@@ -28,6 +28,7 @@ const cnLayersSidebarToolbar = cn('LayersSidebar', 'Toolbar');
 const cnLayersSidebarEditBtn = cn('LayersSidebar', 'EditBtn');
 const cnLayersSidebarAddLayerBtn = cn('LayersSidebar', 'AddLayerBtn');
 const cnLayersSidebarSaveBtn = cn('LayersSidebar', 'SaveBtn');
+const cnLayersSidebarCancelBtn = cn('LayersSidebar', 'CancelBtn');
 
 interface LayersSidebarToolbarProps {
   above: boolean;
@@ -76,7 +77,7 @@ export class LayersSidebarToolbar extends Component<LayersSidebarToolbarProps> {
               </Tooltip>
 
               <Tooltip title='Отменить изменения'>
-                <IconButton onClick={this.cancel} color='secondary'>
+                <IconButton className={cnLayersSidebarCancelBtn()} onClick={this.cancel} color='secondary'>
                   <CancelOutlined />
                 </IconButton>
               </Tooltip>

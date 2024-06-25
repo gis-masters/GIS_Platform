@@ -13,6 +13,7 @@ class LayersSidebarBlock extends Block {
     layer: '.LayersSidebar .Layer',
     editLayersBtn: '.LayersSidebar-EditBtn',
     saveBtn: '.LayersSidebar-SaveBtn',
+    cancelBtn: '.LayersSidebar-CancelBtn',
     loading: '.LayersSidebar .Loading',
     toolbar: '.LayersSidebar-Toolbar',
     addLayerBtn: '.LayersSidebar-AddLayerBtn',
@@ -28,6 +29,11 @@ class LayersSidebarBlock extends Block {
 
   async clickSaveButton(): Promise<void> {
     const $editLayersBtn = await this.$('saveBtn');
+    await $editLayersBtn.click();
+  }
+
+  async clickCancelButton(): Promise<void> {
+    const $editLayersBtn = await this.$('cancelBtn');
     await $editLayersBtn.click();
   }
 

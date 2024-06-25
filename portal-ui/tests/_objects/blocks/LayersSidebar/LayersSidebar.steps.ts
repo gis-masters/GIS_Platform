@@ -12,6 +12,11 @@ When('в списке слоёв на карте я нажимаю кнопку 
   await layersSidebarBlock.waitForLoadingHide();
 });
 
+When('в списке слоёв на карте я нажимаю кнопку `Отменить изменения`', async () => {
+  await layersSidebarBlock.clickCancelButton();
+  await layersSidebarBlock.waitForLoadingHide();
+});
+
 When(
   'в списке слоёв в меню слоя {string} я выбираю пункт {string}',
   async (layerName: string, menuItemTitle: string) => {

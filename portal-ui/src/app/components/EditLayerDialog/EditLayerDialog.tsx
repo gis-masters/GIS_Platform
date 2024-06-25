@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { action, computed, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
+import { cloneDeep } from 'lodash';
 
 import { communicationService } from '../../services/communication.service';
 import { Projection } from '../../services/data/projections/projections.models';
@@ -15,6 +16,7 @@ import {
   SimpleSchema
 } from '../../services/data/schema/schema.models';
 import { applyView } from '../../services/data/schema/schema.utils';
+import { flags } from '../../services/feature-flags';
 import { buildComplexName } from '../../services/geoserver/feature.util';
 import { CUSTOM_STYLE_NAME } from '../../services/geoserver/styles/styles.models';
 import { getSimpleStylesListForGeometryType, getStyleSld } from '../../services/geoserver/styles/styles.service';
@@ -24,6 +26,7 @@ import { CrgLayer, crgLayerSchema, CrgLayerType } from '../../services/gis/layer
 import { createLayer, getViewChoiceOptions } from '../../services/gis/layers/layers.service';
 import { isVectorFromFile } from '../../services/gis/layers/layers.utils';
 import { services } from '../../services/services';
+import { patch } from '../../services/util/patch';
 import { currentProject } from '../../stores/CurrentProject.store';
 import { currentUser } from '../../stores/CurrentUser.store';
 import { CustomStyleControl } from '../CustomStyleControl/CustomStyleControl';
@@ -174,26 +177,29 @@ export class EditLayerDialog extends Component<EditLayerDialogProps> {
   @computed
   private get layerSchema(): SimpleSchema {
     const { layer, schema } = this.props;
-    let properties: PropertySchema[] = [...crgLayerSchema.properties];
+    let properties: PropertySchema[] = cloneDeep(crgLayerSchema.properties);
 
     properties = properties.map(property => {
-      // TODO: выпилить этот костыль после #2075
-      if (property.name === 'nativeCRS' && !layer.complexName.endsWith(`__${getSrid(layer.nativeCRS)}`)) {
-        property.hidden = true;
-      }
+      if (!flags.allowProjectionsForAllLayers && property.name === 'nativeCRS') {
+        // TODO: выпилить этот костыль после #2075
+        if (layer.nativeCRS && !layer.complexName?.endsWith(`__${getSrid(layer.nativeCRS)}`)) {
+          property.hidden = true;
+        }
 
-      // TODO: включить для tif, shp и tab, mid после #2086
-      if (
-        [
-          CrgLayerType.EXTERNAL,
-          CrgLayerType.EXTERNAL_GEOSERVER,
-          CrgLayerType.RASTER,
-          CrgLayerType.MID,
-          CrgLayerType.TAB,
-          CrgLayerType.SHP
-        ].includes(layer.type)
-      ) {
-        property.hidden = true;
+        // TODO: включить для tif, shp и tab, mid после #2086
+        if (
+          layer.type &&
+          [
+            CrgLayerType.EXTERNAL,
+            CrgLayerType.EXTERNAL_GEOSERVER,
+            CrgLayerType.RASTER,
+            CrgLayerType.MID,
+            CrgLayerType.TAB,
+            CrgLayerType.SHP
+          ].includes(layer.type)
+        ) {
+          property.hidden = true;
+        }
       }
 
       return property;
@@ -285,16 +291,21 @@ export class EditLayerDialog extends Component<EditLayerDialogProps> {
     }
 
     if (patch.nativeCRS !== undefined && layer.nativeCRS !== patch.nativeCRS && layer.tableName) {
-      layer.nativeCRS = patch.nativeCRS;
-      layer.complexName = buildComplexName(currentUser.workspaceName, layer.tableName, patch.nativeCRS);
-      void this.changeLayerProjection(layer);
+      void this.changeLayerProjection(layer, patch.nativeCRS);
     } else {
       communicationService.layerUpdated.emit({ type: 'update', data: layer });
     }
   }
 
-  private async changeLayerProjection(layer: CrgLayer): Promise<void> {
-    await createLayer({ ...layer, mode: 'geoserver' }, currentProject.id);
+  private async changeLayerProjection(layer: CrgLayer, projectionCode: string): Promise<void> {
+    await createLayer({ ...layer, mode: 'geoserver', nativeCRS: projectionCode }, currentProject.id);
+    if (!layer.tableName) {
+      throw new Error('Отсутствует tableName у слоя');
+    }
+    patch(layer, {
+      nativeCRS: projectionCode,
+      complexName: buildComplexName(currentUser.workspaceName, layer.tableName, projectionCode)
+    });
     communicationService.layerUpdated.emit({ type: 'update', data: layer });
   }
 

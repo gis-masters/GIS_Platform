@@ -10,15 +10,23 @@ export class SelectProjectionBlock extends Block {
   };
 
   async selectProjectionByCode(code: string): Promise<void> {
-    const [, srid] = code.split(':');
     const $select = await this.$('select');
     const muiSelect = new MuiSelectBlock(null, $select);
-    await muiSelect.selectOptionByTitle('Выбрать другую');
-    await chooseXTableBlock.waitForVisible();
-    const xTable = await chooseXTableBlock.getXTable();
-    await xTable.filterStringColumn('Код SRID', srid);
-    await chooseXTableBlock.selectOne('Код SRID', srid);
-    await chooseXTableDialogBlock.clickSubmitButton();
-    await chooseXTableDialogBlock.waitForHidden();
+
+    try {
+      // сначала пробуем выбрать проекцию из выпадающего списка
+      await muiSelect.selectOptionByTitle(code, true);
+    } catch {
+      // если не получилось, то открываем диалог выбора
+      await muiSelect.close();
+      await muiSelect.selectOptionByTitle('Выбрать другую');
+      await chooseXTableBlock.waitForVisible();
+      const xTable = await chooseXTableBlock.getXTable();
+      const [, srid] = code.split(':');
+      await xTable.filterIdColumn('Код SRID', srid);
+      await chooseXTableBlock.selectOne('Код SRID', srid);
+      await chooseXTableDialogBlock.clickSubmitButton();
+      await chooseXTableDialogBlock.waitForHidden();
+    }
   }
 }

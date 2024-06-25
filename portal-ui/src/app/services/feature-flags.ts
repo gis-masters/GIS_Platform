@@ -3,9 +3,10 @@ import { environment } from './environment';
 export interface FlagsList {
   sample: string; // boolean
   selectingFeaturesLimit: string; // number
+  allowProjectionsForAllLayers: string; // boolean;
 }
 
-const keys: (keyof FlagsList)[] = ['sample', 'selectingFeaturesLimit'];
+const keys: (keyof FlagsList)[] = ['sample', 'selectingFeaturesLimit', 'allowProjectionsForAllLayers'];
 
 function lsKey(key: string) {
   return `crg-flag-${key}`;
@@ -20,6 +21,7 @@ class Flags implements FlagsList {
   sample = '';
 
   selectingFeaturesLimit = '';
+  allowProjectionsForAllLayers = '';
 
   private constructor() {
     this.init();
@@ -50,7 +52,7 @@ class Flags implements FlagsList {
   }
 
   get list(): string {
-    return keys.map(key => `${key}: ${String(this[key])}`).join('\n');
+    return keys.map(key => `${key}: "${String(this[key])}"`).join(', ');
   }
 
   reset() {

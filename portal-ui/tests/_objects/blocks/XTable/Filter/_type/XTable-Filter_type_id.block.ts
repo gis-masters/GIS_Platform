@@ -1,6 +1,6 @@
 import { Block } from '../../../../Block';
 
-class XTableFilterTypeIdBlock extends Block {
+export class XTableFilterTypeIdBlock extends Block {
   selectors = {
     container: '.XTable-Filter_type_id',
     input: '.XTable-Filter_type_id input'
@@ -12,7 +12,7 @@ class XTableFilterTypeIdBlock extends Block {
     return $input.getValue();
   }
 
-  async setValue(title: string) {
+  async setValue(title: string): Promise<void> {
     const $input = await this.$('input');
     await $input.setValue(title);
   }
