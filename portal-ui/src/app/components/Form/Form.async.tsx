@@ -35,7 +35,12 @@ export interface FormProps<T>
   errors?: FieldErrors[];
   onFormChange?(changedValue: T): void;
   onFormSubmit?(changedValue: T): void;
-  onFieldChange?(value: T[keyof T], propertyName: string, prevValue: T[keyof T], formValue: Partial<T>): void;
+  onFieldChange?(
+    value: T[keyof T],
+    propertyName: string,
+    prevValue: T[keyof T] | undefined,
+    formValue: Partial<T>
+  ): void;
   onFieldNeedValidate?(value: T[keyof T], propertyName: keyof T | string): void;
   onActionSuccess?(changedValue: T): void;
   onActionError?(error: Error | { errors: FieldErrors[] }): void;
@@ -338,7 +343,7 @@ export default class Form<T> extends Component<FormProps<T>> {
   }
 
   @boundMethod
-  private fieldChanged(value: T[keyof T], fieldName: string, prevValue: T[keyof T]) {
+  private fieldChanged(value: T[keyof T], fieldName: string, prevValue?: T[keyof T]) {
     const { auto, onFieldChange } = this.props;
 
     if (auto) {

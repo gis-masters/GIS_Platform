@@ -403,7 +403,8 @@ async function getLegendImageSrc(resolution?: number): Promise<string> {
     cleanDuplicates: true
   });
   root.render(reactElement);
-  await sleep(0);
+  //других способов дождаться кончания render не нашлось
+  await sleep(200);
   const src = await domToImage.toPng(el.childNodes[0]);
   root.unmount();
   el.remove();

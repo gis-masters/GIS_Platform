@@ -58,6 +58,7 @@ export const featureExtract: PrintTemplate<WfsFeature> = new PrintTemplate({
           },
           {
             name: 'properties',
+            defaultValue: properties,
             propertyType: PropertyType.CUSTOM,
             ControlComponent: SelectPropertiesControl,
             properties,

@@ -40,6 +40,7 @@ export class PrintTemplate<T> {
 
   async print(entity: T): Promise<void> {
     const html = await this.render(entity);
+
     if (!html) {
       return;
     }

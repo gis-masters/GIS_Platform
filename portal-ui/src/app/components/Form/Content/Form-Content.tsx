@@ -129,7 +129,7 @@ export class FormContent<T> extends Component<FormContentProps<T>> {
       onFormChange(newFormValue);
     }
 
-    if (onFieldChange && prevValue) {
+    if (onFieldChange) {
       onFieldChange(value, propertyName, prevValue);
     }
   }
