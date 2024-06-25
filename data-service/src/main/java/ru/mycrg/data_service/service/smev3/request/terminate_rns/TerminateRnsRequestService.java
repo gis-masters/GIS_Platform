@@ -41,8 +41,8 @@ public class TerminateRnsRequestService extends RequestProcessor {
                                       @Qualifier("schemaTemplateServiceBase") ISchemaTemplateService schemaService,
                                       ResourceLoader resourceLoader,
                                       SmevOutgoingAttachmentService attachmentService) {
-        super(Mnemonic.TERMINATE_RNS_1_0_6, messageService, baseDao, schemaService, attachmentService, resourceLoader,
-              smev3Config);
+        super(Mnemonic.TERMINATE_RNS_1_0_6, messageService, baseDao, schemaService, attachmentService, resourceLoader, null,
+                smev3Config);
     }
 
     @Override

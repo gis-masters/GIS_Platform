@@ -9,6 +9,7 @@ import ru.mycrg.data_service.util.JsonConverter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -18,13 +19,13 @@ public class RequestAndSources<T> {
 
     private final T request;
     private final Map<RecordData, IRecord> sources;
-    private final Map<String, SmevAttachment> attachments;
+    private final Map<UUID, SmevAttachment> attachments;
     private final JsonNode sourcesAsJson;
     private final JsonNode attachmentsAsJson;
 
     public RequestAndSources(@NotNull T request,
                              @Nullable Map<RecordData, IRecord> sources,
-                             @Nullable Map<String, SmevAttachment> attachments) {
+                             @Nullable Map<UUID, SmevAttachment> attachments) {
         this.request = request;
         this.sources = sources;
         this.attachments = attachments;
@@ -50,7 +51,7 @@ public class RequestAndSources<T> {
         return sources;
     }
 
-    public Map<String, SmevAttachment> getAttachments() {
+    public Map<UUID, SmevAttachment> getAttachments() {
         return attachments;
     }
 

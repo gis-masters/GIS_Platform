@@ -111,6 +111,7 @@ public class GetCadastrialPlanRequestService extends RequestProcessor {
                 null,
                 null,
                 resourceLoader,
+                null,
                 smev3Config
         );
         this.schemaService = schemaService;

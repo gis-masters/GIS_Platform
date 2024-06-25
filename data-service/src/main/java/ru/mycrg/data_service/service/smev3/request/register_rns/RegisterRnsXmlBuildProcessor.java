@@ -28,17 +28,8 @@ public class RegisterRnsXmlBuildProcessor extends AXmlBuildProcessor {
     private final Logger log = LoggerFactory.getLogger(RegisterRnsXmlBuildProcessor.class);
     private final ReusableElements rue = new ReusableElements();
 
-    // Заглушка
-    private final FileType stubScan = new FileType();
-
     public RegisterRnsXmlBuildProcessor(RequestProcessor requestProcessor) {
         super(requestProcessor);
-
-        AttachmentRefType attachment = new AttachmentRefType();
-        attachment.setAttachmentId("37850413882942517_PHC_08.04.2022_19.01.53.pdf");
-
-        this.stubScan.setName("PHC_08.04.2022_19.01.53.pdf");
-        this.stubScan.setAttachmentRef(attachment);
     }
 
     public RequestAndSources<Request> run(@NotNull RegisterRnsRequestDto dto) {
@@ -176,7 +167,7 @@ public class RegisterRnsXmlBuildProcessor extends AXmlBuildProcessor {
                 FieldsRsoks.PROPERTY_DL_DATA_PROJECT_DOCUMENTATION_DESCRIPTION_CONNECTION
         );
         log.debug("rprojectDocumentation_Section13Record read. is not null {}",
-                  rue.projectDocumentation_Section13Record.isPresent());
+                rue.projectDocumentation_Section13Record.isPresent());
 
         // ugeRecord
         rue.uge_Section13record = rue.uge_UgeRecord
@@ -257,10 +248,20 @@ public class RegisterRnsXmlBuildProcessor extends AXmlBuildProcessor {
         construction.getObjectInfo().add(objectInfo());
 
         // Добавляем вложение
-        asAttachment(rue.section13Record);
+        var attachments = asAttachment(rue.section13Record);
 
-        // Вставляем заглушку. Это валидное поведение
-        construction.getScans().add(stubScan);
+        if (!attachments.isEmpty()) {
+            attachments.forEach(smevAttachment -> {
+                var attachmentRefType = new AttachmentRefType();
+                attachmentRefType.setAttachmentId(smevAttachment.getAttachmentId().toString());
+
+                var fileType = new FileType();
+                fileType.setAttachmentRef(attachmentRefType);
+                fileType.setName(smevAttachment.getFileName());
+
+                construction.getScans().add(fileType);
+            });
+        }
 
         Request request = new Request();
         request.setRegisterNewConstruction(construction);
@@ -514,27 +515,27 @@ public class RegisterRnsXmlBuildProcessor extends AXmlBuildProcessor {
         // LandCadastral
         Optional.of(landCadastralDescriptionType())
                 .ifPresentOrElse(tp -> {
-                                     type.getLandCadastralDescription().add(tp);
-                                     type.setLandCadastralAvailability(AvailabilityDocType.AVAILABLE);
-                                 },
-                                 () -> type.setLandCadastralAvailability(AvailabilityDocType.NOT_AVAILABLE)
+                            type.getLandCadastralDescription().add(tp);
+                            type.setLandCadastralAvailability(AvailabilityDocType.AVAILABLE);
+                        },
+                        () -> type.setLandCadastralAvailability(AvailabilityDocType.NOT_AVAILABLE)
                 );
 
         // Demarcation
         Optional.of(demarcationDescriptionType())
                 .ifPresentOrElse(tp -> {
-                                     type.getDemarcationDescription().add(tp);
-                                     type.setDemarcationAvailability(AvailabilityDocType.AVAILABLE);
-                                 },
-                                 () -> type.setDemarcationAvailability(AvailabilityDocType.NOT_AVAILABLE)
+                            type.getDemarcationDescription().add(tp);
+                            type.setDemarcationAvailability(AvailabilityDocType.AVAILABLE);
+                        },
+                        () -> type.setDemarcationAvailability(AvailabilityDocType.NOT_AVAILABLE)
                 );
 
         // DevPlanLandPlot
         Optional.of(devPlanLandPlotDescriptionType())
                 .ifPresentOrElse(tp -> {
-                                     type.getDevPlanLandPlotDescription().add(tp);
-                                     type.setDevPlanLandPlotAvailability(AvailabilityDocType.AVAILABLE);
-                                 }, () -> type.setDevPlanLandPlotAvailability(AvailabilityDocType.NOT_AVAILABLE)
+                            type.getDevPlanLandPlotDescription().add(tp);
+                            type.setDevPlanLandPlotAvailability(AvailabilityDocType.AVAILABLE);
+                        }, () -> type.setDevPlanLandPlotAvailability(AvailabilityDocType.NOT_AVAILABLE)
                 );
 
         // EcologicalExpertise

@@ -12,6 +12,7 @@ import ru.mycrg.data_service.dao.BaseReadDao;
 import ru.mycrg.data_service.dto.smev3.ISmevRequestDto;
 import ru.mycrg.data_service.dto.smev3.RegisterRnvRequestDto;
 import ru.mycrg.data_service.register_rnv_1_0_8.*;
+import ru.mycrg.data_service.repository.FileRepository;
 import ru.mycrg.data_service.service.schemas.ISchemaTemplateService;
 import ru.mycrg.data_service.service.smev3.Mnemonic;
 import ru.mycrg.data_service.service.smev3.SmevMessageSenderService;
@@ -41,9 +42,10 @@ public class RegisterRnvRequestService extends RequestProcessor {
                                      BaseReadDao baseReadDao,
                                      @Qualifier("schemaTemplateServiceBase") ISchemaTemplateService schemaService,
                                      ResourceLoader resourceLoader,
+                                     FileRepository fileRepository,
                                      SmevOutgoingAttachmentService attachmentService) {
         super(Mnemonic.REGISTER_RNV_1_0_8, messageService, baseReadDao, schemaService, attachmentService,
-              resourceLoader, smev3Config);
+                resourceLoader, fileRepository, smev3Config);
     }
 
     @Override
@@ -85,8 +87,7 @@ public class RegisterRnvRequestService extends RequestProcessor {
                 .values().stream()
                 .map(smevAttachment -> {
                     var type = new AttachmentHeaderType();
-                    type.setId(
-                            smevAttachment.getAttachmentId().toString());
+                    type.setId(smevAttachment.getAttachmentId().toString());
                     type.setFilePath(smevAttachment.getS3fileName());
                     return type;
                 })

@@ -33,7 +33,7 @@ public class ReceiptRnvRequestService extends RequestProcessor {
     public ReceiptRnvRequestService(Smev3Config smev3Config,
                                     ResourceLoader resourceLoader,
                                     SmevMessageSenderService messageService) {
-        super(Mnemonic.RECEIPT_RNV_1_0_9, messageService, null, null, null, resourceLoader, smev3Config);
+        super(Mnemonic.RECEIPT_RNV_1_0_9, messageService, resourceLoader, smev3Config);
     }
 
     @Override

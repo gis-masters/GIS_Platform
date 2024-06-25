@@ -12,6 +12,7 @@ import ru.mycrg.data_service.dto.smev3.ISmevRequestDto;
 import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.exceptions.SmevRequestException;
 import ru.mycrg.data_service.no_context_transaction.NoContextTransaction;
+import ru.mycrg.data_service.repository.FileRepository;
 import ru.mycrg.data_service.service.schemas.ISchemaTemplateService;
 import ru.mycrg.data_service.service.smev3.Mnemonic;
 import ru.mycrg.data_service.service.smev3.SmevMessageSenderService;
@@ -43,6 +44,7 @@ public abstract class RequestProcessor {
     private final ISchemaTemplateService schemaService;
     private final SmevOutgoingAttachmentService attachmentService;
     private final ResourceLoader resourceLoader;
+    private final FileRepository fileRepository;
 
     // параметры  СМЭВ обмена
     private final Smev3Config smev3Config;
@@ -54,10 +56,27 @@ public abstract class RequestProcessor {
 
     public RequestProcessor(Mnemonic mnemonic,
                             SmevMessageSenderService messageService,
+                            ResourceLoader resourceLoader,
+                            Smev3Config smev3Config) {
+        this.messageService = messageService;
+        this.mnemonic = mnemonic;
+        this.baseReadDao = null;
+        this.schemaService = null;
+        this.attachmentService = null;
+        this.resourceLoader = resourceLoader;
+        this.fileRepository = null;
+        this.smev3Config = smev3Config;
+        this.marshaller = new XmlMarshaller(mnemonic.getPrefixMapper());
+        this.schema = loadSchema(mnemonic.getSchemaPath());
+    }
+
+    public RequestProcessor(Mnemonic mnemonic,
+                            SmevMessageSenderService messageService,
                             BaseReadDao baseReadDao,
                             ISchemaTemplateService schemaService,
                             SmevOutgoingAttachmentService attachmentService,
                             ResourceLoader resourceLoader,
+                            FileRepository fileRepository,
                             Smev3Config smev3Config) {
         this.messageService = messageService;
         this.mnemonic = mnemonic;
@@ -65,6 +84,7 @@ public abstract class RequestProcessor {
         this.schemaService = schemaService;
         this.attachmentService = attachmentService;
         this.resourceLoader = resourceLoader;
+        this.fileRepository = fileRepository;
         this.smev3Config = smev3Config;
         this.marshaller = new XmlMarshaller(mnemonic.getPrefixMapper());
         this.schema = loadSchema(mnemonic.getSchemaPath());
@@ -80,6 +100,10 @@ public abstract class RequestProcessor {
 
     public SmevOutgoingAttachmentService getAttachmentService() {
         return attachmentService;
+    }
+
+    public FileRepository getFileRepository() {
+        return fileRepository;
     }
 
     public Mnemonic mnemonicEnum() {
@@ -104,7 +128,7 @@ public abstract class RequestProcessor {
         try {
             SmevRequestMeta requestMeta = buildRequest(dto);
 
-            log.info("Request is valid. Try send to SMEV. Client ID: {}", requestMeta.getClientId());
+            log.info("Запрос собран успешно. Попытка отправки. Client ID: {}", requestMeta.getClientId());
             messageService.sendMessage(requestMeta, mnemonic.getSystem());
 
             return requestMeta;
@@ -117,7 +141,7 @@ public abstract class RequestProcessor {
     }
 
     protected <T> void validate(SmevRequestMeta meta, T request, Class<T> tClass) {
-        log.info("try validate request: {}", request);
+        log.info("Валидация запроса в СМЭВ: {}", request);
 
         byte[] xmlBytes = null;
         XmlValidationResult validationResult = null;
@@ -133,13 +157,13 @@ public abstract class RequestProcessor {
         }
 
         if (validationResult != null) {
-            String message = "validation fail: " + validationResult.getFailMessage();
+            String message = "Валидация провалилась: " + validationResult.getFailMessage();
             log.error(message);
 
             throw new SmevRequestException(message, meta, validationResult);
         }
 
-        log.info("validation successful!");
+        log.info("Валидация прошла успешно");
     }
 
     private Schema loadSchema(String schemaPath) {

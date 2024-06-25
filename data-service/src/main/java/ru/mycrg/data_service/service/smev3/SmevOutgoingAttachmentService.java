@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 import ru.mycrg.data_service.config.Smev3Config;
-import ru.mycrg.data_service.entity.IRecord;
+import ru.mycrg.data_service.entity.File;
 import ru.mycrg.data_service.exceptions.SmevRequestException;
 import ru.mycrg.data_service.service.smev3.model.SmevAttachment;
 import ru.mycrg.data_service.service.storage.FileStorageService;
@@ -15,10 +15,6 @@ import ru.mycrg.data_service.service.storage.FileStorageService;
 import java.io.ByteArrayInputStream;
 import java.nio.file.Files;
 import java.util.UUID;
-
-import static ru.mycrg.data_service.service.smev3.fields.FieldsFiles.PROPERTY_ID;
-import static ru.mycrg.data_service.service.smev3.fields.FieldsFiles.PROPERTY_TITLE;
-import static ru.mycrg.data_service.util.SystemLibraryAttributes.PATH;
 
 @Service
 @ConditionalOnProperty(
@@ -41,22 +37,19 @@ public class SmevOutgoingAttachmentService {
         this.smev3Config = smev3Config;
     }
 
-    public SmevAttachment pushAttachment(IRecord fileRecord) {
+    public SmevAttachment pushAttachment(File file) {
         try {
             var attachmentId = UUID.randomUUID();
-            var fileId = fileRecord.getAsString(PROPERTY_ID);
-            var fileTitle = fileRecord.getAsString(PROPERTY_TITLE);
-            var filePath = fileRecord.getAsString(PATH.getName());
 
-            var resource = fileStorageService.loadAsResource(filePath);
+            var resource = fileStorageService.loadAsResource(file.getPath());
             byte[] fileBytes = Files.readAllBytes(resource.getFile().toPath());
 
-            var s3fileName = String.format("fileid_%s", fileId);
+            var s3fileName = String.format("fileid_%s", file.getId());
             putObject(s3fileName, fileBytes);
 
-            log.info("add attachment to s3. id {}. filename {}", attachmentId, s3fileName);
+            log.info("Добавление вложения в s3. id {}. filename {}", attachmentId, s3fileName);
 
-            return new SmevAttachment(fileId, fileTitle, attachmentId, s3fileName);
+            return new SmevAttachment(file.getId(), file.getTitle(), attachmentId, s3fileName);
         } catch (Exception e) {
             throw new SmevRequestException("Не удалось добавить attachment => " + e.getMessage());
         }

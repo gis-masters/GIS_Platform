@@ -5,19 +5,16 @@ import com.fasterxml.jackson.databind.JsonNode;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import ru.mycrg.data_service.dao.BaseReadDao;
 import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
 import ru.mycrg.data_service.dto.ResourceType;
+import ru.mycrg.data_service.entity.File;
 import ru.mycrg.data_service.entity.IRecord;
-import ru.mycrg.data_service.entity.RecordEntity;
 import ru.mycrg.data_service.exceptions.SmevRequestException;
 import ru.mycrg.data_service.service.resources.ResourceJsonCondition;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service.service.schemas.ISchemaTemplateService;
 import ru.mycrg.data_service.service.smev3.SmevOutgoingAttachmentService;
-import ru.mycrg.data_service.service.smev3.fields.FieldsFiles;
 import ru.mycrg.data_service.service.smev3.model.RecordData;
 import ru.mycrg.data_service.service.smev3.model.RefType;
 import ru.mycrg.data_service.service.smev3.model.RequestAndSources;
@@ -44,12 +41,10 @@ import static ru.mycrg.data_service.service.smev3.fields.FieldsSection.PROPERTY_
 
 public abstract class AXmlBuildProcessor {
 
-    private static final Logger log = LoggerFactory.getLogger(AXmlBuildProcessor.class);
-
     protected final RequestProcessor requestProcessor;
     protected final Map<String, SchemaDto> schemasMap = new HashMap<>();
     protected final Map<RecordData, IRecord> sourceRecordsMap = new HashMap<>();
-    protected final Map<String, SmevAttachment> attachmentsMap = new HashMap<>();
+    protected final Map<UUID, SmevAttachment> attachmentsMap = new HashMap<>();
 
     public AXmlBuildProcessor(RequestProcessor requestProcessor) {
         this.requestProcessor = requestProcessor;
@@ -129,30 +124,37 @@ public abstract class AXmlBuildProcessor {
                 });
     }
 
-    protected List<IRecord> asFileRecord(IRecord record) {
+    protected List<File> asFileRecord(IRecord record) {
         return asString(record, PROPERTY_FILE)
                 .flatMap(jsonString -> JsonConverter.<List<FileDescription>>fromJson(
                         jsonString,
                         new TypeReference<List<FileDescription>>() {
                         })
                 )
-                .map(this::collectAttachments)
+                .map(fileDescriptions -> {
+                    var fileUuids = fileDescriptions
+                            .stream()
+                            .map(FileDescription::getId)
+                            .collect(Collectors.toSet());
+
+                    return requestProcessor.getFileRepository().findAllByIdIn(fileUuids);
+                })
                 .orElse(List.of());
     }
 
-    // TODO: с атачментами пока не понятно как должно быть. Оставить так, до успешного внедрения
-    protected void asAttachment(IRecord record) {
-        asFileRecord(record)
+    protected List<SmevAttachment> asAttachment(IRecord record) {
+        return asFileRecord(record)
                 .stream()
-                .filter(item -> !item.getContent().isEmpty())
-                .forEach(item -> {
-                    String fileId = item.getAsString(FieldsFiles.PROPERTY_ID);
-                    if (!attachmentsMap.containsKey(fileId)) {
-                        SmevAttachment smevAttachment = attachmentService().pushAttachment(item);
-
+                .map(file -> {
+                    if (attachmentsMap.containsKey(file.getId())) {
+                        return attachmentsMap.get(file.getId());
+                    } else {
+                        var smevAttachment = attachmentService().pushAttachment(file);
                         attachmentsMap.put(smevAttachment.getFileId(), smevAttachment);
+                        return smevAttachment;
                     }
-                });
+                })
+                .collect(Collectors.toList());
     }
 
     protected IRecord getRecordById(String schemaId,
@@ -280,26 +282,5 @@ public abstract class AXmlBuildProcessor {
 
     public SmevOutgoingAttachmentService attachmentService() {
         return requestProcessor.getAttachmentService();
-    }
-
-    private @NotNull List<IRecord> collectAttachments(List<FileDescription> attachments) {
-        return attachments.stream()
-                          .map(fileDescription -> {
-                              // TODO: Не из той таблицы пытаемся тягать файлы. В реальности файл захардкожен:
-                              //  attachmentRefType.setAttachmentId("37850413882942517_PHC_08.04.2022_19.01.53.pdf");
-                              //  this.stubScan.setName("PHC_08.04.2022_19.01.53.pdf");
-
-                              try {
-                                  return getRecordById(null,
-                                                       FieldsFiles.TABLE,
-                                                       fileDescription.getId()
-                                  );
-                              } catch (Exception e) {
-                                  log.warn("Для СМЭВ попытались взять атач из записи, не из той таблицы ☕");
-                              }
-
-                              return new RecordEntity();
-                          })
-                          .collect(Collectors.toList());
     }
 }
