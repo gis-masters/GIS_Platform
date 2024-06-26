@@ -127,7 +127,9 @@ public class ImportController extends BaseController {
     @PostMapping("/import/kpt/{taskId}/cancel")
     public ResponseEntity<Void> cancelKptImport(@PathVariable @NotNull Long taskId) {
         kptImportXmlHandler.cancelImport();
+
         mediator.execute(new UpdateTaskStatusRequest(CANCELED, taskId));
+
         return ResponseEntity.ok().build();
     }
 

@@ -6,7 +6,7 @@ import ru.mycrg.data_service.no_context_transaction.NoContextTransaction;
 import java.util.function.Supplier;
 
 @Component
-public class TransationWrapper {
+public class TransactionWrapper {
 
     @NoContextTransaction(dbProperty = "crg-options.integration.smev3.targetDb")
     public <R> R needTransaction(Supplier<R> supplier) {

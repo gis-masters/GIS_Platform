@@ -92,6 +92,7 @@ public class KptImportXmlRequestService {
 
         Pair<List<ImportSourceFileDto>, String> sourceFilesPair = kptSourceFilesService.getSourceFiles(kpt);
         handleValidationSettings(request.getValidationSettings(), sourceFilesPair.getRight());
+
         messageBus.produce(
                 new KptImportXmlRequestEvent(sourceFilesPair.getLeft(),
                                              getDefaultDatabaseName(authenticationFacade.getOrganizationId()),

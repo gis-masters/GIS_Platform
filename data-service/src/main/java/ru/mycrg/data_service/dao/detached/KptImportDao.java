@@ -16,6 +16,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+import static ru.mycrg.data_service.dao.config.DaoProperties.DEFAULT_GEOMETRY_COLUMN_NAME;
 import static ru.mycrg.data_service.dao.utils.SqlBuilder.buildCopyQuery;
 import static ru.mycrg.data_service.dao.utils.SqlBuilder.buildCreateTableQuery;
 import static ru.mycrg.data_service.kpt_import.KptImportUtils.DS_ID;
@@ -24,7 +25,7 @@ import static ru.mycrg.data_service.kpt_import.KptImportUtils.DS_ID;
 public class KptImportDao {
 
     private static final Logger log = LoggerFactory.getLogger(KptImportDao.class);
-    private static final String CADASTRAL_SQUARE_FILTER_TEMPLATE = "(source_doc::json)->0->>'title' = ?";
+    private static final String DOCUMENT_TITLE_FILTER_TEMPLATE = "(source_doc::json)->0->>'title' = ?";
 
     private final DatasourceFactory datasourceFactory;
     private final DdlTablesBase ddlTablesBase;
@@ -40,7 +41,7 @@ public class KptImportDao {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(datasourceFactory.getNamedDataSource(dbName, DS_ID));
         String query = String.format(
                 "SELECT COUNT(*) FROM %s.%s WHERE %s",
-                tableQualifier.getSchema(), tableQualifier.getTable(), CADASTRAL_SQUARE_FILTER_TEMPLATE
+                tableQualifier.getSchema(), tableQualifier.getTable(), DOCUMENT_TITLE_FILTER_TEMPLATE
         );
         log.debug("Count records by cadastral square query: [{}]", query);
 
@@ -106,20 +107,20 @@ public class KptImportDao {
     /**
      * Удаляет записи в таблице по кадастрвоому номеру
      *
-     * @param tableQualifier   таблица, откуда будут удалены записи
-     * @param cadasttralSquare параметры, которые будут подставлены в условие
-     * @param dbName           название БД
+     * @param dbName         целевая БД
+     * @param tableQualifier целевая таблица, откуда будут удалены записи
+     * @param documentTitle  title документа
      */
-    public void deleteAllByCadatstralSquare(String dbName,
-                                            ResourceQualifier tableQualifier,
-                                            String cadasttralSquare) {
+    public void deleteAllByDocumentTitle(String dbName,
+                                         ResourceQualifier tableQualifier,
+                                         String documentTitle) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(datasourceFactory.getNamedDataSource(dbName, DS_ID));
 
         String query = String.format("DELETE FROM %s.%s WHERE %s",
-                                     tableQualifier.getSchema(), tableQualifier, CADASTRAL_SQUARE_FILTER_TEMPLATE);
-        log.debug("Delete by cadastral square query: [{}]", query);
+                                     tableQualifier.getSchema(), tableQualifier, DOCUMENT_TITLE_FILTER_TEMPLATE);
+        log.debug("Delete by document title query: [{}]", query);
 
-        jdbcTemplate.update(query, cadasttralSquare);
+        jdbcTemplate.update(query, documentTitle);
     }
 
     public void copyCadastralSquare(String dbName,
@@ -127,20 +128,19 @@ public class KptImportDao {
                                     ResourceQualifier target,
                                     List<SimplePropertyDto> sourceProps,
                                     List<SimplePropertyDto> targetProps,
-                                    String cadastralSquare) {
+                                    String documentTitle) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(datasourceFactory.getNamedDataSource(dbName, DS_ID));
 
         String query = buildCopyQuery(source.getTableQualifier(), target.getTableQualifier(), sourceProps, targetProps,
-                                      CADASTRAL_SQUARE_FILTER_TEMPLATE, Collections.emptyMap());
+                                      DOCUMENT_TITLE_FILTER_TEMPLATE, Collections.emptyMap());
         log.debug("Copy cadastral square query: [{}]", query);
 
-        jdbcTemplate.update(query, cadastralSquare);
+        jdbcTemplate.update(query, documentTitle);
     }
 
     public void deduplicateData(String dbName,
                                 ResourceQualifier tableQualifier,
-                                String groupByProperty,
-                                String maxByProperty) {
+                                String groupByProperty) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(datasourceFactory.getNamedDataSource(dbName, DS_ID));
 
         String query = String.format(
@@ -149,12 +149,23 @@ public class KptImportDao {
                         "SELECT 1 " +
                         "FROM %1$s b " +
                         "WHERE a.%2$s = b.%2$s " +
-                        "AND a.%3$s < b.%3$s " +
-                        ")",
-                tableQualifier.getTableQualifier(), groupByProperty, maxByProperty
-        );
+                        "AND a.created_at < b.created_at)",
+                tableQualifier.getTableQualifier(), groupByProperty);
+
         log.debug("Запрос для KPT удаляющий дубли: [{}]", query);
 
         jdbcTemplate.update(query);
+    }
+
+    public void makeGeometryValid(String dbName, ResourceQualifier tableQualifier) {
+        JdbcTemplate jdbcTemplate = new JdbcTemplate(datasourceFactory.getNamedDataSource(dbName, DS_ID));
+
+        String query = String.format(
+                "UPDATE %s.%s " +
+                        "SET %3$s=public.st_makevalid(%3$s) " +
+                        "WHERE public.st_isvalid(%3$s)=false",
+                tableQualifier.getSchema(), tableQualifier.getTable(), DEFAULT_GEOMETRY_COLUMN_NAME);
+
+        jdbcTemplate.execute(query);
     }
 }

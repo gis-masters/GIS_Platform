@@ -59,7 +59,7 @@ public class DatasourceFactory {
         if (datasource != null) {
             dataSources.remove(key);
             datasource.close();
-            log.info("Закрыт datasource " + key);
+            log.info("Закрыт datasource: {}", key);
         }
     }
 

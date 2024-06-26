@@ -17,11 +17,12 @@ public class GeometryDao {
 
     public void makeValid(String schema, String table) throws CrgDaoException {
         try {
-            String geometryColumnName = DEFAULT_GEOMETRY_COLUMN_NAME;
-            String sql = String.format("UPDATE %s.%s SET %s=public.st_makevalid(%s) WHERE public.st_isvalid(%s)=false",
-                                       schema, table, geometryColumnName, geometryColumnName, geometryColumnName);
+            String query = String.format("UPDATE %s.%s " +
+                                                 "SET %3$s=public.st_makevalid(%3$s) " +
+                                                 "WHERE public.st_isvalid(%3$s)=false",
+                                         schema, table, DEFAULT_GEOMETRY_COLUMN_NAME);
 
-            jdbcTemplate.execute(sql);
+            jdbcTemplate.execute(query);
         } catch (Exception e) {
             String msg = "Ошибка при исправлении геометрии для: " + schema + "." + table;
 

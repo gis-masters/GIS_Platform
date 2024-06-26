@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 import ru.mycrg.data_service.dao.detached.TasksDetachedDao;
 import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.service.CancelKptTaskService;
-import ru.mycrg.data_service.service.smev3.support_classes.TransationWrapper;
+import ru.mycrg.data_service.service.smev3.support_classes.TransactionWrapper;
 
 import static ru.mycrg.data_service.service.smev3.request.get_cadastrial_plan.GetCadastrialPlanRequestService.KPT_CONTENT_TYPE;
 
@@ -24,12 +24,12 @@ public class TasksScheduler {
     private final int kptDeadlineTime; // in hours
     private final TasksDetachedDao tasksDetachedDao;
     private final String databaseName;
-    private final TransationWrapper contextWrapper;
+    private final TransactionWrapper contextWrapper;
     private final CancelKptTaskService cancelKptTaskService;
 
     public TasksScheduler(TasksDetachedDao tasksDetachedDao,
                           Environment environment,
-                          TransationWrapper contextWrapper,
+                          TransactionWrapper contextWrapper,
                           CancelKptTaskService cancelKptTaskService) {
         this.tasksDetachedDao = tasksDetachedDao;
         this.contextWrapper = contextWrapper;

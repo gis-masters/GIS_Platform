@@ -16,7 +16,7 @@ import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_N
 import static ru.mycrg.data_service.kpt_import.KptImportUtils.tmbTableName;
 
 /**
- * Создаёт временныек таблицы для импорта КПТ
+ * Создаёт временные таблицы для импорта КПТ
  */
 @Service
 public class TmpTablesCreator {

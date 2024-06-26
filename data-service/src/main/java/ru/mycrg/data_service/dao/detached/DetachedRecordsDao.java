@@ -77,13 +77,14 @@ public class DetachedRecordsDao {
         }
     }
 
-    public void truncateTable(@NotNull ResourceQualifier qualifier, @NotNull String databaseName)
-            throws CrgDaoException {
-        JdbcTemplate jdbcTemplate = new JdbcTemplate(datasourceFactory.getDataSource(databaseName));
-        String query = String.format("TRUNCATE %s.%s", qualifier.getSchema(), qualifier.getTable());
-        log.debug("TRUNCATE QUERY: [{}]", query);
-
+    public void truncateTable(@NotNull String databaseName,
+                              @NotNull ResourceQualifier qualifier) throws CrgDaoException {
         try {
+            JdbcTemplate jdbcTemplate = new JdbcTemplate(datasourceFactory.getDataSource(databaseName));
+
+            String query = String.format("TRUNCATE %s.%s", qualifier.getSchema(), qualifier.getTable());
+            log.debug("TRUNCATE QUERY: [{}]", query);
+
             jdbcTemplate.execute(query);
         } catch (Exception e) {
             throw new CrgDaoException("Ошибка очистки таблицы " + qualifier, e);

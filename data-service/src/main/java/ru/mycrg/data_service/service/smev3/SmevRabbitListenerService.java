@@ -7,7 +7,7 @@ import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
-import ru.mycrg.data_service.service.smev3.support_classes.TransationWrapper;
+import ru.mycrg.data_service.service.smev3.support_classes.TransactionWrapper;
 
 @Service
 @ConditionalOnProperty(
@@ -18,11 +18,11 @@ public class SmevRabbitListenerService {
     private final Logger log = LoggerFactory.getLogger(SmevRabbitListenerService.class);
     private final SmevMessageReceiverService smevMessageReceiverService;
     private final Queue adapterReceiveQueue;
-    private final TransationWrapper contextWrapper;
+    private final TransactionWrapper contextWrapper;
 
     public SmevRabbitListenerService(SmevMessageReceiverService smevMessageReceiverService,
                                      Queue adapterReceiveQueue,
-                                     TransationWrapper contextWrapper) {
+                                     TransactionWrapper contextWrapper) {
         this.smevMessageReceiverService = smevMessageReceiverService;
         this.adapterReceiveQueue = adapterReceiveQueue;
         this.contextWrapper = contextWrapper;
