@@ -23,7 +23,7 @@ import {
 } from '../../services/data/schema/schema.utils';
 import { OldPropertySchema, ValueType } from '../../services/data/schema/schemaOld.models';
 import { deleteFeatures, updateFeature } from '../../services/data/vectorData/vectorData.service';
-import { extractFeatureId } from '../../services/geoserver/feature.util';
+import { extractFeatureId } from '../../services/geoserver/featureType/featureType.util';
 import { transformFeature } from '../../services/geoserver/transform-feature.service';
 import { CoordinateEdited, WfsFeature, WfsGeometry } from '../../services/geoserver/wfs/wfs.models';
 import { getFeaturesById } from '../../services/geoserver/wfs/wfs.service';

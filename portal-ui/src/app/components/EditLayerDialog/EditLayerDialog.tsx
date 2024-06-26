@@ -17,7 +17,7 @@ import {
 } from '../../services/data/schema/schema.models';
 import { applyView } from '../../services/data/schema/schema.utils';
 import { flags } from '../../services/feature-flags';
-import { buildComplexName } from '../../services/geoserver/feature.util';
+import { buildComplexName } from '../../services/geoserver/featureType/featureType.util';
 import { CUSTOM_STYLE_NAME } from '../../services/geoserver/styles/styles.models';
 import { getSimpleStylesListForGeometryType, getStyleSld } from '../../services/geoserver/styles/styles.service';
 import { getStyleTitle } from '../../services/geoserver/styles/styles.utils';

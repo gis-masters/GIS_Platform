@@ -5,7 +5,7 @@ import { Geometry, LineString, MultiLineString, MultiPoint, MultiPolygon, Point,
 
 import { currentUser } from '../../stores/CurrentUser.store';
 import { http } from '../api/http.service';
-import { getVectorTableMultipleRecordsUrl, getWfsUrl } from '../api/server-urls.service';
+import { getVectorTableMultipleRecordsUrl } from '../api/server-urls.service';
 import { usersService } from '../auth/users/users.service';
 import { getFeatureProjection } from '../data/projections/projections.service';
 import { getProjectionCode } from '../data/projections/projections.util';
@@ -17,8 +17,9 @@ import { services } from '../services';
 import { FeatureUtil } from '../util/FeatureUtil';
 import { Mime } from '../util/Mime';
 import { wfsGeometryToGeometry } from '../util/open-layers.util';
-import { buildComplexName, extractFeatureId } from './feature.util';
+import { extractFeatureId } from './featureType/featureType.util';
 import { CoordinateEdited, GeometryType, NewWfsFeature, WfsFeature, WfsGeometry } from './wfs/wfs.models';
+import { updateFeature } from './wfs/wfs.service';
 
 export enum TransactionType {
   INSERT = 'insert',
@@ -40,27 +41,6 @@ export class TransformFeatureService {
 
   private xs = new XMLSerializer();
   private formatWFS = new WFS();
-
-  async updateProperty(tableName: string, featureId: string, propName: string, propValue: string): Promise<string> {
-    await usersService.fetchCurrentUser();
-
-    const complexName = buildComplexName(currentUser.workspaceName, tableName);
-    const payload = `<Transaction xmlns="http://www.opengis.net/wfs" service="WFS" version="1.1.0"
-                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                    xsi:schemaLocation="http://www.opengis.net/wfs http://schemas.opengis.net/wfs/1.1.0/wfs.xsd">
-        <Update typeName="${complexName}">
-          <Property>
-              <Name>${propName}</Name>
-              <Value>${propValue}</Value>
-          </Property>
-          <Filter xmlns="http://www.opengis.net/ogc">
-              <FeatureId fid="${featureId}"/>
-          </Filter>
-        </Update>
-      </Transaction>`;
-
-    return http.post(getWfsUrl(), payload, { headers: { 'Content-Type': Mime.XML }, responseType: 'text' });
-  }
 
   async multipleEdit(
     datasetId: string,
@@ -121,6 +101,7 @@ export class TransformFeatureService {
 
       return newFeature;
     });
+
     const projection = await getFeatureProjection(features[0]);
     const crs = projection ? getProjectionCode(projection) : undefined;
 
@@ -139,7 +120,7 @@ export class TransformFeatureService {
       .replaceAll(new RegExp(`xmlns:${workspace}="castyl_for_remove"`, 'g'), '')
       .replaceAll('<Name>geometry</Name>', '<Name>shape</Name>');
 
-    return http.post(getWfsUrl(), payload, { headers: { 'Content-Type': Mime.XML }, responseType: 'text' });
+    return updateFeature(payload);
   }
 
   async insertFeatures(
@@ -178,10 +159,7 @@ export class TransformFeatureService {
       return [record.id];
     }
 
-    const responseXML = await http.post<string>(getWfsUrl(), payload, {
-      headers: { 'Content-Type': Mime.XML },
-      responseType: 'text'
-    });
+    const responseXML = await updateFeature(payload);
 
     const parser = new DOMParser();
     const xmlDoc = parser.parseFromString(responseXML, Mime.XML);

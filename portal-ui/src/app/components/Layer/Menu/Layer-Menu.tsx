@@ -32,7 +32,6 @@ import { getProjectionCode } from '../../../services/data/projections/projection
 import { Schema } from '../../../services/data/schema/schema.models';
 import { VectorTable } from '../../../services/data/vectorData/vectorData.models';
 import { getVectorTable } from '../../../services/data/vectorData/vectorData.service';
-import { focusToLayer } from '../../../services/geoserver/sidebarActions.service';
 import { GeometryType, WfsFeature } from '../../../services/geoserver/wfs/wfs.models';
 import { getEmptyFeature } from '../../../services/geoserver/wfs/wfs.service';
 import {
@@ -46,6 +45,7 @@ import { getLayerSchema } from '../../../services/gis/layers/layers.service';
 import { isVectorFromFile } from '../../../services/gis/layers/layers.utils';
 import { TreeItemPayload } from '../../../services/gis/projects/projects.models';
 import { services } from '../../../services/services';
+import { focusToLayer } from '../../../services/sidebarActions.service';
 import { currentProject } from '../../../stores/CurrentProject.store';
 import { EditFeatureMode, sidebars } from '../../../stores/Sidebars.store';
 import { Button } from '../../Button/Button';

@@ -13,7 +13,7 @@ import {
   getGeometryTypeFromGeoserverAttributes
 } from '../../data/schema/schema.utils';
 import { getVectorTable } from '../../data/vectorData/vectorData.service';
-import { getFeatureType } from '../../geoserver/featuretypes.service';
+import { getFeatureType } from '../../geoserver/featureType/featureType.service';
 import { SupportedGeometryType, supportedGeometryTypes } from '../../geoserver/wfs/wfs.models';
 import { services } from '../../services';
 import { CrgProject } from '../projects/projects.models';

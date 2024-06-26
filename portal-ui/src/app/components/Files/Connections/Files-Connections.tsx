@@ -9,11 +9,8 @@ import { boundMethod } from 'autobind-decorator';
 import { FileConnection, FileInfo } from '../../../services/data/files/files.models';
 import { isTifFile } from '../../../services/data/files/files.util';
 import { PropertyType, SimpleSchema } from '../../../services/data/schema/schema.models';
-import {
-  CoverageTransparentColorEntry,
-  getFileTransparentColor,
-  updateFileTransparentColor
-} from '../../../services/geoserver/geoserver-file-edit.service';
+import { CoverageTransparentColorEntry } from '../../../services/geoserver/coverages/coverages.model';
+import { getTransparentColor, updateTransparentColor } from '../../../services/geoserver/coverages/coverages.service';
 import { Button } from '../../Button/Button';
 import { ConnectionsToProjects } from '../../ConnectionsToProjects/ConnectionsToProjects';
 import { FormDialog } from '../../FormDialog/FormDialog';
@@ -145,10 +142,7 @@ export class FilesConnections extends Component<ConnectionsProps> {
       return;
     }
 
-    const response = await getFileTransparentColor(
-      layer.dataset,
-      layer.tableName + '__' + layer.nativeCRS.split(':')[1]
-    );
+    const response = await getTransparentColor(layer.dataset, layer.tableName + '__' + layer.nativeCRS.split(':')[1]);
     const entry = response?.coverage?.parameters?.entry;
 
     if (Array.isArray(entry)) {
@@ -167,7 +161,7 @@ export class FilesConnections extends Component<ConnectionsProps> {
       throw new Error('Ошибка сохранения. Не найден слой, набор данных tableName или система координат ');
     }
 
-    await updateFileTransparentColor(
+    await updateTransparentColor(
       layer.dataset,
       layer.tableName + '__' + layer.nativeCRS.split(':')[1],
       value.transparentColor

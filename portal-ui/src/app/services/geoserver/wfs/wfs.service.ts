@@ -4,7 +4,9 @@ import { MultiPolygon } from 'ol/geom';
 
 import { attributesTableStore } from '../../../stores/AttributesTable.store';
 import { currentProject } from '../../../stores/CurrentProject.store';
+import { currentUser } from '../../../stores/CurrentUser.store';
 import { mapStore } from '../../../stores/Map.store';
+import { usersService } from '../../auth/users/users.service';
 import { getOlProjection } from '../../data/projections/projections.service';
 import { getProjectionCode } from '../../data/projections/projections.util';
 import { applyView, getGeometryFieldName } from '../../data/schema/schema.utils';
@@ -20,10 +22,11 @@ import { cqlParse } from '../../util/cqlParse';
 import { filterFeatures } from '../../util/filterObjects';
 import { Mime } from '../../util/Mime';
 import {
+  buildComplexName,
   extractFeatureId,
   extractFeatureTypeNameFromComplexName,
   extractTableNameFromComplexName
-} from '../feature.util';
+} from '../featureType/featureType.util';
 import { wfsClient } from './wfs.client';
 import { CoordinateEdited, WfsFeature, WfsFeatureCollection } from './wfs.models';
 import { generateWfsSortParam, getEmptyGeometry } from './wfs.util';
@@ -52,6 +55,46 @@ function getBaseWfsParams(layer: CrgVectorLayer): { [key: string]: string } {
 }
 
 const MAX_PAGE_SIZE = 10_000;
+
+/**
+ * @deprecated
+ */
+export async function updateFeature(payload: string): Promise<string> {
+  return wfsClient.update(payload);
+}
+
+export async function getFeatureCollection(payload: Record<string, string>): Promise<WfsFeatureCollection> {
+  return wfsClient.getFeatureCollection(payload);
+}
+
+/**
+ * @deprecated
+ */
+export async function updateProperty(
+  tableName: string,
+  featureId: string,
+  propName: string,
+  propValue: string
+): Promise<string> {
+  await usersService.fetchCurrentUser();
+
+  const complexName = buildComplexName(currentUser.workspaceName, tableName);
+  const payload = `<Transaction xmlns="http://www.opengis.net/wfs" service="WFS" version="1.1.0"
+                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                    xsi:schemaLocation="http://www.opengis.net/wfs http://schemas.opengis.net/wfs/1.1.0/wfs.xsd">
+        <Update typeName="${complexName}">
+          <Property>
+              <Name>${propName}</Name>
+              <Value>${propValue}</Value>
+          </Property>
+          <Filter xmlns="http://www.opengis.net/ogc">
+              <FeatureId fid="${featureId}"/>
+          </Filter>
+        </Update>
+      </Transaction>`;
+
+  return wfsClient.update(payload);
+}
 
 /**
  * Get features by wfs

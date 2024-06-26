@@ -4,7 +4,7 @@ import { CrgLayer, CrgLayerType } from '../../gis/layers/layers.models';
 import { getLayerByComplexNameInCurrentProject } from '../../gis/layers/layers.utils';
 import { cqlBuild } from '../../util/cqlBuild';
 import { Mime } from '../../util/Mime';
-import { extractFeatureId, extractFeatureTypeNameFromComplexName } from '../feature.util';
+import { extractFeatureId, extractFeatureTypeNameFromComplexName } from '../featureType/featureType.util';
 import { CUSTOM_STYLE_NAME } from '../styles/styles.models';
 import { getStyleSld } from '../styles/styles.service';
 import { createImageFromBlob } from '../styles/styles.utils';

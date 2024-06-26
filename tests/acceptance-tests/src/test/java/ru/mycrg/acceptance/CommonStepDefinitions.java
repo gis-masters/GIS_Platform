@@ -62,6 +62,11 @@ public class CommonStepDefinitions extends BaseStepsDefinitions {
         assertEquals(count, response.jsonPath().get("page.totalElements"));
     }
 
+    @Then("В выборке присутствует более {int} элемента")
+    public void checkMoreThenElements(Integer count) {
+        assertTrue(Integer.parseInt(response.jsonPath().get("page.totalElements").toString()) >= count);
+    }
+
     @Then("В списке присутствуют определённое кол-во элементов: {int}")
     public void checkTotalElementsInList(Integer count) {
         List<Object> objectList = response.jsonPath().get("");

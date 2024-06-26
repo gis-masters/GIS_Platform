@@ -8,7 +8,7 @@ import { pluralize } from 'numeralize-ru';
 import { FileConnection } from '../../services/data/files/files.models';
 import { SearchItemDataTypeFeature } from '../../services/data/search/search.model';
 import { getVectorTableConnections } from '../../services/data/vectorData/vectorData.service';
-import { extractFeatureId } from '../../services/geoserver/feature.util';
+import { extractFeatureId } from '../../services/geoserver/featureType/featureType.util';
 import { Button } from '../Button/Button';
 import { FeatureInProjects } from '../FeaturesInProjects/FeaturesInProjects';
 import { PseudoLink } from '../PseudoLink/PseudoLink';

@@ -3,7 +3,7 @@ import { Coordinate } from 'ol/coordinate';
 import { currentProject } from '../../../stores/CurrentProject.store';
 import { currentUser } from '../../../stores/CurrentUser.store';
 import { defaultOlProjectionCode } from '../../data/projections/projections.models';
-import { extractTableNameFromFeatureId } from '../../geoserver/feature.util';
+import { extractTableNameFromFeatureId } from '../../geoserver/featureType/featureType.util';
 import { CoordinateEdited, WfsFeature } from '../../geoserver/wfs/wfs.models';
 import { CrgLayerType, CrgRasterLayer, CrgVectorLayer, NewCrgLayer } from './layers.models';
 

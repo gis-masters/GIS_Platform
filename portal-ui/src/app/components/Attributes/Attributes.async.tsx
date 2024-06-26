@@ -10,7 +10,7 @@ import {
   extractFeatureTypeName,
   extractFeatureTypeNameFromComplexName,
   extractTableNameFromFeatureId
-} from '../../services/geoserver/feature.util';
+} from '../../services/geoserver/featureType/featureType.util';
 import { CrgLayer, CrgVectorLayer } from '../../services/gis/layers/layers.models';
 import { getLayerByFeatureInCurrentProject } from '../../services/gis/layers/layers.utils';
 import { mapSelectionService } from '../../services/map/map-selection.service';

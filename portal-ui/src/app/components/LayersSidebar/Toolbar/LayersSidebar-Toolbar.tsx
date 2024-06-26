@@ -7,9 +7,9 @@ import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 import { cloneDeep } from 'lodash';
 
-import { focusToLayer } from '../../../services/geoserver/sidebarActions.service';
 import { CrgLayer, CrgLayersGroup } from '../../../services/gis/layers/layers.models';
 import { projectsService } from '../../../services/gis/projects/projects.service';
+import { focusToLayer } from '../../../services/sidebarActions.service';
 import { currentProject } from '../../../stores/CurrentProject.store';
 import { organizationSettings } from '../../../stores/OrganizationSettings.store';
 import { AddLayerDialog } from '../../AddLayerDialog/AddLayerDialog';

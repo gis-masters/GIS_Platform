@@ -4,7 +4,7 @@ import { cn } from '@bem-react/classname';
 
 import { Schema } from '../../services/data/schema/schema.models';
 import { VectorTable } from '../../services/data/vectorData/vectorData.models';
-import { extractFeatureId } from '../../services/geoserver/feature.util';
+import { extractFeatureId } from '../../services/geoserver/featureType/featureType.util';
 import { WfsFeature } from '../../services/geoserver/wfs/wfs.models';
 import { FeatureActions } from '../FeatureActions/FeatureActions';
 import { FeatureIcon } from '../FeatureIcon/FeatureIcon';

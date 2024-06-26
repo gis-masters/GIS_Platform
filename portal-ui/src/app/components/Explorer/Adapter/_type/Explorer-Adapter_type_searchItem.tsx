@@ -1,7 +1,7 @@
 import React, { ReactNode } from 'react';
 import { FolderOutlined, InsertDriveFile } from '@mui/icons-material';
 
-import { extractFeatureId } from '../../../../services/geoserver/feature.util';
+import { extractFeatureId } from '../../../../services/geoserver/featureType/featureType.util';
 import { SortOrder } from '../../../../services/models';
 import { formatDate } from '../../../../services/util/date.util';
 import { staticImplements } from '../../../../services/util/staticImplements';

@@ -1,3 +1,18 @@
+export interface ImportRequestData {
+  import: {
+    targetWorkspace: {
+      workspace: {
+        name: string;
+      };
+    };
+    targetStore?: {
+      dataStore: {
+        name: string;
+      };
+    };
+  };
+}
+
 export interface ScratchImport {
   id: number;
   href: string;

@@ -41,9 +41,9 @@ public class CoverageHandler extends GeoServerBaseService {
 
     public ResponseModel<Object> create(String workspace, String store, CoverageModel coverage)
             throws HttpClientException {
-        log.debug("try create raster layer: '{}' in store: '{}'", coverage.getName(), store);
-
         String payload = toJson(new CoverageWrapper(coverage));
+
+        log.debug("In store: '{}' try create raster layer: '{}'", store, payload);
 
         String url = getGeoserverRestUrl().append(WORKSPACES).append(workspace)
                                           .append(COVERAGE_STORES).append(store)

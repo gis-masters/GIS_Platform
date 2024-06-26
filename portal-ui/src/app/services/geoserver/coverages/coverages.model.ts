@@ -1,22 +1,14 @@
 import { BBOX } from '@fiz/geoserver-types/BBOX';
 
-import { CrgLayerType } from '../../gis/layers/layers.models';
+export interface CoverageTransparentColorEntry {
+  string: Record<string, string>;
+}
 
-export interface GeoserverLayerInfo {
-  name: string;
-  type: CrgLayerType;
-  defaultStyle: {
-    name: string;
-    href: string;
-  };
-  resource: {
-    '@class': string;
-    name: string;
-    href: string;
-  };
-  attribution: {
-    logoWidth: number;
-    logoHeight: number;
+export interface CoverageTransparentColor {
+  coverage: {
+    parameters: {
+      entry: CoverageTransparentColorEntry | Record<string, string>[];
+    };
   };
 }
 

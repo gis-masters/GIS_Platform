@@ -8,7 +8,7 @@ import { boundMethod } from 'autobind-decorator';
 import { LibraryRecord } from '../../services/data/library/library.models';
 import { createLibraryRecord } from '../../services/data/library/library.service';
 import { EditedField } from '../../services/data/schema/schemaOld.models';
-import { transformFeature } from '../../services/geoserver/transform-feature.service';
+import { updateProperty } from '../../services/geoserver/wfs/wfs.service';
 import { services } from '../../services/services';
 import { EditFeatureInfo } from '../EditFeatureField/EditFeatureField';
 import { Loading } from '../Loading/Loading';
@@ -102,7 +102,7 @@ export default class DocumentsList extends Component<DocumentsListProps> {
       const newDocumentList = this.props.documents.filter(doc => doc.id !== id);
 
       const { featureInfo, editedField } = this.props;
-      await transformFeature.updateProperty(
+      await updateProperty(
         featureInfo.layerName,
         featureInfo.feature.id,
         editedField.name,
@@ -144,7 +144,7 @@ export default class DocumentsList extends Component<DocumentsListProps> {
       if (crgDocument) {
         const payload = this.preparePayload(crgDocument, selectedFile.name);
 
-        await transformFeature.updateProperty(featureInfo.layerName, featureInfo.feature.id, editedField.name, payload);
+        await updateProperty(featureInfo.layerName, featureInfo.feature.id, editedField.name, payload);
 
         this.props.modifyCallback(JSON.parse(payload) as DocumentListItemData[]);
       }

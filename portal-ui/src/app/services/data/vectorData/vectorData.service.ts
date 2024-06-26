@@ -1,7 +1,7 @@
 import { Coordinate } from 'ol/coordinate';
 
 import { communicationService } from '../../communication.service';
-import { extractFeatureId } from '../../geoserver/feature.util';
+import { extractFeatureId } from '../../geoserver/featureType/featureType.util';
 import { CoordinateEdited, NewWfsFeature, WfsFeature } from '../../geoserver/wfs/wfs.models';
 import { CrgLayer } from '../../gis/layers/layers.models';
 import { PageOptions } from '../../models';

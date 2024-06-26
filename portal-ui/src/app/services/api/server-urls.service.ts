@@ -45,18 +45,6 @@ function getBaseUrl(): string {
   return `${protocol}//${host}${port && ':'}${port}${path}`;
 }
 
-function getGeoServerUrl(): string {
-  return getBaseUrl() + '/geoserver';
-}
-
-function getGeoserverWorkspaceUrl(workspace: string): string {
-  return `${getGeoServerUrl()}/rest/workspaces/${workspace}`;
-}
-
-function getGeoserverFeatureTypesUrl(workspace: string, datastore: string): string {
-  return `${getGeoserverWorkspaceUrl(workspace)}/datastores/${datastore}/featuretypes`;
-}
-
 export function getWsEndpointUrl(): string {
   const protocol = getProtocol();
   const host = getHost();
@@ -64,50 +52,6 @@ export function getWsEndpointUrl(): string {
   const path = getWsPath();
 
   return `${protocol}//${host}:${port}${path}/crg-ws-endpoint`;
-}
-
-export function getWfsUrl(): string {
-  return getGeoServerUrl() + '/wfs';
-}
-
-export function getGeoserverImportsUrl(): string {
-  return getGeoServerUrl() + '/rest/imports';
-}
-
-export function getGeoserverFeatureTypeInfoUrl(workspace: string, datastore: string, feature: string): string {
-  return `${getGeoserverFeatureTypeUrl(workspace, datastore, feature)}.json`;
-}
-
-export function getGeoserverFeatureTypeUrl(workspace: string, datastore: string, feature: string): string {
-  return `${getGeoserverFeatureTypesUrl(workspace, datastore)}/${feature}`;
-}
-
-export function getGeoserverFeatureTypesInfoUrl(workspace: string, datastore: string): string {
-  return `${getGeoserverFeatureTypesUrl(workspace, datastore)}.json`;
-}
-
-export function getGeoserverFileUrl(workspace: string, coverageStore: string, coverage: string): string {
-  return `${getGeoserverWorkspaceUrl(workspace)}/coveragestores/${coverageStore}/coverages/${coverage}.json`;
-}
-
-export function getGeoserverImportUrl(importId: number | string): string {
-  return `${getGeoserverImportsUrl()}/${importId}`;
-}
-
-export function getGeoserverImportTasksUrl(importId: number | string): string {
-  return `${getGeoserverImportUrl(importId)}/tasks`;
-}
-
-export function getGeoserverImportTaskUrl(importId: number | string, taskId: number): string {
-  return `${getGeoserverImportTasksUrl(importId)}/${taskId}`;
-}
-
-export function getGeoserverImportTaskProgressUrl(importId: number | string, taskId: number): string {
-  return `${getGeoserverImportTasksUrl(importId)}/${taskId}/progress`;
-}
-
-export function getGeoserverImportTaskLayerUrl(importId: number | string, taskId: number): string {
-  return `${getGeoserverImportTaskUrl(importId, taskId)}/layer`;
 }
 
 export function getEsiaUrl(): string {

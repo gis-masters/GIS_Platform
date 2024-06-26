@@ -4,7 +4,7 @@ import { cn } from '@bem-react/classname';
 import { IClassNameProps } from '@bem-react/core';
 
 import { VectorTable } from '../../services/data/vectorData/vectorData.models';
-import { extractFeatureId } from '../../services/geoserver/feature.util';
+import { extractFeatureId } from '../../services/geoserver/featureType/featureType.util';
 import { Actions } from '../Actions/Actions.composed';
 import { ActionsItemVariant } from '../Actions/Item/Actions-Item.base';
 import { FeatureConnections } from '../FeatureConnections/FeatureConnections';

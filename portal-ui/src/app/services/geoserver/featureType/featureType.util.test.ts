@@ -1,6 +1,6 @@
 import { describe, expect, test } from '@jest/globals';
 
-import { extractFeatureId } from './feature.util';
+import { extractFeatureId } from './featureType.util';
 
 describe('feature util', () => {
   test('Допустимые идентификаторы объектов', () => {

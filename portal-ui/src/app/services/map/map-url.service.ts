@@ -3,7 +3,7 @@ import { Coordinate } from 'ol/coordinate';
 import { currentProject } from '../../stores/CurrentProject.store';
 import { mapStore } from '../../stores/Map.store';
 import { Pages, route } from '../../stores/Route.store';
-import { extractFeatureId } from '../geoserver/feature.util';
+import { extractFeatureId } from '../geoserver/featureType/featureType.util';
 import { WfsFeature } from '../geoserver/wfs/wfs.models';
 import { getLayerByFeatureInCurrentProject } from '../gis/layers/layers.utils';
 import { services } from '../services';

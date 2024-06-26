@@ -7,7 +7,7 @@ import { cloneDeep } from 'lodash';
 
 import { Schema } from '../../../services/data/schema/schema.models';
 import { applyView } from '../../../services/data/schema/schema.utils';
-import { extractFeatureId } from '../../../services/geoserver/feature.util';
+import { extractFeatureId } from '../../../services/geoserver/featureType/featureType.util';
 import { getFeatures } from '../../../services/geoserver/wfs/wfs.service';
 import { CrgVectorLayer } from '../../../services/gis/layers/layers.models';
 import { getLayerSchema } from '../../../services/gis/layers/layers.service';

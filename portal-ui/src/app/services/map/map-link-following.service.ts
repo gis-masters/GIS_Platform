@@ -5,12 +5,10 @@ import { currentProject } from '../../stores/CurrentProject.store';
 import { mapStore } from '../../stores/Map.store';
 import { route } from '../../stores/Route.store';
 import { EditFeatureMode, sidebars } from '../../stores/Sidebars.store';
-import { http } from '../api/http.service';
-import { getWfsUrl } from '../api/server-urls.service';
 import { applyView } from '../data/schema/schema.utils';
-import { extractFeatureId, extractFeatureTypeNameFromComplexName } from '../geoserver/feature.util';
-import { WfsFeature, WfsFeatureCollection } from '../geoserver/wfs/wfs.models';
-import { getFeaturesById } from '../geoserver/wfs/wfs.service';
+import { extractFeatureId, extractFeatureTypeNameFromComplexName } from '../geoserver/featureType/featureType.util';
+import { WfsFeature } from '../geoserver/wfs/wfs.models';
+import { getFeatureCollection, getFeaturesById } from '../geoserver/wfs/wfs.service';
 import { CrgLayer } from '../gis/layers/layers.models';
 import { getLayerSchema } from '../gis/layers/layers.service';
 import { projectsService } from '../gis/projects/projects.service';
@@ -59,8 +57,7 @@ export async function applyMapStateFromNavigator(): Promise<void> {
           count: String(mapStore.selectingFeaturesLimit)
         };
 
-        const response = await http.get<WfsFeatureCollection>(getWfsUrl(), { params });
-
+        const response = await getFeatureCollection(params);
         if (response.features) {
           features.push(...response.features);
         }

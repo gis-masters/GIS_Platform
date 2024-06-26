@@ -2,12 +2,13 @@ import React, { Component } from 'react';
 import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 
+import { FeatureTypeHref } from '../../services/geoserver/featureType/featureType.model';
 import {
   deleteFeatureTypeFromScratchDatastore,
-  FeatureTypeHref,
   getFeatureTypesFromScratchDatastore
-} from '../../services/geoserver/geoserver-clean.service';
+} from '../../services/geoserver/featureType/featureType.service';
 import { sleep } from '../../services/util/sleep';
+import { currentUser } from '../../stores/CurrentUser.store';
 import { Button } from '../Button/Button';
 import { Toast } from '../Toast/Toast';
 
@@ -32,10 +33,15 @@ export class OrganizationClean extends Component {
   private async cleanUp() {
     this.setBusy(true);
 
-    const featureTypeHrefs: FeatureTypeHref[] | undefined = await getFeatureTypesFromScratchDatastore();
+    const { workspaceName, datastoreName } = currentUser;
+    const featureTypeHrefs: FeatureTypeHref[] | undefined = await getFeatureTypesFromScratchDatastore(
+      workspaceName,
+      datastoreName
+    );
+
     if (featureTypeHrefs) {
       for (const item of featureTypeHrefs) {
-        await deleteFeatureTypeFromScratchDatastore(item.name);
+        await deleteFeatureTypeFromScratchDatastore(workspaceName, datastoreName, item.name);
         await sleep(55);
       }
 

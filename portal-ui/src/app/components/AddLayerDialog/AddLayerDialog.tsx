@@ -21,7 +21,7 @@ import {
 } from '../../services/data/schema/schema.models';
 import { Dataset, VectorTable } from '../../services/data/vectorData/vectorData.models';
 import { getVectorTable } from '../../services/data/vectorData/vectorData.service';
-import { buildComplexName } from '../../services/geoserver/feature.util';
+import { buildComplexName } from '../../services/geoserver/featureType/featureType.util';
 import { CrgLayer, CrgLayerType } from '../../services/gis/layers/layers.models';
 import { getViewChoiceOptions } from '../../services/gis/layers/layers.service';
 import {

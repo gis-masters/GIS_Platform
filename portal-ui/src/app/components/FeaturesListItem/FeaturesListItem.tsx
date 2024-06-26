@@ -8,7 +8,7 @@ import { boundMethod } from 'autobind-decorator';
 
 import { Schema } from '../../services/data/schema/schema.models';
 import { applyView, changeSchemaNamesCaseByFeature } from '../../services/data/schema/schema.utils';
-import { extractFeatureId, extractTableNameFromFeatureId } from '../../services/geoserver/feature.util';
+import { extractFeatureId, extractTableNameFromFeatureId } from '../../services/geoserver/featureType/featureType.util';
 import { WfsFeature } from '../../services/geoserver/wfs/wfs.models';
 import { CrgLayer } from '../../services/gis/layers/layers.models';
 import { getLayerSchema } from '../../services/gis/layers/layers.service';

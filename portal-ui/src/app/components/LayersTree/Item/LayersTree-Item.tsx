@@ -3,7 +3,7 @@ import { action, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 
-import { extractTableNameFromFeatureId } from '../../../services/geoserver/feature.util';
+import { extractTableNameFromFeatureId } from '../../../services/geoserver/featureType/featureType.util';
 import { CrgLayer, isVectorLayer } from '../../../services/gis/layers/layers.models';
 import { TreeItem } from '../../../services/gis/projects/projects.models';
 import { projectsService } from '../../../services/gis/projects/projects.service';

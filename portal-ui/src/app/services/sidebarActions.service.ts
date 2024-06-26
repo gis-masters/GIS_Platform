@@ -1,22 +1,22 @@
 import { AxiosError } from 'axios';
 import { isEqual } from 'lodash';
 
-import { Toast } from '../../components/Toast/Toast';
-import { getOlProjection, getProjectionByCode } from '../data/projections/projections.service';
-import { transform } from '../data/projections/projections.util';
-import { CrgLayer, CrgLayerType, CrgVectorLayer } from '../gis/layers/layers.models';
-import { isVectorFromFile } from '../gis/layers/layers.utils';
-import { mapService } from '../map/map.service';
-import { services } from '../services';
-import { recalculateBboxAndGetFeatureType } from './featuretypes.service';
-import { getLayerCoverage } from './geoserverLayer/geoserverLayer.service';
+import { Toast } from '../components/Toast/Toast';
+import { getOlProjection, getProjectionByCode } from './data/projections/projections.service';
+import { transform } from './data/projections/projections.util';
+import { recalculateBboxAndGetCoverage } from './geoserver/coverages/coverages.service';
+import { recalculateBboxAndGetFeatureType } from './geoserver/featureType/featureType.service';
+import { CrgLayer, CrgLayerType, CrgVectorLayer } from './gis/layers/layers.models';
+import { isVectorFromFile } from './gis/layers/layers.utils';
+import { mapService } from './map/map.service';
+import { services } from './services';
 
 export async function focusToLayer(layer: CrgLayer): Promise<void> {
   try {
     const { latLonBoundingBox } =
       layer.type === CrgLayerType.VECTOR || isVectorFromFile(layer.type)
         ? await recalculateBboxAndGetFeatureType(layer as CrgVectorLayer)
-        : await getLayerCoverage(layer);
+        : await recalculateBboxAndGetCoverage(layer);
 
     const { maxx, maxy, minx, miny } = latLonBoundingBox;
     const geoserverProjection = await getProjectionByCode('EPSG:4326');

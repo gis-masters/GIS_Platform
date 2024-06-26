@@ -1,4 +1,4 @@
-import { extractFeatureId } from '../geoserver/feature.util';
+import { extractFeatureId } from '../geoserver/featureType/featureType.util';
 import { MapPosition } from './map.models';
 
 declare const browser: { options: { baseUrl: string } }; //для автотестов

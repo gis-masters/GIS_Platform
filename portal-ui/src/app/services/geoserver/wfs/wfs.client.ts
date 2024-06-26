@@ -1,7 +1,6 @@
 import { boundClass } from 'autobind-decorator';
 
 import { http } from '../../api/http.service';
-import { getWfsUrl } from '../../api/server-urls.service';
 import { Mime } from '../../util/Mime';
 import { GeoserverClient } from '../GeoserverClient';
 import { WfsFeatureCollection } from './wfs.models';
@@ -14,8 +13,12 @@ class WfsClient extends GeoserverClient {
     return this._instance || (this._instance = new this());
   }
 
+  protected getWfsUrl(): string {
+    return this.getGeoserverUrl() + '/wfs';
+  }
+
   async getFeatureCollectionByXmlFilter(xml: string): Promise<WfsFeatureCollection> {
-    return http.post<WfsFeatureCollection>(getWfsUrl(), xml, {
+    return http.post<WfsFeatureCollection>(this.getWfsUrl(), xml, {
       headers: { 'Content-Type': Mime.XML },
       params: {
         exceptions: Mime.JSON,
@@ -26,7 +29,14 @@ class WfsClient extends GeoserverClient {
   }
 
   async getFeatureCollection(params: Record<string, string>): Promise<WfsFeatureCollection> {
-    return http.get<WfsFeatureCollection>(getWfsUrl(), { params, headers: { 'Content-Type': Mime.JSON } });
+    return http.get<WfsFeatureCollection>(this.getWfsUrl(), { params, headers: { 'Content-Type': Mime.JSON } });
+  }
+
+  /**
+   * @deprecated
+   */
+  update(payload: string): Promise<string> {
+    return http.post(this.getWfsUrl(), payload, { headers: { 'Content-Type': Mime.XML }, responseType: 'text' });
   }
 }
 

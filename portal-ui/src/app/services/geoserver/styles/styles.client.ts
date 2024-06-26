@@ -13,10 +13,6 @@ class StylesClient extends GeoserverClient {
     return this._instance || (this._instance = new this());
   }
 
-  protected getWorkspacesUrl(): string {
-    return this.getGeoserverUrl() + '/rest/workspaces/';
-  }
-
   protected getActualLegendUrl(): string {
     return this.getDataUrl() + '/styles/actual';
   }
@@ -30,7 +26,7 @@ class StylesClient extends GeoserverClient {
     names.reverse();
     const [styleName, workspaceName] = names;
     const url = workspaceName
-      ? `${this.getWorkspacesUrl()}${workspaceName}/styles/${styleName}.sld`
+      ? `${this.getGeoserverWorkspaceUrl(workspaceName)}/styles/${styleName}.sld`
       : `${this.getStylesUrl()}/${styleName}.sld`;
 
     return http.get<string>(url, {

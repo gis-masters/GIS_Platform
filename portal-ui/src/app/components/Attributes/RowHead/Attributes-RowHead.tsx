@@ -4,7 +4,7 @@ import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 
 import { isUpdateAllowed } from '../../../services/data/permissions/permissions.service';
-import { extractTableNameFromFeatureId } from '../../../services/geoserver/feature.util';
+import { extractTableNameFromFeatureId } from '../../../services/geoserver/featureType/featureType.util';
 import { CrgVectorLayer } from '../../../services/gis/layers/layers.models';
 import { getLayerByFeatureInCurrentProject } from '../../../services/gis/layers/layers.utils';
 import { FilterQuery } from '../../../services/util/filterObjects';

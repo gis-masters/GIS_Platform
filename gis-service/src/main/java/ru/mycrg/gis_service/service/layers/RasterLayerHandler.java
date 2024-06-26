@@ -49,21 +49,21 @@ public class RasterLayerHandler implements ILayerHandler {
 
     @Override
     public Optional<Layer> create(Project project, LayerCreateDto dto) {
+        String storeName = dto.getDataset();
+        String workspaceName = null;
         if (!GIS_SERVICE_MODE.equals(dto.getMode())) {
             Long orgId = authenticationFacade.getOrganizationId();
-            String workspaceName = getScratchWorkspaceName(orgId);
-            String storeName = dto.getDataset() == null
-                    ? buildRasterStoreName(dto.getTableName())
-                    : dto.getDataset();
+            workspaceName = getScratchWorkspaceName(orgId);
             String nativeCRS = dto.getNativeCRS() != null ? dto.getNativeCRS() : defaultEpsgCode();
             String tableName = buildGeoserverFeatureName(dto.getTableName(), nativeCRS);
+            if (storeName == null) {
+                storeName = buildRasterStoreName(dto.getTableName());
+            }
 
             CoverageModel coverage = new CoverageModel(tableName,
                                                        dto.getTitle(),
                                                        nativeCRS,
                                                        dto.getNativeCRS());
-
-            log.debug("Try create coverage: {}", coverage);
 
             try {
                 createRasterStore(workspaceName, storeName, dto.getDataSourceUri());
@@ -78,7 +78,11 @@ public class RasterLayerHandler implements ILayerHandler {
         if (GEOSERVER_MODE.equals(dto.getMode())) {
             return Optional.empty();
         } else {
-            Layer newLayer = layerRepository.save(new Layer(dto, project));
+            Layer layer = new Layer(dto, project);
+            layer.setDataset(storeName);
+            layer.setDataStoreName(workspaceName);
+
+            Layer newLayer = layerRepository.save(layer);
 
             return Optional.of(newLayer);
         }
@@ -95,8 +99,9 @@ public class RasterLayerHandler implements ILayerHandler {
         }
     }
 
-    private void createRasterLayer(String workspaceName, String store, CoverageModel coverage)
-            throws HttpClientException {
+    private void createRasterLayer(String workspaceName,
+                                   String store,
+                                   CoverageModel coverage) throws HttpClientException {
         String accessToken = crgAuthHandler.getRootAccessToken();
 
         ResponseModel<Object> response = new CoverageHandler(accessToken).create(workspaceName, store, coverage);

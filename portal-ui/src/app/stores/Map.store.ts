@@ -5,7 +5,7 @@ import sift from 'sift';
 
 import { FILTER_BY_SELECTION } from '../components/Attributes/Table/Attributes-Table';
 import { flags } from '../services/feature-flags';
-import { extractTableNameFromFeatureId } from '../services/geoserver/feature.util';
+import { extractTableNameFromFeatureId } from '../services/geoserver/featureType/featureType.util';
 import { WfsFeature } from '../services/geoserver/wfs/wfs.models';
 import { FilterBySelection, LabelType, MapAction, MapMode } from '../services/map/map.models';
 import { MeasureItem, MeasureMode } from '../services/map/map-measure.service';
