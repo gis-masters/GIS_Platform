@@ -3,7 +3,8 @@ import { Block } from '../../Block';
 class MapToolbarBlock extends Block {
   selectors = {
     container: '.MapToolbar',
-    cancelSelection: '.MapToolbar .MapSelection-Cancel'
+    cancelSelection: '.MapToolbar .MapSelection-Cancel',
+    selectMultiple: '.MapToolbar .MapSelection-Select'
   };
 
   async isCancelSelectionBtnExist(): Promise<boolean> {
@@ -16,6 +17,12 @@ class MapToolbarBlock extends Block {
     const $cancelSelectionBtn = await this.$('cancelSelection');
     await $cancelSelectionBtn.waitForClickable();
     await $cancelSelectionBtn.click();
+  }
+
+  async clickSelectMultipleBtn(): Promise<void> {
+    const $selectMultipleBtn = await this.$('selectMultiple');
+    await $selectMultipleBtn.waitForClickable();
+    await $selectMultipleBtn.click();
   }
 }
 

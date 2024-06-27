@@ -9,6 +9,10 @@ When('я протыкаю карту в центре', async function () {
   await mapBlock.clickOnMap();
 });
 
+When('я выделяю область с центра карты к шкале отображения масштаба', async function () {
+  await mapBlock.dragAndDropFromMapCenterToMapScaleBar();
+});
+
 When(
   'я перехожу на карту к объекту с id:{string} в созданном слое по ссылке с зумом {int} и центром {int},{int}',
   async function (this: ScenarioScope, id: string, zoom: number, center1: number, center2: number) {

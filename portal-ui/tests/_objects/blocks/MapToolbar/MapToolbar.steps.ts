@@ -11,3 +11,8 @@ When('в панели инструментов на карте я нажимаю
   await mapToolbarBlock.clickCancelSelectionBtn();
   await mapBlock.moveToMap(); // уводим курсор, чтобы не вылазил тултип
 });
+
+When('в панели инструментов на карте я нажимаю на кнопку `Выделение рамкой`', async () => {
+  await mapToolbarBlock.clickSelectMultipleBtn();
+  await mapBlock.moveToMap(); // уводим курсор, чтобы не вылазил тултип
+});
