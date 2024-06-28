@@ -16,6 +16,10 @@ SET class_rule =
   "title": "Схема для тестов",
   "description": "Схема для тестов",
   "tableName": "test_table",
+  "tags": [
+    "system",
+    "Тестовые"
+  ],
   "properties": [
     {
       "name": "objectname",
@@ -103,6 +107,10 @@ SET class_rule =
   "readOnly": true,
   "tableName": "advertising_point_simf_2022",
   "originName": "advertising_point_simf_2022",
+  "tags": [
+    "system",
+    "Тестовые"
+  ],
   "properties": [
     {
       "name": "classid",
