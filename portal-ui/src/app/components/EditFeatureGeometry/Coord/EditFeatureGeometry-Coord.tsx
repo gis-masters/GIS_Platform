@@ -85,7 +85,7 @@ export class EditFeatureGeometryCoord extends Component<EditFeatureGeometryCoord
   private handleChangeX(e: React.ChangeEvent<HTMLInputElement>) {
     const { val, onChange, index } = this.props;
     val[0] = e.target.value;
-    if (index) {
+    if (index || index === 0) {
       onChange(val, index);
     }
     this.drawFocusedPointMarker();
@@ -95,7 +95,7 @@ export class EditFeatureGeometryCoord extends Component<EditFeatureGeometryCoord
   private handleChangeY(e: React.ChangeEvent<HTMLInputElement>) {
     const { val, onChange, index } = this.props;
     val[1] = e.target.value;
-    if (index) {
+    if (index || index === 0) {
       onChange(val, index);
     }
     this.drawFocusedPointMarker();

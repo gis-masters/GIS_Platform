@@ -46,7 +46,7 @@ When(
   }
 );
 
-When('в форме редактирования объекта я нажимаю кнопку Сохранить', async function () {
+When('в форме редактирования объекта я нажимаю кнопку `Сохранить`', async function () {
   await editFeatureBlock.clickSaveButton();
 });
 
