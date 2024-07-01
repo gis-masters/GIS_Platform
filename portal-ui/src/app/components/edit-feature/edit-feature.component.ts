@@ -336,7 +336,9 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
   }
 
   async ngOnDestroy() {
-    await mapService.highlightFeatures(mapStore.highlightedFeatures);
+    if (currentProject.visibleOnMapLayers.length) {
+      await mapService.highlightFeatures(mapStore.highlightedFeatures);
+    }
   }
 
   async editFeature(): Promise<void> {
