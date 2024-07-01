@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.*;
 import ru.mycrg.auth_facade.IAuthenticationFacade;
 import ru.mycrg.common_contracts.generated.SpatialReferenceSystem;
 import ru.mycrg.data_service.exceptions.BadRequestException;
-import ru.mycrg.data_service.service.SpatialReferenceSystemService;
 import ru.mycrg.data_service.service.cqrs.srs.requests.AddCustomSrsRequest;
+import ru.mycrg.data_service.service.srs.SpatialReferenceSystemService;
 import ru.mycrg.data_service.validators.ecql.EcqlFilter;
 import ru.mycrg.mediator.Mediator;
 

@@ -7,7 +7,7 @@ import ru.mycrg.common_contracts.generated.SpatialReferenceSystem;
 import ru.mycrg.mediator.IRequest;
 
 import static ru.mycrg.data_service.dto.ResourceType.TABLE;
-import static ru.mycrg.data_service.service.SpatialReferenceSystemService.spatialTableQualifier;
+import static ru.mycrg.data_service.service.srs.SpatialReferenceSystemService.spatialTableQualifier;
 import static ru.mycrg.data_service.util.JsonConverter.mapper;
 
 public class AddCustomSrsRequest implements IRequest<SpatialReferenceSystem>, Auditable {

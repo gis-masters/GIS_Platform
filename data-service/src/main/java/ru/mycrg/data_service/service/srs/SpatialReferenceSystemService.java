@@ -1,4 +1,4 @@
-package ru.mycrg.data_service.service;
+package ru.mycrg.data_service.service.srs;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -1,12 +1,15 @@
 package ru.mycrg.data_service.service.cqrs.srs.handlers;
 
 import mil.nga.crs.util.proj.ProjParser;
+import org.apache.commons.lang3.StringUtils;
+import org.geotools.referencing.CRS;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.core.MessageBuilder;
 import org.springframework.amqp.core.MessageProperties;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import ru.mycrg.auth_facade.IAuthenticationFacade;
 import ru.mycrg.common_contracts.generated.SpatialReferenceSystem;
 import ru.mycrg.data_service.dao.SpatialReferenceSystemsDao;
@@ -24,6 +27,8 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static ru.mycrg.data_service.config.CrgCommonConfig.DEFAULT_CONTENT_TYPE;
+import static ru.mycrg.data_service.service.srs.SrsUtils.addAuthority;
+import static ru.mycrg.data_service.service.srs.SrsUtils.replaceAuthority;
 import static ru.mycrg.data_service.util.DetailedLogger.logError;
 import static ru.mycrg.data_service.util.JsonConverter.asJsonString;
 
@@ -48,25 +53,92 @@ public class AddCustomSrsRequestHandler implements IRequestHandler<AddCustomSrsR
     }
 
     @Override
+    @Transactional
     public SpatialReferenceSystem handle(AddCustomSrsRequest request) {
         SpatialReferenceSystem newSrs = request.getSrs();
+        newSrs.setSrtext(StringUtils.normalizeSpace(newSrs.getSrtext()));
 
-        addToPostgisAndValidate(newSrs);
+        // Заменить или добавить authority в WKT
+        try {
+            Optional<String> oAuthName = Optional.ofNullable(
+                    CRS.parseWKT(newSrs.getSrtext())
+                       .getCoordinateSystem()
+                       .getName()
+                       .getCodeSpace());
 
-        Optional<?> result = addToGeoserver(newSrs);
-        if (result.isEmpty()) {
-            log.info("Не удалось добавить проекцию: [{}] на геосервер, выполняем откат", newSrs);
+            if (oAuthName.isPresent()) {
+                // Заменить authority в строке WKT
 
-            try {
-                srsDao.removeSrs(newSrs.getAuthSrid());
-            } catch (CrgDaoException e) {
-                log.error("Не удалось удалить проекцию: [{}] => {}", newSrs, e.getMessage());
+                newSrs.setAuthName(oAuthName.get());
+            } else {
+                // Добавить authority
+
+                newSrs.setAuthName("NEED_ADD_AUTHORITY");
             }
+        } catch (Exception e) {
+            logError("Проекция не прошла проверку", e);
+            List<ErrorInfo> errors = List.of(new ErrorInfo("srtext", e.getMessage()));
+
+            throw new BadRequestException("Задана не корректная проекция", errors);
+        }
+
+        // Проверяем проекцию и выводим из wkt proj4 строку.
+        try {
+            newSrs.setProj4Text(ProjParser.paramsText(newSrs.getSrtext()));
+        } catch (Exception e) {
+            logError("Проекция не прошла проверку", e);
+            List<ErrorInfo> errors = List.of(new ErrorInfo("srtext", e.getMessage()));
+
+            throw new BadRequestException("Задана не корректная проекция", errors);
+        }
+
+        // Сохранили в БД - получили id
+        addToPostgis(newSrs);
+
+        // Заменим или добавим в строку WKT authority и вывести новый proj4 строку
+        SpatialReferenceSystem finalSrs = prepareFinalSrs(newSrs);
+
+        try {
+            srsDao.update(finalSrs);
+        } catch (CrgDaoException e) {
+            throw new DataServiceException("Не удалось обновить проекцию => " + e.getMessage());
+        }
+
+        // На геосервер
+        Optional<?> result = addToGeoserver(finalSrs);
+        if (result.isEmpty()) {
+            log.info("Не удалось добавить проекцию: [{}] на геосервер", finalSrs);
 
             throw new DataServiceException("Не удалось добавить проекцию");
         }
 
-        return newSrs;
+        return finalSrs;
+    }
+
+    private SpatialReferenceSystem prepareFinalSrs(SpatialReferenceSystem newSrs) {
+        SpatialReferenceSystem finalSrs = new SpatialReferenceSystem();
+        finalSrs.setAuthSrid(newSrs.getAuthSrid());
+
+        String finalWkt;
+        if (newSrs.getAuthName().equals("NEED_ADD_AUTHORITY")) {
+            finalWkt = addAuthority(newSrs.getSrtext(), "EPSG", newSrs.getAuthSrid()).orElseThrow();
+        } else {
+            finalWkt = replaceAuthority(newSrs.getSrtext(), "EPSG", newSrs.getAuthSrid()).orElseThrow();
+        }
+
+        finalSrs.setAuthName("EPSG");
+        finalSrs.setSrtext(finalWkt);
+
+        try {
+            finalSrs.setProj4Text(ProjParser.paramsText(finalWkt));
+        } catch (Exception e) {
+            logError("Проекция не прошла проверку", e);
+            List<ErrorInfo> errors = List.of(new ErrorInfo("srtext", e.getMessage()));
+
+            throw new BadRequestException("Задана не корректная проекция", errors);
+        }
+
+        return finalSrs;
     }
 
     private Optional<?> addToGeoserver(SpatialReferenceSystem newSrs) {
@@ -90,11 +162,12 @@ public class AddCustomSrsRequestHandler implements IRequestHandler<AddCustomSrsR
 
         if (responseCorrelationId.equals(requestCorrelationId)) {
             String responseAsString = new String(response.getBody());
-
             if ("SUCCESS".equals(responseAsString)) {
                 log.debug("Проекция: [{}] успешно добавлена на геосервер", newSrs);
 
                 return Optional.of(Boolean.TRUE);
+            } else {
+                log.error("Geoserver response body: [{}]", responseAsString);
             }
         } else {
             log.debug("Не совпал correlationId - не наше сообщение");
@@ -103,7 +176,7 @@ public class AddCustomSrsRequestHandler implements IRequestHandler<AddCustomSrsR
         return Optional.empty();
     }
 
-    public void addToPostgisAndValidate(SpatialReferenceSystem newSrs) {
+    private void addToPostgis(SpatialReferenceSystem newSrs) {
         // Присваиваем идентификатор
         Integer requestedAuthSrid = newSrs.getAuthSrid();
         if (requestedAuthSrid != null) {
@@ -116,16 +189,6 @@ public class AddCustomSrsRequestHandler implements IRequestHandler<AddCustomSrsR
                                  .orElseThrow(() -> new DataServiceException(
                                          "Не удалось найти свободный идентификатор в таблице spatial_ref_sys"));
             newSrs.setAuthSrid(srid);
-        }
-
-        // Проверяем проекцию и выводим из wkt proj4 строку.
-        try {
-            newSrs.setProj4Text(ProjParser.paramsText(newSrs.getSrtext()));
-        } catch (Exception e) {
-            logError("Проекция не прошла проверку", e);
-            List<ErrorInfo> errors = List.of(new ErrorInfo("srtext", e.getMessage()));
-
-            throw new BadRequestException("Задана не корректная проекция", errors);
         }
 
         // Сохраняем проекцию

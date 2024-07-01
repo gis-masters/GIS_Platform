@@ -10,7 +10,7 @@ import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
 
 import java.util.Optional;
 
-import static ru.mycrg.data_service.service.SpatialReferenceSystemService.spatialTableQualifier;
+import static ru.mycrg.data_service.service.srs.SpatialReferenceSystemService.spatialTableQualifier;
 
 @Repository
 public class SpatialReferenceSystemsDao {
@@ -24,6 +24,26 @@ public class SpatialReferenceSystemsDao {
                                       BaseWriteDao baseWriteDao) {
         this.coreReadDao = coreReadDao;
         this.baseWriteDao = baseWriteDao;
+    }
+
+    public void update(SpatialReferenceSystem srs) throws CrgDaoException {
+        try {
+            MapSqlParameterSource parameterSource = new MapSqlParameterSource();
+            parameterSource.addValue("srid", srs.getAuthSrid());
+            parameterSource.addValue("authName", srs.getAuthName());
+            parameterSource.addValue("srtext", srs.getSrtext());
+            parameterSource.addValue("proj4text", srs.getProj4Text());
+
+            String query = "UPDATE public.spatial_ref_sys " +
+                    " SET srtext = :srtext, " +
+                    "     proj4text = :proj4text," +
+                    "     auth_name = :authName" +
+                    " WHERE srid = :srid";
+
+            baseWriteDao.update(query, parameterSource);
+        } catch (Exception e) {
+            throw new CrgDaoException(e.getMessage());
+        }
     }
 
     public void addSrs(SpatialReferenceSystem srs) throws CrgDaoException {
