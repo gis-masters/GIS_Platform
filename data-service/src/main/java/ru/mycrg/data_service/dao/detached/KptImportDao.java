@@ -140,7 +140,7 @@ public class KptImportDao {
 
     public void deduplicateData(String dbName,
                                 ResourceQualifier tableQualifier,
-                                String groupByProperty) {
+                                String targetProperty) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(datasourceFactory.getNamedDataSource(dbName, DS_ID));
 
         String query = String.format(
@@ -150,7 +150,7 @@ public class KptImportDao {
                         "FROM %1$s b " +
                         "WHERE a.%2$s = b.%2$s " +
                         "AND a.created_at < b.created_at)",
-                tableQualifier.getTableQualifier(), groupByProperty);
+                tableQualifier.getTableQualifier(), targetProperty);
 
         log.debug("Запрос для KPT удаляющий дубли: [{}]", query);
 

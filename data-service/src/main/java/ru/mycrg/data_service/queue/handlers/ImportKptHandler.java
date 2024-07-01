@@ -79,8 +79,6 @@ public class ImportKptHandler implements IEventHandler {
     private static final int BATCH_INSERT_SIZE = 200;
 
     private static final String KVARTAL_SCHEMA = "kvartal_kpt";
-    private static final String CADASTRALNUM_PROPERTY = "cadastralnum";
-    private static final String REGNUMBORD_PROPERTY = "regnumbord";
 
     private final XMLInputFactory xmlInputFactory;
     private final KptValidator kptValidator;
@@ -568,24 +566,42 @@ public class ImportKptHandler implements IEventHandler {
     private void deduplicateData(String dbName,
                                  ResourceQualifier qualifier,
                                  SchemaDto schema) {
-        List<String> properties = schema.getProperties().stream()
-                                        .map(SimplePropertyDto::getName)
-                                        .collect(Collectors.toList());
-        boolean hasCadastralnum = properties.stream().anyMatch(CADASTRALNUM_PROPERTY::equals);
-        boolean hasRegnumbodr = properties.stream().anyMatch(REGNUMBORD_PROPERTY::equals);
-
-        if (!hasCadastralnum && !hasRegnumbodr) {
-            log.error("Невозможно дедуплицировать строки для таблицы: '{}' - нет полей cadastralnum/regnumbord для " +
-                              "группировки", qualifier);
-            return;
-        }
-
-        String groupByProperty = hasCadastralnum ? CADASTRALNUM_PROPERTY : REGNUMBORD_PROPERTY;
-
         try {
-            kptImportDao.deduplicateData(dbName, qualifier, groupByProperty);
+            Optional<String> oKey = getKeyForDeduplication(schema.getProperties());
+            if (oKey.isEmpty()) {
+                log.warn("Дедупликация НЕ БУДЕТ ВЫПОЛНЕНА для таблицы: '{}' => не найдено ключевых полей.",
+                         qualifier.getQualifier());
+
+                return;
+            }
+
+            kptImportDao.deduplicateData(dbName, qualifier, oKey.get());
         } catch (Exception e) {
-            log.error("Ошибка дедупликации данных!", e);
+            log.error("Не удалось выполнить дедупликацию для таблицы: '{}' => {}",
+                      qualifier.getQualifier(), e.getMessage(), e);
+        }
+    }
+
+    private static Optional<String> getKeyForDeduplication(List<SimplePropertyDto> properties) {
+        List<String> propertyNames = properties.stream()
+                                               .map(SimplePropertyDto::getName)
+                                               .collect(Collectors.toList());
+
+        String regnumbord = "regnumbord";
+        String regnumborder = "regnumborder";
+        String cadastralnum = "cadastralnum";
+        String municipalityBoundariesEgrn = "municipality_boundaries_egrn";
+
+        if (propertyNames.contains(regnumbord)) {
+            return Optional.of(regnumbord);
+        } else if (propertyNames.contains(regnumborder)) {
+            return Optional.of(regnumborder);
+        } else if (propertyNames.contains(cadastralnum)) {
+            return Optional.of(cadastralnum);
+        } else if (propertyNames.contains(municipalityBoundariesEgrn)) {
+            return Optional.of(municipalityBoundariesEgrn);
+        } else {
+            return Optional.empty();
         }
     }
 
