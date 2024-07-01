@@ -34,5 +34,5 @@ docker compose -f ../docker-compose.dev.yml -f ../docker-compose.yml --env-file 
 ./wait.sh
 
 pushd ../assets/migration-scripts/ || exit
-./uploadStylesFolder.sh
+./uploadStylesFolder.sh "admin@mail.ru" "Esterhazy2022"
 popd || exit

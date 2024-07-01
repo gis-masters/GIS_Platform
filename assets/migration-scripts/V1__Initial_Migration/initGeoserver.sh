@@ -5,7 +5,7 @@ TAB='    '
 echo -e "${TAB}"INIT GEOSERVER
 if [ ! -d ${GEOSERVER_DATA_DIR} ]; then
     echo -e "${TAB}  Catalog ${GEOSERVER_DATA_DIR} not exist, create."
-    mkdir -p ${GEOSERVER_DATA_DIR}
+    mkdir -m 777 -p ${GEOSERVER_DATA_DIR}
 fi
 if [[ $(ls -l ${GEOSERVER_DATA_DIR} | wc -l) -gt 1 ]]; then
     echo -e "${TAB}  ${GEOSERVER_DATA_DIR} is not empty. Do nothing."
