@@ -5,7 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import ru.mycrg.data_service.kpt_import.KptImportUtils;
-import ru.mycrg.data_service.kpt_import.geometry.ZuGeometryParser;
+import ru.mycrg.data_service.kpt_import.geometry_parsers.ZuGeometryParser;
 import ru.mycrg.data_service.kpt_import.model.ZuElement;
 import ru.mycrg.data_service.kpt_import.model.generated.*;
 
@@ -20,55 +20,59 @@ import static ru.mycrg.data_service.dao.config.DaoProperties.DEFAULT_GEOMETRY_CO
 public class ZuReader extends CommonKptXmlElementReader<ZuElement, LandRecord> {
 
     private static final Logger log = LoggerFactory.getLogger(ZuReader.class);
+
     private final ZuGeometryParser geometryParser;
 
     public ZuReader(ZuGeometryParser geometryParser) throws JAXBException {
         super(LandRecord.class, ZuElement.XML_TAG);
+
         this.geometryParser = geometryParser;
     }
 
     @Override
     public List<ZuElement> read(XMLStreamReader reader) {
-        LandRecord lr;
+        LandRecord land;
         try {
-            lr = unmarshall(reader);
+            land = unmarshall(reader);
         } catch (Exception ex) {
             log.warn("Ошибка чтения земельного участка!", ex);
+
             return Collections.emptyList();
         }
-        Map<String, Object> content = new HashMap<>();
-        String cadastralNumber = extractCadastralNumber(lr);
-        List<ContourZUZacrep> contours = extractContours(lr);
-        Optional<MultiPolygon> shape;
+
+        String cadastralNumber = land.getObject().getCommonData().getCadNumber();
+        Optional<MultiPolygon> oMultiPolygon;
         try {
-            shape = geometryParser.createMultiPolygon(contours);
+            oMultiPolygon = geometryParser.createMultiPolygon(extractContours(land));
+            if (oMultiPolygon.isEmpty()) {
+                return Collections.emptyList();
+            }
         } catch (Exception ex) {
-            log.warn("Ошибка парсинга геометрии для элемента с кадастровым номером {}: {}", cadastralNumber,
-                     ex.getMessage());
-            shape = Optional.empty();
+            log.warn("Ошибка парсинга геометрии для элемента с кадастровым номером {}: {}",
+                     cadastralNumber, ex.getMessage());
+
+            return Collections.emptyList();
         }
-        if (shape.isPresent()) {
-            //парсим только объекты с геометрией
-            content.put("cadastralnum", cadastralNumber);
-            content.put("num_zu", KptImportUtils.extractNumberFromCadastralNum(cadastralNumber));
-            content.put("usage", extractPermittedUsageByDocument(lr));
-            content.put("subtype", extractSubtype(lr));
-            content.put("category", extractCategory(lr));
-            content.put("readableaddress", extractReadableAddress(lr));
-            content.put("objecttype", extractObjectType(lr));
-            content.put("cost", extractCost(lr));
-            content.put(DEFAULT_GEOMETRY_COLUMN_NAME, shape.get());
-            content.put("area_doc_2", extractAreaDoc(lr));
-        }
+
+        Map<String, Object> content = new HashMap<>();
+        //парсим только объекты с геометрией
+        content.put("cadastralnum", cadastralNumber);
+        content.put("num_zu", KptImportUtils.extractNumberFromCadastralNum(cadastralNumber));
+        content.put("usage", extractPermittedUsageByDocument(land));
+        content.put("subtype", extractSubtype(land));
+        content.put("category", extractCategory(land));
+        content.put("readableaddress", extractReadableAddress(land));
+        content.put("objecttype", extractObjectType(land));
+        content.put("cost", extractCost(land));
+        content.put(DEFAULT_GEOMETRY_COLUMN_NAME, oMultiPolygon.get());
+        content.put("area_doc_2", extractAreaDoc(land));
+
         return Collections.singletonList(new ZuElement(content));
     }
 
-    private String extractCadastralNumber(LandRecord lr) {
-        return lr.getObject().getCommonData().getCadNumber();
-    }
-
     private String extractPermittedUsageByDocument(LandRecord lr) {
-        return Optional.ofNullable(lr.getParams().getPermittedUse()).map(AllowedUse::getPermittedUseEstablished)
+        return Optional.ofNullable(lr.getParams().getPermittedUse())
+                       .map(AllowedUse::getPermittedUseEstablished)
                        .map(PermittedUseEstablished::getByDocument).orElse(null);
     }
 
@@ -81,7 +85,8 @@ public class ZuReader extends CommonKptXmlElementReader<ZuElement, LandRecord> {
     }
 
     private String extractReadableAddress(LandRecord lr) {
-        return Optional.ofNullable(lr.getAddressLocation()).map(AddressLocationLand::getAddress)
+        return Optional.ofNullable(lr.getAddressLocation())
+                       .map(AddressLocationLand::getAddress)
                        .map(AddressMain::getReadableAddress).orElse(null);
     }
 
@@ -90,7 +95,9 @@ public class ZuReader extends CommonKptXmlElementReader<ZuElement, LandRecord> {
     }
 
     private BigDecimal extractCost(LandRecord lr) {
-        return Optional.ofNullable(lr.getCost()).map(Cost::getValue).orElse(null);
+        return Optional.ofNullable(lr.getCost())
+                       .map(Cost::getValue)
+                       .orElse(null);
     }
 
     private BigDecimal extractAreaDoc(LandRecord lr) {
@@ -98,7 +105,9 @@ public class ZuReader extends CommonKptXmlElementReader<ZuElement, LandRecord> {
     }
 
     private List<ContourZUZacrep> extractContours(LandRecord lr) {
-        return Optional.ofNullable(lr.getContoursLocation()).map(ContoursLocationZUZacrep::getContours)
-                       .map(ContoursZUZacrep::getContour).orElse(Collections.emptyList());
+        return Optional.ofNullable(lr.getContoursLocation())
+                       .map(ContoursLocationZUZacrep::getContours)
+                       .map(ContoursZUZacrep::getContour)
+                       .orElse(Collections.emptyList());
     }
 }

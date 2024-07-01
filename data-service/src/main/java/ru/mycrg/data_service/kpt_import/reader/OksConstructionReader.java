@@ -21,21 +21,21 @@ public class OksConstructionReader extends CommonKptXmlElementReader<OksConstruc
 
     public OksConstructionReader(OksConstructionElementFactory oksConstructionElementFactory) throws JAXBException {
         super(ConstructionRecord.class, OksConstructionElement.XML_TAG);
+
         this.oksConstructionElementFactory = oksConstructionElementFactory;
     }
 
     @Override
     public List<OksConstructionElement> read(XMLStreamReader reader) {
-        ConstructionRecord r;
+        ConstructionRecord record;
         try {
-            r = unmarshall(reader);
+            record = unmarshall(reader);
         } catch (Exception ex) {
-            log.warn("Ошибка чтения сооружения: " + ex.getMessage());
+            log.warn("Ошибка чтения сооружения: {}", ex.getMessage());
+
             return Collections.emptyList();
         }
 
-        return oksConstructionElementFactory.fromConstructionRecord(r);
+        return oksConstructionElementFactory.fromConstructionRecord(record);
     }
-
-
 }

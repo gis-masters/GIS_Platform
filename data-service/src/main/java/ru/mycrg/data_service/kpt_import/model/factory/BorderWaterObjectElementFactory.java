@@ -5,7 +5,7 @@ import org.postgis.MultiPolygon;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-import ru.mycrg.data_service.kpt_import.geometry.BoundGeometryParser;
+import ru.mycrg.data_service.kpt_import.geometry_parsers.BoundGeometryParser;
 import ru.mycrg.data_service.kpt_import.model.BorderWaterObjectElement;
 import ru.mycrg.data_service.kpt_import.model.BorderWaterObjectPolygonElement;
 import ru.mycrg.data_service.kpt_import.model.BorderWaterObjectPolylineElement;
@@ -50,12 +50,14 @@ public class BorderWaterObjectElementFactory {
         if (!polygonContours.isEmpty()) {
             Map<String, Object> content = buildContent(xmlRecord);
             parseMultiPolygon(polygonContours, content);
+
             result.add(new BorderWaterObjectPolygonElement(content));
         }
 
         if (!polylineContours.isEmpty()) {
             Map<String, Object> content = buildContent(xmlRecord);
             parseMultiLineString(polylineContours, content);
+
             result.add(new BorderWaterObjectPolylineElement(content));
         }
 
@@ -141,11 +143,12 @@ public class BorderWaterObjectElementFactory {
         }
 
         SpatialElementBound first = spatialElements.get(0);
+
         return isSpatialElementPolygon(first);
     }
 
     /**
-     * Если хотябы один spatialElement линейный, то контур считается линейным
+     * Если хотя бы один spatialElement линейный, то контур считается линейным
      */
     private boolean isPolylineContour(BoundContourOut contour) {
         if (contour == null) {
@@ -160,7 +163,7 @@ public class BorderWaterObjectElementFactory {
         return spatialElements.stream().anyMatch(geometryParser::isSpatialElementPolyline);
     }
 
-    protected Map<String, Object> buildContent(CoastlineBoundariesType.CoastlineRecord xmlRecord) {
+    private Map<String, Object> buildContent(CoastlineBoundariesType.CoastlineRecord xmlRecord) {
         Optional<Bobject> bobject = extractBObject(xmlRecord);
         Optional<Water> water = extractWater(xmlRecord);
 

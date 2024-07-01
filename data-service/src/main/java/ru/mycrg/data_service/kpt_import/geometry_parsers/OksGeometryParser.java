@@ -1,4 +1,4 @@
-package ru.mycrg.data_service.kpt_import.geometry;
+package ru.mycrg.data_service.kpt_import.geometry_parsers;
 
 import org.postgis.*;
 import org.springframework.stereotype.Component;
@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static ru.mycrg.data_service.kpt_import.KptImportUtils.SRID;
 import static ru.mycrg.data_service.kpt_import.KptImportUtils.hasDifferentOrdinates;
 
 @Component
@@ -25,19 +24,69 @@ public class OksGeometryParser {
 
         List<Polygon> polygons = new LinkedList<>();
         for (SpatialElementOKSOut spEl: spatialElements) {
-            Optional<Polygon> polygon = createPolygon(spEl);
-            polygon.ifPresent(polygons::add);
+            createPolygon(spEl).ifPresent(polygons::add);
         }
 
-        if (!polygons.isEmpty()) {
-            MultiPolygon mp = new MultiPolygon(polygons.toArray(Polygon[]::new));
-            mp.setSrid(SRID);
-            return Optional.of(mp);
-        }
-        return Optional.empty();
+        return polygons.isEmpty()
+                ? Optional.empty()
+                : Optional.of(new MultiPolygon(polygons.toArray(Polygon[]::new)));
     }
 
-    public Optional<Polygon> createPolygon(SpatialElementOKSOut spatialElement) {
+    public Optional<MultiLineString> createMultilineString(List<SpatialElementOKSOut> spatialElementOKSOuts) {
+        if (spatialElementOKSOuts == null || spatialElementOKSOuts.isEmpty()) {
+            return Optional.empty();
+        }
+
+        List<LineString> lineStrings = spatialElementOKSOuts.stream()
+                                                            .map(spEl -> createLineString(extractOrdinates(spEl)))
+                                                            .filter(Optional::isPresent)
+                                                            .map(Optional::get)
+                                                            .collect(Collectors.toList());
+
+        if (lineStrings.isEmpty()) {
+            return Optional.empty();
+        }
+
+        return Optional.of(new MultiLineString(lineStrings.toArray(LineString[]::new)));
+    }
+
+    public Optional<MultiPoint> createMultiPoint(List<SpatialElementOKSOut> spatialElementOKSOuts) {
+        if (spatialElementOKSOuts == null || spatialElementOKSOuts.isEmpty()) {
+            return Optional.empty();
+        }
+
+        List<Point> points = spatialElementOKSOuts.stream()
+                                                  .map(spEl -> createPoint(extractOrdinates(spEl)))
+                                                  .filter(Optional::isPresent)
+                                                  .map(Optional::get)
+                                                  .collect(Collectors.toList());
+
+        return Optional.of(new MultiPoint(points.toArray(Point[]::new)));
+    }
+
+    private Optional<Point> createPoint(List<OrdinateOKSOut> ordinates) {
+        if (ordinates == null || ordinates.isEmpty()) {
+            return Optional.empty();
+        }
+
+        return createPoint(ordinates.get(0));
+    }
+
+    private Optional<Point> createPoint(OrdinateOKSOut ordinate) {
+        if (ordinate.getX() == null || ordinate.getY() == null) {
+            return Optional.empty();
+        }
+
+        return Optional.of(new Point(ordinate.getY().doubleValue(), ordinate.getX().doubleValue()));
+    }
+
+    private List<OrdinateOKSOut> extractOrdinates(SpatialElementOKSOut spatialElement) {
+        return Optional.ofNullable(spatialElement.getOrdinates())
+                       .map(OrdinatesOKSOut::getOrdinate)
+                       .orElse(Collections.emptyList());
+    }
+
+    private Optional<Polygon> createPolygon(SpatialElementOKSOut spatialElement) {
         if (spatialElement == null) {
             return Optional.empty();
         }
@@ -60,28 +109,7 @@ public class OksGeometryParser {
         return Optional.of(new Polygon(new LinearRing[]{linearRing}));
     }
 
-    public Optional<MultiLineString> createMultilineString(List<SpatialElementOKSOut> spatialElementOKSOuts) {
-        if (spatialElementOKSOuts == null || spatialElementOKSOuts.isEmpty()) {
-            return Optional.empty();
-        }
-
-        List<LineString> lineStrings = spatialElementOKSOuts.stream()
-                                                            .map(spEl -> createLineString(extractOrdinates(spEl)))
-                                                            .filter(Optional::isPresent)
-                                                            .map(Optional::get)
-                                                            .collect(Collectors.toList());
-
-        if (lineStrings.isEmpty()) {
-            return Optional.empty();
-        }
-
-        MultiLineString multiLineString = new MultiLineString(lineStrings.toArray(LineString[]::new));
-        multiLineString.setSrid(SRID);
-
-        return Optional.of(multiLineString);
-    }
-
-    public Optional<LineString> createLineString(List<OrdinateOKSOut> ordinates) {
+    private Optional<LineString> createLineString(List<OrdinateOKSOut> ordinates) {
         if (ordinates == null || ordinates.isEmpty()) {
             return Optional.empty();
         }
@@ -95,44 +123,7 @@ public class OksGeometryParser {
         if (ordinates.size() != points.size()) {
             return Optional.empty();
         }
+
         return Optional.of(new LineString(points.toArray(Point[]::new)));
-    }
-
-    public Optional<MultiPoint> createMultiPoint(List<SpatialElementOKSOut> spatialElementOKSOuts) {
-        if (spatialElementOKSOuts == null || spatialElementOKSOuts.isEmpty()) {
-            return Optional.empty();
-        }
-
-        List<Point> points = spatialElementOKSOuts.stream()
-                                                  .map(spEl -> createPoint(extractOrdinates(spEl)))
-                                                  .filter(Optional::isPresent)
-                                                  .map(Optional::get)
-                                                  .collect(Collectors.toList());
-        MultiPoint multiPoint = new MultiPoint(points.toArray(Point[]::new));
-        multiPoint.setSrid(SRID);
-
-        return Optional.of(multiPoint);
-    }
-
-    public Optional<Point> createPoint(List<OrdinateOKSOut> ordinates) {
-        if (ordinates == null || ordinates.isEmpty()) {
-            return Optional.empty();
-        }
-
-        return createPoint(ordinates.get(0));
-    }
-
-    public Optional<Point> createPoint(OrdinateOKSOut ordinate) {
-        if (ordinate.getX() == null || ordinate.getY() == null) {
-            return Optional.empty();
-        }
-
-        return Optional.of(new Point(ordinate.getY().doubleValue(), ordinate.getX().doubleValue()));
-    }
-
-    List<OrdinateOKSOut> extractOrdinates(SpatialElementOKSOut spatialElement) {
-        return Optional.ofNullable(spatialElement.getOrdinates())
-                       .map(OrdinatesOKSOut::getOrdinate)
-                       .orElse(Collections.emptyList());
     }
 }

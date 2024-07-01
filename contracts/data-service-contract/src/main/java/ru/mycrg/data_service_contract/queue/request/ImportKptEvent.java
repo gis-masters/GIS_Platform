@@ -1,7 +1,7 @@
 package ru.mycrg.data_service_contract.queue.request;
 
 import ru.mycrg.data_service_contract.dto.ImportSourceFileDto;
-import ru.mycrg.data_service_contract.dto.import_.KptImportTableDto;
+import ru.mycrg.data_service_contract.dto.import_.ImportKptTableDto;
 import ru.mycrg.data_service_contract.dto.import_.KptImportValidationSettings;
 import ru.mycrg.messagebus_contract.events.DefaultMessageBusRequestEvent;
 
@@ -10,42 +10,40 @@ import java.util.UUID;
 
 import static ru.mycrg.messagebus_contract.MessageBusProperties.IMPORT_KPT_TASK_QUEUE;
 
-public class KptImportXmlRequestEvent extends DefaultMessageBusRequestEvent {
+public class ImportKptEvent extends DefaultMessageBusRequestEvent {
+
+    private String dbName;
 
     /**
      * Список файлов для импорта
      */
     private List<ImportSourceFileDto> sourceFiles;
+
     /**
-     * Название БД, куда должен быть выполнен импорт
+     * Таблицы, в которые будет выполнен импорт.
      */
-    private String dbName;
-    /**
-     * Таблицы, в которые будет выполнен импорт. Key=Название таблицы, value=схема таблицы
-     */
-    private List<KptImportTableDto> tables;
+    private List<ImportKptTableDto> tables;
+
     private String initiatorLogin;
-    /**
-     * Идентификатор проекта
-     */
-    private long projectId;
     private long taskId;
+
     /**
      * Настройки валидации
      */
     private KptImportValidationSettings validationSettings;
 
-    public KptImportXmlRequestEvent() {
+    public ImportKptEvent() {
         super();
     }
 
-    public KptImportXmlRequestEvent(List<ImportSourceFileDto> sourceFiles,
-                                    String dbName,
-                                    List<KptImportTableDto> tables,
-                                    String initiatorLogin,
-                                    long taskId,
-                                    KptImportValidationSettings validationSettings) {
+    public ImportKptEvent(List<ImportSourceFileDto> sourceFiles,
+                          String dbName,
+                          List<ImportKptTableDto> tables,
+                          String initiatorLogin,
+                          long taskId,
+                          KptImportValidationSettings validationSettings) {
         super(UUID.randomUUID(), IMPORT_KPT_TASK_QUEUE);
+
         this.sourceFiles = sourceFiles;
         this.dbName = dbName;
         this.tables = tables;
@@ -62,7 +60,7 @@ public class KptImportXmlRequestEvent extends DefaultMessageBusRequestEvent {
         return dbName;
     }
 
-    public List<KptImportTableDto> getTables() {
+    public List<ImportKptTableDto> getTables() {
         return tables;
     }
 
@@ -78,7 +76,7 @@ public class KptImportXmlRequestEvent extends DefaultMessageBusRequestEvent {
         this.dbName = dbName;
     }
 
-    public void setTables(List<KptImportTableDto> tables) {
+    public void setTables(List<ImportKptTableDto> tables) {
         this.tables = tables;
     }
 

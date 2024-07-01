@@ -18,6 +18,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static ru.mycrg.data_service.config.CrgCommonConfig.DEFAULT_EPSG_METRE;
+import static ru.mycrg.data_service.dao.config.DaoProperties.DEFAULT_GEOMETRY_COLUMN_NAME;
 
 public class GmlParserTest {
 
@@ -62,7 +63,7 @@ public class GmlParserTest {
         SimplePropertyDto status = new SimplePropertyDto();
         status.setName("STATUS");
         SimplePropertyDto shape = new SimplePropertyDto();
-        shape.setName("shape");
+        shape.setName(DEFAULT_GEOMETRY_COLUMN_NAME);
 
         SchemaDto schemaDto = new SchemaDto();
         schemaDto.setName("engprotectionzone");
@@ -84,9 +85,10 @@ public class GmlParserTest {
         assertFalse(parseAttributes.getObjects().isEmpty());
         assertEquals(schema.getOriginName(), parseAttributes.getName());
         for (FeatureObject featureObject: parseAttributes.getObjects()) {
-            boolean shapeExist = featureObject.getProperties()
-                                              .stream()
-                                              .anyMatch(featureProperty -> featureProperty.getName().equals("shape"));
+            boolean shapeExist = featureObject
+                    .getProperties()
+                    .stream()
+                    .anyMatch(featureProperty -> featureProperty.getName().equals(DEFAULT_GEOMETRY_COLUMN_NAME));
             assertTrue(shapeExist);
         }
     }
@@ -102,9 +104,10 @@ public class GmlParserTest {
         assertFalse(parseAttributes.getObjects().isEmpty());
         assertEquals(schema.getOriginName(), parseAttributes.getName());
         for (FeatureObject featureObject: parseAttributes.getObjects()) {
-            boolean shapeExist = featureObject.getProperties()
-                                              .stream()
-                                              .anyMatch(featureProperty -> featureProperty.getName().equals("shape"));
+            boolean shapeExist = featureObject
+                    .getProperties()
+                    .stream()
+                    .anyMatch(featureProperty -> featureProperty.getName().equals(DEFAULT_GEOMETRY_COLUMN_NAME));
             assertTrue(shapeExist);
         }
     }
@@ -120,9 +123,10 @@ public class GmlParserTest {
         assertFalse(parseAttributes.getObjects().isEmpty());
         assertEquals(schema.getOriginName(), parseAttributes.getName());
         for (FeatureObject featureObject: parseAttributes.getObjects()) {
-            boolean shapeExist = featureObject.getProperties()
-                                              .stream()
-                                              .anyMatch(featureProperty -> featureProperty.getName().equals("shape"));
+            boolean shapeExist = featureObject
+                    .getProperties()
+                    .stream()
+                    .anyMatch(featureProperty -> featureProperty.getName().equals(DEFAULT_GEOMETRY_COLUMN_NAME));
             assertTrue(shapeExist);
         }
     }
@@ -138,9 +142,10 @@ public class GmlParserTest {
         assertFalse(parseAttributes.getObjects().isEmpty());
         assertEquals(schema.getOriginName(), parseAttributes.getName());
         for (FeatureObject featureObject: parseAttributes.getObjects()) {
-            boolean shapeExist = featureObject.getProperties()
-                                              .stream()
-                                              .anyMatch(featureProperty -> featureProperty.getName().equals("shape"));
+            boolean shapeExist = featureObject
+                    .getProperties()
+                    .stream()
+                    .anyMatch(featureProperty -> featureProperty.getName().equals(DEFAULT_GEOMETRY_COLUMN_NAME));
             assertTrue(shapeExist);
         }
     }
@@ -156,9 +161,10 @@ public class GmlParserTest {
         assertFalse(parseAttributes.getObjects().isEmpty());
         assertEquals(schema.getOriginName(), parseAttributes.getName());
         for (FeatureObject featureObject: parseAttributes.getObjects()) {
-            boolean shapeExist = featureObject.getProperties()
-                                              .stream()
-                                              .anyMatch(featureProperty -> featureProperty.getName().equals("shape"));
+            boolean shapeExist = featureObject
+                    .getProperties()
+                    .stream()
+                    .anyMatch(featureProperty -> featureProperty.getName().equals(DEFAULT_GEOMETRY_COLUMN_NAME));
             assertTrue(shapeExist);
         }
     }
@@ -174,9 +180,10 @@ public class GmlParserTest {
         assertFalse(parseAttributes.getObjects().isEmpty());
         assertEquals(schema.getOriginName(), parseAttributes.getName());
         for (FeatureObject featureObject: parseAttributes.getObjects()) {
-            boolean shapeExist = featureObject.getProperties()
-                                              .stream()
-                                              .anyMatch(featureProperty -> featureProperty.getName().equals("shape"));
+            boolean shapeExist = featureObject
+                    .getProperties()
+                    .stream()
+                    .anyMatch(featureProperty -> featureProperty.getName().equals(DEFAULT_GEOMETRY_COLUMN_NAME));
             assertTrue(shapeExist);
         }
     }
@@ -192,9 +199,10 @@ public class GmlParserTest {
         assertFalse(parseAttributes.getObjects().isEmpty());
         assertEquals(schema.getOriginName(), parseAttributes.getName());
         for (FeatureObject featureObject: parseAttributes.getObjects()) {
-            boolean shapeExist = featureObject.getProperties()
-                                              .stream()
-                                              .anyMatch(featureProperty -> featureProperty.getName().equals("shape"));
+            boolean shapeExist = featureObject
+                    .getProperties()
+                    .stream()
+                    .anyMatch(featureProperty -> featureProperty.getName().equals(DEFAULT_GEOMETRY_COLUMN_NAME));
             assertTrue(shapeExist);
         }
     }

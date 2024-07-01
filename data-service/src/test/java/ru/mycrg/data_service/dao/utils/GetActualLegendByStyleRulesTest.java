@@ -11,6 +11,7 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static ru.mycrg.data_service.config.CrgCommonConfig.DEFAULT_SRID_DEGREE;
+import static ru.mycrg.data_service.dao.config.DaoProperties.DEFAULT_GEOMETRY_COLUMN_NAME;
 import static ru.mycrg.data_service.dao.config.DaoProperties.RULE_ID;
 import static ru.mycrg.data_service.dao.utils.query_builder.QueryBuilder.buildSelectOneQueryWithBbox;
 import static ru.mycrg.data_service.dao.utils.query_builder.QueryBuilder.buildSelectQueryWithBbox;
@@ -85,7 +86,7 @@ public class GetActualLegendByStyleRulesTest {
 
         SpatialRuleFilter bboxFilter = new SpatialRuleFilter();
         bboxFilter.setOperator(SpacialRuleOperator.INTERSECTS);
-        bboxFilter.setPropertyName("shape");
+        bboxFilter.setPropertyName(DEFAULT_GEOMETRY_COLUMN_NAME);
         bboxFilter.setLiteral(literal);
 
         return bboxFilter;

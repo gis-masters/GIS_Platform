@@ -1,4 +1,4 @@
-package ru.mycrg.data_service.kpt_import.geometry;
+package ru.mycrg.data_service.kpt_import.geometry_parsers;
 
 import org.postgis.LinearRing;
 import org.postgis.MultiPolygon;
@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static ru.mycrg.data_service.kpt_import.KptImportUtils.SRID;
 import static ru.mycrg.data_service.kpt_import.KptImportUtils.hasDifferentOrdinates;
 
 @Component
@@ -28,21 +27,37 @@ public class ZuGeometryParser {
         for (ContourZUZacrep contour: contours) {
             List<SpatialElementZacrep> spatialElements = extractSpatialElements(contour);
             if (!spatialElements.isEmpty()) {
-                Optional<Polygon> polygon = createPolygon(spatialElements);
-                polygon.ifPresent(polygons::add);
+                createPolygon(spatialElements).ifPresent(polygons::add);
             }
         }
 
-        if (!polygons.isEmpty()) {
-            MultiPolygon mp = new MultiPolygon(polygons.toArray(Polygon[]::new));
-            mp.setSrid(SRID);
-            return Optional.of(mp);
-        } else {
-            return Optional.empty();
-        }
+        return polygons.isEmpty()
+                ? Optional.empty()
+                : Optional.of(new MultiPolygon(polygons.toArray(Polygon[]::new)));
     }
 
-    public Optional<Polygon> createPolygon(List<SpatialElementZacrep> spatialElements) {
+    private Optional<Point> createPoint(OrdinateZacrep ordinate) {
+        if (ordinate.getX() == null || ordinate.getY() == null) {
+            return Optional.empty();
+        }
+
+        return Optional.of(new Point(ordinate.getY().doubleValue(), ordinate.getX().doubleValue()));
+    }
+
+    private List<SpatialElementZacrep> extractSpatialElements(ContourZUZacrep contour) {
+        return Optional.ofNullable(contour.getEntitySpatial())
+                       .map(EntitySpatialZUZacrep::getSpatialsElements)
+                       .map(SpatialsElementsZacrep::getSpatialElement)
+                       .orElse(Collections.emptyList());
+    }
+
+    private List<OrdinateZacrep> extractOrdinates(SpatialElementZacrep spatialElement) {
+        return Optional.ofNullable(spatialElement.getOrdinates())
+                       .map(OrdinatesZacrep::getOrdinate)
+                       .orElse(Collections.emptyList());
+    }
+
+    private Optional<Polygon> createPolygon(List<SpatialElementZacrep> spatialElements) {
         if (spatialElements == null || spatialElements.isEmpty()) {
             return Optional.empty();
         }
@@ -70,30 +85,6 @@ public class ZuGeometryParser {
             return Optional.empty();
         }
 
-        Polygon polygonResult = new Polygon(linearRings.toArray(LinearRing[]::new));
-        polygonResult.setSrid(SRID);
-
-        return Optional.of(polygonResult);
-    }
-
-    public Optional<Point> createPoint(OrdinateZacrep ordinate) {
-        if (ordinate.getX() == null || ordinate.getY() == null) {
-            return Optional.empty();
-        }
-
-        return Optional.of(new Point(ordinate.getY().doubleValue(), ordinate.getX().doubleValue()));
-    }
-
-    public List<SpatialElementZacrep> extractSpatialElements(ContourZUZacrep contour) {
-        return Optional.ofNullable(contour.getEntitySpatial())
-                       .map(EntitySpatialZUZacrep::getSpatialsElements)
-                       .map(SpatialsElementsZacrep::getSpatialElement)
-                       .orElse(Collections.emptyList());
-    }
-
-    public List<OrdinateZacrep> extractOrdinates(SpatialElementZacrep spatialElement) {
-        return Optional.ofNullable(spatialElement.getOrdinates())
-                       .map(OrdinatesZacrep::getOrdinate)
-                       .orElse(Collections.emptyList());
+        return Optional.of(new Polygon(linearRings.toArray(LinearRing[]::new)));
     }
 }

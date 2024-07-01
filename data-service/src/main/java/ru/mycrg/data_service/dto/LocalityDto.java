@@ -7,12 +7,7 @@ public class LocalityDto {
     private String oktmo;
 
     public LocalityDto() {
-    }
-
-    public LocalityDto(Long objectId, String locality, String oktmo) {
-        this.objectId = objectId;
-        this.locality = locality;
-        this.oktmo = oktmo;
+        // Required
     }
 
     public Long getObjectId() {

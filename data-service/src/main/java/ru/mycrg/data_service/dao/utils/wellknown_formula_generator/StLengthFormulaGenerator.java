@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static ru.mycrg.data_service.dao.config.DaoProperties.DEFAULT_GEOMETRY_COLUMN_NAME;
 import static ru.mycrg.data_service_contract.enums.ValueType.GEOMETRY;
 
 @Component
@@ -16,7 +17,8 @@ public class StLengthFormulaGenerator implements IWellKnownFormulaGenerator {
 
     public StLengthFormulaGenerator() {
         this.allowedFieldTypes = new HashMap<>();
-        allowedFieldTypes.put("shape", List.of(GEOMETRY.name()));
+
+        allowedFieldTypes.put(DEFAULT_GEOMETRY_COLUMN_NAME, List.of(GEOMETRY.name()));
     }
 
     @Override

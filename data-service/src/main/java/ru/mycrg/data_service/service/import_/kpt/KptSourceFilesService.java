@@ -35,6 +35,7 @@ public class KptSourceFilesService {
     private static final Logger log = LoggerFactory.getLogger(KptSourceFilesService.class);
 
     public static final String KPT_LIBRARY_ID = "dl_data_kpt";
+
     private static final String FILE_PROPERTY = "file";
     private static final String DATA_ORDER_COMPLETION_PROPERTY = "date_order_completion";
 
@@ -71,10 +72,16 @@ public class KptSourceFilesService {
         return new ImmutablePair<>(sourceFiles, (String) kptRecord.getContent().get(DATA_ORDER_COMPLETION_PROPERTY));
     }
 
-    public IRecord getKptByFileId(long kptId) {
-        return recordServiceFactory
+    public IRecord getKptById(long docId) {
+        IRecord record = recordServiceFactory
                 .get()
-                .getById(new ResourceQualifier(SYSTEM_SCHEMA_NAME, KPT_LIBRARY_ID, kptId, LIBRARY_RECORD), kptId);
+                .getById(new ResourceQualifier(SYSTEM_SCHEMA_NAME, KPT_LIBRARY_ID, docId, LIBRARY_RECORD), docId);
+
+        if (record == null) {
+            throw new DataServiceException("Не найден документ: " + docId);
+        }
+
+        return record;
     }
 
     /**
@@ -139,7 +146,7 @@ public class KptSourceFilesService {
         if (filesDescriptions == null || filesDescriptions.isEmpty()) {
             int id = (int) kptRecord.getContent()
                                     .get(ID.getName());
-            log.warn("Невозможно определить файл для импорта кпт с id = " + id);
+            log.warn("Невозможно определить файл для импорта кпт с id = {}", id);
 
             return Optional.empty();
         }
@@ -155,7 +162,6 @@ public class KptSourceFilesService {
 
         return new ImportSourceFileDto(file.getId(),
                                        file.getPath(),
-                                       typeDocumentData
-        );
+                                       typeDocumentData);
     }
 }

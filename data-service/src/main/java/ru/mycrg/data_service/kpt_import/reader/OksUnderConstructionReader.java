@@ -13,30 +13,30 @@ import java.util.Collections;
 import java.util.List;
 
 @Component
-public class OksUnderConstructionReader extends CommonKptXmlElementReader<OksUnderConstructionElement,
-        ObjectUnderConstructionRecord>
-{
+public class OksUnderConstructionReader extends CommonKptXmlElementReader<OksUnderConstructionElement, ObjectUnderConstructionRecord> {
 
     private static final Logger log = LoggerFactory.getLogger(OksUnderConstructionReader.class);
 
     private final OksUnderConstructionElementFactory oksUnderConstructionElementFactory;
 
-    public OksUnderConstructionReader(
-            OksUnderConstructionElementFactory oksUnderConstructionElementFactory) throws JAXBException {
+    public OksUnderConstructionReader(OksUnderConstructionElementFactory oksUnderConstructionElementFactory)
+            throws JAXBException {
         super(ObjectUnderConstructionRecord.class, OksUnderConstructionElement.XML_TAG);
+
         this.oksUnderConstructionElementFactory = oksUnderConstructionElementFactory;
     }
 
     @Override
     public List<OksUnderConstructionElement> read(XMLStreamReader reader) {
-        ObjectUnderConstructionRecord r;
+        ObjectUnderConstructionRecord record;
         try {
-            r = unmarshall(reader);
+            record = unmarshall(reader);
         } catch (Exception ex) {
-            log.warn("Ошибка чтения сооружения : " + ex.getMessage());
+            log.warn("Ошибка чтения сооружения : {}", ex.getMessage());
+
             return Collections.emptyList();
         }
 
-        return oksUnderConstructionElementFactory.fromObjectUnderConstructionRecord(r);
+        return oksUnderConstructionElementFactory.fromObjectUnderConstructionRecord(record);
     }
 }

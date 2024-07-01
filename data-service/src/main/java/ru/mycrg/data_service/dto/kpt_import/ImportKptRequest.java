@@ -7,37 +7,25 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
-/**
- * Запрос на импорт КПТ из xml файла, расположенного на жестком диске
- */
-public class KptImportXmlRequest {
+public class ImportKptRequest {
 
-    /**
-     * Идентификатор документа КПТ
-     */
     @NotNull
     private Long documentId;
-    /**
-     * Названия таблиц для импорта
-     */
+
     @NotEmpty
     private List<DatasetResourceQualifierDto> tables;
-
-    /**
-     * Настройки валидации импортируемых данных
-     */
     private KptImportValidationSettings validationSettings;
 
-    public long getFileId() {
+    public @NotNull Long getDocumentId() {
         return documentId;
+    }
+
+    public void setDocumentId(@NotNull Long documentId) {
+        this.documentId = documentId;
     }
 
     public List<DatasetResourceQualifierDto> getTables() {
         return tables;
-    }
-
-    public void setDocumentId(long documentId) {
-        this.documentId = documentId;
     }
 
     public void setTables(List<DatasetResourceQualifierDto> tables) {

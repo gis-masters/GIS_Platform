@@ -12,8 +12,9 @@ public interface KptElementWriter {
 
     void writeBatch(List<KptElement> kptElements, SchemaDto tableSchemaDto, String databaseName);
 
-
     List<Class<? extends KptElement>> getTargetClasses();
 
     String getSchemaName();
+
+    void setSrid(int srid);
 }

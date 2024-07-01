@@ -22,10 +22,6 @@ public class RecordsCountValidator extends CommonKptImportValidator {
 
     private static final Logger log = LoggerFactory.getLogger(RecordsCountValidator.class);
 
-    private static final String LESS_RECORDS_TEMPLATE = "Во временной таблице %s записей значимо меньше или равно(на " +
-            "константу (%d)), чем в результирующей %s для квартала %s";
-    private static final String MORE_RECORDS_TEMPALTE = "Во временной таблице %s больше записей чем в результирующей " +
-            "%s за вычетом константы (%d) для квартала %s";
     private static final String ERROR_TEMPLATE = "Ошибка подсчета количества записей в таблице %s";
 
     private final KptImportDao validationDao;
@@ -56,6 +52,7 @@ public class RecordsCountValidator extends CommonKptImportValidator {
             String msg = String.format(ERROR_TEMPLATE, tmpTable);
             log.error(msg, ex);
             addResult(results, resultTable.getTable(), KptImportLogLevel.ERROR, msg);
+
             return;
         }
 
@@ -65,17 +62,23 @@ public class RecordsCountValidator extends CommonKptImportValidator {
             String msg = String.format(ERROR_TEMPLATE, resultTable);
             log.error(msg, ex);
             addResult(results, resultTable.getTable(), KptImportLogLevel.ERROR, msg);
+
             return;
         }
 
         int allowedDiff = settings.getAllowedDiff();
         if (countToImport + allowedDiff <= currentCount) {
-            addResult(results, resultTable.getTable(), KptImportLogLevel.WARN,
-                      String.format(LESS_RECORDS_TEMPLATE, tmpTable, allowedDiff, resultTable, cadastralSqare)
-            );
+            String msg = String.format("Во временной таблице %s записей значимо меньше или равно(на константу (%d)), " +
+                                               "чем в результирующей %s для квартала %s",
+                                       tmpTable, allowedDiff, resultTable, cadastralSqare);
+
+            addResult(results, resultTable.getTable(), KptImportLogLevel.WARN, msg);
         } else if (countToImport + allowedDiff > currentCount) {
-            addResult(results, resultTable.getTable(), KptImportLogLevel.SUCCESS,
-                      String.format(MORE_RECORDS_TEMPALTE, tmpTable, resultTable, allowedDiff, cadastralSqare));
+            String msg = String.format("Во временной таблице %s больше записей чем в результирующей %s за вычетом " +
+                                               "константы (%d) для квартала %s",
+                                       tmpTable, resultTable, allowedDiff, cadastralSqare);
+
+            addResult(results, resultTable.getTable(), KptImportLogLevel.SUCCESS, msg);
         }
     }
 }

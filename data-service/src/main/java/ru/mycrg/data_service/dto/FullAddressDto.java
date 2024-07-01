@@ -7,12 +7,7 @@ public class FullAddressDto {
     private String oktmo;
 
     public FullAddressDto() {
-    }
-
-    public FullAddressDto(Long objectId, String fullAddress, String oktmo) {
-        this.objectId = objectId;
-        this.fullAddress = fullAddress;
-        this.oktmo = oktmo;
+        // Required
     }
 
     public Long getObjectId() {

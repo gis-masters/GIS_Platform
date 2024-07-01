@@ -8,7 +8,7 @@ public class KptImportValidationSettings {
     private boolean validateRecordsCount = false;
     private boolean validateFreshness = false;
     /**
-     * Допустимая разница в количесвте между существующими записями по кварталу и импортируемыми
+     * Допустимая разница в количестве между существующими записями по кварталу и импортируемыми
      */
     private Integer allowedDiff;
     /**

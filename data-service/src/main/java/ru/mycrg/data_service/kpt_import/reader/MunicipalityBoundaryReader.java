@@ -4,7 +4,7 @@ import org.postgis.MultiPolygon;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-import ru.mycrg.data_service.kpt_import.geometry.BoundGeometryParser;
+import ru.mycrg.data_service.kpt_import.geometry_parsers.BoundGeometryParser;
 import ru.mycrg.data_service.kpt_import.model.MunicipalityBoundaryElement;
 import ru.mycrg.data_service.kpt_import.model.generated.*;
 

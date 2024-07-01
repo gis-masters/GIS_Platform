@@ -6,7 +6,6 @@ public class ImportSourceFileDto {
 
     private UUID id;
     private String path;
-
     private TypeDocumentData document;
 
     public ImportSourceFileDto() {

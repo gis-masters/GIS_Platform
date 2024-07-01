@@ -3,8 +3,12 @@ package ru.mycrg.data_service_contract.dto;
 import javax.validation.constraints.NotNull;
 
 public class DatasetResourceQualifierDto {
+
     @NotNull
     private String dataset;
+
+    @NotNull
+    private String table;
 
     public String getDataset() {
         return dataset;
@@ -21,7 +25,4 @@ public class DatasetResourceQualifierDto {
     public void setTable(String table) {
         this.table = table;
     }
-
-    @NotNull
-    private String table;
 }

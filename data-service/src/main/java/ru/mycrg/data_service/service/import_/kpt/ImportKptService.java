@@ -2,19 +2,23 @@ package ru.mycrg.data_service.service.import_.kpt;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import org.apache.commons.lang3.tuple.Pair;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 import ru.mycrg.auth_facade.IAuthenticationFacade;
 import ru.mycrg.auth_facade.UserDetails;
-import ru.mycrg.data_service.dto.kpt_import.KptImportXmlRequest;
+import ru.mycrg.data_service.dto.kpt_import.ImportKptRequest;
 import ru.mycrg.data_service.entity.IRecord;
 import ru.mycrg.data_service.entity.RecordEntity;
 import ru.mycrg.data_service.entity.SchemasAndTables;
+import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
+import ru.mycrg.data_service.queue.handlers.ImportKptHandler;
 import ru.mycrg.data_service.repository.SchemasAndTablesRepository;
 import ru.mycrg.data_service.service.cqrs.tasks.requests.CreateTaskRequest;
+import ru.mycrg.data_service.service.cqrs.tasks.requests.UpdateTaskStatusRequest;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service.service.schemas.ISchemaTemplateService;
 import ru.mycrg.data_service.util.SystemLibraryAttributes;
@@ -22,10 +26,10 @@ import ru.mycrg.data_service_contract.dto.DatasetResourceQualifierDto;
 import ru.mycrg.data_service_contract.dto.ImportSourceFileDto;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.data_service_contract.dto.TypeDocumentData;
-import ru.mycrg.data_service_contract.dto.import_.KptImportTableDto;
+import ru.mycrg.data_service_contract.dto.import_.ImportKptTableDto;
 import ru.mycrg.data_service_contract.dto.import_.KptImportValidationSettings;
 import ru.mycrg.data_service_contract.enums.TaskType;
-import ru.mycrg.data_service_contract.queue.request.KptImportXmlRequestEvent;
+import ru.mycrg.data_service_contract.queue.request.ImportKptEvent;
 import ru.mycrg.mediator.Mediator;
 import ru.mycrg.messagebus_contract.IMessageBusProducer;
 
@@ -45,12 +49,13 @@ import static ru.mycrg.data_service.service.import_.kpt.KptSourceFilesService.KP
 import static ru.mycrg.data_service.service.smev3.request.get_cadastrial_plan.GetCadastrialPlanRequestService.DATA_SECTION_KEY_DATA_CONNECTION_ATTRIBUTE;
 import static ru.mycrg.data_service.service.smev3.request.get_cadastrial_plan.GetCadastrialPlanRequestService.KPT_CONTENT_TYPE;
 import static ru.mycrg.data_service.util.JsonConverter.toJsonNode;
+import static ru.mycrg.data_service_contract.enums.TaskStatus.CANCELED;
 
 /**
  * Сервис обработки задач на импорт КПТ из XML
  */
 @Service
-public class KptImportXmlRequestService {
+public class ImportKptService {
 
     private static final int DEFAULT_ALLOWED_RECORDS_DIFF = 10;
 
@@ -60,87 +65,97 @@ public class KptImportXmlRequestService {
     private final IAuthenticationFacade authenticationFacade;
     private final KptSourceFilesService kptSourceFilesService;
     private final SchemasAndTablesRepository schemasAndTablesRepository;
+    private final ImportKptHandler importKptHandler;
 
-    public KptImportXmlRequestService(IMessageBusProducer messageBus,
-                                      @Qualifier("schemaTemplateServiceBase") ISchemaTemplateService schemaService,
-                                      IAuthenticationFacade authenticationFacade,
-                                      KptSourceFilesService kptSourceFilesService,
-                                      Mediator mediator,
-                                      SchemasAndTablesRepository schemasAndTablesRepository) {
+    public ImportKptService(IMessageBusProducer messageBus,
+                            @Qualifier("schemaTemplateServiceBase") ISchemaTemplateService schemaService,
+                            IAuthenticationFacade authenticationFacade,
+                            KptSourceFilesService kptSourceFilesService,
+                            Mediator mediator,
+                            SchemasAndTablesRepository schemasAndTablesRepository,
+                            ImportKptHandler importKptHandler) {
         this.messageBus = messageBus;
         this.schemaService = schemaService;
         this.authenticationFacade = authenticationFacade;
         this.kptSourceFilesService = kptSourceFilesService;
         this.mediator = mediator;
         this.schemasAndTablesRepository = schemasAndTablesRepository;
+        this.importKptHandler = importKptHandler;
     }
 
     /**
      * Создает задачу импорта и отправляет в очередь событие на запуск импорта
      *
-     * @param request запрос на импорт
+     * @param importRequest запрос на импорт
      *
      * @return task импорта
      */
-    public IRecord initImport(KptImportXmlRequest request) {
-        IRecord kpt = kptSourceFilesService.getKptByFileId(request.getFileId());
-        if (kpt == null) {
-            throw new DataServiceException("Не найден КПТ id: " + request.getFileId());
-        }
-
+    public IRecord initImport(ImportKptRequest importRequest) {
+        IRecord kpt = kptSourceFilesService.getKptById(importRequest.getDocumentId());
         IRecord task = createTask(kpt);
 
         Pair<List<ImportSourceFileDto>, String> sourceFilesPair = kptSourceFilesService.getSourceFiles(kpt);
-        handleValidationSettings(request.getValidationSettings(), sourceFilesPair.getRight());
+        handleValidationSettings(importRequest.getValidationSettings(), sourceFilesPair.getRight());
 
         messageBus.produce(
-                new KptImportXmlRequestEvent(sourceFilesPair.getLeft(),
-                                             getDefaultDatabaseName(authenticationFacade.getOrganizationId()),
-                                             buildTableImportDtoList(request.getTables()),
-                                             authenticationFacade.getLogin(),
-                                             task.getId(),
-                                             request.getValidationSettings()));
+                new ImportKptEvent(sourceFilesPair.getLeft(),
+                                   getDefaultDatabaseName(authenticationFacade.getOrganizationId()),
+                                   buildTableImportDtoList(importRequest.getTables()),
+                                   authenticationFacade.getLogin(),
+                                   task.getId(),
+                                   importRequest.getValidationSettings()));
 
         return task;
     }
 
-    private List<KptImportTableDto> buildTableImportDtoList(List<DatasetResourceQualifierDto> qualifiers) {
+    public void cancelImport(@NotNull Long taskId) {
+        importKptHandler.cancelImport();
+
+        mediator.execute(new UpdateTaskStatusRequest(CANCELED, taskId));
+    }
+
+    private List<ImportKptTableDto> buildTableImportDtoList(List<DatasetResourceQualifierDto> qualifiers) {
         List<String> tableIdentifiers = qualifiers.stream()
                                                   .map(DatasetResourceQualifierDto::getTable)
                                                   .collect(Collectors.toList());
 
-        List<SchemasAndTables> schemasAndTables = schemasAndTablesRepository.findByIdentifierIn(tableIdentifiers);
-        checkTablesExists(schemasAndTables, tableIdentifiers);
+        List<SchemasAndTables> foundTables = schemasAndTablesRepository.findByIdentifierIn(tableIdentifiers);
+        checkTablesExists(foundTables, tableIdentifiers);
 
-        List<KptImportTableDto> result = new LinkedList<>();
-        for (SchemasAndTables table: schemasAndTables) {
+        List<ImportKptTableDto> result = new LinkedList<>();
+        for (SchemasAndTables table: foundTables) {
             JsonNode schema = table.getSchema();
             String tableIdentifier = table.getIdentifier();
+            String tableCrs = table.getCrs();
             if (schema == null) {
                 throw new DataServiceException("Не найдена схема таблицы " + tableIdentifier);
             }
 
-            DatasetResourceQualifierDto qualifier = qualifiers
+            DatasetResourceQualifierDto qualifierDto = qualifiers
                     .stream()
                     .filter(it -> it.getTable().equals(tableIdentifier))
                     .findFirst()
                     .orElseThrow(() -> new DataServiceException("Не найдена таблица: " + tableIdentifier));
 
-            result.add(new KptImportTableDto(qualifier, jsonToDto(schema)));
+            result.add(
+                    new ImportKptTableDto(qualifierDto.getDataset(),
+                                          qualifierDto.getTable(),
+                                          jsonToDto(schema),
+                                          tableCrs));
         }
 
         return result;
     }
 
-    private void checkTablesExists(List<SchemasAndTables> found, List<String> requested) {
-        if (found.size() < requested.size()) {
-            List<String> foundIdentifiers = found.stream()
-                                                 .map(SchemasAndTables::getIdentifier)
-                                                 .collect(Collectors.toList());
-            String notFoundNames = requested.stream()
-                                            .filter(identifier -> !foundIdentifiers.contains(identifier))
-                                            .collect(Collectors.joining(","));
-            throw new DataServiceException("Не найдены таблицы для импорта: " + notFoundNames);
+    private void checkTablesExists(List<SchemasAndTables> foundTables, List<String> requestedTables) {
+        if (foundTables.size() < requestedTables.size()) {
+            List<String> foundIdentifiers = foundTables.stream()
+                                                       .map(SchemasAndTables::getIdentifier)
+                                                       .collect(Collectors.toList());
+            String notFoundNames = requestedTables.stream()
+                                                  .filter(identifier -> !foundIdentifiers.contains(identifier))
+                                                  .collect(Collectors.joining(","));
+            throw new BadRequestException("Не найдены таблицы для импорта: " + notFoundNames);
         }
     }
 

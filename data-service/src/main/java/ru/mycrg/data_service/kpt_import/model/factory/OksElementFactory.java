@@ -6,7 +6,7 @@ import org.postgis.MultiPolygon;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.mycrg.data_service.kpt_import.KptImportUtils;
-import ru.mycrg.data_service.kpt_import.geometry.OksGeometryParser;
+import ru.mycrg.data_service.kpt_import.geometry_parsers.OksGeometryParser;
 import ru.mycrg.data_service.kpt_import.model.generated.*;
 
 import java.math.BigDecimal;

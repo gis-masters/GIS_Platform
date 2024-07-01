@@ -4,7 +4,7 @@ import org.postgis.MultiPolygon;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-import ru.mycrg.data_service.kpt_import.geometry.BoundGeometryParser;
+import ru.mycrg.data_service.kpt_import.geometry_parsers.BoundGeometryParser;
 import ru.mycrg.data_service.kpt_import.model.ZouitElement;
 import ru.mycrg.data_service.kpt_import.model.generated.*;
 
@@ -16,48 +16,50 @@ import java.util.*;
 import static ru.mycrg.data_service.dao.config.DaoProperties.DEFAULT_GEOMETRY_COLUMN_NAME;
 
 @Component
-public class ZouitReader extends CommonKptXmlElementReader<ZouitElement,
-        ZonesAndTerritoriesBoundariesType.ZonesAndTerritoriesRecord> {
+public class ZouitReader extends CommonKptXmlElementReader<ZouitElement, ZonesAndTerritoriesBoundariesType.ZonesAndTerritoriesRecord> {
 
     private static final Logger log = LoggerFactory.getLogger(ZouitReader.class);
+
     private final BoundGeometryParser geometryParser;
 
     public ZouitReader(BoundGeometryParser geometryParser) throws JAXBException {
         super(ZonesAndTerritoriesBoundariesType.ZonesAndTerritoriesRecord.class, ZouitElement.XML_TAG);
+
         this.geometryParser = geometryParser;
     }
 
     @Override
     public List<ZouitElement> read(XMLStreamReader reader) {
-        ZonesAndTerritoriesBoundariesType.ZonesAndTerritoriesRecord r;
+        ZonesAndTerritoriesBoundariesType.ZonesAndTerritoriesRecord record;
         try {
-            r = unmarshall(reader);
+            record = unmarshall(reader);
         } catch (Exception ex) {
             log.warn("Ошибка чтения ЗОУИТ: ", ex);
             return Collections.emptyList();
         }
 
         Map<String, Object> content = new HashMap<>();
-        String number = extractNumber(r);
-        List<BoundContourOut> contours = extractContours(r);
+        String number = extractNumber(record);
+        List<BoundContourOut> contours = extractContours(record);
 
-        Optional<MultiPolygon> shape;
+        Optional<MultiPolygon> oMultiPolygon;
         try {
-            shape = geometryParser.createMultiPolygon(contours);
+            oMultiPolygon = geometryParser.createMultiPolygon(contours);
         } catch (Exception ex) {
             log.warn("Ошибка парсинга геометрии для ЗОУИТ с номером {}: {}", number, ex.getMessage());
-            shape = Optional.empty();
+            oMultiPolygon = Optional.empty();
         }
 
-        if (shape.isPresent()) {
+        if (oMultiPolygon.isPresent()) {
             //парсим только объекты с геометрией
             content.put("number", number);
-            content.put("zonetype", extractZoneType(r));
-            content.put("regnumbord", extractRegnumbord(r));
-            content.put("registrati", extractRegistrati(r));
-            content.put("boundary_1", extractBoundary_1(r));
-            content.put(DEFAULT_GEOMETRY_COLUMN_NAME, shape.get());
+            content.put("zonetype", extractZoneType(record));
+            content.put("regnumbord", extractRegnumbord(record));
+            content.put("registrati", extractRegistrati(record));
+            content.put("boundary_1", extractBoundary_1(record));
+            content.put(DEFAULT_GEOMETRY_COLUMN_NAME, oMultiPolygon.get());
         }
+
         return Collections.singletonList(new ZouitElement(content));
     }
 

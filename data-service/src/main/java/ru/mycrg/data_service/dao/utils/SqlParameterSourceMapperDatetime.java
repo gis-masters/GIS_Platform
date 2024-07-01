@@ -40,7 +40,7 @@ public class SqlParameterSourceMapperDatetime implements SqlParameterSourceMappe
         }
 
         try {
-            log.debug("'{}' try as DateTime '{}'", value, SYSTEM_DATETIME_PATTERN);
+            log.trace("'{}' try as DateTime '{}'", value, SYSTEM_DATETIME_PATTERN);
 
             dateTime = LocalDateTime.parse(asString, DateTimeFormatter.ofPattern(SYSTEM_DATETIME_PATTERN));
         } catch (Exception e) {

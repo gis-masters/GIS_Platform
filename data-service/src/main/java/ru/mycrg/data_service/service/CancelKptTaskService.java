@@ -24,6 +24,7 @@ import java.util.stream.Collectors;
 
 import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_NAME;
 import static ru.mycrg.data_service.dto.ResourceType.LIBRARY_RECORD;
+import static ru.mycrg.data_service.service.import_.kpt.KptSourceFilesService.KPT_LIBRARY_ID;
 import static ru.mycrg.data_service.service.resources.ResourceQualifier.libraryQualifier;
 import static ru.mycrg.data_service.service.smev3.request.get_cadastrial_plan.GetCadastrialPlanRequestService.KPT_CONTENT_TYPE;
 import static ru.mycrg.data_service.util.SystemLibraryAttributes.TITLE;
@@ -34,7 +35,6 @@ public class CancelKptTaskService {
 
     private final Logger log = LoggerFactory.getLogger(CancelKptTaskService.class);
 
-    private static final String KPT_TABLE_NAME = "dl_data_kpt";
     private static final String FILE_ATTRIBUTE = "file";
     private static final String NOTE_ATTRIBUTE = "note";
     private static final String CAD_KVARTAL_ATTRIBUTE = "cad_kvartal";
@@ -62,7 +62,7 @@ public class CancelKptTaskService {
             log.debug("Задачи к отмене: {}", tasksForCancel);
 
             tasksForCancel.forEach(taskId -> {
-                ResourceQualifier kptQualifier = libraryQualifier(KPT_TABLE_NAME);
+                ResourceQualifier kptQualifier = libraryQualifier(KPT_LIBRARY_ID);
                 String byOrderTaskNumber = String.format("order_task_number like '%s'", taskId);
                 IRecord folder = recordsDao
                         .findBy(kptQualifier, byOrderTaskNumber)
@@ -70,7 +70,7 @@ public class CancelKptTaskService {
                                 () -> new SmevRequestException("Не найдена папка с order_task_number: " + taskId));
 
                 LibraryModel libraryModel = libraryRepository
-                        .findByTableName(KPT_TABLE_NAME)
+                        .findByTableName(KPT_LIBRARY_ID)
                         .map(LibraryModel::new)
                         .orElseThrow(() -> new NotFoundException(
                                 "Не найдена библиотека КПТ: " + kptQualifier.getQualifier()));
@@ -88,8 +88,7 @@ public class CancelKptTaskService {
                                   "Не пришли ответы на кадастровые номера: " + cadastrialNumbers);
                 try {
                     ResourceQualifier libraryRecordQualifier =
-                            new ResourceQualifier(SYSTEM_SCHEMA_NAME, KPT_TABLE_NAME, folder.getId(),
-                                                  LIBRARY_RECORD);
+                            new ResourceQualifier(SYSTEM_SCHEMA_NAME, KPT_LIBRARY_ID, folder.getId(), LIBRARY_RECORD);
 
                     recordsDao.updateRecordById(libraryRecordQualifier, folderPayload, schema);
                 } catch (CrgDaoException e) {

@@ -1,9 +1,8 @@
 package ru.mycrg.data_service.kpt_import.validation;
 
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
-import ru.mycrg.data_service_contract.dto.DatasetResourceQualifierDto;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
-import ru.mycrg.data_service_contract.dto.import_.KptImportTableDto;
+import ru.mycrg.data_service_contract.dto.import_.ImportKptTableDto;
 import ru.mycrg.data_service_contract.dto.import_.KptImportValidationSettings;
 
 import java.util.LinkedList;
@@ -23,18 +22,17 @@ public abstract class CommonKptImportValidator implements KptImportValidator {
 
     @Override
     public void validate(KptImportValidationData data,
-                         List<KptImportTableDto> tables,
+                         List<ImportKptTableDto> tables,
                          KptImportValidationSettings settings,
                          Map<String, List<KptImportValidationResult>> results) {
-        for (KptImportTableDto tableDto: tables) {
-            DatasetResourceQualifierDto qualifierDto = tableDto.getResourceQualifierDto();
-            if (schemaSupportsValidation(tableDto.getSchemaDto())) {
-                validateSchemaImport(data, new ResourceQualifier(qualifierDto.getDataset(), qualifierDto.getTable()),
-                                     tableDto.getSchemaDto(), settings, results);
+        for (ImportKptTableDto tableDto: tables) {
+            if (schemaSupportsValidation(tableDto.getSchema())) {
+                validateSchemaImport(data, new ResourceQualifier(tableDto.getDataset(), tableDto.getTable()),
+                                     tableDto.getSchema(), settings, results);
             } else {
-                addResult(results, qualifierDto.getTable(), KptImportLogLevel.WARN,
+                addResult(results, tableDto.getTable(), KptImportLogLevel.WARN,
                           String.format("Схема %s не содержит поле source_doc, валидация пропущена",
-                                        tableDto.getSchemaDto().getName()));
+                                        tableDto.getSchema().getName()));
             }
         }
     }

@@ -13,30 +13,30 @@ import java.util.Collections;
 import java.util.List;
 
 @Component
-public class BorderWaterObjectReader extends CommonKptXmlElementReader<BorderWaterObjectElement,
-        CoastlineBoundariesType.CoastlineRecord>
-{
+
+public class BorderWaterObjectReader extends CommonKptXmlElementReader<BorderWaterObjectElement, CoastlineBoundariesType.CoastlineRecord> {
 
     private static final Logger log = LoggerFactory.getLogger(BorderWaterObjectReader.class);
 
     private final BorderWaterObjectElementFactory factory;
 
-    protected BorderWaterObjectReader(BorderWaterObjectElementFactory factory)
-            throws JAXBException {
+    protected BorderWaterObjectReader(BorderWaterObjectElementFactory factory) throws JAXBException {
         super(CoastlineBoundariesType.CoastlineRecord.class, BorderWaterObjectElement.XML_TAG);
+
         this.factory = factory;
     }
 
     @Override
     public List<BorderWaterObjectElement> read(XMLStreamReader reader) {
-        CoastlineBoundariesType.CoastlineRecord r;
+        CoastlineBoundariesType.CoastlineRecord record;
         try {
-            r = unmarshall(reader);
+            record = unmarshall(reader);
         } catch (Exception ex) {
-            log.warn("Ошибка чтения береговой линии: " + ex.getMessage());
+            log.warn("Ошибка чтения береговой линии: {}", ex.getMessage());
+
             return Collections.emptyList();
         }
 
-        return factory.fromCoastlineRecord(r);
+        return factory.fromCoastlineRecord(record);
     }
 }

@@ -49,6 +49,7 @@ import static ru.mycrg.common_utils.CrgGlobalProperties.getDefaultDatabaseName;
 import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_NAME;
 import static ru.mycrg.data_service.dto.ResourceType.LIBRARY_RECORD;
 import static ru.mycrg.data_service.dto.Roles.OWNER;
+import static ru.mycrg.data_service.service.import_.kpt.KptSourceFilesService.KPT_LIBRARY_ID;
 import static ru.mycrg.data_service.service.reestrs.Systems.FGIS_EGRN;
 import static ru.mycrg.data_service.service.reestrs.Systems.SMEV_3;
 import static ru.mycrg.data_service.service.resources.ResourceQualifier.libraryQualifier;
@@ -64,7 +65,7 @@ import static ru.mycrg.data_service.util.SystemLibraryAttributes.*;
 public class AcceptKptService {
 
     private static final Logger log = LoggerFactory.getLogger(AcceptKptService.class);
-    private static final String KPT_TABLE_NAME = "dl_data_kpt";
+
     private static final String DESCRIPTION_ATTRIBUTE = "description";
     private static final String FILE_ATTRIBUTE = "file";
     private static final String DATE_ORDER_COMPLETION = "date_order_completion";
@@ -123,7 +124,7 @@ public class AcceptKptService {
             UUID referenceClientId = processResult.getXmlBuildMeta().getReferenceClientId();
             String filter = String.format("order_number like '%s'", referenceClientId);
             log.debug("Reference client-id: {}", referenceClientId);
-            ResourceQualifier libraryQualifier = libraryQualifier(KPT_TABLE_NAME);
+            ResourceQualifier libraryQualifier = libraryQualifier(KPT_LIBRARY_ID);
             IRecord docRecord = recordsDao
                     .findBy(libraryQualifier, filter)
                     .orElseThrow(
@@ -138,13 +139,13 @@ public class AcceptKptService {
             log.debug("Найдена папка с id: {}", folderId);
 
             LibraryModel libraryModel = libraryRepository
-                    .findByTableName(KPT_TABLE_NAME)
+                    .findByTableName(KPT_LIBRARY_ID)
                     .map(documentLibrary -> new LibraryModel(documentLibrary, OWNER.name()))
                     .orElseThrow(() -> new NotFoundException("Библиотека не найдена по идентификатору: "
-                                                                     + KPT_TABLE_NAME));
+                                                                     + KPT_LIBRARY_ID));
             SchemaDto schema = libraryModel.getSchema();
             ResourceQualifier libraryRecordQualifier =
-                    new ResourceQualifier(SYSTEM_SCHEMA_NAME, KPT_TABLE_NAME, Long.parseLong(folderId), LIBRARY_RECORD);
+                    new ResourceQualifier(SYSTEM_SCHEMA_NAME, KPT_LIBRARY_ID, Long.parseLong(folderId), LIBRARY_RECORD);
             IRecord folder = recordsDao.findById(libraryRecordQualifier, schema)
                     .orElseThrow(() -> new SmevRequestException("Не найдена папка с id: " + folderId));
             String taskNumber = folder.getAsString(ORDER_TASK_NUMBER_ATTRIBUTE);
@@ -232,7 +233,7 @@ public class AcceptKptService {
         payload.put(OWNER_DOC_ATTRIBUTE, FGIS_EGRN);
         payload.put(RECEIPT_TYPE_ATTRIBUTE, SMEV_3);
         ResourceQualifier resourceQualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME,
-                                                                    KPT_TABLE_NAME,
+                                                                    KPT_LIBRARY_ID,
                                                                     docId,
                                                                     LIBRARY_RECORD);
         recordsDao.updateRecordById(resourceQualifier, payload, schema);

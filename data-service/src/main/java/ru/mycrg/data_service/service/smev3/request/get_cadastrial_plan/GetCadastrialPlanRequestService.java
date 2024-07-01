@@ -57,6 +57,7 @@ import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_N
 import static ru.mycrg.data_service.dto.ResourceType.LIBRARY;
 import static ru.mycrg.data_service.dto.ResourceType.TASK;
 import static ru.mycrg.data_service.service.TaskService.*;
+import static ru.mycrg.data_service.service.import_.kpt.KptSourceFilesService.KPT_LIBRARY_ID;
 import static ru.mycrg.data_service.service.schemas.SchemaUtil.excludeUnknownProperties;
 import static ru.mycrg.data_service.util.JsonConverter.mapper;
 import static ru.mycrg.data_service.util.JsonConverter.toJsonNode;
@@ -77,7 +78,6 @@ public class GetCadastrialPlanRequestService extends RequestProcessor {
 
     private static final String FOLDER_CONTENT_TYPE = "folder_v1";
     private static final String DOC_CONTENT_TYPE = "Карточка";
-    private static final String KPT_LIBRARY_ID = "dl_data_kpt";
     private static final String ORDER_NUMBER_PROPERTY = "order_number";
     private static final String PERFORMER_PROPERTY = "performer";
     private static final String STATUS_PROPERTY = "status";

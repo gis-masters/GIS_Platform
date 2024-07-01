@@ -1,4 +1,4 @@
-package ru.mycrg.data_service.kpt_import.geometry;
+package ru.mycrg.data_service.kpt_import.geometry_parsers;
 
 import org.postgis.*;
 import org.springframework.stereotype.Component;
@@ -7,7 +7,8 @@ import ru.mycrg.data_service.kpt_import.model.generated.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static ru.mycrg.data_service.kpt_import.KptImportUtils.*;
+import static ru.mycrg.data_service.kpt_import.KptImportUtils.hasDifferentNum;
+import static ru.mycrg.data_service.kpt_import.KptImportUtils.hasDifferentOrdinates;
 
 @Component
 public class BoundGeometryParser {
@@ -21,18 +22,13 @@ public class BoundGeometryParser {
         for (BoundContourOut contour: contours) {
             List<SpatialElementBound> spatialElements = extractSpatialElements(contour);
             if (!spatialElements.isEmpty()) {
-                Optional<Polygon> polygon = createPolygon(spatialElements);
-                polygon.ifPresent(polygons::add);
+                createPolygon(spatialElements).ifPresent(polygons::add);
             }
         }
 
-        if (!polygons.isEmpty()) {
-            MultiPolygon mp = new MultiPolygon(polygons.toArray(Polygon[]::new));
-            mp.setSrid(SRID);
-            return Optional.of(mp);
-        } else {
-            return Optional.empty();
-        }
+        return polygons.isEmpty()
+                ? Optional.empty()
+                : Optional.of(new MultiPolygon(polygons.toArray(Polygon[]::new)));
     }
 
     public Optional<MultiLineString> createMultiLineString(List<BoundContourOut> contours) {
@@ -48,9 +44,9 @@ public class BoundGeometryParser {
                     .collect(Collectors.toList());
 
             List<OrdinateBound> ordinates = polylineSpatialElements.stream()
-                                                            .map(this::extractOrdinates)
-                                                            .flatMap(Collection::stream)
-                                                            .collect(Collectors.toList());
+                                                                   .map(this::extractOrdinates)
+                                                                   .flatMap(Collection::stream)
+                                                                   .collect(Collectors.toList());
 
             Optional<LineString> lineString = createLineString(ordinates);
             lineString.ifPresent(lineStrings::add);
@@ -60,35 +56,7 @@ public class BoundGeometryParser {
             return Optional.empty();
         }
 
-        MultiLineString multiLineString = new MultiLineString(lineStrings.toArray(LineString[]::new));
-        multiLineString.setSrid(SRID);
-
-        return Optional.of(multiLineString);
-    }
-
-    public Optional<LineString> createLineString(List<OrdinateBound> ordinates) {
-        if (ordinates == null || ordinates.isEmpty()) {
-            return Optional.empty();
-        }
-
-        List<Point> points = ordinates.stream()
-                                      .map(this::createPoint)
-                                      .filter(Optional::isPresent)
-                                      .map(Optional::get)
-                                      .collect(Collectors.toList());
-
-        if (ordinates.size() != points.size()) {
-            return Optional.empty();
-        }
-        return Optional.of(new LineString(points.toArray(Point[]::new)));
-    }
-
-    public Optional<Point> createPoint(OrdinateBound ordinate) {
-        if (ordinate.getX() == null || ordinate.getY() == null) {
-            return Optional.empty();
-        }
-
-        return Optional.of(new Point(ordinate.getY().doubleValue(), ordinate.getX().doubleValue()));
+        return Optional.of(new MultiLineString(lineStrings.toArray(LineString[]::new)));
     }
 
     public Optional<Polygon> createPolygon(List<SpatialElementBound> spatialElements) {
@@ -97,7 +65,7 @@ public class BoundGeometryParser {
         }
 
         List<LinearRing> linearRings = new LinkedList<>();
-        for(SpatialElementBound spatialElement : spatialElements) {
+        for (SpatialElementBound spatialElement: spatialElements) {
             List<OrdinateBound> ordinates = extractOrdinates(spatialElement);
 
             if (!ordinates.isEmpty()) {
@@ -119,10 +87,7 @@ public class BoundGeometryParser {
             return Optional.empty();
         }
 
-        Polygon polygonResult = new Polygon(linearRings.toArray(LinearRing[]::new));
-        polygonResult.setSrid(SRID);
-
-        return Optional.of(polygonResult);
+        return Optional.of(new Polygon(linearRings.toArray(LinearRing[]::new)));
     }
 
     public List<SpatialElementBound> extractSpatialElements(BoundContourOut contour) {
@@ -136,6 +101,30 @@ public class BoundGeometryParser {
         return isOrdinatesPolyline(extractOrdinates(spatialElement));
     }
 
+    public List<OrdinateBound> extractOrdinates(SpatialElementBound spatialElement) {
+        return Optional.ofNullable(spatialElement.getOrdinates())
+                       .map(OrdinatesBound::getOrdinate)
+                       .orElse(Collections.emptyList());
+    }
+
+    private Optional<LineString> createLineString(List<OrdinateBound> ordinates) {
+        if (ordinates == null || ordinates.isEmpty()) {
+            return Optional.empty();
+        }
+
+        List<Point> points = ordinates.stream()
+                                      .map(this::createPoint)
+                                      .filter(Optional::isPresent)
+                                      .map(Optional::get)
+                                      .collect(Collectors.toList());
+
+        if (ordinates.size() != points.size()) {
+            return Optional.empty();
+        }
+
+        return Optional.of(new LineString(points.toArray(Point[]::new)));
+    }
+
     private boolean isOrdinatesPolyline(List<OrdinateBound> ordinates) {
         if (ordinates == null || ordinates.size() < 2) {
             return false;
@@ -147,9 +136,11 @@ public class BoundGeometryParser {
         return hasDifferentNum(first, last) || hasDifferentOrdinates(first, last);
     }
 
-    public List<OrdinateBound> extractOrdinates(SpatialElementBound spatialElement) {
-        return Optional.ofNullable(spatialElement.getOrdinates())
-                       .map(OrdinatesBound::getOrdinate)
-                       .orElse(Collections.emptyList());
+    private Optional<Point> createPoint(OrdinateBound ordinate) {
+        if (ordinate.getX() == null || ordinate.getY() == null) {
+            return Optional.empty();
+        }
+
+        return Optional.of(new Point(ordinate.getY().doubleValue(), ordinate.getX().doubleValue()));
     }
 }

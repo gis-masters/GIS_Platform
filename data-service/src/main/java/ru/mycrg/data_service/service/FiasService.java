@@ -107,7 +107,6 @@ public class FiasService {
     }
 
     public List<LocalityDto> getLocalities(String address) {
-
         try {
             return fiasDao.getLocalities(address);
         } catch (DataAccessException e) {

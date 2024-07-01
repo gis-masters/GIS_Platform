@@ -53,15 +53,16 @@ public class DetachedRecordsDao {
 
             Feature firstFeature = new Feature(body[0]);
             String query = buildParameterizedInsertQuery(qualifier, firstFeature, false);
-            MapSqlParameterSource[] parameterSource = Arrays.stream(body)
-                                                            .map(b -> {
-                                                                MapSqlParameterSource source =
-                                                                        sqlParameterSourceFactory.buildParameterizedSource(
-                                                                                new Feature(b), schema);
-                                                                source.registerSqlType("source_doc", Types.OTHER);
-                                                                return source;
-                                                            })
-                                                            .toArray(MapSqlParameterSource[]::new);
+            MapSqlParameterSource[] parameterSource = Arrays
+                    .stream(body)
+                    .map(b -> {
+                        MapSqlParameterSource source =
+                                sqlParameterSourceFactory.buildParameterizedSource(new Feature(b), schema);
+                        source.registerSqlType("source_doc", Types.OTHER);
+
+                        return source;
+                    })
+                    .toArray(MapSqlParameterSource[]::new);
 
             log.debug("BATCH(size = {}) INSERT QUERY: [{}]", body.length, query);
 

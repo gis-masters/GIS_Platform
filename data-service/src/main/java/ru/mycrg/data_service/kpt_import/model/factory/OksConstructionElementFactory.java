@@ -1,9 +1,7 @@
 package ru.mycrg.data_service.kpt_import.model.factory;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-import ru.mycrg.data_service.kpt_import.geometry.OksGeometryParser;
+import ru.mycrg.data_service.kpt_import.geometry_parsers.OksGeometryParser;
 import ru.mycrg.data_service.kpt_import.model.generated.*;
 import ru.mycrg.data_service.kpt_import.model.oks.OksConstructionElement;
 import ru.mycrg.data_service.kpt_import.model.oks.OksConstructionPointElement;
@@ -16,8 +14,6 @@ import java.util.stream.Collectors;
 
 @Component
 public class OksConstructionElementFactory extends OksElementFactory {
-
-    private static final Logger log = LoggerFactory.getLogger(OksConstructionElementFactory.class);
 
     public OksConstructionElementFactory(OksGeometryParser geometryParser) {
         super(geometryParser);
@@ -59,6 +55,7 @@ public class OksConstructionElementFactory extends OksElementFactory {
     @Override
     protected String extractReadableAddress(Object xmlRecord) {
         ConstructionRecord constructionRecord = (ConstructionRecord) xmlRecord;
+
         return Optional.ofNullable(constructionRecord.getAddressLocation())
                        .map(AddressLocationConstruction::getAddress)
                        .map(AddressMain::getReadableAddress)
@@ -68,6 +65,7 @@ public class OksConstructionElementFactory extends OksElementFactory {
     @Override
     protected String extractPurpose(Object xmlRecord) {
         ConstructionRecord constructionRecord = (ConstructionRecord) xmlRecord;
+
         return Optional.ofNullable(constructionRecord.getParams())
                        .map(ParamsConstructionPurposeUses::getPurpose)
                        .orElse(null);
@@ -76,6 +74,7 @@ public class OksConstructionElementFactory extends OksElementFactory {
     @Override
     protected BigDecimal extractAreaDoc(Object xmlRecord) {
         ConstructionRecord constructionRecord = (ConstructionRecord) xmlRecord;
+
         return Optional.ofNullable(constructionRecord.getParams())
                        .map(ParamsConstructionPurposeUses::getBaseParameters)
                        .map(BaseParameters::getBaseParameter)
@@ -90,18 +89,21 @@ public class OksConstructionElementFactory extends OksElementFactory {
     @Override
     protected ObjectType extractObjectType(Object xmlRecord) {
         ConstructionRecord constructionRecord = (ConstructionRecord) xmlRecord;
+
         return constructionRecord.getObject();
     }
 
     @Override
     protected Cost extractCost(Object xmlRecord) {
         ConstructionRecord constructionRecord = (ConstructionRecord) xmlRecord;
+
         return constructionRecord.getCost();
     }
 
     @Override
     protected String extractUsage(Object xmlRecord) {
         ConstructionRecord constructionRecord = (ConstructionRecord) xmlRecord;
+
         return Optional.ofNullable(constructionRecord.getParams())
                        .map(ParamsConstructionPurposeUses::getPermittedUses)
                        .map(PermittedUses::getPermittedUse)

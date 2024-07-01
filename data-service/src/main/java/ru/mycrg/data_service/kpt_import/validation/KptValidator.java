@@ -3,7 +3,7 @@ package ru.mycrg.data_service.kpt_import.validation;
 import org.springframework.stereotype.Service;
 import ru.mycrg.data_service.dao.detached.TaskLogDetachedDao;
 import ru.mycrg.data_service.dto.TaskLogDto;
-import ru.mycrg.data_service_contract.dto.import_.KptImportTableDto;
+import ru.mycrg.data_service_contract.dto.import_.ImportKptTableDto;
 import ru.mycrg.data_service_contract.dto.import_.KptImportValidationSettings;
 
 import java.util.HashMap;
@@ -16,7 +16,7 @@ import static ru.mycrg.data_service.kpt_import.KptImportUtils.DS_ID;
  * Сервис, управляющей валидацией импортируемых КПТ
  */
 @Service
-public class KptImportValidatorService {
+public class KptValidator {
 
     /**
      * Цепь валидаторов, которые будут применены к импортируемым данным
@@ -24,14 +24,14 @@ public class KptImportValidatorService {
     private final List<KptImportValidator> validators;
     private final TaskLogDetachedDao taskLogDetachedDao;
 
-    public KptImportValidatorService(List<KptImportValidator> validators, TaskLogDetachedDao taskLogDetachedDao) {
+    public KptValidator(List<KptImportValidator> validators, TaskLogDetachedDao taskLogDetachedDao) {
         this.validators = validators;
         this.taskLogDetachedDao = taskLogDetachedDao;
     }
 
     public Map<String, List<KptImportValidationResult>> validate(String cadastralSqare,
                                                                  KptImportValidationSettings settings,
-                                                                 List<KptImportTableDto> tables,
+                                                                 List<ImportKptTableDto> tables,
                                                                  String dbName,
                                                                  long taskId) {
         KptImportValidationData validationData = new KptImportValidationData(cadastralSqare, dbName);
@@ -43,6 +43,7 @@ public class KptImportValidatorService {
                 taskLogDetachedDao.createTaskLog(dbName, new TaskLogDto("Импорт КПТ", taskId), tableResult, DS_ID);
             }
         }
+
         return results;
     }
 }

@@ -7,7 +7,9 @@ import java.util.Map;
 
 public abstract class AQualifier {
     protected static final String SEPARATOR = "\\.";
+
     protected final Map<ResourceType, String> resourceTables = new EnumMap<>(ResourceType.class);
+
     protected String schema;
     protected String table;
     protected ResourceType type;

@@ -3,7 +3,6 @@ package ru.mycrg.data_service.dto;
 public class TaskLogDto {
 
     private String eventType;
-
     private Long taskId;
 
     public TaskLogDto() {

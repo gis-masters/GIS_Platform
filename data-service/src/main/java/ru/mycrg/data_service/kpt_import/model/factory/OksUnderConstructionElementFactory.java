@@ -1,7 +1,7 @@
 package ru.mycrg.data_service.kpt_import.model.factory;
 
 import org.springframework.stereotype.Component;
-import ru.mycrg.data_service.kpt_import.geometry.OksGeometryParser;
+import ru.mycrg.data_service.kpt_import.geometry_parsers.OksGeometryParser;
 import ru.mycrg.data_service.kpt_import.model.generated.*;
 import ru.mycrg.data_service.kpt_import.model.oks.OksUnderConstructionElement;
 import ru.mycrg.data_service.kpt_import.model.oks.OksUnderConstructionPointElement;
@@ -34,18 +34,21 @@ public class OksUnderConstructionElementFactory extends OksElementFactory {
         if (!polygonSpatialElements.isEmpty()) {
             Map<String, Object> content = buildPolygonContent(xmlRecord);
             parseMultiPolygon(polygonSpatialElements, content);
+
             result.add(new OksUnderConstructionPolygonElement(content));
         }
 
         if (!polylineSpatialElements.isEmpty()) {
             Map<String, Object> content = buildPolylineContent(xmlRecord);
             parseMultilineString(polylineSpatialElements, content);
+
             result.add(new OksUnderConstructionPolylineElement(content));
         }
 
         if (!pointSpatialElements.isEmpty()) {
             Map<String, Object> content = buildPointContent(xmlRecord);
             parsePoint(pointSpatialElements, content);
+
             result.add(new OksUnderConstructionPointElement(content));
         }
 
@@ -55,6 +58,7 @@ public class OksUnderConstructionElementFactory extends OksElementFactory {
     @Override
     protected String extractReadableAddress(Object xmlRecord) {
         ObjectUnderConstructionRecord oucr = (ObjectUnderConstructionRecord) xmlRecord;
+
         return Optional.ofNullable(oucr.getAddressLocation())
                        .map(AddressLocationConstruction::getAddress)
                        .map(AddressMain::getReadableAddress)
@@ -64,6 +68,7 @@ public class OksUnderConstructionElementFactory extends OksElementFactory {
     @Override
     protected String extractPurpose(Object xmlRecord) {
         ObjectUnderConstructionRecord oucr = (ObjectUnderConstructionRecord) xmlRecord;
+
         return Optional.ofNullable(oucr.getParams())
                        .map(ParamsConstructionPurpose::getPurpose)
                        .orElse(null);
@@ -72,6 +77,7 @@ public class OksUnderConstructionElementFactory extends OksElementFactory {
     @Override
     protected BigDecimal extractAreaDoc(Object xmlRecord) {
         ObjectUnderConstructionRecord oucr = (ObjectUnderConstructionRecord) xmlRecord;
+
         return Optional.ofNullable(oucr.getParams())
                        .map(ParamsConstructionPurpose::getBaseParameters)
                        .map(BaseParameters::getBaseParameter)
@@ -86,12 +92,14 @@ public class OksUnderConstructionElementFactory extends OksElementFactory {
     @Override
     protected ObjectType extractObjectType(Object xmlRecord) {
         ObjectUnderConstructionRecord oucr = (ObjectUnderConstructionRecord) xmlRecord;
+
         return oucr.getObject();
     }
 
     @Override
     protected Cost extractCost(Object xmlRecord) {
         ObjectUnderConstructionRecord oucr = (ObjectUnderConstructionRecord) xmlRecord;
+
         return oucr.getCost();
     }
 

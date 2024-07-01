@@ -4,7 +4,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import ru.mycrg.data_service.dao.config.DatasourceFactory;
+import ru.mycrg.data_service.dao.detached.DetachedRecordsDao;
 import ru.mycrg.data_service.dao.detached.KptImportDao;
+import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
+import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 
 import java.util.Collection;
@@ -19,33 +22,46 @@ import static ru.mycrg.data_service.kpt_import.KptImportUtils.tmbTableName;
  * Создаёт временные таблицы для импорта КПТ
  */
 @Service
-public class TmpTablesCreator {
-    private static final Logger log = LoggerFactory.getLogger(TmpTablesCreator.class);
+public class TmpTablesService {
+
+    private static final Logger log = LoggerFactory.getLogger(TmpTablesService.class);
 
     private final KptImportDao kptImportDao;
+    private final DetachedRecordsDao recordsDao;
 
-    public TmpTablesCreator(KptImportDao kptImportDao) {
+    public TmpTablesService(KptImportDao kptImportDao,
+                            DetachedRecordsDao recordsDao) {
         this.kptImportDao = kptImportDao;
+        this.recordsDao = recordsDao;
     }
 
     /**
      * Создаёт временные таблицы в схеме {@value DatasourceFactory#SYSTEM_SCHEMA_NAME}
+     * <p>
      * Название таблицы = kpt_[Название схемы], состав полей в соответствии со схемой
      */
     public void createIfNotExists(String dbName, Collection<SchemaDto> schemas) {
         List<String> requiredTableNames = schemas.stream()
-                                            .map(schemaDto -> tmbTableName(schemaDto.getName()))
-                                            .collect(Collectors.toList());
+                                                 .map(schemaDto -> tmbTableName(schemaDto.getName()))
+                                                 .collect(Collectors.toList());
         List<String> existedTableNames = kptImportDao.findKptTablesByNames(dbName, requiredTableNames);
         List<SchemaDto> requiredSchemas = schemas.stream()
-                .filter(it -> !existedTableNames.contains(tmbTableName(it.getName())))
-                .collect(Collectors.toList());
+                                                 .filter(it -> !existedTableNames.contains(tmbTableName(it.getName())))
+                                                 .collect(Collectors.toList());
 
-        for (SchemaDto schema : requiredSchemas) {
+        for (SchemaDto schema: requiredSchemas) {
             String tableName = tmbTableName(schema.getName());
             log.info("Создание временной таблицы {}", tableName);
+
             kptImportDao.createTable(dbName, SYSTEM_SCHEMA_NAME, tableName, schema.getProperties(),
                                      PRIMARY_KEY);
+        }
+    }
+
+    public void cleanTmpTables(String dbName, List<SchemaDto> schemas) throws CrgDaoException {
+        for (SchemaDto schema: schemas) {
+            recordsDao.truncateTable(dbName,
+                                     new ResourceQualifier(SYSTEM_SCHEMA_NAME, tmbTableName(schema.getName())));
         }
     }
 }

@@ -14,6 +14,8 @@ import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Map;
 
+import static ru.mycrg.data_service.config.CrgCommonConfig.SYSTEM_DATETIME_PATTERN;
+
 /**
  * Валидатор, сопоставляющий "свежесть" импортируемых данных КПТ с "свежестью" данных в результирующей таблице
  */
@@ -21,11 +23,8 @@ import java.util.Map;
 public class FreshnessValidator extends CommonKptImportValidator {
 
     private static final Logger log = LoggerFactory.getLogger(FreshnessValidator.class);
-    private static final String OLD_DATA_TEMPLATE = "В результирующей таблице %s хранились более новые данные";
-    private static final String DATE_FORMAT_ERROR_TEMPLATE = "Ошибка чтения даты \"свежести\" КПТ %s";
-    private static final String DATE_COMPLETION_ERROR_TEMPLATE = "Ошибка получения \"свежести\" данных результирующей" +
-            " таблицы %s";
-    private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
+    private final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern(SYSTEM_DATETIME_PATTERN);
 
     private final KptImportDao validationDao;
 
@@ -47,9 +46,10 @@ public class FreshnessValidator extends CommonKptImportValidator {
         try {
             orderCompletion = LocalDateTime.parse(settings.getDateOrderCompletion(), DATE_FORMAT);
         } catch (Exception ex) {
-            String msg = String.format(DATE_FORMAT_ERROR_TEMPLATE, data.getCadastralSqare());
+            String msg = "Ошибка чтения даты \"свежести\" КПТ: " + data.getCadastralSqare();
             log.error(msg);
             addResult(results, resultTable.getTable(), KptImportLogLevel.ERROR, msg);
+
             return;
         }
 
@@ -58,15 +58,16 @@ public class FreshnessValidator extends CommonKptImportValidator {
             resultTableDate = validationDao.latestOrderCompletionDateByCadastralSquare(
                     data.getDbName(), data.getCadastralSqare(), resultTable);
         } catch (Exception ex) {
-            String msg = String.format(DATE_COMPLETION_ERROR_TEMPLATE, resultTable);
+            String msg = "Ошибка получения \"свежести\" данных результирующей таблицы: " + resultTable;
             log.error(msg, ex);
             addResult(results, resultTable.getTable(), KptImportLogLevel.ERROR, msg);
+
             return;
         }
 
         if (resultTableDate != null && resultTableDate.truncatedTo(ChronoUnit.SECONDS).isAfter(orderCompletion)) {
             addResult(results, resultTable.getTable(), KptImportLogLevel.WARN,
-                      String.format(OLD_DATA_TEMPLATE, resultTable));
+                      String.format("В результирующей таблице %s хранились более новые данные", resultTable));
         }
     }
 }

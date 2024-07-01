@@ -26,14 +26,15 @@ public class OksBuildingReader extends CommonKptXmlElementReader<OksBuildingElem
 
     @Override
     public List<OksBuildingElement> read(XMLStreamReader reader) {
-        BuildRecord r;
+        BuildRecord record;
         try {
-            r = unmarshall(reader);
+            record = unmarshall(reader);
         } catch (Exception ex) {
-            log.warn("Ошибка чтения здания: " + ex.getMessage());
+            log.warn("Ошибка чтения здания: {}", ex.getMessage());
+
             return Collections.emptyList();
         }
 
-        return Collections.singletonList(oksBuildingElementFactory.fromBuildRecord(r));
+        return Collections.singletonList(oksBuildingElementFactory.fromBuildRecord(record));
     }
 }
