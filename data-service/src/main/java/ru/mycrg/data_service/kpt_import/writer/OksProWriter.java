@@ -11,7 +11,9 @@ import java.util.Arrays;
 import java.util.List;
 
 @Service
-public class OksProWriter extends KptElementDBWriter{
+public class OksProWriter extends KptElementDBWriter {
+
+    public static final String OKS_PRO_SCHEMA = "oks_pro";
 
     public OksProWriter(DetachedRecordsDao recordsDao) {
         super(recordsDao);
@@ -25,6 +27,6 @@ public class OksProWriter extends KptElementDBWriter{
 
     @Override
     public String getSchemaName() {
-        return "oks_pro";
+        return OKS_PRO_SCHEMA;
     }
 }

@@ -11,6 +11,8 @@ import java.util.List;
 @Service
 public class KvartalWriter extends KptElementDBWriter {
 
+    public static final String KVARTAL_KPT_SCHEMA = "kvartal_kpt";
+
     protected KvartalWriter(DetachedRecordsDao recordsDao) {
         super(recordsDao);
     }
@@ -22,6 +24,6 @@ public class KvartalWriter extends KptElementDBWriter {
 
     @Override
     public String getSchemaName() {
-        return "kvartal_kpt";
+        return KVARTAL_KPT_SCHEMA;
     }
 }

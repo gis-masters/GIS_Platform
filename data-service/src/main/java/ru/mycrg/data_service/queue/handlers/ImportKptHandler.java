@@ -54,6 +54,15 @@ import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_N
 import static ru.mycrg.data_service.kpt_import.KptImportUtils.DS_ID;
 import static ru.mycrg.data_service.kpt_import.KptImportUtils.tmbTableName;
 import static ru.mycrg.data_service.kpt_import.validation.KptImportLogLevel.ERROR;
+import static ru.mycrg.data_service.kpt_import.writer.BorderWaterObjectPolygonWriter.BORDERWATEROBJ_SCHEMA;
+import static ru.mycrg.data_service.kpt_import.writer.BorderWaterObjectPolylineWriter.BORDERWATEROBJ_POLILYNE_PRO_SCHEMA;
+import static ru.mycrg.data_service.kpt_import.writer.KvartalWriter.KVARTAL_KPT_SCHEMA;
+import static ru.mycrg.data_service.kpt_import.writer.MunicipalityBoundaryWriter.MUNICIPALITY_BOUNDARIES_EGRN_SCHEMA;
+import static ru.mycrg.data_service.kpt_import.writer.OksConstructionPointWriter.OKS_CONSTRUCTIONS_POINTS_SCHEMA;
+import static ru.mycrg.data_service.kpt_import.writer.OksPolylineProWriter.OKS_POLYLINE_PRO_SCHEMA;
+import static ru.mycrg.data_service.kpt_import.writer.OksProWriter.OKS_PRO_SCHEMA;
+import static ru.mycrg.data_service.kpt_import.writer.ZouitWriter.ZOUIT_PRO_SCHEMA;
+import static ru.mycrg.data_service.kpt_import.writer.ZuWriter.ZU_PRO_SCHEMA;
 import static ru.mycrg.data_service.util.CrsHandler.extractCrsNumber;
 import static ru.mycrg.data_service.util.DetailedLogger.logError;
 import static ru.mycrg.data_service.util.SystemLibraryAttributes.CREATED_AT;
@@ -509,7 +518,7 @@ public class ImportKptHandler implements IEventHandler {
     }
 
     private boolean isKvartalElementTag(String xmlTag) {
-        return schemaNameTags.get(KVARTAL_SCHEMA).contains(xmlTag);
+        return schemaNameTags.get(KVARTAL_KPT_SCHEMA).contains(xmlTag);
     }
 
     private boolean taskFinished(String dbName, long taskId) {
@@ -605,18 +614,18 @@ public class ImportKptHandler implements IEventHandler {
     }
 
     private void initSchemaNameTags() {
-        schemaNameTags.put("zu_pro", Set.of(ZuElement.XML_TAG));
-        schemaNameTags.put("zouit_pro", Set.of(ZouitElement.XML_TAG));
-        schemaNameTags.put(KVARTAL_SCHEMA, Set.of("cadastral_number", "area_quarter", "spatial_data"));
-        schemaNameTags.put("municipality_boundaries_egrn", Set.of(MunicipalityBoundaryElement.XML_TAG));
-        schemaNameTags.put("oks_pro", Set.of(OksConstructionElement.XML_TAG,
-                                             OksBuildingElement.XML_TAG,
-                                             OksUnderConstructionElement.XML_TAG));
-        schemaNameTags.put("oks_polyline_pro", Set.of(OksConstructionElement.XML_TAG,
-                                                      OksUnderConstructionElement.XML_TAG));
-        schemaNameTags.put("oks_constructions_points", Set.of(OksConstructionElement.XML_TAG,
-                                                              OksUnderConstructionElement.XML_TAG));
-        schemaNameTags.put("borderwaterobj", Set.of(BorderWaterObjectElement.XML_TAG));
-        schemaNameTags.put("borderwaterobj_polilyne", Set.of(BorderWaterObjectElement.XML_TAG));
+        schemaNameTags.put(ZU_PRO_SCHEMA, Set.of(ZuElement.XML_TAG));
+        schemaNameTags.put(ZOUIT_PRO_SCHEMA, Set.of(ZouitElement.XML_TAG));
+        schemaNameTags.put(KVARTAL_KPT_SCHEMA, Set.of("cadastral_number", "area_quarter", "spatial_data"));
+        schemaNameTags.put(MUNICIPALITY_BOUNDARIES_EGRN_SCHEMA, Set.of(MunicipalityBoundaryElement.XML_TAG));
+        schemaNameTags.put(OKS_PRO_SCHEMA, Set.of(OksConstructionElement.XML_TAG,
+                                                  OksBuildingElement.XML_TAG,
+                                                  OksUnderConstructionElement.XML_TAG));
+        schemaNameTags.put(OKS_POLYLINE_PRO_SCHEMA, Set.of(OksConstructionElement.XML_TAG,
+                                                           OksUnderConstructionElement.XML_TAG));
+        schemaNameTags.put(OKS_CONSTRUCTIONS_POINTS_SCHEMA, Set.of(OksConstructionElement.XML_TAG,
+                                                                   OksUnderConstructionElement.XML_TAG));
+        schemaNameTags.put(BORDERWATEROBJ_SCHEMA, Set.of(BorderWaterObjectElement.XML_TAG));
+        schemaNameTags.put(BORDERWATEROBJ_POLILYNE_PRO_SCHEMA, Set.of(BorderWaterObjectElement.XML_TAG));
     }
 }

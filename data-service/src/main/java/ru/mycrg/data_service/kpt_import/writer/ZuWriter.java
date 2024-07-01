@@ -11,6 +11,8 @@ import java.util.List;
 @Service
 public class ZuWriter extends KptElementDBWriter {
 
+    public static final String ZU_PRO_SCHEMA = "zu_pro";
+
     public ZuWriter(DetachedRecordsDao recordsDao) {
         super(recordsDao);
     }
@@ -22,6 +24,6 @@ public class ZuWriter extends KptElementDBWriter {
 
     @Override
     public String getSchemaName() {
-        return "zu_pro";
+        return ZU_PRO_SCHEMA;
     }
 }

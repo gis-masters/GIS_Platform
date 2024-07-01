@@ -13,6 +13,8 @@ import java.util.List;
 @Service
 public class OksPolylineProWriter extends KptElementDBWriter {
 
+    public static final String OKS_POLYLINE_PRO_SCHEMA = "oks_polyline_pro";
+
     public OksPolylineProWriter(DetachedRecordsDao recordsDao) {
         super(recordsDao);
     }
@@ -25,6 +27,6 @@ public class OksPolylineProWriter extends KptElementDBWriter {
 
     @Override
     public String getSchemaName() {
-        return "oks_polyline_pro";
+        return OKS_POLYLINE_PRO_SCHEMA;
     }
 }

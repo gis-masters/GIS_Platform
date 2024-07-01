@@ -11,6 +11,8 @@ import java.util.List;
 @Service
 public class BorderWaterObjectPolygonWriter extends KptElementDBWriter {
 
+    public static final String BORDERWATEROBJ_SCHEMA = "borderwaterobj";
+
     protected BorderWaterObjectPolygonWriter(DetachedRecordsDao recordsDao) {
         super(recordsDao);
     }
@@ -22,6 +24,6 @@ public class BorderWaterObjectPolygonWriter extends KptElementDBWriter {
 
     @Override
     public String getSchemaName() {
-        return "borderwaterobj";
+        return BORDERWATEROBJ_SCHEMA;
     }
 }

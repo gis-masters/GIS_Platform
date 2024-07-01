@@ -1,3 +1,4 @@
+-- Схемы: 'KPT' захардкожены в коде. При внесении любых изменений, не забудьте найти и поправить.
 INSERT INTO data.schemas (name, class_rule)
 SELECT 'dl_data_kpt',
 '{}'

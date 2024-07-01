@@ -10,7 +10,9 @@ import java.util.Arrays;
 import java.util.List;
 
 @Service
-public class OksConstructionPointWriter extends KptElementDBWriter{
+public class OksConstructionPointWriter extends KptElementDBWriter {
+
+    public static final String OKS_CONSTRUCTIONS_POINTS_SCHEMA = "oks_constructions_points";
 
     protected OksConstructionPointWriter(DetachedRecordsDao recordsDao) {
         super(recordsDao);
@@ -23,6 +25,6 @@ public class OksConstructionPointWriter extends KptElementDBWriter{
 
     @Override
     public String getSchemaName() {
-        return "oks_constructions_points";
+        return OKS_CONSTRUCTIONS_POINTS_SCHEMA;
     }
 }

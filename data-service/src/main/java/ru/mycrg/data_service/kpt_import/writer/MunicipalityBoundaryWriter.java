@@ -11,6 +11,8 @@ import java.util.List;
 @Service
 public class MunicipalityBoundaryWriter extends KptElementDBWriter {
 
+    public static final String MUNICIPALITY_BOUNDARIES_EGRN_SCHEMA = "municipality_boundaries_egrn";
+
     protected MunicipalityBoundaryWriter(DetachedRecordsDao recordsDao) {
         super(recordsDao);
     }
@@ -22,6 +24,6 @@ public class MunicipalityBoundaryWriter extends KptElementDBWriter {
 
     @Override
     public String getSchemaName() {
-        return "municipality_boundaries_egrn";
+        return MUNICIPALITY_BOUNDARIES_EGRN_SCHEMA;
     }
 }

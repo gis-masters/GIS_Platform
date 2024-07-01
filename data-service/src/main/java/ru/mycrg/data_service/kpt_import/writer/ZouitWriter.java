@@ -11,6 +11,8 @@ import java.util.List;
 @Service
 public class ZouitWriter extends KptElementDBWriter {
 
+    public static final String ZOUIT_PRO_SCHEMA = "zouit_pro";
+
     protected ZouitWriter(DetachedRecordsDao recordsDao) {
         super(recordsDao);
     }
@@ -22,6 +24,6 @@ public class ZouitWriter extends KptElementDBWriter {
 
     @Override
     public String getSchemaName() {
-        return "zouit_pro";
+        return ZOUIT_PRO_SCHEMA;
     }
 }
