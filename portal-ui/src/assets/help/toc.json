@@ -108,11 +108,6 @@
             "contentUrl": "/assets/help/map/2projectManagement/3renameGroup/03renameGroup.html"
           },
           {
-            "id": "visual_max_min",
-            "title": "Настройка слоя",
-            "contentUrl": "/assets/help/map/2projectManagement/9visual_max_min/09visual_max_min.html"
-          },
-          {
             "id": "deleteGroup",
             "title": "Удаление группы",
             "contentUrl": "/assets/help/map/2projectManagement/4deleteGroup/04deleteGroup.html"
@@ -146,11 +141,27 @@
             "id": "listProjects",
             "title": "Переход к списку проектов",
             "contentUrl": "/assets/help/map/2projectManagement/7listProjects/07listProjects.html"
+          }
+        ]
+      },
+      {
+        "id": "layersProperties",
+        "title": "Свойства слоя",
+        "children": [
+          {
+            "id": "visual_max_min",
+            "title": "Свойства слоя",
+            "contentUrl": "/assets/help/map/2projectManagement/9visual_max_min/09visual_max_min.html"
           },
           {
             "id": "changesStyle",
-            "title": "Выбор стиля для слоя",
+            "title": "Стиль для слоя",
             "contentUrl": "/assets/help/map/2projectManagement/10changesStyle/10changesStyle.html"
+          },
+          {
+            "id": "styleCaptions",
+            "title": "Подписи для слоя",
+            "contentUrl": "/assets/help/map/2projectManagement/12styleCaptions/12styleCaptions.html"
           },
           {
             "id": "photoLayer",
