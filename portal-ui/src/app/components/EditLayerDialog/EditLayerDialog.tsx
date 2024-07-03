@@ -5,8 +5,6 @@ import { cn } from '@bem-react/classname';
 import { cloneDeep } from 'lodash';
 
 import { communicationService } from '../../services/communication.service';
-import { Projection } from '../../services/data/projections/projections.models';
-import { getProjectionByCode } from '../../services/data/projections/projections.service';
 import { getSrid } from '../../services/data/projections/projections.util';
 import {
   PropertyOption,
@@ -51,7 +49,7 @@ export class EditLayerDialog extends Component<EditLayerDialogProps> {
   @observable private simpleStylesOptions: PropertyOption[] = [];
   @observable private currentFormValue?: Partial<CrgLayer>;
   @observable private busy: boolean = false;
-  @observable private defaultProjection?: Projection;
+
   private formInvoke: FormProps<Partial<CrgLayer>>['invoke'] = {};
 
   constructor(props: EditLayerDialogProps) {
@@ -59,8 +57,8 @@ export class EditLayerDialog extends Component<EditLayerDialogProps> {
     makeObservable(this);
   }
 
-  async componentDidMount(): Promise<void> {
-    await this.init();
+  componentDidMount() {
+    this.init();
   }
 
   async componentDidUpdate(prevProps: EditLayerDialogProps) {
@@ -96,24 +94,12 @@ export class EditLayerDialog extends Component<EditLayerDialogProps> {
     );
   }
 
-  private async init() {
+  private init() {
     const { nativeCRS, title } = this.props.layer;
 
     if (!nativeCRS) {
       services.logger.error('Отсутствует nativeCRS у слоя ' + title);
-
-      return;
     }
-
-    const projection = await getProjectionByCode(nativeCRS);
-    if (projection) {
-      this.setDefaultProjection(projection);
-    }
-  }
-
-  @action.bound
-  private setDefaultProjection(defaultProjection: Projection) {
-    this.defaultProjection = defaultProjection;
   }
 
   @action.bound
@@ -171,7 +157,13 @@ export class EditLayerDialog extends Component<EditLayerDialogProps> {
       return;
     }
 
-    return applyView(this.props.schema, this.currentFormValue?.view || this.props.layer.view);
+    let view = this.props.layer.view;
+
+    if (this.currentFormValue && (this.currentFormValue.view || this.currentFormValue.view === '')) {
+      view = this.currentFormValue.view === '' ? undefined : this.currentFormValue.view;
+    }
+
+    return applyView(this.props.schema, view);
   }
 
   @computed
