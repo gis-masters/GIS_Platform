@@ -8,7 +8,7 @@ import { cloneDeep } from 'lodash';
 
 import { organizationsClient } from '../../services/auth/organizations/organizations.client';
 import { organizationsService } from '../../services/auth/organizations/organizations.service';
-import { isArrayOfProjections, Projection } from '../../services/data/projections/projections.models';
+import { isArrayOfProjections, isProjection, Projection } from '../../services/data/projections/projections.models';
 import {
   PropertySchema,
   PropertySchemaChoice,
@@ -178,7 +178,13 @@ export default class OrganizationSettings extends Component<OrganizationSettings
     }
 
     // поле favorites_epsg на бэке сейчас ест только массив строк
-    value.favorites_epsg = value.favorites_epsg.map(item => JSON.stringify(item));
+    value.favorites_epsg = value.favorites_epsg.map(item => {
+      if (!isProjection(item) && typeof item !== 'string') {
+        throw new TypeError('Ошибка в типах данных');
+      }
+
+      return isProjection(item) ? JSON.stringify(item) : item;
+    });
 
     if (id) {
       const payload: OrgSettings = { id, settings: value };
