@@ -40,5 +40,45 @@
         "schemaId": "dl_data_kpt"
       }
     ]
+  },
+  {
+    "id": 2,
+    "title": "Фотоконтроль",
+    "description": "Специализация для организации фотоконтроля при обследованиях территории. Специализация позволяет: загружать и размещать на карте результаты фото-контроля с привязкой к местности и направлением съемки.",
+    "tags": [
+      "Фотофиксация"
+    ],
+    "projects": [
+      {
+        "title": "Проект - Фотоконтроль",
+        "layers": [
+          314
+        ]
+      }
+    ],
+    "datasets": [
+      {
+        "title": "Набор данных Фотоконтроль",
+        "tables": [
+          {
+            "id": 314,
+            "content": [
+              "contentForTablePhotoControl.sql"
+            ],
+            "body": {
+              "title": "Фотофиксация",
+              "schemaId": "photo_uploader",
+              "crs": "EPSG:3857",
+              "styleName": "photo_uploader"
+            }
+          }
+        ]
+      }
+    ],
+    "documentLibraries": [
+      {
+        "schemaId": "dl_data_kpt"
+      }
+    ]
   }
 ]
