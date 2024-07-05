@@ -1,6 +1,7 @@
 package ru.mycrg.data_service.service.smev3.fields;
 
 public class FieldsRveoksPart {
+
     public static final String TABLE = "dl_data_rveoks_part";
     public static final String PROPERTY_DL_DATA_RVEOKS_DATA_CONNECTION = "dl_data_rveoks_data_connection";
     public static final String PROPERTY_HEIGHT_FA = "height_fa";

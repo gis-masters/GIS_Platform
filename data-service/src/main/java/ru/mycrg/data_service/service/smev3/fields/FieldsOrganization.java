@@ -1,6 +1,7 @@
 package ru.mycrg.data_service.service.smev3.fields;
 
 public class FieldsOrganization {
+
     public static final String TABLE = "dl_data_organization";
     public static final String PROPERTY_FULL_TITLE = "full_title";
     public static final String PROPERTY_ACTUAL_ADDRESS = "actual_address";

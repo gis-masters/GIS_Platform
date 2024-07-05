@@ -21,12 +21,13 @@ public enum SmevMessageType {
 
     @Nullable
     public static SmevMessageType parseFromSmevValue(String value) {
-        if (value == null)
+        if (value == null) {
             return null;
+        }
 
         return Arrays.stream(SmevMessageType.values())
-                .filter(type -> type.getSmevValue().equals(value))
-                .findFirst()
-                .orElse(null);
+                     .filter(type -> type.getSmevValue().equals(value))
+                     .findFirst()
+                     .orElse(null);
     }
 }

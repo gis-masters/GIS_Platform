@@ -49,8 +49,11 @@ public class RasterLayerHandler implements ILayerHandler {
 
     @Override
     public Optional<Layer> create(Project project, LayerCreateDto dto) {
+        String mode = getMode(dto);
+
         String storeName = dto.getDataset();
         String workspaceName = null;
+
         if (!GIS_SERVICE_MODE.equals(dto.getMode())) {
             Long orgId = authenticationFacade.getOrganizationId();
             workspaceName = getScratchWorkspaceName(orgId);

@@ -1,6 +1,7 @@
 package ru.mycrg.data_service.service.smev3.model;
 
 public class ResponseAttachment {
+
     private final String name;
     private final String attachmentId;
 

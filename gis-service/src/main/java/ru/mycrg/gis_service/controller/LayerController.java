@@ -3,7 +3,6 @@ package ru.mycrg.gis_service.controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.hateoas.Resource;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
@@ -25,47 +24,48 @@ import javax.json.JsonMergePatch;
 import javax.validation.Valid;
 import java.util.List;
 
+import static org.springframework.http.HttpStatus.CREATED;
 import static ru.mycrg.auth_service_contract.Authorities.HAS_ANY_AUTHORITY;
 import static ru.mycrg.common_utils.MediaTypes.APPLICATION_JSON_MERGE_PATCH;
 
 @RestController
-@RequestMapping("/projects/{project_id}")
+@RequestMapping("/projects/{projectId}")
 public class LayerController {
 
     private final Logger log = LoggerFactory.getLogger(LayerController.class);
 
     private final LayerService layerService;
     private final ProjectService projectService;
-    private final CrgLayerValidator validator;
+    private final CrgLayerValidator layerValidator;
     private final ResourceProtector resourceProtector;
 
     @InitBinder
     protected void initBinder(WebDataBinder binder) {
-        binder.setValidator(validator);
+        binder.setValidator(layerValidator);
     }
 
     public LayerController(LayerService layerService,
                            ProjectService projectService,
-                           CrgLayerValidator validator,
+                           CrgLayerValidator layerValidator,
                            ResourceProtector resourceProtector) {
         this.layerService = layerService;
         this.projectService = projectService;
-        this.validator = validator;
+        this.layerValidator = layerValidator;
         this.resourceProtector = resourceProtector;
     }
 
     @GetMapping("/layers")
     @PreAuthorize(HAS_ANY_AUTHORITY)
-    public ResponseEntity<List<LayerProjection>> getLayers(@PathVariable(name = "project_id") long projectId) {
+    public ResponseEntity<List<LayerProjection>> getLayers(@PathVariable(name = "projectId") long projectId) {
         List<LayerProjection> layers = layerService.getAll(projectId);
 
         return ResponseEntity.ok(layers);
     }
 
-    @GetMapping("/layers/{layer_id}")
+    @GetMapping("/layers/{layerId}")
     @PreAuthorize(HAS_ANY_AUTHORITY)
-    public Resource<LayerProjection> getLayerById(@PathVariable(name = "project_id") long projectId,
-                                                  @PathVariable(name = "layer_id") long layerId) {
+    public Resource<LayerProjection> getLayerById(@PathVariable(name = "projectId") long projectId,
+                                                  @PathVariable(name = "layerId") long layerId) {
         LayerProjection layerProjection = layerService.getById(projectId, layerId);
 
         return new Resource<>(layerProjection);
@@ -73,7 +73,7 @@ public class LayerController {
 
     @PostMapping("/layers")
     @PreAuthorize(HAS_ANY_AUTHORITY)
-    public ResponseEntity<LayerProjection> createLayer(@PathVariable(name = "project_id") long projectId,
+    public ResponseEntity<LayerProjection> createLayer(@PathVariable(name = "projectId") long projectId,
                                                        @Valid @RequestBody LayerCreateDto dto,
                                                        BindingResult bindingResult) {
         log.debug("Request create layer: {}", dto);
@@ -83,14 +83,14 @@ public class LayerController {
         }
 
         return layerService.create(projectId, dto)
-                           .map(layerProjection -> new ResponseEntity<>(layerProjection, HttpStatus.CREATED))
-                           .orElseGet(() -> new ResponseEntity<>(null, HttpStatus.CREATED));
+                           .map(layerProjection -> new ResponseEntity<>(layerProjection, CREATED))
+                           .orElseGet(() -> new ResponseEntity<>(null, CREATED));
     }
 
-    @PatchMapping(path = "/layers/{layer_id}", consumes = APPLICATION_JSON_MERGE_PATCH)
+    @PatchMapping(path = "/layers/{layerId}", consumes = APPLICATION_JSON_MERGE_PATCH)
     @PreAuthorize(HAS_ANY_AUTHORITY)
-    public ResponseEntity<Object> updateLayer(@PathVariable(name = "project_id") long projectId,
-                                              @PathVariable(name = "layer_id") long layerId,
+    public ResponseEntity<Object> updateLayer(@PathVariable(name = "projectId") long projectId,
+                                              @PathVariable(name = "layerId") long layerId,
                                               @RequestBody JsonMergePatch patchDto) {
         log.debug("update layer: {} To: {}", layerId, patchDto.toJsonValue());
 
@@ -99,13 +99,13 @@ public class LayerController {
         return ResponseEntity.noContent().build();
     }
 
-    @DeleteMapping("/layers/{layer_id}")
+    @DeleteMapping("/layers/{layerId}")
     @PreAuthorize(HAS_ANY_AUTHORITY)
-    public ResponseEntity<Object> deleteLayer(@PathVariable(name = "project_id") long projectId,
-                                              @PathVariable(name = "layer_id") long layerId) {
+    public ResponseEntity<Object> deleteLayer(@PathVariable(name = "projectId") long projectId,
+                                              @PathVariable(name = "layerId") long layerId) {
         log.debug("Request for deletion layer: {}", layerId);
 
-        final Project project = projectService.getById(projectId);
+        Project project = projectService.getById(projectId);
         if (!resourceProtector.isOwner(project)) {
             throw new ForbiddenException("редактирования", "проекта", project.getName());
         }

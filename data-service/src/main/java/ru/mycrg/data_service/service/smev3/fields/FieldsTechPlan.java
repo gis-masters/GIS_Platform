@@ -1,6 +1,7 @@
 package ru.mycrg.data_service.service.smev3.fields;
 
 public class FieldsTechPlan {
+
     public static final String TABLE = "dl_data_tech_plan";
     public static final String PROPERTY_TITLE = "title";
     public static final String PROPERTY_ISSUE_DATE = "issue_date";

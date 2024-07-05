@@ -1,6 +1,7 @@
 package ru.mycrg.data_service.service.smev3.fields;
 
 public class FieldsRsoksPart {
+
     public static final String TABLE = "dl_data_rsoks_part";
     public static final String PROPERTY_DL_DATA_RSOKS_DATA_CONNECTION = "dl_data_rsoks_data_connection";
     public static final String PROPERTY_LINE_OBJECT_CLASSES = "line_object_classes";

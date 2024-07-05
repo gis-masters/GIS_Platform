@@ -1,8 +1,9 @@
 package ru.mycrg.data_service.service.smev3.model;
 
 public class RefType {
-    private String code;
-    private String name;
+
+    private final String code;
+    private final String name;
 
     public RefType(String code, String name) {
         this.code = code;

@@ -4,6 +4,7 @@ package ru.mycrg.data_service.service.smev3.model;
  * При ошибке обработка входящего пакета
  */
 public class ResponseFailProcess {
+
     private final String message;
     private final String stackTrace;
     private final String responseXmlBase64;

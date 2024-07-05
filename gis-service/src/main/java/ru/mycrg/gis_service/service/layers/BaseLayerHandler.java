@@ -38,43 +38,39 @@ public class BaseLayerHandler implements ILayerHandler {
 
     @Transactional
     public Optional<Layer> create(Project project, LayerCreateDto dto) {
-        String mode = dto.getMode();
-        if (mode == null) {
-            mode = FULL_MODE;
-        }
-
-        if (dto.getTableName() == null || dto.getNativeCRS() == null) {
-            return Optional.empty();
-        }
+        String mode = getMode(dto);
 
         Layer newLayer = new Layer(dto);
         newLayer.setProject(project);
-        String tableName = newLayer.getTableName();
+        String requestedTableName = newLayer.getTableName();
         String nativeCRS = newLayer.getNativeCRS() != null ? newLayer.getNativeCRS() : defaultEpsgCode();
 
         Layer layer = null;
-        if (!GEOSERVER_MODE.equals(mode)) {
-            if (layerRepository.existsByProjectAndTableNameAndNativeCRS(project, tableName, nativeCRS)) {
-                log.debug("Слой: '{} / {} / {}' уже существует", project.getId(), tableName, nativeCRS);
+        if (FULL_MODE.equals(mode) || GIS_SERVICE_MODE.equals(mode)) {
+            if (layerRepository.existsByProjectAndTableNameAndNativeCRS(project, requestedTableName, nativeCRS)) {
+                log.debug("Слой: '{} / {} / {}' уже существует", project.getId(), requestedTableName, nativeCRS);
 
                 layer = layerRepository
-                        .findByTableNameAndNativeCRS(tableName, nativeCRS)
+                        .findByTableNameAndNativeCRS(requestedTableName, nativeCRS)
                         .stream().findFirst()
                         .orElseThrow(() -> new NotFoundException(
-                                String.format("Не найден слой: %s / %s", tableName, nativeCRS)));
+                                String.format("Не найден слой: %s / %s", requestedTableName, nativeCRS)));
             } else {
                 layer = layerRepository.save(newLayer);
             }
         }
 
-        if (!GIS_SERVICE_MODE.equals(mode)) {
-            String featureTypeName = dto.getFeatureTypeName() == null
-                    ? buildGeoserverFeatureName(tableName, nativeCRS)
-                    : buildGeoserverFeatureName(dto.getFeatureTypeName(), nativeCRS);
+        if (FULL_MODE.equals(mode) || GEOSERVER_MODE.equals(mode)) {
+            String requestedFeatureTypeName = dto.getFeatureTypeName();
+            String featureTypeName = requestedFeatureTypeName == null
+                    ? buildGeoserverFeatureName(requestedTableName, nativeCRS)
+                    : buildGeoserverFeatureName(requestedFeatureTypeName, nativeCRS);
 
-            String nativeName = dto.getNativeName() != null
-                    ? dto.getNativeName()
-                    : dto.getTableName();
+            String requestedNativeName = dto.getNativeName();
+            String nativeName = requestedNativeName != null
+                    ? requestedNativeName
+                    : requestedTableName;
+
             Optional<String> oFeatureTypeName = layerGeoserverService.create(newLayer, featureTypeName, nativeName);
             if (oFeatureTypeName.isPresent()) {
                 String workspace = newLayer.getDataStoreName();

@@ -84,12 +84,20 @@ public class CrgLayerValidator implements Validator {
         common(errors, dto);
 
         if (dto.getNativeCRS() == null) {
-            errors.rejectValue("nativeCRS", REQUIRED, DEFAULT_V_MESSAGE);
+            errors.rejectValue("nativeCRS", REQUIRED, "является обязательным");
+        }
+
+        if (dto.getNativeName() == null) {
+            errors.rejectValue("nativeName", REQUIRED, "является обязательным");
         }
     }
 
     private void validateAsShp(@NotNull Errors errors, LayerCreateDto dto) {
         common(errors, dto);
+
+        if (dto.getNativeName() == null) {
+            errors.rejectValue("nativeName", REQUIRED, "является обязательным");
+        }
     }
 
     private void validateAsRaster(@NotNull Errors errors, LayerCreateDto dto) {
