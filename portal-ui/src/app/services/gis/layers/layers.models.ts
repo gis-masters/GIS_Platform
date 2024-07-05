@@ -46,6 +46,7 @@ export interface CrgRasterLayer extends CrgBaseLayer {
   recordId: number;
   parentId?: number;
   enabled?: boolean;
+  nativeName?: string;
 }
 
 export interface CrgVectorLayer extends CrgBaseLayer {

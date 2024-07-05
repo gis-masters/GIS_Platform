@@ -1,3 +1,4 @@
+import { FilePlacementMode } from '../../../../src/app/services/data/file-placement/file-placement.models';
 import { filesClient } from '../../../../src/app/services/data/files/files.client';
 import { FileInfo } from '../../../../src/app/services/data/files/files.models';
 import { getFileBaseName } from '../../../../src/app/services/data/files/files.util';
@@ -19,7 +20,7 @@ export async function placeTifFile(
     const rasterLayer: NewCrgLayer = {
       title: getFileBaseName(title),
       type: CrgLayerType.RASTER,
-      mode: 'full',
+      mode: FilePlacementMode.FULL,
       nativeCRS,
       tableName: `${record.libraryTableName}_${record.id}__${id}`,
       dataSourceUri: `file://${path}`,

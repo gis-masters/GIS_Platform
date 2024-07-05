@@ -1,3 +1,5 @@
+import { isObject } from 'lodash';
+
 import { PageableResources } from '../../../../server-types/common-contracts';
 import {
   GmlPlacementModel,
@@ -12,8 +14,19 @@ export interface Process {
   status: ProcessStatus;
   type: ProcessType;
   extra: unknown;
+  details: ProcessTasks | ImportShapeProcess | PageableResources<unknown> | PlaceFileProcess;
   message?: string;
-  details: ProcessTasks | ImportShapeProcess | PageableResources<unknown>;
+}
+
+export interface GeoserverPublicationData {
+  workspaceName: string;
+  storeName: string;
+  featureTypeName: string;
+  nativeName: string;
+}
+
+export interface PlaceFileProcess {
+  geoserverPublicationData: GeoserverPublicationData;
 }
 
 export interface ProcessTasks {
@@ -95,4 +108,27 @@ export interface ProcessResponse {
 export interface ProcessableModel {
   type: ProcessType;
   payload: GmlPlacementModel | PlacementModelForFilesWithCrs | ImportFeaturesFromShapeFileModel;
+}
+
+export function isPlaceFileProcess(obj: unknown): obj is PlaceFileProcess {
+  return (
+    isObject(obj) &&
+    'geoserverPublicationData' in obj &&
+    typeof obj.geoserverPublicationData === 'object' &&
+    isGeoserverPublicationData(obj.geoserverPublicationData)
+  );
+}
+
+export function isGeoserverPublicationData(obj: unknown): obj is GeoserverPublicationData {
+  return (
+    isObject(obj) &&
+    'workspaceName' in obj &&
+    typeof obj.workspaceName === 'string' &&
+    'storeName' in obj &&
+    typeof obj.storeName === 'string' &&
+    'featureTypeName' in obj &&
+    typeof obj.featureTypeName === 'string' &&
+    'nativeName' in obj &&
+    typeof obj.nativeName === 'string'
+  );
 }

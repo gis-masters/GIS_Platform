@@ -34,10 +34,10 @@ public class ImportFilesController extends BaseController {
     }
 
     @PostMapping("/import/file")
-    public ResponseEntity<Long> importXml(@RequestParam String datasetId,
-                                          @RequestParam String tableId,
-                                          @RequestParam("file") MultipartFile file,
-                                          @RequestParam String importType) {
+    public ResponseEntity<Long> importFile(@RequestParam String datasetId,
+                                           @RequestParam String tableId,
+                                           @RequestParam("file") MultipartFile file,
+                                           @RequestParam String importType) {
         throwIfEmpty(datasetId, tableId, importType);
 
         Importer fImporter = importers

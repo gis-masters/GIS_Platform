@@ -5,13 +5,23 @@ import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 import { AxiosError } from 'axios';
 
-import { placeFile } from '../../services/data/file-placement/file-placement.service';
+import { FilePlacementMode } from '../../services/data/file-placement/file-placement.models';
+import { placeFileWithProjection } from '../../services/data/file-placement/file-placement.service';
 import { FileInfo } from '../../services/data/files/files.models';
 import { getFile } from '../../services/data/files/files.service';
-import { getFileBaseName } from '../../services/data/files/files.util';
+import {
+  getFileBaseName,
+  isDxfFile,
+  isMidMifFile,
+  isShpFile,
+  isTabFile,
+  isTifFile
+} from '../../services/data/files/files.util';
 import { Library, LibraryRecord } from '../../services/data/library/library.models';
 import { getLibraryRecord } from '../../services/data/library/library.service';
-import { defaultOlProjectionCode } from '../../services/data/projections/projections.models';
+import { isPlaceFileProcess } from '../../services/data/processes/processes.models';
+import { awaitProcess } from '../../services/data/processes/processes.service';
+import { Projection } from '../../services/data/projections/projections.models';
 import {
   ContentType,
   PropertySchema,
@@ -27,16 +37,17 @@ import { getViewChoiceOptions } from '../../services/gis/layers/layers.service';
 import {
   externalLayerDefaults,
   generateNextLayerId,
-  rasterLayerDefaults,
   vectorLayerDefaults
 } from '../../services/gis/layers/layers.utils';
 import { services } from '../../services/services';
 import { FieldValidator, validateFormValue } from '../../services/util/form/formValidation.utils';
 import { currentProject } from '../../stores/CurrentProject.store';
 import { currentUser } from '../../stores/CurrentUser.store';
+import { projectionsStore } from '../../stores/Projections.store';
 import { getDefaultValues } from '../Form/Form.utils';
 import { FormDialog } from '../FormDialog/FormDialog';
 import { SelectFileInLibraryRecordControl } from '../SelectFileInLibraryRecordControl/SelectFileInLibraryRecordControl';
+import { SelectProjectionControl } from '../SelectProjectionControl/SelectProjectionControl';
 import { SelectVectorTableControl } from '../SelectVectorTableControl/SelectVectorTableControl';
 import { Toast } from '../Toast/Toast';
 
@@ -50,6 +61,7 @@ interface AddLayerDialogProps {
 
 interface LayerFormValue extends CrgLayer {
   datasource?: Datasource;
+  projection?: Projection;
   layerType?: string;
 }
 
@@ -63,7 +75,7 @@ export interface Datasource {
 
 const layerTypeOptions = [
   { title: 'Векторный слой', value: 'vector' },
-  { title: 'Растровый слой', value: 'raster' },
+  { title: 'Файловый слой', value: 'raster' },
   { title: 'Внешний слой (веб-сервис ArcGis)', value: 'external' }
 ];
 
@@ -208,6 +220,13 @@ export class AddLayerDialog extends Component<AddLayerDialogProps> {
           validationFormula: validateLayer
         },
         {
+          propertyType: PropertyType.CUSTOM,
+          name: 'projection',
+          title: 'Система координат',
+          defaultValue: projectionsStore.defaultProjection,
+          ControlComponent: SelectProjectionControl
+        },
+        {
           name: 'view',
           title: 'Представление',
           hidden: !this.formValue?.datasource || options.length <= 1,
@@ -231,6 +250,7 @@ export class AddLayerDialog extends Component<AddLayerDialogProps> {
           title: 'Имя слоя',
           required: true,
           minLength: 2,
+          calculatedValueFormula: this.calculateTitle,
           propertyType: PropertyType.STRING
         },
         {
@@ -251,6 +271,13 @@ export class AddLayerDialog extends Component<AddLayerDialogProps> {
           defaultValue: true,
           ControlComponent: SelectFileInLibraryRecordControl,
           validationFormula: validateLayer
+        },
+        {
+          propertyType: PropertyType.CUSTOM,
+          name: 'projection',
+          title: 'Система координат',
+          defaultValue: projectionsStore.defaultProjection,
+          ControlComponent: SelectProjectionControl
         }
       ];
     } else if (this.formValue?.layerType === CrgLayerType.EXTERNAL) {
@@ -314,12 +341,15 @@ export class AddLayerDialog extends Component<AddLayerDialogProps> {
       minZoom,
       dataSourceUri,
       tableName,
+      projection,
       layerType,
       view,
       errorText
     } = this.formValue;
+
     const { dataset, vectorTable, library } = datasource;
     const workspace = currentUser.workspaceName;
+    const crs = `${projection?.authName}:${projection?.authSrid}`;
 
     if (this.valid && (!layerType || layerType === CrgLayerType.VECTOR)) {
       if (!dataset || !vectorTable) {
@@ -333,9 +363,9 @@ export class AddLayerDialog extends Component<AddLayerDialogProps> {
         id: generateNextLayerId(),
         dataset: dataset?.identifier,
         tableName: vectorTable?.identifier,
-        complexName: buildComplexName(workspace, vectorTable?.identifier, vectorTable.crs),
+        complexName: buildComplexName(workspace, vectorTable?.identifier, crs),
         title,
-        nativeCRS: vectorTable.crs,
+        nativeCRS: crs,
         minZoom,
         styleName: styleName || this.schema?.styleName || this.schema?.name,
         view
@@ -346,7 +376,6 @@ export class AddLayerDialog extends Component<AddLayerDialogProps> {
     }
 
     const externalDefaults = externalLayerDefaults();
-    const rasterDefaults = rasterLayerDefaults();
 
     if (this.valid && layerType === CrgLayerType.RASTER && this.formValue.datasource) {
       const { libraryRecord, file } = this.formValue.datasource;
@@ -360,19 +389,79 @@ export class AddLayerDialog extends Component<AddLayerDialogProps> {
         const { path } = await getFile(file.id);
         const fileTableName = `${record.libraryTableName}_${record.id}__${file.id}`;
 
-        await placeFile(file, { crs: defaultOlProjectionCode, mode: 'geoserver' }, currentProject, record);
+        let crgLayer: CrgLayer;
 
-        this.props.onAdd({
-          ...rasterDefaults,
-          id: generateNextLayerId(),
+        const generalCrgLayerProps = {
           title: title || getFileBaseName(file.title),
-          dataStoreName: workspace,
-          tableName: fileTableName, // name слоя не геосервере
-          complexName: buildComplexName(workspace, fileTableName, defaultOlProjectionCode),
-          dataSourceUri: 'file://' + path,
+          tableName: fileTableName,
           libraryId: record.libraryTableName,
-          recordId: record.id
-        });
+          recordId: record.id,
+          dataStoreName: workspace,
+          complexName: buildComplexName(workspace, fileTableName, crs),
+          id: generateNextLayerId(),
+          enabled: true,
+          nativeCRS: crs,
+          mode: FilePlacementMode.GIS
+        };
+
+        if (isMidMifFile(file)) {
+          crgLayer = {
+            ...generalCrgLayerProps,
+            type: CrgLayerType.MID,
+            styleName: 'generic'
+          };
+        }
+
+        if (isDxfFile(file)) {
+          crgLayer = {
+            ...generalCrgLayerProps,
+            type: CrgLayerType.DXF,
+            styleName: 'dxf_style'
+          };
+        }
+
+        if (isShpFile(file)) {
+          crgLayer = {
+            ...generalCrgLayerProps,
+            type: CrgLayerType.SHP,
+            styleName: 'generic'
+          };
+        }
+
+        if (isTabFile(file)) {
+          crgLayer = {
+            ...generalCrgLayerProps,
+            type: CrgLayerType.TAB,
+            styleName: 'generic'
+          };
+        }
+
+        if (isTifFile(file)) {
+          crgLayer = {
+            ...generalCrgLayerProps,
+            type: CrgLayerType.RASTER,
+            dataSourceUri: `file://${path}`
+          };
+        }
+
+        if (!crgLayer) {
+          throw new Error('Не удалось подключить слой');
+        }
+
+        const process = await placeFileWithProjection(file, currentProject.id, crs, FilePlacementMode.GEOSERVER);
+        const processResult = await awaitProcess(Number(process._links.process.href.split('/').at(-1)));
+
+        if (processResult && isPlaceFileProcess(processResult.details)) {
+          const details = processResult.details;
+
+          crgLayer = {
+            ...crgLayer,
+            dataset: details.geoserverPublicationData.storeName,
+            nativeName: details.geoserverPublicationData.nativeName
+          };
+        }
+
+        this.props.onAdd(crgLayer);
       } catch (error) {
         Toast.error('Не удалось подключить слой');
         services.logger.error('Не удалось удалить файл: ', (error as AxiosError).message);

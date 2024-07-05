@@ -20,7 +20,7 @@ public class LayerPublicationDto implements Serializable {
     private String dataSourceUri;
 
     public LayerPublicationDto(String dataset, String tableName, String title, String libraryId, Long recordId,
-                               String nativeCRS, Long projectId, String dataSourceUri) {
+                               String nativeCRS, Long projectId, String dataSourceUri, String mode) {
         this.title = title;
         this.tableName = tableName;
         this.libraryId = libraryId;
@@ -29,9 +29,9 @@ public class LayerPublicationDto implements Serializable {
         this.dataset = dataset;
         this.nativeCRS = nativeCRS;
         this.projectId = projectId;
+        this.mode = mode;
 
         this.type = "raster";
-        this.mode = "full";
         this.enabled = true;
     }
 

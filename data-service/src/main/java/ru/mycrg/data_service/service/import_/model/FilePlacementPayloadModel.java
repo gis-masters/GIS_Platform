@@ -10,6 +10,7 @@ public class FilePlacementPayloadModel extends BaseWsModel {
     private UUID fileId;
     private Long projectId;
     private String style = "generic";
+    private String mode = "FULL";
 
     public FilePlacementPayloadModel() {
         // Required
@@ -47,13 +48,22 @@ public class FilePlacementPayloadModel extends BaseWsModel {
         this.style = style;
     }
 
+    public String getMode() {
+        return mode;
+    }
+
+    public void setMode(String mode) {
+        this.mode = mode;
+    }
+
     @Override
     public String toString() {
         return "{" +
                 "\"crs\":" + (crs == null ? "null" : "\"" + crs + "\"") + ", " +
                 "\"fileId\":" + (fileId == null ? "null" : fileId) + ", " +
                 "\"projectId\":" + (projectId == null ? "null" : "\"" + projectId + "\"") + ", " +
-                "\"style\":" + (style == null ? "null" : "\"" + style + "\"") +
+                "\"style\":" + (style == null ? "null" : "\"" + style + "\"") + ", " +
+                "\"mode\":" + (mode == null ? "null" : "\"" + mode + "\"") +
                 "}";
     }
 }

@@ -26,6 +26,12 @@ Then('в списке слоев панели слоёв отображаютс�
   await expect(expectedNames.raw()[0]).toEqual(currentNames);
 });
 
+Then('в списке слоев панели слоёв отображается пункт {string}', async (layerName: string) => {
+  const currentNames = await layerCardBlock.getLayersCardsNames();
+
+  await expect(currentNames.includes(layerName)).toBeTruthy();
+});
+
 Then('в списке слоев панели слоёв не отображается пункт {string}', async (expectedName: string) => {
   const layerCardExisting = await layerCardBlock.isLayerCardExist(expectedName);
 

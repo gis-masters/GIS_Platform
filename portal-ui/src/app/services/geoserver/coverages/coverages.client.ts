@@ -48,6 +48,7 @@ class CoveragesClient extends GeoserverClient {
     const workspace = extractWorkspaceFromComplexName(layer.complexName);
     const coverage = extractFeatureTypeNameFromComplexName(layer.complexName);
     const coverageStore = layer.dataset;
+
     if (!coverageStore) {
       throw new Error(`У слоя: '${layer.complexName}' не указан dataset`);
     }

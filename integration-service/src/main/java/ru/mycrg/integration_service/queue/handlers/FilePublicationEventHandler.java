@@ -37,7 +37,6 @@ public class FilePublicationEventHandler implements IEventHandler {
 
     @Override
     public void handle(IMessageBusEvent event) {
-
         FilePublicationEvent filePublicationEvent = null;
         try {
             filePublicationEvent = (FilePublicationEvent) event;

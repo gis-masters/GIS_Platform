@@ -21,6 +21,7 @@ import ru.mycrg.data_service_contract.dto.ProcessModel;
 import ru.mycrg.data_service_contract.dto.publication.BaseWsProcess;
 import ru.mycrg.data_service_contract.dto.publication.GeoserverPublicationData;
 import ru.mycrg.data_service_contract.dto.publication.GisPublicationData;
+import ru.mycrg.data_service_contract.enums.FilePublicationMode;
 import ru.mycrg.data_service_contract.enums.FileType;
 import ru.mycrg.data_service_contract.queue.request.FilePublicationEvent;
 import ru.mycrg.messagebus_contract.IMessageBusProducer;
@@ -85,6 +86,7 @@ public class FilePlacementExecutor implements IExecutor<ImportReport>, IFilePlac
         messageBus.produce(
                 new FilePublicationEvent(
                         fileType,
+                        FilePublicationMode.parse(payload.getMode()).orElseThrow(),
                         new BaseWsProcess(
                                 authenticationFacade.getAccessToken(),
                                 this.processModel,

@@ -13,6 +13,10 @@ When('я выделяю область с центра карты к шкале 
   await mapBlock.dragAndDropFromMapCenterToMapScaleBar();
 });
 
+When('я жду когда карта станет кликабельной', async function () {
+  await mapBlock.waitForMapIsClickable();
+});
+
 When(
   'я перехожу на карту к объекту с id:{string} в созданном слое по ссылке с зумом {int} и центром {int},{int}',
   async function (this: ScenarioScope, id: string, zoom: number, center1: number, center2: number) {

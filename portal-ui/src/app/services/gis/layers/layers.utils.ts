@@ -2,6 +2,7 @@ import { Coordinate } from 'ol/coordinate';
 
 import { currentProject } from '../../../stores/CurrentProject.store';
 import { currentUser } from '../../../stores/CurrentUser.store';
+import { FilePlacementMode } from '../../data/file-placement/file-placement.models';
 import { defaultOlProjectionCode } from '../../data/projections/projections.models';
 import { extractTableNameFromFeatureId } from '../../geoserver/featureType/featureType.util';
 import { CoordinateEdited, WfsFeature } from '../../geoserver/wfs/wfs.models';
@@ -34,7 +35,7 @@ export function rasterLayerDefaults(): Pick<
   return {
     ...defaultProps,
     nativeCRS: defaultOlProjectionCode,
-    mode: 'gis-service',
+    mode: FilePlacementMode.GIS,
     enabled: true,
     type: CrgLayerType.RASTER
   };

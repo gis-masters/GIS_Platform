@@ -3,6 +3,7 @@ package ru.mycrg.data_service_contract.queue.request;
 import ru.mycrg.data_service_contract.dto.publication.BaseWsProcess;
 import ru.mycrg.data_service_contract.dto.publication.GeoserverPublicationData;
 import ru.mycrg.data_service_contract.dto.publication.GisPublicationData;
+import ru.mycrg.data_service_contract.enums.FilePublicationMode;
 import ru.mycrg.data_service_contract.enums.FileType;
 import ru.mycrg.messagebus_contract.events.DefaultMessageBusRequestEvent;
 
@@ -14,6 +15,7 @@ import static ru.mycrg.messagebus_contract.MessageBusProperties.DATA_TO_INTEGRAT
 public class FilePublicationEvent extends DefaultMessageBusRequestEvent implements Serializable {
 
     private FileType type;
+    private FilePublicationMode publicationMode;
     private BaseWsProcess baseWsProcess;
     private GeoserverPublicationData geoserverPublicationData;
     private GisPublicationData gisPublicationData;
@@ -23,12 +25,14 @@ public class FilePublicationEvent extends DefaultMessageBusRequestEvent implemen
     }
 
     public FilePublicationEvent(FileType type,
+                                FilePublicationMode publicationMode,
                                 BaseWsProcess baseWsProcess,
                                 GeoserverPublicationData geoserverPublicationData,
                                 GisPublicationData gisPublicationData) {
         super(UUID.randomUUID(), DATA_TO_INTEGRATION_QUEUE);
 
         this.type = type;
+        this.publicationMode = publicationMode;
         this.baseWsProcess = baseWsProcess;
         this.geoserverPublicationData = geoserverPublicationData;
         this.gisPublicationData = gisPublicationData;
@@ -66,13 +70,22 @@ public class FilePublicationEvent extends DefaultMessageBusRequestEvent implemen
         this.gisPublicationData = gisPublicationData;
     }
 
+    public FilePublicationMode getPublicationMode() {
+        return publicationMode;
+    }
+
+    public void setPublicationMode(FilePublicationMode publicationMode) {
+        this.publicationMode = publicationMode;
+    }
+
     @Override
     public String toString() {
         return "{" +
                 "\"type\":" + (type == null ? "null" : type) + ", " +
+                "\"publicationMode\":" + (publicationMode == null ? "null" : publicationMode) + ", " +
                 "\"baseWsProcess\":" + (baseWsProcess == null ? "null" : baseWsProcess) + ", " +
-                "\"geoserverPublication\":" + (geoserverPublicationData == null ? "null" : geoserverPublicationData) + ", " +
-                "\"gisPublication\":" + (gisPublicationData == null ? "null" : gisPublicationData) +
+                "\"geoserverPublicationData\":" + (geoserverPublicationData == null ? "null" : geoserverPublicationData) + ", " +
+                "\"gisPublicationData\":" + (gisPublicationData == null ? "null" : gisPublicationData) +
                 "}";
     }
 }

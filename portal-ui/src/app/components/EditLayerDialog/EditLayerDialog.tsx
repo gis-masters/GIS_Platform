@@ -5,6 +5,7 @@ import { cn } from '@bem-react/classname';
 import { cloneDeep } from 'lodash';
 
 import { communicationService } from '../../services/communication.service';
+import { FilePlacementMode } from '../../services/data/file-placement/file-placement.models';
 import { getSrid } from '../../services/data/projections/projections.util';
 import {
   PropertyOption,
@@ -290,14 +291,17 @@ export class EditLayerDialog extends Component<EditLayerDialogProps> {
   }
 
   private async changeLayerProjection(layer: CrgLayer, projectionCode: string): Promise<void> {
-    await createLayer({ ...layer, mode: 'geoserver', nativeCRS: projectionCode }, currentProject.id);
+    await createLayer({ ...layer, mode: FilePlacementMode.GEOSERVER, nativeCRS: projectionCode }, currentProject.id);
+
     if (!layer.tableName) {
       throw new Error('Отсутствует tableName у слоя');
     }
+
     patch(layer, {
       nativeCRS: projectionCode,
       complexName: buildComplexName(currentUser.workspaceName, layer.tableName, projectionCode)
     });
+
     communicationService.layerUpdated.emit({ type: 'update', data: layer });
   }
 

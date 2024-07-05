@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import ru.mycrg.data_service_contract.dto.publication.GeoserverPublicationData;
 import ru.mycrg.data_service_contract.dto.publication.GisPublicationData;
+import ru.mycrg.data_service_contract.enums.FilePublicationMode;
 import ru.mycrg.data_service_contract.enums.FileType;
 import ru.mycrg.data_service_contract.queue.request.FilePublicationEvent;
 import ru.mycrg.integration_service.bpmn.BaseHttpService;
@@ -91,10 +92,11 @@ public class GisCreateLayerDelegate implements JavaDelegate {
                                            gisPublicationData.getRecordId(),
                                            gisPublicationData.getCrs(),
                                            gisPublicationData.getProjectId(),
-                                           dataSourceUri);
+                                           dataSourceUri,
+                                           getMode(event));
         } else {
             return new LayerPublicationDto(type.name().toLowerCase(),
-                                           "full",
+                                           getMode(event),
                                            gisPublicationData.getProjectId(),
                                            geoserverPublicationData.getFeatureTypeName(),
                                            geoserverPublicationData.getNativeName(),
@@ -105,6 +107,18 @@ public class GisCreateLayerDelegate implements JavaDelegate {
                                            gisPublicationData.getStyleName(),
                                            geoserverPublicationData.getWorkspaceName(),
                                            geoserverPublicationData.getStoreName());
+        }
+    }
+
+    @NotNull
+    private String getMode(FilePublicationEvent event) {
+        FilePublicationMode node = event.getPublicationMode();
+        if (node.equals(FilePublicationMode.GIS)) {
+            return "gis-service";
+        } else if (node.equals(FilePublicationMode.GEOSERVER)) {
+            return "geoserver";
+        } else {
+            return "full";
         }
     }
 

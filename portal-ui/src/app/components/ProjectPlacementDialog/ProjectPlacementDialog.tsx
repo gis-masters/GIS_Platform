@@ -9,7 +9,7 @@ import { AxiosError } from 'axios';
 import { communicationService } from '../../services/communication.service';
 import { placeFileWithProjection, placeGml } from '../../services/data/file-placement/file-placement.service';
 import { FileInfo } from '../../services/data/files/files.models';
-import { isGmlFile, isNeedDefineProjection } from '../../services/data/files/files.util';
+import { isFileCanBePlaced, isGmlFile } from '../../services/data/files/files.util';
 import { LibraryRecord } from '../../services/data/library/library.models';
 import { ProcessResponse } from '../../services/data/processes/processes.models';
 import { awaitProcess } from '../../services/data/processes/processes.service';
@@ -71,7 +71,7 @@ export class ProjectPlacementDialog extends Component<ProjectPlacementDialogProp
         fullWidth={fullWidth}
         additionalAction={
           <>
-            {isNeedDefineProjection(fileInfo) && (
+            {isFileCanBePlaced(fileInfo) && (
               <SelectProjection value={this.projection} onChange={this.setProjection} fullWidth />
             )}
             {isGmlFile(fileInfo) && (
@@ -119,7 +119,7 @@ export class ProjectPlacementDialog extends Component<ProjectPlacementDialogProp
     }
 
     try {
-      const process = await (isNeedDefineProjection(this.props.fileInfo)
+      const process = await (isFileCanBePlaced(this.props.fileInfo)
         ? placeFileWithProjection(fileInfo, project.id, getProjectionCode(this.projection))
         : placeGml(fileInfo, project.id, this.invertedCoordinates));
 

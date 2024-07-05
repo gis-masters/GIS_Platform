@@ -15,6 +15,11 @@ class MapBlock extends Block {
     await $map.click();
   }
 
+  async waitForMapIsClickable(): Promise<void> {
+    const $map = await this.$('map');
+    await $map.waitForClickable();
+  }
+
   async moveToMap(): Promise<void> {
     const $map = await this.$('map');
     await $map.waitForDisplayed();

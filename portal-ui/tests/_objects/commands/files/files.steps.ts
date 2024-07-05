@@ -23,6 +23,14 @@ Given('загружены тестовые файлы', async function (this: Sc
   );
 });
 
+Given('загружены тестовые файлы с названиями: {strings}', async function (filesNames: string[]) {
+  this.latestUploadedFiles = await Promise.all(
+    filesNames.map(async file => {
+      return await uploadTestFile(file);
+    })
+  );
+});
+
 Given(
   'загруженный тестовый dxf файл в проекции {string} размещен в созданном проекте',
   async function (this: ScenarioScope, crs: string) {

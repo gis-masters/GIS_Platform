@@ -71,12 +71,6 @@ export function isZipFile(file: File | FileInfo): boolean {
   return normalizeExtension(getFileExtension(title)) === 'zip';
 }
 
-export function isTifFile(file: File | FileInfo): boolean {
-  const title = isFileInfo(file) ? file.title : file.name;
-
-  return normalizeExtension(getFileExtension(title)) === 'tif';
-}
-
 export function isPdfFile(file: File | FileInfo): boolean {
   const title = isFileInfo(file) ? file.title : file.name;
 
@@ -104,13 +98,37 @@ export function isGmlFile(file: File | FileInfo): boolean {
   return normalizeExtension(getFileExtension(title)) === 'gml';
 }
 
+export function isMidMifFile(file: File | FileInfo): boolean {
+  const title = isFileInfo(file) ? file.title : file.name;
+
+  return normalizeExtension(getFileExtension(title)) === 'mid' || normalizeExtension(getFileExtension(title)) === 'mif';
+}
+
+export function isTabFile(file: File | FileInfo): boolean {
+  const title = isFileInfo(file) ? file.title : file.name;
+
+  return normalizeExtension(getFileExtension(title)) === 'tab';
+}
+
+export function isShpFile(file: File | FileInfo): boolean {
+  const title = isFileInfo(file) ? file.title : file.name;
+
+  return normalizeExtension(getFileExtension(title)) === 'shp';
+}
+
+export function isTifFile(file: File | FileInfo): boolean {
+  const title = isFileInfo(file) ? file.title : file.name;
+
+  return normalizeExtension(getFileExtension(title)) === 'tif';
+}
+
 export function isDxfFile(file: File | FileInfo): boolean {
   const title = isFileInfo(file) ? file.title : file.name;
 
   return normalizeExtension(getFileExtension(title)) === 'dxf';
 }
 
-export function isNeedDefineProjection(file: File | FileInfo): boolean {
+export function isFileCanBePlaced(file: File | FileInfo): boolean {
   const title = isFileInfo(file) ? file.title : file.name;
 
   const ext = normalizeExtension(getFileExtension(title));

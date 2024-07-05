@@ -6,7 +6,7 @@ import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
 import { FileInfo } from '../../services/data/files/files.models';
-import { isTifFile } from '../../services/data/files/files.util';
+import { isFileCanBePlaced } from '../../services/data/files/files.util';
 import { Library, LibraryRecord } from '../../services/data/library/library.models';
 import { Datasource } from '../AddLayerDialog/AddLayerDialog';
 import { Breadcrumbs, BreadcrumbsItemData } from '../Breadcrumbs/Breadcrumbs';
@@ -45,7 +45,12 @@ export class SelectFileInLibraryRecordControl extends Component<FormControlProps
         >
           {libraryRecord ? <Breadcrumbs items={this.breadcrumbsItems} itemsType='none' /> : 'Не выбрано'}
         </ButtonBase>
-        <Dialog open={this.dialogOpen} onClose={this.closeDialog} maxWidth='md'>
+        <Dialog
+          className={cnSelectFileInLibraryRecordControl('Dialog')}
+          open={this.dialogOpen}
+          onClose={this.closeDialog}
+          maxWidth='md'
+        >
           <DialogTitle>Выберите источник данных</DialogTitle>
           <DialogContent>
             <Explorer
@@ -140,7 +145,7 @@ export class SelectFileInLibraryRecordControl extends Component<FormControlProps
   @boundMethod
   private testForDisabled(item: ExplorerItemData): boolean {
     if (item.type === ExplorerItemType.FILE) {
-      return !isTifFile(item.payload);
+      return !isFileCanBePlaced(item.payload);
     }
 
     return false;
@@ -148,7 +153,7 @@ export class SelectFileInLibraryRecordControl extends Component<FormControlProps
 
   private get disabledSelect(): boolean {
     if (this.selectedFile) {
-      return !isTifFile(this.selectedFile);
+      return !isFileCanBePlaced(this.selectedFile);
     }
 
     return true;

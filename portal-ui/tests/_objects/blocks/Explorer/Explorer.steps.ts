@@ -23,9 +23,16 @@ When('я открываю созданный набор данных', async fun
   await explorerBlock.openExplorerItem(latestDataset.title);
 });
 
-When('в созданной библиотеке документов я захожу в папку {string}', async (folder: string) => {
+When('в библиотеке документов я захожу внутрь элемента с названием {string}', async (folder: string) => {
   const explorerBlock = new ExplorerBlock();
   await explorerBlock.openExplorerItem(folder);
+});
+
+When('в библиотеке документов я захожу внутрь созданного документа', async function (this: ScenarioScope) {
+  const explorerBlock = new ExplorerBlock();
+  if (this.latestLibraryRecords[0]?.title) {
+    await explorerBlock.openExplorerItem(this.latestLibraryRecords[0].title);
+  }
 });
 
 When('в наборах данных я выбираю векторную таблицу {string}', async (datatable: string) => {
@@ -41,6 +48,11 @@ When('я нажимаю кнопку `Подключить в проект` в �
 When('я дожидаюсь окончания загрузки в explorer', async () => {
   const explorerBlock = new ExplorerBlock();
   await explorerBlock.waitForLoading();
+});
+
+When('в библиотеке документов я выбираю {string}', async (explorerItem: string) => {
+  const explorerBlock = new ExplorerBlock();
+  await explorerBlock.selectExplorerItem(explorerItem);
 });
 
 When('я выбираю набор данных {string}', async (dataset: string) => {

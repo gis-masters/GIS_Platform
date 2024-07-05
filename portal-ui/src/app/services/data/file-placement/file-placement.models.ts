@@ -1,4 +1,8 @@
-export type FilePlacementMode = 'full' | 'geoserver' | 'gis-service';
+export enum FilePlacementMode {
+  FULL = 'full',
+  GEOSERVER = 'geoserver',
+  GIS = 'gis-service'
+}
 
 export interface GmlPlacementModel {
   wsUiId: string;
@@ -12,6 +16,7 @@ export interface PlacementModelForFilesWithCrs {
   fileId: string;
   projectId: number;
   crs: string;
+  mode?: FilePlacementMode;
 }
 
 export interface ImportFeaturesFromShapeFileModel {

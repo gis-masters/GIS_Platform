@@ -32,7 +32,8 @@ export async function placeGml(
 export async function placeFileWithProjection(
   fileInfo: FileInfo,
   projectId: number,
-  crs: string
+  crs: string,
+  mode = FilePlacementMode.FULL
 ): Promise<ProcessResponse> {
   return createProcess({
     type: ProcessType.IMPORT,
@@ -40,6 +41,7 @@ export async function placeFileWithProjection(
       wsUiId: wsService.getId(),
       fileId: fileInfo.id,
       projectId,
+      mode,
       crs
     }
   });
@@ -95,7 +97,10 @@ export function placeFiles(
     tasks.push(creatingGroup);
   }
 
-  return [...tasks, ...files.map(file => placeFile(file, { crs, mode: 'full' }, project, document, creatingGroup))];
+  return [
+    ...tasks,
+    ...files.map(file => placeFile(file, { crs, mode: FilePlacementMode.FULL }, project, document, creatingGroup))
+  ];
 }
 
 export async function placeFile(
