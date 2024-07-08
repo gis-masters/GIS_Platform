@@ -46,6 +46,6 @@ export async function recalculateBboxAndGetFeatureType(layer: CrgLayer): Promise
 
     return await featureTypeClient.getFeatureType(layer);
   } catch (error) {
-    throw new Error(`Не удалось пересчитать bbox для слоя: ${layer.title} => ${error}`);
+    throw new Error(`Не удалось пересчитать bbox для слоя "${layer.title}": ${String(error)}`);
   }
 }

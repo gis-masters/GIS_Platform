@@ -7,12 +7,12 @@ import { isUpdateAllowed } from '../../../services/data/permissions/permissions.
 import { extractTableNameFromFeatureId } from '../../../services/geoserver/featureType/featureType.util';
 import { CrgVectorLayer } from '../../../services/gis/layers/layers.models';
 import { getLayerByFeatureInCurrentProject } from '../../../services/gis/layers/layers.utils';
-import { FilterQuery } from '../../../services/util/filterObjects';
+import { FilterQuery } from '../../../services/util/filters/filters.models';
 import { sidebars } from '../../../stores/Sidebars.store';
+import { AttributesTableRecord } from '../Attributes.models';
 import { AttributesCheck } from '../Check/Attributes-Check';
 import { AttributesEditMark } from '../EditMark/Attributes-EditMark';
 import { AttributesRowActions } from '../RowActions/Attributes-RowActions';
-import { AttributesTableRecord } from '../Table/Attributes-Table';
 
 import '!style-loader!css-loader!sass-loader!./Attributes-RowHead.scss';
 

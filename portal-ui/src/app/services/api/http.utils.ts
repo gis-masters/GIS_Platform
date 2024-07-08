@@ -1,12 +1,12 @@
 import { PageOptions, PageQueryParams } from '../models';
-import { cqlBuild } from '../util/cqlBuild';
+import { buildCql } from '../util/cql/buildCql';
 
 export function preparePageOptions(
   { page, sort, sortOrder, filter, pageSize, queryParams = {} }: PageOptions,
   useCQL = false
 ): PageQueryParams {
   if (useCQL && filter && Object.keys(filter).length) {
-    filter = { filter: cqlBuild(filter) };
+    filter = { filter: buildCql(filter) };
   }
 
   return {

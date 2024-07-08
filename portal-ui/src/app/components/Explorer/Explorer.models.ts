@@ -13,7 +13,7 @@ import { Task, TaskHistory } from '../../services/data/task/task.models';
 import { Dataset, VectorTable } from '../../services/data/vectorData/vectorData.models';
 import { CrgProject } from '../../services/gis/projects/projects.models';
 import { PageOptions, SortOrder, ValueOf } from '../../services/models';
-import { FilterQuery } from '../../services/util/filterObjects';
+import { FilterQuery } from '../../services/util/filters/filters.models';
 import { ExplorerService } from './Explorer.service';
 import { ExplorerStore } from './Explorer.store';
 

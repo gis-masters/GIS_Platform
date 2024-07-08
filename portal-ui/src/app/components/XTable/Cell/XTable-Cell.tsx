@@ -3,7 +3,8 @@ import { observer } from 'mobx-react';
 import { TableCell, TableCellProps } from '@mui/material';
 import { cn } from '@bem-react/classname';
 
-import { FilterQuery, getFieldFilterValue } from '../../../services/util/filterObjects';
+import { getFieldFilterValue } from '../../../services/util/filters/filters';
+import { FilterQuery } from '../../../services/util/filters/filters.models';
 import { Highlight } from '../../Highlight/Highlight';
 import { TextBadge } from '../../TextBadge/TextBadge';
 import { TextOverflow } from '../../TextOverflow/TextOverflow';
@@ -57,7 +58,7 @@ export const XTableCell = observer((({
       })}
       align={align}
       {...(cellProps || {})}
-      style={{ '--XTableCellWidth': width }}
+      style={width ? { '--XTableCellWidth': width } : undefined}
     >
       {BeforeCellContent && (
         <BeforeCellContent rowData={rowData} filterActive={filterActive} filterParams={filterQuery} col={col} />
@@ -66,7 +67,7 @@ export const XTableCell = observer((({
         singleLineContent={singleLineContent}
         type={type}
         col={col}
-        cellData={rowData[field]}
+        cellData={field && rowData[field]}
         {...cellContentProps}
       >
         {CellContent ? (
@@ -79,12 +80,14 @@ export const XTableCell = observer((({
           />
         ) : (
           <>
-            <TextOverflow maxLines={2}>
-              <Highlight word={getFieldFilterValue(filterQuery, field)} enabled={filterActive}>
-                {rowData[field] === null || rowData[field] === undefined ? '' : String(rowData[field])}
-              </Highlight>
-              {getIdBadge && <TextBadge id={getIdBadge(rowData)} />}
-            </TextOverflow>
+            {field && (
+              <TextOverflow maxLines={2}>
+                <Highlight word={getFieldFilterValue(filterQuery, field)} enabled={filterActive}>
+                  {rowData[field] === null || rowData[field] === undefined ? '' : String(rowData[field])}
+                </Highlight>
+                {getIdBadge && <TextBadge id={getIdBadge(rowData)} />}
+              </TextOverflow>
+            )}
           </>
         )}
       </XTableCellContent>

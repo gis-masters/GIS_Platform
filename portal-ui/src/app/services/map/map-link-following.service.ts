@@ -41,7 +41,6 @@ export async function applyMapStateFromNavigator(): Promise<void> {
     const layers =
       route.queryParams.queryLayers.split(',') || currentProject.vectorLayers.map(({ complexName }) => complexName);
 
-    const details = `Запрос: ${route.queryParams.queryFilter}\n\nСлои:\n${layers.join('\n')}`;
     const features: WfsFeature[] = [];
 
     for (const layer of layers) {
@@ -69,6 +68,7 @@ export async function applyMapStateFromNavigator(): Promise<void> {
     if (features.length) {
       selectFeatures(features);
     } else {
+      const details = `Запрос: ${route.queryParams.queryFilter}\n\nСлои:\n${layers.join('\n')}`;
       Toast.warn({ message: 'Не найдено', details });
     }
   }

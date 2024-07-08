@@ -9,7 +9,7 @@ import { Dataset, VectorTable } from '../../src/app/services/data/vectorData/vec
 import { NewWfsFeature } from '../../src/app/services/geoserver/wfs/wfs.models';
 import { CrgLayer } from '../../src/app/services/gis/layers/layers.models';
 import { CrgProject } from '../../src/app/services/gis/projects/projects.models';
-import { FilterQuery } from '../../src/app/services/util/filterObjects';
+import { FilterQuery } from '../../src/app/services/util/filters/filters.models';
 
 export class ScenarioScope extends World {
   private _latestSchema?: Schema;

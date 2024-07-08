@@ -10,7 +10,7 @@ import {
   PropertyType,
   Relation
 } from '../../services/data/schema/schema.models';
-import { FilterQuery } from '../../services/util/filterObjects';
+import { FilterQuery } from '../../services/util/filters/filters.models';
 import { XTableCellContentProps } from './CellContent/XTable-CellContent.base';
 import { XTableFilterProps } from './Filter/XTable-Filter.base';
 import { XTableFilterPanelItemContentProps } from './FilterPanelItemContent/XTable-FilterPanelItemContent.base';
@@ -56,3 +56,11 @@ export interface XTableCustomCellProps<T> {
   filterActive: boolean;
   filterParams: FilterQuery;
 }
+
+export const colsTypesAlign: Partial<Record<XTableColumnType, TableCellProps['align']>> = {
+  [PropertyType.BOOL]: 'center',
+  [PropertyType.DATETIME]: 'center',
+  [XTableExtraColumnType.ID]: 'right',
+  [PropertyType.INT]: 'right',
+  [PropertyType.FLOAT]: 'right'
+};

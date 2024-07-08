@@ -1,8 +1,9 @@
 import { action, makeObservable, observable, reaction } from 'mobx';
 
-import { FILTER_BY_SELECTION } from '../components/Attributes/Table/Attributes-Table';
+import { FILTER_BY_SELECTION } from '../components/Attributes/Attributes.models';
 import { CrgLayer, CrgVectorLayer } from '../services/gis/layers/layers.models';
-import { FilterQuery, modifyFieldFilterValue } from '../services/util/filterObjects';
+import { modifyFieldFilterValue } from '../services/util/filters/filters';
+import { FilterQuery } from '../services/util/filters/filters.models';
 import { Pages, route } from './Route.store';
 
 const errorMessage = 'Отсутствует имя таблицы';
@@ -40,7 +41,7 @@ class AttributesTableStore {
     return !!this.filter[layer.tableName];
   }
 
-  isLayerFiltered(layer: CrgLayer) {
+  isLayerFiltered(layer: CrgLayer): boolean {
     return this.isLayerFilterExist(layer) && this.isLayerFilterEnabled(layer);
   }
 

@@ -26,10 +26,14 @@ export enum MapAction {
   ADD_LABEL
 }
 
-export enum FilterBySelection {
+export enum FilterBySelectionMode {
   ONLY_SELECTED = 'selected',
   ONLY_NOT_SELECTED = 'notSelected',
   DISABLED = 'disabled'
+}
+
+export function isFilterBySelection(value: unknown): value is FilterBySelectionMode {
+  return typeof value === 'string' && Object.values<string>(FilterBySelectionMode).includes(value);
 }
 
 export type LabelType = 'label' | 'line';

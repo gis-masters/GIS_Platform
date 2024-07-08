@@ -7,7 +7,7 @@ import { DocumentInfo } from '../../../components/Documents/Documents';
 import { CoordinateEdited, GeometryType, WfsFeature } from '../../geoserver/wfs/wfs.models';
 import { services } from '../../services';
 import { formatDate } from '../../util/date.util';
-import { FilterQuery } from '../../util/filterObjects';
+import { FilterQuery } from '../../util/filters/filters.models';
 import { FileInfo } from '../files/files.models';
 import { LibraryRecord } from '../library/library.models';
 import {

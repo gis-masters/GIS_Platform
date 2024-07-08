@@ -15,11 +15,11 @@ import { getLayerSchema } from '../../gis/layers/layers.service';
 import { MapSelectionTypes } from '../../map/map.models';
 import { PageOptions } from '../../models';
 import { WFS } from '../../ol/WFS';
-import { cql2ol } from '../../util/cql2ol';
-import { cqlBuild } from '../../util/cqlBuild';
-import { cqlConcat } from '../../util/cqlConcat';
-import { cqlParse } from '../../util/cqlParse';
-import { filterFeatures } from '../../util/filterObjects';
+import { buildCql } from '../../util/cql/buildCql';
+import { concatCql } from '../../util/cql/concatCql';
+import { cql2ol } from '../../util/cql/cql2ol';
+import { parseCql } from '../../util/cql/parseCql';
+import { filterFeatures } from '../../util/filters/filterObjects';
 import { Mime } from '../../util/Mime';
 import {
   buildComplexName,
@@ -140,7 +140,7 @@ export async function getFeatures(
     count: String(pageOptions.pageSize)
   };
 
-  const cqlFilter = cqlConcat(cqlBuild(pageOptions.filter), definitionQuery);
+  const cqlFilter = concatCql(buildCql(pageOptions.filter), definitionQuery);
   const filter = cqlFilter ? cql2ol(cqlFilter) : undefined;
 
   if (!layer.complexName) {
@@ -219,7 +219,7 @@ export async function getFeaturesById(ids: string[], complexName: string, defini
   let { features } = await wfsClient.getFeatureCollection(params);
 
   if (definitionQuery) {
-    const filter = cqlParse(definitionQuery);
+    const filter = parseCql(definitionQuery);
     features = filterFeatures(features || [], filter);
   }
 
@@ -240,7 +240,7 @@ export async function makeXmlPolygonIntersect(
   }
   const schema = applyView(baseSchema, layer.view);
   const geometryFieldName = getGeometryFieldName(baseSchema);
-  const cqlFilter: string = cqlConcat(cqlBuild(attributesTableStore.getLayerFilter(tableName)), schema.definitionQuery);
+  const cqlFilter: string = concatCql(buildCql(attributesTableStore.getLayerFilter(tableName)), schema.definitionQuery);
   const olProjection = await getOlProjection();
 
   const olFilter = cqlFilter

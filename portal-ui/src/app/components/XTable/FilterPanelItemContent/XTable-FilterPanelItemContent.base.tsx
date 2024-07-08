@@ -3,7 +3,7 @@ import { Tooltip } from '@mui/material';
 import { cn } from '@bem-react/classname';
 import { IClassNameProps } from '@bem-react/core';
 
-import { FilterQuery } from '../../../services/util/filterObjects';
+import { FilterQuery } from '../../../services/util/filters/filters.models';
 import { XTableColumn } from '../XTable.models';
 
 import '!style-loader!css-loader!sass-loader!./XTable-FilterPanelItemContent.scss';

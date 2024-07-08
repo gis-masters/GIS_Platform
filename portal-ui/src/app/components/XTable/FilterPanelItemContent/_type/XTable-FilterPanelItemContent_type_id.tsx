@@ -1,7 +1,8 @@
 import React from 'react';
 import { withBemMod } from '@bem-react/core';
 
-import { FilterQuery, getFieldFilterValue } from '../../../../services/util/filterObjects';
+import { getFieldFilterValue } from '../../../../services/util/filters/filters';
+import { FilterQuery } from '../../../../services/util/filters/filters.models';
 import { XTableExtraColumnType } from '../../XTable.models';
 import {
   cnXTableFilterPanelItemContent,

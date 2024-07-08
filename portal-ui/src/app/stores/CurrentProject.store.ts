@@ -263,8 +263,8 @@ class CurrentProject implements CrgProjectData {
     );
   }
 
-  getLayerByTableNameFromAllVectorLayers(tableName: string): CrgLayer {
-    return this.getLayerByTableNameFromLayers(tableName, this.vectorLayers);
+  getLayerByTableNameFromAllVectorableLayers(tableName: string): CrgLayer {
+    return this.getLayerByTableNameFromLayers(tableName, this.vectorableLayers);
   }
 
   private getLayerByTableNameFromLayers(tableName: string, layers: CrgLayer[]): CrgLayer {

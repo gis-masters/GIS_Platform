@@ -1,5 +1,5 @@
 import { PageOptions, SortOrder } from '../models';
-import { filterObjects } from './filterObjects';
+import { filterObjects } from './filters/filterObjects';
 import { sortObjects } from './sortObjects';
 
 export function queryObjects<T>(arr: T[], { filter, sort, sortOrder, page, pageSize }: PageOptions): T[] {

@@ -1,7 +1,8 @@
 import React, { FC } from 'react';
 import { cn } from '@bem-react/classname';
 
-import { FilterQuery, getFieldFilterValue } from '../../../services/util/filterObjects';
+import { getFieldFilterValue } from '../../../services/util/filters/filters';
+import { FilterQuery } from '../../../services/util/filters/filters.models';
 import { Highlight } from '../../Highlight/Highlight';
 import { TextBadge } from '../../TextBadge/TextBadge';
 import { CrgUserExtended } from '../OrgUsers';

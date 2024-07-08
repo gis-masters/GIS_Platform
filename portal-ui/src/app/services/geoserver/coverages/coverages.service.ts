@@ -1,4 +1,3 @@
-import { Toast } from '../../../components/Toast/Toast';
 import { currentUser } from '../../../stores/CurrentUser.store';
 import { replaceUrl } from '../../api/server-urls.service';
 import { CrgLayer } from '../../gis/layers/layers.models';
@@ -35,9 +34,7 @@ export async function getTransparentColor(coverageStore: string, coverage: strin
   try {
     return await coveragesClient.getCoverage(currentUser.workspaceName, coverageStore, coverage);
   } catch {
-    Toast.error({
-      message: 'Не удалось получить настройки слоя'
-    });
+    throw new Error('Не удалось получить настройки слоя');
   }
 }
 
@@ -50,7 +47,7 @@ export async function recalculateBboxAndGetCoverage(layer: CrgLayer): Promise<Ge
 
     return rasterCoverage.coverage;
   } catch (error) {
-    throw new Error(`Не удалось пересчитать bbox для слоя: ${layer.title} => ${error}`);
+    throw new Error(`Не удалось пересчитать bbox для слоя "${layer.title}": ${String(error)}`);
   }
 }
 

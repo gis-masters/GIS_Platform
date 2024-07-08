@@ -1,4 +1,4 @@
-import { compose } from '@bem-react/core';
+import { compose, HOC } from '@bem-react/core';
 
 import { withTypeBool } from './_type/XTable-FilterPanelItemContent_type_bool';
 import { withTypeChoice } from './_type/XTable-FilterPanelItemContent_type_choice';
@@ -9,16 +9,19 @@ import { withTypeId } from './_type/XTable-FilterPanelItemContent_type_id';
 import { withTypeInt } from './_type/XTable-FilterPanelItemContent_type_int';
 import { withTypeString } from './_type/XTable-FilterPanelItemContent_type_string';
 import { withTypeUserId } from './_type/XTable-FilterPanelItemContent_type_userId';
-import { XTableFilterPanelItemContentBase } from './XTable-FilterPanelItemContent.base';
+import {
+  XTableFilterPanelItemContentBase,
+  XTableFilterPanelItemContentProps
+} from './XTable-FilterPanelItemContent.base';
 
 export const XTableFilterPanelItemContent = compose(
-  withTypeString,
-  withTypeDate,
-  withTypeId,
-  withTypeInt,
-  withTypeFloat,
-  withTypeDocument,
-  withTypeUserId,
-  withTypeBool,
-  withTypeChoice
+  withTypeString as HOC<XTableFilterPanelItemContentProps<unknown>>,
+  withTypeDate as HOC<XTableFilterPanelItemContentProps<unknown>>,
+  withTypeId as HOC<XTableFilterPanelItemContentProps<unknown>>,
+  withTypeInt as HOC<XTableFilterPanelItemContentProps<unknown>>,
+  withTypeFloat as HOC<XTableFilterPanelItemContentProps<unknown>>,
+  withTypeDocument as HOC<XTableFilterPanelItemContentProps<unknown>>,
+  withTypeUserId as HOC<XTableFilterPanelItemContentProps<unknown>>,
+  withTypeBool as HOC<XTableFilterPanelItemContentProps<unknown>>,
+  withTypeChoice as HOC<XTableFilterPanelItemContentProps<unknown>>
 )(XTableFilterPanelItemContentBase) as typeof XTableFilterPanelItemContentBase;

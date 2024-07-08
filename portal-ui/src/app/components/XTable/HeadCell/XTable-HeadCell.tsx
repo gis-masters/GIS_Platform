@@ -6,7 +6,7 @@ import { VisibilityOff } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
 import { PropertyType } from '../../../services/data/schema/schema.models';
-import { FilterQuery } from '../../../services/util/filterObjects';
+import { FilterQuery } from '../../../services/util/filters/filters.models';
 import { SortParams } from '../../../services/util/sortObjects';
 import { DescriptionMark } from '../../DescriptionMark/DescriptionMark';
 import { XTableCellContent } from '../CellContent/XTable-CellContent.composed';
@@ -23,7 +23,7 @@ const cnXTableFilter = cn('XTable', 'Filter');
 
 interface XTableHeadCellProps<T> extends TableCellProps {
   col: XTableColumn<T>;
-  sortParams: SortParams<T>;
+  sortParams: Partial<SortParams<T>>;
   filterActive: boolean;
   filterQuery: FilterQuery;
   singleLineContent: boolean;
@@ -39,7 +39,7 @@ const MIN_CELL_WIDTH = 80;
 @observer
 export class XTableHeadCell<T> extends Component<XTableHeadCellProps<T>> {
   private cellRef = createRef<HTMLTableCellElement>();
-  private initialWidth: number;
+  private initialWidth = 0;
 
   constructor(props: XTableHeadCellProps<T>) {
     super(props);
@@ -66,14 +66,14 @@ export class XTableHeadCell<T> extends Component<XTableHeadCellProps<T>> {
     const filterable = filterActive && col.filterable;
     const type = col.type || PropertyType.STRING;
 
-    const cellProps = {
+    const cellProps: TableCellProps = {
       align: col.align,
       ...otherProps,
       ...col.headerCellProps,
       style: {
         ...style,
         ...col.headerCellProps?.style,
-        '--XTableCellWidth': width
+        '--XTableCellWidth': width || ''
       },
       className: cnXTableHeadCell(
         {
@@ -115,7 +115,7 @@ export class XTableHeadCell<T> extends Component<XTableHeadCellProps<T>> {
             )}
           </XTableHeadCellLabel>
         </XTableCellContent>
-        {filterable && (
+        {filterable && col.field && (
           <FilterComponent
             className={col.CustomFilterComponent && cnXTableFilter({ type: 'custom' })}
             field={col.field}
@@ -135,6 +135,10 @@ export class XTableHeadCell<T> extends Component<XTableHeadCellProps<T>> {
   private handleSort() {
     const { col, sortParams } = this.props;
 
+    if (!col.field) {
+      throw new Error('Не указано поле, по которому сортировка');
+    }
+
     if (sortParams.field === col.field) {
       sortParams.asc = !sortParams.asc;
     } else {
@@ -146,13 +150,24 @@ export class XTableHeadCell<T> extends Component<XTableHeadCellProps<T>> {
   @action.bound
   private handleResizeStart() {
     const { col, onWidthChange } = this.props;
-    this.initialWidth = this.cellRef.current.clientWidth;
-    onWidthChange(col.field, this.cellRef.current.clientWidth);
+    const width = this.cellRef.current?.clientWidth;
+
+    if (!col.field || !width) {
+      return;
+    }
+
+    this.initialWidth = width;
+    onWidthChange(col.field, width);
   }
 
   @action.bound
   private handleResize(deltaX: number) {
     const { col, onWidthChange } = this.props;
+
+    if (!col.field) {
+      return;
+    }
+
     onWidthChange(col.field, Math.max(this.initialWidth + deltaX, col.minWidth || MIN_CELL_WIDTH));
   }
 }

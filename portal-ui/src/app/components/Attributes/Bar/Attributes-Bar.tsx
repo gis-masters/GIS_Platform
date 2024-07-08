@@ -3,7 +3,6 @@ import { action, computed, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
-import { cloneDeep } from 'lodash';
 
 import { Schema } from '../../../services/data/schema/schema.models';
 import { applyView } from '../../../services/data/schema/schema.utils';
@@ -11,16 +10,16 @@ import { extractFeatureId } from '../../../services/geoserver/featureType/featur
 import { getFeatures } from '../../../services/geoserver/wfs/wfs.service';
 import { CrgVectorLayer } from '../../../services/gis/layers/layers.models';
 import { getLayerSchema } from '../../../services/gis/layers/layers.service';
-import { FilterBySelection } from '../../../services/map/map.models';
 import { PageOptions } from '../../../services/models';
-import { getFieldFilterValue, modifyFieldFilterValue } from '../../../services/util/filterObjects';
 import { calculateValues } from '../../../services/util/form/formValidation.utils';
 import { currentProject } from '../../../stores/CurrentProject.store';
 import { mapStore } from '../../../stores/Map.store';
 import { convertToComplexField } from '../../Form/Form.utils';
 import { XTableInvoke } from '../../XTable/XTable';
-import { XTableColumn } from '../../XTable/XTable.models';
+import { XTableColumn, XTableExtraColumnType } from '../../XTable/XTable.models';
 import { getXTableColumnsFromSchema } from '../../XTable/XTable.utils';
+import { AttributesTableRecord } from '../Attributes.models';
+import { extractFeatureIdsFromAttributesFilter } from '../Attributes.utils';
 import { AttributesBarActions } from '../BarActions/Attributes-BarActions';
 import { AttributesBarClose } from '../BarClose/Attributes-BarClose';
 import { AttributesBarHead } from '../BarHead/Attributes-BarHead';
@@ -34,7 +33,7 @@ import { AttributesCounter } from '../Counter/Attributes-Counter';
 import { AttributesFiltersEnabler } from '../FiltersEnabler/Attributes-FiltersEnabler';
 import { AttributesResize } from '../Resize/Attributes-Resize';
 import { AttributesRowHead } from '../RowHead/Attributes-RowHead';
-import { AttributesTable, AttributesTableRecord, FILTER_BY_SELECTION } from '../Table/Attributes-Table';
+import { AttributesTable } from '../Table/Attributes-Table';
 
 import '!style-loader!css-loader!sass-loader!./Attributes-Bar.scss';
 
@@ -149,9 +148,19 @@ export class AttributesBar extends Component<AttributesBarProps> {
           align: 'center',
           className: cnAttributesCheckCell()
         },
-        cellProps: { padding: 'checkbox' }
+        cellProps: {
+          padding: 'checkbox'
+        }
       },
-      { field: 'cutId', title: 'ID', minWidth: 50 },
+
+      {
+        field: 'cutId',
+        title: '№',
+        minWidth: 50,
+        filterable: true,
+        type: XTableExtraColumnType.ID
+      },
+
       ...getXTableColumnsFromSchema(this.schema)
     ] as XTableColumn<AttributesTableRecord>[];
   }
@@ -165,22 +174,14 @@ export class AttributesBar extends Component<AttributesBarProps> {
   @boundMethod
   private async getData(pageOptions: PageOptions): Promise<[AttributesTableRecord[], number]> {
     const { layer } = this.props;
-
-    const filter = cloneDeep(pageOptions.filter || {});
-    const filterBySelection = getFieldFilterValue(filter, FILTER_BY_SELECTION);
-    modifyFieldFilterValue(filter, FILTER_BY_SELECTION);
-
-    const featureIds =
-      filterBySelection && filterBySelection !== FilterBySelection.DISABLED
-        ? mapStore.selectedFeaturesByTableName[layer.tableName]?.map(({ id }) => id)
-        : [];
+    const [featureIds, filter, featureIdsNegative] = extractFeatureIdsFromAttributesFilter(pageOptions.filter, layer);
 
     const [features, totalPages, featuresMatched, featuresTotal] = await getFeatures(
       layer,
       { ...pageOptions, filter },
       this.schema?.definitionQuery,
       featureIds,
-      filterBySelection === FilterBySelection.ONLY_NOT_SELECTED
+      featureIdsNegative
     );
 
     const tableRecords: AttributesTableRecord[] = features.map(feature => {

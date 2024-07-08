@@ -43,6 +43,8 @@ export async function getSearchResults(
 
     return [newContent || [], details.page.totalPages];
   }
+
+  throw new Error('Ошибка поиска');
 }
 
 async function getSearchResultWithWfsFeatures(searchResult: SearchItemData[]): Promise<SearchItemData[]> {
@@ -65,11 +67,17 @@ async function getSearchResultWithWfsFeatures(searchResult: SearchItemData[]): P
       wfsFeaturesStorage[dataset] = {};
     }
 
+    const complexName = vectorTableConnections[0]?.layer?.complexName;
+
+    if (!complexName) {
+      continue;
+    }
+
     if (!wfsFeaturesStorage[dataset][table]) {
       wfsFeaturesStorage[dataset][table] = {
         ids: [],
         features: [],
-        complexName: vectorTableConnections[0]?.layer?.complexName
+        complexName
       };
     }
 

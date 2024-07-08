@@ -6,7 +6,7 @@ import { cn } from '@bem-react/classname';
 import { IClassNameProps } from '@bem-react/core';
 
 import { Relation } from '../../services/data/schema/schema.models';
-import { cqlBuild } from '../../services/util/cqlBuild';
+import { buildCql } from '../../services/util/cql/buildCql';
 import { Link } from '../Link/Link';
 import { MenuIconButton } from '../MenuIconButton/MenuIconButton';
 
@@ -27,7 +27,7 @@ export const RelationsButton: FC<RelationsButtonProps> = observer(({ className, 
     >
       {relations.map((relation, i) => {
         const targetProperty = relation.targetProperty || relation.property;
-        let url: string;
+        let url = '';
 
         if (relation.type === 'document') {
           url =
@@ -35,8 +35,8 @@ export const RelationsButton: FC<RelationsButtonProps> = observer(({ className, 
             encodeURI(JSON.stringify({ [targetProperty]: { $ilike: String(obj[relation.property]) } }));
         }
 
-        if (relation.type === 'feature') {
-          const cqlFilter = cqlBuild({ [targetProperty]: String(obj[relation.property]) });
+        if (relation.type === 'feature' && relation.layers) {
+          const cqlFilter = buildCql({ [targetProperty]: String(obj[relation.property]) });
           url = `/projects/${relation.projectId}/map?queryLayers=${relation.layers.join(',')}&queryFilter=${cqlFilter}`;
         }
 

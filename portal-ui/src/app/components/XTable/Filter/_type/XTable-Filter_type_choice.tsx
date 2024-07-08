@@ -8,7 +8,8 @@ import { boundMethod } from 'autobind-decorator';
 import { isEqual } from 'lodash';
 
 import { PropertyOption, PropertyType } from '../../../../services/data/schema/schema.models';
-import { FilterQuery, getFieldFilterValue, modifyFieldFilterValue } from '../../../../services/util/filterObjects';
+import { getFieldFilterValue, modifyFieldFilterValue } from '../../../../services/util/filters/filters';
+import { FilterQuery } from '../../../../services/util/filters/filters.models';
 import { cnXTableFilter, XTableFilterProps } from '../XTable-Filter.base';
 
 import '!style-loader!css-loader!sass-loader!./XTable-Filter_type_choice.scss';

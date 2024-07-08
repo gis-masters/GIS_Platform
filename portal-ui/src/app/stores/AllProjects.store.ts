@@ -1,7 +1,7 @@
 import { action, computed, makeObservable, observable } from 'mobx';
 
 import { CrgProject } from '../services/gis/projects/projects.models';
-import { filterObjects } from '../services/util/filterObjects';
+import { filterObjects } from '../services/util/filters/filterObjects';
 import { patch } from '../services/util/patch';
 import { sortObjects } from '../services/util/sortObjects';
 
@@ -39,7 +39,13 @@ class AllProjects {
   }
 
   getById(id: number): CrgProject {
-    return this._list.find(project => project.id === id);
+    const project = this._list?.find(project => project.id === id);
+
+    if (!project) {
+      throw new Error(`Проект с id ${id} не найден`);
+    }
+
+    return project;
   }
 
   @action
@@ -79,7 +85,7 @@ class AllProjects {
   }
 
   reset() {
-    this.setList(null);
+    this.setList();
     this.setNameFilter('');
   }
 }

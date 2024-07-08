@@ -1,7 +1,7 @@
 import React, { FC, ReactElement } from 'react';
 import { cn } from '@bem-react/classname';
 
-import { FilterQuery } from '../../../services/util/filterObjects';
+import { FilterQuery } from '../../../services/util/filters/filters.models';
 import { RelationsButton } from '../../RelationsButton/RelationsButton';
 import { XTableColumn } from '../XTable.models';
 
@@ -20,7 +20,7 @@ export const XTableRelationsButton: FC<XTableRelationsButtonProps<unknown>> = ((
   <RelationsButton
     className={cnXTableRelationsButton()}
     obj={rowData as Record<string, unknown>}
-    relations={col.settings?.relations}
+    relations={col.settings?.relations || []}
     size='small'
   />
 )) as <T>(p: XTableRelationsButtonProps<T>) => ReactElement;

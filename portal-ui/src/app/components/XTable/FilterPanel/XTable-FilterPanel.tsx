@@ -7,7 +7,8 @@ import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
 import { PropertyType } from '../../../services/data/schema/schema.models';
-import { FilterQuery, getFieldFilterPart } from '../../../services/util/filterObjects';
+import { getFieldFilterPart } from '../../../services/util/filters/filters';
+import { FilterQuery } from '../../../services/util/filters/filters.models';
 import { cnXTableFilterPanelItem, XTableFilterPanelItem } from '../FilterPanelItem/XTable-FilterPanelItem';
 import { XTableColumn } from '../XTable.models';
 

@@ -6,13 +6,13 @@ import { boundMethod } from 'autobind-decorator';
 
 import { communicationService } from '../../../services/communication.service';
 import { Schema } from '../../../services/data/schema/schema.models';
-import { WfsFeature } from '../../../services/geoserver/wfs/wfs.models';
 import { CrgVectorLayer } from '../../../services/gis/layers/layers.models';
-import { FilterBySelection, MapSelectionTypes } from '../../../services/map/map.models';
+import { FilterBySelectionMode, MapSelectionTypes } from '../../../services/map/map.models';
 import { mapService } from '../../../services/map/map.service';
 import { mapSelectionService } from '../../../services/map/map-selection.service';
 import { PageOptions } from '../../../services/models';
-import { FilterQuery, getFieldFilterValue } from '../../../services/util/filterObjects';
+import { getFieldFilterValue } from '../../../services/util/filters/filters';
+import { FilterQuery } from '../../../services/util/filters/filters.models';
 import { sleep } from '../../../services/util/sleep';
 import { SortParams } from '../../../services/util/sortObjects';
 import { attributesTableStore } from '../../../stores/AttributesTable.store';
@@ -21,6 +21,7 @@ import { EditFeatureMode, sidebars } from '../../../stores/Sidebars.store';
 import { Loading } from '../../Loading/Loading';
 import { XTable, XTableInvoke } from '../../XTable/XTable';
 import { XTableColumn } from '../../XTable/XTable.models';
+import { AttributesTableRecord, FILTER_BY_SELECTION } from '../Attributes.models';
 
 import '!style-loader!css-loader!sass-loader!./Attributes-Table.scss';
 import '!style-loader!css-loader!sass-loader!../CheckCell/Attributes-CheckCell.scss';
@@ -28,11 +29,6 @@ import '!style-loader!css-loader!sass-loader!../TableContainer/Attributes-TableC
 
 const cnAttributesTable = cn('Attributes', 'Table');
 const cnAttributesTableContainer = cn('Attributes', 'TableContainer');
-
-export interface AttributesTableRecord extends Record<string, unknown> {
-  cutId: number;
-  feature: WfsFeature;
-}
 
 interface AttributesTableProps {
   layer: CrgVectorLayer;
@@ -42,8 +38,6 @@ interface AttributesTableProps {
   getData(pageOptions: PageOptions): Promise<[AttributesTableRecord[], number]>;
   invoke: XTableInvoke;
 }
-
-export const FILTER_BY_SELECTION = 'filterBySelection';
 
 @observer
 export class AttributesTable extends Component<AttributesTableProps> {
@@ -123,7 +117,7 @@ export class AttributesTable extends Component<AttributesTableProps> {
 
   @computed
   private get filterBySelectionEnabled(): boolean {
-    return getFieldFilterValue(this.pageOptions?.filter || {}, FILTER_BY_SELECTION) !== FilterBySelection.DISABLED;
+    return getFieldFilterValue(this.pageOptions?.filter || {}, FILTER_BY_SELECTION) !== FilterBySelectionMode.DISABLED;
   }
 
   private rowIdGetter({ cutId }: AttributesTableRecord) {

@@ -1,15 +1,16 @@
 import React, { Component, createRef, ReactNode, RefObject } from 'react';
 import { action, computed, IReactionDisposer, makeObservable, observable, reaction } from 'mobx';
 import { observer } from 'mobx-react';
-import { Pagination, PaperProps, Table, TableBody, TableCellProps, TableContainer, TableRow } from '@mui/material';
+import { Pagination, PaperProps, Table, TableBody, TableContainer, TableRow } from '@mui/material';
 import { cn } from '@bem-react/classname';
 import { IClassNameProps } from '@bem-react/core';
 import { boundMethod } from 'autobind-decorator';
 import { cloneDeep, debounce } from 'lodash';
 
-import { PropertyType } from '../../services/data/schema/schema.models';
 import { PageOptions, SortOrder } from '../../services/models';
-import { filterObjects, FilterQuery } from '../../services/util/filterObjects';
+import { filterObjects } from '../../services/util/filters/filterObjects';
+import { getFieldFilterValue } from '../../services/util/filters/filters';
+import { FilterQuery } from '../../services/util/filters/filters.models';
 import { sortObjects, SortParams } from '../../services/util/sortObjects';
 import { currentUser } from '../../stores/CurrentUser.store';
 import { Loading } from '../Loading/Loading';
@@ -25,7 +26,7 @@ import { XTableRow } from './Row/XTable-Row';
 import { XTableTitle } from './Title/XTable-Title';
 import { XTableTitleBar } from './TitleBar/XTable-TitleBar';
 import { XTableTitleBarActions } from './TitleBarActions/XTable-TitleBarActions';
-import { XTableColumn, XTableColumnType, XTableExtraColumnType } from './XTable.models';
+import { colsTypesAlign, XTableColumn } from './XTable.models';
 import { defaultRowIdGetter } from './XTable.utils';
 
 import '!style-loader!css-loader!sass-loader!./XTable.scss';
@@ -86,8 +87,8 @@ type XTableColsSettings<T> = Partial<Record<keyof T, XTableColSettings>>;
 
 @observer
 export default class XTable<T> extends Component<XTableProps<T>> {
-  @observable private sortParams?: SortParams<T>;
-  @observable private filterQuery?: FilterQuery;
+  @observable private sortParams: Partial<SortParams<T>> = {};
+  @observable private filterQuery: FilterQuery = {};
   @observable private filterActive = true;
   @observable private _page = 1;
   @observable private _asyncData: T[] = [];
@@ -181,21 +182,13 @@ export default class XTable<T> extends Component<XTableProps<T>> {
       onRowDoubleClick
     } = this.props;
 
-    const colsTypesAlign: Partial<Record<XTableColumnType, TableCellProps['align']>> = {
-      [PropertyType.BOOL]: 'center',
-      [PropertyType.DATETIME]: 'center',
-      [XTableExtraColumnType.ID]: 'right',
-      [PropertyType.INT]: 'right',
-      [PropertyType.FLOAT]: 'right'
-    };
-
     return (
       <div className={cnXTable(null, [className, 'scroll'])}>
         {!headerless && (
           <XTableTitleBar>
             {title && <XTableTitle>{title}</XTableTitle>}
             {counter}
-            {showFiltersPanel && this.filterQuery && (
+            {showFiltersPanel && (
               <XTableFilterPanel
                 filterQuery={this.filterQuery}
                 cols={this.cols}
@@ -216,12 +209,11 @@ export default class XTable<T> extends Component<XTableProps<T>> {
             </XTableTitleBarActions>
           </XTableTitleBar>
         )}
-        {/* ошибка тайпскрипта, быстро пофиксить не получилось */}
         <TableContainer
           minHeight={this.tableMinHeight}
           containerRef={this.tableRef}
           component={XTableContainer}
-          containerProps={containerProps}
+          containerProps={containerProps || {}}
         >
           <Table stickyHeader size={size}>
             <XTableHead>
@@ -239,7 +231,7 @@ export default class XTable<T> extends Component<XTableProps<T>> {
                     onBeforeFilterChange={this.beforeFilterChange}
                     onFilterChange={this.afterFilterChange}
                     onWidthChange={this.changeColWidth}
-                    align={col.align || colsTypesAlign[col.type]}
+                    align={col.align || (col.type && colsTypesAlign[col.type]) || undefined}
                   />
                 ))}
               </TableRow>
@@ -265,7 +257,7 @@ export default class XTable<T> extends Component<XTableProps<T>> {
                         width={this.getColWidth(col)}
                         hidden={this.colsSettings[col.field]?.hidden}
                         key={`${i}_${String(col.field)}`}
-                        align={col.align || colsTypesAlign[col.type]}
+                        align={col.align || (col.type && colsTypesAlign[col.type]) || undefined}
                       />
                     ))}
                   </XTableRow>
@@ -297,24 +289,27 @@ export default class XTable<T> extends Component<XTableProps<T>> {
 
     return cols.filter(
       ({ field, hidden }) =>
-        !hidden || this.pageOptions.sort === field || Object.keys(this.pageOptions.filter).includes(field)
+        !hidden || this.pageOptions.sort === field || getFieldFilterValue(this.pageOptions.filter || {}, field)
     );
   }
 
   @computed
   private get syncData(): T[] {
-    const { field, asc } = this.sortParams;
     const { filterable, secondarySortField, filtersAlwaysEnabled } = this.props;
     let { data } = this.props as XTablePropsSync<T>;
 
-    if (data && this.filterQuery) {
+    if (data) {
       if ((filterable && this.filterActive) || filtersAlwaysEnabled) {
         data = filterObjects(data, this.filterQuery);
       }
 
-      const result = field ? sortObjects(data, field, asc, secondarySortField) : data;
+      if (!this.sortParams?.field) {
+        return data;
+      }
 
-      return result || [];
+      const { field, asc } = this.sortParams;
+
+      return field ? sortObjects(data, field, !!asc, secondarySortField) : data;
     }
 
     return [];

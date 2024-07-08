@@ -12,9 +12,9 @@ import { CrgVectorLayer } from '../../../services/gis/layers/layers.models';
 import { MapSelectionTypes } from '../../../services/map/map.models';
 import { mapSelectionService } from '../../../services/map/map-selection.service';
 import { PageOptions } from '../../../services/models';
-import { removeFieldFilter } from '../../../services/util/filterObjects';
+import { removeFieldFilter } from '../../../services/util/filters/filters';
 import { mapStore } from '../../../stores/Map.store';
-import { FILTER_BY_SELECTION } from '../Table/Attributes-Table';
+import { FILTER_BY_SELECTION } from '../Attributes.models';
 
 import '!style-loader!css-loader!sass-loader!./Attributes-CheckMaster.scss';
 
@@ -129,6 +129,7 @@ export class AttributesCheckMaster extends Component<AttributesCheckMasterProps>
 
     if (options.filter) {
       removeFieldFilter(options.filter, FILTER_BY_SELECTION);
+      removeFieldFilter(options.filter, 'cutId');
     }
 
     const [features] = await getFeatures(layer, options, definitionQuery);

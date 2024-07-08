@@ -6,7 +6,7 @@ import { communicationService, DataChangeEventDetail } from '../../../../service
 import { Schema } from '../../../../services/data/schema/schema.models';
 import { schemaService } from '../../../../services/data/schema/schema.service';
 import { PageOptions, SortOrder } from '../../../../services/models';
-import { filterObjects } from '../../../../services/util/filterObjects';
+import { filterObjects } from '../../../../services/util/filters/filterObjects';
 import { sortObjects } from '../../../../services/util/sortObjects';
 import { staticImplements } from '../../../../services/util/staticImplements';
 import { CreateSchema } from '../../../CreateSchema/CreateSchema';

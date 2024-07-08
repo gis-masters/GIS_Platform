@@ -1,17 +1,18 @@
 import { action, computed, makeObservable, observable, reaction } from 'mobx';
-import { cloneDeep } from 'lodash';
 import { Feature } from 'ol';
 import sift from 'sift';
 
-import { FILTER_BY_SELECTION } from '../components/Attributes/Table/Attributes-Table';
+import { extractFeatureIdsFromAttributesFilter } from '../components/Attributes/Attributes.utils';
 import { flags } from '../services/feature-flags';
 import { extractTableNameFromFeatureId } from '../services/geoserver/featureType/featureType.util';
 import { WfsFeature } from '../services/geoserver/wfs/wfs.models';
-import { FilterBySelection, LabelType, MapAction, MapMode } from '../services/map/map.models';
+import { CrgLayer } from '../services/gis/layers/layers.models';
+import { LabelType, MapAction, MapMode } from '../services/map/map.models';
 import { MeasureItem, MeasureMode } from '../services/map/map-measure.service';
-import { getFieldFilterValue, modifyFieldFilterValue, prepareLike } from '../services/util/filterObjects';
+import { prepareLike } from '../services/util/filters/filterObjects';
 import { UnitsOfAreaMeasurement } from '../services/util/open-layers.util';
 import { attributesTableStore } from './AttributesTable.store';
+import { currentProject } from './CurrentProject.store';
 import { Pages, route } from './Route.store';
 
 const actionsInModes = {
@@ -104,27 +105,41 @@ class MapStore {
     const filtersByLayers: {
       [tableName: string]: {
         tester?: (properties: WfsFeature['properties']) => boolean;
+        ids: string[];
         negativeIds: boolean;
       };
     } = {};
 
     return this.selectedFeatures.filter(feature => {
       const tableName = extractTableNameFromFeatureId(feature.id);
-      if (!filtersByLayers[tableName]) {
-        const filter = cloneDeep(attributesTableStore.getLayerFilter(tableName, true));
-        const filterBySelection = getFieldFilterValue(filter, FILTER_BY_SELECTION);
-        modifyFieldFilterValue(filter, FILTER_BY_SELECTION);
 
-        filtersByLayers[tableName] = {
-          tester: Object.keys(filter).length ? sift(prepareLike(filter)) : undefined,
-          negativeIds: filterBySelection === FilterBySelection.ONLY_NOT_SELECTED
-        };
+      if (!filtersByLayers[tableName]) {
+        const layer = currentProject.getLayerByTableNameFromAllVectorableLayers(tableName);
+
+        filtersByLayers[tableName] = this.prepareLayerFilter(layer);
       }
 
-      const { negativeIds, tester } = filtersByLayers[tableName];
+      const { negativeIds, ids, tester } = filtersByLayers[tableName];
 
-      return !negativeIds && (!tester || tester(feature.properties));
+      return !negativeIds && (!tester || tester(feature.properties)) && (!ids.length || ids.includes(feature.id));
     });
+  }
+
+  private prepareLayerFilter(layer: CrgLayer) {
+    if (!layer.tableName) {
+      throw new Error(`Слой ${layer.title} не имеет tableName`);
+    }
+
+    const [ids, filter, negativeIds] = extractFeatureIdsFromAttributesFilter(
+      attributesTableStore.getLayerFilter(layer.tableName, true),
+      layer
+    );
+
+    return {
+      tester: Object.keys(filter).length ? sift(prepareLike(filter)) : undefined,
+      ids,
+      negativeIds
+    };
   }
 
   @action

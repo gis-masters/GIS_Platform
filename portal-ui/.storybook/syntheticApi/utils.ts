@@ -1,6 +1,6 @@
 import { AxiosError, InternalAxiosRequestConfig } from 'axios';
 
-import { cqlParse } from '../../src/app/services/util/cqlParse';
+import { parseCql } from '../../src/app/services/util/cql/parseCql';
 import { PageOptions, SortOrder } from '../../src/app/services/models';
 
 export function err404(config: InternalAxiosRequestConfig) {
@@ -32,7 +32,7 @@ export function parsePageOptions(config: InternalAxiosRequestConfig): PageOption
     }
 
     if (key === 'filter') {
-      pageOptions.filter = cqlParse(String(value));
+      pageOptions.filter = parseCql(String(value));
     }
 
     if (!pageOptions.queryParams) {

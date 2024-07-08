@@ -6,7 +6,7 @@ import { Subject, takeUntil } from 'rxjs';
 
 import { PageOptions, SortOrder } from '../../services/models';
 import { services } from '../../services/services';
-import { FilterQuery } from '../../services/util/filterObjects';
+import { FilterQuery } from '../../services/util/filters/filters.models';
 import { SortParams } from '../../services/util/sortObjects';
 import { route } from '../../stores/Route.store';
 import { XTable, XTableProps } from '../XTable/XTable';

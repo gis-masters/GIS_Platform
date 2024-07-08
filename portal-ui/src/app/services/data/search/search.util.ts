@@ -4,10 +4,10 @@ import { Library, LibraryRecord } from '../../../services/data/library/library.m
 import { SearchRequest } from '../../../services/data/search/search.model';
 import { Dataset } from '../../../services/data/vectorData/vectorData.models';
 import { getAllVectorTablesInDataset } from '../../../services/data/vectorData/vectorData.service';
-import { cqlBuild } from '../../../services/util/cqlBuild';
+import { buildCql } from '../../util/cql/buildCql';
 
 export async function getSearchRequest(search: ExplorerSearchValue): Promise<SearchRequest> {
-  if (!search.searchValue.trim()) {
+  if (!search.searchValue?.trim()) {
     throw new Error('Отсутствует значение для поиска');
   }
 
@@ -24,7 +24,7 @@ export async function getSearchRequest(search: ExplorerSearchValue): Promise<Sea
     if (library?.table_name) {
       searchRequest.sources = [{ library: library.table_name }];
       if (pathToFolder) {
-        searchRequest.ecqlFilter = cqlBuild(getPathFilter(pathToFolder));
+        searchRequest.ecqlFilter = buildCql(getPathFilter(pathToFolder));
       }
     }
   }

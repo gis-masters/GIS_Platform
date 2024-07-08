@@ -11,8 +11,8 @@ import Not from 'ol/format/filter/Not';
 import NotEqualTo from 'ol/format/filter/NotEqualTo';
 import Or from 'ol/format/filter/Or';
 
+import { FilterQuery } from '../filters/filters.models';
 import { cql2ol } from './cql2ol';
-import { FilterQuery } from './filterObjects';
 
 type Operator = (olFilter: Filter) => FilterQuery;
 
@@ -72,6 +72,6 @@ function parseOlFilter(olFilter: Filter): FilterQuery {
   return operator(olFilter);
 }
 
-export function cqlParse(cql: string): FilterQuery {
+export function parseCql(cql: string): FilterQuery {
   return parseOlFilter(cql2ol(cql));
 }

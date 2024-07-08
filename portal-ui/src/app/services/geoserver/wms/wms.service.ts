@@ -2,7 +2,7 @@ import { currentProject } from '../../../stores/CurrentProject.store';
 import { defaultOlProjectionCode } from '../../data/projections/projections.models';
 import { CrgLayer, CrgLayerType } from '../../gis/layers/layers.models';
 import { getLayerByComplexNameInCurrentProject } from '../../gis/layers/layers.utils';
-import { cqlBuild } from '../../util/cqlBuild';
+import { buildCql } from '../../util/cql/buildCql';
 import { Mime } from '../../util/Mime';
 import { extractFeatureId, extractFeatureTypeNameFromComplexName } from '../featureType/featureType.util';
 import { CUSTOM_STYLE_NAME } from '../styles/styles.models';
@@ -21,7 +21,7 @@ export async function getMap(url: string): Promise<Blob> {
 
   if (featureIdParam) {
     const ids = featureIdParam.split(',').map(fid => Number(extractFeatureId(fid)));
-    const idCqlFragment = cqlBuild({ id: { [featureIdsNegative ? '$nin' : '$in']: ids } });
+    const idCqlFragment = buildCql({ id: { [featureIdsNegative ? '$nin' : '$in']: ids } });
     const newCql = cqlFilter ? `(${idCqlFragment}) AND (${cqlFilter})` : idCqlFragment;
     parsedUrl.searchParams.set('CQL_FILTER', newCql);
   }

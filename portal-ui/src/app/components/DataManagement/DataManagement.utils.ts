@@ -1,7 +1,8 @@
 import { cloneDeep } from 'lodash';
 
 import { LibraryRecord } from '../../services/data/library/library.models';
-import { addFilterPart, FilterQuery } from '../../services/util/filterObjects';
+import { addFilterPart } from '../../services/util/filters/filters';
+import { FilterQuery } from '../../services/util/filters/filters.models';
 import { notFalsyFilter } from '../../services/util/NotFalsyFilter';
 import { ExplorerItemData, ExplorerItemType } from '../Explorer/Explorer.models';
 

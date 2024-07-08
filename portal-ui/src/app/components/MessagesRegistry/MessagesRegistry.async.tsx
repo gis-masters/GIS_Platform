@@ -13,7 +13,7 @@ import {
 } from '../../services/data/messagesRegistries/messagesRegistries.service';
 import { Schema } from '../../services/data/schema/schema.models';
 import { PageOptions } from '../../services/models';
-import { FilterQuery } from '../../services/util/filterObjects';
+import { FilterQuery } from '../../services/util/filters/filters.models';
 import { SortParams } from '../../services/util/sortObjects';
 import { Breadcrumbs, BreadcrumbsItemData } from '../Breadcrumbs/Breadcrumbs';
 import { EmptyListView } from '../EmptyListView/EmptyListView';

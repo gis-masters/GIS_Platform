@@ -2,7 +2,7 @@ import { ReactNode } from 'react';
 
 import { OldSchema } from './data/schema/schemaOld.models';
 import { GeometryType } from './geoserver/wfs/wfs.models';
-import { FilterQuery } from './util/filterObjects';
+import { FilterQuery } from './util/filters/filters.models';
 
 export interface ApiLink {
   href: string;

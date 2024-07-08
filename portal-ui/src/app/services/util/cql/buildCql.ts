@@ -1,6 +1,6 @@
-import { FilterQuery, FilterQueryValue } from './filterObjects';
+import { FilterQuery, FilterQueryValue } from '../filters/filters.models';
 
-export function cqlBuild(query: FilterQuery = {}): string {
+export function buildCql(query: FilterQuery = {}): string {
   return Object.entries(query)
     .map(([key, val]) => {
       if (topLevelOperators[key]) {
@@ -86,20 +86,20 @@ const topLevelOperators: Record<string, (value: FilterQuery[] | FilterQuery) => 
       throw new TypeError('Invalid value for $and operator');
     }
 
-    return `(${value.map(cqlBuild).join(') AND (')})`;
+    return `(${value.map(buildCql).join(') AND (')})`;
   },
   $or: (value: FilterQuery[] | FilterQuery) => {
     if (!Array.isArray(value)) {
       throw new TypeError('Invalid value for $or operator');
     }
 
-    return `(${value.map(cqlBuild).join(') OR (')})`;
+    return `(${value.map(buildCql).join(') OR (')})`;
   },
   $not: (value: FilterQuery[] | FilterQuery) => {
     if (Array.isArray(value)) {
       throw new TypeError('Invalid value for $not operator');
     }
 
-    return `(NOT (${cqlBuild(value)}))`;
+    return `(NOT (${buildCql(value)}))`;
   }
 };

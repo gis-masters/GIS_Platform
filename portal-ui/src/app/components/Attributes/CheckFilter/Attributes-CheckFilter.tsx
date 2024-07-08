@@ -5,10 +5,10 @@ import { ToggleButton, ToggleButtonGroup, Tooltip } from '@mui/material';
 import { Check, Close } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
-import { FilterBySelection } from '../../../services/map/map.models';
-import { getFieldFilterValue, modifyFieldFilterValue } from '../../../services/util/filterObjects';
+import { FilterBySelectionMode } from '../../../services/map/map.models';
+import { getFieldFilterValue, modifyFieldFilterValue } from '../../../services/util/filters/filters';
 import { XTableFilterProps } from '../../XTable/Filter/XTable-Filter.base';
-import { FILTER_BY_SELECTION } from '../Table/Attributes-Table';
+import { FILTER_BY_SELECTION } from '../Attributes.models';
 
 import '!style-loader!css-loader!sass-loader!./Attributes-CheckFilter.scss';
 
@@ -35,7 +35,7 @@ export class AttributesCheckFilter extends Component<XTableFilterProps> {
       >
         <ToggleButton
           className={cnAttributesCheckFilterButton({ selected: 'yes' })}
-          value={FilterBySelection.ONLY_SELECTED}
+          value={FilterBySelectionMode.ONLY_SELECTED}
           size='small'
         >
           <Tooltip title='Оставить только выделенные объекты' enterDelay={700}>
@@ -44,7 +44,7 @@ export class AttributesCheckFilter extends Component<XTableFilterProps> {
         </ToggleButton>
         <ToggleButton
           className={cnAttributesCheckFilterButton({ selected: 'no' })}
-          value={FilterBySelection.ONLY_NOT_SELECTED}
+          value={FilterBySelectionMode.ONLY_NOT_SELECTED}
           size='small'
         >
           <Tooltip title='Оставить только не выделенные объекты' enterDelay={700}>
@@ -56,17 +56,17 @@ export class AttributesCheckFilter extends Component<XTableFilterProps> {
   }
 
   @computed
-  private get value(): FilterBySelection {
+  private get value(): FilterBySelectionMode {
     const { filterQuery } = this.props;
     const value = getFieldFilterValue(filterQuery, FILTER_BY_SELECTION);
 
-    return value === FilterBySelection.ONLY_SELECTED || value === FilterBySelection.ONLY_NOT_SELECTED
+    return value === FilterBySelectionMode.ONLY_SELECTED || value === FilterBySelectionMode.ONLY_NOT_SELECTED
       ? value
-      : FilterBySelection.DISABLED;
+      : FilterBySelectionMode.DISABLED;
   }
 
   @action.bound
-  private handleChange(e: React.MouseEvent<HTMLElement, MouseEvent>, value: FilterBySelection) {
+  private handleChange(e: React.MouseEvent<HTMLElement, MouseEvent>, value: FilterBySelectionMode) {
     const { onBeforeFilterChange, onFilterChange, filterQuery } = this.props;
 
     onBeforeFilterChange();

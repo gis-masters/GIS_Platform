@@ -29,6 +29,12 @@ class XTableCellContentTypeDocument extends Component<XTableCellContentProps<unk
       }
     } catch {}
 
+    if (!col.field) {
+      console.error('xTable: не указан field у колонки с типом document');
+
+      return null;
+    }
+
     const documents = (
       <Documents
         property={{ name: col.field, propertyType: PropertyType.DOCUMENT, title: String(col.title) }}
@@ -38,8 +44,8 @@ class XTableCellContentTypeDocument extends Component<XTableCellContentProps<unk
 
     return (
       <XTableCellContentBase col={col} {...props}>
-        {cellData &&
-          Boolean(value.length) &&
+        {!!cellData &&
+          !!value.length &&
           (value.length === 1 ? (
             documents
           ) : (
@@ -47,7 +53,7 @@ class XTableCellContentTypeDocument extends Component<XTableCellContentProps<unk
               <PseudoLink onClick={this.handleClick}>
                 {value.length} {pluralize(value.length, 'документ', 'документа', 'документов')}
               </PseudoLink>
-              <Popover open={Boolean(this.popupAnchor)} onClose={this.handleClose} anchorEl={this.popupAnchor}>
+              <Popover open={!!this.popupAnchor} onClose={this.handleClose} anchorEl={this.popupAnchor}>
                 {documents}
               </Popover>
             </>

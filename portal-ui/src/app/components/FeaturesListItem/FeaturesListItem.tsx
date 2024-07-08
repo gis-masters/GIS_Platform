@@ -121,7 +121,7 @@ export class FeaturesListItem extends Component<FeaturesListItemProps> {
       const tableName = extractTableNameFromFeatureId(feature.id);
 
       return isSearchList
-        ? currentProject.getLayerByTableNameFromAllVectorLayers(tableName)
+        ? currentProject.getLayerByTableNameFromAllVectorableLayers(tableName)
         : currentProject.getLayerByTableNameFromVisibleVectorLayers(tableName);
     }
   }

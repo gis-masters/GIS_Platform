@@ -19,7 +19,7 @@ import '!style-loader!css-loader!sass-loader!./SelectVectorTableControl.scss';
 const cnSelectVectorTable = cn('SelectVectorTableControl');
 
 export interface SelectedVectorTable extends Datasource {
-  path: ExplorerItemData[];
+  path?: ExplorerItemData[];
 }
 
 interface Datasource {

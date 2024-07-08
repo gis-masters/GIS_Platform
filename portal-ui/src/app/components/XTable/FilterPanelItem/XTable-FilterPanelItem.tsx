@@ -7,7 +7,8 @@ import { cn } from '@bem-react/classname';
 import { cloneDeep } from 'lodash';
 
 import { PropertyType } from '../../../services/data/schema/schema.models';
-import { FilterQuery, getFieldFilterPart, modifyFieldFilterValue } from '../../../services/util/filterObjects';
+import { getFieldFilterPart, modifyFieldFilterValue } from '../../../services/util/filters/filters';
+import { FilterQuery } from '../../../services/util/filters/filters.models';
 import { XTableFilterPanelItemContent } from '../FilterPanelItemContent/XTable-FilterPanelItemContent.composed';
 import { XTableColumn } from '../XTable.models';
 

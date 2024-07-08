@@ -5,7 +5,8 @@ import { TextField } from '@mui/material';
 import { withBemMod } from '@bem-react/core';
 
 import { PropertyType } from '../../../../services/data/schema/schema.models';
-import { FilterQuery, getFieldFilterValue, modifyFieldFilterValue } from '../../../../services/util/filterObjects';
+import { getFieldFilterValue, modifyFieldFilterValue } from '../../../../services/util/filters/filters';
+import { FilterQuery } from '../../../../services/util/filters/filters.models';
 import { XTableFilterStrictness } from '../../FilterStrictness/XTable-FilterStrictness';
 import { cnXTableFilter, XTableFilterProps } from '../XTable-Filter.base';
 

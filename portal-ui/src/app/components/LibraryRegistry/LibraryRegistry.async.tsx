@@ -15,11 +15,11 @@ import { PropertySchema, PropertyType } from '../../services/data/schema/schema.
 import { PageOptions } from '../../services/models';
 import {
   addFilterPart,
-  FilterQuery,
   getFieldFilterValue,
   modifyFieldFilterValue,
   removeFieldFilter
-} from '../../services/util/filterObjects';
+} from '../../services/util/filters/filters';
+import { FilterQuery } from '../../services/util/filters/filters.models';
 import { calculateValues } from '../../services/util/form/formValidation.utils';
 import { SortParams } from '../../services/util/sortObjects';
 import { isNumberArray } from '../../services/util/typeGuards/isNumberArray';

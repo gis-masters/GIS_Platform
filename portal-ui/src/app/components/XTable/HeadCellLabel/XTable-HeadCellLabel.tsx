@@ -12,9 +12,9 @@ const cnXTableHeadCellLabel = cn('XTable', 'HeadCellLabel');
 
 interface XTableHeadCellLabelProps<T> extends BaseHTMLAttributes<HTMLSpanElement> {
   col: XTableColumn<T>;
-  sortParams: SortParams<T>;
-  onSort(): void;
+  sortParams?: Partial<SortParams<T>>;
   singleLineContent: boolean;
+  onSort(): void;
 }
 
 export const XTableHeadCellLabel = observer(

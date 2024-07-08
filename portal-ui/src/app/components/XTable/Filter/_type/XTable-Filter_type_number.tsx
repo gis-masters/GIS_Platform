@@ -3,7 +3,8 @@ import { action, computed, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { TextField } from '@mui/material';
 
-import { FilterQuery, getFieldFilterValue, modifyFieldFilterValue } from '../../../../services/util/filterObjects';
+import { getFieldFilterValue, modifyFieldFilterValue } from '../../../../services/util/filters/filters';
+import { FilterQuery } from '../../../../services/util/filters/filters.models';
 import { cnXTableFilter, XTableFilterProps } from '../XTable-Filter.base';
 
 import '!style-loader!css-loader!sass-loader!./XTable-Filter_type_number.scss';

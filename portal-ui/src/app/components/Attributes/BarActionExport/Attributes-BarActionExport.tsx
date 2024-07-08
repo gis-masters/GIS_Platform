@@ -17,7 +17,7 @@ import { notFalsyFilter } from '../../../services/util/NotFalsyFilter';
 import { IconButton } from '../../IconButton/IconButton';
 import { Toast } from '../../Toast/Toast';
 import { XTableColumn } from '../../XTable/XTable.models';
-import { AttributesTableRecord } from '../Table/Attributes-Table';
+import { AttributesTableRecord } from '../Attributes.models';
 
 import '!style-loader!css-loader!sass-loader!./Attributes-BarActionExport.scss';
 
@@ -92,7 +92,7 @@ export class AttributesBarActionExport extends Component<AttributesBarActionExpo
         .filter(notFalsyFilter)
     ];
     const header = properties.map(prop => prop.title || prop.name);
-    const body = records.map(feature => this.prepareFeature(properties, feature));
+    const body = records.map(record => this.prepareFeature(properties, record));
 
     return [header, ...body];
   }

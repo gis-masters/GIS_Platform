@@ -8,6 +8,7 @@ import { boundMethod } from 'autobind-decorator';
 import { importKpt } from '../../../services/data/kpt/kpt.service';
 import { LibraryRecord } from '../../../services/data/library/library.models';
 import { PropertySchema, PropertyType } from '../../../services/data/schema/schema.models';
+import { notFalsyFilter } from '../../../services/util/NotFalsyFilter';
 import { ActionsItemVariant } from '../../Actions/Item/Actions-Item.base';
 import { ActionsItem } from '../../Actions/Item/Actions-Item.composed';
 import { ExplorerItemData, ExplorerItemType, isExplorerItemData } from '../../Explorer/Explorer.models';
@@ -27,7 +28,7 @@ type FormValue = Record<string, SelectedVectorTable>;
 
 @observer
 export class LibraryDocumentActionsImportKpt extends Component<LibraryDocumentActionsImportKptProps> {
-  @observable private formValue: FormValue = getDefaultValues(this.fields);
+  @observable private formValue: Partial<FormValue> = getDefaultValues(this.fields);
   @observable private busy = false;
   @observable private open = false;
   @observable private lastPath?: ExplorerItemData[];
@@ -92,7 +93,7 @@ export class LibraryDocumentActionsImportKpt extends Component<LibraryDocumentAc
   private async doImport() {
     this.setBusy(true);
 
-    const dataSources = Object.values(this.formValue).filter(Boolean);
+    const dataSources = Object.values(this.formValue).filter(notFalsyFilter);
 
     if (!dataSources.length) {
       throw new Error('Необходимо выбрать хотя бы один слой для импорта');
@@ -118,7 +119,7 @@ export class LibraryDocumentActionsImportKpt extends Component<LibraryDocumentAc
     try {
       const response = await importKpt(importRequest);
 
-      Toast.success(`выполняется задача импорт кпт №${response.id}`);
+      Toast.success(`Выполняется задача "Импорт кпт №${response.id}"`);
     } catch (error) {
       this.setBusy(false);
       throw error;
@@ -209,7 +210,7 @@ export class LibraryDocumentActionsImportKpt extends Component<LibraryDocumentAc
       {
         propertyType: PropertyType.CUSTOM,
         name: 'borderwaterobj',
-        title: 'Береговая линия (полиогональные)',
+        title: 'Береговая линия (полигональные)',
         startPath: this.lastPath,
         writableTablesOnly: true,
         customFilters: {

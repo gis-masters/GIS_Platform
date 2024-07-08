@@ -43,7 +43,7 @@ export const PhotoModePreviewer: FC = observer(() => {
           return getPhotoModeFeatureFiles(feature).map(async file => {
             const tableName = extractTableNameFromFeatureId(feature.id);
             const layer =
-              currentProject.getLayerByTableNameFromAllVectorLayers(tableName) ||
+              currentProject.getLayerByTableNameFromAllVectorableLayers(tableName) ||
               currentProject.getLayerByTableNameFromVisibleVectorLayers(tableName);
 
             const schema = await getLayerSchema(layer);

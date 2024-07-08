@@ -3,7 +3,7 @@ import { StoryFn } from '@storybook/react';
 
 import { PropertyOption, PropertyType } from '../../services/data/schema/schema.models';
 import { PageOptions, SortOrder } from '../../services/models';
-import { filterObjects, prepareLike } from '../../services/util/filterObjects';
+import { filterObjects, prepareLike } from '../../services/util/filters/filterObjects';
 import { sleep } from '../../services/util/sleep';
 import { sortObjects, SortParams } from '../../services/util/sortObjects';
 import { smallData, testDataForTables } from './testDataForTables';

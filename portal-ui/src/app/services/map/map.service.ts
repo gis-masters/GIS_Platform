@@ -1,6 +1,6 @@
 import { reaction } from 'mobx';
 import { boundMethod } from 'autobind-decorator';
-import { cloneDeep, debounce } from 'lodash';
+import { debounce } from 'lodash';
 import { Map, View } from 'ol';
 import { defaults as defaultControls } from 'ol/control';
 import { Coordinate } from 'ol/coordinate';
@@ -19,12 +19,13 @@ import { get as getProjection } from 'ol/proj';
 import { ImageWMS, OSM, TileArcGISRest, TileImage, TileWMS, Vector as VectorSource, WMTS, XYZ } from 'ol/source';
 import ImageSource from 'ol/source/Image';
 import TileSource from 'ol/source/Tile';
+import { Options as TileWMSOptions } from 'ol/source/TileWMS';
 import { ServerType } from 'ol/source/wms';
 import { Circle, Fill, Stroke, Style } from 'ol/style.js';
 import Tile from 'ol/Tile';
 import WMTSTileGrid from 'ol/tilegrid/WMTS';
 
-import { FILTER_BY_SELECTION } from '../../components/Attributes/Table/Attributes-Table';
+import { extractFeatureIdsFromAttributesFilter } from '../../components/Attributes/Attributes.utils';
 import { Toast } from '../../components/Toast/Toast';
 import { attributesTableStore } from '../../stores/AttributesTable.store';
 import { basemapsStore } from '../../stores/Basemaps.store';
@@ -46,14 +47,13 @@ import { CrgExternalLayer, CrgLayer, CrgLayerType } from '../gis/layers/layers.m
 import { getLayerSchema } from '../gis/layers/layers.service';
 import { ScaleLine } from '../ol/ScaleLine';
 import { services } from '../services';
-import { cqlBuild } from '../util/cqlBuild';
-import { cqlConcat } from '../util/cqlConcat';
-import { getFieldFilterValue, modifyFieldFilterValue } from '../util/filterObjects';
+import { buildCql } from '../util/cql/buildCql';
+import { concatCql } from '../util/cql/concatCql';
 import { Mime } from '../util/Mime';
 import { notFalsyFilter } from '../util/NotFalsyFilter';
 import { wfsFeatureToFeature } from '../util/open-layers.util';
 import { sleep } from '../util/sleep';
-import { FilterBySelection, MapPosition } from './map.models';
+import { MapPosition } from './map.models';
 
 // WMS request parameters. At least a LAYERS param is required.
 interface CrgWmsParams {
@@ -112,7 +112,7 @@ class MapService {
 
   view?: View;
   scaleLine?: ScaleLine;
-  draftSource?: VectorSource<Feature<SimpleGeometry>>;
+  draftSource?: VectorSource;
 
   // Подложка
   private basemapLayer = new TileLayer();
@@ -184,7 +184,7 @@ class MapService {
       features: []
     });
 
-    this.draftSource = new VectorSource<Feature<SimpleGeometry>>({
+    this.draftSource = new VectorSource<Feature<Geometry>>({
       features: []
     });
 
@@ -379,9 +379,10 @@ class MapService {
       FORMAT: Mime.VND_JPEG_PNG8
     };
 
-    const filter = cloneDeep(attributesTableStore.getLayerFilter(tableName));
-    const filterBySelection = getFieldFilterValue(filter, FILTER_BY_SELECTION);
-    modifyFieldFilterValue(filter, FILTER_BY_SELECTION);
+    const [featureIds, filter, featureIdsNegative] = extractFeatureIdsFromAttributesFilter(
+      attributesTableStore.getLayerFilter(tableName),
+      layer
+    );
 
     if (type === CrgLayerType.VECTOR) {
       const schema = await getLayerSchema(layer);
@@ -396,18 +397,15 @@ class MapService {
 
     if (attributesTableStore.isLayerFiltered(layer)) {
       if (Object.keys(filter).length) {
-        params.CQL_FILTER = cqlConcat(cqlBuild(filter), params.CQL_FILTER);
+        params.CQL_FILTER = concatCql(buildCql(filter), params.CQL_FILTER);
       }
 
-      if (
-        filterBySelection === FilterBySelection.ONLY_SELECTED ||
-        filterBySelection === FilterBySelection.ONLY_NOT_SELECTED
-      ) {
-        params.featureId = mapStore.selectedFeaturesByTableName[tableName]?.map(({ id }) => id)?.join(',');
-      }
+      if (featureIds.length) {
+        params.featureId = featureIds.join(',');
 
-      if (filterBySelection === FilterBySelection.ONLY_NOT_SELECTED && params.featureId) {
-        params.featureIdsNegative = 'true';
+        if (featureIdsNegative) {
+          params.featureIdsNegative = 'true';
+        }
       }
     }
 
@@ -417,10 +415,10 @@ class MapService {
       zIndex
     };
 
-    const commonWMSParams = {
+    const commonWMSParams: Pick<TileWMSOptions, 'url' | 'params' | 'serverType' | 'crossOrigin'> = {
       url: wmsClient.getWmsUrl(),
       params,
-      serverType: 'geoserver' as ServerType,
+      serverType: 'geoserver',
       crossOrigin: 'anonymous'
     };
 
@@ -692,17 +690,16 @@ class MapService {
 
   async positionToFeatures(features: WfsFeature[], projection?: Projection) {
     const olProjection = await getOlProjection();
-    const extents = await Promise.all(
-      features
-        .map(async feature => {
-          const extent = getFeatureExtent(feature);
-          const proj = projection || (await getFeatureProjection(feature));
-          if (extent && proj && olProjection) {
-            return transformExtent(extent, proj, olProjection);
-          }
-        })
-        .filter(notFalsyFilter)
+    const unfilteredExtent = await Promise.all(
+      features.map(async feature => {
+        const extent = getFeatureExtent(feature);
+        const proj = projection || (await getFeatureProjection(feature));
+        if (extent && proj && olProjection) {
+          return transformExtent(extent, proj, olProjection);
+        }
+      })
     );
+    const extents = unfilteredExtent.filter(notFalsyFilter);
     const isSinglePoint = features.length === 1 && features[0].geometry?.type === GeometryType.POINT;
 
     if (extents.length) {

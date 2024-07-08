@@ -6,8 +6,8 @@ import { CrgVectorLayer } from '../../gis/layers/layers.models';
 import { getLayerSchema } from '../../gis/layers/layers.service';
 import { mapService } from '../../map/map.service';
 import { services } from '../../services';
-import { cqlBuild } from '../../util/cqlBuild';
-import { cqlConcat } from '../../util/cqlConcat';
+import { buildCql } from '../../util/cql/buildCql';
+import { concatCql } from '../../util/cql/concatCql';
 import { Mime } from '../../util/Mime';
 import { notFalsyFilter } from '../../util/NotFalsyFilter';
 import { GeometryType } from '../wfs/wfs.models';
@@ -27,7 +27,7 @@ const parsedStyles: Record<string, Promise<StyleRule[]>> = {};
 
 export async function getLayerStyleRules(layer: CrgVectorLayer): Promise<StyleRule[]> {
   const schema = await getLayerSchema(layer);
-  const styleName = layer.styleName || schema.styleName;
+  const styleName = layer.styleName || schema?.styleName;
 
   if (!styleName || styleName === CUSTOM_STYLE_NAME) {
     return [];
@@ -154,12 +154,18 @@ export async function filterLegendForCurrentMapView(layers: CrgVectorLayer[]): P
   const filterDisabled = cloneDeep(attributesTableStore.filterDisabled);
   const requestData: FilteredStylesLayerRequest[] = await Promise.all(
     layers.map(async layer => {
-      const { definitionQuery } = applyView(await getLayerSchema(layer), layer.view);
+      const schema = await getLayerSchema(layer);
+
+      if (!schema) {
+        throw new Error(`Не удалось получить схему для слоя ${layer.tableName}`);
+      }
+
+      const { definitionQuery } = applyView(schema, layer.view);
 
       let ecqlFilter: string | undefined = definitionQuery;
 
       if (!filterDisabled[layer.tableName]) {
-        ecqlFilter = cqlConcat(ecqlFilter, cqlBuild(attributesTableStore.getLayerFilter(layer.tableName)));
+        ecqlFilter = concatCql(ecqlFilter, buildCql(attributesTableStore.getLayerFilter(layer.tableName)));
       }
 
       return {

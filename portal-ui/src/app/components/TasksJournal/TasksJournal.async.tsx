@@ -12,7 +12,8 @@ import { applyContentType, mergeContentTypes } from '../../services/data/schema/
 import { Task } from '../../services/data/task/task.models';
 import { getTasks, getTaskSchema } from '../../services/data/task/task.service';
 import { PageOptions, ValueOf } from '../../services/models';
-import { FilterQuery, getFieldFilterValue, modifyFieldFilterValue } from '../../services/util/filterObjects';
+import { getFieldFilterValue, modifyFieldFilterValue } from '../../services/util/filters/filters';
+import { FilterQuery } from '../../services/util/filters/filters.models';
 import { calculateValues } from '../../services/util/form/formValidation.utils';
 import { SortParams } from '../../services/util/sortObjects';
 import { currentUser } from '../../stores/CurrentUser.store';
@@ -244,8 +245,7 @@ export default class TasksJournal extends Component {
   }
 
   @boundMethod
-  private updateSchema(pageOptions: PageOptions) {
-    const { filter } = pageOptions;
+  private updateSchema({ filter = {} }: PageOptions) {
     // костыль для корректной работы задач (+ починить заскипаные тесты если это нужно)
     if (filter?.is_folder) {
       delete filter.is_folder;

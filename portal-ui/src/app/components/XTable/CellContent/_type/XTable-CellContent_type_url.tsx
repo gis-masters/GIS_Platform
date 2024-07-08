@@ -31,6 +31,12 @@ class XTableCellContentTypeUrl extends Component<XTableCellContentProps<unknown>
       }
     } catch {}
 
+    if (!col.field) {
+      console.error('xTable: не указан field у колонки с типом url');
+
+      return null;
+    }
+
     const links = (
       <UrlsList
         property={{
@@ -46,8 +52,8 @@ class XTableCellContentTypeUrl extends Component<XTableCellContentProps<unknown>
 
     return (
       <XTableCellContentBase col={col} {...props}>
-        {cellData &&
-          Boolean(value.length) &&
+        {!!cellData &&
+          !!value.length &&
           (value.length === 1 ? (
             links
           ) : (

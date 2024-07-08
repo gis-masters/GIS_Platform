@@ -45,7 +45,7 @@ const data: TestData[] = [
   }
 ];
 
-const colsWithPresicion3: XTableColumn<TestData>[] = [
+const colsWithPrecision3: XTableColumn<TestData>[] = [
   {
     title: 'Вес',
     description: 'в килограммах',
@@ -59,7 +59,7 @@ const colsWithPresicion3: XTableColumn<TestData>[] = [
   }
 ];
 
-const colsWithPresicion0: XTableColumn<TestData>[] = [
+const colsWithPrecision0: XTableColumn<TestData>[] = [
   {
     title: 'Вес',
     description: 'в килограммах',
@@ -102,7 +102,7 @@ TypeFloat.args = {
 export const TypeFloatWithPrecision3 = Template.bind({}) as StoryFn<XTableForTestData>;
 TypeFloatWithPrecision3.args = {
   data,
-  cols: colsWithPresicion3,
+  cols: colsWithPrecision3,
   defaultSort,
   showFiltersPanel: true,
   secondarySortField: 'id',
@@ -113,7 +113,7 @@ TypeFloatWithPrecision3.args = {
 export const TypeFloatWithPrecision0 = Template.bind({}) as StoryFn<XTableForTestData>;
 TypeFloatWithPrecision0.args = {
   data,
-  cols: colsWithPresicion0,
+  cols: colsWithPrecision0,
   defaultSort,
   showFiltersPanel: true,
   secondarySortField: 'id',

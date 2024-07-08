@@ -8,7 +8,7 @@ import { isEqual } from 'lodash';
 
 import { Library, LibraryRecord } from '../../../services/data/library/library.models';
 import { getLibraryRecord } from '../../../services/data/library/library.service';
-import { FilterQuery } from '../../../services/util/filterObjects';
+import { FilterQuery } from '../../../services/util/filters/filters.models';
 import { Breadcrumbs, BreadcrumbsItemData, BreadcrumbsProps } from '../../Breadcrumbs/Breadcrumbs';
 import {
   getIdsFromPath,

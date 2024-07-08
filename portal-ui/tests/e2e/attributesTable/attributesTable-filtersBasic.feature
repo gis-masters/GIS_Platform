@@ -74,9 +74,9 @@ Feature: Атрибутивная таблица: фильтрация - баз�
 
     Examples:
       | fieldTitle  | selected                | checkedFieldTitle | expected |
-      | Поле CHOICE | Не заполнено            | ID                | "1"      |
-      | Поле CHOICE | Модульная односторонняя | ID                | "2", "3" |
-      | Поле CHOICE | Модульная двухсторонняя | ID                | -        |
+      | Поле CHOICE | Не заполнено            | №                 | "1"      |
+      | Поле CHOICE | Модульная односторонняя | №                 | "2", "3" |
+      | Поле CHOICE | Модульная двухсторонняя | №                 | -        |
 
   Scenario Outline: Пользователь может фильтровать по нескольким полям: "<firstFieldTitle>", "<secondFieldTitle>"
     Given я авторизован как "Гарри"
@@ -88,5 +88,5 @@ Feature: Атрибутивная таблица: фильтрация - баз�
 
     Examples:
       | firstFieldTitle | from | to  | selected                | secondFieldTitle | checkedFieldTitle | expected |
-      | Поле CHOICE     | 100  |     | Модульная односторонняя | Поле FLOAT       | ID                | "3"      |
-      | Поле CHOICE     |      | 500 | Не заполнено            | Поле INT         | ID                | "1"      |
+      | Поле CHOICE     | 100  |     | Модульная односторонняя | Поле FLOAT       | №                 | "3"      |
+      | Поле CHOICE     |      | 500 | Не заполнено            | Поле INT         | №                 | "1"      |

@@ -2,7 +2,7 @@ import React from 'react';
 import { withBemMod } from '@bem-react/core';
 
 import { PropertyType } from '../../../../services/data/schema/schema.models';
-import { getFieldFilterValue } from '../../../../services/util/filterObjects';
+import { getFieldFilterValue } from '../../../../services/util/filters/filters';
 import {
   cnXTableFilterPanelItemContent,
   XTableFilterPanelItemContentProps

@@ -54,6 +54,7 @@ class MapSelectionService {
     },
     pointerStyle: []
   });
+
   private areaExtentReplace = new ExtentInteraction({
     condition: (e: MapBrowserEvent<UIEvent>) => {
       const originalEvent = e.originalEvent as MouseEvent;

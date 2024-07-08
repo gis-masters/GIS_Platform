@@ -1,4 +1,4 @@
-//https://github.com/openlayers/ol2/blob/master/lib/OpenLayers/Format/CQL.js
+// https://github.com/openlayers/ol2/blob/master/lib/OpenLayers/Format/CQL.js
 
 import { WKT } from 'ol/format';
 import {

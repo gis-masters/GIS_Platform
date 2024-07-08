@@ -30,14 +30,20 @@ class XTableCellContentTypeFile extends Component<XTableCellContentProps<unknown
       }
     } catch {}
 
+    if (!col.field) {
+      console.error('xTable: не указан field у колонки с типом file');
+
+      return null;
+    }
+
     const files = (
       <Files property={{ name: col.field, propertyType: PropertyType.FILE, title: String(col.title) }} value={value} />
     );
 
     return (
       <XTableCellContentBase col={col} {...props}>
-        {cellData &&
-          Boolean(value.length) &&
+        {!!cellData &&
+          !!value.length &&
           (value.length === 1 ? (
             files
           ) : (

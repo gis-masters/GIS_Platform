@@ -4,7 +4,8 @@ import { observer } from 'mobx-react';
 import { TextField } from '@mui/material';
 import { withBemMod } from '@bem-react/core';
 
-import { FilterQuery, getFieldFilterValue, modifyFieldFilterValue } from '../../../../services/util/filterObjects';
+import { getFieldFilterValue, modifyFieldFilterValue } from '../../../../services/util/filters/filters';
+import { FilterQuery } from '../../../../services/util/filters/filters.models';
 import { notFalsyFilter } from '../../../../services/util/NotFalsyFilter';
 import { XTableExtraColumnType } from '../../XTable.models';
 import { cnXTableFilter, XTableFilterProps } from '../XTable-Filter.base';

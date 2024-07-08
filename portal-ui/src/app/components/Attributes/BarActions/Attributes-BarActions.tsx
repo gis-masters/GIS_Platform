@@ -23,8 +23,8 @@ import { CopyFeaturesButton } from '../../CopyFeaturesButton/CopyFeaturesButton'
 import { IconButton } from '../../IconButton/IconButton';
 import { PrintAction } from '../../PrintAction/PrintAction';
 import { XTableColumn } from '../../XTable/XTable.models';
+import { AttributesTableRecord } from '../Attributes.models';
 import { AttributesBarActionExport } from '../BarActionExport/Attributes-BarActionExport';
-import { AttributesTableRecord } from '../Table/Attributes-Table';
 
 import '!style-loader!css-loader!sass-loader!./Attributes-BarActions.scss';
 

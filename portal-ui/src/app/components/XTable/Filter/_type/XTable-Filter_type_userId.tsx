@@ -9,7 +9,8 @@ import { isEqual } from 'lodash';
 
 import { usersService } from '../../../../services/auth/users/users.service';
 import { PropertyOption, PropertyType } from '../../../../services/data/schema/schema.models';
-import { FilterQuery, getFieldFilterValue, modifyFieldFilterValue } from '../../../../services/util/filterObjects';
+import { getFieldFilterValue, modifyFieldFilterValue } from '../../../../services/util/filters/filters';
+import { FilterQuery } from '../../../../services/util/filters/filters.models';
 import { notFalsyFilter } from '../../../../services/util/NotFalsyFilter';
 import { allUsers } from '../../../../stores/AllUsers.store';
 import { cnXTableFilter, XTableFilterProps } from '../XTable-Filter.base';
