@@ -1,26 +1,27 @@
-<svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="2017" height="2017">
-    <g style="font-style:normal;font-weight:400;font-size:22.6771px;font-family:icomoon;display:inline;fill:#fff;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1;stroke-linecap:square;stroke-linejoin:bevel">
-        <path d="M2.637-24.375h24.726c.723 0 1.343.259 1.86.776.518.518.777 1.138.777 1.86V2.989c0 .723-.259 1.343-.776 1.86a2.538 2.538 0 0 1-1.86.777H2.636a2.538 2.538 0 0 1-1.86-.776A2.538 2.538 0 0 1 0 2.989v-24.727c0-.723.259-1.343.776-1.86a2.538 2.538 0 0 1 1.86-.777" font-size="22.677" font-weight="400" style="vector-effect:none;fill-rule:nonzero" transform="matrix(2.51969 0 0 2.51969 0 61.417)"/>
-    </g>
-    <path d="M50.402 249.43c-.37 0-.686.133-.95.398a1.297 1.297 0 0 0-.398.95v12.639c0 .369.133.686.397.95.265.265.582.397.951.397H63.04c.37 0 .686-.132.95-.397.265-.264.398-.581.398-.95v-12.638c0-.37-.133-.687-.397-.951a1.297 1.297 0 0 0-.95-.397zm0 .45H63.04c.25 0 .462.087.636.262a.866.866 0 0 1 .263.637v12.638c0 .25-.088.461-.263.636a.866.866 0 0 1-.636.262H50.402a.867.867 0 0 1-.636-.262.866.866 0 0 1-.262-.636v-12.638c0-.25.087-.462.262-.637a.867.867 0 0 1 .636-.262zm2.264 3.061c-.004.02-.011.035-.016.052l.029.002-.013-.054z" style="font-style:normal;font-weight:400;font-size:17.0078px;font-family:icomoon;display:inline;vector-effect:none;fill:#000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:.666667;stroke-linecap:square;stroke-linejoin:bevel" transform="matrix(3.77953 0 0 3.77953 -176.306 -933.912)"/>
-    <g style="font-style:normal;font-weight:400;font-size:22.6771px;font-family:icomoon;display:inline;fill:#000;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1;stroke-linecap:square;stroke-linejoin:bevel">
-        <path d="M26.426-22.236c.39 0 .727.141 1.01.425.284.283.425.62.425 1.01V2.051c0 .39-.141.727-.425 1.01a1.38 1.38 0 0 1-1.01.425H3.574a1.38 1.38 0 0 1-1.01-.424 1.38 1.38 0 0 1-.425-1.011v-22.852c0-.39.141-.727.424-1.01a1.38 1.38 0 0 1 1.011-.425h22.852m0-.703H3.574c-.586 0-1.089.21-1.509.63-.42.42-.63.922-.63 1.508V2.051c0 .586.21 1.089.63 1.509.42.42.923.63 1.51.63h22.85c.587 0 1.09-.21 1.51-.63.42-.42.63-.923.63-1.51V-20.8c0-.587-.21-1.09-.63-1.51-.42-.42-.923-.63-1.51-.63m1.436-.732c.391 0 .728.142 1.011.425.283.283.425.62.425 1.01V3.487c0 .39-.142.728-.425 1.011a1.38 1.38 0 0 1-1.01.425H2.138a1.38 1.38 0 0 1-1.011-.425 1.38 1.38 0 0 1-.425-1.01v-25.723c0-.391.142-.728.425-1.011a1.38 1.38 0 0 1 1.01-.425h25.723m0-.703H2.14c-.586 0-1.09.21-1.51.63-.419.42-.629.923-.629 1.509V3.486c0 .586.21 1.09.63 1.51.42.419.923.629 1.509.629H27.86c.586 0 1.09-.21 1.51-.63.419-.42.629-.923.629-1.509v-25.722c0-.586-.21-1.09-.63-1.51-.42-.419-.923-.629-1.509-.629" font-size="22.677" font-weight="400" style="vector-effect:none;fill-rule:nonzero" transform="matrix(2.51969 0 0 2.51969 0 61.417)"/>
-    </g>
-    <g style="opacity:1" transform="matrix(.07032 0 0 .07032 -33.496 -8.831)">
-        <circle cx="1019.344" cy="445.21" r="109.043" style="opacity:1;fill:#000;fill-opacity:1;stroke:#000;stroke-width:27;stroke-linecap:round;stroke-linejoin:bevel;stroke-opacity:0;paint-order:stroke markers fill"/>
-        <path d="M1161.052 725.684c14.97 26.34 24.443 25.858 36.63 18.359 12.564-7.732 13.697-16.338.219-39.02l-130.735-219.837-27.71 26.555z" style="fill:#000;fill-opacity:1;stroke:#000;stroke-width:27;stroke-linecap:round;stroke-linejoin:bevel;stroke-opacity:0;paint-order:stroke markers fill"/>
-    </g>
-    <g style="opacity:1" transform="matrix(.07032 0 0 .07032 -33.496 -8.831)">
-        <circle cx="133.021" cy="-1537.865" r="109.043" style="fill:#000;fill-opacity:1;stroke:#000;stroke-width:27;stroke-linecap:round;stroke-linejoin:bevel;stroke-opacity:0;paint-order:stroke markers fill" transform="rotate(119.81)"/>
-        <path d="M954.424 863.471c-30.296-.244-34.588 8.353-34.14 22.656.463 14.746 7.367 20.007 33.748 19.588l240.627.068-10.134-40.46z" style="fill:#000;fill-opacity:1;stroke:#000;stroke-width:27;stroke-linecap:round;stroke-linejoin:bevel;stroke-opacity:0;paint-order:stroke markers fill"/>
-    </g>
-    <g style="opacity:1" transform="rotate(120.263 57.103 37.549) scale(.07032)">
-        <circle cx="133.021" cy="-1537.865" r="109.043" style="fill:#000;fill-opacity:1;stroke:#000;stroke-width:27;stroke-linecap:round;stroke-linejoin:bevel;stroke-opacity:0;paint-order:stroke markers fill" transform="rotate(119.81)"/>
-        <path d="M954.424 863.471c-30.296-.244-34.588 8.353-34.14 22.656.463 14.746 7.367 20.007 33.748 19.588l240.627.068-10.134-40.46z" style="fill:#000;fill-opacity:1;stroke:#000;stroke-width:27;stroke-linecap:round;stroke-linejoin:bevel;stroke-opacity:0;paint-order:stroke markers fill"/>
-    </g>
-    <g transform="matrix(.07032 0 0 .07032 -33.496 -8.831)">
-        <circle cx="986.209" cy="412.678" r="51.187" style="opacity:1;fill:#f9f9f9;fill-opacity:1;stroke:#000;stroke-width:31.8618;stroke-linecap:round;stroke-linejoin:bevel;stroke-opacity:0;paint-order:stroke markers fill"/>
-        <circle cx="724.746" cy="850.056" r="51.187" style="opacity:1;fill:#f9f9f9;fill-opacity:1;stroke:#000;stroke-width:31.8618;stroke-linecap:round;stroke-linejoin:bevel;stroke-opacity:0;paint-order:stroke markers fill"/>
-        <circle cx="1240.443" cy="850.056" r="51.187" style="opacity:1;fill:#f9f9f9;fill-opacity:1;stroke:#000;stroke-width:31.8618;stroke-linecap:round;stroke-linejoin:bevel;stroke-opacity:0;paint-order:stroke markers fill"/>
-    </g>
+<svg
+	xmlns="http://www.w3.org/2000/svg"
+	xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" width="20" height="20">
+	<defs>
+		<path id="a" d="M954.424 863.471c-30.296-.244-34.588 8.353-34.14 22.656.463 14.746 7.367 20.007 33.748 19.588l240.627.068-10.134-40.46z"/>
+	</defs>
+	<path fill="#fff" d="M1.772 0h16.623c.486 0 .903.173 1.25.52.349.35.523.766.523 1.252v16.626c0 .486-.174.902-.522 1.25a1.706 1.706 0 0 1-1.25.523H1.772a1.706 1.706 0 0 1-1.25-.522A1.706 1.706 0 0 1 0 18.398V1.772C0 1.286.174.87.52.522a1.706 1.706 0 0 1 1.25-.523" font-family="icomoon" font-size="22.677" font-weight="400"/>
+	<path d="M3.786 2.352c-.374 0-.692.134-.958.401a1.308 1.308 0 0 0-.402.958v12.747c0 .372.134.692.4.958.268.268.587.4.96.4H16.53a1.3 1.3 0 0 0 .958-.4c.267-.266.401-.586.401-.958V3.712a1.31 1.31 0 0 0-.4-.959 1.308 1.308 0 0 0-.958-.4Zm0 .454H16.53a.87.87 0 0 1 .641.264.873.873 0 0 1 .266.642v12.746a.872.872 0 0 1-.266.642.873.873 0 0 1-.641.264H3.786a.874.874 0 0 1-.642-.264.873.873 0 0 1-.264-.642V3.712c0-.252.088-.466.264-.642a.874.874 0 0 1 .642-.264Zm2.283 3.087c-.004.02-.011.035-.016.052l.029.002z" font-family="icomoon" font-size="17.008" font-weight="400"/>
+	<path d="M17.765 1.437c.263 0 .49.095.68.286.19.19.285.417.285.68v15.364a.926.926 0 0 1-.286.679.928.928 0 0 1-.679.286H2.402a.928.928 0 0 1-.679-.285.928.928 0 0 1-.285-.68V2.402c0-.262.094-.489.285-.679a.928.928 0 0 1 .68-.286h15.362m0-.472H2.402c-.394 0-.732.14-1.014.423-.283.283-.424.62-.424 1.014v15.365c0 .394.141.732.424 1.014.282.283.62.424 1.015.424h15.362c.394 0 .732-.141 1.015-.424.282-.282.423-.62.423-1.015V2.403c0-.395-.14-.733-.423-1.015a1.384 1.384 0 0 0-1.015-.424m.965-.492c.263 0 .49.095.68.286.19.19.285.416.285.679v17.295a.93.93 0 0 1-.285.68.928.928 0 0 1-.68.286H1.438a.928.928 0 0 1-.68-.286.928.928 0 0 1-.285-.679V1.438c0-.263.095-.49.285-.68a.928.928 0 0 1 .68-.285H18.73m0-.473H1.44C1.043 0 .704.14.422.423A1.39 1.39 0 0 0 0 1.438v17.294c0 .394.141.733.424 1.015.282.282.62.423 1.014.423H18.73c.394 0 .733-.141 1.016-.424.281-.282.422-.62.422-1.014V1.437c0-.394-.14-.733-.423-1.015A1.386 1.386 0 0 0 18.729 0" font-family="icomoon" font-size="22.677" font-weight="400"/>
+	<g paint-order="stroke markers fill" transform="translate(-8.938 -2.357) scale(.01876)">
+		<circle cx="1019.344" cy="445.21" r="109.043"/>
+		<path d="M1161.052 725.684c14.97 26.34 24.443 25.858 36.63 18.359 12.564-7.732 13.697-16.338.219-39.02l-130.735-219.837-27.71 26.555z"/>
+	</g>
+	<g paint-order="stroke markers fill" transform="translate(-8.938 -2.357) scale(.01876)">
+		<circle cx="133.021" cy="-1537.865" r="109.043" transform="rotate(119.81)"/>
+		<use xlink:href="#a"/>
+	</g>
+	<g paint-order="stroke markers fill" transform="rotate(120.283 15.236 10.015) scale(.01876)">
+		<circle cx="133.021" cy="-1537.865" r="109.043" transform="rotate(119.81)"/>
+		<use xlink:href="#a"/>
+	</g>
+	<g fill="#f9f9f9" paint-order="stroke markers fill" transform="translate(-8.938 -2.357) scale(.01876)">
+		<circle cx="986.209" cy="412.678" r="51.187"/>
+		<circle cx="724.746" cy="850.056" r="51.187"/>
+		<circle cx="1240.443" cy="850.056" r="51.187"/>
+	</g>
 </svg>
