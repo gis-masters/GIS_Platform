@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { action, computed, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { Skeleton } from '@mui/material';
-import { Edit, EditOutlined, Group, Person } from '@mui/icons-material';
+import { Group, Person } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
@@ -21,7 +21,6 @@ import {
 import { getAllPermissions, getProjectPermissions } from '../../services/data/permissions/permissions.service';
 import { allGroups } from '../../stores/AllGroups.store';
 import { allUsers } from '../../stores/AllUsers.store';
-import { Button } from '../Button/Button';
 import { ExplorerItemEntityTypeTitle } from '../Explorer/Explorer.models';
 import { PermissionsEditDialog } from '../PermissionsEditDialog/PermissionsEditDialog';
 import { PseudoLink } from '../PseudoLink/PseudoLink';
@@ -74,21 +73,19 @@ export class PermissionsWidget extends Component<PermissionsWidgetProps> {
   }
 
   render() {
-    const EditIcon = this.dialogOpen ? Edit : EditOutlined;
-
     return (
       <>
         <div className={cnPermissionsWidget()}>
-          <Button
-            className={cnPermissionsWidget('Header')}
-            endIcon={<EditIcon fontSize='inherit' />}
-            variant='text'
-            disabled={this.props.disabled}
-            onClick={this.openModal}
-          >
-            Разрешения
-          </Button>
-
+          {!this.props.disabled && (
+            <PseudoLink
+              className={cnPermissionsWidget('Header')}
+              disabled={this.props.disabled}
+              onClick={this.openModal}
+            >
+              Разрешения
+            </PseudoLink>
+          )}
+          {this.props.disabled && <span className={cnPermissionsWidget('Header', { disabled: true })}>Разрешения</span>}
           {this.fetching ? (
             <>
               <Skeleton height={20} animation='wave' width={String(40 + Math.random() * 60) + '%'} />

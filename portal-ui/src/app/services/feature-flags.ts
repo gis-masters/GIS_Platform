@@ -4,9 +4,15 @@ export interface FlagsList {
   sample: string; // boolean
   selectingFeaturesLimit: string; // number
   allowProjectionsForAllLayers: string; // boolean;
+  showDocumentRoles: string; //boolean
 }
 
-const keys: (keyof FlagsList)[] = ['sample', 'selectingFeaturesLimit', 'allowProjectionsForAllLayers'];
+const keys: (keyof FlagsList)[] = [
+  'sample',
+  'selectingFeaturesLimit',
+  'allowProjectionsForAllLayers',
+  'showDocumentRoles'
+];
 
 function lsKey(key: string) {
   return `crg-flag-${key}`;
@@ -22,6 +28,7 @@ class Flags implements FlagsList {
 
   selectingFeaturesLimit = '';
   allowProjectionsForAllLayers = '';
+  showDocumentRoles = '';
 
   private constructor() {
     this.init();

@@ -64,7 +64,7 @@ class XTableFilterTypeUser extends Component<XTableFilterProps> {
 
   @computed
   private get options(): PropertyOption[] {
-    const options = allUsers.fullList
+    const options = allUsers.list
       .map(user => {
         if (user.enabled) {
           return { title: `${user.surname || ''} ${user.name} ${user.middleName || ''}`, value: user.id };

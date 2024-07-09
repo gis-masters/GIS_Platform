@@ -9,7 +9,7 @@ import { getFilesInfoByFileList } from '../../services/photoUploader.service';
 import { photoUploaderStore } from '../../stores/PhotoUploader.store';
 
 const addHandler = async (checkedFiles: FileList | null) => {
-  const files: File[] = [...checkedFiles].filter(item => item.type !== '' && item.type.startsWith('image/'));
+  const files: File[] = [...(checkedFiles || [])].filter(item => item.type !== '' && item.type.startsWith('image/'));
 
   if (files?.length) {
     const firstHandledFiles: UploadedFile[] = await getFilesInfoByFileList(files);

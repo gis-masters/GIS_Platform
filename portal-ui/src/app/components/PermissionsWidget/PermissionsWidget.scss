@@ -8,9 +8,15 @@ body .PermissionsWidget {
   }
 
   &-Header {
-    margin-left: -6px;
+    display: block;
+
+    margin-bottom: 5px;
 
     color: #666;
+
+    &_disabled {
+      color: var(--gray);
+    }
   }
 
   &-List {

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { action, computed, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
+import { cn } from '@bem-react/classname';
 import { isObject } from 'lodash';
 
 import { communicationService, DataChangeEventDetail } from '../../../../services/communication.service';
@@ -10,14 +11,18 @@ import { getLibraryRecord, getLibrarySchemaByRecord } from '../../../../services
 import { Role } from '../../../../services/data/permissions/permissions.models';
 import { Schema } from '../../../../services/data/schema/schema.models';
 import { applyContentType } from '../../../../services/data/schema/schema.utils';
+import { flags } from '../../../../services/feature-flags';
 import { currentUser } from '../../../../stores/CurrentUser.store';
+import { DocumentRole } from '../../../DocumentRole/DocumentRole';
 import { DocumentVersionsWidget } from '../../../DocumentVersionsWidget/DocumentVersionsWidget';
 import { PermissionsWidget } from '../../../PermissionsWidget/PermissionsWidget';
 import { ViewContentWidget } from '../../../ViewContentWidget/ViewContentWidget';
 import { getId } from '../../Adapter/Explorer-Adapter';
 import { ExplorerItemEntityTypeTitle, ExplorerItemType, itemTypeError } from '../../Explorer.models';
 import { ExplorerInfoDescItem } from '../../InfoDescItem/Explorer-InfoDescItem';
-import { cnExplorerWidgets, ExplorerWidgetsProps } from '../Explorer-Widgets.base';
+import { ExplorerWidgetsProps } from '../Explorer-Widgets.base';
+
+const cnExplorer = cn('Explorer');
 
 @observer
 export class ExplorerWidgetsTypeLibraryRecord extends Component<ExplorerWidgetsProps> {
@@ -63,7 +68,7 @@ export class ExplorerWidgetsTypeLibraryRecord extends Component<ExplorerWidgetsP
     }
 
     return (
-      <div className={cnExplorerWidgets(null, [className])}>
+      <div className={cnExplorer('Widgets', [className])}>
         {this.currentRecord && this.schema && (
           <>
             <ExplorerInfoDescItem multiline>
@@ -92,6 +97,13 @@ export class ExplorerWidgetsTypeLibraryRecord extends Component<ExplorerWidgetsP
               }
               disabled={!(currentUser.isAdmin || this.currentRecord.role === Role.OWNER)}
             />
+            {!flags.showDocumentRoles && (
+              <DocumentRole
+                id={item.payload.id}
+                libraryTableName={item.payload.libraryTableName}
+                role={item.payload.role}
+              />
+            )}
           </>
         )}
       </div>

@@ -18,7 +18,7 @@ export interface Library {
   table_name: string;
   versioned: boolean;
   schema: Schema;
-  role: Role;
+  role?: Role;
 }
 
 export interface LibraryRaw extends Omit<Library, 'schema'> {
