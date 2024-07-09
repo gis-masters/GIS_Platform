@@ -2,7 +2,7 @@ package ru.mycrg.data_service.dto.smev3;
 
 import javax.validation.constraints.NotNull;
 
-public class RegisterRnsRequestDto implements ISmevRequestDto {
+public class RegisterRequestDto implements ISmevRequestDto {
 
     @NotNull(message = "Забыли указать идентификатор отправляемой записи")
     private Long recId;

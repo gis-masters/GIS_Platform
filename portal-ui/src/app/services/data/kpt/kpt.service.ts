@@ -9,8 +9,8 @@ export async function importKpt(importRequest: Record<string, unknown>): Promise
   return await kptClient.importKpt(importRequest);
 }
 
-export async function requestKpt(order: string[]): Promise<void> {
-  await kptClient.requestKpt(order);
+export async function requestKpt(cadNums: string[]): Promise<void> {
+  await kptClient.requestKpt(cadNums);
 }
 
 export async function uploadKpt({ file, data, libraryTableName }: UploadKptData): Promise<UploadKptReturnType> {

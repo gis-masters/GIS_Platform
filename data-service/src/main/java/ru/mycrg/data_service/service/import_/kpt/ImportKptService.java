@@ -21,7 +21,6 @@ import ru.mycrg.data_service.service.cqrs.tasks.requests.CreateTaskRequest;
 import ru.mycrg.data_service.service.cqrs.tasks.requests.UpdateTaskStatusRequest;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service.service.schemas.ISchemaTemplateService;
-import ru.mycrg.data_service.util.SystemLibraryAttributes;
 import ru.mycrg.data_service_contract.dto.DatasetResourceQualifierDto;
 import ru.mycrg.data_service_contract.dto.ImportSourceFileDto;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
@@ -49,6 +48,8 @@ import static ru.mycrg.data_service.service.import_.kpt.KptSourceFilesService.KP
 import static ru.mycrg.data_service.service.smev3.request.get_cadastrial_plan.GetCadastrialPlanRequestService.DATA_SECTION_KEY_DATA_CONNECTION_ATTRIBUTE;
 import static ru.mycrg.data_service.service.smev3.request.get_cadastrial_plan.GetCadastrialPlanRequestService.KPT_CONTENT_TYPE;
 import static ru.mycrg.data_service.util.JsonConverter.toJsonNode;
+import static ru.mycrg.data_service.util.SystemLibraryAttributes.CONTENT_TYPE_ID;
+import static ru.mycrg.data_service.util.SystemLibraryAttributes.CREATED_AT;
 import static ru.mycrg.data_service_contract.enums.TaskStatus.CANCELED;
 
 /**
@@ -181,8 +182,8 @@ public class ImportKptService {
         body.put(TASK_TYPE_PROPERTY, TaskType.CUSTOM.name());
         body.put(TASK_ASSIGNED_TO_PROPERTY, userDetails.getUserId());
         body.put(TASK_OWNER_ID_PROPERTY, userDetails.getUserId());
-        body.put(SystemLibraryAttributes.CONTENT_TYPE_ID.getName(), KPT_CONTENT_TYPE);
-        body.put(SystemLibraryAttributes.CREATED_AT.getName(), LocalDate.now());
+        body.put(CONTENT_TYPE_ID.getName(), KPT_CONTENT_TYPE);
+        body.put(CREATED_AT.getName(), LocalDate.now());
         body.put(DATA_SECTION_KEY_DATA_CONNECTION_ATTRIBUTE, toJsonNode(typeDocumentData).toString());
 
         return body;

@@ -15,6 +15,7 @@ import ru.mycrg.data_service.service.smev3.request.register_rnv.RegisterRnvReque
 import ru.mycrg.data_service.service.smev3.request.terminate_rns.TerminateRnsRequestService;
 
 import javax.validation.Valid;
+import java.util.List;
 import java.util.UUID;
 
 import static ru.mycrg.auth_service_contract.Authorities.HAS_ANY_AUTHORITY;
@@ -65,8 +66,8 @@ public class Smev3RequestController {
      */
     @PostMapping("/egrn")
     @PreAuthorize(HAS_ANY_AUTHORITY)
-    public ResponseEntity<?> getCadastrialPlan(@RequestBody OrderKptDto body) {
-        getCadastrialPlanRequestService.processMessageFromSmev(body);
+    public ResponseEntity<?> getCadastrialPlan(@RequestBody List<String> cadNums) {
+        getCadastrialPlanRequestService.processMessageFromSmev(cadNums);
 
         return ResponseEntity.ok().build();
     }
@@ -98,7 +99,7 @@ public class Smev3RequestController {
      */
     @PostMapping("/register-rns")
     @PreAuthorize(HAS_ANY_AUTHORITY)
-    public ResponseEntity<SmevRequestMeta> registerRns(@Valid @RequestBody RegisterRnsRequestDto rnsRequestDto) {
+    public ResponseEntity<SmevRequestMeta> registerRns(@Valid @RequestBody RegisterRequestDto rnsRequestDto) {
         SmevRequestMeta response = registerRnsService.sendRequest(rnsRequestDto);
 
         return ResponseEntity.ok(response);
@@ -109,7 +110,7 @@ public class Smev3RequestController {
      */
     @PostMapping("/register-rnv")
     @PreAuthorize(HAS_ANY_AUTHORITY)
-    public ResponseEntity<SmevRequestMeta> registerRnv(@RequestBody RegisterRnvRequestDto rnvRequestDto) {
+    public ResponseEntity<SmevRequestMeta> registerRnv(@RequestBody RegisterRequestDto rnvRequestDto) {
         SmevRequestMeta response = registerRnvService.sendRequest(rnvRequestDto);
 
         return ResponseEntity.ok(response);

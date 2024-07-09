@@ -20,8 +20,8 @@ class KptClient extends Client {
     return this.getDataUrl() + '/integration/smev3/request/egrn';
   }
 
-  async requestKpt(order: string[]) {
-    return http.post(this.getRequestKptUrl(), { order });
+  async requestKpt(cadNums: string[]) {
+    return http.post(this.getRequestKptUrl(), cadNums);
   }
 
   async importKpt(importRequest: Record<string, unknown>): Promise<KptTaskInfo> {

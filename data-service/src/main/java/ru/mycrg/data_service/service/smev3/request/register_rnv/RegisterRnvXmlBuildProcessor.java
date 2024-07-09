@@ -4,7 +4,7 @@ import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.mycrg.data_service.dto.ResourceType;
-import ru.mycrg.data_service.dto.smev3.RegisterRnvRequestDto;
+import ru.mycrg.data_service.dto.smev3.RegisterRequestDto;
 import ru.mycrg.data_service.entity.IRecord;
 import ru.mycrg.data_service.exceptions.SmevRequestException;
 import ru.mycrg.data_service.register_rnv_1_0_8.*;
@@ -30,7 +30,7 @@ public class RegisterRnvXmlBuildProcessor extends AXmlBuildProcessor {
         super(requestProcessor);
     }
 
-    public RequestAndSources<Request> run(@NotNull RegisterRnvRequestDto dto) {
+    public RequestAndSources<Request> run(@NotNull RegisterRequestDto dto) {
         try {
             loadRecords(dto.getRecId());
 

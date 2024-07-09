@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import ru.mycrg.data_service.config.Smev3Config;
 import ru.mycrg.data_service.dao.BaseReadDao;
 import ru.mycrg.data_service.dto.smev3.ISmevRequestDto;
-import ru.mycrg.data_service.dto.smev3.RegisterRnsRequestDto;
+import ru.mycrg.data_service.dto.smev3.RegisterRequestDto;
 import ru.mycrg.data_service.register_rns_1_0_10.*;
 import ru.mycrg.data_service.repository.FileRepository;
 import ru.mycrg.data_service.service.schemas.ISchemaTemplateService;
@@ -23,6 +23,8 @@ import ru.mycrg.data_service.service.smev3.request.RequestProcessor;
 import ru.mycrg.data_service.service.smev3.request.SmevFakeXmlBuilder;
 import ru.mycrg.data_service.util.JsonConverter;
 
+import javax.xml.bind.JAXBException;
+import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -46,13 +48,13 @@ public class RegisterRnsRequestService extends RequestProcessor {
                                      FileRepository fileRepository,
                                      SmevOutgoingAttachmentService attachmentService) {
         super(Mnemonic.REGISTER_RNS_1_0_10,
-                messageService,
-                baseReadDao,
-                schemaService,
-                attachmentService,
-                resourceLoader,
-                fileRepository,
-                smev3Config);
+              messageService,
+              baseReadDao,
+              schemaService,
+              attachmentService,
+              resourceLoader,
+              fileRepository,
+              smev3Config);
     }
 
     @Override
@@ -61,21 +63,21 @@ public class RegisterRnsRequestService extends RequestProcessor {
     }
 
     @Override
-    protected SmevRequestMeta buildRequest(@NotNull ISmevRequestDto dto) throws Exception {
-        RegisterRnsRequestDto registerRnsRequestDto = (RegisterRnsRequestDto) dto;
+    protected SmevRequestMeta buildRequest(@NotNull ISmevRequestDto dto) throws JAXBException {
+        RegisterRequestDto registerRequestDto = (RegisterRequestDto) dto;
 
         log.debug("Построение запроса register-rns в СМЭВ на основе ДТО: {}", dto);
 
         RequestAndSources<Request> requestAndSources = new RegisterRnsXmlBuildProcessor(this)
-                .run(registerRnsRequestDto);
+                .run(registerRequestDto);
         ClientMessage clientMessage = prepareClientMessage(requestAndSources);
 
         String xmlPartOfRequest = xmlMarshaller().marshall(clientMessage, ClientMessage.class);
-        if (registerRnsRequestDto.getFakeRequest() != null) {
+        if (registerRequestDto.getFakeRequest() != null) {
             log.debug("Подменяем 🔀 RequestContent на заданный в запросе");
 
             xmlPartOfRequest = SmevFakeXmlBuilder.replaceRequest(xmlPartOfRequest,
-                    registerRnsRequestDto.getFakeRequest());
+                                                                 registerRequestDto.getFakeRequest());
         }
 
         SmevRequestMeta meta = new SmevRequestMeta(
@@ -93,15 +95,15 @@ public class RegisterRnsRequestService extends RequestProcessor {
     }
 
     private ClientMessage prepareClientMessage(RequestAndSources<Request> requestAndSources) {
-        var content = new Content();
+        Content content = new Content();
 
         // PrimaryContent
-        var primaryContent = new MessagePrimaryContent();
+        MessagePrimaryContent primaryContent = new MessagePrimaryContent();
         primaryContent.setRequest(requestAndSources.getRequest());
         content.setMessagePrimaryContent(primaryContent);
 
         // AttachmentHeaderList
-        var attachmentHeaderTypeList = requestAndSources
+        List<AttachmentHeaderType> attachmentHeaderTypeList = requestAndSources
                 .getAttachments()
                 .values().stream()
                 .map(smevAttachment -> {
@@ -114,22 +116,22 @@ public class RegisterRnsRequestService extends RequestProcessor {
                 .collect(Collectors.toList());
 
         if (!attachmentHeaderTypeList.isEmpty()) {
-            var attachmentHeaderList = new AttachmentHeaderList();
+            AttachmentHeaderList attachmentHeaderList = new AttachmentHeaderList();
             attachmentHeaderList.getAttachmentHeader().addAll(attachmentHeaderTypeList);
             content.setAttachmentHeaderList(attachmentHeaderList);
         }
 
-        var contentType = new RequestContentType();
+        RequestContentType contentType = new RequestContentType();
         contentType.setContent(content);
 
-        var metadataType = new RequestMetadataType();
+        RequestMetadataType metadataType = new RequestMetadataType();
         metadataType.setClientId(UUID.randomUUID().toString());
 
-        var messageType = new RequestMessageType();
+        RequestMessageType messageType = new RequestMessageType();
         messageType.setRequestMetadata(metadataType);
         messageType.setRequestContent(contentType);
 
-        var clientMessage = new ClientMessage();
+        ClientMessage clientMessage = new ClientMessage();
         clientMessage.setItSystem(getSmev3Config().getSystemMnemonic());
         clientMessage.setRequestMessage(messageType);
 
