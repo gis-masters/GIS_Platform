@@ -6,6 +6,7 @@ import { boundMethod } from 'autobind-decorator';
 
 import { PropertySchemaSet, PropertyType } from '../../../../services/data/schema/schema.models';
 import { CommonDiRegistry } from '../../../../services/di-registry';
+import { isRecordStringUnknown } from '../../../../services/util/typeGuards/isRecordStringUnknown';
 import { FormErrors } from '../../Errors/Form-Errors';
 import { FormHiddenField } from '../../HiddenField/Form-HiddenField';
 import { cnFormControl, FormControlProps } from '../Form-Control';
@@ -18,6 +19,8 @@ class FormControlTypeSet extends Component<FormControlProps> {
     const { htmlId, className, property, fieldValue = {}, errors, variant = 'standard' } = this.props;
     const { properties } = property as PropertySchemaSet;
 
+    const value: Record<string, unknown> = isRecordStringUnknown(fieldValue) ? fieldValue : {};
+
     return (
       <div className={cnFormControl()}>
         <div className={className}>
@@ -29,7 +32,7 @@ class FormControlTypeSet extends Component<FormControlProps> {
                     <FormHiddenField
                       key={i}
                       name={String(subProperty.name)}
-                      value={fieldValue[subProperty.name] as Record<string, unknown>}
+                      value={value[subProperty.name] as Record<string, unknown>}
                     />
                   ) : (
                     <FormControl
@@ -38,7 +41,7 @@ class FormControlTypeSet extends Component<FormControlProps> {
                       property={subProperty}
                       type={subProperty.propertyType}
                       onChange={this.fieldChanged}
-                      fieldValue={fieldValue[subProperty.name] as Record<string, unknown>}
+                      fieldValue={value[subProperty.name] as Record<string, unknown>}
                       variant={variant}
                       inSet
                     />
@@ -57,7 +60,7 @@ class FormControlTypeSet extends Component<FormControlProps> {
   private fieldChanged({ value, propertyName }: { value: unknown; propertyName: string }) {
     const { onChange, property, fieldValue } = this.props;
 
-    onChange({
+    onChange?.({
       value: { ...(fieldValue as Record<string, unknown>), [propertyName]: value },
       propertyName: property.name
     });

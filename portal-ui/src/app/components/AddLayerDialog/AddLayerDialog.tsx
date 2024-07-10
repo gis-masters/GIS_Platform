@@ -389,7 +389,7 @@ export class AddLayerDialog extends Component<AddLayerDialogProps> {
         const { path } = await getFile(file.id);
         const fileTableName = `${record.libraryTableName}_${record.id}__${file.id}`;
 
-        let crgLayer: CrgLayer;
+        let crgLayer: CrgLayer | undefined;
 
         const generalCrgLayerProps = {
           title: title || getFileBaseName(file.title),

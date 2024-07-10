@@ -15,7 +15,7 @@ class FormControlTypeDatetime extends Component<FormControlProps> {
   render() {
     const { htmlId, className, fieldValue, inSet, property, errors, variant = 'standard' } = this.props;
     const { name } = property as PropertySchemaDatetime;
-    const date = fieldValue && moment(fieldValue);
+    const date = fieldValue ? moment(fieldValue) : undefined;
 
     return (
       <div className={cnFormControl({ inSet }, [className])}>
@@ -24,7 +24,7 @@ class FormControlTypeDatetime extends Component<FormControlProps> {
           id={htmlId}
           name={name}
           fullWidth={!inSet}
-          value={date?.isValid && date.isValid() ? date.format(systemFormat) : ''}
+          value={date?.isValid?.() ? date.format(systemFormat) : ''}
           onChange={this.handleChange}
           label={inSet ? property.title : undefined}
           InputLabelProps={{

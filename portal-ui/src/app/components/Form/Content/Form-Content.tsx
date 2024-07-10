@@ -34,7 +34,7 @@ interface FormContentProps<T> extends IClassNameProps {
   readonly?: boolean;
   labelInField?: boolean;
   onFormChange?(changedValue: Partial<T>): void;
-  onFieldChange?(value: T[keyof T & string], propertyName: keyof T & string, prevValue: T[keyof T & string]): void;
+  onFieldChange?(value: T[keyof T & string], propertyName: keyof T & string, prevValue?: T[keyof T & string]): void;
   onFieldNeedValidate?(value: T[keyof T & string], propertyName: keyof T & string): void;
 }
 

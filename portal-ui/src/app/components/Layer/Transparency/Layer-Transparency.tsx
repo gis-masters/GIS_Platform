@@ -28,13 +28,16 @@ export class LayerTransparency extends Component<LayerTransparencyProps> {
     return (
       <div className={cnLayerTransparency()}>
         <Slider value={transparency} min={5} max={100} step={1} onChange={this.handleChange} />
-        <LayerTransparencyLabel value={transparency} />
+        <LayerTransparencyLabel value={transparency || 100} />
       </div>
     );
   }
 
   @action.bound
-  private handleChange(e: Event, value: number) {
+  private handleChange(e: Event, value: number | number[]) {
+    if (Array.isArray(value)) {
+      throw new TypeError('Слайдер не должен быть multiple');
+    }
     this.props.entity.transparency = value;
   }
 }

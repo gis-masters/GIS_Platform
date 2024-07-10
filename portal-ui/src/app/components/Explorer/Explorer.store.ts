@@ -46,8 +46,10 @@ export class ExplorerStore {
   @computed
   get openedItem(): ExplorerItemData {
     const { path } = this;
+    const openedItem = path.at(-2);
+    const firstItem = path[0];
 
-    return path.length > 1 ? path.at(-2) : path[0];
+    return path.length > 1 && openedItem ? openedItem : firstItem;
   }
 
   @computed

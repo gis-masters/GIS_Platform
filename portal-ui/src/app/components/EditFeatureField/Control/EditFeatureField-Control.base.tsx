@@ -7,12 +7,12 @@ import { EditFeatureInfo } from '../EditFeatureField';
 
 export const cnEditFeatureFieldControl = cn('EditFeatureField', 'Control');
 
-export interface EditFeaturesControlProps extends IClassNameProps {
+export interface EditFeatureFieldControlProps extends IClassNameProps {
   type: ValueType;
   field: EditedField;
   featureInfo: EditFeatureInfo;
 }
 
-export const EditFeatureFieldControl: FC<EditFeaturesControlProps> = ({ field }) => (
+export const EditFeatureFieldControlBase: FC<EditFeatureFieldControlProps> = ({ field }) => (
   <div className={cnEditFeatureFieldControl()}>{field.value}</div>
 );

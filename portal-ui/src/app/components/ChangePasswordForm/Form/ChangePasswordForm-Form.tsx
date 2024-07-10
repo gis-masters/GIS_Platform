@@ -1,8 +1,10 @@
 import React, { FC } from 'react';
 import { cn } from '@bem-react/classname';
+import { isString } from 'lodash';
 
 import { PropertySchema, PropertyType, SimpleSchema } from '../../../services/data/schema/schema.models';
 import { generateRandomId } from '../../../services/util/randomId';
+import { isRecordStringUnknown } from '../../../services/util/typeGuards/isRecordStringUnknown';
 import { Button } from '../../Button/Button';
 import { Form } from '../../Form/Form';
 import { ChangePasswordFormTitle } from '../Title/ChangePasswordForm-Title';
@@ -29,8 +31,12 @@ const schema: SimpleSchema = {
       required: true,
       display: 'password',
       propertyType: PropertyType.STRING,
-      validationFormula(passwordConfirmation: string, property: PropertySchema, { password }: ChangePasswordData) {
-        if (passwordConfirmation !== password) {
+      validationFormula(passwordConfirmation: unknown, property: PropertySchema, formValue: unknown) {
+        if (!isString(passwordConfirmation) || !isRecordStringUnknown(formValue) || !isString(formValue.password)) {
+          return ['Непредвиденная ошибка'];
+        }
+
+        if (passwordConfirmation !== formValue.password) {
           return ['Пароли не совпадают'];
         }
       }

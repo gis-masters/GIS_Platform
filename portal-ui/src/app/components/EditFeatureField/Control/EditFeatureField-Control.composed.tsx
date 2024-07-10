@@ -1,7 +1,10 @@
-import { compose } from '@bem-react/core';
+import { compose, HOC } from '@bem-react/core';
 
 import { withTypeLookup } from './_type/EditFeatureField-Control_type_lookup';
 import { withTypeUrl } from './_type/EditFeatureField-Control_type_url';
-import { EditFeatureFieldControl as Presenter } from './EditFeatureField-Control';
+import { EditFeatureFieldControlBase, EditFeatureFieldControlProps } from './EditFeatureField-Control.base';
 
-export const EditFeatureFieldControl = compose(withTypeUrl, withTypeLookup)(Presenter) as typeof Presenter;
+export const EditFeatureFieldControl = compose(
+  withTypeUrl as HOC<EditFeatureFieldControlProps>,
+  withTypeLookup as HOC<EditFeatureFieldControlProps>
+)(EditFeatureFieldControlBase);

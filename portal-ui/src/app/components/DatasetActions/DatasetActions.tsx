@@ -20,8 +20,8 @@ interface DatasetActionsProps {
 
 @observer
 export class DatasetActions extends Component<DatasetActionsProps> {
-  @observable private dataset: Dataset;
-  private operationId: symbol;
+  @observable private dataset?: Dataset;
+  private operationId?: symbol;
 
   constructor(props: DatasetActionsProps) {
     super(props);
@@ -41,13 +41,13 @@ export class DatasetActions extends Component<DatasetActionsProps> {
   render() {
     const actionAllowed = currentUser.isAdmin || this.dataset?.role === Role.OWNER;
 
-    return (
+    return this.dataset ? (
       <div className={cnDatasetActions()}>
         {actionAllowed && <DatasetActionsEdit dataset={this.dataset} />}
         <DatasetActionsAddToProject dataset={this.dataset} />
         {actionAllowed && <DatasetActionsDelete dataset={this.dataset} />}
       </div>
-    );
+    ) : null;
   }
 
   private async init() {

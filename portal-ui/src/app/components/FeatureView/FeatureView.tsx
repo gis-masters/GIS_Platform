@@ -77,6 +77,10 @@ export class FeatureView extends Component<FeatureProps> {
   private setBreadcrumbsItems() {
     const { vectorTable } = this.props;
 
+    if (!this.dataset) {
+      throw new Error('Набор данных не получен');
+    }
+
     const { title: tableTitle, identifier: tableIdentifier } = vectorTable;
     const { title: datasetTitle, identifier: datasetIdentifier } = this.dataset;
 

@@ -47,6 +47,10 @@ export default class ChangePasswordForm extends Component {
   private async savePassword(value: ChangePasswordData) {
     this.setLoading(true);
 
+    if (!value.password) {
+      throw new Error('Пароль не может быть пустым');
+    }
+
     try {
       await authService.changePassword(route.params.token, value.password);
       this.setSuccess();
@@ -85,7 +89,13 @@ export default class ChangePasswordForm extends Component {
   private async isTokenExpired() {
     const pathname = location.pathname.split('/');
 
-    this.setTokenExpired(await authService.isTokenExpired(pathname.at(-1)));
+    const token = pathname.at(-1);
+
+    if (!token) {
+      throw new Error('Токен не найден');
+    }
+
+    this.setTokenExpired(await authService.isTokenExpired(token));
   }
 
   @action

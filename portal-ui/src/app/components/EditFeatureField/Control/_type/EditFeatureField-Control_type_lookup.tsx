@@ -7,13 +7,13 @@ import { boundMethod } from 'autobind-decorator';
 import { ValueType } from '../../../../services/data/schema/schemaOld.models';
 import { services } from '../../../../services/services';
 import { DocumentListItemData, DocumentsList } from '../../../DocumentsList/DocumentsList';
-import { cnEditFeatureFieldControl, EditFeaturesControlProps } from '../EditFeatureField-Control';
+import { cnEditFeatureFieldControl, EditFeatureFieldControlProps } from '../EditFeatureField-Control.base';
 
 @observer
-class EditFeatureFieldControlTypeLookup extends Component<EditFeaturesControlProps> {
-  @observable lookupValue: DocumentListItemData[];
+class EditFeatureFieldControlTypeLookup extends Component<EditFeatureFieldControlProps> {
+  @observable lookupValue?: DocumentListItemData[];
 
-  constructor(props: EditFeaturesControlProps) {
+  constructor(props: EditFeatureFieldControlProps) {
     super(props);
 
     makeObservable(this);
@@ -51,7 +51,7 @@ class EditFeatureFieldControlTypeLookup extends Component<EditFeaturesControlPro
   }
 }
 
-export const withTypeLookup = withBemMod<EditFeaturesControlProps, EditFeaturesControlProps>(
+export const withTypeLookup = withBemMod<EditFeatureFieldControlProps, EditFeatureFieldControlProps>(
   cnEditFeatureFieldControl(),
   { type: ValueType.LOOKUP },
   () => EditFeatureFieldControlTypeLookup

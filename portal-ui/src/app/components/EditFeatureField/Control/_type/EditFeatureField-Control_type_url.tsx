@@ -12,7 +12,7 @@ import { HtmlContent } from '../../../HtmlContent/HtmlContent';
 import { Link } from '../../../Link/Link';
 import { Loading } from '../../../Loading/Loading';
 import { PseudoLink } from '../../../PseudoLink/PseudoLink';
-import { cnEditFeatureFieldControl, EditFeaturesControlProps } from '../EditFeatureField-Control';
+import { cnEditFeatureFieldControl, EditFeatureFieldControlProps } from '../EditFeatureField-Control.base';
 
 import '!style-loader!css-loader!sass-loader!./EditFeatureField-Control_type_url.scss';
 
@@ -25,13 +25,13 @@ interface PropertyTypeUrlValue {
 }
 
 @observer
-class EditFeatureFieldControlTypeUrl extends Component<EditFeaturesControlProps> {
+class EditFeatureFieldControlTypeUrl extends Component<EditFeatureFieldControlProps> {
   @observable private isOpen = false;
   @observable private content = '';
   @observable private fetching = false;
-  value: PropertyTypeUrlValue;
+  value?: PropertyTypeUrlValue;
 
-  constructor(props: EditFeaturesControlProps) {
+  constructor(props: EditFeatureFieldControlProps) {
     super(props);
 
     makeObservable(this);
@@ -75,16 +75,18 @@ class EditFeatureFieldControlTypeUrl extends Component<EditFeaturesControlProps>
             </Dialog>
           </>
         ) : (
-          <Link href={url} target='_blank'>
-            {text}
-          </Link>
+          url && (
+            <Link href={url} target='_blank'>
+              {text}
+            </Link>
+          )
         )}
       </div>
     );
   }
 
   private async fetchContent() {
-    if (!this.content && !this.fetching) {
+    if (!this.content && !this.fetching && this.value?.url) {
       this.setFetching(true);
       try {
         const response = await fetch(this.value.url);
@@ -120,7 +122,7 @@ class EditFeatureFieldControlTypeUrl extends Component<EditFeaturesControlProps>
   }
 }
 
-export const withTypeUrl = withBemMod<EditFeaturesControlProps, EditFeaturesControlProps>(
+export const withTypeUrl = withBemMod<EditFeatureFieldControlProps, EditFeatureFieldControlProps>(
   cnEditFeatureFieldControl(),
   { type: ValueType.URL },
   () => EditFeatureFieldControlTypeUrl

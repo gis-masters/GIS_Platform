@@ -31,9 +31,9 @@ interface DatasetActionsDeleteProps {
 export class DatasetActionsDelete extends Component<DatasetActionsDeleteProps> {
   @observable private dialogOpen = false;
   @observable private busy = false;
-  @observable private deleteAllowed: boolean;
-  @observable private btnLoading: boolean;
-  @observable private errorMessage: string;
+  @observable private deleteAllowed = false;
+  @observable private btnLoading = false;
+  @observable private errorMessage = '';
 
   constructor(props: DatasetActionsDeleteProps) {
     super(props);
@@ -102,9 +102,7 @@ export class DatasetActionsDelete extends Component<DatasetActionsDeleteProps> {
 
     this.setDeleteAllowed(!records.length);
     this.setErrorMessage(
-      records.length
-        ? 'Набор данных не пустой. Для его удаления необходимо сперва удалить все таблицы внутри.'
-        : undefined
+      records.length ? 'Набор данных не пустой. Для его удаления необходимо сперва удалить все таблицы внутри.' : ''
     );
   }
 
@@ -118,7 +116,7 @@ export class DatasetActionsDelete extends Component<DatasetActionsDeleteProps> {
       this.closeDialog();
     } catch (error) {
       const err = error as AxiosError<{ message: string }>;
-      this.setErrorMessage(err.response.data.message);
+      this.setErrorMessage(err.response?.data.message || '');
     }
 
     this.setDeleteAllowed(false);

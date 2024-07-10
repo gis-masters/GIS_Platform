@@ -54,7 +54,7 @@ class Sidebars {
   @observable featuresClosingConfirmationCallback?: () => void;
   @observable searchValue?: SearchInfo;
   @observable featuresEdited?: boolean;
-  @observable featuresClosingConfirmationOpen?: boolean;
+  @observable featuresClosingConfirmationOpen = false;
   @observable bugReportOpen?: boolean;
   @observable infoOpen?: boolean;
   @observable photoLayerOpen: boolean = false;

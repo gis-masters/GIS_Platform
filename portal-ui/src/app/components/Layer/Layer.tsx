@@ -49,7 +49,7 @@ export class Layer extends Component<LayerProps> {
   @observable private menuX = 0;
   @observable private menuY = 0;
   @observable private _errors: string[] = [];
-  private menuAnchor?: HTMLElement;
+  @observable private menuAnchor?: HTMLElement;
 
   constructor(props: LayerProps) {
     super(props);
@@ -86,14 +86,14 @@ export class Layer extends Component<LayerProps> {
           {!hiddenByZoom && <LayerTransparencyIndicator value={transparency} />}
           {hiddenByZoom && <LayerZoomWarning out={out} tooltipText={hiddenByZoomTooltipText} />}
           <LayerEye
-            enabled={enabled}
+            enabled={!!enabled}
             disabled={this.isError}
             onClick={onEyeClick}
             tooltipText={hiddenByZoomTooltipText}
           />
           <LayerGap gap={depth} />
           <LayerOpen onClick={this.handleOpen} open={this.open} disabled={editMode && !isGroup} />
-          <LayerIcon isGroup={isGroup} expanded={expanded} data={data} isError={this.isError} />
+          <LayerIcon isGroup={isGroup} expanded={!!expanded} data={data} isError={this.isError} />
           <LayerTitle isError={this.isError}>
             {title}
             {isEmptyGroup && <LayerEmptiness />}
@@ -106,17 +106,19 @@ export class Layer extends Component<LayerProps> {
           {isVectorLayer && <LayerLegend layer={data as CrgVectorLayer} />}
         </LayerInnards>
 
-        <LayerMenu
-          isGroup={isGroup}
-          entity={data}
-          open={this.menuOpen}
-          x={this.menuX}
-          y={this.menuY}
-          anchor={this.menuAnchor}
-          onClose={this.handleContextMenuClose}
-          layerWithError={this.isError}
-          editMode={editMode}
-        />
+        {this.menuAnchor && (
+          <LayerMenu
+            isGroup={isGroup}
+            entity={data}
+            open={this.menuOpen}
+            x={this.menuX}
+            y={this.menuY}
+            anchor={this.menuAnchor}
+            onClose={this.handleContextMenuClose}
+            layerWithError={this.isError}
+            editMode={editMode}
+          />
+        )}
       </div>
     );
   }

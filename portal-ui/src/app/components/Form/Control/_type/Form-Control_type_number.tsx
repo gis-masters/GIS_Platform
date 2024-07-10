@@ -57,13 +57,16 @@ export class FormControlTypeNumber extends Component<FormControlProps> {
   @boundMethod
   private handleNumberChange(event: React.ChangeEvent<{ value: string }>) {
     const targetValue = event.target.value;
-    const value = targetValue ? Number(targetValue) : null;
+    const value = targetValue ? Number(targetValue) : undefined;
 
     this.change(value);
   }
 
   @boundMethod
-  private handleSliderChange(event: Event, value: number) {
+  private handleSliderChange(event: Event, value: number | number[]) {
+    if (Array.isArray(value)) {
+      throw new TypeError('Множественный режим слайдера не поддерживается');
+    }
     this.change(value);
     this.handleNeedValidate();
   }

@@ -278,10 +278,10 @@ export default class Explorer extends Component<ExplorerProps> {
   private init(props: ExplorerProps) {
     const { path, preset } = props;
 
-    if (preset) {
+    if (preset && Array.isArray(presets[preset])) {
       this.store.setPath(presets[preset]);
     } else {
-      this.store.setPath(path.length ? path : [emptyItem]);
+      this.store.setPath(Array.isArray(path) && path.length ? path : [emptyItem]);
     }
   }
 
@@ -313,7 +313,10 @@ export default class Explorer extends Component<ExplorerProps> {
     const action = Object.keys(keyActions).find(key => keyActions[key].includes(e.key));
 
     if (action === KeyAction.BACK && path.length >= 3) {
-      void this.openItem(path.at(-3), path.length - 3);
+      const item = path.at(-3);
+      if (item) {
+        void this.openItem(item, path.length - 3);
+      }
     }
 
     if (action === KeyAction.PAGE_PREV && page > 0) {
@@ -355,6 +358,10 @@ export default class Explorer extends Component<ExplorerProps> {
 
     await services.provided;
     const { path, page, pageSize, sort, sortOrder, filter } = this.store;
+
+    if (!sort) {
+      return;
+    }
 
     const explorerItems = path.flatMap(item => [item.type, getId(item, this.store)]);
     const encodedURIPath = JSON.stringify(explorerItems);
