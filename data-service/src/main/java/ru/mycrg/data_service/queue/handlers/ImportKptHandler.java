@@ -78,8 +78,6 @@ public class ImportKptHandler implements IEventHandler {
 
     private static final int BATCH_INSERT_SIZE = 200;
 
-    private static final String KVARTAL_SCHEMA = "kvartal_kpt";
-
     private final XMLInputFactory xmlInputFactory;
     private final KptValidator kptValidator;
     private final TmpTablesService tmpTablesService;
@@ -241,18 +239,19 @@ public class ImportKptHandler implements IEventHandler {
         StopWatch timer = new StopWatch();
         timer.start();
 
+        TypeDocumentData kptDocument = kpt.getDocument();
         String pathToKpt = kpt.getPath();
         try (ZipFile zipKpt = new ZipFile(pathToKpt)) {
             Optional<ZipEntry> xmlZipEntry = extractXmlZipEntry(zipKpt);
             if (xmlZipEntry.isEmpty()) {
-                log.error("В архиве не найден xml файл КПТ. kptId: {}, архив: {}",
-                          kpt.getDocument().getId(), pathToKpt);
+                log.error("В архиве не найден xml файл КПТ. kptId: {}, архив: {}", kptDocument.getId(), pathToKpt);
+
                 return;
             }
 
             ZipEntry xmlFile = xmlZipEntry.get();
             try (InputStream inputStream = zipKpt.getInputStream(xmlFile)) {
-                log.info("Импорт КПТ: '{}' из {}/{}", kpt.getDocument().getTitle(), pathToKpt, xmlFile.getName());
+                log.info("Импорт КПТ: '{}' из {}/{}", kptDocument.getTitle(), pathToKpt, xmlFile.getName());
 
                 String dbName = importEvent.getDbName();
                 String initiator = importEvent.getInitiatorLogin();
@@ -272,7 +271,11 @@ public class ImportKptHandler implements IEventHandler {
                     }
 
                     kptElements.forEach(kptElement -> {
-                        fillContentWithCommonData(kptElement.getContent(), initiator, kpt.getDocument(), acsepAt);
+                        Map<String, Object> filledContent = fillContentWithCommonData(kptElement.getContent(),
+                                                                                      initiator,
+                                                                                      kptDocument,
+                                                                                      acsepAt);
+                        kptElement.setContent(filledContent);
                     });
 
                     persistKptElements(dbName, kptElements, writers, toWrite, schemas);
@@ -285,12 +288,20 @@ public class ImportKptHandler implements IEventHandler {
                     }
                 }
 
-                if (!kvartalElement.getContent().isEmpty()) {
-                    fillContentWithCommonData(kvartalElement.getContent(), initiator, kpt.getDocument(), acsepAt);
-                    KptElementWriter kvartalWriter = writers.get(KvartalElement.class);
+                Map<String, Object> content = kvartalElement.getContent();
+                if (!content.isEmpty()) {
+                    Map<String, Object> filledContent = fillContentWithCommonData(content,
+                                                                                  initiator,
+                                                                                  kptDocument,
+                                                                                  acsepAt);
+                    kvartalElement.setContent(filledContent);
 
+                    List<KptElement> batch = new ArrayList<>();
+                    batch.add(kvartalElement);
+
+                    KptElementWriter kvartalWriter = writers.get(KvartalElement.class);
                     writeBatch(kvartalWriter,
-                               List.of(kvartalElement),
+                               batch,
                                getKptElementSchema(schemas, kvartalWriter.getSchemaName()),
                                dbName);
                 }
@@ -299,7 +310,7 @@ public class ImportKptHandler implements IEventHandler {
                 log.info("Файл '{}' обработан за {} сек", pathToKpt, timer.getTotalTimeSeconds());
             }
         } catch (IOException ex) {
-            log.error("Ошибка чтения архива. КПТ: {}, архив: {}", kpt.getDocument().getId(), pathToKpt, ex);
+            log.error("Ошибка чтения архива. КПТ: {}, архив: {}", kptDocument.getId(), pathToKpt, ex);
 
             throw ex;
         }
@@ -309,28 +320,30 @@ public class ImportKptHandler implements IEventHandler {
     private List<? extends KptElement> getKptElements(Set<String> tags,
                                                       XMLStreamReader streamReader,
                                                       KvartalElement kvartalElement) throws XMLStreamException {
+        List<KptElement> empty = Collections.emptyList();
+
         int eventType = streamReader.next();
         if (eventType != XMLStreamConstants.START_ELEMENT) {
-            return List.of();
+            return empty;
         }
 
         String tagName = streamReader.getLocalName();
         if (!tags.contains(tagName)) {
-            return List.of();
+            return empty;
         }
 
         KptXmlElementReader<? extends KptElement> tagReader = tagReaders.get(tagName);
         if (tagReader == null) {
             log.warn("Не найден reader для тэга {}. Элемент пропущен", tagName);
 
-            return List.of();
+            return empty;
         }
 
         if (isKvartalElementTag(tagName)) {
             KvartalPartialDataReader<?, ?> kvartalReader = (KvartalPartialDataReader<?, ?>) tagReader;
             kvartalReader.readKvartalData(streamReader, kvartalElement);
 
-            return List.of();
+            return empty;
         }
 
         try {
@@ -338,7 +351,7 @@ public class ImportKptHandler implements IEventHandler {
         } catch (Exception e) {
             log.error("Ошибка чтения элемента в {}", tagReader.getClass().getSimpleName(), e);
 
-            return List.of();
+            return empty;
         }
     }
 
@@ -446,14 +459,18 @@ public class ImportKptHandler implements IEventHandler {
         return Optional.ofNullable(xmlEntry);
     }
 
-    private void fillContentWithCommonData(Map<String, Object> content,
-                                           String initiator,
-                                           TypeDocumentData document,
-                                           String acseptAt) {
-        content.put("acsept_at", acseptAt);
-        content.put(CREATED_BY.getName(), initiator);
-        content.put(CREATED_AT.getName(), LocalDateTime.now());
-        content.put("source_doc", String.format("[%s]", document.toString()));
+    private Map<String, Object> fillContentWithCommonData(Map<String, Object> content,
+                                                          String initiator,
+                                                          TypeDocumentData document,
+                                                          String acseptAt) {
+        Map<String, Object> result = new HashMap<>(content);
+
+        result.put(CREATED_BY.getName(), initiator);
+        result.put("source_doc", String.format("[%s]", document.toString()));
+        result.put("acsept_at", acseptAt);
+        result.put(CREATED_AT.getName(), LocalDateTime.now());
+
+        return result;
     }
 
     private SchemaDto getKptElementSchema(List<SchemaDto> schemas, String schemaName) {

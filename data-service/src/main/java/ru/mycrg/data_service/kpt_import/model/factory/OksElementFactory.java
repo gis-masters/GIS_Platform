@@ -210,7 +210,7 @@ public abstract class OksElementFactory {
         List<SpatialElementOKSOut> polylineSpatialElements = new LinkedList<>();
         List<SpatialElementOKSOut> pointSpatialElements = new LinkedList<>();
 
-        for (SpatialElementOKSOut spatialElement : spEls) {
+        for (SpatialElementOKSOut spatialElement: spEls) {
             if (isSpatialElementPolygon(spatialElement)) {
                 polygonSpatialElements.add(spatialElement);
             } else if (isSpatialElementPolyline(spatialElement)) {

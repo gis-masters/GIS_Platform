@@ -130,7 +130,7 @@ uploadAll() {
     objectPath="$targetPath$(basename "$object")"
     # Проверка на папку
     if [ -d "$object" ]; then
-      uploadAll "$object/" "$objectPath"
+      uploadAll "$object/" "$objectPath/"
     else
       fileUpload "$objectPath" "$object"
 

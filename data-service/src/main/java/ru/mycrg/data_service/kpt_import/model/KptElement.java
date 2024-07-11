@@ -9,9 +9,9 @@ import static ru.mycrg.data_service.dao.config.DaoProperties.DEFAULT_GEOMETRY_CO
  */
 public abstract class KptElement {
 
-    protected final Map<String, Object> content;
+    private Map<String, Object> content;
 
-    protected KptElement(Map<String, Object> content) {
+    public KptElement(Map<String, Object> content) {
         this.content = content;
     }
 
@@ -21,5 +21,9 @@ public abstract class KptElement {
 
     public Map<String, Object> getContent() {
         return content;
+    }
+
+    public void setContent(Map<String, Object> content) {
+        this.content = content;
     }
 }
