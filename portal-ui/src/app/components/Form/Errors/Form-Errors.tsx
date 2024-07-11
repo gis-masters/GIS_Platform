@@ -10,7 +10,7 @@ interface FormErrorsProps {
 }
 
 export const FormErrors: FC<FormErrorsProps> = ({ errors }) =>
-  errors?.length > 0 && (
+  !!errors?.length && (
     <div className={cnFormErrors()}>
       {errors.map((error, i) => (
         <FormError key={i}>{error}</FormError>

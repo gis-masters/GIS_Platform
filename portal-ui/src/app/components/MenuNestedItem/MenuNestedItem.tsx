@@ -1,4 +1,4 @@
-import React, { Component, createRef, FC, forwardRef, ReactNode, RefObject } from 'react';
+import React, { Component, createRef, FC, ForwardedRef, forwardRef, ReactNode, RefObject } from 'react';
 import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { ListItemIcon, ListItemText, Menu, MenuItem, MenuItemProps, MenuProps } from '@mui/material';
@@ -13,7 +13,7 @@ const cnMenuNestedItem = cn('MenuNestedItem');
 interface MenuNestedItemProps extends Omit<MenuItemProps, 'ref'> {
   parentMenuOpen: boolean;
   MenuProps?: Omit<MenuProps, 'children'>;
-  innerRef?: RefObject<HTMLLIElement>;
+  innerRef?: ForwardedRef<HTMLLIElement>;
   ContainerProps?: React.HTMLAttributes<HTMLElement> & React.RefAttributes<HTMLElement | null>;
   submenu: ReactNode[];
   icon: ReactNode;
@@ -117,22 +117,22 @@ class MenuNestedItemComponent extends Component<MenuNestedItemProps> {
       e.stopPropagation();
     }
 
-    const active = this.containerRef.current.ownerDocument.activeElement;
+    const active = this.containerRef.current?.ownerDocument.activeElement;
 
     if (e.key === 'ArrowLeft' && this.isSubmenuFocused()) {
-      this.containerRef.current.focus();
+      this.containerRef.current?.focus();
     }
 
     if (e.key === 'ArrowRight' && e.target === this.containerRef.current && e.target === active) {
-      const firstChild = this.menuContainerRef.current.children[0] as HTMLElement;
+      const firstChild = this.menuContainerRef.current?.children[0] as HTMLElement;
       firstChild.focus();
     }
   }
 
   private isSubmenuFocused() {
-    const active = this.containerRef.current.ownerDocument.activeElement;
+    const active = this.containerRef.current?.ownerDocument.activeElement;
 
-    for (const child of this.menuContainerRef.current.children) {
+    for (const child of this.menuContainerRef.current?.children || []) {
       if (child === active) {
         return true;
       }
@@ -153,5 +153,5 @@ class MenuNestedItemComponent extends Component<MenuNestedItemProps> {
 }
 
 export const MenuNestedItem: FC<Omit<MenuNestedItemProps, 'innerRef'>> = forwardRef(
-  (props, ref: RefObject<HTMLLIElement>) => <MenuNestedItemComponent innerRef={ref} {...props} />
+  (props, ref: ForwardedRef<HTMLLIElement>) => <MenuNestedItemComponent innerRef={ref} {...props} />
 );

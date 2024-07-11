@@ -6,6 +6,7 @@ import { boundMethod } from 'autobind-decorator';
 import { isError } from 'lodash';
 
 import { SpecializationView } from '../../../server-types/common-contracts';
+import { RegData } from '../../services/auth/auth/auth.models';
 import { authService } from '../../services/auth/auth/auth.service';
 import { getSpecializations } from '../../services/auth/specializations/specializations.service';
 import { PropertyOption, PropertyType, SimpleSchema } from '../../services/data/schema/schema.models';
@@ -23,21 +24,10 @@ import '!style-loader!css-loader!sass-loader!./OrgRegistrationForm.scss';
 
 const cnOrgRegistrationForm = cn('OrgRegistrationForm');
 
-interface OrgRegistration {
-  company: string;
-  contactPhone: string;
-  specializationId: number | null;
-  lastName: string;
-  firstName: string;
-  email: string;
-  password: string;
-  password_: string;
-}
-
-const defaultData: OrgRegistration = {
+const defaultData: Partial<RegData> = {
   company: '',
   contactPhone: '',
-  specializationId: null,
+  specializationId: undefined,
   lastName: '',
   firstName: '',
   email: '',
@@ -199,7 +189,7 @@ export class OrgRegistrationForm extends Component {
   }
 
   @boundMethod
-  private async save(value: OrgRegistration) {
+  private async save(value: RegData) {
     if (value.password !== value.password_) {
       throw new Error('Пароли не совпадают');
     }

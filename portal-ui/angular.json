@@ -44,6 +44,7 @@
               "event-emitter",
               "file-saver",
               "form-data",
+              "geojson-equality",
               "html2canvas",
               "hoist-non-react-statics",
               "lodash",

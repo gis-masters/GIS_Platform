@@ -33,9 +33,9 @@ const toComplex: Partial<Record<PropertyType, <T>(field: PropertySchema, formVal
     const name = String(field.name);
 
     const value: FiasValue = {
-      address: formValue[name + '__address'] as string,
-      id: formValue[name + '__id'] as number,
-      oktmo: formValue[name + '__oktmo'] as string
+      address: formValue[(name + '__address') as keyof T] as string,
+      id: formValue[(name + '__id') as keyof T] as number,
+      oktmo: formValue[(name + '__oktmo') as keyof T] as string
     };
 
     return value;
@@ -47,11 +47,13 @@ const _applyFieldValue = <T>(
   formValue: Partial<T>,
   fieldValue: T[keyof T & string]
 ): Partial<T> => {
-  if (fromComplex[propertySchema.propertyType]) {
-    return fromComplex[propertySchema.propertyType]<T>(propertySchema, formValue, fieldValue);
+  const complexifier = fromComplex[propertySchema.propertyType];
+
+  if (complexifier) {
+    return complexifier<T>(propertySchema, formValue, fieldValue);
   }
 
-  formValue[propertySchema.name] = fieldValue;
+  formValue[propertySchema.name as keyof T] = fieldValue;
 
   return formValue;
 };
@@ -63,7 +65,7 @@ export function convertToComplexField<T>(field: PropertySchema, formValue: Parti
     return toComplex[field.propertyType]?.<T>(field, formValue);
   }
 
-  return formValue[field.name];
+  return formValue[field.name as keyof T];
 }
 
 export function isEqualExceptCalculated<T>(

@@ -1,4 +1,4 @@
-import React, { BaseHTMLAttributes, Component, FC, forwardRef, RefObject } from 'react';
+import React, { BaseHTMLAttributes, Component, FC, ForwardedRef, forwardRef } from 'react';
 import { OpenInNew } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
@@ -19,7 +19,7 @@ export interface LinkProps extends BaseHTMLAttributes<HTMLAnchorElement>, Childr
   download?: string | boolean;
   disabled?: boolean;
   delay?: number;
-  innerRef?: RefObject<HTMLAnchorElement>;
+  innerRef?: ForwardedRef<HTMLAnchorElement>;
   onClick?(e: React.MouseEvent<HTMLAnchorElement>): void;
 }
 
@@ -90,6 +90,6 @@ class LinkComponent extends Component<LinkProps> {
   }
 }
 
-export const Link: FC<Omit<LinkProps, 'innerRef'>> = forwardRef((props, ref: RefObject<HTMLAnchorElement>) => (
+export const Link: FC<Omit<LinkProps, 'innerRef'>> = forwardRef((props, ref: ForwardedRef<HTMLAnchorElement>) => (
   <LinkComponent innerRef={ref} {...props} />
 ));

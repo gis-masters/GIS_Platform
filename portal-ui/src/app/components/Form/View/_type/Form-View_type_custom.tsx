@@ -5,7 +5,7 @@ import { withBemMod } from '@bem-react/core';
 import { PropertySchemaCustom, PropertyType } from '../../../../services/data/schema/schema.models';
 import { FormControlProps } from '../../Control/Form-Control';
 import { FormViewErrors } from '../../ViewErrors/ViewErrors-ViewErrors';
-import { cnFormView } from '../Form-View';
+import { cnFormView } from '../Form-View.base';
 
 @observer
 class FormViewTypeCustom extends Component<FormControlProps> {

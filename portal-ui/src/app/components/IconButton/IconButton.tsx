@@ -1,4 +1,4 @@
-import React, { BaseHTMLAttributes, FC, forwardRef, RefObject } from 'react';
+import React, { BaseHTMLAttributes, FC, ForwardedRef, forwardRef } from 'react';
 import { CircularProgress, IconButton as BaseIconButton, IconButtonProps as BaseIconButtonProps } from '@mui/material';
 import { cn } from '@bem-react/classname';
 
@@ -17,7 +17,7 @@ export interface IconButtonProps
 }
 
 export const IconButton: FC<IconButtonProps> = forwardRef(
-  ({ className, children, loading, checked, ...props }, ref: RefObject<HTMLButtonElement>) => (
+  ({ className, children, loading, checked, ...props }, ref: ForwardedRef<HTMLButtonElement>) => (
     <BaseIconButton
       {...(props.href ? { ...props, variant: 'none', LinkComponent: Link } : props)}
       className={cnIconButton({ loading, checked }, [className])}

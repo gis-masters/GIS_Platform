@@ -7,7 +7,7 @@ import { DocumentInfo, Documents } from '../../../Documents/Documents';
 import { FormControlProps } from '../../Control/Form-Control';
 import { FormViewErrors } from '../../ViewErrors/ViewErrors-ViewErrors';
 import { FormViewValue } from '../../ViewValue/Form-ViewValue';
-import { cnFormView } from '../Form-View';
+import { cnFormView } from '../Form-View.base';
 
 @observer
 class FormViewTypeDocument extends Component<FormControlProps> {

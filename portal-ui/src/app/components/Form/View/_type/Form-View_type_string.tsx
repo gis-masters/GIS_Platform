@@ -9,7 +9,7 @@ import { FormControlProps } from '../../Control/Form-Control';
 import { FormSetLabel } from '../../SetLabel/Form-SetLabel';
 import { FormViewErrors } from '../../ViewErrors/ViewErrors-ViewErrors';
 import { FormViewValue } from '../../ViewValue/Form-ViewValue';
-import { cnFormView } from '../Form-View';
+import { cnFormView } from '../Form-View.base';
 
 import '!style-loader!css-loader!sass-loader!./Form-View_type_string.scss';
 

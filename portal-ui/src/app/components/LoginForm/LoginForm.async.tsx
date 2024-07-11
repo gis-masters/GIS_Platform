@@ -52,7 +52,7 @@ export default class LoginForm extends Component<LoginFormProps> {
 
   async componentDidMount() {
     const url = new URL(location.href);
-    const queryParams = Object.fromEntries(url.searchParams);
+    const queryParams: Record<string, string | null> = Object.fromEntries(url.searchParams);
 
     const guestName = queryParams.guestName;
     const guestPass = queryParams.guestPass;

@@ -29,7 +29,7 @@ export default class ImportGmlResultsLink extends Component<ImportGmlResultsLink
     const { reports } = this.props;
     const { importLayerReports, projectId } = reports || {};
 
-    return importLayerReports?.length ? (
+    return reports && importLayerReports?.length ? (
       <div className={cnImportGmlResultsLink()}>
         <PseudoLink className={cnImportGmlResultsLink('Info')} onClick={this.openDialog}>
           Отчет

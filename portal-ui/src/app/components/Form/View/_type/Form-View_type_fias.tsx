@@ -7,7 +7,7 @@ import { PropertyType } from '../../../../services/data/schema/schema.models';
 import { FiasView } from '../../../FiasView/FiasView';
 import { FormControlProps } from '../../Control/Form-Control';
 import { FormViewErrors } from '../../ViewErrors/ViewErrors-ViewErrors';
-import { cnFormView } from '../Form-View';
+import { cnFormView } from '../Form-View.base';
 
 @observer
 class FormViewTypeFias extends Component<FormControlProps> {

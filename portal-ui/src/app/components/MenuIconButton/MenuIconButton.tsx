@@ -1,4 +1,4 @@
-import React, { Component, createRef, FC, forwardRef, ReactNode, RefObject } from 'react';
+import React, { Component, createRef, FC, ForwardedRef, forwardRef, ReactNode, RefObject } from 'react';
 import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { Menu, PropTypes } from '@mui/material';
@@ -15,14 +15,14 @@ interface MenuIconButtonProps extends Omit<IconButtonProps, 'ref'> {
   icon: ReactNode;
   color?: PropTypes.Color;
   keepMounted?: boolean;
-  innerRef?: RefObject<HTMLButtonElement>;
+  innerRef?: ForwardedRef<HTMLButtonElement>;
 }
 
 @observer
 class MenuIconButtonComponent extends Component<MenuIconButtonProps> {
   private anchorRef: RefObject<HTMLButtonElement> = createRef();
   @observable private menuOpen = false;
-  private anchorEl: HTMLButtonElement;
+  private anchorEl: HTMLButtonElement | null = null;
 
   constructor(props: MenuIconButtonProps) {
     super(props);
@@ -81,5 +81,5 @@ class MenuIconButtonComponent extends Component<MenuIconButtonProps> {
 }
 
 export const MenuIconButton: FC<Omit<MenuIconButtonProps, 'innerRef'>> = forwardRef(
-  (props, ref: RefObject<HTMLButtonElement>) => <MenuIconButtonComponent innerRef={ref} {...props} />
+  (props, ref: ForwardedRef<HTMLButtonElement>) => <MenuIconButtonComponent innerRef={ref} {...props} />
 );

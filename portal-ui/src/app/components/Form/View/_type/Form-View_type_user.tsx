@@ -8,7 +8,7 @@ import { Users } from '../../../Users/Users';
 import { FormControlProps } from '../../Control/Form-Control';
 import { FormViewErrors } from '../../ViewErrors/ViewErrors-ViewErrors';
 import { FormViewValue } from '../../ViewValue/Form-ViewValue';
-import { cnFormView } from '../Form-View';
+import { cnFormView } from '../Form-View.base';
 
 @observer
 class FormViewTypeUser extends Component<FormControlProps> {

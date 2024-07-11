@@ -1,4 +1,4 @@
-import React, { Component, ReactElement } from 'react';
+import React, { Component, ReactElement, SyntheticEvent } from 'react';
 import { action, computed, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { Dialog, DialogActions, DialogContent, Tab, Tabs } from '@mui/material';
@@ -49,9 +49,9 @@ interface PermissionsListProps {
 @observer
 export class PermissionsListDialog extends Component<PermissionsListProps> {
   @observable private loading = false;
-  @observable private changedProjectsList?: PermissionsListItem<CrgProject>[];
-  @observable private changedTablesList?: PermissionsListItem<VectorTable>[];
-  @observable private changedDatasetsList?: PermissionsListItem<Dataset>[];
+  @observable private changedProjectsList: PermissionsListItem<CrgProject>[] = [];
+  @observable private changedTablesList: PermissionsListItem<VectorTable>[] = [];
+  @observable private changedDatasetsList: PermissionsListItem<Dataset>[] = [];
   @observable private activeTab: PermissionsListItemType = PermissionsListItemType.PROJECT;
 
   constructor(props: PermissionsListProps) {
@@ -198,17 +198,17 @@ export class PermissionsListDialog extends Component<PermissionsListProps> {
 
   @computed
   private get currentProjectsPermissions(): PermissionsListItem<CrgProject>[] {
-    return this.changedProjectsList || this.existingProjectsList;
+    return this.changedProjectsList.length ? this.changedProjectsList : this.existingProjectsList;
   }
 
   @computed
   private get currentTablesPermissions(): PermissionsListItem<VectorTable>[] {
-    return this.changedTablesList || this.existingTablesList;
+    return this.changedTablesList.length ? this.changedTablesList : this.existingTablesList;
   }
 
   @computed
   private get currentDatasetsPermissions(): PermissionsListItem<Dataset>[] {
-    return this.changedDatasetsList || this.existingDatasetsList;
+    return this.changedDatasetsList.length ? this.changedDatasetsList : this.existingDatasetsList;
   }
 
   @computed
@@ -241,7 +241,7 @@ export class PermissionsListDialog extends Component<PermissionsListProps> {
 
   @computed
   private get changed(): boolean {
-    return !this.changedProjectsList;
+    return !this.changedProjectsList.length;
   }
 
   @computed
@@ -266,13 +266,13 @@ export class PermissionsListDialog extends Component<PermissionsListProps> {
 
   @action
   private initChangedLists() {
-    if (!this.changedProjectsList) {
+    if (!this.changedProjectsList.length) {
       this.changedProjectsList = this.existingProjectsList;
     }
-    if (!this.changedTablesList) {
+    if (!this.changedTablesList.length) {
       this.changedTablesList = this.existingTablesList;
     }
-    if (!this.changedDatasetsList) {
+    if (!this.changedDatasetsList.length) {
       this.changedDatasetsList = this.existingDatasetsList;
     }
   }
@@ -313,6 +313,10 @@ export class PermissionsListDialog extends Component<PermissionsListProps> {
 
     const changedIndex = this.changedProjectsList.findIndex(({ entity }) => entity.id === newItem.entity.id);
 
+    if (changedIndex === undefined || changedIndex === -1) {
+      return;
+    }
+
     this.changedProjectsList.splice(changedIndex, 1, newItem);
   }
 
@@ -324,6 +328,10 @@ export class PermissionsListDialog extends Component<PermissionsListProps> {
       ({ entity }) => entity.identifier === newItem.entity.identifier && entity.dataset === newItem.entity.dataset
     );
 
+    if (changedIndex === undefined || changedIndex === -1) {
+      return;
+    }
+
     this.changedTablesList.splice(changedIndex, 1, newItem);
   }
 
@@ -334,6 +342,10 @@ export class PermissionsListDialog extends Component<PermissionsListProps> {
     const changedIndex = this.changedDatasetsList.findIndex(
       ({ entity }) => entity.identifier === newItem.entity.identifier
     );
+
+    if (changedIndex === undefined || changedIndex === -1) {
+      return;
+    }
 
     this.changedDatasetsList.splice(changedIndex, 1, newItem);
   }
@@ -366,6 +378,7 @@ export class PermissionsListDialog extends Component<PermissionsListProps> {
         }
       });
     });
+
     this.changedProjectsList = [...this.changedProjectsList, ...items];
   }
 
@@ -387,7 +400,7 @@ export class PermissionsListDialog extends Component<PermissionsListProps> {
 
   @action.bound
   private dropChangedList() {
-    this.changedProjectsList = undefined;
+    this.changedProjectsList = [];
   }
 
   @boundMethod
@@ -551,7 +564,7 @@ export class PermissionsListDialog extends Component<PermissionsListProps> {
   }
 
   @action.bound
-  private handleTabChange(e: React.ChangeEvent, value: PermissionsListItemType) {
+  private handleTabChange(e: SyntheticEvent<Element, Event>, value: PermissionsListItemType) {
     this.activeTab = value;
   }
 }

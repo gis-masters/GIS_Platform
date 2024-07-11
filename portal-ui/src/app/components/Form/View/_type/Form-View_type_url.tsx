@@ -6,7 +6,7 @@ import { PropertySchemaUrl, PropertyType } from '../../../../services/data/schem
 import { UrlsList } from '../../../UrlsList/UrlsList';
 import { FormControlProps } from '../../Control/Form-Control';
 import { FormViewErrors } from '../../ViewErrors/ViewErrors-ViewErrors';
-import { cnFormView } from '../Form-View';
+import { cnFormView } from '../Form-View.base';
 
 import '!style-loader!css-loader!sass-loader!./Form-View_type_url.scss';
 

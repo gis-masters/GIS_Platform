@@ -1,4 +1,4 @@
-import React, { Component, createRef, FC, forwardRef, ReactNode, RefObject } from 'react';
+import React, { Component, createRef, FC, ForwardedRef, forwardRef, ReactNode, RefObject } from 'react';
 import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { Menu } from '@mui/material';
@@ -12,7 +12,7 @@ import '!style-loader!css-loader!sass-loader!./MenuButton.scss';
 const cnMenuButton = cn('MenuButton');
 
 interface MenuButtonProps extends Omit<ButtonProps, 'ref'> {
-  innerRef?: RefObject<HTMLButtonElement>;
+  innerRef?: ForwardedRef<HTMLButtonElement>;
   menu: ReactNode;
 }
 
@@ -20,7 +20,7 @@ interface MenuButtonProps extends Omit<ButtonProps, 'ref'> {
 class MenuButtonComponent extends Component<MenuButtonProps> {
   private anchorRef: RefObject<HTMLButtonElement> = createRef();
   @observable private menuOpen = false;
-  private anchorEl: HTMLButtonElement;
+  private anchorEl: HTMLButtonElement | null = null;
 
   constructor(props: MenuButtonProps) {
     super(props);
@@ -62,5 +62,5 @@ class MenuButtonComponent extends Component<MenuButtonProps> {
 }
 
 export const MenuButton: FC<Omit<MenuButtonProps, 'innerRef'>> = forwardRef(
-  (props, ref: RefObject<HTMLButtonElement>) => <MenuButtonComponent innerRef={ref} {...props} />
+  (props, ref: ForwardedRef<HTMLButtonElement>) => <MenuButtonComponent innerRef={ref} {...props} />
 );

@@ -11,7 +11,14 @@ import '!style-loader!css-loader!sass-loader!./Form-View.scss';
 
 export const cnFormView = cn('Form', 'View');
 
-export const FormView: FC<FormControlProps> = ({ children, className, property, fieldValue = '—', errors, inSet }) => {
+export const FormViewBase: FC<FormControlProps> = ({
+  children,
+  className,
+  property,
+  fieldValue = '—',
+  errors,
+  inSet
+}) => {
   if (fieldValue === null) {
     fieldValue = '—';
   }

@@ -7,7 +7,7 @@ import { FormControlProps } from '../../Control/Form-Control';
 import { FormSetLabel } from '../../SetLabel/Form-SetLabel';
 import { FormViewErrors } from '../../ViewErrors/ViewErrors-ViewErrors';
 import { FormViewValue } from '../../ViewValue/Form-ViewValue';
-import { cnFormView } from '../Form-View';
+import { cnFormView } from '../Form-View.base';
 
 @observer
 class FormViewTypeFloat extends Component<FormControlProps> {

@@ -72,7 +72,7 @@ export class Layer extends Component<LayerProps> {
       this.props;
     const { title, enabled, transparency } = data;
     const { expanded } = data as CrgLayersGroup;
-    const out = currentProject.viewZoom > (data as CrgLayer).minZoom;
+    const out = currentProject.viewZoom > ((data as CrgLayer).minZoom || 0);
     const type = (data as CrgLayer).type;
     const isVectorLayer = type === CrgLayerType.VECTOR || type === CrgLayerType.SHP;
     const hiddenByZoomTooltipText = hiddenByZoom
@@ -83,7 +83,7 @@ export class Layer extends Component<LayerProps> {
       <div className={cnLayer({ open: this.open, group: isGroup, visible, editMode }, [className])}>
         <LayerCard onContextMenu={this.handleContextMenu} highlighted={highlighted}>
           <LayerDrag />
-          {!hiddenByZoom && <LayerTransparencyIndicator value={transparency} />}
+          {!hiddenByZoom && <LayerTransparencyIndicator value={transparency || 100} />}
           {hiddenByZoom && <LayerZoomWarning out={out} tooltipText={hiddenByZoomTooltipText} />}
           <LayerEye
             enabled={!!enabled}
@@ -91,7 +91,7 @@ export class Layer extends Component<LayerProps> {
             onClick={onEyeClick}
             tooltipText={hiddenByZoomTooltipText}
           />
-          <LayerGap gap={depth} />
+          <LayerGap gap={depth || 0} />
           <LayerOpen onClick={this.handleOpen} open={this.open} disabled={editMode && !isGroup} />
           <LayerIcon isGroup={isGroup} expanded={!!expanded} data={data} isError={this.isError} />
           <LayerTitle isError={this.isError}>
@@ -101,7 +101,7 @@ export class Layer extends Component<LayerProps> {
           <LayerBurger onClick={this.handleBurgerClick} />
         </LayerCard>
 
-        <LayerInnards show={this.open && !isGroup} depth={depth}>
+        <LayerInnards show={this.open && !isGroup} depth={depth || 0}>
           {this.isError && <LayerErrors errors={this.errors} />}
           {isVectorLayer && <LayerLegend layer={data as CrgVectorLayer} />}
         </LayerInnards>

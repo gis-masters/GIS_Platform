@@ -1,4 +1,5 @@
-import { compose } from '@bem-react/core';
+import { FormControlProps } from '@mui/material';
+import { compose, HOC } from '@bem-react/core';
 
 import { withTypeBinary } from './_type/Form-View_type_binary';
 import { withTypeBool } from './_type/Form-View_type_bool';
@@ -14,21 +15,21 @@ import { withTypeString } from './_type/Form-View_type_string';
 import { withTypeUrl } from './_type/Form-View_type_url';
 import { withTypeUser } from './_type/Form-View_type_user';
 import { withTypeUserId } from './_type/Form-View_type_userId';
-import { FormView as Presenter } from './Form-View';
+import { FormViewBase } from './Form-View.base';
 
 export const FormView = compose(
-  withTypeBool,
-  withTypeBinary,
-  withTypeChoice,
-  withTypeCustom,
-  withTypeDatetime,
-  withTypeDocument,
-  withTypeFloat,
-  withTypeFias,
-  withTypeFile,
-  withTypeUser,
-  withTypeUserId,
-  withTypeSet,
-  withTypeString,
-  withTypeUrl
-)(Presenter) as typeof Presenter;
+  withTypeBool as HOC<FormControlProps>,
+  withTypeBinary as HOC<FormControlProps>,
+  withTypeChoice as HOC<FormControlProps>,
+  withTypeCustom as HOC<FormControlProps>,
+  withTypeDatetime as HOC<FormControlProps>,
+  withTypeDocument as HOC<FormControlProps>,
+  withTypeFloat as HOC<FormControlProps>,
+  withTypeFias as HOC<FormControlProps>,
+  withTypeFile as HOC<FormControlProps>,
+  withTypeUser as HOC<FormControlProps>,
+  withTypeUserId as HOC<FormControlProps>,
+  withTypeSet as HOC<FormControlProps>,
+  withTypeString as HOC<FormControlProps>,
+  withTypeUrl as HOC<FormControlProps>
+)(FormViewBase) as typeof FormViewBase;

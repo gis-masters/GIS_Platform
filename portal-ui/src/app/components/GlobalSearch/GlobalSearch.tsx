@@ -35,11 +35,12 @@ export class GlobalSearch extends Component<GlobalSearchProps> {
 
   @boundMethod
   private onSubmit(search: ExplorerSearchValue) {
-    if (search.searchValue) {
+    const { source } = this.props;
+    if (search.searchValue && source) {
       this.setSearch({
         ...search,
         breadcrumbSearchValue: search.searchValue,
-        source: [this.props.source]
+        source: [source]
       });
 
       this.openDialog();
