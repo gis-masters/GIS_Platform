@@ -86,9 +86,10 @@ export class PrintMapDialogCopy extends Component {
       const blob = await request.blob();
       const clipboardItemInput = new ClipboardItem({ [ImageMime.PNG]: blob });
       await navigator.clipboard.write([clipboardItemInput]);
-    } else {
+    } else if (this.node) {
       copyNodeToClipboard(this.node);
     }
+
     Toast.success('Скопировано в буфер обмена');
   }
 

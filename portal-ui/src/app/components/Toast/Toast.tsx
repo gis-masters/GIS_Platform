@@ -6,11 +6,12 @@ import { CheckCircle, Close, Error, Info, Warning } from '@mui/icons-material';
 import { SvgIconProps } from '@mui/material/SvgIcon/';
 import { cn } from '@bem-react/classname';
 import nl2br from 'react-nl2br';
-import { Id, toast, ToastOptions } from 'react-toastify';
+import { Id, toast, ToastOptions, TypeOptions } from 'react-toastify';
 import '!style-loader!css-loader!sass-loader!../../../../node_modules/react-toastify/dist/ReactToastify.css';
 
 import { environment } from '../../services/environment';
 import { sendTelegramError } from '../../services/telegram.service';
+import { isRecordStringUnknown } from '../../services/util/typeGuards/isRecordStringUnknown';
 
 import '!style-loader!css-loader!sass-loader!./Toast.scss';
 
@@ -42,11 +43,13 @@ interface ToastProps extends ToastOpts {
 export class Toast extends Component<ToastProps> {
   static defaultDuration = 5000;
 
-  private static icons: { [key: string]: FC<SvgIconProps> } = {
+  private static icons: Record<TypeOptions, FC<SvgIconProps>> = {
     error: Error,
     success: CheckCircle,
     warning: Warning,
-    info: Info
+    info: Info,
+    default: Info,
+    dark: Info
   };
 
   @observable open = false;
@@ -58,7 +61,7 @@ export class Toast extends Component<ToastProps> {
 
   static show(message: ReactNode | ToastOpts, opts?: ToastOpts): void {
     const normalizedOpts = this.normalizeOpts(message, opts);
-    const Icon = this.icons[normalizedOpts.type] || null;
+    const Icon = this.icons[normalizedOpts.type || 'default'] || null;
     const toastInfo: { id: Id } = { id: '0' };
     const handleClose = () => {
       toast.dismiss(toastInfo.id);
@@ -166,7 +169,12 @@ ${error.message || error.toString()}`;
 
     void sendTelegramError(tgMsg);
 
-    if ((environment.suppressToastErrors && environment.suppressToastErrors[protocol] && canBeSuppressed) || suppress) {
+    if (
+      (isRecordStringUnknown(environment.suppressToastErrors) &&
+        environment.suppressToastErrors[protocol] &&
+        canBeSuppressed) ||
+      suppress
+    ) {
       return;
     }
 

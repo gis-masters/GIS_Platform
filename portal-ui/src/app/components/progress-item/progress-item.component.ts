@@ -15,7 +15,7 @@ import { ExportWsMsg, IWsMessage } from '../../services/ws.service';
   styleUrls: ['./progress-item.component.css']
 })
 export class ProgressItemComponent implements OnDestroy {
-  @Input() event: IEvent;
+  @Input() event?: IEvent;
 
   private unsubscribe$: Subject<void> = new Subject<void>();
 
@@ -27,7 +27,7 @@ export class ProgressItemComponent implements OnDestroy {
   }
 
   getDescription(): string {
-    switch (this.event.payload.payload.status) {
+    switch (this.event?.payload.payload.status) {
       case ProcessStatus.PENDING: {
         return this.event.payload.payload.description;
       }
@@ -56,22 +56,29 @@ export class ProgressItemComponent implements OnDestroy {
         return 'Процесс завершился ошибкой';
       }
       default: {
-        this.logger.warn('Unknown status. Event is: ', this.event.payload);
+        this.logger.warn('Unknown status. Event is: ', this.event?.payload);
 
         return '';
       }
     }
+
+    return '';
   }
 
   inProgress(): boolean {
-    return this.event.payload?.payload?.status === ProcessStatus.PENDING;
+    return this.event?.payload?.payload?.status === ProcessStatus.PENDING;
   }
 
   closeNotice(): void {
-    eventService.delete(this.event.id);
+    if (this.event) {
+      eventService.delete(this.event.id);
+    }
   }
 
   async download(): Promise<void> {
+    if (!this.event) {
+      return;
+    }
     const wsMessage: IWsMessage = this.event.payload;
     const exportWsMsg: ExportWsMsg = wsMessage.payload as ExportWsMsg;
     const fileName = exportWsMsg.payload.split('/')[3];
@@ -83,12 +90,15 @@ export class ProgressItemComponent implements OnDestroy {
 
   isShowActionBlock(): boolean {
     return (
-      this.event.payload.payload.status === ProcessStatus.DONE ||
-      this.event.payload.payload.status === ProcessStatus.ERROR
+      this.event?.payload.payload.status === ProcessStatus.DONE ||
+      this.event?.payload.payload.status === ProcessStatus.ERROR
     );
   }
 
   isShowDownloadLink(): boolean {
+    if (!this.event) {
+      return false;
+    }
     const { type, payload } = this.event;
 
     return (

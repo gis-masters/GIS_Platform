@@ -33,7 +33,7 @@ export default class XmlDownload extends Component<XmlDownloadProps> {
     const { feature } = this.props;
 
     return (
-      feature.geometry.type === GeometryType.MULTI_POLYGON && (
+      feature.geometry?.type === GeometryType.MULTI_POLYGON && (
         <Tooltip title='Скачать XML межевого плана'>
           <span className={cnXmlDownload()}>
             <IconButton onClick={this.download}>
@@ -51,9 +51,13 @@ export default class XmlDownload extends Component<XmlDownloadProps> {
     const { properties, geometry } = feature;
     const guid = uuid().toUpperCase();
 
-    let cadastralBlock: string;
-    if (properties.cad_num) {
-      cadastralBlock = (properties.cad_num as string)?.split(':').slice(0, -1).join(':');
+    if (!geometry) {
+      throw new Error('Не удалось получить геометрию');
+    }
+
+    let cadastralBlock: string = '';
+    if (typeof properties.cad_num === 'string') {
+      cadastralBlock = properties.cad_num?.split(':').slice(0, -1).join(':');
     }
 
     const mp = {

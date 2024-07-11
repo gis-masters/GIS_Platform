@@ -23,7 +23,7 @@ export const ViewContentWidget: FC<ViewContentWidgetProps> = ({ data, schema, ti
     <span className={cnViewContentWidget('Title')}>{title}:</span>
     <Paper className={cnViewContentWidget(null, ['scroll'])} variant='outlined' square>
       <RegistryConsumer id='common'>
-        {({ Form }: CommonDiRegistry) => <Form formRole={formRole} schema={schema} value={data} readonly />}
+        {({ Form }: CommonDiRegistry) => <Form formRole={formRole} schema={schema} value={data || {}} readonly />}
       </RegistryConsumer>
     </Paper>
   </>

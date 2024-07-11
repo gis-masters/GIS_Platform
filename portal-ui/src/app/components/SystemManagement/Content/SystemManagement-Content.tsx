@@ -18,7 +18,7 @@ const cnSystemManagementContent = cn('SystemManagement', 'Content');
 
 @observer
 export class SystemManagementContent extends Component {
-  @observable private organization: OrgSettings;
+  @observable private organization?: OrgSettings;
   @observable private dialogOpen = false;
 
   private cols: XTableColumn<OrgSettings>[] = [
@@ -58,7 +58,7 @@ export class SystemManagementContent extends Component {
 
         <ChooseXTableDialog<OrgSettings>
           title='Выберите организацию'
-          data={organizationSettings.systemSettings}
+          data={organizationSettings.systemSettings || []}
           cols={this.cols}
           open={this.dialogOpen}
           onClose={this.closeDialog}
@@ -69,7 +69,7 @@ export class SystemManagementContent extends Component {
 
         {this.organization && <OrganizationSettings orgSettings={this.organization} systemManagement />}
 
-        {!organizationSettings.systemSettings.length && <>Нет настроек организаций</>}
+        {!organizationSettings.systemSettings?.length && <>Нет настроек организаций</>}
       </Container>
     );
   }

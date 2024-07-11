@@ -13,5 +13,5 @@ interface ServicesCalculatorPriceProps {
 }
 
 export const ServicesCalculatorPrice: FC<ServicesCalculatorPriceProps> = observer(({ service }) => (
-  <div className={cnServicesCalculatorPrice()}>{service.price * service.counter} руб.</div>
+  <div className={cnServicesCalculatorPrice()}>{(service.price || 0) * (service.counter || 0)} руб.</div>
 ));

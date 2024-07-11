@@ -29,7 +29,9 @@ export class ProjectsHeader extends Component<ChildrenProps> {
   }
 
   componentDidMount() {
-    this.intersectionObserver.observe(this.ref.current);
+    if (this.ref.current) {
+      this.intersectionObserver.observe(this.ref.current);
+    }
   }
 
   componentWillUnmount() {

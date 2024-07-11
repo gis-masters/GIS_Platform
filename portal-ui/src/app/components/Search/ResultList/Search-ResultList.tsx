@@ -22,9 +22,9 @@ interface SearchResultListProps {
 
 export const SearchResultList: FC<SearchResultListProps> = observer(({ addressData, kadAreasData, kadOksData }) => (
   <div className={cnSearch('ResultList')}>
-    {(addressData && addressData.featureMember.length) || kadAreasData.length || kadOksData.length ? (
+    {(addressData && addressData.featureMember.length) || kadAreasData?.length || kadOksData?.length ? (
       <List dense>
-        {kadAreasData.length ? (
+        {kadAreasData?.length ? (
           <>
             <div className={cnSearch('ListTitle')}>Участки:</div>
             {kadAreasData.map(item => (
@@ -32,7 +32,7 @@ export const SearchResultList: FC<SearchResultListProps> = observer(({ addressDa
             ))}
           </>
         ) : null}
-        {kadOksData.length ? (
+        {kadOksData?.length ? (
           <>
             <div className={cnSearch('ListTitle')}>ОКС:</div>
             {kadOksData.map(item => (

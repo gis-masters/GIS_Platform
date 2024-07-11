@@ -20,6 +20,8 @@ import { getFeaturesById } from '../../../services/geoserver/wfs/wfs.service';
 import { CrgVectorLayer } from '../../../services/gis/layers/layers.models';
 import { mapService } from '../../../services/map/map.service';
 
+const invalid = 'Не переданы обязательные параметры';
+
 @Component({
   selector: 'crg-bugs-table',
   templateUrl: './bugs-table.component.html',
@@ -33,15 +35,17 @@ import { mapService } from '../../../services/map/map.service';
   ]
 })
 
-// TODO: поправить ошибки типизации
+/**
+ * @deprecated
+ */
 export class BugsTableComponent implements OnInit, OnChanges, AfterViewInit, OnDestroy {
-  @Input() isActive: boolean;
-  @Input() index: number;
-  @Input() step: number;
-  @Input() crgLayer: CrgVectorLayer;
+  @Input() isActive?: boolean;
+  @Input() index?: number;
+  @Input() step?: number;
+  @Input() crgLayer?: CrgVectorLayer;
 
-  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
-  @ViewChild(MatSort, { static: true }) sort: MatSort;
+  @ViewChild(MatPaginator, { static: true }) paginator?: MatPaginator;
+  @ViewChild(MatSort, { static: true }) sort?: MatSort;
 
   displayedColumns: string[] = ['objectid', 'classid', 'violationsCounter'];
   data: ValidationResultsResponse = {
@@ -54,7 +58,7 @@ export class BugsTableComponent implements OnInit, OnChanges, AfterViewInit, OnD
 
   isLoadingResults = true;
 
-  _step: number;
+  _step?: number;
   totalElements = 0;
   defaultPageSize = 25;
 
@@ -71,7 +75,7 @@ export class BugsTableComponent implements OnInit, OnChanges, AfterViewInit, OnD
       await this.getValidation();
     }, this);
 
-    this.updatingAllowed = await isUpdateAllowed(this.crgLayer);
+    this.updatingAllowed = !!this.crgLayer && (await isUpdateAllowed(this.crgLayer));
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -87,13 +91,26 @@ export class BugsTableComponent implements OnInit, OnChanges, AfterViewInit, OnD
 
   ngAfterViewInit() {
     // If the user changes the sort order, reset back to the first page.
-    this.sort.sortChange.subscribe(() => (this.paginator.pageIndex = 0));
+
+    if (!this.crgLayer || !this.paginator || !this.sort) {
+      throw new Error(invalid);
+    }
+
+    this.sort?.sortChange.subscribe(() => {
+      if (this.paginator) {
+        this.paginator.pageIndex = 0;
+      }
+    });
 
     merge(this.sort.sortChange, this.paginator.page)
       .pipe(
         startWith({}),
         switchMap(() => {
           this.isLoadingResults = true;
+
+          if (!this.crgLayer || !this.paginator || !this.sort) {
+            throw new Error(invalid);
+          }
 
           return this.isActive
             ? getValidationResults(
@@ -110,7 +127,12 @@ export class BugsTableComponent implements OnInit, OnChanges, AfterViewInit, OnD
         }),
         takeUntil(this.unsubscribe$)
       )
-      .subscribe((response: ValidationResultsResponse) => this.handleResponse(response));
+      .subscribe((response: ValidationResultsResponse | null) => {
+        if (!response) {
+          return;
+        }
+        void this.handleResponse(response);
+      });
   }
 
   ngOnDestroy(): void {
@@ -120,6 +142,10 @@ export class BugsTableComponent implements OnInit, OnChanges, AfterViewInit, OnD
   }
 
   async getValidation(): Promise<void> {
+    if (!this.crgLayer) {
+      throw new Error(invalid);
+    }
+
     const response: ValidationResultsResponse = await getValidationResults(
       {
         dataset: this.crgLayer.dataset,
@@ -131,12 +157,12 @@ export class BugsTableComponent implements OnInit, OnChanges, AfterViewInit, OnD
       'asc'
     );
 
-    this.handleResponse(response);
+    await this.handleResponse(response);
   }
 
   async showObject(event: Event, objectId: string): Promise<void> {
     event.stopPropagation();
-    if (!this.crgLayer.complexName) {
+    if (!this.crgLayer?.complexName) {
       this.logger.warn('Невозможно отобразить объект: complexName = undefined');
 
       return;
@@ -151,16 +177,23 @@ export class BugsTableComponent implements OnInit, OnChanges, AfterViewInit, OnD
 
   editObject(event: Event, objectId: string): void {
     event.stopPropagation();
+    if (!this.crgLayer) {
+      throw new Error(invalid);
+    }
 
     communicationService.editBugObject.emit([{ id: objectId, crgLayer: this.crgLayer }]);
   }
 
-  private handleResponse(response: ValidationResultsResponse) {
+  private async handleResponse(response: ValidationResultsResponse) {
+    if (!this.crgLayer) {
+      throw new Error(invalid);
+    }
+
     if (response) {
       this.data = response;
-      this.data.results.forEach(async bugObject => {
+      for (const bugObject of this.data.results) {
         bugObject.title = await schemaService.getClassIdAlias(this.crgLayer, bugObject);
-      });
+      }
 
       this.totalElements = response.total;
       this.isLoadingResults = false;

@@ -43,9 +43,9 @@ const schema = {
 @observer
 export default class RestorePasswordForm extends Component {
   @observable private formValue = cloneDeep(defaultData);
-  @observable private emailValidationError: string;
+  @observable private emailValidationError?: string;
   @observable private successMessage = false;
-  @observable private loading: boolean;
+  @observable private loading = false;
 
   constructor(props: Record<string, never>) {
     super(props);

@@ -32,14 +32,14 @@ export class VectorTableCard extends Component<VectorTableCardProps> {
 
   async componentDidMount() {
     if (this.props.vectorTable) {
-      await this.getBreadcrumbsItems();
+      await this.loadBreadcrumbsItems();
     }
   }
 
   async componentDidUpdate(prevProps: VectorTableCardProps) {
     const { vectorTable } = this.props;
     if (!isEqual(prevProps.vectorTable, vectorTable)) {
-      await this.getBreadcrumbsItems();
+      await this.loadBreadcrumbsItems();
     }
   }
 
@@ -67,7 +67,11 @@ export class VectorTableCard extends Component<VectorTableCardProps> {
     );
   }
 
-  private async getBreadcrumbsItems() {
+  private async loadBreadcrumbsItems() {
+    if (!this.props.vectorTable) {
+      throw new Error('VectorTable не может быть пустым');
+    }
+
     this.setBreadcrumbsItems(await this.getVectorTableBreadcrumbs(this.props.vectorTable));
   }
 

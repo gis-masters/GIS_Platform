@@ -29,17 +29,21 @@ export class FeatureTitle extends Component<FeatureTitleProps> {
   }
 
   render() {
-    return <>{this.titleAndEmptiness}</>;
+    return <>{this.title}</>;
   }
 
   @computed
-  private get titleAndEmptiness(): string {
+  private get title(): string {
     if (this.schema) {
-      return getFeaturesListItemTitle(
+      const titleAndEmptiness = getFeaturesListItemTitle(
         this.props.feature,
         changeSchemaNamesCaseByFeature(this.schema, this.props.feature)
-      ).title;
+      );
+
+      return titleAndEmptiness.title;
     }
+
+    return '';
   }
 
   private async fetchData() {

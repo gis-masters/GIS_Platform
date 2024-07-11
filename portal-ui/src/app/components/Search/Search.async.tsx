@@ -21,8 +21,8 @@ const cnSearch = cn('Search');
 
 @observer
 export default class Search extends Component {
-  @observable private searchValue: string;
-  @observable private searchResult: YaGeoObjectCollection;
+  @observable private searchValue = '';
+  @observable private searchResult?: YaGeoObjectCollection;
   @observable private resultListOpen = false;
   @observable private isLoading = false;
   @observable private kadAreas: KadObject[] = [];
@@ -81,7 +81,7 @@ export default class Search extends Component {
   }
 
   @action
-  private setSearchResult(result: YaGeoObjectCollection) {
+  private setSearchResult(result?: YaGeoObjectCollection) {
     this.searchResult = result;
   }
 
@@ -99,7 +99,7 @@ export default class Search extends Component {
     this.setLoading(true);
     if (this.kadNumRegex.test(this.searchValue)) {
       await this.getKadItems(this.searchValue.replaceAll(/[\sa-zа-яё]/gi, ''));
-      this.setSearchResult(null);
+      this.setSearchResult(undefined);
     } else {
       this.setSearchResult(await geocodeService.search(this.searchValue));
       this.setLoading(false);

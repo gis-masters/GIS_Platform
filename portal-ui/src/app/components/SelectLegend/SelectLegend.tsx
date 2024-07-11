@@ -20,7 +20,7 @@ const cnSelectLegend = cn('SelectLegend');
 
 @observer
 export class SelectLegend extends Component<FormControlProps> {
-  private disposer: IReactionDisposer;
+  private disposer?: IReactionDisposer;
   @observable private dialogOpen = false;
 
   private cols: XTableColumn<StyleRuleExtended>[] = [
@@ -60,7 +60,7 @@ export class SelectLegend extends Component<FormControlProps> {
   }
 
   componentWillUnmount() {
-    this.disposer();
+    this.disposer?.();
   }
 
   render() {

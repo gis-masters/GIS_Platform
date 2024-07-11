@@ -14,18 +14,18 @@ import { FeatureUtil } from '../../services/util/FeatureUtil';
   styleUrls: ['./mapping-card.component.css']
 })
 export class MappingCardComponent implements OnInit, OnChanges, OnDestroy {
-  @Input() importLayer: ImportLayerItem;
-  @Input() schemas: OldSchema[];
+  @Input() importLayer?: ImportLayerItem;
+  @Input() schemas?: OldSchema[];
 
   featureDescriptions: OldSchema[] = [];
   searchingFeatureDescriptions: OldSchema[] = [];
 
   propertySchemas: OldPropertySchema[] = [];
 
-  selectedFeatureType: string;
-  searchWord: string;
+  selectedFeatureType?: string;
+  searchWord?: string;
 
-  metrics: InputDataMetrics;
+  metrics?: InputDataMetrics;
 
   private unsubscribe$: Subject<void> = new Subject<void>();
 
@@ -46,7 +46,7 @@ export class MappingCardComponent implements OnInit, OnChanges, OnDestroy {
   ngOnChanges(changes: SimpleChanges): void {
     this.selectedFeatureType = '';
     const simpleChange = changes.importLayer;
-    if (simpleChange && !simpleChange.isFirstChange() && simpleChange.currentValue) {
+    if (this.schemas && simpleChange && !simpleChange.isFirstChange() && simpleChange.currentValue) {
       const newLayer = simpleChange.currentValue as ImportLayerItem;
       const filteredByGeometrySchemas = FeatureUtil.filterByGeometry(this.schemas, newLayer);
       const sortedByBestMatching = FeatureUtil.sortByBestCompatibility(filteredByGeometrySchemas, newLayer);
@@ -81,6 +81,10 @@ export class MappingCardComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   featureTypeChanged(selectedTable: { name: string; title: string }): void {
+    if (!this.importLayer) {
+      return;
+    }
+
     if (selectedTable.name === IMPORT_LAYER_AS_IS.name) {
       this.selectedFeatureType = selectedTable.name;
       this.importData.setFeatureSchema(this.importLayer.nativeName, IMPORT_LAYER_AS_IS);
@@ -110,7 +114,13 @@ export class MappingCardComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   findDescription(tableName: string): OldSchema {
-    return this.schemas.find((type: OldSchema) => type.tableName === tableName);
+    const schema = this.schemas?.find((type: OldSchema) => type.tableName === tableName);
+
+    if (!schema) {
+      throw new Error(`Не найдена схема "${tableName}"`);
+    }
+
+    return schema;
   }
 
   openAttributes(): boolean {

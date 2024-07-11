@@ -1,4 +1,4 @@
-import React, { Component, ReactElement, SyntheticEvent } from 'react';
+import React, { Component, ReactNode, SyntheticEvent } from 'react';
 import { action, computed, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { Dialog, DialogActions, DialogContent, Tab, Tabs } from '@mui/material';
@@ -493,9 +493,13 @@ export class PermissionsListDialog extends Component<PermissionsListProps> {
   }
 
   @boundMethod
-  private renderProjectRoleSelect({ rowData }: { rowData: CrgProject }): ReactElement {
+  private renderProjectRoleSelect({ rowData }: { rowData: CrgProject }): ReactNode {
     const { principalId, principalType } = this.props;
     const item = this.currentProjectsPermissions.find(({ entity }) => entity.id === rowData.id);
+
+    if (!item) {
+      return null;
+    }
 
     return (
       <PermissionsListRoleSelect
@@ -509,11 +513,15 @@ export class PermissionsListDialog extends Component<PermissionsListProps> {
   }
 
   @boundMethod
-  private renderTableRoleSelect({ rowData }: { rowData: VectorTable }): ReactElement {
+  private renderTableRoleSelect({ rowData }: { rowData: VectorTable }): ReactNode {
     const { principalId, principalType } = this.props;
     const item = this.currentTablesPermissions.find(
       ({ entity }) => entity.identifier === rowData.identifier && entity.dataset === rowData.dataset
     );
+
+    if (!item) {
+      return null;
+    }
 
     return (
       <PermissionsListRoleSelect
@@ -527,9 +535,13 @@ export class PermissionsListDialog extends Component<PermissionsListProps> {
   }
 
   @boundMethod
-  private renderDatasetRoleSelect({ rowData }: { rowData: Dataset }): ReactElement {
+  private renderDatasetRoleSelect({ rowData }: { rowData: Dataset }): ReactNode {
     const { principalId, principalType } = this.props;
     const item = this.currentDatasetsPermissions.find(({ entity }) => entity.identifier === rowData.identifier);
+
+    if (!item) {
+      return null;
+    }
 
     return (
       <PermissionsListRoleSelect
@@ -543,12 +555,12 @@ export class PermissionsListDialog extends Component<PermissionsListProps> {
   }
 
   @boundMethod
-  private renderProjectActions({ rowData }: { rowData: CrgProject }): ReactElement {
+  private renderProjectActions({ rowData }: { rowData: CrgProject }): ReactNode {
     return <PermissionsListActions id={rowData.id} onDelete={this.handleProjectDelete} />;
   }
 
   @boundMethod
-  private renderTableActions({ rowData }: { rowData: VectorTable }): ReactElement {
+  private renderTableActions({ rowData }: { rowData: VectorTable }): ReactNode {
     return (
       <PermissionsListActions
         id={rowData.identifier}
@@ -559,7 +571,7 @@ export class PermissionsListDialog extends Component<PermissionsListProps> {
   }
 
   @boundMethod
-  private renderDatasetActions({ rowData }: { rowData: Dataset }): ReactElement {
+  private renderDatasetActions({ rowData }: { rowData: Dataset }): ReactNode {
     return <PermissionsListActions id={rowData.identifier} onDelete={this.handleDatasetDelete} />;
   }
 

@@ -241,7 +241,7 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
         delete this.changedGeometry;
         this.isGeometryValid = false;
         this.isGeometryChanged = false;
-        this.updatingAllowed = await isUpdateAllowed(this.layer);
+        this.updatingAllowed = !!this.layer && (await isUpdateAllowed(this.layer));
 
         if (this.updatingAllowed && this.mode === EditFeatureMode.single && !firstFeature.geometry) {
           firstFeature.geometry = getEmptyGeometry(this.featureDescription.geometryType);
@@ -358,7 +358,7 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
 
     this.isSaveInProgress = true;
 
-    const featureProperties = convertOldToNewProperties(this.featureDescription.properties);
+    const featureProperties = convertOldToNewProperties(this.featureDescription?.properties || []);
     let actualProperties = this.getActualValuesFromForm();
     for (const key of Object.keys(actualProperties)) {
       const propertyByKey = featureProperties.find(({ name }) => name === key);
@@ -372,16 +372,16 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
       }
     }
 
-    let ids = this.features.map(({ id }) => id);
+    let ids = this.features?.map(({ id }) => id) || [];
     if (this.isNew) {
       ids = await transformFeature.insertFeatures(
         [{ ...this.features[0], properties: actualProperties, geometry: this.changedGeometry }],
         this.layer
       );
     } else {
-      let geometry: WfsGeometry<Coordinate>;
+      let geometry: WfsGeometry<Coordinate> | undefined;
 
-      if (this.features.length === 1 && this.isGeometryChanged) {
+      if (this.features?.length === 1 && this.isGeometryChanged) {
         geometry = this.features[0].geometry as WfsGeometry<Coordinate>;
       }
 
@@ -389,7 +389,7 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
         geometry = this.changedGeometry;
       }
 
-      await this.batchUpdateFeatures(this.features, actualProperties, geometry);
+      await this.batchUpdateFeatures(this.features || [], actualProperties, geometry);
     }
 
     sidebars.setFeaturesEdited(false);
@@ -402,7 +402,7 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
     this.isSaveInProgress = false;
 
     sidebars.openEdit({
-      mode: this.mode,
+      mode: this.mode || EditFeatureMode.single,
       features: savedFeatures,
       layer: this.layer,
       properties: this.properties,
@@ -436,14 +436,18 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
       .afterClosed()
       .pipe(filter(value => !!value))
       .subscribe(async () => {
-        if (sidebars.editFeaturesData.mode === EditFeatureMode.multipleEdit) {
-          for (const feature of this.features) {
+        if (sidebars.editFeaturesData?.mode === EditFeatureMode.multipleEdit) {
+          for (const feature of this.features || []) {
             const featureLayer = getLayerByFeatureInCurrentProject(feature);
+
+            if (!featureLayer) {
+              continue;
+            }
 
             await deleteFeatures(featureLayer.dataset, featureLayer.tableName, [feature]);
           }
         } else {
-          await deleteFeatures(dataset, tableName, [this.features[0]]);
+          await deleteFeatures(dataset, tableName, [(this.features || [])[0]]);
         }
 
         mapService.refreshAllLayers();
@@ -461,21 +465,21 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
   }
 
   getTooltip(): string {
-    const count = this.features.length;
+    const count = this.features?.length;
 
     return count ? `Сохранить данные для ${count} объектов` : 'Сохранить объект';
   }
 
   switchControl(property: OldPropertySchema): void {
-    if (this.editFeatureForm.controls[property.name].disabled) {
-      this.editFeatureForm.controls[property.name].enable();
+    if (this.editFeatureForm?.controls[property.name].disabled) {
+      this.editFeatureForm?.controls[property.name].enable();
     } else {
-      this.editFeatureForm.controls[property.name].disable();
+      this.editFeatureForm?.controls[property.name].disable();
     }
   }
 
   isShowTemplate(property: OldPropertySchema): boolean {
-    const control = this.editFeatureForm.controls[property.name];
+    const control = this.editFeatureForm?.controls[property.name];
 
     return control ? control.disabled : false;
   }
