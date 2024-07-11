@@ -10,7 +10,7 @@ import org.springframework.jdbc.core.RowMapperResultSetExtractor;
 import org.springframework.stereotype.Repository;
 import ru.mycrg.auth_facade.IAuthenticationFacade;
 import ru.mycrg.auth_facade.UserDetails;
-import ru.mycrg.gis_service.dto.ProjectProjection;
+import ru.mycrg.gis_service.dto.project.ProjectProjection;
 
 import java.util.Collection;
 import java.util.List;

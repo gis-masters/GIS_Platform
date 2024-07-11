@@ -35,7 +35,7 @@ class ProjectsSyntheticController implements SyntheticController {
   }
 
   post(config: InternalAxiosRequestConfig): CrgProject {
-    const data = JSON.parse(config.data) as { projectName: string };
+    const data = JSON.parse(config.data) as { name: string };
     const property: PropertySchemaString = {
       title: 'title',
       propertyType: PropertyType.STRING,
@@ -44,7 +44,7 @@ class ProjectsSyntheticController implements SyntheticController {
       regex: '^[a-zA-Zа-яА-Я0-9 ._-]*$',
       regexErrorMessage: 'Должно начинаться с буквы. Затем может содержать: буквы, цифры и символы .-_'
     };
-    const errors = validateFieldValue(data.projectName, property, data);
+    const errors = validateFieldValue(data.name, property, data);
 
     if (errors?.messages?.length) {
       throw new AxiosError('bad request', 'bad request', config, null, {
@@ -63,7 +63,7 @@ class ProjectsSyntheticController implements SyntheticController {
 
     const project = {
       id: Math.max(...projects.map(({ id }) => id)) + 1,
-      name: data.projectName,
+      name: data.name,
       internalName: 'workspace_1427',
       organizationId: 1,
       createdAt: '2022-11-11T12:27:11.238515',

@@ -422,7 +422,7 @@ public class LayerStepDefinitions extends BaseStepsDefinitions {
 
     @And("Сообщение об отсутствии прав на добавление слоя соответствует заданному формату")
     public void checkResponseMessageWhenAddLayerForbidden() {
-        super.checkErrorResponseMessage("Недостаточно прав для редактирования проекта: " + projectDto.getProjectName());
+        super.checkErrorResponseMessage("Недостаточно прав для редактирования проекта: " + projectDto.getName());
     }
 
     @And("Текущая группа слоёв 'не пострадала'")

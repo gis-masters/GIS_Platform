@@ -13,9 +13,9 @@ import ru.mycrg.audit_service_contract.events.CrgAuditEvent;
 import ru.mycrg.auth_facade.IAuthenticationFacade;
 import ru.mycrg.auth_facade.UserDetails;
 import ru.mycrg.gis_service.dao.ProjectsDao;
-import ru.mycrg.gis_service.dto.ProjectProjection;
-import ru.mycrg.gis_service.dto.ProjectRequestDto;
-import ru.mycrg.gis_service.dto.ProjectUpdateDto;
+import ru.mycrg.gis_service.dto.project.ProjectCreateDto;
+import ru.mycrg.gis_service.dto.project.ProjectProjection;
+import ru.mycrg.gis_service.dto.project.ProjectUpdateDto;
 import ru.mycrg.gis_service.entity.BaseMap;
 import ru.mycrg.gis_service.entity.Permission;
 import ru.mycrg.gis_service.entity.Project;
@@ -28,17 +28,16 @@ import ru.mycrg.gis_service.repository.PermissionRepository;
 import ru.mycrg.gis_service.repository.ProjectRepository;
 import ru.mycrg.gis_service.repository.RoleRepository;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
+import static java.time.LocalDateTime.now;
 import static java.util.Objects.nonNull;
 import static ru.mycrg.gis_service.GisServiceApplication.objectMapper;
 import static ru.mycrg.gis_service.security.Roles.OWNER;
 
 @Service
-@Transactional
 public class ProjectService {
 
     private final Logger log = LoggerFactory.getLogger(ProjectService.class);
@@ -143,12 +142,13 @@ public class ProjectService {
     }
 
     /**
-     * Обновление проекта. До тех пор пока меняется только название проекта, можно менять только алиас в нашей БД. Не
+     * Обновление проекта. До тех пор, пока меняется только название проекта, можно менять только алиас в нашей БД. Не
      * меняя названия рабочей области на геосервере и схемы в БД.
      *
      * @param projectId Идентификатор проекта.
      * @param updateDto Сущность для обновления проекта.
      */
+    @Transactional
     public void update(long projectId, ProjectUpdateDto updateDto) {
         Project project;
         if (authenticationFacade.isRoot()) {
@@ -172,7 +172,8 @@ public class ProjectService {
             project.setBbox(updateDto.getBbox());
         }
 
-        project.setLastModified(LocalDateTime.now());
+        project.setDefault(updateDto.getDefault());
+        project.setLastModified(now());
 
         projectRepository.save(project);
 
@@ -184,14 +185,14 @@ public class ProjectService {
                                              objectMapper.convertValue(project, JsonNode.class)));
     }
 
-    public ProjectProjection create(ProjectRequestDto dto) {
-        final Long orgId = authenticationFacade.getOrganizationId();
-        final Long userId = authenticationFacade.getUserDetails().getUserId();
+    @Transactional
+    public ProjectProjection create(ProjectCreateDto dto) {
+        Long orgId = authenticationFacade.getOrganizationId();
+        Long userId = authenticationFacade.getUserDetails().getUserId();
 
-        log.info("Init create project: {} for organization: {}", dto.getProjectName(), orgId);
+        log.info("Init create project: {} for organization: {}", dto, orgId);
 
-        Project newProject = new Project(dto.getProjectName(), orgId);
-        Project savedProject = projectRepository.save(newProject);
+        Project savedProject = projectRepository.save(new Project(dto, orgId));
 
         Role role = roleRepository.findByNameIgnoreCase(OWNER.name())
                                   .orElseThrow(() -> new NotFoundException("Не найдена роль: " + OWNER.name()));

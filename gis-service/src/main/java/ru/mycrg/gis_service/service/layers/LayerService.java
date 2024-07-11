@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.mycrg.audit_service_contract.events.CrgAuditEvent;
 import ru.mycrg.auth_facade.IAuthenticationFacade;
 import ru.mycrg.gis_service.dto.*;
+import ru.mycrg.gis_service.dto.project.ProjectProjection;
 import ru.mycrg.gis_service.entity.Group;
 import ru.mycrg.gis_service.entity.Layer;
 import ru.mycrg.gis_service.entity.Project;

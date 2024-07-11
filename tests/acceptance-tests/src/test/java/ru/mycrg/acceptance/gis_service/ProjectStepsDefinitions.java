@@ -10,8 +10,7 @@ import io.restassured.path.json.JsonPath;
 import io.restassured.specification.RequestSpecification;
 import ru.mycrg.acceptance.BaseStepsDefinitions;
 import ru.mycrg.acceptance.auth_service.AuthorizationBase;
-import ru.mycrg.acceptance.gis_service.dto.ProjectRequestDto;
-import ru.mycrg.acceptance.gis_service.dto.ProjectUpdateDto;
+import ru.mycrg.acceptance.gis_service.dto.ProjectDto;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -25,7 +24,7 @@ import static ru.mycrg.acceptance.auth_service.UserStepsDefinitions.userId;
 
 public class ProjectStepsDefinitions extends BaseStepsDefinitions {
 
-    public static ProjectRequestDto projectDto;
+    public static ProjectDto projectDto;
     public static Integer projectId;
     public static Integer permId;
 
@@ -60,7 +59,17 @@ public class ProjectStepsDefinitions extends BaseStepsDefinitions {
     public void checkProjectData() {
         jsonPath = response.jsonPath();
 
-        assertEquals(jsonPath.get("name"), projectDto.getProjectName());
+        assertEquals(jsonPath.get("name"), projectDto.getName());
+    }
+
+    @And("параметры проекта совпадают с переданными")
+    public void checkCreatedProject() {
+        jsonPath = response.jsonPath();
+
+        assertEquals(jsonPath.get("name"), projectDto.getName());
+        assertEquals(jsonPath.get("description"), projectDto.getDescription());
+        assertEquals(jsonPath.get("bbox"), projectDto.getBbox());
+        assertEquals(jsonPath.get("default"), projectDto.getDefault());
     }
 
     @Given("Существует проект {string}")
@@ -105,9 +114,23 @@ public class ProjectStepsDefinitions extends BaseStepsDefinitions {
 
     @When("Пользователь делает запрос на создание проекта {string}")
     public void createProjectStep(String projectNameKey) {
-        projectDto = new ProjectRequestDto(generateString(projectNameKey));
+        projectDto = new ProjectDto(generateString(projectNameKey));
 
         super.createEntity(projectDto);
+
+        projectId = extractEntityIdFromResponse(response);
+    }
+
+    @Then("проект успешно создан")
+    public void checkCreateProjectResponseStatus() {
+        assertEquals(SC_CREATED, response.getStatusCode());
+    }
+
+    @When("я создаю проект: {string}, {string}, {string}, {string}")
+    public void createProjectNewStep(String name, String description, String bbox, String isDefault) {
+        projectDto = new ProjectDto(name, description, bbox, Boolean.parseBoolean(isDefault));
+
+        super.createEntity(projectDto.toString());
 
         projectId = extractEntityIdFromResponse(response);
     }
@@ -117,7 +140,7 @@ public class ProjectStepsDefinitions extends BaseStepsDefinitions {
         authorizationBase.loginAsCurrentUser();
 
         String projName = generateString(projectName);
-        ProjectUpdateDto updateDto = new ProjectUpdateDto(projName);
+        ProjectDto updateDto = new ProjectDto(projName);
 
         String jsonBody = gson.toJson(updateDto);
         projectDto = mapToProjectDto(projName);
@@ -128,7 +151,7 @@ public class ProjectStepsDefinitions extends BaseStepsDefinitions {
     @When("Пользователь делает запрос на обновление полей проекта {string} имея старый токен")
     public void updateCurrentProjectWithOldCookie(String projectName) {
         String projName = generateString(projectName);
-        ProjectUpdateDto updateDto = new ProjectUpdateDto(projName);
+        ProjectDto updateDto = new ProjectDto(projName);
 
         String jsonBody = gson.toJson(updateDto);
         projectDto = mapToProjectDto(projName);
@@ -153,9 +176,9 @@ public class ProjectStepsDefinitions extends BaseStepsDefinitions {
         authorizationBase.loginAsOwner();
 
         String projName = generateString("STRING_10");
-        ProjectUpdateDto updateDto = new ProjectUpdateDto(projName,
-                                                          generateString("description"),
-                                                          "[3824617.6,5725021.2,3834608.8,5743457.4]");
+        ProjectDto updateDto = new ProjectDto(projName,
+                                              generateString("description"),
+                                              "[3824617.6,5725021.2,3834608.8,5743457.4]");
         String jsonBody = gson.toJson(updateDto);
         projectDto = mapToProjectDto(projName);
 
@@ -167,7 +190,7 @@ public class ProjectStepsDefinitions extends BaseStepsDefinitions {
         authorizationBase.loginAsOwner();
 
         String projName = generateString(name);
-        ProjectUpdateDto updateDto = new ProjectUpdateDto(projName, generateString(description), bbox);
+        ProjectDto updateDto = new ProjectDto(projName, generateString(description), bbox);
         String jsonBody = gson.toJson(updateDto);
         projectDto = mapToProjectDto(projName);
 
@@ -210,7 +233,7 @@ public class ProjectStepsDefinitions extends BaseStepsDefinitions {
 
         names.forEach(s -> System.out.println("PROJECT NAME : " + s));
 
-        assertTrue(names.contains(projectDto.getProjectName()));
+        assertTrue(names.contains(projectDto.getName()));
     }
 
     @When("Пользователь делает запрос на удаление текущего проекта")
@@ -428,16 +451,16 @@ public class ProjectStepsDefinitions extends BaseStepsDefinitions {
 
     private boolean isProjectExistInPool(String projectName) {
         return projectPool.values().stream()
-                          .anyMatch(dto -> projectName.equals(dto.getProjectName()));
+                          .anyMatch(dto -> projectName.equals(dto.getName()));
     }
 
-    private ProjectRequestDto mapToProjectDto(String projectName) {
-        return new ProjectRequestDto(projectName);
+    private ProjectDto mapToProjectDto(String projectName) {
+        return new ProjectDto(projectName);
     }
 
     private void makeExactProjectAsCurrent(String projectName) {
         projectPool.entrySet().stream()
-                   .filter(entry -> entry.getValue().getProjectName().equals(projectName))
+                   .filter(entry -> entry.getValue().getName().equals(projectName))
                    .findFirst()
                    .ifPresent(entry -> {
                        projectId = entry.getKey();

@@ -8,9 +8,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import ru.mycrg.gis_service.dto.ProjectProjection;
-import ru.mycrg.gis_service.dto.ProjectRequestDto;
-import ru.mycrg.gis_service.dto.ProjectUpdateDto;
+import ru.mycrg.gis_service.dto.project.ProjectCreateDto;
+import ru.mycrg.gis_service.dto.project.ProjectProjection;
+import ru.mycrg.gis_service.dto.project.ProjectUpdateDto;
 import ru.mycrg.gis_service.exceptions.BadRequestException;
 import ru.mycrg.gis_service.security.OrgSettingsKeeper;
 import ru.mycrg.gis_service.service.ProjectService;
@@ -56,8 +56,10 @@ public class ProjectController {
 
     @PostMapping
     @PreAuthorize(HAS_ANY_AUTHORITY)
-    public ResponseEntity<ProjectProjection> createProject(@Valid @RequestBody ProjectRequestDto projectDto) {
+    public ResponseEntity<ProjectProjection> createProject(@Valid @RequestBody ProjectCreateDto projectDto) {
         orgSettingsKeeper.throwIfCreateProjectNotAllowed();
+        throwsIfBboxIsNotValid(projectDto.getBbox());
+
         ProjectProjection project = projectService.create(projectDto);
 
         return new ResponseEntity<>(project, HttpStatus.CREATED);
@@ -68,6 +70,7 @@ public class ProjectController {
     public ResponseEntity<Object> updateProject(@PathVariable long projectId,
                                                 @Valid @RequestBody ProjectUpdateDto projectDto) {
         throwsIfBboxIsNotValid(projectDto.getBbox());
+
         projectService.update(projectId, projectDto);
 
         return ResponseEntity.ok().build();
@@ -82,17 +85,19 @@ public class ProjectController {
     }
 
     private void throwsIfBboxIsNotValid(String bbox) {
-        if (nonNull(bbox) && !bbox.isEmpty()) {
-            try {
-                TypeReference<List<Double>> type = new TypeReference<>() {
-                };
-                List<Double> coordinates = objectMapper.readValue(bbox, type);
-                if (!coordinates.isEmpty() && coordinates.size() != 4) {
-                    throw new BadRequestException("Невалидный bbox! Поле bbox должно состоять из 4 чисел.");
-                }
-            } catch (IOException e) {
+        if (!nonNull(bbox) || bbox.isEmpty()) {
+            return;
+        }
+
+        try {
+            TypeReference<List<Double>> type = new TypeReference<>() {
+            };
+            List<Double> coordinates = objectMapper.readValue(bbox, type);
+            if (!coordinates.isEmpty() && coordinates.size() != 4) {
                 throw new BadRequestException("Невалидный bbox! Поле bbox должно состоять из 4 чисел.");
             }
+        } catch (IOException e) {
+            throw new BadRequestException("Невалидный bbox! Поле bbox должно состоять из 4 чисел.");
         }
     }
 }

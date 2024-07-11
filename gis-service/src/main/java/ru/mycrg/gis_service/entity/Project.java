@@ -5,6 +5,7 @@ import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.hateoas.Identifiable;
+import ru.mycrg.gis_service.dto.project.ProjectCreateDto;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -63,12 +64,14 @@ public class Project implements Identifiable<Long> {
         // Required
     }
 
-    public Project(String name, long organizationId) {
-        this.name = name;
-        this.organizationId = organizationId;
-
+    public Project(ProjectCreateDto dto, long organizationId) {
+        this.name = dto.getName();
+        this.description = dto.getDescription();
+        this.bbox = dto.getBbox();
+        this.isDefault = dto.getDefault();
         this.createdAt = LocalDateTime.now();
         this.lastModified = LocalDateTime.now();
+        this.organizationId = organizationId;
     }
 
     @Override

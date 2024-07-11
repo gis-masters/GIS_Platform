@@ -50,8 +50,8 @@ class ProjectsClient extends Client {
     return http.getPaged<CrgProject>(this.getProjectsUrl(), { cache: { disabled: true } });
   }
 
-  async createProject(projectName: string): Promise<CrgProject> {
-    return http.post<CrgProject>(this.getProjectsUrl(), { projectName });
+  async createProject(name: string): Promise<CrgProject> {
+    return http.post<CrgProject>(this.getProjectsUrl(), { name });
   }
 
   async updateProject(id: number, patch: Partial<CrgProject>): Promise<void> {

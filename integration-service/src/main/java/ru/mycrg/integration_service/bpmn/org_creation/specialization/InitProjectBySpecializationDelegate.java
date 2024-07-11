@@ -100,7 +100,7 @@ public class InitProjectBySpecializationDelegate implements JavaDelegate {
             Request request = new Request.Builder()
                     .url(new URL(baseHttpService.getGisServiceUrl(), "/projects"))
                     .addHeader("Authorization", "Bearer " + token)
-                    .post(RequestBody.create(JSON_MEDIA_TYPE, "{\"projectName\": \"" + project.getTitle() + "\"}"))
+                    .post(RequestBody.create(JSON_MEDIA_TYPE, "{\"name\": \"" + project.getTitle() + "\"}"))
                     .build();
 
             response = httpClient.newCall(request).execute();

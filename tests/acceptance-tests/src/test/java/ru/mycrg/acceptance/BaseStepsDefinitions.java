@@ -19,7 +19,7 @@ import ru.mycrg.acceptance.data_service.dto.schemas.SchemaDto;
 import ru.mycrg.acceptance.gis_service.dto.BaseMapCreateDto;
 import ru.mycrg.acceptance.gis_service.dto.LayerCreateDto;
 import ru.mycrg.acceptance.gis_service.dto.LayerGroupCreateDto;
-import ru.mycrg.acceptance.gis_service.dto.ProjectRequestDto;
+import ru.mycrg.acceptance.gis_service.dto.ProjectDto;
 import ru.mycrg.auth_service_contract.dto.GroupCreateDto;
 import ru.mycrg.auth_service_contract.dto.OrganizationCreateDto;
 import ru.mycrg.auth_service_contract.dto.UserCreateDto;
@@ -59,7 +59,7 @@ public class BaseStepsDefinitions {
     public static Map<Integer, UserCreateDto> userPool = new LinkedHashMap<>();
     public static Map<Integer, GroupCreateDto> usersGroupPool = new LinkedHashMap<>();
     public static Map<Integer, InitialBaseMapCreateDto> baseMapsPool = new LinkedHashMap<>();
-    public static Map<Integer, ProjectRequestDto> projectPool = new LinkedHashMap<>();
+    public static Map<Integer, ProjectDto> projectPool = new LinkedHashMap<>();
     public static Map<Integer, BaseMapCreateDto> projectBaseMapsPool = new LinkedHashMap<>();
     public static Map<Integer, LayerGroupCreateDto> layerGroupPool = new LinkedHashMap<>();
     public static Map<String, DatasetCreateDto> datasetsPool = new LinkedHashMap<>();
@@ -398,9 +398,13 @@ public class BaseStepsDefinitions {
     }
 
     public void createEntity(Object dto) {
+        createEntity(gson.toJson(dto));
+    }
+
+    public void createEntity(String jsonPayload) {
         response = getBaseRequestWithCurrentCookie()
                 .given().
-                        body(gson.toJson(dto)).
+                        body(jsonPayload).
                         contentType(ContentType.JSON)
                 .when().
                         post()

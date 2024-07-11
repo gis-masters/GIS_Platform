@@ -1,4 +1,4 @@
-package ru.mycrg.gis_service.dto;
+package ru.mycrg.gis_service.dto.project;
 
 import org.springframework.data.rest.core.config.Projection;
 import ru.mycrg.gis_service.entity.Project;

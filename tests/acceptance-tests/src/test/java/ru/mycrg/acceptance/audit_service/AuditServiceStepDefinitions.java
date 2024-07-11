@@ -162,7 +162,7 @@ public class AuditServiceStepDefinitions extends BaseStepsDefinitions {
 
     @Then("Создан аудит лог о создании проекта, с корректным телом")
     public void checkProjectCreate() {
-        String projectName = projectDto.getProjectName();
+        String projectName = projectDto.getName();
 
         checkAuditEvent(CREATE.name(), PROJECT, projectName);
     }
@@ -186,7 +186,7 @@ public class AuditServiceStepDefinitions extends BaseStepsDefinitions {
 
     @Then("Создан аудит лог об удалении проекта")
     public void checkProjectDelete() {
-        String projectName = projectDto.getProjectName();
+        String projectName = projectDto.getName();
 
         checkAuditEvent(DELETE.name(), PROJECT, projectName);
     }
@@ -200,7 +200,7 @@ public class AuditServiceStepDefinitions extends BaseStepsDefinitions {
 
     @And("Создан аудит лог об изменении проекта")
     public void checkProjectUpdate() {
-        String projectName = projectDto.getProjectName();
+        String projectName = projectDto.getName();
 
         checkAuditEvent(UPDATE.name(), PROJECT, projectName);
     }

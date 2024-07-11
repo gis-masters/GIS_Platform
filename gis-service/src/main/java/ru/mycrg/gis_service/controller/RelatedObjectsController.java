@@ -2,7 +2,7 @@ package ru.mycrg.gis_service.controller;
 
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import ru.mycrg.gis_service.dto.ProjectProjection;
+import ru.mycrg.gis_service.dto.project.ProjectProjection;
 import ru.mycrg.gis_service.dto.RelatedLayersModel;
 import ru.mycrg.gis_service.exceptions.BadRequestException;
 import ru.mycrg.gis_service.exceptions.ErrorInfo;

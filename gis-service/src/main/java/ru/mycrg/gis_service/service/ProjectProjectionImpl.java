@@ -1,7 +1,7 @@
 package ru.mycrg.gis_service.service;
 
 import org.springframework.hateoas.core.Relation;
-import ru.mycrg.gis_service.dto.ProjectProjection;
+import ru.mycrg.gis_service.dto.project.ProjectProjection;
 import ru.mycrg.gis_service.entity.Project;
 
 import java.time.LocalDateTime;

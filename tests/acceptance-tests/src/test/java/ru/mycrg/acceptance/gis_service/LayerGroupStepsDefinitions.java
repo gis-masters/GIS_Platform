@@ -71,7 +71,7 @@ public class LayerGroupStepsDefinitions extends BaseStepsDefinitions {
 
     @And("Сообщение об отсутствии прав на добавление группы соответствует заданному формату")
     public void checkResponseMessageWhenAddLayerGroupForbidden() {
-        super.checkErrorResponseMessage("Недостаточно прав для редактирования проекта: " + projectDto.getProjectName());
+        super.checkErrorResponseMessage("Недостаточно прав для редактирования проекта: " + projectDto.getName());
     }
 
     @And("Сервер передает ID группы слоев проекта в ответе")
