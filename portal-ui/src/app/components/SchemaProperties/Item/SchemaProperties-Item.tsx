@@ -68,6 +68,7 @@ const getTypeIcon = (type: PropertyType): [SvgIconComponent, string] => {
 interface SchemaPropertiesItemProps {
   propertySchema: PropertySchema;
   readonly: boolean;
+  propertySchemaWithoutContentType?: PropertySchema;
   onPropertyChange?(newPropertySchema: PropertySchema): void;
 }
 
@@ -88,7 +89,7 @@ export class SchemaPropertiesItem extends Component<SchemaPropertiesItemProps> {
   }
 
   render() {
-    const { readonly, propertySchema, onPropertyChange } = this.props;
+    const { readonly, propertySchema, propertySchemaWithoutContentType, onPropertyChange } = this.props;
     const { name, title, propertyType, description, hidden, readOnly, required } = propertySchema;
     const [TypeIcon, typeText] = getTypeIcon(propertyType);
 
@@ -150,7 +151,11 @@ export class SchemaPropertiesItem extends Component<SchemaPropertiesItemProps> {
           <AccordionSummary />
           <AccordionDetails>
             {onPropertyChange && (
-              <EditPropertySchemaForm propertySchema={propertySchema} onPropertyChange={onPropertyChange} />
+              <EditPropertySchemaForm
+                propertySchema={propertySchema}
+                propertySchemaWithoutContentType={propertySchemaWithoutContentType}
+                onPropertyChange={onPropertyChange}
+              />
             )}
           </AccordionDetails>
         </Accordion>

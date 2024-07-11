@@ -75,7 +75,7 @@ export class SchemaCard extends Component<SchemaCardProps> {
     return (
       this.schemaWithAppliedType && (
         <>
-          <Card>
+          <Card className={cnSchemaCard()}>
             <CardRow>
               <CardRowTitle>Название:</CardRowTitle>
               {readonly && this.schemaWithAppliedType.title}
@@ -149,6 +149,9 @@ export class SchemaCard extends Component<SchemaCardProps> {
                   <SchemaProperties
                     readonly={readonly}
                     schema={this.schemaWithAppliedType}
+                    propertiesSchemaWithoutContentType={
+                      this.selectedViewId || this.selectedContentTypeId ? this.props.schema.properties : undefined
+                    }
                     onPropertyChange={this.editSchemaProperty}
                   />
                 </CardValue>

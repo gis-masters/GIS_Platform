@@ -10,13 +10,29 @@ const cnSchemaProperties = cn('SchemaProperties');
 export interface SchemaPropertiesListProps {
   schema: Schema;
   readonly: boolean;
+  propertiesSchemaWithoutContentType?: PropertySchema[];
   onPropertyChange?(newPropertySchema: PropertySchema): void;
 }
 
-export const SchemaProperties: FC<SchemaPropertiesListProps> = ({ schema, readonly, onPropertyChange }) => (
+export const SchemaProperties: FC<SchemaPropertiesListProps> = ({
+  schema,
+  readonly,
+  propertiesSchemaWithoutContentType,
+  onPropertyChange
+}) => (
   <List className={cnSchemaProperties()} dense>
     {schema.properties.map((el, idx) => (
-      <SchemaPropertiesItem readonly={readonly} key={idx} propertySchema={el} onPropertyChange={onPropertyChange} />
+      <SchemaPropertiesItem
+        readonly={readonly}
+        key={idx}
+        propertySchema={el}
+        propertySchemaWithoutContentType={
+          propertiesSchemaWithoutContentType
+            ? propertiesSchemaWithoutContentType.find(item => item.name === el.name)
+            : undefined
+        }
+        onPropertyChange={onPropertyChange}
+      />
     ))}
   </List>
 );

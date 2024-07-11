@@ -46,6 +46,7 @@ const propertyFieldsSchema: SimpleSchema = {
 
 interface EditPropertySchemaFormProps {
   propertySchema: PropertySchema;
+  propertySchemaWithoutContentType?: PropertySchema;
   onPropertyChange(newPropertySchema: Partial<BasePropertySchema>): void;
 }
 
@@ -66,11 +67,13 @@ export class EditPropertySchemaForm extends Component<EditPropertySchemaFormProp
 
   @boundMethod
   private handleFormChange(value: Partial<BasePropertySchema>) {
-    const { propertySchema, onPropertyChange } = this.props;
+    const { onPropertyChange, propertySchemaWithoutContentType } = this.props;
 
     // чтобы не замусоривать схему дефолтными значениями, удалим их
-    const cleanedValue = Object.fromEntries(Object.entries(value).filter(([_, v]) => v)); // сейчас все дефолты falsy
+    const cleanedValue = Object.fromEntries(
+      Object.entries(value).filter(([k, v]) => v || propertySchemaWithoutContentType?.[k]) // сейчас все дефолты false
+    );
 
-    onPropertyChange({ ...propertySchema, ...cleanedValue });
+    onPropertyChange(cleanedValue);
   }
 }
