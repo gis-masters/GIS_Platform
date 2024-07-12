@@ -212,7 +212,7 @@ export enum Updateability {
 
 export interface EditedField {
   name: string;
-  value: string;
+  value: string | null;
   property: OldPropertySchema;
   isFgistpProperty: boolean;
   relations?: Relation[];

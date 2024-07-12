@@ -41,9 +41,11 @@ export async function getMessagesRegistriesData(
 ): Promise<[MessagesRegistriesMessages[], number]> {
   const response = await messagesRegistriesClient.getMessagesRegistriesData(tableName, pageOptions);
 
-  if (response) {
-    const { content, page } = response;
-
-    return [content || [], page.totalPages];
+  if (!response) {
+    return [[], 0];
   }
+
+  const { content, page } = response;
+
+  return [content || [], page.totalPages];
 }

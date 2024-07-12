@@ -1,4 +1,4 @@
-import { debounce } from 'lodash';
+import { debounce, DebouncedFunc } from 'lodash';
 
 import { allGroups } from '../../../stores/AllGroups.store';
 import { CrgUser } from '../users/users.models';
@@ -8,7 +8,7 @@ import { CrgGroup, GroupData } from './groups.models';
 class GroupsService {
   private static _instance: GroupsService;
   private allGroupsStoreInited = false;
-  private debouncedFetchGroupsListStore: () => Promise<void>;
+  private debouncedFetchGroupsListStore: DebouncedFunc<() => Promise<void>>;
   private allGroupsFetching?: Promise<CrgGroup[]>;
 
   private constructor() {

@@ -20,7 +20,7 @@ export class HelpPart {
 
   async initContent(items?: Toc): Promise<void> {
     await this.inited;
-    (items || this.items).forEach(async item => {
+    (items || this.items || []).forEach(async item => {
       if (item.children) {
         void this.initContent(item.children);
       }

@@ -28,12 +28,12 @@ import { currentProject } from '../../stores/CurrentProject.store';
   styleUrls: ['./mapping-page.component.css']
 })
 export class MappingPageComponent implements OnInit, OnDestroy {
-  selectedLayer: ImportLayerItem;
+  selectedLayer?: ImportLayerItem;
   isWorkImportInited = false;
-  selectedDataset: Dataset;
-  comparableLayers: ComparableLayersPair[];
-  prevLink: string;
-  nextLink: string;
+  selectedDataset?: Dataset;
+  comparableLayers?: ComparableLayersPair[];
+  prevLink?: string;
+  nextLink?: string;
 
   schemas?: OldSchema[];
 
@@ -97,10 +97,16 @@ export class MappingPageComponent implements OnInit, OnDestroy {
 
     await projectsService.fetchCurrent();
 
+    const identifier = this.selectedDataset?.identifier;
+    if (!identifier) {
+      this.isWorkImportInited = false;
+
+      return;
+    }
     // TODO: Нельзя чтобы в рабочем импорте таски ссылались на одну рабочую таблицу!
     // Т.е. пользователь выбрал импорт в одну и тоже место несколько раз
     // eslint-disable-next-line promise/catch-or-return
-    doWorkImport(workTasks, currentProject.id, this.selectedDataset.identifier).then(
+    doWorkImport(workTasks, currentProject.id, identifier).then(
       (crgProcess: Process) => {
         interval(this.CHECK_STATUS_INTERVAL)
           .pipe(takeUntil(this.unsubscribe$))

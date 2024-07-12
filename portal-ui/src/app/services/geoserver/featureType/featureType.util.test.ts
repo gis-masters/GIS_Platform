@@ -18,6 +18,7 @@ describe('feature util', () => {
     }).toThrow("Передан некорректный идентификатор объекта: '  '");
 
     expect(() => {
+      // @ts-expect-error -- так надо
       extractFeatureId(null);
     }).toThrow("Передан некорректный идентификатор объекта: 'null'");
 

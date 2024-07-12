@@ -9,17 +9,19 @@ import { AS_IS, ImportTargetType, NOT_IMPORT } from '../../services/models';
 import { PropertiesComparatorService } from '../../services/properties-comparator.service';
 import { GeoUtil } from '../../services/util/GeoUtil';
 
+const invalid = 'Не указаны обязательные атрибуты компонента';
+
 @Component({
   selector: 'crg-mapping-pair',
   templateUrl: './mapping-pair.component.html'
 })
 export class MappingPairComponent implements OnInit, OnChanges {
-  @Input() layerName: string;
-  @Input() importedLayerAttribute: LayerAttribute; // Атрибут импортированного шейпа
-  @Input() propertySchemas: OldPropertySchema[]; // Атрибуты описанные в схеме
+  @Input() layerName?: string;
+  @Input() importedLayerAttribute?: LayerAttribute; // Атрибут импортированного шейпа
+  @Input() propertySchemas?: OldPropertySchema[]; // Атрибуты описанные в схеме
 
-  columnForm: UntypedFormGroup;
-  selectedProperty: OldPropertySchema;
+  columnForm?: UntypedFormGroup;
+  selectedProperty?: OldPropertySchema;
 
   constructor(
     private importData: ImportDataHolderService,
@@ -28,11 +30,14 @@ export class MappingPairComponent implements OnInit, OnChanges {
   ) {}
 
   ngOnInit() {
-    let currentAttrPair: MatchingPair;
+    if (!this.layerName) {
+      throw new Error(invalid);
+    }
+    let currentAttrPair: MatchingPair | undefined;
     const comparableLayersPair = this.importData.findCompatiblePair(this.layerName);
     if (comparableLayersPair && comparableLayersPair.targetLayer.pairs.length > 0) {
       currentAttrPair = comparableLayersPair.targetLayer.pairs.find(
-        (matchingPair: MatchingPair) => matchingPair.source.name === this.importedLayerAttribute.name
+        (matchingPair: MatchingPair) => matchingPair.source.name === this.importedLayerAttribute?.name
       );
 
       if (currentAttrPair) {
@@ -42,22 +47,22 @@ export class MappingPairComponent implements OnInit, OnChanges {
           });
         } else if (currentAttrPair.target.type === ImportTargetType.AS_IS) {
           this.columnForm = this.formBuilder.group({
-            columnFiz: [this.propertySchemas[1]]
+            columnFiz: [this.propertySchemas?.[1]]
           });
           // eslint-disable-next-line sonarjs/no-duplicated-branches
         } else {
           this.columnForm = this.formBuilder.group({
-            columnFiz: [this.propertySchemas[1]]
+            columnFiz: [this.propertySchemas?.[1]]
           });
         }
       } else {
         this.columnForm = this.formBuilder.group({
-          columnFiz: [this.propertySchemas[0]]
+          columnFiz: [this.propertySchemas?.[0]]
         });
       }
     } else {
       this.columnForm = this.formBuilder.group({
-        columnFiz: [this.propertySchemas[0]]
+        columnFiz: [this.propertySchemas?.[0]]
       });
     }
   }
@@ -71,18 +76,20 @@ export class MappingPairComponent implements OnInit, OnChanges {
 
   // Подбираем и устанавливаем наиболее похожий столбец
   private setIdenticalColumn() {
+    if (!this.importedLayerAttribute || !this.propertySchemas || !this.layerName) {
+      throw new Error(invalid);
+    }
+
     const bestCompareProperty = this.crgComparator.compare(this.importedLayerAttribute, this.propertySchemas);
 
     this.importData.updateAttributeMapping(this.layerName, this.importedLayerAttribute, bestCompareProperty);
 
-    this.columnForm.controls.columnFiz.patchValue(bestCompareProperty);
+    this.columnForm?.controls.columnFiz.patchValue(bestCompareProperty);
     this.selectedProperty = bestCompareProperty;
   }
 
   typeToString(type: string): string {
-    const splitType = type.split('.');
-
-    return GeoUtil.getAliasForBaseType(splitType.at(-1));
+    return GeoUtil.getAliasForBaseType(type.split('.').at(-1) || '');
   }
 
   compareFn(c1: { name?: unknown }, c2?: { name?: unknown }): boolean {
@@ -90,8 +97,11 @@ export class MappingPairComponent implements OnInit, OnChanges {
   }
 
   columnChanged(): void {
-    this.selectedProperty = this.columnForm.controls.columnFiz.value as OldPropertySchema;
+    if (!this.importedLayerAttribute || !this.layerName) {
+      throw new Error(invalid);
+    }
 
+    this.selectedProperty = this.columnForm?.controls.columnFiz.value as OldPropertySchema;
     this.importData.updateAttributeMapping(this.layerName, this.importedLayerAttribute, this.selectedProperty);
   }
 
@@ -103,6 +113,6 @@ export class MappingPairComponent implements OnInit, OnChanges {
   }
 
   private getPropertySchema(name: string) {
-    return this.propertySchemas.find((propertySchema: OldPropertySchema) => propertySchema.name === name);
+    return this.propertySchemas?.find((propertySchema: OldPropertySchema) => propertySchema.name === name);
   }
 }

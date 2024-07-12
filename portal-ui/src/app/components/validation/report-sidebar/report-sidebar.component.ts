@@ -56,10 +56,10 @@ export class ReportSidebarComponent implements OnInit, OnChanges, OnDestroy {
     wsService.messages$
       .pipe(
         filter(value => !!value),
-        filter((msg: IWsMessage) => msg.type === ProcessType.VALIDATION),
+        filter((msg: IWsMessage | undefined) => msg?.type === ProcessType.VALIDATION),
         takeUntil(this.unsubscribe$)
       )
-      .subscribe(wsMessage => this.handleWsMessage(wsMessage.payload));
+      .subscribe(wsMessage => this.handleWsMessage(wsMessage?.payload));
   }
 
   async ngOnChanges(changes: SimpleChanges) {
@@ -109,8 +109,8 @@ export class ReportSidebarComponent implements OnInit, OnChanges, OnDestroy {
     return false;
   }
 
-  private async handleWsMessage(validationWsMsg: ExportWsMsg | ValidationWsMsg | WsImportModel) {
-    switch (validationWsMsg.status) {
+  private async handleWsMessage(validationWsMsg?: ExportWsMsg | ValidationWsMsg | WsImportModel) {
+    switch (validationWsMsg?.status) {
       case ProcessStatus.PENDING: {
         this.commonProgress = validationWsMsg.progress;
 

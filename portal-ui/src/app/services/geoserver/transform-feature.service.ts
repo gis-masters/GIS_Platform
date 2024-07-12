@@ -10,15 +10,11 @@ import { usersService } from '../auth/users/users.service';
 import { getFeatureProjection } from '../data/projections/projections.service';
 import { getProjectionCode } from '../data/projections/projections.util';
 import { OldSchema } from '../data/schema/schemaOld.models';
-import { createFeature } from '../data/vectorData/vectorData.service';
 import { environment } from '../environment';
-import { CrgLayer } from '../gis/layers/layers.models';
 import { services } from '../services';
 import { FeatureUtil } from '../util/FeatureUtil';
-import { Mime } from '../util/Mime';
-import { wfsGeometryToGeometry } from '../util/open-layers.util';
 import { extractFeatureId } from './featureType/featureType.util';
-import { CoordinateEdited, GeometryType, NewWfsFeature, WfsFeature, WfsGeometry } from './wfs/wfs.models';
+import { CoordinateEdited, GeometryType, WfsFeature, WfsGeometry } from './wfs/wfs.models';
 import { updateFeature } from './wfs/wfs.service';
 
 export enum TransactionType {
@@ -67,16 +63,16 @@ export class TransformFeatureService {
     const workspace = `${environment.scratchWorkspaceName}_${currentUser.orgId}`;
 
     const featuresForUpdate: Feature<Geometry>[] = features.map(feature => {
-      const calculated = FeatureUtil.calculateByFunction(
-        { ...feature.properties, ...newProperties },
-        schema.calcFiledFunction
-      );
+      const calculated = schema.calcFiledFunction
+        ? FeatureUtil.calculateByFunction({ ...feature.properties, ...newProperties }, schema.calcFiledFunction)
+        : {};
 
       const newFeature = new Feature({ ...newProperties, ...calculated });
       newFeature.setId(feature.id);
 
+      let geom: Geometry | undefined;
+
       if (geometry) {
-        let geom: Geometry;
         if (geometry.type === GeometryType.POINT) {
           geom = new Point(geometry.coordinates);
         }
@@ -123,70 +119,28 @@ export class TransformFeatureService {
     return updateFeature(payload);
   }
 
-  async insertFeatures(
-    featuresData: WfsFeature[],
-    { nativeCRS, dataset, tableName }: Partial<CrgLayer>
-  ): Promise<string[]> {
-    await usersService.fetchCurrentUser();
-    const workspace = `${environment.scratchWorkspaceName}_${currentUser.orgId}`;
-
-    const options: WriteTransactionOptions = {
-      featureNS: workspace,
-      featureType: tableName,
-      featurePrefix: '',
-      nativeElements: [],
-      gmlOptions: { srsName: nativeCRS }
-    };
-
-    const featuresToInsert: Feature<Geometry>[] = featuresData.map((featureData: WfsFeature) => {
-      const feature = new Feature(featureData.properties);
-
-      // TODO: брать поле с геометрией из схемы
-      if (featureData.geometry) {
-        feature.set('shape', wfsGeometryToGeometry(featureData.geometry));
-      }
-
-      return feature;
-    });
-
-    const payload = this.xs.serializeToString(this.getNode(TransactionType.INSERT, featuresToInsert, options));
-
-    if (featuresData.length === 1) {
-      const { geometry, properties } = featuresData[0];
-      const newFeature: NewWfsFeature = { type: 'Feature', geometry, properties };
-      const record = await createFeature(dataset, tableName, newFeature);
-
-      return [record.id];
-    }
-
-    const responseXML = await updateFeature(payload);
-
-    const parser = new DOMParser();
-    const xmlDoc = parser.parseFromString(responseXML, Mime.XML);
-
-    return [...xmlDoc.querySelector('InsertResults').querySelectorAll('FeatureId')].map((f: Element) =>
-      f.getAttribute('fid')
-    );
-  }
-
   private getNode(type: TransactionType, features: Feature<Geometry>[], options: WriteTransactionOptions): Node {
-    let node: Node;
+    let node: Node | undefined;
     switch (type) {
       case TransactionType.INSERT: {
-        node = this.formatWFS.writeTransaction(features, null, null, options);
+        node = this.formatWFS.writeTransaction(features, [], [], options);
         break;
       }
       case TransactionType.UPDATE: {
-        node = this.formatWFS.writeTransaction(null, features, null, options);
+        node = this.formatWFS.writeTransaction([], features, [], options);
         break;
       }
       case TransactionType.DELETE: {
-        node = this.formatWFS.writeTransaction(null, null, features, options);
+        node = this.formatWFS.writeTransaction([], [], features, options);
         break;
       }
       default: {
         services.logger.warn('Unsupported transaction type: ', type);
       }
+    }
+
+    if (!node) {
+      throw new Error('Не удалось создать xml-node');
     }
 
     return node;

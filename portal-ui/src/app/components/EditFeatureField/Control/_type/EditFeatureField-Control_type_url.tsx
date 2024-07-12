@@ -37,7 +37,7 @@ class EditFeatureFieldControlTypeUrl extends Component<EditFeatureFieldControlPr
     makeObservable(this);
 
     try {
-      this.value = JSON.parse(props.field.value) as PropertyTypeUrlValue;
+      this.value = JSON.parse(props.field.value || '') as PropertyTypeUrlValue;
     } catch {
       services.logger.warn('Incorrect url value: ', props.field.value);
     }

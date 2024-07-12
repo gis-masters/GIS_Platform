@@ -6,8 +6,8 @@ import { AS_IS, NOT_IMPORT } from '../models';
 import { CrgRootGeometry, GeometryItem } from './crg-root-geometry';
 
 export class FeatureUtil {
-  static getLayerGeometry(importLayer: ImportLayerItem): string {
-    return importLayer.attributes.find((attr: LayerAttribute) => attr.name === 'the_geom').binding;
+  static getLayerGeometry(importLayer: ImportLayerItem): string | undefined {
+    return importLayer.attributes.find((attr: LayerAttribute) => attr.name === 'the_geom')?.binding;
   }
 
   // layer = Point, MultiLineString, MultiPolygon
@@ -15,6 +15,10 @@ export class FeatureUtil {
   static isFeatureGeometryCompatible(layerGeometryTypeName: string, featureDescription: OldSchema): boolean {
     const split = layerGeometryTypeName.split('.');
     const layerGeometryName = split.at(-1);
+
+    if (!layerGeometryName) {
+      return false;
+    }
 
     const allowedGeometry: string[] = this.fillAllowedGeometry(new CrgRootGeometry(), layerGeometryName);
     const featureGeometry = this.getFeatureGeometry(featureDescription);
@@ -35,14 +39,22 @@ export class FeatureUtil {
   }
 
   static filterByGeometry(fDescription: OldSchema[], layer?: ImportLayerItem): OldSchema[] {
+    if (!layer) {
+      return [];
+    }
+
     const geometryName = FeatureUtil.getLayerGeometry(layer);
 
     return fDescription.filter((featureDescription: OldSchema) => {
-      return FeatureUtil.isFeatureGeometryCompatible(geometryName, featureDescription);
+      return geometryName && FeatureUtil.isFeatureGeometryCompatible(geometryName, featureDescription);
     });
   }
 
   static sortByBestCompatibility(fDescription: OldSchema[], layer?: ImportLayerItem): OldSchema[] {
+    if (!layer) {
+      return [];
+    }
+
     fDescription.forEach((description: OldSchema) => {
       this.calculateAttributeCompatibility(layer, description);
     });

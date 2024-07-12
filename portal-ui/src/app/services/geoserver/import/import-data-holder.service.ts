@@ -62,7 +62,7 @@ export class ImportDataHolderService {
 
     const taskImport = new TaskImport(layerNativeName, srs);
     // Layer mapping
-    if (featureDescription) {
+    if (featureDescription && featureDescription.tableName) {
       taskImport.workTableName = featureDescription.tableName;
       taskImport.schemaName = featureDescription.name;
     }
@@ -167,9 +167,15 @@ export class ImportDataHolderService {
   }
 
   findCompatiblePair(nativeName: string): ComparableLayersPair {
-    return this._comparableLayers.find(
+    const layer = this._comparableLayers.find(
       (layersPair: ComparableLayersPair) => layersPair.originalLayer.nativeName === nativeName
     );
+
+    if (!layer) {
+      throw new Error(`Не найден слой с nativeName "${nativeName}"`);
+    }
+
+    return layer;
   }
 
   clear(): void {
@@ -208,7 +214,10 @@ export class ImportDataHolderService {
     this.updateMetrics(this._comparableLayers);
   }
 
-  private findAttributePair(comparableLayersPair: ComparableLayersPair, source: LayerAttribute): MatchingPair {
+  private findAttributePair(
+    comparableLayersPair: ComparableLayersPair,
+    source: LayerAttribute
+  ): MatchingPair | undefined {
     return comparableLayersPair.targetLayer.pairs.find(
       (pair: MatchingPair) => pair.source.name === source.name && pair.source.binding === source.binding
     );

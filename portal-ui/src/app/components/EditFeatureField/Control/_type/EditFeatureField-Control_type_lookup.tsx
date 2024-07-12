@@ -19,7 +19,7 @@ class EditFeatureFieldControlTypeLookup extends Component<EditFeatureFieldContro
     makeObservable(this);
 
     try {
-      this.setValue(JSON.parse(props.field.value) as DocumentListItemData[]);
+      this.setValue(JSON.parse(props.field.value || '') as DocumentListItemData[]);
     } catch {
       services.logger.warn('Incorrect lookup value: ', props.field.value);
     }

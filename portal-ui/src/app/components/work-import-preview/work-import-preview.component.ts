@@ -8,7 +8,7 @@ import { ImportDataHolderService, InputDataMetrics } from '../../services/geoser
   styleUrls: ['./work-import-preview.component.scss']
 })
 export class WorkImportPreviewComponent {
-  metrics: InputDataMetrics;
+  metrics?: InputDataMetrics;
 
   constructor(public importData: ImportDataHolderService) {
     this.importData.metrics$.subscribe((metrics: InputDataMetrics) => (this.metrics = metrics));

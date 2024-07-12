@@ -7,12 +7,14 @@ import { ValidationErrors } from '@angular/forms';
   styleUrls: ['./errors-badge.component.css']
 })
 export class ErrorsBadgeComponent implements OnInit, OnChanges {
-  @Input() errors: ValidationErrors | null;
+  @Input() errors?: ValidationErrors | null;
 
   htmlTooltip = '';
 
   ngOnInit() {
-    this.generateTooltip(this.errors);
+    if (this.errors) {
+      this.generateTooltip(this.errors);
+    }
   }
 
   ngOnChanges(changes: SimpleChanges): void {

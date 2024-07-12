@@ -120,16 +120,28 @@ function inOperator(propertyName: string, values: (string | number)[]) {
   return values.length > 1 ? or(...values.map(val => equalTo(propertyName, val))) : equalTo(propertyName, values[0]);
 }
 
-const operators: Record<string, (propertyName: string, expression: number | string) => Filter> = {
-  '=': equalTo,
-  '<>': notEqualTo,
+const numberOperators: Record<string, (propertyName: string, expression: number) => Filter> = {
   '<': lessThan,
   '<=': lessThanOrEqualTo,
   '>': greaterThan,
-  '>=': greaterThanOrEqualTo,
+  '>=': greaterThanOrEqualTo
+};
+
+const stringOperators: Record<string, (propertyName: string, expression: string) => Filter> = {
   LIKE: likeOperator,
-  ILIKE: ilikeOperator,
+  ILIKE: ilikeOperator
+};
+
+const numberStringOperators: Record<string, (propertyName: string, expression: number | string) => Filter> = {
+  '=': equalTo,
+  '<>': notEqualTo,
   'IS NULL': isNull
+};
+
+const operators = {
+  ...numberOperators,
+  ...stringOperators,
+  ...numberStringOperators
 };
 
 const logicals: Record<string, FilterFunc> = {
@@ -143,12 +155,14 @@ const precedence: Partial<Record<Token, number>> = {
   [Token.COMPARISON]: 1
 };
 
-function tryToken(text: string, pattern: RegExp | ((t: string) => string[])) {
+type PrecedenceKey = Token.RPAREN | Token.LOGICAL | Token.COMPARISON;
+
+function tryToken(text: string, pattern: RegExp | ((t: string) => string[] | undefined)) {
   return pattern instanceof RegExp ? pattern.exec(text) : pattern(text);
 }
 
-function nextToken(text: string, tokens: (keyof typeof patterns)[]): TokenInfo {
-  for (const token of tokens) {
+function nextToken(text: string, tokens?: (keyof typeof patterns)[]): TokenInfo {
+  for (const token of tokens || []) {
     const pat = patterns[token];
     const matches = tryToken(text, pat);
     if (matches) {
@@ -164,7 +178,7 @@ function nextToken(text: string, tokens: (keyof typeof patterns)[]): TokenInfo {
   }
 
   let msg = `ERROR: In parsing: [${text}], expected one of: `;
-  for (const token of tokens) {
+  for (const token of tokens || []) {
     msg += `\n    ${token}: ${String(patterns[token])}`;
   }
 
@@ -174,7 +188,7 @@ function nextToken(text: string, tokens: (keyof typeof patterns)[]): TokenInfo {
 function tokenize(text: string) {
   const results: TokenInfo[] = [];
   let token: TokenInfo;
-  let expect = [Token.NOT, Token.GEOMETRY, Token.SPATIAL, Token.PROPERTY, Token.LPAREN];
+  let expect: Token[] | undefined = [Token.NOT, Token.GEOMETRY, Token.SPATIAL, Token.PROPERTY, Token.LPAREN];
 
   do {
     token = nextToken(text, expect);
@@ -195,7 +209,7 @@ function buildAst(tokens: TokenInfo[]) {
 
   while (tokens.length) {
     const tok = tokens.shift();
-    switch (tok.type) {
+    switch (tok?.type) {
       case Token.PROPERTY:
       case Token.GEOMETRY:
       case Token.VALUE: {
@@ -206,8 +220,15 @@ function buildAst(tokens: TokenInfo[]) {
       case Token.BETWEEN:
       case Token.IS_NULL:
       case Token.LOGICAL: {
-        while (operatorStack.length > 0 && precedence[operatorStack.at(-1).type] <= precedence[tok.type]) {
-          postfix.push(operatorStack.pop());
+        while (
+          operatorStack.length > 0 &&
+          (precedence[operatorStack.at(-1)?.type as PrecedenceKey] as number) <=
+            (precedence[tok?.type as PrecedenceKey] as number)
+        ) {
+          const operator = operatorStack.pop();
+          if (operator) {
+            postfix.push(operator);
+          }
         }
 
         operatorStack.push(tok);
@@ -221,13 +242,19 @@ function buildAst(tokens: TokenInfo[]) {
         break;
       }
       case Token.RPAREN: {
-        while (operatorStack.length > 0 && operatorStack.at(-1).type !== Token.LPAREN) {
-          postfix.push(operatorStack.pop());
+        while (operatorStack.length > 0 && operatorStack.at(-1)?.type !== Token.LPAREN) {
+          const operator = operatorStack.pop();
+          if (operator) {
+            postfix.push(operator);
+          }
         }
         operatorStack.pop(); // toss out the LPAREN
 
-        if (operatorStack.length > 0 && operatorStack.at(-1).type === Token.SPATIAL) {
-          postfix.push(operatorStack.pop());
+        if (operatorStack.length > 0 && operatorStack.at(-1)?.type === Token.SPATIAL) {
+          const operator = operatorStack.pop();
+          if (operator) {
+            postfix.push(operator);
+          }
         }
         break;
       }
@@ -236,16 +263,19 @@ function buildAst(tokens: TokenInfo[]) {
         break;
       }
       default: {
-        throw new Error(`Unknown token type ${String(tok.type)}`);
+        throw new Error(`Unknown token type ${String(tok?.type)}`);
       }
     }
   }
 
   while (operatorStack.length > 0) {
-    postfix.push(operatorStack.pop());
+    const operator = operatorStack.pop();
+    if (operator) {
+      postfix.push(operator);
+    }
   }
 
-  function buildTree(): Filter | string | number | Geometry {
+  function buildTree(): Filter | string | number | Geometry | undefined {
     const tok = postfix.pop();
     let rhs: Filter | string;
     let lhs: Filter | string;
@@ -263,7 +293,7 @@ function buildAst(tokens: TokenInfo[]) {
     let unit: Units;
     let values: (string | number)[];
 
-    switch (tok.type) {
+    switch (tok?.type) {
       case Token.LOGICAL: {
         rhs = buildTree() as Filter;
         lhs = buildTree() as Filter;
@@ -280,7 +310,7 @@ function buildAst(tokens: TokenInfo[]) {
 
         do {
           values.push(buildTree() as string | number);
-        } while (postfix.at(-1).type === Token.VALUE);
+        } while (postfix.at(-1)?.type === Token.VALUE);
 
         property = buildTree() as string;
 
@@ -298,7 +328,7 @@ function buildAst(tokens: TokenInfo[]) {
         value = buildTree() as string;
         property = buildTree() as string;
 
-        return operators[tok.text.toUpperCase()](property, value);
+        return operators[tok.text.toUpperCase()](property, value as never); // ¯\_(ツ)_/¯
       }
       case Token.IS_NULL: {
         property = buildTree() as string;
@@ -306,7 +336,7 @@ function buildAst(tokens: TokenInfo[]) {
         return isNull(property);
       }
       case Token.VALUE: {
-        match = tok.text.match(/^'(.*)'$/);
+        match = tok.text.match(/^'(.*)'$/) as string[];
 
         return match ? match[1].replaceAll("''", "'") : Number(tok.text);
       }
@@ -355,7 +385,7 @@ function buildAst(tokens: TokenInfo[]) {
         return new WKT().readFeature(tok.text).getGeometry();
       }
       default: {
-        return tok.text;
+        return tok?.text;
       }
     }
   }

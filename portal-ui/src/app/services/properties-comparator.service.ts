@@ -41,7 +41,7 @@ export interface CrgComparison {
    * Задаем следующий метод в цепочке.
    * @param comparison Обработчик
    */
-  setNext(comparison: CrgComparison);
+  setNext(comparison: CrgComparison): void;
 
   compare(source: LayerAttribute, columns: OldPropertySchema[]): OldPropertySchema;
 }

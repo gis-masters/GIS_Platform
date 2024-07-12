@@ -21,6 +21,8 @@ import {
 } from './import.models';
 import { TaskImport } from './taskImport';
 
+const importNotInited = 'Импорт не инициализирован';
+
 /**
  * Для выполнения импорта передаем на бекенд geoserverName(то имя под которым создан workspace на геосервере,
  * то имя под которым создана схема в БД) проекта в который хотим импортировать.
@@ -54,6 +56,10 @@ export async function getById(id: string): Promise<ScratchImport> {
 }
 
 export async function checkImportStatus(): Promise<void> {
+  if (!currentImport.id) {
+    throw new Error(importNotInited);
+  }
+
   const { import: scratch } = await importClient.getImportWithoutCache(currentImport.id);
   currentImport.fit({ scratch });
 
@@ -61,6 +67,10 @@ export async function checkImportStatus(): Promise<void> {
 }
 
 async function getImportLayer(task: ImportTaskShort): Promise<ImportLayer> {
+  if (!currentImport.id) {
+    throw new Error(importNotInited);
+  }
+
   return await importClient.getTaskLayer(currentImport.id, task.id);
 }
 
@@ -158,18 +168,26 @@ export function fillTasks(): void {
 export async function updateProgress(): Promise<void> {
   const firstTask = currentImport.tasks[0];
 
-  if (firstTask && firstTask.progress) {
+  if (firstTask && firstTask.progress && currentImport.id) {
     currentImport.setProgress(await importClient.getImportTaskProgress(currentImport.id, firstTask.id));
   }
 }
 
 async function getFullImportTask(shortTask: ImportTaskShort): Promise<ImportTaskFull> {
+  if (!currentImport.id) {
+    throw new Error(importNotInited);
+  }
+
   const { task } = await importClient.getTask(currentImport.id, shortTask.id);
 
   return task;
 }
 
 export async function deleteTask(task: ImportTaskShort): Promise<void> {
+  if (!currentImport.id) {
+    throw new Error(importNotInited);
+  }
+
   await importClient.deleteTask(currentImport.id, task.id);
 
   await checkImportStatus();

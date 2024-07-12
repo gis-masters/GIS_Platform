@@ -8,10 +8,10 @@ import { CrgComparison } from '../properties-comparator.service';
  * Приводит строки к одному регистру и сравнивает по первым 10 символам. (Длинна ограничения названия shp формата)
  */
 export class DirectComparison implements CrgComparison {
-  private comparison: CrgComparison;
+  private comparison?: CrgComparison;
 
   compare(source: LayerAttribute, properties: OldPropertySchema[]): OldPropertySchema {
-    let result: OldPropertySchema;
+    let result: OldPropertySchema | undefined;
     const shapeName = source.name.slice(0, 10).toLowerCase();
     properties.forEach((property: OldPropertySchema) => {
       const ourName = property.name.slice(0, 10).toLowerCase();
@@ -20,8 +20,13 @@ export class DirectComparison implements CrgComparison {
       }
     });
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-    return result || this.comparison.compare(source, properties);
+    const property = result || this.comparison?.compare(source, properties);
+
+    if (!property) {
+      throw new Error(`Не нашлось свойство "${source.name}"`);
+    }
+
+    return property;
   }
 
   setNext(comparison: CrgComparison): void {
@@ -33,11 +38,11 @@ export class DirectComparison implements CrgComparison {
  * Определяет дефолтный маппинг геометрии.
  */
 export class GeometryComparison implements CrgComparison {
-  private comparison: CrgComparison;
+  private comparison?: CrgComparison;
 
   // TODO: Сопоставление геометрии
   compare(source: LayerAttribute, properties: OldPropertySchema[]): OldPropertySchema {
-    let result: OldPropertySchema;
+    let result: OldPropertySchema | undefined;
 
     if (
       source.binding.includes('MultiPolygon') ||
@@ -54,7 +59,13 @@ export class GeometryComparison implements CrgComparison {
       };
     }
 
-    return result || this.comparison.compare(source, properties);
+    const property = result || this.comparison?.compare(source, properties);
+
+    if (!property) {
+      throw new Error(`Не нашлось свойство "${source.name}"`);
+    }
+
+    return property;
   }
 
   setNext(comparison: CrgComparison): void {
@@ -66,10 +77,10 @@ export class GeometryComparison implements CrgComparison {
  * Определяет дефолтный маппинг ObjectId.
  */
 export class ObjectIdComparison implements CrgComparison {
-  private comparison: CrgComparison;
+  private comparison?: CrgComparison;
 
   compare(source: LayerAttribute, properties: OldPropertySchema[]): OldPropertySchema {
-    let result: OldPropertySchema;
+    let result: OldPropertySchema | undefined;
 
     if (source.name.toLowerCase().includes('objectid')) {
       result = {
@@ -79,7 +90,13 @@ export class ObjectIdComparison implements CrgComparison {
       };
     }
 
-    return result || this.comparison.compare(source, properties);
+    const property = result || this.comparison?.compare(source, properties);
+
+    if (!property) {
+      throw new Error(`Не нашлось свойство "${source.name}"`);
+    }
+
+    return property;
   }
 
   setNext(comparison: CrgComparison): void {

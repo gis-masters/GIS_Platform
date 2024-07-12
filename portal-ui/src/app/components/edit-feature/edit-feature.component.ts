@@ -22,13 +22,18 @@ import {
   getFieldRelations
 } from '../../services/data/schema/schema.utils';
 import { OldPropertySchema, ValueType } from '../../services/data/schema/schemaOld.models';
-import { deleteFeatures, updateFeature } from '../../services/data/vectorData/vectorData.service';
+import { createFeature, deleteFeatures, updateFeature } from '../../services/data/vectorData/vectorData.service';
 import { extractFeatureId } from '../../services/geoserver/featureType/featureType.util';
 import { transformFeature } from '../../services/geoserver/transform-feature.service';
 import { CoordinateEdited, WfsFeature, WfsGeometry } from '../../services/geoserver/wfs/wfs.models';
 import { getFeaturesById } from '../../services/geoserver/wfs/wfs.service';
 import { getEmptyGeometry } from '../../services/geoserver/wfs/wfs.util';
-import { CrgVectorableLayer, CrgVectorLayer, isVectorLayer } from '../../services/gis/layers/layers.models';
+import {
+  CrgLayerType,
+  CrgVectorableLayer,
+  CrgVectorLayer,
+  isVectorLayer
+} from '../../services/gis/layers/layers.models';
 import { getLayerSchema } from '../../services/gis/layers/layers.service';
 import { getLayerByFeatureInCurrentProject } from '../../services/gis/layers/layers.utils';
 import { MapSelectionTypes } from '../../services/map/map.models';
@@ -98,7 +103,10 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
         if (!firstFeature) {
           return;
         }
-        this.layer = { ...(data.layer || getLayerByFeatureInCurrentProject(firstFeature)) };
+        const layer = data.layer || getLayerByFeatureInCurrentProject(firstFeature);
+        if (layer) {
+          this.layer = { ...layer };
+        }
         this.properties = data.properties;
         this.isNew = data.isNew;
         this.selectedTab = Number(data.isNew);
@@ -186,42 +194,44 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
               currentProperty = String(currentProperty).trim();
             }
 
-            if (property) {
-              this.editFeatureData.push({
-                name: key,
-                property,
-                value: currentProperty === null ? null : String(currentProperty),
-                isFgistpProperty: true,
-                relations: getFieldRelations(key, convertOldToNewSchema(this.featureDescription))
-              });
-
-              const formControl = new UntypedFormControl(
-                {
-                  value: currentProperty,
-                  disabled: property.name === 'GLOBALID'
-                },
-                {
-                  validators: [FeaturePropertyValidators.validate(property)]
-                }
-              );
-
-              if (this.mode === EditFeatureMode.multipleEdit) {
-                formControl.disable();
-              }
-
-              this.editFeatureForm.addControl(key, formControl);
-            } else {
-              this.editFeatureData.push({
-                name: key,
-                property: {
+            if (this.featureDescription) {
+              if (property) {
+                this.editFeatureData.push({
                   name: key,
-                  title: key,
-                  valueType: ValueType.STRING
-                },
-                value: currentProperty === null ? null : String(currentProperty),
-                isFgistpProperty: false,
-                relations: getFieldRelations(key, convertOldToNewSchema(this.featureDescription))
-              });
+                  property,
+                  value: currentProperty === null ? null : String(currentProperty),
+                  isFgistpProperty: true,
+                  relations: getFieldRelations(key, convertOldToNewSchema(this.featureDescription))
+                });
+
+                const formControl = new UntypedFormControl(
+                  {
+                    value: currentProperty,
+                    disabled: property.name === 'GLOBALID'
+                  },
+                  {
+                    validators: [FeaturePropertyValidators.validate(property)]
+                  }
+                );
+
+                if (this.mode === EditFeatureMode.multipleEdit) {
+                  formControl.disable();
+                }
+
+                this.editFeatureForm?.addControl(key, formControl);
+              } else {
+                this.editFeatureData.push({
+                  name: key,
+                  property: {
+                    name: key,
+                    title: key,
+                    valueType: ValueType.STRING
+                  },
+                  value: currentProperty === null ? null : String(currentProperty),
+                  isFgistpProperty: false,
+                  relations: getFieldRelations(key, convertOldToNewSchema(this.featureDescription))
+                });
+              }
 
               const formControl = new UntypedFormControl(currentProperty);
 
@@ -243,7 +253,12 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
         this.isGeometryChanged = false;
         this.updatingAllowed = !!this.layer && (await isUpdateAllowed(this.layer));
 
-        if (this.updatingAllowed && this.mode === EditFeatureMode.single && !firstFeature.geometry) {
+        if (
+          this.updatingAllowed &&
+          this.mode === EditFeatureMode.single &&
+          !firstFeature.geometry &&
+          this.featureDescription.geometryType
+        ) {
           firstFeature.geometry = getEmptyGeometry(this.featureDescription.geometryType);
         }
 
@@ -318,7 +333,7 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
           await sleep(0);
 
           sidebars.openEdit({
-            mode: this.mode,
+            mode: this.mode || EditFeatureMode.single,
             features: this.features as WfsFeature<Coordinate>[],
             layer: currentLayer,
             properties: this.properties,
@@ -352,9 +367,11 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
       return;
     }
 
-    if (!this.layer) {
+    if (!this.layer || this.layer.type !== CrgLayerType.VECTOR) {
       return;
     }
+
+    const layer = this.layer as CrgVectorLayer;
 
     this.isSaveInProgress = true;
 
@@ -373,11 +390,15 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
     }
 
     let ids = this.features?.map(({ id }) => id) || [];
-    if (this.isNew) {
-      ids = await transformFeature.insertFeatures(
-        [{ ...this.features[0], properties: actualProperties, geometry: this.changedGeometry }],
-        this.layer
-      );
+    const feature = this.features?.[0];
+
+    if (this.isNew && feature) {
+      const createdFeature = await createFeature(layer.dataset, layer.tableName, {
+        ...feature,
+        properties: actualProperties,
+        geometry: this.changedGeometry
+      });
+      ids = [createdFeature.id];
     } else {
       let geometry: WfsGeometry<Coordinate> | undefined;
 
@@ -393,6 +414,10 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
     }
 
     sidebars.setFeaturesEdited(false);
+
+    if (!this.layer.complexName) {
+      throw new Error('Не установлен complexName слоя');
+    }
 
     const savedFeatures = await getFeaturesById(ids, this.layer.complexName);
 

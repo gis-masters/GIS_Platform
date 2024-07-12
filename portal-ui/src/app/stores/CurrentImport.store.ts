@@ -92,7 +92,7 @@ class CurrentImport implements ImportInfo {
   get isError(): boolean {
     const { scratch, error, isWrongExt } = this;
 
-    return error || isWrongExt || (scratch && scratch.state === 'ERROR');
+    return error || isWrongExt || scratch?.state === 'ERROR';
   }
 
   @computed

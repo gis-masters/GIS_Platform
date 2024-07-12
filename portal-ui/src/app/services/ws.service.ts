@@ -41,9 +41,9 @@ export interface ValidationWsMsg {
 
 class WsService {
   private static _instance: WsService;
-  private _wsMsg$: BehaviorSubject<IWsMessage> = new BehaviorSubject<IWsMessage>(undefined);
+  private _wsMsg$: BehaviorSubject<IWsMessage | undefined> = new BehaviorSubject<IWsMessage | undefined>(undefined);
 
-  messages$: Observable<IWsMessage> = this._wsMsg$.asObservable().pipe(
+  messages$: Observable<IWsMessage | undefined> = this._wsMsg$.asObservable().pipe(
     // компоненты при подписке должны видеть одно последнее значение в потоке
     publishReplay(1),
     refCount()
@@ -56,7 +56,7 @@ class WsService {
   disabled = true;
 
   private id = generateRandomId();
-  private stompClient: CompatClient;
+  private stompClient?: CompatClient;
 
   private constructor() {
     this.connect();
@@ -69,7 +69,7 @@ class WsService {
 
     this.stompClient.connect({}, () => {
       this.setConnected(true);
-      this.stompClient.subscribe('/topic/' + this.id + '/**', data => {
+      this.stompClient?.subscribe('/topic/' + this.id + '/**', data => {
         this._wsMsg$.next(JSON.parse(data.body) as IWsMessage<ExportWsMsg | ValidationWsMsg | WsImportModel>);
       });
     });

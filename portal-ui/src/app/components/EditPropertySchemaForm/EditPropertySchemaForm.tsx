@@ -71,7 +71,8 @@ export class EditPropertySchemaForm extends Component<EditPropertySchemaFormProp
 
     // чтобы не замусоривать схему дефолтными значениями, удалим их
     const cleanedValue = Object.fromEntries(
-      Object.entries(value).filter(([k, v]) => v || propertySchemaWithoutContentType?.[k]) // сейчас все дефолты false
+      // сейчас все дефолты false
+      Object.entries(value).filter(([k, v]) => v || propertySchemaWithoutContentType?.[k as keyof PropertySchema])
     );
 
     onPropertyChange(cleanedValue);

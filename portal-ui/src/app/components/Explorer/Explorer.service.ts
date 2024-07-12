@@ -14,7 +14,6 @@ export class ExplorerService {
 
   constructor(store: ExplorerStore) {
     this.store = store;
-
     this.refreshItems = debounce(this._refreshItems.bind(this), 50);
   }
 

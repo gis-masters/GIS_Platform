@@ -11,7 +11,7 @@ import { sidebars } from '../../stores/Sidebars.store';
   styleUrls: ['./info-sidebar.component.css']
 })
 export class InfoSidebarComponent implements OnInit, OnDestroy {
-  @Input() isActive: boolean;
+  @Input() isActive?: boolean;
 
   events: IEvent[] = [];
 

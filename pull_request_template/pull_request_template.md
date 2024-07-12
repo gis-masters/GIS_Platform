@@ -2,7 +2,6 @@
 
 ##### Разработчик
 
-- [ ] В затронутых файлах нет ошибок при включенном строгом режиме (strict mode).
 - [ ] Функциональность эксплораторно или автоматически протестирована.
 - [ ] Добавлены Acceptance Tests в виде Gherkin (Cucumber) Feature file (Given When Then).
 - [ ] Acceptance Tests скопированы в WorkItem.

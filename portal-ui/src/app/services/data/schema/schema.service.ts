@@ -98,11 +98,11 @@ class SchemaService {
     let layerNameWithGeomType: string;
 
     const geometryName = FeatureUtil.getLayerGeometry(layer);
-    if (geometryName.includes('MultiLineString')) {
+    if (geometryName?.includes('MultiLineString')) {
       if (!layerName.includes('_line')) {
         layerNameWithGeomType = layerName + '_line';
       }
-    } else if (geometryName.includes('Point') && !layerName.includes('_point')) {
+    } else if (geometryName?.includes('Point') && !layerName.includes('_point')) {
       layerNameWithGeomType = layerName + '_point';
     }
 

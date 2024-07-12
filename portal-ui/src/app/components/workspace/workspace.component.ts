@@ -13,7 +13,7 @@ import { sidebars } from '../../stores/Sidebars.store';
   styleUrls: ['./workspace.component.scss']
 })
 export class WorkspaceComponent implements OnDestroy, OnInit {
-  @Input() fixed: boolean;
+  @Input() fixed?: boolean;
   cn = cn('workspace');
 
   isInfoSidebarActive = false;
@@ -26,7 +26,7 @@ export class WorkspaceComponent implements OnDestroy, OnInit {
     fromMobx(() => sidebars.infoOpen, true)
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(infoOpen => {
-        this.isInfoSidebarActive = infoOpen;
+        this.isInfoSidebarActive = !!infoOpen;
       });
   }
 

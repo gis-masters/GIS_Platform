@@ -15,24 +15,28 @@ interface ViolationViewItem {
   styleUrls: ['./violations-view.component.css']
 })
 export class ViolationsViewComponent implements OnInit {
-  @Input() data: BugObject;
-  @Input() layer: CrgVectorLayer;
+  @Input() data?: BugObject;
+  @Input() layer?: CrgVectorLayer;
 
   violationItems: ViolationViewItem[] = [];
 
-  ngOnInit() {
-    this.data.propertyViolations.forEach(async value => {
+  async ngOnInit() {
+    if (!this.layer) {
+      throw new Error('Не указан слой');
+    }
+
+    for (const value of this.data?.propertyViolations || []) {
       this.violationItems.push({
         errors: schemaService.getErrorsDescription(value.errorTypes),
         propertyName: await schemaService.getPropertyAlias(this.layer, value.name)
       });
-    });
+    }
 
-    this.data.objectViolations.forEach(async validationError => {
+    for (const validationError of this.data?.objectViolations || []) {
       this.violationItems.push({
         propertyName: await schemaService.getPropertyAlias(this.layer, validationError.attribute),
         errors: [validationError.error]
       });
-    });
+    }
   }
 }

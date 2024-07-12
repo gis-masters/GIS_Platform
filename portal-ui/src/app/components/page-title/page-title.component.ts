@@ -8,6 +8,6 @@ import { cn } from '../../services/util/cn';
   styleUrls: ['./page-title.component.scss']
 })
 export class PageTitleComponent {
-  @Input() simple: boolean;
+  @Input() simple?: boolean;
   cn = cn('page-title');
 }

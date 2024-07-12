@@ -14,7 +14,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   currentPage = '';
   reactionDisposer?: IReactionDisposer;
   envPlatform: Platform = 'simf';
-  envRegistration: boolean;
+  envRegistration = false;
 
   constructor(private router: Router) {}
 

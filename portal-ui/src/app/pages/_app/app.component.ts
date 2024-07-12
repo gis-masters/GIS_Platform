@@ -15,17 +15,19 @@ const ToastContainerWithRegistry = withRegistry(registry)(ToastContainer);
 })
 export class AppComponent implements OnInit, OnDestroy, OnChanges {
   @ViewChild('reactToastContainer', { read: ElementRef, static: true })
-  refToastContainer: ElementRef<HTMLDivElement>;
-  private root: Root;
+  refToastContainer?: ElementRef<HTMLDivElement>;
+  private root?: Root;
 
   ngOnInit() {
-    this.root = createRoot(this.refToastContainer.nativeElement);
-    this.renderReactElement();
-    this.addOnErrorWindowHandler();
+    if (this.refToastContainer?.nativeElement) {
+      this.root = createRoot(this.refToastContainer.nativeElement);
+      this.renderReactElement();
+      this.addOnErrorWindowHandler();
+    }
   }
 
   ngOnDestroy() {
-    this.root.unmount();
+    this.root?.unmount();
   }
 
   ngOnChanges() {
@@ -72,6 +74,6 @@ export class AppComponent implements OnInit, OnDestroy, OnChanges {
 
     const reactElement = createElement(ToastContainerWithRegistry, props);
 
-    this.root.render(reactElement);
+    this.root?.render(reactElement);
   }
 }

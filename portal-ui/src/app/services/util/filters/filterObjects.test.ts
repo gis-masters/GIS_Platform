@@ -1,6 +1,7 @@
 import { describe, expect, test } from '@jest/globals';
 
 import { filterObjects, prepareLike } from './filterObjects';
+import { FilterQuery } from './filters.models';
 
 describe('утилита фильтрации объектов', () => {
   test('функция prepareLike заменяет нестандартные операторы $like и $ilike на $regex', () => {
@@ -12,7 +13,9 @@ describe('утилита фильтрации объектов', () => {
   });
 
   test('функция prepareLike работает также c вложенными в операторы $and операторами $like и $ilike', () => {
-    const input = { $and: [{ property1: { $like: '%someValue%' } }, { property2: { $ilike: '%oth..Value%' } }] };
+    const input: FilterQuery = {
+      $and: [{ property1: { $like: '%someValue%' } }, { property2: { $ilike: '%oth..Value%' } }]
+    };
     const output = {
       // eslint-disable-next-line unicorn/better-regex
       $and: [{ property1: { $regex: /^.*someValue.*$/ } }, { property2: { $regex: /^.*oth..Value.*$/i } }]
@@ -22,7 +25,9 @@ describe('утилита фильтрации объектов', () => {
   });
 
   test('функция prepareLike работает также c вложенными в операторы $or операторами $like и $ilike', () => {
-    const input = { $or: [{ property1: { $like: '%someValue%' } }, { property2: { $ilike: '%oth..Value%' } }] };
+    const input: FilterQuery = {
+      $or: [{ property1: { $like: '%someValue%' } }, { property2: { $ilike: '%oth..Value%' } }]
+    };
     const output = {
       // eslint-disable-next-line unicorn/better-regex
       $or: [{ property1: { $regex: /^.*someValue.*$/ } }, { property2: { $regex: /^.*oth..Value.*$/i } }]

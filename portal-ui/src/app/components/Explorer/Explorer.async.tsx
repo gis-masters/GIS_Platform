@@ -10,6 +10,7 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 import { Emitter } from '../../services/common/Emitter';
+import { DataChangeEventDetail } from '../../services/communication.service';
 import { SortOrder } from '../../services/models';
 import { services } from '../../services/services';
 import { sleep } from '../../services/util/sleep';
@@ -85,7 +86,7 @@ export default class Explorer extends Component<ExplorerProps> {
   private reactionDisposers: IReactionDisposer[] = [];
   private store: ExplorerStore;
   private service: ExplorerService;
-  private channels: Emitter[] = [];
+  private channels: Emitter<DataChangeEventDetail<unknown>>[] = [];
   private savingToUrl = false;
   private explorerRef: RefObject<HTMLDivElement> = createRef();
 
@@ -144,20 +145,24 @@ export default class Explorer extends Component<ExplorerProps> {
       ),
 
       reaction(
-        () => [
-          cloneDeep(this.store.path),
-          this.store.page,
-          this.store.pageSize,
-          this.store.sort,
-          this.store.sortOrder,
-          cloneDeep(this.store.filter)
-        ],
-        async ([path, page, pageSize, sortOrder, sort, filter]: [
+        () => {
+          const data: [ExplorerItemData[], number, number, string, SortOrder, Record<string, string>] = [
+            cloneDeep(this.store.path),
+            this.store.page,
+            this.store.pageSize,
+            this.store.sort || '',
+            this.store.sortOrder,
+            cloneDeep(this.store.filter)
+          ];
+
+          return data;
+        },
+        async ([path, page, pageSize, sort, sortOrder, filter]: [
           ExplorerItemData[],
           number,
           number,
-          SortOrder,
           string,
+          SortOrder,
           Record<string, string>
         ]) => {
           if (!isEqual(path, prevPath)) {
@@ -278,8 +283,11 @@ export default class Explorer extends Component<ExplorerProps> {
   private init(props: ExplorerProps) {
     const { path, preset } = props;
 
-    if (preset && Array.isArray(presets[preset])) {
-      this.store.setPath(presets[preset]);
+    if (preset && preset in presets) {
+      const pathFromPreset = presets[preset];
+      if (Array.isArray(pathFromPreset)) {
+        this.store.setPath(pathFromPreset);
+      }
     } else {
       this.store.setPath(Array.isArray(path) && path.length ? path : [emptyItem]);
     }

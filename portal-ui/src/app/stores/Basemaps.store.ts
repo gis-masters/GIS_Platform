@@ -11,8 +11,8 @@ class Basemaps {
 
   private static _instance: Basemaps;
 
-  @observable basemaps: Basemap[];
-  @observable currentBasemap: Basemap;
+  @observable basemaps: Basemap[] = [];
+  @observable currentBasemap?: Basemap;
 
   private constructor() {
     makeObservable(this);

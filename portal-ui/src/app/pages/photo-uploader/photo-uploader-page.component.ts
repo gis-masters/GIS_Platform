@@ -11,16 +11,18 @@ import { environment } from '../../services/environment';
   styleUrls: ['./photo-uploader-page.component.scss']
 })
 export class PhotoUploaderPageComponent implements OnInit, OnDestroy {
-  @ViewChild('react', { read: ElementRef, static: true }) ref: ElementRef<HTMLDivElement>;
-  private root: Root;
+  @ViewChild('react', { read: ElementRef, static: true }) ref?: ElementRef<HTMLDivElement>;
+  private root?: Root;
 
   ngOnInit() {
-    this.root = createRoot(this.ref.nativeElement);
-    this.renderReactElement();
+    if (this.ref?.nativeElement) {
+      this.root = createRoot(this.ref.nativeElement);
+      this.renderReactElement();
+    }
   }
 
   ngOnDestroy() {
-    this.root.unmount();
+    this.root?.unmount();
   }
   backgroundImage = environment.background;
 
@@ -33,6 +35,6 @@ export class PhotoUploaderPageComponent implements OnInit, OnDestroy {
   }
 
   private renderReactElement() {
-    this.root.render(createElement(PhotoUploader));
+    this.root?.render(createElement(PhotoUploader));
   }
 }

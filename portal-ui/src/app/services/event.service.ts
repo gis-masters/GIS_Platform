@@ -64,21 +64,21 @@ class EventService {
     wsService.messages$
       .pipe(
         filter(value => !!value),
-        filter((msg: IWsMessage) => this.isAllowedMessageType(msg))
+        filter((msg: IWsMessage | undefined) => this.isAllowedMessageType(msg))
       )
-      .subscribe((wsMessage: IWsMessage) => this.handleMessage(wsMessage));
+      .subscribe((wsMessage: IWsMessage | undefined) => this.handleMessage(wsMessage));
   }
 
-  private isAllowedMessageType(msg: IWsMessage): boolean {
+  private isAllowedMessageType(msg?: IWsMessage): boolean {
     return !!(
-      msg.type === 'EXPORT' ||
-      msg.type === 'VALIDATION_REPORT' ||
-      msg.type === 'IMPORT_GML' ||
-      msg.type === 'IMPORT_DXF' ||
-      msg.type === 'IMPORT_TAB' ||
-      msg.type === 'IMPORT_MID' ||
-      msg.type === 'IMPORT_SHP' ||
-      msg.type === 'IMPORT_TIF'
+      msg?.type === 'EXPORT' ||
+      msg?.type === 'VALIDATION_REPORT' ||
+      msg?.type === 'IMPORT_GML' ||
+      msg?.type === 'IMPORT_DXF' ||
+      msg?.type === 'IMPORT_TAB' ||
+      msg?.type === 'IMPORT_MID' ||
+      msg?.type === 'IMPORT_SHP' ||
+      msg?.type === 'IMPORT_TIF'
     );
   }
 
@@ -86,7 +86,10 @@ class EventService {
    * Обрабатываем сообщение. (добавляем в общий список, персистим в локал сторадж)
    * @param wsMessage Сообщение от сервера
    */
-  private handleMessage(wsMessage: IWsMessage) {
+  private handleMessage(wsMessage?: IWsMessage) {
+    if (!wsMessage) {
+      return;
+    }
     const newEvent: IEvent = { id: generateRandomId(), payload: wsMessage, type: wsMessage.type };
     const events = this._events$.getValue();
 

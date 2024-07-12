@@ -224,9 +224,9 @@ export function getSupGeometryType(geometryType: GeometryType): 'line' | 'polygo
 function getCustomStyleAllRule(sldDocument: Document, schema?: Schema): [PointRule, LineRule, PolygonRule] {
   const sldRules = sldDocument.querySelectorAll('Rule');
 
-  let pointRule: PointRule;
-  let lineRule: LineRule;
-  let polygonRule: PolygonRule;
+  let pointRule: PointRule | undefined;
+  let lineRule: LineRule | undefined;
+  let polygonRule: PolygonRule | undefined;
 
   for (const rule of sldRules) {
     const textSymbolizerNode = rule.querySelector('TextSymbolizer');
@@ -258,6 +258,10 @@ function getCustomStyleAllRule(sldDocument: Document, schema?: Schema): [PointRu
         polygonRule.labelProperty = schema?.properties.find(({ name }) => name === labelProperty?.textContent);
       }
     }
+  }
+
+  if (!pointRule || !lineRule || !polygonRule) {
+    throw new Error('Отсутствуют обязательные параметры для стиля');
   }
 
   return [pointRule, lineRule, polygonRule];

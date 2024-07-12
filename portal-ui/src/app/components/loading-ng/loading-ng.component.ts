@@ -6,8 +6,8 @@ import { Component, Input } from '@angular/core';
   styleUrls: ['./loading-ng.component.scss']
 })
 export class LoadingNgComponent {
-  @Input() percents: string;
-  @Input() noBackdrop: boolean;
+  @Input() percents?: string;
+  @Input() noBackdrop?: boolean;
 
   get hasPercents(): boolean {
     return (typeof this.percents === 'string' && Boolean(this.percents)) || typeof this.percents === 'number';

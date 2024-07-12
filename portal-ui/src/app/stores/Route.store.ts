@@ -32,13 +32,13 @@ export enum Pages {
 class Route {
   private static _instance: Route;
 
-  @observable url: UrlSegment[];
+  @observable url?: UrlSegment[];
   @observable params: Params = {};
   @observable queryParams: Params = {};
-  @observable fragment: string;
+  @observable fragment?: string;
   @observable data: AppRouteData = { page: Pages.NONE };
-  @observable paramMap: ParamMap;
-  @observable queryParamMap: ParamMap;
+  @observable paramMap?: ParamMap;
+  @observable queryParamMap?: ParamMap;
 
   private constructor() {
     makeObservable(this);
@@ -54,7 +54,7 @@ class Route {
     this.url = route.url;
     this.params = route.params;
     this.queryParams = route.queryParams;
-    this.fragment = route.fragment;
+    this.fragment = route.fragment || '';
     this.data = route.data as AppRouteData;
     this.paramMap = route.paramMap;
     this.queryParamMap = route.queryParamMap;

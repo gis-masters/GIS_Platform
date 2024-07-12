@@ -17,7 +17,7 @@ export class TaskImport {
   layerName: string;
 
   // Название проекта
-  workTableName: string;
+  workTableName?: string;
 
   // Список сопоставляемых атрибутов
   pairs: MatchingPair[] = [];
@@ -25,7 +25,7 @@ export class TaskImport {
   // Система координат определенная импорт плагином
   srs: number;
 
-  schemaName: string;
+  schemaName?: string;
 
   constructor(layerName: string, srs: string) {
     this.srs = Number(srs.split(':')[1]);

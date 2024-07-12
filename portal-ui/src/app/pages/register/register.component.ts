@@ -7,7 +7,7 @@ import { Subject } from 'rxjs';
   styleUrls: ['./register.component.css']
 })
 export class RegisterComponent implements OnDestroy {
-  errorMsg: string;
+  errorMsg?: string;
 
   private unsubscribe$: Subject<void> = new Subject<void>();
 

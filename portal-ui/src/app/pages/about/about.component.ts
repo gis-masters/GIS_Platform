@@ -13,19 +13,21 @@ const HelpWithRegistry = withRegistry(registry)(Help);
   templateUrl: './about.component.html'
 })
 export class AboutComponent implements OnInit, OnDestroy {
-  @ViewChild('helpReact', { read: ElementRef, static: true }) ref: ElementRef<HTMLDivElement>;
-  private root: Root;
+  @ViewChild('helpReact', { read: ElementRef, static: true }) ref?: ElementRef<HTMLDivElement>;
+  private root?: Root;
 
   ngOnInit() {
-    this.root = createRoot(this.ref.nativeElement);
-    this.renderReactElement();
+    if (this.ref?.nativeElement) {
+      this.root = createRoot(this.ref.nativeElement);
+      this.renderReactElement();
+    }
   }
 
   ngOnDestroy() {
-    this.root.unmount();
+    this.root?.unmount();
   }
 
   private renderReactElement() {
-    this.root.render(createElement(HelpWithRegistry));
+    this.root?.render(createElement(HelpWithRegistry));
   }
 }

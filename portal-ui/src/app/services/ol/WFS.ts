@@ -29,15 +29,15 @@ export class WFS extends OL_WFS {
       elementPropertyName.append(sort.propertyName);
       elementSortOrder.append(sort.order.toLocaleUpperCase());
 
-      dom.querySelector('Query').append(elementSortBy);
+      dom.querySelector('Query')?.append(elementSortBy);
     }
 
     if (featureIds?.length) {
       const queryElem = dom.querySelector('Query');
-      let filterElem = queryElem.querySelector('Filter');
+      let filterElem = queryElem?.querySelector('Filter');
       if (!filterElem) {
         filterElem = document.createElementNS(ogcNsUri, 'Filter');
-        queryElem.append(filterElem);
+        queryElem?.append(filterElem);
       }
 
       const orElem = xmlDoc.createElement('Or');

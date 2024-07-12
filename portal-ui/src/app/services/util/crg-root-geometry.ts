@@ -7,7 +7,7 @@ export interface GeometryItem {
  * Корень дерева геометрий.
  */
 export class CrgRootGeometry implements GeometryItem {
-  name: string;
+  name = '';
   child: GeometryItem[] = [
     {
       name: 'Point',

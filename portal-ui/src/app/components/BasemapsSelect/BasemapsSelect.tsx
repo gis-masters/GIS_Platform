@@ -42,14 +42,16 @@ export class BasemapsSelect extends Component {
 
     return (
       <>
-        <Paper className={cnBasemapsSelect()} onClick={this.handleBaseClick} elevation={3}>
-          <span ref={this.ref}>
-            <ButtonBase>
-              <BasemapsSelectThumbnail urn={currentBasemap.thumbnailUrn} />
-              <BasemapsSelectTooltipAnchor hidden={this.open} ready={this.ready} />
-            </ButtonBase>
-          </span>
-        </Paper>
+        {currentBasemap && (
+          <Paper className={cnBasemapsSelect()} onClick={this.handleBaseClick} elevation={3}>
+            <span ref={this.ref}>
+              <ButtonBase>
+                <BasemapsSelectThumbnail urn={currentBasemap.thumbnailUrn} />
+                <BasemapsSelectTooltipAnchor hidden={this.open} ready={this.ready} />
+              </ButtonBase>
+            </span>
+          </Paper>
+        )}
         {this.ready && (
           <Menu
             PaperProps={{ className: cnBasemapsSelect('MenuPaper'), square: true, elevation: 0 }}
@@ -87,7 +89,7 @@ export class BasemapsSelect extends Component {
   private get basemaps(): Basemap[] {
     const { basemaps, currentBasemap } = basemapsStore;
 
-    return [...basemaps].sort((a, b) => Number(a.id === currentBasemap.id) - Number(b.id === currentBasemap.id));
+    return [...basemaps].sort((a, b) => Number(a.id === currentBasemap?.id) - Number(b.id === currentBasemap?.id));
   }
 
   @action.bound

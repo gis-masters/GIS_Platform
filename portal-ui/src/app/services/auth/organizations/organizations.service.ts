@@ -3,9 +3,7 @@ import { AxiosError } from 'axios';
 
 import { Toast } from '../../../components/Toast/Toast';
 import { organizationSettings, OrgSettings } from '../../../stores/OrganizationSettings.store';
-import { PropertySchema, PropertyType, SimpleSchema } from '../../data/schema/schema.models';
 import { schemaService } from '../../data/schema/schema.service';
-import { notFalsyFilter } from '../../util/NotFalsyFilter';
 import { organizationsClient } from './organizations.client';
 
 class OrganizationsService {
@@ -55,25 +53,6 @@ class OrganizationsService {
         }
       }
     }
-  }
-
-  orgSchema(settings: Record<string, boolean>, systemManagement: boolean): SimpleSchema {
-    const settingsKeys = Object.keys(settings);
-
-    return {
-      properties: settingsKeys
-        .map((item): PropertySchema | undefined => {
-          if (organizationSettings.schema?.properties[item]) {
-            return {
-              name: item,
-              title: 'organizationSettings.schema.properties[item]',
-              propertyType: PropertyType.BOOL,
-              hidden: systemManagement ? false : !organizationSettings.orgSettings?.system?.[item]
-            };
-          }
-        })
-        .filter(notFalsyFilter)
-    };
   }
 
   static get instance() {

@@ -44,7 +44,7 @@ class MessagesRegistriesClient extends Client {
   async getMessagesRegistriesWithParticularOne(
     tableName: string,
     pageOptions: PageOptions
-  ): Promise<[{ content: MessagesRegistry }[], number, number]> {
+  ): Promise<[{ content: MessagesRegistry }[], number, number] | undefined> {
     const params = preparePageOptions(pageOptions, true);
     const objectRecognizer = (item: { content: MessagesRegistry }) => item?.content?.tableName === tableName;
 
