@@ -30,6 +30,7 @@ interface CrgBaseLayer extends CrgEntity {
   complexName?: string;
   parentId?: number;
   errorText?: string;
+  mode?: FilePlacementMode;
 }
 
 export interface CrgLayersGroup extends CrgEntity {

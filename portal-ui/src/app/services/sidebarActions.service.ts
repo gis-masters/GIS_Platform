@@ -18,6 +18,11 @@ export async function focusToLayer(layer: CrgLayer): Promise<void> {
         ? await recalculateBboxAndGetFeatureType(layer as CrgVectorLayer)
         : await recalculateBboxAndGetCoverage(layer);
 
+    // не переходим к слою если хотя бы одна из координат = 0, что бы не улетать неизвестно куда
+    if (!latLonBoundingBox.minx || !latLonBoundingBox.maxx || !latLonBoundingBox.miny || !latLonBoundingBox.maxy) {
+      return;
+    }
+
     const { maxx, maxy, minx, miny } = latLonBoundingBox;
     const geoserverProjection = await getProjectionByCode('EPSG:4326');
     const olProjection = await getOlProjection();

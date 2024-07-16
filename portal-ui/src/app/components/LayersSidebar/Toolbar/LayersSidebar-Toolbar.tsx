@@ -196,6 +196,7 @@ export class LayersSidebarToolbar extends Component<LayersSidebarToolbarProps> {
       currentProject.groups = cloneDeep(currentProject.primalGroups);
       currentProject.layers = cloneDeep(currentProject.primalLayers);
     }
+
     this.props.onChangeMode(false);
   }
 }

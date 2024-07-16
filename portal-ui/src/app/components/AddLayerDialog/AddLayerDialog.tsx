@@ -33,7 +33,7 @@ import { Dataset, VectorTable } from '../../services/data/vectorData/vectorData.
 import { getVectorTable } from '../../services/data/vectorData/vectorData.service';
 import { buildComplexName } from '../../services/geoserver/featureType/featureType.util';
 import { CrgLayer, CrgLayerType } from '../../services/gis/layers/layers.models';
-import { getViewChoiceOptions } from '../../services/gis/layers/layers.service';
+import { createLayer, getViewChoiceOptions } from '../../services/gis/layers/layers.service';
 import {
   externalLayerDefaults,
   generateNextLayerId,
@@ -358,7 +358,7 @@ export class AddLayerDialog extends Component<AddLayerDialogProps> {
 
       const styleName = this.views.find(({ id }) => id === view)?.styleName;
 
-      this.props.onAdd({
+      const newCrgLayer: CrgLayer = {
         ...vectorLayerDefaults(),
         id: generateNextLayerId(),
         dataset: dataset?.identifier,
@@ -369,9 +369,15 @@ export class AddLayerDialog extends Component<AddLayerDialogProps> {
         minZoom,
         styleName: styleName || this.schema?.styleName || this.schema?.name,
         view
-      });
-      this.clearForm();
+      };
 
+      newCrgLayer.mode = FilePlacementMode.GEOSERVER;
+      await createLayer(newCrgLayer, currentProject.id);
+
+      newCrgLayer.mode = FilePlacementMode.FULL;
+      this.props.onAdd(newCrgLayer);
+
+      this.clearForm();
       this.close();
     }
 
