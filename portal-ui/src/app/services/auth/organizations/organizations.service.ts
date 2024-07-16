@@ -2,7 +2,7 @@ import { boundMethod } from 'autobind-decorator';
 import { AxiosError } from 'axios';
 
 import { Toast } from '../../../components/Toast/Toast';
-import { organizationSettings, OrgSettings } from '../../../stores/OrganizationSettings.store';
+import { CompositeSettings, organizationSettings } from '../../../stores/OrganizationSettings.store';
 import { schemaService } from '../../data/schema/schema.service';
 import { organizationsClient } from './organizations.client';
 
@@ -27,7 +27,7 @@ class OrganizationsService {
     }
   }
 
-  async setOrganizationSettings(settings: OrgSettings): Promise<void> {
+  async setOrganizationSettings(settings: CompositeSettings): Promise<void> {
     await organizationsClient.setOrganizationSettings(settings);
     await this.loadSettings();
   }

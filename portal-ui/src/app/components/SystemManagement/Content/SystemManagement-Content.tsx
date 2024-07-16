@@ -6,7 +6,7 @@ import { cn } from '@bem-react/classname';
 
 import { organizationsService } from '../../../services/auth/organizations/organizations.service';
 import { PropertyType } from '../../../services/data/schema/schema.models';
-import { organizationSettings, OrgSettings } from '../../../stores/OrganizationSettings.store';
+import { CompositeSettings, organizationSettings } from '../../../stores/OrganizationSettings.store';
 import { Button } from '../../Button/Button';
 import { ChooseXTableDialog } from '../../ChooseXTableDialog/ChooseXTableDialog';
 import { OrganizationSettings } from '../../OrganizationSettings/OrganizationSettings';
@@ -18,10 +18,10 @@ const cnSystemManagementContent = cn('SystemManagement', 'Content');
 
 @observer
 export class SystemManagementContent extends Component {
-  @observable private organization?: OrgSettings;
+  @observable private organization?: CompositeSettings;
   @observable private dialogOpen = false;
 
-  private cols: XTableColumn<OrgSettings>[] = [
+  private cols: XTableColumn<CompositeSettings>[] = [
     {
       field: 'id',
       title: 'ID',
@@ -56,7 +56,7 @@ export class SystemManagementContent extends Component {
           Выбрать организацию
         </Button>
 
-        <ChooseXTableDialog<OrgSettings>
+        <ChooseXTableDialog<CompositeSettings>
           title='Выберите организацию'
           data={organizationSettings.systemSettings || []}
           cols={this.cols}
@@ -75,7 +75,7 @@ export class SystemManagementContent extends Component {
   }
 
   @action.bound
-  private select(organizations: OrgSettings[]) {
+  private select(organizations: CompositeSettings[]) {
     const [organization] = organizations;
     this.organization = organization;
 

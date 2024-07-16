@@ -23,6 +23,8 @@ import ru.mycrg.data_service_contract.enums.TaskType;
 
 import java.util.*;
 
+import static java.lang.Boolean.FALSE;
+import static java.lang.Boolean.TRUE;
 import static java.lang.Thread.sleep;
 import static org.apache.http.HttpStatus.*;
 import static org.junit.Assert.*;
@@ -220,19 +222,37 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
     @And("Настройки организации включены в зависимости от выбранной специализации {string}")
     public void checkSettingsBySpecialization(String specializationId) {
         JsonPath jsonPath = response.jsonPath();
+
+        List<Map<String, Object>> allSpecializations = getSpecializations();
+        Map<String, Object> existSpecialization = allSpecializations
+                .stream()
+                .filter(specialization -> specializationId.equals(specialization.get("id").toString()))
+                .findFirst()
+                .get();
+        Map<String, Object> specializationSettings = (Map<String, Object>) existSpecialization.get("settings");
+
         List<String> tags = jsonPath.get("settings.tags");
-
-        List<Map<String, Object>> specializations = getSpecializations();
-        Map<String, Object> specializationById = specializations.stream()
-                                                                .filter(specialization -> specializationId.equals(
-                                                                        specialization.get("id").toString()))
-                                                                .findFirst()
-                                                                .get();
-        List<String> tagsBySpecialization = (List<String>) specializationById.get("tags");
-
+        List<String> tagsBySpecialization = (List<String>) specializationSettings.get("tags");
         assertTrue(tags.size() == tagsBySpecialization.size()
                            && tags.containsAll(tagsBySpecialization)
                            && tagsBySpecialization.containsAll(tags));
+
+        checkProperty(specializationSettings, "reestrs", TRUE);
+        checkProperty(specializationSettings, "sedDialog", TRUE);
+        checkProperty(specializationSettings, "downloadXml", TRUE);
+        checkProperty(specializationSettings, "taskManagement", TRUE);
+        checkProperty(specializationSettings, "createProject", TRUE);
+        checkProperty(specializationSettings, "downloadFiles", TRUE);
+        checkProperty(specializationSettings, "dataManagement", TRUE);
+        checkProperty(specializationSettings, "editProjectLayer", TRUE);
+        checkProperty(specializationSettings, "createLibraryItem", TRUE);
+    }
+
+    private void checkProperty(Map<String, Object> specializationSettings, String key, Boolean expectedValue) {
+        Object actualValue = specializationSettings.get(key);
+
+        assertNotNull(actualValue);
+        assertEquals(expectedValue, actualValue);
     }
 
     /**
@@ -511,7 +531,6 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
     }
 
     private List<Map<String, Object>> getSpecializations() {
-
         Response specializations = getBaseRequestWithCurrentCookie()
                 .when().
                         get("/specializations");

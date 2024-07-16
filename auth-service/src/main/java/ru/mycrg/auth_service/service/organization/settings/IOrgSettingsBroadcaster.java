@@ -1,4 +1,4 @@
-package ru.mycrg.auth_service.service.organization;
+package ru.mycrg.auth_service.service.organization.settings;
 
 import ru.mycrg.auth_service_contract.dto.OrgSettingsResponseDto;
 

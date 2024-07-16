@@ -1,6 +1,6 @@
 import { boundClass } from 'autobind-decorator';
 
-import { OrgSettings } from '../../../stores/OrganizationSettings.store';
+import { CompositeSettings } from '../../../stores/OrganizationSettings.store';
 import { Client } from '../../api/Client';
 import { http } from '../../api/http.service';
 import { Organization } from './organizations.models';
@@ -29,15 +29,15 @@ class OrganizationsClient extends Client {
     return this.getOrganizationsSettingsUrl() + '/schema';
   }
 
-  async getOrganizationSettings(): Promise<OrgSettings> {
-    return http.get<OrgSettings>(this.getOrganizationsSettingsUrl());
+  async getOrganizationSettings(): Promise<CompositeSettings> {
+    return http.get<CompositeSettings>(this.getOrganizationsSettingsUrl());
   }
 
   async getOrganization(orgId: number): Promise<Organization> {
     return http.get<Organization>(this.getOrganizationUrl(orgId));
   }
 
-  async setOrganizationSettings(settings: OrgSettings): Promise<void> {
+  async setOrganizationSettings(settings: CompositeSettings): Promise<void> {
     return http.patch(this.getOrganizationsSettingsUrl(), settings);
   }
 

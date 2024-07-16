@@ -62,7 +62,7 @@ public class OrganizationController {
 
     @PostMapping("/init")
     public ResponseEntity<Object> createOrganization(@Valid @RequestBody OrganizationCreateDto createDto) {
-        log.debug("Request create organization: {}", createDto);
+        log.debug("Запрос на создание организации: {}", createDto);
 
         Organization newOrganization = organizationService.create(createDto);
 
@@ -71,7 +71,6 @@ public class OrganizationController {
         String ownerAccessToken = authService.authorize(owner.getEmail(),
                                                         createDto.getOwner().getPassword()).getAccess_token();
 
-        // TODO: Мы не можем передавать всю специализацию - камунда не может хранить более 4000 символов и падает
         messageBus.produce(
                 new OrganizationInitializedEvent(newOrganization.getId(),
                                                  rootAccessToken,
@@ -107,7 +106,7 @@ public class OrganizationController {
     @DeleteMapping("/{id}")
     @PreAuthorize(SYSTEM_ADMIN_AUTHORITY)
     public ResponseEntity<Object> deleteOrganization(@PathVariable Long id) {
-        log.debug("Request delete organization: {}", id);
+        log.debug("Запрос на удаление организации: {}", id);
 
         organizationService.delete(id);
 

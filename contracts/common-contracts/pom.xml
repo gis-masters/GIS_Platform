@@ -6,7 +6,7 @@
 
     <groupId>ru.mycrg</groupId>
     <artifactId>common-contracts</artifactId>
-    <version>1.4.0-SNAPSHOT</version>
+    <version>1.5.0-SNAPSHOT</version>
 
     <name>common-contracts Maven Webapp</name>
     <description>Common contract</description>
@@ -82,7 +82,7 @@
                 <artifactId>jsonschema2pojo-maven-plugin</artifactId>
                 <version>1.2.1</version>
                 <configuration>
-                    <sourceDirectory>${basedir}/../../auth-service/src/main/resources/specializations</sourceDirectory>
+                    <sourceDirectory>${basedir}/../../auth-service/src/main/resources/specializations-template</sourceDirectory>
                     <targetPackage>ru.mycrg.common_contracts.specialization</targetPackage>
                     <sourceType>json</sourceType>
                 </configuration>

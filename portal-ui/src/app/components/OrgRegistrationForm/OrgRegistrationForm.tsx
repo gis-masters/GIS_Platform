@@ -126,9 +126,9 @@ export class OrgRegistrationForm extends Component {
                 throw new Error('Отсутствуют данные о специализации');
               }
 
-              const { description, tags } = specialization;
+              const { description, settings } = specialization;
 
-              return { hidden: false, description, tags };
+              return { hidden: false, description, settings };
             }
 
             return { ...obj };

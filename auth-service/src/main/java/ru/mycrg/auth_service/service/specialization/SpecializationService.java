@@ -15,7 +15,7 @@ import static ru.mycrg.auth_service.AuthJWTApplication.mapper;
 @Service
 public class SpecializationService {
 
-    private static final String SPECIALIZATIONS_FILE_NAME = "specializations/specialization.json";
+    private static final String SPECIALIZATIONS_FILE_NAME = "specializations/specializations.json";
 
     private final List<Specialization> specializations;
 

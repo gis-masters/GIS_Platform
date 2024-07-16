@@ -17,6 +17,7 @@ import ru.mycrg.auth_service.exceptions.ForbiddenException;
 import ru.mycrg.auth_service.exceptions.NotFoundException;
 import ru.mycrg.auth_service.repository.OrganizationRepository;
 import ru.mycrg.auth_service.repository.UserRepository;
+import ru.mycrg.auth_service.service.organization.settings.OrganizationSettingService;
 import ru.mycrg.auth_service.service.specialization.SpecializationService;
 import ru.mycrg.auth_service_contract.dto.OrganizationCreateDto;
 import ru.mycrg.auth_service_contract.dto.UserCreateDto;

@@ -3,11 +3,22 @@
     "id": 1,
     "title": "НТО",
     "description": "Описание специализации НТО",
-    "tags": [
-      "НТО",
-      "КПТ",
-      "Инвентаризация недвижимости"
-    ],
+    "settings": {
+      "reestrs": true,
+      "sedDialog": true,
+      "downloadXml": true,
+      "createProject": true,
+      "downloadFiles": true,
+      "taskManagement": true,
+      "dataManagement": true,
+      "editProjectLayer": true,
+      "createLibraryItem": true,
+      "tags": [
+        "НТО",
+        "КПТ",
+        "Инвентаризация недвижимости"
+      ]
+    },
     "projects": [
       {
         "title": "Проект по специализации 1",
@@ -45,9 +56,15 @@
     "id": 2,
     "title": "Фотоконтроль",
     "description": "Специализация для организации фотоконтроля при обследованиях территории. Специализация позволяет: загружать и размещать на карте результаты фото-контроля с привязкой к местности и направлением съемки.",
-    "tags": [
-      "Фотофиксация"
-    ],
+    "settings": {
+      "createProject": true,
+      "downloadFiles": true,
+      "dataManagement": true,
+      "editProjectLayer": true,
+      "tags": [
+        "Фотофиксация"
+      ]
+    },
     "projects": [
       {
         "title": "Проект - Фотоконтроль",
@@ -74,21 +91,22 @@
           }
         ]
       }
-    ],
-    "documentLibraries": [
-      {
-        "schemaId": "dl_data_kpt"
-      }
     ]
   },
   {
     "id": 3,
     "title": "Нестационарные торговые объекты",
     "description": "Специализация для инвентаризации и управления нестационарными торговыми объектами",
-    "tags": [
-      "НТО",
-      "Фотофиксация"
-    ],
+    "settings": {
+      "createProject": true,
+      "downloadFiles": true,
+      "dataManagement": true,
+      "editProjectLayer": true,
+      "tags": [
+        "НТО",
+        "Фотофиксация"
+      ]
+    },
     "projects": [
       {
         "title": "Пример НТО",

@@ -1,7 +1,7 @@
 import { organizationsClient } from '../../../../src/app/services/auth/organizations/organizations.client';
-import { OrgSettings } from '../../../../src/app/stores/OrganizationSettings.store';
+import { CompositeSettings } from '../../../../src/app/stores/OrganizationSettings.store';
 import { requestAsAdmin } from '../requestAs';
 
-export async function setOrgSetting(payload: OrgSettings): Promise<void> {
+export async function setOrgSetting(payload: CompositeSettings): Promise<void> {
   await requestAsAdmin(organizationsClient.setOrganizationSettings, payload);
 }

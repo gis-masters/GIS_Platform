@@ -1,7 +1,7 @@
 package ru.mycrg.auth_service;
 
 import org.junit.jupiter.api.Test;
-import ru.mycrg.auth_service.service.organization.OrgSettingsSchemaHolder;
+import ru.mycrg.auth_service.service.organization.settings.OrgSettingsSchemaHolder;
 import ru.mycrg.auth_service_contract.dto.OrgSettingsResponseDto;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.data_service_contract.dto.SimplePropertyDto;

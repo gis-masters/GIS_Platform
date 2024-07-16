@@ -2,7 +2,7 @@ import { authClient } from '../../../../src/app/services/auth/auth/auth.client';
 import { RegData } from '../../../../src/app/services/auth/auth/auth.models';
 import { organizationsClient } from '../../../../src/app/services/auth/organizations/organizations.client';
 import { Organization } from '../../../../src/app/services/auth/organizations/organizations.models';
-import { Settings } from '../../../../src/app/stores/OrganizationSettings.store';
+import { OrgSettings } from '../../../../src/app/stores/OrganizationSettings.store';
 import { requestAs } from '../requestAs';
 import { getTestUser } from './testUsers';
 
@@ -58,7 +58,7 @@ function isBodyNotValid(organization: Organization) {
  *
  * @param settings Настройки организации.
  */
-function isSettingsNotValid(settings: Settings): boolean {
+function isSettingsNotValid(settings: OrgSettings): boolean {
   return (
     !settings.downloadXml ||
     !settings.sedDialog ||
@@ -71,7 +71,6 @@ function isSettingsNotValid(settings: Settings): boolean {
     !settings.favorites_epsg ||
     settings.favorites_epsg.length < 1 ||
     !settings.tags ||
-    settings.tags.length < 1 ||
     !settings.dataManagement
   );
 }

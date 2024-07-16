@@ -1,4 +1,4 @@
-package ru.mycrg.auth_service.service.organization;
+package ru.mycrg.auth_service.service.organization.settings;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

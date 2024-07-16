@@ -1,7 +1,7 @@
 import { Given } from '@wdio/cucumber-framework';
 
 import { usersClient } from '../../../../src/app/services/auth/users/users.client';
-import { OrgSettings, Settings } from '../../../../src/app/stores/OrganizationSettings.store';
+import { CompositeSettings, OrgSettings } from '../../../../src/app/stores/OrganizationSettings.store';
 import { requestAsAdmin } from '../requestAs';
 import { setOrgSetting } from './setOrgSetting';
 
@@ -13,11 +13,11 @@ Given('в настройках организации отключен пунк�
   await setOrgSetting(await setOption(setting, false));
 });
 
-async function setOption(setting: string, status: boolean): Promise<OrgSettings> {
+async function setOption(setting: string, status: boolean): Promise<CompositeSettings> {
   const user = await requestAsAdmin(usersClient.getCurrentUser);
 
   // будет исправлено в #2155
-  const settings: Settings = {
+  const settings: OrgSettings = {
     createLibraryItem: true,
     createProject: true,
     dataManagement: true,
@@ -34,7 +34,7 @@ async function setOption(setting: string, status: boolean): Promise<OrgSettings>
     tags: ['НТО']
   };
 
-  const payload: { id: number; settings: Settings } = {
+  const payload: { id: number; settings: OrgSettings } = {
     id: user.orgId,
     settings
   };

@@ -1,4 +1,4 @@
-package ru.mycrg.auth_service.service.organization;
+package ru.mycrg.auth_service.service.organization.settings;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;

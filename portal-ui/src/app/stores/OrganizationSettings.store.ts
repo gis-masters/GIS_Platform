@@ -1,38 +1,29 @@
 import { action, computed, makeObservable, observable } from 'mobx';
 
+import { Settings } from '../../server-types/common-contracts';
 import { Projection } from '../services/data/projections/projections.models';
 import { Schema } from '../services/data/schema/schema.models';
 import { currentUser } from './CurrentUser.store';
 
-export interface Settings {
-  createLibraryItem: boolean;
-  createProject: boolean;
-  dataManagement: boolean;
-  downloadFiles: boolean;
-  downloadXml: boolean;
-  editProjectLayer: boolean;
-  reestrs: boolean;
-  sedDialog: boolean;
-  taskManagement: boolean;
+export interface OrgSettings extends Settings {
   favorites_epsg: Projection[] | string[];
   default_epsg: string;
-  tags: string | string[];
 }
 
-export interface OrgSettings {
+export interface CompositeSettings {
   id: number;
   name?: string;
-  system?: Settings;
-  settings?: Settings;
-  organization?: Settings;
+  system?: OrgSettings;
+  settings?: OrgSettings;
+  organization?: OrgSettings;
 }
 
 export class OrganizationSettings {
   private static _instance: OrganizationSettings;
 
   @observable settingsError?: boolean;
-  @observable orgSettings?: OrgSettings;
-  @observable systemSettings?: OrgSettings[];
+  @observable orgSettings?: CompositeSettings;
+  @observable systemSettings?: CompositeSettings[];
   @observable schema?: Schema;
 
   static get instance(): OrganizationSettings {
@@ -44,16 +35,13 @@ export class OrganizationSettings {
   }
 
   @action
-  setSettings(settings?: OrgSettings | OrgSettings[]): void {
+  setSettings(settings?: CompositeSettings | CompositeSettings[]): void {
     if (Array.isArray(settings)) {
       this.systemSettings = settings;
     } else {
-      const tags = settings?.organization?.tags;
-      if (tags?.length && settings?.organization) {
-        settings.organization.tags = tags;
-      }
       this.orgSettings = settings;
     }
+
     this.setSettingsError(false);
   }
 
@@ -70,19 +58,25 @@ export class OrganizationSettings {
 
   @computed
   get createProject(): boolean {
-    return this.allowedToUse(this.orgSettings?.system?.createProject, this.orgSettings?.organization?.createProject);
+    return this.allowedToUse(
+      !!this.orgSettings?.system?.createProject,
+      !!this.orgSettings?.organization?.createProject
+    );
   }
 
   @computed
   get dataManagement(): boolean {
-    return this.allowedToUse(this.orgSettings?.system?.dataManagement, this.orgSettings?.organization?.dataManagement);
+    return this.allowedToUse(
+      !!this.orgSettings?.system?.dataManagement,
+      !!this.orgSettings?.organization?.dataManagement
+    );
   }
 
   @computed
   get editProjectLayer(): boolean {
     return this.allowedToUse(
-      this.orgSettings?.system?.editProjectLayer,
-      this.orgSettings?.organization?.editProjectLayer
+      !!this.orgSettings?.system?.editProjectLayer,
+      !!this.orgSettings?.organization?.editProjectLayer
     );
   }
 
@@ -97,23 +91,26 @@ export class OrganizationSettings {
   @computed
   get createLibraryItem(): boolean {
     return this.allowedToUse(
-      this.orgSettings?.system?.createLibraryItem,
-      this.orgSettings?.organization?.createLibraryItem
+      !!this.orgSettings?.system?.createLibraryItem,
+      !!this.orgSettings?.organization?.createLibraryItem
     );
   }
 
   @computed
   get downloadFiles(): boolean {
-    return this.allowedToUse(this.orgSettings?.system?.downloadFiles, this.orgSettings?.organization?.downloadFiles);
+    return this.allowedToUse(
+      !!this.orgSettings?.system?.downloadFiles,
+      !!this.orgSettings?.organization?.downloadFiles
+    );
   }
 
   @computed
   get downloadXml(): boolean {
-    return this.allowedToUse(this.orgSettings?.system?.downloadXml, this.orgSettings?.organization?.downloadXml);
+    return this.allowedToUse(!!this.orgSettings?.system?.downloadXml, !!this.orgSettings?.organization?.downloadXml);
   }
 
   @computed
-  get SEDDialog(): boolean {
+  get sedDialog(): boolean {
     return Boolean(this.orgSettings?.system?.sedDialog && this.orgSettings?.organization?.sedDialog);
   }
 

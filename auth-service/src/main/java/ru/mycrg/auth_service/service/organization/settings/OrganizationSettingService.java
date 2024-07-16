@@ -1,7 +1,6 @@
-package ru.mycrg.auth_service.service.organization;
+package ru.mycrg.auth_service.service.organization.settings;
 
 import com.vladmihalcea.hibernate.type.json.internal.JacksonUtil;
-import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,8 +21,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.vladmihalcea.hibernate.type.json.internal.JacksonUtil.toJsonNode;
-import static java.util.Objects.nonNull;
-import static ru.mycrg.auth_service.service.organization.SettingsMapper.mapToSettings;
+import static ru.mycrg.auth_service.service.organization.settings.SettingsMapper.mapToSettings;
+import static ru.mycrg.auth_service.service.organization.settings.SpecializationSettingsHandler.fillSettingsBySpecialization;
 import static ru.mycrg.auth_service.util.SettingsHandler.*;
 
 @Service
@@ -147,10 +146,9 @@ public class OrganizationSettingService {
     }
 
     synchronized
-    public void initOrgSetting(Organization organization, @Nullable SpecializationView specialization) {
-        Map<String, Object> enabledKnownSetting = orgSettingsSchemaHolder.allInclusive();
-
-        fillSettingsWithTagsFromSpecialization(specialization, enabledKnownSetting);
+    public void initOrgSetting(Organization organization, SpecializationView specialization) {
+        Map<String, Object> orgSettings = fillSettingsBySpecialization(specialization.getSettings(),
+                                                                       orgSettingsSchemaHolder.allInclusive());
 
         // init in system settings
         Set<OrgSettingsRequestDto> systemSettings = getSystemSettings()
@@ -158,7 +156,7 @@ public class OrganizationSettingService {
                 .map(responseDto -> new OrgSettingsRequestDto(responseDto.getId(), responseDto.getSystem()))
                 .collect(Collectors.toSet());
 
-        systemSettings.add(new OrgSettingsRequestDto(organization.getId(), enabledKnownSetting));
+        systemSettings.add(new OrgSettingsRequestDto(organization.getId(), orgSettings));
 
         Organization systemOrganization = organizationRepository.findById(ROOT_ORG_ID)
                                                                 .orElseThrow(() -> new NotFoundException(ROOT_ORG_ID));
@@ -170,7 +168,7 @@ public class OrganizationSettingService {
         organizationRepository.save(systemOrganization);
 
         // init in organization settings
-        organization.setSettings(toJsonNode(JacksonUtil.toString(enabledKnownSetting)));
+        organization.setSettings(toJsonNode(JacksonUtil.toString(orgSettings)));
 
         organizationRepository.save(organization);
     }
@@ -182,13 +180,5 @@ public class OrganizationSettingService {
 
         return buildSchema(orgSettingsSchemaHolder.getSchema(),
                            orgSettingsRepository.readOrganizationSettings(authenticationFacade.getOrganizationId()));
-    }
-
-    private static void fillSettingsWithTagsFromSpecialization(@Nullable SpecializationView specialization,
-                                                               Map<String, Object> settings) {
-        String tagsName = "tags";
-        if (nonNull(specialization) && !specialization.getTags().isEmpty() && settings.containsKey(tagsName)) {
-            settings.put(tagsName, specialization.getTags());
-        }
     }
 }

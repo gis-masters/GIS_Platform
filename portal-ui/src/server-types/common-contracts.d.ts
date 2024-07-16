@@ -37,6 +37,26 @@ export interface SpecializationView {
   id: number;
   title: string;
   description: string;
+  settings: Settings;
+}
+
+export interface TableContentModel {
+  datasetIdentifier: string;
+  tableIdentifier: string;
+  content: string[];
+  variables: { [index: string]: string };
+}
+
+export interface Settings {
+  reestrs: boolean;
+  sedDialog: boolean;
+  downloadXml: boolean;
+  taskManagement: boolean;
+  createProject: boolean;
+  downloadFiles: boolean;
+  dataManagement: boolean;
+  editProjectLayer: boolean;
+  createLibraryItem: boolean;
   tags: string[];
 }
 

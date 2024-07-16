@@ -1,4 +1,4 @@
-package ru.mycrg.auth_service.service.organization;
+package ru.mycrg.auth_service.service.organization.settings;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.vladmihalcea.hibernate.type.json.internal.JacksonUtil;
@@ -14,9 +14,9 @@ import ru.mycrg.data_service_contract.dto.SchemaDto;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static ru.mycrg.auth_service.service.organization.OrganizationSettingService.ROOT_ORG_ID;
-import static ru.mycrg.auth_service.service.organization.SettingsMapper.mapToSettings;
-import static ru.mycrg.auth_service.service.organization.SettingsMapper.mapToSystemSettings;
+import static ru.mycrg.auth_service.service.organization.settings.OrganizationSettingService.ROOT_ORG_ID;
+import static ru.mycrg.auth_service.service.organization.settings.SettingsMapper.mapToSettings;
+import static ru.mycrg.auth_service.service.organization.settings.SettingsMapper.mapToSystemSettings;
 import static ru.mycrg.auth_service.util.SettingsHandler.processSettings;
 
 @Component

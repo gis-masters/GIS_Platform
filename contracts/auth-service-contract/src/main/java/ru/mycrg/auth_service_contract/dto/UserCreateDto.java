@@ -122,4 +122,18 @@ public class UserCreateDto extends PasswordModel {
     public void setBossId(Integer bossId) {
         this.bossId = bossId;
     }
+
+    @Override
+    public String toString() {
+        return "{" +
+                "\"name\":" + (name == null ? "null" : "\"" + name + "\"") + ", " +
+                "\"middleName\":" + (middleName == null ? "null" : "\"" + middleName + "\"") + ", " +
+                "\"surname\":" + (surname == null ? "null" : "\"" + surname + "\"") + ", " +
+                "\"job\":" + (job == null ? "null" : "\"" + job + "\"") + ", " +
+                "\"phone\":" + (phone == null ? "null" : "\"" + phone + "\"") + ", " +
+                "\"email\":" + (email == null ? "null" : "\"" + email + "\"") + ", " +
+                "\"department\":" + (department == null ? "null" : "\"" + department + "\"") + ", " +
+                "\"bossId\":" + (bossId == null ? "null" : "\"" + bossId + "\"") +
+                "}";
+    }
 }

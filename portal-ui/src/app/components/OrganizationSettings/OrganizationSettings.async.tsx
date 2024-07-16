@@ -9,16 +9,11 @@ import { cloneDeep } from 'lodash';
 import { organizationsClient } from '../../services/auth/organizations/organizations.client';
 import { organizationsService } from '../../services/auth/organizations/organizations.service';
 import { isArrayOfProjections, isProjection, Projection } from '../../services/data/projections/projections.models';
-import {
-  PropertySchema,
-  PropertySchemaChoice,
-  PropertyType,
-  SimpleSchema
-} from '../../services/data/schema/schema.models';
+import { PropertySchemaChoice, PropertyType, SimpleSchema } from '../../services/data/schema/schema.models';
 import { schemaService } from '../../services/data/schema/schema.service';
 import { generateRandomId } from '../../services/util/randomId';
 import { isStringArray } from '../../services/util/typeGuards/isStringArray';
-import { organizationSettings, OrgSettings, Settings } from '../../stores/OrganizationSettings.store';
+import { CompositeSettings, organizationSettings, OrgSettings } from '../../stores/OrganizationSettings.store';
 import { Button } from '../Button/Button';
 import { Form } from '../Form/Form';
 import { SelectFavoriteProjectionsControl } from '../SelectFavoriteProjectionsControl/SelectFavoriteProjectionsControl';
@@ -30,12 +25,12 @@ const cnOrganizationSettings = cn('OrganizationSettings');
 
 export interface OrganizationSettingsProps {
   systemManagement?: boolean;
-  orgSettings?: OrgSettings;
+  orgSettings?: CompositeSettings;
 }
 
 @observer
 export default class OrganizationSettings extends Component<OrganizationSettingsProps> {
-  @observable private formValue?: Settings = cloneDeep(
+  @observable private formValue?: OrgSettings = cloneDeep(
     organizationSettings.orgSettings?.organization || this.props.orgSettings?.system
   );
   @observable private busy = false;
@@ -101,7 +96,7 @@ export default class OrganizationSettings extends Component<OrganizationSettings
             {this.formValue && this.schema && (
               <>
                 <h1 className={cnOrganizationSettings('Title')}>Управление организацией</h1>
-                <Form<Settings>
+                <Form<OrgSettings>
                   id={htmlId}
                   className={cnOrganizationSettings('Form', ['scroll'])}
                   actionFunction={this.save}
@@ -135,7 +130,7 @@ export default class OrganizationSettings extends Component<OrganizationSettings
   }
 
   @boundMethod
-  private handleFieldChange(value: unknown, propertyName: string, prevValue: unknown, formValue: Settings) {
+  private handleFieldChange(value: unknown, propertyName: string, prevValue: unknown, formValue: OrgSettings) {
     if (formValue.favorites_epsg && isArrayOfProjections(formValue.favorites_epsg)) {
       this.setFavoritesProjection(formValue.favorites_epsg);
       this.updateOptions();
@@ -157,7 +152,7 @@ export default class OrganizationSettings extends Component<OrganizationSettings
   }
 
   @boundMethod
-  private async save(value: Settings) {
+  private async save(value: OrgSettings) {
     this.setBusy(true);
 
     const { systemManagement, orgSettings } = this.props;
@@ -179,7 +174,7 @@ export default class OrganizationSettings extends Component<OrganizationSettings
 
     // поле favorites_epsg на бэке сейчас ест только массив строк
     value.favorites_epsg = value.favorites_epsg.map(item => {
-      if (!isProjection(item) && typeof item !== 'string') {
+      if (!isProjection(item)) {
         throw new TypeError('Ошибка в типах данных');
       }
 
@@ -187,7 +182,7 @@ export default class OrganizationSettings extends Component<OrganizationSettings
     });
 
     if (id) {
-      const payload: OrgSettings = { id, settings: value };
+      const payload: CompositeSettings = { id, settings: value };
 
       await organizationsService.setOrganizationSettings(payload);
       Toast.success('Настройки успешно обновлены');
@@ -200,7 +195,7 @@ export default class OrganizationSettings extends Component<OrganizationSettings
 
   @action
   private setSchema(_schema: SimpleSchema) {
-    const properties: PropertySchema[] = _schema.properties.map(prop => {
+    _schema.properties = _schema.properties.map(prop => {
       if (prop.name === 'favorites_epsg') {
         return {
           name: prop.name,
@@ -214,8 +209,6 @@ export default class OrganizationSettings extends Component<OrganizationSettings
       return prop;
     });
 
-    _schema.properties = properties;
-
     this._schema = _schema;
   }
 
@@ -225,7 +218,7 @@ export default class OrganizationSettings extends Component<OrganizationSettings
   }
 
   @action
-  private setFormValue(formValue: Settings): void {
+  private setFormValue(formValue: OrgSettings): void {
     this.formValue = formValue;
   }
 

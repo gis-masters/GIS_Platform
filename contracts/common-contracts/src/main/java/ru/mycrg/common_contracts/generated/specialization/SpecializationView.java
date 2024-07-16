@@ -1,24 +1,23 @@
 package ru.mycrg.common_contracts.generated.specialization;
 
-import java.util.ArrayList;
-import java.util.List;
+import ru.mycrg.common_contracts.specialization.Settings;
 
 public class SpecializationView {
 
     private int id;
     private String title;
     private String description;
-    private List<String> tags = new ArrayList<>();
+    private Settings settings;
 
     public SpecializationView() {
         // Required
     }
 
-    public SpecializationView(int id, String title, String description, List<String> tags) {
+    public SpecializationView(int id, String title, String description, Settings settings) {
         this.id = id;
         this.title = title;
         this.description = description;
-        this.tags = tags;
+        this.settings = settings;
     }
 
     public int getId() {
@@ -45,11 +44,11 @@ public class SpecializationView {
         this.description = description;
     }
 
-    public List<String> getTags() {
-        return tags;
+    public Settings getSettings() {
+        return settings;
     }
 
-    public void setTags(List<String> tags) {
-        this.tags = tags;
+    public void setSettings(Settings settings) {
+        this.settings = settings;
     }
 }
