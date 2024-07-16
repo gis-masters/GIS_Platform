@@ -5,7 +5,7 @@ import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
 import { PropertySchemaCustom } from '../../services/data/schema/schema.models';
-import { defaultPrintSettings, printSettings } from '../../stores/PrintSettings.store';
+import { printSettings } from '../../stores/PrintSettings.store';
 import { Button } from '../Button/Button';
 import { FormControlProps } from '../Form/Control/Form-Control';
 import { PrintMapDialog } from '../PrintMapDialog/PrintMapDialog';
@@ -72,8 +72,5 @@ export default class PrintMapImageControl extends Component<FormControlProps> {
   @action.bound
   private closePrintDialog() {
     this.printDialogOpen = false;
-    if (printSettings.pageFormatId === 'square') {
-      printSettings.setPageFormatId(defaultPrintSettings.pageFormatId);
-    }
   }
 }

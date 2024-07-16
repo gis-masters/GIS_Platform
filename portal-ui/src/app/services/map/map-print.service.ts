@@ -128,6 +128,7 @@ export async function getMapImage(options: MapImageOptions = {}): Promise<string
       const mapCanvas = document.createElement('canvas');
       mapCanvas.width = width;
       mapCanvas.height = height;
+
       const mapContext = mapCanvas.getContext('2d');
       if (!mapContext) {
         throw new Error('Canvas context is not initialized');

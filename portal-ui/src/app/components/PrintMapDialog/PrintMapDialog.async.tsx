@@ -4,7 +4,7 @@ import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
 import { exportMap, printMap } from '../../services/map/map-print.service';
-import { printSettings } from '../../stores/PrintSettings.store';
+import { defaultPrintSettings, printSettings } from '../../stores/PrintSettings.store';
 import { Button } from '../Button/Button';
 import { PrintMapDialogContent } from './Content/PrintMapDialog-Content';
 import { PrintMapDialogForm } from './Form/PrintMapDialog-Form';
@@ -28,8 +28,12 @@ export interface PrintMapDialogProps {
 
 export default class PrintMapDialog extends Component<PrintMapDialogProps> {
   componentDidUpdate(prevProps: PrintMapDialogProps) {
-    if (!prevProps.open && this.props.open && this.props.format) {
-      printSettings.setPageFormatId(this.props.format);
+    if (!prevProps.open && this.props.open) {
+      if (this.props.format) {
+        printSettings.setPageFormatId(this.props.format);
+      } else if (printSettings.pageFormatId === 'square') {
+        printSettings.setPageFormatId(defaultPrintSettings.pageFormatId);
+      }
     }
   }
 

@@ -19,7 +19,7 @@ const submitTexts: Record<UtilityDialogInfo['type'], string> = {
   achtung: 'Понятно',
   konfirmieren: 'Да',
   prompto: 'OK',
-  formPrompt: 'OK'
+  formPrompt: 'Печать (PDF)'
 };
 
 const cancelTexts: Record<UtilityDialogInfo['type'], string> = {
