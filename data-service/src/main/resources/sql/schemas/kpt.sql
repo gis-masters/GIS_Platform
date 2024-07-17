@@ -444,6 +444,7 @@ SET class_rule =
         {
             "name": "shape",
             "title": "shape",
+            "hidden": true,
             "valueType": "GEOMETRY",
             "allowedValues": [
                 "LineString"
@@ -1173,6 +1174,7 @@ SET class_rule =
     {
       "name": "shape",
       "title": "shape",
+      "hidden": true,
       "valueType": "GEOMETRY",
       "allowedValues": [
         "Polygon"
@@ -1279,6 +1281,7 @@ SET class_rule =
         {
             "name": "shape",
             "title": "Геометрия",
+            "hidden": true,
             "valueType": "GEOMETRY",
             "allowedValues": [
                 "Polygon"
@@ -1387,6 +1390,7 @@ SET class_rule =
         },
         {
             "name": "shape",
+            "hidden": true,
             "title": "shape",
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -1709,6 +1713,7 @@ SET class_rule =
         {
             "name": "shape",
             "title": "shape",
+            "hidden": true,
             "valueType": "GEOMETRY",
             "allowedValues": [
                 "Point"
@@ -1821,6 +1826,7 @@ SET class_rule =
         {
             "name": "shape",
             "title": "Геометрия",
+            "hidden": true,
             "valueType": "GEOMETRY",
             "allowedValues": [
                 "Polygon"
