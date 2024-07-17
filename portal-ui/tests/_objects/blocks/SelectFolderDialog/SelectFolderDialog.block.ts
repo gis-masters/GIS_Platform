@@ -8,7 +8,7 @@ class SelectFolderDialogBlock extends Block {
     loading: '.SelectFolderDialog .Loading'
   };
 
-  async selectFolder(): Promise<void> {
+  async selectFolder(explorerItemTitle: string): Promise<void> {
     await this.waitForVisible();
 
     const $loading = await this.$('loading');
@@ -20,6 +20,9 @@ class SelectFolderDialogBlock extends Block {
     }
 
     await $loading.waitForDisplayed({ reverse: true });
+    const explorerBlock = new ExplorerBlock(await this.$('container'));
+    await explorerBlock.selectExplorerItem(explorerItemTitle);
+
     const $select = await this.$('select');
     await $select.waitForClickable();
     await $select.click();

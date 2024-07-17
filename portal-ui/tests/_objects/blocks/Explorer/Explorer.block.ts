@@ -27,6 +27,8 @@ export class ExplorerBlock extends Block {
   }
 
   async selectExplorerItem(item: string): Promise<void> {
+    await this.waitForVisible();
+
     const $item = await this.getExplorerItemByName(item);
     if (!$item) {
       throw new Error(`Не найден элемент "${item}"`);

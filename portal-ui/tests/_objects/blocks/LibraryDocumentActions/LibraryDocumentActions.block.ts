@@ -24,6 +24,8 @@ class LibraryDocumentActionsBlock extends Block {
   }
 
   async documentMoveBtnExist(): Promise<boolean> {
+    await this.waitForVisible();
+
     const $moveBtn = await this.$('move');
 
     return await $moveBtn.isExisting();

@@ -2,8 +2,8 @@ import { When } from '@wdio/cucumber-framework';
 
 import { selectFolderDialogBlock } from './SelectFolderDialog.block';
 
-When('в окне выбора папки я нажимаю `Выбрать`', async function () {
-  await selectFolderDialogBlock.selectFolder();
+When('в окне выбора папки я нажимаю `Выбрать` у элемента {string}', async function (explorerItemTitle: string) {
+  await selectFolderDialogBlock.selectFolder(explorerItemTitle);
 });
 
 When(
