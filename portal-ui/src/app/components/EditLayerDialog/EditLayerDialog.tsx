@@ -179,18 +179,7 @@ export class EditLayerDialog extends Component<EditLayerDialogProps> {
           property.hidden = true;
         }
 
-        // TODO: включить для tif, shp и tab, mid после #2086
-        if (
-          layer.type &&
-          [
-            CrgLayerType.EXTERNAL,
-            CrgLayerType.EXTERNAL_GEOSERVER,
-            CrgLayerType.RASTER,
-            CrgLayerType.MID,
-            CrgLayerType.TAB,
-            CrgLayerType.SHP
-          ].includes(layer.type)
-        ) {
+        if (layer.type && [CrgLayerType.EXTERNAL, CrgLayerType.EXTERNAL_GEOSERVER].includes(layer.type)) {
           property.hidden = true;
         }
       }

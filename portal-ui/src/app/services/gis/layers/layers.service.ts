@@ -6,6 +6,9 @@ import { AxiosError } from 'axios';
 
 import { Toast } from '../../../components/Toast/Toast';
 import { currentProject } from '../../../stores/CurrentProject.store';
+import { getFile } from '../../data/files/files.service';
+import { getFileBaseName, getLibraryRecordFiles } from '../../data/files/files.util';
+import { getLibraryRecord } from '../../data/library/library.service';
 import { PropertyOption, Schema } from '../../data/schema/schema.models';
 import { schemaService } from '../../data/schema/schema.service';
 import {
@@ -19,13 +22,38 @@ import { services } from '../../services';
 import { CrgProject } from '../projects/projects.models';
 import { layersClient } from './layers.client';
 import { CrgLayer, CrgLayersGroup, CrgLayerType, CrgRasterLayer, NewCrgLayer } from './layers.models';
-import { isVectorFromFile } from './layers.utils';
+import { isLayerFromFile, isVectorFromFile } from './layers.utils';
 
 export async function getLayers(projectId: number): Promise<CrgLayer[]> {
   return await layersClient.getLayers(projectId);
 }
 
 export async function createLayer(newLayer: NewCrgLayer, projectId: number): Promise<CrgLayer> {
+  if (isLayerFromFile(newLayer)) {
+    if (!newLayer.libraryId || !newLayer.recordId) {
+      throw new Error('Ошибка получения данных слоя');
+    }
+
+    const document = await getLibraryRecord(newLayer.libraryId, newLayer.recordId);
+    const files = getLibraryRecordFiles(document);
+    const fileInfo = files.find(({ id }) => id === newLayer.tableName?.split('__')[1]);
+
+    if (!fileInfo) {
+      throw new Error('Не найден источник данных файлового слоя');
+    }
+
+    const fullFileInfo = await getFile(fileInfo.id);
+
+    if (!fullFileInfo.path) {
+      throw new Error('Ошибка получения пути источника данных файлового слоя');
+    }
+
+    const pathToFile = fullFileInfo.path.split('/').at(-1);
+    const nativeName = pathToFile && getFileBaseName(pathToFile);
+
+    return await layersClient.createLayer({ ...newLayer, nativeName }, projectId);
+  }
+
   return await layersClient.createLayer(newLayer, projectId);
 }
 

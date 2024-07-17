@@ -5,7 +5,7 @@ import { generateRandomId } from '../../../../src/app/services/util/randomId';
 import { awaitProcessForTest } from '../process/awaitProcessForTest';
 import { requestAsAdmin } from '../requestAs';
 
-export async function placeDxfFile(fileInfo: FileInfo, projectId: number, crs: string): Promise<void> {
+export async function placeFile(fileInfo: FileInfo, projectId: number, crs: string): Promise<void> {
   const model = {
     type: ProcessType.IMPORT,
     payload: {

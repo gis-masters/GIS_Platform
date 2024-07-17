@@ -6,7 +6,7 @@ import { FilePlacementMode } from '../../data/file-placement/file-placement.mode
 import { defaultOlProjectionCode } from '../../data/projections/projections.models';
 import { extractTableNameFromFeatureId } from '../../geoserver/featureType/featureType.util';
 import { CoordinateEdited, WfsFeature } from '../../geoserver/wfs/wfs.models';
-import { CrgLayerType, CrgRasterLayer, CrgVectorLayer, NewCrgLayer } from './layers.models';
+import { CrgLayer, CrgLayerType, CrgRasterLayer, CrgVectorLayer, NewCrgLayer } from './layers.models';
 
 const defaultProps = {
   enabled: true,
@@ -71,5 +71,15 @@ export function generateNextLayerId(): number {
 export function isVectorFromFile(type: CrgLayerType | undefined): boolean {
   return (
     type === CrgLayerType.DXF || type === CrgLayerType.SHP || type === CrgLayerType.TAB || type === CrgLayerType.MID
+  );
+}
+
+export function isLayerFromFile(layer: CrgLayer | NewCrgLayer): boolean {
+  return (
+    layer.type === CrgLayerType.RASTER ||
+    layer.type === CrgLayerType.MID ||
+    layer.type === CrgLayerType.TAB ||
+    layer.type === CrgLayerType.SHP ||
+    layer.type === CrgLayerType.DXF
   );
 }

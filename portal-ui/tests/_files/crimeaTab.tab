@@ -1,0 +1,14 @@
+!table
+!version 450
+!charset Neutral
+
+Definition Table
+  Type NATIVE Charset "Neutral"
+  Fields 7
+    objectid Decimal (18,0) ;
+    name Char (254) ;
+    created_at Date ;
+    last_modif Date ;
+    created_by Char (254) ;
+    updated_by Char (254) ;
+    ruleid Char (254) ;

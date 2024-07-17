@@ -48,6 +48,16 @@ Given(
     this.latestLibraryRecords = generated;
   }
 );
+Given(
+  'в библиотеке документов {string} существует документ, доступный пользователю {user}',
+  async function (this: ScenarioScope, libraryTitle: string, user: TestUser) {
+    await authenticateAs(user);
+    const library = await getDocumentsLibraryByTitle(libraryTitle);
+    const generated = await createGeneratedDocuments(1, library, user);
+
+    this.latestLibraryRecords = generated;
+  }
+);
 
 Given(
   'в библиотеке документов {string} существует документ с контент типом {string} c полем `Название` равным {string}, доступный пользователю {user}',
