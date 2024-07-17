@@ -475,23 +475,31 @@
             "title": "Перемещение документов",
             "contentUrl": "/assets/help/5dataManagement/13moveDocument/13moveDocument.html"
           },
-
           {
-            "id": "kptOrder",
-            "title": "Заказ КПТ",
-            "contentUrl": "/assets/help/5dataManagement/19kptOrder/19kptOrder.html"
-          },
-
-          {
-            "id": "importKpt",
-            "title": "Импорт КПТ",
-            "contentUrl": "/assets/help/5dataManagement/20importKpt/20importKpt.html"
-          },
-
-          {
-            "id": "massLoadingKPT",
-            "title": "Массовая загрузка КПТ из zip-архивов",
-            "contentUrl": "/assets/help/5dataManagement/26massLoadingKPT/26massLoadingKPT.html"
+            "id": "kptGroup",
+            "title": "КПТ",
+            "children": [
+              {
+                "id": "libraryKpt",
+                "title": "Библиотека «КПТ»",
+                "contentUrl": "/assets/help/5dataManagement/27libraryKpt/27libraryKpt.html"
+              },
+              {
+                "id": "massLoadingKPT",
+                "title": "Массовая загрузка КПТ из zip-архивов",
+                "contentUrl": "/assets/help/5dataManagement/26massLoadingKPT/26massLoadingKPT.html"
+              },
+              {
+                "id": "kptOrder",
+                "title": "Заказ КПТ",
+                "contentUrl": "/assets/help/5dataManagement/19kptOrder/19kptOrder.html"
+              },
+              {
+                "id": "importKpt",
+                "title": "Импорт КПТ",
+                "contentUrl": "/assets/help/5dataManagement/20importKpt/20importKpt.html"
+              }
+            ]
           }
         ]
       },
