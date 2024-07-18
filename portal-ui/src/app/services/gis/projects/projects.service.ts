@@ -19,7 +19,7 @@ import { sleep } from '../../util/sleep';
 import { CrgLayer, CrgLayersGroup } from '../layers/layers.models';
 import { getLayers } from '../layers/layers.service';
 import { projectsClient } from './projects.client';
-import { CrgProject } from './projects.models';
+import { CrgProject, NewCrgProject } from './projects.models';
 
 class ProjectsService {
   private static _instance: ProjectsService;
@@ -188,8 +188,8 @@ class ProjectsService {
     }
   }
 
-  async create(name: string): Promise<CrgProject> {
-    const result = await projectsClient.createProject(name);
+  async create(project: NewCrgProject): Promise<CrgProject> {
+    const result = await projectsClient.createProject(project);
     communicationService.projectUpdated.emit({ type: 'create', data: result });
 
     return result;
@@ -210,9 +210,11 @@ class ProjectsService {
 
   async update(project: CrgProject, patch: Partial<CrgProject>) {
     await projectsClient.updateProject(project.id, patch);
+
     if (allProjects.inited) {
       allProjects.update(project.id, patch);
     }
+
     communicationService.projectUpdated.emit({ type: 'update', data: { ...project, ...patch } });
   }
 

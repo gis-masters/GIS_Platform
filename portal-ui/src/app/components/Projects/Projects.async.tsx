@@ -149,7 +149,7 @@ export default class Projects extends Component {
     this.setBusy(true);
 
     try {
-      const newProject = await projectsService.create(name);
+      const newProject = await projectsService.create({ name });
       communicationService.allProjectsFetched.once(() => {
         communicationService.projectUpdated.emit({ type: 'create', data: newProject });
       });

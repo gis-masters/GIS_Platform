@@ -6,7 +6,7 @@ import { http } from '../../api/http.service';
 import { preparePageOptions } from '../../api/http.utils';
 import { PageOptions } from '../../models';
 import { CrgLayersGroup } from '../layers/layers.models';
-import { CrgProject } from './projects.models';
+import { CrgProject, NewCrgProject } from './projects.models';
 
 @boundClass
 class ProjectsClient extends Client {
@@ -50,8 +50,8 @@ class ProjectsClient extends Client {
     return http.getPaged<CrgProject>(this.getProjectsUrl(), { cache: { disabled: true } });
   }
 
-  async createProject(name: string): Promise<CrgProject> {
-    return http.post<CrgProject>(this.getProjectsUrl(), { name });
+  async createProject(project: NewCrgProject): Promise<CrgProject> {
+    return http.post<CrgProject>(this.getProjectsUrl(), project);
   }
 
   async updateProject(id: number, patch: Partial<CrgProject>): Promise<void> {

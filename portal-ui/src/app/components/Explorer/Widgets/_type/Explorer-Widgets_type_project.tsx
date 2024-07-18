@@ -10,7 +10,7 @@ import { permissionsClient } from '../../../../services/permissions/permissions.
 import { Role } from '../../../../services/permissions/permissions.models';
 import { currentUser } from '../../../../stores/CurrentUser.store';
 import { PermissionsWidget } from '../../../PermissionsWidget/PermissionsWidget';
-import { crgProjectSchema } from '../../../ProjectsActions/ProjectsActions';
+import { crgProjectSchema } from '../../../ProjectActions/ProjectActions';
 import { ViewContentWidget } from '../../../ViewContentWidget/ViewContentWidget';
 import { assertExplorerItemDataTypeProject } from '../../Adapter/_type/Explorer-Adapter_type_project';
 import { getId } from '../../Adapter/Explorer-Adapter';

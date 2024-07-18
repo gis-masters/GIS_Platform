@@ -1,9 +1,11 @@
 import React, { ReactNode } from 'react';
+import { Tooltip } from '@mui/material';
 import { MapOutlined } from '@mui/icons-material';
 
+import { services } from '../../../../services/services';
 import { formatDate } from '../../../../services/util/date.util';
 import { staticImplements } from '../../../../services/util/staticImplements';
-import { ProjectsActions } from '../../../ProjectsActions/ProjectsActions';
+import { ProjectActions } from '../../../ProjectActions/ProjectActions';
 import {
   Adapter,
   ExplorerItemData,
@@ -48,12 +50,32 @@ export class ExplorerAdapterTypeProject {
   }
 
   static isFolder(): boolean {
-    return false;
+    return true;
   }
 
   static getActions(item: ExplorerItemData): ReactNode {
     assertExplorerItemDataTypeProject(item);
 
-    return <ProjectsActions project={item.payload} />;
+    return <ProjectActions project={item.payload} />;
+  }
+
+  static customOpenActionIcon(): ReactNode {
+    return (
+      <Tooltip title='Открыть проект'>
+        <MapOutlined />
+      </Tooltip>
+    );
+  }
+
+  static async customOpenAction(item: ExplorerItemData): Promise<void> {
+    assertExplorerItemDataTypeProject(item);
+
+    await services.provided;
+
+    services.ngZone.run(() => {
+      setTimeout(() => {
+        void services.router.navigateByUrl(`/projects/${item.payload.id}/map`);
+      }, 0);
+    });
   }
 }

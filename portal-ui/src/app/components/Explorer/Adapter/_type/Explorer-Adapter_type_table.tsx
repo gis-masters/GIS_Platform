@@ -78,7 +78,7 @@ export class ExplorerAdapterTypeTable {
 
   static customOpenActionIcon(): ReactNode {
     return (
-      <Tooltip title='Перейти в табличный вид'>
+      <Tooltip title='Открыть'>
         <ViewListOutlined />
       </Tooltip>
     );

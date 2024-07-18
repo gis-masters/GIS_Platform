@@ -14,7 +14,8 @@ import { FormDialog } from '../../FormDialog/FormDialog';
 import { IconButton } from '../../IconButton/IconButton';
 import { TextBadge } from '../../TextBadge/TextBadge';
 
-const cnProjectActionsEdit = cn('ProjectActionsEdit', 'Edit');
+const cnProjectActionsEdit = cn('ProjectActions', 'Edit');
+const cnProjectActionsEditDialog = cn('ProjectActions', 'EditDialog');
 
 interface ProjectActionsProps {
   project: CrgProject;
@@ -43,6 +44,7 @@ export class ProjectActionsEdit extends Component<ProjectActionsProps> {
 
         <FormDialog<Partial<CrgProject>>
           open={this.dialogOpen}
+          className={cnProjectActionsEditDialog()}
           schema={schema}
           value={project}
           actionFunction={this.updateDocumentPage}

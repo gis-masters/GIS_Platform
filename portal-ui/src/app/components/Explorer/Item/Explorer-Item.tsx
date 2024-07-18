@@ -10,6 +10,7 @@ import { ExplorerItemData } from '../Explorer.models';
 import { ExplorerStore } from '../Explorer.store';
 
 import '!style-loader!css-loader!sass-loader!./Explorer-Item.scss';
+import '!style-loader!css-loader!sass-loader!../ItemTitle/Explorer-ItemTitle.scss';
 
 const cnExplorerItem = cn('Explorer', 'Item');
 const cnExplorerItemTitle = cn('Explorer', 'ItemTitle');

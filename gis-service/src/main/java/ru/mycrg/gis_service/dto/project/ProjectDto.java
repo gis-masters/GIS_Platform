@@ -7,7 +7,7 @@ public class ProjectDto {
     @Size(max = 2048, message = "Не более 2048 символов")
     protected String description;
 
-    @Size(min = 1, max = 200, message = "bbox ожидается в формате: [3788517, 5579665, 3848968, 5614937]")
+    @Size(max = 200, message = "bbox ожидается в формате: [3788517, 5579665, 3848968, 5614937]")
     protected String bbox;
 
     protected boolean isDefault;

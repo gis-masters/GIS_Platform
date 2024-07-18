@@ -183,6 +183,10 @@ Given('я на странице `Наборы данных` в управлен�
   await dataManagementPage.openDatasetRootPage();
 });
 
+Given('я на странице `Проекты` в управлении данными', async () => {
+  await dataManagementPage.openProjectRootPage();
+});
+
 Given('я на странице `Схемы данных` в управлении данными', async () => {
   await dataManagementPage.openSchemasRootPage();
 });

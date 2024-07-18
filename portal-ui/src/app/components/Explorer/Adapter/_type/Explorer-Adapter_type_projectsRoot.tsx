@@ -7,6 +7,7 @@ import { CrgProject } from '../../../../services/gis/projects/projects.models';
 import { projectsService } from '../../../../services/gis/projects/projects.service';
 import { PageOptions, SortOrder } from '../../../../services/models';
 import { staticImplements } from '../../../../services/util/staticImplements';
+import { CreateProject } from '../../../CreateProject/CreateProject';
 import { Adapter, ExplorerItemData, ExplorerItemType, SortItem } from '../../Explorer.models';
 import { ExplorerService } from '../../Explorer.service';
 import { ExplorerStore } from '../../Explorer.store';
@@ -112,5 +113,13 @@ export class ExplorerAdapterTypeProjectsRoot {
 
   static getRefreshEmitters(): Emitter<DataChangeEventDetail<CrgProject>>[] {
     return [communicationService.projectUpdated];
+  }
+
+  static getToolbarActions(item: ExplorerItemData, store: ExplorerStore): ReactNode {
+    const handleCreate = (record: CrgProject) => {
+      store.selectItem({ payload: record, type: ExplorerItemType.PROJECT });
+    };
+
+    return <CreateProject onCreate={handleCreate} />;
   }
 }

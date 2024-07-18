@@ -3,6 +3,6 @@ import { CrgProject } from '../../../../src/app/services/gis/projects/projects.m
 import { TestUser } from '../auth/testUsers';
 import { requestAs } from '../requestAs';
 
-export async function createProjectAs(user: TestUser, title: string): Promise<CrgProject> {
-  return await requestAs(user, projectsClient.createProject, title);
+export async function createProjectAs(user: TestUser, name: string): Promise<CrgProject> {
+  return await requestAs(user, projectsClient.createProject, { name });
 }

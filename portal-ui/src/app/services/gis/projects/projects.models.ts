@@ -27,3 +27,5 @@ export interface CrgProject {
   createdAt?: string;
   role: Role;
 }
+
+export type NewCrgProject = Pick<CrgProject, 'name' | 'description' | 'bbox'>;

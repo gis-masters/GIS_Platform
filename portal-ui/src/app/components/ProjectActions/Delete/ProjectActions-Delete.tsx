@@ -20,6 +20,7 @@ import { projectsService } from '../../../services/gis/projects/projects.service
 import { Button } from '../../Button/Button';
 
 const cnProjectActionsDelete = cn('ProjectActions', 'Delete');
+const cnProjectActionsDeleteDialog = cn('ProjectActions', 'DeleteDialog');
 
 interface ProjectActionsDeleteProps {
   project: CrgProject;
@@ -51,7 +52,7 @@ export class ProjectActionsDelete extends Component<ProjectActionsDeleteProps> {
           </IconButton>
         </Tooltip>
 
-        <Dialog open={this.dialogOpen} onClose={this.closeDialog}>
+        <Dialog open={this.dialogOpen} className={cnProjectActionsDeleteDialog()} onClose={this.closeDialog}>
           <DialogTitle>Подтверждение удаления</DialogTitle>
           <DialogContent>
             <DialogContentText>Вы действительно хотите удалить "{project.name}"?</DialogContentText>

@@ -9,9 +9,9 @@ import { currentUser } from '../../stores/CurrentUser.store';
 import { ProjectActionsDelete } from './Delete/ProjectActions-Delete';
 import { ProjectActionsEdit } from './Edit/ProjectActions-Edit';
 
-const cnProjectsActions = cn('ProjectsActions');
+const cnProjectActions = cn('ProjectActions');
 
-interface ProjectsActionsProps {
+interface ProjectActionsProps {
   project: CrgProject;
 }
 
@@ -20,6 +20,7 @@ export const crgProjectSchema: SimpleSchema = {
     {
       name: 'name',
       title: 'Название',
+      required: true,
       propertyType: PropertyType.STRING
     },
     {
@@ -30,13 +31,24 @@ export const crgProjectSchema: SimpleSchema = {
     {
       name: 'bbox',
       title: 'Bbox',
+      description: (
+        <>
+          BBox (bounding box) для картографического слоя в метрах — это прямоугольная область, которая определяет
+          границы проекта на карте. Она указывается в метрах и содержит координаты минимального и максимального значений
+          по осям X и Y.
+          <br />
+          Пример заполнения:
+          <br />
+          [4336548,5630738,4337222,5632892]
+        </>
+      ),
       propertyType: PropertyType.STRING
     }
   ]
 };
 
-export const ProjectsActions: FC<ProjectsActionsProps> = observer(({ project }) => (
-  <div className={cnProjectsActions()}>
+export const ProjectActions: FC<ProjectActionsProps> = observer(({ project }) => (
+  <div className={cnProjectActions()}>
     {(currentUser.isAdmin || project.role === Role.OWNER) && (
       <>
         <ProjectActionsEdit project={project} schema={crgProjectSchema} />
