@@ -21,6 +21,9 @@ import { getDefaultValues } from '../Form/Form.utils';
 
 import '!style-loader!css-loader!sass-loader!./FormDialog.scss';
 
+// избавиться от schemaId в задаче #2268
+const validateExceptions = new Set(['role', 'schemaId']);
+
 const cnFormDialog = cn('FormDialog');
 
 export interface FormDialogProps<T> extends IClassNameProps {
@@ -59,8 +62,10 @@ export class FormDialog<T> extends Component<FormDialogProps<T>> {
     makeObservable(this);
   }
 
-  componentDidMount(): void {
-    this.initialFormValue = cloneDeep(this.props.value);
+  componentDidMount() {
+    const value = cloneDeep(this.props.value);
+
+    this.initialFormValue = value;
   }
 
   componentDidUpdate() {
@@ -185,7 +190,7 @@ export class FormDialog<T> extends Component<FormDialogProps<T>> {
       return;
     }
 
-    if (this.props.closeWithConfirm && !isEqual(this.actualFormValue, this.initialFormValue)) {
+    if (this.props.closeWithConfirm && !this.isValueNotChanged(this.initialFormValue, this.actualFormValue)) {
       const confirmed = await konfirmieren({
         message: 'Все несохраненные данные будут утеряны.',
         okText: 'Всё равно закрыть',
@@ -218,8 +223,58 @@ export class FormDialog<T> extends Component<FormDialogProps<T>> {
     const { onFormChange } = this.props;
 
     this.actualFormValue = changedValue;
-    if (onFormChange) {
-      onFormChange(changedValue);
+
+    onFormChange?.(changedValue);
+  }
+
+  private isValueNotChanged(
+    initValue: Record<string, unknown> | undefined,
+    actualValue: Record<string, unknown>
+  ): boolean {
+    const result = isEqual(initValue, actualValue);
+
+    if (result) {
+      return true;
     }
+    const actualKeys = Object.keys(actualValue);
+
+    if (!actualKeys.length) {
+      return true;
+    }
+
+    const initialKeys = initValue && typeof initValue === 'object' ? Object.keys(initValue) : [];
+    const actualValues = Object.values(actualValue);
+
+    if (!initialKeys?.length && actualValues.every(item => item === undefined || item === null)) {
+      return true;
+    }
+
+    return Object.entries(actualValue).every(([key, value]) => {
+      const initialFieldValue = initValue?.[key];
+      const defaultFormValue = getDefaultValues<Record<string, unknown>>(this.props.schema.properties);
+      const property = this.props.schema.properties.find(({ name }) => name === key);
+
+      if (this.isEmptyValue(value) && this.isEmptyValue(initialFieldValue)) {
+        return true;
+      }
+      if (defaultFormValue[key] === value && this.isEmptyValue(initialFieldValue)) {
+        return true;
+      }
+      if (Array.isArray(value) && Array.isArray(initialFieldValue)) {
+        return isEqual(initialFieldValue, value);
+      }
+      if (property?.calculatedValueFormula || property?.calculatedValueWellKnownFormula) {
+        return true;
+      }
+      if (validateExceptions.has(key)) {
+        return true;
+      }
+
+      return initialFieldValue === value;
+    });
+  }
+
+  private isEmptyValue(value: unknown): boolean {
+    return value === undefined || value === null || (Array.isArray(value) && !value.length);
   }
 }
