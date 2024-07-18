@@ -4,11 +4,13 @@ import { Block } from '../../Block';
 
 export class MuiInputBlock extends Block {
   selectors = {
-    container: '.MuiInputBase-input'
+    container: '.MuiInputBase-root',
+    input: '.MuiInputBase-input',
+    icon: '.MuiSvgIcon-colorWarning'
   };
 
   async clearValue(): Promise<void> {
-    const $input = await this.$('container');
+    const $input = await this.$('input');
     await $input.moveTo();
     await $input.click();
     await browser.keys([Key.Ctrl, 'a']);
@@ -16,13 +18,20 @@ export class MuiInputBlock extends Block {
   }
 
   async setValue(value: string): Promise<void> {
-    const $input = await this.$('container');
+    const $input = await this.$('input');
     await $input.setValue(value);
   }
 
   async getValue(): Promise<string> {
-    const $input = await this.$('container');
+    const $input = await this.$('input');
 
     return await $input.getValue();
+  }
+
+  async hasWarningIcon(): Promise<boolean> {
+    const $container = await this.$('container');
+    const $warning = await $container.$(this.selectors.icon);
+
+    return await $warning.isDisplayed();
   }
 }

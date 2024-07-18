@@ -43,9 +43,11 @@ export const EditFeatureNavigation: FC = observer(() => {
         currentIndex >= 0 && (
           <div className={cnEditFeatureNavigation()}>
             <Tooltip title='Предыдущий объект'>
-              <IconButton disabled={!sidebars.memorizedViewFeatures || currentIndex === 0} onClick={prevHandler}>
-                <ArrowBackIos />
-              </IconButton>
+              <span className={cnEditFeatureNavigation('Wrap')}>
+                <IconButton disabled={!sidebars.memorizedViewFeatures || currentIndex === 0} onClick={prevHandler}>
+                  <ArrowBackIos />
+                </IconButton>
+              </span>
             </Tooltip>
             <span className={cnEditFeatureNavigation('FeaturesInfo')}>
               {currentIndex + 1}
@@ -53,12 +55,16 @@ export const EditFeatureNavigation: FC = observer(() => {
               {sidebars.memorizedViewFeatures.length}
             </span>
             <Tooltip title='Следующий объект'>
-              <IconButton
-                disabled={!sidebars.memorizedViewFeatures || currentIndex + 1 === sidebars.memorizedViewFeatures.length}
-                onClick={nextHandler}
-              >
-                <ArrowForwardIos />
-              </IconButton>
+              <span className={cnEditFeatureNavigation('Wrap')}>
+                <IconButton
+                  disabled={
+                    !sidebars.memorizedViewFeatures || currentIndex + 1 === sidebars.memorizedViewFeatures.length
+                  }
+                  onClick={nextHandler}
+                >
+                  <ArrowForwardIos />
+                </IconButton>
+              </span>
             </Tooltip>
           </div>
         )}

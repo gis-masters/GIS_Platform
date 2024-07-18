@@ -1,14 +1,24 @@
 import React, { Component } from 'react';
+import { action } from 'mobx';
 import { observer } from 'mobx-react';
 import { Tooltip } from '@mui/material';
 import { cn } from '@bem-react/classname';
+import { polygon } from '@turf/turf';
 import { boundMethod } from 'autobind-decorator';
 import { Geometry, SimpleGeometry } from 'ol/geom';
 
 import { Emitter } from '../../services/common/Emitter';
+import { communicationService } from '../../services/communication.service';
+import { DEFAULT_OL_PROJECTION } from '../../services/data/projections/projections.models';
+import { getProjectionByCode } from '../../services/data/projections/projections.service';
 import { transformGeometry } from '../../services/data/projections/projections.util';
+import { recalculateBboxAndGetCoverage } from '../../services/geoserver/coverages/coverages.service';
+import { recalculateBboxAndGetFeatureType } from '../../services/geoserver/featureType/featureType.service';
 import { GeometryType, supportedGeometryTypes, WfsGeometry } from '../../services/geoserver/wfs/wfs.models';
+import { CrgLayerType, CrgVectorLayer } from '../../services/gis/layers/layers.models';
+import { isVectorFromFile } from '../../services/gis/layers/layers.utils';
 import { mapService } from '../../services/map/map.service';
+import { notFalsyFilter } from '../../services/util/NotFalsyFilter';
 import { EditFeatureGeometryStore } from '../../stores/EditFeatureGeometry.store';
 import { projectionsStore } from '../../stores/Projections.store';
 import { FeatureIcon } from '../FeatureIcon/FeatureIcon';
@@ -21,6 +31,8 @@ import { EditFeatureGeometryView } from './View/EditFeatureGeometry-View.compose
 
 import '!style-loader!css-loader!sass-loader!./EditFeatureGeometry.scss';
 
+const defaultEPSG = `${DEFAULT_OL_PROJECTION.authName}:${DEFAULT_OL_PROJECTION.srid}`;
+
 const cnEditFeatureGeometry = cn('EditFeatureGeometry');
 
 export interface EditFeatureGeometryProps {
@@ -30,11 +42,15 @@ export interface EditFeatureGeometryProps {
 
 @observer
 export default class EditFeatureGeometry extends Component<EditFeatureGeometryProps> {
-  componentDidMount() {
+  async componentDidMount() {
+    await this.updateExtent();
+
     mapService.modificationDone.on(this.handleModify, this);
+    communicationService.featuresUpdated.on(this.updateExtent, this);
   }
 
   componentWillUnmount() {
+    communicationService.off(this);
     Emitter.scopeOff(this);
   }
 
@@ -97,6 +113,52 @@ export default class EditFeatureGeometry extends Component<EditFeatureGeometryPr
         : geometry?.coordinates;
 
     setGeometry({ ...geometry, coordinates } as WfsGeometry);
+  }
+
+  @action
+  private async updateExtent() {
+    const { store } = this.props;
+
+    if (!store.layer) {
+      return;
+    }
+
+    const { layer } = store;
+
+    const { nativeBoundingBox } =
+      layer.type === CrgLayerType.VECTOR || isVectorFromFile(layer.type)
+        ? await recalculateBboxAndGetFeatureType(layer as CrgVectorLayer)
+        : await recalculateBboxAndGetCoverage(layer);
+
+    const { minx, miny, maxx, maxy, crs } = nativeBoundingBox;
+    const crsStringValue = typeof crs === 'string' ? crs : crs.$;
+
+    let polygonCoordinates = [
+      [minx - 200_000, miny - 200_000],
+      [minx - 200_000, maxy + 200_000],
+      [maxx + 200_000, maxy + 200_000],
+      [maxx + 200_000, miny - 200_000],
+      [minx - 200_000, miny - 200_000]
+    ];
+
+    if (crsStringValue !== defaultEPSG) {
+      const currentProjection = await getProjectionByCode(crsStringValue);
+      const defaultProjection = await getProjectionByCode(defaultEPSG);
+
+      const features: WfsGeometry[] = polygonCoordinates.map(item => ({
+        type: GeometryType.POINT,
+        coordinates: item
+      }));
+
+      if (currentProjection && defaultProjection) {
+        polygonCoordinates = features
+          .map(item => transformGeometry(item, currentProjection, defaultProjection))
+          .map(item => item?.coordinates.map(Number))
+          .filter(notFalsyFilter);
+      }
+    }
+
+    store.setLayerExtent(polygon([polygonCoordinates]));
   }
 
   private getFeatureIconGeometryType(geometryType: GeometryType): string | undefined {

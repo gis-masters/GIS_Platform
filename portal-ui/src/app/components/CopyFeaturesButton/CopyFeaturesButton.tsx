@@ -117,6 +117,7 @@ export class CopyFeaturesButton extends Component<CopyFeaturesButtonProps> {
       if (!selectedProjection) {
         throw new Error(`Не найдена проекция "${selectedLayer.nativeCRS}" для слоя "${selectedLayer.title}"`);
       }
+
       const currentProjection = await getProjectionByCode(layer.nativeCRS);
       if (!currentProjection) {
         throw new Error(`Не найдена проекция "${layer.nativeCRS}" для слоя "${layer.title}"`);

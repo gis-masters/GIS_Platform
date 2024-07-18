@@ -5,22 +5,26 @@ class EditFeatureGeometryBlock extends Block {
   selectors = {
     container: '.EditFeatureGeometry',
     coord: '.EditFeatureGeometry-Coord',
-    coordInput: '.EditFeatureGeometry-CoordInput'
+    coordInput: '.EditFeatureGeometry-CoordInput',
+    warningIcon: '.MuiSvgIcon-colorWarning'
   };
 
-  async changeFormInputValue(fieldNumber: number, fieldType: 'X' | 'Y', value: string): Promise<void> {
-    const $formInput = await this.getFormInputByNumberAndType(fieldNumber, fieldType);
+  async changeFormInputValue(fieldNumber: number, value: string): Promise<void> {
+    const $formInput = await this.getFormInputByNumber(fieldNumber);
     await $formInput.clearValue();
     await $formInput.setValue(value);
   }
 
-  async getFormInputByNumberAndType(fieldNumber: number, fieldType: 'X' | 'Y'): Promise<MuiInputBlock> {
-    const $coords = await this.$$('coord');
-    const $coord = $coords[fieldNumber - 1];
-    const $coordInputs = await $coord.$$(this.selectors.coordInput);
-    const $coordInput = $coordInputs[fieldType === 'X' ? 0 : 1];
+  async getFormInputByNumber(fieldNumber: number): Promise<MuiInputBlock> {
+    const $$coords = await this.$$('coord');
 
-    return new MuiInputBlock($coordInput);
+    return new MuiInputBlock($$coords[fieldNumber - 1]);
+  }
+
+  async hasWarningInInput(fieldNumber: number): Promise<boolean> {
+    const inputRoot = await this.getFormInputByNumber(fieldNumber);
+
+    return await inputRoot.hasWarningIcon();
   }
 }
 

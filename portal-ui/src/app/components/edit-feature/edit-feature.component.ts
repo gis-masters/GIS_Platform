@@ -45,6 +45,7 @@ import { FeaturePropertyValidators } from '../../services/util/FeaturePropertyVa
 import { calculateValues } from '../../services/util/form/formValidation.utils';
 import { fromMobx } from '../../services/util/fromMobx';
 import { sleep } from '../../services/util/sleep';
+import { konfirmieren } from '../../services/utility-dialogs.service';
 import { currentProject } from '../../stores/CurrentProject.store';
 import { EditFeatureGeometryStore } from '../../stores/EditFeatureGeometry.store';
 import { mapStore } from '../../stores/Map.store';
@@ -253,6 +254,10 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
         this.isGeometryChanged = false;
         this.updatingAllowed = !!this.layer && (await isUpdateAllowed(this.layer));
 
+        if (this.layer) {
+          this.editGeometryStore.setLayer(this.layer);
+        }
+
         if (
           this.updatingAllowed &&
           this.mode === EditFeatureMode.single &&
@@ -357,6 +362,28 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
   }
 
   async editFeature(): Promise<void> {
+    await (this.editGeometryStore.hasGeometryWarning
+      ? this.editFeatureWithConfirm()
+      : this.editFeatureWithoutConfirm());
+  }
+
+  async editFeatureWithConfirm(): Promise<void> {
+    const feature = sidebars.editFeaturesData?.features[0];
+
+    if (feature) {
+      await mapService.positionToFeature(feature);
+    }
+
+    if (
+      await konfirmieren({
+        message: 'Точки геометрии, выходят за рамки слоя. Вы уверенны, что хотите внести изменения в геометрию?'
+      })
+    ) {
+      await this.editFeatureWithoutConfirm();
+    }
+  }
+
+  async editFeatureWithoutConfirm(): Promise<void> {
     if (this.isNew && !this.isGeometryValid) {
       this.selectedTab = Number(!this.isGeometryValid);
 

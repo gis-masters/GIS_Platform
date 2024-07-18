@@ -1,17 +1,22 @@
 import React, { Component } from 'react';
-import { action, makeObservable } from 'mobx';
+import { action, computed, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import TextField from '@mui/material/TextField';
+import { OutlinedInput, Tooltip } from '@mui/material';
+import { WarningAmberOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
+import { booleanPointInPolygon, point } from '@turf/turf';
 import { boundMethod } from 'autobind-decorator';
 import { Feature } from 'ol';
 import { SimpleGeometry } from 'ol/geom';
 
+import { DEFAULT_OL_PROJECTION, Projection } from '../../../services/data/projections/projections.models';
+import { getProjectionByCode } from '../../../services/data/projections/projections.service';
 import { transformGeometry } from '../../../services/data/projections/projections.util';
 import { CoordinateEdited, GeometryType, WfsFeature, WfsGeometry } from '../../../services/geoserver/wfs/wfs.models';
 import { isDimensionValid, isGeometryValid } from '../../../services/geoserver/wfs/wfs.util';
 import { mapService } from '../../../services/map/map.service';
 import { wfsFeatureToFeature } from '../../../services/util/open-layers.util';
+import { isNumberArray } from '../../../services/util/typeGuards/isNumberArray';
 import { EditFeatureGeometryStore } from '../../../stores/EditFeatureGeometry.store';
 import { projectionsStore } from '../../../stores/Projections.store';
 import { Toast } from '../../Toast/Toast';
@@ -20,6 +25,8 @@ import { EditFeatureGeometryCoordDel } from '../CoordDel/EditFeatureGeometry-Coo
 import '!style-loader!css-loader!sass-loader!./EditFeatureGeometry-Coord.scss';
 import '!style-loader!css-loader!sass-loader!../CoordInput/EditFeatureGeometry-CoordInput.scss';
 import '!style-loader!css-loader!sass-loader!../CoordNumber/EditFeatureGeometry-CoordNumber.scss';
+
+const warningText = 'Внимание. Заданная координата может выходить за рамки имеющегося слоя';
 
 const cnEditFeatureGeometry = cn('EditFeatureGeometry');
 
@@ -38,10 +45,19 @@ interface EditFeatureGeometryCoordProps {
 @observer
 export class EditFeatureGeometryCoord extends Component<EditFeatureGeometryCoordProps> {
   private focusedPointMarker?: Feature<SimpleGeometry>;
+  @observable private defaultProjection?: Projection;
 
   constructor(props: EditFeatureGeometryCoordProps) {
     super(props);
     makeObservable(this);
+  }
+
+  async componentDidMount(): Promise<void> {
+    const projection = await getProjectionByCode(`${DEFAULT_OL_PROJECTION.authName}:${DEFAULT_OL_PROJECTION.srid}`);
+
+    if (projection) {
+      this.setDefaultProjection(projection);
+    }
   }
 
   render() {
@@ -52,26 +68,40 @@ export class EditFeatureGeometryCoord extends Component<EditFeatureGeometryCoord
       <div className={cnEditFeatureGeometry('Coord', { withControls, active })}>
         {withControls ? <div className={cnEditFeatureGeometry('CoordNumber')}>{(index || 0) + 1}</div> : null}
 
-        <TextField
+        <OutlinedInput
           className={cnEditFeatureGeometry('CoordInput', { d: 'x' })}
           value={val[1]}
           error={!isDimensionValid(val[1])}
+          color={this.warning ? 'warning' : undefined}
+          endAdornment={
+            this.warning ? (
+              <Tooltip title={warningText}>
+                <WarningAmberOutlined color='warning' />
+              </Tooltip>
+            ) : undefined
+          }
           onChange={this.handleChangeY}
           onFocus={this.handleInputFocus}
           onBlur={this.handleInputBlur}
           disabled={disabled}
-          variant='outlined'
         />
 
-        <TextField
+        <OutlinedInput
           className={cnEditFeatureGeometry('CoordInput', { d: 'y' })}
           value={val[0]}
           error={!isDimensionValid(val[0])}
+          color={this.warning ? 'warning' : undefined}
+          endAdornment={
+            this.warning ? (
+              <Tooltip title={warningText}>
+                <WarningAmberOutlined color='warning' />
+              </Tooltip>
+            ) : undefined
+          }
           onChange={this.handleChangeX}
           onFocus={this.handleInputFocus}
           onBlur={this.handleInputBlur}
           disabled={disabled}
-          variant='outlined'
         />
 
         {withControls ? (
@@ -79,6 +109,49 @@ export class EditFeatureGeometryCoord extends Component<EditFeatureGeometryCoord
         ) : null}
       </div>
     );
+  }
+
+  @computed
+  private get warning(): boolean {
+    const {
+      store: { layer, currentProjection, layerExtent },
+      val
+    } = this.props;
+
+    if (!layer || !currentProjection || !layerExtent || !this.defaultProjection) {
+      return false;
+    }
+
+    let cloneVal = val.map(Number);
+
+    if (!isNumberArray(cloneVal) || cloneVal.some(item => Number.isNaN(item))) {
+      //ошибку подсвечивает isDimensionValid(val)
+
+      return false;
+    }
+
+    if (currentProjection.authSrid !== DEFAULT_OL_PROJECTION.srid && currentProjection && this.defaultProjection) {
+      const geometry = transformGeometry(
+        { type: GeometryType.POINT, coordinates: cloneVal },
+        currentProjection,
+        this.defaultProjection
+      );
+      if (geometry) {
+        cloneVal = geometry.coordinates.map(Number);
+      }
+    }
+
+    const checkPoint = point(cloneVal);
+    const isPointInPolygon = booleanPointInPolygon(checkPoint, layerExtent);
+
+    this.props.store.setGeometryWarning(!isPointInPolygon);
+
+    return !isPointInPolygon;
+  }
+
+  @action
+  private setDefaultProjection(projection: Projection): void {
+    this.defaultProjection = projection;
   }
 
   @action.bound

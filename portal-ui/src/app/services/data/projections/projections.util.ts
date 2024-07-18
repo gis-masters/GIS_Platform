@@ -1,7 +1,3 @@
-/* eslint-disable no-useless-escape */
-/* eslint-disable regexp/no-useless-escape */
-/* eslint-disable regexp/no-unused-capturing-group */
-/* eslint-disable unicorn/better-regex */
 import { chunk, cloneDeep, isEqual } from 'lodash';
 import { Coordinate } from 'ol/coordinate';
 import { Extent } from 'ol/extent';
@@ -211,9 +207,9 @@ export function projectionUnit(proj: string): string {
 }
 
 export function getProjectionTitle(proj: string): string {
-  const projcsRegex = /PROJCS\["([A-Z][\w \/-]+)",/;
-  const geogcsRegex = /GEOGCS\["([A-Z][\w \/-]+)",/;
-  const unknownRegex = /\["([A-Z][\w \/\(\)-]+)",/;
+  const projcsRegex = /PROJCS\["([^"]+)",/;
+  const geogcsRegex = /GEOGCS\["([^"]+)",/;
+  const unknownRegex = /\["([^"]+)",/;
 
   const extractTitle = (regex: RegExp): string | null => {
     const match = proj.match(regex);

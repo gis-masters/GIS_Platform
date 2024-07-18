@@ -9,3 +9,9 @@ When('в появившемся диалоговом окне подтвержд
 Then('отобразилось диалоговое окно', async () => {
   await utilityDialogBlock.waitForVisible();
 });
+
+Then('отобразилось диалоговое окно с текстом {string}', async (content: string) => {
+  const result = await utilityDialogBlock.getTextFromDialog();
+
+  await expect(result).toBe(content);
+});

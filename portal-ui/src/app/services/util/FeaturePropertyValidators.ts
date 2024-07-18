@@ -137,6 +137,10 @@ export class FeaturePropertyValidators {
           //иначе сыпятся ошибки в консоли
           break;
         }
+        case ValueType.URL: {
+          //иначе сыпятся ошибки в консоли
+          break;
+        }
         default: {
           console.error('Unsupported ValueType:', propertySchema.valueType);
 
