@@ -4,10 +4,10 @@ import { observer } from 'mobx-react';
 import { withBemMod } from '@bem-react/core';
 
 import { communicationService, DataChangeEventDetail } from '../../../../services/communication.service';
-import { permissionsClient } from '../../../../services/data/permissions/permissions.client';
-import { Role } from '../../../../services/data/permissions/permissions.models';
 import { VectorTable, vectorTableSchema } from '../../../../services/data/vectorData/vectorData.models';
 import { getVectorTable } from '../../../../services/data/vectorData/vectorData.service';
+import { permissionsClient } from '../../../../services/permissions/permissions.client';
+import { Role } from '../../../../services/permissions/permissions.models';
 import { currentUser } from '../../../../stores/CurrentUser.store';
 import { ConnectionsTableToProjectsWidget } from '../../../ConnectionsTableToProjectsWidget/ConnectionsTableToProjectsWidget';
 import { PermissionsWidget } from '../../../PermissionsWidget/PermissionsWidget';

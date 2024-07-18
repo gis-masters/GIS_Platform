@@ -7,7 +7,6 @@ import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 import { pluralize } from 'numeralize-ru';
 
-import { isUpdateAllowed } from '../../../services/data/permissions/permissions.service';
 import { deleteFeatures } from '../../../services/data/vectorData/vectorData.service';
 import { WfsFeature } from '../../../services/geoserver/wfs/wfs.models';
 import { CrgVectorableLayer, isVectorLayer } from '../../../services/gis/layers/layers.models';
@@ -15,6 +14,7 @@ import { MapSelectionTypes } from '../../../services/map/map.models';
 import { mapService } from '../../../services/map/map.service';
 import { mapSelectionService } from '../../../services/map/map-selection.service';
 import { PageOptions } from '../../../services/models';
+import { isUpdateAllowed } from '../../../services/permissions/permissions.service';
 import { featuresCollectionPrintTemplates } from '../../../services/print/print.service';
 import { mapStore } from '../../../stores/Map.store';
 import { EditFeatureMode, sidebars } from '../../../stores/Sidebars.store';

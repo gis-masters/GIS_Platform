@@ -6,12 +6,15 @@ import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
 import { communicationService } from '../../services/communication.service';
+import { Dataset, VectorTable } from '../../services/data/vectorData/vectorData.models';
+import { tablesEqual } from '../../services/data/vectorData/vectorData.util';
+import { CrgProject } from '../../services/gis/projects/projects.models';
 import {
   PermissionsListItem,
+  PermissionType,
   PrincipalType,
-  projectRoles,
   RoleAssignmentBody
-} from '../../services/data/permissions/permissions.models';
+} from '../../services/permissions/permissions.models';
 import {
   addDatasetPermission,
   addProjectPermission,
@@ -19,10 +22,8 @@ import {
   removeDatasetPermission,
   removeProjectPermission,
   removeTablePermission
-} from '../../services/data/permissions/permissions.service';
-import { Dataset, VectorTable } from '../../services/data/vectorData/vectorData.models';
-import { tablesEqual } from '../../services/data/vectorData/vectorData.util';
-import { CrgProject } from '../../services/gis/projects/projects.models';
+} from '../../services/permissions/permissions.service';
+import { getRolesByPermissionsListItemType } from '../../services/permissions/permissions.utils';
 import { allPermissions } from '../../stores/AllPermissions.store';
 import { Button } from '../Button/Button';
 import { Loading } from '../Loading/Loading';
@@ -371,10 +372,12 @@ export class PermissionsListDialog extends Component<PermissionsListProps> {
 
   @action
   private handleProjectAdd(items: PermissionsListItem<CrgProject>[]) {
+    const roles = getRolesByPermissionsListItemType(this.activeTab);
+
     items.forEach(item => {
       item.permissions.forEach(permission => {
-        if (!projectRoles.includes(permission.role)) {
-          permission.role = projectRoles[0];
+        if (!roles.includes(permission.role)) {
+          permission.role = roles[0];
         }
       });
     });
@@ -507,7 +510,7 @@ export class PermissionsListDialog extends Component<PermissionsListProps> {
         onChange={this.handleProjectRolesChange}
         principalId={principalId}
         principalType={principalType}
-        listItemType={PermissionsListItemType.PROJECT}
+        permissionType={PermissionType.GIS}
       />
     );
   }
@@ -529,7 +532,7 @@ export class PermissionsListDialog extends Component<PermissionsListProps> {
         onChange={this.handleTableRolesChange}
         principalId={principalId}
         principalType={principalType}
-        listItemType={PermissionsListItemType.TABLE}
+        permissionType={PermissionType.DATA}
       />
     );
   }
@@ -549,7 +552,7 @@ export class PermissionsListDialog extends Component<PermissionsListProps> {
         onChange={this.handleDatasetRolesChange}
         principalId={principalId}
         principalType={principalType}
-        listItemType={PermissionsListItemType.DATASET}
+        permissionType={PermissionType.DATA}
       />
     );
   }

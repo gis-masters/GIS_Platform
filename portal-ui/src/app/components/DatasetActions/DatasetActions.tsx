@@ -4,9 +4,9 @@ import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { isEqual } from 'lodash';
 
-import { Role } from '../../services/data/permissions/permissions.models';
 import { Dataset } from '../../services/data/vectorData/vectorData.models';
 import { getDataset } from '../../services/data/vectorData/vectorData.service';
+import { Role } from '../../services/permissions/permissions.models';
 import { currentUser } from '../../stores/CurrentUser.store';
 import { DatasetActionsAddToProject } from './AddToProject/DatasetActions-AddToProject';
 import { DatasetActionsDelete } from './Delete/DatasetActions-Delete';

@@ -1,8 +1,8 @@
 import { debounce, DebouncedFunc } from 'lodash';
 
-import { allPermissions } from '../../../stores/AllPermissions.store';
-import { communicationService } from '../../communication.service';
-import { projectsService } from '../../gis/projects/projects.service';
+import { allPermissions } from '../../stores/AllPermissions.store';
+import { communicationService } from '../communication.service';
+import { projectsService } from '../gis/projects/projects.service';
 import { permissionsClient } from './permissions.client';
 
 class AllPermissionsService {

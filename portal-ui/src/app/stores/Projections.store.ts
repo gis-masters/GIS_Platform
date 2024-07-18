@@ -1,7 +1,7 @@
 import { action, computed, makeObservable, observable } from 'mobx';
 
-import { isProjection, Projection } from '../services/data/projections/projections.models';
-import { isStringArray } from '../services/util/typeGuards/isStringArray';
+import { Projection } from '../services/data/projections/projections.models';
+import { mapToProjections } from '../services/util/projectionMapper';
 import { organizationSettings } from './OrganizationSettings.store';
 
 class ProjectionsStore {
@@ -18,33 +18,14 @@ class ProjectionsStore {
 
   @computed
   get defaultProjection(): Projection | undefined {
-    let defaultProjection = organizationSettings.orgSettings?.organization?.default_epsg;
-    defaultProjection = isStringArray(defaultProjection) ? defaultProjection[0] : defaultProjection;
+    const defaultProjectionTitle = organizationSettings.orgSettings?.organization?.default_epsg;
 
-    return this.favoriteProjections?.find(({ title }) => title === defaultProjection);
+    return this.favoriteProjections?.find(({ title }) => title === defaultProjectionTitle);
   }
 
   @computed
   get favoriteProjections(): Projection[] {
-    const projection = organizationSettings.orgSettings?.organization?.favorites_epsg;
-
-    if (isStringArray(projection)) {
-      return projection.map(item => {
-        try {
-          const parsedItem = JSON.parse(item) as unknown;
-
-          if (!isProjection(parsedItem)) {
-            throw new Error('Система координат не является проекцией');
-          }
-
-          return parsedItem;
-        } catch {
-          throw new Error(`Не удалось "прочитать" систему координат + ${item}`);
-        }
-      });
-    }
-
-    return [];
+    return mapToProjections(organizationSettings.orgSettings?.organization?.favorites_epsg);
   }
 
   @action

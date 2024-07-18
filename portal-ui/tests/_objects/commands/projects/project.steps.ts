@@ -1,14 +1,14 @@
 import { faker } from '@faker-js/faker';
 import { Given, Then } from '@wdio/cucumber-framework';
 
-import { createProjectAs } from './createProjectAs';
+import { CrgProject } from '../../../../src/app/services/gis/projects/projects.models';
+import { PrincipalType, Role } from '../../../../src/app/services/permissions/permissions.models';
 import { ScenarioScope } from '../../ScenarioScope';
 import { getUserByEmail } from '../auth/getUserByEmail';
 import { TestUser } from '../auth/testUsers';
-import { deleteAllProjects } from './deleteAllProjects';
 import { addProjectPermissionForUser } from './addProjectPermissions';
-import { PrincipalType, Role } from '../../../../src/app/services/data/permissions/permissions.models';
-import { CrgProject } from '../../../../src/app/services/gis/projects/projects.models';
+import { createProjectAs } from './createProjectAs';
+import { deleteAllProjects } from './deleteAllProjects';
 import { getProjectByTitle } from './getProjectByTitle';
 
 Given(

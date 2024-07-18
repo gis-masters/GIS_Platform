@@ -1,5 +1,5 @@
 import { SelectSchemaControl } from '../../../components/SelectSchemaControl/SelectSchemaControl';
-import { Role } from '../permissions/permissions.models';
+import { Role } from '../../permissions/permissions.models';
 import { PropertyType, Schema, SimpleSchema } from '../schema/schema.models';
 import { OldSchema } from '../schema/schemaOld.models';
 import { DataEntityType } from '../vectorData/vectorData.models';

@@ -11,14 +11,9 @@ import { groupsService } from '../../services/auth/groups/groups.service';
 import { CrgUser } from '../../services/auth/users/users.models';
 import { usersService } from '../../services/auth/users/users.service';
 import { communicationService } from '../../services/communication.service';
-import {
-  PrincipalType,
-  Role,
-  RoleAssignmentBody,
-  roles,
-  rolesTitles
-} from '../../services/data/permissions/permissions.models';
-import { getAllPermissions, getProjectPermissions } from '../../services/data/permissions/permissions.service';
+import { PrincipalType, Role, RoleAssignmentBody, rolesTitles } from '../../services/permissions/permissions.models';
+import { getAllPermissions, getProjectPermissions } from '../../services/permissions/permissions.service';
+import { getRolesByExplorerItemEntityType } from '../../services/permissions/permissions.utils';
 import { allGroups } from '../../stores/AllGroups.store';
 import { allUsers } from '../../stores/AllUsers.store';
 import { ExplorerItemEntityTypeTitle } from '../Explorer/Explorer.models';
@@ -49,6 +44,7 @@ export class PermissionsWidget extends Component<PermissionsWidgetProps> {
 
   constructor(props: PermissionsWidgetProps) {
     super(props);
+
     makeObservable(this);
   }
 
@@ -73,19 +69,17 @@ export class PermissionsWidget extends Component<PermissionsWidgetProps> {
   }
 
   render() {
+    const { disabled, itemEntityType, url, title } = this.props;
+
     return (
       <>
         <div className={cnPermissionsWidget()}>
-          {!this.props.disabled && (
-            <PseudoLink
-              className={cnPermissionsWidget('Header')}
-              disabled={this.props.disabled}
-              onClick={this.openModal}
-            >
+          {!disabled && (
+            <PseudoLink className={cnPermissionsWidget('Header')} disabled={disabled} onClick={this.openModal}>
               Разрешения
             </PseudoLink>
           )}
-          {this.props.disabled && <span className={cnPermissionsWidget('Header', { disabled: true })}>Разрешения</span>}
+          {disabled && <span className={cnPermissionsWidget('Header', { disabled: true })}>Разрешения</span>}
           {this.fetching ? (
             <>
               <Skeleton height={20} animation='wave' width={String(40 + Math.random() * 60) + '%'} />
@@ -93,7 +87,7 @@ export class PermissionsWidget extends Component<PermissionsWidgetProps> {
               <Skeleton height={20} animation='wave' width={String(40 + Math.random() * 60) + '%'} />
             </>
           ) : (
-            roles
+            getRolesByExplorerItemEntityType(itemEntityType)
               .map(role => {
                 const groups = this.getListForRole(role, allGroups.list, PrincipalType.GROUP);
                 const users = this.getListForRole(role, allUsers.list, PrincipalType.USER);
@@ -148,10 +142,10 @@ export class PermissionsWidget extends Component<PermissionsWidgetProps> {
           onClose={this.closeModal}
           open={this.dialogOpen}
           onChange={this.fetchPermissions}
-          url={this.props.url}
-          title={this.props.title}
+          url={url}
+          title={title}
           permissions={this.permissions}
-          itemEntityType={this.props.itemEntityType}
+          itemEntityType={itemEntityType}
         />
       </>
     );
@@ -180,6 +174,8 @@ export class PermissionsWidget extends Component<PermissionsWidgetProps> {
   }
 
   private getListForRole<T extends CrgUser | CrgGroup>(listRole: Role, arr: T[], type: PrincipalType): T[] {
+    const roles = getRolesByExplorerItemEntityType(this.props.itemEntityType);
+
     const greaterRoles = new Set(roles.slice(roles.indexOf(listRole) + 1, roles.length));
 
     return arr

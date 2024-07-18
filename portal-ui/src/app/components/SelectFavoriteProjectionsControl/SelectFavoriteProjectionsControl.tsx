@@ -5,9 +5,9 @@ import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
 import { SpatialReferenceSystem } from '../../../server-types/common-contracts';
-import { isProjection, Projection, projectionXTableCols } from '../../services/data/projections/projections.models';
+import { Projection, projectionXTableCols } from '../../services/data/projections/projections.models';
 import { getProjections } from '../../services/data/projections/projections.service';
-import { isStringArray } from '../../services/util/typeGuards/isStringArray';
+import { mapToProjections } from '../../services/util/projectionMapper';
 import { ChooseXTableDialog } from '../ChooseXTableDialog/ChooseXTableDialog';
 import { FormControlProps } from '../Form/Control/Form-Control';
 import { SelectFavoriteProjectionsControlButton } from './Button/SelectFavoriteProjectionsControl-Button';
@@ -60,33 +60,10 @@ export class SelectFavoriteProjectionsControl extends Component<FormControlProps
 
   @boundMethod
   private init() {
-    if (!isStringArray(this.props.fieldValue)) {
-      return;
-    }
-    const favoritesProjection = this.props.fieldValue;
+    const selectedProjections = mapToProjections(this.props.fieldValue);
 
-    if (!favoritesProjection?.length) {
-      return;
-    }
-
-    const selectedProjections = favoritesProjection.map(item => {
-      try {
-        const parsedItem = JSON.parse(item) as unknown;
-
-        if (!isProjection(parsedItem)) {
-          throw new Error('Система координат не является проекцией');
-        }
-
-        return parsedItem;
-      } catch {
-        throw new Error(`Не удалось "прочитать" систему координат + ${item}`);
-      }
-    });
-
-    if (selectedProjections) {
-      this.setSelectedProjection(selectedProjections);
-      this.select(selectedProjections);
-    }
+    this.setSelectedProjection(selectedProjections);
+    this.select(selectedProjections);
   }
 
   @action.bound

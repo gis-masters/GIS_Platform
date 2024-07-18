@@ -4,8 +4,8 @@ import { observer } from 'mobx-react';
 import { Tab, Tabs } from '@mui/material';
 import { cn } from '@bem-react/classname';
 
-import { allPermissionsService } from '../../services/data/permissions/allPermissions.service';
 import { allDataEntitiesService } from '../../services/data/vectorData/allVectorDataEntities.service';
+import { allPermissionsService } from '../../services/permissions/allPermissions.service';
 import { allGroups } from '../../stores/AllGroups.store';
 import { allPermissions } from '../../stores/AllPermissions.store';
 import { allUsers } from '../../stores/AllUsers.store';

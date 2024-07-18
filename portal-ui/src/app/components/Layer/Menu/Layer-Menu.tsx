@@ -21,12 +21,6 @@ import { communicationService, DataChangeEventDetail } from '../../../services/c
 import { exportVectorTableAsShape } from '../../../services/data/export/export.service';
 import { LibraryRecord } from '../../../services/data/library/library.models';
 import { getLibraryRecord } from '../../../services/data/library/library.service';
-import {
-  isLayersManagementAllowed,
-  isShapeImportAllowed,
-  isTableExportAllowed,
-  isUpdateAllowed
-} from '../../../services/data/permissions/permissions.service';
 import { Projection } from '../../../services/data/projections/projections.models';
 import { getProjectionCode } from '../../../services/data/projections/projections.util';
 import { Schema } from '../../../services/data/schema/schema.models';
@@ -44,6 +38,12 @@ import {
 import { getLayerSchema } from '../../../services/gis/layers/layers.service';
 import { isVectorFromFile } from '../../../services/gis/layers/layers.utils';
 import { TreeItemPayload } from '../../../services/gis/projects/projects.models';
+import {
+  isLayersManagementAllowed,
+  isShapeImportAllowed,
+  isTableExportAllowed,
+  isUpdateAllowed
+} from '../../../services/permissions/permissions.service';
 import { services } from '../../../services/services';
 import { focusToLayer } from '../../../services/sidebarActions.service';
 import { currentProject } from '../../../stores/CurrentProject.store';

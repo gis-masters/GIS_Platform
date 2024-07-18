@@ -5,7 +5,7 @@ import { ButtonBase, Menu, Paper, Tooltip } from '@mui/material';
 import { cn } from '@bem-react/classname';
 
 import { Basemap } from '../../services/data/basemaps/basemaps.models';
-import { Role } from '../../services/data/permissions/permissions.models';
+import { Role } from '../../services/permissions/permissions.models';
 import { sleep } from '../../services/util/sleep';
 import { basemapsStore } from '../../stores/Basemaps.store';
 import { currentProject } from '../../stores/CurrentProject.store';

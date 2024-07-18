@@ -3,7 +3,7 @@ import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { IClassNameProps } from '@bem-react/core';
 
-import { PermissionsListItem, PrincipalType } from '../../services/data/permissions/permissions.models';
+import { PermissionsListItem, PrincipalType } from '../../services/permissions/permissions.models';
 import { allPermissions } from '../../stores/AllPermissions.store';
 
 import '!style-loader!css-loader!sass-loader!./PermissionsCount.scss';

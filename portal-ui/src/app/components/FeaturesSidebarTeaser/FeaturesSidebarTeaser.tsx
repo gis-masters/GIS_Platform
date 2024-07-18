@@ -5,8 +5,8 @@ import { Badge } from '@mui/material';
 import { EditLocationOutlined, PinDropOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
-import { isUpdateAllowed } from '../../services/data/permissions/permissions.service';
 import { getLayerByFeatureInCurrentProject } from '../../services/gis/layers/layers.utils';
+import { isUpdateAllowed } from '../../services/permissions/permissions.service';
 import { mapStore } from '../../stores/Map.store';
 import { sidebars } from '../../stores/Sidebars.store';
 import { IconButton } from '../IconButton/IconButton';

@@ -1,10 +1,6 @@
 import { Given, When } from '@wdio/cucumber-framework';
 
-import {
-  PrincipalType,
-  Role,
-  RoleAssignmentBody
-} from '../../../../src/app/services/data/permissions/permissions.models';
+import { PrincipalType, Role, RoleAssignmentBody } from '../../../../src/app/services/permissions/permissions.models';
 import { documentVersionsWidgetBlock } from '../../blocks/DocumentVersionsWidget/DocumentVersionsWidget.block';
 import { ExplorerBlock } from '../../blocks/Explorer/Explorer.block';
 import { ScenarioScope } from '../../ScenarioScope';

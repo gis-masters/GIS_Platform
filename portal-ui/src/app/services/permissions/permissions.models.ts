@@ -1,4 +1,9 @@
-import { DataEntityType } from '../vectorData/vectorData.models';
+import { DataEntityType } from '../data/vectorData/vectorData.models';
+
+export enum PermissionType {
+  GIS,
+  DATA
+}
 
 export enum BuiltInRole {
   SYSTEM_ADMIN = 'SYSTEM_ADMIN',
@@ -18,6 +23,9 @@ export enum TablePermissionPoint {
   EXPORT,
   DELETE
 }
+
+export const roles: Role[] = [Role.VIEWER, Role.CONTRIBUTOR, Role.OWNER];
+export const gisRoles: Role[] = [Role.VIEWER, Role.OWNER];
 
 export const tableRolesPermissionPoints = new Map<Role, TablePermissionPoint[]>([
   [
@@ -52,9 +60,6 @@ export const projectRolesPermissionPoints = new Map<Role, ProjectPermissionPoint
   ],
   [Role.VIEWER, [ProjectPermissionPoint.READ]]
 ]);
-
-export const roles: Role[] = [Role.VIEWER, Role.CONTRIBUTOR, Role.OWNER];
-export const projectRoles: Role[] = [Role.VIEWER, Role.OWNER];
 
 export const rolesTitles: { [key in Role]: string } = {
   VIEWER: 'Чтение',

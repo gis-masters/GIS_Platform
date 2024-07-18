@@ -1,30 +1,31 @@
 import { AxiosError } from 'axios';
 
-import { ExplorerItemEntityTypeTitle } from '../../../components/Explorer/Explorer.models';
-import { Toast } from '../../../components/Toast/Toast';
-import { currentProject } from '../../../stores/CurrentProject.store';
-import { currentUser } from '../../../stores/CurrentUser.store';
-import { CrgLayer, CrgLayerType } from '../../gis/layers/layers.models';
-import { getLayerSchema } from '../../gis/layers/layers.service';
-import { isVectorFromFile } from '../../gis/layers/layers.utils';
-import { CrgProject } from '../../gis/projects/projects.models';
-import { services } from '../../services';
-import { getLibraryRecordFiles } from '../files/files.util';
-import { LibraryRecord } from '../library/library.models';
-import { getLibraryRecord } from '../library/library.service';
-import { Schema } from '../schema/schema.models';
-import { VectorTable } from '../vectorData/vectorData.models';
-import { getVectorTable } from '../vectorData/vectorData.service';
+import { ExplorerItemEntityTypeTitle } from '../../components/Explorer/Explorer.models';
+import { Toast } from '../../components/Toast/Toast';
+import { currentProject } from '../../stores/CurrentProject.store';
+import { currentUser } from '../../stores/CurrentUser.store';
+import { getLibraryRecordFiles } from '../data/files/files.util';
+import { LibraryRecord } from '../data/library/library.models';
+import { getLibraryRecord } from '../data/library/library.service';
+import { Schema } from '../data/schema/schema.models';
+import { VectorTable } from '../data/vectorData/vectorData.models';
+import { getVectorTable } from '../data/vectorData/vectorData.service';
+import { CrgLayer, CrgLayerType } from '../gis/layers/layers.models';
+import { getLayerSchema } from '../gis/layers/layers.service';
+import { isVectorFromFile } from '../gis/layers/layers.utils';
+import { CrgProject } from '../gis/projects/projects.models';
+import { services } from '../services';
 import { permissionsClient } from './permissions.client';
 import {
+  PermissionType,
   ProjectPermissionPoint,
   projectRolesPermissionPoints,
   Role,
   RoleAssignmentBody,
-  roles,
   TablePermissionPoint,
   tableRolesPermissionPoints
 } from './permissions.models';
+import { getRoles } from './permissions.utils';
 
 export async function getProjectPermissions(url: string): Promise<RoleAssignmentBody[]> {
   return await permissionsClient.getProjectPermissions(url);
@@ -275,6 +276,8 @@ async function isAllowedWithTable(
     if (currentUser.isAdmin) {
       role = Role.OWNER;
     }
+
+    const roles = getRoles(PermissionType.DATA);
     if (roles.indexOf(role) > roles.indexOf(Role.VIEWER) && readOnly) {
       role = Role.VIEWER;
     }

@@ -3,10 +3,10 @@ import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { withBemMod } from '@bem-react/core';
 
-import { permissionsClient } from '../../../../services/data/permissions/permissions.client';
-import { Role } from '../../../../services/data/permissions/permissions.models';
 import { Dataset } from '../../../../services/data/vectorData/vectorData.models';
 import { getDataset } from '../../../../services/data/vectorData/vectorData.service';
+import { permissionsClient } from '../../../../services/permissions/permissions.client';
+import { Role } from '../../../../services/permissions/permissions.models';
 import { currentUser } from '../../../../stores/CurrentUser.store';
 import { PermissionsWidget } from '../../../PermissionsWidget/PermissionsWidget';
 import { assertExplorerItemDataTypeDataset } from '../../Adapter/_type/Explorer-Adapter_type_dataset';

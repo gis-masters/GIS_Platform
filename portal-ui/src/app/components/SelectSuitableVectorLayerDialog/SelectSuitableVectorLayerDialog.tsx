@@ -7,12 +7,12 @@ import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 import { pluralize } from 'numeralize-ru';
 
-import { isUpdateAllowed } from '../../services/data/permissions/permissions.service';
 import { getProjectionByCode } from '../../services/data/projections/projections.service';
 import { GeometryType, WfsFeature } from '../../services/geoserver/wfs/wfs.models';
 import { isLinear, isPoint, isPolygonal } from '../../services/geoserver/wfs/wfs.util';
 import { CrgLayer, CrgVectorLayer } from '../../services/gis/layers/layers.models';
 import { getLayerSchema } from '../../services/gis/layers/layers.service';
+import { isUpdateAllowed } from '../../services/permissions/permissions.service';
 import { currentProject } from '../../stores/CurrentProject.store';
 import { ChooseXTableDialog } from '../ChooseXTableDialog/ChooseXTableDialog';
 import { XTableColumn } from '../XTable/XTable.models';

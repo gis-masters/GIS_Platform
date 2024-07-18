@@ -1,6 +1,6 @@
 import { Library } from '../../../../src/app/services/data/library/library.models';
 import { setLibraryPermission } from '../../../../src/app/services/data/library/library.service';
-import { RoleAssignmentBody } from '../../../../src/app/services/data/permissions/permissions.models';
+import { RoleAssignmentBody } from '../../../../src/app/services/permissions/permissions.models';
 import { authenticateAsAdmin } from '../auth/authenticate';
 
 declare const window: {

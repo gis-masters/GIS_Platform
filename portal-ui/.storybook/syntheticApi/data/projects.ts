@@ -1,4 +1,4 @@
-import { Role } from '../../../src/app/services/data/permissions/permissions.models';
+import { Role } from '../../../src/app/services/permissions/permissions.models';
 import { CrgProject } from '../../../src/app/services/gis/projects/projects.models';
 
 export const projects: CrgProject[] = [

@@ -11,11 +11,11 @@ import { placeFiles } from '../../services/data/file-placement/file-placement.se
 import { FileInfo } from '../../services/data/files/files.models';
 import { isTifFile } from '../../services/data/files/files.util';
 import { LibraryRecord } from '../../services/data/library/library.models';
-import { Role } from '../../services/data/permissions/permissions.models';
 import { getProjectionCode } from '../../services/data/projections/projections.util';
 import { PropertyType, Schema } from '../../services/data/schema/schema.models';
 import { CrgProject } from '../../services/gis/projects/projects.models';
 import { projectsService } from '../../services/gis/projects/projects.service';
+import { Role } from '../../services/permissions/permissions.models';
 import { sleep } from '../../services/util/sleep';
 import { allProjects } from '../../stores/AllProjects.store';
 import { Button } from '../Button/Button';

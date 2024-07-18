@@ -4,7 +4,7 @@ import { DeleteOutline } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
-import { PrincipalType } from '../../../services/data/permissions/permissions.models';
+import { PrincipalType } from '../../../services/permissions/permissions.models';
 
 const cnPermissionsEditDialogRemovePrincipal = cn('PermissionsEditDialog', 'RemovePrincipal');
 

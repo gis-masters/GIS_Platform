@@ -2,7 +2,7 @@ import { SelectSchemaControl } from '../../../components/SelectSchemaControl/Sel
 import { projectionsStore } from '../../../stores/Projections.store';
 import { CrgLayer } from '../../gis/layers/layers.models';
 import { CrgProject } from '../../gis/projects/projects.models';
-import { Role } from '../permissions/permissions.models';
+import { Role } from '../../permissions/permissions.models';
 import { getProjectionCode } from '../projections/projections.util';
 import { PropertyType, Schema, SimpleSchema } from '../schema/schema.models';
 import { OldSchema } from '../schema/schemaOld.models';

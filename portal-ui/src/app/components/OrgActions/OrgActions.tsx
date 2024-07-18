@@ -3,7 +3,7 @@ import { cn } from '@bem-react/classname';
 
 import { CrgGroup } from '../../services/auth/groups/groups.models';
 import { CrgUser } from '../../services/auth/users/users.models';
-import { PrincipalType } from '../../services/data/permissions/permissions.models';
+import { PrincipalType } from '../../services/permissions/permissions.models';
 import { OrgActionsDel } from './Del/OrgActions-Del';
 import { OrgActionsEdit } from './Edit/OrgActions-Edit';
 import { OrgActionsGroups } from './Groups/OrgActions-Groups';

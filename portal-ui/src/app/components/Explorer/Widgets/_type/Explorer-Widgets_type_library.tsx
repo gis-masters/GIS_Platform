@@ -6,7 +6,7 @@ import { withBemMod } from '@bem-react/core';
 import { libraryClient } from '../../../../services/data/library/library.client';
 import { Library } from '../../../../services/data/library/library.models';
 import { getLibrary } from '../../../../services/data/library/library.service';
-import { Role } from '../../../../services/data/permissions/permissions.models';
+import { Role } from '../../../../services/permissions/permissions.models';
 import { currentUser } from '../../../../stores/CurrentUser.store';
 import { PermissionsWidget } from '../../../PermissionsWidget/PermissionsWidget';
 import { assertExplorerItemDataTypeLibrary } from '../../Adapter/_type/Explorer-Adapter_type_library';

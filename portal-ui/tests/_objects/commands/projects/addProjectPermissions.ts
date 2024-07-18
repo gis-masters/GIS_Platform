@@ -1,6 +1,6 @@
 import { CrgProject } from '../../../../src/app/services/gis/projects/projects.models';
-import { RoleAssignmentBody } from '../../../../src/app/services/data/permissions/permissions.models';
-import { permissionsClient } from '../../../../src/app/services/data/permissions/permissions.client';
+import { permissionsClient } from '../../../../src/app/services/permissions/permissions.client';
+import { RoleAssignmentBody } from '../../../../src/app/services/permissions/permissions.models';
 import { requestAsAdmin } from '../requestAs';
 
 export let currentProject: CrgProject;

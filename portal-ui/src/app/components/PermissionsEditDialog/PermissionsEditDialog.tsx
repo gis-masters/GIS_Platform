@@ -15,9 +15,13 @@ import {
   PrincipalType,
   Role,
   RoleAssignmentBody
-} from '../../services/data/permissions/permissions.models';
-import { addEntityPermission, removeEntityPermission } from '../../services/data/permissions/permissions.service';
-import { filterByPrincipal, filterOutPrincipal } from '../../services/data/permissions/permissions.utils';
+} from '../../services/permissions/permissions.models';
+import { addEntityPermission, removeEntityPermission } from '../../services/permissions/permissions.service';
+import {
+  definePermissionType,
+  filterByPrincipal,
+  filterOutPrincipal
+} from '../../services/permissions/permissions.utils';
 import { allGroups } from '../../stores/AllGroups.store';
 import { allUsers } from '../../stores/AllUsers.store';
 import { Button } from '../Button/Button';
@@ -137,6 +141,7 @@ export class PermissionsEditDialog extends Component<PermissionsEditDialogProps>
                   onAdd={this.handleAdd}
                   currentPrincipals={this.users}
                   principalType={PrincipalType.USER}
+                  permissionType={definePermissionType(this.props.itemEntityType)}
                 />
               }
               data={this.users}
@@ -154,6 +159,7 @@ export class PermissionsEditDialog extends Component<PermissionsEditDialogProps>
                   onAdd={this.handleAdd}
                   currentPrincipals={this.groups}
                   principalType={PrincipalType.GROUP}
+                  permissionType={definePermissionType(this.props.itemEntityType)}
                 />
               }
               data={this.groups}
@@ -298,6 +304,7 @@ export class PermissionsEditDialog extends Component<PermissionsEditDialogProps>
         principalId={principal.id}
         principalType={principalType}
         onChange={this.handleChangeRole}
+        permissionType={definePermissionType(this.props.itemEntityType)}
       />
     );
   }

@@ -6,7 +6,7 @@ import { IClassNameProps } from '@bem-react/core';
 
 import { LibraryRecord } from '../../services/data/library/library.models';
 import { getLibraryRecord } from '../../services/data/library/library.service';
-import { Role } from '../../services/data/permissions/permissions.models';
+import { Role } from '../../services/permissions/permissions.models';
 import { currentUser } from '../../stores/CurrentUser.store';
 import { Actions } from '../Actions/Actions.composed';
 import { ActionsItemVariant } from '../Actions/Item/Actions-Item.base';

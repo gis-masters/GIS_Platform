@@ -4,10 +4,10 @@ import { observer } from 'mobx-react';
 import { withBemMod } from '@bem-react/core';
 
 import { communicationService, DataChangeEventDetail } from '../../../../services/communication.service';
-import { permissionsClient } from '../../../../services/data/permissions/permissions.client';
-import { Role } from '../../../../services/data/permissions/permissions.models';
 import { CrgProject } from '../../../../services/gis/projects/projects.models';
 import { projectsService } from '../../../../services/gis/projects/projects.service';
+import { permissionsClient } from '../../../../services/permissions/permissions.client';
+import { Role } from '../../../../services/permissions/permissions.models';
 import { currentUser } from '../../../../stores/CurrentUser.store';
 import { PermissionsWidget } from '../../../PermissionsWidget/PermissionsWidget';
 import { crgProjectSchema } from '../../../ProjectsActions/ProjectsActions';

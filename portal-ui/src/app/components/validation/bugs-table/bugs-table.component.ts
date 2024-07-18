@@ -10,7 +10,6 @@ import { switchMap } from 'rxjs/internal/operators/switchMap';
 import { takeUntil } from 'rxjs/operators';
 
 import { communicationService } from '../../../services/communication.service';
-import { isUpdateAllowed } from '../../../services/data/permissions/permissions.service';
 import { ProcessStatus } from '../../../services/data/processes/processes.models';
 import { getProjectionByCode } from '../../../services/data/projections/projections.service';
 import { schemaService } from '../../../services/data/schema/schema.service';
@@ -19,6 +18,7 @@ import { getValidationResults } from '../../../services/data/validation/validati
 import { getFeaturesById } from '../../../services/geoserver/wfs/wfs.service';
 import { CrgVectorLayer } from '../../../services/gis/layers/layers.models';
 import { mapService } from '../../../services/map/map.service';
+import { isUpdateAllowed } from '../../../services/permissions/permissions.service';
 
 const invalid = 'Не переданы обязательные параметры';
 

@@ -5,7 +5,7 @@ import { IconButton, Tooltip } from '@mui/material';
 import { PlaylistAddCheck } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
-import { PrincipalType } from '../../../services/data/permissions/permissions.models';
+import { PrincipalType } from '../../../services/permissions/permissions.models';
 import { PermissionsListDialog } from '../../PermissionsListDialog/PermissionsListDialog';
 
 const cnOrgActionsListPermissions = cn('OrgActions', 'ListPermissions');

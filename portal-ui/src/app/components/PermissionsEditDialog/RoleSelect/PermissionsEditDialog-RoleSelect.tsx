@@ -6,12 +6,13 @@ import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
 import {
+  PermissionType,
   PrincipalType,
   Role,
   RoleAssignmentBody,
-  roles,
   rolesTitles
-} from '../../../services/data/permissions/permissions.models';
+} from '../../../services/permissions/permissions.models';
+import { getRoles } from '../../../services/permissions/permissions.utils';
 
 const cnPermissionsEditDialogRoleSelect = cn('PermissionsEditDialog', 'RoleSelect');
 
@@ -19,6 +20,7 @@ interface PermissionsEditDialogRoleSelectProps {
   principalId: number;
   principalType: PrincipalType;
   currentPermissions: RoleAssignmentBody[];
+  permissionType: PermissionType;
   onChange(principalId: number, principalType: PrincipalType, role: Role): void;
 }
 
@@ -37,7 +39,7 @@ export class PermissionsEditDialogRoleSelect extends Component<PermissionsEditDi
         onChange={this.handleChange}
         variant='standard'
       >
-        {roles.map(roleName => (
+        {getRoles(this.props.permissionType).map(roleName => (
           <MenuItem value={roleName} key={roleName}>
             {rolesTitles[roleName]}
           </MenuItem>
@@ -48,7 +50,9 @@ export class PermissionsEditDialogRoleSelect extends Component<PermissionsEditDi
 
   @computed
   private get principalRole(): Role {
-    const { principalId, principalType, currentPermissions } = this.props;
+    const { principalId, principalType, currentPermissions, permissionType } = this.props;
+
+    const roles = getRoles(permissionType);
 
     return currentPermissions.reduce((role: Role, permission: RoleAssignmentBody) => {
       return principalType === permission.principalType &&

@@ -6,14 +6,12 @@ import { cn } from '@bem-react/classname';
 
 import {
   PermissionsListItem,
+  PermissionType,
   PrincipalType,
-  projectRoles,
   Role,
-  roles,
   rolesTitles
-} from '../../../services/data/permissions/permissions.models';
-import { filterOutPrincipal } from '../../../services/data/permissions/permissions.utils';
-import { PermissionsListItemType } from '../PermissionsListDialog.models';
+} from '../../../services/permissions/permissions.models';
+import { filterOutPrincipal, getRoles } from '../../../services/permissions/permissions.utils';
 
 import '!style-loader!css-loader!sass-loader!./PermissionsListDialog-RoleSelect.scss';
 
@@ -23,7 +21,7 @@ interface PermissionsListRoleSelectProps {
   listItem: PermissionsListItem;
   principalId: number;
   principalType: PrincipalType;
-  listItemType: PermissionsListItemType;
+  permissionType: PermissionType;
   onChange(newItem: PermissionsListItem): void;
 }
 
@@ -38,7 +36,7 @@ export class PermissionsListRoleSelect extends Component<PermissionsListRoleSele
     return (
       <div className={cnPermissionsListRoleSelect()}>
         <Select value={this.value} onChange={this.handleChange} variant='standard'>
-          {this.roles.map(roleName => (
+          {getRoles(this.props.permissionType).map(roleName => (
             <MenuItem value={roleName} key={roleName}>
               {rolesTitles[roleName]}
             </MenuItem>
@@ -49,13 +47,10 @@ export class PermissionsListRoleSelect extends Component<PermissionsListRoleSele
   }
 
   @computed
-  private get roles(): Role[] {
-    return this.props.listItemType === PermissionsListItemType.PROJECT ? projectRoles : roles;
-  }
-
-  @computed
   private get value(): Role {
-    return this.roles[Math.max(...this.props.listItem.permissions.map(({ role }) => this.roles.indexOf(role)))];
+    const roles = getRoles(this.props.permissionType);
+
+    return roles[Math.max(...this.props.listItem.permissions.map(({ role }) => roles.indexOf(role)))];
   }
 
   @action.bound

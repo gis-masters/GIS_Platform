@@ -3,7 +3,6 @@ import { Storage } from '@mui/icons-material';
 
 import { Emitter } from '../../../../services/common/Emitter';
 import { communicationService, DataChangeEventDetail } from '../../../../services/communication.service';
-import { Role } from '../../../../services/data/permissions/permissions.models';
 import { VectorTable } from '../../../../services/data/vectorData/vectorData.models';
 import {
   getDataset,
@@ -12,6 +11,7 @@ import {
   getVectorTablesWithParticularOne
 } from '../../../../services/data/vectorData/vectorData.service';
 import { PageOptions, SortOrder } from '../../../../services/models';
+import { Role } from '../../../../services/permissions/permissions.models';
 import { formatDate } from '../../../../services/util/date.util';
 import { staticImplements } from '../../../../services/util/staticImplements';
 import { currentUser } from '../../../../stores/CurrentUser.store';

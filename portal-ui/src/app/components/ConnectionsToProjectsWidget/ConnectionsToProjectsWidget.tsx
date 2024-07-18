@@ -10,12 +10,12 @@ import { boundMethod } from 'autobind-decorator';
 import { pluralize } from 'numeralize-ru';
 
 import { FileConnection } from '../../services/data/files/files.models';
-import { Role } from '../../services/data/permissions/permissions.models';
-import { isLayersManagementAllowed } from '../../services/data/permissions/permissions.service';
 import { PropertyOption, PropertyType, Schema } from '../../services/data/schema/schema.models';
 import { CommonDiRegistry } from '../../services/di-registry';
 import { getViewChoiceOptions } from '../../services/gis/layers/layers.service';
 import { CrgProject } from '../../services/gis/projects/projects.models';
+import { Role } from '../../services/permissions/permissions.models';
+import { isLayersManagementAllowed } from '../../services/permissions/permissions.service';
 import { ActionsLeft } from '../ActionsLeft/ActionsLeft';
 import { ActionsRight } from '../ActionsRight/ActionsRight';
 import { Button } from '../Button/Button';

@@ -1,8 +1,8 @@
 import { faker } from '@faker-js/faker';
 import { Given } from '@wdio/cucumber-framework';
 
-import { PrincipalType, Role } from '../../../../src/app/services/data/permissions/permissions.models';
 import { Schema } from '../../../../src/app/services/data/schema/schema.models';
+import { PrincipalType, Role } from '../../../../src/app/services/permissions/permissions.models';
 import { ScenarioScope } from '../../ScenarioScope';
 import { getUserByEmail } from '../auth/getUserByEmail';
 import { TestUser } from '../auth/testUsers';

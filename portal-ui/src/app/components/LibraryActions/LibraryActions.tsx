@@ -5,7 +5,7 @@ import { isEqual } from 'lodash';
 
 import { Library } from '../../services/data/library/library.models';
 import { getLibrary } from '../../services/data/library/library.service';
-import { Role } from '../../services/data/permissions/permissions.models';
+import { Role } from '../../services/permissions/permissions.models';
 import { currentUser } from '../../stores/CurrentUser.store';
 import { SchemaActionsEdit } from '../SchemaActions/Edit/SchemaActions-Edit';
 

@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import { cn } from '@bem-react/classname';
 
-import { PrincipalType } from '../../../services/data/permissions/permissions.models';
+import { PrincipalType } from '../../../services/permissions/permissions.models';
 import { PermissionsCount } from '../../PermissionsCount/PermissionsCount';
 import { CrgUserExtended } from '../OrgUsers';
 

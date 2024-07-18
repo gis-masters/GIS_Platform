@@ -10,8 +10,8 @@ import {
   getLibraryRecords,
   getLibraryRecordsWithParticularOne
 } from '../../../../services/data/library/library.service';
-import { Role } from '../../../../services/data/permissions/permissions.models';
 import { PageOptions, SortOrder } from '../../../../services/models';
+import { Role } from '../../../../services/permissions/permissions.models';
 import { formatDate } from '../../../../services/util/date.util';
 import { staticImplements } from '../../../../services/util/staticImplements';
 import { currentUser } from '../../../../stores/CurrentUser.store';

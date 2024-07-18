@@ -6,9 +6,9 @@ import { Delete } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
-import { Role } from '../../../services/data/permissions/permissions.models';
 import { CrgProject } from '../../../services/gis/projects/projects.models';
 import { projectsService } from '../../../services/gis/projects/projects.service';
+import { Role } from '../../../services/permissions/permissions.models';
 import { currentUser } from '../../../stores/CurrentUser.store';
 import { Button } from '../../Button/Button';
 

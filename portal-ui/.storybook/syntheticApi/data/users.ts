@@ -1,4 +1,4 @@
-import { BuiltInRole } from '../../../src/app/services/data/permissions/permissions.models';
+import { BuiltInRole } from '../../../src/app/services/permissions/permissions.models';
 import { CrgUserRaw } from '../../../src/app/services/auth/users/users.models';
 
 export const users: CrgUserRaw[] = [

@@ -5,9 +5,9 @@ import { ButtonBase, Dialog, DialogActions, DialogContent, DialogTitle } from '@
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
-import { isFeaturesUpdateAllowed } from '../../services/data/permissions/permissions.service';
 import { PropertyType } from '../../services/data/schema/schema.models';
 import { Dataset, VectorTable } from '../../services/data/vectorData/vectorData.models';
+import { isFeaturesUpdateAllowed } from '../../services/permissions/permissions.service';
 import { Breadcrumbs, BreadcrumbsItemData } from '../Breadcrumbs/Breadcrumbs';
 import { Button } from '../Button/Button';
 import { Explorer } from '../Explorer/Explorer';

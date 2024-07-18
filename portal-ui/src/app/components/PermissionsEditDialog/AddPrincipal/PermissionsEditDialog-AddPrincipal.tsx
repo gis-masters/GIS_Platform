@@ -19,12 +19,13 @@ import { boundMethod } from 'autobind-decorator';
 import { CrgGroup } from '../../../services/auth/groups/groups.models';
 import { CrgUser } from '../../../services/auth/users/users.models';
 import {
+  PermissionType,
   PrincipalType,
   Role,
   RoleAssignmentBody,
-  roles,
   rolesTitles
-} from '../../../services/data/permissions/permissions.models';
+} from '../../../services/permissions/permissions.models';
+import { getRoles } from '../../../services/permissions/permissions.utils';
 import { allGroups } from '../../../stores/AllGroups.store';
 import { allUsers } from '../../../stores/AllUsers.store';
 import { ActionsRight } from '../../ActionsRight/ActionsRight';
@@ -40,6 +41,7 @@ const cnPermissionsEditDialog = cn('PermissionsEditDialog');
 interface PermissionsEditDialogAddPrincipalProps {
   principalType: PrincipalType;
   currentPrincipals: (CrgUser | CrgGroup)[];
+  permissionType: PermissionType;
   onAdd(permissions: RoleAssignmentBody[]): void;
 }
 
@@ -100,7 +102,7 @@ export class PermissionsEditDialogAddPrincipal extends Component<PermissionsEdit
           <DialogActions>
             <ActionsRight>
               <Select value={this.role} onChange={this.handleRoleChange} variant='standard'>
-                {roles.map(roleName => (
+                {getRoles(this.props.permissionType).map(roleName => (
                   <MenuItem value={roleName} key={roleName}>
                     {rolesTitles[roleName]}
                   </MenuItem>

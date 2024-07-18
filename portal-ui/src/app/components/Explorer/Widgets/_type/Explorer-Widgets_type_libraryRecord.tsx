@@ -8,10 +8,10 @@ import { communicationService, DataChangeEventDetail } from '../../../../service
 import { libraryClient } from '../../../../services/data/library/library.client';
 import { LibraryRecord } from '../../../../services/data/library/library.models';
 import { getLibraryRecord, getLibrarySchemaByRecord } from '../../../../services/data/library/library.service';
-import { Role } from '../../../../services/data/permissions/permissions.models';
 import { Schema } from '../../../../services/data/schema/schema.models';
 import { applyContentType } from '../../../../services/data/schema/schema.utils';
 import { flags } from '../../../../services/feature-flags';
+import { Role } from '../../../../services/permissions/permissions.models';
 import { currentUser } from '../../../../stores/CurrentUser.store';
 import { DocumentRole } from '../../../DocumentRole/DocumentRole';
 import { DocumentVersionsWidget } from '../../../DocumentVersionsWidget/DocumentVersionsWidget';

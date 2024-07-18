@@ -5,17 +5,11 @@ import { Checkbox, Dialog, DialogActions, DialogContent, MenuItem, Select, Selec
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
-import {
-  PermissionsListItem,
-  PrincipalType,
-  projectRoles,
-  Role,
-  roles,
-  rolesTitles
-} from '../../services/data/permissions/permissions.models';
 import { Dataset, VectorTable } from '../../services/data/vectorData/vectorData.models';
 import { tablesEqual } from '../../services/data/vectorData/vectorData.util';
 import { CrgProject } from '../../services/gis/projects/projects.models';
+import { PermissionsListItem, PrincipalType, Role, rolesTitles } from '../../services/permissions/permissions.models';
+import { getRolesByPermissionsListItemType } from '../../services/permissions/permissions.utils';
 import { allDataEntitiesStore } from '../../stores/AllDataEntities.store';
 import { allProjects } from '../../stores/AllProjects.store';
 import { ActionsRight } from '../ActionsRight/ActionsRight';
@@ -73,7 +67,7 @@ export class PermissionsAddDialog extends Component<PermissionsAddDialogProps> {
         <DialogActions>
           <ActionsRight>
             <Select value={this.role} onChange={this.handleRoleChange} variant='standard'>
-              {(type === PermissionsListItemType.PROJECT ? projectRoles : roles).map(roleName => (
+              {getRolesByPermissionsListItemType(type).map(roleName => (
                 <MenuItem value={roleName} key={roleName}>
                   {rolesTitles[roleName]}
                 </MenuItem>

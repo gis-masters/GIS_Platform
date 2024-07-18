@@ -5,7 +5,7 @@ import { Client } from '../../api/Client';
 import { http } from '../../api/http.service';
 import { preparePageOptions } from '../../api/http.utils';
 import { PageOptions } from '../../models';
-import { RoleAssignmentBody } from '../permissions/permissions.models';
+import { RoleAssignmentBody } from '../../permissions/permissions.models';
 import { OldSchema } from '../schema/schemaOld.models';
 import { DocumentVersion, LibraryRaw, LibraryRecord, LibraryRecordNew, LibraryRecordRaw } from './library.models';
 

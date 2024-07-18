@@ -5,7 +5,7 @@ import { EditOutlined, HealthAndSafetyOutlined, VisibilityOutlined } from '@mui/
 import { cn } from '@bem-react/classname';
 
 import { getLibraryRecord } from '../../services/data/library/library.service';
-import { Role } from '../../services/data/permissions/permissions.models';
+import { Role } from '../../services/permissions/permissions.models';
 
 import '!style-loader!css-loader!sass-loader!./DocumentRole.scss';
 

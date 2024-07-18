@@ -7,11 +7,11 @@ import { isEqual } from 'lodash';
 
 import { LibraryRecord } from '../../services/data/library/library.models';
 import { getLibraryRecord } from '../../services/data/library/library.service';
-import { isRecordUpdateAllowed } from '../../services/data/permissions/permissions.service';
 import { SearchItemData } from '../../services/data/search/search.model';
 import { VectorTable } from '../../services/data/vectorData/vectorData.models';
 import { getVectorTable } from '../../services/data/vectorData/vectorData.service';
 import { extractFeatureId } from '../../services/geoserver/featureType/featureType.util';
+import { isRecordUpdateAllowed } from '../../services/permissions/permissions.service';
 import { Actions } from '../Actions/Actions.composed';
 import { ActionsItemVariant } from '../Actions/Item/Actions-Item.base';
 import { FeatureConnections } from '../FeatureConnections/FeatureConnections';

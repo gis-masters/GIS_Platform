@@ -8,7 +8,6 @@ import { Subject } from 'rxjs';
 import { filter, first, takeUntil } from 'rxjs/operators';
 
 import { communicationService } from '../../services/communication.service';
-import { isUpdateAllowed } from '../../services/data/permissions/permissions.service';
 import { getFeatureProjection } from '../../services/data/projections/projections.service';
 import { PropertySchema, PropertyType } from '../../services/data/schema/schema.models';
 import { schemaService } from '../../services/data/schema/schema.service';
@@ -39,6 +38,7 @@ import { getLayerByFeatureInCurrentProject } from '../../services/gis/layers/lay
 import { MapSelectionTypes } from '../../services/map/map.models';
 import { mapService } from '../../services/map/map.service';
 import { mapSelectionService } from '../../services/map/map-selection.service';
+import { isUpdateAllowed } from '../../services/permissions/permissions.service';
 import { services } from '../../services/services';
 import { formatDate, systemFormat } from '../../services/util/date.util';
 import { FeaturePropertyValidators } from '../../services/util/FeaturePropertyValidators';

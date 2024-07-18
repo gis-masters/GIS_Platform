@@ -115,8 +115,8 @@ public class OrgSettingsSchemaHolder {
         SimplePropertyDto defaultEpsg = new SimplePropertyDto();
         defaultEpsg.setName("default_epsg");
         defaultEpsg.setTitle("Система координат по-умолчанию");
-        defaultEpsg.setValueType(STRING);
-        defaultEpsg.setDefaultValue(DEFAULT_EPSG);
+        defaultEpsg.setValueType(CHOICE);
+        defaultEpsg.setEnumerations(List.of(new ValueTitleProjection(DEFAULT_EPSG)));
 
         props.add(createLibraryItem);
         props.add(dataManagement);

@@ -3,8 +3,8 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { filter, publishReplay, refCount } from 'rxjs/operators';
 
 import { communicationService } from './communication.service';
-import { Role } from './data/permissions/permissions.models';
 import { ProcessType, WsImportModel } from './data/processes/processes.models';
+import { Role } from './permissions/permissions.models';
 import { generateRandomId } from './util/randomId';
 import { IWsMessage, wsService } from './ws.service';
 
