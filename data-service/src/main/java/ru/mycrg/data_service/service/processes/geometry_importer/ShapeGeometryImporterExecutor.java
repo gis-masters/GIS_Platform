@@ -2,7 +2,6 @@ package ru.mycrg.data_service.service.processes.geometry_importer;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 import ru.mycrg.auth_facade.IAuthenticationFacade;
@@ -24,11 +23,10 @@ import ru.mycrg.data_service_contract.enums.FileType;
 import ru.mycrg.data_service_contract.queue.request.ShapeLoadedEvent;
 import ru.mycrg.messagebus_contract.IMessageBusProducer;
 
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.LinkedHashMap;
 
 import static ru.mycrg.common_utils.CrgGlobalProperties.getDefaultDatabaseName;
+import static ru.mycrg.data_service.service.storage.FileStorageUtil.generateFileName;
 import static ru.mycrg.data_service.util.JsonConverter.mapper;
 
 @Component
@@ -39,7 +37,6 @@ public class ShapeGeometryImporterExecutor implements IExecutor<ImportGeometrySh
     private final IMessageBusProducer messageBus;
 
     private final FileStorageService fileStorageService;
-    private final Path exportStoragePath;
 
     private final TableService tableService;
     private final TableProtector tableProtector;
@@ -51,7 +48,6 @@ public class ShapeGeometryImporterExecutor implements IExecutor<ImportGeometrySh
 
     public ShapeGeometryImporterExecutor(IMessageBusProducer messageBus,
                                          FileStorageService fileStorageService,
-                                         Environment environment,
                                          IAuthenticationFacade authenticationFacade,
                                          TableService tableService,
                                          TableProtector tableProtector) {
@@ -60,10 +56,6 @@ public class ShapeGeometryImporterExecutor implements IExecutor<ImportGeometrySh
         this.authenticationFacade = authenticationFacade;
         this.tableService = tableService;
         this.tableProtector = tableProtector;
-
-        String path = environment.getRequiredProperty("crg-options.exportStoragePath");
-
-        exportStoragePath = Paths.get(path).toAbsolutePath().normalize();
     }
 
     @Override
@@ -156,9 +148,8 @@ public class ShapeGeometryImporterExecutor implements IExecutor<ImportGeometrySh
 
             throw new BadRequestException(msg);
         }
-        String filePath = fileStorageService.storeFile(file,
-                                                       exportStoragePath,
-                                                       fileStorageService.generateFileName(file));
+
+        String filePath = fileStorageService.copyToExportStorage(file, generateFileName(file.getOriginalFilename()));
         payload.setFilePath(filePath);
 
         return this;

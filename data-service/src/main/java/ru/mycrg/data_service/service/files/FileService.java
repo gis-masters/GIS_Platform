@@ -5,7 +5,6 @@ import org.apache.commons.compress.utils.FileNameUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.mycrg.auth_facade.IAuthenticationFacade;
@@ -19,7 +18,6 @@ import ru.mycrg.data_service_contract.dto.FileDescription;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -38,19 +36,12 @@ public class FileService {
     private final FileStorageService fileStorageService;
     private final IAuthenticationFacade authenticationFacade;
 
-    private final Path fileStoragePath;
-
-    public FileService(Environment environment,
-                       FileRepository fileRepository,
+    public FileService(FileRepository fileRepository,
                        FileStorageService fileStorageService,
                        IAuthenticationFacade authenticationFacade) {
         this.fileRepository = fileRepository;
         this.fileStorageService = fileStorageService;
         this.authenticationFacade = authenticationFacade;
-
-        String path = environment.getRequiredProperty("crg-options.fileStoragePath");
-
-        fileStoragePath = Paths.get(path).toAbsolutePath().normalize();
     }
 
     public void relateFilesByCreation(SchemaDto schema,
@@ -128,6 +119,9 @@ public class FileService {
     public void transferFileFromTempDirectory(File file,
                                               ResourceQualifier qualifier,
                                               String type) {
+        // TODO: (1) Используется только в AcceptKptService, захардкожена первая организация "organization_1" -
+        //  пересмотреть бы подход к KPT
+
         transferFileFromTempDirectory(qualifier,
                                       file.getTitle(),
                                       file.getPath(),
@@ -158,14 +152,17 @@ public class FileService {
         Set<UUID> ids = files.stream().map(FileDescription::getId).collect(Collectors.toSet());
 
         fileRepository.findAllByIdIn(ids).forEach(file -> {
-            Optional<FileDescription> description = files
+            String fileName = files
                     .stream()
                     .filter(fileDescription -> fileDescription.getId().equals(file.getId()))
-                    .findFirst();
+                    .findFirst()
+                    .orElseThrow(() -> new IllegalStateException("Не найдено описание файла: " + file.getId()))
+                    .getTitle();
 
             transferFileFromTempDirectory(qualifier,
-                                          description.get().getTitle(),
-                                          file.getPath(), file.getId(),
+                                          fileName,
+                                          file.getPath(),
+                                          file.getId(),
                                           getDefaultOrganizationName(authenticationFacade.getOrganizationId()),
                                           type);
         });
@@ -173,7 +170,7 @@ public class FileService {
 
     private void transferFileFromTempDirectory(ResourceQualifier qualifier,
                                                String fileName,
-                                               String filePath,
+                                               String currentFilePath,
                                                UUID fileId,
                                                String organizationName,
                                                String type) {
@@ -181,16 +178,15 @@ public class FileService {
                                               makeFileName(qualifier, FilenameUtils.removeExtension(fileName)),
                                               FileNameUtils.getExtension(fileName).toLowerCase());
 
-        Path targetPath = fileStoragePath.resolve(
-                String.format("%s/%s/%s/%s",
-                              organizationName,
-                              type.toLowerCase(),
-                              qualifier.getTable(),
-                              resultFileName));
+        String pathToFile = String.format("%s/%s/%s/%s",
+                                          organizationName,
+                                          type.toLowerCase(),
+                                          qualifier.getTable(),
+                                          resultFileName);
 
-        fileStorageService.moveFile(Path.of(filePath), targetPath);
+        Path resultPath = fileStorageService.moveToMainStorage(Path.of(currentFilePath), Path.of(pathToFile));
 
-        fileRepository.setPathById(targetPath.toString(), fileId);
+        fileRepository.setPathById(resultPath.toString(), fileId);
     }
 
     private boolean isFieldEdited(Map<String, Object> record, String fileFieldName) {

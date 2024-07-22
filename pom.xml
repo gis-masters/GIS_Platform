@@ -20,7 +20,8 @@
         <java.version>11</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <spring-cloud.version>Finchley.RELEASE</spring-cloud.version>
-        <maven-surefire-plugin.version>2.21.0</maven-surefire-plugin.version>
+
+        <surefire.version>3.3.1</surefire.version>
     </properties>
 
     <dependencyManagement>

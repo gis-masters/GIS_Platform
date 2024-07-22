@@ -10,6 +10,7 @@ import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
+import ru.mycrg.auth_facade.IAuthenticationFacade;
 import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.service.storage.exceptions.MalformedURLStorageException;
@@ -19,13 +20,19 @@ import ru.mycrg.data_service.service.storage.exceptions.StorageException;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.nio.file.*;
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
+import java.net.URI;
+import java.nio.file.AccessDeniedException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
+import static ru.mycrg.common_utils.CrgGlobalProperties.getDefaultOrganizationName;
+import static ru.mycrg.data_service.service.storage.FileStorageUtil.calculateSize;
+import static ru.mycrg.data_service.service.storage.FileStorageUtil.readableFileSize;
 import static ru.mycrg.data_service.util.DetailedLogger.logError;
 
 @Service
@@ -33,29 +40,47 @@ public class FileStorageService {
 
     private final Logger log = LoggerFactory.getLogger(FileStorageService.class);
 
-    private final Path fileTrashPath;
-    private final Path fileStoragePath;
+    private final Path trashPath;
+    private final Path mainStoragePath;
     private final Path exportStoragePath;
-    private final Path kptArchivesPath;
+    private final Path kptStoragePath;
+
+    private final IAuthenticationFacade authenticationFacade;
 
     @Autowired
-    public FileStorageService(Environment environment) {
-        String path = environment.getRequiredProperty("crg-options.fileStoragePath");
+    public FileStorageService(Environment environment,
+                              IAuthenticationFacade authenticationFacade) {
+        this.authenticationFacade = authenticationFacade;
+
+        String kptStoragePath = environment.getRequiredProperty("crg-options.kptStoragePath");
+        String mainStoragePath = environment.getRequiredProperty("crg-options.mainStoragePath");
         String exportStoragePath = environment.getRequiredProperty("crg-options.exportStoragePath");
-        String kptArchivesPath = environment.getRequiredProperty("crg-options.kptArchivesPath");
 
-        this.fileStoragePath = Paths.get(path).toAbsolutePath().normalize();
-        this.fileTrashPath = Paths.get(path + "/trash").toAbsolutePath().normalize();
-        this.exportStoragePath = Paths.get(exportStoragePath)
-                                      .toAbsolutePath()
-                                      .normalize();
-        this.kptArchivesPath = Paths.get(kptArchivesPath).toAbsolutePath().normalize();
+        this.kptStoragePath = Paths.get(kptStoragePath).toAbsolutePath().normalize();
+        this.mainStoragePath = Paths.get(mainStoragePath).toAbsolutePath().normalize();
+        this.exportStoragePath = Paths.get(exportStoragePath).toAbsolutePath().normalize();
 
+        this.trashPath = Paths.get(mainStoragePath + "/trash").toAbsolutePath().normalize();
         try {
-            Files.createDirectories(fileTrashPath);
+            Files.createDirectories(trashPath);
         } catch (Exception e) {
-            throw new DataServiceException("Could not create the directory for the uploaded documents.", e);
+            throw new DataServiceException("Не удалось создать каталог: " + trashPath, e);
         }
+
+        long trashSize = calculateSize(trashPath);
+        long mainStorageSize = calculateSize(this.mainStoragePath);
+        long exportStorageSize = calculateSize(this.exportStoragePath);
+        long kptStorageSize = calculateSize(this.kptStoragePath);
+        long allOccupied = trashSize + mainStorageSize + exportStorageSize + kptStorageSize;
+
+        log.info("Отчет по занятому месту: \n" +
+                         "Карзина: {} \n" +
+                         "Основное хранилище: {} \n" +
+                         "Хранилище для экспорта файлов: {} \n" +
+                         "Хранилище КПТ: {} \n" +
+                         "Всего: {}",
+                 readableFileSize(trashSize), readableFileSize(mainStorageSize), readableFileSize(exportStorageSize),
+                 readableFileSize(kptStorageSize), readableFileSize(allOccupied));
     }
 
     /**
@@ -70,11 +95,159 @@ public class FileStorageService {
      *
      * @throws DataServiceException в случае если не удается сохранить файл
      */
-    public String storeFile(MultipartFile file, String fileName) {
-        return storeFile(file, fileTrashPath, fileName);
+    public String copyToTrash(MultipartFile file, String fileName) {
+        return copyTo(file, trashPath, fileName);
     }
 
-    public String storeFile(MultipartFile file, Path storagePath, String fileName) {
+    public String copyToExportStorage(MultipartFile file, String fileName) {
+        return copyTo(file, exportStoragePath, fileName);
+    }
+
+    /**
+     * Перемещение файла.
+     * <p>
+     *
+     * @param sourcePath Путь откуда перемещаем файл
+     * @param targetPath Путь куда перемещаем файл
+     *
+     * @throws DataServiceException в случае если не удается переместить файл
+     */
+    public Path moveToMainStorage(Path sourcePath, Path targetPath) {
+        Path resultPath = null;
+        try {
+            resultPath = mainStoragePath.resolve(targetPath);
+
+            log.info("Try move file from: [{}] to [{}]", sourcePath, resultPath);
+
+            if (Files.exists(resultPath) && !sourcePath.equals(resultPath)) {
+                Files.deleteIfExists(sourcePath);
+            } else {
+                Files.createDirectories(resultPath);
+                Files.move(sourcePath, resultPath, REPLACE_EXISTING);
+            }
+
+            return resultPath;
+        } catch (AccessDeniedException e) {
+            String msg = "Нет доступа к ресурсу: " + resultPath;
+            log.error(msg);
+
+            throw new DataServiceException(msg);
+        } catch (Exception e) {
+            String msg = String.format("Не удалось переместить файл из: '%s' в: '%s'. Возникла ошибка: %s",
+                                       sourcePath, resultPath, e.getMessage());
+            log.error(msg);
+
+            throw new DataServiceException(msg);
+        }
+    }
+
+    public Resource loadFromExportStorage(String fileName) {
+        try {
+            Path filePath = exportStoragePath.resolve(fileName).normalize();
+            log.debug("Попытка загрузить файл: '{}' из exportStorage", filePath);
+
+            Resource resource = new UrlResource(filePath.toUri());
+            if (resource.exists()) {
+                return resource;
+            }
+
+            log.error("В хранилище exportStorage, не найден файл: {}", fileName);
+            throw new NotFoundException(fileName);
+        } catch (MalformedURLException e) {
+            log.error("В хранилище exportStorage, не найден ресурс: {}", fileName);
+            throw new NotFoundException(fileName);
+        }
+    }
+
+    public Resource loadFromMainStorage(String path) throws MalformedURLStorageException, NoSuchFileStorageException {
+        try {
+            Path filePath = mainStoragePath.resolve(addDefaultExtension(path)).normalize();
+            Resource resource = new UrlResource(filePath.toUri());
+            if (resource.exists()) {
+                return resource;
+            } else {
+                throw new NoSuchFileStorageException(path);
+            }
+        } catch (MalformedURLException e) {
+            throw new MalformedURLStorageException(path, e);
+        }
+    }
+
+    public File loadFromKptStorage(String fileName) throws IOException {
+        Path filePath = kptStoragePath.resolve(fileName).normalize();
+        Resource resource = new UrlResource(filePath.toUri());
+        if (resource.exists()) {
+            log.debug("Успешно нашли КПТ архив");
+        } else {
+            log.error("Ресурс {} не существует", kptStoragePath);
+            throw new NotFoundException(kptStoragePath);
+        }
+
+        return resource.getFile();
+    }
+
+    /**
+     * На данный момент подсчитываем только в главном хранилище.
+     */
+    public Map<String, Object> occupiedSpace() {
+        Path targetPath = buildPathToOrganizationMainStorage();
+
+        Map<String, Object> result = new HashMap<>();
+
+        long totalFiles = 0;
+        try (Stream<Path> filesStream = Files.walk(Paths.get(targetPath.toUri()))) {
+            totalFiles = filesStream.parallel()
+                                    .filter(p -> !p.toFile().isDirectory())
+                                    .count();
+        } catch (IOException e) {
+            log.error("Не удалось подсчитать кол-во файлов в хранилище: '{}'", targetPath);
+        }
+
+        result.put("totalFiles", totalFiles);
+        result.put("allocated", readableFileSize(calculateSize(targetPath)));
+
+        return result;
+    }
+
+    public long mainStorageOccupiedSpace() {
+        Path orgMainStoragePath = buildPathToOrganizationMainStorage();
+        if (Files.notExists(orgMainStoragePath)) {
+            try {
+                Files.createDirectory(orgMainStoragePath);
+            } catch (IOException e) {
+                String msg = "Не удалось создать основное хранилище организации: " + orgMainStoragePath;
+                log.error("{} => {}", msg, e.getMessage(), e);
+
+                throw new DataServiceException(msg);
+            }
+        }
+
+        return calculateSize(orgMainStoragePath);
+    }
+
+    public void deleteIfExists(String path) throws StorageException {
+        try {
+            Path filePath = mainStoragePath.resolve(addDefaultExtension(path)).normalize();
+
+            Files.deleteIfExists(filePath);
+        } catch (IOException e) {
+            throw new StorageException("Cant delete file: " + path, e);
+        }
+    }
+
+    public List<String> getExistKptArchives() throws StorageException {
+        return getFileNamesFromDirectory(kptStoragePath.toUri());
+    }
+
+    public String buildPathToExportStorage(String fileName) {
+        return exportStoragePath + fileName;
+    }
+
+    private Path buildPathToOrganizationMainStorage() {
+        return mainStoragePath.resolve(getDefaultOrganizationName(authenticationFacade.getOrganizationId()));
+    }
+
+    private String copyTo(MultipartFile file, Path storagePath, String fileName) {
         Path targetLocation = null;
         try {
             // Copy file to the target location (Replacing existing file with the same name)
@@ -96,128 +269,22 @@ public class FileStorageService {
         }
     }
 
-    public Resource load(String fileName) {
+    private List<String> getFileNamesFromDirectory(URI targetUri) throws StorageException {
         try {
-            Path filePath = exportStoragePath.resolve(fileName).normalize();
-            log.debug("Try load file: {}", filePath);
-
-            Resource resource = new UrlResource(filePath.toUri());
-            if (resource.exists()) {
-                log.debug("Success loaded");
-
-                return resource;
-            } else {
-                log.error("Resource not exist");
-                throw new NotFoundException(fileName);
+            File[] files = new File(targetUri).listFiles();
+            if (files == null || files.length == 0) {
+                return new ArrayList<>();
             }
-        } catch (MalformedURLException e) {
-            log.error("File not found", e);
-            throw new NotFoundException(fileName);
-        }
-    }
 
-    public Resource loadAsResource(String path) throws MalformedURLStorageException, NoSuchFileStorageException {
-        try {
-            Path filePath = fileStoragePath.resolve(addDefaultExtension(path)).normalize();
-            Resource resource = new UrlResource(filePath.toUri());
-            if (resource.exists()) {
-                return resource;
-            } else {
-                throw new NoSuchFileStorageException(path);
-            }
-        } catch (MalformedURLException e) {
-            throw new MalformedURLStorageException(path, e);
-        }
-    }
-
-    public File loadKptArchive(String fileName) throws IOException {
-        Path filePath = kptArchivesPath.resolve(fileName).normalize();
-        Resource resource = new UrlResource(filePath.toUri());
-        if (resource.exists()) {
-            log.debug("Успешно нашли КПТ архив");
-        } else {
-            log.error("Ресурс {} не существует", kptArchivesPath);
-            throw new NotFoundException(kptArchivesPath);
-        }
-        return resource.getFile();
-    }
-
-    public void deleteIfExists(String path) throws StorageException {
-        try {
-            Path filePath = fileStoragePath.resolve(addDefaultExtension(path)).normalize();
-
-            Files.deleteIfExists(filePath);
-        } catch (IOException e) {
-            throw new StorageException("Cant delete file: " + path, e);
-        }
-    }
-
-    @NotNull
-    public String generateFileName(MultipartFile file) {
-        return String.format("%s.%s",
-                             UUID.randomUUID().toString().substring(0, 13),
-                             StringUtils.getFilenameExtension(file.getOriginalFilename()));
-    }
-
-    public List<String> getNonExistentFileNames(List<String> fileNames) throws StorageException, IOException {
-        File directory = getKptArchiveDirectory();
-        File[] existKptArchives = directory.listFiles();
-        if (existKptArchives == null) {
-            throw new StorageException(kptArchivesPath + " не существует");
-        }
-        if (existKptArchives.length == 0) {
-            throw new StorageException(kptArchivesPath + " не имеет файлов");
-        }
-        List<String> exisingFileNames = Arrays.stream(existKptArchives)
-                                              .map(File::getName).collect(Collectors.toList());
-
-        return fileNames.stream()
-                        .filter(fileName -> !exisingFileNames.contains(fileName))
-                        .collect(Collectors.toList());
-    }
-
-    /**
-     * Перемещение файла.
-     * <p>
-     *
-     * @param sourcePath Путь откуда перемещаем файл
-     * @param targetPath Путь куда перемещаем файл
-     *
-     * @throws DataServiceException в случае если не удается переместить файл
-     */
-    public void moveFile(Path sourcePath, Path targetPath) {
-        try {
-            log.info("Try move file from: [{}] to [{}]", sourcePath, targetPath);
-
-            if (Files.exists(targetPath) && !sourcePath.equals(targetPath)) {
-                Files.deleteIfExists(sourcePath);
-            } else {
-                Files.createDirectories(targetPath);
-                Files.move(sourcePath, targetPath, StandardCopyOption.REPLACE_EXISTING);
-            }
-        } catch (AccessDeniedException e) {
-            String msg = "Нет доступа к ресурсу: " + targetPath;
-            log.error(msg);
-
-            throw new DataServiceException(msg);
+            return Arrays.stream(files)
+                         .map(File::getName)
+                         .collect(Collectors.toList());
         } catch (Exception e) {
-            String msg = String.format("Не удалось переместить файл из: '%s' в: '%s'. Возникла ошибка: %s",
-                                       sourcePath, targetPath, e.getMessage());
-            log.error(msg);
+            String msg = "Не удалось прочитать файлы в каталоге: " + kptStoragePath;
+            log.error("{} => {}", msg, e.getMessage(), e);
 
-            throw new DataServiceException(msg);
+            throw new StorageException(msg);
         }
-    }
-
-    private File getKptArchiveDirectory() throws IOException {
-        Resource resource = new UrlResource(kptArchivesPath.toUri());
-        if (resource.exists()) {
-            log.debug("Успешно нашли папку с архивами КПТ");
-        } else {
-            log.error("Ресурс не существует");
-            throw new NotFoundException(kptArchivesPath);
-        }
-        return resource.getFile();
     }
 
     @NotNull

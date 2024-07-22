@@ -1,4 +1,4 @@
-package ru.mycrg.auth_service;
+package ru.mycrg.auth_service.service.organization.settings;
 
 import org.junit.jupiter.api.Test;
 
@@ -6,9 +6,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static ru.mycrg.auth_service.util.SettingsHandler.*;
+import static ru.mycrg.auth_service.service.organization.settings.SettingsUtil.*;
 
-class MergeSettingsTest {
+public class MergeSettingsTest {
 
     @Test
     void mergeEmptySettings() {

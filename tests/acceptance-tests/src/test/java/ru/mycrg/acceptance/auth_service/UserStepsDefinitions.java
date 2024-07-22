@@ -14,7 +14,9 @@ import ru.mycrg.auth_service_contract.dto.UserInfoModel;
 import ru.mycrg.auth_service_contract.dto.UserUpdateDto;
 
 import java.util.*;
-import java.util.concurrent.*;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import static java.lang.String.format;
 import static java.lang.Thread.sleep;
@@ -105,7 +107,7 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
     public void initializeUser(DataTable dataTable) throws InterruptedException {
         userDto = mapToDto(dataTable.asList());
 
-        createUser(userDto);
+        createRandomUser(userDto);
     }
 
     @Given("Существует другой пользователь")
@@ -125,7 +127,7 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
         userDto.setEmail(email);
         userDto.setPassword("aA111111");
 
-        createUser(userDto);
+        createRandomUser(userDto);
     }
 
     @Then("На геосервере удалилась роль, связанная с пользователем")
@@ -167,15 +169,20 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
         authorizationBase.loginAsOwner();
 
         CountDownLatch counter = new CountDownLatch(30);
-        ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+        int availableProcessors = Runtime.getRuntime().availableProcessors();
+
+        System.out.println("availableProcessors: " + availableProcessors);
+
+        ExecutorService executorService = Executors.newFixedThreadPool(availableProcessors);
         for (int i = 0; i < 30; i++) {
+            int finalI = i;
             executorService.submit(() -> {
                 try {
-                    createRandomUser();
-
-                    counter.countDown();
+                    createUserWithEmail(generateString("EMAIL_8") + "_" + (finalI + 1));
                 } catch (Exception e) {
                     throw new RuntimeException(e);
+                } finally {
+                    counter.countDown();
                 }
             });
         }
@@ -300,7 +307,7 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
 
             System.out.println("*** *** Create user fiz1");
             userDto = fiz1;
-            createUser(fiz1);
+            createRandomUser(fiz1);
 
             // Пользователь fiz2, у которого начальником будет владелец организации
             UserCreateDto fiz2 = new UserCreateDto("fiz2", "fiz2", "fiz2", "job", generateString("NUMBER_10"),
@@ -309,7 +316,7 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
 
             System.out.println("*** *** Create user fiz2");
             userDto = fiz2;
-            createUser(fiz2);
+            createRandomUser(fiz2);
             Integer fiz2Id = userId;
 
             // Пользователь fiz3, у которого начальником будет fiz2
@@ -319,7 +326,7 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
 
             System.out.println("*** *** Create user fiz3");
             userDto = fiz3;
-            createUser(fiz3);
+            createRandomUser(fiz3);
             Integer fiz3Id = userId;
 
             // Пользователь fiz4, у которого начальником будет fiz3
@@ -329,7 +336,7 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
 
             System.out.println("*** *** Create user fiz4");
             userDto = fiz4;
-            createUser(fiz4);
+            createRandomUser(fiz4);
 
             // Пользователь fiz5, без начальника
             UserCreateDto fiz5 = new UserCreateDto("fiz5", "fiz5", "fiz5", "job", generateString("NUMBER_10"),
@@ -337,7 +344,7 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
 
             System.out.println("*** *** Create user fiz5");
             userDto = fiz5;
-            createUser(fiz5);
+            createRandomUser(fiz5);
 
             System.out.println("============= Print userPool =============");
             userPool.forEach((id, userDto) -> {
@@ -620,7 +627,8 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
                             get(String.format("/?size=%s&page=%s", entitiesPerPage, i));
 
             jsonPath = response.jsonPath();
-            usersId.addAll(response.jsonPath().getList("content.id"));
+            List<Long> userIds = jsonPath.getList("content.id");
+            usersId.addAll(userIds);
         }
     }
 
@@ -694,7 +702,7 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
         throw new RuntimeException("User not created: " + id);
     }
 
-    private void createUser(UserCreateDto dto) throws InterruptedException {
+    private void createRandomUser(UserCreateDto dto) throws InterruptedException {
         if (isUserExistInPool(dto.getEmail())) {
             makeExactUserAsCurrent(dto.getEmail());
         } else {
@@ -744,7 +752,16 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
                                     generateString("EMAIL_10"),
                                     "testPassword1");
 
-        createUser(userDto);
+        createRandomUser(userDto);
+    }
+
+    private void createUserWithEmail(String email) throws InterruptedException {
+        userDto = new UserCreateDto(generateString("STRING_10"),
+                                    generateString("STRING_10"),
+                                    email,
+                                    "testPassword1");
+
+        createRandomUser(userDto);
     }
 
     private void createRandomUserAndLogin() throws InterruptedException {

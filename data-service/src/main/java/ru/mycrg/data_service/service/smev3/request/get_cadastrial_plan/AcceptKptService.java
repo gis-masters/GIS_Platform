@@ -26,10 +26,10 @@ import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.exceptions.SmevRequestException;
 import ru.mycrg.data_service.repository.DocumentLibraryRepository;
 import ru.mycrg.data_service.repository.FileRepository;
-import ru.mycrg.data_service.service.files.FileService;
 import ru.mycrg.data_service.service.MinioService;
 import ru.mycrg.data_service.service.TaskLogService;
 import ru.mycrg.data_service.service.binary_analyzers.SimpleIntentHandler;
+import ru.mycrg.data_service.service.files.FileService;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service.service.smev3.model.CustomMultipartFile;
 import ru.mycrg.data_service.service.smev3.model.ProcessAdapterMessageResult;
@@ -40,7 +40,6 @@ import ru.mycrg.data_service_contract.enums.TaskStatus;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import java.io.InputStream;
 import java.io.StringReader;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -53,6 +52,7 @@ import static ru.mycrg.data_service.service.import_.kpt.KptSourceFilesService.KP
 import static ru.mycrg.data_service.service.reestrs.Systems.FGIS_EGRN;
 import static ru.mycrg.data_service.service.reestrs.Systems.SMEV_3;
 import static ru.mycrg.data_service.service.resources.ResourceQualifier.libraryQualifier;
+import static ru.mycrg.data_service.service.storage.FileStorageUtil.generateFileName;
 import static ru.mycrg.data_service.util.JsonConverter.mapper;
 import static ru.mycrg.data_service.util.JsonConverter.toJsonNode;
 import static ru.mycrg.data_service.util.SystemLibraryAttributes.*;
@@ -147,11 +147,12 @@ public class AcceptKptService {
             ResourceQualifier libraryRecordQualifier =
                     new ResourceQualifier(SYSTEM_SCHEMA_NAME, KPT_LIBRARY_ID, Long.parseLong(folderId), LIBRARY_RECORD);
             IRecord folder = recordsDao.findById(libraryRecordQualifier, schema)
-                    .orElseThrow(() -> new SmevRequestException("Не найдена папка с id: " + folderId));
+                                       .orElseThrow(
+                                               () -> new SmevRequestException("Не найдена папка с id: " + folderId));
             String taskNumber = folder.getAsString(ORDER_TASK_NUMBER_ATTRIBUTE);
             if (!StringUtils.isNumeric(taskNumber)) {
                 throw new SmevRequestException("У папки некорректно заполнен атрибут : " + ORDER_TASK_NUMBER_ATTRIBUTE
-                        + ": " + taskNumber);
+                                                       + ": " + taskNumber);
             }
             long taskId = Long.parseLong(taskNumber);
             log.debug("Найдена задача с id: {}", taskId);
@@ -205,8 +206,11 @@ public class AcceptKptService {
                                                               clientId + DEFAULT_FILE_FORMAT,
                                                               DEFAULT_FILENAME,
                                                               DEFAULT_CONTENT_TYPE);
-        String path = fileStorageService.storeFile(multipartFile, fileStorageService.generateFileName(multipartFile));
+        String path = fileStorageService.copyToTrash(multipartFile,
+                                                     generateFileName(multipartFile.getOriginalFilename()));
         String intents = simpleIntentHandler.defineIntent(multipartFile);
+
+        // TODO: Тут происходит чтот странное. Файлу сохранили в корзину? userLogin указали как: "СМЭВ 3" ?
         File entity = new File(multipartFile, intents, path, SMEV_3);
         File savedEntity = fileRepository.save(entity);
         ResourceQualifier fileQualifier = new ResourceQualifier(qualifier, docId);

@@ -15,6 +15,8 @@ import ru.mycrg.mediator.IRequestHandler;
 import java.util.ArrayList;
 import java.util.List;
 
+import static ru.mycrg.data_service.service.storage.FileStorageUtil.generateFileName;
+
 @Component
 public class CreateFileHandler implements IRequestHandler<CreateFileRequest, List<FileProjection>> {
 
@@ -43,7 +45,7 @@ public class CreateFileHandler implements IRequestHandler<CreateFileRequest, Lis
         MultipartFile[] files = request.getFiles();
         for (MultipartFile file: files) {
             if (file != null && !file.isEmpty()) {
-                String path = fileStorageService.storeFile(file, fileStorageService.generateFileName(file));
+                String path = fileStorageService.copyToTrash(file, generateFileName(file.getOriginalFilename()));
                 String intents = simpleIntentHandler.defineIntent(file);
 
                 File entity = new File(file, intents, path, authenticationFacade.getLogin());

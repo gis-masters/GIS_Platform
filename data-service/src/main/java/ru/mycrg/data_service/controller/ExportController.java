@@ -68,7 +68,7 @@ public class ExportController extends BaseController {
     public ResponseEntity<Resource> download(@PathVariable String fileName, HttpServletRequest request) {
         log.debug("Request to download file: {}", fileName);
 
-        Resource res = fileStorageService.load(fileName);
+        Resource res = fileStorageService.loadFromExportStorage(fileName);
 
         return ResponseEntity
                 .ok()

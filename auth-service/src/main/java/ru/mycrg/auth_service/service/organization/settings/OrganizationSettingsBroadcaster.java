@@ -9,7 +9,7 @@ import ru.mycrg.messagebus_contract.IMessageBusProducer;
 
 import java.util.Map;
 
-import static ru.mycrg.auth_service.util.SettingsHandler.mergeSettings;
+import static ru.mycrg.auth_service.service.organization.settings.SettingsUtil.mergeSettings;
 
 @Service
 public class OrganizationSettingsBroadcaster implements IOrgSettingsBroadcaster {

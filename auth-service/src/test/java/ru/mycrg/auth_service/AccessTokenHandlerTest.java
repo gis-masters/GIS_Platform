@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static ru.mycrg.auth_service.util.AccessTokenHandler.asMap;
 import static ru.mycrg.auth_service.util.AccessTokenHandler.extractUserSbjId;
 
-class AccessTokenHandlerTest {
+public class AccessTokenHandlerTest {
 
     @Test
     void shouldCorrectExtractUserSbjId_newFormat() throws IOException {

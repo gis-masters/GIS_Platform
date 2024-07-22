@@ -1,7 +1,6 @@
-package ru.mycrg.auth_service;
+package ru.mycrg.auth_service.service.organization.settings;
 
 import org.junit.jupiter.api.Test;
-import ru.mycrg.auth_service.service.organization.settings.OrgSettingsSchemaHolder;
 import ru.mycrg.auth_service_contract.dto.OrgSettingsResponseDto;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.data_service_contract.dto.SimplePropertyDto;
@@ -12,9 +11,9 @@ import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static ru.mycrg.auth_service.util.SettingsHandler.buildSchema;
+import static ru.mycrg.auth_service.service.organization.settings.SettingsUtil.buildSchema;
 
-class buildOrgSettingsSchemaTest {
+public class BuildOrgSettingsSchemaTest {
 
     private final OrgSettingsSchemaHolder settingsSchemaHolder = new OrgSettingsSchemaHolder();
 
@@ -66,34 +65,6 @@ class buildOrgSettingsSchemaTest {
         assertFalse(resultProps.contains("downloadXml"));
         assertFalse(resultProps.contains("createProject"));
         assertFalse(resultProps.contains("unknownProperty1"));
-    }
-
-    @Test
-    void whenOrgSettingsNotContainTags_tagsShouldNotBePresentInSchema() {
-        Map<String, Object> systemSettings = new HashMap<>();
-        systemSettings.put("tags", List.of("Приказ 10", "Приказ 123"));
-
-        SchemaDto schema = buildSchema(settingsSchemaHolder.getSchema(),
-                                       new OrgSettingsResponseDto(1L, systemSettings, new HashMap<>()));
-        Set<String> resultProps = schema.getProperties().stream()
-                                        .map(SimplePropertyDto::getName)
-                                        .collect(Collectors.toSet());
-
-        assertFalse(resultProps.contains("tags"));
-    }
-
-    @Test
-    void whenSystemSettingsNotContainTags_tagsShouldNotBePresentInSchema() {
-        Map<String, Object> orgSettings = new HashMap<>();
-        orgSettings.put("tags", List.of("Приказ 10", "Приказ 123"));
-
-        SchemaDto schema = buildSchema(settingsSchemaHolder.getSchema(),
-                                       new OrgSettingsResponseDto(1L, new HashMap<>(), orgSettings));
-        Set<String> resultProps = schema.getProperties().stream()
-                                        .map(SimplePropertyDto::getName)
-                                        .collect(Collectors.toSet());
-
-        assertFalse(resultProps.contains("tags"));
     }
 
     @Test

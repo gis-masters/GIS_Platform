@@ -1,7 +1,6 @@
 package ru.mycrg.acceptance.auth_service.org_settings;
 
 import io.cucumber.java.en.And;
-import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.restassured.http.ContentType;
@@ -15,28 +14,12 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static java.lang.Thread.sleep;
 import static org.junit.Assert.*;
 import static ru.mycrg.acceptance.auth_service.OrganizationStepsDefinitions.orgId;
 
 public class OrgSettingsStepsDefinitions extends BaseStepsDefinitions {
 
     private final AuthorizationBase authorizationBase = new AuthorizationBase();
-
-    @Given("Заданы глобальные настройки разрешающие всё")
-    public void setGlobalSettingsForOrgAsEnabled(Integer orgId) throws InterruptedException {
-        Map<String, Object> settings = new HashMap<>();
-        settings.put("downloadXml", true);
-        settings.put("createProject", true);
-        settings.put("downloadFiles", true);
-        settings.put("dataManagement", true);
-        settings.put("editProjectLayer", true);
-        settings.put("createLibraryItem", true);
-
-        updateOrgSetting(gson.toJson(new OrgSettingsRequestDto(Long.valueOf(orgId), settings)));
-
-        sleep(1000);
-    }
 
     @When("Пользователь отправляет GET запрос на эндпоинт {string}")
     public void getByUrlStep(String url) {

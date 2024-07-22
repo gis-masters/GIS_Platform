@@ -64,8 +64,8 @@ public class GisogdRfPublisher {
     public static final String INBOX_MARKER = "inbox_data";
     public static final String FILE_WITH_FIELDS = "gisogdrfFields.json";
 
-    @Value("${crg-options.fileStoragePath}")
-    private String baseFileStoragePath;
+    @Value("${crg-options.mainStoragePath}")
+    private String mainStoragePath;
 
     private final Logger log = LoggerFactory.getLogger(GisogdRfPublisher.class);
 
@@ -255,7 +255,7 @@ public class GisogdRfPublisher {
 
     private Map<String, Object> clearBySettings(String libraryName, Map<String, Object> documentContent) {
         Path pathToFile = Path.of(format("%s/%s/%s",
-                                         baseFileStoragePath,
+                                         mainStoragePath,
                                          getDefaultOrganizationName(authenticationFacade.getOrganizationId()),
                                          FILE_WITH_FIELDS));
 

@@ -162,10 +162,10 @@ services:
       CRG_OPTIONS_GIS_SERVICE_URL: http://gis-service:8082
       CRG_OPTIONS_DATA_SERVICE_URL: http://data-service:8084
       CRG_OPTIONS_UI_SERVICE_URL: http://portal-ui:80
-      CRG_OPTIONS_FILE_STORAGE_PATH: /opt/file_storage
-      CRG_OPTIONS_KPT_ARCHIVES_PATH: /opt/kpt_order/
-      CRG_OPTIONS_GEOSERVER_DB_NAME: geoserver_db
+      CRG_OPTIONS_KPT_STORAGE_PATH: /opt/kpt_order/
+      CRG_OPTIONS_MAIN_STORAGE_PATH: /opt/file_storage
       CRG_OPTIONS_EXPORT_STORAGE_PATH: /opt/export/
+      CRG_OPTIONS_GEOSERVER_DB_NAME: geoserver_db
       CRG_OPTIONS_CLIENT_ID: admin
       CRG_OPTIONS_CLIENT_SECRET: geoserver
       CRG_OPTIONS_SYSTEM_ADMIN_LOGIN: ${SYSTEM_ADMIN_LOGIN}

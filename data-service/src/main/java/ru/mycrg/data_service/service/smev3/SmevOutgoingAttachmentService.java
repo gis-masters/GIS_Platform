@@ -41,7 +41,7 @@ public class SmevOutgoingAttachmentService {
         try {
             var attachmentId = UUID.randomUUID();
 
-            var resource = fileStorageService.loadAsResource(file.getPath());
+            var resource = fileStorageService.loadFromMainStorage(file.getPath());
             byte[] fileBytes = Files.readAllBytes(resource.getFile().toPath());
 
             var s3fileName = String.format("fileid_%s", file.getId());

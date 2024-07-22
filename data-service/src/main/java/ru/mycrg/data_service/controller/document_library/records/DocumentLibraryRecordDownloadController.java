@@ -58,7 +58,7 @@ public class DocumentLibraryRecordDownloadController extends BaseController {
         String path = (String) record.getContent().get(field);
 
         try {
-            Resource resource = fileStorageService.loadAsResource(path);
+            Resource resource = fileStorageService.loadFromMainStorage(path);
 
             SchemaDto schema = libraryService.getSchema(docLibId);
             SystemAttributeHandler attributeHandler = this.systemAttributeHandler.init(schema, record.getContent());

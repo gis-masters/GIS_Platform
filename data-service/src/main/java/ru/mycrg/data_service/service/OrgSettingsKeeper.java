@@ -41,6 +41,23 @@ public class OrgSettingsKeeper {
         throwIfNotAllowed("reestrs");
     }
 
+    /**
+     * Ограничение дискового пространства для организации. Значение -1 означает что ограничений нет.
+     */
+    public int getStorageSize() {
+        Object o = getCurrentOrgSettings().get("storageSize");
+        if (o == null) {
+            return -1;
+        } else {
+            int size = Integer.parseInt(o.toString());
+            if (size < 0) {
+                return -1;
+            }
+
+            return size;
+        }
+    }
+
     public boolean isTagAllowed(String tag) {
         Map<String, Object> orgSettings = getCurrentOrgSettings();
         if (!orgSettings.containsKey("tags")) {

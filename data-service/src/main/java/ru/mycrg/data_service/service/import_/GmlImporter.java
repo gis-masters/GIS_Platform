@@ -1,7 +1,6 @@
 package ru.mycrg.data_service.service.import_;
 
 import net.bytebuddy.utility.RandomString;
-import org.geotools.gml.GMLException;
 import org.jetbrains.annotations.Nullable;
 import org.postgis.PGgeometry;
 import org.slf4j.Logger;
@@ -84,7 +83,7 @@ public class GmlImporter {
     public ImportReport doImport(String path, String datasetIdentifier, Boolean invertedCoordinates) {
         Resource file;
         try {
-            file = fileStorageService.loadAsResource(path);
+            file = fileStorageService.loadFromMainStorage(path);
         } catch (Exception e) {
             String msg = String.format("Не удалось загрузить файл по пути: '%s'", path);
             log.error(msg, e.getCause());

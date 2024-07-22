@@ -16,10 +16,7 @@ import ru.mycrg.data_service.dto.FileProjection;
 import ru.mycrg.data_service.dto.FileResourceQualifier;
 import ru.mycrg.data_service.dto.ResourceType;
 import ru.mycrg.data_service.entity.File;
-import ru.mycrg.data_service.exceptions.BadRequestException;
-import ru.mycrg.data_service.exceptions.DataServiceException;
-import ru.mycrg.data_service.exceptions.ForbiddenException;
-import ru.mycrg.data_service.exceptions.NotFoundException;
+import ru.mycrg.data_service.exceptions.*;
 import ru.mycrg.data_service.mappers.FileResourceQualifierMapper;
 import ru.mycrg.data_service.repository.FileRepository;
 import ru.mycrg.data_service.service.OrgSettingsKeeper;
@@ -28,6 +25,7 @@ import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service.service.resources.protectors.IMasterResourceProtector;
 import ru.mycrg.data_service.service.resources.protectors.MasterResourceProtector;
 import ru.mycrg.data_service.service.storage.FileStorageService;
+import ru.mycrg.data_service.service.storage.FileStorageSizeGuarder;
 import ru.mycrg.data_service.service.storage.exceptions.MalformedURLStorageException;
 import ru.mycrg.data_service.service.storage.exceptions.NoSuchFileStorageException;
 import ru.mycrg.mediator.Mediator;
@@ -59,6 +57,7 @@ public class FileController extends BaseController {
     private final Mediator mediator;
     private final FileRepository fileRepository;
     private final FileStorageService fileStorageService;
+    private final FileStorageSizeGuarder fileStorageSizeGuarder;
     private final IAuthenticationFacade authenticationFacade;
     private final IMasterResourceProtector resourceProtector;
     private final OrgSettingsKeeper orgSettingsKeeper;
@@ -68,12 +67,14 @@ public class FileController extends BaseController {
     public FileController(Mediator mediator,
                           FileRepository fileRepository,
                           FileStorageService fileStorageService,
+                          FileStorageSizeGuarder fileStorageSizeGuarder,
                           IAuthenticationFacade authenticationFacade,
                           MasterResourceProtector resourceProtector,
                           OrgSettingsKeeper orgSettingsKeeper) {
         this.mediator = mediator;
         this.fileStorageService = fileStorageService;
         this.fileRepository = fileRepository;
+        this.fileStorageSizeGuarder = fileStorageSizeGuarder;
         this.authenticationFacade = authenticationFacade;
         this.resourceProtector = resourceProtector;
         this.orgSettingsKeeper = orgSettingsKeeper;
@@ -83,6 +84,9 @@ public class FileController extends BaseController {
     @PostMapping(value = "/files")
     public ResponseEntity<List<FileProjection>> createFile(@RequestPart MultipartFile[] files) {
         validateRequest(files);
+        if (fileStorageSizeGuarder.isTooLarge(files)) {
+            throw new PayloadTooLargeException();
+        }
 
         List<FileProjection> projections = mediator.execute(new CreateFileRequest(files));
 
@@ -121,7 +125,7 @@ public class FileController extends BaseController {
                                                                       .filename(file.getTitle(), UTF_8)
                                                                       .build();
 
-            Resource resource = fileStorageService.loadAsResource(file.getPath());
+            Resource resource = fileStorageService.loadFromMainStorage(file.getPath());
 
             return ResponseEntity.ok()
                                  .contentType(MediaType.parseMediaType(defineFileContentType(request, resource)))

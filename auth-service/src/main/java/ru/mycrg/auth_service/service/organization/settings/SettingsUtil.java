@@ -1,4 +1,4 @@
-package ru.mycrg.auth_service.util;
+package ru.mycrg.auth_service.service.organization.settings;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -17,11 +17,11 @@ import java.util.stream.Collectors;
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 
-public class SettingsHandler {
+public class SettingsUtil {
 
-    private static final Logger log = LoggerFactory.getLogger(SettingsHandler.class);
+    private static final Logger log = LoggerFactory.getLogger(SettingsUtil.class);
 
-    private SettingsHandler() {
+    private SettingsUtil() {
         throw new IllegalStateException("Utility class");
     }
 
@@ -39,11 +39,7 @@ public class SettingsHandler {
         }
 
         Map<String, Object> result = new HashMap<>();
-        if (systemSettings.isEmpty() && orgSettings.isEmpty()) {
-            return result;
-        } else if (systemSettings.isEmpty()) {
-            result.putAll(orgSettings);
-
+        if (systemSettings.isEmpty()) {
             return result;
         } else if (orgSettings.isEmpty()) {
             result.putAll(systemSettings);
@@ -147,26 +143,6 @@ public class SettingsHandler {
 
                 result.put("tags", resultTags);
             }
-
-            // Process favoriteEpsg props
-//            if ("favorites_epsg".equals(name)) {
-//                List<String> resultEpsg = new ArrayList<>();
-//                List<String> epsg = (List<String>) result.get(name);
-//                if (epsg == null || epsg.isEmpty()) {
-//                    result.put("favorites_epsg", resultEpsg);
-//
-//                    continue;
-//                }
-//
-//                property.getEnumerations().forEach(item -> {
-//                    String value = item.getValue();
-//                    if (epsg.contains(value)) {
-//                        resultEpsg.add(item.getValue());
-//                    }
-//                });
-//
-//                result.put("favorites_epsg", resultEpsg);
-//            }
         }
 
         return result;
@@ -211,41 +187,11 @@ public class SettingsHandler {
                     }
                 } catch (Exception e) {
                     String msg = "Структура поля tags не соответствует ожиданию.";
-                    log.error(msg + ". По причине: {}", e.getMessage(), e);
+                    log.error("{}. По причине: {}", msg, e.getMessage(), e);
 
                     throw new BadRequestException(msg);
                 }
             }
-
-            // Process favorites_epsg props
-//            if ("favorites_epsg".equals(property.getName())) {
-//                try {
-//                    List<String> resultEpsg = new ArrayList<>();
-//
-//                    List<String> epsg = (List<String>) result.get(name);
-//                    if (epsg == null || epsg.isEmpty()) {
-//                        continue;
-//                    }
-//
-//                    property.getEnumerations().forEach(item -> {
-//                        String value = item.getValue();
-//                        if (epsg.contains(value)) {
-//                            resultEpsg.add(item.getValue());
-//                        }
-//                    });
-//
-//                    if (resultEpsg.isEmpty()) {
-//                        result.remove("favorites_epsg");
-//                    } else {
-//                        result.put("favorites_epsg", resultEpsg);
-//                    }
-//                } catch (Exception e) {
-//                    String msg = "Структура поля favorites_epsg не соответствует ожиданию.";
-//                    log.error(msg + ". По причине: {}", e.getMessage(), e);
-//
-//                    throw new BadRequestException(msg);
-//                }
-//            }
         }
 
         return result;
@@ -291,6 +237,17 @@ public class SettingsHandler {
                                          .filter(propertyDto -> propertyDto.getName().equals("tags"))
                                          .findFirst()
                                          .ifPresent(propertyDto -> propertyDto.setEnumerations(allowedTags));
+                        }
+                        break;
+                    case "storageSize":
+                        if (propertyExistAndNotNull) {
+                            newProperties.stream()
+                                         .filter(propertyDto -> propertyDto.getName().equals("storageSize"))
+                                         .findFirst()
+                                         .ifPresent(prop -> {
+                                             prop.setReadOnly(true);
+                                             prop.setDefaultValue(systemSettings.get(name));
+                                         });
                         }
                         break;
                     case "favorites_epsg":

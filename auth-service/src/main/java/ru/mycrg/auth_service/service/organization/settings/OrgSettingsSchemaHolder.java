@@ -19,7 +19,10 @@ import static ru.mycrg.http_client.JsonConverter.toJson;
 @Component
 public class OrgSettingsSchemaHolder {
 
+    // TODO: Только код EPSG
     public static final String DEFAULT_EPSG = "WGS 84 / Pseudo-Mercator, EPSG:3857, метры";
+
+    // TODO: Не хранить проекцию, а хранить только её код EPSG
     public static final String DEFAULT_FAVORITES_EPSG = "{\"authName\":\"EPSG\",\"authSrid\":3857,\"srtext\":\"" +
             "PROJCS[\\\"WGS 84 / Pseudo-Mercator\\\",GEOGCS[\\\"WGS 84\\\",DATUM[\\\"WGS_1984\\\",SPHEROID[\\\"" +
             "WGS 84\\\",6378137,298.257223563,AUTHORITY[\\\"EPSG\\\",\\\"7030\\\"]],AUTHORITY[\\\"EPSG\\\",\\\"" +
@@ -118,6 +121,14 @@ public class OrgSettingsSchemaHolder {
         defaultEpsg.setValueType(CHOICE);
         defaultEpsg.setEnumerations(List.of(new ValueTitleProjection(DEFAULT_EPSG)));
 
+        SimplePropertyDto storageSize = new SimplePropertyDto();
+        storageSize.setName("storageSize");
+        storageSize.setTitle("Размер доступного дискового пространства (Гб)");
+        storageSize.setValueType(INT);
+        storageSize.setDefaultValue(2);
+        storageSize.setMinInclusive(0);
+        storageSize.setMaxInclusive(100);
+
         props.add(createLibraryItem);
         props.add(dataManagement);
         props.add(downloadXml);
@@ -130,6 +141,7 @@ public class OrgSettingsSchemaHolder {
         props.add(tags);
         props.add(favoritesEpsg);
         props.add(defaultEpsg);
+        props.add(storageSize);
 
         this.schema.setProperties(props);
     }
@@ -159,15 +171,16 @@ public class OrgSettingsSchemaHolder {
     public Map<String, Object> allInclusive() {
         Map<String, Object> result = new HashMap<>();
         this.schema.getProperties().forEach(property -> {
-            if (property.getValueType().equals(BOOLEAN.name())) {
+            String type = property.getValueType();
+            if (type.equals(BOOLEAN.name())) {
                 result.put(property.getName(), true);
-            }
-
-            if (property.getValueType().equals(CHOICE.name())) {
+            } else if (type.equals(CHOICE.name())) {
                 List<Object> items = new ArrayList<>();
                 property.getEnumerations().forEach(item -> items.add(item.getTitle()));
 
                 result.put(property.getName(), items);
+            } else {
+                result.put(property.getName(), property.getDefaultValue());
             }
         });
 

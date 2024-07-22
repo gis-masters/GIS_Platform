@@ -4,6 +4,7 @@
     "title": "НТО",
     "description": "Описание специализации НТО",
     "settings": {
+      "storageSize": 20,
       "reestrs": false,
       "sedDialog": false,
       "downloadXml": true,

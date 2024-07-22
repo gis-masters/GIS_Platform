@@ -3,7 +3,6 @@ package ru.mycrg.data_service.service.export;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.env.Environment;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -20,6 +19,7 @@ import ru.mycrg.data_service.service.CsvHandler;
 import ru.mycrg.data_service.service.WsNotificationService;
 import ru.mycrg.data_service.service.processes.ProcessService;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
+import ru.mycrg.data_service.service.storage.FileStorageService;
 import ru.mycrg.data_service.util.JsonConverter;
 import ru.mycrg.data_service.util.filter.CrgFilter;
 import ru.mycrg.data_service.util.filter.FilterCondition;
@@ -50,39 +50,39 @@ public class LayerValidationReportService {
     private static final Integer PAGE_SIZE = 100;
     private static final String NOT_PASSED = "не обработан ";
 
-    private final String exportStoragePath;
-    private final String[] header;
+    private final String[] headers;
 
     private CsvHandler csvHandler;
     private ValidationResultDao validationResultDao;
 
     private final ProcessService processService;
     private final DatasourceFactory datasourceFactory;
+    private final FileStorageService fileStorageService;
     private final IAuthenticationFacade authenticationFacade;
     private final WsNotificationService wsNotificationService;
     private final SchemasAndTablesRepository schemasAndTablesRepository;
 
-    public LayerValidationReportService(Environment environment,
-                                        IAuthenticationFacade authenticationFacade,
+    public LayerValidationReportService(IAuthenticationFacade authenticationFacade,
                                         ProcessService processService,
                                         DatasourceFactory datasourceFactory,
+                                        FileStorageService fileStorageService,
                                         WsNotificationService wsNotificationService,
                                         SchemasAndTablesRepository schemasAndTablesRepository) {
         this.authenticationFacade = authenticationFacade;
         this.processService = processService;
         this.datasourceFactory = datasourceFactory;
+        this.fileStorageService = fileStorageService;
         this.wsNotificationService = wsNotificationService;
         this.schemasAndTablesRepository = schemasAndTablesRepository;
 
-        exportStoragePath = environment.getRequiredProperty("crg-options.exportStoragePath");
-        header = new String[]{" Класс объектов", " Объект класса", " Идентификатор объекта(GLOBALID)", " Имя атрибута",
-                " Значение", " Описание ошибки"};
+        this.headers = new String[]{" Класс объектов", " Объект класса", " Идентификатор объекта(GLOBALID)",
+                " Имя атрибута", " Значение", " Описание ошибки"};
     }
 
     public Process generateReport(ValidationRequestDto request) {
         final List<ExportResourceModel> resources = request.getResources();
         final String title = String.format("Экспорт отчета об ошибках. Кол-во слоев: %d", resources.size());
-        final String filePath = exportStoragePath + initFileName();
+        final String filePath = fileStorageService.buildPathToExportStorage(initFileName());
         final String dbName = getDefaultDatabaseName(authenticationFacade.getOrganizationId());
         final Map<String, SchemaDto> schemas = fetchSchemas(resources);
         final Process process = processService.create(authenticationFacade.getLogin(),
@@ -131,7 +131,7 @@ public class LayerValidationReportService {
                                  Map<String, SchemaDto> schemas,
                                  String filePath,
                                  ValidationReportModel model) throws IOException {
-        csvHandler = new CsvHandler(filePath, header);
+        csvHandler = new CsvHandler(filePath, headers);
 
         resources.forEach(resource -> {
             String tableIdentifier = resource.getTable();

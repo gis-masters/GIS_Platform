@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 import static ru.mycrg.auth_service.service.organization.settings.OrganizationSettingService.ROOT_ORG_ID;
 import static ru.mycrg.auth_service.service.organization.settings.SettingsMapper.mapToSettings;
 import static ru.mycrg.auth_service.service.organization.settings.SettingsMapper.mapToSystemSettings;
-import static ru.mycrg.auth_service.util.SettingsHandler.processSettings;
+import static ru.mycrg.auth_service.service.organization.settings.SettingsUtil.processSettings;
 
 @Component
 public class OrganizationSettingsRepository {

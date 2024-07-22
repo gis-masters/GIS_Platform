@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 import static com.vladmihalcea.hibernate.type.json.internal.JacksonUtil.toJsonNode;
 import static ru.mycrg.auth_service.service.organization.settings.SettingsMapper.mapToSettings;
 import static ru.mycrg.auth_service.service.organization.settings.SpecializationSettingsHandler.fillSettingsBySpecialization;
-import static ru.mycrg.auth_service.util.SettingsHandler.*;
+import static ru.mycrg.auth_service.service.organization.settings.SettingsUtil.*;
 
 @Service
 @Transactional

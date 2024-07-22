@@ -41,6 +41,9 @@ public class SpecializationSettingsHandler {
                            ? settings.getFavoritesEpsg()
                            : List.of(DEFAULT_FAVORITES_EPSG));
 
+        // Storage size
+        result.put("storageSize", settings.getStorageSize() != null ? settings.getStorageSize() : 0);
+
         // Boolean settings - если настройка не упомянута она выключена
         result.put("reestrs", settings.getReestrs() != null && settings.getReestrs());
         result.put("sedDialog", settings.getSedDialog() != null && settings.getSedDialog());

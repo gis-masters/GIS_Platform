@@ -173,7 +173,7 @@ public class GetCadastrialPlanRequestService extends RequestProcessor {
         clientIdToCadastrialNumber.forEach((clientId, cadastrialNumber) -> {
             String kptArchiveFileName = buildKptArchiveFileName(cadastrialNumber);
             try {
-                File kptArchive = fileStorageService.loadKptArchive(kptArchiveFileName);
+                File kptArchive = fileStorageService.loadFromKptStorage(kptArchiveFileName);
                 byte[] archiveBytes = Files.readAllBytes(kptArchive.toPath());
 
                 minioService.uploadFile(kptArchive.getName(), archiveBytes, getSmev3Config().getS3bucketOutgoing());
@@ -365,7 +365,10 @@ public class GetCadastrialPlanRequestService extends RequestProcessor {
 
         List<String> nonExistentArchives;
         try {
-            nonExistentArchives = fileStorageService.getNonExistentFileNames(archiveFileNames);
+            List<String> existKptArchives = fileStorageService.getExistKptArchives();
+            nonExistentArchives = archiveFileNames.stream()
+                                                  .filter(fileName -> !existKptArchives.contains(fileName))
+                                                  .collect(Collectors.toList());
         } catch (Exception e) {
             log.error("Во время проверки наличия на диске архивов КПТ произошла ошибка: {}", e.getMessage());
 

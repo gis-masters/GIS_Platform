@@ -4,6 +4,7 @@
     "title": "НТО",
     "description": "Описание специализации НТО",
     "settings": {
+      "storageSize": 20,
       "reestrs": true,
       "sedDialog": true,
       "downloadXml": true,
@@ -57,6 +58,7 @@
     "title": "Фотоконтроль",
     "description": "Специализация для организации фотоконтроля при обследованиях территории. Специализация позволяет: загружать и размещать на карте результаты фото-контроля с привязкой к местности и направлением съемки.",
     "settings": {
+      "storageSize": 2,
       "createProject": true,
       "downloadFiles": true,
       "dataManagement": true,
@@ -98,6 +100,7 @@
     "title": "Нестационарные торговые объекты",
     "description": "Специализация для инвентаризации и управления нестационарными торговыми объектами",
     "settings": {
+      "storageSize": 2,
       "createProject": true,
       "downloadFiles": true,
       "dataManagement": true,

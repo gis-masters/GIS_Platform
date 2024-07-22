@@ -13,9 +13,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static ru.mycrg.auth_service.service.organization.settings.SpecializationSettingsHandler.fillSettingsBySpecialization;
 
-public class SpecializationSettingsHandlerTest {
+public class SpecializationSettingsUtilTest {
 
-    public static final int EXPECTED_NUMBER_OF_SETTINGS = 12;
+    public static final int EXPECTED_NUMBER_OF_SETTINGS = 13;
 
     @Test
     void shouldCorrectHandleNullable() {
@@ -57,6 +57,7 @@ public class SpecializationSettingsHandlerTest {
         assertEquals(FALSE, result.get("dataManagement"));
         assertEquals(FALSE, result.get("editProjectLayer"));
         assertEquals(FALSE, result.get("createLibraryItem"));
+        assertEquals(0, result.get("storageSize"));
     }
 
     @Test
@@ -65,12 +66,13 @@ public class SpecializationSettingsHandlerTest {
                                                      "someOtherKey", "someValue",
                                                      "downloadXml", TRUE);
 
-        Settings settings = new Settings();
-        settings.setCreateProject(TRUE);
-        settings.setDownloadFiles(TRUE);
-        settings.setTags(List.of("firstTag", "secondTag"));
+        Settings settingsBySpecialization = new Settings();
+        settingsBySpecialization.setCreateProject(TRUE);
+        settingsBySpecialization.setDownloadFiles(TRUE);
+        settingsBySpecialization.setTags(List.of("firstTag", "secondTag"));
+        settingsBySpecialization.setStorageSize(20);
 
-        Map<String, Object> result = fillSettingsBySpecialization(settings, initialSettings);
+        Map<String, Object> result = fillSettingsBySpecialization(settingsBySpecialization, initialSettings);
 
         assertEquals(EXPECTED_NUMBER_OF_SETTINGS, result.size());
         assertEquals("[firstTag, secondTag]", result.get("tags").toString());
@@ -83,5 +85,6 @@ public class SpecializationSettingsHandlerTest {
         assertEquals(FALSE, result.get("dataManagement"));
         assertEquals(FALSE, result.get("editProjectLayer"));
         assertEquals(FALSE, result.get("createLibraryItem"));
+        assertEquals(20, result.get("storageSize"));
     }
 }

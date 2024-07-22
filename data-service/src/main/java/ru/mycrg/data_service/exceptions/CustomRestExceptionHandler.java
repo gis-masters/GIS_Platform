@@ -232,6 +232,15 @@ public class CustomRestExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(errorModel, new HttpHeaders(), errorModel.getStatus());
     }
 
+    @ExceptionHandler(PayloadTooLargeException.class)
+    public ResponseEntity<Object> handlePayloadTooLarge(final RuntimeException e) {
+        PayloadTooLargeException ex = (PayloadTooLargeException) e;
+
+        ApiErrorModel errorModel = new ApiErrorModel(PAYLOAD_TOO_LARGE, ex.getMessage());
+
+        return new ResponseEntity<>(errorModel, new HttpHeaders(), errorModel.getStatus());
+    }
+
     @ExceptionHandler(ConflictException.class)
     public ResponseEntity<Object> handleConflict(final RuntimeException ex) {
         ApiErrorModel errorModel = new ApiErrorModel(CONFLICT, ex.getLocalizedMessage());

@@ -23,8 +23,6 @@ import ru.mycrg.data_service_contract.enums.TaskType;
 
 import java.util.*;
 
-import static java.lang.Boolean.FALSE;
-import static java.lang.Boolean.TRUE;
 import static java.lang.Thread.sleep;
 import static org.apache.http.HttpStatus.*;
 import static org.junit.Assert.*;
@@ -237,22 +235,26 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
                            && tags.containsAll(tagsBySpecialization)
                            && tagsBySpecialization.containsAll(tags));
 
-        checkProperty(specializationSettings, "reestrs", TRUE);
-        checkProperty(specializationSettings, "sedDialog", TRUE);
-        checkProperty(specializationSettings, "downloadXml", TRUE);
-        checkProperty(specializationSettings, "taskManagement", TRUE);
-        checkProperty(specializationSettings, "createProject", TRUE);
-        checkProperty(specializationSettings, "downloadFiles", TRUE);
-        checkProperty(specializationSettings, "dataManagement", TRUE);
-        checkProperty(specializationSettings, "editProjectLayer", TRUE);
-        checkProperty(specializationSettings, "createLibraryItem", TRUE);
+        checkIsTrue(specializationSettings, "reestrs");
+        checkIsTrue(specializationSettings, "sedDialog");
+        checkIsTrue(specializationSettings, "downloadXml");
+        checkIsTrue(specializationSettings, "taskManagement");
+        checkIsTrue(specializationSettings, "createProject");
+        checkIsTrue(specializationSettings, "downloadFiles");
+        checkIsTrue(specializationSettings, "dataManagement");
+        checkIsTrue(specializationSettings, "editProjectLayer");
+        checkIsTrue(specializationSettings, "createLibraryItem");
+
+        Object storageSize = specializationSettings.get("storageSize");
+        assertNotNull(storageSize);
+        assertEquals(20, storageSize);
     }
 
-    private void checkProperty(Map<String, Object> specializationSettings, String key, Boolean expectedValue) {
+    private void checkIsTrue(Map<String, Object> specializationSettings, String key) {
         Object actualValue = specializationSettings.get(key);
 
         assertNotNull(actualValue);
-        assertEquals(expectedValue, actualValue);
+        assertEquals(Boolean.TRUE, actualValue);
     }
 
     /**
