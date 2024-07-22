@@ -70,10 +70,10 @@ interface LayerMenuProps {
   open: boolean;
   x: number;
   y: number;
-  anchor: HTMLElement;
   isGroup: boolean;
   editMode: boolean;
   layerWithError: boolean;
+  anchor?: HTMLElement;
   onClose(): void;
 }
 

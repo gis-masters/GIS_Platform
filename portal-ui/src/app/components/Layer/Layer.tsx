@@ -106,7 +106,7 @@ export class Layer extends Component<LayerProps> {
           {isVectorLayer && <LayerLegend layer={data as CrgVectorLayer} />}
         </LayerInnards>
 
-        {this.menuAnchor && (
+        {(this.menuAnchor || !!(this.menuX && this.menuY)) && (
           <LayerMenu
             isGroup={isGroup}
             entity={data}
@@ -194,7 +194,10 @@ export class Layer extends Component<LayerProps> {
       return;
     }
 
-    delete this.menuAnchor;
+    if (this.menuAnchor) {
+      delete this.menuAnchor;
+    }
+
     this.menuX = e.clientX - 2;
     this.menuY = e.clientY - 4;
     this.menuOpen = true;
