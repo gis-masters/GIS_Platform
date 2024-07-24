@@ -65,14 +65,6 @@ export class OrganizationSettings {
   }
 
   @computed
-  get dataManagement(): boolean {
-    return this.allowedToUse(
-      !!this.orgSettings?.system?.dataManagement,
-      !!this.orgSettings?.organization?.dataManagement
-    );
-  }
-
-  @computed
   get editProjectLayer(): boolean {
     return this.allowedToUse(
       !!this.orgSettings?.system?.editProjectLayer,

@@ -13,8 +13,12 @@ export async function mockSettings(browser: WebdriverIO.Browser) {
         downloadXml: true,
         createProject: true,
         downloadFiles: true,
-        dataManagement: true,
         editProjectLayer: true,
+        viewDocumentLibrary: true,
+        viewBugReport: true,
+        downloadGml: true,
+        importShp: true,
+        viewServicesCalculator: true,
         taskManagement: true,
         createLibraryItem: true
       },
@@ -22,8 +26,12 @@ export async function mockSettings(browser: WebdriverIO.Browser) {
         downloadXml: true,
         createProject: true,
         downloadFiles: true,
-        dataManagement: true,
         editProjectLayer: true,
+        viewDocumentLibrary: true,
+        viewBugReport: true,
+        downloadGml: true,
+        importShp: true,
+        viewServicesCalculator: true,
         taskManagement: true,
         createLibraryItem: true
       }

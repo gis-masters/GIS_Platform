@@ -48,15 +48,22 @@ export interface TableContentModel {
 }
 
 export interface Settings {
+  storageSize: number;
   reestrs: boolean;
   sedDialog: boolean;
   downloadXml: boolean;
   taskManagement: boolean;
   createProject: boolean;
   downloadFiles: boolean;
-  dataManagement: boolean;
+  viewDocumentLibrary: boolean;
+  viewBugReport: boolean;
+  downloadGml: boolean;
+  importShp: boolean;
+  viewServicesCalculator: boolean;
   editProjectLayer: boolean;
   createLibraryItem: boolean;
+  favoritesEpsg: string[];
+  defaultEpsg: string;
   tags: string[];
 }
 

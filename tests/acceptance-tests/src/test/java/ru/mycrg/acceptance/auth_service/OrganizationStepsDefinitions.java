@@ -241,9 +241,13 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
         checkIsTrue(specializationSettings, "taskManagement");
         checkIsTrue(specializationSettings, "createProject");
         checkIsTrue(specializationSettings, "downloadFiles");
-        checkIsTrue(specializationSettings, "dataManagement");
         checkIsTrue(specializationSettings, "editProjectLayer");
         checkIsTrue(specializationSettings, "createLibraryItem");
+        checkIsTrue(specializationSettings, "viewDocumentLibrary");
+        checkIsTrue(specializationSettings, "viewBugReport");
+        checkIsTrue(specializationSettings, "downloadGml");
+        checkIsTrue(specializationSettings, "importShp");
+        checkIsTrue(specializationSettings, "viewServicesCalculator");
 
         Object storageSize = specializationSettings.get("storageSize");
         assertNotNull(storageSize);

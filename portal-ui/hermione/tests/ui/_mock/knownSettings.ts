@@ -11,7 +11,11 @@ export async function mockKnownSettings(browser: WebdriverIO.Browser) {
       downloadXml: 'Скачивание xml межевого плана и выгрузка координат и геометрии',
       createLibraryItem: 'Создание элементов в библиотеке',
       editProjectLayer: 'Настройка слоев проекта',
-      dataManagement: 'Управление данными',
+      viewDocumentLibrary: 'Доступность библиотек документов',
+      viewBugReport: 'Проверка ошибок по приказу',
+      downloadGml: 'Выгрузка GML',
+      importShp: 'Импорт SHP архивов',
+      viewServicesCalculator: 'Калькулятор предоставления сведений',
       createProject: 'Создание проекта',
       taskManagement: 'Управление задачами',
       downloadFiles: 'Скачать документ'

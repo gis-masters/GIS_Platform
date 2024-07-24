@@ -7,7 +7,6 @@ import { cn } from '@bem-react/classname';
 
 import { currentProject } from '../../../stores/CurrentProject.store';
 import { currentUser } from '../../../stores/CurrentUser.store';
-import { organizationSettings } from '../../../stores/OrganizationSettings.store';
 import { Pages, route } from '../../../stores/Route.store';
 import { Link } from '../../Link/Link';
 import { WorkspaceHeaderBurger } from '../Burger/WorkspaceHeader-Burger';
@@ -66,16 +65,14 @@ export class WorkspaceHeaderMenu extends Component {
             </MenuItem>
           </Link>
 
-          {organizationSettings.dataManagement && (
-            <Link href='/data-management' variant='contents' delay={300}>
-              <MenuItem onClick={this.close}>
-                <ListItemIcon>
-                  <Storage />
-                </ListItemIcon>
-                <span className={cnWorkspaceHeaderMenuItemTitle()}>Управление данными</span>
-              </MenuItem>
-            </Link>
-          )}
+          <Link href='/data-management' variant='contents' delay={300}>
+            <MenuItem onClick={this.close}>
+              <ListItemIcon>
+                <Storage />
+              </ListItemIcon>
+              <span className={cnWorkspaceHeaderMenuItemTitle()}>Управление данными</span>
+            </MenuItem>
+          </Link>
 
           {currentUser.isAdmin && (
             <Link href='/org-admin' variant='contents' delay={300}>

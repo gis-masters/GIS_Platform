@@ -67,10 +67,14 @@ function isSettingsNotValid(settings: OrgSettings): boolean {
     !settings.createProject ||
     !settings.createLibraryItem ||
     !settings.editProjectLayer ||
+    !settings.viewDocumentLibrary ||
+    !settings.viewBugReport ||
+    !settings.downloadGml ||
+    !settings.importShp ||
+    !settings.viewServicesCalculator ||
     !settings.default_epsg ||
     !settings.favorites_epsg ||
     settings.favorites_epsg.length < 1 ||
-    !settings.tags ||
-    !settings.dataManagement
+    !settings.tags
   );
 }

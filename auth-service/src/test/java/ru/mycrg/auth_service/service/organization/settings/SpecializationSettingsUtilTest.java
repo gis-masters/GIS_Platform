@@ -15,7 +15,7 @@ import static ru.mycrg.auth_service.service.organization.settings.Specialization
 
 public class SpecializationSettingsUtilTest {
 
-    public static final int EXPECTED_NUMBER_OF_SETTINGS = 13;
+    public static final int EXPECTED_NUMBER_OF_SETTINGS = 17;
 
     @Test
     void shouldCorrectHandleNullable() {
@@ -54,7 +54,6 @@ public class SpecializationSettingsUtilTest {
         assertEquals(FALSE, result.get("createProject"));
         assertEquals(FALSE, result.get("downloadFiles"));
         assertEquals(FALSE, result.get("taskManagement"));
-        assertEquals(FALSE, result.get("dataManagement"));
         assertEquals(FALSE, result.get("editProjectLayer"));
         assertEquals(FALSE, result.get("createLibraryItem"));
         assertEquals(0, result.get("storageSize"));
@@ -82,7 +81,6 @@ public class SpecializationSettingsUtilTest {
         assertEquals(TRUE, result.get("createProject"));
         assertEquals(TRUE, result.get("downloadFiles"));
         assertEquals(FALSE, result.get("taskManagement"));
-        assertEquals(FALSE, result.get("dataManagement"));
         assertEquals(FALSE, result.get("editProjectLayer"));
         assertEquals(FALSE, result.get("createLibraryItem"));
         assertEquals(20, result.get("storageSize"));

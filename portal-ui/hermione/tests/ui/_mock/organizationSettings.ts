@@ -10,8 +10,12 @@ export async function mockOrganizationSettings(browser: WebdriverIO.Browser) {
     response: JSON.stringify({
       downloadFiles: true,
       createProject: true,
-      dataManagement: true,
       editProjectLayer: true,
+      viewDocumentLibrary: true,
+      viewBugReport: true,
+      downloadGml: true,
+      importShp: true,
+      viewServicesCalculator: true,
       createLibraryItem: true,
       taskManagement: true,
       downloadXml: true

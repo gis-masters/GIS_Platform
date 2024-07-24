@@ -52,17 +52,41 @@ public class OrgSettingsSchemaHolder {
         createLibraryItem.setValueType(BOOLEAN);
         createLibraryItem.setDefaultValue(false);
 
-        SimplePropertyDto dataManagement = new SimplePropertyDto();
-        dataManagement.setName("dataManagement");
-        dataManagement.setTitle("Управление данными");
-        dataManagement.setValueType(BOOLEAN);
-        dataManagement.setDefaultValue(false);
-
         SimplePropertyDto downloadXml = new SimplePropertyDto();
         downloadXml.setName("downloadXml");
         downloadXml.setTitle("Скачивание xml межевого плана и выгрузка координат и геометрии");
         downloadXml.setValueType(BOOLEAN);
         downloadXml.setDefaultValue(false);
+
+        SimplePropertyDto viewDocumentLibrary = new SimplePropertyDto();
+        viewDocumentLibrary.setName("viewDocumentLibrary");
+        viewDocumentLibrary.setTitle("Доступность библиотек документов");
+        viewDocumentLibrary.setValueType(BOOLEAN);
+        viewDocumentLibrary.setDefaultValue(false);
+
+        SimplePropertyDto viewBugReport = new SimplePropertyDto();
+        viewBugReport.setName("viewBugReport");
+        viewBugReport.setTitle("Проверка ошибок по приказу");
+        viewBugReport.setValueType(BOOLEAN);
+        viewBugReport.setDefaultValue(false);
+
+        SimplePropertyDto downloadGml = new SimplePropertyDto();
+        downloadGml.setName("downloadGml");
+        downloadGml.setTitle("Выгрузка GML");
+        downloadGml.setValueType(BOOLEAN);
+        downloadGml.setDefaultValue(false);
+
+        SimplePropertyDto importShp = new SimplePropertyDto();
+        importShp.setName("importShp");
+        importShp.setTitle("Импорт SHP архивов");
+        importShp.setValueType(BOOLEAN);
+        importShp.setDefaultValue(false);
+
+        SimplePropertyDto viewServicesCalculator = new SimplePropertyDto();
+        viewServicesCalculator.setName("viewServicesCalculator");
+        viewServicesCalculator.setTitle("Калькулятор предоставления сведений");
+        viewServicesCalculator.setValueType(BOOLEAN);
+        viewServicesCalculator.setDefaultValue(false);
 
         SimplePropertyDto downloadFiles = new SimplePropertyDto();
         downloadFiles.setName("downloadFiles");
@@ -130,7 +154,11 @@ public class OrgSettingsSchemaHolder {
         storageSize.setMaxInclusive(100);
 
         props.add(createLibraryItem);
-        props.add(dataManagement);
+        props.add(viewDocumentLibrary);
+        props.add(viewBugReport);
+        props.add(downloadGml);
+        props.add(importShp);
+        props.add(viewServicesCalculator);
         props.add(downloadXml);
         props.add(downloadFiles);
         props.add(createProject);

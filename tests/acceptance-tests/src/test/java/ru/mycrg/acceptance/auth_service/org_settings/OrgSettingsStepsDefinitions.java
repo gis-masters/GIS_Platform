@@ -103,9 +103,13 @@ public class OrgSettingsStepsDefinitions extends BaseStepsDefinitions {
         settings.put("downloadXml", true);
         settings.put("createProject", true);
         settings.put("downloadFiles", true);
-        settings.put("dataManagement", true);
         settings.put("editProjectLayer", true);
         settings.put("createLibraryItem", true);
+        settings.put("viewDocumentLibrary", true);
+        settings.put("viewBugReport", true);
+        settings.put("downloadGml", true);
+        settings.put("importShp", true);
+        settings.put("viewServicesCalculator", true);
 
         updateOrgSetting(gson.toJson(new OrgSettingsRequestDto(Long.valueOf(orgId), settings)));
     }

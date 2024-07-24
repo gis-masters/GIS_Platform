@@ -51,9 +51,16 @@ public class SpecializationSettingsHandler {
         result.put("createProject", settings.getCreateProject() != null && settings.getCreateProject());
         result.put("downloadFiles", settings.getDownloadFiles() != null && settings.getDownloadFiles());
         result.put("taskManagement", settings.getTaskManagement() != null && settings.getTaskManagement());
-        result.put("dataManagement", settings.getDataManagement() != null && settings.getDataManagement());
         result.put("editProjectLayer", settings.getEditProjectLayer() != null && settings.getEditProjectLayer());
         result.put("createLibraryItem", settings.getCreateLibraryItem() != null && settings.getCreateLibraryItem());
+
+        result.put("importShp", settings.getImportShp() != null && settings.getImportShp());
+        result.put("downloadGml", settings.getDownloadGml() != null && settings.getDownloadGml());
+        result.put("viewBugReport", settings.getViewBugReport() != null && settings.getViewBugReport());
+        result.put("viewDocumentLibrary",
+                   settings.getViewDocumentLibrary() != null && settings.getViewDocumentLibrary());
+        result.put("viewServicesCalculator",
+                   settings.getViewServicesCalculator() != null && settings.getViewServicesCalculator());
 
         return result;
     }

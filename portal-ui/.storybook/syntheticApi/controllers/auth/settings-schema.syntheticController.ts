@@ -24,8 +24,32 @@ class SettingsSchemaSyntheticController implements SyntheticController {
           defaultValue: false
         },
         {
-          name: 'dataManagement',
-          title: 'Управление данными',
+          name: 'viewDocumentLibrary',
+          title: 'Доступность библиотек документов',
+          propertyType: PropertyType.BOOL,
+          defaultValue: false
+        },
+        {
+          name: 'viewServicesCalculator',
+          title: 'Калькулятор предоставления сведений',
+          propertyType: PropertyType.BOOL,
+          defaultValue: false
+        },
+        {
+          name: 'importShp',
+          title: 'Импорт SHP архивов',
+          propertyType: PropertyType.BOOL,
+          defaultValue: false
+        },
+        {
+          name: 'viewBugReport',
+          title: 'Проверка ошибок по приказу',
+          propertyType: PropertyType.BOOL,
+          defaultValue: false
+        },
+        {
+          name: 'downloadGml',
+          title: 'Выгрузка GML',
           propertyType: PropertyType.BOOL,
           defaultValue: false
         },

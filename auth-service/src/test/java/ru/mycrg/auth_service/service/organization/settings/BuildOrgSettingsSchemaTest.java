@@ -28,7 +28,6 @@ public class BuildOrgSettingsSchemaTest {
     // | Название         | Настройки           | Свойство попадает |
     // |                  | сис. администратора | в схему           |
     // --------------------------------------------------------------------
-    // | dataManagement   | true                | true              | Разрешено сис. администратором
     // | editProjectLayer | true                | true              | Разрешено сис. администратором
     // | taskManagement   | true                | true              | Разрешено сис. администратором
     // | downloadXml      | -                   | false             | Отсутствие воспринимается как запрет
@@ -38,14 +37,12 @@ public class BuildOrgSettingsSchemaTest {
     void commonBooleanCases() {
         // Arrange
         Map<String, Object> systemSettings = new HashMap<>();
-        systemSettings.put("dataManagement", true);
         systemSettings.put("editProjectLayer", true);
         systemSettings.put("taskManagement", true);
         systemSettings.put("createProject", false);
         systemSettings.put("unknownProperty1", true);
 
         Map<String, Object> orgSettings = new HashMap<>();
-        orgSettings.put("dataManagement", true);
         orgSettings.put("createProject", true);
         orgSettings.put("taskManagement", false);
         orgSettings.put("unknownProperty1", true);
@@ -58,7 +55,6 @@ public class BuildOrgSettingsSchemaTest {
                                         .collect(Collectors.toSet());
 
         // Assert
-        assertTrue(resultProps.contains("dataManagement"));
         assertTrue(resultProps.contains("editProjectLayer"));
         assertTrue(resultProps.contains("taskManagement"));
 
