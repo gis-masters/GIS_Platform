@@ -15,6 +15,7 @@ import java.math.BigDecimal;
 import java.util.*;
 
 import static ru.mycrg.data_service.dao.config.DaoProperties.DEFAULT_GEOMETRY_COLUMN_NAME;
+import static ru.mycrg.data_service.kpt_import.reader.AddressExtractor.getAddress;
 
 @Component
 public class ZuReader extends CommonKptXmlElementReader<ZuElement, LandRecord> {
@@ -90,48 +91,7 @@ public class ZuReader extends CommonKptXmlElementReader<ZuElement, LandRecord> {
             return null;
         }
 
-        AddressMain mainAddress = addressLocation.getAddress();
-        if (mainAddress == null) {
-            return null;
-        }
-
-        String readableAddress = mainAddress.getReadableAddress();
-        if (readableAddress != null) {
-            return readableAddress;
-        } else {
-            Address addressFias = mainAddress.getAddressFias();
-            if (addressFias == null) {
-                return null;
-            }
-
-            AddressCity ls = addressFias.getLevelSettlement();
-            Dict region = ls.getRegion();
-            City city = ls.getCity();
-            UrbanDistrict district = ls.getUrbanDistrict();
-
-            DetailedLevel dl = addressFias.getDetailedLevel();
-            Street street = dl.getStreet();
-            Apartment apartment = dl.getApartment();
-            Level1 level1 = dl.getLevel1();
-            Level2 level2 = dl.getLevel2();
-            Level3 level3 = dl.getLevel3();
-
-            return String.format("%s, %s, %s %s, %s %s, %s %s, %s %s, %s %s, %s %s",
-                                 region == null ? "" : region.getValue(),
-                                 city == null ? "" : city.getNameCity(),
-                                 district == null ? "" : district.getTypeUrbanDistrict(),
-                                 district == null ? "" : district.getNameUrbanDistrict(),
-                                 street == null ? "" : street.getTypeStreet(),
-                                 street == null ? "" : street.getNameStreet(),
-                                 apartment == null ? "" : apartment.getTypeApartment(),
-                                 apartment == null ? "" : apartment.getNameApartment(),
-                                 level1 == null ? "" : level1.getTypeLevel1(),
-                                 level1 == null ? "" : level1.getNameLevel1(),
-                                 level2 == null ? "" : level2.getTypeLevel2(),
-                                 level2 == null ? "" : level2.getNameLevel2(),
-                                 level3 == null ? "" : level3.getTypeLevel3(),
-                                 level3 == null ? "" : level3.getNameLevel3());
-        }
+        return getAddress(addressLocation.getAddress()).orElse(null);
     }
 
     private String extractObjectType(LandRecord lr) {

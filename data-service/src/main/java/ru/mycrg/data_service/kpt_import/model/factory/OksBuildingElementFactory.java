@@ -12,6 +12,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import static ru.mycrg.data_service.kpt_import.reader.AddressExtractor.getAddress;
+
 @Component
 public class OksBuildingElementFactory extends OksElementFactory {
 
@@ -41,8 +43,7 @@ public class OksBuildingElementFactory extends OksElementFactory {
         BuildRecord buildRecord = (BuildRecord) xmlRecord;
 
         return Optional.ofNullable(buildRecord.getAddressLocation())
-                       .map(AddressLocationBuild::getAddress)
-                       .map(AddressMain::getReadableAddress)
+                       .flatMap(alBuild -> getAddress(alBuild.getAddress()))
                        .orElse(null);
     }
 

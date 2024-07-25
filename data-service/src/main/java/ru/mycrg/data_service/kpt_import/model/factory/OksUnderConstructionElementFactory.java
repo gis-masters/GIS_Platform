@@ -11,6 +11,8 @@ import ru.mycrg.data_service.kpt_import.model.oks.OksUnderConstructionPolylineEl
 import java.math.BigDecimal;
 import java.util.*;
 
+import static ru.mycrg.data_service.kpt_import.reader.AddressExtractor.getAddress;
+
 @Component
 public class OksUnderConstructionElementFactory extends OksElementFactory {
 
@@ -60,8 +62,7 @@ public class OksUnderConstructionElementFactory extends OksElementFactory {
         ObjectUnderConstructionRecord oucr = (ObjectUnderConstructionRecord) xmlRecord;
 
         return Optional.ofNullable(oucr.getAddressLocation())
-                       .map(AddressLocationConstruction::getAddress)
-                       .map(AddressMain::getReadableAddress)
+                       .flatMap(alUnderConstruction -> getAddress(alUnderConstruction.getAddress()))
                        .orElse(null);
     }
 

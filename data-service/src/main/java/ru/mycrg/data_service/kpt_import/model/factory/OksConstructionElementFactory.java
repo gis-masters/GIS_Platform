@@ -12,6 +12,8 @@ import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static ru.mycrg.data_service.kpt_import.reader.AddressExtractor.getAddress;
+
 @Component
 public class OksConstructionElementFactory extends OksElementFactory {
 
@@ -57,8 +59,7 @@ public class OksConstructionElementFactory extends OksElementFactory {
         ConstructionRecord constructionRecord = (ConstructionRecord) xmlRecord;
 
         return Optional.ofNullable(constructionRecord.getAddressLocation())
-                       .map(AddressLocationConstruction::getAddress)
-                       .map(AddressMain::getReadableAddress)
+                       .flatMap(alConstruction -> getAddress(alConstruction.getAddress()))
                        .orElse(null);
     }
 
