@@ -344,33 +344,24 @@ WHERE NOT EXISTS(SELECT id FROM data.reestrs WHERE table_name = 'reestr_outgoing
 
 -- TASKS
 -- Common
+-- Таблица должна соответствовать схеме: tasks_schema_v1 -> tasks.sql
 CREATE TABLE IF NOT EXISTS data.tasks
 (
-    id                    bigserial NOT NULL,
-    type                  character varying,
-    status                character varying(30),
-    assigned_to           bigint,
-    owner_id              bigint,
-    due_date              timestamp without time zone,
-    description           character varying,
-    guid                  uuid,
-    "number"              bigint,
-    date                  timestamp without time zone,
-    person_name           character varying,
-    cover_letter_num      character varying,
-    cover_letter_date     timestamp without time zone,
-    request_type          character varying,
-    is_name               character varying,
-    data_type             character varying,
-    record_status         character varying,
-    user_name             character varying,
-    document_library_name character varying(100),
-    content_type_id       character varying(50),
-
-    created_by            bigint,
-    updated_by            bigint,
-    created_at            timestamp without time zone DEFAULT now(),
-    last_modified         timestamp without time zone DEFAULT now(),
+    id                               bigserial NOT NULL,
+    type                             character varying(30),
+    content_type_id                  character varying(50),
+    status                           character varying(30),
+    description                      character varying,
+    assigned_to                      bigint,
+    owner_id                         bigint,
+    due_date                         timestamp without time zone,
+    guid                             uuid,
+    inbox_data_key_data_connection   character varying,
+    data_section_key_data_connection character varying,
+    created_by                       bigint,
+    updated_by                       bigint,
+    created_at                       timestamp without time zone DEFAULT now(),
+    last_modified                    timestamp without time zone DEFAULT now(),
     CONSTRAINT tasks_id_pkey PRIMARY KEY (id)
 ) TABLESPACE pg_default;
 ALTER TABLE data.tasks

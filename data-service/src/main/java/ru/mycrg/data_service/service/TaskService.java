@@ -66,7 +66,6 @@ public class TaskService {
     @NotNull
     public Page<Object> getAll(String ecqlFilter, Pageable pageable) {
         try {
-            ResourceQualifier taskQualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, "tasks");
             String filter = ecqlFilter;
             if (!authenticationFacade.isOrganizationAdmin()) {
                 filter = modifyFilterByAssignedToMe(ecqlFilter);
@@ -78,11 +77,11 @@ public class TaskService {
                     .getSchemaByName(TASKS_SCHEMA)
                     .orElseThrow(() -> new NotFoundException("Не найдена схема задач: " + TASKS_SCHEMA));
 
-            List<Object> tasks = baseDao.findAll(taskQualifier, filter, pageable, new RecordRowMapper(tasksSchema))
+            List<Object> tasks = baseDao.findAll(TASK_QUALIFIER, filter, pageable, new RecordRowMapper(tasksSchema))
                                         .stream()
                                         .map(IRecord::getContent)
                                         .collect(Collectors.toList());
-            long total = baseDao.total(taskQualifier, filter);
+            long total = baseDao.total(TASK_QUALIFIER, filter);
 
             return new PageImpl<>(tasks, pageable, total);
         } catch (BadSqlGrammarException ex) {

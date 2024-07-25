@@ -19,6 +19,10 @@ interface LibraryKptRequestProps {
   library: Library;
 }
 
+interface KptRequest {
+  kptRequest: string;
+}
+
 const requestKptSchema: Schema = {
   name: 'requestKpt',
   title: 'requestKpt',
@@ -52,7 +56,7 @@ export class LibraryKptRequest extends Component<LibraryKptRequestProps> {
           </IconButton>
         </Tooltip>
 
-        <FormDialog
+        <FormDialog<KptRequest>
           className={cnLibraryKptRequest()}
           open={this.dialogOpen}
           onClose={this.closeDialog}
@@ -67,8 +71,8 @@ export class LibraryKptRequest extends Component<LibraryKptRequestProps> {
   }
 
   @boundMethod
-  private async save(cadNums: string) {
-    await requestKpt(cadNums.split(','));
+  private async save(request: KptRequest) {
+    await requestKpt(request.kptRequest?.split(','));
 
     communicationService.libraryUpdated.emit({ type: 'update', data: this.props.library });
   }

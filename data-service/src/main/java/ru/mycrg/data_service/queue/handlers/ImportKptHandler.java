@@ -76,7 +76,7 @@ public class ImportKptHandler implements IEventHandler {
 
     private static final Logger log = LoggerFactory.getLogger(ImportKptHandler.class);
 
-    private static final int BATCH_INSERT_SIZE = 200;
+    private static final int BATCH_INSERT_SIZE = 400;
 
     private final XMLInputFactory xmlInputFactory;
     private final KptValidator kptValidator;
