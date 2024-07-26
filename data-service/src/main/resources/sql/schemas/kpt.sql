@@ -784,9 +784,10 @@ SET class_rule =
             "name": "area",
             "title": "Площадь вычисляемая, м.кв.",
             "valueType": "DOUBLE",
-            "description": "Площадь вычисляемая ГИСОГД РК",
+            "description": "Площадь вычисляемая",
             "totalDigits": 38,
-            "fractionDigits": 2
+            "fractionDigits": 2,
+            "calculatedValueWellKnownFormula": "st_area"
         },
         {
             "name": "area_doc_2",
@@ -961,7 +962,7 @@ SET class_rule =
             "name": "lenght",
             "title": "Протяженность вычисляемая, м. кв.",
             "valueType": "DOUBLE",
-            "description": "Протяженность вычисляемая ГИСОГД РК",
+            "description": "Протяженность вычисляемая",
             "totalDigits": 38,
             "fractionDigits": 2,
             "calculatedValueWellKnownFormula": "st_length"
@@ -987,7 +988,7 @@ SET class_rule =
             "title": "Протяженность вычисляемая, м. кв.",
             "hidden": true,
             "valueType": "DOUBLE",
-            "description": "Протяженность вычисляемая ГИСОГД РК",
+            "description": "Протяженность вычисляемая",
             "totalDigits": 38,
             "fractionDigits": 2
         },
