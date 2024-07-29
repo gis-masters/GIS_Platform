@@ -40,12 +40,15 @@ export class CustomStyleControlLabelPropertySelect extends Component<CustomStyle
   @boundMethod
   private changeHandler(e: SelectChangeEvent<unknown>) {
     const { onChange, schema } = this.props;
-
     if (typeof e.target.value !== 'string') {
       throw new TypeError('Ошибка при выборе подписи');
     }
 
-    const property = schema.properties.find(property => property.name === e.target.value);
+    let property = schema.properties.find(property => property.name === e.target.value);
+
+    if (!property && (e.target.value === LABEL_PROPERTY_DEFAULT.name)) {
+      property = LABEL_PROPERTY_DEFAULT;
+    }
 
     if (onChange && property) {
       onChange(property);
