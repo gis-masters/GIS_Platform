@@ -14,6 +14,7 @@ import ru.mycrg.data_service.entity.smev.SmevMessageMetaEntity;
 import ru.mycrg.data_service.exceptions.SmevRequestException;
 import ru.mycrg.data_service.service.smev3.model.ResponseFailProcess;
 import ru.mycrg.data_service.service.smev3.request.ResponseProcessor;
+import ru.mycrg.data_service.service.smev3.request.gpzu.GpzuService;
 import ru.mycrg.data_service.util.JsonConverter;
 
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -35,15 +36,18 @@ public class SmevMessageReceiverService {
     private final RabbitTemplate rabbitTemplate;
     private final Queue adapterReceiveFailQueue;
     private final List<ResponseProcessor> responseProcessors;
+    private final GpzuService gpzuService;
 
     public SmevMessageReceiverService(SmevMessageService messageService,
                                       RabbitTemplate rabbitTemplate,
                                       Queue adapterReceiveFailQueue,
-                                      List<ResponseProcessor> responseProcessors) {
+                                      List<ResponseProcessor> responseProcessors,
+                                      GpzuService gpzuService) {
         this.messageService = messageService;
         this.rabbitTemplate = rabbitTemplate;
         this.adapterReceiveFailQueue = adapterReceiveFailQueue;
         this.responseProcessors = responseProcessors;
+        this.gpzuService = gpzuService;
     }
 
     /**
@@ -53,6 +57,10 @@ public class SmevMessageReceiverService {
     public void processReceiveMessage(@NotNull Message message) {
         var body = new String(message.getBody());
         try {
+            if (body.contains("urn://rostelekom.ru/GPZU/1.0.4")) {
+                gpzuService.acceptGpzuRequest(body);
+                return;
+            }
             var messageEntity = replyToClientId(message)
                     .map(messageService::getByClientId)
                     .orElseThrow(() -> new SmevRequestException("Не удалось найти исходное сообщение"));

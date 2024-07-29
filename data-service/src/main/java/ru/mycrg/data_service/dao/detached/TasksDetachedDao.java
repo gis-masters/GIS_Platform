@@ -4,26 +4,48 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import ru.mycrg.data_service.dao.config.DatasourceFactory;
+import ru.mycrg.data_service.dao.utils.SqlParameterSourceFactory;
+import ru.mycrg.data_service.exceptions.NotFoundException;
+import ru.mycrg.data_service.service.resources.ResourceQualifier;
+import ru.mycrg.data_service.service.schemas.ISchemaTemplateService;
+import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.data_service_contract.enums.TaskStatus;
+import ru.mycrg.geo_json.Feature;
 
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Map;
 
 import static java.time.LocalDateTime.now;
 import static java.time.format.DateTimeFormatter.ISO_DATE_TIME;
+import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_NAME;
+import static ru.mycrg.data_service.dao.utils.SqlBuilder.*;
+import static ru.mycrg.data_service.service.TaskService.*;
 import static ru.mycrg.data_service_contract.enums.TaskStatus.*;
 
 @Repository
 public class TasksDetachedDao {
 
+    private static final String STATUS_PROPERTY = "status";
+
     private final Logger log = LoggerFactory.getLogger(TasksDetachedDao.class);
 
     private final DatasourceFactory datasourceFactory;
+    private final ISchemaTemplateService schemaService;
+    private final SqlParameterSourceFactory sqlParameterSourceFactory;
 
-    public TasksDetachedDao(DatasourceFactory datasourceFactory) {
+    public TasksDetachedDao(DatasourceFactory datasourceFactory,
+                            ISchemaTemplateService schemaService,
+                            SqlParameterSourceFactory sqlParameterSourceFactory) {
         this.datasourceFactory = datasourceFactory;
+        this.schemaService = schemaService;
+        this.sqlParameterSourceFactory = sqlParameterSourceFactory;
     }
 
     public List<Long> findTasksForCancel(String dbName, int deadline, String contentType) {
@@ -68,6 +90,24 @@ public class TasksDetachedDao {
                                     "SET status = ?, last_modified = now() " +
                                     "WHERE id = ?", newStatus.toString(), taskId);
         log.debug("Задача {} переведена в статус {}", taskId, newStatus);
+    }
+
+    public long createTask(String databaseName, Map<String, Object> payload) {
+        NamedParameterJdbcTemplate jdbcTemplate = new NamedParameterJdbcTemplate(datasourceFactory.getDataSource(databaseName));
+
+        final String createTaskStatement = buildParameterizedInsertQuery(
+                new ResourceQualifier(SYSTEM_SCHEMA_NAME, TASK_TABLE_NAME),
+                new Feature(payload),
+                false);
+        SchemaDto tasksSchema = this.schemaService
+                .getSchemaByName(TASKS_SCHEMA)
+                .orElseThrow(() -> new NotFoundException("Не найдена схема задач: " + TASKS_SCHEMA));
+        MapSqlParameterSource parameterSource = sqlParameterSourceFactory.buildParameterizedSource(new Feature(payload), tasksSchema);
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbcTemplate.update(createTaskStatement, parameterSource, keyHolder);
+
+        log.debug("Создана задача с id {}", keyHolder.getKeys().get("id"));
+        return (long) keyHolder.getKeys().get("id");
     }
 
     public TaskStatus getTaskStatus(String databaseName, Long taskId) {

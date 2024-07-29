@@ -85,6 +85,23 @@ public class SmevMessageService {
     }
 
     @Transactional
+    public void saveIncoming(String message) {
+        try {
+            ReestrIncoming incomingMessage = new ReestrIncoming();
+            incomingMessage.setId(UUID.randomUUID());
+            incomingMessage.setBody(message);
+            incomingMessage.setDateIn(LocalDateTime.now());
+            incomingMessage.setStatus("В работе");
+            incomingMessage.setSystem(Systems.GISOGD_RK);
+            incomingMessage.setUserFrom(Systems.EPGU);
+            incomingService.save(incomingMessage);
+            log.info("Сохранено входящее сообщение. id: {}", incomingMessage.getId());
+        } catch (Exception e) {
+            throw new SmevRequestException("Ошибка при сохранении :" + e.getMessage());
+        }
+    }
+
+    @Transactional
     public void saveOutgoing(SmevRequestMeta requestMeta, String userTo) {
         try {
             ReestrOutgoing reestrMessage = new ReestrOutgoing();
