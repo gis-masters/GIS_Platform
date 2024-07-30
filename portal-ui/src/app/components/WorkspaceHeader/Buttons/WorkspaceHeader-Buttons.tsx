@@ -13,6 +13,7 @@ import { ExportGmlButton } from '../../ExportGmlButton/ExportGmlButton';
 import { HelpToggler } from '../../HelpToggler/HelpToggler';
 import { NotificationsToggler } from '../../NotificationsToggler/NotificationsToggler';
 import { PrintMapButton } from '../../PrintMapButton/PrintMapButton';
+import { RunningOutOfSpace } from '../../RunningOutOfSpace/RunningOutOfSpace';
 import { SearchInProject } from '../../SearchInProject/SearchInProject';
 import { User } from '../../User/User';
 
@@ -41,6 +42,7 @@ export class WorkspaceHeaderButtons extends Component {
 
         <HelpToggler />
         <NotificationsToggler />
+        <RunningOutOfSpace />
         <User />
       </div>
     );

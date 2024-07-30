@@ -1,6 +1,7 @@
 import { action, computed, makeObservable, observable } from 'mobx';
 
 import { Settings } from '../../server-types/common-contracts';
+import { OccupiedStorage } from '../services/auth/organizations/organizations.models';
 import { Projection } from '../services/data/projections/projections.models';
 import { Schema } from '../services/data/schema/schema.models';
 import { currentUser } from './CurrentUser.store';
@@ -25,6 +26,7 @@ export class OrganizationSettings {
   @observable orgSettings?: CompositeSettings;
   @observable systemSettings?: CompositeSettings[];
   @observable schema?: Schema;
+  @observable occupiedStorage?: OccupiedStorage;
 
   static get instance(): OrganizationSettings {
     return this._instance || (this._instance = new this());
@@ -54,6 +56,21 @@ export class OrganizationSettings {
   @action
   setSettingsError(isError: boolean): void {
     this.settingsError = isError;
+  }
+
+  @action
+  setOccupiedStorage(occupiedStorage: OccupiedStorage): void {
+    this.occupiedStorage = occupiedStorage;
+  }
+
+  @computed
+  get occupiedStorageInfo(): OccupiedStorage | undefined {
+    return this.occupiedStorage;
+  }
+
+  @computed
+  get systemSettingsInfo(): CompositeSettings[] | undefined {
+    return this.systemSettings;
   }
 
   @computed

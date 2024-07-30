@@ -11,6 +11,7 @@ import { allPermissions } from '../../stores/AllPermissions.store';
 import { allUsers } from '../../stores/AllUsers.store';
 import { Loading } from '../Loading/Loading';
 import { OrganizationClean } from '../OrganizationClean/OrganizationClean';
+import { OrganizationInfo } from '../OrganizationInfo/OrganizationInfo';
 import { OrganizationSettings } from '../OrganizationSettings/OrganizationSettings';
 import { OrgGroups } from '../OrgGroups/OrgGroups';
 import { OrgProjections } from '../OrgProjections/OrgProjections';
@@ -23,9 +24,10 @@ const cnOrgAdmin = cn('OrgAdmin');
 const tabs = [
   [OrgUsers, 'Пользователи'],
   [OrgGroups, 'Группы'],
-  [OrganizationSettings, 'Настройки организации'],
+  [OrganizationSettings, 'Настройки'],
   [OrgProjections, 'Системы координат'],
-  [OrganizationClean, 'Очистка']
+  [OrganizationClean, 'Очистка'],
+  [OrganizationInfo, 'Информация']
 ];
 
 @observer

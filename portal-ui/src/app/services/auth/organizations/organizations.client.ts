@@ -3,7 +3,7 @@ import { boundClass } from 'autobind-decorator';
 import { CompositeSettings } from '../../../stores/OrganizationSettings.store';
 import { Client } from '../../api/Client';
 import { http } from '../../api/http.service';
-import { Organization } from './organizations.models';
+import { OccupiedStorage, Organization } from './organizations.models';
 
 @boundClass
 class OrganizationsClient extends Client {
@@ -15,6 +15,10 @@ class OrganizationsClient extends Client {
 
   private getOrganizationsUrl(): string {
     return this.getBaseUrl() + '/organizations';
+  }
+
+  private getOrganizationsOccupiedStorage(): string {
+    return this.getDataUrl() + '/storage/occupied';
   }
 
   private getOrganizationUrl(orgId: number): string {
@@ -43,6 +47,10 @@ class OrganizationsClient extends Client {
 
   async deleteOrganization(orgId: number): Promise<void> {
     return http.delete(this.getOrganizationUrl(orgId));
+  }
+
+  async getOrganizationOccupiedStorage(): Promise<OccupiedStorage> {
+    return http.get<OccupiedStorage>(this.getOrganizationsOccupiedStorage());
   }
 }
 

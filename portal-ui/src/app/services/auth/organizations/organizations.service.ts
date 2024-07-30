@@ -5,6 +5,7 @@ import { Toast } from '../../../components/Toast/Toast';
 import { CompositeSettings, organizationSettings } from '../../../stores/OrganizationSettings.store';
 import { schemaService } from '../../data/schema/schema.service';
 import { organizationsClient } from './organizations.client';
+import { OccupiedStorage } from './organizations.models';
 
 class OrganizationsService {
   private static _instance: OrganizationsService;
@@ -35,6 +36,10 @@ class OrganizationsService {
   async deleteOrganization(orgId: number): Promise<void> {
     await organizationsClient.deleteOrganization(orgId);
     await this.loadSettings();
+  }
+
+  async getOrganizationOccupiedStorage(): Promise<OccupiedStorage> {
+    return await organizationsClient.getOrganizationOccupiedStorage();
   }
 
   @boundMethod

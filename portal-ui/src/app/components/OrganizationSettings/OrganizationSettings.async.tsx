@@ -50,7 +50,13 @@ export default class OrganizationSettings extends Component<OrganizationSettings
       () => cloneDeep(organizationSettings.orgSettings),
       () => {
         if (organizationSettings.orgSettings?.organization) {
-          this.setFormValue(cloneDeep(organizationSettings.orgSettings.organization));
+          const formValue = organizationSettings.orgSettings.organization;
+
+          if (typeof organizationSettings.orgSettings.system?.storageSize === 'number') {
+            formValue.storageSize = Number(organizationSettings.orgSettings.system?.storageSize);
+          }
+
+          this.setFormValue(cloneDeep(formValue));
         }
       },
       {
@@ -140,8 +146,8 @@ export default class OrganizationSettings extends Component<OrganizationSettings
   private updateOptions() {
     const options = this.favoritesProjection.length
       ? this.favoritesProjection.map(item => {
-          return { title: item.title, value: item.title };
-        })
+        return { title: item.title, value: item.title };
+      })
       : [];
 
     this._schema?.properties.forEach(property => {
