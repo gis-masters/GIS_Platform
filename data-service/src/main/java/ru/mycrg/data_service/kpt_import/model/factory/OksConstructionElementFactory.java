@@ -87,6 +87,20 @@ public class OksConstructionElementFactory extends OksElementFactory {
                        .orElse(null);
     }
 
+    protected BigDecimal extractLengthDoc(Object xmlRecord) {
+        ConstructionRecord constructionRecord = (ConstructionRecord) xmlRecord;
+
+        return Optional.ofNullable(constructionRecord.getParams())
+                       .map(ParamsConstructionPurposeUses::getBaseParameters)
+                       .map(BaseParameters::getBaseParameter)
+                       .orElse(Collections.emptyList())
+                       .stream()
+                       .filter(baseParameter -> baseParameter.getExtension() != null)
+                       .findFirst()
+                       .map(BaseParameters.BaseParameter::getExtension)
+                       .orElse(null);
+    }
+
     @Override
     protected ObjectType extractObjectType(Object xmlRecord) {
         ConstructionRecord constructionRecord = (ConstructionRecord) xmlRecord;

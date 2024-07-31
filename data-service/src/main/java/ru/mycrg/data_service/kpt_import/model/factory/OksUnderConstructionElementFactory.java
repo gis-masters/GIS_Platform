@@ -91,6 +91,11 @@ public class OksUnderConstructionElementFactory extends OksElementFactory {
     }
 
     @Override
+    protected BigDecimal extractLengthDoc(Object xmlRecord) {
+        return null;
+    }
+
+    @Override
     protected ObjectType extractObjectType(Object xmlRecord) {
         ObjectUnderConstructionRecord oucr = (ObjectUnderConstructionRecord) xmlRecord;
 

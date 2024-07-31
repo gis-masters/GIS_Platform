@@ -162,7 +162,7 @@ public abstract class OksElementFactory {
         content.put("readablead", extractReadableAddress(xmlRecord));
         content.put("purpose", extractPurpose(xmlRecord));
         content.put("cost", extractCostValue(xmlRecord));
-        content.put("lenght_doc", extractAreaDoc(xmlRecord));
+        content.put("lenght_doc", extractLengthDoc(xmlRecord));
 
         return content;
     }
@@ -228,6 +228,8 @@ public abstract class OksElementFactory {
     protected abstract String extractPurpose(Object xmlRecord);
 
     protected abstract BigDecimal extractAreaDoc(Object xmlRecord);
+
+    protected abstract BigDecimal extractLengthDoc(Object xmlRecord);
 
     protected abstract ObjectType extractObjectType(Object xmlRecord);
 
