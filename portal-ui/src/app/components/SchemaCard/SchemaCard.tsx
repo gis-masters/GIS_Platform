@@ -109,10 +109,13 @@ export class SchemaCard extends Component<SchemaCardProps> {
               <CardRowTitle>Только для чтения:</CardRowTitle>
               {this.schemaWithAppliedType.readOnly ? 'да' : 'нет'}
             </CardRow>
-            {this.schemaWithAppliedType.styleName ? (
+            {this.schemaWithAppliedType.styleName || this.schemaWithAppliedType.styleName === '' ? (
               <CardRow>
                 <CardRowTitle>Стиль:</CardRowTitle>
-                {this.schemaWithAppliedType.styleName}
+                {readonly && this.schemaWithAppliedType.styleName}
+                {!readonly && this.schemaWithAppliedType.geometryType && (
+                  <Input value={this.schemaWithAppliedType.styleName} onChange={this.editSchemaStyleName} />
+                )}
               </CardRow>
             ) : null}
             {this.schemaWithAppliedType.geometryType ? (
@@ -322,6 +325,11 @@ export class SchemaCard extends Component<SchemaCardProps> {
   @boundMethod
   private editSchemaTitle(event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
     this.editSchemaInfo({ title: event.target.value });
+  }
+
+  @boundMethod
+  private editSchemaStyleName(event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>): void {
+    this.editSchemaInfo({ styleName: event.target.value });
   }
 
   @action.bound

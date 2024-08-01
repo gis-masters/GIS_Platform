@@ -11,6 +11,7 @@ import { documentWithoutVersioned } from './testSchemas/documentWithoutVersioned
 import { editable } from './testSchemas/editable';
 import { forTestTitles } from './testSchemas/forTestTitles';
 import { photoLayer } from './testSchemas/photoLayer';
+import { propertyWithAllCheckedAttributes } from './testSchemas/propertyWithAllCheckedAttributes';
 import { readonly } from './testSchemas/readonly';
 import { simple } from './testSchemas/simple';
 import { testNotSorting } from './testSchemas/testNotSorting';
@@ -37,6 +38,7 @@ const testSchemas: Schema[] = [
   editable,
   forTestTitles,
   photoLayer,
+  propertyWithAllCheckedAttributes,
   readonly,
   simple,
   testNotSorting,

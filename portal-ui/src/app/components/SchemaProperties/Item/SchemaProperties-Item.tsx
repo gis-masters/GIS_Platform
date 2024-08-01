@@ -76,6 +76,7 @@ const cnSchemaPropertiesItem = cn('SchemaProperties', 'Item');
 const cnSchemaPropertiesItemAccordion = cn('SchemaProperties', 'ItemAccordion');
 const cnSchemaPropertiesItemIcon = cn('SchemaProperties', 'ItemIcon');
 const cnSchemaPropertiesPrimaryText = cn('SchemaProperties', 'PrimaryText');
+const cnSchemaPropertiesOpenEditButton = cn('SchemaProperties', 'OpenEditButton');
 
 @observer
 export class SchemaPropertiesItem extends Component<SchemaPropertiesItemProps> {
@@ -111,17 +112,25 @@ export class SchemaPropertiesItem extends Component<SchemaPropertiesItemProps> {
               )}
               {hidden && (
                 <Tooltip title='Скрытое'>
-                  <VisibilityOffOutlined fontSize='small' className={cnSchemaPropertiesItemIcon()} color='action' />
+                  <VisibilityOffOutlined
+                    fontSize='small'
+                    className={cnSchemaPropertiesItemIcon({ type: 'hidden' })}
+                    color='action'
+                  />
                 </Tooltip>
               )}
               {readOnly && (
                 <Tooltip title='Только для чтения'>
-                  <EditOffOutlined fontSize='small' className={cnSchemaPropertiesItemIcon()} color='action' />
+                  <EditOffOutlined
+                    fontSize='small'
+                    className={cnSchemaPropertiesItemIcon({ type: 'readOnly' })}
+                    color='action'
+                  />
                 </Tooltip>
               )}
               {required && (
                 <Tooltip title='Обязательное'>
-                  <Icon className={cnSchemaPropertiesItemIcon()} color='action'>
+                  <Icon className={cnSchemaPropertiesItemIcon({ type: 'required' })} color='action'>
                     *
                   </Icon>
                 </Tooltip>
@@ -130,7 +139,14 @@ export class SchemaPropertiesItem extends Component<SchemaPropertiesItemProps> {
 
             {!readonly && (
               <Tooltip title='Редактировать'>
-                <IconButton size='small' onClick={this.onPropertyChange} name={name} ref={this.ref} color='primary'>
+                <IconButton
+                  size='small'
+                  className={cnSchemaPropertiesOpenEditButton()}
+                  onClick={this.onPropertyChange}
+                  name={name}
+                  ref={this.ref}
+                  color='primary'
+                >
                   {this.selectedId === name ? (
                     <Edit fontSize='small' color='primary' />
                   ) : (
@@ -143,6 +159,7 @@ export class SchemaPropertiesItem extends Component<SchemaPropertiesItemProps> {
         </ListItem>
 
         <Accordion
+          component='li'
           className={cnSchemaPropertiesItemAccordion()}
           key={name}
           expanded={this.selectedId === name}

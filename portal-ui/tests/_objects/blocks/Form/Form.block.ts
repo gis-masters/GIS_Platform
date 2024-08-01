@@ -6,7 +6,8 @@ export class FormBlock extends Block {
   selectors = {
     container: '.Form',
     content: '.Form .Form-Content',
-    formFields: '.Form .Form-Field'
+    formFields: '.Form .Form-Field',
+    checkbox: '.Form-Control input[type="checkbox"]'
   };
 
   async replaceStringValue(title: string, value: string): Promise<void> {
@@ -100,5 +101,11 @@ export class FormBlock extends Block {
     } catch {
       return false;
     }
+  }
+
+  async getFieldCheckboxInputRoot(title: string): Promise<WebdriverIO.Element> {
+    const $tableField = await this.getField(title);
+
+    return await $tableField.$(this.selectors.checkbox);
   }
 }

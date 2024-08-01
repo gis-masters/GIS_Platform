@@ -1,11 +1,13 @@
 import { Schema } from '../../../../src/app/services/data/schema/schema.models';
+import { sleep } from '../../../../src/app/services/util/sleep';
 import { Block } from '../../Block';
 import { FormBlock } from '../Form/Form.block';
+import { SchemaPropertiesBlock } from '../SchemaProperties/SchemaProperties.block';
 
 class SchemaActionsBlock extends Block {
   selectors = {
     container: '.SchemaActions',
-    editBtn: '.SchemaActions .SchemaActions-Edit',
+    editBtn: '.SchemaActions-Edit',
     editDialog: '.SchemaActions-EditDialog',
     editDialogYes: '.SchemaActions-EditDialogYes',
     editInJSON: '.SchemaActions-EditInJson',
@@ -16,6 +18,22 @@ class SchemaActionsBlock extends Block {
     const $editBtn = await this.$('editBtn');
     await $editBtn.waitForDisplayed();
     await $editBtn.click();
+    await sleep(300); // ждем анимации открытия диалога
+  }
+
+  async clickEditDialogPropertyByTitle(title: string): Promise<void> {
+    const $editDialog = await this.$('editDialog');
+    const schemaProperties = new SchemaPropertiesBlock($editDialog);
+
+    await schemaProperties.clickEditPropertyByTitle(title);
+  }
+
+  async changePropertyAttributeByName(title: string, fieldLabel: string): Promise<void> {
+    const $editDialog = await this.$('editDialog');
+    const schemaProperties = new SchemaPropertiesBlock($editDialog);
+    const $checkbox = await schemaProperties.getInputCheckboxByPropertyTitleAndFieldLabel(title, fieldLabel);
+
+    await $checkbox.click();
   }
 
   async clickEditJSONBtn(): Promise<void> {
