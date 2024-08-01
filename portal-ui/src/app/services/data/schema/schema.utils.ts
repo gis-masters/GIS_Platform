@@ -5,6 +5,7 @@ import { Coordinate } from 'ol/coordinate';
 import { getIdsFromPath } from '../../../components/DataManagement/DataManagement.utils';
 import { DocumentInfo } from '../../../components/Documents/Documents';
 import { CoordinateEdited, GeometryType, WfsFeature } from '../../geoserver/wfs/wfs.models';
+import { convertComplexNamesArrayToTableNamesUriFragment } from '../../gis/layers/layers.utils';
 import { services } from '../../services';
 import { formatDate } from '../../util/date.util';
 import { FilterQuery } from '../../util/filters/filters.models';
@@ -464,17 +465,19 @@ export const valueWellKnownFormulas: Record<string, ValueFormula> = {
       text?: string;
       includeParents?: boolean;
     };
-    const pathname = `/projects/${projectId}/map`;
+
     const ids: number[] = [id];
     if (includeParents) {
       ids.push(...getIdsFromPath(path));
     }
+
     const parts = ids
       .map(
         currId =>
-          `${property}%20LIKE%20%27%25{%22id%22:${currId},%25%22libraryTableName%22:%22${libraryTableName}%22%25%27`
+          `(${property}%20LIKE%20%27%25{%22id%22:${currId},%25%22libraryTableName%22:%22${libraryTableName}%22%25%27)`
       )
       .join(')%20OR%20(');
+
     const ps = ids.length > 1 ? '()' : ['', ''];
     const filter = `${ps[0]}${parts}${ps[1]}`;
 
@@ -484,7 +487,7 @@ export const valueWellKnownFormulas: Record<string, ValueFormula> = {
 
     return JSON.stringify([
       {
-        url: `${pathname}?queryLayers=${layers.join(',')}&queryFilter=${filter}`,
+        url: `/projects/${projectId}/map?queryLayers=${convertComplexNamesArrayToTableNamesUriFragment(layers)}&queryFilter=${filter}`,
         text
       }
     ]);

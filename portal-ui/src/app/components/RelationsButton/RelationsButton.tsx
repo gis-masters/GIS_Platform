@@ -6,6 +6,7 @@ import { cn } from '@bem-react/classname';
 import { IClassNameProps } from '@bem-react/core';
 
 import { Relation } from '../../services/data/schema/schema.models';
+import { convertComplexNamesArrayToTableNamesUriFragment } from '../../services/gis/layers/layers.utils';
 import { buildCql } from '../../services/util/cql/buildCql';
 import { Link } from '../Link/Link';
 import { MenuIconButton } from '../MenuIconButton/MenuIconButton';
@@ -37,7 +38,9 @@ export const RelationsButton: FC<RelationsButtonProps> = observer(({ className, 
 
         if (relation.type === 'feature' && relation.layers) {
           const cqlFilter = buildCql({ [targetProperty]: String(obj[relation.property]) });
-          url = `/projects/${relation.projectId}/map?queryLayers=${relation.layers.join(',')}&queryFilter=${cqlFilter}`;
+          if (relation.projectId) {
+            url = `/projects/${relation.projectId}/map?queryLayers=${convertComplexNamesArrayToTableNamesUriFragment(relation.layers)}&queryFilter=${cqlFilter}`;
+          }
         }
 
         return (

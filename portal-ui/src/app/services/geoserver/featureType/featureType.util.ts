@@ -46,7 +46,11 @@ export const extractTableNameFromFeatureId = (id: string): string => {
 };
 
 export const extractTableNameFromComplexName = (complexName: string): string => {
-  return extractTableNameFromFeatureTypeName(extractFeatureTypeNameFromComplexName(complexName));
+  if (!complexName.includes(':')) {
+    return complexName;
+  }
+
+  return extractTableNameFromFeatureTypeName(splitComplexName(complexName)[1]);
 };
 
 export const extractFeatureTypeNameFromComplexName = (complexName: string | undefined): string => {

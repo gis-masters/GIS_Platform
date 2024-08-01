@@ -6,6 +6,7 @@ import { cn } from '@bem-react/classname';
 
 import { LibraryRecord } from '../../../services/data/library/library.models';
 import { Schema } from '../../../services/data/schema/schema.models';
+import { convertComplexNamesArrayToTableNamesUriFragment } from '../../../services/gis/layers/layers.utils';
 import { buildCql } from '../../../services/util/cql/buildCql';
 import { ActionsItemVariant } from '../../Actions/Item/Actions-Item.base';
 import { ActionsItem } from '../../Actions/Item/Actions-Item.composed';
@@ -48,10 +49,9 @@ export class LibraryDocumentActionsRelations extends Component<LibraryDocumentAc
             if (!relation.projectId || !relation.layers) {
               throw new Error('Ошибка схемы: relations установлен некорректно');
             }
+
             const cqlFilter = buildCql({ [targetProperty]: String(document[relation.property]) });
-            url = `/projects/${relation.projectId}/map?queryLayers=${relation.layers.join(
-              ','
-            )}&queryFilter=${cqlFilter}`;
+            url = `/projects/${relation.projectId}/map?queryLayers=${convertComplexNamesArrayToTableNamesUriFragment(relation.layers)}&queryFilter=${cqlFilter}`;
           }
 
           if (!url) {

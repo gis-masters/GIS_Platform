@@ -6,7 +6,11 @@ import { mapStore } from '../../stores/Map.store';
 import { route } from '../../stores/Route.store';
 import { EditFeatureMode, sidebars } from '../../stores/Sidebars.store';
 import { applyView } from '../data/schema/schema.utils';
-import { extractFeatureId, extractFeatureTypeNameFromComplexName } from '../geoserver/featureType/featureType.util';
+import {
+  extractFeatureId,
+  extractFeatureTypeNameFromComplexName,
+  extractTableNameFromComplexName
+} from '../geoserver/featureType/featureType.util';
 import { WfsFeature } from '../geoserver/wfs/wfs.models';
 import { getFeatureCollection, getFeaturesById } from '../geoserver/wfs/wfs.service';
 import { CrgLayer } from '../gis/layers/layers.models';
@@ -14,6 +18,7 @@ import { getLayerSchema } from '../gis/layers/layers.service';
 import { projectsService } from '../gis/projects/projects.service';
 import { services } from '../services';
 import { Mime } from '../util/Mime';
+import { notFalsyFilter } from '../util/NotFalsyFilter';
 import { mapService } from './map.service';
 import { mapSelectionService } from './map-selection.service';
 
@@ -38,13 +43,41 @@ export async function applyMapStateFromNavigator(): Promise<void> {
 
   // ссылка на выборку объектов по CQL-фильтру
   if (route.queryParams.queryFilter) {
-    const layers =
-      route.queryParams.queryLayers.split(',') || currentProject.vectorLayers.map(({ complexName }) => complexName);
+    const queryLayers = route.queryParams.queryLayers.split(',');
+    let layersComplexNames: string[] = [];
 
+    if (queryLayers.length) {
+      layersComplexNames = queryLayers
+        .map(layer => {
+          if (layer.includes(':') && layer.includes('__')) {
+            return layer;
+          }
+
+          const currentLayerTableName = extractTableNameFromComplexName(layer);
+          const currentLayer = currentProject.layers.find(({ tableName }) => tableName === currentLayerTableName);
+
+          return currentLayer?.complexName;
+        })
+        .filter(notFalsyFilter);
+    }
+
+    const layers = layersComplexNames.length
+      ? layersComplexNames
+      : currentProject.vectorLayers.map(({ complexName }) => complexName);
     const features: WfsFeature[] = [];
+
+    if (!layers.length) {
+      Toast.warn({ message: 'Не найдено' });
+
+      return;
+    }
 
     for (const layer of layers) {
       try {
+        if (!layer) {
+          return;
+        }
+
         const params: Record<string, string> = {
           service: 'wfs',
           request: 'GetFeature',
@@ -57,6 +90,7 @@ export async function applyMapStateFromNavigator(): Promise<void> {
         };
 
         const response = await getFeatureCollection(params);
+
         if (response.features) {
           features.push(...response.features);
         }

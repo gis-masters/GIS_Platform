@@ -4,7 +4,10 @@ import { currentProject } from '../../../stores/CurrentProject.store';
 import { currentUser } from '../../../stores/CurrentUser.store';
 import { FilePlacementMode } from '../../data/file-placement/file-placement.models';
 import { defaultOlProjectionCode } from '../../data/projections/projections.models';
-import { extractTableNameFromFeatureId } from '../../geoserver/featureType/featureType.util';
+import {
+  extractTableNameFromComplexName,
+  extractTableNameFromFeatureId
+} from '../../geoserver/featureType/featureType.util';
 import { CoordinateEdited, WfsFeature } from '../../geoserver/wfs/wfs.models';
 import { CrgLayer, CrgLayerType, CrgRasterLayer, CrgVectorLayer, NewCrgLayer } from './layers.models';
 
@@ -82,4 +85,8 @@ export function isLayerFromFile(layer: CrgLayer | NewCrgLayer): boolean {
     layer.type === CrgLayerType.SHP ||
     layer.type === CrgLayerType.DXF
   );
+}
+
+export function convertComplexNamesArrayToTableNamesUriFragment(complexNames: string[]): string {
+  return complexNames.map(extractTableNameFromComplexName).join(',');
 }
