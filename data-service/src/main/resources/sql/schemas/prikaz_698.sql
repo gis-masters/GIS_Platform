@@ -391,9 +391,9 @@ SELECT 'traditionalarea_698',
 '{}'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'traditionalarea_698');
 INSERT INTO data.schemas (name, class_rule)
-SELECT 'traditionalarea_698',
+SELECT 'specialeconomicarea_698',
 '{}'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'traditionalarea_698');
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'specialeconomicarea_698');
 INSERT INTO data.schemas (name, class_rule)
 SELECT 'emergencyprotectionobj_698',
 '{}'
@@ -588,7 +588,7 @@ SET class_rule =
         "readOnly": true,
         "styleName": "thermalpipeline_line_698",
         "tableName": "thermalpipeline_line_698",
-        "originName": "ThermalPipeline_698",
+        "originName": "ThermalPipeline",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
         "properties": [
           {
@@ -782,8 +782,12 @@ SET class_rule =
                 "value": "5"
               },
               {
-                "title": "Иное значение",
+                "title": "Иное значение, местное значение муниципального района, необходимое для осуществления полномочий по вопросам местного значения муниципального района, предусмотренных частью 4 статьи 14, статьей 15 Федерального закона от 6 октября 2003 г. N 131-ФЗ Об общих принципах организации местного самоуправления в Российской Федерации.",
                 "value": "6"
+              },
+              {
+                "title": "Местное значение муниципального округа",
+                "value": "8"
               }
             ]
           },
@@ -791,6 +795,7 @@ SET class_rule =
             "name": "shape",
             "title": "геометрия", 
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "LineString"
             ]
@@ -845,7 +850,7 @@ SET class_rule =
         "readOnly": true,
         "styleName": "oilpipeline_line_698",
         "tableName": "oilpipeline_line_698",
-        "originName": "OilPipeline_698",
+        "originName": "OilPipeline",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
         "properties": [
           {
@@ -884,7 +889,7 @@ SET class_rule =
           },
           {
             "name": "number",
-            "title": "Номер согласно Положению о территориальном планировании", 
+            "title": "Номер согласно положению о территориальном планировании", 
             "valueType": "STRING"
           },
           {
@@ -1045,8 +1050,12 @@ SET class_rule =
                 "value": "5"
               },
               {
-                "title": "Иное значение",
+                "title": "Иное значение, местное значение муниципального района, необходимое для осуществления полномочий по вопросам местного значения муниципального района, предусмотренных частью 4 статьи 14, статьей 15 Федерального закона от 6 октября 2003 г. N 131-ФЗ Об общих принципах организации местного самоуправления в Российской Федерации.",
                 "value": "6"
+              },
+              {
+                "title": "Местное значение муниципального округа",
+                "value": "8"
               }
             ]
           },
@@ -1054,6 +1063,7 @@ SET class_rule =
             "name": "shape",
             "title": "геометрия", 
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "LineString"
             ]
@@ -1126,7 +1136,7 @@ SET class_rule =
           },
           {
             "name": "number",
-            "title": "Номер согласно Положению о территориальном планировании", 
+            "title": "Номер согласно положению о территориальном планировании", 
             "valueType": "STRING"
           },
           {
@@ -1342,15 +1352,28 @@ SET class_rule =
                 "value": "5"
               },
               {
-                "title": "Иное значение",
+                "title": "Иное значение, местное значение муниципального района, необходимое для осуществления полномочий по вопросам местного значения муниципального района, предусмотренных частью 4 статьи 14, статьей 15 Федерального закона от 6 октября 2003 г. N 131-ФЗ Об общих принципах организации местного самоуправления в Российской Федерации.",
                 "value": "6"
+              },
+              {
+                "title": "Местное значение муниципального округа",
+                "value": "8"
               }
             ]
+          },
+          {
+            "name": "length",
+            "title": "Протяженность сооружения, км",
+            "required": true,
+            "valueType": "DOUBLE",
+            "totalDigits": 38,
+            "fractionDigits": 8
           },
           {
             "name": "shape",
             "title": "геометрия", 
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "LineString"
             ]
@@ -1377,20 +1400,48 @@ custom_rule = 'var errors = [];
           errors.push({attribute: ''cable_type'', error: ''Значение заполняется только для объекта "Линейно-кабельное сооружение связи"''});
       }
 
-      if (obj.status == ''2'') {
-        if (!obj.function) {
-          errors.push({attribute: ''function'', error: ''Значение обязательно к заполнению''});
+      if (obj.status == ''2'' || obj.status == ''3'') {
+
+        if (!obj.event_time) {
+            errors.push({ attribute: ''event_time'', error: ''Значение обязательно к заполнению'' });
         }
-      } else if (obj.function) {
-          errors.push({attribute: ''function'', error: ''Значение заполняется только для планируемых к размещению объектов''});
+
+        if (!obj.number) {
+          errors.push({ attribute: ''number'', error: ''Значение обязательно к заполнению'' });
+       }
+      } else {
+        if (obj.event_time) {
+            errors.push({ attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению или планируемых к реконструкции объектов'' });
+        }
+        if (obj.number) {
+          errors.push({ attribute: ''number'', error: ''Значение заполняется только для планируемых к размещению или планируемых к реконструкции объектов'' });
+      }
       }
 
-      if (obj.status == ''2'' || obj.status == ''3'' || obj.status == ''4'') {
+      if (obj.reg_status == ''1'' || obj.reg_status == ''2'') {
         if (!obj.event_time) {
           errors.push({attribute: ''event_time'', error: ''Значение обязательно к заполнению''});
         }
-      } else if (obj.event_time) {
+        if (!obj.wear_prcnt) {
+          errors.push({attribute: ''wear_prcnt'', error: ''Значение обязательно к заполнению''});
+        }
+      } 
+      else 
+      if (obj.event_time) {
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
+      }
+      if (obj.wear_prcnt) {
+        errors.push({attribute: ''wear_prcnt'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
+      }
+
+      if (!(obj.status == ''1'' || obj.status == ''3'' || obj.status == ''4'')) {
+        if (!obj.wear_prcnt) {
+            errors.push({ attribute: ''wear_prcnt'', error: ''Значение обязательно к заполнению'' });
+        }
+      } else {
+        if (obj.wear_prcnt) {
+            errors.push({ attribute: ''wear_prcnt'', error: ''Значение заполняется только для существующих и строящихся, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов'' });
+        }
       }
 
       return errors;'
@@ -1405,7 +1456,7 @@ SET class_rule =
         "readOnly": true,
         "styleName": "electrictransformer_point_698",
         "tableName": "electrictransformer_point_698",
-        "originName": "ElectricTransformer_698",
+        "originName": "ElectricTransformer",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
         "properties": [
           {
@@ -1761,8 +1812,12 @@ SET class_rule =
                 "value": "5"
               },
               {
-                "title": "Иное значение",
+                "title": "Иное значение, местное значение муниципального района, необходимое для осуществления полномочий по вопросам местного значения муниципального района, предусмотренных частью 4 статьи 14, статьей 15 Федерального закона от 6 октября 2003 г. N 131-ФЗ Об общих принципах организации местного самоуправления в Российской Федерации.",
                 "value": "6"
+              },
+              {
+                "title": "Местное значение муниципального округа",
+                "value": "8"
               }
             ]
           },
@@ -1797,6 +1852,7 @@ SET class_rule =
             "name": "shape",
             "title": "геометрия", 
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "Point"
             ]
@@ -1949,7 +2005,7 @@ SET class_rule =
         "readOnly": true,
         "styleName": "railwayfacility_point_698",
         "tableName": "railwayfacility_point_698",
-        "originName": "RailwayFacility_698",
+        "originName": "RailwayFacility",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
         "properties": [
           {
@@ -2300,8 +2356,12 @@ SET class_rule =
                 "value": "5"
               },
               {
-                "title": "Иное значение",
+                "title": "Иное значение, местное значение муниципального района, необходимое для осуществления полномочий по вопросам местного значения муниципального района, предусмотренных частью 4 статьи 14, статьей 15 Федерального закона от 6 октября 2003 г. N 131-ФЗ Об общих принципах организации местного самоуправления в Российской Федерации.",
                 "value": "6"
+              },
+              {
+                "title": "Местное значение муниципального округа",
+                "value": "8"
               }
             ]
           },
@@ -2336,6 +2396,7 @@ SET class_rule =
             "name": "shape",
             "title": "геометрия", 
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "Point"
             ]
@@ -2435,7 +2496,7 @@ SET class_rule  =
         "readOnly": true,
         "styleName": "admesrf_698",
         "tableName": "admesrf_698",
-        "originName": "admesrf_698",
+        "originName": "AdmeSRF",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
         "properties": [
           {
@@ -2522,6 +2583,7 @@ SET class_rule  =
             "name": "shape",
             "title": "геометрия", 
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "Polygon"
             ]
@@ -2541,7 +2603,7 @@ SET class_rule =
         "readOnly": true,
         "styleName": "wastefacility_point_698_698",
         "tableName": "wastefacility_point_698_698",
-        "originName": "WasteFacility_698",
+        "originName": "WasteFacility",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
         "properties": [
           {
@@ -2948,8 +3010,12 @@ SET class_rule =
                 "value": "5"
               },
               {
-                "title": "Иное значение",
+                "title": "Иное значение, местное значение муниципального района, необходимое для осуществления полномочий по вопросам местного значения муниципального района, предусмотренных частью 4 статьи 14, статьей 15 Федерального закона от 6 октября 2003 г. N 131-ФЗ Об общих принципах организации местного самоуправления в Российской Федерации.",
                 "value": "6"
+              },
+              {
+                "title": "Местное значение муниципального округа",
+                "value": "8"
               }
             ]
           },
@@ -2984,6 +3050,7 @@ SET class_rule =
             "name": "shape",
             "title": "геометрия", 
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "Point"
             ]
@@ -3105,7 +3172,7 @@ SET class_rule =
         "readOnly": true,
         "styleName": "waterfacility_point_698",
         "tableName": "waterfacility_point_698",
-        "originName": "waterfacility_698",
+        "originName": "WaterFacility",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
         "properties": [
           {
@@ -3336,8 +3403,12 @@ SET class_rule =
                 "value": "5"
               },
               {
-                "title": "Иное значение",
+                "title": "Иное значение, местное значение муниципального района, необходимое для осуществления полномочий по вопросам местного значения муниципального района, предусмотренных частью 4 статьи 14, статьей 15 Федерального закона от 6 октября 2003 г. N 131-ФЗ Об общих принципах организации местного самоуправления в Российской Федерации.",
                 "value": "6"
+              },
+              {
+                "title": "Местное значение муниципального округа",
+                "value": "8"
               }
             ]
           },
@@ -3353,6 +3424,7 @@ SET class_rule =
             "name": "shape",
             "title": "геометрия", 
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "Point"
             ]
@@ -3447,7 +3519,7 @@ SET class_rule =
         "readOnly": true,
         "styleName": "publictransportservice_point_698",
         "tableName": "publictransportservice_point_698",
-        "originName": "publictransportservice_698",
+        "originName": "PublicTransportService",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
         "properties": [
           {
@@ -3651,8 +3723,12 @@ SET class_rule =
                 "value": "5"
               },
               {
-                "title": "Иное значение",
+                "title": "Иное значение, местное значение муниципального района, необходимое для осуществления полномочий по вопросам местного значения муниципального района, предусмотренных частью 4 статьи 14, статьей 15 Федерального закона от 6 октября 2003 г. N 131-ФЗ Об общих принципах организации местного самоуправления в Российской Федерации.",
                 "value": "6"
+              },
+              {
+                "title": "Местное значение муниципального округа",
+                "value": "8"
               }
             ]
           },
@@ -3670,6 +3746,7 @@ SET class_rule =
             "name": "shape",
             "title": "геометрия", 
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "Point"
             ]
@@ -3727,7 +3804,7 @@ SET class_rule =
         "readOnly": true,
         "styleName": "airtransportobj_point_698",
         "tableName": "airtransportobj_point_698",
-        "originName": "airtransportobj_698",
+        "originName": "AirTransportObj",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
         "properties": [
           {
@@ -4022,8 +4099,12 @@ SET class_rule =
                 "value": "5"
               },
               {
-                "title": "Иное значение",
+                "title": "Иное значение, местное значение муниципального района, необходимое для осуществления полномочий по вопросам местного значения муниципального района, предусмотренных частью 4 статьи 14, статьей 15 Федерального закона от 6 октября 2003 г. N 131-ФЗ Об общих принципах организации местного самоуправления в Российской Федерации.",
                 "value": "6"
+              },
+              {
+                "title": "Местное значение муниципального округа",
+                "value": "8"
               }
             ]
           },
@@ -4048,6 +4129,7 @@ SET class_rule =
             "name": "shape",
             "title": "геометрия",
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "Point"
             ]
@@ -4123,7 +4205,7 @@ SET class_rule =
         "readOnly": true,
         "styleName": "autoservice_point_698",
         "tableName": "autoservice_point_698",
-        "originName": "autoservice_698",
+        "originName": "AutoService",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
         "properties": [
         {
@@ -4374,8 +4456,12 @@ SET class_rule =
                 "value": "5"
               },
               {
-                "title": "Иное значение",
+                "title": "Иное значение, местное значение муниципального района, необходимое для осуществления полномочий по вопросам местного значения муниципального района, предусмотренных частью 4 статьи 14, статьей 15 Федерального закона от 6 октября 2003 г. N 131-ФЗ Об общих принципах организации местного самоуправления в Российской Федерации.",
                 "value": "6"
+              },
+              {
+                "title": "Местное значение муниципального округа",
+                "value": "8"
               }
             ]
           },
@@ -4393,6 +4479,7 @@ SET class_rule =
             "name": "shape",
             "title": "геометрия",
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "Point"
             ]
@@ -4615,6 +4702,7 @@ SET class_rule =
           {
             "name": "her_type",
             "title": "Вид памятника",
+            "required": true,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -4636,12 +4724,21 @@ SET class_rule =
               {
                 "title": "Иные виды памятников",
                 "value": "5"
+              },
+              {
+                "title": "Природный памятник",
+                "value": "8"
+              },
+              {
+                "title": "Иные виды памятников",
+                "value": "9"
               }
             ]
           },
           {
             "name": "ans_type",
             "title": "Вид ансамбля",
+            "required": true,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -4827,9 +4924,56 @@ SET class_rule =
             ]
           },
           {
+            "name": "kadastroks",
+            "title": "Кадастровый номер ОКС",
+            "valueType": "STRING"
+          },
+          {
+            "name": "kadastrzu",
+            "title": "Кадастровый номер земельного участка, на котором расположен объект",
+            "valueType": "STRING"
+          },
+          {
+            "name": "reg_status",
+            "title": "Значение объекта",
+            "required": true,
+            "valueType": "CHOICE",
+            "enumerations": [
+              {
+                "title": "Федеральное значение",
+                "value": "1"
+              },
+              {
+                "title": "Региональное значение",
+                "value": "2"
+              },
+              {
+                "title": "Местное значение муниципального района",
+                "value": "3"
+              },
+              {
+                "title": "Местное значение городского округа",
+                "value": "4"
+              },
+              {
+                "title": "Местное значение поселения",
+                "value": "5"
+              },
+              {
+                "title": "Иное значение, местное значение муниципального района, необходимое для осуществления полномочий по вопросам местного значения муниципального района, предусмотренных частью 4 статьи 14, статьей 15 Федерального закона от 6 октября 2003 г. N 131-ФЗ Об общих принципах организации местного самоуправления в Российской Федерации.",
+                "value": "6"
+              },
+              {
+                "title": "Местное значение муниципального округа",
+                "value": "8"
+              }
+            ]
+          },
+          {
             "name": "shape",
             "title": "геометрия",
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "Point"
             ]
@@ -4856,11 +5000,16 @@ custom_rule = 'var errors = [];
           errors.push({attribute: ''ans_type'', error: ''Значение заполняется только для объекта "Ансамбль"''});
       }
 
-      if (!(obj.classid == ''604010103'' || obj.classid == ''604010104'')) {
-       if (obj.status) {
-          errors.push({attribute: ''status'', error: ''Значение заполняется только для объектов "Достопримечательное место", "Историко-культурный заповедник"''});
+      if (!(obj.status == ''1'' || obj.status == ''3'' || obj.status == ''4'')) {
+        if (!obj.kadastrzu) {
+            errors.push({ attribute: ''kadastrzu'', error: ''Значение обязательно к заполнению'' });
+        }
+      } else {
+        if (obj.kadastrzu) {
+            errors.push({ attribute: ''kadastrzu'', error: ''Значение заполняется только для существующих и строящихся, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов'' });
+        }
       }
-      }
+      
       return errors;'
 WHERE name = 'heritage_point_698';
 
@@ -4873,7 +5022,7 @@ SET class_rule =
         "readOnly": true,
         "styleName": "resort_point_698",
         "tableName": "resort_point_698",
-        "originName": "resort_698",
+        "originName": "Resort",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
         "properties": [
         {
@@ -5065,8 +5214,12 @@ SET class_rule =
                 "value": "5"
               },
               {
-                "title": "Иное значение",
+                "title": "Иное значение, местное значение муниципального района, необходимое для осуществления полномочий по вопросам местного значения муниципального района, предусмотренных частью 4 статьи 14, статьей 15 Федерального закона от 6 октября 2003 г. N 131-ФЗ Об общих принципах организации местного самоуправления в Российской Федерации.",
                 "value": "6"
+              },
+              {
+                "title": "Местное значение муниципального округа",
+                "value": "8"
               }
             ]
           },
@@ -5099,6 +5252,7 @@ SET class_rule =
             "name": "shape",
             "title": "геометрия",
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "Point"
             ]
@@ -5179,7 +5333,7 @@ SET class_rule =
         "readOnly": true,
         "styleName": "servicefacility_point_698",
         "tableName": "servicefacility_point_698",
-        "originName": "servicefacility_698",
+        "originName": "ServiceFacility",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
         "properties": [
         {
@@ -5558,8 +5712,12 @@ SET class_rule =
                 "value": "5"
               },
               {
-                "title": "Иное значение",
+                "title": "Иное значение, местное значение муниципального района, необходимое для осуществления полномочий по вопросам местного значения муниципального района, предусмотренных частью 4 статьи 14, статьей 15 Федерального закона от 6 октября 2003 г. N 131-ФЗ Об общих принципах организации местного самоуправления в Российской Федерации.",
                 "value": "6"
+              },
+              {
+                "title": "Местное значение муниципального округа",
+                "value": "8"
               }
             ]
           },
@@ -5599,6 +5757,7 @@ SET class_rule =
             "name": "shape",
             "title": "геометрия",
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "Point"
             ]
@@ -5680,7 +5839,7 @@ SET class_rule =
         "readOnly": true,
         "styleName": "sewerfacility_point_698",
         "tableName": "sewerfacility_point_698",
-        "originName": "sewerfacility_698",
+        "originName": "SewerFacility",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
         "properties": [
         {
@@ -5727,7 +5886,7 @@ SET class_rule =
           },
           {
             "name": "number",
-            "title": "Номер согласно Положению о территориальном планировании",
+            "title": "Номер согласно положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
@@ -5786,6 +5945,7 @@ SET class_rule =
           {
             "name": "output",
             "title": "Производительность, тыс. куб. м/сут",
+            "required": true,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -5907,15 +6067,30 @@ SET class_rule =
                 "value": "5"
               },
               {
-                "title": "Иное значение",
+                "title": "Иное значение, местное значение муниципального района, необходимое для осуществления полномочий по вопросам местного значения муниципального района, предусмотренных частью 4 статьи 14, статьей 15 Федерального закона от 6 октября 2003 г. N 131-ФЗ Об общих принципах организации местного самоуправления в Российской Федерации.",
                 "value": "6"
+              },
+              {
+                "title": "Местное значение муниципального округа",
+                "value": "8"
               }
             ]
+          },
+          {
+            "name": "kadastroks",
+            "title": "Кадастровый номер ОКС",
+            "valueType": "STRING"
+          },
+          {
+            "name": "kadastrzu",
+            "title": "Кадастровый номер земельного участка, на котором расположен объект",
+            "valueType": "STRING"
           },
           {
             "name": "shape",
             "title": "геометрия",
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "Point"
             ]
@@ -5934,20 +6109,65 @@ custom_rule = 'var errors = [];
           errors.push({attribute: ''snow_type'', error: ''Значение заполняется только для объекта "Снегоплавильный, снегоприемный пункт"''});
       }
 
-      if (obj.status == ''2'') {
-        if (!obj.function) {
-          errors.push({attribute: ''function'', error: ''Значение обязательно к заполнению''});
+      if (obj.status == ''1'' || obj.status == ''3'' || obj.status == ''4'') {
+        if (!obj.wear_prcnt) {
+            errors.push({attribute: ''wear_prcnt'', error: ''Значение обязательно к заполнению''});
         }
-      } else if (obj.function) {
-          errors.push({attribute: ''function'', error: ''Значение заполняется только для планируемых к размещению объектов''});
+        if (!obj.fact_use) {
+          errors.push({attribute: ''fact_use'', error: ''Значение обязательно к заполнению''});
+      }
+      if (!obj.kadastrzu) {
+        errors.push({attribute: ''kadastrzu'', error: ''Значение обязательно к заполнению''});
+    }
+      } else 
+      if (obj.wear_prcnt) {
+        errors.push({attribute: ''wear_prcnt'', error: ''Значение заполняется только для планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
+      }
+      if (obj.fact_use) {
+        errors.push({attribute: ''fact_use'', error: ''Значение заполняется только для сушествующих, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
+      }
+      if (obj.kadastrzu) {
+        errors.push({attribute: ''kadastrzu'', error: ''Значение заполняется только для сушествующих, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
 
-      if (obj.status == ''2'' || obj.status == ''3'' || obj.status == ''4'') {
+      if (obj.status == ''2'' || obj.status == ''3'') {
+
+        if (!obj.event_time) {
+            errors.push({ attribute: ''event_time'', error: ''Значение обязательно к заполнению'' });
+        }
+
+        if (!obj.number) {
+          errors.push({ attribute: ''number'', error: ''Значение обязательно к заполнению'' });
+      }
+      } else {
+        if (obj.event_time) {
+            errors.push({ attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению или планируемых к реконструкции объектов'' });
+        }
+        if (obj.number) {
+          errors.push({ attribute: ''number'', error: ''Значение заполняется только для планируемых к размещению или планируемых к реконструкции объектов'' });
+      }
+      }
+
+      if (obj.reg_status == ''1'' || obj.reg_status == ''2'') {
         if (!obj.event_time) {
           errors.push({attribute: ''event_time'', error: ''Значение обязательно к заполнению''});
         }
-      } else if (obj.event_time) {
+        if (!obj.wear_prcnt) {
+          errors.push({attribute: ''wear_prcnt'', error: ''Значение обязательно к заполнению''});
+        }
+        if (!obj.fact_use) {
+          errors.push({attribute: ''fact_use'', error: ''Значение обязательно к заполнению''});
+        }
+      } else if {
+        (obj.event_time) {
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
+      }
+      (obj.wear_prcnt) {
+        errors.push({attribute: ''wear_prcnt'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
+      }
+      (obj.fact_use) {
+        errors.push({attribute: ''fact_use'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
+      }
       }
 
       return errors;'
@@ -6001,7 +6221,7 @@ SET class_rule =
           },
           {
             "name": "number",
-            "title": "Номер согласно Положению о территориальном планировании",
+            "title": "Номер согласно положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
@@ -6100,8 +6320,16 @@ SET class_rule =
                 "value": "4"
               },
               {
-                "title": "Иная зрелищная организация",
+                "title": "Здание многоцелевого центра искусств",
                 "value": "5"
+              },
+              {
+                "title": "Здание дома национального искусства",
+                "value": "8"
+              },
+              {
+                "title": "Иная зрелищная организация",
+                "value": "9"
               }
             ]
           },
@@ -6115,6 +6343,7 @@ SET class_rule =
           {
             "name": "capacity",
             "title": "Вместимость, читательских, посетительских, зрительских мест",
+            "required": true,
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT"
           },
@@ -6126,7 +6355,7 @@ SET class_rule =
             "fractionDigits": 8
           },
           {
-            "name": "exb_area",
+            "name": "exbarea",
             "title": "Площадь выставочных (экспозиционных) залов, кв. м",
             "valueType": "DOUBLE",
             "totalDigits": 38,
@@ -6210,8 +6439,12 @@ SET class_rule =
                 "value": "5"
               },
               {
-                "title": "Иное значение",
+                "title": "Иное значение, местное значение муниципального района, необходимое для осуществления полномочий по вопросам местного значения муниципального района, предусмотренных частью 4 статьи 14, статьей 15 Федерального закона от 6 октября 2003 г. N 131-ФЗ Об общих принципах организации местного самоуправления в Российской Федерации.",
                 "value": "6"
+              },
+              {
+                "title": "Местное значение муниципального округа",
+                "value": "8"
               }
             ]
           },
@@ -6219,6 +6452,7 @@ SET class_rule =
             "name": "shape",
             "title": "геометрия",
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "Point"
             ]
@@ -6269,20 +6503,63 @@ custom_rule = 'var errors = [];
           errors.push({attribute: ''exb_area'', error: ''Значение заполняется только для объектов "Объект культурно-просветительного назначения", "Объект культурно-досугового (клубного) типа"''});
       }
 
-      if (obj.status == ''2'') {
-        if (!obj.function) {
-          errors.push({attribute: ''function'', error: ''Значение обязательно к заполнению''});
+      if (obj.status == ''2'' || obj.status == ''3'') {
+
+        if (!obj.namedocosn) {
+            errors.push({ attribute: ''namedocosn'', error: ''Значение обязательно к заполнению'' });
         }
-      } else if (obj.function) {
-          errors.push({attribute: ''function'', error: ''Значение заполняется только для планируемых к размещению объектов''});
+
+        if (!obj.datedocosn) {
+            errors.push({ attribute: ''datedocosn'', error: ''Значение обязательно к заполнению'' });
+        }
+
+        if (!obj.numberdocosn) {
+            errors.push({ attribute: ''numberdocosn'', error: ''Значение обязательно к заполнению'' });
+        }
+
+        if (!obj.event_time) {
+            errors.push({ attribute: ''event_time'', error: ''Значение обязательно к заполнению'' });
+        }
+
+        if (!obj.number) {
+          errors.push({ attribute: ''number'', error: ''Значение обязательно к заполнению'' });
+       }
+      } else {
+        if (obj.namedocosn) {
+            errors.push({ attribute: ''namedocosn'', error: ''Значение заполняется только для планируемых к размещению или планируемых к реконструкции объектов'' });
+        }
+        if (obj.datedocosn) {
+            errors.push({ attribute: ''datedocosn'', error: ''Значение заполняется только для планируемых к размещению или планируемых к реконструкции объектов'' });
+        }
+        if (obj.numberdocosn) {
+            errors.push({ attribute: ''numberdocosn'', error: ''Значение заполняется только для планируемых к размещению или планируемых к реконструкции объектов'' });
+        }
+        if (obj.event_time) {
+            errors.push({ attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению или планируемых к реконструкции объектов'' });
+        }
+        if (obj.number) {
+          errors.push({ attribute: ''number'', error: ''Значение заполняется только для планируемых к размещению или планируемых к реконструкции объектов'' });
+      }
       }
 
-      if (obj.status == ''2'' || obj.status == ''3'' || obj.status == ''4'') {
+      if (obj.reg_status == ''1'' || obj.reg_status == ''2'') {
         if (!obj.event_time) {
           errors.push({attribute: ''event_time'', error: ''Значение обязательно к заполнению''});
         }
-      } else if (obj.event_time) {
+      } 
+      else 
+      if (obj.event_time) {
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
+      }
+      
+      if (!(obj.status == ''1'' || obj.status == ''3'' || obj.status == ''4'')) {
+        if (!obj.kadastrzu) {
+            errors.push({ attribute: ''kadastrzu'', error: ''Значение обязательно к заполнению'' });
+        }
+      } else {
+         if (obj.kadastrzu) {
+            errors.push({ attribute: ''kadastrzu'', error: ''Значение заполняется только для существующих и строящихся, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов'' });
+        }
       }
 
       return errors;'
@@ -6297,7 +6574,7 @@ SET class_rule =
         "readOnly": true,
         "styleName": "mineraldep_point_698",
         "tableName": "mineraldep_point_698",
-        "originName": "mineraldep_698",
+        "originName": "MineralDep",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
         "properties": [
         {
@@ -6493,8 +6770,12 @@ SET class_rule =
                 "value": "5"
               },
               {
-                "title": "Иное значение",
+                "title": "Иное значение, местное значение муниципального района, необходимое для осуществления полномочий по вопросам местного значения муниципального района, предусмотренных частью 4 статьи 14, статьей 15 Федерального закона от 6 октября 2003 г. N 131-ФЗ Об общих принципах организации местного самоуправления в Российской Федерации.",
                 "value": "6"
+              },
+              {
+                "title": "Местное значение муниципального округа",
+                "value": "8"
               }
             ]
           },
@@ -6502,6 +6783,7 @@ SET class_rule =
             "name": "shape",
             "title": "геометрия",
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "Point"
             ]
@@ -6540,7 +6822,7 @@ SET class_rule =
         "readOnly": true,
         "styleName": "mineraldep_point_698",
         "tableName": "transplogisticobj_point_698",
-        "originName": "transplogisticobj_698",
+        "originName": "TranspLogisticObj",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
         "properties": [
         {
@@ -6689,8 +6971,12 @@ SET class_rule =
                 "value": "5"
               },
               {
-                "title": "Иное значение",
+                "title": "Иное значение, местное значение муниципального района, необходимое для осуществления полномочий по вопросам местного значения муниципального района, предусмотренных частью 4 статьи 14, статьей 15 Федерального закона от 6 октября 2003 г. N 131-ФЗ Об общих принципах организации местного самоуправления в Российской Федерации.",
                 "value": "6"
+              },
+              {
+                "title": "Местное значение муниципального округа",
+                "value": "8"
               }
             ]
           },
@@ -6725,6 +7011,7 @@ SET class_rule =
             "name": "shape",
             "title": "геометрия",
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "Point"
             ]
@@ -6795,7 +7082,7 @@ SET class_rule =
         "readOnly": true,
         "styleName": "publictransportobj_point_698",
         "tableName": "publictransportobj_point_698",
-        "originName": "publictransportobj_698",
+        "originName": "PublicTransportObj",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
         "properties": [
         {
@@ -6932,8 +7219,12 @@ SET class_rule =
                 "value": "5"
               },
               {
-                "title": "Иное значение",
+                "title": "Иное значение, местное значение муниципального района, необходимое для осуществления полномочий по вопросам местного значения муниципального района, предусмотренных частью 4 статьи 14, статьей 15 Федерального закона от 6 октября 2003 г. N 131-ФЗ Об общих принципах организации местного самоуправления в Российской Федерации.",
                 "value": "6"
+              },
+              {
+                "title": "Местное значение муниципального округа",
+                "value": "8"
               }
             ]
           },
@@ -6951,6 +7242,7 @@ SET class_rule =
             "name": "shape",
             "title": "геометрия",
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "Point"
             ]
@@ -7008,7 +7300,7 @@ SET class_rule =
         "readOnly": true,
         "styleName": "envmonitoring_point_698",
         "tableName": "envmonitoring_point_698",
-        "originName": "envmonitoring_698",
+        "originName": "EnvMonitoring",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
         "properties": [
         {
@@ -7039,7 +7331,7 @@ SET class_rule =
           },
           {
             "name": "number",
-            "title": "Номер согласно Положению о территориальном планировании",
+            "title": "Номер согласно положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
@@ -7149,8 +7441,12 @@ SET class_rule =
                 "value": "5"
               },
               {
-                "title": "Иное значение",
+                "title": "Иное значение, местное значение муниципального района, необходимое для осуществления полномочий по вопросам местного значения муниципального района, предусмотренных частью 4 статьи 14, статьей 15 Федерального закона от 6 октября 2003 г. N 131-ФЗ Об общих принципах организации местного самоуправления в Российской Федерации.",
                 "value": "6"
+              },
+              {
+                "title": "Местное значение муниципального округа",
+                "value": "8"
               }
             ]
           },
@@ -7158,6 +7454,7 @@ SET class_rule =
             "name": "shape",
             "title": "геометрия",
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "Point"
             ]
@@ -7196,7 +7493,7 @@ SET class_rule =
         "readOnly": true,
         "styleName": "hydro_point_698",
         "tableName": "hydro_point_698",
-        "originName": "hydro_698",
+        "originName": "Hydro",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
         "properties": [
         {
@@ -7247,7 +7544,7 @@ SET class_rule =
           },
           {
             "name": "number",
-            "title": "Номер согласно Положению о территориальном планировании",
+            "title": "Номер согласно положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
@@ -7321,6 +7618,7 @@ SET class_rule =
             "name": "shape",
             "title": "геометрия",
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "Point"
             ]
@@ -7396,7 +7694,7 @@ SET class_rule =
           },
           {
             "name": "number",
-            "title": "Номер согласно Положению о территориальном планировании",
+            "title": "Номер согласно положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
@@ -7514,8 +7812,12 @@ SET class_rule =
                 "value": "5"
               },
               {
-                "title": "Иное значение",
+                "title": "Иное значение, местное значение муниципального района, необходимое для осуществления полномочий по вопросам местного значения муниципального района, предусмотренных частью 4 статьи 14, статьей 15 Федерального закона от 6 октября 2003 г. N 131-ФЗ Об общих принципах организации местного самоуправления в Российской Федерации.",
                 "value": "6"
+              },
+              {
+                "title": "Местное значение муниципального округа",
+                "value": "8"
               }
             ]
           },
@@ -7523,6 +7825,7 @@ SET class_rule =
             "name": "shape",
             "title": "геометрия",
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "Point"
             ]
@@ -7533,21 +7836,28 @@ SET class_rule =
 }',
 custom_rule = 'var errors = [];
 
-      if (obj.status == ''2'') {
-        if (!obj.function) {
-          errors.push({attribute: ''function'', error: ''Значение обязательно к заполнению''});
-        }
-      } else if (obj.function) {
-          errors.push({attribute: ''function'', error: ''Значение заполняется только для планируемых к размещению объектов''});
-      }
-
-      if (obj.status == ''2'' || obj.status == ''3'' || obj.status == ''4'') {
+      if (obj.status == ''2'' || obj.status == ''3'') {
         if (!obj.event_time) {
           errors.push({attribute: ''event_time'', error: ''Значение обязательно к заполнению''});
         }
-      } else if (obj.event_time) {
-          errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
-      }
+        if (!obj.number) {
+          errors.push({attribute: ''number'', error: ''Значение обязательно к заполнению''});
+        }
+      } else 
+        if (obj.event_time) {
+            errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
+        }
+        if (obj.number) {
+          errors.push({attribute: ''number'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
+        }
+
+        if (obj.reg_status == ''1'' || obj.reg_status == ''2'') {
+          if (!obj.event_time) {
+            errors.push({attribute: ''event_time'', error: ''Значение обязательно к заполнению''});
+          }
+        } else if (obj.event_time) {
+            errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
+        }
 
       return errors;'
 WHERE name = 'engprotectionobj_point_698';
@@ -7747,8 +8057,12 @@ SET class_rule =
                 "value": "5"
               },
               {
-                "title": "Иное значение",
+                "title": "Иное значение, местное значение муниципального района, необходимое для осуществления полномочий по вопросам местного значения муниципального района, предусмотренных частью 4 статьи 14, статьей 15 Федерального закона от 6 октября 2003 г. N 131-ФЗ Об общих принципах организации местного самоуправления в Российской Федерации.",
                 "value": "6"
+              },
+              {
+                "title": "Местное значение муниципального округа",
+                "value": "8"
               }
             ]
           },
@@ -7756,6 +8070,7 @@ SET class_rule =
             "name": "shape",
             "title": "геометрия",
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "LineString"
             ]
@@ -7829,7 +8144,7 @@ SET class_rule =
         "readOnly": true,
         "styleName": "culture_698",
         "tableName": "culture_698",
-        "originName": "Culture_698",
+        "originName": "Culture",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
         "properties": [
         {
@@ -7868,7 +8183,7 @@ SET class_rule =
           },
           {
             "name": "number",
-            "title": "Номер согласно Положению о территориальном планировании",
+            "title": "Номер согласно положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
@@ -7969,6 +8284,14 @@ SET class_rule =
               {
                 "title": "Иная зрелищная организация",
                 "value": "5"
+              },
+              {
+                "title": "Здание дома национального искусства",
+                "value": "8"
+              },
+              {
+                "title": "Иная зрелищная организация",
+                "value": "9"
               }
             ]
           },
@@ -7982,6 +8305,7 @@ SET class_rule =
           {
             "name": "capacity",
             "title": "Вместимость, читательских, посетительских, зрительских мест",
+            "required": true,
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT"
           },
@@ -7993,7 +8317,7 @@ SET class_rule =
             "fractionDigits": 8
           },
           {
-            "name": "exb_area",
+            "name": "exbarea",
             "title": "Площадь выставочных (экспозиционных) залов, кв. м",
             "valueType": "DOUBLE",
             "totalDigits": 38,
@@ -8077,15 +8401,47 @@ SET class_rule =
                 "value": "5"
               },
               {
-                "title": "Иное значение",
+                "title": "Иное значение, местное значение муниципального района, необходимое для осуществления полномочий по вопросам местного значения муниципального района, предусмотренных частью 4 статьи 14, статьей 15 Федерального закона от 6 октября 2003 г. N 131-ФЗ Об общих принципах организации местного самоуправления в Российской Федерации.",
                 "value": "6"
+              },
+              {
+                "title": "Местное значение муниципального округа",
+                "value": "8"
               }
             ]
+          },
+          {
+            "name": "kadastroks",
+            "title": "Кадастровый номер объекта капитального строительства",
+            "valueType": "STRING"
+          },
+          {
+            "name": "kadastrzu",
+            "title": "Кадастровый номер земельного участка и (или) номер кадастрового квартала, в границах которого расположен объект",
+            "valueType": "STRING"
+          },
+          {
+            "name": "namedocosn",
+            "title": "Наименование документа - основания",
+            "valueType": "STRING"
+          },
+          {
+            "name": "datedocosn",
+            "title": "Дата документа - основания",
+            "valueType": "DOUBLE",
+            "fractionDigits": 2
+          },
+          {
+            "name": "numberdocosn",
+            "title": "Номер документа - основания",
+            "valueType": "DOUBLE",
+            "fractionDigits": 2
           },
           {
             "name": "shape",
             "title": "геометрия",
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "Polygon"
             ]
@@ -8136,20 +8492,63 @@ custom_rule = 'var errors = [];
           errors.push({attribute: ''exb_area'', error: ''Значение заполняется только для объектов "Объект культурно-просветительного назначения", "Объект культурно-досугового (клубного) типа"''});
       }
 
-      if (obj.status == ''2'') {
-        if (!obj.function) {
-          errors.push({attribute: ''function'', error: ''Значение обязательно к заполнению''});
+      if (obj.status == ''2'' || obj.status == ''3'') {
+
+        if (!obj.namedocosn) {
+            errors.push({ attribute: ''namedocosn'', error: ''Значение обязательно к заполнению'' });
         }
-      } else if (obj.function) {
-          errors.push({attribute: ''function'', error: ''Значение заполняется только для планируемых к размещению объектов''});
+
+        if (!obj.datedocosn) {
+            errors.push({ attribute: ''datedocosn'', error: ''Значение обязательно к заполнению'' });
+        }
+
+        if (!obj.numberdocosn) {
+            errors.push({ attribute: ''numberdocosn'', error: ''Значение обязательно к заполнению'' });
+        }
+
+        if (!obj.event_time) {
+            errors.push({ attribute: ''event_time'', error: ''Значение обязательно к заполнению'' });
+        }
+
+        if (!obj.number) {
+          errors.push({ attribute: ''number'', error: ''Значение обязательно к заполнению'' });
+       }
+      } else {
+        if (obj.namedocosn) {
+            errors.push({ attribute: ''namedocosn'', error: ''Значение заполняется только для планируемых к размещению или планируемых к реконструкции объектов'' });
+        }
+        if (obj.datedocosn) {
+            errors.push({ attribute: ''datedocosn'', error: ''Значение заполняется только для планируемых к размещению или планируемых к реконструкции объектов'' });
+        }
+        if (obj.numberdocosn) {
+            errors.push({ attribute: ''numberdocosn'', error: ''Значение заполняется только для планируемых к размещению или планируемых к реконструкции объектов'' });
+        }
+        if (obj.event_time) {
+            errors.push({ attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению или планируемых к реконструкции объектов'' });
+        }
+        if (obj.number) {
+          errors.push({ attribute: ''number'', error: ''Значение заполняется только для планируемых к размещению или планируемых к реконструкции объектов'' });
+      }
       }
 
-      if (obj.status == ''2'' || obj.status == ''3'' || obj.status == ''4'') {
+      if (obj.reg_status == ''1'' || obj.reg_status == ''2'') {
         if (!obj.event_time) {
           errors.push({attribute: ''event_time'', error: ''Значение обязательно к заполнению''});
         }
-      } else if (obj.event_time) {
+      } 
+      else 
+      if (obj.event_time) {
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
+      }
+      
+      if (!(obj.status == ''1'' || obj.status == ''3'' || obj.status == ''4'')) {
+        if (!obj.kadastrzu) {
+            errors.push({ attribute: ''kadastrzu'', error: ''Значение обязательно к заполнению'' });
+        }
+      } else {
+         if (obj.kadastrzu) {
+            errors.push({ attribute: ''kadastrzu'', error: ''Значение заполняется только для существующих и строящихся, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов'' });
+        }
       }
 
       return errors;'
@@ -8164,7 +8563,7 @@ SET class_rule =
         "readOnly": true,
         "styleName": "manufacturing_698",
         "tableName": "manufacturing_698",
-        "originName": "manufacturing_698",
+        "originName": "Manufacturing",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
         "properties": [
         {
@@ -8517,8 +8916,12 @@ SET class_rule =
                 "value": "5"
               },
               {
-                "title": "Иное значение",
+                "title": "Иное значение, местное значение муниципального района, необходимое для осуществления полномочий по вопросам местного значения муниципального района, предусмотренных частью 4 статьи 14, статьей 15 Федерального закона от 6 октября 2003 г. N 131-ФЗ Об общих принципах организации местного самоуправления в Российской Федерации.",
                 "value": "6"
+              },
+              {
+                "title": "Местное значение муниципального округа",
+                "value": "8"
               }
             ]
           },
@@ -8541,6 +8944,7 @@ SET class_rule =
             "name": "shape",
             "title": "геометрия",
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "Polygon"
             ]
@@ -8611,7 +9015,7 @@ SET class_rule =
         "readOnly": true,
         "styleName": "authorityservice_698",
         "tableName": "authorityservice_698",
-        "originName": "authorityservice_698",
+        "originName": "AuthorityService",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
         "properties": [
         {
@@ -8666,7 +9070,7 @@ SET class_rule =
           },
           {
             "name": "number",
-            "title": "Номер согласно Положению о территориальном планировании",
+            "title": "Номер согласно положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
@@ -8921,8 +9325,12 @@ SET class_rule =
                 "value": "5"
               },
               {
-                "title": "Иное значение",
+                "title": "Иное значение, местное значение муниципального района, необходимое для осуществления полномочий по вопросам местного значения муниципального района, предусмотренных частью 4 статьи 14, статьей 15 Федерального закона от 6 октября 2003 г. N 131-ФЗ Об общих принципах организации местного самоуправления в Российской Федерации.",
                 "value": "6"
+              },
+              {
+                "title": "Местное значение муниципального округа",
+                "value": "8"
               }
             ]
           },
@@ -8930,6 +9338,7 @@ SET class_rule =
             "name": "shape",
             "title": "геометрия",
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "Polygon"
             ]
@@ -9032,7 +9441,7 @@ SET class_rule =
         "readOnly": true,
         "styleName": "sport_698",
         "tableName": "sport_698",
-        "originName": "Sport_698",
+        "originName": "Sport",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
         "properties": [
         {
@@ -9323,8 +9732,12 @@ SET class_rule =
                 "value": "5"
               },
               {
-                "title": "Иное значение",
+                "title": "Иное значение, местное значение муниципального района, необходимое для осуществления полномочий по вопросам местного значения муниципального района, предусмотренных частью 4 статьи 14, статьей 15 Федерального закона от 6 октября 2003 г. N 131-ФЗ Об общих принципах организации местного самоуправления в Российской Федерации.",
                 "value": "6"
+              },
+              {
+                "title": "Местное значение муниципального округа",
+                "value": "8"
               }
             ]
           },
@@ -9359,6 +9772,7 @@ SET class_rule =
             "name": "shape",
             "title": "геометрия",
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "Polygon"
             ]
@@ -9447,7 +9861,7 @@ SET class_rule =
         "readOnly": true,
         "styleName": "naturalriskzone_698",
         "tableName": "naturalriskzone_698",
-        "originName": "naturalriskzone_698",
+        "originName": "NaturalRiskZone",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
         "properties": [
         {
@@ -9697,6 +10111,7 @@ SET class_rule =
             "name": "shape",
             "title": "геометрия",
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "Polygon"
             ]
@@ -9716,7 +10131,7 @@ SET class_rule =
         "readOnly": true,
         "styleName": "natureprotectarea_698",
         "tableName": "natureprotectarea_698",
-        "originName": "natureprotectarea_698",
+        "originName": "NatureProtectArea",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
         "properties": [
         {
@@ -9864,15 +10279,25 @@ SET class_rule =
                 "value": "5"
               },
               {
-                "title": "Иное значение",
+                "title": "Иное значение, местное значение муниципального района, необходимое для осуществления полномочий по вопросам местного значения муниципального района, предусмотренных частью 4 статьи 14, статьей 15 Федерального закона от 6 октября 2003 г. N 131-ФЗ Об общих принципах организации местного самоуправления в Российской Федерации.",
                 "value": "6"
+              },
+              {
+                "title": "Местное значение муниципального округа",
+                "value": "8"
               }
             ]
+          },
+          {
+            "name": "kadastrzu",
+            "title": "Кадастровый номер земельного участка, на котором расположен объект",
+            "valueType": "STRING"
           },
           {
             "name": "shape",
             "title": "геометрия",
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "Polygon"
             ]
@@ -9883,21 +10308,31 @@ SET class_rule =
 }',
 custom_rule = 'var errors = [];
 
-      if (obj.status == ''2'') {
-        if (!obj.function) {
-          errors.push({attribute: ''function'', error: ''Значение обязательно к заполнению''});
-        }
-      } else if (obj.function) {
-          errors.push({attribute: ''function'', error: ''Значение заполняется только для планируемых к размещению объектов''});
-      }
-
-      if (obj.status == ''2'' || obj.status == ''3'' || obj.status == ''4'') {
+      if (obj.status == ''2'' || obj.status == ''3'') {
         if (!obj.event_time) {
           errors.push({attribute: ''event_time'', error: ''Значение обязательно к заполнению''});
         }
       } else if (obj.event_time) {
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
+
+      if (obj.reg_status == ''1'' || obj.reg_status == ''2'') {
+          if (!obj.event_time) {
+            errors.push({attribute: ''event_time'', error: ''Значение обязательно к заполнению''});
+          }
+        } else if (obj.event_time) {
+            errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
+        }
+
+        if (!(obj.status == ''1'' || obj.status == ''3'' || obj.status == ''4'')) {
+          if (!obj.kadastrzu) {
+              errors.push({ attribute: ''kadastrzu'', error: ''Значение обязательно к заполнению'' });
+          }
+        } else {
+          if (obj.kadastrzu) {
+              errors.push({ attribute: ''kadastrzu'', error: ''Значение заполняется только для существующих и строящихся, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов'' });
+          }
+        }
 
       return errors;'
 WHERE name = 'natureprotectarea_698';
@@ -9911,7 +10346,7 @@ SET class_rule =
         "readOnly": true,
         "styleName": "gasfacility_698",
         "tableName": "gasfacility_698",
-        "originName": "gasfacility_698",
+        "originName": "GasFacility",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
         "properties": [
         {
@@ -10002,7 +10437,7 @@ SET class_rule =
           },
           {
             "name": "number",
-            "title": "Номер согласно Положению о территориальном планировании",
+            "title": "Номер согласно положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
@@ -10175,8 +10610,12 @@ SET class_rule =
                 "value": "5"
               },
               {
-                "title": "Иное значение",
+                "title": "Иное значение, местное значение муниципального района, необходимое для осуществления полномочий по вопросам местного значения муниципального района, предусмотренных частью 4 статьи 14, статьей 15 Федерального закона от 6 октября 2003 г. N 131-ФЗ Об общих принципах организации местного самоуправления в Российской Федерации.",
                 "value": "6"
+              },
+              {
+                "title": "Местное значение муниципального округа",
+                "value": "8"
               }
             ]
           },
@@ -10184,6 +10623,7 @@ SET class_rule =
             "name": "shape",
             "title": "геометрия",
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "Polygon"
             ]
@@ -10222,7 +10662,7 @@ SET class_rule =
         "readOnly": true,
         "styleName": "gasfacility_point_698",
         "tableName": "gasfacility_point_698",
-        "originName": "gasfacility_698",
+        "originName": "GasFacility",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
         "properties": [
         {
@@ -10313,7 +10753,7 @@ SET class_rule =
           },
           {
             "name": "number",
-            "title": "Номер согласно Положению о территориальном планировании",
+            "title": "Номер согласно положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
@@ -10486,8 +10926,12 @@ SET class_rule =
                 "value": "5"
               },
               {
-                "title": "Иное значение",
+                "title": "Иное значение, местное значение муниципального района, необходимое для осуществления полномочий по вопросам местного значения муниципального района, предусмотренных частью 4 статьи 14, статьей 15 Федерального закона от 6 октября 2003 г. N 131-ФЗ Об общих принципах организации местного самоуправления в Российской Федерации.",
                 "value": "6"
+              },
+              {
+                "title": "Местное значение муниципального округа",
+                "value": "8"
               }
             ]
           },
@@ -10495,6 +10939,7 @@ SET class_rule =
             "name": "shape",
             "title": "геометрия",
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "Point"
             ]
@@ -10533,7 +10978,7 @@ SET class_rule =
         "readOnly": true,
         "styleName": "publictransportobj_698",
         "tableName": "publictransportobj_698",
-        "originName": "publictransportobj_698",
+        "originName": "PublicTransportObj",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
         "properties": [
         {
@@ -10670,8 +11115,12 @@ SET class_rule =
                 "value": "5"
               },
               {
-                "title": "Иное значение",
+                "title": "Иное значение, местное значение муниципального района, необходимое для осуществления полномочий по вопросам местного значения муниципального района, предусмотренных частью 4 статьи 14, статьей 15 Федерального закона от 6 октября 2003 г. N 131-ФЗ Об общих принципах организации местного самоуправления в Российской Федерации.",
                 "value": "6"
+              },
+              {
+                "title": "Местное значение муниципального округа",
+                "value": "8"
               }
             ]
           },
@@ -10689,6 +11138,7 @@ SET class_rule =
             "name": "shape",
             "title": "геометрия",
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "Polygon"
             ]
@@ -10746,7 +11196,7 @@ SET class_rule =
         "readOnly": true,
         "styleName": "thermalfacility_698",
         "tableName": "thermalfacility_698",
-        "originName": "thermalfacility_698",
+        "originName": "ThermalFacility",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
         "properties": [
         {
@@ -11023,8 +11473,12 @@ SET class_rule =
                 "value": "5"
               },
               {
-                "title": "Иное значение",
+                "title": "Иное значение, местное значение муниципального района, необходимое для осуществления полномочий по вопросам местного значения муниципального района, предусмотренных частью 4 статьи 14, статьей 15 Федерального закона от 6 октября 2003 г. N 131-ФЗ Об общих принципах организации местного самоуправления в Российской Федерации.",
                 "value": "6"
+              },
+              {
+                "title": "Местное значение муниципального округа",
+                "value": "8"
               }
             ]
           },
@@ -11049,6 +11503,7 @@ SET class_rule =
             "name": "shape",
             "title": "геометрия",
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "Polygon"
             ]
@@ -11153,7 +11608,7 @@ SET class_rule =
         "readOnly": true,
         "styleName": "envmonitoring_698",
         "tableName": "envmonitoring_698",
-        "originName": "envmonitoring_698",
+        "originName": "EnvMonitoring",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
         "properties": [
         {
@@ -11184,7 +11639,7 @@ SET class_rule =
           },
           {
             "name": "number",
-            "title": "Номер согласно Положению о территориальном планировании",
+            "title": "Номер согласно положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
@@ -11294,8 +11749,12 @@ SET class_rule =
                 "value": "5"
               },
               {
-                "title": "Иное значение",
+                "title": "Иное значение, местное значение муниципального района, необходимое для осуществления полномочий по вопросам местного значения муниципального района, предусмотренных частью 4 статьи 14, статьей 15 Федерального закона от 6 октября 2003 г. N 131-ФЗ Об общих принципах организации местного самоуправления в Российской Федерации.",
                 "value": "6"
+              },
+              {
+                "title": "Местное значение муниципального округа",
+                "value": "8"
               }
             ]
           },
@@ -11303,6 +11762,7 @@ SET class_rule =
             "name": "shape",
             "title": "геометрия",
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "Polygon"
             ]
@@ -11341,7 +11801,7 @@ SET class_rule =
         "readOnly": true,
         "styleName": "thermalfacility_point_698",
         "tableName": "thermalfacility_point_698",
-        "originName": "thermalfacility_698",
+        "originName": "ThermalFacility",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
         "properties": [
           {
@@ -11618,8 +12078,12 @@ SET class_rule =
                 "value": "5"
               },
               {
-                "title": "Иное значение",
+                "title": "Иное значение, местное значение муниципального района, необходимое для осуществления полномочий по вопросам местного значения муниципального района, предусмотренных частью 4 статьи 14, статьей 15 Федерального закона от 6 октября 2003 г. N 131-ФЗ Об общих принципах организации местного самоуправления в Российской Федерации.",
                 "value": "6"
+              },
+              {
+                "title": "Местное значение муниципального округа",
+                "value": "8"
               }
             ]
           },
@@ -11644,6 +12108,7 @@ SET class_rule =
             "name": "shape",
             "title": "геометрия",
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "Point"
             ]
@@ -12092,8 +12557,12 @@ SET class_rule =
                 "value": "5"
               },
               {
-                "title": "Иное значение",
+                "title": "Иное значение, местное значение муниципального района, необходимое для осуществления полномочий по вопросам местного значения муниципального района, предусмотренных частью 4 статьи 14, статьей 15 Федерального закона от 6 октября 2003 г. N 131-ФЗ Об общих принципах организации местного самоуправления в Российской Федерации.",
                 "value": "6"
+              },
+              {
+                "title": "Местное значение муниципального округа",
+                "value": "8"
               }
             ]
           },
@@ -12125,6 +12594,7 @@ SET class_rule =
             "name": "shape",
             "title": "геометрия",
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "LineString"
             ]
@@ -12248,7 +12718,7 @@ SET class_rule =
         "readOnly": true,
         "styleName": "telecomfacility_698",
         "tableName": "telecomfacility_698",
-        "originName": "telecomfacility_698",
+        "originName": "TelecomFacility",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
         "properties": [
           {
@@ -12319,7 +12789,7 @@ SET class_rule =
           },
           {
             "name": "number",
-            "title": "Номер согласно Положению о территориальном планировании",
+            "title": "Номер согласно положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
@@ -12510,15 +12980,30 @@ SET class_rule =
                 "value": "5"
               },
               {
-                "title": "Иное значение",
+                "title": "Иное значение, местное значение муниципального района, необходимое для осуществления полномочий по вопросам местного значения муниципального района, предусмотренных частью 4 статьи 14, статьей 15 Федерального закона от 6 октября 2003 г. N 131-ФЗ Об общих принципах организации местного самоуправления в Российской Федерации.",
                 "value": "6"
+              },
+              {
+                "title": "Местное значение муниципального округа",
+                "value": "8"
               }
             ]
+          },
+          {
+            "name": "kadastroks",
+            "title": "Кадастровый номер ОКС",
+            "valueType": "STRING"
+          },
+          {
+            "name": "kadastrzu",
+            "title": "Кадастровый номер земельного участка, на котором расположен объект",
+            "valueType": "STRING"
           },
           {
             "name": "shape",
             "title": "геометрия",
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "Polygon"
             ]
@@ -12537,20 +13022,65 @@ custom_rule = 'var errors = [];
           errors.push({attribute: ''capacity'', error: ''Значение заполняется только для объекта "Автоматическая телефонная станция"''});
       }
 
-      if (obj.status == ''2'') {
-        if (!obj.function) {
-          errors.push({attribute: ''function'', error: ''Значение обязательно к заполнению''});
+      if (obj.status == ''1'' || obj.status == ''3'' || obj.status == ''4'') {
+        if (!obj.wear_prcnt) {
+            errors.push({attribute: ''wear_prcnt'', error: ''Значение обязательно к заполнению''});
         }
-      } else if (obj.function) {
-          errors.push({attribute: ''function'', error: ''Значение заполняется только для планируемых к размещению объектов''});
+        if (!obj.fact_use) {
+          errors.push({attribute: ''fact_use'', error: ''Значение обязательно к заполнению''});
+      }
+      if (!obj.kadastrzu) {
+        errors.push({attribute: ''kadastrzu'', error: ''Значение обязательно к заполнению''});
+    }
+      } else 
+      if (obj.wear_prcnt) {
+        errors.push({attribute: ''wear_prcnt'', error: ''Значение заполняется только для планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
+      }
+      if (obj.fact_use) {
+        errors.push({attribute: ''fact_use'', error: ''Значение заполняется только для сушествующих, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
+      }
+      if (obj.kadastrzu) {
+        errors.push({attribute: ''kadastrzu'', error: ''Значение заполняется только для сушествующих, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
 
-      if (obj.status == ''2'' || obj.status == ''3'' || obj.status == ''4'') {
+      if (obj.status == ''2'' || obj.status == ''3'') {
+
+        if (!obj.event_time) {
+            errors.push({ attribute: ''event_time'', error: ''Значение обязательно к заполнению'' });
+        }
+
+        if (!obj.number) {
+          errors.push({ attribute: ''number'', error: ''Значение обязательно к заполнению'' });
+       }
+      } else {
+        if (obj.event_time) {
+            errors.push({ attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению или планируемых к реконструкции объектов'' });
+        }
+        if (obj.number) {
+          errors.push({ attribute: ''number'', error: ''Значение заполняется только для планируемых к размещению или планируемых к реконструкции объектов'' });
+      }
+      }
+
+      if (obj.reg_status == ''1'' || obj.reg_status == ''2'') {
         if (!obj.event_time) {
           errors.push({attribute: ''event_time'', error: ''Значение обязательно к заполнению''});
         }
-      } else if (obj.event_time) {
+        if (!obj.fact_use) {
+          errors.push({attribute: ''fact_use'', error: ''Значение обязательно к заполнению''});
+        }
+        if (!obj.wear_prcnt) {
+          errors.push({attribute: ''wear_prcnt'', error: ''Значение обязательно к заполнению''});
+        }
+      } 
+      else 
+      if (obj.event_time) {
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
+      }
+      if (obj.fact_use) {
+        errors.push({attribute: ''fact_use'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
+      }
+      if (obj.wear_prcnt) {
+        errors.push({attribute: ''wear_prcnt'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
 
       return errors;'
@@ -12565,7 +13095,7 @@ SET class_rule =
         "readOnly": true,
         "styleName": "customcontrol_698",
         "tableName": "customcontrol_698",
-        "originName": "customcontrol_698",
+        "originName": "CustomControl",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
         "properties": [
           {
@@ -12787,8 +13317,12 @@ SET class_rule =
                 "value": "5"
               },
               {
-                "title": "Иное значение",
+                "title": "Иное значение, местное значение муниципального района, необходимое для осуществления полномочий по вопросам местного значения муниципального района, предусмотренных частью 4 статьи 14, статьей 15 Федерального закона от 6 октября 2003 г. N 131-ФЗ Об общих принципах организации местного самоуправления в Российской Федерации.",
                 "value": "6"
+              },
+              {
+                "title": "Местное значение муниципального округа",
+                "value": "8"
               }
             ]
           },
@@ -12796,6 +13330,7 @@ SET class_rule =
             "name": "shape",
             "title": "геометрия",
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "Polygon"
             ]
@@ -12844,7 +13379,7 @@ SET class_rule =
         "readOnly": true,
         "styleName": "education_698",
         "tableName": "education_698",
-        "originName": "education_698",
+        "originName": "Education",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
         "properties": [
           {
@@ -12915,7 +13450,7 @@ SET class_rule =
           },
           {
             "name": "number",
-            "title": "Номер согласно Положению о территориальном планировании",
+            "title": "Номер согласно положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
@@ -13230,15 +13765,20 @@ SET class_rule =
                 "value": "5"
               },
               {
-                "title": "Иное значение",
+                "title": "Иное значение, местное значение муниципального района, необходимое для осуществления полномочий по вопросам местного значения муниципального района, предусмотренных частью 4 статьи 14, статьей 15 Федерального закона от 6 октября 2003 г. N 131-ФЗ Об общих принципах организации местного самоуправления в Российской Федерации.",
                 "value": "6"
+              },
+              {
+                "title": "Местное значение муниципального округа",
+                "value": "8"
               }
             ]
           },
           {
             "name": "shape",
-            "title": "Геометрия",
+            "title": "геометрия",
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "Polygon"
             ]
@@ -13378,7 +13918,7 @@ SET class_rule =
           },
           {
             "name": "number",
-            "title": "Номер согласно Положению о территориальном планировании",
+            "title": "Номер согласно положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
@@ -13533,8 +14073,12 @@ SET class_rule =
                 "value": "5"
               },
               {
-                "title": "Иное значение",
+                "title": "Иное значение, местное значение муниципального района, необходимое для осуществления полномочий по вопросам местного значения муниципального района, предусмотренных частью 4 статьи 14, статьей 15 Федерального закона от 6 октября 2003 г. N 131-ФЗ Об общих принципах организации местного самоуправления в Российской Федерации.",
                 "value": "6"
+              },
+              {
+                "title": "Местное значение муниципального округа",
+                "value": "8"
               }
             ]
           },
@@ -13542,6 +14086,7 @@ SET class_rule =
             "name": "shape",
             "title": "геометрия",
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "LineString"
             ]
@@ -13580,7 +14125,7 @@ SET class_rule =
         "readOnly": true,
         "styleName": "telecomfacility_point_698",
         "tableName": "telecomfacility_point_698",
-        "originName": "telecomfacility_698",
+        "originName": "TelecomFacility",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
         "properties": [
           {
@@ -13651,7 +14196,7 @@ SET class_rule =
           },
           {
             "name": "number",
-            "title": "Номер согласно Положению о территориальном планировании",
+            "title": "Номер согласно положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
@@ -13842,15 +14387,30 @@ SET class_rule =
                 "value": "5"
               },
               {
-                "title": "Иное значение",
+                "title": "Иное значение, местное значение муниципального района, необходимое для осуществления полномочий по вопросам местного значения муниципального района, предусмотренных частью 4 статьи 14, статьей 15 Федерального закона от 6 октября 2003 г. N 131-ФЗ Об общих принципах организации местного самоуправления в Российской Федерации.",
                 "value": "6"
+              },
+              {
+                "title": "Местное значение муниципального округа",
+                "value": "8"
               }
             ]
+          },
+          {
+            "name": "kadastroks",
+            "title": "Кадастровый номер ОКС",
+            "valueType": "STRING"
+          },
+          {
+            "name": "kadastrzu",
+            "title": "Кадастровый номер земельного участка, на котором расположен объект",
+            "valueType": "STRING"
           },
           {
             "name": "shape",
             "title": "геометрия",
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "Point"
             ]
@@ -13869,20 +14429,65 @@ custom_rule = 'var errors = [];
           errors.push({attribute: ''capacity'', error: ''Значение заполняется только для объекта "Автоматическая телефонная станция"''});
       }
 
-      if (obj.status == ''2'') {
-        if (!obj.function) {
-          errors.push({attribute: ''function'', error: ''Значение обязательно к заполнению''});
+      if (obj.status == ''1'' || obj.status == ''3'' || obj.status == ''4'') {
+        if (!obj.wear_prcnt) {
+            errors.push({attribute: ''wear_prcnt'', error: ''Значение обязательно к заполнению''});
         }
-      } else if (obj.function) {
-          errors.push({attribute: ''function'', error: ''Значение заполняется только для планируемых к размещению объектов''});
+        if (!obj.fact_use) {
+          errors.push({attribute: ''fact_use'', error: ''Значение обязательно к заполнению''});
+      }
+      if (!obj.kadastrzu) {
+        errors.push({attribute: ''kadastrzu'', error: ''Значение обязательно к заполнению''});
+      }
+      } else 
+      if (obj.wear_prcnt) {
+        errors.push({attribute: ''wear_prcnt'', error: ''Значение заполняется только для планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
+      }
+      if (obj.fact_use) {
+        errors.push({attribute: ''fact_use'', error: ''Значение заполняется только для сушествующих, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
+      }
+      if (obj.kadastrzu) {
+        errors.push({attribute: ''kadastrzu'', error: ''Значение заполняется только для сушествующих, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
 
-      if (obj.status == ''2'' || obj.status == ''3'' || obj.status == ''4'') {
+      if (obj.status == ''2'' || obj.status == ''3'') {
+
+        if (!obj.event_time) {
+            errors.push({ attribute: ''event_time'', error: ''Значение обязательно к заполнению'' });
+        }
+
+        if (!obj.number) {
+          errors.push({ attribute: ''number'', error: ''Значение обязательно к заполнению'' });
+      }
+      } else {
+        if (obj.event_time) {
+            errors.push({ attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению или планируемых к реконструкции объектов'' });
+        }
+        if (obj.number) {
+          errors.push({ attribute: ''number'', error: ''Значение заполняется только для планируемых к размещению или планируемых к реконструкции объектов'' });
+      }
+      }
+
+      if (obj.reg_status == ''1'' || obj.reg_status == ''2'') {
         if (!obj.event_time) {
           errors.push({attribute: ''event_time'', error: ''Значение обязательно к заполнению''});
         }
-      } else if (obj.event_time) {
+        if (!obj.fact_use) {
+          errors.push({attribute: ''fact_use'', error: ''Значение обязательно к заполнению''});
+        }
+        if (!obj.wear_prcnt) {
+          errors.push({attribute: ''wear_prcnt'', error: ''Значение обязательно к заполнению''});
+        }
+      } 
+      else 
+      if (obj.event_time) {
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
+      }
+      if (obj.fact_use) {
+        errors.push({attribute: ''fact_use'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
+      }
+      if (obj.wear_prcnt) {
+        errors.push({attribute: ''wear_prcnt'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
 
       return errors;'
@@ -13897,7 +14502,7 @@ SET class_rule =
         "readOnly": true,
         "styleName": "resort_698",
         "tableName": "resort_698",
-        "originName": "resort_698",
+        "originName": "Resort",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
         "properties": [
           {
@@ -14089,8 +14694,12 @@ SET class_rule =
                 "value": "5"
               },
               {
-                "title": "Иное значение",
+                "title": "Иное значение, местное значение муниципального района, необходимое для осуществления полномочий по вопросам местного значения муниципального района, предусмотренных частью 4 статьи 14, статьей 15 Федерального закона от 6 октября 2003 г. N 131-ФЗ Об общих принципах организации местного самоуправления в Российской Федерации.",
                 "value": "6"
+              },
+              {
+                "title": "Местное значение муниципального округа",
+                "value": "8"
               }
             ]
           },
@@ -14123,6 +14732,7 @@ SET class_rule =
             "name": "shape",
             "title": "геометрия",
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "Polygon"
             ]
@@ -14203,7 +14813,7 @@ SET class_rule =
         "readOnly": true,
         "styleName": "servicefacility_698",
         "tableName": "servicefacility_698",
-        "originName": "servicefacility_698",
+        "originName": "ServiceFacility",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
         "properties": [
           {
@@ -14582,8 +15192,12 @@ SET class_rule =
                 "value": "5"
               },
               {
-                "title": "Иное значение",
+                "title": "Иное значение, местное значение муниципального района, необходимое для осуществления полномочий по вопросам местного значения муниципального района, предусмотренных частью 4 статьи 14, статьей 15 Федерального закона от 6 октября 2003 г. N 131-ФЗ Об общих принципах организации местного самоуправления в Российской Федерации.",
                 "value": "6"
+              },
+              {
+                "title": "Местное значение муниципального округа",
+                "value": "8"
               }
             ]
           },
@@ -14623,6 +15237,7 @@ SET class_rule =
             "name": "shape",
             "title": "геометрия",
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "Polygon"
             ]
@@ -14704,7 +15319,7 @@ SET class_rule =
         "readOnly": true,
         "styleName": "admenp_698",
         "tableName": "admenp_698",
-        "originName": "admenp_698",
+        "originName": "AdmeNP",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
         "properties": [
           {
@@ -15098,6 +15713,7 @@ SET class_rule =
             "name": "shape",
             "title": "геометрия",
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "Polygon"
             ]
@@ -15117,7 +15733,7 @@ SET class_rule =
         "readOnly": true,
         "styleName": "transportobj_698",
         "tableName": "transportobj_698",
-        "originName": "transportobj_698",
+        "originName": "TransportObj",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
         "properties": [
           {
@@ -15347,8 +15963,12 @@ SET class_rule =
                 "value": "5"
               },
               {
-                "title": "Иное значение",
+                "title": "Иное значение, местное значение муниципального района, необходимое для осуществления полномочий по вопросам местного значения муниципального района, предусмотренных частью 4 статьи 14, статьей 15 Федерального закона от 6 октября 2003 г. N 131-ФЗ Об общих принципах организации местного самоуправления в Российской Федерации.",
                 "value": "6"
+              },
+              {
+                "title": "Местное значение муниципального округа",
+                "value": "8"
               }
             ]
           },
@@ -15356,6 +15976,7 @@ SET class_rule =
             "name": "shape",
             "title": "геометрия",
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "Polygon"
             ]
@@ -15428,7 +16049,7 @@ SET class_rule =
         "readOnly": true,
         "styleName": "transportobj_line_698",
         "tableName": "transportobj_line_698",
-        "originName": "transportobj_698",
+        "originName": "TransportObj",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
         "properties": [
           {
@@ -15658,8 +16279,12 @@ SET class_rule =
                 "value": "5"
               },
               {
-                "title": "Иное значение",
+                "title": "Иное значение, местное значение муниципального района, необходимое для осуществления полномочий по вопросам местного значения муниципального района, предусмотренных частью 4 статьи 14, статьей 15 Федерального закона от 6 октября 2003 г. N 131-ФЗ Об общих принципах организации местного самоуправления в Российской Федерации.",
                 "value": "6"
+              },
+              {
+                "title": "Местное значение муниципального округа",
+                "value": "8"
               }
             ]
           },
@@ -15667,6 +16292,7 @@ SET class_rule =
             "name": "shape",
             "title": "геометрия",
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "LineString"
             ]
@@ -15739,7 +16365,7 @@ SET class_rule =
         "readOnly": true,
         "styleName": "transportobj_point_698",
         "tableName": "transportobj_point_698",
-        "originName": "transportobj_698",
+        "originName": "TransportObj",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
         "properties": [
           {
@@ -15969,8 +16595,12 @@ SET class_rule =
                 "value": "5"
               },
               {
-                "title": "Иное значение",
+                "title": "Иное значение, местное значение муниципального района, необходимое для осуществления полномочий по вопросам местного значения муниципального района, предусмотренных частью 4 статьи 14, статьей 15 Федерального закона от 6 октября 2003 г. N 131-ФЗ Об общих принципах организации местного самоуправления в Российской Федерации.",
                 "value": "6"
+              },
+              {
+                "title": "Местное значение муниципального округа",
+                "value": "8"
               }
             ]
           },
@@ -15978,6 +16608,7 @@ SET class_rule =
             "name": "shape",
             "title": "геометрия",
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "Point"
             ]
@@ -16050,7 +16681,7 @@ SET class_rule =
         "readOnly": true,
         "styleName": "wastefacility_698",
         "tableName": "wastefacility_698",
-        "originName": "wastefacility_698",
+        "originName": "WasteFacility",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
         "properties": [
           {
@@ -16457,8 +17088,12 @@ SET class_rule =
                 "value": "5"
               },
               {
-                "title": "Иное значение",
+                "title": "Иное значение, местное значение муниципального района, необходимое для осуществления полномочий по вопросам местного значения муниципального района, предусмотренных частью 4 статьи 14, статьей 15 Федерального закона от 6 октября 2003 г. N 131-ФЗ Об общих принципах организации местного самоуправления в Российской Федерации.",
                 "value": "6"
+              },
+              {
+                "title": "Местное значение муниципального округа",
+                "value": "8"
               }
             ]
           },
@@ -16493,6 +17128,7 @@ SET class_rule =
             "name": "shape",
             "title": "геометрия",
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "Polygon"
             ]
@@ -16614,7 +17250,7 @@ SET class_rule =
         "readOnly": true,
         "styleName": "waterfacility_698",
         "tableName": "waterfacility_698",
-        "originName": "waterfacility_698",
+        "originName": "WaterFacility",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
         "properties": [
           {
@@ -16845,8 +17481,12 @@ SET class_rule =
                 "value": "5"
               },
               {
-                "title": "Иное значение",
+                "title": "Иное значение, местное значение муниципального района, необходимое для осуществления полномочий по вопросам местного значения муниципального района, предусмотренных частью 4 статьи 14, статьей 15 Федерального закона от 6 октября 2003 г. N 131-ФЗ Об общих принципах организации местного самоуправления в Российской Федерации.",
                 "value": "6"
+              },
+              {
+                "title": "Местное значение муниципального округа",
+                "value": "8"
               }
             ]
           },
@@ -16862,6 +17502,7 @@ SET class_rule =
             "name": "shape",
             "title": "геометрия",
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "Polygon"
             ]
@@ -16956,7 +17597,7 @@ SET class_rule =
         "readOnly": true,
         "styleName": "otherobject_698",
         "tableName": "otherobject_698",
-        "originName": "otherobject_698",
+        "originName": "OtherObject",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
         "properties": [
           {
@@ -16987,7 +17628,7 @@ SET class_rule =
           },
           {
             "name": "number",
-            "title": "Номер согласно Положению о территориальном планировании",
+            "title": "Номер согласно положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
@@ -17009,6 +17650,21 @@ SET class_rule =
             "name": "address",
             "title": "Местоположение, адресное описание",
             "valueType": "STRING"
+          },
+          {
+            "name": "przilf",
+            "title": "Признак принадлежности к объектам государственного (муниципального) жилищного фонда",
+            "valueType": "CHOICE",
+            "enumerations": [
+              {
+                "title": "Принадлежность к объектам государственного жилищного фонда",
+                "value": "1"
+              },
+              {
+                "title": "Принадлежность к объектам муниципального жилищного фонда",
+                "value": "2"
+              }
+            ]
           },
           {
             "name": "lawsource",
@@ -17082,7 +17738,6 @@ SET class_rule =
           {
             "name": "area",
             "title": "Площадь объекта, га",
-            "required": true,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -17159,15 +17814,30 @@ SET class_rule =
                 "value": "5"
               },
               {
-                "title": "Иное значение",
+                "title": "Иное значение, местное значение муниципального района, необходимое для осуществления полномочий по вопросам местного значения муниципального района, предусмотренных частью 4 статьи 14, статьей 15 Федерального закона от 6 октября 2003 г. N 131-ФЗ Об общих принципах организации местного самоуправления в Российской Федерации.",
                 "value": "6"
+              },
+              {
+                "title": "Местное значение муниципального округа",
+                "value": "8"
               }
             ]
+          },
+          {
+            "name": "kadastroks",
+            "title": "Кадастровый номер ОКС",
+            "valueType": "STRING"
+          },
+          {
+            "name": "kadastrzu",
+            "title": "Кадастровый номер земельного участка, на котором расположен объект",
+            "valueType": "STRING"
           },
           {
             "name": "shape",
             "title": "геометрия",
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "Polygon"
             ]
@@ -17178,20 +17848,40 @@ SET class_rule =
 }',
 custom_rule = 'var errors = [];
 
-      if (obj.status == ''2'') {
-        if (!obj.function) {
-          errors.push({attribute: ''function'', error: ''Значение обязательно к заполнению''});
+      if (obj.status == ''2'' || obj.status == ''3'') {
+
+        if (!obj.event_time) {
+            errors.push({ attribute: ''event_time'', error: ''Значение обязательно к заполнению'' });
         }
-      } else if (obj.function) {
-          errors.push({attribute: ''function'', error: ''Значение заполняется только для планируемых к размещению объектов''});
+
+        if (!obj.number) {
+          errors.push({ attribute: ''number'', error: ''Значение обязательно к заполнению'' });
+      }
+      } else {
+        if (obj.event_time) {
+            errors.push({ attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению или планируемых к реконструкции объектов'' });
+        }
+        if (obj.number) {
+          errors.push({ attribute: ''number'', error: ''Значение заполняется только для планируемых к размещению или планируемых к реконструкции объектов'' });
+      }
       }
 
-      if (obj.status == ''2'' || obj.status == ''3'' || obj.status == ''4'') {
+      if (obj.reg_status == ''1'' || obj.reg_status == ''2'') {
         if (!obj.event_time) {
           errors.push({attribute: ''event_time'', error: ''Значение обязательно к заполнению''});
         }
       } else if (obj.event_time) {
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
+      }
+
+      if (!(obj.status == ''1'' || obj.status == ''3'' || obj.status == ''4'')) {
+        if (!obj.kadastrzu) {
+            errors.push({ attribute: ''kadastrzu'', error: ''Значение обязательно к заполнению'' });
+        }
+      } else {
+         if (obj.kadastrzu) {
+            errors.push({ attribute: ''kadastrzu'', error: ''Значение заполняется только для существующих и строящихся, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов'' });
+        }
       }
 
       return errors;'
@@ -17206,7 +17896,7 @@ SET class_rule =
         "readOnly": true,
         "styleName": "forest_698",
         "tableName": "forest_698",
-        "originName": "forest_698",
+        "originName": "Forest",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
         "properties": [
           {
@@ -17418,6 +18108,7 @@ SET class_rule =
             "name": "shape",
             "title": "геометрия",
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "Polygon"
             ]
@@ -17469,7 +18160,7 @@ SET class_rule =
         "readOnly": true,
         "styleName": "education_point_698",
         "tableName": "education_point_698",
-        "originName": "education_698",
+        "originName": "Education",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
         "properties": [
           {
@@ -17540,7 +18231,7 @@ SET class_rule =
           },
           {
             "name": "number",
-            "title": "Номер согласно Положению о территориальном планировании",
+            "title": "Номер согласно положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
@@ -17856,8 +18547,12 @@ SET class_rule =
                 "value": "5"
               },
               {
-                "title": "Иное значение",
+                "title": "Иное значение, местное значение муниципального района, необходимое для осуществления полномочий по вопросам местного значения муниципального района, предусмотренных частью 4 статьи 14, статьей 15 Федерального закона от 6 октября 2003 г. N 131-ФЗ Об общих принципах организации местного самоуправления в Российской Федерации.",
                 "value": "6"
+              },
+              {
+                "title": "Местное значение муниципального округа",
+                "value": "8"
               }
             ]
           },
@@ -17865,6 +18560,7 @@ SET class_rule =
             "name": "shape",
             "title": "геометрия",
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "Point"
             ]
@@ -17941,7 +18637,7 @@ SET class_rule =
         "readOnly": true,
         "styleName": "electricpowerstation_698",
         "tableName": "electricpowerstation_698",
-        "originName": "electricpowerstation_698",
+        "originName": "ElectricPowerStation",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
         "properties": [
           {
@@ -18348,8 +19044,12 @@ SET class_rule =
                 "value": "5"
               },
               {
-                "title": "Иное значение",
+                "title": "Иное значение, местное значение муниципального района, необходимое для осуществления полномочий по вопросам местного значения муниципального района, предусмотренных частью 4 статьи 14, статьей 15 Федерального закона от 6 октября 2003 г. N 131-ФЗ Об общих принципах организации местного самоуправления в Российской Федерации.",
                 "value": "6"
+              },
+              {
+                "title": "Местное значение муниципального округа",
+                "value": "8"
               }
             ]
           },
@@ -18384,6 +19084,7 @@ SET class_rule =
             "name": "shape",
             "title": "геометрия",
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "Polygon"
             ]
@@ -18493,7 +19194,7 @@ SET class_rule =
         "readOnly": true,
         "styleName": "publictransportservice_698",
         "tableName": "publictransportservice_698",
-        "originName": "publictransportservice_698",
+        "originName": "PublicTransportService",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
         "properties": [
           {
@@ -18697,8 +19398,12 @@ SET class_rule =
                 "value": "5"
               },
               {
-                "title": "Иное значение",
+                "title": "Иное значение, местное значение муниципального района, необходимое для осуществления полномочий по вопросам местного значения муниципального района, предусмотренных частью 4 статьи 14, статьей 15 Федерального закона от 6 октября 2003 г. N 131-ФЗ Об общих принципах организации местного самоуправления в Российской Федерации.",
                 "value": "6"
+              },
+              {
+                "title": "Местное значение муниципального округа",
+                "value": "8"
               }
             ]
           },
@@ -18716,6 +19421,7 @@ SET class_rule =
             "name": "shape",
             "title": "геометрия",
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "Polygon"
             ]
@@ -18773,7 +19479,7 @@ SET class_rule =
         "readOnly": true,
         "styleName": "airtransportobj_698",
         "tableName": "airtransportobj_698",
-        "originName": "airtransportobj_698",
+        "originName": "AirTransportObj",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
         "properties": [
           {
@@ -19068,8 +19774,12 @@ SET class_rule =
                 "value": "5"
               },
               {
-                "title": "Иное значение",
+                "title": "Иное значение, местное значение муниципального района, необходимое для осуществления полномочий по вопросам местного значения муниципального района, предусмотренных частью 4 статьи 14, статьей 15 Федерального закона от 6 октября 2003 г. N 131-ФЗ Об общих принципах организации местного самоуправления в Российской Федерации.",
                 "value": "6"
+              },
+              {
+                "title": "Местное значение муниципального округа",
+                "value": "8"
               }
             ]
           },
@@ -19094,6 +19804,7 @@ SET class_rule =
             "name": "shape",
             "title": "геометрия",
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "Polygon"
             ]
@@ -19169,7 +19880,7 @@ SET class_rule =
         "readOnly": true,
         "styleName": "electricpowerstation_point_698",
         "tableName": "electricpowerstation_point_698",
-        "originName": "electricpowerstation_698",
+        "originName": "ElectricPowerStation",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
         "properties": [
           {
@@ -19576,8 +20287,12 @@ SET class_rule =
                 "value": "5"
               },
               {
-                "title": "Иное значение",
+                "title": "Иное значение, местное значение муниципального района, необходимое для осуществления полномочий по вопросам местного значения муниципального района, предусмотренных частью 4 статьи 14, статьей 15 Федерального закона от 6 октября 2003 г. N 131-ФЗ Об общих принципах организации местного самоуправления в Российской Федерации.",
                 "value": "6"
+              },
+              {
+                "title": "Местное значение муниципального округа",
+                "value": "8"
               }
             ]
           },
@@ -19612,6 +20327,7 @@ SET class_rule =
             "name": "shape",
             "title": "геометрия",
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "Point"
             ]
@@ -19721,7 +20437,7 @@ SET class_rule =
         "readOnly": true,
         "styleName": "autoservice_698",
         "tableName": "autoservice_698",
-        "originName": "autoservice_698",
+        "originName": "AutoService",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
         "properties": [
           {
@@ -19972,8 +20688,12 @@ SET class_rule =
                 "value": "5"
               },
               {
-                "title": "Иное значение",
+                "title": "Иное значение, местное значение муниципального района, необходимое для осуществления полномочий по вопросам местного значения муниципального района, предусмотренных частью 4 статьи 14, статьей 15 Федерального закона от 6 октября 2003 г. N 131-ФЗ Об общих принципах организации местного самоуправления в Российской Федерации.",
                 "value": "6"
+              },
+              {
+                "title": "Местное значение муниципального округа",
+                "value": "8"
               }
             ]
           },
@@ -19991,6 +20711,7 @@ SET class_rule =
             "name": "shape",
             "title": "геометрия",
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "Polygon"
             ]
@@ -20162,7 +20883,7 @@ SET class_rule =
           },
           {
             "name": "number",
-            "title": "Номер согласно Положению о территориальном планировании",
+            "title": "Номер согласно положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
@@ -20356,15 +21077,20 @@ SET class_rule =
                 "value": "5"
               },
               {
-                "title": "Иное значение",
+                "title": "Иное значение, местное значение муниципального района, необходимое для осуществления полномочий по вопросам местного значения муниципального района, предусмотренных частью 4 статьи 14, статьей 15 Федерального закона от 6 октября 2003 г. N 131-ФЗ Об общих принципах организации местного самоуправления в Российской Федерации.",
                 "value": "6"
+              },
+              {
+                "title": "Местное значение муниципального округа",
+                "value": "8"
               }
             ]
           },
           {
             "name": "shape",
             "title": "геометрия",
-            "valueType": "GEOMETRY",
+            "valueType": "GEOMETRY",            
+            "hidden": true,
             "allowedValues": [
               "LineString"
             ]
@@ -20654,8 +21380,12 @@ SET class_rule =
                 "value": "5"
               },
               {
-                "title": "Иное значение",
+                "title": "Иное значение, местное значение муниципального района, необходимое для осуществления полномочий по вопросам местного значения муниципального района, предусмотренных частью 4 статьи 14, статьей 15 Федерального закона от 6 октября 2003 г. N 131-ФЗ Об общих принципах организации местного самоуправления в Российской Федерации.",
                 "value": "6"
+              },
+              {
+                "title": "Местное значение муниципального округа",
+                "value": "8"
               }
             ]
           },
@@ -20680,6 +21410,7 @@ SET class_rule =
             "name": "shape",
             "title": "геометрия",
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "LineString"
             ]
@@ -20822,7 +21553,7 @@ SET class_rule =
           },
           {
             "name": "number",
-            "title": "Номер согласно Положению о территориальном планировании",
+            "title": "Номер согласно положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
@@ -20996,8 +21727,12 @@ SET class_rule =
                 "value": "5"
               },
               {
-                "title": "Иное значение",
+                "title": "Иное значение, местное значение муниципального района, необходимое для осуществления полномочий по вопросам местного значения муниципального района, предусмотренных частью 4 статьи 14, статьей 15 Федерального закона от 6 октября 2003 г. N 131-ФЗ Об общих принципах организации местного самоуправления в Российской Федерации.",
                 "value": "6"
+              },
+              {
+                "title": "Местное значение муниципального округа",
+                "value": "8"
               }
             ]
           },
@@ -21005,6 +21740,7 @@ SET class_rule =
             "name": "shape",
             "title": "геометрия",
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "LineString"
             ]
@@ -21127,7 +21863,7 @@ SET class_rule =
           },
           {
             "name": "number",
-            "title": "Номер согласно Положению о территориальном планировании",
+            "title": "Номер согласно положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
@@ -21321,8 +22057,12 @@ SET class_rule =
                 "value": "5"
               },
               {
-                "title": "Иное значение",
+                "title": "Иное значение, местное значение муниципального района, необходимое для осуществления полномочий по вопросам местного значения муниципального района, предусмотренных частью 4 статьи 14, статьей 15 Федерального закона от 6 октября 2003 г. N 131-ФЗ Об общих принципах организации местного самоуправления в Российской Федерации.",
                 "value": "6"
+              },
+              {
+                "title": "Местное значение муниципального округа",
+                "value": "8"
               }
             ]
           },
@@ -21330,6 +22070,7 @@ SET class_rule =
             "name": "shape",
             "title": "геометрия",
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "Point"
             ]
@@ -21368,7 +22109,7 @@ SET class_rule =
         "readOnly": true,
         "styleName": "health_698",
         "tableName": "health_698",
-        "originName": "health_698",
+        "originName": "Health",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
         "properties": [
           {
@@ -21780,8 +22521,12 @@ SET class_rule =
                 "value": "5"
               },
               {
-                "title": "Иное значение",
+                "title": "Иное значение, местное значение муниципального района, необходимое для осуществления полномочий по вопросам местного значения муниципального района, предусмотренных частью 4 статьи 14, статьей 15 Федерального закона от 6 октября 2003 г. N 131-ФЗ Об общих принципах организации местного самоуправления в Российской Федерации.",
                 "value": "6"
+              },
+              {
+                "title": "Местное значение муниципального округа",
+                "value": "8"
               }
             ]
           },
@@ -21823,6 +22568,7 @@ SET class_rule =
             "name": "shape",
             "title": "геометрия",
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "Polygon"
             ]
@@ -21982,7 +22728,7 @@ SET class_rule =
         "readOnly": true,
         "styleName": "customcontrol_point_698",
         "tableName": "customcontrol_point_698",
-        "originName": "customcontrol_698",
+        "originName": "CustomControl",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
         "properties": [
           {
@@ -22204,8 +22950,12 @@ SET class_rule =
                 "value": "5"
               },
               {
-                "title": "Иное значение",
+                "title": "Иное значение, местное значение муниципального района, необходимое для осуществления полномочий по вопросам местного значения муниципального района, предусмотренных частью 4 статьи 14, статьей 15 Федерального закона от 6 октября 2003 г. N 131-ФЗ Об общих принципах организации местного самоуправления в Российской Федерации.",
                 "value": "6"
+              },
+              {
+                "title": "Местное значение муниципального округа",
+                "value": "8"
               }
             ]
           },
@@ -22213,6 +22963,7 @@ SET class_rule =
             "name": "shape",
             "title": "геометрия",
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "Point"
             ]
@@ -22261,7 +23012,7 @@ SET class_rule =
     "readOnly": true,
     "styleName": "health_point_698",
     "tableName": "health_point_698",
-    "originName": "health_698",
+    "originName": "Health",
     "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
     "properties": [
           {
@@ -22673,8 +23424,12 @@ SET class_rule =
                 "value": "5"
               },
               {
-                "title": "Иное значение",
+                "title": "Иное значение, местное значение муниципального района, необходимое для осуществления полномочий по вопросам местного значения муниципального района, предусмотренных частью 4 статьи 14, статьей 15 Федерального закона от 6 октября 2003 г. N 131-ФЗ Об общих принципах организации местного самоуправления в Российской Федерации.",
                 "value": "6"
+              },
+              {
+                "title": "Местное значение муниципального округа",
+                "value": "8"
               }
             ]
           },
@@ -22716,6 +23471,7 @@ SET class_rule =
             "name": "shape",
             "title": "геометрия",
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "Point"
             ]
@@ -22910,7 +23666,7 @@ SET class_rule =
           },
           {
             "name": "number",
-            "title": "Номер согласно Положению о территориальном планировании",
+            "title": "Номер согласно положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
@@ -23186,8 +23942,12 @@ SET class_rule =
                 "value": "5"
               },
               {
-                "title": "Иное значение",
+                "title": "Иное значение, местное значение муниципального района, необходимое для осуществления полномочий по вопросам местного значения муниципального района, предусмотренных частью 4 статьи 14, статьей 15 Федерального закона от 6 октября 2003 г. N 131-ФЗ Об общих принципах организации местного самоуправления в Российской Федерации.",
                 "value": "6"
+              },
+              {
+                "title": "Местное значение муниципального округа",
+                "value": "8"
               }
             ]
           },
@@ -23195,6 +23955,7 @@ SET class_rule =
             "name": "shape",
             "title": "геометрия",
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "LineString"
             ]
@@ -23276,7 +24037,7 @@ SET class_rule =
           },
           {
             "name": "number",
-            "title": "Номер согласно Положению о территориальном планировании",
+            "title": "Номер согласно положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
@@ -23452,8 +24213,12 @@ SET class_rule =
                 "value": "5"
               },
               {
-                "title": "Иное значение",
+                "title": "Иное значение, местное значение муниципального района, необходимое для осуществления полномочий по вопросам местного значения муниципального района, предусмотренных частью 4 статьи 14, статьей 15 Федерального закона от 6 октября 2003 г. N 131-ФЗ Об общих принципах организации местного самоуправления в Российской Федерации.",
                 "value": "6"
+              },
+              {
+                "title": "Местное значение муниципального округа",
+                "value": "8"
               }
             ]
           },
@@ -23461,6 +24226,7 @@ SET class_rule =
             "name": "shape",
             "title": "геометрия",
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "LineString"
             ]
@@ -23504,7 +24270,7 @@ SET class_rule =
         "readOnly": true,
         "styleName": "cemetery_point_698",
         "tableName": "cemetery_point_698",
-        "originName": "cemetery_698",
+        "originName": "Cemetery",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
         "properties": [
           {
@@ -23547,7 +24313,7 @@ SET class_rule =
           },
           {
             "name": "number",
-            "title": "Номер согласно Положению о территориальном планировании",
+            "title": "Номер согласно положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
@@ -23745,8 +24511,12 @@ SET class_rule =
                 "value": "5"
               },
               {
-                "title": "Иное значение",
+                "title": "Иное значение, местное значение муниципального района, необходимое для осуществления полномочий по вопросам местного значения муниципального района, предусмотренных частью 4 статьи 14, статьей 15 Федерального закона от 6 октября 2003 г. N 131-ФЗ Об общих принципах организации местного самоуправления в Российской Федерации.",
                 "value": "6"
+              },
+              {
+                "title": "Местное значение муниципального округа",
+                "value": "8"
               }
             ]
           },
@@ -23754,6 +24524,7 @@ SET class_rule =
             "name": "shape",
             "title": "геометрия",
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "Point"
             ]
@@ -23796,15 +24567,32 @@ custom_rule = 'var errors = [];
            errors.push({attribute: ''cemet_stat'', error: ''Значение заполняется только для объектов "Кладбище", "Воинское кладбище, военное мемориальное кладбище"''});
        }
 
+       if (obj.status == ''2'' || obj.status == ''3'') {
 
+        if (!obj.event_time) {
+            errors.push({ attribute: ''event_time'', error: ''Значение обязательно к заполнению'' });
+        }
 
-       if (obj.status == ''2'' || obj.status == ''3'' || obj.status == ''4'') {
-         if (!obj.event_time) {
-           errors.push({attribute: ''event_time'', error: ''Значение обязательно к заполнению''});
-         }
-       } else if (obj.event_time) {
-           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
-       }
+        if (!obj.number) {
+          errors.push({ attribute: ''number'', error: ''Значение обязательно к заполнению'' });
+      }
+      } else {
+        if (obj.event_time) {
+            errors.push({ attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению или планируемых к реконструкции объектов'' });
+        }
+        if (obj.number) {
+          errors.push({ attribute: ''number'', error: ''Значение заполняется только для планируемых к размещению или планируемых к реконструкции объектов'' });
+      }
+      }
+
+      if (obj.reg_status == ''1'' || obj.reg_status == ''2'') {
+        if (!obj.event_time) {
+          errors.push({attribute: ''event_time'', error: ''Значение обязательно к заполнению''});
+        }
+      } else if (obj.event_time) {
+          errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
+      }
+
 
        return errors;'
 WHERE name = 'cemetery_point_698';
@@ -23818,7 +24606,7 @@ SET class_rule =
         "readOnly": true,
         "styleName": "cemetery_698",
         "tableName": "cemetery_698",
-        "originName": "cemetery_698",
+        "originName": "Cemetery",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
         "properties": [
           {
@@ -23861,7 +24649,7 @@ SET class_rule =
           },
           {
             "name": "number",
-            "title": "Номер согласно Положению о территориальном планировании",
+            "title": "Номер согласно положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
@@ -24059,8 +24847,12 @@ SET class_rule =
                 "value": "5"
               },
               {
-                "title": "Иное значение",
+                "title": "Иное значение, местное значение муниципального района, необходимое для осуществления полномочий по вопросам местного значения муниципального района, предусмотренных частью 4 статьи 14, статьей 15 Федерального закона от 6 октября 2003 г. N 131-ФЗ Об общих принципах организации местного самоуправления в Российской Федерации.",
                 "value": "6"
+              },
+              {
+                "title": "Местное значение муниципального округа",
+                "value": "8"
               }
             ]
           },
@@ -24068,6 +24860,7 @@ SET class_rule =
             "name": "shape",
             "title": "геометрия",
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "Polygon"
             ]
@@ -24110,15 +24903,25 @@ custom_rule = 'var errors = [];
           errors.push({attribute: ''cemet_stat'', error: ''Значение заполняется только для объектов "Кладбище", "Воинское кладбище, военное мемориальное кладбище"''});
       }
 
-      if (obj.status == ''2'') {
-        if (!obj.function) {
-          errors.push({attribute: ''function'', error: ''Значение обязательно к заполнению''});
+      if (obj.status == ''2'' || obj.status == ''3'') {
+
+        if (!obj.event_time) {
+            errors.push({ attribute: ''event_time'', error: ''Значение обязательно к заполнению'' });
         }
-      } else if (obj.function) {
-          errors.push({attribute: ''function'', error: ''Значение заполняется только для планируемых к размещению объектов''});
+
+        if (!obj.number) {
+          errors.push({ attribute: ''number'', error: ''Значение обязательно к заполнению'' });
+      }
+      } else {
+        if (obj.event_time) {
+            errors.push({ attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению или планируемых к реконструкции объектов'' });
+        }
+        if (obj.number) {
+          errors.push({ attribute: ''number'', error: ''Значение заполняется только для планируемых к размещению или планируемых к реконструкции объектов'' });
+      }
       }
 
-      if (obj.status == ''2'' || obj.status == ''3'' || obj.status == ''4'') {
+      if (obj.reg_status == ''1'' || obj.reg_status == ''2'') {
         if (!obj.event_time) {
           errors.push({attribute: ''event_time'', error: ''Значение обязательно к заполнению''});
         }
@@ -24138,7 +24941,7 @@ SET class_rule =
         "readOnly": true,
         "styleName": "investmentzone_698",
         "tableName": "investmentzone_698",
-        "originName": "investmentzone_698",
+        "originName": "InvestmentZone",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
         "properties": [
           {
@@ -24185,7 +24988,7 @@ SET class_rule =
           },
           {
             "name": "number",
-            "title": "Номер согласно Положению о территориальном планировании",
+            "title": "Номер согласно положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
@@ -24208,6 +25011,7 @@ SET class_rule =
             "name": "area",
             "title": "Общая площадь территории зоны (кластера), га",
             "valueType": "DOUBLE",
+            "required": true,
             "totalDigits": 38,
             "fractionDigits": 8
           },
@@ -24284,15 +25088,47 @@ SET class_rule =
                 "value": "5"
               },
               {
-                "title": "Иное значение",
+                "title": "Иное значение, местное значение муниципального района, необходимое для осуществления полномочий по вопросам местного значения муниципального района, предусмотренных частью 4 статьи 14, статьей 15 Федерального закона от 6 октября 2003 г. N 131-ФЗ Об общих принципах организации местного самоуправления в Российской Федерации.",
                 "value": "6"
+              },
+              {
+                "title": "Местное значение муниципального округа",
+                "value": "8"
               }
             ]
+          },
+          {
+            "name": "kadastroks",
+            "title": "Кадастровый номер ОКС",
+            "valueType": "STRING"
+          },
+          {
+            "name": "kadastrzu",
+            "title": "Кадастровый номер земельного участка, на котором расположен объект",
+            "valueType": "STRING"
+          },
+          {
+            "name": "namedocosn",
+            "title": "Наименование документа основания",
+            "valueType": "STRING"
+          },
+          {
+            "name": "datedocosn",
+            "title": "Дата документа основания",
+            "valueType": "DOUBLE",
+            "fractionDigits": 2
+          },
+          {
+            "name": "numberdocosn",
+            "title": "Номер документа основания",
+            "valueType": "DOUBLE",
+            "fractionDigits": 2
           },
           {
             "name": "shape",
             "title": "геометрия",
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "Polygon"
             ]
@@ -24303,11 +25139,63 @@ SET class_rule =
 }',
 custom_rule = 'var errors = [];
 
-      if (!(obj.status == ''2'' || obj.status == ''3'' || obj.status == ''4'')) {
+      if (obj.status == ''2'' || obj.status == ''3'') {
+
+        if (!obj.namedocosn) {
+            errors.push({ attribute: ''namedocosn'', error: ''Значение обязательно к заполнению'' });
+        }
+
+        if (!obj.datedocosn) {
+            errors.push({ attribute: ''datedocosn'', error: ''Значение обязательно к заполнению'' });
+        }
+
+        if (!obj.numberdocosn) {
+            errors.push({ attribute: ''numberdocosn'', error: ''Значение обязательно к заполнению'' });
+        }
+
+        if (!obj.event_time) {
+            errors.push({ attribute: ''event_time'', error: ''Значение обязательно к заполнению'' });
+        }
+
+        if (!obj.number) {
+          errors.push({ attribute: ''number'', error: ''Значение обязательно к заполнению'' });
+      }
+      } else {
+        if (obj.namedocosn) {
+            errors.push({ attribute: ''namedocosn'', error: ''Значение заполняется только для планируемых к размещению или планируемых к реконструкции объектов'' });
+        }
+        if (obj.datedocosn) {
+            errors.push({ attribute: ''datedocosn'', error: ''Значение заполняется только для планируемых к размещению или планируемых к реконструкции объектов'' });
+        }
+        if (obj.numberdocosn) {
+            errors.push({ attribute: ''numberdocosn'', error: ''Значение заполняется только для планируемых к размещению или планируемых к реконструкции объектов'' });
+        }
         if (obj.event_time) {
+            errors.push({ attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению или планируемых к реконструкции объектов'' });
+        }
+        if (obj.number) {
+          errors.push({ attribute: ''number'', error: ''Значение заполняется только для планируемых к размещению или планируемых к реконструкции объектов'' });
+      }
+      }
+
+      if (obj.reg_status == ''1'' || obj.reg_status == ''2'') {
+        if (!obj.event_time) {
+          errors.push({attribute: ''event_time'', error: ''Значение обязательно к заполнению''});
+        }
+      } else if (obj.event_time) {
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
+      }
+
+      if (!(obj.status == ''1'' || obj.status == ''3'' || obj.status == ''4'')) {
+        if (!obj.kadastrzu) {
+            errors.push({ attribute: ''kadastrzu'', error: ''Значение обязательно к заполнению'' });
+        }
+      } else {
+         if (obj.kadastrzu) {
+            errors.push({ attribute: ''kadastrzu'', error: ''Значение заполняется только для существующих и строящихся, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов'' });
         }
       }
+      
       return errors;'
 WHERE name = 'investmentzone_698';
 
@@ -24320,7 +25208,7 @@ SET class_rule =
         "readOnly": true,
         "styleName": "watertransportobj_698",
         "tableName": "watertransportobj_698",
-        "originName": "watertransportobj_698",
+        "originName": "WaterTransportObj",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
         "properties": [
           {
@@ -24383,7 +25271,7 @@ SET class_rule =
           },
           {
             "name": "number",
-            "title": "Номер согласно Положению о территориальном планировании",
+            "title": "Номер согласно положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
@@ -24631,8 +25519,12 @@ SET class_rule =
                 "value": "5"
               },
               {
-                "title": "Иное значение",
+                "title": "Иное значение, местное значение муниципального района, необходимое для осуществления полномочий по вопросам местного значения муниципального района, предусмотренных частью 4 статьи 14, статьей 15 Федерального закона от 6 октября 2003 г. N 131-ФЗ Об общих принципах организации местного самоуправления в Российской Федерации.",
                 "value": "6"
+              },
+              {
+                "title": "Местное значение муниципального округа",
+                "value": "8"
               }
             ]
           },
@@ -24640,6 +25532,7 @@ SET class_rule =
             "name": "shape",
             "title": "геометрия",
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "Polygon"
             ]
@@ -24817,7 +25710,7 @@ SET class_rule =
           },
           {
             "name": "number",
-            "title": "Номер согласно Положению о территориальном планировании",
+            "title": "Номер согласно положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
@@ -25112,8 +26005,12 @@ SET class_rule =
                 "value": "5"
               },
               {
-                "title": "Иное значение",
+                "title": "Иное значение, местное значение муниципального района, необходимое для осуществления полномочий по вопросам местного значения муниципального района, предусмотренных частью 4 статьи 14, статьей 15 Федерального закона от 6 октября 2003 г. N 131-ФЗ Об общих принципах организации местного самоуправления в Российской Федерации.",
                 "value": "6"
+              },
+              {
+                "title": "Местное значение муниципального округа",
+                "value": "8"
               }
             ]
           },
@@ -25121,6 +26018,7 @@ SET class_rule =
             "name": "shape",
             "title": "геометрия",
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "LineString"
             ]
@@ -25159,7 +26057,7 @@ SET class_rule =
         "readOnly": true,
         "styleName": "watertransportobj_point_698",
         "tableName": "watertransportobj_point_698",
-        "originName": "watertransportobj_698",
+        "originName": "WaterTransportObj",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
         "properties": [
           {
@@ -25222,7 +26120,7 @@ SET class_rule =
           },
           {
             "name": "number",
-            "title": "Номер согласно Положению о территориальном планировании",
+            "title": "Номер согласно положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
@@ -25470,8 +26368,12 @@ SET class_rule =
                 "value": "5"
               },
               {
-                "title": "Иное значение",
+                "title": "Иное значение, местное значение муниципального района, необходимое для осуществления полномочий по вопросам местного значения муниципального района, предусмотренных частью 4 статьи 14, статьей 15 Федерального закона от 6 октября 2003 г. N 131-ФЗ Об общих принципах организации местного самоуправления в Российской Федерации.",
                 "value": "6"
+              },
+              {
+                "title": "Местное значение муниципального округа",
+                "value": "8"
               }
             ]
           },
@@ -25479,6 +26381,7 @@ SET class_rule =
             "name": "shape",
             "title": "геометрия",
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "Point"
             ]
@@ -25565,7 +26468,7 @@ SET class_rule =
         "readOnly": true,
         "styleName": "historicsettlement_698",
         "tableName": "historicsettlement_698",
-        "originName": "historicsettlement_698",
+        "originName": "HistoricSettlement",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
         "properties": [
           {
@@ -25630,6 +26533,7 @@ SET class_rule =
             "name": "shape",
             "title": "геометрия",
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "Polygon"
             ]
@@ -25649,7 +26553,7 @@ SET class_rule =
         "readOnly": true,
         "styleName": "public_698",
         "tableName": "public_698",
-        "originName": "public_698",
+        "originName": "Public",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
         "properties": [
           {
@@ -25974,8 +26878,12 @@ SET class_rule =
                 "value": "5"
               },
               {
-                "title": "Иное значение",
+                "title": "Иное значение, местное значение муниципального района, необходимое для осуществления полномочий по вопросам местного значения муниципального района, предусмотренных частью 4 статьи 14, статьей 15 Федерального закона от 6 октября 2003 г. N 131-ФЗ Об общих принципах организации местного самоуправления в Российской Федерации.",
                 "value": "6"
+              },
+              {
+                "title": "Местное значение муниципального округа",
+                "value": "8"
               }
             ]
           },
@@ -25983,6 +26891,7 @@ SET class_rule =
             "name": "shape",
             "title": "геометрия",
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "Polygon"
             ]
@@ -26062,7 +26971,7 @@ SET class_rule =
         "readOnly": true,
         "styleName": "sewerfacility_698",
         "tableName": "sewerfacility_698",
-        "originName": "sewerfacility_698",
+        "originName": "SewerFacility",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
         "properties": [
           {
@@ -26109,7 +27018,7 @@ SET class_rule =
           },
           {
             "name": "number",
-            "title": "Номер согласно Положению о территориальном планировании",
+            "title": "Номер согласно положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
@@ -26169,6 +27078,7 @@ SET class_rule =
             "name": "output",
             "title": "Производительность, тыс. куб. м/сут",
             "valueType": "DOUBLE",
+            "required": true,
             "totalDigits": 38,
             "fractionDigits": 8
           },
@@ -26289,15 +27199,30 @@ SET class_rule =
                 "value": "5"
               },
               {
-                "title": "Иное значение",
+                "title": "Иное значение, местное значение муниципального района, необходимое для осуществления полномочий по вопросам местного значения муниципального района, предусмотренных частью 4 статьи 14, статьей 15 Федерального закона от 6 октября 2003 г. N 131-ФЗ Об общих принципах организации местного самоуправления в Российской Федерации.",
                 "value": "6"
+              },
+              {
+                "title": "Местное значение муниципального округа",
+                "value": "8"
               }
             ]
+          },
+          {
+            "name": "kadastroks",
+            "title": "Кадастровый номер ОКС",
+            "valueType": "STRING"
+          },
+          {
+            "name": "kadastrzu",
+            "title": "Кадастровый номер земельного участка, на котором расположен объект",
+            "valueType": "STRING"
           },
           {
             "name": "shape",
             "title": "геометрия",
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "Polygon"
             ]
@@ -26308,29 +27233,74 @@ SET class_rule =
 }',
 custom_rule = 'var errors = [];
 
-      if (obj.classid == ''602041306'') {
-        if (!obj.snow_type) {
-          errors.push({attribute: ''snow_type'', error: ''Значение обязательно к заполнению''});
-        }
-      } else if (obj.snow_type) {
-          errors.push({attribute: ''snow_type'', error: ''Значение заполняется только для объекта "Снегоплавильный, снегоприемный пункт"''});
+    if (obj.classid == ''602041306'') {
+      if (!obj.snow_type) {
+        errors.push({attribute: ''snow_type'', error: ''Значение обязательно к заполнению''});
+      }
+    } else if (obj.snow_type) {
+        errors.push({attribute: ''snow_type'', error: ''Значение заполняется только для объекта "Снегоплавильный, снегоприемный пункт"''});
+    }
+
+    if (obj.status == ''1'' || obj.status == ''3'' || obj.status == ''4'') {
+      if (!obj.wear_prcnt) {
+          errors.push({attribute: ''wear_prcnt'', error: ''Значение обязательно к заполнению''});
+      }
+      if (!obj.fact_use) {
+        errors.push({attribute: ''fact_use'', error: ''Значение обязательно к заполнению''});
+    }
+    if (!obj.kadastrzu) {
+      errors.push({attribute: ''kadastrzu'', error: ''Значение обязательно к заполнению''});
+    }
+    } else 
+    if (obj.wear_prcnt) {
+      errors.push({attribute: ''wear_prcnt'', error: ''Значение заполняется только для планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
+    }
+    if (obj.fact_use) {
+      errors.push({attribute: ''fact_use'', error: ''Значение заполняется только для сушествующих, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
+    }
+    if (obj.kadastrzu) {
+      errors.push({attribute: ''kadastrzu'', error: ''Значение заполняется только для сушествующих, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
+    }
+
+    if (obj.status == ''2'' || obj.status == ''3'') {
+
+      if (!obj.event_time) {
+          errors.push({ attribute: ''event_time'', error: ''Значение обязательно к заполнению'' });
       }
 
-      if (obj.status == ''2'') {
-        if (!obj.function) {
-          errors.push({attribute: ''function'', error: ''Значение обязательно к заполнению''});
-        }
-      } else if (obj.function) {
-          errors.push({attribute: ''function'', error: ''Значение заполняется только для планируемых к размещению объектов''});
+      if (!obj.number) {
+        errors.push({ attribute: ''number'', error: ''Значение обязательно к заполнению'' });
+    }
+    } else {
+      if (obj.event_time) {
+          errors.push({ attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению или планируемых к реконструкции объектов'' });
       }
+      if (obj.number) {
+        errors.push({ attribute: ''number'', error: ''Значение заполняется только для планируемых к размещению или планируемых к реконструкции объектов'' });
+    }
+    }
 
-      if (obj.status == ''2'' || obj.status == ''3'' || obj.status == ''4'') {
-        if (!obj.event_time) {
-          errors.push({attribute: ''event_time'', error: ''Значение обязательно к заполнению''});
-        }
-      } else if (obj.event_time) {
-          errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
+    if (obj.reg_status == ''1'' || obj.reg_status == ''2'') {
+      if (!obj.event_time) {
+        errors.push({attribute: ''event_time'', error: ''Значение обязательно к заполнению''});
       }
+      if (!obj.wear_prcnt) {
+        errors.push({attribute: ''wear_prcnt'', error: ''Значение обязательно к заполнению''});
+      }
+      if (!obj.fact_use) {
+        errors.push({attribute: ''fact_use'', error: ''Значение обязательно к заполнению''});
+      }
+    } else if {
+      (obj.event_time) {
+        errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
+    }
+    (obj.wear_prcnt) {
+      errors.push({attribute: ''wear_prcnt'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
+    }
+    (obj.fact_use) {
+      errors.push({attribute: ''fact_use'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
+    }
+    }
 
       return errors;'
 WHERE name = 'sewerfacility_698';
@@ -26344,7 +27314,7 @@ SET class_rule =
         "readOnly": true,
         "styleName": "functionalzone_698",
         "tableName": "functionalzone_698",
-        "originName": "functionalzone_698",
+        "originName": "FunctionalZone",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
         "properties": [
           {
@@ -26840,8 +27810,12 @@ SET class_rule =
                 "value": "5"
               },
               {
-                "title": "Иное значение",
+                "title": "Иное значение, местное значение муниципального района, необходимое для осуществления полномочий по вопросам местного значения муниципального района, предусмотренных частью 4 статьи 14, статьей 15 Федерального закона от 6 октября 2003 г. N 131-ФЗ Об общих принципах организации местного самоуправления в Российской Федерации.",
                 "value": "6"
+              },
+              {
+                "title": "Местное значение муниципального округа",
+                "value": "8"
               }
             ]
           },
@@ -26849,6 +27823,7 @@ SET class_rule =
             "name": "shape",
             "title": "геометрия",
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "Polygon"
             ]
@@ -26971,7 +27946,7 @@ SET class_rule =
         "readOnly": true,
         "styleName": "technoriskarea_698",
         "tableName": "technoriskarea_698",
-        "originName": "technoriskarea_698",
+        "originName": "TechnoRiskArea",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
         "properties": [
           {
@@ -27149,6 +28124,7 @@ SET class_rule =
             "name": "shape",
             "title": "геометрия",
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "Polygon"
             ]
@@ -27168,7 +28144,7 @@ SET class_rule =
         "readOnly": true,
         "styleName": "coastalprotectionzone_698",
         "tableName": "coastalprotectionzone_698",
-        "originName": "coastalprotectionzone_698",
+        "originName": "CoastalProtectionZone",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
         "properties": [
           {
@@ -27229,9 +28205,25 @@ SET class_rule =
             ]
           },
           {
+            "name": "numberzouit",
+            "title": "Учетный номер зоны, внесенный в единый государственный реестр недвижимости",
+            "valueType": "STRING"
+          },
+          {
+            "name": "reestrzoit",
+            "title": "Реестровый номер зоны, внесенный в единый государственный реестр недвижимости",
+            "valueType": "STRING"
+          },
+          {
+            "name": "dateegrn",
+            "title": "Дата внесения зон с особыми условиями использования территории в единый государственный реестр недвижимости",
+            "valueType": "STRING"
+          },
+          {
             "name": "shape",
             "title": "геометрия",
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "Polygon"
             ]
@@ -27251,7 +28243,7 @@ SET class_rule =
         "readOnly": true,
         "styleName": "publictransportstops_698",
         "tableName": "publictransportstops_698",
-        "originName": "publictransportstops_698",
+        "originName": "PublicTransportStops",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
         "properties": [
           {
@@ -27502,8 +28494,12 @@ SET class_rule =
                 "value": "5"
               },
               {
-                "title": "Иное значение",
+                "title": "Иное значение, местное значение муниципального района, необходимое для осуществления полномочий по вопросам местного значения муниципального района, предусмотренных частью 4 статьи 14, статьей 15 Федерального закона от 6 октября 2003 г. N 131-ФЗ Об общих принципах организации местного самоуправления в Российской Федерации.",
                 "value": "6"
+              },
+              {
+                "title": "Местное значение муниципального округа",
+                "value": "8"
               }
             ]
           },
@@ -27511,6 +28507,7 @@ SET class_rule =
             "name": "shape",
             "title": "геометрия",
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "Polygon"
             ]
@@ -27564,7 +28561,7 @@ SET class_rule =
         "readOnly": true,
         "styleName": "hazardarea_698",
         "tableName": "hazardarea_698",
-        "originName": "hazardarea_698",
+        "originName": "HazardArea",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
         "properties": [
           {
@@ -27601,6 +28598,7 @@ SET class_rule =
             "name": "shape",
             "title": "геометрия",
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "Polygon"
             ]
@@ -27620,7 +28618,7 @@ SET class_rule =
         "readOnly": true,
         "styleName": "publictransportstops_point_698",
         "tableName": "publictransportstops_point_698",
-        "originName": "publictransportstops_698",
+        "originName": "PublicTransportStops",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
         "properties": [
           {
@@ -27871,8 +28869,12 @@ SET class_rule =
                 "value": "5"
               },
               {
-                "title": "Иное значение",
+                "title": "Иное значение, местное значение муниципального района, необходимое для осуществления полномочий по вопросам местного значения муниципального района, предусмотренных частью 4 статьи 14, статьей 15 Федерального закона от 6 октября 2003 г. N 131-ФЗ Об общих принципах организации местного самоуправления в Российской Федерации.",
                 "value": "6"
+              },
+              {
+                "title": "Местное значение муниципального округа",
+                "value": "8"
               }
             ]
           },
@@ -27880,6 +28882,7 @@ SET class_rule =
             "name": "shape",
             "title": "геометрия",
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "Point"
             ]
@@ -27933,7 +28936,7 @@ SET class_rule =
         "readOnly": true,
         "styleName": "otherobject_point_698",
         "tableName": "otherobject_point_698",
-        "originName": "otherobject_698",
+        "originName": "OtherObject",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
         "properties": [
           {
@@ -27964,7 +28967,7 @@ SET class_rule =
           },
           {
             "name": "number",
-            "title": "Номер согласно Положению о территориальном планировании",
+            "title": "Номер согласно положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
@@ -27986,6 +28989,21 @@ SET class_rule =
             "name": "address",
             "title": "Местоположение, адресное описание",
             "valueType": "STRING"
+          },          
+          {
+            "name": "przilf",
+            "title": "Признак принадлежности к объектам государственного (муниципального) жилищного фонда",
+            "valueType": "CHOICE",
+            "enumerations": [
+              {
+                "title": "Принадлежность к объектам государственного жилищного фонда",
+                "value": "1"
+              },
+              {
+                "title": "Принадлежность к объектам муниципального жилищного фонда",
+                "value": "2"
+              }
+            ]
           },
           {
             "name": "lawsource",
@@ -28059,7 +29077,6 @@ SET class_rule =
           {
             "name": "area",
             "title": "Площадь объекта, га",
-            "required": true,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -28136,15 +29153,30 @@ SET class_rule =
                 "value": "5"
               },
               {
-                "title": "Иное значение",
+                "title": "Иное значение, местное значение муниципального района, необходимое для осуществления полномочий по вопросам местного значения муниципального района, предусмотренных частью 4 статьи 14, статьей 15 Федерального закона от 6 октября 2003 г. N 131-ФЗ Об общих принципах организации местного самоуправления в Российской Федерации.",
                 "value": "6"
+              },
+              {
+                "title": "Местное значение муниципального округа",
+                "value": "8"
               }
             ]
+          },
+          {
+            "name": "kadastroks",
+            "title": "Кадастровый номер ОКС",
+            "valueType": "STRING"
+          },
+          {
+            "name": "kadastrzu",
+            "title": "Кадастровый номер земельного участка, на котором расположен объект",
+            "valueType": "STRING"
           },
           {
             "name": "shape",
             "title": "геометрия",
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "Point"
             ]
@@ -28155,20 +29187,40 @@ SET class_rule =
 }',
 custom_rule = 'var errors = [];
 
-      if (obj.status == ''2'') {
-        if (!obj.function) {
-          errors.push({attribute: ''function'', error: ''Значение обязательно к заполнению''});
+      if (obj.status == ''2'' || obj.status == ''3'') {
+
+        if (!obj.event_time) {
+            errors.push({ attribute: ''event_time'', error: ''Значение обязательно к заполнению'' });
         }
-      } else if (obj.function) {
-          errors.push({attribute: ''function'', error: ''Значение заполняется только для планируемых к размещению объектов''});
+
+        if (!obj.number) {
+          errors.push({ attribute: ''number'', error: ''Значение обязательно к заполнению'' });
+      }
+      } else {
+        if (obj.event_time) {
+            errors.push({ attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению или планируемых к реконструкции объектов'' });
+        }
+        if (obj.number) {
+          errors.push({ attribute: ''number'', error: ''Значение заполняется только для планируемых к размещению или планируемых к реконструкции объектов'' });
+      }
       }
 
-      if (obj.status == ''2'' || obj.status == ''3'' || obj.status == ''4'') {
+      if (obj.reg_status == ''1'' || obj.reg_status == ''2'') {
         if (!obj.event_time) {
           errors.push({attribute: ''event_time'', error: ''Значение обязательно к заполнению''});
         }
       } else if (obj.event_time) {
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
+      }
+
+      if (!(obj.status == ''1'' || obj.status == ''3'' || obj.status == ''4'')) {
+        if (!obj.kadastrzu) {
+            errors.push({ attribute: ''kadastrzu'', error: ''Значение обязательно к заполнению'' });
+        }
+      } else {
+        if (obj.kadastrzu) {
+            errors.push({ attribute: ''kadastrzu'', error: ''Значение заполняется только для существующих и строящихся, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов'' });
+        }
       }
 
       return errors;'
@@ -28183,7 +29235,7 @@ SET class_rule =
         "readOnly": true,
         "styleName": "resortarea_698",
         "tableName": "resortarea_698",
-        "originName": "resortarea_698",
+        "originName": "ResortArea",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
         "properties": [
           {
@@ -28214,7 +29266,7 @@ SET class_rule =
           },
           {
             "name": "number",
-            "title": "Номер согласно Положению о территориальном планировании",
+            "title": "Номер согласно положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
@@ -28307,8 +29359,12 @@ SET class_rule =
                 "value": "5"
               },
               {
-                "title": "Иное значение",
+                "title": "Иное значение, местное значение муниципального района, необходимое для осуществления полномочий по вопросам местного значения муниципального района, предусмотренных частью 4 статьи 14, статьей 15 Федерального закона от 6 октября 2003 г. N 131-ФЗ Об общих принципах организации местного самоуправления в Российской Федерации.",
                 "value": "6"
+              },
+              {
+                "title": "Местное значение муниципального округа",
+                "value": "8"
               }
             ]
           },
@@ -28316,6 +29372,7 @@ SET class_rule =
             "name": "shape",
             "title": "геометрия",
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "Polygon"
             ]
@@ -28326,19 +29383,29 @@ SET class_rule =
 }',
 custom_rule = 'var errors = [];
 
-      if (obj.status == ''2'') {
-        if (!obj.function) {
-          errors.push({attribute: ''function'', error: ''Значение обязательно к заполнению''});
+      if (obj.reg_status == ''1'' || obj.reg_status == ''2'') {
+        if (!obj.event_time) {
+          errors.push({attribute: ''event_time'', error: ''Значение обязательно к заполнению''});
         }
-      } else if (obj.function) {
-          errors.push({attribute: ''function'', error: ''Значение заполняется только для планируемых к размещению объектов''});
+      } else if (obj.event_time) {
+          errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
 
-      if (!(obj.status == ''2'' || obj.status == ''3'' || obj.status == ''4'')) {
+      if (obj.status == ''2'' || obj.status == ''3'') {
+        if (!obj.event_time) {
+          errors.push({attribute: ''event_time'', error: ''Значение обязательно к заполнению''});
+        }
+        if (!obj.number) {
+          errors.push({attribute: ''number'', error: ''Значение обязательно к заполнению''});
+        }
+      } else {
         if (obj.event_time) {
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
-    }
+      if (obj.number) {
+        errors.push({attribute: ''number'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
+      }
+      }
 
       return errors;'
 WHERE name = 'resortarea_698';
@@ -28352,7 +29419,7 @@ SET class_rule =
         "readOnly": true,
         "styleName": "social_698",
         "tableName": "social_698",
-        "originName": "social_698",
+        "originName": "Social",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
         "properties": [
           {
@@ -28395,7 +29462,7 @@ SET class_rule =
           },
           {
             "name": "number",
-            "title": "Номер согласно Положению о территориальном планировании",
+            "title": "Номер согласно положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
@@ -28677,8 +29744,12 @@ SET class_rule =
                 "value": "5"
               },
               {
-                "title": "Иное значение",
+                "title": "Иное значение, местное значение муниципального района, необходимое для осуществления полномочий по вопросам местного значения муниципального района, предусмотренных частью 4 статьи 14, статьей 15 Федерального закона от 6 октября 2003 г. N 131-ФЗ Об общих принципах организации местного самоуправления в Российской Федерации.",
                 "value": "6"
+              },
+              {
+                "title": "Местное значение муниципального округа",
+                "value": "8"
               }
             ]
           },
@@ -28686,6 +29757,7 @@ SET class_rule =
             "name": "shape",
             "title": "геометрия",
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "Polygon"
             ]
@@ -28780,7 +29852,7 @@ SET class_rule =
         "readOnly": true,
         "styleName": "agriculture_698",
         "tableName": "agriculture_698",
-        "originName": "agriculture_698",
+        "originName": "Agriculture",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
         "properties": [
           {
@@ -29301,8 +30373,12 @@ SET class_rule =
                 "value": "5"
               },
               {
-                "title": "Иное значение",
+                "title": "Иное значение, местное значение муниципального района, необходимое для осуществления полномочий по вопросам местного значения муниципального района, предусмотренных частью 4 статьи 14, статьей 15 Федерального закона от 6 октября 2003 г. N 131-ФЗ Об общих принципах организации местного самоуправления в Российской Федерации.",
                 "value": "6"
+              },
+              {
+                "title": "Местное значение муниципального округа",
+                "value": "8"
               }
             ]
           },
@@ -29342,6 +30418,7 @@ SET class_rule =
             "name": "shape",
             "title": "геометрия",
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "Polygon"
             ]
@@ -29441,7 +30518,7 @@ SET class_rule =
         "readOnly": true,
         "styleName": "social_point_698",
         "tableName": "social_point_698",
-        "originName": "social_698",
+        "originName": "Social",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
         "properties": [
           {
@@ -29484,7 +30561,7 @@ SET class_rule =
           },
           {
             "name": "number",
-            "title": "Номер согласно Положению о территориальном планировании",
+            "title": "Номер согласно положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
@@ -29766,8 +30843,12 @@ SET class_rule =
                 "value": "5"
               },
               {
-                "title": "Иное значение",
+                "title": "Иное значение, местное значение муниципального района, необходимое для осуществления полномочий по вопросам местного значения муниципального района, предусмотренных частью 4 статьи 14, статьей 15 Федерального закона от 6 октября 2003 г. N 131-ФЗ Об общих принципах организации местного самоуправления в Российской Федерации.",
                 "value": "6"
+              },
+              {
+                "title": "Местное значение муниципального округа",
+                "value": "8"
               }
             ]
           },
@@ -29775,6 +30856,7 @@ SET class_rule =
             "name": "shape",
             "title": "геометрия",
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "Point"
             ]
@@ -29869,7 +30951,7 @@ SET class_rule =
         "readOnly": true,
         "styleName": "agriculture_point_698",
         "tableName": "agriculture_point_698",
-        "originName": "agriculture_698",
+        "originName": "Agriculture",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
         "properties": [
           {
@@ -30390,8 +31472,12 @@ SET class_rule =
                 "value": "5"
               },
               {
-                "title": "Иное значение",
+                "title": "Иное значение, местное значение муниципального района, необходимое для осуществления полномочий по вопросам местного значения муниципального района, предусмотренных частью 4 статьи 14, статьей 15 Федерального закона от 6 октября 2003 г. N 131-ФЗ Об общих принципах организации местного самоуправления в Российской Федерации.",
                 "value": "6"
+              },
+              {
+                "title": "Местное значение муниципального округа",
+                "value": "8"
               }
             ]
           },
@@ -30431,6 +31517,7 @@ SET class_rule =
             "name": "shape",
             "title": "геометрия",
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "Point"
             ]
@@ -30529,7 +31616,7 @@ SET class_rule =
         "readOnly": true,
         "styleName": "wildlifeprotection_698",
         "tableName": "wildlifeprotection_698",
-        "originName": "wildlifeprotection_698",
+        "originName": "WildlifeProtection",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
         "properties": [
           {
@@ -30564,7 +31651,7 @@ SET class_rule =
           },
           {
             "name": "number",
-            "title": "Номер согласно Положению о территориальном планировании",
+            "title": "Номер согласно положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
@@ -30617,7 +31704,6 @@ SET class_rule =
           {
             "name": "area",
             "title": "Площадь объекта, га",
-            "required": true,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -30694,15 +31780,30 @@ SET class_rule =
                 "value": "5"
               },
               {
-                "title": "Иное значение",
+                "title": "Иное значение, местное значение муниципального района, необходимое для осуществления полномочий по вопросам местного значения муниципального района, предусмотренных частью 4 статьи 14, статьей 15 Федерального закона от 6 октября 2003 г. N 131-ФЗ Об общих принципах организации местного самоуправления в Российской Федерации.",
                 "value": "6"
+              },
+              {
+                "title": "Местное значение муниципального округа",
+                "value": "8"
               }
             ]
+          },
+          {
+            "name": "kadastroks",
+            "title": "Кадастровый номер ОКС",
+            "valueType": "STRING"
+          },
+          {
+            "name": "kadastrzu",
+            "title": "Кадастровый номер земельного участка, на котором расположен объект",
+            "valueType": "STRING"
           },
           {
             "name": "shape",
             "title": "геометрия",
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "Polygon"
             ]
@@ -30713,20 +31814,40 @@ SET class_rule =
 }',
 custom_rule = 'var errors = [];
 
-      if (obj.status == ''2'') {
-        if (!obj.function) {
-          errors.push({attribute: ''function'', error: ''Значение обязательно к заполнению''});
+      if (obj.status == ''2'' || obj.status == ''3'') {
+
+        if (!obj.event_time) {
+            errors.push({ attribute: ''event_time'', error: ''Значение обязательно к заполнению'' });
         }
-      } else if (obj.function) {
-          errors.push({attribute: ''function'', error: ''Значение заполняется только для планируемых к размещению объектов''});
+
+        if (!obj.number) {
+          errors.push({ attribute: ''number'', error: ''Значение обязательно к заполнению'' });
+      }
+      } else {
+        if (obj.event_time) {
+            errors.push({ attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению или планируемых к реконструкции объектов'' });
+        }
+        if (obj.number) {
+          errors.push({ attribute: ''number'', error: ''Значение заполняется только для планируемых к размещению или планируемых к реконструкции объектов'' });
+      }
       }
 
-      if (obj.status == ''2'' || obj.status == ''3'' || obj.status == ''4'') {
+      if (obj.reg_status == ''1'' || obj.reg_status == ''2'') {
         if (!obj.event_time) {
           errors.push({attribute: ''event_time'', error: ''Значение обязательно к заполнению''});
         }
       } else if (obj.event_time) {
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
+      }
+
+      if (!(obj.status == ''1'' || obj.status == ''3'' || obj.status == ''4'')) {
+        if (!obj.kadastrzu) {
+            errors.push({ attribute: ''kadastrzu'', error: ''Значение обязательно к заполнению'' });
+        }
+      } else {
+         if (obj.kadastrzu) {
+            errors.push({ attribute: ''kadastrzu'', error: ''Значение заполняется только для существующих и строящихся, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов'' });
+        }
       }
 
       return errors;'
@@ -30741,7 +31862,7 @@ SET class_rule =
         "readOnly": true,
         "styleName": "heritagearea_698",
         "tableName": "heritagearea_698",
-        "originName": "heritagearea_698",
+        "originName": "HeritageArea",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
         "properties": [
           {
@@ -30905,6 +32026,7 @@ SET class_rule =
             "name": "shape",
             "title": "геометрия",
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "Polygon"
             ]
@@ -30924,7 +32046,7 @@ SET class_rule =
         "readOnly": true,
         "styleName": "mineraldep_698",
         "tableName": "mineraldep_698",
-        "originName": "mineraldep_698",
+        "originName": "MineralDep",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
         "properties": [
           {
@@ -31120,8 +32242,12 @@ SET class_rule =
                 "value": "5"
               },
               {
-                "title": "Иное значение",
+                "title": "Иное значение, местное значение муниципального района, необходимое для осуществления полномочий по вопросам местного значения муниципального района, предусмотренных частью 4 статьи 14, статьей 15 Федерального закона от 6 октября 2003 г. N 131-ФЗ Об общих принципах организации местного самоуправления в Российской Федерации.",
                 "value": "6"
+              },
+              {
+                "title": "Местное значение муниципального округа",
+                "value": "8"
               }
             ]
           },
@@ -31129,6 +32255,7 @@ SET class_rule =
             "name": "shape",
             "title": "геометрия",
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "Polygon"
             ]
@@ -31167,7 +32294,7 @@ SET class_rule =
         "readOnly": true,
         "styleName": "transplogisticobj_698",
         "tableName": "transplogisticobj_698",
-        "originName": "transplogisticobj_698",
+        "originName": "TranspLogisticObj",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
         "properties": [
           {
@@ -31316,8 +32443,12 @@ SET class_rule =
                 "value": "5"
               },
               {
-                "title": "Иное значение",
+                "title": "Иное значение, местное значение муниципального района, необходимое для осуществления полномочий по вопросам местного значения муниципального района, предусмотренных частью 4 статьи 14, статьей 15 Федерального закона от 6 октября 2003 г. N 131-ФЗ Об общих принципах организации местного самоуправления в Российской Федерации.",
                 "value": "6"
+              },
+              {
+                "title": "Местное значение муниципального округа",
+                "value": "8"
               }
             ]
           },
@@ -31352,6 +32483,7 @@ SET class_rule =
             "name": "shape",
             "title": "геометрия",
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "Polygon"
             ]
@@ -31422,7 +32554,7 @@ SET class_rule =
         "readOnly": true,
         "styleName": "heritageprotectionzone_698",
         "tableName": "heritageprotectionzone_698",
-        "originName": "heritageprotectionzone_698",
+        "originName": "HeritageProtectionZone",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
         "properties": [
           {
@@ -31507,6 +32639,7 @@ SET class_rule =
             "name": "shape",
             "title": "геометрия",
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "Polygon"
             ]
@@ -31526,7 +32659,7 @@ SET class_rule =
         "readOnly": true,
         "styleName": "engprotectionzone_698",
         "tableName": "engprotectionzone_698",
-        "originName": "engprotectionzone_698",
+        "originName": "EngProtectionZone",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
         "properties": [
           {
@@ -31619,6 +32752,7 @@ SET class_rule =
             "name": "shape",
             "title": "геометрия",
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "Polygon"
             ]
@@ -31638,7 +32772,7 @@ SET class_rule =
         "readOnly": true,
         "styleName": "foreshore_698",
         "tableName": "foreshore_698",
-        "originName": "foreshore_698",
+        "originName": "Foreshore",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
         "properties": [
           {
@@ -31699,9 +32833,25 @@ SET class_rule =
             ]
           },
           {
+            "name": "numberzouit",
+            "title": "Учетный номер зоны, внесенный в единый государственный реестр недвижимости",
+            "valueType": "STRING"
+          },
+          {
+            "name": "reestrzoit",
+            "title": "Реестровый номер зоны, внесенный в единый государственный реестр недвижимости",
+            "valueType": "STRING"
+          },
+          {
+            "name": "dateegrn",
+            "title": "Дата внесения зон с особыми условиями использования территории в единый государственный реестр недвижимости",
+            "valueType": "STRING"
+          },
+          {
             "name": "shape",
             "title": "геометрия",
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "Polygon"
             ]
@@ -31721,7 +32871,7 @@ SET class_rule =
         "readOnly": true,
         "styleName": "transpprotectionzone_698",
         "tableName": "transpprotectionzone_698",
-        "originName": "transpprotectionzone_698",
+        "originName": "TranspProtectionZone",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
         "properties": [
           {
@@ -31798,6 +32948,7 @@ SET class_rule =
             "name": "shape",
             "title": "геометрия",
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "Polygon"
             ]
@@ -31817,7 +32968,7 @@ SET class_rule =
         "readOnly": true,
         "styleName": "recreation_698",
         "tableName": "recreation_698",
-        "originName": "recreation_698",
+        "originName": "Recreation",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
         "properties": [
           {
@@ -31864,7 +33015,7 @@ SET class_rule =
           },
           {
             "name": "number",
-            "title": "Номер согласно Положению о территориальном планировании",
+            "title": "Номер согласно положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
@@ -32162,8 +33313,12 @@ SET class_rule =
                 "value": "5"
               },
               {
-                "title": "Иное значение",
+                "title": "Иное значение, местное значение муниципального района, необходимое для осуществления полномочий по вопросам местного значения муниципального района, предусмотренных частью 4 статьи 14, статьей 15 Федерального закона от 6 октября 2003 г. N 131-ФЗ Об общих принципах организации местного самоуправления в Российской Федерации.",
                 "value": "6"
+              },
+              {
+                "title": "Местное значение муниципального округа",
+                "value": "8"
               }
             ]
           },
@@ -32171,6 +33326,7 @@ SET class_rule =
             "name": "shape",
             "title": "геометрия",
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "Polygon"
             ]
@@ -32283,7 +33439,7 @@ SET class_rule =
         "readOnly": true,
         "styleName": "natureprotectionzone_698",
         "tableName": "natureprotectionzone_698",
-        "originName": "natureprotectionzone_698",
+        "originName": "NatureProtectionZone",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
         "properties": [
           {
@@ -32387,6 +33543,7 @@ SET class_rule =
             "name": "shape",
             "title": "геометрия",
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "Polygon"
             ]
@@ -32406,7 +33563,7 @@ SET class_rule =
         "readOnly": true,
         "styleName": "traditionalarea_698",
         "tableName": "traditionalarea_698",
-        "originName": "traditionalarea_698",
+        "originName": "TraditionalArea",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
         "properties": [
           {
@@ -32507,8 +33664,12 @@ SET class_rule =
                 "value": "5"
               },
               {
-                "title": "Иное значение",
+                "title": "Иное значение, местное значение муниципального района, необходимое для осуществления полномочий по вопросам местного значения муниципального района, предусмотренных частью 4 статьи 14, статьей 15 Федерального закона от 6 октября 2003 г. N 131-ФЗ Об общих принципах организации местного самоуправления в Российской Федерации.",
                 "value": "6"
+              },
+              {
+                "title": "Местное значение муниципального округа",
+                "value": "8"
               }
             ]
           },
@@ -32516,6 +33677,7 @@ SET class_rule =
             "name": "shape",
             "title": "геометрия",
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "Polygon"
             ]
@@ -32526,11 +33688,23 @@ SET class_rule =
 }',
 custom_rule = 'var errors = [];
 
-      if (!(obj.status == ''2'' || obj.status == ''3'' || obj.status == ''4'')) {
+      if (obj.status == ''2'' || obj.status == ''3'') {
+        if (!obj.event_time) {
+          errors.push({attribute: ''event_time'', error: ''Значение обязательно к заполнению''});
+        }
+      } else {
         if (obj.event_time) {
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
-    }
+      }
+
+      if (obj.reg_status == ''1'' || obj.reg_status == ''2'') {
+        if (!obj.event_time) {
+          errors.push({attribute: ''event_time'', error: ''Значение обязательно к заполнению''});
+        }
+      } else if (obj.event_time) {
+          errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
+      }
 
       return errors;'
 WHERE name = 'traditionalarea_698';
@@ -32539,12 +33713,12 @@ WHERE name = 'traditionalarea_698';
 UPDATE data.schemas 
 SET class_rule =
        '{
-        "name": "traditionalarea_698",
+        "name": "specialeconomicarea_698",
         "title": "Особые экономические зоны",
         "readOnly": true,
-        "styleName": "traditionalarea_698",
-        "tableName": "traditionalarea_698",
-        "originName": "traditionalarea_698",
+        "styleName": "specialeconomicarea_698",
+        "tableName": "specialeconomicarea_698",
+        "originName": "SpecialEconomicArea",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
         "properties": [
           {
@@ -32587,7 +33761,7 @@ SET class_rule =
           },
           {
             "name": "number",
-            "title": "Номер согласно Положению о территориальном планировании",
+            "title": "Номер согласно положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
@@ -32695,8 +33869,12 @@ SET class_rule =
                 "value": "5"
               },
               {
-                "title": "Иное значение",
+                "title": "Иное значение, местное значение муниципального района, необходимое для осуществления полномочий по вопросам местного значения муниципального района, предусмотренных частью 4 статьи 14, статьей 15 Федерального закона от 6 октября 2003 г. N 131-ФЗ Об общих принципах организации местного самоуправления в Российской Федерации.",
                 "value": "6"
+              },
+              {
+                "title": "Местное значение муниципального округа",
+                "value": "8"
               }
             ]
           },
@@ -32704,6 +33882,7 @@ SET class_rule =
             "name": "shape",
             "title": "геометрия",
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "Polygon"
             ]
@@ -32731,7 +33910,7 @@ custom_rule = 'var errors = [];
       }
 
       return errors;'
-WHERE name = 'traditionalarea_698';
+WHERE name = 'specialeconomicarea_698';
 
 
 UPDATE data.schemas 
@@ -32742,7 +33921,7 @@ SET class_rule =
         "readOnly": true,
         "styleName": "emergencyprotectionobj_698",
         "tableName": "emergencyprotectionobj_698",
-        "originName": "emergencyprotectionobj_698",
+        "originName": "EmergencyProtectionObj",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
         "properties": [
           {
@@ -32793,7 +33972,7 @@ SET class_rule =
           },
           {
             "name": "number",
-            "title": "Номер согласно Положению о территориальном планировании",
+            "title": "Номер согласно положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
@@ -33048,8 +34227,12 @@ SET class_rule =
                 "value": "5"
               },
               {
-                "title": "Иное значение",
+                "title": "Иное значение, местное значение муниципального района, необходимое для осуществления полномочий по вопросам местного значения муниципального района, предусмотренных частью 4 статьи 14, статьей 15 Федерального закона от 6 октября 2003 г. N 131-ФЗ Об общих принципах организации местного самоуправления в Российской Федерации.",
                 "value": "6"
+              },
+              {
+                "title": "Местное значение муниципального округа",
+                "value": "8"
               }
             ]
           },
@@ -33057,6 +34240,7 @@ SET class_rule =
             "name": "shape",
             "title": "геометрия",
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "Polygon"
             ]
@@ -33151,7 +34335,7 @@ SET class_rule =
         "readOnly": true,
         "styleName": "electrictransformer_698",
         "tableName": "electrictransformer_698",
-        "originName": "electrictransformer_698",
+        "originName": "ElectricTransformer",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
         "properties": [
           {
@@ -33509,8 +34693,12 @@ SET class_rule =
                 "value": "5"
               },
               {
-                "title": "Иное значение",
+                "title": "Иное значение, местное значение муниципального района, необходимое для осуществления полномочий по вопросам местного значения муниципального района, предусмотренных частью 4 статьи 14, статьей 15 Федерального закона от 6 октября 2003 г. N 131-ФЗ Об общих принципах организации местного самоуправления в Российской Федерации.",
                 "value": "6"
+              },
+              {
+                "title": "Местное значение муниципального округа",
+                "value": "8"
               }
             ]
           },
@@ -33545,6 +34733,7 @@ SET class_rule =
             "name": "shape",
             "title": "геометрия",
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "Polygon"
             ]
@@ -33697,7 +34886,7 @@ SET class_rule =
         "readOnly": true,
         "styleName": "railwayfacility_698",
         "tableName": "railwayfacility_698",
-        "originName": "railwayfacility_698",
+        "originName": "RailwayFacility",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
         "properties": [
           {
@@ -34047,8 +35236,12 @@ SET class_rule =
                 "value": "5"
               },
               {
-                "title": "Иное значение",
+                "title": "Иное значение, местное значение муниципального района, необходимое для осуществления полномочий по вопросам местного значения муниципального района, предусмотренных частью 4 статьи 14, статьей 15 Федерального закона от 6 октября 2003 г. N 131-ФЗ Об общих принципах организации местного самоуправления в Российской Федерации.",
                 "value": "6"
+              },
+              {
+                "title": "Местное значение муниципального округа",
+                "value": "8"
               }
             ]
           },
@@ -34083,6 +35276,7 @@ SET class_rule =
             "name": "shape",
             "title": "геометрия",
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "Polygon"
             ]
@@ -34182,7 +35376,7 @@ SET class_rule =
         "readOnly": true,
         "styleName": "admemo_698",
         "tableName": "admemo_698",
-        "originName": "admemo_698",
+        "originName": "AdmeMO",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
         "properties": [
           {
@@ -34294,6 +35488,7 @@ SET class_rule =
             "name": "shape",
             "title": "геометрия",
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "Polygon"
             ]
@@ -34313,7 +35508,7 @@ SET class_rule =
         "readOnly": true,
         "styleName": "oilfacility_698",
         "tableName": "oilfacility_698",
-        "originName": "oilfacility_698",
+        "originName": "OilFacility",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
         "properties": [
           {
@@ -34569,8 +35764,12 @@ SET class_rule =
                 "value": "5"
               },
               {
-                "title": "Иное значение",
+                "title": "Иное значение, местное значение муниципального района, необходимое для осуществления полномочий по вопросам местного значения муниципального района, предусмотренных частью 4 статьи 14, статьей 15 Федерального закона от 6 октября 2003 г. N 131-ФЗ Об общих принципах организации местного самоуправления в Российской Федерации.",
                 "value": "6"
+              },
+              {
+                "title": "Местное значение муниципального округа",
+                "value": "8"
               }
             ]
           },
@@ -34605,6 +35804,7 @@ SET class_rule =
             "name": "shape",
             "title": "геометрия",
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "Polygon"
             ]
@@ -34727,7 +35927,7 @@ SET class_rule =
         "readOnly": true,
         "styleName": "emergencyprotectionobj_point_698",
         "tableName": "emergencyprotectionobj_point_698",
-        "originName": "emergencyprotectionobj_698",
+        "originName": "EmergencyProtectionObj",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
         "properties": [
           {
@@ -34778,7 +35978,7 @@ SET class_rule =
           },
           {
             "name": "number",
-            "title": "Номер согласно Положению о территориальном планировании",
+            "title": "Номер согласно положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
@@ -35033,8 +36233,12 @@ SET class_rule =
                 "value": "5"
               },
               {
-                "title": "Иное значение",
+                "title": "Иное значение, местное значение муниципального района, необходимое для осуществления полномочий по вопросам местного значения муниципального района, предусмотренных частью 4 статьи 14, статьей 15 Федерального закона от 6 октября 2003 г. N 131-ФЗ Об общих принципах организации местного самоуправления в Российской Федерации.",
                 "value": "6"
+              },
+              {
+                "title": "Местное значение муниципального округа",
+                "value": "8"
               }
             ]
           },
@@ -35042,6 +36246,7 @@ SET class_rule =
             "name": "shape",
             "title": "геометрия",
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "Point"
             ]
@@ -35136,7 +36341,7 @@ SET class_rule =
         "readOnly": true,
         "styleName": "manufacturing_point_698",
         "tableName": "manufacturing_point_698",
-        "originName": "manufacturing_698",
+        "originName": "Manufacturing",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
         "properties": [
           {
@@ -35489,8 +36694,12 @@ SET class_rule =
                 "value": "5"
               },
               {
-                "title": "Иное значение",
+                "title": "Иное значение, местное значение муниципального района, необходимое для осуществления полномочий по вопросам местного значения муниципального района, предусмотренных частью 4 статьи 14, статьей 15 Федерального закона от 6 октября 2003 г. N 131-ФЗ Об общих принципах организации местного самоуправления в Российской Федерации.",
                 "value": "6"
+              },
+              {
+                "title": "Местное значение муниципального округа",
+                "value": "8"
               }
             ]
           },
@@ -35513,6 +36722,7 @@ SET class_rule =
             "name": "shape",
             "title": "геометрия",
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "Point"
             ]
@@ -35583,7 +36793,7 @@ SET class_rule =
         "readOnly": true,
         "styleName": "authorityservice_point_698",
         "tableName": "authorityservice_point_698",
-        "originName": "authorityservice_698",
+        "originName": "AuthorityService",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
         "properties": [
           {
@@ -35638,7 +36848,7 @@ SET class_rule =
           },
           {
             "name": "number",
-            "title": "Номер согласно Положению о территориальном планировании",
+            "title": "Номер согласно положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
@@ -35893,8 +37103,12 @@ SET class_rule =
                 "value": "5"
               },
               {
-                "title": "Иное значение",
+                "title": "Иное значение, местное значение муниципального района, необходимое для осуществления полномочий по вопросам местного значения муниципального района, предусмотренных частью 4 статьи 14, статьей 15 Федерального закона от 6 октября 2003 г. N 131-ФЗ Об общих принципах организации местного самоуправления в Российской Федерации.",
                 "value": "6"
+              },
+              {
+                "title": "Местное значение муниципального округа",
+                "value": "8"
               }
             ]
           },
@@ -35902,6 +37116,7 @@ SET class_rule =
             "name": "shape",
             "title": "геометрия",
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "Point"
             ]
@@ -36004,7 +37219,7 @@ SET class_rule =
         "readOnly": true,
         "styleName": "sport_point_698",
         "tableName": "sport_point_698",
-        "originName": "Sport_698",
+        "originName": "Sport",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
         "properties": [
           {
@@ -36295,8 +37510,12 @@ SET class_rule =
                 "value": "5"
               },
               {
-                "title": "Иное значение",
+                "title": "Иное значение, местное значение муниципального района, необходимое для осуществления полномочий по вопросам местного значения муниципального района, предусмотренных частью 4 статьи 14, статьей 15 Федерального закона от 6 октября 2003 г. N 131-ФЗ Об общих принципах организации местного самоуправления в Российской Федерации.",
                 "value": "6"
+              },
+              {
+                "title": "Местное значение муниципального округа",
+                "value": "8"
               }
             ]
           },
@@ -36331,6 +37550,7 @@ SET class_rule =
             "name": "shape",
             "title": "геометрия",
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "Point"
             ]
@@ -36419,7 +37639,7 @@ SET class_rule =
         "readOnly": true,
         "styleName": "recreation_point_698",
         "tableName": "recreation_point_698",
-        "originName": "recreation_698",
+        "originName": "Recreation",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
         "properties": [
           {
@@ -36466,7 +37686,7 @@ SET class_rule =
           },
           {
             "name": "number",
-            "title": "Номер согласно Положению о территориальном планировании",
+            "title": "Номер согласно положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
@@ -36764,8 +37984,12 @@ SET class_rule =
                 "value": "5"
               },
               {
-                "title": "Иное значение",
+                "title": "Иное значение, местное значение муниципального района, необходимое для осуществления полномочий по вопросам местного значения муниципального района, предусмотренных частью 4 статьи 14, статьей 15 Федерального закона от 6 октября 2003 г. N 131-ФЗ Об общих принципах организации местного самоуправления в Российской Федерации.",
                 "value": "6"
+              },
+              {
+                "title": "Местное значение муниципального округа",
+                "value": "8"
               }
             ]
           },
@@ -36773,6 +37997,7 @@ SET class_rule =
             "name": "shape",
             "title": "геометрия",
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "Point"
             ]
@@ -36885,7 +38110,7 @@ SET class_rule =
         "readOnly": true,
         "styleName": "public_point_698",
         "tableName": "public_point_698",
-        "originName": "public_698",
+        "originName": "Public",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
         "properties": [
           {
@@ -37209,8 +38434,12 @@ SET class_rule =
                 "value": "5"
               },
               {
-                "title": "Иное значение",
+                "title": "Иное значение, местное значение муниципального района, необходимое для осуществления полномочий по вопросам местного значения муниципального района, предусмотренных частью 4 статьи 14, статьей 15 Федерального закона от 6 октября 2003 г. N 131-ФЗ Об общих принципах организации местного самоуправления в Российской Федерации.",
                 "value": "6"
+              },
+              {
+                "title": "Местное значение муниципального округа",
+                "value": "8"
               }
             ]
           },
@@ -37218,6 +38447,7 @@ SET class_rule =
             "name": "shape",
             "title": "геометрия",
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "Point"
             ]
@@ -37296,7 +38526,7 @@ SET class_rule =
         "readOnly": true,
         "styleName": "waterprotectionzone_698",
         "tableName": "waterprotectionzone_698",
-        "originName": "waterprotectionzone_698",
+        "originName": "WaterProtectionZone",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
         "properties": [
           {
@@ -37360,6 +38590,7 @@ SET class_rule =
             "name": "shape",
             "title": "геометрия",
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "Polygon"
             ]
@@ -37379,7 +38610,7 @@ SET class_rule =
         "readOnly": true,
         "styleName": "envdanger_point_698",
         "tableName": "envdanger_point_698",
-        "originName": "envdanger_698",
+        "originName": "EnvDanger",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
         "properties": [
           {
@@ -37414,7 +38645,7 @@ SET class_rule =
           },
           {
             "name": "number",
-            "title": "Номер согласно Положению о территориальном планировании",
+            "title": "Номер согласно положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
@@ -37463,6 +38694,7 @@ SET class_rule =
             "name": "shape",
             "title": "геометрия",
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "Point"
             ]
@@ -37470,7 +38702,20 @@ SET class_rule =
         ],
         "description": "Класс объектов «Объекты накопленного вреда окружающей среде, водные объекты, подлежащие реабилитации»",
         "geometryType": "Point"
-      }'
+      }',
+      custom_rule = 'var errors = [];
+
+      if (obj.status == ''2'' || obj.status == ''3'') {
+        
+        if (!obj.number) {
+          errors.push({attribute: ''number'', error: ''Значение обязательно к заполнению''});
+        }
+        } else { 
+        if (obj.number) {
+          errors.push({attribute: ''number'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
+      }
+
+      return errors;'
 WHERE name = 'envdanger_point_698';
 
 
@@ -37482,7 +38727,7 @@ SET class_rule =
         "readOnly": true,
         "styleName": "prison_698",
         "tableName": "prison_698",
-        "originName": "prison_698",
+        "originName": "Prison",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
         "properties": [
           {
@@ -37513,7 +38758,7 @@ SET class_rule =
           },
           {
             "name": "number",
-            "title": "Номер согласно Положению о территориальном планировании",
+            "title": "Номер согласно положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
@@ -37580,6 +38825,14 @@ SET class_rule =
               {
                 "title": "Исправительная колония особого режима для осужденных, отбывающих пожизненное лишение свободы",
                 "value": "10"
+              },
+              {
+                "title": "Здание врачебного здравпункта ФСИН России",
+                "value": "13"
+              },
+              {
+                "title": "Прочие объекты инфраструктуры уголовно-исполнительной системы",
+                "value": "14"
               }
             ]
           },
@@ -37631,8 +38884,12 @@ SET class_rule =
                 "value": "5"
               },
               {
-                "title": "Иное значение",
+                "title": "Иное значение, местное значение муниципального района, необходимое для осуществления полномочий по вопросам местного значения муниципального района, предусмотренных частью 4 статьи 14, статьей 15 Федерального закона от 6 октября 2003 г. N 131-ФЗ Об общих принципах организации местного самоуправления в Российской Федерации.",
                 "value": "6"
+              },
+              {
+                "title": "Местное значение муниципального округа",
+                "value": "8"
               }
             ]
           },
@@ -37661,9 +38918,20 @@ SET class_rule =
             ]
           },
           {
+            "name": "kadastroks",
+            "title": "Кадастровый номер ОКС",
+            "valueType": "STRING"
+          },
+          {
+            "name": "kadastrzu",
+            "title": "Кадастровый номер земельного участка, на котором расположен объект",
+            "valueType": "STRING"
+          },
+          {
             "name": "shape",
             "title": "геометрия",
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "Polygon"
             ]
@@ -37674,21 +38942,38 @@ SET class_rule =
 }',
 custom_rule = 'var errors = [];
 
-      if (obj.status == ''2'') {
-        if (!obj.function) {
-          errors.push({attribute: ''function'', error: ''Значение обязательно к заполнению''});
-        }
-      } else if (obj.function) {
-          errors.push({attribute: ''function'', error: ''Значение заполняется только для планируемых к размещению объектов''});
-      }
-
-      if (obj.status == ''2'' || obj.status == ''3'' || obj.status == ''4'') {
+      if (obj.status == ''2'' || obj.status == ''3'') {
         if (!obj.event_time) {
           errors.push({attribute: ''event_time'', error: ''Значение обязательно к заполнению''});
         }
-      } else if (obj.event_time) {
-          errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
-      }
+        if (!obj.number) {
+          errors.push({attribute: ''number'', error: ''Значение обязательно к заполнению''});
+        }
+      } else 
+        if (obj.event_time) {
+            errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
+        }
+        if (obj.number) {
+          errors.push({attribute: ''number'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
+        }
+
+        if (obj.reg_status == ''1'' || obj.reg_status == ''2'') {
+          if (!obj.event_time) {
+            errors.push({attribute: ''event_time'', error: ''Значение обязательно к заполнению''});
+          }
+        } else if (obj.event_time) {
+            errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
+        }
+
+        if (!(obj.status == ''1'' || obj.status == ''3'' || obj.status == ''4'')) {
+          if (!obj.kadastrzu) {
+              errors.push({ attribute: ''kadastrzu'', error: ''Значение обязательно к заполнению'' });
+          }
+        } else {
+           if (obj.kadastrzu) {
+              errors.push({ attribute: ''kadastrzu'', error: ''Значение заполняется только для существующих и строящихся, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов'' });
+          }
+        }
 
       return errors;'
 WHERE name = 'prison_698';
@@ -37702,7 +38987,7 @@ SET class_rule =
         "readOnly": true,
         "styleName": "greeneryplanting_698",
         "tableName": "greeneryplanting_698",
-        "originName": "greeneryplanting_698",
+        "originName": "GreeneryPlanting",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
         "properties": [
           {
@@ -37753,7 +39038,7 @@ SET class_rule =
           },
           {
             "name": "number",
-            "title": "Номер согласно Положению о территориальном планировании",
+            "title": "Номер согласно положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
@@ -37831,6 +39116,7 @@ SET class_rule =
             "name": "shape",
             "title": "геометрия",
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "Polygon"
             ]
@@ -37861,7 +39147,7 @@ SET class_rule =
         "readOnly": true,
         "styleName": "forestpark_698",
         "tableName": "forestpark_698",
-        "originName": "forestpark_698",
+        "originName": "ForestPark",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
         "properties": [
           {
@@ -37892,7 +39178,7 @@ SET class_rule =
           },
           {
             "name": "number",
-            "title": "Номер согласно Положению о территориальном планировании",
+            "title": "Номер согласно положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
@@ -37948,6 +39234,7 @@ SET class_rule =
             "name": "shape",
             "title": "геометрия",
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "Polygon"
             ]
@@ -37955,7 +39242,20 @@ SET class_rule =
         ],
         "description": "Класс объектов «Лесопарковый зеленый пояс»",
         "geometryType": "MultiPolygon"
-      }'
+      }',
+      custom_rule = 'var errors = [];
+
+      if (obj.status == ''2'' || obj.status == ''3'') {
+        
+        if (!obj.number) {
+          errors.push({attribute: ''number'', error: ''Значение обязательно к заполнению''});
+        }
+        } else { 
+        if (obj.number) {
+          errors.push({attribute: ''number'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
+      }
+
+      return errors;'
 WHERE name = 'forestpark_698';
 
 
@@ -37967,7 +39267,7 @@ SET class_rule =
         "readOnly": true,
         "styleName": "oilfacility_point_698",
         "tableName": "oilfacility_point_698",
-        "originName": "oilfacility_698",
+        "originName": "OilFacility",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
         "properties": [
           {
@@ -38223,8 +39523,12 @@ SET class_rule =
                 "value": "5"
               },
               {
-                "title": "Иное значение",
+                "title": "Иное значение, местное значение муниципального района, необходимое для осуществления полномочий по вопросам местного значения муниципального района, предусмотренных частью 4 статьи 14, статьей 15 Федерального закона от 6 октября 2003 г. N 131-ФЗ Об общих принципах организации местного самоуправления в Российской Федерации.",
                 "value": "6"
+              },
+              {
+                "title": "Местное значение муниципального округа",
+                "value": "8"
               }
             ]
           },
@@ -38259,6 +39563,7 @@ SET class_rule =
             "name": "shape",
             "title": "геометрия",
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "Point"
             ]
@@ -38381,7 +39686,7 @@ SET class_rule =
         "readOnly": true,
         "styleName": "transpsanitarygapzone_698",
         "tableName": "transpsanitarygapzone_698",
-        "originName": "transpsanitarygapzone_698",
+        "originName": "TranspSanitaryGapZone",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
         "properties": [
           {
@@ -38463,9 +39768,25 @@ SET class_rule =
             ]
           },
           {
+            "name": "numberzouit",
+            "title": "Учетный номер зоны, внесенный в единый государственный реестр недвижимости",
+            "valueType": "STRING"
+          },
+          {
+            "name": "reestrzoit",
+            "title": "Реестровый номер зоны, внесенный в единый государственный реестр недвижимости",
+            "valueType": "STRING"
+          },
+          {
+            "name": "dateegrn",
+            "title": "Дата внесения зон с особыми условиями использования территории в единый государственный реестр недвижимости",
+            "valueType": "STRING"
+          },
+          {
             "name": "shape",
             "title": "геометрия",
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "Polygon"
             ]
@@ -38485,7 +39806,7 @@ SET class_rule =
         "readOnly": true,
         "styleName": "sanitaryprotectionzone_698",
         "tableName": "sanitaryprotectionzone_698",
-        "originName": "sanitaryprotectionzone_698",
+        "originName": "SanitaryProtectionZone",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
         "properties": [
           {
@@ -38624,9 +39945,30 @@ SET class_rule =
             ]
           },
           {
+            "name": "numberzouit",
+            "title": "Учетный номер зоны, внесенный в единый государственный реестр недвижимости",
+            "valueType": "STRING"
+          },
+          {
+            "name": "reestrzoit",
+            "title": "Реестровый номер зоны, внесенный в единый государственный реестр недвижимости",
+            "valueType": "STRING"
+          },
+          {
+            "name": "dateegrn",
+            "title": "Дата внесения зон с особыми условиями использования территории в единый государственный реестр недвижимости",
+            "valueType": "STRING"
+          },
+          {
+            "name": "oponz",
+            "title": "Описание ориентировочной (нормативной) зоны",
+            "valueType": "STRING"
+          },
+          {
             "name": "shape",
             "title": "геометрия",
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "Polygon"
             ]
@@ -38646,7 +39988,7 @@ SET class_rule =
         "readOnly": true,
         "styleName": "drinkwaterprotectionzone_698",
         "tableName": "drinkwaterprotectionzone_698",
-        "originName": "drinkwaterprotectionzone_698",
+        "originName": "DrinkWaterProtectionZone",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
         "properties": [
           {
@@ -38724,9 +40066,25 @@ SET class_rule =
             ]
           },
           {
+            "name": "numberzouit",
+            "title": "Учетный номер зоны, внесенный в единый государственный реестр недвижимости",
+            "valueType": "STRING"
+          },
+          {
+            "name": "reestrzoit",
+            "title": "Реестровый номер зоны, внесенный в единый государственный реестр недвижимости",
+            "valueType": "STRING"
+          },
+          {
+            "name": "dateegrn",
+            "title": "Дата внесения зон с особыми условиями использования территории в единый государственный реестр недвижимости",
+            "valueType": "STRING"
+          },
+          {
             "name": "shape",
             "title": "геометрия",
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "Polygon"
             ]
@@ -38746,7 +40104,7 @@ SET class_rule =
         "readOnly": true,
         "styleName": "admerf_698",
         "tableName": "admerf_698",
-        "originName": "admerf_698",
+        "originName": "AdmeRF",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
         "properties": [
           {
@@ -38797,6 +40155,7 @@ SET class_rule =
             "name": "shape",
             "title": "геометрия",
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "Polygon"
             ]
@@ -38816,7 +40175,7 @@ SET class_rule =
         "readOnly": true,
         "styleName": "resortprotectionzone_698",
         "tableName": "resortprotectionzone_698",
-        "originName": "resortprotectionzone_698",
+        "originName": "ResortProtectionZone",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
         "properties": [
           {
@@ -38893,6 +40252,7 @@ SET class_rule =
             "name": "shape",
             "title": "геометрия",
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "Polygon"
             ]
@@ -38912,7 +40272,7 @@ SET class_rule =
         "readOnly": true,
         "styleName": "landuse_698",
         "tableName": "landuse_698",
-        "originName": "landuse_698",
+        "originName": "LandUse",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
         "properties": [
           {
@@ -38985,6 +40345,7 @@ SET class_rule =
             "name": "shape",
             "title": "геометрия",
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "Polygon"
             ]
@@ -39004,7 +40365,7 @@ SET class_rule =
         "readOnly": true,
         "styleName": "mineralarea_698",
         "tableName": "mineralarea_698",
-        "originName": "mineralarea_698",
+        "originName": "MineralArea",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
         "properties": [
           {
@@ -39092,6 +40453,7 @@ SET class_rule =
             "name": "shape",
             "title": "геометрия",
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "Polygon"
             ]
@@ -39111,7 +40473,7 @@ SET class_rule =
         "readOnly": true,
         "styleName": "engsanitarygapzone_698",
         "tableName": "engsanitarygapzone_698",
-        "originName": "engsanitarygapzone_698",
+        "originName": "EngSanitaryGapZone",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
         "properties": [
           {
@@ -39188,6 +40550,7 @@ SET class_rule =
             "name": "shape",
             "title": "геометрия",
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "Polygon"
             ]
@@ -39207,7 +40570,7 @@ SET class_rule =
         "readOnly": true,
         "styleName": "otherzone_698",
         "tableName": "otherzone_698",
-        "originName": "otherzone_698",
+        "originName": "OtherZone",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
         "properties": [
           {
@@ -39323,6 +40686,7 @@ SET class_rule =
             "name": "shape",
             "title": "геометрия",
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "Polygon"
             ]
@@ -39353,7 +40717,7 @@ SET class_rule =
         "readOnly": true,
         "styleName": "envdanger_698",
         "tableName": "envdanger_698",
-        "originName": "envdanger_698",
+        "originName": "EnvDanger",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
         "properties": [
           {
@@ -39388,7 +40752,7 @@ SET class_rule =
           },
           {
             "name": "number",
-            "title": "Номер согласно Положению о территориальном планировании",
+            "title": "Номер согласно положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
@@ -39437,6 +40801,7 @@ SET class_rule =
             "name": "shape",
             "title": "геометрия",
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "Polygon"
             ]
@@ -39444,7 +40809,20 @@ SET class_rule =
         ],
         "description": "Класс объектов «Объекты накопленного вреда окружающей среде, водные объекты, подлежащие реабилитации»",
         "geometryType": "MultiPolygon"
-      }'
+      }',
+      custom_rule = 'var errors = [];
+
+      if (obj.status == ''2'' || obj.status == ''3'') {
+        
+        if (!obj.number) {
+          errors.push({attribute: ''number'', error: ''Значение обязательно к заполнению''});
+        }
+        } else { 
+        if (obj.number) {
+          errors.push({attribute: ''number'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
+      }
+
+      return errors;'
 WHERE name = 'envdanger_698';
 
 
@@ -39499,7 +40877,7 @@ SET class_rule =
           },
           {
             "name": "number",
-            "title": "Номер согласно Положению о территориальном планировании",
+            "title": "Номер согласно положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
@@ -39650,8 +41028,12 @@ SET class_rule =
                 "value": "5"
               },
               {
-                "title": "Иное значение",
+                "title": "Иное значение, местное значение муниципального района, необходимое для осуществления полномочий по вопросам местного значения муниципального района, предусмотренных частью 4 статьи 14, статьей 15 Федерального закона от 6 октября 2003 г. N 131-ФЗ Об общих принципах организации местного самоуправления в Российской Федерации.",
                 "value": "6"
+              },
+              {
+                "title": "Местное значение муниципального округа",
+                "value": "8"
               }
             ]
           },
@@ -39659,6 +41041,7 @@ SET class_rule =
             "name": "shape",
             "title": "геометрия",
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "LineString"
             ]
@@ -39714,7 +41097,7 @@ SET class_rule =
         "readOnly": true,
         "styleName": "otherprotectionzone_698",
         "tableName": "otherprotectionzone_698",
-        "originName": "otherprotectionzone_698",
+        "originName": "OtherProtectionZone",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
         "properties": [
           {
@@ -39787,6 +41170,7 @@ SET class_rule =
             "name": "shape",
             "title": "геометрия",
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "Polygon"
             ]
@@ -39806,7 +41190,7 @@ SET class_rule =
         "readOnly": true,
         "styleName": "protectionzone_698",
         "tableName": "protectionzone_698",
-        "originName": "protectionzone_698",
+        "originName": "ProtectionZone",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
         "properties": [
           {
@@ -39884,9 +41268,25 @@ SET class_rule =
             ]
           },
           {
+            "name": "numberzouit",
+            "title": "Учетный номер зоны, внесенный в единый государственный реестр недвижимости",
+            "valueType": "STRING"
+          },
+          {
+            "name": "reestrzoit",
+            "title": "Реестровый номер зоны, внесенный в единый государственный реестр недвижимости",
+            "valueType": "STRING"
+          },
+          {
+            "name": "dateegrn",
+            "title": "Дата внесения зон с особыми условиями использования территории в единый государственный реестр недвижимости",
+            "valueType": "STRING"
+          },
+          {
             "name": "shape",
             "title": "геометрия",
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "Polygon"
             ]
@@ -39906,7 +41306,7 @@ SET class_rule =
         "readOnly": true,
         "styleName": "hydro_698",
         "tableName": "hydro_698",
-        "originName": "hydro_698",
+        "originName": "Hydro",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
         "properties": [
           {
@@ -39957,7 +41357,7 @@ SET class_rule =
           },
           {
             "name": "number",
-            "title": "Номер согласно Положению о территориальном планировании",
+            "title": "Номер согласно положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
@@ -40031,6 +41431,7 @@ SET class_rule =
             "name": "shape",
             "title": "геометрия",
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "Polygon"
             ]
@@ -40058,7 +41459,7 @@ SET class_rule =
         "readOnly": true,
         "styleName": "floodarea_698",
         "tableName": "floodarea_698",
-        "originName": "floodarea_698",
+        "originName": "FloodArea",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
         "properties": [
           {
@@ -40136,6 +41537,7 @@ SET class_rule =
           {
             "name": "objectname",
             "title": "Наименование объекта (для которого устанавливается зона)",
+            "required": true,
             "valueType": "STRING"
           },
           {
@@ -40165,9 +41567,25 @@ SET class_rule =
             ]
           },
           {
+            "name": "numberzouit",
+            "title": "Учетный номер зоны, внесенный в единый государственный реестр недвижимости",
+            "valueType": "STRING"
+          },
+          {
+            "name": "reestrzoit",
+            "title": "Реестровый номер зоны, внесенный в единый государственный реестр недвижимости",
+            "valueType": "STRING"
+          },
+          {
+            "name": "dateegrn",
+            "title": "Дата внесения зон с особыми условиями использования территории в единый государственный реестр недвижимости",
+            "valueType": "STRING"
+          },
+          {
             "name": "shape",
             "title": "геометрия",
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "Polygon"
             ]
@@ -40206,7 +41624,7 @@ SET class_rule =
         "readOnly": true,
         "styleName": "areabasedevelopment_698",
         "tableName": "areabasedevelopment_698",
-        "originName": "areabasedevelopment_698",
+        "originName": "AreaBaseDevelopment",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
         "properties": [
           {
@@ -40249,7 +41667,7 @@ SET class_rule =
           },
           {
             "name": "number",
-            "title": "Номер согласно Положению о территориальном планировании",
+            "title": "Номер согласно положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
@@ -40266,7 +41684,6 @@ SET class_rule =
           {
             "name": "area",
             "title": "Общая площадь территории, га",
-            "required": true,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -40338,8 +41755,12 @@ SET class_rule =
                 "value": "5"
               },
               {
-                "title": "Иное значение",
+                "title": "Иное значение, местное значение муниципального района, необходимое для осуществления полномочий по вопросам местного значения муниципального района, предусмотренных частью 4 статьи 14, статьей 15 Федерального закона от 6 октября 2003 г. N 131-ФЗ Об общих принципах организации местного самоуправления в Российской Федерации.",
                 "value": "6"
+              },
+              {
+                "title": "Местное значение поселения",
+                "value": "8"
               }
             ]
           },
@@ -40347,6 +41768,7 @@ SET class_rule =
             "name": "shape",
             "title": "геометрия",
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "Polygon"
             ]
@@ -40357,11 +41779,30 @@ SET class_rule =
 }',
 custom_rule = 'var errors = [];
 
-      if (!(obj.status == ''2'' || obj.status == ''3'' || obj.status == ''4'')) {
-        if (obj.event_time) {
+      if (obj.status == ''2'' || obj.status == ''3'') {
+              
+        if (!obj.event_time) {
+          errors.push({attribute: ''event_time'', error: ''Значение обязательно к заполнению''});
+        }
+        if (!obj.number) {
+          errors.push({attribute: ''number'', error: ''Значение обязательно к заполнению''});
+        }
+        } else { 
+          if (obj.event_time) {
+            errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
+        }
+        if (obj.number) {
+          errors.push({attribute: ''number'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
+      }
+
+      if (obj.reg_status == ''1'' || obj.reg_status == ''2'') {
+        if (!obj.event_time) {
+          errors.push({attribute: ''event_time'', error: ''Значение обязательно к заполнению''});
+        }
+      } else if (obj.event_time) {
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
-      }
+
       return errors;'
 WHERE name = 'areabasedevelopment_698';
 
@@ -40374,7 +41815,7 @@ SET class_rule =
         "readOnly": true,
         "styleName": "fishprotectionzone_698",
         "tableName": "fishprotectionzone_698",
-        "originName": "fishprotectionzone_698",
+        "originName": "FishProtectionZone",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
         "properties": [
           {
@@ -40444,9 +41885,25 @@ SET class_rule =
             ]
           },
           {
+            "name": "numberzouit",
+            "title": "Учетный номер зоны, внесенный в единый государственный реестр недвижимости",
+            "valueType": "STRING"
+          },
+          {
+            "name": "reestrzoit",
+            "title": "Реестровый номер зоны, внесенный в единый государственный реестр недвижимости",
+            "valueType": "STRING"
+          },
+          {
+            "name": "dateegrn",
+            "title": "Дата внесения зон с особыми условиями использования территории в единый государственный реестр недвижимости",
+            "valueType": "STRING"
+          },
+          {
             "name": "shape",
             "title": "геометрия",
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "Polygon"
             ]
@@ -40610,8 +42067,12 @@ SET class_rule =
                 "value": "5"
               },
               {
-                "title": "Иное значение",
+                "title": "Иное значение, местное значение муниципального района, необходимое для осуществления полномочий по вопросам местного значения муниципального района, предусмотренных частью 4 статьи 14, статьей 15 Федерального закона от 6 октября 2003 г. N 131-ФЗ Об общих принципах организации местного самоуправления в Российской Федерации.",
                 "value": "6"
+              },
+              {
+                "title": "Местное значение муниципального округа",
+                "value": "8"
               }
             ]
           },
@@ -40619,6 +42080,7 @@ SET class_rule =
             "name": "shape",
             "title": "геометрия",
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "LineString"
             ]
@@ -40777,7 +42239,7 @@ SET class_rule =
         "readOnly": true,
         "styleName": "hydro_line_698",
         "tableName": "hydro_line_698",
-        "originName": "hydro_698",
+        "originName": "Hydro",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
         "properties": [
           {
@@ -40828,7 +42290,7 @@ SET class_rule =
           },
           {
             "name": "number",
-            "title": "Номер согласно Положению о территориальном планировании",
+            "title": "Номер согласно положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
@@ -40902,6 +42364,7 @@ SET class_rule =
             "name": "shape",
             "title": "геометрия",
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "LineString"
             ]
@@ -40985,7 +42448,7 @@ SET class_rule =
           },
           {
             "name": "number",
-            "title": "Номер согласно Положению о территориальном планировании",
+            "title": "Номер согласно положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
@@ -41125,8 +42588,12 @@ SET class_rule =
                 "value": "5"
               },
               {
-                "title": "Иное значение",
+                "title": "Иное значение, местное значение муниципального района, необходимое для осуществления полномочий по вопросам местного значения муниципального района, предусмотренных частью 4 статьи 14, статьей 15 Федерального закона от 6 октября 2003 г. N 131-ФЗ Об общих принципах организации местного самоуправления в Российской Федерации.",
                 "value": "6"
+              },
+              {
+                "title": "Местное значение муниципального округа",
+                "value": "8"
               }
             ]
           },
@@ -41134,6 +42601,7 @@ SET class_rule =
             "name": "shape",
             "title": "геометрия",
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "LineString"
             ]
@@ -41144,20 +42612,45 @@ SET class_rule =
 }',
 custom_rule = 'var errors = [];
 
-      if (obj.status == ''2'') {
-        if (!obj.function) {
-          errors.push({attribute: ''function'', error: ''Значение обязательно к заполнению''});
-        }
-      } else if (obj.function) {
-          errors.push({attribute: ''function'', error: ''Значение заполняется только для планируемых к размещению объектов''});
-      }
-
-      if (obj.status == ''2'' || obj.status == ''3'' || obj.status == ''4'') {
+      if (obj.reg_status == ''1'' || obj.reg_status == ''2'') {
         if (!obj.event_time) {
           errors.push({attribute: ''event_time'', error: ''Значение обязательно к заполнению''});
         }
-      } else if (obj.event_time) {
+        if (!obj.wear_prcnt) {
+          errors.push({attribute: ''wear_prcnt'', error: ''Значение обязательно к заполнению''});
+        }
+      } else if {
+        (obj.event_time) {
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
+      }
+      (obj.wear_prcnt) {
+        errors.push({attribute: ''wear_prcnt'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
+      }
+      }
+
+      if (obj.status == ''2'' || obj.status == ''3'') {
+                    
+        if (!obj.event_time) {
+          errors.push({attribute: ''event_time'', error: ''Значение обязательно к заполнению''});
+        }
+        if (!obj.number) {
+          errors.push({attribute: ''number'', error: ''Значение обязательно к заполнению''});
+        }
+        } else { 
+          if (obj.event_time) {
+            errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
+        }
+        if (obj.number) {
+          errors.push({attribute: ''number'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
+      }
+
+      if (obj.status == ''1'' || obj.status == ''3'' || obj.status == ''4'') {
+        if (!obj.wear_prcnt) {
+            errors.push({attribute: ''wear_prcnt'', error: ''Значение обязательно к заполнению''});
+        }
+      } else 
+      if (obj.wear_prcnt) {
+        errors.push({attribute: ''wear_prcnt'', error: ''Значение заполняется только для планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
 
       return errors;'
@@ -41219,7 +42712,7 @@ SET class_rule =
           },
           {
             "name": "number",
-            "title": "Номер согласно Положению о территориальном планировании",
+            "title": "Номер согласно положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
@@ -41337,8 +42830,12 @@ SET class_rule =
                 "value": "5"
               },
               {
-                "title": "Иное значение",
+                "title": "Иное значение, местное значение муниципального района, необходимое для осуществления полномочий по вопросам местного значения муниципального района, предусмотренных частью 4 статьи 14, статьей 15 Федерального закона от 6 октября 2003 г. N 131-ФЗ Об общих принципах организации местного самоуправления в Российской Федерации.",
                 "value": "6"
+              },
+              {
+                "title": "Местное значение муниципального округа",
+                "value": "8"
               }
             ]
           },
@@ -41346,6 +42843,7 @@ SET class_rule =
             "name": "shape",
             "title": "геометрия",
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "LineString"
             ]
@@ -41356,21 +42854,28 @@ SET class_rule =
 }',
 custom_rule = 'var errors = [];
 
-      if (obj.status == ''2'') {
-        if (!obj.function) {
-          errors.push({attribute: ''function'', error: ''Значение обязательно к заполнению''});
-        }
-      } else if (obj.function) {
-          errors.push({attribute: ''function'', error: ''Значение заполняется только для планируемых к размещению объектов''});
-      }
-
-      if (obj.status == ''2'' || obj.status == ''3'' || obj.status == ''4'') {
+      if (obj.status == ''2'' || obj.status == ''3'') {
         if (!obj.event_time) {
           errors.push({attribute: ''event_time'', error: ''Значение обязательно к заполнению''});
         }
-      } else if (obj.event_time) {
-          errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
-      }
+        if (!obj.number) {
+          errors.push({attribute: ''number'', error: ''Значение обязательно к заполнению''});
+        }
+      } else 
+        if (obj.event_time) {
+            errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
+        }
+        if (obj.number) {
+          errors.push({attribute: ''number'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
+        }
+
+        if (obj.reg_status == ''1'' || obj.reg_status == ''2'') {
+          if (!obj.event_time) {
+            errors.push({attribute: ''event_time'', error: ''Значение обязательно к заполнению''});
+          }
+        } else if (obj.event_time) {
+            errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
+        }
 
       return errors;'
 WHERE name = 'engprotectionobj_line_698';
@@ -41384,7 +42889,7 @@ SET class_rule =
         "readOnly": true,
         "styleName": "naturalriskzone_point_698",
         "tableName": "naturalriskzone_point_698",
-        "originName": "naturalriskzone_698",
+        "originName": "NaturalRiskZone",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
         "properties": [
           {
@@ -41634,6 +43139,7 @@ SET class_rule =
             "name": "shape",
             "title": "геометрия",
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "Point"
             ]
@@ -41653,7 +43159,7 @@ SET class_rule =
         "readOnly": true,
         "styleName": "natureprotectarea_point_698",
         "tableName": "natureprotectarea_point_698",
-        "originName": "natureprotectarea_698",
+        "originName": "NatureProtectArea",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
         "properties": [
           {
@@ -41801,15 +43307,25 @@ SET class_rule =
                 "value": "5"
               },
               {
-                "title": "Иное значение",
+                "title": "Иное значение, местное значение муниципального района, необходимое для осуществления полномочий по вопросам местного значения муниципального района, предусмотренных частью 4 статьи 14, статьей 15 Федерального закона от 6 октября 2003 г. N 131-ФЗ Об общих принципах организации местного самоуправления в Российской Федерации.",
                 "value": "6"
+              },
+              {
+                "title": "Местное значение муниципального округа",
+                "value": "8"
               }
             ]
+          },
+          {
+            "name": "kadastrzu",
+            "title": "Кадастровый номер земельного участка, на котором расположен объект",
+            "valueType": "STRING"
           },
           {
             "name": "shape",
             "title": "геометрия",
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "Point"
             ]
@@ -41820,21 +43336,31 @@ SET class_rule =
 }',
 custom_rule = 'var errors = [];
 
-      if (obj.status == ''2'') {
-        if (!obj.function) {
-          errors.push({attribute: ''function'', error: ''Значение обязательно к заполнению''});
-        }
-      } else if (obj.function) {
-          errors.push({attribute: ''function'', error: ''Значение заполняется только для планируемых к размещению объектов''});
-      }
-
-      if (obj.status == ''2'' || obj.status == ''3'' || obj.status == ''4'') {
+      if (obj.status == ''2'' || obj.status == ''3'') {
         if (!obj.event_time) {
           errors.push({attribute: ''event_time'', error: ''Значение обязательно к заполнению''});
         }
       } else if (obj.event_time) {
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
+
+      if (obj.reg_status == ''1'' || obj.reg_status == ''2'') {
+          if (!obj.event_time) {
+            errors.push({attribute: ''event_time'', error: ''Значение обязательно к заполнению''});
+          }
+        } else if (obj.event_time) {
+            errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
+        }
+
+        if (!(obj.status == ''1'' || obj.status == ''3'' || obj.status == ''4'')) {
+          if (!obj.kadastrzu) {
+              errors.push({ attribute: ''kadastrzu'', error: ''Значение обязательно к заполнению'' });
+          }
+        } else {
+          if (obj.kadastrzu) {
+              errors.push({ attribute: ''kadastrzu'', error: ''Значение заполняется только для существующих и строящихся, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов'' });
+          }
+        }
 
       return errors;'
 WHERE name = 'natureprotectarea_point_698';
@@ -41848,7 +43374,7 @@ SET class_rule =
         "readOnly": true,
         "styleName": "technoriskarea_point_698",
         "tableName": "technoriskarea_point_698",
-        "originName": "technoriskarea_698",
+        "originName": "TechnoRiskArea",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
         "properties": [
           {
@@ -42026,6 +43552,7 @@ SET class_rule =
             "name": "shape",
             "title": "геометрия",
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "Point"
             ]
@@ -42045,7 +43572,7 @@ SET class_rule =
         "readOnly": true,
         "styleName": "resortarea_point_698",
         "tableName": "resortarea_point_698",
-        "originName": "resortarea_698",
+        "originName": "ResortArea",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
         "properties": [
           {
@@ -42076,7 +43603,7 @@ SET class_rule =
           },
           {
             "name": "number",
-            "title": "Номер согласно Положению о территориальном планировании",
+            "title": "Номер согласно положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
@@ -42169,8 +43696,12 @@ SET class_rule =
                 "value": "5"
               },
               {
-                "title": "Иное значение",
+                "title": "Иное значение, местное значение муниципального района, необходимое для осуществления полномочий по вопросам местного значения муниципального района, предусмотренных частью 4 статьи 14, статьей 15 Федерального закона от 6 октября 2003 г. N 131-ФЗ Об общих принципах организации местного самоуправления в Российской Федерации.",
                 "value": "6"
+              },
+              {
+                "title": "Местное значение муниципального округа",
+                "value": "8"
               }
             ]
           },
@@ -42178,6 +43709,7 @@ SET class_rule =
             "name": "shape",
             "title": "геометрия",
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "Point"
             ]
@@ -42188,19 +43720,29 @@ SET class_rule =
 }',
 custom_rule = 'var errors = [];
 
-      if (obj.status == ''2'') {
-        if (!obj.function) {
-          errors.push({attribute: ''function'', error: ''Значение обязательно к заполнению''});
+      if (obj.reg_status == ''1'' || obj.reg_status == ''2'') {
+        if (!obj.event_time) {
+          errors.push({attribute: ''event_time'', error: ''Значение обязательно к заполнению''});
         }
-      } else if (obj.function) {
-          errors.push({attribute: ''function'', error: ''Значение заполняется только для планируемых к размещению объектов''});
+      } else if (obj.event_time) {
+          errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
 
-      if (!(obj.status == ''2'' || obj.status == ''3'' || obj.status == ''4'')) {
+      if (obj.status == ''2'' || obj.status == ''3'') {
+        if (!obj.event_time) {
+          errors.push({attribute: ''event_time'', error: ''Значение обязательно к заполнению''});
+        }
+        if (!obj.number) {
+          errors.push({attribute: ''number'', error: ''Значение обязательно к заполнению''});
+        }
+      } else {
         if (obj.event_time) {
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
-    }
+      if (obj.number) {
+        errors.push({attribute: ''number'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
+      }
+      }
 
       return errors;'
 WHERE name = 'resortarea_point_698';
@@ -42214,7 +43756,7 @@ SET class_rule =
         "readOnly": true,
         "styleName": "prison_point_698",
         "tableName": "prison_point_698",
-        "originName": "prison_698",
+        "originName": "Prison",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
         "properties": [
           {
@@ -42245,7 +43787,7 @@ SET class_rule =
           },
           {
             "name": "number",
-            "title": "Номер согласно Положению о территориальном планировании",
+            "title": "Номер согласно положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
@@ -42312,6 +43854,14 @@ SET class_rule =
               {
                 "title": "Исправительная колония особого режима для осужденных, отбывающих пожизненное лишение свободы",
                 "value": "10"
+              },
+              {
+                "title": "Здание врачебного здравпункта ФСИН России",
+                "value": "13"
+              },
+              {
+                "title": "Прочие объекты инфраструктуры уголовно-исполнительной системы",
+                "value": "14"
               }
             ]
           },
@@ -42363,8 +43913,12 @@ SET class_rule =
                 "value": "5"
               },
               {
-                "title": "Иное значение",
+                "title": "Иное значение, местное значение муниципального района, необходимое для осуществления полномочий по вопросам местного значения муниципального района, предусмотренных частью 4 статьи 14, статьей 15 Федерального закона от 6 октября 2003 г. N 131-ФЗ Об общих принципах организации местного самоуправления в Российской Федерации.",
                 "value": "6"
+              },
+              {
+                "title": "Местное значение муниципального округа",
+                "value": "8"
               }
             ]
           },
@@ -42393,9 +43947,20 @@ SET class_rule =
             ]
           },
           {
+            "name": "kadastroks",
+            "title": "Кадастровый номер ОКС",
+            "valueType": "STRING"
+          },
+          {
+            "name": "kadastrzu",
+            "title": "Кадастровый номер земельного участка, на котором расположен объект",
+            "valueType": "STRING"
+          },
+          {
             "name": "shape",
             "title": "геометрия",
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "Point"
             ]
@@ -42406,21 +43971,38 @@ SET class_rule =
 }',
 custom_rule = 'var errors = [];
 
-      if (obj.status == ''2'') {
-        if (!obj.function) {
-          errors.push({attribute: ''function'', error: ''Значение обязательно к заполнению''});
-        }
-      } else if (obj.function) {
-          errors.push({attribute: ''function'', error: ''Значение заполняется только для планируемых к размещению объектов''});
-      }
-
-      if (obj.status == ''2'' || obj.status == ''3'' || obj.status == ''4'') {
+      if (obj.status == ''2'' || obj.status == ''3'') {
         if (!obj.event_time) {
           errors.push({attribute: ''event_time'', error: ''Значение обязательно к заполнению''});
         }
-      } else if (obj.event_time) {
-          errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
-      }
+        if (!obj.number) {
+          errors.push({attribute: ''number'', error: ''Значение обязательно к заполнению''});
+        }
+      } else 
+        if (obj.event_time) {
+            errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
+        }
+        if (obj.number) {
+          errors.push({attribute: ''number'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
+        }
+
+        if (obj.reg_status == ''1'' || obj.reg_status == ''2'') {
+          if (!obj.event_time) {
+            errors.push({attribute: ''event_time'', error: ''Значение обязательно к заполнению''});
+          }
+        } else if (obj.event_time) {
+            errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
+        }
+
+        if (!(obj.status == ''1'' || obj.status == ''3'' || obj.status == ''4'')) {
+          if (!obj.kadastrzu) {
+              errors.push({ attribute: ''kadastrzu'', error: ''Значение обязательно к заполнению'' });
+          }
+        } else {
+          if (obj.kadastrzu) {
+              errors.push({ attribute: ''kadastrzu'', error: ''Значение заполняется только для существующих и строящихся, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов'' });
+          }
+        }
 
       return errors;'
 WHERE name = 'prison_point_698';
@@ -42434,7 +44016,7 @@ SET class_rule =
         "readOnly": true,
         "styleName": "wildlifeprotection_point_698",
         "tableName": "wildlifeprotection_point_698",
-        "originName": "wildlifeprotection_698",
+        "originName": "WildlifeProtection",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
         "properties": [
           {
@@ -42469,7 +44051,7 @@ SET class_rule =
           },
           {
             "name": "number",
-            "title": "Номер согласно Положению о территориальном планировании",
+            "title": "Номер согласно положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
@@ -42522,7 +44104,6 @@ SET class_rule =
           {
             "name": "area",
             "title": "Площадь объекта, га",
-            "required": true,
             "valueType": "DOUBLE",
             "totalDigits": 38,
             "fractionDigits": 8
@@ -42599,15 +44180,30 @@ SET class_rule =
                 "value": "5"
               },
               {
-                "title": "Иное значение",
+                "title": "Иное значение, местное значение муниципального района, необходимое для осуществления полномочий по вопросам местного значения муниципального района, предусмотренных частью 4 статьи 14, статьей 15 Федерального закона от 6 октября 2003 г. N 131-ФЗ Об общих принципах организации местного самоуправления в Российской Федерации.",
                 "value": "6"
+              },
+              {
+                "title": "Местное значение муниципального округа",
+                "value": "8"
               }
             ]
+          },
+          {
+            "name": "kadastroks",
+            "title": "Кадастровый номер ОКС",
+            "valueType": "STRING"
+          },
+          {
+            "name": "kadastrzu",
+            "title": "Кадастровый номер земельного участка, на котором расположен объект",
+            "valueType": "STRING"
           },
           {
             "name": "shape",
             "title": "геометрия",
             "valueType": "GEOMETRY",
+            "hidden": true,
             "allowedValues": [
               "Point"
             ]
@@ -42618,20 +44214,40 @@ SET class_rule =
 }',
 custom_rule = 'var errors = [];
 
-      if (obj.status == ''2'') {
-        if (!obj.function) {
-          errors.push({attribute: ''function'', error: ''Значение обязательно к заполнению''});
+      if (obj.status == ''2'' || obj.status == ''3'') {
+
+        if (!obj.event_time) {
+            errors.push({ attribute: ''event_time'', error: ''Значение обязательно к заполнению'' });
         }
-      } else if (obj.function) {
-          errors.push({attribute: ''function'', error: ''Значение заполняется только для планируемых к размещению объектов''});
+
+        if (!obj.number) {
+          errors.push({ attribute: ''number'', error: ''Значение обязательно к заполнению'' });
+      }
+      } else {
+        if (obj.event_time) {
+            errors.push({ attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению или планируемых к реконструкции объектов'' });
+        }
+        if (obj.number) {
+          errors.push({ attribute: ''number'', error: ''Значение заполняется только для планируемых к размещению или планируемых к реконструкции объектов'' });
+      }
       }
 
-      if (obj.status == ''2'' || obj.status == ''3'' || obj.status == ''4'') {
+      if (obj.reg_status == ''1'' || obj.reg_status == ''2'') {
         if (!obj.event_time) {
           errors.push({attribute: ''event_time'', error: ''Значение обязательно к заполнению''});
         }
       } else if (obj.event_time) {
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
+      }
+
+      if (!(obj.status == ''1'' || obj.status == ''3'' || obj.status == ''4'')) {
+        if (!obj.kadastrzu) {
+            errors.push({ attribute: ''kadastrzu'', error: ''Значение обязательно к заполнению'' });
+        }
+      } else {
+        if (obj.kadastrzu) {
+            errors.push({ attribute: ''kadastrzu'', error: ''Значение заполняется только для существующих и строящихся, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов'' });
+        }
       }
 
       return errors;'
@@ -42644,7 +44260,7 @@ SET class_rule =
           "title": "Образуемые земельные участки",
           "styleName": "mp",
           "tableName": "mp_698",
-          "originName": "mp_698",
+          "originName": "mp",
           "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
           "properties": [
             {
@@ -42749,6 +44365,7 @@ SET class_rule =
               "name": "shape",
               "title": "геометрия",
               "valueType": "GEOMETRY",
+              "hidden": true,
               "allowedValues": [
                 "Polygon"
               ]

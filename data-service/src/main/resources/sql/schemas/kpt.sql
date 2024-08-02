@@ -892,7 +892,7 @@ SET class_rule =
         "КПТ"
     ],
     "name": "oks_polyline_pro",
-    "title": "Объекaты капитального строительства",
+    "title": "Объекты капитального строительства",
     "readOnly": true,
     "styleName": "oks_polyline_pro",
     "tableName": "oks_polyline_pro",

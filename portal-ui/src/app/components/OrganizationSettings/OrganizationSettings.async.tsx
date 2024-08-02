@@ -148,8 +148,8 @@ export default class OrganizationSettings extends Component<OrganizationSettings
   private updateOptions() {
     const options = this.favoritesProjection.length
       ? this.favoritesProjection.map(item => {
-        return { title: item.title, value: item.title };
-      })
+          return { title: item.title, value: item.title };
+        })
       : [];
 
     this._schema?.properties.forEach(property => {
