@@ -302,6 +302,10 @@ SET class_rule =
           "name": "source_doc"
         },
         {
+          "name": "date_order_completion",
+          "readOnly": true
+        },
+        {
           "name": "file"
         }
       ]
@@ -414,8 +418,9 @@ SET class_rule =
         },
         {
             "name": "created_at",
-            "title": "Дата создания",
+            "title": "Дата",
             "hidden": true,
+            "description": "Дата импорта XML в слой",
             "valueType": "DATETIME"
         },
         {
@@ -460,6 +465,7 @@ SET class_rule =
         {
             "name": "acsept_at",
             "title": "Дата",
+            "hidden": true,
             "valueType": "DATETIME",
             "description": "Дата приёма данных из  АИС УМС"
         },
@@ -622,8 +628,9 @@ SET class_rule =
         },
         {
             "name": "created_at",
-            "title": "Дата создания",
+            "title": "Дата",
             "hidden": true,
+            "description": "Дата импорта XML в слой",
             "valueType": "DATETIME"
         },
         {
@@ -679,6 +686,7 @@ SET class_rule =
         {
             "name": "acsept_at",
             "title": "Дата",
+            "hidden": true,
             "valueType": "DATETIME",
             "description": "Дата получения КПТ"
         },
@@ -807,8 +815,9 @@ SET class_rule =
         },
         {
             "name": "created_at",
-            "title": "Дата создания",
+            "title": "Дата",
             "hidden": true,
+            "description": "Дата импорта XML в слой",
             "valueType": "DATETIME"
         },
         {
@@ -865,6 +874,7 @@ SET class_rule =
         {
             "name": "acsept_at",
             "title": "Дата",
+            "hidden": true,
             "valueType": "DATETIME",
             "description": "Дата приёма данных из АИС УМС"
         },
@@ -1003,8 +1013,9 @@ SET class_rule =
         },
         {
             "name": "created_at",
-            "title": "Дата создания",
+            "title": "Дата",
             "hidden": true,
+            "description": "Дата импорта XML в слой",
             "valueType": "DATETIME"
         },
         {
@@ -1061,6 +1072,7 @@ SET class_rule =
         {
             "name": "acsept_at",
             "title": "Дата",
+            "hidden": true,
             "valueType": "DATETIME",
             "description": "Дата приёма данных из АИС УМС"
         },
@@ -1145,8 +1157,9 @@ SET class_rule =
     },
     {
       "name": "created_at",
-      "title": "Дата создания",
+      "title": "Дата",
       "hidden": true,
+      "description": "Дата импорта XML в слой",
       "valueType": "DATETIME"
     },
     {
@@ -1190,6 +1203,7 @@ SET class_rule =
     {
       "name": "acsept_at",
       "title": "Дата",
+      "hidden": true,
       "valueType": "DATETIME",
       "description": "Дата приёма данных из  АИС УМС"    },
     {
@@ -1252,8 +1266,9 @@ SET class_rule =
         },
         {
             "name": "created_at",
-            "title": "Дата создания",
+            "title": "Дата",
             "hidden": true,
+            "description": "Дата импорта XML в слой",
             "valueType": "DATETIME"
         },
         {
@@ -1298,6 +1313,7 @@ SET class_rule =
         {
             "name": "acsept_at",
             "title": "Дата",
+            "hidden": true,
             "valueType": "DATETIME",
             "description": "Дата приёма данных из АИС УМС"
         },
@@ -1362,8 +1378,9 @@ SET class_rule =
         },
         {
             "name": "created_at",
-            "title": "Дата создания",
+            "title": "Дата",
             "hidden": true,
+            "description": "Дата импорта XML в слой",
             "valueType": "DATETIME"
         },
         {
@@ -1407,6 +1424,7 @@ SET class_rule =
         {
             "name": "acsept_at",
             "title": "Дата",
+            "hidden": true,
             "valueType": "DATETIME",
             "description": "Дата приёма данных из  АИС УМС"
         },
@@ -1684,8 +1702,9 @@ SET class_rule =
         },
         {
             "name": "created_at",
-            "title": "Дата создания",
+            "title": "Дата",
             "hidden": true,
+            "description": "Дата импорта XML в слой",
             "valueType": "DATETIME"
         },
         {
@@ -1742,6 +1761,7 @@ SET class_rule =
         {
             "name": "acsept_at",
             "title": "Дата",
+            "hidden": true,
             "valueType": "DATETIME",
             "description": "Дата приёма данных из АИС УМС"
         },
@@ -1797,8 +1817,9 @@ SET class_rule =
         },
         {
             "name": "created_at",
-            "title": "Дата создания",
+            "title": "Дата",
             "hidden": true,
+            "description": "Дата импорта XML в слой",
             "valueType": "DATETIME"
         },
         {
@@ -1843,6 +1864,7 @@ SET class_rule =
         {
             "name": "acsept_at",
             "title": "Дата",
+            "hidden": true,
             "valueType": "DATETIME",
             "description": "Дата приёма данных из АИС УМС"
         },
