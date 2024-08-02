@@ -4,6 +4,7 @@ import { cn } from '@bem-react/classname';
 
 import { WfsFeature } from '../../services/geoserver/wfs/wfs.models';
 import { CrgVectorLayer } from '../../services/gis/layers/layers.models';
+import { organizationSettings } from '../../stores/OrganizationSettings.store';
 import { CopyFeaturesButton } from '../CopyFeaturesButton/CopyFeaturesButton';
 import { CopyUrlButton } from '../CopyUrlButton/CopyUrlButton';
 import { OpenInAnotherProject } from '../OpenInAnotherProject/OpenInAnotherProject';
@@ -31,7 +32,7 @@ export class EditFeatureActions extends Component<EditFeatureActionsProps> {
           <CopyFeaturesButton layer={layer} features={[feature]} tooltipTitle='Копировать объект в другой слой' />
         )}
         <PrintFeature feature={feature} layer={layer} />
-        {layer && <XmlDownload feature={feature} layer={layer} />}
+        {organizationSettings.downloadXml && layer && <XmlDownload feature={feature} layer={layer} />}
         <OpenInAnotherProject feature={feature} />
         <CopyUrlButton features={[feature]} />
         <ZoomToFeature feature={feature} />

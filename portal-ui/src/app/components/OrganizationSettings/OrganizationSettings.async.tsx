@@ -21,6 +21,8 @@ import { Toast } from '../Toast/Toast';
 
 import '!style-loader!css-loader!sass-loader!./OrganizationSettings.scss';
 
+const typeError = 'Ошибка в типах данных';
+
 const cnOrganizationSettings = cn('OrganizationSettings');
 
 export interface OrganizationSettingsProps {
@@ -174,17 +176,27 @@ export default class OrganizationSettings extends Component<OrganizationSettings
 
         value.tags = parsedValue;
       } catch {
-        throw new Error('Ошибка в типах данных');
+        throw new Error(typeError);
       }
     }
 
     // поле favorites_epsg на бэке сейчас ест только массив строк
     value.favorites_epsg = value.favorites_epsg.map(item => {
-      if (!isProjection(item)) {
-        throw new TypeError('Ошибка в типах данных');
+      let projection = item;
+
+      if (typeof item === 'string') {
+        try {
+          projection = JSON.parse(item) as Projection;
+        } catch {
+          throw new TypeError(typeError);
+        }
       }
 
-      return isProjection(item) ? JSON.stringify(item) : item;
+      if (!isProjection(projection)) {
+        throw new TypeError(typeError);
+      }
+
+      return isProjection(projection) ? JSON.stringify(projection) : projection;
     });
 
     if (id) {

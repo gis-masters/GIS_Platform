@@ -14,7 +14,6 @@ import { PageOptions, SortOrder } from '../../../../services/models';
 import { Role } from '../../../../services/permissions/permissions.models';
 import { formatDate } from '../../../../services/util/date.util';
 import { staticImplements } from '../../../../services/util/staticImplements';
-import { currentUser } from '../../../../stores/CurrentUser.store';
 import { organizationSettings } from '../../../../stores/OrganizationSettings.store';
 import { CreateLibraryRecord } from '../../../CreateLibraryRecord/CreateLibraryRecord';
 import { LibraryActions } from '../../../LibraryActions/LibraryActions';
@@ -213,9 +212,8 @@ export class ExplorerAdapterTypeLibrary {
     assertExplorerItemDataTypeLibrary(item);
 
     const currentItem = await getLibrary(item.payload.table_name);
-    const enabled =
-      currentUser.isAdmin ||
-      (organizationSettings.createLibraryItem && currentItem.role && currentItem.role !== Role.VIEWER);
+    const recordCreationAllowed =
+      !!organizationSettings.createLibraryItem && !!currentItem.role && currentItem.role !== Role.VIEWER;
 
     const handleCreate = (record: LibraryRecord, isFolder: boolean) => {
       store.selectItem({ payload: record, type: isFolder ? ExplorerItemType.FOLDER : ExplorerItemType.DOCUMENT });
@@ -234,7 +232,7 @@ export class ExplorerAdapterTypeLibrary {
               <LibraryKptRequest library={item.payload} />
             </>
           )}
-          {full && enabled && <CreateLibraryRecord library={item.payload} onCreate={handleCreate} />}
+          {full && recordCreationAllowed && <CreateLibraryRecord library={item.payload} onCreate={handleCreate} />}
           <LibraryDeletedDocumentsSwitch library={currentItem} />
           <LibraryViewSwitch to='registry' library={currentItem} path={[]} />
         </>

@@ -4,7 +4,6 @@ import { Settings } from '../../server-types/common-contracts';
 import { OccupiedStorage } from '../services/auth/organizations/organizations.models';
 import { Projection } from '../services/data/projections/projections.models';
 import { Schema } from '../services/data/schema/schema.models';
-import { currentUser } from './CurrentUser.store';
 
 export interface OrgSettings extends Settings {
   favorites_epsg: Projection[] | string[];
@@ -106,6 +105,11 @@ export class OrganizationSettings {
   }
 
   @computed
+  get reestrs(): boolean {
+    return this.allowedToUse(!!this.orgSettings?.system?.reestrs, !!this.orgSettings?.organization?.reestrs);
+  }
+
+  @computed
   get downloadFiles(): boolean {
     return this.allowedToUse(
       !!this.orgSettings?.system?.downloadFiles,
@@ -126,7 +130,7 @@ export class OrganizationSettings {
   private allowedToUse(systemSetting?: boolean, orgSetting?: boolean): boolean {
     const setting = systemSetting && orgSetting;
 
-    return Boolean(currentUser.isAdmin || setting);
+    return Boolean(setting);
   }
 }
 

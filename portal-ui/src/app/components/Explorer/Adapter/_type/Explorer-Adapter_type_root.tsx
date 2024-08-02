@@ -23,12 +23,15 @@ function getChildren(): ExplorerItemData[] {
     {
       type: ExplorerItemType.PROJECTS_ROOT,
       payload: null
-    },
-    {
-      type: ExplorerItemType.MESSAGES_REGISTRIES_ROOT,
-      payload: null
     }
   ];
+
+  if (organizationSettings.reestrs) {
+    baseChildren.push({
+      type: ExplorerItemType.MESSAGES_REGISTRIES_ROOT,
+      payload: null
+    });
+  }
 
   if (organizationSettings.taskManagement) {
     baseChildren.push({

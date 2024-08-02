@@ -16,7 +16,6 @@ import { PageOptions, SortOrder } from '../../../../services/models';
 import { Role } from '../../../../services/permissions/permissions.models';
 import { formatDate } from '../../../../services/util/date.util';
 import { staticImplements } from '../../../../services/util/staticImplements';
-import { currentUser } from '../../../../stores/CurrentUser.store';
 import { organizationSettings } from '../../../../stores/OrganizationSettings.store';
 import { CreateLibraryRecord } from '../../../CreateLibraryRecord/CreateLibraryRecord';
 import { LibraryDeletedDocumentsSwitch } from '../../../LibraryDeletedDocumentsSwitch/LibraryDeletedDocumentsSwitch';
@@ -216,10 +215,9 @@ export class ExplorerAdapterTypeFolder {
 
     const currentItem = await getLibraryRecord(item.payload.libraryTableName, item.payload.id);
     const createEnabled =
-      currentUser.isAdmin ||
-      (organizationSettings.createLibraryItem &&
-        currentItem.role &&
-        [Role.OWNER, Role.CONTRIBUTOR].includes(currentItem.role));
+      !!organizationSettings.createLibraryItem &&
+      !!currentItem.role &&
+      [Role.OWNER, Role.CONTRIBUTOR].includes(currentItem.role);
     const handleCreate = (record: LibraryRecord, isFolder: boolean) => {
       store.selectItem({ payload: record, type: isFolder ? ExplorerItemType.FOLDER : ExplorerItemType.DOCUMENT });
     };

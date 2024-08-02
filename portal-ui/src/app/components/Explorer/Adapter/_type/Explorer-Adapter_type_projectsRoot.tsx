@@ -7,6 +7,7 @@ import { CrgProject } from '../../../../services/gis/projects/projects.models';
 import { projectsService } from '../../../../services/gis/projects/projects.service';
 import { PageOptions, SortOrder } from '../../../../services/models';
 import { staticImplements } from '../../../../services/util/staticImplements';
+import { organizationSettings } from '../../../../stores/OrganizationSettings.store';
 import { CreateProject } from '../../../CreateProject/CreateProject';
 import { Adapter, ExplorerItemData, ExplorerItemType, SortItem } from '../../Explorer.models';
 import { ExplorerService } from '../../Explorer.service';
@@ -120,6 +121,6 @@ export class ExplorerAdapterTypeProjectsRoot {
       store.selectItem({ payload: record, type: ExplorerItemType.PROJECT });
     };
 
-    return <CreateProject onCreate={handleCreate} />;
+    return organizationSettings.createProject ? <CreateProject onCreate={handleCreate} /> : null;
   }
 }
