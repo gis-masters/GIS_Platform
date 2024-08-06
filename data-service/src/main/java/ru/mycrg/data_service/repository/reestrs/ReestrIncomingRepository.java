@@ -9,4 +9,6 @@ import java.util.UUID;
 @Repository
 public interface ReestrIncomingRepository extends PagingAndSortingRepository<ReestrIncoming, UUID> {
 
+    ReestrIncoming findFirstByBodyContains(String originalMessageId);
+
 }

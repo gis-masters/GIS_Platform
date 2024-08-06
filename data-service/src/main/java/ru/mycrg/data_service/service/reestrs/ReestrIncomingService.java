@@ -22,4 +22,9 @@ public class ReestrIncomingService {
         incomingRepository.save(message);
         log.info("Reestr record saved. id:{}", message.getId());
     }
+
+    @Transactional
+    public ReestrIncoming findByBody(String body){
+        return incomingRepository.findFirstByBodyContains(body);
+    }
 }

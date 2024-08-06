@@ -9,16 +9,28 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import ru.mycrg.data_service.entity.reestrs.ReestrIncoming;
 import ru.mycrg.data_service.entity.smev.SmevMessageMetaEntity;
 import ru.mycrg.data_service.exceptions.SmevRequestException;
+import ru.mycrg.data_service.service.reestrs.ReestrIncomingService;
 import ru.mycrg.data_service.service.smev3.model.ResponseFailProcess;
 import ru.mycrg.data_service.service.smev3.request.ResponseProcessor;
 import ru.mycrg.data_service.service.smev3.request.gpzu.GpzuService;
 import ru.mycrg.data_service.util.JsonConverter;
 
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 import java.io.ByteArrayInputStream;
+import java.io.StringWriter;
 import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
@@ -37,17 +49,20 @@ public class SmevMessageReceiverService {
     private final Queue adapterReceiveFailQueue;
     private final List<ResponseProcessor> responseProcessors;
     private final GpzuService gpzuService;
+    private final ReestrIncomingService reestrIncomingService;
 
     public SmevMessageReceiverService(SmevMessageService messageService,
                                       RabbitTemplate rabbitTemplate,
                                       Queue adapterReceiveFailQueue,
                                       List<ResponseProcessor> responseProcessors,
-                                      GpzuService gpzuService) {
+                                      GpzuService gpzuService,
+                                      ReestrIncomingService reestrIncomingService) {
         this.messageService = messageService;
         this.rabbitTemplate = rabbitTemplate;
         this.adapterReceiveFailQueue = adapterReceiveFailQueue;
         this.responseProcessors = responseProcessors;
         this.gpzuService = gpzuService;
+        this.reestrIncomingService = reestrIncomingService;
     }
 
     /**
@@ -55,7 +70,7 @@ public class SmevMessageReceiverService {
      */
     @Transactional
     public void processReceiveMessage(@NotNull Message message) {
-        var body = new String(message.getBody());
+        String body = new String(message.getBody());
         try {
             if (body.contains("urn://rostelekom.ru/GPZU/1.0.4")) {
                 gpzuService.acceptGpzuRequest(body);
@@ -64,11 +79,19 @@ public class SmevMessageReceiverService {
             var messageEntity = replyToClientId(message)
                     .map(messageService::getByClientId)
                     .orElseThrow(() -> new SmevRequestException("Не удалось найти исходное сообщение"));
+            if (!body.contains("<replyToClientId>") && (body.contains("RRTR02_3S"))) {
+                String closingTag = "</clientId>";
+                int closingTabIndex = body.indexOf(closingTag) + closingTag.length();
+                String clientId = messageEntity.getClientId().toString();
+                String replyToClientId = "<replyToClientId>" + clientId + "</replyToClientId>";
+                body = body.substring(0, closingTabIndex) + replyToClientId + body.substring(closingTabIndex);
+            }
+            String finalBody = body;
             responseProcessors.stream()
                     .filter(processor -> processor.mnemonicEnum() == messageEntity.mnemonicEnum())
                     .findFirst()
                     .ifPresentOrElse(
-                            processor -> process(processor, messageEntity, body),
+                            processor -> process(processor, messageEntity, finalBody),
                             () -> log.warn("Обработчик сообщения СМЭВ не найден {}", messageEntity.mnemonicEnum())
                     );
         } catch (Exception e) {
@@ -94,7 +117,13 @@ public class SmevMessageReceiverService {
                         throw new SmevRequestException("Ошибка при парсинге XML " + e.getMessage());
                     }
                 })
-                .map(document -> document.getElementsByTagName("replyToClientId"))
+                .map(document -> {
+                    if (document.getElementsByTagName("replyToClientId").getLength() == 0) {
+                        addReplyToClientIdToDocument(document);
+                        return document.getElementsByTagName("replyToClientId");
+                    }
+                    return document.getElementsByTagName("replyToClientId");
+                })
                 .map(nodeList -> nodeList.item(0))
                 .map(Node::getFirstChild)
                 .map(Node::getNodeValue)
@@ -129,5 +158,34 @@ public class SmevMessageReceiverService {
         } catch (Exception e) {
             log.error("Ошибка при попытке отправить сообщение в очередь receive fail'. {} {}", e.getMessage(), e.toString());
         }
+    }
+
+    private void addReplyToClientIdToDocument(Document document){
+        NodeList originalMessageIDNodes = document.getElementsByTagName("OriginalMessageID");
+        Element originalMessageIDElement = (Element) originalMessageIDNodes.item(0);
+
+        StringWriter writer = new StringWriter();
+        try {
+            Transformer transformer = TransformerFactory.newInstance().newTransformer();
+            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+            transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
+            transformer.transform(new DOMSource(originalMessageIDElement), new StreamResult(writer));
+        } catch (TransformerException e) {
+            throw new SmevRequestException("Ошибка при получении OriginalMessageID из сообщения СМЭВ" + e.getMessage());
+        }
+        String originalMessageIDWithTags = writer.toString().trim();
+        ReestrIncoming reestrIncoming = reestrIncomingService.findByBody(originalMessageIDWithTags);
+        String body = reestrIncoming.getBody();
+        String startTag = "<replyToClientId>";
+        String endTag = "</replyToClientId>";
+        int startTagIndex = body.indexOf(startTag);
+        int endTagIndex = body.indexOf(endTag);
+        String replyToClientId = body.substring(startTagIndex + startTag.length(), endTagIndex);
+
+        NodeList responseMetadataNodes = document.getElementsByTagName("ResponseMetadata");
+        Node responseMetadataNode = responseMetadataNodes.item(0);
+        Element replyToClientIdElement = document.createElement("replyToClientId");
+        replyToClientIdElement.setTextContent(replyToClientId);
+        responseMetadataNode.appendChild(replyToClientIdElement);
     }
 }
