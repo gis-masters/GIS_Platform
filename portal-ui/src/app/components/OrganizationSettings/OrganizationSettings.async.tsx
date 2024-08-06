@@ -181,19 +181,19 @@ export default class OrganizationSettings extends Component<OrganizationSettings
     }
 
     // поле favorites_epsg на бэке сейчас ест только массив строк
-    value.favorites_epsg = value.favorites_epsg.map(item => {
-      let projection = item;
-
-      if (typeof item === 'string') {
+    value.favorites_epsg = value.favorites_epsg.map(projection => {
+      if (typeof projection === 'string') {
         try {
-          projection = JSON.parse(item) as Projection;
-        } catch {
-          throw new TypeError(typeError);
-        }
-      }
+          const parsedValue = JSON.parse(projection) as unknown;
 
-      if (!isProjection(projection)) {
-        throw new TypeError(typeError);
+          if (!isProjection(parsedValue)) {
+            throw new TypeError('Неверное значение у системы координат');
+          }
+
+          return projection;
+        } catch {
+          throw new Error('Ошибка получения системы координат');
+        }
       }
 
       return isProjection(projection) ? JSON.stringify(projection) : projection;
