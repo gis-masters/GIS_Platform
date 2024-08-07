@@ -17,6 +17,7 @@ import { ActionsLeft } from '../ActionsLeft/ActionsLeft';
 import { Button } from '../Button/Button';
 import { Form } from '../Form/Form';
 import { Loading } from '../Loading/Loading';
+import { SmartCaptchaControl } from '../SmartCaptchaControl/SmartCaptchaControl';
 import { SpecializationDescription } from '../SpecializationDescription/SpecializationDescription';
 import { Toast } from '../Toast/Toast';
 
@@ -63,11 +64,11 @@ export class OrgRegistrationForm extends Component {
     const htmlId = generateRandomId();
 
     return (
-      <>
+      <div className={cnOrgRegistrationForm('Wrapper')}>
         <div className={cnOrgRegistrationForm('Title')}>Данные об организации</div>
 
         <Form
-          className={cnOrgRegistrationForm()}
+          className={cnOrgRegistrationForm(null, ['scroll'])}
           schema={this.schema}
           id={htmlId}
           value={defaultData}
@@ -84,7 +85,7 @@ export class OrgRegistrationForm extends Component {
         />
 
         {this.loading && <Loading global />}
-      </>
+      </div>
     );
   }
 
@@ -175,6 +176,13 @@ export class OrgRegistrationForm extends Component {
           required: true,
           display: 'password',
           propertyType: PropertyType.STRING
+        },
+        {
+          propertyType: PropertyType.CUSTOM,
+          name: 'captcha',
+          title: 'Каптча',
+          required: true,
+          ControlComponent: SmartCaptchaControl
         }
       ]
     };

@@ -1,4 +1,8 @@
 .OrgRegistrationForm {
+  overflow: hidden auto;
+
+  max-height: calc(100% - 200px);
+
   &-Registered {
     display: flex;
     align-items: center;
@@ -12,5 +16,10 @@
 
     font-size: 20px;
     font-weight: 400;
+  }
+
+  &-Wrapper {
+    height: 100%;
+    max-height: 100%;
   }
 }

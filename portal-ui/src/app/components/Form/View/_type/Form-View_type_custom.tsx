@@ -10,11 +10,11 @@ import { cnFormView } from '../Form-View.base';
 @observer
 class FormViewTypeCustom extends Component<FormControlProps> {
   render() {
-    const { className, fieldValue, errors, property } = this.props;
+    const { className, fieldValue, errors, labelInField, property } = this.props;
     const { ViewComponent } = property as PropertySchemaCustom;
 
     return (
-      <div className={cnFormView(null, [className])}>
+      <div className={cnFormView({ labelInField }, [className])}>
         {ViewComponent ? <ViewComponent {...this.props} /> : String(fieldValue)}
         <FormViewErrors errors={errors} />
       </div>

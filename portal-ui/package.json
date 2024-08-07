@@ -47,6 +47,7 @@
     "@mui/x-tree-view": "7.5.1",
     "@stomp/stompjs": "5.4.2",
     "@turf/turf": "6.5.0",
+    "@yandex/smart-captcha": "2.6.0",
     "autobind-decorator": "2.4.0",
     "axios": "1.6.8",
     "core-js": "3.36.1",

@@ -9,11 +9,11 @@ import { cnFormControl, FormControlProps } from '../Form-Control';
 @observer
 class FormControlTypeCustom extends Component<FormControlProps> {
   render() {
-    const { className, property, errors } = this.props;
+    const { className, property, labelInField, errors } = this.props;
     const { ControlComponent } = property as PropertySchemaCustom;
 
     return (
-      <div className={cnFormControl(null, [className])}>
+      <div className={cnFormControl({ labelInField }, [className])}>
         <ControlComponent {...this.props} />
         <FormErrors errors={errors} />
       </div>
