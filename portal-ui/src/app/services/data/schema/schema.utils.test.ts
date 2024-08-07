@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-floating-promises */
 /* eslint-disable sonarjs/no-duplicate-string */
-import { Attribute } from '@fiz/geoserver-types/Attribute';
 
+import { Attribute } from '../../geoserver/featureType/featureType.model';
 import { GeometryType } from '../../geoserver/wfs/wfs.models';
 import { PropertySchema, PropertyType, Relation, Schema } from './schema.models';
 import {

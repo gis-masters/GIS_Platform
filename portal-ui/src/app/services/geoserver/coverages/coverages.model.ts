@@ -1,4 +1,4 @@
-import { BBOX } from '@fiz/geoserver-types/BBOX';
+import { BBOX } from '../featureType/featureType.model';
 
 export interface CoverageTransparentColorEntry {
   string: Record<string, string>;

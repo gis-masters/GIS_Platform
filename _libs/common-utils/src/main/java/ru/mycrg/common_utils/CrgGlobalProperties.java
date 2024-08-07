@@ -25,6 +25,11 @@ public class CrgGlobalProperties {
     }
 
     @NotNull
+    public static String joinByDouble(String s1, String s2) {
+        return s1 + DOUBLE_SEPARATOR + s2;
+    }
+
+    @NotNull
     public static String join(String s1, String s2) {
         return s1 + SEPARATOR + s2;
     }
@@ -82,11 +87,11 @@ public class CrgGlobalProperties {
     @NotNull
     public static String buildStoreName(Long orgId,
                                         String fileType,
-                                        int hashFromFileTitle,
+                                        String hash,
                                         String base) {
         String postfix = join(orgId.toString(), fileType, DEFAULT_STORE_POSTFIX);
 
-        return postfix + DOUBLE_SEPARATOR + join(String.valueOf(hashFromFileTitle), base);
+        return postfix + DOUBLE_SEPARATOR + join(hash, base);
     }
 
     @NotNull

@@ -36,7 +36,7 @@ public class ImportGeometryShapeFailedEventHandler implements IEventHandler {
         log.debug("In ShapeImportedFailedEvent! {}", requestEvent);
 
         String error = nonNull(event.getWarningMessage()) ? event.getWarningMessage() : event.getErrorMessage();
-        log.error("Выполнение процесса потерпело неудачу. Причина: {}", error);
+        log.error("Выполнение импорта геометрии потерпело неудачу. Причина: {}", error);
 
         processService.error(requestEvent.getDbName(),
                              requestEvent.getProcessId(),

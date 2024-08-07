@@ -1,10 +1,9 @@
-import { FeatureType } from '@fiz/geoserver-types/feature-types/FeatureType';
 import { boundClass } from 'autobind-decorator';
 
 import { http } from '../../api/http.service';
 import { CrgLayer } from '../../gis/layers/layers.models';
 import { GeoserverClient } from '../GeoserverClient';
-import { FeatureTypeHref } from './featureType.model';
+import { FeatureType, FeatureTypeHref } from './featureType.model';
 import { extractFeatureTypeNameFromComplexName, extractWorkspaceFromComplexName } from './featureType.util';
 
 @boundClass

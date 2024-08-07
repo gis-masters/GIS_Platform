@@ -13,16 +13,13 @@ import ru.mycrg.data_service_contract.dto.SimplePropertyDto;
 import ru.mycrg.data_service_contract.enums.FileType;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static ru.mycrg.common_utils.CrgGlobalProperties.join;
+import static ru.mycrg.common_utils.CrgGlobalProperties.joinByDouble;
 import static ru.mycrg.data_service.util.DetailedLogger.logError;
 import static ru.mycrg.data_service.util.JsonConverter.mapper;
-import static ru.mycrg.data_service.util.StringUtil.getHashCode;
 import static ru.mycrg.data_service_contract.enums.ValueType.FILE;
 
 public class FileUtil {
@@ -53,7 +50,7 @@ public class FileUtil {
         }
     }
 
-    public static String makeFileName(ResourceQualifier qualifier, String title) {
+    public static String makeFileName(ResourceQualifier qualifier, String fileHashCode) {
         String recordId = "undefinedRecordId";
         if (qualifier.getRecordId() == null) {
             log.warn("Не установлен recordId у квалификатора ресурса: [{}]", qualifier);
@@ -68,7 +65,7 @@ public class FileUtil {
             fieldName = qualifier.getFieldName();
         }
 
-        return join(recordId, fieldName, String.valueOf(getHashCode(title)));
+        return joinByDouble(join(recordId, fieldName), fileHashCode);
     }
 
     public static List<FileDescription> getFilesDescription(Map<String, Object> record, String fieldName) {

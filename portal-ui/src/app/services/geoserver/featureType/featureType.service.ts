@@ -1,9 +1,7 @@
-import { FeatureType } from '@fiz/geoserver-types/feature-types/FeatureType';
-
 import { Toast } from '../../../components/Toast/Toast';
 import { CrgLayer } from '../../gis/layers/layers.models';
 import { featureTypeClient } from './featureType.client';
-import { FeatureTypeHref } from './featureType.model';
+import { FeatureType, FeatureTypeHref } from './featureType.model';
 
 export async function getFeatureType(layer: CrgLayer): Promise<FeatureType> {
   return await featureTypeClient.getFeatureType(layer);

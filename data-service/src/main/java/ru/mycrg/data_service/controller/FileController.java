@@ -28,6 +28,7 @@ import ru.mycrg.data_service.service.storage.FileStorageService;
 import ru.mycrg.data_service.service.storage.FileStorageSizeGuarder;
 import ru.mycrg.data_service.service.storage.exceptions.MalformedURLStorageException;
 import ru.mycrg.data_service.service.storage.exceptions.NoSuchFileStorageException;
+import ru.mycrg.data_service_contract.enums.FileType;
 import ru.mycrg.mediator.Mediator;
 
 import javax.servlet.ServletOutputStream;
@@ -37,10 +38,13 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipException;
 import java.util.zip.ZipOutputStream;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -49,6 +53,7 @@ import static org.springframework.http.HttpHeaders.CONTENT_LENGTH;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 import static ru.mycrg.auth_service_contract.Authorities.HAS_ANY_AUTHORITY;
+import static ru.mycrg.data_service.service.files.FileService.fileGroups;
 import static ru.mycrg.data_service.util.DetailedLogger.logError;
 
 @RestController
@@ -155,26 +160,44 @@ public class FileController extends BaseController {
     public void downloadZip(@PathVariable UUID id, HttpServletResponse response) {
         orgSettingsKeeper.throwIfDownloadFileNotAllowed();
 
-        File file = fileRepository.findById(id)
-                                  .orElseThrow(() -> new NotFoundException(id));
+        File baseFile = fileRepository.findById(id)
+                                      .orElseThrow(() -> new NotFoundException(id));
 
-        if (!authenticationFacade.getLogin().equalsIgnoreCase(file.getCreatedBy())) {
-            throwIfResourceNotAllowed(file);
+        if (!authenticationFacade.getLogin().equalsIgnoreCase(baseFile.getCreatedBy())) {
+            throwIfResourceNotAllowed(baseFile);
         }
 
-        String fileBaseTitle = FilenameUtils.getBaseName(file.getTitle());
+        Optional<FileType> oType = FileType.parse(baseFile.getExtension());
+        if (oType.isEmpty()) {
+            throw new BadRequestException("Выгрузка архивом не поддерживается для данного файла.");
+        }
+
+        Set<String> fileFullGroup = Optional
+                .of(fileGroups.get(oType.get()))
+                .orElseThrow(() -> new BadRequestException("Не найдено описание типа для файла: " + oType.get()))
+                .getFull();
+
+        String fileBaseTitle = FilenameUtils.getBaseName(baseFile.getTitle());
+
         response.setContentType("application/zip");
         response.setHeader("Content-Disposition", ContentDisposition.builder("attachment")
                                                                     .filename(fileBaseTitle + ".zip", UTF_8)
                                                                     .build().toString());
 
+        String tmpPath = FilenameUtils.removeExtension(baseFile.getPath()).split("__")[0];
+
         try (ServletOutputStream sos = response.getOutputStream();
              ZipOutputStream zos = new ZipOutputStream(sos)) {
-            String filePathBase = FilenameUtils.removeExtension(file.getPath());
 
-            fileRepository.getFilePathsByPathBase(filePathBase)
-                          .stream().map(Paths::get)
-                          .forEach(path -> makeZipArchive(path, zos, fileBaseTitle));
+            List<String> foundFiles = fileRepository.oneGroupFiles(tmpPath,
+                                                                   fileBaseTitle.toLowerCase(),
+                                                                   fileFullGroup)
+                                                    .stream().map(File::getPath)
+                                                    .collect(Collectors.toList());
+
+            log.debug("Found files: {}", foundFiles);
+
+            foundFiles.forEach(path -> makeZipArchive(Path.of(path), zos, fileBaseTitle));
         } catch (Exception ex) {
             String msg = String.format("Не удалось создать zip архив. Причина: %s", ex.getMessage());
             log.error(msg);
@@ -207,6 +230,15 @@ public class FileController extends BaseController {
             }
             // Закрытие текущей записи ZIP
             zos.closeEntry();
+        } catch (ZipException e) {
+            String message = e.getMessage();
+            if (!message.contains("duplicate entry")) {
+                String msg = String.format("Не удалось добавить файл %s в архив. Причина: %s",
+                                           path.getFileName(),
+                                           e.getMessage());
+
+                throw new DataServiceException(msg);
+            }
         } catch (Exception e) {
             String msg = String.format("Не удалось добавить файл %s в архив. Причина: %s",
                                        path.getFileName(),

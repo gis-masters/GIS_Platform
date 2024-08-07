@@ -5,6 +5,8 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class StringUtil {
@@ -34,6 +36,27 @@ public class StringUtil {
         return hashCode > 0
                 ? hashCode
                 : hashCode * -1;
+    }
+
+    public static String hashCodeAsString(int hashCode) {
+        return hashCodeAsString((long) hashCode);
+    }
+
+    public static String hashCodeAsString(long hashCode) {
+        return String.valueOf(hashCode).replace("-", "1");
+    }
+
+    public static String extractHash(String input) {
+        if (input == null) {
+            return "";
+        }
+
+        Matcher matcher = Pattern.compile("__(\\d+)").matcher(input);
+        if (matcher.find()) {
+            return matcher.group(1);
+        }
+
+        return "";
     }
 
     public static String join(List<Long> ids) {

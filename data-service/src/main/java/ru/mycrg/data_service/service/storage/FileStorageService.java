@@ -8,7 +8,6 @@ import org.springframework.core.env.Environment;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 import ru.mycrg.auth_facade.IAuthenticationFacade;
 import ru.mycrg.data_service.exceptions.DataServiceException;
@@ -30,6 +29,8 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
+import static org.springframework.util.StringUtils.getFilename;
+import static org.springframework.util.StringUtils.getFilenameExtension;
 import static ru.mycrg.common_utils.CrgGlobalProperties.getDefaultOrganizationName;
 import static ru.mycrg.data_service.service.storage.FileStorageUtil.calculateSize;
 import static ru.mycrg.data_service.service.storage.FileStorageUtil.readableFileSize;
@@ -117,13 +118,24 @@ public class FileStorageService {
         try {
             resultPath = mainStoragePath.resolve(targetPath);
 
-            log.info("Try move file from: [{}] to [{}]", sourcePath, resultPath);
+            log.debug("Перемещаем файл из временного каталога в основное хранилище: [{}] в [{}]",
+                      sourcePath, resultPath);
 
-            if (Files.exists(resultPath) && !sourcePath.equals(resultPath)) {
-                Files.deleteIfExists(sourcePath);
+            if (Files.exists(resultPath)) {
+                if (!sourcePath.equals(resultPath)) {
+                    Files.move(sourcePath, resultPath, REPLACE_EXISTING);
+                    log.debug("Перемещение с заменой выполнено успешно: [{}] в [{}]", sourcePath, resultPath);
+                } else {
+                    log.debug("Пути одинаковы: : [{}] в [{}] только удаляем источник", sourcePath, resultPath);
+
+                    Files.deleteIfExists(sourcePath);
+                }
             } else {
                 Files.createDirectories(resultPath);
+                log.info("Создали каталог: [{}]", resultPath);
+
                 Files.move(sourcePath, resultPath, REPLACE_EXISTING);
+                log.debug("Перемещение с заменой выполнено успешно: [{}] в [{}]", sourcePath, resultPath);
             }
 
             return resultPath;
@@ -243,6 +255,21 @@ public class FileStorageService {
         return exportStoragePath + fileName;
     }
 
+    public void rename(String pathFrom, String pathTo) throws StorageException {
+        try {
+            new File(pathFrom).renameTo(new File(pathTo));
+        } catch (Exception e) {
+            String msg = String.format("Не удалось переименовать файл: '%s' в: '%s' => '%s'",
+                                       getFilename(pathFrom), getFilename(pathTo), e.getMessage());
+
+            throw new StorageException(msg + " => " + e.getMessage(), e.getCause());
+        }
+    }
+
+    public Path getTrashPath() {
+        return trashPath;
+    }
+
     private Path buildPathToOrganizationMainStorage() {
         return mainStoragePath.resolve(getDefaultOrganizationName(authenticationFacade.getOrganizationId()));
     }
@@ -291,7 +318,7 @@ public class FileStorageService {
     private String addDefaultExtension(String path) {
         // если имя файла без расширения, то добавить .blob
         // как временный кастыль со времен когда в БД хранилось имя файла без расширения
-        String filenameExtension = StringUtils.getFilenameExtension(path);
+        String filenameExtension = getFilenameExtension(path);
         if (filenameExtension == null) {
             path = path + ".blob";
         }

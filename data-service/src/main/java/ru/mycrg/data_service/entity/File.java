@@ -69,7 +69,7 @@ public class File {
     public File(MultipartFile file, String intents, String path, String userLogin) {
         this.title = file.getOriginalFilename();
         this.size = file.getSize();
-        this.extension = StringUtils.getFilenameExtension(this.title);
+        this.extension = StringUtils.getFilenameExtension(this.title.toLowerCase());
         this.contentType = file.getContentType();
         this.intents = intents;
         this.path = path;

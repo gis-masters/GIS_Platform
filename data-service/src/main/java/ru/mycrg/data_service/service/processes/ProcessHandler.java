@@ -90,7 +90,7 @@ public class ProcessHandler {
         } catch (Exception e) {
             String msg = "Выполнение процесса потерпело неудачу. Причина: " + e.getMessage();
 
-            log.error(msg, e.getCause());
+            log.error(msg, e.getCause(), e);
             processService.error(databaseName, process.getId(), toJsonNode(executor.getReport()));
         }
     }

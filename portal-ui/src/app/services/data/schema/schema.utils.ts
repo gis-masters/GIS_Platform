@@ -1,9 +1,9 @@
-import { Attribute } from '@fiz/geoserver-types/Attribute';
 import { cloneDeep } from 'lodash';
 import { Coordinate } from 'ol/coordinate';
 
 import { getIdsFromPath } from '../../../components/DataManagement/DataManagement.utils';
 import { DocumentInfo } from '../../../components/Documents/Documents';
+import { Attribute } from '../../geoserver/featureType/featureType.model';
 import { CoordinateEdited, GeometryType, WfsFeature } from '../../geoserver/wfs/wfs.models';
 import { convertComplexNamesArrayToTableNamesUriFragment } from '../../gis/layers/layers.utils';
 import { services } from '../../services';

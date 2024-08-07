@@ -2,12 +2,12 @@ package ru.mycrg.data_service.service.files;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import org.apache.commons.compress.utils.FileNameUtils;
-import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.mycrg.auth_facade.IAuthenticationFacade;
+import ru.mycrg.data_service.dto.FileGroupModel;
 import ru.mycrg.data_service.dto.FileResourceQualifier;
 import ru.mycrg.data_service.entity.File;
 import ru.mycrg.data_service.entity.IRecord;
@@ -16,6 +16,7 @@ import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service.service.storage.FileStorageService;
 import ru.mycrg.data_service_contract.dto.FileDescription;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
+import ru.mycrg.data_service_contract.enums.FileType;
 
 import java.nio.file.Path;
 import java.util.*;
@@ -25,10 +26,22 @@ import static ru.mycrg.common_utils.CrgGlobalProperties.getDefaultOrganizationNa
 import static ru.mycrg.data_service.service.files.FileUtil.*;
 import static ru.mycrg.data_service.util.DetailedLogger.logError;
 import static ru.mycrg.data_service.util.JsonConverter.toJsonNode;
+import static ru.mycrg.data_service.util.StringUtil.hashCodeAsString;
+import static ru.mycrg.data_service_contract.enums.FileType.*;
 
 @Service
 @Transactional
 public class FileService {
+
+    public static Map<FileType, FileGroupModel> fileGroups = Map.of(
+            SHP, new FileGroupModel(Set.of("shp", "dbf", "shx", "prj"),
+                                    Set.of("shp", "dbf", "shx", "prj", "cpg", "sbn", "sbx")),
+            TAB, new FileGroupModel(Set.of("dat", "id", "map", "tab")),
+            MID, new FileGroupModel(Set.of("mid", "mif")),
+            DXF, new FileGroupModel(Set.of("dxf")),
+            TIF, new FileGroupModel(Set.of("tif")),
+            GML, new FileGroupModel(Set.of("gml"))
+    );
 
     private final Logger log = LoggerFactory.getLogger(FileService.class);
 
@@ -123,7 +136,6 @@ public class FileService {
         //  пересмотреть бы подход к KPT
 
         transferFileFromTempDirectory(qualifier,
-                                      file.getTitle(),
                                       file.getPath(),
                                       file.getId(),
                                       "organization_1",
@@ -152,15 +164,7 @@ public class FileService {
         Set<UUID> ids = files.stream().map(FileDescription::getId).collect(Collectors.toSet());
 
         fileRepository.findAllByIdIn(ids).forEach(file -> {
-            String fileName = files
-                    .stream()
-                    .filter(fileDescription -> fileDescription.getId().equals(file.getId()))
-                    .findFirst()
-                    .orElseThrow(() -> new IllegalStateException("Не найдено описание файла: " + file.getId()))
-                    .getTitle();
-
             transferFileFromTempDirectory(qualifier,
-                                          fileName,
                                           file.getPath(),
                                           file.getId(),
                                           getDefaultOrganizationName(authenticationFacade.getOrganizationId()),
@@ -169,14 +173,21 @@ public class FileService {
     }
 
     private void transferFileFromTempDirectory(ResourceQualifier qualifier,
-                                               String fileName,
                                                String currentFilePath,
                                                UUID fileId,
                                                String organizationName,
                                                String type) {
+        if (!currentFilePath.contains(fileStorageService.getTrashPath().toString())) {
+            log.debug("Файл: {} не находится во временном хранилище. Перемещать нечего.", currentFilePath);
+
+            return;
+        }
+
+        int hashCode = new java.io.File(currentFilePath).hashCode();
+
         String resultFileName = String.format("%s.%s",
-                                              makeFileName(qualifier, FilenameUtils.removeExtension(fileName)),
-                                              FileNameUtils.getExtension(fileName).toLowerCase());
+                                              makeFileName(qualifier, hashCodeAsString(hashCode)),
+                                              FileNameUtils.getExtension(currentFilePath).toLowerCase());
 
         String pathToFile = String.format("%s/%s/%s/%s",
                                           organizationName,

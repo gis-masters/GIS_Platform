@@ -32,7 +32,7 @@ import static org.springframework.util.StringUtils.stripFilenameExtension;
 import static ru.mycrg.common_utils.CrgGlobalProperties.*;
 import static ru.mycrg.data_service.mappers.FileResourceQualifierMapper.mapToFileQualifier;
 import static ru.mycrg.data_service.util.JsonConverter.mapper;
-import static ru.mycrg.data_service.util.StringUtil.getHashCode;
+import static ru.mycrg.data_service.util.StringUtil.extractHash;
 import static ru.mycrg.data_service_contract.enums.FileType.MID;
 import static ru.mycrg.data_service_contract.enums.ProcessStatus.PENDING;
 import static ru.mycrg.data_service_contract.enums.ProcessType.IMPORT;
@@ -72,6 +72,9 @@ public class FilePlacementExecutor implements IExecutor<ImportReport>, IFilePlac
 
         File file = fileRepository.findById(payload.getFileId())
                                   .orElseThrow(() -> new NotFoundException("Не найден файл:" + payload.getFileId()));
+
+        log.debug("Размещение файла: {}", file);
+
         FileType fileType = FileUtil.defineType(file);
 
         notifyProcessAsPending(importReport, "Размещение файла: " + file.getTitle());
@@ -96,7 +99,7 @@ public class FilePlacementExecutor implements IExecutor<ImportReport>, IFilePlac
                                 getScratchWorkspaceName(authenticationFacade.getOrganizationId()),
                                 buildStoreName(authenticationFacade.getOrganizationId(),
                                                fileType.name().toLowerCase(),
-                                               getHashCode(file.getTitle()),
+                                               extractHash(nativeName),
                                                fileQualifier.toString()),
                                 featureTypeName,
                                 nativeName),

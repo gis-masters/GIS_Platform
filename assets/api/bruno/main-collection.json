@@ -1,0 +1,2481 @@
+{
+  "name": "CRG API",
+  "version": "1",
+  "items": [
+    {
+      "type": "http",
+      "name": "3-- ------- ------",
+      "seq": 1,
+      "request": {
+        "url": "http://localhost:8088/organizations/1/projects/1/import",
+        "method": "POST",
+        "headers": [
+          {
+            "name": "Content-Type",
+            "value": "application/json",
+            "enabled": true
+          }
+        ],
+        "params": [],
+        "body": {
+          "mode": "json",
+          "json": "{\n    \"wsUiId\": \"aue0id\",\n    \"targetSchema\": \"simferopol_1\",\n    \"importTasks\": [\n        {\n            \"pairs\": [\n                {\n                    \"source\": {\n                        \"name\": \"the_geom\",\n                        \"binding\": \"org.locationtech.jts.geom.MultiPolygon\"\n                    },\n                    \"target\": {\n                        \"name\": \"shape\",\n                        \"type\": \"FromSchema\"\n                    }\n                },\n                {\n                    \"source\": {\n                        \"name\": \"CAD_NUM\",\n                        \"binding\": \"java.lang.String\"\n                    },\n                    \"target\": {\n                        \"name\": \"cad_num\",\n                        \"type\": \"FromSchema\"\n                    }\n                },\n                {\n                    \"source\": {\n                        \"name\": \"Anno_text\",\n                        \"binding\": \"java.lang.String\"\n                    },\n                    \"target\": {\n                        \"name\": \"anno_text\",\n                        \"type\": \"FromSchema\"\n                    }\n                },\n                {\n                    \"source\": {\n                        \"name\": \"State\",\n                        \"binding\": \"java.lang.Long\"\n                    },\n                    \"target\": {\n                        \"name\": \"state\",\n                        \"type\": \"FromSchema\"\n                    }\n                },\n                {\n                    \"source\": {\n                        \"name\": \"Category\",\n                        \"binding\": \"java.lang.String\"\n                    },\n                    \"target\": {\n                        \"name\": \"category\",\n                        \"type\": \"FromSchema\"\n                    }\n                },\n                {\n                    \"source\": {\n                        \"name\": \"Usage\",\n                        \"binding\": \"java.lang.String\"\n                    },\n                    \"target\": {\n                        \"name\": \"usage\",\n                        \"type\": \"FromSchema\"\n                    }\n                },\n                {\n                    \"source\": {\n                        \"name\": \"RuleID\",\n                        \"binding\": \"java.lang.Long\"\n                    },\n                    \"target\": {\n                        \"name\": \"RuleID\",\n                        \"type\": \"AsIs\"\n                    }\n                }\n            ],\n            \"srs\": 28406,\n            \"layerName\": \"KPT_Simf_42_63\",\n            \"workTableName\": \"kptzu\"\n        }\n    ]\n}",
+          "formUrlEncoded": [],
+          "multipartForm": []
+        },
+        "script": {},
+        "vars": {},
+        "assertions": [],
+        "tests": "",
+        "auth": {
+          "mode": "bearer",
+          "bearer": {
+            "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJ1c2VyX25hbWUiOiJhZG1pbkBtYWlsLnJ1Iiwic2NvcGUiOlsiY3JnIl0sIm9yZ2FuaXphdGlvbnMiOltdLCJleHAiOjE1Nzk1ODU2OTYsImF1dGhvcml0aWVzIjpbIkFETUlOIl0sImp0aSI6IjdhM2Q1MzE3LWYzMTMtNDgwNC1hMjM3LTg0OWY3YjljYjE2MSIsImNsaWVudF9pZCI6ImFkbWluIn0.j1bUXVObJd-WVjCGs1Ot53JcOuBOwI9WNbt4N-Qs1VU"
+          }
+        }
+      }
+    },
+    {
+      "type": "http",
+      "name": "4- ---------",
+      "seq": 3,
+      "request": {
+        "url": "http://localhost:8088/organizations/1/projects/1/validation",
+        "method": "POST",
+        "headers": [
+          {
+            "name": "Content-Type",
+            "value": "application/json",
+            "enabled": true
+          }
+        ],
+        "params": [],
+        "body": {
+          "mode": "json",
+          "json": "{\n    \"wsUiId\": \"i7bp3p\",\n    \"layers\": [\n        \"agriculture_point\",\n        \"functionalzone\"\n    ]\n}",
+          "formUrlEncoded": [],
+          "multipartForm": []
+        },
+        "script": {},
+        "vars": {},
+        "assertions": [],
+        "tests": "",
+        "auth": {
+          "mode": "bearer",
+          "bearer": {
+            "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJ1c2VyX25hbWUiOiJhZG1pbkBtYWlsLnJ1Iiwic2NvcGUiOlsiY3JnIl0sIm9yZ2FuaXphdGlvbnMiOltdLCJleHAiOjE1Nzk1ODU2OTYsImF1dGhvcml0aWVzIjpbIkFETUlOIl0sImp0aSI6IjdhM2Q1MzE3LWYzMTMtNDgwNC1hMjM3LTg0OWY3YjljYjE2MSIsImNsaWVudF9pZCI6ImFkbWluIn0.j1bUXVObJd-WVjCGs1Ot53JcOuBOwI9WNbt4N-Qs1VU"
+          }
+        }
+      }
+    },
+    {
+      "type": "http",
+      "name": "4b- ------ SHORT ---- -- ---------",
+      "seq": 4,
+      "request": {
+        "url": "http://localhost:8088/organizations/1/projects/1/validation/short",
+        "method": "POST",
+        "headers": [
+          {
+            "name": "Content-Type",
+            "value": "application/json",
+            "enabled": true
+          }
+        ],
+        "params": [],
+        "body": {
+          "mode": "json",
+          "json": "{\n    \"wsUiId\": \"i7bp3p\",\n    \"layers\": [\n        \"agriculture_point\",\n        \"electrictsdfsdfsdfransformer_point\",\n        \"functionalzone\"\n    ]\n}",
+          "formUrlEncoded": [],
+          "multipartForm": []
+        },
+        "script": {},
+        "vars": {},
+        "assertions": [],
+        "tests": "",
+        "auth": {
+          "mode": "bearer",
+          "bearer": {
+            "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJ1c2VyX25hbWUiOiJhZG1pbkBtYWlsLnJ1Iiwic2NvcGUiOlsiY3JnIl0sIm9yZ2FuaXphdGlvbnMiOltdLCJleHAiOjE1Nzk1ODU2OTYsImF1dGhvcml0aWVzIjpbIkFETUlOIl0sImp0aSI6IjdhM2Q1MzE3LWYzMTMtNDgwNC1hMjM3LTg0OWY3YjljYjE2MSIsImNsaWVudF9pZCI6ImFkbWluIn0.j1bUXVObJd-WVjCGs1Ot53JcOuBOwI9WNbt4N-Qs1VU"
+          }
+        }
+      }
+    },
+    {
+      "type": "http",
+      "name": "4c- ------ ---- -- ---------",
+      "seq": 2,
+      "request": {
+        "url": "http://localhost:8088/organizations/1/projects/1/validation?layerName=functionalzone&page=0&size=5",
+        "method": "GET",
+        "headers": [
+          {
+            "name": "Content-Type",
+            "value": "application/json",
+            "enabled": true
+          }
+        ],
+        "params": [
+          {
+            "name": "layerName",
+            "value": "functionalzone",
+            "type": "query",
+            "enabled": true
+          },
+          {
+            "name": "page",
+            "value": "0",
+            "type": "query",
+            "enabled": true
+          },
+          {
+            "name": "size",
+            "value": "5",
+            "type": "query",
+            "enabled": true
+          }
+        ],
+        "body": {
+          "mode": "none",
+          "formUrlEncoded": [],
+          "multipartForm": []
+        },
+        "script": {},
+        "vars": {},
+        "assertions": [],
+        "tests": "",
+        "auth": {
+          "mode": "bearer",
+          "bearer": {
+            "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJ1c2VyX25hbWUiOiJhZG1pbkBtYWlsLnJ1Iiwic2NvcGUiOlsiY3JnIl0sIm9yZ2FuaXphdGlvbnMiOltdLCJleHAiOjE1Nzk1ODU2OTYsImF1dGhvcml0aWVzIjpbIkFETUlOIl0sImp0aSI6IjdhM2Q1MzE3LWYzMTMtNDgwNC1hMjM3LTg0OWY3YjljYjE2MSIsImNsaWVudF9pZCI6ImFkbWluIn0.j1bUXVObJd-WVjCGs1Ot53JcOuBOwI9WNbt4N-Qs1VU"
+          }
+        }
+      }
+    },
+    {
+      "type": "http",
+      "name": "5- -------- GML",
+      "seq": 5,
+      "request": {
+        "url": "http://localhost:8088/organizations/1/projects/1/export",
+        "method": "POST",
+        "headers": [
+          {
+            "name": "Content-Type",
+            "value": "application/json",
+            "enabled": true
+          }
+        ],
+        "params": [],
+        "body": {
+          "mode": "json",
+          "json": "{\n    \"wsUiId\": \"znbjto\",\n    \"format\": \"ESRI Shapefile\",\n    \"layers\": [\n        \"gasfacility\"\n    ]\n}",
+          "formUrlEncoded": [],
+          "multipartForm": []
+        },
+        "script": {},
+        "vars": {},
+        "assertions": [],
+        "tests": "",
+        "auth": {
+          "mode": "bearer",
+          "bearer": {
+            "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJ1c2VyX25hbWUiOiJhZG1pbkBtYWlsLnJ1Iiwic2NvcGUiOlsiY3JnIl0sIm9yZ2FuaXphdGlvbnMiOltdLCJleHAiOjE1Nzk1ODU2OTYsImF1dGhvcml0aWVzIjpbIkFETUlOIl0sImp0aSI6IjdhM2Q1MzE3LWYzMTMtNDgwNC1hMjM3LTg0OWY3YjljYjE2MSIsImNsaWVudF9pZCI6ImFkbWluIn0.j1bUXVObJd-WVjCGs1Ot53JcOuBOwI9WNbt4N-Qs1VU"
+          }
+        }
+      }
+    },
+    {
+      "type": "http",
+      "name": "6- ------- ----- - Shape",
+      "seq": 6,
+      "request": {
+        "url": "http://localhost:8100/organizations/1/projects/1/export",
+        "method": "POST",
+        "headers": [
+          {
+            "name": "Content-Type",
+            "value": "application/json",
+            "enabled": true
+          }
+        ],
+        "params": [],
+        "body": {
+          "mode": "json",
+          "json": "{\n  \"format\": \"some format\",\n  \"layers\": [\"test\", \"test2\", \"test3\"]\n}",
+          "formUrlEncoded": [],
+          "multipartForm": []
+        },
+        "script": {},
+        "vars": {},
+        "assertions": [],
+        "tests": "",
+        "auth": {
+          "mode": "bearer",
+          "bearer": {
+            "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJ1c2VyX25hbWUiOiJhZG1pbkBtYWlsLnJ1Iiwic2NvcGUiOlsiY3JnIl0sIm9yZ2FuaXphdGlvbnMiOltdLCJleHAiOjE1Nzk1ODU2OTYsImF1dGhvcml0aWVzIjpbIkFETUlOIl0sImp0aSI6IjdhM2Q1MzE3LWYzMTMtNDgwNC1hMjM3LTg0OWY3YjljYjE2MSIsImNsaWVudF9pZCI6ImFkbWluIn0.j1bUXVObJd-WVjCGs1Ot53JcOuBOwI9WNbt4N-Qs1VU"
+          }
+        }
+      }
+    },
+    {
+      "type": "http",
+      "name": "8- -------- --------",
+      "seq": 7,
+      "request": {
+        "url": "http://localhost:8088/organizations/1/tasks/276",
+        "method": "GET",
+        "headers": [],
+        "params": [],
+        "body": {
+          "mode": "none",
+          "formUrlEncoded": [],
+          "multipartForm": []
+        },
+        "script": {},
+        "vars": {},
+        "assertions": [],
+        "tests": "",
+        "auth": {
+          "mode": "bearer",
+          "bearer": {
+            "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJ1c2VyX25hbWUiOiJhZG1pbkBtYWlsLnJ1Iiwic2NvcGUiOlsiY3JnIl0sIm9yZ2FuaXphdGlvbnMiOltdLCJleHAiOjE1Nzk1ODU2OTYsImF1dGhvcml0aWVzIjpbIkFETUlOIl0sImp0aSI6IjdhM2Q1MzE3LWYzMTMtNDgwNC1hMjM3LTg0OWY3YjljYjE2MSIsImNsaWVudF9pZCI6ImFkbWluIn0.j1bUXVObJd-WVjCGs1Ot53JcOuBOwI9WNbt4N-Qs1VU"
+          }
+        }
+      }
+    },
+    {
+      "type": "folder",
+      "name": "audit-service",
+      "items": [
+        {
+          "type": "http",
+          "name": "Add event",
+          "seq": 1,
+          "request": {
+            "url": "",
+            "method": "GET",
+            "headers": [],
+            "params": [],
+            "body": {
+              "mode": "none",
+              "formUrlEncoded": [],
+              "multipartForm": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "auth": {
+              "mode": "bearer",
+              "bearer": {
+                "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJ1c2VyX25hbWUiOiJhZG1pbkBtYWlsLnJ1Iiwic2NvcGUiOlsiY3JnIl0sIm9yZ2FuaXphdGlvbnMiOltdLCJleHAiOjE1Nzk1ODU2OTYsImF1dGhvcml0aWVzIjpbIkFETUlOIl0sImp0aSI6IjdhM2Q1MzE3LWYzMTMtNDgwNC1hMjM3LTg0OWY3YjljYjE2MSIsImNsaWVudF9pZCI6ImFkbWluIn0.j1bUXVObJd-WVjCGs1Ot53JcOuBOwI9WNbt4N-Qs1VU"
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "type": "folder",
+      "name": "auth-service",
+      "items": [
+        {
+          "type": "http",
+          "name": "Authorize with secret and user-pass",
+          "seq": 4,
+          "request": {
+            "url": "http://localhost:9000/oauth/token",
+            "method": "POST",
+            "headers": [
+              {
+                "name": "Cache-Control",
+                "value": "",
+                "enabled": false
+              },
+              {
+                "name": "Cookie",
+                "value": "",
+                "enabled": false
+              }
+            ],
+            "params": [],
+            "body": {
+              "mode": "multipartForm",
+              "formUrlEncoded": [],
+              "multipartForm": [
+                {
+                  "type": "text",
+                  "name": "grant_type",
+                  "value": "password",
+                  "enabled": true
+                },
+                {
+                  "type": "text",
+                  "name": "username",
+                  "value": "fiz@fiz",
+                  "enabled": true
+                },
+                {
+                  "type": "text",
+                  "name": "password",
+                  "value": "aA111111",
+                  "enabled": true
+                }
+              ]
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "auth": {
+              "mode": "basic",
+              "basic": {
+                "username": "admin",
+                "password": "geoserver"
+              }
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "Login for organization",
+          "seq": 2,
+          "request": {
+            "url": "{{host}}:{{port}}/oauth/token?orgId=25",
+            "method": "POST",
+            "headers": [],
+            "params": [
+              {
+                "name": "orgId",
+                "value": "25",
+                "type": "query",
+                "enabled": true
+              }
+            ],
+            "body": {
+              "mode": "multipartForm",
+              "formUrlEncoded": [],
+              "multipartForm": [
+                {
+                  "type": "text",
+                  "name": "grant_type",
+                  "value": "password",
+                  "enabled": true
+                },
+                {
+                  "type": "text",
+                  "name": "username",
+                  "value": "arh_grad_rk@mail.ru",
+                  "enabled": true
+                },
+                {
+                  "type": "text",
+                  "name": "password",
+                  "value": "Fiorentina123",
+                  "enabled": true
+                }
+              ]
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "auth": {
+              "mode": "none"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "Login",
+          "seq": 1,
+          "request": {
+            "url": "{{host}}:{{port}}/oauth/token",
+            "method": "POST",
+            "headers": [],
+            "params": [],
+            "body": {
+              "mode": "multipartForm",
+              "formUrlEncoded": [],
+              "multipartForm": [
+                {
+                  "type": "text",
+                  "name": "grant_type",
+                  "value": "password",
+                  "enabled": true
+                },
+                {
+                  "type": "text",
+                  "name": "username",
+                  "value": "{{user}}",
+                  "enabled": true
+                },
+                {
+                  "type": "text",
+                  "name": "password",
+                  "value": "{{password}}",
+                  "enabled": true
+                }
+              ]
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "auth": {
+              "mode": "none"
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "Logout",
+          "seq": 3,
+          "request": {
+            "url": "http://localhost:8100/perform_logout",
+            "method": "POST",
+            "headers": [],
+            "params": [],
+            "body": {
+              "mode": "none",
+              "formUrlEncoded": [],
+              "multipartForm": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "auth": {
+              "mode": "none"
+            }
+          }
+        },
+        {
+          "type": "folder",
+          "name": "organization",
+          "items": [
+            {
+              "type": "http",
+              "name": "1- -------- -----------",
+              "seq": 2,
+              "request": {
+                "url": "http://localhost:8100/organizations/43",
+                "method": "DELETE",
+                "headers": [
+                  {
+                    "name": "Content-Type",
+                    "value": "application/json; charset=utf-8",
+                    "enabled": true
+                  }
+                ],
+                "params": [],
+                "body": {
+                  "mode": "none",
+                  "formUrlEncoded": [],
+                  "multipartForm": []
+                },
+                "script": {},
+                "vars": {},
+                "assertions": [],
+                "tests": "",
+                "auth": {
+                  "mode": "bearer",
+                  "bearer": {
+                    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJ1c2VyX25hbWUiOiJhZG1pbkBtYWlsLnJ1Iiwic2NvcGUiOlsiY3JnIl0sIm9yZ2FuaXphdGlvbnMiOltdLCJncm91cHMiOltdLCJleHAiOjE2MDA5NzkyODIsImF1dGhvcml0aWVzIjpbIkdMT0JBTF9BRE1JTiJdLCJqdGkiOiIwMTkwMjk2My1mZmI5LTQyNGItYjg2Mi0wY2ZiYzEyODI0ZGEiLCJjbGllbnRfaWQiOiJhZG1pbiJ9.0Ct8bTmy96h-8BubYoif8hFPGPkCbb_V8F0sdDC3I1c"
+                  }
+                }
+              }
+            },
+            {
+              "type": "http",
+              "name": "2- Get all",
+              "seq": 3,
+              "request": {
+                "url": "http://localhost:8100/organizations",
+                "method": "GET",
+                "headers": [
+                  {
+                    "name": "Content-Type",
+                    "value": "application/json; charset=utf-8",
+                    "enabled": true
+                  }
+                ],
+                "params": [],
+                "body": {
+                  "mode": "none",
+                  "formUrlEncoded": [],
+                  "multipartForm": []
+                },
+                "script": {},
+                "vars": {},
+                "assertions": [],
+                "tests": "",
+                "auth": {
+                  "mode": "bearer",
+                  "bearer": {
+                    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJ1c2VyX25hbWUiOiJhZG1pbkBtYWlsLnJ1Iiwic2NvcGUiOlsiY3JnIl0sIm9yZ2FuaXphdGlvbnMiOltdLCJncm91cHMiOltdLCJleHAiOjE2MDA5NTY2MTIsImF1dGhvcml0aWVzIjpbIkdMT0JBTF9BRE1JTiJdLCJqdGkiOiI3ZThiN2UxOC05NTA3LTQ3MmItODM4OC0yNGJhNzYzYzQyN2IiLCJjbGllbnRfaWQiOiJhZG1pbiJ9.9pwJCEddPkAZzrPaePGuBUovviXiBY54h9vlEXcvNvg"
+                  }
+                }
+              }
+            },
+            {
+              "type": "http",
+              "name": "Get by ID",
+              "seq": 4,
+              "request": {
+                "url": "http://localhost:8100/organizations/1",
+                "method": "GET",
+                "headers": [
+                  {
+                    "name": "Content-Type",
+                    "value": "application/json; charset=utf-8",
+                    "enabled": true
+                  }
+                ],
+                "params": [],
+                "body": {
+                  "mode": "none",
+                  "formUrlEncoded": [],
+                  "multipartForm": []
+                },
+                "script": {},
+                "vars": {},
+                "assertions": [],
+                "tests": "",
+                "auth": {
+                  "mode": "bearer",
+                  "bearer": {
+                    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyLCJ1c2VyX25hbWUiOiJmaXpAZml6Iiwic2NvcGUiOlsiY3JnIl0sIm9yZ2FuaXphdGlvbnMiOlt7ImlkIjoxLCJuYW1lIjoiZml6IENvbXBhbnkifV0sImdyb3VwcyI6W10sImV4cCI6MTY0OTE0NjE3MiwiYXV0aG9yaXRpZXMiOlsiT1JHX0FETUlOIl0sImp0aSI6ImI3YWExNTljLTI5NTMtNDZhMy1iZDI1LWQ5YWQwZWQ1NjYwMSIsImNsaWVudF9pZCI6ImFkbWluIn0.zltKZrphQ-5F-QP-9vDRsyyQDJzC4Pxxmz-kkSUCNwQ"
+                  }
+                }
+              }
+            },
+            {
+              "type": "http",
+              "name": "Login",
+              "seq": 5,
+              "request": {
+                "url": "http://localhost:0.0.31.164/oauth/token",
+                "method": "POST",
+                "headers": [],
+                "params": [],
+                "body": {
+                  "mode": "none",
+                  "formUrlEncoded": [],
+                  "multipartForm": []
+                },
+                "script": {},
+                "vars": {},
+                "assertions": [],
+                "tests": "",
+                "auth": {
+                  "mode": "none"
+                }
+              }
+            },
+            {
+              "type": "http",
+              "name": "Создание организации",
+              "seq": 1,
+              "request": {
+                "url": "{{host}}:{{port}}/organizations/init",
+                "method": "POST",
+                "headers": [
+                  {
+                    "name": "Content-Type",
+                    "value": "application/json",
+                    "enabled": true
+                  }
+                ],
+                "params": [],
+                "body": {
+                  "mode": "json",
+                  "json": "{\n  \"name\": \"АО Геоинформационные системы\",\n  \"phone\": \"79780562493\",\n  \"specializationId\": 1,\n  \"owner\": {\n    \"name\": \"Денис\",\n    \"surname\": \"Денисович\",\n    \"email\": \"{{user}}\",\n    \"password\": \"{{password}}\"\n  }\n}",
+                  "formUrlEncoded": [],
+                  "multipartForm": []
+                },
+                "script": {},
+                "vars": {},
+                "assertions": [],
+                "tests": "",
+                "auth": {
+                  "mode": "none"
+                }
+              }
+            },
+            {
+              "type": "folder",
+              "name": "settings",
+              "items": [
+                {
+                  "type": "http",
+                  "name": "Get global settings",
+                  "seq": 1,
+                  "request": {
+                    "url": "http://localhost:9000/organizations/settings",
+                    "method": "GET",
+                    "headers": [
+                      {
+                        "name": "Content-Type",
+                        "value": "application/json; charset=utf-8",
+                        "enabled": true
+                      }
+                    ],
+                    "params": [],
+                    "body": {
+                      "mode": "none",
+                      "formUrlEncoded": [],
+                      "multipartForm": []
+                    },
+                    "script": {},
+                    "vars": {},
+                    "assertions": [],
+                    "tests": "",
+                    "auth": {
+                      "mode": "bearer",
+                      "bearer": {
+                        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjcmdfbG9naW4iOiJhZG1pbkBtYWlsLnJ1IiwidXNlcl9pZCI6MSwidXNlcl9uYW1lIjoiYWRtaW5AbWFpbC5ydSIsInNjb3BlIjpbImNyZyJdLCJvcmdhbml6YXRpb25zIjpbXSwiZ3JvdXBzIjpbXSwiZXhwIjoxNjY0NDE2MTg1LCJhdXRob3JpdGllcyI6WyJHTE9CQUxfQURNSU4iXSwianRpIjoiMTBiOWZiNzktNTg5OC00MjRlLTkxOGQtOGI1YjA0NWFmYjA3IiwiY2xpZW50X2lkIjoiYWRtaW4ifQ.MMbOxjsxDWjPULwen9L9SQx2YTBgnO5gQ8SzsDKtvlU"
+                      }
+                    }
+                  }
+                },
+                {
+                  "type": "http",
+                  "name": "Get settings of cpecific org-",
+                  "seq": 2,
+                  "request": {
+                    "url": "http://localhost:9000/organizations/1/settings",
+                    "method": "GET",
+                    "headers": [
+                      {
+                        "name": "Content-Type",
+                        "value": "application/json; charset=utf-8",
+                        "enabled": true
+                      }
+                    ],
+                    "params": [],
+                    "body": {
+                      "mode": "none",
+                      "formUrlEncoded": [],
+                      "multipartForm": []
+                    },
+                    "script": {},
+                    "vars": {},
+                    "assertions": [],
+                    "tests": "",
+                    "auth": {
+                      "mode": "bearer",
+                      "bearer": {
+                        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjcmdfbG9naW4iOiJhZG1pbkBtYWlsLnJ1IiwidXNlcl9pZCI6MSwidXNlcl9uYW1lIjoiYWRtaW5AbWFpbC5ydSIsInNjb3BlIjpbImNyZyJdLCJvcmdhbml6YXRpb25zIjpbXSwiZ3JvdXBzIjpbXSwiZXhwIjoxNjY0NDE2MTg1LCJhdXRob3JpdGllcyI6WyJHTE9CQUxfQURNSU4iXSwianRpIjoiMTBiOWZiNzktNTg5OC00MjRlLTkxOGQtOGI1YjA0NWFmYjA3IiwiY2xpZW50X2lkIjoiYWRtaW4ifQ.MMbOxjsxDWjPULwen9L9SQx2YTBgnO5gQ8SzsDKtvlU"
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "folder",
+          "name": "users",
+          "items": [
+            {
+              "type": "http",
+              "name": "Create",
+              "seq": 2,
+              "request": {
+                "url": "http://localhost:8100/users",
+                "method": "POST",
+                "headers": [
+                  {
+                    "name": "Content-Type",
+                    "value": "application/json; charset=utf-8",
+                    "enabled": true
+                  }
+                ],
+                "params": [],
+                "body": {
+                  "mode": "json",
+                  "json": "{\n    \"name\": \"fiz\",\n  \"surName\": \"fanatic\",  \n  \"email\": \"fiz_test1@fiz\",\n  \"password\": \"aA111111\",\n    \"surname\": \"dsfsdf\"\n}",
+                  "formUrlEncoded": [],
+                  "multipartForm": []
+                },
+                "script": {},
+                "vars": {},
+                "assertions": [],
+                "tests": "",
+                "auth": {
+                  "mode": "none"
+                }
+              }
+            },
+            {
+              "type": "http",
+              "name": "Get all",
+              "seq": 1,
+              "request": {
+                "url": "http://localhost:8100/users",
+                "method": "GET",
+                "headers": [
+                  {
+                    "name": "Content-Type",
+                    "value": "application/json; charset=utf-8",
+                    "enabled": true
+                  }
+                ],
+                "params": [],
+                "body": {
+                  "mode": "none",
+                  "formUrlEncoded": [],
+                  "multipartForm": []
+                },
+                "script": {},
+                "vars": {},
+                "assertions": [],
+                "tests": "",
+                "auth": {
+                  "mode": "none"
+                }
+              }
+            },
+            {
+              "type": "http",
+              "name": "Get by id",
+              "seq": 3,
+              "request": {
+                "url": "http://localhost:8100/users/2",
+                "method": "GET",
+                "headers": [
+                  {
+                    "name": "Content-Type",
+                    "value": "application/json; charset=utf-8",
+                    "enabled": true
+                  }
+                ],
+                "params": [],
+                "body": {
+                  "mode": "none",
+                  "formUrlEncoded": [],
+                  "multipartForm": []
+                },
+                "script": {},
+                "vars": {},
+                "assertions": [],
+                "tests": "",
+                "auth": {
+                  "mode": "none"
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "folder",
+      "name": "data-service",
+      "items": [
+        {
+          "type": "http",
+          "name": "Allowed tables in workspace",
+          "seq": 1,
+          "request": {
+            "url": "http://localhost:8100/api/data/schemas/workspace_1/tables",
+            "method": "GET",
+            "headers": [],
+            "params": [],
+            "body": {
+              "mode": "json",
+              "json": "{\n  \"role\": \"VIEWER\",\n  \"principalType\": \"user\",\n  \"principalId\": 2\n}",
+              "formUrlEncoded": [],
+              "multipartForm": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "auth": {
+              "mode": "bearer",
+              "bearer": {
+                "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyLCJ1c2VyX25hbWUiOiJ3QHciLCJzY29wZSI6WyJjcmciXSwib3JnYW5pemF0aW9ucyI6W3siaWQiOjEsIm5hbWUiOiJXV1cgSW5jIn1dLCJncm91cHMiOltdLCJleHAiOjE1ODkzNjE2MzcsImF1dGhvcml0aWVzIjpbIk9SR19BRE1JTiJdLCJqdGkiOiJiYjE0M2RmZS1lNGIxLTQ2YWItYTA4NC1hNWUwZDk2ZjRiMWEiLCJjbGllbnRfaWQiOiJhZG1pbiJ9.0kfpCGGjSo7GA9PjcFyt1tcvlAl_l2hWSM2YHAFkVh0"
+              }
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "GET MY permission to -zu- tables in -workspace_1-",
+          "seq": 2,
+          "request": {
+            "url": "http://localhost:8100/api/data/schemas/workspace_1/tables/zu",
+            "method": "GET",
+            "headers": [],
+            "params": [],
+            "body": {
+              "mode": "json",
+              "json": "{\n  \"role\": \"VIEWER\",\n  \"principalType\": \"user\",\n  \"principalId\": 2\n}",
+              "formUrlEncoded": [],
+              "multipartForm": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "auth": {
+              "mode": "bearer",
+              "bearer": {
+                "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyLCJ1c2VyX25hbWUiOiJ3QHciLCJzY29wZSI6WyJjcmciXSwib3JnYW5pemF0aW9ucyI6W3siaWQiOjEsIm5hbWUiOiJXV1cgSW5jIn1dLCJncm91cHMiOltdLCJleHAiOjE1ODkzNjE2MzcsImF1dGhvcml0aWVzIjpbIk9SR19BRE1JTiJdLCJqdGkiOiJiYjE0M2RmZS1lNGIxLTQ2YWItYTA4NC1hNWUwZDk2ZjRiMWEiLCJjbGllbnRfaWQiOiJhZG1pbiJ9.0kfpCGGjSo7GA9PjcFyt1tcvlAl_l2hWSM2YHAFkVh0"
+              }
+            }
+          }
+        },
+        {
+          "type": "http",
+          "name": "SET permissions to -functionalzone- table in -workspace_1-",
+          "seq": 3,
+          "request": {
+            "url": "http://localhost:8100/api/data/schemas/workspace_1/tables/functionalzone/roleAssignment",
+            "method": "POST",
+            "headers": [],
+            "params": [],
+            "body": {
+              "mode": "json",
+              "json": "{\n  \"role\": \"OWNER\",\n  \"principalType\": \"user\",\n  \"principalId\": 2\n}",
+              "formUrlEncoded": [],
+              "multipartForm": []
+            },
+            "script": {},
+            "vars": {},
+            "assertions": [],
+            "tests": "",
+            "auth": {
+              "mode": "bearer",
+              "bearer": {
+                "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyLCJ1c2VyX25hbWUiOiJ3QHciLCJzY29wZSI6WyJjcmciXSwib3JnYW5pemF0aW9ucyI6W3siaWQiOjEsIm5hbWUiOiJXV1cgSW5jIn1dLCJncm91cHMiOltdLCJleHAiOjE1ODkzNjE2MzcsImF1dGhvcml0aWVzIjpbIk9SR19BRE1JTiJdLCJqdGkiOiJiYjE0M2RmZS1lNGIxLTQ2YWItYTA4NC1hNWUwZDk2ZjRiMWEiLCJjbGllbnRfaWQiOiJhZG1pbiJ9.0kfpCGGjSo7GA9PjcFyt1tcvlAl_l2hWSM2YHAFkVh0"
+              }
+            }
+          }
+        },
+        {
+          "type": "folder",
+          "name": "BaseMaps",
+          "items": [
+            {
+              "type": "http",
+              "name": "Create basemap",
+              "seq": 2,
+              "request": {
+                "url": "http://localhost:8100/api/data/basemaps",
+                "method": "POST",
+                "headers": [],
+                "params": [],
+                "body": {
+                  "mode": "json",
+                  "json": "{\n    \"name\": \"wmts\",\n    \"title\": \"Моя подложка\",\n    \"thumbnailUrn\": \"/assets/images/thumbnail-WMTS-sputnik.jpg\",\n    \"type\": \"WMTS\",\n    \"url\": \"https://localhost/api/geoserver/gwc/service/wmts\",\n    \"layerName\": \"scratch_database_1:ZolotoePole_GP_FuncZone_2018_BM_P\",\n    \"style\": \"raster\",\n    \"projection\": \"EPSG:900913\",\n    \"format\": \"image/png\",\n    \"size\": 256,\n    \"resolution\": 21,\n    \"matrixIds\": 21\n}",
+                  "formUrlEncoded": [],
+                  "multipartForm": []
+                },
+                "script": {},
+                "vars": {},
+                "assertions": [],
+                "tests": "",
+                "auth": {
+                  "mode": "bearer",
+                  "bearer": {
+                    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJ1c2VyX25hbWUiOiJhZG1pbkBtYWlsLnJ1Iiwic2NvcGUiOlsiY3JnIl0sIm9yZ2FuaXphdGlvbnMiOltdLCJleHAiOjE1Nzk1ODU2OTYsImF1dGhvcml0aWVzIjpbIkFETUlOIl0sImp0aSI6IjdhM2Q1MzE3LWYzMTMtNDgwNC1hMjM3LTg0OWY3YjljYjE2MSIsImNsaWVudF9pZCI6ImFkbWluIn0.j1bUXVObJd-WVjCGs1Ot53JcOuBOwI9WNbt4N-Qs1VU"
+                  }
+                }
+              }
+            },
+            {
+              "type": "http",
+              "name": "Get",
+              "seq": 1,
+              "request": {
+                "url": "http://localhost:8100/api/data/basemaps",
+                "method": "GET",
+                "headers": [],
+                "params": [],
+                "body": {
+                  "mode": "none",
+                  "formUrlEncoded": [],
+                  "multipartForm": []
+                },
+                "script": {},
+                "vars": {},
+                "assertions": [],
+                "tests": "",
+                "auth": {
+                  "mode": "bearer",
+                  "bearer": {
+                    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyLCJ1c2VyX25hbWUiOiJmaXpAZml6Iiwic2NvcGUiOlsiY3JnIl0sIm9yZ2FuaXphdGlvbnMiOlt7ImlkIjoxLCJuYW1lIjoiZml6IENvbXBhbnkifV0sImdyb3VwcyI6W10sImV4cCI6MTYxMTg5NzU1NiwiYXV0aG9yaXRpZXMiOlsiT1JHX0FETUlOIl0sImp0aSI6Ijk2ODE4MGRjLWVmNTQtNDdjYS1hNjBmLTIyZDgzZGM0NDRjZiIsImNsaWVudF9pZCI6ImFkbWluIn0.j91hGC6sIxL0xBfwAXr7tBwlK4I75tDARQbMuXWrjSA"
+                  }
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "folder",
+          "name": "Databases",
+          "items": [
+            {
+              "type": "http",
+              "name": "-------- --",
+              "seq": 2,
+              "request": {
+                "url": "http://localhost:8100/api/data/databases/someDbName",
+                "method": "DELETE",
+                "headers": [
+                  {
+                    "name": "Content-Type",
+                    "value": "application/json; charset=utf-8",
+                    "enabled": true
+                  }
+                ],
+                "params": [],
+                "body": {
+                  "mode": "none",
+                  "formUrlEncoded": [],
+                  "multipartForm": []
+                },
+                "script": {},
+                "vars": {},
+                "assertions": [],
+                "tests": "",
+                "auth": {
+                  "mode": "bearer",
+                  "bearer": {
+                    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJ1c2VyX25hbWUiOiJhZG1pbkBtYWlsLnJ1Iiwic2NvcGUiOlsiY3JnIl0sIm9yZ2FuaXphdGlvbnMiOltdLCJncm91cHMiOltdLCJleHAiOjE2MDA4NDk4NTMsImF1dGhvcml0aWVzIjpbIkdMT0JBTF9BRE1JTiJdLCJqdGkiOiIxN2JmY2ZlNy00Y2ZmLTRkYjEtOTQ0MS0xYmViOTJlYTE4YjMiLCJjbGllbnRfaWQiOiJhZG1pbiJ9.PGv4cWtcgV2MOo_NP4NJ2lOc2WkbPOXp68Vdcrzu37E"
+                  }
+                }
+              }
+            },
+            {
+              "type": "http",
+              "name": "Get Db info",
+              "seq": 3,
+              "request": {
+                "url": "http://localhost:8100/api/data/databases/database_1",
+                "method": "GET",
+                "headers": [
+                  {
+                    "name": "Content-Type",
+                    "value": "application/json; charset=utf-8",
+                    "enabled": true
+                  }
+                ],
+                "params": [],
+                "body": {
+                  "mode": "none",
+                  "formUrlEncoded": [],
+                  "multipartForm": []
+                },
+                "script": {},
+                "vars": {},
+                "assertions": [],
+                "tests": "",
+                "auth": {
+                  "mode": "none"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "folder",
+          "name": "Datasets",
+          "items": [
+            {
+              "type": "http",
+              "name": "Create-",
+              "seq": 2,
+              "request": {
+                "url": "http://localhost:8084/datasets",
+                "method": "POST",
+                "headers": [],
+                "params": [],
+                "body": {
+                  "mode": "json",
+                  "json": "{\n    \"name\": \"dataset_test_1\",\n    \"title\": \"first test\",\n    \"details\": \"some details\"\n}",
+                  "formUrlEncoded": [],
+                  "multipartForm": []
+                },
+                "script": {},
+                "vars": {},
+                "assertions": [],
+                "tests": "",
+                "auth": {
+                  "mode": "bearer",
+                  "bearer": {
+                    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjozNCwidXNlcl9uYW1lIjoiZml6QGZpeiIsInNjb3BlIjpbImNyZyJdLCJvcmdhbml6YXRpb25zIjpbeyJpZCI6MSwibmFtZSI6ImZpeiBDb21wYW55In1dLCJncm91cHMiOltdLCJleHAiOjE2MDYzMTkwNDUsImF1dGhvcml0aWVzIjpbIk9SR19BRE1JTiJdLCJqdGkiOiIyNjM2NGIzYy1mN2M1LTQ1NjUtOGNjZi0yMDgzMjlmNDA0YWIiLCJjbGllbnRfaWQiOiJhZG1pbiJ9.ajb_xK_FJaq9XSO2QLg92xaS0qoWC_iOGQZkFkrrJYU"
+                  }
+                }
+              }
+            },
+            {
+              "type": "http",
+              "name": "Delete",
+              "seq": 3,
+              "request": {
+                "url": "http://localhost:8100/api/data/datasets/dataset_test_1",
+                "method": "DELETE",
+                "headers": [],
+                "params": [],
+                "body": {
+                  "mode": "none",
+                  "formUrlEncoded": [],
+                  "multipartForm": []
+                },
+                "script": {},
+                "vars": {},
+                "assertions": [],
+                "tests": "",
+                "auth": {
+                  "mode": "bearer",
+                  "bearer": {
+                    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjozNCwidXNlcl9uYW1lIjoiZml6QGZpeiIsInNjb3BlIjpbImNyZyJdLCJvcmdhbml6YXRpb25zIjpbeyJpZCI6MSwibmFtZSI6ImZpeiBDb21wYW55In1dLCJncm91cHMiOltdLCJleHAiOjE2MDY5MTkwNjIsImF1dGhvcml0aWVzIjpbIk9SR19BRE1JTiJdLCJqdGkiOiJjMTQzNjZhNC02N2NiLTQ3NGEtOTdkYS1jMDUwYzY1Y2U2ZDMiLCJjbGllbnRfaWQiOiJhZG1pbiJ9.yYWIfFu_YWmaM5288Hssok6JAGidCQhOEEyxGry_3Kg"
+                  }
+                }
+              }
+            },
+            {
+              "type": "http",
+              "name": "get all",
+              "seq": 1,
+              "request": {
+                "url": "http://localhost:8100/api/data/datasets",
+                "method": "GET",
+                "headers": [],
+                "params": [],
+                "body": {
+                  "mode": "none",
+                  "formUrlEncoded": [],
+                  "multipartForm": []
+                },
+                "script": {},
+                "vars": {},
+                "assertions": [],
+                "tests": "",
+                "auth": {
+                  "mode": "bearer",
+                  "bearer": {
+                    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyLCJ1c2VyX25hbWUiOiJmaXpAZml6Iiwic2NvcGUiOlsiY3JnIl0sIm9yZ2FuaXphdGlvbnMiOlt7ImlkIjoxLCJuYW1lIjoiZml6IENvbXBhbnkifV0sImdyb3VwcyI6W10sImV4cCI6MTYwODAyNTU2NywiYXV0aG9yaXRpZXMiOlsiT1JHX0FETUlOIl0sImp0aSI6IjBkMzBiY2ZjLWNmYWUtNGQxOC04ZjlhLTU0OTQzN2I3NjYyYiIsImNsaWVudF9pZCI6ImFkbWluIn0.GiXehTbW-7FpzkOk4YjBaNoMxCCaV7nJ8NV1ik_NYVI"
+                  }
+                }
+              }
+            },
+            {
+              "type": "folder",
+              "name": "Roles",
+              "items": [
+                {
+                  "type": "http",
+                  "name": "Add role",
+                  "seq": 2,
+                  "request": {
+                    "url": "http://localhost:8100/api/data/datasets/dataset_5ffd90/roleAssignment",
+                    "method": "POST",
+                    "headers": [],
+                    "params": [],
+                    "body": {
+                      "mode": "json",
+                      "json": "{\n    \"principalType\": \"user\",\n    \"principalId\": 314,\n    \"role\": \"VIEWER\"\n}",
+                      "formUrlEncoded": [],
+                      "multipartForm": []
+                    },
+                    "script": {},
+                    "vars": {},
+                    "assertions": [],
+                    "tests": "",
+                    "auth": {
+                      "mode": "bearer",
+                      "bearer": {
+                        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyLCJ1c2VyX25hbWUiOiJmaXpAZml6Iiwic2NvcGUiOlsiY3JnIl0sIm9yZ2FuaXphdGlvbnMiOlt7ImlkIjoxLCJuYW1lIjoiZml6IENvbXBhbnkifV0sImdyb3VwcyI6W10sImV4cCI6MTYwNTk2MzI1MCwiYXV0aG9yaXRpZXMiOlsiT1JHX0FETUlOIl0sImp0aSI6IjFkY2VlYTFiLTUzZWItNDQxMC05ZjRiLTRiYzVhMzJjYTg2NSIsImNsaWVudF9pZCI6ImFkbWluIn0.4_xhYvsjh0v0he-yYcRmm0lph_1s3Ppc009uMGm0hV8"
+                      }
+                    }
+                  }
+                },
+                {
+                  "type": "http",
+                  "name": "Delete all roles",
+                  "seq": 4,
+                  "request": {
+                    "url": "http://localhost:8100/api/data/datasets/dataset_5ffd90/roleAssignment",
+                    "method": "DELETE",
+                    "headers": [],
+                    "params": [],
+                    "body": {
+                      "mode": "none",
+                      "formUrlEncoded": [],
+                      "multipartForm": []
+                    },
+                    "script": {},
+                    "vars": {},
+                    "assertions": [],
+                    "tests": "",
+                    "auth": {
+                      "mode": "bearer",
+                      "bearer": {
+                        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyLCJ1c2VyX25hbWUiOiJmaXpAZml6Iiwic2NvcGUiOlsiY3JnIl0sIm9yZ2FuaXphdGlvbnMiOlt7ImlkIjoxLCJuYW1lIjoiZml6IENvbXBhbnkifV0sImdyb3VwcyI6W10sImV4cCI6MTYwNTk2MzI1MCwiYXV0aG9yaXRpZXMiOlsiT1JHX0FETUlOIl0sImp0aSI6IjFkY2VlYTFiLTUzZWItNDQxMC05ZjRiLTRiYzVhMzJjYTg2NSIsImNsaWVudF9pZCI6ImFkbWluIn0.4_xhYvsjh0v0he-yYcRmm0lph_1s3Ppc009uMGm0hV8"
+                      }
+                    }
+                  }
+                },
+                {
+                  "type": "http",
+                  "name": "Delete one role",
+                  "seq": 3,
+                  "request": {
+                    "url": "http://localhost:8100/api/data/datasets/dataset_5ffd90/roleAssignment/6",
+                    "method": "DELETE",
+                    "headers": [],
+                    "params": [],
+                    "body": {
+                      "mode": "none",
+                      "formUrlEncoded": [],
+                      "multipartForm": []
+                    },
+                    "script": {},
+                    "vars": {},
+                    "assertions": [],
+                    "tests": "",
+                    "auth": {
+                      "mode": "bearer",
+                      "bearer": {
+                        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyLCJ1c2VyX25hbWUiOiJmaXpAZml6Iiwic2NvcGUiOlsiY3JnIl0sIm9yZ2FuaXphdGlvbnMiOlt7ImlkIjoxLCJuYW1lIjoiZml6IENvbXBhbnkifV0sImdyb3VwcyI6W10sImV4cCI6MTYwNTk2MzI1MCwiYXV0aG9yaXRpZXMiOlsiT1JHX0FETUlOIl0sImp0aSI6IjFkY2VlYTFiLTUzZWItNDQxMC05ZjRiLTRiYzVhMzJjYTg2NSIsImNsaWVudF9pZCI6ImFkbWluIn0.4_xhYvsjh0v0he-yYcRmm0lph_1s3Ppc009uMGm0hV8"
+                      }
+                    }
+                  }
+                },
+                {
+                  "type": "http",
+                  "name": "Get roles",
+                  "seq": 1,
+                  "request": {
+                    "url": "http://localhost:8100/api/data/datasets/dataset_5ffd90/roleAssignment",
+                    "method": "GET",
+                    "headers": [],
+                    "params": [],
+                    "body": {
+                      "mode": "json",
+                      "json": "{\n    \"name\": \"testtesttest\",\n    \"title\": \"first test\",\n    \"details\": \"some details\"\n}",
+                      "formUrlEncoded": [],
+                      "multipartForm": []
+                    },
+                    "script": {},
+                    "vars": {},
+                    "assertions": [],
+                    "tests": "",
+                    "auth": {
+                      "mode": "bearer",
+                      "bearer": {
+                        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyLCJ1c2VyX25hbWUiOiJmaXpAZml6Iiwic2NvcGUiOlsiY3JnIl0sIm9yZ2FuaXphdGlvbnMiOlt7ImlkIjoxLCJuYW1lIjoiZml6IENvbXBhbnkifV0sImdyb3VwcyI6W10sImV4cCI6MTYwNTk2MzI1MCwiYXV0aG9yaXRpZXMiOlsiT1JHX0FETUlOIl0sImp0aSI6IjFkY2VlYTFiLTUzZWItNDQxMC05ZjRiLTRiYzVhMzJjYTg2NSIsImNsaWVudF9pZCI6ImFkbWluIn0.4_xhYvsjh0v0he-yYcRmm0lph_1s3Ppc009uMGm0hV8"
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "folder",
+          "name": "DocLibraries",
+          "items": [
+            {
+              "type": "http",
+              "name": "Add record",
+              "seq": 2,
+              "request": {
+                "url": "http://localhost:8100/api/data/document-libraries/documents",
+                "method": "POST",
+                "headers": [],
+                "params": [],
+                "body": {
+                  "mode": "multipartForm",
+                  "formUrlEncoded": [],
+                  "multipartForm": [
+                    {
+                      "type": "text",
+                      "name": "body",
+                      "value": "{\"title\": \"SecondPostmanFolder\",\"content_type_id\": \"FOLDER\"}",
+                      "enabled": true
+                    }
+                  ]
+                },
+                "script": {},
+                "vars": {},
+                "assertions": [],
+                "tests": "",
+                "auth": {
+                  "mode": "none"
+                }
+              }
+            },
+            {
+              "type": "http",
+              "name": "Get all records",
+              "seq": 1,
+              "request": {
+                "url": "http://localhost:8084/document-libraries/documents/records",
+                "method": "GET",
+                "headers": [],
+                "params": [],
+                "body": {
+                  "mode": "none",
+                  "formUrlEncoded": [],
+                  "multipartForm": []
+                },
+                "script": {},
+                "vars": {},
+                "assertions": [],
+                "tests": "",
+                "auth": {
+                  "mode": "bearer",
+                  "bearer": {
+                    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyLCJ1c2VyX25hbWUiOiJmaXpAZml6Iiwic2NvcGUiOlsiY3JnIl0sIm9yZ2FuaXphdGlvbnMiOlt7ImlkIjoxLCJuYW1lIjoiZml6IENvbXBhbnkifV0sImdyb3VwcyI6W10sImV4cCI6MTYxMTc0MjgxNCwiYXV0aG9yaXRpZXMiOlsiT1JHX0FETUlOIl0sImp0aSI6ImVkZDU3MDBhLWFlMzAtNDE3NS1hNjAxLTA0ZGE0MzNhYWY2YiIsImNsaWVudF9pZCI6ImFkbWluIn0.T_5me392ZNQvQbltV8p4-YDw7FuUt8NFZ5CYEYAWTpg"
+                  }
+                }
+              }
+            },
+            {
+              "type": "folder",
+              "name": "Records",
+              "items": [
+                {
+                  "type": "http",
+                  "name": "Create record",
+                  "seq": 3,
+                  "request": {
+                    "url": "http://localhost:8084/document-libraries/dl_default/records",
+                    "method": "POST",
+                    "headers": [],
+                    "params": [],
+                    "body": {
+                      "mode": "multipartForm",
+                      "formUrlEncoded": [],
+                      "multipartForm": [
+                        {
+                          "type": "text",
+                          "name": "body",
+                          "value": "{\"title\": \"record 1 title\"}",
+                          "enabled": true
+                        }
+                      ]
+                    },
+                    "script": {},
+                    "vars": {},
+                    "assertions": [],
+                    "tests": "",
+                    "auth": {
+                      "mode": "bearer",
+                      "bearer": {
+                        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyLCJ1c2VyX25hbWUiOiJmaXpAZml6Iiwic2NvcGUiOlsiY3JnIl0sIm9yZ2FuaXphdGlvbnMiOlt7ImlkIjoxLCJuYW1lIjoiZml6IENvbXBhbnkifV0sImdyb3VwcyI6W10sImV4cCI6MTYzNDExMTAzMSwiYXV0aG9yaXRpZXMiOlsiT1JHX0FETUlOIl0sImp0aSI6ImZkYTlmZWZiLTBjMTAtNDFjOS1iNTgzLTZkMmJjMDlmZDlkNyIsImNsaWVudF9pZCI6ImFkbWluIn0.4H1fHo1NhHwkMad_pk7lZCVdUbDRqXMAeh3ScqlOKi8"
+                      }
+                    }
+                  }
+                },
+                {
+                  "type": "http",
+                  "name": "Get ALL records",
+                  "seq": 2,
+                  "request": {
+                    "url": "http://localhost:8084/document-libraries/dl_default/records",
+                    "method": "GET",
+                    "headers": [],
+                    "params": [],
+                    "body": {
+                      "mode": "none",
+                      "formUrlEncoded": [],
+                      "multipartForm": []
+                    },
+                    "script": {},
+                    "vars": {},
+                    "assertions": [],
+                    "tests": "",
+                    "auth": {
+                      "mode": "bearer",
+                      "bearer": {
+                        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyLCJ1c2VyX25hbWUiOiJmaXpAZml6Iiwic2NvcGUiOlsiY3JnIl0sIm9yZ2FuaXphdGlvbnMiOlt7ImlkIjoxLCJuYW1lIjoiZml6IENvbXBhbnkifV0sImdyb3VwcyI6W10sImV4cCI6MTYzNDExMTAzMSwiYXV0aG9yaXRpZXMiOlsiT1JHX0FETUlOIl0sImp0aSI6ImZkYTlmZWZiLTBjMTAtNDFjOS1iNTgzLTZkMmJjMDlmZDlkNyIsImNsaWVudF9pZCI6ImFkbWluIn0.4H1fHo1NhHwkMad_pk7lZCVdUbDRqXMAeh3ScqlOKi8"
+                      }
+                    }
+                  }
+                },
+                {
+                  "type": "http",
+                  "name": "Get record permissions",
+                  "seq": 1,
+                  "request": {
+                    "url": "http://localhost:8084/document-libraries/dl_default/records/2/roleAssignment",
+                    "method": "GET",
+                    "headers": [],
+                    "params": [],
+                    "body": {
+                      "mode": "none",
+                      "formUrlEncoded": [],
+                      "multipartForm": []
+                    },
+                    "script": {},
+                    "vars": {},
+                    "assertions": [],
+                    "tests": "",
+                    "auth": {
+                      "mode": "bearer",
+                      "bearer": {
+                        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyLCJ1c2VyX25hbWUiOiJmaXpAZml6Iiwic2NvcGUiOlsiY3JnIl0sIm9yZ2FuaXphdGlvbnMiOlt7ImlkIjoxLCJuYW1lIjoiZml6IENvbXBhbnkifV0sImdyb3VwcyI6W10sImV4cCI6MTYyNTg5MjAxMywiYXV0aG9yaXRpZXMiOlsiT1JHX0FETUlOIl0sImp0aSI6ImIwOTdjYzdmLWQ3MWItNDFkOC1hYmI1LTNkOWE0ZGZlNDY1NyIsImNsaWVudF9pZCI6ImFkbWluIn0.RxmJ2mK3chopahUW7vkH1ap8VWGhwvtnV_flh6RcwzQ"
+                      }
+                    }
+                  }
+                },
+                {
+                  "type": "http",
+                  "name": "Update record",
+                  "seq": 4,
+                  "request": {
+                    "url": "http://localhost:8084/document-libraries/dl_default/records/2",
+                    "method": "PATCH",
+                    "headers": [
+                      {
+                        "name": "Content-Type",
+                        "value": "application/merge-patch+json",
+                        "enabled": true
+                      }
+                    ],
+                    "params": [],
+                    "body": {
+                      "mode": "json",
+                      "json": "{\n    \"title\": \"new title for Folder1\",\n    \"content_type_id\": \"folder_v1\"\n}",
+                      "formUrlEncoded": [],
+                      "multipartForm": []
+                    },
+                    "script": {},
+                    "vars": {},
+                    "assertions": [],
+                    "tests": "",
+                    "auth": {
+                      "mode": "bearer",
+                      "bearer": {
+                        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjozLCJ1c2VyX25hbWUiOiJmaXpfdGVzdDFAZml6Iiwic2NvcGUiOlsiY3JnIl0sIm9yZ2FuaXphdGlvbnMiOlt7ImlkIjoxLCJuYW1lIjoiZml6IENvbXBhbnkifV0sImdyb3VwcyI6W10sImV4cCI6MTY1MDM2MDc3NywiYXV0aG9yaXRpZXMiOlsiVVNFUiJdLCJqdGkiOiJkYTY1ODliZi05NDU2LTQ5OWUtYjAyYS1iZmU0M2ViMGRhNjMiLCJjbGllbnRfaWQiOiJhZG1pbiJ9.Yh-rL61i8TVyt2eZY1yQi_BdUsDjYQeeFJyL-Y1lVZI"
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "folder",
+          "name": "Files",
+          "items": [
+            {
+              "type": "http",
+              "name": "Load files",
+              "seq": 1,
+              "request": {
+                "url": "http://localhost:8084/files",
+                "method": "POST",
+                "headers": [],
+                "params": [],
+                "body": {
+                  "mode": "multipartForm",
+                  "formUrlEncoded": [],
+                  "multipartForm": [
+                    {
+                      "type": "text",
+                      "name": "files",
+                      "value": "undefined",
+                      "enabled": true
+                    },
+                    {
+                      "type": "text",
+                      "name": "body",
+                      "value": "[{\"fileId\": \"5758bce3-8b38-4e69-a5f3-0176c1ed3f28\", \"fieldName\": \"some\"}]",
+                      "enabled": false
+                    },
+                    {
+                      "type": "text",
+                      "name": "filesMapping",
+                      "value": "",
+                      "enabled": false
+                    }
+                  ]
+                },
+                "script": {},
+                "vars": {},
+                "assertions": [],
+                "tests": "",
+                "auth": {
+                  "mode": "bearer",
+                  "bearer": {
+                    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyLCJ1c2VyX25hbWUiOiJmaXpAZml6Iiwic2NvcGUiOlsiY3JnIl0sIm9yZ2FuaXphdGlvbnMiOlt7ImlkIjoxLCJuYW1lIjoiZml6IENvbXBhbnkifV0sImdyb3VwcyI6W10sImV4cCI6MTY0NDQ3NTcyNywiYXV0aG9yaXRpZXMiOlsiT1JHX0FETUlOIl0sImp0aSI6Ijg4YjdmZDJiLThkMmUtNGYyOC1hMWU1LTA2Y2MxZWMwY2RiYiIsImNsaWVudF9pZCI6ImFkbWluIn0.gZh4A9ge8u4yvTd438gai2Ei9qJPjYjhy1Sk1ul5TgA"
+                  }
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "folder",
+          "name": "Processes",
+          "items": [
+            {
+              "type": "http",
+              "name": "------ GML ----- -------",
+              "seq": 1,
+              "request": {
+                "url": "http://localhost:8084/processes",
+                "method": "POST",
+                "headers": [],
+                "params": [],
+                "body": {
+                  "mode": "json",
+                  "json": "{\n    \"type\": \"IMPORT\",\n    \"payload\": {\n        \"type\": \"IMPORT_GML\",\n        \"payload\": {\n            \"wsUiId\": \"any\",\n            \"source\": {\n                \"libraryId\": \"\",\n                \"objectId\": \"\",\n                \"fileId\": \"\"\n            },\n            \"target\": {\n                \"projectId\": \"\",\n                \"projectName\": \"\",\n                \"projectIsNew\": false,\n                \"mode\": \"???\"\n            },\n            \"invertedCoordinates\": false\n        }\n    }\n}",
+                  "formUrlEncoded": [],
+                  "multipartForm": []
+                },
+                "script": {},
+                "vars": {},
+                "assertions": [],
+                "tests": "",
+                "auth": {
+                  "mode": "bearer",
+                  "bearer": {
+                    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyLCJ1c2VyX25hbWUiOiJmaXpAZml6Iiwic2NvcGUiOlsiY3JnIl0sIm9yZ2FuaXphdGlvbnMiOlt7ImlkIjoxLCJuYW1lIjoiZml6IENvbXBhbnkifV0sImdyb3VwcyI6W10sImV4cCI6MTY1OTUzNzgwMiwiYXV0aG9yaXRpZXMiOlsiT1JHX0FETUlOIl0sImp0aSI6ImE5Y2M1YjNhLTIzYjctNDE4Ni1hZDkwLTAzOWYwYjJkOWE1MyIsImNsaWVudF9pZCI6ImFkbWluIn0.kpmE2wI8IYkLulk2HpLVm4MFJyLsLhpXoyovn9fKQCI"
+                  }
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "folder",
+          "name": "Schema",
+          "items": [
+            {
+              "type": "http",
+              "name": "------- ----",
+              "seq": 1,
+              "request": {
+                "url": "http://localhost:8084/schemas?schemaIds=documents",
+                "method": "GET",
+                "headers": [],
+                "params": [
+                  {
+                    "name": "schemaIds",
+                    "value": "documents",
+                    "type": "query",
+                    "enabled": true
+                  }
+                ],
+                "body": {
+                  "mode": "json",
+                  "json": "{\n    \n}",
+                  "formUrlEncoded": [],
+                  "multipartForm": []
+                },
+                "script": {},
+                "vars": {},
+                "assertions": [],
+                "tests": "",
+                "auth": {
+                  "mode": "bearer",
+                  "bearer": {
+                    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyLCJ1c2VyX25hbWUiOiJhcmhfZ3JhZF9ya0BtYWlsLnJ1Iiwic2NvcGUiOlsiY3JnIl0sIm9yZ2FuaXphdGlvbnMiOlt7ImlkIjoxLCJuYW1lIjoi0KHQn9Cg0JDQktCe0KfQndCQ0K8g0JjQndCk0J7QoNCc0JDQptCY0J7QndCd0JDQryDQodCY0KHQotCV0JzQkCJ9XSwiZ3JvdXBzIjpbXSwiZXhwIjoxNjExMTMyODc3LCJhdXRob3JpdGllcyI6WyJPUkdfQURNSU4iXSwianRpIjoiYjliMTVmMzAtNjk0OS00YTliLWEzZjgtZGNjNjA2MGE2NDcxIiwiY2xpZW50X2lkIjoiYWRtaW4ifQ.B2UorffJidOSMQmmBgocG57AUNkrs-wjSHX9xr6BJpM"
+                  }
+                }
+              }
+            },
+            {
+              "type": "http",
+              "name": "----------",
+              "seq": 3,
+              "request": {
+                "url": "http://localhost:8084/schemas",
+                "method": "PUT",
+                "headers": [],
+                "params": [],
+                "body": {
+                  "mode": "json",
+                  "json": "{\n    \"name\": \"documents5\",\n    \"title\": \"documents_v0.1\",\n    \"description\": \"documents_v0.1\",\n    \"readOnly\": true,\n    \"tableName\": \"documents5\",\n    \"originName\": \"documents5\",\n    \"properties\": [\n        {\n            \"name\": \"id\",\n            \"title\": \"Идентификатор объекта\",\n            \"hidden\": true,\n            \"required\": true,\n            \"valueType\": \"UUID\"\n        },\n        {\n            \"name\": \"title\",\n            \"title\": \"\",\n            \"hidden\": false,\n            \"length\": 500,\n            \"required\": true,\n            \"valueType\": \"STRING\"\n        },\n        {\n            \"name\": \"size\",\n            \"title\": \"\",\n            \"hidden\": false,\n            \"required\": false,\n            \"valueType\": \"INT\"\n        }\n    ],\n    \"geometryType\": \"MultiPolygon\",\n    \"customRuleFunction\": null,\n    \"calcFiledFunction\": \"var results = {}; var regStatus;  if (!obj.reg_status) { regStatus = 0; } else { var nRegStatus = Number(obj.reg_status); if (!nRegStatus) { regStatus = 0; } else { if (nRegStatus < 1 || nRegStatus > 6) { regStatus = 0; } else if (nRegStatus > 3) { regStatus = 3; } else { regStatus = nRegStatus; }}} var status; if (!obj.status) { status = 0; } else { var nStatus = Number(obj.status); if (!nStatus) {  status = 0;} else { if (nStatus > 0 && nStatus <= 4) { status = obj.status; } else { status = 0;}} }  if (!obj.classid) { results.ruleid = ''; } else { results.ruleid = String(obj.classid) + regStatus + status; } return results;\"\n}",
+                  "formUrlEncoded": [],
+                  "multipartForm": []
+                },
+                "script": {},
+                "vars": {},
+                "assertions": [],
+                "tests": "",
+                "auth": {
+                  "mode": "bearer",
+                  "bearer": {
+                    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjozNCwidXNlcl9uYW1lIjoiZml6QGZpeiIsInNjb3BlIjpbImNyZyJdLCJvcmdhbml6YXRpb25zIjpbeyJpZCI6MSwibmFtZSI6ImZpeiBDb21wYW55In1dLCJncm91cHMiOltdLCJleHAiOjE2NTI5NjkzMzgsImF1dGhvcml0aWVzIjpbIk9SR19BRE1JTiJdLCJqdGkiOiI2YzAxZTliMS04MzIyLTQ3ZDktYTVmZC1iM2UzYTc0Mzc2ZjMiLCJjbGllbnRfaWQiOiJhZG1pbiJ9.guntucRn7kfTa3Fi7HMmMVTwpqfUI2iSvtpOGpR5tBE"
+                  }
+                }
+              }
+            },
+            {
+              "type": "http",
+              "name": "--------",
+              "seq": 2,
+              "request": {
+                "url": "http://localhost:8084/schemas?schemaIds=documents10",
+                "method": "GET",
+                "headers": [],
+                "params": [
+                  {
+                    "name": "schemaIds",
+                    "value": "documents10",
+                    "type": "query",
+                    "enabled": true
+                  }
+                ],
+                "body": {
+                  "mode": "json",
+                  "json": "{\n    \"name\": \"documents3\",\n    \"title\": \"documents_v0.1\",\n    \"description\": \"documents_v0.1\",\n    \"readOnly\": true,\n    \"tableName\": \"documents3\",\n    \"originName\": \"documents3\",\n    \"properties\": [\n        {\n            \"name\": \"id\",\n            \"title\": \"Идентификатор объекта\",\n            \"hidden\": true,\n            \"required\": true,\n            \"valueType\": \"UUID\"\n        },\n        {\n            \"name\": \"title\",\n            \"title\": \"\",\n            \"hidden\": false,\n            \"length\": 500,\n            \"required\": true,\n            \"valueType\": \"STRING\"\n        },\n        {\n            \"name\": \"size\",\n            \"title\": \"\",\n            \"hidden\": false,\n            \"required\": false,\n            \"valueType\": \"INT\"\n        }\n    ],\n    \"geometryType\": \"MultiPolygon\",\n    \"customRuleFunction\": \"customRuleFunction\",\n    \"calcFiledFunction\": \"calcFiledFunction\"\n}",
+                  "formUrlEncoded": [],
+                  "multipartForm": []
+                },
+                "script": {},
+                "vars": {},
+                "assertions": [],
+                "tests": "",
+                "auth": {
+                  "mode": "bearer",
+                  "bearer": {
+                    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjozNCwidXNlcl9uYW1lIjoiZml6QGZpeiIsInNjb3BlIjpbImNyZyJdLCJvcmdhbml6YXRpb25zIjpbeyJpZCI6MSwibmFtZSI6ImZpeiBDb21wYW55In1dLCJncm91cHMiOltdLCJleHAiOjE2NTI5NjkzMzgsImF1dGhvcml0aWVzIjpbIk9SR19BRE1JTiJdLCJqdGkiOiI2YzAxZTliMS04MzIyLTQ3ZDktYTVmZC1iM2UzYTc0Mzc2ZjMiLCJjbGllbnRfaWQiOiJhZG1pbiJ9.guntucRn7kfTa3Fi7HMmMVTwpqfUI2iSvtpOGpR5tBE"
+                  }
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "folder",
+          "name": "Tables",
+          "items": [
+            {
+              "type": "http",
+              "name": "Create",
+              "seq": 2,
+              "request": {
+                "url": "http://localhost:8084/datasets/dataset_test_1/tables",
+                "method": "POST",
+                "headers": [],
+                "params": [],
+                "body": {
+                  "mode": "json",
+                  "json": "{\n    \"name\": \"test_new_id_table\",\n    \"details\": \"i table\",\n    \"title\": \"Я ТАБЛИЦА\"\n}",
+                  "formUrlEncoded": [],
+                  "multipartForm": []
+                },
+                "script": {},
+                "vars": {},
+                "assertions": [],
+                "tests": "",
+                "auth": {
+                  "mode": "bearer",
+                  "bearer": {
+                    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyLCJ1c2VyX25hbWUiOiJmaXpAZml6Iiwic2NvcGUiOlsiY3JnIl0sIm9yZ2FuaXphdGlvbnMiOlt7ImlkIjoxLCJuYW1lIjoiZml6IENvbXBhbnkifV0sImdyb3VwcyI6W10sImV4cCI6MTYwNjI5MjUyNSwiYXV0aG9yaXRpZXMiOlsiT1JHX0FETUlOIl0sImp0aSI6IjQxMDdjMTA3LWE4Y2QtNGY0YS1hMDIxLTA0ODFkMGJjYWMyZiIsImNsaWVudF9pZCI6ImFkbWluIn0.tCSgw2yCv78uYHfFGSPvxNcc0rkbNy30DX9ZELApINo"
+                  }
+                }
+              }
+            },
+            {
+              "type": "http",
+              "name": "get all",
+              "seq": 1,
+              "request": {
+                "url": "http://localhost:8084/datasets/dataset_d8a75f/tables",
+                "method": "GET",
+                "headers": [],
+                "params": [],
+                "body": {
+                  "mode": "json",
+                  "json": "{\n    \"name\": \"test_new_id_schema\",\n    \"details\": \"i schema\",\n    \"title\": \"Я СХЕМА\"\n}",
+                  "formUrlEncoded": [],
+                  "multipartForm": []
+                },
+                "script": {},
+                "vars": {},
+                "assertions": [],
+                "tests": "",
+                "auth": {
+                  "mode": "bearer",
+                  "bearer": {
+                    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyLCJ1c2VyX25hbWUiOiJmaXpAZml6Iiwic2NvcGUiOlsiY3JnIl0sIm9yZ2FuaXphdGlvbnMiOlt7ImlkIjoxLCJuYW1lIjoiZml6IENvbXBhbnkifV0sImdyb3VwcyI6W10sImV4cCI6MTYwNjI5MjUyNSwiYXV0aG9yaXRpZXMiOlsiT1JHX0FETUlOIl0sImp0aSI6IjQxMDdjMTA3LWE4Y2QtNGY0YS1hMDIxLTA0ODFkMGJjYWMyZiIsImNsaWVudF9pZCI6ImFkbWluIn0.tCSgw2yCv78uYHfFGSPvxNcc0rkbNy30DX9ZELApINo"
+                  }
+                }
+              }
+            },
+            {
+              "type": "folder",
+              "name": "Features-Records",
+              "items": [
+                {
+                  "type": "http",
+                  "name": "Create feature",
+                  "seq": 1,
+                  "request": {
+                    "url": "http://localhost:8084/datasets/dataset_fcc0b7/tables/heritagearea_1_ddcd/records",
+                    "method": "POST",
+                    "headers": [],
+                    "params": [],
+                    "body": {
+                      "mode": "json",
+                      "json": "{\n  \"type\": \"Feature\",\n  \"geometry\": {\n    \"type\": \"Polygon\",\n    \"coordinates\": []\n  },\n  \"properties\": {\n    \"name\": \"Dinagat Islands\"\n  }\n}",
+                      "formUrlEncoded": [],
+                      "multipartForm": []
+                    },
+                    "script": {},
+                    "vars": {},
+                    "assertions": [],
+                    "tests": "",
+                    "auth": {
+                      "mode": "bearer",
+                      "bearer": {
+                        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjozLCJ1c2VyX25hbWUiOiJmaXpfdGVzdDFAZml6Iiwic2NvcGUiOlsiY3JnIl0sIm9yZ2FuaXphdGlvbnMiOlt7ImlkIjoxLCJuYW1lIjoiZml6IENvbXBhbnkifV0sImdyb3VwcyI6W10sImV4cCI6MTY1MDM0NzgzNSwiYXV0aG9yaXRpZXMiOlsiVVNFUiJdLCJqdGkiOiJjNWM4YTk4NS03MmU1LTRiMGEtYWU1MC1jMDFjZTlkYzdhNWIiLCJjbGllbnRfaWQiOiJhZG1pbiJ9.YEMDSPhHFS4WryI-ZDC8M8l_tc_BbtzGrI-oJU-A_b0"
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "folder",
+          "name": "srs",
+          "items": [
+            {
+              "type": "http",
+              "name": "add new SRS",
+              "seq": 2,
+              "request": {
+                "url": "{{host}}:8084/srs",
+                "method": "POST",
+                "headers": [
+                  {
+                    "name": "Content-Type",
+                    "value": "application/json",
+                    "enabled": true
+                  }
+                ],
+                "params": [],
+                "body": {
+                  "mode": "json",
+                  "json": "{\n  \"srtext\": \"PROJCS[\\\"Pulkovo 1942 / CS63 zone X5\\\", \\r\\n  GEOGCS[\\\"Pulkovo 1942\\\", \\r\\n    DATUM[\\\"Pulkovo 1942\\\", \\r\\n      SPHEROID[\\\"Krassowsky 1940\\\", 6378245.0, 298.3, AUTHORITY[\\\"EPSG\\\",\\\"7024\\\"]], \\r\\n      TOWGS84[43.822, -108.842, -119.585, 1.455, -0.761, 0.737, 0.549], \\r\\n      AUTHORITY[\\\"EPSG\\\",\\\"6284\\\"]], \\r\\n    PRIMEM[\\\"Greenwich\\\", 0.0, AUTHORITY[\\\"EPSG\\\",\\\"8901\\\"]], \\r\\n    UNIT[\\\"degree\\\", 0.017453292519943295], \\r\\n    AXIS[\\\"Geodetic longitude\\\", EAST], \\r\\n    AXIS[\\\"Geodetic latitude\\\", NORTH], \\r\\n    AUTHORITY[\\\"EPSG\\\",\\\"4284\\\"]], \\r\\n  PROJECTION[\\\"Transverse_Mercator\\\", AUTHORITY[\\\"EPSG\\\",\\\"9807\\\"]], \\r\\n  PARAMETER[\\\"central_meridian\\\", 35.5], \\r\\n  PARAMETER[\\\"latitude_of_origin\\\", 0.08333333333333333], \\r\\n  PARAMETER[\\\"scale_factor\\\", 1.0], \\r\\n  PARAMETER[\\\"false_easting\\\", 5300000.0], \\r\\n  PARAMETER[\\\"false_northing\\\", 0.0], \\r\\n  UNIT[\\\"m\\\", 1.0], \\r\\n  AXIS[\\\"Easting\\\", EAST], \\r\\n  AXIS[\\\"Northing\\\", NORTH], \\r\\n  AUTHORITY[\\\"EPSG\\\",\\\"7829\\\"]]\"\n}",
+                  "formUrlEncoded": [],
+                  "multipartForm": []
+                },
+                "script": {},
+                "vars": {},
+                "assertions": [],
+                "tests": "",
+                "auth": {
+                  "mode": "bearer",
+                  "bearer": {
+                    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjcmdfbG9naW4iOiJmaXpAZml6IiwidXNlcl9uYW1lIjoiZml6X2Zpel8zNCIsImdyb3VwcyI6W10sInZlcnNpb24iOm51bGwsImF1dGhvcml0aWVzIjpbIk9SR19BRE1JTiJdLCJtaW5pb25zIjpbXSwiY2xpZW50X2lkIjoiYWRtaW4iLCJ1c2VyX2lkIjozNCwic2NvcGUiOlsiY3JnIl0sIm9yZ2FuaXphdGlvbnMiOlt7ImlkIjoxLCJuYW1lIjoi0JDQniDQk9C10L7QuNC90YTQvtGA0LzQsNGG0LjQvtC90L3Ri9C1INGB0LjRgdGC0LXQvNGLIn1dLCJleHAiOjE3MTgzNDI1OTIsImRpcmVjdE1pbmlvbnMiOltdLCJqdGkiOiJlMWI0NjkxYS05OGZlLTRiMTktOWNkZi1lYTQ4OTg3ZWI0MmYifQ.AkVt81BLZ_FvtRYaq16BiA6Hxo8qMnRiJiKMDtLF07E"
+                  }
+                }
+              }
+            },
+            {
+              "type": "http",
+              "name": "get all",
+              "seq": 1,
+              "request": {
+                "url": "{{host}}:{{port}}/api/data/srs",
+                "method": "GET",
+                "headers": [],
+                "params": [],
+                "body": {
+                  "mode": "none",
+                  "formUrlEncoded": [],
+                  "multipartForm": []
+                },
+                "script": {},
+                "vars": {},
+                "assertions": [],
+                "tests": "",
+                "auth": {
+                  "mode": "bearer",
+                  "bearer": {
+                    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjcmdfbG9naW4iOiJmaXpAZml6IiwidXNlcl9uYW1lIjoiZml6X2Zpel8zNCIsImdyb3VwcyI6W10sInZlcnNpb24iOm51bGwsImF1dGhvcml0aWVzIjpbIk9SR19BRE1JTiJdLCJtaW5pb25zIjpbXSwiY2xpZW50X2lkIjoiYWRtaW4iLCJ1c2VyX2lkIjozNCwic2NvcGUiOlsiY3JnIl0sIm9yZ2FuaXphdGlvbnMiOlt7ImlkIjoxLCJuYW1lIjoi0JDQniDQk9C10L7QuNC90YTQvtGA0LzQsNGG0LjQvtC90L3Ri9C1INGB0LjRgdGC0LXQvNGLIn1dLCJleHAiOjE3MTgyNzU4ODQsImRpcmVjdE1pbmlvbnMiOltdLCJqdGkiOiI2Y2E5NWQ4Ny0zMWZjLTQxMGYtODliOC01YjQyMGUyNDNmYTEifQ.t9xfSHIi3HveDy6ty4Aij1vhvJJabvLZuK-G1VadJIQ"
+                  }
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "folder",
+      "name": "gis-service",
+      "items": [
+        {
+          "type": "folder",
+          "name": "Projects",
+          "items": [
+            {
+              "type": "http",
+              "name": "2- -------- -------",
+              "seq": 4,
+              "request": {
+                "url": "http://localhost:8100/organizations/1/projects",
+                "method": "POST",
+                "headers": [
+                  {
+                    "name": "Content-Type",
+                    "value": "application/json",
+                    "enabled": true
+                  }
+                ],
+                "params": [],
+                "body": {
+                  "mode": "json",
+                  "json": "{\n  \"projectName\": \"Yalta\"\n}",
+                  "formUrlEncoded": [],
+                  "multipartForm": []
+                },
+                "script": {},
+                "vars": {},
+                "assertions": [],
+                "tests": "",
+                "auth": {
+                  "mode": "bearer",
+                  "bearer": {
+                    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJ1c2VyX25hbWUiOiJhZG1pbkBtYWlsLnJ1Iiwic2NvcGUiOlsiY3JnIl0sIm9yZ2FuaXphdGlvbnMiOltdLCJleHAiOjE1Nzk1ODU2OTYsImF1dGhvcml0aWVzIjpbIkFETUlOIl0sImp0aSI6IjdhM2Q1MzE3LWYzMTMtNDgwNC1hMjM3LTg0OWY3YjljYjE2MSIsImNsaWVudF9pZCI6ImFkbWluIn0.j1bUXVObJd-WVjCGs1Ot53JcOuBOwI9WNbt4N-Qs1VU"
+                  }
+                }
+              }
+            },
+            {
+              "type": "http",
+              "name": "Create",
+              "seq": 3,
+              "request": {
+                "url": "http://localhost:8100/projects",
+                "method": "POST",
+                "headers": [
+                  {
+                    "name": "Content-Type",
+                    "value": "application/json",
+                    "enabled": true
+                  }
+                ],
+                "params": [],
+                "body": {
+                  "mode": "json",
+                  "json": "{\n  \"projectName\": \"Project 2 for q user\"\n}",
+                  "formUrlEncoded": [],
+                  "multipartForm": []
+                },
+                "script": {},
+                "vars": {},
+                "assertions": [],
+                "tests": "",
+                "auth": {
+                  "mode": "bearer",
+                  "bearer": {
+                    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo3MCwidXNlcl9uYW1lIjoid0B3Iiwic2NvcGUiOlsiY3JnIl0sIm9yZ2FuaXphdGlvbnMiOlt7ImlkIjo2OSwibmFtZSI6IldXVyBDb21wYW55In1dLCJleHAiOjE1Nzk3NjY0ODEsImF1dGhvcml0aWVzIjpbIkdFT1NFUlZFUl9BRE1JTiJdLCJqdGkiOiI3Mjc0Y2U2Ni0xM2IyLTQ2NTUtYjNmYi0wNTc4NGEyMGQ4YzYiLCJjbGllbnRfaWQiOiJhZG1pbiJ9.ABE2Ii1fk1k_b-OD7tYjrZlascqQXrKtkvfOCabQgnM"
+                  }
+                }
+              }
+            },
+            {
+              "type": "http",
+              "name": "Find related layers",
+              "seq": 5,
+              "request": {
+                "url": "http://localhost:8100/projects/find-related-layers?field=table&value=heritagearea_1_c3cc",
+                "method": "GET",
+                "headers": [],
+                "params": [
+                  {
+                    "name": "field",
+                    "value": "table",
+                    "type": "query",
+                    "enabled": true
+                  },
+                  {
+                    "name": "value",
+                    "value": "heritagearea_1_c3cc",
+                    "type": "query",
+                    "enabled": true
+                  }
+                ],
+                "body": {
+                  "mode": "none",
+                  "formUrlEncoded": [],
+                  "multipartForm": []
+                },
+                "script": {},
+                "vars": {},
+                "assertions": [],
+                "tests": "",
+                "auth": {
+                  "mode": "bearer",
+                  "bearer": {
+                    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJ1c2VyX25hbWUiOiJhZG1pbkBtYWlsLnJ1Iiwic2NvcGUiOlsiY3JnIl0sIm9yZ2FuaXphdGlvbnMiOltdLCJleHAiOjE1Nzk1ODU2OTYsImF1dGhvcml0aWVzIjpbIkFETUlOIl0sImp0aSI6IjdhM2Q1MzE3LWYzMTMtNDgwNC1hMjM3LTg0OWY3YjljYjE2MSIsImNsaWVudF9pZCI6ImFkbWluIn0.j1bUXVObJd-WVjCGs1Ot53JcOuBOwI9WNbt4N-Qs1VU"
+                  }
+                }
+              }
+            },
+            {
+              "type": "http",
+              "name": "Get all",
+              "seq": 1,
+              "request": {
+                "url": "http://{{host}}:{{port}}/projects?page=0&size=10",
+                "method": "GET",
+                "headers": [],
+                "params": [
+                  {
+                    "name": "page",
+                    "value": "0",
+                    "type": "query",
+                    "enabled": true
+                  },
+                  {
+                    "name": "size",
+                    "value": "10",
+                    "type": "query",
+                    "enabled": true
+                  }
+                ],
+                "body": {
+                  "mode": "none",
+                  "formUrlEncoded": [],
+                  "multipartForm": []
+                },
+                "script": {},
+                "vars": {},
+                "assertions": [],
+                "tests": "",
+                "auth": {
+                  "mode": "none"
+                }
+              }
+            },
+            {
+              "type": "http",
+              "name": "Update",
+              "seq": 2,
+              "request": {
+                "url": "http://localhost:8100/api/projects/11",
+                "method": "PUT",
+                "headers": [
+                  {
+                    "name": "Content-Type",
+                    "value": "application/json",
+                    "enabled": true
+                  }
+                ],
+                "params": [],
+                "body": {
+                  "mode": "json",
+                  "json": "{\n  \"projectName\": \"new name of 11 project\"\n}",
+                  "formUrlEncoded": [],
+                  "multipartForm": []
+                },
+                "script": {},
+                "vars": {},
+                "assertions": [],
+                "tests": "",
+                "auth": {
+                  "mode": "bearer",
+                  "bearer": {
+                    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJ1c2VyX25hbWUiOiJhZG1pbkBtYWlsLnJ1Iiwic2NvcGUiOlsiY3JnIl0sIm9yZ2FuaXphdGlvbnMiOltdLCJleHAiOjE1Nzk2MTIyMjQsImF1dGhvcml0aWVzIjpbIkFETUlOIl0sImp0aSI6ImQxZmRjYTk0LTk5OTctNDQ1ZS05N2U5LWZkYjk5MDNlZDk0YyIsImNsaWVudF9pZCI6ImFkbWluIn0.0oCV4RmaV7kaBsTMl7tPGZWF-7k6lsmLCg0WBtoEJlw"
+                  }
+                }
+              }
+            },
+            {
+              "type": "folder",
+              "name": "BaseMaps",
+              "items": [
+                {
+                  "type": "http",
+                  "name": "Create new",
+                  "seq": 2,
+                  "request": {
+                    "url": "http://localhost:8100/projects/1/basemaps",
+                    "method": "POST",
+                    "headers": [],
+                    "params": [],
+                    "body": {
+                      "mode": "json",
+                      "json": "{\n    \"baseMapId\": 2,\n    \"title\": \"wmts\"\n}",
+                      "formUrlEncoded": [],
+                      "multipartForm": []
+                    },
+                    "script": {},
+                    "vars": {},
+                    "assertions": [],
+                    "tests": "",
+                    "auth": {
+                      "mode": "bearer",
+                      "bearer": {
+                        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyLCJ1c2VyX25hbWUiOiJmaXpAZml6Iiwic2NvcGUiOlsiY3JnIl0sIm9yZ2FuaXphdGlvbnMiOlt7ImlkIjoxLCJuYW1lIjoiYXNkZmFzZGZhc2QifV0sImdyb3VwcyI6W10sImV4cCI6MTYwMjkyNzc0NSwiYXV0aG9yaXRpZXMiOlsiT1JHX0FETUlOIl0sImp0aSI6IjdkZDk1YzMyLTE5YWMtNGFkZi05NjQ2LTk1ZTU5MDZjYTdjYSIsImNsaWVudF9pZCI6ImFkbWluIn0.aedD0Y86Up-arxSATC2-TUq4TjGXgmV79OknKTAVe_o"
+                      }
+                    }
+                  }
+                },
+                {
+                  "type": "http",
+                  "name": "Get all",
+                  "seq": 1,
+                  "request": {
+                    "url": "http://localhost:8100/projects/1/basemaps",
+                    "method": "GET",
+                    "headers": [],
+                    "params": [],
+                    "body": {
+                      "mode": "none",
+                      "formUrlEncoded": [],
+                      "multipartForm": []
+                    },
+                    "script": {},
+                    "vars": {},
+                    "assertions": [],
+                    "tests": "",
+                    "auth": {
+                      "mode": "bearer",
+                      "bearer": {
+                        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyLCJ1c2VyX25hbWUiOiJmaXpAZml6Iiwic2NvcGUiOlsiY3JnIl0sIm9yZ2FuaXphdGlvbnMiOlt7ImlkIjoxLCJuYW1lIjoiYXNkZmFzZGZhc2QifV0sImdyb3VwcyI6W10sImV4cCI6MTYwMjkyNzc0NSwiYXV0aG9yaXRpZXMiOlsiT1JHX0FETUlOIl0sImp0aSI6IjdkZDk1YzMyLTE5YWMtNGFkZi05NjQ2LTk1ZTU5MDZjYTdjYSIsImNsaWVudF9pZCI6ImFkbWluIn0.aedD0Y86Up-arxSATC2-TUq4TjGXgmV79OknKTAVe_o"
+                      }
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "type": "folder",
+              "name": "Layers",
+              "items": [
+                {
+                  "type": "http",
+                  "name": "Create layer",
+                  "seq": 3,
+                  "request": {
+                    "url": "http://localhost:8082/projects/58/layers",
+                    "method": "POST",
+                    "headers": [],
+                    "params": [],
+                    "body": {
+                      "mode": "json",
+                      "json": "{\n    \"type\": \"vector\",\n    \"title\": \"title\",\n    \"dataset\": \"dataset\",\n    \"internalName\": \"internalName\",\n    \"nativeCRS\": \"EPSG:28406\",\n    \"dataStoreName\": \"dataStoreName\",\n    \"schemaId\": \"schemaId\",\n    \"styleName\": \"styleName\"\n}",
+                      "formUrlEncoded": [],
+                      "multipartForm": []
+                    },
+                    "script": {},
+                    "vars": {},
+                    "assertions": [],
+                    "tests": "",
+                    "auth": {
+                      "mode": "bearer",
+                      "bearer": {
+                        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo5MywidXNlcl9uYW1lIjoiZml6QGZpeiIsInNjb3BlIjpbImNyZyJdLCJvcmdhbml6YXRpb25zIjpbeyJpZCI6NywibmFtZSI6ImZpeiBDb21wYW55In1dLCJncm91cHMiOltdLCJleHAiOjE2MDU0NDM4NzcsImF1dGhvcml0aWVzIjpbIk9SR19BRE1JTiJdLCJqdGkiOiI0YWEzNmUxYy0wNjY3LTRiZjItOGVkNS1iNDcxMjIzMzY1ZGYiLCJjbGllbnRfaWQiOiJhZG1pbiJ9.fA2r2kDUeIKhjf_6NgkNRtED3D4su0MUlBQtjewS4Ks"
+                      }
+                    }
+                  }
+                },
+                {
+                  "type": "http",
+                  "name": "Get All layers",
+                  "seq": 1,
+                  "request": {
+                    "url": "http://localhost:8100/projects/3/layers",
+                    "method": "GET",
+                    "headers": [],
+                    "params": [],
+                    "body": {
+                      "mode": "none",
+                      "formUrlEncoded": [],
+                      "multipartForm": []
+                    },
+                    "script": {},
+                    "vars": {},
+                    "assertions": [],
+                    "tests": "",
+                    "auth": {
+                      "mode": "bearer",
+                      "bearer": {
+                        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyLCJ1c2VyX25hbWUiOiJ3QHciLCJzY29wZSI6WyJjcmciXSwib3JnYW5pemF0aW9ucyI6W3siaWQiOjEsIm5hbWUiOiJXV1cgQ29tcGFueSJ9XSwiZ3JvdXBzIjpbXSwiZXhwIjoxNTkxODY3MTIyLCJhdXRob3JpdGllcyI6WyJPUkdfQURNSU4iXSwianRpIjoiZWY0OWI2ZTUtMmY2Ni00ODgwLWEwMTQtNGNhMGFmZDQ1YmY2IiwiY2xpZW50X2lkIjoiYWRtaW4ifQ.5aL-33NGtXCaee_cAQu3jvKjPOgR-OqKSDh11uDs4uM"
+                      }
+                    }
+                  }
+                },
+                {
+                  "type": "http",
+                  "name": "Patch layer",
+                  "seq": 2,
+                  "request": {
+                    "url": "http://localhost:8100/projects/3/layers/45",
+                    "method": "PATCH",
+                    "headers": [
+                      {
+                        "name": "Content-Type",
+                        "value": "application/merge-patch+json",
+                        "enabled": true
+                      }
+                    ],
+                    "params": [
+                      {
+                        "name": "Appl",
+                        "value": "null",
+                        "type": "query",
+                        "enabled": false
+                      }
+                    ],
+                    "body": {
+                      "mode": "json",
+                      "json": "{\n  \"transparency\": 50\n}",
+                      "formUrlEncoded": [],
+                      "multipartForm": []
+                    },
+                    "script": {},
+                    "vars": {},
+                    "assertions": [],
+                    "tests": "",
+                    "auth": {
+                      "mode": "bearer",
+                      "bearer": {
+                        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyLCJ1c2VyX25hbWUiOiJ3QHciLCJzY29wZSI6WyJjcmciXSwib3JnYW5pemF0aW9ucyI6W3siaWQiOjEsIm5hbWUiOiJXV1cgQ29tcGFueSJ9XSwiZ3JvdXBzIjpbXSwiZXhwIjoxNTkxODY3MTIyLCJhdXRob3JpdGllcyI6WyJPUkdfQURNSU4iXSwianRpIjoiZWY0OWI2ZTUtMmY2Ni00ODgwLWEwMTQtNGNhMGFmZDQ1YmY2IiwiY2xpZW50X2lkIjoiYWRtaW4ifQ.5aL-33NGtXCaee_cAQu3jvKjPOgR-OqKSDh11uDs4uM"
+                      }
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "type": "folder",
+              "name": "Permissions",
+              "items": [
+                {
+                  "type": "http",
+                  "name": "Get ALL permission",
+                  "seq": 1,
+                  "request": {
+                    "url": "http://localhost:8100/projects/5/permissions",
+                    "method": "GET",
+                    "headers": [],
+                    "params": [],
+                    "body": {
+                      "mode": "json",
+                      "json": "{\n    \"principalType\": \"user\",\n    \"principalId\": 2,\n    \"role\": \"VIEWER\"\n}",
+                      "formUrlEncoded": [],
+                      "multipartForm": []
+                    },
+                    "script": {},
+                    "vars": {},
+                    "assertions": [],
+                    "tests": "",
+                    "auth": {
+                      "mode": "bearer",
+                      "bearer": {
+                        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo1LCJ1c2VyX25hbWUiOiJvd25lckBvIiwic2NvcGUiOlsiY3JnIl0sIm9yZ2FuaXphdGlvbnMiOlt7ImlkIjozLCJuYW1lIjoiT09PIENvbXBhbnkifV0sImdyb3VwcyI6W10sImV4cCI6MTU5MTk1Mzg2MSwiYXV0aG9yaXRpZXMiOlsiT1JHX0FETUlOIl0sImp0aSI6IjkyYWJmZDBkLTc1ZjQtNGUyZC05YWFiLTZkNGI3OWVjZWI2NiIsImNsaWVudF9pZCI6ImFkbWluIn0.Wa4kC0p0hmVk95-4auHkTytMtEkmVlo26nroi610EjM"
+                      }
+                    }
+                  }
+                },
+                {
+                  "type": "http",
+                  "name": "Update",
+                  "seq": 2,
+                  "request": {
+                    "url": "http://localhost:8100/projects/5/permissions/13",
+                    "method": "PATCH",
+                    "headers": [
+                      {
+                        "name": "Content-Type",
+                        "value": "application/merge-patch+json",
+                        "enabled": true
+                      }
+                    ],
+                    "params": [],
+                    "body": {
+                      "mode": "json",
+                      "json": "{\n    \"principalId\": 6\n}",
+                      "formUrlEncoded": [],
+                      "multipartForm": []
+                    },
+                    "script": {},
+                    "vars": {},
+                    "assertions": [],
+                    "tests": "",
+                    "auth": {
+                      "mode": "bearer",
+                      "bearer": {
+                        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo1LCJ1c2VyX25hbWUiOiJvd25lckBvIiwic2NvcGUiOlsiY3JnIl0sIm9yZ2FuaXphdGlvbnMiOlt7ImlkIjozLCJuYW1lIjoiT09PIENvbXBhbnkifV0sImdyb3VwcyI6W10sImV4cCI6MTU5MTk1Mzg2MSwiYXV0aG9yaXRpZXMiOlsiT1JHX0FETUlOIl0sImp0aSI6IjkyYWJmZDBkLTc1ZjQtNGUyZC05YWFiLTZkNGI3OWVjZWI2NiIsImNsaWVudF9pZCI6ImFkbWluIn0.Wa4kC0p0hmVk95-4auHkTytMtEkmVlo26nroi610EjM"
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "folder",
+          "name": "datasets",
+          "items": [
+            {
+              "type": "http",
+              "name": "Create dataset",
+              "seq": 1,
+              "request": {
+                "url": "http://localhost:8082/geoserver/datastores/dataStoreId",
+                "method": "POST",
+                "headers": [],
+                "params": [],
+                "body": {
+                  "mode": "none",
+                  "formUrlEncoded": [],
+                  "multipartForm": []
+                },
+                "script": {},
+                "vars": {},
+                "assertions": [],
+                "tests": "",
+                "auth": {
+                  "mode": "bearer",
+                  "bearer": {
+                    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyLCJ1c2VyX25hbWUiOiJmaXpAZml6Iiwic2NvcGUiOlsiY3JnIl0sIm9yZ2FuaXphdGlvbnMiOlt7ImlkIjoxLCJuYW1lIjoiZml6IENvbXBhbnkifV0sImdyb3VwcyI6W10sImV4cCI6MTYwODAyNTU2NywiYXV0aG9yaXRpZXMiOlsiT1JHX0FETUlOIl0sImp0aSI6IjBkMzBiY2ZjLWNmYWUtNGQxOC04ZjlhLTU0OTQzN2I3NjYyYiIsImNsaWVudF9pZCI6ImFkbWluIn0.GiXehTbW-7FpzkOk4YjBaNoMxCCaV7nJ8NV1ik_NYVI"
+                  }
+                }
+              }
+            },
+            {
+              "type": "http",
+              "name": "Delete dataset",
+              "seq": 2,
+              "request": {
+                "url": "http://localhost:8082/geoserver/datastores/dataStoreId",
+                "method": "DELETE",
+                "headers": [],
+                "params": [],
+                "body": {
+                  "mode": "none",
+                  "formUrlEncoded": [],
+                  "multipartForm": []
+                },
+                "script": {},
+                "vars": {},
+                "assertions": [],
+                "tests": "",
+                "auth": {
+                  "mode": "bearer",
+                  "bearer": {
+                    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyLCJ1c2VyX25hbWUiOiJmaXpAZml6Iiwic2NvcGUiOlsiY3JnIl0sIm9yZ2FuaXphdGlvbnMiOlt7ImlkIjoxLCJuYW1lIjoiZml6IENvbXBhbnkifV0sImdyb3VwcyI6W10sImV4cCI6MTYwODAyNTU2NywiYXV0aG9yaXRpZXMiOlsiT1JHX0FETUlOIl0sImp0aSI6IjBkMzBiY2ZjLWNmYWUtNGQxOC04ZjlhLTU0OTQzN2I3NjYyYiIsImNsaWVudF9pZCI6ImFkbWluIn0.GiXehTbW-7FpzkOk4YjBaNoMxCCaV7nJ8NV1ik_NYVI"
+                  }
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "folder",
+      "name": "integration-service",
+      "items": [
+        {
+          "type": "folder",
+          "name": "Camunda",
+          "items": [
+            {
+              "type": "http",
+              "name": "----- ------- - -------",
+              "seq": 3,
+              "request": {
+                "url": "http://localhost:8338/rest/history/process-instance/9e1f4618-b94a-11eb-8a68-b2908c733532",
+                "method": "GET",
+                "headers": [],
+                "params": [],
+                "body": {
+                  "mode": "none",
+                  "formUrlEncoded": [],
+                  "multipartForm": []
+                },
+                "script": {},
+                "vars": {},
+                "assertions": [],
+                "tests": "",
+                "auth": {
+                  "mode": "bearer",
+                  "bearer": {
+                    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJ1c2VyX25hbWUiOiJhZG1pbkBtYWlsLnJ1Iiwic2NvcGUiOlsiY3JnIl0sIm9yZ2FuaXphdGlvbnMiOltdLCJleHAiOjE1Nzk1ODU2OTYsImF1dGhvcml0aWVzIjpbIkFETUlOIl0sImp0aSI6IjdhM2Q1MzE3LWYzMTMtNDgwNC1hMjM3LTg0OWY3YjljYjE2MSIsImNsaWVudF9pZCI6ImFkbWluIn0.j1bUXVObJd-WVjCGs1Ot53JcOuBOwI9WNbt4N-Qs1VU"
+                  }
+                }
+              }
+            },
+            {
+              "type": "http",
+              "name": "------- ---------- -------",
+              "seq": 2,
+              "request": {
+                "url": "http://localhost:8338/rest/process-instance/9e1f4618-b94a-11eb-8a68-b2908c733532",
+                "method": "DELETE",
+                "headers": [],
+                "params": [],
+                "body": {
+                  "mode": "none",
+                  "formUrlEncoded": [],
+                  "multipartForm": []
+                },
+                "script": {},
+                "vars": {},
+                "assertions": [],
+                "tests": "",
+                "auth": {
+                  "mode": "bearer",
+                  "bearer": {
+                    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJ1c2VyX25hbWUiOiJhZG1pbkBtYWlsLnJ1Iiwic2NvcGUiOlsiY3JnIl0sIm9yZ2FuaXphdGlvbnMiOltdLCJleHAiOjE1Nzk1ODU2OTYsImF1dGhvcml0aWVzIjpbIkFETUlOIl0sImp0aSI6IjdhM2Q1MzE3LWYzMTMtNDgwNC1hMjM3LTg0OWY3YjljYjE2MSIsImNsaWVudF9pZCI6ImFkbWluIn0.j1bUXVObJd-WVjCGs1Ot53JcOuBOwI9WNbt4N-Qs1VU"
+                  }
+                }
+              }
+            },
+            {
+              "type": "http",
+              "name": "-------- ---------- --------",
+              "seq": 1,
+              "request": {
+                "url": "http://localhost:8338/rest/process-instance",
+                "method": "GET",
+                "headers": [],
+                "params": [],
+                "body": {
+                  "mode": "none",
+                  "formUrlEncoded": [],
+                  "multipartForm": []
+                },
+                "script": {},
+                "vars": {},
+                "assertions": [],
+                "tests": "",
+                "auth": {
+                  "mode": "bearer",
+                  "bearer": {
+                    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJ1c2VyX25hbWUiOiJhZG1pbkBtYWlsLnJ1Iiwic2NvcGUiOlsiY3JnIl0sIm9yZ2FuaXphdGlvbnMiOltdLCJleHAiOjE1Nzk1ODU2OTYsImF1dGhvcml0aWVzIjpbIkFETUlOIl0sImp0aSI6IjdhM2Q1MzE3LWYzMTMtNDgwNC1hMjM3LTg0OWY3YjljYjE2MSIsImNsaWVudF9pZCI6ImFkbWluIn0.j1bUXVObJd-WVjCGs1Ot53JcOuBOwI9WNbt4N-Qs1VU"
+                  }
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "folder",
+          "name": "gis-analyzers",
+          "items": [
+            {
+              "type": "http",
+              "name": "Analyze resources by specific analyzer",
+              "seq": 3,
+              "request": {
+                "url": "http://localhost:8082/resource-analyzers/LayerExistenceOnGeoserverAnalyzer/analyze",
+                "method": "POST",
+                "headers": [],
+                "params": [],
+                "body": {
+                  "mode": "json",
+                  "json": "[\n    {\n        \"id\": \"testRaster\",\n        \"title\": \"Raster 2\",\n        \"resourceDefinition\": {\n            \"type\": \"RasterLayer\",\n            \"typeTitle\": \"Растровые слои\"\n        },\n        \"resourceProperties\": {\n            \"styleName\": \"polygon\",\n            \"type\": \"raster\"\n        }\n    }\n]",
+                  "formUrlEncoded": [],
+                  "multipartForm": []
+                },
+                "script": {},
+                "vars": {},
+                "assertions": [],
+                "tests": "",
+                "auth": {
+                  "mode": "bearer",
+                  "bearer": {
+                    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyLCJ1c2VyX25hbWUiOiJmaXpAZml6Iiwic2NvcGUiOlsiY3JnIl0sIm9yZ2FuaXphdGlvbnMiOlt7ImlkIjoxLCJuYW1lIjoiZml6IENvbXBhbnkifV0sImdyb3VwcyI6W10sImV4cCI6MTYyMTQwODcwMiwiYXV0aG9yaXRpZXMiOlsiT1JHX0FETUlOIl0sImp0aSI6IjIwM2E4ZTEzLTY2MDgtNDVhYi05ZTgzLWUxZTdmNzc2NTFhYSIsImNsaWVudF9pZCI6ImFkbWluIn0.rNDzOtY9Cv0FxZe92IzIcAHz0JXrK7o1hEDdr_Wzx1g"
+                  }
+                }
+              }
+            },
+            {
+              "type": "http",
+              "name": "Get all existed analyzers",
+              "seq": 2,
+              "request": {
+                "url": "http://localhost:8082/resource-analyzers",
+                "method": "GET",
+                "headers": [],
+                "params": [],
+                "body": {
+                  "mode": "json",
+                  "json": "{\n    \"id\": \"gaspipeline_line_1_fdfe\",\n    \"title\": \"Трубопроводы для транспортировки газа\",\n    \"resourceDefinition\": {\n        \"type\": \"VectorLayer\",\n        \"typeTitle\": \"Векторные слои\"\n    },\n    \"resourceProperties\": {\n        \"styleName\": \"gaspipeline_line\",\n        \"type\": \"vector\"\n    }\n}",
+                  "formUrlEncoded": [],
+                  "multipartForm": []
+                },
+                "script": {},
+                "vars": {},
+                "assertions": [],
+                "tests": "",
+                "auth": {
+                  "mode": "bearer",
+                  "bearer": {
+                    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyLCJ1c2VyX25hbWUiOiJmaXpAZml6Iiwic2NvcGUiOlsiY3JnIl0sIm9yZ2FuaXphdGlvbnMiOlt7ImlkIjoxLCJuYW1lIjoiZml6IENvbXBhbnkifV0sImdyb3VwcyI6W10sImV4cCI6MTYyMTM0Njk4NCwiYXV0aG9yaXRpZXMiOlsiT1JHX0FETUlOIl0sImp0aSI6ImFkMjBhN2QzLTA5YzYtNGY3NC05NDJmLTdjZGViNjA4YTFkMSIsImNsaWVudF9pZCI6ImFkbWluIn0.-ZHBcAaL6GLfQmSwAuOb13Zpk-NrUnA_Ufb7bhmWtEE"
+                  }
+                }
+              }
+            },
+            {
+              "type": "http",
+              "name": "Query resources by type",
+              "seq": 1,
+              "request": {
+                "url": "http://localhost:8082/resources/RasterLayer/entities?size=1&page=1",
+                "method": "GET",
+                "headers": [],
+                "params": [
+                  {
+                    "name": "size",
+                    "value": "1",
+                    "type": "query",
+                    "enabled": true
+                  },
+                  {
+                    "name": "page",
+                    "value": "1",
+                    "type": "query",
+                    "enabled": true
+                  }
+                ],
+                "body": {
+                  "mode": "none",
+                  "formUrlEncoded": [],
+                  "multipartForm": []
+                },
+                "script": {},
+                "vars": {},
+                "assertions": [],
+                "tests": "",
+                "auth": {
+                  "mode": "bearer",
+                  "bearer": {
+                    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyLCJ1c2VyX25hbWUiOiJmaXpAZml6Iiwic2NvcGUiOlsiY3JnIl0sIm9yZ2FuaXphdGlvbnMiOlt7ImlkIjoxLCJuYW1lIjoiZml6IENvbXBhbnkifV0sImdyb3VwcyI6W10sImV4cCI6MTYyMTQxNzA2NSwiYXV0aG9yaXRpZXMiOlsiT1JHX0FETUlOIl0sImp0aSI6IjM5NGY2ZjI1LTZkMmUtNDMyZC1iMGE3LTkyZWY4NjM0MjQyYSIsImNsaWVudF9pZCI6ImFkbWluIn0.o9NJ7UFYa9C544iNb7hMBAcRx7O1KIoTzZgw4kua2eo"
+                  }
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "folder",
+          "name": "resource-analyzer",
+          "items": [
+            {
+              "type": "http",
+              "name": "Get types",
+              "seq": 1,
+              "request": {
+                "url": "http://localhost:8100/resource-analyzers",
+                "method": "GET",
+                "headers": [],
+                "params": [],
+                "body": {
+                  "mode": "none",
+                  "formUrlEncoded": [],
+                  "multipartForm": []
+                },
+                "script": {},
+                "vars": {},
+                "assertions": [],
+                "tests": "",
+                "auth": {
+                  "mode": "bearer",
+                  "bearer": {
+                    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyLCJ1c2VyX25hbWUiOiJmaXpAZml6Iiwic2NvcGUiOlsiY3JnIl0sIm9yZ2FuaXphdGlvbnMiOlt7ImlkIjoxLCJuYW1lIjoiZml6IENvbXBhbnkifV0sImdyb3VwcyI6W10sImV4cCI6MTYyMTQxNzA2NSwiYXV0aG9yaXRpZXMiOlsiT1JHX0FETUlOIl0sImp0aSI6IjM5NGY2ZjI1LTZkMmUtNDMyZC1iMGE3LTkyZWY4NjM0MjQyYSIsImNsaWVudF9pZCI6ImFkbWluIn0.o9NJ7UFYa9C544iNb7hMBAcRx7O1KIoTzZgw4kua2eo"
+                  }
+                }
+              }
+            },
+            {
+              "type": "http",
+              "name": "Run analyzer",
+              "seq": 2,
+              "request": {
+                "url": "http://localhost:8100/resource-analyzers?resourceType=RasterLayer",
+                "method": "POST",
+                "headers": [],
+                "params": [
+                  {
+                    "name": "resourceType",
+                    "value": "RasterLayer",
+                    "type": "query",
+                    "enabled": true
+                  }
+                ],
+                "body": {
+                  "mode": "none",
+                  "formUrlEncoded": [],
+                  "multipartForm": []
+                },
+                "script": {},
+                "vars": {},
+                "assertions": [],
+                "tests": "",
+                "auth": {
+                  "mode": "bearer",
+                  "bearer": {
+                    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyLCJ1c2VyX25hbWUiOiJmaXpAZml6Iiwic2NvcGUiOlsiY3JnIl0sIm9yZ2FuaXphdGlvbnMiOlt7ImlkIjoxLCJuYW1lIjoiZml6IENvbXBhbnkifV0sImdyb3VwcyI6W10sImV4cCI6MTYyMTQxNzA2NSwiYXV0aG9yaXRpZXMiOlsiT1JHX0FETUlOIl0sImp0aSI6IjM5NGY2ZjI1LTZkMmUtNDMyZC1iMGE3LTkyZWY4NjM0MjQyYSIsImNsaWVudF9pZCI6ImFkbWluIn0.o9NJ7UFYa9C544iNb7hMBAcRx7O1KIoTzZgw4kua2eo"
+                  }
+                }
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "environments": [
+    {
+      "variables": [
+        {
+          "name": "host",
+          "value": "http://localhost",
+          "enabled": true,
+          "secret": false,
+          "type": "text"
+        },
+        {
+          "name": "port",
+          "value": "8100",
+          "enabled": true,
+          "secret": false,
+          "type": "text"
+        },
+        {
+          "name": "user",
+          "value": "fiz@fiz",
+          "enabled": true,
+          "secret": false,
+          "type": "text"
+        },
+        {
+          "name": "password",
+          "value": "aA111111",
+          "enabled": true,
+          "secret": false,
+          "type": "text"
+        }
+      ],
+      "name": "Local"
+    }
+  ],
+  "brunoConfig": {
+    "version": "1",
+    "name": "CRG API",
+    "type": "collection",
+    "ignore": [
+      "node_modules",
+      ".git"
+    ]
+  }
+}

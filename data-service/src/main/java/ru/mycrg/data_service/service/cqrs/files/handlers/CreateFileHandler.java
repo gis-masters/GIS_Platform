@@ -45,7 +45,7 @@ public class CreateFileHandler implements IRequestHandler<CreateFileRequest, Lis
         MultipartFile[] files = request.getFiles();
         for (MultipartFile file: files) {
             if (file != null && !file.isEmpty()) {
-                String path = fileStorageService.copyToTrash(file, generateFileName(file.getOriginalFilename()));
+                String path = fileStorageService.copyToTrash(file, generateFileName(file));
                 String intents = simpleIntentHandler.defineIntent(file);
 
                 File entity = new File(file, intents, path, authenticationFacade.getLogin());

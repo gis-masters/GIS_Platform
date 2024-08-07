@@ -1,7 +1,6 @@
 import { createElement } from 'react';
 import { ListItemIcon, Tooltip } from '@mui/material';
 import { FilterAltOutlined } from '@mui/icons-material';
-import { FeatureType } from '@fiz/geoserver-types/feature-types/FeatureType';
 import { AxiosError } from 'axios';
 
 import { Toast } from '../../../components/Toast/Toast';
@@ -16,6 +15,7 @@ import {
   getGeometryTypeFromGeoserverAttributes
 } from '../../data/schema/schema.utils';
 import { getVectorTable } from '../../data/vectorData/vectorData.service';
+import { FeatureType } from '../../geoserver/featureType/featureType.model';
 import { getFeatureType } from '../../geoserver/featureType/featureType.service';
 import { SupportedGeometryType, supportedGeometryTypes } from '../../geoserver/wfs/wfs.models';
 import { services } from '../../services';
@@ -119,8 +119,14 @@ export async function getLayerSchema(layer?: CrgLayer): Promise<Schema | undefin
     return await schemaService.getSchema('dxf_schema_v1');
   } else if (layer.type && isVectorFromFile(layer.type)) {
     const featureType: FeatureType = await getFeatureType(layer);
-    const properties = convertGeoserverPropertiesToSchemaProperties(featureType.attributes.attribute);
-    const geometryType = getGeometryTypeFromGeoserverAttributes(featureType.attributes.attribute);
+
+    let attributes = featureType.attributes.attribute;
+    if (!Array.isArray(attributes)) {
+      attributes = [attributes];
+    }
+
+    const properties = convertGeoserverPropertiesToSchemaProperties(attributes);
+    const geometryType = getGeometryTypeFromGeoserverAttributes(attributes);
     const template = `schema_template_${layer.id}_${layer.id}`;
     if (supportedGeometryTypes.includes(geometryType)) {
       return {

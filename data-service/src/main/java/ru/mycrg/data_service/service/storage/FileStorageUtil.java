@@ -5,11 +5,14 @@ import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.nio.file.Path;
 import java.text.DecimalFormat;
 import java.util.UUID;
+
+import static ru.mycrg.common_utils.CrgGlobalProperties.joinByDouble;
 
 public class FileStorageUtil {
 
@@ -44,5 +47,14 @@ public class FileStorageUtil {
         return String.format("%s.%s",
                              UUID.randomUUID().toString().substring(0, 13),
                              StringUtils.getFilenameExtension(originalFilename));
+    }
+
+    @NotNull
+    public static String generateFileName(MultipartFile file) {
+        int fileHashCode = file.hashCode();
+
+        return String.format("%s.%s",
+                             joinByDouble(UUID.randomUUID().toString().substring(0, 13), String.valueOf(fileHashCode)),
+                             StringUtils.getFilenameExtension(file.getOriginalFilename())).toLowerCase();
     }
 }
