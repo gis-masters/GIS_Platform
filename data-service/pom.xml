@@ -540,7 +540,6 @@
                             <packageName>ru.mycrg.data_service.egrn_cadastrial_plans_1_1_2</packageName>
                             <encoding>UTF-8</encoding>
                             <clearOutputDir>false</clearOutputDir>
-
                         </configuration>
                     </execution>
 
@@ -558,7 +557,23 @@
                             <packageName>ru.mycrg.data_service.gpzu_1_0_4</packageName>
                             <encoding>UTF-8</encoding>
                             <clearOutputDir>false</clearOutputDir>
+                        </configuration>
+                    </execution>
 
+                    <execution>
+                        <id>accept_rns_1_0_3</id>
+                        <goals>
+                            <goal>xjc</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>${basedir}/src/main/resources/xsd_smev3/accept_rns_1_0_3/core/service-adapter-types.xsd</source>
+                            </sources>
+                            <verbose>false</verbose>
+                            <extension>true</extension>
+                            <packageName>ru.mycrg.data_service.accept_rns_1_0_3</packageName>
+                            <encoding>UTF-8</encoding>
+                            <clearOutputDir>false</clearOutputDir>
                         </configuration>
                     </execution>
                 </executions>

@@ -20,6 +20,7 @@ import ru.mycrg.data_service.service.reestrs.ReestrIncomingService;
 import ru.mycrg.data_service.service.smev3.model.ResponseFailProcess;
 import ru.mycrg.data_service.service.smev3.request.ResponseProcessor;
 import ru.mycrg.data_service.service.smev3.request.gpzu.GpzuService;
+import ru.mycrg.data_service.service.smev3.request.accept_rns.AcceptRnsService;
 import ru.mycrg.data_service.util.JsonConverter;
 
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -49,6 +50,7 @@ public class SmevMessageReceiverService {
     private final Queue adapterReceiveFailQueue;
     private final List<ResponseProcessor> responseProcessors;
     private final GpzuService gpzuService;
+    private final AcceptRnsService acceptRnsService;
     private final ReestrIncomingService reestrIncomingService;
 
     public SmevMessageReceiverService(SmevMessageService messageService,
@@ -56,12 +58,14 @@ public class SmevMessageReceiverService {
                                       Queue adapterReceiveFailQueue,
                                       List<ResponseProcessor> responseProcessors,
                                       GpzuService gpzuService,
+                                      AcceptRnsService acceptRnsService,
                                       ReestrIncomingService reestrIncomingService) {
         this.messageService = messageService;
         this.rabbitTemplate = rabbitTemplate;
         this.adapterReceiveFailQueue = adapterReceiveFailQueue;
         this.responseProcessors = responseProcessors;
         this.gpzuService = gpzuService;
+        this.acceptRnsService = acceptRnsService;
         this.reestrIncomingService = reestrIncomingService;
     }
 
@@ -74,6 +78,10 @@ public class SmevMessageReceiverService {
         try {
             if (body.contains("urn://rostelekom.ru/GPZU/1.0.4")) {
                 gpzuService.acceptGpzuRequest(body);
+                return;
+            }
+            if (body.contains("urn://rostelekom.ru/ConstructionPermits/1.0.3")) {
+                acceptRnsService.acceptRnsRequest(body);
                 return;
             }
             var messageEntity = replyToClientId(message)
