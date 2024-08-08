@@ -1,7 +1,6 @@
 package ru.mycrg.acceptance;
 
 import org.jetbrains.annotations.NotNull;
-import ru.mycrg.acceptance.data_service.dto.schemas.SchemaDto;
 import ru.mycrg.geo_json.Feature;
 import ru.mycrg.geo_json.LngLatAlt;
 import ru.mycrg.geo_json.MultiPolygon;
@@ -16,6 +15,8 @@ public class FeatureBuilder {
 
     public static List<Feature> prepareFeatures(String dataTemplate) {
         List<Feature> features = new ArrayList<>();
+
+        Feature feature1, feature2;
 
         switch (dataTemplate) {
             case "данные для множественного копирования":
@@ -37,13 +38,26 @@ public class FeatureBuilder {
 
                 break;
             case "исключение hidden полей при полнотекстовом поиске":
-                Feature feature1 = getFeature_F();
+                feature1 = getFeature_F();
                 feature1.setProperty("field_1", "с. Золотое поле, ул. Ленина, д. 71");
                 feature1.setProperty("field_2", "с. Золотая балка, ул. Пушкина, д. 99");
 
-                Feature feature2 = getFeature_I();
+                feature2 = getFeature_I();
                 feature2.setProperty("field_1", "с. Льговсоке, ул. Долгоруковская, д. 22");
                 feature2.setProperty("field_2", "с. Золотое поле, ул. Комарова, д. 71");
+
+                features.add(feature1);
+                features.add(feature2);
+
+                break;
+            case "данные для тестирования FTS":
+                feature1 = getFeature_F();
+                feature1.setProperty("field_1", "с. Золотое поле, ул. Ленина, д. 71");
+                feature1.setProperty("field_2", "с. Золотая балка, ул. Пушкина, д. 99");
+
+                feature2 = getFeature_I();
+                feature2.setProperty("field_1", "с. Льговсоке, ул. Долгоруковская, д. 22");
+                feature2.setProperty("field_2", "с. Золотое поле, ул. Пограничников, д. 71");
 
                 features.add(feature1);
                 features.add(feature2);

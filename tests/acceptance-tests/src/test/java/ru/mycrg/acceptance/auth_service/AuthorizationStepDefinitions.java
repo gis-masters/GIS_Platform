@@ -68,6 +68,11 @@ public class AuthorizationStepDefinitions extends BaseStepsDefinitions {
         authorizationBase.loginAsOwner();
     }
 
+    @Given("Пользователь авторизован как {string}, {string}")
+    public void authorizedAs(String email, String pass) {
+        authorizationBase.loginAs(email, pass);
+    }
+
     @When("Авторизуемся пользователем у которого email прописан в верхнем регистре")
     public void authorizeAsUserIgnoreUsernameCase() {
         authorizationBase.loginAs(userDto.getEmail().toUpperCase(), userDto.getPassword());

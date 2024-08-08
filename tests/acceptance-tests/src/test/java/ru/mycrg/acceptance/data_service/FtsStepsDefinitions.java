@@ -10,6 +10,7 @@ import ru.mycrg.common_contracts.generated.fts.FtsRequestDto;
 import ru.mycrg.common_contracts.generated.fts.FtsType;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 
 public class FtsStepsDefinitions extends BaseStepsDefinitions {
 
@@ -20,11 +21,17 @@ public class FtsStepsDefinitions extends BaseStepsDefinitions {
         return super.getBaseRequestWithCurrentCookie().basePath("/api/data/fts");
     }
 
-    @When("Пользователь запускает асинхронный полнотекстовый поиск: {string}")
-    public void runAsyncFtsSearch(String text) {
+    @When("Пользователь полнотекстовым поиском по {word} ищет {string}")
+    public void runAsyncFtsSearch(String type, String text) {
         FtsRequestDto ftsDto = new FtsRequestDto();
         ftsDto.setText(text);
-        ftsDto.setType(FtsType.FEATURE);
+        if ("документам".equals(type)) {
+            ftsDto.setType(FtsType.DOCUMENT);
+        } else if ("слоям".equals(type)) {
+            ftsDto.setType(FtsType.FEATURE);
+        } else {
+            throw new RuntimeException("Укажите по чему вести поиск: документам или слоям.");
+        }
         ftsDto.setSources(null);
 
         response = getBaseRequestWithCurrentCookie()
@@ -36,16 +43,29 @@ public class FtsStepsDefinitions extends BaseStepsDefinitions {
                         post();
     }
 
-    @Then("Пользователь ожидает завершение работы асинхронного запроса")
+    @Then("Пользователь ожидает завершения работы поиска")
     public void waitFtsProcessToComplete() {
         Integer currentProcessId = extractId((String) response.jsonPath().get("_links.self.href"));
 
         processesStepDefinitions.waitUntilProcessCompleteWithStatus(currentProcessId, "DONE");
     }
 
-    @Then("Не найдены результаты асинхронного полнотекстового поиска")
-    public void shouldNotFoundAnythingAsync() {
+    @Then("Полнотекстовый поиск не нашел ничего")
+    public void shouldNotFoundAnything() {
         int total = response.jsonPath().getInt("details.page.totalElements");
-        assertEquals("Данные не должны быть найдены", total, 0);
+        assertEquals("Количество записей в ответе должно быть равно 0", 0, total);
     }
+
+    @Then("Полнотекстовй поск нашёл (документы/документ)")
+    public void shouldFoundAnything() {
+        int total = response.jsonPath().getInt("details.page.totalElements");
+        assertNotEquals("Количество записей в ответе должно быть больше 0", 0, total);
+    }
+
+    @Then("В результате поиска найдена строка {string}")
+    public void shouldFoundString(String str) {
+        String respStr = response.jsonPath().getString("details.content[0].payload.properties.field_1");
+        assertEquals("Должна быть найдена строка" + str, str, respStr);
+    }
+
 }

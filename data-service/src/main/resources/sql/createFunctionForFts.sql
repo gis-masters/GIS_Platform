@@ -54,7 +54,7 @@ BEGIN
 
     RETURN NEW;
 END;
-$$ LANGUAGE plpgsql;
+$$ LANGUAGE plpgsql;;
 
 
 CREATE OR REPLACE FUNCTION public.universal_copy_to_fts_layers()
@@ -94,7 +94,7 @@ BEGIN
 
     RETURN NEW;
 END;
-$$ LANGUAGE plpgsql;
+$$ LANGUAGE plpgsql;;
 
 
 CREATE OR REPLACE FUNCTION public.delete_from_fts_documents() RETURNS TRIGGER AS $$
@@ -105,7 +105,7 @@ BEGIN
 
     RETURN OLD;
 END;
-$$ LANGUAGE plpgsql;
+$$ LANGUAGE plpgsql;;
 
 CREATE OR REPLACE FUNCTION public.delete_from_fts_layers() RETURNS TRIGGER AS $$
 BEGIN
@@ -115,4 +115,33 @@ BEGIN
 
     RETURN OLD;
 END;
-$$ LANGUAGE plpgsql;
+$$ LANGUAGE plpgsql;;
+
+CREATE OR REPLACE FUNCTION public.update_fts_dictionary_incremental() RETURNS TRIGGER AS $$
+DECLARE
+    new_type_id INT;
+BEGIN
+    new_type_id := TG_ARGV[0];
+    INSERT INTO data.fts_dictionary (word, type_id)
+        SELECT substring(original_word, 2, length(original_word) - 2), new_type_id
+        FROM (
+            SELECT substring(
+                       unnest(string_to_array(to_tsvector('russian', NEW.concatenated_data)::text, ' ')),
+                   '([^:]+)') AS original_word
+        ) AS cte
+    ON CONFLICT (word, type_id) DO NOTHING;
+    RETURN NULL;
+END;
+$$ LANGUAGE plpgsql;;
+
+DROP TRIGGER IF EXISTS update_fts_dictionary_documents_tgr ON data.fts_documents;;
+CREATE TRIGGER update_fts_dictionary_documents_tgr AFTER INSERT OR UPDATE
+    ON data.fts_documents
+    FOR EACH ROW
+EXECUTE PROCEDURE public.update_fts_dictionary_incremental(2);;
+
+DROP TRIGGER IF EXISTS update_fts_dictionary_layers_tgr ON data.fts_layers;;
+CREATE TRIGGER update_fts_dictionary_layers_tgr AFTER INSERT OR UPDATE
+    ON data.fts_layers
+    FOR EACH ROW
+EXECUTE PROCEDURE public.update_fts_dictionary_incremental(1);;
