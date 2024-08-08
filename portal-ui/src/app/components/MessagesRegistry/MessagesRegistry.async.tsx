@@ -13,8 +13,10 @@ import {
 } from '../../services/data/messagesRegistries/messagesRegistries.service';
 import { Schema } from '../../services/data/schema/schema.models';
 import { PageOptions } from '../../services/models';
+import { services } from '../../services/services';
 import { FilterQuery } from '../../services/util/filters/filters.models';
 import { SortParams } from '../../services/util/sortObjects';
+import { organizationSettings } from '../../stores/OrganizationSettings.store';
 import { Breadcrumbs, BreadcrumbsItemData } from '../Breadcrumbs/Breadcrumbs';
 import { EmptyListView } from '../EmptyListView/EmptyListView';
 import { Loading } from '../Loading/Loading';
@@ -47,32 +49,44 @@ export default class MessagesRegistry extends Component<MessagesRegistryProps> {
   }
 
   async componentDidMount() {
+    if (!organizationSettings.reestrs) {
+      await services.provided;
+
+      services.ngZone.run(() => {
+        setTimeout(() => {
+          void services.router.navigateByUrl('/data-management');
+        }, 0);
+      });
+    }
+
     await this.getSchema();
   }
 
   render() {
     return (
-      <div className={cnMessagesRegistry()}>
-        {this.ready && (
-          <>
-            <Breadcrumbs items={this.items} itemsType='link' size='medium' />
+      organizationSettings.reestrs && (
+        <div className={cnMessagesRegistry()}>
+          {this.ready && (
+            <>
+              <Breadcrumbs items={this.items} itemsType='link' size='medium' />
 
-            <Registry<MessagesRegistriesMessages>
-              className={cnMessagesRegistry('Table')}
-              cols={this.cols}
-              id={this.getId()}
-              getData={this.getData}
-              defaultSort={this.defaultSort}
-              filtersAlwaysEnabled
-              showFiltersPanel
-              defaultFilter={this.defaultFilter}
-            />
-          </>
-        )}
-        {!this.ready && !this.error && <Loading noBackdrop />}
+              <Registry<MessagesRegistriesMessages>
+                className={cnMessagesRegistry('Table')}
+                cols={this.cols}
+                id={this.getId()}
+                getData={this.getData}
+                defaultSort={this.defaultSort}
+                filtersAlwaysEnabled
+                showFiltersPanel
+                defaultFilter={this.defaultFilter}
+              />
+            </>
+          )}
+          {!this.ready && !this.error && <Loading noBackdrop />}
 
-        {this.error && <EmptyListView text={this.error} />}
-      </div>
+          {this.error && <EmptyListView text={this.error} />}
+        </div>
+      )
     );
   }
 

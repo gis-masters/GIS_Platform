@@ -5,6 +5,7 @@ import { BugReport, BugReportOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
+import { organizationSettings } from '../../../stores/OrganizationSettings.store';
 import { Pages, route } from '../../../stores/Route.store';
 import { sidebars } from '../../../stores/Sidebars.store';
 import { CalculatorButton } from '../../CalculatorButton/CalculatorButton';
@@ -27,10 +28,12 @@ export class WorkspaceHeaderButtons extends Component {
     return (
       <div className={cnWorkspaceHeaderButtons()}>
         {route.data.page === Pages.MAP && <SearchInProject />}
-        {route.data.page === Pages.DATA_MANAGEMENT && <CalculatorButton />}
+        {route.data.page === Pages.DATA_MANAGEMENT && organizationSettings.viewServicesCalculator && (
+          <CalculatorButton />
+        )}
         <CopyUrlButton inHeader />
         {route.data.page === Pages.MAP && <PrintMapButton />}
-        {route.data.page === Pages.MAP && (
+        {route.data.page === Pages.MAP && organizationSettings.viewBugReport && (
           <Tooltip title='Проверка ошибок по приказу'>
             <IconButton onClick={this.handleBugsClick} color='inherit'>
               {sidebars.bugReportOpen ? <BugReport /> : <BugReportOutlined />}
@@ -38,7 +41,7 @@ export class WorkspaceHeaderButtons extends Component {
           </Tooltip>
         )}
 
-        {route.data.page === Pages.MAP && <ExportGmlButton />}
+        {route.data.page === Pages.MAP && organizationSettings.downloadGml && <ExportGmlButton />}
 
         <HelpToggler />
         <NotificationsToggler />

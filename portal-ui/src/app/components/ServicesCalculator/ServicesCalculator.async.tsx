@@ -5,6 +5,8 @@ import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
 import { PropertySchema, PropertyType } from '../../services/data/schema/schema.models';
+import { services } from '../../services/services';
+import { organizationSettings } from '../../stores/OrganizationSettings.store';
 import { FormDialog } from '../FormDialog/FormDialog';
 import { ServicesCalculatorActions } from './Actions/ServicesCalculator-Actions';
 import { ServicesCalculatorList } from './List/ServicesCalculator-List';
@@ -127,49 +129,63 @@ export default class ServicesCalculator extends Component {
     }
   }
 
+  async componentDidMount() {
+    if (!organizationSettings.viewServicesCalculator) {
+      await services.provided;
+
+      services.ngZone.run(() => {
+        setTimeout(() => {
+          void services.router.navigateByUrl('/projects');
+        }, 0);
+      });
+    }
+  }
+
   render() {
     return (
-      <>
-        <ServicesCalculatorTitle />
+      organizationSettings.viewServicesCalculator && (
+        <>
+          <ServicesCalculatorTitle />
 
-        <div className={cnServicesCalculator()}>
-          <ServicesCalculatorServicesList
-            selectAllService={this.selectAllService}
-            selectedServices={this.selectedServices}
-            openServicesDialog={this.openServicesDialog}
-            selectedAllServices={this.selectedAllServices}
-            selectService={this.selectService}
-            deleteService={this.deleteService}
+          <div className={cnServicesCalculator()}>
+            <ServicesCalculatorServicesList
+              selectAllService={this.selectAllService}
+              selectedServices={this.selectedServices}
+              openServicesDialog={this.openServicesDialog}
+              selectedAllServices={this.selectedAllServices}
+              selectService={this.selectService}
+              deleteService={this.deleteService}
+            />
+
+            <ServicesCalculatorActions
+              openRequisitesDialog={this.openRequisitesDialog}
+              onClearAll={this.onClearAll}
+              resultPrice={this.resultPrice}
+              selectedServices={this.selectedServices}
+              onClearSelectedServices={this.setClearSelectedServices}
+            />
+          </div>
+
+          <FormDialog
+            open={this.requisitesDialogOpen}
+            schema={{ properties }}
+            value={(JSON.parse(String(localStorage.getItem('invoiceRequisites'))) as InvoiceInfo) || {}}
+            actionButtonProps={{ children: 'Сохранить' }}
+            actionFunction={this.setSelectedServices}
+            onClose={this.closeRequisitesDialog}
+            unclosable={this.unclosable}
+            title='Реквизиты'
           />
 
-          <ServicesCalculatorActions
-            openRequisitesDialog={this.openRequisitesDialog}
-            onClearAll={this.onClearAll}
-            resultPrice={this.resultPrice}
-            selectedServices={this.selectedServices}
-            onClearSelectedServices={this.setClearSelectedServices}
+          <ServicesCalculatorList
+            servicesDialogOpen={this.servicesDialogOpen}
+            onCloseServicesDialog={this.closeServicesDialog}
+            onChangeServices={this.setServices}
+            clearSelectedServices={this.clearSelectedServices}
+            onClearServices={this.setClearSelectedServices}
           />
-        </div>
-
-        <FormDialog
-          open={this.requisitesDialogOpen}
-          schema={{ properties }}
-          value={(JSON.parse(String(localStorage.getItem('invoiceRequisites'))) as InvoiceInfo) || {}}
-          actionButtonProps={{ children: 'Сохранить' }}
-          actionFunction={this.setSelectedServices}
-          onClose={this.closeRequisitesDialog}
-          unclosable={this.unclosable}
-          title='Реквизиты'
-        />
-
-        <ServicesCalculatorList
-          servicesDialogOpen={this.servicesDialogOpen}
-          onCloseServicesDialog={this.closeServicesDialog}
-          onChangeServices={this.setServices}
-          clearSelectedServices={this.clearSelectedServices}
-          onClearServices={this.setClearSelectedServices}
-        />
-      </>
+        </>
+      )
     );
   }
 

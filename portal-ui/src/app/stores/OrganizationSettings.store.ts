@@ -89,6 +89,40 @@ export class OrganizationSettings {
   }
 
   @computed
+  get viewDocumentLibrary(): boolean {
+    return this.allowedToUse(
+      !!this.orgSettings?.system?.viewDocumentLibrary,
+      !!this.orgSettings?.organization?.viewDocumentLibrary
+    );
+  }
+
+  @computed
+  get viewBugReport(): boolean {
+    return this.allowedToUse(
+      !!this.orgSettings?.system?.viewBugReport,
+      !!this.orgSettings?.organization?.viewBugReport
+    );
+  }
+
+  @computed
+  get viewServicesCalculator(): boolean {
+    return this.allowedToUse(
+      !!this.orgSettings?.system?.viewServicesCalculator,
+      !!this.orgSettings?.organization?.viewServicesCalculator
+    );
+  }
+
+  @computed
+  get importShp(): boolean {
+    return this.allowedToUse(!!this.orgSettings?.system?.importShp, !!this.orgSettings?.organization?.importShp);
+  }
+
+  @computed
+  get downloadGml(): boolean {
+    return this.allowedToUse(!!this.orgSettings?.system?.downloadGml, !!this.orgSettings?.organization?.downloadGml);
+  }
+
+  @computed
   get taskManagement(): boolean {
     return this.allowedToUse(
       !!this.orgSettings?.system?.taskManagement,

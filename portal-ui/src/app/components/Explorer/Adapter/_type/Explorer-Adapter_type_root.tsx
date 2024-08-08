@@ -13,10 +13,6 @@ function getChildren(): ExplorerItemData[] {
       payload: null
     },
     {
-      type: ExplorerItemType.LIBRARY_ROOT,
-      payload: null
-    },
-    {
       type: ExplorerItemType.BASEMAPS_ROOT,
       payload: null
     },
@@ -25,6 +21,13 @@ function getChildren(): ExplorerItemData[] {
       payload: null
     }
   ];
+
+  if (organizationSettings.viewDocumentLibrary) {
+    baseChildren.push({
+      type: ExplorerItemType.LIBRARY_ROOT,
+      payload: null
+    });
+  }
 
   if (organizationSettings.reestrs) {
     baseChildren.push({

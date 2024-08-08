@@ -14,6 +14,7 @@ import { DataChangeEventDetail } from '../../services/communication.service';
 import { SortOrder } from '../../services/models';
 import { services } from '../../services/services';
 import { sleep } from '../../services/util/sleep';
+import { organizationSettings } from '../../stores/OrganizationSettings.store';
 import { Loading } from '../Loading/Loading';
 import {
   customOpenAction,
@@ -58,6 +59,10 @@ const presets: Partial<{ [key in ExplorerItemType]: ExplorerItemData[] }> = {
   [ExplorerItemType.DATASET_ROOT]: [{ type: ExplorerItemType.DATASET_ROOT, payload: null }, emptyItem],
   [ExplorerItemType.LIBRARY_ROOT]: [{ type: ExplorerItemType.LIBRARY_ROOT, payload: null }, emptyItem],
   [ExplorerItemType.PROJECTS_ROOT]: [{ type: ExplorerItemType.PROJECTS_ROOT, payload: null }, emptyItem],
+  [ExplorerItemType.MESSAGES_REGISTRIES_ROOT]: [
+    { type: ExplorerItemType.MESSAGES_REGISTRIES_ROOT, payload: null },
+    emptyItem
+  ],
   [ExplorerItemType.BASEMAPS_ROOT]: [{ type: ExplorerItemType.BASEMAPS_ROOT, payload: null }, emptyItem]
 };
 
@@ -392,6 +397,14 @@ export default class Explorer extends Component<ExplorerProps> {
   }
 
   private async restoreStateFromUrl(url: URL = new URL(window.location.href)) {
+    if (url.href.includes('libraryRoot') && !organizationSettings.viewDocumentLibrary) {
+      return;
+    }
+
+    if (url.href.includes('messagesRegistries') && !organizationSettings.reestrs) {
+      return;
+    }
+
     this.store.setRestoringFromUrl(true);
 
     const { explorerRole, onOpen } = this.props;

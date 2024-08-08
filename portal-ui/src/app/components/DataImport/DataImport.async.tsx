@@ -14,6 +14,7 @@ import {
 import { projectsService } from '../../services/gis/projects/projects.service';
 import { services } from '../../services/services';
 import { currentImport } from '../../stores/CurrentImport.store';
+import { organizationSettings } from '../../stores/OrganizationSettings.store';
 import { route } from '../../stores/Route.store';
 import { DataImportTasksList } from '../DataImportTasksList/DataImportTasksList';
 import { NoticeList } from '../Notice/List/Notice-List';
@@ -51,6 +52,16 @@ export default class DataImport extends Component {
   }
 
   async componentDidMount() {
+    if (!organizationSettings.importShp) {
+      await services.provided;
+
+      services.ngZone.run(() => {
+        setTimeout(() => {
+          void services.router.navigateByUrl('/projects');
+        }, 0);
+      });
+    }
+
     // прогреем схемы, понадобятся на следующем шаге
     void schemaService.getAllOldSchemas();
     const urlImportId = route.params.importId;
@@ -85,33 +96,35 @@ export default class DataImport extends Component {
     const { on, file } = currentImport;
 
     return (
-      <div className={cnDataImport()}>
-        <DataImportDropzone
-          loading={this.loading}
-          file={file}
-          importOn={on}
-          onDrop={this.handleFileDrop}
-          onClear={this.reset}
-        />
+      organizationSettings.importShp && (
+        <div className={cnDataImport()}>
+          <DataImportDropzone
+            loading={this.loading}
+            file={file}
+            importOn={on}
+            onDrop={this.handleFileDrop}
+            onClear={this.reset}
+          />
 
-        <Notice>
-          Допустимы данные в системах координат
-          <NoticeList>
-            <NoticeListItem>СК-42 в проекции Гаусса-Крюгера;</NoticeListItem>
-            <NoticeListItem>WGS84 геодезическая система координат на эллипсоиде WGS843;</NoticeListItem>
-            <NoticeListItem>WGS84 Web Mercator.</NoticeListItem>
-          </NoticeList>
-          Имена файлов в архиве не должны содержать кириллические символы.
-        </Notice>
+          <Notice>
+            Допустимы данные в системах координат
+            <NoticeList>
+              <NoticeListItem>СК-42 в проекции Гаусса-Крюгера;</NoticeListItem>
+              <NoticeListItem>WGS84 геодезическая система координат на эллипсоиде WGS843;</NoticeListItem>
+              <NoticeListItem>WGS84 Web Mercator.</NoticeListItem>
+            </NoticeList>
+            Имена файлов в архиве не должны содержать кириллические символы.
+          </Notice>
 
-        <DataImportNotifications />
+          <DataImportNotifications />
 
-        <DataImportTasksList className={cnDataImport('TasksList')} onDeleteAllTask={this.reset} />
+          <DataImportTasksList className={cnDataImport('TasksList')} onDeleteAllTask={this.reset} />
 
-        <DataImportNavButtons onNext={this.handleNext} onCancel={this.reset} nextUrl={this.nextUrl} />
+          <DataImportNavButtons onNext={this.handleNext} onCancel={this.reset} nextUrl={this.nextUrl} />
 
-        <DataImportDialog open={this.dialogOpen} onClose={this.handleDialogClose} nextUrl={this.nextUrl} />
-      </div>
+          <DataImportDialog open={this.dialogOpen} onClose={this.handleDialogClose} nextUrl={this.nextUrl} />
+        </div>
+      )
     );
   }
 
