@@ -14,6 +14,7 @@ import javax.xml.stream.XMLStreamReader;
 import java.util.*;
 
 import static ru.mycrg.data_service.dao.config.DaoProperties.DEFAULT_GEOMETRY_COLUMN_NAME;
+import static ru.mycrg.data_service.service.smev3.fields.KptFields.REGNUMBORD;
 
 @Component
 public class ZouitReader extends CommonKptXmlElementReader<ZouitElement, ZonesAndTerritoriesBoundariesType.ZonesAndTerritoriesRecord> {
@@ -54,7 +55,7 @@ public class ZouitReader extends CommonKptXmlElementReader<ZouitElement, ZonesAn
             //парсим только объекты с геометрией
             content.put("number", number);
             content.put("zonetype", extractZoneType(record));
-            content.put("regnumbord", extractRegnumbord(record));
+            content.put(REGNUMBORD, extractRegnumbord(record));
             content.put("registrati", extractRegistrati(record));
             content.put("boundary_1", extractBoundary_1(record));
             content.put(DEFAULT_GEOMETRY_COLUMN_NAME, oMultiPolygon.get());

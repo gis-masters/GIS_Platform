@@ -37,9 +37,12 @@ public class DeleteMultipleTableRecordsHandler implements IRequestHandler<Delete
         ResourceQualifier rQualifier = request.getrQualifiers();
 
         try {
-            ddlTablesBase.isExist(rQualifier);
-            spatialRecordsDao.removeMultipleRecords(rQualifier, request.getIds());
-            removeRecordsFromExtensionTableByObjectId(rQualifier, request.getIds());
+            if (ddlTablesBase.isExist(rQualifier)) {
+                spatialRecordsDao.removeMultipleRecords(rQualifier, request.getIds());
+                removeRecordsFromExtensionTableByObjectId(rQualifier, request.getIds());
+            } else {
+                throw new DataServiceException("Не найдена таблица: " + rQualifier.getQualifier());
+            }
         } catch (CrgDaoException e) {
             throw new DataServiceException(e.getMessage(), e.getCause());
         }

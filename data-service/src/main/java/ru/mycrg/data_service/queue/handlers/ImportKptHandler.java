@@ -29,6 +29,7 @@ import ru.mycrg.data_service_contract.dto.SimplePropertyDto;
 import ru.mycrg.data_service_contract.dto.TypeDocumentData;
 import ru.mycrg.data_service_contract.dto.import_.ImportKptTableDto;
 import ru.mycrg.data_service_contract.dto.import_.KptImportValidationSettings;
+import ru.mycrg.data_service_contract.enums.GeometryType;
 import ru.mycrg.data_service_contract.enums.TaskStatus;
 import ru.mycrg.data_service_contract.queue.request.ImportKptEvent;
 import ru.mycrg.messagebus_contract.IEventHandler;
@@ -63,10 +64,15 @@ import static ru.mycrg.data_service.kpt_import.writer.OksPolylineProWriter.OKS_P
 import static ru.mycrg.data_service.kpt_import.writer.OksProWriter.OKS_PRO_SCHEMA;
 import static ru.mycrg.data_service.kpt_import.writer.ZouitWriter.ZOUIT_PRO_SCHEMA;
 import static ru.mycrg.data_service.kpt_import.writer.ZuWriter.ZU_PRO_SCHEMA;
+import static ru.mycrg.data_service.service.smev3.fields.CommonFields.CADASTRALNUM;
+import static ru.mycrg.data_service.service.smev3.fields.KptFields.REGNUMBORD;
+import static ru.mycrg.data_service.service.smev3.fields.KptFields.REGNUMBORDER;
 import static ru.mycrg.data_service.util.CrsHandler.extractCrsNumber;
 import static ru.mycrg.data_service.util.DetailedLogger.logError;
+import static ru.mycrg.data_service.util.KptZipUtil.extractXmlReport;
 import static ru.mycrg.data_service.util.SystemLibraryAttributes.CREATED_AT;
 import static ru.mycrg.data_service.util.SystemLibraryAttributes.CREATED_BY;
+import static ru.mycrg.data_service_contract.enums.TaskStatus.*;
 
 /**
  * Обработчик запроса на импорт КПТ из XML
@@ -87,10 +93,25 @@ public class ImportKptHandler implements IEventHandler {
     private final DatasourceFactory datasourceFactory;
     private final Map<String, KptXmlElementReader<? extends KptElement>> tagReaders;
     private final Map<Class<? extends KptElement>, KptElementWriter> kptElementsWriters;
+
     /**
      * Соответствие названия схем таблиц БД с тэгами xml
      */
-    private final Map<String, Set<String>> schemaNameTags = new HashMap<>();
+    private final Map<String, Set<String>> schemaNameTags = Map.of(
+            ZU_PRO_SCHEMA, Set.of(ZuElement.XML_TAG),
+            ZOUIT_PRO_SCHEMA, Set.of(ZouitElement.XML_TAG),
+            BORDERWATEROBJ_SCHEMA, Set.of(BorderWaterObjectElement.XML_TAG),
+            BORDERWATEROBJ_POLILYNE_PRO_SCHEMA, Set.of(BorderWaterObjectElement.XML_TAG),
+            KVARTAL_KPT_SCHEMA, Set.of("cadastral_number", "area_quarter", "spatial_data"),
+            MUNICIPALITY_BOUNDARIES_EGRN_SCHEMA, Set.of(MunicipalityBoundaryElement.XML_TAG),
+            OKS_PRO_SCHEMA, Set.of(OksConstructionElement.XML_TAG,
+                                   OksBuildingElement.XML_TAG,
+                                   OksUnderConstructionElement.XML_TAG),
+            OKS_POLYLINE_PRO_SCHEMA, Set.of(OksConstructionElement.XML_TAG,
+                                            OksUnderConstructionElement.XML_TAG),
+            OKS_CONSTRUCTIONS_POINTS_SCHEMA, Set.of(OksConstructionElement.XML_TAG,
+                                                    OksUnderConstructionElement.XML_TAG));
+
     /**
      * Флаг выполнения импорта для обеспечения возможности отмены операции
      */
@@ -120,8 +141,6 @@ public class ImportKptHandler implements IEventHandler {
         this.kptElementsWriters = Collections.unmodifiableMap(tmpWriters);
 
         this.xmlInputFactory = XMLInputFactory.newFactory();
-
-        initSchemaNameTags();
     }
 
     @Override
@@ -142,7 +161,7 @@ public class ImportKptHandler implements IEventHandler {
                 return;
             }
 
-            tasksDetachedDao.updateStatus(dbName, event.getTaskId(), TaskStatus.IN_PROGRESS);
+            tasksDetachedDao.updateStatus(dbName, event.getTaskId(), IN_PROGRESS);
             running.set(true);
 
             List<ImportKptTableDto> targetTables = event.getTables();
@@ -204,14 +223,15 @@ public class ImportKptHandler implements IEventHandler {
             }
 
             if (running.get()) {
-                tasksDetachedDao.updateStatus(dbName, event.getTaskId(), TaskStatus.DONE);
-            }
+                for (ImportKptTableDto table: targetTables) {
+                    ResourceQualifier qualifier = new ResourceQualifier(table.getDataset(), table.getTable());
 
-            for (ImportKptTableDto table: targetTables) {
-                ResourceQualifier qualifier = new ResourceQualifier(table.getDataset(), table.getTable());
+                    deduplicateData(dbName, qualifier, table.getSchema());
+                    fixGeometry(dbName, qualifier);
+                    unpackGeometryCollection(dbName, qualifier, table.getSchema().getGeometryType());
+                }
 
-                deduplicateData(dbName, qualifier, table.getSchema());
-                fixGeometry(dbName, qualifier);
+                tasksDetachedDao.updateStatus(dbName, event.getTaskId(), DONE);
             }
 
             importTimer.stop();
@@ -242,7 +262,7 @@ public class ImportKptHandler implements IEventHandler {
         TypeDocumentData kptDocument = kpt.getDocument();
         String pathToKpt = kpt.getPath();
         try (ZipFile zipKpt = new ZipFile(pathToKpt)) {
-            Optional<ZipEntry> xmlZipEntry = extractXmlZipEntry(zipKpt);
+            Optional<ZipEntry> xmlZipEntry = extractXmlReport(zipKpt);
             if (xmlZipEntry.isEmpty()) {
                 log.error("В архиве не найден xml файл КПТ. kptId: {}, архив: {}", kptDocument.getId(), pathToKpt);
 
@@ -255,7 +275,7 @@ public class ImportKptHandler implements IEventHandler {
 
                 String dbName = importEvent.getDbName();
                 String initiator = importEvent.getInitiatorLogin();
-                String acsepAt = importEvent.getValidationSettings().getDateOrderCompletion();
+                String acceptAt = importEvent.getValidationSettings().getDateOrderCompletion();
                 Map<KptElementWriter, List<KptElement>> toWrite = new HashMap<>();
                 KvartalElement kvartalElement = new KvartalElement(new HashMap<>()); // кадастровый квартал
 
@@ -274,7 +294,7 @@ public class ImportKptHandler implements IEventHandler {
                         Map<String, Object> filledContent = fillContentWithCommonData(kptElement.getContent(),
                                                                                       initiator,
                                                                                       kptDocument,
-                                                                                      acsepAt);
+                                                                                      acceptAt);
                         kptElement.setContent(filledContent);
                     });
 
@@ -293,7 +313,7 @@ public class ImportKptHandler implements IEventHandler {
                     Map<String, Object> filledContent = fillContentWithCommonData(content,
                                                                                   initiator,
                                                                                   kptDocument,
-                                                                                  acsepAt);
+                                                                                  acceptAt);
                     kvartalElement.setContent(filledContent);
 
                     List<KptElement> batch = new ArrayList<>();
@@ -432,6 +452,19 @@ public class ImportKptHandler implements IEventHandler {
         }
     }
 
+    private boolean tmpTableHasRecords(String dbName, String schemaName, String cadastralSquare) {
+        String tableName = tmbTableName(schemaName);
+        ResourceQualifier rq = new ResourceQualifier(SYSTEM_SCHEMA_NAME, tableName);
+        try {
+            return kptImportDao.countRecordsByCadastralSquare(cadastralSquare, dbName, rq).compareTo(0) > 0;
+        } catch (Exception e) {
+            log.error("Ошибка получения количества строк во временной таблице {} по кварталу {}",
+                      tableName, cadastralSquare);
+
+            return false;
+        }
+    }
+
     /**
      * Возвращает множество тэгов, которые необходимо парсить
      */
@@ -442,32 +475,15 @@ public class ImportKptHandler implements IEventHandler {
                       .collect(Collectors.toSet());
     }
 
-    private Optional<ZipEntry> extractXmlZipEntry(ZipFile zipFile) {
-        Enumeration<? extends ZipEntry> entries = zipFile.entries();
-        ZipEntry xmlEntry = null;
-        while (entries.hasMoreElements()) {
-            ZipEntry entry = entries.nextElement();
-            if (entry.getName().startsWith("report")) {
-                String[] parts = entry.getName().split("\\.");
-                if ("xml".equals(parts[parts.length - 1])) {
-                    xmlEntry = entry;
-                    break;
-                }
-            }
-        }
-
-        return Optional.ofNullable(xmlEntry);
-    }
-
     private Map<String, Object> fillContentWithCommonData(Map<String, Object> content,
                                                           String initiator,
                                                           TypeDocumentData document,
-                                                          String acseptAt) {
+                                                          String acceptAt) {
         Map<String, Object> result = new HashMap<>(content);
 
         result.put(CREATED_BY.getName(), initiator);
         result.put("source_doc", String.format("[%s]", document.toString()));
-        result.put("acsept_at", acseptAt);
+        result.put("acsept_at", acceptAt);
         result.put(CREATED_AT.getName(), LocalDateTime.now());
 
         return result;
@@ -539,7 +555,7 @@ public class ImportKptHandler implements IEventHandler {
     private boolean taskFinished(String dbName, long taskId) {
         TaskStatus taskStatus = tasksDetachedDao.getTaskStatus(dbName, taskId);
 
-        return taskStatus == TaskStatus.CANCELED || taskStatus == TaskStatus.DONE;
+        return taskStatus == CANCELED || taskStatus == DONE;
     }
 
     private void persistKptElements(String dbName,
@@ -599,31 +615,26 @@ public class ImportKptHandler implements IEventHandler {
         }
     }
 
-    private static Optional<String> getKeyForDeduplication(List<SimplePropertyDto> properties) {
+    private Optional<String> getKeyForDeduplication(List<SimplePropertyDto> properties) {
         List<String> propertyNames = properties.stream()
                                                .map(SimplePropertyDto::getName)
                                                .collect(Collectors.toList());
 
-        String regnumbord = "regnumbord";
-        String regnumborder = "regnumborder";
-        String cadastralnum = "cadastralnum";
-        String municipalityBoundariesEgrn = "municipality_boundaries_egrn";
-
-        if (propertyNames.contains(regnumbord)) {
-            return Optional.of(regnumbord);
-        } else if (propertyNames.contains(regnumborder)) {
-            return Optional.of(regnumborder);
-        } else if (propertyNames.contains(cadastralnum)) {
-            return Optional.of(cadastralnum);
-        } else if (propertyNames.contains(municipalityBoundariesEgrn)) {
-            return Optional.of(municipalityBoundariesEgrn);
+        if (propertyNames.contains(REGNUMBORD)) {
+            return Optional.of(REGNUMBORD);
+        } else if (propertyNames.contains(REGNUMBORDER)) {
+            return Optional.of(REGNUMBORDER);
+        } else if (propertyNames.contains(CADASTRALNUM)) {
+            return Optional.of(CADASTRALNUM);
+        } else if (propertyNames.contains(MUNICIPALITY_BOUNDARIES_EGRN_SCHEMA)) {
+            return Optional.of(MUNICIPALITY_BOUNDARIES_EGRN_SCHEMA);
         } else {
             return Optional.empty();
         }
     }
 
     private void fixGeometry(String dbName, ResourceQualifier qualifier) {
-        log.info("Выполняем исправление геометрии для: {}", qualifier.getQualifier());
+        log.debug("Выполняем исправление геометрии для: {}", qualifier.getQualifier());
 
         try {
             kptImportDao.makeGeometryValid(dbName, qualifier);
@@ -633,32 +644,49 @@ public class ImportKptHandler implements IEventHandler {
         }
     }
 
-    private boolean tmpTableHasRecords(String dbName, String schemaName, String cadastralSquare) {
-        String tableName = tmbTableName(schemaName);
-        ResourceQualifier rq = new ResourceQualifier(SYSTEM_SCHEMA_NAME, tableName);
-        try {
-            return kptImportDao.countRecordsByCadastralSquare(cadastralSquare, dbName, rq).compareTo(0) > 0;
-        } catch (Exception e) {
-            log.error("Ошибка получения количества строк во временной таблице {} по кварталу {}",
-                      tableName, cadastralSquare);
+    private void unpackGeometryCollection(String dbName, ResourceQualifier qualifier, GeometryType geometryType) {
+        log.debug("Выполняем 'распаковку' GeometryCollection для: {}", qualifier.getQualifier());
 
-            return false;
+        try {
+            List<String> infectedRecords = kptImportDao.findRecordsWithGeometryCollection(dbName, qualifier)
+                                                       .stream()
+                                                       .map(feature -> String.valueOf(feature.getId()))
+                                                       .collect(Collectors.toList());
+            if (infectedRecords.isEmpty()) {
+                return;
+            }
+
+            log.debug("infectedRecords: {}", infectedRecords);
+
+            kptImportDao.unpackGeometryCollection(dbName,
+                                                  qualifier,
+                                                  infectedRecords,
+                                                  restrictGeometryType(geometryType));
+        } catch (Exception e) {
+            log.error("Не удалось выполнить 'распаковку' GeometryCollection для таблицы: '{}' => {}",
+                      qualifier.getQualifier(), e.getMessage(), e);
         }
     }
 
-    private void initSchemaNameTags() {
-        schemaNameTags.put(ZU_PRO_SCHEMA, Set.of(ZuElement.XML_TAG));
-        schemaNameTags.put(ZOUIT_PRO_SCHEMA, Set.of(ZouitElement.XML_TAG));
-        schemaNameTags.put(KVARTAL_KPT_SCHEMA, Set.of("cadastral_number", "area_quarter", "spatial_data"));
-        schemaNameTags.put(MUNICIPALITY_BOUNDARIES_EGRN_SCHEMA, Set.of(MunicipalityBoundaryElement.XML_TAG));
-        schemaNameTags.put(OKS_PRO_SCHEMA, Set.of(OksConstructionElement.XML_TAG,
-                                                  OksBuildingElement.XML_TAG,
-                                                  OksUnderConstructionElement.XML_TAG));
-        schemaNameTags.put(OKS_POLYLINE_PRO_SCHEMA, Set.of(OksConstructionElement.XML_TAG,
-                                                           OksUnderConstructionElement.XML_TAG));
-        schemaNameTags.put(OKS_CONSTRUCTIONS_POINTS_SCHEMA, Set.of(OksConstructionElement.XML_TAG,
-                                                                   OksUnderConstructionElement.XML_TAG));
-        schemaNameTags.put(BORDERWATEROBJ_SCHEMA, Set.of(BorderWaterObjectElement.XML_TAG));
-        schemaNameTags.put(BORDERWATEROBJ_POLILYNE_PRO_SCHEMA, Set.of(BorderWaterObjectElement.XML_TAG));
+    private String restrictGeometryType(GeometryType geometryType) {
+        switch (geometryType) {
+            case POINT:
+            case MULTI_POINT:
+                return "POINT";
+            case POLYGON:
+            case MULTI_POLYGON:
+                return "POLYGON";
+            case LINE_STRING:
+            case MULTI_LINE_STRING:
+                return "LINESTRING";
+            case CURVE:
+            case MULTI_CURVE:
+                return "CURVE";
+            case SURFACE:
+            case MULTI_SURFACE:
+                return "SURFACE";
+            default:
+                return "POLYGON";
+        }
     }
 }

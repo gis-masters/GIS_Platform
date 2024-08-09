@@ -9,6 +9,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import static ru.mycrg.data_service.service.smev3.fields.CommonFields.CADASTRALNUM;
+
 @Component
 public class KvartalCadastralNumberReader extends KvartalPartialDataReader<KvartalCadNumElement, String> {
 
@@ -20,7 +22,7 @@ public class KvartalCadastralNumberReader extends KvartalPartialDataReader<Kvart
     public List<KvartalCadNumElement> read(XMLStreamReader reader) {
         try {
             String cadNum =  unmarshall(reader);
-            return Collections.singletonList(new KvartalCadNumElement(Map.of("cadastralnum", cadNum)));
+            return Collections.singletonList(new KvartalCadNumElement(Map.of(CADASTRALNUM, cadNum)));
         } catch (JAXBException e) {
             return Collections.emptyList();
         }

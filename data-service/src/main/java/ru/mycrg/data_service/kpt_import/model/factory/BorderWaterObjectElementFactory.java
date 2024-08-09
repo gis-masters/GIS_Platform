@@ -17,6 +17,7 @@ import java.util.*;
 import static ru.mycrg.data_service.dao.config.DaoProperties.DEFAULT_GEOMETRY_COLUMN_NAME;
 import static ru.mycrg.data_service.kpt_import.KptImportUtils.hasSameNum;
 import static ru.mycrg.data_service.kpt_import.KptImportUtils.hasSameOrdinates;
+import static ru.mycrg.data_service.service.smev3.fields.KptFields.REGNUMBORDER;
 
 @Component
 public class BorderWaterObjectElementFactory {
@@ -70,7 +71,7 @@ public class BorderWaterObjectElementFactory {
             shape = geometryParser.createMultiPolygon(polygonContours);
         } catch (Exception ex) {
             log.warn("Ошибка парсинга площадной геометрии для береговой линии с номером {}: {}",
-                     content.get("regnumborder"), ex.getMessage());
+                     content.get(REGNUMBORDER), ex.getMessage());
             shape = Optional.empty();
         }
 
@@ -83,7 +84,7 @@ public class BorderWaterObjectElementFactory {
             shape = geometryParser.createMultiLineString(polylineContours);
         } catch (Exception ex) {
             log.warn("Ошибка парсинга линейной геометрии для береговой линии с номером {}: {}",
-                     content.get("regnumborder"), ex.getMessage());
+                     content.get(REGNUMBORDER), ex.getMessage());
             shape = Optional.empty();
         }
 
@@ -168,7 +169,7 @@ public class BorderWaterObjectElementFactory {
         Optional<Water> water = extractWater(xmlRecord);
 
         Map<String, Object> content = new HashMap<>();
-        content.put("regnumborder", bobject.map(Bobject::getRegNumbBorder).orElse(null));
+        content.put(REGNUMBORDER, bobject.map(Bobject::getRegNumbBorder).orElse(null));
         content.put("btypecode", bobject.map(Bobject::getTypeBoundary).map(Dict::getCode).orElse(null));
         content.put("btype", bobject.map(Bobject::getTypeBoundary).map(Dict::getValue).orElse(null));
         content.put("objectname", water.map(Water::getWaterObjectName).orElse(null));

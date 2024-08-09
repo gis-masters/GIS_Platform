@@ -1,20 +1,20 @@
 package ru.mycrg.data_service.dao.ddl.tables;
 
-import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-import ru.mycrg.data_service.dao.utils.wellknown_formula_generator.WellKnownFormulaGenerator;
+import ru.mycrg.data_service.dao.utils.wellknown_formula_generator.PropertyBuilderWithFormula;
 import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service_contract.dto.SimplePropertyDto;
 
 import java.util.List;
 
-import static ru.mycrg.data_service.dao.utils.SqlBuilder.*;
+import static ru.mycrg.data_service.dao.utils.SqlBuilder.buildCreateTableQuery;
+import static ru.mycrg.data_service.dao.utils.SqlBuilder.buildDeleteTableQuery;
 
 @Repository
 public class DdlTablesBase {
@@ -22,12 +22,12 @@ public class DdlTablesBase {
     private final Logger log = LoggerFactory.getLogger(DdlTablesBase.class);
 
     private final JdbcTemplate jdbcTemplate;
-    private final WellKnownFormulaGenerator wkfGenerator;
+    private final PropertyBuilderWithFormula propertyBuilder;
 
     public DdlTablesBase(JdbcTemplate jdbcTemplate,
-                         WellKnownFormulaGenerator wkfGenerator) {
+                         PropertyBuilderWithFormula propertyBuilder) {
         this.jdbcTemplate = jdbcTemplate;
-        this.wkfGenerator = wkfGenerator;
+        this.propertyBuilder = propertyBuilder;
     }
 
     public void create(String schemaName,
@@ -37,7 +37,7 @@ public class DdlTablesBase {
         String query = buildCreateTableQuery(schemaName,
                                              tableName,
                                              primaryKeyName,
-                                             buildProps(properties, primaryKeyName));
+                                             propertyBuilder.buildProps(properties, primaryKeyName));
 
         log.debug("Create table query: [{}]", query);
 
@@ -77,24 +77,5 @@ public class DdlTablesBase {
 
             return true;
         }
-    }
-
-    //TODO Вынести это отсюда
-    @NotNull
-    public String buildProps(List<SimplePropertyDto> properties, String primaryKeyName) {
-        StringBuilder props = new StringBuilder();
-        for (SimplePropertyDto property: properties) {
-            if (!property.getName().equalsIgnoreCase(primaryKeyName)) {
-                String base = generatePropertySqlString(property);
-                props.append(",").append(base);
-
-                String calculatedValueWellKnownFormula = property.getCalculatedValueWellKnownFormula();
-                if (calculatedValueWellKnownFormula != null) {
-                    props.append(" ").append(wkfGenerator.generate(calculatedValueWellKnownFormula));
-                }
-            }
-        }
-
-        return props.toString();
     }
 }

@@ -20,6 +20,7 @@ import java.util.Optional;
 
 import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_NAME;
 import static ru.mycrg.data_service.dto.ResourceType.LIBRARY_RECORD;
+import static ru.mycrg.data_service.service.smev3.fields.CommonFields.CADASTRALNUM;
 import static ru.mycrg.data_service.service.smev3.fields.FieldsSection.PROPERTY_OBJECT_PURPOSE_FUNCTIONAL_REF_VALUE_5;
 import static ru.mycrg.data_service.service.smev3.model.SmevRequestConst.CRIMEA_REGION;
 
@@ -348,14 +349,14 @@ public class RegisterRnsXmlBuildProcessor extends AXmlBuildProcessor {
 
         // oks13Record
         if (rue.oks13Record != null) {
-            asString(rue.oks13Record, FieldsOks13.PROPERTY_CADASTRALNUM)
+            asString(rue.oks13Record, CADASTRALNUM)
                     .ifPresent(type::setCadastralNumberOKS);
         }
 
         // oks13LineRecord
         // Вариант работает, только если мы не вычитали CadastralNumberOKS на предыдущем шаге
         if (type.getCadastralNumberOKS() == null && rue.oks13LineRecord != null) {
-            asString(rue.oks13LineRecord, FieldsOks13Line.PROPERTY_CADASTRALNUM)
+            asString(rue.oks13LineRecord, CADASTRALNUM)
                     .ifPresent(type::setCadastralNumberOKS);
         }
 
@@ -652,7 +653,7 @@ public class RegisterRnsXmlBuildProcessor extends AXmlBuildProcessor {
 
     private LandCadastralDescriptionType gpzuLandCadastralDescriptionType() {
         var type = new LandCadastralDescriptionType();
-        asString(rue.gpzuSection13LandplotRecord, FieldsLandplot.PROPERTY_CADASTRALNUM)
+        asString(rue.gpzuSection13LandplotRecord, CADASTRALNUM)
                 .ifPresent(type::setCadastralNumberZU);
         asString(rue.gpzuSection13LandplotRecord, FieldsLandplot.PROPERTY_AREA)
                 .ifPresent(type::setLandPlotArea);
@@ -692,7 +693,7 @@ public class RegisterRnsXmlBuildProcessor extends AXmlBuildProcessor {
 
     private LandCadastralDescriptionType landCadastralDescriptionType() {
         var type = new LandCadastralDescriptionType();
-        asString(rue.landplotRecord, FieldsLandplot.PROPERTY_CADASTRALNUM)
+        asString(rue.landplotRecord, CADASTRALNUM)
                 .ifPresent(type::setCadastralNumberZU);
         asString(rue.landplotRecord, FieldsLandplot.PROPERTY_AREA)
                 .ifPresent(type::setLandPlotArea);

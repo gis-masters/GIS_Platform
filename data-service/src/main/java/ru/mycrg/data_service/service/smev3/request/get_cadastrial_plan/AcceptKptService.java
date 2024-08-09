@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,7 +36,6 @@ import ru.mycrg.data_service.service.smev3.model.CustomMultipartFile;
 import ru.mycrg.data_service.service.smev3.model.ProcessAdapterMessageResult;
 import ru.mycrg.data_service.service.storage.FileStorageService;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
-import ru.mycrg.data_service_contract.enums.TaskStatus;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -44,7 +44,6 @@ import java.io.StringReader;
 import java.time.LocalDateTime;
 import java.util.*;
 
-import static ru.mycrg.common_utils.CrgGlobalProperties.getDefaultDatabaseName;
 import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_NAME;
 import static ru.mycrg.data_service.dto.ResourceType.LIBRARY_RECORD;
 import static ru.mycrg.data_service.dto.Roles.OWNER;
@@ -56,6 +55,7 @@ import static ru.mycrg.data_service.service.storage.FileStorageUtil.generateFile
 import static ru.mycrg.data_service.util.JsonConverter.mapper;
 import static ru.mycrg.data_service.util.JsonConverter.toJsonNode;
 import static ru.mycrg.data_service.util.SystemLibraryAttributes.*;
+import static ru.mycrg.data_service_contract.enums.TaskStatus.DONE;
 
 @Service
 @ConditionalOnProperty(
@@ -91,6 +91,9 @@ public class AcceptKptService {
 
     private final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
     private final DocumentBuilder builder = factory.newDocumentBuilder();
+
+    @Value("${crg-options.taskDb}")
+    private String dbName;
 
     public AcceptKptService(RecordsDao recordsDao,
                             DocumentLibraryRepository libraryRepository,
@@ -257,14 +260,12 @@ public class AcceptKptService {
             folderPayload.remove(TITLE.getName());
             folderPayload.put(DATE_ORDER_COMPLETION, LocalDateTime.now());
             folderPayload.put(STATUS_ATTRIBUTE, "Получено");
+
             recordsDao.updateRecordById(libraryRecordQualifier, folderPayload, schema);
+            tasksDetachedDao.updateStatus(dbName, taskId, DONE);
 
-            String databaseName = getDefaultDatabaseName(1L);
-            tasksDetachedDao.updateStatus(databaseName, taskId, TaskStatus.DONE);
-
-            Map<String, Object> logMap = new HashMap<>();
-            logMap.put(DESCRIPTION_ATTRIBUTE, "Все архивы получены");
-            taskLogService.create(new TaskLogDto("Закрытие задачи", taskId), logMap);
+            taskLogService.create(new TaskLogDto("Закрытие задачи", taskId),
+                                  Map.of(DESCRIPTION_ATTRIBUTE, "Все архивы получены"));
         }
     }
 }

@@ -243,64 +243,6 @@ public class SqlBuilder {
                 pageSection;
     }
 
-    public static String buildFtsWhere(String ecqlFilter, float bound, List<String> resources) {
-        String result = buildFtsWhere(ecqlFilter, bound);
-
-        if (!resources.isEmpty()) {
-            List<String> asString = resources.stream()
-                                             .map(s -> "'" + s + "'")
-                                             .collect(Collectors.toList());
-
-            result = result + " AND \"table\" IN (" + String.join(",", asString) + ")";
-        }
-
-        return result;
-    }
-
-    public static String buildFtsWhere(String ecqlFilter, float bound) {
-        String ftsCondition = String.format("(:searchedText OPERATOR (public.<<<->) d.concatenated_data < %s)", bound);
-
-        String filter = buildWhereSection(ecqlFilter);
-
-        String result;
-        if (filter.isBlank()) {
-            result = "WHERE " + ftsCondition;
-        } else {
-            result = buildWhereSection(ecqlFilter) + " AND " + ftsCondition;
-        }
-
-        return result;
-    }
-
-    public static String buildFtsWhere2(String ecqlFilter) {
-        String ftsCondition = "d.vector_data @@ query";
-
-        String filter = buildWhereSection(ecqlFilter);
-
-        String result;
-        if (filter.isBlank()) {
-            result = "WHERE " + ftsCondition;
-        } else {
-            result = buildWhereSection(ecqlFilter) + " AND " + ftsCondition;
-        }
-
-        return result;
-    }
-
-    public static String buildFtsWhere2(String ecqlFilter, List<String> resources) {
-        String result = buildFtsWhere2(ecqlFilter);
-
-        if (!resources.isEmpty()) {
-            List<String> asString = resources.stream()
-                                             .map(s -> "'" + s + "'")
-                                             .collect(Collectors.toList());
-
-            result = result + " AND \"table\" IN (" + String.join(",", asString) + ")";
-        }
-
-        return result;
-    }
-
     public static String fillWhereSectionByFilter(CrgFilter filter) {
         StringBuilder result = new StringBuilder();
         for (FilterItem filterItem: filter.getFilters()) {
@@ -690,8 +632,8 @@ public class SqlBuilder {
                                                  @Nullable List<String> requestedTables,
                                                  @NotNull Set<String> words) {
         String ftsWhere = (requestedTables != null)
-                ? buildFtsWhere2(ecqlFilter, requestedTables)
-                : buildFtsWhere2(ecqlFilter);
+                ? buildFtsWhere(ecqlFilter, requestedTables)
+                : buildFtsWhere(ecqlFilter);
 
         // В данном запросе внутренний SELECT это первое сужение всего набора данных - выборка по найденным словам в
         // словаре, с ранжированием и ограничением с плавающим лимитом.
@@ -722,6 +664,35 @@ public class SqlBuilder {
                 "ORDER BY dist ";
 
         return query;
+    }
+
+    private static String buildFtsWhere(String ecqlFilter) {
+        String ftsCondition = "d.vector_data @@ query";
+
+        String filter = buildWhereSection(ecqlFilter);
+
+        String result;
+        if (filter.isBlank()) {
+            result = "WHERE " + ftsCondition;
+        } else {
+            result = buildWhereSection(ecqlFilter) + " AND " + ftsCondition;
+        }
+
+        return result;
+    }
+
+    private static String buildFtsWhere(String ecqlFilter, List<String> resources) {
+        String result = buildFtsWhere(ecqlFilter);
+
+        if (!resources.isEmpty()) {
+            List<String> asString = resources.stream()
+                                             .map(s -> "'" + s + "'")
+                                             .collect(Collectors.toList());
+
+            result = result + " AND \"table\" IN (" + String.join(",", asString) + ")";
+        }
+
+        return result;
     }
 
     private static int generateLimit(Set<String> words) {

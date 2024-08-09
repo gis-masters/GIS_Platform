@@ -55,6 +55,7 @@ import static ru.mycrg.data_service_contract.enums.TaskType.CUSTOM;
 public class GpzuService {
 
     private static final Logger log = LoggerFactory.getLogger(GpzuService.class);
+
     private static final String GPZU_CONTENT_TYPE = "gpzu_smev_rostelekom";
     private static final String STATUS_PROPERTY = "status";
     private static final String GPZU_LIBRARY_ID = "dl_data_inbox_data";
@@ -66,14 +67,15 @@ public class GpzuService {
     private static final String GPZU_DATA_TYPE = "0Е.2";
     private static final String GPZU_TITLE = "ГПЗУ";
 
-    @Value("${crg-options.taskDb}")
-    private String dbName;
     private final TaskLogService taskLogService;
     private final TasksDetachedDao tasksDao;
     private final SmevMessageService smevMessageService;
     private final ISchemaTemplateService schemaService;
     private final RecordsDao recordsDao;
     private final DocumentLibraryRepository libraryRepository;
+
+    @Value("${crg-options.taskDb}")
+    private String dbName;
 
     public GpzuService(TaskLogService taskLogService,
                        TasksDetachedDao tasksDao,

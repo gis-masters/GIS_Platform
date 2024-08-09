@@ -84,7 +84,7 @@ public class DetachedRecordsDao {
             JdbcTemplate jdbcTemplate = new JdbcTemplate(datasourceFactory.getDataSource(databaseName));
 
             String query = String.format("TRUNCATE %s.%s", qualifier.getSchema(), qualifier.getTable());
-            log.debug("TRUNCATE QUERY: [{}]", query);
+            log.debug("Очистка таблицы: [{}]", query);
 
             jdbcTemplate.execute(query);
         } catch (Exception e) {

@@ -14,6 +14,7 @@ import javax.xml.stream.XMLStreamReader;
 import java.util.*;
 
 import static ru.mycrg.data_service.dao.config.DaoProperties.DEFAULT_GEOMETRY_COLUMN_NAME;
+import static ru.mycrg.data_service.service.smev3.fields.KptFields.REGNUMBORDER;
 
 @Component
 public class MunicipalityBoundaryReader extends CommonKptXmlElementReader<MunicipalityBoundaryElement,
@@ -54,7 +55,7 @@ public class MunicipalityBoundaryReader extends CommonKptXmlElementReader<Munici
         Map<String, Object> content = new HashMap<>();
         if (shape.isPresent()) {
             //парсим только объекты с геометрией
-            content.put("regnumborder", number);
+            content.put(REGNUMBORDER, number);
             content.put("boundary_1", extractBoundary1(r));
             content.put("registrationdate", extractRegistrationDate(r));
             content.put(DEFAULT_GEOMETRY_COLUMN_NAME, shape.get());

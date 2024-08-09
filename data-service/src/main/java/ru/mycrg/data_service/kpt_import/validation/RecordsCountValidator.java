@@ -1,5 +1,6 @@
 package ru.mycrg.data_service.kpt_import.validation;
 
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -24,10 +25,10 @@ public class RecordsCountValidator extends CommonKptImportValidator {
 
     private static final String ERROR_TEMPLATE = "Ошибка подсчета количества записей в таблице %s";
 
-    private final KptImportDao validationDao;
+    private final KptImportDao kptImportDao;
 
-    public RecordsCountValidator(KptImportDao validationDao) {
-        this.validationDao = validationDao;
+    public RecordsCountValidator(KptImportDao kptImportDao) {
+        this.kptImportDao = kptImportDao;
     }
 
     @Override
@@ -43,26 +44,14 @@ public class RecordsCountValidator extends CommonKptImportValidator {
         String cadastralSqare = data.getCadastralSqare();
         String dbName = data.getDbName();
         ResourceQualifier tmpTable = new ResourceQualifier(SYSTEM_SCHEMA_NAME, tmbTableName(schema.getName()));
-        int countToImport;
-        int currentCount;
 
-        try {
-            countToImport = validationDao.countRecordsByCadastralSquare(cadastralSqare, dbName, tmpTable);
-        } catch (Exception ex) {
-            String msg = String.format(ERROR_TEMPLATE, tmpTable);
-            log.error(msg, ex);
-            addResult(results, resultTable.getTable(), KptImportLogLevel.ERROR, msg);
-
+        Integer countToImport = countRecords(dbName, resultTable, results, cadastralSqare, tmpTable);
+        if (countToImport == null) {
             return;
         }
 
-        try {
-            currentCount = validationDao.countRecordsByCadastralSquare(cadastralSqare, dbName, resultTable);
-        } catch (Exception ex) {
-            String msg = String.format(ERROR_TEMPLATE, resultTable);
-            log.error(msg, ex);
-            addResult(results, resultTable.getTable(), KptImportLogLevel.ERROR, msg);
-
+        Integer currentCount = countRecords(dbName, resultTable, results, cadastralSqare);
+        if (currentCount == null) {
             return;
         }
 
@@ -79,6 +68,31 @@ public class RecordsCountValidator extends CommonKptImportValidator {
                                        tmpTable, resultTable, allowedDiff, cadastralSqare);
 
             addResult(results, resultTable.getTable(), KptImportLogLevel.SUCCESS, msg);
+        }
+    }
+
+    @Nullable
+    private Integer countRecords(String dbName,
+                                 ResourceQualifier resultTable,
+                                 Map<String, List<KptImportValidationResult>> results,
+                                 String cadastralSqare) {
+        return countRecords(dbName, resultTable, results, cadastralSqare, resultTable);
+    }
+
+    @Nullable
+    private Integer countRecords(String dbName,
+                                 ResourceQualifier resultTable,
+                                 Map<String, List<KptImportValidationResult>> results,
+                                 String cadastralSqare,
+                                 ResourceQualifier tmpTable) {
+        try {
+            return kptImportDao.countRecordsByCadastralSquare(cadastralSqare, dbName, tmpTable);
+        } catch (Exception ex) {
+            String msg = String.format(ERROR_TEMPLATE, tmpTable);
+            log.error(msg, ex);
+            addResult(results, resultTable.getTable(), KptImportLogLevel.ERROR, msg);
+
+            return null;
         }
     }
 }

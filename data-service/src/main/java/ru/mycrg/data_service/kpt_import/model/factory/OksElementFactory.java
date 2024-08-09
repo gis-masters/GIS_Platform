@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
 
 import static ru.mycrg.data_service.dao.config.DaoProperties.DEFAULT_GEOMETRY_COLUMN_NAME;
 import static ru.mycrg.data_service.kpt_import.KptImportUtils.*;
+import static ru.mycrg.data_service.service.smev3.fields.CommonFields.CADASTRALNUM;
 
 public abstract class OksElementFactory {
 
@@ -32,7 +33,7 @@ public abstract class OksElementFactory {
             shape = geometryParser.createMultiPolygon(spatialElements);
         } catch (Exception ex) {
             log.warn("Ошибка парсинга площадной геометрии для элемента с кадастровым номером {}: {}",
-                     content.get("cadastralnum"), ex.getMessage());
+                     content.get(CADASTRALNUM), ex.getMessage());
             shape = Optional.empty();
         }
 
@@ -49,7 +50,7 @@ public abstract class OksElementFactory {
             shape = geometryParser.createMultilineString(spatialElements);
         } catch (Exception ex) {
             log.warn("Ошибка парсинга линейной геометрии для элемента с кадастровым номером {}: {}",
-                     content.get("cadastralnum"), ex.getMessage());
+                     content.get(CADASTRALNUM), ex.getMessage());
             shape = Optional.empty();
         }
 
@@ -66,7 +67,7 @@ public abstract class OksElementFactory {
             shape = geometryParser.createMultiPoint(spatialElements);
         } catch (Exception ex) {
             log.warn("Ошибка парсинга точечной геометрии для элемента с кадастровым номером {}: {}",
-                     content.get("cadastralnum"), ex.getMessage());
+                     content.get(CADASTRALNUM), ex.getMessage());
             shape = Optional.empty();
         }
 
@@ -140,7 +141,7 @@ public abstract class OksElementFactory {
         String cadastralnumber = extractCadastralNumber(objectType);
 
         Map<String, Object> content = new HashMap<>();
-        content.put("cadastralnum", cadastralnumber);
+        content.put(CADASTRALNUM, cadastralnumber);
         content.put("num_oks", KptImportUtils.extractNumberFromCadastralNum(cadastralnumber));
         content.put("objecttype", extractObjectType(objectType));
         content.put("readablead", extractReadableAddress(xmlRecord));
@@ -156,7 +157,7 @@ public abstract class OksElementFactory {
         String cadastralnumber = extractCadastralNumber(objectType);
 
         Map<String, Object> content = new HashMap<>();
-        content.put("cadastralnum", cadastralnumber);
+        content.put(CADASTRALNUM, cadastralnumber);
         content.put("num_oks", KptImportUtils.extractNumberFromCadastralNum(cadastralnumber));
         content.put("objecttype", extractObjectType(objectType));
         content.put("readablead", extractReadableAddress(xmlRecord));
@@ -172,7 +173,7 @@ public abstract class OksElementFactory {
         String cadastralnumber = extractCadastralNumber(objectType);
 
         Map<String, Object> content = new HashMap<>();
-        content.put("cadastralnum", cadastralnumber);
+        content.put(CADASTRALNUM, cadastralnumber);
         content.put("num_oks", KptImportUtils.extractNumberFromCadastralNum(cadastralnumber));
         content.put("purpose", extractPurpose(xmlRecord));
         content.put("objecttype", extractObjectType(objectType));

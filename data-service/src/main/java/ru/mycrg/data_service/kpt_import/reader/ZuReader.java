@@ -16,6 +16,7 @@ import java.util.*;
 
 import static ru.mycrg.data_service.dao.config.DaoProperties.DEFAULT_GEOMETRY_COLUMN_NAME;
 import static ru.mycrg.data_service.kpt_import.reader.AddressExtractor.getAddress;
+import static ru.mycrg.data_service.service.smev3.fields.CommonFields.CADASTRALNUM;
 
 @Component
 public class ZuReader extends CommonKptXmlElementReader<ZuElement, LandRecord> {
@@ -57,7 +58,7 @@ public class ZuReader extends CommonKptXmlElementReader<ZuElement, LandRecord> {
 
         Map<String, Object> content = new HashMap<>();
         //парсим только объекты с геометрией
-        content.put("cadastralnum", cadastralNumber);
+        content.put(CADASTRALNUM, cadastralNumber);
         content.put("num_zu", KptImportUtils.extractNumberFromCadastralNum(cadastralNumber));
         content.put("usage", extractPermittedUsageByDocument(land));
         content.put("subtype", extractSubtype(land));
