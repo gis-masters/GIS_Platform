@@ -58,12 +58,11 @@ Feature: Атрибутивная таблица: фильтрация - баз�
     *     открыта атрибутивная таблица созданного слоя
     When  в атрибутивной таблице я ввожу в фильтр поля типа document "<fieldTitle>" значение "<filter>"
     Then  в атрибутивной таблице в колонке "<fieldTitle>" значения: <expected>
-
     Examples:
-      | fieldTitle    | filter | expected                    | description                                                                      |
-      | Поле DOCUMENT | cat    | "catta"                     |                                                                                  |
-      | Поле DOCUMENT | Q      | "sequi"                     | Поиск не зависит от регистра                                                     |
-      | Поле DOCUMENT | u      | "sequi", "sciurus", "catta" | Фильтр работает НЕ КОРРЕКНТО. Ищет просто по строке, в которой есть 'dl_default' |
+      | fieldTitle    | filter | expected                    | description                  |
+      | Поле DOCUMENT | cat    | "catta"                     |                              |
+      | Поле DOCUMENT | Q      | "sequi"                     | Поиск не зависит от регистра |
+      | Поле DOCUMENT | u      | "sequi", "sciurus", "catta" | Фильтр работает НЕ КОРРЕКНТО |
 
   Scenario Outline: Пользователь может фильтровать по полю типа CHOICE
     Given я авторизован как "Гарри"

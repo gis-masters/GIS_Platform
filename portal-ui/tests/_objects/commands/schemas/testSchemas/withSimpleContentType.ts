@@ -46,6 +46,11 @@ export const withSimpleContentType: Schema = {
   ],
   properties: [
     {
+      name: 'id',
+      title: 'Идентификатор',
+      propertyType: PropertyType.INT
+    },
+    {
       name: 'title',
       title: 'Название',
       propertyType: PropertyType.STRING

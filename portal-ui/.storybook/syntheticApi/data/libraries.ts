@@ -16,17 +16,6 @@ function getSchema(schemaName: string): OldSchema {
 
 export const libraries: Omit<LibraryRaw, 'role'>[] = [
   {
-    id: 103,
-    title: 'Библиотека ЗУ',
-    details: 'ЗУ библиотека',
-    type: DataEntityType.LIBRARY,
-    table_name: 'dl_zu',
-    schema: getSchema('dl_zu_schema'),
-    versioned: false,
-    readyForFts: false,
-    createdAt: '2022-06-08T16:09:19.811232'
-  },
-  {
     id: 6,
     title: 'Градостроительное зонирование',
     details: 'Раздел 5',

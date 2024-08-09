@@ -28,7 +28,8 @@ export const forSorting: NewWfsFeature[] = [
       number_double: 3.14,
       some_string: 'привет worldwide',
       some_date: '2023-02-01',
-      some_document: '[{"id":314,"title":"sequi","libraryTableName":"dl_default"}]',
+      some_document:
+        '[{"id":314,"title":"sequi","libraryTableName":"dl_data_documents_with_simple_content_type_schema"}]',
       is_enabled: true
     }
   },
@@ -53,7 +54,8 @@ export const forSorting: NewWfsFeature[] = [
       number_double: 0.58,
       some_string: 'some other text',
       some_date: '2011-07-01',
-      some_document: '[{"id":314,"title":"sciurus","libraryTableName":"dl_default"}]',
+      some_document:
+        '[{"id":314,"title":"sciurus","libraryTableName":"dl_data_documents_with_simple_content_type_schema"}]',
       obj_code: '1122'
     }
   },
@@ -85,7 +87,8 @@ export const forSorting: NewWfsFeature[] = [
       some_string: 'привет мир',
       some_date: '1990-02-28',
       is_enabled: false,
-      some_document: '[{"id":314,"title":"catta","libraryTableName":"dl_default"}]',
+      some_document:
+        '[{"id":314,"title":"catta","libraryTableName":"dl_data_documents_with_simple_content_type_schema"}]',
       obj_code: '1122'
     }
   }

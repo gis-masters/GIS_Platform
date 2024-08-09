@@ -28,7 +28,8 @@ export const forForm: NewWfsFeature[] = [
       field_double: 15.9,
       field_string: 'worldwide',
       field_date: '2023-03-02',
-      field_document: '[{"id":26,"title":"sequi","libraryTableName":"dl_default"}]',
+      field_document:
+        '[{"id":26,"title":"sequi","libraryTableName":"dl_data_documents_with_simple_content_type_schema"}]',
       field_boolean: true,
       field_choice: 1111,
       field_url: '[{"url":"ya.ru","text":"someUrl"}]',

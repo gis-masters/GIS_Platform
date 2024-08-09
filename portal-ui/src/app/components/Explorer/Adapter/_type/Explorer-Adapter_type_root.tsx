@@ -7,7 +7,7 @@ import { organizationSettings } from '../../../../stores/OrganizationSettings.st
 import { Adapter, ExplorerItemData, ExplorerItemType } from '../../Explorer.models';
 
 function getChildren(): ExplorerItemData[] {
-  const baseChildren: ExplorerItemData[] = [
+  let baseChildren: ExplorerItemData[] = [
     {
       type: ExplorerItemType.DATASET_ROOT,
       payload: null
@@ -23,10 +23,12 @@ function getChildren(): ExplorerItemData[] {
   ];
 
   if (organizationSettings.viewDocumentLibrary) {
-    baseChildren.push({
+    const libraryRoot: ExplorerItemData = {
       type: ExplorerItemType.LIBRARY_ROOT,
       payload: null
-    });
+    };
+
+    baseChildren = [...baseChildren.slice(0, 1), libraryRoot, ...baseChildren.slice(1)];
   }
 
   if (organizationSettings.reestrs) {

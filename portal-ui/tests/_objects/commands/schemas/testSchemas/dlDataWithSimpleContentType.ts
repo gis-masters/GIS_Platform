@@ -15,6 +15,9 @@ export const dlDataWithSimpleContentType: Schema = {
       type: 'DOCUMENT'
     },
     {
+      id: 'doc_v2',
+      title: 'Тип 2',
+      type: 'DOCUMENT',
       properties: [
         {
           name: 'title',
@@ -26,10 +29,7 @@ export const dlDataWithSimpleContentType: Schema = {
           title: 'Поле FILE',
           propertyType: PropertyType.FILE
         }
-      ],
-      id: 'doc_v2',
-      title: 'Тип 2',
-      type: 'DOCUMENT'
+      ]
     }
   ],
   properties: [
