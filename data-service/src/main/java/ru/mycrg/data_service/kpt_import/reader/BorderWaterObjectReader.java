@@ -4,7 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import ru.mycrg.data_service.kpt_import.model.BorderWaterObjectElement;
-import ru.mycrg.data_service.kpt_import.model.factory.BorderWaterObjectElementFactory;
+import ru.mycrg.data_service.kpt_import.model.BorderWaterObjectElementFactory;
 import ru.mycrg.data_service.kpt_import.model.generated.CoastlineBoundariesType;
 
 import javax.xml.bind.JAXBException;

@@ -3,7 +3,7 @@ package ru.mycrg.data_service.kpt_import.reader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-import ru.mycrg.data_service.kpt_import.model.factory.OksUnderConstructionElementFactory;
+import ru.mycrg.data_service.kpt_import.model.oks.parsers.OksUnderConstructionElementParser;
 import ru.mycrg.data_service.kpt_import.model.generated.ObjectUnderConstructionRecord;
 import ru.mycrg.data_service.kpt_import.model.oks.OksUnderConstructionElement;
 
@@ -17,9 +17,9 @@ public class OksUnderConstructionReader extends CommonKptXmlElementReader<OksUnd
 
     private static final Logger log = LoggerFactory.getLogger(OksUnderConstructionReader.class);
 
-    private final OksUnderConstructionElementFactory oksUnderConstructionElementFactory;
+    private final OksUnderConstructionElementParser oksUnderConstructionElementFactory;
 
-    public OksUnderConstructionReader(OksUnderConstructionElementFactory oksUnderConstructionElementFactory)
+    public OksUnderConstructionReader(OksUnderConstructionElementParser oksUnderConstructionElementFactory)
             throws JAXBException {
         super(ObjectUnderConstructionRecord.class, OksUnderConstructionElement.XML_TAG);
 
@@ -37,6 +37,6 @@ public class OksUnderConstructionReader extends CommonKptXmlElementReader<OksUnd
             return Collections.emptyList();
         }
 
-        return oksUnderConstructionElementFactory.fromObjectUnderConstructionRecord(record);
+        return oksUnderConstructionElementFactory.parseByGeometry(record);
     }
 }

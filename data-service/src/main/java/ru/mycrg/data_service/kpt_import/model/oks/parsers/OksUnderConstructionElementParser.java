@@ -1,4 +1,4 @@
-package ru.mycrg.data_service.kpt_import.model.factory;
+package ru.mycrg.data_service.kpt_import.model.oks.parsers;
 
 import org.springframework.stereotype.Component;
 import ru.mycrg.data_service.kpt_import.geometry_parsers.OksGeometryParser;
@@ -14,14 +14,13 @@ import java.util.*;
 import static ru.mycrg.data_service.kpt_import.reader.AddressExtractor.getAddress;
 
 @Component
-public class OksUnderConstructionElementFactory extends OksElementFactory {
+public class OksUnderConstructionElementParser extends BaseOksElementParser {
 
-    protected OksUnderConstructionElementFactory(OksGeometryParser geometryParser) {
+    protected OksUnderConstructionElementParser(OksGeometryParser geometryParser) {
         super(geometryParser);
     }
 
-    public List<OksUnderConstructionElement> fromObjectUnderConstructionRecord(
-            ObjectUnderConstructionRecord xmlRecord) {
+    public List<OksUnderConstructionElement> parseByGeometry(ObjectUnderConstructionRecord xmlRecord) {
         if (xmlRecord.getContours() == null) {
             return Collections.emptyList();
         }
@@ -79,15 +78,22 @@ public class OksUnderConstructionElementFactory extends OksElementFactory {
     protected BigDecimal extractAreaDoc(Object xmlRecord) {
         ObjectUnderConstructionRecord oucr = (ObjectUnderConstructionRecord) xmlRecord;
 
-        return Optional.ofNullable(oucr.getParams())
-                       .map(ParamsConstructionPurpose::getBaseParameters)
-                       .map(BaseParameters::getBaseParameter)
-                       .orElse(Collections.emptyList())
-                       .stream()
-                       .filter(baseParameter -> baseParameter.getArea() != null)
-                       .findFirst()
-                       .map(BaseParameters.BaseParameter::getArea)
-                       .orElse(null);
+        List<BaseParameters.BaseParameter> baseParameters = Optional
+                .ofNullable(oucr.getParams())
+                .map(ParamsConstructionPurpose::getBaseParameters)
+                .map(BaseParameters::getBaseParameter)
+                .orElse(new ArrayList<>());
+
+        Optional<BigDecimal> oArea = baseParameters.stream()
+                                                   .filter(baseParameter -> baseParameter.getArea() != null)
+                                                   .findFirst()
+                                                   .map(BaseParameters.BaseParameter::getArea);
+
+        return oArea.orElseGet(() -> baseParameters.stream()
+                                                   .filter(baseParameter -> baseParameter.getBuiltUpArea() != null)
+                                                   .findFirst()
+                                                   .map(BaseParameters.BaseParameter::getBuiltUpArea)
+                                                   .orElse(null));
     }
 
     @Override

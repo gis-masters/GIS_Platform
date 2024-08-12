@@ -3,7 +3,7 @@ package ru.mycrg.data_service.kpt_import.reader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-import ru.mycrg.data_service.kpt_import.model.factory.OksConstructionElementFactory;
+import ru.mycrg.data_service.kpt_import.model.oks.parsers.OksConstructionElementParser;
 import ru.mycrg.data_service.kpt_import.model.generated.ConstructionRecord;
 import ru.mycrg.data_service.kpt_import.model.oks.OksConstructionElement;
 
@@ -17,9 +17,9 @@ public class OksConstructionReader extends CommonKptXmlElementReader<OksConstruc
 
     private static final Logger log = LoggerFactory.getLogger(OksConstructionReader.class);
 
-    private final OksConstructionElementFactory oksConstructionElementFactory;
+    private final OksConstructionElementParser oksConstructionElementFactory;
 
-    public OksConstructionReader(OksConstructionElementFactory oksConstructionElementFactory) throws JAXBException {
+    public OksConstructionReader(OksConstructionElementParser oksConstructionElementFactory) throws JAXBException {
         super(ConstructionRecord.class, OksConstructionElement.XML_TAG);
 
         this.oksConstructionElementFactory = oksConstructionElementFactory;
@@ -36,6 +36,6 @@ public class OksConstructionReader extends CommonKptXmlElementReader<OksConstruc
             return Collections.emptyList();
         }
 
-        return oksConstructionElementFactory.fromConstructionRecord(record);
+        return oksConstructionElementFactory.parseByGeometry(record);
     }
 }

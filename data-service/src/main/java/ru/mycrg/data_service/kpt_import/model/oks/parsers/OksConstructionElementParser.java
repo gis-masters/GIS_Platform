@@ -1,4 +1,4 @@
-package ru.mycrg.data_service.kpt_import.model.factory;
+package ru.mycrg.data_service.kpt_import.model.oks.parsers;
 
 import org.springframework.stereotype.Component;
 import ru.mycrg.data_service.kpt_import.geometry_parsers.OksGeometryParser;
@@ -15,13 +15,13 @@ import java.util.stream.Collectors;
 import static ru.mycrg.data_service.kpt_import.reader.AddressExtractor.getAddress;
 
 @Component
-public class OksConstructionElementFactory extends OksElementFactory {
+public class OksConstructionElementParser extends BaseOksElementParser {
 
-    public OksConstructionElementFactory(OksGeometryParser geometryParser) {
+    public OksConstructionElementParser(OksGeometryParser geometryParser) {
         super(geometryParser);
     }
 
-    public List<OksConstructionElement> fromConstructionRecord(ConstructionRecord xmlRecord) {
+    public List<OksConstructionElement> parseByGeometry(ConstructionRecord xmlRecord) {
         if (xmlRecord.getContours() == null) {
             return Collections.emptyList();
         }
@@ -76,15 +76,22 @@ public class OksConstructionElementFactory extends OksElementFactory {
     protected BigDecimal extractAreaDoc(Object xmlRecord) {
         ConstructionRecord constructionRecord = (ConstructionRecord) xmlRecord;
 
-        return Optional.ofNullable(constructionRecord.getParams())
-                       .map(ParamsConstructionPurposeUses::getBaseParameters)
-                       .map(BaseParameters::getBaseParameter)
-                       .orElse(Collections.emptyList())
-                       .stream()
-                       .filter(baseParameter -> baseParameter.getArea() != null)
-                       .findFirst()
-                       .map(BaseParameters.BaseParameter::getArea)
-                       .orElse(null);
+        List<BaseParameters.BaseParameter> baseParameters = Optional
+                .ofNullable(constructionRecord.getParams())
+                .map(ParamsConstructionPurposeUses::getBaseParameters)
+                .map(BaseParameters::getBaseParameter)
+                .orElse(new ArrayList<>());
+
+        Optional<BigDecimal> oArea = baseParameters.stream()
+                                                   .filter(baseParameter -> baseParameter.getArea() != null)
+                                                   .findFirst()
+                                                   .map(BaseParameters.BaseParameter::getArea);
+
+        return oArea.orElseGet(() -> baseParameters.stream()
+                                                   .filter(baseParameter -> baseParameter.getBuiltUpArea() != null)
+                                                   .findFirst()
+                                                   .map(BaseParameters.BaseParameter::getBuiltUpArea)
+                                                   .orElse(null));
     }
 
     protected BigDecimal extractLengthDoc(Object xmlRecord) {

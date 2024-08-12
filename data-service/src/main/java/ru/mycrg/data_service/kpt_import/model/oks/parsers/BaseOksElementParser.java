@@ -1,4 +1,4 @@
-package ru.mycrg.data_service.kpt_import.model.factory;
+package ru.mycrg.data_service.kpt_import.model.oks.parsers;
 
 import org.postgis.MultiLineString;
 import org.postgis.MultiPoint;
@@ -17,13 +17,13 @@ import static ru.mycrg.data_service.dao.config.DaoProperties.DEFAULT_GEOMETRY_CO
 import static ru.mycrg.data_service.kpt_import.KptImportUtils.*;
 import static ru.mycrg.data_service.service.smev3.fields.CommonFields.CADASTRALNUM;
 
-public abstract class OksElementFactory {
+public abstract class BaseOksElementParser {
 
-    private static final Logger log = LoggerFactory.getLogger(OksElementFactory.class);
+    private static final Logger log = LoggerFactory.getLogger(BaseOksElementParser.class);
 
     private final OksGeometryParser geometryParser;
 
-    protected OksElementFactory(OksGeometryParser geometryParser) {
+    protected BaseOksElementParser(OksGeometryParser geometryParser) {
         this.geometryParser = geometryParser;
     }
 

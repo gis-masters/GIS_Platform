@@ -1,4 +1,4 @@
-package ru.mycrg.data_service.kpt_import.model.factory;
+package ru.mycrg.data_service.kpt_import.model.oks.parsers;
 
 import org.springframework.stereotype.Component;
 import ru.mycrg.data_service.kpt_import.geometry_parsers.OksGeometryParser;
@@ -15,13 +15,13 @@ import java.util.Optional;
 import static ru.mycrg.data_service.kpt_import.reader.AddressExtractor.getAddress;
 
 @Component
-public class OksBuildingElementFactory extends OksElementFactory {
+public class OksBuildingElementParser extends BaseOksElementParser {
 
-    public OksBuildingElementFactory(OksGeometryParser geometryParser) {
+    public OksBuildingElementParser(OksGeometryParser geometryParser) {
         super(geometryParser);
     }
 
-    public OksBuildingElement fromBuildRecord(BuildRecord xmlRecord) {
+    public OksBuildingElement parseByGeometry(BuildRecord xmlRecord) {
         if (xmlRecord.getContours() == null) {
             return new OksBuildingElement(Collections.emptyMap());
         }
