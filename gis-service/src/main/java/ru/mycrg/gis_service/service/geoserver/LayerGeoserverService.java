@@ -10,7 +10,6 @@ import ru.mycrg.geoserver_client.services.styles.StyleService;
 import ru.mycrg.gis_service.entity.Layer;
 import ru.mycrg.gis_service.security.CrgAuthHandler;
 import ru.mycrg.http_client.ResponseModel;
-import ru.mycrg.http_client.exceptions.HttpClientException;
 
 import java.util.Optional;
 
@@ -34,6 +33,7 @@ public class LayerGeoserverService {
         String nativeCRS = layer.getNativeCRS();
 
         try {
+            log.debug("isLayerExist: '{}'", featureTypeName);
             if (isLayerExist(workspace, featureTypeName)) {
                 log.debug("Layer: '{}' already exist.", featureTypeName);
 
@@ -41,14 +41,21 @@ public class LayerGeoserverService {
             }
 
             FeatureTypeModel featureType = new FeatureTypeModel(featureTypeName, nativeName, nativeCRS);
-            log.debug("Publish feature: {} on to workspace: [{}] datastore: [{}]", featureType, workspace, dataStore);
+            log.debug("Попытка публикации слоя: {} в рабочей области: [{}] из хранилища: [{}]",
+                      featureType, workspace, dataStore);
 
             ResponseModel<Object> responseModel = new FeatureTypeService(authenticationFacade.getAccessToken())
                     .create(workspace, dataStore, featureType);
 
-            return responseModel.isSuccessful()
-                    ? Optional.of(featureTypeName)
-                    : Optional.empty();
+            if (responseModel.isSuccessful()) {
+                log.debug("Слой: {} успешно опубликован", featureTypeName);
+
+                return Optional.of(featureTypeName);
+            }
+
+            log.debug("Не удалось опубликовать слой: {} => {}", featureTypeName, responseModel.getBody());
+
+            return Optional.empty();
         } catch (Exception e) {
             String msg = String.format("Не удалось опубликовать слой: '%s' на геосервере. Reason: %s",
                                        nativeName, e.getMessage());
@@ -90,7 +97,7 @@ public class LayerGeoserverService {
         }
     }
 
-    private boolean isLayerExist(String workspace, String feature) throws HttpClientException {
+    private boolean isLayerExist(String workspace, String feature) {
         return new FeatureTypeService(authenticationFacade.getAccessToken())
                 .isExist(workspace, feature);
     }

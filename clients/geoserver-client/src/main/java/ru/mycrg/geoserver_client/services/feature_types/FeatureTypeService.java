@@ -47,8 +47,6 @@ public class FeatureTypeService extends GeoServerBaseService implements IFeature
 
     public boolean isExist(String workspace,
                            String featureType) {
-        log.debug("try get featureType: [{}] in: [{}]", featureType, workspace);
-
         String url = getGeoserverRestUrl()
                 .append(WORKSPACES).append(workspace)
                 .append(FEATURE_TYPES).append(featureType)
@@ -56,7 +54,8 @@ public class FeatureTypeService extends GeoServerBaseService implements IFeature
 
         Request request = builderWithBearerAuth.url(url).get().build();
 
-        log.debug("get featureType request {} ", request);
+        log.debug("Проверка наличия featureType: [{}] в рабочей области: [{}] Request: [{}]",
+                  featureType, workspace, request);
 
         try {
             return httpClient.handleRequest(request).isSuccessful();

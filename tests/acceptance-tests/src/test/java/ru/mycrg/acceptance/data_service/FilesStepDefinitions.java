@@ -5,6 +5,7 @@ import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import org.jetbrains.annotations.NotNull;
 import ru.mycrg.acceptance.BaseStepsDefinitions;
@@ -56,6 +57,39 @@ public class FilesStepDefinitions extends BaseStepsDefinitions {
 
         getFile(firstFileId);
         currentFilePath = jsonPath.getString("path");
+    }
+
+    @Given("Загружены файлы {string}")
+    public void loadAnyFiles(String fileNamesInString) {
+        currentFiles.clear();
+
+        Arrays.stream(fileNamesInString.split(","))
+              .map(String::trim)
+              .forEach(fileName -> {
+                  File file = getFile(fileName);
+                  List<UUID> ids = createFiles(new File[]{file});
+
+                  currentFiles.add(new FileDescriptionModel(ids.get(0), file.getTotalSpace(), fileName));
+              });
+
+        assertEquals(currentFiles.size(), fileNamesInString.split(",").length);
+    }
+
+    @Given("я скачиваю группу файлов архивом, передав главный файл группы: {string}")
+    public void downloadArchiveStep(String mainFileName) {
+        downloadAsArchive(mainFileName);
+    }
+
+    @Given("я скачиваю группу файлов архивом, передав не корректный идентификатор файла: {string}")
+    public void downloadArchiveIncorrectly(String incorrectFileName) {
+        downloadAsArchive(incorrectFileName);
+    }
+
+    @Given("архив успешно скачан в полном объеме: {int} байт")
+    public void downloadArchiveStep(Integer bytes) {
+        assertEquals(SC_OK, response.getStatusCode());
+        assertEquals("application/zip", response.getContentType());
+        assertEquals((int) bytes, response.asByteArray().length);
     }
 
     @Given("Пользователем создано три файла")
@@ -232,6 +266,8 @@ public class FilesStepDefinitions extends BaseStepsDefinitions {
 
     @Given("Существуют файлы")
     public void createFiles(DataTable dataTable) {
+        currentFiles.clear();
+
         dataTable.asList()
                  .forEach(fileName -> {
                      File file = getFile(fileName);
@@ -296,6 +332,14 @@ public class FilesStepDefinitions extends BaseStepsDefinitions {
                         get(url);
     }
 
+    private void downloadArchive(UUID mainFileId) {
+        String url = String.format("/%s/download/zip", mainFileId);
+
+        response = getBaseRequestWithCurrentCookie()
+                .when().
+                        get(url);
+    }
+
     private List<UUID> createFiles(File[] files) {
         RequestSpecification requestSpecification = getBaseRequestWithCurrentCookie()
                 .given().
@@ -327,6 +371,18 @@ public class FilesStepDefinitions extends BaseStepsDefinitions {
         if (!testFile.exists()) {
             throw new IllegalStateException("Not exist test resource: " + fileName);
         }
+
         return testFile;
+    }
+
+    private void downloadAsArchive(String incorrectFileName) {
+        FileDescriptionModel mainFile = currentFiles
+                .stream()
+                .filter(file -> file.getTitle().equals(incorrectFileName))
+                .findFirst()
+                .orElseThrow(
+                        () -> new IllegalStateException("Среди текущих файлов не найден искомый: " + incorrectFileName));
+
+        downloadArchive(mainFile.getId());
     }
 }

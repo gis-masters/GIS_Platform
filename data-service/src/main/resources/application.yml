@@ -6,7 +6,6 @@ logging:
   file: /opt/logs/data-service.log
   level:
     ru.mycrg: debug
-    org.springframework.jdbc: debug
 
 ---
 

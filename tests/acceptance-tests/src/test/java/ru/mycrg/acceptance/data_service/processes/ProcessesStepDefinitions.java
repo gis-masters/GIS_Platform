@@ -8,6 +8,7 @@ import ru.mycrg.acceptance.data_service.dto.FileDescriptionModel;
 
 import java.io.File;
 import java.time.LocalTime;
+import java.util.UUID;
 
 import static io.restassured.http.ContentType.JSON;
 import static java.lang.Thread.sleep;
@@ -51,42 +52,24 @@ public class ProcessesStepDefinitions extends BaseStepsDefinitions {
 
     @When("Пользователь публикует DXF")
     public void tryPlacementDxfAsProcess() {
-        DxfPlacementModel placementModel = new DxfPlacementModel();
-        placementModel.setFileId(currentFileId);
-        placementModel.setWsUiId("Fiat lux");
-        placementModel.setProjectId(Long.valueOf(projectId));
-
-        placeFile(placementModel);
+        placeFileInCurrentProject(currentFileId);
     }
 
-    @When("Пользователь публикует SHP")
-    public void tryPlacementShpAsProcess() {
-        DxfPlacementModel placementModel = new DxfPlacementModel();
-        placementModel.setWsUiId("Fiat lux");
-        placementModel.setProjectId(Long.valueOf(projectId));
-        placementModel.setFileId(getFile(".shp").getId());
-
-        placeFile(placementModel);
+    @When("Пользователь публикует {string}")
+    public void tryPlacementFileAsProcess(String fileType) {
+        placeFileInCurrentProject(getFile(fileType.toLowerCase()).getId());
     }
 
-    @When("Пользователь публикует TAB")
-    public void tryPlacementTabAsProcess() {
-        DxfPlacementModel placementModel = new DxfPlacementModel();
-        placementModel.setWsUiId("Fiat lux");
-        placementModel.setProjectId(Long.valueOf(projectId));
-        placementModel.setFileId(getFile(".tab").getId());
+    @When("Файл {string} опубликован в текущем проекте")
+    public void tryPlacementFile(String fileName) {
+        FileDescriptionModel fileForPublication = currentFiles
+                .stream()
+                .filter(file -> file.getTitle().equals(fileName))
+                .findFirst()
+                .orElseThrow(
+                        () -> new IllegalStateException("Среди текущих файлов не найден искомый: " + fileName));
 
-        placeFile(placementModel);
-    }
-
-    @When("Пользователь публикует MID")
-    public void tryPlacementMidAsProcess() {
-        DxfPlacementModel placementModel = new DxfPlacementModel();
-        placementModel.setWsUiId("Fiat lux");
-        placementModel.setProjectId(Long.valueOf(projectId));
-        placementModel.setFileId(getFile(".mid").getId());
-
-        placeFile(placementModel);
+        placeFileInCurrentProject(fileForPublication.getId());
     }
 
     @When("Пользователь импортирует геометрию из shape файла в существующий слой")
@@ -227,5 +210,14 @@ public class ProcessesStepDefinitions extends BaseStepsDefinitions {
                 .filter(file -> file.getTitle().contains(extension))
                 .findFirst()
                 .orElseThrow(() -> new IllegalStateException("Нет файла с расширением " + extension));
+    }
+
+    private void placeFileInCurrentProject(UUID fileId) {
+        DxfPlacementModel placementModel = new DxfPlacementModel();
+        placementModel.setWsUiId("Fiat lux");
+        placementModel.setProjectId(Long.valueOf(projectId));
+        placementModel.setFileId(fileId);
+
+        placeFile(placementModel);
     }
 }

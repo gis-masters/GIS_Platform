@@ -496,6 +496,14 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
         currentDocumentId = extractEntityIdFromResponse(response);
     }
 
+    @Given("Загруженные файлы подвязаны к текущей записи")
+    public void updateRecordWithFilesOnDefaultLibrary() {
+        DefaultDocumentModel record = new DefaultDocumentModel("plug-in files");
+        record.setSome_files(currentFiles);
+
+        updateDocument(currentDocumentId, gson.toJson(record), DEFAULT_LIBRARY);
+    }
+
     @Given("Существует запись в библиотеке на основе растрового файла из БД {string}")
     public void createLibraryDefaultRecord(String title) {
         String body = "{" +

@@ -186,18 +186,17 @@ public class FileController extends BaseController {
 
         String tmpPath = FilenameUtils.removeExtension(baseFile.getPath()).split("__")[0];
 
+        List<String> foundFilesPath = fileRepository
+                .oneGroupFiles(tmpPath, fileBaseTitle.toLowerCase(), fileFullGroup)
+                .stream().map(File::getPath)
+                .collect(Collectors.toList());
+
+        throwIfGroupNotFull(fileGroups.get(oType.get()).getRequired(), foundFilesPath);
+
         try (ServletOutputStream sos = response.getOutputStream();
              ZipOutputStream zos = new ZipOutputStream(sos)) {
 
-            List<String> foundFiles = fileRepository.oneGroupFiles(tmpPath,
-                                                                   fileBaseTitle.toLowerCase(),
-                                                                   fileFullGroup)
-                                                    .stream().map(File::getPath)
-                                                    .collect(Collectors.toList());
-
-            log.debug("Found files: {}", foundFiles);
-
-            foundFiles.forEach(path -> makeZipArchive(Path.of(path), zos, fileBaseTitle));
+            foundFilesPath.forEach(path -> makeZipArchive(Path.of(path), zos, fileBaseTitle));
         } catch (Exception ex) {
             String msg = String.format("Не удалось создать zip архив. Причина: %s", ex.getMessage());
             log.error(msg);
@@ -279,5 +278,23 @@ public class FileController extends BaseController {
         if (!resourceProtector.isAllowed(rQualifier)) {
             throw new ForbiddenException("Файл недоступен");
         }
+    }
+
+    private void throwIfGroupNotFull(Set<String> required, List<String> foundFilesPath) {
+        log.debug("Found files: {}", foundFilesPath);
+
+        if (required.size() != foundFilesPath.size()) {
+            throw new BadRequestException("Группа файлов не полная");
+        }
+
+        Set<String> foundExtensions = foundFilesPath.stream()
+                                                    .map(FilenameUtils::getExtension)
+                                                    .collect(Collectors.toSet());
+
+        required.forEach(requiredExt -> {
+            if (!foundExtensions.contains(requiredExt)) {
+                throw new BadRequestException("Группа файлов не полная");
+            }
+        });
     }
 }

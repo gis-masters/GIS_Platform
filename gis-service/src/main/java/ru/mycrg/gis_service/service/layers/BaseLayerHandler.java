@@ -45,6 +45,9 @@ public class BaseLayerHandler implements ILayerHandler {
         String requestedTableName = newLayer.getTableName();
         String nativeCRS = newLayer.getNativeCRS() != null ? newLayer.getNativeCRS() : defaultEpsgCode();
 
+        log.info("BaseLayerHandler.create: {}", newLayer);
+        log.info("BaseLayerHandler.requestedTableName: {} / mode: {}", requestedTableName, mode);
+
         Layer layer = null;
         if (FULL_MODE.equals(mode) || GIS_SERVICE_MODE.equals(mode)) {
             if (layerRepository.existsByProjectAndTableNameAndNativeCRS(project, requestedTableName, nativeCRS)) {
