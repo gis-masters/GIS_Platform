@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
+import { Tooltip } from '@mui/material';
 
 import { FeatureTypeHref } from '../../services/geoserver/featureType/featureType.model';
 import {
@@ -23,9 +24,11 @@ export class OrganizationClean extends Component {
 
   render() {
     return (
-      <Button loading={this.busy} color='primary' onClick={this.cleanUp}>
-        Очистить дефолтные слои
-      </Button>
+      <Tooltip title='Очистка предназначена для удаления временных слоев после импорта'>
+            <Button loading={this.busy} color='primary' onClick={this.cleanUp}>
+              Очистить дефолтные слои
+            </Button>
+      </Tooltip>
     );
   }
 

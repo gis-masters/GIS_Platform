@@ -570,6 +570,11 @@
         "id": "04addUser",
         "title": "Приглашение пользователя",
         "contentUrl": "/assets/help/8orgManagement/04addUser/04addUser.html"
+      },
+      {
+        "id": "06cleaningLayers",
+        "title": "Очистка",
+        "contentUrl": "/assets/help/8orgManagement/06cleaningLayers/06cleaningLayers.html"
       }
     ]
   },
