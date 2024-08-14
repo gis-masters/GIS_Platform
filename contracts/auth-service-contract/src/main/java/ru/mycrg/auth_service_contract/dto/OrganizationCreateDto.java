@@ -1,6 +1,7 @@
 package ru.mycrg.auth_service_contract.dto;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -15,6 +16,7 @@ public class OrganizationCreateDto {
     @Size(max = 20, message = "No more than 20 characters")
     private String phone;
 
+    @Min(1)
     private Integer specializationId;
 
     @Valid

@@ -781,11 +781,6 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
         recoverRecord(currentDocumentId, currentFolderId, DEFAULT_LIBRARY);
     }
 
-    @When("сообщение об ошибке соответствует ожидаемому: {string}")
-    public void checkErrorMsg(String msg) {
-        checkResponseValue("message", msg);
-    }
-
     @When("Сообщение об ошибке содержит причину: {string}")
     public void checkErrorMsgContains(String msg) {
         checkResponseValueContains("message", msg);

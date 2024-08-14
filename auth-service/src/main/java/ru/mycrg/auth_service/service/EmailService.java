@@ -1,9 +1,9 @@
 package ru.mycrg.auth_service.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
+import ru.mycrg.auth_service.entity.OrganizationIntent;
 import ru.mycrg.auth_service.entity.User;
 import ru.mycrg.auth_service.exceptions.BadRequestException;
 
@@ -27,11 +27,11 @@ public class EmailService {
 
     private final JavaMailSender emailSender;
 
-    @Autowired
-    private Environment environment;
+    private final Environment environment;
 
-    public EmailService(JavaMailSender emailSender) {
+    public EmailService(JavaMailSender emailSender, Environment environment) {
         this.emailSender = emailSender;
+        this.environment = environment;
     }
 
     public void sendEmailResetPassword(User receiver, String newToken, String originHost) {
@@ -62,18 +62,23 @@ public class EmailService {
         }
     }
 
+    public void sendIntent(OrganizationIntent intent) {
+        // TODO: in progress
+    }
+
     private String preparedMessageHtmlBody(String fullName, String token, String originHost) {
         String restoreLink = format("%s/%s/%s", originHost, "password-reset", token);
-        String filePath = "templateEmail.html";
+        String resetPassEmailPath = "resetPassEmail.html";
 
         String content;
         try {
-            content = readFromFile(filePath);
+            content = readFromFile(resetPassEmailPath);
             content = content.replace("{fullname}", fullName);
             content = content.replace("{baseSiteURL}", originHost);
             content = content.replace("{restoreLink}", restoreLink);
         } catch (IOException e) {
-            throw new BadRequestException(format("Не удалось прочитать файл %s. %s", filePath, e.getMessage()));
+            throw new BadRequestException(
+                    format("Не удалось прочитать файл %s. %s", resetPassEmailPath, e.getMessage()));
         }
 
         return content;

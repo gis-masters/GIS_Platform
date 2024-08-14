@@ -3,6 +3,7 @@ package ru.mycrg.acceptance;
 import io.cucumber.java.Before;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Then;
+import io.cucumber.java.en.When;
 
 import java.util.List;
 import java.util.Map;
@@ -133,4 +134,10 @@ public class CommonStepDefinitions extends BaseStepsDefinitions {
     public void checkResponseValue(String field, String value) {
         super.checkResponseValue(field, value);
     }
+
+    @When("сообщение об ошибке соответствует ожидаемому: {string}")
+    public void checkErrorMsg(String msg) {
+        checkResponseValue("message", msg);
+    }
+
 }

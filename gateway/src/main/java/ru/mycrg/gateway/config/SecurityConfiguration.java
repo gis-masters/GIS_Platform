@@ -70,6 +70,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers(POST,
                              "/oauth/token",
                              "/organizations/init",
+                             "/organizations/intents",
                              "/perform_logout",
                              "/integration/ais_ums/import",
                              "/integration/statement/import",

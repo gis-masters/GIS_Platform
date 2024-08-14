@@ -10,6 +10,7 @@ import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
 import ru.mycrg.acceptance.BaseStepsDefinitions;
 import ru.mycrg.acceptance.GeoserverStepDefinitions;
+import ru.mycrg.acceptance.auth_service.dto.OrganizationBase;
 import ru.mycrg.acceptance.data_service.datasets.DatasetsStepsDefinitions;
 import ru.mycrg.acceptance.data_service.features.FeaturesStepsDefinitions;
 import ru.mycrg.acceptance.data_service.libraries.LibraryBaseRecords;
@@ -17,11 +18,13 @@ import ru.mycrg.acceptance.data_service.tables.TablesStepsDefinitions;
 import ru.mycrg.acceptance.data_service.tasks.TaskStepDefinition;
 import ru.mycrg.acceptance.gis_service.LayerStepDefinitions;
 import ru.mycrg.acceptance.gis_service.ProjectStepsDefinitions;
+import ru.mycrg.auth_service_contract.dto.AuthorityCommonDto;
 import ru.mycrg.auth_service_contract.dto.OrganizationCreateDto;
 import ru.mycrg.auth_service_contract.dto.UserCreateDto;
 import ru.mycrg.data_service_contract.enums.TaskType;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static java.lang.Thread.sleep;
 import static org.apache.http.HttpStatus.*;
@@ -378,6 +381,8 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
      */
     @Given("Существует любая организация")
     public void getExistOrg() throws InterruptedException {
+        fillOrganizationPoolFromServer();
+
         Iterator<Map.Entry<Integer, OrganizationCreateDto>> iterator = orgPool.entrySet().iterator();
         if (iterator.hasNext()) {
             Map.Entry<Integer, OrganizationCreateDto> entry = iterator.next();
@@ -388,17 +393,41 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
             System.out.println("Org owner: [" + orgDto.getOwner().getEmail() + "]");
         } else {
             List<String> data = new ArrayList<>();
-            data.add("ООО FizИКоровы");
+            data.add("ООО AnyOrganization");
             data.add("1234567890");
-            data.add("Ivanov");
-            data.add("Ivan");
-            data.add("EMAIL_20");
+            data.add("AnyAny");
+            data.add("Any");
+            data.add("EMAIL_12");
             data.add("testPassword1");
 
             List<List<String>> raw = new ArrayList<>();
             raw.add(data);
 
             initOrg(DataTable.create(raw));
+        }
+    }
+
+    private void fillOrganizationPoolFromServer() {
+        authorizationBase.loginAsSystemAdmin();
+
+        response = getBaseRequestWithCurrentCookie()
+                .when().
+                        log().all().
+                        get("/organizations");
+
+        List<OrganizationBase> organizations = response.jsonPath().getList("content", OrganizationBase.class);
+        for (OrganizationBase org: organizations) {
+            final UserCreateDto[] ownerTmp = new UserCreateDto[1];
+            org.getUsers().stream()
+               .filter(user -> hasAdminAuthority(user.getAuthorities()))
+               .findFirst()
+               .ifPresent(userDto -> {
+                   ownerTmp[0] = new UserCreateDto(userDto.getName(), userDto.getSurname(), userDto.getEmail(), "");
+               });
+
+            if (ownerTmp[0] != null) {
+                orgPool.put(org.getId(), new OrganizationCreateDto(org.getName(), org.getPhone(), ownerTmp[0]));
+            }
         }
     }
 
@@ -766,5 +795,16 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
         tasksForFiz5.add(task5_1);
 
         taskStepDefinition.initTasks(DataTable.create(tasksForFiz5));
+    }
+
+    private boolean hasAdminAuthority(Set<AuthorityCommonDto> authorities) {
+        AtomicBoolean result = new AtomicBoolean(false);
+        authorities.forEach(authority -> {
+            if (authority.getAuthority().equals("ORG_ADMIN")) {
+                result.set(true);
+            }
+        });
+
+        return result.get();
     }
 }

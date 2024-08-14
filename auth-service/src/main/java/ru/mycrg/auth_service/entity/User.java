@@ -47,7 +47,7 @@ public class User {
     @Column
     private String phone;
 
-    @Column
+    @Column(length = 60)
     private String email;
 
     @Column

@@ -35,6 +35,6 @@ public class SpecializationService {
         return specializations.stream()
                               .filter(item -> item.getId() == specId)
                               .findFirst()
-                              .orElseThrow(() -> new BadRequestException("Не найдена специализация с id " + specId));
+                              .orElseThrow(() -> new BadRequestException("Запрашиваемая специализация не найдена"));
     }
 }

@@ -26,8 +26,16 @@ public class ResourceServerSecurityConfig extends ResourceServerConfigurerAdapte
     public void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                .antMatchers(POST, "/organizations/init", "/request-password-reset", "/password-reset").permitAll()
-                .antMatchers(GET, "/actuator/health", "/password-reset", "/esia/**", "/users/organizations",
+                .antMatchers(POST,
+                             "/organizations/init",
+                             "/organizations/intents",
+                             "/request-password-reset",
+                             "/password-reset").permitAll()
+                .antMatchers(GET,
+                             "/actuator/health",
+                             "/password-reset",
+                             "/esia/**",
+                             "/users/organizations",
                              "/specializations/**").permitAll()
                 .antMatchers(SWAGGER_WHITELIST).permitAll()
                 .anyRequest().authenticated();
