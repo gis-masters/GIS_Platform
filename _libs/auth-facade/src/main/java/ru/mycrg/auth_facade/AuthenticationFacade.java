@@ -1,6 +1,8 @@
 package ru.mycrg.auth_facade;
 
 import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -16,6 +18,8 @@ import static ru.mycrg.auth_service_contract.Authorities.ORG_ADMIN;
 import static ru.mycrg.auth_service_contract.Authorities.SYSTEM_ADMIN;
 
 public class AuthenticationFacade implements IAuthenticationFacade {
+
+    private static final Logger log = LoggerFactory.getLogger(AuthenticationFacade.class);
 
     @Override
     public String getAccessToken() {
@@ -115,10 +119,16 @@ public class AuthenticationFacade implements IAuthenticationFacade {
     }
 
     private Map<String, Object> decode(Principal principal) {
-        var authentication = (OAuth2Authentication) principal;
-        var details = (OAuth2AuthenticationDetails) authentication.getDetails();
+        try {
+            OAuth2Authentication authentication = (OAuth2Authentication) principal;
+            OAuth2AuthenticationDetails details = (OAuth2AuthenticationDetails) authentication.getDetails();
 
-        return (Map<String, Object>) details.getDecodedDetails();
+            return (Map<String, Object>) details.getDecodedDetails();
+        } catch (Exception e) {
+            log.error("Не удалось прочесть Principal => {}", e.getMessage(), e);
+
+            return new HashMap<>();
+        }
     }
 
     private Optional<Object> getValue(Map<String, Object> data, String target) {

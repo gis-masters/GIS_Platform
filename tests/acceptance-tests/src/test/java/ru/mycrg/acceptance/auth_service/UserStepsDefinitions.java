@@ -26,6 +26,7 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.*;
+import static ru.mycrg.acceptance.auth_service.AuthorizationBase.DEFAULT_TEST_PASSWORD;
 
 public class UserStepsDefinitions extends BaseStepsDefinitions {
 
@@ -750,7 +751,7 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
         userDto = new UserCreateDto(generateString("STRING_10"),
                                     generateString("STRING_10"),
                                     generateString("EMAIL_10"),
-                                    "testPassword1");
+                                    DEFAULT_TEST_PASSWORD);
 
         createRandomUser(userDto);
     }
@@ -759,7 +760,7 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
         userDto = new UserCreateDto(generateString("STRING_10"),
                                     generateString("STRING_10"),
                                     email,
-                                    "testPassword1");
+                                    DEFAULT_TEST_PASSWORD);
 
         createRandomUser(userDto);
     }

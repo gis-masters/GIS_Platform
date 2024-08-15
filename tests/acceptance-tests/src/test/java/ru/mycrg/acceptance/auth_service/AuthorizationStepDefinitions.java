@@ -17,6 +17,7 @@ import static org.apache.http.HttpStatus.SC_UNAUTHORIZED;
 import static org.junit.Assert.*;
 import static ru.mycrg.acceptance.auth_service.AuthorizationBase.AUTH_COOKIE;
 import static ru.mycrg.acceptance.auth_service.AuthorizationBase.AUTH_COOKIE_VALUE_SEPARATOR;
+import static ru.mycrg.acceptance.auth_service.OrganizationStepsDefinitions.orgDto;
 import static ru.mycrg.acceptance.auth_service.UserStepsDefinitions.userDto;
 
 public class AuthorizationStepDefinitions extends BaseStepsDefinitions {
@@ -71,6 +72,16 @@ public class AuthorizationStepDefinitions extends BaseStepsDefinitions {
     @Given("Пользователь авторизован как {string}, {string}")
     public void authorizedAs(String email, String pass) {
         authorizationBase.loginAs(email, pass);
+    }
+
+    @Given("Владелец организации пытается авторизоваться с не корректным логином {string}")
+    public void tryAuthorizeWithIncorrectEmail(String email) {
+        authorizationBase.authorizeAs(email, orgDto.getOwner().getPassword());
+    }
+
+    @Given("Владелец организации пытается авторизоваться с не корректным паролем {string}")
+    public void tryAuthorizeWithIncorrectPassword(String password) {
+        authorizationBase.authorizeAs(orgDto.getOwner().getEmail(), password);
     }
 
     @When("Авторизуемся пользователем у которого email прописан в верхнем регистре")

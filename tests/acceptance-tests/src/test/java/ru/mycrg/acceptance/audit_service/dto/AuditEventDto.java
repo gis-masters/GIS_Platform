@@ -1,5 +1,6 @@
 package ru.mycrg.acceptance.audit_service.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.JsonNode;
 
 import java.util.List;
@@ -13,6 +14,8 @@ public class AuditEventDto {
     private String entityName;
     private String entityType;
     private Long entityId;
+
+    @JsonIgnore
     private List<Long> entityIds;
     private Long organizationId;
     private JsonNode entityStateAfter;

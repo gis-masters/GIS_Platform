@@ -29,6 +29,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import static java.lang.Thread.sleep;
 import static org.apache.http.HttpStatus.*;
 import static org.junit.Assert.*;
+import static ru.mycrg.acceptance.auth_service.AuthorizationBase.DEFAULT_TEST_PASSWORD;
 import static ru.mycrg.acceptance.data_service.datasets.DatasetsStepsDefinitions.currentDatasetIdentifier;
 import static ru.mycrg.acceptance.gis_service.ProjectStepsDefinitions.projectId;
 
@@ -398,7 +399,7 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
             data.add("AnyAny");
             data.add("Any");
             data.add("EMAIL_12");
-            data.add("testPassword1");
+            data.add(DEFAULT_TEST_PASSWORD);
 
             List<List<String>> raw = new ArrayList<>();
             raw.add(data);
@@ -422,7 +423,8 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
                .filter(user -> hasAdminAuthority(user.getAuthorities()))
                .findFirst()
                .ifPresent(userDto -> {
-                   ownerTmp[0] = new UserCreateDto(userDto.getName(), userDto.getSurname(), userDto.getEmail(), "");
+                   ownerTmp[0] = new UserCreateDto(userDto.getName(), userDto.getSurname(), userDto.getEmail(),
+                                                   DEFAULT_TEST_PASSWORD);
                });
 
             if (ownerTmp[0] != null) {
@@ -528,7 +530,7 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
         assertTrue(presentedData.containsKey("users"));
     }
 
-    @When("Отправляется повторный запрос на создание организации")
+    @When("я отправляю запрос на создание организации используя email уже созданной организации")
     public void sendAgainCreateOrganizationRequest() {
         createOrganization(orgDto);
     }

@@ -1,8 +1,10 @@
 package ru.mycrg.http_client;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import org.jetbrains.annotations.Nullable;
 
 import java.text.SimpleDateFormat;
 import java.util.Optional;
@@ -27,6 +29,14 @@ public class JsonConverter {
                          .writeValueAsString(value);
         } catch (Exception e) {
             throw new IllegalArgumentException("Не удалось обработать объект: " + value);
+        }
+    }
+
+    public static JsonNode toJsonNode(@Nullable Object value) {
+        try {
+            return mapper.convertValue(value, JsonNode.class);
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Не удалось конвертировать объект в JsonNode: " + value);
         }
     }
 

@@ -25,9 +25,9 @@ export class OrganizationClean extends Component {
   render() {
     return (
       <Tooltip title='Очистка предназначена для удаления временных слоев после импорта'>
-            <Button loading={this.busy} color='primary' onClick={this.cleanUp}>
-              Очистить дефолтные слои
-            </Button>
+        <Button loading={this.busy} color='primary' onClick={this.cleanUp}>
+          Очистить дефолтные слои
+        </Button>
       </Tooltip>
     );
   }

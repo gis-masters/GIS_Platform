@@ -2,6 +2,7 @@ package ru.mycrg.gateway.filters;
 
 import lombok.extern.log4j.Log4j2;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.web.filter.OncePerRequestFilter;
 import ru.mycrg.audit_service_contract.events.CrgAuditEvent;
 import ru.mycrg.auth_service_contract.dto.IdNameProjection;
@@ -19,7 +20,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
+import static org.apache.commons.lang.CharEncoding.UTF_8;
 import static ru.mycrg.gateway.GatewayApplication.objectMapper;
+import static ru.mycrg.http_client.JsonConverter.toJsonNode;
 
 @Log4j2
 public class MainAuthFilter extends OncePerRequestFilter implements CrgFilter {
@@ -53,7 +56,7 @@ public class MainAuthFilter extends OncePerRequestFilter implements CrgFilter {
             String username = request.getParameter("username");
             String password = request.getParameter("password");
             if (username == null || password == null) {
-                sendUnauthorized(response);
+                sendUnauthorized(response, request.getParameter("orgId"), "Имя пользователя или пароль отсутствуют");
             } else {
                 authorize(request, response, username, password);
             }
@@ -80,11 +83,13 @@ public class MainAuthFilter extends OncePerRequestFilter implements CrgFilter {
                            String usernameRaw,
                            String password) {
         response.setContentType(request.getContentType());
-        response.setCharacterEncoding("UTF-8");
+        response.setCharacterEncoding(UTF_8);
 
         String username = usernameRaw.trim();
         if (isNotCorrectLoginPass(username, password)) {
-            sendUnauthorized(response);
+            sendUnauthorized(response,
+                             request.getParameter("orgId"),
+                             "Попытка авторизоваться с неверными именем или паролем: " + username + "/" + password);
 
             return;
         }
@@ -97,7 +102,9 @@ public class MainAuthFilter extends OncePerRequestFilter implements CrgFilter {
             if (orgs == null) { // Не удалось получить ничего, по причине невалидного пользователя, например.
                 log.debug("Unauthorized: '{}'", username);
 
-                sendUnauthorized(response);
+                sendUnauthorized(response,
+                                 request.getParameter("orgId"),
+                                 "Попытка авторизоваться в организации: " + orgId + " пользователем: " + username);
             } else if (orgs.isEmpty()) { // Пустой список организаций отдаётся сейчас супер пользователю!
                 log.debug("Is root? '{}'", username);
 
@@ -120,7 +127,7 @@ public class MainAuthFilter extends OncePerRequestFilter implements CrgFilter {
     }
 
     private void authWithOrgId(@NotNull HttpServletResponse response, String username, String password, String orgId) {
-        log.debug("auth with orgId: {}", orgId);
+        log.debug("Авторизация в конкретную организацию: {}", orgId);
 
         authenticator.requestToken(username, password, orgId)
                      .ifPresentOrElse(token -> {
@@ -129,7 +136,9 @@ public class MainAuthFilter extends OncePerRequestFilter implements CrgFilter {
                          messageBus.produce(
                                  new CrgAuditEvent(token.getAccess_token(), "SIGN_IN", "user", "USER", -1L));
                      }, () -> {
-                         sendUnauthorized(response);
+                         sendUnauthorized(response,
+                                          null,
+                                          "Пользователем: " + username + " не удалось зайти в организацию: " + orgId);
                      });
     }
 
@@ -174,21 +183,25 @@ public class MainAuthFilter extends OncePerRequestFilter implements CrgFilter {
             // Удалим куку/разлогинем пользователя
             response.addCookie(cookieProducer.makeDeletionCookie());
 
-            sendUnauthorized(response);
+            String msg = String.format("Попытка авторизации без токена восстановления. Токен авторизации: %s",
+                                       token.getAccess_token());
+            sendUnauthorized(response, request.getParameter("orgId"), msg);
         } else if ("refreshTokenExpired".equals(authConclusion.getCause())) {
             log.debug("Refresh token expired");
 
             // Удалим куку/разлогинем пользователя
             response.addCookie(cookieProducer.makeDeletionCookie());
 
-            sendUnauthorized(response);
+            sendUnauthorized(response, request.getParameter("orgId"),
+                             "Попытка авторизации с просроченным токеном: " + token.getAccess_token());
         } else {
             log.info("Error authorize");
 
             // Удалим куку/разлогинем пользователя
             response.addCookie(cookieProducer.makeDeletionCookie());
 
-            sendUnauthorized(response);
+            sendUnauthorized(response, request.getParameter("orgId"),
+                             "Не удалось авторизоваться. Токен: " + token.getAccess_token());
         }
     }
 
@@ -239,7 +252,7 @@ public class MainAuthFilter extends OncePerRequestFilter implements CrgFilter {
         try {
             response.getWriter().write(jwtToken.getAccess_token());
         } catch (IOException e) {
-            log.error("Error prepare response: {}", e.getMessage());
+            log.error("Error prepare cookie response: {}", e.getMessage());
         }
     }
 
@@ -252,8 +265,21 @@ public class MainAuthFilter extends OncePerRequestFilter implements CrgFilter {
         }
     }
 
-    private void sendUnauthorized(@NotNull HttpServletResponse response) {
+    private void sendUnauthorized(@NotNull HttpServletResponse response,
+                                  @Nullable String orgId,
+                                  String reason) {
         try {
+            long orgIdentityId = orgId != null ? Long.parseLong(orgId) : -1L;
+
+            CrgAuditEvent auditEvent = new CrgAuditEvent();
+            auditEvent.setActionType("SIGN_FAIL");
+            auditEvent.setEntityName("user");
+            auditEvent.setEntityType("USER");
+            auditEvent.setEntityId(orgIdentityId);
+            auditEvent.setEntityStateAfter(toJsonNode(String.format("Организация: %d. %s", orgIdentityId, reason)));
+
+            messageBus.produce(auditEvent);
+
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
         } catch (IOException e) {
             log.error("Response failed: ", e);

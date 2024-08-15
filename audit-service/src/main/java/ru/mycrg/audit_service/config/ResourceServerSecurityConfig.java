@@ -14,6 +14,9 @@ import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 import ru.mycrg.auth_facade.AuthenticationFacade;
 import ru.mycrg.auth_facade.IAuthenticationFacade;
 
+import static org.springframework.http.HttpMethod.GET;
+import static org.springframework.http.HttpMethod.POST;
+
 @Configuration
 @EnableResourceServer
 public class ResourceServerSecurityConfig extends ResourceServerConfigurerAdapter {
@@ -54,7 +57,8 @@ public class ResourceServerSecurityConfig extends ResourceServerConfigurerAdapte
                 .cors().and()
                 .csrf().disable()
                 .authorizeRequests()
-                .antMatchers(HttpMethod.GET, "/actuator/health").permitAll()
+                .antMatchers(GET, "/actuator/health").permitAll()
+                .antMatchers(POST, "/events").permitAll()
                 .anyRequest().authenticated();
     }
 

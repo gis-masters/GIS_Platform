@@ -3,6 +3,7 @@ package ru.mycrg.integration_service.queue.handlers;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -43,29 +44,21 @@ public class AuditEventHandler implements IEventHandler {
         try {
             CrgAuditEvent event = (CrgAuditEvent) mqEvent;
 
-            String entityType = isNull(event.getEntityType())
-                    ? null
-                    : event.getEntityType();
-
-            AuditEventDto auditEventDto = new AuditEventDto(LocalDateTime.parse(event.getDateTime()),
-                                                            event.getActionType(),
-                                                            event.getEntityName(),
-                                                            entityType,
-                                                            event.getEntityId(),
-                                                            event.getEntityStateAfter(),
-                                                            event.getEntityIds());
-
-            Request req = new Request.Builder()
-                    .addHeader("Authorization", "Bearer " + event.getToken())
+            AuditEventDto auditEvent = prepareEvent(event);
+            Request.Builder reqBuilder = new Request.Builder()
                     .url(new URL(baseHttpService.getAuditServiceUrl(), "/events"))
-                    .post(RequestBody.create(JSON_MEDIA_TYPE, objectMapper.writeValueAsString(auditEventDto)))
-                    .build();
+                    .post(RequestBody.create(JSON_MEDIA_TYPE, objectMapper.writeValueAsString(auditEvent)));
 
-            response = httpClient.newCall(req).execute();
+            if (event.getToken() != null) {
+                reqBuilder.addHeader("Authorization", "Bearer " + event.getToken());
+            }
+
+            response = httpClient.newCall(reqBuilder.build()).execute();
             if (response.isSuccessful()) {
-                log.debug("Success send audit event: {}", auditEventDto);
+                log.debug("Success send audit event: {}", auditEvent);
             } else {
-                log.warn("Не удалось записать событие аудита: {}", auditEventDto);
+                log.warn("Не удалось записать событие аудита: {} => {} / {}",
+                         auditEvent, response.code(), response.body().string());
             }
         } catch (Exception e) {
             log.error("Failed to process audit queue event: {} ", e.getMessage());
@@ -74,5 +67,16 @@ public class AuditEventHandler implements IEventHandler {
                 response.close();
             }
         }
+    }
+
+    @NotNull
+    private static AuditEventDto prepareEvent(CrgAuditEvent event) {
+        return new AuditEventDto(LocalDateTime.parse(event.getDateTime()),
+                                 event.getActionType(),
+                                 event.getEntityName(),
+                                 isNull(event.getEntityType()) ? null : event.getEntityType(),
+                                 event.getEntityId(),
+                                 event.getEntityStateAfter(),
+                                 event.getEntityIds());
     }
 }

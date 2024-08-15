@@ -8,6 +8,7 @@ import io.restassured.specification.RequestSpecification;
 import ru.mycrg.acceptance.BaseStepsDefinitions;
 import ru.mycrg.acceptance.audit_service.dto.AuditEventDto;
 import ru.mycrg.acceptance.audit_service.dto.AuditEventEntityType;
+import ru.mycrg.acceptance.auth_service.AuthorizationBase;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -35,6 +36,8 @@ public class AuditServiceStepDefinitions extends BaseStepsDefinitions {
 
     private final String CURRENT_TIME = "CURRENT_TIME";
     private final String EVENTS = "events";
+
+    private final AuthorizationBase authorizationBase = new AuthorizationBase();
 
     @Override
     public RequestSpecification getBaseRequest() {
@@ -152,117 +155,124 @@ public class AuditServiceStepDefinitions extends BaseStepsDefinitions {
 
     @Then("Создан аудит лог о входе пользователя в систему")
     public void checkAuditEventSignIn() {
-        checkAuditEvent(SIGN_IN.name(), USER, "user");
+        waitAuditEvent(SIGN_IN.name(), USER, "user");
+    }
+
+    @Then("Создан аудит лог о неудачной попытке входа пользователя в систему")
+    public void checkAuditEventSignFail() throws InterruptedException {
+        authorizationBase.loginAsSystemAdmin();
+
+        waitAuditEvent(SIGN_FAIL.name(), USER, "user");
     }
 
     @Then("Создан аудит лог о выходе пользователя из системы")
     public void checkAuditEventSignOut() {
-        checkAuditEvent(SIGN_OUT.name(), USER, "user");
+        waitAuditEvent(SIGN_OUT.name(), USER, "user");
     }
 
     @Then("Создан аудит лог о создании проекта, с корректным телом")
     public void checkProjectCreate() {
         String projectName = projectDto.getName();
 
-        checkAuditEvent(CREATE.name(), PROJECT, projectName);
+        waitAuditEvent(CREATE.name(), PROJECT, projectName);
     }
 
     @Then("Создана запись в журнале аудита о создании документа")
     public void checkDocumentCreate() {
-        checkAuditEvent(CREATE.name(), LIBRARY_RECORD, DEFAULT_LIBRARY);
+        waitAuditEvent(CREATE.name(), LIBRARY_RECORD, DEFAULT_LIBRARY);
     }
 
     @Then("Создана запись в журнале аудита о создании записи в слое")
     public void checkFeatureCreate() {
-        checkAuditEvent(CREATE.name(), FEATURE, currentTableName);
+        waitAuditEvent(CREATE.name(), FEATURE, currentTableName);
     }
 
     @Then("Создан аудит лог о создании слоя, с корректным телом")
     public void checkLayerCreate() {
         String tableName = layerCreateDto.getTableName();
 
-        checkAuditEvent(CREATE.name(), LAYER, tableName);
+        waitAuditEvent(CREATE.name(), LAYER, tableName);
     }
 
     @Then("Создан аудит лог об удалении проекта")
     public void checkProjectDelete() {
         String projectName = projectDto.getName();
 
-        checkAuditEvent(DELETE.name(), PROJECT, projectName);
+        waitAuditEvent(DELETE.name(), PROJECT, projectName);
     }
 
     @Then("Создан аудит лог об удалении слоя, с корректным телом")
     public void checkLayerDelete() {
         String tableName = layerCreateDto.getTableName();
 
-        checkAuditEvent(DELETE.name(), LAYER, tableName);
+        waitAuditEvent(DELETE.name(), LAYER, tableName);
     }
 
     @And("Создан аудит лог об изменении проекта")
     public void checkProjectUpdate() {
         String projectName = projectDto.getName();
 
-        checkAuditEvent(UPDATE.name(), PROJECT, projectName);
+        waitAuditEvent(UPDATE.name(), PROJECT, projectName);
     }
 
     @And("Создан аудит лог об изменении записи в слое")
     public void checkFeatureUpdate() {
-        checkAuditEvent(UPDATE.name(), FEATURE, currentTableName);
+        waitAuditEvent(UPDATE.name(), FEATURE, currentTableName);
     }
 
     @And("Создан аудит лог о массовом удалении записей")
     public void checkFeaturesDelete() {
-        checkAuditEvent(MULTIPLE_DELETION.name(), FEATURE, currentTableName);
+        waitAuditEvent(MULTIPLE_DELETION.name(), FEATURE, currentTableName);
     }
 
     @And("Создан аудит лог о массовом редактировании записей")
     public void checkFeaturesUpdate() {
-        checkAuditEvent(MULTIPLE_UPDATE.name(), FEATURE, currentTableName);
+        waitAuditEvent(MULTIPLE_UPDATE.name(), FEATURE, currentTableName);
     }
 
     @And("Создан аудит лог о массовом копировании записей")
     public void checkFeaturesCopied() {
-        checkAuditEvent(COPYING.name(), FEATURE, anotherTableName);
+        waitAuditEvent(COPYING.name(), FEATURE, anotherTableName);
     }
 
     @And("Создана запись в журнале аудита о создании схемы")
     public void checkAuditEventForSchemaCreate() {
-        checkAuditEvent(CREATE.name(), SCHEMA, "schemas");
+        waitAuditEvent(CREATE.name(), SCHEMA, "schemas");
     }
 
     @And("Создан аудит лог об изменении схемы")
     public void checkAuditEventForSchemaUpdate() {
-        checkAuditEvent(UPDATE.name(), SCHEMA, "schemas");
+        waitAuditEvent(UPDATE.name(), SCHEMA, "schemas");
     }
 
     @Then("Создана запись в журнале аудита о создании датасета")
     public void checkDatasetCreate() {
-        checkAuditEvent(CREATE.name(), DATASET, currentDatasetIdentifier);
+        waitAuditEvent(CREATE.name(), DATASET, currentDatasetIdentifier);
     }
 
     @Then("Создана запись в журнале аудита об удалении набора данных")
     public void checkDatasetDelete() {
-        checkAuditEvent(DELETE.name(), DATASET, currentDatasetIdentifier);
+        waitAuditEvent(DELETE.name(), DATASET, currentDatasetIdentifier);
     }
 
     @Then("Создана запись в журнале аудита о создании библиотеки документов")
     public void checkDocumentLibraryCreate() {
-        checkAuditEvent(CREATE.name(), LIBRARY, currentLibraryTableName);
+        waitAuditEvent(CREATE.name(), LIBRARY, currentLibraryTableName);
     }
 
     @Then("Создана запись в журнале аудита об удалении библиотеки документов")
     public void checkDocumentLibraryDelete() {
-        checkAuditEvent(DELETE.name(), LIBRARY, format("data.%s", currentLibraryTableName));
+        waitAuditEvent(DELETE.name(), LIBRARY, format("data.%s", currentLibraryTableName));
     }
 
     @Then("Создана запись в журнале аудита о создании правила")
     public void checkPermissionCreate() {
-        checkAuditEvent(CREATE.name(), PERMISSION, "acl_permissions");
+        waitAuditEvent(CREATE.name(), PERMISSION, "acl_permissions");
     }
 
     @Then("Создана запись в журнале аудита об удалении правила")
     public void checkPermissionDelete() {
-        checkAuditEvent(DELETE.name(), PERMISSION, "acl_permissions");
+        waitAuditEvent(DELETE.name(), PERMISSION, "acl_permissions");
     }
 
     @And("Создан аудит лог об изменении слоя, с корректным телом")
@@ -271,45 +281,45 @@ public class AuditServiceStepDefinitions extends BaseStepsDefinitions {
 
         String tableName = layerCreateDto.getTableName();
 
-        checkAuditEvent(UPDATE.name(), LAYER, tableName);
+        waitAuditEvent(UPDATE.name(), LAYER, tableName);
     }
 
     @Then("Создана запись в журнале аудита о создании таблицы")
     public void checkTableCreate() {
-        checkAuditEvent(CREATE.name(), TABLE, currentTableName);
+        waitAuditEvent(CREATE.name(), TABLE, currentTableName);
     }
 
     @Then("Создана запись в журнале аудита о приглашении пользователя в другую организацию")
     public void checkUserWasInvite() {
-        checkAuditEvent(INVITE.name(), USER, userDto.getEmail());
+        waitAuditEvent(INVITE.name(), USER, userDto.getEmail());
     }
 
     @Then("Создана запись в журнале аудита об обновлении таблицы")
     public void checkTableUpdate() {
-        checkAuditEvent(UPDATE.name(), TABLE, currentTableName);
+        waitAuditEvent(UPDATE.name(), TABLE, currentTableName);
     }
 
     @Then("Создана запись в журнале аудита об удалении таблицы")
     public void checkTableDelete() {
-        checkAuditEvent(DELETE.name(), TABLE, currentTableName);
+        waitAuditEvent(DELETE.name(), TABLE, currentTableName);
     }
 
     @Then("В выборке присутствует запись об авторизации пользователя")
     public void checkUserSignInEventExist() {
-        checkAuditEvent(SIGN_IN.name(), USER, "user");
+        waitAuditEvent(SIGN_IN.name(), USER, "user");
     }
 
-    private boolean checkAuditEvent(String actionType, AuditEventEntityType entityType, String tableName) {
+    private boolean waitAuditEvent(String actionType, AuditEventEntityType entityType, String entityName) {
         try {
             int currentAttempt = 0;
             do {
                 currentAttempt++;
-                System.out.println("Attempt: " + currentAttempt + ". Check audit event. " + "actionType: '" +
-                                           actionType + "' " + "entityType: '" +
-                                           entityType.name() + "' tableName: '" +
-                                           tableName + "'");
+                System.out.println("Attempt: " + currentAttempt + ". Check audit event. " +
+                                           "actionType: '" + actionType + "' " +
+                                           "entityType: '" + entityType.name() + "' " +
+                                           "entityName: '" + entityName + "'");
 
-                getEventsByFilter(actionType, entityType.name(), tableName);
+                getEventsByFilter(actionType, entityType.name(), entityName);
 
                 List<AuditEventDto> lists = response.jsonPath().getList("content", AuditEventDto.class);
 
@@ -317,7 +327,7 @@ public class AuditServiceStepDefinitions extends BaseStepsDefinitions {
                 for (AuditEventDto list: lists) {
                     if (actionType.equalsIgnoreCase(list.getActionType())
                             && entityType.name().equalsIgnoreCase(list.getEntityType())
-                            && tableName.equalsIgnoreCase(list.getEntityName())) {
+                            && entityName.equalsIgnoreCase(list.getEntityName())) {
                         result = true;
                         break;
                     }
@@ -337,8 +347,12 @@ public class AuditServiceStepDefinitions extends BaseStepsDefinitions {
     }
 
     private void getEventsByFilter(String actionType, String entityType, String tableName) {
+        String url = String.format("?actionType=%s&entityType=%s&entityName=%s&size=10000",
+                                   actionType, entityType, tableName);
+
         response = getBaseRequestWithCurrentCookie()
                 .when().
-                        get("/?actionType=" + actionType + "&entityType=" + entityType + "&entityName=" + tableName);
+                        log().all().
+                        get(url);
     }
 }

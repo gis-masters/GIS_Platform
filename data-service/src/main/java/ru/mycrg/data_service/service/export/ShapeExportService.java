@@ -1,6 +1,7 @@
 package ru.mycrg.data_service.service.export;
 
 import org.springframework.stereotype.Service;
+import ru.mycrg.audit_service_contract.events.CrgAuditEvent;
 import ru.mycrg.auth_facade.IAuthenticationFacade;
 import ru.mycrg.data_service.dto.ExportRequestModel;
 import ru.mycrg.data_service.dto.ExportResourceModel;
@@ -20,6 +21,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static ru.mycrg.common_utils.CrgGlobalProperties.getDefaultDatabaseName;
+import static ru.mycrg.data_service.dto.ResourceType.TABLE;
 import static ru.mycrg.data_service.mappers.SchemaMapper.jsonToDto;
 import static ru.mycrg.data_service.service.export.ExportType.SHAPE;
 import static ru.mycrg.data_service.util.CrsHandler.extractCrsNumber;
@@ -50,8 +52,8 @@ public class ShapeExportService implements Exporter {
     @Override
     public Process doExport(ExportRequestModel request) {
         long orgId = authenticationFacade.getOrganizationId();
-        final String dbName = getDefaultDatabaseName(orgId);
-        final String title = String.format("Экспорт. Кол-во слоев: %d", request.getResources().size());
+        String dbName = getDefaultDatabaseName(orgId);
+        String title = String.format("Экспорт. Кол-во слоев: %d", request.getResources().size());
 
         Process process = processService.create(authenticationFacade.getLogin(), title, EXPORT, request);
 
@@ -81,12 +83,23 @@ public class ShapeExportService implements Exporter {
                            });
                 });
 
-        final ExportRequestEvent requestEvent = new ExportRequestEvent(process.getId(), dbName, payload);
+        ExportRequestEvent requestEvent = new ExportRequestEvent(process.getId(), dbName, payload);
         messageBus.produce(requestEvent);
 
-        final ExportResponseEvent responseEvent = new ExportResponseEvent(requestEvent, PENDING, title, 0);
+        ExportResponseEvent responseEvent = new ExportResponseEvent(requestEvent, PENDING, title, 0);
         wsNotificationService.send(
                 new WsMessageDto<>(EXPORT.name(), responseEvent), request.getWsUiId());
+
+        String resources = payload.getResourceProjections().stream()
+                                  .map(res -> res.getSchemaName() + "." + res.getTableName())
+                                  .collect(Collectors.joining(","));
+
+        messageBus.produce(
+                new CrgAuditEvent(authenticationFacade.getAccessToken(),
+                                  EXPORT.name(),
+                                  resources,
+                                  TABLE.name(),
+                                  -1L));
 
         return process;
     }

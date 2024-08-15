@@ -17,6 +17,7 @@ public class AuthorizationBase extends BaseStepsDefinitions {
 
     public static final String AUTH_COOKIE = "crgAuthCookie";
     public static final String AUTH_COOKIE_VALUE_SEPARATOR = "---crg---";
+    public static final String DEFAULT_TEST_PASSWORD = "testPassword1";
 
     public static int authCounter;
     public static int authCacheUsedCounter;
@@ -25,7 +26,7 @@ public class AuthorizationBase extends BaseStepsDefinitions {
 
     public void loginAsSystemAdmin() {
         System.out.println("login as root");
-        Response response = authorizeUser(rootUserName, rootPassword, "root");
+        Response response = authorizeWithRetry(rootUserName, rootPassword);
 
         checkCookieAndWriteAsCurrent(response);
     }
@@ -36,21 +37,21 @@ public class AuthorizationBase extends BaseStepsDefinitions {
 
     public void loginAsOwner(boolean cachable) {
         System.out.println("login as owner: " + orgDto.getOwner().getEmail());
-        response = authorizeUser(orgDto.getOwner().getEmail(), orgDto.getOwner().getPassword(), "owner", cachable);
+        response = authorizeWithRetry(orgDto.getOwner().getEmail(), orgDto.getOwner().getPassword(), cachable);
 
         checkCookieAndWriteAsCurrent(response);
     }
 
     public void loginAsCurrentUser() {
         System.out.println("login as current user: " + userDto.getEmail());
-        response = authorizeUser(userDto.getEmail(), userDto.getPassword(), "current user");
+        response = authorizeWithRetry(userDto.getEmail(), userDto.getPassword());
 
         checkCookieAndWriteAsCurrent(response);
     }
 
     public void loginAs(String email, String password) {
         System.out.println("login as user: " + email);
-        response = authorizeUser(email, password, "user");
+        response = authorizeWithRetry(email, password);
 
         checkCookieAndWriteAsCurrent(response);
     }
@@ -66,11 +67,30 @@ public class AuthorizationBase extends BaseStepsDefinitions {
         System.out.println("current auth cookie: " + cookie);
     }
 
-    private Response authorizeUser(String login, String password, String user) {
-        return authorizeUser(login, password, user, true);
+    public void authorizeAs(String login,
+                            String password) {
+        System.out.println("Try authorize as " + login);
+
+        Map<String, String> queryParams = new HashMap<>() {{
+            put("username", login);
+            put("password", password);
+            put("grant_type", "password");
+        }};
+
+        getBaseRequest()
+                .given().
+                        formParams(queryParams)
+                .when().
+                        post("/oauth/token");
     }
 
-    private Response authorizeUser(String login, String password, String user, boolean cachable) {
+    private Response authorizeWithRetry(String login, String password) {
+        return authorizeWithRetry(login, password, true);
+    }
+
+    private Response authorizeWithRetry(String login,
+                                        String password,
+                                        boolean cachable) {
         if (cachable && authorizationCache.containsKey(login)) {
             authCacheUsedCounter++;
 
@@ -82,7 +102,7 @@ public class AuthorizationBase extends BaseStepsDefinitions {
 
             int currentAttempt = 0;
             do {
-                System.out.println("authorize as " + user + ". Attempt: " + currentAttempt);
+                System.out.println("authorize as " + login + ". Attempt: " + currentAttempt);
                 currentAttempt++;
 
                 Map<String, String> queryParams = new HashMap<>() {{
@@ -109,7 +129,7 @@ public class AuthorizationBase extends BaseStepsDefinitions {
 
             throw new RuntimeException("User not authorized: " + login);
         } catch (InterruptedException e) {
-            throw new RuntimeException("Failed to authorize by user: " + login);
+            throw new RuntimeException("Failed to authorize by userType: " + login);
         }
     }
 }

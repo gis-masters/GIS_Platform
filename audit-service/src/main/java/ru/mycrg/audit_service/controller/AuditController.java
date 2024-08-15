@@ -29,7 +29,7 @@ public class AuditController {
     }
 
     @PostMapping(value = "/events")
-    @PreAuthorize(HAS_ANY_AUTHORITY)
+    @PreAuthorize("permitAll()")
     public ResponseEntity<EventFullProjection> addEvent(@Validated @RequestBody AuditEventDto auditEventDto) {
         EventFullProjection newEvent = auditEventService.addEvent(auditEventDto);
 

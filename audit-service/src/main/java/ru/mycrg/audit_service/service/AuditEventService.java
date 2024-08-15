@@ -34,19 +34,15 @@ public class AuditEventService {
 
     public Page<EventFullProjection> getAllEvents(Pageable pageable, String aType, String eName, String eType) {
         if (authenticationFacade.isRoot()) {
-            log.debug("Get all events by Root");
-
             return auditRepository.findAll(pageable)
                                   .map(event -> projectionFactory.createProjection(EventFullProjection.class, event));
         } else if (authenticationFacade.isOrganizationAdmin()) {
-            log.debug("Get all events by Organization Admin");
             Long orgId = authenticationFacade.getOrganizationId();
 
             return auditRepository
                     .findAllByOrganizationIdWithSpecificFilter(orgId, aType, eName, eType, pageable)
                     .map(event -> projectionFactory.createProjection(EventFullProjection.class, event));
         } else {
-            log.debug("Get all events by User");
             Long orgId = authenticationFacade.getOrganizationId();
             String userName = authenticationFacade.getLogin();
 
@@ -57,16 +53,23 @@ public class AuditEventService {
     }
 
     public EventFullProjection addEvent(AuditEventDto eventDto) {
-        log.debug("Request create audit: {}", eventDto);
+        log.debug("Попытка создания события аудита: {}", eventDto);
+
+        Event newEvent;
+        if (authenticationFacade.getOrganizationId() < 1) {
+            newEvent = new Event(eventDto,
+                                 authenticationFacade.getOrganizationId(),
+                                 authenticationFacade.getLogin() == null ? "system" : authenticationFacade.getLogin());
+        } else {
+            newEvent = new Event(eventDto, authenticationFacade.getOrganizationId(), authenticationFacade.getLogin());
+        }
 
         try {
-            Event newEvent = new Event(eventDto, authenticationFacade.getOrganizationId(),
-                                       authenticationFacade.getLogin());
             auditRepository.save(newEvent);
 
             return projectionFactory.createProjection(EventFullProjection.class, newEvent);
         } catch (Exception e) {
-            throw new AuditServiceException("Failed add audit: " + e.getMessage());
+            throw new AuditServiceException("Не удалось добавить событие аудита => " + e.getMessage());
         }
     }
 }

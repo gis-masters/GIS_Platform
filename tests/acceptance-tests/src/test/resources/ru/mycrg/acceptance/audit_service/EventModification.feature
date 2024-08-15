@@ -7,4 +7,4 @@ Feature: Изменение существующих событий аудита
       | method |
       | put    |
       | patch  |
-      | delete  |
+      | delete |
