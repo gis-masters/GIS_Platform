@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.mycrg.data_service.exceptions.SmevRequestException;
 import ru.mycrg.data_service.register_rns_1_0_10.QueryResult;
+import ru.mycrg.data_service.register_rns_1_0_10.Reject;
+import ru.mycrg.data_service.register_rns_1_0_10.Status;
 import ru.mycrg.data_service.service.smev3.Mnemonic;
 import ru.mycrg.data_service.service.smev3.model.ProcessAdapterMessageResult;
 import ru.mycrg.data_service.service.smev3.model.ProcessMessageStatus;
@@ -34,45 +36,39 @@ public class RegisterRnvResponseService extends ResponseProcessor {
     @Transactional
     public ProcessAdapterMessageResult processMessageFromSmev(String messageBody) {
         try {
-            var queryResult = xmlMarshaller().unmarshall(messageBody, QueryResult.class);
+            QueryResult queryResult = xmlMarshaller().unmarshall(messageBody, QueryResult.class);
 
-            var XmlBuildMeta = new SmevRequestMeta(
+            SmevRequestMeta meta = new SmevRequestMeta(
                     mnemonicEnum(),
                     UUID.fromString(queryResult.getMessage().getResponseMetadata().getClientId()),
                     UUID.fromString(queryResult.getMessage().getResponseMetadata().getReplyToClientId()),
                     messageBody,
                     JsonConverter.toJsonNode(queryResult),
                     null,
-                    null
-            );
+                    null);
 
             switch (messageType(queryResult)) {
                 case REJECT: {
                     log.debug("Тип сообщения - REJECT");
-                    var reject = queryResult.getMessage().getResponseContent().getRejects().get(0);
+                    Reject reject = queryResult.getMessage().getResponseContent().getRejects().get(0);
+
                     return new ProcessAdapterMessageResult(ProcessMessageStatus.ERROR_REJECT)
-                            .setXmlBuildMeta(XmlBuildMeta)
+                            .setXmlBuildMeta(meta)
                             .setSmevDescription(reject.getCode(), reject.getDescription());
                 }
                 case STATUS: {
                     log.debug("Тип сообщения - STATUS");
-                    var status = queryResult.getMessage().getResponseContent().getStatus();
+                    Status status = queryResult.getMessage().getResponseContent().getStatus();
+
                     return new ProcessAdapterMessageResult(ProcessMessageStatus.ERROR_STATUS)
-                            .setXmlBuildMeta(XmlBuildMeta)
+                            .setXmlBuildMeta(meta)
                             .setSmevDescription(status.getCode(), status.getDescription());
                 }
                 case PRIMARY: {
                     log.error("Тип сообщения - PRIMARY. Но обработка не сделана -  метод не реализован");
 
-                    // todo тут код заглушка
-                    var responseType = queryResult
-                            .getMessage()
-                            .getResponseContent()
-                            .getContent()
-                            .getMessagePrimaryContent();
-
                     return new ProcessAdapterMessageResult(ProcessMessageStatus.ERROR_NOT_IMPLEMENTED)
-                            .setXmlBuildMeta(XmlBuildMeta);
+                            .setXmlBuildMeta(meta);
                 }
             }
 
@@ -86,5 +82,4 @@ public class RegisterRnvResponseService extends ResponseProcessor {
     private SmevMessageType messageType(QueryResult queryResult) {
         return SmevMessageType.parseFromSmevValue(queryResult.getMessage().getMessageType());
     }
-
 }

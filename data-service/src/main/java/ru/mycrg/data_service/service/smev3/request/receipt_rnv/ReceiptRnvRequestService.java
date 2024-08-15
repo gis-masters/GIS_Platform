@@ -12,6 +12,7 @@ import ru.mycrg.data_service.dto.smev3.ReceiptRnvRequestDto;
 import ru.mycrg.data_service.receipt_rnv_1_0_9.*;
 import ru.mycrg.data_service.service.smev3.Mnemonic;
 import ru.mycrg.data_service.service.smev3.SmevMessageSenderService;
+import ru.mycrg.data_service.service.smev3.model.RequestAndSources;
 import ru.mycrg.data_service.service.smev3.model.SmevRequestMeta;
 import ru.mycrg.data_service.service.smev3.request.RequestProcessor;
 import ru.mycrg.data_service.util.JsonConverter;
@@ -45,40 +46,41 @@ public class ReceiptRnvRequestService extends RequestProcessor {
     protected SmevRequestMeta buildRequest(@NotNull ISmevRequestDto dto) throws Exception {
         log.debug("Построение запроса receipt-rnv в СМЭВ на основе ДТО: {}", dto);
 
-        var buildRequest = new ReceiptRnvXmlBuildProcessor(this).run((ReceiptRnvRequestDto) dto);
-        var clientMessage = clientMessage(buildRequest.getRequest());
-        var meta = new SmevRequestMeta(
+        RequestAndSources<Request> requestAndSources = new ReceiptRnvXmlBuildProcessor(this)
+                .run((ReceiptRnvRequestDto) dto);
+        ClientMessage clientMessage = prepareClientMessage(requestAndSources.getRequest());
+        SmevRequestMeta meta = new SmevRequestMeta(
                 mnemonicEnum(),
                 UUID.fromString(clientMessage.getRequestMessage().getRequestMetadata().getClientId()),
                 null,
                 xmlMarshaller().marshall(clientMessage, ClientMessage.class),
                 JsonConverter.toJsonNode(clientMessage),
-                buildRequest.getSourcesAsJson(),
-                buildRequest.getAttachmentsAsJson()
-        );
-        validate(meta, buildRequest.getRequest(), Request.class);
+                requestAndSources.getSourcesAsJson(),
+                requestAndSources.getAttachmentsAsJson());
+
+        validate(meta, requestAndSources.getRequest(), Request.class);
 
         return meta;
     }
 
-    private ClientMessage clientMessage(Request request) {
-        var primaryContent = new MessagePrimaryContent();
+    private ClientMessage prepareClientMessage(Request request) {
+        MessagePrimaryContent primaryContent = new MessagePrimaryContent();
         primaryContent.setRequest(request);
 
-        var content = new Content();
+        Content content = new Content();
         content.setMessagePrimaryContent(primaryContent);
 
-        var contentType = new RequestContentType();
+        RequestContentType contentType = new RequestContentType();
         contentType.setContent(content);
 
-        var metadataType = new RequestMetadataType();
+        RequestMetadataType metadataType = new RequestMetadataType();
         metadataType.setClientId(UUID.randomUUID().toString());
 
-        var messageType = new RequestMessageType();
+        RequestMessageType messageType = new RequestMessageType();
         messageType.setRequestMetadata(metadataType);
         messageType.setRequestContent(contentType);
 
-        var clientMessage = new ClientMessage();
+        ClientMessage clientMessage = new ClientMessage();
         clientMessage.setItSystem(getSmev3Config().getSystemMnemonic());
         clientMessage.setRequestMessage(messageType);
 

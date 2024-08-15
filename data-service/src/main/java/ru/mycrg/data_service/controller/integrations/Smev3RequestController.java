@@ -4,7 +4,9 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import ru.mycrg.data_service.dto.smev3.*;
+import ru.mycrg.data_service.dto.smev3.ReceiptRnsRequestDto;
+import ru.mycrg.data_service.dto.smev3.ReceiptRnvRequestDto;
+import ru.mycrg.data_service.dto.smev3.RegisterRequestDto;
 import ru.mycrg.data_service.service.smev3.SmevMessageService;
 import ru.mycrg.data_service.service.smev3.model.SmevRequestMeta;
 import ru.mycrg.data_service.service.smev3.request.get_cadastrial_plan.GetCadastrialPlanRequestService;
@@ -88,7 +90,7 @@ public class Smev3RequestController {
      */
     @PostMapping("/receipt-rnv")
     @PreAuthorize(HAS_ANY_AUTHORITY)
-    public ResponseEntity<SmevRequestMeta> requestReceiptRnv(@RequestBody ReceiptRnvRequestDto rnvRequestDto) {
+    public ResponseEntity<SmevRequestMeta> receiptRnv(@RequestBody ReceiptRnvRequestDto rnvRequestDto) {
         SmevRequestMeta response = rnvRequestService.sendRequest(rnvRequestDto);
 
         return ResponseEntity.ok(response);
@@ -121,8 +123,7 @@ public class Smev3RequestController {
      */
     @PostMapping("/terminate-rns")
     @PreAuthorize(HAS_ANY_AUTHORITY)
-    public ResponseEntity<SmevRequestMeta> requestTerminateRns(
-            @RequestBody TerminateRnsRequestDto terminateRnsRequestDto) {
+    public ResponseEntity<SmevRequestMeta> terminateRns(@RequestBody RegisterRequestDto terminateRnsRequestDto) {
         SmevRequestMeta response = terminateRnsRequestService.sendRequest(terminateRnsRequestDto);
 
         return ResponseEntity.ok(response);

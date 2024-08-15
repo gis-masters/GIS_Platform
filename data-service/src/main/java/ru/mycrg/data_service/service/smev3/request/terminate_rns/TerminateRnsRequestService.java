@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import ru.mycrg.data_service.config.Smev3Config;
 import ru.mycrg.data_service.dao.BaseReadDao;
 import ru.mycrg.data_service.dto.smev3.ISmevRequestDto;
-import ru.mycrg.data_service.dto.smev3.TerminateRnsRequestDto;
+import ru.mycrg.data_service.dto.smev3.RegisterRequestDto;
 import ru.mycrg.data_service.service.schemas.ISchemaTemplateService;
 import ru.mycrg.data_service.service.smev3.Mnemonic;
 import ru.mycrg.data_service.service.smev3.SmevMessageSenderService;
@@ -18,6 +18,7 @@ import ru.mycrg.data_service.service.smev3.SmevOutgoingAttachmentService;
 import ru.mycrg.data_service.service.smev3.model.RequestAndSources;
 import ru.mycrg.data_service.service.smev3.model.SmevRequestMeta;
 import ru.mycrg.data_service.service.smev3.request.RequestProcessor;
+import ru.mycrg.data_service.service.smev3.request.SmevFakeXmlBuilder;
 import ru.mycrg.data_service.terminate_rns_1_0_6.*;
 import ru.mycrg.data_service.util.JsonConverter;
 
@@ -58,44 +59,55 @@ public class TerminateRnsRequestService extends RequestProcessor {
 
     @Override
     protected SmevRequestMeta buildRequest(@NotNull ISmevRequestDto dto) throws Exception {
+        RegisterRequestDto terminateRequestDto = (RegisterRequestDto) dto;
+
         log.debug("Построение запроса terminate-rns в СМЭВ на основе ДТО: {}", dto);
 
-        var buildRequest = new TerminateRnsXmlBuildProcessor(this).run((TerminateRnsRequestDto) dto);
-        var clientMessage = clientMessage(buildRequest);
-        var meta = new SmevRequestMeta(
+        RequestAndSources<Request> requestAndSources = new TerminateRnsXmlBuildProcessor(this)
+                .run(terminateRequestDto);
+        ClientMessage clientMessage = clientMessage(requestAndSources);
+
+        String xmlPartOfRequest = xmlMarshaller().marshall(clientMessage, ClientMessage.class);
+        if (terminateRequestDto.getFakeRequest() != null) {
+            log.debug("Подменяем 🔀 RequestContent на заданный в запросе");
+
+            xmlPartOfRequest = SmevFakeXmlBuilder.replaceRequest(xmlPartOfRequest,
+                                                                 terminateRequestDto.getFakeRequest());
+        }
+
+        SmevRequestMeta meta = new SmevRequestMeta(
                 mnemonicEnum(),
                 UUID.fromString(clientMessage.getRequestMessage().getRequestMetadata().getClientId()),
                 null,
-                xmlMarshaller().marshall(clientMessage, ClientMessage.class),
+                xmlPartOfRequest,
                 JsonConverter.toJsonNode(clientMessage),
-                buildRequest.getSourcesAsJson(),
-                buildRequest.getAttachmentsAsJson()
-        );
+                requestAndSources.getSourcesAsJson(),
+                requestAndSources.getAttachmentsAsJson());
 
-        validate(meta, buildRequest.getRequest(), Request.class);
+        validate(meta, requestAndSources.getRequest(), Request.class);
 
         return meta;
     }
 
     private ClientMessage clientMessage(RequestAndSources<Request> requestAndSources) {
-        var content = new Content();
+        Content content = new Content();
 
         // PrimaryContent
-        var primaryContent = new MessagePrimaryContent();
+        MessagePrimaryContent primaryContent = new MessagePrimaryContent();
         primaryContent.setRequest(requestAndSources.getRequest());
         content.setMessagePrimaryContent(primaryContent);
 
-        var contentType = new RequestContentType();
+        RequestContentType contentType = new RequestContentType();
         contentType.setContent(content);
 
-        var metadataType = new RequestMetadataType();
+        RequestMetadataType metadataType = new RequestMetadataType();
         metadataType.setClientId(UUID.randomUUID().toString());
 
-        var messageType = new RequestMessageType();
+        RequestMessageType messageType = new RequestMessageType();
         messageType.setRequestMetadata(metadataType);
         messageType.setRequestContent(contentType);
 
-        var clientMessage = new ClientMessage();
+        ClientMessage clientMessage = new ClientMessage();
         clientMessage.setItSystem(getSmev3Config().getSystemMnemonic());
         clientMessage.setRequestMessage(messageType);
 

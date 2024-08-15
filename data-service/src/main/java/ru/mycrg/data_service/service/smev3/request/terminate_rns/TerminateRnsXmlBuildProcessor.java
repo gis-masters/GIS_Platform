@@ -3,7 +3,7 @@ package ru.mycrg.data_service.service.smev3.request.terminate_rns;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.mycrg.data_service.dto.smev3.TerminateRnsRequestDto;
+import ru.mycrg.data_service.dto.smev3.RegisterRequestDto;
 import ru.mycrg.data_service.entity.IRecord;
 import ru.mycrg.data_service.exceptions.SmevRequestException;
 import ru.mycrg.data_service.service.smev3.fields.FieldsCustomer;
@@ -34,12 +34,12 @@ public class TerminateRnsXmlBuildProcessor extends AXmlBuildProcessor {
         super(requestProcessor);
     }
 
-    public RequestAndSources<Request> run(@NotNull TerminateRnsRequestDto dto) {
+    public RequestAndSources<Request> run(@NotNull RegisterRequestDto dto) {
         try {
             loadRecords(dto.getRecId());
 
             // бизнес часть запроса
-            var request = buildRequest();
+            Request request = buildRequest();
 
             return buildRequest(request);
         } catch (Exception e) {
@@ -86,7 +86,7 @@ public class TerminateRnsXmlBuildProcessor extends AXmlBuildProcessor {
      * Корневая сущность
      */
     private Request buildRequest() {
-        var request = new Request();
+        Request request = new Request();
 
         of(LEGAL_ENTITY)
                 .ifPresent(request::setUserType);

@@ -6,8 +6,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.mycrg.data_service.entity.IRecord;
 import ru.mycrg.data_service.exceptions.SmevRequestException;
 import ru.mycrg.data_service.receipt_rns_1_0_9.QueryResult;
+import ru.mycrg.data_service.receipt_rns_1_0_9.Reject;
+import ru.mycrg.data_service.receipt_rns_1_0_9.ResponseType;
+import ru.mycrg.data_service.receipt_rns_1_0_9.Status;
 import ru.mycrg.data_service.service.smev3.DataEisZsService;
 import ru.mycrg.data_service.service.smev3.Mnemonic;
 import ru.mycrg.data_service.service.smev3.fields.FieldsEisZs;
@@ -18,6 +22,7 @@ import ru.mycrg.data_service.service.smev3.model.SmevRequestMeta;
 import ru.mycrg.data_service.service.smev3.request.ResponseProcessor;
 import ru.mycrg.data_service.util.JsonConverter;
 
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -44,45 +49,40 @@ public class ReceiptRnsResponseService extends ResponseProcessor {
         log.debug("Получено сообщение из СМЭВ: {}", messageBody);
 
         try {
-            var queryResult = xmlMarshaller().unmarshall(messageBody, QueryResult.class);
+            QueryResult queryResult = xmlMarshaller().unmarshall(messageBody, QueryResult.class);
 
-            var XmlBuildMeta = new SmevRequestMeta(
+            SmevRequestMeta meta = new SmevRequestMeta(
                     mnemonicEnum(),
                     UUID.fromString(queryResult.getMessage().getResponseMetadata().getClientId()),
                     UUID.fromString(queryResult.getMessage().getResponseMetadata().getReplyToClientId()),
                     messageBody,
                     JsonConverter.toJsonNode(queryResult),
                     null,
-                    null
-            );
+                    null);
 
             switch (messageType(queryResult)) {
                 case REJECT: {
                     log.debug("Тип сообщения - REJECT");
-                    var reject = queryResult.getMessage().getResponseContent().getRejects().get(0);
+                    Reject reject = queryResult.getMessage().getResponseContent().getRejects().get(0);
+
                     return new ProcessAdapterMessageResult(ProcessMessageStatus.ERROR_REJECT)
-                            .setXmlBuildMeta(XmlBuildMeta)
-                            .setSmevDescription(
-                                    reject.getCode(),
-                                    reject.getDescription()
-                            );
+                            .setXmlBuildMeta(meta)
+                            .setSmevDescription(reject.getCode(), reject.getDescription());
                 }
                 case STATUS: {
                     log.debug("Тип сообщения - STATUS");
-                    var status = queryResult.getMessage().getResponseContent().getStatus();
+                    Status status = queryResult.getMessage().getResponseContent().getStatus();
+
                     return new ProcessAdapterMessageResult(ProcessMessageStatus.ERROR_STATUS)
-                            .setXmlBuildMeta(XmlBuildMeta)
-                            .setSmevDescription(
-                                    status.getCode(),
-                                    status.getDescription()
-                            );
+                            .setXmlBuildMeta(meta)
+                            .setSmevDescription(status.getCode(), status.getDescription());
                 }
                 case PRIMARY: {
                     log.debug("Тип сообщения - PRIMARY");
                     processResponse(queryResult);
 
                     return new ProcessAdapterMessageResult(ProcessMessageStatus.SUCCESSFULLY)
-                            .setXmlBuildMeta(XmlBuildMeta);
+                            .setXmlBuildMeta(meta);
                 }
             }
 
@@ -98,25 +98,25 @@ public class ReceiptRnsResponseService extends ResponseProcessor {
     }
 
     private void processResponse(QueryResult queryResult) {
-        var responseType = queryResult
+        ResponseType responseType = queryResult
                 .getMessage()
                 .getResponseContent()
                 .getContent()
                 .getMessagePrimaryContent()
                 .getResponse();
 
-        var process = new ReceiptRnsResponseXmlProcessor();
+        ReceiptRnsResponseXmlProcessor receiptRnsProcessor = new ReceiptRnsResponseXmlProcessor();
 
         if (responseType.getResponseConstruction() != null) {
-            var iRecord = process.processOne(responseType.getResponseConstruction());
-            log.info("Найдена 1 запись {}", iRecord);
+            IRecord record = receiptRnsProcessor.processOne(responseType.getResponseConstruction());
+            log.info("Найдена 1 запись {}", record);
 
-            dataEisZsService.updateExists(FieldsEisZs.PROPERTY_CONST_PERMIT_NUMBER, iRecord);
+            dataEisZsService.updateExists(FieldsEisZs.PROPERTY_CONST_PERMIT_NUMBER, record);
         } else if (!CollectionUtils.isEmpty(responseType.getResponseListConstruction())) {
-            var iRecords = process.processList(responseType.getResponseListConstruction());
-            log.info("Найдено {} записей", iRecords.size());
+            List<IRecord> records = receiptRnsProcessor.processList(responseType.getResponseListConstruction());
+            log.info("Найдено {} записей", records.size());
 
-            dataEisZsService.addOrIgnoreRecords(FieldsEisZs.PROPERTY_CONST_PERMIT_NUMBER, iRecords);
+            dataEisZsService.addOrIgnoreRecords(FieldsEisZs.PROPERTY_CONST_PERMIT_NUMBER, records);
         } else {
             throw new SmevRequestException("Ответ из СМЭВ не содержит записей для обработки");
         }

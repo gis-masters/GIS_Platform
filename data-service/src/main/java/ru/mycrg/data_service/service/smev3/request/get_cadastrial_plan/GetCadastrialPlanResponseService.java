@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.mycrg.data_service.exceptions.SmevRequestException;
 import ru.mycrg.data_service.receipt_rnv_1_0_9.QueryResult;
+import ru.mycrg.data_service.receipt_rnv_1_0_9.Reject;
+import ru.mycrg.data_service.receipt_rnv_1_0_9.Status;
 import ru.mycrg.data_service.service.smev3.Mnemonic;
 import ru.mycrg.data_service.service.smev3.model.ProcessAdapterMessageResult;
 import ru.mycrg.data_service.service.smev3.model.ProcessMessageStatus;
@@ -49,20 +51,23 @@ public class GetCadastrialPlanResponseService extends ResponseProcessor {
             switch (messageType(queryResult)) {
                 case REJECT: {
                     log.debug("Тип сообщения - REJECT");
-                    var reject = queryResult.getMessage().getResponseContent().getRejects().get(0);
+                    Reject reject = queryResult.getMessage().getResponseContent().getRejects().get(0);
+
                     return new ProcessAdapterMessageResult(ProcessMessageStatus.ERROR_REJECT)
                             .setXmlBuildMeta(metaInfo)
                             .setSmevDescription(reject.getCode(), reject.getDescription());
                 }
                 case STATUS: {
                     log.debug("Тип сообщения - STATUS");
-                    var status = queryResult.getMessage().getResponseContent().getStatus();
+                    Status status = queryResult.getMessage().getResponseContent().getStatus();
+
                     return new ProcessAdapterMessageResult(ProcessMessageStatus.ERROR_STATUS)
                             .setXmlBuildMeta(metaInfo)
                             .setSmevDescription(status.getCode(), status.getDescription());
                 }
                 case PRIMARY: {
                     log.debug("Тип сообщения - PRIMARY");
+
                     return new ProcessAdapterMessageResult(ProcessMessageStatus.SUCCESSFULLY)
                             .setXmlBuildMeta(metaInfo);
                 }

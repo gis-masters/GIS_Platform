@@ -6,8 +6,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.mycrg.data_service.entity.IRecord;
 import ru.mycrg.data_service.exceptions.SmevRequestException;
 import ru.mycrg.data_service.receipt_rnv_1_0_9.QueryResult;
+import ru.mycrg.data_service.receipt_rnv_1_0_9.Reject;
+import ru.mycrg.data_service.receipt_rnv_1_0_9.ResponseType;
+import ru.mycrg.data_service.receipt_rnv_1_0_9.Status;
 import ru.mycrg.data_service.service.smev3.DataEisZsService;
 import ru.mycrg.data_service.service.smev3.Mnemonic;
 import ru.mycrg.data_service.service.smev3.fields.FieldsEisZs;
@@ -18,8 +22,8 @@ import ru.mycrg.data_service.service.smev3.model.SmevRequestMeta;
 import ru.mycrg.data_service.service.smev3.request.ResponseProcessor;
 import ru.mycrg.data_service.util.JsonConverter;
 
+import java.util.List;
 import java.util.UUID;
-
 
 /**
  * urn://x-artefacts-uishc.domrf.ru/receipt-rnv/1.0.9
@@ -30,11 +34,14 @@ import java.util.UUID;
         havingValue = "true",
         matchIfMissing = true)
 public class ReceiptRnvResponseService extends ResponseProcessor {
-    private final Logger log = LoggerFactory.getLogger(ReceiptRnvResponseService.class);
+
+    private static final Logger log = LoggerFactory.getLogger(ReceiptRnvResponseService.class);
+
     private final DataEisZsService dataEisZsService;
 
     public ReceiptRnvResponseService(DataEisZsService dataEisZsService) {
         super(Mnemonic.RECEIPT_RNV_1_0_9);
+
         this.dataEisZsService = dataEisZsService;
     }
 
@@ -44,31 +51,32 @@ public class ReceiptRnvResponseService extends ResponseProcessor {
         log.debug("Получено сообщение из СМЭВ: {}", messageBody);
 
         try {
-            var queryResult = xmlMarshaller().unmarshall(messageBody, QueryResult.class);
+            QueryResult queryResult = xmlMarshaller().unmarshall(messageBody, QueryResult.class);
 
-            var XmlBuildMeta = new SmevRequestMeta(
+            SmevRequestMeta meta = new SmevRequestMeta(
                     mnemonicEnum(),
                     UUID.fromString(queryResult.getMessage().getResponseMetadata().getClientId()),
                     UUID.fromString(queryResult.getMessage().getResponseMetadata().getReplyToClientId()),
                     messageBody,
                     JsonConverter.toJsonNode(queryResult),
                     null,
-                    null
-            );
+                    null);
 
             switch (messageType(queryResult)) {
                 case REJECT: {
                     log.debug("Тип сообщения - REJECT");
-                    var reject = queryResult.getMessage().getResponseContent().getRejects().get(0);
+                    Reject reject = queryResult.getMessage().getResponseContent().getRejects().get(0);
+
                     return new ProcessAdapterMessageResult(ProcessMessageStatus.ERROR_REJECT)
-                            .setXmlBuildMeta(XmlBuildMeta)
+                            .setXmlBuildMeta(meta)
                             .setSmevDescription(reject.getCode(), reject.getDescription());
                 }
                 case STATUS: {
                     log.debug("Тип сообщения - STATUS");
-                    var status = queryResult.getMessage().getResponseContent().getStatus();
+                    Status status = queryResult.getMessage().getResponseContent().getStatus();
+
                     return new ProcessAdapterMessageResult(ProcessMessageStatus.ERROR_STATUS)
-                            .setXmlBuildMeta(XmlBuildMeta)
+                            .setXmlBuildMeta(meta)
                             .setSmevDescription(status.getCode(), status.getDescription());
                 }
                 case PRIMARY: {
@@ -76,7 +84,7 @@ public class ReceiptRnvResponseService extends ResponseProcessor {
                     processResponse(queryResult);
 
                     return new ProcessAdapterMessageResult(ProcessMessageStatus.SUCCESSFULLY)
-                            .setXmlBuildMeta(XmlBuildMeta);
+                            .setXmlBuildMeta(meta);
                 }
             }
 
@@ -88,25 +96,25 @@ public class ReceiptRnvResponseService extends ResponseProcessor {
     }
 
     private void processResponse(QueryResult queryResult) {
-        var responseType = queryResult
+        ResponseType responseType = queryResult
                 .getMessage()
                 .getResponseContent()
                 .getContent()
                 .getMessagePrimaryContent()
                 .getResponse();
 
-        var process = new ReceiptRnvResponseXmlProcessor();
+        ReceiptRnvResponseXmlProcessor receiptRnvProcessor = new ReceiptRnvResponseXmlProcessor();
 
         if (responseType.getResponseExploitation() != null) {
-            var iRecord = process.processOne(responseType.getResponseExploitation());
-            log.info("Найдена 1 запись {}", iRecord);
+            IRecord record = receiptRnvProcessor.processOne(responseType.getResponseExploitation());
+            log.info("Найдена 1 запись {}", record);
 
-            dataEisZsService.updateExists(FieldsEisZs.PROPERTY_PERMIT_NUMBER, iRecord);
+            dataEisZsService.updateExists(FieldsEisZs.PROPERTY_PERMIT_NUMBER, record);
         } else if (!CollectionUtils.isEmpty(responseType.getResponseListExploitation())) {
-            var iRecords = process.processList(responseType.getResponseListExploitation());
-            log.info("Найдено {} записей", iRecords.size());
+            List<IRecord> records = receiptRnvProcessor.processList(responseType.getResponseListExploitation());
+            log.info("Найдено {} записей", records.size());
 
-            dataEisZsService.addOrIgnoreRecords(FieldsEisZs.PROPERTY_PERMIT_NUMBER, iRecords);
+            dataEisZsService.addOrIgnoreRecords(FieldsEisZs.PROPERTY_PERMIT_NUMBER, records);
         } else {
             throw new SmevRequestException("Ответ из СМЭВ не содержит записей для обработки");
         }
