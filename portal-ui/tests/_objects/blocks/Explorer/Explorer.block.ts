@@ -10,7 +10,7 @@ export class ExplorerBlock extends Block {
     loader: '.Explorer .Loading',
     viewContentWidget: '.Explorer .ViewContentWidget',
     empty: '.Explorer-Empty',
-    createLayerBtn: '.Explorer-ToolbarActions .MuiButtonBase-root[aria-label="Создать слой"]',
+    createLayerBtn: '.Explorer-ToolbarActions .MuiButtonBase-root[aria-label="Создать векторную таблицу"]',
     firstItem: '.Explorer-List .Explorer-Item:first-child',
     secondItemTitle: '.Explorer-List .Explorer-Item:last-child .MuiListItemText-primary',
     connectionToProject: '.Explorer .ConnectionsToProjectsWidget button'

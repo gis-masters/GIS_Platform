@@ -9,7 +9,7 @@ interface CreateVectorTableButtonProps {
 export class CreateVectorTableButton extends Component<CreateVectorTableButtonProps> {
   render() {
     return (
-      <Tooltip title='Создать слой'>
+      <Tooltip title='Создать векторную таблицу'>
         <IconButton onClick={this.props.onClick}>
           <PlaylistAdd />
         </IconButton>

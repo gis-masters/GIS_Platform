@@ -43,7 +43,7 @@ export class VectorTableActionsEdit extends Component<VectorTableActionsEditProp
           actionButtonProps={{ startIcon: <SaveOutlined />, children: 'Сохранить' }}
           onClose={this.closeDialog}
           closeWithConfirm
-          title='Редактирование данных'
+          title='Редактирование векторной таблицы'
         />
       </>
     );

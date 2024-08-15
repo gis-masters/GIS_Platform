@@ -172,7 +172,7 @@ export class SchemaActionsEdit extends Component<SchemaActionsEditProps> {
     }
 
     if (explorerItem?.type === DataEntityType.TABLE && explorerItem?.title) {
-      return `${title} таблицы ${explorerItem.title}`;
+      return `${title} векторной таблицы ${explorerItem.title}`;
     }
 
     return `${title} ${schema.title}`;

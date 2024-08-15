@@ -61,7 +61,7 @@ export class ExplorerAdapterTypeProject {
 
   static customOpenActionIcon(): ReactNode {
     return (
-      <Tooltip title='Открыть проект'>
+      <Tooltip title='Открыть'>
         <MapOutlined />
       </Tooltip>
     );
