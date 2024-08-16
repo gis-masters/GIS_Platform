@@ -2,10 +2,8 @@ package ru.mycrg.auth_service.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import ru.mycrg.auth_service.dto.IntentProjection;
 import ru.mycrg.auth_service.service.OrganizationIntentService;
 import ru.mycrg.auth_service_contract.dto.OrganizationIntentDto;
 
@@ -27,5 +25,13 @@ public class OrganizationIntentController {
         intentService.addIntent(intentDto);
 
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/intents/{intentToken}")
+    @PreAuthorize("permitAll()")
+    public ResponseEntity<IntentProjection> getIntentData(@PathVariable String intentToken) {
+        IntentProjection intent = intentService.getIntent(intentToken);
+
+        return ResponseEntity.ok(intent);
     }
 }

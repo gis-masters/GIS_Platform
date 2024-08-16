@@ -23,28 +23,28 @@ public class OrganizationIntentStepDefinitions extends BaseStepsDefinitions {
 
     @When("я отправляю идентификатор не существующей специализации")
     public void createIntentWithIncorrectSpecialization() {
-        OrganizationIntentDto dto = new OrganizationIntentDto("asd@asd", 314);
+        OrganizationIntentDto dto = new OrganizationIntentDto("localhost", "asd@asd", 314);
 
         createIntent(dto);
     }
 
     @When("я отправляю заявку на создание новой организации используя email уже существующего в системе пользователя")
     public void createIntentWithAlreadyExistEmail() {
-        OrganizationIntentDto dto = new OrganizationIntentDto(orgDto.getOwner().getEmail(), 1);
+        OrganizationIntentDto dto = new OrganizationIntentDto("localhost", orgDto.getOwner().getEmail(), 1);
 
         createIntent(dto);
     }
 
     @Given("существует заявка на создание новой организации от {string}")
     public void existIntent(String email) {
-        OrganizationIntentDto dto = new OrganizationIntentDto(email, 1);
+        OrganizationIntentDto dto = new OrganizationIntentDto("localhost", email, 1);
 
         createIntent(dto);
     }
 
     @When("я отправляю заявку на создание новой организации: {string}")
     public void createIntent(String email) {
-        OrganizationIntentDto dto = new OrganizationIntentDto(email, 1);
+        OrganizationIntentDto dto = new OrganizationIntentDto("localhost", email, 1);
 
         createIntent(dto);
     }
