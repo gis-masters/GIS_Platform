@@ -127,8 +127,13 @@ class CurrentProject implements CrgProjectData {
   }
 
   @computed
+  private get visibleOnMapAndHiddenByZoomLayers(): TreeItem<CrgLayer>[] {
+    return this.tree.filter(item => !item.isGroup && item.visible) as TreeItem<CrgLayer>[];
+  }
+
+  @computed
   get visibleOnMapLayers(): TreeItem<CrgLayer>[] {
-    return this.tree.filter(item => !item.isGroup && item.visible && !item.hiddenByZoom) as TreeItem<CrgLayer>[];
+    return this.visibleOnMapAndHiddenByZoomLayers.filter(item => !item.hiddenByZoom);
   }
 
   @computed
@@ -263,12 +268,20 @@ class CurrentProject implements CrgProjectData {
     );
   }
 
+  getLayerByTableNameFromVisibleAndHiddenByZoomVectorLayers(tableName: string): CrgLayer {
+    return this.getLayerByTableNameFromLayers(
+      tableName,
+      this.visibleOnMapAndHiddenByZoomLayers.map(item => item.payload)
+    );
+  }
+
   getLayerByTableNameFromAllVectorableLayers(tableName: string): CrgLayer {
     return this.getLayerByTableNameFromLayers(tableName, this.vectorableLayers);
   }
 
   private getLayerByTableNameFromLayers(tableName: string, layers: CrgLayer[]): CrgLayer {
     const layer = layers.find(item => item.tableName === tableName);
+
     if (!layer) {
       throw new Error('Не удалось найти слой по tableName: ' + tableName);
     }

@@ -122,7 +122,7 @@ export class FeaturesListItem extends Component<FeaturesListItemProps> {
 
       return isSearchList
         ? currentProject.getLayerByTableNameFromAllVectorableLayers(tableName)
-        : currentProject.getLayerByTableNameFromVisibleVectorLayers(tableName);
+        : currentProject.getLayerByTableNameFromVisibleAndHiddenByZoomVectorLayers(tableName);
     }
   }
 
