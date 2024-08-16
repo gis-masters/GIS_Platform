@@ -9,3 +9,7 @@ Then('открывается панель редактирования объе�
 When('на панели выделенного объекта я нажимаю `Копировать объект в другой слой`', async function () {
   await editFeatureSidebarBlock.copyFeaturesButton.click();
 });
+
+When('я закрываю панель выделенного объекта', async function () {
+  await editFeatureSidebarBlock.closeFeatureSidebar();
+});

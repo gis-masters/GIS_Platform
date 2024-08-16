@@ -139,7 +139,7 @@ function transformCoordinate(
   return isCoordinateValid(coord) ? transform(projFrom, projTo, coord) : coordEdited;
 }
 
-function transformGroup(
+export function transformGroup(
   group: Coord[],
   projFrom: Projection,
   projTo: Projection,

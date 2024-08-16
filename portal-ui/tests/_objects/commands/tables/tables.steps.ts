@@ -31,6 +31,21 @@ Given(
 );
 
 Given(
+  'пользователем {user} внутри созданного набора данных создана таблица {string} с СК {string} по схеме {schema}',
+  async function (this: ScenarioScope, user: TestUser, title: string, crs: string, schema: Schema) {
+    this.latestVectorTable = await createVectorTableAs(
+      this.latestDataset.identifier,
+      {
+        title,
+        schemaId: schema.name,
+        crs
+      },
+      user
+    );
+  }
+);
+
+Given(
   'внутри созданного набора данных существует таблица по схеме {schema} созданная пользователем {user}',
   async function (this: ScenarioScope, schema: Schema, user: TestUser) {
     this.latestVectorTable = await createVectorTableAs(

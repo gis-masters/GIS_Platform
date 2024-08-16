@@ -11,6 +11,7 @@ import { konfirmieren } from '../../services/utility-dialogs.service';
 import { mapStore } from '../../stores/Map.store';
 import { IconButton } from '../IconButton/IconButton';
 import { LabelsOutlined } from '../Icons/LabelsOutlined';
+import { MapTurningPoints } from '../MapTurningPoints/MapTurningPoints';
 
 import '!style-loader!css-loader!sass-loader!./MapLabels.scss';
 
@@ -27,6 +28,7 @@ export class MapLabels extends Component {
       <div className={cnMapLabels()}>
         {mapStore.labelsVisible && (
           <>
+            <MapTurningPoints />
             <Tooltip title='Добавить аннотацию'>
               <IconButton
                 className={cnMapLabels('AddLabel')}

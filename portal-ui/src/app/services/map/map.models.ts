@@ -36,7 +36,7 @@ export function isFilterBySelection(value: unknown): value is FilterBySelectionM
   return typeof value === 'string' && Object.values<string>(FilterBySelectionMode).includes(value);
 }
 
-export type LabelType = 'label' | 'line';
+export type LabelType = 'label' | 'line' | 'turningPoints';
 
 export interface MapPosition {
   zoom: number;

@@ -19,6 +19,7 @@ import { forProkol } from './testFeatures/forProkol';
 import { forSimpleFiltering } from './testFeatures/forSimpleFiltering';
 import { forSorting } from './testFeatures/forSorting';
 import { forTitles } from './testFeatures/forTitles';
+import { singleFeature } from './testFeatures/singleFeature';
 
 const KEY = 'тестовые данные';
 
@@ -102,6 +103,9 @@ export async function getTestFeatures(key: string, schema?: Schema): Promise<New
     }
     case 'тестирование панели объектов': {
       return forFeaturesSidebar;
+    }
+    case 'один объект': {
+      return singleFeature;
     }
     case 'тестирование заголовков': {
       return forTitles;

@@ -16,3 +16,13 @@ When('в панели инструментов на карте я нажимаю
   await mapToolbarBlock.clickSelectMultipleBtn();
   await mapBlock.moveToMap(); // уводим курсор, чтобы не вылазил тултип
 });
+
+When('в панели инструментов на карте я нажимаю на кнопку `Показать скрыть аннотации`', async () => {
+  await mapToolbarBlock.clickTogglerBtn();
+  await mapBlock.moveToMap(); // уводим курсор, чтобы не вылазил тултип
+});
+
+When('в панели инструментов на карте я нажимаю на кнопку `Добавить поворотные точки`', async () => {
+  await mapToolbarBlock.clickTurningPointsBtn();
+  await mapBlock.moveToMap(); // уводим курсор, чтобы не вылазил тултип
+});

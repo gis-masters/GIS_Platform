@@ -5,12 +5,12 @@ import { boundMethod } from 'autobind-decorator';
 import { debounce } from 'lodash';
 import { Feature, MapBrowserEvent, Overlay } from 'ol';
 import { Coordinate } from 'ol/coordinate';
-import { Point } from 'ol/geom';
+import { Geometry, Point } from 'ol/geom';
 import { Draw, Modify } from 'ol/interaction';
 import { DrawEvent } from 'ol/interaction/Draw';
 import VectorLayer from 'ol/layer/Vector';
 import VectorSource from 'ol/source/Vector';
-import { Fill, Icon, Stroke, Style, Text } from 'ol/style';
+import { Circle, Fill, Icon, Stroke, Style, Text } from 'ol/style';
 import CircleStyle from 'ol/style/Circle';
 import { v4 as uuid } from 'uuid';
 
@@ -19,9 +19,16 @@ import { currentProject } from '../../stores/CurrentProject.store';
 import { currentUser } from '../../stores/CurrentUser.store';
 import { mapStore } from '../../stores/Map.store';
 import { communicationService } from '../communication.service';
-import { GeometryType, WfsFeature } from '../geoserver/wfs/wfs.models';
+import { defaultOlProjectionCode } from '../data/projections/projections.models';
+import { getProjectionByCode } from '../data/projections/projections.service';
+import { transformGroup } from '../data/projections/projections.util';
+import { extractTableNameFromFeatureId } from '../geoserver/featureType/featureType.util';
+import { GeometryType, supportedGeometryTypes, WfsFeature } from '../geoserver/wfs/wfs.models';
+import { isPolygonal } from '../geoserver/wfs/wfs.util';
 import { featureToWfsFeature, wfsFeatureToFeature } from '../util/open-layers.util';
 import { sleep } from '../util/sleep';
+import { isArrayOf } from '../util/typeGuards/isArrayOf';
+import { isNumberArray } from '../util/typeGuards/isNumberArray';
 import { prompto } from '../utility-dialogs.service';
 import { LabelType, MapMode } from './map.models';
 import { mapService } from './map.service';
@@ -102,10 +109,85 @@ class MapLabelsService {
     return false;
   }
 
-  async addingLabelOn(type: LabelType) {
+  async addTurningPoints() {
+    this.dropInteractions();
+
+    const layerTableName = extractTableNameFromFeatureId(mapStore.selectedFeatures[0].id);
+    const layer = currentProject.layers.find(layer => layer.tableName === layerTableName);
+    const coordinates = mapStore.selectedFeatures[0].geometry?.coordinates || [];
+    const geometryType = mapStore.selectedFeatures[0].geometry?.type;
+
+    if (!geometryType || !supportedGeometryTypes.includes(geometryType)) {
+      throw new Error('Неподдерживаемый тип геометрии');
+    }
+
+    if (!layer?.nativeCRS) {
+      throw new Error('В слое не указана система координат');
+    }
+
+    const currentLayerProjection = await getProjectionByCode(layer?.nativeCRS);
+    const targetLayerProjection = await getProjectionByCode(defaultOlProjectionCode);
+
+    if (currentLayerProjection && targetLayerProjection) {
+      const pointsCoordinates = this.getTurningPointsFromCoordinates(coordinates, geometryType);
+      const transformedCoordinates = transformGroup(pointsCoordinates, currentLayerProjection, targetLayerProjection);
+      const features = transformedCoordinates.map((coord, index) => {
+        return this.createTurningPointsFeature(coord as Coordinate, index);
+      });
+
+      this.source.addFeatures(features);
+    }
+
+    await sleep(0);
+    this.saveToStorages();
+  }
+
+  private getTurningPointsFromCoordinates(
+    coordinates: Coordinate | Coordinate[] | Coordinate[][] | Coordinate[][][],
+    geometryType: GeometryType
+  ): Coordinate[] {
+    if (isNumberArray(coordinates)) {
+      return [coordinates];
+    }
+
+    const resultCoordinates: Coordinate[] = [];
+
+    if (isArrayOf(coordinates, isNumberArray)) {
+      resultCoordinates.push(...coordinates);
+      if (isPolygonal(geometryType)) {
+        resultCoordinates.pop();
+      }
+    } else {
+      for (const subgroup of coordinates) {
+        resultCoordinates.push(...this.getTurningPointsFromCoordinates(subgroup, geometryType));
+      }
+    }
+
+    return resultCoordinates;
+  }
+
+  dropInteractions() {
     this.drawOff();
     mapService.drawOff();
     mapMeasureService.measureOff();
+  }
+
+  createTurningPointsFeature(coord: Coordinate, index: number): Feature<Geometry> {
+    const feature = new Feature({
+      geometry: new Point(coord),
+      type: 'turningPoints',
+      text: String(index + 1)
+    });
+
+    feature.setId(uuid());
+    feature.setStyle(this.createStyle(feature));
+
+    return feature;
+  }
+
+  async addingLabelOn(type: LabelType) {
+    this.dropInteractions();
+
     mapStore.setMode(MapMode.ADDING_LABEL);
     mapStore.setCurrentLabelType(type);
 
@@ -113,6 +195,7 @@ class MapLabelsService {
 
     this.draw = this.getDraw(type);
     this.draw.on('drawend', this.handleDrawEnd);
+
     mapService.map.addInteraction(this.draw);
   }
 
@@ -169,7 +252,7 @@ class MapLabelsService {
     const feature = e.feature;
     feature.setId(uuid());
     feature.setProperties({ type: mapStore.currentLabelType });
-    if (mapStore.currentLabelType === 'label') {
+    if (mapStore.currentLabelType === 'label' || mapStore.currentLabelType === 'turningPoints') {
       await this.editLabel(feature);
     } else {
       await sleep(0);
@@ -286,13 +369,17 @@ class MapLabelsService {
     return `mapLabels_${key}_${currentUser.id}_${currentProject.id}`;
   }
 
-  private createStyle(feature: Feature, selected?: boolean): Style {
+  private createStyle(feature: Feature, selected?: boolean): Style[] {
     if (this.getLabelType(feature) === 'line') {
-      return this.createLineStyle(selected);
+      return [this.createLineStyle(selected)];
     }
 
     if (this.getLabelType(feature) === 'label') {
-      return this.createLabelStyle(feature, selected);
+      return [this.createLabelStyle(feature, selected)];
+    }
+
+    if (this.getLabelType(feature) === 'turningPoints') {
+      return [this.createLabelStyle(feature, selected), this.createCircleStyle()];
     }
 
     throw new Error(`Unknown label type: ${this.getLabelType(feature)}`);
@@ -303,6 +390,21 @@ class MapLabelsService {
       stroke: new Stroke({
         color: selected ? '#1177dd' : '#3399ff',
         width: 2
+      })
+    });
+  }
+
+  private createCircleStyle(): Style {
+    return new Style({
+      image: new Circle({
+        fill: new Fill({
+          color: '#3399ff'
+        }),
+        stroke: new Stroke({
+          width: 1,
+          color: '#fff'
+        }),
+        radius: 6
       })
     });
   }

@@ -3,10 +3,17 @@ import { CopyFeaturesButtonBlock } from '../CopyFeaturesButton/CopyFeaturesButto
 
 class EditFeatureSidebarBlock extends Block {
   selectors = {
-    container: '.edit-features-sidebar'
+    container: '.edit-features-sidebar',
+    close: '.edit-features-sidebar .close-button'
   };
 
   copyFeaturesButton = new CopyFeaturesButtonBlock(this.selectors.container);
+
+  async closeFeatureSidebar(): Promise<void> {
+    const $closeBtn = await this.$('close');
+    await $closeBtn.waitForClickable({ timeout: 1000 });
+    await $closeBtn.click();
+  }
 }
 
 export const editFeatureSidebarBlock = new EditFeatureSidebarBlock();
