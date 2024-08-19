@@ -1,0 +1,25 @@
+meta {
+  name: Update
+  type: http
+  seq: 2
+}
+
+put {
+  url: http://localhost:8100/api/projects/11
+  body: json
+  auth: bearer
+}
+
+headers {
+  Content-Type: application/json
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJ1c2VyX25hbWUiOiJhZG1pbkBtYWlsLnJ1Iiwic2NvcGUiOlsiY3JnIl0sIm9yZ2FuaXphdGlvbnMiOltdLCJleHAiOjE1Nzk2MTIyMjQsImF1dGhvcml0aWVzIjpbIkFETUlOIl0sImp0aSI6ImQxZmRjYTk0LTk5OTctNDQ1ZS05N2U5LWZkYjk5MDNlZDk0YyIsImNsaWVudF9pZCI6ImFkbWluIn0.0oCV4RmaV7kaBsTMl7tPGZWF-7k6lsmLCg0WBtoEJlw
+}
+
+body:json {
+  {
+    "projectName": "new name of 11 project"
+  }
+}

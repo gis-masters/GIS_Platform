@@ -1,0 +1,22 @@
+meta {
+  name: Create new
+  type: http
+  seq: 2
+}
+
+post {
+  url: http://localhost:8100/projects/1/basemaps
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyLCJ1c2VyX25hbWUiOiJmaXpAZml6Iiwic2NvcGUiOlsiY3JnIl0sIm9yZ2FuaXphdGlvbnMiOlt7ImlkIjoxLCJuYW1lIjoiYXNkZmFzZGZhc2QifV0sImdyb3VwcyI6W10sImV4cCI6MTYwMjkyNzc0NSwiYXV0aG9yaXRpZXMiOlsiT1JHX0FETUlOIl0sImp0aSI6IjdkZDk1YzMyLTE5YWMtNGFkZi05NjQ2LTk1ZTU5MDZjYTdjYSIsImNsaWVudF9pZCI6ImFkbWluIn0.aedD0Y86Up-arxSATC2-TUq4TjGXgmV79OknKTAVe_o
+}
+
+body:json {
+  {
+      "baseMapId": 2,
+      "title": "wmts"
+  }
+}

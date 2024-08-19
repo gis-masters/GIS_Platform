@@ -1,0 +1,20 @@
+meta {
+  name: Find related layers
+  type: http
+  seq: 5
+}
+
+get {
+  url: http://localhost:8100/projects/find-related-layers?field=table&value=heritagearea_1_c3cc
+  body: none
+  auth: bearer
+}
+
+params:query {
+  field: table
+  value: heritagearea_1_c3cc
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJ1c2VyX25hbWUiOiJhZG1pbkBtYWlsLnJ1Iiwic2NvcGUiOlsiY3JnIl0sIm9yZ2FuaXphdGlvbnMiOltdLCJleHAiOjE1Nzk1ODU2OTYsImF1dGhvcml0aWVzIjpbIkFETUlOIl0sImp0aSI6IjdhM2Q1MzE3LWYzMTMtNDgwNC1hMjM3LTg0OWY3YjljYjE2MSIsImNsaWVudF9pZCI6ImFkbWluIn0.j1bUXVObJd-WVjCGs1Ot53JcOuBOwI9WNbt4N-Qs1VU
+}

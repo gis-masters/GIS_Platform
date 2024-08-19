@@ -1,0 +1,21 @@
+meta {
+  name: Login for organization
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{host}}:{{port}}/oauth/token?orgId=25
+  body: multipartForm
+  auth: none
+}
+
+params:query {
+  orgId: 25
+}
+
+body:multipart-form {
+  grant_type: password
+  username: arh_grad_rk@mail.ru
+  password: Fiorentina123
+}

@@ -1,0 +1,29 @@
+meta {
+  name: Create new organization
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{host}}:{{port}}/organizations/init
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "name": "АО Геоинформационные системы",
+    "phone": "79780562493",
+    "specializationId": 1,
+    "owner": {
+      "name": "Денис",
+      "surname": "Денисович",
+      "email": "{{user}}",
+      "password": "{{password}}"
+    }
+  }
+}

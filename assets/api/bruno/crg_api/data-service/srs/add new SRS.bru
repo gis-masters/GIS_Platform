@@ -1,0 +1,25 @@
+meta {
+  name: add new SRS
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{host}}:8084/srs
+  body: json
+  auth: bearer
+}
+
+headers {
+  Content-Type: application/json
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjcmdfbG9naW4iOiJmaXpAZml6IiwidXNlcl9uYW1lIjoiZml6X2Zpel8zNCIsImdyb3VwcyI6W10sInZlcnNpb24iOm51bGwsImF1dGhvcml0aWVzIjpbIk9SR19BRE1JTiJdLCJtaW5pb25zIjpbXSwiY2xpZW50X2lkIjoiYWRtaW4iLCJ1c2VyX2lkIjozNCwic2NvcGUiOlsiY3JnIl0sIm9yZ2FuaXphdGlvbnMiOlt7ImlkIjoxLCJuYW1lIjoi0JDQniDQk9C10L7QuNC90YTQvtGA0LzQsNGG0LjQvtC90L3Ri9C1INGB0LjRgdGC0LXQvNGLIn1dLCJleHAiOjE3MTgzNDI1OTIsImRpcmVjdE1pbmlvbnMiOltdLCJqdGkiOiJlMWI0NjkxYS05OGZlLTRiMTktOWNkZi1lYTQ4OTg3ZWI0MmYifQ.AkVt81BLZ_FvtRYaq16BiA6Hxo8qMnRiJiKMDtLF07E
+}
+
+body:json {
+  {
+    "srtext": "PROJCS[\"Pulkovo 1942 / CS63 zone X5\", \r\n  GEOGCS[\"Pulkovo 1942\", \r\n    DATUM[\"Pulkovo 1942\", \r\n      SPHEROID[\"Krassowsky 1940\", 6378245.0, 298.3, AUTHORITY[\"EPSG\",\"7024\"]], \r\n      TOWGS84[43.822, -108.842, -119.585, 1.455, -0.761, 0.737, 0.549], \r\n      AUTHORITY[\"EPSG\",\"6284\"]], \r\n    PRIMEM[\"Greenwich\", 0.0, AUTHORITY[\"EPSG\",\"8901\"]], \r\n    UNIT[\"degree\", 0.017453292519943295], \r\n    AXIS[\"Geodetic longitude\", EAST], \r\n    AXIS[\"Geodetic latitude\", NORTH], \r\n    AUTHORITY[\"EPSG\",\"4284\"]], \r\n  PROJECTION[\"Transverse_Mercator\", AUTHORITY[\"EPSG\",\"9807\"]], \r\n  PARAMETER[\"central_meridian\", 35.5], \r\n  PARAMETER[\"latitude_of_origin\", 0.08333333333333333], \r\n  PARAMETER[\"scale_factor\", 1.0], \r\n  PARAMETER[\"false_easting\", 5300000.0], \r\n  PARAMETER[\"false_northing\", 0.0], \r\n  UNIT[\"m\", 1.0], \r\n  AXIS[\"Easting\", EAST], \r\n  AXIS[\"Northing\", NORTH], \r\n  AUTHORITY[\"EPSG\",\"7829\"]]"
+  }
+}

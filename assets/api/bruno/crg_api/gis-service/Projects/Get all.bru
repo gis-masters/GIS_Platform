@@ -1,0 +1,16 @@
+meta {
+  name: Get all
+  type: http
+  seq: 1
+}
+
+get {
+  url: http://{{host}}:{{port}}/projects?page=0&size=10
+  body: none
+  auth: none
+}
+
+params:query {
+  page: 0
+  size: 10
+}

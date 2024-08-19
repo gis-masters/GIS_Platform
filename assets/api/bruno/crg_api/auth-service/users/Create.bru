@@ -1,0 +1,25 @@
+meta {
+  name: Create
+  type: http
+  seq: 2
+}
+
+post {
+  url: http://localhost:8100/users
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json; charset=utf-8
+}
+
+body:json {
+  {
+      "name": "fiz",
+    "surName": "fanatic",  
+    "email": "fiz_test1@fiz",
+    "password": "aA111111",
+      "surname": "dsfsdf"
+  }
+}

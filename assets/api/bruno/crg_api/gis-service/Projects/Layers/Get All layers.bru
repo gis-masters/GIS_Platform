@@ -1,0 +1,15 @@
+meta {
+  name: Get All layers
+  type: http
+  seq: 1
+}
+
+get {
+  url: http://localhost:8100/projects/3/layers
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyLCJ1c2VyX25hbWUiOiJ3QHciLCJzY29wZSI6WyJjcmciXSwib3JnYW5pemF0aW9ucyI6W3siaWQiOjEsIm5hbWUiOiJXV1cgQ29tcGFueSJ9XSwiZ3JvdXBzIjpbXSwiZXhwIjoxNTkxODY3MTIyLCJhdXRob3JpdGllcyI6WyJPUkdfQURNSU4iXSwianRpIjoiZWY0OWI2ZTUtMmY2Ni00ODgwLWEwMTQtNGNhMGFmZDQ1YmY2IiwiY2xpZW50X2lkIjoiYWRtaW4ifQ.5aL-33NGtXCaee_cAQu3jvKjPOgR-OqKSDh11uDs4uM
+}

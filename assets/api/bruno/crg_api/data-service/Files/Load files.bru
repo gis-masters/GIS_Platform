@@ -1,0 +1,21 @@
+meta {
+  name: Load files
+  type: http
+  seq: 1
+}
+
+post {
+  url: http://localhost:8084/files
+  body: multipartForm
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyLCJ1c2VyX25hbWUiOiJmaXpAZml6Iiwic2NvcGUiOlsiY3JnIl0sIm9yZ2FuaXphdGlvbnMiOlt7ImlkIjoxLCJuYW1lIjoiZml6IENvbXBhbnkifV0sImdyb3VwcyI6W10sImV4cCI6MTY0NDQ3NTcyNywiYXV0aG9yaXRpZXMiOlsiT1JHX0FETUlOIl0sImp0aSI6Ijg4YjdmZDJiLThkMmUtNGYyOC1hMWU1LTA2Y2MxZWMwY2RiYiIsImNsaWVudF9pZCI6ImFkbWluIn0.gZh4A9ge8u4yvTd438gai2Ei9qJPjYjhy1Sk1ul5TgA
+}
+
+body:multipart-form {
+  files: undefined
+  ~body: [{"fileId": "5758bce3-8b38-4e69-a5f3-0176c1ed3f28", "fieldName": "some"}]
+  ~filesMapping: 
+}

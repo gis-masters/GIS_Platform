@@ -1,0 +1,15 @@
+meta {
+  name: Add record
+  type: http
+  seq: 2
+}
+
+post {
+  url: http://localhost:8100/api/data/document-libraries/documents
+  body: multipartForm
+  auth: none
+}
+
+body:multipart-form {
+  body: {"title": "SecondPostmanFolder","content_type_id": "FOLDER"}
+}

@@ -1,0 +1,26 @@
+meta {
+  name: Update record
+  type: http
+  seq: 4
+}
+
+patch {
+  url: http://localhost:8084/document-libraries/dl_default/records/2
+  body: json
+  auth: bearer
+}
+
+headers {
+  Content-Type: application/merge-patch+json
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjozLCJ1c2VyX25hbWUiOiJmaXpfdGVzdDFAZml6Iiwic2NvcGUiOlsiY3JnIl0sIm9yZ2FuaXphdGlvbnMiOlt7ImlkIjoxLCJuYW1lIjoiZml6IENvbXBhbnkifV0sImdyb3VwcyI6W10sImV4cCI6MTY1MDM2MDc3NywiYXV0aG9yaXRpZXMiOlsiVVNFUiJdLCJqdGkiOiJkYTY1ODliZi05NDU2LTQ5OWUtYjAyYS1iZmU0M2ViMGRhNjMiLCJjbGllbnRfaWQiOiJhZG1pbiJ9.Yh-rL61i8TVyt2eZY1yQi_BdUsDjYQeeFJyL-Y1lVZI
+}
+
+body:json {
+  {
+      "title": "new title for Folder1",
+      "content_type_id": "folder_v1"
+  }
+}

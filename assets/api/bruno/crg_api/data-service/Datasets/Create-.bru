@@ -1,0 +1,23 @@
+meta {
+  name: Create-
+  type: http
+  seq: 2
+}
+
+post {
+  url: http://localhost:8084/datasets
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjozNCwidXNlcl9uYW1lIjoiZml6QGZpeiIsInNjb3BlIjpbImNyZyJdLCJvcmdhbml6YXRpb25zIjpbeyJpZCI6MSwibmFtZSI6ImZpeiBDb21wYW55In1dLCJncm91cHMiOltdLCJleHAiOjE2MDYzMTkwNDUsImF1dGhvcml0aWVzIjpbIk9SR19BRE1JTiJdLCJqdGkiOiIyNjM2NGIzYy1mN2M1LTQ1NjUtOGNjZi0yMDgzMjlmNDA0YWIiLCJjbGllbnRfaWQiOiJhZG1pbiJ9.ajb_xK_FJaq9XSO2QLg92xaS0qoWC_iOGQZkFkrrJYU
+}
+
+body:json {
+  {
+      "name": "dataset_test_1",
+      "title": "first test",
+      "details": "some details"
+  }
+}

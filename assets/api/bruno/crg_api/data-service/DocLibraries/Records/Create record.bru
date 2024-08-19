@@ -1,0 +1,19 @@
+meta {
+  name: Create record
+  type: http
+  seq: 3
+}
+
+post {
+  url: http://localhost:8084/document-libraries/dl_default/records
+  body: multipartForm
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyLCJ1c2VyX25hbWUiOiJmaXpAZml6Iiwic2NvcGUiOlsiY3JnIl0sIm9yZ2FuaXphdGlvbnMiOlt7ImlkIjoxLCJuYW1lIjoiZml6IENvbXBhbnkifV0sImdyb3VwcyI6W10sImV4cCI6MTYzNDExMTAzMSwiYXV0aG9yaXRpZXMiOlsiT1JHX0FETUlOIl0sImp0aSI6ImZkYTlmZWZiLTBjMTAtNDFjOS1iNTgzLTZkMmJjMDlmZDlkNyIsImNsaWVudF9pZCI6ImFkbWluIn0.4H1fHo1NhHwkMad_pk7lZCVdUbDRqXMAeh3ScqlOKi8
+}
+
+body:multipart-form {
+  body: {"title": "record 1 title"}
+}

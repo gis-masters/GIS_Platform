@@ -283,10 +283,6 @@ public class FileController extends BaseController {
     private void throwIfGroupNotFull(Set<String> required, List<String> foundFilesPath) {
         log.debug("Found files: {}", foundFilesPath);
 
-        if (required.size() != foundFilesPath.size()) {
-            throw new BadRequestException("Группа файлов не полная");
-        }
-
         Set<String> foundExtensions = foundFilesPath.stream()
                                                     .map(FilenameUtils::getExtension)
                                                     .collect(Collectors.toSet());

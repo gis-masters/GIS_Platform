@@ -1,0 +1,23 @@
+meta {
+  name: Get ALL permission
+  type: http
+  seq: 1
+}
+
+get {
+  url: http://localhost:8100/projects/5/permissions
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo1LCJ1c2VyX25hbWUiOiJvd25lckBvIiwic2NvcGUiOlsiY3JnIl0sIm9yZ2FuaXphdGlvbnMiOlt7ImlkIjozLCJuYW1lIjoiT09PIENvbXBhbnkifV0sImdyb3VwcyI6W10sImV4cCI6MTU5MTk1Mzg2MSwiYXV0aG9yaXRpZXMiOlsiT1JHX0FETUlOIl0sImp0aSI6IjkyYWJmZDBkLTc1ZjQtNGUyZC05YWFiLTZkNGI3OWVjZWI2NiIsImNsaWVudF9pZCI6ImFkbWluIn0.Wa4kC0p0hmVk95-4auHkTytMtEkmVlo26nroi610EjM
+}
+
+body:json {
+  {
+      "principalType": "user",
+      "principalId": 2,
+      "role": "VIEWER"
+  }
+}

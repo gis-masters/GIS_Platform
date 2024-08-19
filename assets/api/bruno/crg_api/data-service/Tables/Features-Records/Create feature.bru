@@ -1,0 +1,28 @@
+meta {
+  name: Create feature
+  type: http
+  seq: 1
+}
+
+post {
+  url: http://localhost:8084/datasets/dataset_fcc0b7/tables/heritagearea_1_ddcd/records
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjozLCJ1c2VyX25hbWUiOiJmaXpfdGVzdDFAZml6Iiwic2NvcGUiOlsiY3JnIl0sIm9yZ2FuaXphdGlvbnMiOlt7ImlkIjoxLCJuYW1lIjoiZml6IENvbXBhbnkifV0sImdyb3VwcyI6W10sImV4cCI6MTY1MDM0NzgzNSwiYXV0aG9yaXRpZXMiOlsiVVNFUiJdLCJqdGkiOiJjNWM4YTk4NS03MmU1LTRiMGEtYWU1MC1jMDFjZTlkYzdhNWIiLCJjbGllbnRfaWQiOiJhZG1pbiJ9.YEMDSPhHFS4WryI-ZDC8M8l_tc_BbtzGrI-oJU-A_b0
+}
+
+body:json {
+  {
+    "type": "Feature",
+    "geometry": {
+      "type": "Polygon",
+      "coordinates": []
+    },
+    "properties": {
+      "name": "Dinagat Islands"
+    }
+  }
+}

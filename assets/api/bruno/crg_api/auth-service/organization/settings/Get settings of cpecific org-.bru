@@ -1,0 +1,19 @@
+meta {
+  name: Get settings of cpecific org-
+  type: http
+  seq: 2
+}
+
+get {
+  url: http://localhost:9000/organizations/1/settings
+  body: none
+  auth: bearer
+}
+
+headers {
+  Content-Type: application/json; charset=utf-8
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjcmdfbG9naW4iOiJhZG1pbkBtYWlsLnJ1IiwidXNlcl9pZCI6MSwidXNlcl9uYW1lIjoiYWRtaW5AbWFpbC5ydSIsInNjb3BlIjpbImNyZyJdLCJvcmdhbml6YXRpb25zIjpbXSwiZ3JvdXBzIjpbXSwiZXhwIjoxNjY0NDE2MTg1LCJhdXRob3JpdGllcyI6WyJHTE9CQUxfQURNSU4iXSwianRpIjoiMTBiOWZiNzktNTg5OC00MjRlLTkxOGQtOGI1YjA0NWFmYjA3IiwiY2xpZW50X2lkIjoiYWRtaW4ifQ.MMbOxjsxDWjPULwen9L9SQx2YTBgnO5gQ8SzsDKtvlU
+}
