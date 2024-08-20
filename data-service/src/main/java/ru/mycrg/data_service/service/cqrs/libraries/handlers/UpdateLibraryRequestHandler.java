@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import ru.mycrg.data_service.dao.FtsDao;
+import ru.mycrg.data_service.dao.ddl.columns.DdlColumnBase;
 import ru.mycrg.data_service.dao.ddl.tables.DdlTriggers;
 import ru.mycrg.data_service.dto.LibraryUpdateDto;
 import ru.mycrg.data_service.entity.DocumentLibrary;
@@ -34,15 +35,18 @@ public class UpdateLibraryRequestHandler implements IRequestHandler<UpdateLibrar
 
     private final FtsDao ftsDao;
     private final DdlTriggers ddlTriggers;
+    private final DdlColumnBase ddlColumnBase;
     private final IMasterResourceProtector resourceProtector;
     private final DocumentLibraryRepository libraryRepository;
 
     public UpdateLibraryRequestHandler(FtsDao ftsDao,
                                        DdlTriggers ddlTriggers,
+                                       DdlColumnBase ddlColumnBase,
                                        MasterResourceProtector resourceProtector,
                                        DocumentLibraryRepository libraryRepository) {
         this.ftsDao = ftsDao;
         this.ddlTriggers = ddlTriggers;
+        this.ddlColumnBase = ddlColumnBase;
         this.resourceProtector = resourceProtector;
         this.libraryRepository = libraryRepository;
     }
@@ -100,8 +104,15 @@ public class UpdateLibraryRequestHandler implements IRequestHandler<UpdateLibrar
             }
         }
 
-        if (updateDto.isVersioned() != null) {
-            library.setVersioned(updateDto.isVersioned());
+        Boolean versioned = updateDto.isVersioned();
+        if (versioned != null) {
+            if (versioned) {
+                library.setVersioned(true);
+
+                ddlColumnBase.add(qualifier, "versions", "jsonb");
+            } else {
+                library.setVersioned(false);
+            }
         }
 
         library.setLastModified(LocalDateTime.now());

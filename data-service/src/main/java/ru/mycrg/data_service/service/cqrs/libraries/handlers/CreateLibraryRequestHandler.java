@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 import static ru.mycrg.data_service.config.CrgCommonConfig.ROOT_FOLDER_PATH;
 import static ru.mycrg.data_service.dao.config.DaoProperties.ID;
 import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_NAME;
-import static ru.mycrg.data_service.dto.ResourceType.LIBRARY;
+import static ru.mycrg.data_service.service.resources.ResourceQualifier.libraryQualifier;
 import static ru.mycrg.data_service.service.schemas.SchemaUtil.getFtsProperties;
 import static ru.mycrg.data_service.util.JsonConverter.toJsonNode;
 import static ru.mycrg.data_service.util.SystemLibraryAttributes.*;
@@ -62,12 +62,12 @@ public class CreateLibraryRequestHandler implements IRequestHandler<CreateLibrar
     public LibraryModel handle(CreateLibraryRequest request) {
         LibraryCreateDto dto = request.getLibraryCreateDto();
 
-        String schemaId = dto.getSchemaId();
-        SchemaDto schema = schemaService.getSchemaByName(schemaId)
-                                        .orElseThrow(() -> new NotFoundException(
-                                                "Не найдена схема библиотеки: " + schemaId));
+        SchemaDto schema = schemaService
+                .getSchemaByName(dto.getSchemaId())
+                .orElseThrow(() -> new NotFoundException("Не найдена схема библиотеки: " + dto.getSchemaId()));
+        ResourceQualifier dlQualifier = libraryQualifier(schema.getTableName().toLowerCase());
 
-        docLibraryProtector.throwIfExists(new ResourceQualifier(schemaId, schema.getTableName()));
+        docLibraryProtector.throwIfExists(dlQualifier);
 
         validationSchema(schema);
 
@@ -75,7 +75,7 @@ public class CreateLibraryRequestHandler implements IRequestHandler<CreateLibrar
         library.setTitle(schema.getTitle());
         library.setSchema(toJsonNode(schema));
         library.setDetails(dto.getDetails());
-        library.setTableName(schema.getTableName());
+        library.setTableName(dlQualifier.getTable());
         library.setCreatedBy(authenticationFacade.getLogin());
         library.setPath(ROOT_FOLDER_PATH);
         library.setVersioned(dto.isVersioned());
@@ -89,11 +89,10 @@ public class CreateLibraryRequestHandler implements IRequestHandler<CreateLibrar
         ddlTablesBase.create(SYSTEM_SCHEMA_NAME, library.getTableName(), schemaProperties, ID);
 
         if (dto.isReadyForFts()) {
-            ResourceQualifier qualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, library.getTableName(), LIBRARY);
             List<String> ftsProperties = getFtsProperties(schema);
-            ddlTriggers.createInsertTrigger(qualifier, ftsProperties);
-            ddlTriggers.createUpdateTrigger(qualifier, ftsProperties);
-            ddlTriggers.createDeleteTrigger(qualifier);
+            ddlTriggers.createInsertTrigger(dlQualifier, ftsProperties);
+            ddlTriggers.createUpdateTrigger(dlQualifier, ftsProperties);
+            ddlTriggers.createDeleteTrigger(dlQualifier);
         }
 
         LibraryModel libraryModel = new LibraryModel(library);

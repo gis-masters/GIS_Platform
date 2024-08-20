@@ -29,6 +29,14 @@ public class CrgGlobalProperties {
         return s1 + DOUBLE_SEPARATOR + s2;
     }
 
+    /**
+     * Объединяет строки с использованием разделителя по-умолчанию: {@value #SEPARATOR}
+     *
+     * @param s1 Первая строка
+     * @param s2 Вторая строка
+     *
+     * @return Результат: {s1} + {@value #SEPARATOR} + {s2}
+     */
     @NotNull
     public static String join(String s1, String s2) {
         return s1 + SEPARATOR + s2;
