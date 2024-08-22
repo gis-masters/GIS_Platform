@@ -111,6 +111,8 @@ public class GmlImporter {
                     featureData = gmlParser.parseAttributes(file, schema, invertedCoordinates, defaultCrs);
                     epsgFromLayer = getEpsgFromFeature(oLayerEpsg, featureData);
                 } catch (Exception e) {
+                    logError("Не удалось распарсить атрибуты фичи: " + schema.getName(), e);
+
                     ImportLayerReport importLayerReport = new ImportLayerReport();
                     importLayerReport.setSchemaId(schema.getName());
                     importLayerReport.setTableTitle(schema.getTableName());
@@ -145,8 +147,14 @@ public class GmlImporter {
             return oLayerEpsg.get();
         }
 
-        Optional<FeatureProperty> shapeOpt = featureData
-                .getObjects().get(0).getProperties()
+        List<FeatureObject> objects = featureData.getObjects();
+        if (objects == null || objects.isEmpty()) {
+            return null;
+        }
+
+        Optional<FeatureProperty> shapeOpt = objects
+                .get(0)
+                .getProperties()
                 .stream()
                 .filter(property -> DEFAULT_GEOMETRY_COLUMN_NAME.equalsIgnoreCase(property.getName()))
                 .findFirst();
