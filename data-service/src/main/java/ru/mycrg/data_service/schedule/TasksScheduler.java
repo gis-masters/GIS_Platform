@@ -14,6 +14,7 @@ import ru.mycrg.data_service.service.CancelKptTaskService;
 import ru.mycrg.data_service.service.smev3.support_classes.TransactionWrapper;
 
 import static ru.mycrg.data_service.service.smev3.request.get_cadastrial_plan.GetCadastrialPlanRequestService.KPT_CONTENT_TYPE;
+import static ru.mycrg.data_service_contract.enums.TaskType.ASSIGNABLE;
 
 @Component
 public class TasksScheduler {
@@ -22,8 +23,8 @@ public class TasksScheduler {
 
     private final int deadlineTime; // in hours
     private final int kptDeadlineTime; // in hours
-    private final TasksDetachedDao tasksDetachedDao;
     private final String databaseName;
+    private final TasksDetachedDao tasksDetachedDao;
     private final TransactionWrapper contextWrapper;
     private final CancelKptTaskService cancelKptTaskService;
 
@@ -42,12 +43,14 @@ public class TasksScheduler {
 
     @Scheduled(cron = "0 0 * * * *")
     public void closeOldTasks() {
-        log.debug("close tasks by deadline: {}", deadlineTime);
+        log.debug("Закрываем старые задачи (Дедлайн: {} часов). " +
+                          "За исключением задач c контент-типом КПТ: {} и задач типа: {}",
+                  deadlineTime, KPT_CONTENT_TYPE, ASSIGNABLE);
 
         SecurityContext securityContext = SecurityContextHolder.getContext();
         DelegatingSecurityContextRunnable wrappedRunnable = new DelegatingSecurityContextRunnable(() -> {
             try {
-                tasksDetachedDao.closeOldTasks(databaseName, deadlineTime, KPT_CONTENT_TYPE);
+                tasksDetachedDao.closeOldTasks(databaseName, deadlineTime);
             } catch (Exception e) {
                 String msg = "Не удалось выполнить процесс закрытия старых задач. Причина: " + e.getMessage();
                 log.error(msg);
@@ -60,7 +63,7 @@ public class TasksScheduler {
 
     @Scheduled(cron = "${crg-options.kptTaskJobCron}")
     public void closeOldKptTasks() {
-        log.debug("close KPT tasks by deadline: {}", kptDeadlineTime);
+        log.debug("Закрываем старые КПТ задачи (Дедлайн: {} часов)", kptDeadlineTime);
         contextWrapper.needTransaction(() -> cancelKptTaskService.cancelOldKptTasks(databaseName, kptDeadlineTime));
     }
 }

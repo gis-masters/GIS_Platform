@@ -25,14 +25,15 @@ import java.util.Map;
 import static java.time.LocalDateTime.now;
 import static java.time.format.DateTimeFormatter.ISO_DATE_TIME;
 import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_NAME;
-import static ru.mycrg.data_service.dao.utils.SqlBuilder.*;
-import static ru.mycrg.data_service.service.TaskService.*;
+import static ru.mycrg.data_service.dao.utils.SqlBuilder.buildParameterizedInsertQuery;
+import static ru.mycrg.data_service.service.TaskService.TASKS_SCHEMA;
+import static ru.mycrg.data_service.service.TaskService.TASK_TABLE_NAME;
+import static ru.mycrg.data_service.service.smev3.request.get_cadastrial_plan.GetCadastrialPlanRequestService.KPT_CONTENT_TYPE;
 import static ru.mycrg.data_service_contract.enums.TaskStatus.*;
+import static ru.mycrg.data_service_contract.enums.TaskType.ASSIGNABLE;
 
 @Repository
 public class TasksDetachedDao {
-
-    private static final String STATUS_PROPERTY = "status";
 
     private final Logger log = LoggerFactory.getLogger(TasksDetachedDao.class);
 
@@ -65,7 +66,7 @@ public class TasksDetachedDao {
                                   (rs, rowNum) -> rs.getLong("id"));
     }
 
-    public void closeOldTasks(String databaseName, int deadline, String contentType) {
+    public void closeOldTasks(String databaseName, int deadline) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(datasourceFactory.getDataSource(databaseName));
 
         String dateTime = now().minusHours(deadline).format(ISO_DATE_TIME);
@@ -73,14 +74,15 @@ public class TasksDetachedDao {
                 "SET status = '" + DONE + "', " +
                 "    last_modified = now() " +
                 "WHERE status <> '" + DONE + "' AND " +
-                "      content_type_id <> '" + contentType + "' AND " +
+                "      content_type_id <> '" + KPT_CONTENT_TYPE + "' AND " +
+                "      type <> '" + ASSIGNABLE + "' AND " +
                 "      last_modified <= '" + dateTime + "'";
 
-        log.debug("Close old tasks query: {}", query);
+        log.debug("Запрос на закрытие старых задач: {}", query);
 
         int updatedCounter = jdbcTemplate.update(query);
 
-        log.debug("Найдено и закрыто [{}] задач типа: '{}'", updatedCounter, contentType);
+        log.debug("Найдено и закрыто [{}] задач", updatedCounter);
     }
 
     public void updateStatus(String databaseName, Long taskId, TaskStatus newStatus) {
@@ -93,20 +95,24 @@ public class TasksDetachedDao {
     }
 
     public long createTask(String databaseName, Map<String, Object> payload) {
-        NamedParameterJdbcTemplate jdbcTemplate = new NamedParameterJdbcTemplate(datasourceFactory.getDataSource(databaseName));
+        NamedParameterJdbcTemplate jdbcTemplate = new NamedParameterJdbcTemplate(
+                datasourceFactory.getDataSource(databaseName));
 
-        final String createTaskStatement = buildParameterizedInsertQuery(
+        String createTaskStatement = buildParameterizedInsertQuery(
                 new ResourceQualifier(SYSTEM_SCHEMA_NAME, TASK_TABLE_NAME),
                 new Feature(payload),
                 false);
         SchemaDto tasksSchema = this.schemaService
                 .getSchemaByName(TASKS_SCHEMA)
                 .orElseThrow(() -> new NotFoundException("Не найдена схема задач: " + TASKS_SCHEMA));
-        MapSqlParameterSource parameterSource = sqlParameterSourceFactory.buildParameterizedSource(new Feature(payload), tasksSchema);
+        MapSqlParameterSource parameterSource = sqlParameterSourceFactory
+                .buildParameterizedSource(new Feature(payload), tasksSchema);
         KeyHolder keyHolder = new GeneratedKeyHolder();
+
         jdbcTemplate.update(createTaskStatement, parameterSource, keyHolder);
 
         log.debug("Создана задача с id {}", keyHolder.getKeys().get("id"));
+
         return (long) keyHolder.getKeys().get("id");
     }
 
