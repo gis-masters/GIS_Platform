@@ -10,14 +10,17 @@ export const supportedTypesForGeneration: PropertyType[] = [
   PropertyType.INT
 ];
 
-export function generateObjectBySchema(schema: Schema): Record<string, unknown> {
+export function generateObjectBySchema(schema: Schema, objectCount?: number): Record<string, unknown> {
   const result: Record<string, unknown> = {};
 
   for (const property of schema.properties) {
     const { propertyType, name } = property;
-
     switch (property.propertyType) {
       case PropertyType.STRING: {
+        if (name.includes('__address') || name.includes('__oktmo')) {
+          break;
+        }
+
         result[name] = faker.lorem.sentence(10).slice(0, property.maxLength);
 
         break;
@@ -44,6 +47,18 @@ export function generateObjectBySchema(schema: Schema): Record<string, unknown> 
       }
       case PropertyType.URL: {
         result[name] = `[{"url":"${faker.internet.url()}","text":"${faker.science.chemicalElement().name}"}]`;
+
+        break;
+      }
+      case PropertyType.FIAS: {
+        let address = 'Севастополь, вн.тер.г. Андреевский муниципальный округ, п Солнечный, ул Андреевская, д.1';
+        // для возможности фильтрации по полю FIAS у нескольких документов
+        if (objectCount) {
+          address = objectCount + address;
+        }
+
+        result[`${name}__address`] = address;
+        result[`${name}__oktmo`] = '67318000106';
 
         break;
       }

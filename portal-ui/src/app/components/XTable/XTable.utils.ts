@@ -12,7 +12,8 @@ const filterableTypes = new Set([
   PropertyType.USER_ID,
   PropertyType.USER,
   PropertyType.INT,
-  PropertyType.STRING
+  PropertyType.STRING,
+  PropertyType.FIAS
 ]);
 
 const sortableTypes = new Set([

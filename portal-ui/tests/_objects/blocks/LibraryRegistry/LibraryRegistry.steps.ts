@@ -80,6 +80,21 @@ When('жду загрузку страницы в реестре докумен�
   await xTableBlock.waitForLoading();
 });
 
+When(
+  'в таблице реестров документов я ввожу в фильтр поля типа FIAS {string} значение {string}',
+  async (colTitle: string, filter: string) => {
+    await libraryRegistryBlock.xTable.filterFiasColumn(colTitle, filter);
+  }
+);
+
+Then(
+  'в реестре документов в колонке {string} отображается значение: {string}',
+  async function (colTitle: string, expected: string[]) {
+    await browser.pause(200); // бага в browser.waitUntil
+    isEqual(await libraryRegistryBlock.xTable.getColValues(colTitle), expected);
+  }
+);
+
 Then(
   'в реестре документов отображается только документ с указанным идентификатором',
   async function (this: ScenarioScope) {

@@ -67,6 +67,7 @@ export const XTableCell = observer((({
         singleLineContent={singleLineContent}
         type={type}
         col={col}
+        filterParams={filterQuery}
         cellData={field && rowData[field]}
         {...cellContentProps}
       >

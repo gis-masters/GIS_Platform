@@ -2,13 +2,15 @@ import { Block } from '../../Block';
 import { libraryDocumentActionsDeleteDialogBlock } from '../LibraryDocumentActionsDeleteDialog/LibraryDocumentActionsDeleteDialog.block';
 import { MuiMenuBlock } from '../MuiMenu/MuiMenu.block';
 import { xTableFilterTypeIdBlock } from '../XTable/Filter/_type/XTable-Filter_type_id.block';
-import { xTableBlock } from '../XTable/XTable.block';
+import { XTableBlock, xTableBlock } from '../XTable/XTable.block';
 
 class LibraryRegistryBlock extends Block {
   selectors = {
     container: '.LibraryRegistry',
     loading: '.LibraryRegistry .Loading'
   };
+
+  xTable = new XTableBlock(this.selectors.container);
 
   async getVisibleDocumentsIds(): Promise<number[]> {
     const colValues = await xTableBlock.getSecondColValues();

@@ -19,6 +19,7 @@ import { testShapeFeaturesCopy } from './testSchemas/testShapeFeaturesCopy';
 import { testSorting } from './testSchemas/testSorting';
 import { withCalculatedArea } from './testSchemas/withCalculatedArea';
 import { withDefinitionQuery } from './testSchemas/withDefinitionQuery';
+import { withFias } from './testSchemas/withFias';
 import { withFile } from './testSchemas/withFiles';
 import { withInappropriateStyleName } from './testSchemas/withInappropriateStyleName';
 import { withoutViews } from './testSchemas/withoutViews';
@@ -50,6 +51,7 @@ const testSchemas: Schema[] = [
   withInappropriateStyleName,
   withoutViews,
   withSimpleContentType,
+  withFias,
   withViews
 ];
 

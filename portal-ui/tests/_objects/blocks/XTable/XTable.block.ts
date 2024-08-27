@@ -6,6 +6,7 @@ import { extractText } from '../../commands/extractText';
 import { hasClass } from '../../utils/hasClass';
 import { MuiSelectBlock } from '../MuiSelect/MuiSelect.block';
 import { XTableFilterTypeDocumentBlock } from './Filter/_type/XTable-Filter_type_document.block';
+import { XTableFilterTypeFiasBlock } from './Filter/_type/XTable-Filter_type_fias.block';
 import { XTableFilterTypeIdBlock } from './Filter/_type/XTable-Filter_type_id.block';
 import { XTableFilterTypeStringBlock } from './Filter/_type/XTable-Filter_type_string.block';
 
@@ -183,6 +184,14 @@ export class XTableBlock extends Block {
     const $headCell = await this.getHeadCell(colTitle);
     const xTableFilterTypeDocumentBlock = new XTableFilterTypeDocumentBlock($headCell);
     await xTableFilterTypeDocumentBlock.setValue(filter);
+    const $loading = await this.$('loading');
+    await $loading.waitForDisplayed({ reverse: true });
+  }
+
+  async filterFiasColumn(colTitle: string, filter: string): Promise<void> {
+    const $headCell = await this.getHeadCell(colTitle);
+    const xTableFilterTypeFiasBlock = new XTableFilterTypeFiasBlock($headCell);
+    await xTableFilterTypeFiasBlock.setValue(filter);
     const $loading = await this.$('loading');
     await $loading.waitForDisplayed({ reverse: true });
   }

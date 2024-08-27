@@ -4,6 +4,7 @@ import { withTypeBool } from './_type/XTable-Filter_type_bool';
 import { withTypeChoice } from './_type/XTable-Filter_type_choice';
 import { withTypeDateTime } from './_type/XTable-Filter_type_dateTime';
 import { withTypeDocument } from './_type/XTable-Filter_type_document';
+import { withTypeFias } from './_type/XTable-Filter_type_fias';
 import { withTypeFloat } from './_type/XTable-Filter_type_float';
 import { withTypeId } from './_type/XTable-Filter_type_id';
 import { withTypeInteger } from './_type/XTable-Filter_type_integer';
@@ -22,5 +23,6 @@ export const XTableFilter = compose(
   withTypeDocument as HOC<XTableFilterProps>,
   withTypeUserId as HOC<XTableFilterProps>,
   withTypeUser as HOC<XTableFilterProps>,
-  withTypeString as HOC<XTableFilterProps>
+  withTypeString as HOC<XTableFilterProps>,
+  withTypeFias as HOC<XTableFilterProps>
 )(XTableFilterBase) as typeof XTableFilterBase;

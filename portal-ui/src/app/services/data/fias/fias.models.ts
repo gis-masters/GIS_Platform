@@ -1,3 +1,5 @@
+import { isObject } from 'lodash';
+
 export interface FiasValue {
   id?: number;
   oktmo?: string;
@@ -9,4 +11,8 @@ export interface FiasApiItem {
   locality?: string;
   objectId: number;
   oktmo: string;
+}
+
+export function isFiasValue(obj: unknown): obj is FiasValue {
+  return isObject(obj);
 }

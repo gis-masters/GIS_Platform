@@ -3,6 +3,7 @@ import { cn } from '@bem-react/classname';
 import { IClassNameProps } from '@bem-react/core';
 
 import { ChildrenProps } from '../../../services/models';
+import { FilterQuery } from '../../../services/util/filters/filters.models';
 import { XTableColumn, XTableColumnType } from '../XTable.models';
 
 import '!style-loader!css-loader!sass-loader!./XTable-CellContent.scss';
@@ -16,6 +17,7 @@ export interface XTableCellContentProps<T>
   singleLineContent: boolean;
   col: XTableColumn<T>;
   type?: XTableColumnType;
+  filterParams?: FilterQuery;
   cellData?: unknown;
   inHead?: boolean;
 }

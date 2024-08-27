@@ -5,13 +5,13 @@ import { Checkbox } from '@mui/material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 import { AxiosError } from 'axios';
-import { cloneDeep } from 'lodash';
+import { cloneDeep, isArray } from 'lodash';
 import { Subject } from 'rxjs';
 
 import { communicationService } from '../../services/communication.service';
 import { Library, LibraryRecord } from '../../services/data/library/library.models';
 import { getLibrary, getLibraryRecordsAsRegistry } from '../../services/data/library/library.service';
-import { PropertySchema, PropertyType } from '../../services/data/schema/schema.models';
+import { PropertySchema, PropertyType, Schema } from '../../services/data/schema/schema.models';
 import { PageOptions } from '../../services/models';
 import {
   addFilterPart,
@@ -182,8 +182,7 @@ export default class LibraryRegistry extends Component<LibraryRegistryProps> {
   @computed
   private get properties(): PropertySchema[] {
     return (this.library?.schema.properties || []).filter(
-      ({ hidden, propertyType }) =>
-        !hidden && propertyType !== PropertyType.BINARY && propertyType !== PropertyType.FIAS
+      ({ hidden, propertyType }) => !hidden && propertyType !== PropertyType.BINARY
     );
   }
 
@@ -343,11 +342,18 @@ export default class LibraryRegistry extends Component<LibraryRegistryProps> {
 
     if (pageOptions.filter) {
       const filterById = getFieldFilterValue(pageOptions.filter, 'id') as { $in: number[] } | undefined;
+      const modifiedFilter = cloneDeep(pageOptions.filter);
+
+      this.modifyAllFiasFilters(this.library.schema, modifiedFilter);
+
+      pageOptions = {
+        ...pageOptions,
+        filter: modifiedFilter
+      };
 
       if (filterById) {
-        const modifiedFilter = cloneDeep(pageOptions.filter);
-
         modifyFieldFilterValue(modifiedFilter, 'id');
+
         pageOptions = {
           ...pageOptions,
           filter: modifiedFilter,
@@ -384,6 +390,20 @@ export default class LibraryRegistry extends Component<LibraryRegistryProps> {
       }),
       pages.totalPages
     ];
+  }
+
+  // в текущей реализации фильтры для FIAS ведут нестрогий поиск в колонке "__address"
+  private modifyAllFiasFilters(schema: Schema, filter: FilterQuery) {
+    for (const property of schema.properties) {
+      if (property.propertyType === PropertyType.FIAS) {
+        const propertyFilterVal = getFieldFilterValue(filter, property.name);
+
+        if (propertyFilterVal && !isArray(propertyFilterVal)) {
+          modifyFieldFilterValue(filter, `${property.name}__address`, propertyFilterVal);
+          removeFieldFilter(filter, property.name);
+        }
+      }
+    }
   }
 
   @boundMethod
