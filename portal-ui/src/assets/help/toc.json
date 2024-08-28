@@ -283,7 +283,7 @@
           {
             "id": "multipleSampling",
             "title": "Выбор и очистка объектов",
-            "contentUrl": "/assets/help/map/mapTools/print/11multipleSampling.html"
+            "contentUrl": "/assets/help/map/mapTools/multipleSampling/11multipleSampling.html"
           },
           {
             "id": "unloadingGML",
@@ -293,9 +293,20 @@
         ]
       },
       {
-        "id": "labels",
-        "title": "Аннотации на карте",
-        "contentUrl": "/assets/help/map/mapTools/labels/labels.html"
+        "id": "label",
+        "title": "Аннотации",
+        "children": [
+          {
+            "id": "labels",
+            "title": "Аннотации на карте",
+            "contentUrl": "/assets/help/map/mapTools/labels/labels.html"
+          },
+          {
+            "id": "turningPoints",
+            "title": "Поворотные точки",
+            "contentUrl": "/assets/help/map/mapTools/turningPoints/turningPoints.html"
+          }
+        ]
       },
       {
         "id": "edit-object1",
