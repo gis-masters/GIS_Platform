@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, memo, useMemo } from 'react';
 import { cn } from '@bem-react/classname';
 import Highlighter from 'react-highlight-words';
 
@@ -15,20 +15,20 @@ interface HighlightProps {
   enabled?: boolean;
 }
 
-export const Highlight: FC<HighlightProps> = ({ enabled, word, searchWords, children }) => {
-  let actualWord: string | RegExp;
+const HighlightFC: FC<HighlightProps> = ({ enabled, word, searchWords, children }) => {
+  const actualWord: string | RegExp = useMemo(() => {
+    if (
+      word &&
+      typeof word === 'object' &&
+      !Array.isArray(word) &&
+      !(word instanceof RegExp) &&
+      typeof word.$ilike === 'string'
+    ) {
+      return word.$ilike.replaceAll(/^%|%$/g, '');
+    }
 
-  if (
-    word &&
-    typeof word === 'object' &&
-    !Array.isArray(word) &&
-    !(word instanceof RegExp) &&
-    typeof word.$ilike === 'string'
-  ) {
-    actualWord = word.$ilike.replaceAll(/^%|%$/g, '');
-  } else {
-    actualWord = word instanceof RegExp ? word : String(word);
-  }
+    return word instanceof RegExp ? word : String(word);
+  }, [word]);
 
   return enabled && (actualWord || searchWords) ? (
     <Highlighter
@@ -36,8 +36,11 @@ export const Highlight: FC<HighlightProps> = ({ enabled, word, searchWords, chil
       highlightClassName={cnHighlight('Mark')}
       searchWords={searchWords || [actualWord]}
       textToHighlight={String(children)}
+      autoEscape
     />
   ) : (
     <>{children}</>
   );
 };
+
+export const Highlight = memo(HighlightFC);
