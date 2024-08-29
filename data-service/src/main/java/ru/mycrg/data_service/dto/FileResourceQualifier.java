@@ -13,10 +13,6 @@ public class FileResourceQualifier {
         // Required
     }
 
-    public FileResourceQualifier(String schema, String table, Long recordId) {
-        this(schema, table, recordId, null);
-    }
-
     public FileResourceQualifier(String schema, String table, Long recordId, String field) {
         this.schema = schema;
         this.table = table;

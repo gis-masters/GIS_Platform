@@ -2,7 +2,7 @@ Feature: Cookie
 
   Background:
     Given Существует организация
-      | ООО Cookie | 1234567890 | Печеньков | Зефир | EMAIL_10 | testPassword1 |
+      | ООО Cookie | 1234567890 | Печеньков | Зефир | EMAIL_10 |
     Given Владелец организации авторизован
 
   Scenario: Удаление cookie при разлогине

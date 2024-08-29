@@ -1,6 +1,5 @@
 package ru.mycrg.data_service.service.cqrs.files.handlers;
 
-import org.springframework.data.projection.ProjectionFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 import ru.mycrg.auth_facade.IAuthenticationFacade;
@@ -21,18 +20,15 @@ import static ru.mycrg.data_service.service.storage.FileStorageUtil.generateFile
 public class CreateFileHandler implements IRequestHandler<CreateFileRequest, List<FileProjection>> {
 
     private final FileRepository fileRepository;
-    private final ProjectionFactory projectionFactory;
     private final FileStorageService fileStorageService;
     private final IAuthenticationFacade authenticationFacade;
     private final SimpleIntentHandler simpleIntentHandler;
 
     public CreateFileHandler(FileRepository fileRepository,
-                             ProjectionFactory projectionFactory,
                              FileStorageService fileStorageService,
                              IAuthenticationFacade authenticationFacade,
                              SimpleIntentHandler simpleIntentHandler) {
         this.fileRepository = fileRepository;
-        this.projectionFactory = projectionFactory;
         this.fileStorageService = fileStorageService;
         this.simpleIntentHandler = simpleIntentHandler;
         this.authenticationFacade = authenticationFacade;
@@ -51,7 +47,7 @@ public class CreateFileHandler implements IRequestHandler<CreateFileRequest, Lis
                 File entity = new File(file, intents, path, authenticationFacade.getLogin());
                 File savedEntity = fileRepository.save(entity);
 
-                fileProjections.add(projectionFactory.createProjection(FileProjection.class, savedEntity));
+                fileProjections.add(new FileProjection(savedEntity));
             }
         }
 

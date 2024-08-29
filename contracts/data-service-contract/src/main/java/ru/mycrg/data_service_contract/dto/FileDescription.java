@@ -12,6 +12,12 @@ public class FileDescription {
         // Required
     }
 
+    public FileDescription(UUID id, String title, Long size) {
+        this.id = id;
+        this.title = title;
+        this.size = size;
+    }
+
     public UUID getId() {
         return id;
     }

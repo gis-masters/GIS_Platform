@@ -14,17 +14,25 @@ import static ru.mycrg.data_service.dto.ResourceType.*;
 public class ResourceQualifier extends AQualifier {
 
     private final Object recordId;
-    private String fieldName;
-
-    public ResourceQualifier(ResourceQualifier rQualifier, Object recordId, ResourceType type) {
-        this(rQualifier.getSchema(), rQualifier.getTable(), recordId, type);
-    }
+    private final String field;
 
     public ResourceQualifier(ResourceQualifier qualifier, Long recordId) {
         this(qualifier.getSchema(),
              qualifier.getTable(),
              recordId,
              qualifier.getType().equals(FEATURE) ? FEATURE : LIBRARY_RECORD);
+    }
+
+    public ResourceQualifier(ResourceQualifier qualifier, Long recordId, String field) {
+        this(qualifier.getSchema(),
+             qualifier.getTable(),
+             recordId,
+             field,
+             qualifier.getType().equals(FEATURE) ? FEATURE : LIBRARY_RECORD);
+    }
+
+    public ResourceQualifier(ResourceQualifier rQualifier, Object recordId, ResourceType type) {
+        this(rQualifier.getSchema(), rQualifier.getTable(), recordId, type);
     }
 
     public ResourceQualifier(String schema) {
@@ -39,13 +47,19 @@ public class ResourceQualifier extends AQualifier {
         this(schema, table, null, type);
     }
 
+    public ResourceQualifier(String schema, String table, Object recordId, ResourceType type) {
+        this(schema, table, recordId, null, type);
+    }
+
     public ResourceQualifier(@NotNull String schema,
                              @Nullable String table,
                              Object recordId,
+                             @Nullable String field,
                              @NotNull ResourceType type) {
         this.schema = schema;
         this.table = table;
         this.recordId = recordId;
+        this.field = field;
         this.type = type;
 
         this.resourceTables.put(LIBRARY, "doc_libraries");
@@ -78,12 +92,9 @@ public class ResourceQualifier extends AQualifier {
         return recordId;
     }
 
-    public String getFieldName() {
-        return fieldName;
-    }
-
-    public void setFieldName(String fieldName) {
-        this.fieldName = fieldName;
+    @Nullable
+    public String getField() {
+        return field;
     }
 
     @NotNull
@@ -99,7 +110,7 @@ public class ResourceQualifier extends AQualifier {
             if (recordId == null) {
                 return schema + SEPARATOR.charAt(1) + table;
             } else {
-                if (fieldName == null) {
+                if (field == null) {
                     return schema + SEPARATOR.charAt(1) +
                             table + SEPARATOR.charAt(1) +
                             recordId;
@@ -107,7 +118,7 @@ public class ResourceQualifier extends AQualifier {
                     return schema + SEPARATOR.charAt(1) +
                             table + SEPARATOR.charAt(1) +
                             recordId + SEPARATOR.charAt(1) +
-                            fieldName;
+                            field;
                 }
             }
         }

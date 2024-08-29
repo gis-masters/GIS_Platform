@@ -59,10 +59,10 @@ public class FileUtil {
         }
 
         String fieldName = "undefinedFieldName";
-        if (qualifier.getFieldName() == null) {
+        if (qualifier.getField() == null) {
             log.warn("Не установлено fieldName у квалификатора ресурса: [{}]", qualifier.getQualifier());
         } else {
-            fieldName = qualifier.getFieldName();
+            fieldName = qualifier.getField();
         }
 
         return joinByDouble(join(recordId, fieldName), fileHashCode);

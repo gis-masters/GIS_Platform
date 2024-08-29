@@ -40,9 +40,9 @@ public class FilesRelationMiddleware implements IRequestMiddleware {
         if (request instanceof ICreateFilesRelation) {
             ICreateFilesRelation createFilesRelation = (ICreateFilesRelation) request;
 
-            fileService.relateFilesByCreation(createFilesRelation.getSchema(),
-                                              createFilesRelation.getQualifier(),
-                                              createFilesRelation.getRecord());
+            fileService.relateFiles(createFilesRelation.getSchema(),
+                                    createFilesRelation.getQualifier(),
+                                    createFilesRelation.getRecord());
         } else if (request instanceof IUpdateFilesRelation) {
             IUpdateFilesRelation updateFilesRelation = (IUpdateFilesRelation) request;
 

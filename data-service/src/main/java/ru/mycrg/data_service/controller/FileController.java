@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ContentDisposition;
 import org.springframework.http.MediaType;
@@ -34,6 +35,7 @@ import ru.mycrg.mediator.Mediator;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
@@ -101,7 +103,7 @@ public class FileController extends BaseController {
 
     @PreAuthorize(HAS_ANY_AUTHORITY)
     @GetMapping("/files/{id}")
-    public ResponseEntity<Object> getFile(@PathVariable UUID id) {
+    public ResponseEntity<FileProjection> getFile(@PathVariable UUID id) {
         File file = fileRepository.findById(id)
                                   .orElseThrow(() -> new NotFoundException(id));
         if (!authenticationFacade.getLogin().equalsIgnoreCase(file.getCreatedBy())) {
@@ -109,21 +111,14 @@ public class FileController extends BaseController {
         }
 
         return ResponseEntity.status(OK)
-                             .body(file);
+                             .body(new FileProjection(file));
     }
 
     @PreAuthorize(HAS_ANY_AUTHORITY)
     @GetMapping("/files/{id}/download")
     public ResponseEntity<Resource> downloadFile(@PathVariable UUID id,
                                                  HttpServletRequest request) {
-        orgSettingsKeeper.throwIfDownloadFileNotAllowed();
-
-        File file = fileRepository.findById(id)
-                                  .orElseThrow(() -> new NotFoundException(id));
-
-        if (!authenticationFacade.getLogin().equalsIgnoreCase(file.getCreatedBy())) {
-            throwIfResourceNotAllowed(file);
-        }
+        File file = getFileOrThrow(id);
 
         try {
             ContentDisposition contentDisposition = ContentDisposition.builder("attachment")
@@ -156,16 +151,72 @@ public class FileController extends BaseController {
     }
 
     @PreAuthorize(HAS_ANY_AUTHORITY)
+    @GetMapping("/files/{id}/download/ecp")
+    public ResponseEntity<Resource> downloadEcp(@PathVariable UUID id) {
+        File file = getFileOrThrow(id);
+        byte[] ecp = file.getEcp();
+        if (ecp == null) {
+            throw new BadRequestException("Файл не подписан");
+        }
+
+        try {
+            ContentDisposition contentDisposition = ContentDisposition.builder("attachment")
+                                                                      .filename(file.getTitle() + ".sig", UTF_8)
+                                                                      .build();
+
+            return ResponseEntity.ok()
+                                 .contentType(MediaType.parseMediaType("application/pgp-signature"))
+                                 .header(CONTENT_DISPOSITION, contentDisposition.toString())
+                                 .header(CONTENT_LENGTH, String.valueOf(ecp.length))
+                                 .body(new ByteArrayResource(ecp));
+        } catch (Exception e) {
+            String msg = "Что-то пошло не так при попытке скачивания ЭЦП файла: " + file;
+            logError(msg, e);
+
+            throw new DataServiceException(msg, e.getCause());
+        }
+    }
+
+    @PreAuthorize(HAS_ANY_AUTHORITY)
+    @GetMapping("/files/{id}/download/with-ecp")
+    public void downloadFileWithEcp(@PathVariable UUID id, HttpServletResponse response) {
+        File file = getFileOrThrow(id);
+        byte[] ecp = file.getEcp();
+        if (ecp == null) {
+            throw new BadRequestException("Файл не подписан");
+        }
+
+        String fileBaseTitle = FilenameUtils.getBaseName(file.getTitle());
+
+        response.setContentType("application/zip");
+        response.setHeader("Content-Disposition", ContentDisposition.builder("attachment")
+                                                                    .filename(fileBaseTitle + ".zip", UTF_8)
+                                                                    .build().toString());
+
+        try (ServletOutputStream sos = response.getOutputStream(); ZipOutputStream zos = new ZipOutputStream(sos)) {
+            try {
+                addStreamToZip(zos, Files.newInputStream(Path.of(file.getPath())), file.getTitle());
+                addStreamToZip(zos, new ByteArrayResource(ecp).getInputStream(), file.getTitle() + ".sig");
+
+                zos.closeEntry();
+            } catch (Exception e) {
+                String msg = String.format("Не удалось сформировать архив с ЭЦП для файла: %s. Причина: %s",
+                                           file.getPath(), e.getMessage());
+
+                throw new DataServiceException(msg);
+            }
+        } catch (Exception ex) {
+            String msg = String.format("Не удалось создать zip архив файл+ЭЦП. Причина: %s", ex.getMessage());
+            log.error(msg);
+
+            throw new DataServiceException(msg);
+        }
+    }
+
+    @PreAuthorize(HAS_ANY_AUTHORITY)
     @GetMapping("/files/{id}/download/zip")
     public void downloadZip(@PathVariable UUID id, HttpServletResponse response) {
-        orgSettingsKeeper.throwIfDownloadFileNotAllowed();
-
-        File baseFile = fileRepository.findById(id)
-                                      .orElseThrow(() -> new NotFoundException(id));
-
-        if (!authenticationFacade.getLogin().equalsIgnoreCase(baseFile.getCreatedBy())) {
-            throwIfResourceNotAllowed(baseFile);
-        }
+        File baseFile = getFileOrThrow(id);
 
         Optional<FileType> oType = FileType.parse(baseFile.getExtension());
         if (oType.isEmpty()) {
@@ -178,25 +229,82 @@ public class FileController extends BaseController {
                 .getFull();
 
         String fileBaseTitle = FilenameUtils.getBaseName(baseFile.getTitle());
+        String tmpPath = FilenameUtils.removeExtension(baseFile.getPath()).split("__")[0];
+        List<File> allFiles = fileRepository.oneGroupFiles(tmpPath, fileBaseTitle.toLowerCase(), fileFullGroup);
+
+        throwIfGroupNotFull(fileGroups.get(oType.get()).getRequired(), allFiles);
 
         response.setContentType("application/zip");
         response.setHeader("Content-Disposition", ContentDisposition.builder("attachment")
                                                                     .filename(fileBaseTitle + ".zip", UTF_8)
                                                                     .build().toString());
 
+        makeZip(response, allFiles, fileBaseTitle, false);
+    }
+
+    @PreAuthorize(HAS_ANY_AUTHORITY)
+    @GetMapping("/files/{id}/download/zip/with-ecp")
+    public void downloadZipWithEcp(@PathVariable UUID id, HttpServletResponse response) {
+        File baseFile = getFileOrThrow(id);
+
+        Optional<FileType> oType = FileType.parse(baseFile.getExtension());
+        if (oType.isEmpty()) {
+            throw new BadRequestException("Выгрузка архивом не поддерживается для данного файла.");
+        }
+
+        Set<String> fileFullGroup = Optional
+                .of(fileGroups.get(oType.get()))
+                .orElseThrow(() -> new BadRequestException("Не найдено описание типа для файла: " + oType.get()))
+                .getFull();
+
+        String fileBaseTitle = FilenameUtils.getBaseName(baseFile.getTitle());
         String tmpPath = FilenameUtils.removeExtension(baseFile.getPath()).split("__")[0];
+        List<File> allFiles = fileRepository.oneGroupFiles(tmpPath, fileBaseTitle.toLowerCase(), fileFullGroup);
 
-        List<String> foundFilesPath = fileRepository
-                .oneGroupFiles(tmpPath, fileBaseTitle.toLowerCase(), fileFullGroup)
-                .stream().map(File::getPath)
-                .collect(Collectors.toList());
+        throwIfGroupNotFull(fileGroups.get(oType.get()).getRequired(), allFiles);
 
-        throwIfGroupNotFull(fileGroups.get(oType.get()).getRequired(), foundFilesPath);
+        response.setContentType("application/zip");
+        response.setHeader("Content-Disposition", ContentDisposition.builder("attachment")
+                                                                    .filename(fileBaseTitle + ".zip", UTF_8)
+                                                                    .build().toString());
 
-        try (ServletOutputStream sos = response.getOutputStream();
-             ZipOutputStream zos = new ZipOutputStream(sos)) {
+        makeZip(response, allFiles, fileBaseTitle, true);
+    }
 
-            foundFilesPath.forEach(path -> makeZipArchive(Path.of(path), zos, fileBaseTitle));
+    private void makeZip(HttpServletResponse response,
+                         List<File> files,
+                         String baseName,
+                         boolean withEcp) {
+        try (ServletOutputStream sos = response.getOutputStream(); ZipOutputStream zos = new ZipOutputStream(sos)) {
+            files.forEach(file -> {
+                Path path = Path.of(file.getPath());
+                String entryName = baseName + "." + FilenameUtils.getExtension(path.getFileName().toString());
+
+                try {
+                    addStreamToZip(zos, Files.newInputStream(path), entryName);
+
+                    if (withEcp && file.getEcp() != null) {
+                        addStreamToZip(zos,
+                                       new ByteArrayResource(file.getEcp()).getInputStream(),
+                                       file.getTitle() + ".sig");
+                    }
+
+                    zos.closeEntry();
+                } catch (ZipException e) {
+                    String message = e.getMessage();
+                    if (!message.contains("duplicate entry")) {
+                        String msg = String.format("Не удалось добавить файл %s в архив. Причина: %s",
+                                                   entryName, e.getMessage());
+
+                        throw new DataServiceException(msg);
+                    }
+                } catch (Exception e) {
+                    String msg = String.format("Не удалось добавить файл %s в архив. Причина: %s",
+                                               entryName, e.getMessage());
+
+                    throw new DataServiceException(msg);
+                }
+            });
         } catch (Exception ex) {
             String msg = String.format("Не удалось создать zip архив. Причина: %s", ex.getMessage());
             log.error(msg);
@@ -205,45 +313,30 @@ public class FileController extends BaseController {
         }
     }
 
-    private void makeZipArchive(Path path, ZipOutputStream zos, String fileName) {
-        try {
-            // Создание новой записи ZIP и добавление её в поток
-            String fileNameWithExtension =
-                    String.format("%s.%s", fileName, FilenameUtils.getExtension(path.getFileName().toString()));
-            ZipEntry zipEntry = new ZipEntry(fileNameWithExtension);
+    private File getFileOrThrow(UUID id) {
+        orgSettingsKeeper.throwIfDownloadFileNotAllowed();
 
-            // Чтение файла и запись его в ZIP-архив
-            try (InputStream fis = Files.newInputStream(path)) {
-                zos.putNextEntry(zipEntry);
+        File file = fileRepository.findById(id)
+                                  .orElseThrow(() -> new NotFoundException(id));
 
-                byte[] buffer = new byte[1024];
-                int length;
-                while ((length = fis.read(buffer)) >= 0) {
-                    zos.write(buffer, 0, length);
-                }
-            } catch (NoSuchFileException ex) {
-                String msg = String.format("Не удалось добавить файл %s в архив. Файл не найден по пути: %s",
-                                           path.getFileName(),
-                                           ex.getMessage());
-                log.error(msg);
+        if (!authenticationFacade.getLogin().equalsIgnoreCase(file.getCreatedBy())) {
+            throwIfResourceNotAllowed(file);
+        }
+
+        return file;
+    }
+
+    private void addStreamToZip(ZipOutputStream zos, InputStream stream, String entryName) throws IOException {
+        try (stream) {
+            zos.putNextEntry(new ZipEntry(entryName));
+
+            byte[] buffer = new byte[1024];
+            int length;
+            while ((length = stream.read(buffer)) >= 0) {
+                zos.write(buffer, 0, length);
             }
-            // Закрытие текущей записи ZIP
-            zos.closeEntry();
-        } catch (ZipException e) {
-            String message = e.getMessage();
-            if (!message.contains("duplicate entry")) {
-                String msg = String.format("Не удалось добавить файл %s в архив. Причина: %s",
-                                           path.getFileName(),
-                                           e.getMessage());
-
-                throw new DataServiceException(msg);
-            }
-        } catch (Exception e) {
-            String msg = String.format("Не удалось добавить файл %s в архив. Причина: %s",
-                                       path.getFileName(),
-                                       e.getMessage());
-
-            throw new DataServiceException(msg);
+        } catch (NoSuchFileException ex) {
+            log.error("Не удалось добавить файл: '{}' в архив => {}", entryName, ex.getMessage());
         }
     }
 
@@ -280,12 +373,12 @@ public class FileController extends BaseController {
         }
     }
 
-    private void throwIfGroupNotFull(Set<String> required, List<String> foundFilesPath) {
-        log.debug("Found files: {}", foundFilesPath);
+    private void throwIfGroupNotFull(Set<String> required, List<File> files) {
+        log.debug("Found files: {}", files);
 
-        Set<String> foundExtensions = foundFilesPath.stream()
-                                                    .map(FilenameUtils::getExtension)
-                                                    .collect(Collectors.toSet());
+        Set<String> foundExtensions = files.stream()
+                                           .map(file -> FilenameUtils.getExtension(file.getTitle()))
+                                           .collect(Collectors.toSet());
 
         required.forEach(requiredExt -> {
             if (!foundExtensions.contains(requiredExt)) {

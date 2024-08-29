@@ -216,12 +216,12 @@ public class AcceptKptService {
         // TODO: Тут происходит чтот странное. Файлу сохранили в корзину? userLogin указали как: "СМЭВ 3" ?
         File entity = new File(multipartFile, intents, path, SMEV_3);
         File savedEntity = fileRepository.save(entity);
-        ResourceQualifier fileQualifier = new ResourceQualifier(qualifier, docId);
-        fileQualifier.setFieldName(FILE_ATTRIBUTE);
+        ResourceQualifier fileQualifier = new ResourceQualifier(qualifier, docId, FILE_ATTRIBUTE);
         String type = fileQualifier.getType().name();
         FileResourceQualifier fileResQualifier = new FileResourceQualifier(qualifier.getSchema(),
                                                                            qualifier.getTable(),
-                                                                           docId);
+                                                                           docId,
+                                                                           FILE_ATTRIBUTE);
         JsonNode jsonNode = toJsonNode(fileResQualifier);
         fileRepository.setQualifier(type, jsonNode, Set.of(savedEntity.getId()));
         fileService.transferFileFromTempDirectory(savedEntity, fileQualifier, type);

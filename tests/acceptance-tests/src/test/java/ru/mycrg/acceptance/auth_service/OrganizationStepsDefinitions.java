@@ -62,8 +62,14 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
     public void sendCreateOrganizationRequest(DataTable dataTable) {
         List<String> data = dataTable.asList();
         String ownerEmail = generateString(data.get(4));
+
+        String password = DEFAULT_TEST_PASSWORD;
+        if (data.size() > 5 && data.get(5) != null) {
+            password = generateString(data.get(5));
+        }
+
         UserCreateDto owner = new UserCreateDto(generateString(data.get(2)), generateString(data.get(3)),
-                                                ownerEmail, generateString(data.get(5)));
+                                                ownerEmail, password);
 
         System.out.println("Organization owner: " + ownerEmail);
 
@@ -360,7 +366,7 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
             makeExactOrgAsCurrent(emailForFeature);
         } else {
             UserCreateDto owner = new UserCreateDto(generateString(data.get(2)), generateString(data.get(3)),
-                                                    emailForFeature, generateString(data.get(5)));
+                                                    emailForFeature, DEFAULT_TEST_PASSWORD);
 
             System.out.println("Org. Owner: " + emailForFeature);
 

@@ -1,33 +1,94 @@
 package ru.mycrg.data_service.dto;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import org.springframework.data.rest.core.config.Projection;
+import com.fasterxml.jackson.databind.JsonNode;
 import ru.mycrg.data_service.entity.File;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-@Projection(
-        name = "fileProjection",
-        types = {File.class})
-@JsonInclude(JsonInclude.Include.NON_EMPTY)
-public interface FileProjection {
+public class FileProjection {
 
-    UUID getId();
+    private final UUID id;
+    private final String title;
+    private final Long size;
+    private final String extension;
+    private final String path;
+    private final String contentType;
+    private final String intents;
+    private final String resourceType;
+    private final JsonNode resourceQualifier;
+    private final String createdBy;
+    private final LocalDateTime createdAt;
 
-    String getTitle();
+    private final boolean signed;
+    private final boolean expired;
 
-    Long getSize();
+    public FileProjection(File file) {
+        this.id = file.getId();
+        this.title = file.getTitle();
+        this.size = file.getSize();
+        this.extension = file.getExtension();
+        this.contentType = file.getContentType();
+        this.intents = file.getIntents();
+        this.resourceType = file.getResourceType();
+        this.resourceQualifier = file.getResourceQualifier();
+        this.path = file.getPath();
+        this.createdBy = file.getCreatedBy();
+        this.createdAt = file.getCreatedAt();
 
-    String getExtension();
+        this.signed = file.getEcp() != null && file.getEcp().length > 0;
+        this.expired = false;
+    }
 
-    String getIntents();
+    public UUID getId() {
+        return id;
+    }
 
-    ResourceType getResourceType();
+    public String getTitle() {
+        return title;
+    }
 
-    FileResourceQualifier getResourceQualifier();
+    public Long getSize() {
+        return size;
+    }
 
-    String getCreatedBy();
+    public String getExtension() {
+        return extension;
+    }
 
-    LocalDateTime getCreatedAt();
+    public String getPath() {
+        return path;
+    }
+
+    public String getContentType() {
+        return contentType;
+    }
+
+    public String getIntents() {
+        return intents;
+    }
+
+    public String getResourceType() {
+        return resourceType;
+    }
+
+    public JsonNode getResourceQualifier() {
+        return resourceQualifier;
+    }
+
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public boolean isSigned() {
+        return signed;
+    }
+
+    public boolean isExpired() {
+        return expired;
+    }
 }

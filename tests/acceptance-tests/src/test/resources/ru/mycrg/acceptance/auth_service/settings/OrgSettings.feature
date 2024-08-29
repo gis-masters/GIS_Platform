@@ -2,7 +2,7 @@ Feature: Функционирование настроек
 
   Background:
     Given Существует организация
-      | ООО Settings | 1111111111 | Settinov | Set | EMAIL_20 | testPassword1 |
+      | ООО Settings | 1111111111 | Settinov | Set | EMAIL_20 |
 
   Scenario: При выставлении в настройках флага "createProject" в "false", сервер начинает отвечать кодом 404 при
   попытке создать проект.

@@ -56,6 +56,9 @@ public class File {
     @Column(columnDefinition = "json")
     private JsonNode resourceQualifier;
 
+    @Column
+    private byte[] ecp;
+
     @Column(length = 50)
     private String createdBy;
 
@@ -163,6 +166,14 @@ public class File {
 
     public void setExtension(String extension) {
         this.extension = extension;
+    }
+
+    public byte[] getEcp() {
+        return ecp;
+    }
+
+    public void setEcp(byte[] ecp) {
+        this.ecp = ecp;
     }
 
     @Override

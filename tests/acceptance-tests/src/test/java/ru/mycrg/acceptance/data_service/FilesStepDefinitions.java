@@ -75,6 +75,18 @@ public class FilesStepDefinitions extends BaseStepsDefinitions {
         assertEquals(currentFiles.size(), fileNamesInString.split(",").length);
     }
 
+    @Given("догружены новые файлы {string}")
+    public void loadMoreFiles(String fileNamesInString) {
+        Arrays.stream(fileNamesInString.split(","))
+              .map(String::trim)
+              .forEach(fileName -> {
+                  File file = getFile(fileName);
+                  List<UUID> ids = createFiles(new File[]{file});
+
+                  currentFiles.add(new FileDescriptionModel(ids.get(0), file.getTotalSpace(), fileName));
+              });
+    }
+
     @Given("я скачиваю группу файлов архивом, передав главный файл группы: {string}")
     public void downloadArchiveStep(String mainFileName) {
         downloadAsArchive(mainFileName);
@@ -306,6 +318,23 @@ public class FilesStepDefinitions extends BaseStepsDefinitions {
         assertTrue(firstFilePath.toLowerCase().contains(organizationDir));
         assertTrue(firstFilePath.toLowerCase().contains("library_record"));
         assertTrue(firstFilePath.toLowerCase().contains(DEFAULT_LIBRARY));
+    }
+
+    @Given("я запрашиваю информацию о файле {string}")
+    public void getFileInfo(String fileName) {
+        FileDescriptionModel targetFile = currentFiles
+                .stream()
+                .filter(file -> file.getTitle().equals(fileName))
+                .findFirst()
+                .orElseThrow(
+                        () -> new IllegalStateException("Среди текущих файлов не найден искомый: " + fileName));
+
+        getFile(targetFile.getId());
+    }
+
+    @Given("файл подписан")
+    public void checkFileSignature() {
+        assertTrue(jsonPath.getBoolean("signed"));
     }
 
     @Given("Существует GML файл")

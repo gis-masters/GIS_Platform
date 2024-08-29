@@ -39,9 +39,8 @@ import static org.springframework.http.HttpStatus.CREATED;
 import static ru.mycrg.auth_service_contract.Authorities.HAS_ANY_AUTHORITY;
 import static ru.mycrg.common_utils.MediaTypes.APPLICATION_JSON_MERGE_PATCH;
 import static ru.mycrg.common_utils.page.PageHandler.pageFromList;
-import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_NAME;
-import static ru.mycrg.data_service.dto.ResourceType.LIBRARY;
-import static ru.mycrg.data_service.dto.ResourceType.LIBRARY_RECORD;
+import static ru.mycrg.data_service.service.resources.ResourceQualifier.libraryQualifier;
+import static ru.mycrg.data_service.service.resources.ResourceQualifier.libraryRecordQualifier;
 import static ru.mycrg.data_service.service.schemas.SchemaUtil.excludeUnknownProperties;
 import static ru.mycrg.data_service.service.schemas.SchemaUtil.throwIfNotMatchSchema;
 import static ru.mycrg.data_service.util.JsonConverter.fromJson;
@@ -73,13 +72,13 @@ public class DocumentLibraryRecordsController {
                                          @RequestParam(required = false) Long parent,
                                          @RequestParam(name = "filter", required = false) @EcqlFilter String ecqlFilter,
                                          Pageable pageable) {
-        ResourceQualifier lQualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, docLibId, LIBRARY);
-
         checkSortedFields(docLibId, pageable);
-        Pageable newPageable = fetchFoldersFirst(pageable);
 
         Page<RecordDto> page = recordServiceFactory.get()
-                                                   .getPaged(lQualifier, newPageable, parent, ecqlFilter)
+                                                   .getPaged(libraryQualifier(docLibId),
+                                                             fetchFoldersFirst(pageable),
+                                                             parent,
+                                                             ecqlFilter)
                                                    .map(record -> new RecordDto(removeVersionsFromRecord(record)));
 
         return ResponseEntity.ok(pageFromList(page, pageable));
@@ -92,14 +91,12 @@ public class DocumentLibraryRecordsController {
             @RequestParam(name = "filter", required = false) @EcqlFilter String filter,
             @RequestParam(name = "recordId", required = false) List<Long> recordId,
             Pageable pageable) {
-        ResourceQualifier lQualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, docLibId, LIBRARY);
-
         checkSortedFields(docLibId, pageable);
 
         String ecqlFilter = EcqlRecordIdHandler.joinAsIn(filter, recordId);
 
         Page<RecordDto> page = recordServiceFactory.get()
-                                                   .getAsRegistry(lQualifier, pageable, ecqlFilter)
+                                                   .getAsRegistry(libraryQualifier(docLibId), pageable, ecqlFilter)
                                                    .map(record -> new RecordDto(removeVersionsFromRecord(record)));
 
         return ResponseEntity.ok(pageFromList(page, pageable));
@@ -109,9 +106,9 @@ public class DocumentLibraryRecordsController {
     @GetMapping("/document-libraries/{docLibId}/records/{recId}")
     public ResponseEntity<Map<String, Object>> getById(@PathVariable String docLibId,
                                                        @PathVariable Long recId) {
-        ResourceQualifier qualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, docLibId, recId, LIBRARY_RECORD);
-
-        IRecord record = recordServiceFactory.get().getById(qualifier, recId);
+        IRecord record = recordServiceFactory.get()
+                                             .getById(libraryRecordQualifier(docLibId, recId),
+                                                      recId);
 
         return ResponseEntity.ok(removeVersionsFromRecord(record).getContent());
     }
@@ -122,9 +119,9 @@ public class DocumentLibraryRecordsController {
                                                              @PathVariable Long recId) {
         LibraryModel libraryInfo = (LibraryModel) libraryService.getInfo(docLibId);
         if (TRUE.equals(libraryInfo.getVersioned())) {
-            ResourceQualifier qualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, docLibId, recId, LIBRARY_RECORD);
-
-            return recordServiceFactory.get().getVersionsByRecordId(qualifier, recId);
+            return recordServiceFactory.get()
+                                       .getVersionsByRecordId(libraryRecordQualifier(docLibId, recId),
+                                                              recId);
         } else {
             throw new BadRequestException("Библиотека не является версионируемой: " + docLibId);
         }
@@ -143,7 +140,7 @@ public class DocumentLibraryRecordsController {
 
         IRecord record = mediator.execute(
                 new CreateLibraryRecordRequest(schema,
-                                               new ResourceQualifier(SYSTEM_SCHEMA_NAME, docLibId, LIBRARY),
+                                               libraryQualifier(docLibId),
                                                new RecordEntity(props)));
 
         return new ResponseEntity<>(record.getContent(), CREATED);
@@ -158,10 +155,9 @@ public class DocumentLibraryRecordsController {
             SchemaDto schema = libraryService.getSchema(docLibId);
             throwIfNotMatchSchema(schema, payload);
 
-            ResourceQualifier rQualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, docLibId, recId, LIBRARY_RECORD);
             mediator.execute(
                     new UpdateLibraryRecordRequest(schema,
-                                                   rQualifier,
+                                                   libraryRecordQualifier(docLibId, recId),
                                                    new RecordEntity(payload)));
         }
 
@@ -172,7 +168,7 @@ public class DocumentLibraryRecordsController {
     @DeleteMapping("/document-libraries/{docLibId}/records/{recId}")
     public ResponseEntity<Object> delete(@PathVariable String docLibId,
                                          @PathVariable Long recId) {
-        ResourceQualifier qualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, docLibId, recId, LIBRARY_RECORD);
+        ResourceQualifier qualifier = libraryRecordQualifier(docLibId, recId);
 
         SchemaDto schema = libraryService.getSchema(docLibId);
         IRecord record = recordServiceFactory.get().getById(qualifier, recId);
@@ -188,8 +184,8 @@ public class DocumentLibraryRecordsController {
     public ResponseEntity<Object> recoverRecord(@PathVariable String docLibId,
                                                 @PathVariable Long recId,
                                                 @RequestParam(required = false) Long recoverFolderId) {
-        ResourceQualifier rQualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, docLibId, recId, LIBRARY_RECORD);
-        mediator.execute(new RecoverLibraryRecordRequest(rQualifier, recoverFolderId));
+        mediator.execute(
+                new RecoverLibraryRecordRequest(libraryRecordQualifier(docLibId, recId), recoverFolderId));
 
         return ResponseEntity.noContent().build();
     }
