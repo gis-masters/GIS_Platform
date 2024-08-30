@@ -419,7 +419,6 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
 
         response = getBaseRequestWithCurrentCookie()
                 .when().
-                        log().all().
                         get("/organizations");
 
         List<OrganizationBase> organizations = response.jsonPath().getList("content", OrganizationBase.class);

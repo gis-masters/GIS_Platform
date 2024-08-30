@@ -5,7 +5,6 @@ import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
-import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import org.jetbrains.annotations.NotNull;
 import ru.mycrg.acceptance.BaseStepsDefinitions;
@@ -92,6 +91,21 @@ public class FilesStepDefinitions extends BaseStepsDefinitions {
         downloadAsArchive(mainFileName);
     }
 
+    @Given("я скачиваю ЭЦП файла {string}")
+    public void downloadOnlyEcp(String fileName) {
+        downloadEcp(getFileByTitleOrThrow(fileName).getId());
+    }
+
+    @Given("я скачиваю архивом файл {string} c ЭЦП")
+    public void downloadFileWithEcpAsZip(String fileName) {
+        downloadFileWithEcp(getFileByTitleOrThrow(fileName).getId());
+    }
+
+    @Given("я скачиваю группу файлов архивом с ЭЦП, передав главный файл группы: {string}")
+    public void downloadGroupWithEcp(String baseFileName) {
+        downloadGroupWithEcp(getFileByTitleOrThrow(baseFileName).getId());
+    }
+
     @Given("я скачиваю группу файлов архивом, передав не корректный идентификатор файла: {string}")
     public void downloadArchiveIncorrectly(String incorrectFileName) {
         downloadAsArchive(incorrectFileName);
@@ -102,6 +116,20 @@ public class FilesStepDefinitions extends BaseStepsDefinitions {
         assertEquals(SC_OK, response.getStatusCode());
         assertEquals("application/zip", response.getContentType());
         assertEquals((int) bytes, response.asByteArray().length);
+    }
+
+    @Given("ЭЦП успешно скачан в полном объеме: {int} байт")
+    public void checkEcpStep(Integer bytes) {
+        assertEquals(SC_OK, response.getStatusCode());
+        assertEquals((int) bytes, response.asByteArray().length);
+        assertEquals("application/pgp-signature", response.getContentType());
+    }
+
+    @Given("файл и ЭЦП успешно скачаны в полном объеме: {int} байт")
+    public void checkFileWithEcpStep(Integer bytes) {
+        assertEquals(SC_OK, response.getStatusCode());
+        assertEquals((int) bytes, response.asByteArray().length);
+        assertEquals("application/zip", response.getContentType());
     }
 
     @Given("Пользователем создано три файла")
@@ -322,14 +350,7 @@ public class FilesStepDefinitions extends BaseStepsDefinitions {
 
     @Given("я запрашиваю информацию о файле {string}")
     public void getFileInfo(String fileName) {
-        FileDescriptionModel targetFile = currentFiles
-                .stream()
-                .filter(file -> file.getTitle().equals(fileName))
-                .findFirst()
-                .orElseThrow(
-                        () -> new IllegalStateException("Среди текущих файлов не найден искомый: " + fileName));
-
-        getFile(targetFile.getId());
+        getFile(getFileByTitleOrThrow(fileName).getId());
     }
 
     @Given("файл подписан")
@@ -354,16 +375,26 @@ public class FilesStepDefinitions extends BaseStepsDefinitions {
     }
 
     private void downloadFile(UUID fileId) {
-        String url = String.format("/%s/download", fileId);
-
-        response = getBaseRequestWithCurrentCookie()
-                .when().
-                        get(url);
+        downloadFile(String.format("/%s/download", fileId));
     }
 
     private void downloadArchive(UUID mainFileId) {
-        String url = String.format("/%s/download/zip", mainFileId);
+        downloadFile(String.format("/%s/download/zip", mainFileId));
+    }
 
+    private void downloadGroupWithEcp(UUID fileId) {
+        downloadFile(String.format("/%s/download/zip/with-ecp", fileId));
+    }
+
+    private void downloadEcp(UUID fileId) {
+        downloadFile(String.format("/%s/download/ecp", fileId));
+    }
+
+    private void downloadFileWithEcp(UUID fileId) {
+        downloadFile(String.format("/%s/download/with-ecp", fileId));
+    }
+
+    private void downloadFile(String url) {
         response = getBaseRequestWithCurrentCookie()
                 .when().
                         get(url);
@@ -404,14 +435,15 @@ public class FilesStepDefinitions extends BaseStepsDefinitions {
         return testFile;
     }
 
-    private void downloadAsArchive(String incorrectFileName) {
-        FileDescriptionModel mainFile = currentFiles
-                .stream()
-                .filter(file -> file.getTitle().equals(incorrectFileName))
-                .findFirst()
-                .orElseThrow(
-                        () -> new IllegalStateException("Среди текущих файлов не найден искомый: " + incorrectFileName));
+    private void downloadAsArchive(String fileName) {
+        downloadArchive(getFileByTitleOrThrow(fileName).getId());
+    }
 
-        downloadArchive(mainFile.getId());
+    private static FileDescriptionModel getFileByTitleOrThrow(String title) {
+        return currentFiles
+                .stream()
+                .filter(file -> file.getTitle().equals(title))
+                .findFirst()
+                .orElseThrow(() -> new IllegalStateException("Среди текущих файлов не найден искомый: " + title));
     }
 }
