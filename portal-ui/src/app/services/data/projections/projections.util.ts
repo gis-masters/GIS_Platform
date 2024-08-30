@@ -18,7 +18,7 @@ import { isCoordinateValid, normalizeCoordinates } from '../../geoserver/wfs/wfs
 import { isStringArray } from '../../util/typeGuards/isStringArray';
 import { Projection } from './projections.models';
 
-type Coord = Coordinate | CoordinateEdited;
+export type Coord = Coordinate | CoordinateEdited;
 
 export function getSrid(projectionCode: string): number {
   const srid = projectionCode.split(':')[1];

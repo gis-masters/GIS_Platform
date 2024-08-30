@@ -5,7 +5,7 @@ import { boundMethod } from 'autobind-decorator';
 import { debounce } from 'lodash';
 import { Feature, MapBrowserEvent, Overlay } from 'ol';
 import { Coordinate } from 'ol/coordinate';
-import { Geometry, Point } from 'ol/geom';
+import { Point } from 'ol/geom';
 import { Draw, Modify } from 'ol/interaction';
 import { DrawEvent } from 'ol/interaction/Draw';
 import VectorLayer from 'ol/layer/Vector';
@@ -21,10 +21,11 @@ import { mapStore } from '../../stores/Map.store';
 import { communicationService } from '../communication.service';
 import { defaultOlProjectionCode } from '../data/projections/projections.models';
 import { getProjectionByCode } from '../data/projections/projections.service';
-import { transformGroup } from '../data/projections/projections.util';
+import { Coord, transformGroup } from '../data/projections/projections.util';
 import { extractTableNameFromFeatureId } from '../geoserver/featureType/featureType.util';
 import { GeometryType, supportedGeometryTypes, WfsFeature } from '../geoserver/wfs/wfs.models';
 import { isPolygonal } from '../geoserver/wfs/wfs.util';
+import { notFalsyFilter } from '../util/NotFalsyFilter';
 import { featureToWfsFeature, wfsFeatureToFeature } from '../util/open-layers.util';
 import { sleep } from '../util/sleep';
 import { isArrayOf } from '../util/typeGuards/isArrayOf';
@@ -41,6 +42,7 @@ class MapLabelsService {
   private draw?: Draw;
   private modify?: Modify;
   private source = new VectorSource();
+  private turningPointsSource = new VectorSource();
   private sourceForPrintLabels = new VectorSource();
   private selectedFeature?: Feature;
   private modifyingNow = false;
@@ -50,6 +52,11 @@ class MapLabelsService {
     source: this.source,
     zIndex: mapService.LABELS_LAYER_ZINDEX,
     properties: { name: 'labels' }
+  });
+  private layerForTurningPoints = new VectorLayer({
+    source: this.turningPointsSource,
+    zIndex: mapService.LABELS_LAYER_ZINDEX,
+    properties: { name: 'turningPoints' }
   });
   private layerForPrintLabels = new VectorLayer({
     source: this.sourceForPrintLabels,
@@ -131,15 +138,16 @@ class MapLabelsService {
     if (currentLayerProjection && targetLayerProjection) {
       const pointsCoordinates = this.getTurningPointsFromCoordinates(coordinates, geometryType);
       const transformedCoordinates = transformGroup(pointsCoordinates, currentLayerProjection, targetLayerProjection);
-      const features = transformedCoordinates.map((coord, index) => {
-        return this.createTurningPointsFeature(coord as Coordinate, index);
-      });
 
-      this.source.addFeatures(features);
+      const turningPoints = this.createFeatures(transformedCoordinates, 'turningPoints');
+      const labels = this.createFeatures(transformedCoordinates, 'label');
+
+      this.source.addFeatures(labels);
+      this.turningPointsSource.addFeatures(turningPoints);
+
+      await sleep(0);
+      this.saveToStorages();
     }
-
-    await sleep(0);
-    this.saveToStorages();
   }
 
   private getTurningPointsFromCoordinates(
@@ -172,17 +180,23 @@ class MapLabelsService {
     mapMeasureService.measureOff();
   }
 
-  createTurningPointsFeature(coord: Coordinate, index: number): Feature<Geometry> {
-    const feature = new Feature({
-      geometry: new Point(coord),
-      type: 'turningPoints',
-      text: String(index + 1)
-    });
+  createFeatures(transformedCoordinates: Coord[], type: LabelType): Feature<Point>[] {
+    return transformedCoordinates
+      .map((coord, index) => {
+        if (isNumberArray(coord)) {
+          const feature = new Feature({
+            geometry: new Point(coord),
+            type,
+            text: String(index + 1)
+          });
 
-    feature.setId(uuid());
-    feature.setStyle(this.createStyle(feature));
+          feature.setId(uuid());
+          feature.setStyle(this.createStyle(feature));
 
-    return feature;
+          return feature;
+        }
+      })
+      .filter(notFalsyFilter);
   }
 
   async addingLabelOn(type: LabelType) {
@@ -284,6 +298,11 @@ class MapLabelsService {
     if (this.source.hasFeature(feature)) {
       this.source.removeFeature(feature);
     }
+
+    if (this.turningPointsSource.hasFeature(feature)) {
+      this.turningPointsSource.removeFeature(feature);
+    }
+
     this.saveToStorages();
     this.removeLabelToolbox();
   }
@@ -292,6 +311,11 @@ class MapLabelsService {
     for (const feature of this.source.getFeatures()) {
       this.source.removeFeature(feature);
     }
+
+    for (const feature of this.turningPointsSource.getFeatures()) {
+      this.turningPointsSource.removeFeature(feature);
+    }
+
     this.saveToStorages();
   }
 
@@ -303,7 +327,10 @@ class MapLabelsService {
     }
 
     mapService.map.addLayer(this.layer);
+    mapService.map.addLayer(this.layerForTurningPoints);
+
     this.modify = new Modify({ source: this.source });
+
     mapService.map.addInteraction(this.modify);
     this.modify.on(['modifystart'], this.handleModifyStart);
     this.modify.on(['modifyend'], this.handleModifyEnd);
@@ -335,7 +362,15 @@ class MapLabelsService {
     });
 
     this.source.clear();
-    this.source.addFeatures(olFeatures);
+    this.source.addFeatures(
+      olFeatures.filter(feature => feature.getProperties().type === 'label' || feature.getProperties().type === 'line')
+    );
+
+    this.turningPointsSource.clear();
+    this.turningPointsSource.addFeatures(
+      olFeatures.filter(features => features.getProperties().type === 'turningPoints')
+    );
+
     mapStore.setLabels(olFeatures);
   }
 
@@ -343,6 +378,7 @@ class MapLabelsService {
     this.drawOff();
     this.modifyOff();
     mapService.map.removeLayer(this.layer);
+    mapService.map.removeLayer(this.layerForTurningPoints);
   }
 
   @boundMethod
@@ -358,7 +394,7 @@ class MapLabelsService {
   }
 
   private saveToStorages() {
-    const olFeatures = this.source.getFeatures();
+    const olFeatures = [...this.source.getFeatures(), ...this.turningPointsSource.getFeatures()];
     const wfsFeatures: WfsFeature[] = olFeatures.map(featureToWfsFeature);
 
     mapStore.setLabels(olFeatures);
@@ -379,7 +415,7 @@ class MapLabelsService {
     }
 
     if (this.getLabelType(feature) === 'turningPoints') {
-      return [this.createLabelStyle(feature, selected), this.createCircleStyle()];
+      return [this.createCircleStyle()];
     }
 
     throw new Error(`Unknown label type: ${this.getLabelType(feature)}`);
