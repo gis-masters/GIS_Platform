@@ -62,9 +62,9 @@ public class GDALService implements IExporter {
                 log.warn("Not implemented multiple export. Export only first feature.");
 
                 // TODO: При имплементации импорта множества слоев необходимо генерить один большой зип.
-                pathToZip = exportToShape(resourceProjections.get(0));
+                pathToZip = exportToShape(resourceProjections.get(0), payload.getEpsg());
             } else {
-                pathToZip = exportToShape(resourceProjections.get(0));
+                pathToZip = exportToShape(resourceProjections.get(0), payload.getEpsg());
             }
 
             return pathToZip;
@@ -255,10 +255,11 @@ public class GDALService implements IExporter {
      * - zip -r ../agriculture.zip *; <p> - cd ..; <p> - rm -rf SOME_DIR
      *
      * @param resource Ресурс для экспорта
+     * @param requiredEpsgCode Код проекции
      *
      * @return Path к архиву
      */
-    private String exportToShape(ResourceProjection resource) {
+    private String exportToShape(ResourceProjection resource, Integer requiredEpsgCode) {
         try {
             String rootPath = crgProperties.getExportStoragePath();
             log.debug("Root path for export is: {}", rootPath);
@@ -274,8 +275,16 @@ public class GDALService implements IExporter {
             SchemaDto schema = resource.getSchema();
             String geomType = schema.getGeometryType().getType().toUpperCase();
 
+            Integer tableEpsgCode = requiredEpsgCode;
+            try {
+                tableEpsgCode = Integer.valueOf(resource.getCrs().split(":")[1]);
+            } catch (Exception e) {
+                log.warn("Не удалось получить EPSG код таблицы => {}", e.getMessage());
+            }
+
             String mkdirAndCd = String.format("mkdir %s; cd %s;", randomDirName, randomDirName);
-            String exportAShp = getOgr2OgrExportCmd(host, port, usrName, pswd, dbName, schemaName, tableName, geomType);
+            String exportAShp = getOgr2OgrExportCmd(host, port, usrName, pswd, dbName, schemaName, tableName,
+                                                    geomType, requiredEpsgCode, tableEpsgCode);
             String getTheHead = String.format(" head -c 29 %s.dbf > head.ext;", tableName);
             String getTheTail = String.format(" tail -c +31 %s.dbf > tail.ext;", tableName);
             String fillHead1b = " dd if=tail.ext bs=1 count=1 >> head.ext;";
@@ -320,11 +329,13 @@ public class GDALService implements IExporter {
     }
 
     private String getOgr2OgrExportCmd(String host, String port, String userName, String password, String dbName,
-                                       String schemaName, String tableName, String geomType) {
-        return String.format("ogr2ogr -f \"ESRi Shapefile\" %s.shp " +
+                                       String schemaName, String tableName, String geomType,
+                                       Integer newEpsgCode, Integer currentEpsgCode) {
+        return String.format("ogr2ogr -f \"ESRi Shapefile\" -t_srs EPSG:%d -s_srs EPSG:%d %s.shp " +
                                      "PG:\"host=%s port=%s user=%s password=%s dbname=%s\" " +
                                      "-nlt %s -sql \"SELECT * from %s.%s\" --config SHAPE_ENCODING UTF-8;",
-                             tableName, host, port, userName, password, dbName, geomType, schemaName, tableName);
+                             newEpsgCode, currentEpsgCode, tableName, host, port, userName, password, dbName, geomType,
+                             schemaName, tableName);
     }
 
     private String getOgr2OgrImportFromSHPToTableCommand(String dbName, String tableName, String srs, String filePath) {
