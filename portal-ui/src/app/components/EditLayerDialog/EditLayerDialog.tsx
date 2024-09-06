@@ -295,11 +295,12 @@ export class EditLayerDialog extends Component<EditLayerDialogProps> {
   }
 
   private async loadStylesOptions(): Promise<void> {
+    if (!this.props.geometryType) {
+      return;
+    }
+
     this.setBusy(true);
 
-    if (!this.props.geometryType) {
-      throw new Error('Отсутствует тип геометрии');
-    }
     const stylesList = await getSimpleStylesListForGeometryType(this.props.geometryType);
     const stylesListOptions: PropertyOption[] = await Promise.all(
       stylesList.map(async styleName => {

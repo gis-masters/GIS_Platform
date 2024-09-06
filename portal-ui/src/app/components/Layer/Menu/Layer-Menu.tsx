@@ -100,8 +100,12 @@ export class LayerMenu extends Component<LayerMenuProps> {
   }
 
   async componentDidMount() {
-    await this.fetchGeometryType();
-    await this.fetchPermissions();
+    const { layerWithError } = this.props;
+
+    if (!layerWithError) {
+      await this.fetchGeometryType();
+      await this.fetchPermissions();
+    }
 
     this.setLayersDeleteAllowed(isLayersManagementAllowed());
 
@@ -127,37 +131,40 @@ export class LayerMenu extends Component<LayerMenuProps> {
           anchorPosition={{ top: y, left: x }}
           onClose={onClose}
         >
-          <MenuItem disableRipple>
-            <LayerTransparency entity={entity} />
-          </MenuItem>
+          {!layerWithError && (
+            <>
+              <MenuItem disableRipple>
+                <LayerTransparency entity={entity} />
+              </MenuItem>
 
-          {!editMode && (this.isVectorLayer || this.isVectorFromFileWithPaginationLayer) && (
-            <MenuItem onClick={this.openAttributeTable}>
-              <ListItemIcon>
-                <ListAlt />
-              </ListItemIcon>
-              Открыть таблицу атрибутов
-            </MenuItem>
+              {!editMode && (this.isVectorLayer || this.isVectorFromFileWithPaginationLayer) && (
+                <MenuItem onClick={this.openAttributeTable}>
+                  <ListItemIcon>
+                    <ListAlt />
+                  </ListItemIcon>
+                  Открыть таблицу атрибутов
+                </MenuItem>
+              )}
+
+              {!editMode && this.isVectorLayer && this.featuresCreateAllowed && (
+                <MenuItem onClick={this.addFeature}>
+                  <ListItemIcon>
+                    <AddCircleOutline />
+                  </ListItemIcon>
+                  Добавить объект
+                </MenuItem>
+              )}
+
+              {!editMode && (this.isVectorLayer || this.isRasterLayer || this.isVectorFromFileLayer) && (
+                <MenuItem onClick={this.goToLayer}>
+                  <ListItemIcon>
+                    <CropFree />
+                  </ListItemIcon>
+                  Перейти к слою
+                </MenuItem>
+              )}
+            </>
           )}
-
-          {!editMode && this.isVectorLayer && this.featuresCreateAllowed && (
-            <MenuItem onClick={this.addFeature}>
-              <ListItemIcon>
-                <AddCircleOutline />
-              </ListItemIcon>
-              Добавить объект
-            </MenuItem>
-          )}
-
-          {!editMode && (this.isVectorLayer || this.isRasterLayer || this.isVectorFromFileLayer) && (
-            <MenuItem onClick={this.goToLayer}>
-              <ListItemIcon>
-                <CropFree />
-              </ListItemIcon>
-              Перейти к слою
-            </MenuItem>
-          )}
-
           {!editMode && this.isVectorLayer && this.isVectorTableInfoEnabled && (
             <MenuItem onClick={this.getLayerVectorTable}>
               <ListItemIcon>
@@ -175,36 +182,39 @@ export class LayerMenu extends Component<LayerMenuProps> {
               Источник данных
             </MenuItem>
           )}
+          {!layerWithError && (
+            <>
+              {!editMode && this.isVectorLayer && this.featuresCreateAllowed && (
+                <MenuNestedItem
+                  parentMenuOpen={open}
+                  submenu={[
+                    (this.geometryType === GeometryType.MULTI_POLYGON ||
+                      this.geometryType === GeometryType.POLYGON) && (
+                      <MenuItem key='xml' onClick={this.openImportXmlDialog}>
+                        Импорт межевого плана из XML
+                      </MenuItem>
+                    ),
+                    this.importShapeAllowed && (
+                      <MenuItem key='shp' onClick={this.openImportShapeDialog}>
+                        Импорт геометрии из Shape-файла
+                      </MenuItem>
+                    )
+                  ]}
+                  icon={<ImportOutlined />}
+                  title='Импорт'
+                />
+              )}
 
-          {!editMode && this.isVectorLayer && this.featuresCreateAllowed && (
-            <MenuNestedItem
-              parentMenuOpen={open}
-              submenu={[
-                (this.geometryType === GeometryType.MULTI_POLYGON || this.geometryType === GeometryType.POLYGON) && (
-                  <MenuItem key='xml' onClick={this.openImportXmlDialog}>
-                    Импорт межевого плана из XML
-                  </MenuItem>
-                ),
-                this.importShapeAllowed && (
-                  <MenuItem key='shp' onClick={this.openImportShapeDialog}>
-                    Импорт геометрии из Shape-файла
-                  </MenuItem>
-                )
-              ]}
-              icon={<ImportOutlined />}
-              title='Импорт'
-            />
+              {!editMode && this.isVectorLayer && this.layerExportAllowed && (
+                <MenuItem onClick={this.openSelectProjectionDialog}>
+                  <ListItemIcon>
+                    <UnarchiveOutlined />
+                  </ListItemIcon>
+                  Экспорт ESRI Shape-файл
+                </MenuItem>
+              )}
+            </>
           )}
-
-          {!editMode && this.isVectorLayer && this.layerExportAllowed && (
-            <MenuItem onClick={this.openSelectProjectionDialog}>
-              <ListItemIcon>
-                <UnarchiveOutlined />
-              </ListItemIcon>
-              Экспорт ESRI Shape-файл
-            </MenuItem>
-          )}
-
           {!isGroup && (
             <MenuItem onClick={this.openLayerEditDialog}>
               <ListItemIcon>

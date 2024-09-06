@@ -159,7 +159,7 @@ export async function testLayerByWms(layer: CrgLayer): Promise<{ ok: boolean; er
   if (!layer.complexName) {
     return { ok: false, errors: ['Не указан complexName у слоя'] };
   }
-  if (layer.type === CrgLayerType.VECTOR) {
+  if (layer.type === CrgLayerType.VECTOR || layer.type === CrgLayerType.DXF || layer.type === CrgLayerType.SHP) {
     const url = new URL(wmsClient.getWmsUrl());
 
     url.searchParams.set('SERVICE', 'WMS');

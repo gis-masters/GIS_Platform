@@ -103,7 +103,7 @@ export class Layer extends Component<LayerProps> {
 
         <LayerInnards show={this.open && !isGroup} depth={depth || 0}>
           {this.isError && <LayerErrors errors={this.errors} />}
-          {isVectorLayer && <LayerLegend layer={data as CrgVectorLayer} />}
+          {isVectorLayer && !this.errors && <LayerLegend layer={data as CrgVectorLayer} />}
         </LayerInnards>
 
         {(this.menuAnchor || !!(this.menuX && this.menuY)) && (
@@ -173,11 +173,12 @@ export class Layer extends Component<LayerProps> {
       const { type } = data as CrgLayer;
 
       if (
-        (type !== CrgLayerType.SHP &&
+        ((type !== CrgLayerType.SHP &&
           type !== CrgLayerType.VECTOR &&
           type !== CrgLayerType.EXTERNAL &&
           type !== CrgLayerType.EXTERNAL_GEOSERVER) ||
-        editMode
+          editMode) &&
+        !this.isError
       ) {
         return;
       }

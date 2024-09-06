@@ -12,8 +12,8 @@ interface LayerErrorsProps {
 
 export const LayerErrors: FC<LayerErrorsProps> = ({ errors }) => (
   <div className={cnLayerErrors()}>
-    {errors.map((error, i) => (
-      <div key={i} dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(error) }} />
-    ))}
+    {!!errors.length &&
+      errors.map((error, i) => <div key={i} dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(error) }} />)}
+    {!errors.length && 'Ошибка получения данных'}
   </div>
 );
