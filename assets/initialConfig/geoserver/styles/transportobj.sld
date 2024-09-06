@@ -1029,26 +1029,6 @@ xmlns:se="http://www.opengis.net/se">
 					</se:PointSymbolizer>
 				</se:Rule>
 				<se:Rule>
-					<se:Name>60203160514</se:Name>
-					<se:Description>
-						<se:Title>Железнодорожный переезд планиуемый к ликвидации федерального значения</se:Title>
-					</se:Description>
-					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
-						<ogc:PropertyIsEqualTo>
-							<ogc:PropertyName>ruleid</ogc:PropertyName>
-							<ogc:Literal>60203160514</ogc:Literal>
-						</ogc:PropertyIsEqualTo>
-					</ogc:Filter>
-					<se:PointSymbolizer>
-						<se:Graphic>
-							<se:ExternalGraphic>
-								<se:OnlineResource xlink:type="simple" xlink:href="svg/03_Transport/10_TransportObj/60203160514.svg" />
-								<se:Format>image/svg+xml</se:Format>
-							</se:ExternalGraphic>
-						</se:Graphic>
-					</se:PointSymbolizer>
-				</se:Rule>
-				<se:Rule>
 					<se:Name>60203160521</se:Name>
 					<se:Description>
 						<se:Title>Железнодорожный переезд существующий регионального значения</se:Title>
@@ -1109,26 +1089,6 @@ xmlns:se="http://www.opengis.net/se">
 					</se:PointSymbolizer>
 				</se:Rule>
 				<se:Rule>
-					<se:Name>60203160524</se:Name>
-					<se:Description>
-						<se:Title>Железнодорожный переезд планируемый к ликвидации регионального значения</se:Title>
-					</se:Description>
-					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
-						<ogc:PropertyIsEqualTo>
-							<ogc:PropertyName>ruleid</ogc:PropertyName>
-							<ogc:Literal>60203160524</ogc:Literal>
-						</ogc:PropertyIsEqualTo>
-					</ogc:Filter>
-					<se:PointSymbolizer>
-						<se:Graphic>
-							<se:ExternalGraphic>
-								<se:OnlineResource xlink:type="simple" xlink:href="svg/03_Transport/10_TransportObj/60203160524.svg" />
-								<se:Format>image/svg+xml</se:Format>
-							</se:ExternalGraphic>
-						</se:Graphic>
-					</se:PointSymbolizer>
-				</se:Rule>
-				<se:Rule>
 					<se:Name>60203160531</se:Name>
 					<se:Description>
 						<se:Title>Железнодорожный переезд существующий местного значения</se:Title>
@@ -1183,26 +1143,6 @@ xmlns:se="http://www.opengis.net/se">
 						<se:Graphic>
 							<se:ExternalGraphic>
 								<se:OnlineResource xlink:type="simple" xlink:href="svg/03_Transport/10_TransportObj/60203160533.svg" />
-								<se:Format>image/svg+xml</se:Format>
-							</se:ExternalGraphic>
-						</se:Graphic>
-					</se:PointSymbolizer>
-				</se:Rule>
-				<se:Rule>
-					<se:Name>60203160534</se:Name>
-					<se:Description>
-						<se:Title>Железнодорожный переезд планируемый к ликвидации местного значения</se:Title>
-					</se:Description>
-					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
-						<ogc:PropertyIsEqualTo>
-							<ogc:PropertyName>ruleid</ogc:PropertyName>
-							<ogc:Literal>60203160534</ogc:Literal>
-						</ogc:PropertyIsEqualTo>
-					</ogc:Filter>
-					<se:PointSymbolizer>
-						<se:Graphic>
-							<se:ExternalGraphic>
-								<se:OnlineResource xlink:type="simple" xlink:href="svg/03_Transport/10_TransportObj/60203160534.svg" />
 								<se:Format>image/svg+xml</se:Format>
 							</se:ExternalGraphic>
 						</se:Graphic>

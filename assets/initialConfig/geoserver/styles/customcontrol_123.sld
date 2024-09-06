@@ -69,26 +69,6 @@ xmlns:se="http://www.opengis.net/se">
 					</se:PointSymbolizer>
 				</se:Rule>
 				<se:Rule>
-					<se:Name>60203150114</se:Name>
-					<se:Description>
-						<se:Title>Пункт пропуска через Государственную границу планируемый к ликвидации федерального значения</se:Title>
-					</se:Description>
-					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
-						<ogc:PropertyIsEqualTo>
-							<ogc:PropertyName>ruleid</ogc:PropertyName>
-							<ogc:Literal>60203150114</ogc:Literal>
-						</ogc:PropertyIsEqualTo>
-					</ogc:Filter>
-					<se:PointSymbolizer>
-						<se:Graphic>
-							<se:ExternalGraphic>
-								<se:OnlineResource xlink:type="simple" xlink:href="svg_123/03_Transport/09_CustomControl/60203150114.svg" />
-								<se:Format>image/svg+xml</se:Format>
-							</se:ExternalGraphic>
-						</se:Graphic>
-					</se:PointSymbolizer>
-				</se:Rule>
-				<se:Rule>
 					<se:Name>60203150121</se:Name>
 					<se:Description>
 						<se:Title>Пункт пропуска через Государственную границу существующий регионального значения</se:Title>
@@ -149,26 +129,6 @@ xmlns:se="http://www.opengis.net/se">
 					</se:PointSymbolizer>
 				</se:Rule>
 				<se:Rule>
-					<se:Name>60203150124</se:Name>
-					<se:Description>
-						<se:Title>Пункт пропуска через Государственную границу планируемый к ликвидации регионального значения</se:Title>
-					</se:Description>
-					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
-						<ogc:PropertyIsEqualTo>
-							<ogc:PropertyName>ruleid</ogc:PropertyName>
-							<ogc:Literal>60203150124</ogc:Literal>
-						</ogc:PropertyIsEqualTo>
-					</ogc:Filter>
-					<se:PointSymbolizer>
-						<se:Graphic>
-							<se:ExternalGraphic>
-								<se:OnlineResource xlink:type="simple" xlink:href="svg_123/03_Transport/09_CustomControl/60203150124.svg" />
-								<se:Format>image/svg+xml</se:Format>
-							</se:ExternalGraphic>
-						</se:Graphic>
-					</se:PointSymbolizer>
-				</se:Rule>
-				<se:Rule>
 					<se:Name>60203150131</se:Name>
 					<se:Description>
 						<se:Title>Пункт пропуска через Государственную границу существующий местного значения</se:Title>
@@ -223,26 +183,6 @@ xmlns:se="http://www.opengis.net/se">
 						<se:Graphic>
 							<se:ExternalGraphic>
 								<se:OnlineResource xlink:type="simple" xlink:href="svg_123/03_Transport/09_CustomControl/60203150133.svg" />
-								<se:Format>image/svg+xml</se:Format>
-							</se:ExternalGraphic>
-						</se:Graphic>
-					</se:PointSymbolizer>
-				</se:Rule>
-				<se:Rule>
-					<se:Name>60203150134</se:Name>
-					<se:Description>
-						<se:Title>Пункт пропуска через Государственную границу планируемый к ликвидации местного значения</se:Title>
-					</se:Description>
-					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
-						<ogc:PropertyIsEqualTo>
-							<ogc:PropertyName>ruleid</ogc:PropertyName>
-							<ogc:Literal>60203150134</ogc:Literal>
-						</ogc:PropertyIsEqualTo>
-					</ogc:Filter>
-					<se:PointSymbolizer>
-						<se:Graphic>
-							<se:ExternalGraphic>
-								<se:OnlineResource xlink:type="simple" xlink:href="svg_123/03_Transport/09_CustomControl/60203150134.svg" />
 								<se:Format>image/svg+xml</se:Format>
 							</se:ExternalGraphic>
 						</se:Graphic>

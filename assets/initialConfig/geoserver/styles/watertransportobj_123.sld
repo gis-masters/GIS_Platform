@@ -69,26 +69,6 @@ xmlns:se="http://www.opengis.net/se">
 					</se:PointSymbolizer>
 				</se:Rule>
 				<se:Rule>
-					<se:Name>60203130114</se:Name>
-					<se:Description>
-						<se:Title>Морской порт и (или) морской терминал планируемый к ликвидации федерального значения</se:Title>
-					</se:Description>
-					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
-						<ogc:PropertyIsEqualTo>
-							<ogc:PropertyName>ruleid</ogc:PropertyName>
-							<ogc:Literal>60203130114</ogc:Literal>
-						</ogc:PropertyIsEqualTo>
-					</ogc:Filter>
-					<se:PointSymbolizer>
-						<se:Graphic>
-							<se:ExternalGraphic>
-								<se:OnlineResource xlink:type="simple" xlink:href="svg_123/03_Transport/08_WaterTransportObj/60203130114.svg" />
-								<se:Format>image/svg+xml</se:Format>
-							</se:ExternalGraphic>
-						</se:Graphic>
-					</se:PointSymbolizer>
-				</se:Rule>
-				<se:Rule>
 					<se:Name>60203130121</se:Name>
 					<se:Description>
 						<se:Title>Морской порт и (или) морской терминал существующий регионального значения</se:Title>
@@ -143,26 +123,6 @@ xmlns:se="http://www.opengis.net/se">
 						<se:Graphic>
 							<se:ExternalGraphic>
 								<se:OnlineResource xlink:type="simple" xlink:href="svg_123/03_Transport/08_WaterTransportObj/60203130123.svg" />
-								<se:Format>image/svg+xml</se:Format>
-							</se:ExternalGraphic>
-						</se:Graphic>
-					</se:PointSymbolizer>
-				</se:Rule>
-				<se:Rule>
-					<se:Name>60203130124</se:Name>
-					<se:Description>
-						<se:Title>Морской порт и (или) морской терминал планируемый к ликвидации регионального значения</se:Title>
-					</se:Description>
-					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
-						<ogc:PropertyIsEqualTo>
-							<ogc:PropertyName>ruleid</ogc:PropertyName>
-							<ogc:Literal>60203130124</ogc:Literal>
-						</ogc:PropertyIsEqualTo>
-					</ogc:Filter>
-					<se:PointSymbolizer>
-						<se:Graphic>
-							<se:ExternalGraphic>
-								<se:OnlineResource xlink:type="simple" xlink:href="svg_123/03_Transport/08_WaterTransportObj/60203130124.svg" />
 								<se:Format>image/svg+xml</se:Format>
 							</se:ExternalGraphic>
 						</se:Graphic>
@@ -229,26 +189,6 @@ xmlns:se="http://www.opengis.net/se">
 					</se:PointSymbolizer>
 				</se:Rule>
 				<se:Rule>
-					<se:Name>60203130134</se:Name>
-					<se:Description>
-						<se:Title>Морской порт и (или) морской терминал планируемый к ликвидации местного значения</se:Title>
-					</se:Description>
-					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
-						<ogc:PropertyIsEqualTo>
-							<ogc:PropertyName>ruleid</ogc:PropertyName>
-							<ogc:Literal>60203130134</ogc:Literal>
-						</ogc:PropertyIsEqualTo>
-					</ogc:Filter>
-					<se:PointSymbolizer>
-						<se:Graphic>
-							<se:ExternalGraphic>
-								<se:OnlineResource xlink:type="simple" xlink:href="svg_123/03_Transport/08_WaterTransportObj/60203130134.svg" />
-								<se:Format>image/svg+xml</se:Format>
-							</se:ExternalGraphic>
-						</se:Graphic>
-					</se:PointSymbolizer>
-				</se:Rule>
-				<se:Rule>
 					<se:Name>60203130211</se:Name>
 					<se:Description>
 						<se:Title>Объект навигационно-гидрографического обеспечения морских путей, системы управления движением судов существующий федерального значения</se:Title>
@@ -303,26 +243,6 @@ xmlns:se="http://www.opengis.net/se">
 						<se:Graphic>
 							<se:ExternalGraphic>
 								<se:OnlineResource xlink:type="simple" xlink:href="svg_123/03_Transport/08_WaterTransportObj/60203130213.svg" />
-								<se:Format>image/svg+xml</se:Format>
-							</se:ExternalGraphic>
-						</se:Graphic>
-					</se:PointSymbolizer>
-				</se:Rule>
-				<se:Rule>
-					<se:Name>60203130214</se:Name>
-					<se:Description>
-						<se:Title>Объект навигационно-гидрографического обеспечения морских путей, системы управления движением судов планируемый к ликвидации федерального значения</se:Title>
-					</se:Description>
-					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
-						<ogc:PropertyIsEqualTo>
-							<ogc:PropertyName>ruleid</ogc:PropertyName>
-							<ogc:Literal>60203130214</ogc:Literal>
-						</ogc:PropertyIsEqualTo>
-					</ogc:Filter>
-					<se:PointSymbolizer>
-						<se:Graphic>
-							<se:ExternalGraphic>
-								<se:OnlineResource xlink:type="simple" xlink:href="svg_123/03_Transport/08_WaterTransportObj/60203130214.svg" />
 								<se:Format>image/svg+xml</se:Format>
 							</se:ExternalGraphic>
 						</se:Graphic>
@@ -389,26 +309,6 @@ xmlns:se="http://www.opengis.net/se">
 					</se:PointSymbolizer>
 				</se:Rule>
 				<se:Rule>
-					<se:Name>60203130224</se:Name>
-					<se:Description>
-						<se:Title>Объект навигационно-гидрографического обеспечения морских путей, системы управления движением судов планируемый к ликвидации регионального значения</se:Title>
-					</se:Description>
-					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
-						<ogc:PropertyIsEqualTo>
-							<ogc:PropertyName>ruleid</ogc:PropertyName>
-							<ogc:Literal>60203130224</ogc:Literal>
-						</ogc:PropertyIsEqualTo>
-					</ogc:Filter>
-					<se:PointSymbolizer>
-						<se:Graphic>
-							<se:ExternalGraphic>
-								<se:OnlineResource xlink:type="simple" xlink:href="svg_123/03_Transport/08_WaterTransportObj/60203130224.svg" />
-								<se:Format>image/svg+xml</se:Format>
-							</se:ExternalGraphic>
-						</se:Graphic>
-					</se:PointSymbolizer>
-				</se:Rule>
-				<se:Rule>
 					<se:Name>60203130231</se:Name>
 					<se:Description>
 						<se:Title>Объект навигационно-гидрографического обеспечения морских путей, системы управления движением судов существующий местного значения</se:Title>
@@ -463,26 +363,6 @@ xmlns:se="http://www.opengis.net/se">
 						<se:Graphic>
 							<se:ExternalGraphic>
 								<se:OnlineResource xlink:type="simple" xlink:href="svg_123/03_Transport/08_WaterTransportObj/60203130233.svg" />
-								<se:Format>image/svg+xml</se:Format>
-							</se:ExternalGraphic>
-						</se:Graphic>
-					</se:PointSymbolizer>
-				</se:Rule>
-				<se:Rule>
-					<se:Name>60203130234</se:Name>
-					<se:Description>
-						<se:Title>Объект навигационно-гидрографического обеспечения морских путей, системы управления движением судов планируемый к ликвидации местного значения</se:Title>
-					</se:Description>
-					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
-						<ogc:PropertyIsEqualTo>
-							<ogc:PropertyName>ruleid</ogc:PropertyName>
-							<ogc:Literal>60203130234</ogc:Literal>
-						</ogc:PropertyIsEqualTo>
-					</ogc:Filter>
-					<se:PointSymbolizer>
-						<se:Graphic>
-							<se:ExternalGraphic>
-								<se:OnlineResource xlink:type="simple" xlink:href="svg_123/03_Transport/08_WaterTransportObj/60203130234.svg" />
 								<se:Format>image/svg+xml</se:Format>
 							</se:ExternalGraphic>
 						</se:Graphic>
@@ -549,26 +429,6 @@ xmlns:se="http://www.opengis.net/se">
 					</se:PointSymbolizer>
 				</se:Rule>
 				<se:Rule>
-					<se:Name>60203130314</se:Name>
-					<se:Description>
-						<se:Title>Речной порт планируемый к ликвидации федерального значения</se:Title>
-					</se:Description>
-					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
-						<ogc:PropertyIsEqualTo>
-							<ogc:PropertyName>ruleid</ogc:PropertyName>
-							<ogc:Literal>60203130314</ogc:Literal>
-						</ogc:PropertyIsEqualTo>
-					</ogc:Filter>
-					<se:PointSymbolizer>
-						<se:Graphic>
-							<se:ExternalGraphic>
-								<se:OnlineResource xlink:type="simple" xlink:href="svg_123/03_Transport/08_WaterTransportObj/60203130314.svg" />
-								<se:Format>image/svg+xml</se:Format>
-							</se:ExternalGraphic>
-						</se:Graphic>
-					</se:PointSymbolizer>
-				</se:Rule>
-				<se:Rule>
 					<se:Name>60203130321</se:Name>
 					<se:Description>
 						<se:Title>Речной порт существующий регионального значения</se:Title>
@@ -623,26 +483,6 @@ xmlns:se="http://www.opengis.net/se">
 						<se:Graphic>
 							<se:ExternalGraphic>
 								<se:OnlineResource xlink:type="simple" xlink:href="svg_123/03_Transport/08_WaterTransportObj/60203130323.svg" />
-								<se:Format>image/svg+xml</se:Format>
-							</se:ExternalGraphic>
-						</se:Graphic>
-					</se:PointSymbolizer>
-				</se:Rule>
-				<se:Rule>
-					<se:Name>60203130324</se:Name>
-					<se:Description>
-						<se:Title>Речной порт планируемый к ликвидации регионального значения</se:Title>
-					</se:Description>
-					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
-						<ogc:PropertyIsEqualTo>
-							<ogc:PropertyName>ruleid</ogc:PropertyName>
-							<ogc:Literal>60203130324</ogc:Literal>
-						</ogc:PropertyIsEqualTo>
-					</ogc:Filter>
-					<se:PointSymbolizer>
-						<se:Graphic>
-							<se:ExternalGraphic>
-								<se:OnlineResource xlink:type="simple" xlink:href="svg_123/03_Transport/08_WaterTransportObj/60203130324.svg" />
 								<se:Format>image/svg+xml</se:Format>
 							</se:ExternalGraphic>
 						</se:Graphic>
@@ -709,26 +549,6 @@ xmlns:se="http://www.opengis.net/se">
 					</se:PointSymbolizer>
 				</se:Rule>
 				<se:Rule>
-					<se:Name>60203130334</se:Name>
-					<se:Description>
-						<se:Title>Речной порт планируемый к ликвидации местного значения</se:Title>
-					</se:Description>
-					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
-						<ogc:PropertyIsEqualTo>
-							<ogc:PropertyName>ruleid</ogc:PropertyName>
-							<ogc:Literal>60203130334</ogc:Literal>
-						</ogc:PropertyIsEqualTo>
-					</ogc:Filter>
-					<se:PointSymbolizer>
-						<se:Graphic>
-							<se:ExternalGraphic>
-								<se:OnlineResource xlink:type="simple" xlink:href="svg_123/03_Transport/08_WaterTransportObj/60203130334.svg" />
-								<se:Format>image/svg+xml</se:Format>
-							</se:ExternalGraphic>
-						</se:Graphic>
-					</se:PointSymbolizer>
-				</se:Rule>
-				<se:Rule>
 					<se:Name>60203130411</se:Name>
 					<se:Description>
 						<se:Title>Объект инфраструктуры внутренних водных путей существующий федерального значения</se:Title>
@@ -783,26 +603,6 @@ xmlns:se="http://www.opengis.net/se">
 						<se:Graphic>
 							<se:ExternalGraphic>
 								<se:OnlineResource xlink:type="simple" xlink:href="svg_123/03_Transport/08_WaterTransportObj/60203130413.svg" />
-								<se:Format>image/svg+xml</se:Format>
-							</se:ExternalGraphic>
-						</se:Graphic>
-					</se:PointSymbolizer>
-				</se:Rule>
-				<se:Rule>
-					<se:Name>60203130414</se:Name>
-					<se:Description>
-						<se:Title>Объект инфраструктуры внутренних водных путей планируемый к ликвидации федерального значения</se:Title>
-					</se:Description>
-					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
-						<ogc:PropertyIsEqualTo>
-							<ogc:PropertyName>ruleid</ogc:PropertyName>
-							<ogc:Literal>60203130414</ogc:Literal>
-						</ogc:PropertyIsEqualTo>
-					</ogc:Filter>
-					<se:PointSymbolizer>
-						<se:Graphic>
-							<se:ExternalGraphic>
-								<se:OnlineResource xlink:type="simple" xlink:href="svg_123/03_Transport/08_WaterTransportObj/60203130414.svg" />
 								<se:Format>image/svg+xml</se:Format>
 							</se:ExternalGraphic>
 						</se:Graphic>
@@ -869,26 +669,6 @@ xmlns:se="http://www.opengis.net/se">
 					</se:PointSymbolizer>
 				</se:Rule>
 				<se:Rule>
-					<se:Name>60203130424</se:Name>
-					<se:Description>
-						<se:Title>Объект инфраструктуры внутренних водных путей планируемый к ликвидации регионального значения</se:Title>
-					</se:Description>
-					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
-						<ogc:PropertyIsEqualTo>
-							<ogc:PropertyName>ruleid</ogc:PropertyName>
-							<ogc:Literal>60203130424</ogc:Literal>
-						</ogc:PropertyIsEqualTo>
-					</ogc:Filter>
-					<se:PointSymbolizer>
-						<se:Graphic>
-							<se:ExternalGraphic>
-								<se:OnlineResource xlink:type="simple" xlink:href="svg_123/03_Transport/08_WaterTransportObj/60203130424.svg" />
-								<se:Format>image/svg+xml</se:Format>
-							</se:ExternalGraphic>
-						</se:Graphic>
-					</se:PointSymbolizer>
-				</se:Rule>
-				<se:Rule>
 					<se:Name>60203130431</se:Name>
 					<se:Description>
 						<se:Title>Объект инфраструктуры внутренних водных путей существующий местного значения</se:Title>
@@ -943,26 +723,6 @@ xmlns:se="http://www.opengis.net/se">
 						<se:Graphic>
 							<se:ExternalGraphic>
 								<se:OnlineResource xlink:type="simple" xlink:href="svg_123/03_Transport/08_WaterTransportObj/60203130433.svg" />
-								<se:Format>image/svg+xml</se:Format>
-							</se:ExternalGraphic>
-						</se:Graphic>
-					</se:PointSymbolizer>
-				</se:Rule>
-				<se:Rule>
-					<se:Name>60203130434</se:Name>
-					<se:Description>
-						<se:Title>Объект инфраструктуры внутренних водных путей планируемый к ликвидации местного значения</se:Title>
-					</se:Description>
-					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
-						<ogc:PropertyIsEqualTo>
-							<ogc:PropertyName>ruleid</ogc:PropertyName>
-							<ogc:Literal>60203130434</ogc:Literal>
-						</ogc:PropertyIsEqualTo>
-					</ogc:Filter>
-					<se:PointSymbolizer>
-						<se:Graphic>
-							<se:ExternalGraphic>
-								<se:OnlineResource xlink:type="simple" xlink:href="svg_123/03_Transport/08_WaterTransportObj/60203130434.svg" />
 								<se:Format>image/svg+xml</se:Format>
 							</se:ExternalGraphic>
 						</se:Graphic>
@@ -1749,26 +1509,6 @@ xmlns:se="http://www.opengis.net/se">
 					</se:PointSymbolizer>
 				</se:Rule>
 				<se:Rule>
-					<se:Name>60203130814</se:Name>
-					<se:Description>
-						<se:Title>Судоходные гидротехнические сооружения внутренних водных путей планируемые к ликвидации федерального значения</se:Title>
-					</se:Description>
-					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
-						<ogc:PropertyIsEqualTo>
-							<ogc:PropertyName>ruleid</ogc:PropertyName>
-							<ogc:Literal>60203130814</ogc:Literal>
-						</ogc:PropertyIsEqualTo>
-					</ogc:Filter>
-					<se:PointSymbolizer>
-						<se:Graphic>
-							<se:ExternalGraphic>
-								<se:OnlineResource xlink:type="simple" xlink:href="svg_123/03_Transport/08_WaterTransportObj/60203130814.svg" />
-								<se:Format>image/svg+xml</se:Format>
-							</se:ExternalGraphic>
-						</se:Graphic>
-					</se:PointSymbolizer>
-				</se:Rule>
-				<se:Rule>
 					<se:Name>60203130821</se:Name>
 					<se:Description>
 						<se:Title>Судоходные гидротехнические сооружения внутренних водных путей существующие регионального значения</se:Title>
@@ -1823,26 +1563,6 @@ xmlns:se="http://www.opengis.net/se">
 						<se:Graphic>
 							<se:ExternalGraphic>
 								<se:OnlineResource xlink:type="simple" xlink:href="svg_123/03_Transport/08_WaterTransportObj/60203130823.svg" />
-								<se:Format>image/svg+xml</se:Format>
-							</se:ExternalGraphic>
-						</se:Graphic>
-					</se:PointSymbolizer>
-				</se:Rule>
-				<se:Rule>
-					<se:Name>60203130824</se:Name>
-					<se:Description>
-						<se:Title>Судоходные гидротехнические сооружения внутренних водных путей планируемые к ликвидации регионального значения</se:Title>
-					</se:Description>
-					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
-						<ogc:PropertyIsEqualTo>
-							<ogc:PropertyName>ruleid</ogc:PropertyName>
-							<ogc:Literal>60203130824</ogc:Literal>
-						</ogc:PropertyIsEqualTo>
-					</ogc:Filter>
-					<se:PointSymbolizer>
-						<se:Graphic>
-							<se:ExternalGraphic>
-								<se:OnlineResource xlink:type="simple" xlink:href="svg_123/03_Transport/08_WaterTransportObj/60203130824.svg" />
 								<se:Format>image/svg+xml</se:Format>
 							</se:ExternalGraphic>
 						</se:Graphic>
@@ -1909,26 +1629,6 @@ xmlns:se="http://www.opengis.net/se">
 					</se:PointSymbolizer>
 				</se:Rule>
 				<se:Rule>
-					<se:Name>60203130834</se:Name>
-					<se:Description>
-						<se:Title>Судоходные гидротехнические сооружения внутренних водных путей планируемые к ликвидации местного значения</se:Title>
-					</se:Description>
-					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
-						<ogc:PropertyIsEqualTo>
-							<ogc:PropertyName>ruleid</ogc:PropertyName>
-							<ogc:Literal>60203130834</ogc:Literal>
-						</ogc:PropertyIsEqualTo>
-					</ogc:Filter>
-					<se:PointSymbolizer>
-						<se:Graphic>
-							<se:ExternalGraphic>
-								<se:OnlineResource xlink:type="simple" xlink:href="svg_123/03_Transport/08_WaterTransportObj/60203130834.svg" />
-								<se:Format>image/svg+xml</se:Format>
-							</se:ExternalGraphic>
-						</se:Graphic>
-					</se:PointSymbolizer>
-				</se:Rule>
-				<se:Rule>
 					<se:Name>60203130911</se:Name>
 					<se:Description>
 						<se:Title>Наплавной мост существующий федерального значения</se:Title>
@@ -1983,26 +1683,6 @@ xmlns:se="http://www.opengis.net/se">
 						<se:Graphic>
 							<se:ExternalGraphic>
 								<se:OnlineResource xlink:type="simple" xlink:href="svg_123/03_Transport/08_WaterTransportObj/60203130913.svg" />
-								<se:Format>image/svg+xml</se:Format>
-							</se:ExternalGraphic>
-						</se:Graphic>
-					</se:PointSymbolizer>
-				</se:Rule>
-				<se:Rule>
-					<se:Name>60203130914</se:Name>
-					<se:Description>
-						<se:Title>Наплавной мост планируемый к ликвидации федерального значения</se:Title>
-					</se:Description>
-					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
-						<ogc:PropertyIsEqualTo>
-							<ogc:PropertyName>ruleid</ogc:PropertyName>
-							<ogc:Literal>60203130914</ogc:Literal>
-						</ogc:PropertyIsEqualTo>
-					</ogc:Filter>
-					<se:PointSymbolizer>
-						<se:Graphic>
-							<se:ExternalGraphic>
-								<se:OnlineResource xlink:type="simple" xlink:href="svg_123/03_Transport/08_WaterTransportObj/60203130914.svg" />
 								<se:Format>image/svg+xml</se:Format>
 							</se:ExternalGraphic>
 						</se:Graphic>
@@ -2069,26 +1749,6 @@ xmlns:se="http://www.opengis.net/se">
 					</se:PointSymbolizer>
 				</se:Rule>
 				<se:Rule>
-					<se:Name>60203130924</se:Name>
-					<se:Description>
-						<se:Title>Наплавной мост планируемый к ликвидации регионального значения</se:Title>
-					</se:Description>
-					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
-						<ogc:PropertyIsEqualTo>
-							<ogc:PropertyName>ruleid</ogc:PropertyName>
-							<ogc:Literal>60203130924</ogc:Literal>
-						</ogc:PropertyIsEqualTo>
-					</ogc:Filter>
-					<se:PointSymbolizer>
-						<se:Graphic>
-							<se:ExternalGraphic>
-								<se:OnlineResource xlink:type="simple" xlink:href="svg_123/03_Transport/08_WaterTransportObj/60203130924.svg" />
-								<se:Format>image/svg+xml</se:Format>
-							</se:ExternalGraphic>
-						</se:Graphic>
-					</se:PointSymbolizer>
-				</se:Rule>
-				<se:Rule>
 					<se:Name>60203130931</se:Name>
 					<se:Description>
 						<se:Title>Наплавной мост существующий местного значения</se:Title>
@@ -2143,26 +1803,6 @@ xmlns:se="http://www.opengis.net/se">
 						<se:Graphic>
 							<se:ExternalGraphic>
 								<se:OnlineResource xlink:type="simple" xlink:href="svg_123/03_Transport/08_WaterTransportObj/60203130933.svg" />
-								<se:Format>image/svg+xml</se:Format>
-							</se:ExternalGraphic>
-						</se:Graphic>
-					</se:PointSymbolizer>
-				</se:Rule>
-				<se:Rule>
-					<se:Name>60203130934</se:Name>
-					<se:Description>
-						<se:Title>Наплавной мост планируемый к ликвидации местного значения</se:Title>
-					</se:Description>
-					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
-						<ogc:PropertyIsEqualTo>
-							<ogc:PropertyName>ruleid</ogc:PropertyName>
-							<ogc:Literal>60203130934</ogc:Literal>
-						</ogc:PropertyIsEqualTo>
-					</ogc:Filter>
-					<se:PointSymbolizer>
-						<se:Graphic>
-							<se:ExternalGraphic>
-								<se:OnlineResource xlink:type="simple" xlink:href="svg_123/03_Transport/08_WaterTransportObj/60203130934.svg" />
 								<se:Format>image/svg+xml</se:Format>
 							</se:ExternalGraphic>
 						</se:Graphic>

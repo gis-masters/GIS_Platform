@@ -69,26 +69,6 @@ xmlns:se="http://www.opengis.net/se">
 					</se:PointSymbolizer>
 				</se:Rule>
 				<se:Rule>
-					<se:Name>60205030114</se:Name>
-					<se:Description>
-						<se:Title>Кладбище планируемое к ликвидации федерального значения</se:Title>
-					</se:Description>
-					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
-						<ogc:PropertyIsEqualTo>
-							<ogc:PropertyName>ruleid</ogc:PropertyName>
-							<ogc:Literal>60205030114</ogc:Literal>
-						</ogc:PropertyIsEqualTo>
-					</ogc:Filter>
-					<se:PointSymbolizer>
-						<se:Graphic>
-							<se:ExternalGraphic>
-								<se:OnlineResource xlink:type="simple" xlink:href="svg/05_Unclassified/03_Cemetery/60205030114.svg" />
-								<se:Format>image/svg+xml</se:Format>
-							</se:ExternalGraphic>
-						</se:Graphic>
-					</se:PointSymbolizer>
-				</se:Rule>
-				<se:Rule>
 					<se:Name>60205030121</se:Name>
 					<se:Description>
 						<se:Title>Кладбище существующее регионального значения</se:Title>
@@ -149,26 +129,6 @@ xmlns:se="http://www.opengis.net/se">
 					</se:PointSymbolizer>
 				</se:Rule>
 				<se:Rule>
-					<se:Name>60205030124</se:Name>
-					<se:Description>
-						<se:Title>Кладбище планируемое к ликвидации регионального значения</se:Title>
-					</se:Description>
-					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
-						<ogc:PropertyIsEqualTo>
-							<ogc:PropertyName>ruleid</ogc:PropertyName>
-							<ogc:Literal>60205030124</ogc:Literal>
-						</ogc:PropertyIsEqualTo>
-					</ogc:Filter>
-					<se:PointSymbolizer>
-						<se:Graphic>
-							<se:ExternalGraphic>
-								<se:OnlineResource xlink:type="simple" xlink:href="svg/05_Unclassified/03_Cemetery/60205030124.svg" />
-								<se:Format>image/svg+xml</se:Format>
-							</se:ExternalGraphic>
-						</se:Graphic>
-					</se:PointSymbolizer>
-				</se:Rule>
-				<se:Rule>
 					<se:Name>60205030131</se:Name>
 					<se:Description>
 						<se:Title>Кладбище существующее местного значения</se:Title>
@@ -223,26 +183,6 @@ xmlns:se="http://www.opengis.net/se">
 						<se:Graphic>
 							<se:ExternalGraphic>
 								<se:OnlineResource xlink:type="simple" xlink:href="svg/05_Unclassified/03_Cemetery/60205030133.svg" />
-								<se:Format>image/svg+xml</se:Format>
-							</se:ExternalGraphic>
-						</se:Graphic>
-					</se:PointSymbolizer>
-				</se:Rule>
-				<se:Rule>
-					<se:Name>60205030134</se:Name>
-					<se:Description>
-						<se:Title>Кладбище планируемое к ликвидации местного значения</se:Title>
-					</se:Description>
-					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
-						<ogc:PropertyIsEqualTo>
-							<ogc:PropertyName>ruleid</ogc:PropertyName>
-							<ogc:Literal>60205030134</ogc:Literal>
-						</ogc:PropertyIsEqualTo>
-					</ogc:Filter>
-					<se:PointSymbolizer>
-						<se:Graphic>
-							<se:ExternalGraphic>
-								<se:OnlineResource xlink:type="simple" xlink:href="svg/05_Unclassified/03_Cemetery/60205030134.svg" />
 								<se:Format>image/svg+xml</se:Format>
 							</se:ExternalGraphic>
 						</se:Graphic>
@@ -489,26 +429,6 @@ xmlns:se="http://www.opengis.net/se">
 					</se:PointSymbolizer>
 				</se:Rule>
 				<se:Rule>
-					<se:Name>60205030314</se:Name>
-					<se:Description>
-						<se:Title>Крематорий планируемый к ликвидации федерального значения</se:Title>
-					</se:Description>
-					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
-						<ogc:PropertyIsEqualTo>
-							<ogc:PropertyName>ruleid</ogc:PropertyName>
-							<ogc:Literal>60205030314</ogc:Literal>
-						</ogc:PropertyIsEqualTo>
-					</ogc:Filter>
-					<se:PointSymbolizer>
-						<se:Graphic>
-							<se:ExternalGraphic>
-								<se:OnlineResource xlink:type="simple" xlink:href="svg/05_Unclassified/03_Cemetery/60205030314.svg" />
-								<se:Format>image/svg+xml</se:Format>
-							</se:ExternalGraphic>
-						</se:Graphic>
-					</se:PointSymbolizer>
-				</se:Rule>
-				<se:Rule>
 					<se:Name>60205030321</se:Name>
 					<se:Description>
 						<se:Title>Крематорий существующий регионального значения</se:Title>
@@ -569,26 +489,6 @@ xmlns:se="http://www.opengis.net/se">
 					</se:PointSymbolizer>
 				</se:Rule>
 				<se:Rule>
-					<se:Name>60205030324</se:Name>
-					<se:Description>
-						<se:Title>Крематорий планируемый к ликвидации регионального значения</se:Title>
-					</se:Description>
-					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
-						<ogc:PropertyIsEqualTo>
-							<ogc:PropertyName>ruleid</ogc:PropertyName>
-							<ogc:Literal>60205030324</ogc:Literal>
-						</ogc:PropertyIsEqualTo>
-					</ogc:Filter>
-					<se:PointSymbolizer>
-						<se:Graphic>
-							<se:ExternalGraphic>
-								<se:OnlineResource xlink:type="simple" xlink:href="svg/05_Unclassified/03_Cemetery/60205030324.svg" />
-								<se:Format>image/svg+xml</se:Format>
-							</se:ExternalGraphic>
-						</se:Graphic>
-					</se:PointSymbolizer>
-				</se:Rule>
-				<se:Rule>
 					<se:Name>60205030331</se:Name>
 					<se:Description>
 						<se:Title>Крематорий существующий местного значения</se:Title>
@@ -643,26 +543,6 @@ xmlns:se="http://www.opengis.net/se">
 						<se:Graphic>
 							<se:ExternalGraphic>
 								<se:OnlineResource xlink:type="simple" xlink:href="svg/05_Unclassified/03_Cemetery/60205030333.svg" />
-								<se:Format>image/svg+xml</se:Format>
-							</se:ExternalGraphic>
-						</se:Graphic>
-					</se:PointSymbolizer>
-				</se:Rule>
-				<se:Rule>
-					<se:Name>60205030334</se:Name>
-					<se:Description>
-						<se:Title>Крематорий планируемый к ликвидации местного значения</se:Title>
-					</se:Description>
-					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
-						<ogc:PropertyIsEqualTo>
-							<ogc:PropertyName>ruleid</ogc:PropertyName>
-							<ogc:Literal>60205030334</ogc:Literal>
-						</ogc:PropertyIsEqualTo>
-					</ogc:Filter>
-					<se:PointSymbolizer>
-						<se:Graphic>
-							<se:ExternalGraphic>
-								<se:OnlineResource xlink:type="simple" xlink:href="svg/05_Unclassified/03_Cemetery/60205030334.svg" />
 								<se:Format>image/svg+xml</se:Format>
 							</se:ExternalGraphic>
 						</se:Graphic>

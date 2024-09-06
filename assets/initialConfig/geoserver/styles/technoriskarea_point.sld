@@ -43,7 +43,7 @@ xmlns:se="http://www.opengis.net/se">
 					<se:PointSymbolizer>
 						<se:Graphic>
 							<se:ExternalGraphic>
-								<se:OnlineResource xlink:type="simple" xlink:href="svg/08_RiskZone/01_NaturalRiskZone/60601020201.svg" />
+								<se:OnlineResource xlink:type="simple" xlink:href="svg/08_RiskZone/02_TechnoRiskArea/60601020201.svg" />
 								<se:Format>image/svg+xml</se:Format>
 							</se:ExternalGraphic>
 							<se:Size>40</se:Size>
@@ -64,7 +64,7 @@ xmlns:se="http://www.opengis.net/se">
 					<se:PointSymbolizer>
 						<se:Graphic>
 							<se:ExternalGraphic>
-								<se:OnlineResource xlink:type="simple" xlink:href="svg/08_RiskZone/01_NaturalRiskZone/60601020301.svg" />
+								<se:OnlineResource xlink:type="simple" xlink:href="svg/08_RiskZone/02_TechnoRiskArea/60601020301.svg" />
 								<se:Format>image/svg+xml</se:Format>
 							</se:ExternalGraphic>
 							<se:Size>40</se:Size>
@@ -85,7 +85,7 @@ xmlns:se="http://www.opengis.net/se">
 					<se:PointSymbolizer>
 						<se:Graphic>
 							<se:ExternalGraphic>
-								<se:OnlineResource xlink:type="simple" xlink:href="svg/08_RiskZone/01_NaturalRiskZone/60601020401.svg" />
+								<se:OnlineResource xlink:type="simple" xlink:href="svg/08_RiskZone/02_TechnoRiskArea/60601020401.svg" />
 								<se:Format>image/svg+xml</se:Format>
 							</se:ExternalGraphic>
 							<se:Size>40</se:Size>

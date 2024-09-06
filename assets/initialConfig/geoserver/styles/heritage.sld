@@ -29,46 +29,6 @@ xmlns:se="http://www.opengis.net/se">
 					</se:PointSymbolizer>
 				</se:Rule>
 				<se:Rule>
-					<se:Name>60401010102</se:Name>
-					<se:Description>
-						<se:Title>Памятник планируемый к размещению</se:Title>
-					</se:Description>
-					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
-						<ogc:PropertyIsEqualTo>
-							<ogc:PropertyName>ruleid</ogc:PropertyName>
-							<ogc:Literal>60401010102</ogc:Literal>
-						</ogc:PropertyIsEqualTo>
-					</ogc:Filter>
-					<se:PointSymbolizer>
-						<se:Graphic>
-							<se:ExternalGraphic>
-								<se:OnlineResource xlink:type="simple" xlink:href="svg/06_Heritage/60401010102.svg" />
-								<se:Format>image/svg+xml</se:Format>
-							</se:ExternalGraphic>
-						</se:Graphic>
-					</se:PointSymbolizer>
-				</se:Rule>
-				<se:Rule>
-					<se:Name>60401010103</se:Name>
-					<se:Description>
-						<se:Title>Памятник планируемый к реконструкции</se:Title>
-					</se:Description>
-					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
-						<ogc:PropertyIsEqualTo>
-							<ogc:PropertyName>ruleid</ogc:PropertyName>
-							<ogc:Literal>60401010103</ogc:Literal>
-						</ogc:PropertyIsEqualTo>
-					</ogc:Filter>
-					<se:PointSymbolizer>
-						<se:Graphic>
-							<se:ExternalGraphic>
-								<se:OnlineResource xlink:type="simple" xlink:href="svg/06_Heritage/60401010103.svg" />
-								<se:Format>image/svg+xml</se:Format>
-							</se:ExternalGraphic>
-						</se:Graphic>
-					</se:PointSymbolizer>
-				</se:Rule>
-				<se:Rule>
 					<se:Name>60401010201</se:Name>
 					<se:Description>
 						<se:Title>Ансамбль существующий</se:Title>
@@ -83,46 +43,6 @@ xmlns:se="http://www.opengis.net/se">
 						<se:Graphic>
 							<se:ExternalGraphic>
 								<se:OnlineResource xlink:type="simple" xlink:href="svg/06_Heritage/60401010201.svg" />
-								<se:Format>image/svg+xml</se:Format>
-							</se:ExternalGraphic>
-						</se:Graphic>
-					</se:PointSymbolizer>
-				</se:Rule>
-				<se:Rule>
-					<se:Name>60401010202</se:Name>
-					<se:Description>
-						<se:Title>Ансамбль планируемый к размещению</se:Title>
-					</se:Description>
-					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
-						<ogc:PropertyIsEqualTo>
-							<ogc:PropertyName>ruleid</ogc:PropertyName>
-							<ogc:Literal>60401010202</ogc:Literal>
-						</ogc:PropertyIsEqualTo>
-					</ogc:Filter>
-					<se:PointSymbolizer>
-						<se:Graphic>
-							<se:ExternalGraphic>
-								<se:OnlineResource xlink:type="simple" xlink:href="svg/06_Heritage/60401010202.svg" />
-								<se:Format>image/svg+xml</se:Format>
-							</se:ExternalGraphic>
-						</se:Graphic>
-					</se:PointSymbolizer>
-				</se:Rule>
-				<se:Rule>
-					<se:Name>60401010203</se:Name>
-					<se:Description>
-						<se:Title>Ансамбль планируемый к реконструкции</se:Title>
-					</se:Description>
-					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
-						<ogc:PropertyIsEqualTo>
-							<ogc:PropertyName>ruleid</ogc:PropertyName>
-							<ogc:Literal>60401010203</ogc:Literal>
-						</ogc:PropertyIsEqualTo>
-					</ogc:Filter>
-					<se:PointSymbolizer>
-						<se:Graphic>
-							<se:ExternalGraphic>
-								<se:OnlineResource xlink:type="simple" xlink:href="svg/06_Heritage/60401010203.svg" />
 								<se:Format>image/svg+xml</se:Format>
 							</se:ExternalGraphic>
 						</se:Graphic>
@@ -169,26 +89,6 @@ xmlns:se="http://www.opengis.net/se">
 					</se:PointSymbolizer>
 				</se:Rule>
 				<se:Rule>
-					<se:Name>60401010303</se:Name>
-					<se:Description>
-						<se:Title>Достопримечательное место планируемое к реконструкции</se:Title>
-					</se:Description>
-					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
-						<ogc:PropertyIsEqualTo>
-							<ogc:PropertyName>ruleid</ogc:PropertyName>
-							<ogc:Literal>60401010303</ogc:Literal>
-						</ogc:PropertyIsEqualTo>
-					</ogc:Filter>
-					<se:PointSymbolizer>
-						<se:Graphic>
-							<se:ExternalGraphic>
-								<se:OnlineResource xlink:type="simple" xlink:href="svg/06_Heritage/60401010303.svg" />
-								<se:Format>image/svg+xml</se:Format>
-							</se:ExternalGraphic>
-						</se:Graphic>
-					</se:PointSymbolizer>
-				</se:Rule>
-				<se:Rule>
 					<se:Name>60401010401</se:Name>
 					<se:Description>
 						<se:Title>Историко-культурный заповедник существующий</se:Title>
@@ -223,26 +123,6 @@ xmlns:se="http://www.opengis.net/se">
 						<se:Graphic>
 							<se:ExternalGraphic>
 								<se:OnlineResource xlink:type="simple" xlink:href="svg/06_Heritage/60401010402.svg" />
-								<se:Format>image/svg+xml</se:Format>
-							</se:ExternalGraphic>
-						</se:Graphic>
-					</se:PointSymbolizer>
-				</se:Rule>
-				<se:Rule>
-					<se:Name>60401010403</se:Name>
-					<se:Description>
-						<se:Title>Историко-культурный заповедник планируемый к реконструкции</se:Title>
-					</se:Description>
-					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
-						<ogc:PropertyIsEqualTo>
-							<ogc:PropertyName>ruleid</ogc:PropertyName>
-							<ogc:Literal>60401010403</ogc:Literal>
-						</ogc:PropertyIsEqualTo>
-					</ogc:Filter>
-					<se:PointSymbolizer>
-						<se:Graphic>
-							<se:ExternalGraphic>
-								<se:OnlineResource xlink:type="simple" xlink:href="svg/06_Heritage/60401010403.svg" />
 								<se:Format>image/svg+xml</se:Format>
 							</se:ExternalGraphic>
 						</se:Graphic>
