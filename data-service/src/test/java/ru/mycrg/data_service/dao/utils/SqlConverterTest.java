@@ -4,6 +4,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 import static ru.mycrg.data_service.dao.utils.EcqlHandler.buildWhereSection;
+import static ru.mycrg.data_service.dao.utils.EcqlHandler.markSingleQuotesIn;
 
 public class SqlConverterTest {
 
@@ -58,5 +59,30 @@ public class SqlConverterTest {
         assertEquals("WHERE id IN (1, 13)", buildWhereSection("\"id\" IN (1, 13)"));
         assertEquals("WHERE id = 13", buildWhereSection("\"id\" = 13"));
         assertEquals("WHERE id > 13", buildWhereSection("\"id\" > 13"));
+    }
+
+    @Test
+    public void shouldCastStringAsString() {
+        assertEquals("WHERE (fiz = '1')", buildWhereSection("\"fiz\" IN('1')"));
+        assertEquals("WHERE fiz IN ('1', '22', '333')", buildWhereSection("\"fiz\" IN ('1', '22', '333')"));
+        assertEquals("WHERE ((((((is_folder = false) OR is_folder IS NULL ) " +
+                             "AND (path LIKE '/root/%'  OR path = '/root')) " +
+                             "AND (receipt_type = '2')) " +
+                             "AND fiz_type IN ('200', '314', '5000')) " +
+                             "AND is_deleted = 'false')",
+                     buildWhereSection("(((is_folder IN(false) OR (is_folder IS null)))) " +
+                                               "AND (((path LIKE '/root/%')) OR ((path = '/root'))) " +
+                                               "AND ((receipt_type IN('2'))) " +
+                                               "AND ((fiz_type IN('200', '314', '5000'))) " +
+                                               "AND is_deleted = 'false'"));
+    }
+
+    @Test
+    public void shouldCorrectlyMarkSingleQuotes() {
+        assertEquals("some IN('marker1')", markSingleQuotesIn("some IN('1')", "marker"));
+        assertEquals("some IN ('_fiz_1', '_fiz_2')", markSingleQuotesIn("some IN ('1', '2')", "_fiz_"));
+        assertEquals("some1 IN ('__1', '__2') OR some2 IN ('__333','__5','__314314')",
+                     markSingleQuotesIn("some1 IN ('1', '2') OR some2 IN ('333','5','314314')", "__"));
+        assertEquals("((ttt IN('fiz1')))", markSingleQuotesIn("((ttt IN('1')))", "fiz"));
     }
 }

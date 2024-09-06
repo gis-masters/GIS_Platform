@@ -4,9 +4,12 @@ LABEL MAINTAINER="Fanatic Fiz <fanaticfiz@outlook.com>"
 COPY ./target/apm-agent.jar apm-agent.jar
 COPY ./target/geo-wrapper.jar geo-wrapper.jar
 
-RUN apt update
-RUN apt install gdal-bin -y
-RUN apt install zip -y
+RUN set -eux; \
+    apt update; \
+    apt install gdal-bin -y; \
+    apt install zip -y; \
+    apt autoremove -y; \
+    apt autoclean -y;
 
 ENV XMX_SIZE=1G
 

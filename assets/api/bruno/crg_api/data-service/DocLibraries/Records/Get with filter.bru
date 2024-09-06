@@ -1,0 +1,21 @@
+meta {
+  name: Get with filter
+  type: http
+  seq: 5
+}
+
+get {
+  url: http://localhost:8084/document-libraries/dl_data_kpt/records/as_registry?page=0&size=20&filter=(((is_folder+IN(false)+OR+(is_folder+IS+null))))+AND+(((path+LIKE+%27%2Froot%2F%25%27))+OR+((path+%3D+%27%2Froot%27)))+AND+((receipt_type+IN(%272%27)))
+  body: none
+  auth: bearer
+}
+
+params:query {
+  page: 0
+  size: 20
+  filter: (((is_folder+IN(false)+OR+(is_folder+IS+null))))+AND+(((path+LIKE+%27%2Froot%2F%25%27))+OR+((path+%3D+%27%2Froot%27)))+AND+((receipt_type+IN(%272%27)))
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjcmdfbG9naW4iOiJmaXpAZml6IiwidXNlcl9uYW1lIjoiZml6X2Zpel8yIiwiZ3JvdXBzIjpbXSwidmVyc2lvbiI6bnVsbCwiYXV0aG9yaXRpZXMiOlsiT1JHX0FETUlOIl0sIm1pbmlvbnMiOltdLCJjbGllbnRfaWQiOiJhZG1pbiIsInVzZXJfaWQiOjIsInNjb3BlIjpbImNyZyJdLCJvcmdhbml6YXRpb25zIjpbeyJpZCI6MSwibmFtZSI6ItCQ0J4g0JPQtdC-0LjQvdGE0L7RgNC80LDRhtC40L7QvdC90YvQtSDRgdC40YHRgtC10LzRiyJ9XSwiZXhwIjoxNzI1NTQyMTQzLCJkaXJlY3RNaW5pb25zIjpbXSwianRpIjoiNTQ0NDQxNWItMmVlMi00NDhmLTk4MTgtZmVkYmRlNmM5NzI5In0.TNwbKeeG8JogVt0SiRbm_-q9dtU70CQ7bbj68RK4coU
+}
