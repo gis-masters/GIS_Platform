@@ -30,4 +30,8 @@ public class RegistryData {
     public Set<String> getParentPaths() {
         return pathsToMyParent;
     }
+
+    public boolean isEmpty() {
+        return allowedDirectlyDocumentIds.isEmpty() && pathsToChildren.isEmpty() && pathsToMyParent.isEmpty();
+    }
 }

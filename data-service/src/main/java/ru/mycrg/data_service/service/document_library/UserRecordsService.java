@@ -114,6 +114,10 @@ public class UserRecordsService implements IRecordsService {
                 : addAsEqual(ecqlFilter, IS_DELETED.getName(), "false");
 
         RegistryData registryData = librariesService.prepareDataForRegistry(lQualifier);
+        if (registryData.isEmpty()) {
+            return new PageImpl<>(List.of(), pageable, 0);
+        }
+
         SchemaDto schema = librariesService.getSchema(lQualifier.getTable());
 
         List<IRecord> allAllowedRecords = recordsDao.findAllowedForRegistry(lQualifier, ecqlFilter, registryData,
