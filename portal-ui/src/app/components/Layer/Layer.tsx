@@ -103,7 +103,7 @@ export class Layer extends Component<LayerProps> {
 
         <LayerInnards show={this.open && !isGroup} depth={depth || 0}>
           {this.isError && <LayerErrors errors={this.errors} />}
-          {isVectorLayer && !this.errors && <LayerLegend layer={data as CrgVectorLayer} />}
+          {isVectorLayer && !this.isError && <LayerLegend layer={data as CrgVectorLayer} />}
         </LayerInnards>
 
         {(this.menuAnchor || !!(this.menuX && this.menuY)) && (

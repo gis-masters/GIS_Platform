@@ -61,6 +61,7 @@ export const LayerIcon: FC<LayerIconProps> = ({ data, isGroup, isError, expanded
       }
     }
   }
+  // console.log(data.title, iconType, isError);
 
   return <Icon type={iconType} className={cnLayerIcon()} layer={layer} expanded={expanded} />;
 };

@@ -197,6 +197,7 @@ class MapSelectionService {
 
   private generateBuffer(areaExtent: Extent, coordinate: Coordinate): MultiPolygon | undefined {
     const extent = areaExtent.getExtent();
+
     areaExtent.setExtent([0, 0, 0, 0]);
 
     if (extent) {
@@ -234,7 +235,6 @@ class MapSelectionService {
   private async selectFeaturesByCoordinates(selectionType: MapSelectionTypes, buffer: MultiPolygon) {
     await services.provided;
     const visibleLayers = currentProject.visibleVectorLayers.map(({ payload }) => payload);
-
     if (!visibleLayers.length) {
       services.logger.debug('No visible layers');
       this.selectFeatures([]);
