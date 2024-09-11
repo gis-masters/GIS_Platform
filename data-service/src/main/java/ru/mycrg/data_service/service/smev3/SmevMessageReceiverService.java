@@ -103,7 +103,7 @@ public class SmevMessageReceiverService {
                             () -> log.warn("Обработчик сообщения СМЭВ не найден {}", messageEntity.mnemonicEnum())
                     );
         } catch (Exception e) {
-            log.warn("Ошибка при обработке сообщения из СМЭВ: {}", e.getMessage());
+            log.warn("Ошибка при обработке сообщения из СМЭВ: {}", e.getMessage(), e);
             receiveFail(e, body);
         }
     }
