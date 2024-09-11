@@ -164,6 +164,16 @@
             "contentUrl": "/assets/help/map/2projectManagement/12styleCaptions/12styleCaptions.html"
           },
           {
+            "id": "visibilityControl",
+            "title": "Видимость слоя",
+            "contentUrl": "/assets/help/map/2projectManagement/13visibilityControl/13visibilityControl.html"
+          },
+          {
+            "id": "reprojection",
+            "title": "Перепроецирование слоя",
+            "contentUrl": "/assets/help/map/2projectManagement/14reprojection/14reprojection.html"
+          },
+          {
             "id": "photoLayer",
             "title": "Фотослой",
             "contentUrl": "/assets/help/map/2projectManagement/11photoLayer/11photoLayer.html"
