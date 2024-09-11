@@ -14,6 +14,11 @@ import { photoLayer } from './testSchemas/photoLayer';
 import { propertyWithAllCheckedAttributes } from './testSchemas/propertyWithAllCheckedAttributes';
 import { readonly } from './testSchemas/readonly';
 import { simple } from './testSchemas/simple';
+import { simpleMultiLine } from './testSchemas/simpleMultiline';
+import { simpleMultiLineReadonly } from './testSchemas/simpleMultilineReadonly';
+import { simpleMultiPoint } from './testSchemas/simpleMultipoint';
+import { simpleMultiPointReadonly } from './testSchemas/simpleMultipointReadonly';
+import { simpleReadonly } from './testSchemas/simpleReadonly';
 import { testNotSorting } from './testSchemas/testNotSorting';
 import { testShapeFeaturesCopy } from './testSchemas/testShapeFeaturesCopy';
 import { testSorting } from './testSchemas/testSorting';
@@ -42,6 +47,11 @@ const testSchemas: Schema[] = [
   propertyWithAllCheckedAttributes,
   readonly,
   simple,
+  simpleMultiLine,
+  simpleMultiPoint,
+  simpleReadonly,
+  simpleMultiLineReadonly,
+  simpleMultiPointReadonly,
   testNotSorting,
   testShapeFeaturesCopy,
   testSorting,

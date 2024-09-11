@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { action, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { withBemMod } from '@bem-react/core';
+import { Coordinate } from 'ol/coordinate';
 
 import {
   CoordinateEdited,
@@ -24,6 +25,7 @@ class EditFeatureGeometryFormTypeMultiPolygon extends Component<EditFeatureGeome
   render() {
     const { className, store } = this.props;
     const geometry = store.geometry as WfsMultiPolygonGeometry;
+    const startingIndexes = this.getCoordinatesIndexArray(geometry.coordinates);
 
     return (
       <div className={cnEditFeatureGeometryForm(null, [className, 'scroll'])}>
@@ -34,6 +36,7 @@ class EditFeatureGeometryFormTypeMultiPolygon extends Component<EditFeatureGeome
             groupsMustBeClosed
             store={store}
             index={index}
+            startingIndexes={startingIndexes[index]}
             key={index}
             onPolygonDelete={this.handleDeletePolygon}
           />
@@ -42,6 +45,25 @@ class EditFeatureGeometryFormTypeMultiPolygon extends Component<EditFeatureGeome
         <EditFeatureGeometryAddButton onClick={this.handlePolygonAdd}>Добавить полигон</EditFeatureGeometryAddButton>
       </div>
     );
+  }
+
+  // собираем стартовые индексы для каждого набора координат
+  private getCoordinatesIndexArray(coordinates: Coordinate[][][]): number[][][] {
+    let coordinatesCounter: number = 0;
+
+    return coordinates.map((coord, i) => {
+      return coord.map((c, y) => {
+        let startingIndexOfTheCoordinateSet = coordinatesCounter;
+
+        if (!i && !y) {
+          startingIndexOfTheCoordinateSet = 0;
+        }
+
+        coordinatesCounter = coordinatesCounter + c.length - 1;
+
+        return [startingIndexOfTheCoordinateSet];
+      });
+    });
   }
 
   @action.bound

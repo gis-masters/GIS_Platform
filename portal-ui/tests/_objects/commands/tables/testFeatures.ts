@@ -19,6 +19,10 @@ import { forProkol } from './testFeatures/forProkol';
 import { forSimpleFiltering } from './testFeatures/forSimpleFiltering';
 import { forSorting } from './testFeatures/forSorting';
 import { forTitles } from './testFeatures/forTitles';
+import { line } from './testFeatures/line';
+import { multiLine } from './testFeatures/multiline';
+import { multiPoint } from './testFeatures/multipoint';
+import { multiPolygon } from './testFeatures/multiPolygon';
 import { singleFeature } from './testFeatures/singleFeature';
 
 const KEY = 'тестовые данные';
@@ -100,6 +104,18 @@ export async function getTestFeatures(key: string, schema?: Schema): Promise<New
     }
     case 'тестирование прокола': {
       return forProkol;
+    }
+    case 'мультиполигон': {
+      return multiPolygon;
+    }
+    case 'линия': {
+      return line;
+    }
+    case 'мультилиния': {
+      return multiLine;
+    }
+    case 'мультиточка': {
+      return multiPoint;
     }
     case 'тестирование панели объектов': {
       return forFeaturesSidebar;

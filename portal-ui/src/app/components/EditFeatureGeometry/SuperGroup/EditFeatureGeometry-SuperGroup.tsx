@@ -4,6 +4,7 @@ import { observer } from 'mobx-react';
 import { IconButton, Tooltip } from '@mui/material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
+import { isNumber } from 'lodash';
 import { Coordinate } from 'ol/coordinate';
 
 import { CoordinateEdited, GeometryType } from '../../../services/geoserver/wfs/wfs.models';
@@ -27,6 +28,7 @@ interface EditFeatureGeometrySuperGroupProps {
   groupsMustBeClosed?: boolean;
   index: number;
   store: EditFeatureGeometryStore;
+  startingIndexes?: number[][];
   onPolygonDelete?(index: number): void;
 }
 
@@ -38,7 +40,7 @@ export class EditFeatureGeometrySuperGroup extends Component<EditFeatureGeometry
   }
 
   render() {
-    const { geometryPart, minCoordsPerGroup, groupsMustBeClosed, store } = this.props;
+    const { geometryPart, minCoordsPerGroup, groupsMustBeClosed, store, startingIndexes } = this.props;
     const anotherPolygonExists =
       store.geometryType === GeometryType.MULTI_POLYGON && (store.geometry?.coordinates.length || 0) > 1;
     const labelPart = selectLabelForGeometryType(
@@ -66,19 +68,28 @@ export class EditFeatureGeometrySuperGroup extends Component<EditFeatureGeometry
           </EditFeatureGeometryToolbarRight>
         </EditFeatureGeometryToolbar>
 
-        {geometryPart.map((coordGroup, i, coordinates) => (
-          <EditFeatureGeometryGroup
-            coordinates={coordGroup}
-            minCoordsCount={minCoordsPerGroup}
-            mustBeClosed={groupsMustBeClosed}
-            canBeDeleted={coordinates.length > 1}
-            onDelete={this.handleGroupDelete}
-            multiple={coordinates.length > 1}
-            store={store}
-            index={i}
-            key={i}
-          />
-        ))}
+        {geometryPart.map((coordGroup, i, coordinates) => {
+          let startIndex: number | undefined;
+
+          if (startingIndexes && isNumber(startingIndexes[i][0])) {
+            startIndex = startingIndexes[i][0];
+          }
+
+          return (
+            <EditFeatureGeometryGroup
+              coordinates={coordGroup}
+              minCoordsCount={minCoordsPerGroup}
+              mustBeClosed={groupsMustBeClosed}
+              canBeDeleted={coordinates.length > 1}
+              onDelete={this.handleGroupDelete}
+              multiple={coordinates.length > 1}
+              store={store}
+              index={i}
+              startIndex={startIndex}
+              key={i}
+            />
+          );
+        })}
       </div>
     );
   }

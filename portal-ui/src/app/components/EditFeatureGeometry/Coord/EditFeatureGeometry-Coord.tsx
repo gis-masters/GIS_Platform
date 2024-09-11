@@ -36,6 +36,7 @@ interface EditFeatureGeometryCoordProps {
   withControls?: boolean;
   canBeDeleted?: boolean;
   disabled?: boolean;
+  displayIndex?: number;
   index?: number;
   active?: boolean;
   onChange(val: CoordinateEdited, i: number): void;
@@ -61,12 +62,12 @@ export class EditFeatureGeometryCoord extends Component<EditFeatureGeometryCoord
   }
 
   render() {
-    const { val, withControls, index, canBeDeleted, disabled, active } = this.props;
+    const { val, withControls, displayIndex, canBeDeleted, disabled, active } = this.props;
 
     // у росреестра своё понимание X и Y
     return (
       <div className={cnEditFeatureGeometry('Coord', { withControls, active })}>
-        {withControls ? <div className={cnEditFeatureGeometry('CoordNumber')}>{(index || 0) + 1}</div> : null}
+        {withControls ? <div className={cnEditFeatureGeometry('CoordNumber')}>{(displayIndex || 0) + 1}</div> : null}
 
         <OutlinedInput
           className={cnEditFeatureGeometry('CoordInput', { d: 'x' })}
@@ -177,6 +178,7 @@ export class EditFeatureGeometryCoord extends Component<EditFeatureGeometryCoord
   @boundMethod
   private handleDelete() {
     const { onDelete, index } = this.props;
+
     if (onDelete && index) {
       onDelete(index);
     }

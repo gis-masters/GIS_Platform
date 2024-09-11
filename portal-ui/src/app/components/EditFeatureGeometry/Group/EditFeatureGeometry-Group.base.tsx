@@ -6,7 +6,7 @@ import { IClassNameProps } from '@bem-react/core';
 import { boundMethod } from 'autobind-decorator';
 import { debounce } from 'lodash';
 
-import { CoordinateEdited } from '../../../services/geoserver/wfs/wfs.models';
+import { CoordinateEdited, GeometryType } from '../../../services/geoserver/wfs/wfs.models';
 import { selectLabelForGeometryType } from '../../../services/geoserver/wfs/wfs.util';
 import { EditFeatureGeometryStore } from '../../../stores/EditFeatureGeometry.store';
 import { EditFeatureGeometryAddNode } from '../AddNode/EditFeatureGeometry-AddNode';
@@ -33,6 +33,7 @@ export interface EditFeatureGeometryGroupProps extends IClassNameProps {
   multiple: boolean;
   index: number;
   store: EditFeatureGeometryStore;
+  startIndex?: number;
   onDelete?(index: number): void;
 }
 
@@ -63,14 +64,16 @@ export class EditFeatureGeometryGroupBase extends Component<EditFeatureGeometryG
   render() {
     const {
       coordinates,
-      minCoordsCount,
       canBeDeleted,
+      minCoordsCount,
       className,
       Container,
       mustBeClosed = false,
       store,
-      index
+      index,
+      startIndex = 0
     } = this.props;
+
     const Tag = Container || Div;
 
     if (!store.geometryType) {
@@ -91,13 +94,23 @@ export class EditFeatureGeometryGroupBase extends Component<EditFeatureGeometryG
         >
           {coordinates.slice(this.startOffset, coordinates.length - this.endOffset).map((coordinate, i) => {
             const isLast = i + this.startOffset === coordinates.length - 1;
+            let displayIndex = i + this.startOffset;
+
+            if (store.geometryType === GeometryType.MULTI_POLYGON || store.geometryType === GeometryType.POLYGON) {
+              displayIndex = isLast ? startIndex || index : startIndex + i + this.startOffset;
+            }
+
+            if (store.geometryType === GeometryType.MULTI_LINE_STRING) {
+              displayIndex = startIndex + i + this.startOffset;
+            }
 
             return (
               <EditFeatureGeometryCoord
                 store={store}
                 val={coordinate}
                 key={i + this.startOffset}
-                index={i + this.startOffset}
+                displayIndex={displayIndex}
+                index={i}
                 onDelete={this.handleDelete}
                 withControls
                 canBeDeleted={coordinates.length > minCoordsCount}

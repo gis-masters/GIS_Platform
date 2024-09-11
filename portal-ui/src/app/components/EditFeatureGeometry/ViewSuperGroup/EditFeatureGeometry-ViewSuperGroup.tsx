@@ -1,5 +1,6 @@
 import React, { FC } from 'react';
 import { cn } from '@bem-react/classname';
+import { isNumber } from 'lodash';
 import { Coordinate } from 'ol/coordinate';
 
 import { EditFeatureGeometryStore } from '../../../stores/EditFeatureGeometry.store';
@@ -12,15 +13,31 @@ const cnEditFeatureGeometryViewSuperGroup = cn('EditFeatureGeometry', 'ViewSuper
 interface EditFeatureGeometryViewSuperGroupProps {
   coordinates: Coordinate[][];
   store: EditFeatureGeometryStore;
+  startingIndexes?: number[][];
 }
 
 export const EditFeatureGeometryViewSuperGroup: FC<EditFeatureGeometryViewSuperGroupProps> = ({
   coordinates,
-  store
+  store,
+  startingIndexes
 }) => (
   <div className={cnEditFeatureGeometryViewSuperGroup()}>
-    {coordinates.map((coordinatesGroup, i) => (
-      <EditFeatureGeometryViewGroup coordinates={coordinatesGroup} key={i} store={store} index={0} />
-    ))}
+    {coordinates.map((coordinatesGroup, i) => {
+      let startIndex: number | undefined;
+
+      if (startingIndexes && isNumber(startingIndexes[i][0])) {
+        startIndex = startingIndexes[i][0];
+      }
+
+      return (
+        <EditFeatureGeometryViewGroup
+          coordinates={coordinatesGroup}
+          startIndex={startIndex}
+          key={i}
+          store={store}
+          index={0}
+        />
+      );
+    })}
   </div>
 );

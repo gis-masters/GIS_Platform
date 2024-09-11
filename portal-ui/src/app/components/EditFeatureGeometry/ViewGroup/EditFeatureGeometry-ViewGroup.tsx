@@ -3,18 +3,21 @@ import { Paper, PaperProps, Table, TableBody, TableCell, TableContainer, TableHe
 import { cn } from '@bem-react/classname';
 import { Coordinate } from 'ol/coordinate';
 
+import { GeometryType } from '../../../services/geoserver/wfs/wfs.models';
 import { EditFeatureGeometryStore } from '../../../stores/EditFeatureGeometry.store';
 import { EditFeatureGeometryViewGroupControls } from '../ViewGroupControls/EditFeatureGeometry-ViewGroupControls';
 
 import '!style-loader!css-loader!sass-loader!./EditFeatureGeometry-ViewGroup.scss';
 
 const cnEditFeatureGeometryViewGroup = cn('EditFeatureGeometry', 'ViewGroup');
+const cnEditFeatureGeometryViewGroupIndexCell = cn('EditFeatureGeometry', 'ViewGroupIndexCell');
 
 interface EditFeatureGeometryViewGroupProps {
   coordinates: Coordinate[];
-  isPoint?: boolean;
   store: EditFeatureGeometryStore;
   index: number;
+  isPoint?: boolean;
+  startIndex?: number;
 }
 
 const Container: FC<PaperProps> = props => <Paper {...props} square />;
@@ -23,7 +26,7 @@ export class EditFeatureGeometryViewGroup extends Component<EditFeatureGeometryV
   tableRef: RefObject<HTMLTableElement> = createRef();
 
   render() {
-    const { coordinates, isPoint, store, index } = this.props;
+    const { coordinates, isPoint, store, index, startIndex = 0 } = this.props;
 
     return (
       <TableContainer component={Container} className={cnEditFeatureGeometryViewGroup()}>
@@ -42,13 +45,30 @@ export class EditFeatureGeometryViewGroup extends Component<EditFeatureGeometryV
             </TableRow>
           </TableHead>
           <TableBody>
-            {coordinates.map((coordinate, i) => (
-              <TableRow key={i}>
-                {!isPoint && <TableCell align='right'>{i + 1}</TableCell>}
-                <TableCell>{coordinate[1]}</TableCell>
-                <TableCell>{coordinate[0]}</TableCell>
-              </TableRow>
-            ))}
+            {coordinates.map((coordinate, i) => {
+              const isLast = i === coordinates.length - 1;
+              let displayIndex = i;
+
+              if (store.geometryType === GeometryType.MULTI_POLYGON || store.geometryType === GeometryType.POLYGON) {
+                displayIndex = isLast ? startIndex || index : startIndex + i;
+              }
+
+              if (store.geometryType === GeometryType.MULTI_LINE_STRING) {
+                displayIndex = startIndex + i;
+              }
+
+              return (
+                <TableRow key={i}>
+                  {!isPoint && (
+                    <TableCell className={cnEditFeatureGeometryViewGroupIndexCell()} align='right'>
+                      {displayIndex + 1}
+                    </TableCell>
+                  )}
+                  <TableCell>{coordinate[1]}</TableCell>
+                  <TableCell>{coordinate[0]}</TableCell>
+                </TableRow>
+              );
+            })}
           </TableBody>
         </Table>
       </TableContainer>

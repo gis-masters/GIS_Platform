@@ -4,10 +4,36 @@ import { MuiInputBlock } from '../MuiInput/MuiInput.block';
 class EditFeatureGeometryBlock extends Block {
   selectors = {
     container: '.EditFeatureGeometry',
+    view: '.EditFeatureGeometry-View',
     coord: '.EditFeatureGeometry-Coord',
     coordInput: '.EditFeatureGeometry-CoordInput',
-    warningIcon: '.MuiSvgIcon-colorWarning'
+    warningIcon: '.MuiSvgIcon-colorWarning',
+    geometryForm: '.EditFeatureGeometry-Form'
   };
+
+  async getEditFormCoordsIndexes(): Promise<string[]> {
+    const $geometryForm = await this.$('geometryForm');
+    const $$coords = await $geometryForm.$$('.EditFeatureGeometry-CoordNumber');
+
+    const indexes: string[] = [];
+    for (const $coord of $$coords) {
+      indexes.push(await $coord.getText());
+    }
+
+    return indexes;
+  }
+
+  async getViewFormCoordsIndexes(): Promise<string[]> {
+    const $viewForm = await this.$('view');
+    const $$coords = await $viewForm.$$('.EditFeatureGeometry-ViewGroupIndexCell');
+
+    const indexes: string[] = [];
+    for (const $coord of $$coords) {
+      indexes.push(await $coord.getText());
+    }
+
+    return indexes;
+  }
 
   async changeFormInputValue(fieldNumber: number, value: string): Promise<void> {
     const $formInput = await this.getFormInputByNumber(fieldNumber);

@@ -1,24 +1,38 @@
 import React, { FC } from 'react';
+import { observer } from 'mobx-react';
 import { withBemMod } from '@bem-react/core';
 
 import { GeometryType, WfsMultiLineStringGeometry } from '../../../../services/geoserver/wfs/wfs.models';
 import { EditFeatureGeometrySuperGroup } from '../../SuperGroup/EditFeatureGeometry-SuperGroup';
 import { cnEditFeatureGeometryForm, EditFeatureGeometryFormProps } from '../EditFeatureGeometry-Form.base';
 
-const EditFeatureGeometryFormTypeMultiLineString: FC<EditFeatureGeometryFormProps> = ({ store, className }) => {
-  const geometry = store.geometry as WfsMultiLineStringGeometry;
+const EditFeatureGeometryFormTypeMultiLineString: FC<EditFeatureGeometryFormProps> = observer(
+  ({ store, className }) => {
+    const geometry = store.geometry as WfsMultiLineStringGeometry;
 
-  return (
-    <div className={cnEditFeatureGeometryForm(null, [className, 'scroll'])}>
-      <EditFeatureGeometrySuperGroup
-        geometryPart={geometry.coordinates}
-        minCoordsPerGroup={2}
-        store={store}
-        index={0}
-      />
-    </div>
-  );
-};
+    let coordinatesCounter: number = 0;
+
+    // собираем стартовые индексы для каждого набора координат
+    const startingIndexes = geometry.coordinates.map((coord, i) => {
+      const startingIndexOfTheCoordinateSet = coordinatesCounter;
+      coordinatesCounter = coordinatesCounter + coord.length;
+
+      return [i ? startingIndexOfTheCoordinateSet : 0];
+    });
+
+    return (
+      <div className={cnEditFeatureGeometryForm(null, [className, 'scroll'])}>
+        <EditFeatureGeometrySuperGroup
+          geometryPart={geometry.coordinates}
+          minCoordsPerGroup={2}
+          store={store}
+          startingIndexes={startingIndexes}
+          index={0}
+        />
+      </div>
+    );
+  }
+);
 
 export const withTypeMultiLineString = withBemMod<EditFeatureGeometryFormProps>(
   cnEditFeatureGeometryForm(),
