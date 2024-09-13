@@ -8,6 +8,8 @@ import { boundMethod } from 'autobind-decorator';
 import { importKpt } from '../../../services/data/kpt/kpt.service';
 import { LibraryRecord } from '../../../services/data/library/library.models';
 import { PropertySchema, PropertyType } from '../../../services/data/schema/schema.models';
+import { ActionTypes, DataTypes } from '../../../services/permissions/permissions.models';
+import { getAvailableActionsTooltipByRole } from '../../../services/permissions/permissions.utils';
 import { notFalsyFilter } from '../../../services/util/NotFalsyFilter';
 import { ActionsItemVariant } from '../../Actions/Item/Actions-Item.base';
 import { ActionsItem } from '../../Actions/Item/Actions-Item.composed';
@@ -22,6 +24,7 @@ const cnLibraryDocumentActionsImportKpt = cn('LibraryDocumentActions', 'ImportKp
 interface LibraryDocumentActionsImportKptProps {
   document: LibraryRecord;
   as: ActionsItemVariant;
+  disabled?: boolean;
 }
 
 type FormValue = Record<string, SelectedVectorTable>;
@@ -39,7 +42,12 @@ export class LibraryDocumentActionsImportKpt extends Component<LibraryDocumentAc
   }
 
   render() {
-    const { as, document } = this.props;
+    const { as, document, disabled } = this.props;
+    const role = document.role;
+
+    if (!role) {
+      return;
+    }
 
     return (
       document.libraryTableName === 'dl_data_kpt' && (
@@ -47,9 +55,12 @@ export class LibraryDocumentActionsImportKpt extends Component<LibraryDocumentAc
           <ActionsItem
             className={cnLibraryDocumentActionsImportKpt()}
             title='Импорт КПТ'
+            tooltipText={
+              disabled ? getAvailableActionsTooltipByRole(ActionTypes.IMPORT_KPT, role, DataTypes.DOC) : undefined
+            }
             as={as}
             onClick={this.openDialog}
-            disabled={this.busy}
+            disabled={this.busy || disabled}
             icon={<DownloadForOfflineOutlined />}
           />
 

@@ -4,7 +4,8 @@ import { cn } from '@bem-react/classname';
 
 import { PropertyType, SimpleSchema } from '../../services/data/schema/schema.models';
 import { CrgProject } from '../../services/gis/projects/projects.models';
-import { Role } from '../../services/permissions/permissions.models';
+import { ActionTypes, DataTypes, Role } from '../../services/permissions/permissions.models';
+import { getAvailableActionsTooltipByRole } from '../../services/permissions/permissions.utils';
 import { currentUser } from '../../stores/CurrentUser.store';
 import { ProjectActionsDelete } from './Delete/ProjectActions-Delete';
 import { ProjectActionsEdit } from './Edit/ProjectActions-Edit';
@@ -47,13 +48,24 @@ export const crgProjectSchema: SimpleSchema = {
   ]
 };
 
-export const ProjectActions: FC<ProjectActionsProps> = observer(({ project }) => (
-  <div className={cnProjectActions()}>
-    {(currentUser.isAdmin || project.role === Role.OWNER) && (
+export const ProjectActions: FC<ProjectActionsProps> = observer(({ project }) => {
+  const owningAllowed = currentUser.isAdmin || project.role === Role.OWNER;
+
+  return (
+    <div className={cnProjectActions()}>
       <>
-        <ProjectActionsEdit project={project} schema={crgProjectSchema} />
-        <ProjectActionsDelete project={project} />
+        <ProjectActionsEdit
+          project={project}
+          schema={crgProjectSchema}
+          disabled={!owningAllowed}
+          tooltipText={getAvailableActionsTooltipByRole(ActionTypes.EDIT, project.role, DataTypes.PROJECT)}
+        />
+        <ProjectActionsDelete
+          project={project}
+          disabled={!owningAllowed}
+          tooltipText={getAvailableActionsTooltipByRole(ActionTypes.DELETE, project.role, DataTypes.PROJECT)}
+        />
       </>
-    )}
-  </div>
-));
+    </div>
+  );
+});

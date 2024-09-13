@@ -20,6 +20,8 @@ const cnDatasetActionsEditDialogYes = cn('DatasetActions', 'EditDialogYes');
 
 interface DatasetActionsEditProps {
   dataset: Dataset;
+  disabled?: boolean;
+  tooltipText?: string;
 }
 
 @observer
@@ -32,19 +34,23 @@ export class DatasetActionsEdit extends Component<DatasetActionsEditProps> {
   }
 
   render() {
+    const { dataset, disabled, tooltipText } = this.props;
+
     return (
       <>
-        <Tooltip title='Редактировать'>
-          <IconButton className={cnDatasetActionsEdit()} onClick={this.openDialog}>
-            {this.dialogOpen ? <Edit /> : <EditOutlined />}
-          </IconButton>
+        <Tooltip title={disabled && tooltipText ? tooltipText : 'Редактировать'}>
+          <span>
+            <IconButton className={cnDatasetActionsEdit()} onClick={this.openDialog} disabled={disabled}>
+              {this.dialogOpen ? <Edit /> : <EditOutlined />}
+            </IconButton>
+          </span>
         </Tooltip>
 
         <FormDialog
           className={cnDatasetActionsEditDialog()}
           open={this.dialogOpen}
           schema={datasetSchema}
-          value={this.props.dataset}
+          value={dataset}
           actionFunction={this.update}
           actionButtonProps={{
             startIcon: <SaveOutlined className={cnDatasetActionsEditDialogYes()} />,

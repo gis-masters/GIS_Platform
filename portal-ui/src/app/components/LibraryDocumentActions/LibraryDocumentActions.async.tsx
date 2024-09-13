@@ -80,18 +80,28 @@ export default class LibraryDocumentActions extends Component<LibraryDocumentAct
 
     return (
       <Actions className={cnLibraryDocumentActions({ forDialog }, [className])} as={as}>
-        {canEdit && <LibraryDocumentActionsImportKpt document={this.document || document} as={as} />}
+        <LibraryDocumentActionsImportKpt document={this.document || document} as={as} disabled={!canEdit} />
         {isNew && <LibraryDocumentActionsSave onSave={onSave} document={this.document || document} as={as} />}
         {!hideOpen && <LibraryDocumentActionsOpen document={this.document || document} as={as} />}
-        {!isNew && canEdit && (
-          <LibraryDocumentActionsEdit document={this.document || document} schema={this.schema} as={as} />
+        {!isNew && (
+          <LibraryDocumentActionsEdit
+            document={this.document || document}
+            schema={this.schema}
+            as={as}
+            disabled={!canEdit}
+          />
         )}
         {canCreateChildren && (
           <LibraryDocumentActionsCreateChild document={this.document || document} schema={this.schema} as={as} />
         )}
         {canPrint && <LibraryDocumentActionsPrint document={this.document || document} schema={this.schema} as={as} />}
-        {!isNew && isOwner && (
-          <LibraryDocumentActionsMove document={this.document || document} schema={this.schema} as={as} />
+        {!isNew && (
+          <LibraryDocumentActionsMove
+            document={this.document || document}
+            schema={this.schema}
+            as={as}
+            disabled={!isOwner}
+          />
         )}
         {!isNew && <LibraryDocumentActionsShare document={this.document || document} as={as} />}
         {!isNew && this.canBeRegistered() && (
@@ -102,12 +112,13 @@ export default class LibraryDocumentActions extends Component<LibraryDocumentAct
         {!!this.schema?.relations?.length && this.schema.relations.length > 0 && (
           <LibraryDocumentActionsRelations document={this.document || document} schema={this.schema} as={as} />
         )}
-        {!isNew && canDelete && (
+        {!isNew && (
           <LibraryDocumentActionsDelete
             document={this.document || document}
             schema={this.schema}
             as={as}
             onDelete={onDialogClose}
+            disabled={!canDelete}
           />
         )}
         {forDialog && <LibraryDocumentActionsClose onClick={onDialogClose} as={as} />}

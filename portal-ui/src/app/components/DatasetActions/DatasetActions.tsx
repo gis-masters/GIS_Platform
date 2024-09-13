@@ -6,7 +6,8 @@ import { isEqual } from 'lodash';
 
 import { Dataset } from '../../services/data/vectorData/vectorData.models';
 import { getDataset } from '../../services/data/vectorData/vectorData.service';
-import { Role } from '../../services/permissions/permissions.models';
+import { ActionTypes, DataTypes, Role } from '../../services/permissions/permissions.models';
+import { getAvailableActionsTooltipByRole } from '../../services/permissions/permissions.utils';
 import { currentUser } from '../../stores/CurrentUser.store';
 import { DatasetActionsAddToProject } from './AddToProject/DatasetActions-AddToProject';
 import { DatasetActionsDelete } from './Delete/DatasetActions-Delete';
@@ -39,13 +40,29 @@ export class DatasetActions extends Component<DatasetActionsProps> {
   }
 
   render() {
-    const actionAllowed = currentUser.isAdmin || this.dataset?.role === Role.OWNER;
+    const owningAllowed = currentUser.isAdmin || this.dataset?.role === Role.OWNER;
 
     return this.dataset ? (
       <div className={cnDatasetActions()}>
-        {actionAllowed && <DatasetActionsEdit dataset={this.dataset} />}
+        <DatasetActionsEdit
+          dataset={this.dataset}
+          disabled={!owningAllowed}
+          tooltipText={
+            owningAllowed
+              ? undefined
+              : getAvailableActionsTooltipByRole(ActionTypes.EDIT, this.dataset.role, DataTypes.DATASET)
+          }
+        />
         <DatasetActionsAddToProject dataset={this.dataset} />
-        {actionAllowed && <DatasetActionsDelete dataset={this.dataset} />}
+        <DatasetActionsDelete
+          dataset={this.dataset}
+          disabled={!owningAllowed}
+          tooltipText={
+            owningAllowed
+              ? undefined
+              : getAvailableActionsTooltipByRole(ActionTypes.DELETE, this.dataset.role, DataTypes.DATASET)
+          }
+        />
       </div>
     ) : null;
   }

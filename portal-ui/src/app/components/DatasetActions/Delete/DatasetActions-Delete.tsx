@@ -25,6 +25,8 @@ const cnDatasetActionsDeleteProhibitDeletionDialog = cn('DatasetActions', 'Delet
 
 interface DatasetActionsDeleteProps {
   dataset: Dataset;
+  disabled?: boolean;
+  tooltipText?: string;
 }
 
 @observer
@@ -41,14 +43,16 @@ export class DatasetActionsDelete extends Component<DatasetActionsDeleteProps> {
   }
 
   render() {
-    const { dataset } = this.props;
+    const { dataset, disabled, tooltipText } = this.props;
 
     return (
       <>
-        <Tooltip title='Удалить'>
-          <IconButton className={cnDatasetActionsDelete()} onClick={this.openDialog}>
-            {this.dialogOpen ? <Delete /> : <DeleteOutline />}
-          </IconButton>
+        <Tooltip title={disabled && tooltipText ? tooltipText : 'Удалить'}>
+          <span>
+            <IconButton className={cnDatasetActionsDelete()} onClick={this.openDialog} disabled={disabled}>
+              {this.dialogOpen ? <Delete /> : <DeleteOutline />}
+            </IconButton>
+          </span>
         </Tooltip>
 
         {this.busy || Boolean(this.deleteAllowed) ? (

@@ -75,7 +75,7 @@ Then(
     if (this.latestLibraryRecords[0].title) {
       const explorerBlock = new ExplorerBlock();
       await explorerBlock.selectExplorerItem(this.latestLibraryRecords[0].title);
-      const exist = await libraryDocumentActionsBlock.documentMoveBtnExist();
+      const exist = await libraryDocumentActionsBlock.documentMoveBtnDisabled();
       await expect(exist).toEqual(false);
     } else {
       throw new Error('Что то пошло не так при перемещении документа');

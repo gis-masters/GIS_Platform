@@ -15,6 +15,8 @@ const cnVectorTableActionsEdit = cn('VectorTableActions', 'Edit');
 
 interface VectorTableActionsEditProps {
   vectorTable: VectorTable;
+  disabled?: boolean;
+  tooltipText?: string;
 }
 
 @observer
@@ -27,18 +29,22 @@ export class VectorTableActionsEdit extends Component<VectorTableActionsEditProp
   }
 
   render() {
+    const { vectorTable, disabled, tooltipText } = this.props;
+
     return (
       <>
-        <Tooltip title='Редактировать'>
-          <IconButton className={cnVectorTableActionsEdit()} onClick={this.openDialog}>
-            {this.dialogOpen ? <Edit /> : <EditOutlined />}
-          </IconButton>
+        <Tooltip title={disabled && tooltipText ? tooltipText : 'Редактировать'}>
+          <span>
+            <IconButton className={cnVectorTableActionsEdit()} onClick={this.openDialog} disabled={disabled}>
+              {this.dialogOpen ? <Edit /> : <EditOutlined />}
+            </IconButton>
+          </span>
         </Tooltip>
 
         <FormDialog
           open={this.dialogOpen}
           schema={vectorTableSchema}
-          value={this.props.vectorTable}
+          value={vectorTable}
           actionFunction={this.update}
           actionButtonProps={{ startIcon: <SaveOutlined />, children: 'Сохранить' }}
           onClose={this.closeDialog}

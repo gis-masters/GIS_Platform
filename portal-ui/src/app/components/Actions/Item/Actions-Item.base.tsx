@@ -12,6 +12,7 @@ export interface ActionsItemProps extends IClassNameProps {
   as: ActionsItemVariant;
   icon: ReactNode;
   title: string;
+  tooltipText?: string;
   disabled?: boolean;
   loading?: boolean;
   color?: 'inherit' | 'primary' | 'secondary' | 'success' | 'error' | 'info' | 'warning';

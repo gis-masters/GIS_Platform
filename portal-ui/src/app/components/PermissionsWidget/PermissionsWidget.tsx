@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { action, computed, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { Skeleton } from '@mui/material';
-import { Group, Person } from '@mui/icons-material';
+import { ChevronRightOutlined, Group, KeyboardArrowDown, Person } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
@@ -17,6 +17,7 @@ import { getRolesByExplorerItemEntityType } from '../../services/permissions/per
 import { allGroups } from '../../stores/AllGroups.store';
 import { allUsers } from '../../stores/AllUsers.store';
 import { ExplorerItemEntityTypeTitle } from '../Explorer/Explorer.models';
+import { IconButton } from '../IconButton/IconButton';
 import { PermissionsEditDialog } from '../PermissionsEditDialog/PermissionsEditDialog';
 import { PseudoLink } from '../PseudoLink/PseudoLink';
 import { Toast } from '../Toast/Toast';
@@ -41,6 +42,7 @@ export class PermissionsWidget extends Component<PermissionsWidgetProps> {
   @observable private dialogOpen = false;
   @observable private permissions: RoleAssignmentBody[] = [];
   @observable private moarExpanded: Partial<{ [key in Role]: true }> = {};
+  @observable private isAccordionOpen: boolean = false;
 
   constructor(props: PermissionsWidgetProps) {
     super(props);
@@ -74,68 +76,75 @@ export class PermissionsWidget extends Component<PermissionsWidgetProps> {
     return (
       <>
         <div className={cnPermissionsWidget()}>
-          {!disabled && (
-            <PseudoLink className={cnPermissionsWidget('Header')} disabled={disabled} onClick={this.openModal}>
-              Разрешения
-            </PseudoLink>
-          )}
-          {disabled && <span className={cnPermissionsWidget('Header', { disabled: true })}>Разрешения</span>}
-          {this.fetching ? (
-            <>
-              <Skeleton height={20} animation='wave' width={String(40 + Math.random() * 60) + '%'} />
-              <Skeleton height={20} animation='wave' width={String(40 + Math.random() * 60) + '%'} />
-              <Skeleton height={20} animation='wave' width={String(40 + Math.random() * 60) + '%'} />
-            </>
-          ) : (
-            getRolesByExplorerItemEntityType(itemEntityType)
-              .map(role => {
-                const groups = this.getListForRole(role, allGroups.list, PrincipalType.GROUP);
-                const users = this.getListForRole(role, allUsers.list, PrincipalType.USER);
-                const expanded = this.moarExpanded[role];
-                const totalCount = groups.length + users.length;
-                const hiddenCount =
-                  !expanded && totalCount > MAX_PRINCIPALS_TO_SHOW
-                    ? Math.max(totalCount - MAX_PRINCIPALS_TO_SHOW, MIN_PRINCIPALS_TO_HIDE)
-                    : 0;
-                const shownCount = totalCount - hiddenCount;
+          <div className={cnPermissionsWidget('HeaderWrap')}>
+            {!disabled && (
+              <PseudoLink className={cnPermissionsWidget('Header')} disabled={disabled} onClick={this.openModal}>
+                Разрешения
+              </PseudoLink>
+            )}
+            {disabled && <span className={cnPermissionsWidget('Header', { disabled: true })}>Разрешения</span>}
+            <IconButton onClick={this.setAccordionIsOpen}>
+              {this.isAccordionOpen ? <ChevronRightOutlined /> : <KeyboardArrowDown />}
+            </IconButton>
+          </div>
+          <div className={cnPermissionsWidget('Content', { open: this.isAccordionOpen })}>
+            {this.fetching ? (
+              <>
+                <Skeleton height={20} animation='wave' width={String(40 + Math.random() * 60) + '%'} />
+                <Skeleton height={20} animation='wave' width={String(40 + Math.random() * 60) + '%'} />
+                <Skeleton height={20} animation='wave' width={String(40 + Math.random() * 60) + '%'} />
+              </>
+            ) : (
+              getRolesByExplorerItemEntityType(itemEntityType)
+                .map(role => {
+                  const groups = this.getListForRole(role, allGroups.list, PrincipalType.GROUP);
+                  const users = this.getListForRole(role, allUsers.list, PrincipalType.USER);
+                  const expanded = this.moarExpanded[role];
+                  const totalCount = groups.length + users.length;
+                  const hiddenCount =
+                    !expanded && totalCount > MAX_PRINCIPALS_TO_SHOW
+                      ? Math.max(totalCount - MAX_PRINCIPALS_TO_SHOW, MIN_PRINCIPALS_TO_HIDE)
+                      : 0;
+                  const shownCount = totalCount - hiddenCount;
 
-                return (
-                  Boolean(totalCount) && (
-                    <div className={cnPermissionsWidget('List')} key={role}>
-                      <span className={cnPermissionsWidget('ListTitle')}>{rolesTitles[role]}: </span>
-                      <div className={cnPermissionsWidget('ListItems')}>
-                        {groups.slice(0, shownCount).map(group => (
-                          <span className={cnPermissionsWidget('Item')} key={`g${group.id}`}>
-                            <Group className={cnPermissionsWidget('ItemIcon')} />
-                            {group.name}
+                  return (
+                    Boolean(totalCount) && (
+                      <div className={cnPermissionsWidget('List')} key={role}>
+                        <span className={cnPermissionsWidget('ListTitle')}>{rolesTitles[role]}: </span>
+                        <div className={cnPermissionsWidget('ListItems')}>
+                          {groups.slice(0, shownCount).map(group => (
+                            <span className={cnPermissionsWidget('Item')} key={`g${group.id}`}>
+                              <Group className={cnPermissionsWidget('ItemIcon')} />
+                              {group.name}
+                            </span>
+                          ))}
+                          {users.slice(0, Math.max(shownCount - groups.length, 0)).map(user => (
+                            <span className={cnPermissionsWidget('Item')} key={`u${user.id}`}>
+                              <Person className={cnPermissionsWidget('ItemIcon')} />
+                              {user.name}
+                            </span>
+                          ))}
+                        </div>
+
+                        {!expanded && Boolean(hiddenCount) && (
+                          <span className={cnPermissionsWidget('Moar')}>
+                            ...
+                            <PseudoLink
+                              className={cnPermissionsWidget('MoarLink')}
+                              onClick={this.handleMoar}
+                              data-role={role}
+                            >
+                              (ещё {hiddenCount})
+                            </PseudoLink>
                           </span>
-                        ))}
-                        {users.slice(0, Math.max(shownCount - groups.length, 0)).map(user => (
-                          <span className={cnPermissionsWidget('Item')} key={`u${user.id}`}>
-                            <Person className={cnPermissionsWidget('ItemIcon')} />
-                            {user.name}
-                          </span>
-                        ))}
+                        )}
                       </div>
-
-                      {!expanded && Boolean(hiddenCount) && (
-                        <span className={cnPermissionsWidget('Moar')}>
-                          ...
-                          <PseudoLink
-                            className={cnPermissionsWidget('MoarLink')}
-                            onClick={this.handleMoar}
-                            data-role={role}
-                          >
-                            (ещё {hiddenCount})
-                          </PseudoLink>
-                        </span>
-                      )}
-                    </div>
-                  )
-                );
-              })
-              .reverse()
-          )}
+                    )
+                  );
+                })
+                .reverse()
+            )}
+          </div>
         </div>
 
         <PermissionsEditDialog
@@ -161,6 +170,11 @@ export class PermissionsWidget extends Component<PermissionsWidgetProps> {
     this.permissions = permissions;
     this._fetching = fetching;
     this.moarExpanded = {};
+  }
+
+  @action.bound
+  private setAccordionIsOpen(): void {
+    this.isAccordionOpen = !this.isAccordionOpen;
   }
 
   @action.bound

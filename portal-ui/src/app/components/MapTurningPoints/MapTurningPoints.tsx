@@ -19,13 +19,15 @@ export class MapTurningPoints extends Component {
           mapStore.selectedFeatures.length === 1
             ? 'Добавить поворотные точки'
             : 'Поворотные точки включаются только при выборе одного объекта'
-        }>
+        }
+      >
         <span>
           <IconButton
             disabled={mapStore.selectedFeatures.length !== 1}
             className={cnMapTurningPoints()}
             onClick={this.handleTurningPointsClick}
-            size='small'>
+            size='small'
+          >
             <Adjust />
           </IconButton>
         </span>

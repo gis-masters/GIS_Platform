@@ -24,6 +24,20 @@ export enum TablePermissionPoint {
   DELETE
 }
 
+export enum ActionTypes {
+  EDIT = 'Редактирование',
+  DELETE = 'Удаление',
+  MOVE = 'Перемещение',
+  IMPORT_KPT = 'Импортирование'
+}
+
+export enum DataTypes {
+  DATASET = 'Набор данных',
+  DOC = 'Документ',
+  VECTOR_TABLE = 'Векторная таблица',
+  PROJECT = 'Проект'
+}
+
 export const roles: Role[] = [Role.VIEWER, Role.CONTRIBUTOR, Role.OWNER];
 export const gisRoles: Role[] = [Role.VIEWER, Role.OWNER];
 

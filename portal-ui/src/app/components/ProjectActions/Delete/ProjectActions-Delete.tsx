@@ -24,6 +24,8 @@ const cnProjectActionsDeleteDialog = cn('ProjectActions', 'DeleteDialog');
 
 interface ProjectActionsDeleteProps {
   project: CrgProject;
+  disabled?: boolean;
+  tooltipText?: string;
 }
 
 @observer
@@ -42,14 +44,16 @@ export class ProjectActionsDelete extends Component<ProjectActionsDeleteProps> {
   }
 
   render() {
-    const { project } = this.props;
+    const { project, disabled, tooltipText } = this.props;
 
     return (
       <>
-        <Tooltip title='Удалить'>
-          <IconButton className={cnProjectActionsDelete()} onClick={this.openDialog}>
-            {this.dialogOpen ? <Delete /> : <DeleteOutline />}
-          </IconButton>
+        <Tooltip title={disabled && tooltipText ? tooltipText : 'Удалить'}>
+          <span>
+            <IconButton className={cnProjectActionsDelete()} onClick={this.openDialog} disabled={disabled}>
+              {this.dialogOpen ? <Delete /> : <DeleteOutline />}
+            </IconButton>
+          </span>
         </Tooltip>
 
         <Dialog open={this.dialogOpen} className={cnProjectActionsDeleteDialog()} onClose={this.closeDialog}>

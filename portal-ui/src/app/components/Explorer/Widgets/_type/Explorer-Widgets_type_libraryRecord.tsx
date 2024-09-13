@@ -97,7 +97,7 @@ export class ExplorerWidgetsTypeLibraryRecord extends Component<ExplorerWidgetsP
               }
               disabled={!(currentUser.isAdmin || this.currentRecord.role === Role.OWNER)}
             />
-            {!flags.showDocumentRoles && (
+            {flags.showDocumentRoles && (
               <DocumentRole
                 id={item.payload.id}
                 libraryTableName={item.payload.libraryTableName}

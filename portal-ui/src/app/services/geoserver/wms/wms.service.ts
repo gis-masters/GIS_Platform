@@ -156,7 +156,6 @@ export async function getMapByXml(url: string): Promise<Blob> {
 }
 
 export async function testLayerByWms(layer: CrgLayer): Promise<{ ok: boolean; errors?: string[] }> {
-  //check error is here - have not check for shp
   if (!layer.complexName) {
     return { ok: false, errors: ['Не указан complexName у слоя'] };
   }

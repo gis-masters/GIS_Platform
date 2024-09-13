@@ -7,6 +7,12 @@ body .PermissionsWidget {
     vertical-align: bottom;
   }
 
+  &-HeaderWrap {
+    display: flex;
+    align-items: center;
+    column-gap: 15px;
+  }
+
   &-Header {
     display: block;
 
@@ -16,6 +22,14 @@ body .PermissionsWidget {
 
     &_disabled {
       color: var(--gray);
+    }
+  }
+
+  &-Content {
+    height: 0;
+
+    &_open {
+      height: auto;
     }
   }
 

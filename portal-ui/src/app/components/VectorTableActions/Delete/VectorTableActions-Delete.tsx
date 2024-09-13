@@ -23,6 +23,8 @@ const cnVectorTableActionsDelete = cn('VectorTableActions', 'Delete');
 
 interface VectorTableActionsDeleteProps {
   vectorTable: VectorTable;
+  disabled?: boolean;
+  tooltipText?: string;
 }
 
 @observer
@@ -37,12 +39,16 @@ export class VectorTableActionsDelete extends Component<VectorTableActionsDelete
   }
 
   render() {
+    const { vectorTable, disabled, tooltipText } = this.props;
+
     return (
       <>
-        <Tooltip title='Удалить'>
-          <IconButton className={cnVectorTableActionsDelete()} onClick={this.openDialog}>
-            {this.dialogOpen ? <Delete /> : <DeleteOutline />}
-          </IconButton>
+        <Tooltip title={disabled && tooltipText ? tooltipText : 'Удалить'}>
+          <span>
+            <IconButton className={cnVectorTableActionsDelete()} onClick={this.openDialog} disabled={disabled}>
+              {this.dialogOpen ? <Delete /> : <DeleteOutline />}
+            </IconButton>
+          </span>
         </Tooltip>
 
         {this.errorMessage ? (
@@ -59,7 +65,7 @@ export class VectorTableActionsDelete extends Component<VectorTableActionsDelete
           <Dialog open={this.dialogOpen} onClose={this.closeDialog}>
             <DialogTitle>Подтверждение удаления</DialogTitle>
             <DialogContent>
-              <DialogContentText>Вы действительно хотите удалить "{this.props.vectorTable?.title}"?</DialogContentText>
+              <DialogContentText>Вы действительно хотите удалить "{vectorTable?.title}"?</DialogContentText>
             </DialogContent>
             <DialogActions>
               <Button loading={this.btnLoading} onClick={this.doDeletion} color='primary'>

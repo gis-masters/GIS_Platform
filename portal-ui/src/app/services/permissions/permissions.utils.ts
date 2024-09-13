@@ -1,6 +1,15 @@
 import { ExplorerItemEntityTypeTitle } from '../../components/Explorer/Explorer.models';
 import { PermissionsListItemType } from '../../components/PermissionsListDialog/PermissionsListDialog.models';
-import { gisRoles, PermissionType, PrincipalType, Role, RoleAssignmentBody, roles } from './permissions.models';
+import {
+  ActionTypes,
+  DataTypes,
+  gisRoles,
+  PermissionType,
+  PrincipalType,
+  Role,
+  RoleAssignmentBody,
+  roles
+} from './permissions.models';
 
 export function filterOutPrincipal(
   filteringPrincipalId: number,
@@ -24,6 +33,10 @@ export function filterByPrincipal(
 
 export function getRoles(type: PermissionType): Role[] {
   return type === PermissionType.GIS ? gisRoles : roles;
+}
+
+export function getAvailableActionsTooltipByRole(action: ActionTypes, role: Role, dataType: DataTypes): string {
+  return `${action} недоступно. ${dataType} доступ${dataType === DataTypes.VECTOR_TABLE ? 'на' : 'ен'} вам только для чтения${role === Role.CONTRIBUTOR ? ' и редактирования' : ''}`;
 }
 
 export function getRolesByPermissionsListItemType(itemType: PermissionsListItemType): Role[] {

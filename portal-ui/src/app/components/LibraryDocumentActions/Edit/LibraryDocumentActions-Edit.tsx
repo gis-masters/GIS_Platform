@@ -8,6 +8,8 @@ import { boundMethod } from 'autobind-decorator';
 import { LibraryRecord } from '../../../services/data/library/library.models';
 import { updateLibraryRecord } from '../../../services/data/library/library.service';
 import { PropertySchema, PropertyType, Schema } from '../../../services/data/schema/schema.models';
+import { ActionTypes, DataTypes } from '../../../services/permissions/permissions.models';
+import { getAvailableActionsTooltipByRole } from '../../../services/permissions/permissions.utils';
 import { getPatch } from '../../../services/util/patch';
 import { ActionsItemVariant } from '../../Actions/Item/Actions-Item.base';
 import { ActionsItem } from '../../Actions/Item/Actions-Item.composed';
@@ -19,8 +21,9 @@ const cnLibraryDocumentActionsEditDialog = cn('LibraryDocumentActions', 'EditDia
 
 interface LibraryDocumentActionsEditProps {
   document: LibraryRecord;
-  schema?: Schema;
   as: ActionsItemVariant;
+  schema?: Schema;
+  disabled?: boolean;
 }
 
 @observer
@@ -33,15 +36,22 @@ export class LibraryDocumentActionsEdit extends Component<LibraryDocumentActions
   }
 
   render() {
-    const { as, document, schema } = this.props;
+    const { as, document, schema, disabled } = this.props;
+    const role = document.role;
+
+    if (!role) {
+      return;
+    }
 
     return (
       <>
         <ActionsItem
           className={cnLibraryDocumentActionsEdit()}
           title='Редактировать'
+          tooltipText={disabled ? getAvailableActionsTooltipByRole(ActionTypes.EDIT, role, DataTypes.DOC) : undefined}
           as={as}
           onClick={this.openDialog}
+          disabled={disabled}
           icon={this.dialogOpen ? <Edit /> : <EditOutlined />}
         />
 

@@ -19,19 +19,30 @@ class DatasetActionsBlock extends Block {
     await $deleteBtn.click();
   }
 
-  async deleteBtnNotExist(): Promise<void> {
+  async deleteBtnExisting(): Promise<boolean> {
     const $deleteBtn = await this.$('deleteBtn');
-    await $deleteBtn.waitForExist({ reverse: true });
+
+    return await $deleteBtn.isExisting();
   }
 
-  async editBtnNotExist(): Promise<void> {
-    const $deleteBtn = await this.$('editBtn');
-    await $deleteBtn.waitForExist({ reverse: true });
+  async isDeleteBtnEnabled(): Promise<boolean> {
+    const $deleteBtn = await this.$('deleteBtn');
+    await $deleteBtn.waitForDisplayed();
+
+    return await $deleteBtn.isEnabled();
   }
 
-  async editBtnExist(): Promise<void> {
+  async editBtnExist(): Promise<boolean> {
     const $editBtn = await this.$('editBtn');
-    await $editBtn.waitForExist();
+
+    return await $editBtn.isExisting();
+  }
+
+  async isEditBtnEnabled(): Promise<boolean> {
+    const $editBtn = await this.$('editBtn');
+    await $editBtn.waitForDisplayed();
+
+    return await $editBtn.isEnabled();
   }
 
   async clickEditBtn(): Promise<void> {

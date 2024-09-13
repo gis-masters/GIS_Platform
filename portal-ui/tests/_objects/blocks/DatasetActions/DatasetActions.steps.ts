@@ -6,16 +6,20 @@ When('я нажимаю кнопку удалить в панели свойст
   await datasetActionsBlock.clickDeleteBtn();
 });
 
-Then('в панели свойств набора данных нет кнопки удаления', async () => {
-  await datasetActionsBlock.deleteBtnNotExist();
+Then('в панели свойств набора данных есть кнопка удаления, но она неактивна', async () => {
+  void expect(await datasetActionsBlock.isDeleteBtnEnabled()).toBeFalsy();
 });
 
-Then('в панели свойств набора данных нет кнопки редактирования', async () => {
-  await datasetActionsBlock.editBtnNotExist();
+Then('в панели свойств набора данных есть кнопка удаления, и она активна', async () => {
+  await expect(await datasetActionsBlock.isDeleteBtnEnabled()).toBe(true);
 });
 
-Then('в панели свойств набора данных есть кнопка редактирования', async () => {
-  await datasetActionsBlock.editBtnExist();
+Then('в панели свойств набора данных есть кнопка редактирования, и она активна', async () => {
+  await expect(await datasetActionsBlock.isEditBtnEnabled()).toBe(true);
+});
+
+Then('в панели свойств набора данных есть кнопка редактирования, но она неактивна', async () => {
+  await expect(await datasetActionsBlock.isDeleteBtnEnabled()).toBeFalsy();
 });
 
 When('нажимаю на кнопку подтверждения удаления набора данных в появившемся диалоговом окне', async () => {

@@ -22,6 +22,8 @@ import { getLibraryRecordFiles } from '../../../services/data/files/files.util';
 import { LibraryRecord } from '../../../services/data/library/library.models';
 import { deleteLibraryRecord, getLibraryRecords } from '../../../services/data/library/library.service';
 import { Schema } from '../../../services/data/schema/schema.models';
+import { ActionTypes, DataTypes } from '../../../services/permissions/permissions.models';
+import { getAvailableActionsTooltipByRole } from '../../../services/permissions/permissions.utils';
 import { notFalsyFilter } from '../../../services/util/NotFalsyFilter';
 import { ActionsItemVariant } from '../../Actions/Item/Actions-Item.base';
 import { ActionsItem } from '../../Actions/Item/Actions-Item.composed';
@@ -33,8 +35,9 @@ const cnLibraryDocumentActionsDeleteDialog = cn('LibraryDocumentActions', 'Delet
 
 interface LibraryDocumentActionsDeleteProps {
   document: LibraryRecord;
-  schema?: Schema;
   as: ActionsItemVariant;
+  schema?: Schema;
+  disabled?: boolean;
   onDelete?(): void;
 }
 
@@ -58,17 +61,23 @@ export class LibraryDocumentActionsDelete extends Component<LibraryDocumentActio
   }
 
   render() {
-    const { as, document } = this.props;
+    const { as, document, disabled } = this.props;
+    const role = document.role;
+
+    if (!role) {
+      return;
+    }
 
     return (
       <>
         <ActionsItem
           className={cnLibraryDocumentActionsDelete()}
           title='Удалить'
+          tooltipText={disabled ? getAvailableActionsTooltipByRole(ActionTypes.DELETE, role, DataTypes.DOC) : undefined}
           color='error'
           as={as}
           onClick={this.openDialog}
-          disabled={this.busy}
+          disabled={this.busy || disabled}
           icon={this.dialogOpen ? <Delete /> : <DeleteOutline />}
         />
 

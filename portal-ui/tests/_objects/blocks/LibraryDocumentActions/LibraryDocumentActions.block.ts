@@ -23,6 +23,14 @@ class LibraryDocumentActionsBlock extends Block {
     await $moveBtn.click();
   }
 
+  async documentMoveBtnDisabled(): Promise<boolean> {
+    await this.waitForVisible();
+
+    const $moveBtn = await this.$('move');
+
+    return await $moveBtn.isEnabled();
+  }
+
   async documentMoveBtnExist(): Promise<boolean> {
     await this.waitForVisible();
 

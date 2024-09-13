@@ -437,7 +437,6 @@ class CurrentProject implements CrgProjectData {
 
   @action
   setLayerError(layerComplexName: string, errors: string[]) {
-    // брать это значение для идентификации, где ошибка!
     this.layersErrors[layerComplexName] = errors;
   }
 

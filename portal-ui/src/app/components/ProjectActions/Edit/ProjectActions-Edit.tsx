@@ -20,6 +20,8 @@ const cnProjectActionsEditDialog = cn('ProjectActions', 'EditDialog');
 interface ProjectActionsProps {
   project: CrgProject;
   schema: SimpleSchema;
+  disabled?: boolean;
+  tooltipText?: string;
 }
 
 @observer
@@ -32,14 +34,16 @@ export class ProjectActionsEdit extends Component<ProjectActionsProps> {
   }
 
   render() {
-    const { project, schema } = this.props;
+    const { project, schema, disabled, tooltipText } = this.props;
 
     return (
       <>
-        <Tooltip title='Редактировать'>
-          <IconButton className={cnProjectActionsEdit()} onClick={this.openDialog}>
-            {this.dialogOpen ? <Edit /> : <EditOutlined />}
-          </IconButton>
+        <Tooltip title={disabled && tooltipText ? tooltipText : 'Редактировать'}>
+          <span>
+            <IconButton className={cnProjectActionsEdit()} onClick={this.openDialog} disabled={disabled}>
+              {this.dialogOpen ? <Edit /> : <EditOutlined />}
+            </IconButton>
+          </span>
         </Tooltip>
 
         <FormDialog<Partial<CrgProject>>

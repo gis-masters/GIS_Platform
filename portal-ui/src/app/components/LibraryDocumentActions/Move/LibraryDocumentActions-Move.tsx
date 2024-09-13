@@ -9,6 +9,8 @@ import { AxiosError } from 'axios';
 import { Library, LibraryRecord } from '../../../services/data/library/library.models';
 import { getLibrary, getLibraryRecord, moveLibraryRecord } from '../../../services/data/library/library.service';
 import { Schema } from '../../../services/data/schema/schema.models';
+import { ActionTypes, DataTypes } from '../../../services/permissions/permissions.models';
+import { getAvailableActionsTooltipByRole } from '../../../services/permissions/permissions.utils';
 import { services } from '../../../services/services';
 import { notFalsyFilter } from '../../../services/util/NotFalsyFilter';
 import { isAxiosError } from '../../../services/util/typeGuards/isAxiosError';
@@ -24,8 +26,9 @@ const cnLibraryDocumentActionsMove = cn('LibraryDocumentActions', 'Move');
 
 interface LibraryDocumentActionsFilesPlacementProps {
   document: LibraryRecord;
-  schema?: Schema;
   as: ActionsItemVariant;
+  schema?: Schema;
+  disabled?: boolean;
 }
 
 @observer
@@ -48,16 +51,24 @@ export class LibraryDocumentActionsMove extends Component<LibraryDocumentActions
   }
 
   render() {
-    const { as, document } = this.props;
+    const { as, document, disabled } = this.props;
+
+    const role = document.role;
+
+    if (!role) {
+      return;
+    }
 
     return (
       <>
         <ActionsItem
           title='Переместить'
+          tooltipText={disabled ? getAvailableActionsTooltipByRole(ActionTypes.MOVE, role, DataTypes.DOC) : undefined}
           className={cnLibraryDocumentActionsMove()}
           icon={this.documentMoveDialogOpen ? <DriveFileMove /> : <DriveFileMoveOutlined />}
           onClick={this.openDocumentMoveDialog}
           as={as}
+          disabled={disabled}
         />
 
         <SelectFolderDialog

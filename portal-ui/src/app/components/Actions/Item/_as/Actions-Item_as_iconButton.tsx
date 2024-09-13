@@ -8,6 +8,7 @@ import { ActionsItemProps, cnActionsItem } from '../Actions-Item.base';
 
 const ActionsItemAsIconButton: FC<ActionsItemProps> = ({
   title,
+  tooltipText,
   className,
   disabled,
   color,
@@ -19,24 +20,26 @@ const ActionsItemAsIconButton: FC<ActionsItemProps> = ({
   loading,
   size
 }) => (
-  <Tooltip title={title} enterDelay={600}>
+  <Tooltip title={tooltipText || title} enterDelay={600}>
     {submenu ? (
       <MenuIconButton className={className} icon={icon}>
         {submenu}
       </MenuIconButton>
     ) : (
-      <IconButton
-        className={cnActionsItem(null, [className])}
-        disabled={disabled}
-        onClick={onClick}
-        color={color}
-        href={url}
-        download={download}
-        loading={loading}
-        size={size}
-      >
-        {icon}
-      </IconButton>
+      <span>
+        <IconButton
+          className={cnActionsItem(null, [className])}
+          disabled={disabled}
+          onClick={onClick}
+          color={color}
+          href={url}
+          download={download}
+          loading={loading}
+          size={size}
+        >
+          {icon}
+        </IconButton>
+      </span>
     )}
   </Tooltip>
 );

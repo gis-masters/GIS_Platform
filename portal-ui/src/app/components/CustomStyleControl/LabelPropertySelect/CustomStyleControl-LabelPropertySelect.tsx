@@ -46,7 +46,7 @@ export class CustomStyleControlLabelPropertySelect extends Component<CustomStyle
 
     let property = schema.properties.find(property => property.name === e.target.value);
 
-    if (!property && (e.target.value === LABEL_PROPERTY_DEFAULT.name)) {
+    if (!property && e.target.value === LABEL_PROPERTY_DEFAULT.name) {
       property = LABEL_PROPERTY_DEFAULT;
     }
 

@@ -6,7 +6,8 @@ import { isEqual } from 'lodash';
 
 import { VectorTable } from '../../services/data/vectorData/vectorData.models';
 import { getVectorTable } from '../../services/data/vectorData/vectorData.service';
-import { Role } from '../../services/permissions/permissions.models';
+import { ActionTypes, DataTypes, Role } from '../../services/permissions/permissions.models';
+import { getAvailableActionsTooltipByRole } from '../../services/permissions/permissions.utils';
 import { currentUser } from '../../stores/CurrentUser.store';
 import { SchemaActionsEdit } from '../SchemaActions/Edit/SchemaActions-Edit';
 import { VectorTableActionsDelete } from './Delete/VectorTableActions-Delete';
@@ -39,21 +40,47 @@ export class VectorTableActions extends Component<VectorTableActionsProps> {
   }
 
   render() {
-    const editAllowed = currentUser.isAdmin || this.vectorTable?.role === Role.OWNER;
+    const owninAllowed = currentUser.isAdmin || this.vectorTable?.role === Role.OWNER;
 
     return (
       <div className={cnVectorTableActions()}>
-        {editAllowed && this.vectorTable && <VectorTableActionsEdit vectorTable={this.vectorTable} />}
+        {this.vectorTable && (
+          <VectorTableActionsEdit
+            vectorTable={this.vectorTable}
+            disabled={!owninAllowed}
+            tooltipText={
+              owninAllowed
+                ? undefined
+                : getAvailableActionsTooltipByRole(ActionTypes.EDIT, this.vectorTable.role, DataTypes.VECTOR_TABLE)
+            }
+          />
+        )}
         {this.vectorTable && (
           <SchemaActionsEdit
             withPreview
-            readonly={!editAllowed}
+            readonly={!owninAllowed}
             item={this.vectorTable}
             schema={this.vectorTable.schema}
             as='iconButton'
+            disabled={!owninAllowed}
+            tooltipText={
+              owninAllowed
+                ? undefined
+                : getAvailableActionsTooltipByRole(ActionTypes.EDIT, this.vectorTable.role, DataTypes.VECTOR_TABLE)
+            }
           />
         )}
-        {editAllowed && this.vectorTable && <VectorTableActionsDelete vectorTable={this.vectorTable} />}
+        {this.vectorTable && (
+          <VectorTableActionsDelete
+            vectorTable={this.vectorTable}
+            disabled={!owninAllowed}
+            tooltipText={
+              owninAllowed
+                ? undefined
+                : getAvailableActionsTooltipByRole(ActionTypes.DELETE, this.vectorTable.role, DataTypes.VECTOR_TABLE)
+            }
+          />
+        )}
       </div>
     );
   }

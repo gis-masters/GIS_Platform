@@ -46,6 +46,8 @@ interface SchemaActionsEditProps {
   withPreview?: boolean;
   readonly?: boolean;
   isTemplateEditing?: boolean;
+  disabled?: boolean;
+  tooltipText?: string;
 }
 
 @observer
@@ -72,7 +74,7 @@ export class SchemaActionsEdit extends Component<SchemaActionsEditProps> {
   }
 
   render() {
-    const { as, withPreview, isTemplateEditing: editIcon, readonly = false } = this.props;
+    const { as, withPreview, isTemplateEditing: editIcon, readonly = false, disabled, tooltipText } = this.props;
     const icons = [
       [SchemaOutlined, SchemaIcon],
       [EditOutlined, Edit]
@@ -83,10 +85,11 @@ export class SchemaActionsEdit extends Component<SchemaActionsEditProps> {
       <>
         <ActionsItem
           className={cnSchemaActionsEdit()}
-          title={this.buttonTitle}
+          title={disabled ? tooltipText || this.buttonTitle : this.buttonTitle}
           as={as}
           onClick={this.openDialog}
           icon={<Icon />}
+          disabled={disabled}
         />
 
         <Dialog
