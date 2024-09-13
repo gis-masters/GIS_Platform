@@ -33,6 +33,11 @@ SELECT 'dl_data_owners',
     '{}'
 WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_data_owners');
 
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'dl_data_gml',
+    '{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_data_gml');
+
 UPDATE data.schemas 
 SET class_rule =
     '{
@@ -3822,3 +3827,113 @@ SET class_rule =
   "geometryType": "MultiPolygon"
 }'
 WHERE name = 'dl_data_owners';
+
+UPDATE data.schemas 
+SET class_rule =
+    '{
+  "name": "dl_data_gml",
+  "tags": [
+    "system",
+    "Библиотека",
+    "Приказ 10"
+  ],
+  "title": "Библиотека GML",
+  "tableName": "dl_data_gml",
+  "description": "Библиотека для загрузки и публикиции файлов GML",
+  "properties": [
+    {
+      "name": "id",
+      "title": "id",
+      "readOnly": true,
+      "required": true,
+      "valueType": "INT"
+    },
+    {
+      "name": "path",
+      "title": "Путь",
+      "hidden": true,
+      "maxLength": 522,
+      "valueType": "STRING",
+      "description": "Полный путь, отражающий иерархию объектов"
+    },
+    {
+      "name": "is_folder",
+      "title": "Папка/Документ",
+      "valueType": "BOOLEAN",
+      "description": "Папка или Документ"
+    },
+    {
+      "name": "created_at",
+      "title": "Дата создания",
+      "readOnly": true,
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "last_modified",
+      "title": "Дата модификации",
+      "valueType": "DATETIME",
+      "description": "Дата последней модификации документа"
+    },
+    {
+      "name": "updated_by",
+      "title": "Кто обновил",
+      "readOnly": true,
+      "maxLength": 50,
+      "valueType": "STRING"
+    },
+    {
+      "name": "content_type_id",
+      "title": "Вид документа",
+      "hidden": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "title",
+      "title": "Наименование",
+      "display": "multiline",
+      "minWidth": 400,
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "file",
+      "title": "Документ",
+      "maxFiles": 10,
+      "valueType": "FILE"
+    },
+    {
+      "name": "created_by",
+      "title": "Создатель",
+      "maxLength": 50,
+      "valueType": "STRING"
+    }
+  ],
+  "contentTypes": [
+    {
+      "id": "doc_v1",
+      "icon": "DOCUMENT",
+      "type": "DOCUMENT",
+      "title": "Документ",
+      "attributes": [
+        {
+          "name": "title"
+        },
+        {
+          "name": "file"
+        }
+      ]
+    },
+    {
+      "id": "folder_v1",
+      "icon": "FOLDER_CREATE",
+      "type": "FOLDER",
+      "title": "Папка",
+      "attributes": [
+        {
+          "name": "title"
+        }
+      ]
+    }
+  ]
+}'
+WHERE name = 'dl_data_gml';

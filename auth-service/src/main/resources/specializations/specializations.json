@@ -29,7 +29,7 @@
       {
         "title": "Проект по специализации 1",
         "layers": [
-          314
+          101
         ]
       }
     ],
@@ -38,7 +38,7 @@
         "title": "Набор данных по специализации 1",
         "tables": [
           {
-            "id": 314,
+            "id": 101,
             "content": [
               "contentForTable314.sql"
             ],
@@ -183,6 +183,73 @@
     "documentLibraries": [
       {
         "schemaId": "dl_data_kpt"
+      }
+    ]
+  },
+  {
+    "id": 4,
+    "title": "Территориальное планирование",
+    "description": "Специализация для создания и проверки документов территориального планирования",
+    "settings": {
+      "storageSize": 2,
+      "createLibraryItem": true,
+      "viewDocumentLibrary": true,
+      "viewBugReport": true,
+      "downloadGml": true,
+      "importShp": true,
+      "downloadFiles": true,
+      "createProject": true,
+      "editProjectLayer": true,
+      "tags": [
+        "Приказ 10",
+        "Приказ 123",
+        "Приказ 10, версия 5 изм. от 6 октября 2023 № 698",
+        "КПТ"
+      ]
+    },
+    "projects": [
+      {
+        "title": "Проект Территориальное планирование",
+        "layers": [
+          402,
+          401
+        ]
+      }
+    ],
+    "datasets": [
+      {
+        "title": "Векторные данные территориального планирования",
+        "tables": [
+          {
+            "id": 401,
+            "content": [
+              "functionalzone.sql"
+            ],
+            "body": {
+              "title": "Функциональные зоны",
+              "schemaId": "functionalzone_123",
+              "crs": "EPSG:7829",
+              "styleName": "functionalzone_123"
+            }
+          },
+          {
+            "id": 402,
+            "content": [
+              "admborder_line_123.sql"
+            ],
+            "body": {
+              "title": "Границы",
+              "schemaId": "admborder_line_123",
+              "crs": "EPSG:7829",
+              "styleName": "admborder_line_123"
+            }
+          }
+        ]
+      }
+    ],
+    "documentLibraries": [
+      {
+        "schemaId": "dl_data_gml"
       }
     ]
   }
