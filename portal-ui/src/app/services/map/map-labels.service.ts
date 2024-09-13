@@ -5,7 +5,7 @@ import { boundMethod } from 'autobind-decorator';
 import { debounce } from 'lodash';
 import { Feature, MapBrowserEvent, Overlay } from 'ol';
 import { Coordinate } from 'ol/coordinate';
-import { Point } from 'ol/geom';
+import { LineString, Point } from 'ol/geom';
 import { Draw, Modify } from 'ol/interaction';
 import { DrawEvent } from 'ol/interaction/Draw';
 import VectorLayer from 'ol/layer/Vector';
@@ -19,19 +19,19 @@ import { currentProject } from '../../stores/CurrentProject.store';
 import { currentUser } from '../../stores/CurrentUser.store';
 import { mapStore } from '../../stores/Map.store';
 import { communicationService } from '../communication.service';
-import { defaultOlProjectionCode } from '../data/projections/projections.models';
+import { defaultOlProjectionCode, Projection } from '../data/projections/projections.models';
 import { getProjectionByCode } from '../data/projections/projections.service';
 import { Coord, transformGroup } from '../data/projections/projections.util';
 import { extractTableNameFromFeatureId } from '../geoserver/featureType/featureType.util';
-import { GeometryType, supportedGeometryTypes, WfsFeature } from '../geoserver/wfs/wfs.models';
+import { GeometryType, isCoordinate, supportedGeometryTypes, WfsFeature } from '../geoserver/wfs/wfs.models';
 import { isPolygonal } from '../geoserver/wfs/wfs.util';
 import { notFalsyFilter } from '../util/NotFalsyFilter';
-import { featureToWfsFeature, wfsFeatureToFeature } from '../util/open-layers.util';
+import { featureToWfsFeature, formatLength, wfsFeatureToFeature } from '../util/open-layers.util';
 import { sleep } from '../util/sleep';
 import { isArrayOf } from '../util/typeGuards/isArrayOf';
 import { isNumberArray } from '../util/typeGuards/isNumberArray';
 import { prompto } from '../utility-dialogs.service';
-import { LabelType, MapMode } from './map.models';
+import { Distance, LabelType, MapMode } from './map.models';
 import { mapService } from './map.service';
 import { mapMeasureService } from './map-measure.service';
 
@@ -114,6 +114,109 @@ class MapLabelsService {
     }
 
     return false;
+  }
+
+  private getDistancesByCoords(coordinates: Coord[], projFrom: Projection, projTo: Projection): Distance[] {
+    const coords = transformGroup(coordinates, projFrom, projTo);
+
+    const distances = [];
+
+    for (let i = 0; i < coords.length; i += 1) {
+      const lineString = new LineString([
+        coords[i] as number[],
+        coords[i === coords.length - 1 ? 0 : i + 1] as number[]
+      ]);
+      const [value, units] = formatLength(lineString);
+
+      distances.push({
+        distance: { value, units },
+        center: lineString.getFlatMidpoint()
+      });
+    }
+
+    return distances;
+  }
+
+  private getFlatGroups(coordinates: Coordinate[] | Coordinate[][] | Coordinate[][][]): Coordinate[][] {
+    if (isArrayOf(coordinates, isCoordinate)) {
+      return [coordinates];
+    } else if (coordinates.every(part => isArrayOf(part, isCoordinate))) {
+      return coordinates as Coordinate[][]; // as ошибка TS
+    }
+
+    return this.getFlatGroups(coordinates.flat() as Coordinate[][]); // as ошибка TS
+  }
+
+  private getDistancesFeatures({
+    projFrom,
+    olProjection: projTo,
+    coordinates
+  }: {
+    projFrom: Projection;
+    olProjection: Projection;
+    coordinates: Coordinate[] | Coordinate[][] | Coordinate[][][];
+  }): Feature<Point>[] {
+    let distances: Distance[] = [];
+
+    for (const group of this.getFlatGroups(coordinates)) {
+      distances.push(...this.getDistancesByCoords(group, projFrom, projTo));
+    }
+
+    if (!distances?.length) {
+      return [];
+    }
+
+    distances = distances.filter(({ distance }) => distance.value > 0);
+
+    return distances
+      .map(coord => {
+        if (isNumberArray(coord.center)) {
+          const feature = new Feature({
+            geometry: new Point(coord.center),
+            type: 'label',
+            text: `${coord.distance.value} ${coord.distance.units}`
+          });
+
+          feature.setId(uuid());
+          feature.setStyle(this.createStyle(feature));
+
+          return feature;
+        }
+      })
+      .filter(notFalsyFilter);
+  }
+
+  async addPointsDistances(): Promise<void> {
+    const layerTableName = extractTableNameFromFeatureId(mapStore.selectedFeatures[0].id);
+    const layer = currentProject.layers.find(layer => layer.tableName === layerTableName);
+    const coordinates = mapStore.selectedFeatures[0].geometry?.coordinates;
+    const geometryType = mapStore.selectedFeatures[0].geometry?.type;
+
+    if (!coordinates || !geometryType || !supportedGeometryTypes.includes(geometryType)) {
+      throw new Error('Неподдерживаемый тип геометрии');
+    }
+
+    if (!layer?.nativeCRS) {
+      throw new Error('В слое не указана система координат');
+    }
+
+    const currentLayerProjection = await getProjectionByCode(layer?.nativeCRS);
+    const olProjection = await getProjectionByCode(defaultOlProjectionCode);
+
+    if (!(currentLayerProjection && olProjection) || isNumberArray(coordinates)) {
+      return;
+    }
+
+    const features = this.getDistancesFeatures({
+      projFrom: currentLayerProjection,
+      olProjection,
+      coordinates
+    });
+
+    this.source.addFeatures(features);
+
+    await sleep(0);
+    this.saveToStorages();
   }
 
   async addTurningPoints() {
@@ -447,9 +550,11 @@ class MapLabelsService {
 
   private createLabelStyle(feature: Feature, selected?: boolean): Style {
     const properties = feature.getProperties();
+
     if (typeof properties.text !== 'string') {
       throw new TypeError('Текст не текст');
     }
+
     const svg =
       '<svg xmlns="http://www.w3.org/2000/svg" height="20" width="20" viewBox="0 0 24 24"><path d="M10 9h4V6h3l-5-5-5 5h3v3zm-1 1H6V7l-5 5 5 5v-3h3v-4zm14 2-5-5v3h-3v4h3v3l5-5zm-9 3h-4v3H7l5 5 5-5h-3v-3z"/></svg>';
 

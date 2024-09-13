@@ -42,3 +42,5 @@ export interface MapPosition {
   zoom: number;
   center: Coordinate;
 }
+
+export type Distance = { distance: { value: number; units: string }; center: Coordinate };
