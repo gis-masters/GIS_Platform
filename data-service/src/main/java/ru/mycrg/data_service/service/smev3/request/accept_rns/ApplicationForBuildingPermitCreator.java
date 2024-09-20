@@ -9,9 +9,20 @@ import org.apache.poi.xwpf.usermodel.XWPFTableCell;
 import org.apache.poi.xwpf.usermodel.XWPFTableRow;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblWidth;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTcPr;
+import ru.mycrg.data_service.accept_rns_1_0_3.GPZUBlockType;
+import ru.mycrg.data_service.accept_rns_1_0_3.GPZUType;
+import ru.mycrg.data_service.accept_rns_1_0_3.ObjectCadastralBlockType;
+import ru.mycrg.data_service.accept_rns_1_0_3.ObjectDataType;
+import ru.mycrg.data_service.accept_rns_1_0_3.PlanProjectBlockType;
+import ru.mycrg.data_service.accept_rns_1_0_3.PlanProjectType;
+import ru.mycrg.data_service.accept_rns_1_0_3.RecipientPersonalDataType;
 import ru.mycrg.data_service.accept_rns_1_0_3.RequestType;
+import ru.mycrg.data_service.accept_rns_1_0_3.SurveyingBlockType;
+import ru.mycrg.data_service.accept_rns_1_0_3.SurveyingType;
+import ru.mycrg.data_service.accept_rns_1_0_3.VariantChoiceType;
 
 import java.math.BigInteger;
+import java.util.Optional;
 
 import static org.apache.poi.xwpf.usermodel.ParagraphAlignment.*;
 import static org.openxmlformats.schemas.wordprocessingml.x2006.main.STMerge.CONTINUE;
@@ -39,26 +50,97 @@ public class ApplicationForBuildingPermitCreator {
         // Заполняем первую строку с объединенными ячейками
         setupFirstRow(table);
 
+        String lastname = Optional.ofNullable(request.getRecipientPersonalData())
+                .map(RecipientPersonalDataType::getLastname)
+                .orElse("");
+        String firstname = Optional.ofNullable(request.getRecipientPersonalData())
+                .map(RecipientPersonalDataType::getFirstname)
+                .orElse("");
+        String middlename = Optional.ofNullable(request.getRecipientPersonalData())
+                .map(RecipientPersonalDataType::getMiddlename)
+                .orElse("");
+        String regadress = Optional.ofNullable(request.getRecipientPersonalData())
+                .map(RecipientPersonalDataType::getRegAddress)
+                .orElse("");
+        String objectName = Optional.ofNullable(request.getObjectData())
+                .map(ObjectDataType::getObjectName)
+                .orElse("");
+        String construction = Optional.ofNullable(request.getVariantChoice())
+                .map(VariantChoiceType::getKPOA11)
+                .map(kpoa11Type -> Boolean.TRUE.equals(kpoa11Type.isConstruction()) ? "Строительство" : "Реконструкция")
+                .orElse("");
+        String objectCadastrialNumber = Optional.ofNullable(request.getObjectData())
+                .map(ObjectDataType::getObjectCadastralBlock)
+                .map(objectCadastralBlockTypes -> objectCadastralBlockTypes.get(0))
+                .map(ObjectCadastralBlockType::getObjectCadastralNumber)
+                .map(strings -> strings.get(0))
+                .orElse("");
+        String date = Optional.ofNullable(request.getGPZU())
+                .map(GPZUType::getGPZUBlock)
+                .map(gpzuBlockTypes -> gpzuBlockTypes.get(0))
+                .map(GPZUBlockType::getDate)
+                .orElse("");
+        String number = Optional.ofNullable(request.getGPZU())
+                .map(GPZUType::getGPZUBlock)
+                .map(gpzuBlockTypes -> gpzuBlockTypes.get(0))
+                .map(GPZUBlockType::getNumber)
+                .orElse("");
+        String issuer = Optional.ofNullable(request.getGPZU())
+                .map(GPZUType::getGPZUBlock)
+                .map(gpzuBlockTypes -> gpzuBlockTypes.get(0))
+                .map(GPZUBlockType::getIssuer)
+                .orElse("");
+        String planProjectDate = Optional.ofNullable(request.getPlanProject())
+                .map(PlanProjectType::getPlanProjectBlock)
+                .map(planProjectBlockTypes -> planProjectBlockTypes.get(0))
+                .map(PlanProjectBlockType::getDate)
+                .orElse("");
+        String planProjectNumber = Optional.ofNullable(request.getPlanProject())
+                .map(PlanProjectType::getPlanProjectBlock)
+                .map(planProjectBlockTypes -> planProjectBlockTypes.get(0))
+                .map(PlanProjectBlockType::getNumber)
+                .orElse("");
+        String planProjectIssuer = Optional.ofNullable(request.getPlanProject())
+                .map(PlanProjectType::getPlanProjectBlock)
+                .map(planProjectBlockTypes -> planProjectBlockTypes.get(0))
+                .map(PlanProjectBlockType::getIssuer)
+                .orElse("");
+        String surveyingDate = Optional.ofNullable(request.getSurveying())
+                .map(SurveyingType::getSurveyingBlock)
+                .map(surveyingBlockTypes -> surveyingBlockTypes.get(0))
+                .map(SurveyingBlockType::getDate)
+                .orElse("");
+        String surveyingNumber = Optional.ofNullable(request.getSurveying())
+                .map(SurveyingType::getSurveyingBlock)
+                .map(surveyingBlockTypes -> surveyingBlockTypes.get(0))
+                .map(SurveyingBlockType::getNumber)
+                .orElse("");
+        String surveyingIssuer = Optional.ofNullable(request.getSurveying())
+                .map(SurveyingType::getSurveyingBlock)
+                .map(surveyingBlockTypes -> surveyingBlockTypes.get(0))
+                .map(SurveyingBlockType::getIssuer)
+                .orElse("");
+
         mergeCellsAndSetValue(table, 1, "Раздел 2. Информация о застройщике", false, CENTER);
-        mergeCellsAndSetValue(table, 2, "2.1. Сведения о физическом лице или индивидуальном предпринимателе:", false, ParagraphAlignment.LEFT);
-        setTableNode(table, 3, "2.1.1. Фамилия:", request.getRecipientPersonalData().getLastname());
-        setTableNode(table, 4, "2.1.2. Имя:", request.getRecipientPersonalData().getFirstname());
-        setTableNode(table, 5, "2.1.3. Отчество:", request.getRecipientPersonalData().getMiddlename());
+        mergeCellsAndSetValue(table, 2, "2.1. Сведения о физическом лице или индивидуальном предпринимателе:", false, LEFT);
+        setTableNode(table, 3, "2.1.1. Фамилия:",lastname);
+        setTableNode(table, 4, "2.1.2. Имя:", firstname);
+        setTableNode(table, 5, "2.1.3. Отчество:", middlename);
         setTableNode(table, 6, "2.1.4. ИНН:", "");
         setTableNode(table, 7, "2.1.5. ОГРНИП:", "");
-        setTableNode(table, 8, "2.1.6. Адрес регистрации по месту жительства/адрес для почтовой корреспонденции:", request.getRecipientPersonalData().getRegAddress());
-        mergeCellsAndSetValue(table, 9, "2.2. Сведения о юридическом лице:", false, ParagraphAlignment.LEFT);
+        setTableNode(table, 8, "2.1.6. Адрес регистрации по месту жительства/адрес для почтовой корреспонденции:", regadress);
+        mergeCellsAndSetValue(table, 9, "2.2. Сведения о юридическом лице:", false, LEFT);
         setTableNode(table, 10, "2.2.1. Полное наименование:", "");
         setTableNode(table, 11, "2.2.2. ИНН:", "");
         setTableNode(table, 12, "2.2.3. ОГРН:", "");
         setTableNode(table, 13, "2.2.4. Адрес регистрации/адрес для почтовой корреспонденции:", "");
         setTableNode(table, 14, "2.2.5. адрес электронной почты для связи с застройщиком:", "");
         setTableNode(table, 15, "2.2.6. Контактный номер телефона:", "");
-        mergeCellsAndSetValue(table, 16, "Прошу выдать разрешение на строительство следующего объекта капитального строительства:", true, ParagraphAlignment.LEFT);
+        mergeCellsAndSetValue(table, 16, "Прошу выдать разрешение на строительство следующего объекта капитального строительства:", true, LEFT);
         mergeCellsAndSetValue(table, 17, "Раздел 3. Информация об объекте капитального строительства ", false, CENTER);
-        setTableNode(table, 18, "3.1. Наименование объекта капитального строительства (этапа) в соответствии с проектной документацией:", request.getObjectData().getObjectName());
-        setTableNode(table, 19, "3.2. Вид выполняемых работ в отношении объекта капитального строительства в соответствии с проектной документацией:", Boolean.TRUE.equals(request.getVariantChoice().getKPOA11().isConstruction()) ? "Строительство" : "Реконструкция");
-        mergeCellsAndSetValue(table, 20, "3.3. Адрес (местоположение) объекта капитального строительства ", false, ParagraphAlignment.LEFT);
+        setTableNode(table, 18, "3.1. Наименование объекта капитального строительства (этапа) в соответствии с проектной документацией:", objectName);
+        setTableNode(table, 19, "3.2. Вид выполняемых работ в отношении объекта капитального строительства в соответствии с проектной документацией:", construction);
+        mergeCellsAndSetValue(table, 20, "3.3. Адрес (местоположение) объекта капитального строительства ", false, LEFT);
         setTableNode(table, 21, "3.3.1. Субъект Российской Федерации:", "");
         setTableNode(table, 22, "3.3.2. Муниципальный район, муниципальный округ, городской округ или внутригородская территория (для городов федерального значения) в составе субъекта Российской Федерации, федеральная территория:", "");
         setTableNode(table, 23, "3.3.3. Городское или сельское поселение в составе муниципального района (для муниципального района) или внутригородского района городского округа (за исключением зданий, строений, сооружений, расположенных на федеральных территориях):", "");
@@ -67,58 +149,58 @@ public class ApplicationForBuildingPermitCreator {
         setTableNode(table, 26, "3.3.6. Наименование элемента улично-дорожной сети:", "");
         setTableNode(table, 27, "3.3.7. Тип и номер здания (сооружения):", "");
         mergeCellsAndSetValue(table, 28, "Раздел 4. Информация о земельном участке", false, CENTER);
-        setTableNode(table, 29, "4.1. Кадастровый номер земельного участка (земельных участков), в границах которого (которых) расположен или планируется расположение объекта капитального строительства:", request.getObjectData().getObjectCadastralBlock().get(0).getObjectCadastralNumber().get(0));
+        setTableNode(table, 29, "4.1. Кадастровый номер земельного участка (земельных участков), в границах которого (которых) расположен или планируется расположение объекта капитального строительства:", objectCadastrialNumber);
         setTableNode(table, 30, "4.2. Площадь земельного участка (земельных участков), в границах которого (которых) расположен или планируется расположение объекта капитального строительства:", "");
-        mergeCellsAndSetValue(table, 31, "4.3. Сведения о градостроительном плане земельного участка", false, ParagraphAlignment.LEFT);
-        setTableNode(table, 32, "4.3.X.1. Дата:", request.getGPZU().getGPZUBlock().get(0).getDate());
-        setTableNode(table, 33, "4.3.X.2. Номер:", request.getGPZU().getGPZUBlock().get(0).getNumber());
-        setTableNode(table, 34, "4.3.X.3. Наименование органа, выдавшего градостроительный план земельного участка:", request.getGPZU().getGPZUBlock().get(0).getIssuer());
+        mergeCellsAndSetValue(table, 31, "4.3. Сведения о градостроительном плане земельного участка", false, LEFT);
+        setTableNode(table, 32, "4.3.X.1. Дата:", date);
+        setTableNode(table, 33, "4.3.X.2. Номер:", number);
+        setTableNode(table, 34, "4.3.X.3. Наименование органа, выдавшего градостроительный план земельного участка:", issuer);
         setTableNode(table, 35, "4.4. Условный номер земельного участка (земельных участков) на утвержденной схеме расположения земельного участка или земельных участков на кадастровом плане территории (при необходимости):", "");
-        mergeCellsAndSetValue(table, 36, "4.5. Сведения о схеме расположения земельного участка или земельных участков на кадастровом плане территории", false, ParagraphAlignment.LEFT);
+        mergeCellsAndSetValue(table, 36, "4.5. Сведения о схеме расположения земельного участка или земельных участков на кадастровом плане территории", false, LEFT);
         setTableNode(table, 37, "4.5.1. Дата решения:", "");
         setTableNode(table, 38, "4.5.2. Номер решения:", "");
         setTableNode(table, 39, "4.5.3. Наименование организации, уполномоченного органа или лица, принявшего решение об утверждении схемы расположения земельного участка или земельных участков:", "");
-        mergeCellsAndSetValue(table, 40, "4.6. Информация о документации по планировке территории", false, ParagraphAlignment.LEFT);
-        mergeCellsAndSetValue(table, 41, "4.6.1. Сведения о проекте планировки территории", false, ParagraphAlignment.LEFT);
-        setTableNode(table, 42, "4.6.1.X.1. Дата решения:", request.getPlanProject().getPlanProjectBlock().get(0).getDate());
-        setTableNode(table, 43, "4.6.1.X.2. Номер решения:", request.getPlanProject().getPlanProjectBlock().get(0).getNumber());
-        setTableNode(table, 44, "4.6.1.X.3. Наименование организации, уполномоченного органа или лица, принявшего решение об утверждении проекта планировки территории:", request.getPlanProject().getPlanProjectBlock().get(0).getIssuer());
-        mergeCellsAndSetValue(table, 45, "4.6.2. Сведения о проекте межевания территории", false, ParagraphAlignment.LEFT);
-        setTableNode(table, 46, "4.6.2.X.1. Дата решения:", request.getSurveying().getSurveyingBlock().get(0).getDate());
-        setTableNode(table, 47, "4.6.2.X.2. Номер решения:", request.getSurveying().getSurveyingBlock().get(0).getNumber());
-        setTableNode(table, 48, "4.6.2.X.3. Наименование организации, уполномоченного органа или лица, принявшего решение об утверждении проекта межевания территории:", request.getSurveying().getSurveyingBlock().get(0).getIssuer());
+        mergeCellsAndSetValue(table, 40, "4.6. Информация о документации по планировке территории", false, LEFT);
+        mergeCellsAndSetValue(table, 41, "4.6.1. Сведения о проекте планировки территории", false, LEFT);
+        setTableNode(table, 42, "4.6.1.X.1. Дата решения:", planProjectDate);
+        setTableNode(table, 43, "4.6.1.X.2. Номер решения:", planProjectNumber);
+        setTableNode(table, 44, "4.6.1.X.3. Наименование организации, уполномоченного органа или лица, принявшего решение об утверждении проекта планировки территории:", planProjectIssuer);
+        mergeCellsAndSetValue(table, 45, "4.6.2. Сведения о проекте межевания территории", false, LEFT);
+        setTableNode(table, 46, "4.6.2.X.1. Дата решения:", surveyingDate);
+        setTableNode(table, 47, "4.6.2.X.2. Номер решения:", surveyingNumber);
+        setTableNode(table, 48, "4.6.2.X.3. Наименование организации, уполномоченного органа или лица, принявшего решение об утверждении проекта межевания территории:", surveyingIssuer);
         mergeCellsAndSetValue(table, 49, "Раздел 5. Сведения о проектной документации, типовом архитектурном решении", false, CENTER);
-        mergeCellsAndSetValue(table, 50, "5.1. Сведения о разработчике - индивидуальном предпринимателе", false, ParagraphAlignment.LEFT);
+        mergeCellsAndSetValue(table, 50, "5.1. Сведения о разработчике - индивидуальном предпринимателе", false, LEFT);
         setTableNode(table, 51, "5.1.1. Фамилия:", "");
         setTableNode(table, 52, "5.1.2. Имя:", "");
         setTableNode(table, 53, "5.1.3. Отчество:", "");
         setTableNode(table, 54, "5.1.4. ИНН:", "");
         setTableNode(table, 55, "5.1.5. ОГРНИП:", "");
-        mergeCellsAndSetValue(table, 56, "5.2. Сведения о разработчике - юридическом лице ", false, ParagraphAlignment.LEFT);
+        mergeCellsAndSetValue(table, 56, "5.2. Сведения о разработчике - юридическом лице ", false, LEFT);
         setTableNode(table, 57, "5.2.1. Полное наименование:", "");
         setTableNode(table, 58, "5.2.2. ИНН:", "");
         setTableNode(table, 59, "5.2.3. ОГРН:", "");
         setTableNode(table, 60, "5.3. Дата утверждения (при наличии):", "");
         setTableNode(table, 61, "5.4. Номер (при наличии):", "");
-        mergeCellsAndSetValue(table, 62, "5.5. Типовое архитектурное решение объекта капитального строительства, утвержденное для исторического поселения (при наличии)", false, ParagraphAlignment.LEFT);
+        mergeCellsAndSetValue(table, 62, "5.5. Типовое архитектурное решение объекта капитального строительства, утвержденное для исторического поселения (при наличии)", false, LEFT);
         setTableNode(table, 63, "5.5.1. Дата:", "");
         setTableNode(table, 64, "5.5.2. Номер:", "");
         setTableNode(table, 65, "5.5.3. Наименование документа:", "");
         setTableNode(table, 66, "5.5.4. Наименование уполномоченного органа, принявшего решение об утверждении типового архитектурного решения:", "");
         mergeCellsAndSetValue(table, 67, "Раздел 6. Информация о результатах экспертизы проектной документации и государственной экологической экспертизы", false, CENTER);
-        mergeCellsAndSetValue(table, 68, "6.1. Сведения об экспертизе проектной документации", false, ParagraphAlignment.LEFT);
+        mergeCellsAndSetValue(table, 68, "6.1. Сведения об экспертизе проектной документации", false, LEFT);
         setTableNode(table, 69, "6.1.X.1. Дата утверждения:", "");
         setTableNode(table, 70, "6.1.X.2. Номер: ", "");
         setTableNode(table, 71, "6.1.X.3. Наименование органа или организации, выдавшей положительное заключение экспертизы проектной документации:", "");
-        mergeCellsAndSetValue(table, 72, "6.2. Сведения о государственной экологической экспертизе ", false, ParagraphAlignment.LEFT);
+        mergeCellsAndSetValue(table, 72, "6.2. Сведения о государственной экологической экспертизе ", false, LEFT);
         setTableNode(table, 73, "6.2.X.1. Дата утверждения:", "");
         setTableNode(table, 74, "6.2.X.2. Номер:", "");
         setTableNode(table, 75, "6.2.X.3. Наименование органа, утвердившего положительное заключение государственной экологической экспертизы:", "");
-        mergeCellsAndSetValue(table, 76, "6.3. Подтверждение соответствия вносимых в проектную документацию изменений требованиям, указанным в части 3.8 статьи 49 Градостроительного кодекса Российской Федерации", false, ParagraphAlignment.LEFT);
+        mergeCellsAndSetValue(table, 76, "6.3. Подтверждение соответствия вносимых в проектную документацию изменений требованиям, указанным в части 3.8 статьи 49 Градостроительного кодекса Российской Федерации", false, LEFT);
         setTableNode(table, 77, "6.3.1. Дата:", "");
         setTableNode(table, 78, "6.3.2. Номер:", "");
         setTableNode(table, 79, "6.3.3. Сведения о лице, утвердившем указанное подтверждение:", "");
-        mergeCellsAndSetValue(table, 80, "6.4. Подтверждение соответствия вносимых в проектную документацию изменений требованиям, указанным в части 3.9 статьи 49 Градостроительного кодекса Российской Федерации", false, ParagraphAlignment.LEFT);
+        mergeCellsAndSetValue(table, 80, "6.4. Подтверждение соответствия вносимых в проектную документацию изменений требованиям, указанным в части 3.9 статьи 49 Градостроительного кодекса Российской Федерации", false, LEFT);
         setTableNode(table, 81, "6.4.1. Дата:", "");
         setTableNode(table, 82, "6.4.2. Номер:", "");
         setTableNode(table, 83, "6.4.3. Наименование органа исполнительной власти или организации, проводившей оценку соответствия:", "");
@@ -362,7 +444,7 @@ public class ApplicationForBuildingPermitCreator {
 
     private static void setCellText(XWPFTableCell cell, String text) {
         XWPFParagraph paragraph = cell.getParagraphs().get(0);
-        paragraph.setAlignment(ParagraphAlignment.LEFT);
+        paragraph.setAlignment(LEFT);
         addTextToParagraph(paragraph, text, false, 12);
     }
 

@@ -53,6 +53,7 @@ management:
 crg-options:
   taskDb: database_1
   taskDeadlineTime: 5
+  taskManagementFolderId: ${CRG_OPTIONS_TASK_MANAGEMENT_FOLDER_ID:29}
   kptTaskJobCron: ${CRG_OPTIONS_KPT_TASK_JOB_CRON:0 0 0 * * *}
   kptTaskDeadlineTime: ${CRG_OPTIONS_KPT_TASK_DEADLINE_TIME:720}
   auth-service-url: http://127.0.0.1:9000

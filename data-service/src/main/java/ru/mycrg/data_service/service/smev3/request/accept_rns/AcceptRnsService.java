@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import ru.mycrg.data_service.accept_rns_1_0_3.QueryResult;
+import ru.mycrg.data_service.accept_rns_1_0_3.RecipientPersonalDataType;
 import ru.mycrg.data_service.accept_rns_1_0_3.RequestType;
 import ru.mycrg.data_service.dao.RecordsDao;
 import ru.mycrg.data_service.dao.detached.TasksDetachedDao;
@@ -22,6 +23,7 @@ import ru.mycrg.data_service.entity.IRecord;
 import ru.mycrg.data_service.entity.RecordEntity;
 import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
+import ru.mycrg.data_service.exceptions.SmevRequestException;
 import ru.mycrg.data_service.repository.DocumentLibraryRepository;
 import ru.mycrg.data_service.repository.FileRepository;
 import ru.mycrg.data_service.service.TaskLogService;
@@ -50,6 +52,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
@@ -90,6 +93,8 @@ public class AcceptRnsService {
 
     @Value("${crg-options.taskDb}")
     private String dbName;
+    @Value("${crg-options.taskManagementFolderId}")
+    private String folderId;
     private final TaskLogService taskLogService;
     private final TasksDetachedDao tasksDao;
     private final SmevMessageService smevMessageService;
@@ -135,7 +140,14 @@ public class AcceptRnsService {
         RequestType request = queryResult.getMessage()
                 .getRequestContent().getContent().getMessagePrimaryContent().getRequest();
         smevMessageService.saveIncoming(body);
-        Map<String, Object> taskContent = prepareTaskRecord(String.valueOf(request.getService().getOrderId()));
+        String filter = String.format("path like '%s'", "/root/" + folderId);
+        ResourceQualifier libraryQualifier = libraryQualifier("dl_data_task_allocation");
+        IRecord docRecord = recordsDao
+                .findBy(libraryQualifier, filter)
+                .orElseThrow(
+                        () -> new SmevRequestException("Не найден исполнитель по пути " + "/root/29"));
+        Long performerId = Long.valueOf(docRecord.getContent().get("performer").toString());
+        Map<String, Object> taskContent = prepareTaskRecord(String.valueOf(request.getService().getOrderId()), performerId);
         long taskId = tasksDao.createTask(dbName, taskContent);
         createLog("Входящее сообщение РНС успешно записано в реестр",
                   "Входящее сообщение РНС успешно записано в реестр",
@@ -143,15 +155,15 @@ public class AcceptRnsService {
         createDocumentAndLinkToTask(request, taskContent, taskId);
     }
 
-    private Map<String, Object> prepareTaskRecord(String description) {
+    private Map<String, Object> prepareTaskRecord(String description, Long performerId) {
         Map<String, Object> body = new HashMap<>();
         body.put(TASK_TYPE_PROPERTY, CUSTOM.name());
         body.put(TASK_DESCRIPTION_PROPERTY, description);
         body.put(STATUS_PROPERTY, TaskStatus.CREATED.name());
         body.put(CONTENT_TYPE_ID.getName(), RNS_CONTENT_TYPE);
         body.put(CREATED_AT.getName(), LocalDate.now());
-        body.put(TASK_OWNER_ID_PROPERTY, Long.valueOf("2"));
-        body.put(TASK_ASSIGNED_TO_PROPERTY, Long.valueOf("2"));
+        body.put(TASK_OWNER_ID_PROPERTY, performerId);
+        body.put(TASK_ASSIGNED_TO_PROPERTY, performerId);
 
         return body;
     }
@@ -178,8 +190,12 @@ public class AcceptRnsService {
         SchemaDto rnsSchema = rnsLibraryModel.getSchema();
         Map<String, Object> documentPayload = new HashMap<>();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+
+        String fullfio = Optional.ofNullable(request.getRecipientPersonalData())
+                .map(RecipientPersonalDataType::getFullfio)
+                .orElse("");
         documentPayload.put(DATE_ATTRIBUTE, LocalDate.parse(request.getService().getCurrentDate(), formatter));
-        documentPayload.put(PERSON_NAME_ATTRIBUTE, request.getRecipientPersonalData().getFullfio());
+        documentPayload.put(PERSON_NAME_ATTRIBUTE, fullfio);
         documentPayload.put(REQUEST_TYPE_ATTRIBUTE, RNS_REQUEST_TYPE);
         documentPayload.put(DATA_TYPE_ATTRIBUTE, RNS_DATA_TYPE);
         documentPayload.put(TITLE.getName(), RNS_TITLE);
@@ -192,9 +208,11 @@ public class AcceptRnsService {
         Long savedDocumentId = savedDocument.getId();
         String savedDocumentTitile = savedDocument.getTitle();
 
-        XWPFDocument wordDocument = ApplicationForBuildingPermitCreator.create(request);
-        ByteArrayOutputStream wordDocumentOutputStream = new ByteArrayOutputStream();
-        wordDocument.write(wordDocumentOutputStream);
+        ByteArrayOutputStream wordDocumentOutputStream;
+        try (XWPFDocument wordDocument = ApplicationForBuildingPermitCreator.create(request)) {
+            wordDocumentOutputStream = new ByteArrayOutputStream();
+            wordDocument.write(wordDocumentOutputStream);
+        }
         byte[] wordDocumentBytes = wordDocumentOutputStream.toByteArray();
         wordDocumentOutputStream.close();
         MultipartFile wordDocumentFile = new CustomMultipartFile(wordDocumentBytes,
