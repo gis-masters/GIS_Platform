@@ -16,11 +16,12 @@ import ru.mycrg.data_service.config.Smev3Config;
 import ru.mycrg.data_service.dao.RecordsDao;
 import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
 import ru.mycrg.data_service.dto.TaskLogDto;
+import ru.mycrg.data_service.dto.record.IRecord;
+import ru.mycrg.data_service.dto.record.RecordEntity;
+import ru.mycrg.data_service.dto.record.ResponseWithReport;
 import ru.mycrg.data_service.dto.smev3.GetCadastrialPlanDto;
 import ru.mycrg.data_service.dto.smev3.ISmevRequestDto;
 import ru.mycrg.data_service.egrn_cadastrial_plans_1_1_2.*;
-import ru.mycrg.data_service.entity.IRecord;
-import ru.mycrg.data_service.entity.RecordEntity;
 import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
@@ -54,10 +55,10 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_NAME;
-import static ru.mycrg.data_service.dto.ResourceType.LIBRARY;
 import static ru.mycrg.data_service.dto.ResourceType.TASK;
 import static ru.mycrg.data_service.service.TaskService.*;
 import static ru.mycrg.data_service.service.import_.kpt.KptSourceFilesService.KPT_LIBRARY_ID;
+import static ru.mycrg.data_service.service.resources.ResourceQualifier.libraryQualifier;
 import static ru.mycrg.data_service.service.schemas.SchemaUtil.excludeUnknownProperties;
 import static ru.mycrg.data_service.util.JsonConverter.mapper;
 import static ru.mycrg.data_service.util.JsonConverter.toJsonNode;
@@ -226,10 +227,12 @@ public class GetCadastrialPlanRequestService extends RequestProcessor {
     private IRecord createFolder(String order, IRecord createdTask) {
         SchemaDto schema = documentLibraryService.getSchema(KPT_LIBRARY_ID);
 
-        return mediator.execute(
+        ResponseWithReport response = mediator.execute(
                 new CreateLibraryRecordRequest(schema,
-                                               new ResourceQualifier(SYSTEM_SCHEMA_NAME, KPT_LIBRARY_ID, LIBRARY),
+                                               libraryQualifier(KPT_LIBRARY_ID),
                                                prepareFolderRecord(order, createdTask, schema)));
+
+        return new RecordEntity(response.getContent());
     }
 
     @NotNull
@@ -262,10 +265,12 @@ public class GetCadastrialPlanRequestService extends RequestProcessor {
 
         SchemaDto schema = documentLibraryService.getSchema(KPT_LIBRARY_ID);
 
-        return mediator.execute(
+        ResponseWithReport response = mediator.execute(
                 new CreateLibraryRecordRequest(schema,
-                                               new ResourceQualifier(SYSTEM_SCHEMA_NAME, KPT_LIBRARY_ID, LIBRARY),
+                                               libraryQualifier(KPT_LIBRARY_ID),
                                                new RecordEntity(excludeUnknownProperties(schema, body))));
+
+        return new RecordEntity(response.getContent());
     }
 
     private void createLog(String eventType, String description, Map<String, Object> propsMap, Long taskId) {

@@ -3,7 +3,7 @@ package ru.mycrg.data_service.service.document_library;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
-import ru.mycrg.data_service.entity.IRecord;
+import ru.mycrg.data_service.dto.record.IRecord;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service_contract.dto.DocumentVersioningDto;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
@@ -27,6 +27,8 @@ public interface IRecordsService {
      * @param rQualifier Квалификатор библиотеки
      * @param recordId   Идентификатор записи
      */
+    // TODO: Удалить второй параметр: Object recordId. Уже сейчас зачастую id есть в ResourceQualifier. Ну а в
+    //  дальнейшем это в целом верный путь - задать корректный ResourceQualifier с id.
     IRecord getById(ResourceQualifier rQualifier,
                     Object recordId);
 

@@ -7,7 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.mycrg.data_service.dao.RecordsDao;
 import ru.mycrg.data_service.dao.config.DaoProperties;
 import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
-import ru.mycrg.data_service.entity.IRecord;
+import ru.mycrg.data_service.dto.record.IRecord;
 import ru.mycrg.data_service.exceptions.SmevRequestException;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service.service.schemas.ISchemaTemplateService;

@@ -6,7 +6,7 @@ import ru.mycrg.auth_facade.IAuthenticationFacade;
 import ru.mycrg.data_service.dao.BasePermissionsRepository;
 import ru.mycrg.data_service.dao.RecordsDao;
 import ru.mycrg.data_service.dto.ResourceType;
-import ru.mycrg.data_service.entity.IRecord;
+import ru.mycrg.data_service.dto.record.IRecord;
 import ru.mycrg.data_service.exceptions.ConflictException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.service.document_library.DocumentLibraryService;

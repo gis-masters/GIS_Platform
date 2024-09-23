@@ -1,8 +1,8 @@
 package ru.mycrg.data_service.service.cqrs.reestrs.requests;
 
 import org.jetbrains.annotations.NotNull;
-import ru.mycrg.data_service.entity.IRecord;
-import ru.mycrg.data_service.entity.RecordEntity;
+import ru.mycrg.data_service.dto.record.IRecord;
+import ru.mycrg.data_service.dto.record.RecordEntity;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.mediator.IRequest;
 

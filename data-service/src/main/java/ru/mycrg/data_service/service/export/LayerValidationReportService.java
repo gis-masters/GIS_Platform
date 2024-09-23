@@ -12,7 +12,7 @@ import ru.mycrg.data_service.dao.detached.ValidationResultDao;
 import ru.mycrg.data_service.dto.ExportResourceModel;
 import ru.mycrg.data_service.dto.ValidationRequestDto;
 import ru.mycrg.data_service.dto.WsMessageDto;
-import ru.mycrg.data_service.entity.IRecord;
+import ru.mycrg.data_service.dto.record.IRecord;
 import ru.mycrg.data_service.entity.Process;
 import ru.mycrg.data_service.repository.SchemasAndTablesRepository;
 import ru.mycrg.data_service.service.CsvHandler;

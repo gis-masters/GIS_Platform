@@ -28,15 +28,20 @@ export const forForm: NewWfsFeature[] = [
       field_double: 15.9,
       field_string: 'worldwide',
       field_date: '2023-03-02',
-      field_document:
-        '[{"id":26,"title":"sequi","libraryTableName":"dl_data_documents_with_simple_content_type_schema"}]',
+      field_document: '[{"id":26,"title":"sequi","libraryTableName":"dl_data_documents_with_simple_content_type"}]',
       field_boolean: true,
       field_choice: 1111,
       field_url: '[{"url":"ya.ru","text":"someUrl"}]',
       field_fias__oktmo: '35656401',
       field_fias__address: 'Черноморское',
       field_fias__id: 5,
-      field_file: '[{"id":"5f6d0a28-3871-4a13-8fba-b411b54dc4f0","title":"some super file","size":314}]'
+      field_file: [
+        {
+          id: '5f6d0a28-3871-4a13-8fba-b411b54dc4f0',
+          title: 'some super file',
+          size: 314
+        }
+      ]
     }
   }
 ];

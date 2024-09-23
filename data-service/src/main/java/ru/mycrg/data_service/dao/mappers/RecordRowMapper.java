@@ -2,8 +2,8 @@ package ru.mycrg.data_service.dao.mappers;
 
 import org.jetbrains.annotations.Nullable;
 import org.springframework.jdbc.core.RowMapper;
-import ru.mycrg.data_service.entity.IRecord;
-import ru.mycrg.data_service.entity.RecordEntity;
+import ru.mycrg.data_service.dto.record.IRecord;
+import ru.mycrg.data_service.dto.record.RecordEntity;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 
 import java.sql.ResultSet;

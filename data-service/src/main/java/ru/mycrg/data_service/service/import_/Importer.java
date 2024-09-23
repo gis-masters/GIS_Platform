@@ -1,7 +1,7 @@
 package ru.mycrg.data_service.service.import_;
 
 import org.springframework.web.multipart.MultipartFile;
-import ru.mycrg.data_service.entity.IRecord;
+import ru.mycrg.data_service.dto.record.IRecord;
 import ru.mycrg.data_service.service.import_.dto.ImportInitializingModel;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 

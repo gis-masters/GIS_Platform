@@ -14,7 +14,7 @@ import ru.mycrg.data_service.dao.mappers.DocLibraryMapper;
 import ru.mycrg.data_service.dao.mappers.RecordRowMapper;
 import ru.mycrg.data_service.dao.mappers.SchemasAndTablesMapper;
 import ru.mycrg.data_service.entity.DocumentLibrary;
-import ru.mycrg.data_service.entity.IRecord;
+import ru.mycrg.data_service.dto.record.IRecord;
 import ru.mycrg.data_service.entity.SchemasAndTables;
 import ru.mycrg.data_service.service.PrincipalService;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;

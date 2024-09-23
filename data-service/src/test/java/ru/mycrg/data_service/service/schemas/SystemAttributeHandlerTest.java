@@ -2,8 +2,8 @@ package ru.mycrg.data_service.service.schemas;
 
 import org.junit.Test;
 import ru.mycrg.auth_facade.AuthenticationFacade;
-import ru.mycrg.data_service.entity.IRecord;
-import ru.mycrg.data_service.entity.RecordEntity;
+import ru.mycrg.data_service.dto.record.IRecord;
+import ru.mycrg.data_service.dto.record.RecordEntity;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -3,7 +3,7 @@ package ru.mycrg.data_service.service.smev3.model;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import ru.mycrg.data_service.entity.IRecord;
+import ru.mycrg.data_service.dto.record.IRecord;
 import ru.mycrg.data_service.util.JsonConverter;
 
 import java.util.ArrayList;

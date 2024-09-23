@@ -2,8 +2,8 @@ package ru.mycrg.data_service.service.cqrs.library_records.handlers;
 
 import org.springframework.stereotype.Component;
 import ru.mycrg.data_service.dao.BasePermissionsRepository;
-import ru.mycrg.data_service.entity.IRecord;
-import ru.mycrg.data_service.entity.RecordEntity;
+import ru.mycrg.data_service.dto.record.IRecord;
+import ru.mycrg.data_service.dto.record.RecordEntity;
 import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.service.document_library.DocumentLibraryService;
 import ru.mycrg.data_service.service.cqrs.library_records.requests.RegisterDocumentRequest;

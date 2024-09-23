@@ -8,23 +8,23 @@ import ru.mycrg.data_service.dao.RecordsDao;
 import ru.mycrg.data_service.dao.ddl.tables.DdlTablesSpecial;
 import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
 import ru.mycrg.data_service.dto.LibraryModel;
-import ru.mycrg.data_service.entity.IRecord;
+import ru.mycrg.data_service.dto.record.IRecord;
+import ru.mycrg.data_service.dto.record.ResponseWithReport;
 import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.exceptions.ForbiddenException;
-import ru.mycrg.data_service.service.document_library.DocumentLibraryService;
-import ru.mycrg.data_service.service.schemas.SystemAttributeHandler;
 import ru.mycrg.data_service.service.cqrs.library_records.requests.UpdateLibraryRecordRequest;
+import ru.mycrg.data_service.service.document_library.DocumentLibraryService;
 import ru.mycrg.data_service.service.document_library.IRecordsService;
 import ru.mycrg.data_service.service.document_library.RecordServiceFactory;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service.service.resources.protectors.IMasterResourceProtector;
 import ru.mycrg.data_service.service.resources.protectors.MasterResourceProtector;
+import ru.mycrg.data_service.service.schemas.SystemAttributeHandler;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.data_service_contract.dto.SimplePropertyDto;
 import ru.mycrg.data_service_contract.enums.ValueType;
 import ru.mycrg.mediator.IRequestHandler;
-import ru.mycrg.mediator.Voidy;
 
 import java.util.List;
 import java.util.Map;
@@ -37,7 +37,7 @@ import static ru.mycrg.data_service.util.SystemLibraryAttributes.*;
 import static ru.mycrg.data_service.util.TableUtils.throwIfNotMatchTableColumns;
 
 @Component
-public class UpdateLibraryRecordRequestHandler implements IRequestHandler<UpdateLibraryRecordRequest, Voidy> {
+public class UpdateLibraryRecordRequestHandler implements IRequestHandler<UpdateLibraryRecordRequest, ResponseWithReport> {
 
     private final Logger log = LoggerFactory.getLogger(UpdateLibraryRecordRequestHandler.class);
 
@@ -66,9 +66,11 @@ public class UpdateLibraryRecordRequestHandler implements IRequestHandler<Update
     }
 
     @Override
-    public Voidy handle(UpdateLibraryRecordRequest request) {
+    public ResponseWithReport handle(UpdateLibraryRecordRequest request) {
+        log.debug("UpdateLibraryRecordRequestHandler-UpdateLibraryRecordRequestHandler: {}",
+                  request.getNewRecord().getContent());
+
         ResourceQualifier recordQualifier = request.getQualifier();
-        IRecord newRecord = request.getNewRecord();
 
         SchemaDto schema = librariesService.getSchema(recordQualifier.getTable());
         SimplePropertyDto versions = new SimplePropertyDto();
@@ -76,34 +78,39 @@ public class UpdateLibraryRecordRequestHandler implements IRequestHandler<Update
         versions.setValueType(ValueType.VERSIONS);
         schema.addProperty(versions);
 
-        IRecordsService recordsService = recordServiceFactory.get();
-        IRecord currentRecordState = recordsService.getById(recordQualifier,
-                                                            recordQualifier.getRecordIdAsLong(),
-                                                            schema);
+        IRecord currentRecordState = recordServiceFactory.get()
+                                                         .getById(recordQualifier,
+                                                                  recordQualifier.getRecordIdAsLong(),
+                                                                  schema);
         request.setOldRecord(currentRecordState);
 
-        updateRecord(recordQualifier, newRecord, schema, currentRecordState);
+        Map<String, Object> updatedProps = updateRecord(recordQualifier,
+                                                        request.getNewRecord(),
+                                                        schema,
+                                                        currentRecordState);
 
-        return new Voidy();
+        ResponseWithReport responseWithReport = request.getResponseWithReport();
+        responseWithReport.setContent(updatedProps);
+
+        return responseWithReport;
     }
 
-    private void updateRecord(ResourceQualifier recordQualifier,
-                              IRecord newRecord,
-                              SchemaDto schema,
-                              IRecord oldRecordState) {
-
+    private Map<String, Object> updateRecord(ResourceQualifier recordQualifier,
+                                             IRecord newRecordState,
+                                             SchemaDto schema,
+                                             IRecord oldRecordState) {
         if (!authenticationFacade.isOrganizationAdmin() && !authenticationFacade.isRoot()) {
-            throwIfUpdateNotAllowed(recordQualifier, newRecord);
+            throwIfUpdateNotAllowed(recordQualifier, newRecordState);
         }
 
         // update
         try {
-            log.debug("try update record: {} by data: {}", recordQualifier.getQualifier(), newRecord);
+            log.debug("try update record: {} by data: {}", recordQualifier.getQualifier(), newRecordState);
 
-            Map<String, Object> content = newRecord.getContent();
+            Map<String, Object> content = newRecordState.getContent();
             List<String> allColumnNames = ddlTablesSpecial.getAllColumnNames(recordQualifier.getTable());
-            throwIfNotMatchTableColumns(content.keySet(),
-                                        allColumnNames);
+
+            throwIfNotMatchTableColumns(content.keySet(), allColumnNames);
 
             Map<String, Object> modifiedProps;
             LibraryModel libraryInfo = (LibraryModel) librariesService.getInfo(recordQualifier.getTable());
@@ -124,11 +131,13 @@ public class UpdateLibraryRecordRequestHandler implements IRequestHandler<Update
                         .build();
             }
 
-            newRecord.setContent(modifiedProps);
+            newRecordState.setContent(modifiedProps);
 
             recordsDao.updateRecordById(recordQualifier, modifiedProps, schema);
 
             log.debug("Record: '{}' successfully patched", recordQualifier.getRecordIdAsLong());
+
+            return modifiedProps;
         } catch (CrgDaoException e) {
             throw new DataServiceException("Failed to update record: " + recordQualifier.getQualifier(), e.getCause());
         }

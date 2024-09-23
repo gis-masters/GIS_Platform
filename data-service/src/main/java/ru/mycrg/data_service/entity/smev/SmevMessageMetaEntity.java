@@ -10,7 +10,6 @@ import org.hibernate.annotations.TypeDef;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ru.mycrg.data_service.config.CrgCommonConfig;
-import ru.mycrg.data_service.entity.IContent;
 import ru.mycrg.data_service.service.smev3.Mnemonic;
 
 import javax.persistence.*;
@@ -24,7 +23,7 @@ import java.util.UUID;
         name = "jsonb-node",
         typeClass = JsonNodeBinaryType.class
 )
-public class SmevMessageMetaEntity implements IContent {
+public class SmevMessageMetaEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

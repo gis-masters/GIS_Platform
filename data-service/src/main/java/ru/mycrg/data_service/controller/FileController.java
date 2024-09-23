@@ -53,13 +53,14 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.springframework.http.HttpHeaders.CONTENT_DISPOSITION;
 import static org.springframework.http.HttpHeaders.CONTENT_LENGTH;
 import static org.springframework.http.HttpStatus.CREATED;
-import static org.springframework.http.HttpStatus.OK;
 import static ru.mycrg.auth_service_contract.Authorities.HAS_ANY_AUTHORITY;
 import static ru.mycrg.data_service.service.files.FileService.fileGroups;
 import static ru.mycrg.data_service.util.DetailedLogger.logError;
 
 @RestController
 public class FileController extends BaseController {
+
+    private final Logger log = LoggerFactory.getLogger(FileController.class);
 
     private final Mediator mediator;
     private final FileRepository fileRepository;
@@ -68,8 +69,6 @@ public class FileController extends BaseController {
     private final IAuthenticationFacade authenticationFacade;
     private final IMasterResourceProtector resourceProtector;
     private final OrgSettingsKeeper orgSettingsKeeper;
-
-    private final Logger log = LoggerFactory.getLogger(FileController.class);
 
     public FileController(Mediator mediator,
                           FileRepository fileRepository,
@@ -110,8 +109,7 @@ public class FileController extends BaseController {
             throwIfResourceNotAllowed(file);
         }
 
-        return ResponseEntity.status(OK)
-                             .body(new FileProjection(file));
+        return ResponseEntity.ok(new FileProjection(file));
     }
 
     @PreAuthorize(HAS_ANY_AUTHORITY)

@@ -1,0 +1,16 @@
+meta {
+  name: Verify signature
+  type: http
+  seq: 1
+}
+
+get {
+  url: http://localhost:8448/verify
+  body: multipartForm
+  auth: none
+}
+
+body:multipart-form {
+  path: /path/to/base/file/315.dxf
+  signature: @file(/home/denis/dev/signature/315.dxf.sig)
+}

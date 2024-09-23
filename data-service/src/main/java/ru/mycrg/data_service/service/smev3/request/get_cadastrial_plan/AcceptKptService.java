@@ -20,8 +20,8 @@ import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
 import ru.mycrg.data_service.dto.FileResourceQualifier;
 import ru.mycrg.data_service.dto.LibraryModel;
 import ru.mycrg.data_service.dto.TaskLogDto;
+import ru.mycrg.data_service.dto.record.IRecord;
 import ru.mycrg.data_service.entity.File;
-import ru.mycrg.data_service.entity.IRecord;
 import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.exceptions.SmevRequestException;
@@ -51,6 +51,7 @@ import static ru.mycrg.data_service.service.import_.kpt.KptSourceFilesService.KP
 import static ru.mycrg.data_service.service.reestrs.Systems.FGIS_EGRN;
 import static ru.mycrg.data_service.service.reestrs.Systems.SMEV_3;
 import static ru.mycrg.data_service.service.resources.ResourceQualifier.libraryQualifier;
+import static ru.mycrg.data_service.service.resources.ResourceQualifier.libraryRecordQualifier;
 import static ru.mycrg.data_service.service.storage.FileStorageUtil.generateFileName;
 import static ru.mycrg.data_service.util.JsonConverter.mapper;
 import static ru.mycrg.data_service.util.JsonConverter.toJsonNode;
@@ -147,11 +148,10 @@ public class AcceptKptService {
                     .orElseThrow(() -> new NotFoundException("Библиотека не найдена по идентификатору: "
                                                                      + KPT_LIBRARY_ID));
             SchemaDto schema = libraryModel.getSchema();
-            ResourceQualifier libraryRecordQualifier =
-                    new ResourceQualifier(SYSTEM_SCHEMA_NAME, KPT_LIBRARY_ID, Long.parseLong(folderId), LIBRARY_RECORD);
-            IRecord folder = recordsDao.findById(libraryRecordQualifier, schema)
-                                       .orElseThrow(
-                                               () -> new SmevRequestException("Не найдена папка с id: " + folderId));
+            ResourceQualifier folderQualifier = libraryRecordQualifier(KPT_LIBRARY_ID, Long.parseLong(folderId));
+            IRecord folder = recordsDao
+                    .findById(folderQualifier, schema)
+                    .orElseThrow(() -> new SmevRequestException("Не найдена папка с id: " + folderId));
             String taskNumber = folder.getAsString(ORDER_TASK_NUMBER_ATTRIBUTE);
             if (!StringUtils.isNumeric(taskNumber)) {
                 throw new SmevRequestException("У папки некорректно заполнен атрибут : " + ORDER_TASK_NUMBER_ATTRIBUTE
@@ -168,10 +168,12 @@ public class AcceptKptService {
             Document document = builder
                     .parse(new InputSource(new StringReader(processResult.getXmlBuildMeta().getRequestXmlString())));
             NodeList idList = document.getElementsByTagName("Id");
-            String attachId = idList.item(0).getTextContent();
+
             uploadFileToDocument(docRecord,
                                  processResult.getXmlBuildMeta().getClientId().toString(),
-                                 libraryRecordQualifier, schema, attachId);
+                                 folderQualifier,
+                                 schema,
+                                 idList.item(0).getTextContent());
 
             Map<String, Object> attachmentLog = new HashMap<>();
             attachmentLog.put(DESCRIPTION_ATTRIBUTE, "ZIP архив прикреплён к документу " +
@@ -181,7 +183,7 @@ public class AcceptKptService {
             updateFolderAndTaskIfAllFileProcessed(docRecord,
                                                   folder,
                                                   libraryQualifier,
-                                                  libraryRecordQualifier,
+                                                  folderQualifier,
                                                   taskId,
                                                   schema);
         } catch (Exception e) {

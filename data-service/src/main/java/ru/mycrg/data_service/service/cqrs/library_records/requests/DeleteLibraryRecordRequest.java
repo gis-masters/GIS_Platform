@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import org.jetbrains.annotations.NotNull;
 import ru.mycrg.audit_service_contract.Auditable;
 import ru.mycrg.audit_service_contract.events.CrgAuditEvent;
-import ru.mycrg.data_service.entity.IRecord;
+import ru.mycrg.data_service.dto.record.IRecord;
 import ru.mycrg.data_service.service.cqrs.files.IDeleteFilesRelation;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service_contract.dto.SchemaDto;

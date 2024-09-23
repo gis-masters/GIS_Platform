@@ -74,8 +74,7 @@ public class UpdateTableRecordRequestHandler implements IRequestHandler<UpdateTa
                             .forEach(newFeature::setProperty);
 
         try {
-            spatialRecordsDao.updateByIds(rQualifier, newFeature, PRIMARY_KEY, schema,
-                                          asList(rQualifier.getRecordIdAsLong()));
+            spatialRecordsDao.updateByIds(rQualifier, newFeature, schema, asList(rQualifier.getRecordIdAsLong()));
         } catch (CrgDaoException e) {
             String msg = "Не удалось обновить фичу в таблице: " + rQualifier.getTable();
             logError(msg, e);

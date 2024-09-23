@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import ru.mycrg.data_service.dao.RecordsDao;
 import ru.mycrg.data_service.entity.File;
-import ru.mycrg.data_service.entity.IRecord;
+import ru.mycrg.data_service.dto.record.IRecord;
 import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.repository.FileRepository;
 import ru.mycrg.data_service.service.document_library.DocumentLibraryService;
@@ -23,6 +23,8 @@ import java.util.stream.Collectors;
 
 import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_NAME;
 import static ru.mycrg.data_service.dto.ResourceType.LIBRARY_RECORD;
+import static ru.mycrg.data_service.service.resources.ResourceQualifier.libraryQualifier;
+import static ru.mycrg.data_service.service.resources.ResourceQualifier.libraryRecordQualifier;
 import static ru.mycrg.data_service.util.SystemLibraryAttributes.ID;
 import static ru.mycrg.data_service.util.SystemLibraryAttributes.PATH;
 
@@ -75,7 +77,7 @@ public class KptSourceFilesService {
     public IRecord getKptById(long docId) {
         IRecord record = recordServiceFactory
                 .get()
-                .getById(new ResourceQualifier(SYSTEM_SCHEMA_NAME, KPT_LIBRARY_ID, docId, LIBRARY_RECORD), docId);
+                .getById(libraryRecordQualifier(KPT_LIBRARY_ID, docId), docId);
 
         if (record == null) {
             throw new DataServiceException("Не найден документ: " + docId);
@@ -112,7 +114,7 @@ public class KptSourceFilesService {
         String recordsInDir = String.format("%s LIKE '%s/%d'",
                                             PATH.getName(), directory.getAsString(PATH.getName()), directory.getId());
 
-        List<IRecord> records = recordsDao.findAll(new ResourceQualifier(SYSTEM_SCHEMA_NAME, KPT_LIBRARY_ID),
+        List<IRecord> records = recordsDao.findAll(libraryQualifier(KPT_LIBRARY_ID),
                                                    recordsInDir,
                                                    kptLibSchema);
         Set<UUID> fileIds = records

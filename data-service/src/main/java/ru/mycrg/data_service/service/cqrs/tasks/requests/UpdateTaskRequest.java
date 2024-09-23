@@ -3,7 +3,7 @@ package ru.mycrg.data_service.service.cqrs.tasks.requests;
 import com.fasterxml.jackson.databind.JsonNode;
 import ru.mycrg.audit_service_contract.Auditable;
 import ru.mycrg.audit_service_contract.events.CrgAuditEvent;
-import ru.mycrg.data_service.entity.IRecord;
+import ru.mycrg.data_service.dto.record.IRecord;
 import ru.mycrg.mediator.IRequest;
 import ru.mycrg.mediator.Voidy;
 

@@ -120,11 +120,10 @@ public class SpatialRecordsDao {
 
     public void updateByIds(ResourceQualifier qualifier,
                             Feature feature,
-                            String primaryKey,
                             SchemaDto schema,
                             List<Long> ids) throws CrgDaoException {
         try {
-            String query = buildParameterizedUpdateQuery(qualifier, feature, primaryKey, ids);
+            String query = buildParameterizedUpdateQuery(qualifier, feature, qualifier.getPrimaryKeyName(), ids);
             MapSqlParameterSource parameterSource = sqlParameterSourceFactory.buildParameterizedSource(
                     feature,
                     schema);

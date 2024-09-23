@@ -2,7 +2,6 @@ package ru.mycrg.data_service.entity.reestrs;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import ru.mycrg.data_service.entity.IContent;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -14,7 +13,7 @@ import java.util.UUID;
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 @Entity
 @Table(name = "reestr_incoming")
-public class ReestrIncoming implements IContent {
+public class ReestrIncoming {
 
     @Id
     private UUID id;

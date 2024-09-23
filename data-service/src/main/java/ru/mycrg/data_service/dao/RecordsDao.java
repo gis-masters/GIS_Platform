@@ -14,14 +14,16 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
 import ru.mycrg.data_service.dao.mappers.RecordRowMapper;
 import ru.mycrg.data_service.dto.RegistryData;
-import ru.mycrg.data_service.entity.IContent;
-import ru.mycrg.data_service.entity.IRecord;
-import ru.mycrg.data_service.service.schemas.SystemAttributeHandler;
+import ru.mycrg.data_service.dto.record.IRecord;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
+import ru.mycrg.data_service.service.schemas.SystemAttributeHandler;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.geo_json.Feature;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 import static com.google.common.primitives.Longs.asList;
 import static ru.mycrg.data_service.dao.utils.EcqlHandler.buildWhereSection;
@@ -65,8 +67,7 @@ public class RecordsDao {
     public void updateRecordById(@NotNull ResourceQualifier qualifier,
                                  @NotNull Map<String, Object> data,
                                  @NotNull SchemaDto schema) throws CrgDaoException {
-        spatialRecordsDao.updateByIds(qualifier, new Feature(data), ID.getName(), schema,
-                                      asList(qualifier.getRecordIdAsLong()));
+        spatialRecordsDao.updateByIds(qualifier, new Feature(data), schema, asList(qualifier.getRecordIdAsLong()));
     }
 
     public void addRecordsAsBatch(@NotNull ResourceQualifier qualifier,

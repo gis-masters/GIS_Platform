@@ -5,6 +5,13 @@ export interface SpatialReferenceSystem {
   proj4Text: string;
 }
 
+export interface VerifyEcpResponse {
+  message: string;
+  signer: string;
+  code: string;
+  verified: boolean;
+}
+
 export interface FtsRequestDto {
   text: string;
   ecqlFilter: string;
@@ -55,13 +62,13 @@ export interface Settings {
   taskManagement: boolean;
   createProject: boolean;
   downloadFiles: boolean;
-  viewDocumentLibrary: boolean;
-  viewBugReport: boolean;
-  downloadGml: boolean;
-  importShp: boolean;
-  viewServicesCalculator: boolean;
   editProjectLayer: boolean;
   createLibraryItem: boolean;
+  importShp: boolean;
+  downloadGml: boolean;
+  viewBugReport: boolean;
+  viewDocumentLibrary: boolean;
+  viewServicesCalculator: boolean;
   favoritesEpsg: string[];
   defaultEpsg: string;
   tags: string[];

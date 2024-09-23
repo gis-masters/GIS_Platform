@@ -1,6 +1,6 @@
 package ru.mycrg.data_service.service.smev3;
 
-import ru.mycrg.data_service.entity.IRecord;
+import ru.mycrg.data_service.dto.record.IRecord;
 
 import java.util.ArrayList;
 import java.util.List;

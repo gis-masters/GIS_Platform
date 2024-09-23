@@ -1,8 +1,8 @@
 package ru.mycrg.data_service.service.smev3.request.receipt_rns;
 
 import org.jetbrains.annotations.NotNull;
-import ru.mycrg.data_service.entity.IRecord;
-import ru.mycrg.data_service.entity.RecordEntity;
+import ru.mycrg.data_service.dto.record.IRecord;
+import ru.mycrg.data_service.dto.record.RecordEntity;
 import ru.mycrg.data_service.exceptions.SmevRequestException;
 import ru.mycrg.data_service.receipt_rns_1_0_9.*;
 import ru.mycrg.data_service.service.smev3.request.AResponseXmlProcessor;

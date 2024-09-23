@@ -3,13 +3,17 @@ package ru.mycrg.data_service.service.cqrs.midelwares;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-import ru.mycrg.data_service.service.files.FileService;
-import ru.mycrg.data_service.service.schemas.ISchemable;
+import ru.mycrg.common_contracts.generated.ecp.VerifyEcpResponse;
 import ru.mycrg.data_service.service.cqrs.files.ICreateFilesRelation;
 import ru.mycrg.data_service.service.cqrs.files.IDeleteFilesRelation;
 import ru.mycrg.data_service.service.cqrs.files.IUpdateFilesRelation;
+import ru.mycrg.data_service.service.files.FileService;
+import ru.mycrg.data_service.service.schemas.ISchemable;
 import ru.mycrg.mediator.IRequest;
 import ru.mycrg.mediator.IRequestMiddleware;
+
+import java.util.Map;
+import java.util.UUID;
 
 import static ru.mycrg.data_service.service.schemas.SchemaUtil.isFilePropertyExist;
 
@@ -40,16 +44,22 @@ public class FilesRelationMiddleware implements IRequestMiddleware {
         if (request instanceof ICreateFilesRelation) {
             ICreateFilesRelation createFilesRelation = (ICreateFilesRelation) request;
 
-            fileService.relateFiles(createFilesRelation.getSchema(),
-                                    createFilesRelation.getQualifier(),
-                                    createFilesRelation.getRecord());
+            Map<UUID, VerifyEcpResponse> ecpReport = fileService
+                    .relateFiles(createFilesRelation.getSchema(),
+                                 createFilesRelation.getQualifier(),
+                                 createFilesRelation.getRecord());
+
+            createFilesRelation.addEcpReport(ecpReport);
         } else if (request instanceof IUpdateFilesRelation) {
             IUpdateFilesRelation updateFilesRelation = (IUpdateFilesRelation) request;
 
-            fileService.relateFilesByUpdate(updateFilesRelation.getSchema(),
-                                            updateFilesRelation.getQualifier(),
-                                            updateFilesRelation.getNewRecord(),
-                                            updateFilesRelation.getOldRecord());
+            Map<UUID, VerifyEcpResponse> ecpReport = fileService
+                    .relateFilesByUpdate(updateFilesRelation.getSchema(),
+                                         updateFilesRelation.getQualifier(),
+                                         updateFilesRelation.getNewRecord(),
+                                         updateFilesRelation.getOldRecord());
+
+            updateFilesRelation.addEcpReport(ecpReport);
         } else if (request instanceof IDeleteFilesRelation) {
             // IDeleteFilesRelation deleteFilesRelation = (IDeleteFilesRelation) request;
             // закомментировано, так как решается вопрос о том каким образом будут подчищаться хвосты

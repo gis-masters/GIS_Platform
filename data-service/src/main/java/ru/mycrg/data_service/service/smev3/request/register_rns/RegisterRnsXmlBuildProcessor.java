@@ -6,7 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.mycrg.data_service.dto.ResourceType;
 import ru.mycrg.data_service.dto.smev3.RegisterRequestDto;
-import ru.mycrg.data_service.entity.IRecord;
+import ru.mycrg.data_service.dto.record.IRecord;
 import ru.mycrg.data_service.exceptions.SmevRequestException;
 import ru.mycrg.data_service.register_rns_1_0_10.*;
 import ru.mycrg.data_service.service.smev3.fields.*;

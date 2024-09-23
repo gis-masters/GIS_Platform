@@ -161,6 +161,7 @@ services:
       CRG_OPTIONS_KPT_TASK_DEADLINE_TIME: ${CRG_OPTIONS_KPT_TASK_DEADLINE_TIME:-720}
       CRG_OPTIONS_AUTH_SERVICE_URL: http://auth-service:9000
       CRG_OPTIONS_GIS_SERVICE_URL: http://gis-service:8082
+      CRG_OPTIONS_CRYPTOPRO_SERVICE_URL: http://cryptopro-service:8448
       CRG_OPTIONS_DATA_SERVICE_URL: http://data-service:8084
       CRG_OPTIONS_UI_SERVICE_URL: http://portal-ui:80
       CRG_OPTIONS_KPT_STORAGE_PATH: /opt/kpt_order/
@@ -380,3 +381,16 @@ services:
         max-size: "10m"
         max-file: "10"
     mem_limit: ${GISOGD_MEM_LIMIT:-400}m
+
+  cryptopro-service:
+    container_name: crg-cryptopro-service
+    image: ${DOCKER_CRG_HOST}/crg-cryptopro:5
+    restart: always
+    extra_hosts:
+      - "logstash:${LOGSTASH_HOST}"
+    volumes:
+      - /opt/logs:/opt/logs
+      - /opt/file_storage:/opt/file_storage
+    ports:
+      - "8448:8448"
+    mem_limit: ${CRYPTOPRO_MEM_LIMIT:-400}m

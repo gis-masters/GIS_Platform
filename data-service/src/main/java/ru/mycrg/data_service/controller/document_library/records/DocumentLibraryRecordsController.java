@@ -10,9 +10,10 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.mycrg.data_service.dto.LibraryModel;
-import ru.mycrg.data_service.dto.RecordDto;
-import ru.mycrg.data_service.entity.IRecord;
-import ru.mycrg.data_service.entity.RecordEntity;
+import ru.mycrg.data_service.dto.record.IRecord;
+import ru.mycrg.data_service.dto.record.RecordDto;
+import ru.mycrg.data_service.dto.record.RecordEntity;
+import ru.mycrg.data_service.dto.record.ResponseWithReport;
 import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.service.OrgSettingsKeeper;
@@ -138,30 +139,31 @@ public class DocumentLibraryRecordsController {
         SchemaDto schema = libraryService.getSchema(docLibId);
         Map<String, Object> props = excludeUnknownProperties(schema, data);
 
-        IRecord record = mediator.execute(
+        ResponseWithReport response = mediator.execute(
                 new CreateLibraryRecordRequest(schema,
                                                libraryQualifier(docLibId),
                                                new RecordEntity(props)));
 
-        return new ResponseEntity<>(record.getContent(), CREATED);
+        return new ResponseEntity<>(response.getContent(), CREATED);
     }
 
     @PreAuthorize(HAS_ANY_AUTHORITY)
     @PatchMapping(path = "/document-libraries/{docLibId}/records/{recId}", consumes = APPLICATION_JSON_MERGE_PATCH)
-    public ResponseEntity<Object> updateRecord(@PathVariable String docLibId,
-                                               @PathVariable Long recId,
-                                               @RequestBody Map<String, Object> payload) {
+    public ResponseEntity<ResponseWithReport> updateRecord(@PathVariable String docLibId,
+                                                           @PathVariable Long recId,
+                                                           @RequestBody Map<String, Object> payload) {
+        ResponseWithReport response = new ResponseWithReport();
         if (!payload.isEmpty()) {
             SchemaDto schema = libraryService.getSchema(docLibId);
             throwIfNotMatchSchema(schema, payload);
 
-            mediator.execute(
+            response = mediator.execute(
                     new UpdateLibraryRecordRequest(schema,
                                                    libraryRecordQualifier(docLibId, recId),
                                                    new RecordEntity(payload)));
         }
 
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(response);
     }
 
     @PreAuthorize(HAS_ANY_AUTHORITY)

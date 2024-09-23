@@ -90,7 +90,7 @@ public class UpdateMultipleTableRecordRequestHandler implements IRequestHandler<
 
     private void multipleUpdate(ResourceQualifier qualifier, Feature newFeature, SchemaDto schema, List<Long> ids) {
         try {
-            spatialRecordsDao.updateByIds(qualifier, newFeature, PRIMARY_KEY, schema, ids);
+            spatialRecordsDao.updateByIds(qualifier, newFeature, schema, ids);
         } catch (CrgDaoException e) {
             String msg = "Не удалось выполнить multipleUpdate в таблице: " + qualifier.getTable();
             logError(msg, e);

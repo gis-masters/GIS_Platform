@@ -4,7 +4,7 @@ import org.springframework.stereotype.Component;
 import ru.mycrg.auth_facade.IAuthenticationFacade;
 import ru.mycrg.data_service.dao.CommonDao;
 import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
-import ru.mycrg.data_service.entity.IRecord;
+import ru.mycrg.data_service.dto.record.IRecord;
 import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.service.cqrs.reestrs.requests.CreateReestrRecordRequest;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;

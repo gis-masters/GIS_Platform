@@ -1,4 +1,4 @@
-package ru.mycrg.data_service.entity;
+package ru.mycrg.data_service.dto.record;
 
 import org.jetbrains.annotations.Nullable;
 

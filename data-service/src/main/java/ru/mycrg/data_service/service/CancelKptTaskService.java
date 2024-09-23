@@ -9,7 +9,7 @@ import ru.mycrg.data_service.dao.detached.TasksDetachedDao;
 import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
 import ru.mycrg.data_service.dto.LibraryModel;
 import ru.mycrg.data_service.dto.TaskLogDto;
-import ru.mycrg.data_service.entity.IRecord;
+import ru.mycrg.data_service.dto.record.IRecord;
 import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.exceptions.SmevRequestException;
@@ -22,10 +22,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_NAME;
-import static ru.mycrg.data_service.dto.ResourceType.LIBRARY_RECORD;
 import static ru.mycrg.data_service.service.import_.kpt.KptSourceFilesService.KPT_LIBRARY_ID;
 import static ru.mycrg.data_service.service.resources.ResourceQualifier.libraryQualifier;
+import static ru.mycrg.data_service.service.resources.ResourceQualifier.libraryRecordQualifier;
 import static ru.mycrg.data_service.service.smev3.request.get_cadastrial_plan.GetCadastrialPlanRequestService.KPT_CONTENT_TYPE;
 import static ru.mycrg.data_service.util.SystemLibraryAttributes.TITLE;
 import static ru.mycrg.data_service_contract.enums.TaskStatus.CANCELED;
@@ -87,10 +86,9 @@ public class CancelKptTaskService {
                 folderPayload.put(NOTE_ATTRIBUTE,
                                   "Не пришли ответы на кадастровые номера: " + cadastrialNumbers);
                 try {
-                    ResourceQualifier libraryRecordQualifier =
-                            new ResourceQualifier(SYSTEM_SCHEMA_NAME, KPT_LIBRARY_ID, folder.getId(), LIBRARY_RECORD);
-
-                    recordsDao.updateRecordById(libraryRecordQualifier, folderPayload, schema);
+                    recordsDao.updateRecordById(libraryRecordQualifier(KPT_LIBRARY_ID, folder.getId()),
+                                                folderPayload,
+                                                schema);
                 } catch (CrgDaoException e) {
                     log.error("Не удалось обновить папку с id: {}. По причине: {}", folder.getId(),
                               e.getMessage());
