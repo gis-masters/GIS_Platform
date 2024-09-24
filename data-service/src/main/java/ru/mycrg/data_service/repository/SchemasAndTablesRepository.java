@@ -17,10 +17,7 @@ public interface SchemasAndTablesRepository extends PagingAndSortingRepository<S
 
     void deleteByIdentifier(String identifier);
 
-    @Query("SELECT crs FROM SchemasAndTables WHERE identifier = :identifier")
-    Optional<String> findCrsByIdentifier(@Param("identifier") String identifier);
-
-    @Query(value = "SELECT * FROM doc_libraries WHERE (schema->>'name')\\:\\:text = :schemaId",
+    @Query(value = "SELECT * FROM schemas_and_tables WHERE (schema->>'name')\\:\\:text = :schemaId",
            nativeQuery = true)
     List<SchemasAndTables> findBySchemaId(@Param("schemaId") String schemaId);
 
