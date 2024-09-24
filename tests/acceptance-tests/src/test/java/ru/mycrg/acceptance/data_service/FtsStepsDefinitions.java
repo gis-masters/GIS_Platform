@@ -27,7 +27,7 @@ public class FtsStepsDefinitions extends BaseStepsDefinitions {
         ftsDto.setText(text);
         if ("документам".equals(type)) {
             ftsDto.setType(FtsType.DOCUMENT);
-        } else if ("слоям".equals(type)) {
+        } else if ("таблице".equals(type)) {
             ftsDto.setType(FtsType.FEATURE);
         } else {
             throw new RuntimeException("Укажите по чему вести поиск: документам или слоям.");
@@ -56,7 +56,7 @@ public class FtsStepsDefinitions extends BaseStepsDefinitions {
         assertEquals("Количество записей в ответе должно быть равно 0", 0, total);
     }
 
-    @Then("Полнотекстовй поск нашёл (документы/документ)")
+    @Then("Полнотекстовый поиск нашёл (документы/документ)")
     public void shouldFoundAnything() {
         int total = response.jsonPath().getInt("details.page.totalElements");
         assertNotEquals("Количество записей в ответе должно быть больше 0", 0, total);

@@ -13,6 +13,7 @@ import ru.mycrg.acceptance.data_service.dto.DefaultDocumentModel;
 import ru.mycrg.acceptance.data_service.dto.FileDescriptionModel;
 import ru.mycrg.acceptance.data_service.dto.LibraryModel;
 import ru.mycrg.acceptance.data_service.dto.RecordDto;
+import ru.mycrg.acceptance.data_service.dto.schemas.SchemaDto;
 import ru.mycrg.data_service_contract.dto.DocumentVersioningDto;
 
 import javax.validation.constraints.NotNull;
@@ -39,7 +40,7 @@ import static ru.mycrg.acceptance.data_service.schemas.SchemasStepsDefinitions.c
 
 public class LibraryStepsDefinitions extends LibraryBaseRecords {
 
-    public static LibraryModel currentLibraryModel;
+    public static LibraryModel currentLibrary;
     public static LibraryModel currentLibraryWithVersioningModel;
     public static String currentLibraryId;
     public static String currentLibraryTableName;
@@ -64,12 +65,13 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
     }
 
     @When("Администратор организации делает запрос на создание библиотеки документов")
-    public void createDocumentLibraryByAdmin() {
+    public void createDocumentLibraryByAdminStep() {
         authorizationBase.loginAsOwner();
 
-        if (Objects.isNull(currentLibraryModel)) {
+        if (Objects.isNull(currentLibrary)) {
             createLibrary(currentSchemaName, false);
-            currentLibraryModel = extractCurrentLibraryModel();
+
+            currentLibrary = extractCurrentLibraryModel();
         }
     }
 
@@ -80,14 +82,32 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
 
     @When("Существует библиотека документов")
     public void createRandomDocumentLibraryByAdmin() {
-        createDocumentLibraryByAdmin();
+        createDocumentLibraryByAdminStep();
     }
 
     @When("Существует библиотека документов по текущей схеме")
     public void createRandomDocumentLibraryByAdminByCurrentSchema() {
-        currentLibraryModel = null;
+        currentLibrary = null;
 
-        createDocumentLibraryByAdmin();
+        createDocumentLibraryByAdminStep();
+    }
+
+    @When("Существует библиотека документов, созданная по схеме {string}")
+    public void createDocumentLibraryBySchema(String schemaTitle) {
+        currentLibrary = null;
+
+        SchemaDto schema = getSchemaByTitleFromScenario(schemaTitle);
+
+        createLibrary(schema.getName(), false);
+        if (response.statusCode() == 409) {
+            System.out.println("Библиотека " + schema.getName() + " уже существует");
+        } else if (response.statusCode() != 201) {
+            throw new IllegalStateException("Не удалось создать библиотеку по схеме: " + schema.getName());
+        }
+
+        response.prettyPrint();
+
+        // currentLibrary = extractCurrentLibraryModel();
     }
 
     @When("Существует библиотека документов с включённым версионированием")
@@ -102,7 +122,7 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
     public void currentDatasetExist() {
         getBaseRequestWithCurrentCookie()
                 .when().
-                        get("/" + currentLibraryModel.getTableName())
+                        get("/" + currentLibrary.getTableName())
                 .then().
                         statusCode(SC_OK);
     }
@@ -113,7 +133,7 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
 
         getBaseRequestWithCurrentCookie()
                 .when().
-                        delete("/" + currentLibraryModel.getTableName())
+                        delete("/" + currentLibrary.getTableName())
                 .then().
                         statusCode(SC_NO_CONTENT);
     }
@@ -460,7 +480,7 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
                          .multiPart("body", body)
                 .when().
                          log().ifValidationFails().
-                         post("/dl_default/records");
+                         post("/" + DEFAULT_LIBRARY + "/records");
 
         currentDocumentId = extractEntityIdFromResponse(response);
     }

@@ -93,7 +93,7 @@ public class TablesStepsDefinitions extends BaseStepsDefinitions {
 
     @When("Существует таблица по схеме {string}")
     public void initTable(String schemaTitle) {
-        SchemaDto schema = getSchemaByTitle(schemaTitle);
+        SchemaDto schema = getSchemaByTitleFromScenario(schemaTitle);
 
         createTablesRequest(generateString("STRING_8"),
                             "some title",

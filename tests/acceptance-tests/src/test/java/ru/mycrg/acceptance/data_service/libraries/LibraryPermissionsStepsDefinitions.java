@@ -70,7 +70,7 @@ public class LibraryPermissionsStepsDefinitions extends BaseStepsDefinitions {
 
     @When("Пользователь делает запрос на получение текущей библиотеки")
     public void getCurrentLibrary() {
-        getLibrary(currentLibraryModel.getTableName());
+        getLibrary(currentLibrary.getTableName());
     }
 
     @Then("Отправляется запрос на создание правила для библиотеки: {string}, {string} {string} {string}")
@@ -156,33 +156,35 @@ public class LibraryPermissionsStepsDefinitions extends BaseStepsDefinitions {
     public void createSomeCatalogsAndFiles(int option) {
         authorizationBase.loginAsOwner();
 
+        String library = DEFAULT_LIBRARY;
+
         if (option == 1) {
             // Root folder: folder_1
-            folder1Id = baseRecords.createRecordWithCheck(DEFAULT_LIBRARY, new RecordDto("folder_1"));
+            folder1Id = baseRecords.createRecordWithCheck(library, new RecordDto("folder_1"));
 
             // In folder_1
             String pathToFolder1 = "/root/" + folder1Id;
-            folder11Id = baseRecords.createRecordWithCheck(DEFAULT_LIBRARY, new RecordDto("folder_1_1", pathToFolder1));
-            baseRecords.createRecordWithCheck(DEFAULT_LIBRARY, new RecordDto("folder_1_2", pathToFolder1));
-            baseRecords.createRecordWithCheck(DEFAULT_LIBRARY, new RecordDto("file_1_1", pathToFolder1, "doc_v3"));
-            baseRecords.createRecordWithCheck(DEFAULT_LIBRARY, new RecordDto("file_1_2", pathToFolder1, "doc_v3"));
-            baseRecords.createRecordWithCheck(DEFAULT_LIBRARY, new RecordDto("file_1_3", pathToFolder1, "doc_v3"));
+            folder11Id = baseRecords.createRecordWithCheck(library, new RecordDto("folder_1_1", pathToFolder1));
+            baseRecords.createRecordWithCheck(library, new RecordDto("folder_1_2", pathToFolder1));
+            baseRecords.createRecordWithCheck(library, new RecordDto("file_1_1", pathToFolder1, "doc_v3"));
+            baseRecords.createRecordWithCheck(library, new RecordDto("file_1_2", pathToFolder1, "doc_v3"));
+            baseRecords.createRecordWithCheck(library, new RecordDto("file_1_3", pathToFolder1, "doc_v3"));
 
             // In folder_1_1
             String pathToFolder11 = String.format("/root/%d/%d", folder1Id, folder11Id);
-            folder111Id = baseRecords.createRecordWithCheck(DEFAULT_LIBRARY,
+            folder111Id = baseRecords.createRecordWithCheck(library,
                                                             new RecordDto("folder_1_1_1", pathToFolder11));
-            baseRecords.createRecordWithCheck(DEFAULT_LIBRARY, new RecordDto("folder_1_1_2", pathToFolder11));
-            baseRecords.createRecordWithCheck(DEFAULT_LIBRARY, new RecordDto("file_1_1_1", pathToFolder11, "doc_v3"));
+            baseRecords.createRecordWithCheck(library, new RecordDto("folder_1_1_2", pathToFolder11));
+            baseRecords.createRecordWithCheck(library, new RecordDto("file_1_1_1", pathToFolder11, "doc_v3"));
 
             // In folder_1_1_1
             String pathToFolder111 = String.format("/root/%d/%d/%d", folder1Id, folder11Id, folder111Id);
-            baseRecords.createRecordWithCheck(DEFAULT_LIBRARY, new RecordDto("folder_1_1_1_1", pathToFolder111));
-            baseRecords.createRecordWithCheck(DEFAULT_LIBRARY, new RecordDto("folder_1_1_1_2", pathToFolder111));
-            baseRecords.createRecordWithCheck(DEFAULT_LIBRARY, new RecordDto("folder_1_1_1_3", pathToFolder111));
-            baseRecords.createRecordWithCheck(DEFAULT_LIBRARY,
+            baseRecords.createRecordWithCheck(library, new RecordDto("folder_1_1_1_1", pathToFolder111));
+            baseRecords.createRecordWithCheck(library, new RecordDto("folder_1_1_1_2", pathToFolder111));
+            baseRecords.createRecordWithCheck(library, new RecordDto("folder_1_1_1_3", pathToFolder111));
+            baseRecords.createRecordWithCheck(library,
                                               new RecordDto("file_1_1_1_1", pathToFolder111, "doc_v3"));
-            file1112Id = baseRecords.createRecordWithCheck(DEFAULT_LIBRARY,
+            file1112Id = baseRecords.createRecordWithCheck(library,
                                                            new RecordDto("file_1_1_1_2", pathToFolder111, "doc_v3"));
         } else if (option == 2) {
             String fileContentType = "doc_v3";
@@ -205,131 +207,131 @@ public class LibraryPermissionsStepsDefinitions extends BaseStepsDefinitions {
             String folder11 = "folder_11";
             String folder12 = "folder_12";
 
-            addPermissionToLibraryForCurrentUser("CONTRIBUTOR", "dl_default");
+            addPermissionToLibraryForCurrentUser("CONTRIBUTOR", library);
 
-            Integer file1Id = baseRecords.createRecordWithCheck(DEFAULT_LIBRARY,
+            Integer file1Id = baseRecords.createRecordWithCheck(library,
                                                                 new RecordDto(file1, null, fileContentType));
             libraryCatalog.put(file1, file1Id);
             addPermissionToRecordForCurrentUser(file1Id, "OWNER");
 
-            Integer file2Id = baseRecords.createRecordWithCheck(DEFAULT_LIBRARY,
+            Integer file2Id = baseRecords.createRecordWithCheck(library,
                                                                 new RecordDto(file2, null, fileContentType));
             libraryCatalog.put(file2, file2Id);
 
-            Integer folder1Id = baseRecords.createRecordWithCheck(DEFAULT_LIBRARY,
+            Integer folder1Id = baseRecords.createRecordWithCheck(library,
                                                                   new RecordDto(folder1, null, folderContentType));
             libraryCatalog.put(folder1, folder1Id);
 
-            Integer folder2Id = baseRecords.createRecordWithCheck(DEFAULT_LIBRARY,
+            Integer folder2Id = baseRecords.createRecordWithCheck(library,
                                                                   new RecordDto(folder2, null, folderContentType));
             libraryCatalog.put(folder2, folder2Id);
 
-            Integer folder3Id = baseRecords.createRecordWithCheck(DEFAULT_LIBRARY,
+            Integer folder3Id = baseRecords.createRecordWithCheck(library,
                                                                   new RecordDto(folder3, null, folderContentType));
             libraryCatalog.put(folder3, folder3Id);
             addPermissionToRecordForCurrentUser(folder3Id, "VIEWER");
 
             String pathToFolder3 = String.format("/root/%d", folder3Id);
-            Integer folder4Id = baseRecords.createRecordWithCheck(DEFAULT_LIBRARY,
+            Integer folder4Id = baseRecords.createRecordWithCheck(library,
                                                                   new RecordDto(folder4, pathToFolder3,
                                                                                 folderContentType));
             libraryCatalog.put(folder4, folder4Id);
 
             String pathToFolder4 = String.format("/root/%d/%d", folder3Id, folder4Id);
-            Integer folder5Id = baseRecords.createRecordWithCheck(DEFAULT_LIBRARY,
+            Integer folder5Id = baseRecords.createRecordWithCheck(library,
                                                                   new RecordDto(folder5, pathToFolder4,
                                                                                 folderContentType));
             libraryCatalog.put(folder5, folder5Id);
 
             String pathToFolder5 = String.format("/root/%d/%d/%d", folder3Id, folder4Id, folder5Id);
-            Integer folder6Id = baseRecords.createRecordWithCheck(DEFAULT_LIBRARY,
+            Integer folder6Id = baseRecords.createRecordWithCheck(library,
                                                                   new RecordDto(folder6, pathToFolder5,
                                                                                 folderContentType));
             libraryCatalog.put(folder6, folder6Id);
 
             String pathToFolder2 = String.format("/root/%d", folder2Id);
-            Integer folder7Id = baseRecords.createRecordWithCheck(DEFAULT_LIBRARY,
+            Integer folder7Id = baseRecords.createRecordWithCheck(library,
                                                                   new RecordDto(folder7, pathToFolder2,
                                                                                 folderContentType));
             libraryCatalog.put(folder7, folder7Id);
 
-            Integer folder8Id = baseRecords.createRecordWithCheck(DEFAULT_LIBRARY,
+            Integer folder8Id = baseRecords.createRecordWithCheck(library,
                                                                   new RecordDto(folder8, pathToFolder2,
                                                                                 folderContentType));
             libraryCatalog.put(folder8, folder8Id);
             addPermissionToRecordForCurrentUser(folder8Id, "VIEWER");
 
             String pathToFolder8 = String.format("/root/%d/%d", folder2Id, folder8Id);
-            Integer folder9Id = baseRecords.createRecordWithCheck(DEFAULT_LIBRARY,
+            Integer folder9Id = baseRecords.createRecordWithCheck(library,
                                                                   new RecordDto(folder9, pathToFolder8,
                                                                                 folderContentType));
             libraryCatalog.put(folder9, folder9Id);
 
-            Integer file3Id = baseRecords.createRecordWithCheck(DEFAULT_LIBRARY,
+            Integer file3Id = baseRecords.createRecordWithCheck(library,
                                                                 new RecordDto(file3, pathToFolder8, fileContentType));
             libraryCatalog.put(file3, file3Id);
 
             String pathToFolder9 = String.format("/root/%d/%d/%d", folder2Id, folder8Id, folder9Id);
-            Integer folder10Id = baseRecords.createRecordWithCheck(DEFAULT_LIBRARY,
+            Integer folder10Id = baseRecords.createRecordWithCheck(library,
                                                                    new RecordDto(folder10, pathToFolder9,
                                                                                  folderContentType));
             libraryCatalog.put(folder10, folder10Id);
             addPermissionToRecordForCurrentUser(folder10Id, "OWNER");
 
             String pathToFolder10 = String.format("/root/%d/%d/%d/%d", folder2Id, folder8Id, folder9Id, folder10Id);
-            Integer folder11Id = baseRecords.createRecordWithCheck(DEFAULT_LIBRARY,
+            Integer folder11Id = baseRecords.createRecordWithCheck(library,
                                                                    new RecordDto(folder11, pathToFolder10,
                                                                                  folderContentType));
             libraryCatalog.put(folder11, folder11Id);
 
-            Integer file4Id = baseRecords.createRecordWithCheck(DEFAULT_LIBRARY,
+            Integer file4Id = baseRecords.createRecordWithCheck(library,
                                                                 new RecordDto(file4, pathToFolder10, fileContentType));
             libraryCatalog.put(file4, file4Id);
 
             String pathToFolder11 = String.format("/root/%d/%d/%d/%d/%d",
                                                   folder2Id, folder8Id, folder9Id, folder10Id, folder11Id);
-            Integer file5Id = baseRecords.createRecordWithCheck(DEFAULT_LIBRARY,
+            Integer file5Id = baseRecords.createRecordWithCheck(library,
                                                                 new RecordDto(file5, pathToFolder11, fileContentType));
             libraryCatalog.put(file5, file5Id);
 
-            Integer folder12Id = baseRecords.createRecordWithCheck(DEFAULT_LIBRARY,
+            Integer folder12Id = baseRecords.createRecordWithCheck(library,
                                                                    new RecordDto(folder12, null, folderContentType));
             libraryCatalog.put(folder12, folder12Id);
             addPermissionToRecordForCurrentUser(folder12Id, "OWNER");
         } else if (option == 3) {
             // Root folder: folder_1
-            folder1Id = baseRecords.createRecordWithCheck(DEFAULT_LIBRARY, new RecordDto("folder_v3_1"));
+            folder1Id = baseRecords.createRecordWithCheck(library, new RecordDto("folder_v3_1"));
 
             // In folder_1
             String pathToFolder1 = "/root/" + folder1Id;
-            baseRecords.createRecordWithCheck(DEFAULT_LIBRARY, new RecordDto("folder_v3_1_1", pathToFolder1));
-            baseRecords.createRecordWithCheck(DEFAULT_LIBRARY, new RecordDto("folder_v3_1_2", pathToFolder1));
-            baseRecords.createRecordWithCheck(DEFAULT_LIBRARY, new RecordDto("folder_v3_1_3", pathToFolder1));
-            baseRecords.createRecordWithCheck(DEFAULT_LIBRARY, new RecordDto("folder_v3_1_4", pathToFolder1));
-            baseRecords.createRecordWithCheck(DEFAULT_LIBRARY, new RecordDto("folder_v3_1_5", pathToFolder1));
-            baseRecords.createRecordWithCheck(DEFAULT_LIBRARY, new RecordDto("folder_v3_1_6", pathToFolder1));
-            baseRecords.createRecordWithCheck(DEFAULT_LIBRARY, new RecordDto("folder_v3_1_7", pathToFolder1));
-            baseRecords.createRecordWithCheck(DEFAULT_LIBRARY, new RecordDto("folder_v3_1_8", pathToFolder1));
-            baseRecords.createRecordWithCheck(DEFAULT_LIBRARY, new RecordDto("folder_v3_1_9", pathToFolder1));
+            baseRecords.createRecordWithCheck(library, new RecordDto("folder_v3_1_1", pathToFolder1));
+            baseRecords.createRecordWithCheck(library, new RecordDto("folder_v3_1_2", pathToFolder1));
+            baseRecords.createRecordWithCheck(library, new RecordDto("folder_v3_1_3", pathToFolder1));
+            baseRecords.createRecordWithCheck(library, new RecordDto("folder_v3_1_4", pathToFolder1));
+            baseRecords.createRecordWithCheck(library, new RecordDto("folder_v3_1_5", pathToFolder1));
+            baseRecords.createRecordWithCheck(library, new RecordDto("folder_v3_1_6", pathToFolder1));
+            baseRecords.createRecordWithCheck(library, new RecordDto("folder_v3_1_7", pathToFolder1));
+            baseRecords.createRecordWithCheck(library, new RecordDto("folder_v3_1_8", pathToFolder1));
+            baseRecords.createRecordWithCheck(library, new RecordDto("folder_v3_1_9", pathToFolder1));
 
             // Root folder: folder_2
-            Integer folder2Id = baseRecords.createRecordWithCheck(DEFAULT_LIBRARY, new RecordDto("folder_v3_2"));
+            Integer folder2Id = baseRecords.createRecordWithCheck(library, new RecordDto("folder_v3_2"));
 
             // In folder_2
             String pathToFolder2 = "/root/" + folder2Id;
-            baseRecords.createRecordWithCheck(DEFAULT_LIBRARY,
+            baseRecords.createRecordWithCheck(library,
                                               new RecordDto("file_2_1", pathToFolder2, "doc_v3"));
         } else if (option == 4) {
             String folder1Title = "Folder 1";
             String folder2Title = "Folder 2";
 
-            addPermissionToLibraryForCurrentUser("VIEWER", DEFAULT_LIBRARY);
+            addPermissionToLibraryForCurrentUser("VIEWER", library);
 
-            Integer folder1Id = baseRecords.createRecordWithCheck(DEFAULT_LIBRARY, new RecordDto(folder1Title));
+            Integer folder1Id = baseRecords.createRecordWithCheck(library, new RecordDto(folder1Title));
             libraryCatalog.put(folder1Title, folder1Id);
             addPermissionToRecordForCurrentUser(folder1Id, "OWNER");
 
-            Integer folder2Id = baseRecords.createRecordWithCheck(DEFAULT_LIBRARY, new RecordDto(folder2Title));
+            Integer folder2Id = baseRecords.createRecordWithCheck(library, new RecordDto(folder2Title));
             libraryCatalog.put(folder2Title, folder2Id);
             addPermissionToRecordForCurrentUser(folder2Id, "OWNER");
         } else {

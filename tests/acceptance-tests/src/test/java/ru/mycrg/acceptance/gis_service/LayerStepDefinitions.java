@@ -30,6 +30,7 @@ import static ru.mycrg.acceptance.auth_service.OrganizationStepsDefinitions.orgI
 import static ru.mycrg.acceptance.data_service.FilesStepDefinitions.currentFileId;
 import static ru.mycrg.acceptance.data_service.FilesStepDefinitions.currentFilePath;
 import static ru.mycrg.acceptance.data_service.datasets.DatasetsStepsDefinitions.currentDatasetIdentifier;
+import static ru.mycrg.acceptance.data_service.libraries.LibraryPermissionsStepsDefinitions.DEFAULT_LIBRARY;
 import static ru.mycrg.acceptance.data_service.libraries.LibraryStepsDefinitions.currentDocumentId;
 import static ru.mycrg.acceptance.data_service.tables.TablesStepsDefinitions.anotherTableName;
 import static ru.mycrg.acceptance.data_service.tables.TablesStepsDefinitions.currentTableName;
@@ -206,7 +207,7 @@ public class LayerStepDefinitions extends BaseStepsDefinitions {
         String dataSourceUri = format("file://%s", currentFilePath);
         layerCreateDto = new LayerCreateDto("Тестовый растр", "raster");
 
-        layerCreateDto.setLibraryId("dl_default");
+        layerCreateDto.setLibraryId(DEFAULT_LIBRARY);
         layerCreateDto.setMode("full");
         layerCreateDto.setNativeCRS("EPSG:28406");
         layerCreateDto.setDataSourceUri(dataSourceUri);

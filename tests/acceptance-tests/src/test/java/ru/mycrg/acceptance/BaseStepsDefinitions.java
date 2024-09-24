@@ -424,7 +424,7 @@ public class BaseStepsDefinitions {
                 .orElseThrow(() -> new IllegalStateException("Не найден слой: " + layerTitle));
     }
 
-    public SchemaDto getSchemaByTitle(String schemaTitle) {
+    public SchemaDto getSchemaByTitleFromScenario(String schemaTitle) {
         if (scenarioSchemas.isEmpty()) {
             throw new IllegalStateException("Список схем пуст");
         }
