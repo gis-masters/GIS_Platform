@@ -20,6 +20,7 @@ import static java.lang.Thread.sleep;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.http.HttpStatus.SC_OK;
 import static org.junit.Assert.assertTrue;
+import static ru.mycrg.acceptance.JsonMapper.asJsonNode;
 import static ru.mycrg.acceptance.audit_service.dto.AuditEventActionsType.*;
 import static ru.mycrg.acceptance.audit_service.dto.AuditEventEntityType.*;
 import static ru.mycrg.acceptance.auth_service.OrganizationStepsDefinitions.MAX_RETRY_ATTEMPT;
@@ -75,7 +76,7 @@ public class AuditServiceStepDefinitions extends BaseStepsDefinitions {
                                               generateString(eName),
                                               generateString(eType),
                                               Long.parseLong(eId),
-                                              createJsonNode(generateJsonString(stateAfter)));
+                                              asJsonNode(generateJsonString(stateAfter)));
         }
 
         super.createEntity(auditEventDto);
@@ -352,7 +353,6 @@ public class AuditServiceStepDefinitions extends BaseStepsDefinitions {
 
         response = getBaseRequestWithCurrentCookie()
                 .when().
-                        log().all().
                         get(url);
     }
 }

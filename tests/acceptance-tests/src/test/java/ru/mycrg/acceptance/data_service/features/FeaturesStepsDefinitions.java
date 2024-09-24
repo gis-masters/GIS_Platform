@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertEquals;
 import static ru.mycrg.acceptance.FeatureBuilder.prepareFeatures;
+import static ru.mycrg.acceptance.JsonMapper.asJson;
 import static ru.mycrg.acceptance.data_service.datasets.DatasetsStepsDefinitions.currentDatasetIdentifier;
 
 public class FeaturesStepsDefinitions extends BaseStepsDefinitions {
@@ -84,16 +85,12 @@ public class FeaturesStepsDefinitions extends BaseStepsDefinitions {
         assertEquals(thirdFeature.get("objectid"), 3);
     }
 
-    private void createFeature(Feature feature) throws JsonProcessingException {
+    private void createFeature(Feature feature) {
         TableCreateDto latestTable = getLatestTable();
-
-        String asJsonString = mapper.writer()
-                                    .withDefaultPrettyPrinter()
-                                    .writeValueAsString(feature);
 
         response = getBaseRequestWithCurrentCookie()
                 .given().
-                        body(asJsonString).
+                        body(asJson(feature)).
                         contentType(ContentType.JSON)
                 .when().
                         post("/" + latestTable.getName() + "/records");
@@ -117,7 +114,6 @@ public class FeaturesStepsDefinitions extends BaseStepsDefinitions {
                 .given().
                         contentType(ContentType.JSON)
                 .when().
-                        log().all().
                         get("/" + tableName + "/records");
 
         return response;

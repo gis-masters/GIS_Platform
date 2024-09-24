@@ -94,10 +94,14 @@ public class ProjectController {
             };
             List<Double> coordinates = objectMapper.readValue(bbox, type);
             if (!coordinates.isEmpty() && coordinates.size() != 4) {
-                throw new BadRequestException("Невалидный bbox! Поле bbox должно состоять из 4 чисел.");
+                String msg = "Невалидный bbox: '" + bbox  + "' Поле bbox должно состоять из 4 чисел";
+
+                throw new BadRequestException(msg);
             }
         } catch (IOException e) {
-            throw new BadRequestException("Невалидный bbox! Поле bbox должно состоять из 4 чисел.");
+            String msg = "Не удалось получить bbox из: '" + bbox;
+
+            throw new BadRequestException(msg);
         }
     }
 }

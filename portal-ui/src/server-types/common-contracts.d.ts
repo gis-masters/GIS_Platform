@@ -28,6 +28,20 @@ export interface FtsResponseDto {
   headlines: string[];
 }
 
+export interface ProjectCreateDto {
+  name: string;
+  bbox: string;
+  description: string;
+  default: boolean;
+}
+
+export interface ProjectDto extends ProjectCreateDto {
+  id: string;
+  organizationId: string;
+  createdAt: string;
+  role: string;
+}
+
 export interface Page {
   size: number;
   totalElements: number;

@@ -10,7 +10,8 @@ import io.restassured.path.json.JsonPath;
 import io.restassured.specification.RequestSpecification;
 import ru.mycrg.acceptance.BaseStepsDefinitions;
 import ru.mycrg.acceptance.auth_service.AuthorizationBase;
-import ru.mycrg.acceptance.gis_service.dto.ProjectDto;
+import ru.mycrg.common_contracts.generated.gis_service.project.ProjectCreateDto;
+import ru.mycrg.common_contracts.generated.gis_service.project.ProjectDto;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -24,7 +25,7 @@ import static ru.mycrg.acceptance.auth_service.UserStepsDefinitions.userId;
 
 public class ProjectStepsDefinitions extends BaseStepsDefinitions {
 
-    public static ProjectDto projectDto;
+    public static ProjectCreateDto projectDto;
     public static Integer projectId;
     public static Integer permId;
 
@@ -64,12 +65,12 @@ public class ProjectStepsDefinitions extends BaseStepsDefinitions {
 
     @And("параметры проекта совпадают с переданными")
     public void checkCreatedProject() {
-        jsonPath = response.jsonPath();
+        ProjectDto project = response.jsonPath().getObject("", ProjectDto.class);
 
-        assertEquals(jsonPath.get("name"), projectDto.getName());
-        assertEquals(jsonPath.get("description"), projectDto.getDescription());
-        assertEquals(jsonPath.get("bbox"), projectDto.getBbox());
-        assertEquals(jsonPath.get("default"), projectDto.getDefault());
+        assertEquals(projectDto.getName(), project.getName());
+        assertEquals(projectDto.getDescription(), project.getDescription());
+        assertEquals(projectDto.getBbox(), project.getBbox());
+        assertEquals(projectDto.isDefault(), project.isDefault());
     }
 
     @Given("Существует проект {string}")
@@ -77,10 +78,9 @@ public class ProjectStepsDefinitions extends BaseStepsDefinitions {
         String projectName = generateString(projectNameKey);
         if (isProjectExistInPool(projectName)) {
             makeExactProjectAsCurrent(projectName);
-        } else if (!projectPool.isEmpty()) {
-            makeLastAvailableProjectAsCurrent();
         } else {
             createProjectStep(projectNameKey);
+
             assertEquals(SC_CREATED, response.getStatusCode());
             extractAndSetProjectIdFromBody();
         }
@@ -114,7 +114,7 @@ public class ProjectStepsDefinitions extends BaseStepsDefinitions {
 
     @When("Пользователь делает запрос на создание проекта {string}")
     public void createProjectStep(String projectNameKey) {
-        projectDto = new ProjectDto(generateString(projectNameKey));
+        projectDto = new ProjectCreateDto(generateString(projectNameKey));
 
         super.createEntity(projectDto);
 
@@ -128,9 +128,9 @@ public class ProjectStepsDefinitions extends BaseStepsDefinitions {
 
     @When("я создаю проект: {string}, {string}, {string}, {string}")
     public void createProjectNewStep(String name, String description, String bbox, String isDefault) {
-        projectDto = new ProjectDto(name, description, bbox, Boolean.parseBoolean(isDefault));
+        projectDto = new ProjectCreateDto(name, description, bbox, Boolean.parseBoolean(isDefault));
 
-        super.createEntity(projectDto.toString());
+        super.createEntity(projectDto);
 
         projectId = extractEntityIdFromResponse(response);
     }
@@ -140,7 +140,7 @@ public class ProjectStepsDefinitions extends BaseStepsDefinitions {
         authorizationBase.loginAsCurrentUser();
 
         String projName = generateString(projectName);
-        ProjectDto updateDto = new ProjectDto(projName);
+        ProjectCreateDto updateDto = new ProjectCreateDto(projName);
 
         String jsonBody = gson.toJson(updateDto);
         projectDto = mapToProjectDto(projName);
@@ -151,7 +151,7 @@ public class ProjectStepsDefinitions extends BaseStepsDefinitions {
     @When("Пользователь делает запрос на обновление полей проекта {string} имея старый токен")
     public void updateCurrentProjectWithOldCookie(String projectName) {
         String projName = generateString(projectName);
-        ProjectDto updateDto = new ProjectDto(projName);
+        ProjectCreateDto updateDto = new ProjectCreateDto(projName);
 
         String jsonBody = gson.toJson(updateDto);
         projectDto = mapToProjectDto(projName);
@@ -176,9 +176,9 @@ public class ProjectStepsDefinitions extends BaseStepsDefinitions {
         authorizationBase.loginAsOwner();
 
         String projName = generateString("STRING_10");
-        ProjectDto updateDto = new ProjectDto(projName,
-                                              generateString("description"),
-                                              "[3824617.6,5725021.2,3834608.8,5743457.4]");
+        ProjectCreateDto updateDto = new ProjectCreateDto(projName,
+                                                          generateString("description"),
+                                                          "[3824617.6,5725021.2,3834608.8,5743457.4]");
         String jsonBody = gson.toJson(updateDto);
         projectDto = mapToProjectDto(projName);
 
@@ -190,7 +190,7 @@ public class ProjectStepsDefinitions extends BaseStepsDefinitions {
         authorizationBase.loginAsOwner();
 
         String projName = generateString(name);
-        ProjectDto updateDto = new ProjectDto(projName, generateString(description), bbox);
+        ProjectCreateDto updateDto = new ProjectCreateDto(projName, generateString(description), bbox);
         String jsonBody = gson.toJson(updateDto);
         projectDto = mapToProjectDto(projName);
 
@@ -454,8 +454,8 @@ public class ProjectStepsDefinitions extends BaseStepsDefinitions {
                           .anyMatch(dto -> projectName.equals(dto.getName()));
     }
 
-    private ProjectDto mapToProjectDto(String projectName) {
-        return new ProjectDto(projectName);
+    private ProjectCreateDto mapToProjectDto(String projectName) {
+        return new ProjectCreateDto(projectName);
     }
 
     private void makeExactProjectAsCurrent(String projectName) {

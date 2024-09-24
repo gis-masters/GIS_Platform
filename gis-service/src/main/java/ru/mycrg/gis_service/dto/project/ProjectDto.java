@@ -32,7 +32,7 @@ public class ProjectDto {
         this.bbox = bbox;
     }
 
-    public boolean getDefault() {
+    public boolean isDefault() {
         return isDefault;
     }
 

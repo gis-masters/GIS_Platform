@@ -18,7 +18,9 @@
       "viewBugReport": true,
       "viewDocumentLibrary": true,
       "viewServicesCalculator": true,
-      "favoritesEpsg": ["3857"],
+      "favoritesEpsg": [
+        "3857"
+      ],
       "defaultEpsg": "WGS 84 / Pseudo-Mercator, EPSG:3857, метры",
       "tags": [
         "НТО",
@@ -28,10 +30,17 @@
     },
     "projects": [
       {
-        "title": "Проект по специализации 1",
+        "title": "Проект 1",
+        "bbox": "[3733187.3, 5540706.2,  3745910.5, 5550374.5]",
+        "isDefault": true,
+        "description": "Проект по-молчанию, с проставленным bbox и одним слоем внутри.",
         "layers": [
           314
         ]
+      },
+      {
+        "title": "Проект 2",
+        "isDefault": false
       }
     ],
     "datasets": [

@@ -21,6 +21,7 @@ import ru.mycrg.acceptance.gis_service.ProjectStepsDefinitions;
 import ru.mycrg.auth_service_contract.dto.AuthorityCommonDto;
 import ru.mycrg.auth_service_contract.dto.OrganizationCreateDto;
 import ru.mycrg.auth_service_contract.dto.UserCreateDto;
+import ru.mycrg.common_contracts.generated.gis_service.project.ProjectDto;
 import ru.mycrg.data_service_contract.enums.TaskType;
 
 import java.util.*;
@@ -502,9 +503,21 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
         assertTrue(docLibraries.contains("dl_data_kpt"));
 
         JsonPath projectJsonPath = projectStepsDefinitions.getAllEntities().jsonPath();
-        assertEquals("Проект по специализации 1", projectJsonPath.get("content.name[0]"));
+        List<ProjectDto> projects = projectJsonPath.getList("content", ProjectDto.class);
+        assertEquals(2, projects.size());
 
-        projectId = Integer.valueOf(projectJsonPath.get("content.id[0]").toString());
+        ProjectDto firstProject = projects
+                .stream()
+                .filter(p -> p.getName().equalsIgnoreCase("Проект 1"))
+                .findFirst()
+                .orElseThrow(() -> new IllegalStateException("Не найден проект с именем: 'Проект 1'"));
+
+        assertEquals("Проект 1", firstProject.getName());
+        assertEquals("[3733187.3, 5540706.2,  3745910.5, 5550374.5]", firstProject.getBbox());
+        assertEquals("Проект по-молчанию, с проставленным bbox и одним слоем внутри.", firstProject.getDescription());
+        assertTrue(firstProject.isDefault());
+
+        projectId = Integer.valueOf(firstProject.getId());
 
         JsonPath layerJsonPath = layerStepDefinitions.getAllEntities().jsonPath();
         assertEquals("Тестовое название первой таблицы", layerJsonPath.get("title[0]"));

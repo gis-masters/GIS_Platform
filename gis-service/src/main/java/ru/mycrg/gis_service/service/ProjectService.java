@@ -172,7 +172,7 @@ public class ProjectService {
             project.setBbox(updateDto.getBbox());
         }
 
-        project.setDefault(updateDto.getDefault());
+        project.setDefault(updateDto.isDefault());
         project.setLastModified(now());
 
         projectRepository.save(project);

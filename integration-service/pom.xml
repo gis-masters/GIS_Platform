@@ -158,6 +158,11 @@
             <artifactId>data-service-contract</artifactId>
             <version>1.5-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <groupId>ru.mycrg</groupId>
+            <artifactId>common-contracts</artifactId>
+            <version>1.6.0-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 
     <build>

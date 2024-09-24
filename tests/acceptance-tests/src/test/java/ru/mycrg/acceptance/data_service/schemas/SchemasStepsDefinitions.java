@@ -33,9 +33,7 @@ public class SchemasStepsDefinitions extends BaseStepsDefinitions {
     public void fetchAllKnownSchemas() {
         authorizationBase.loginAsOwner();
 
-        response = getBaseRequestWithCurrentCookie()
-                .when().
-                        get("?schemaIds=");
+        getAllSchemas();
     }
 
     @Then("Количество схем соответствует ожидаемому: {int}")
@@ -135,12 +133,6 @@ public class SchemasStepsDefinitions extends BaseStepsDefinitions {
                 response.jsonPath()
                         .getList("title", String.class)
                         .contains(title));
-    }
-
-    private void getCurrentSchema() {
-        response = getBaseRequestWithCurrentCookie()
-                .when().
-                        get("?schemaIds=" + currentSchemaName);
     }
 
     private void createSchema() {
@@ -271,16 +263,19 @@ public class SchemasStepsDefinitions extends BaseStepsDefinitions {
         }
     }
 
-    private void updateCurrentSchema(SchemaDto dto) {
-        response = getBaseRequestWithCurrentCookie()
-                .given().
-                        body(gson.toJson(dto)).
-                        contentType(ContentType.JSON)
-                .when().
-                        put()
-                .then().
-                        log().ifError().
-                        extract().response();
+    private void createSchema(SchemaDto dto) {
+        currentSchemaName = dto.getName();
+        scenarioSchemas.put(dto.getTitle(), dto);
+
+        super.createEntity(dto);
+
+        if (response.statusCode() == 409) {
+            System.out.println("Схема уже существует, обновим");
+
+            updateCurrentSchema(dto);
+        } else if (response.statusCode() != 201) {
+            throw new IllegalStateException("Не удалось создать схему: " + dto.getName());
+        }
     }
 
     private SchemaDto prepareSomeSchema(String name) {
@@ -308,19 +303,28 @@ public class SchemasStepsDefinitions extends BaseStepsDefinitions {
         return dto;
     }
 
-    private void createSchema(SchemaDto dto) {
-        currentSchemaName = dto.getName();
-        scenarioSchemas.put(dto.getTitle(), dto);
+    private void getAllSchemas() {
+        response = getBaseRequestWithCurrentCookie()
+                .when().
+                        get("?schemaIds=");
+    }
 
-        super.createEntity(dto);
+    private void getCurrentSchema() {
+        response = getBaseRequestWithCurrentCookie()
+                .when().
+                        get("?schemaIds=" + currentSchemaName);
+    }
 
-        if (response.statusCode() == 409) {
-            System.out.println("Схема уже существует, обновим");
-
-            updateCurrentSchema(dto);
-        } else if (response.statusCode() != 201) {
-            throw new IllegalStateException("Не удалось создать схему: " + dto.getName());
-        }
+    private void updateCurrentSchema(SchemaDto dto) {
+        response = getBaseRequestWithCurrentCookie()
+                .given().
+                        body(gson.toJson(dto)).
+                        contentType(ContentType.JSON)
+                .when().
+                        put()
+                .then().
+                        log().ifError().
+                        extract().response();
     }
 
     private SchemaDto testFtsHiddenFieldsSchema() {

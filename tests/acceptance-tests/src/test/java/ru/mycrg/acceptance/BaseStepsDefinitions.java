@@ -1,8 +1,5 @@
 package ru.mycrg.acceptance;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.cucumber.messages.internal.com.google.gson.Gson;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
@@ -19,10 +16,10 @@ import ru.mycrg.acceptance.data_service.dto.schemas.SchemaDto;
 import ru.mycrg.acceptance.gis_service.dto.BaseMapCreateDto;
 import ru.mycrg.acceptance.gis_service.dto.LayerCreateDto;
 import ru.mycrg.acceptance.gis_service.dto.LayerGroupCreateDto;
-import ru.mycrg.acceptance.gis_service.dto.ProjectDto;
 import ru.mycrg.auth_service_contract.dto.GroupCreateDto;
 import ru.mycrg.auth_service_contract.dto.OrganizationCreateDto;
 import ru.mycrg.auth_service_contract.dto.UserCreateDto;
+import ru.mycrg.common_contracts.generated.gis_service.project.ProjectCreateDto;
 import ru.mycrg.geo_json.Feature;
 
 import java.util.*;
@@ -35,6 +32,7 @@ import static org.apache.commons.lang3.RandomStringUtils.random;
 import static org.apache.http.HttpStatus.SC_OK;
 import static org.hamcrest.CoreMatchers.hasItems;
 import static org.junit.Assert.*;
+import static ru.mycrg.acceptance.JsonMapper.asJson;
 import static ru.mycrg.acceptance.auth_service.AuthorizationBase.AUTH_COOKIE_VALUE_SEPARATOR;
 
 public class BaseStepsDefinitions {
@@ -59,7 +57,7 @@ public class BaseStepsDefinitions {
     public static Map<Integer, UserCreateDto> userPool = new LinkedHashMap<>();
     public static Map<Integer, GroupCreateDto> usersGroupPool = new LinkedHashMap<>();
     public static Map<Integer, InitialBaseMapCreateDto> baseMapsPool = new LinkedHashMap<>();
-    public static Map<Integer, ProjectDto> projectPool = new LinkedHashMap<>();
+    public static Map<Integer, ProjectCreateDto> projectPool = new LinkedHashMap<>();
     public static Map<Integer, BaseMapCreateDto> projectBaseMapsPool = new LinkedHashMap<>();
     public static Map<Integer, LayerGroupCreateDto> layerGroupPool = new LinkedHashMap<>();
     public static Map<String, DatasetCreateDto> datasetsPool = new LinkedHashMap<>();
@@ -72,8 +70,6 @@ public class BaseStepsDefinitions {
     public static List<Feature> scenarioFeatures = new ArrayList<>();
 
     public static Integer currentId;
-
-    public ObjectMapper mapper = new ObjectMapper();
 
     public Integer getCurrentId() {
         return currentId;
@@ -213,18 +209,6 @@ public class BaseStepsDefinitions {
         }
 
         return command;
-    }
-
-    public JsonNode createJsonNode(String jsonString) {
-        JsonNode jsonNode = null;
-
-        try {
-            jsonNode = mapper.readValue(jsonString, JsonNode.class);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
-
-        return jsonNode;
     }
 
     public void checkPagesCount(String entityType, String entitiesPerPage) {
@@ -398,19 +382,7 @@ public class BaseStepsDefinitions {
     }
 
     public void createEntity(Object dto) {
-        createEntity(gson.toJson(dto));
-    }
-
-    public void createEntity(String jsonPayload) {
-        response = getBaseRequestWithCurrentCookie()
-                .given().
-                        body(jsonPayload).
-                        contentType(ContentType.JSON)
-                .when().
-                        post()
-                .then().
-                        log().ifError().
-                        extract().response();
+        createEntity(asJson(dto));
     }
 
     public void deleteCurrentEntity() {
@@ -452,14 +424,6 @@ public class BaseStepsDefinitions {
                 .orElseThrow(() -> new IllegalStateException("Не найден слой: " + layerTitle));
     }
 
-    public SchemaDto getSchemaByName(String schemaName) {
-        return scenarioSchemas
-                .values().stream()
-                .filter(schema -> schema.getName().equals(schemaName))
-                .findFirst()
-                .orElseThrow(() -> new IllegalStateException("Не найдена схема по названию: " + schemaName));
-    }
-
     public SchemaDto getSchemaByTitle(String schemaTitle) {
         if (scenarioSchemas.isEmpty()) {
             throw new IllegalStateException("Список схем пуст");
@@ -491,6 +455,18 @@ public class BaseStepsDefinitions {
                        .findFirst()
                        .orElseThrow(() -> new IllegalStateException("Not found user in pool by name: " + name))
                        .getValue();
+    }
+
+    private void createEntity(String jsonPayload) {
+        response = getBaseRequestWithCurrentCookie()
+                .given().
+                        body(jsonPayload).
+                        contentType(ContentType.JSON)
+                .when().
+                        post()
+                .then().
+                        log().ifError().
+                        extract().response();
     }
 
     private void deleteEntity(Integer id) {

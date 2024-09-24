@@ -68,7 +68,7 @@ public class Project implements Identifiable<Long> {
         this.name = dto.getName();
         this.description = dto.getDescription();
         this.bbox = dto.getBbox();
-        this.isDefault = dto.getDefault();
+        this.isDefault = dto.isDefault();
         this.createdAt = LocalDateTime.now();
         this.lastModified = LocalDateTime.now();
         this.organizationId = organizationId;

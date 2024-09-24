@@ -1,4 +1,4 @@
-package ru.mycrg.integration_service.bpmn.org_creation.specialization;
+package ru.mycrg.integration_service.bpmn.specialization;
 
 import okhttp3.Request;
 import okhttp3.RequestBody;

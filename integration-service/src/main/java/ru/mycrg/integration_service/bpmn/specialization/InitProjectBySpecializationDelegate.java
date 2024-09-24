@@ -1,4 +1,4 @@
-package ru.mycrg.integration_service.bpmn.org_creation.specialization;
+package ru.mycrg.integration_service.bpmn.specialization;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import okhttp3.Request;
@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import ru.mycrg.auth_service_contract.events.request.OrganizationInitializedEvent;
+import ru.mycrg.common_contracts.generated.gis_service.project.ProjectCreateDto;
 import ru.mycrg.common_contracts.specialization.Project;
 import ru.mycrg.common_contracts.specialization.Specialization;
 import ru.mycrg.integration_service.bpmn.BaseHttpService;
@@ -24,6 +25,7 @@ import java.util.Optional;
 
 import static ru.mycrg.geoserver_client.GeoserverClient.JSON_MEDIA_TYPE;
 import static ru.mycrg.http_client.JsonConverter.fromJson;
+import static ru.mycrg.http_client.JsonConverter.toJson;
 import static ru.mycrg.integration_service.IntegrationApplication.objectMapper;
 import static ru.mycrg.integration_service.bpmn.BaseHttpService.httpClient;
 import static ru.mycrg.integration_service.bpmn.IJavaDelegateProperties.*;
@@ -96,11 +98,15 @@ public class InitProjectBySpecializationDelegate implements JavaDelegate {
 
     private String createProject(Project project, String token) {
         Response response = null;
+
+        String payload = toJson(new ProjectCreateDto(project.getTitle(), project.getDescription(), project.getBbox(),
+                                                     project.getIsDefault()));
+
         try {
             Request request = new Request.Builder()
                     .url(new URL(baseHttpService.getGisServiceUrl(), "/projects"))
                     .addHeader("Authorization", "Bearer " + token)
-                    .post(RequestBody.create(JSON_MEDIA_TYPE, "{\"name\": \"" + project.getTitle() + "\"}"))
+                    .post(RequestBody.create(JSON_MEDIA_TYPE, payload))
                     .build();
 
             response = httpClient.newCall(request).execute();
