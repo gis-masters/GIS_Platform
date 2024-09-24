@@ -7,7 +7,7 @@ import { boundMethod } from 'autobind-decorator';
 
 import { communicationService, DataChangeEventDetail } from '../../../services/communication.service';
 import { FileConnection, FileInfo } from '../../../services/data/files/files.models';
-import { getFileConnections } from '../../../services/data/files/files.service';
+import { getFile, getFileConnections } from '../../../services/data/files/files.service';
 import {
   getFileBaseName,
   getFileExtension,
@@ -30,6 +30,7 @@ import { FilesIcon } from '../Icon/Files-Icon';
 import { FilesName } from '../Name/Files-Name';
 import { FilesPlacement } from '../Placement/Files-Placement';
 import { FilesPreview } from '../Preview/Files-Preview';
+import { FilesSignature } from '../Signature/Files-Signature';
 
 const cnFilesItem = cn('Files', 'Item');
 
@@ -53,6 +54,7 @@ export class FilesItem extends Component<FilesItemProps> {
   @observable private connections: FileConnection[] = [];
   @observable private currentFileId?: string;
   @observable private deleteDialogOpen = false;
+  @observable private fileInfo?: FileInfo;
   private operationId: symbol | undefined;
 
   constructor(props: FilesItemProps) {
@@ -68,6 +70,7 @@ export class FilesItem extends Component<FilesItemProps> {
       }
     }, this);
     await this.fetchConnections();
+    await this.updateFileInfo();
   }
 
   async componentDidUpdate(prevProps: FilesItemProps) {
@@ -75,6 +78,8 @@ export class FilesItem extends Component<FilesItemProps> {
       this.dropConnections();
       await this.fetchConnections();
     }
+
+    await this.updateFileInfo();
   }
 
   componentWillUnmount() {
@@ -102,6 +107,7 @@ export class FilesItem extends Component<FilesItemProps> {
     const isFileCanBePlaced =
       (showMainCompoundFileActions && showPlaceAction) ||
       (!showMainCompoundFileActions && showPlaceAction && (isGmlFile(item) || isTifFile(item) || isDxfFile(item)));
+    const signed = !!(item.signed || this.fileInfo?.signed);
 
     return (
       <>
@@ -121,7 +127,12 @@ export class FilesItem extends Component<FilesItemProps> {
           {!!status && <LookupStatus status={status} statusText={statusText} />}
           <LookupActions>
             {isPreviewAllowed(item) && <FilesPreview item={item} onPreview={onPreview} />}
-            {showMainCompoundFileActions && showPlaceAction && <FilesDownloadCompoundFile item={item} />}
+
+            {showMainCompoundFileActions && showPlaceAction && (
+              <FilesDownloadCompoundFile item={item} signed={signed} />
+            )}
+
+            {!showMainCompoundFileActions && <FilesSignature id={item.id} title={item.title} signed={signed} />}
 
             {isFileConnected && <FilesConnections file={item} connections={this.connections} />}
 
@@ -180,9 +191,24 @@ export class FilesItem extends Component<FilesItemProps> {
     }
   }
 
+  private async updateFileInfo(): Promise<void> {
+    const { showMainCompoundFileActions, showPlaceAction, item } = this.props;
+    const { id, signed } = item;
+
+    if (!signed && !showMainCompoundFileActions && showPlaceAction) {
+      const fileInfo = await getFile(id);
+      this.setFileInfo(fileInfo);
+    }
+  }
+
   @action
   private dropConnections() {
     this.connections = [];
+  }
+
+  @action
+  private setFileInfo(fileInfo: FileInfo): void {
+    this.fileInfo = fileInfo;
   }
 
   @action

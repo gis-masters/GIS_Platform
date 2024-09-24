@@ -72,6 +72,7 @@ export class FilesName extends Component<FilesNameProps> {
   private handleClick(e: React.MouseEvent<HTMLAnchorElement>) {
     const { file, item } = this.props;
 
+    // файл существует только у свежесозданных файлов, не загруженных на бэк
     if (file) {
       e.preventDefault();
       saveAs(file, item.title);

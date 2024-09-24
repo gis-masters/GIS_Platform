@@ -20,6 +20,14 @@ class FilesClient extends Client {
     return `${this.getFilesUrl()}/${id}`;
   }
 
+  getFileEcpUrl(id: string): string {
+    return `${this.getFileDownloadUrl(id)}/ecp`;
+  }
+
+  getFileWithEcpUrl(id: string): string {
+    return `${this.getFileDownloadUrl(id)}/with-ecp`;
+  }
+
   private getFileConnectionsUrl(): string {
     return `${this.getProjectsUrl()}/find-related-to-file-layers`;
   }
@@ -30,6 +38,10 @@ class FilesClient extends Client {
 
   getZipDownloadUrl(id: string): string {
     return `${this.getFileUrl(id)}/download/zip`;
+  }
+
+  getZipDownloadWithEcpUrl(id: string): string {
+    return `${this.getFileUrl(id)}/download/zip/with-ecp`;
   }
 
   async createFile(file: File): Promise<FileInfo[]> {

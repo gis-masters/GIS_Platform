@@ -9,6 +9,13 @@ export interface FileInfo {
   createdBy?: string;
   createdAt?: string;
   notLoaded?: boolean;
+  signed?: boolean;
+  contentType?: string;
+  expired?: boolean;
+  extension?: string;
+  intents?: string;
+  resourceQualifier?: Record<string, string | number>;
+  resourceType?: string;
 }
 
 export interface FileConnection {
