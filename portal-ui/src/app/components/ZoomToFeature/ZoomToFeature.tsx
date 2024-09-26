@@ -6,6 +6,7 @@ import { IClassNameProps } from '@bem-react/core';
 import { boundMethod } from 'autobind-decorator';
 
 import { WfsFeature } from '../../services/geoserver/wfs/wfs.models';
+import { getFeaturesById } from '../../services/geoserver/wfs/wfs.service';
 import { getLayerByFeatureInCurrentProject } from '../../services/gis/layers/layers.utils';
 import { projectsService } from '../../services/gis/projects/projects.service';
 import { mapService } from '../../services/map/map.service';
@@ -34,9 +35,15 @@ export class ZoomToFeature extends Component<ZoomToFeatureProps> {
 
   @boundMethod
   private async handleClick() {
-    const { feature, onClick } = this.props;
-
+    const { onClick } = this.props;
+    let { feature } = this.props;
     const layer = getLayerByFeatureInCurrentProject(feature);
+
+    if (layer?.complexName && !feature.geometry?.coordinates.length) {
+      const [currentFeature] = await getFeaturesById([feature.id], layer?.complexName);
+
+      feature = currentFeature;
+    }
 
     if (layer?.tableName) {
       projectsService.enableLayersByTableNames([layer.tableName]);

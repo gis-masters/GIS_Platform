@@ -10,6 +10,7 @@ import { Schema } from '../../services/data/schema/schema.models';
 import { applyView, changeSchemaNamesCaseByFeature } from '../../services/data/schema/schema.utils';
 import { extractFeatureId, extractTableNameFromFeatureId } from '../../services/geoserver/featureType/featureType.util';
 import { WfsFeature } from '../../services/geoserver/wfs/wfs.models';
+import { getFeaturesById } from '../../services/geoserver/wfs/wfs.service';
 import { CrgLayer } from '../../services/gis/layers/layers.models';
 import { getLayerSchema } from '../../services/gis/layers/layers.service';
 import { projectsService } from '../../services/gis/projects/projects.service';
@@ -127,9 +128,17 @@ export class FeaturesListItem extends Component<FeaturesListItemProps> {
   }
 
   @boundMethod
-  private selectIt() {
+  private async selectIt() {
     if (!this.props.errorData) {
-      const { onSelect, feature } = this.props;
+      const { onSelect, isSearchList } = this.props;
+      let { feature } = this.props;
+
+      if (this.layer?.complexName && feature && isSearchList) {
+        const [currentFeature] = await getFeaturesById([feature.id], this.layer?.complexName);
+
+        feature = currentFeature;
+      }
+
       if (onSelect && feature) {
         onSelect(feature);
       }
