@@ -4067,8 +4067,7 @@ SET class_rule =
                 "dl_data_flats_balaklava",
                 "dl_data_limits_balaklava",
                 "dl_data_oks_property_yugip",
-                "dl_data_owners_balaklava",
-                "dl_zu"
+                "dl_data_owners_balaklava"
             ],
             "valueType": "DOCUMENT",
             "maxDocuments": 10
