@@ -1,10 +1,9 @@
 import { WfsFeature } from '../../geoserver/wfs/wfs.models';
-import { getFeaturesById } from '../../geoserver/wfs/wfs.service';
 import { PageOptions } from '../../models';
 import { isPageableResources } from '../../util/typeGuards/isPageableResources';
 import { awaitProcess, createSearchProcess } from '../processes/processes.service';
 import { getGeometryFieldName } from '../schema/schema.utils';
-import { getVectorTable, getVectorTableConnections } from '../vectorData/vectorData.service';
+import { getVectorTable } from '../vectorData/vectorData.service';
 import { SearchItemData, SearchRequest } from './search.model';
 
 export async function getSearchResults(
@@ -39,74 +38,9 @@ export async function getSearchResults(
         return item;
       })
     );
-    const newContent = await getSearchResultWithWfsFeatures(content);
 
-    return [newContent || [], details.page.totalPages];
+    return [content || [], details.page.totalPages];
   }
 
   throw new Error('Ошибка поиска');
-}
-
-async function getSearchResultWithWfsFeatures(searchResult: SearchItemData[]): Promise<SearchItemData[]> {
-  const wfsFeaturesStorage: Record<
-    string,
-    Record<string, { ids: string[]; features: WfsFeature[]; complexName: string }>
-  > = {};
-
-  // собираем id всех объектов, разложенные по наборам данных и таблицам
-  for (const item of searchResult) {
-    if (item.type !== 'FEATURE') {
-      continue;
-    }
-
-    const { source, payload } = item;
-    const { table, dataset } = source;
-    const vectorTableConnections = await getVectorTableConnections(table);
-
-    if (!wfsFeaturesStorage[dataset]) {
-      wfsFeaturesStorage[dataset] = {};
-    }
-
-    const complexName = vectorTableConnections[0]?.layer?.complexName;
-
-    if (!complexName) {
-      continue;
-    }
-
-    if (!wfsFeaturesStorage[dataset][table]) {
-      wfsFeaturesStorage[dataset][table] = {
-        ids: [],
-        features: [],
-        complexName
-      };
-    }
-
-    wfsFeaturesStorage[dataset][table].ids.push(payload.id);
-  }
-
-  // запрашиваем объекты для каждой таблицы
-  for (const dataset of Object.keys(wfsFeaturesStorage)) {
-    for (const table of Object.keys(wfsFeaturesStorage[dataset])) {
-      const ids = wfsFeaturesStorage[dataset][table].ids;
-      const complexName = wfsFeaturesStorage[dataset][table].complexName;
-
-      if (complexName) {
-        wfsFeaturesStorage[dataset][table].features = await getFeaturesById(ids, complexName);
-      }
-    }
-  }
-
-  // добавляем объекты в результат
-  return searchResult.map(item => {
-    if (item.type !== 'FEATURE') {
-      return item;
-    }
-
-    const { source, payload } = item;
-    const { table, dataset } = source;
-    const features = wfsFeaturesStorage[dataset][table].features;
-    const feature = features.find(f => f.id === payload.id);
-
-    return feature ? { ...item, payload: feature } : item;
-  });
 }
