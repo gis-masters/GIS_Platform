@@ -1,5 +1,8 @@
 import { Coordinate } from 'ol/coordinate';
 
+import { Projection } from '../data/projections/projections.models';
+import { GeometryType } from '../geoserver/wfs/wfs.models';
+
 export enum MapSelectionTypes {
   ADD,
   REMOVE,
@@ -32,10 +35,6 @@ export enum FilterBySelectionMode {
   DISABLED = 'disabled'
 }
 
-export function isFilterBySelection(value: unknown): value is FilterBySelectionMode {
-  return typeof value === 'string' && Object.values<string>(FilterBySelectionMode).includes(value);
-}
-
 export type LabelType = 'label' | 'line' | 'turningPoints';
 
 export interface MapPosition {
@@ -43,4 +42,16 @@ export interface MapPosition {
   center: Coordinate;
 }
 
-export type Distance = { distance: { value: number; units: string }; center: Coordinate };
+export type Distance = {
+  distance: { value: number; units: string };
+  center: Coordinate;
+  azimuth: number;
+  isLabelInPolygon: boolean;
+};
+
+export type CreateFeaturesData = {
+  coordinates: Coordinate | Coordinate[] | Coordinate[][] | Coordinate[][][];
+  geometryType: GeometryType;
+  currentLayerProjection?: Projection;
+  olProjection?: Projection;
+};

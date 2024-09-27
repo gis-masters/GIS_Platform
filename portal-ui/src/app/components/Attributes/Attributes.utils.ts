@@ -2,9 +2,10 @@ import { cloneDeep } from 'lodash';
 
 import { extractFeatureTypeNameFromComplexName } from '../../services/geoserver/featureType/featureType.util';
 import { CrgLayer } from '../../services/gis/layers/layers.models';
-import { FilterBySelectionMode, isFilterBySelection } from '../../services/map/map.models';
+import { FilterBySelectionMode } from '../../services/map/map.models';
 import { getFieldFilterValue, modifyFieldFilterValue } from '../../services/util/filters/filters';
 import { FilterQuery } from '../../services/util/filters/filters.models';
+import { isFilterBySelection } from '../../services/util/typeGuards/isFilterBySelection';
 import { isNumberArray } from '../../services/util/typeGuards/isNumberArray';
 import { isRecordStringUnknown } from '../../services/util/typeGuards/isRecordStringUnknown';
 import { mapStore } from '../../stores/Map.store';

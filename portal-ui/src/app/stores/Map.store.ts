@@ -125,6 +125,10 @@ class MapStore {
     });
   }
 
+  getFeatureInSelectionById(id: string): WfsFeature | undefined {
+    return this.selectedFeatures.find(feature => feature.id === id);
+  }
+
   private prepareLayerFilter(layer: CrgLayer) {
     if (!layer.tableName) {
       throw new Error(`Слой ${layer.title} не имеет tableName`);

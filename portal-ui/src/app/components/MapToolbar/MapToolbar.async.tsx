@@ -18,7 +18,7 @@ const MapToolbar: FC = observer(() => (
   <div
     className={cnMapToolbar()}
     style={{
-      '--MapToolbarLeftButtons': Number(mapStore.labelsVisible) * (2 + Number(mapStore.labels.length > 0))
+      '--MapToolbarLeftButtons': Number(mapStore.labelsVisible) * (4 + Number(mapStore.labels.length > 0))
     }}
   >
     <MapToolbarBar>

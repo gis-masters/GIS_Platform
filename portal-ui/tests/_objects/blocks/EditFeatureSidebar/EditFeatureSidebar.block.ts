@@ -11,7 +11,7 @@ class EditFeatureSidebarBlock extends Block {
 
   async closeFeatureSidebar(): Promise<void> {
     const $closeBtn = await this.$('close');
-    await $closeBtn.waitForClickable({ timeout: 1000 });
+    await $closeBtn.waitForClickable({ timeout: 2000 });
     await $closeBtn.click();
   }
 }

@@ -53,3 +53,10 @@ export function buildFeaturesUrlFragment(
 
   featuresUrlFragment[datasetIdentifier][tableIdentifier].push(...featureIds);
 }
+
+// азимут отраженный в градусах преобразуется в радианы с учетом разности смещения нулевой точки
+export function getRotationByAzimuth(azimuth: number): number {
+  const rotation = (3.14 / 180) * azimuth;
+
+  return rotation > 0 ? rotation - 1.57 : rotation + 1.57;
+}

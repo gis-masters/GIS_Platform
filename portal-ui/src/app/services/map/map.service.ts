@@ -206,6 +206,7 @@ class MapService {
     });
 
     const { imageColor, strokeColor } = this.getDraftColors();
+
     this.draftStyle = new Style({
       fill: new Fill({
         color: 'rgba(255, 255, 0, 0.5)'
@@ -215,7 +216,7 @@ class MapService {
         width: 2
       }),
       image: new Circle({
-        radius: 7,
+        radius: 12,
         fill: new Fill({
           color: imageColor
         })

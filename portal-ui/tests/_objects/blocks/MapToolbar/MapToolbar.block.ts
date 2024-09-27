@@ -6,7 +6,8 @@ class MapToolbarBlock extends Block {
     cancelSelection: '.MapToolbar .MapSelection-Cancel',
     selectMultiple: '.MapToolbar .MapSelection-Select',
     labelsToggler: '.MapToolbar .MapLabels .MapLabels-Toggler',
-    labelsTurningPoints: '.MapToolbar .MapLabels .MapTurningPoints'
+    labelsTurningPoints: '.MapToolbar .MapLabels .MapTurningPoints',
+    labelsDistances: '.MapToolbar .MapLabels .MapDistances'
   };
 
   async isCancelSelectionBtnExist(): Promise<boolean> {
@@ -36,6 +37,12 @@ class MapToolbarBlock extends Block {
 
   async clickTurningPointsBtn(): Promise<void> {
     const $turningPointsBtn = await this.$('labelsTurningPoints');
+    await $turningPointsBtn.waitForClickable();
+    await $turningPointsBtn.click();
+  }
+
+  async clickDistancesBtn(): Promise<void> {
+    const $turningPointsBtn = await this.$('labelsDistances');
     await $turningPointsBtn.waitForClickable();
     await $turningPointsBtn.click();
   }

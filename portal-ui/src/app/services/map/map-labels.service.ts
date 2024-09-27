@@ -1,11 +1,12 @@
 import { createElement } from 'react';
 import { createRoot, Root } from 'react-dom/client';
 import { reaction } from 'mobx';
+import { bearing, point, toWgs84 } from '@turf/turf';
 import { boundMethod } from 'autobind-decorator';
 import { debounce } from 'lodash';
 import { Feature, MapBrowserEvent, Overlay } from 'ol';
 import { Coordinate } from 'ol/coordinate';
-import { LineString, Point } from 'ol/geom';
+import { LineString, Point, Polygon } from 'ol/geom';
 import { Draw, Modify } from 'ol/interaction';
 import { DrawEvent } from 'ol/interaction/Draw';
 import VectorLayer from 'ol/layer/Vector';
@@ -18,6 +19,7 @@ import { MapLabelToolbox } from '../../components/MapLabelToolbox/MapLabelToolbo
 import { currentProject } from '../../stores/CurrentProject.store';
 import { currentUser } from '../../stores/CurrentUser.store';
 import { mapStore } from '../../stores/Map.store';
+import { sidebars } from '../../stores/Sidebars.store';
 import { communicationService } from '../communication.service';
 import { defaultOlProjectionCode, Projection } from '../data/projections/projections.models';
 import { getProjectionByCode } from '../data/projections/projections.service';
@@ -29,10 +31,12 @@ import { notFalsyFilter } from '../util/NotFalsyFilter';
 import { featureToWfsFeature, formatLength, wfsFeatureToFeature } from '../util/open-layers.util';
 import { sleep } from '../util/sleep';
 import { isArrayOf } from '../util/typeGuards/isArrayOf';
+import { isCoordinateArray } from '../util/typeGuards/isCoordinateArray';
 import { isNumberArray } from '../util/typeGuards/isNumberArray';
 import { prompto } from '../utility-dialogs.service';
-import { Distance, LabelType, MapMode } from './map.models';
+import { CreateFeaturesData, Distance, LabelType, MapMode } from './map.models';
 import { mapService } from './map.service';
+import { getRotationByAzimuth } from './map.util';
 import { mapMeasureService } from './map-measure.service';
 
 const MARK_FILL_COLOR = 'rgba(255, 255, 255, 0.5)';
@@ -119,18 +123,32 @@ class MapLabelsService {
   private getDistancesByCoords(coordinates: Coord[], projFrom: Projection, projTo: Projection): Distance[] {
     const coords = transformGroup(coordinates, projFrom, projTo);
 
+    if (!isCoordinateArray(coords)) {
+      throw new Error('Указанные координаты не являются полигоном');
+    }
+
+    const polygon = new Polygon([coords]);
     const distances = [];
 
     for (let i = 0; i < coords.length; i += 1) {
-      const lineString = new LineString([
-        coords[i] as number[],
-        coords[i === coords.length - 1 ? 0 : i + 1] as number[]
-      ]);
+      const pointA = coords[i];
+      const pointB = coords[i === coords.length - 1 ? 0 : i + 1];
+
+      const lineString = new LineString([pointA, pointB]);
       const [value, units] = formatLength(lineString);
+      const center = lineString.getFlatMidpoint();
+      const perpendicularPoint = [center[0], center[1] + 10];
+      const isLabelInPolygon = polygon.intersectsCoordinate(perpendicularPoint);
+      const azimuth = bearing(
+        toWgs84(point(pointA, { crs: { type: 'pointA', properties: { name: defaultOlProjectionCode } } })),
+        toWgs84(point(pointB, { crs: { type: 'pointB', properties: { name: defaultOlProjectionCode } } }))
+      );
 
       distances.push({
         distance: { value, units },
-        center: lineString.getFlatMidpoint()
+        center,
+        isLabelInPolygon,
+        azimuth
       });
     }
 
@@ -171,10 +189,15 @@ class MapLabelsService {
     return distances
       .map(coord => {
         if (isNumberArray(coord.center)) {
+          const rotation = getRotationByAzimuth(coord.azimuth);
+
           const feature = new Feature({
             geometry: new Point(coord.center),
             type: 'label',
-            text: `${coord.distance.value} ${coord.distance.units}`
+            text: `${coord.distance.value} ${coord.distance.units}`,
+            rotation,
+            isLabelInPolygon: coord.isLabelInPolygon,
+            centred: true
           });
 
           feature.setId(uuid());
@@ -186,13 +209,24 @@ class MapLabelsService {
       .filter(notFalsyFilter);
   }
 
-  async addPointsDistances(): Promise<void> {
-    const layerTableName = extractTableNameFromFeatureId(mapStore.selectedFeatures[0].id);
+  private async getDataForCreateFeatures(): Promise<CreateFeaturesData> {
+    this.dropInteractions();
+
+    const selectedFeatureId = sidebars.editFeaturesData?.features[0].id;
+    const activeFeature = selectedFeatureId
+      ? mapStore.getFeatureInSelectionById(selectedFeatureId)
+      : mapStore.selectedFeatures[0];
+    const layerTableName = activeFeature ? extractTableNameFromFeatureId(activeFeature.id) : null;
+
+    if (!layerTableName) {
+      throw new Error('Отсуствует векторная таблица');
+    }
+
     const layer = currentProject.layers.find(layer => layer.tableName === layerTableName);
-    const coordinates = mapStore.selectedFeatures[0].geometry?.coordinates;
+    const coordinates = activeFeature?.geometry?.coordinates || [];
     const geometryType = mapStore.selectedFeatures[0].geometry?.type;
 
-    if (!coordinates || !geometryType || !supportedGeometryTypes.includes(geometryType)) {
+    if (!geometryType || !supportedGeometryTypes.includes(geometryType)) {
       throw new Error('Неподдерживаемый тип геометрии');
     }
 
@@ -202,6 +236,12 @@ class MapLabelsService {
 
     const currentLayerProjection = await getProjectionByCode(layer?.nativeCRS);
     const olProjection = await getProjectionByCode(defaultOlProjectionCode);
+
+    return { coordinates, geometryType, currentLayerProjection, olProjection };
+  }
+
+  async addPointsDistances(): Promise<void> {
+    const { coordinates, currentLayerProjection, olProjection } = await this.getDataForCreateFeatures();
 
     if (!(currentLayerProjection && olProjection) || isNumberArray(coordinates)) {
       return;
@@ -220,27 +260,11 @@ class MapLabelsService {
   }
 
   async addTurningPoints() {
-    this.dropInteractions();
+    const { coordinates, currentLayerProjection, olProjection, geometryType } = await this.getDataForCreateFeatures();
 
-    const layerTableName = extractTableNameFromFeatureId(mapStore.selectedFeatures[0].id);
-    const layer = currentProject.layers.find(layer => layer.tableName === layerTableName);
-    const coordinates = mapStore.selectedFeatures[0].geometry?.coordinates || [];
-    const geometryType = mapStore.selectedFeatures[0].geometry?.type;
-
-    if (!geometryType || !supportedGeometryTypes.includes(geometryType)) {
-      throw new Error('Неподдерживаемый тип геометрии');
-    }
-
-    if (!layer?.nativeCRS) {
-      throw new Error('В слое не указана система координат');
-    }
-
-    const currentLayerProjection = await getProjectionByCode(layer?.nativeCRS);
-    const targetLayerProjection = await getProjectionByCode(defaultOlProjectionCode);
-
-    if (currentLayerProjection && targetLayerProjection) {
+    if (currentLayerProjection && olProjection) {
       const pointsCoordinates = this.getTurningPointsFromCoordinates(coordinates, geometryType);
-      const transformedCoordinates = transformGroup(pointsCoordinates, currentLayerProjection, targetLayerProjection);
+      const transformedCoordinates = transformGroup(pointsCoordinates, currentLayerProjection, olProjection);
 
       const turningPoints = this.createFeatures(transformedCoordinates, 'turningPoints');
       const labels = this.createFeatures(transformedCoordinates, 'label');
@@ -537,7 +561,7 @@ class MapLabelsService {
     return new Style({
       image: new Circle({
         fill: new Fill({
-          color: '#3399ff'
+          color: '#FFA343'
         }),
         stroke: new Stroke({
           width: 1,
@@ -549,9 +573,9 @@ class MapLabelsService {
   }
 
   private createLabelStyle(feature: Feature, selected?: boolean): Style {
-    const properties = feature.getProperties();
+    const { centred, rotation, isLabelInPolygon, text } = feature.getProperties();
 
-    if (typeof properties.text !== 'string') {
+    if (typeof text !== 'string') {
       throw new TypeError('Текст не текст');
     }
 
@@ -564,17 +588,19 @@ class MapLabelsService {
         opacity: selected ? 0.5 : 0
       }),
       text: new Text({
-        font: '16px sans-serif',
+        font: `${centred ? '14' : '18'}px sans-serif`,
         textAlign: 'left',
         justify: 'left',
-        offsetX: 17,
-        offsetY: 2,
-        text: properties.text,
+        offsetX: centred ? -14 : 17,
+        offsetY: centred && isLabelInPolygon ? 20 : -20,
+        text: text,
+        stroke: new Stroke({
+          color: centred ? '#d3d3d3' : '#fff',
+          width: 5
+        }),
+        rotation: rotation && typeof rotation === 'number' ? rotation : 0,
         fill: new Fill({
           color: [20, 20, 20, 1]
-        }),
-        backgroundFill: new Fill({
-          color: [255, 255, 255, selected ? 0.9 : 0.6]
         }),
         padding: [5, 5, 3, 5]
       })
