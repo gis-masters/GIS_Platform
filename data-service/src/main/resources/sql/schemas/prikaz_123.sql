@@ -1174,7 +1174,6 @@ SET class_rule =
             "name": "shape",
             "title": "Геометрия",
             "hidden": true,
-
             "valueType": "GEOMETRY",
             "allowedValues": [
               "LineString"
@@ -2545,6 +2544,7 @@ SET class_rule  =
           {
             "name": "shape",
             "title": "Геометрия",
+            "hidden": true,
             "valueType": "GEOMETRY",
             "allowedValues": [
               "Polygon"
@@ -13022,6 +13022,7 @@ SET class_rule =
           {
             "name": "shape",
             "title": "Геометрия",
+            "hidden": true,
             "valueType": "GEOMETRY",
             "allowedValues": [
               "Polygon"
@@ -13323,6 +13324,7 @@ SET class_rule =
     {
       "name": "shape",
       "title": "тайтл",
+      "hidden": true,
       "valueType": "GEOMETRY",
       "allowedValues": [
         "LineString"
@@ -16890,6 +16892,7 @@ SET class_rule =
     {
       "name": "shape",
       "title": "Леса",
+      "hidden": true,
       "valueType": "GEOMETRY",
       "allowedValues": [
         "Polygon"
@@ -21890,6 +21893,7 @@ SET class_rule =
     {
       "name": "shape",
       "title": "Геометрия",
+      "hidden": true,
       "valueType": "GEOMETRY",
       "allowedValues": [
         "Point"
@@ -22378,6 +22382,7 @@ SET class_rule =
     {
       "name": "shape",
       "title": "Геометрия",
+      "hidden": true,
       "valueType": "GEOMETRY",
       "allowedValues": [
         "LineString"
@@ -24368,6 +24373,7 @@ SET class_rule =
     {
       "name": "shape",
       "title": "тайтл",
+      "hidden": true,
       "valueType": "GEOMETRY",
       "allowedValues": [
         "LineString"
@@ -26111,7 +26117,8 @@ SET class_rule =
     },
     {
       "name": "shape",
-      "title": "тайтл",
+      "title": "Геометрия", 
+      "hidden": true,
       "valueType": "GEOMETRY",
       "allowedValues": [
         "Polygon"
@@ -27491,7 +27498,6 @@ SET class_rule =
       "name": "shape",
       "title": "Геометрия",
       "hidden": true,
-
       "valueType": "GEOMETRY",
       "allowedValues": [
         "Point"
@@ -30876,7 +30882,6 @@ SET class_rule =
       "name": "shape",
       "title": "Геометрия",
       "hidden": true,
-
       "valueType": "GEOMETRY",
       "allowedValues": [
         "Polygon"
@@ -31004,7 +31009,6 @@ SET class_rule =
       "name": "shape",
       "title": "Геометрия",
       "hidden": true,
-
       "valueType": "GEOMETRY",
       "allowedValues": [
         "Polygon"
@@ -35422,6 +35426,7 @@ SET class_rule =
     {
       "name": "shape",
       "title": "Геометрия",
+      "hidden": true,
       "valueType": "GEOMETRY",
       "allowedValues": [
         "Point"
@@ -37021,6 +37026,7 @@ SET class_rule =
     {
       "name": "shape",
       "title": "Существующий",
+      "hidden": true,
       "valueType": "GEOMETRY",
       "allowedValues": [
         "Polygon"
@@ -37429,7 +37435,6 @@ SET class_rule =
       "name": "shape",
       "title": "Геометрия",
       "hidden": true,
-
       "valueType": "GEOMETRY",
       "allowedValues": [
         "Point"
@@ -38700,6 +38705,7 @@ SET class_rule =
     {
       "name": "shape",
       "title": "тайтл",
+      "hidden": true,
       "valueType": "GEOMETRY",
       "allowedValues": [
         "Polygon"
@@ -40319,6 +40325,7 @@ SET class_rule =
     {
       "name": "shape",
       "title": "Геометрия",
+      "hidden": true,
       "valueType": "GEOMETRY",
       "allowedValues": [
         "LineString"

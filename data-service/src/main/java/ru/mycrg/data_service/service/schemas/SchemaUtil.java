@@ -166,7 +166,9 @@ public class SchemaUtil {
         if (!propertyNames.contains(CREATED_BY.getName())) {
             SimplePropertyDto createdBy = new SimplePropertyDto();
             createdBy.setName(CREATED_BY.getName());
-            createdBy.setTitle("Кем создано");
+            createdBy.setTitle("Создатель");
+            createdBy.setDescription("Пользователь создавший объект (Заполняется автоматически)");
+            createdBy.setReadOnly(true);
             createdBy.setValueType(ValueType.STRING);
 
             schemaProperties.add(createdBy);
@@ -176,6 +178,9 @@ public class SchemaUtil {
             SimplePropertyDto createdAt = new SimplePropertyDto();
             createdAt.setName(CREATED_AT.getName());
             createdAt.setTitle("Дата создания");
+            createdAt.setDescription("Дата создания объекта (Заполняется автоматически)");
+            createdAt.setReadOnly(true);
+            createdAt.setHidden(true);
             createdAt.setValueType(ValueType.DATETIME);
 
             schemaProperties.add(createdAt);
@@ -184,7 +189,10 @@ public class SchemaUtil {
         if (!propertyNames.contains(UPDATED_BY.getName())) {
             SimplePropertyDto updatedBy = new SimplePropertyDto();
             updatedBy.setName(UPDATED_BY.getName());
-            updatedBy.setTitle("Кто обновил");
+            updatedBy.setTitle("Редактор");
+            updatedBy.setDescription("Пользователь редактировавший объект последним (Заполняется автоматически)");
+            updatedBy.setReadOnly(true);
+            updatedBy.setHidden(true);
             updatedBy.setValueType(ValueType.STRING);
 
             schemaProperties.add(updatedBy);
@@ -193,7 +201,10 @@ public class SchemaUtil {
         if (!propertyNames.contains(LAST_MODIFIED.getName())) {
             SimplePropertyDto lastModified = new SimplePropertyDto();
             lastModified.setName(LAST_MODIFIED.getName());
-            lastModified.setTitle("Дата последнего изменения");
+            lastModified.setTitle("Дата редактирования");
+            lastModified.setDescription("Дата последнего редактирования объекта (Заполняется автоматически)");
+            lastModified.setReadOnly(true);
+            lastModified.setHidden(true);
             lastModified.setValueType(ValueType.DATETIME);
 
             schemaProperties.add(lastModified);

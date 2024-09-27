@@ -793,6 +793,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия", 
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -1041,6 +1042,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия", 
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -1338,6 +1340,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия", 
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -1760,6 +1763,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия", 
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -2135,6 +2139,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия", 
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -2279,6 +2284,7 @@ SET class_rule  =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия", 
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -2715,6 +2721,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия", 
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -3033,6 +3040,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия", 
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -3292,6 +3300,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия", 
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -3633,6 +3642,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия",
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -3941,6 +3951,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия",
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -4351,6 +4362,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия",
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -4596,6 +4608,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия",
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -4992,6 +5005,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия",
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -5266,6 +5280,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия",
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -5571,6 +5586,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия",
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -5853,6 +5869,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия",
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -6049,6 +6066,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия",
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -6233,6 +6251,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия",
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -6421,6 +6440,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия",
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -6584,6 +6604,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия",
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -6786,6 +6807,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия",
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -7021,6 +7043,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия",
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -7326,6 +7349,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия",
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -7767,6 +7791,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия",
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -8140,6 +8165,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия",
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -8527,6 +8553,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия",
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -8822,6 +8849,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия",
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -8998,6 +9026,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия",
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -9309,6 +9338,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия",
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -9620,6 +9650,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия",
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -9804,6 +9835,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия",
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -10128,6 +10160,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия",
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -10324,6 +10357,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия",
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -10648,6 +10682,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия",
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -11047,6 +11082,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия",
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -11411,6 +11447,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия",
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -11688,6 +11725,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия",
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -12103,6 +12141,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "Геометрия",
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -12406,6 +12445,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия",
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -12716,6 +12756,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия",
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -12964,6 +13005,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия",
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -13360,6 +13402,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия",
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -13788,6 +13831,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия",
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -14046,6 +14090,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия",
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -14348,6 +14393,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия",
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -14649,6 +14695,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия",
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -15128,6 +15175,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия",
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -15446,6 +15494,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия",
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -15705,6 +15754,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия",
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -15955,6 +16005,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия",
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -16383,6 +16434,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия",
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -16875,6 +16927,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия",
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -17126,6 +17179,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия",
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -17467,6 +17521,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия",
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -17927,6 +17982,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия",
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -18229,6 +18285,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия",
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -18577,6 +18634,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия",
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -18870,6 +18928,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия",
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -19146,6 +19205,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия",
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -19471,6 +19531,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия",
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -19912,6 +19973,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия",
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -20259,6 +20321,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия",
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -20700,6 +20763,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия",
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -21137,6 +21201,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия",
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -21405,6 +21470,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия",
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -21698,6 +21764,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия",
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -22012,6 +22079,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия",
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -22238,6 +22306,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия",
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -22585,6 +22654,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия",
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -23066,6 +23136,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия",
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -23424,6 +23495,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия",
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -23574,6 +23646,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия",
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -23884,6 +23957,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия",
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -24190,6 +24264,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия",
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -24744,6 +24819,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия",
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -25043,6 +25119,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия",
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -25125,6 +25202,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия",
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -25404,6 +25482,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия",
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -25486,6 +25565,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия",
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -25765,6 +25845,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия",
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -26024,6 +26105,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия",
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -26195,6 +26277,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия",
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -26569,6 +26652,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия",
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -27162,6 +27246,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия",
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -27538,6 +27623,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия",
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -28131,6 +28217,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия",
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -28343,6 +28430,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия",
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -28544,6 +28632,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия",
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -28767,6 +28856,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия",
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -28963,6 +29053,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия",
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -29085,6 +29176,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия",
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -29196,6 +29288,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия",
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -29278,6 +29371,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия",
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -29373,6 +29467,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия",
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -29752,6 +29847,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия",
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -29967,6 +30063,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия",
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -30096,6 +30193,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия",
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -30285,6 +30383,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия",
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -30639,6 +30738,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия",
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -31101,6 +31201,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия",
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -31475,6 +31576,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия",
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -31636,6 +31738,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия",
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -31920,6 +32023,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия",
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -32274,6 +32378,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия",
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -32731,6 +32836,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия",
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -33104,6 +33210,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия",
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -33491,6 +33598,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия",
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -33897,6 +34005,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия",
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -34300,6 +34409,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия",
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -34433,6 +34543,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия",
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -34535,6 +34646,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия",
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -34736,6 +34848,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия",
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -34902,6 +35015,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия",
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -35018,6 +35132,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия",
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -35302,6 +35417,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия",
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -35424,6 +35540,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия",
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -35584,6 +35701,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия",
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -35683,6 +35801,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия",
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -35752,6 +35871,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия",
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -35847,6 +35967,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия",
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -35938,6 +36059,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия",
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -36044,6 +36166,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия",
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -36139,6 +36262,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия",
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -36273,6 +36397,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия",
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -36386,6 +36511,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия",
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -36608,6 +36734,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия",
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -36735,6 +36862,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия",
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -36833,6 +36961,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия",
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -36977,6 +37106,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия",
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -37113,6 +37243,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия",
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -37292,6 +37423,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия",
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -37391,6 +37523,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия",
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -37562,6 +37695,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия",
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -37689,8 +37823,8 @@ SET class_rule =
           },
           {
             "name": "shape",
-            "title": "Геомметрия",
             "hidden": true,
+            "title": "Геомметрия",
             "valueType": "GEOMETRY",
             "allowedValues": [
               "LineString"
@@ -37834,6 +37968,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия",
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -38068,6 +38203,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия",
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -38280,6 +38416,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия",
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -38567,6 +38704,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия",
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -38743,6 +38881,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия",
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -38958,6 +39097,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия",
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -39110,6 +39250,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия",
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -39328,6 +39469,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия",
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -39540,6 +39682,7 @@ SET class_rule =
           },
           {
             "name": "shape",
+            "hidden": true,
             "title": "геометрия",
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -39681,6 +39824,7 @@ SET class_rule =
             },
             {
               "name": "shape",
+              "hidden": true,
               "title": "геометрия",
               "valueType": "GEOMETRY",
               "allowedValues": [

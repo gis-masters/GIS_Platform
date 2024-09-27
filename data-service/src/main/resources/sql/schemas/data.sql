@@ -34,9 +34,14 @@ SELECT 'dl_data_owners',
 WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_data_owners');
 
 INSERT INTO data.schemas (name, class_rule)
-SELECT 'dl_data_gml',
+SELECT 'dl_data_doc',
     '{}'
-WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_data_gml');
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_data_doc');
+
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'dl_data_terplan_doc',
+    '{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_data_terplan_doc');
 
 UPDATE data.schemas 
 SET class_rule =
@@ -3831,109 +3836,344 @@ WHERE name = 'dl_data_owners';
 UPDATE data.schemas 
 SET class_rule =
     '{
-  "name": "dl_data_gml",
-  "tags": [
-    "system",
-    "Библиотека",
-    "Приказ 10"
-  ],
-  "title": "Библиотека GML",
-  "tableName": "dl_data_gml",
-  "description": "Библиотека для загрузки и публикиции файлов GML",
-  "properties": [
-    {
-      "name": "id",
-      "title": "id",
-      "readOnly": true,
-      "required": true,
-      "valueType": "INT"
-    },
-    {
-      "name": "path",
-      "title": "Путь",
-      "hidden": true,
-      "maxLength": 522,
-      "valueType": "STRING",
-      "description": "Полный путь, отражающий иерархию объектов"
-    },
-    {
-      "name": "is_folder",
-      "title": "Папка/Документ",
-      "valueType": "BOOLEAN",
-      "description": "Папка или Документ"
-    },
-    {
-      "name": "created_at",
-      "title": "Дата создания",
-      "readOnly": true,
-      "valueType": "DATETIME"
-    },
-    {
-      "name": "last_modified",
-      "title": "Дата модификации",
-      "valueType": "DATETIME",
-      "description": "Дата последней модификации документа"
-    },
-    {
-      "name": "updated_by",
-      "title": "Кто обновил",
-      "readOnly": true,
-      "maxLength": 50,
-      "valueType": "STRING"
-    },
-    {
-      "name": "content_type_id",
-      "title": "Вид документа",
-      "hidden": true,
-      "valueType": "STRING"
-    },
-    {
-      "name": "title",
-      "title": "Наименование",
-      "display": "multiline",
-      "minWidth": 400,
-      "required": true,
-      "valueType": "STRING"
-    },
-    {
-      "name": "file",
-      "title": "Документ",
-      "maxFiles": 10,
-      "valueType": "FILE"
-    },
-    {
-      "name": "created_by",
-      "title": "Создатель",
-      "maxLength": 50,
-      "valueType": "STRING"
-    }
-  ],
-  "contentTypes": [
-    {
-      "id": "doc_v1",
-      "icon": "DOCUMENT",
-      "type": "DOCUMENT",
-      "title": "Документ",
-      "attributes": [
+    "name": "dl_data_doc",
+    "title": "Документы",
+    "tags": [
+        "system",
+        "Библиотека"
+        ],
+    "tableName": "dl_data_doc",
+    "properties": [
         {
-          "name": "title"
+            "name": "id",
+            "title": "Идентификатор",
+            "valueType": "INT"
         },
         {
-          "name": "file"
-        }
-      ]
-    },
-    {
-      "id": "folder_v1",
-      "icon": "FOLDER_CREATE",
-      "type": "FOLDER",
-      "title": "Папка",
-      "attributes": [
+            "name": "is_folder",
+            "title": "Признак раздела",
+            "valueType": "BOOLEAN"
+        },
         {
-          "name": "title"
+            "name": "path",
+            "title": "Путь",
+            "maxLength": 522,
+            "valueType": "STRING",
+            "description": "Полный путь, отражающий иерархию объектов"
+        },
+        {
+            "name": "content_type_id",
+            "title": "Идентификатор контент типа",
+            "valueType": "STRING",
+            "required": true,
+            "maxLength": 50
+        },
+        {
+            "name": "title",
+            "title": "Наименование документа",
+            "valueType": "STRING",
+            "required": true
+        },
+        {
+            "name": "doc_num",
+            "title": "Номер документа",
+            "valueType": "STRING"
+        },
+        {
+            "name": "files",
+            "title": "Файлы",
+            "valueType": "FILE",
+            "multiple": true,
+            "maxSize": 50000000,
+            "maxFiles": 10
+        },
+        {
+            "name": "relations",
+            "title": "Связанные документы",
+            "valueType": "DOCUMENT",
+            "multiple": true,
+            "libraries": [
+                "dl_data_doc"
+            ],
+            "maxDocuments": 10
+        },
+        {
+            "name": "note",
+            "title": "Примечания",
+            "maxLength": 522,
+            "valueType": "STRING",
+            "display": "multiline"
         }
-      ]
-    }
-  ]
+    ],
+    "description": "Библиотека документов",
+    "originName": "dl_data_doc",
+    "contentTypes": [
+        {
+            "id": "doc_tif",
+            "type": "DOCUMENT",
+            "title": "Документ",
+            "attributes": [
+                {
+                    "name": "title"
+                },
+                {
+                    "name": "doc_num"
+                },
+                {
+                    "name": "files"
+                },
+                {
+                    "name": "relations"
+                },
+                {
+                    "name": "created_at",
+                    "title": "Внесено"
+                },
+                {
+                    "name": "note"
+                }
+            ]
+        },
+        {
+            "id": "folder_v1",
+            "type": "FOLDER",
+            "attributes": [
+                {
+                    "name": "title",
+                    "title": "Наименование раздела"
+                }
+            ]
+        }
+    ]
 }'
-WHERE name = 'dl_data_gml';
+WHERE name = 'dl_data_doc';
+
+UPDATE data.schemas 
+SET class_rule =
+    '{
+    "name": "dl_data_terplan_doc",
+    "title": "Документы развития территорий",
+    "tags": [
+        "system",
+        "Библиотека",
+        "Тер.планирование"
+        ],
+    "tableName": "dl_data_terplan_doc",
+    "properties": [
+        {
+            "name": "id",
+            "title": "Идентификатор",
+            "valueType": "INT"
+        },
+        {
+            "name": "is_folder",
+            "title": "Признак раздела",
+            "valueType": "BOOLEAN"
+        },
+        {
+            "name": "path",
+            "title": "Путь",
+            "maxLength": 522,
+            "valueType": "STRING",
+            "description": "Полный путь, отражающий иерархию объектов"
+        },
+        {
+            "name": "content_type_id",
+            "title": "Идентификатор контент типа",
+            "valueType": "CHOICE",
+            "hidden": true,
+            "maxLength": 50,
+            "enumerations": [
+                {
+                    "value": "doc",
+                    "title": "Документ"
+                },
+                {
+                    "value": "folder",
+                    "title": "Папка"
+                }
+            ]
+        },
+        {
+            "name": "title",
+            "title": "Наименование",
+            "valueType": "STRING",
+            "required": true,
+            "maxLength": 500
+        },
+        {
+            "name": "status_type",
+            "title": "Статус документа",
+            "valueType": "CHOICE",
+            "enumerations": [
+                {
+                    "value": "Проектный",
+                    "title": "Проектный"
+                },
+                {
+                    "value": "Действующий",
+                    "title": "Действующий"
+                },
+                {
+                    "value": "Архивный",
+                    "title": "Архивный"
+                }
+            ]
+        },
+        {
+            "name": "document_type",
+            "title": "Тип документа",
+            "valueType": "CHOICE",
+            "enumerations": [
+                {
+                    "value": "СТП",
+                    "title": "Схема территориального планирования"
+                },
+                {
+                    "value": "Проект планировки территории",
+                    "title": "Проект планировки территории"
+                },
+                {
+                    "value": "Проект межевания территории",
+                    "title": "Проект межевания территории"
+                },
+                {
+                    "value": "Генеральный план поселения",
+                    "title": "Генеральный план поселения"
+                },
+                {
+                    "value": "Генеральный план городского округа",
+                    "title": "Генеральный план городского округа"
+                },
+                {
+                    "value": "Генеральная схема развития транспортной инфраструктуры",
+                    "title": "Генеральная схема развития транспортной инфраструктуры"
+                },
+                {
+                    "value": "Местные нормативы градостроительного проектирования",
+                    "title": "Местные нормативы градостроительного проектирования"
+                },
+                {
+                    "value": "Программы комплексного развития",
+                    "title": "Программы комплексного развития систем инженерной, транспортной и социальной инфраструктуры"
+                },
+                {
+                    "value": "Прочие",
+                    "title": "Прочие"
+                }
+            ]
+        },
+        {
+            "name": "doc_num",
+            "title": "Номер документа",
+            "valueType": "STRING",
+            "required": true
+        },
+        {
+            "name": "approve_date",
+            "title": "Дата утверждения",
+            "valueType": "DATETIME"
+        },
+        {
+            "name": "org_name",
+            "title": "Утвердивший орган",
+            "valueType": "STRING"
+        },
+        {
+            "name": "files",
+            "title": "Файлы",
+            "valueType": "FILE",
+            "multiple": true,
+            "maxSize": 50000000
+        },
+        {
+            "name": "guiddocpreviousversion",
+            "title": "Версии",
+            "valueType": "DOCUMENT",
+            "multiple": true,
+            "description": "Предыдущие версии документа",
+            "libraries": [
+                "dl_data_doc",
+                "dl_data_terplan_doc"
+            ],
+            "maxDocuments": 10
+        },
+        {
+            "name": "relations",
+            "title": "Связанные документы",
+            "valueType": "DOCUMENT",
+            "multiple": true,
+            "libraries": [
+                "dl_data_doc",
+                "dl_data_terplan_doc"
+            ],
+            "maxDocuments": 10
+        },
+        {
+            "name": "note",
+            "title": "Примечания",
+            "maxLength": 522,
+            "valueType": "STRING",
+            "display": "multiline"
+        }
+    ],
+    "description": "Библиотека для документов территориального планирования",
+    "originName": "dl_data_terplan_doc",
+    "styleName": "dl_data_terplan_doc",
+    "geometryType": "MultiPolygon",
+    "contentTypes": [
+        {
+            "id": "doc",
+            "type": "DOCUMENT",
+            "title": "Документ",
+            "icon": "GPZU",
+            "attributes": [
+                {
+                    "name": "title"
+                },
+                {
+                    "name": "doc_num"
+                },
+                {
+                    "name": "status_type"
+                },
+                {
+                    "name": "document_type"
+                },
+                {
+                    "name": "approve_date"
+                },
+                {
+                    "name": "org_name"
+                },
+                {
+                    "name": "files"
+                },
+                {
+                    "name": "relations"
+                },
+                {
+                    "name": "guiddocpreviousversion"
+                },
+                {
+                    "name": "note"
+                },
+                {
+                    "name": "created_at",
+                    "title": "Внесено"
+                }
+            ]
+        },
+        {
+            "id": "folder",
+            "type": "FOLDER",
+            "attributes": [
+                {
+                    "name": "title",
+                    "title": "Наименование раздела"
+                }
+            ]
+        }
+    ]
+}'
+WHERE name = 'dl_data_terplan_doc';

@@ -211,7 +211,8 @@
         "Приказ 10",
         "Приказ 123",
         "Приказ 10, версия 5 изм. от 6 октября 2023 № 698",
-        "КПТ"
+        "КПТ",
+        "Тер.планирование"
       ]
     },
     "projects": [
@@ -256,7 +257,10 @@
     ],
     "documentLibraries": [
       {
-        "schemaId": "dl_data_gml"
+        "schemaId": "dl_data_terplan_doc"
+      },
+      {
+        "schemaId": "dl_data_kpt"
       }
     ]
   }
