@@ -7,6 +7,7 @@ import { currentProject } from '../../../stores/CurrentProject.store';
 import { currentUser } from '../../../stores/CurrentUser.store';
 import { mapStore } from '../../../stores/Map.store';
 import { usersService } from '../../auth/users/users.service';
+import { Projection } from '../../data/projections/projections.models';
 import { getOlProjection } from '../../data/projections/projections.service';
 import { getProjectionCode } from '../../data/projections/projections.util';
 import { applyView, getGeometryFieldName } from '../../data/schema/schema.utils';
@@ -190,6 +191,10 @@ export async function getFeatures(
  */
 export async function getFeatureCollectionByXmlFilter(xml: string): Promise<WfsFeatureCollection> {
   return wfsClient.getFeatureCollectionByXmlFilter(xml);
+}
+
+export async function getShapeFile(layerComplexName: string, projection: Projection): Promise<void> {
+  await wfsClient.getShapeFile(layerComplexName, projection);
 }
 
 export async function getFeaturesById(ids: string[], complexName: string, definitionQuery = ''): Promise<WfsFeature[]> {

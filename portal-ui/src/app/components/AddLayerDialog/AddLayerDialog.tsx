@@ -22,6 +22,7 @@ import { getLibraryRecord } from '../../services/data/library/library.service';
 import { isPlaceFileProcess } from '../../services/data/processes/processes.models';
 import { awaitProcess } from '../../services/data/processes/processes.service';
 import { Projection } from '../../services/data/projections/projections.models';
+import { getProjectionCode } from '../../services/data/projections/projections.util';
 import {
   ContentType,
   PropertySchema,
@@ -349,7 +350,7 @@ export class AddLayerDialog extends Component<AddLayerDialogProps> {
 
     const { dataset, vectorTable, library } = datasource;
     const workspace = currentUser.workspaceName;
-    const crs = `${projection?.authName}:${projection?.authSrid}`;
+    const crs = projection ? getProjectionCode(projection) : '';
 
     if (this.valid && (!layerType || layerType === CrgLayerType.VECTOR)) {
       if (!dataset || !vectorTable) {

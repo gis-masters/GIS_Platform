@@ -18,16 +18,14 @@ import { boundMethod } from 'autobind-decorator';
 import { AxiosError } from 'axios';
 
 import { communicationService, DataChangeEventDetail } from '../../../services/communication.service';
-import { exportVectorTableAsShape } from '../../../services/data/export/export.service';
 import { LibraryRecord } from '../../../services/data/library/library.models';
 import { getLibraryRecord } from '../../../services/data/library/library.service';
 import { Projection } from '../../../services/data/projections/projections.models';
-import { getProjectionCode } from '../../../services/data/projections/projections.util';
 import { Schema } from '../../../services/data/schema/schema.models';
 import { VectorTable } from '../../../services/data/vectorData/vectorData.models';
 import { getVectorTable } from '../../../services/data/vectorData/vectorData.service';
 import { GeometryType, WfsFeature } from '../../../services/geoserver/wfs/wfs.models';
-import { getEmptyFeature } from '../../../services/geoserver/wfs/wfs.service';
+import { getEmptyFeature, getShapeFile } from '../../../services/geoserver/wfs/wfs.service';
 import {
   CrgLayer,
   CrgLayersGroup,
@@ -429,12 +427,18 @@ export class LayerMenu extends Component<LayerMenuProps> {
   }
 
   @boundMethod
-  private async export(proj: Projection) {
+  private async export(projection: Projection) {
     const { entity, onClose } = this.props;
-    const { dataset, tableName } = entity as CrgVectorLayer;
+    const { complexName } = entity as CrgVectorLayer;
 
-    await exportVectorTableAsShape([{ dataset, table: tableName }], getProjectionCode(proj));
-    sidebars.openInfo();
+    if (!complexName) {
+      Toast.error('Некорректный слой: отсутствует complexName');
+      onClose();
+
+      return;
+    }
+
+    await getShapeFile(complexName, projection);
 
     onClose();
   }

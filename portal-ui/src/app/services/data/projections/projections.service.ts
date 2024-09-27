@@ -10,7 +10,7 @@ import { getLayerByFeatureInCurrentProject } from '../../gis/layers/layers.utils
 import { PageOptions } from '../../models';
 import { projectionsClient } from './projections.client';
 import { DEFAULT_OL_PROJECTION, defaultOlProjectionCode, Projection } from './projections.models';
-import { getProjectionTitle, getSrid, projectionUnit } from './projections.util';
+import { getProjectionCode, getProjectionTitle, getSrid, projectionUnit } from './projections.util';
 
 const projectionCache: Record<string, Promise<Projection | undefined> | undefined> = {};
 
@@ -108,43 +108,31 @@ export function registerProjectionArrayInProj4(projections: Projection[]): void 
       proj.authSrid !== 7829 &&
       proj.authSrid !== 3395
     ) {
-      proj4.defs(`${proj.authName}:${proj.authSrid}`, proj.proj4Text);
+      proj4.defs(getProjectionCode(proj), proj.proj4Text);
     }
 
     if (proj.authSrid === 28_406) {
-      proj4.defs(`${proj.authName}:${proj.authSrid}`, proj4Str({ lat_0: 0, lon_0: 33, x_0: 6_500_000 }));
+      proj4.defs(getProjectionCode(proj), proj4Str({ lat_0: 0, lon_0: 33, x_0: 6_500_000 }));
     }
 
     if (proj.authSrid === 28_407) {
-      proj4.defs(`${proj.authName}:${proj.authSrid}`, proj4Str({ lat_0: 0, lon_0: 39, x_0: 7_500_000 }));
+      proj4.defs(getProjectionCode(proj), proj4Str({ lat_0: 0, lon_0: 39, x_0: 7_500_000 }));
     }
 
     if (proj.authSrid === 314_315) {
-      proj4.defs(
-        `${proj.authName}:${proj.authSrid}`,
-        proj4Str({ lat_0: 0.083_333_333_333_333_3, lon_0: 32.5, x_0: 4_300_000 })
-      );
+      proj4.defs(getProjectionCode(proj), proj4Str({ lat_0: 0.083_333_333_333_333_3, lon_0: 32.5, x_0: 4_300_000 }));
     }
 
     if (proj.authSrid === 314_314) {
-      proj4.defs(
-        `${proj.authName}:${proj.authSrid}`,
-        proj4Str({ lat_0: 0.083_333_333_333_333_3, lon_0: 35.5, x_0: 5_300_000 })
-      );
+      proj4.defs(getProjectionCode(proj), proj4Str({ lat_0: 0.083_333_333_333_333_3, lon_0: 35.5, x_0: 5_300_000 }));
     }
 
     if (proj.authSrid === 7828) {
-      proj4.defs(
-        `${proj.authName}:${proj.authSrid}`,
-        proj4Str({ lat_0: 0.083_333_333_333_333_3, lon_0: 32.5, x_0: 4_300_000 })
-      );
+      proj4.defs(getProjectionCode(proj), proj4Str({ lat_0: 0.083_333_333_333_333_3, lon_0: 32.5, x_0: 4_300_000 }));
     }
 
     if (proj.authSrid === 7829) {
-      proj4.defs(
-        `${proj.authName}:${proj.authSrid}`,
-        proj4Str({ lat_0: 0.083_333_333_333_333_3, lon_0: 35.5, x_0: 5_300_000 })
-      );
+      proj4.defs(getProjectionCode(proj), proj4Str({ lat_0: 0.083_333_333_333_333_3, lon_0: 35.5, x_0: 5_300_000 }));
     }
   }
 
