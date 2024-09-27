@@ -71,6 +71,10 @@ SET class_rule =
                {
                  "value": "sed_task_introduction",
                  "title": "Размещение документов из СЭД Диалог в ГИСОГД РК"
+               },
+               {
+                 "value": "rns_smev_rostelekom",
+                 "title": "РНС. Выдача или внесение изменений"
                }
              ]
            },
@@ -367,6 +371,56 @@ SET class_rule =
              "id": "sed_task_introduction",
              "type": "DOCUMENT",
              "title": "Размещение документов из СЭД Диалог в ГИСОГД РК",
+             "attributes": [
+               {
+                 "name": "id",
+                 "hidden": true
+               },
+               {
+                 "name": "content_type_id",
+                 "readOnly": true
+               },
+               {
+                 "name": "status",
+                 "readOnly": true
+               },
+               {
+                 "name": "assigned_to",
+                 "required": true
+               },
+               {
+                 "name": "owner_id",
+                 "required": true
+               },
+               {
+                 "name": "inbox_data_key_data_connection",
+                 "title": "Заявка",
+                 "readOnly": true
+               },
+               {
+                 "name": "data_section_key_data_connection",
+                 "title": "Размещенные документы",
+                 "dynamicPropertyFormula": "return { required: obj?.status == \"DONE\", readOnly: (obj?.status == \"DONE\" || obj?.status == \"CANCELED\")}"
+               },
+               {
+                 "name": "due_date"
+               },
+               {
+                 "name": "created_at"
+               },
+               {
+                 "name": "last_modified"
+               },
+               {
+                 "name": "description",
+                 "title": "Комментарий"
+               }
+             ]
+           },
+           {
+             "id": "rns_smev_rostelekom",
+             "type": "DOCUMENT",
+             "title": "РНС. Выдача или внесение изменений",
              "attributes": [
                {
                  "name": "id",

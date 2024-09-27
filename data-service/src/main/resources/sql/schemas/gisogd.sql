@@ -18444,6 +18444,10 @@ SET class_rule =
                 {
                     "title": "Реестр входящих",
                     "value": "InboxData"
+                },
+                {
+                    "title": "РНС. Выдача или внесение изменений",
+                    "value": "rns_smev_rostelekom"
                 }
             ]
         },
@@ -18808,6 +18812,7 @@ SET class_rule =
         {
             "name": "if_from_eis_zh",
             "title": "Пришло из ЕИС ЖС",
+            "hidden": true,
             "readOnly": true,
             "valueType": "BOOLEAN"
         },
@@ -18901,6 +18906,14 @@ SET class_rule =
             ],
             "valueType": "DOCUMENT",
             "maxDocuments": 10
+        },   
+        {
+            "name": "smev_message_id",
+            "title": "Номер СМЭВ-3",
+            "readOnly": true,
+            "maxLength": 40,
+            "valueType": "STRING",            
+            "description": "Для отслеживания судьбы сообщения СМЭВ-3"
         }
     ],
     "description": "Реестр учета сведений, документов, материалов, поступивших на размещение в информационную систему",
@@ -19006,6 +19019,93 @@ SET class_rule =
                 },
                 {
                     "name": "territory"
+                },
+                {
+                    "name": "location"
+                },
+                {
+                    "name": "namefrompd"
+                },
+                {
+                    "name": "developer"
+                },
+                {
+                    "name": "constructiontype"
+                },
+                {
+                    "name": "developer_data_connection"
+                },
+                {
+                    "name": "number"
+                },
+                {
+                    "name": "date"
+                },
+                {
+                    "name": "person_name"
+                },
+                {
+                    "name": "cover_letter_num"
+                },
+                {
+                    "name": "cover_letter_date"
+                },
+                {
+                    "name": "request_type"
+                },
+                {
+                    "name": "is_name"
+                },
+                {
+                    "name": "data_type"
+                },
+                {
+                    "name": "record_status"
+                },
+                {
+                    "name": "user_name"
+                },
+                {
+                    "name": "document_feedback"
+                },
+                {
+                    "name": "if_from_eis_zh"
+                },
+                {
+                    "name": "gisogdrf_publication_datetime"
+                },
+                {
+                    "name": "gisogdrf_sync_status"
+                },
+                {
+                    "name": "gisogdrf_audit_datetime"
+                },
+                {
+                    "name": "gisogdrf_response"
+                },
+                {
+                    "name": "file"
+                },
+                {
+                    "name": "last_modified"
+                }
+            ]
+        },
+        {
+            "id": "rns_smev_rostelekom",
+            "icon": "DOCUMENT",
+            "type": "DOCUMENT",
+            "title": "РНС. Выдача или внесение изменений",
+            "childOnly": true,
+            "attributes": [
+                {
+                    "name": "title"
+                },
+                {
+                    "name": "territory"
+                },
+                {
+                    "name": "smev_message_id"
                 },
                 {
                     "name": "location"
