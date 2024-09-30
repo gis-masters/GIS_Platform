@@ -1,6 +1,5 @@
 package ru.mycrg.data_service.dao.utils;
 
-import org.geotools.data.jdbc.FilterToSQL;
 import org.geotools.data.jdbc.FilterToSQLException;
 import org.geotools.data.postgis.PostGISDialect;
 import org.geotools.data.postgis.PostgisFilterToSQL;
@@ -19,7 +18,7 @@ public class EcqlHandler {
 
     private static final Logger log = LoggerFactory.getLogger(EcqlHandler.class);
 
-    private static final FilterToSQL ENCODER = new PostgisFilterToSQL(new PostGISDialect(null));
+    private static final PostGISDialect dialect = new PostGISDialect(null);
 
     private EcqlHandler() {
         throw new IllegalStateException("Utility class");
@@ -37,8 +36,8 @@ public class EcqlHandler {
 
             Filter filter = ECQL.toFilter(markSingleQuotesIn(ecqlFilter, marker));
 
-            return ENCODER.encodeToString(filter)
-                          .replace(marker, "");
+            return new PostgisFilterToSQL(dialect).encodeToString(filter)
+                                                  .replace(marker, "");
         } catch (CQLException | FilterToSQLException e) {
             String msg = String.format("Задан некорректный ECQL фильтр: [%s]", ecqlFilter);
             log.error("{} Reason: [{}]", msg, e.getMessage());
