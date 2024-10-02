@@ -13,6 +13,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.mycrg.auth_facade.IAuthenticationFacade;
+import ru.mycrg.common_contracts.generated.ecp.VerifyEcpResponse;
 import ru.mycrg.data_service.dto.FileProjection;
 import ru.mycrg.data_service.dto.FileResourceQualifier;
 import ru.mycrg.data_service.dto.ResourceType;
@@ -20,6 +21,7 @@ import ru.mycrg.data_service.entity.File;
 import ru.mycrg.data_service.exceptions.*;
 import ru.mycrg.data_service.mappers.FileResourceQualifierMapper;
 import ru.mycrg.data_service.repository.FileRepository;
+import ru.mycrg.data_service.service.EcpVerifier;
 import ru.mycrg.data_service.service.OrgSettingsKeeper;
 import ru.mycrg.data_service.service.cqrs.files.requests.CreateFileRequest;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
@@ -63,6 +65,7 @@ public class FileController extends BaseController {
     private final Logger log = LoggerFactory.getLogger(FileController.class);
 
     private final Mediator mediator;
+    private final EcpVerifier ecpVerifier;
     private final FileRepository fileRepository;
     private final FileStorageService fileStorageService;
     private final FileStorageSizeGuarder fileStorageSizeGuarder;
@@ -71,6 +74,7 @@ public class FileController extends BaseController {
     private final OrgSettingsKeeper orgSettingsKeeper;
 
     public FileController(Mediator mediator,
+                          EcpVerifier ecpVerifier,
                           FileRepository fileRepository,
                           FileStorageService fileStorageService,
                           FileStorageSizeGuarder fileStorageSizeGuarder,
@@ -78,6 +82,7 @@ public class FileController extends BaseController {
                           MasterResourceProtector resourceProtector,
                           OrgSettingsKeeper orgSettingsKeeper) {
         this.mediator = mediator;
+        this.ecpVerifier = ecpVerifier;
         this.fileStorageService = fileStorageService;
         this.fileRepository = fileRepository;
         this.fileStorageSizeGuarder = fileStorageSizeGuarder;
@@ -110,6 +115,24 @@ public class FileController extends BaseController {
         }
 
         return ResponseEntity.ok(new FileProjection(file));
+    }
+
+    @PreAuthorize(HAS_ANY_AUTHORITY)
+    @GetMapping("/files/{id}/verify")
+    public ResponseEntity<VerifyEcpResponse> verifyFile(@PathVariable UUID id) {
+        File file = fileRepository.findById(id)
+                                  .orElseThrow(() -> new NotFoundException(id));
+        if (!authenticationFacade.getLogin().equalsIgnoreCase(file.getCreatedBy())) {
+            throwIfResourceNotAllowed(file);
+        }
+
+        if (file.getEcp() == null) {
+            throw new BadRequestException("Файл: '" + file.getTitle() + "' не подписан");
+        }
+
+        VerifyEcpResponse verifyEcpResponse = ecpVerifier.verify(file.getPath(), file.getEcp());
+
+        return ResponseEntity.ok(verifyEcpResponse);
     }
 
     @PreAuthorize(HAS_ANY_AUTHORITY)

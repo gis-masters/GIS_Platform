@@ -1,9 +1,7 @@
-import React, { Component } from 'react';
-import { action, makeObservable, observable } from 'mobx';
-import { observer } from 'mobx-react';
+import React, { FC, memo, useCallback, useEffect, useMemo } from 'react';
+import { observer, useLocalObservable } from 'mobx-react';
 import { Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import { cn } from '@bem-react/classname';
-import { boundMethod } from 'autobind-decorator';
 
 import { communicationService, DataChangeEventDetail } from '../../../services/communication.service';
 import { FileConnection, FileInfo } from '../../../services/data/files/files.models';
@@ -49,65 +47,154 @@ interface FilesItemProps {
   onPreview(item: FileInfo): void;
 }
 
-@observer
-export class FilesItem extends Component<FilesItemProps> {
-  @observable private connections: FileConnection[] = [];
-  @observable private currentFileId?: string;
-  @observable private deleteDialogOpen = false;
-  @observable private fileInfo?: FileInfo;
-  private operationId: symbol | undefined;
+type Ids = {
+  currentFileId: string | null;
+  operationId: symbol | null;
+};
 
-  constructor(props: FilesItemProps) {
-    super(props);
-    makeObservable(this);
-  }
+type FilesItemState = {
+  connections: FileConnection[];
+  ids: Ids;
+  deleteDialogOpen: boolean;
+  fileInfo: FileInfo | null;
+  setConnections(connections: FileConnection[]): void;
+  setIds({ currentFileId, operationId }: Ids): void;
+  setDeleteDialogOpen(isOpen: boolean): void;
+  setFileInfo(fileInfo: FileInfo): void;
+};
 
-  async componentDidMount() {
-    communicationService.fileConnectionsUpdated.on(async (e: CustomEvent<DataChangeEventDetail<FileInfo[]>>) => {
-      if (e.detail.data.some(file => file.id === this.currentFileId)) {
-        this.dropConnections();
-        await this.fetchConnections();
-      }
-    }, this);
-    await this.fetchConnections();
-    await this.updateFileInfo();
-  }
-
-  async componentDidUpdate(prevProps: FilesItemProps) {
-    if (this.props.item.id !== prevProps.item.id) {
-      this.dropConnections();
-      await this.fetchConnections();
-    }
-
-    await this.updateFileInfo();
-  }
-
-  componentWillUnmount() {
-    communicationService.off(this);
-  }
-
-  render() {
+const FilesItemFC: FC<FilesItemProps> = observer(
+  ({
+    item,
+    editable,
+    status,
+    file,
+    statusText,
+    numerous,
+    multiple,
+    document,
+    showMainCompoundFileActions,
+    showPlaceAction,
+    onPreview,
+    onDelete
+  }) => {
     const {
-      item,
-      editable,
-      status,
-      file,
-      statusText,
-      numerous,
-      multiple,
-      document,
-      showMainCompoundFileActions,
-      showPlaceAction,
-      onPreview
-    } = this.props;
-    const ext = getFileExtension(item.title);
-    const baseName = getFileBaseName(item.title);
-    const disabled = status ? ['loading', 'new', 'error'].includes(status) : undefined;
-    const isFileConnected = !!this.connections?.length && showPlaceAction;
-    const isFileCanBePlaced =
-      (showMainCompoundFileActions && showPlaceAction) ||
-      (!showMainCompoundFileActions && showPlaceAction && (isGmlFile(item) || isTifFile(item) || isDxfFile(item)));
-    const signed = !!(item.signed || this.fileInfo?.signed);
+      connections,
+      ids: { currentFileId, operationId },
+      deleteDialogOpen,
+      fileInfo,
+      setConnections,
+      setIds,
+      setDeleteDialogOpen,
+      setFileInfo
+    } = useLocalObservable(
+      (): FilesItemState => ({
+        connections: [],
+        ids: { currentFileId: null, operationId: null },
+        deleteDialogOpen: false,
+        fileInfo: null,
+
+        setConnections(this: FilesItemState, connections: FileConnection[]): void {
+          this.connections = connections;
+        },
+        setIds(this: FilesItemState, ids: Ids): void {
+          this.ids = ids;
+        },
+        setDeleteDialogOpen(this: FilesItemState, isOpen: boolean): void {
+          this.deleteDialogOpen = isOpen;
+        },
+        setFileInfo(this: FilesItemState, fileInfo: FileInfo): void {
+          this.fileInfo = fileInfo;
+        }
+      })
+    );
+
+    const handleDelete = useCallback(() => {
+      onDelete([item]);
+    }, [item, onDelete]);
+
+    const openDeleteDialog = useCallback(() => {
+      setDeleteDialogOpen(true);
+    }, [setDeleteDialogOpen]);
+
+    const handleDeleteButtonClick = useCallback(
+      (item: FileInfo) => {
+        if (connections?.length) {
+          openDeleteDialog();
+        } else {
+          onDelete([item]);
+        }
+      },
+      [connections?.length, onDelete, openDeleteDialog]
+    );
+
+    const closeDeleteDialog = useCallback(() => {
+      setDeleteDialogOpen(false);
+    }, [setDeleteDialogOpen]);
+
+    const fetchConnections = useCallback(async () => {
+      const { id } = item;
+      const newOperationId = Symbol();
+      setIds({ operationId: newOperationId, currentFileId: id });
+
+      const documentConnections = await getFileConnections(id);
+      if (documentConnections.length && currentFileId === id && operationId === newOperationId) {
+        setConnections(documentConnections);
+      }
+    }, [currentFileId, item, operationId, setConnections, setIds]);
+
+    const dropConnections = useCallback(() => {
+      setConnections([]);
+    }, [setConnections]);
+
+    const updateFileInfo = useCallback(async () => {
+      const { id } = item;
+
+      if (!status || status === 'success' || status === 'normal') {
+        const fileInfo = await getFile(id);
+
+        setFileInfo(fileInfo);
+      }
+    }, [item, setFileInfo, status]);
+
+    const { ext, baseName, disabled, isFileConnected, isFileCanBePlaced, signed } = useMemo(() => {
+      const ext = getFileExtension(item.title);
+      const baseName = getFileBaseName(item.title);
+      const disabled = status ? ['loading', 'new', 'error'].includes(status) : undefined;
+      const isFileConnected = !!connections?.length && showPlaceAction;
+      const isFileCanBePlaced =
+        (showMainCompoundFileActions && showPlaceAction) ||
+        (!showMainCompoundFileActions && showPlaceAction && (isGmlFile(item) || isTifFile(item) || isDxfFile(item)));
+      const signed = !!(item.signed || fileInfo?.signed);
+
+      return { ext, baseName, disabled, isFileConnected, isFileCanBePlaced, signed };
+    }, [connections?.length, fileInfo?.signed, item, showMainCompoundFileActions, showPlaceAction, status]);
+
+    useEffect(() => {
+      void (async () => {
+        communicationService.fileConnectionsUpdated.on(async (e: CustomEvent<DataChangeEventDetail<FileInfo[]>>) => {
+          if (e.detail.data.some(file => file.id === currentFileId)) {
+            dropConnections();
+            await fetchConnections();
+          }
+        }, this);
+        await fetchConnections();
+        if (!item.signed) {
+          await updateFileInfo();
+        }
+      })();
+    }, []);
+
+    useEffect(() => {
+      void (async () => {
+        dropConnections();
+        await fetchConnections();
+
+        if (!fileInfo && !item.signed) {
+          await updateFileInfo();
+        }
+      })();
+    }, [item.id, item.signed, fileInfo]);
 
     return (
       <>
@@ -128,13 +215,14 @@ export class FilesItem extends Component<FilesItemProps> {
           <LookupActions>
             {isPreviewAllowed(item) && <FilesPreview item={item} onPreview={onPreview} />}
 
+            {(showPlaceAction || showMainCompoundFileActions || showMainCompoundFileActions === undefined) &&
+              !editable && <FilesSignature id={item.id} title={item.title} signed={signed} />}
+
             {showMainCompoundFileActions && showPlaceAction && (
               <FilesDownloadCompoundFile item={item} signed={signed} />
             )}
 
-            {!showMainCompoundFileActions && <FilesSignature id={item.id} title={item.title} signed={signed} />}
-
-            {isFileConnected && <FilesConnections file={item} connections={this.connections} />}
+            {isFileConnected && <FilesConnections file={item} connections={connections} />}
 
             {isFileCanBePlaced && <FilesPlacement document={document} fileInfo={item} />}
 
@@ -142,87 +230,28 @@ export class FilesItem extends Component<FilesItemProps> {
               <LookupDelete
                 tooltip={showMainCompoundFileActions ? 'Удалить набор файлов' : undefined}
                 item={item}
-                onDelete={this.handleDeleteButtonClick}
+                onDelete={handleDeleteButtonClick}
               />
             )}
           </LookupActions>
         </LookupItem>
 
-        <Dialog open={this.deleteDialogOpen} onClose={this.closeDeleteDialog}>
+        <Dialog open={deleteDialogOpen} onClose={closeDeleteDialog}>
           <DialogTitle>Подтверждение удаления</DialogTitle>
           <DialogContent className='scroll'>
             Файл {item.title} подключен в проекты:
-            <ConnectionsToProjects type='list' connections={this.connections} />
+            <ConnectionsToProjects type='list' connections={connections} />
           </DialogContent>
           <DialogActions>
-            <Button onClick={this.handleDelete} color='primary'>
+            <Button onClick={handleDelete} color='primary'>
               Удалить
             </Button>
-            <Button onClick={this.closeDeleteDialog}>Закрыть</Button>
+            <Button onClick={closeDeleteDialog}>Закрыть</Button>
           </DialogActions>
         </Dialog>
       </>
     );
   }
+);
 
-  @boundMethod
-  private handleDeleteButtonClick(item: FileInfo) {
-    if (this.connections?.length) {
-      this.openDeleteDialog();
-    } else {
-      this.props.onDelete([item]);
-    }
-  }
-
-  @boundMethod
-  private handleDelete() {
-    this.props.onDelete([this.props.item]);
-  }
-
-  private async fetchConnections() {
-    const { id } = this.props.item;
-    const operationId = Symbol();
-    this.operationId = operationId;
-    this.currentFileId = id;
-
-    const documentConnections = await getFileConnections(id);
-    if (documentConnections.length && this.currentFileId === id && this.operationId === operationId) {
-      this.setConnections(documentConnections);
-    }
-  }
-
-  private async updateFileInfo(): Promise<void> {
-    const { showMainCompoundFileActions, showPlaceAction, item } = this.props;
-    const { id, signed } = item;
-
-    if (!signed && !showMainCompoundFileActions && showPlaceAction) {
-      const fileInfo = await getFile(id);
-      this.setFileInfo(fileInfo);
-    }
-  }
-
-  @action
-  private dropConnections() {
-    this.connections = [];
-  }
-
-  @action
-  private setFileInfo(fileInfo: FileInfo): void {
-    this.fileInfo = fileInfo;
-  }
-
-  @action
-  private setConnections(connections: FileConnection[]) {
-    this.connections = connections;
-  }
-
-  @action.bound
-  private openDeleteDialog() {
-    this.deleteDialogOpen = true;
-  }
-
-  @action.bound
-  private closeDeleteDialog() {
-    this.deleteDialogOpen = false;
-  }
-}
+export const FilesItem = memo(FilesItemFC);

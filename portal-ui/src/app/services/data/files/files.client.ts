@@ -1,5 +1,6 @@
 import { boundClass } from 'autobind-decorator';
 
+import { VerifyEcpResponse } from '../../../../server-types/common-contracts';
 import { Client } from '../../api/Client';
 import { http } from '../../api/http.service';
 import { FileConnection, FileInfo } from './files.models';
@@ -18,6 +19,10 @@ class FilesClient extends Client {
 
   private getFileUrl(id: string): string {
     return `${this.getFilesUrl()}/${id}`;
+  }
+
+  getEcpInfoUrl(id: string): string {
+    return `${this.getFileUrl(id)}/verify`;
   }
 
   getFileEcpUrl(id: string): string {
@@ -53,6 +58,10 @@ class FilesClient extends Client {
 
   async getFile(id: string): Promise<FileInfo> {
     return http.get<FileInfo>(this.getFileUrl(id));
+  }
+
+  async getEcpInfo(id: string): Promise<VerifyEcpResponse> {
+    return http.get<VerifyEcpResponse>(this.getEcpInfoUrl(id));
   }
 
   async getFileConnections(fileId: string): Promise<FileConnection[]> {

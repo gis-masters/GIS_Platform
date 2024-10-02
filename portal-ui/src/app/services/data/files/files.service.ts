@@ -1,3 +1,4 @@
+import { VerifyEcpResponse } from '../../../../server-types/common-contracts';
 import { filesClient } from './files.client';
 import { FileConnection, FileInfo } from './files.models';
 
@@ -12,6 +13,10 @@ export async function createFile(file: File): Promise<FileInfo> {
 
 export async function getFile(id: string): Promise<FileInfo> {
   return await filesClient.getFile(id);
+}
+
+export async function getEcpInfo(id: string): Promise<VerifyEcpResponse> {
+  return await filesClient.getEcpInfo(id);
 }
 
 export async function getFileConnections(fileId: string): Promise<FileConnection[]> {
