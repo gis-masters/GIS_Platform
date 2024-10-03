@@ -34,7 +34,6 @@ import static java.util.UUID.fromString;
 import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_NAME;
 import static ru.mycrg.data_service.dto.ResourceType.*;
 import static ru.mycrg.data_service.service.resources.DatasetService.SCHEMAS_AND_TABLES_QUALIFIER;
-import static ru.mycrg.data_service.service.resources.ResourceQualifier.recordQualifier;
 import static ru.mycrg.data_service.util.JsonConverter.asJsonString;
 import static ru.mycrg.data_service.util.JsonConverter.mapper;
 import static ru.mycrg.data_service.util.LogUtil.withoutHeavyFields;
@@ -94,25 +93,26 @@ public class RecordPublisher {
         log.debug("Родительский объект до: [{}]", withoutHeavyFields(initialRecord.getContent()));
         log.debug("Родительский объект после удаления полей: [{}]", withoutHeavyFields(mappedContent));
 
-        publishWatcher.start("fetchByTypeDocument");
-        List<Document> documents = fetchByTypeDocument(qualifier, mappedContent);
+        publishWatcher.start("childrenByDocument");
+        List<Document> childrenByDocument = fetchByDocument(qualifier, mappedContent);
         publishWatcher.stop();
         watchLog.put(publishWatcher.getLastTaskName(), publishWatcher.getLastTaskTimeMillis());
 
-        publishWatcher.start("fetchByUrlAsFormula");
-        Set<Document> urlAsFormula = fetchByUrlAsFormula(qualifier, srid);
+        publishWatcher.start("childrenByUrlAsLinkToFeaturesFormula");
+        Set<Document> childrenByUrlAsLinkToFeaturesFormula = fetchByUrlAsLinkToFeaturesFormula(qualifier, srid);
         publishWatcher.stop();
         watchLog.put(publishWatcher.getLastTaskName(), publishWatcher.getLastTaskTimeMillis());
 
-        publishWatcher.start("fetchByTypeUrlDirectly");
-        Set<Document> urlDirectly = fetchByTypeUrlDirectly(qualifier, mappedContent, srid);
+        publishWatcher.start("childrenByUrlDirectly");
+        Set<Document> childrenByUrlDirectly = fetchByUrlDirectly(qualifier, mappedContent, srid);
         publishWatcher.stop();
         watchLog.put(publishWatcher.getLastTaskName(), publishWatcher.getLastTaskTimeMillis());
 
         publishWatcher.start("Формирование массива детей(с маппингом полей)");
-        List<Document> children = new ArrayList<>(documents);
-        children.addAll(urlAsFormula);
-        children.addAll(urlDirectly);
+        List<Document> children = new ArrayList<>();
+        children.addAll(childrenByDocument);
+        children.addAll(childrenByUrlAsLinkToFeaturesFormula);
+        children.addAll(childrenByUrlDirectly);
 
         // Для "детей" маппим контент - чтобы отправлялось только то, что нужно для ГИСОГД РФ
         children.forEach(child -> {
@@ -126,26 +126,21 @@ public class RecordPublisher {
         children.forEach(child -> {
             if ("territorykey".equals(child.getName())) {
                 String territoryGuid = (String) child.getContent().get("guid");
-
-                ResourceQualifier territoryQualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, "territory");
                 String filterByGuid = "guid = '" + territoryGuid + "'";
 
-                Optional<IRecord> oTerritory = baseReadDao.findBy(territoryQualifier, filterByGuid);
-                if (oTerritory.isPresent()) {
-                    IRecord territory = oTerritory.get();
-                    String territoryStatus = (String) territory.getContent().get("gisogdrf_sync_status");
+                baseReadDao.findBy(new ResourceQualifier(SYSTEM_SCHEMA_NAME, "territory"), filterByGuid)
+                           .ifPresent(territory -> {
+                               String territoryStatus = (String) territory.getContent().get("gisogdrf_sync_status");
 
-                    if (isNotSynced(territoryStatus)) {
-                        notSyncedChildren.add(child);
-                    }
+                               if (isNotSynced(territoryStatus)) {
+                                   notSyncedChildren.add(child);
+                               }
+                           });
+            } else {
+                String syncStatus = (String) child.getContent().get("gisogdrf_sync_status");
+                if (isNotSynced(syncStatus)) {
+                    notSyncedChildren.add(child);
                 }
-
-                return;
-            }
-
-            String syncStatus = (String) child.getContent().get("gisogdrf_sync_status");
-            if (isNotSynced(syncStatus)) {
-                notSyncedChildren.add(child);
             }
         });
         publishWatcher.stop();
@@ -198,7 +193,7 @@ public class RecordPublisher {
                 !"Cинхронизация завершилась предупреждением".equals(status);
     }
 
-    private List<Document> fetchByTypeDocument(ResourceQualifier qualifier, Map<String, Object> content) {
+    private List<Document> fetchByDocument(ResourceQualifier qualifier, Map<String, Object> content) {
         try {
             List<Document> result = new ArrayList<>();
 
@@ -283,9 +278,9 @@ public class RecordPublisher {
     }
 
     @NotNull
-    private Set<Document> fetchByTypeUrlDirectly(ResourceQualifier qualifier,
-                                                 Map<String, Object> parentContent,
-                                                 int srid) {
+    private Set<Document> fetchByUrlDirectly(ResourceQualifier qualifier,
+                                             Map<String, Object> parentContent,
+                                             int srid) {
         log.debug("Собираем объекты по связям типа URL связанными напрямую. для: {}", qualifier.getQualifier());
 
         Optional<SchemaDto> oSchema = schemaExtractor.get(qualifier);
@@ -300,13 +295,13 @@ public class RecordPublisher {
                       .filter(propertyDto -> URL.name().equalsIgnoreCase(propertyDto.getValueType()))
                       .filter(propertyDto -> propertyDto.getCalculatedValueWellKnownFormula() == null &&
                               propertyDto.getCalculatedValueFormula() == null)
-                      .flatMap(property -> fetchByTypeUrlDirectly(property, parentContent, srid).stream())
+                      .flatMap(property -> fetchByUrlDirectly(property, parentContent, srid).stream())
                       .collect(Collectors.toSet());
     }
 
-    private List<Document> fetchByTypeUrlDirectly(SimplePropertyDto property,
-                                                  Map<String, Object> parentContent,
-                                                  int srid) {
+    private List<Document> fetchByUrlDirectly(SimplePropertyDto property,
+                                              Map<String, Object> parentContent,
+                                              int srid) {
         List<Document> result = new ArrayList<>();
         for (ResourceQualifier qualifier: extractTableQualifiers(property, parentContent)) {
             prepareDocument(qualifier, srid).ifPresent(result::add);
@@ -325,7 +320,7 @@ public class RecordPublisher {
      * @return Квалификатор объекта слоя
      */
     @NotNull
-    private Set<Document> fetchByUrlAsFormula(ResourceQualifier qualifier, int srid) {
+    private Set<Document> fetchByUrlAsLinkToFeaturesFormula(ResourceQualifier qualifier, int srid) {
         log.debug("Собираем объекты по связям типа URL c формулой 'linkToFeaturesMentioningThisDocument' для: {}",
                   qualifier.getQualifier());
 
@@ -334,11 +329,13 @@ public class RecordPublisher {
                 .map(schema -> SchemaUtil.getPropsByFormula(schema, "linkToFeaturesMentioningThisDocument"))
                 .orElseGet(ArrayList::new)
                 .stream()
-                .flatMap(property -> fetchByUrlAsFormula(qualifier, property, srid).stream())
+                .flatMap(property -> fetchByUrlAsLinkToFeaturesFormula(qualifier, property, srid).stream())
                 .collect(Collectors.toSet());
     }
 
-    private List<Document> fetchByUrlAsFormula(ResourceQualifier qualifier, SimplePropertyDto property, int srid) {
+    private List<Document> fetchByUrlAsLinkToFeaturesFormula(ResourceQualifier qualifier,
+                                                             SimplePropertyDto property,
+                                                             int srid) {
         List<Document> result = new ArrayList<>();
 
         Map<String, Object> formulaParams = (Map<String, Object>) property.getValueFormulaParams();
@@ -433,6 +430,8 @@ public class RecordPublisher {
         return Optional.empty();
     }
 
+    // TODO: вынести - это вспомогательный код.
+    //  Формирует ResourceQualifier для документов, прикрепленных по определенному полю
     private List<ResourceQualifier> extractTableQualifiers(SimplePropertyDto property,
                                                            Map<String, Object> parentContent) {
         Object value = null;
@@ -532,7 +531,7 @@ public class RecordPublisher {
 
             // Тащим запись о наборе данных, чтобы достать его название
             IRecord dataset = baseReadDao
-                    .findById(recordQualifier(SCHEMAS_AND_TABLES_QUALIFIER, datasetId))
+                    .findById(new ResourceQualifier(SCHEMAS_AND_TABLES_QUALIFIER, datasetId, DATASET))
                     .orElseThrow(() -> new IllegalStateException("Не найден набор данных по id: " + datasetId));
             String datasetIdentifier = dataset.getContent().get("identifier").toString();
             log.debug("founded dataset: {}", datasetIdentifier);
@@ -553,6 +552,7 @@ public class RecordPublisher {
                     log.debug("Not found record in LAYER: '{}.{}' Mode: [PARENT ON]", datasetIdentifier, layerName);
                 }
             } else {
+                // TODO: Может не id собирать, а непосредственно запись... ?
                 Optional<Long> oRecordId = gisogdRfDao.findJoinedToDocumentLayerRecordId(datasetIdentifier,
                                                                                          layerName,
                                                                                          columnName,
