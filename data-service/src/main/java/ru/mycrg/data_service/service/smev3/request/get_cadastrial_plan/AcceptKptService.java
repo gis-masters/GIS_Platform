@@ -50,8 +50,7 @@ import static ru.mycrg.data_service.dto.Roles.OWNER;
 import static ru.mycrg.data_service.service.import_.kpt.KptSourceFilesService.KPT_LIBRARY_ID;
 import static ru.mycrg.data_service.service.reestrs.Systems.FGIS_EGRN;
 import static ru.mycrg.data_service.service.reestrs.Systems.SMEV_3;
-import static ru.mycrg.data_service.service.resources.ResourceQualifier.libraryQualifier;
-import static ru.mycrg.data_service.service.resources.ResourceQualifier.libraryRecordQualifier;
+import static ru.mycrg.data_service.service.resources.ResourceQualifier.*;
 import static ru.mycrg.data_service.service.storage.FileStorageUtil.generateFileName;
 import static ru.mycrg.data_service.util.JsonConverter.mapper;
 import static ru.mycrg.data_service.util.JsonConverter.toJsonNode;
@@ -218,7 +217,7 @@ public class AcceptKptService {
         // TODO: Тут происходит чтот странное. Файлу сохранили в корзину? userLogin указали как: "СМЭВ 3" ?
         File entity = new File(multipartFile, intents, path, SMEV_3);
         File savedEntity = fileRepository.save(entity);
-        ResourceQualifier fileQualifier = new ResourceQualifier(qualifier, docId, FILE_ATTRIBUTE);
+        ResourceQualifier fileQualifier = fieldQualifier(qualifier, docId, FILE_ATTRIBUTE);
         String type = fileQualifier.getType().name();
         FileResourceQualifier fileResQualifier = new FileResourceQualifier(qualifier.getSchema(),
                                                                            qualifier.getTable(),

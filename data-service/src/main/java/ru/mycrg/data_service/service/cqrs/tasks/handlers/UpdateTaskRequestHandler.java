@@ -10,11 +10,10 @@ import ru.mycrg.data_service.dto.record.IRecord;
 import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
-import ru.mycrg.data_service.service.schemas.ISchemaTemplateService;
 import ru.mycrg.data_service.service.TaskLogService;
 import ru.mycrg.data_service.service.TaskService;
 import ru.mycrg.data_service.service.cqrs.tasks.requests.UpdateTaskRequest;
-import ru.mycrg.data_service.service.resources.ResourceQualifier;
+import ru.mycrg.data_service.service.schemas.ISchemaTemplateService;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.mediator.IRequestHandler;
 import ru.mycrg.mediator.Voidy;
@@ -25,6 +24,7 @@ import java.util.Map;
 import static java.time.LocalDateTime.now;
 import static ru.mycrg.data_service.service.TaskService.TASKS_SCHEMA;
 import static ru.mycrg.data_service.service.TaskService.TASK_QUALIFIER;
+import static ru.mycrg.data_service.service.resources.ResourceQualifier.recordQualifier;
 import static ru.mycrg.data_service.util.SystemLibraryAttributes.*;
 
 @Component
@@ -72,7 +72,7 @@ public class UpdateTaskRequestHandler implements IRequestHandler<UpdateTaskReque
         dataForUpdate.put(LAST_MODIFIED.getName(), now());
 
         try {
-            recordsDao.updateRecordById(new ResourceQualifier(TASK_QUALIFIER, taskId),
+            recordsDao.updateRecordById(recordQualifier(TASK_QUALIFIER, taskId),
                                         dataForUpdate,
                                         tasksSchema);
 

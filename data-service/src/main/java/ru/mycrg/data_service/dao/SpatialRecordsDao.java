@@ -173,19 +173,6 @@ public class SpatialRecordsDao {
         }
     }
 
-    public String fetchGeometryAsGeoJson(ResourceQualifier qualifier, int srid) {
-        String fieldId = getIdField(qualifier);
-        String query = format("SELECT public.st_AsGeoJSON(public.st_transform(shape::public.geometry, %d)) " +
-                                      "FROM %s WHERE %s = %d",
-                              srid, qualifier.getTableQualifier(), fieldId, qualifier.getRecordIdAsLong());
-
-        log.debug("fetch geometry as text: [{}]", query);
-
-        return pJdbcTemplate.queryForObject(query,
-                                            new MapSqlParameterSource(fieldId, qualifier.getRecordIdAsLong()),
-                                            String.class);
-    }
-
     public boolean isExist(ResourceQualifier qualifier) {
         try {
             String fieldId = getIdField(qualifier);

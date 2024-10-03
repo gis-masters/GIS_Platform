@@ -16,21 +16,6 @@ public class ResourceQualifier extends AQualifier {
     private final Object recordId;
     private final String field;
 
-    public ResourceQualifier(ResourceQualifier qualifier, Long recordId) {
-        this(qualifier.getSchema(),
-             qualifier.getTable(),
-             recordId,
-             qualifier.getType().equals(FEATURE) ? FEATURE : LIBRARY_RECORD);
-    }
-
-    public ResourceQualifier(ResourceQualifier qualifier, Long recordId, String field) {
-        this(qualifier.getSchema(),
-             qualifier.getTable(),
-             recordId,
-             field,
-             qualifier.getType().equals(FEATURE) ? FEATURE : LIBRARY_RECORD);
-    }
-
     public ResourceQualifier(ResourceQualifier rQualifier, Object recordId, ResourceType type) {
         this(rQualifier.getSchema(), rQualifier.getTable(), recordId, type);
     }
@@ -73,6 +58,14 @@ public class ResourceQualifier extends AQualifier {
 
     public static ResourceQualifier libraryRecordQualifier(String libraryName, Long id) {
         return new ResourceQualifier(SYSTEM_SCHEMA_NAME, libraryName, id, LIBRARY_RECORD);
+    }
+
+    public static ResourceQualifier recordQualifier(ResourceQualifier qualifier, Long id) {
+        return new ResourceQualifier(qualifier.getSchema(), qualifier.getTable(), id, shiftDownType(qualifier));
+    }
+
+    public static ResourceQualifier fieldQualifier(ResourceQualifier qualifier, Long id, String field) {
+        return new ResourceQualifier(qualifier.getSchema(), qualifier.getTable(), id, field, shiftDownType(qualifier));
     }
 
     public static ResourceQualifier tableQualifier(String dataset, String table) {
@@ -138,6 +131,21 @@ public class ResourceQualifier extends AQualifier {
             return table;
         } else {
             return recordId.toString();
+        }
+    }
+
+    // Когда нужно перейти к более конкретному объекту, от библиотеки/слоя к конкретной записи.
+    private static @NotNull ResourceType shiftDownType(ResourceQualifier qualifier) {
+        ResourceType type = qualifier.getType();
+        switch (type) {
+            case TABLE:
+            case FEATURE:
+                return FEATURE;
+            case LIBRARY:
+            case LIBRARY_RECORD:
+                return LIBRARY_RECORD;
+            default:
+                return type;
         }
     }
 }

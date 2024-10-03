@@ -30,7 +30,6 @@ import ru.mycrg.data_service.service.TaskLogService;
 import ru.mycrg.data_service.service.cqrs.library_records.requests.CreateLibraryRecordRequest;
 import ru.mycrg.data_service.service.cqrs.tasks.requests.CreateTaskRequest;
 import ru.mycrg.data_service.service.document_library.DocumentLibraryService;
-import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service.service.schemas.ISchemaTemplateService;
 import ru.mycrg.data_service.service.smev3.Mnemonic;
 import ru.mycrg.data_service.service.smev3.SmevMessageSenderService;
@@ -57,6 +56,7 @@ import java.util.stream.Collectors;
 import static ru.mycrg.data_service.service.TaskService.*;
 import static ru.mycrg.data_service.service.import_.kpt.KptSourceFilesService.KPT_LIBRARY_ID;
 import static ru.mycrg.data_service.service.resources.ResourceQualifier.libraryQualifier;
+import static ru.mycrg.data_service.service.resources.ResourceQualifier.recordQualifier;
 import static ru.mycrg.data_service.service.schemas.SchemaUtil.excludeUnknownProperties;
 import static ru.mycrg.data_service.util.JsonConverter.mapper;
 import static ru.mycrg.data_service.util.JsonConverter.toJsonNode;
@@ -293,7 +293,7 @@ public class GetCadastrialPlanRequestService extends RequestProcessor {
                 .getSchemaByName(TASKS_SCHEMA)
                 .orElseThrow(() -> new NotFoundException("Не найдена схема задач: " + TASKS_SCHEMA));
 
-        recordsDao.updateRecordById(new ResourceQualifier(TASK_QUALIFIER, task.getId()),
+        recordsDao.updateRecordById(recordQualifier(TASK_QUALIFIER, task.getId()),
                                     taskPayload,
                                     tasksSchema);
     }

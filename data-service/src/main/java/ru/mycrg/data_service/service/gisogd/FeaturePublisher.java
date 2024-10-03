@@ -11,6 +11,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static ru.mycrg.data_service.service.resources.ResourceQualifier.recordQualifier;
+
 @Component
 public class FeaturePublisher implements IGisogdRfPublisher {
 
@@ -33,13 +35,13 @@ public class FeaturePublisher implements IGisogdRfPublisher {
         Map<String, Long> resultLog = new HashMap<>();
 
         try {
-            List<IRecord> records = gisogdRfDao.getRecordsForPublishing(qualifier, limit);
+            List<IRecord> records = gisogdRfDao.getRecordsForPublishing(qualifier, limit, srid);
             log.debug("Из слоя: '{}' опубликуем: {} записей", qualifier.getQualifier(), records.size());
 
             for (IRecord record: records) {
                 Map<String, Long> log = recordPublisher
                         .publishDocument(taskId,
-                                         new ResourceQualifier(qualifier, record.getId()),
+                                         recordQualifier(qualifier, record.getId()),
                                          srid,
                                          record);
 

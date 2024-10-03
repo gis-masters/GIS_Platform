@@ -26,6 +26,7 @@ import java.util.stream.Collectors;
 
 import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_NAME;
 import static ru.mycrg.data_service.dto.ResourceType.TASK;
+import static ru.mycrg.data_service.service.resources.ResourceQualifier.recordQualifier;
 import static ru.mycrg.data_service.util.DetailedLogger.logError;
 import static ru.mycrg.data_service.util.StringUtil.join;
 
@@ -58,7 +59,7 @@ public class TaskService {
 
     @NotNull
     public Map<String, Object> getById(@NotNull Long id) {
-        return baseDao.findById(new ResourceQualifier(TASK_QUALIFIER, id))
+        return baseDao.findById(recordQualifier(TASK_QUALIFIER, id))
                       .map(IRecord::getContent)
                       .orElseThrow(() -> new NotFoundException("Не найдена задача по id:" + id));
     }

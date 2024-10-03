@@ -18,9 +18,9 @@ import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
 import ru.mycrg.data_service.dto.FileResourceQualifier;
 import ru.mycrg.data_service.dto.LibraryModel;
 import ru.mycrg.data_service.dto.TaskLogDto;
-import ru.mycrg.data_service.entity.File;
 import ru.mycrg.data_service.dto.record.IRecord;
 import ru.mycrg.data_service.dto.record.RecordEntity;
+import ru.mycrg.data_service.entity.File;
 import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.exceptions.SmevRequestException;
@@ -49,25 +49,19 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 import static ru.mycrg.data_service.config.CrgCommonConfig.ROOT_FOLDER_PATH;
+import static ru.mycrg.data_service.dto.ResourceType.LIBRARY_RECORD;
 import static ru.mycrg.data_service.dto.Roles.OWNER;
 import static ru.mycrg.data_service.service.TaskService.*;
 import static ru.mycrg.data_service.service.reestrs.Systems.SMEV_3;
-import static ru.mycrg.data_service.service.resources.ResourceQualifier.libraryQualifier;
-import static ru.mycrg.data_service.service.smev3.request.get_cadastrial_plan.GetCadastrialPlanRequestService.*;
+import static ru.mycrg.data_service.service.resources.ResourceQualifier.*;
+import static ru.mycrg.data_service.service.smev3.request.get_cadastrial_plan.GetCadastrialPlanRequestService.DATA_SECTION_KEY_DATA_CONNECTION_ATTRIBUTE;
 import static ru.mycrg.data_service.service.storage.FileStorageUtil.generateFileName;
-import static ru.mycrg.data_service.util.JsonConverter.mapper;
-import static ru.mycrg.data_service.util.JsonConverter.toJsonNode;
+import static ru.mycrg.data_service.util.JsonConverter.*;
 import static ru.mycrg.data_service.util.SystemLibraryAttributes.*;
 import static ru.mycrg.data_service_contract.enums.TaskType.CUSTOM;
-
 
 @Service
 @ConditionalOnProperty(
@@ -138,7 +132,7 @@ public class AcceptRnsService {
             throw new BadRequestException("Не удалось распарсить сообщение: " + body);
         }
         RequestType request = queryResult.getMessage()
-                .getRequestContent().getContent().getMessagePrimaryContent().getRequest();
+                                         .getRequestContent().getContent().getMessagePrimaryContent().getRequest();
         smevMessageService.saveIncoming(body);
         String filter = String.format("path like '%s'", "/root/" + folderId);
         ResourceQualifier libraryQualifier = libraryQualifier("dl_data_task_allocation");
@@ -147,7 +141,8 @@ public class AcceptRnsService {
                 .orElseThrow(
                         () -> new SmevRequestException("Не найден исполнитель по пути " + "/root/29"));
         Long performerId = Long.valueOf(docRecord.getContent().get("performer").toString());
-        Map<String, Object> taskContent = prepareTaskRecord(String.valueOf(request.getService().getOrderId()), performerId);
+        Map<String, Object> taskContent = prepareTaskRecord(String.valueOf(request.getService().getOrderId()),
+                                                            performerId);
         long taskId = tasksDao.createTask(dbName, taskContent);
         createLog("Входящее сообщение РНС успешно записано в реестр",
                   "Входящее сообщение РНС успешно записано в реестр",
@@ -179,8 +174,8 @@ public class AcceptRnsService {
         taskLogService.create(new TaskLogDto(eventType, taskId), propsMap);
     }
 
-    private void createDocumentAndLinkToTask(RequestType request, Map<String, Object> taskContent, Long taskId) throws
-            CrgDaoException, IOException {
+    private void createDocumentAndLinkToTask(RequestType request, Map<String, Object> taskContent, Long taskId)
+            throws CrgDaoException, IOException {
         ResourceQualifier rnsLibraryQualifier = libraryQualifier(RNS_LIBRARY_ID);
         LibraryModel rnsLibraryModel = libraryRepository
                 .findByTableName(RNS_LIBRARY_ID)
@@ -192,8 +187,8 @@ public class AcceptRnsService {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
 
         String fullfio = Optional.ofNullable(request.getRecipientPersonalData())
-                .map(RecipientPersonalDataType::getFullfio)
-                .orElse("");
+                                 .map(RecipientPersonalDataType::getFullfio)
+                                 .orElse("");
         documentPayload.put(DATE_ATTRIBUTE, LocalDate.parse(request.getService().getCurrentDate(), formatter));
         documentPayload.put(PERSON_NAME_ATTRIBUTE, fullfio);
         documentPayload.put(REQUEST_TYPE_ATTRIBUTE, RNS_REQUEST_TYPE);
@@ -206,7 +201,7 @@ public class AcceptRnsService {
         RecordEntity document = new RecordEntity(documentPayload);
         IRecord savedDocument = recordsDao.addRecord(rnsLibraryQualifier, document, rnsSchema);
         Long savedDocumentId = savedDocument.getId();
-        String savedDocumentTitile = savedDocument.getTitle();
+        String savedDocumentTitle = savedDocument.getTitle();
 
         ByteArrayOutputStream wordDocumentOutputStream;
         try (XWPFDocument wordDocument = ApplicationForBuildingPermitCreator.create(request)) {
@@ -216,9 +211,9 @@ public class AcceptRnsService {
         byte[] wordDocumentBytes = wordDocumentOutputStream.toByteArray();
         wordDocumentOutputStream.close();
         MultipartFile wordDocumentFile = new CustomMultipartFile(wordDocumentBytes,
-                                                              "result.doc",
-                                                              "result.doc",
-                                                              "application/msword");
+                                                                 "result.doc",
+                                                                 "result.doc",
+                                                                 "application/msword");
         String fileName = generateFileName(wordDocumentFile);
         String path = fileStorageService.copyToTrash(wordDocumentFile,
                                                      fileName);
@@ -234,26 +229,20 @@ public class AcceptRnsService {
                                    Paths.get("organization_1/library_record/dl_data_inbox_data/" + fileName))
                 .normalize().toString();
         File wordDocumentEntity = new File(wordDocumentFile, intents, path, SMEV_3);
-        File savedEntity = fileRepository.save(wordDocumentEntity);
-        UUID savedEntityId = savedEntity.getId();
-        String savedEntityTitle = savedEntity.getTitle();
-        Long savedEntitySize = savedEntity.getSize();
-        ResourceQualifier fileQualifier = new ResourceQualifier(rnsLibraryQualifier, savedDocumentId, FILE_ATTRIBUTE);
-        String type = fileQualifier.getType().name();
-        fileRepository.setQualifier(type, jsonNode, Set.of(savedEntityId));
+        File savedFile = fileRepository.save(wordDocumentEntity);
+        UUID savedFileId = savedFile.getId();
+        fileRepository.setQualifier(LIBRARY_RECORD.name(), jsonNode, Set.of(savedFileId));
 
-        FileDescription fileDescription = new FileDescription(savedEntityId, savedEntityTitle, savedEntitySize);
-        String jacksonData = JsonConverter.getJsonString(fileDescription);
+        String asJson = getJsonString(new FileDescription(savedFileId, savedFile.getTitle(), savedFile.getSize()));
         Map<String, Object> payload = savedDocument.getContent();
-        payload.put(FILE_ATTRIBUTE, List.of(jacksonData));
-        ResourceQualifier rnsResQualifier = ResourceQualifier.libraryRecordQualifier(RNS_LIBRARY_ID, savedDocumentId);
-        recordsDao.updateRecordById(rnsResQualifier, payload, rnsSchema);
+        payload.put(FILE_ATTRIBUTE, asJson == null ? List.of() : List.of(asJson));
+        recordsDao.updateRecordById(libraryRecordQualifier(RNS_LIBRARY_ID, savedDocumentId), payload, rnsSchema);
 
-        TypeDocumentData documentData = new TypeDocumentData(savedDocumentId, savedDocumentTitile, RNS_LIBRARY_ID);
+        TypeDocumentData documentData = new TypeDocumentData(savedDocumentId, savedDocumentTitle, RNS_LIBRARY_ID);
         taskContent.put(DATA_SECTION_KEY_DATA_CONNECTION_ATTRIBUTE, mapper.writeValueAsString(List.of(documentData)));
-        SchemaDto tasksSchema = this.schemaService.getSchemaByName(TASKS_SCHEMA)
+        SchemaDto tasksSchema = this.schemaService
+                .getSchemaByName(TASKS_SCHEMA)
                 .orElseThrow(() -> new NotFoundException("Не найдена схема задач: " + TASKS_SCHEMA));
-        recordsDao.updateRecordById(new ResourceQualifier(TASK_QUALIFIER, taskId), taskContent, tasksSchema);
-
+        recordsDao.updateRecordById(recordQualifier(TASK_QUALIFIER, taskId), taskContent, tasksSchema);
     }
 }

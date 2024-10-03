@@ -11,7 +11,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 import ru.mycrg.auth_facade.IAuthenticationFacade;
 import ru.mycrg.data_service.dao.BaseReadDao;
 import ru.mycrg.data_service.dao.GisogdRfDao;
-import ru.mycrg.data_service.dao.SpatialRecordsDao;
 import ru.mycrg.data_service.dto.record.IRecord;
 import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
@@ -32,10 +31,10 @@ import java.util.stream.Collectors;
 import static java.lang.String.format;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.UUID.fromString;
-import static ru.mycrg.data_service.dao.config.DaoProperties.DEFAULT_GEOMETRY_COLUMN_NAME;
 import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_NAME;
 import static ru.mycrg.data_service.dto.ResourceType.*;
 import static ru.mycrg.data_service.service.resources.DatasetService.SCHEMAS_AND_TABLES_QUALIFIER;
+import static ru.mycrg.data_service.service.resources.ResourceQualifier.recordQualifier;
 import static ru.mycrg.data_service.util.JsonConverter.asJsonString;
 import static ru.mycrg.data_service.util.JsonConverter.mapper;
 import static ru.mycrg.data_service.util.LogUtil.withoutHeavyFields;
@@ -50,7 +49,6 @@ public class RecordPublisher {
 
     private final BaseReadDao baseReadDao;
     private final GisogdRfDao gisogdRfDao;
-    private final SpatialRecordsDao spatialRecordsDao;
 
     private final IMessageBusProducer messageBus;
     private final IAuthenticationFacade authenticationFacade;
@@ -62,14 +60,12 @@ public class RecordPublisher {
                            GisogdRfDao gisogdRfDao,
                            IMessageBusProducer messageBus,
                            SchemaExtractor schemaExtractor,
-                           SpatialRecordsDao spatialRecordsDao,
                            IAuthenticationFacade authenticationFacade,
                            GisogdRfLibraryFieldsMapper libraryFieldsMapper) {
         this.baseReadDao = baseReadDao;
         this.messageBus = messageBus;
         this.gisogdRfDao = gisogdRfDao;
         this.schemaExtractor = schemaExtractor;
-        this.spatialRecordsDao = spatialRecordsDao;
         this.authenticationFacade = authenticationFacade;
         this.libraryFieldsMapper = libraryFieldsMapper;
     }
@@ -89,21 +85,13 @@ public class RecordPublisher {
         }
 
         StopWatch publishWatcher = new StopWatch("Публикация: " + qualifier.getQualifier());
-        publishWatcher.start("Сбор геометрии в wgs84");
-        Map<String, Object> initialContent = initialRecord.getContent();
-        if (initialContent.containsKey(DEFAULT_GEOMETRY_COLUMN_NAME)) {
-            String wgs84AsText = spatialRecordsDao.fetchGeometryAsGeoJson(qualifier, srid);
-            initialContent.put(DEFAULT_GEOMETRY_COLUMN_NAME, wgs84AsText);
-        }
-        publishWatcher.stop();
-        watchLog.put(publishWatcher.getLastTaskName(), publishWatcher.getLastTaskTimeMillis());
-
         publishWatcher.start("Маппинг полей согласно ГИСОГД РФ");
-        Map<String, Object> mappedContent = libraryFieldsMapper.mapBySettings(qualifier.getTable(), initialContent);
+        Map<String, Object> mappedContent = libraryFieldsMapper.mapBySettings(qualifier.getTable(),
+                                                                              initialRecord.getContent());
         publishWatcher.stop();
         watchLog.put(publishWatcher.getLastTaskName(), publishWatcher.getLastTaskTimeMillis());
 
-        log.debug("Родительский объект до: [{}]", withoutHeavyFields(initialContent));
+        log.debug("Родительский объект до: [{}]", withoutHeavyFields(initialRecord.getContent()));
         log.debug("Родительский объект после удаления полей: [{}]", withoutHeavyFields(mappedContent));
 
         publishWatcher.start("fetchByTypeDocument");
@@ -498,26 +486,22 @@ public class RecordPublisher {
     private Optional<Document> prepareDocument(ResourceQualifier recordQualifier, int srid) {
         log.debug("Подготовим документ для: '{}'", recordQualifier.getQualifier());
 
-        Optional<IRecord> oLayerRecord = baseReadDao.findBy(recordQualifier,
-                                                            "objectId = " + recordQualifier.getRecordId());
-        if (oLayerRecord.isEmpty()) {
+        Optional<IRecord> oRecord = gisogdRfDao.getRecord(recordQualifier, srid);
+        if (oRecord.isEmpty()) {
             log.warn("Не найдена запись: {}", recordQualifier.getRecordId());
 
             return Optional.empty();
         }
-        IRecord record = oLayerRecord.get();
 
-        // вытащим геометрию
-        String geometryAsText = spatialRecordsDao.fetchGeometryAsGeoJson(recordQualifier, srid);
+        IRecord record = oRecord.get();
         String guid = record.getAsString(GUID.getName());
-        Map<String, Object> content = record.getContent();
-        content.put(DEFAULT_GEOMETRY_COLUMN_NAME, geometryAsText);
 
-        return Optional.of(new Document((guid != null) ? fromString(guid) : null,
-                                        recordQualifier.getSchema(),
-                                        recordQualifier.getTable(),
-                                        recordQualifier.getTable(),
-                                        content));
+        return Optional.of(
+                new Document((guid != null) ? fromString(guid) : null,
+                             recordQualifier.getSchema(),
+                             recordQualifier.getTable(),
+                             recordQualifier.getTable(),
+                             record.getContent()));
     }
 
     private Optional<ResourceQualifier> findRecord(ResourceQualifier qualifier,
@@ -548,7 +532,7 @@ public class RecordPublisher {
 
             // Тащим запись о наборе данных, чтобы достать его название
             IRecord dataset = baseReadDao
-                    .findById(new ResourceQualifier(SCHEMAS_AND_TABLES_QUALIFIER, datasetId))
+                    .findById(recordQualifier(SCHEMAS_AND_TABLES_QUALIFIER, datasetId))
                     .orElseThrow(() -> new IllegalStateException("Не найден набор данных по id: " + datasetId));
             String datasetIdentifier = dataset.getContent().get("identifier").toString();
             log.debug("founded dataset: {}", datasetIdentifier);

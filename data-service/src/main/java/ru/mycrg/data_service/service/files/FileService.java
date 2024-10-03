@@ -33,6 +33,7 @@ import static org.apache.commons.io.FilenameUtils.getExtension;
 import static ru.mycrg.common_contracts.generated.ecp.VerifyEcpResponse.verificationFailed;
 import static ru.mycrg.common_utils.CrgGlobalProperties.getDefaultOrganizationName;
 import static ru.mycrg.data_service.service.files.FileUtil.*;
+import static ru.mycrg.data_service.service.resources.ResourceQualifier.fieldQualifier;
 import static ru.mycrg.data_service.util.DetailedLogger.logError;
 import static ru.mycrg.data_service.util.JsonConverter.toJsonNode;
 import static ru.mycrg.data_service.util.StringUtil.hashCodeAsString;
@@ -92,7 +93,7 @@ public class FileService {
                               result.put(fileId, verificationFailed("Файл не найден"));
                           });
 
-                ResourceQualifier fQualifier = new ResourceQualifier(qualifier, newRecord.getId(), fieldName);
+                ResourceQualifier fQualifier = fieldQualifier(qualifier, newRecord.getId(), fieldName);
                 allFoundsFiles.stream()
                               .filter(FileService::isNotEcp)
                               .forEach(file -> {
@@ -156,14 +157,6 @@ public class FileService {
                 log.debug("Список новых  файлов: {}", newFileIds);
 
                 // Надо отделить процесс перемещения от подписывания
-                ResourceQualifier fQualifier = new ResourceQualifier(qualifier,
-                                                                     qualifier.getRecordIdAsLong(),
-                                                                     fieldName);
-                Set<UUID> allFileIds = getFilesDescription(newContent, fieldName)
-                        .stream()
-                        .map(FileDescription::getId)
-                        .collect(Collectors.toSet());
-
                 // ПЕРЕМЕЩЕНИЕ - Перемещать нужно только основные, новые файлы
                 Set<UUID> fileIdsForTransfer = newFilesDescriptions
                         .stream()
@@ -172,6 +165,11 @@ public class FileService {
                         .collect(Collectors.toSet());
 
                 fileIdsForTransfer.removeAll(oldFileIds);
+
+                Set<UUID> allFileIds = getFilesDescription(newContent, fieldName)
+                        .stream()
+                        .map(FileDescription::getId)
+                        .collect(Collectors.toSet());
 
                 List<File> allFiles = fileRepository.findAllByIdIn(allFileIds);
                 List<File> allFoundsFiles = fileRepository.findAllByIdIn(allFileIds);
@@ -182,6 +180,7 @@ public class FileService {
                     }
                 }
 
+                ResourceQualifier fQualifier = fieldQualifier(qualifier, qualifier.getRecordIdAsLong(), fieldName);
                 allFiles.stream()
                         .filter(file -> fileIdsForTransfer.contains(file.getId()))
                         .collect(Collectors.toList())

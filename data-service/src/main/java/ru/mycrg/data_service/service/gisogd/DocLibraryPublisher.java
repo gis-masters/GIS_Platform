@@ -11,6 +11,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static ru.mycrg.data_service.service.resources.ResourceQualifier.recordQualifier;
+
 @Component
 public class DocLibraryPublisher implements IGisogdRfPublisher {
 
@@ -39,7 +41,7 @@ public class DocLibraryPublisher implements IGisogdRfPublisher {
             for (IRecord record: documents) {
                 Map<String, Long> log = recordPublisher
                         .publishDocument(taskId,
-                                         new ResourceQualifier(qualifier, record.getId()),
+                                         recordQualifier(qualifier, record.getId()),
                                          srid,
                                          record);
 

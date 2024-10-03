@@ -40,8 +40,8 @@ import java.util.Map;
 import static ru.mycrg.data_service.config.CrgCommonConfig.ROOT_FOLDER_PATH;
 import static ru.mycrg.data_service.dto.Roles.OWNER;
 import static ru.mycrg.data_service.service.TaskService.*;
-import static ru.mycrg.data_service.service.TaskService.TASK_DESCRIPTION_PROPERTY;
 import static ru.mycrg.data_service.service.resources.ResourceQualifier.libraryQualifier;
+import static ru.mycrg.data_service.service.resources.ResourceQualifier.recordQualifier;
 import static ru.mycrg.data_service.service.smev3.request.get_cadastrial_plan.GetCadastrialPlanRequestService.DATA_SECTION_KEY_DATA_CONNECTION_ATTRIBUTE;
 import static ru.mycrg.data_service.util.JsonConverter.mapper;
 import static ru.mycrg.data_service.util.SystemLibraryAttributes.*;
@@ -103,13 +103,13 @@ public class GpzuService {
             throw new BadRequestException("Не удалось распарсить сообщение: " + body);
         }
         RequestType request = queryResult.getMessage()
-                .getRequestContent().getContent().getMessagePrimaryContent().getRequest();
+                                         .getRequestContent().getContent().getMessagePrimaryContent().getRequest();
         smevMessageService.saveIncoming(body);
-        Map<String, Object> taskContent =  prepareTaskRecord(String.valueOf(request.getService().getOrderId()));
+        Map<String, Object> taskContent = prepareTaskRecord(String.valueOf(request.getService().getOrderId()));
         long taskId = tasksDao.createTask(dbName, taskContent);
         createLog("Входящее сообщение ЕПГУ успешно записано в реестр",
-                      "Входящее сообщение ЕПГУ успешно записано в реестр",
-                      taskId);
+                  "Входящее сообщение ЕПГУ успешно записано в реестр",
+                  taskId);
         createDocumentAndLinkToTask(request, taskContent, taskId);
     }
 
@@ -137,8 +137,8 @@ public class GpzuService {
         taskLogService.create(new TaskLogDto(eventType, taskId), propsMap);
     }
 
-    private void createDocumentAndLinkToTask(RequestType request, Map<String, Object> taskContent, Long taskId) throws
-            CrgDaoException, JsonProcessingException {
+    private void createDocumentAndLinkToTask(RequestType request, Map<String, Object> taskContent, Long taskId)
+            throws CrgDaoException, JsonProcessingException {
         ResourceQualifier libraryQualifier = libraryQualifier(GPZU_LIBRARY_ID);
         LibraryModel libraryModel = libraryRepository
                 .findByTableName(GPZU_LIBRARY_ID)
@@ -170,9 +170,8 @@ public class GpzuService {
                 .getSchemaByName(TASKS_SCHEMA)
                 .orElseThrow(() -> new NotFoundException("Не найдена схема задач: " + TASKS_SCHEMA));
 
-        recordsDao.updateRecordById(new ResourceQualifier(TASK_QUALIFIER, taskId),
+        recordsDao.updateRecordById(recordQualifier(TASK_QUALIFIER, taskId),
                                     taskContent,
                                     tasksSchema);
-
     }
 }

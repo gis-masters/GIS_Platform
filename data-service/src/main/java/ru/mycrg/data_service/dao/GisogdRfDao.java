@@ -101,12 +101,26 @@ public class GisogdRfDao {
         return jdbcTemplate.query(query, new RecordRowMapper(null));
     }
 
-    public List<IRecord> getRecordsForPublishing(ResourceQualifier qualifier, Long publicationLimit) {
-        String query = "SELECT * FROM " + qualifier.getQualifier() +
+    public List<IRecord> getRecordsForPublishing(ResourceQualifier qualifier, Long publicationLimit, int srid) {
+        String query = "SELECT *, public.st_AsGeoJSON(public.st_transform(shape::public.geometry, " + srid + ")) as shape" +
+                " FROM " + qualifier.getQualifier() +
                 " WHERE gisogdrf_sync_status = 'Не синхронизирован'" +
                 " LIMIT " + publicationLimit;
 
         return jdbcTemplate.query(query, new RecordRowMapper(null));
+    }
+
+    public Optional<IRecord> getRecord(ResourceQualifier qualifier, int srid) {
+        String query = String.format(
+                "SELECT *, public.st_AsGeoJSON(public.st_transform(shape::public.geometry, %d)) as shape FROM %s WHERE %s = %s",
+                srid, qualifier.getTableQualifier(), getIdField(qualifier), qualifier.getRecordId());
+
+        List<IRecord> records = jdbcTemplate.query(query, new RecordRowMapper(null));
+        if (records.isEmpty()) {
+            return Optional.empty();
+        }
+
+        return Optional.ofNullable(records.get(0));
     }
 
     public List<IRecord> findAllForAudit(ResourceQualifier qualifier, Long limit) {

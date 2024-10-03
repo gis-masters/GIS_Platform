@@ -8,8 +8,8 @@ import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
 import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.exceptions.ForbiddenException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
-import ru.mycrg.data_service.service.document_library.DocumentLibraryService;
 import ru.mycrg.data_service.service.cqrs.library_records.requests.RecoverLibraryRecordRequest;
+import ru.mycrg.data_service.service.document_library.DocumentLibraryService;
 import ru.mycrg.data_service.service.document_library.RecordServiceFactory;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service.service.resources.protectors.IMasterResourceProtector;
@@ -20,6 +20,7 @@ import ru.mycrg.mediator.Voidy;
 
 import static ru.mycrg.data_service.config.CrgCommonConfig.ROOT_FOLDER_PATH;
 import static ru.mycrg.data_service.dto.ResourceType.LIBRARY;
+import static ru.mycrg.data_service.service.resources.ResourceQualifier.recordQualifier;
 import static ru.mycrg.data_service.util.SystemLibraryAttributes.PATH;
 
 @Component
@@ -62,7 +63,7 @@ public class RecoverLibraryRecordRequestHandler implements IRequestHandler<Recov
 
             recoverPath = ROOT_FOLDER_PATH;
         } else {
-            ResourceQualifier parentQualifier = new ResourceQualifier(rQualifier, parentFolderId);
+            ResourceQualifier parentQualifier = recordQualifier(rQualifier, parentFolderId);
             if (!resourceProtector.isEditAllowed(parentQualifier)) {
                 String msg = "Нет прав на восстановление документа в этот каталог: " + parentQualifier.getRecordIdAsLong();
                 log.warn(msg);
