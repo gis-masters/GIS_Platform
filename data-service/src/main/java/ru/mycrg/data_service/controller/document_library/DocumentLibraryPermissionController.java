@@ -10,11 +10,10 @@ import ru.mycrg.data_service.dto.IResourceModel;
 import ru.mycrg.data_service.dto.PermissionCreateDto;
 import ru.mycrg.data_service.dto.PermissionProjection;
 import ru.mycrg.data_service.exceptions.BindingErrorsException;
-import ru.mycrg.data_service.service.document_library.DocumentLibraryService;
 import ru.mycrg.data_service.service.PermissionsService;
 import ru.mycrg.data_service.service.cqrs.library_records.requests.CreatePermissionRequest;
 import ru.mycrg.data_service.service.cqrs.library_records.requests.DeletePermissionRequest;
-import ru.mycrg.data_service.service.resources.ResourceQualifier;
+import ru.mycrg.data_service.service.document_library.DocumentLibraryService;
 import ru.mycrg.mediator.Mediator;
 
 import javax.validation.Valid;
@@ -22,8 +21,7 @@ import java.net.URI;
 
 import static ru.mycrg.auth_service_contract.Authorities.HAS_ANY_AUTHORITY;
 import static ru.mycrg.common_utils.page.PageHandler.pageFromList;
-import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_NAME;
-import static ru.mycrg.data_service.dto.ResourceType.LIBRARY;
+import static ru.mycrg.data_service.service.resources.ResourceQualifier.libraryQualifier;
 
 @RestController
 public class DocumentLibraryPermissionController {
@@ -46,8 +44,7 @@ public class DocumentLibraryPermissionController {
                                                         Pageable pageable) {
         IResourceModel dl = librariesService.getInfo(docLibId);
 
-        ResourceQualifier dlQualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, docLibId, LIBRARY);
-        var permissions = permissionsService.getAllByResourceId(dlQualifier, dl.getId(), pageable);
+        var permissions = permissionsService.getAllByResourceId(libraryQualifier(docLibId), dl.getId(), pageable);
 
         return ResponseEntity.ok(pageFromList(permissions, pageable));
     }
@@ -63,9 +60,8 @@ public class DocumentLibraryPermissionController {
 
         IResourceModel dl = librariesService.getInfo(docLibId);
 
-        ResourceQualifier dlQualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, docLibId, LIBRARY);
         PermissionProjection permission = mediator.execute(
-                new CreatePermissionRequest(dlQualifier, dl.getId(), dto));
+                new CreatePermissionRequest(libraryQualifier(docLibId), dl.getId(), dto));
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentContextPath()
@@ -81,8 +77,7 @@ public class DocumentLibraryPermissionController {
     public ResponseEntity<Object> delete(@PathVariable String docLibId,
                                          @PathVariable Long permissionId) {
         mediator.execute(
-                new DeletePermissionRequest(new ResourceQualifier(SYSTEM_SCHEMA_NAME, docLibId, LIBRARY),
-                                            permissionId));
+                new DeletePermissionRequest(libraryQualifier(docLibId), permissionId));
 
         return ResponseEntity.noContent().build();
     }

@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.mycrg.data_service.dao.BaseReadDao;
 import ru.mycrg.data_service.service.gisogd.GisogdRfAuditor;
-import ru.mycrg.data_service.service.gisogd.GisogdRfPublisher;
+import ru.mycrg.data_service.service.gisogd.GisogdRfService;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service.service.resources.TableService;
 
@@ -17,9 +17,9 @@ import static org.springframework.http.HttpStatus.CREATED;
 import static ru.mycrg.auth_service_contract.Authorities.ORG_ADMIN_AUTHORITY;
 import static ru.mycrg.data_service.config.CrgCommonConfig.DEFAULT_SRID_DEGREE;
 import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_NAME;
-import static ru.mycrg.data_service.dto.ResourceType.*;
-import static ru.mycrg.data_service.service.TaskService.TASK_QUALIFIER;
-import static ru.mycrg.data_service.service.gisogd.GisogdRfPublisher.INBOX_MARKER;
+import static ru.mycrg.data_service.dto.ResourceType.LIBRARY;
+import static ru.mycrg.data_service.dto.ResourceType.TABLE;
+import static ru.mycrg.data_service.service.document_library.DocumentLibraryService.DL_QUALIFIER;
 
 @RestController
 @RequestMapping("/gisogd-rf")
@@ -28,34 +28,35 @@ public class GisogdRfController {
     private final BaseReadDao baseReadDao;
     private final TableService tableService;
     private final GisogdRfAuditor gisogdRfAuditor;
-    private final GisogdRfPublisher gisogdRfPublisher;
+    private final GisogdRfService gisogdRfService;
 
     public GisogdRfController(BaseReadDao baseReadDao,
                               TableService tableService,
                               GisogdRfAuditor gisogdRfAuditor,
-                              GisogdRfPublisher gisogdRfPublisher) {
+                              GisogdRfService gisogdRfService) {
         this.baseReadDao = baseReadDao;
         this.tableService = tableService;
         this.gisogdRfAuditor = gisogdRfAuditor;
-        this.gisogdRfPublisher = gisogdRfPublisher;
+        this.gisogdRfService = gisogdRfService;
     }
 
     @PostMapping("/send")
     @PreAuthorize(ORG_ADMIN_AUTHORITY)
-    public ResponseEntity<Object> send(@RequestParam String entityName,
-                                       @RequestParam Long entityId,
-                                       @RequestParam(defaultValue = DEFAULT_SRID_DEGREE, required = false) Integer srid) {
-        long taskId = -314L;
-        gisogdRfPublisher.publish(taskId, makeQualifier(entityName, entityId), srid);
+    public ResponseEntity<Object> publishSingle(
+            @RequestParam String entityName,
+            @RequestParam Long entityId,
+            @RequestParam(defaultValue = DEFAULT_SRID_DEGREE, required = false) Integer srid) {
+        Long taskId = gisogdRfService.publish(makeQualifier(entityName, entityId), srid);
 
         return ResponseEntity.status(CREATED).body(taskId);
     }
 
     @PostMapping("/publish")
     @PreAuthorize(ORG_ADMIN_AUTHORITY)
-    public ResponseEntity<Object> publish(@RequestParam(defaultValue = "100") Long limit,
-                                          @RequestParam(defaultValue = DEFAULT_SRID_DEGREE, required = false) Integer srid) {
-        Long taskId = gisogdRfPublisher.fullPublication(limit, srid);
+    public ResponseEntity<Object> publishAll(
+            @RequestParam(defaultValue = "100") Long limit,
+            @RequestParam(defaultValue = DEFAULT_SRID_DEGREE, required = false) Integer srid) {
+        Long taskId = gisogdRfService.fullPublication(limit, srid);
 
         return ResponseEntity.status(CREATED).body(taskId);
     }
@@ -80,9 +81,7 @@ public class GisogdRfController {
     }
 
     private ResourceQualifier makeQualifier(String tableName, Long entityId) {
-        if (tableName.equalsIgnoreCase(INBOX_MARKER)) {
-            return new ResourceQualifier(TASK_QUALIFIER, entityId, TASK);
-        } else if (itIsLibrary(tableName)) {
+        if (itIsLibrary(tableName)) {
             return new ResourceQualifier(SYSTEM_SCHEMA_NAME, tableName, entityId, LIBRARY);
         } else {
             String dataset = tableService.getDatasetByTableName(tableName);
@@ -92,10 +91,7 @@ public class GisogdRfController {
     }
 
     private boolean itIsLibrary(String entityName) {
-        ResourceQualifier docLibraries = new ResourceQualifier(SYSTEM_SCHEMA_NAME, "doc_libraries");
-        String filterByTableName = "table_name = '" + entityName + "'";
-
-        return baseReadDao.findBy(docLibraries, filterByTableName)
+        return baseReadDao.findBy(DL_QUALIFIER, "table_name = '" + entityName + "'")
                           .isPresent();
     }
 }

@@ -28,11 +28,14 @@ import static java.time.LocalDateTime.now;
 import static ru.mycrg.data_service.config.CrgCommonConfig.ROOT_FOLDER_PATH;
 import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_NAME;
 import static ru.mycrg.data_service.dto.ResourceType.LIBRARY;
+import static ru.mycrg.data_service.service.resources.ResourceQualifier.libraryQualifier;
 import static ru.mycrg.data_service.util.SystemLibraryAttributes.ID;
 import static ru.mycrg.data_service.util.SystemLibraryAttributes.PATH;
 
 @Service
 public class DocumentLibraryService {
+
+    public static final ResourceQualifier DL_QUALIFIER = libraryQualifier("doc_libraries");
 
     private final DocumentLibraryDao libraryDao;
     private final IAuthenticationFacade authenticationFacade;
@@ -60,14 +63,13 @@ public class DocumentLibraryService {
 
             totalLibraries = libraryDao.getTotal(ecqlFilter);
         } else {
-            ResourceQualifier dlQualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, "doc_libraries", LIBRARY);
             libraries = permissionsRepository
-                    .findAllowedByParent(dlQualifier, ROOT_FOLDER_PATH, ecqlFilter, pageable, new DocLibraryMapper())
+                    .findAllowedByParent(DL_QUALIFIER, ROOT_FOLDER_PATH, ecqlFilter, pageable, new DocLibraryMapper())
                     .stream()
                     .map(LibraryModel::new)
                     .collect(Collectors.toList());
 
-            totalLibraries = permissionsRepository.getTotalByParent(dlQualifier, ROOT_FOLDER_PATH, ecqlFilter);
+            totalLibraries = permissionsRepository.getTotalByParent(DL_QUALIFIER, ROOT_FOLDER_PATH, ecqlFilter);
         }
 
         return new PageImpl<>(libraries, pageable, totalLibraries);
@@ -80,9 +82,8 @@ public class DocumentLibraryService {
                                             .map(LibraryModel::new)
                                             .collect(Collectors.toList());
         } else {
-            ResourceQualifier dlQualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, "doc_libraries", LIBRARY);
             allAllowedLibraries = permissionsRepository
-                    .findAllowedByParent(dlQualifier,
+                    .findAllowedByParent(DL_QUALIFIER,
                                          ROOT_FOLDER_PATH,
                                          ecqlFilter)
                     .stream()

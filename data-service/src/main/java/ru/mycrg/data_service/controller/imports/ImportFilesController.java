@@ -21,6 +21,7 @@ import static org.springframework.util.StringUtils.getFilenameExtension;
 import static org.springframework.util.StringUtils.isEmpty;
 import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_NAME;
 import static ru.mycrg.data_service.dto.ResourceType.LIBRARY;
+import static ru.mycrg.data_service.service.resources.ResourceQualifier.libraryQualifier;
 
 @RestController
 public class ImportFilesController extends BaseController {
@@ -86,8 +87,9 @@ public class ImportFilesController extends BaseController {
 
             throw new BadRequestException(msg);
         }
-        ResourceQualifier lQualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, libraryId, LIBRARY);
-        List<ImportRecordReport> result = (List<ImportRecordReport>) eImporter.doImport(file, lQualifier);
+
+        List<ImportRecordReport> result = (List<ImportRecordReport>) eImporter
+                .doImport(file, libraryQualifier(libraryId));
 
         return ResponseEntity.status(CREATED).body(result);
     }

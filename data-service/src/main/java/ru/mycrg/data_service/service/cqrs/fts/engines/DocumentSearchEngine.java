@@ -35,13 +35,12 @@ import static ru.mycrg.common_contracts.generated.fts.FtsType.DOCUMENT;
 import static ru.mycrg.common_utils.page.PageHandler.pageFromList;
 import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_NAME;
 import static ru.mycrg.data_service.dto.ResourceType.LIBRARY;
+import static ru.mycrg.data_service.service.resources.ResourceQualifier.libraryQualifier;
 
 @Component
 public class DocumentSearchEngine implements IFullTextSearchEngine {
 
-    private static final ResourceQualifier DOCUMENTS = new ResourceQualifier(SYSTEM_SCHEMA_NAME,
-                                                                             "fts_documents",
-                                                                             LIBRARY);
+    private static final ResourceQualifier DOCUMENTS = libraryQualifier("fts_documents");
 
     private final Logger log = LoggerFactory.getLogger(DocumentSearchEngine.class);
 

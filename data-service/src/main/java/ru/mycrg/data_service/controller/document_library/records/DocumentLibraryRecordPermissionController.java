@@ -23,8 +23,7 @@ import java.net.URI;
 
 import static ru.mycrg.auth_service_contract.Authorities.HAS_ANY_AUTHORITY;
 import static ru.mycrg.common_utils.page.PageHandler.pageFromList;
-import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_NAME;
-import static ru.mycrg.data_service.dto.ResourceType.LIBRARY_RECORD;
+import static ru.mycrg.data_service.service.resources.ResourceQualifier.libraryRecordQualifier;
 import static ru.mycrg.data_service.util.SystemLibraryAttributes.ID;
 
 @RestController
@@ -47,9 +46,8 @@ public class DocumentLibraryRecordPermissionController {
     public ResponseEntity<Object> getLibraryPermissions(@PathVariable String docLibId,
                                                         @PathVariable Long recId,
                                                         Pageable pageable) {
-        ResourceQualifier recordQualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, docLibId, recId, LIBRARY_RECORD);
-
-        Page<PermissionProjection> permissions = permissionsService.getAllByResourceId(recordQualifier, pageable);
+        Page<PermissionProjection> permissions = permissionsService
+                .getAllByResourceId(libraryRecordQualifier(docLibId, recId), pageable);
 
         return ResponseEntity.ok(pageFromList(permissions, pageable));
     }
@@ -64,7 +62,7 @@ public class DocumentLibraryRecordPermissionController {
             throw new BindingErrorsException("Сущность описана некорректно", bindingResult);
         }
 
-        ResourceQualifier rQualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, docLibId, recId, LIBRARY_RECORD);
+        ResourceQualifier rQualifier = libraryRecordQualifier(docLibId, recId);
 
         IRecord record = recordServiceFactory.get().getById(rQualifier, recId);
         Long recordId = Long.valueOf(record.getContent().get(ID.getName()).toString());
@@ -86,9 +84,7 @@ public class DocumentLibraryRecordPermissionController {
     public ResponseEntity<Object> delete(@PathVariable String docLibId,
                                          @PathVariable Long recId,
                                          @PathVariable Long permissionId) {
-        ResourceQualifier recordQualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, docLibId, recId, LIBRARY_RECORD);
-
-        mediator.execute(new DeletePermissionRequest(recordQualifier, permissionId));
+        mediator.execute(new DeletePermissionRequest(libraryRecordQualifier(docLibId, recId), permissionId));
 
         return ResponseEntity.noContent().build();
     }

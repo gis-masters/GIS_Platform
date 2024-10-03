@@ -14,15 +14,13 @@ import ru.mycrg.data_service.dto.record.IRecord;
 import ru.mycrg.data_service.dto.record.RecordEntity;
 import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.exceptions.DataServiceException;
-import ru.mycrg.data_service.service.integrations.IIntegrationHandler;
 import ru.mycrg.data_service.service.document_library.RecordServiceFactory;
-import ru.mycrg.data_service.service.resources.ResourceQualifier;
+import ru.mycrg.data_service.service.integrations.IIntegrationHandler;
 
 import java.util.List;
 
 import static ru.mycrg.auth_service_contract.Authorities.HAS_ANY_AUTHORITY;
-import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_NAME;
-import static ru.mycrg.data_service.dto.ResourceType.LIBRARY_RECORD;
+import static ru.mycrg.data_service.service.resources.ResourceQualifier.libraryRecordQualifier;
 
 @RestController
 public class DocumentLibraryRecordIntegrationController {
@@ -43,9 +41,8 @@ public class DocumentLibraryRecordIntegrationController {
     public ResponseEntity<PermissionProjection> addPermissionToLibrary(@PathVariable String docLibId,
                                                                        @PathVariable Long recId,
                                                                        @RequestBody IntegrationDto dto) {
-        ResourceQualifier rQualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, docLibId, recId, LIBRARY_RECORD);
         IRecord record = recordServiceFactory.get()
-                                             .getById(rQualifier, recId);
+                                             .getById(libraryRecordQualifier(docLibId, recId), recId);
 
         try {
             integrationHandlers.stream()

@@ -11,10 +11,7 @@ import ru.mycrg.data_service_contract.dto.SimplePropertyDto;
 import ru.mycrg.data_service_contract.dto.ValueTitleProjection;
 import ru.mycrg.data_service_contract.enums.ValueType;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -218,6 +215,22 @@ public class SchemaUtil {
                                               new ErrorInfo(key, "Данное свойство отсутствует в схеме"));
             }
         });
+    }
+
+    @NotNull
+    public static List<SimplePropertyDto> getPropsByFormula(SchemaDto schema, String formulaName) {
+        List<SimplePropertyDto> result = schema
+                .getProperties().stream()
+                .filter(propertyDto -> formulaName.equals(propertyDto.getCalculatedValueWellKnownFormula()))
+                .collect(Collectors.toList());
+
+        if (result.isEmpty()) {
+            log.debug("Нет свойств с заданной формулой: '{}'", formulaName);
+
+            return new ArrayList<>();
+        }
+
+        return result;
     }
 
     @NotNull

@@ -13,7 +13,6 @@ import ru.mycrg.data_service.service.cqrs.tasks.requests.CreateTaskRequest;
 import ru.mycrg.data_service.service.cqrs.tasks.requests.DeleteAllTasksRequest;
 import ru.mycrg.data_service.service.cqrs.tasks.requests.UpdateTaskRequest;
 import ru.mycrg.data_service.service.cqrs.tasks.requests.UpdateTaskStatusRequest;
-import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service.service.schemas.ISchemaTemplateService;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.mediator.Mediator;
@@ -24,10 +23,8 @@ import static org.springframework.http.HttpStatus.CREATED;
 import static ru.mycrg.auth_service_contract.Authorities.HAS_ANY_AUTHORITY;
 import static ru.mycrg.auth_service_contract.Authorities.SYSTEM_ADMIN_ORG_ADMIN_AUTHORITY;
 import static ru.mycrg.common_utils.page.PageHandler.pageFromList;
-import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_NAME;
-import static ru.mycrg.data_service.dto.ResourceType.TASK;
 import static ru.mycrg.data_service.service.TaskService.TASKS_SCHEMA;
-import static ru.mycrg.data_service.service.TaskService.TASK_TABLE_NAME;
+import static ru.mycrg.data_service.service.TaskService.TASK_QUALIFIER;
 import static ru.mycrg.data_service.service.schemas.SchemaUtil.excludeUnknownProperties;
 import static ru.mycrg.data_service.util.StringUtil.camelCaseToSnakeCaseForEcqlFilter;
 import static ru.mycrg.data_service_contract.enums.TaskStatus.*;
@@ -74,9 +71,7 @@ public class TaskController {
         Map<String, Object> props = excludeUnknownProperties(tasksSchema, body);
 
         IRecord record = mediator.execute(
-                new CreateTaskRequest(tasksSchema,
-                                      new ResourceQualifier(SYSTEM_SCHEMA_NAME, TASK_TABLE_NAME, TASK),
-                                      new RecordEntity(props)));
+                new CreateTaskRequest(tasksSchema, TASK_QUALIFIER, new RecordEntity(props)));
 
         return new ResponseEntity<>(record.getContent(), CREATED);
     }

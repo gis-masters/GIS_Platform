@@ -31,7 +31,7 @@ public class GisogdData {
     @Override
     public String toString() {
         return "{" +
-                "\"resourceQualifier\":" + (resourceQualifier == null ? "null" : resourceQualifier) + ", " +
+                "\"resourceQualifier\":" + (resourceQualifier == null ? "null" : "\"" + resourceQualifier + "\"") + ", " +
                 "\"publishOrder\":" + (publishOrder == null ? "null" : "\"" + publishOrder + "\"") +
                 "}";
     }

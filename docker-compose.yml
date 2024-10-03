@@ -394,3 +394,4 @@ services:
     ports:
       - "8448:8448"
     mem_limit: ${CRYPTOPRO_MEM_LIMIT:-400}m
+    privileged: true

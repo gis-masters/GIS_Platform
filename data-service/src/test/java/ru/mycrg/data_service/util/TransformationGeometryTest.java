@@ -11,10 +11,14 @@ import org.locationtech.jts.geom.Polygon;
 import org.opengis.referencing.FactoryException;
 import org.opengis.referencing.crs.CoordinateReferenceSystem;
 import org.postgis.Point;
+import org.springframework.util.StopWatch;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import static java.lang.Thread.sleep;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -132,5 +136,66 @@ public class TransformationGeometryTest {
                 assertEquals(coordinates[j].y, preparedPoints[j].y, 0);
             }
         }
+    }
+
+    @Test
+    public void watcherExample() throws InterruptedException {
+        Map<String, Long> resultLog = new HashMap<>();
+
+        // First
+        Map<String, Long> watchLog = new HashMap<>();
+        StopWatch watcher = new StopWatch("Публикация");
+        watcher.start("Маппинг полей");
+        sleep(76);
+        watcher.stop();
+        watchLog.put(watcher.getLastTaskName(), watcher.getLastTaskTimeMillis());
+
+        watcher.start("Сбор детей");
+        sleep(226);
+        watcher.stop();
+        watchLog.put(watcher.getLastTaskName(), watcher.getLastTaskTimeMillis());
+
+        watcher.start("JSON сериализация");
+        sleep(12);
+        watcher.stop();
+        watchLog.put(watcher.getLastTaskName(), watcher.getLastTaskTimeMillis());
+
+        System.out.println(watcher.prettyPrint());
+        System.out.println(watchLog);
+
+        watchLog.forEach((k, v) -> {
+            Long resultTime = resultLog.getOrDefault(k, 0L);
+
+            resultLog.put(k, resultTime + v);
+        });
+
+
+        // Second
+        Map<String, Long> watchLog2 = new HashMap<>();
+        StopWatch watcher2 = new StopWatch("Публикация");
+        watcher2.start("Маппинг полей");
+        sleep(76);
+        watcher2.stop();
+        watchLog2.put(watcher2.getLastTaskName(), watcher2.getLastTaskTimeMillis());
+
+        watcher2.start("Сбор детей");
+        sleep(226);
+        watcher2.stop();
+        watchLog2.put(watcher2.getLastTaskName(), watcher2.getLastTaskTimeMillis());
+
+        watcher2.start("JSON сериализация");
+        sleep(12);
+        watcher2.stop();
+        watchLog2.put(watcher2.getLastTaskName(), watcher2.getLastTaskTimeMillis());
+
+        System.out.println(watcher2.prettyPrint());
+        System.out.println(watchLog2);
+
+        watchLog2.forEach((k, v) -> {
+            Long resultTime = resultLog.getOrDefault(k, 0L);
+
+            resultLog.put(k, resultTime + v);
+        });
+        System.out.println(resultLog);
     }
 }

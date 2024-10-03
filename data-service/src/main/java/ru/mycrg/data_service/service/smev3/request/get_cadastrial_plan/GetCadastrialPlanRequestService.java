@@ -54,8 +54,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_NAME;
-import static ru.mycrg.data_service.dto.ResourceType.TASK;
 import static ru.mycrg.data_service.service.TaskService.*;
 import static ru.mycrg.data_service.service.import_.kpt.KptSourceFilesService.KPT_LIBRARY_ID;
 import static ru.mycrg.data_service.service.resources.ResourceQualifier.libraryQualifier;
@@ -205,9 +203,7 @@ public class GetCadastrialPlanRequestService extends RequestProcessor {
                 .orElseThrow(() -> new NotFoundException("Не найдена схема задач: " + TASKS_SCHEMA));
 
         return mediator.execute(
-                new CreateTaskRequest(tasksSchema,
-                                      new ResourceQualifier(SYSTEM_SCHEMA_NAME, TASK_TABLE_NAME, TASK),
-                                      prepareTaskRecord(description)));
+                new CreateTaskRequest(tasksSchema, TASK_QUALIFIER, prepareTaskRecord(description)));
     }
 
     private RecordEntity prepareTaskRecord(String description) {
