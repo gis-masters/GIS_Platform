@@ -100,7 +100,7 @@ public class InitProjectBySpecializationDelegate implements JavaDelegate {
         Response response = null;
 
         String payload = toJson(new ProjectCreateDto(project.getTitle(), project.getDescription(), project.getBbox(),
-                                                     project.getIsDefault()));
+                                                     project.getIsDefault() != null && project.getIsDefault()));
 
         try {
             Request request = new Request.Builder()
