@@ -131,6 +131,19 @@ public class GisogdRfDao {
         return jdbcTemplate.query(query, new RecordRowMapper(null));
     }
 
+    public List<IRecord> findAllPairsTablesAndTheirDatasets() {
+        String query = "" +
+                "WITH tmp(table_id, dataset_id) AS " +
+                "(" +
+                "  SELECT identifier AS table_id, REPLACE(path, '/root/', '') AS dataset_id " +
+                "  FROM data.schemas_and_tables " +
+                ") " +
+                "SELECT tmp.table_id AS table, identifier AS dataset FROM data.schemas_and_tables AS sat " +
+                "JOIN tmp ON tmp.dataset_id::text = sat.id::text";
+
+        return jdbcTemplate.query(query, new RecordRowMapper(null));
+    }
+
     public void writeErrors(ResourceQualifier qualifier, Map<String, String> response) {
         String asJson = JsonConverter.asJsonString(response);
 

@@ -4,6 +4,7 @@ import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StopWatch;
 import ru.mycrg.auth_facade.IAuthenticationFacade;
 import ru.mycrg.data_service.dao.BaseReadDao;
 import ru.mycrg.data_service.dao.GisogdRfDao;
@@ -68,6 +69,8 @@ public class GisogdRfAuditor {
                     .filter(gisogdData -> gisogdData.getPublishOrder() >= 0)
                     .sorted(Comparator.comparing(GisogdData::getPublishOrder))
                     .forEach(gisogdEntity -> auditAll(gisogdEntity.getResourceQualifier(), limit));
+
+        log.debug("Полный аудит завершен");
     }
 
     private void audit(ResourceQualifier qualifier, IRecord parent) {
@@ -103,11 +106,18 @@ public class GisogdRfAuditor {
 
     private void auditAll(ResourceQualifier qualifier, Long limit) {
         List<IRecord> documents = gisogdRfDao.findAllForAudit(qualifier, limit);
-        if (!documents.isEmpty()) {
-            log.debug("In [{}] found: {}", qualifier.getQualifier(), documents.size());
-
-            documents.forEach(doc -> audit(qualifier, doc));
+        if (documents.isEmpty()) {
+            return;
         }
+
+        String resQualifier = qualifier.getQualifier();
+        StopWatch auditWatcher = new StopWatch("Аудит: " + resQualifier);
+        log.debug("Начинаю аудит [{}] с лимитом: {}. Найдено: {} записей", resQualifier, limit, documents.size());
+
+        documents.forEach(doc -> audit(qualifier, doc));
+
+        auditWatcher.stop();
+        log.debug("Конец аудита [{}] \n Затрачено времени: {}", resQualifier, auditWatcher.prettyPrint());
     }
 
     @NotNull

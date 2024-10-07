@@ -6,8 +6,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ru.mycrg.auth_facade.IAuthenticationFacade;
-import ru.mycrg.data_service.dao.BaseReadDao;
 import ru.mycrg.data_service.dao.BasePermissionsRepository;
+import ru.mycrg.data_service.dao.BaseReadDao;
 import ru.mycrg.data_service.dao.mappers.SchemasAndTablesMapper;
 import ru.mycrg.data_service.dto.DatasetModel;
 import ru.mycrg.data_service.dto.IResourceModel;
@@ -25,12 +25,12 @@ import java.util.stream.Collectors;
 
 import static ru.mycrg.data_service.config.CrgCommonConfig.ROOT_FOLDER_PATH;
 import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_NAME;
+import static ru.mycrg.data_service.service.resources.ResourceQualifier.systemTable;
 
 @Service
 public class DatasetService {
 
-    public static final ResourceQualifier SCHEMAS_AND_TABLES_QUALIFIER =
-            new ResourceQualifier(SYSTEM_SCHEMA_NAME, "schemas_and_tables");
+    public static final ResourceQualifier SCHEMAS_AND_TABLES_QUALIFIER = systemTable("schemas_and_tables");
 
     private final BasePermissionsRepository permissionsRepository;
     private final IResourceProtector datasetProtector;

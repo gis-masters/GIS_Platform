@@ -13,8 +13,8 @@ import ru.mycrg.data_service.dto.DatasetModel;
 import ru.mycrg.data_service.dto.FileResourceQualifier;
 import ru.mycrg.data_service.dto.ResourceCreateDto;
 import ru.mycrg.data_service.dto.WsMessageDto;
-import ru.mycrg.data_service.entity.File;
 import ru.mycrg.data_service.dto.record.IRecord;
+import ru.mycrg.data_service.entity.File;
 import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.mappers.FileResourceQualifierMapper;
@@ -27,7 +27,6 @@ import ru.mycrg.data_service.service.import_.dto.GmlPlacementModel;
 import ru.mycrg.data_service.service.import_.model.FilePlacementPayloadModel;
 import ru.mycrg.data_service.service.import_.model.WsImportModel;
 import ru.mycrg.data_service.service.processes.IExecutor;
-import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service_contract.dto.ImportLayerReport;
 import ru.mycrg.data_service_contract.dto.ImportReport;
 import ru.mycrg.data_service_contract.dto.ProcessModel;
@@ -48,7 +47,7 @@ import java.util.UUID;
 import static ru.mycrg.common_utils.CrgGlobalProperties.getScratchWorkspaceName;
 import static ru.mycrg.common_utils.CrgGlobalProperties.join;
 import static ru.mycrg.data_service.config.CrgCommonConfig.DEFAULT_MEDIA_TYPE;
-import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_NAME;
+import static ru.mycrg.data_service.service.resources.ResourceQualifier.systemTable;
 import static ru.mycrg.data_service.util.JsonConverter.mapper;
 import static ru.mycrg.data_service.validators.GmlPlacementModelValidator.throwIfNotValid;
 import static ru.mycrg.data_service_contract.enums.FileType.GML;
@@ -106,9 +105,8 @@ public class GmlPlacementExecutor implements IExecutor<ImportReport>, IFilePlace
         FileResourceQualifier frQualifier = FileResourceQualifierMapper.mapToFileQualifier(file.getResourceQualifier());
 
         // Fetch document
-        ResourceQualifier tQualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, frQualifier.getTable());
         IRecord document = recordServiceFactory.get()
-                                               .getById(tQualifier, frQualifier.getRecordId());
+                                               .getById(systemTable(frQualifier.getTable()), frQualifier.getRecordId());
         String resultName = getResultName(document, file);
 
         // Создание и размещение в наборе данных

@@ -52,6 +52,10 @@ public class ResourceQualifier extends AQualifier {
         this.resourceTables.put(DATASET, "schemas_and_tables");
     }
 
+    public static ResourceQualifier systemTable(String tableName) {
+        return new ResourceQualifier(SYSTEM_SCHEMA_NAME, tableName, TABLE);
+    }
+
     public static ResourceQualifier libraryQualifier(String libraryName) {
         return new ResourceQualifier(SYSTEM_SCHEMA_NAME, libraryName, LIBRARY);
     }

@@ -12,7 +12,6 @@ import org.springframework.stereotype.Repository;
 import ru.mycrg.data_service.dao.config.DatasourceFactory;
 import ru.mycrg.data_service.dao.utils.SqlParameterSourceFactory;
 import ru.mycrg.data_service.exceptions.NotFoundException;
-import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service.service.schemas.ISchemaTemplateService;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.data_service_contract.enums.TaskStatus;
@@ -24,10 +23,10 @@ import java.util.Map;
 
 import static java.time.LocalDateTime.now;
 import static java.time.format.DateTimeFormatter.ISO_DATE_TIME;
-import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_NAME;
 import static ru.mycrg.data_service.dao.utils.SqlBuilder.buildParameterizedInsertQuery;
 import static ru.mycrg.data_service.service.TaskService.TASKS_SCHEMA;
 import static ru.mycrg.data_service.service.TaskService.TASK_TABLE_NAME;
+import static ru.mycrg.data_service.service.resources.ResourceQualifier.systemTable;
 import static ru.mycrg.data_service.service.smev3.request.get_cadastrial_plan.GetCadastrialPlanRequestService.KPT_CONTENT_TYPE;
 import static ru.mycrg.data_service_contract.enums.TaskStatus.*;
 import static ru.mycrg.data_service_contract.enums.TaskType.ASSIGNABLE;
@@ -98,10 +97,9 @@ public class TasksDetachedDao {
         NamedParameterJdbcTemplate jdbcTemplate = new NamedParameterJdbcTemplate(
                 datasourceFactory.getDataSource(databaseName));
 
-        String createTaskStatement = buildParameterizedInsertQuery(
-                new ResourceQualifier(SYSTEM_SCHEMA_NAME, TASK_TABLE_NAME),
-                new Feature(payload),
-                false);
+        String query = buildParameterizedInsertQuery(systemTable(TASK_TABLE_NAME),
+                                                     new Feature(payload),
+                                                     false);
         SchemaDto tasksSchema = this.schemaService
                 .getSchemaByName(TASKS_SCHEMA)
                 .orElseThrow(() -> new NotFoundException("Не найдена схема задач: " + TASKS_SCHEMA));
@@ -109,7 +107,7 @@ public class TasksDetachedDao {
                 .buildParameterizedSource(new Feature(payload), tasksSchema);
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
-        jdbcTemplate.update(createTaskStatement, parameterSource, keyHolder);
+        jdbcTemplate.update(query, parameterSource, keyHolder);
 
         log.debug("Создана задача с id {}", keyHolder.getKeys().get("id"));
 

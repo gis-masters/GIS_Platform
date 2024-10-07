@@ -12,8 +12,8 @@ import ru.mycrg.data_service.dto.reestrs.ReestrProjection;
 import ru.mycrg.data_service.entity.reestrs.Reestr;
 import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.repository.reestrs.ReestrRepository;
-import ru.mycrg.data_service.service.schemas.ISchemaTemplateService;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
+import ru.mycrg.data_service.service.schemas.ISchemaTemplateService;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 
 import java.util.Collections;
@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_NAME;
+import static ru.mycrg.data_service.service.resources.ResourceQualifier.systemTable;
 import static ru.mycrg.data_service.util.MapUtil.clearNullable;
 
 @Service
@@ -57,8 +57,7 @@ public class ReestrsService {
     }
 
     public Page<Map<String, Object>> getAll(String tableName, Pageable pageable, String ecqlFilter) {
-        ResourceQualifier reestrQualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, tableName);
-
+        ResourceQualifier reestrQualifier = systemTable(tableName);
         SchemaDto schema = getSchema(tableName);
 
         List<Map<String, Object>> result = recordsDao.findAll(reestrQualifier, ecqlFilter, schema, pageable).stream()

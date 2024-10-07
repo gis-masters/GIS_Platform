@@ -77,7 +77,7 @@ public class GisogdRfController {
     public ResponseEntity<Object> fullAudit(@RequestParam(defaultValue = "100") Long limit) {
         gisogdRfAuditor.fullAudit(limit);
 
-        return ResponseEntity.status(ACCEPTED).body("Accepted. Full publication with limit: " + limit);
+        return ResponseEntity.status(ACCEPTED).body("Принято в работу. Полная публикация с лимитом: " + limit);
     }
 
     private ResourceQualifier makeQualifier(String tableName, Long entityId) {

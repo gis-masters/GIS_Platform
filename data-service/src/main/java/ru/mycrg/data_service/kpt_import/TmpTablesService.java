@@ -7,7 +7,6 @@ import ru.mycrg.data_service.dao.config.DatasourceFactory;
 import ru.mycrg.data_service.dao.detached.DetachedRecordsDao;
 import ru.mycrg.data_service.dao.detached.KptImportDao;
 import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
-import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 
 import java.util.Collection;
@@ -17,6 +16,7 @@ import java.util.stream.Collectors;
 import static ru.mycrg.data_service.dao.config.DaoProperties.PRIMARY_KEY;
 import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_NAME;
 import static ru.mycrg.data_service.kpt_import.KptImportUtils.tmbTableName;
+import static ru.mycrg.data_service.service.resources.ResourceQualifier.systemTable;
 
 /**
  * Создаёт временные таблицы для импорта КПТ
@@ -61,7 +61,7 @@ public class TmpTablesService {
     public void cleanTmpTables(String dbName, List<SchemaDto> schemas) throws CrgDaoException {
         for (SchemaDto schema: schemas) {
             recordsDao.truncateTable(dbName,
-                                     new ResourceQualifier(SYSTEM_SCHEMA_NAME, tmbTableName(schema.getName())));
+                                     systemTable(tmbTableName(schema.getName())));
         }
     }
 }

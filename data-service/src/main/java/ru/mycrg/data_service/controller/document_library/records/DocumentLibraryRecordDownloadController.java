@@ -13,9 +13,9 @@ import ru.mycrg.data_service.dto.record.IRecord;
 import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.service.document_library.DocumentLibraryService;
-import ru.mycrg.data_service.service.schemas.SystemAttributeHandler;
 import ru.mycrg.data_service.service.document_library.RecordServiceFactory;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
+import ru.mycrg.data_service.service.schemas.SystemAttributeHandler;
 import ru.mycrg.data_service.service.storage.FileStorageService;
 import ru.mycrg.data_service.service.storage.exceptions.MalformedURLStorageException;
 import ru.mycrg.data_service.service.storage.exceptions.NoSuchFileStorageException;
@@ -27,7 +27,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.springframework.http.HttpHeaders.CONTENT_DISPOSITION;
 import static org.springframework.http.HttpHeaders.CONTENT_LENGTH;
 import static ru.mycrg.auth_service_contract.Authorities.HAS_ANY_AUTHORITY;
-import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_NAME;
+import static ru.mycrg.data_service.service.resources.ResourceQualifier.libraryQualifier;
 
 @RestController
 public class DocumentLibraryRecordDownloadController extends BaseController {
@@ -53,8 +53,7 @@ public class DocumentLibraryRecordDownloadController extends BaseController {
                                                    @PathVariable String field,
                                                    @PathVariable Long recId,
                                                    HttpServletRequest request) {
-        ResourceQualifier qualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, docLibId);
-        IRecord record = recordServiceFactory.get().getById(qualifier, recId);
+        IRecord record = recordServiceFactory.get().getById(libraryQualifier(docLibId), recId);
         String path = (String) record.getContent().get(field);
 
         try {

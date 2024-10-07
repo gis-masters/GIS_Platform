@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import ru.mycrg.auth_facade.IAuthenticationFacade;
 import ru.mycrg.data_service.dao.BaseReadDao;
+import ru.mycrg.data_service.dao.GisogdRfDao;
 import ru.mycrg.data_service.dto.record.IRecord;
 import ru.mycrg.data_service.dto.record.RecordEntity;
 import ru.mycrg.data_service.exceptions.DataServiceException;
@@ -29,6 +30,7 @@ public class GisogdRfService {
     private final Logger log = LoggerFactory.getLogger(GisogdRfService.class);
 
     private final BaseReadDao baseReadDao;
+    private final GisogdRfDao gisogdRfDao;
 
     private final Mediator mediator;
     private final IAuthenticationFacade authenticationFacade;
@@ -38,21 +40,26 @@ public class GisogdRfService {
 
     private final GisogdRfPublisherFactory gisogdRfPublisherFactory;
     private final RecordPublisher recordPublisher;
+    private final RecordsCache recordsCache;
 
     public GisogdRfService(BaseReadDao baseReadDao,
+                           GisogdRfDao gisogdRfDao,
                            Mediator mediator,
                            GisogdRfUtil gisogdRfUtil,
                            @Qualifier("schemaTemplateServiceBase") ISchemaTemplateService schemaService,
                            IAuthenticationFacade authenticationFacade,
                            GisogdRfPublisherFactory gisogdRfPublisherFactory,
-                           RecordPublisher recordPublisher) {
+                           RecordPublisher recordPublisher,
+                           RecordsCache recordsCache) {
         this.baseReadDao = baseReadDao;
+        this.gisogdRfDao = gisogdRfDao;
         this.mediator = mediator;
         this.gisogdRfUtil = gisogdRfUtil;
         this.schemaService = schemaService;
         this.authenticationFacade = authenticationFacade;
         this.gisogdRfPublisherFactory = gisogdRfPublisherFactory;
         this.recordPublisher = recordPublisher;
+        this.recordsCache = recordsCache;
     }
 
     public Long publish(ResourceQualifier qualifier, int srid) {
@@ -90,7 +97,9 @@ public class GisogdRfService {
         IRecord record = createSystemTask();
         Long taskId = record.getId();
 
+        recordsCache.clear();
         log.debug("Старт публикации в ГИСОГД РФ с лимитом: [{}] Создана задача: [{}]", limit, taskId);
+        cacheSchemasAndTables();
 
         List<GisogdData> sortedGisogdEntities = gisogdRfUtil
                 .getSchemasPreparedForGisogdRf()
@@ -114,6 +123,7 @@ public class GisogdRfService {
         });
 
         log.debug("Все события были разосланы. Задача: [{}] \n Result time Log: {}", taskId, resultLog);
+        recordsCache.printStatistics();
 
         return taskId;
     }
@@ -141,5 +151,14 @@ public class GisogdRfService {
 
         return mediator.execute(
                 new CreateTaskRequest(tasksSchema, TASK_QUALIFIER, new RecordEntity(content)));
+    }
+
+    private void cacheSchemasAndTables() {
+        List<IRecord> all = gisogdRfDao.findAllPairsTablesAndTheirDatasets();
+        all.forEach(record -> {
+            recordsCache.addRecord("tableDatasetPairs",
+                                   record.getAsString("table"),
+                                   record);
+        });
     }
 }

@@ -17,18 +17,20 @@ import ru.mycrg.data_service_contract.dto.SchemaDto;
 import java.util.List;
 import java.util.Optional;
 
-import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_NAME;
 import static ru.mycrg.data_service.dto.ResourceType.TABLE;
+import static ru.mycrg.data_service.service.resources.ResourceQualifier.systemTable;
 
 /**
  * Обработка записей  dl_data_eis_zs
  */
 @Service
 public class DataEisZsServiceImpl implements DataEisZsService {
+
     private final Logger log = LoggerFactory.getLogger(DataEisZsServiceImpl.class);
+
     private final RecordsDao recordsDao;
     private final ISchemaTemplateService schemaService;
-    private final ResourceQualifier qualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, FieldsEisZs.TABLE);
+    private final ResourceQualifier qualifier = systemTable(FieldsEisZs.TABLE);
     private SchemaDto schema = null;
 
     public DataEisZsServiceImpl(RecordsDao recordsDao, ISchemaTemplateService schemaService) {
@@ -97,7 +99,8 @@ public class DataEisZsServiceImpl implements DataEisZsService {
         if (schema == null) {
             schema = schemaService
                     .getSchemaByName(qualifier.getTable())
-                    .orElseThrow(() -> new SmevRequestException("Не удалось найти схему таблицы " + qualifier.getTable()));
+                    .orElseThrow(
+                            () -> new SmevRequestException("Не удалось найти схему таблицы " + qualifier.getTable()));
         }
     }
 }

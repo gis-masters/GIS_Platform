@@ -19,7 +19,7 @@ import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import java.util.List;
 
 import static java.time.LocalDateTime.now;
-import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_NAME;
+import static ru.mycrg.data_service.service.resources.ResourceQualifier.systemTable;
 import static ru.mycrg.data_service.util.DetailedLogger.logError;
 import static ru.mycrg.data_service.util.JsonConverter.mapper;
 
@@ -27,11 +27,10 @@ import static ru.mycrg.data_service.util.JsonConverter.mapper;
 @Transactional
 public class TaskLogService {
 
-    public static final String TASK_LOG_TABLE_NAME = "tasks_log";
-    public static final ResourceQualifier TASK_LOG_QUALIFIER = new ResourceQualifier(SYSTEM_SCHEMA_NAME,
-                                                                                     TASK_LOG_TABLE_NAME);
-    private final TaskLogRepository taskLogRepository;
+    public static final ResourceQualifier TASK_LOG_QUALIFIER = systemTable("tasks_log");
+
     private final BaseReadDao baseDao;
+    private final TaskLogRepository taskLogRepository;
 
     public TaskLogService(TaskLogRepository taskLogRepository, BaseReadDao baseDao) {
         this.taskLogRepository = taskLogRepository;

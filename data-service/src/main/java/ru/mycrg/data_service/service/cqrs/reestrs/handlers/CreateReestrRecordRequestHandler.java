@@ -7,7 +7,6 @@ import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
 import ru.mycrg.data_service.dto.record.IRecord;
 import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.service.cqrs.reestrs.requests.CreateReestrRecordRequest;
-import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.geo_json.Feature;
 import ru.mycrg.mediator.IRequestHandler;
@@ -16,7 +15,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import static java.time.LocalDateTime.now;
-import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_NAME;
+import static ru.mycrg.data_service.service.resources.ResourceQualifier.systemTable;
 
 @Component
 public class CreateReestrRecordRequestHandler implements IRequestHandler<CreateReestrRecordRequest, IRecord> {
@@ -43,9 +42,7 @@ public class CreateReestrRecordRequestHandler implements IRequestHandler<CreateR
         content.put("date_in", now());
 
         try {
-            return commonDao.save(new ResourceQualifier(SYSTEM_SCHEMA_NAME, tableName),
-                                  new Feature(content),
-                                  schema);
+            return commonDao.save(systemTable(tableName), new Feature(content), schema);
         } catch (CrgDaoException e) {
             throw new DataServiceException("Не удалось сохранить запись в реестр");
         }

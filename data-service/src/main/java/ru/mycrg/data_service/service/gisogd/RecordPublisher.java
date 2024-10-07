@@ -32,12 +32,15 @@ import static java.lang.String.format;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.UUID.fromString;
 import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_NAME;
-import static ru.mycrg.data_service.dto.ResourceType.*;
-import static ru.mycrg.data_service.service.resources.DatasetService.SCHEMAS_AND_TABLES_QUALIFIER;
+import static ru.mycrg.data_service.dto.ResourceType.FEATURE;
+import static ru.mycrg.data_service.dto.ResourceType.TABLE;
+import static ru.mycrg.data_service.service.resources.ResourceQualifier.libraryRecordQualifier;
+import static ru.mycrg.data_service.service.resources.ResourceQualifier.systemTable;
 import static ru.mycrg.data_service.util.JsonConverter.asJsonString;
 import static ru.mycrg.data_service.util.JsonConverter.mapper;
 import static ru.mycrg.data_service.util.LogUtil.withoutHeavyFields;
-import static ru.mycrg.data_service.util.SystemLibraryAttributes.*;
+import static ru.mycrg.data_service.util.SystemLibraryAttributes.CONTENT_TYPE_ID;
+import static ru.mycrg.data_service.util.SystemLibraryAttributes.GUID;
 import static ru.mycrg.data_service_contract.enums.ValueType.DOCUMENT;
 import static ru.mycrg.data_service_contract.enums.ValueType.URL;
 
@@ -54,19 +57,22 @@ public class RecordPublisher {
 
     private final SchemaExtractor schemaExtractor;
     private final GisogdRfLibraryFieldsMapper libraryFieldsMapper;
+    private final RecordsCache recordsCache;
 
     public RecordPublisher(BaseReadDao baseReadDao,
                            GisogdRfDao gisogdRfDao,
                            IMessageBusProducer messageBus,
                            SchemaExtractor schemaExtractor,
                            IAuthenticationFacade authenticationFacade,
-                           GisogdRfLibraryFieldsMapper libraryFieldsMapper) {
+                           GisogdRfLibraryFieldsMapper libraryFieldsMapper,
+                           RecordsCache recordsCache) {
         this.baseReadDao = baseReadDao;
         this.messageBus = messageBus;
         this.gisogdRfDao = gisogdRfDao;
         this.schemaExtractor = schemaExtractor;
         this.authenticationFacade = authenticationFacade;
         this.libraryFieldsMapper = libraryFieldsMapper;
+        this.recordsCache = recordsCache;
     }
 
     public Map<String, Long> publishDocument(Long taskId,
@@ -128,11 +134,9 @@ public class RecordPublisher {
                 String territoryGuid = (String) child.getContent().get("guid");
                 String filterByGuid = "guid = '" + territoryGuid + "'";
 
-                baseReadDao.findBy(new ResourceQualifier(SYSTEM_SCHEMA_NAME, "territory"), filterByGuid)
+                baseReadDao.findBy(systemTable("territory"), filterByGuid)
                            .ifPresent(territory -> {
-                               String territoryStatus = (String) territory.getContent().get("gisogdrf_sync_status");
-
-                               if (isNotSynced(territoryStatus)) {
+                               if (isNotSynced(territory.getAsString("gisogdrf_sync_status"))) {
                                    notSyncedChildren.add(child);
                                }
                            });
@@ -177,7 +181,7 @@ public class RecordPublisher {
                              mappedContent),
                 children);
 
-        log.debug("Publish to GISOGD_RF: [{}]", asJsonString(event));
+        log.debug("Публикуемое событие: [{}]", asJsonString(event));
 
         messageBus.produce(event);
 
@@ -188,6 +192,7 @@ public class RecordPublisher {
         return watchLog;
     }
 
+    // Статусы прописаны в схемах
     private boolean isNotSynced(String status) {
         return !"Синхронизирован".equals(status) &&
                 !"Cинхронизация завершилась предупреждением".equals(status);
@@ -217,26 +222,26 @@ public class RecordPublisher {
             for (SimplePropertyDto documentProperty: documentProperties) {
                 List<TypeDocumentData> documents = getDocuments(content, documentProperty);
                 for (TypeDocumentData document: documents) {
-                    Long id = document.getId();
                     String library = document.getLibraryTableName();
+                    ResourceQualifier childDocQualifier = libraryRecordQualifier(library, document.getId());
 
-                    ResourceQualifier childQualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, library, id, LIBRARY);
                     try {
-                        baseReadDao.findById(childQualifier)
-                                   .ifPresentOrElse(record -> {
-                                       String guid = record.getAsString(GUID.getName());
-                                       String contentType = record.getAsString(CONTENT_TYPE_ID.getName());
+                        // Ищем среди библиотек документов
+                        Optional<IRecord> childRecord = baseReadDao.findById(childDocQualifier);
+                        childRecord.ifPresentOrElse(record -> {
+                            String guid = record.getAsString(GUID.getName());
+                            String contentType = record.getAsString(CONTENT_TYPE_ID.getName());
 
-                                       result.add(new Document((guid != null) ? fromString(guid) : null,
-                                                               SYSTEM_SCHEMA_NAME,
-                                                               library,
-                                                               contentType,
-                                                               record.getContent()));
-                                   }, () -> {
-                                       log.warn("Не найден связанный документ. [{}]", childQualifier.getQualifier());
-                                   });
+                            result.add(new Document((guid != null) ? fromString(guid) : null,
+                                                    SYSTEM_SCHEMA_NAME,
+                                                    library,
+                                                    contentType,
+                                                    record.getContent()));
+                        }, () -> {
+                            log.warn("Не найден связанный документ. [{}]", childDocQualifier.getQualifier());
+                        });
                     } catch (Exception e) {
-                        log.warn("Не удалось получить документ: [{}]", childQualifier.getQualifier(), e);
+                        log.warn("Не удалось получить документ: [{}]", childDocQualifier.getQualifier(), e);
                     }
                 }
             }
@@ -518,23 +523,17 @@ public class RecordPublisher {
                 return Optional.empty();
             }
 
-            // Тащим запись о слое, чтобы достать путь к набору данных
-            String filterForLayer = "identifier = '" + layerName + "'";
-            Optional<IRecord> oLayer = baseReadDao.findBy(SCHEMAS_AND_TABLES_QUALIFIER, filterForLayer);
-            if (oLayer.isEmpty()) {
-                log.warn("Не найден слой: {}", layerName);
+            // Тащим идентификатор набора данных текущего слоя из ранее собранного кеша, по ключу: "tableDatasetPairs"
+            String datasetIdentifier;
+            Optional<IRecord> oRecord = recordsCache.getRecord("tableDatasetPairs", layerName);
+            if (oRecord.isPresent()) {
+                datasetIdentifier = oRecord.get().getAsString("dataset");
+                log.debug("Для слоя: '{}' родительский набор данных: {}", layerName, datasetIdentifier);
+            } else {
+                log.warn("Не найден родитель для слоя: {}", layerName);
 
                 return Optional.empty();
             }
-
-            long datasetId = Long.parseLong(oLayer.get().getContent().get(PATH.getName()).toString().split("root/")[1]);
-
-            // Тащим запись о наборе данных, чтобы достать его название
-            IRecord dataset = baseReadDao
-                    .findById(new ResourceQualifier(SCHEMAS_AND_TABLES_QUALIFIER, datasetId, DATASET))
-                    .orElseThrow(() -> new IllegalStateException("Не найден набор данных по id: " + datasetId));
-            String datasetIdentifier = dataset.getContent().get("identifier").toString();
-            log.debug("founded dataset: {}", datasetIdentifier);
 
             // Ищем в слое запись, которая ссылается на документ. Берем id.
             Long recordId = null;
@@ -549,20 +548,20 @@ public class RecordPublisher {
                 if (oRecordId.isPresent()) {
                     recordId = oRecordId.get();
                 } else {
-                    log.debug("Not found record in LAYER: '{}.{}' Mode: [PARENT ON]", datasetIdentifier, layerName);
+                    log.debug("Не найдена запись в слое: '{}.{}' [PARENT ON]", datasetIdentifier, layerName);
                 }
             } else {
-                // TODO: Может не id собирать, а непосредственно запись... ?
-                Optional<Long> oRecordId = gisogdRfDao.findJoinedToDocumentLayerRecordId(datasetIdentifier,
-                                                                                         layerName,
-                                                                                         columnName,
-                                                                                         qualifier.getTableQualifier(),
-                                                                                         qualifier.getRecordId());
+                Optional<Long> oRecordId = gisogdRfDao
+                        .findJoinedToDocumentLayerRecordId(datasetIdentifier,
+                                                           layerName,
+                                                           columnName,
+                                                           qualifier.getTableQualifier(),
+                                                           qualifier.getRecordId());
 
                 if (oRecordId.isPresent()) {
                     recordId = oRecordId.get();
                 } else {
-                    log.debug("Not found record in LAYER: '{}.{}' Mode: [PARENT OFF]", datasetIdentifier, layerName);
+                    log.debug("Не найдена запись в слое: '{}.{}' [PARENT OFF]", datasetIdentifier, layerName);
                 }
             }
 
