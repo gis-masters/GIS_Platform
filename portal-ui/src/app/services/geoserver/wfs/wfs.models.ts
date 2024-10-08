@@ -1,8 +1,5 @@
 import { Coordinate } from 'ol/coordinate';
 
-import { isNumberArray } from '../../util/typeGuards/isNumberArray';
-import { isStringNumberArray } from '../../util/typeGuards/isStringNumberArray';
-
 export enum GeometryType {
   POINT = 'Point',
   LINE_STRING = 'LineString',
@@ -16,14 +13,6 @@ export enum GeometryType {
 }
 
 export type CoordinateEdited = (number | string)[];
-
-export function isCoordinateEdited(value: unknown): value is CoordinateEdited {
-  return isStringNumberArray(value);
-}
-
-export function isCoordinate(value: unknown): value is CoordinateEdited {
-  return isNumberArray(value);
-}
 
 export type SupportedGeometryType =
   | GeometryType.POINT

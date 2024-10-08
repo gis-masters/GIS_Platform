@@ -8,9 +8,10 @@ import { clone, isEqual } from 'lodash';
 import { parse } from 'papaparse';
 
 import { communicationService } from '../../../services/communication.service';
-import { CoordinateEdited, GeometryType, isCoordinateEdited } from '../../../services/geoserver/wfs/wfs.models';
+import { CoordinateEdited, GeometryType } from '../../../services/geoserver/wfs/wfs.models';
 import { selectLabelForGeometryType } from '../../../services/geoserver/wfs/wfs.util';
 import { exportAsCSV } from '../../../services/util/export';
+import { isCoordinateEdited } from '../../../services/util/typeGuards/isCoordinateEdited';
 import { EditFeatureGeometryCSVInput } from '../CSVInput/EditFeatureGeometry-CSVInput';
 
 const cnEditFeatureGeometryCSV = cn('EditFeatureGeometry', 'CSV');

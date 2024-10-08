@@ -3,13 +3,9 @@ import { action, makeObservable } from 'mobx';
 import { withBemMod } from '@bem-react/core';
 import { Coordinate } from 'ol/coordinate';
 
-import {
-  CoordinateEdited,
-  GeometryType,
-  isCoordinateEdited,
-  WfsMultiPointGeometry
-} from '../../../../services/geoserver/wfs/wfs.models';
+import { CoordinateEdited, GeometryType, WfsMultiPointGeometry } from '../../../../services/geoserver/wfs/wfs.models';
 import { isArrayOf } from '../../../../services/util/typeGuards/isArrayOf';
+import { isCoordinateEdited } from '../../../../services/util/typeGuards/isCoordinateEdited';
 import { EditFeatureGeometryDraw } from '../../Draw/EditFeatureGeometry-Draw';
 import { EditFeatureGeometryGroup } from '../../Group/EditFeatureGeometry-Group.composed';
 import { EditFeatureGeometryToolbar } from '../../Toolbar/EditFeatureGeometry-Toolbar';

@@ -117,13 +117,11 @@ export default class EditFeatureGeometry extends Component<EditFeatureGeometryPr
 
   @action
   private async updateExtent() {
-    const { store } = this.props;
-
-    if (!store.layer) {
+    if (!this.props?.store?.layer) {
       return;
     }
 
-    const { layer } = store;
+    const { layer } = this.props.store;
 
     const { nativeBoundingBox } =
       layer.type === CrgLayerType.VECTOR || isVectorFromFile(layer.type)
@@ -158,7 +156,7 @@ export default class EditFeatureGeometry extends Component<EditFeatureGeometryPr
       }
     }
 
-    store.setLayerExtent(polygon([polygonCoordinates]));
+    this.props.store.setLayerExtent(polygon([polygonCoordinates]));
   }
 
   private getFeatureIconGeometryType(geometryType: GeometryType): string | undefined {

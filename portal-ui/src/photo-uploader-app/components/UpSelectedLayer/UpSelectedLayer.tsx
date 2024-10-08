@@ -3,8 +3,8 @@ import { observer } from 'mobx-react';
 import { List } from '@mui/material';
 import { Clear } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
-import { CopyUrlButton } from 'src/app/components/CopyUrlButton/CopyUrlButton';
 
+import { CopyUrlButton } from '../../../app/components/CopyUrlButton/CopyUrlButton';
 import { IconButton } from '../../../app/components/IconButton/IconButton';
 import { photoUploaderStore } from '../../stores/PhotoUploader.store';
 import { UpLayersListItem } from '../UpLayersList/Item/UpLayersList-Item';

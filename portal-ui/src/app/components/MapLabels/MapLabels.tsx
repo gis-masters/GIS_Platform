@@ -1,9 +1,8 @@
-import React, { Component } from 'react';
+import React, { FC, useCallback, useEffect } from 'react';
 import { observer } from 'mobx-react';
 import { Tooltip } from '@mui/material';
 import { DeleteSweepOutlined, LabelOutlined, PolylineOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
-import { boundMethod } from 'autobind-decorator';
 
 import { LabelType, MapMode } from '../../services/map/map.models';
 import { mapLabelsService } from '../../services/map/map-labels.service';
@@ -12,90 +11,51 @@ import { mapStore } from '../../stores/Map.store';
 import { IconButton } from '../IconButton/IconButton';
 import { LabelsOutlined } from '../Icons/LabelsOutlined';
 import { MapDistances } from '../MapDistances/MapDistances';
+import { MapPerimeter } from '../MapPerimeter/MapPerimeter';
+import { MapSquare } from '../MapSquare/MapSquare';
 import { MapTurningPoints } from '../MapTurningPoints/MapTurningPoints';
 
 import '!style-loader!css-loader!sass-loader!./MapLabels.scss';
 
 const cnMapLabels = cn('MapLabels');
 
-@observer
-export class MapLabels extends Component {
-  async componentDidMount() {
-    await this.restoreLabelsVisibilityState();
-  }
-
-  render() {
-    return (
-      <div className={cnMapLabels()}>
-        {mapStore.labelsVisible && (
-          <>
-            <MapTurningPoints />
-            <MapDistances />
-            <Tooltip title='Добавить аннотацию'>
-              <IconButton
-                className={cnMapLabels('AddLabel')}
-                checked={mapStore.mode === MapMode.ADDING_LABEL && mapStore.currentLabelType === 'label'}
-                onClick={this.handleAddLabelClick}
-                size='small'
-              >
-                <LabelOutlined />
-              </IconButton>
-            </Tooltip>
-            <Tooltip title='Нарисовать вспомогательную линию'>
-              <IconButton
-                className={cnMapLabels('AddLine')}
-                checked={mapStore.mode === MapMode.ADDING_LABEL && mapStore.currentLabelType === 'line'}
-                onClick={this.handleAddLineClick}
-                size='small'
-              >
-                <PolylineOutlined />
-              </IconButton>
-            </Tooltip>
-            {mapStore.labels.length > 0 && (
-              <Tooltip title='Удалить все аннотации'>
-                <IconButton className={cnMapLabels('ClearAll')} onClick={this.handleClearAllClick} size='small'>
-                  <DeleteSweepOutlined />
-                </IconButton>
-              </Tooltip>
-            )}
-          </>
-        )}
-        <Tooltip title='Показать/скрыть аннотации'>
-          <IconButton
-            className={cnMapLabels('Toggler')}
-            checked={mapStore.labelsVisible}
-            size='small'
-            onClick={this.handleTogglerClick}
-          >
-            <LabelsOutlined />
-          </IconButton>
-        </Tooltip>
-      </div>
-    );
-  }
-
-  @boundMethod
-  private handleTogglerClick() {
+export const MapLabels: FC = observer(() => {
+  const handleTogglerClick = useCallback(() => {
     const visible = !mapStore.labelsVisible;
     mapStore.setLabelsVisibility(visible);
     localStorage.setItem(mapLabelsService.getStorageKey('visible'), visible.toString());
     if (!visible) {
       mapLabelsService.addingLabelOff();
     }
-  }
+  }, []);
 
-  @boundMethod
-  private async handleAddLabelClick() {
-    await this.startLabelAdding('label');
-  }
+  const startLabelAdding = useCallback(async (type: LabelType) => {
+    if (mapStore.mode === MapMode.ADDING_LABEL && type && mapStore.currentLabelType === type) {
+      mapLabelsService.addingLabelOff();
+    } else {
+      await mapLabelsService.addingLabelOn(type);
+    }
+  }, []);
 
-  @boundMethod
-  private async handleAddLineClick() {
-    await this.startLabelAdding('line');
-  }
+  const handleAddLabelClick = useCallback(async () => {
+    await startLabelAdding('label');
+  }, [startLabelAdding]);
 
-  @boundMethod
-  private async handleClearAllClick() {
+  const handleAddLineClick = useCallback(async () => {
+    await startLabelAdding('line');
+  }, [startLabelAdding]);
+
+  const restoreLabelsVisibilityState = useCallback(async () => {
+    const labelsVisible = localStorage.getItem(`${mapLabelsService.getStorageKey('visible')}`);
+    if (labelsVisible) {
+      mapStore.setLabelsVisibility(labelsVisible === 'true');
+      if (labelsVisible === 'true') {
+        await mapLabelsService.show();
+      }
+    }
+  }, []);
+
+  const handleClearAllClick = useCallback(async () => {
     if (
       await konfirmieren({
         title: 'Вы уверены, что хотите удалить все аннотации?',
@@ -104,23 +64,61 @@ export class MapLabels extends Component {
     ) {
       mapLabelsService.clearAll();
     }
-  }
+  }, []);
 
-  private async startLabelAdding(type: LabelType) {
-    if (mapStore.mode === MapMode.ADDING_LABEL && type && mapStore.currentLabelType === type) {
-      mapLabelsService.addingLabelOff();
-    } else {
-      await mapLabelsService.addingLabelOn(type);
-    }
-  }
+  useEffect(() => {
+    void (async () => {
+      await restoreLabelsVisibilityState();
+    })();
+  }, []);
 
-  private async restoreLabelsVisibilityState() {
-    const labelsVisible = localStorage.getItem(`${mapLabelsService.getStorageKey('visible')}`);
-    if (labelsVisible) {
-      mapStore.setLabelsVisibility(labelsVisible === 'true');
-      if (labelsVisible === 'true') {
-        await mapLabelsService.show();
-      }
-    }
-  }
-}
+  return (
+    <div className={cnMapLabels()}>
+      {mapStore.labelsVisible && (
+        <>
+          <MapSquare />
+          <MapPerimeter />
+          <MapTurningPoints />
+          <MapDistances />
+          <Tooltip title='Добавить аннотацию'>
+            <IconButton
+              className={cnMapLabels('AddLabel')}
+              checked={mapStore.mode === MapMode.ADDING_LABEL && mapStore.currentLabelType === 'label'}
+              onClick={handleAddLabelClick}
+              size='small'
+            >
+              <LabelOutlined />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title='Нарисовать вспомогательную линию'>
+            <IconButton
+              className={cnMapLabels('AddLine')}
+              checked={mapStore.mode === MapMode.ADDING_LABEL && mapStore.currentLabelType === 'line'}
+              onClick={handleAddLineClick}
+              size='small'
+            >
+              <PolylineOutlined />
+            </IconButton>
+          </Tooltip>
+          {mapStore.labels.length > 0 && (
+            <Tooltip title='Удалить все аннотации'>
+              <IconButton className={cnMapLabels('ClearAll')} onClick={handleClearAllClick} size='small'>
+                <DeleteSweepOutlined />
+              </IconButton>
+            </Tooltip>
+          )}
+        </>
+      )}
+      <Tooltip title='Показать/скрыть аннотации'>
+        <IconButton
+          className={cnMapLabels('Toggler')}
+          checked={mapStore.labelsVisible}
+          size='small'
+          onClick={handleTogglerClick}
+        >
+          <LabelsOutlined />
+        </IconButton>
+      </Tooltip>
+    </div>
+  );
+});

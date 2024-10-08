@@ -23,20 +23,26 @@ import { sidebars } from '../../stores/Sidebars.store';
 import { communicationService } from '../communication.service';
 import { defaultOlProjectionCode, Projection } from '../data/projections/projections.models';
 import { getProjectionByCode } from '../data/projections/projections.service';
-import { Coord, transformGroup } from '../data/projections/projections.util';
+import { Coord, transformCoord, transformGroup } from '../data/projections/projections.util';
 import { extractTableNameFromFeatureId } from '../geoserver/featureType/featureType.util';
-import { GeometryType, isCoordinate, supportedGeometryTypes, WfsFeature } from '../geoserver/wfs/wfs.models';
+import { GeometryType, supportedGeometryTypes, WfsFeature } from '../geoserver/wfs/wfs.models';
 import { isPolygonal } from '../geoserver/wfs/wfs.util';
 import { notFalsyFilter } from '../util/NotFalsyFilter';
 import { featureToWfsFeature, formatLength, wfsFeatureToFeature } from '../util/open-layers.util';
 import { sleep } from '../util/sleep';
 import { isArrayOf } from '../util/typeGuards/isArrayOf';
-import { isCoordinateArray } from '../util/typeGuards/isCoordinateArray';
+import { isCoordinate, isCoordinateArray, isCoordinateArrayArray } from '../util/typeGuards/isCoordinate';
 import { isNumberArray } from '../util/typeGuards/isNumberArray';
 import { prompto } from '../utility-dialogs.service';
 import { CreateFeaturesData, Distance, LabelType, MapMode } from './map.models';
 import { mapService } from './map.service';
-import { getRotationByAzimuth } from './map.util';
+import {
+  getFeatureLengthByGeometry,
+  getFeatureSquareByGeometry,
+  getMeasureUnitsByType,
+  getRotationByAzimuth,
+  transformAnyCoordinates
+} from './map-labels.util';
 import { mapMeasureService } from './map-measure.service';
 
 const MARK_FILL_COLOR = 'rgba(255, 255, 255, 0.5)';
@@ -158,11 +164,11 @@ class MapLabelsService {
   private getFlatGroups(coordinates: Coordinate[] | Coordinate[][] | Coordinate[][][]): Coordinate[][] {
     if (isArrayOf(coordinates, isCoordinate)) {
       return [coordinates];
-    } else if (coordinates.every(part => isArrayOf(part, isCoordinate))) {
-      return coordinates as Coordinate[][]; // as ошибка TS
+    } else if (isCoordinateArrayArray(coordinates)) {
+      return coordinates;
     }
 
-    return this.getFlatGroups(coordinates.flat() as Coordinate[][]); // as ошибка TS
+    return this.getFlatGroups(coordinates.flat());
   }
 
   private getDistancesFeatures({
@@ -209,22 +215,22 @@ class MapLabelsService {
       .filter(notFalsyFilter);
   }
 
-  private async getDataForCreateFeatures(): Promise<CreateFeaturesData> {
+  async getDataForCreateFeatures(): Promise<CreateFeaturesData> {
     this.dropInteractions();
 
     const selectedFeatureId = sidebars.editFeaturesData?.features[0].id;
-    const activeFeature = selectedFeatureId
+    const selectedFeature = selectedFeatureId
       ? mapStore.getFeatureInSelectionById(selectedFeatureId)
       : mapStore.selectedFeatures[0];
-    const layerTableName = activeFeature ? extractTableNameFromFeatureId(activeFeature.id) : null;
+    const layerTableName = selectedFeature ? extractTableNameFromFeatureId(selectedFeature.id) : null;
 
     if (!layerTableName) {
       throw new Error('Отсуствует векторная таблица');
     }
 
     const layer = currentProject.layers.find(layer => layer.tableName === layerTableName);
-    const coordinates = activeFeature?.geometry?.coordinates || [];
-    const geometryType = mapStore.selectedFeatures[0].geometry?.type;
+    const coordinates = selectedFeature?.geometry?.coordinates || [];
+    const geometryType = selectedFeature?.geometry?.type;
 
     if (!geometryType || !supportedGeometryTypes.includes(geometryType)) {
       throw new Error('Неподдерживаемый тип геометрии');
@@ -238,6 +244,74 @@ class MapLabelsService {
     const olProjection = await getProjectionByCode(defaultOlProjectionCode);
 
     return { coordinates, geometryType, currentLayerProjection, olProjection };
+  }
+
+  async addFeatureSquare(): Promise<void> {
+    const { coordinates, geometryType, currentLayerProjection, olProjection } = await this.getDataForCreateFeatures();
+
+    if (!currentLayerProjection || !olProjection) {
+      throw new Error('Отсутствует проекция');
+    }
+
+    const { value, middlePoints } = getFeatureSquareByGeometry(coordinates, geometryType);
+
+    for (const point of middlePoints) {
+      const pointCoordinates = transformCoord(point.getCoordinates().slice(0, 2), currentLayerProjection, olProjection);
+
+      if (!isCoordinate(pointCoordinates) || !isNumberArray(pointCoordinates)) {
+        throw new Error('Координаты точки некорректны');
+      }
+
+      const { value: squareValue, units } = getMeasureUnitsByType(value, 'square');
+
+      const feature = new Feature({
+        geometry: new Point(pointCoordinates),
+        type: 'label',
+        text: `${squareValue} ${units}`,
+        isLabelInPolygon: true
+      });
+
+      feature.setId(uuid());
+      feature.setStyle(this.createStyle(feature));
+
+      this.source.addFeature(feature);
+    }
+
+    await sleep(0);
+    this.saveToStorages();
+  }
+
+  async addFeaturePerimeter(): Promise<void> {
+    const { coordinates, geometryType, currentLayerProjection, olProjection } = await this.getDataForCreateFeatures();
+
+    if (!currentLayerProjection || !olProjection) {
+      throw new Error('Отсутствует проекция');
+    }
+
+    const olCoordinates = transformAnyCoordinates(coordinates, currentLayerProjection, olProjection);
+
+    if (!olCoordinates) {
+      throw new Error('Координаты точки некорректны');
+    }
+
+    const { length, middlePoints } = getFeatureLengthByGeometry(olCoordinates, geometryType);
+    const { value, units } = getMeasureUnitsByType(length);
+
+    for (const point of middlePoints) {
+      const feature = new Feature({
+        geometry: new Point(point.getCoordinates()),
+        type: 'label',
+        text: `${value} ${units}`
+      });
+
+      feature.setId(uuid());
+      feature.setStyle(this.createStyle(feature));
+
+      this.source.addFeature(feature);
+    }
+
+    await sleep(0);
+    this.saveToStorages();
   }
 
   async addPointsDistances(): Promise<void> {
@@ -592,7 +666,7 @@ class MapLabelsService {
         textAlign: 'left',
         justify: 'left',
         offsetX: centred ? -14 : 17,
-        offsetY: centred && isLabelInPolygon ? 20 : -20,
+        offsetY: isLabelInPolygon ? 20 : -20,
         text: text,
         stroke: new Stroke({
           color: centred ? '#d3d3d3' : '#fff',

@@ -56,7 +56,7 @@ export function transformGeometry(
   const { type: geometryType, coordinates } = geometry;
 
   if (geometryType === GeometryType.POINT) {
-    const newCoordinates = transformCoordinate(
+    const newCoordinates = transformCoord(
       coordinates as Coordinate,
       projFrom,
       projTo,
@@ -122,7 +122,7 @@ export function transformExtent(extent: Extent, projectionFrom: Projection, proj
   return chunk(extent, 2).flatMap(coord => transform(projectionFrom, projectionTo, coord)) as Extent;
 }
 
-function transformCoordinate(
+export function transformCoord(
   coordEdited: Coord,
   projFrom: Projection,
   projTo: Projection,
@@ -146,10 +146,10 @@ export function transformGroup(
   origin?: Coord[],
   transformedOrigin?: Coord[]
 ): Coord[] {
-  return group.map(coord => transformCoordinate(coord, projFrom, projTo, origin, transformedOrigin));
+  return group.map(coord => transformCoord(coord, projFrom, projTo, origin, transformedOrigin));
 }
 
-function transformSuperGroup(
+export function transformSuperGroup(
   superGroup: Coord[][],
   projFrom: Projection,
   projTo: Projection,
@@ -167,7 +167,7 @@ function transformSuperGroup(
   );
 }
 
-function transformMultiSuperGroup(
+export function transformMultiSuperGroup(
   superGroups: Coord[][][],
   projFrom: Projection,
   projTo: Projection,
