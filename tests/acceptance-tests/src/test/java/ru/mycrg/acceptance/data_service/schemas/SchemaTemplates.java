@@ -8,15 +8,15 @@ import java.util.List;
 
 import static ru.mycrg.acceptance.BaseStepsDefinitions.gson;
 
-public class SchemaHolder {
+public class SchemaTemplates {
 
-    public static SchemaDto getSchemaByKey(String schemaKey) {
-        switch (schemaKey) {
+    public static SchemaDto getSchemaTemplateByTitle(String schemaTitle) {
+        switch (schemaTitle) {
             case "Тест FTS - исключение hidden полей":
                 return testFtsHiddenFieldsSchema();
-            case "Тестовая схема V1":
-                SchemaDto schema0 = DlDefaultSchema();
-                schema0.setTitle("Тестовая схема V1");
+            case "Тестовая схема dl_default":
+                SchemaDto schema0 = dlDefaultSchema();
+                schema0.setTitle("Тестовая схема dl_default");
 
                 return schema0;
             case "rule_id_terr_Rf_subRf без требуемых полей":
@@ -59,29 +59,30 @@ public class SchemaHolder {
             case "с тэгом 'Приказ 123'":
                 SchemaDto schemaWithOrder123 = prepareSchemaTarget();
                 schemaWithOrder123.setName("schemaWithTagsOrder123");
-                schemaWithOrder123.setTitle("с тэгом 'Приказ 123");
+                schemaWithOrder123.setTitle("с тэгом 'Приказ 123'");
                 schemaWithOrder123.setTags(List.of("Приказ 123", "system"));
 
                 return schemaWithOrder123;
             case "с тэгами 'Приказ 10' и 'Приказ 123'":
                 SchemaDto schemaBoth = prepareSchemaWithTags();
                 schemaBoth.setName("schema_with_both_tags");
-                schemaBoth.setTitle("Схема с тегами 'Приказ 10', 'Приказ 123'");
+                schemaBoth.setTitle("с тэгами 'Приказ 10' и 'Приказ 123'");
                 schemaBoth.setTags(List.of("Приказ 10", "Приказ 123", "system"));
 
                 return schemaBoth;
             case "с тэгом 'Схема доярки'":
                 SchemaDto schemaDoyarka = prepareSchemaWithTags();
                 schemaDoyarka.setName("schemaDoyarkaV1");
-                schemaDoyarka.setTitle("Схема доярки 1");
+                schemaDoyarka.setTitle("с тэгом 'Схема доярки'");
                 schemaDoyarka.setTags(List.of("Схема доярки"));
 
                 return schemaDoyarka;
             case "с полем типа UUID, в котором указан параметр 'defaultValueWellKnownFormula'":
                 SchemaDto schemaWithUuidFiled = prepareSchemaTarget();
-                schemaWithUuidFiled.setTableName("schemaWithUuidFiled");
+                schemaWithUuidFiled.setTableName("dl_with_uuid_filed");
                 schemaWithUuidFiled.setName("schemaWithUuidFiled");
-                schemaWithUuidFiled.setTitle("с полем типа UUID, указан параметр 'defaultValueWellKnownFormula'");
+                schemaWithUuidFiled.setTitle(
+                        "с полем типа UUID, в котором указан параметр 'defaultValueWellKnownFormula'");
 
                 SimplePropertyDto uuidProperty = new SimplePropertyDto();
                 uuidProperty.setName("guid");
@@ -100,7 +101,7 @@ public class SchemaHolder {
 
                 return schemaWithUuidFiled;
             default:
-                return simpleSchema(schemaKey);
+                return simpleSchema(schemaTitle);
         }
     }
 
@@ -232,11 +233,11 @@ public class SchemaHolder {
                         "}", SchemaDto.class);
     }
 
-    private static SchemaDto DlDefaultSchema() {
+    private static SchemaDto dlDefaultSchema() {
         return gson.fromJson(
                 "{" +
                         "  \"name\": \"dl_default_schema\"," +
-                        "  \"title\": \"Тестовая схема V1\"," +
+                        "  \"title\": \"Тестовая схема dl_default\"," +
                         "  \"description\": \"documents_schema_v1\"," +
                         "  \"tableName\": \"dl_default\"," +
                         "  \"properties\": [" +
@@ -702,7 +703,7 @@ public class SchemaHolder {
         SchemaDto schemaDto = new SchemaDto();
         schemaDto.setName(name);
         schemaDto.setTitle("someTitle");
-        schemaDto.setTableName("someTableName");
+        schemaDto.setTableName("some_table_name");
         schemaDto.setProperties(properties);
         schemaDto.setReadOnly(true);
 

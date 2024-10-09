@@ -7,8 +7,10 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import ru.mycrg.data_service.dto.PermissionProjection;
 import ru.mycrg.data_service.entity.Permission;
 import ru.mycrg.data_service.entity.Principal;
+import ru.mycrg.data_service.entity.Role;
 
 import java.util.List;
+import java.util.Optional;
 
 @RepositoryRestResource(exported = false)
 public interface PermissionRepository extends PagingAndSortingRepository<Permission, Long> {
@@ -23,4 +25,9 @@ public interface PermissionRepository extends PagingAndSortingRepository<Permiss
                                                                                  Object resId,
                                                                                  List<Principal> principals,
                                                                                  Pageable pageable);
+
+    Optional<Permission> findByResourceTableAndResourceIdAndPrincipalAndRole(String table,
+                                                                             Object resId,
+                                                                             Principal principal,
+                                                                             Role role);
 }

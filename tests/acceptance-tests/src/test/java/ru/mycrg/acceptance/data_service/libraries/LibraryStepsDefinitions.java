@@ -14,6 +14,7 @@ import ru.mycrg.acceptance.data_service.dto.FileDescriptionModel;
 import ru.mycrg.acceptance.data_service.dto.LibraryModel;
 import ru.mycrg.acceptance.data_service.dto.RecordDto;
 import ru.mycrg.acceptance.data_service.dto.schemas.SchemaDto;
+import ru.mycrg.acceptance.data_service.schemas.CurrentScenarioSchema;
 import ru.mycrg.data_service_contract.dto.DocumentVersioningDto;
 
 import javax.validation.constraints.NotNull;
@@ -36,14 +37,11 @@ import static ru.mycrg.acceptance.Config.PATCH_CONTENT_TYPE;
 import static ru.mycrg.acceptance.auth_service.UserStepsDefinitions.userDto;
 import static ru.mycrg.acceptance.data_service.FilesStepDefinitions.*;
 import static ru.mycrg.acceptance.data_service.libraries.LibraryPermissionsStepsDefinitions.*;
-import static ru.mycrg.acceptance.data_service.schemas.SchemasStepsDefinitions.currentSchemaName;
 
 public class LibraryStepsDefinitions extends LibraryBaseRecords {
 
     public static LibraryModel currentLibrary;
     public static LibraryModel currentLibraryWithVersioningModel;
-    public static String currentLibraryId;
-    public static String currentLibraryTableName;
 
     public static Integer currentDocumentId;
     public static Integer deletedDocumentId;
@@ -68,16 +66,12 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
     public void createDocumentLibraryByAdminStep() {
         authorizationBase.loginAsOwner();
 
-        if (Objects.isNull(currentLibrary)) {
-            createLibrary(currentSchemaName, false);
-
-            currentLibrary = extractCurrentLibraryModel();
-        }
+        createOrGetDocumentLibrary(CurrentScenarioSchema.getCurrentSchema().getTitle(), false);
     }
 
-    @When("Пользователь делает запрос на создание библиотеки документов")
+    @When("Текущий пользователь делает запрос на создание библиотеки документов по текущей схеме")
     public void createDocumentLibraryByUser() {
-        createLibrary(currentSchemaName, false);
+        createLibrary(CurrentScenarioSchema.getCurrentSchema().getName(), false);
     }
 
     @When("Существует библиотека документов")
@@ -92,28 +86,16 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
         createDocumentLibraryByAdminStep();
     }
 
-    @When("Существует библиотека документов, созданная по схеме {string}")
+    @Given("Существует библиотека документов, созданная по схеме {string}")
     public void createDocumentLibraryBySchema(String schemaTitle) {
-        currentLibrary = null;
-
-        SchemaDto schema = getSchemaByTitleFromScenario(schemaTitle);
-
-        createLibrary(schema.getName(), false);
-        if (response.statusCode() == 409) {
-            System.out.println("Библиотека " + schema.getName() + " уже существует");
-        } else if (response.statusCode() != 201) {
-            throw new IllegalStateException("Не удалось создать библиотеку по схеме: " + schema.getName());
-        }
-
-        response.prettyPrint();
-
-        // currentLibrary = extractCurrentLibraryModel();
+        createOrGetDocumentLibrary(schemaTitle, false);
     }
 
     @When("Существует библиотека документов с включённым версионированием")
     public void createDocumentLibraryWithVersioning() {
         if (Objects.isNull(currentLibraryWithVersioningModel)) {
-            createLibrary(currentSchemaName, true);
+            createOrGetDocumentLibrary(CurrentScenarioSchema.getCurrentSchema().getTitle(), true);
+
             currentLibraryWithVersioningModel = extractCurrentLibraryModel();
         }
     }
@@ -208,7 +190,7 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
     @Given("В текущей библиотеке существует документ с полем {string} заполненным {string}")
     public void initRecordInCurrentLibraryWithFields(String filedName, String fieldValue) throws InterruptedException {
         String body = String.format("{\"%s\": \"%s\"}", filedName, fieldValue);
-        createDocumentAndWriteAsCurrent(body, currentLibraryTableName);
+        createDocumentAndWriteAsCurrent(body, currentLibrary.getTableName());
 
         sleep(800);
 
@@ -217,18 +199,11 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
         currentDocumentId = extractEntityIdFromResponse(response);
     }
 
-    @Given("Текущий пользователь создает документ в библиотеке по умолчанию")
-    public void currentUserCreateRecordInDefaultLibrary() {
-        createDocumentAndWriteAsCurrent(
-                String.format("{\"title\":\"%s\"}", generateString("STRING_10")),
-                DEFAULT_LIBRARY);
-    }
-
     @Given("Текущий пользователь создает документ в текущей библиотеке")
     public void currentUserCreateRecordInCurrentLibrary() {
         createDocumentAndWriteAsCurrent(
                 String.format("{\"title\":\"%s\"}", generateString("STRING_10")),
-                currentLibraryTableName);
+                currentLibrary.getTableName());
     }
 
     @When("Пользователь создаёт запись в библиотеке с отсылкой на второй файл")
@@ -284,7 +259,7 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
     public void updateCurrentDocument(String filedName, String fieldValue) {
         updateDocument(currentDocumentId,
                        String.format("{\"%s\": \"%s\"}", filedName, fieldValue),
-                       currentLibraryTableName);
+                       currentLibrary.getTableName());
     }
 
     @When("Пользователь делает запрос на обновление текущей записи передавая несуществующий атрибут")
@@ -399,7 +374,7 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
 
         response = getBaseRequestWithCurrentCookie()
                 .when().
-                        get(String.format("/%s/records/%d/versions", currentLibraryTableName, currentDocumentId));
+                        get(String.format("/%s/records/%d/versions", currentLibrary.getTableName(), currentDocumentId));
     }
 
     @When("Администратор делает запрос на версии текущего документа из библиотеки по-умолчанию")
@@ -432,6 +407,12 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
 
     @When("Тело ответа содержит предыдущие версии изменений текущего документа")
     public void responseContainsAllVersionOfDocument() {
+        if (response.statusCode() != 200) {
+            response.prettyPrint();
+
+            throw new IllegalStateException("Предыдущий запрос закончился неудачей");
+        }
+
         String field = "firstproperty";
         jsonPath = response.jsonPath();
         List<DocumentVersioningDto> versions = jsonPath.getList("", DocumentVersioningDto.class);
@@ -524,7 +505,7 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
         updateDocument(currentDocumentId, gson.toJson(record), DEFAULT_LIBRARY);
     }
 
-    @Given("Существует запись в библиотеке на основе растрового файла из БД {string}")
+    @Given("Существует запись в текущей библиотеке на основе растрового файла из БД {string}")
     public void createLibraryDefaultRecord(String title) {
         String body = "{" +
                 "    \"title\": \"" + title + "\"," +
@@ -539,7 +520,7 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
                 "    \"content_type_id\": \"doc_v4\"" +
                 "}";
 
-        createDocumentAndWriteAsCurrent(body, DEFAULT_LIBRARY);
+        createDocumentAndWriteAsCurrent(body, currentLibrary.getTableName());
         currentDocumentId = extractEntityIdFromResponse(response);
     }
 
@@ -806,14 +787,23 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
         checkResponseValueContains("message", msg);
     }
 
-    private void createLibrary(String schemaId, boolean versioning) {
-        String body = String.format("{\"schemaId\":\"%s\", \"versioned\":\"%s\"}", schemaId, versioning);
-        response = getBaseRequestWithCurrentCookie()
-                .given().
-                        body(body).
-                        contentType(ContentType.JSON)
-                .when().
-                        post();
+    public void createOrGetDocumentLibrary(String schemaTitle, boolean versioning) {
+        currentLibrary = null;
+
+        SchemaDto schema = CurrentScenarioSchema.getSchemaByTitle(schemaTitle);
+
+        createLibrary(schema.getName(), versioning);
+        response.prettyPrint();
+
+        if (response.statusCode() == 409) {
+            System.out.println("Библиотека " + schema.getTableName() + " уже существует");
+
+            getLibrary(schema.getTableName());
+        } else if (response.statusCode() != 201) {
+            throw new IllegalStateException("Не удалось создать библиотеку по схеме: " + schema.getName());
+        }
+
+        currentLibrary = extractCurrentLibraryModel();
     }
 
     private LibraryModel extractCurrentLibraryModel() {
@@ -821,16 +811,14 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
         String title = response.jsonPath().get("title");
         String details = response.jsonPath().get("details");
         String schemaId = response.jsonPath().get("schemaId");
-        currentLibraryTableName = response.jsonPath().get("table_name");
+        String libraryTableName = response.jsonPath().get("table_name");
 
         LibraryModel libraryModel = new LibraryModel();
         libraryModel.setId(id);
         libraryModel.setTitle(title);
         libraryModel.setSchemaId(schemaId);
-        libraryModel.setTableName(currentLibraryTableName);
+        libraryModel.setTableName(libraryTableName);
         libraryModel.setDetails(details);
-
-        currentLibraryId = String.valueOf(id);
 
         return libraryModel;
     }
@@ -852,7 +840,31 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
     }
 
     private void getCurrentDocumentInCurrentLibrary() {
-        getRecordById(currentDocumentId, currentLibraryTableName);
+        getRecordById(currentDocumentId, currentLibrary.getTableName());
+    }
+
+    private void updateCurrentDocument(String payload) {
+        if (currentDocumentId == null) {
+            throw new IllegalStateException("Идентификатор текущего документа не задан");
+        }
+
+        updateDocument(currentDocumentId, payload, DEFAULT_LIBRARY);
+    }
+
+    private void createLibrary(String schemaName, boolean versioning) {
+        String body = String.format("{\"schemaId\":\"%s\", \"versioned\":\"%s\"}", schemaName, versioning);
+        response = getBaseRequestWithCurrentCookie()
+                .given().
+                        body(body).
+                        contentType(ContentType.JSON)
+                .when().
+                        post();
+    }
+
+    private void getLibrary(String libraryId) {
+        response = getBaseRequestWithCurrentCookie()
+                .when().
+                       get("/" + libraryId);
     }
 
     private void getRecordById(Integer id, String libraryId) {
@@ -890,7 +902,6 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
 
         response = getBaseRequestWithCurrentCookie()
                 .when().
-                        log().all().
                         post(path);
     }
 
@@ -901,14 +912,6 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
                         body(payload)
                 .when().
                         patch(String.format("/%s/records/%d", currentLibraryId, docId));
-    }
-
-    private void updateCurrentDocument(String payload) {
-        if (currentDocumentId == null) {
-            throw new IllegalStateException("Идентификатор текущего документа не задан");
-        }
-
-        updateDocument(currentDocumentId, payload, DEFAULT_LIBRARY);
     }
 
     private void getAllRecords(String libraryId) {

@@ -1,6 +1,6 @@
 Feature: Публикация GML
 
-  Background: Проверка организации
+  Background:
     Given Существует любая организация
     Given Владелец организации авторизован
     Given Существует проект "some gml"

@@ -12,13 +12,11 @@ import java.util.List;
 import java.util.Objects;
 
 import static org.junit.Assert.*;
-import static ru.mycrg.acceptance.data_service.schemas.SchemaHolder.getSchemaByKey;
+import static ru.mycrg.acceptance.data_service.schemas.SchemaTemplates.getSchemaTemplateByTitle;
 
 public class SchemasStepsDefinitions extends BaseStepsDefinitions {
 
     private final AuthorizationBase authorizationBase = new AuthorizationBase();
-
-    public static String currentSchemaName;
 
     @Override
     public RequestSpecification getBaseRequestWithCurrentCookie() {
@@ -89,15 +87,15 @@ public class SchemasStepsDefinitions extends BaseStepsDefinitions {
     }
 
     @When("Существует схема {string}")
-    public void createSchemaByKey(String schemaKey) {
-        SchemaDto schema = getSchemaByKey(schemaKey);
+    public void createSchemaByKey(String schemaTitle) {
+        SchemaDto schema = getSchemaTemplateByTitle(schemaTitle);
 
         createOrUpdateSchema(schema);
     }
 
     @When("Пользователь делает PUT запрос на обновление существующей схемы")
     public void updateCurrentSchemaRequest() {
-        SchemaDto schema = getSchemaByKey(currentSchemaName);
+        SchemaDto schema = CurrentScenarioSchema.getCurrentSchema();
         schema.setReadOnly(false);
 
         updateSchema(schema);
@@ -105,7 +103,8 @@ public class SchemasStepsDefinitions extends BaseStepsDefinitions {
 
     @When("Схема создана и доступна для выборки")
     public void checkCreatedSchema() {
-        getCurrentSchema();
+        String currentSchemaName = CurrentScenarioSchema.getCurrentSchema().getName();
+        getCurrentSchema(currentSchemaName);
 
         boolean isPresent = response.jsonPath()
                                     .getList("", SchemaDto.class)
@@ -117,7 +116,8 @@ public class SchemasStepsDefinitions extends BaseStepsDefinitions {
 
     @When("Схема обновлена успешно")
     public void checkUpdatedSchema() {
-        getCurrentSchema();
+        String currentSchemaName = CurrentScenarioSchema.getCurrentSchema().getName();
+        getCurrentSchema(currentSchemaName);
 
         boolean isSchemaReadonly = response.jsonPath()
                                            .getList("", SchemaDto.class)
@@ -137,38 +137,36 @@ public class SchemasStepsDefinitions extends BaseStepsDefinitions {
     }
 
     private void createSchemaWithRandomName() {
-        currentSchemaName = generateString("STRING_8");
-
-        SchemaDto schema = getSchemaByKey(currentSchemaName);
+        SchemaDto schema = getSchemaTemplateByTitle(generateString("STRING_8"));
 
         createOrUpdateSchema(schema);
     }
 
-    private void createOrUpdateSchema(SchemaDto dto) {
-        currentSchemaName = dto.getName();
-        scenarioSchemas.put(dto.getTitle(), dto);
+    private void createOrUpdateSchema(SchemaDto schema) {
+        CurrentScenarioSchema.add(schema);
 
-        super.createEntity(dto);
+        super.createEntity(schema);
 
         if (response.statusCode() == 409) {
             System.out.println("Схема уже существует, обновим");
 
-            updateSchema(dto);
+            updateSchema(schema);
         } else if (response.statusCode() != 201) {
-            throw new IllegalStateException("Не удалось создать схему: " + dto.getName());
+            throw new IllegalStateException("Не удалось создать схему: " + schema.getName());
         }
     }
 
     private void getAllSchemas() {
         response = getBaseRequestWithCurrentCookie()
                 .when().
+                        log().all().
                         get("?schemaIds=");
     }
 
-    private void getCurrentSchema() {
+    private void getCurrentSchema(String schemaName) {
         response = getBaseRequestWithCurrentCookie()
                 .when().
-                        get("?schemaIds=" + currentSchemaName);
+                        get("?schemaIds=" + schemaName);
     }
 
     private void updateSchema(SchemaDto dto) {

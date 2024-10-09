@@ -23,6 +23,7 @@ import ru.mycrg.data_service.service.resources.protectors.IMasterResourceProtect
 import ru.mycrg.data_service.service.resources.protectors.MasterResourceProtector;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static java.time.LocalDateTime.now;
@@ -152,16 +153,22 @@ public class PermissionsService {
                 .findByIdentifierAndType(userId, "user")
                 .orElseGet(() -> principalRepository.save(new Principal(userId, "user")));
 
-        Permission permission = new Permission();
-        permission.setRole(role);
-        permission.setPrincipal(principal);
-        permission.setCreatedAt(now());
-        permission.setLastModified(now());
-        permission.setCreatedBy(authenticationFacade.getLogin());
-        permission.setResourceTable(targetTable.getTable());
-        permission.setResourceId(id);
+        Optional<Permission> oPerm = permissionRepository
+                .findByResourceTableAndResourceIdAndPrincipalAndRole(targetTable.getTable(), id, principal, role);
+        if (oPerm.isEmpty()) {
+            Permission permission = new Permission();
+            permission.setRole(role);
+            permission.setPrincipal(principal);
+            permission.setCreatedAt(now());
+            permission.setLastModified(now());
+            permission.setCreatedBy(authenticationFacade.getLogin());
+            permission.setResourceTable(targetTable.getTable());
+            permission.setResourceId(id);
 
-        return permissionRepository.save(permission);
+            return permissionRepository.save(permission);
+        }
+
+        return oPerm.get();
     }
 
     public void delete(Permission permission) {

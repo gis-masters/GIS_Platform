@@ -12,6 +12,7 @@ import ru.mycrg.acceptance.data_service.dto.PermissionCreateDto;
 import ru.mycrg.acceptance.data_service.dto.TableCreateDto;
 import ru.mycrg.acceptance.data_service.dto.TableUpdateDto;
 import ru.mycrg.acceptance.data_service.dto.schemas.SchemaDto;
+import ru.mycrg.acceptance.data_service.schemas.CurrentScenarioSchema;
 
 import java.util.List;
 import java.util.Map;
@@ -93,7 +94,7 @@ public class TablesStepsDefinitions extends BaseStepsDefinitions {
 
     @When("Существует таблица по схеме {string}")
     public void initTable(String schemaTitle) {
-        SchemaDto schema = getSchemaByTitleFromScenario(schemaTitle);
+        SchemaDto schema = CurrentScenarioSchema.getSchemaByTitle(schemaTitle);
 
         createTablesRequest(generateString("STRING_8"),
                             "some title",

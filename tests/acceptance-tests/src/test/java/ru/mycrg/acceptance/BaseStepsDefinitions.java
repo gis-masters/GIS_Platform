@@ -424,19 +424,6 @@ public class BaseStepsDefinitions {
                 .orElseThrow(() -> new IllegalStateException("Не найден слой: " + layerTitle));
     }
 
-    public SchemaDto getSchemaByTitleFromScenario(String schemaTitle) {
-        if (scenarioSchemas.isEmpty()) {
-            throw new IllegalStateException("Список схем пуст");
-        }
-
-        SchemaDto schema = scenarioSchemas.get(schemaTitle);
-        if (schema == null) {
-            throw new IllegalStateException("Не найдена схема по названию: " + schemaTitle);
-        }
-
-        return schema;
-    }
-
     public void checkResponseValueContains(String field, String value) {
         assertTrue(((String) response.jsonPath().get(field)).contains(value));
     }

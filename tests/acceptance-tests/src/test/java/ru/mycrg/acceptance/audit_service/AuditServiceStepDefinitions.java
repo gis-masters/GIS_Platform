@@ -26,8 +26,7 @@ import static ru.mycrg.acceptance.audit_service.dto.AuditEventEntityType.*;
 import static ru.mycrg.acceptance.auth_service.OrganizationStepsDefinitions.MAX_RETRY_ATTEMPT;
 import static ru.mycrg.acceptance.auth_service.UserStepsDefinitions.userDto;
 import static ru.mycrg.acceptance.data_service.datasets.DatasetsStepsDefinitions.currentDatasetIdentifier;
-import static ru.mycrg.acceptance.data_service.libraries.LibraryPermissionsStepsDefinitions.DEFAULT_LIBRARY;
-import static ru.mycrg.acceptance.data_service.libraries.LibraryStepsDefinitions.currentLibraryTableName;
+import static ru.mycrg.acceptance.data_service.libraries.LibraryStepsDefinitions.currentLibrary;
 import static ru.mycrg.acceptance.data_service.tables.TablesStepsDefinitions.anotherTableName;
 import static ru.mycrg.acceptance.data_service.tables.TablesStepsDefinitions.currentTableName;
 import static ru.mycrg.acceptance.gis_service.LayerStepDefinitions.layerCreateDto;
@@ -180,7 +179,7 @@ public class AuditServiceStepDefinitions extends BaseStepsDefinitions {
 
     @Then("Создана запись в журнале аудита о создании документа")
     public void checkDocumentCreate() {
-        waitAuditEvent(CREATE.name(), LIBRARY_RECORD, DEFAULT_LIBRARY);
+        waitAuditEvent(CREATE.name(), LIBRARY_RECORD, currentLibrary.getTableName());
     }
 
     @Then("Создана запись в журнале аудита о создании записи в слое")
@@ -258,12 +257,12 @@ public class AuditServiceStepDefinitions extends BaseStepsDefinitions {
 
     @Then("Создана запись в журнале аудита о создании библиотеки документов")
     public void checkDocumentLibraryCreate() {
-        waitAuditEvent(CREATE.name(), LIBRARY, currentLibraryTableName);
+        waitAuditEvent(CREATE.name(), LIBRARY, currentLibrary.getTableName());
     }
 
     @Then("Создана запись в журнале аудита об удалении библиотеки документов")
     public void checkDocumentLibraryDelete() {
-        waitAuditEvent(DELETE.name(), LIBRARY, format("data.%s", currentLibraryTableName));
+        waitAuditEvent(DELETE.name(), LIBRARY, format("data.%s", currentLibrary.getTableName()));
     }
 
     @Then("Создана запись в журнале аудита о создании правила")

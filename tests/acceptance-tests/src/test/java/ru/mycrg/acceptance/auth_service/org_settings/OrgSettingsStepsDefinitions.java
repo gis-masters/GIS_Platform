@@ -47,6 +47,20 @@ public class OrgSettingsStepsDefinitions extends BaseStepsDefinitions {
         updateOrgSetting(gson.toJson(new OrgSettingsRequestDto(Long.valueOf(orgId), settings)));
     }
 
+    @When("Администратор системы разрешает пользоваться схемами с тегами: {string}")
+    public void updateAllowedTagsAsRoot(String tagsAsString) {
+        authorizationBase.loginAsSystemAdmin();
+
+        Map<String, Object> settings = new HashMap<>();
+        Set<String> tags = Stream.of(tagsAsString.split(","))
+                                 .map(String::trim)
+                                 .collect(Collectors.toSet());
+
+        settings.put("tags", tags);
+
+        updateOrgSetting(gson.toJson(new OrgSettingsRequestDto(Long.valueOf(orgId), settings)));
+    }
+
     @When("Владелец организации разрешает пользоваться схемами с тегами: {string}")
     public void updateAllowedTagsAsOwner(String tagsAsString) {
         authorizationBase.loginAsOwner();
