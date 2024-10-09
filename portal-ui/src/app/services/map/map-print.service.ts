@@ -7,7 +7,8 @@ import { Legend } from '../../components/Legend/Legend';
 import { PrintMapDialogDate } from '../../components/PrintMapDialog/Date/PrintMapDialog-Date';
 import { currentProject } from '../../stores/CurrentProject.store';
 import { mapStore } from '../../stores/Map.store';
-import { printSettings, StyleRuleExtended } from '../../stores/PrintSettings.store';
+import { printSettings } from '../../stores/PrintSettings.store';
+import { StyleRuleExtended } from '../geoserver/styles/styles.models';
 import { filterLegendForCurrentMapView, getLayerStyleRules } from '../geoserver/styles/styles.service';
 import { CrgLayerType, CrgVectorLayer } from '../gis/layers/layers.models';
 import { saveAsBlob } from '../util/FileSaver';
@@ -426,7 +427,6 @@ async function autoFilterLegend() {
     if (lastFilteredLegendRequestId !== filteredLegendRequestId) {
       return;
     }
-
     printSettings.setLegendItems(
       filteredLegendResponse
         .flatMap(({ dataset, identifier, rules: rulesNames }) =>

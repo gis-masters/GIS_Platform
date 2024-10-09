@@ -2,8 +2,7 @@ import React, { FC, Fragment } from 'react';
 import { cn } from '@bem-react/classname';
 import { IClassNameProps } from '@bem-react/core';
 
-import { StyleRule } from '../../services/geoserver/styles/styles.models';
-import { StyleRuleExtended } from '../../stores/PrintSettings.store';
+import { isStyleRuleExtended, StyleRule, StyleRuleExtended } from '../../services/geoserver/styles/styles.models';
 
 import '!style-loader!css-loader!sass-loader!./Legend.scss';
 
@@ -50,8 +49,11 @@ export const Legend: FC<LegendProps> = ({
       })
     : rules;
 
-  const isMonoRule = (rule: StyleRuleExtended): boolean =>
-    !(filteredRules as StyleRuleExtended[]).some(r => r.layerTitle === rule.layerTitle && r !== rule);
+  const isMonoRule = (rule: StyleRuleExtended | StyleRule): boolean => {
+    return !(filteredRules as StyleRuleExtended[]).some(
+      r => isStyleRuleExtended(rule) && r.layerTitle === rule.layerTitle && r !== rule
+    );
+  };
 
   if (forPrint) {
     (filteredRules as StyleRuleExtended[]).sort((a, b) => {
@@ -87,6 +89,16 @@ export const Legend: FC<LegendProps> = ({
           }
         }
 
+        let ruleTitle = rules[i].title;
+
+        if (forPrint && isMonoRule(rules[i])) {
+          const currentRule = rules.find(({ name }) => name === rules[i].name);
+
+          if (isStyleRuleExtended(currentRule)) {
+            ruleTitle = currentRule.layerTitle;
+          }
+        }
+
         return (
           <Fragment key={i}>
             {layerTitle && forPrint && !isMonoRule(rules[i]) && (
@@ -96,12 +108,8 @@ export const Legend: FC<LegendProps> = ({
               <div className={cnLegend('LayerTitle')}>Другие</div>
             )}
             <div className={cnLegend('Rule')}>
-              <img src={rule.legend} className={cnLegend('Img')} />
-              {!withoutTitle && (
-                <div className={cnLegend('RuleTitle')}>
-                  {forPrint && isMonoRule(rules[i]) ? rules[i].layerTitle : rule.title}
-                </div>
-              )}
+              <img src={rules[i].legend} className={cnLegend('Img')} />
+              {!withoutTitle && <div className={cnLegend('RuleTitle')}>{ruleTitle}</div>}
             </div>
           </Fragment>
         );

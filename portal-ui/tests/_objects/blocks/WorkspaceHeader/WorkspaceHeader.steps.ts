@@ -9,3 +9,7 @@ Then('в шапке страницы название организации —
 When('я дожидаюсь исчезновения индикатора загрузки карты в шапке страницы', async () => {
   await workspaceHeaderBlock.waitForLoaderEnd();
 });
+
+When('я нажимаю на кнопку `Распечатать карту` в шапке страницы', async () => {
+  await workspaceHeaderBlock.clickPrintMap();
+});

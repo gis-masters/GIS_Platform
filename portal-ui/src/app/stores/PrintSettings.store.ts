@@ -1,14 +1,9 @@
 import { action, computed, makeObservable, observable } from 'mobx';
 import { cloneDeep } from 'lodash';
 
-import { StyleRule } from '../services/geoserver/styles/styles.models';
+import { StyleRuleExtended } from '../services/geoserver/styles/styles.models';
 import { CrgVectorLayer } from '../services/gis/layers/layers.models';
 import { currentProject } from './CurrentProject.store';
-
-export interface StyleRuleExtended extends StyleRule {
-  layerId: number;
-  layerTitle: string;
-}
 
 export interface PrintFormat {
   id: string;

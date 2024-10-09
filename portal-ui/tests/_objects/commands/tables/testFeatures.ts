@@ -12,6 +12,9 @@ import { forFeaturesSidebar } from './testFeatures/forFeaturesSidebar';
 import { forFiltering } from './testFeatures/forFiltering';
 import { forForm } from './testFeatures/forForm';
 import { forForm2 } from './testFeatures/forForm2';
+import { forLegendTest1 } from './testFeatures/forLegendTest1';
+import { forLegendTest2 } from './testFeatures/forLegendTest2';
+import { forLegendTest3 } from './testFeatures/forLegendTest3';
 import { forOtherFiltering } from './testFeatures/forOtherFiltering';
 import { forOtherFiltering2 } from './testFeatures/forOtherFiltering2';
 import { forPhotoLayerWithMultipleObjects } from './testFeatures/forPhotoLayerWithMultipleObjects';
@@ -119,6 +122,15 @@ export async function getTestFeatures(key: string, schema?: Schema): Promise<New
     }
     case 'тестирование панели объектов': {
       return forFeaturesSidebar;
+    }
+    case 'для тестирования легенды 1': {
+      return forLegendTest1;
+    }
+    case 'для тестирования легенды 2': {
+      return forLegendTest2;
+    }
+    case 'для тестирования легенды 3': {
+      return forLegendTest3;
     }
     case 'один объект': {
       return singleFeature;

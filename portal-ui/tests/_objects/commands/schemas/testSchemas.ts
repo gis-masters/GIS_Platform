@@ -9,6 +9,9 @@ import { dlDataWithSimpleContentType } from './testSchemas/dlDataWithSimpleConte
 import { documentWithDocumentField } from './testSchemas/documentWithDocumentField';
 import { documentWithoutVersioned } from './testSchemas/documentWithoutVersioned';
 import { editable } from './testSchemas/editable';
+import { forTestInteraction } from './testSchemas/forTestInteraction';
+import { forTestParcelsNew } from './testSchemas/forTestParcelsNew';
+import { forTestParcelsOld1 } from './testSchemas/forTestParcelsOld1';
 import { forTestTitles } from './testSchemas/forTestTitles';
 import { photoLayer } from './testSchemas/photoLayer';
 import { propertyWithAllCheckedAttributes } from './testSchemas/propertyWithAllCheckedAttributes';
@@ -43,6 +46,9 @@ const testSchemas: Schema[] = [
   documentWithoutVersioned,
   editable,
   forTestTitles,
+  forTestParcelsNew,
+  forTestParcelsOld1,
+  forTestInteraction,
   photoLayer,
   propertyWithAllCheckedAttributes,
   readonly,

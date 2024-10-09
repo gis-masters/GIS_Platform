@@ -3,10 +3,11 @@ import { action, IReactionDisposer, makeObservable, observable, reaction } from 
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 
+import { StyleRuleExtended } from '../../services/geoserver/styles/styles.models';
 import { loadAllLayersStyles } from '../../services/map/map-print.service';
 import { SortParams } from '../../services/util/sortObjects';
 import { currentProject } from '../../stores/CurrentProject.store';
-import { printSettings, StyleRuleExtended } from '../../stores/PrintSettings.store';
+import { printSettings } from '../../stores/PrintSettings.store';
 import { Button } from '../Button/Button';
 import { ChooseXTableDialog } from '../ChooseXTableDialog/ChooseXTableDialog';
 import { FormControlProps } from '../Form/Control/Form-Control';

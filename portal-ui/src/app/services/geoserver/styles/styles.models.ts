@@ -1,5 +1,12 @@
+import { isObject } from 'lodash';
+
 import { PropertySchema, PropertyType } from '../../data/schema/schema.models';
 import { WfsGeometry } from '../wfs/wfs.models';
+
+export interface StyleRuleExtended extends StyleRule {
+  layerId: number;
+  layerTitle: string;
+}
 
 export interface StyleRule {
   name: string;
@@ -292,3 +299,19 @@ export const LABEL_PROPERTY_DEFAULT: PropertySchema = {
   title: 'без подписи',
   propertyType: PropertyType.STRING
 };
+
+export function isStyleRuleExtended(obj: unknown): obj is StyleRuleExtended {
+  return (
+    isObject(obj) &&
+    'name' in obj &&
+    typeof obj.name === 'string' &&
+    'title' in obj &&
+    typeof obj.title === 'string' &&
+    'legend' in obj &&
+    typeof obj.legend === 'string' &&
+    'layerId' in obj &&
+    typeof obj.layerId === 'number' &&
+    'layerTitle' in obj &&
+    typeof obj.layerTitle === 'string'
+  );
+}

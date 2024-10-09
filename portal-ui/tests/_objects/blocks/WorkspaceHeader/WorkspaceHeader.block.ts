@@ -3,12 +3,20 @@ import { Block } from '../../Block';
 class WorkspaceHeaderBlock extends Block {
   selectors = {
     container: '.WorkspaceHeader',
+    printMap: '.WorkspaceHeader .PrintMapButton',
     organization: '.WorkspaceHeader-Organization',
     loader: '.WorkspaceHeader-Loader .MuiLinearProgress-root'
   };
 
   async testOrganization(organization: string) {
     await expect(this.$('organization')).toHaveTextContaining(organization);
+  }
+
+  async clickPrintMap(): Promise<void> {
+    const $printMapBtn = await this.$('printMap');
+    await $printMapBtn.waitForDisplayed();
+
+    await $printMapBtn.click();
   }
 
   async waitForLoaderEnd(): Promise<void> {
