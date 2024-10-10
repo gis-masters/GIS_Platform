@@ -52,6 +52,8 @@ public class InitDocumentLibrariesBySpecializationDelegate implements JavaDelega
             specialization.getDocumentLibraries()
                           .forEach(dl -> createDocumentLibrary(dl, event.getOwnerToken()));
 
+            removeDlDefaultLibrary(event.getOwnerToken());
+
             log.info("Создание библиотек документов согласно специализации: '{}', успешно выполнена",
                      specialization.getId());
             execution.setVariable(ITERATION_COUNTER_VAR_NAME, 3);
@@ -88,6 +90,25 @@ public class InitDocumentLibrariesBySpecializationDelegate implements JavaDelega
             }
         } catch (Exception e) {
             throw new IllegalStateException("Не удалось создать библиотеку документов => " + e.getMessage(), e);
+        } finally {
+            if (response != null) {
+                response.close();
+            }
+        }
+    }
+
+    private void removeDlDefaultLibrary(String token) {
+        Response response = null;
+        try {
+            Request request = new Request.Builder()
+                    .url(new URL(baseHttpService.getDataServiceUrl(), "/document-libraries"))
+                    .addHeader("Authorization", "Bearer " + token)
+                    .delete()
+                    .build();
+
+            response = httpClient.newCall(request).execute();
+        } catch (Exception e) {
+            throw new IllegalStateException("Не удалось удалить библиотеку dl_default => " + e.getMessage(), e);
         } finally {
             if (response != null) {
                 response.close();

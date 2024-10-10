@@ -20,8 +20,8 @@ import static org.apache.http.HttpStatus.SC_OK;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.*;
 import static ru.mycrg.acceptance.auth_service.OrganizationStepsDefinitions.orgId;
-import static ru.mycrg.acceptance.data_service.libraries.LibraryPermissionsStepsDefinitions.DEFAULT_LIBRARY;
 import static ru.mycrg.acceptance.data_service.libraries.LibraryStepsDefinitions.currentDocumentId;
+import static ru.mycrg.acceptance.data_service.libraries.LibraryStepsDefinitions.currentLibrary;
 import static ru.mycrg.acceptance.data_service.tables.TablesStepsDefinitions.currentTableName;
 
 public class FilesStepDefinitions extends BaseStepsDefinitions {
@@ -240,7 +240,7 @@ public class FilesStepDefinitions extends BaseStepsDefinitions {
         String resourceType = jsonPath.getString("resourceType");
 
         assertEquals(currentDocumentId.intValue(), recordId);
-        assertEquals(DEFAULT_LIBRARY, table);
+        assertEquals(currentLibrary.getTableName(), table);
         assertEquals("LIBRARY_RECORD", resourceType);
     }
 
@@ -334,18 +334,6 @@ public class FilesStepDefinitions extends BaseStepsDefinitions {
         assertTrue(currentFilePath.toLowerCase().contains(organizationDir));
         assertTrue(currentFilePath.toLowerCase().contains("feature"));
         assertTrue(currentFilePath.toLowerCase().contains(currentTableName));
-    }
-
-    @Given("Первый файл перемещён из временного хранилища в соответствующую директорию")
-    public void checkFirstFilePlaceInCorrectDirectory() {
-        getFile(firstFileId);
-        String firstFilePath = jsonPath.getString("path");
-
-        String organizationDir = "organization_" + orgId;
-
-        assertTrue(firstFilePath.toLowerCase().contains(organizationDir));
-        assertTrue(firstFilePath.toLowerCase().contains("library_record"));
-        assertTrue(firstFilePath.toLowerCase().contains(DEFAULT_LIBRARY));
     }
 
     @Given("я запрашиваю информацию о файле {string}")

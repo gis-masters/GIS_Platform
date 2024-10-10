@@ -31,6 +31,7 @@ import java.util.stream.Collectors;
 import static java.lang.String.format;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.UUID.fromString;
+import static ru.mycrg.common_utils.CrgGlobalProperties.getTableNameFromComplexName;
 import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_NAME;
 import static ru.mycrg.data_service.dto.ResourceType.FEATURE;
 import static ru.mycrg.data_service.dto.ResourceType.TABLE;
@@ -515,22 +516,23 @@ public class RecordPublisher {
         log.debug("Fetch from layer: {}", complexName);
 
         try {
-            String layerName = complexName.split(":")[1];
-            if (layerName == null) {
+            Optional<String> oTableName = getTableNameFromComplexName(complexName);
+            if (oTableName.isEmpty()) {
                 log.warn("Не верно заданы параметры valueFormulaParams. " +
-                                 "Не удалось вытащить название слоя из layerComplexName: {}", complexName);
+                                 "Не удалось вытащить название таблицы из layerComplexName: {}", complexName);
 
                 return Optional.empty();
             }
 
             // Тащим идентификатор набора данных текущего слоя из ранее собранного кеша, по ключу: "tableDatasetPairs"
+            String tableName = oTableName.get();
             String datasetIdentifier;
-            Optional<IRecord> oRecord = recordsCache.getRecord("tableDatasetPairs", layerName);
+            Optional<IRecord> oRecord = recordsCache.getRecord("tableDatasetPairs", tableName);
             if (oRecord.isPresent()) {
                 datasetIdentifier = oRecord.get().getAsString("dataset");
-                log.debug("Для слоя: '{}' родительский набор данных: {}", layerName, datasetIdentifier);
+                log.debug("Для таблицы: '{}' определен родительский набор данных: {}", tableName, datasetIdentifier);
             } else {
-                log.warn("Не найден родитель для слоя: {}", layerName);
+                log.warn("Не найден родитель для таблицы: {}", tableName);
 
                 return Optional.empty();
             }
@@ -540,7 +542,7 @@ public class RecordPublisher {
             if (includeParents) {
                 Optional<Long> oRecordId = gisogdRfDao
                         .findJoinedToDocumentLayerRecordIdWithParents(datasetIdentifier,
-                                                                      layerName,
+                                                                      tableName,
                                                                       columnName,
                                                                       qualifier.getTableQualifier(),
                                                                       qualifier.getRecordId());
@@ -548,12 +550,12 @@ public class RecordPublisher {
                 if (oRecordId.isPresent()) {
                     recordId = oRecordId.get();
                 } else {
-                    log.debug("Не найдена запись в слое: '{}.{}' [PARENT ON]", datasetIdentifier, layerName);
+                    log.debug("Не найдена запись в слое: '{}.{}' [PARENT ON]", datasetIdentifier, tableName);
                 }
             } else {
                 Optional<Long> oRecordId = gisogdRfDao
                         .findJoinedToDocumentLayerRecordId(datasetIdentifier,
-                                                           layerName,
+                                                           tableName,
                                                            columnName,
                                                            qualifier.getTableQualifier(),
                                                            qualifier.getRecordId());
@@ -561,13 +563,13 @@ public class RecordPublisher {
                 if (oRecordId.isPresent()) {
                     recordId = oRecordId.get();
                 } else {
-                    log.debug("Не найдена запись в слое: '{}.{}' [PARENT OFF]", datasetIdentifier, layerName);
+                    log.debug("Не найдена запись в слое: '{}.{}' [PARENT OFF]", datasetIdentifier, tableName);
                 }
             }
 
             return recordId == null
                     ? Optional.empty()
-                    : Optional.of(new ResourceQualifier(datasetIdentifier, layerName, recordId, FEATURE));
+                    : Optional.of(new ResourceQualifier(datasetIdentifier, tableName, recordId, FEATURE));
         } catch (Exception e) {
             log.error("Не удается получить информацию из слоя: {}. По причине: {}",
                       complexName, e.getMessage(), e);

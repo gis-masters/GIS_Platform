@@ -146,4 +146,51 @@ public class CrgGlobalProperties {
             return "";
         }
     }
+
+    /**
+     * Извлекаем название слоя из комплексного имени геосервера
+     *
+     * @param complexName Комплексное имя слоя на геосервере: scratch_database_1:layer_name_fr34__7829
+     *
+     * @return Название слоя или {@literal Optional.empty()} если не удалось успешно его получить
+     */
+    public static Optional<String> getLayerNameFromComplexName(String complexName) {
+        if (complexName == null || complexName.isEmpty()) {
+            return Optional.empty();
+        }
+
+        try {
+            return Optional.of(complexName.split(GEOSERVER_COMPLEX_NAME_SEPARATOR)[1]);
+        } catch (Exception e) {
+            return Optional.empty();
+        }
+    }
+
+    /**
+     * Извлекаем название таблицы из названия слоя геосервера
+     * <p>
+     * Основано на шаблонах именования, применяемых нами при именовании таблиц и слоёв. Если таблица названа:
+     * some_table_r314, то слой на геосервере будет назван: some_table_r314__7829 - т.е. к названию таблицы добавили
+     * через разделитель код проекции(EPSG)
+     *
+     * @param geoserverLayerName Название слоя на геосервере
+     *
+     * @return Название таблицы или {@literal Optional.empty()} если не удалось успешно его получить
+     */
+    public static Optional<String> getTableNameFromGeoserverLayerName(String geoserverLayerName) {
+        if (geoserverLayerName == null || geoserverLayerName.isEmpty()) {
+            return Optional.empty();
+        }
+
+        try {
+            return Optional.ofNullable(geoserverLayerName.split("__(\\d+)")[0]);
+        } catch (Exception e) {
+            return Optional.empty();
+        }
+    }
+
+    public static Optional<String> getTableNameFromComplexName(String complexName) {
+        return getLayerNameFromComplexName(complexName)
+                .flatMap(CrgGlobalProperties::getTableNameFromGeoserverLayerName);
+    }
 }

@@ -144,13 +144,13 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
 
     @When("Пользователь удаляет запись в библиотеке")
     public void deleteLibraryDocument() {
-        deleteRecordFromDefaultLibrary(currentDocumentId);
+        deleteRecordFromDefaultLibrary(currentDocumentId, DEFAULT_LIBRARY);
     }
 
     @Given("Текущая запись была удалена")
     public void currentLibraryRecordWasDeleted() {
         deletedDocumentId = currentDocumentId;
-        deleteRecordFromDefaultLibrary(deletedDocumentId);
+        deleteRecordFromDefaultLibrary(deletedDocumentId, DEFAULT_LIBRARY);
 
         assertEquals(204, response.getStatusCode());
     }
@@ -274,7 +274,7 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
 
     @And("Запись успешно обновлена")
     public void checkRecord() {
-        getCurrentDocument();
+        getCurrentDocument(DEFAULT_LIBRARY);
 
         String newTitle = response.jsonPath().get("title");
 
@@ -293,7 +293,7 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
 
     @Then("Поле {string} заполнилось")
     public void checkFieldNotNull(String field) {
-        getCurrentDocument();
+        getCurrentDocument(DEFAULT_LIBRARY);
 
         Object data = response.jsonPath().get(field);
 
@@ -304,7 +304,7 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
 
     @Then("Поле 'last_modified' изменилось")
     public void checkLastModifiedFieldWasChanged() {
-        getCurrentDocument();
+        getCurrentDocument(DEFAULT_LIBRARY);
 
         String lastModified = response.jsonPath().get("last_modified");
         LocalDateTime lastModifiedDate = LocalDateTime.parse(lastModified, DATE_TIME_FORMAT);
@@ -317,7 +317,7 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
 
     @Then("Поле 'updated_by' изменилось")
     public void checkUpdatedByWasChanged() {
-        getCurrentDocument();
+        getCurrentDocument(DEFAULT_LIBRARY);
 
         String updatedBy = response.jsonPath().get("updated_by");
 
@@ -326,7 +326,7 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
 
     @Given("В текущей записи хранится текущее время в поле 'last_modified'")
     public void checkLastModifiedFieldInNewRecord() {
-        getCurrentDocument();
+        getCurrentDocument(DEFAULT_LIBRARY);
 
         String lastModified = response.jsonPath().get("last_modified");
         currentRecordLastModified = LocalDateTime.parse(lastModified, DATE_TIME_FORMAT);
@@ -534,19 +534,19 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
 
     @When("Администратор делает запрос с сортировкой по {string} и {string} по всем записям библиотеки по-умолчанию")
     public void getAllRecordsSortedByAdmin(String sortingFactor, String sortingDirection) {
-        getAllRecordsSorted(sortingFactor, sortingDirection);
+        getAllRecordsSorted(sortingFactor, sortingDirection, DEFAULT_LIBRARY);
     }
 
     @When("Администратор делает запрос в реестре с сортировкой по {string} и {string} по всем записям библиотеки по-умолчанию")
     public void getAllRecordsSortedInRegister(String sortingFactor, String sortingDirection) {
         String filter = "((is_folder+IN('false')+OR+is_folder+IS+null))";
 
-        getAllRecordsInRegisterSortedWithFilter(sortingFactor, sortingDirection, filter);
+        getAllRecordsInRegisterSortedWithFilter(sortingFactor, sortingDirection, filter, DEFAULT_LIBRARY);
     }
 
     @When("Текущий пользователь, по эндпоинту as_registry, запрашивает записи c id: {string}")
     public void getWithRecordId(String recordId) {
-        getRecordByEcqlFilterAndRecordId("", recordId);
+        getRecordByEcqlFilterAndRecordId("", recordId, DEFAULT_LIBRARY);
     }
 
     @Then("В табличном виде пользователю доступно {int} объектов")
@@ -562,7 +562,7 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
     public void getAllRecordsSortedByCurrentUser(String sortingFactor, String sortingDirection) {
         authorizationBase.loginAsCurrentUser();
 
-        getAllRecordsSorted(sortingFactor, sortingDirection);
+        getAllRecordsSorted(sortingFactor, sortingDirection, DEFAULT_LIBRARY);
     }
 
     @When("Пользователь делает запрос на получение всех записей из библиотеки по-умолчанию")
@@ -581,7 +581,8 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
 
         getAllRecordsInRegisterSortedWithFilter(sortingFactor,
                                                 sortingDirection,
-                                                "((is_folder+IN('false')+OR+is_folder+IS+null))");
+                                                "((is_folder+IN('false')+OR+is_folder+IS+null))",
+                                                DEFAULT_LIBRARY);
     }
 
     @When("В библиотеке документов по-умолчанию существует {string} папки")
@@ -640,7 +641,7 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
 
     @And("Удаленная запись восстановлена")
     public void checkThatRemovedDocumentIsRecover() {
-        getRecordById(currentDocumentId, DEFAULT_LIBRARY);
+        getCurrentDocument(DEFAULT_LIBRARY);
 
         boolean isDeleted = Boolean.parseBoolean(response.jsonPath().get("is_deleted").toString());
 
@@ -722,7 +723,7 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
 
     @When("я переношу объект {int} в каталог {int}")
     public void moveRecord(int movedFolderId, int targetFolderId) {
-        moveRecord((long) movedFolderId, (long) targetFolderId);
+        moveRecord((long) movedFolderId, (long) targetFolderId, DEFAULT_LIBRARY);
     }
 
     @When("я переношу каталог {string} в каталог {string}")
@@ -730,14 +731,14 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
         Integer movedFolderId = libraryCatalog.get(movedFolderTitle);
         Integer targetFolderId = libraryCatalog.get(targetFolderTitle);
 
-        moveRecord((long) movedFolderId, (long) targetFolderId);
+        moveRecord((long) movedFolderId, (long) targetFolderId, DEFAULT_LIBRARY);
     }
 
     @When("я перемещаю каталог {string} в корень библиотеки")
     public void moveRecordToLibraryRoot(String movedFolderTitle) {
         Integer movedFolderId = libraryCatalog.get(movedFolderTitle);
 
-        moveRecord((long) movedFolderId, null);
+        moveRecord((long) movedFolderId, null, DEFAULT_LIBRARY);
     }
 
     @Then("перенос документа 1 выполнен успешно")
@@ -835,12 +836,12 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
         currentDocumentId = extractEntityIdFromResponse(response);
     }
 
-    private void getCurrentDocument() {
-        getRecordById(currentDocumentId, DEFAULT_LIBRARY);
+    private void getCurrentDocument(String libraryId) {
+        getRecordById(currentDocumentId, libraryId);
     }
 
     private void getCurrentDocumentInCurrentLibrary() {
-        getRecordById(currentDocumentId, currentLibrary.getTableName());
+        getCurrentDocument(currentLibrary.getTableName());
     }
 
     private void updateCurrentDocument(String payload) {
@@ -895,10 +896,11 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
     }
 
     private void moveRecord(@NotNull Long movedRecordId,
-                            @Nullable Long targetRecordId) {
+                            @Nullable Long targetRecordId,
+                            String libraryId) {
         String path = (targetRecordId == null)
-                ? String.format("/%s/records/%d/move", DEFAULT_LIBRARY, movedRecordId)
-                : String.format("/%s/records/%d/move/%d", DEFAULT_LIBRARY, movedRecordId, targetRecordId);
+                ? String.format("/%s/records/%d/move", libraryId, movedRecordId)
+                : String.format("/%s/records/%d/move/%d", libraryId, movedRecordId, targetRecordId);
 
         response = getBaseRequestWithCurrentCookie()
                 .when().
@@ -920,11 +922,11 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
                         get(String.format("/%s/records", libraryId));
     }
 
-    private void getAllRecordsSorted(String sortingFiled, String sortingDirection) {
+    private void getAllRecordsSorted(String sortingFiled, String sortingDirection, String libraryId) {
         response = getBaseRequestWithCurrentCookie()
                 .when().
                         get(String.format("/%s/records?sort=%s,%s&%s",
-                                          DEFAULT_LIBRARY,
+                                          libraryId,
                                           sortingFiled,
                                           sortingDirection,
                                           "size=1000"));
@@ -932,20 +934,21 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
 
     private void getAllRecordsInRegisterSortedWithFilter(String sortingFiled,
                                                          String sortingDirection,
-                                                         String filter) {
+                                                         String filter,
+                                                         String libraryId) {
         response = getBaseRequestWithCurrentCookie()
                 .when().
                         get(String.format("/%s/records/as_registry?sort=%s,%s&filter=%s&%s",
-                                          DEFAULT_LIBRARY,
+                                          libraryId,
                                           sortingFiled,
                                           sortingDirection,
                                           filter,
                                           "size=1000"));
     }
 
-    private void getRecordByEcqlFilterAndRecordId(String ecqlFilter, String recordId) {
+    private void getRecordByEcqlFilterAndRecordId(String ecqlFilter, String recordId, String libraryId) {
         String url = String.format("/%s/records/as_registry?filter=%s&recordId=%s",
-                                   DEFAULT_LIBRARY,
+                                   libraryId,
                                    ecqlFilter,
                                    recordId);
 

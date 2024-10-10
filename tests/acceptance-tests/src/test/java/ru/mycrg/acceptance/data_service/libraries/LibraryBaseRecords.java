@@ -6,7 +6,6 @@ import ru.mycrg.acceptance.data_service.dto.RecordDto;
 
 import static org.apache.http.HttpStatus.SC_CREATED;
 import static ru.mycrg.acceptance.Config.PATCH_CONTENT_TYPE;
-import static ru.mycrg.acceptance.data_service.libraries.LibraryPermissionsStepsDefinitions.DEFAULT_LIBRARY;
 
 public class LibraryBaseRecords extends BaseStepsDefinitions {
 
@@ -52,9 +51,9 @@ public class LibraryBaseRecords extends BaseStepsDefinitions {
                         patch(String.format("/%s/records/%d", library, recordId));
     }
 
-    public void deleteRecordFromDefaultLibrary(Integer recordId) {
+    public void deleteRecordFromDefaultLibrary(Integer recordId, String libraryId) {
         response = getBaseRequestWithCurrentCookie()
                 .when().
-                        delete(String.format("/%s/records/%s", DEFAULT_LIBRARY, recordId));
+                        delete(String.format("/%s/records/%s", libraryId, recordId));
     }
 }

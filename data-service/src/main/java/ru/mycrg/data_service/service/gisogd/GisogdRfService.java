@@ -63,7 +63,9 @@ public class GisogdRfService {
     }
 
     public Long publish(ResourceQualifier qualifier, int srid) {
+        recordsCache.clear();
         log.debug("Публикация одной записи: {}", qualifier);
+        cacheSchemasAndTables();
 
         IRecord parentDoc = baseReadDao
                 .findById(qualifier)

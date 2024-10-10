@@ -122,6 +122,25 @@ public class LibraryPermissionsStepsDefinitions extends BaseStepsDefinitions {
         }
     }
 
+    @Given("Владелец организации текущему пользователю, для текущей библиотеки, устанавливает роль {string}")
+    public void addPermissionToLibraryForCurrentUser2(String role) {
+        authorizationBase.loginAsOwner();
+
+        setRoleForCurrentUserToLibrary(currentLibrary.getTableName(), role);
+        int statusCode = response.statusCode();
+        if (statusCode == 201) {
+            currentPermissionId = super.extractId(response);
+        } else if (statusCode == 409) {
+            System.out.println("Роль: " + role + " уже установлена для: " + currentLibrary.getTableName());
+            response.prettyPrint();
+        } else {
+            response.prettyPrint();
+            String msg = String.format("Роль: %s уже установлена для: %s", role, currentLibrary.getTableName());
+
+            throw new IllegalStateException(msg);
+        }
+    }
+
     @Given("Текущему пользователю установлена роль {string}, для библиотеки: {string}")
     public void setPermissionToLibraryForCurrentUser(String role, String libraryName) {
         authorizationBase.loginAsOwner();
@@ -455,7 +474,7 @@ public class LibraryPermissionsStepsDefinitions extends BaseStepsDefinitions {
     public void tryDeleteFolder11() {
         authorizationBase.loginAsCurrentUser();
 
-        baseRecords.deleteRecordFromDefaultLibrary(folder11Id);
+        baseRecords.deleteRecordFromDefaultLibrary(folder11Id, DEFAULT_LIBRARY);
     }
 
     @Then("пользователь пытается создать новый каталог в тестовой библиотеке")
@@ -476,7 +495,7 @@ public class LibraryPermissionsStepsDefinitions extends BaseStepsDefinitions {
     public void tryRemoveFolder1FromDefaultLibrary(String libraryName) {
         authorizationBase.loginAsCurrentUser();
 
-        baseRecords.deleteRecordFromDefaultLibrary(folder1Id);
+        baseRecords.deleteRecordFromDefaultLibrary(folder1Id, DEFAULT_LIBRARY);
     }
 
     @When("Владелец организации устанавливает роль VIEWER для текущего пользователя, на файл file_1_1_1_2")
