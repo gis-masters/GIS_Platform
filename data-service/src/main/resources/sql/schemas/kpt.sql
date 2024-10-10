@@ -1359,6 +1359,11 @@ SET class_rule =
             "valueType": "STRING"
         },
         {
+            "name": "name_by_doc",
+            "title": "Название зоны",
+            "valueType": "TEXT"
+        },
+        {
             "name": "regnumbord",
             "title": "Реестровый номер границы",
             "asTitle": true,

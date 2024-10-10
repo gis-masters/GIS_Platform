@@ -10,6 +10,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 import ru.mycrg.data_service.dao.config.DatasourceFactory;
 import ru.mycrg.data_service.dao.mappers.FeatureRowMapper;
+import ru.mycrg.data_service.dao.utils.SqlBuilder;
 import ru.mycrg.data_service.dao.utils.wellknown_formula_generator.PropertyBuilderWithFormula;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service_contract.dto.SimplePropertyDto;
@@ -109,6 +110,19 @@ public class KptImportDao {
         log.debug("Create table query: [{}]", query);
 
         jdbcTemplate.execute(query);
+    }
+
+    /**
+     * Удаление таблицы
+     * @param dbName название БД
+     * @param schemaName название схемы
+     * @param tableName название таблицы
+     */
+    public void dropTable(String  dbName,
+                          String schemaName,
+                          String tableName) {
+        JdbcTemplate jdbcTemplate = new JdbcTemplate(datasourceFactory.getNamedDataSource(dbName, DS_ID));
+        jdbcTemplate.execute(SqlBuilder.buildDeleteTableQuery(new ResourceQualifier(schemaName, tableName)));
     }
 
     /**

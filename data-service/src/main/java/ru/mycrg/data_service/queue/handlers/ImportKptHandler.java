@@ -170,7 +170,7 @@ public class ImportKptHandler implements IEventHandler {
                                                   .collect(Collectors.toList());
 
             try {
-                tmpTablesService.createIfNotExists(dbName, schemas);
+                tmpTablesService.recreateTable(dbName, schemas);
             } catch (Exception e) {
                 String message = "Не удалось создать временные таблицы для импорта!";
                 log.error(message, e);

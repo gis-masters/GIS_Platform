@@ -11,7 +11,6 @@ import ru.mycrg.data_service_contract.dto.SchemaDto;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static ru.mycrg.data_service.dao.config.DaoProperties.PRIMARY_KEY;
 import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_NAME;
@@ -36,25 +35,20 @@ public class TmpTablesService {
     }
 
     /**
-     * Создаёт временные таблицы в схеме {@value DatasourceFactory#SYSTEM_SCHEMA_NAME}
+     * Удаляет и заново создаёт временные таблицы в схеме {@value DatasourceFactory#SYSTEM_SCHEMA_NAME}
      * <p>
      * Название таблицы = kpt_[Название схемы], состав полей в соответствии со схемой
      */
-    public void createIfNotExists(String dbName, Collection<SchemaDto> schemas) {
-        List<String> requiredTableNames = schemas.stream()
-                                                 .map(schemaDto -> tmbTableName(schemaDto.getName()))
-                                                 .collect(Collectors.toList());
-        List<String> existedTableNames = kptImportDao.findKptTablesByNames(dbName, requiredTableNames);
-        List<SchemaDto> requiredSchemas = schemas.stream()
-                                                 .filter(it -> !existedTableNames.contains(tmbTableName(it.getName())))
-                                                 .collect(Collectors.toList());
-
-        for (SchemaDto schema: requiredSchemas) {
+    public void recreateTable(String dbName, Collection<SchemaDto> schemas) {
+        for (SchemaDto schema: schemas) {
             String tableName = tmbTableName(schema.getName());
-            log.info("Создание временной таблицы {}", tableName);
 
+            log.info("Удаление временной таблицы {}", tableName);
+            kptImportDao.dropTable(dbName, SYSTEM_SCHEMA_NAME, tableName);
+
+            log.info("Создание временной таблицы {}", tableName);
             kptImportDao.createTable(dbName, SYSTEM_SCHEMA_NAME, tableName, schema.getProperties(),
-                                     PRIMARY_KEY);
+                    PRIMARY_KEY);
         }
     }
 

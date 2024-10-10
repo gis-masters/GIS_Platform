@@ -58,6 +58,7 @@ public class ZouitReader extends CommonKptXmlElementReader<ZouitElement, ZonesAn
             content.put(REGNUMBORD, extractRegnumbord(record));
             content.put("registrati", extractRegistrati(record));
             content.put("boundary_1", extractBoundary_1(record));
+            content.put("name_by_doc", extractNameByDoc(record));
             content.put(DEFAULT_GEOMETRY_COLUMN_NAME, oMultiPolygon.get());
         }
 
@@ -101,6 +102,12 @@ public class ZouitReader extends CommonKptXmlElementReader<ZouitElement, ZonesAn
                        .map(BobjectZonesAndTerritories::getBObject)
                        .map(Bobject::getTypeBoundary)
                        .map(Dict::getValue)
+                       .orElse(null);
+    }
+
+    private Object extractNameByDoc(ZonesAndTerritoriesBoundariesType.ZonesAndTerritoriesRecord r) {
+        return Optional.ofNullable(r.getBObjectZonesAndTerritories())
+                       .map(BobjectZonesAndTerritories::getNameByDoc)
                        .orElse(null);
     }
 }
