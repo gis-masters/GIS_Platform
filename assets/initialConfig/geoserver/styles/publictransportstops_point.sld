@@ -1710,6 +1710,43 @@ xmlns:se="http://www.opengis.net/se">
 					</se:PointSymbolizer>
 				</se:Rule>
 				<se:Rule>
+					<se:Description>
+						<se:Title>планируемый к размещению</se:Title>
+					</se:Description>
+					<ogc:Filter>
+						<ogc:PropertyIsLike  wildCard="*" singleChar="." escapeChar="!">
+						<ogc:PropertyName>ruleid</ogc:PropertyName>
+						<ogc:Literal>*2</ogc:Literal>
+						</ogc:PropertyIsLike>
+					</ogc:Filter>
+					<se:LineSymbolizer>
+						<se:Stroke>
+							<se:SvgParameter name="stroke">#808080</se:SvgParameter>
+							<se:SvgParameter name="stroke-width">1.1</se:SvgParameter>
+							<se:SvgParameter name="stroke-dasharray">15 7.5</se:SvgParameter>
+						</se:Stroke>
+					</se:LineSymbolizer>
+				</se:Rule>
+				<se:Rule>
+					<se:Description>
+						<se:Title>Иной объект</se:Title>
+					</se:Description>
+					<ogc:Filter>
+						<ogc:Not>
+						<ogc:PropertyIsLike  wildCard="*" singleChar="." escapeChar="!">
+						<ogc:PropertyName>ruleid</ogc:PropertyName>
+						<ogc:Literal>*2</ogc:Literal>
+						</ogc:PropertyIsLike>
+						</ogc:Not>
+					</ogc:Filter>
+					<se:LineSymbolizer>
+						<se:Stroke>
+							<se:SvgParameter name="stroke">#808080</se:SvgParameter>
+							<se:SvgParameter name="stroke-width">1.1</se:SvgParameter>
+						</se:Stroke>
+					</se:LineSymbolizer>
+				</se:Rule>
+				<se:Rule>
 					<se:Name>Default</se:Name>
 					<se:Description>
 						<se:Title>Не определено</se:Title>

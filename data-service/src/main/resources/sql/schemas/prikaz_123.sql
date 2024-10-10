@@ -7837,7 +7837,7 @@ SET class_rule =
        '{
         "name": "culture_123",
         "title": "Объекты культуры и искусства",
-        "styleName": "culture_123",
+        "styleName": "culture_point_123",
         "readOnly": true,
         "tableName": "culture_123",
         "originName": "culture_123",
@@ -7848,7 +7848,7 @@ SET class_rule =
             "title": "Идентификатор стиля",
             "hidden": true,
             "valueType": "STRING",
-            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
             "name": "globalid",
@@ -8167,7 +8167,7 @@ SET class_rule =
        '{
         "name": "manufacturing_123",
         "title": "Предприятия и объекты добывающей и обрабатывающей промышленности",
-        "styleName": "manufacturing_123",
+        "styleName": "manufacturing_point_123",
         "readOnly": true,
         "tableName": "manufacturing_123",
         "originName": "manufacturing_123",
@@ -8178,7 +8178,7 @@ SET class_rule =
             "title": "Идентификатор стиля",
             "hidden": true,
             "valueType": "STRING",
-            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
             "name": "globalid",
@@ -8580,7 +8580,7 @@ SET class_rule =
        '{
         "name": "authorityservice_123",
         "title": "Прочие объекты обслуживания",
-        "styleName": "authorityservice_123",
+        "styleName": "authorityservice_point_123",
         "readOnly": true,
         "tableName": "authorityservice_123",
         "originName": "authorityservice_123",
@@ -8996,7 +8996,7 @@ SET class_rule =
        '{
         "name": "sport_123",
         "title": "Объекты физкультурного и спортивного назначения",
-        "styleName": "sport_123",
+        "styleName": "sport_point_123",
         "readOnly": true,
         "tableName": "sport_123",
         "originName": "sport_123",
@@ -9007,7 +9007,7 @@ SET class_rule =
             "title": "Идентификатор стиля",
             "hidden": true,
             "valueType": "STRING",
-            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
             "name": "globalid",
@@ -9320,7 +9320,7 @@ SET class_rule =
        '{
         "name": "naturalriskzone_123",
         "title": "Территории, подверженные риску возникновения чрезвычайных ситуаций природного характера",
-        "styleName": "naturalriskzone_123",
+        "styleName": "naturalriskzone_point_123",
         "readOnly": true,
         "tableName": "naturalriskzone_123",
         "originName": "naturalriskzone_123",
@@ -9331,7 +9331,7 @@ SET class_rule =
             "title": "Идентификатор стиля",
             "hidden": true,
             "valueType": "STRING",
-            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
             "name": "globalid",
@@ -9590,7 +9590,7 @@ SET class_rule =
        '{
         "name": "natureprotectarea_123",
         "title": "Особо охраняемые природные территории",
-        "styleName": "natureprotectarea_123",
+        "styleName": "natureprotectarea_point_123",
         "readOnly": true,
         "tableName": "natureprotectarea_123",
         "originName": "natureprotectarea_123",
@@ -9601,7 +9601,7 @@ SET class_rule =
             "title": "Идентификатор стиля",
             "hidden": true,
             "valueType": "STRING",
-            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
             "name": "globalid",
@@ -9784,7 +9784,7 @@ SET class_rule =
        '{
         "name": "gasfacility_123",
         "title": "Объекты добычи и транспортировки газа",
-        "styleName": "gasfacility_123",
+        "styleName": "gasfacility_point_123",
         "readOnly": true,
         "tableName": "gasfacility_123",
         "originName": "gasfacility_123",
@@ -9795,7 +9795,7 @@ SET class_rule =
             "title": "Идентификатор стиля",
             "hidden": true,
             "valueType": "STRING",
-            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
             "name": "globalid",
@@ -10466,7 +10466,7 @@ SET class_rule =
        '{
   "name": "publictransportobj_123",
   "title": "Объекты автомобильного пассажирского транспорта",
-  "styleName": "publictransportobj_123",
+  "styleName": "publictransportobj_point_123",
   "tableName": "publictransportobj_123",
   "tags": ["system", "Приказ 123"],
   "properties": [
@@ -10668,7 +10668,7 @@ SET class_rule =
        '{
         "name": "thermalfacility_123",
         "title": "Объекты теплоснабжения",
-        "styleName": "thermalfacility_123",
+        "styleName": "thermalfacility_point_123",
         "readOnly": true,
         "tableName": "thermalfacility_123",
         "originName": "thermalfacility_123",
@@ -10679,7 +10679,7 @@ SET class_rule =
             "title": "Идентификатор стиля",
             "hidden": true,
             "valueType": "STRING",
-            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
             "name": "globalid",
@@ -10994,7 +10994,7 @@ SET class_rule =
        '{
         "name": "envmonitoring_123",
         "title": "Объекты государственной системы наблюдений за состоянием окружающей среды",
-        "styleName": "envmonitoring_123",
+        "styleName": "envmonitoring_point_123",
         "readOnly": true,
         "tableName": "envmonitoring_123",
         "originName": "envmonitoring_123",
@@ -11005,7 +11005,7 @@ SET class_rule =
             "title": "Идентификатор стиля",
             "hidden": true,
             "valueType": "STRING",
-            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
             "name": "globalid",
@@ -12033,7 +12033,7 @@ SET class_rule =
        '{
         "name": "telecomfacility_123",
         "title": "Объекты связи",
-        "styleName": "telecomfacility_123",
+        "styleName": "telecomfacility_point_123",
         "readOnly": true,
         "tableName": "telecomfacility_123",
         "originName": "telecomfacility_123",
@@ -12044,7 +12044,7 @@ SET class_rule =
             "title": "Идентификатор стиля",
             "hidden": true,
             "valueType": "STRING",
-            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
             "name": "globalid",
@@ -12380,7 +12380,7 @@ SET class_rule =
        '{
         "name": "customcontrol_123",
         "title": "Пункт пропуска через Государственную границу",
-        "styleName": "customcontrol_123",
+        "styleName": "customcontrol_point_123",
         "readOnly": true,
         "tableName": "customcontrol_123",
         "originName": "customcontrol_123",
@@ -12391,7 +12391,7 @@ SET class_rule =
             "title": "Идентификатор стиля",
             "hidden": true,
             "valueType": "STRING",
-            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
             "name": "globalid",
@@ -12649,7 +12649,7 @@ SET class_rule =
        '{
         "name": "education_123",
         "title": "Объекты образования и науки",
-        "styleName": "education_123",
+        "styleName": "education_point_123",
         "readOnly": true,
         "tableName": "education_123",
         "originName": "education_123",
@@ -12660,7 +12660,7 @@ SET class_rule =
             "title": "Идентификатор стиля",
             "hidden": true,
             "valueType": "STRING",
-            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
             "name": "globalid",
@@ -13718,7 +13718,7 @@ SET class_rule =
        '{
         "name": "resort_123",
         "title": "Объекты санаторно-курортного назначения",
-        "styleName": "resort_123",
+        "styleName": "resort_point_123",
         "readOnly": true,
         "tableName": "resort_123",
         "originName": "resort_123",
@@ -13729,7 +13729,7 @@ SET class_rule =
             "title": "Идентификатор стиля",
             "hidden": true,
             "valueType": "STRING",
-            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
             "name": "globalid",
@@ -13951,7 +13951,7 @@ SET class_rule =
        '{
         "name": "servicefacility_123",
         "title": "Прочие объекты, связанные с производственной деятельностью",
-        "styleName": "servicefacility_123",
+        "styleName": "servicefacility_point_123",
         "readOnly": true,
         "tableName": "servicefacility_123",
         "originName": "servicefacility_123",
@@ -13962,7 +13962,7 @@ SET class_rule =
             "title": "Идентификатор стиля",
             "hidden": true,
             "valueType": "STRING",
-            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
             "name": "globalid",
@@ -14754,7 +14754,7 @@ SET class_rule =
        '{
         "name": "transportobj_123",
         "title": "Искусственные дорожные сооружения",
-        "styleName": "transportobj_123",
+        "styleName": "transportobj_point_123",
         "readOnly": true,
         "tableName": "transportobj_123",
         "originName": "transportobj_123",
@@ -14765,7 +14765,7 @@ SET class_rule =
             "title": "Идентификатор стиля",
             "hidden": true,
             "valueType": "STRING",
-            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
             "name": "globalid",
@@ -15658,7 +15658,7 @@ SET class_rule =
        '{
         "name": "wastefacility_123",
         "title": "Объекты утилизации, обезвреживания, размещения отходов производства и потребления",
-        "styleName": "wastefacility_123",
+        "styleName": "wastefacility_point_123",
         "readOnly": true,
         "tableName": "wastefacility_123",
         "originName": "wastefacility_123",
@@ -15669,7 +15669,7 @@ SET class_rule =
             "title": "Идентификатор стиля",
             "hidden": true,
             "valueType": "STRING",
-            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
             "name": "globalid",
@@ -16151,7 +16151,7 @@ SET class_rule =
        '{
         "name": "waterfacility_123",
         "title": "Объекты водоснабжения",
-        "styleName": "waterfacility_123",
+        "styleName": "waterfacility_point_123",
         "readOnly": true,
         "tableName": "waterfacility_123",
         "originName": "waterfacility_123",
@@ -16162,7 +16162,7 @@ SET class_rule =
             "title": "Идентификатор стиля",
             "hidden": true,
             "valueType": "STRING",
-            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
             "name": "globalid",
@@ -16430,7 +16430,7 @@ SET class_rule =
        '{
         "name": "otherobject_123",
         "title": "Иные объекты федерального значения, объекты регионального значения, объекты местного значения",
-        "styleName": "otherobject_123",
+        "styleName": "otherobject_point_123",
         "readOnly": true,
         "tableName": "otherobject_123",
         "originName": "otherobject_123",
@@ -16441,7 +16441,7 @@ SET class_rule =
             "title": "Идентификатор стиля",
             "hidden": true,
             "valueType": "STRING",
-            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
             "name": "globalid",
@@ -17489,7 +17489,7 @@ SET class_rule =
        '{
         "name": "electricpowerstation_123",
         "title": "Электростанции",
-        "styleName": "electricpowerstation_123",
+        "styleName": "electricpowerstation_point_123",
         "readOnly": true,
         "tableName": "electricpowerstation_123",
         "originName": "electricpowerstation_123",
@@ -17500,7 +17500,7 @@ SET class_rule =
             "title": "Идентификатор стиля",
             "hidden": true,
             "valueType": "STRING",
-            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
             "name": "globalid",
@@ -17938,7 +17938,7 @@ SET class_rule =
        '{
         "name": "publictransportservice_123",
         "title": "Объекты хранения и обслуживания общественного пассажирского транспорта",
-        "styleName": "publictransportservice_123",
+        "styleName": "publictransportservice_point_123",
         "readOnly": true,
         "tableName": "publictransportservice_123",
         "originName": "publictransportservice_123",
@@ -17949,7 +17949,7 @@ SET class_rule =
             "title": "Идентификатор стиля",
             "hidden": true,
             "valueType": "STRING",
-            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
             "name": "globalid",
@@ -18187,7 +18187,7 @@ SET class_rule =
        '{
         "name": "airtransportobj_123",
         "title": "Объекты воздушного транспорта",
-        "styleName": "airtransportobj_123",
+        "styleName": "airtransportobj_point_123",
         "readOnly": true,
         "tableName": "airtransportobj_123",
         "originName": "airtransportobj_123",
@@ -18198,7 +18198,7 @@ SET class_rule =
             "title": "Идентификатор стиля",
             "hidden": true,
             "valueType": "STRING",
-            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
             "name": "globalid",
@@ -19041,7 +19041,7 @@ SET class_rule =
        '{
         "name": "autoservice_123",
         "title": "Объекты обслуживания и хранения автомобильного транспорта",
-        "styleName": "autoservice_123",
+        "styleName": "autoservice_point_123",
         "readOnly": true,
         "tableName": "autoservice_123",
         "originName": "autoservice_123",
@@ -20665,7 +20665,7 @@ SET class_rule =
        '{
         "name": "health_123",
         "title": "Объекты здравоохранения",
-        "styleName": "health_123",
+        "styleName": "health_point_123",
         "readOnly": true,
         "tableName": "health_123",
         "originName": "health_123",
@@ -20676,7 +20676,7 @@ SET class_rule =
             "title": "Идентификатор стиля",
             "hidden": true,
             "valueType": "STRING",
-            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
             "name": "globalid",
@@ -23038,7 +23038,7 @@ SET class_rule =
        '{
         "name": "cemetery_123",
         "title": "Места погребения",
-        "styleName": "cemetery_123",
+        "styleName": "cemetery_point_123",
         "readOnly": true,
         "tableName": "cemetery_123",
         "originName": "cemetery_123",
@@ -23049,7 +23049,7 @@ SET class_rule =
             "title": "Идентификатор стиля",
             "hidden": true,
             "valueType": "STRING",
-            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
             "name": "globalid",
@@ -23577,7 +23577,7 @@ SET class_rule =
        '{
         "name": "watertransportobj_123",
         "title": "Объекты водного транспорта",
-        "styleName": "watertransportobj_123",
+        "styleName": "watertransportobj_point_123",
         "readOnly": true,
         "tableName": "watertransportobj_123",
         "originName": "watertransportobj_123",
@@ -23588,7 +23588,7 @@ SET class_rule =
             "title": "Идентификатор стиля",
             "hidden": true,
             "valueType": "STRING",
-            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
             "name": "globalid",
@@ -24918,7 +24918,7 @@ SET class_rule =
        '{
         "name": "public_123",
         "title": "Прочие объекты обслуживания",
-        "styleName": "public_123",
+        "styleName": "public_point_123",
         "readOnly": true,
         "tableName": "public_123",
         "originName": "public_123",
@@ -24929,7 +24929,7 @@ SET class_rule =
             "title": "Идентификатор стиля",
             "hidden": true,
             "valueType": "STRING",
-            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
             "name": "globalid",
@@ -25274,7 +25274,7 @@ SET class_rule =
        '{
         "name": "sewerfacility_123",
         "title": "Объекты водоотведения",
-        "styleName": "sewerfacility_123",
+        "styleName": "sewerfacility_point_123",
         "readOnly": true,
         "tableName": "sewerfacility_123",
         "originName": "sewerfacility_123",
@@ -25285,7 +25285,7 @@ SET class_rule =
             "title": "Идентификатор стиля",
             "hidden": true,
             "valueType": "STRING",
-            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
             "name": "globalid",
@@ -26270,7 +26270,7 @@ SET class_rule =
        '{
         "name": "technoriskarea_123",
         "title": "Территории, подверженные риску возникновения чрезвычайных ситуаций техногенного характера",
-        "styleName": "technoriskarea_123",
+        "styleName": "technoriskarea_point_123",
         "readOnly": true,
         "tableName": "technoriskarea_123",
         "originName": "technoriskarea_123",
@@ -26281,7 +26281,7 @@ SET class_rule =
             "title": "Идентификатор стиля",
             "hidden": true,
             "valueType": "STRING",
-            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
             "name": "globalid",
@@ -26596,7 +26596,7 @@ SET class_rule =
        '{
         "name": "publictransportstops_123",
         "title": "Остановочные пункты общественного пассажирского транспорта",
-        "styleName": "publictransportstops_123",
+        "styleName": "publictransportstops_point_123",
         "readOnly": true,
         "tableName": "publictransportstops_123",
         "originName": "publictransportstops_123",
@@ -26607,7 +26607,7 @@ SET class_rule =
             "title": "Идентификатор стиля",
             "hidden": true,
             "valueType": "STRING",
-            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
             "name": "globalid",
@@ -27725,7 +27725,7 @@ SET class_rule =
        '{
         "name": "social_123",
         "title": "Объекты социального обслуживания",
-        "styleName": "social_123",
+        "styleName": "social_point_123",
         "readOnly": true,
         "tableName": "social_123",
         "originName": "social_123",
@@ -27736,7 +27736,7 @@ SET class_rule =
             "title": "Идентификатор стиля",
             "hidden": true,
             "valueType": "STRING",
-            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
             "name": "globalid",
@@ -28148,7 +28148,7 @@ SET class_rule =
        '{
         "name": "agriculture_123",
         "title": "Предприятия и объекты сельского и лесного хозяйства, рыболовства и рыбоводства",
-        "styleName": "agriculture_123",
+        "styleName": "agriculture_point_123",
         "readOnly": true,
         "tableName": "agriculture_123",
         "originName": "agriculture_123",
@@ -28159,7 +28159,7 @@ SET class_rule =
             "title": "Идентификатор стиля",
             "hidden": true,
             "valueType": "STRING",
-            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
             "name": "globalid",
@@ -29802,7 +29802,7 @@ SET class_rule =
        '{
         "name": "wildlifeprotection_123",
         "title": "Объекты охраны животного мира",
-        "styleName": "wildlifeprotection_123",
+        "styleName": "wildlifeprotection_point_123",
         "readOnly": true,
         "tableName": "wildlifeprotection_123",
         "originName": "wildlifeprotection_123",
@@ -29813,7 +29813,7 @@ SET class_rule =
             "title": "Идентификатор стиля",
             "hidden": true,
             "valueType": "STRING",
-            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
             "name": "globalid",
@@ -30189,7 +30189,7 @@ SET class_rule =
        '{
         "name": "mineraldep_123",
         "title": "Месторождения и проявления полезных ископаемых",
-        "styleName": "mineraldep_123",
+        "styleName": "mineraldep_point_123",
         "readOnly": true,
         "tableName": "mineraldep_123",
         "originName": "mineraldep_123",
@@ -30200,7 +30200,7 @@ SET class_rule =
             "title": "Идентификатор стиля",
             "hidden": true,
             "valueType": "STRING",
-            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
             "name": "globalid",
@@ -31200,7 +31200,7 @@ SET class_rule =
        '{
         "name": "recreation_123",
         "title": "Объекты отдыха и туризма",
-        "styleName": "recreation_123",
+        "styleName": "recreation_point_123",
         "readOnly": true,
         "tableName": "recreation_123",
         "originName": "recreation_123",
@@ -31211,7 +31211,7 @@ SET class_rule =
             "title": "Идентификатор стиля",
             "hidden": true,
             "valueType": "STRING",
-            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
             "name": "globalid",
@@ -32167,7 +32167,7 @@ SET class_rule =
        '{
         "name": "emergencyprotectionobj_123",
         "title": "Объекты единой государственной системы предупреждения и ликвидации чрезвычайных ситуаций",
-        "styleName": "emergencyprotectionobj_123",
+        "styleName": "emergencyprotectionobj_point_123",
         "readOnly": true,
         "tableName": "emergencyprotectionobj_123",
         "originName": "emergencyprotectionobj_123",
@@ -32178,7 +32178,7 @@ SET class_rule =
             "title": "Идентификатор стиля",
             "hidden": true,
             "valueType": "STRING",
-            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
             "name": "globalid",
@@ -32955,7 +32955,7 @@ SET class_rule =
        '{
         "name": "railwayfacility_123",
         "title": "Объекты железнодорожного транспорта",
-        "styleName": "railwayfacility_123",
+        "styleName": "railwayfacility_point_123",
         "readOnly": true,
         "tableName": "railwayfacility_123",
         "originName": "railwayfacility_123",
@@ -32966,7 +32966,7 @@ SET class_rule =
             "title": "Идентификатор стиля",
             "hidden": true,
             "valueType": "STRING",
-            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
             "name": "globalid",
@@ -33483,7 +33483,7 @@ SET class_rule =
        '{
         "name": "oilfacility_123",
         "title": "Объекты добычи и транспортировки жидких углеводородов",
-        "styleName": "oilfacility_123",
+        "styleName": "oilfacility_point_123",
         "readOnly": true,
         "tableName": "oilfacility_123",
         "originName": "oilfacility_123",
@@ -33494,7 +33494,7 @@ SET class_rule =
             "title": "Идентификатор стиля",
             "hidden": true,
             "valueType": "STRING",
-            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
             "name": "globalid",
@@ -36661,7 +36661,7 @@ SET class_rule =
        '{
         "name": "prison_123",
         "title": "Объекты ФСИН России, иные объекты федерального значения",
-        "styleName": "prison_123",
+        "styleName": "prison_point_123",
         "readOnly": true,
         "tableName": "prison_123",
         "originName": "prison_123",
@@ -36672,7 +36672,7 @@ SET class_rule =
             "title": "Идентификатор стиля",
             "hidden": true,
             "valueType": "STRING",
-            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
             "name": "globalid",

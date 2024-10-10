@@ -2604,11 +2604,11 @@ WHERE name = 'admesrf_698';
 UPDATE data.schemas 
 SET class_rule =
        '{
-        "name": "wastefacility_point_698_698",
+        "name": "wastefacility_point_698",
         "title": "Объекты утилизации, обезвреживания, размещения отходов производства и потребления",
         "readOnly": true,
-        "styleName": "wastefacility_point_698_698",
-        "tableName": "wastefacility_point_698_698",
+        "styleName": "wastefacility_point_698",
+        "tableName": "wastefacility_point_698",
         "originName": "WasteFacility",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
         "properties": [
@@ -8165,7 +8165,7 @@ SET class_rule =
         "name": "culture_698",
         "title": "Объекты культуры и искусства",
         "readOnly": true,
-        "styleName": "culture_698",
+        "styleName": "culture_point_698",
         "tableName": "culture_698",
         "originName": "Culture",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
@@ -8175,7 +8175,7 @@ SET class_rule =
             "title": "Идентификатор стиля",
             "hidden": true,
             "valueType": "STRING",
-            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
             "name": "globalid",
@@ -8585,7 +8585,7 @@ SET class_rule =
         "name": "manufacturing_698",
         "title": "Предприятия и объекты добывающей и обрабатывающей промышленности",
         "readOnly": true,
-        "styleName": "manufacturing_698",
+        "styleName": "manufacturing_point_698",
         "tableName": "manufacturing_698",
         "originName": "Manufacturing",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
@@ -8595,7 +8595,7 @@ SET class_rule =
             "title": "Идентификатор стиля",
             "hidden": true,
             "valueType": "STRING",
-            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
             "name": "globalid",
@@ -9038,7 +9038,7 @@ SET class_rule =
         "name": "authorityservice_698",
         "title": "Прочие объекты обслуживания",
         "readOnly": true,
-        "styleName": "authorityservice_698",
+        "styleName": "authorityservice_point_698",
         "tableName": "authorityservice_698",
         "originName": "AuthorityService",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
@@ -9462,10 +9462,10 @@ WHERE name = 'authorityservice_698';
 UPDATE data.schemas 
 SET class_rule =
        '{
-        "name": "sport__698",
+        "name": "sport_698",
         "title": "Объекты физкультурного и спортивного назначения",
         "readOnly": true,
-        "styleName": "sport_698",
+        "styleName": "sport_point_698",
         "tableName": "sport_698",
         "originName": "Sport",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
@@ -9475,7 +9475,7 @@ SET class_rule =
             "title": "Идентификатор стиля",
             "hidden": true,
             "valueType": "STRING",
-            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
             "name": "globalid",
@@ -9886,7 +9886,7 @@ SET class_rule =
         "name": "naturalriskzone_698",
         "title": "Территории, подверженные риску возникновения чрезвычайных ситуаций природного характера",
         "readOnly": true,
-        "styleName": "naturalriskzone_698",
+        "styleName": "naturalriskzone_point_698",
         "tableName": "naturalriskzone_698",
         "originName": "NaturalRiskZone",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
@@ -9896,7 +9896,7 @@ SET class_rule =
             "title": "Идентификатор стиля",
             "hidden": true,
             "valueType": "STRING",
-            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
             "name": "globalid",
@@ -10157,7 +10157,7 @@ SET class_rule =
         "name": "natureprotectarea_698",
         "title": "Особо охраняемые природные территории",
         "readOnly": true,
-        "styleName": "natureprotectarea_698",
+        "styleName": "natureprotectarea_point_698",
         "tableName": "natureprotectarea_698",
         "originName": "NatureProtectArea",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
@@ -10373,7 +10373,7 @@ SET class_rule =
         "name": "gasfacility_698",
         "title": "Объекты добычи и транспортировки газа",
         "readOnly": true,
-        "styleName": "gasfacility_698",
+        "styleName": "gasfacility_point_698",
         "tableName": "gasfacility_698",
         "originName": "GasFacility",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
@@ -10383,7 +10383,7 @@ SET class_rule =
             "title": "Идентификатор стиля",
             "hidden": true,
             "valueType": "STRING",
-            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
             "name": "globalid",
@@ -11007,7 +11007,7 @@ SET class_rule =
         "name": "publictransportobj_698",
         "title": "Объекты автомобильного пассажирского транспорта",
         "readOnly": true,
-        "styleName": "publictransportobj_698",
+        "styleName": "publictransportobj_point_698",
         "tableName": "publictransportobj_698",
         "originName": "PublicTransportObj",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
@@ -11017,7 +11017,7 @@ SET class_rule =
             "title": "Идентификатор стиля",
             "hidden": true,
             "valueType": "STRING",
-            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
             "name": "globalid",
@@ -11226,7 +11226,7 @@ SET class_rule =
         "name": "thermalfacility_698",
         "title": "Объекты теплоснабжения",
         "readOnly": true,
-        "styleName": "thermalfacility_698",
+        "styleName": "thermalfacility_point_698",
         "tableName": "thermalfacility_698",
         "originName": "ThermalFacility",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
@@ -11236,7 +11236,7 @@ SET class_rule =
             "title": "Идентификатор стиля",
             "hidden": true,
             "valueType": "STRING",
-            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
             "name": "globalid",
@@ -11639,7 +11639,7 @@ SET class_rule =
         "name": "envmonitoring_698",
         "title": "Объекты государственной системы наблюдений за состоянием окружающей среды",
         "readOnly": true,
-        "styleName": "envmonitoring_698",
+        "styleName": "envmonitoring_point_698",
         "tableName": "envmonitoring_698",
         "originName": "EnvMonitoring",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
@@ -11649,7 +11649,7 @@ SET class_rule =
             "title": "Идентификатор стиля",
             "hidden": true,
             "valueType": "STRING",
-            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
             "name": "globalid",
@@ -12752,7 +12752,7 @@ SET class_rule =
         "name": "telecomfacility_698",
         "title": "Объекты связи",
         "readOnly": true,
-        "styleName": "telecomfacility_698",
+        "styleName": "telecomfacility_point_698",
         "tableName": "telecomfacility_698",
         "originName": "TelecomFacility",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
@@ -12762,7 +12762,7 @@ SET class_rule =
             "title": "Идентификатор стиля",
             "hidden": true,
             "valueType": "STRING",
-            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
             "name": "globalid",
@@ -13130,7 +13130,7 @@ SET class_rule =
         "name": "customcontrol_698",
         "title": "Пункт пропуска через Государственную границу",
         "readOnly": true,
-        "styleName": "customcontrol_698",
+        "styleName": "customcontrol_point_698",
         "tableName": "customcontrol_698",
         "originName": "CustomControl",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
@@ -13140,7 +13140,7 @@ SET class_rule =
             "title": "Идентификатор стиля",
             "hidden": true,
             "valueType": "STRING",
-            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
             "name": "globalid",
@@ -13415,7 +13415,7 @@ SET class_rule =
         "name": "education_698",
         "title": "Объекты образования и науки",
         "readOnly": true,
-        "styleName": "education_698",
+        "styleName": "education_point_698",
         "tableName": "education_698",
         "originName": "Education",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
@@ -13425,7 +13425,7 @@ SET class_rule =
             "title": "Идентификатор стиля",
             "hidden": true,
             "valueType": "STRING",
-            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
             "name": "globalid",
@@ -14541,7 +14541,7 @@ SET class_rule =
         "name": "resort_698",
         "title": "Объекты санаторно-курортного назначения",
         "readOnly": true,
-        "styleName": "resort_698",
+        "styleName": "resort_point_698",
         "tableName": "resort_698",
         "originName": "Resort",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
@@ -14551,7 +14551,7 @@ SET class_rule =
             "title": "Идентификатор стиля",
             "hidden": true,
             "valueType": "STRING",
-            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
             "name": "globalid",
@@ -14853,7 +14853,7 @@ SET class_rule =
         "name": "servicefacility_698",
         "title": "Прочие объекты, связанные с производственной деятельностью",
         "readOnly": true,
-        "styleName": "servicefacility_698",
+        "styleName": "servicefacility_point_698",
         "tableName": "servicefacility_698",
         "originName": "ServiceFacility",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
@@ -14863,7 +14863,7 @@ SET class_rule =
             "title": "Идентификатор стиля",
             "hidden": true,
             "valueType": "STRING",
-            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
             "name": "globalid",
@@ -15775,7 +15775,7 @@ SET class_rule =
         "name": "transportobj_698",
         "title": "Искусственные дорожные сооружения",
         "readOnly": true,
-        "styleName": "transportobj_698",
+        "styleName": "transportobj_point_698",
         "tableName": "transportobj_698",
         "originName": "TransportObj",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
@@ -15785,7 +15785,7 @@ SET class_rule =
             "title": "Идентификатор стиля",
             "hidden": true,
             "valueType": "STRING",
-            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
             "name": "globalid",
@@ -16726,7 +16726,7 @@ SET class_rule =
         "name": "wastefacility_698",
         "title": "Объекты утилизации, обезвреживания, размещения отходов производства и потребления",
         "readOnly": true,
-        "styleName": "wastefacility_698",
+        "styleName": "wastefacility_point_698",
         "tableName": "wastefacility_698",
         "originName": "WasteFacility",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
@@ -16736,7 +16736,7 @@ SET class_rule =
             "title": "Идентификатор стиля",
             "hidden": true,
             "valueType": "STRING",
-            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
             "name": "globalid",
@@ -17296,7 +17296,7 @@ SET class_rule =
         "name": "waterfacility_698",
         "title": "Объекты водоснабжения",
         "readOnly": true,
-        "styleName": "waterfacility_698",
+        "styleName": "waterfacility_pooint_698",
         "tableName": "waterfacility_698",
         "originName": "WaterFacility",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
@@ -17306,7 +17306,7 @@ SET class_rule =
             "title": "Идентификатор стиля",
             "hidden": true,
             "valueType": "STRING",
-            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
             "name": "globalid",
@@ -17644,7 +17644,7 @@ SET class_rule =
         "name": "otherobject_698",
         "title": "Иные объекты федерального значения, объекты регионального значения, объекты местного значения",
         "readOnly": true,
-        "styleName": "otherobject_698",
+        "styleName": "otherobject_point_698",
         "tableName": "otherobject_698",
         "originName": "OtherObject",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
@@ -17654,7 +17654,7 @@ SET class_rule =
             "title": "Идентификатор стиля",
             "hidden": true,
             "valueType": "STRING",
-            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
             "name": "globalid",
@@ -18687,7 +18687,7 @@ SET class_rule =
         "name": "electricpowerstation_698",
         "title": "Электростанции",
         "readOnly": true,
-        "styleName": "electricpowerstation_698",
+        "styleName": "electricpowerstation_point_698",
         "tableName": "electricpowerstation_698",
         "originName": "ElectricPowerStation",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
@@ -18697,7 +18697,7 @@ SET class_rule =
             "title": "Идентификатор стиля",
             "hidden": true,
             "valueType": "STRING",
-            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
             "name": "globalid",
@@ -19245,7 +19245,7 @@ SET class_rule =
         "name": "publictransportservice_698",
         "title": "Объекты хранения и обслуживания общественного пассажирского транспорта",
         "readOnly": true,
-        "styleName": "publictransportservice_698",
+        "styleName": "publictransportservice_point_698",
         "tableName": "publictransportservice_698",
         "originName": "PublicTransportService",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
@@ -19255,7 +19255,7 @@ SET class_rule =
             "title": "Идентификатор стиля",
             "hidden": true,
             "valueType": "STRING",
-            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
             "name": "globalid",
@@ -19531,7 +19531,7 @@ SET class_rule =
         "name": "airtransportobj_698",
         "title": "Объекты воздушного транспорта",
         "readOnly": true,
-        "styleName": "airtransportobj_698",
+        "styleName": "airtransportobj_point_698",
         "tableName": "airtransportobj_698",
         "originName": "AirTransportObj",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
@@ -19541,7 +19541,7 @@ SET class_rule =
             "title": "Идентификатор стиля",
             "hidden": true,
             "valueType": "STRING",
-            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
             "name": "globalid",
@@ -20491,7 +20491,7 @@ SET class_rule =
         "name": "autoservice_698",
         "title": "Объекты обслуживания и хранения автомобильного транспорта",
         "readOnly": true,
-        "styleName": "autoservice_698",
+        "styleName": "autoservice_point_698",
         "tableName": "autoservice_698",
         "originName": "AutoService",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
@@ -22168,7 +22168,7 @@ SET class_rule =
         "name": "health_698",
         "title": "Объекты здравоохранения",
         "readOnly": true,
-        "styleName": "health_698",
+        "styleName": "health_point_698",
         "tableName": "health_698",
         "originName": "Health",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
@@ -22178,7 +22178,7 @@ SET class_rule =
             "title": "Идентификатор стиля",
             "hidden": true,
             "valueType": "STRING",
-            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
             "name": "globalid",
@@ -24671,7 +24671,7 @@ SET class_rule =
         "name": "cemetery_698",
         "title": "Места погребения",
         "readOnly": true,
-        "styleName": "cemetery_698",
+        "styleName": "cemetery_point_698",
         "tableName": "cemetery_698",
         "originName": "Cemetery",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
@@ -24681,7 +24681,7 @@ SET class_rule =
             "title": "Идентификатор стиля",
             "hidden": true,
             "valueType": "STRING",
-            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
             "name": "globalid",
@@ -25275,7 +25275,7 @@ SET class_rule =
         "name": "watertransportobj_698",
         "title": "Объекты водного транспорта",
         "readOnly": true,
-        "styleName": "watertransportobj_698",
+        "styleName": "watertransportobj_point_698",
         "tableName": "watertransportobj_698",
         "originName": "WaterTransportObj",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
@@ -25285,7 +25285,7 @@ SET class_rule =
             "title": "Идентификатор стиля",
             "hidden": true,
             "valueType": "STRING",
-            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
             "name": "globalid",
@@ -26636,7 +26636,7 @@ SET class_rule =
         "name": "public_698",
         "title": "Прочие объекты обслуживания",
         "readOnly": true,
-        "styleName": "public_698",
+        "styleName": "public_point_698",
         "tableName": "public_698",
         "originName": "Public",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
@@ -26646,7 +26646,7 @@ SET class_rule =
             "title": "Идентификатор стиля",
             "hidden": true,
             "valueType": "STRING",
-            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
             "name": "globalid",
@@ -27055,7 +27055,7 @@ SET class_rule =
         "name": "sewerfacility_698",
         "title": "Объекты водоотведения",
         "readOnly": true,
-        "styleName": "sewerfacility_698",
+        "styleName": "sewerfacility_point_698",
         "tableName": "sewerfacility_698",
         "originName": "SewerFacility",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
@@ -27065,7 +27065,7 @@ SET class_rule =
             "title": "Идентификатор стиля",
             "hidden": true,
             "valueType": "STRING",
-            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
             "name": "globalid",
@@ -28032,7 +28032,7 @@ SET class_rule =
         "name": "technoriskarea_698",
         "title": "Территории, подверженные риску возникновения чрезвычайных ситуаций техногенного характера",
         "readOnly": true,
-        "styleName": "technoriskarea_698",
+        "styleName": "technoriskarea_point_698",
         "tableName": "technoriskarea_698",
         "originName": "TechnoRiskArea",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
@@ -28042,7 +28042,7 @@ SET class_rule =
             "title": "Идентификатор стиля",
             "hidden": true,
             "valueType": "STRING",
-            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
             "name": "globalid",
@@ -28331,7 +28331,7 @@ SET class_rule =
         "name": "publictransportstops_698",
         "title": "Остановочные пункты общественного пассажирского транспорта",
         "readOnly": true,
-        "styleName": "publictransportstops_698",
+        "styleName": "publictransportstops_point_698",
         "tableName": "publictransportstops_698",
         "originName": "PublicTransportStops",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
@@ -28341,7 +28341,7 @@ SET class_rule =
             "title": "Идентификатор стиля",
             "hidden": true,
             "valueType": "STRING",
-            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
             "name": "globalid",
@@ -29512,7 +29512,7 @@ SET class_rule =
         "name": "social_698",
         "title": "Объекты социального обслуживания",
         "readOnly": true,
-        "styleName": "social_698",
+        "styleName": "social_point_698",
         "tableName": "social_698",
         "originName": "Social",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
@@ -29522,7 +29522,7 @@ SET class_rule =
             "title": "Идентификатор стиля",
             "hidden": true,
             "valueType": "STRING",
-            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
             "name": "globalid",
@@ -29946,7 +29946,7 @@ SET class_rule =
         "name": "agriculture_698",
         "title": "Предприятия и объекты сельского и лесного хозяйства, рыболовства и рыбоводства",
         "readOnly": true,
-        "styleName": "agriculture_698",
+        "styleName": "agriculture_poing_698",
         "tableName": "agriculture_698",
         "originName": "Agriculture",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
@@ -29956,7 +29956,7 @@ SET class_rule =
             "title": "Идентификатор стиля",
             "hidden": true,
             "valueType": "STRING",
-            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
             "name": "globalid",
@@ -31713,7 +31713,7 @@ SET class_rule =
         "name": "wildlifeprotection_698",
         "title": "Объекты охраны животного мира",
         "readOnly": true,
-        "styleName": "wildlifeprotection_698",
+        "styleName": "wildlifeprotection_point_698",
         "tableName": "wildlifeprotection_698",
         "originName": "WildlifeProtection",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
@@ -31723,7 +31723,7 @@ SET class_rule =
             "title": "Идентификатор стиля",
             "hidden": true,
             "valueType": "STRING",
-            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
             "name": "globalid",
@@ -32145,7 +32145,7 @@ SET class_rule =
         "name": "mineraldep_698",
         "title": "Месторождения и проявления полезных ископаемых",
         "readOnly": true,
-        "styleName": "mineraldep_698",
+        "styleName": "mineraldep_point_698",
         "tableName": "mineraldep_698",
         "originName": "MineralDep",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
@@ -32155,7 +32155,7 @@ SET class_rule =
             "title": "Идентификатор стиля",
             "hidden": true,
             "valueType": "STRING",
-            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
             "name": "globalid",
@@ -33073,7 +33073,7 @@ SET class_rule =
         "name": "recreation_698",
         "title": "Объекты отдыха и туризма",
         "readOnly": true,
-        "styleName": "recreation_698",
+        "styleName": "recreation_point_698",
         "tableName": "recreation_698",
         "originName": "Recreation",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
@@ -33083,7 +33083,7 @@ SET class_rule =
             "title": "Идентификатор стиля",
             "hidden": true,
             "valueType": "STRING",
-            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
             "name": "globalid",
@@ -34030,7 +34030,7 @@ SET class_rule =
         "name": "emergencyprotectionobj_698",
         "title": "Объекты единой государственной системы предупреждения и ликвидации чрезвычайных ситуаций",
         "readOnly": true,
-        "styleName": "emergencyprotectionobj_698",
+        "styleName": "emergencyprotectionobj_point_698",
         "tableName": "emergencyprotectionobj_698",
         "originName": "EmergencyProtectionObj",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
@@ -34040,7 +34040,7 @@ SET class_rule =
             "title": "Идентификатор стиля",
             "hidden": true,
             "valueType": "STRING",
-            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
             "name": "globalid",
@@ -34997,7 +34997,7 @@ SET class_rule =
         "name": "railwayfacility_698",
         "title": "Объекты железнодорожного транспорта",
         "readOnly": true,
-        "styleName": "railwayfacility_698",
+        "styleName": "railwayfacility_point_698",
         "tableName": "railwayfacility_698",
         "originName": "RailwayFacility",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
@@ -35007,7 +35007,7 @@ SET class_rule =
             "title": "Идентификатор стиля",
             "hidden": true,
             "valueType": "STRING",
-            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
             "name": "globalid",
@@ -35621,7 +35621,7 @@ SET class_rule =
         "name": "oilfacility_698",
         "title": "Объекты добычи и транспортировки жидких углеводородов",
         "readOnly": true,
-        "styleName": "oilfacility_698",
+        "styleName": "oilfacility_point_698",
         "tableName": "oilfacility_698",
         "originName": "OilFacility",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
@@ -35631,7 +35631,7 @@ SET class_rule =
             "title": "Идентификатор стиля",
             "hidden": true,
             "valueType": "STRING",
-            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
             "name": "globalid",
@@ -38849,7 +38849,7 @@ SET class_rule =
         "name": "prison_698",
         "title": "Объекты ФСИН России, иные объекты федерального значения",
         "readOnly": true,
-        "styleName": "prison_698",
+        "styleName": "prison_point_698",
         "tableName": "prison_698",
         "originName": "Prison",
         "tags": ["system", "Приказ 10, версия 5 изм. от 6 октября 2023 № 698"],
@@ -38859,7 +38859,7 @@ SET class_rule =
             "title": "Идентификатор стиля",
             "hidden": true,
             "valueType": "STRING",
-            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
             "name": "globalid",

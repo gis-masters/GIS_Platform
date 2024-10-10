@@ -1782,6 +1782,7 @@ UPDATE data.schemas
 SET class_rule =
        '{
         "name": "railwayfacility_point",
+        "styleName": "railwayfacility_point",
         "title": "Объекты железнодорожного транспорта",
         "readOnly": true,
         "tableName": "railwayfacility_point",
@@ -2302,6 +2303,7 @@ UPDATE data.schemas
 SET class_rule =
        '{
         "name": "wastefacility_point",
+        "styleName": "wastefacility_point",
         "title": "Объекты утилизации, обезвреживания, размещения отходов производства и потребления",
         "readOnly": true,
         "tableName": "wastefacility_point",
@@ -2798,6 +2800,7 @@ UPDATE data.schemas
 SET class_rule =
        '{
         "name": "waterfacility_point",
+        "styleName": "waterfacility_point",
         "title": "Объекты водоснабжения",
         "readOnly": true,
         "tableName": "waterfacility_point",
@@ -3085,6 +3088,7 @@ UPDATE data.schemas
 SET class_rule =
        '{
         "name": "publictransportservice_point",
+        "styleName": "publictransportservice_point",
         "title": "Объекты хранения и обслуживания общественного пассажирского транспорта",
         "readOnly": true,
         "tableName": "publictransportservice_point",
@@ -3337,6 +3341,7 @@ UPDATE data.schemas
 SET class_rule =
        '{
         "name": "airtransportobj_point",
+        "styleName": "airtransportobj_point",
         "title": "Объекты воздушного транспорта",
         "readOnly": true,
         "tableName": "airtransportobj_point",
@@ -3685,6 +3690,7 @@ UPDATE data.schemas
 SET class_rule =
        '{
         "name": "autoservice_point",
+        "styleName": "autoservice_point",
         "title": "Объекты обслуживания и хранения автомобильного транспорта",
         "readOnly": true,
         "tableName": "autoservice_point",
@@ -4404,6 +4410,7 @@ UPDATE data.schemas
 SET class_rule =
        '{
         "name": "resort_point",
+        "styleName": "resort_point",
         "title": "Объекты санаторно-курортного назначения",
         "readOnly": true,
         "tableName": "resort_point",
@@ -4645,6 +4652,7 @@ UPDATE data.schemas
 SET class_rule =
        '{
         "name": "servicefacility_point",
+        "styleName": "servicefacility_point",
         "title": "Прочие объекты, связанные с производственной деятельностью",
         "readOnly": true,
         "tableName": "servicefacility_point",
@@ -5042,6 +5050,7 @@ UPDATE data.schemas
 SET class_rule =
        '{
         "name": "sewerfacility_point",
+        "styleName": "sewerfacility_point",
         "title": "Объекты водоотведения",
         "readOnly": true,
         "tableName": "sewerfacility_point",
@@ -5325,6 +5334,7 @@ UPDATE data.schemas
 SET class_rule =
        '{
         "name": "culture_point",
+        "styleName": "culture_point",
         "title": "Объекты культуры и искусства",
         "readOnly": true,
         "tableName": "culture_point",
@@ -5663,6 +5673,7 @@ UPDATE data.schemas
 SET class_rule =
        '{
         "name": "mineraldep_point",
+        "styleName": "mineraldep_point",
         "title": "Месторождения и проявления полезных ископаемых",
         "readOnly": true,
         "tableName": "mineraldep_point",
@@ -6103,6 +6114,7 @@ UPDATE data.schemas
 SET class_rule =
        '{
         "name": "publictransportobj_point",
+        "styleName": "publictransportobj_point",
         "title": "Объекты автомобильного пассажирского транспорта",
         "readOnly": true,
         "tableName": "publictransportobj_point",
@@ -6288,6 +6300,7 @@ UPDATE data.schemas
 SET class_rule =
        '{
         "name": "envmonitoring_point",
+        "styleName": "envmonitoring_point",
         "title": "Объекты государственной системы наблюдений за состоянием окружающей среды",
         "readOnly": true,
         "tableName": "envmonitoring_point",
@@ -7088,6 +7101,7 @@ UPDATE data.schemas
 SET class_rule =
        '{
         "name": "culture",
+        "styleName": "culture_point",
         "title": "Объекты культуры и искусства",
         "readOnly": true,
         "tableName": "culture",
@@ -7099,7 +7113,7 @@ SET class_rule =
             "title": "Идентификатор стиля",
             "hidden": true,
             "valueType": "STRING",
-            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
             "name": "globalid",
@@ -7426,6 +7440,7 @@ UPDATE data.schemas
 SET class_rule =
        '{
         "name": "manufacturing",
+        "styleName": "manufacturing_point",
         "title": "Предприятия и объекты добывающей и обрабатывающей промышленности",
         "readOnly": true,
         "tableName": "manufacturing",
@@ -7437,7 +7452,7 @@ SET class_rule =
             "title": "Идентификатор стиля",
             "hidden": true,
             "valueType": "STRING",
-            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
             "name": "globalid",
@@ -7842,6 +7857,7 @@ UPDATE data.schemas
 SET class_rule =
        '{
         "name": "authorityservice",
+        "styleName": "authorityservice_point",
         "title": "Прочие объекты обслуживания",
         "readOnly": true,
         "tableName": "authorityservice",
@@ -8266,6 +8282,7 @@ UPDATE data.schemas
 SET class_rule =
        '{
         "name": "sport",
+        "styleName": "sport_point",
         "title": "Объекты физкультурного и спортивного назначения",
         "readOnly": true,
         "tableName": "sport",
@@ -8277,7 +8294,7 @@ SET class_rule =
             "title": "Идентификатор стиля",
             "hidden": true,
             "valueType": "STRING",
-            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
             "name": "globalid",
@@ -8598,6 +8615,7 @@ UPDATE data.schemas
 SET class_rule =
        '{
         "name": "naturalriskzone",
+        "styleName": "naturalriskzone_point",
         "title": "Территории, подверженные риску возникновения чрезвычайных ситуаций природного характера",
         "readOnly": true,
         "tableName": "naturalriskzone",
@@ -8609,7 +8627,7 @@ SET class_rule =
             "title": "Идентификатор стиля",
             "hidden": true,
             "valueType": "STRING",
-            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
             "name": "globalid",
@@ -8867,6 +8885,7 @@ UPDATE data.schemas
 SET class_rule =
        '{
         "name": "natureprotectarea",
+        "styleName": "natureprotectarea_point",
         "title": "Особо охраняемые природные территории",
         "readOnly": true,
         "tableName": "natureprotectarea",
@@ -8878,7 +8897,7 @@ SET class_rule =
             "title": "Идентификатор стиля",
             "hidden": true,
             "valueType": "STRING",
-            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
             "name": "globalid",
@@ -9063,6 +9082,7 @@ UPDATE data.schemas
 SET class_rule =
        '{
         "name": "gasfacility",
+        "styleName": "gasfacility_point",
         "title": "Объекты добычи и транспортировки газа",
         "readOnly": true,
         "tableName": "gasfacility",
@@ -9074,7 +9094,7 @@ SET class_rule =
             "title": "Идентификатор стиля",
             "hidden": true,
             "valueType": "STRING",
-            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
             "name": "globalid",
@@ -9375,6 +9395,7 @@ UPDATE data.schemas
 SET class_rule =
        '{
         "name": "gasfacility_point",
+        "styleName": "gasfacility_point",
         "title": "Объекты добычи и транспортировки газа",
         "readOnly": true,
         "tableName": "gasfacility_point",
@@ -9687,6 +9708,7 @@ UPDATE data.schemas
 SET class_rule =
        '{
         "name": "publictransportobj",
+        "styleName": "publictransportobj_point",
         "title": "Объекты автомобильного пассажирского транспорта",
         "readOnly": true,
         "tableName": "publictransportobj",
@@ -9698,7 +9720,7 @@ SET class_rule =
             "title": "Идентификатор стиля",
             "hidden": true,
             "valueType": "STRING",
-            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
             "name": "globalid",
@@ -9872,6 +9894,7 @@ UPDATE data.schemas
 SET class_rule =
        '{
         "name": "thermalfacility",
+        "styleName": "thermalfacility_point",
         "title": "Объекты теплоснабжения",
         "readOnly": true,
         "tableName": "thermalfacility",
@@ -9883,7 +9906,7 @@ SET class_rule =
             "title": "Идентификатор стиля",
             "hidden": true,
             "valueType": "STRING",
-            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
             "name": "globalid",
@@ -10205,6 +10228,7 @@ UPDATE data.schemas
 SET class_rule =
        '{
         "name": "envmonitoring",
+        "styleName": "envmonitoring_point",
         "title": "Объекты государственной системы наблюдений за состоянием окружающей среды",
         "readOnly": true,
         "tableName": "envmonitoring",
@@ -10216,7 +10240,7 @@ SET class_rule =
             "title": "Идентификатор стиля",
             "hidden": true,
             "valueType": "STRING",
-            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
             "name": "globalid",
@@ -10394,6 +10418,7 @@ UPDATE data.schemas
 SET class_rule =
        '{
         "name": "thermalfacility_point",
+        "styleName": "thermalfacility_point",
         "title": "Объекты теплоснабжения",
         "readOnly": true,
         "tableName": "thermalfacility_point",
@@ -11173,6 +11198,7 @@ UPDATE data.schemas
 SET class_rule =
        '{
         "name": "telecomfacility",
+        "styleName": "telecomfacility_point",
         "title": "Объекты связи",
         "readOnly": true,
         "tableName": "telecomfacility",
@@ -11184,7 +11210,7 @@ SET class_rule =
             "title": "Идентификатор стиля",
             "hidden": true,
             "valueType": "STRING",
-            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
             "name": "globalid",
@@ -11492,6 +11518,7 @@ UPDATE data.schemas
 SET class_rule =
        '{
         "name": "customcontrol",
+        "styleName": "customcontrol_point",
         "title": "Пункт пропуска через Государственную границу",
         "readOnly": true,
         "tableName": "customcontrol",
@@ -11503,7 +11530,7 @@ SET class_rule =
             "title": "Идентификатор стиля",
             "hidden": true,
             "valueType": "STRING",
-            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
             "name": "globalid",
@@ -11762,6 +11789,7 @@ UPDATE data.schemas
 SET class_rule =
        '{
         "name": "education",
+        "styleName": "education_point",
         "title": "Объекты образования и науки",
         "readOnly": true,
         "tableName": "education",
@@ -11773,7 +11801,7 @@ SET class_rule =
             "title": "Идентификатор стиля",
             "hidden": true,
             "valueType": "STRING",
-            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
             "name": "globalid",
@@ -12482,6 +12510,7 @@ UPDATE data.schemas
 SET class_rule =
        '{
         "name": "telecomfacility_point",
+        "styleName": "telecomfacility_point",
         "title": "Объекты связи",
         "readOnly": true,
         "tableName": "telecomfacility_point",
@@ -12801,6 +12830,7 @@ UPDATE data.schemas
 SET class_rule =
        '{
         "name": "resort",
+        "styleName": "resort_point",
         "title": "Объекты санаторно-курортного назначения",
         "readOnly": true,
         "tableName": "resort",
@@ -12812,7 +12842,7 @@ SET class_rule =
             "title": "Идентификатор стиля",
             "hidden": true,
             "valueType": "STRING",
-            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
             "name": "globalid",
@@ -13042,6 +13072,7 @@ UPDATE data.schemas
 SET class_rule =
        '{
         "name": "servicefacility",
+        "styleName": "servicefacility_point",
         "title": "Прочие объекты, связанные с производственной деятельностью",
         "readOnly": true,
         "tableName": "servicefacility",
@@ -13053,7 +13084,7 @@ SET class_rule =
             "title": "Идентификатор стиля",
             "hidden": true,
             "valueType": "STRING",
-            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
             "name": "globalid",
@@ -13850,6 +13881,7 @@ SET class_rule =
        '{
         "name": "transportobj",
         "title": "Искусственные дорожные сооружения",
+        "styleName": "transportobj_point",
         "readOnly": true,
         "tableName": "transportobj",
         "originName": "TransportObj",
@@ -14455,6 +14487,7 @@ SET class_rule =
        '{
         "name": "transportobj_point",
         "title": "Искусственные дорожные сооружения",
+        "styleName": "transportobj_point",
         "readOnly": true,
         "tableName": "transportobj_point",
         "originName": "TransportObj",
@@ -14756,6 +14789,7 @@ UPDATE data.schemas
 SET class_rule =
        '{
         "name": "wastefacility",
+        "styleName": "wastefacility_point",
         "title": "Объекты утилизации, обезвреживания, размещения отходов производства и потребления",
         "readOnly": true,
         "tableName": "wastefacility",
@@ -14767,7 +14801,7 @@ SET class_rule =
             "title": "Идентификатор стиля",
             "hidden": true,
             "valueType": "STRING",
-            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
             "name": "globalid",
@@ -15252,6 +15286,7 @@ UPDATE data.schemas
 SET class_rule =
        '{
         "name": "waterfacility",
+        "styleName": "waterfacility_point",
         "title": "Объекты водоснабжения",
         "readOnly": true,
         "tableName": "waterfacility",
@@ -15263,7 +15298,7 @@ SET class_rule =
             "title": "Идентификатор стиля",
             "hidden": true,
             "valueType": "STRING",
-            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
             "name": "globalid",
@@ -15539,6 +15574,7 @@ UPDATE data.schemas
 SET class_rule =
        '{
         "name": "otherobject",
+        "styleName": "otherobject_point",
         "title": "Иные объекты федерального значения, объекты регионального значения, объекты местного значения",
         "readOnly": true,
         "tableName": "otherobject",
@@ -15550,7 +15586,7 @@ SET class_rule =
             "title": "Идентификатор стиля",
             "hidden": true,
             "valueType": "STRING",
-            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
             "name": "globalid",
@@ -16055,6 +16091,7 @@ UPDATE data.schemas
 SET class_rule =
        '{
         "name": "education_point",
+        "styleName": "education_point",
         "title": "Объекты образования и науки",
         "readOnly": true,
         "tableName": "education_point",
@@ -16509,6 +16546,7 @@ UPDATE data.schemas
 SET class_rule =
        '{
         "name": "electricpowerstation",
+        "styleName": "electricpowerstation_point",
         "title": "Электростанции",
         "readOnly": true,
         "tableName": "electricpowerstation",
@@ -16520,7 +16558,7 @@ SET class_rule =
             "title": "Идентификатор стиля",
             "hidden": true,
             "valueType": "STRING",
-            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
             "name": "globalid",
@@ -16964,6 +17002,7 @@ UPDATE data.schemas
 SET class_rule =
        '{
         "name": "publictransportservice",
+        "styleName": "publictransportservice_point",
         "title": "Объекты хранения и обслуживания общественного пассажирского транспорта",
         "readOnly": true,
         "tableName": "publictransportservice",
@@ -16975,7 +17014,7 @@ SET class_rule =
             "title": "Идентификатор стиля",
             "hidden": true,
             "valueType": "STRING",
-            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
             "name": "globalid",
@@ -17216,6 +17255,7 @@ UPDATE data.schemas
 SET class_rule =
        '{
         "name": "airtransportobj",
+        "styleName": "airtransportobj_point",
         "title": "Объекты воздушного транспорта",
         "readOnly": true,
         "tableName": "airtransportobj",
@@ -17227,7 +17267,7 @@ SET class_rule =
             "title": "Идентификатор стиля",
             "hidden": true,
             "valueType": "STRING",
-            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
             "name": "globalid",
@@ -17564,6 +17604,7 @@ UPDATE data.schemas
 SET class_rule =
        '{
         "name": "electricpowerstation_point",
+        "styleName": "electricpowerstation_point",
         "title": "Электростанции",
         "readOnly": true,
         "tableName": "electricpowerstation_point",
@@ -18019,6 +18060,7 @@ UPDATE data.schemas
 SET class_rule =
        '{
         "name": "autoservice",
+        "styleName": "autoservice_point",
         "title": "Объекты обслуживания и хранения автомобильного транспорта",
         "readOnly": true,
         "tableName": "autoservice",
@@ -19568,6 +19610,7 @@ UPDATE data.schemas
 SET class_rule =
        '{
         "name": "health",
+        "styleName": "health_point",
         "title": "Объекты здравоохранения",
         "readOnly": true,
         "tableName": "health",
@@ -19579,7 +19622,7 @@ SET class_rule =
             "title": "Идентификатор стиля",
             "hidden": true,
             "valueType": "STRING",
-            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
             "name": "globalid",
@@ -20088,6 +20131,7 @@ UPDATE data.schemas
 SET class_rule =
        '{
         "name": "customcontrol_point",
+        "styleName": "customcontrol_point",
         "title": "Пункт пропуска через Государственную границу",
         "readOnly": true,
         "tableName": "customcontrol_point",
@@ -20358,6 +20402,7 @@ UPDATE data.schemas
 SET class_rule =
        '{
         "name": "health_point",
+        "styleName": "health_point",
         "title": "Объекты здравоохранения",
         "readOnly": true,
         "tableName": "health_point",
@@ -21512,6 +21557,7 @@ UPDATE data.schemas
 SET class_rule =
        '{
         "name": "cemetery_point",
+        "styleName": "cemetery_point",
         "title": "Места погребения",
         "readOnly": true,
         "tableName": "cemetery_point",
@@ -21827,6 +21873,7 @@ UPDATE data.schemas
 SET class_rule =
        '{
         "name": "cemetery",
+        "styleName": "cemetery_point",
         "title": "Места погребения",
         "readOnly": true,
         "tableName": "cemetery",
@@ -21838,7 +21885,7 @@ SET class_rule =
             "title": "Идентификатор стиля",
             "hidden": true,
             "valueType": "STRING",
-            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
             "name": "globalid",
@@ -22332,6 +22379,7 @@ UPDATE data.schemas
 SET class_rule =
        '{
         "name": "watertransportobj",
+        "styleName": "watertransportobj_point",
         "title": "Объекты водного транспорта",
         "readOnly": true,
         "tableName": "watertransportobj",
@@ -22343,7 +22391,7 @@ SET class_rule =
             "title": "Идентификатор стиля",
             "hidden": true,
             "valueType": "STRING",
-            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
             "name": "globalid",
@@ -23173,6 +23221,7 @@ UPDATE data.schemas
 SET class_rule =
        '{
         "name": "watertransportobj_point",
+        "styleName": "watertransportobj_point",
         "title": "Объекты водного транспорта",
         "readOnly": true,
         "tableName": "watertransportobj_point",
@@ -23664,6 +23713,7 @@ UPDATE data.schemas
 SET class_rule =
        '{
         "name": "public",
+        "styleName": "public_point",
         "title": "Прочие объекты обслуживания",
         "readOnly": true,
         "tableName": "public",
@@ -23675,7 +23725,7 @@ SET class_rule =
             "title": "Идентификатор стиля",
             "hidden": true,
             "valueType": "STRING",
-            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
             "name": "globalid",
@@ -24026,6 +24076,7 @@ UPDATE data.schemas
 SET class_rule =
        '{
         "name": "sewerfacility",
+        "styleName": "sewerfacility_point",
         "title": "Объекты водоотведения",
         "readOnly": true,
         "tableName": "sewerfacility",
@@ -24037,7 +24088,7 @@ SET class_rule =
             "title": "Идентификатор стиля",
             "hidden": true,
             "valueType": "STRING",
-            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
             "name": "globalid",
@@ -24940,6 +24991,7 @@ UPDATE data.schemas
 SET class_rule =
        '{
         "name": "technoriskarea",
+        "styleName": "technoriskarea_point",
         "title": "Территории, подверженные риску возникновения чрезвычайных ситуаций техногенного характера",
         "readOnly": true,
         "tableName": "technoriskarea",
@@ -24951,7 +25003,7 @@ SET class_rule =
             "title": "Идентификатор стиля",
             "hidden": true,
             "valueType": "STRING",
-            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
             "name": "globalid",
@@ -25220,6 +25272,7 @@ UPDATE data.schemas
 SET class_rule =
        '{
         "name": "publictransportstops",
+        "styleName": "publictransportstops_point",
         "title": "Остановочные пункты общественного пассажирского транспорта",
         "readOnly": true,
         "tableName": "publictransportstops",
@@ -25231,7 +25284,7 @@ SET class_rule =
             "title": "Идентификатор стиля",
             "hidden": true,
             "valueType": "STRING",
-            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
             "name": "globalid",
@@ -25583,6 +25636,7 @@ UPDATE data.schemas
 SET class_rule =
        '{
         "name": "publictransportstops_point",
+        "styleName": "publictransportstops_point",
         "title": "Остановочные пункты общественного пассажирского транспорта",
         "readOnly": true,
         "tableName": "publictransportstops_point",
@@ -25890,6 +25944,7 @@ UPDATE data.schemas
 SET class_rule =
        '{
         "name": "otherobject_point",
+        "styleName": "otherobject_point",
         "title": "Иные объекты федерального значения, объекты регионального значения, объекты местного значения",
         "readOnly": true,
         "tableName": "otherobject_point",
@@ -26312,6 +26367,7 @@ UPDATE data.schemas
 SET class_rule =
        '{
         "name": "social",
+        "styleName": "social_point",
         "title": "Объекты социального обслуживания",
         "readOnly": true,
         "tableName": "social",
@@ -26323,7 +26379,7 @@ SET class_rule =
             "title": "Идентификатор стиля",
             "hidden": true,
             "valueType": "STRING",
-            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
             "name": "globalid",
@@ -26745,6 +26801,7 @@ UPDATE data.schemas
 SET class_rule =
        '{
         "name": "agriculture",
+        "styleName": "agriculture_point",
         "title": "Предприятия и объекты сельского и лесного хозяйства, рыболовства и рыбоводства",
         "readOnly": true,
         "tableName": "agriculture",
@@ -26756,7 +26813,7 @@ SET class_rule =
             "title": "Идентификатор стиля",
             "hidden": true,
             "valueType": "STRING",
-            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
             "name": "globalid",
@@ -27283,6 +27340,7 @@ UPDATE data.schemas
 SET class_rule =
        '{
         "name": "social_point",
+        "styleName": "social_point",
         "title": "Объекты социального обслуживания",
         "readOnly": true,
         "tableName": "social_point",
@@ -27716,6 +27774,7 @@ UPDATE data.schemas
 SET class_rule =
        '{
         "name": "agriculture_point",
+        "styleName": "agriculture_point",
         "title": "Предприятия и объекты сельского и лесного хозяйства, рыболовства и рыбоводства",
         "readOnly": true,
         "tableName": "agriculture_point",
@@ -28254,6 +28313,7 @@ UPDATE data.schemas
 SET class_rule =
        '{
         "name": "wildlifeprotection",
+        "styleName": "wildlifeprotection_point",
         "title": "Объекты охраны животного мира",
         "readOnly": true,
         "tableName": "wildlifeprotection",
@@ -28265,7 +28325,7 @@ SET class_rule =
             "title": "Идентификатор стиля",
             "hidden": true,
             "valueType": "STRING",
-            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
             "name": "globalid",
@@ -28650,6 +28710,7 @@ UPDATE data.schemas
 SET class_rule =
        '{
         "name": "mineraldep",
+        "styleName": "mineraldep_point",
         "title": "Месторождения и проявления полезных ископаемых",
         "readOnly": true,
         "tableName": "mineraldep",
@@ -28661,7 +28722,7 @@ SET class_rule =
             "title": "Идентификатор стиля",
             "hidden": true,
             "valueType": "STRING",
-            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
             "name": "globalid",
@@ -29485,6 +29546,7 @@ UPDATE data.schemas
 SET class_rule =
        '{
         "name": "recreation",
+        "styleName": "recreation_point",
         "title": "Объекты отдыха и туризма",
         "readOnly": true,
         "tableName": "recreation",
@@ -29496,7 +29558,7 @@ SET class_rule =
             "title": "Идентификатор стиля",
             "hidden": true,
             "valueType": "STRING",
-            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
             "name": "globalid",
@@ -30420,6 +30482,7 @@ UPDATE data.schemas
 SET class_rule =
        '{
         "name": "emergencyprotectionobj",
+        "styleName": "emergencyprotectionobj_point",
         "title": "Объекты единой государственной системы предупреждения и ликвидации чрезвычайных ситуаций",
         "readOnly": true,
         "tableName": "emergencyprotectionobj",
@@ -30431,7 +30494,7 @@ SET class_rule =
             "title": "Идентификатор стиля",
             "hidden": true,
             "valueType": "STRING",
-            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
             "name": "globalid",
@@ -31219,6 +31282,7 @@ UPDATE data.schemas
 SET class_rule =
        '{
         "name": "railwayfacility",
+        "styleName": "railwayfacility_point",
         "title": "Объекты железнодорожного транспорта",
         "readOnly": true,
         "tableName": "railwayfacility",
@@ -31230,7 +31294,7 @@ SET class_rule =
             "title": "Идентификатор стиля",
             "hidden": true,
             "valueType": "STRING",
-            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
             "name": "globalid",
@@ -31756,6 +31820,7 @@ UPDATE data.schemas
 SET class_rule =
        '{
         "name": "oilfacility",
+        "styleName": "oilfacility_point",
         "title": "Объекты добычи и транспортировки жидких углеводородов",
         "readOnly": true,
         "tableName": "oilfacility",
@@ -31767,7 +31832,7 @@ SET class_rule =
             "title": "Идентификатор стиля",
             "hidden": true,
             "valueType": "STRING",
-            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
             "name": "globalid",
@@ -32060,6 +32125,7 @@ UPDATE data.schemas
 SET class_rule =
        '{
         "name": "emergencyprotectionobj_point",
+        "styleName": "emergencyprotectionobj_point",
         "title": "Объекты единой государственной системы предупреждения и ликвидации чрезвычайных ситуаций",
         "readOnly": true,
         "tableName": "emergencyprotectionobj_point",
@@ -32471,6 +32537,7 @@ UPDATE data.schemas
 SET class_rule =
        '{
         "name": "manufacturing_point",
+        "styleName": "manufacturing_point",
         "title": "Предприятия и объекты добывающей и обрабатывающей промышленности",
         "readOnly": true,
         "tableName": "manufacturing_point",
@@ -32887,6 +32954,7 @@ UPDATE data.schemas
 SET class_rule =
        '{
         "name": "authorityservice_point",
+        "styleName": "authorityservice_point",
         "title": "Прочие объекты обслуживания",
         "readOnly": true,
         "tableName": "authorityservice_point",
@@ -33311,6 +33379,7 @@ UPDATE data.schemas
 SET class_rule =
        '{
         "name": "sport_point",
+        "styleName": "sport_point",
         "title": "Объекты физкультурного и спортивного назначения",
         "readOnly": true,
         "tableName": "sport_point",
@@ -33643,6 +33712,7 @@ UPDATE data.schemas
 SET class_rule =
        '{
         "name": "recreation_point",
+        "styleName": "recreation_point",
         "title": "Объекты отдыха и туризма",
         "readOnly": true,
         "tableName": "recreation_point",
@@ -34116,6 +34186,7 @@ UPDATE data.schemas
 SET class_rule =
        '{
         "name": "public_point",
+        "styleName": "public_point",
         "title": "Общественные пространства",
         "readOnly": true,
         "tableName": "public_point",
@@ -34664,6 +34735,7 @@ UPDATE data.schemas
 SET class_rule =
        '{
         "name": "prison",
+        "styleName": "prison_point",
         "title": "Объекты ФСИН России, иные объекты федерального значения",
         "readOnly": true,
         "tableName": "prison",
@@ -34675,7 +34747,7 @@ SET class_rule =
             "title": "Идентификатор стиля",
             "hidden": true,
             "valueType": "STRING",
-            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
           },
           {
             "name": "globalid",
@@ -35150,6 +35222,7 @@ UPDATE data.schemas
 SET class_rule =
        '{
         "name": "oilfacility_point",
+        "styleName": "oilfacility_point",
         "title": "Объекты добычи и транспортировки жидких углеводородов",
         "readOnly": true,
         "tableName": "oilfacility_point",
@@ -38453,6 +38526,7 @@ UPDATE data.schemas
 SET class_rule =
        '{
         "name": "naturalriskzone_point",
+        "styleName": "naturalriskzone_point",
         "title": "Территории, подверженные риску возникновения чрезвычайных ситуаций природного характера",
         "readOnly": true,
         "tableName": "naturalriskzone_point",
@@ -38722,6 +38796,7 @@ UPDATE data.schemas
 SET class_rule =
        '{
         "name": "natureprotectarea_point",
+        "styleName": "natureprotectarea_point",
         "title": "Особо охраняемые природные территории",
         "readOnly": true,
         "tableName": "natureprotectarea_point",
@@ -38918,6 +38993,7 @@ UPDATE data.schemas
 SET class_rule =
        '{
         "name": "technoriskarea_point",
+        "styleName": "technoriskarea_point",
         "title": "Территории, подверженные риску возникновения чрезвычайных ситуаций техногенного характера",
         "readOnly": true,
         "tableName": "technoriskarea_point",
@@ -39285,6 +39361,7 @@ UPDATE data.schemas
 SET class_rule =
        '{
         "name": "prison_point",
+        "styleName": "prison_point",
         "title": "Объекты ФСИН России, иные объекты федерального значения",
         "readOnly": true,
         "tableName": "prison_point",
@@ -39506,6 +39583,7 @@ UPDATE data.schemas
 SET class_rule =
        '{
         "name": "wildlifeprotection_point",
+        "styleName": "wildlifeprotection_point",
         "title": "Объекты охраны животного мира",
         "readOnly": true,
         "tableName": "wildlifeprotection_point",
