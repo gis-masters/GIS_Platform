@@ -159,6 +159,7 @@ export async function testLayerByWms(layer: CrgLayer): Promise<{ ok: boolean; er
   if (!layer.complexName) {
     return { ok: false, errors: ['Не указан complexName у слоя'] };
   }
+
   if (layer.type === CrgLayerType.VECTOR || layer.type === CrgLayerType.DXF || layer.type === CrgLayerType.SHP) {
     const url = new URL(wmsClient.getWmsUrl());
 
@@ -169,7 +170,7 @@ export async function testLayerByWms(layer: CrgLayer): Promise<{ ok: boolean; er
     url.searchParams.set('TRANSPARENT', 'true');
     url.searchParams.set('LAYERS', layer.complexName);
     url.searchParams.set('CRS', defaultOlProjectionCode);
-    url.searchParams.set('STYLES', '');
+    url.searchParams.set('STYLES', 'generic');
     url.searchParams.set('WIDTH', '300');
     url.searchParams.set('HEIGHT', '300');
     url.searchParams.set('BBOX', '3778140.58549765,5300522.190056069,3778162.97915828,5300544.5837167');
