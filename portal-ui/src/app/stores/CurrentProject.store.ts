@@ -11,7 +11,7 @@ import {
   NewCrgLayer
 } from '../services/gis/layers/layers.models';
 import { isVectorFromFile } from '../services/gis/layers/layers.utils';
-import { CrgProject, TreeItem } from '../services/gis/projects/projects.models';
+import { CrgProject, TreeItem, TreeItemPayload } from '../services/gis/projects/projects.models';
 import { Role } from '../services/permissions/permissions.models';
 import { getPatch } from '../services/util/patch';
 
@@ -54,6 +54,7 @@ class CurrentProject implements CrgProjectData {
   @observable layersErrors: Record<string, string[]> = emptyProject.layersErrors;
   @observable rawLayersFromApi: CrgLayer[] = [];
   @observable role: Role = emptyProject.role;
+  @observable filter: string = '';
 
   @observable viewZoom: number = 0;
 
@@ -114,6 +115,32 @@ class CurrentProject implements CrgProjectData {
         return item;
       })
       .sort(this.sorter);
+  }
+
+  @computed
+  get filteredTree(): TreeItem[] {
+    const layers = currentProject.tree.filter(layer =>
+      layer.payload.title.toLowerCase().includes(this.filter.toLowerCase())
+    );
+
+    const uniqueLayerParentsMap = new Map<number, TreeItem<TreeItemPayload>>();
+
+    for (const layer of layers) {
+      let currentLayer = layer.parent;
+
+      while (currentLayer) {
+        if (!uniqueLayerParentsMap.has(currentLayer.id) && !layers.some(item => item.id === currentLayer?.id)) {
+          uniqueLayerParentsMap.set(currentLayer.id, currentLayer);
+        }
+
+        currentLayer = currentLayer.parent;
+      }
+    }
+
+    const resultLayers = [...layers, ...uniqueLayerParentsMap.values()];
+    resultLayers.sort(this.sorter);
+
+    return resultLayers;
   }
 
   @computed
@@ -438,6 +465,11 @@ class CurrentProject implements CrgProjectData {
   @action
   setLayerError(layerComplexName: string, errors: string[]) {
     this.layersErrors[layerComplexName] = errors;
+  }
+
+  @action
+  setFilter(filter: string) {
+    this.filter = filter;
   }
 
   @action

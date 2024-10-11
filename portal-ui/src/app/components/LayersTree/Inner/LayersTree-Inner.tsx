@@ -18,23 +18,33 @@ interface LayersTreeInnerProps {
 }
 
 export const LayersTreeInner: FC<LayersTreeInnerProps> = observer(
-  ({ droppableProvidedProps, innerRef, editMode, placeholder, highlightedGroupId }) => (
-    <div className={cnLayersTreeInner()} ref={innerRef} {...droppableProvidedProps}>
-      {(editMode ? currentProject.visibleTreeWithEmptyGroups : currentProject.visibleTree).map((item, i) => (
-        <LayersTreeItemContainer
-          editMode={editMode}
-          key={`${item.isGroup ? 'g' : 'l'}${item.id}`}
-          index={i}
-          id={`LayersTreeItem_${item.isGroup ? 'g' : 'l'}_${item.id}`}
-        >
-          <LayersTreeItem
-            item={item}
-            highlighted={item.isGroup && item.payload.id === highlightedGroupId}
-            editMode={editMode}
-          />
-        </LayersTreeItemContainer>
-      ))}
-      {placeholder}
-    </div>
-  )
+  ({ droppableProvidedProps, innerRef, editMode, placeholder, highlightedGroupId }) => {
+    let sidebarEditMode = editMode;
+    let layers = editMode ? currentProject.visibleTreeWithEmptyGroups : currentProject.visibleTree;
+
+    if (currentProject.filter) {
+      sidebarEditMode = false;
+      layers = currentProject.filteredTree;
+    }
+
+    return (
+      <div className={cnLayersTreeInner()} ref={innerRef} {...droppableProvidedProps}>
+        {layers?.map((item, i) => (
+          <LayersTreeItemContainer
+            editMode={sidebarEditMode}
+            key={`${item.isGroup ? 'g' : 'l'}${item.id}`}
+            index={i}
+            id={`LayersTreeItem_${item.isGroup ? 'g' : 'l'}_${item.id}`}
+          >
+            <LayersTreeItem
+              item={item}
+              highlighted={item.isGroup && item.payload.id === highlightedGroupId}
+              editMode={sidebarEditMode}
+            />
+          </LayersTreeItemContainer>
+        ))}
+        {placeholder}
+      </div>
+    );
+  }
 );

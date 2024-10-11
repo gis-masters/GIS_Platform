@@ -9,6 +9,7 @@ import { getLayerSchema } from '../../services/gis/layers/layers.service';
 import { isVectorFromFile } from '../../services/gis/layers/layers.utils';
 import { TreeItemPayload } from '../../services/gis/projects/projects.models';
 import { currentProject } from '../../stores/CurrentProject.store';
+import { Highlight } from '../Highlight/Highlight';
 import { LayerBurger } from './Burger/Layer-Burger';
 import { LayerCard } from './Card/Layer-Card';
 import { LayerDrag } from './Drag/Layer-Drag';
@@ -92,10 +93,20 @@ export class Layer extends Component<LayerProps> {
             tooltipText={hiddenByZoomTooltipText}
           />
           <LayerGap gap={depth || 0} />
-          <LayerOpen onClick={this.handleOpen} open={this.open} disabled={editMode && !isGroup} />
+          <LayerOpen
+            onClick={this.handleOpen}
+            open={this.open}
+            disabled={currentProject.filter ? true : editMode && !isGroup}
+          />
           <LayerIcon isGroup={isGroup} expanded={!!expanded} data={data} isError={this.isError} />
           <LayerTitle isError={this.isError}>
-            {title}
+            {currentProject.filter ? (
+              <Highlight searchWords={[currentProject.filter]} enabled>
+                {title}
+              </Highlight>
+            ) : (
+              title
+            )}
             {isEmptyGroup && <LayerEmptiness />}
           </LayerTitle>
           <LayerBurger onClick={this.handleBurgerClick} />

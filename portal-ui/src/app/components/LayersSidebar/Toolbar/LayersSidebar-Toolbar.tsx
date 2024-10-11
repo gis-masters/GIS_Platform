@@ -2,7 +2,13 @@ import React, { Component } from 'react';
 import { action, computed, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { Tooltip } from '@mui/material';
-import { CancelOutlined, CreateNewFolder, CreateNewFolderOutlined, SaveOutlined } from '@mui/icons-material';
+import {
+  CancelOutlined,
+  CreateNewFolder,
+  CreateNewFolderOutlined,
+  FilterAltOutlined,
+  SaveOutlined
+} from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 import { cloneDeep } from 'lodash';
@@ -18,6 +24,7 @@ import { LayerAdd } from '../../Icons/LayerAdd';
 import { LayerAddOutlined } from '../../Icons/LayerAddOutlined';
 import { LayersSettings } from '../../Icons/LayersSettings';
 import { LayersSettingsOutline } from '../../Icons/LayersSettingsOutline';
+import { LayersFilter } from '../../LayersFilter/LayersFilter';
 import { LayersGroupEditDialog } from '../../LayersGroupEditDialog/LayersGroupEditDialog';
 import { LayersSidebarToolbarLeft } from '../ToolbarLeft/LayersSidebar-ToolbarLeft';
 import { LayersSidebarToolbarRight } from '../ToolbarRight/LayersSidebar-ToolbarRight';
@@ -41,6 +48,7 @@ interface LayersSidebarToolbarProps {
 export class LayersSidebarToolbar extends Component<LayersSidebarToolbarProps> {
   @observable private createGroupDialogOpen = false;
   @observable private addLayerDialogOpen = false;
+  @observable private isLayersFilterActive = false;
 
   constructor(props: LayersSidebarToolbarProps) {
     super(props);
@@ -56,7 +64,7 @@ export class LayersSidebarToolbar extends Component<LayersSidebarToolbarProps> {
     return (
       <>
         <div className={cnLayersSidebarToolbar({ above })}>
-          {hasChangedLayers && (
+          {hasChangedLayers && !this.isLayersFilterActive && (
             <LayersSidebarToolbarLeft>
               <Tooltip
                 title={
@@ -84,29 +92,39 @@ export class LayersSidebarToolbar extends Component<LayersSidebarToolbarProps> {
             </LayersSidebarToolbarLeft>
           )}
 
-          <LayersSidebarToolbarRight>
-            {editMode && (
-              <Tooltip title='Создать группу'>
-                <IconButton onClick={this.openCreateGroupDialog}>
-                  {this.createGroupDialogOpen ? <CreateNewFolder /> : <CreateNewFolderOutlined />}
+          {this.isLayersFilterActive && <LayersFilter turnOffLayersFilter={this.turnOffLayersFilter} />}
+
+          {!this.isLayersFilterActive && (
+            <LayersSidebarToolbarRight>
+              <Tooltip title='Фильтрация слоёв'>
+                <IconButton onClick={this.turnOnLayersFilter}>
+                  <FilterAltOutlined />
                 </IconButton>
               </Tooltip>
-            )}
 
-            <Tooltip title='Подключить слой'>
-              <IconButton className={cnLayersSidebarAddLayerBtn()} onClick={this.openAddLayerDialog}>
-                {this.addLayerDialogOpen ? <LayerAdd /> : <LayerAddOutlined />}
-              </IconButton>
-            </Tooltip>
+              {editMode && (
+                <Tooltip title='Создать группу'>
+                  <IconButton onClick={this.openCreateGroupDialog}>
+                    {this.createGroupDialogOpen ? <CreateNewFolder /> : <CreateNewFolderOutlined />}
+                  </IconButton>
+                </Tooltip>
+              )}
 
-            {organizationSettings.editProjectLayer && (
-              <Tooltip title='Настроить слои проекта'>
-                <IconButton className={cnLayersSidebarEditBtn()} onClick={this.handleEditModeClick}>
-                  {editMode ? <LayersSettings /> : <LayersSettingsOutline />}
+              <Tooltip title='Подключить слой'>
+                <IconButton className={cnLayersSidebarAddLayerBtn()} onClick={this.openAddLayerDialog}>
+                  {this.addLayerDialogOpen ? <LayerAdd /> : <LayerAddOutlined />}
                 </IconButton>
               </Tooltip>
-            )}
-          </LayersSidebarToolbarRight>
+
+              {organizationSettings.editProjectLayer && (
+                <Tooltip title='Настроить слои проекта'>
+                  <IconButton className={cnLayersSidebarEditBtn()} onClick={this.handleEditModeClick}>
+                    {editMode ? <LayersSettings /> : <LayersSettingsOutline />}
+                  </IconButton>
+                </Tooltip>
+              )}
+            </LayersSidebarToolbarRight>
+          )}
         </div>
 
         <LayersGroupEditDialog
@@ -134,6 +152,18 @@ export class LayersSidebarToolbar extends Component<LayersSidebarToolbarProps> {
       groupsToPatch.some(([, patch]) => Object.keys(patch).some(key => key !== 'enabled' && key !== 'expanded')) ||
       layersToPatch.some(([, patch]) => Object.keys(patch).some(key => key !== 'enabled'))
     );
+  }
+
+  @action.bound
+  private turnOnLayersFilter() {
+    this.isLayersFilterActive = true;
+    this.props.onChangeMode(false);
+  }
+
+  @action.bound
+  private turnOffLayersFilter() {
+    this.isLayersFilterActive = false;
+    currentProject.setFilter('');
   }
 
   @action.bound
