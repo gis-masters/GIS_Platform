@@ -10,7 +10,6 @@
           <se:Description>
             <se:Title>Здания и сооружения</se:Title>
           </se:Description>
-          <se:ElseFilter/>
           <se:PolygonSymbolizer>
             <se:Fill>
               <se:SvgParameter name="fill">#C0C0C0</se:SvgParameter>

@@ -10,7 +10,6 @@
           <se:Description>
             <se:Title></se:Title>
           </se:Description>
-          <se:ElseFilter/>
           <se:PolygonSymbolizer>
             <se:Fill>
               <se:SvgParameter name="fill">#BA5EE5</se:SvgParameter>

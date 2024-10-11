@@ -11,7 +11,6 @@
           <se:Description>
             <se:Title>Рамка листа</se:Title>
           </se:Description>
-          <se:ElseFilter/>
           <se:PolygonSymbolizer>
             <se:Fill>
               <se:SvgParameter name="fill-opacity">0</se:SvgParameter>

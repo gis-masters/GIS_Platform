@@ -10,7 +10,6 @@
           <se:Description>
             <se:Title>Объекты капитального строительства</se:Title>
           </se:Description>
-          <se:ElseFilter/>
           <se:LineSymbolizer>
             <se:Stroke>
               <se:SvgParameter name="stroke">#df7f7f</se:SvgParameter>

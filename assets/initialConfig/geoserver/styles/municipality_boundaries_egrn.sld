@@ -10,7 +10,6 @@
           <se:Description>
             <se:Title>Граница населённого пункта</se:Title>
           </se:Description>
-          <se:ElseFilter/>
           <se:PolygonSymbolizer>
             <se:Fill>
               <se:SvgParameter name="fill">#894465</se:SvgParameter>

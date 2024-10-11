@@ -10,7 +10,6 @@
           <se:Description>
             <se:Title></se:Title>
           </se:Description>
-          <se:ElseFilter/>
           <se:LineSymbolizer>
             <se:Stroke>
               <se:SvgParameter name="stroke">#000000</se:SvgParameter>

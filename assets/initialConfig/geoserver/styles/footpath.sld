@@ -10,7 +10,6 @@
           <se:Description>
             <se:Title>Транспортные и пешеходнве пути</se:Title>
           </se:Description>
-          <se:ElseFilter/>
           <se:PolygonSymbolizer>
             <se:Fill>
               <se:SvgParameter name="fill">#FF8C00</se:SvgParameter>

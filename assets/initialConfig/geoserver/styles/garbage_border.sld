@@ -10,7 +10,6 @@
           <se:Description>
             <se:Title>Граница</se:Title>
           </se:Description>
-          <se:ElseFilter/>
           <se:PolygonSymbolizer>
             <se:Fill>
               <se:SvgParameter name="fill">#D1FFF6</se:SvgParameter>

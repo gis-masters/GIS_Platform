@@ -15,7 +15,6 @@
           <se:Description>
             <se:Title>Точка с номером</se:Title>
           </se:Description>
-          <se:ElseFilter/>
           <se:PointSymbolizer>
             <se:Graphic>
               <se:Mark>
