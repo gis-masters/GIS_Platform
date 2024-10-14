@@ -100,6 +100,29 @@ public class SchemaTemplates {
                 properties.add(path);
 
                 return schemaWithUuidFiled;
+            case "Тестовая схема с полем в верхнем регистре":
+                SchemaDto incorrectSchema = simpleSchema(schemaTitle);
+                incorrectSchema.setName("incorrectSchemaForTestOny");
+                incorrectSchema.setTitle("Тестовая схема с полем в верхнем регистре");
+                incorrectSchema.setTableName("t_incorrect_for_test");
+                incorrectSchema.setGeometryType("MultiPolygon");
+                incorrectSchema.setReadOnly(false);
+
+                SimplePropertyDto incorrectField = new SimplePropertyDto();
+                incorrectField.setName("FIZ");
+                incorrectField.setTitle("Тест");
+                incorrectField.setValueType("STRING");
+
+                SimplePropertyDto shape = new SimplePropertyDto();
+                shape.setName("shape");
+                shape.setTitle("Геометрия");
+                shape.setValueType("GEOMETRY");
+
+                List<SimplePropertyDto> props = incorrectSchema.getProperties();
+                props.add(incorrectField);
+                props.add(shape);
+
+                return incorrectSchema;
             default:
                 return simpleSchema(schemaTitle);
         }

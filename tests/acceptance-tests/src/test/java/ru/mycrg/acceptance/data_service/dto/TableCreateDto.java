@@ -7,6 +7,7 @@ public class TableCreateDto {
     private final String details;
     private final String crs;
     private final String schemaId;
+    private final boolean readyForFts;
 
     public TableCreateDto(String name, String title, String details, String crs, String schemaId) {
         this.name = name;
@@ -14,6 +15,16 @@ public class TableCreateDto {
         this.details = details;
         this.crs = crs;
         this.schemaId = schemaId;
+        this.readyForFts = false;
+    }
+
+    public TableCreateDto(String name, String title, String details, String crs, String schemaId, boolean readyForFts) {
+        this.name = name;
+        this.title = title;
+        this.details = details;
+        this.crs = crs;
+        this.schemaId = schemaId;
+        this.readyForFts = readyForFts;
     }
 
     public String getTitle() {
@@ -34,5 +45,9 @@ public class TableCreateDto {
 
     public String getSchemaId() {
         return schemaId;
+    }
+
+    public boolean isReadyForFts() {
+        return readyForFts;
     }
 }

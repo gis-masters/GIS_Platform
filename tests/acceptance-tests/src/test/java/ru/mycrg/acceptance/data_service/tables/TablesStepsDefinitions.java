@@ -47,14 +47,35 @@ public class TablesStepsDefinitions extends BaseStepsDefinitions {
                                     String descriptionKey,
                                     String crs,
                                     String schemaName) {
+        schemaId = schemaName;
         currentTableName = generateString(nameKey);
-        currentTableDto = new TableCreateDto(currentTableName,
+        tableName = currentTableName;
+        currentTableDto = new TableCreateDto(tableName,
                                              generateString(titleKey),
                                              generateString(descriptionKey),
                                              generateString(crs),
-                                             schemaName);
-        tableName = currentTableName;
+                                             schemaId);
+
+        scenarioTables.add(currentTableDto);
+
+        super.createEntity(currentTableDto);
+    }
+
+    public void createTablesRequest(String nameKey,
+                                    String titleKey,
+                                    String descriptionKey,
+                                    String crs,
+                                    String schemaName,
+                                    boolean readyForFts) {
         schemaId = schemaName;
+        currentTableName = generateString(nameKey);
+        tableName = currentTableName;
+        currentTableDto = new TableCreateDto(tableName,
+                                             generateString(titleKey),
+                                             generateString(descriptionKey),
+                                             generateString(crs),
+                                             schemaId,
+                                             readyForFts);
 
         scenarioTables.add(currentTableDto);
 
@@ -101,6 +122,18 @@ public class TablesStepsDefinitions extends BaseStepsDefinitions {
                             "some description",
                             "EPSG:28406",
                             schema.getName());
+    }
+
+    @When("Существует таблица созданная по текущей схеме и с включённым FTS")
+    public void initTableByCurrentSchemaWithEnabledFts() {
+        createTablesRequest(generateString("STRING_8"),
+                            "some title",
+                            "some description",
+                            "EPSG:28406",
+                            CurrentScenarioSchema.getCurrentSchema().getName(),
+                            true);
+
+        assertEquals(201, response.getStatusCode());
     }
 
     @When("Создана таблица по схеме, не имеющей автозаполняемые поля 'дату создания, модификации и создателя'")

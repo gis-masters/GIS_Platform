@@ -1,6 +1,5 @@
 package ru.mycrg.acceptance.data_service.features;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -17,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.assertEquals;
 import static ru.mycrg.acceptance.FeatureBuilder.prepareFeatures;
 import static ru.mycrg.acceptance.JsonMapper.asJson;
@@ -36,8 +36,33 @@ public class FeaturesStepsDefinitions extends BaseStepsDefinitions {
         return getFeatures(tableIdentifier);
     }
 
+    @When("Пользователь добавляет случайный объект в текущую таблицу")
+    public void createRandomObjectInCurrentTable() {
+        // TODO: нужен бы генератор тестовых данных, который бы работал по схеме.
+        Feature feature = new Feature(Map.of(
+                "firstProperty", "any text here",
+                "fiz", "any text here"
+        ));
+
+        scenarioFeatures.add(feature);
+
+        createFeature(feature);
+
+        response.then()
+                .statusCode(201);
+    }
+
+    @Then("Объект успешно сохранён в текущей таблице")
+    public void checkCreatedFeature() {
+        Feature firstFeature = scenarioFeatures.get(0);
+
+        response.then()
+                .statusCode(201)
+                .body("properties.fiz", equalTo(firstFeature.getProperties().get("fiz").toString()));
+    }
+
     @When("Таблица наполнена данными {string}")
-    public void createSomeDataInCurrentTable(String dataTemplate) throws JsonProcessingException {
+    public void createSomeDataInCurrentTable(String dataTemplate) {
         scenarioFeatures = prepareFeatures(dataTemplate);
         for (Feature feature: scenarioFeatures) {
             createFeature(feature);

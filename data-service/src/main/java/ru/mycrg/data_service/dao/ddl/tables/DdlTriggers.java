@@ -9,6 +9,7 @@ import ru.mycrg.common_utils.CrgGlobalProperties;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.apache.commons.lang3.StringUtils.join;
 import static ru.mycrg.data_service.dao.utils.ResourceQualifierUtil.getIdField;
@@ -77,8 +78,8 @@ public class DdlTriggers {
             funcName = (qualifier.getType() == TABLE)
                     ? "universal_copy_to_fts_layers"
                     : "universal_copy_to_fts_documents";
-            triggerParams = String.format("'%s', '%s', '%s', '%s'", schema, table,
-                                          getIdField(qualifier), join(fields, ","));
+            String joinedFields = join(fields.stream().map(String::toLowerCase).collect(Collectors.toList()), ",");
+            triggerParams = String.format("'%s', '%s', '%s', '%s'", schema, table, getIdField(qualifier), joinedFields);
         }
 
         dropTrigger(qualifier, operation);
