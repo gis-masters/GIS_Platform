@@ -1,6 +1,8 @@
 package ru.mycrg.data_service.service.smev3.request.accept_rns;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import io.minio.Result;
+import io.minio.messages.Item;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,9 +11,13 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import ru.mycrg.data_service.accept_rns_1_0_3.AttachmentHeaderList;
+import ru.mycrg.data_service.accept_rns_1_0_3.AttachmentHeaderType;
+import ru.mycrg.data_service.accept_rns_1_0_3.DocInfoType;
 import ru.mycrg.data_service.accept_rns_1_0_3.QueryResult;
 import ru.mycrg.data_service.accept_rns_1_0_3.RecipientPersonalDataType;
 import ru.mycrg.data_service.accept_rns_1_0_3.RequestType;
+import ru.mycrg.data_service.config.Smev3Config;
 import ru.mycrg.data_service.dao.RecordsDao;
 import ru.mycrg.data_service.dao.detached.TasksDetachedDao;
 import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
@@ -26,8 +32,10 @@ import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.exceptions.SmevRequestException;
 import ru.mycrg.data_service.repository.DocumentLibraryRepository;
 import ru.mycrg.data_service.repository.FileRepository;
+import ru.mycrg.data_service.service.MinioService;
 import ru.mycrg.data_service.service.TaskLogService;
 import ru.mycrg.data_service.service.binary_analyzers.SimpleIntentHandler;
+import ru.mycrg.data_service.service.files.FileService;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service.service.schemas.ISchemaTemplateService;
 import ru.mycrg.data_service.service.smev3.SmevMessageService;
@@ -50,12 +58,12 @@ import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 import static ru.mycrg.data_service.config.CrgCommonConfig.ROOT_FOLDER_PATH;
-import static ru.mycrg.data_service.dto.ResourceType.LIBRARY_RECORD;
 import static ru.mycrg.data_service.dto.Roles.OWNER;
 import static ru.mycrg.data_service.service.TaskService.*;
-import static ru.mycrg.data_service.service.reestrs.Systems.SMEV_3;
 import static ru.mycrg.data_service.service.resources.ResourceQualifier.*;
 import static ru.mycrg.data_service.service.smev3.request.get_cadastrial_plan.GetCadastrialPlanRequestService.DATA_SECTION_KEY_DATA_CONNECTION_ATTRIBUTE;
 import static ru.mycrg.data_service.service.storage.FileStorageUtil.generateFileName;
@@ -98,6 +106,9 @@ public class AcceptRnsService {
     private final DocumentLibraryRepository libraryRepository;
     private final FileRepository fileRepository;
     private final SimpleIntentHandler simpleIntentHandler;
+    private final MinioService minioService;
+    private final Smev3Config smev3Config;
+    private final FileService fileService;
 
     public AcceptRnsService(TaskLogService taskLogService,
                             TasksDetachedDao tasksDao,
@@ -107,7 +118,10 @@ public class AcceptRnsService {
                             RecordsDao recordsDao,
                             DocumentLibraryRepository libraryRepository,
                             FileRepository fileRepository,
-                            SimpleIntentHandler simpleIntentHandler) {
+                            SimpleIntentHandler simpleIntentHandler,
+                            MinioService minioService,
+                            Smev3Config smev3Config,
+                            FileService fileService) {
         this.taskLogService = taskLogService;
         this.tasksDao = tasksDao;
         this.smevMessageService = smevMessageService;
@@ -117,6 +131,9 @@ public class AcceptRnsService {
         this.libraryRepository = libraryRepository;
         this.fileRepository = fileRepository;
         this.simpleIntentHandler = simpleIntentHandler;
+        this.minioService = minioService;
+        this.smev3Config = smev3Config;
+        this.fileService = fileService;
     }
 
     @Transactional
@@ -132,7 +149,7 @@ public class AcceptRnsService {
             throw new BadRequestException("Не удалось распарсить сообщение: " + body);
         }
         RequestType request = queryResult.getMessage()
-                                         .getRequestContent().getContent().getMessagePrimaryContent().getRequest();
+                .getRequestContent().getContent().getMessagePrimaryContent().getRequest();
         smevMessageService.saveIncoming(body);
         String filter = String.format("path like '%s'", "/root/" + folderId);
         ResourceQualifier libraryQualifier = libraryQualifier("dl_data_task_allocation");
@@ -147,7 +164,7 @@ public class AcceptRnsService {
         createLog("Входящее сообщение РНС успешно записано в реестр",
                   "Входящее сообщение РНС успешно записано в реестр",
                   taskId);
-        createDocumentAndLinkToTask(request, taskContent, taskId);
+        createDocumentAndLinkToTask(request, taskContent, taskId, queryResult);
     }
 
     private Map<String, Object> prepareTaskRecord(String description, Long performerId) {
@@ -174,7 +191,8 @@ public class AcceptRnsService {
         taskLogService.create(new TaskLogDto(eventType, taskId), propsMap);
     }
 
-    private void createDocumentAndLinkToTask(RequestType request, Map<String, Object> taskContent, Long taskId)
+    private void createDocumentAndLinkToTask(RequestType request, Map<String, Object> taskContent, Long taskId,
+                                             QueryResult queryResult)
             throws CrgDaoException, IOException {
         ResourceQualifier rnsLibraryQualifier = libraryQualifier(RNS_LIBRARY_ID);
         LibraryModel rnsLibraryModel = libraryRepository
@@ -187,8 +205,8 @@ public class AcceptRnsService {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
 
         String fullfio = Optional.ofNullable(request.getRecipientPersonalData())
-                                 .map(RecipientPersonalDataType::getFullfio)
-                                 .orElse("");
+                .map(RecipientPersonalDataType::getFullfio)
+                .orElse("");
         documentPayload.put(DATE_ATTRIBUTE, LocalDate.parse(request.getService().getCurrentDate(), formatter));
         documentPayload.put(PERSON_NAME_ATTRIBUTE, fullfio);
         documentPayload.put(REQUEST_TYPE_ATTRIBUTE, RNS_REQUEST_TYPE);
@@ -197,6 +215,7 @@ public class AcceptRnsService {
         documentPayload.put(CONTENT_TYPE_ID.getName(), RNS_CONTENT_TYPE);
         documentPayload.put(IS_FOLDER.getName(), false);
         documentPayload.put(PATH.getName(), ROOT_FOLDER_PATH);
+        documentPayload.put("smev_message_id", queryResult.getSmevMetadata().getMessageId());
 
         RecordEntity document = new RecordEntity(documentPayload);
         IRecord savedDocument = recordsDao.addRecord(rnsLibraryQualifier, document, rnsSchema);
@@ -228,15 +247,64 @@ public class AcceptRnsService {
                 .moveToMainStorage(Paths.get(path),
                                    Paths.get("organization_1/library_record/dl_data_inbox_data/" + fileName))
                 .normalize().toString();
-        File wordDocumentEntity = new File(wordDocumentFile, intents, path, SMEV_3);
-        File savedFile = fileRepository.save(wordDocumentEntity);
-        UUID savedFileId = savedFile.getId();
-        fileRepository.setQualifier(LIBRARY_RECORD.name(), jsonNode, Set.of(savedFileId));
+        File wordDocumentEntity = new File(wordDocumentFile, intents, path, "arh_grad_rk@mail.ru");
+        File savedEntity = fileRepository.save(wordDocumentEntity);
+        UUID savedEntityId = savedEntity.getId();
+        String savedEntityTitle = savedEntity.getTitle();
+        Long savedEntitySize = savedEntity.getSize();
+        ResourceQualifier fileQualifier = fieldQualifier(rnsLibraryQualifier, savedDocumentId, FILE_ATTRIBUTE);
+        String type = fileQualifier.getType().name();
+        fileRepository.setQualifier(type, jsonNode, Set.of(savedEntityId));
 
-        String asJson = getJsonString(new FileDescription(savedFileId, savedFile.getTitle(), savedFile.getSize()));
+        FileDescription fileDescription = new FileDescription(savedEntityId, savedEntityTitle, savedEntitySize);
+        List<FileDescription> fileDescriptions = new ArrayList<>();
+        fileDescriptions.add(fileDescription);
+
+        Map<String, byte[]> map = uploadRequestAttaches(
+                queryResult.getMessage().getRequestContent().getContent().getAttachmentHeaderList());
+        List<MultipartFile> files = new ArrayList<>();
+        addFileIfNotEmpty(files, request.getDocuments().getAdditionalDocument(), map);
+        addFileIfNotEmpty(files, request.getDocuments().getTitleDocLandPlot(), map);
+        addFileIfNotEmpty(files, request.getDocuments().getTitleDocLandPlotSig(), map);
+        addFileIfNotEmpty(files, request.getDocuments().getDecisionOwnersConstructionObject(), map);
+        addFileIfNotEmpty(files, request.getDocuments().getDecisionOwnersConstructionObjectSig(), map);
+        addFileIfNotEmpty(files, request.getDocuments().getDecisionMeetingOwnersApartment(), map);
+        addFileIfNotEmpty(files, request.getDocuments().getDecisionMeetingOwnersApartmentSig(), map);
+        addFileIfNotEmpty(files, request.getDocuments().getDecisionOwnersApartments(), map);
+        addFileIfNotEmpty(files, request.getDocuments().getDecisionOwnersApartmentsSig(), map);
+        addFileIfNotEmpty(files, request.getDocuments().getResaltEngineerResearch(), map);
+        addFileIfNotEmpty(files, request.getDocuments().getResaltEngineerResearchSig(), map);
+        addFileIfNotEmpty(files, request.getDocuments().getProjectDescriptionPartition(), map);
+        addFileIfNotEmpty(files, request.getDocuments().getProjectDescriptionPartitionSig(), map);
+        addFileIfNotEmpty(files, request.getDocuments().getSchemeLandPlotPartition(), map);
+        addFileIfNotEmpty(files, request.getDocuments().getSchemeLandPlotPartitionSig(), map);
+        addFileIfNotEmpty(files, request.getDocuments().getArchitecturalSolutionsPartition(), map);
+        addFileIfNotEmpty(files, request.getDocuments().getArchitecturalSolutionsPartitionSig(), map);
+        addFileIfNotEmpty(files, request.getDocuments().getConstructionProjectPartition(), map);
+        addFileIfNotEmpty(files, request.getDocuments().getProjectDescriptionPartitionSig(), map);
+        addFileIfNotEmpty(files, request.getDocuments().getRemovalProjectPartition(), map);
+        addFileIfNotEmpty(files, request.getDocuments().getRemovalProjectPartitionSig(), map);
+        addFileIfNotEmpty(files, request.getDocuments().getPositiveConclusion(), map);
+        addFileIfNotEmpty(files, request.getDocuments().getPositiveConclusionSig(), map);
+        addFileIfNotEmpty(files, request.getDocuments().getDelegateLegalDocFile(), map);
+        addFileIfNotEmpty(files, request.getDocuments().getDelegateLegalDocSigFile(), map);
+        addFileIfNotEmpty(files, request.getDocuments().getAdditionalDocFile(), map);
+        addFileIfNotEmpty(files, request.getDocuments().getAdditionalDocFileSig(), map);
+        addFileIfNotEmpty(files, request.getDocuments().getAdditionalDocFile2(), map);
+        addFileIfNotEmpty(files, request.getDocuments().getAdditionalDocFileSig2(), map);
+        addFileIfNotEmpty(files, request.getDocuments().getAdditionalDocFile3(), map);
+        addFileIfNotEmpty(files, request.getDocuments().getAdditionalDocFileSig3(), map);
+        addFileIfNotEmpty(files, request.getDocuments().getAdditionalDocFile4(), map);
+        addFileIfNotEmpty(files, request.getDocuments().getAdditionalDocFileSig4(), map);
+        addFileIfNotEmpty(files, request.getDocuments().getDelegateDocFile(), map);
+        addFileIfNotEmpty(files, request.getDocuments().getDelegateDocSigFile(), map);
+        collectFilesToList(files, fileResQualifier, fileQualifier, fileDescriptions);
+
+        String jacksonData = JsonConverter.getJsonString(fileDescriptions);
         Map<String, Object> payload = savedDocument.getContent();
-        payload.put(FILE_ATTRIBUTE, asJson == null ? List.of() : List.of(asJson));
-        recordsDao.updateRecordById(libraryRecordQualifier(RNS_LIBRARY_ID, savedDocumentId), payload, rnsSchema);
+        payload.put(FILE_ATTRIBUTE, jacksonData);
+        ResourceQualifier rnsResQualifier = ResourceQualifier.libraryRecordQualifier(RNS_LIBRARY_ID, savedDocumentId);
+        recordsDao.updateRecordById(rnsResQualifier, payload, rnsSchema);
 
         TypeDocumentData documentData = new TypeDocumentData(savedDocumentId, savedDocumentTitle, RNS_LIBRARY_ID);
         taskContent.put(DATA_SECTION_KEY_DATA_CONNECTION_ATTRIBUTE, mapper.writeValueAsString(List.of(documentData)));
@@ -245,4 +313,98 @@ public class AcceptRnsService {
                 .orElseThrow(() -> new NotFoundException("Не найдена схема задач: " + TASKS_SCHEMA));
         recordsDao.updateRecordById(recordQualifier(TASK_QUALIFIER, taskId), taskContent, tasksSchema);
     }
+
+    private Map<String, byte[]> uploadRequestAttaches(AttachmentHeaderList attachmentHeaderList) {
+        Map<String, byte[]> filesAsBytes = new HashMap<>();
+
+        try {
+            for (AttachmentHeaderType attachmentHeader : attachmentHeaderList.getAttachmentHeader()) {
+                Iterable<Result<Item>> objects = minioService.getListObjects(attachmentHeader.getId() + "/",
+                                                                             smev3Config.getS3bucketIncoming());
+                String lowerFolderName = objects.iterator().next().get().objectName();
+                Iterable<Result<Item>> results1 = minioService.getListObjects(lowerFolderName,
+                                                                              smev3Config.getS3bucketIncoming());
+                String fileName = results1.iterator().next().get().objectName();
+                byte[] fileBytes = minioService.getFile(
+                        fileName,
+                        smev3Config.getS3bucketIncoming());
+
+                try (ZipInputStream zis = new ZipInputStream(new ByteArrayInputStream(fileBytes))) {
+                    ZipEntry entry;
+                    while ((entry = zis.getNextEntry()) != null) {
+                        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                        byte[] buffer = new byte[1024];
+                        int len;
+                        while ((len = zis.read(buffer)) > 0) {
+                            bos.write(buffer, 0, len);
+                        }
+                        filesAsBytes.put(entry.getName(), bos.toByteArray());
+                        zis.closeEntry();
+                    }
+                }
+
+            }
+
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            throw new SmevRequestException("Не удалось загрузить вложения");
+        }
+        return filesAsBytes;
+
+
+    }
+
+    private void addFileIfNotEmpty(List<MultipartFile> files, List<DocInfoType> documents, Map<String, byte[]> map) {
+        if (!documents.isEmpty()) {
+            for (DocInfoType doc : documents) {
+                MultipartFile file = new CustomMultipartFile(
+                        map.get(doc.getURL()),
+                        doc.getName(),
+                        doc.getName(),
+                        doc.getType()
+                );
+                if ((doc.getCodeDocument().equalsIgnoreCase("electrSigFile"))
+                        && (doc.getType().equalsIgnoreCase("application/pdf"))
+                        && (doc.getName().endsWith(".pdf"))) {
+                    files.add(0, file);
+                } else {
+                    files.add(file);
+                }
+            }
+        }
+    }
+
+    private void collectFilesToList(List<MultipartFile> files,
+                                    FileResourceQualifier fileResQualifier,
+                                    ResourceQualifier resourceQualifier,
+                                    List<FileDescription> fileDescriptions) {
+        List<File> filesAndSignatures = new ArrayList<>();
+        for (MultipartFile multipartFile : files) {
+            String filename = generateFileName(multipartFile.getOriginalFilename());
+            String path = fileStorageService.copyToTrash(multipartFile, filename);
+            String intents = simpleIntentHandler.defineIntent(multipartFile);
+
+            JsonNode jsonNode = toJsonNode(fileResQualifier);
+            path = fileStorageService
+                    .moveToMainStorage(Paths.get(path),
+                                       Paths.get("organization_1/library_record/dl_data_inbox_data/" + filename))
+                    .normalize().toString();
+            File file = new File(multipartFile, intents, path, "arh_grad_rk@mail.ru");
+            File savedEntity = fileRepository.save(file);
+            UUID savedEntityId = savedEntity.getId();
+
+            String type = resourceQualifier.getType().name();
+            fileRepository.setQualifier(type, jsonNode, Set.of(savedEntityId));
+            filesAndSignatures.add(savedEntity);
+        }
+
+        List<File> baseFiles = fileService.checkSignatures(filesAndSignatures);
+        for (File file : baseFiles) {
+            FileDescription fileDescription = new FileDescription(file.getId(), file.getTitle(), file.getSize());
+            fileDescriptions.add(fileDescription);
+        }
+
+    }
+
+
 }

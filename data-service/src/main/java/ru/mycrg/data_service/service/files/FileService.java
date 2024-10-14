@@ -238,11 +238,20 @@ public class FileService {
         fileRepository.setPathById(resultPath, fileId);
     }
 
-    private Map<UUID, VerifyEcpResponse> addSignature(ResourceQualifier qualifier,
-                                                      List<File> allFiles,
+    public List<File> checkSignatures(List<File> allFiles) {
+        return processFiles(allFiles, null);
+    }
+
+    private Map<UUID, VerifyEcpResponse> addSignature(ResourceQualifier qualifier, List<File> allFiles,
                                                       @NotNull SchemaDto schema) {
         Map<UUID, VerifyEcpResponse> report = new HashMap<>();
+        List<File> baseFiles = processFiles(allFiles, report);
+        // После всего обновляем запись только базовыми файлами
+        updateRecord(qualifier, baseFiles, schema);
+        return report;
+    }
 
+    private List<File> processFiles(List<File> allFiles, Map<UUID, VerifyEcpResponse> report) {
         List<File> baseFiles = allFiles.stream().filter(FileService::isNotEcp).collect(Collectors.toList());
         log.debug("Базовые файлы: {}", baseFiles);
 
@@ -250,44 +259,56 @@ public class FileService {
         log.debug("Файлы ЭЦП: {}", ecpFiles);
 
         for (File ecpFile: ecpFiles) {
-            UUID ecpFileId = ecpFile.getId();
             Optional<File> oBaseFile = getBaseFile(baseFiles, ecpFile.getTitle());
-            if (oBaseFile.isPresent()) { // Для ЭЦП нашли базовый файл... подписываем и удаляем ЭЦП
-                File baseFile = oBaseFile.get();
-
-                byte[] ecpAsBytes = getEcpAsBytes(ecpFile);
-
-                VerifyEcpResponse verifyEcpResponse = ecpVerifier.verify(baseFile.getPath(), ecpAsBytes);
-                if (verifyEcpResponse.isVerified()) {
-                    baseFile.setEcp(ecpAsBytes);
-
-                    log.debug("Файл: '{}' подписан ЭЦП: '{}'", baseFile.getId(), ecpFileId);
-                } else {
-                    log.debug("Файл: '{}' НЕ подписан. ЭЦП: '{}' не прошла проверку: {}",
-                              baseFile.getId(), ecpFileId, verifyEcpResponse);
-                }
-
-                // Добавим ЭЦП в отчет
-                report.put(ecpFileId, verifyEcpResponse);
-
-                // Удалим ЭЦП файл
-                fileRepository.delete(ecpFile);
-            } else { // Не нашли базовый файл.
-                log.debug("Для ЭЦП: '{}' не найден базовый файл", ecpFileId);
-
-                // Добавим ЭЦП в отчет
-                report.put(ecpFileId, verificationFailed("Не найден базовый файл"));
-
-                // Удалим ЭЦП файл
-                fileRepository.delete(ecpFile);
-            }
+            processEcpFile(oBaseFile, ecpFile, report);
         }
+        return baseFiles;
+    }
 
-        // После всего обновляем запись только базовыми файлами
-        List<FileDescription> allFilesAsDescription = new ArrayList<>(baseFiles)
-                .stream()
-                .map(file -> new FileDescription(file.getId(), file.getTitle(), file.getSize()))
-                .collect(Collectors.toList());
+    private void processEcpFile(Optional<File> oBaseFile, File ecpFile, Map<UUID, VerifyEcpResponse> report) {
+        if (oBaseFile.isPresent()) { // Для ЭЦП нашли базовый файл... подписываем и удаляем ЭЦП
+            File baseFile = oBaseFile.get();
+            byte[] ecpAsBytes = getEcpAsBytes(ecpFile);
+            VerifyEcpResponse verifyEcpResponse = ecpVerifier.verify(baseFile.getPath(), ecpAsBytes);
+
+            if (verifyEcpResponse.isVerified()) {
+                baseFile.setEcp(ecpAsBytes);
+                log.debug("Файл: '{}' подписан ЭЦП: '{}'", baseFile.getId(), ecpFile.getId());
+            } else {
+                log.debug("Файл: '{}' НЕ подписан. ЭЦП: '{}' не прошла проверку: {}", baseFile.getId(), ecpFile.getId(),
+                          verifyEcpResponse);
+            }
+
+            if (report != null) {
+                report.put(ecpFile.getId(), verifyEcpResponse);
+            }
+
+            // Удалим ЭЦП файл
+            deleteEcpFile(ecpFile);
+        } else {
+            // Не нашли базовый файл.
+            log.debug("Для ЭЦП: '{}' не найден базовый файл", ecpFile.getId());
+
+            // Добавим ЭЦП в отчет
+            if (report != null) {
+                report.put(ecpFile.getId(), verificationFailed("Не найден базовый файл"));
+            }
+
+            // Удалим ЭЦП файл
+            deleteEcpFile(ecpFile);
+        }
+    }
+
+    private void deleteEcpFile(File ecpFile) {
+        fileRepository.delete(ecpFile);
+    }
+
+    private void updateRecord(ResourceQualifier qualifier, List<File> baseFiles, @NotNull SchemaDto schema) {
+        List<FileDescription> allFilesAsDescription = baseFiles.stream()
+                                                               .map(file -> new FileDescription(file.getId(),
+                                                                                                file.getTitle(),
+                                                                                                file.getSize()))
+                                                               .collect(Collectors.toList());
 
         Map<String, Object> modifiedProps = new HashMap<>();
         JsonNode payload = toJsonNode(allFilesAsDescription);
@@ -298,11 +319,8 @@ public class FileService {
         } catch (CrgDaoException e) {
             String msg = "Не удалось обновить информацию о файлах";
             log.error("{} в записи: {} => {}", msg, qualifier.getQualifier(), e.getMessage());
-
             throw new DataServiceException(msg);
         }
-
-        return report;
     }
 
     private byte[] getEcpAsBytes(File ecpFile) {

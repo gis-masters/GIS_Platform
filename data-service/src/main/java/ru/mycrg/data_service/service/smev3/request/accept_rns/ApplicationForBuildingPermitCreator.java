@@ -71,52 +71,62 @@ public class ApplicationForBuildingPermitCreator {
                 .orElse("");
         String objectCadastrialNumber = Optional.ofNullable(request.getObjectData())
                 .map(ObjectDataType::getObjectCadastralBlock)
+                .filter(objectCadastralBlockTypes -> !objectCadastralBlockTypes.isEmpty())
                 .map(objectCadastralBlockTypes -> objectCadastralBlockTypes.get(0))
                 .map(ObjectCadastralBlockType::getObjectCadastralNumber)
                 .map(strings -> strings.get(0))
                 .orElse("");
         String date = Optional.ofNullable(request.getGPZU())
                 .map(GPZUType::getGPZUBlock)
+                .filter(gpzuBlockTypes -> !gpzuBlockTypes.isEmpty())
                 .map(gpzuBlockTypes -> gpzuBlockTypes.get(0))
                 .map(GPZUBlockType::getDate)
                 .orElse("");
         String number = Optional.ofNullable(request.getGPZU())
                 .map(GPZUType::getGPZUBlock)
+                .filter(gpzuBlockTypes -> !gpzuBlockTypes.isEmpty())
                 .map(gpzuBlockTypes -> gpzuBlockTypes.get(0))
                 .map(GPZUBlockType::getNumber)
                 .orElse("");
         String issuer = Optional.ofNullable(request.getGPZU())
                 .map(GPZUType::getGPZUBlock)
+                .filter(gpzuBlockTypes -> !gpzuBlockTypes.isEmpty())
                 .map(gpzuBlockTypes -> gpzuBlockTypes.get(0))
                 .map(GPZUBlockType::getIssuer)
                 .orElse("");
         String planProjectDate = Optional.ofNullable(request.getPlanProject())
                 .map(PlanProjectType::getPlanProjectBlock)
+                .filter(planProjectBlockTypes -> !planProjectBlockTypes.isEmpty())
                 .map(planProjectBlockTypes -> planProjectBlockTypes.get(0))
                 .map(PlanProjectBlockType::getDate)
                 .orElse("");
         String planProjectNumber = Optional.ofNullable(request.getPlanProject())
                 .map(PlanProjectType::getPlanProjectBlock)
+                .filter(planProjectBlockTypes -> !planProjectBlockTypes.isEmpty())
                 .map(planProjectBlockTypes -> planProjectBlockTypes.get(0))
                 .map(PlanProjectBlockType::getNumber)
                 .orElse("");
         String planProjectIssuer = Optional.ofNullable(request.getPlanProject())
                 .map(PlanProjectType::getPlanProjectBlock)
+                .filter(planProjectBlockTypes -> !planProjectBlockTypes.isEmpty())
                 .map(planProjectBlockTypes -> planProjectBlockTypes.get(0))
                 .map(PlanProjectBlockType::getIssuer)
                 .orElse("");
         String surveyingDate = Optional.ofNullable(request.getSurveying())
                 .map(SurveyingType::getSurveyingBlock)
+                .filter(surveyingBlockTypes -> !surveyingBlockTypes.isEmpty())
                 .map(surveyingBlockTypes -> surveyingBlockTypes.get(0))
                 .map(SurveyingBlockType::getDate)
                 .orElse("");
         String surveyingNumber = Optional.ofNullable(request.getSurveying())
                 .map(SurveyingType::getSurveyingBlock)
+                .filter(surveyingBlockTypes -> !surveyingBlockTypes.isEmpty())
                 .map(surveyingBlockTypes -> surveyingBlockTypes.get(0))
                 .map(SurveyingBlockType::getNumber)
                 .orElse("");
         String surveyingIssuer = Optional.ofNullable(request.getSurveying())
                 .map(SurveyingType::getSurveyingBlock)
+                .filter(surveyingBlockTypes -> !surveyingBlockTypes.isEmpty())
                 .map(surveyingBlockTypes -> surveyingBlockTypes.get(0))
                 .map(SurveyingBlockType::getIssuer)
                 .orElse("");
