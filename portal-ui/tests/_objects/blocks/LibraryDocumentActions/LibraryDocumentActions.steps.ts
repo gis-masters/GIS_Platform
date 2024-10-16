@@ -87,7 +87,7 @@ Then('в библиотеке документов у созданной пап�
   if (this.latestFolder.title) {
     const explorerBlock = new ExplorerBlock();
     await explorerBlock.selectExplorerItem(this.latestFolder.title);
-    const exist = await libraryDocumentActionsBlock.documentMoveBtnExist();
+    const exist = await libraryDocumentActionsBlock.documentMoveBtnDisabled();
     await expect(exist).toEqual(false);
   } else {
     throw new Error('Что то пошло не так при перемещении папки');

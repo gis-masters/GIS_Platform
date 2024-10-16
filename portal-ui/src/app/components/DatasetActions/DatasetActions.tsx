@@ -41,14 +41,15 @@ export class DatasetActions extends Component<DatasetActionsProps> {
 
   render() {
     const owningAllowed = currentUser.isAdmin || this.dataset?.role === Role.OWNER;
+    const editAllowed = owningAllowed || this.dataset?.role === Role.CONTRIBUTOR;
 
     return this.dataset ? (
       <div className={cnDatasetActions()}>
         <DatasetActionsEdit
           dataset={this.dataset}
-          disabled={!owningAllowed}
+          disabled={!editAllowed}
           tooltipText={
-            owningAllowed
+            editAllowed
               ? undefined
               : getAvailableActionsTooltipByRole(ActionTypes.EDIT, this.dataset.role, DataTypes.DATASET)
           }

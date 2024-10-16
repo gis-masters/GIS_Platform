@@ -27,6 +27,7 @@ class LibraryDocumentActionsBlock extends Block {
     await this.waitForVisible();
 
     const $moveBtn = await this.$('move');
+    await $moveBtn.waitForDisplayed();
 
     return await $moveBtn.isEnabled();
   }
@@ -35,6 +36,7 @@ class LibraryDocumentActionsBlock extends Block {
     await this.waitForVisible();
 
     const $moveBtn = await this.$('move');
+    await $moveBtn.waitForDisplayed();
 
     return await $moveBtn.isExisting();
   }
