@@ -375,7 +375,7 @@ class MapService {
     }
 
     const params: CrgWmsParams = {
-      STYLES: styleName,
+      STYLES: type === CrgLayerType.RASTER ? 'raster' : styleName,
       LAYERS: complexName,
       FORMAT: Mime.VND_JPEG_PNG8
     };
