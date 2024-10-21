@@ -19,31 +19,33 @@ import { MapLabelToolbox } from '../../components/MapLabelToolbox/MapLabelToolbo
 import { currentProject } from '../../stores/CurrentProject.store';
 import { currentUser } from '../../stores/CurrentUser.store';
 import { mapStore } from '../../stores/Map.store';
-import { sidebars } from '../../stores/Sidebars.store';
 import { communicationService } from '../communication.service';
 import { defaultOlProjectionCode, Projection } from '../data/projections/projections.models';
-import { getProjectionByCode } from '../data/projections/projections.service';
+import { getOlProjection } from '../data/projections/projections.service';
 import { Coord, transformCoord, transformGroup } from '../data/projections/projections.util';
-import { extractTableNameFromFeatureId } from '../geoserver/featureType/featureType.util';
-import { GeometryType, supportedGeometryTypes, WfsFeature } from '../geoserver/wfs/wfs.models';
+import { GeometryType, WfsFeature } from '../geoserver/wfs/wfs.models';
 import { isPolygonal } from '../geoserver/wfs/wfs.util';
 import { notFalsyFilter } from '../util/NotFalsyFilter';
-import { featureToWfsFeature, formatLength, wfsFeatureToFeature } from '../util/open-layers.util';
+import { featureToWfsFeature, UnitsOfAreaMeasurement, wfsFeatureToFeature } from '../util/open-layers.util';
 import { sleep } from '../util/sleep';
 import { isArrayOf } from '../util/typeGuards/isArrayOf';
 import { isCoordinate, isCoordinateArray, isCoordinateArrayArray } from '../util/typeGuards/isCoordinate';
 import { isNumberArray } from '../util/typeGuards/isNumberArray';
 import { prompto } from '../utility-dialogs.service';
-import { CreateFeaturesData, Distance, LabelType, MapMode } from './map.models';
+import { Distance, LabelType, MapMode } from './map.models';
 import { mapService } from './map.service';
 import {
-  getFeatureLengthByGeometry,
-  getFeatureSquareByGeometry,
-  getMeasureUnitsByType,
+  getFeatureArea,
+  getFeatureLength,
+  getMiddlePoints,
   getRotationByAzimuth,
+  getSelectedFeatureProjection,
+  getSelectedOrActiveFeature,
   transformAnyCoordinates
 } from './map-labels.util';
 import { mapMeasureService } from './map-measure.service';
+
+const projectionError = 'Отсутствует проекция';
 
 const MARK_FILL_COLOR = 'rgba(255, 255, 255, 0.5)';
 
@@ -127,21 +129,21 @@ class MapLabelsService {
   }
 
   private getDistancesByCoords(coordinates: Coord[], projFrom: Projection, projTo: Projection): Distance[] {
-    const coords = transformGroup(coordinates, projFrom, projTo);
+    // const coords = transformGroup(coordinates, projFrom, projTo);
 
-    if (!isCoordinateArray(coords)) {
+    if (!isCoordinateArray(coordinates)) {
       throw new Error('Указанные координаты не являются полигоном');
     }
 
-    const polygon = new Polygon([coords]);
+    const polygon = new Polygon([coordinates]);
     const distances = [];
 
-    for (let i = 0; i < coords.length; i += 1) {
-      const pointA = coords[i];
-      const pointB = coords[i === coords.length - 1 ? 0 : i + 1];
+    for (let i = 0; i < coordinates.length; i += 1) {
+      const pointA = coordinates[i];
+      const pointB = coordinates[i === coordinates.length - 1 ? 0 : i + 1];
 
       const lineString = new LineString([pointA, pointB]);
-      const [value, units] = formatLength(lineString);
+      const [value, units] = getFeatureLength({ geometry: lineString, projection: projFrom });
       const center = lineString.getFlatMidpoint();
       const perpendicularPoint = [center[0], center[1] + 10];
       const isLabelInPolygon = polygon.intersectsCoordinate(perpendicularPoint);
@@ -152,7 +154,7 @@ class MapLabelsService {
 
       distances.push({
         distance: { value, units },
-        center,
+        center: transformCoord(center, projFrom, projTo) as number[],
         isLabelInPolygon,
         azimuth
       });
@@ -215,59 +217,41 @@ class MapLabelsService {
       .filter(notFalsyFilter);
   }
 
-  async getDataForCreateFeatures(): Promise<CreateFeaturesData> {
+  async addFeatureArea(): Promise<void> {
     this.dropInteractions();
 
-    const selectedFeatureId = sidebars.editFeaturesData?.features[0].id;
-    const selectedFeature = selectedFeatureId
-      ? mapStore.getFeatureInSelectionById(selectedFeatureId)
-      : mapStore.selectedFeatures[0];
-    const layerTableName = selectedFeature ? extractTableNameFromFeatureId(selectedFeature.id) : null;
+    const currentLayerProjection = await getSelectedFeatureProjection();
+    const wfsFeature = getSelectedOrActiveFeature();
 
-    if (!layerTableName) {
-      throw new Error('Отсуствует векторная таблица');
+    if (!currentLayerProjection || !wfsFeature) {
+      throw new Error(projectionError);
     }
 
-    const layer = currentProject.layers.find(layer => layer.tableName === layerTableName);
-    const coordinates = selectedFeature?.geometry?.coordinates || [];
-    const geometryType = selectedFeature?.geometry?.type;
+    const feature = wfsFeatureToFeature(wfsFeature);
+    const geometry = feature.getGeometry();
 
-    if (!geometryType || !supportedGeometryTypes.includes(geometryType)) {
-      throw new Error('Неподдерживаемый тип геометрии');
+    if (!geometry) {
+      throw new Error('Ошибка геометрии объекта');
     }
 
-    if (!layer?.nativeCRS) {
-      throw new Error('В слое не указана система координат');
-    }
-
-    const currentLayerProjection = await getProjectionByCode(layer?.nativeCRS);
-    const olProjection = await getProjectionByCode(defaultOlProjectionCode);
-
-    return { coordinates, geometryType, currentLayerProjection, olProjection };
-  }
-
-  async addFeatureSquare(): Promise<void> {
-    const { coordinates, geometryType, currentLayerProjection, olProjection } = await this.getDataForCreateFeatures();
-
-    if (!currentLayerProjection || !olProjection) {
-      throw new Error('Отсутствует проекция');
-    }
-
-    const { value, middlePoints } = getFeatureSquareByGeometry(coordinates, geometryType);
+    const [value, units] = getFeatureArea(geometry, UnitsOfAreaMeasurement.HECTARE, 4);
+    const middlePoints = getMiddlePoints(feature);
 
     for (const point of middlePoints) {
-      const pointCoordinates = transformCoord(point.getCoordinates().slice(0, 2), currentLayerProjection, olProjection);
+      const pointCoordinates = transformCoord(
+        point.getCoordinates().slice(0, 2),
+        currentLayerProjection,
+        await getOlProjection()
+      );
 
       if (!isCoordinate(pointCoordinates) || !isNumberArray(pointCoordinates)) {
         throw new Error('Координаты точки некорректны');
       }
 
-      const { value: squareValue, units } = getMeasureUnitsByType(value, 'square');
-
       const feature = new Feature({
         geometry: new Point(pointCoordinates),
         type: 'label',
-        text: `${squareValue} ${units}`,
+        text: `${value} ${units}`,
         isLabelInPolygon: true
       });
 
@@ -281,25 +265,39 @@ class MapLabelsService {
     this.saveToStorages();
   }
 
-  async addFeaturePerimeter(): Promise<void> {
-    const { coordinates, geometryType, currentLayerProjection, olProjection } = await this.getDataForCreateFeatures();
+  async addFeatureLength(): Promise<void> {
+    this.dropInteractions();
 
-    if (!currentLayerProjection || !olProjection) {
-      throw new Error('Отсутствует проекция');
+    const currentLayerProjection = await getSelectedFeatureProjection();
+    const wfsFeature = getSelectedOrActiveFeature();
+
+    if (!currentLayerProjection || !wfsFeature) {
+      throw new Error(projectionError);
     }
 
-    const olCoordinates = transformAnyCoordinates(coordinates, currentLayerProjection, olProjection);
+    const feature = wfsFeatureToFeature(wfsFeature);
+    const geometry = feature.getGeometry();
 
-    if (!olCoordinates) {
+    if (!geometry) {
+      throw new Error('Ошибка геометрии объекта');
+    }
+
+    const [value, units] = getFeatureLength({ geometry, projection: currentLayerProjection, precision: 4 });
+    const middlePoints = getMiddlePoints(feature);
+
+    const olMiddlePoints = transformAnyCoordinates(
+      middlePoints.map(point => point.getCoordinates()),
+      currentLayerProjection,
+      await getOlProjection()
+    );
+
+    if (!olMiddlePoints || !isCoordinateArray(olMiddlePoints)) {
       throw new Error('Координаты точки некорректны');
     }
 
-    const { length, middlePoints } = getFeatureLengthByGeometry(olCoordinates, geometryType);
-    const { value, units } = getMeasureUnitsByType(length);
-
-    for (const point of middlePoints) {
+    for (const point of olMiddlePoints) {
       const feature = new Feature({
-        geometry: new Point(point.getCoordinates()),
+        geometry: new Point(point),
         type: 'label',
         text: `${value} ${units}`
       });
@@ -315,15 +313,18 @@ class MapLabelsService {
   }
 
   async addPointsDistances(): Promise<void> {
-    const { coordinates, currentLayerProjection, olProjection } = await this.getDataForCreateFeatures();
+    this.dropInteractions();
 
-    if (!(currentLayerProjection && olProjection) || isNumberArray(coordinates)) {
+    const currentLayerProjection = await getSelectedFeatureProjection();
+    const coordinates = getSelectedOrActiveFeature()?.geometry?.coordinates;
+
+    if (!currentLayerProjection || !coordinates || isNumberArray(coordinates)) {
       return;
     }
 
     const features = this.getDistancesFeatures({
       projFrom: currentLayerProjection,
-      olProjection,
+      olProjection: await getOlProjection(),
       coordinates
     });
 
@@ -334,11 +335,25 @@ class MapLabelsService {
   }
 
   async addTurningPoints() {
-    const { coordinates, currentLayerProjection, olProjection, geometryType } = await this.getDataForCreateFeatures();
+    this.dropInteractions();
 
-    if (currentLayerProjection && olProjection) {
+    const currentLayerProjection = await getSelectedFeatureProjection();
+    const wfsFeature = getSelectedOrActiveFeature();
+
+    if (!currentLayerProjection || !wfsFeature) {
+      throw new Error(projectionError);
+    }
+
+    const coordinates = wfsFeature.geometry?.coordinates;
+    const geometryType = wfsFeature.geometry?.type;
+
+    if (!coordinates || !geometryType) {
+      throw new Error('Отсутствие координат объекта');
+    }
+
+    if (currentLayerProjection) {
       const pointsCoordinates = this.getTurningPointsFromCoordinates(coordinates, geometryType);
-      const transformedCoordinates = transformGroup(pointsCoordinates, currentLayerProjection, olProjection);
+      const transformedCoordinates = transformGroup(pointsCoordinates, currentLayerProjection, await getOlProjection());
 
       const turningPoints = this.createFeatures(transformedCoordinates, 'turningPoints');
       const labels = this.createFeatures(transformedCoordinates, 'label');

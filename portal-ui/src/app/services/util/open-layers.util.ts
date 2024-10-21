@@ -1,7 +1,6 @@
 import { Feature } from 'ol';
 import { Coordinate } from 'ol/coordinate';
 import { LineString, MultiLineString, MultiPoint, MultiPolygon, Point, Polygon, SimpleGeometry } from 'ol/geom';
-import { getArea, getLength } from 'ol/sphere';
 
 import { GeometryType, WfsFeature, WfsGeometry } from '../geoserver/wfs/wfs.models';
 
@@ -94,44 +93,4 @@ export function wfsGeometryToGeometry(wfsGeometry: WfsGeometry<Coordinate>): Sim
       throw new Error(`Неподдерживаемый тип геометрии: ${wfsGeometry.type}`);
     }
   }
-}
-
-export function formatArea(polygon: Polygon, units: UnitsOfAreaMeasurement): [number, UnitsOfAreaMeasurement] {
-  const area = getArea(polygon);
-  let value: number;
-  let outputUnits: UnitsOfAreaMeasurement;
-
-  if (units === UnitsOfAreaMeasurement.HECTARE) {
-    if (area > 100) {
-      value = Math.round((area / 10_000) * 100) / 100;
-      outputUnits = UnitsOfAreaMeasurement.HECTARE;
-    } else {
-      value = Math.round(area * 100) / 100;
-      outputUnits = UnitsOfAreaMeasurement.SQUARE_METER;
-    }
-  } else if (area > 10_000) {
-    value = Math.round((area / 1_000_000) * 100) / 100;
-    outputUnits = UnitsOfAreaMeasurement.SQUARE_KILOMETER;
-  } else {
-    value = Math.round(area * 100) / 100;
-    outputUnits = UnitsOfAreaMeasurement.SQUARE_METER;
-  }
-
-  return [value, outputUnits];
-}
-
-export function formatLength(line: LineString): [number, UnitsOfLengthMeasurement] {
-  const length = getLength(line);
-  let value: number;
-  let outputUnits: UnitsOfLengthMeasurement;
-
-  if (length > 100) {
-    value = Math.round((length / 1000) * 100) / 100;
-    outputUnits = UnitsOfLengthMeasurement.KILOMETER;
-  } else {
-    value = Math.round(length * 100) / 100;
-    outputUnits = UnitsOfLengthMeasurement.METER;
-  }
-
-  return [value, outputUnits];
 }

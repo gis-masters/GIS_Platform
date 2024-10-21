@@ -6,13 +6,10 @@ import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 import { LineString, Polygon } from 'ol/geom';
 
+import { Projection } from '../../services/data/projections/projections.models';
+import { getFeatureArea, getFeatureLength } from '../../services/map/map-labels.util';
 import { MeasureItem } from '../../services/map/map-measure.service';
-import {
-  formatArea,
-  formatLength,
-  UnitsOfAreaMeasurement,
-  UnitsOfLengthMeasurement
-} from '../../services/util/open-layers.util';
+import { UnitsOfAreaMeasurement, UnitsOfLengthMeasurement } from '../../services/util/open-layers.util';
 import { mapStore } from '../../stores/Map.store';
 import { printSettings } from '../../stores/PrintSettings.store';
 import { PseudoLink } from '../PseudoLink/PseudoLink';
@@ -24,21 +21,23 @@ const cnMapMeasureTooltip = cn('MapMeasureTooltip');
 interface MapMeasureTooltipProps {
   item: MeasureItem;
   sketch: boolean;
+  projection: Projection;
   onClear(item: MeasureItem): void;
 }
 
 @observer
 export class MapMeasureTooltip extends Component<MapMeasureTooltipProps> {
   render() {
-    const { item, sketch } = this.props;
+    const { item, sketch, projection } = this.props;
     const { printingInProcess, printingResolution } = printSettings;
     const geom = item.feature.getGeometry();
+
     let value: number | undefined;
     let units: UnitsOfAreaMeasurement | UnitsOfLengthMeasurement | undefined;
     let switchingUnitsEnabled = false;
 
     if (geom instanceof Polygon) {
-      [value, units] = formatArea(geom, mapStore.unitsOfAreaMeasurement);
+      [value, units] = getFeatureArea(geom, mapStore.unitsOfAreaMeasurement);
       if (
         !sketch &&
         (value > 100 || units === UnitsOfAreaMeasurement.HECTARE || units === UnitsOfAreaMeasurement.SQUARE_KILOMETER)
@@ -46,7 +45,7 @@ export class MapMeasureTooltip extends Component<MapMeasureTooltipProps> {
         switchingUnitsEnabled = true;
       }
     } else if (geom instanceof LineString) {
-      [value, units] = formatLength(geom);
+      [value, units] = getFeatureLength({ geometry: geom, projection, isMeasure: true });
     }
 
     return (

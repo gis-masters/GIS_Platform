@@ -16,7 +16,7 @@ import {
 } from '../../geoserver/wfs/wfs.models';
 import { isCoordinateValid, normalizeCoordinates } from '../../geoserver/wfs/wfs.util';
 import { isStringArray } from '../../util/typeGuards/isStringArray';
-import { Projection } from './projections.models';
+import { Projection, ProjectionUnit } from './projections.models';
 
 export type Coord = Coordinate | CoordinateEdited;
 
@@ -185,7 +185,7 @@ export function transformMultiSuperGroup(
   );
 }
 
-export function projectionUnit(proj: string): string {
+export function getProjectionUnit(proj: string): ProjectionUnit {
   const unit = proj.split('UNIT');
 
   if (isStringArray(unit)) {

@@ -9,7 +9,11 @@ import { boundMethod } from 'autobind-decorator';
 import { Feature } from 'ol';
 import { SimpleGeometry } from 'ol/geom';
 
-import { DEFAULT_OL_PROJECTION, Projection } from '../../../services/data/projections/projections.models';
+import {
+  DEFAULT_OL_PROJECTION,
+  defaultOlProjectionCode,
+  Projection
+} from '../../../services/data/projections/projections.models';
 import { getProjectionByCode } from '../../../services/data/projections/projections.service';
 import { transformGeometry } from '../../../services/data/projections/projections.util';
 import { CoordinateEdited, GeometryType, WfsFeature, WfsGeometry } from '../../../services/geoserver/wfs/wfs.models';
@@ -54,7 +58,7 @@ export class EditFeatureGeometryCoord extends Component<EditFeatureGeometryCoord
   }
 
   async componentDidMount(): Promise<void> {
-    const projection = await getProjectionByCode(`${DEFAULT_OL_PROJECTION.authName}:${DEFAULT_OL_PROJECTION.srid}`);
+    const projection = await getProjectionByCode(defaultOlProjectionCode);
 
     if (projection) {
       this.setDefaultProjection(projection);

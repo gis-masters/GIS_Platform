@@ -5,13 +5,14 @@ import { getFeaturesListItemTitle } from '../../../../components/FeaturesListIte
 import { PrintMapImageControl } from '../../../../components/PrintMapImageControl/PrintMapImageControl';
 import { SelectPropertiesControl } from '../../../../components/SelectPropertiesControl/SelectPropertiesControl';
 import { getProjectionByCode } from '../../../data/projections/projections.service';
-import { getProjectionCode } from '../../../data/projections/projections.util';
+import { getProjectionCode, getProjectionUnit } from '../../../data/projections/projections.util';
 import { PropertySchema, PropertyType } from '../../../data/schema/schema.models';
 import { applyView, getReadablePropertyValue } from '../../../data/schema/schema.utils';
 import { GeometryType, WfsFeature } from '../../../geoserver/wfs/wfs.models';
 import { getLayerSchema } from '../../../gis/layers/layers.service';
 import { getLayerByFeatureInCurrentProject } from '../../../gis/layers/layers.utils';
 import { formPrompt } from '../../../utility-dialogs.service';
+import { getFeatureSize } from '../../helpers/getFeatureSize';
 import { PrintTemplate } from '../PrintTemplate';
 
 const MAX_COORDINATES = 30;
@@ -132,6 +133,16 @@ export const featureExtract: PrintTemplate<WfsFeature> = new PrintTemplate({
 
     const projection = await getProjectionByCode(layer.nativeCRS);
 
+    if (!projection) {
+      throw new Error('Отсутствует проекция');
+    }
+
+    const area = getFeatureSize({
+      feature: entity,
+      projection,
+      units: projection ? getProjectionUnit(projection.srtext) : undefined
+    });
+
     return await this.renderFragment('main', {
       title: mapDialogResult.title,
       image: mapDialogResult.image,
@@ -139,7 +150,13 @@ export const featureExtract: PrintTemplate<WfsFeature> = new PrintTemplate({
       crs: projection ? getProjectionCode(projection) : layer.nativeCRS,
       coordinates: coordinatesFragment,
       properties: propertiesRows.join(''),
-      area: ''
+      area: area
+        ? await this.renderFragment('area', {
+            area: String(area.value),
+            units: String(area.units),
+            areaType: area.sizeType === 'area' ? 'Площадь' : 'Протяженность'
+          })
+        : ''
     });
   },
 

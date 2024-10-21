@@ -47,18 +47,13 @@ interface FilesItemProps {
   onPreview(item: FileInfo): void;
 }
 
-type Ids = {
-  currentFileId: string | null;
-  operationId: symbol | null;
-};
-
 type FilesItemState = {
   connections: FileConnection[];
-  ids: Ids;
+  id: string;
   deleteDialogOpen: boolean;
   fileInfo: FileInfo | null;
   setConnections(connections: FileConnection[]): void;
-  setIds({ currentFileId, operationId }: Ids): void;
+  setIds(id: string): void;
   setDeleteDialogOpen(isOpen: boolean): void;
   setFileInfo(fileInfo: FileInfo): void;
 };
@@ -78,36 +73,28 @@ const FilesItemFC: FC<FilesItemProps> = observer(
     onPreview,
     onDelete
   }) => {
-    const {
-      connections,
-      ids: { currentFileId, operationId },
-      deleteDialogOpen,
-      fileInfo,
-      setConnections,
-      setIds,
-      setDeleteDialogOpen,
-      setFileInfo
-    } = useLocalObservable(
-      (): FilesItemState => ({
-        connections: [],
-        ids: { currentFileId: null, operationId: null },
-        deleteDialogOpen: false,
-        fileInfo: null,
+    const { connections, id, deleteDialogOpen, fileInfo, setConnections, setIds, setDeleteDialogOpen, setFileInfo } =
+      useLocalObservable(
+        (): FilesItemState => ({
+          connections: [],
+          id: item.id,
+          deleteDialogOpen: false,
+          fileInfo: null,
 
-        setConnections(this: FilesItemState, connections: FileConnection[]): void {
-          this.connections = connections;
-        },
-        setIds(this: FilesItemState, ids: Ids): void {
-          this.ids = ids;
-        },
-        setDeleteDialogOpen(this: FilesItemState, isOpen: boolean): void {
-          this.deleteDialogOpen = isOpen;
-        },
-        setFileInfo(this: FilesItemState, fileInfo: FileInfo): void {
-          this.fileInfo = fileInfo;
-        }
-      })
-    );
+          setConnections(this: FilesItemState, connections: FileConnection[]): void {
+            this.connections = connections;
+          },
+          setIds(this: FilesItemState, id: string): void {
+            this.id = id;
+          },
+          setDeleteDialogOpen(this: FilesItemState, isOpen: boolean): void {
+            this.deleteDialogOpen = isOpen;
+          },
+          setFileInfo(this: FilesItemState, fileInfo: FileInfo): void {
+            this.fileInfo = fileInfo;
+          }
+        })
+      );
 
     const handleDelete = useCallback(() => {
       onDelete([item]);
@@ -133,15 +120,16 @@ const FilesItemFC: FC<FilesItemProps> = observer(
     }, [setDeleteDialogOpen]);
 
     const fetchConnections = useCallback(async () => {
-      const { id } = item;
-      const newOperationId = Symbol();
-      setIds({ operationId: newOperationId, currentFileId: id });
+      const { id: newId } = item;
 
-      const documentConnections = await getFileConnections(id);
-      if (documentConnections.length && currentFileId === id && operationId === newOperationId) {
+      setIds(newId);
+
+      const documentConnections = await getFileConnections(newId);
+
+      if (documentConnections.length && id === newId) {
         setConnections(documentConnections);
       }
-    }, [currentFileId, item, operationId, setConnections, setIds]);
+    }, [id, item, setConnections, setIds]);
 
     const dropConnections = useCallback(() => {
       setConnections([]);
@@ -168,12 +156,12 @@ const FilesItemFC: FC<FilesItemProps> = observer(
       const signed = !!(item.signed || fileInfo?.signed);
 
       return { ext, baseName, disabled, isFileConnected, isFileCanBePlaced, signed };
-    }, [connections?.length, fileInfo?.signed, item, showMainCompoundFileActions, showPlaceAction, status]);
+    }, [connections, fileInfo?.signed, item, showMainCompoundFileActions, showPlaceAction, status]);
 
     useEffect(() => {
       void (async () => {
         communicationService.fileConnectionsUpdated.on(async (e: CustomEvent<DataChangeEventDetail<FileInfo[]>>) => {
-          if (e.detail.data.some(file => file.id === currentFileId)) {
+          if (e.detail.data.some(file => file.id === id)) {
             dropConnections();
             await fetchConnections();
           }

@@ -8,11 +8,11 @@ import { LabelType, MapMode } from '../../services/map/map.models';
 import { mapLabelsService } from '../../services/map/map-labels.service';
 import { konfirmieren } from '../../services/utility-dialogs.service';
 import { mapStore } from '../../stores/Map.store';
+import { FeatureArea } from '../FeatureArea/FeatureArea';
+import { FeatureLength } from '../FeatureLength/FeatureLength';
 import { IconButton } from '../IconButton/IconButton';
 import { LabelsOutlined } from '../Icons/LabelsOutlined';
 import { MapDistances } from '../MapDistances/MapDistances';
-import { MapPerimeter } from '../MapPerimeter/MapPerimeter';
-import { MapSquare } from '../MapSquare/MapSquare';
 import { MapTurningPoints } from '../MapTurningPoints/MapTurningPoints';
 
 import '!style-loader!css-loader!sass-loader!./MapLabels.scss';
@@ -76,8 +76,8 @@ export const MapLabels: FC = observer(() => {
     <div className={cnMapLabels()}>
       {mapStore.labelsVisible && (
         <>
-          <MapSquare />
-          <MapPerimeter />
+          <FeatureArea />
+          <FeatureLength />
           <MapTurningPoints />
           <MapDistances />
           <Tooltip title='Добавить аннотацию'>

@@ -1,7 +1,7 @@
 import React, { FC, useCallback } from 'react';
 import { observer } from 'mobx-react';
 import { Tooltip } from '@mui/material';
-import StraightenIcon from '@mui/icons-material/Straighten';
+import { Straighten } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
 import { mapLabelsService } from '../../services/map/map-labels.service';
@@ -26,7 +26,7 @@ export const MapDistances: FC = observer(() => {
     >
       <span className={cnMapDistances('Wrapper')}>
         <IconButton className={cnMapDistances()} onClick={handleOpen} disabled={!!disabled} size='small'>
-          <StraightenIcon />
+          <Straighten />
         </IconButton>
       </span>
     </Tooltip>

@@ -108,3 +108,5 @@ export const projectionXTableCols: XTableColumn<Projection>[] = [
     filterable: true
   }
 ];
+
+export type ProjectionUnit = 'градусы' | 'метры' | 'геодезический фут США' | '';

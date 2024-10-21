@@ -1,7 +1,8 @@
 import { Coordinate } from 'ol/coordinate';
+import { SimpleGeometry } from 'ol/geom';
 
 import { Projection } from '../data/projections/projections.models';
-import { GeometryType } from '../geoserver/wfs/wfs.models';
+import { WfsFeature } from '../geoserver/wfs/wfs.models';
 
 export enum MapSelectionTypes {
   ADD,
@@ -49,9 +50,14 @@ export type Distance = {
   isLabelInPolygon: boolean;
 };
 
-export type CreateFeaturesData = {
-  coordinates: Coordinate | Coordinate[] | Coordinate[][] | Coordinate[][][];
-  geometryType: GeometryType;
+export type CreateLabelsFeaturesData = {
+  feature?: WfsFeature;
   currentLayerProjection?: Projection;
-  olProjection?: Projection;
+};
+
+export type FeatureLengthData = {
+  geometry: SimpleGeometry;
+  projection: Projection;
+  precision?: number;
+  isMeasure?: boolean;
 };

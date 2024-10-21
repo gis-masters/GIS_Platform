@@ -19,6 +19,8 @@ import CircleStyle from 'ol/style/Circle';
 import { MapMeasureTooltip } from '../../components/MapMeasureTooltip/MapMeasureTooltip';
 import { mapStore } from '../../stores/Map.store';
 import { communicationService } from '../communication.service';
+import { Projection } from '../data/projections/projections.models';
+import { getOlProjection } from '../data/projections/projections.service';
 import { GeometryType } from '../geoserver/wfs/wfs.models';
 import { UnitsOfAreaMeasurement } from '../util/open-layers.util';
 import { MapMode } from './map.models';
@@ -45,6 +47,7 @@ class MapMeasureService {
   private helpTooltipElement?: HTMLDivElement;
   private helpTooltip?: Overlay;
   private helpMsg?: string;
+  private projection?: Projection;
 
   private layer = new VectorLayer({
     source: this.source,
@@ -101,13 +104,13 @@ class MapMeasureService {
     this.initUnitsOfAreaMeasurement();
   }
 
-  measureOn(mode: MeasureMode) {
+  async measureOn(mode: MeasureMode) {
     mapService.drawOff();
     this.measureOff();
     mapStore.setMode(MapMode.MEASURE);
     mapStore.setMeasureMode(mode);
     if (!this.inited) {
-      this.init();
+      await this.init();
     }
 
     this.draw = this.getDraw(mode);
@@ -118,7 +121,8 @@ class MapMeasureService {
     mapService.map.addInteraction(this.draw);
   }
 
-  private init() {
+  private async init() {
+    this.projection = await getOlProjection();
     mapService.map.addLayer(this.layer);
     const modify = new Modify({ source: this.source });
     mapService.map.addInteraction(modify);
@@ -273,7 +277,16 @@ class MapMeasureService {
   }
 
   private renderTooltip(item: MeasureItem, sketch: boolean) {
-    const reactElement = createElement(MapMeasureTooltip, { item: { ...item }, sketch, onClear: this.clearItem });
+    if (!this.projection) {
+      return;
+    }
+
+    const reactElement = createElement(MapMeasureTooltip, {
+      item: { ...item },
+      sketch,
+      projection: this.projection,
+      onClear: this.clearItem
+    });
 
     item.tooltipRoot.render(reactElement);
   }

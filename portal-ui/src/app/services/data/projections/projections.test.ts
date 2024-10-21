@@ -1,6 +1,6 @@
 import { describe, expect, test } from '@jest/globals';
 
-import { getProjectionTitle, projectionUnit } from './projections.util';
+import { getProjectionTitle, getProjectionUnit } from './projections.util';
 
 const srs4326 =
   'GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563,AUTHORITY["EPSG","7030"]],AUTHORITY["EPSG","6326"]],PRIMEM["Greenwich",0,AUTHORITY["EPSG","8901"]],UNIT["degree",0.0174532925199433,AUTHORITY["EPSG","9122"]],AUTHORITY["EPSG","4326"]]';
@@ -27,10 +27,10 @@ describe('Получение названия системы координат 
   });
 
   test('Получение единиц измерения (градусы) из srtext', () => {
-    expect('градусы').toBe(projectionUnit(srs4326));
+    expect('градусы').toBe(getProjectionUnit(srs4326));
   });
 
   test('Получение единиц измерения (метры) из srtext', () => {
-    expect('метры').toBe(projectionUnit(srs28406));
+    expect('метры').toBe(getProjectionUnit(srs28406));
   });
 });

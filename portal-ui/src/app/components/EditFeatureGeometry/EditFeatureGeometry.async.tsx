@@ -9,7 +9,7 @@ import { Geometry, SimpleGeometry } from 'ol/geom';
 
 import { Emitter } from '../../services/common/Emitter';
 import { communicationService } from '../../services/communication.service';
-import { DEFAULT_OL_PROJECTION } from '../../services/data/projections/projections.models';
+import { defaultOlProjectionCode } from '../../services/data/projections/projections.models';
 import { getProjectionByCode } from '../../services/data/projections/projections.service';
 import { transformGeometry } from '../../services/data/projections/projections.util';
 import { recalculateBboxAndGetCoverage } from '../../services/geoserver/coverages/coverages.service';
@@ -30,8 +30,6 @@ import { EditFeatureGeometrySelectProjection } from './SelectProjection/EditFeat
 import { EditFeatureGeometryView } from './View/EditFeatureGeometry-View.composed';
 
 import '!style-loader!css-loader!sass-loader!./EditFeatureGeometry.scss';
-
-const defaultEPSG = `${DEFAULT_OL_PROJECTION.authName}:${DEFAULT_OL_PROJECTION.srid}`;
 
 const cnEditFeatureGeometry = cn('EditFeatureGeometry');
 
@@ -139,9 +137,9 @@ export default class EditFeatureGeometry extends Component<EditFeatureGeometryPr
       [minx - 200_000, miny - 200_000]
     ];
 
-    if (crsStringValue !== defaultEPSG) {
+    if (crsStringValue !== defaultOlProjectionCode) {
       const currentProjection = await getProjectionByCode(crsStringValue);
-      const defaultProjection = await getProjectionByCode(defaultEPSG);
+      const defaultProjection = await getProjectionByCode(defaultOlProjectionCode);
 
       const features: WfsGeometry[] = polygonCoordinates.map(item => ({
         type: GeometryType.POINT,

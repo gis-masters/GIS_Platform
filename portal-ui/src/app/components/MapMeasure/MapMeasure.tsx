@@ -53,22 +53,22 @@ export class MapMeasure extends Component {
   }
 
   @boundMethod
-  private handleLengthClick() {
-    this.selectMode('length');
+  private async handleLengthClick() {
+    await this.selectMode('length');
   }
 
   @boundMethod
-  private handleAreaClick() {
-    this.selectMode('area');
+  private async handleAreaClick() {
+    await this.selectMode('area');
   }
 
-  private selectMode(mode?: MeasureMode) {
+  private async selectMode(mode?: MeasureMode) {
     mapMeasureService.removeHelpMsg();
     if (mode && mapStore.measureMode === mode) {
       mapMeasureService.measureOff();
     } else if (mode) {
       mapMeasureService.createMeasureStartTooltip();
-      mapMeasureService.measureOn(mode);
+      await mapMeasureService.measureOn(mode);
     }
 
     if (mapStore.mode === MapMode.MEASURE && !mapStore.measureMode) {

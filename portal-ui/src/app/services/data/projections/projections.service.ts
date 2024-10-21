@@ -9,8 +9,8 @@ import { CoordinateEdited, WfsFeature } from '../../geoserver/wfs/wfs.models';
 import { getLayerByFeatureInCurrentProject } from '../../gis/layers/layers.utils';
 import { PageOptions } from '../../models';
 import { projectionsClient } from './projections.client';
-import { DEFAULT_OL_PROJECTION, defaultOlProjectionCode, Projection } from './projections.models';
-import { getProjectionCode, getProjectionTitle, getSrid, projectionUnit } from './projections.util';
+import { defaultOlProjectionCode, Projection } from './projections.models';
+import { getProjectionCode, getProjectionTitle, getProjectionUnit, getSrid } from './projections.util';
 
 const projectionCache: Record<string, Promise<Projection | undefined> | undefined> = {};
 
@@ -19,7 +19,7 @@ export async function getProjections(pageOptions: PageOptions): Promise<[Project
 
   const modifiedProjections: Projection[] = response.content.map(proj => ({
     ...proj,
-    title: `${getProjectionTitle(proj.srtext)}, ${proj.authName}:${proj.authSrid}, ${projectionUnit(proj.srtext)}`,
+    title: `${getProjectionTitle(proj.srtext)}, ${proj.authName}:${proj.authSrid}, ${getProjectionUnit(proj.srtext)}`,
     auth_srid: proj.authSrid,
     auth_name: proj.authName,
     srtext: proj.srtext,
@@ -70,7 +70,7 @@ async function fetchProjection(projectionCode: string): Promise<Projection | und
 
 // 3857 - проекция для корректной работы ol, не удалять, не менять
 export async function getOlProjection(): Promise<Projection> {
-  const projection = await getProjectionByCode(`${DEFAULT_OL_PROJECTION.authName}:${DEFAULT_OL_PROJECTION.srid}`);
+  const projection = await getProjectionByCode(defaultOlProjectionCode);
 
   if (!projection) {
     throw new Error('Ошибка получения проекции ' + defaultOlProjectionCode);
