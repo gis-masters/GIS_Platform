@@ -37,7 +37,10 @@ import { mapService } from './map.service';
 import {
   getFeatureArea,
   getFeatureLength,
+  getLabelPosition,
+  getLabelStyleOffsets,
   getMiddlePoints,
+  getPointsWithAngles,
   getRotationByAzimuth,
   getSelectedFeatureProjection,
   getSelectedOrActiveFeature,
@@ -355,11 +358,33 @@ class MapLabelsService {
       const pointsCoordinates = this.getTurningPointsFromCoordinates(coordinates, geometryType);
       const transformedCoordinates = transformGroup(pointsCoordinates, currentLayerProjection, await getOlProjection());
 
-      const turningPoints = this.createFeatures(transformedCoordinates, 'turningPoints');
-      const labels = this.createFeatures(transformedCoordinates, 'label');
+      if (!isCoordinateArray(transformedCoordinates)) {
+        return;
+      }
 
-      this.source.addFeatures(labels);
+      const angles = getPointsWithAngles(transformedCoordinates);
+      const labelsFeatures = angles
+        .map(({ angle, point, isLabelInPolygon }, index) => {
+          const position = getLabelPosition(angle, isLabelInPolygon);
+
+          const feature = new Feature({
+            geometry: new Point(point),
+            type: 'label',
+            text: String(index + 1),
+            position
+          });
+
+          feature.setId(uuid());
+          feature.setStyle(this.createStyle(feature));
+
+          return feature;
+        })
+        .filter(notFalsyFilter);
+
+      const turningPoints = this.createFeatures(transformedCoordinates, 'turningPoints');
+
       this.turningPointsSource.addFeatures(turningPoints);
+      this.source.addFeatures(labelsFeatures);
 
       await sleep(0);
       this.saveToStorages();
@@ -376,7 +401,7 @@ class MapLabelsService {
 
     const resultCoordinates: Coordinate[] = [];
 
-    if (isArrayOf(coordinates, isNumberArray)) {
+    if (isCoordinateArray(coordinates)) {
       resultCoordinates.push(...coordinates);
       if (isPolygonal(geometryType)) {
         resultCoordinates.pop();
@@ -662,7 +687,13 @@ class MapLabelsService {
   }
 
   private createLabelStyle(feature: Feature, selected?: boolean): Style {
-    const { centred, rotation, isLabelInPolygon, text } = feature.getProperties();
+    const { centred, rotation, isLabelInPolygon, text, position } = feature.getProperties();
+
+    const { offsetX, offsetY } = getLabelStyleOffsets({
+      position,
+      centred,
+      isLabelInPolygon
+    });
 
     if (typeof text !== 'string') {
       throw new TypeError('Текст не текст');
@@ -680,8 +711,8 @@ class MapLabelsService {
         font: `${centred ? '14' : '18'}px sans-serif`,
         textAlign: 'left',
         justify: 'left',
-        offsetX: centred ? -14 : 17,
-        offsetY: isLabelInPolygon ? 20 : -20,
+        offsetX,
+        offsetY,
         text: text,
         stroke: new Stroke({
           color: centred ? '#d3d3d3' : '#fff',

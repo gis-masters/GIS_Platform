@@ -61,3 +61,20 @@ export type FeatureLengthData = {
   precision?: number;
   isMeasure?: boolean;
 };
+
+export type PointWithAngle = { angle: number; point: Coordinate; isLabelInPolygon: boolean };
+
+export type LabelStyleOffsets = {
+  offsetX: number;
+  offsetY: number;
+};
+
+export type LabelPosition = {
+  vertical: 'top' | 'center' | 'bottom';
+  horizontal: 'left' | 'center' | 'right';
+};
+
+export type PointOnBisectorData = {
+  bx: number;
+  by: number;
+};

@@ -1,3 +1,4 @@
+import { bearing, toWgs84 } from '@turf/turf';
 import { Feature } from 'ol';
 import { Coordinate } from 'ol/coordinate';
 import { SimpleGeometry } from 'ol/geom';
@@ -27,7 +28,7 @@ import { UnitsOfAreaMeasurement, UnitsOfLengthMeasurement } from '../util/open-l
 import { isArrayOf } from '../util/typeGuards/isArrayOf';
 import { isCoordinate, isCoordinateArray, isCoordinateArrayArray } from '../util/typeGuards/isCoordinate';
 import { isNumberArray } from '../util/typeGuards/isNumberArray';
-import { FeatureLengthData } from './map.models';
+import { FeatureLengthData, LabelPosition, LabelStyleOffsets, PointOnBisectorData, PointWithAngle } from './map.models';
 
 const geometryError = 'Тип геометрии не позволяет определить периметр объекта';
 
@@ -314,4 +315,176 @@ export function getFeatureLength({
   }
 
   return [value, outputUnits];
+}
+
+export function getPointsAngles(coordinates: Coordinate[]): Omit<PointWithAngle, 'isLabelInPolygon'>[] {
+  const pointsWithAngles: { angle: number; point: Coordinate }[] = [];
+
+  for (let i = 0; i + 1 < coordinates.length; i += 1) {
+    const pointA = coordinates[i === 0 ? coordinates.length - 1 : i - 1];
+    const pointB = coordinates[i];
+    const pointC = coordinates[i + 1];
+
+    const angleA = bearing(pointA, pointB);
+    const angleB = bearing(pointB, pointC);
+
+    pointsWithAngles.push({ angle: angleB - angleA, point: pointB });
+  }
+
+  return pointsWithAngles;
+}
+
+// вычисляем положения label на основании азимута
+// и находится ли точка внутри полигона или снаружи
+export function getLabelPosition(angle: number, isPointInPolygon: boolean): LabelPosition {
+  let vertical: 'top' | 'center' | 'bottom' = 'top';
+  let horizontal: 'left' | 'center' | 'right' = 'right';
+
+  if (angle < 22.5) {
+    horizontal = 'center';
+    if (isPointInPolygon) {
+      vertical = 'bottom';
+    }
+  } else if (angle > 22.5 && angle < 67.5) {
+    if (isPointInPolygon) {
+      vertical = 'bottom';
+      horizontal = 'left';
+    }
+  } else if (angle > 67.5 && angle < 112.5) {
+    vertical = 'center';
+    if (isPointInPolygon) {
+      horizontal = 'left';
+    }
+  } else if (angle > 112.5 && angle < 157.5) {
+    if (isPointInPolygon) {
+      horizontal = 'left';
+    } else {
+      vertical = 'bottom';
+    }
+  } else if (angle > 157.5) {
+    horizontal = 'center';
+    if (!isPointInPolygon) {
+      vertical = 'bottom';
+    }
+  }
+
+  return { vertical, horizontal };
+}
+
+// создаем виртуальную линию по биссектрисе среднего угла для определения ее угла наклона относительно севера
+// создаем смещенную по виртуальной линии точки чтобы получить проверку внутри заданного полигона или нет
+export function getPointsWithAngles(coordinates: Coordinate[]): PointWithAngle[] {
+  const pointsWithAngles: PointWithAngle[] = [];
+
+  for (let i = 0; i < coordinates.length; i += 1) {
+    const pointA = coordinates[i === 0 ? coordinates.length - 1 : i - 1];
+    const pointB = coordinates[i];
+    const pointC = coordinates[i + 1 === coordinates.length ? 0 : i + 1];
+
+    const deltaX1 = pointA[0] - pointB[0];
+    const deltaY1 = pointA[1] - pointB[1];
+    const deltaX3 = pointC[0] - pointB[0];
+    const deltaY3 = pointC[1] - pointB[1];
+    const alpha = calculateAngle(deltaX1, deltaY1);
+    const beta = calculateAngle(deltaX3, deltaY3);
+    const bisector = calculateBisectorAngle(alpha, beta);
+    const newPoint = calculatePointOnBisector(pointB[0], pointB[1], bisector, 1);
+    const testPoint = [newPoint.bx, newPoint.by];
+    const polygon = new Polygon([coordinates]);
+    const isLabelInPolygon = polygon.intersectsCoordinate(testPoint);
+    const angle = bearing(toWgs84(pointB), toWgs84(testPoint));
+
+    pointsWithAngles.push({
+      angle,
+      point: pointB,
+      isLabelInPolygon
+    });
+  }
+
+  return pointsWithAngles;
+}
+
+// получаем офсеты для кооректного создания стилей (расположения лейблов относительно точек)
+export function getLabelStyleOffsets({
+  position,
+  centred,
+  isLabelInPolygon
+}: Record<string, unknown>): LabelStyleOffsets {
+  const offsets = {
+    offsetX: 17,
+    offsetY: -20
+  };
+
+  if (!!position && typeof position === 'object' && 'vertical' in position && 'horizontal' in position) {
+    const { vertical, horizontal } = position;
+
+    if (vertical === 'center') {
+      offsets.offsetY = 0;
+    } else if (vertical === 'bottom') {
+      offsets.offsetY = 23;
+    }
+
+    if (horizontal === 'center') {
+      offsets.offsetX = 0;
+    } else if (horizontal === 'left') {
+      offsets.offsetX = -23;
+    }
+  }
+
+  if (centred) {
+    offsets.offsetX = -14;
+  }
+
+  if (isLabelInPolygon) {
+    offsets.offsetY = 20;
+  }
+
+  return offsets;
+}
+
+// Функция для перевода радиан в градусы
+function toDegrees(radians: number): number {
+  return radians * (180 / Math.PI);
+}
+// Функция для нормализации угла в диапазоне от 0 до 360 градусов
+export function normalizeAngle(angle: number): number {
+  return (angle + 360) % 360;
+}
+// Функция для вычисления угла между вектором и осью X
+export function calculateAngle(x: number, y: number): number {
+  const angle = toDegrees(Math.atan2(y, x));
+
+  return normalizeAngle(angle);
+}
+
+// Функция для вычисления биссектрисы угла между двумя векторами относительно оси X
+function calculateBisectorAngle(alpha: number, beta: number): number {
+  const angleDifference = Math.abs(alpha - beta);
+  const halfAngle = angleDifference / 2;
+  const minAngle = Math.min(alpha, beta);
+
+  return normalizeAngle(minAngle + halfAngle);
+}
+
+// Функция для вычисления точки на биссектрисе с изменением x на deltaX
+function calculatePointOnBisector(x2: number, y2: number, bisectorAngle: number, deltaX: number): PointOnBisectorData {
+  if (deltaX === 0) {
+    deltaX = 1;
+  }
+  const bisectorRadians = bisectorAngle * (Math.PI / 180);
+  // Проверяем, чтобы угол не был вертикальным (90 или 270 градусов), чтобы избежать деления на ноль
+  if (Math.cos(bisectorRadians) === 0) {
+    // Если угол вертикальный, то y изменяется на deltaY, а x остается неизменным
+    return {
+      bx: x2,
+      by: y2 + deltaX * Math.sign(Math.sin(bisectorRadians)) // deltaX здесь представляет deltaY
+    };
+  }
+  // Вычисляем изменение по Y используя тангенс угла
+  const deltaY = Math.tan(bisectorRadians) * deltaX;
+
+  return {
+    bx: x2 + deltaX,
+    by: y2 + deltaY
+  };
 }
