@@ -46,6 +46,14 @@ When('я перемещаю слой {string} в группу {string}', async (
   await layersSidebarBlock.moveLayerToGroup(layerName, groupName);
 });
 
+When('я нажимаю кнопку `Фильтрация слоёв`', async () => {
+  await layersSidebarBlock.clickFilterButton();
+});
+
 Then('в списке слоёв отображается {string}', async (variant: string) => {
   await layersSidebarBlock.assertSelfie(variant.split(' ').join('-'));
+});
+
+Then('блок LayersSidebar вариант {string} выглядит как положено', async (variant: string) => {
+  await layersSidebarBlock.assertSelfieFull(variant);
 });

@@ -36,6 +36,7 @@ const cnLayersSidebarEditBtn = cn('LayersSidebar', 'EditBtn');
 const cnLayersSidebarAddLayerBtn = cn('LayersSidebar', 'AddLayerBtn');
 const cnLayersSidebarSaveBtn = cn('LayersSidebar', 'SaveBtn');
 const cnLayersSidebarCancelBtn = cn('LayersSidebar', 'CancelBtn');
+const cnLayersSidebarFilterBtn = cn('LayersSidebar', 'FilterBtn');
 
 interface LayersSidebarToolbarProps {
   above: boolean;
@@ -97,7 +98,7 @@ export class LayersSidebarToolbar extends Component<LayersSidebarToolbarProps> {
           {!this.isLayersFilterActive && (
             <LayersSidebarToolbarRight>
               <Tooltip title='Фильтрация слоёв'>
-                <IconButton onClick={this.turnOnLayersFilter}>
+                <IconButton className={cnLayersSidebarFilterBtn()} onClick={this.turnOnLayersFilter}>
                   <FilterAltOutlined />
                 </IconButton>
               </Tooltip>

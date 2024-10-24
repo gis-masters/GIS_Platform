@@ -17,8 +17,17 @@ class LayersSidebarBlock extends Block {
     loading: '.LayersSidebar .Loading',
     toolbar: '.LayersSidebar-Toolbar',
     addLayerBtn: '.LayersSidebar-AddLayerBtn',
+    filterBtn: '.LayersSidebar-FilterBtn',
     layerBurger: '.LayersSidebar .Layer-Burger'
   };
+
+  async clickFilterButton(): Promise<void> {
+    const $filterBtn = await this.$('filterBtn');
+    await $filterBtn.waitForDisplayed({ timeout: 6000 });
+
+    await $filterBtn.click();
+    await $filterBtn.waitForDisplayed({ reverse: true });
+  }
 
   async clickEditButton(): Promise<void> {
     const $editLayersBtn = await this.$('editLayersBtn');
@@ -111,6 +120,16 @@ class LayersSidebarBlock extends Block {
 
     await super.assertSelfie(tag, {
       hideElements: [await this.$('toolbar'), ...(checkElementOptions?.hideElements || [])],
+      ...checkElementOptions
+    });
+  }
+
+  async assertSelfieFull(tag?: string, checkElementOptions?: WdioCheckElementMethodOptions): Promise<void> {
+    const $container = await this.$('container');
+    await $container.waitForDisplayed();
+
+    await super.assertSelfie(tag, {
+      hideElements: [...(checkElementOptions?.hideElements || [])],
       ...checkElementOptions
     });
   }
