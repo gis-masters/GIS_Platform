@@ -18379,960 +18379,960 @@ WHERE name = 'dl_data_gpzu_info_p6';
 UPDATE data.schemas 
 SET class_rule =
     '{
-    "tags": [
-        "system",
-            "Библиотека",
-        "ГИСОГД"
-    ],
-    "name": "dl_data_inbox_data",
-    "title": "Реестр учета сведений",
-    "children": [
-        {
-            "library": "dl_data_section13",
-            "contentType": "doc_13.04"
-        }
-    ],
-    "tableName": "dl_data_inbox_data",
-    "properties": [
-        {
-            "name": "id",
-            "title": "Идентификатор",
-            "readOnly": true,
-            "required": true,
-            "valueType": "INT"
-        },
-        {
-            "name": "path",
-            "title": "Путь",
-            "maxLength": 522,
-            "valueType": "STRING",
-            "description": "Полный путь, отражающий иерархию объектов"
-        },
-        {
-            "name": "is_folder",
-            "title": "Папка/Документ",
-            "valueType": "BOOLEAN",
-            "description": "Папка или Документ"
-        },
-        {
-            "name": "created_at",
-            "title": "Дата создания",
-            "valueType": "DATETIME"
-        },
-        {
-            "name": "last_modified",
-            "title": "Дата модификации",
-            "readOnly": true,
-            "valueType": "DATETIME",
-            "description": "Дата последней модификации документа"
-        },
-        {
-            "name": "updated_by",
-            "title": "Кто обновил",
-            "readOnly": true,
-            "maxLength": 50,
-            "valueType": "STRING"
-        },
-        {
-            "name": "content_type_id",
-            "title": "Вид документа",
-            "minWidth": 300,
-            "readOnly": true,
-            "maxLength": 50,
-            "valueType": "CHOICE",
-            "enumerations": [
-                {
-                    "title": "Реестр входящих",
-                    "value": "InboxData"
-                },
-                {
-                    "title": "РНС. Выдача или внесение изменений",
-                    "value": "rns_smev_rostelekom"
-                }
-            ]
-        },
-        {
-            "name": "guid",
-            "title": "guid",
-            "hidden": true,
-            "valueType": "UUID"
-        },
-        {
-            "name": "title",
-            "title": "Наименование документа",
-            "display": "multiline",
-            "minWidth": 800,
-            "required": true,
-            "valueType": "TEXT"
-        },
-        {
-            "name": "territory",
-            "title": "Административная единица",
-            "required": true,
-            "valueType": "CHOICE",
-            "enumerations": [
-                {
-                    "title": "г.о. Алушта",
-                    "value": "г.о. Алушта"
-                },
-                {
-                    "title": "г.о. Армянск",
-                    "value": "г.о. Армянск"
-                },
-                {
-                    "title": "г.о. Джанкой",
-                    "value": "г.о. Джанкой"
-                },
-                {
-                    "title": "г.о. Евпатория",
-                    "value": "г.о. Евпатория"
-                },
-                {
-                    "title": "г.о. Керчь",
-                    "value": "г.о. Керчь"
-                },
-                {
-                    "title": "г.о. Красноперекопск",
-                    "value": "г.о. Красноперекопск"
-                },
-                {
-                    "title": "г.о. Саки",
-                    "value": "г.о. Саки"
-                },
-                {
-                    "title": "г.о. Симферополь",
-                    "value": "г.о. Симферополь"
-                },
-                {
-                    "title": "г.о. Судак",
-                    "value": "г.о. Судак"
-                },
-                {
-                    "title": "г.о. Феодосия",
-                    "value": "г.о. Феодосия"
-                },
-                {
-                    "title": "г.о. Ялта",
-                    "value": "г.о. Ялта"
-                },
-                {
-                    "title": "Бахчисарайский муниципальный район",
-                    "value": "Бахчисарайский муниципальный район"
-                },
-                {
-                    "title": "Белогорский муниципальный район",
-                    "value": "Белогорский муниципальный район"
-                },
-                {
-                    "title": "Джанкойский муниципальный район",
-                    "value": "Джанкойский муниципальный район"
-                },
-                {
-                    "title": "Кировский муниципальный район",
-                    "value": "Кировский муниципальный район"
-                },
-                {
-                    "title": "Красногвардейский муниципальный район",
-                    "value": "Красногвардейский муниципальный район"
-                },
-                {
-                    "title": "Красноперекопский муниципальный район",
-                    "value": "Красноперекопский муниципальный район"
-                },
-                {
-                    "title": "Ленинский муниципальный район",
-                    "value": "Ленинский муниципальный район"
-                },
-                {
-                    "title": "Нижнегорский муниципальный район",
-                    "value": "Нижнегорский муниципальный район"
-                },
-                {
-                    "title": "Первомайский муниципальный район",
-                    "value": "Первомайский муниципальный район"
-                },
-                {
-                    "title": "Раздольненский муниципальный район",
-                    "value": "Раздольненский муниципальный район"
-                },
-                {
-                    "title": "Сакский муниципальный район",
-                    "value": "Сакский муниципальный район"
-                },
-                {
-                    "title": "Симферопольский муниципальный район",
-                    "value": "Симферопольский муниципальный район"
-                },
-                {
-                    "title": "Советский муниципальный район",
-                    "value": "Советский муниципальный район"
-                },
-                {
-                    "title": "Черноморский муниципальный район",
-                    "value": "Черноморский муниципальный район"
-                }
-            ]
-        },
-        {
-            "name": "namefrompd",
-            "title": "Наименование из ПД",
-            "display": "multiline",
-            "minWidth": 400,
-            "maxLength": 500,
-            "valueType": "STRING",
-            "description": "Наименование объекта (этапа) из проектной документации"
-        },
-        {
-            "name": "developer",
-            "title": "Застройщик",
-            "minWidth": 400,
-            "required": true,
-            "maxLength": 500,
-            "valueType": "STRING"
-        },
-        {
-            "name": "constructiontype",
-            "title": "Вид строительства",
-            "valueType": "CHOICE",
-            "enumerations": [
-                {
-                    "title": "Строительство объекта капитального строительства",
-                    "value": "0I.1"
-                },
-                {
-                    "title": "Строительство линейного объекта",
-                    "value": "0I.2"
-                },
-                {
-                    "title": "Строительство объекта капитального строительства, входящего в состав линейного",
-                    "value": "0I.3"
-                },
-                {
-                    "title": "Реконструкция объекта капитального строительства",
-                    "value": "0I.4"
-                },
-                {
-                    "title": "Реконструкция линейного объекта",
-                    "value": "0I.5"
-                },
-                {
-                    "title": "Реконструкция объекта капитального строительства, входящего в состав линейного",
-                    "value": "0I.6"
-                },
-                {
-                    "title": "Работы по сохранению объекта культурного наследия",
-                    "value": "0I.7"
-                }
-            ],
-            "foreignKeyType": "STRING"
-        },
-        {
-            "name": "developer_data_connection",
-            "title": "Застройщик",
-            "multiple": true,
-            "libraries": [
-                "dl_data_customer"
-            ],
-            "valueType": "DOCUMENT",
-            "maxDocuments": 10
-        },
-        {
-            "name": "number",
-            "title": "Номер записи",
-            "minWidth": 200,
-            "readOnly": true,
-            "valueType": "STRING"
-        },
-        {
-            "name": "date",
-            "title": "Дата поступления данных",
-            "required": true,
-            "valueType": "DATETIME",
-            "description": "Дата поступления данных на размещение в информационной системе"
-        },
-        {
-            "name": "location",
-            "title": "Местоположение",
-            "minWidth": 200,
-            "valueType": "STRING"
-        },
-        {
-            "name": "fias",
-            "title": "Населённый пункт",
-            "minWidth": 400,
-            "required": true,
-            "valueType": "FIAS",
-            "searchMode": "oktmo"
-        },
-        {
-            "name": "fias__oktmo",
-            "title": "ОКТМО",
-            "hidden": true,
-            "valueType": "STRING"
-        },
-        {
-            "name": "fias__address",
-            "title": "Адрес",
-            "hidden": true,
-            "minWidth": 400,
-            "valueType": "STRING"
-        },
-        {
-            "name": "fias__id",
-            "title": "Код ФИАС",
-            "hidden": true,
-            "valueType": "INT"
-        },
-        {
-            "name": "person_name",
-            "title": "Источник информации",
-            "minWidth": 200,
-            "required": true,
-            "valueType": "STRING",
-            "description": "Информация о лице, направившим данные на размещение в информационной системе"
-        },
-        {
-            "name": "cover_letter_num",
-            "title": "Исходящий номер сопроводительного письма",
-            "valueType": "STRING"
-        },
-        {
-            "name": "cover_letter_date",
-            "title": "Исходящая дата сопроводительного письма",
-            "valueType": "DATETIME"
-        },
-        {
-            "name": "request_type",
-            "title": "Способ направления данных",
-            "asTitle": true,
-            "required": true,
-            "valueType": "CHOICE",
-            "enumerations": [
-                {
-                    "title": "Лично",
-                    "value": "0B.1"
-                },
-                {
-                    "title": "Почтовое отправление",
-                    "value": "0B.2"
-                },
-                {
-                    "title": "Электронная почта",
-                    "value": "0B.3"
-                },
-                {
-                    "title": "Многофункциональный центр (МФЦ)",
-                    "value": "0B.4"
-                },
-                {
-                    "title": "Единая система межведомственного электронного взаимодействия (ЕСМЭВ)",
-                    "value": "0B.5"
-                },
-                {
-                    "title": "Портал государственных услуг (ПГУ)",
-                    "value": "0B.6"
-                },
-                {
-                    "title": "СЭД «ДИАЛОГ»",
-                    "value": "0B.7"
-                },
-                {
-                    "title": "Иные",
-                    "value": "0B.7"
-                }
-            ]
-        },
-        {
-            "name": "is_name",
-            "title": "Информационная система",
-            "valueType": "STRING",
-            "description": "Наименование информационной системы, из которой передаются данные"
-        },
-        {
-            "name": "data_type",
-            "title": "Форма данных",
-            "asTitle": true,
-            "required": true,
-            "valueType": "CHOICE",
-            "enumerations": [
-                {
-                    "title": "Бумажная форма",
-                    "value": "0Е.1"
-                },
-                {
-                    "title": "Электронная форма",
-                    "value": "0Е.2"
-                }
-            ]
-        },
-        {
-            "name": "record_status",
-            "title": "Статус",
-            "asTitle": true,
-            "required": true,
-            "valueType": "CHOICE",
-            "enumerations": [
-                {
-                    "title": "Ожидает размещения",
-                    "value": "1.А.1"
-                },
-                {
-                    "title": "Размещено",
-                    "value": "1.А.2"
-                },
-                {
-                    "title": "Отказано в размещении",
-                    "value": "1.А.3"
-                },
-                {
-                    "title": "Частично размещено",
-                    "value": "1.А.4"
-                }
-            ]
-        },
-        {
-            "name": "user_name",
-            "title": "Фамилия, имя, отчество",
-            "required": true,
-            "valueType": "STRING",
-            "description": "(последнее при наличии) уполномоченного лица, органа, осуществляющего ведение информационной системы, или наименование автоматического сервиса программных средств информационной системы, обработавшего данные, поступившие на размещение в информационную систему"
-        },
-        {
-            "name": "document_feedback",
-            "title": "Документы, связанные с этим актом",
-            "valueType": "URL",
-            "valueFormulaParams": {
-                "text": "Найти связанные акты",
-                "library": "dl_data_section13",
-                "property": "inbox_data_key_data_connection",
-                "includeParents": true
-            },
-            "calculatedValueWellKnownFormula": "linkToDocumentsMentioningThisDocument"
-        },
-        {
-            "name": "if_from_eis_zh",
-            "title": "Пришло из ЕИС ЖС",
-            "hidden": true,
-            "readOnly": true,
-            "valueType": "BOOLEAN"
-        },
-        {
-            "name": "gisogdrf_publication_datetime",
-            "title": "Дата публикации в ГИСОГД",
-            "readOnly": true,
-            "valueType": "DATETIME"
-        },
-        {
-            "name": "gisogdrf_audit_datetime",
-            "title": "Дата публикации в ГИСОГД",
-            "readOnly": true,
-            "valueType": "DATETIME"
-        },
-        {
-            "name": "gisogdrf_sync_status",
-            "title": "Статус синхронизации",
-            "asTitle": true,
-            "readOnly": true,
-            "valueType": "CHOICE",
-            "enumerations": [
-                {
-                    "title": "Cинхронизация завершилась ошибкой",
-                    "value": "Cинхронизация завершилась ошибкой"
-                },
-                {
-                    "title": "Cинхронизация завершилась предупреждением",
-                    "value": "Cинхронизация завершилась предупреждением"
-                },
-                {
-                    "title": "Синхронизирован",
-                    "value": "Синхронизирован"
-                },
-                {
-                    "title": "Объект не найден в ГИСОГД РФ",
-                    "value": "Объект не найден в ГИСОГД РФ"
-                },
-                {
-                    "title": "В процессе синхронизации",
-                    "value": "В процессе синхронизации"
-                },
-                {
-                    "title": "Не синхронизирован",
-                    "value": "Не синхронизирован"
-                }
-            ]
-        },
-        {
-            "name": "gisogdrf_response",
-            "title": "Ответ ГИСОГД",
-            "readOnly": true,
-            "valueType": "TEXT"
-        },
-        {
-            "name": "created_by",
-            "title": "Создатель",
-            "maxLength": 50,
-            "valueType": "STRING"
-        },
-        {
-            "name": "file",
-            "title": "Выбор файла",
-            "maxSize": 100000000,
-            "multiple": true,
-            "valueType": "FILE",
-            "maxDocuments": 10
-        },
-        {
-            "name": "library_doc",
-            "title": "Материалы библиотеки данных",
-            "multiple": true,
-            "libraries": [
-                "dl_data_section2",
-                "dl_data_section3",
-                "dl_data_section4",
-                "dl_data_section5",
-                "dl_data_section6",
-                "dl_data_section7",
-                "dl_data_section8",
-                "dl_data_section9",
-                "dl_data_section10",
-                "dl_data_section11",
-                "dl_data_section12",
-                "dl_data_section13",
-                "dl_data_section14",
-                "dl_data_section15",
-                "dl_data_section16",
-                "dl_data_section17",
-                "dl_data_section18"
-            ],
-            "valueType": "DOCUMENT",
-            "maxDocuments": 10
-        },   
-        {
-            "name": "smev_message_id",
-            "title": "Номер СМЭВ-3",
-            "readOnly": true,
-            "maxLength": 40,
-            "valueType": "STRING",            
-            "description": "Для отслеживания судьбы сообщения СМЭВ-3"
-        }
-    ],
-    "description": "Реестр учета сведений, документов, материалов, поступивших на размещение в информационную систему",
-    "contentTypes": [
-        {
-            "id": "InboxData",
-            "icon": "DOCUMENT",
-            "type": "DOCUMENT",
-            "title": "Запись в реестре учета",
-            "attributes": [
-                {
-                    "name": "content_type_id",
-                    "title": "Вид документа",
-                            "defaultValue": "InboxData"
-                },
-                {
-                    "name": "title"
-                },
-                {
-                    "name": "number"
-                },
-                {
-                    "name": "date"
-                },
-                {
-                    "name": "person_name"
-                },
-                {
-                    "name": "cover_letter_num"
-                },
-                {
-                    "name": "cover_letter_date"
-                },
-                {
-                    "name": "request_type"
-                },
-                {
-                    "name": "is_name"
-                },
-                {
-                    "name": "data_type"
-                },
-                {
-                    "name": "record_status"
-                },
-                {
-                    "name": "user_name"
-                },
-                {
-                    "name": "if_from_eis_zh"
-                },
-                {
-                    "name": "gisogdrf_publication_datetime"
-                },
-                {
-                    "name": "gisogdrf_sync_status"
-                },
-                {
-                    "name": "gisogdrf_audit_datetime"
-                },
-                {
-                    "name": "gisogdrf_response"
-                },
-                {
-                    "name": "last_modified"
-                },
-                {
-                    "name": "file"
-                },
-                {
-                    "name": "library_doc"
-                },
-                {
-                    "name": "fias",
-                    "title": "Населённый пункт",
-                    "required": true,
-                    "valueType": "FIAS",
-                    "searchMode": "oktmo"
-                },
-                {
-                    "name": "fias__oktmo",
-                    "defaultValueWellKnownFormula": "inherit"
-                },
-                {
-                    "name": "fias__address",
-                    "defaultValueWellKnownFormula": "inherit"
-                },
-                {
-                    "name": "fias__id",
-                    "defaultValueWellKnownFormula": "inherit"
-                }
-            ]
-        },
-        {
-            "id": "InboxData_min_gp",
-            "icon": "DOCUMENT",
-            "type": "DOCUMENT",
-            "title": "Разрешение на строительство",
-            "childOnly": true,
-            "attributes": [
-                {
-                    "name": "title"
-                },
-                {
-                    "name": "territory"
-                },
-                {
-                    "name": "location"
-                },
-                {
-                    "name": "namefrompd"
-                },
-                {
-                    "name": "developer"
-                },
-                {
-                    "name": "constructiontype"
-                },
-                {
-                    "name": "developer_data_connection"
-                },
-                {
-                    "name": "number"
-                },
-                {
-                    "name": "date"
-                },
-                {
-                    "name": "person_name"
-                },
-                {
-                    "name": "cover_letter_num"
-                },
-                {
-                    "name": "cover_letter_date"
-                },
-                {
-                    "name": "request_type"
-                },
-                {
-                    "name": "is_name"
-                },
-                {
-                    "name": "data_type"
-                },
-                {
-                    "name": "record_status"
-                },
-                {
-                    "name": "user_name"
-                },
-                {
-                    "name": "document_feedback"
-                },
-                {
-                    "name": "if_from_eis_zh"
-                },
-                {
-                    "name": "gisogdrf_publication_datetime"
-                },
-                {
-                    "name": "gisogdrf_sync_status"
-                },
-                {
-                    "name": "gisogdrf_audit_datetime"
-                },
-                {
-                    "name": "gisogdrf_response"
-                },
-                {
-                    "name": "file"
-                },
-                {
-                    "name": "last_modified"
-                }
-            ]
-        },
-        {
-            "id": "rns_smev_rostelekom",
-            "icon": "DOCUMENT",
-            "type": "DOCUMENT",
-            "title": "РНС. Выдача или внесение изменений",
-            "childOnly": true,
-            "attributes": [
-                {
-                    "name": "title"
-                },
-                {
-                    "name": "territory"
-                },
-                {
-                    "name": "smev_message_id"
-                },
-                {
-                    "name": "location"
-                },
-                {
-                    "name": "namefrompd"
-                },
-                {
-                    "name": "developer"
-                },
-                {
-                    "name": "constructiontype"
-                },
-                {
-                    "name": "developer_data_connection"
-                },
-                {
-                    "name": "number"
-                },
-                {
-                    "name": "date"
-                },
-                {
-                    "name": "person_name"
-                },
-                {
-                    "name": "cover_letter_num"
-                },
-                {
-                    "name": "cover_letter_date"
-                },
-                {
-                    "name": "request_type"
-                },
-                {
-                    "name": "is_name"
-                },
-                {
-                    "name": "data_type"
-                },
-                {
-                    "name": "record_status"
-                },
-                {
-                    "name": "user_name"
-                },
-                {
-                    "name": "document_feedback"
-                },
-                {
-                    "name": "if_from_eis_zh"
-                },
-                {
-                    "name": "gisogdrf_publication_datetime"
-                },
-                {
-                    "name": "gisogdrf_sync_status"
-                },
-                {
-                    "name": "gisogdrf_audit_datetime"
-                },
-                {
-                    "name": "gisogdrf_response"
-                },
-                {
-                    "name": "file"
-                },
-                {
-                    "name": "last_modified"
-                }
-            ]
-        },
-        {
-            "id": "InboxData_min_gp",
-            "icon": "DOCUMENT",
-            "type": "DOCUMENT",
-            "title": "Разрешение на ввод объекта в эксплуатацию",
-            "childOnly": true,
-            "attributes": [
-                {
-                    "name": "title"
-                },
-                {
-                    "name": "territory"
-                },
-                {
-                    "name": "location"
-                },
-                {
-                    "name": "namefrompd"
-                },
-                {
-                    "name": "developer"
-                },
-                {
-                    "name": "constructiontype"
-                },
-                {
-                    "name": "developer_data_connection"
-                },
-                {
-                    "name": "number"
-                },
-                {
-                    "name": "date"
-                },
-                {
-                    "name": "person_name"
-                },
-                {
-                    "name": "cover_letter_num"
-                },
-                {
-                    "name": "cover_letter_date"
-                },
-                {
-                    "name": "request_type"
-                },
-                {
-                    "name": "is_name"
-                },
-                {
-                    "name": "data_type"
-                },
-                {
-                    "name": "record_status"
-                },
-                {
-                    "name": "user_name"
-                },
-                {
-                    "name": "document_feedback"
-                },
-                {
-                    "name": "if_from_eis_zh"
-                },
-                {
-                    "name": "gisogdrf_publication_datetime"
-                },
-                {
-                    "name": "gisogdrf_sync_status"
-                },
-                {
-                    "name": "gisogdrf_audit_datetime"
-                },
-                {
-                    "name": "gisogdrf_response"
-                },
-                {
-                    "name": "file"
-                },
-                {
-                    "name": "last_modified"
-                }
-            ]
-        },
-        {
-            "id": "folder_v1",
-            "icon": "FOLDER_CREATE",
-            "type": "FOLDER",
-            "title": "Папка",
-            "attributes": [
-                {
-                    "name": "title",
-                    "title": "Наименование",
-                    "required": true,
-                    "maxLength": 500
-                },
-                {
-                    "name": "fias",
-                    "title": "Административная единица",
-                    "readOnly": true,
-                            "valueType": "FIAS",
-                    "searchMode": "oktmo"
-                },
-                {
-                    "name": "fias__oktmo"
-                },
-                {
-                    "name": "fias__address"
-                },
-                {
-                    "name": "fias__id"
-                }
-            ]
-        },
-        {
-            "id": "folder_min_gp",
-            "icon": "FOLDER_CREATE",
-            "type": "FOLDER",
-            "title": "Папка",
-            "children": [
-                {
-                            "contentType": "InboxData_min_gp"
-                },
-                {
-                            "contentType": "folder_min_gp"
-                }
-            ],
-            "childOnly": true,
-            "attributes": [
-                {
-                    "name": "title",
-                    "title": "Наименование",
-                    "required": true,
-                    "maxLength": 500
-                },
-                {
-                    "name": "fias",
-                    "title": "Административная единица",
-                    "readOnly": true,
-                            "valueType": "FIAS",
-                    "searchMode": "oktmo"
-                },
-                {
-                    "name": "fias__oktmo"
-                },
-                {
-                    "name": "fias__address"
-                },
-                {
-                    "name": "fias__id"
-                }
-            ]
-        }
-    ]
-}'
+       "tags": [
+         "system",
+         "Библиотека",
+         "ГИСОГД"
+       ],
+       "name": "dl_data_inbox_data",
+       "title": "Реестр учета сведений",
+       "children": [
+         {
+           "library": "dl_data_section13",
+           "contentType": "doc_13.04"
+         }
+       ],
+       "tableName": "dl_data_inbox_data",
+       "properties": [
+         {
+           "name": "id",
+           "title": "Идентификатор",
+           "readOnly": true,
+           "required": true,
+           "valueType": "INT"
+         },
+         {
+           "name": "path",
+           "title": "Путь",
+           "maxLength": 522,
+           "valueType": "STRING",
+           "description": "Полный путь, отражающий иерархию объектов"
+         },
+         {
+           "name": "is_folder",
+           "title": "Папка/Документ",
+           "valueType": "BOOLEAN",
+           "description": "Папка или Документ"
+         },
+         {
+           "name": "created_at",
+           "title": "Дата создания",
+           "valueType": "DATETIME"
+         },
+         {
+           "name": "last_modified",
+           "title": "Дата модификации",
+           "readOnly": true,
+           "valueType": "DATETIME",
+           "description": "Дата последней модификации документа"
+         },
+         {
+           "name": "updated_by",
+           "title": "Кто обновил",
+           "readOnly": true,
+           "maxLength": 50,
+           "valueType": "STRING"
+         },
+         {
+           "name": "content_type_id",
+           "title": "Вид документа",
+           "minWidth": 300,
+           "readOnly": true,
+           "maxLength": 50,
+           "valueType": "CHOICE",
+           "enumerations": [
+             {
+               "title": "Реестр входящих",
+               "value": "InboxData"
+             },
+             {
+               "title": "РНС. Выдача или внесение изменений",
+               "value": "rns_smev_rostelekom"
+             }
+           ]
+         },
+         {
+           "name": "guid",
+           "title": "guid",
+           "hidden": true,
+           "valueType": "UUID"
+         },
+         {
+           "name": "title",
+           "title": "Наименование документа",
+           "display": "multiline",
+           "minWidth": 800,
+           "required": true,
+           "valueType": "TEXT"
+         },
+         {
+           "name": "territory",
+           "title": "Административная единица",
+           "required": true,
+           "valueType": "CHOICE",
+           "enumerations": [
+             {
+               "title": "г.о. Алушта",
+               "value": "г.о. Алушта"
+             },
+             {
+               "title": "г.о. Армянск",
+               "value": "г.о. Армянск"
+             },
+             {
+               "title": "г.о. Джанкой",
+               "value": "г.о. Джанкой"
+             },
+             {
+               "title": "г.о. Евпатория",
+               "value": "г.о. Евпатория"
+             },
+             {
+               "title": "г.о. Керчь",
+               "value": "г.о. Керчь"
+             },
+             {
+               "title": "г.о. Красноперекопск",
+               "value": "г.о. Красноперекопск"
+             },
+             {
+               "title": "г.о. Саки",
+               "value": "г.о. Саки"
+             },
+             {
+               "title": "г.о. Симферополь",
+               "value": "г.о. Симферополь"
+             },
+             {
+               "title": "г.о. Судак",
+               "value": "г.о. Судак"
+             },
+             {
+               "title": "г.о. Феодосия",
+               "value": "г.о. Феодосия"
+             },
+             {
+               "title": "г.о. Ялта",
+               "value": "г.о. Ялта"
+             },
+             {
+               "title": "Бахчисарайский муниципальный район",
+               "value": "Бахчисарайский муниципальный район"
+             },
+             {
+               "title": "Белогорский муниципальный район",
+               "value": "Белогорский муниципальный район"
+             },
+             {
+               "title": "Джанкойский муниципальный район",
+               "value": "Джанкойский муниципальный район"
+             },
+             {
+               "title": "Кировский муниципальный район",
+               "value": "Кировский муниципальный район"
+             },
+             {
+               "title": "Красногвардейский муниципальный район",
+               "value": "Красногвардейский муниципальный район"
+             },
+             {
+               "title": "Красноперекопский муниципальный район",
+               "value": "Красноперекопский муниципальный район"
+             },
+             {
+               "title": "Ленинский муниципальный район",
+               "value": "Ленинский муниципальный район"
+             },
+             {
+               "title": "Нижнегорский муниципальный район",
+               "value": "Нижнегорский муниципальный район"
+             },
+             {
+               "title": "Первомайский муниципальный район",
+               "value": "Первомайский муниципальный район"
+             },
+             {
+               "title": "Раздольненский муниципальный район",
+               "value": "Раздольненский муниципальный район"
+             },
+             {
+               "title": "Сакский муниципальный район",
+               "value": "Сакский муниципальный район"
+             },
+             {
+               "title": "Симферопольский муниципальный район",
+               "value": "Симферопольский муниципальный район"
+             },
+             {
+               "title": "Советский муниципальный район",
+               "value": "Советский муниципальный район"
+             },
+             {
+               "title": "Черноморский муниципальный район",
+               "value": "Черноморский муниципальный район"
+             }
+           ]
+         },
+         {
+           "name": "namefrompd",
+           "title": "Наименование из ПД",
+           "display": "multiline",
+           "minWidth": 400,
+           "maxLength": 500,
+           "valueType": "STRING",
+           "description": "Наименование объекта (этапа) из проектной документации"
+         },
+         {
+           "name": "developer",
+           "title": "Застройщик",
+           "minWidth": 400,
+           "required": true,
+           "maxLength": 500,
+           "valueType": "STRING"
+         },
+         {
+           "name": "constructiontype",
+           "title": "Вид строительства",
+           "valueType": "CHOICE",
+           "enumerations": [
+             {
+               "title": "Строительство объекта капитального строительства",
+               "value": "0I.1"
+             },
+             {
+               "title": "Строительство линейного объекта",
+               "value": "0I.2"
+             },
+             {
+               "title": "Строительство объекта капитального строительства, входящего в состав линейного",
+               "value": "0I.3"
+             },
+             {
+               "title": "Реконструкция объекта капитального строительства",
+               "value": "0I.4"
+             },
+             {
+               "title": "Реконструкция линейного объекта",
+               "value": "0I.5"
+             },
+             {
+               "title": "Реконструкция объекта капитального строительства, входящего в состав линейного",
+               "value": "0I.6"
+             },
+             {
+               "title": "Работы по сохранению объекта культурного наследия",
+               "value": "0I.7"
+             }
+           ],
+           "foreignKeyType": "STRING"
+         },
+         {
+           "name": "developer_data_connection",
+           "title": "Застройщик",
+           "multiple": true,
+           "libraries": [
+             "dl_data_customer"
+           ],
+           "valueType": "DOCUMENT",
+           "maxDocuments": 10
+         },
+         {
+           "name": "number",
+           "title": "Номер записи",
+           "minWidth": 200,
+           "readOnly": true,
+           "valueType": "STRING"
+         },
+         {
+           "name": "date",
+           "title": "Дата поступления данных",
+           "required": true,
+           "valueType": "DATETIME",
+           "description": "Дата поступления данных на размещение в информационной системе"
+         },
+         {
+           "name": "location",
+           "title": "Местоположение",
+           "minWidth": 200,
+           "valueType": "STRING"
+         },
+         {
+           "name": "fias",
+           "title": "Населённый пункт",
+           "minWidth": 400,
+           "required": true,
+           "valueType": "FIAS",
+           "searchMode": "oktmo"
+         },
+         {
+           "name": "fias__oktmo",
+           "title": "ОКТМО",
+           "hidden": true,
+           "valueType": "STRING"
+         },
+         {
+           "name": "fias__address",
+           "title": "Адрес",
+           "hidden": true,
+           "minWidth": 400,
+           "valueType": "STRING"
+         },
+         {
+           "name": "fias__id",
+           "title": "Код ФИАС",
+           "hidden": true,
+           "valueType": "INT"
+         },
+         {
+           "name": "person_name",
+           "title": "Источник информации",
+           "minWidth": 200,
+           "required": true,
+           "valueType": "STRING",
+           "description": "Информация о лице, направившим данные на размещение в информационной системе"
+         },
+         {
+           "name": "cover_letter_num",
+           "title": "Исходящий номер сопроводительного письма",
+           "valueType": "STRING"
+         },
+         {
+           "name": "cover_letter_date",
+           "title": "Исходящая дата сопроводительного письма",
+           "valueType": "DATETIME"
+         },
+         {
+           "name": "request_type",
+           "title": "Способ направления данных",
+           "asTitle": true,
+           "required": true,
+           "valueType": "CHOICE",
+           "enumerations": [
+             {
+               "title": "Лично",
+               "value": "0B.1"
+             },
+             {
+               "title": "Почтовое отправление",
+               "value": "0B.2"
+             },
+             {
+               "title": "Электронная почта",
+               "value": "0B.3"
+             },
+             {
+               "title": "Многофункциональный центр (МФЦ)",
+               "value": "0B.4"
+             },
+             {
+               "title": "Единая система межведомственного электронного взаимодействия (ЕСМЭВ)",
+               "value": "0B.5"
+             },
+             {
+               "title": "Портал государственных услуг (ПГУ)",
+               "value": "0B.6"
+             },
+             {
+               "title": "СЭД «ДИАЛОГ»",
+               "value": "0B.7"
+             },
+             {
+               "title": "Иные",
+               "value": "0B.7"
+             }
+           ]
+         },
+         {
+           "name": "is_name",
+           "title": "Информационная система",
+           "valueType": "STRING",
+           "description": "Наименование информационной системы, из которой передаются данные"
+         },
+         {
+           "name": "data_type",
+           "title": "Форма данных",
+           "asTitle": true,
+           "required": true,
+           "valueType": "CHOICE",
+           "enumerations": [
+             {
+               "title": "Бумажная форма",
+               "value": "0Е.1"
+             },
+             {
+               "title": "Электронная форма",
+               "value": "0Е.2"
+             }
+           ]
+         },
+         {
+           "name": "record_status",
+           "title": "Статус",
+           "asTitle": true,
+           "required": true,
+           "valueType": "CHOICE",
+           "enumerations": [
+             {
+               "title": "Ожидает размещения",
+               "value": "1.А.1"
+             },
+             {
+               "title": "Размещено",
+               "value": "1.А.2"
+             },
+             {
+               "title": "Отказано в размещении",
+               "value": "1.А.3"
+             },
+             {
+               "title": "Частично размещено",
+               "value": "1.А.4"
+             }
+           ]
+         },
+         {
+           "name": "user_name",
+           "title": "Фамилия, имя, отчество",
+           "required": true,
+           "valueType": "STRING",
+           "description": "(последнее при наличии) уполномоченного лица, органа, осуществляющего ведение информационной системы, или наименование автоматического сервиса программных средств информационной системы, обработавшего данные, поступившие на размещение в информационную систему"
+         },
+         {
+           "name": "document_feedback",
+           "title": "Документы, связанные с этим актом",
+           "valueType": "URL",
+           "valueFormulaParams": {
+             "text": "Найти связанные акты",
+             "library": "dl_data_section13",
+             "property": "inbox_data_key_data_connection",
+             "includeParents": true
+           },
+           "calculatedValueWellKnownFormula": "linkToDocumentsMentioningThisDocument"
+         },
+         {
+           "name": "if_from_eis_zh",
+           "title": "Пришло из ЕИС ЖС",
+           "hidden": true,
+           "readOnly": true,
+           "valueType": "BOOLEAN"
+         },
+         {
+           "name": "gisogdrf_publication_datetime",
+           "title": "Дата публикации в ГИСОГД",
+           "readOnly": true,
+           "valueType": "DATETIME"
+         },
+         {
+           "name": "gisogdrf_audit_datetime",
+           "title": "Дата публикации в ГИСОГД",
+           "readOnly": true,
+           "valueType": "DATETIME"
+         },
+         {
+           "name": "gisogdrf_sync_status",
+           "title": "Статус синхронизации",
+           "asTitle": true,
+           "readOnly": true,
+           "valueType": "CHOICE",
+           "enumerations": [
+             {
+               "title": "Cинхронизация завершилась ошибкой",
+               "value": "Cинхронизация завершилась ошибкой"
+             },
+             {
+               "title": "Cинхронизация завершилась предупреждением",
+               "value": "Cинхронизация завершилась предупреждением"
+             },
+             {
+               "title": "Синхронизирован",
+               "value": "Синхронизирован"
+             },
+             {
+               "title": "Объект не найден в ГИСОГД РФ",
+               "value": "Объект не найден в ГИСОГД РФ"
+             },
+             {
+               "title": "В процессе синхронизации",
+               "value": "В процессе синхронизации"
+             },
+             {
+               "title": "Не синхронизирован",
+               "value": "Не синхронизирован"
+             }
+           ]
+         },
+         {
+           "name": "gisogdrf_response",
+           "title": "Ответ ГИСОГД",
+           "readOnly": true,
+           "valueType": "TEXT"
+         },
+         {
+           "name": "created_by",
+           "title": "Создатель",
+           "maxLength": 50,
+           "valueType": "STRING"
+         },
+         {
+           "name": "file",
+           "title": "Выбор файла",
+           "maxSize": 100000000,
+           "multiple": true,
+           "valueType": "FILE",
+           "maxDocuments": 10
+         },
+         {
+           "name": "library_doc",
+           "title": "Материалы библиотеки данных",
+           "multiple": true,
+           "libraries": [
+             "dl_data_section2",
+             "dl_data_section3",
+             "dl_data_section4",
+             "dl_data_section5",
+             "dl_data_section6",
+             "dl_data_section7",
+             "dl_data_section8",
+             "dl_data_section9",
+             "dl_data_section10",
+             "dl_data_section11",
+             "dl_data_section12",
+             "dl_data_section13",
+             "dl_data_section14",
+             "dl_data_section15",
+             "dl_data_section16",
+             "dl_data_section17",
+             "dl_data_section18"
+           ],
+           "valueType": "DOCUMENT",
+           "maxDocuments": 10
+         },
+         {
+           "name": "smev_message_id",
+           "title": "Номер сообщения СМЭВ-3",
+           "readOnly": true,
+           "maxLength": 40,
+           "valueType": "STRING",
+           "description": "Для отслеживания судьбы сообщения СМЭВ-3"
+         },
+         {
+           "name": "epgu_status_code",
+           "title": "Статус для ЕПГУ",
+           "readOnly": true,
+           "maxLength": 200,
+           "valueType": "STRING",
+           "description": "Последний статус, переданный в ЕПГУ"
+         },
+         {
+           "name": "pguid",
+           "title": "Номер заявления в ЕПГУ",
+           "readOnly": true,
+           "maxLength": 200,
+           "valueType": "STRING"
+         }
+       ],
+       "description": "Реестр учета сведений, документов, материалов, поступивших на размещение в информационную систему",
+       "contentTypes": [
+         {
+           "id": "InboxData",
+           "icon": "DOCUMENT",
+           "type": "DOCUMENT",
+           "title": "Запись в реестре учета",
+           "attributes": [
+             {
+               "name": "content_type_id",
+               "title": "Вид документа",
+               "defaultValue": "InboxData"
+             },
+             {
+               "name": "title"
+             },
+             {
+               "name": "number"
+             },
+             {
+               "name": "date"
+             },
+             {
+               "name": "person_name"
+             },
+             {
+               "name": "cover_letter_num"
+             },
+             {
+               "name": "cover_letter_date"
+             },
+             {
+               "name": "request_type"
+             },
+             {
+               "name": "is_name"
+             },
+             {
+               "name": "data_type"
+             },
+             {
+               "name": "record_status"
+             },
+             {
+               "name": "user_name"
+             },
+             {
+               "name": "if_from_eis_zh"
+             },
+             {
+               "name": "gisogdrf_publication_datetime"
+             },
+             {
+               "name": "gisogdrf_sync_status"
+             },
+             {
+               "name": "gisogdrf_audit_datetime"
+             },
+             {
+               "name": "gisogdrf_response"
+             },
+             {
+               "name": "last_modified"
+             },
+             {
+               "name": "file"
+             },
+             {
+               "name": "library_doc"
+             },
+             {
+               "name": "fias",
+               "title": "Населённый пункт",
+               "required": true,
+               "valueType": "FIAS",
+               "searchMode": "oktmo"
+             },
+             {
+               "name": "fias__oktmo",
+               "defaultValueWellKnownFormula": "inherit"
+             },
+             {
+               "name": "fias__address",
+               "defaultValueWellKnownFormula": "inherit"
+             },
+             {
+               "name": "fias__id",
+               "defaultValueWellKnownFormula": "inherit"
+             }
+           ]
+         },
+         {
+           "id": "InboxData_min_gp",
+           "icon": "DOCUMENT",
+           "type": "DOCUMENT",
+           "title": "Разрешение на строительство",
+           "childOnly": true,
+           "attributes": [
+             {
+               "name": "title"
+             },
+             {
+               "name": "territory"
+             },
+             {
+               "name": "location"
+             },
+             {
+               "name": "namefrompd"
+             },
+             {
+               "name": "developer"
+             },
+             {
+               "name": "constructiontype"
+             },
+             {
+               "name": "developer_data_connection"
+             },
+             {
+               "name": "number"
+             },
+             {
+               "name": "date"
+             },
+             {
+               "name": "person_name"
+             },
+             {
+               "name": "cover_letter_num"
+             },
+             {
+               "name": "cover_letter_date"
+             },
+             {
+               "name": "request_type"
+             },
+             {
+               "name": "is_name"
+             },
+             {
+               "name": "data_type"
+             },
+             {
+               "name": "record_status"
+             },
+             {
+               "name": "user_name"
+             },
+             {
+               "name": "document_feedback"
+             },
+             {
+               "name": "if_from_eis_zh"
+             },
+             {
+               "name": "gisogdrf_publication_datetime"
+             },
+             {
+               "name": "gisogdrf_sync_status"
+             },
+             {
+               "name": "gisogdrf_audit_datetime"
+             },
+             {
+               "name": "gisogdrf_response"
+             },
+             {
+               "name": "file"
+             },
+             {
+               "name": "last_modified"
+             }
+           ]
+         },
+         {
+           "id": "rns_smev_rostelekom",
+           "icon": "DOCUMENT",
+           "type": "DOCUMENT",
+           "title": "РНС. Выдача или внесение изменений",
+           "childOnly": true,
+           "attributes": [
+             {
+               "name": "content_type_id",
+               "readOnly":true,
+               "defaultValue":"rns_smev_rostelekom"
+             },
+             {
+               "name": "title"
+             },
+             {
+               "name": "smev_message_id"
+             },
+             {
+               "name": "pguid"
+             },
+             {
+               "name": "epgu_status_code"
+             },
+             {
+               "name": "date",
+               "readOnly":true
+             },
+             {
+               "name": "person_name",
+               "readOnly":true
+             },
+             {
+               "name": "request_type",
+               "readOnly":true
+             },
+             {
+               "name": "is_name",
+               "readOnly":true
+             },
+             {
+               "name": "data_type",
+               "readOnly":true
+             },
+             {
+               "name": "record_status",
+               "readOnly":true
+             },
+             {
+               "name": "user_name",
+               "readOnly":true
+             },
+             {
+               "name": "file",
+               "readOnly":true
+             },
+             {
+               "name": "gisogdrf_publication_datetime"
+             },
+             {
+               "name": "gisogdrf_sync_status"
+             },
+             {
+               "name": "gisogdrf_audit_datetime"
+             },
+             {
+               "name": "gisogdrf_response"
+             }
+           ]
+         },
+         {
+           "id": "InboxData_min_gp",
+           "icon": "DOCUMENT",
+           "type": "DOCUMENT",
+           "title": "Разрешение на ввод объекта в эксплуатацию",
+           "childOnly": true,
+           "attributes": [
+             {
+               "name": "title"
+             },
+             {
+               "name": "territory"
+             },
+             {
+               "name": "location"
+             },
+             {
+               "name": "namefrompd"
+             },
+             {
+               "name": "developer"
+             },
+             {
+               "name": "constructiontype"
+             },
+             {
+               "name": "developer_data_connection"
+             },
+             {
+               "name": "number"
+             },
+             {
+               "name": "date"
+             },
+             {
+               "name": "person_name"
+             },
+             {
+               "name": "cover_letter_num"
+             },
+             {
+               "name": "cover_letter_date"
+             },
+             {
+               "name": "request_type"
+             },
+             {
+               "name": "is_name"
+             },
+             {
+               "name": "data_type"
+             },
+             {
+               "name": "record_status"
+             },
+             {
+               "name": "user_name"
+             },
+             {
+               "name": "document_feedback"
+             },
+             {
+               "name": "if_from_eis_zh"
+             },
+             {
+               "name": "gisogdrf_publication_datetime"
+             },
+             {
+               "name": "gisogdrf_sync_status"
+             },
+             {
+               "name": "gisogdrf_audit_datetime"
+             },
+             {
+               "name": "gisogdrf_response"
+             },
+             {
+               "name": "file"
+             },
+             {
+               "name": "last_modified"
+             }
+           ]
+         },
+         {
+           "id": "folder_v1",
+           "icon": "FOLDER_CREATE",
+           "type": "FOLDER",
+           "title": "Папка",
+           "attributes": [
+             {
+               "name": "title",
+               "title": "Наименование",
+               "required": true,
+               "maxLength": 500
+             },
+             {
+               "name": "fias",
+               "title": "Административная единица",
+               "readOnly": true,
+               "valueType": "FIAS",
+               "searchMode": "oktmo"
+             },
+             {
+               "name": "fias__oktmo"
+             },
+             {
+               "name": "fias__address"
+             },
+             {
+               "name": "fias__id"
+             }
+           ]
+         },
+         {
+           "id": "folder_min_gp",
+           "icon": "FOLDER_CREATE",
+           "type": "FOLDER",
+           "title": "Папка",
+           "children": [
+             {
+               "contentType": "InboxData_min_gp"
+             },
+             {
+               "contentType": "folder_min_gp"
+             }
+           ],
+           "childOnly": true,
+           "attributes": [
+             {
+               "name": "title",
+               "title": "Наименование",
+               "required": true,
+               "maxLength": 500
+             },
+             {
+               "name": "fias",
+               "title": "Административная единица",
+               "readOnly": true,
+               "valueType": "FIAS",
+               "searchMode": "oktmo"
+             },
+             {
+               "name": "fias__oktmo"
+             },
+             {
+               "name": "fias__address"
+             },
+             {
+               "name": "fias__id"
+             }
+           ]
+         }
+       ],
+       "calcFiledFunction": "",
+       "customRuleFunction": ""
+     }'
 WHERE name = 'dl_data_inbox_data';
 
 UPDATE data.schemas 

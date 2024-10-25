@@ -247,6 +247,8 @@ public class FileService {
         Map<UUID, VerifyEcpResponse> report = new HashMap<>();
         List<File> baseFiles = processFiles(allFiles, report);
         // После всего обновляем запись только базовыми файлами
+        log.debug("Содержимое ResourceQualifier: {}", qualifier);
+
         updateRecord(qualifier, baseFiles, schema);
         return report;
     }

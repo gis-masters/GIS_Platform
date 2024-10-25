@@ -148,6 +148,7 @@ public class AcceptRnsService {
             log.error("Не удалось распарсить сообщение: {}", body);
             throw new BadRequestException("Не удалось распарсить сообщение: " + body);
         }
+
         RequestType request = queryResult.getMessage()
                 .getRequestContent().getContent().getMessagePrimaryContent().getRequest();
         smevMessageService.saveIncoming(body);
@@ -159,11 +160,11 @@ public class AcceptRnsService {
                         () -> new SmevRequestException("Не найден исполнитель по пути " + "/root/29"));
         Long performerId = Long.valueOf(docRecord.getContent().get("performer").toString());
         Map<String, Object> taskContent = prepareTaskRecord(String.valueOf(request.getService().getOrderId()),
-                                                            performerId);
+                performerId);
         long taskId = tasksDao.createTask(dbName, taskContent);
         createLog("Входящее сообщение РНС успешно записано в реестр",
-                  "Входящее сообщение РНС успешно записано в реестр",
-                  taskId);
+                "Входящее сообщение РНС успешно записано в реестр",
+                taskId);
         createDocumentAndLinkToTask(request, taskContent, taskId, queryResult);
     }
 
@@ -199,7 +200,7 @@ public class AcceptRnsService {
                 .findByTableName(RNS_LIBRARY_ID)
                 .map(documentLibrary -> new LibraryModel(documentLibrary, OWNER.name()))
                 .orElseThrow(() -> new NotFoundException("Библиотека не найдена по идентификатору: "
-                                                                 + RNS_LIBRARY_ID));
+                        + RNS_LIBRARY_ID));
         SchemaDto rnsSchema = rnsLibraryModel.getSchema();
         Map<String, Object> documentPayload = new HashMap<>();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
@@ -219,6 +220,7 @@ public class AcceptRnsService {
 
         RecordEntity document = new RecordEntity(documentPayload);
         IRecord savedDocument = recordsDao.addRecord(rnsLibraryQualifier, document, rnsSchema);
+
         Long savedDocumentId = savedDocument.getId();
         String savedDocumentTitle = savedDocument.getTitle();
 
@@ -230,22 +232,23 @@ public class AcceptRnsService {
         byte[] wordDocumentBytes = wordDocumentOutputStream.toByteArray();
         wordDocumentOutputStream.close();
         MultipartFile wordDocumentFile = new CustomMultipartFile(wordDocumentBytes,
-                                                                 "result.doc",
-                                                                 "result.doc",
-                                                                 "application/msword");
+                "result.doc",
+                "result.doc",
+                "application/msword");
         String fileName = generateFileName(wordDocumentFile);
         String path = fileStorageService.copyToTrash(wordDocumentFile,
-                                                     fileName);
+                fileName);
         String intents = simpleIntentHandler.defineIntent(wordDocumentFile);
 
         FileResourceQualifier fileResQualifier = new FileResourceQualifier(rnsLibraryQualifier.getSchema(),
-                                                                           rnsLibraryQualifier.getTable(),
-                                                                           savedDocumentId,
-                                                                           FILE_ATTRIBUTE);
+                rnsLibraryQualifier.getTable(),
+                savedDocumentId,
+                FILE_ATTRIBUTE);
         JsonNode jsonNode = toJsonNode(fileResQualifier);
+
         path = fileStorageService
                 .moveToMainStorage(Paths.get(path),
-                                   Paths.get("organization_1/library_record/dl_data_inbox_data/" + fileName))
+                        Paths.get("organization_1/library_record/dl_data_inbox_data/" + fileName))
                 .normalize().toString();
         File wordDocumentEntity = new File(wordDocumentFile, intents, path, "arh_grad_rk@mail.ru");
         File savedEntity = fileRepository.save(wordDocumentEntity);
@@ -301,12 +304,14 @@ public class AcceptRnsService {
         collectFilesToList(files, fileResQualifier, fileQualifier, fileDescriptions);
 
         String jacksonData = JsonConverter.getJsonString(fileDescriptions);
+
         Map<String, Object> payload = savedDocument.getContent();
         payload.put(FILE_ATTRIBUTE, jacksonData);
         ResourceQualifier rnsResQualifier = ResourceQualifier.libraryRecordQualifier(RNS_LIBRARY_ID, savedDocumentId);
         recordsDao.updateRecordById(rnsResQualifier, payload, rnsSchema);
 
         TypeDocumentData documentData = new TypeDocumentData(savedDocumentId, savedDocumentTitle, RNS_LIBRARY_ID);
+
         taskContent.put(DATA_SECTION_KEY_DATA_CONNECTION_ATTRIBUTE, mapper.writeValueAsString(List.of(documentData)));
         SchemaDto tasksSchema = this.schemaService
                 .getSchemaByName(TASKS_SCHEMA)
@@ -320,10 +325,10 @@ public class AcceptRnsService {
         try {
             for (AttachmentHeaderType attachmentHeader : attachmentHeaderList.getAttachmentHeader()) {
                 Iterable<Result<Item>> objects = minioService.getListObjects(attachmentHeader.getId() + "/",
-                                                                             smev3Config.getS3bucketIncoming());
+                        smev3Config.getS3bucketIncoming());
                 String lowerFolderName = objects.iterator().next().get().objectName();
                 Iterable<Result<Item>> results1 = minioService.getListObjects(lowerFolderName,
-                                                                              smev3Config.getS3bucketIncoming());
+                        smev3Config.getS3bucketIncoming());
                 String fileName = results1.iterator().next().get().objectName();
                 byte[] fileBytes = minioService.getFile(
                         fileName,
@@ -350,7 +355,6 @@ public class AcceptRnsService {
             throw new SmevRequestException("Не удалось загрузить вложения");
         }
         return filesAsBytes;
-
 
     }
 
@@ -385,9 +389,10 @@ public class AcceptRnsService {
             String intents = simpleIntentHandler.defineIntent(multipartFile);
 
             JsonNode jsonNode = toJsonNode(fileResQualifier);
+
             path = fileStorageService
                     .moveToMainStorage(Paths.get(path),
-                                       Paths.get("organization_1/library_record/dl_data_inbox_data/" + filename))
+                            Paths.get("organization_1/library_record/dl_data_inbox_data/" + filename))
                     .normalize().toString();
             File file = new File(multipartFile, intents, path, "arh_grad_rk@mail.ru");
             File savedEntity = fileRepository.save(file);
@@ -395,16 +400,17 @@ public class AcceptRnsService {
 
             String type = resourceQualifier.getType().name();
             fileRepository.setQualifier(type, jsonNode, Set.of(savedEntityId));
+            savedEntity.setResourceQualifier(jsonNode);
+            savedEntity.setResourceType(type);
             filesAndSignatures.add(savedEntity);
+
         }
 
         List<File> baseFiles = fileService.checkSignatures(filesAndSignatures);
+
         for (File file : baseFiles) {
             FileDescription fileDescription = new FileDescription(file.getId(), file.getTitle(), file.getSize());
             fileDescriptions.add(fileDescription);
         }
-
     }
-
-
 }
