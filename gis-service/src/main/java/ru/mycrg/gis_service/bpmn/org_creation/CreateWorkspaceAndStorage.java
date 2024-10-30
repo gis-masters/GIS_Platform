@@ -8,10 +8,11 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import ru.mycrg.geoserver_client.contracts.datastores.VectorDataStore;
 import ru.mycrg.geoserver_client.contracts.datastores.base.IParameterizedStore;
-import ru.mycrg.geoserver_client.contracts.datastores.base.PostGisConnectionParameters;
 import ru.mycrg.geoserver_client.services.storage.vector.VectorStorage;
 import ru.mycrg.geoserver_client.services.workspace.WorkspacesService;
 import ru.mycrg.gis_service.dto.geoserver.OrgCreateDto;
+
+import java.util.Map;
 
 import static ru.mycrg.common_utils.CrgGlobalProperties.*;
 import static ru.mycrg.gis_service.GisServiceApplication.objectMapper;
@@ -54,12 +55,14 @@ public class CreateWorkspaceAndStorage implements JavaDelegate {
             String dbOwner = environment.getRequiredProperty("spring.datasource.username");
             String dbPass = environment.getRequiredProperty("spring.datasource.password");
 
-            PostGisConnectionParameters connParams = new PostGisConnectionParameters(dbHost, String.valueOf(dbPort),
-                                                                                     dbName,
-                                                                                     "public",
-                                                                                     dbOwner, dbPass, "postgis");
+            Map<String, Object> connParams = Map.of("host", dbHost,
+                                                    "port", String.valueOf(dbPort),
+                                                    "database", dbName,
+                                                    "schema", "public",
+                                                    "user", dbOwner,
+                                                    "passwd", dbPass);
 
-            IParameterizedStore<PostGisConnectionParameters> vectorStore =
+            IParameterizedStore<Map<String, Object>> vectorStore =
                     new VectorDataStore(getDefaultStoreName(scratchWorkspaceName), connParams);
 
             new VectorStorage(accessToken).create(scratchWorkspaceName, vectorStore);

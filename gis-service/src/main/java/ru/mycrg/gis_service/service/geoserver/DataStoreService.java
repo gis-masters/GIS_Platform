@@ -7,12 +7,13 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import ru.mycrg.auth_facade.IAuthenticationFacade;
 import ru.mycrg.geoserver_client.contracts.datastores.VectorDataStore;
-import ru.mycrg.geoserver_client.contracts.datastores.base.PostGisConnectionParameters;
 import ru.mycrg.geoserver_client.services.storage.vector.VectorStorage;
 import ru.mycrg.gis_service.exceptions.NotFoundException;
 import ru.mycrg.gis_service.exceptions.ThirdPartyServiceException;
 import ru.mycrg.http_client.ResponseModel;
 import ru.mycrg.http_client.exceptions.HttpClientException;
+
+import java.util.Map;
 
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static ru.mycrg.common_utils.CrgGlobalProperties.getDefaultDatabaseName;
@@ -72,19 +73,17 @@ public class DataStoreService {
     }
 
     @NotNull
-    private PostGisConnectionParameters prepareConnectionParameters(Long orgId, String dataStoreId) {
+    private Map<String, Object> prepareConnectionParameters(Long orgId, String dataStoreId) {
         String postGis = environment
                 .getRequiredProperty("spring.datasource.url")
                 .split("//")[1]
                 .split("/")[0];
 
-        String dbName = getDefaultDatabaseName(orgId);
-        String dbHost = postGis.split(":")[0];
-        int dbPort = Integer.parseInt(postGis.split(":")[1]);
-        String dbOwner = environment.getRequiredProperty("spring.datasource.username");
-        String dbPass = environment.getRequiredProperty("spring.datasource.password");
-
-        return new PostGisConnectionParameters(dbHost, String.valueOf(dbPort), dbName, dataStoreId, dbOwner, dbPass,
-                                               "postgis");
+        return Map.of("host", postGis.split(":")[0],
+                      "port", String.valueOf(Integer.parseInt(postGis.split(":")[1])),
+                      "database", getDefaultDatabaseName(orgId),
+                      "schema", dataStoreId,
+                      "user", environment.getRequiredProperty("spring.datasource.username"),
+                      "passwd", environment.getRequiredProperty("spring.datasource.password"));
     }
 }

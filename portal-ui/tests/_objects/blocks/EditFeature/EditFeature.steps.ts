@@ -8,9 +8,9 @@ When('я закрываю панель редактирования объект
 });
 
 Then(
-  'в панели атрибутов объекта на карте в списке атрибутов отображается только поле {string}',
-  async function (title: string) {
-    await editFeatureBlock.checkObjectAttributeFields(title);
+  'в панели атрибутов объекта на карте в списке атрибутов отображается только поля: {strings}',
+  async function (titles: string[]) {
+    await editFeatureBlock.checkObjectAttributeFields(titles);
   }
 );
 

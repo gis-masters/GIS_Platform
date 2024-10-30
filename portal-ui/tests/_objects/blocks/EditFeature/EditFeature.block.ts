@@ -30,14 +30,14 @@ class EditFeatureBlock extends Block {
     await $editFeatureClose.click();
   }
 
-  async checkObjectAttributeFields(title: string): Promise<void> {
+  async checkObjectAttributeFields(titles: string[]): Promise<void> {
     const $editFeatureLoader = await this.$('editFeatureLoading');
     await $editFeatureLoader.waitForDisplayed({ reverse: true });
     await this.waitForEditFeatureForm();
 
     await browser.waitUntil(
       async () => {
-        return isEqual(await this.getFormFieldsLabels(), [title]);
+        return isEqual(await this.getFormFieldsLabels(), titles);
       },
       {
         timeout: 1000
