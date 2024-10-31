@@ -73,7 +73,7 @@ export default class Files extends Component<FilesProps> {
 
   render() {
     const { value, property, editable, document, showPlaceAction } = this.props;
-    const { multiple } = property;
+    const { multiple, name } = property;
     const numerous = value.length > 1;
 
     const [singularFiles, compoundFiles] = this.separateCompoundFiles(value);
@@ -100,6 +100,7 @@ export default class Files extends Component<FilesProps> {
                     file={newbie?.file}
                     statusText={newbie?.statusText}
                     numerous={numerous}
+                    propertyName={name}
                     multiple={multiple}
                   />
                 );
@@ -114,6 +115,8 @@ export default class Files extends Component<FilesProps> {
                     onDelete={this.handleDelete}
                     onPreview={this.handlePreview}
                     getNewbie={this.getNewbie}
+                    document={document}
+                    propertyName={name}
                     editable={editable}
                   />
                 );
@@ -205,6 +208,7 @@ export default class Files extends Component<FilesProps> {
     const compoundFilesDuplicates: string[] = [];
     for (let i = 0; i < max; i++) {
       const file = selectedFiles?.item(i);
+
       if (file) {
         if (compoundFiles[getFileBaseName(file.name)]?.some(item => item.title === file.name)) {
           compoundFilesDuplicates.push(file.name);

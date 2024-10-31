@@ -8,7 +8,7 @@ import { AxiosError } from 'axios';
 import { FilePlacementMode } from '../../services/data/file-placement/file-placement.models';
 import { placeFileWithProjection } from '../../services/data/file-placement/file-placement.service';
 import { FileInfo } from '../../services/data/files/files.models';
-import { getFile } from '../../services/data/files/files.service';
+import { getFileInfo } from '../../services/data/files/files.service';
 import {
   getFileBaseName,
   isDxfFile,
@@ -393,7 +393,7 @@ export class AddLayerDialog extends Component<AddLayerDialogProps> {
         }
 
         const record = await getLibraryRecord(library.table_name, libraryRecord.id);
-        const { path } = await getFile(file.id);
+        const { path } = await getFileInfo(file.id);
         const fileTableName = `${record.libraryTableName}_${record.id}__${file.id}`;
 
         let crgLayer: CrgLayer | undefined;

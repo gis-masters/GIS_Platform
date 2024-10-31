@@ -1,7 +1,6 @@
 import { WfsFeature } from '../../geoserver/wfs/wfs.models';
 import { getLayerByFeatureInCurrentProject } from '../../gis/layers/layers.utils';
 import { notFalsyFilter } from '../../util/NotFalsyFilter';
-import { isRecordStringUnknown } from '../../util/typeGuards/isRecordStringUnknown';
 import { LibraryRecord } from '../library/library.models';
 import {
   allCompoundFilesTypes,
@@ -9,6 +8,7 @@ import {
   allTabFilesTypes,
   CompoundFileTypes,
   FileInfo,
+  isFileInfo,
   midMifRequiredFilesTypes,
   optionalShapeFilesTypes,
   optionalTabFilesTypes,
@@ -205,18 +205,6 @@ export function getPhotoModeFeatureFiles(feature: WfsFeature): FileInfo[] {
   }
 
   return [];
-}
-
-function isFileInfo(obj: unknown): obj is FileInfo {
-  return Boolean(
-    isRecordStringUnknown(obj) &&
-      obj.id &&
-      typeof obj.id === 'string' &&
-      obj.size &&
-      typeof obj.size === 'number' &&
-      obj.title &&
-      typeof obj.title === 'string'
-  );
 }
 
 export function getMissingCompoundFileTypes(files: FileInfo[]): CompoundFileTypes[] {

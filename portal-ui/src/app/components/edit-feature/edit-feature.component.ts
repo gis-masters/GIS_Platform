@@ -106,6 +106,7 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
         }
         const layer = data.layer || getLayerByFeatureInCurrentProject(firstFeature);
         if (layer) {
+          sidebars.setLayerOfEditedFeature(layer);
           this.layer = { ...layer };
         }
         this.properties = data.properties;

@@ -67,6 +67,7 @@ export function isVectorLayer(layer?: CrgLayer): layer is CrgVectorLayer {
 export interface CrgVectorableLayer extends CrgBaseLayer {
   type: CrgLayerType.VECTOR | CrgLayerType.DXF | CrgLayerType.MID | CrgLayerType.SHP | CrgLayerType.TAB;
   dataStoreName?: string;
+  dataset?: string;
   styleName?: string;
   style?: string;
 }

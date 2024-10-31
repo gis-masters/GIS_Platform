@@ -30,6 +30,7 @@ interface ChooseXTableBaseProps<T> extends IClassNameProps {
   single?: boolean;
   withoutSelectAll?: boolean;
   loading?: boolean;
+  showFiltersPanel?: boolean;
   filterable?: boolean;
   filtersAlwaysEnabled?: boolean;
   getRowId?(rowData: T): string | number;

@@ -56,8 +56,12 @@ class FilesClient extends Client {
     return http.post<FileInfo[]>(this.getFilesUrl(), formData);
   }
 
-  async getFile(id: string): Promise<FileInfo> {
+  async getFileInfo(id: string): Promise<FileInfo> {
     return http.get<FileInfo>(this.getFileUrl(id));
+  }
+
+  async getFile(id: string): Promise<string> {
+    return http.get<string>(this.getFileDownloadUrl(id));
   }
 
   async getEcpInfo(id: string): Promise<VerifyEcpResponse> {

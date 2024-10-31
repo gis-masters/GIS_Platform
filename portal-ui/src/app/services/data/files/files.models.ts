@@ -1,5 +1,6 @@
 import { CrgLayer } from '../../gis/layers/layers.models';
 import { CrgProject } from '../../gis/projects/projects.models';
+import { isRecordStringUnknown } from '../../util/typeGuards/isRecordStringUnknown';
 
 export interface FileInfo {
   id: string;
@@ -134,3 +135,29 @@ export const compoundFileFullType: Record<string, string> = {
   tab: 'MapInfo TAB',
   mid: 'MapInfo MID'
 };
+
+export function isFileInfo(obj: unknown): obj is FileInfo {
+  return Boolean(
+    isRecordStringUnknown(obj) &&
+      obj.id &&
+      typeof obj.id === 'string' &&
+      obj.size &&
+      typeof obj.size === 'number' &&
+      obj.title &&
+      typeof obj.title === 'string'
+  );
+}
+
+export function isFileInfoArray(values: unknown): values is FileInfo[] {
+  if (!Array.isArray(values)) {
+    return false;
+  }
+
+  for (const value of values) {
+    if (!isFileInfo(value)) {
+      return false;
+    }
+  }
+
+  return true;
+}

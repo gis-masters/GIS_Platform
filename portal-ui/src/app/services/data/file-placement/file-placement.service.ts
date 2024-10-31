@@ -6,7 +6,7 @@ import { CrgProject } from '../../gis/projects/projects.models';
 import { projectsService } from '../../gis/projects/projects.service';
 import { wsService } from '../../ws.service';
 import { FileInfo } from '../files/files.models';
-import { getFile } from '../files/files.service';
+import { getFileInfo } from '../files/files.service';
 import { getFileBaseName } from '../files/files.util';
 import { LibraryRecord } from '../library/library.models';
 import { ProcessResponse, ProcessType } from '../processes/processes.models';
@@ -110,7 +110,7 @@ export async function placeFile(
   document: LibraryRecord,
   layersGroupCreating?: Promise<CrgLayersGroup> | CrgLayersGroup
 ): Promise<void> {
-  const { path, id, title } = await getFile(file.id);
+  const { path, id, title } = await getFileInfo(file.id);
   const group = layersGroupCreating && (await layersGroupCreating);
 
   const rasterLayer: Omit<CrgRasterLayer, 'id'> = {

@@ -1,13 +1,11 @@
 import React, { Component } from 'react';
-import { action, computed, makeObservable, observable } from 'mobx';
+import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { IClassNameProps } from '@bem-react/core';
 import { boundMethod } from 'autobind-decorator';
 import { isEqual } from 'lodash';
 
-import { FileInfo } from '../../services/data/files/files.models';
-import { isTifFile } from '../../services/data/files/files.util';
 import { LibraryRecord } from '../../services/data/library/library.models';
 import { getLibraryRecord, getLibrarySchemaByRecord } from '../../services/data/library/library.service';
 import { PropertyType, Schema } from '../../services/data/schema/schema.models';
@@ -138,25 +136,6 @@ export default class LibraryDocumentActions extends Component<LibraryDocumentAct
     if (this.operationId === operationId) {
       this.setData(document, schema);
     }
-  }
-
-  @computed
-  private get canBePlaced(): boolean {
-    const hasNativeCrs = this.schema?.properties?.some(({ name }) => name === 'native_crs');
-    if (!hasNativeCrs) {
-      return false;
-    }
-
-    const filesFields = this.schema?.properties?.filter(field => field.propertyType === PropertyType.FILE);
-    if (!filesFields || filesFields.length <= 0) {
-      return false;
-    }
-
-    return filesFields.some(field => {
-      const files: FileInfo[] = this.props.document[field.name] as FileInfo[];
-
-      return !!files?.filter(isTifFile)?.length;
-    });
   }
 
   @boundMethod

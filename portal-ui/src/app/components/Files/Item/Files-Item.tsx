@@ -2,10 +2,11 @@ import React, { FC, memo, useCallback, useEffect, useMemo } from 'react';
 import { observer, useLocalObservable } from 'mobx-react';
 import { Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import { cn } from '@bem-react/classname';
+import { isValidSystemSetup } from 'crypto-pro';
 
 import { communicationService, DataChangeEventDetail } from '../../../services/communication.service';
 import { FileConnection, FileInfo } from '../../../services/data/files/files.models';
-import { getFile, getFileConnections } from '../../../services/data/files/files.service';
+import { getFileConnections, getFileInfo } from '../../../services/data/files/files.service';
 import {
   getFileBaseName,
   getFileExtension,
@@ -15,6 +16,7 @@ import {
   isTifFile
 } from '../../../services/data/files/files.util';
 import { LibraryRecord } from '../../../services/data/library/library.models';
+import { sidebars } from '../../../stores/Sidebars.store';
 import { Button } from '../../Button/Button';
 import { ConnectionsToProjects } from '../../ConnectionsToProjects/ConnectionsToProjects';
 import { LookupActions } from '../../Lookup/Actions/Lookup-Actions';
@@ -28,6 +30,7 @@ import { FilesIcon } from '../Icon/Files-Icon';
 import { FilesName } from '../Name/Files-Name';
 import { FilesPlacement } from '../Placement/Files-Placement';
 import { FilesPreview } from '../Preview/Files-Preview';
+import { FilesSign } from '../Sign/Files-Sign';
 import { FilesSignature } from '../Signature/Files-Signature';
 
 const cnFilesItem = cn('Files', 'Item');
@@ -38,6 +41,7 @@ interface FilesItemProps {
   file: File | undefined;
   statusText: string | undefined;
   numerous: boolean;
+  propertyName?: string;
   editable?: boolean;
   multiple?: boolean;
   document?: LibraryRecord;
@@ -52,6 +56,8 @@ type FilesItemState = {
   id: string;
   deleteDialogOpen: boolean;
   fileInfo: FileInfo | null;
+  isPluginActive: boolean;
+  setIsPluginActive(isPluginActive: boolean): void;
   setConnections(connections: FileConnection[]): void;
   setIds(id: string): void;
   setDeleteDialogOpen(isOpen: boolean): void;
@@ -68,33 +74,48 @@ const FilesItemFC: FC<FilesItemProps> = observer(
     numerous,
     multiple,
     document,
+    propertyName,
     showMainCompoundFileActions,
     showPlaceAction,
     onPreview,
     onDelete
   }) => {
-    const { connections, id, deleteDialogOpen, fileInfo, setConnections, setIds, setDeleteDialogOpen, setFileInfo } =
-      useLocalObservable(
-        (): FilesItemState => ({
-          connections: [],
-          id: item.id,
-          deleteDialogOpen: false,
-          fileInfo: null,
+    const {
+      connections,
+      id,
+      deleteDialogOpen,
+      fileInfo,
+      isPluginActive,
+      setIsPluginActive,
+      setConnections,
+      setIds,
+      setDeleteDialogOpen,
+      setFileInfo
+    } = useLocalObservable(
+      (): FilesItemState => ({
+        connections: [],
+        id: item.id,
+        deleteDialogOpen: false,
+        fileInfo: null,
+        isPluginActive: false,
 
-          setConnections(this: FilesItemState, connections: FileConnection[]): void {
-            this.connections = connections;
-          },
-          setIds(this: FilesItemState, id: string): void {
-            this.id = id;
-          },
-          setDeleteDialogOpen(this: FilesItemState, isOpen: boolean): void {
-            this.deleteDialogOpen = isOpen;
-          },
-          setFileInfo(this: FilesItemState, fileInfo: FileInfo): void {
-            this.fileInfo = fileInfo;
-          }
-        })
-      );
+        setIsPluginActive(this: FilesItemState, isPluginActive: boolean): void {
+          this.isPluginActive = isPluginActive;
+        },
+        setConnections(this: FilesItemState, connections: FileConnection[]): void {
+          this.connections = connections;
+        },
+        setIds(this: FilesItemState, id: string): void {
+          this.id = id;
+        },
+        setDeleteDialogOpen(this: FilesItemState, isOpen: boolean): void {
+          this.deleteDialogOpen = isOpen;
+        },
+        setFileInfo(this: FilesItemState, fileInfo: FileInfo): void {
+          this.fileInfo = fileInfo;
+        }
+      })
+    );
 
     const handleDelete = useCallback(() => {
       onDelete([item]);
@@ -139,7 +160,7 @@ const FilesItemFC: FC<FilesItemProps> = observer(
       const { id } = item;
 
       if (!status || status === 'success' || status === 'normal') {
-        const fileInfo = await getFile(id);
+        const fileInfo = await getFileInfo(id);
 
         setFileInfo(fileInfo);
       }
@@ -157,6 +178,11 @@ const FilesItemFC: FC<FilesItemProps> = observer(
 
       return { ext, baseName, disabled, isFileConnected, isFileCanBePlaced, signed };
     }, [connections, fileInfo?.signed, item, showMainCompoundFileActions, showPlaceAction, status]);
+
+    const showSign = (sidebars.editFeaturesData?.features[0] && editable) || (document && !editable);
+    const showFilesSignatureInExplorer =
+      (showPlaceAction || showMainCompoundFileActions || showMainCompoundFileActions === undefined) && !editable;
+    const showFileSignatureOnMap = sidebars.editFeaturesData?.features[0] && signed;
 
     useEffect(() => {
       void (async () => {
@@ -181,6 +207,11 @@ const FilesItemFC: FC<FilesItemProps> = observer(
         if (!fileInfo && !item.signed) {
           await updateFileInfo();
         }
+
+        // проверяем не отвалился ли плагин при работе с файлами
+        if (await isValidSystemSetup()) {
+          setIsPluginActive(true);
+        }
       })();
     }, [item.id, item.signed, fileInfo]);
 
@@ -203,8 +234,20 @@ const FilesItemFC: FC<FilesItemProps> = observer(
           <LookupActions>
             {isPreviewAllowed(item) && <FilesPreview item={item} onPreview={onPreview} />}
 
-            {(showPlaceAction || showMainCompoundFileActions || showMainCompoundFileActions === undefined) &&
-              !editable && <FilesSignature id={item.id} title={item.title} signed={signed} />}
+            {(showFilesSignatureInExplorer || showFileSignatureOnMap) && (
+              <FilesSignature id={item.id} title={item.title} signed={signed} />
+            )}
+
+            {isPluginActive && !signed && showSign && (
+              <FilesSign
+                id={item.id}
+                title={item.title}
+                propertyName={propertyName}
+                document={document}
+                feature={sidebars.editFeaturesData?.features[0]}
+                updateFileInfo={updateFileInfo}
+              />
+            )}
 
             {showMainCompoundFileActions && showPlaceAction && (
               <FilesDownloadCompoundFile item={item} signed={signed} />

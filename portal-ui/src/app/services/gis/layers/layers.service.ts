@@ -5,7 +5,7 @@ import { AxiosError } from 'axios';
 
 import { Toast } from '../../../components/Toast/Toast';
 import { currentProject } from '../../../stores/CurrentProject.store';
-import { getFile } from '../../data/files/files.service';
+import { getFileInfo } from '../../data/files/files.service';
 import { getFileBaseName, getLibraryRecordFiles } from '../../data/files/files.util';
 import { getLibraryRecord } from '../../data/library/library.service';
 import { PropertyOption, Schema } from '../../data/schema/schema.models';
@@ -42,7 +42,7 @@ export async function createLayer(newLayer: NewCrgLayer, projectId: number): Pro
       throw new Error('Не найден источник данных файлового слоя');
     }
 
-    const fullFileInfo = await getFile(fileInfo.id);
+    const fullFileInfo = await getFileInfo(fileInfo.id);
 
     if (!fullFileInfo.path) {
       throw new Error('Ошибка получения пути источника данных файлового слоя');

@@ -47,6 +47,7 @@ class Sidebars {
   @observable deletedFeatures?: FeatureError[];
   @observable featuresWithNoAccess?: FeatureError[];
   @observable deletedLayers?: FeatureError[];
+  @observable layerOfEditedFeature?: CrgVectorableLayer;
   @observable editFeaturesData?: EditFeaturesData;
   @observable featuresWithErrors?: number;
   @observable foundBySearchFeatureEdited?: boolean;
@@ -99,6 +100,11 @@ class Sidebars {
   @action.bound
   setSearchValue(searchValue: SearchInfo) {
     this.searchValue = searchValue;
+  }
+
+  @action.bound
+  setLayerOfEditedFeature(layerOfEditedFeature: CrgVectorableLayer) {
+    this.layerOfEditedFeature = layerOfEditedFeature;
   }
 
   @action.bound

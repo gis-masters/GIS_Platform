@@ -11,6 +11,7 @@ import {
   getMissingCompoundFileTypes,
   normalizeExtension
 } from '../../../services/data/files/files.util';
+import { LibraryRecord } from '../../../services/data/library/library.models';
 import { NewbieFile } from '../Files.async';
 import { FilesItem } from '../Item/Files-Item';
 
@@ -20,8 +21,10 @@ const cnFilesCompoundItem = cn('Files', 'CompoundItem');
 
 interface FilesCompoundItemProps {
   files: FileInfo[];
+  propertyName?: string;
   editable?: boolean;
   showPlaceAction?: boolean;
+  document?: LibraryRecord;
   onDelete(item: FileInfo[]): void;
   onPreview(item: FileInfo): void;
   getNewbie(id: string): NewbieFile | undefined;
@@ -30,7 +33,7 @@ interface FilesCompoundItemProps {
 @observer
 export class FilesCompoundItem extends Component<FilesCompoundItemProps> {
   render() {
-    const { files, editable, showPlaceAction, onDelete, onPreview, getNewbie } = this.props;
+    const { files, editable, showPlaceAction, document, propertyName, onDelete, onPreview, getNewbie } = this.props;
 
     return (
       <div className={cnFilesCompoundItem()}>
@@ -49,6 +52,8 @@ export class FilesCompoundItem extends Component<FilesCompoundItemProps> {
               file={newbie?.file}
               showPlaceAction={showPlaceAction}
               statusText={newbie?.statusText}
+              document={document}
+              propertyName={propertyName}
               numerous
               multiple
             />
@@ -66,6 +71,8 @@ export class FilesCompoundItem extends Component<FilesCompoundItemProps> {
               status={'notAvailable'}
               file={undefined}
               statusText={undefined}
+              document={document}
+              propertyName={propertyName}
               numerous
               multiple
             />
