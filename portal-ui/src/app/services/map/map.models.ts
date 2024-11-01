@@ -78,3 +78,39 @@ export type PointOnBisectorData = {
   bx: number;
   by: number;
 };
+
+export enum LabelsStyleTypes {
+  AREA = 'area',
+  LENGTH = 'length',
+  TURNING_POINTS = 'turningPoints',
+  DISTANCES = 'distances'
+}
+
+export type TextAlignTypes = 'left' | 'center' | 'right' | 'justify';
+
+export type TextStyleProperties = {
+  fontSize?: number;
+  fontColor?: string;
+  isBold?: boolean;
+  isItalic?: boolean;
+  rotation?: number;
+  textAlign?: TextAlignTypes;
+};
+
+export type FontProperties = {
+  fontSize: number;
+  fontColor: string;
+  isBold: boolean;
+  isItalic: boolean;
+  textAlign: TextAlignTypes;
+};
+
+export type TextProperties = {
+  fontSize: number;
+  bold: string;
+  italic: string;
+  fontColor: string;
+  textAlign: TextAlignTypes;
+};
+
+export type FeatureFontStringData = { fontColor: number[]; textAlign: TextAlignTypes; font?: string };

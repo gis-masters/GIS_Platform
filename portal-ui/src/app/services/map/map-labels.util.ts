@@ -8,6 +8,7 @@ import MultiPolygon from 'ol/geom/MultiPolygon';
 import Point from 'ol/geom/Point';
 import Polygon from 'ol/geom/Polygon';
 import { getLength } from 'ol/sphere';
+import { Fill, Stroke, Style, Text } from 'ol/style';
 
 import { currentProject } from '../../stores/CurrentProject.store';
 import { mapStore } from '../../stores/Map.store';
@@ -27,8 +28,20 @@ import { GeometryType, supportedGeometryTypes, WfsFeature } from '../geoserver/w
 import { UnitsOfAreaMeasurement, UnitsOfLengthMeasurement } from '../util/open-layers.util';
 import { isArrayOf } from '../util/typeGuards/isArrayOf';
 import { isCoordinate, isCoordinateArray, isCoordinateArrayArray } from '../util/typeGuards/isCoordinate';
+import { isLabelTextProperties } from '../util/typeGuards/isLabelTextProperties';
 import { isNumberArray } from '../util/typeGuards/isNumberArray';
-import { FeatureLengthData, LabelPosition, LabelStyleOffsets, PointOnBisectorData, PointWithAngle } from './map.models';
+import { isTextAlignTypes } from '../util/typeGuards/isTextAlignTypes';
+import {
+  FeatureFontStringData,
+  FeatureLengthData,
+  FontProperties,
+  LabelPosition,
+  LabelStyleOffsets,
+  PointOnBisectorData,
+  PointWithAngle,
+  TextAlignTypes,
+  TextProperties
+} from './map.models';
 
 const geometryError = 'Тип геометрии не позволяет определить периметр объекта';
 
@@ -371,7 +384,7 @@ export function getLabelPosition(angle: number, isPointInPolygon: boolean): Labe
   return { vertical, horizontal };
 }
 
-// создаем виртуальную линию по биссектрисе среднего угла для определения ее угла наклона относительно севера
+// создаем виртуальную линию по биссектрисе среднего угла для определения ее угла наклона относительно азимута
 // создаем смещенную по виртуальной линии точки чтобы получить проверку внутри заданного полигона или нет
 export function getPointsWithAngles(coordinates: Coordinate[]): PointWithAngle[] {
   const pointsWithAngles: PointWithAngle[] = [];
@@ -404,7 +417,7 @@ export function getPointsWithAngles(coordinates: Coordinate[]): PointWithAngle[]
   return pointsWithAngles;
 }
 
-// получаем офсеты для кооректного создания стилей (расположения лейблов относительно точек)
+// получаем офсеты для корректного создания стилей (расположения лейблов относительно точек)
 export function getLabelStyleOffsets({
   position,
   centred,
@@ -487,4 +500,146 @@ function calculatePointOnBisector(x2: number, y2: number, bisectorAngle: number,
     bx: x2 + deltaX,
     by: y2 + deltaY
   };
+}
+
+export function getTextProperties(properties: Record<string, unknown>): TextProperties {
+  const { centred, textProperties } = properties;
+
+  let fontSize = 18;
+  let bold = '';
+  let italic = '';
+  let color = '#141414';
+  let align: TextAlignTypes = 'left';
+
+  if (centred) {
+    fontSize = 14;
+  }
+
+  if (textProperties && isLabelTextProperties(textProperties)) {
+    const { fontSize: size, fontColor, isBold, isItalic, textAlign } = textProperties;
+    if (size && typeof size === 'number') {
+      fontSize = size;
+    }
+
+    if (isBold) {
+      bold = 'bold';
+    }
+
+    if (isItalic) {
+      italic = 'italic';
+    }
+
+    if (fontColor && typeof fontColor === 'string') {
+      color = fontColor;
+    }
+
+    if (textAlign && isTextAlignTypes(textAlign)) {
+      align = textAlign;
+    }
+  }
+
+  return { fontSize, bold, italic, fontColor: color, textAlign: align };
+}
+
+export function getTextStyle(properties: Record<string, unknown>): Text {
+  const { position, isLabelInPolygon, text, rotation, ...otherProperties } = properties;
+  const { fontSize, bold, italic, fontColor, textAlign } = getTextProperties(otherProperties);
+  const { offsetX, offsetY } = getLabelStyleOffsets({ position, centred: otherProperties.centred, isLabelInPolygon });
+
+  return new Text({
+    font: `${bold} ${italic} ${fontSize}px sans-serif`,
+    textAlign: textAlign === 'justify' ? 'left' : textAlign,
+    justify: textAlign === 'center' ? 'center' : 'left',
+    offsetX,
+    offsetY,
+    text: String(text),
+    stroke: new Stroke({
+      color: properties.centred ? '#d3d3d3' : '#fff',
+      width: 5
+    }),
+    rotation: rotation && typeof rotation === 'number' ? rotation : 0,
+    fill: new Fill({
+      color: fontColor
+    }),
+    padding: [5, 5, 3, 5]
+  });
+}
+
+export function getFeatureStringValue(feature: Feature): string {
+  const { text } = feature.getProperties();
+
+  return String(text);
+}
+
+// получаем строку с характеристиками шрифта самой Feature
+export function getFeatureFontString(feature: Feature): FeatureFontStringData {
+  const style = feature.getStyle();
+  let textAlign: TextAlignTypes = 'center';
+  let font: string | undefined = undefined;
+  let fontColor: number[] = [20, 20, 20, 1];
+
+  if (style instanceof Style) {
+    font = style.getText()?.getFont();
+    const align = style.getText()?.getTextAlign();
+    const justify = style.getText()?.getJustify();
+
+    if (align && isTextAlignTypes(align)) {
+      textAlign = align;
+    }
+
+    if (justify) {
+      textAlign = 'justify';
+    }
+  }
+
+  if (Array.isArray(style) && style[0] instanceof Style) {
+    const color = style[0].getText()?.getFill()?.getColor();
+    const align = style[0].getText()?.getTextAlign();
+    const justify = style[0].getText()?.getJustify();
+
+    if (color && isNumberArray(color)) {
+      fontColor = color;
+    }
+
+    if (align && isTextAlignTypes(align)) {
+      textAlign = align;
+    }
+
+    if (justify) {
+      textAlign = 'justify';
+    }
+
+    font = style[0].getText()?.getFont();
+  }
+
+  return { font, fontColor, textAlign };
+}
+
+// получаем свойства шрифта из строки
+export function getFeatureFontPropertiesByString(value?: string): Omit<FontProperties, 'fontColor' | 'textAlign'> {
+  return {
+    fontSize: value ? Number(value.match(/-?\d+/g)?.[0]) || 14 : 14,
+    isBold: value ? /\bbold\b/i.test(value) : false,
+    isItalic: value ? /\bitalic\b/i.test(value) : false
+  };
+}
+
+// из RGBA возвращенный из OL делаем HEX. Там всегда массив из 4-х значений
+export function convertFromRGBAToHEX([r, g, b, a]: number[]): string {
+  r = Math.max(0, Math.min(255, r));
+  g = Math.max(0, Math.min(255, g));
+  b = Math.max(0, Math.min(255, b));
+
+  const hexR = ('0' + r.toString(16)).slice(-2);
+  const hexG = ('0' + g.toString(16)).slice(-2);
+  const hexB = ('0' + b.toString(16)).slice(-2);
+
+  if (a === 1) {
+    return `#${hexR}${hexG}${hexB}`;
+  }
+
+  const hexA = Math.round(a * 255);
+  const hexAlpha = ('0' + hexA.toString(16)).slice(-2);
+
+  return `#${hexR}${hexG}${hexB}${hexAlpha}`;
 }

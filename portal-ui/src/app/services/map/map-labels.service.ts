@@ -1,6 +1,7 @@
 import { createElement } from 'react';
 import { createRoot, Root } from 'react-dom/client';
 import { reaction } from 'mobx';
+import { withRegistry } from '@bem-react/di';
 import { bearing, point, toWgs84 } from '@turf/turf';
 import { boundMethod } from 'autobind-decorator';
 import { debounce } from 'lodash';
@@ -23,8 +24,9 @@ import { communicationService } from '../communication.service';
 import { defaultOlProjectionCode, Projection } from '../data/projections/projections.models';
 import { getOlProjection } from '../data/projections/projections.service';
 import { Coord, transformCoord, transformGroup } from '../data/projections/projections.util';
+import { registry } from '../di-registry';
 import { GeometryType, WfsFeature } from '../geoserver/wfs/wfs.models';
-import { isPolygonal } from '../geoserver/wfs/wfs.util';
+import { isLinear, isPolygonal } from '../geoserver/wfs/wfs.util';
 import { notFalsyFilter } from '../util/NotFalsyFilter';
 import { featureToWfsFeature, UnitsOfAreaMeasurement, wfsFeatureToFeature } from '../util/open-layers.util';
 import { sleep } from '../util/sleep';
@@ -38,12 +40,12 @@ import {
   getFeatureArea,
   getFeatureLength,
   getLabelPosition,
-  getLabelStyleOffsets,
   getMiddlePoints,
   getPointsWithAngles,
   getRotationByAzimuth,
   getSelectedFeatureProjection,
   getSelectedOrActiveFeature,
+  getTextStyle,
   transformAnyCoordinates
 } from './map-labels.util';
 import { mapMeasureService } from './map-measure.service';
@@ -132,8 +134,6 @@ class MapLabelsService {
   }
 
   private getDistancesByCoords(coordinates: Coord[], projFrom: Projection, projTo: Projection): Distance[] {
-    // const coords = transformGroup(coordinates, projFrom, projTo);
-
     if (!isCoordinateArray(coordinates)) {
       throw new Error('Указанные координаты не являются полигоном');
     }
@@ -254,7 +254,7 @@ class MapLabelsService {
       const feature = new Feature({
         geometry: new Point(pointCoordinates),
         type: 'label',
-        text: `${value} ${units}`,
+        text: `S = ${value} ${units}`,
         isLabelInPolygon: true
       });
 
@@ -302,7 +302,7 @@ class MapLabelsService {
       const feature = new Feature({
         geometry: new Point(point),
         type: 'label',
-        text: `${value} ${units}`
+        text: `${!!wfsFeature.geometry?.type && isLinear(wfsFeature.geometry?.type) ? 'L' : 'P'} = ${value} ${units}`
       });
 
       feature.setId(uuid());
@@ -634,7 +634,7 @@ class MapLabelsService {
     this.saveToStorages();
   }
 
-  private saveToStorages() {
+  saveToStorages() {
     const olFeatures = [...this.source.getFeatures(), ...this.turningPointsSource.getFeatures()];
     const wfsFeatures: WfsFeature[] = olFeatures.map(featureToWfsFeature);
 
@@ -646,7 +646,7 @@ class MapLabelsService {
     return `mapLabels_${key}_${currentUser.id}_${currentProject.id}`;
   }
 
-  private createStyle(feature: Feature, selected?: boolean): Style[] {
+  createStyle(feature: Feature, selected?: boolean): Style[] {
     if (this.getLabelType(feature) === 'line') {
       return [this.createLineStyle(selected)];
     }
@@ -687,15 +687,9 @@ class MapLabelsService {
   }
 
   private createLabelStyle(feature: Feature, selected?: boolean): Style {
-    const { centred, rotation, isLabelInPolygon, text, position } = feature.getProperties();
+    const properties = feature.getProperties();
 
-    const { offsetX, offsetY } = getLabelStyleOffsets({
-      position,
-      centred,
-      isLabelInPolygon
-    });
-
-    if (typeof text !== 'string') {
+    if (typeof properties.text !== 'string') {
       throw new TypeError('Текст не текст');
     }
 
@@ -707,23 +701,7 @@ class MapLabelsService {
         src: 'data:image/svg+xml,' + encodeURIComponent(svg),
         opacity: selected ? 0.5 : 0
       }),
-      text: new Text({
-        font: `${centred ? '14' : '18'}px sans-serif`,
-        textAlign: 'left',
-        justify: 'left',
-        offsetX,
-        offsetY,
-        text: text,
-        stroke: new Stroke({
-          color: centred ? '#d3d3d3' : '#fff',
-          width: 5
-        }),
-        rotation: rotation && typeof rotation === 'number' ? rotation : 0,
-        fill: new Fill({
-          color: [20, 20, 20, 1]
-        }),
-        padding: [5, 5, 3, 5]
-      })
+      text: getTextStyle(properties)
     });
   }
 
@@ -805,7 +783,8 @@ class MapLabelsService {
     const toolboxNode = document.createElement('div');
     toolboxNode.className = 'MapLabelToolboxRoot';
     this.currentToolboxRoot = createRoot(toolboxNode);
-    const reactElement = createElement(MapLabelToolbox, {
+    const MapLabelToolboxWithRegistry = withRegistry(registry)(MapLabelToolbox);
+    const reactElement = createElement(MapLabelToolboxWithRegistry, {
       feature,
       labelType: this.getLabelType(feature),
       onEdit: this.editLabel,
@@ -824,7 +803,7 @@ class MapLabelsService {
     mapService.map.addOverlay(this.currentOverlay);
   }
 
-  private removeLabelToolbox() {
+  removeLabelToolbox() {
     this.renderLabelToolboxDebounced.cancel();
     if (this.currentOverlay) {
       this.currentToolboxRoot?.unmount();
