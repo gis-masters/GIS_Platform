@@ -6,7 +6,7 @@ import java.util.*;
 
 public class ResponseWithReport {
 
-    private Map<UUID, VerifyEcpResponse> ecpReport;
+    private Map<UUID, List<VerifyEcpResponse>> ecpReport;
     private Map<String, Object> content;
 
     public ResponseWithReport() {
@@ -14,16 +14,16 @@ public class ResponseWithReport {
         this.content = new HashMap<>();
     }
 
-    public ResponseWithReport(Map<UUID, VerifyEcpResponse> ecpReport, Map<String, Object> content) {
+    public ResponseWithReport(Map<UUID, List<VerifyEcpResponse>> ecpReport, Map<String, Object> content) {
         this.ecpReport = ecpReport;
         this.content = content;
     }
 
-    public Map<UUID, VerifyEcpResponse> getEcpReport() {
+    public Map<UUID, List<VerifyEcpResponse>> getEcpReport() {
         return ecpReport;
     }
 
-    public void setEcpReport(Map<UUID, VerifyEcpResponse> ecpReport) {
+    public void setEcpReport(Map<UUID, List<VerifyEcpResponse>> ecpReport) {
         this.ecpReport = ecpReport;
     }
 

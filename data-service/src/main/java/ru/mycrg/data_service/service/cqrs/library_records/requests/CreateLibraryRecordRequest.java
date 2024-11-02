@@ -14,6 +14,7 @@ import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.geo_json.Feature;
 import ru.mycrg.mediator.IRequest;
 
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -75,7 +76,7 @@ public class CreateLibraryRecordRequest implements IRequest<ResponseWithReport>,
     }
 
     @Override
-    public void addEcpReport(Map<UUID, VerifyEcpResponse> ecpReport) {
+    public void addEcpReport(Map<UUID, List<VerifyEcpResponse>> ecpReport) {
         this.responseWithReport.setEcpReport(ecpReport);
     }
 }

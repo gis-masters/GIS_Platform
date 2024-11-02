@@ -6,6 +6,7 @@ import ru.mycrg.data_service.dto.record.ResponseWithReport;
 import ru.mycrg.data_service.service.resources.IQualifiable;
 import ru.mycrg.data_service.service.schemas.ISchemable;
 
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -19,5 +20,5 @@ public interface IUpdateFilesRelation extends ISchemable, IQualifiable {
 
     void setOldRecord(IRecord oldRecord);
 
-    void addEcpReport(Map<UUID, VerifyEcpResponse> ecpReport);
+    void addEcpReport(Map<UUID, List<VerifyEcpResponse>> ecpReport);
 }

@@ -73,10 +73,10 @@ public class FileService {
         this.authenticationFacade = authenticationFacade;
     }
 
-    public Map<UUID, VerifyEcpResponse> relateFiles(SchemaDto schema,
-                                                    ResourceQualifier qualifier,
-                                                    IRecord newRecord) {
-        Map<UUID, VerifyEcpResponse> result = new HashMap<>();
+    public Map<UUID, List<VerifyEcpResponse>> relateFiles(SchemaDto schema,
+                                                          ResourceQualifier qualifier,
+                                                          IRecord newRecord) {
+        Map<UUID, List<VerifyEcpResponse>> result = new HashMap<>();
 
         try {
             for (String fieldName: getFileFieldNames(schema)) {
@@ -90,7 +90,7 @@ public class FileService {
                 allFileIds.stream()
                           .filter(fileId -> !allFoundFilesIds.contains(fileId))
                           .forEach(fileId -> {
-                              result.put(fileId, verificationFailed("Файл не найден"));
+                              result.put(fileId, List.of(verificationFailed("Файл не найден")));
                           });
 
                 ResourceQualifier fQualifier = fieldQualifier(qualifier, newRecord.getId(), fieldName);
@@ -106,7 +106,7 @@ public class FileService {
                                   file.setPath(resultPath);
                               });
 
-                Map<UUID, VerifyEcpResponse> signatureReport = addSignature(fQualifier, allFoundsFiles, schema);
+                Map<UUID, List<VerifyEcpResponse>> signatureReport = addSignature(fQualifier, allFoundsFiles, schema);
                 result.putAll(signatureReport);
 
                 // Запишем информацию о принадлежности файлов к их ресурсу: документу или фиче.
@@ -125,11 +125,11 @@ public class FileService {
         return result;
     }
 
-    public Map<UUID, VerifyEcpResponse> relateFilesByUpdate(SchemaDto schema,
-                                                            ResourceQualifier qualifier,
-                                                            IRecord newRecord,
-                                                            IRecord oldRecord) {
-        Map<UUID, VerifyEcpResponse> result = new HashMap<>();
+    public Map<UUID, List<VerifyEcpResponse>> relateFilesByUpdate(SchemaDto schema,
+                                                                  ResourceQualifier qualifier,
+                                                                  IRecord newRecord,
+                                                                  IRecord oldRecord) {
+        Map<UUID, List<VerifyEcpResponse>> result = new HashMap<>();
 
         try {
             // Из схемы достаем названия полей, в которых хранится информация о файлах ValueType.FILE
@@ -176,7 +176,7 @@ public class FileService {
                 Set<UUID> allFoundFilesIds = allFoundsFiles.stream().map(File::getId).collect(Collectors.toSet());
                 for (UUID fileId: allFileIds) {
                     if (!allFoundFilesIds.contains(fileId)) {
-                        result.put(fileId, verificationFailed("Файл не найден"));
+                        result.put(fileId, List.of(verificationFailed("Файл не найден")));
                     }
                 }
 
@@ -195,7 +195,7 @@ public class FileService {
                         });
 
                 // ПОДПИСЫВАНИЕ
-                Map<UUID, VerifyEcpResponse> signatureReport = addSignature(fQualifier, allFoundsFiles, schema);
+                Map<UUID, List<VerifyEcpResponse>> signatureReport = addSignature(fQualifier, allFoundsFiles, schema);
                 result.putAll(signatureReport);
 
                 // Запишем информацию о принадлежности файлов к их ресурсу: документу или фиче.
@@ -242,18 +242,19 @@ public class FileService {
         return processFiles(allFiles, null);
     }
 
-    private Map<UUID, VerifyEcpResponse> addSignature(ResourceQualifier qualifier, List<File> allFiles,
-                                                      @NotNull SchemaDto schema) {
-        Map<UUID, VerifyEcpResponse> report = new HashMap<>();
+    private Map<UUID, List<VerifyEcpResponse>> addSignature(ResourceQualifier qualifier, List<File> allFiles,
+                                                            @NotNull SchemaDto schema) {
+        Map<UUID, List<VerifyEcpResponse>> report = new HashMap<>();
         List<File> baseFiles = processFiles(allFiles, report);
         // После всего обновляем запись только базовыми файлами
         log.debug("Содержимое ResourceQualifier: {}", qualifier);
 
         updateRecord(qualifier, baseFiles, schema);
+
         return report;
     }
 
-    private List<File> processFiles(List<File> allFiles, Map<UUID, VerifyEcpResponse> report) {
+    private List<File> processFiles(List<File> allFiles, Map<UUID, List<VerifyEcpResponse>> report) {
         List<File> baseFiles = allFiles.stream().filter(FileService::isNotEcp).collect(Collectors.toList());
         log.debug("Базовые файлы: {}", baseFiles);
 
@@ -267,22 +268,22 @@ public class FileService {
         return baseFiles;
     }
 
-    private void processEcpFile(Optional<File> oBaseFile, File ecpFile, Map<UUID, VerifyEcpResponse> report) {
+    private void processEcpFile(Optional<File> oBaseFile, File ecpFile, Map<UUID, List<VerifyEcpResponse>> report) {
         if (oBaseFile.isPresent()) { // Для ЭЦП нашли базовый файл... подписываем и удаляем ЭЦП
             File baseFile = oBaseFile.get();
             byte[] ecpAsBytes = getEcpAsBytes(ecpFile);
-            VerifyEcpResponse verifyEcpResponse = ecpVerifier.verify(baseFile.getPath(), ecpAsBytes);
+            List<VerifyEcpResponse> result = ecpVerifier.verify(baseFile.getPath(), ecpAsBytes);
 
-            if (verifyEcpResponse.isVerified()) {
+            if (isVerified(result)) {
                 baseFile.setEcp(ecpAsBytes);
                 log.debug("Файл: '{}' подписан ЭЦП: '{}'", baseFile.getId(), ecpFile.getId());
             } else {
                 log.debug("Файл: '{}' НЕ подписан. ЭЦП: '{}' не прошла проверку: {}", baseFile.getId(), ecpFile.getId(),
-                          verifyEcpResponse);
+                          report);
             }
 
             if (report != null) {
-                report.put(ecpFile.getId(), verifyEcpResponse);
+                report.put(ecpFile.getId(), result);
             }
 
             // Удалим ЭЦП файл
@@ -293,12 +294,16 @@ public class FileService {
 
             // Добавим ЭЦП в отчет
             if (report != null) {
-                report.put(ecpFile.getId(), verificationFailed("Не найден базовый файл"));
+                report.put(ecpFile.getId(), List.of(verificationFailed("Не найден базовый файл")));
             }
 
             // Удалим ЭЦП файл
             deleteEcpFile(ecpFile);
         }
+    }
+
+    private boolean isVerified(List<VerifyEcpResponse> verifyEcpResponses) {
+        return verifyEcpResponses.stream().allMatch(VerifyEcpResponse::isVerified);
     }
 
     private void deleteEcpFile(File ecpFile) {

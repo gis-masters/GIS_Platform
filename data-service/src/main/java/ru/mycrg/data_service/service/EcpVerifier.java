@@ -1,5 +1,6 @@
 package ru.mycrg.data_service.service;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import okhttp3.*;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
@@ -13,6 +14,7 @@ import ru.mycrg.http_client.handlers.BaseRequestHandler;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.List;
 
 import static ru.mycrg.common_contracts.generated.ecp.VerifyEcpResponse.verificationFailed;
 
@@ -30,7 +32,7 @@ public class EcpVerifier {
     }
 
     @NotNull
-    public VerifyEcpResponse verify(String path, byte[] ecpAsBytes) {
+    public List<VerifyEcpResponse> verify(String path, byte[] ecpAsBytes) {
         try {
             RequestBody ecp = RequestBody.create(MediaType.parse("application/octet-stream"), ecpAsBytes);
             RequestBody payload = new MultipartBody.Builder()
@@ -44,19 +46,21 @@ public class EcpVerifier {
                     .post(payload)
                     .build();
 
-            ResponseModel<VerifyEcpResponse> responseModel = httpClient.handleRequest(request, VerifyEcpResponse.class);
+            ResponseModel<List<VerifyEcpResponse>> responseModel = httpClient.handleRequest(request,
+                                                                                            new TypeReference<>() {
+                                                                                            });
             if (responseModel.isSuccessful()) {
                 return responseModel.getBody();
             } else {
                 log.debug("Не удалось проверить подпись. Неожиданный ответ от сервиса: {}", responseModel);
 
-                return verificationFailed("Сервис проверки подписи не доступен");
+                return List.of(verificationFailed("Сервис проверки подписи не доступен"));
             }
         } catch (Exception e) {
             String msg = "Не удалось проверить подпись";
             log.error("{} => {}", msg, e.getMessage(), e);
 
-            return verificationFailed(msg);
+            return List.of(verificationFailed(msg));
         }
     }
 }

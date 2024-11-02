@@ -15,6 +15,7 @@ import ru.mycrg.geo_json.Feature;
 import ru.mycrg.mediator.IRequest;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -91,7 +92,7 @@ public class CreateTableRecordRequest implements IRequest<Feature>, Auditable, I
     }
 
     @Override
-    public void addEcpReport(Map<UUID, VerifyEcpResponse> ecpReport) {
+    public void addEcpReport(Map<UUID, List<VerifyEcpResponse>> ecpReport) {
         this.responseWithReport.setEcpReport(ecpReport);
     }
 

@@ -21,7 +21,7 @@ class FilesClient extends Client {
     return `${this.getFilesUrl()}/${id}`;
   }
 
-  getEcpInfoUrl(id: string): string {
+  verifyEcpUrl(id: string): string {
     return `${this.getFileUrl(id)}/verify`;
   }
 
@@ -64,8 +64,8 @@ class FilesClient extends Client {
     return http.get<string>(this.getFileDownloadUrl(id));
   }
 
-  async getEcpInfo(id: string): Promise<VerifyEcpResponse> {
-    return http.get<VerifyEcpResponse>(this.getEcpInfoUrl(id));
+  async verifyEcp(id: string): Promise<VerifyEcpResponse[]> {
+    return http.get<VerifyEcpResponse[]>(this.verifyEcpUrl(id));
   }
 
   async getFileConnections(fileId: string): Promise<FileConnection[]> {

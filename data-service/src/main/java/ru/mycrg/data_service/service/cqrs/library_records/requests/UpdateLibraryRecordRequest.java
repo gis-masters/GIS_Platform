@@ -12,6 +12,7 @@ import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.mediator.IRequest;
 
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -80,7 +81,7 @@ public class UpdateLibraryRecordRequest implements IRequest<ResponseWithReport>,
     }
 
     @Override
-    public void addEcpReport(Map<UUID, VerifyEcpResponse> ecpReport) {
+    public void addEcpReport(Map<UUID, List<VerifyEcpResponse>> ecpReport) {
         this.responseWithReport.setEcpReport(ecpReport);
     }
 }

@@ -15,8 +15,8 @@ export async function getFileInfo(id: string): Promise<FileInfo> {
   return await filesClient.getFileInfo(id);
 }
 
-export async function getEcpInfo(id: string): Promise<VerifyEcpResponse> {
-  return await filesClient.getEcpInfo(id);
+export async function verifyEcp(id: string): Promise<VerifyEcpResponse[]> {
+  return await filesClient.verifyEcp(id);
 }
 
 export async function getFileConnections(fileId: string): Promise<FileConnection[]> {

@@ -7,6 +7,7 @@ import ru.mycrg.data_service.service.resources.IQualifiable;
 import ru.mycrg.data_service.service.schemas.ISchemable;
 import ru.mycrg.geo_json.Feature;
 
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -22,5 +23,5 @@ public interface ICreateFilesRelation extends ISchemable, IQualifiable {
 
     ResponseWithReport getResponseWithReport();
 
-    void addEcpReport(Map<UUID, VerifyEcpResponse> ecpReport);
+    void addEcpReport(Map<UUID, List<VerifyEcpResponse>> ecpReport);
 }

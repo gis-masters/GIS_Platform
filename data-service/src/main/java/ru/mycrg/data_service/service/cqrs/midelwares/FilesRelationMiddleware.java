@@ -12,6 +12,7 @@ import ru.mycrg.data_service.service.schemas.ISchemable;
 import ru.mycrg.mediator.IRequest;
 import ru.mycrg.mediator.IRequestMiddleware;
 
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -44,7 +45,7 @@ public class FilesRelationMiddleware implements IRequestMiddleware {
         if (request instanceof ICreateFilesRelation) {
             ICreateFilesRelation createFilesRelation = (ICreateFilesRelation) request;
 
-            Map<UUID, VerifyEcpResponse> ecpReport = fileService
+            Map<UUID, List<VerifyEcpResponse>> ecpReport = fileService
                     .relateFiles(createFilesRelation.getSchema(),
                                  createFilesRelation.getQualifier(),
                                  createFilesRelation.getRecord());
@@ -53,7 +54,7 @@ public class FilesRelationMiddleware implements IRequestMiddleware {
         } else if (request instanceof IUpdateFilesRelation) {
             IUpdateFilesRelation updateFilesRelation = (IUpdateFilesRelation) request;
 
-            Map<UUID, VerifyEcpResponse> ecpReport = fileService
+            Map<UUID, List<VerifyEcpResponse>> ecpReport = fileService
                     .relateFilesByUpdate(updateFilesRelation.getSchema(),
                                          updateFilesRelation.getQualifier(),
                                          updateFilesRelation.getNewRecord(),

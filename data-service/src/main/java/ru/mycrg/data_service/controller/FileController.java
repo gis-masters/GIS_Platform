@@ -119,7 +119,7 @@ public class FileController extends BaseController {
 
     @PreAuthorize(HAS_ANY_AUTHORITY)
     @GetMapping("/files/{id}/verify")
-    public ResponseEntity<VerifyEcpResponse> verifyFile(@PathVariable UUID id) {
+    public ResponseEntity<List<VerifyEcpResponse>> verifyFile(@PathVariable UUID id) {
         File file = fileRepository.findById(id)
                                   .orElseThrow(() -> new NotFoundException(id));
         if (!authenticationFacade.getLogin().equalsIgnoreCase(file.getCreatedBy())) {
@@ -130,9 +130,9 @@ public class FileController extends BaseController {
             throw new BadRequestException("Файл: '" + file.getTitle() + "' не подписан");
         }
 
-        VerifyEcpResponse verifyEcpResponse = ecpVerifier.verify(file.getPath(), file.getEcp());
+        List<VerifyEcpResponse> result = ecpVerifier.verify(file.getPath(), file.getEcp());
 
-        return ResponseEntity.ok(verifyEcpResponse);
+        return ResponseEntity.ok(result);
     }
 
     @PreAuthorize(HAS_ANY_AUTHORITY)

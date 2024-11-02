@@ -17,11 +17,11 @@ import { cn } from '@bem-react/classname';
 
 import { VerifyEcpResponse } from '../../../../server-types/common-contracts';
 import { filesClient } from '../../../services/data/files/files.client';
-import { getEcpInfo } from '../../../services/data/files/files.service';
+import { verifyEcp } from '../../../services/data/files/files.service';
+import { services } from '../../../services/services';
 import { IconButton } from '../../IconButton/IconButton';
 import { Link } from '../../Link/Link';
 import { MenuIconButton } from '../../MenuIconButton/MenuIconButton';
-import { Toast } from '../../Toast/Toast';
 
 interface FilesSignatureProps {
   id: string;
@@ -31,23 +31,23 @@ interface FilesSignatureProps {
 
 type FilesSignatureState = {
   isInfoOpen: boolean;
-  ecp: VerifyEcpResponse | null;
+  ecps: VerifyEcpResponse[];
   setInfoOpen(isOpen: boolean): void;
-  setEcp(ecp: VerifyEcpResponse): void;
+  setVerifyEcpResponse(ecpResponse: VerifyEcpResponse[]): void;
 };
 
 const cnFiles = cn('Files');
 
 const FilesSignatureFC: FC<FilesSignatureProps> = observer(({ id, title, signed }) => {
-  const { isInfoOpen, ecp, setInfoOpen, setEcp } = useLocalObservable(
+  const { isInfoOpen, ecps, setInfoOpen, setVerifyEcpResponse } = useLocalObservable(
     (): FilesSignatureState => ({
       isInfoOpen: false,
       setInfoOpen(this: FilesSignatureState, isOpen: boolean) {
         this.isInfoOpen = isOpen;
       },
-      ecp: null,
-      setEcp(this: FilesSignatureState, ecp: VerifyEcpResponse) {
-        this.ecp = ecp;
+      ecps: [],
+      setVerifyEcpResponse(this: FilesSignatureState, ecps: VerifyEcpResponse[]) {
+        this.ecps = ecps;
       }
     })
   );
@@ -58,12 +58,12 @@ const FilesSignatureFC: FC<FilesSignatureProps> = observer(({ id, title, signed 
     setInfoOpen(true);
 
     try {
-      setEcp(await getEcpInfo(id));
+      setVerifyEcpResponse(await verifyEcp(id));
     } catch {
       setInfoOpen(false);
-      Toast.warn({ message: 'Ошибка получения информации об электронно цифровой подписи' });
+      services.logger.warn(`Не удалось выполнить проверку электронно цифровой подписи для файла: ${id}`);
     }
-  }, [id, setEcp, setInfoOpen]);
+  }, [id, setVerifyEcpResponse, setInfoOpen]);
 
   const closeSignerInfo = useCallback(() => {
     setInfoOpen(false);
@@ -99,21 +99,25 @@ const FilesSignatureFC: FC<FilesSignatureProps> = observer(({ id, title, signed 
           onClose={closeSignerInfo}
         >
           <Card sx={{ width: 300, minHeight: 80 }}>
-            {!!ecp && (
-              <CardHeader
-                avatar={<WorkspacePremiumOutlined color='success' fontSize='large' />}
-                title={`Подписано: ${ecp.signer.split(',')[0]}`}
-                subheader={
-                  <Typography color={'success'}>{`Подпись${ecp?.verified ? '' : ' не'} подтверждена`}</Typography>
-                }
-                action={
-                  <IconButton onClick={closeSignerInfo}>
-                    <CloseIcon />
-                  </IconButton>
-                }
-              />
-            )}
-            {!ecp && (
+            {ecps.length &&
+              ecps.map((ecp, i) => (
+                <CardHeader
+                  key={i}
+                  avatar={<WorkspacePremiumOutlined color='success' fontSize='large' />}
+                  title={`Подписано: ${ecp.signer.split(',')[0]}`}
+                  subheader={
+                    <Typography color={'success'}>{`Подпись${ecp?.verified ? '' : ' не'} подтверждена`}</Typography>
+                  }
+                  action={
+                    i === 0 && (
+                      <IconButton onClick={closeSignerInfo}>
+                        <CloseIcon />
+                      </IconButton>
+                    )
+                  }
+                />
+              ))}
+            {!ecps.length && (
               <CardContent sx={{ textAlign: 'center' }}>
                 <CircularProgress size={50} disableShrink />
               </CardContent>
