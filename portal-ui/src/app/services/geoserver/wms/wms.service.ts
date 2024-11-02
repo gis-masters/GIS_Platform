@@ -170,7 +170,15 @@ export async function testLayerByWms(layer: CrgLayer): Promise<{ ok: boolean; er
     url.searchParams.set('TRANSPARENT', 'true');
     url.searchParams.set('LAYERS', layer.complexName);
     url.searchParams.set('CRS', defaultOlProjectionCode);
-    url.searchParams.set('STYLES', 'generic');
+
+    if (layer.styleName && layer.styleName !== CUSTOM_STYLE_NAME) {
+      url.searchParams.set('STYLES', layer.styleName);
+    }
+
+    if (layer.styleName === CUSTOM_STYLE_NAME && layer.style) {
+      url.searchParams.set('SLD_BODY', layer.style);
+    }
+
     url.searchParams.set('WIDTH', '300');
     url.searchParams.set('HEIGHT', '300');
     url.searchParams.set('BBOX', '3778140.58549765,5300522.190056069,3778162.97915828,5300544.5837167');
