@@ -14,10 +14,10 @@ Feature: Скачивание архивом групп файлов
       | files                                                                  | mainFile         | expectedSize |
       | HeritageArea.prj, HeritageArea.dbf, HeritageArea.shp, HeritageArea.shx | HeritageArea.shp | 266567       |
       | someTab.dat, someTab.id, someTab.map, someTab.tab                      | someTab.tab      | 91888        |
-      | AdmBorder.mid, AdmBorder.mif                                           | AdmBorder.mid    | 10210        |
+      | AdmBorder.MID, AdmBorder.mif                                           | AdmBorder.MID    | 10207        |
 
   Scenario: При скачивании архивом и передаче НЕ главного файла группы - сервер возвращает ошибку
-    Given Загружены файлы "AdmBorder.mid, AdmBorder.mif"
+    Given Загружены файлы "AdmBorder.MID, AdmBorder.mif"
     *     В библиотеке по-умолчанию существует запись
     *     Загруженные файлы подвязаны к текущей записи
     When  я скачиваю группу файлов архивом, передав не корректный идентификатор файла: "AdmBorder.mif"
@@ -25,12 +25,12 @@ Feature: Скачивание архивом групп файлов
 
   Scenario: Скачивание архивом группы файлов не ломается после публикации
     Given Существует проект "для размещения MID"
-    *     Загружены файлы "AdmBorder.mid, AdmBorder.mif"
+    *     Загружены файлы "AdmBorder.MID, AdmBorder.mif"
     *     В библиотеке по-умолчанию существует запись
     *     Загруженные файлы подвязаны к текущей записи
-    *     Файл "AdmBorder.mid" опубликован в текущем проекте
-    When  я скачиваю группу файлов архивом, передав главный файл группы: "AdmBorder.mid"
-    Then  архив успешно скачан в полном объеме: 10210 байт
+    *     Файл "AdmBorder.MID" опубликован в текущем проекте
+    When  я скачиваю группу файлов архивом, передав главный файл группы: "AdmBorder.MID"
+    Then  архив успешно скачан в полном объеме: 10207 байт
 
   Scenario: Сервер блокирует скачивание, если группа файлов не полная
 

@@ -1,5 +1,7 @@
 package ru.mycrg.data_service.service.cqrs.files.handlers;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 import ru.mycrg.auth_facade.IAuthenticationFacade;
@@ -18,6 +20,8 @@ import static ru.mycrg.data_service.service.storage.FileStorageUtil.generateFile
 
 @Component
 public class CreateFileHandler implements IRequestHandler<CreateFileRequest, List<FileProjection>> {
+
+    private static final Logger log = LoggerFactory.getLogger(CreateFileHandler.class);
 
     private final FileRepository fileRepository;
     private final FileStorageService fileStorageService;
@@ -48,6 +52,8 @@ public class CreateFileHandler implements IRequestHandler<CreateFileRequest, Lis
                 File savedEntity = fileRepository.save(entity);
 
                 fileProjections.add(new FileProjection(savedEntity));
+            } else {
+                log.debug("Файл пуст");
             }
         }
 

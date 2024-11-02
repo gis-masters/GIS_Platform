@@ -5,6 +5,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -105,6 +106,12 @@ public class StringUtil {
 
     public static String removePunctuation(String input) {
         return input.replaceAll("\\p{Punct}", "");
+    }
+
+    public static Set<String> setToLowerCase(Set<String> input) {
+        return input.stream()
+                    .map(String::toLowerCase)
+                    .collect(Collectors.toSet());
     }
 
     private static String joinAndQuoteMark(Collection<String> ids,

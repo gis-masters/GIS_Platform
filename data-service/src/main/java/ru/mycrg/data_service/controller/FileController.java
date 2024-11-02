@@ -58,6 +58,7 @@ import static org.springframework.http.HttpStatus.CREATED;
 import static ru.mycrg.auth_service_contract.Authorities.HAS_ANY_AUTHORITY;
 import static ru.mycrg.data_service.service.files.FileService.fileGroups;
 import static ru.mycrg.data_service.util.DetailedLogger.logError;
+import static ru.mycrg.data_service.util.StringUtil.setToLowerCase;
 
 @RestController
 public class FileController extends BaseController {
@@ -395,15 +396,14 @@ public class FileController extends BaseController {
     }
 
     private void throwIfGroupNotFull(Set<String> required, List<File> files) {
-        log.debug("Found files: {}", files);
-
+        Set<String> requiredExt = setToLowerCase(required);
         Set<String> foundExtensions = files.stream()
-                                           .map(file -> FilenameUtils.getExtension(file.getTitle()))
+                                           .map(file -> FilenameUtils.getExtension(file.getTitle()).toLowerCase())
                                            .collect(Collectors.toSet());
 
-        required.forEach(requiredExt -> {
-            if (!foundExtensions.contains(requiredExt)) {
-                throw new BadRequestException("Группа файлов не полная");
+        requiredExt.forEach(ext -> {
+            if (!foundExtensions.contains(ext)) {
+                throw new BadRequestException("Группа файлов не полная. Не найден: " + ext);
             }
         });
     }

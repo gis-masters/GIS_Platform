@@ -207,7 +207,7 @@ public class ProcessesStepDefinitions extends BaseStepsDefinitions {
     private static FileDescriptionModel getFile(String extension) {
         return currentFiles
                 .stream()
-                .filter(file -> file.getTitle().contains(extension))
+                .filter(file -> file.getTitle().split("\\.")[1].toLowerCase().contains(extension.toLowerCase()))
                 .findFirst()
                 .orElseThrow(() -> new IllegalStateException("Нет файла с расширением " + extension));
     }
