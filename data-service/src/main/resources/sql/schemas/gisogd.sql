@@ -418,6 +418,10 @@ INSERT INTO data.schemas (name, class_rule)
 SELECT 'smev_message_meta_schema',
  '{}'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'smev_message_meta_schema');
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'dl_data_section_delivery_data',
+ '{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'dl_data_section_delivery_data');
 
 
 UPDATE data.schemas 
@@ -46304,6 +46308,7 @@ SET class_rule =
   "geometryType": "MultiPolygon"
 }'
 WHERE name = 'dl_data_section1';
+
 UPDATE data.schemas 
 SET class_rule =
        '{
@@ -46391,3 +46396,422 @@ SET class_rule =
     ]
 }'
 WHERE name = 'smev_message_meta_schema';
+
+UPDATE data.schemas 
+SET class_rule =
+       '{
+  "tags": [
+    "system",
+    "Библиотека",
+    "ГИСОГД"
+  ],
+  "name": "dl_data_section_delivery_data",
+  "title": "19. Реестр предоставленных сведений",
+  "tableName": "dl_data_section_delivery_data",
+  "originName": "dl_data_section_delivery_data",
+  "properties": [
+    {
+      "name": "id",
+      "title": "Идентификатор",
+      "required": true,
+      "valueType": "INT"
+    },
+    {
+      "name": "is_folder",
+      "title": "Папка/Документ",
+      "required": true,
+      "valueType": "BOOLEAN"
+    },
+    {
+      "name": "path",
+      "title": "Полный путь, отражающий иерархию объектов",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "content_type_id",
+      "title": "Идентификатор контент типа",
+      "valueType": "CHOICE",
+      "hidden": true,
+      "maxLength": 50,
+      "enumerations": [
+        {
+          "value": "doc",
+          "title": "Документ"
+        },
+        {
+          "value": "folder",
+          "title": "Папка"
+        }
+      ]
+    },
+    {
+      "name": "title",
+      "title": "Наименование",
+      "valueType": "STRING",
+      "required": true
+    },
+    {
+      "name": "fias",
+      "title": "Населённый пункт",
+      "required": true,
+      "valueType": "FIAS",
+      "searchMode": "oktmo"
+    },
+    {
+      "name": "fias__oktmo",
+      "title": "ОКТМО",
+      "hidden": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "fias__address",
+      "title": "Адрес",
+      "hidden": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "fias__id",
+      "title": "id",
+      "hidden": true,
+      "valueType": "INT"
+    },
+    {
+      "name": "number",
+      "title": "Номер записи",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "delivery_status",
+      "title": "Статус обработки запроса",
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Внесено в реестр",
+          "value": "0D.1"
+        },
+        {
+          "title": "Определен размер платы",
+          "value": "0D.2"
+        },
+        {
+          "title": "Отказ в предоставлении данных",
+          "value": "0D.3"
+        },
+        {
+          "title": "Подготовка данных",
+          "value": "0D.4"
+        },
+        {
+          "title": "Данные предоставлены",
+          "value": "0D.5"
+        }
+      ]
+    },
+    {
+      "name": "date",
+      "title": "Дата поступления запроса на предоставление данных",
+      "required": true,
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "delivery_date",
+      "title": "Дата предоставления данных",
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "person_name",
+      "title": "Информация о лице, направившим запрос на предоставление данных",
+      "description": "Заполняется наименованием юридического лица или указывается фамилия, имя, отчество (последнее при наличии) для физического лица",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "request_description",
+      "title": "Описание запрашиваемых данных",
+      "description": "Реквизиты необходимых сведений и (или) кадастровый номер(а) земельного(ых) участка(ов), и (или) адрес(а) объектов недвижимости, и (или) сведения о границах территории, перечень координат характерных точек этих границ, заполняется в случае получения описания запрашиваемых сведений в электронном виде, в случае получения описания на бумажном носителе, в File загружается скан-образ",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "delivery_type",
+      "title": "Способ предоставления данных из информационной системы",
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Многофункциональный центр (МФЦ)",
+          "value": "0G.1"
+        },
+        {
+          "title": "Портал государственных услуг (ПГУ)",
+          "value": "0G.2"
+        },
+        {
+          "title": "Межведомственный запрос",
+          "value": "0G.3"
+        }
+      ]
+    },
+    {
+      "name": "request_type",
+      "title": "Способ направления запроса на предоставление данных",
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Лично",
+          "value": "0B.1"
+        },
+        {
+          "title": "Почтовое отправление",
+          "value": "0B.2"
+        },
+        {
+          "title": "Электронная почта",
+          "value": "0B.3"
+        },
+        {
+          "title": "Многофункциональный центр (МФЦ)",
+          "value": "0B.4"
+        },
+        {
+          "title": "Единая система межведомственного электронного взаимодействия (ЕСМЭВ)",
+          "value": "0B.5"
+        },
+        {
+          "title": "Портал государственных услуг (ПГУ)",
+          "value": "0B.6"
+        },
+        {
+          "title": "Иные",
+          "value": "0B.7"
+        }
+      ]
+    },
+    {
+      "name": "data_type",
+      "title": "Форма данных",
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Бумажная форма",
+          "value": "0E.2"
+        },
+        {
+          "title": "Электронная форма",
+          "value": "0E.1"
+        }
+      ]
+    },
+    {
+      "name": "data_delivery_type",
+      "title": "Формат предоставления данных",
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Сведения в виде справки из информационной системы",
+          "value": "0F.1"
+        },
+        {
+          "title": "Копия документов, материалов",
+          "value": "0F.2"
+        },
+        {
+          "title": "Копия материалов и результатов инженерных изысканий",
+          "value": "0F.3"
+        }
+      ]
+    },
+    {
+      "name": "amount_pay",
+      "title": "Сумма к оплате",
+      "valueType": "INT"
+    },
+    {
+      "name": "invoice_date",
+      "title": "Дата выставления счета",
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "paid_amount",
+      "title": "Оплаченная сумма",
+      "valueType": "INT"
+    },
+    {
+      "name": "paid_date",
+      "title": "Дата оплаты",
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "user_name",
+      "title": "ФИО",
+      "description": "Фамилия, имя, отчество (последнее при наличии) уполномоченного лица, органа, осуществляющего ведение информационной системы, или наименование автоматического сервиса программных средств информационной системы, обработавшего запрос на предоставление данных",
+      "required": true,
+      "valueType": "STRING"
+    },
+    {
+      "name": "file",
+      "title": "Приложенные файлы",
+      "valueType": "FILE",
+      "multiple": true,
+      "maxDocuments": 10
+    },
+    {
+      "name": "relations",
+      "title": "Связанные документы",
+      "valueType": "DOCUMENT",
+      "multiple": true,
+      "libraries": [
+        "dl_data_section13"
+      ],
+      "maxDocuments": 10
+    },
+    {
+      "name": "created_by",
+      "title": "Создатель",
+      "readOnly": true,
+      "maxLength": 50,
+      "valueType": "STRING"
+    },
+    {
+      "name": "note",
+      "title": "Примечание",
+      "display": "multiline",
+      "valueType": "STRING"
+    },
+    {
+      "name": "created_at",
+      "title": "Дата и время создания (отправки в очередь либо чтения из очереди)",
+      "valueType": "DATETIME"
+    }
+  ],
+  "contentTypes": [
+    {
+      "id": "doc",
+      "icon": "DOCUMENT",
+      "type": "DOCUMENT",
+      "title": "Документ",
+      "attributes": [
+        {
+          "name": "id",
+          "hidden": true
+        },
+        {
+          "name": "is_folder",
+          "hidden": true
+        },
+        {
+          "name": "path",
+          "hidden": true
+        },
+        {
+          "name": "title"
+        },
+        {
+          "name": "fias"
+        },
+        {
+          "name": "fias__oktmo",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__address",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__id",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "number"
+        },
+        {
+          "name": "delivery_status"
+        },
+        {
+          "name": "date"
+        },
+        {
+          "name": "delivery_date"
+        },
+        {
+          "name": "person_name"
+        },
+        {
+          "name": "request_description"
+        },
+        {
+          "name": "delivery_type"
+        },
+        {
+          "name": "request_type"
+        },
+        {
+          "name": "data_type"
+        },
+        {
+          "name": "data_delivery_type"
+        },
+        {
+          "name": "amount_pay"
+        },
+        {
+          "name": "invoice_date"
+        },
+        {
+          "name": "paid_amount"
+        },
+        {
+          "name": "paid_date"
+        },
+        {
+          "name": "user_name"
+        },
+        {
+          "name": "file"
+        },
+        {
+          "name": "relations"
+        },
+        {
+          "name": "created_by"
+        },
+        {
+          "name": "note"
+        }
+      ]
+    },
+    {
+      "id": "folder_v1",
+      "icon": "FOLDER_CREATE",
+      "type": "FOLDER",
+      "title": "Папка",
+      "attributes": [
+        {
+          "name": "title"
+        },
+        {
+          "name": "fias"
+        },
+        {
+          "name": "fias__oktmo"
+        },
+        {
+          "name": "fias__address"
+        },
+        {
+          "name": "fias__id"
+        },
+        {
+          "name": "note"
+        }
+      ]
+    }
+  ]
+}'
+WHERE name = 'dl_data_section_delivery_data';
