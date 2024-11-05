@@ -75,6 +75,7 @@ const FilesSignFC: FC<FilesSignatureProps> = observer(
 
     const handleCloseClick = useCallback(() => {
       setDialogOpen(false);
+      setLoading(false);
     }, [setDialogOpen]);
 
     const handleSelectClick = useCallback(
@@ -131,6 +132,7 @@ const FilesSignFC: FC<FilesSignatureProps> = observer(
         }
 
         setDialogOpen(false);
+        setLoading(false);
       },
       [fileBlob, document, propertyName, title, updateFileInfo]
     );
@@ -141,27 +143,32 @@ const FilesSignFC: FC<FilesSignatureProps> = observer(
       try {
         setLoading(true);
         fileString = await getFile(id);
+        setLoading(false);
       } catch {
+        setLoading(false);
         await achtung({
           title: 'Не удалось получить файл для подписи'
         });
+
+        return;
       }
 
       try {
         const fileBlob = new Blob([fileString]);
         setFileBlob(fileBlob);
+        setLoading(true);
 
         const certificates = await getUserCertificates();
         setCertificates(certificates);
 
+        setLoading(false);
         setDialogOpen(true);
       } catch {
+        setLoading(false);
         await achtung({
           title: 'Отсутствуют сертификаты для подписи'
         });
       }
-
-      setLoading(false);
     }, [id, setCertificates, setFileBlob, setDialogOpen]);
 
     const getRowId = useCallback((rowData: Certificate) => {

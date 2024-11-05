@@ -209,8 +209,11 @@ const FilesItemFC: FC<FilesItemProps> = observer(
         }
 
         // проверяем не отвалился ли плагин при работе с файлами
-        if (await isValidSystemSetup()) {
+        try {
+          await isValidSystemSetup();
           setIsPluginActive(true);
+        } catch {
+          // do nothing
         }
       })();
     }, [item.id, item.signed, fileInfo]);
@@ -238,7 +241,7 @@ const FilesItemFC: FC<FilesItemProps> = observer(
               <FilesSignature id={item.id} title={item.title} signed={signed} />
             )}
 
-            {isPluginActive && !signed && showSign && (
+            {isPluginActive && !signed && !!item.size && showSign && (
               <FilesSign
                 id={item.id}
                 title={item.title}

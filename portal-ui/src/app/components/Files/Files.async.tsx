@@ -201,9 +201,18 @@ export default class Files extends Component<FilesProps> {
   @boundMethod
   private handleAdd(selectedFiles: FileList | null) {
     const { onChange, value } = this.props;
+    let sigFilesCounter = 0;
+
+    if (selectedFiles) {
+      for (const file of selectedFiles) {
+        if (file.type === 'application/pgp-signature') {
+          sigFilesCounter++;
+        }
+      }
+    }
 
     const newFileItems: FileInfo[] = [];
-    const max = Math.min(this.max - value.length, selectedFiles?.length || 0);
+    const max = Math.min(this.max - value.length, selectedFiles?.length || 0) + sigFilesCounter;
     const [, compoundFiles] = this.separateCompoundFiles(value);
     const compoundFilesDuplicates: string[] = [];
     for (let i = 0; i < max; i++) {
