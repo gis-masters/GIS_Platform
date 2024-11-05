@@ -6,6 +6,7 @@ import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
 import { Schema } from '../../../services/data/schema/schema.models';
+import { applyContentType } from '../../../services/data/schema/schema.utils';
 import { Task } from '../../../services/data/task/task.models';
 import { updateTask } from '../../../services/data/task/task.service';
 import { services } from '../../../services/services';
@@ -54,7 +55,7 @@ export class TasksJournalActionsEdit extends Component<TasksJournalActionsEditPr
           onClose={this.closeDialog}
           value={task}
           open={this.openDialog}
-          schema={schema}
+          schema={applyContentType(schema, task.content_type_id)}
           actionButtonProps={{ children: 'Сохранить', loading: this.loading }}
         />
       </>

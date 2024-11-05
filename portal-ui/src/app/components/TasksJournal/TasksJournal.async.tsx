@@ -52,6 +52,7 @@ export default class TasksJournal extends Component {
 
   async componentDidMount() {
     await this.fetchSchema();
+
     communicationService.taskUpdated.on(async () => {
       if (this.tableInvoke && this.tableInvoke.reload) {
         await this.tableInvoke.reload();
