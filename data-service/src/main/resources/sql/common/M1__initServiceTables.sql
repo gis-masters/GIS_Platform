@@ -351,6 +351,7 @@ CREATE TABLE IF NOT EXISTS data.tasks
     type                             character varying(30),
     content_type_id                  character varying(50),
     status                           character varying(30),
+    intermediate_status              character varying(30),
     description                      character varying,
     assigned_to                      bigint,
     owner_id                         bigint,

@@ -103,6 +103,38 @@ SET class_rule =
               ]
             },
             {
+             "name": "intermediate_status",
+             "title": "Промежуточный статус выполнения задачи",
+             "description": "Финальный статус устанавливается системой, не заполняйте вручную",
+             "valueType": "CHOICE",
+             "enumerations": [
+               {
+                 "value": "1",
+                 "title": "Заявление прибыло из СМЭВ-3"
+               },
+               {
+                 "value": "2",
+                 "title": "Заявлению назначен исполнитель"
+               },
+               {
+                 "value": "3",
+                 "title": "Подготовленные документы ожидают подпись"
+               },
+               {
+                 "value": "4",
+                 "title": "Документы готовы к отправке"
+               },
+               {
+                 "value": "5",
+                 "title": "РНС успешно отправлен в СМЭВ-3"
+               },
+               {
+                 "value": "6",
+                 "title": "Мотивированный отказ успешно отправлен в СМЭВ-3"
+               }
+             ]
+           },
+           {
               "name": "description",
               "title": "Описание",
               "valueType": "STRING",
@@ -214,8 +246,7 @@ SET class_rule =
                   "name": "owner_id"
                 },
                 {
-                  "name": "assigned_to",
-                  "required": true
+                  "name": "assigned_to"
                 },
                 {
                   "name": "due_date"
@@ -247,12 +278,10 @@ SET class_rule =
                   "hidden": true
                 },
                 {
-                  "name": "owner_id",
-                  "required": true
+                  "name": "owner_id"
                 },
                 {
-                  "name": "assigned_to",
-                  "required": true
+                  "name": "assigned_to"
                 },
                 {
                   "name": "due_date"
@@ -293,12 +322,10 @@ SET class_rule =
                   "hidden": true
                 },
                 {
-                  "name": "owner_id",
-                  "required": true
+                  "name": "owner_id"
                 },
                 {
-                  "name": "assigned_to",
-                  "required": true
+                  "name": "assigned_to"
                 },
                 {
                   "name": "due_date"
@@ -346,12 +373,10 @@ SET class_rule =
                   "hidden": true
                 },
                 {
-                  "name": "owner_id",
-                  "required": true
+                  "name": "owner_id"
                 },
                 {
-                  "name": "assigned_to",
-                  "required": true
+                  "name": "assigned_to"
                 },
                 {
                   "name": "due_date"
@@ -397,12 +422,10 @@ SET class_rule =
                   "name": "status"
                 },
                 {
-                  "name": "assigned_to",
-                  "required": true
+                  "name": "assigned_to"
                 },
                 {
-                  "name": "owner_id",
-                  "required": true
+                  "name": "owner_id"
                 },
                 {
                   "name": "inbox_data_key_data_connection",
@@ -435,30 +458,38 @@ SET class_rule =
               "title": "РНС. Выдача или внесение изменений",
               "attributes": [
                 {
-                  "name": "id"
+                 "name": "id",
+                 "hidden": true
                 },
                 {
-                  "name": "content_type_id"
+                 "name": "content_type_id",
+                 "readOnly": true
                 },
                 {
-                  "name": "status"
+                 "name": "status",
+                 "readOnly": true
+               },
+               {
+                 "name": "intermediate_status"
                 },
                 {
-                  "name": "assigned_to"
+                 "name": "assigned_to"
                 },
                 {
-                  "name": "owner_id"
+                 "name": "owner_id"
                 },
                 {
                   "name": "inbox_data_key_data_connection",
                   "title": "Заявка",
                   "description": "Заявление, доставленное из ЕПГУ посредством СМЭВ-3",
+                  "multiple": false,
                   "readOnly": true
                 },
                 {
                   "name": "data_section_key_data_connection",
                   "title": "Размещенный документ",
                   "description": "Мотивированный отказ вносится в библиотеку Реестр предоставления сведений",
+                  "multiple": false,
                   "libraries": [
                     "dl_data_section13",
                     "dl_data_section19"
