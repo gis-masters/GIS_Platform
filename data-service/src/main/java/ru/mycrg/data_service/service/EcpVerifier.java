@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 import ru.mycrg.common_contracts.generated.ecp.VerifyEcpResponse;
+import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.http_client.HttpClient;
 import ru.mycrg.http_client.ResponseModel;
 import ru.mycrg.http_client.handlers.BaseRequestHandler;
@@ -25,10 +26,12 @@ public class EcpVerifier {
 
     private final HttpClient httpClient;
     private final URL cryptoproServiceVerifyUrl;
+    private final URL cryptoproServiceHashUrl;
 
     public EcpVerifier(Environment env) throws MalformedURLException {
         httpClient = new HttpClient(new BaseRequestHandler(new OkHttpClient()));
         cryptoproServiceVerifyUrl = new URL(env.getRequiredProperty("crg-options.cryptopro-service-url") + "/verify");
+        cryptoproServiceHashUrl = new URL(env.getRequiredProperty("crg-options.cryptopro-service-url") + "/hash");
     }
 
     @NotNull
@@ -50,7 +53,7 @@ public class EcpVerifier {
                                                                                             new TypeReference<>() {
                                                                                             });
             if (responseModel.isSuccessful()) {
-                return responseModel.getBody();
+                return responseModel.getBody() != null ? responseModel.getBody() : List.of();
             } else {
                 log.debug("Не удалось проверить подпись. Неожиданный ответ от сервиса: {}", responseModel);
 
@@ -62,5 +65,32 @@ public class EcpVerifier {
 
             return List.of(verificationFailed(msg));
         }
+    }
+
+    public String calculateHash(String path) {
+        try {
+            RequestBody payload = new MultipartBody.Builder()
+                    .setType(MultipartBody.FORM)
+                    .addFormDataPart("path", path)
+                    .build();
+
+            Request request = new Request.Builder()
+                    .url(cryptoproServiceHashUrl)
+                    .post(payload)
+                    .build();
+
+            ResponseModel<String> responseModel = httpClient.handleRequestAsString(request);
+            if (responseModel.isSuccessful()) {
+                return responseModel.getBody();
+            } else {
+                log.debug("Не удалось получить хеш для файла: [{}]. Неожиданный ответ от сервиса: {}",
+                          path, responseModel);
+            }
+        } catch (Exception e) {
+            String msg = "Не удалось проверить подпись";
+            log.error("{} => {}", msg, e.getMessage(), e);
+        }
+
+        throw new DataServiceException("Не удалось получить хеш");
     }
 }

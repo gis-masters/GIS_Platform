@@ -137,6 +137,22 @@ public class FileController extends BaseController {
     }
 
     @PreAuthorize(HAS_ANY_AUTHORITY)
+    @GetMapping("/files/{id}/hash")
+    public ResponseEntity<String> calculateHash(@PathVariable UUID id) {
+        log.info("Запрос hash для файла: {}", id);
+
+        File file = fileRepository.findById(id)
+                                  .orElseThrow(() -> new NotFoundException(id));
+        if (!authenticationFacade.getLogin().equalsIgnoreCase(file.getCreatedBy())) {
+            throwIfResourceNotAllowed(file);
+        }
+
+        String hash = ecpVerifier.calculateHash(file.getPath());
+
+        return ResponseEntity.ok(hash);
+    }
+
+    @PreAuthorize(HAS_ANY_AUTHORITY)
     @GetMapping("/files/{id}/download")
     public ResponseEntity<Resource> downloadFile(@PathVariable UUID id,
                                                  HttpServletRequest request) {

@@ -384,7 +384,7 @@ services:
 
   cryptopro-service:
     container_name: crg-cryptopro-service
-    image: ${DOCKER_CRG_HOST}/crg-cryptopro:5.1
+    image: ${DOCKER_CRG_HOST}/crg-cryptopro:5.2
     restart: always
     extra_hosts:
       - "logstash:${LOGSTASH_HOST}"
