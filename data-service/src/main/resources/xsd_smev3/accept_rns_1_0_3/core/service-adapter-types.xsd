@@ -35,7 +35,8 @@
     <xs:element name="MessagePrimaryContent">
         <xs:complexType>
             <xs:sequence>
-                <xs:element ref="req:request"/>
+                <xs:element ref="req:request" minOccurs="0"/>
+                <xs:element ref="req:FormResponse" minOccurs="0"/>
             </xs:sequence>
         </xs:complexType>
     </xs:element>

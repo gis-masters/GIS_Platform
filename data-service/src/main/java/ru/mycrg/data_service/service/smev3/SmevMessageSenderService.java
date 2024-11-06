@@ -33,11 +33,16 @@ public class SmevMessageSenderService {
 
     @Transactional
     public void sendMessage(SmevRequestMeta requestMeta, String userTo) {
-        try {
-            log.debug("Попытка отправить сообщение в СМЭВ: {}", requestMeta.toString());
-            messageService.saveOutgoing(requestMeta, userTo);
+        messageService.saveOutgoing(requestMeta, userTo);
 
-            rabbitTemplate.convertAndSend(adapterSendQueue.getName(), requestMeta.getRequestXmlString());
+        sendMessage(requestMeta.getRequestXmlString());
+    }
+
+    public void sendMessage(String message) {
+        try {
+            log.debug("Попытка отправить сообщение в СМЭВ: {}", message);
+
+            rabbitTemplate.convertAndSend(adapterSendQueue.getName(), message);
 
             log.info("Сообщение успешно отправлено очередь адаптера и сохранено");
         } catch (Exception e) {

@@ -14,7 +14,9 @@ import ru.mycrg.data_service.service.TaskLogService;
 import ru.mycrg.data_service.service.TaskService;
 import ru.mycrg.data_service.service.cqrs.tasks.requests.UpdateTaskRequest;
 import ru.mycrg.data_service.service.schemas.ISchemaTemplateService;
+import ru.mycrg.data_service.service.smev3.request.accept_rns.AcceptRnsService;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
+import ru.mycrg.data_service_contract.enums.TaskStatus;
 import ru.mycrg.mediator.IRequestHandler;
 import ru.mycrg.mediator.Voidy;
 
@@ -25,6 +27,7 @@ import static java.time.LocalDateTime.now;
 import static ru.mycrg.data_service.service.TaskService.TASKS_SCHEMA;
 import static ru.mycrg.data_service.service.TaskService.TASK_QUALIFIER;
 import static ru.mycrg.data_service.service.resources.ResourceQualifier.recordQualifier;
+import static ru.mycrg.data_service.service.smev3.request.accept_rns.AcceptRnsService.*;
 import static ru.mycrg.data_service.util.SystemLibraryAttributes.*;
 
 @Component
@@ -35,17 +38,20 @@ public class UpdateTaskRequestHandler implements IRequestHandler<UpdateTaskReque
     private final ISchemaTemplateService schemaService;
     private final TaskLogService taskLogService;
     private final IAuthenticationFacade authenticationFacade;
+    private final AcceptRnsService acceptRnsService;
 
     public UpdateTaskRequestHandler(RecordsDao recordsDao,
                                     TaskService taskService,
                                     ISchemaTemplateService schemaService,
                                     TaskLogService taskLogService,
-                                    IAuthenticationFacade authenticationFacade) {
+                                    IAuthenticationFacade authenticationFacade,
+                                    AcceptRnsService acceptRnsService) {
         this.recordsDao = recordsDao;
         this.taskService = taskService;
         this.schemaService = schemaService;
         this.taskLogService = taskLogService;
         this.authenticationFacade = authenticationFacade;
+        this.acceptRnsService = acceptRnsService;
     }
 
     @Override
@@ -61,6 +67,19 @@ public class UpdateTaskRequestHandler implements IRequestHandler<UpdateTaskReque
         if (!userDetails.getUserId().equals(ownerId) && !directMinions.contains(ownerId)) {
             throw new BadRequestException(
                     "Возможно редактировать только свои задачи или задачи своих непосредственных подчиненных");
+        }
+
+        if (task.get(CONTENT_TYPE_ID) != null) {
+            if (task.get(CONTENT_TYPE_ID).toString().equals(RNS_CONTENT_TYPE)) {
+                if (newTask.getContent().get(STATUS) != null) {
+                    if ("IN_PROGRESS".equals(newTask.getContent().get(STATUS).toString())) {
+                        acceptRnsService.updateTablesAndSendStatusMessageToSmev(task, TaskStatus.IN_PROGRESS, taskId);
+                    }
+                    if ("DONE".equals(newTask.getContent().get(STATUS).toString())) {
+                        acceptRnsService.updateTablesAndSendStatusMessageToSmev(task, TaskStatus.DONE, taskId);
+                    }
+                }
+            }
         }
 
         SchemaDto tasksSchema = this.schemaService
