@@ -30,18 +30,18 @@ import { isArrayOf } from '../util/typeGuards/isArrayOf';
 import { isCoordinate, isCoordinateArray, isCoordinateArrayArray } from '../util/typeGuards/isCoordinate';
 import { isLabelTextProperties } from '../util/typeGuards/isLabelTextProperties';
 import { isNumberArray } from '../util/typeGuards/isNumberArray';
-import { isTextAlignTypes } from '../util/typeGuards/isTextAlignTypes';
 import {
   FeatureFontStringData,
   FeatureLengthData,
   FontProperties,
+  isTextAlignTypes,
   LabelPosition,
   LabelStyleOffsets,
   PointOnBisectorData,
   PointWithAngle,
   TextAlignTypes,
   TextProperties
-} from './map.models';
+} from './map-labels.models';
 
 const geometryError = 'Тип геометрии не позволяет определить периметр объекта';
 

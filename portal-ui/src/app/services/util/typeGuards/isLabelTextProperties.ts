@@ -1,4 +1,4 @@
-import { TextStyleProperties } from '../../map/map.models';
+import { TextStyleProperties } from '../../map/map-labels.models';
 
 const keyNames = new Set(['fontSize', 'fontColor', 'isBold', 'isItalic', 'textAlign']);
 

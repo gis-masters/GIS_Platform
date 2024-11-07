@@ -5,7 +5,7 @@ import { getFeaturesListItemTitle } from '../../../../components/FeaturesListIte
 import { PrintMapImageControl } from '../../../../components/PrintMapImageControl/PrintMapImageControl';
 import { SelectPropertiesControl } from '../../../../components/SelectPropertiesControl/SelectPropertiesControl';
 import { getProjectionByCode } from '../../../data/projections/projections.service';
-import { getProjectionCode, getProjectionUnit } from '../../../data/projections/projections.util';
+import { getProjectionUnit } from '../../../data/projections/projections.util';
 import { PropertySchema, PropertyType } from '../../../data/schema/schema.models';
 import { applyView, getReadablePropertyValue } from '../../../data/schema/schema.utils';
 import { GeometryType, WfsFeature } from '../../../geoserver/wfs/wfs.models';
@@ -147,7 +147,7 @@ export const featureExtract: PrintTemplate<WfsFeature> = new PrintTemplate({
       title: mapDialogResult.title,
       image: mapDialogResult.image,
       currentDate: moment().format('LL'),
-      crs: projection ? getProjectionCode(projection) : layer.nativeCRS,
+      crs: projection ? projection.title : layer.nativeCRS,
       coordinates: coordinatesFragment,
       properties: propertiesRows.join(''),
       area: area

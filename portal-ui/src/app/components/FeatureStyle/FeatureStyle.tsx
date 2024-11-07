@@ -5,7 +5,7 @@ import { EditOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { Feature } from 'ol';
 
-import { FontProperties } from '../../services/map/map.models';
+import { FontProperties } from '../../services/map/map-labels.models';
 import { mapLabelsService } from '../../services/map/map-labels.service';
 import {
   convertFromRGBAToHEX,
@@ -115,8 +115,8 @@ export const FeatureStyle: FC<FeatureStyleProps> = observer(({ feature }) => {
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleSaveClick} color='info'>
-            ОK
+          <Button onClick={handleSaveClick} color='primary'>
+            Сохранить
           </Button>
           <Button onClick={handleCancelClick}>Отмена</Button>
         </DialogActions>

@@ -30,12 +30,14 @@ import { isLinear, isPolygonal } from '../geoserver/wfs/wfs.util';
 import { notFalsyFilter } from '../util/NotFalsyFilter';
 import { featureToWfsFeature, UnitsOfAreaMeasurement, wfsFeatureToFeature } from '../util/open-layers.util';
 import { sleep } from '../util/sleep';
+import { isAnnotationsFontProperties } from '../util/typeGuards/isAnnotationsFontProperties';
 import { isArrayOf } from '../util/typeGuards/isArrayOf';
 import { isCoordinate, isCoordinateArray, isCoordinateArrayArray } from '../util/typeGuards/isCoordinate';
 import { isNumberArray } from '../util/typeGuards/isNumberArray';
 import { prompto } from '../utility-dialogs.service';
-import { Distance, LabelType, MapMode } from './map.models';
+import { MapMode } from './map.models';
 import { mapService } from './map.service';
+import { AnnotationsFontProperties, Distance, FontProperties, LabelType } from './map-labels.models';
 import {
   getFeatureArea,
   getFeatureLength,
@@ -51,7 +53,13 @@ import {
 import { mapMeasureService } from './map-measure.service';
 
 const projectionError = 'Отсутствует проекция';
-
+const baseStyle: FontProperties = {
+  isBold: false,
+  isItalic: false,
+  fontSize: 18,
+  fontColor: '#141414',
+  textAlign: 'left'
+};
 const MARK_FILL_COLOR = 'rgba(255, 255, 255, 0.5)';
 
 class MapLabelsService {
@@ -83,6 +91,13 @@ class MapLabelsService {
   private renderLabelToolboxDebounced = debounce(this.renderLabelToolbox, 500);
   private removeLabelToolboxDebounced = debounce(this.removeLabelToolbox, 500);
   private toolboxHovered = false;
+  userLabelsSettings: AnnotationsFontProperties = {
+    area: { ...baseStyle },
+    length: { ...baseStyle },
+    turningPoints: { ...baseStyle },
+    distances: { ...baseStyle, fontSize: 14 },
+    annotations: { ...baseStyle }
+  };
 
   static get instance() {
     return this._instance || (this._instance = new this());
@@ -179,11 +194,13 @@ class MapLabelsService {
   private getDistancesFeatures({
     projFrom,
     olProjection: projTo,
-    coordinates
+    coordinates,
+    properties
   }: {
     projFrom: Projection;
     olProjection: Projection;
     coordinates: Coordinate[] | Coordinate[][] | Coordinate[][][];
+    properties?: Record<string, unknown>;
   }): Feature<Point>[] {
     let distances: Distance[] = [];
 
@@ -206,6 +223,7 @@ class MapLabelsService {
             geometry: new Point(coord.center),
             type: 'label',
             text: `${coord.distance.value} ${coord.distance.units}`,
+            textProperties: properties ? { ...properties } : undefined,
             rotation,
             isLabelInPolygon: coord.isLabelInPolygon,
             centred: true
@@ -255,7 +273,8 @@ class MapLabelsService {
         geometry: new Point(pointCoordinates),
         type: 'label',
         text: `S = ${value} ${units}`,
-        isLabelInPolygon: true
+        isLabelInPolygon: true,
+        textProperties: { ...this.userLabelsSettings.area }
       });
 
       feature.setId(uuid());
@@ -302,7 +321,8 @@ class MapLabelsService {
       const feature = new Feature({
         geometry: new Point(point),
         type: 'label',
-        text: `${!!wfsFeature.geometry?.type && isLinear(wfsFeature.geometry?.type) ? 'L' : 'P'} = ${value} ${units}`
+        text: `${!!wfsFeature.geometry?.type && isLinear(wfsFeature.geometry?.type) ? 'L' : 'P'} = ${value} ${units}`,
+        textProperties: { ...this.userLabelsSettings.length }
       });
 
       feature.setId(uuid());
@@ -328,7 +348,8 @@ class MapLabelsService {
     const features = this.getDistancesFeatures({
       projFrom: currentLayerProjection,
       olProjection: await getOlProjection(),
-      coordinates
+      coordinates,
+      properties: { ...this.userLabelsSettings.distances }
     });
 
     this.source.addFeatures(features);
@@ -371,7 +392,8 @@ class MapLabelsService {
             geometry: new Point(point),
             type: 'label',
             text: String(index + 1),
-            position
+            position,
+            textProperties: { ...this.userLabelsSettings.turningPoints }
           });
 
           feature.setId(uuid());
@@ -520,6 +542,7 @@ class MapLabelsService {
   @boundMethod
   private async editLabel(feature: Feature) {
     const currentText = feature.getProperties().text as string | undefined;
+
     const text = await prompto({ title: 'Текст аннотации:', defaultValue: currentText || '', multiline: true });
 
     if (!text) {
@@ -530,7 +553,11 @@ class MapLabelsService {
       return;
     }
 
-    feature.setProperties({ ...feature.getProperties(), text });
+    feature.setProperties({
+      ...feature.getProperties(),
+      text,
+      textProperties: this.userLabelsSettings.annotations
+    });
     this.saveToStorages();
   }
 
@@ -586,6 +613,14 @@ class MapLabelsService {
 
     try {
       wfsFeatures = (JSON.parse(localStorage.getItem(this.getStorageKey('labels')) || '') || []) as WfsFeature[];
+
+      const userLabelsStyles: unknown = JSON.parse(
+        localStorage.getItem(this.getStorageKey('userLabelsSettings')) || ''
+      );
+
+      if (!!userLabelsStyles && isAnnotationsFontProperties(userLabelsStyles)) {
+        this.setLabelsSettings(userLabelsStyles);
+      }
     } catch {
       // do nothing
     }
@@ -734,6 +769,11 @@ class MapLabelsService {
     const properties = feature.getProperties();
 
     return properties.type as LabelType;
+  }
+
+  setLabelsSettings(fontProperties: AnnotationsFontProperties): void {
+    this.userLabelsSettings = fontProperties;
+    localStorage.setItem(this.getStorageKey('userLabelsSettings'), JSON.stringify(fontProperties)); // do something
   }
 
   @boundMethod

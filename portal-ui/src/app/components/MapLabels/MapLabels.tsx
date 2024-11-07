@@ -4,10 +4,12 @@ import { Tooltip } from '@mui/material';
 import { DeleteSweepOutlined, LabelOutlined, PolylineOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
-import { LabelType, MapMode } from '../../services/map/map.models';
+import { MapMode } from '../../services/map/map.models';
+import { LabelType } from '../../services/map/map-labels.models';
 import { mapLabelsService } from '../../services/map/map-labels.service';
 import { konfirmieren } from '../../services/utility-dialogs.service';
 import { mapStore } from '../../stores/Map.store';
+import { AnnotationSettings } from '../AnnotationSettings/AnnotationSettings';
 import { FeatureArea } from '../FeatureArea/FeatureArea';
 import { FeatureLength } from '../FeatureLength/FeatureLength';
 import { IconButton } from '../IconButton/IconButton';
@@ -100,6 +102,7 @@ export const MapLabels: FC = observer(() => {
               <PolylineOutlined />
             </IconButton>
           </Tooltip>
+          <AnnotationSettings />
           {mapStore.labels.length > 0 && (
             <Tooltip title='Удалить все аннотации'>
               <IconButton className={cnMapLabels('ClearAll')} onClick={handleClearAllClick} size='small'>
