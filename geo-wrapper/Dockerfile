@@ -1,10 +1,11 @@
-FROM openjdk:11-jre
+FROM 10.10.10.116:5000/openjdk:11-jre
 LABEL MAINTAINER="Fanatic Fiz <fanaticfiz@outlook.com>"
 
 COPY ./target/apm-agent.jar apm-agent.jar
 COPY ./target/geo-wrapper.jar geo-wrapper.jar
 
 RUN set -eux; \
+    echo "deb http://10.10.10.116:8081/repository/debian-apt-proxy bullseye main" > /etc/apt/sources.list; \
     apt update; \
     apt install gdal-bin -y; \
     apt install zip -y; \

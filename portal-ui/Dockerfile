@@ -1,4 +1,4 @@
-FROM nginx:1.20.2
+FROM 10.10.10.116:5000/nginx:1.20.2
 LABEL MAINTAINER="zakaratcha <zakaratcha@ya.ru>"
 
 COPY init/init_config.sh /opt
