@@ -18664,7 +18664,6 @@ SET class_rule =
            "name": "fias",
            "title": "Населённый пункт",
            "minWidth": 400,
-           "required": true,
            "valueType": "FIAS",
            "searchMode": "oktmo"
          },
@@ -19119,8 +19118,8 @@ SET class_rule =
            "attributes": [
              {
                "name": "content_type_id",
-               "readOnly":true,
-               "defaultValue":"rns_smev_rostelekom"
+               "readOnly": true,
+               "defaultValue": "rns_smev_rostelekom"
              },
              {
                "name": "title"
@@ -19136,35 +19135,35 @@ SET class_rule =
              },
              {
                "name": "date",
-               "readOnly":true
+               "readOnly": true
              },
              {
                "name": "person_name",
-               "readOnly":true
+               "readOnly": true
              },
              {
                "name": "request_type",
-               "readOnly":true
+               "readOnly": true
              },
              {
                "name": "is_name",
-               "readOnly":true
+               "readOnly": true
              },
              {
                "name": "data_type",
-               "readOnly":true
+               "readOnly": true
              },
              {
                "name": "record_status",
-               "readOnly":true
+               "readOnly": true
              },
              {
                "name": "user_name",
-               "readOnly":true
+               "readOnly": true
              },
              {
                "name": "file",
-               "readOnly":true
+               "required":true
              },
              {
                "name": "gisogdrf_publication_datetime"
@@ -19279,7 +19278,6 @@ SET class_rule =
              {
                "name": "fias",
                "title": "Административная единица",
-               "readOnly": true,
                "valueType": "FIAS",
                "searchMode": "oktmo"
              },
@@ -19333,10 +19331,8 @@ SET class_rule =
              }
            ]
          }
-       ],
-       "calcFiledFunction": "",
-       "customRuleFunction": ""
-     }'
+      ]
+   }'
 WHERE name = 'dl_data_inbox_data';
 
 UPDATE data.schemas 
