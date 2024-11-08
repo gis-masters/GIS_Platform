@@ -74,12 +74,12 @@ export default class FeaturesListSidebarFeatures extends Component<FeaturesListS
       sidebars.setSearchValue({});
     }
 
-    if (this.props.singleTab) {
+    if (this.props.singleTab || !sidebars.searchValue) {
       sidebars.closeFeaturesSidebar();
     }
 
-    if (!sidebars.searchValue) {
-      sidebars.closeFeaturesSidebar();
+    if (sidebars.memorizedViewFeatures?.length) {
+      sidebars.setMemorizedFeatures([]);
     }
   }
 }

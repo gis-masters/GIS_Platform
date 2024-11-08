@@ -39,6 +39,10 @@ When('в форме просмотра объекта, я перехожу на 
   await editFeatureBlock.openGeometryTab();
 });
 
+When('я дожидаюсь исчезновения индикатора загрузки в форме редактирования объекта', async () => {
+  await editFeatureBlock.waitForLoaderEnd();
+});
+
 When(
   'в форме редактирования объекта я изменяю значение поля {string} на {string}',
   async function (title: string, value: string) {
@@ -49,6 +53,13 @@ When(
 When('в форме редактирования объекта я нажимаю кнопку `Сохранить`', async function () {
   await editFeatureBlock.clickSaveButton();
 });
+
+Then(
+  'в форме редактирования объекта в поле {string} значение {string}',
+  async function (title: string, value: string): Promise<void> {
+    await expect(await editFeatureBlock.checkFormFieldValue(title, value)).toBe(true);
+  }
+);
 
 Then('вкладка просмотра геометрии в режиме чтения содержит следующую геометрию', async function (data: DataTable) {
   const expectedGeometry = data

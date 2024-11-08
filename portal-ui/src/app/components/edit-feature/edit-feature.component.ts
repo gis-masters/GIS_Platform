@@ -539,7 +539,7 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
 
   @boundMethod
   async close(): Promise<void> {
-    if (sidebars.memorizedViewFeatures) {
+    if (sidebars.memorizedViewFeatures?.length) {
       mapSelectionService.selectFeatures(sidebars.memorizedViewFeatures, MapSelectionTypes.REPLACE);
       sidebars.openSelectedFeaturesSidebar();
     } else if (sidebars.foundBySearchFeatureEdited) {
@@ -550,8 +550,8 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
         queryParams: { features: null, queryFilter: null, queryLayers: null },
         queryParamsHandling: 'merge'
       });
-      sidebars.closeEdit();
     }
+    sidebars.closeEdit();
   }
 
   getDateTime(value: string | number): string {

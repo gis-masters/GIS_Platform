@@ -17,7 +17,8 @@ class EditFeatureBlock extends Block {
     editFeatureField: '.edit-feature__field',
     editFeatureLoading: '.edit-feature .loading',
     editFeatureGeometryAsTextBtn: '.edit-feature .EditFeatureGeometry-AsText',
-    lookupStatus: '.edit-feature .Lookup-Status'
+    lookupStatus: '.edit-feature .Lookup-Status',
+    loader: 'edit-feature .MuiLinearProgress-root'
   };
 
   async clickSaveButton(): Promise<void> {
@@ -131,6 +132,29 @@ class EditFeatureBlock extends Block {
       hideElements: [$lookupStatus, ...(checkElementOptions?.hideElements || [])],
       ...checkElementOptions
     });
+  }
+
+  async waitForLoaderEnd(): Promise<void> {
+    const loader = await this.$('loader');
+    try {
+      await loader.waitForDisplayed({ timeout: 1000 });
+    } catch {
+      // ignore
+    }
+    await loader.waitForDisplayed({ reverse: true });
+  }
+
+  async checkFormFieldValue(title: string, value: string): Promise<boolean> {
+    const $formField = await this.getFeatureEditField(title);
+
+    if (!$formField) {
+      throw new Error(`Не найден элемент ${title}`);
+    }
+
+    const inputBlock = new MuiInputBlock(await $formField.$('.Form-Control'));
+    const inputValue = await inputBlock.getValue();
+
+    return inputValue === value;
   }
 }
 
