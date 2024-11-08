@@ -30,9 +30,9 @@ public class GisogdRfSyncStatusFormulaGenerator implements IWellKnownFormulaGene
         return " GENERATED ALWAYS AS (" +
                 " CASE " +
                 "  WHEN (((gisogdrf_response)::json ->> 'Status'::text) = 'Error'::text)" +
-                "    THEN 'Cинхронизация завершилась ошибкой'::text" +
+                "    THEN 'Синхронизация завершилась ошибкой'::text" +
                 "  WHEN (((gisogdrf_response)::json ->> 'Status'::text) = 'Warning'::text)" +
-                "    THEN 'Cинхронизация завершилась предупреждением'::text" +
+                "    THEN 'Синхронизация завершилась предупреждением'::text" +
                 "  WHEN (((gisogdrf_response)::json ->> 'Status'::text) = 'Success'::text)" +
                 "    THEN 'Синхронизирован'::text" +
                 "  WHEN (((gisogdrf_response)::json ->> 'Status'::text) = 'NotFound'::text)" +

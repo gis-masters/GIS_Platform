@@ -93,19 +93,39 @@ public class GisogdRfDao {
                 : Optional.ofNullable(ids.get(0));
     }
 
-    public List<IRecord> getDocumentsForPublishing(ResourceQualifier qualifier, Long publicationLimit) {
+    /**
+     * Выборка документов готовых к отправке.
+     * <p>
+     * Сюда подпадают документы в статусе: "Синхронизация завершилась ошибкой" и "Не синхронизирован".
+     *
+     * @param qualifier Квалификатор библиотеки
+     * @param limit     Лимит
+     */
+    public List<IRecord> getDocumentsForPublishing(ResourceQualifier qualifier, Long limit) {
         String query = "SELECT * FROM " + qualifier.getQualifier() +
-                " WHERE is_folder = false AND gisogdrf_sync_status = 'Не синхронизирован'" +
-                " LIMIT " + publicationLimit;
+                " WHERE is_folder = false " +
+                "   AND (gisogdrf_sync_status = 'Не синхронизирован' OR " +
+                "        gisogdrf_sync_status = 'Синхронизация завершилась ошибкой')" +
+                " LIMIT " + limit;
 
         return jdbcTemplate.query(query, new RecordRowMapper(null));
     }
 
-    public List<IRecord> getRecordsForPublishing(ResourceQualifier qualifier, Long publicationLimit, int srid) {
+    /**
+     * Выборка записей готовых к отправке.
+     * <p>
+     * Сюда подпадают записи в статусе: "Синхронизация завершилась ошибкой" и "Не синхронизирован". Геометрия из shape
+     * сразу достается в нужном для отправки формате: GeoJSON.
+     *
+     * @param qualifier Квалификатор библиотеки
+     * @param limit     Лимит
+     */
+    public List<IRecord> getRecordsForPublishing(ResourceQualifier qualifier, Long limit, int srid) {
         String query = "SELECT *, public.st_AsGeoJSON(public.st_transform(shape::public.geometry, " + srid + ")) as shape" +
                 " FROM " + qualifier.getQualifier() +
-                " WHERE gisogdrf_sync_status = 'Не синхронизирован'" +
-                " LIMIT " + publicationLimit;
+                " WHERE gisogdrf_sync_status = 'Не синхронизирован' OR " +
+                "       gisogdrf_sync_status = 'Синхронизация завершилась ошибкой'" +
+                " LIMIT " + limit;
 
         return jdbcTemplate.query(query, new RecordRowMapper(null));
     }
