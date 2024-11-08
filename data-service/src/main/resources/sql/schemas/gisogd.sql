@@ -19180,6 +19180,146 @@ SET class_rule =
            ]
          },
          {
+           "id": "rnv_smev_rostelekom",
+           "icon": "DOCUMENT",
+           "type": "DOCUMENT",
+           "title": "РНВ. Выдача или внесение изменений",
+           "childOnly": true,
+           "attributes": [
+             {
+               "name": "content_type_id",
+               "readOnly":true,
+               "defaultValue":"rnv_smev_rostelekom"
+             },
+             {
+               "name": "title"
+             },
+             {
+               "name": "smev_message_id"
+             },
+             {
+               "name": "pguid"
+             },
+             {
+               "name": "epgu_status_code"
+             },
+             {
+               "name": "date",
+               "readOnly":true
+             },
+             {
+               "name": "person_name",
+               "readOnly":true
+             },
+             {
+               "name": "request_type",
+               "readOnly":true
+             },
+             {
+               "name": "is_name",
+               "readOnly":true
+             },
+             {
+               "name": "data_type",
+               "readOnly":true
+             },
+             {
+               "name": "record_status",
+               "readOnly":true
+             },
+             {
+               "name": "user_name",
+               "readOnly":true
+             },
+             {
+               "name": "file",
+               "readOnly":true
+             },
+             {
+               "name": "gisogdrf_publication_datetime"
+             },
+             {
+               "name": "gisogdrf_sync_status"
+             },
+             {
+               "name": "gisogdrf_audit_datetime"
+             },
+             {
+               "name": "gisogdrf_response"
+             }
+           ]
+         },
+         {
+           "id": "gpzu_smev_rostelekom",
+           "icon": "DOCUMENT",
+           "type": "DOCUMENT",
+           "title": "ГПЗУ. Выдача или внесение изменений",
+           "childOnly": true,
+           "attributes": [
+             {
+               "name": "content_type_id",
+               "readOnly":true,
+               "defaultValue":"gpzu_smev_rostelekom"
+             },
+             {
+               "name": "title"
+             },
+             {
+               "name": "smev_message_id"
+             },
+             {
+               "name": "pguid"
+             },
+             {
+               "name": "epgu_status_code"
+             },
+             {
+               "name": "date",
+               "readOnly":true
+             },
+             {
+               "name": "person_name",
+               "readOnly":true
+             },
+             {
+               "name": "request_type",
+               "readOnly":true
+             },
+             {
+               "name": "is_name",
+               "readOnly":true
+             },
+             {
+               "name": "data_type",
+               "readOnly":true
+             },
+             {
+               "name": "record_status",
+               "readOnly":true
+             },
+             {
+               "name": "user_name",
+               "readOnly":true
+             },
+             {
+               "name": "file",
+               "readOnly":true
+             },
+             {
+               "name": "gisogdrf_publication_datetime"
+             },
+             {
+               "name": "gisogdrf_sync_status"
+             },
+             {
+               "name": "gisogdrf_audit_datetime"
+             },
+             {
+               "name": "gisogdrf_response"
+             }
+           ]
+         },
+         {
            "id": "InboxData_min_gp",
            "icon": "DOCUMENT",
            "type": "DOCUMENT",

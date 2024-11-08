@@ -76,6 +76,14 @@ SET class_rule =
                 {
                   "value": "rns_smev_rostelekom",
                   "title": "РНС. Выдача или внесение изменений"
+                },
+                {
+                  "value": "rnv_smev_rostelekom",
+                  "title": "РНВ. Выдача или внесение изменений"
+                },
+                {
+                  "value": "gpzu_smev_rostelekom",
+                  "title": "ГПЗУ. Выдача или внесение изменений"
                 }
               ]
             },
@@ -456,6 +464,128 @@ SET class_rule =
               "id": "rns_smev_rostelekom",
               "type": "DOCUMENT",
               "title": "РНС. Выдача или внесение изменений",
+              "attributes": [
+                {
+                 "name": "id",
+                 "hidden": true
+                },
+                {
+                 "name": "content_type_id",
+                 "readOnly": true
+                },
+                {
+                 "name": "status",
+                 "readOnly": true
+               },
+               {
+                 "name": "intermediate_status"
+                },
+                {
+                 "name": "assigned_to"
+                },
+                {
+                 "name": "owner_id"
+                },
+                {
+                  "name": "inbox_data_key_data_connection",
+                  "title": "Заявка",
+                  "description": "Заявление, доставленное из ЕПГУ посредством СМЭВ-3",
+                  "multiple": false,
+                  "readOnly": true
+                },
+                {
+                  "name": "data_section_key_data_connection",
+                  "title": "Размещенный документ",
+                  "description": "Мотивированный отказ вносится в библиотеку Реестр предоставления сведений",
+                  "multiple": false,
+                  "libraries": [
+                    "dl_data_section13",
+                    "dl_data_section19"
+                  ],
+                  "valueType": "DOCUMENT"
+                },
+                {
+                  "name": "due_date",
+                  "description": "Срок исполнения устанавливается с момента подачи заявки в систему и не подлежит изменению.",
+                  "readOnly": true
+                },
+                {
+                  "name": "created_at"
+                },
+                {
+                  "name": "last_modified"
+                },
+                {
+                  "name": "description",
+                  "title": "Комментарий"
+                }
+              ]
+            },
+            {
+              "id": "rnv_smev_rostelekom",
+              "type": "DOCUMENT",
+              "title": "ГПЗУ. Выдача или внесение изменений",
+              "attributes": [
+                {
+                 "name": "id",
+                 "hidden": true
+                },
+                {
+                 "name": "content_type_id",
+                 "readOnly": true
+                },
+                {
+                 "name": "status",
+                 "readOnly": true
+               },
+               {
+                 "name": "intermediate_status"
+                },
+                {
+                 "name": "assigned_to"
+                },
+                {
+                 "name": "owner_id"
+                },
+                {
+                  "name": "inbox_data_key_data_connection",
+                  "title": "Заявка",
+                  "description": "Заявление, доставленное из ЕПГУ посредством СМЭВ-3",
+                  "multiple": false,
+                  "readOnly": true
+                },
+                {
+                  "name": "data_section_key_data_connection",
+                  "title": "Размещенный документ",
+                  "description": "Мотивированный отказ вносится в библиотеку Реестр предоставления сведений",
+                  "multiple": false,
+                  "libraries": [
+                    "dl_data_section13",
+                    "dl_data_section19"
+                  ],
+                  "valueType": "DOCUMENT"
+                },
+                {
+                  "name": "due_date",
+                  "description": "Срок исполнения устанавливается с момента подачи заявки в систему и не подлежит изменению.",
+                  "readOnly": true
+                },
+                {
+                  "name": "created_at"
+                },
+                {
+                  "name": "last_modified"
+                },
+                {
+                  "name": "description",
+                  "title": "Комментарий"
+                }
+              ]
+            },
+            {
+              "id": "gpzu_smev_rostelekom",
+              "type": "DOCUMENT",
+              "title": "ГПЗУ. Выдача или внесение изменений",
               "attributes": [
                 {
                  "name": "id",
