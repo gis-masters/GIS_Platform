@@ -9,6 +9,7 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import ru.mycrg.data_service.service.smev3.config.Smev3Config;
 
 import static ru.mycrg.messagebus_contract.MessageBusProperties.*;
 

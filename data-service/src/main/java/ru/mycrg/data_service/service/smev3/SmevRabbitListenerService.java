@@ -3,7 +3,6 @@ package ru.mycrg.data_service.service.smev3;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.Message;
-import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
@@ -15,17 +14,16 @@ import ru.mycrg.data_service.service.smev3.support_classes.TransactionWrapper;
         havingValue = "true",
         matchIfMissing = true)
 public class SmevRabbitListenerService {
+
     private final Logger log = LoggerFactory.getLogger(SmevRabbitListenerService.class);
-    private final SmevMessageReceiverService smevMessageReceiverService;
-    private final Queue adapterReceiveQueue;
+
     private final TransactionWrapper contextWrapper;
+    private final SmevMessageReceiverService smevMessageReceiverService;
 
     public SmevRabbitListenerService(SmevMessageReceiverService smevMessageReceiverService,
-                                     Queue adapterReceiveQueue,
                                      TransactionWrapper contextWrapper) {
-        this.smevMessageReceiverService = smevMessageReceiverService;
-        this.adapterReceiveQueue = adapterReceiveQueue;
         this.contextWrapper = contextWrapper;
+        this.smevMessageReceiverService = smevMessageReceiverService;
     }
 
     @RabbitListener(containerFactory = "smevRabbitContainerFactory", queues = "#{adapterReceiveQueue}")

@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import ru.mycrg.data_service.accept_rns_1_0_3.*;
-import ru.mycrg.data_service.config.Smev3Config;
+import ru.mycrg.data_service.service.smev3.config.Smev3Config;
 import ru.mycrg.data_service.dao.RecordsDao;
 import ru.mycrg.data_service.dao.detached.TasksDetachedDao;
 import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
@@ -39,6 +39,7 @@ import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service.service.schemas.ISchemaTemplateService;
 import ru.mycrg.data_service.service.smev3.SmevMessageSenderService;
 import ru.mycrg.data_service.service.smev3.SmevMessageService;
+import ru.mycrg.data_service.service.smev3.fields.CommonFields;
 import ru.mycrg.data_service.service.smev3.model.CustomMultipartFile;
 import ru.mycrg.data_service.service.storage.FileStorageService;
 import ru.mycrg.data_service.util.JsonConverter;
@@ -84,9 +85,8 @@ import static ru.mycrg.data_service_contract.enums.TaskType.CUSTOM;
         matchIfMissing = true)
 public class AcceptRnsService {
 
-    public static final String RNS_CONTENT_TYPE = "rns_smev_rostelekom";
-    public static final String STATUS = "status";
     private static final Logger log = LoggerFactory.getLogger(AcceptRnsService.class);
+
     // TODO: Заменить все эти многочисленные static final String переменные на единую точку-класс, из которого будут
     //  добываться параметры, по типу MessageSource
     private static final String DATA_SECTION_KEY_DATA_CONNECTION_ATTRIBUTE = "data_section_key_data_connection";
@@ -109,6 +109,7 @@ public class AcceptRnsService {
     private String dbName;
     @Value("${crg-options.taskManagementFolderId}")
     private String folderId;
+
     private final TaskLogService taskLogService;
     private final TasksDetachedDao tasksDao;
     private final SmevMessageService smevMessageService;
@@ -439,8 +440,8 @@ public class AcceptRnsService {
     private Map<String, Object> prepareTaskContent(Long performerId) {
         Map<String, Object> body = new HashMap<>();
         body.put(TASK_TYPE_PROPERTY, CUSTOM.name());
-        body.put(STATUS, TaskStatus.CREATED.name());
-        body.put(CONTENT_TYPE_ID.getName(), RNS_CONTENT_TYPE);
+        body.put(CommonFields.STATUS, TaskStatus.CREATED.name());
+        body.put(CONTENT_TYPE_ID.getName(), CommonFields.RNS_CONTENT_TYPE);
         body.put(CREATED_AT.getName(), LocalDate.now());
         body.put(TASK_OWNER_ID_PROPERTY, performerId);
         body.put(TASK_ASSIGNED_TO_PROPERTY, performerId);
@@ -451,9 +452,9 @@ public class AcceptRnsService {
     private void createLog(String eventType, String description, Long taskId) {
         Map<String, Object> propsMap = new HashMap<>();
         propsMap.put(TASK_DESCRIPTION_PROPERTY, description);
-        propsMap.put(CONTENT_TYPE_ID.getName(), RNS_CONTENT_TYPE);
+        propsMap.put(CONTENT_TYPE_ID.getName(), CommonFields.RNS_CONTENT_TYPE);
         propsMap.put(TASK_TYPE_PROPERTY, CUSTOM.name());
-        propsMap.put(STATUS, TaskStatus.CREATED);
+        propsMap.put(CommonFields.STATUS, TaskStatus.CREATED);
         propsMap.put(TASK_OWNER_ID_PROPERTY, Long.valueOf("2"));
 
         taskLogService.create(new TaskLogDto(eventType, taskId), propsMap);
@@ -483,7 +484,7 @@ public class AcceptRnsService {
         documentPayload.put(REQUEST_TYPE_ATTRIBUTE, RNS_REQUEST_TYPE);
         documentPayload.put(DATA_TYPE_ATTRIBUTE, RNS_DATA_TYPE);
         documentPayload.put(TITLE.getName(), RNS_TITLE);
-        documentPayload.put(CONTENT_TYPE_ID.getName(), RNS_CONTENT_TYPE);
+        documentPayload.put(CONTENT_TYPE_ID.getName(), CommonFields.RNS_CONTENT_TYPE);
         documentPayload.put(IS_FOLDER.getName(), false);
         documentPayload.put(PATH.getName(), ROOT_FOLDER_PATH);
         documentPayload.put("smev_message_id", queryResult.getSmevMetadata().getMessageId());

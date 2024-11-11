@@ -1,8 +1,8 @@
 package ru.mycrg.data_service.service.smev3;
 
 import org.junit.Test;
-import ru.mycrg.data_service.config.Smev3Config;
 import ru.mycrg.data_service.egrn_cadastrial_plans_1_1_2.Request;
+import ru.mycrg.data_service.service.smev3.config.Smev3Config;
 import ru.mycrg.data_service.service.smev3.request.get_cadastrial_plan.GetCadastrialPlanRequestService;
 import ru.mycrg.data_service.service.smev3.request.get_cadastrial_plan.GetCadastrialPlanXmlBuildProcessor;
 import ru.mycrg.data_service.util.xml.XmlMarshaller;

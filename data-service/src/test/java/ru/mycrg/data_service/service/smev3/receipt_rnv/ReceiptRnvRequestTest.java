@@ -1,7 +1,7 @@
 package ru.mycrg.data_service.service.smev3.receipt_rnv;
 
 import org.junit.Test;
-import ru.mycrg.data_service.config.Smev3Config;
+import ru.mycrg.data_service.service.smev3.config.Smev3Config;
 import ru.mycrg.data_service.dto.smev3.ReceiptRnvRequestDto;
 import ru.mycrg.data_service.receipt_rnv_1_0_9.Request;
 import ru.mycrg.data_service.service.smev3.Mnemonic;

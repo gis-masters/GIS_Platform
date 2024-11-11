@@ -16,7 +16,6 @@ import ru.mycrg.data_service.service.cqrs.tasks.requests.UpdateTaskRequest;
 import ru.mycrg.data_service.service.schemas.ISchemaTemplateService;
 import ru.mycrg.data_service.service.smev3.request.accept_rns.AcceptRnsService;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
-import ru.mycrg.data_service_contract.enums.TaskStatus;
 import ru.mycrg.mediator.IRequestHandler;
 import ru.mycrg.mediator.Voidy;
 
@@ -27,37 +26,39 @@ import static java.time.LocalDateTime.now;
 import static ru.mycrg.data_service.service.TaskService.TASKS_SCHEMA;
 import static ru.mycrg.data_service.service.TaskService.TASK_QUALIFIER;
 import static ru.mycrg.data_service.service.resources.ResourceQualifier.recordQualifier;
-import static ru.mycrg.data_service.service.smev3.request.accept_rns.AcceptRnsService.*;
+import static ru.mycrg.data_service.service.smev3.fields.CommonFields.RNS_CONTENT_TYPE;
+import static ru.mycrg.data_service.service.smev3.fields.CommonFields.STATUS;
 import static ru.mycrg.data_service.util.SystemLibraryAttributes.*;
+import static ru.mycrg.data_service_contract.enums.TaskStatus.DONE;
+import static ru.mycrg.data_service_contract.enums.TaskStatus.IN_PROGRESS;
 
 @Component
 public class UpdateTaskRequestHandler implements IRequestHandler<UpdateTaskRequest, Voidy> {
 
     private final RecordsDao recordsDao;
     private final TaskService taskService;
-    private final ISchemaTemplateService schemaService;
     private final TaskLogService taskLogService;
-    private final IAuthenticationFacade authenticationFacade;
     private final AcceptRnsService acceptRnsService;
+    private final ISchemaTemplateService schemaService;
+    private final IAuthenticationFacade authenticationFacade;
 
     public UpdateTaskRequestHandler(RecordsDao recordsDao,
                                     TaskService taskService,
-                                    ISchemaTemplateService schemaService,
                                     TaskLogService taskLogService,
-                                    IAuthenticationFacade authenticationFacade,
-                                    AcceptRnsService acceptRnsService) {
+                                    AcceptRnsService acceptRnsService,
+                                    ISchemaTemplateService schemaService,
+                                    IAuthenticationFacade authenticationFacade) {
         this.recordsDao = recordsDao;
         this.taskService = taskService;
         this.schemaService = schemaService;
         this.taskLogService = taskLogService;
-        this.authenticationFacade = authenticationFacade;
         this.acceptRnsService = acceptRnsService;
+        this.authenticationFacade = authenticationFacade;
     }
 
     @Override
     public Voidy handle(UpdateTaskRequest request) {
         Long taskId = request.getTaskId();
-        IRecord newTask = request.getNewTask();
 
         Map<String, Object> task = taskService.getById(taskId);
 
@@ -69,15 +70,17 @@ public class UpdateTaskRequestHandler implements IRequestHandler<UpdateTaskReque
                     "Возможно редактировать только свои задачи или задачи своих непосредственных подчиненных");
         }
 
-        if (task.get(CONTENT_TYPE_ID) != null) {
-            if (task.get(CONTENT_TYPE_ID).toString().equals(RNS_CONTENT_TYPE)) {
-                if (newTask.getContent().get(STATUS) != null) {
-                    if ("IN_PROGRESS".equals(newTask.getContent().get(STATUS).toString())) {
-                        acceptRnsService.updateTablesAndSendStatusMessageToSmev(task, TaskStatus.IN_PROGRESS, taskId);
-                    }
-                    if ("DONE".equals(newTask.getContent().get(STATUS).toString())) {
-                        acceptRnsService.updateTablesAndSendStatusMessageToSmev(task, TaskStatus.DONE, taskId);
-                    }
+        IRecord newTask = request.getNewTask();
+        Object contentType = task.get(CONTENT_TYPE_ID.name());
+        if (contentType != null && contentType.toString().equals(RNS_CONTENT_TYPE)) {
+            String status = newTask.getAsString(STATUS);
+            if (status != null) {
+                if (IN_PROGRESS.name().equals(status)) {
+                    acceptRnsService.updateTablesAndSendStatusMessageToSmev(task, IN_PROGRESS, taskId);
+                }
+
+                if (DONE.name().equals(status)) {
+                    acceptRnsService.updateTablesAndSendStatusMessageToSmev(task, DONE, taskId);
                 }
             }
         }
@@ -91,9 +94,7 @@ public class UpdateTaskRequestHandler implements IRequestHandler<UpdateTaskReque
         dataForUpdate.put(LAST_MODIFIED.getName(), now());
 
         try {
-            recordsDao.updateRecordById(recordQualifier(TASK_QUALIFIER, taskId),
-                                        dataForUpdate,
-                                        tasksSchema);
+            recordsDao.updateRecordById(recordQualifier(TASK_QUALIFIER, taskId), dataForUpdate, tasksSchema);
 
             Map<String, Object> updatedTask = taskService.getById(taskId);
 

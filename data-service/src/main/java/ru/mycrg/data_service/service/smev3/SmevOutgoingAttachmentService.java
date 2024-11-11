@@ -6,9 +6,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
-import ru.mycrg.data_service.config.Smev3Config;
 import ru.mycrg.data_service.entity.File;
 import ru.mycrg.data_service.exceptions.SmevRequestException;
+import ru.mycrg.data_service.service.smev3.config.Smev3Config;
 import ru.mycrg.data_service.service.smev3.model.SmevAttachment;
 import ru.mycrg.data_service.service.storage.FileStorageService;
 

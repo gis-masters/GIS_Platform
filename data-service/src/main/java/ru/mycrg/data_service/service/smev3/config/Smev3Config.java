@@ -1,11 +1,10 @@
-package ru.mycrg.data_service.config;
+package ru.mycrg.data_service.service.smev3.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 
-
 /**
- * Параметры интеграци с СМЭВ 3
+ * Параметры интеграции с СМЭВ 3
  */
 @Configuration
 public class Smev3Config {

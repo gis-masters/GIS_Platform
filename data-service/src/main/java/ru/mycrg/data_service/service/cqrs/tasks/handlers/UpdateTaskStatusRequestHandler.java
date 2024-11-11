@@ -19,14 +19,19 @@ import ru.mycrg.data_service_contract.enums.TaskStatus;
 import ru.mycrg.mediator.IRequestHandler;
 import ru.mycrg.mediator.Voidy;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static java.time.LocalDateTime.now;
 import static java.util.Objects.nonNull;
-import static ru.mycrg.data_service.service.TaskService.*;
-import static ru.mycrg.data_service.service.resources.ResourceQualifier.*;
-import static ru.mycrg.data_service.service.smev3.request.accept_rns.AcceptRnsService.*;
+import static ru.mycrg.data_service.service.TaskService.TASKS_SCHEMA;
+import static ru.mycrg.data_service.service.TaskService.TASK_QUALIFIER;
+import static ru.mycrg.data_service.service.resources.ResourceQualifier.recordQualifier;
+import static ru.mycrg.data_service.service.smev3.fields.CommonFields.RNS_CONTENT_TYPE;
 import static ru.mycrg.data_service.util.SystemLibraryAttributes.*;
+import static ru.mycrg.data_service_contract.enums.TaskStatus.DONE;
+import static ru.mycrg.data_service_contract.enums.TaskStatus.IN_PROGRESS;
 
 @Component
 public class UpdateTaskStatusRequestHandler implements IRequestHandler<UpdateTaskStatusRequest, Voidy> {
@@ -54,7 +59,6 @@ public class UpdateTaskStatusRequestHandler implements IRequestHandler<UpdateTas
 
     @Override
     public Voidy handle(UpdateTaskStatusRequest request) {
-        TaskStatus newStatus = request.getTaskStatus();
         Long taskId = request.getTaskId();
 
         Map<String, Object> task = taskService.getById(taskId);
@@ -71,15 +75,15 @@ public class UpdateTaskStatusRequestHandler implements IRequestHandler<UpdateTas
         dataForUpdate.put(UPDATED_BY.getName(), userDetails.getUserId());
         dataForUpdate.put(LAST_MODIFIED.getName(), now());
 
+        TaskStatus newStatus = request.getTaskStatus();
         if (nonNull(newStatus)) {
             dataForUpdate.put("status", newStatus.toString());
         }
 
-        if (task.get(CONTENT_TYPE_ID) != null) {
-            if (task.get(CONTENT_TYPE_ID).toString().equals(RNS_CONTENT_TYPE)) {
-                if ((newStatus == TaskStatus.IN_PROGRESS) || newStatus == TaskStatus.DONE) {
-                    acceptRnsService.updateTablesAndSendStatusMessageToSmev(task, newStatus, taskId);
-                }
+        Object contentType = task.get(CONTENT_TYPE_ID.name());
+        if (contentType != null && contentType.toString().equals(RNS_CONTENT_TYPE)) {
+            if ((newStatus == IN_PROGRESS) || newStatus == DONE) {
+                acceptRnsService.updateTablesAndSendStatusMessageToSmev(task, newStatus, taskId);
             }
         }
 
