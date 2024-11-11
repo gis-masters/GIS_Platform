@@ -47,7 +47,8 @@ const fieldValidators: Partial<Record<PropertyType, FieldValidator[]>> = {
   [PropertyType.FILE]: [filesRequired, filesLoaded],
   [PropertyType.DOCUMENT]: [jsonArrayRequired],
   [PropertyType.SET]: [],
-  [PropertyType.CUSTOM]: [simpleRequired]
+  [PropertyType.CUSTOM]: [simpleRequired],
+  [PropertyType.USER_ID]: [numberRequired]
 };
 
 const propertyTypeError = new Error('Ошибка типа свойства');
