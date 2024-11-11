@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.mycrg.data_service.entity.File;
 import ru.mycrg.data_service.exceptions.BadRequestException;
+import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service_contract.dto.FileDescription;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
@@ -13,6 +14,8 @@ import ru.mycrg.data_service_contract.dto.SimplePropertyDto;
 import ru.mycrg.data_service_contract.enums.FileType;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -92,5 +95,24 @@ public class FileUtil {
                      .filter(property -> property.getValueTypeAsEnum().equals(FILE))
                      .map(SimplePropertyDto::getName)
                      .collect(Collectors.toList());
+    }
+
+    public static byte[] getFileAsBytes(File file) {
+        byte[] result;
+        try {
+            result = Files.readAllBytes(Path.of(file.getPath()));
+        } catch (IOException e) {
+            String msg = "Не удалось прочитать файл: " + file.getId();
+
+            log.error("{} => {}", msg, e.getMessage(), e);
+
+            throw new DataServiceException(msg);
+        }
+
+        if (result.length > 0) {
+            return result;
+        } else {
+            throw new DataServiceException("Файл пуст: " + file.getId());
+        }
     }
 }

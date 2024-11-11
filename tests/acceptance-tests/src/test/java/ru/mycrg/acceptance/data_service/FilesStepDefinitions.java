@@ -6,6 +6,7 @@ import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.restassured.specification.RequestSpecification;
+import org.hamcrest.core.IsEqual;
 import org.jetbrains.annotations.NotNull;
 import ru.mycrg.acceptance.BaseStepsDefinitions;
 import ru.mycrg.acceptance.auth_service.AuthorizationBase;
@@ -14,6 +15,7 @@ import ru.mycrg.acceptance.data_service.dto.FileDescriptionModel;
 import java.io.File;
 import java.util.*;
 
+import static java.lang.Boolean.TRUE;
 import static java.lang.Thread.sleep;
 import static org.apache.http.HttpStatus.SC_NOT_FOUND;
 import static org.apache.http.HttpStatus.SC_OK;
@@ -84,6 +86,16 @@ public class FilesStepDefinitions extends BaseStepsDefinitions {
 
                   currentFiles.add(new FileDescriptionModel(ids.get(0), file.getTotalSpace(), fileName));
               });
+    }
+
+    @Given("ECP догружен заново {string}")
+    public void loadEcpAgain(String ecpFileName) {
+        currentFiles.removeIf(item -> item.getTitle().equals(ecpFileName));
+
+        File file = getFile(ecpFileName);
+        List<UUID> ids = createFiles(new File[]{file});
+
+        currentFiles.add(new FileDescriptionModel(ids.get(0), file.getTotalSpace(), ecpFileName));
     }
 
     @Given("я скачиваю группу файлов архивом, передав главный файл группы: {string}")
@@ -341,6 +353,23 @@ public class FilesStepDefinitions extends BaseStepsDefinitions {
         getFile(getFileByTitleOrThrow(fileName).getId());
     }
 
+    @Given("я отправляю запрос на проверку соответствия файла {string} подписи {string}")
+    public void verifyFileByEcpStep(String baseFileName, String ecpFileName) {
+        FileDescriptionModel baseFile = getFileByTitleOrThrow(baseFileName);
+        FileDescriptionModel ecpFile = getFileByTitleOrThrow(ecpFileName);
+
+        verifyFileByEcp(baseFile, ecpFile);
+    }
+
+    @Given("подпись соответствует файлу, подписант: {string}")
+    public void checkVerifyResult(String signer) {
+        response.then()
+                .statusCode(SC_OK)
+                .body("signer[0]", IsEqual.equalTo(signer),
+                      "code[0]", IsEqual.equalTo("0x00000000"),
+                      "verified[0]", IsEqual.equalTo(TRUE));
+    }
+
     @Given("файл подписан")
     public void checkFileSignature() {
         assertTrue(jsonPath.getBoolean("signed"));
@@ -388,6 +417,12 @@ public class FilesStepDefinitions extends BaseStepsDefinitions {
                         get(url);
     }
 
+    private void verifyFileByEcp(FileDescriptionModel baseFile, FileDescriptionModel ecpFile) {
+        response = getBaseRequestWithCurrentCookie()
+                .when().
+                        get("/" + baseFile.getId() + "/verify/" + ecpFile.getId());
+    }
+
     private List<UUID> createFiles(File[] files) {
         RequestSpecification requestSpecification = getBaseRequestWithCurrentCookie()
                 .given().
@@ -427,7 +462,7 @@ public class FilesStepDefinitions extends BaseStepsDefinitions {
         downloadArchive(getFileByTitleOrThrow(fileName).getId());
     }
 
-    private static FileDescriptionModel getFileByTitleOrThrow(String title) {
+    public static FileDescriptionModel getFileByTitleOrThrow(String title) {
         return currentFiles
                 .stream()
                 .filter(file -> file.getTitle().equals(title))

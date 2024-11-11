@@ -57,6 +57,7 @@ import static org.springframework.http.HttpHeaders.CONTENT_LENGTH;
 import static org.springframework.http.HttpStatus.CREATED;
 import static ru.mycrg.auth_service_contract.Authorities.HAS_ANY_AUTHORITY;
 import static ru.mycrg.data_service.service.files.FileService.fileGroups;
+import static ru.mycrg.data_service.service.files.FileUtil.getFileAsBytes;
 import static ru.mycrg.data_service.util.DetailedLogger.logError;
 import static ru.mycrg.data_service.util.StringUtil.setToLowerCase;
 
@@ -132,6 +133,27 @@ public class FileController extends BaseController {
         }
 
         List<VerifyEcpResponse> result = ecpVerifier.verify(file.getPath(), file.getEcp());
+
+        return ResponseEntity.ok(result);
+    }
+
+    @PreAuthorize(HAS_ANY_AUTHORITY)
+    @GetMapping("/files/{fileId}/verify/{ecpId}")
+    public ResponseEntity<List<VerifyEcpResponse>> verifyFileByEcp(@PathVariable UUID fileId,
+                                                                   @PathVariable UUID ecpId) {
+        File file = fileRepository.findById(fileId)
+                                  .orElseThrow(() -> new NotFoundException(fileId));
+        if (!authenticationFacade.getLogin().equalsIgnoreCase(file.getCreatedBy())) {
+            throwIfResourceNotAllowed(file);
+        }
+
+        File ecp = fileRepository.findById(ecpId)
+                                 .orElseThrow(() -> new NotFoundException(ecpId));
+        if (!authenticationFacade.getLogin().equalsIgnoreCase(ecp.getCreatedBy())) {
+            throwIfResourceNotAllowed(ecp);
+        }
+
+        List<VerifyEcpResponse> result = ecpVerifier.verify(file.getPath(), getFileAsBytes(ecp));
 
         return ResponseEntity.ok(result);
     }

@@ -505,6 +505,26 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
         updateDocument(currentDocumentId, gson.toJson(record), DEFAULT_LIBRARY);
     }
 
+    @When("я заново пытаюсь подвязать подпись {string} к файлу {string} в текущей записи")
+    public void updateRecordWithNewEcpOnDefaultLibrary(String ecpFileName, String fileName) {
+        FileDescriptionModel ecpFile = getFileByTitleOrThrow(ecpFileName);
+
+        DefaultDocumentModel record = new DefaultDocumentModel("plug-in files");
+        record.setSome_files(currentFiles);
+
+        updateDocument(currentDocumentId, gson.toJson(record), DEFAULT_LIBRARY);
+    }
+
+    @Then("подпись заменена не будет с сообщением {string}")
+    public void checkEcpResponse(String msg) {
+        response.then().statusCode(200);
+
+        assertTrue(response.jsonPath()
+                           .getString("ecpReport")
+                           .contains(
+                                   "Подпись 'Подписанта' загружена не будет. Файл уже подписан. До-подписать можно плагином"));
+    }
+
     @Given("Существует запись в текущей библиотеке на основе растрового файла из БД {string}")
     public void createLibraryDefaultRecord(String title) {
         String body = "{" +

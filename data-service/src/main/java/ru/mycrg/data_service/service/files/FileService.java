@@ -23,8 +23,6 @@ import ru.mycrg.data_service_contract.dto.FileDescription;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.data_service_contract.enums.FileType;
 
-import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -271,19 +269,27 @@ public class FileService {
     private void processEcpFile(Optional<File> oBaseFile, File ecpFile, Map<UUID, List<VerifyEcpResponse>> report) {
         if (oBaseFile.isPresent()) { // Для ЭЦП нашли базовый файл... подписываем и удаляем ЭЦП
             File baseFile = oBaseFile.get();
-            byte[] ecpAsBytes = getEcpAsBytes(ecpFile);
-            List<VerifyEcpResponse> result = ecpVerifier.verify(baseFile.getPath(), ecpAsBytes);
+            if (baseFile.getEcp() != null) {
+                VerifyEcpResponse response = verificationFailed(
+                        "Подпись 'Подписанта' загружена не будет. Файл уже подписан. До-подписать можно плагином");
 
-            if (isVerified(result)) {
-                baseFile.setEcp(ecpAsBytes);
-                log.debug("Файл: '{}' подписан ЭЦП: '{}'", baseFile.getId(), ecpFile.getId());
+                report.put(ecpFile.getId(), List.of(response));
             } else {
-                log.debug("Файл: '{}' НЕ подписан. ЭЦП: '{}' не прошла проверку: {}", baseFile.getId(), ecpFile.getId(),
-                          report);
-            }
+                byte[] ecpAsBytes = getFileAsBytes(ecpFile);
+                List<VerifyEcpResponse> result = ecpVerifier.verify(baseFile.getPath(), ecpAsBytes);
 
-            if (report != null) {
-                report.put(ecpFile.getId(), result);
+                if (isVerified(result)) {
+                    baseFile.setEcp(ecpAsBytes);
+                    log.debug("Файл: '{}' подписан ЭЦП: '{}'", baseFile.getId(), ecpFile.getId());
+                } else {
+                    log.debug("Файл: '{}' НЕ подписан. ЭЦП: '{}' не прошла проверку: {}", baseFile.getId(),
+                              ecpFile.getId(),
+                              report);
+                }
+
+                if (report != null) {
+                    report.put(ecpFile.getId(), result);
+                }
             }
 
             // Удалим ЭЦП файл
@@ -327,25 +333,6 @@ public class FileService {
             String msg = "Не удалось обновить информацию о файлах";
             log.error("{} в записи: {} => {}", msg, qualifier.getQualifier(), e.getMessage());
             throw new DataServiceException(msg);
-        }
-    }
-
-    private byte[] getEcpAsBytes(File ecpFile) {
-        byte[] ecpAsBytes;
-        try {
-            ecpAsBytes = Files.readAllBytes(Path.of(ecpFile.getPath()));
-        } catch (IOException e) {
-            String msg = "Не удалось прочитать подпись из файла: " + ecpFile.getId();
-
-            log.error("{} => {}", msg, e.getMessage(), e);
-
-            throw new DataServiceException(msg);
-        }
-
-        if (ecpAsBytes.length > 0) {
-            return ecpAsBytes;
-        } else {
-            throw new DataServiceException("Файл подписи пуст: " + ecpFile.getId());
         }
     }
 
