@@ -82,7 +82,7 @@ public class LayerValidationReportService {
     public Process generateReport(ValidationRequestDto request) {
         final List<ExportResourceModel> resources = request.getResources();
         final String title = String.format("Экспорт отчета об ошибках. Кол-во слоев: %d", resources.size());
-        final String filePath = fileStorageService.buildPathToExportStorage(initFileName());
+        final String filePath = fileStorageService.getExportStoragePath() + "/" +  initFileName();
         final String dbName = getDefaultDatabaseName(authenticationFacade.getOrganizationId());
         final Map<String, SchemaDto> schemas = fetchSchemas(resources);
         final Process process = processService.create(authenticationFacade.getLogin(),

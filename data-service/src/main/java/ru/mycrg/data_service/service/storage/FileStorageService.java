@@ -251,8 +251,8 @@ public class FileStorageService {
         return getFileNamesFromDirectory(kptStoragePath.toUri());
     }
 
-    public String buildPathToExportStorage(String fileName) {
-        return exportStoragePath + fileName;
+    public Path getExportStoragePath() {
+        return exportStoragePath;
     }
 
     public void rename(String pathFrom, String pathTo) throws StorageException {
