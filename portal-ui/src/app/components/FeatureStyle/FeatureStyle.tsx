@@ -13,6 +13,7 @@ import {
   getFeatureFontString,
   getFeatureStringValue
 } from '../../services/map/map-labels.util';
+import { createStyle } from '../../services/util/style.util';
 import { Button } from '../Button/Button';
 import { IconButton } from '../IconButton/IconButton';
 import { LabelStylesSettings } from '../LabelStylesSettings/LabelStylesSettings';
@@ -83,7 +84,7 @@ export const FeatureStyle: FC<FeatureStyleProps> = observer(({ feature }) => {
       text,
       textProperties: { ...fontProperties }
     });
-    feature.setStyle(mapLabelsService.createStyle(feature));
+    feature.setStyle(createStyle(feature));
     setDialogOpen(false);
     handleCloseDialog();
     mapLabelsService.saveToStorages();

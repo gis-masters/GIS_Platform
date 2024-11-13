@@ -289,89 +289,94 @@ class MapService {
     });
   }
 
-  addExternalGeoserverLayer(layer: CrgExternalLayer, zIndex: number) {
-    const { tableName, transparency = 100, dataSourceUri } = layer;
+  addExternalGeoserverLayer(extLayer: CrgExternalLayer, zIndex: number) {
+    this.throwIfMapNotCreated();
 
-    if (!this.map) {
-      throw new Error('Невозможно выполнить addExternalGeoserverLayer. Карта не создана');
-    }
-
+    const { tableName, transparency = 100, dataSourceUri } = extLayer;
     const layerOnMap = this.getLayerByName(tableName);
     if (layerOnMap) {
       layerOnMap.setVisible(true);
       layerOnMap.setOpacity(transparency / 100);
       layerOnMap.setZIndex(zIndex);
-    } else {
-      const params: CrgWmsParams = {
-        LAYERS: tableName,
-        FORMAT: 'image/png8' // TODO: Вынести в настройки слоя
-      };
 
-      const commonLayerParams = {
-        visible: true,
-        opacity: transparency / 100,
-        zIndex
-      };
-
-      const commonWMSParams = {
-        url: dataSourceUri,
-        params,
-        serverType: 'geoserver' as ServerType,
-        crossOrigin: 'anonymous'
-      };
-
-      const layer: ImageLayer<ImageSource> = new ImageLayer({
-        source: new ImageWMS({
-          imageLoadFunction: this.externalGisMapServerLoadFunction,
-          ...commonWMSParams,
-          ratio: 1
-        }),
-        ...commonLayerParams
-      });
-
-      const props: LayerAdditionalProps = { crgInfo: { isUserLayer: true } };
-
-      layer.setProperties(props);
-
-      this.map.addLayer(layer);
+      return;
     }
+
+    const params: CrgWmsParams = {
+      LAYERS: tableName,
+      FORMAT: 'image/png8' // TODO: Вынести в настройки слоя
+    };
+
+    const commonLayerParams = {
+      visible: true,
+      opacity: transparency / 100,
+      zIndex
+    };
+
+    const commonWMSParams = {
+      url: dataSourceUri,
+      params,
+      serverType: 'geoserver' as ServerType,
+      crossOrigin: 'anonymous'
+    };
+
+    const layer: ImageLayer<ImageSource> = new ImageLayer({
+      source: new ImageWMS({
+        imageLoadFunction: this.externalGisMapServerLoadFunction,
+        ...commonWMSParams,
+        ratio: 1
+      }),
+      ...commonLayerParams
+    });
+
+    const props: LayerAdditionalProps = { crgInfo: { isUserLayer: true } };
+
+    layer.setProperties(props);
+
+    this.map.addLayer(layer);
   }
 
   addExternalLayer(layer: CrgExternalLayer, zIndex: number) {
+    this.throwIfMapNotCreated();
+
+    const { tableName, transparency, dataSourceUri } = layer;
     const layerOnMap = this.getLayerByName(layer.tableName);
     if (layerOnMap) {
       layerOnMap.setVisible(true);
-      layerOnMap.setOpacity((layer.transparency ?? 100) / 100);
+      layerOnMap.setOpacity((transparency ?? 100) / 100);
       layerOnMap.setZIndex(zIndex);
-    } else {
-      const tileLayer = new TileLayer({
-        source: new TileArcGISRest({
-          url: layer.dataSourceUri,
-          params: {
-            LAYERS: layer.tableName
-          },
-          tileLoadFunction: this.externalGisMapServerLoadFunction
-        }),
-        visible: true,
-        opacity: (layer.transparency ?? 100) / 100,
-        zIndex: zIndex
-      });
 
-      const props: LayerAdditionalProps = {
-        crgInfo: { isUserLayer: true }
-      };
-
-      tileLayer.setProperties(props);
-
-      this.map.addLayer(tileLayer);
+      return;
     }
+
+    const tileLayer = new TileLayer({
+      source: new TileArcGISRest({
+        url: dataSourceUri,
+        params: {
+          LAYERS: tableName
+        },
+        tileLoadFunction: this.externalGisMapServerLoadFunction
+      }),
+      visible: true,
+      opacity: (transparency ?? 100) / 100,
+      zIndex: zIndex
+    });
+
+    const props: LayerAdditionalProps = {
+      crgInfo: { isUserLayer: true }
+    };
+
+    tileLayer.setProperties(props);
+
+    this.map.addLayer(tileLayer);
   }
 
   async addLayer(layer: CrgLayer, zIndex: number, opacity: number): Promise<void> {
-    const { tableName, complexName, styleName, view, type } = layer;
+    this.throwIfMapNotCreated();
 
+    const { tableName, complexName, styleName, view, type } = layer;
     if (!tableName || !complexName) {
-      throw new Error('Некорректный слой в методе addLayers');
+      throw new Error('Некорректный слой, не заданы: tableName, complexName');
     }
 
     const params: CrgWmsParams = {
@@ -380,21 +385,22 @@ class MapService {
       FORMAT: Mime.VND_JPEG_PNG8
     };
 
-    const [featureIds, filter, featureIdsNegative] = extractFeatureIdsFromAttributesFilter(
-      attributesTableStore.getLayerFilter(tableName),
-      layer
-    );
-
     if (type === CrgLayerType.VECTOR) {
       const schema = await getLayerSchema(layer);
       if (!schema) {
         throw new Error(`Не удалось получить схему слоя ${layer.title}`);
       }
+
       const { definitionQuery }: Schema = applyView(schema, view);
       if (definitionQuery) {
         params.CQL_FILTER = definitionQuery;
       }
     }
+
+    const [featureIds, filter, featureIdsNegative] = extractFeatureIdsFromAttributesFilter(
+      attributesTableStore.getLayerFilter(tableName),
+      layer
+    );
 
     if (attributesTableStore.isLayerFiltered(layer)) {
       if (Object.keys(filter).length) {
@@ -435,8 +441,12 @@ class MapService {
 
     const props: LayerAdditionalProps = { crgInfo: { isUserLayer: true } };
 
-    olLayer.setProperties(props);
+    const oldLayer = this.getLayerByName(complexName);
+    if (oldLayer) {
+      this.map.removeLayer(oldLayer);
+    }
 
+    olLayer.setProperties(props);
     this.map.addLayer(olLayer);
   }
 
@@ -451,7 +461,6 @@ class MapService {
     });
   }
 
-  // Принудительный рефреш
   refreshAllLayers() {
     this.getUserLayers().forEach(layer => layer.getSource()?.refresh());
   }
@@ -464,11 +473,6 @@ class MapService {
     const collection = this.draftSource.getFeaturesCollection();
     const count = collection ? collection.getLength() : 0;
     this.draftSource.clear(count > 10);
-  }
-
-  // Очистить карту от всех слоёв.
-  clearMap() {
-    this.getUserLayers().forEach(layer => this.map.removeLayer(layer));
   }
 
   /**
@@ -895,6 +899,12 @@ class MapService {
     }
 
     return false;
+  }
+
+  private throwIfMapNotCreated() {
+    if (!this.map) {
+      throw new Error('Что-то пошло не так - карта не создана');
+    }
   }
 
   private selectDraftColor() {

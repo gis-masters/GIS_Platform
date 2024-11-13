@@ -12,7 +12,7 @@ import { Draw, Modify } from 'ol/interaction';
 import { DrawEvent } from 'ol/interaction/Draw';
 import VectorLayer from 'ol/layer/Vector';
 import VectorSource from 'ol/source/Vector';
-import { Circle, Fill, Icon, Stroke, Style, Text } from 'ol/style';
+import { Fill, Stroke, Style, Text } from 'ol/style';
 import CircleStyle from 'ol/style/Circle';
 import { v4 as uuid } from 'uuid';
 
@@ -30,6 +30,7 @@ import { isLinear, isPolygonal } from '../geoserver/wfs/wfs.util';
 import { notFalsyFilter } from '../util/NotFalsyFilter';
 import { featureToWfsFeature, UnitsOfAreaMeasurement, wfsFeatureToFeature } from '../util/open-layers.util';
 import { sleep } from '../util/sleep';
+import { createStyle, getLabelType } from '../util/style.util';
 import { isAnnotationsFontProperties } from '../util/typeGuards/isAnnotationsFontProperties';
 import { isArrayOf } from '../util/typeGuards/isArrayOf';
 import { isCoordinate, isCoordinateArray, isCoordinateArrayArray } from '../util/typeGuards/isCoordinate';
@@ -47,12 +48,10 @@ import {
   getRotationByAzimuth,
   getSelectedFeatureProjection,
   getSelectedOrActiveFeature,
-  getTextStyle,
   transformAnyCoordinates
 } from './map-labels.util';
 import { mapMeasureService } from './map-measure.service';
 
-const projectionError = 'Отсутствует проекция';
 const baseStyle: FontProperties = {
   isBold: false,
   isItalic: false,
@@ -66,31 +65,34 @@ class MapLabelsService {
   private static _instance: MapLabelsService;
   private draw?: Draw;
   private modify?: Modify;
-  private source = new VectorSource();
-  private turningPointsSource = new VectorSource();
-  private sourceForPrintLabels = new VectorSource();
   private selectedFeature?: Feature;
   private modifyingNow = false;
   private currentToolboxRoot?: Root;
   private currentOverlay?: Overlay;
-  private layer = new VectorLayer({
-    source: this.source,
+
+  private labelsSource = new VectorSource();
+  private layerForLabels = new VectorLayer({
+    source: this.labelsSource,
     zIndex: mapService.LABELS_LAYER_ZINDEX,
     properties: { name: 'labels' }
   });
+  private turningPointsSource = new VectorSource();
   private layerForTurningPoints = new VectorLayer({
     source: this.turningPointsSource,
     zIndex: mapService.LABELS_LAYER_ZINDEX,
     properties: { name: 'turningPoints' }
   });
+  private sourceForPrintLabels = new VectorSource();
   private layerForPrintLabels = new VectorLayer({
     source: this.sourceForPrintLabels,
     zIndex: mapService.LABELS_LAYER_ZINDEX,
     properties: { name: 'printLabels' }
   });
+
   private renderLabelToolboxDebounced = debounce(this.renderLabelToolbox, 500);
   private removeLabelToolboxDebounced = debounce(this.removeLabelToolbox, 500);
   private toolboxHovered = false;
+
   userLabelsSettings: AnnotationsFontProperties = {
     area: { ...baseStyle },
     length: { ...baseStyle },
@@ -140,7 +142,7 @@ class MapLabelsService {
 
   private get shown(): boolean {
     for (const layer of mapService.map.getLayers().getArray()) {
-      if (layer === this.layer) {
+      if (layer === this.layerForLabels) {
         return true;
       }
     }
@@ -230,7 +232,7 @@ class MapLabelsService {
           });
 
           feature.setId(uuid());
-          feature.setStyle(this.createStyle(feature));
+          feature.setStyle(createStyle(feature));
 
           return feature;
         }
@@ -240,14 +242,7 @@ class MapLabelsService {
 
   async addFeatureArea(): Promise<void> {
     this.dropInteractions();
-
-    const currentLayerProjection = await getSelectedFeatureProjection();
-    const wfsFeature = getSelectedOrActiveFeature();
-
-    if (!currentLayerProjection || !wfsFeature) {
-      throw new Error(projectionError);
-    }
-
+    const wfsFeature = this.getSelectedOrActiveFeatureOrThrow();
     const feature = wfsFeatureToFeature(wfsFeature);
     const geometry = feature.getGeometry();
 
@@ -261,7 +256,7 @@ class MapLabelsService {
     for (const point of middlePoints) {
       const pointCoordinates = transformCoord(
         point.getCoordinates().slice(0, 2),
-        currentLayerProjection,
+        await getSelectedFeatureProjection(),
         await getOlProjection()
       );
 
@@ -278,9 +273,9 @@ class MapLabelsService {
       });
 
       feature.setId(uuid());
-      feature.setStyle(this.createStyle(feature));
+      feature.setStyle(createStyle(feature));
 
-      this.source.addFeature(feature);
+      this.labelsSource.addFeature(feature);
     }
 
     await sleep(0);
@@ -290,13 +285,7 @@ class MapLabelsService {
   async addFeatureLength(): Promise<void> {
     this.dropInteractions();
 
-    const currentLayerProjection = await getSelectedFeatureProjection();
-    const wfsFeature = getSelectedOrActiveFeature();
-
-    if (!currentLayerProjection || !wfsFeature) {
-      throw new Error(projectionError);
-    }
-
+    const wfsFeature = this.getSelectedOrActiveFeatureOrThrow();
     const feature = wfsFeatureToFeature(wfsFeature);
     const geometry = feature.getGeometry();
 
@@ -304,6 +293,7 @@ class MapLabelsService {
       throw new Error('Ошибка геометрии объекта');
     }
 
+    const currentLayerProjection = await getSelectedFeatureProjection();
     const [value, units] = getFeatureLength({ geometry, projection: currentLayerProjection, precision: 4 });
     const middlePoints = getMiddlePoints(feature);
 
@@ -326,9 +316,9 @@ class MapLabelsService {
       });
 
       feature.setId(uuid());
-      feature.setStyle(this.createStyle(feature));
+      feature.setStyle(createStyle(feature));
 
-      this.source.addFeature(feature);
+      this.labelsSource.addFeature(feature);
     }
 
     await sleep(0);
@@ -338,21 +328,19 @@ class MapLabelsService {
   async addPointsDistances(): Promise<void> {
     this.dropInteractions();
 
-    const currentLayerProjection = await getSelectedFeatureProjection();
     const coordinates = getSelectedOrActiveFeature()?.geometry?.coordinates;
-
-    if (!currentLayerProjection || !coordinates || isNumberArray(coordinates)) {
+    if (!coordinates || isNumberArray(coordinates)) {
       return;
     }
 
     const features = this.getDistancesFeatures({
-      projFrom: currentLayerProjection,
+      projFrom: await getSelectedFeatureProjection(),
       olProjection: await getOlProjection(),
       coordinates,
       properties: { ...this.userLabelsSettings.distances }
     });
 
-    this.source.addFeatures(features);
+    this.labelsSource.addFeatures(features);
 
     await sleep(0);
     this.saveToStorages();
@@ -361,13 +349,7 @@ class MapLabelsService {
   async addTurningPoints() {
     this.dropInteractions();
 
-    const currentLayerProjection = await getSelectedFeatureProjection();
-    const wfsFeature = getSelectedOrActiveFeature();
-
-    if (!currentLayerProjection || !wfsFeature) {
-      throw new Error(projectionError);
-    }
-
+    const wfsFeature = this.getSelectedOrActiveFeatureOrThrow();
     const coordinates = wfsFeature.geometry?.coordinates;
     const geometryType = wfsFeature.geometry?.type;
 
@@ -375,42 +357,43 @@ class MapLabelsService {
       throw new Error('Отсутствие координат объекта');
     }
 
-    if (currentLayerProjection) {
-      const pointsCoordinates = this.getTurningPointsFromCoordinates(coordinates, geometryType);
-      const transformedCoordinates = transformGroup(pointsCoordinates, currentLayerProjection, await getOlProjection());
+    const pointsCoordinates = this.getTurningPointsFromCoordinates(coordinates, geometryType);
+    const transformedCoordinates = transformGroup(
+      pointsCoordinates,
+      await getSelectedFeatureProjection(),
+      await getOlProjection()
+    );
 
-      if (!isCoordinateArray(transformedCoordinates)) {
-        return;
-      }
-
-      const angles = getPointsWithAngles(transformedCoordinates);
-      const labelsFeatures = angles
-        .map(({ angle, point, isLabelInPolygon }, index) => {
-          const position = getLabelPosition(angle, isLabelInPolygon);
-
-          const feature = new Feature({
-            geometry: new Point(point),
-            type: 'label',
-            text: String(index + 1),
-            position,
-            textProperties: { ...this.userLabelsSettings.turningPoints }
-          });
-
-          feature.setId(uuid());
-          feature.setStyle(this.createStyle(feature));
-
-          return feature;
-        })
-        .filter(notFalsyFilter);
-
-      const turningPoints = this.createFeatures(transformedCoordinates, 'turningPoints');
-
-      this.turningPointsSource.addFeatures(turningPoints);
-      this.source.addFeatures(labelsFeatures);
-
-      await sleep(0);
-      this.saveToStorages();
+    if (!isCoordinateArray(transformedCoordinates)) {
+      return;
     }
+
+    const angles = getPointsWithAngles(transformedCoordinates);
+    const labelsFeatures = angles
+      .map(({ angle, point, isLabelInPolygon }, index) => {
+        const position = getLabelPosition(angle, isLabelInPolygon);
+
+        const feature = new Feature({
+          geometry: new Point(point),
+          type: 'label',
+          text: String(index + 1),
+          position,
+          textProperties: { ...this.userLabelsSettings.turningPoints }
+        });
+
+        feature.setId(uuid());
+        feature.setStyle(createStyle(feature));
+
+        return feature;
+      })
+      .filter(notFalsyFilter);
+
+    const turningPoints = this.createFeatures(transformedCoordinates, 'turningPoints');
+    this.turningPointsSource.addFeatures(turningPoints);
+    this.labelsSource.addFeatures(labelsFeatures);
+
+    await sleep(0);
+    this.saveToStorages();
   }
 
   private getTurningPointsFromCoordinates(
@@ -454,7 +437,7 @@ class MapLabelsService {
           });
 
           feature.setId(uuid());
-          feature.setStyle(this.createStyle(feature));
+          feature.setStyle(createStyle(feature));
 
           return feature;
         }
@@ -500,7 +483,7 @@ class MapLabelsService {
 
   private getDraw(type: LabelType): Draw {
     return new Draw({
-      source: this.source,
+      source: this.labelsSource,
       type: type === 'line' ? GeometryType.LINE_STRING : GeometryType.POINT,
       style: new Style({
         fill: new Fill({
@@ -535,7 +518,7 @@ class MapLabelsService {
       await sleep(0);
       this.saveToStorages();
     }
-    feature.setStyle(this.createStyle(feature));
+    feature.setStyle(createStyle(feature));
     this.addingLabelOff();
   }
 
@@ -563,8 +546,8 @@ class MapLabelsService {
 
   @boundMethod
   private removeItem(feature: Feature) {
-    if (this.source.hasFeature(feature)) {
-      this.source.removeFeature(feature);
+    if (this.labelsSource.hasFeature(feature)) {
+      this.labelsSource.removeFeature(feature);
     }
 
     if (this.turningPointsSource.hasFeature(feature)) {
@@ -576,8 +559,8 @@ class MapLabelsService {
   }
 
   clearAll() {
-    for (const feature of this.source.getFeatures()) {
-      this.source.removeFeature(feature);
+    for (const feature of this.labelsSource.getFeatures()) {
+      this.labelsSource.removeFeature(feature);
     }
 
     for (const feature of this.turningPointsSource.getFeatures()) {
@@ -594,10 +577,10 @@ class MapLabelsService {
       return;
     }
 
-    mapService.map.addLayer(this.layer);
+    mapService.map.addLayer(this.layerForLabels);
     mapService.map.addLayer(this.layerForTurningPoints);
 
-    this.modify = new Modify({ source: this.source });
+    this.modify = new Modify({ source: this.labelsSource });
 
     mapService.map.addInteraction(this.modify);
     this.modify.on(['modifystart'], this.handleModifyStart);
@@ -632,13 +615,13 @@ class MapLabelsService {
         throw new Error('feature error');
       }
 
-      feature.setStyle(this.createStyle(feature));
+      feature.setStyle(createStyle(feature));
 
       return feature;
     });
 
-    this.source.clear();
-    this.source.addFeatures(
+    this.labelsSource.clear();
+    this.labelsSource.addFeatures(
       olFeatures.filter(feature => feature.getProperties().type === 'label' || feature.getProperties().type === 'line')
     );
 
@@ -653,7 +636,7 @@ class MapLabelsService {
   hide() {
     this.drawOff();
     this.modifyOff();
-    mapService.map.removeLayer(this.layer);
+    mapService.map.removeLayer(this.layerForLabels);
     mapService.map.removeLayer(this.layerForTurningPoints);
   }
 
@@ -670,7 +653,7 @@ class MapLabelsService {
   }
 
   saveToStorages() {
-    const olFeatures = [...this.source.getFeatures(), ...this.turningPointsSource.getFeatures()];
+    const olFeatures = [...this.labelsSource.getFeatures(), ...this.turningPointsSource.getFeatures()];
     const wfsFeatures: WfsFeature[] = olFeatures.map(featureToWfsFeature);
 
     mapStore.setLabels(olFeatures);
@@ -679,65 +662,6 @@ class MapLabelsService {
 
   getStorageKey(key: string): string {
     return `mapLabels_${key}_${currentUser.id}_${currentProject.id}`;
-  }
-
-  createStyle(feature: Feature, selected?: boolean): Style[] {
-    if (this.getLabelType(feature) === 'line') {
-      return [this.createLineStyle(selected)];
-    }
-
-    if (this.getLabelType(feature) === 'label') {
-      return [this.createLabelStyle(feature, selected)];
-    }
-
-    if (this.getLabelType(feature) === 'turningPoints') {
-      return [this.createCircleStyle()];
-    }
-
-    throw new Error(`Unknown label type: ${this.getLabelType(feature)}`);
-  }
-
-  private createLineStyle(selected?: boolean): Style {
-    return new Style({
-      stroke: new Stroke({
-        color: selected ? '#1177dd' : '#3399ff',
-        width: 2
-      })
-    });
-  }
-
-  private createCircleStyle(): Style {
-    return new Style({
-      image: new Circle({
-        fill: new Fill({
-          color: '#FFA343'
-        }),
-        stroke: new Stroke({
-          width: 1,
-          color: '#fff'
-        }),
-        radius: 6
-      })
-    });
-  }
-
-  private createLabelStyle(feature: Feature, selected?: boolean): Style {
-    const properties = feature.getProperties();
-
-    if (typeof properties.text !== 'string') {
-      throw new TypeError('Текст не текст');
-    }
-
-    const svg =
-      '<svg xmlns="http://www.w3.org/2000/svg" height="20" width="20" viewBox="0 0 24 24"><path d="M10 9h4V6h3l-5-5-5 5h3v3zm-1 1H6V7l-5 5 5 5v-3h3v-4zm14 2-5-5v3h-3v4h3v3l5-5zm-9 3h-4v3H7l5 5 5-5h-3v-3z"/></svg>';
-
-    return new Style({
-      image: new Icon({
-        src: 'data:image/svg+xml,' + encodeURIComponent(svg),
-        opacity: selected ? 0.5 : 0
-      }),
-      text: getTextStyle(properties)
-    });
   }
 
   private createPrintLabelStyle(feature: Feature): Style {
@@ -765,12 +689,6 @@ class MapLabelsService {
     });
   }
 
-  private getLabelType(feature: Feature): LabelType {
-    const properties = feature.getProperties();
-
-    return properties.type as LabelType;
-  }
-
   setLabelsSettings(fontProperties: AnnotationsFontProperties): void {
     this.userLabelsSettings = fontProperties;
     localStorage.setItem(this.getStorageKey('userLabelsSettings'), JSON.stringify(fontProperties)); // do something
@@ -792,7 +710,7 @@ class MapLabelsService {
           if (feature === wasSelected) {
             selectedAgain = true;
           } else {
-            feature.setStyle(this.createStyle(feature, true));
+            feature.setStyle(createStyle(feature, true));
           }
 
           if (e.dragging || this.toolboxHovered) {
@@ -807,11 +725,11 @@ class MapLabelsService {
 
           return true; // так будет подсвечена только одна фича
         },
-        { layerFilter: layer => layer === this.layer, hitTolerance: 10 }
+        { layerFilter: layer => layer === this.layerForLabels, hitTolerance: 10 }
       );
 
       if (!selectedAgain && wasSelected && !this.toolboxHovered) {
-        wasSelected.setStyle(this.createStyle(wasSelected));
+        wasSelected.setStyle(createStyle(wasSelected));
         this.removeLabelToolboxDebounced();
       }
     }
@@ -826,7 +744,7 @@ class MapLabelsService {
     const MapLabelToolboxWithRegistry = withRegistry(registry)(MapLabelToolbox);
     const reactElement = createElement(MapLabelToolboxWithRegistry, {
       feature,
-      labelType: this.getLabelType(feature),
+      labelType: getLabelType(feature),
       onEdit: this.editLabel,
       onRemove: this.removeItem,
       onMouseEnter: this.handleToolboxMouseEnter,
@@ -882,6 +800,15 @@ class MapLabelsService {
     });
     feature.setStyle(this.createPrintLabelStyle(feature));
     this.sourceForPrintLabels.addFeatures([feature]);
+  }
+
+  private getSelectedOrActiveFeatureOrThrow() {
+    const wfsFeature = getSelectedOrActiveFeature();
+    if (!wfsFeature) {
+      throw new Error('Отсутствует выделенная/активная фича');
+    }
+
+    return wfsFeature;
   }
 }
 

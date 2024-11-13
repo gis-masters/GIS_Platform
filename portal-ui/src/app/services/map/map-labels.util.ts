@@ -249,12 +249,12 @@ export function getMiddlePoints(feature: Feature<SimpleGeometry>): Point[] {
   return [];
 }
 
-export async function getSelectedFeatureProjection(): Promise<Projection | undefined> {
+export async function getSelectedFeatureProjection(): Promise<Projection> {
   const selectedFeature = getSelectedOrActiveFeature();
   const layerTableName = selectedFeature ? extractTableNameFromFeatureId(selectedFeature.id) : null;
 
   if (!layerTableName) {
-    throw new Error('Отсуствует векторная таблица');
+    throw new Error('Отсутствует векторная таблица');
   }
 
   const layer = currentProject.layers.find(layer => layer.tableName === layerTableName);
@@ -269,7 +269,12 @@ export async function getSelectedFeatureProjection(): Promise<Projection | undef
     throw new Error('В слое не указана система координат');
   }
 
-  return await getProjectionByCode(layer?.nativeCRS);
+  const currentLayerProjection = await getProjectionByCode(layer?.nativeCRS);
+  if (!currentLayerProjection) {
+    throw new Error('Отсутствует проекция');
+  }
+
+  return currentLayerProjection;
 }
 
 export function getFeatureArea(
@@ -385,7 +390,7 @@ export function getLabelPosition(angle: number, isPointInPolygon: boolean): Labe
 }
 
 // создаем виртуальную линию по биссектрисе среднего угла для определения ее угла наклона относительно азимута
-// создаем смещенную по виртуальной линии точки чтобы получить проверку внутри заданного полигона или нет
+// создаем смещенную по виртуальной линии точки, чтобы получить проверку внутри заданного полигона или нет
 export function getPointsWithAngles(coordinates: Coordinate[]): PointWithAngle[] {
   const pointsWithAngles: PointWithAngle[] = [];
 
