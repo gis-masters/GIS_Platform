@@ -36,13 +36,7 @@ public class FileSigner {
         String errorMsg = "Новая ЭЦП не прошла проверку";
         List<VerifyEcpResponse> newEcpVerifyResponse = throwIfSignNotValid(file, ecpAsBytes, errorMsg);
 
-        if (file.getEcp() == null) {
-            log.debug("Файл НЕ подписан, проверяем подпись и подписываем");
-
-            file.setEcp(ecpAsBytes);
-
-            log.debug("Файл: '{}' подписан: {}", file.getId(), newEcpVerifyResponse);
-        } else {
+        if (file.getEcp() != null) {
             log.debug("Файл подписан. Проверяем, что новая подпись соответствует критериям: \n" +
                               "- Новая подпись валидна\n" +
                               "- Новая подпись содержит подписанта(ов) из старой подписи\n" +
@@ -72,6 +66,9 @@ public class FileSigner {
                 throw new BadRequestException("Новая подпись не содержит всех старых подписантов");
             }
         }
+
+        file.setEcp(ecpAsBytes);
+        log.debug("Файл: '{}' подписан: {}", file.getId(), newEcpVerifyResponse);
     }
 
     private List<VerifyEcpResponse> throwIfSignNotValid(File file, byte[] signAsBytes, String errorMsg) {

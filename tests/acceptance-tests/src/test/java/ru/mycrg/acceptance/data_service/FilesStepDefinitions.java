@@ -83,6 +83,15 @@ public class FilesStepDefinitions extends BaseStepsDefinitions {
                 new File("src/test/resources/ru/mycrg/acceptance/resources/" + ecpFileName));
     }
 
+    @Given("подпись файла {string} имеет размер {int}")
+    public void checkFileSignature(String baseFileName, Integer signSize) {
+        downloadEcp(getFileByTitleOrThrow(baseFileName).getId());
+
+        assertEquals(SC_OK, response.getStatusCode());
+        assertEquals((int) signSize, response.asByteArray().length);
+        assertEquals("application/pgp-signature", response.getContentType());
+    }
+
     @When("я подписываю файл {string} подписью {string}")
     public void signFile(String baseFileName, String ecpFileName) {
         signFile(
@@ -92,6 +101,13 @@ public class FilesStepDefinitions extends BaseStepsDefinitions {
 
     @Then("файл успешно подписан")
     public void fileSignedSuccessfully() {
+        assertEquals(200, response.getStatusCode());
+    }
+
+    @Then("файл {string} успешно до-подписан")
+    public void fileCoSignedSuccessfully(String fileName) {
+        response.prettyPrint();
+
         assertEquals(200, response.getStatusCode());
     }
 
