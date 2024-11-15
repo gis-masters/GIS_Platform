@@ -21,9 +21,11 @@ import ru.mycrg.data_service.entity.File;
 import ru.mycrg.data_service.exceptions.*;
 import ru.mycrg.data_service.mappers.FileResourceQualifierMapper;
 import ru.mycrg.data_service.repository.FileRepository;
-import ru.mycrg.data_service.service.EcpVerifier;
 import ru.mycrg.data_service.service.OrgSettingsKeeper;
 import ru.mycrg.data_service.service.cqrs.files.requests.CreateFileRequest;
+import ru.mycrg.data_service.service.ecp.EcpVerifier;
+import ru.mycrg.data_service.service.ecp.FileSigner;
+import ru.mycrg.data_service.service.ecp.HashCalculator;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service.service.resources.protectors.IMasterResourceProtector;
 import ru.mycrg.data_service.service.resources.protectors.MasterResourceProtector;
@@ -68,6 +70,8 @@ public class FileController extends BaseController {
 
     private final Mediator mediator;
     private final EcpVerifier ecpVerifier;
+    private final HashCalculator hashCalculator;
+    private final FileSigner fileSigner;
     private final FileRepository fileRepository;
     private final FileStorageService fileStorageService;
     private final FileStorageSizeGuarder fileStorageSizeGuarder;
@@ -77,6 +81,8 @@ public class FileController extends BaseController {
 
     public FileController(Mediator mediator,
                           EcpVerifier ecpVerifier,
+                          HashCalculator hashCalculator,
+                          FileSigner fileSigner,
                           FileRepository fileRepository,
                           FileStorageService fileStorageService,
                           FileStorageSizeGuarder fileStorageSizeGuarder,
@@ -85,6 +91,8 @@ public class FileController extends BaseController {
                           OrgSettingsKeeper orgSettingsKeeper) {
         this.mediator = mediator;
         this.ecpVerifier = ecpVerifier;
+        this.hashCalculator = hashCalculator;
+        this.fileSigner = fileSigner;
         this.fileStorageService = fileStorageService;
         this.fileRepository = fileRepository;
         this.fileStorageSizeGuarder = fileStorageSizeGuarder;
@@ -117,6 +125,21 @@ public class FileController extends BaseController {
         }
 
         return ResponseEntity.ok(new FileProjection(file));
+    }
+
+    @PreAuthorize(HAS_ANY_AUTHORITY)
+    @PostMapping("/files/{id}/sign")
+    public ResponseEntity<?> sign(@PathVariable UUID id,
+                                  @RequestPart MultipartFile sign) {
+        File file = fileRepository.findById(id)
+                                  .orElseThrow(() -> new NotFoundException(id));
+        if (!authenticationFacade.getLogin().equalsIgnoreCase(file.getCreatedBy())) {
+            throwIfResourceNotAllowed(file);
+        }
+
+        fileSigner.sign(file, sign);
+
+        return ResponseEntity.ok().build();
     }
 
     @PreAuthorize(HAS_ANY_AUTHORITY)
@@ -169,7 +192,7 @@ public class FileController extends BaseController {
             throwIfResourceNotAllowed(file);
         }
 
-        String hash = ecpVerifier.calculateHash(file.getPath());
+        String hash = hashCalculator.calculate(file.getPath());
 
         return ResponseEntity.ok(hash);
     }

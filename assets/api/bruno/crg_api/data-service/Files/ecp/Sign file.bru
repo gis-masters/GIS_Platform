@@ -1,0 +1,19 @@
+meta {
+  name: Sign file
+  type: http
+  seq: 2
+}
+
+post {
+  url: http://localhost:8084/files/a7d8dc76-a002-44e2-95ba-8bad73ec67a4/sign
+  body: multipartForm
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjcmdfbG9naW4iOiJoZXJtaW9uZUBhZG1pbjEiLCJ1c2VyX25hbWUiOiJoZXJtaW9uZV9hZG1pbjFfMTAiLCJncm91cHMiOltdLCJ2ZXJzaW9uIjoyLCJhdXRob3JpdGllcyI6WyJPUkdfQURNSU4iXSwibWluaW9ucyI6W10sImNsaWVudF9pZCI6ImFkbWluIiwidXNlcl9pZCI6MTAsInNjb3BlIjpbImNyZyJdLCJvcmdhbml6YXRpb25zIjpbeyJpZCI6MywibmFtZSI6IkhvZ3dhcnRzIDEifV0sImV4cCI6MTczMTU5NjM5NywiZGlyZWN0TWluaW9ucyI6WzEyXSwianRpIjoiM2U0OWMyNDQtMjFmOS00MDYzLWEwNDEtNmVkYzY4MTI4YWI0In0.DvjTCHXvFyIUkFOoKdMaUhXQPSryDwVQpXs-Rp6_Xts
+}
+
+body:multipart-form {
+  sign: @file(/home/denis/dev/_data/signature/test111.sig)
+}

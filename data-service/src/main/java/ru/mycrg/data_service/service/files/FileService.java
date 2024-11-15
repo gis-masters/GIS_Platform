@@ -16,7 +16,7 @@ import ru.mycrg.data_service.dto.record.IRecord;
 import ru.mycrg.data_service.entity.File;
 import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.repository.FileRepository;
-import ru.mycrg.data_service.service.EcpVerifier;
+import ru.mycrg.data_service.service.ecp.EcpVerifier;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service.service.storage.FileStorageService;
 import ru.mycrg.data_service_contract.dto.FileDescription;
@@ -263,6 +263,7 @@ public class FileService {
             Optional<File> oBaseFile = getBaseFile(baseFiles, ecpFile.getTitle());
             processEcpFile(oBaseFile, ecpFile, report);
         }
+
         return baseFiles;
     }
 

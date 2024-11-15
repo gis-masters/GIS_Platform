@@ -415,6 +415,9 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
         }
     }
 
+    /**
+     * Берем только организации созданные acceptance тестами. (Они имеют правильные логины и пароли)
+     */
     private void fillOrganizationPoolFromServer() {
         authorizationBase.loginAsSystemAdmin();
 
@@ -424,7 +427,12 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
 
         List<OrganizationBase> organizations = response.jsonPath().getList("content", OrganizationBase.class);
         for (OrganizationBase org: organizations) {
-            final UserCreateDto[] ownerTmp = new UserCreateDto[1];
+            String orgName = org.getName();
+            if (!orgName.contains("ООО ")) {
+                continue;
+            }
+
+            UserCreateDto[] ownerTmp = new UserCreateDto[1];
             org.getUsers().stream()
                .filter(user -> hasAdminAuthority(user.getAuthorities()))
                .findFirst()
@@ -434,7 +442,7 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
                });
 
             if (ownerTmp[0] != null) {
-                orgPool.put(org.getId(), new OrganizationCreateDto(org.getName(), org.getPhone(), ownerTmp[0]));
+                orgPool.put(org.getId(), new OrganizationCreateDto(orgName, org.getPhone(), ownerTmp[0]));
             }
         }
     }

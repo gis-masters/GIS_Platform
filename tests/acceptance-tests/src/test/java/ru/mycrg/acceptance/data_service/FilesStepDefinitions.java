@@ -76,6 +76,25 @@ public class FilesStepDefinitions extends BaseStepsDefinitions {
         assertEquals(currentFiles.size(), fileNamesInString.split(",").length);
     }
 
+    @Given("файл {string} подписан подписью {string}")
+    public void fileSigned(String baseFileName, String ecpFileName) {
+        signFile(
+                getFileByTitleOrThrow(baseFileName).getId(),
+                new File("src/test/resources/ru/mycrg/acceptance/resources/" + ecpFileName));
+    }
+
+    @When("я подписываю файл {string} подписью {string}")
+    public void signFile(String baseFileName, String ecpFileName) {
+        signFile(
+                getFileByTitleOrThrow(baseFileName).getId(),
+                new File("src/test/resources/ru/mycrg/acceptance/resources/" + ecpFileName));
+    }
+
+    @Then("файл успешно подписан")
+    public void fileSignedSuccessfully() {
+        assertEquals(200, response.getStatusCode());
+    }
+
     @Given("догружены новые файлы {string}")
     public void loadMoreFiles(String fileNamesInString) {
         Arrays.stream(fileNamesInString.split(","))
@@ -421,6 +440,15 @@ public class FilesStepDefinitions extends BaseStepsDefinitions {
         response = getBaseRequestWithCurrentCookie()
                 .when().
                         get("/" + baseFile.getId() + "/verify/" + ecpFile.getId());
+    }
+
+    private void signFile(UUID baseFileId, File ecp) {
+        RequestSpecification requestSpecification = getBaseRequestWithCurrentCookie()
+                .given().
+                        contentType("multipart/form-data").
+                        multiPart("sign", ecp);
+
+        response = requestSpecification.post("/" + baseFileId + "/sign");
     }
 
     private List<UUID> createFiles(File[] files) {
