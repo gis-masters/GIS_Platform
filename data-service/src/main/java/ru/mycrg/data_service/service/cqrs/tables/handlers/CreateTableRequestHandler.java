@@ -37,6 +37,7 @@ import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 import static java.util.stream.Collectors.toMap;
 import static ru.mycrg.data_service.dao.config.DaoProperties.RULE_ID;
+import static ru.mycrg.data_service.dao.config.DaoProperties.PRIMARY_KEY;
 import static ru.mycrg.data_service.dto.ResourceType.TABLE;
 import static ru.mycrg.data_service.dto.Roles.OWNER;
 import static ru.mycrg.data_service.service.resources.DatasetService.SCHEMAS_AND_TABLES_QUALIFIER;
@@ -130,7 +131,7 @@ public class CreateTableRequestHandler implements IRequestHandler<CreateTableReq
     private void createTable(SchemaDto schema, String datasetId, TableCreateDto dto) {
         try {
             List<SimplePropertyDto> schemaProperties = schema.getProperties();
-            enrichPropsByRuleId(schemaProperties);
+            generateSystemAttributes(schemaProperties);
 
             ddlTablesSpecial.create(datasetId, dto, schemaProperties);
         } catch (BadSqlGrammarException e) {
@@ -182,7 +183,7 @@ public class CreateTableRequestHandler implements IRequestHandler<CreateTableReq
         }
     }
 
-    private void enrichPropsByRuleId(List<SimplePropertyDto> schemaProperties) {
+    private void generateSystemAttributes(List<SimplePropertyDto> schemaProperties) {
         List<String> schemaPropertyName = schemaProperties.stream().map(SimplePropertyDto::getName)
                                                           .collect(Collectors.toList());
         if (!schemaPropertyName.contains(RULE_ID)) {
@@ -193,6 +194,17 @@ public class CreateTableRequestHandler implements IRequestHandler<CreateTableReq
 
             schemaProperties.add(ruleId);
         }
+
+        SimplePropertyDto objectId = new SimplePropertyDto();
+        objectId.setName(PRIMARY_KEY);
+        objectId.setTitle("№");
+        objectId.setDescription("Идентификатор объекта (Заполняется автоматически)");
+        objectId.setReadOnly(true);
+        objectId.setValueType(ValueType.INT);
+
+        schemaProperties.removeIf(prop -> PRIMARY_KEY.equals(prop.getName()));
+
+        schemaProperties.add(0, objectId);
     }
 
     private String buildTableName(String nameFromSchema, long datasetId, String requiredName) {

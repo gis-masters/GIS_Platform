@@ -16,7 +16,7 @@ import { currentProject } from '../../../stores/CurrentProject.store';
 import { mapStore } from '../../../stores/Map.store';
 import { convertToComplexField } from '../../Form/Form.utils';
 import { XTableInvoke } from '../../XTable/XTable';
-import { XTableColumn, XTableExtraColumnType } from '../../XTable/XTable.models';
+import { XTableColumn } from '../../XTable/XTable.models';
 import { getXTableColumnsFromSchema } from '../../XTable/XTable.utils';
 import { AttributesTableRecord } from '../Attributes.models';
 import { extractFeatureIdsFromAttributesFilter } from '../Attributes.utils';
@@ -151,14 +151,6 @@ export class AttributesBar extends Component<AttributesBarProps> {
         cellProps: {
           padding: 'checkbox'
         }
-      },
-
-      {
-        field: 'cutId',
-        title: '№',
-        minWidth: 50,
-        filterable: true,
-        type: XTableExtraColumnType.ID
       },
 
       ...getXTableColumnsFromSchema(this.schema)

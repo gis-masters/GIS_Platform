@@ -170,7 +170,7 @@ public class SchemaUtil {
 
             schemaProperties.add(createdBy);
         }
-
+        
         if (!propertyNames.contains(CREATED_AT.getName())) {
             SimplePropertyDto createdAt = new SimplePropertyDto();
             createdAt.setName(CREATED_AT.getName());

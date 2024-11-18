@@ -69,6 +69,9 @@ public class CreateLibraryRequestHandler implements IRequestHandler<CreateLibrar
 
         docLibraryProtector.throwIfExists(dlQualifier);
 
+        List<SimplePropertyDto> schemaProperties = schema.getProperties();
+        generateSystemAttributes(schemaProperties);
+
         validationSchema(schema);
 
         DocumentLibrary library = new DocumentLibrary();
@@ -83,8 +86,7 @@ public class CreateLibraryRequestHandler implements IRequestHandler<CreateLibrar
 
         libraryRepository.save(library);
 
-        List<SimplePropertyDto> schemaProperties = schema.getProperties();
-        generateSystemAttributes(schemaProperties);
+        generateSystemBackAttributes(schemaProperties);
 
         ddlTablesBase.create(SYSTEM_SCHEMA_NAME, library.getTableName(), schemaProperties, ID);
 
@@ -104,6 +106,44 @@ public class CreateLibraryRequestHandler implements IRequestHandler<CreateLibrar
     private void generateSystemAttributes(List<SimplePropertyDto> schemaProperties) {
         List<String> schemaPropertyName = schemaProperties.stream().map(SimplePropertyDto::getName)
                                                           .collect(Collectors.toList());
+        if (!schemaPropertyName.contains(IS_FOLDER.getName())) {
+            SimplePropertyDto isFolder = new SimplePropertyDto();
+            isFolder.setName(IS_FOLDER.getName());
+            isFolder.setTitle("Папка/Документ");
+            isFolder.setDescription("Папка или Документ");
+            isFolder.setValueType(ValueType.BOOLEAN);
+            isFolder.setDefaultValue(false);
+
+            schemaProperties.add(isFolder);
+        }
+
+        if (!schemaPropertyName.contains(PATH.getName())) {
+            SimplePropertyDto path = new SimplePropertyDto();
+            path.setName(PATH.getName());
+            path.setTitle("Путь");
+            path.setDescription("Полный путь, отражающий иерархию объектов");
+            path.setValueType(ValueType.TEXT);
+            path.setDefaultValue(ROOT_FOLDER_PATH);
+
+            schemaProperties.add(path);
+        }
+
+        SimplePropertyDto id = new SimplePropertyDto();
+        id.setName(ID);
+        id.setTitle("Идентификатор");
+        id.setDescription("Заполняется автоматически");
+        id.setRequired(true);
+        id.setReadOnly(true);
+        id.setValueType(ValueType.INT);
+
+        schemaProperties.removeIf(prop -> ID.equals(prop.getName()));
+
+        schemaProperties.add(0, id);
+    }
+
+    private void generateSystemBackAttributes(List<SimplePropertyDto> schemaProperties) {
+        List<String> schemaPropertyName = schemaProperties.stream().map(SimplePropertyDto::getName)
+                                                          .collect(Collectors.toList());
         if (!schemaPropertyName.contains(SystemLibraryAttributes.VERSIONS.getName())) {
             SimplePropertyDto versions = new SimplePropertyDto();
             versions.setName(SystemLibraryAttributes.VERSIONS.getName());
@@ -119,24 +159,6 @@ public class CreateLibraryRequestHandler implements IRequestHandler<CreateLibrar
             isDeleted.setDefaultValue(false);
 
             schemaProperties.add(isDeleted);
-        }
-
-        if (!schemaPropertyName.contains(IS_FOLDER.getName())) {
-            SimplePropertyDto isFolder = new SimplePropertyDto();
-            isFolder.setName(IS_FOLDER.getName());
-            isFolder.setValueType(ValueType.BOOLEAN);
-            isFolder.setDefaultValue(false);
-
-            schemaProperties.add(isFolder);
-        }
-
-        if (!schemaPropertyName.contains(PATH.getName())) {
-            SimplePropertyDto path = new SimplePropertyDto();
-            path.setName(PATH.getName());
-            path.setValueType(ValueType.TEXT);
-            path.setDefaultValue(ROOT_FOLDER_PATH);
-
-            schemaProperties.add(path);
         }
     }
 

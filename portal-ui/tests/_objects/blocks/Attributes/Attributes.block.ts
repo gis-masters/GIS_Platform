@@ -42,7 +42,7 @@ class AttributesBlock extends Block {
 
     const values = await this.getHeadCellsValues();
 
-    await expect(values).toEqual(['', '№', title]);
+    await expect(values).toEqual(['', title]);
   }
 
   async selectTab(title: string): Promise<void> {
