@@ -50,7 +50,7 @@ export class Layer extends Component<LayerProps> {
   @observable private menuX = 0;
   @observable private menuY = 0;
   @observable private _errors: string[] = [];
-  @observable private menuAnchor?: HTMLElement;
+  @observable private menuAnchor?: HTMLElement | null;
 
   constructor(props: LayerProps) {
     super(props);
@@ -124,7 +124,7 @@ export class Layer extends Component<LayerProps> {
             open={this.menuOpen}
             x={this.menuX}
             y={this.menuY}
-            anchor={this.menuAnchor}
+            anchor={this.menuAnchor ?? undefined}
             onClose={this.handleContextMenuClose}
             layerWithError={this.isError}
             editMode={editMode}
@@ -207,7 +207,7 @@ export class Layer extends Component<LayerProps> {
     }
 
     if (this.menuAnchor) {
-      delete this.menuAnchor;
+      this.menuAnchor = null;
     }
 
     this.menuX = e.clientX - 2;
