@@ -815,6 +815,7 @@ SET class_rule =
             "name": "gisogdrf_audit_datetime",
             "title": "Дата аудита в ГИСОГД",
             "readOnly": true,
+            "minWidth": 200,
             "valueType": "DATETIME"
         },
         {
@@ -822,6 +823,7 @@ SET class_rule =
             "title": "Статус синхронизации",
             "asTitle": true,
             "readOnly": true,
+            "minWidth": 200,
             "valueType": "CHOICE",
             "enumerations": [
                 {
@@ -854,6 +856,7 @@ SET class_rule =
             "name": "gisogdrf_publication_datetime",
             "title": "Дата последней отправки в ГИСОГД РФ",
             "readOnly": true,
+            "minWidth": 300,
             "valueType": "DATETIME"
         },
         {
@@ -1394,12 +1397,14 @@ SET class_rule =
         {
           "name": "gisogdrf_audit_datetime",
           "title": "Дата аудита в ГИСОГД",
+          "minWidth": 200,
           "readOnly": true,
           "valueType": "DATETIME"
         },
         {
           "name": "gisogdrf_sync_status",
           "title": "Статус синхронизации",
+          "minWidth": 200,
           "asTitle": true,
           "readOnly": true,
           "valueType": "CHOICE",
@@ -1433,6 +1438,7 @@ SET class_rule =
         {
           "name": "gisogdrf_publication_datetime",
           "title": "Дата последней отправки в ГИСОГД РФ",
+          "minWidth": 300,
           "readOnly": true,
           "valueType": "DATETIME"
         },
@@ -2290,6 +2296,7 @@ SET class_rule =
             "name": "gisogdrf_audit_datetime",
             "title": "Дата аудита в ГИСОГД",
             "readOnly": true,
+            "minWidth": 200,
             "valueType": "DATETIME"
         },
         {
@@ -2297,6 +2304,7 @@ SET class_rule =
             "title": "Статус синхронизации",
             "asTitle": true,
             "readOnly": true,
+            "minWidth": 200,
             "valueType": "CHOICE",
             "enumerations": [
                 {
@@ -2329,6 +2337,7 @@ SET class_rule =
             "name": "gisogdrf_publication_datetime",
             "title": "Дата последней отправки в ГИСОГД РФ",
             "readOnly": true,
+            "minWidth": 300,
             "valueType": "DATETIME"
         },
         {
@@ -2917,6 +2926,7 @@ SET class_rule =
             "name": "gisogdrf_audit_datetime",
             "title": "Дата аудита в ГИСОГД",
             "readOnly": true,
+            "minWidth": 200,
             "valueType": "DATETIME",
             "description": "Время ответа Аудита ГИСОГД РФ"
         },
@@ -2925,6 +2935,7 @@ SET class_rule =
             "title": "Статус синхронизации",
             "asTitle": true,
             "readOnly": true,
+            "minWidth": 200,
             "valueType": "CHOICE",
             "enumerations": [
                 {
@@ -2957,6 +2968,7 @@ SET class_rule =
             "name": "gisogdrf_publication_datetime",
             "title": "Дата последней отправки в ГИСОГД РФ",
             "readOnly": true,
+            "minWidth": 300,
             "valueType": "DATETIME"
         },
         {
@@ -4381,6 +4393,7 @@ SET class_rule =
             "name": "gisogdrf_audit_datetime",
             "title": "Дата аудита в ГИСОГД",
             "readOnly": true,
+            "minWidth": 200,
             "valueType": "DATETIME",
             "description": "Время ответа Аудита ГИСОГД РФ"
         },
@@ -4389,6 +4402,7 @@ SET class_rule =
             "title": "Статус синхронизации",
             "asTitle": true,
             "readOnly": true,
+            "minWidth": 200,
             "valueType": "CHOICE",
             "enumerations": [
                 {
@@ -4428,6 +4442,7 @@ SET class_rule =
             "name": "gisogdrf_publication_datetime",
             "title": "Дата последней отправки в ГИСОГД РФ",
             "readOnly": true,
+            "minWidth": 300,
             "valueType": "DATETIME"
         },
         {
@@ -4695,6 +4710,7 @@ SET class_rule =
             "name": "gisogdrf_audit_datetime",
             "title": "Дата аудита в ГИСОГД",
             "readOnly": true,
+            "minWidth": 200,
             "valueType": "DATETIME",
             "description": "Время ответа Аудита ГИСОГД РФ"
         },
@@ -4703,6 +4719,7 @@ SET class_rule =
             "title": "Статус синхронизации",
             "asTitle": true,
             "readOnly": true,
+            "minWidth": 200,
             "valueType": "CHOICE",
             "enumerations": [
                 {
@@ -4735,6 +4752,7 @@ SET class_rule =
             "name": "gisogdrf_publication_datetime",
             "title": "Дата последней отправки в ГИСОГД РФ",
             "readOnly": true,
+            "minWidth": 300,
             "valueType": "DATETIME"
         },
         {
@@ -5500,6 +5518,7 @@ SET class_rule =
             "name": "gisogdrf_audit_datetime",
             "title": "Дата аудита в ГИСОГД",
             "readOnly": true,
+            "minWidth": 200,
             "valueType": "DATETIME",
             "description": "Время ответа Аудита ГИСОГД РФ"
         },
@@ -5508,6 +5527,7 @@ SET class_rule =
             "title": "Статус синхронизации",
             "asTitle": true,
             "readOnly": true,
+            "minWidth": 200,
             "valueType": "CHOICE",
             "enumerations": [
                 {
@@ -5540,6 +5560,7 @@ SET class_rule =
             "name": "gisogdrf_publication_datetime",
             "title": "Дата последней отправки в ГИСОГД РФ",
             "readOnly": true,
+            "minWidth": 300,
             "valueType": "DATETIME"
         },
         {
@@ -7585,6 +7606,7 @@ SET class_rule =
             "name": "gisogdrf_audit_datetime",
             "title": "Дата аудита в ГИСОГД",
             "readOnly": true,
+            "minWidth": 200,
             "valueType": "DATETIME",
             "description": "Время ответа Аудита ГИСОГД РФ"
         },
@@ -7593,6 +7615,7 @@ SET class_rule =
             "title": "Статус синхронизации",
             "asTitle": true,
             "readOnly": true,
+            "minWidth": 200,
             "valueType": "CHOICE",
             "enumerations": [
                 {
@@ -7625,6 +7648,7 @@ SET class_rule =
             "name": "gisogdrf_publication_datetime",
             "title": "Дата последней отправки в ГИСОГД РФ",
             "readOnly": true,
+            "minWidth": 300,
             "valueType": "DATETIME"
         },
         {
@@ -10858,6 +10882,7 @@ SET class_rule =
             "name": "gisogdrf_audit_datetime",
             "title": "Дата аудита в ГИСОГД",
             "readOnly": true,
+            "minWidth": 200,
             "valueType": "DATETIME",
             "description": "Время ответа Аудита ГИСОГД РФ"
         },
@@ -10866,6 +10891,7 @@ SET class_rule =
             "title": "Статус синхронизации",
             "asTitle": true,
             "readOnly": true,
+            "minWidth": 200,
             "valueType": "CHOICE",
             "enumerations": [
                 {
@@ -10898,6 +10924,7 @@ SET class_rule =
             "name": "gisogdrf_publication_datetime",
             "title": "Дата последней отправки в ГИСОГД РФ",
             "readOnly": true,
+            "minWidth": 300,
             "valueType": "DATETIME"
         },
         {
@@ -11217,6 +11244,7 @@ SET class_rule =
             "name": "gisogdrf_audit_datetime",
             "title": "Дата аудита в ГИСОГД",
             "readOnly": true,
+            "minWidth": 200,
             "valueType": "DATETIME",
             "description": "Время ответа Аудита ГИСОГД РФ"
         },
@@ -11225,6 +11253,7 @@ SET class_rule =
             "title": "Статус синхронизации",
             "asTitle": true,
             "readOnly": true,
+            "minWidth": 200,
             "valueType": "CHOICE",
             "enumerations": [
                 {
@@ -11257,6 +11286,7 @@ SET class_rule =
             "name": "gisogdrf_publication_datetime",
             "title": "Дата последней отправки в ГИСОГД РФ",
             "readOnly": true,
+            "minWidth": 300,
             "valueType": "DATETIME"
         },
         {
@@ -15608,12 +15638,14 @@ SET class_rule =
         {
             "name": "gisogdrf_publication_datetime",
             "title": "Дата публикации в ГИСОГД",
+            "minWidth": 300,
             "readOnly": true,
             "valueType": "DATETIME"
         },
         {
             "name": "gisogdrf_sync_status",
             "title": "Статус синхронизации",
+            "minWidth": 200,
             "asTitle": true,
             "readOnly": true,
             "valueType": "CHOICE",
@@ -15789,6 +15821,7 @@ SET class_rule =
         {
             "name": "gisogdrf_publication_datetime",
             "title": "Дата публикации в ГИСОГД",
+            "minWidth": 300,
             "readOnly": true,
             "valueType": "DATETIME"
         },
@@ -15796,6 +15829,7 @@ SET class_rule =
             "name": "gisogdrf_audit_datetime",
             "title": "Дата аудита в ГИСОГД",
             "readOnly": true,
+            "minWidth": 200,
             "valueType": "DATETIME",
             "description": "Время ответа Аудита ГИСОГД РФ"
         },
@@ -15804,6 +15838,7 @@ SET class_rule =
             "title": "Статус синхронизации",
             "asTitle": true,
             "readOnly": true,
+            "minWidth": 200,
             "valueType": "CHOICE",
             "enumerations": [
                 {
@@ -16260,12 +16295,15 @@ SET class_rule =
         {
             "name": "gisogdrf_publication_datetime",
             "title": "Дата публикации в ГИСОГД",
+            "minWidth": 300,
+            "readOnly": true,
             "valueType": "DATETIME"
         },
         {
             "name": "gisogdrf_audit_datetime",
             "title": "Дата аудита в ГИСОГД",
             "readOnly": true,
+            "minWidth": 200,
             "valueType": "DATETIME",
             "description": "Время ответа Аудита ГИСОГД РФ"
         },
@@ -16274,6 +16312,7 @@ SET class_rule =
             "title": "Статус синхронизации",
             "asTitle": true,
             "readOnly": true,
+            "minWidth": 200,
             "valueType": "CHOICE",
             "enumerations": [
                 {
@@ -16482,12 +16521,15 @@ SET class_rule =
         {
             "name": "gisogdrf_publication_datetime",
             "title": "Дата публикации в ГИСОГД",
+            "minWidth": 300,
+            "readOnly": true,
             "valueType": "DATETIME"
         },
         {
             "name": "gisogdrf_audit_datetime",
             "title": "Дата аудита в ГИСОГД",
             "readOnly": true,
+            "minWidth": 200,
             "valueType": "DATETIME",
             "description": "Время ответа Аудита ГИСОГД РФ"
         },
@@ -16496,6 +16538,7 @@ SET class_rule =
             "title": "Статус синхронизации",
             "asTitle": true,
             "readOnly": true,
+            "minWidth": 200,
             "valueType": "CHOICE",
             "enumerations": [
                 {
@@ -16830,12 +16873,15 @@ SET class_rule =
         {
             "name": "gisogdrf_publication_datetime",
             "title": "Дата публикации в ГИСОГД",
+            "minWidth": 300,
+            "readOnly": true,
             "valueType": "DATETIME"
         },
         {
             "name": "gisogdrf_audit_datetime",
             "title": "Дата аудита в ГИСОГД",
             "readOnly": true,
+            "minWidth": 200,
             "valueType": "DATETIME",
             "description": "Время ответа Аудита ГИСОГД РФ"
         },
@@ -16844,6 +16890,7 @@ SET class_rule =
             "title": "Статус синхронизации",
             "asTitle": true,
             "readOnly": true,
+            "minWidth": 200,
             "valueType": "CHOICE",
             "enumerations": [
                 {
@@ -17139,12 +17186,15 @@ SET class_rule =
         {
             "name": "gisogdrf_publication_datetime",
             "title": "Дата публикации в ГИСОГД",
+            "minWidth": 300,
+            "readOnly": true,
             "valueType": "DATETIME"
         },
         {
             "name": "gisogdrf_audit_datetime",
             "title": "Дата аудита в ГИСОГД",
             "readOnly": true,
+            "minWidth": 200,
             "valueType": "DATETIME",
             "description": "Время ответа Аудита ГИСОГД РФ"
         },
@@ -17153,6 +17203,7 @@ SET class_rule =
             "title": "Статус синхронизации",
             "asTitle": true,
             "readOnly": true,
+            "minWidth": 200,
             "valueType": "CHOICE",
             "enumerations": [
                 {
@@ -17417,12 +17468,15 @@ SET class_rule =
         {
             "name": "gisogdrf_publication_datetime",
             "title": "Дата публикации в ГИСОГД",
+            "minWidth": 300,
+            "readOnly": true,
             "valueType": "DATETIME"
         },
         {
             "name": "gisogdrf_audit_datetime",
             "title": "Дата аудита в ГИСОГД",
             "readOnly": true,
+            "minWidth": 200,
             "valueType": "DATETIME",
             "description": "Время ответа Аудита ГИСОГД РФ"
         },
@@ -17431,6 +17485,7 @@ SET class_rule =
             "title": "Статус синхронизации",
             "asTitle": true,
             "readOnly": true,
+            "minWidth": 200,
             "valueType": "CHOICE",
             "enumerations": [
                 {
@@ -17706,12 +17761,15 @@ SET class_rule =
         {
             "name": "gisogdrf_publication_datetime",
             "title": "Дата публикации в ГИСОГД",
+            "minWidth": 300,
+            "readOnly": true,
             "valueType": "DATETIME"
         },
         {
             "name": "gisogdrf_audit_datetime",
             "title": "Дата аудита в ГИСОГД",
             "readOnly": true,
+            "minWidth": 200,
             "valueType": "DATETIME",
             "description": "Время ответа Аудита ГИСОГД РФ"
         },
@@ -17720,6 +17778,7 @@ SET class_rule =
             "title": "Статус синхронизации",
             "asTitle": true,
             "readOnly": true,
+            "minWidth": 200,
             "valueType": "CHOICE",
             "enumerations": [
                 {
@@ -18015,12 +18074,15 @@ SET class_rule =
         {
             "name": "gisogdrf_publication_datetime",
             "title": "Дата публикации в ГИСОГД",
+            "minWidth": 300,
+            "readOnly": true,
             "valueType": "DATETIME"
         },
         {
             "name": "gisogdrf_audit_datetime",
             "title": "Дата аудита в ГИСОГД",
             "readOnly": true,
+            "minWidth": 200,
             "valueType": "DATETIME",
             "description": "Время ответа Аудита ГИСОГД РФ"
         },
@@ -18029,6 +18091,7 @@ SET class_rule =
             "title": "Статус синхронизации",
             "asTitle": true,
             "readOnly": true,
+            "minWidth": 200,
             "valueType": "CHOICE",
             "enumerations": [
                 {
@@ -18271,12 +18334,15 @@ SET class_rule =
         {
             "name": "gisogdrf_publication_datetime",
             "title": "Дата публикации в ГИСОГД",
+            "minWidth": 300,
+            "readOnly": true,
             "valueType": "DATETIME"
         },
         {
             "name": "gisogdrf_audit_datetime",
             "title": "Дата аудита в ГИСОГД",
             "readOnly": true,
+            "minWidth": 200,
             "valueType": "DATETIME",
             "description": "Время ответа Аудита ГИСОГД РФ"
         },
@@ -18285,6 +18351,7 @@ SET class_rule =
             "title": "Статус синхронизации",
             "asTitle": true,
             "readOnly": true,
+            "minWidth": 200,
             "valueType": "CHOICE",
             "enumerations": [
                 {
@@ -18822,6 +18889,7 @@ SET class_rule =
          {
            "name": "gisogdrf_publication_datetime",
            "title": "Дата публикации в ГИСОГД",
+           "minWidth": 300,
            "readOnly": true,
            "valueType": "DATETIME"
          },
@@ -18829,11 +18897,13 @@ SET class_rule =
            "name": "gisogdrf_audit_datetime",
            "title": "Дата публикации в ГИСОГД",
            "readOnly": true,
+           "minWidth": 200,
            "valueType": "DATETIME"
          },
          {
            "name": "gisogdrf_sync_status",
            "title": "Статус синхронизации",
+           "minWidth": 200,
            "asTitle": true,
            "readOnly": true,
            "valueType": "CHOICE",
@@ -19587,12 +19657,15 @@ SET class_rule =
         {
             "name": "gisogdrf_publication_datetime",
             "title": "Дата публикации в ГИСОГД",
+            "minWidth": 300,
+            "readOnly": true,
             "valueType": "DATETIME"
         },
         {
             "name": "gisogdrf_audit_datetime",
             "title": "Дата аудита в ГИСОГД",
             "readOnly": true,
+            "minWidth": 200,
             "valueType": "DATETIME",
             "description": "Время ответа Аудита ГИСОГД РФ"
         },
@@ -19601,6 +19674,7 @@ SET class_rule =
             "title": "Статус синхронизации",
             "asTitle": true,
             "readOnly": true,
+            "minWidth": 200,
             "valueType": "CHOICE",
             "enumerations": [
                 {
@@ -20022,12 +20096,15 @@ SET class_rule =
         {
             "name": "gisogdrf_publication_datetime",
             "title": "Дата публикации в ГИСОГД",
+            "minWidth": 300,
+            "readOnly": true,
             "valueType": "DATETIME"
         },
         {
             "name": "gisogdrf_audit_datetime",
             "title": "Дата аудита в ГИСОГД",
             "readOnly": true,
+            "minWidth": 200,
             "valueType": "DATETIME",
             "description": "Время ответа Аудита ГИСОГД РФ"
         },
@@ -20036,6 +20113,7 @@ SET class_rule =
             "title": "Статус синхронизации",
             "asTitle": true,
             "readOnly": true,
+            "minWidth": 200,
             "valueType": "CHOICE",
             "enumerations": [
                 {
@@ -21578,6 +21656,8 @@ SET class_rule =
     {
       "name": "gisogdrf_publication_datetime",
       "title": "Дата публикации в ГИСОГД",
+      "minWidth": 300,
+      "readOnly": true,
       "valueType": "DATETIME"
     },
     {
@@ -21585,11 +21665,13 @@ SET class_rule =
       "title": "Дата аудита в ГИСОГД",
       "readOnly": true,
       "valueType": "DATETIME",
+      "minWidth": 200,
       "description": "Время ответа Аудита ГИСОГД РФ"
     },
     {
       "name": "gisogdrf_sync_status",
       "title": "Статус синхронизации",
+      "minWidth": 200,
       "asTitle": true,
       "readOnly": true,
       "valueType": "CHOICE",
@@ -22513,6 +22595,8 @@ SET class_rule =
     {
       "name": "gisogdrf_publication_datetime",
       "title": "Дата публикации в ГИСОГД",
+      "minWidth": 300,
+      "readOnly": true,
       "valueType": "DATETIME"
     },
     {
@@ -22520,11 +22604,13 @@ SET class_rule =
       "title": "Дата аудита в ГИСОГД",
       "readOnly": true,
       "valueType": "DATETIME",
+      "minWidth": 200,
       "description": "Время ответа Аудита ГИСОГД РФ"
     },
     {
       "name": "gisogdrf_sync_status",
       "title": "Статус синхронизации",
+      "minWidth": 200,
       "asTitle": true,
       "readOnly": true,
       "valueType": "CHOICE",
@@ -23872,6 +23958,8 @@ SET class_rule =
             {
                 "name": "gisogdrf_publication_datetime",
                 "title": "Дата публикации в ГИСОГД",
+                "minWidth": 300,
+                "readOnly": true,
                 "valueType": "DATETIME"
             },
             {
@@ -23879,11 +23967,13 @@ SET class_rule =
                 "title": "Дата аудита в ГИСОГД",
                 "readOnly": true,
                 "valueType": "DATETIME",
+                "minWidth": 200,
                 "description": "Время ответа Аудита ГИСОГД РФ"
             },
             {
                 "name": "gisogdrf_sync_status",
                 "title": "Статус синхронизации",
+                "minWidth": 200,
                 "asTitle": true,
                 "readOnly": true,
                 "valueType": "CHOICE",
@@ -24936,11 +25026,13 @@ SET class_rule =
                 "title": "Дата аудита в ГИСОГД",
                 "readOnly": true,
                 "valueType": "DATETIME",
+                "minWidth": 200,
                 "description": "Время ответа Аудита ГИСОГД РФ"
             },
             {
                 "name": "gisogdrf_sync_status",
                 "title": "Статус синхронизации",
+                "minWidth": 200,
                 "asTitle": true,
                 "readOnly": true,
                 "valueType": "CHOICE",
@@ -24974,6 +25066,7 @@ SET class_rule =
             {
                 "name": "gisogdrf_publication_datetime",
                 "title": "Дата последней отправки в ГИСОГД РФ",
+                "minWidth": 300,
                 "readOnly": true,
                 "valueType": "DATETIME"
             },
@@ -25442,11 +25535,13 @@ SET class_rule =
                 "title": "Дата аудита в ГИСОГД",
                 "readOnly": true,
                 "valueType": "DATETIME",
+                "minWidth": 200,
                 "description": "Время ответа Аудита ГИСОГД РФ"
             },
             {
                 "name": "gisogdrf_sync_status",
                 "title": "Статус синхронизации",
+                "minWidth": 200,
                 "asTitle": true,
                 "readOnly": true,
                 "valueType": "CHOICE",
@@ -25480,6 +25575,7 @@ SET class_rule =
             {
                 "name": "gisogdrf_publication_datetime",
                 "title": "Дата последней отправки в ГИСОГД РФ",
+                "minWidth": 300,
                 "readOnly": true,
                 "valueType": "DATETIME"
             },
@@ -26250,11 +26346,13 @@ SET class_rule =
                 "title": "Дата аудита в ГИСОГД",
                 "readOnly": true,
                 "valueType": "DATETIME",
+                "minWidth": 200,
                 "description": "Время ответа Аудита ГИСОГД РФ"
             },
             {
                 "name": "gisogdrf_sync_status",
                 "title": "Статус синхронизации",
+                "minWidth": 200,
                 "asTitle": true,
                 "readOnly": true,
                 "valueType": "CHOICE",
@@ -26288,6 +26386,7 @@ SET class_rule =
             {
                 "name": "gisogdrf_publication_datetime",
                 "title": "Дата последней отправки в ГИСОГД РФ",
+                "minWidth": 300,
                 "readOnly": true,
                 "valueType": "DATETIME"
             },
@@ -26764,11 +26863,13 @@ SET class_rule =
                 "title": "Дата аудита в ГИСОГД",
                 "readOnly": true,
                 "valueType": "DATETIME",
+                "minWidth": 200,
                 "description": "Время ответа Аудита ГИСОГД РФ"
             },
             {
                 "name": "gisogdrf_sync_status",
                 "title": "Статус синхронизации",
+                "minWidth": 200,
                 "asTitle": true,
                 "readOnly": true,
                 "valueType": "CHOICE",
@@ -26802,6 +26903,7 @@ SET class_rule =
             {
                 "name": "gisogdrf_publication_datetime",
                 "title": "Дата последней отправки в ГИСОГД РФ",
+                "minWidth": 300,
                 "readOnly": true,
                 "valueType": "DATETIME"
             },
@@ -27937,11 +28039,13 @@ SET class_rule =
                 "name": "gisogdrf_audit_datetime",
                 "title": "Дата аудита в ГИСОГД",
                 "readOnly": true,
+                "minWidth": 200,
                 "valueType": "DATETIME"
             },
             {
                 "name": "gisogdrf_sync_status",
                 "title": "Статус синхронизации",
+                "minWidth": 200,
                 "asTitle": true,
                 "readOnly": true,
                 "valueType": "CHOICE",
@@ -27975,6 +28079,7 @@ SET class_rule =
             {
                 "name": "gisogdrf_publication_datetime",
                 "title": "Дата последней отправки в ГИСОГД РФ",
+                "minWidth": 300,
                 "readOnly": true,
                 "valueType": "DATETIME"
             }
@@ -28801,11 +28906,13 @@ SET class_rule =
                 "name": "gisogdrf_audit_datetime",
                 "title": "Дата аудита в ГИСОГД",
                 "readOnly": true,
+                "minWidth": 200,
                 "valueType": "DATETIME"
             },
             {
                 "name": "gisogdrf_sync_status",
                 "title": "Статус синхронизации",
+                "minWidth": 200,
                 "asTitle": true,
                 "readOnly": true,
                 "valueType": "CHOICE",
@@ -28839,6 +28946,7 @@ SET class_rule =
             {
                 "name": "gisogdrf_publication_datetime",
                 "title": "Дата последней отправки в ГИСОГД РФ",
+                "minWidth": 300,
                 "readOnly": true,
                 "valueType": "DATETIME"
             },
@@ -30088,11 +30196,13 @@ SET class_rule =
                 "name": "gisogdrf_audit_datetime",
                 "title": "Дата аудита в ГИСОГД",
                 "readOnly": true,
+                "minWidth": 200,
                 "valueType": "DATETIME"
             },
             {
                 "name": "gisogdrf_sync_status",
                 "title": "Статус синхронизации",
+                "minWidth": 200,
                 "asTitle": true,
                 "readOnly": true,
                 "valueType": "CHOICE",
@@ -30126,6 +30236,7 @@ SET class_rule =
             {
                 "name": "gisogdrf_publication_datetime",
                 "title": "Дата последней отправки в ГИСОГД РФ",
+                "minWidth": 300,
                 "readOnly": true,
                 "valueType": "DATETIME"
             },
@@ -31067,11 +31178,13 @@ SET class_rule =
                 "title": "Дата аудита в ГИСОГД",
                 "readOnly": true,
                 "valueType": "DATETIME",
+                "minWidth": 200,
                 "description": "Время ответа Аудита ГИСОГД РФ"
             },
             {
                 "name": "gisogdrf_sync_status",
                 "title": "Статус синхронизации",
+                "minWidth": 200,
                 "asTitle": true,
                 "readOnly": true,
                 "valueType": "CHOICE",
@@ -31105,6 +31218,7 @@ SET class_rule =
             {
                 "name": "gisogdrf_publication_datetime",
                 "title": "Дата последней отправки в ГИСОГД РФ",
+                "minWidth": 300,
                 "readOnly": true,
                 "valueType": "DATETIME"
             },
@@ -31544,6 +31658,7 @@ SET class_rule =
             {
                 "name": "gisogdrf_publication_datetime",
                 "title": "Дата публикации в ГИСОГД",
+                "minWidth": 300,
                 "readOnly": true,
                 "valueType": "DATETIME"
             },
@@ -31563,11 +31678,13 @@ SET class_rule =
                 "title": "Дата аудита в ГИСОГД",
                 "readOnly": true,
                 "valueType": "DATETIME",
+                "minWidth": 200,
                 "description": "Время ответа Аудита ГИСОГД РФ"
             },
             {
                 "name": "gisogdrf_sync_status",
                 "title": "Статус синхронизации",
+                "minWidth": 200,
                 "asTitle": true,
                 "readOnly": true,
                 "valueType": "CHOICE",
@@ -31786,6 +31903,8 @@ SET class_rule =
             {
                 "name": "gisogdrf_publication_datetime",
                 "title": "Дата публикации в ГИСОГД",
+                "minWidth": 300,
+                "readOnly": true,
                 "valueType": "DATETIME"
             },
             {
@@ -31793,11 +31912,13 @@ SET class_rule =
                 "title": "Дата аудита в ГИСОГД",
                 "readOnly": true,
                 "valueType": "DATETIME",
+                "minWidth": 200,
                 "description": "Время ответа Аудита ГИСОГД РФ"
             },
             {
                 "name": "gisogdrf_sync_status",
                 "title": "Статус синхронизации",
+                "minWidth": 200,
                 "asTitle": true,
                 "readOnly": true,
                 "valueType": "CHOICE",
@@ -32000,6 +32121,7 @@ SET class_rule =
             {
                 "name": "gisogdrf_publication_datetime",
                 "title": "Дата публикации в ГИСОГД",
+                "minWidth": 300,
                 "readOnly": true,
                 "valueType": "DATETIME"
             },
@@ -32008,11 +32130,13 @@ SET class_rule =
                 "title": "Дата аудита в ГИСОГД",
                 "readOnly": true,
                 "valueType": "DATETIME",
+                "minWidth": 200,
                 "description": "Время ответа Аудита ГИСОГД РФ"
             },
             {
                 "name": "gisogdrf_sync_status",
                 "title": "Статус синхронизации",
+                "minWidth": 200,
                 "asTitle": true,
                 "readOnly": true,
                 "valueType": "CHOICE",
@@ -32231,6 +32355,8 @@ SET class_rule =
             {
                 "name": "gisogdrf_publication_datetime",
                 "title": "Дата публикации в ГИСОГД",
+                "minWidth": 300,
+                "readOnly": true,
                 "valueType": "DATETIME"
             },
             {
@@ -32238,11 +32364,13 @@ SET class_rule =
                 "title": "Дата аудита в ГИСОГД",
                 "readOnly": true,
                 "valueType": "DATETIME",
+                "minWidth": 200,
                 "description": "Время ответа Аудита ГИСОГД РФ"
             },
             {
                 "name": "gisogdrf_sync_status",
                 "title": "Статус синхронизации",
+                "minWidth": 200,
                 "asTitle": true,
                 "readOnly": true,
                 "valueType": "CHOICE",
@@ -32502,6 +32630,8 @@ SET class_rule =
             {
                 "name": "gisogdrf_publication_datetime",
                 "title": "Дата публикации в ГИСОГД",
+                "minWidth": 300,
+                "readOnly": true,
                 "valueType": "DATETIME"
             },
             {
@@ -32509,11 +32639,13 @@ SET class_rule =
                 "title": "Дата аудита в ГИСОГД",
                 "readOnly": true,
                 "valueType": "DATETIME",
+                "minWidth": 200,
                 "description": "Время ответа Аудита ГИСОГД РФ"
             },
             {
                 "name": "gisogdrf_sync_status",
                 "title": "Статус синхронизации",
+                "minWidth": 200,
                 "asTitle": true,
                 "readOnly": true,
                 "valueType": "CHOICE",
@@ -32845,6 +32977,8 @@ SET class_rule =
             {
                 "name": "gisogdrf_publication_datetime",
                 "title": "Дата публикации в ГИСОГД",
+                "minWidth": 300,
+                "readOnly": true,
                 "valueType": "DATETIME"
             },
             {
@@ -32852,11 +32986,13 @@ SET class_rule =
                 "title": "Дата аудита в ГИСОГД",
                 "readOnly": true,
                 "valueType": "DATETIME",
+                "minWidth": 200,
                 "description": "Время ответа Аудита ГИСОГД РФ"
             },
             {
                 "name": "gisogdrf_sync_status",
                 "title": "Статус синхронизации",
+                "minWidth": 200,
                 "asTitle": true,
                 "readOnly": true,
                 "valueType": "CHOICE",
@@ -33134,6 +33270,8 @@ SET class_rule =
             {
                 "name": "gisogdrf_publication_datetime",
                 "title": "Дата публикации в ГИСОГД",
+                "minWidth": 300,
+                "readOnly": true,
                 "valueType": "DATETIME"
             },
             {
@@ -33141,11 +33279,13 @@ SET class_rule =
                 "title": "Дата аудита в ГИСОГД",
                 "readOnly": true,
                 "valueType": "DATETIME",
+                "minWidth": 200,
                 "description": "Время ответа Аудита ГИСОГД РФ"
             },
             {
                 "name": "gisogdrf_sync_status",
                 "title": "Статус синхронизации",
+                "minWidth": 200,
                 "asTitle": true,
                 "readOnly": true,
                 "valueType": "CHOICE",
@@ -33387,6 +33527,8 @@ SET class_rule =
             {
                 "name": "gisogdrf_publication_datetime",
                 "title": "Дата публикации в ГИСОГД",
+                "minWidth": 300,
+                "readOnly": true,
                 "valueType": "DATETIME"
             },
             {
@@ -33394,11 +33536,13 @@ SET class_rule =
                 "title": "Дата аудита в ГИСОГД",
                 "readOnly": true,
                 "valueType": "DATETIME",
+                "minWidth": 200,
                 "description": "Время ответа Аудита ГИСОГД РФ"
             },
             {
                 "name": "gisogdrf_sync_status",
                 "title": "Статус синхронизации",
+                "minWidth": 200,
                 "asTitle": true,
                 "readOnly": true,
                 "valueType": "CHOICE",
@@ -33593,6 +33737,8 @@ SET class_rule =
             {
                 "name": "gisogdrf_publication_datetime",
                 "title": "Дата публикации в ГИСОГД",
+                "minWidth": 300,
+                "readOnly": true,
                 "valueType": "DATETIME"
             },
             {
@@ -33600,11 +33746,13 @@ SET class_rule =
                 "title": "Дата аудита в ГИСОГД",
                 "readOnly": true,
                 "valueType": "DATETIME",
+                "minWidth": 200,
                 "description": "Время ответа Аудита ГИСОГД РФ"
             },
             {
                 "name": "gisogdrf_sync_status",
                 "title": "Статус синхронизации",
+                "minWidth": 200,
                 "asTitle": true,
                 "readOnly": true,
                 "valueType": "CHOICE",
@@ -33816,11 +33964,13 @@ SET class_rule =
                 "title": "Дата аудита в ГИСОГД",
                 "readOnly": true,
                 "valueType": "DATETIME",
+                "minWidth": 200,
                 "description": "Время ответа Аудита ГИСОГД РФ"
             },
             {
                 "name": "gisogdrf_sync_status",
                 "title": "Статус синхронизации",
+                "minWidth": 200,
                 "asTitle": true,
                 "readOnly": true,
                 "valueType": "CHOICE",
@@ -33854,6 +34004,7 @@ SET class_rule =
             {
                 "name": "gisogdrf_publication_datetime",
                 "title": "Дата последней отправки в ГИСОГД РФ",
+                "minWidth": 300,
                 "readOnly": true,
                 "valueType": "DATETIME"
             }
@@ -34046,6 +34197,7 @@ SET class_rule =
             {
                 "name": "gisogdrf_publication_datetime",
                 "title": "Дата публикации в ГИСОГД РФ",
+                "minWidth": 300,
                 "readOnly": true,
                 "valueType": "DATETIME"
             },
@@ -34054,11 +34206,13 @@ SET class_rule =
                 "title": "Дата аудита в ГИСОГД",
                 "readOnly": true,
                 "valueType": "DATETIME",
+                "minWidth": 200,
                 "description": "Время ответа Аудита ГИСОГД РФ"
             },
             {
                 "name": "gisogdrf_sync_status",
                 "title": "Статус синхронизации",
+                "minWidth": 200,
                 "asTitle": true,
                 "readOnly": true,
                 "valueType": "CHOICE",
@@ -34360,6 +34514,7 @@ SET class_rule =
         {
             "name": "gisogdrf_publication_datetime",
             "title": "Дата публикации в ГИСОГД",
+            "minWidth": 300,
             "readOnly": true,
             "valueType": "DATETIME"
         },
@@ -34367,6 +34522,7 @@ SET class_rule =
             "name": "gisogdrf_audit_datetime",
             "title": "Дата аудита в ГИСОГД",
             "readOnly": true,
+            "minWidth": 200,
             "valueType": "DATETIME",
             "description": "Время ответа Аудита ГИСОГД РФ"
         },
@@ -34375,6 +34531,7 @@ SET class_rule =
             "title": "Статус синхронизации",
             "asTitle": true,
             "readOnly": true,
+            "minWidth": 200,
             "valueType": "CHOICE",
             "enumerations": [
                 {
@@ -35289,12 +35446,15 @@ SET class_rule =
         {
             "name": "gisogdrf_publication_datetime",
             "title": "Дата публикации в ГИСОГД",
+            "minWidth": 300,
+            "readOnly": true,
             "valueType": "DATETIME"
         },
         {
             "name": "gisogdrf_audit_datetime",
             "title": "Дата аудита в ГИСОГД",
             "readOnly": true,
+            "minWidth": 200,
             "valueType": "DATETIME",
             "description": "Время ответа Аудита ГИСОГД РФ"
         },
@@ -35303,6 +35463,7 @@ SET class_rule =
             "title": "Статус синхронизации",
             "asTitle": true,
             "readOnly": true,
+            "minWidth": 200,
             "valueType": "CHOICE",
             "enumerations": [
                 {
@@ -35513,6 +35674,7 @@ SET class_rule =
         {
             "name": "gisogdrf_publication_datetime",
             "title": "Дата публикации в ГИСОГД",
+            "minWidth": 300,
             "readOnly": true,
             "valueType": "DATETIME"
         },
@@ -35520,6 +35682,7 @@ SET class_rule =
             "name": "gisogdrf_audit_datetime",
             "title": "Дата аудита в ГИСОГД",
             "readOnly": true,
+            "minWidth": 200,
             "valueType": "DATETIME",
             "description": "Время ответа Аудита ГИСОГД РФ"
         },
@@ -35528,6 +35691,7 @@ SET class_rule =
             "title": "Статус синхронизации",
             "asTitle": true,
             "readOnly": true,
+            "minWidth": 200,
             "valueType": "CHOICE",
             "enumerations": [
                 {
@@ -35748,6 +35912,7 @@ SET class_rule =
         {
             "name": "gisogdrf_publication_datetime",
             "title": "Дата публикации в ГИСОГД",
+            "minWidth": 300,
             "readOnly": true,
             "valueType": "DATETIME"
         },
@@ -35755,6 +35920,7 @@ SET class_rule =
             "name": "gisogdrf_audit_datetime",
             "title": "Дата аудита в ГИСОГД",
             "readOnly": true,
+            "minWidth": 200,
             "valueType": "DATETIME",
             "description": "Время ответа Аудита ГИСОГД РФ"
         },
@@ -35763,6 +35929,7 @@ SET class_rule =
             "title": "Статус синхронизации",
             "asTitle": true,
             "readOnly": true,
+            "minWidth": 200,
             "valueType": "CHOICE",
             "enumerations": [
                 {
@@ -35966,6 +36133,7 @@ SET class_rule =
         {
             "name": "gisogdrf_publication_datetime",
             "title": "Дата публикации в ГИСОГД",
+            "minWidth": 300,
             "readOnly": true,
             "valueType": "DATETIME"
         },
@@ -35973,6 +36141,7 @@ SET class_rule =
             "name": "gisogdrf_audit_datetime",
             "title": "Дата аудита в ГИСОГД",
             "readOnly": true,
+            "minWidth": 200,
             "valueType": "DATETIME",
             "description": "Время ответа Аудита ГИСОГД РФ"
         },
@@ -35981,6 +36150,7 @@ SET class_rule =
             "title": "Статус синхронизации",
             "asTitle": true,
             "readOnly": true,
+            "minWidth": 200,
             "valueType": "CHOICE",
             "enumerations": [
                 {
@@ -36370,6 +36540,7 @@ SET class_rule =
             "name": "gisogdrf_audit_datetime",
             "title": "Дата аудита в ГИСОГД",
             "readOnly": true,
+            "minWidth": 200,
             "valueType": "DATETIME",
             "description": "Время ответа Аудита ГИСОГД РФ"
         },
@@ -36378,6 +36549,7 @@ SET class_rule =
             "title": "Статус синхронизации",
             "asTitle": true,
             "readOnly": true,
+            "minWidth": 200,
             "valueType": "CHOICE",
             "enumerations": [
                 {
@@ -36410,6 +36582,7 @@ SET class_rule =
             "name": "gisogdrf_publication_datetime",
             "title": "Дата последней отправки в ГИСОГД РФ",
             "readOnly": true,
+            "minWidth": 300,
             "valueType": "DATETIME"
         },
         {
@@ -37334,6 +37507,7 @@ SET class_rule =
             "name": "gisogdrf_audit_datetime",
             "title": "Дата аудита в ГИСОГД",
             "readOnly": true,
+            "minWidth": 200,
             "valueType": "DATETIME",
             "description": "Время ответа Аудита ГИСОГД РФ"
         },
@@ -37342,6 +37516,7 @@ SET class_rule =
             "title": "Статус синхронизации",
             "asTitle": true,
             "readOnly": true,
+            "minWidth": 200,
             "valueType": "CHOICE",
             "enumerations": [
                 {
@@ -37374,6 +37549,7 @@ SET class_rule =
             "name": "gisogdrf_publication_datetime",
             "title": "Дата последней отправки в ГИСОГД РФ",
             "readOnly": true,
+            "minWidth": 300,
             "valueType": "DATETIME"
         },
         {
@@ -37541,11 +37717,11 @@ WHERE name = 'dl_data_section11';
 UPDATE data.schemas 
 SET class_rule =
 '{
-    "tags": [
-        "system",
-        "Библиотека",
-        "ГИСОГД"
-    ],
+  "tags": [
+    "system",
+    "Библиотека",
+    "ГИСОГД"
+  ],
   "name": "dl_data_section13",
   "title": "13. Дела о застроенных или подлежащих застройке земельных участках",
   "tableName": "dl_data_section13",
@@ -37576,8 +37752,7 @@ SET class_rule =
     },
     {
       "name": "guid",
-      "title": "guid",
-      "hidden": true,
+      "title": "Глобальный идентификатор",
       "valueType": "UUID"
     },
     {
@@ -37615,7 +37790,7 @@ SET class_rule =
           "value": "doc_13.05"
         },
         {
-          "title": "06. Внесении изменений в разрешение",
+          "title": "06. Внесение изменений в РНС",
           "value": "doc_13.06"
         },
         {
@@ -37760,13 +37935,15 @@ SET class_rule =
       "minWidth": 800,
       "required": true,
       "maxLength": 500,
-      "valueType": "STRING"
+      "valueType": "STRING",
+      "description": "Полное наименование документа"
     },
     {
       "name": "const_government_order_id",
       "title": "Идентификатор номера приказа, в соответствии с которым выдается РНС",
       "required": true,
       "valueType": "CHOICE",
+      "description": "Для ЕИС ЖС",
       "enumerations": [
         {
           "title": "Номер соответствует Приказу Минстроя РФ от 19.02.2015 N 117/ПР",
@@ -37806,10 +37983,10 @@ SET class_rule =
       "description": "Объект на карте",
       "valueFormulaParams": {
         "layers": [
-          "scratch_database_1:landplot_1627_2d2b",
-          "scratch_database_1:easement_1627_bb27",
-          "scratch_database_1:oks_13_1627_79c6",
-          "scratch_database_1:oks_13_line_1627_4bce"
+          "scratch_database_1:landplot_1627_2d2b__7829",
+          "scratch_database_1:easement_1627_bb27__7829",
+          "scratch_database_1:oks_13_1627_79c6__7829",
+          "scratch_database_1:oks_13_line_1627_4bce__7829"
         ],
         "property": "file",
         "projectId": 789,
@@ -37888,7 +38065,8 @@ SET class_rule =
       "name": "lacotean",
       "title": "Местоположение",
       "valueType": "STRING",
-      "description": "Адрес или при отсутствии адреса иное описание местоположения"
+      "required": true,
+      "description": "Адрес или при отсутствии адреса иное описание местоположения, для ГИСОГД РФ"
     },
     {
       "name": "fias",
@@ -37896,7 +38074,8 @@ SET class_rule =
       "minWidth": 400,
       "required": true,
       "valueType": "FIAS",
-      "searchMode": "oktmo"
+      "searchMode": "oktmo",
+      "description": "Для ГИСОГД РФ"
     },
     {
       "name": "fias__oktmo",
@@ -37941,7 +38120,6 @@ SET class_rule =
     {
       "name": "validuntil",
       "title": "Действует до",
-      "required": true,
       "valueType": "DATETIME",
       "description": "Срок действия документа"
     },
@@ -37954,6 +38132,34 @@ SET class_rule =
       ],
       "valueType": "DOCUMENT",
       "maxDocuments": 5
+    },
+    {
+      "name": "termination_reason_eis",
+      "title": "Основание прекращения действия РНС",
+      "required": true,
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Принудительное прекращение права собственности и иных прав на земельные участки, в том числе изъятие земельных участков для государственных или муниципальных нужд",
+          "value": "1"
+        },
+        {
+          "title": "Предписания уполномоченного Правительством Российской Федерации федерального органа исполнительной власти о прекращении действия разрешения на строительство на основании несоответствия разрешения на строительство ограничениям использования объектов недвижимости, установленным на приаэродромной территории",
+          "value": "2"
+        },
+        {
+          "title": "Отказ от права собственности и иных прав на земельные участки",
+          "value": "3"
+        },
+        {
+          "title": "Расторжение договора аренды и иных договоров, на основании которых у граждан и юридических лиц возникли права на земельные участки",
+          "value": "4"
+        },
+        {
+          "title": "Прекращения права пользования недрами, если разрешение на строительство выдано на строительство, реконструкцию объекта капитального строительства на земельном участке, предоставленном пользователю недр и необходимом для ведения работ, связанных с пользованием недрами",
+          "value": "5"
+        }
+      ]
     },
     {
       "name": "orgname",
@@ -38002,6 +38208,7 @@ SET class_rule =
       "title": "Статус действия",
       "required": true,
       "valueType": "CHOICE",
+      "description": "Обязательное по Приказу № 433/пр",
       "enumerations": [
         {
           "title": "Действующий",
@@ -38103,7 +38310,6 @@ SET class_rule =
       "name": "developer",
       "title": "Застройщик",
       "minWidth": 400,
-      "required": true,
       "maxLength": 500,
       "valueType": "STRING"
     },
@@ -38133,7 +38339,7 @@ SET class_rule =
         "dl_data_inbox_data"
       ],
       "valueType": "DOCUMENT",
-      "description": "Реестр учёта сведений, документов, материалов, поступивших на размещение в информационную систему, и результатов их рассмотрения",
+      "description": "Реестр учёта сведений, документов, материалов, поступивших на размещение в информационную систему, и результатов их рассмотрения / Обязательное по Приказу № 433/пр",
       "maxDocuments": 10
     },
     {
@@ -38197,13 +38403,14 @@ SET class_rule =
       "maxSize": 100000000,
       "multiple": true,
       "valueType": "FILE",
+      "description": "Обязательное по Приказу № 433/пр",
       "maxDocuments": 10
     },
     {
       "name": "date_uis",
       "title": "Дата отправки в ЕИС ЖС",
       "readOnly": true,
-      "valueType": "TEXT"
+      "valueType": "DATETIME"
     },
     {
       "name": "uis_sync_status",
@@ -38236,7 +38443,9 @@ SET class_rule =
     {
       "name": "object_kind",
       "title": "Объект капитального строительства",
+      "required": true,
       "valueType": "CHOICE",
+      "description": "Для ЕИС ЖС",
       "enumerations": [
         {
           "title": "Многоквартирный дом",
@@ -38263,7 +38472,9 @@ SET class_rule =
     {
       "name": "object_purpose",
       "title": "Назначение объекта",
+      "required": true,
       "valueType": "CHOICE",
+      "description": "Для ЕИС ЖС",
       "enumerations": [
         {
           "title": "Жилое",
@@ -38278,7 +38489,9 @@ SET class_rule =
     {
       "name": "object_purpose_functional",
       "title": "Функциональное назначение объекта",
+      "required": true,
       "valueType": "CHOICE",
+      "description": "Для ЕИС ЖС",
       "enumerations": [
         {
           "title": "Иное",
@@ -38305,7 +38518,9 @@ SET class_rule =
     {
       "name": "build_capital_type",
       "title": "Вид объекта капитального строительства",
+      "required": true,
       "valueType": "CHOICE",
+      "description": "Для ЕИС ЖС",
       "enumerations": [
         {
           "title": "Здание",
@@ -38341,36 +38556,76 @@ SET class_rule =
       "title": "Количество объектов (этапов)",
       "required": true,
       "maxLength": 5,
-      "valueType": "STRING"
+      "valueType": "STRING",
+      "description": "Для ЕИС ЖС"
+    },
+    {
+      "name": "smev_message_id",
+      "title": "Номер сообщения СМЭВ-3",
+      "required": true,
+      "maxLength": 100,
+      "valueType": "STRING",
+      "description": "Для ЕИС ЖС"
     },
     {
       "name": "number_long_objects",
       "title": "Количество линейных объектов",
-      "required": true,
       "maxLength": 5,
-      "valueType": "STRING"
+      "valueType": "STRING",
+      "description": "Для ЕИС ЖС"
     },
     {
-      "name": "if_from_eis_zh",
-      "title": "Пришло из ЕИС ЖС",
-      "readOnly": true,
-      "valueType": "BOOLEAN"
+      "name": "object_name_eis",
+      "title": "Наименование объекта ОКС",
+      "required": true,
+      "valueType": "STRING",
+      "description": "Поле обязательно для синхронизации с ЕИС ЖС"
+    },
+    {
+      "name": "detail",
+      "title": "Уточнение основания прекращения действия РНС",
+      "valueType": "TEXT"
+    },
+    {
+      "name": "canceled_doc_number",
+      "title": "Номер предписания",
+      "valueType": "TEXT",
+      "description": "На основании которого выдано решение о прекращении действия"
+    },
+    {
+      "name": "canceled_doc_date",
+      "title": "Дата предписания",
+      "valueType": "DATETIME",
+      "description": "На основании которого выдано решение о прекращении действия"
+    },
+    {
+      "name": "organization_2",
+      "title": "Организация выдавшая предписание",
+      "multiple": true,
+      "libraries": [
+        "dl_data_organization"
+      ],
+      "valueType": "DOCUMENT",
+      "description": "Организация, выдавшая предписание, на основании которого выдано решение о прекращении действия",
+      "maxDocuments": 10
     },
     {
       "name": "created_by",
       "title": "Создатель",
       "maxLength": 50,
+      "readOnly": true,
       "valueType": "STRING"
     },
     {
       "name": "created_at",
       "title": "Дата создания",
-      "required": true,
+      "readOnly": true,
       "valueType": "DATETIME"
     },
     {
       "name": "last_modified",
       "title": "Дата модификации",
+      "readOnly": true,
       "valueType": "DATETIME",
       "description": "Дата последней модификации документа"
     },
@@ -38386,11 +38641,13 @@ SET class_rule =
       "title": "Дата аудита в ГИСОГД",
       "readOnly": true,
       "valueType": "DATETIME",
+      "minWidth": 200,
       "description": "Время ответа Аудита ГИСОГД РФ"
     },
     {
       "name": "gisogdrf_sync_status",
       "title": "Статус синхронизации с ГИСОГД РФ",
+      "minWidth": 200,
       "asTitle": true,
       "readOnly": true,
       "valueType": "CHOICE",
@@ -38424,6 +38681,7 @@ SET class_rule =
     {
       "name": "gisogdrf_publication_datetime",
       "title": "Дата последней отправки в ГИСОГД РФ",
+      "minWidth": 300,
       "readOnly": true,
       "valueType": "DATETIME"
     },
@@ -38451,13 +38709,10 @@ SET class_rule =
       "attributes": [
         {
           "name": "content_type_id",
-          "title": "Вид документа",
           "defaultValue": "doc_13.01"
         },
         {
-          "name": "title",
-          "required": true,
-          "description": "Полное наименование документа"
+          "name": "title"
         },
         {
           "name": "cad_num"
@@ -38472,13 +38727,10 @@ SET class_rule =
           "name": "regdate"
         },
         {
-          "name": "lacotean",
-          "required": true
+          "name": "lacotean"
         },
         {
-          "name": "fias",
-          "title": "Населённый пункт",
-          "required": true
+          "name": "fias"
         },
         {
           "name": "fias__oktmo",
@@ -38526,9 +38778,6 @@ SET class_rule =
           "name": "termination_reason"
         },
         {
-          "name": "if_from_eis_zh"
-        },
-        {
           "name": "gisogdrf_audit_datetime"
         },
         {
@@ -38547,13 +38796,7 @@ SET class_rule =
           "name": "is_public"
         },
         {
-          "name": "file",
-          "title": "Выбор файла",
-          "maxSize": 100000000,
-          "maxFiles": 10,
-          "multiple": true,
-          "required": true,
-          "valueType": "FILE"
+          "name": "file"
         },
         {
           "name": "guiddocpreviousversion"
@@ -38574,13 +38817,10 @@ SET class_rule =
       "attributes": [
         {
           "name": "content_type_id",
-          "title": "Вид документа",
           "defaultValue": "doc_13.02"
         },
         {
-          "name": "title",
-          "required": true,
-          "description": "Полное наименование документа"
+          "name": "title"
         },
         {
           "name": "territorykey"
@@ -38592,13 +38832,10 @@ SET class_rule =
           "name": "regdate"
         },
         {
-          "name": "lacotean",
-          "required": true
+          "name": "lacotean"
         },
         {
-          "name": "fias",
-          "title": "Населённый пункт",
-          "required": true
+          "name": "fias"
         },
         {
           "name": "fias__oktmo",
@@ -38646,9 +38883,6 @@ SET class_rule =
           "name": "termination_reason"
         },
         {
-          "name": "if_from_eis_zh"
-        },
-        {
           "name": "gisogdrf_audit_datetime"
         },
         {
@@ -38664,13 +38898,7 @@ SET class_rule =
           "name": "note"
         },
         {
-          "name": "file",
-          "title": "Выбор файла",
-          "maxSize": 100000000,
-          "maxFiles": 10,
-          "multiple": true,
-          "required": true,
-          "valueType": "FILE"
+          "name": "file"
         },
         {
           "name": "guiddocpreviousversion"
@@ -38691,13 +38919,10 @@ SET class_rule =
       "attributes": [
         {
           "name": "content_type_id",
-          "title": "Вид документа",
           "defaultValue": "doc_13.03"
         },
         {
-          "name": "title",
-          "required": true,
-          "description": "Полное наименование документа"
+          "name": "title"
         },
         {
           "name": "territorykey"
@@ -38709,13 +38934,10 @@ SET class_rule =
           "name": "regdate"
         },
         {
-          "name": "lacotean",
-          "required": true
+          "name": "lacotean"
         },
         {
-          "name": "fias",
-          "title": "Населённый пункт",
-          "required": true
+          "name": "fias"
         },
         {
           "name": "fias__oktmo",
@@ -38742,7 +38964,8 @@ SET class_rule =
           "name": "egrzdate"
         },
         {
-          "name": "orgname"
+          "name": "orgname",
+          "required": false
         },
         {
           "name": "docstatus"
@@ -38763,9 +38986,6 @@ SET class_rule =
           "name": "termination_reason"
         },
         {
-          "name": "if_from_eis_zh"
-        },
-        {
           "name": "is_public"
         },
         {
@@ -38784,13 +39004,7 @@ SET class_rule =
           "name": "note"
         },
         {
-          "name": "file",
-          "title": "Выбор файла",
-          "maxSize": 100000000,
-          "maxFiles": 10,
-          "multiple": true,
-          "required": true,
-          "valueType": "FILE"
+          "name": "file"
         },
         {
           "name": "guiddocpreviousversion"
@@ -38811,14 +39025,127 @@ SET class_rule =
       "attributes": [
         {
           "name": "content_type_id",
-          "title": "Вид документа",
           "defaultValue": "doc_13.04"
         },
         {
           "name": "title",
-          "required": true,
-          "description": "Полное наименование документа",
           "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "namefrompd"
+        },
+        {
+          "name": "regnum"
+        },
+        {
+          "name": "regdate"
+        },
+        {
+          "name": "territorykey"
+        },
+        {
+          "name": "lacotean"
+        },
+        {
+          "name": "fias"
+        },
+        {
+          "name": "fias__oktmo",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__address",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__id",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "applicant"
+        },
+        {
+          "name": "developer"
+        },
+        {
+          "name": "const_permission_type"
+        },
+        {
+          "name": "constructiontype"
+        },
+        {
+          "name": "docnum"
+        },
+        {
+          "name": "docdate"
+        },
+        {
+          "name": "validuntil"
+        },
+        {
+          "name": "orgname"
+        },
+        {
+          "name": "docstatus"
+        },
+        {
+          "name": "supplier_data_connection"
+        },
+        {
+          "name": "inbox_data_key_data_connection",
+          "defaultValueWellKnownFormula": "parentDocument"
+        },
+        {
+          "name": "developer_data_connection"
+        },
+        {
+          "name": "supplieremploey_data_connection"
+        },
+        {
+          "name": "termination_reason"
+        },
+        {
+          "name": "is_public"
+        },
+        {
+          "name": "service_status"
+        },
+        {
+          "name": "note"
+        },
+        {
+          "name": "file",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "guiddocpreviousversion"
+        },
+        {
+          "name": "relations"
+        },
+        {
+          "name": "number_objects"
+        },
+        {
+          "name": "number_long_objects"
+        },
+        {
+          "name": "object_name_eis"
+        },
+        {
+          "name": "object_kind"
+        },
+        {
+          "name": "object_purpose"
+        },
+        {
+          "name": "object_purpose_functional"
+        },
+        {
+          "name": "build_capital_type"
+        },
+        {
+          "name": "object_name_eis"
         },
         {
           "name": "const_government_order_id"
@@ -38830,98 +39157,13 @@ SET class_rule =
           "name": "const_cadastral_area"
         },
         {
-          "name": "namefrompd"
-        },
-        {
-          "name": "regnum"
-        },
-        {
-          "name": "regdate"
-        },
-        {
-          "name": "territorykey"
-        },
-        {
-          "name": "lacotean",
-          "required": true
-        },
-        {
-          "name": "fias",
-          "title": "Населённый пункт",
-          "required": true
-        },
-        {
-          "name": "fias__oktmo",
-          "defaultValueWellKnownFormula": "inherit"
-        },
-        {
-          "name": "fias__address",
-          "defaultValueWellKnownFormula": "inherit"
-        },
-        {
-          "name": "fias__id",
-          "defaultValueWellKnownFormula": "inherit"
-        },
-        {
-          "name": "applicant",
-          "defaultValueFormula": "return `${parent.person_name}`"
-        },
-        {
-          "name": "developer"
-        },
-        {
-          "name": "const_permission_type"
-        },
-        {
-          "name": "number_objects"
-        },
-        {
-          "name": "number_long_objects"
-        },
-        {
-          "name": "constructiontype"
-        },
-        {
-          "name": "docnum"
-        },
-        {
-          "name": "docdate"
-        },
-        {
-          "name": "validuntil"
-        },
-        {
-          "name": "orgname"
-        },
-        {
-          "name": "docstatus"
-        },
-        {
           "name": "issue_person_connection"
         },
         {
-          "name": "supplier_data_connection"
-        },
-        {
-          "name": "inbox_data_key_data_connection"
-        },
-        {
-          "name": "developer_data_connection"
-        },
-        {
-          "name": "supplieremploey_data_connection"
-        },
-        {
-          "name": "termination_reason"
-        },
-        {
-          "name": "if_from_eis_zh"
-        },
-        {
-          "name": "is_public"
-        },
-        {
           "name": "date_uis"
+        },
+        {
+          "name": "smev_message_id"
         },
         {
           "name": "uis_sync_status"
@@ -38939,29 +39181,7 @@ SET class_rule =
           "name": "gisogdrf_publication_datetime"
         },
         {
-          "name": "service_status"
-        },
-        {
-          "name": "note"
-        },
-        {
-          "name": "file",
-          "title": "Выбор файла",
-          "maxSize": 100000000,
-          "maxFiles": 10,
-          "multiple": true,
-          "required": true,
-          "valueType": "FILE",
-          "defaultValueWellKnownFormula": "inherit"
-        },
-        {
-          "name": "guiddocpreviousversion"
-        },
-        {
           "name": "gisogdrf_response"
-        },
-        {
-          "name": "relations"
         }
       ]
     },
@@ -38973,13 +39193,27 @@ SET class_rule =
       "attributes": [
         {
           "name": "content_type_id",
-          "title": "Вид документа",
           "defaultValue": "doc_13.05"
         },
         {
-          "name": "title",
+          "name": "title"
+        },
+        {
+          "name": "relations",
           "required": true,
-          "description": "Полное наименование документа"
+          "description": "Разрешение на строительство"
+        },
+        {
+          "name": "detail"
+        },
+        {
+          "name": "canceled_doc_number"
+        },
+        {
+          "name": "canceled_doc_date"
+        },
+        {
+          "name": "organization_2"
         },
         {
           "name": "territorykey"
@@ -38991,13 +39225,10 @@ SET class_rule =
           "name": "regdate"
         },
         {
-          "name": "lacotean",
-          "required": true
+          "name": "lacotean"
         },
         {
-          "name": "fias",
-          "title": "Населённый пункт",
-          "required": true
+          "name": "fias"
         },
         {
           "name": "fias__oktmo",
@@ -39015,19 +39246,23 @@ SET class_rule =
           "name": "applicant"
         },
         {
-          "name": "docnum"
+          "name": "docnum",
+          "description": ""
         },
         {
-          "name": "docdate"
+          "name": "docdate",
+          "description": ""
         },
         {
-          "name": "orgname"
+          "name": "orgname",
+          "required": false
         },
         {
           "name": "docstatus"
         },
         {
-          "name": "supplier_data_connection"
+          "name": "supplier_data_connection",
+          "description": "Организация выдавшая решение о прекращении действия РНС"
         },
         {
           "name": "inbox_data_key_data_connection"
@@ -39039,13 +39274,67 @@ SET class_rule =
           "name": "supplieremploey_data_connection"
         },
         {
-          "name": "termination_reason"
-        },
-        {
-          "name": "if_from_eis_zh"
-        },
-        {
           "name": "is_public"
+        },
+        {
+          "name": "service_status"
+        },
+        {
+          "name": "note"
+        },
+        {
+          "name": "file"
+        },
+        {
+          "name": "guiddocpreviousversion"
+        },
+        {
+          "name": "number_objects"
+        },
+        {
+          "name": "number_long_objects"
+        },
+        {
+          "name": "termination_reason_eis"
+        },
+        {
+          "name": "object_name_eis"
+        },
+        {
+          "name": "const_government_order_id"
+        },
+        {
+          "name": "const_cadastral_district"
+        },
+        {
+          "name": "const_cadastral_area"
+        },
+        {
+          "name": "issue_person_connection"
+        },
+        {
+          "name": "object_kind"
+        },
+        {
+          "name": "object_purpose"
+        },
+        {
+          "name": "object_purpose_functional"
+        },
+        {
+          "name": "date_uis"
+        },
+        {
+          "name": "smev_message_id"
+        },
+        {
+          "name": "uis_sync_status"
+        },
+        {
+          "name": "uis_response"
+        },
+        {
+          "name": "build_capital_type"
         },
         {
           "name": "gisogdrf_audit_datetime"
@@ -39057,28 +39346,7 @@ SET class_rule =
           "name": "gisogdrf_publication_datetime"
         },
         {
-          "name": "service_status"
-        },
-        {
-          "name": "note"
-        },
-        {
-          "name": "file",
-          "title": "Выбор файла",
-          "maxSize": 100000000,
-          "maxFiles": 10,
-          "multiple": true,
-          "required": true,
-          "valueType": "FILE"
-        },
-        {
-          "name": "guiddocpreviousversion"
-        },
-        {
           "name": "gisogdrf_response"
-        },
-        {
-          "name": "relations"
         }
       ]
     },
@@ -39090,13 +39358,10 @@ SET class_rule =
       "attributes": [
         {
           "name": "content_type_id",
-          "title": "Вид документа",
           "defaultValue": "doc_13.06"
         },
         {
-          "name": "title",
-          "required": true,
-          "description": "Полное наименование документа"
+          "name": "title"
         },
         {
           "name": "namefrompd"
@@ -39111,13 +39376,10 @@ SET class_rule =
           "name": "regdate"
         },
         {
-          "name": "lacotean",
-          "required": true
+          "name": "lacotean"
         },
         {
-          "name": "fias",
-          "title": "Населённый пункт",
-          "required": true
+          "name": "fias"
         },
         {
           "name": "fias__oktmo",
@@ -39147,7 +39409,8 @@ SET class_rule =
           "name": "validuntil"
         },
         {
-          "name": "orgname"
+          "name": "orgname",
+          "required": false
         },
         {
           "name": "docstatus"
@@ -39166,9 +39429,6 @@ SET class_rule =
         },
         {
           "name": "termination_reason"
-        },
-        {
-          "name": "if_from_eis_zh"
         },
         {
           "name": "is_public"
@@ -39198,13 +39458,7 @@ SET class_rule =
           "name": "note"
         },
         {
-          "name": "file",
-          "title": "Выбор файла",
-          "maxSize": 100000000,
-          "maxFiles": 10,
-          "multiple": true,
-          "required": true,
-          "valueType": "FILE"
+          "name": "file"
         },
         {
           "name": "guiddocpreviousversion"
@@ -39225,13 +39479,10 @@ SET class_rule =
       "attributes": [
         {
           "name": "content_type_id",
-          "title": "Вид документа",
           "defaultValue": "doc_13.07"
         },
         {
-          "name": "title",
-          "required": true,
-          "description": "Полное наименование документа"
+          "name": "title"
         },
         {
           "name": "territorykey"
@@ -39243,13 +39494,10 @@ SET class_rule =
           "name": "regdate"
         },
         {
-          "name": "lacotean",
-          "required": true
+          "name": "lacotean"
         },
         {
-          "name": "fias",
-          "title": "Населённый пункт",
-          "required": true
+          "name": "fias"
         },
         {
           "name": "fias__oktmo",
@@ -39273,7 +39521,8 @@ SET class_rule =
           "name": "docdate"
         },
         {
-          "name": "orgname"
+          "name": "orgname",
+          "required": false
         },
         {
           "name": "docstatus"
@@ -39294,9 +39543,6 @@ SET class_rule =
           "name": "termination_reason"
         },
         {
-          "name": "if_from_eis_zh"
-        },
-        {
           "name": "is_public"
         },
         {
@@ -39315,12 +39561,7 @@ SET class_rule =
           "name": "note"
         },
         {
-          "name": "file",
-          "title": "Выбор файла",
-          "maxSize": 100000000,
-          "maxFiles": 10,
-          "multiple": true,
-          "valueType": "FILE"
+          "name": "file"
         },
         {
           "name": "guiddocpreviousversion"
@@ -39341,13 +39582,10 @@ SET class_rule =
       "attributes": [
         {
           "name": "content_type_id",
-          "title": "Вид документа",
           "defaultValue": "doc_13.08"
         },
         {
-          "name": "title",
-          "required": true,
-          "description": "Полное наименование документа"
+          "name": "title"
         },
         {
           "name": "territorykey"
@@ -39359,13 +39597,10 @@ SET class_rule =
           "name": "regdate"
         },
         {
-          "name": "lacotean",
-          "required": true
+          "name": "lacotean"
         },
         {
-          "name": "fias",
-          "title": "Населённый пункт",
-          "required": true
+          "name": "fias"
         },
         {
           "name": "fias__oktmo",
@@ -39389,7 +39624,8 @@ SET class_rule =
           "name": "docdate"
         },
         {
-          "name": "orgname"
+          "name": "orgname",
+          "required": false
         },
         {
           "name": "docstatus"
@@ -39410,9 +39646,6 @@ SET class_rule =
           "name": "termination_reason"
         },
         {
-          "name": "if_from_eis_zh"
-        },
-        {
           "name": "is_public"
         },
         {
@@ -39431,13 +39664,7 @@ SET class_rule =
           "name": "note"
         },
         {
-          "name": "file",
-          "title": "Выбор файла",
-          "maxSize": 100000000,
-          "maxFiles": 10,
-          "multiple": true,
-          "required": true,
-          "valueType": "FILE"
+          "name": "file"
         },
         {
           "name": "guiddocpreviousversion"
@@ -39458,13 +39685,10 @@ SET class_rule =
       "attributes": [
         {
           "name": "content_type_id",
-          "title": "Вид документа",
           "defaultValue": "doc_13.09"
         },
         {
-          "name": "title",
-          "required": true,
-          "description": "Полное наименование документа"
+          "name": "title"
         },
         {
           "name": "territorykey"
@@ -39476,13 +39700,10 @@ SET class_rule =
           "name": "regdate"
         },
         {
-          "name": "lacotean",
-          "required": true
+          "name": "lacotean"
         },
         {
-          "name": "fias",
-          "title": "Населённый пункт",
-          "required": true
+          "name": "fias"
         },
         {
           "name": "fias__oktmo",
@@ -39506,7 +39727,8 @@ SET class_rule =
           "name": "docdate"
         },
         {
-          "name": "orgname"
+          "name": "orgname",
+          "required": false
         },
         {
           "name": "docstatus"
@@ -39527,9 +39749,6 @@ SET class_rule =
           "name": "termination_reason"
         },
         {
-          "name": "if_from_eis_zh"
-        },
-        {
           "name": "is_public"
         },
         {
@@ -39548,13 +39767,7 @@ SET class_rule =
           "name": "note"
         },
         {
-          "name": "file",
-          "title": "Выбор файла",
-          "maxSize": 100000000,
-          "maxFiles": 10,
-          "multiple": true,
-          "required": true,
-          "valueType": "FILE"
+          "name": "file"
         },
         {
           "name": "guiddocpreviousversion"
@@ -39575,13 +39788,10 @@ SET class_rule =
       "attributes": [
         {
           "name": "content_type_id",
-          "title": "Вид документа",
           "defaultValue": "doc_13.10"
         },
         {
-          "name": "title",
-          "required": true,
-          "description": "Полное наименование документа"
+          "name": "title"
         },
         {
           "name": "territorykey"
@@ -39593,13 +39803,10 @@ SET class_rule =
           "name": "regdate"
         },
         {
-          "name": "lacotean",
-          "required": true
+          "name": "lacotean"
         },
         {
-          "name": "fias",
-          "title": "Населённый пункт",
-          "required": true
+          "name": "fias"
         },
         {
           "name": "fias__oktmo",
@@ -39626,7 +39833,8 @@ SET class_rule =
           "name": "egrzdate"
         },
         {
-          "name": "orgname"
+          "name": "orgname",
+          "required": false
         },
         {
           "name": "docstatus"
@@ -39647,9 +39855,6 @@ SET class_rule =
           "name": "termination_reason"
         },
         {
-          "name": "if_from_eis_zh"
-        },
-        {
           "name": "is_public"
         },
         {
@@ -39668,13 +39873,7 @@ SET class_rule =
           "name": "note"
         },
         {
-          "name": "file",
-          "title": "Выбор файла",
-          "maxSize": 100000000,
-          "maxFiles": 10,
-          "multiple": true,
-          "required": true,
-          "valueType": "FILE"
+          "name": "file"
         },
         {
           "name": "guiddocpreviousversion"
@@ -39695,13 +39894,10 @@ SET class_rule =
       "attributes": [
         {
           "name": "content_type_id",
-          "title": "Вид документа",
           "defaultValue": "doc_13.11"
         },
         {
-          "name": "title",
-          "required": true,
-          "description": "Полное наименование документа"
+          "name": "title"
         },
         {
           "name": "territorykey"
@@ -39713,13 +39909,10 @@ SET class_rule =
           "name": "regdate"
         },
         {
-          "name": "lacotean",
-          "required": true
+          "name": "lacotean"
         },
         {
-          "name": "fias",
-          "title": "Населённый пункт",
-          "required": true
+          "name": "fias"
         },
         {
           "name": "fias__oktmo",
@@ -39743,7 +39936,8 @@ SET class_rule =
           "name": "docdate"
         },
         {
-          "name": "orgname"
+          "name": "orgname",
+          "required": false
         },
         {
           "name": "docstatus"
@@ -39764,9 +39958,6 @@ SET class_rule =
           "name": "termination_reason"
         },
         {
-          "name": "if_from_eis_zh"
-        },
-        {
           "name": "is_public"
         },
         {
@@ -39785,13 +39976,7 @@ SET class_rule =
           "name": "note"
         },
         {
-          "name": "file",
-          "title": "Выбор файла",
-          "maxSize": 100000000,
-          "maxFiles": 10,
-          "multiple": true,
-          "required": true,
-          "valueType": "FILE"
+          "name": "file"
         },
         {
           "name": "guiddocpreviousversion"
@@ -39812,13 +39997,10 @@ SET class_rule =
       "attributes": [
         {
           "name": "content_type_id",
-          "title": "Вид документа",
           "defaultValue": "doc_13.12"
         },
         {
-          "name": "title",
-          "required": true,
-          "description": "Полное наименование документа"
+          "name": "title"
         },
         {
           "name": "territorykey"
@@ -39830,13 +40012,10 @@ SET class_rule =
           "name": "regdate"
         },
         {
-          "name": "lacotean",
-          "required": true
+          "name": "lacotean"
         },
         {
-          "name": "fias",
-          "title": "Населённый пункт",
-          "required": true
+          "name": "fias"
         },
         {
           "name": "fias__oktmo",
@@ -39860,7 +40039,8 @@ SET class_rule =
           "name": "docdate"
         },
         {
-          "name": "orgname"
+          "name": "orgname",
+          "required": false
         },
         {
           "name": "docstatus"
@@ -39881,9 +40061,6 @@ SET class_rule =
           "name": "termination_reason"
         },
         {
-          "name": "if_from_eis_zh"
-        },
-        {
           "name": "is_public"
         },
         {
@@ -39902,13 +40079,7 @@ SET class_rule =
           "name": "note"
         },
         {
-          "name": "file",
-          "title": "Выбор файла",
-          "maxSize": 100000000,
-          "maxFiles": 10,
-          "multiple": true,
-          "required": true,
-          "valueType": "FILE"
+          "name": "file"
         },
         {
           "name": "guiddocpreviousversion"
@@ -39929,13 +40100,10 @@ SET class_rule =
       "attributes": [
         {
           "name": "content_type_id",
-          "title": "Вид документа",
           "defaultValue": "doc_13.13"
         },
         {
-          "name": "title",
-          "required": true,
-          "description": "Полное наименование документа"
+          "name": "title"
         },
         {
           "name": "territorykey"
@@ -39947,13 +40115,10 @@ SET class_rule =
           "name": "regdate"
         },
         {
-          "name": "lacotean",
-          "required": true
+          "name": "lacotean"
         },
         {
-          "name": "fias",
-          "title": "Населённый пункт",
-          "required": true
+          "name": "fias"
         },
         {
           "name": "fias__oktmo",
@@ -39977,7 +40142,8 @@ SET class_rule =
           "name": "docdate"
         },
         {
-          "name": "orgname"
+          "name": "orgname",
+          "required": false
         },
         {
           "name": "docstatus"
@@ -39998,9 +40164,6 @@ SET class_rule =
           "name": "termination_reason"
         },
         {
-          "name": "if_from_eis_zh"
-        },
-        {
           "name": "is_public"
         },
         {
@@ -40019,13 +40182,7 @@ SET class_rule =
           "name": "note"
         },
         {
-          "name": "file",
-          "title": "Выбор файла",
-          "maxSize": 100000000,
-          "maxFiles": 10,
-          "multiple": true,
-          "required": true,
-          "valueType": "FILE"
+          "name": "file"
         },
         {
           "name": "guiddocpreviousversion"
@@ -40046,13 +40203,10 @@ SET class_rule =
       "attributes": [
         {
           "name": "content_type_id",
-          "title": "Вид документа",
           "defaultValue": "doc_13.14"
         },
         {
-          "name": "title",
-          "required": true,
-          "description": "Полное наименование документа"
+          "name": "title"
         },
         {
           "name": "territorykey"
@@ -40064,13 +40218,10 @@ SET class_rule =
           "name": "regdate"
         },
         {
-          "name": "lacotean",
-          "required": true
+          "name": "lacotean"
         },
         {
-          "name": "fias",
-          "title": "Населённый пункт",
-          "required": true
+          "name": "fias"
         },
         {
           "name": "fias__oktmo",
@@ -40094,7 +40245,8 @@ SET class_rule =
           "name": "docdate"
         },
         {
-          "name": "orgname"
+          "name": "orgname",
+          "required": false
         },
         {
           "name": "docstatus"
@@ -40115,9 +40267,6 @@ SET class_rule =
           "name": "termination_reason"
         },
         {
-          "name": "if_from_eis_zh"
-        },
-        {
           "name": "is_public"
         },
         {
@@ -40136,13 +40285,7 @@ SET class_rule =
           "name": "note"
         },
         {
-          "name": "file",
-          "title": "Выбор файла",
-          "maxSize": 100000000,
-          "maxFiles": 10,
-          "multiple": true,
-          "required": true,
-          "valueType": "FILE"
+          "name": "file"
         },
         {
           "name": "guiddocpreviousversion"
@@ -40163,13 +40306,10 @@ SET class_rule =
       "attributes": [
         {
           "name": "content_type_id",
-          "title": "Вид документа",
           "defaultValue": "doc_13.16"
         },
         {
-          "name": "title",
-          "required": true,
-          "description": "Полное наименование документа"
+          "name": "title"
         },
         {
           "name": "territorykey"
@@ -40181,13 +40321,10 @@ SET class_rule =
           "name": "regdate"
         },
         {
-          "name": "lacotean",
-          "required": true
+          "name": "lacotean"
         },
         {
-          "name": "fias",
-          "title": "Населённый пункт",
-          "required": true
+          "name": "fias"
         },
         {
           "name": "fias__oktmo",
@@ -40211,7 +40348,8 @@ SET class_rule =
           "name": "docdate"
         },
         {
-          "name": "orgname"
+          "name": "orgname",
+          "required": false
         },
         {
           "name": "docstatus"
@@ -40232,9 +40370,6 @@ SET class_rule =
           "name": "termination_reason"
         },
         {
-          "name": "if_from_eis_zh"
-        },
-        {
           "name": "is_public"
         },
         {
@@ -40253,13 +40388,7 @@ SET class_rule =
           "name": "note"
         },
         {
-          "name": "file",
-          "title": "Выбор файла",
-          "maxSize": 100000000,
-          "maxFiles": 10,
-          "multiple": true,
-          "required": true,
-          "valueType": "FILE"
+          "name": "file"
         },
         {
           "name": "guiddocpreviousversion"
@@ -40280,13 +40409,10 @@ SET class_rule =
       "attributes": [
         {
           "name": "content_type_id",
-          "title": "Вид документа",
           "defaultValue": "doc_13.17"
         },
         {
-          "name": "title",
-          "required": true,
-          "description": "Полное наименование документа"
+          "name": "title"
         },
         {
           "name": "territorykey"
@@ -40298,13 +40424,10 @@ SET class_rule =
           "name": "regdate"
         },
         {
-          "name": "lacotean",
-          "required": true
+          "name": "lacotean"
         },
         {
-          "name": "fias",
-          "title": "Населённый пункт",
-          "required": true
+          "name": "fias"
         },
         {
           "name": "fias__oktmo",
@@ -40328,7 +40451,8 @@ SET class_rule =
           "name": "docdate"
         },
         {
-          "name": "orgname"
+          "name": "orgname",
+          "required": false
         },
         {
           "name": "docstatus"
@@ -40349,9 +40473,6 @@ SET class_rule =
           "name": "termination_reason"
         },
         {
-          "name": "if_from_eis_zh"
-        },
-        {
           "name": "is_public"
         },
         {
@@ -40370,13 +40491,7 @@ SET class_rule =
           "name": "note"
         },
         {
-          "name": "file",
-          "title": "Выбор файла",
-          "maxSize": 100000000,
-          "maxFiles": 10,
-          "multiple": true,
-          "required": true,
-          "valueType": "FILE"
+          "name": "file"
         },
         {
           "name": "guiddocpreviousversion"
@@ -40397,13 +40512,10 @@ SET class_rule =
       "attributes": [
         {
           "name": "content_type_id",
-          "title": "Вид документа",
           "defaultValue": "doc_13.18"
         },
         {
-          "name": "title",
-          "required": true,
-          "description": "Полное наименование документа"
+          "name": "title"
         },
         {
           "name": "namefrompd"
@@ -40418,16 +40530,13 @@ SET class_rule =
           "name": "regdate"
         },
         {
-          "name": "lacotean",
-          "required": true
+          "name": "lacotean"
         },
         {
           "name": "constructiontype"
         },
         {
-          "name": "fias",
-          "title": "Населённый пункт",
-          "required": true
+          "name": "fias"
         },
         {
           "name": "fias__oktmo",
@@ -40449,14 +40558,15 @@ SET class_rule =
         },
         {
           "name": "docnum",
-          "required": true
+          "description": "При наличии утверждаемых документов указывается номер утверждающего документа / Обязательное по Приказу № 433/пр"
         },
         {
           "name": "docdate",
-          "required": true
+          "description": "При наличии утверждаемых документов указывается дата утверждающего документа / Обязательное по Приказу № 433/пр"
         },
         {
-          "name": "orgname"
+          "name": "orgname",
+          "required": false
         },
         {
           "name": "docstatus"
@@ -40474,16 +40584,70 @@ SET class_rule =
           "name": "supplieremploey_data_connection"
         },
         {
-          "name": "issue_person_connection"
-        },
-        {
           "name": "termination_reason"
         },
         {
-          "name": "if_from_eis_zh"
+          "name": "is_public"
         },
         {
-          "name": "is_public"
+          "name": "service_status"
+        },
+        {
+          "name": "note"
+        },
+        {
+          "name": "file"
+        },
+        {
+          "name": "guiddocpreviousversion"
+        },
+        {
+          "name": "relations"
+        },
+        {
+          "name": "number_objects"
+        },
+        {
+          "name": "number_long_objects"
+        },
+        {
+          "name": "object_name_eis"
+        },
+        {
+          "name": "object_kind"
+        },
+        {
+          "name": "object_purpose"
+        },
+        {
+          "name": "object_purpose_functional"
+        },
+        {
+          "name": "build_capital_type"
+        },
+        {
+          "name": "const_government_order_id"
+        },
+        {
+          "name": "const_cadastral_district"
+        },
+        {
+          "name": "const_cadastral_area"
+        },
+        {
+          "name": "issue_person_connection"
+        },
+        {
+          "name": "date_uis"
+        },
+        {
+          "name": "smev_message_id"
+        },
+        {
+          "name": "uis_sync_status"
+        },
+        {
+          "name": "uis_response"
         },
         {
           "name": "gisogdrf_audit_datetime"
@@ -40495,28 +40659,7 @@ SET class_rule =
           "name": "gisogdrf_publication_datetime"
         },
         {
-          "name": "service_status"
-        },
-        {
-          "name": "note"
-        },
-        {
-          "name": "file",
-          "title": "Выбор файла",
-          "maxSize": 100000000,
-          "maxFiles": 10,
-          "multiple": true,
-          "required": true,
-          "valueType": "FILE"
-        },
-        {
-          "name": "guiddocpreviousversion"
-        },
-        {
           "name": "gisogdrf_response"
-        },
-        {
-          "name": "relations"
         }
       ]
     },
@@ -40528,13 +40671,10 @@ SET class_rule =
       "attributes": [
         {
           "name": "content_type_id",
-          "title": "Вид документа",
           "defaultValue": "doc_13.19"
         },
         {
-          "name": "title",
-          "required": true,
-          "description": "Полное наименование документа"
+          "name": "title"
         },
         {
           "name": "territorykey"
@@ -40546,13 +40686,10 @@ SET class_rule =
           "name": "regdate"
         },
         {
-          "name": "lacotean",
-          "required": true
+          "name": "lacotean"
         },
         {
-          "name": "fias",
-          "title": "Населённый пункт",
-          "required": true
+          "name": "fias"
         },
         {
           "name": "fias__oktmo",
@@ -40576,7 +40713,8 @@ SET class_rule =
           "name": "docdate"
         },
         {
-          "name": "orgname"
+          "name": "orgname",
+          "required": false
         },
         {
           "name": "docstatus"
@@ -40597,9 +40735,6 @@ SET class_rule =
           "name": "termination_reason"
         },
         {
-          "name": "if_from_eis_zh"
-        },
-        {
           "name": "is_public"
         },
         {
@@ -40618,13 +40753,7 @@ SET class_rule =
           "name": "note"
         },
         {
-          "name": "file",
-          "title": "Выбор файла",
-          "maxSize": 100000000,
-          "maxFiles": 10,
-          "multiple": true,
-          "required": true,
-          "valueType": "FILE"
+          "name": "file"
         },
         {
           "name": "guiddocpreviousversion"
@@ -40645,13 +40774,10 @@ SET class_rule =
       "attributes": [
         {
           "name": "content_type_id",
-          "title": "Вид документа",
           "defaultValue": "doc_13.20"
         },
         {
-          "name": "title",
-          "required": true,
-          "description": "Полное наименование документа"
+          "name": "title"
         },
         {
           "name": "territorykey"
@@ -40663,13 +40789,10 @@ SET class_rule =
           "name": "regdate"
         },
         {
-          "name": "lacotean",
-          "required": true
+          "name": "lacotean"
         },
         {
-          "name": "fias",
-          "title": "Населённый пункт",
-          "required": true
+          "name": "fias"
         },
         {
           "name": "fias__oktmo",
@@ -40690,13 +40813,15 @@ SET class_rule =
           "name": "developer"
         },
         {
-          "name": "docnum"
+          "name": "docnum",
+          "required": false
         },
         {
           "name": "docdate"
         },
         {
-          "name": "orgname"
+          "name": "orgname",
+          "required": false
         },
         {
           "name": "docstatus"
@@ -40717,9 +40842,6 @@ SET class_rule =
           "name": "termination_reason"
         },
         {
-          "name": "if_from_eis_zh"
-        },
-        {
           "name": "is_public"
         },
         {
@@ -40738,13 +40860,7 @@ SET class_rule =
           "name": "note"
         },
         {
-          "name": "file",
-          "title": "Выбор файла",
-          "maxSize": 100000000,
-          "maxFiles": 10,
-          "multiple": true,
-          "required": true,
-          "valueType": "FILE"
+          "name": "file"
         },
         {
           "name": "guiddocpreviousversion"
@@ -40765,13 +40881,10 @@ SET class_rule =
       "attributes": [
         {
           "name": "content_type_id",
-          "title": "Вид документа",
           "defaultValue": "doc_13.21"
         },
         {
-          "name": "title",
-          "required": true,
-          "description": "Полное наименование документа"
+          "name": "title"
         },
         {
           "name": "territorykey"
@@ -40783,13 +40896,10 @@ SET class_rule =
           "name": "regdate"
         },
         {
-          "name": "lacotean",
-          "required": true
+          "name": "lacotean"
         },
         {
-          "name": "fias",
-          "title": "Населённый пункт",
-          "required": true
+          "name": "fias"
         },
         {
           "name": "fias__oktmo",
@@ -40810,13 +40920,15 @@ SET class_rule =
           "name": "developer"
         },
         {
-          "name": "docnum"
+          "name": "docnum",
+          "required": false
         },
         {
           "name": "docdate"
         },
         {
-          "name": "orgname"
+          "name": "orgname",
+          "required": false
         },
         {
           "name": "docstatus"
@@ -40837,9 +40949,6 @@ SET class_rule =
           "name": "termination_reason"
         },
         {
-          "name": "if_from_eis_zh"
-        },
-        {
           "name": "is_public"
         },
         {
@@ -40858,13 +40967,7 @@ SET class_rule =
           "name": "note"
         },
         {
-          "name": "file",
-          "title": "Выбор файла",
-          "maxSize": 100000000,
-          "maxFiles": 10,
-          "multiple": true,
-          "required": true,
-          "valueType": "FILE"
+          "name": "file"
         },
         {
           "name": "guiddocpreviousversion"
@@ -40885,13 +40988,10 @@ SET class_rule =
       "attributes": [
         {
           "name": "content_type_id",
-          "title": "Вид документа",
           "defaultValue": "doc_13.22"
         },
         {
-          "name": "title",
-          "required": true,
-          "description": "Полное наименование документа"
+          "name": "title"
         },
         {
           "name": "territorykey"
@@ -40903,13 +41003,10 @@ SET class_rule =
           "name": "regdate"
         },
         {
-          "name": "lacotean",
-          "required": true
+          "name": "lacotean"
         },
         {
-          "name": "fias",
-          "title": "Населённый пункт",
-          "required": true
+          "name": "fias"
         },
         {
           "name": "fias__oktmo",
@@ -40933,7 +41030,8 @@ SET class_rule =
           "name": "docdate"
         },
         {
-          "name": "orgname"
+          "name": "orgname",
+          "required": false
         },
         {
           "name": "docstatus"
@@ -40954,9 +41052,6 @@ SET class_rule =
           "name": "termination_reason"
         },
         {
-          "name": "if_from_eis_zh"
-        },
-        {
           "name": "is_public"
         },
         {
@@ -40975,13 +41070,7 @@ SET class_rule =
           "name": "note"
         },
         {
-          "name": "file",
-          "title": "Выбор файла",
-          "maxSize": 100000000,
-          "maxFiles": 10,
-          "multiple": true,
-          "required": true,
-          "valueType": "FILE"
+          "name": "file"
         },
         {
           "name": "guiddocpreviousversion"
@@ -41002,13 +41091,10 @@ SET class_rule =
       "attributes": [
         {
           "name": "content_type_id",
-          "title": "Вид документа",
           "defaultValue": "doc_13.23"
         },
         {
-          "name": "title",
-          "required": true,
-          "description": "Полное наименование документа"
+          "name": "title"
         },
         {
           "name": "territorykey"
@@ -41020,13 +41106,10 @@ SET class_rule =
           "name": "regdate"
         },
         {
-          "name": "lacotean",
-          "required": true
+          "name": "lacotean"
         },
         {
-          "name": "fias",
-          "title": "Населённый пункт",
-          "required": true
+          "name": "fias"
         },
         {
           "name": "fias__oktmo",
@@ -41050,7 +41133,8 @@ SET class_rule =
           "name": "docdate"
         },
         {
-          "name": "orgname"
+          "name": "orgname",
+          "required": false
         },
         {
           "name": "docstatus"
@@ -41071,9 +41155,6 @@ SET class_rule =
           "name": "termination_reason"
         },
         {
-          "name": "if_from_eis_zh"
-        },
-        {
           "name": "is_public"
         },
         {
@@ -41092,13 +41173,7 @@ SET class_rule =
           "name": "note"
         },
         {
-          "name": "file",
-          "title": "Выбор файла",
-          "maxSize": 100000000,
-          "maxFiles": 10,
-          "multiple": true,
-          "required": true,
-          "valueType": "FILE"
+          "name": "file"
         },
         {
           "name": "guiddocpreviousversion"
@@ -41119,13 +41194,10 @@ SET class_rule =
       "attributes": [
         {
           "name": "content_type_id",
-          "title": "Вид документа",
           "defaultValue": "doc_13.24"
         },
         {
-          "name": "title",
-          "required": true,
-          "description": "Полное наименование документа"
+          "name": "title"
         },
         {
           "name": "territorykey"
@@ -41137,13 +41209,10 @@ SET class_rule =
           "name": "regdate"
         },
         {
-          "name": "lacotean",
-          "required": true
+          "name": "lacotean"
         },
         {
-          "name": "fias",
-          "title": "Населённый пункт",
-          "required": true
+          "name": "fias"
         },
         {
           "name": "fias__oktmo",
@@ -41167,7 +41236,8 @@ SET class_rule =
           "name": "docdate"
         },
         {
-          "name": "orgname"
+          "name": "orgname",
+          "required": false
         },
         {
           "name": "docstatus"
@@ -41188,9 +41258,6 @@ SET class_rule =
           "name": "termination_reason"
         },
         {
-          "name": "if_from_eis_zh"
-        },
-        {
           "name": "is_public"
         },
         {
@@ -41209,13 +41276,7 @@ SET class_rule =
           "name": "note"
         },
         {
-          "name": "file",
-          "title": "Выбор файла",
-          "maxSize": 100000000,
-          "maxFiles": 10,
-          "multiple": true,
-          "required": true,
-          "valueType": "FILE"
+          "name": "file"
         },
         {
           "name": "guiddocpreviousversion"
@@ -41236,13 +41297,10 @@ SET class_rule =
       "attributes": [
         {
           "name": "content_type_id",
-          "title": "Вид документа",
           "defaultValue": "doc_13.25"
         },
         {
-          "name": "title",
-          "required": true,
-          "description": "Полное наименование документа"
+          "name": "title"
         },
         {
           "name": "territorykey"
@@ -41254,13 +41312,10 @@ SET class_rule =
           "name": "regdate"
         },
         {
-          "name": "lacotean",
-          "required": true
+          "name": "lacotean"
         },
         {
-          "name": "fias",
-          "title": "Населённый пункт",
-          "required": true
+          "name": "fias"
         },
         {
           "name": "fias__oktmo",
@@ -41284,7 +41339,8 @@ SET class_rule =
           "name": "docdate"
         },
         {
-          "name": "orgname"
+          "name": "orgname",
+          "required": false
         },
         {
           "name": "docstatus"
@@ -41305,9 +41361,6 @@ SET class_rule =
           "name": "termination_reason"
         },
         {
-          "name": "if_from_eis_zh"
-        },
-        {
           "name": "is_public"
         },
         {
@@ -41326,13 +41379,7 @@ SET class_rule =
           "name": "note"
         },
         {
-          "name": "file",
-          "title": "Выбор файла",
-          "maxSize": 100000000,
-          "maxFiles": 10,
-          "multiple": true,
-          "required": true,
-          "valueType": "FILE"
+          "name": "file"
         },
         {
           "name": "guiddocpreviousversion"
@@ -41353,13 +41400,10 @@ SET class_rule =
       "attributes": [
         {
           "name": "content_type_id",
-          "title": "Вид документа",
           "defaultValue": "doc_13.26"
         },
         {
-          "name": "title",
-          "required": true,
-          "description": "Полное наименование документа"
+          "name": "title"
         },
         {
           "name": "territorykey"
@@ -41371,13 +41415,10 @@ SET class_rule =
           "name": "regdate"
         },
         {
-          "name": "lacotean",
-          "required": true
+          "name": "lacotean"
         },
         {
-          "name": "fias",
-          "title": "Населённый пункт",
-          "required": true
+          "name": "fias"
         },
         {
           "name": "fias__oktmo",
@@ -41401,7 +41442,8 @@ SET class_rule =
           "name": "docdate"
         },
         {
-          "name": "orgname"
+          "name": "orgname",
+          "required": false
         },
         {
           "name": "docstatus"
@@ -41422,9 +41464,6 @@ SET class_rule =
           "name": "termination_reason"
         },
         {
-          "name": "if_from_eis_zh"
-        },
-        {
           "name": "is_public"
         },
         {
@@ -41443,13 +41482,7 @@ SET class_rule =
           "name": "note"
         },
         {
-          "name": "file",
-          "title": "Выбор файла",
-          "maxSize": 100000000,
-          "maxFiles": 10,
-          "multiple": true,
-          "required": true,
-          "valueType": "FILE"
+          "name": "file"
         },
         {
           "name": "guiddocpreviousversion"
@@ -41470,13 +41503,10 @@ SET class_rule =
       "attributes": [
         {
           "name": "content_type_id",
-          "title": "Вид документа",
           "defaultValue": "doc_13.27"
         },
         {
-          "name": "title",
-          "required": true,
-          "description": "Полное наименование документа"
+          "name": "title"
         },
         {
           "name": "territorykey"
@@ -41488,13 +41518,10 @@ SET class_rule =
           "name": "regdate"
         },
         {
-          "name": "lacotean",
-          "required": true
+          "name": "lacotean"
         },
         {
-          "name": "fias",
-          "title": "Населённый пункт",
-          "required": true
+          "name": "fias"
         },
         {
           "name": "fias__oktmo",
@@ -41515,13 +41542,15 @@ SET class_rule =
           "name": "developer"
         },
         {
-          "name": "docnum"
+          "name": "docnum",
+          "required": false
         },
         {
           "name": "docdate"
         },
         {
-          "name": "orgname"
+          "name": "orgname",
+          "required": false
         },
         {
           "name": "docstatus"
@@ -41542,9 +41571,6 @@ SET class_rule =
           "name": "termination_reason"
         },
         {
-          "name": "if_from_eis_zh"
-        },
-        {
           "name": "is_public"
         },
         {
@@ -41563,13 +41589,7 @@ SET class_rule =
           "name": "note"
         },
         {
-          "name": "file",
-          "title": "Выбор файла",
-          "maxSize": 100000000,
-          "maxFiles": 10,
-          "multiple": true,
-          "required": true,
-          "valueType": "FILE"
+          "name": "file"
         },
         {
           "name": "guiddocpreviousversion"
@@ -41590,13 +41610,10 @@ SET class_rule =
       "attributes": [
         {
           "name": "content_type_id",
-          "title": "Вид документа",
           "defaultValue": "doc_13.28"
         },
         {
-          "name": "title",
-          "required": true,
-          "description": "Полное наименование документа"
+          "name": "title"
         },
         {
           "name": "territorykey"
@@ -41608,13 +41625,10 @@ SET class_rule =
           "name": "regdate"
         },
         {
-          "name": "lacotean",
-          "required": true
+          "name": "lacotean"
         },
         {
-          "name": "fias",
-          "title": "Населённый пункт",
-          "required": true
+          "name": "fias"
         },
         {
           "name": "fias__oktmo",
@@ -41638,7 +41652,8 @@ SET class_rule =
           "name": "docdate"
         },
         {
-          "name": "orgname"
+          "name": "orgname",
+          "required": false
         },
         {
           "name": "docstatus"
@@ -41659,9 +41674,6 @@ SET class_rule =
           "name": "termination_reason"
         },
         {
-          "name": "if_from_eis_zh"
-        },
-        {
           "name": "is_public"
         },
         {
@@ -41680,13 +41692,7 @@ SET class_rule =
           "name": "note"
         },
         {
-          "name": "file",
-          "title": "Выбор файла",
-          "maxSize": 100000000,
-          "maxFiles": 10,
-          "multiple": true,
-          "required": true,
-          "valueType": "FILE"
+          "name": "file"
         },
         {
           "name": "guiddocpreviousversion"
@@ -41707,13 +41713,10 @@ SET class_rule =
       "attributes": [
         {
           "name": "content_type_id",
-          "title": "Вид документа",
           "defaultValue": "doc_13.29"
         },
         {
-          "name": "title",
-          "required": true,
-          "description": "Полное наименование документа"
+          "name": "title"
         },
         {
           "name": "territorykey"
@@ -41725,13 +41728,10 @@ SET class_rule =
           "name": "regdate"
         },
         {
-          "name": "lacotean",
-          "required": true
+          "name": "lacotean"
         },
         {
-          "name": "fias",
-          "title": "Населённый пункт",
-          "required": true
+          "name": "fias"
         },
         {
           "name": "fias__oktmo",
@@ -41755,7 +41755,8 @@ SET class_rule =
           "name": "docdate"
         },
         {
-          "name": "orgname"
+          "name": "orgname",
+          "required": false
         },
         {
           "name": "docstatus"
@@ -41776,9 +41777,6 @@ SET class_rule =
           "name": "termination_reason"
         },
         {
-          "name": "if_from_eis_zh"
-        },
-        {
           "name": "is_public"
         },
         {
@@ -41797,13 +41795,7 @@ SET class_rule =
           "name": "note"
         },
         {
-          "name": "file",
-          "title": "Выбор файла",
-          "maxSize": 100000000,
-          "maxFiles": 10,
-          "multiple": true,
-          "required": true,
-          "valueType": "FILE"
+          "name": "file"
         },
         {
           "name": "guiddocpreviousversion"
@@ -41824,13 +41816,10 @@ SET class_rule =
       "attributes": [
         {
           "name": "content_type_id",
-          "title": "Вид документа",
           "defaultValue": "doc_13.30"
         },
         {
-          "name": "title",
-          "required": true,
-          "description": "Полное наименование документа"
+          "name": "title"
         },
         {
           "name": "territorykey"
@@ -41842,13 +41831,10 @@ SET class_rule =
           "name": "regdate"
         },
         {
-          "name": "lacotean",
-          "required": true
+          "name": "lacotean"
         },
         {
-          "name": "fias",
-          "title": "Населённый пункт",
-          "required": true
+          "name": "fias"
         },
         {
           "name": "fias__oktmo",
@@ -41872,7 +41858,8 @@ SET class_rule =
           "name": "docdate"
         },
         {
-          "name": "orgname"
+          "name": "orgname",
+          "required": false
         },
         {
           "name": "docstatus"
@@ -41893,9 +41880,6 @@ SET class_rule =
           "name": "termination_reason"
         },
         {
-          "name": "if_from_eis_zh"
-        },
-        {
           "name": "is_public"
         },
         {
@@ -41914,13 +41898,7 @@ SET class_rule =
           "name": "note"
         },
         {
-          "name": "file",
-          "title": "Выбор файла",
-          "maxSize": 100000000,
-          "maxFiles": 10,
-          "multiple": true,
-          "required": true,
-          "valueType": "FILE"
+          "name": "file"
         },
         {
           "name": "guiddocpreviousversion"
@@ -41941,13 +41919,10 @@ SET class_rule =
       "attributes": [
         {
           "name": "content_type_id",
-          "title": "Вид документа",
           "defaultValue": "doc_13.31"
         },
         {
-          "name": "title",
-          "required": true,
-          "description": "Полное наименование документа"
+          "name": "title"
         },
         {
           "name": "territorykey"
@@ -41959,13 +41934,10 @@ SET class_rule =
           "name": "regdate"
         },
         {
-          "name": "lacotean",
-          "required": true
+          "name": "lacotean"
         },
         {
-          "name": "fias",
-          "title": "Населённый пункт",
-          "required": true
+          "name": "fias"
         },
         {
           "name": "fias__oktmo",
@@ -41989,7 +41961,8 @@ SET class_rule =
           "name": "docdate"
         },
         {
-          "name": "orgname"
+          "name": "orgname",
+          "required": false
         },
         {
           "name": "docstatus"
@@ -42010,9 +41983,6 @@ SET class_rule =
           "name": "termination_reason"
         },
         {
-          "name": "if_from_eis_zh"
-        },
-        {
           "name": "is_public"
         },
         {
@@ -42031,13 +42001,7 @@ SET class_rule =
           "name": "note"
         },
         {
-          "name": "file",
-          "title": "Выбор файла",
-          "maxSize": 100000000,
-          "maxFiles": 10,
-          "multiple": true,
-          "required": true,
-          "valueType": "FILE"
+          "name": "file"
         },
         {
           "name": "guiddocpreviousversion"
@@ -42058,13 +42022,10 @@ SET class_rule =
       "attributes": [
         {
           "name": "content_type_id",
-          "title": "Вид документа",
           "defaultValue": "doc_13.32"
         },
         {
-          "name": "title",
-          "required": true,
-          "description": "Полное наименование документа"
+          "name": "title"
         },
         {
           "name": "territorykey"
@@ -42076,13 +42037,10 @@ SET class_rule =
           "name": "regdate"
         },
         {
-          "name": "lacotean",
-          "required": true
+          "name": "lacotean"
         },
         {
-          "name": "fias",
-          "title": "Населённый пункт",
-          "required": true
+          "name": "fias"
         },
         {
           "name": "fias__oktmo",
@@ -42106,7 +42064,8 @@ SET class_rule =
           "name": "docdate"
         },
         {
-          "name": "orgname"
+          "name": "orgname",
+          "required": false
         },
         {
           "name": "docstatus"
@@ -42127,9 +42086,6 @@ SET class_rule =
           "name": "termination_reason"
         },
         {
-          "name": "if_from_eis_zh"
-        },
-        {
           "name": "is_public"
         },
         {
@@ -42148,13 +42104,7 @@ SET class_rule =
           "name": "note"
         },
         {
-          "name": "file",
-          "title": "Выбор файла",
-          "maxSize": 100000000,
-          "maxFiles": 10,
-          "multiple": true,
-          "required": true,
-          "valueType": "FILE"
+          "name": "file"
         },
         {
           "name": "guiddocpreviousversion"
@@ -42175,13 +42125,10 @@ SET class_rule =
       "attributes": [
         {
           "name": "content_type_id",
-          "title": "Вид документа",
           "defaultValue": "doc_13.33"
         },
         {
-          "name": "title",
-          "required": true,
-          "description": "Полное наименование документа"
+          "name": "title"
         },
         {
           "name": "territorykey"
@@ -42193,13 +42140,10 @@ SET class_rule =
           "name": "regdate"
         },
         {
-          "name": "lacotean",
-          "required": true
+          "name": "lacotean"
         },
         {
-          "name": "fias",
-          "title": "Населённый пункт",
-          "required": true
+          "name": "fias"
         },
         {
           "name": "fias__oktmo",
@@ -42223,7 +42167,8 @@ SET class_rule =
           "name": "docdate"
         },
         {
-          "name": "orgname"
+          "name": "orgname",
+          "required": false
         },
         {
           "name": "docstatus"
@@ -42244,9 +42189,6 @@ SET class_rule =
           "name": "termination_reason"
         },
         {
-          "name": "if_from_eis_zh"
-        },
-        {
           "name": "is_public"
         },
         {
@@ -42265,13 +42207,7 @@ SET class_rule =
           "name": "note"
         },
         {
-          "name": "file",
-          "title": "Выбор файла",
-          "maxSize": 100000000,
-          "maxFiles": 10,
-          "multiple": true,
-          "required": true,
-          "valueType": "FILE"
+          "name": "file"
         },
         {
           "name": "guiddocpreviousversion"
@@ -42292,13 +42228,10 @@ SET class_rule =
       "attributes": [
         {
           "name": "content_type_id",
-          "title": "Вид документа",
           "defaultValue": "doc_13.34"
         },
         {
-          "name": "title",
-          "required": true,
-          "description": "Полное наименование документа"
+          "name": "title"
         },
         {
           "name": "territorykey"
@@ -42310,13 +42243,10 @@ SET class_rule =
           "name": "regdate"
         },
         {
-          "name": "lacotean",
-          "required": true
+          "name": "lacotean"
         },
         {
-          "name": "fias",
-          "title": "Населённый пункт",
-          "required": true
+          "name": "fias"
         },
         {
           "name": "fias__oktmo",
@@ -42340,7 +42270,8 @@ SET class_rule =
           "name": "docdate"
         },
         {
-          "name": "orgname"
+          "name": "orgname",
+          "required": false
         },
         {
           "name": "docstatus"
@@ -42361,9 +42292,6 @@ SET class_rule =
           "name": "termination_reason"
         },
         {
-          "name": "if_from_eis_zh"
-        },
-        {
           "name": "is_public"
         },
         {
@@ -42382,13 +42310,7 @@ SET class_rule =
           "name": "note"
         },
         {
-          "name": "file",
-          "title": "Выбор файла",
-          "maxSize": 100000000,
-          "maxFiles": 10,
-          "multiple": true,
-          "required": true,
-          "valueType": "FILE"
+          "name": "file"
         },
         {
           "name": "guiddocpreviousversion"
@@ -42409,13 +42331,10 @@ SET class_rule =
       "attributes": [
         {
           "name": "content_type_id",
-          "title": "Вид документа",
           "defaultValue": "doc_13.35"
         },
         {
-          "name": "title",
-          "required": true,
-          "description": "Полное наименование документа"
+          "name": "title"
         },
         {
           "name": "territorykey"
@@ -42427,13 +42346,10 @@ SET class_rule =
           "name": "regdate"
         },
         {
-          "name": "lacotean",
-          "required": true
+          "name": "lacotean"
         },
         {
-          "name": "fias",
-          "title": "Населённый пункт",
-          "required": true
+          "name": "fias"
         },
         {
           "name": "fias__oktmo",
@@ -42457,7 +42373,8 @@ SET class_rule =
           "name": "docdate"
         },
         {
-          "name": "orgname"
+          "name": "orgname",
+          "required": false
         },
         {
           "name": "docstatus"
@@ -42478,9 +42395,6 @@ SET class_rule =
           "name": "termination_reason"
         },
         {
-          "name": "if_from_eis_zh"
-        },
-        {
           "name": "is_public"
         },
         {
@@ -42499,13 +42413,7 @@ SET class_rule =
           "name": "note"
         },
         {
-          "name": "file",
-          "title": "Выбор файла",
-          "maxSize": 100000000,
-          "maxFiles": 10,
-          "multiple": true,
-          "required": true,
-          "valueType": "FILE"
+          "name": "file"
         },
         {
           "name": "guiddocpreviousversion"
@@ -42526,13 +42434,10 @@ SET class_rule =
       "attributes": [
         {
           "name": "content_type_id",
-          "title": "Вид документа",
           "defaultValue": "doc_13.36"
         },
         {
-          "name": "title",
-          "required": true,
-          "description": "Полное наименование документа"
+          "name": "title"
         },
         {
           "name": "territorykey"
@@ -42544,13 +42449,10 @@ SET class_rule =
           "name": "regdate"
         },
         {
-          "name": "lacotean",
-          "required": true
+          "name": "lacotean"
         },
         {
-          "name": "fias",
-          "title": "Населённый пункт",
-          "required": true
+          "name": "fias"
         },
         {
           "name": "fias__oktmo",
@@ -42574,7 +42476,8 @@ SET class_rule =
           "name": "docdate"
         },
         {
-          "name": "orgname"
+          "name": "orgname",
+          "required": false
         },
         {
           "name": "docstatus"
@@ -42595,9 +42498,6 @@ SET class_rule =
           "name": "termination_reason"
         },
         {
-          "name": "if_from_eis_zh"
-        },
-        {
           "name": "is_public"
         },
         {
@@ -42616,13 +42516,7 @@ SET class_rule =
           "name": "note"
         },
         {
-          "name": "file",
-          "title": "Выбор файла",
-          "maxSize": 100000000,
-          "maxFiles": 10,
-          "multiple": true,
-          "required": true,
-          "valueType": "FILE"
+          "name": "file"
         },
         {
           "name": "guiddocpreviousversion"
@@ -42643,13 +42537,10 @@ SET class_rule =
       "attributes": [
         {
           "name": "content_type_id",
-          "title": "Вид документа",
           "defaultValue": "doc_13.37"
         },
         {
-          "name": "title",
-          "required": true,
-          "description": "Полное наименование документа"
+          "name": "title"
         },
         {
           "name": "territorykey"
@@ -42661,13 +42552,10 @@ SET class_rule =
           "name": "regdate"
         },
         {
-          "name": "lacotean",
-          "required": true
+          "name": "lacotean"
         },
         {
-          "name": "fias",
-          "title": "Населённый пункт",
-          "required": true
+          "name": "fias"
         },
         {
           "name": "fias__oktmo",
@@ -42691,7 +42579,8 @@ SET class_rule =
           "name": "docdate"
         },
         {
-          "name": "orgname"
+          "name": "orgname",
+          "required": false
         },
         {
           "name": "docstatus"
@@ -42712,9 +42601,6 @@ SET class_rule =
           "name": "termination_reason"
         },
         {
-          "name": "if_from_eis_zh"
-        },
-        {
           "name": "is_public"
         },
         {
@@ -42733,13 +42619,7 @@ SET class_rule =
           "name": "note"
         },
         {
-          "name": "file",
-          "title": "Выбор файла",
-          "maxSize": 100000000,
-          "maxFiles": 10,
-          "multiple": true,
-          "required": true,
-          "valueType": "FILE"
+          "name": "file"
         },
         {
           "name": "guiddocpreviousversion"
@@ -42760,13 +42640,10 @@ SET class_rule =
       "attributes": [
         {
           "name": "content_type_id",
-          "title": "Вид документа",
           "defaultValue": "doc_13.38"
         },
         {
-          "name": "title",
-          "required": true,
-          "description": "Полное наименование документа"
+          "name": "title"
         },
         {
           "name": "territorykey"
@@ -42778,13 +42655,10 @@ SET class_rule =
           "name": "regdate"
         },
         {
-          "name": "lacotean",
-          "required": true
+          "name": "lacotean"
         },
         {
-          "name": "fias",
-          "title": "Населённый пункт",
-          "required": true
+          "name": "fias"
         },
         {
           "name": "fias__oktmo",
@@ -42808,7 +42682,8 @@ SET class_rule =
           "name": "docdate"
         },
         {
-          "name": "orgname"
+          "name": "orgname",
+          "required": false
         },
         {
           "name": "docstatus"
@@ -42829,9 +42704,6 @@ SET class_rule =
           "name": "termination_reason"
         },
         {
-          "name": "if_from_eis_zh"
-        },
-        {
           "name": "is_public"
         },
         {
@@ -42850,13 +42722,7 @@ SET class_rule =
           "name": "note"
         },
         {
-          "name": "file",
-          "title": "Выбор файла",
-          "maxSize": 100000000,
-          "maxFiles": 10,
-          "multiple": true,
-          "required": true,
-          "valueType": "FILE"
+          "name": "file"
         },
         {
           "name": "guiddocpreviousversion"
@@ -42877,13 +42743,31 @@ SET class_rule =
       "attributes": [
         {
           "name": "content_type_id",
-          "title": "Вид документа",
           "defaultValue": "doc_13.39"
         },
         {
-          "name": "title",
-          "required": true,
-          "description": "Полное наименование документа"
+          "name": "title"
+        },
+        {
+          "name": "regnum"
+        },
+        {
+          "name": "regdate"
+        },
+        {
+          "name": "fias"
+        },
+        {
+          "name": "fias__oktmo",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__address",
+          "defaultValueWellKnownFormula": "inherit"
+        },
+        {
+          "name": "fias__id",
+          "defaultValueWellKnownFormula": "inherit"
         },
         {
           "name": "docdate"
@@ -42901,13 +42785,7 @@ SET class_rule =
           "name": "project_doc_year"
         },
         {
-          "name": "file",
-          "title": "Выбор файла",
-          "maxSize": 100000000,
-          "maxFiles": 10,
-          "multiple": true,
-          "required": true,
-          "valueType": "FILE"
+          "name": "file"
         }
       ]
     },
@@ -42918,21 +42796,13 @@ SET class_rule =
       "title": "Дело о земельном участке",
       "attributes": [
         {
-          "name": "title",
-          "title": "Наименование",
-          "required": true,
-          "maxLength": 500
+          "name": "title"
         },
         {
-          "name": "territorykey",
-          "title": "Территория действия"
+          "name": "territorykey"
         },
         {
-          "name": "fias",
-          "title": "Населённый пункт",
-          "required": true,
-          "valueType": "FIAS",
-          "searchMode": "oktmo"
+          "name": "fias"
         },
         {
           "name": "fias__oktmo"
@@ -42944,11 +42814,7 @@ SET class_rule =
           "name": "fias__id"
         },
         {
-          "name": "note",
-          "title": "Примечание",
-          "display": "multiline",
-          "maxLength": 500,
-          "valueType": "STRING"
+          "name": "note"
         }
       ]
     }
@@ -43245,6 +43111,7 @@ SET class_rule =
             "name": "gisogdrf_audit_datetime",
             "title": "Дата аудита в ГИСОГД",
             "readOnly": true,
+            "minWidth": 200,
             "valueType": "DATETIME",
             "description": "Время ответа Аудита ГИСОГД РФ"
         },
@@ -43253,6 +43120,7 @@ SET class_rule =
             "title": "Статус синхронизации",
             "asTitle": true,
             "readOnly": true,
+            "minWidth": 200,
             "valueType": "CHOICE",
             "enumerations": [
                 {
@@ -43285,6 +43153,7 @@ SET class_rule =
             "name": "gisogdrf_publication_datetime",
             "title": "Дата последней отправки в ГИСОГД РФ",
             "readOnly": true,
+            "minWidth": 300,
             "valueType": "DATETIME"
         },
         {
@@ -43996,539 +43865,2546 @@ UPDATE data.schemas
 SET class_rule =
 '{
     "tags": [
-        "system",
-        "Библиотека",
-        "ГИСОГД"
+      "system",
+      "Библиотека",
+      "ГИСОГД"
     ],
     "name": "dl_data_section17",
     "title": "17. Информационные модели объектов капитального строительства",
+    "readOnly": false,
+    "styleName": "dl_data_section17",
     "tableName": "dl_data_section17",
     "properties": [
-        {
-            "name": "id",
-            "title": "Идентификатор",
-            "required": true,
-            "valueType": "INT"
+      {
+        "name": "id",
+        "title": "Идентификатор",
+        "required": true,
+        "valueType": "INT"
+      },
+      {
+        "name": "path",
+        "title": "Путь",
+        "minWidth": 300,
+        "required": true,
+        "maxLength": 522,
+        "valueType": "STRING",
+        "description": "Путь, отражающий иерархию объектов"
+      },
+      {
+        "name": "is_folder",
+        "title": "Папка/Документ",
+        "required": true,
+        "valueType": "BOOLEAN",
+        "description": "Папка или Документ"
+      },
+      {
+        "name": "guid",
+        "title": "Глобальный идентификатор",
+        "hidden": true,
+        "valueType": "UUID"
+      },
+      {
+        "name": "content_type_id",
+        "title": "Вид документа",
+        "minWidth": 300,
+        "readOnly": true,
+        "valueType": "CHOICE",
+        "enumerations": [
+          {
+            "title": "Информационная модель объекта капитального строительства",
+            "value": "doc_17.01"
+          },
+          {
+            "title": "Сметный расчет",
+            "value": "doc_17.02"
+          },
+          {
+            "title": "Ведомость объектов, сводка затрат",
+            "value": "doc_17.03"
+          },
+          {
+            "title": "Конъюнктурный анализ",
+            "value": "doc_17.04"
+          },
+          {
+            "title": "Заключение экспертизы",
+            "value": "doc_17.05"
+          },
+          {
+            "title": "Папка",
+            "value": "folder_v1"
+          },
+          {
+            "title": "Этапы проектирования",
+            "value": "folder_v2"
+          },
+          {
+            "title": "Этапы строительства",
+            "value": "folder_v3"
+          },
+          {
+            "title": "ЦИМ",
+            "value": "folder_v4"
+          },
+          {
+            "title": "Инженерные изыскания",
+            "value": "doc_17.06"
+          },
+          {
+            "title": "Контрольно надзорные мероприятия",
+            "value": "doc_17.07"
+          },
+          {
+            "title": "Осмотр ОКС",
+            "value": "doc_17.08"
+          },
+          {
+            "title": "Акты проверки объекта",
+            "value": "doc_17.09"
+          },
+          {
+            "title": "Нарушения",
+            "value": "doc_17.10"
+          },
+          {
+            "title": "Строительство и реконструкция ОКС",
+            "value": "doc_17.11"
+          },
+          {
+            "title": "Протоколы",
+            "value": "doc_17.12"
+          },
+          {
+            "title": "Инженерные изыскания",
+            "value": "folder_v5"
+          },
+          {
+            "title": "Эксплуатация",
+            "value": "folder_v6"
+          }
+        ],
+        "foreignKeyType": "STRING"
+      },
+      {
+        "name": "title",
+        "title": "Наименование",
+        "display": "multiline",
+        "minWidth": 400,
+        "required": true,
+        "maxLength": 500,
+        "valueType": "STRING"
+      },
+      {
+        "name": "namefrompd",
+        "title": "Наименование из ПД",
+        "display": "multiline",
+        "minWidth": 400,
+        "required": true,
+        "maxLength": 500,
+        "valueType": "STRING",
+        "description": "Наименование объекта (этапа) из проектной документации"
+      },
+      {
+        "name": "territorykey",
+        "title": "Объект на карте",
+        "hidden": true,
+        "minWidth": 200,
+        "readOnly": true,
+        "valueType": "URL",
+        "valueFormulaParams": {
+          "layers": [
+            "scratch_database_1:section17_789_8439"
+          ],
+          "property": "file",
+          "projectId": 789,
+          "includeParents": true
         },
-        {
-            "name": "path",
-            "title": "Путь",
-            "minWidth": 300,
-            "required": true,
-            "maxLength": 522,
-            "valueType": "STRING",
-            "description": "Путь,отражающий иерархию объектов"
+        "calculatedValueWellKnownFormula": "linkToFeaturesMentioningThisDocument"
+      },
+      {
+        "name": "landplot_connection",
+        "title": "Земельный участок",
+        "hidden": true,
+        "readOnly": true,
+        "valueType": "URL",
+        "description": "ЗУ на карте",
+        "valueFormulaParams": {
+          "layers": [
+            "scratch_database_1:landplot_1627_2d2b"
+          ],
+          "property": "file",
+          "projectId": 789,
+          "includeParents": true
         },
-        {
-            "name": "is_folder",
-            "title": "Папка/Документ",
-            "required": true,
-            "valueType": "BOOLEAN",
-            "description": "Папка или Документ"
+        "calculatedValueWellKnownFormula": "linkToFeaturesMentioningThisDocument"
+      },
+      {
+        "name": "oks_connection",
+        "title": "Территория действия",
+        "hidden": true,
+        "readOnly": true,
+        "valueType": "URL",
+        "description": "Объект на карте",
+        "valueFormulaParams": {
+          "layers": [
+            "scratch_database_1:oks_13_1627_79c6",
+            "scratch_database_1:oks_13_line_1627_4bce"
+          ],
+          "property": "file",
+          "projectId": 789,
+          "includeParents": true
         },
-        {
-            "name": "guid",
-            "title": "guid",
-            "hidden": true,
-            "valueType": "UUID"
-        },
-        {
-            "name": "content_type_id",
-            "title": "Вид документа",
-            "minWidth": 300,
-            "readOnly": true,
-            "valueType": "CHOICE",
-            "enumerations": [
-                {
-                    "title": "Информационная модель объекта капитального строительства",
-                    "value": "doc_17.01"
-                },
-                {
-                    "title": "Папка",
-                    "value": "folder_v1"
-                }
-            ],
-            "foreignKeyType": "STRING"
-        },
-        {
-            "name": "title",
-            "title": "Наименование",
-            "display": "multiline",
-            "minWidth": 800,
-            "required": true,
-            "maxLength": 500,
-            "valueType": "STRING"
-        },
-        {
-            "name": "namefrompd",
-            "title": "Наименование из ПД",
-            "display": "multiline",
-            "minWidth": 400,
-            "required": true,
-            "maxLength": 500,
-            "valueType": "STRING",
-            "description": "Наименование объекта (этапа) из проектной документации"
-        },
-        {
-            "name": "territorykey",
-            "title": "Территория действия",
-            "readOnly": true,
-            "valueType": "URL",
-            "description": "Объект на карте",
-            "valueFormulaParams": {
-                "layers": [
-                    "scratch_database_1: section17_789_8439"
-                ],
-                "property": "file",
-                "projectId": 789
-            },
-            "calculatedValueWellKnownFormula": "linkToFeaturesMentioningThisDocument"
-        },
-        {
-            "name": "landplot_connection",
-            "title": "Земельный участок",
-            "hidden": true,
-            "readOnly": true,
-            "valueType": "URL",
-            "description": "ЗУ на карте",
-            "valueFormulaParams": {
-                "layers": [
-                    "scratch_database_1: landplot_1627_2d2b"
-                ],
-                "property": "file",
-                "projectId": 789,
-                "includeParents": true
-            },
-            "calculatedValueWellKnownFormula": "linkToFeaturesMentioningThisDocument"
-        },
-        {
-            "name": "oks_connection",
-            "title": "Территория действия",
-            "hidden": true,
-            "readOnly": true,
-            "valueType": "URL",
-            "description": "Объект на карте",
-            "valueFormulaParams": {
-                "layers": [
-                    "scratch_database_1: oks_13_1627_79c6",
-                    "scratch_database_1: oks_13_line_1627_4bce"
-                ],
-                "property": "file",
-                "projectId": 789,
-                "includeParents": true
-            },
-            "calculatedValueWellKnownFormula": "linkToFeaturesMentioningThisDocument"
-        },
-        {
-            "name": "inbox_data_key_data_connection",
-            "title": "Реестр учета сведений",
-            "multiple": true,
-            "libraries": [
-                "dl_data_inbox_data"
-            ],
-            "valueType": "DOCUMENT",
-            "description": "Реестр учета сведений,документов,материалов,поступивших на размещение в информационную систему,и результатов их рассмотрения",
-            "maxDocuments": 10
-        },
-        {
-            "name": "regnum",
-            "title": "Регистрационный номер",
-            "minWidth": 200,
-            "readOnly": true,
-            "maxLength": 25,
-            "valueType": "STRING",
-            "description": "Регистрационный номер в ГИСОГД РК"
-        },
-        {
-            "name": "regdate",
-            "title": "Дата регистрации",
-            "readOnly": true,
-            "valueType": "DATETIME",
-            "description": "Дата регистрации документа в ГИСОГД РК"
-        },
-        {
-            "name": "change_date",
-            "title": "Дата внесения изменений или исправлений",
-            "hidden": true,
-            "valueType": "DATETIME"
-        },
-        {
-            "name": "fias",
-            "title": "Населённый пункт",
-            "minWidth": 400,
-            "valueType": "FIAS",
-            "searchMode": "oktmo"
-        },
-        {
-            "name": "fias__oktmo",
-            "title": "ОКТМО",
-            "hidden": true,
-            "valueType": "STRING"
-        },
-        {
-            "name": "fias__address",
-            "title": "Адрес",
-            "hidden": true,
-            "minWidth": 400,
-            "valueType": "STRING"
-        },
-        {
-            "name": "fias__id",
-            "title": "Код ФИАС",
-            "hidden": true,
-            "valueType": "INT"
-        },
-        {
-            "name": "orgname",
-            "title": "Наименование органа",
-            "minWidth": 400,
-            "required": true,
-            "valueType": "STRING",
-            "description": "Наименование органа,утвердившего документ"
-        },
-        {
-            "name": "docname",
-            "title": "Наименование данных",
-            "valueType": "STRING"
-        },
-        {
-            "name": "docnum",
-            "title": "Номер документа",
-            "required": true,
-            "valueType": "STRING",
-            "description": "При наличии утверждаемых документов указывается номер утверждающего документа"
-        },
-        {
-            "name": "docdate",
-            "title": "Дата документа",
-            "required": true,
-            "valueType": "DATETIME",
-            "description": "При наличии утверждаемых документов указывается дата утверждающего документа"
-        },
-        {
-            "name": "docstatus",
-            "title": "Статус действия",
-            "required": true,
-            "valueType": "CHOICE",
-            "enumerations": [
-                {
-                    "title": "Действующий",
-                    "value": "0С.1"
-                },
-                {
-                    "title": "Недействующий",
-                    "value": "0С.2"
-                }
-            ],
-            "foreignKeyType": "STRING"
-        },
-        {
-            "name": "developer_data_connection",
-            "title": "Застройщик",
-            "multiple": true,
-            "libraries": [
-                "dl_data_customer"
-            ],
-            "valueType": "DOCUMENT",
-            "maxDocuments": 10
-        },
-        {
-            "name": "supplier_data_connection",
-            "title": "Организация",
-            "multiple": true,
-            "libraries": [
-                "dl_data_supplier"
-            ],
-            "valueType": "DOCUMENT",
-            "description": "Наименование органа,утвердившего документ",
-            "maxDocuments": 10
-        },
-        {
-            "name": "supplieremploey_data_connection",
-            "title": "Сотрудник организации ОГД",
-            "multiple": true,
-            "libraries": [
-                "users_after_trigger"
-            ],
-            "valueType": "DOCUMENT",
-            "maxDocuments": 10
-        },
-        {
-            "name": "guiddocpreviousversion",
-            "title": "Версии",
-            "multiple": true,
-            "libraries": [
-                "dl_data_section17"
-            ],
-            "valueType": "DOCUMENT",
-            "description": "Предыдущая версия данных",
-            "maxDocuments": 5
-        },
-        {
-            "name": "is_public",
-            "title": "Публичный документ",
-            "valueType": "BOOLEAN"
-        },
-        {
-            "name": "note",
-            "title": "Примечание",
-            "display": "multiline",
-            "minWidth": 400,
-            "maxLength": 500,
-            "valueType": "STRING"
-        },
-        {
-            "name": "file",
-            "title": "Выбор файла",
-            "maxSize": 100000000,
-            "multiple": true,
-            "valueType": "FILE",
-            "maxDocuments": 10
-        },
-        {
-            "name": "created_by",
-            "title": "Создатель",
-            "maxLength": 50,
-            "valueType": "STRING"
-        },
-        {
-            "name": "created_at",
-            "title": "Дата создания",
-            "valueType": "DATETIME"
-        },
-        {
-            "name": "last_modified",
-            "title": "Дата модификации",
-            "valueType": "DATETIME",
-            "description": "Дата последней модификации документа"
-        },
-        {
-            "name": "updated_by",
-            "title": "Кто обновил",
-            "readOnly": true,
-            "maxLength": 50,
-            "valueType": "STRING"
-        },
-        {
-            "name": "gisogdrf_response",
-            "title": "Ответ ГИСОГД",
-            "readOnly": true,
-            "valueType": "TEXT"
-        },
-        {
-            "name": "gisogdrf_audit_datetime",
-            "title": "Дата аудита в ГИСОГД",
-            "readOnly": true,
-            "valueType": "DATETIME",
-            "description": "Время ответа Аудита ГИСОГД РФ"
-        },
-        {
-            "name": "gisogdrf_sync_status",
-            "title": "Статус синхронизации",
-            "asTitle": true,
-            "readOnly": true,
-            "valueType": "CHOICE",
-            "enumerations": [
-                {
-                    "title": "Синхронизация завершилась ошибкой",
-                    "value": "Синхронизация завершилась ошибкой"
-                },
-                {
-                    "title": "Синхронизация завершилась предупреждением",
-                    "value": "Синхронизация завершилась предупреждением"
-                },
-                {
-                    "title": "Синхронизирован",
-                    "value": "Синхронизирован"
-                },
-                {
-                    "title": "Объект не найден в ГИСОГД РФ",
-                    "value": "Объект не найден в ГИСОГД РФ"
-                },
-                {
-                    "title": "В процессе синхронизации",
-                    "value": "В процессе синхронизации"
-                },
-                {
-                    "title": "Не синхронизирован",
-                    "value": "Не синхронизирован"
-                }
-            ]
-        },
-        {
-            "name": "gisogdrf_publication_datetime",
-            "title": "Дата последней отправки в ГИСОГД РФ",
-            "readOnly": true,
-            "valueType": "DATETIME"
-        },
-        {
-            "name": "type",
-            "title": "Тип файла",
-            "hidden": true,
-            "maxLength": 50,
-            "valueType": "STRING"
-        },
-        {
-            "name": "size",
-            "title": "Размер в kb",
-            "hidden": true,
-            "valueType": "INT"
-        }
+        "calculatedValueWellKnownFormula": "linkToFeaturesMentioningThisDocument"
+      },
+      {
+        "name": "inbox_data_key_data_connection",
+        "title": "Реестр учета сведений",
+        "minWidth": 200,
+        "multiple": true,
+        "libraries": [
+          "dl_data_inbox_data"
+        ],
+        "valueType": "DOCUMENT",
+        "description": "Реестр учета сведений, документов, материалов, поступивших на размещение в информационную систему, и результатов их рассмотрения",
+        "maxDocuments": 10
+      },
+      {
+        "name": "regnum",
+        "title": "Регистрационный номер",
+        "minWidth": 200,
+        "readOnly": true,
+        "maxLength": 25,
+        "valueType": "STRING",
+        "description": "Регистрационный номер в ГИСОГД РК"
+      },
+      {
+        "name": "regdate",
+        "title": "Дата регистрации",
+        "readOnly": true,
+        "valueType": "DATETIME",
+        "description": "Дата регистрации документа в ГИСОГД РК"
+      },
+      {
+        "name": "change_date",
+        "title": "Дата внесения изменений или исправлений",
+        "hidden": true,
+        "minWidth": 300,
+        "valueType": "DATETIME"
+      },
+      {
+        "name": "fias",
+        "title": "Адрес (местоположение) объекта",
+        "minWidth": 400,
+        "valueType": "FIAS",
+        "searchMode": "oktmo"
+      },
+      {
+        "name": "fias__oktmo",
+        "title": "ОКТМО",
+        "hidden": true,
+        "valueType": "STRING"
+      },
+      {
+        "name": "fias__address",
+        "title": "Адрес",
+        "hidden": true,
+        "valueType": "STRING"
+      },
+      {
+        "name": "fias__id",
+        "title": "Код ФИАС",
+        "hidden": true,
+        "valueType": "INT"
+      },
+      {
+        "name": "orgname",
+        "title": "Наименование органа",
+        "hidden": true,
+        "minWidth": 400,
+        "valueType": "STRING",
+        "description": "Наименование органа, утвердившего документ"
+      },
+      {
+        "name": "docname",
+        "title": "Наименование данных",
+        "hidden": true,
+        "valueType": "STRING"
+      },
+      {
+        "name": "docnum",
+        "title": "Номер документа",
+        "required": true,
+        "valueType": "STRING",
+        "description": "При наличии утверждаемых документов указывается номер утверждающего документа"
+      },
+      {
+        "name": "docdate",
+        "title": "Дата документа",
+        "required": true,
+        "valueType": "DATETIME",
+        "description": "При наличии утверждаемых документов указывается дата утверждающего документа"
+      },
+      {
+        "name": "docstatus",
+        "title": "Статус действия",
+        "required": true,
+        "valueType": "CHOICE",
+        "enumerations": [
+          {
+            "title": "Действующий",
+            "value": "0С.1"
+          },
+          {
+            "title": "Недействующий",
+            "value": "0С.2"
+          }
+        ],
+        "foreignKeyType": "STRING"
+      },
+      {
+        "name": "developer_data_connection",
+        "title": "Застройщик",
+        "multiple": true,
+        "libraries": [
+          "dl_data_customer"
+        ],
+        "valueType": "DOCUMENT",
+        "maxDocuments": 10
+      },
+      {
+        "name": "supplier_data_connection",
+        "title": "Организация",
+        "multiple": true,
+        "libraries": [
+          "dl_data_supplier"
+        ],
+        "valueType": "DOCUMENT",
+        "description": "Наименование органа, утвердившего документ",
+        "maxDocuments": 10
+      },
+      {
+        "name": "supplieremploey_data_connection",
+        "title": "Сотрудник организации ОГД",
+        "multiple": true,
+        "libraries": [
+          "users_after_trigger"
+        ],
+        "valueType": "DOCUMENT",
+        "maxDocuments": 10
+      },
+      {
+        "name": "guiddocpreviousversion",
+        "title": "Версии",
+        "multiple": true,
+        "libraries": [
+          "dl_data_section17"
+        ],
+        "valueType": "DOCUMENT",
+        "description": "Предыдущая версия данных",
+        "maxDocuments": 5
+      },
+      {
+        "name": "is_public",
+        "title": "Публичный документ",
+        "hidden": true,
+        "valueType": "BOOLEAN"
+      },
+      {
+        "name": "note",
+        "title": "Примечание",
+        "display": "multiline",
+        "minWidth": 400,
+        "maxLength": 500,
+        "valueType": "STRING"
+      },
+      {
+        "name": "type_construction",
+        "title": "Вид строительных работ",
+        "minWidth": 300,
+        "valueType": "CHOICE",
+        "enumerations": [
+          {
+            "title": "Строительство",
+            "value": "construction_1"
+          },
+          {
+            "title": "Реконструкции",
+            "value": "construction_2"
+          },
+          {
+            "title": "Капитальный ремонт",
+            "value": "construction_3"
+          }
+        ],
+        "foreignKeyType": "STRING"
+      },
+      {
+        "name": "stage_work",
+        "title": "Текущий этап работ",
+        "minWidth": 300,
+        "valueType": "CHOICE",
+        "enumerations": [
+          {
+            "title": "Инженерные изыскания",
+            "value": "stage_work_1"
+          },
+          {
+            "title": "Проектирование",
+            "value": "stage_work_2"
+          },
+          {
+            "title": "Строительство/реконструкция",
+            "value": "stage_work_3"
+          },
+          {
+            "title": "Эксплуатация",
+            "value": "stage_work_4"
+          }
+        ],
+        "foreignKeyType": "STRING"
+      },
+      {
+        "name": "design_stages",
+        "title": "Тип сметы",
+        "minWidth": 300,
+        "valueType": "CHOICE",
+        "enumerations": [
+          {
+            "title": "Локальный сметный расчет, созданный ресурсно-индексным методом",
+            "value": "doc_1"
+          },
+          {
+            "title": "Локальный сметный расчет, созданный базисно-индексным методом",
+            "value": "doc_2"
+          },
+          {
+            "title": "Объектный сметный расчет",
+            "value": "doc_3"
+          },
+          {
+            "title": "Сводный сметный расчет",
+            "value": "doc_4"
+          },
+          {
+            "title": "Формат представления сводных сметных расчетов",
+            "value": "doc_5"
+          },
+          {
+            "title": "Формат представления объектных сметных расчетов",
+            "value": "doc_6"
+          },
+          {
+            "title": "Формат представления локальных сметных расчетов созданных ресурсно-индексным методом",
+            "value": "doc_7"
+          },
+          {
+            "title": "Формат представления локальных сметных расчетов созданных базисно-индексным методом (2022)",
+            "value": "doc_8"
+          },
+          {
+            "title": "Формат представления локальных сметных расчетов (смет), в электронном виде (на основе XML)",
+            "value": "doc_9"
+          }
+        ],
+        "foreignKeyType": "STRING"
+      },
+      {
+        "name": "bill_of_quantities",
+        "title": "Тип объекта затрат",
+        "minWidth": 300,
+        "valueType": "CHOICE",
+        "enumerations": [
+          {
+            "title": "Ведомость объемов работ",
+            "value": "bill_of_quantities_1"
+          },
+          {
+            "title": "Сводка затрат",
+            "value": "bill_of_quantities_2"
+          },
+          {
+            "title": "Формат представления документа сводка затрат",
+            "value": "bill_of_quantities_3"
+          }
+        ],
+        "foreignKeyType": "STRING"
+      },
+      {
+        "name": "conjunctural_analysis",
+        "title": "Тип объекта анализа",
+        "minWidth": 300,
+        "valueType": "CHOICE",
+        "enumerations": [
+          {
+            "title": "Результаты конъюнктурного анализа",
+            "value": "conjunctural_analysis_1"
+          },
+          {
+            "title": "Формат представления результатов конъюнктурного анализа",
+            "value": "conjunctural_analysis_2"
+          }
+        ],
+        "foreignKeyType": "STRING"
+      },
+      {
+        "name": "type_expert_opinion",
+        "title": "Тип объекта экспертизы",
+        "minWidth": 300,
+        "valueType": "CHOICE",
+        "enumerations": [
+          {
+            "title": "XML-схема заключения экспертизы V1.02",
+            "value": "type_expert_opinion_1"
+          },
+          {
+            "title": "XML-схема заключения экспертизы",
+            "value": "type_expert_opinion_2"
+          }
+        ],
+        "foreignKeyType": "STRING"
+      },
+      {
+        "name": "access_level",
+        "title": "Гриф ограничения доступа",
+        "minWidth": 300,
+        "valueType": "CHOICE",
+        "description": "Классификация информации по грифу ограничения доступа",
+        "enumerations": [
+          {
+            "title": "Общедоступная информация",
+            "value": "doc_1"
+          },
+          {
+            "title": "Для служебного пользования",
+            "value": "doc_2"
+          },
+          {
+            "title": "Коммерческая тайна",
+            "value": "doc_3"
+          }
+        ],
+        "foreignKeyType": "STRING"
+      },
+      {
+        "name": "number_construction",
+        "title": "Номер стройки",
+        "hidden": true,
+        "valueType": "STRING",
+        "description": "Номер стройки, к которой относится объект капитального строительства (реконструкции, капитального ремонта)"
+      },
+      {
+        "name": "name_construction",
+        "title": "Наименование стройки",
+        "hidden": true,
+        "valueType": "STRING",
+        "description": "Наименование стройки, к которой относится объект капитального строительства (реконструкции, капитального ремонта)"
+      },
+      {
+        "name": "name_oks",
+        "title": "Наименование ОКС",
+        "hidden": true,
+        "valueType": "STRING",
+        "description": ""
+      },
+      {
+        "name": "address_oks",
+        "title": "Адрес ОКС",
+        "hidden": true,
+        "valueType": "STRING",
+        "description": "Адрес объекта капитального строительства (реконструкции, капитального ремонта)"
+      },
+      {
+        "name": "reason",
+        "title": "Основание ОСР (ОС)",
+        "hidden": true,
+        "maxSize": 100000,
+        "minWidth": 300,
+        "multiple": true,
+        "valueType": "FILE",
+        "description": "Основание ОСР (ОС) - проектная или иная техническая документация",
+        "maxDocuments": 10
+      },
+      {
+        "name": "created_ocr",
+        "title": "Дата составления ОСР (ОС)",
+        "hidden": true,
+        "minWidth": 300,
+        "valueType": "DATETIME"
+      },
+      {
+        "name": "approved_ocr",
+        "title": "Дата утверждения ОСР (ОС)",
+        "hidden": true,
+        "minWidth": 300,
+        "valueType": "DATETIME"
+      },
+      {
+        "name": "signatures",
+        "title": "Подписи ОСР (ОС)",
+        "hidden": true,
+        "maxSize": 1000000,
+        "minWidth": 300,
+        "multiple": true,
+        "valueType": "FILE",
+        "maxDocuments": 10
+      },
+      {
+        "name": "unbounded",
+        "title": "Итоговые стоимостные показатели ЛСР(ЛС) в составе ОСР (ОС)",
+        "hidden": true,
+        "minWidth": 300,
+        "valueType": "STRING",
+        "description": "Суммирование данных ЛСР с распределением затрат по следующим элементам сметной стоимости строительства: стоимость строительных (ремонтно-строительных) работ, монтажных работ, оборудования, прочих затрат"
+      },
+      {
+        "name": "sub_summary_1",
+        "title": "Итого по локальным сметным расчетам (сметам) в составе ОСР (ОС)",
+        "hidden": true,
+        "minWidth": 300,
+        "valueType": "STRING",
+        "description": "Суммирование данных ЛСР (смет) с распределением затрат по следующим элементам сметной стоимости строительства: стоимость строительных (ремонтно-строительных) работ, монтажных работ, оборудования, прочих затрат"
+      },
+      {
+        "name": "summary",
+        "title": "Сметная стоимость по элементам затрат в составе ОСР (ОС)",
+        "hidden": true,
+        "minWidth": 300,
+        "valueType": "STRING"
+      },
+      {
+        "name": "position_type",
+        "title": "Тип позиции",
+        "hidden": true,
+        "minWidth": 300,
+        "multiple": true,
+        "valueType": "CHOICE",
+        "enumerations": [
+          {
+            "title": "Материал",
+            "value": "type_1"
+          },
+          {
+            "title": "Оборудование",
+            "value": "type_2"
+          },
+          {
+            "title": "Работа",
+            "value": "type_3"
+          },
+          {
+            "title": "Машина",
+            "value": "type_4"
+          },
+          {
+            "title": "Перевозка",
+            "value": "type_5"
+          },
+          {
+            "title": "Прочее",
+            "value": "type_6"
+          }
+        ],
+        "foreignKeyType": "STRING"
+      },
+      {
+        "name": "name_type_position",
+        "title": "Наименование  работ (затрат, ресурсов)",
+        "hidden": true,
+        "minWidth": 300,
+        "valueType": "STRING",
+        "description": "вид работ или вид расходуемого материала, предусмотренный проектными решениями (например, производство земляных работ, забивка свай и др.)"
+      },
+      {
+        "name": "quantity",
+        "title": "Объем работ",
+        "hidden": true,
+        "valueType": "STRING",
+        "description": "Объем работ или объем расходуемого материала, предусмотренный проектными решениями"
+      },
+      {
+        "name": "created_doc",
+        "title": "Дата составления документа по затратам",
+        "hidden": true,
+        "minWidth": 300,
+        "valueType": "DATETIME"
+      },
+      {
+        "name": "price_row",
+        "title": "Cтоимостные показатели локального сметного расчета (сметы)",
+        "hidden": true,
+        "minWidth": 400,
+        "valueType": "STRING",
+        "description": ""
+      },
+      {
+        "name": "file_estimate",
+        "title": "Файл локального сметного расчета",
+        "hidden": true,
+        "maxSize": 100000000,
+        "minWidth": 300,
+        "multiple": true,
+        "valueType": "FILE",
+        "maxDocuments": 10
+      },
+      {
+        "name": "date_analysis",
+        "title": "Дата составления коньюнктурного анализа",
+        "hidden": true,
+        "minWidth": 300,
+        "valueType": "DATETIME"
+      },
+      {
+        "name": "expense_type",
+        "title": "Виды затрат",
+        "hidden": true,
+        "minWidth": 300,
+        "multiple": true,
+        "valueType": "CHOICE",
+        "enumerations": [
+          {
+            "title": "Тара, упаковка, реквизит",
+            "value": "expense_type_1"
+          },
+          {
+            "title": "Стоимость комплекта запасных частей",
+            "value": "expense_type_2"
+          },
+          {
+            "title": "Снабженческие наценки",
+            "value": "expense_type_3"
+          },
+          {
+            "title": "Расходы на уплату пошлин",
+            "value": "expense_type_4"
+          },
+          {
+            "title": "Расходы на уплату налогов",
+            "value": "expense_type_5"
+          },
+          {
+            "title": "Расходы на уплату сборов",
+            "value": "expense_type_6"
+          },
+          {
+            "title": "Другие таможенные платежи",
+            "value": "expense_type_7"
+          },
+          {
+            "title": "Шефмонтаж",
+            "value": "expense_type_8"
+          },
+          {
+            "title": "Шефналадка",
+            "value": "expense_type_9"
+          },
+          {
+            "title": "Доводка",
+            "value": "expense_type_10"
+          },
+          {
+            "title": "Доизготовление",
+            "value": "expense_type_11"
+          },
+          {
+            "title": "Изготовление специальной оснастки",
+            "value": "expense_type_12"
+          },
+          {
+            "title": "Предварительно установленное программное обеспечение",
+            "value": "expense_type_13"
+          },
+          {
+            "title": "Затраты по оценке соответствия оборудования",
+            "value": "expense_type_14"
+          },
+          {
+            "title": "Другие затраты",
+            "value": "expense_type_15"
+          },
+          {
+            "title": "Комплектация оборудования",
+            "value": "expense_type_16"
+          }
+        ],
+        "foreignKeyType": "STRING"
+      },
+      {
+        "name": "offer",
+        "title": "Обоснование результатов конъюнктурного анализа",
+        "hidden": true,
+        "display": "multiline",
+        "minWidth": 300,
+        "valueType": "STRING"
+      },
+      {
+        "name": "signature",
+        "title": "Подписи",
+        "hidden": true,
+        "maxSize": 100000000,
+        "multiple": true,
+        "valueType": "FILE",
+        "maxDocuments": 10
+      },
+      {
+        "name": "expert_organization",
+        "title": "Сведения об организации по проведению экспертизы",
+        "hidden": true,
+        "minWidth": 300,
+        "valueType": "STRING"
+      },
+      {
+        "name": "examination_object_type",
+        "title": "Вид объекта экспертизы",
+        "hidden": true,
+        "display": "multiline",
+        "minWidth": 200,
+        "valueType": "STRING"
+      },
+      {
+        "name": "examination_type",
+        "title": "Предмет экспертизы",
+        "hidden": true,
+        "display": "multiline",
+        "valueType": "STRING"
+      },
+      {
+        "name": "construction_type",
+        "title": "Вид работ",
+        "hidden": true,
+        "display": "multiline",
+        "valueType": "STRING"
+      },
+      {
+        "name": "expert_opinion",
+        "title": "Результат экспертизы",
+        "hidden": true,
+        "display": "multiline",
+        "valueType": "STRING"
+      },
+      {
+        "name": "examination_stage_note",
+        "title": "Дополнительные сведения о виде экспертизы",
+        "hidden": true,
+        "minWidth": 300,
+        "valueType": "STRING"
+      },
+      {
+        "name": "expert_file",
+        "title": "Экспертиза",
+        "hidden": true,
+        "maxSize": 100000000,
+        "multiple": true,
+        "valueType": "FILE",
+        "maxDocuments": 10
+      },
+      {
+        "name": "dl_data_section8_data_connection",
+        "title": "Инженерные изыскания",
+        "multiple": true,
+        "libraries": [
+          "dl_data_section8"
+        ],
+        "valueType": "DOCUMENT",
+        "description": "",
+        "maxDocuments": 5
+      },
+      {
+        "name": "engineering_surveys",
+        "title": "Тип инженерных изысканий",
+        "minWidth": 300,
+        "valueType": "CHOICE",
+        "enumerations": [
+          {
+            "title": "Акт разбивки осей объекта капитального строительства на местности",
+            "value": "engineering_surveys_1"
+          },
+          {
+            "title": "Акт освидетельствования участков сетей инженерно-технического обеспечения",
+            "value": "engineering_surveys_2"
+          },
+          {
+            "title": "Акт освидетельствования скрытых работ",
+            "value": "engineering_surveys_3"
+          },
+          {
+            "title": "Акт освидетельствования ответственных конструкций",
+            "value": "engineering_surveys_4"
+          },
+          {
+            "title": "Акт освидетельствования геодезической разбивочной основы объекта капитального строительства",
+            "value": "engineering_surveys_5"
+          }
+        ],
+        "foreignKeyType": "STRING"
+      },
+      {
+        "name": "knm",
+        "title": "Тип контрольно надзорного мероприятия",
+        "minWidth": 300,
+        "valueType": "CHOICE",
+        "enumerations": [
+          {
+            "title": "Уведомление СРО о проведении контрольного (надзорного) мероприятия",
+            "value": "knm_1"
+          },
+          {
+            "title": "Акт по результатам контрольного (надзорного) мероприятия без взаимодействия с контролируемым лицом",
+            "value": "knm_2"
+          },
+          {
+            "title": "Задание на проведение контрольного (надзорного) мероприятия без взаимодействия",
+            "value": "knm_3"
+          },
+          {
+            "title": "Отзыв жалобы на решение контрольного (надзорного) органа",
+            "value": "knm_4"
+          },
+          {
+            "title": "Письменное объяснение по жалобе на решение контрольного (надзорного) органа",
+            "value": "knm_5"
+          },
+          {
+            "title": "Решение о проведении контрольного (надзорного) мероприятия",
+            "value": "knm_6"
+          },
+          {
+            "title": "Уведомление саморегулируемой организации о проведении контрольного (надзорного) мероприятия",
+            "value": "knm_7"
+          },
+          {
+            "title": "Уведомление контрольного (надзорного) органа о невозможности присутствия представителя контролируемого лица при проведении проверки (о не наступлении события)",
+            "value": "knm_8"
+          },
+          {
+            "title": "Акт о невозможности проведения контрольного (надзорного) мероприятия",
+            "value": "knm_9"
+          },
+          {
+            "title": "Жалоба на решение контрольного (надзорного) органа",
+            "value": "knm_10"
+          },
+          {
+            "title": "Акт о невозможности проведения КНМ",
+            "value": "knm_11"
+          },
+          {
+            "title": "Решение о проведении КНМ",
+            "value": "knm_12"
+          },
+          {
+            "title": "Решение уполномоченного на рассмотрение жалобы органа",
+            "value": "knm_13"
+          }
+        ],
+        "foreignKeyType": "STRING"
+      },
+      {
+        "name": "inspection",
+        "title": "Осмотр ОКС",
+        "minWidth": 300,
+        "valueType": "CHOICE",
+        "enumerations": [
+          {
+            "title": "Протокол об административном правонарушении",
+            "value": "inspection_1"
+          },
+          {
+            "title": "Постановление об административном правонарушении",
+            "value": "inspection_2"
+          },
+          {
+            "title": "Письменное объяснение, составленное инспектором",
+            "value": "inspection_3"
+          },
+          {
+            "title": "Уведомление контролируемого лица о проведении проверки (профилактического визита)",
+            "value": "inspection_4"
+          },
+          {
+            "title": "Уведомление об отказе в профилактическом визите",
+            "value": "inspection_5"
+          },
+          {
+            "title": "Уведомление о составлении протокола",
+            "value": "inspection_6"
+          },
+          {
+            "title": "Акт по результатам профилактического визита",
+            "value": "inspection_7"
+          },
+          {
+            "title": "Справка о результатах оценки исполнения предписания",
+            "value": "inspection_8"
+          }
+        ],
+        "foreignKeyType": "STRING"
+      },
+      {
+        "name": "inspection_reports",
+        "title": "Акты проверки",
+        "minWidth": 300,
+        "valueType": "CHOICE",
+        "enumerations": [
+          {
+            "title": "Акт выездной внеплановой проверки",
+            "value": "inspection_reports_1"
+          },
+          {
+            "title": "Акт документарной внеплановой проверки",
+            "value": "inspection_reports_2"
+          },
+          {
+            "title": "Предписание об устранении выявленных нарушений",
+            "value": "inspection_reports_3"
+          },
+          {
+            "title": "Уведомление о выявлении самовольной постройки",
+            "value": "inspection_reports_4"
+          }
+        ],
+        "foreignKeyType": "STRING"
+      },
+      {
+        "name": "violations",
+        "title": "Нарушения",
+        "minWidth": 300,
+        "valueType": "CHOICE",
+        "enumerations": [
+          {
+            "title": "Уведомление об исполнении предостережения о недопустимости нарушения обязательных требований",
+            "value": "violations_1"
+          },
+          {
+            "title": "Решение по рассмотрению возражения на предостережение о недопустимости нарушения обязательных требований",
+            "value": "violations_2"
+          },
+          {
+            "title": "Возражение в отношении предостережения о недопустимости нарушения обязательных требований",
+            "value": "violations_3"
+          },
+          {
+            "title": "Предостережение о недопустимости нарушения обязательных требований",
+            "value": "violations_4"
+          },
+          {
+            "title": "Сопроводительное заявление к технической документации по консервации объекта капитального строительства",
+            "value": "violations_5"
+          },
+          {
+            "title": "Решение о консервации объекта капитального строительства",
+            "value": "violations_6"
+          }
+        ],
+        "foreignKeyType": "STRING"
+      },
+      {
+        "name": "construction_reconstruction_oks",
+        "title": "Строительство и реконструкция ОКС",
+        "minWidth": 300,
+        "valueType": "CHOICE",
+        "enumerations": [
+          {
+            "title": "Ходатайство о продлении срока исполнения предписания об устранении наруш. при стр., реконстр. ОКС (о восстан. сроков подачи жалобы на решение контр.(надзор.) органа)",
+            "value": "construction_reconstruction_oks_1"
+          },
+          {
+            "title": "Уведомление о возобновлении строительства, реконструкции объекта капитального строительства",
+            "value": "construction_reconstruction_oks_2"
+          },
+          {
+            "title": "Решение органа по ход. о продлении срока исп. предпис. об устранении нарушений при строит, реконстр. ОКС (о восст. ср. подачи жалобы на реш. контр (надзор) органа)",
+            "value": "construction_reconstruction_oks_3"
+          },
+          {
+            "title": "Приказ (распоряжение) органа рег. гос. строит. надзора о выдаче заключения (решения об отказе в выдаче заключения) о соответствии постр., реконстр. ОКС",
+            "value": "construction_reconstruction_oks_4"
+          },
+          {
+            "title": "Уведомление о приостановлении строительства, реконструкции объекта капитального строительства",
+            "value": "construction_reconstruction_oks_5"
+          },
+          {
+            "title": "Извещение о начале строительства",
+            "value": "construction_reconstruction_oks_6"
+          },
+          {
+            "title": "Заключение о соответствии построенного (реконструированного) объекта капитального строительства требованиям проектной документации, в том числе требованиям энергетической эффективности и требованиям оснащенности объекта капитального строительства приборами учета используемых энергетических ресурсов",
+            "value": "construction_reconstruction_oks_7"
+          },
+          {
+            "title": "Извещения о сроках завершения (об изменении сроков завершения) работ",
+            "value": "construction_reconstruction_oks_8"
+          },
+          {
+            "title": "Извещение о возникновении аварийной ситуации",
+            "value": "construction_reconstruction_oks_9"
+          },
+          {
+            "title": "Решение об отказе в выдаче ЗОС",
+            "value": "construction_reconstruction_oks_10"
+          }
+        ],
+        "foreignKeyType": "STRING"
+      },
+      {
+        "name": "protocols",
+        "title": "Протоколы",
+        "minWidth": 300,
+        "valueType": "CHOICE",
+        "enumerations": [
+          {
+            "title": "Протокол опроса",
+            "value": "protocols_1"
+          },
+          {
+            "title": "Протокол осмотра",
+            "value": "protocols_2"
+          },
+          {
+            "title": "Программа проверок",
+            "value": "protocols_3"
+          }
+        ],
+        "foreignKeyType": "STRING"
+      },
+      {
+        "name": "rns_rnv_data_connection",
+        "title": "РНС и РНВ",
+        "minWidth": 200,
+        "multiple": true,
+        "libraries": [
+          "dl_data_section13"
+        ],
+        "valueType": "DOCUMENT",
+        "description": "Документы по разрешению на строильство и разрешению на ввод объекта в эксплуатацию",
+        "maxDocuments": 10
+      },
+      {
+        "name": "customer_data_connection",
+        "title": "Заказчик",
+        "minWidth": 200,
+        "multiple": true,
+        "libraries": [
+          "dl_data_organization"
+        ],
+        "valueType": "DOCUMENT",
+        "description": "Полное наименование, ИНН",
+        "maxDocuments": 10
+      },
+      {
+        "name": "file",
+        "title": "Выбор файла",
+        "maxSize": 100000000,
+        "multiple": true,
+        "valueType": "FILE",
+        "maxDocuments": 10
+      },
+      {
+        "name": "created_by",
+        "title": "Создатель",
+        "readOnly": true,
+        "maxLength": 50,
+        "valueType": "STRING"
+      },
+      {
+        "name": "created_at",
+        "title": "Дата создания",
+        "readOnly": true,
+        "valueType": "DATETIME"
+      },
+      {
+        "name": "last_modified",
+        "title": "Дата модификации",
+        "readOnly": true,
+        "valueType": "DATETIME",
+        "description": "Дата последней модификации документа"
+      },
+      {
+        "name": "updated_by",
+        "title": "Кто обновил",
+        "readOnly": true,
+        "maxLength": 50,
+        "valueType": "STRING"
+      },
+      {
+        "name": "gisogdrf_response",
+        "title": "Ответ ГИСОГД РФ",
+        "readOnly": true,
+        "maxLength": 5000,
+        "valueType": "STRING"
+      },
+      {
+        "name": "gisogdrf_audit_datetime",
+        "title": "Дата аудита в ГИСОГД РФ",
+        "readOnly": true,
+        "minWidth": 200,
+        "valueType": "DATETIME",
+        "description": "Время ответа Аудита ГИСОГД РФ"
+      },
+      {
+        "name": "gisogdrf_sync_status",
+        "title": "Статус синхронизации с ГИСОГД РФ",
+        "minWidth": 200,
+        "asTitle": true,
+        "readOnly": true,
+        "valueType": "CHOICE",
+        "enumerations": [
+          {
+            "title": "Cинхронизация завершилась ошибкой",
+            "value": "Cинхронизация завершилась ошибкой"
+          },
+          {
+            "title": "Cинхронизация завершилась предупреждением",
+            "value": "Cинхронизация завершилась предупреждением"
+          },
+          {
+            "title": "Синхронизирован",
+            "value": "Синхронизирован"
+          },
+          {
+            "title": "Объект не найден в ГИСОГД РФ",
+            "value": "Объект не найден в ГИСОГД РФ"
+          },
+          {
+            "title": "В процессе синхронизации",
+            "value": "В процессе синхронизации"
+          },
+          {
+            "title": "Не синхронизирован",
+            "value": "Не синхронизирован"
+          }
+        ]
+      },
+      {
+        "name": "gisogdrf_publication_datetime",
+        "title": "Дата последней отправки в ГИСОГД РФ",
+        "minWidth": 300,
+        "readOnly": true,
+        "valueType": "DATETIME"
+      },
+      {
+        "name": "type",
+        "title": "Тип файла",
+        "hidden": true,
+        "maxLength": 50,
+        "valueType": "STRING"
+      },
+      {
+        "name": "size",
+        "title": "Размер в kb",
+        "hidden": true,
+        "valueType": "INT"
+      }
     ],
     "description": "17. Информационные модели объектов капитального строительства",
     "contentTypes": [
-        {
-            "id": "doc_17.01",
-            "icon": "DOCUMENT",
-            "type": "DOCUMENT",
-            "title": "Информационная модель объекта капитального строительства",
-            "attributes": [
-                {
-                    "name": "content_type_id",
-                    "title": "Вид документа",
-                    "defaultValue": "doc_17.01"
-                },
-                {
-                    "name": "title",
-                    "required": true,
-                    "description": "Полное наименование документа"
-                },
-                {
-                    "name": "namefrompd"
-                },
-                {
-                    "name": "territorykey"
-                },
-                {
-                    "name": "regnum"
-                },
-                {
-                    "name": "regdate"
-                },
-                {
-                    "name": "fias",
-                    "title": "Населённый пункт",
-                    "required": true
-                },
-                {
-                    "name": "fias__oktmo",
-                    "defaultValueWellKnownFormula": "inherit"
-                },
-                {
-                    "name": "fias__address",
-                    "defaultValueWellKnownFormula": "inherit"
-                },
-                {
-                    "name": "fias__id",
-                    "defaultValueWellKnownFormula": "inherit"
-                },
-                {
-                    "name": "orgname",
-                    "description": "Наименование органа,утвердившего документ"
-                },
-                {
-                    "name": "docname"
-                },
-                {
-                    "name": "docnum"
-                },
-                {
-                    "name": "docdate"
-                },
-                {
-                    "name": "docstatus"
-                },
-                {
-                    "name": "developer_data_connection"
-                },
-                {
-                    "name": "supplier_data_connection"
-                },
-                {
-                    "name": "supplieremploey_data_connection"
-                },
-                {
-                    "name": "inbox_data_key_data_connection"
-                },
-                {
-                    "name": "landplot_connection"
-                },
-                {
-                    "name": "oks_connection"
-                },
-                {
-                    "name": "is_public"
-                },
-                {
-                    "name": "gisogdrf_audit_datetime"
-                },
-                {
-                    "name": "gisogdrf_sync_status"
-                },
-                {
-                    "name": "gisogdrf_publication_datetime"
-                },
-                {
-                    "name": "note"
-                },
-                {
-                    "name": "file",
-                    "title": "Выбор файла",
-                    "maxSize": 100000000,
-                    "maxFiles": 10,
-                    "multiple": true,
-                    "required": true,
-                    "valueType": "FILE"
-                },
-                {
-                    "name": "guiddocpreviousversion"
-                },
-                {
-                    "name": "gisogdrf_response"
-                }
-            ]
-        },
-        {
-            "id": "folder_v1",
-            "icon": "FOLDER_CREATE",
-            "type": "FOLDER",
-            "title": "Папка",
-            "attributes": [
-                {
-                    "name": "title",
-                    "title": "Наименование",
-                    "required": true,
-                    "maxLength": 500
-                },
-                {
-                    "name": "territorykey"
-                },
-                {
-                    "name": "fias",
-                    "title": "Населённый пункт",
-                    "required": true,
-                    "valueType": "FIAS",
-                    "searchMode": "oktmo"
-                },
-                {
-                    "name": "fias__oktmo"
-                },
-                {
-                    "name": "fias__address"
-                },
-                {
-                    "name": "fias__id"
-                },
-                {
-                    "name": "note",
-                    "title": "Примечание",
-                    "display": "multiline",
-                    "valueType": "TEXT"
-                }
-            ]
-        }
+      {
+        "id": "doc_17.01",
+        "icon": "DOCUMENT",
+        "type": "DOCUMENT",
+        "title": "Информационная модель объекта капитального строительства",
+        "childOnly": true,
+        "attributes": [
+          {
+            "name": "content_type_id",
+            "title": "Вид документа",
+            "defaultValue": "doc_17.01"
+          },
+          {
+            "name": "title"
+          },
+          {
+            "name": "namefrompd"
+          },
+          {
+            "name": "territorykey",
+            "hidden": false
+          },
+          {
+            "name": "regnum"
+          },
+          {
+            "name": "regdate"
+          },
+          {
+            "name": "fias"
+          },
+          {
+            "name": "fias__oktmo",
+            "defaultValueWellKnownFormula": "inherit"
+          },
+          {
+            "name": "fias__address",
+            "defaultValueWellKnownFormula": "inherit"
+          },
+          {
+            "name": "fias__id",
+            "defaultValueWellKnownFormula": "inherit"
+          },
+          {
+            "name": "orgname"
+          },
+          {
+            "name": "docname"
+          },
+          {
+            "name": "docnum"
+          },
+          {
+            "name": "docdate"
+          },
+          {
+            "name": "docstatus"
+          },
+          {
+            "name": "number_construction"
+          },
+          {
+            "name": "name_construction"
+          },
+          {
+            "name": "name_oks"
+          },
+          {
+            "name": "address_oks"
+          },
+          {
+            "name": "territorykey",
+            "hidden": false
+          },
+          {
+            "name": "dl_data_section8_data_connection"
+          },
+          {
+            "name": "developer_data_connection"
+          },
+          {
+            "name": "supplier_data_connection"
+          },
+          {
+            "name": "supplieremploey_data_connection"
+          },
+          {
+            "name": "inbox_data_key_data_connection"
+          },
+          {
+            "name": "landplot_connection"
+          },
+          {
+            "name": "oks_connection"
+          },
+          {
+            "name": "is_public"
+          },
+          {
+            "name": "gisogdrf_audit_datetime"
+          },
+          {
+            "name": "gisogdrf_sync_status"
+          },
+          {
+            "name": "gisogdrf_publication_datetime"
+          },
+          {
+            "name": "note"
+          },
+          {
+            "name": "file"
+          },
+          {
+            "name": "guiddocpreviousversion"
+          },
+          {
+            "name": "gisogdrf_response"
+          }
+        ]
+      },
+      {
+        "id": "doc_17.02",
+        "icon": "DOCUMENT",
+        "type": "DOCUMENT",
+        "title": "Сметный расчет",
+        "childOnly": true,
+        "attributes": [
+          {
+            "name": "content_type_id",
+            "defaultValue": "doc_17.02"
+          },
+          {
+            "name": "title"
+          },
+          {
+            "name": "design_stages"
+          },
+          {
+            "name": "access_level"
+          },
+          {
+            "name": "regnum"
+          },
+          {
+            "name": "regdate"
+          },
+          {
+            "name": "fias"
+          },
+          {
+            "name": "fias__oktmo",
+            "defaultValueWellKnownFormula": "inherit"
+          },
+          {
+            "name": "fias__address",
+            "defaultValueWellKnownFormula": "inherit"
+          },
+          {
+            "name": "fias__id",
+            "defaultValueWellKnownFormula": "inherit"
+          },
+          {
+            "name": "territorykey",
+            "hidden": false
+          },
+          {
+            "name": "docnum"
+          },
+          {
+            "name": "docdate"
+          },
+          {
+            "name": "docstatus"
+          },
+          {
+            "name": "inbox_data_key_data_connection"
+          },
+          {
+            "name": "file"
+          },
+          {
+            "name": "guiddocpreviousversion"
+          },
+          {
+            "name": "gisogdrf_publication_datetime"
+          },
+          {
+            "name": "gisogdrf_audit_datetime"
+          },
+          {
+            "name": "gisogdrf_sync_status"
+          },
+          {
+            "name": "gisogdrf_response"
+          },
+          {
+            "name": "note"
+          }
+        ]
+      },
+      {
+        "id": "doc_17.03",
+        "icon": "DOCUMENT",
+        "type": "DOCUMENT",
+        "title": "Ведомость объектов, сводка затрат",
+        "childOnly": true,
+        "attributes": [
+          {
+            "name": "content_type_id",
+            "title": "Вид документа",
+            "defaultValue": "doc_17.03"
+          },
+          {
+            "name": "title"
+          },
+          {
+            "name": "bill_of_quantities"
+          },
+          {
+            "name": "access_level"
+          },
+          {
+            "name": "regnum"
+          },
+          {
+            "name": "regdate"
+          },
+          {
+            "name": "fias"
+          },
+          {
+            "name": "fias__oktmo",
+            "defaultValueWellKnownFormula": "inherit"
+          },
+          {
+            "name": "fias__address",
+            "defaultValueWellKnownFormula": "inherit"
+          },
+          {
+            "name": "fias__id",
+            "defaultValueWellKnownFormula": "inherit"
+          },
+          {
+            "name": "territorykey",
+            "hidden": false
+          },
+          {
+            "name": "docnum"
+          },
+          {
+            "name": "docdate"
+          },
+          {
+            "name": "docstatus"
+          },
+          {
+            "name": "inbox_data_key_data_connection"
+          },
+          {
+            "name": "file"
+          },
+          {
+            "name": "guiddocpreviousversion"
+          },
+          {
+            "name": "gisogdrf_publication_datetime"
+          },
+          {
+            "name": "gisogdrf_audit_datetime"
+          },
+          {
+            "name": "gisogdrf_sync_status"
+          },
+          {
+            "name": "gisogdrf_response"
+          },
+          {
+            "name": "note"
+          }
+        ]
+      },
+      {
+        "id": "doc_17.04",
+        "icon": "DOCUMENT",
+        "type": "DOCUMENT",
+        "title": "Конъюнктурный анализ",
+        "childOnly": true,
+        "attributes": [
+          {
+            "name": "content_type_id",
+            "title": "Вид документа",
+            "defaultValue": "doc_17.04"
+          },
+          {
+            "name": "title"
+          },
+          {
+            "name": "conjunctural_analysis"
+          },
+          {
+            "name": "access_level"
+          },
+          {
+            "name": "regnum"
+          },
+          {
+            "name": "regdate"
+          },
+          {
+            "name": "fias"
+          },
+          {
+            "name": "fias__oktmo",
+            "defaultValueWellKnownFormula": "inherit"
+          },
+          {
+            "name": "fias__address",
+            "defaultValueWellKnownFormula": "inherit"
+          },
+          {
+            "name": "fias__id",
+            "defaultValueWellKnownFormula": "inherit"
+          },
+          {
+            "name": "territorykey",
+            "hidden": false
+          },
+          {
+            "name": "docnum"
+          },
+          {
+            "name": "docdate"
+          },
+          {
+            "name": "docstatus"
+          },
+          {
+            "name": "inbox_data_key_data_connection"
+          },
+          {
+            "name": "file"
+          },
+          {
+            "name": "guiddocpreviousversion"
+          },
+          {
+            "name": "gisogdrf_publication_datetime"
+          },
+          {
+            "name": "gisogdrf_audit_datetime"
+          },
+          {
+            "name": "gisogdrf_sync_status"
+          },
+          {
+            "name": "gisogdrf_response"
+          },
+          {
+            "name": "note"
+          }
+        ]
+      },
+      {
+        "id": "doc_17.05",
+        "icon": "DOCUMENT",
+        "type": "DOCUMENT",
+        "title": "Заключение экспертизы",
+        "childOnly": true,
+        "attributes": [
+          {
+            "name": "content_type_id",
+            "title": "Вид документа",
+            "defaultValue": "doc_17.05"
+          },
+          {
+            "name": "title",
+            "required": true,
+            "description": "Полное наименование документа"
+          },
+          {
+            "name": "type_expert_opinion"
+          },
+          {
+            "name": "access_level"
+          },
+          {
+            "name": "regnum"
+          },
+          {
+            "name": "regdate"
+          },
+          {
+            "name": "fias"
+          },
+          {
+            "name": "fias__oktmo",
+            "defaultValueWellKnownFormula": "inherit"
+          },
+          {
+            "name": "fias__address",
+            "defaultValueWellKnownFormula": "inherit"
+          },
+          {
+            "name": "fias__id",
+            "defaultValueWellKnownFormula": "inherit"
+          },
+          {
+            "name": "territorykey",
+            "hidden": false
+          },
+          {
+            "name": "docnum"
+          },
+          {
+            "name": "docdate"
+          },
+          {
+            "name": "docstatus"
+          },
+          {
+            "name": "inbox_data_key_data_connection"
+          },
+          {
+            "name": "file"
+          },
+          {
+            "name": "guiddocpreviousversion"
+          },
+          {
+            "name": "gisogdrf_publication_datetime"
+          },
+          {
+            "name": "gisogdrf_audit_datetime"
+          },
+          {
+            "name": "gisogdrf_sync_status"
+          },
+          {
+            "name": "gisogdrf_response"
+          },
+          {
+            "name": "note"
+          }
+        ]
+      },
+      {
+        "id": "doc_17.06",
+        "icon": "DOCUMENT",
+        "type": "DOCUMENT",
+        "title": "Инженерные изыскания",
+        "childOnly": true,
+        "attributes": [
+          {
+            "name": "content_type_id",
+            "title": "Вид документа",
+            "defaultValue": "doc_17.06"
+          },
+          {
+            "name": "title"
+          },
+          {
+            "name": "engineering_surveys"
+          },
+          {
+            "name": "access_level"
+          },
+          {
+            "name": "regnum"
+          },
+          {
+            "name": "regdate"
+          },
+          {
+            "name": "fias"
+          },
+          {
+            "name": "fias__oktmo",
+            "defaultValueWellKnownFormula": "inherit"
+          },
+          {
+            "name": "fias__address",
+            "defaultValueWellKnownFormula": "inherit"
+          },
+          {
+            "name": "fias__id",
+            "defaultValueWellKnownFormula": "inherit"
+          },
+          {
+            "name": "territorykey",
+            "hidden": false
+          },
+          {
+            "name": "docnum"
+          },
+          {
+            "name": "docdate"
+          },
+          {
+            "name": "docstatus"
+          },
+          {
+            "name": "inbox_data_key_data_connection"
+          },
+          {
+            "name": "file"
+          },
+          {
+            "name": "guiddocpreviousversion"
+          },
+          {
+            "name": "gisogdrf_publication_datetime"
+          },
+          {
+            "name": "gisogdrf_audit_datetime"
+          },
+          {
+            "name": "gisogdrf_sync_status"
+          },
+          {
+            "name": "gisogdrf_response"
+          },
+          {
+            "name": "note"
+          }
+        ]
+      },
+      {
+        "id": "doc_17.07",
+        "icon": "DOCUMENT",
+        "type": "DOCUMENT",
+        "title": "Контрольно надзорные мероприятия",
+        "childOnly": true,
+        "attributes": [
+          {
+            "name": "content_type_id",
+            "title": "Вид документа",
+            "defaultValue": "doc_17.07"
+          },
+          {
+            "name": "title",
+            "required": true,
+            "description": "Полное наименование документа"
+          },
+          {
+            "name": "knm"
+          },
+          {
+            "name": "access_level"
+          },
+          {
+            "name": "regnum"
+          },
+          {
+            "name": "regdate"
+          },
+          {
+            "name": "fias"
+          },
+          {
+            "name": "fias__oktmo",
+            "defaultValueWellKnownFormula": "inherit"
+          },
+          {
+            "name": "fias__address",
+            "defaultValueWellKnownFormula": "inherit"
+          },
+          {
+            "name": "fias__id",
+            "defaultValueWellKnownFormula": "inherit"
+          },
+          {
+            "name": "territorykey",
+            "hidden": false
+          },
+          {
+            "name": "docnum"
+          },
+          {
+            "name": "docdate"
+          },
+          {
+            "name": "docstatus"
+          },
+          {
+            "name": "inbox_data_key_data_connection"
+          },
+          {
+            "name": "file"
+          },
+          {
+            "name": "guiddocpreviousversion"
+          },
+          {
+            "name": "gisogdrf_publication_datetime"
+          },
+          {
+            "name": "gisogdrf_audit_datetime"
+          },
+          {
+            "name": "gisogdrf_sync_status"
+          },
+          {
+            "name": "gisogdrf_response"
+          },
+          {
+            "name": "note"
+          }
+        ]
+      },
+      {
+        "id": "doc_17.08",
+        "icon": "DOCUMENT",
+        "type": "DOCUMENT",
+        "title": "Осмотр ОКС",
+        "childOnly": true,
+        "attributes": [
+          {
+            "name": "content_type_id",
+            "defaultValue": "doc_17.08"
+          },
+          {
+            "name": "title"
+          },
+          {
+            "name": "inspection"
+          },
+          {
+            "name": "access_level"
+          },
+          {
+            "name": "regnum"
+          },
+          {
+            "name": "regdate"
+          },
+          {
+            "name": "fias"
+          },
+          {
+            "name": "fias__oktmo",
+            "defaultValueWellKnownFormula": "inherit"
+          },
+          {
+            "name": "fias__address",
+            "defaultValueWellKnownFormula": "inherit"
+          },
+          {
+            "name": "fias__id",
+            "defaultValueWellKnownFormula": "inherit"
+          },
+          {
+            "name": "territorykey",
+            "hidden": false
+          },
+          {
+            "name": "docnum"
+          },
+          {
+            "name": "docdate"
+          },
+          {
+            "name": "docstatus"
+          },
+          {
+            "name": "inbox_data_key_data_connection"
+          },
+          {
+            "name": "file"
+          },
+          {
+            "name": "guiddocpreviousversion"
+          },
+          {
+            "name": "gisogdrf_publication_datetime"
+          },
+          {
+            "name": "gisogdrf_audit_datetime"
+          },
+          {
+            "name": "gisogdrf_sync_status"
+          },
+          {
+            "name": "gisogdrf_response"
+          },
+          {
+            "name": "note"
+          }
+        ]
+      },
+      {
+        "id": "doc_17.09",
+        "icon": "DOCUMENT",
+        "type": "DOCUMENT",
+        "title": "Акты проверки",
+        "childOnly": true,
+        "attributes": [
+          {
+            "name": "content_type_id",
+            "defaultValue": "doc_17.09"
+          },
+          {
+            "name": "title"
+          },
+          {
+            "name": "inspection_reports"
+          },
+          {
+            "name": "access_level"
+          },
+          {
+            "name": "regnum"
+          },
+          {
+            "name": "regdate"
+          },
+          {
+            "name": "fias"
+          },
+          {
+            "name": "fias__oktmo",
+            "defaultValueWellKnownFormula": "inherit"
+          },
+          {
+            "name": "fias__address",
+            "defaultValueWellKnownFormula": "inherit"
+          },
+          {
+            "name": "fias__id",
+            "defaultValueWellKnownFormula": "inherit"
+          },
+          {
+            "name": "territorykey",
+            "hidden": false
+          },
+          {
+            "name": "docnum"
+          },
+          {
+            "name": "docdate"
+          },
+          {
+            "name": "docstatus"
+          },
+          {
+            "name": "inbox_data_key_data_connection"
+          },
+          {
+            "name": "file"
+          },
+          {
+            "name": "guiddocpreviousversion"
+          },
+          {
+            "name": "gisogdrf_publication_datetime"
+          },
+          {
+            "name": "gisogdrf_audit_datetime"
+          },
+          {
+            "name": "gisogdrf_sync_status"
+          },
+          {
+            "name": "gisogdrf_response"
+          },
+          {
+            "name": "note"
+          }
+        ]
+      },
+      {
+        "id": "doc_17.10",
+        "icon": "DOCUMENT",
+        "type": "DOCUMENT",
+        "title": "Нарушения",
+        "childOnly": true,
+        "attributes": [
+          {
+            "name": "content_type_id",
+            "defaultValue": "doc_17.10"
+          },
+          {
+            "name": "title"
+          },
+          {
+            "name": "violations"
+          },
+          {
+            "name": "access_level"
+          },
+          {
+            "name": "regnum"
+          },
+          {
+            "name": "regdate"
+          },
+          {
+            "name": "fias"
+          },
+          {
+            "name": "fias__oktmo",
+            "defaultValueWellKnownFormula": "inherit"
+          },
+          {
+            "name": "fias__address",
+            "defaultValueWellKnownFormula": "inherit"
+          },
+          {
+            "name": "fias__id",
+            "defaultValueWellKnownFormula": "inherit"
+          },
+          {
+            "name": "territorykey",
+            "hidden": false
+          },
+          {
+            "name": "docnum"
+          },
+          {
+            "name": "docdate"
+          },
+          {
+            "name": "docstatus"
+          },
+          {
+            "name": "inbox_data_key_data_connection"
+          },
+          {
+            "name": "file"
+          },
+          {
+            "name": "guiddocpreviousversion"
+          },
+          {
+            "name": "gisogdrf_publication_datetime"
+          },
+          {
+            "name": "gisogdrf_audit_datetime"
+          },
+          {
+            "name": "gisogdrf_sync_status"
+          },
+          {
+            "name": "gisogdrf_response"
+          },
+          {
+            "name": "note"
+          }
+        ]
+      },
+      {
+        "id": "doc_17.11",
+        "icon": "DOCUMENT",
+        "type": "DOCUMENT",
+        "title": "Строительство и реконструкция ОКС",
+        "childOnly": true,
+        "attributes": [
+          {
+            "name": "content_type_id",
+            "defaultValue": "doc_17.11"
+          },
+          {
+            "name": "title"
+          },
+          {
+            "name": "construction_reconstruction_oks"
+          },
+          {
+            "name": "access_level"
+          },
+          {
+            "name": "regnum"
+          },
+          {
+            "name": "regdate"
+          },
+          {
+            "name": "fias"
+          },
+          {
+            "name": "fias__oktmo",
+            "defaultValueWellKnownFormula": "inherit"
+          },
+          {
+            "name": "fias__address",
+            "defaultValueWellKnownFormula": "inherit"
+          },
+          {
+            "name": "fias__id",
+            "defaultValueWellKnownFormula": "inherit"
+          },
+          {
+            "name": "territorykey",
+            "hidden": false
+          },
+          {
+            "name": "docnum"
+          },
+          {
+            "name": "docdate"
+          },
+          {
+            "name": "docstatus"
+          },
+          {
+            "name": "inbox_data_key_data_connection"
+          },
+          {
+            "name": "file"
+          },
+          {
+            "name": "guiddocpreviousversion"
+          },
+          {
+            "name": "gisogdrf_publication_datetime"
+          },
+          {
+            "name": "gisogdrf_audit_datetime"
+          },
+          {
+            "name": "gisogdrf_sync_status"
+          },
+          {
+            "name": "gisogdrf_response"
+          },
+          {
+            "name": "note"
+          }
+        ]
+      },
+      {
+        "id": "doc_17.12",
+        "icon": "DOCUMENT",
+        "type": "DOCUMENT",
+        "title": "Протоколы",
+        "childOnly": true,
+        "attributes": [
+          {
+            "name": "content_type_id",
+            "defaultValue": "doc_17.12"
+          },
+          {
+            "name": "title"
+          },
+          {
+            "name": "protocols"
+          },
+          {
+            "name": "access_level"
+          },
+          {
+            "name": "regnum"
+          },
+          {
+            "name": "regdate"
+          },
+          {
+            "name": "fias"
+          },
+          {
+            "name": "fias__oktmo",
+            "defaultValueWellKnownFormula": "inherit"
+          },
+          {
+            "name": "fias__address",
+            "defaultValueWellKnownFormula": "inherit"
+          },
+          {
+            "name": "fias__id",
+            "defaultValueWellKnownFormula": "inherit"
+          },
+          {
+            "name": "territorykey",
+            "hidden": false
+          },
+          {
+            "name": "docnum"
+          },
+          {
+            "name": "docdate"
+          },
+          {
+            "name": "docstatus"
+          },
+          {
+            "name": "inbox_data_key_data_connection"
+          },
+          {
+            "name": "file"
+          },
+          {
+            "name": "guiddocpreviousversion"
+          },
+          {
+            "name": "gisogdrf_publication_datetime"
+          },
+          {
+            "name": "gisogdrf_audit_datetime"
+          },
+          {
+            "name": "gisogdrf_sync_status"
+          },
+          {
+            "name": "gisogdrf_response"
+          },
+          {
+            "name": "note"
+          }
+        ]
+      },
+      {
+        "id": "folder_v1",
+        "icon": "FOLDER_CREATE",
+        "type": "FOLDER",
+        "title": "Папка",
+        "children": [
+          {
+            "library": null,
+            "contentType": "doc_17.01"
+          },
+          {
+            "library": null,
+            "contentType": "folder_v4"
+          }
+        ],
+        "attributes": [
+          {
+            "name": "title"
+          },
+          {
+            "name": "territorykey",
+            "hidden": false
+          },
+          {
+            "name": "fias"
+          },
+          {
+            "name": "fias__oktmo",
+            "defaultValueWellKnownFormula": "inherit"
+          },
+          {
+            "name": "fias__address",
+            "defaultValueWellKnownFormula": "inherit"
+          },
+          {
+            "name": "fias__id",
+            "defaultValueWellKnownFormula": "inherit"
+          },
+          {
+            "name": "note"
+          }
+        ]
+      },
+      {
+        "id": "folder_v4",
+        "icon": "FOLDER_CREATE",
+        "type": "FOLDER",
+        "title": "ЦИМ",
+        "children": [
+          {
+            "library": null,
+            "contentType": "folder_v2"
+          },
+          {
+            "library": null,
+            "contentType": "folder_v3"
+          },
+          {
+            "library": null,
+            "contentType": "doc_17.01"
+          },
+          {
+            "library": null,
+            "contentType": "folder_v5"
+          },
+          {
+            "library": null,
+            "contentType": "folder_v6"
+          }
+        ],
+        "childOnly": true,
+        "attributes": [
+          {
+            "name": "title",
+            "description": "Наименование объекта капитального строительства (этапа) в соответсвии с проектной документацией"
+          },
+          {
+            "name": "customer_data_connection"
+          },
+          {
+            "name": "fias"
+          },
+          {
+            "name": "fias__oktmo",
+            "defaultValueWellKnownFormula": "inherit"
+          },
+          {
+            "name": "fias__address",
+            "defaultValueWellKnownFormula": "inherit"
+          },
+          {
+            "name": "fias__id",
+            "defaultValueWellKnownFormula": "inherit"
+          },
+          {
+            "name": "type_construction"
+          },
+          {
+            "name": "stage_work"
+          },
+          {
+            "name": "rns_rnv_data_connection"
+          },
+          {
+            "name": "territorykey",
+            "hidden": false
+          },
+          {
+            "name": "note"
+          }
+        ]
+      },
+      {
+        "id": "folder_v2",
+        "icon": "FOLDER_CREATE",
+        "type": "FOLDER",
+        "title": "Этапы проектирования",
+        "children": [
+          {
+            "library": null,
+            "contentType": "doc_17.02"
+          },
+          {
+            "library": null,
+            "contentType": "doc_17.03"
+          },
+          {
+            "library": null,
+            "contentType": "doc_17.04"
+          },
+          {
+            "library": null,
+            "contentType": "doc_17.05"
+          }
+        ],
+        "childOnly": true,
+        "attributes": [
+          {
+            "name": "title"
+          },
+          {
+            "name": "fias"
+          },
+          {
+            "name": "fias__oktmo",
+            "defaultValueWellKnownFormula": "inherit"
+          },
+          {
+            "name": "fias__address",
+            "defaultValueWellKnownFormula": "inherit"
+          },
+          {
+            "name": "fias__id",
+            "defaultValueWellKnownFormula": "inherit"
+          },
+          {
+            "name": "note"
+          }
+        ]
+      },
+      {
+        "id": "folder_v3",
+        "icon": "FOLDER_CREATE",
+        "type": "FOLDER",
+        "title": "Этапы строительства",
+        "children": [
+          {
+            "library": null,
+            "contentType": "doc_17.06"
+          },
+          {
+            "library": null,
+            "contentType": "doc_17.07"
+          },
+          {
+            "library": null,
+            "contentType": "doc_17.08"
+          },
+          {
+            "library": null,
+            "contentType": "doc_17.09"
+          },
+          {
+            "library": null,
+            "contentType": "doc_17.10"
+          },
+          {
+            "library": null,
+            "contentType": "doc_17.11"
+          },
+          {
+            "library": null,
+            "contentType": "doc_17.12"
+          }
+        ],
+        "childOnly": true,
+        "attributes": [
+          {
+            "name": "title"
+          },
+          {
+            "name": "fias"
+          },
+          {
+            "name": "fias__oktmo",
+            "defaultValueWellKnownFormula": "inherit"
+          },
+          {
+            "name": "fias__address",
+            "defaultValueWellKnownFormula": "inherit"
+          },
+          {
+            "name": "fias__id",
+            "defaultValueWellKnownFormula": "inherit"
+          },
+          {
+            "name": "note"
+          }
+        ]
+      },
+      {
+        "id": "folder_v5",
+        "icon": "FOLDER_CREATE",
+        "type": "FOLDER",
+        "title": "Инженерные изыскания",
+        "children": [
+          {
+            "library": null,
+            "contentType": "doc_17.01"
+          }
+        ],
+        "childOnly": true,
+        "attributes": [
+          {
+            "name": "title"
+          },
+          {
+            "name": "fias"
+          },
+          {
+            "name": "fias__oktmo",
+            "defaultValueWellKnownFormula": "inherit"
+          },
+          {
+            "name": "fias__address",
+            "defaultValueWellKnownFormula": "inherit"
+          },
+          {
+            "name": "fias__id",
+            "defaultValueWellKnownFormula": "inherit"
+          },
+          {
+            "name": "dl_data_section8_data_connection"
+          },
+          {
+            "name": "note"
+          }
+        ]
+      },
+      {
+        "id": "folder_v6",
+        "icon": "FOLDER_CREATE",
+        "type": "FOLDER",
+        "title": "Эксплуатация",
+        "children": [
+          {
+            "library": null,
+            "contentType": "doc_17.01"
+          }
+        ],
+        "childOnly": true,
+        "attributes": [
+          {
+            "name": "title"
+          },
+          {
+            "name": "fias"
+          },
+          {
+            "name": "fias__oktmo",
+            "defaultValueWellKnownFormula": "inherit"
+          },
+          {
+            "name": "fias__address",
+            "defaultValueWellKnownFormula": "inherit"
+          },
+          {
+            "name": "fias__id",
+            "defaultValueWellKnownFormula": "inherit"
+          },
+          {
+            "name": "note"
+          }
+        ]
+      }
     ]
-}'WHERE name = 'dl_data_section17';
+  }'WHERE name = 'dl_data_section17';
 
 UPDATE data.schemas 
 SET class_rule =
@@ -44798,6 +46674,7 @@ SET class_rule =
             "name": "gisogdrf_audit_datetime",
             "title": "Дата аудита в ГИСОГД",
             "readOnly": true,
+            "minWidth": 200,
             "valueType": "DATETIME",
             "description": "Время ответа Аудита ГИСОГД РФ"
         },
@@ -44806,6 +46683,7 @@ SET class_rule =
             "title": "Статус синхронизации",
             "asTitle": true,
             "readOnly": true,
+            "minWidth": 200,
             "valueType": "CHOICE",
             "enumerations": [
                 {
@@ -44838,6 +46716,7 @@ SET class_rule =
             "name": "gisogdrf_publication_datetime",
             "title": "Дата последней отправки в ГИСОГД РФ",
             "readOnly": true,
+            "minWidth": 300,
             "valueType": "DATETIME"
         },
         {
@@ -45447,6 +47326,7 @@ SET class_rule =
         {
             "name": "gisogdrf_sync_status",
             "title": "Статус синхронизации",
+            "minWidth": 200,
             "asTitle": true,
             "readOnly": true,
             "valueType": "CHOICE",
@@ -45465,6 +47345,7 @@ SET class_rule =
             "name": "gisogdrf_publication_datetime",
             "title": "Дата последней отправки в ГИСОГД РФ",
             "readOnly": true,
+            "minWidth": 300,
             "valueType": "DATETIME"
         },
         {
