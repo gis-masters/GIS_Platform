@@ -135,7 +135,12 @@ public class SqlBuilder {
 
         String orderSection = "";
         if (pageable != null) {
-            orderSection = buildOrderBySection(pageable.getSort());
+            Sort sort = pageable.getSort();
+            if (sort.isUnsorted()) {
+                sort.and(Sort.by(qualifier.getPrimaryKeyName()));
+            }
+
+            orderSection = buildOrderBySection(sort);
         }
 
         String pagingSection = "";
