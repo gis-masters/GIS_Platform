@@ -273,6 +273,7 @@ public class ImportKptHandler implements IEventHandler {
             try (InputStream inputStream = zipKpt.getInputStream(xmlFile)) {
                 log.info("Импорт КПТ: '{}' из {}/{}", kptDocument.getTitle(), pathToKpt, xmlFile.getName());
 
+                long taskId = importEvent.getTaskId();
                 String dbName = importEvent.getDbName();
                 String initiator = importEvent.getInitiatorLogin();
                 String acceptAt = importEvent.getValidationSettings().getDateOrderCompletion();
@@ -298,13 +299,13 @@ public class ImportKptHandler implements IEventHandler {
                         kptElement.setContent(filledContent);
                     });
 
-                    persistKptElements(dbName, kptElements, writers, toWrite, schemas);
+                    persistKptElements(dbName, kptElements, writers, toWrite, schemas, taskId);
                 }
 
                 for (KptElementWriter writer: toWrite.keySet()) {
                     List<KptElement> batch = toWrite.get(writer);
                     if (!batch.isEmpty()) {
-                        writeBatch(writer, batch, getKptElementSchema(schemas, writer.getSchemaName()), dbName);
+                        writeBatch(writer, batch, getKptElementSchema(schemas, writer.getSchemaName()), dbName, taskId);
                     }
                 }
 
@@ -323,7 +324,8 @@ public class ImportKptHandler implements IEventHandler {
                     writeBatch(kvartalWriter,
                                batch,
                                getKptElementSchema(schemas, kvartalWriter.getSchemaName()),
-                               dbName);
+                               dbName,
+                               taskId);
                 }
 
                 timer.stop();
@@ -562,7 +564,8 @@ public class ImportKptHandler implements IEventHandler {
                                     List<? extends KptElement> kptElements,
                                     Map<Class<? extends KptElement>, KptElementWriter> writers,
                                     Map<KptElementWriter, List<KptElement>> toWrite,
-                                    List<SchemaDto> schemas) {
+                                    List<SchemaDto> schemas,
+                                    long taskId) {
         for (KptElement kptElement: kptElements) {
             if (!kptElement.hasGeometry()) {
                 continue;
@@ -576,7 +579,7 @@ public class ImportKptHandler implements IEventHandler {
             List<KptElement> batch = toWrite.computeIfAbsent(writer, k -> new LinkedList<>());
 
             if (batch.size() >= BATCH_INSERT_SIZE) {
-                writeBatch(writer, batch, getKptElementSchema(schemas, writer.getSchemaName()), dbName);
+                writeBatch(writer, batch, getKptElementSchema(schemas, writer.getSchemaName()), dbName, taskId);
             }
 
             batch.add(kptElement);
@@ -586,11 +589,14 @@ public class ImportKptHandler implements IEventHandler {
     private void writeBatch(KptElementWriter writer,
                             List<KptElement> batch,
                             SchemaDto schemaDto,
-                            String databaseName) {
+                            String databaseName,
+                            long taskId) {
         try {
             writer.writeBatch(batch, schemaDto, databaseName);
         } catch (Exception e) {
             log.error("Ошибка сохранения данных слоя {}", writer.getSchemaName(), e);
+
+            writeErrorToTaskLog(databaseName, taskId, e.getMessage());
         }
 
         batch.clear();

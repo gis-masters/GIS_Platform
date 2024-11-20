@@ -4,18 +4,18 @@ public class KptImportValidationResult {
 
     private final KptImportLogLevel level;
 
-    private final String message;
+    private final String description;
 
-    public KptImportValidationResult(KptImportLogLevel level, String message) {
+    public KptImportValidationResult(KptImportLogLevel level, String description) {
         this.level = level;
-        this.message = message;
+        this.description = description;
     }
 
     public KptImportLogLevel getLevel() {
         return level;
     }
 
-    public String getMessage() {
-        return message;
+    public String getDescription() {
+        return description;
     }
 }
