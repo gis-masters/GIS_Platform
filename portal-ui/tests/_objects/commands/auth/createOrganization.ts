@@ -66,6 +66,7 @@ function isSettingsNotValid(settings: OrgSettings): boolean {
     !settings.reestrs ||
     !settings.createProject ||
     !settings.createLibraryItem ||
+    !settings.showPermissions ||
     !settings.editProjectLayer ||
     !settings.viewDocumentLibrary ||
     !settings.viewBugReport ||

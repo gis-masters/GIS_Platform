@@ -48,6 +48,12 @@ class SettingsSchemaSyntheticController implements SyntheticController {
           defaultValue: false
         },
         {
+          name: 'showPermissions',
+          title: 'Настройка разрешений в админке',
+          propertyType: PropertyType.BOOL,
+          defaultValue: false
+        },
+        {
           name: 'downloadGml',
           title: 'Выгрузка GML',
           propertyType: PropertyType.BOOL,

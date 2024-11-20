@@ -79,6 +79,7 @@ export interface Settings {
   editProjectLayer: boolean;
   createLibraryItem: boolean;
   importShp: boolean;
+  showPermissions: boolean;
   downloadGml: boolean;
   viewBugReport: boolean;
   viewDocumentLibrary: boolean;

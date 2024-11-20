@@ -19,6 +19,7 @@ async function setOption(setting: string, status: boolean): Promise<CompositeSet
   // будет исправлено в #2155
   const settings: OrgSettings = {
     createLibraryItem: true,
+    showPermissions: true,
     createProject: true,
     downloadFiles: true,
     viewDocumentLibrary: true,

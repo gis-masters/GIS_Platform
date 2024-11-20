@@ -18,6 +18,7 @@ class SettingsSyntheticController implements SyntheticController {
       system: {
         downloadXml: true,
         createLibraryItem: true,
+        showPermissions: true,
         reestrs: true,
         editProjectLayer: true,
         sedDialog: true,
@@ -38,6 +39,7 @@ class SettingsSyntheticController implements SyntheticController {
       organization: {
         downloadXml: true,
         createLibraryItem: true,
+        showPermissions: true,
         reestrs: true,
         editProjectLayer: true,
         sedDialog: true,

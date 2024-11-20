@@ -20,6 +20,7 @@ export async function mockSettings(browser: WebdriverIO.Browser) {
         importShp: true,
         viewServicesCalculator: true,
         taskManagement: true,
+        showPermissions: true,
         createLibraryItem: true
       },
       organization: {
@@ -33,6 +34,7 @@ export async function mockSettings(browser: WebdriverIO.Browser) {
         importShp: true,
         viewServicesCalculator: true,
         taskManagement: true,
+        showPermissions: true,
         createLibraryItem: true
       }
     })

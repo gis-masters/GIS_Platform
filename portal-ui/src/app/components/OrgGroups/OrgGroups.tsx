@@ -7,6 +7,7 @@ import { CrgGroup } from '../../services/auth/groups/groups.models';
 import { groupsService } from '../../services/auth/groups/groups.service';
 import { PropertyType } from '../../services/data/schema/schema.models';
 import { allGroups } from '../../stores/AllGroups.store';
+import { organizationSettings } from '../../stores/OrganizationSettings.store';
 import { XTable } from '../XTable/XTable';
 import { XTableColumn } from '../XTable/XTable.models';
 import { OrgGroupsCreate } from './Create/OrgGroups-Create';
@@ -47,11 +48,6 @@ export class OrgGroups extends Component {
       align: 'right'
     },
     {
-      title: 'Разрешений',
-      CellContent: OrgGroupsPermissionsCount,
-      align: 'right'
-    },
-    {
       title: 'Действия',
       align: 'right',
       cellProps: { padding: 'checkbox' },
@@ -62,6 +58,14 @@ export class OrgGroups extends Component {
   constructor(props: Record<string, never>) {
     super(props);
     makeObservable(this);
+
+    if (organizationSettings.showPermissions) {
+      this.xTableCols.splice(-1, 0, {
+        title: 'Разрешений',
+        CellContent: OrgGroupsPermissionsCount,
+        align: 'right'
+      });
+    }
   }
 
   async componentDidMount() {

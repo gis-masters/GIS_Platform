@@ -9,6 +9,7 @@ import { allPermissionsService } from '../../services/permissions/allPermissions
 import { allGroups } from '../../stores/AllGroups.store';
 import { allPermissions } from '../../stores/AllPermissions.store';
 import { allUsers } from '../../stores/AllUsers.store';
+import { organizationSettings } from '../../stores/OrganizationSettings.store';
 import { Loading } from '../Loading/Loading';
 import { OrganizationClean } from '../OrganizationClean/OrganizationClean';
 import { OrganizationInfo } from '../OrganizationInfo/OrganizationInfo';
@@ -40,8 +41,10 @@ export default class OrgAdmin extends Component {
   }
 
   async componentDidMount() {
-    await allDataEntitiesService.initAllDataEntitiesStore();
-    await allPermissionsService.initAllPermissionsStore();
+    if (organizationSettings.showPermissions) {
+      await allDataEntitiesService.initAllDataEntitiesStore();
+      await allPermissionsService.initAllPermissionsStore();
+    }
   }
 
   componentWillUnmount() {

@@ -10,6 +10,7 @@ import { usersService } from '../../services/auth/users/users.service';
 import { PropertyType } from '../../services/data/schema/schema.models';
 import { allGroups } from '../../stores/AllGroups.store';
 import { allUsers } from '../../stores/AllUsers.store';
+import { organizationSettings } from '../../stores/OrganizationSettings.store';
 import { XTable } from '../XTable/XTable';
 import { XTableColumn } from '../XTable/XTable.models';
 import { OrgUsersCreate } from './Create/OrgUsers-Create';
@@ -96,11 +97,6 @@ export class OrgUsers extends Component {
       align: 'right'
     },
     {
-      title: 'Разрешений',
-      CellContent: OrgUsersPermissionsCount,
-      align: 'right'
-    },
-    {
       title: 'Действия',
       align: 'right',
       cellProps: { padding: 'checkbox' },
@@ -111,6 +107,14 @@ export class OrgUsers extends Component {
   constructor(props: Record<string, never>) {
     super(props);
     makeObservable(this);
+
+    if (organizationSettings.showPermissions) {
+      this.xTableCols.splice(-1, 0, {
+        title: 'Разрешений',
+        CellContent: OrgUsersPermissionsCount,
+        align: 'right'
+      });
+    }
   }
 
   async componentDidMount() {

@@ -51,6 +51,7 @@ public class SpecializationSettingsHandler {
         result.put("createProject", settings.getCreateProject() != null && settings.getCreateProject());
         result.put("downloadFiles", settings.getDownloadFiles() != null && settings.getDownloadFiles());
         result.put("taskManagement", settings.getTaskManagement() != null && settings.getTaskManagement());
+        result.put("showPermissions", settings.getShowPermissions() != null && settings.getShowPermissions());
         result.put("editProjectLayer", settings.getEditProjectLayer() != null && settings.getEditProjectLayer());
         result.put("createLibraryItem", settings.getCreateLibraryItem() != null && settings.getCreateLibraryItem());
 

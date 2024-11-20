@@ -118,6 +118,12 @@ public class OrgSettingsSchemaHolder {
         reestrs.setValueType(BOOLEAN);
         reestrs.setDefaultValue(false);
 
+        SimplePropertyDto showPermissions = new SimplePropertyDto();
+        showPermissions.setName("showPermissions");
+        showPermissions.setTitle("Настройка разрешений в админке");
+        showPermissions.setValueType(BOOLEAN);
+        showPermissions.setDefaultValue(true);
+
         SimplePropertyDto taskManagement = new SimplePropertyDto();
         taskManagement.setName("taskManagement");
         taskManagement.setTitle("Управление задачами");
@@ -165,6 +171,7 @@ public class OrgSettingsSchemaHolder {
         props.add(editProjectLayer);
         props.add(sedDialog);
         props.add(reestrs);
+        props.add(showPermissions);
         props.add(taskManagement);
         props.add(tags);
         props.add(favoritesEpsg);

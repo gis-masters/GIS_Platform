@@ -10,6 +10,7 @@
       "downloadXml": true,
       "createProject": true,
       "downloadFiles": true,
+      "showPermissions": true,
       "taskManagement": true,
       "editProjectLayer": true,
       "createLibraryItem": true,

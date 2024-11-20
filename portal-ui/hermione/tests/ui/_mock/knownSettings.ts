@@ -13,6 +13,7 @@ export async function mockKnownSettings(browser: WebdriverIO.Browser) {
       editProjectLayer: 'Настройка слоев проекта',
       viewDocumentLibrary: 'Доступность библиотек документов',
       viewBugReport: 'Проверка ошибок по приказу',
+      showPermissions: 'Настройка разрешений в админке',
       downloadGml: 'Выгрузка GML',
       importShp: 'Импорт SHP архивов',
       viewServicesCalculator: 'Калькулятор предоставления сведений',

@@ -15,7 +15,7 @@ import static ru.mycrg.auth_service.service.organization.settings.Specialization
 
 public class SpecializationSettingsUtilTest {
 
-    public static final int EXPECTED_NUMBER_OF_SETTINGS = 17;
+    public static final int EXPECTED_NUMBER_OF_SETTINGS = 18;
 
     @Test
     void shouldCorrectHandleNullable() {

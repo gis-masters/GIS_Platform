@@ -97,6 +97,14 @@ export class OrganizationSettings {
   }
 
   @computed
+  get showPermissions(): boolean {
+    return this.allowedToUse(
+      !!this.orgSettings?.system?.showPermissions,
+      !!this.orgSettings?.organization?.showPermissions
+    );
+  }
+
+  @computed
   get viewBugReport(): boolean {
     return this.allowedToUse(
       !!this.orgSettings?.system?.viewBugReport,

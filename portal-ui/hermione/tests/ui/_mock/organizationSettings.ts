@@ -17,6 +17,7 @@ export async function mockOrganizationSettings(browser: WebdriverIO.Browser) {
       importShp: true,
       viewServicesCalculator: true,
       createLibraryItem: true,
+      showPermissions: true,
       taskManagement: true,
       downloadXml: true
     })

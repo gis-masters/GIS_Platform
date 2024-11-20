@@ -11,6 +11,7 @@
       "taskManagement": true,
       "createProject": true,
       "downloadFiles": true,
+      "showPermissions": true,
       "editProjectLayer": true,
       "createLibraryItem": true,
       "importShp": true,
