@@ -29,6 +29,7 @@ export interface ChooseXTableDialogBaseProps<T> extends IClassNameProps {
   fullWidth?: boolean;
   selectedItems?: T[];
   disabledItems?: T[];
+  disabledItemsMessage?: string;
   cols: XTableColumn<T>[];
   defaultSort?: SortParams<T>;
   secondarySortField?: keyof T;
@@ -71,6 +72,8 @@ export default class ChooseXTableDialog<T> extends Component<ChooseXTableDialogP
       secondarySortField,
       actionButtonProps = {},
       single,
+      disabledItems,
+      disabledItemsMessage,
       withoutSelectAll,
       loading,
       afterTable,
@@ -101,6 +104,8 @@ export default class ChooseXTableDialog<T> extends Component<ChooseXTableDialogP
             secondarySortField={secondarySortField}
             filterable
             loading={loading}
+            disabledItems={disabledItems}
+            disabledItemsMessage={disabledItemsMessage}
             filtersAlwaysEnabled
             single={single}
             withoutSelectAll={withoutSelectAll}

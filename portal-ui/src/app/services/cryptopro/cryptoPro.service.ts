@@ -1,112 +1,114 @@
+/* eslint-disable sonarjs/no-duplicate-string */
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-// TODO: eslint на говно исходится при типизации yield, нужно потом поправить как то
+// TODO: eslint на говно исходится при типизации файла, нужно потом поправить как то
 
 import { CAdESCOM } from './models/cadescom_async';
-import { CADESPluginAsync } from './models/cadesplugin';
+import { CADESPlugin } from './models/cadesplugin';
 import { CAPICOM_ASYNC } from './models/capicom_async';
 
-declare const cadesplugin: CADESPluginAsync;
+declare const cadesplugin: CADESPlugin;
 
-export function fileSignCreate(oFile: File | Blob, certName?: string): Promise<Blob> {
-  return new Promise((resolve, reject) => {
-    cadesplugin.async_spawn(() => {
-      if (!window.FileReader) {
-        return reject('API чтения файлов не поддерживается в вашем браузере');
-      }
+export async function createSignature(
+  hashValue: string,
+  certificateThumbprint: string,
+  existingSign?: string
+): Promise<string | undefined> {
+  // Алгоритм хэширования, при помощи которого было вычислено хэш-значение
+  const hashAlg = cadesplugin.CADESCOM_HASH_ALGORITHM_CP_GOST_3411_2012_256;
 
-      const oFReader = new FileReader();
+  const oHashedData: CAdESCOM.CPHashedDataAsync = await cadesplugin.CreateObjectAsync('CAdESCOM.HashedData');
 
-      if (typeof oFReader.readAsDataURL !== 'function') {
-        return reject('Ошибка получение информации о файле');
-      }
+  // Инициализируем объект заранее вычисленным хэш-значением
+  // Алгоритм хэширования нужно указать до того, как будет передано хэш-значение
+  await oHashedData.propset_Algorithm(hashAlg);
+  await oHashedData.SetHashValue(hashValue);
 
-      oFReader.readAsDataURL(oFile);
-      oFReader.addEventListener('load', function (oFREvent) {
-        cadesplugin.async_spawn(function* () {
-          const header = ';base64,';
+  const oSignedData: CAdESCOM.CadesSignedDataAsync = await cadesplugin.CreateObjectAsync('CAdESCOM.CadesSignedData');
 
-          if (!oFREvent?.target?.result) {
-            return reject('Ошибка получения данных');
-          }
+  if (existingSign) {
+    await oSignedData.VerifyHash(oHashedData, existingSign, cadesplugin.CADESCOM_CADES_BES);
+  }
 
-          const sFileData = oFREvent.target.result;
+  // @ts-expect-error
+  const oStore: CAPICOM_ASYNC.StoreAsync = await cadesplugin.CreateObjectAsync('CAdESCOM.Store');
+  await oStore.Open(
+    cadesplugin.CAPICOM_CURRENT_USER_STORE,
+    cadesplugin.CAPICOM_MY_STORE,
+    cadesplugin.CAPICOM_STORE_OPEN_MAXIMUM_ALLOWED
+  );
 
-          if (typeof sFileData !== 'string') {
-            return reject('Некорректные данные');
-          }
+  // Выбираем сертификат для подписания
+  const certificates = await oStore.Certificates;
+  const centsLength = await certificates?.Count;
+  let oCertificate;
 
-          const sBase64Data = sFileData.slice(sFileData.indexOf(header) + header.length);
-          const oCertName = { value: certName }; // имя сертификата
-          const sCertName = oCertName.value;
-          if (sCertName === '') {
-            return reject('Введите имя сертификата (CN).');
-          }
+  for (let i = 1; i <= centsLength; i++) {
+    const cert = await certificates.Item(i);
+    const certThumbprint = await cert.Thumbprint;
 
-          const oStore: CAPICOM_ASYNC.StoreAsync = yield cadesplugin.CreateObjectAsync('CAPICOM.Store');
+    if (certThumbprint === certificateThumbprint) {
+      oCertificate = cert;
 
-          if (!oStore) {
-            return reject('Введите имя сертификата (CN).');
-          }
+      break;
+    }
+  }
+  await oStore.Close();
 
-          yield oStore.Open(
-            cadesplugin.CAPICOM_CURRENT_USER_STORE,
-            cadesplugin.CAPICOM_MY_STORE,
-            cadesplugin.CAPICOM_STORE_OPEN_MAXIMUM_ALLOWED
-          );
+  const oSigner: CAdESCOM.CPSignerAsync = await cadesplugin.CreateObjectAsync('CAdESCOM.CPSigner');
 
-          const oStoreCerts: CAPICOM_ASYNC.ICertificatesAsync = yield oStore.Certificates;
-          const oCertificates: CAPICOM_ASYNC.ICertificatesAsync = yield oStoreCerts?.Find(
-            cadesplugin.CAPICOM_CERTIFICATE_FIND_SUBJECT_NAME,
-            sCertName
-          );
-          const certsCount: number = yield oCertificates?.Count;
+  await oSigner.propset_Certificate(oCertificate);
+  await oSigner.propset_CheckCertificate(true);
 
-          if (certsCount === 0) {
-            return reject('Не найден сертификат: ' + sCertName);
-          }
+  let sSignedMessage = '';
+  sSignedMessage = await (existingSign
+    ? oSignedData.CoSignHash(oHashedData, oSigner, cadesplugin.CADESCOM_CADES_BES)
+    : oSignedData.SignHash(oHashedData, oSigner, cadesplugin.CADESCOM_CADES_BES));
 
-          const oCertificate: CAPICOM_ASYNC.ICertificateAsync = yield oCertificates.Item(1);
-          const oSigner: CAdESCOM.CPSignerAsync = yield cadesplugin.CreateObjectAsync('CAdESCOM.CPSigner');
-          yield oSigner.propset_Certificate(oCertificate);
-          yield oSigner.propset_CheckCertificate(true);
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+  await verifyHash(oHashedData, sSignedMessage);
 
-          const oSignedData: CAdESCOM.CadesSignedDataAsync =
-            yield cadesplugin.CreateObjectAsync('CAdESCOM.CadesSignedData');
-          yield oSignedData.propset_ContentEncoding(cadesplugin.CADESCOM_BASE64_TO_BINARY);
-          yield oSignedData.propset_Content(sBase64Data);
-
-          try {
-            const sSignedMessage: string = yield oSignedData.SignCades(oSigner, cadesplugin.CADESCOM_CADES_BES, true);
-            // Функция для конвертации Base64 в бинарный массив
-            // Получаем бинарные данные из строки Base64
-            const binarySignature = base64ToUint8Array(sSignedMessage);
-
-            yield oStore.Close();
-
-            resolve(new Blob([binarySignature], { type: 'application/octet-stream' }));
-          } catch (error) {
-            return reject('Ошибка создания подписи: ' + cadesplugin.getLastError(error as Error));
-          }
-
-          yield oStore.Close();
-        });
-      });
-    });
-  });
+  return sSignedMessage;
 }
 
-function base64ToUint8Array(base64: string) {
-  const binaryString = atob(base64);
-  const len = binaryString.length;
-  const bytes = new Uint8Array(len);
+async function verifyHash(hash: CAdESCOM.CPHashedDataAsync, sSignedMessage: string) {
+  const signedDataForVerify: CAdESCOM.CadesSignedDataAsync =
+    await cadesplugin.CreateObjectAsync('CAdESCOM.CadesSignedData');
 
-  for (let i = 0; i < len; i++) {
-    const byte = binaryString.codePointAt(i);
+  try {
+    await signedDataForVerify.VerifyHash(hash, sSignedMessage, cadesplugin.CADESCOM_CADES_BES);
+  } catch {
+    alert('Failed to verify signature. Error: ');
+  }
+}
 
-    if (typeof byte === 'number') {
-      bytes[i] = byte;
+export async function getUsedCertificates(hashValue: string, existingSign: string): Promise<string[]> {
+  const hashAlg = cadesplugin.CADESCOM_HASH_ALGORITHM_CP_GOST_3411_2012_256;
+
+  const oHashedData: CAdESCOM.CPHashedDataAsync = await cadesplugin.CreateObjectAsync('CAdESCOM.HashedData');
+
+  // Инициализируем объект заранее вычисленным хэш-значением
+  // Алгоритм хэширования нужно указать до того, как будет передано хэш-значение
+  await oHashedData.propset_Algorithm(hashAlg);
+  await oHashedData.SetHashValue(hashValue);
+
+  const oSignedData: CAdESCOM.CadesSignedDataAsync = await cadesplugin.CreateObjectAsync('CAdESCOM.CadesSignedData');
+
+  const existingSignaturesThumbprints = [];
+
+  // параллельная подпись
+  if (existingSign) {
+    await oSignedData.VerifyHash(oHashedData, existingSign, cadesplugin.CADESCOM_CADES_BES);
+
+    // собираем thumbprint каждой существующей подписи для запрета дублирующих подписей
+    const existingSignatures: CAPICOM_ASYNC.ICertificatesAsync = await oSignedData.Certificates;
+    const centsLength = await existingSignatures?.Count;
+    for (let i = 1; i <= centsLength; i++) {
+      const cert = await existingSignatures.Item(i);
+      const thumbprint = await cert.Thumbprint;
+      existingSignaturesThumbprints.push(thumbprint);
     }
   }
 
-  return bytes;
+  return existingSignaturesThumbprints;
 }

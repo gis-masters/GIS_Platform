@@ -24,6 +24,7 @@ interface ChooseXTableBaseProps<T> extends IClassNameProps {
   data?: T[];
   selectedItems?: T[];
   disabledItems?: T[];
+  disabledItemsMessage?: string;
   cols: XTableColumn<T>[];
   defaultSort?: SortParams<T>;
   secondarySortField?: keyof T;
@@ -144,12 +145,14 @@ export class ChooseXTable<T> extends Component<ChooseXTableProps<T>> {
 
   @boundMethod
   private renderCheckbox({ rowData }: { rowData: T }): ReactElement {
-    const { single = false, getRowId = defaultRowIdGetter, onSelect } = this.props;
+    const { single = false, disabledItems, disabledItemsMessage, getRowId = defaultRowIdGetter, onSelect } = this.props;
 
     return (
       <ChooseXTableCheck
         single={single}
         item={rowData}
+        disabled={disabledItems?.includes(rowData)}
+        disabledItemsMessage={disabledItemsMessage}
         selectedItems={this.selected}
         getRowId={getRowId}
         onSelect={onSelect}

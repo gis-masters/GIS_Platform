@@ -25,6 +25,18 @@ class FilesClient extends Client {
     return `${this.getFileUrl(id)}/verify`;
   }
 
+  checkFileEcpUrl(fileId: string, expId: string): string {
+    return `${this.verifyEcpUrl(fileId)}/${expId}`;
+  }
+
+  fileHashUrl(id: string): string {
+    return `${this.getFileUrl(id)}/hash`;
+  }
+
+  signFileUrl(id: string): string {
+    return `${this.getFileUrl(id)}/sign`;
+  }
+
   getFileEcpUrl(id: string): string {
     return `${this.getFileDownloadUrl(id)}/ecp`;
   }
@@ -56,6 +68,17 @@ class FilesClient extends Client {
     return http.post<FileInfo[]>(this.getFilesUrl(), formData);
   }
 
+  async signFile(id: string, file: File): Promise<void> {
+    const formData = new FormData();
+    formData.append('sign', file);
+
+    return http.post(this.signFileUrl(id), formData);
+  }
+
+  async getFileEcp(id: string): Promise<string> {
+    return http.get<string>(this.getFileEcpUrl(id));
+  }
+
   async getFileInfo(id: string): Promise<FileInfo> {
     return http.get<FileInfo>(this.getFileUrl(id));
   }
@@ -66,6 +89,14 @@ class FilesClient extends Client {
 
   async verifyEcp(id: string): Promise<VerifyEcpResponse[]> {
     return http.get<VerifyEcpResponse[]>(this.verifyEcpUrl(id));
+  }
+
+  async checkFileEcp(fileId: string, ecpId: string): Promise<VerifyEcpResponse[]> {
+    return http.get<VerifyEcpResponse[]>(this.checkFileEcpUrl(fileId, ecpId));
+  }
+
+  async getFileHash(id: string): Promise<string> {
+    return http.get<string>(this.fileHashUrl(id));
   }
 
   async getFileConnections(fileId: string): Promise<FileConnection[]> {

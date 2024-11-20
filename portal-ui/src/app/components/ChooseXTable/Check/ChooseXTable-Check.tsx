@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { action, computed, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
-import { Checkbox, Radio } from '@mui/material';
+import { Checkbox, Radio, Tooltip } from '@mui/material';
 import { cn } from '@bem-react/classname';
 
 const cnChooseXTableCheck = cn('ChooseXTable', 'Check');
@@ -10,6 +10,8 @@ interface ChooseXTableCheckProps<T> {
   item: T;
   selectedItems: T[];
   single: boolean;
+  disabled?: boolean;
+  disabledItemsMessage?: string;
   getRowId(rowData: T): string | number;
   onSelect(items: T[]): void;
 }
@@ -22,10 +24,21 @@ export class ChooseXTableCheck<T> extends Component<ChooseXTableCheckProps<T>> {
   }
 
   render() {
-    const { single } = this.props;
+    const { single, disabledItemsMessage, disabled = false } = this.props;
     const Check = single ? Radio : Checkbox;
 
-    return <Check className={cnChooseXTableCheck()} checked={this.selected} onChange={this.handleChange} />;
+    return (
+      <Tooltip title={disabled && disabledItemsMessage} placement='top'>
+        <span>
+          <Check
+            disabled={disabled}
+            className={cnChooseXTableCheck()}
+            checked={this.selected}
+            onChange={this.handleChange}
+          />
+        </span>
+      </Tooltip>
+    );
   }
 
   @computed

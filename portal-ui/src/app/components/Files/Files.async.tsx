@@ -45,6 +45,7 @@ export interface FilesProps {
   property: PropertySchemaFile;
   document?: LibraryRecord;
   editable?: boolean;
+  statusText?: Record<string, string>;
   showPlaceAction?: boolean;
   onChange?(value: FileInfo[]): void;
 }
@@ -86,6 +87,7 @@ export default class Files extends Component<FilesProps> {
             <LookupList multiple={multiple} numerous={numerous} editable={editable}>
               {singularFiles.map((item, i) => {
                 const newbie = this.getNewbie(item.id);
+                const fileWithError = this.checkFilesForErrorStatus(newbie);
 
                 return (
                   <FilesItem
@@ -95,10 +97,10 @@ export default class Files extends Component<FilesProps> {
                     key={`${item.id}_${i}`}
                     editable={editable}
                     showPlaceAction={showPlaceAction}
-                    status={newbie?.status}
+                    status={fileWithError?.status || newbie?.status}
                     document={document}
                     file={newbie?.file}
-                    statusText={newbie?.statusText}
+                    statusText={fileWithError?.statusText || newbie?.statusText}
                     numerous={numerous}
                     propertyName={name}
                     multiple={multiple}
@@ -156,6 +158,18 @@ export default class Files extends Component<FilesProps> {
     const { multiple, maxFiles } = this.props.property;
 
     return multiple ? maxFiles || defaultMaxFiles : 1;
+  }
+
+  private checkFilesForErrorStatus(newbie?: NewbieFile): Partial<NewbieFile> {
+    const { statusText } = this.props;
+    const fileWithError: Partial<NewbieFile> = {};
+
+    if (statusText && newbie?.id && statusText[newbie.id]) {
+      fileWithError.status = 'error';
+      fileWithError.statusText = statusText[newbie.id];
+    }
+
+    return fileWithError;
   }
 
   @boundMethod

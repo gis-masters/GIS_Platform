@@ -37,6 +37,13 @@ export declare namespace CAdESCOM {
       EncodingType?: CAPICOM.CAPICOM_ENCODING_TYPE
     ): Promise<string>;
     VerifyCades(SignedMessage: string, CadesType?: CADESCOM_CADES_TYPE, bDetached?: boolean): Promise<void>;
+    CoSignHash(SignedMessage: CPHashedDataAsync, signer?: CPSignerAsync, type?: CADESCOM_CADES_TYPE): Promise<string>;
+    SignHash(hash: CPHashedDataAsync, signer?: CPSignerAsync, type?: CADESCOM_CADES_TYPE): Promise<string>;
+    VerifyHash(
+      hash: CPHashedDataAsync,
+      certificate: CAPICOM.ICertificateAsync,
+      type: CADESCOM_CADES_TYPE
+    ): Promise<void>;
   }
 
   interface VersionAsync {
@@ -81,7 +88,7 @@ export declare namespace CAdESCOM {
     Hash(newVal: string): Promise<void>;
     SetHashValue(newVal: string): Promise<void>;
     readonly Algorithm: Promise<CAPICOM.CAPICOM_HASH_ALGORITHM>;
-    propset_Algorithm(algorithm: CAPICOM.CAPICOM_HASH_ALGORITHM): Promise<void>;
+    propset_Algorithm(algorithm: CAPICOM.CADESCOM_HASH_ALGORITHM): Promise<void>;
     readonly DataEncoding: Promise<CADESCOM_CONTENT_ENCODING_TYPE>;
     propset_DataEncoding(dataEncoding: CADESCOM_CONTENT_ENCODING_TYPE): Promise<void>;
     readonly Value: Promise<string>;

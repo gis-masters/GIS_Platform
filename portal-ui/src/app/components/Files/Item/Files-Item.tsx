@@ -1,6 +1,7 @@
 import React, { FC, memo, useCallback, useEffect, useMemo } from 'react';
 import { observer, useLocalObservable } from 'mobx-react';
-import { Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
+import { Dialog, DialogActions, DialogContent, DialogTitle, Tooltip } from '@mui/material';
+import { WorkspacePremiumOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { isValidSystemSetup } from 'crypto-pro';
 
@@ -19,6 +20,7 @@ import { LibraryRecord } from '../../../services/data/library/library.models';
 import { sidebars } from '../../../stores/Sidebars.store';
 import { Button } from '../../Button/Button';
 import { ConnectionsToProjects } from '../../ConnectionsToProjects/ConnectionsToProjects';
+import { IconButton } from '../../IconButton/IconButton';
 import { LookupActions } from '../../Lookup/Actions/Lookup-Actions';
 import { LookupDelete } from '../../Lookup/Delete/Lookup-Delete';
 import { LookupItem } from '../../Lookup/Item/Lookup-Item';
@@ -30,10 +32,13 @@ import { FilesIcon } from '../Icon/Files-Icon';
 import { FilesName } from '../Name/Files-Name';
 import { FilesPlacement } from '../Placement/Files-Placement';
 import { FilesPreview } from '../Preview/Files-Preview';
-import { FilesSign } from '../Sign/Files-Sign';
 import { FilesSignature } from '../Signature/Files-Signature';
+import { FilesSignDialog } from '../SignDialog/Files-SignDialog';
+
+import '!style-loader!css-loader!sass-loader!../Sign/Files-Sign.scss';
 
 const cnFilesItem = cn('Files', 'Item');
+const cnFilesSign = cn('Files', 'Sign');
 
 interface FilesItemProps {
   item: FileInfo;
@@ -57,6 +62,8 @@ type FilesItemState = {
   deleteDialogOpen: boolean;
   fileInfo: FileInfo | null;
   isPluginActive: boolean;
+  fileSignDialogOpen: boolean;
+  setFileSignDialogOpen(fileSignDialogOpen: boolean): void;
   setIsPluginActive(isPluginActive: boolean): void;
   setConnections(connections: FileConnection[]): void;
   setIds(id: string): void;
@@ -86,6 +93,8 @@ const FilesItemFC: FC<FilesItemProps> = observer(
       deleteDialogOpen,
       fileInfo,
       isPluginActive,
+      fileSignDialogOpen,
+      setFileSignDialogOpen,
       setIsPluginActive,
       setConnections,
       setIds,
@@ -98,7 +107,11 @@ const FilesItemFC: FC<FilesItemProps> = observer(
         deleteDialogOpen: false,
         fileInfo: null,
         isPluginActive: false,
+        fileSignDialogOpen: false,
 
+        setFileSignDialogOpen(this: FilesItemState, fileSignDialogOpen: boolean): void {
+          this.fileSignDialogOpen = fileSignDialogOpen;
+        },
         setIsPluginActive(this: FilesItemState, isPluginActive: boolean): void {
           this.isPluginActive = isPluginActive;
         },
@@ -140,6 +153,10 @@ const FilesItemFC: FC<FilesItemProps> = observer(
       setDeleteDialogOpen(false);
     }, [setDeleteDialogOpen]);
 
+    const fileSignDialogOpenHandler = useCallback(() => {
+      setFileSignDialogOpen(true);
+    }, [setFileSignDialogOpen]);
+
     const fetchConnections = useCallback(async () => {
       const { id: newId } = item;
 
@@ -158,10 +175,8 @@ const FilesItemFC: FC<FilesItemProps> = observer(
 
     const updateFileInfo = useCallback(async () => {
       const { id } = item;
-
       if (!status || status === 'success' || status === 'normal') {
         const fileInfo = await getFileInfo(id);
-
         setFileInfo(fileInfo);
       }
     }, [item, setFileInfo, status]);
@@ -186,6 +201,12 @@ const FilesItemFC: FC<FilesItemProps> = observer(
 
     useEffect(() => {
       void (async () => {
+        communicationService.libraryRecordUpdated.on(async (e: CustomEvent<DataChangeEventDetail<LibraryRecord>>) => {
+          if (e.detail.data.id === document?.id) {
+            await updateFileInfo();
+          }
+        }, this);
+
         communicationService.fileConnectionsUpdated.on(async (e: CustomEvent<DataChangeEventDetail<FileInfo[]>>) => {
           if (e.detail.data.some(file => file.id === id)) {
             dropConnections();
@@ -238,16 +259,36 @@ const FilesItemFC: FC<FilesItemProps> = observer(
             {isPreviewAllowed(item) && <FilesPreview item={item} onPreview={onPreview} />}
 
             {(showFilesSignatureInExplorer || showFileSignatureOnMap) && (
-              <FilesSignature id={item.id} title={item.title} signed={signed} />
+              <FilesSignature
+                id={item.id}
+                title={item.title}
+                signed={signed}
+                propertyName={propertyName}
+                document={document}
+                feature={sidebars.editFeaturesData?.features[0]}
+                updateFileInfo={updateFileInfo}
+              />
             )}
 
             {isPluginActive && !signed && !!item.size && showSign && (
-              <FilesSign
+              <Tooltip title={'Подписать ЭЦП'}>
+                <span>
+                  <IconButton onClick={fileSignDialogOpenHandler} className={cnFilesSign()} size='small'>
+                    <WorkspacePremiumOutlined color='disabled' fontSize='small' />
+                  </IconButton>
+                </span>
+              </Tooltip>
+            )}
+
+            {fileSignDialogOpen && (
+              <FilesSignDialog
                 id={item.id}
                 title={item.title}
                 propertyName={propertyName}
                 document={document}
                 feature={sidebars.editFeaturesData?.features[0]}
+                open={fileSignDialogOpen}
+                onClose={setFileSignDialogOpen}
                 updateFileInfo={updateFileInfo}
               />
             )}

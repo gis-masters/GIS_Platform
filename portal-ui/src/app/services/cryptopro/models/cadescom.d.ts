@@ -1,4 +1,4 @@
-declare namespace CAdESCOM {
+export declare namespace CAdESCOM {
   interface CPSigner {
     Display(hwndParent?: number, title?: string): void;
     Load(fileName: string, password?: string): void;
