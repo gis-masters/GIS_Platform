@@ -104,7 +104,6 @@ export const FeatureStyle: FC<FeatureStyleProps> = observer(({ feature }) => {
           <EditOutlined />
         </IconButton>
       </Tooltip>
-
       <Dialog open={isDialogOpen} onClose={handleCloseDialog}>
         <DialogTitle>Настройка аннотации</DialogTitle>
         <DialogContent>

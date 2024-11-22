@@ -67,7 +67,13 @@ export type TextProperties = {
 
 export type FeatureFontStringData = { fontColor: number[]; textAlign: TextAlignTypes; font?: string };
 
-export type AnnotationsType = 'length' | 'area' | 'turningPoints' | 'distances' | 'annotations';
+export type AnnotationsType =
+  | 'length'
+  | 'area'
+  | 'turningPoints'
+  | 'distances'
+  | 'annotations'
+  | 'turningPointsSettings';
 
 export type AnnotationsFontProperties = {
   area: FontProperties;
@@ -80,3 +86,9 @@ export type AnnotationsFontProperties = {
 export function isTextAlignTypes(value: unknown): value is TextAlignTypes {
   return typeof value === 'string' && textAlignTypes.has(value);
 }
+
+export type CircleProperties = {
+  fillColor: string;
+  strokeColor: string;
+  radius: string;
+};

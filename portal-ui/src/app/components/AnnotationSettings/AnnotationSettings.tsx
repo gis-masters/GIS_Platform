@@ -4,6 +4,7 @@ import { Dialog, DialogActions, DialogContent, DialogTitle, Tab, Tabs, Tooltip }
 import {
   Adjust,
   ArchitectureOutlined,
+  BuildCircleOutlined,
   CropOutlined,
   LabelOutlined,
   SaveOutlined,
@@ -19,6 +20,7 @@ import { isAnnotationType } from '../../services/util/typeGuards/isAnnotationTyp
 import { Button } from '../Button/Button';
 import { IconButton } from '../IconButton/IconButton';
 import { LabelStylesSettings } from '../LabelStylesSettings/LabelStylesSettings';
+import { TurningPointsCircleSettings } from '../TurningPointsCircleSettings/TurningPointsCircleSettings';
 
 import '!style-loader!css-loader!sass-loader!./AnnotationSettings.scss';
 
@@ -36,7 +38,8 @@ const tabs = [
   { title: 'Периметр', value: 'length', element: <ArchitectureOutlined /> },
   { title: 'Поворотные точки', value: 'turningPoints', element: <Adjust /> },
   { title: 'Промеры', value: 'distances', element: <Straighten /> },
-  { title: 'Аннотации', value: 'annotations', element: <LabelOutlined /> }
+  { title: 'Аннотации', value: 'annotations', element: <LabelOutlined /> },
+  { title: 'Настройка стиля поворотных точек', value: 'turningPointsSettings', element: <BuildCircleOutlined /> }
 ];
 
 const cnAnnotationSettings = cn('AnnotationSettings');
@@ -114,10 +117,14 @@ export const AnnotationSettings: FC = observer(() => {
           </TabContext>
           <div className={cnAnnotationSettings('SettingsWrap')}>
             {tabs.find(({ value }) => value === selectedAnnotationType)?.title || null}
-            <LabelStylesSettings
-              onChange={handleChangeFontProperties}
-              fontProperties={fontProperties[selectedAnnotationType]}
-            />
+            {selectedAnnotationType === 'turningPointsSettings' ? (
+              <TurningPointsCircleSettings />
+            ) : (
+              <LabelStylesSettings
+                onChange={handleChangeFontProperties}
+                fontProperties={fontProperties[selectedAnnotationType]}
+              />
+            )}
           </div>
         </DialogContent>
         <DialogActions>

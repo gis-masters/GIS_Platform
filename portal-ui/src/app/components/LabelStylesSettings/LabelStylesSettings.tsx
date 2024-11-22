@@ -129,7 +129,6 @@ export const LabelStylesSettings: FC<LaLabelStylesSettingsProps> = observer(
             />
           )}
 
-          {/* добавить кейс без текста но с возможностью редактирования */}
           {!value && (
             <Paper
               className={cnLabelStylesSettings('ExampleUnchangeable')}

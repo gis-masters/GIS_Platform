@@ -8,7 +8,7 @@ import MultiPolygon from 'ol/geom/MultiPolygon';
 import Point from 'ol/geom/Point';
 import Polygon from 'ol/geom/Polygon';
 import { getLength } from 'ol/sphere';
-import { Fill, Stroke, Style, Text } from 'ol/style';
+import { Circle, Fill, Stroke, Style, Text } from 'ol/style';
 
 import { currentProject } from '../../stores/CurrentProject.store';
 import { mapStore } from '../../stores/Map.store';
@@ -27,6 +27,7 @@ import { extractTableNameFromFeatureId } from '../geoserver/featureType/featureT
 import { GeometryType, supportedGeometryTypes, WfsFeature } from '../geoserver/wfs/wfs.models';
 import { UnitsOfAreaMeasurement, UnitsOfLengthMeasurement } from '../util/open-layers.util';
 import { isArrayOf } from '../util/typeGuards/isArrayOf';
+import { isCircleProperties } from '../util/typeGuards/isCircleProperties';
 import { isCoordinate, isCoordinateArray, isCoordinateArrayArray } from '../util/typeGuards/isCoordinate';
 import { isLabelTextProperties } from '../util/typeGuards/isLabelTextProperties';
 import { isNumberArray } from '../util/typeGuards/isNumberArray';
@@ -464,10 +465,12 @@ export function getLabelStyleOffsets({
 function toDegrees(radians: number): number {
   return radians * (180 / Math.PI);
 }
+
 // Функция для нормализации угла в диапазоне от 0 до 360 градусов
 export function normalizeAngle(angle: number): number {
   return (angle + 360) % 360;
 }
+
 // Функция для вычисления угла между вектором и осью X
 export function calculateAngle(x: number, y: number): number {
   const angle = toDegrees(Math.atan2(y, x));
@@ -544,6 +547,41 @@ export function getTextProperties(properties: Record<string, unknown>): TextProp
   }
 
   return { fontSize, bold, italic, fontColor: color, textAlign: align };
+}
+
+export function getCircleStyle(feature?: Feature): Circle {
+  let circleFillColor = '#FFA343';
+  let circleStrokeColor = '#fff';
+  let circleRadius = 6;
+
+  const circleProperties: unknown = feature ? feature.getProperties().circleProperties : undefined;
+
+  if (circleProperties && isCircleProperties(circleProperties)) {
+    const { fillColor, strokeColor, radius } = circleProperties;
+
+    if (fillColor && isValidHexColor(fillColor)) {
+      circleFillColor = fillColor;
+    }
+
+    if (strokeColor && isValidHexColor(strokeColor)) {
+      circleStrokeColor = strokeColor;
+    }
+
+    if (radius) {
+      circleRadius = Number(radius);
+    }
+  }
+
+  return new Circle({
+    fill: new Fill({
+      color: circleFillColor
+    }),
+    stroke: new Stroke({
+      width: 1,
+      color: circleStrokeColor
+    }),
+    radius: circleRadius
+  });
 }
 
 export function getTextStyle(properties: Record<string, unknown>): Text {
@@ -647,4 +685,8 @@ export function convertFromRGBAToHEX([r, g, b, a]: number[]): string {
   const hexAlpha = ('0' + hexA.toString(16)).slice(-2);
 
   return `#${hexR}${hexG}${hexB}${hexAlpha}`;
+}
+
+export function isValidHexColor(value: unknown): boolean {
+  return !!value && typeof value === 'string' && value.includes('#') && value.length > 3 && value.length < 10;
 }
