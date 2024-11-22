@@ -1,28 +1,30 @@
 package ru.mycrg.data_service.service.smev3.request.accept_rns;
 
-import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
-import org.apache.poi.xwpf.usermodel.XWPFDocument;
-import org.apache.poi.xwpf.usermodel.XWPFParagraph;
-import org.apache.poi.xwpf.usermodel.XWPFRun;
-import org.apache.poi.xwpf.usermodel.XWPFTable;
-import org.apache.poi.xwpf.usermodel.XWPFTableCell;
-import org.apache.poi.xwpf.usermodel.XWPFTableRow;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblWidth;
-import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTcPr;
+import org.apache.poi.xwpf.usermodel.*;
+import org.springframework.stereotype.Component;
 import ru.mycrg.data_service.accept_rns_1_0_3.*;
 
-import java.math.BigInteger;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static java.util.Optional.ofNullable;
 import static org.apache.poi.xwpf.usermodel.ParagraphAlignment.*;
-import static org.openxmlformats.schemas.wordprocessingml.x2006.main.STMerge.CONTINUE;
-import static org.openxmlformats.schemas.wordprocessingml.x2006.main.STMerge.RESTART;
+import static ru.mycrg.data_service.service.smev3.request.accept_rns.DocumentCreationUtils.*;
 
-public class ApplicationForBuildingPermitCreator {
+@Component
+public class GiveRnsStrategy implements IRnsRequestDocumentCreator {
 
-    public static XWPFDocument create(RequestType request) {
+    @Override
+    public int getGoal() {
+        return 1;
+    }
+
+    @Override
+    public XWPFDocument create(RequestType request) {
+        return createTemplate(request);
+    }
+
+    private static XWPFDocument createTemplate(RequestType request) {
         XWPFDocument document = new XWPFDocument();
         addParagraph(document, "Приложение N 1");
         addParagraph(document, "к Административному регламенту");
@@ -30,16 +32,12 @@ public class ApplicationForBuildingPermitCreator {
         addParagraph(document, "и государственного строительного надзора Республики Крым");
         addParagraph(document, "государственной услуги по выдаче разрешения");
         addParagraph(document, "на строительство на территории Республики Крым");
-
-        // Создаем таблицу с 10 строками и 2 столбцами
         XWPFTable table = document.createTable(114, 2);
         setColumnWidth(table, 0, 3500);
         setColumnWidth(table, 1, 6000);
 
-        // Объединяем ячейки в первой строке (ячейка 0 и ячейка 1)
         mergeCellsHorizontally(table, 0, 0, 1);
 
-        // Заполняем первую строку с объединенными ячейками
         setupFirstRow(table);
 
         Optional<RecipientPersonalDataType> oRecipientPersonalData = ofNullable(request.getRecipientPersonalData());
@@ -264,10 +262,10 @@ public class ApplicationForBuildingPermitCreator {
                     capObjectName = objectName;
                     capObjectCadastralNumber = objCadastralNumber;
                     if (request.getVariantChoice().getKPOA12() != null) {
-                        if (request.getVariantChoice().getKPOA12().isResidential()) {
+                        if (Boolean.TRUE.equals(request.getVariantChoice().getKPOA12().isResidential())) {
                             objectAppointment = "Жилой многоквартирный дом";
                         }
-                        if (request.getVariantChoice().getKPOA12().isUninhabited()) {
+                        if (Boolean.TRUE.equals(request.getVariantChoice().getKPOA12().isUninhabited())) {
                             objectAppointment = "Нежилой";
                         }
                     }
@@ -299,6 +297,7 @@ public class ApplicationForBuildingPermitCreator {
         mergeCellsAndSetValue(table, 16,
                               "Прошу выдать разрешение на строительство следующего объекта капитального строительства:",
                               true, LEFT);
+
         mergeCellsAndSetValue(table, 17, "Раздел 3. Информация об объекте капитального строительства ", false, CENTER);
         setTableNode(table, 18,
                      "3.1. Наименование объекта капитального строительства (этапа) в соответствии с проектной документацией:",
@@ -600,98 +599,5 @@ public class ApplicationForBuildingPermitCreator {
         addText(document, "<***> Следует указать один из способов получения результата предоставления ");
         addText(document, "государственной услуги.");
         return document;
-    }
-
-    private static void addTextToParagraph(XWPFParagraph paragraph, String text, boolean isBold, int fontSize) {
-        XWPFRun run = paragraph.createRun();
-        run.setText(text);
-        run.setFontFamily("Times New Roman");
-        run.setFontSize(fontSize);
-        run.setBold(isBold);
-    }
-
-    private static void setupFirstRow(XWPFTable table) {
-        XWPFTableRow firstRow = table.getRow(0);
-        XWPFTableCell mergedCell = firstRow.getCell(0);
-        XWPFParagraph paragraph = mergedCell.getParagraphs().get(0);
-        paragraph.setAlignment(CENTER);
-        addTextToParagraph(paragraph,
-                           "Раздел 1. Наименование исполнительного органа Республики Крым, куда подается заявление о выдаче разрешения на строительство:",
-                           false, 12);
-        paragraph.createRun().addBreak();
-        addTextToParagraph(paragraph,
-                           "Министерство жилищной политики и государственного строительного надзора Республики Крым",
-                           true, 12);
-    }
-
-    private static void addParagraph(XWPFDocument document, String text) {
-        XWPFParagraph paragraph = document.createParagraph();
-        paragraph.setAlignment(RIGHT);
-        paragraph.setSpacingAfter(30);
-
-        XWPFRun run = paragraph.createRun();
-        run.setText(text);
-        run.setFontFamily("Times New Roman");
-        run.setFontSize(12);
-    }
-
-    private static void addParagraph(XWPFDocument document, String text, boolean isBold, int spacingAfter) {
-        XWPFParagraph paragraph = document.createParagraph();
-        paragraph.setAlignment(BOTH);
-        paragraph.setSpacingAfter(spacingAfter);
-        addTextToParagraph(paragraph, text, isBold, 12);
-    }
-
-    private static void addBoldText(XWPFDocument document, String text) {
-        addParagraph(document, text, true, 30);
-    }
-
-    private static void addText(XWPFDocument document, String text) {
-        addParagraph(document, text, false, 30);
-    }
-
-    private static void addTextWithSpacing(XWPFDocument document, String text) {
-        addParagraph(document, text, false, 250);
-    }
-
-    private static void setCellText(XWPFTableCell cell, String text) {
-        XWPFParagraph paragraph = cell.getParagraphs().get(0);
-        paragraph.setAlignment(LEFT);
-        addTextToParagraph(paragraph, text, false, 12);
-    }
-
-    private static void setTableNode(XWPFTable table, int rowNumber, String rowName, String rowValue) {
-        XWPFTableRow row = table.getRow(rowNumber);
-        setCellText(row.getCell(0), rowName);
-        setCellText(row.getCell(1), rowValue);
-    }
-
-    private static void mergeCellsAndSetValue(XWPFTable table, int rowNumber, String value, boolean isBold,
-                                              ParagraphAlignment alignment) {
-        mergeCellsHorizontally(table, rowNumber, 0, 1);
-        XWPFTableRow row = table.getRow(rowNumber);
-        XWPFTableCell mergedCell = row.getCell(0);
-        XWPFParagraph paragraph = mergedCell.getParagraphs().get(0);
-        paragraph.setAlignment(alignment);
-        addTextToParagraph(paragraph, value, isBold, 12);
-    }
-
-    private static void mergeCellsHorizontally(XWPFTable table, int row, int fromCell, int toCell) {
-        XWPFTableRow tableRow = table.getRow(row);
-        for (int cellIndex = toCell; cellIndex > fromCell; cellIndex--) {
-            XWPFTableCell mergedCell = tableRow.getCell(fromCell);
-            XWPFTableCell removedCell = tableRow.getCell(cellIndex);
-            mergedCell.getCTTc().addNewTcPr().addNewHMerge().setVal(RESTART);
-            removedCell.getCTTc().addNewTcPr().addNewHMerge().setVal(CONTINUE);
-        }
-    }
-
-    private static void setColumnWidth(XWPFTable table, int columnIndex, int width) {
-        for (XWPFTableRow row: table.getRows()) {
-            XWPFTableCell cell = row.getCell(columnIndex);
-            CTTcPr tcPr = cell.getCTTc().addNewTcPr();
-            CTTblWidth tblWidth = tcPr.addNewTcW();
-            tblWidth.setW(BigInteger.valueOf(width));
-        }
     }
 }

@@ -92,9 +92,11 @@ public class AcceptRnsService {
     private static final String DATA_SECTION_KEY_DATA_CONNECTION_ATTRIBUTE = "data_section_key_data_connection";
     private static final String INBOX_DATA_KEY_DATA_CONNECTION_ATTRIBUTE = "inbox_data_key_data_connection";
     private static final String RNS_LIBRARY_ID = "dl_data_inbox_data";
+    private static final String TASK_ALLOCATION_LIBRARY_ID = "dl_data_task_allocation";
     private static final String DATE_ATTRIBUTE = "date";
     private static final String FILE_ATTRIBUTE = "file";
     private static final String PERSON_NAME_ATTRIBUTE = "person_name";
+    private static final String PERFORMER_ATTRIBUTE = "performer";
     private static final String REQUEST_TYPE_ATTRIBUTE = "request_type";
     private static final String RNS_REQUEST_TYPE = "0B.5";
     private static final String DATA_TYPE_ATTRIBUTE = "data_type";
@@ -103,7 +105,17 @@ public class AcceptRnsService {
     private static final String EPGU_STATUS_CODE_ATTRIBUTE = "epgu_status_code";
     private static final String DESCRIPTION_ATTRIBUTE = "description";
     private static final String SMEV_CLIENT_ID_ATTRIBUTE = "smev_client_id";
+    private static final String SMEV_MESSAGE_ID_ATTRIBUTE = "smev_message_id";
     private static final String PGUID_ATTRIBUTE = "pguid";
+    private static final String DEFAULT_USER_LOGIN = "arh_grad_rk@mail.ru";
+    private static final String DEFAULT_PATH = "organization_1/library_record/dl_data_inbox_data/";
+    private static final String DEFAULT_XML_FILENAME = "result.xml";
+    private static final String DEFAULT_XML_CONTENT_TYPE = "application/xml";
+    private static final String DEFAULT_WORD_FILENAME = "result.doc";
+    private static final String DEFAULT_WORD_CONTENT_TYPE = "application/msword";
+    private static final String PDF_CONTENT_TYPE = "application/pdf";
+    private static final String PDF_EXTENSION = ".pdf";
+    private static final String DOCUMENT_CODE = "electrSigFile";
 
     @Value("${crg-options.taskDb}")
     private String dbName;
@@ -123,6 +135,8 @@ public class AcceptRnsService {
     private final Smev3Config smev3Config;
     private final FileService fileService;
     private final SmevMessageSenderService smevMessageSenderService;
+    private final DocumentCreationService documentCreationService;
+    private final XmlMarshaller xmlMarshaller;
 
     public AcceptRnsService(TaskLogService taskLogService,
                             TasksDetachedDao tasksDao,
@@ -136,7 +150,8 @@ public class AcceptRnsService {
                             MinioService minioService,
                             Smev3Config smev3Config,
                             FileService fileService,
-                            SmevMessageSenderService smevMessageSenderService) {
+                            SmevMessageSenderService smevMessageSenderService,
+                            DocumentCreationService documentCreationService) {
         this.taskLogService = taskLogService;
         this.tasksDao = tasksDao;
         this.smevMessageService = smevMessageService;
@@ -150,6 +165,13 @@ public class AcceptRnsService {
         this.smev3Config = smev3Config;
         this.fileService = fileService;
         this.smevMessageSenderService = smevMessageSenderService;
+        this.documentCreationService = documentCreationService;
+        this.xmlMarshaller = new XmlMarshaller(new NamespacePrefixMapper() {
+            @Override
+            public String getPreferredPrefix(String urn, String s1, boolean b) {
+                return "tns";
+            }
+        });
     }
 
     @Transactional
@@ -167,11 +189,11 @@ public class AcceptRnsService {
         smevMessageService.saveIncoming(body);
 
         String filter = String.format("path like '%s'", "/root/" + folderId);
-        ResourceQualifier libraryQualifier = libraryQualifier("dl_data_task_allocation");
+        ResourceQualifier libraryQualifier = libraryQualifier(TASK_ALLOCATION_LIBRARY_ID);
         IRecord docRecord = recordsDao
                 .findBy(libraryQualifier, filter)
-                .orElseThrow(() -> new SmevRequestException("Не найден исполнитель по пути " + "/root/29"));
-        Long performerId = Long.valueOf(docRecord.getAsString("performer"));
+                .orElseThrow(() -> new SmevRequestException("Не найден исполнитель по пути " + "/root/" + folderId));
+        Long performerId = Long.valueOf(Objects.requireNonNull(docRecord.getAsString(PERFORMER_ATTRIBUTE)));
         Map<String, Object> taskContent = prepareTaskContent(performerId);
 
         long taskId = tasksDao.createTask(dbName, taskContent);
@@ -245,7 +267,7 @@ public class AcceptRnsService {
                     .orElseThrow(() -> new SmevRequestException("Не найден документ с id: " + docId));
 
             Optional<List<FileDescription>> oFileDescriptions = JsonConverter.fromJson(
-                    inboxDocRecord.getAsString("file"),
+                    inboxDocRecord.getAsString(FILE_ATTRIBUTE),
                     new TypeReference<List<FileDescription>>() {
                     });
             if (oFileDescriptions.isEmpty()) {
@@ -386,7 +408,7 @@ public class AcceptRnsService {
                                     ChangeOrderInfoType changeOrderInfoType, String fileName,
                                     String fileExtension, byte[] ecp, Content content) {
         OrderIdType orderIdType = new OrderIdType();
-        orderIdType.setPguId(Long.parseLong(docRecord.getAsString(PGUID_ATTRIBUTE)));
+        orderIdType.setPguId(Long.parseLong(Objects.requireNonNull(docRecord.getAsString(PGUID_ATTRIBUTE))));
         changeOrderInfoType.setOrderId(orderIdType);
 
         StatusCodeType statusCodeType = new StatusCodeType();
@@ -422,18 +444,20 @@ public class AcceptRnsService {
     }
 
     private String marshalClientMessage(ClientMessage clientMessage) {
-        XmlMarshaller xmlMarshaller = new XmlMarshaller(new NamespacePrefixMapper() {
-            @Override
-            public String getPreferredPrefix(String urn, String s1, boolean b) {
-                return "tns";
-            }
-        });
-
         try {
             return xmlMarshaller.marshall(clientMessage, ClientMessage.class);
         } catch (Exception e) {
             throw new SmevRequestException(
                     "Не удалось создать статусное сообщение для СМЭВ. Ошибка: " + e.getMessage());
+        }
+    }
+
+    private String marshalQueryResult(QueryResult queryResult) {
+        try {
+            return xmlMarshaller.marshall(queryResult, QueryResult.class);
+        } catch (Exception e) {
+            throw new SmevRequestException(
+                    "Не удалось упорядочить xml содержимое запроса. Ошибка: " + e.getMessage());
         }
     }
 
@@ -473,6 +497,9 @@ public class AcceptRnsService {
                 .orElseThrow(() -> new NotFoundException("Библиотека не найдена по идентификатору: "
                                                                  + RNS_LIBRARY_ID));
         SchemaDto rnsSchema = rnsLibraryModel.getSchema();
+        if (rnsSchema == null) {
+            throw new NotFoundException("Не удалось получить схему из библиотеки " + RNS_LIBRARY_ID);
+        }
         Map<String, Object> documentPayload = new HashMap<>();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
 
@@ -487,7 +514,7 @@ public class AcceptRnsService {
         documentPayload.put(CONTENT_TYPE_ID.getName(), CommonFields.RNS_CONTENT_TYPE);
         documentPayload.put(IS_FOLDER.getName(), false);
         documentPayload.put(PATH.getName(), ROOT_FOLDER_PATH);
-        documentPayload.put("smev_message_id", queryResult.getSmevMetadata().getMessageId());
+        documentPayload.put(SMEV_MESSAGE_ID_ATTRIBUTE, queryResult.getSmevMetadata().getMessageId());
         documentPayload.put(SMEV_CLIENT_ID_ATTRIBUTE, queryResult.getMessage().getRequestMetadata().getClientId());
         documentPayload.put(PGUID_ATTRIBUTE, String.valueOf(request.getService().getOrderId()));
 
@@ -496,43 +523,34 @@ public class AcceptRnsService {
         Long savedDocumentId = savedDocument.getId();
         String savedDocumentTitle = savedDocument.getTitle();
 
-        ByteArrayOutputStream wordDocumentOutputStream;
-        try (XWPFDocument wordDocument = ApplicationForBuildingPermitCreator.create(request)) {
-            wordDocumentOutputStream = new ByteArrayOutputStream();
-            wordDocument.write(wordDocumentOutputStream);
-        }
-        byte[] wordDocumentBytes = wordDocumentOutputStream.toByteArray();
-        wordDocumentOutputStream.close();
-        MultipartFile wordDocumentFile = new CustomMultipartFile(wordDocumentBytes,
-                                                                 "result.doc",
-                                                                 "result.doc",
-                                                                 "application/msword");
-        String fileName = generateFileName(wordDocumentFile);
-        String path = fileStorageService.copyToTrash(wordDocumentFile,
-                                                     fileName);
-        String intents = simpleIntentHandler.defineIntent(wordDocumentFile);
-
+        List<FileDescription> fileDescriptions = new ArrayList<>();
         FileResourceQualifier fileResQualifier = new FileResourceQualifier(rnsLibraryQualifier.getSchema(),
                                                                            rnsLibraryQualifier.getTable(),
                                                                            savedDocumentId,
                                                                            FILE_ATTRIBUTE);
         JsonNode jsonNode = toJsonNode(fileResQualifier);
-        path = fileStorageService
-                .moveToMainStorage(Paths.get(path),
-                                   Paths.get("organization_1/library_record/dl_data_inbox_data/" + fileName))
-                .normalize().toString();
-        File wordDocumentEntity = new File(wordDocumentFile, intents, path, "arh_grad_rk@mail.ru");
-        File savedEntity = fileRepository.save(wordDocumentEntity);
-        UUID savedEntityId = savedEntity.getId();
-        String savedEntityTitle = savedEntity.getTitle();
-        Long savedEntitySize = savedEntity.getSize();
         ResourceQualifier fileQualifier = fieldQualifier(rnsLibraryQualifier, savedDocumentId, FILE_ATTRIBUTE);
         String type = fileQualifier.getType().name();
-        fileRepository.setQualifier(type, jsonNode, Set.of(savedEntityId));
-
-        FileDescription fileDescription = new FileDescription(savedEntityId, savedEntityTitle, savedEntitySize);
-        List<FileDescription> fileDescriptions = new ArrayList<>();
-        fileDescriptions.add(fileDescription);
+        ByteArrayOutputStream wordDocumentOutputStream = null;
+        XWPFDocument wordDocument = documentCreationService.createDoc(request);
+        if (wordDocument != null) {
+            wordDocumentOutputStream = new ByteArrayOutputStream();
+            wordDocument.write(wordDocumentOutputStream);
+        }
+        if (wordDocumentOutputStream != null) {
+            byte[] wordDocumentBytes = wordDocumentOutputStream.toByteArray();
+            wordDocumentOutputStream.close();
+            MultipartFile wordDocumentFile = new CustomMultipartFile(wordDocumentBytes,
+                                                                     DEFAULT_WORD_FILENAME,
+                                                                     DEFAULT_WORD_FILENAME,
+                                                                     DEFAULT_WORD_CONTENT_TYPE);
+            saveMultipartFile(fileDescriptions, jsonNode, type, wordDocumentFile);
+        }
+        MultipartFile xmlDocumentFile = new CustomMultipartFile(marshalQueryResult(queryResult).getBytes(UTF_8),
+                                                                DEFAULT_XML_FILENAME,
+                                                                DEFAULT_XML_FILENAME,
+                                                                DEFAULT_XML_CONTENT_TYPE);
+        saveMultipartFile(fileDescriptions, jsonNode, type, xmlDocumentFile);
 
         Map<String, byte[]> map = uploadRequestAttaches(
                 queryResult.getMessage().getRequestContent().getContent().getAttachmentHeaderList());
@@ -588,6 +606,28 @@ public class AcceptRnsService {
         recordsDao.updateRecordById(recordQualifier(TASK_QUALIFIER, taskId), taskContent, tasksSchema);
     }
 
+    private void saveMultipartFile(List<FileDescription> fileDescriptions, JsonNode jsonNode, String type,
+                                   MultipartFile wordDocumentFile) {
+        String fileName = generateFileName(wordDocumentFile);
+        String path = fileStorageService.copyToTrash(wordDocumentFile,
+                                                     fileName);
+        String intents = simpleIntentHandler.defineIntent(wordDocumentFile);
+
+        path = fileStorageService
+                .moveToMainStorage(Paths.get(path),
+                                   Paths.get(DEFAULT_PATH + fileName))
+                .normalize().toString();
+        File wordDocumentEntity = new File(wordDocumentFile, intents, path, DEFAULT_USER_LOGIN);
+        File savedEntity = fileRepository.save(wordDocumentEntity);
+        UUID savedEntityId = savedEntity.getId();
+        String savedEntityTitle = savedEntity.getTitle();
+        Long savedEntitySize = savedEntity.getSize();
+        fileRepository.setQualifier(type, jsonNode, Set.of(savedEntityId));
+
+        FileDescription fileDescription = new FileDescription(savedEntityId, savedEntityTitle, savedEntitySize);
+        fileDescriptions.add(fileDescription);
+    }
+
     private Map<String, byte[]> uploadRequestAttaches(AttachmentHeaderList attachmentHeaderList) {
         Map<String, byte[]> filesAsBytes = new HashMap<>();
 
@@ -633,9 +673,9 @@ public class AcceptRnsService {
                         doc.getName(),
                         doc.getType()
                 );
-                if ((doc.getCodeDocument().equalsIgnoreCase("electrSigFile"))
-                        && (doc.getType().equalsIgnoreCase("application/pdf"))
-                        && (doc.getName().endsWith(".pdf"))) {
+                if ((doc.getCodeDocument().equalsIgnoreCase(DOCUMENT_CODE))
+                        && (doc.getType().equalsIgnoreCase(PDF_CONTENT_TYPE))
+                        && (doc.getName().endsWith(PDF_EXTENSION))) {
                     files.add(0, file);
                 } else {
                     files.add(file);
@@ -657,9 +697,9 @@ public class AcceptRnsService {
             JsonNode jsonNode = toJsonNode(fileResQualifier);
             path = fileStorageService
                     .moveToMainStorage(Paths.get(path),
-                                       Paths.get("organization_1/library_record/dl_data_inbox_data/" + filename))
+                                       Paths.get(DEFAULT_PATH + filename))
                     .normalize().toString();
-            File file = new File(multipartFile, intents, path, "arh_grad_rk@mail.ru");
+            File file = new File(multipartFile, intents, path, DEFAULT_USER_LOGIN);
             File savedEntity = fileRepository.save(file);
             UUID savedEntityId = savedEntity.getId();
 
