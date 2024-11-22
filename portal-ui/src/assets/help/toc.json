@@ -521,6 +521,17 @@
                 "contentUrl": "/assets/help/5dataManagement/20importKpt/20importKpt.html"
               }
             ]
+          },
+          {
+            "id": "cryptoPro",
+            "title": "Подпись документов",
+            "children": [
+              {
+                "id": "libraryKpt",
+                "title": "Библиотека «КПТ»",
+                "contentUrl": "/assets/help/5dataManagement/28cryptoPro/28cryptoPro.html"
+              }
+            ]
           }
         ]
       },
