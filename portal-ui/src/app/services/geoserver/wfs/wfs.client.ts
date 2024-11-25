@@ -45,7 +45,7 @@ class WfsClient extends GeoserverClient {
         outputFormat: Mime.SHAPE_ZIP,
         encoding: undefined,
         srsName: getProjectionCode(projection),
-        format_options: 'charset:cp1251'
+        format_options: 'CHARSET:UTF-8'
       },
       cache: { clear: false, disabled: false }
     });

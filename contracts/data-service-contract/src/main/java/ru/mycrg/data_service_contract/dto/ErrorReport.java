@@ -4,6 +4,7 @@ public class ErrorReport {
 
     private int failedRecordCount;
     private boolean shpFileHasProjection = true;
+    private int utf8ErrorCount;
 
     public ErrorReport() {
         // Required
@@ -11,6 +12,13 @@ public class ErrorReport {
 
     public int getFailedRecordCount() {
         return failedRecordCount;
+    }
+
+    public int getUtf8ErrorCount(){
+        return utf8ErrorCount;
+    }
+    public void setUtf8ErrorCount(int utf8ErrorCount){
+        this.utf8ErrorCount = utf8ErrorCount;
     }
 
     public void setFailedRecordCount(int failedRecordCount) {

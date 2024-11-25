@@ -41,7 +41,7 @@ public class JsonConverter {
 
             return JacksonUtil.toJsonNode(jsonString);
         } catch (JsonProcessingException e) {
-            log.warn("Failed convert object: '{}' to jsonNode. Reason: {}", jsonString, e.getMessage());
+            log.warn("Сбой при конвертации объекта: '{}' в jsonNode. Причина: {}", jsonString, e.getMessage());
 
             return JacksonUtil.toJsonNode("{}");
         }
@@ -52,7 +52,7 @@ public class JsonConverter {
         try {
             return mapper.readTree(json);
         } catch (IOException e) {
-            log.error("Failed convert to toJsonNodeFromString: {}", e.getMessage());
+            log.error("Сбой при конвертации в toJsonNodeFromString: {}", e.getMessage());
 
             return JacksonUtil.toJsonNode("{}");
         }
@@ -62,7 +62,7 @@ public class JsonConverter {
         try {
             return Optional.of(mapper.readValue(stringJson, valueTypeRef));
         } catch (IOException e) {
-            log.error("Failed convert from string(as type) to JSON: {}", e.getMessage());
+            log.error("Сбой при конвертации из string(as type) в JSON: {}", e.getMessage());
 
             return Optional.empty();
         }
@@ -72,7 +72,7 @@ public class JsonConverter {
         try {
             return Optional.of(mapper.readValue(stringJson, classOfT));
         } catch (IOException e) {
-            log.error("Failed convert from string(as class) to JSON: {}", e.getMessage());
+            log.error("Сбой при конвертации из string(as class) в JSON: {}", e.getMessage());
 
             return Optional.empty();
         }

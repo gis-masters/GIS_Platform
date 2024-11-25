@@ -157,8 +157,14 @@ public class GDALService implements IExporter {
 
                 throw new ImportException("Import of geometry shape failed by timeout");
             }
+            ErrorReport errorReport = getErrorsFromInputStream(importProcess.getErrorStream());
+            if (errorReport.getUtf8ErrorCount() > 0) {
+                importProcess.destroy();
 
-            return getErrorsFromInputStream(importProcess.getErrorStream());
+                throw new ImportException("Обработка файла прервана, кодировка объектов не равна UTF-8");
+            }
+
+            return errorReport;
         } catch (IOException | InterruptedException e) {
             // Restore interrupted state...
             Thread.currentThread().interrupt();
@@ -186,8 +192,13 @@ public class GDALService implements IExporter {
 
                 throw new ImportException("Import of geometry shape failed by timeout");
             }
-
             ErrorReport errorReport = getErrorsFromInputStream(importProcess.getErrorStream());
+            if (errorReport.getUtf8ErrorCount() > 0) {
+                importProcess.destroy();
+
+                throw new ImportException("Обработка файла прервана, кодировка объектов не равна UTF-8");
+            }
+
             errorReport.setShpFileHasProjection(false);
             importProcess.destroy();
 
@@ -254,7 +265,7 @@ public class GDALService implements IExporter {
      * <br>
      * - zip -r ../agriculture.zip *; <p> - cd ..; <p> - rm -rf SOME_DIR
      *
-     * @param resource Ресурс для экспорта
+     * @param resource         Ресурс для экспорта
      * @param requiredEpsgCode Код проекции
      *
      * @return Path к архиву
@@ -318,6 +329,7 @@ public class GDALService implements IExporter {
                 return pathToResultZip;
             } else {
                 log.info("Path to result ZIP file: {}", pathToResultZip);
+
                 throw new ExportException("Не удалось выполнить консольную команду");
             }
         } catch (IOException | InterruptedException e) {
@@ -363,6 +375,7 @@ public class GDALService implements IExporter {
         BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
         ErrorReport errorReport = new ErrorReport();
         int failedRecordCount = 0;
+        int utf8ErrorCount = 0;
 
         String line;
         while ((line = reader.readLine()) != null) {
@@ -370,6 +383,11 @@ public class GDALService implements IExporter {
             if (containsIgnoreCase(line, "COPY statement failed")) {
                 failedRecordCount++;
             }
+
+            if (containsIgnoreCase(line, "UTF8")) {
+                utf8ErrorCount++;
+            }
+
             if (containsIgnoreCase(line, "Can't transform coordinates, source layer has no")) {
                 log.debug("No CRS in shape file {}", line);
                 errorReport.setShpFileHasProjection(false);
@@ -377,6 +395,8 @@ public class GDALService implements IExporter {
         }
         errorReport.setFailedRecordCount(failedRecordCount);
         log.debug("ErrorStream: failed records count {}", failedRecordCount);
+        log.debug("ErrorStream: failed UTF8 count {}", utf8ErrorCount);
+        errorReport.setUtf8ErrorCount(utf8ErrorCount);
 
         return errorReport;
     }
