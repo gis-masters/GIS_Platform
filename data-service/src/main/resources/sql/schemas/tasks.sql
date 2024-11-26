@@ -359,6 +359,9 @@ SET class_rule =
                 },
                 {
                   "name": "data_section_key_data_connection"
+                },
+                {
+                  "name": "description"
                 }
               ]
             },
@@ -410,6 +413,9 @@ SET class_rule =
                 },
                 {
                   "name": "data_section_key_data_connection"
+                },
+                {
+                "name": "description"
                 }
               ]
             },

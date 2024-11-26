@@ -450,6 +450,7 @@ public class ImportKptHandler implements IEventHandler {
                          documentTitle);
             } catch (Exception e) {
                 log.error("Ошибка переноса данных из временной таблицы в '{}'", table, e);
+                writeErrorToTaskLog(dbName, taskId, e.getMessage());
             }
         }
     }
@@ -505,9 +506,9 @@ public class ImportKptHandler implements IEventHandler {
         StopWatch timer = new StopWatch();
         timer.start();
 
-        Set<String> generatedValues = Set.of("area", "lenght");
+        Set<String> excludedValues = Set.of("area", "lenght", targetTableQualifier.getPrimaryKeyName());
         List<SimplePropertyDto> properties = schema.getProperties().stream()
-                                                   .filter(prop -> !generatedValues.contains((prop.getName())))
+                                                   .filter(prop -> !excludedValues.contains((prop.getName())))
                                                    .collect(Collectors.toList());
 
         kptImportDao.deleteAllByDocumentTitle(dbName, targetTableQualifier, documentTitle);
