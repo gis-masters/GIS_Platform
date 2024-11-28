@@ -137,7 +137,7 @@ public class SqlBuilder {
         if (pageable != null) {
             Sort sort = pageable.getSort();
             if (sort.isUnsorted()) {
-                sort.and(Sort.by(qualifier.getPrimaryKeyName()));
+                sort = sort.and(Sort.by(qualifier.getPrimaryKeyName()));
             }
 
             orderSection = buildOrderBySection(sort);
