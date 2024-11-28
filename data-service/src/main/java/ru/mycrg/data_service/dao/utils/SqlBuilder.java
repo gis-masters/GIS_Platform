@@ -349,11 +349,13 @@ public class SqlBuilder {
             values.append(buildGeometryValue(feature)).append(", ");
         }
 
-        feature.getProperties().forEach((paramName, value) -> {
-            params.append(paramName).append(", ");
-
-            values.append(":").append(paramName.trim()).append(", ");
-        });
+        Set<String> excludedValues = Set.of(qualifier.getPrimaryKeyName());
+        feature.getProperties().entrySet().stream()
+               .filter(entry -> !excludedValues.contains(entry.getKey()))
+               .forEach(entry -> {
+                   params.append(entry.getKey()).append(", ");
+                   values.append(":").append(entry.getKey().trim()).append(", ");
+               });
 
         String valueSection = values.substring(0, values.length() - 2) + ")";
         String paramSection = " (" + params.substring(0, params.length() - 2) + ")";
