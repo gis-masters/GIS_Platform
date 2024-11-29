@@ -22,6 +22,7 @@ import { verifyEcp } from '../../../services/data/files/files.service';
 import { LibraryRecord } from '../../../services/data/library/library.models';
 import { WfsFeature } from '../../../services/geoserver/wfs/wfs.models';
 import { services } from '../../../services/services';
+import { cryptoProStore } from '../../../stores/CryptoPro.store';
 import { sidebars } from '../../../stores/Sidebars.store';
 import { IconButton } from '../../IconButton/IconButton';
 import { Link } from '../../Link/Link';
@@ -103,7 +104,14 @@ const FilesSignatureFC: FC<FilesSignatureProps> = observer(
           >
             {signed && <MenuItem onClick={handleInfoClick}>Информация</MenuItem>}
             <Divider />
-            <MenuItem onClick={handleCoSignClick}>Доподписать</MenuItem>
+
+            <Tooltip placement='top' title={cryptoProStore.isPluginActive ? '' : 'Плагин КрипроПро не подключен'}>
+              <span>
+                <MenuItem disabled={!cryptoProStore.isPluginActive} onClick={handleCoSignClick}>
+                  Доподписать
+                </MenuItem>
+              </span>
+            </Tooltip>
             <MenuItem component={Link} href={filesClient.getFileEcpUrl(id)} variant='none' download={title}>
               Скачать ЭЦП
             </MenuItem>

@@ -49,6 +49,7 @@
     "@yandex/smart-captcha": "2.6.0",
     "autobind-decorator": "2.4.0",
     "axios": "1.6.8",
+    "buffer": "6.0.3",
     "core-js": "3.36.1",
     "crypto-pro": "2.5.2",
     "dom-to-image": "2.6.0",

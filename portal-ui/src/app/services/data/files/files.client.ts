@@ -75,8 +75,8 @@ class FilesClient extends Client {
     return http.post(this.signFileUrl(id), formData);
   }
 
-  async getFileEcp(id: string): Promise<string> {
-    return http.get<string>(this.getFileEcpUrl(id));
+  async getFileEcp(id: string): Promise<ArrayBuffer> {
+    return http.get<ArrayBuffer>(this.getFileEcpUrl(id), { responseType: 'arraybuffer' });
   }
 
   async getFileInfo(id: string): Promise<FileInfo> {

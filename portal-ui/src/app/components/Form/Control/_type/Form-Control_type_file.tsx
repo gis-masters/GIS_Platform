@@ -4,7 +4,7 @@ import { observer } from 'mobx-react';
 import { withBemMod } from '@bem-react/core';
 import { boundMethod } from 'autobind-decorator';
 
-import { FileInfo } from '../../../../services/data/files/files.models';
+import { FileInfo, isFileInfoArray } from '../../../../services/data/files/files.models';
 import { checkFileEcp, verifyEcp } from '../../../../services/data/files/files.service';
 import { LibraryRecord } from '../../../../services/data/library/library.models';
 import { PropertySchemaFile, PropertyType } from '../../../../services/data/schema/schema.models';
@@ -29,17 +29,33 @@ class FormControlTypeFile extends Component<FormControlProps> {
     const { fieldValue } = this.props;
 
     if (prevProps.fieldValue !== fieldValue) {
-      await this.checkEcpFile();
+      const files = fieldValue;
+      const prevFiles = prevProps.fieldValue;
+
+      if (isFileInfoArray(files) && isFileInfoArray(prevFiles)) {
+        const ecpFiles = files
+          .filter(file => {
+            return !prevFiles.some(({ id }) => file.id === id);
+          })
+          .filter(({ title }) => title.includes('.sig'));
+
+        if (ecpFiles.length) {
+          await this.checkEcpFile(ecpFiles);
+        }
+      }
     }
   }
 
   render() {
     const { className, inSet, property, formRole, errors, fieldValue, formValue, fullWidthForOldForm } = this.props;
-    let value = (fieldValue || []) as FileInfo[];
+    let value: FileInfo[] = [];
 
     try {
       if (fieldValue && typeof fieldValue === 'string') {
-        value = JSON.parse(fieldValue) as FileInfo[];
+        const parsedValue = JSON.parse(fieldValue) as unknown;
+        value = isFileInfoArray(parsedValue) ? parsedValue : [];
+      } else if (isFileInfoArray(fieldValue)) {
+        value = fieldValue;
       }
     } catch {
       value = [];
@@ -61,43 +77,52 @@ class FormControlTypeFile extends Component<FormControlProps> {
     );
   }
 
-  private async checkEcpFile() {
-    const { fieldValue } = this.props;
-    const files = (fieldValue || []) as FileInfo[];
+  private async checkEcpFile(newEcpFiles?: FileInfo[]) {
     const filesStatusText: Record<string, string> = {};
+    const { fieldValue } = this.props;
 
-    const promises = files
-      .filter(file => file.title.includes('.sig'))
-      .map(async file => {
-        const originalFileName = file.title.split('.sig')[0];
-        const fileForEcp = files.find(({ title }) => title === originalFileName);
+    let files: FileInfo[] = [];
+    let ecpFiles: FileInfo[] = [];
 
-        if (!fileForEcp) {
+    if (isFileInfoArray(fieldValue)) {
+      files = fieldValue;
+    }
+
+    ecpFiles = newEcpFiles?.length ? newEcpFiles : files.filter(file => file.title.includes('.sig'));
+
+    if (!ecpFiles.length) {
+      return;
+    }
+
+    const promises = ecpFiles.map(async file => {
+      const originalFileName = file.title.split('.sig')[0];
+      const fileForEcp = files.find(({ title }) => title === originalFileName);
+
+      if (!fileForEcp) {
+        return;
+      }
+
+      try {
+        const verifyFileEcp = await checkFileEcp(fileForEcp?.id, file.id);
+        const findNotValidSigns = verifyFileEcp.some(({ verified }) => !verified);
+
+        if (findNotValidSigns) {
+          filesStatusText[file.id] = `Загрузить файл подписи "${file.title}" невозможно. ЭЦП недействительна.`;
+
           return;
         }
 
-        try {
-          const fileEcp = await checkFileEcp(fileForEcp?.id, file.id);
+        const existingEcp = await verifyEcp(fileForEcp?.id);
 
-          if (fileEcp.length && !fileEcp[0].verified) {
-            filesStatusText[file.id] = 'Подпись не действительна';
-          }
-        } catch {
-          // do nothing
+        if (existingEcp.length) {
+          filesStatusText[file.id] =
+            `Загрузить файл подписи невозможно - для файла "${file.title}" уже существует ЭЦП.\n` +
+            'Используйте инструмент "Доподписать"';
         }
-
-        try {
-          const existingEcp = await verifyEcp(fileForEcp?.id);
-
-          if (existingEcp.length) {
-            filesStatusText[file.id] =
-              `Загрузить файл подписи невозможно - для файла "${file.title}" уже существует ЭЦП.\n` +
-              'Используйте инструмент "Доподписать"';
-          }
-        } catch {
-          // do nothing
-        }
-      });
+      } catch {
+        // do nothing
+      }
+    });
 
     await Promise.all(promises);
     this.setStatusText(filesStatusText);

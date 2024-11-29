@@ -23,7 +23,7 @@ export async function checkFileEcp(fileId: string, ecpId: string): Promise<Verif
   return await filesClient.checkFileEcp(fileId, ecpId);
 }
 
-export async function getFileEcp(id: string): Promise<string> {
+export async function getFileEcp(id: string): Promise<ArrayBuffer> {
   return await filesClient.getFileEcp(id);
 }
 

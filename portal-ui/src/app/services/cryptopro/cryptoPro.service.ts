@@ -1,7 +1,8 @@
-/* eslint-disable sonarjs/no-duplicate-string */
-/* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 // TODO: eslint на говно исходится при типизации файла, нужно потом поправить как то
+
+/* eslint-disable unicorn/prefer-node-protocol */
+import { Buffer } from 'buffer';
 
 import { CAdESCOM } from './models/cadescom_async';
 import { CADESPlugin } from './models/cadesplugin';
@@ -9,10 +10,12 @@ import { CAPICOM_ASYNC } from './models/capicom_async';
 
 declare const cadesplugin: CADESPlugin;
 
+const CADES_SIGNED_DATA = 'CAdESCOM.CadesSignedData';
+
 export async function createSignature(
   hashValue: string,
   certificateThumbprint: string,
-  existingSign?: string
+  existingSign?: ArrayBuffer
 ): Promise<string | undefined> {
   // Алгоритм хэширования, при помощи которого было вычислено хэш-значение
   const hashAlg = cadesplugin.CADESCOM_HASH_ALGORITHM_CP_GOST_3411_2012_256;
@@ -24,12 +27,15 @@ export async function createSignature(
   await oHashedData.propset_Algorithm(hashAlg);
   await oHashedData.SetHashValue(hashValue);
 
-  const oSignedData: CAdESCOM.CadesSignedDataAsync = await cadesplugin.CreateObjectAsync('CAdESCOM.CadesSignedData');
+  const oSignedData: CAdESCOM.CadesSignedDataAsync = await cadesplugin.CreateObjectAsync(CADES_SIGNED_DATA);
 
   if (existingSign) {
-    await oSignedData.VerifyHash(oHashedData, existingSign, cadesplugin.CADESCOM_CADES_BES);
+    const sign = isBinary(existingSign) ? convertToBase64(existingSign) : new TextDecoder().decode(existingSign);
+
+    await oSignedData.VerifyHash(oHashedData, sign, cadesplugin.CADESCOM_CADES_BES);
   }
 
+  /* eslint-disable @typescript-eslint/ban-ts-comment */
   // @ts-expect-error
   const oStore: CAPICOM_ASYNC.StoreAsync = await cadesplugin.CreateObjectAsync('CAdESCOM.Store');
   await oStore.Open(
@@ -65,24 +71,22 @@ export async function createSignature(
     ? oSignedData.CoSignHash(oHashedData, oSigner, cadesplugin.CADESCOM_CADES_BES)
     : oSignedData.SignHash(oHashedData, oSigner, cadesplugin.CADESCOM_CADES_BES));
 
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
   await verifyHash(oHashedData, sSignedMessage);
 
   return sSignedMessage;
 }
 
 async function verifyHash(hash: CAdESCOM.CPHashedDataAsync, sSignedMessage: string) {
-  const signedDataForVerify: CAdESCOM.CadesSignedDataAsync =
-    await cadesplugin.CreateObjectAsync('CAdESCOM.CadesSignedData');
+  const signedDataForVerify: CAdESCOM.CadesSignedDataAsync = await cadesplugin.CreateObjectAsync(CADES_SIGNED_DATA);
 
   try {
     await signedDataForVerify.VerifyHash(hash, sSignedMessage, cadesplugin.CADESCOM_CADES_BES);
   } catch {
-    alert('Failed to verify signature. Error: ');
+    throw new Error('Не удалось подтвердить подпись');
   }
 }
 
-export async function getUsedCertificates(hashValue: string, existingSign: string): Promise<string[]> {
+export async function getUsedCertificates(hashValue: string, existingSign: ArrayBuffer): Promise<string[]> {
   const hashAlg = cadesplugin.CADESCOM_HASH_ALGORITHM_CP_GOST_3411_2012_256;
 
   const oHashedData: CAdESCOM.CPHashedDataAsync = await cadesplugin.CreateObjectAsync('CAdESCOM.HashedData');
@@ -92,17 +96,20 @@ export async function getUsedCertificates(hashValue: string, existingSign: strin
   await oHashedData.propset_Algorithm(hashAlg);
   await oHashedData.SetHashValue(hashValue);
 
-  const oSignedData: CAdESCOM.CadesSignedDataAsync = await cadesplugin.CreateObjectAsync('CAdESCOM.CadesSignedData');
+  const oSignedData: CAdESCOM.CadesSignedDataAsync = await cadesplugin.CreateObjectAsync(CADES_SIGNED_DATA);
 
   const existingSignaturesThumbprints = [];
 
   // параллельная подпись
   if (existingSign) {
-    await oSignedData.VerifyHash(oHashedData, existingSign, cadesplugin.CADESCOM_CADES_BES);
+    const signBase64 = convertToBase64(existingSign);
+
+    await oSignedData.VerifyHash(oHashedData, signBase64, cadesplugin.CADESCOM_CADES_BES);
 
     // собираем thumbprint каждой существующей подписи для запрета дублирующих подписей
     const existingSignatures: CAPICOM_ASYNC.ICertificatesAsync = await oSignedData.Certificates;
     const centsLength = await existingSignatures?.Count;
+
     for (let i = 1; i <= centsLength; i++) {
       const cert = await existingSignatures.Item(i);
       const thumbprint = await cert.Thumbprint;
@@ -111,4 +118,27 @@ export async function getUsedCertificates(hashValue: string, existingSign: strin
   }
 
   return existingSignaturesThumbprints;
+}
+
+// преобразуем байтовый массив в base64 строку
+function convertToBase64(binaryData: ArrayBuffer) {
+  try {
+    return Buffer.from(binaryData).toString('base64');
+  } catch {
+    throw new Error('Ошибка при обработке файла подписи');
+  }
+}
+
+function isBinary(arrayBuffer: ArrayBuffer) {
+  const text = new TextDecoder().decode(arrayBuffer);
+
+  for (let i = 0; i < text.length; i++) {
+    const charCode = text.codePointAt(i);
+
+    if (charCode && (charCode < 0x09 || (charCode > 0x0d && charCode < 0x20))) {
+      return true;
+    }
+  }
+
+  return false;
 }

@@ -17,6 +17,7 @@ import {
   isTifFile
 } from '../../../services/data/files/files.util';
 import { LibraryRecord } from '../../../services/data/library/library.models';
+import { cryptoProStore } from '../../../stores/CryptoPro.store';
 import { sidebars } from '../../../stores/Sidebars.store';
 import { Button } from '../../Button/Button';
 import { ConnectionsToProjects } from '../../ConnectionsToProjects/ConnectionsToProjects';
@@ -61,10 +62,8 @@ type FilesItemState = {
   id: string;
   deleteDialogOpen: boolean;
   fileInfo: FileInfo | null;
-  isPluginActive: boolean;
   fileSignDialogOpen: boolean;
   setFileSignDialogOpen(fileSignDialogOpen: boolean): void;
-  setIsPluginActive(isPluginActive: boolean): void;
   setConnections(connections: FileConnection[]): void;
   setIds(id: string): void;
   setDeleteDialogOpen(isOpen: boolean): void;
@@ -92,10 +91,8 @@ const FilesItemFC: FC<FilesItemProps> = observer(
       id,
       deleteDialogOpen,
       fileInfo,
-      isPluginActive,
       fileSignDialogOpen,
       setFileSignDialogOpen,
-      setIsPluginActive,
       setConnections,
       setIds,
       setDeleteDialogOpen,
@@ -106,14 +103,10 @@ const FilesItemFC: FC<FilesItemProps> = observer(
         id: item.id,
         deleteDialogOpen: false,
         fileInfo: null,
-        isPluginActive: false,
         fileSignDialogOpen: false,
 
         setFileSignDialogOpen(this: FilesItemState, fileSignDialogOpen: boolean): void {
           this.fileSignDialogOpen = fileSignDialogOpen;
-        },
-        setIsPluginActive(this: FilesItemState, isPluginActive: boolean): void {
-          this.isPluginActive = isPluginActive;
         },
         setConnections(this: FilesItemState, connections: FileConnection[]): void {
           this.connections = connections;
@@ -198,6 +191,9 @@ const FilesItemFC: FC<FilesItemProps> = observer(
     const showFilesSignatureInExplorer =
       (showPlaceAction || showMainCompoundFileActions || showMainCompoundFileActions === undefined) && !editable;
     const showFileSignatureOnMap = sidebars.editFeaturesData?.features[0] && signed;
+    const showSignButton = cryptoProStore.isPluginActive && !signed && !!item.size && showSign;
+    const showLookupDeleteButton =
+      (showMainCompoundFileActions && editable) || (!showMainCompoundFileActions && editable);
 
     useEffect(() => {
       void (async () => {
@@ -217,6 +213,18 @@ const FilesItemFC: FC<FilesItemProps> = observer(
         if (!item.signed) {
           await updateFileInfo();
         }
+
+        // проверяем есть ли плагин криптопро
+        try {
+          if (cryptoProStore.isPluginActive) {
+            return;
+          }
+
+          await isValidSystemSetup();
+          cryptoProStore.setPluginActive();
+        } catch {
+          // do nothing
+        }
       })();
     }, []);
 
@@ -227,14 +235,6 @@ const FilesItemFC: FC<FilesItemProps> = observer(
 
         if (!fileInfo && !item.signed) {
           await updateFileInfo();
-        }
-
-        // проверяем не отвалился ли плагин при работе с файлами
-        try {
-          await isValidSystemSetup();
-          setIsPluginActive(true);
-        } catch {
-          // do nothing
         }
       })();
     }, [item.id, item.signed, fileInfo]);
@@ -270,7 +270,7 @@ const FilesItemFC: FC<FilesItemProps> = observer(
               />
             )}
 
-            {isPluginActive && !signed && !!item.size && showSign && (
+            {showSignButton && (
               <Tooltip title={'Подписать ЭЦП'}>
                 <span>
                   <IconButton onClick={fileSignDialogOpenHandler} className={cnFilesSign()} size='small'>
@@ -301,7 +301,7 @@ const FilesItemFC: FC<FilesItemProps> = observer(
 
             {isFileCanBePlaced && <FilesPlacement document={document} fileInfo={item} />}
 
-            {((showMainCompoundFileActions && editable) || (!showMainCompoundFileActions && editable)) && (
+            {showLookupDeleteButton && (
               <LookupDelete
                 tooltip={showMainCompoundFileActions ? 'Удалить набор файлов' : undefined}
                 item={item}

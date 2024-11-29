@@ -6,8 +6,7 @@ import { Coordinate } from 'ol/coordinate';
 
 import { communicationService } from '../../../services/communication.service';
 import { createSignature, getUsedCertificates } from '../../../services/cryptopro/cryptoPro.service';
-import { filesClient } from '../../../services/data/files/files.client';
-import { getFileHash, signFile } from '../../../services/data/files/files.service';
+import { getFileEcp, getFileHash, signFile } from '../../../services/data/files/files.service';
 import { LibraryRecord } from '../../../services/data/library/library.models';
 import { PropertyType } from '../../../services/data/schema/schema.models';
 import { WfsFeature } from '../../../services/geoserver/wfs/wfs.models';
@@ -23,10 +22,10 @@ interface FileSignState {
   certificates: Certificate[];
   loading: boolean;
   fileHash: string;
-  prevSignatures: string;
+  prevSignatures: ArrayBuffer | undefined;
   disabledCertificates: Certificate[];
   setDisabledCertificates(disabledCertificates: Certificate[]): void;
-  setPrevSignatures(prevSignatures: string): void;
+  setPrevSignatures(prevSignatures: ArrayBuffer): void;
   setFileHash(fileHash: string): void;
   setLoading(loading: boolean): void;
   setCertificates(certificates: Certificate[]): void;
@@ -61,12 +60,12 @@ const FilesSignDialogFC: FC<FilesSignatureProps> = observer(
         certificates: [],
         loading: false,
         fileHash: '',
-        prevSignatures: '',
+        prevSignatures: undefined,
         disabledCertificates: [],
         setDisabledCertificates(disabledCertificates: Certificate[]): void {
           this.disabledCertificates = disabledCertificates;
         },
-        setPrevSignatures(prevSignatures: string): void {
+        setPrevSignatures(prevSignatures: ArrayBuffer): void {
           this.prevSignatures = prevSignatures;
         },
         setFileHash(fileHash: string): void {
@@ -98,8 +97,12 @@ const FilesSignDialogFC: FC<FilesSignatureProps> = observer(
               return;
             }
 
-            const fileBlob = new Blob([signedMessage]);
-            const signatureFile = new File([fileBlob], title + '.sig', { type: 'application/pgp-signature' });
+            // 0xFF - Ограничивает значение диапазона от 0 до 255, чтобы соответствовать требованиям Uint8Array.
+            const binaryData = Uint8Array.from(atob(signedMessage), char => char.codePointAt(0)! & 0xff);
+            const fileBlob = new Blob([binaryData]);
+            const signatureFile = new File([fileBlob], title + '.sig', {
+              type: 'application/pgp-signature'
+            });
 
             await signFile(id, signatureFile);
 
@@ -139,7 +142,8 @@ const FilesSignDialogFC: FC<FilesSignatureProps> = observer(
         setFileHash(hash);
 
         try {
-          const fileSignatures = await filesClient.getFileEcp(id);
+          const fileSignatures = await getFileEcp(id);
+
           setPrevSignatures(fileSignatures);
           usedCertificates = await getUsedCertificates(hash, fileSignatures);
         } catch {
