@@ -13,12 +13,14 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import ru.mycrg.data_service.accept_rnv_1_0_6.QueryResult;
 import ru.mycrg.data_service.entity.reestrs.ReestrIncoming;
 import ru.mycrg.data_service.entity.smev.SmevMessageMetaEntity;
 import ru.mycrg.data_service.exceptions.SmevRequestException;
 import ru.mycrg.data_service.service.reestrs.ReestrIncomingService;
 import ru.mycrg.data_service.service.smev3.model.ResponseFailProcess;
 import ru.mycrg.data_service.service.smev3.request.ResponseProcessor;
+import ru.mycrg.data_service.service.smev3.request.accept_rnv.AcceptRnvService;
 import ru.mycrg.data_service.service.smev3.request.gpzu.GpzuService;
 import ru.mycrg.data_service.service.smev3.request.accept_rns.AcceptRnsService;
 import ru.mycrg.data_service.util.JsonConverter;
@@ -51,6 +53,7 @@ public class SmevMessageReceiverService {
     private final List<ResponseProcessor> responseProcessors;
     private final GpzuService gpzuService;
     private final AcceptRnsService acceptRnsService;
+    private final AcceptRnvService acceptRnvService;
     private final ReestrIncomingService reestrIncomingService;
 
     public SmevMessageReceiverService(SmevMessageService messageService,
@@ -59,6 +62,7 @@ public class SmevMessageReceiverService {
                                       List<ResponseProcessor> responseProcessors,
                                       GpzuService gpzuService,
                                       AcceptRnsService acceptRnsService,
+                                      AcceptRnvService acceptRnvService,
                                       ReestrIncomingService reestrIncomingService) {
         this.messageService = messageService;
         this.rabbitTemplate = rabbitTemplate;
@@ -66,6 +70,7 @@ public class SmevMessageReceiverService {
         this.responseProcessors = responseProcessors;
         this.gpzuService = gpzuService;
         this.acceptRnsService = acceptRnsService;
+        this.acceptRnvService = acceptRnvService;
         this.reestrIncomingService = reestrIncomingService;
     }
 
@@ -76,12 +81,17 @@ public class SmevMessageReceiverService {
     public void processReceiveMessage(@NotNull Message message) {
         String body = new String(message.getBody());
         try {
+            // TODO: Как только отладим логику 3-х этих процессов, переделать на стратегию
             if (body.contains("urn://rostelekom.ru/GPZU/1.0.4")) {
                 gpzuService.acceptGpzuRequest(body);
                 return;
             }
             if (body.contains("urn://rostelekom.ru/ConstructionPermits/1.0.3")) {
-                acceptRnsService.acceptRnsRequest(body);
+                acceptRnsService.acceptRequest(body, ru.mycrg.data_service.accept_rns_1_0_3.QueryResult.class);
+                return;
+            }
+            if (body.contains("urn://rostelekom.ru/PermissionObjectOperation/1.0.6")) {
+                acceptRnvService.acceptRequest(body, QueryResult.class);
                 return;
             }
             var messageEntity = replyToClientId(message)

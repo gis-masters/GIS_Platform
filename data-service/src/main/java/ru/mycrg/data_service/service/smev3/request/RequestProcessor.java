@@ -51,7 +51,6 @@ public abstract class RequestProcessor {
 
     // Классы уникальные под каждый запрос
     private final Mnemonic mnemonic;
-    private final XmlMarshaller marshaller;
     private final Schema schema;
 
     public RequestProcessor(Mnemonic mnemonic,
@@ -66,7 +65,6 @@ public abstract class RequestProcessor {
         this.resourceLoader = resourceLoader;
         this.fileRepository = null;
         this.smev3Config = smev3Config;
-        this.marshaller = new XmlMarshaller(mnemonic.getPrefixMapper());
         this.schema = loadSchema(mnemonic.getSchemaPath());
     }
 
@@ -86,7 +84,6 @@ public abstract class RequestProcessor {
         this.resourceLoader = resourceLoader;
         this.fileRepository = fileRepository;
         this.smev3Config = smev3Config;
-        this.marshaller = new XmlMarshaller(mnemonic.getPrefixMapper());
         this.schema = loadSchema(mnemonic.getSchemaPath());
     }
 
@@ -108,10 +105,6 @@ public abstract class RequestProcessor {
 
     public Mnemonic mnemonicEnum() {
         return mnemonic;
-    }
-
-    public XmlMarshaller xmlMarshaller() {
-        return marshaller;
     }
 
     public Smev3Config getSmev3Config() {
@@ -147,7 +140,8 @@ public abstract class RequestProcessor {
         XmlValidationResult validationResult = null;
 
         try {
-            xmlBytes = xmlMarshaller().marshall(request, tClass).getBytes(StandardCharsets.UTF_8);
+            xmlBytes = XmlMarshaller.marshall(request, tClass, mnemonic.getPrefixMapper())
+                                      .getBytes(StandardCharsets.UTF_8);
             schema.newValidator().validate(new StreamSource(new ByteArrayInputStream(xmlBytes)));
         } catch (SAXParseException e) {
             String base64str = new String(base64Encoder.encode(xmlBytes));

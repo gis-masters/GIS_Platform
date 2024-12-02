@@ -28,6 +28,7 @@ import static ru.mycrg.data_service.service.TaskService.TASKS_SCHEMA;
 import static ru.mycrg.data_service.service.TaskService.TASK_TABLE_NAME;
 import static ru.mycrg.data_service.service.resources.ResourceQualifier.systemTable;
 import static ru.mycrg.data_service.service.smev3.fields.CommonFields.RNS_CONTENT_TYPE;
+import static ru.mycrg.data_service.service.smev3.fields.CommonFields.RNV_CONTENT_TYPE;
 import static ru.mycrg.data_service.service.smev3.request.get_cadastrial_plan.GetCadastrialPlanRequestService.KPT_CONTENT_TYPE;
 import static ru.mycrg.data_service_contract.enums.TaskStatus.*;
 import static ru.mycrg.data_service_contract.enums.TaskType.ASSIGNABLE;
@@ -76,6 +77,7 @@ public class TasksDetachedDao {
                 "WHERE status <> '" + DONE + "' AND " +
                 "      content_type_id <> '" + KPT_CONTENT_TYPE + "' AND " +
                 "      content_type_id <> '" + RNS_CONTENT_TYPE + "' AND " +
+                "      content_type_id <> '" + RNV_CONTENT_TYPE + "' AND " +
                 "      type <> '" + ASSIGNABLE + "' AND " +
                 "      last_modified <= '" + dateTime + "'";
 

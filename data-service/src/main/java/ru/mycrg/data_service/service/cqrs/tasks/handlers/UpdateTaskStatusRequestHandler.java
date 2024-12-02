@@ -14,6 +14,7 @@ import ru.mycrg.data_service.service.TaskService;
 import ru.mycrg.data_service.service.cqrs.tasks.requests.UpdateTaskStatusRequest;
 import ru.mycrg.data_service.service.schemas.ISchemaTemplateService;
 import ru.mycrg.data_service.service.smev3.request.accept_rns.AcceptRnsService;
+import ru.mycrg.data_service.service.smev3.request.accept_rnv.AcceptRnvService;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.data_service_contract.enums.TaskStatus;
 import ru.mycrg.mediator.IRequestHandler;
@@ -29,6 +30,7 @@ import static ru.mycrg.data_service.service.TaskService.TASKS_SCHEMA;
 import static ru.mycrg.data_service.service.TaskService.TASK_QUALIFIER;
 import static ru.mycrg.data_service.service.resources.ResourceQualifier.recordQualifier;
 import static ru.mycrg.data_service.service.smev3.fields.CommonFields.RNS_CONTENT_TYPE;
+import static ru.mycrg.data_service.service.smev3.fields.CommonFields.RNV_CONTENT_TYPE;
 import static ru.mycrg.data_service.util.SystemLibraryAttributes.*;
 import static ru.mycrg.data_service_contract.enums.TaskStatus.DONE;
 import static ru.mycrg.data_service_contract.enums.TaskStatus.IN_PROGRESS;
@@ -42,19 +44,22 @@ public class UpdateTaskStatusRequestHandler implements IRequestHandler<UpdateTas
     private final TaskLogService taskLogService;
     private final IAuthenticationFacade authenticationFacade;
     private final AcceptRnsService acceptRnsService;
+    private final AcceptRnvService acceptRnvService;
 
     public UpdateTaskStatusRequestHandler(RecordsDao recordsDao,
                                           TaskService taskService,
                                           ISchemaTemplateService schemaService,
                                           TaskLogService taskLogService,
                                           IAuthenticationFacade authenticationFacade,
-                                          AcceptRnsService acceptRnsService) {
+                                          AcceptRnsService acceptRnsService,
+                                          AcceptRnvService acceptRnvService) {
         this.recordsDao = recordsDao;
         this.taskService = taskService;
         this.schemaService = schemaService;
         this.taskLogService = taskLogService;
         this.authenticationFacade = authenticationFacade;
         this.acceptRnsService = acceptRnsService;
+        this.acceptRnvService = acceptRnvService;
     }
 
     @Override
@@ -80,10 +85,15 @@ public class UpdateTaskStatusRequestHandler implements IRequestHandler<UpdateTas
             dataForUpdate.put("status", newStatus.toString());
         }
 
-        Object contentType = task.get(CONTENT_TYPE_ID.name());
+        Object contentType = task.get(CONTENT_TYPE_ID.getName());
         if (contentType != null && contentType.toString().equals(RNS_CONTENT_TYPE)) {
             if ((newStatus == IN_PROGRESS) || newStatus == DONE) {
                 acceptRnsService.updateTablesAndSendStatusMessageToSmev(task, newStatus, taskId);
+            }
+        }
+        if (contentType != null && contentType.toString().equals(RNV_CONTENT_TYPE)) {
+            if ((newStatus == IN_PROGRESS) || newStatus == DONE) {
+                acceptRnvService.updateTablesAndSendStatusMessageToSmev(task, newStatus, taskId);
             }
         }
 

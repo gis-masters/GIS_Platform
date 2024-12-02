@@ -10,7 +10,6 @@ import ru.mycrg.data_service.service.smev3.AProcessorTest;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class RegisterRnsResponseTest extends AProcessorTest {
-    private final XmlMarshaller marshaller = new XmlMarshaller(Mnemonic.REGISTER_RNS_1_0_10.getPrefixMapper());
     private final String xmlPath = "register_rns_1_0_10";
 
     @Test

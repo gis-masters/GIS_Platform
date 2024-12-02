@@ -10,13 +10,12 @@ import java.io.StringWriter;
 
 public class XmlMarshaller {
 
-    private final NamespacePrefixMapper namespacePrefixMapper;
-
-    public XmlMarshaller(NamespacePrefixMapper namespacePrefixMapper) {
-        this.namespacePrefixMapper = namespacePrefixMapper;
+    public XmlMarshaller() {
+        throw new IllegalStateException("Utility class");
     }
 
-    public <T> String marshall(T object, Class<T> tClass) throws JAXBException {
+    public static  <T> String marshall(T object, Class<T> tClass, NamespacePrefixMapper namespacePrefixMapper)
+            throws JAXBException {
         var marshaller = JAXBContext
                 .newInstance(tClass)
                 .createMarshaller();
@@ -30,7 +29,7 @@ public class XmlMarshaller {
         return sw.toString();
     }
 
-    public <T> T unmarshall(String xml, Class<T> tClass) throws JAXBException {
+    public static <T> T unmarshall(String xml, Class<T> tClass) throws JAXBException {
         var jaxbUnmarshaller = JAXBContext
                 .newInstance(tClass)
                 .createUnmarshaller();

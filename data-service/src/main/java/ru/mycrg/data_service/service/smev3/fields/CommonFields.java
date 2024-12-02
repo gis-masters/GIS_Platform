@@ -9,4 +9,5 @@ public class CommonFields {
 
     public static final String STATUS = "status";
     public static final String RNS_CONTENT_TYPE = "rns_smev_rostelekom";
+    public static final String RNV_CONTENT_TYPE = "rnv_smev_rostelekom";
 }

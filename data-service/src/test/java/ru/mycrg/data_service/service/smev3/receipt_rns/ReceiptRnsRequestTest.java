@@ -19,8 +19,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  */
 public class ReceiptRnsRequestTest {
 
-    private final XmlMarshaller marshaller = new XmlMarshaller(Mnemonic.RECEIPT_RNS_1_0_9.getPrefixMapper());
-
     @Test
     public void request() throws Exception {
         var smev3Config = new Smev3Config();
@@ -35,10 +33,11 @@ public class ReceiptRnsRequestTest {
         var meta = new ReceiptRnsRequestXmlProcessor(processor).run(dto);
 
         // to xml
-        var requestXmlStrong = marshaller.marshall(meta.getRequest(), Request.class);
+        var requestXmlStrong = XmlMarshaller.marshall(meta.getRequest(), Request.class,
+                                                   Mnemonic.RECEIPT_RNS_1_0_9.getPrefixMapper());
 
         // to object
-        var requestObject = marshaller.unmarshall(requestXmlStrong, Request.class);
+        var requestObject = XmlMarshaller.unmarshall(requestXmlStrong, Request.class);
 
         var receiptListConstruction = requestObject.getReceiptListConstruction();
 

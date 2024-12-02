@@ -18,7 +18,6 @@ import static ru.mycrg.data_service.service.smev3.fields.FieldsEisZs.*;
  * urn://x-artefacts-uishc.domrf.ru/receipt-rnv/1.0.9
  */
 public class ReceiptRnvResponseTest extends AProcessorTest {
-    private final XmlMarshaller marshaller = new XmlMarshaller(Mnemonic.RECEIPT_RNV_1_0_9.getPrefixMapper());
     private final String xmlPath = "receipt_rnv_1_0_9";
 
     @Test
@@ -70,7 +69,7 @@ public class ReceiptRnvResponseTest extends AProcessorTest {
         var content = dataEisZsServiceMock.getContent().get(0);
 
         // Получаем объект из XML для дальнейшего сравнения
-        var response = marshaller.unmarshall(fileContent, QueryResult.class)
+        var response = XmlMarshaller.unmarshall(fileContent, QueryResult.class)
                 .getMessage()
                 .getResponseContent()
                 .getContent()
@@ -111,7 +110,7 @@ public class ReceiptRnvResponseTest extends AProcessorTest {
         var records = dataEisZsServiceMock.getContent();
 
         // Получаем объект из XML для дальнейшего сравнения
-        var response = marshaller.unmarshall(fileContent, QueryResult.class)
+        var response = XmlMarshaller.unmarshall(fileContent, QueryResult.class)
                 .getMessage()
                 .getResponseContent()
                 .getContent()

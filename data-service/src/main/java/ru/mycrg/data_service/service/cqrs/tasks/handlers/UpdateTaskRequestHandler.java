@@ -15,6 +15,7 @@ import ru.mycrg.data_service.service.TaskService;
 import ru.mycrg.data_service.service.cqrs.tasks.requests.UpdateTaskRequest;
 import ru.mycrg.data_service.service.schemas.ISchemaTemplateService;
 import ru.mycrg.data_service.service.smev3.request.accept_rns.AcceptRnsService;
+import ru.mycrg.data_service.service.smev3.request.accept_rnv.AcceptRnvService;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.mediator.IRequestHandler;
 import ru.mycrg.mediator.Voidy;
@@ -26,8 +27,7 @@ import static java.time.LocalDateTime.now;
 import static ru.mycrg.data_service.service.TaskService.TASKS_SCHEMA;
 import static ru.mycrg.data_service.service.TaskService.TASK_QUALIFIER;
 import static ru.mycrg.data_service.service.resources.ResourceQualifier.recordQualifier;
-import static ru.mycrg.data_service.service.smev3.fields.CommonFields.RNS_CONTENT_TYPE;
-import static ru.mycrg.data_service.service.smev3.fields.CommonFields.STATUS;
+import static ru.mycrg.data_service.service.smev3.fields.CommonFields.*;
 import static ru.mycrg.data_service.util.SystemLibraryAttributes.*;
 import static ru.mycrg.data_service_contract.enums.TaskStatus.DONE;
 import static ru.mycrg.data_service_contract.enums.TaskStatus.IN_PROGRESS;
@@ -39,6 +39,7 @@ public class UpdateTaskRequestHandler implements IRequestHandler<UpdateTaskReque
     private final TaskService taskService;
     private final TaskLogService taskLogService;
     private final AcceptRnsService acceptRnsService;
+    private final AcceptRnvService acceptRnvService;
     private final ISchemaTemplateService schemaService;
     private final IAuthenticationFacade authenticationFacade;
 
@@ -46,6 +47,7 @@ public class UpdateTaskRequestHandler implements IRequestHandler<UpdateTaskReque
                                     TaskService taskService,
                                     TaskLogService taskLogService,
                                     AcceptRnsService acceptRnsService,
+                                    AcceptRnvService acceptRnvService,
                                     ISchemaTemplateService schemaService,
                                     IAuthenticationFacade authenticationFacade) {
         this.recordsDao = recordsDao;
@@ -53,6 +55,7 @@ public class UpdateTaskRequestHandler implements IRequestHandler<UpdateTaskReque
         this.schemaService = schemaService;
         this.taskLogService = taskLogService;
         this.acceptRnsService = acceptRnsService;
+        this.acceptRnvService = acceptRnvService;
         this.authenticationFacade = authenticationFacade;
     }
 
@@ -71,7 +74,7 @@ public class UpdateTaskRequestHandler implements IRequestHandler<UpdateTaskReque
         }
 
         IRecord newTask = request.getNewTask();
-        Object contentType = task.get(CONTENT_TYPE_ID.name());
+        Object contentType = task.get(CONTENT_TYPE_ID.getName());
         if (contentType != null && contentType.toString().equals(RNS_CONTENT_TYPE)) {
             String status = newTask.getAsString(STATUS);
             if (status != null) {
@@ -81,6 +84,18 @@ public class UpdateTaskRequestHandler implements IRequestHandler<UpdateTaskReque
 
                 if (DONE.name().equals(status)) {
                     acceptRnsService.updateTablesAndSendStatusMessageToSmev(task, DONE, taskId);
+                }
+            }
+        }
+        if (contentType != null && contentType.toString().equals(RNV_CONTENT_TYPE)) {
+            String status = newTask.getAsString(STATUS);
+            if (status != null) {
+                if (IN_PROGRESS.name().equals(status)) {
+                    acceptRnvService.updateTablesAndSendStatusMessageToSmev(task, IN_PROGRESS, taskId);
+                }
+
+                if (DONE.name().equals(status)) {
+                    acceptRnvService.updateTablesAndSendStatusMessageToSmev(task, DONE, taskId);
                 }
             }
         }

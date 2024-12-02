@@ -22,6 +22,7 @@ import ru.mycrg.data_service.service.smev3.model.SmevRequestMeta;
 import ru.mycrg.data_service.service.smev3.request.RequestProcessor;
 import ru.mycrg.data_service.service.smev3.request.SmevFakeXmlBuilder;
 import ru.mycrg.data_service.util.JsonConverter;
+import ru.mycrg.data_service.util.xml.XmlMarshaller;
 
 import javax.xml.bind.JAXBException;
 import java.util.List;
@@ -72,7 +73,8 @@ public class RegisterRnsRequestService extends RequestProcessor {
                 .run(registerRequestDto);
         ClientMessage clientMessage = prepareClientMessage(requestAndSources);
 
-        String xmlPartOfRequest = xmlMarshaller().marshall(clientMessage, ClientMessage.class);
+        String xmlPartOfRequest = XmlMarshaller.marshall(clientMessage, ClientMessage.class,
+                                                         mnemonicEnum().getPrefixMapper());
         if (registerRequestDto.getFakeRequest() != null) {
             log.debug("Подменяем 🔀 RequestContent на заданный в запросе");
 

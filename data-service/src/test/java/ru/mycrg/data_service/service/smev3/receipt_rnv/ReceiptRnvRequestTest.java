@@ -16,7 +16,6 @@ import java.time.LocalDate;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ReceiptRnvRequestTest extends AProcessorTest {
-    private final XmlMarshaller marshaller = new XmlMarshaller(Mnemonic.RECEIPT_RNV_1_0_9.getPrefixMapper());
 
     @Test
     public void request() throws Exception {
@@ -32,10 +31,11 @@ public class ReceiptRnvRequestTest extends AProcessorTest {
         var meta = new ReceiptRnvXmlBuildProcessor(processor).run(dto);
 
         // to xml
-        var requestXmlStrong = marshaller.marshall(meta.getRequest(), Request.class);
+        var requestXmlStrong = XmlMarshaller.marshall(meta.getRequest(), Request.class,
+                                          Mnemonic.RECEIPT_RNV_1_0_9.getPrefixMapper());
 
         // to object
-        var requestObject = marshaller.unmarshall(requestXmlStrong, Request.class);
+        var requestObject = XmlMarshaller.unmarshall(requestXmlStrong, Request.class);
 
         var receiptListConstruction = requestObject.getReceiptListExploitation();
 

@@ -1,11 +1,11 @@
-package ru.mycrg.data_service.service.smev3.request.accept_rns;
+package ru.mycrg.data_service.service.smev3.request.accept_rnv;
 
 import com.sun.xml.bind.marshaller.NamespacePrefixMapper;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import ru.mycrg.data_service.accept_rns_1_0_3.*;
+import ru.mycrg.data_service.accept_rnv_1_0_6.*;
 import ru.mycrg.data_service.dao.RecordsDao;
 import ru.mycrg.data_service.dao.detached.TasksDetachedDao;
 import ru.mycrg.data_service.dto.record.IRecord;
@@ -23,6 +23,7 @@ import ru.mycrg.data_service.service.smev3.config.Smev3Config;
 import ru.mycrg.data_service.service.smev3.fields.CommonFields;
 import ru.mycrg.data_service.service.smev3.model.CustomMultipartFile;
 import ru.mycrg.data_service.service.smev3.request.AcceptSerivceBase;
+import ru.mycrg.data_service.service.smev3.request.accept_rns.DocumentCreationService;
 import ru.mycrg.data_service.service.storage.FileStorageService;
 import ru.mycrg.data_service.util.xml.XmlMarshaller;
 import ru.mycrg.data_service_contract.enums.TaskStatus;
@@ -35,12 +36,12 @@ import java.util.stream.Collectors;
         value = "crg-options.integration.smev3.enabled",
         havingValue = "true",
         matchIfMissing = true)
-public class AcceptRnsService extends AcceptSerivceBase {
+public class AcceptRnvService extends AcceptSerivceBase {
 
-    private static final String TITLE = "РНC из ЕПГУ";
-    private static final String EVENT_TYPE_LOG = "Входящее сообщение РНC успешно записано в реестр";
+    private static final String TITLE = "РНВ из ЕПГУ";
+    private static final String EVENT_TYPE_LOG = "Входящее сообщение РНВ успешно записано в реестр";
 
-    public AcceptRnsService(TaskLogService taskLogService, TasksDetachedDao tasksDao,
+    public AcceptRnvService(TaskLogService taskLogService, TasksDetachedDao tasksDao,
                             SmevMessageService smevMessageService,
                             ISchemaTemplateService schemaService,
                             FileStorageService fileStorageService, RecordsDao recordsDao,
@@ -58,7 +59,7 @@ public class AcceptRnsService extends AcceptSerivceBase {
 
     @Override
     protected String getContentType() {
-        return CommonFields.RNS_CONTENT_TYPE;
+        return CommonFields.RNV_CONTENT_TYPE;
     }
 
     @Override
@@ -136,10 +137,7 @@ public class AcceptRnsService extends AcceptSerivceBase {
 
     @Override
     protected <T> XWPFDocument getWordDocument(T queryResult) {
-        QueryResult result = (QueryResult) queryResult;
-        RequestType request = result.getMessage().getRequestContent().getContent().getMessagePrimaryContent()
-                                    .getRequest();
-        return documentCreationService.createDoc(request);
+        return null;
     }
 
     @Override
@@ -179,41 +177,34 @@ public class AcceptRnsService extends AcceptSerivceBase {
         RequestType request = result.getMessage().getRequestContent().getContent().getMessagePrimaryContent()
                                     .getRequest();
         List<MultipartFile> files = new ArrayList<>();
-        addFileIfNotEmpty(files, request.getDocuments().getAdditionalDocument(), map);
-        addFileIfNotEmpty(files, request.getDocuments().getTitleDocLandPlot(), map);
-        addFileIfNotEmpty(files, request.getDocuments().getTitleDocLandPlotSig(), map);
-        addFileIfNotEmpty(files, request.getDocuments().getDecisionOwnersConstructionObject(), map);
-        addFileIfNotEmpty(files, request.getDocuments().getDecisionOwnersConstructionObjectSig(), map);
-        addFileIfNotEmpty(files, request.getDocuments().getDecisionMeetingOwnersApartment(), map);
-        addFileIfNotEmpty(files, request.getDocuments().getDecisionMeetingOwnersApartmentSig(), map);
-        addFileIfNotEmpty(files, request.getDocuments().getDecisionOwnersApartments(), map);
-        addFileIfNotEmpty(files, request.getDocuments().getDecisionOwnersApartmentsSig(), map);
-        addFileIfNotEmpty(files, request.getDocuments().getResaltEngineerResearch(), map);
-        addFileIfNotEmpty(files, request.getDocuments().getResaltEngineerResearchSig(), map);
-        addFileIfNotEmpty(files, request.getDocuments().getProjectDescriptionPartition(), map);
-        addFileIfNotEmpty(files, request.getDocuments().getProjectDescriptionPartitionSig(), map);
-        addFileIfNotEmpty(files, request.getDocuments().getSchemeLandPlotPartition(), map);
-        addFileIfNotEmpty(files, request.getDocuments().getSchemeLandPlotPartitionSig(), map);
-        addFileIfNotEmpty(files, request.getDocuments().getArchitecturalSolutionsPartition(), map);
-        addFileIfNotEmpty(files, request.getDocuments().getArchitecturalSolutionsPartitionSig(), map);
-        addFileIfNotEmpty(files, request.getDocuments().getConstructionProjectPartition(), map);
-        addFileIfNotEmpty(files, request.getDocuments().getProjectDescriptionPartitionSig(), map);
-        addFileIfNotEmpty(files, request.getDocuments().getRemovalProjectPartition(), map);
-        addFileIfNotEmpty(files, request.getDocuments().getRemovalProjectPartitionSig(), map);
-        addFileIfNotEmpty(files, request.getDocuments().getPositiveConclusion(), map);
-        addFileIfNotEmpty(files, request.getDocuments().getPositiveConclusionSig(), map);
         addFileIfNotEmpty(files, request.getDocuments().getDelegateLegalDocFile(), map);
         addFileIfNotEmpty(files, request.getDocuments().getDelegateLegalDocSigFile(), map);
-        addFileIfNotEmpty(files, request.getDocuments().getAdditionalDocFile(), map);
-        addFileIfNotEmpty(files, request.getDocuments().getAdditionalDocFileSig(), map);
-        addFileIfNotEmpty(files, request.getDocuments().getAdditionalDocFile2(), map);
-        addFileIfNotEmpty(files, request.getDocuments().getAdditionalDocFileSig2(), map);
-        addFileIfNotEmpty(files, request.getDocuments().getAdditionalDocFile3(), map);
-        addFileIfNotEmpty(files, request.getDocuments().getAdditionalDocFileSig3(), map);
-        addFileIfNotEmpty(files, request.getDocuments().getAdditionalDocFile4(), map);
-        addFileIfNotEmpty(files, request.getDocuments().getAdditionalDocFileSig4(), map);
         addFileIfNotEmpty(files, request.getDocuments().getDelegateDocFile(), map);
         addFileIfNotEmpty(files, request.getDocuments().getDelegateDocSigFile(), map);
+        addFileIfNotEmpty(files, request.getDocuments().getAdditionalDocument(), map);
+        addFileIfNotEmpty(files, request.getDocuments().getTitleDocLandPlot(), map);
+        addFileIfNotEmpty(files, request.getDocuments().getCertificateAcceptanceObject(), map);
+        addFileIfNotEmpty(files, request.getDocuments().getConfirmingComplianceParameters(), map);
+        addFileIfNotEmpty(files, request.getDocuments().getActConnection(), map);
+        addFileIfNotEmpty(files, request.getDocuments().getActConnectionOwnedNoState(), map);
+        addFileIfNotEmpty(files, request.getDocuments().getDiagramLocationObject(), map);
+        addFileIfNotEmpty(files, request.getDocuments().getContractCivilLiabilityInsurance(), map);
+        addFileIfNotEmpty(files, request.getDocuments().getTechnicalPlanObject(), map);
+        addFileIfNotEmpty(files, request.getDocuments().getContractConcludedDeveloperAnotherPerson(), map);
+        addFileIfNotEmpty(files, request.getDocuments().getSignedStatement(), map);
+        addFileIfNotEmpty(files, request.getDocuments().getExtractEgrul(), map);
+        addFileIfNotEmpty(files, request.getDocuments().getExtractEgrip(), map);
+        addFileIfNotEmpty(files, request.getDocuments().getExtractEgrn(), map);
+        addFileIfNotEmpty(files, request.getDocuments().getGPZUDocument(), map);
+        addFileIfNotEmpty(files, request.getDocuments().getProjectPlanningTerritory(), map);
+        addFileIfNotEmpty(files, request.getDocuments().getProjectSurveyingTerritory(), map);
+        addFileIfNotEmpty(files, request.getDocuments().getConstructionPermit(), map);
+        addFileIfNotEmpty(files, request.getDocuments().getConclusionStateConstruction(), map);
+        addFileIfNotEmpty(files, request.getDocuments().getPermissionObjectOperation(), map);
+        addFileIfNotEmpty(files, request.getDocuments().getConsentProcessingPersonalData(), map);
+        addFileIfNotEmpty(files, request.getDocuments().getLicenseUseMineralResources(), map);
+        addFileIfNotEmpty(files, request.getDocuments().getIdentityDocument(), map);
+        addFileIfNotEmpty(files, request.getDocuments().getActAcceptanceObjectCultural(), map);
         return files;
     }
 

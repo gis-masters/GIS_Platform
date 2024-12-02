@@ -16,6 +16,7 @@ import ru.mycrg.data_service.service.smev3.model.SmevMessageType;
 import ru.mycrg.data_service.service.smev3.model.SmevRequestMeta;
 import ru.mycrg.data_service.service.smev3.request.ResponseProcessor;
 import ru.mycrg.data_service.util.JsonConverter;
+import ru.mycrg.data_service.util.xml.XmlMarshaller;
 
 import java.util.UUID;
 
@@ -36,7 +37,7 @@ public class RegisterRnvResponseService extends ResponseProcessor {
     @Transactional
     public ProcessAdapterMessageResult processMessageFromSmev(String messageBody) {
         try {
-            QueryResult queryResult = xmlMarshaller().unmarshall(messageBody, QueryResult.class);
+            QueryResult queryResult = XmlMarshaller.unmarshall(messageBody, QueryResult.class);
 
             SmevRequestMeta meta = new SmevRequestMeta(
                     mnemonicEnum(),

@@ -21,6 +21,7 @@ import ru.mycrg.data_service.service.smev3.model.SmevMessageType;
 import ru.mycrg.data_service.service.smev3.model.SmevRequestMeta;
 import ru.mycrg.data_service.service.smev3.request.ResponseProcessor;
 import ru.mycrg.data_service.util.JsonConverter;
+import ru.mycrg.data_service.util.xml.XmlMarshaller;
 
 import java.util.List;
 import java.util.UUID;
@@ -49,7 +50,7 @@ public class ReceiptRnsResponseService extends ResponseProcessor {
         log.debug("Получено сообщение из СМЭВ: {}", messageBody);
 
         try {
-            QueryResult queryResult = xmlMarshaller().unmarshall(messageBody, QueryResult.class);
+            QueryResult queryResult = XmlMarshaller.unmarshall(messageBody, QueryResult.class);
 
             SmevRequestMeta meta = new SmevRequestMeta(
                     mnemonicEnum(),

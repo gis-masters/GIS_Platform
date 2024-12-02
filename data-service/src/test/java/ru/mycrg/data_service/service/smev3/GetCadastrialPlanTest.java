@@ -13,8 +13,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class GetCadastrialPlanTest {
 
-    private final XmlMarshaller marshaller = new XmlMarshaller(Mnemonic.GET_CADASTRIAL_PLAN_1_1_2.getPrefixMapper());
-
     @Test
     public void getEgrnCadastrialPlans_1_1_2() throws JAXBException {
         var smev3Config = new Smev3Config();
@@ -32,10 +30,11 @@ public class GetCadastrialPlanTest {
         var meta = new GetCadastrialPlanXmlBuildProcessor(processor).run();
 
         // to xml
-        var requestXmlStrong = marshaller.marshall(meta.getRequest(), Request.class);
+        var requestXmlStrong = XmlMarshaller.marshall(meta.getRequest(), Request.class,
+                                                   Mnemonic.GET_CADASTRIAL_PLAN_1_1_2.getPrefixMapper());
 
         // to object
-        var requestObject = marshaller.unmarshall(requestXmlStrong, Request.class);
+        var requestObject = XmlMarshaller.unmarshall(requestXmlStrong, Request.class);
 
         assertNotNull(requestObject);
     }

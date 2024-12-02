@@ -16,6 +16,7 @@ import ru.mycrg.data_service.service.smev3.model.RequestAndSources;
 import ru.mycrg.data_service.service.smev3.model.SmevRequestMeta;
 import ru.mycrg.data_service.service.smev3.request.RequestProcessor;
 import ru.mycrg.data_service.util.JsonConverter;
+import ru.mycrg.data_service.util.xml.XmlMarshaller;
 
 import java.util.UUID;
 
@@ -53,7 +54,7 @@ public class ReceiptRnsRequestService extends RequestProcessor {
                 mnemonicEnum(),
                 UUID.fromString(clientMessage.getRequestMessage().getRequestMetadata().getClientId()),
                 null,
-                xmlMarshaller().marshall(clientMessage, ClientMessage.class),
+                XmlMarshaller.marshall(clientMessage, ClientMessage.class, mnemonicEnum().getPrefixMapper()),
                 JsonConverter.toJsonNode(clientMessage),
                 requestAndSources.getSourcesAsJson(),
                 requestAndSources.getAttachmentsAsJson());

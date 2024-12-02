@@ -37,6 +37,7 @@ import ru.mycrg.data_service.service.smev3.model.RequestAndSources;
 import ru.mycrg.data_service.service.smev3.model.SmevRequestMeta;
 import ru.mycrg.data_service.service.smev3.request.RequestProcessor;
 import ru.mycrg.data_service.service.storage.FileStorageService;
+import ru.mycrg.data_service.util.xml.XmlMarshaller;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.data_service_contract.dto.TypeDocumentData;
 import ru.mycrg.mediator.Mediator;
@@ -310,7 +311,7 @@ public class GetCadastrialPlanRequestService extends RequestProcessor {
                 mnemonicEnum(),
                 UUID.fromString(clientMessage.getRequestMessage().getRequestMetadata().getClientId()),
                 null,
-                xmlMarshaller().marshall(clientMessage, ClientMessage.class),
+                XmlMarshaller.marshall(clientMessage, ClientMessage.class, mnemonicEnum().getPrefixMapper()),
                 toJsonNode(clientMessage),
                 requestAndSources.getSourcesAsJson(),
                 requestAndSources.getAttachmentsAsJson()

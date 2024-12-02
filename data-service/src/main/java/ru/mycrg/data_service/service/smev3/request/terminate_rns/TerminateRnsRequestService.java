@@ -21,6 +21,7 @@ import ru.mycrg.data_service.service.smev3.request.RequestProcessor;
 import ru.mycrg.data_service.service.smev3.request.SmevFakeXmlBuilder;
 import ru.mycrg.data_service.terminate_rns_1_0_6.*;
 import ru.mycrg.data_service.util.JsonConverter;
+import ru.mycrg.data_service.util.xml.XmlMarshaller;
 
 import java.util.UUID;
 
@@ -67,7 +68,8 @@ public class TerminateRnsRequestService extends RequestProcessor {
                 .run(terminateRequestDto);
         ClientMessage clientMessage = clientMessage(requestAndSources);
 
-        String xmlPartOfRequest = xmlMarshaller().marshall(clientMessage, ClientMessage.class);
+        String xmlPartOfRequest = XmlMarshaller.marshall(clientMessage, ClientMessage.class,
+                                                         mnemonicEnum().getPrefixMapper());
         if (terminateRequestDto.getFakeRequest() != null) {
             log.debug("Подменяем 🔀 RequestContent на заданный в запросе");
 
