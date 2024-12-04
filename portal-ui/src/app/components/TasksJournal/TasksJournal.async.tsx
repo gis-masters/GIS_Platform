@@ -174,7 +174,15 @@ export default class TasksJournal extends Component {
       return;
     }
 
-    return <TasksJournalActions schema={this.schema} className={cnTasksJournal('Actions')} task={rowData} as='menu' />;
+    return (
+      <TasksJournalActions
+        schema={this.schema}
+        primalSchema={this.primalSchema}
+        className={cnTasksJournal('Actions')}
+        task={rowData}
+        as='menu'
+      />
+    );
   }
 
   @boundMethod

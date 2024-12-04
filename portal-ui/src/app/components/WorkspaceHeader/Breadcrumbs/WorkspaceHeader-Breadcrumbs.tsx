@@ -22,7 +22,7 @@ export const WorkspaceHeaderBreadcrumbs: FC = observer(() => {
 
   if (page === Pages.ORG_ADMIN) {
     root = { url: '/org-admin', title: 'Управление организацией' };
-  } else if ([Pages.DATA_MANAGEMENT, Pages.REGISTRY, Pages.DOCUMENT].includes(page)) {
+  } else if ([Pages.DATA_MANAGEMENT, Pages.REGISTRY, Pages.DOCUMENT, Pages.TASKS_JOURNAL].includes(page)) {
     root = { url: '/data-management', title: 'Управление данными' };
   } else {
     root = { url: '/projects', title: 'Проекты' };

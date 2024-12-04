@@ -17,6 +17,7 @@ export const cnLibraryTaskActions = cn('LibraryTaskActions');
 export interface TasksJournalActionsProps extends IClassNameProps {
   task: Task;
   schema: Schema;
+  primalSchema?: Schema;
   as: ActionsItemVariant;
 }
 
@@ -27,12 +28,12 @@ export default class TasksJournalActions extends Component<TasksJournalActionsPr
   }
 
   render() {
-    const { as, className, task, schema } = this.props;
+    const { as, className, task, schema, primalSchema } = this.props;
 
     return (
       <Actions className={cnLibraryTaskActions(null, [className])} as={as}>
         {/* <TasksJournalActionsStatus task={task} as={as} /> */}
-        <TasksJournalActionsEdit schema={schema} task={task} as={as} />
+        {primalSchema && <TasksJournalActionsEdit primalSchema={primalSchema} task={task} as={as} />}
         <TasksJournalActionsHistory schema={schema} task={task} as={as} />
       </Actions>
     );

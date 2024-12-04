@@ -21,7 +21,7 @@ const cnTasksJournalActionsEditDialog = cn('TasksJournalActions', 'EditDialog');
 
 interface TasksJournalActionsEditProps {
   task: Task;
-  schema: Schema;
+  primalSchema: Schema;
   as: ActionsItemVariant;
 }
 
@@ -36,7 +36,7 @@ export class TasksJournalActionsEdit extends Component<TasksJournalActionsEditPr
   }
 
   render() {
-    const { as, task, schema } = this.props;
+    const { as, task, primalSchema } = this.props;
 
     return (
       <>
@@ -55,7 +55,7 @@ export class TasksJournalActionsEdit extends Component<TasksJournalActionsEditPr
           onClose={this.closeDialog}
           value={task}
           open={this.openDialog}
-          schema={applyContentType(schema, task.content_type_id)}
+          schema={applyContentType(primalSchema, task.content_type_id)}
           actionButtonProps={{ children: 'Сохранить', loading: this.loading }}
         />
       </>
