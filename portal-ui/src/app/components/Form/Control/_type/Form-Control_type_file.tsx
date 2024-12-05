@@ -39,9 +39,7 @@ class FormControlTypeFile extends Component<FormControlProps> {
           })
           .filter(({ title }) => title.includes('.sig'));
 
-        if (ecpFiles.length) {
-          await this.checkEcpFile(ecpFiles);
-        }
+        await this.checkEcpFile(ecpFiles);
       }
     }
   }
@@ -61,6 +59,10 @@ class FormControlTypeFile extends Component<FormControlProps> {
       value = [];
     }
 
+    if (value.length) {
+      value = this.sortEcpFiles(value);
+    }
+
     return (
       <div className={cnFormControl({ inSet, fullWidthForOldForm }, [className])}>
         <Files
@@ -75,6 +77,26 @@ class FormControlTypeFile extends Component<FormControlProps> {
         <FormErrors errors={errors} />
       </div>
     );
+  }
+
+  private sortEcpFiles(files: FileInfo[]): FileInfo[] {
+    const filesCopy = [...files];
+
+    filesCopy.sort((a, b) => {
+      const aContains = a.title.includes('.sig');
+      const bContains = b.title.includes('.sig');
+
+      if (aContains && !bContains) {
+        return 1;
+      }
+      if (!aContains && bContains) {
+        return -1;
+      }
+
+      return 0;
+    });
+
+    return filesCopy;
   }
 
   private async checkEcpFile(newEcpFiles?: FileInfo[]) {
@@ -99,6 +121,8 @@ class FormControlTypeFile extends Component<FormControlProps> {
       const fileForEcp = files.find(({ title }) => title === originalFileName);
 
       if (!fileForEcp) {
+        filesStatusText[file.id] = `Загрузить файл подписи "${file.title}" невозможно. ЭЦП недействительна.`;
+
         return;
       }
 
