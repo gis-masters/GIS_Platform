@@ -3,7 +3,7 @@ import { boundClass } from 'autobind-decorator';
 import { PageableResources } from '../../../../server-types/common-contracts';
 import { http, MAX_ITEMS_PER_PAGE } from '../../api/http.service';
 import { preparePageOptions } from '../../api/http.utils';
-import { NewWfsFeature, WfsFeature } from '../../geoserver/wfs/wfs.models';
+import { CrgFeature, NewWfsFeature, WfsFeature } from '../../geoserver/wfs/wfs.models';
 import { PageOptions } from '../../models';
 import { DataClient } from '../DataClient';
 import { OldSchema } from '../schema/schemaOld.models';
@@ -176,10 +176,9 @@ class VectorDataClient extends DataClient {
   async updateFeature(
     datasetIdentifier: string,
     vectorTableIdentifier: string,
-    recordId: number,
-    patch: Partial<WfsFeature>
+    patchedFeature: CrgFeature
   ): Promise<void> {
-    return http.patch(this.getFeatureUrl(datasetIdentifier, vectorTableIdentifier, recordId), patch);
+    return http.patch(this.getFeatureUrl(datasetIdentifier, vectorTableIdentifier, patchedFeature.id), patchedFeature);
   }
 
   async copyFeaturesBetweenLayers(

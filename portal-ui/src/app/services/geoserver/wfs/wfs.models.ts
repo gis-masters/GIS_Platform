@@ -85,7 +85,8 @@ export type SupportedWfsGeometry<T = Coordinate> =
 
 export type WfsGeometry<T = Coordinate | CoordinateEdited> = SupportedWfsGeometry<T> | OtherGeometry<T>;
 
-export type NewWfsFeature = Pick<WfsFeature, 'type' | 'geometry' | 'properties'>;
+export type CrgFeature = Pick<WfsFeature, 'id' | 'type' | 'geometry' | 'properties'>;
+export type NewWfsFeature = Omit<CrgFeature, 'id'>;
 export interface WfsFeature<T extends Coordinate | CoordinateEdited = Coordinate> extends GeoJSONObject {
   type: 'Feature';
   id: string;

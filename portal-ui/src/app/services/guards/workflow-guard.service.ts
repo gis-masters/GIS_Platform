@@ -3,8 +3,8 @@ import { ActivatedRouteSnapshot, Router } from '@angular/router';
 import { AxiosError } from 'axios';
 import { NGXLogger } from 'ngx-logger';
 
-import { currentProject } from '../stores/CurrentProject.store';
-import { projectsService } from './gis/projects/projects.service';
+import { currentProject } from '../../stores/CurrentProject.store';
+import { projectsService } from '../gis/projects/projects.service';
 
 @Injectable({
   providedIn: 'root'

@@ -60,9 +60,6 @@ class WfsClient extends GeoserverClient {
     return http.get<WfsFeatureCollection>(this.getWfsUrl(), { params, headers: { 'Content-Type': Mime.JSON } });
   }
 
-  /**
-   * @deprecated
-   */
   update(payload: string): Promise<string> {
     return http.post(this.getWfsUrl(), payload, { headers: { 'Content-Type': Mime.XML }, responseType: 'text' });
   }

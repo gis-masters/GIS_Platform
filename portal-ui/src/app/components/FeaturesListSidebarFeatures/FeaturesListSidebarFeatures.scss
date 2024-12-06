@@ -21,7 +21,7 @@ body .FeaturesListSidebarFeatures {
 
   &-Close {
     position: absolute;
-    top: 8px;
+    top: 15px;
     right: 8px;
   }
 
@@ -31,5 +31,23 @@ body .FeaturesListSidebarFeatures {
     color: var(--danger);
 
     font-size: 13px;
+  }
+
+  &-Actions {
+    position: absolute;
+    top: 17px;
+    right: 90px;
+  }
+
+  &-Fon {
+    position: absolute;
+
+    width: 120px;
+    height: 39px;
+
+    opacity: 0.5;
+    border: 1px solid blue;
+    border-radius: 20px;
+    background-color: lightgray;
   }
 }

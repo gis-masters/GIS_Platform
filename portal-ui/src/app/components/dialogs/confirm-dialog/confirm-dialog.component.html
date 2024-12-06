@@ -2,9 +2,9 @@
   <p>{{data.title}}</p>
 </div>
 
-<mat-dialog-actions style="justify-content: space-between;">
-  <button mat-raised-button color="primary" cdkFocusInitial [mat-dialog-close]="true">
+<mat-dialog-actions style="justify-content: end">
+  <button mat-stroked-button style="color: #1976d2; letter-spacing: 0.02857em" [mat-dialog-close]="true">
     {{data.approveBtnName}}
   </button>
-  <button mat-raised-button mat-dialog-close>Отмена</button>
+  <button mat-stroked-button mat-dialog-close style="letter-spacing: 0.02857em">Отмена</button>
 </mat-dialog-actions>

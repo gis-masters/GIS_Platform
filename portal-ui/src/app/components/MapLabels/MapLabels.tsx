@@ -4,7 +4,7 @@ import { Tooltip } from '@mui/material';
 import { DeleteSweepOutlined, LabelOutlined, PolylineOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
-import { MapMode } from '../../services/map/map.models';
+import { MapAction, MapMode } from '../../services/map/map.models';
 import { LabelType } from '../../services/map/map-labels.models';
 import { mapLabelsService } from '../../services/map/map-labels.service';
 import { konfirmieren } from '../../services/utility-dialogs.service';
@@ -118,6 +118,7 @@ export const MapLabels: FC = observer(() => {
           checked={mapStore.labelsVisible}
           size='small'
           onClick={handleTogglerClick}
+          disabled={!mapStore.allowedActions.includes(MapAction.MAP_LABELS)}
         >
           <LabelsOutlined />
         </IconButton>

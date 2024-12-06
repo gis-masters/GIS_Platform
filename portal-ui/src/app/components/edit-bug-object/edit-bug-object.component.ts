@@ -8,7 +8,7 @@ import { schemaService } from '../../services/data/schema/schema.service';
 import { convertNewToOldSchema } from '../../services/data/schema/schema.utils';
 import { ValueType } from '../../services/data/schema/schemaOld.models';
 import { initValidation } from '../../services/data/validation/validation.service';
-import { transformFeature } from '../../services/geoserver/transform-feature.service';
+import { transformFeature } from '../../services/geoserver/wfs/transform-feature.service';
 import { WfsFeature } from '../../services/geoserver/wfs/wfs.models';
 import { getFeaturesById } from '../../services/geoserver/wfs/wfs.service';
 import { CrgVectorLayer } from '../../services/gis/layers/layers.models';

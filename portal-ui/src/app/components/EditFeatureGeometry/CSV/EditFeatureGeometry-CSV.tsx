@@ -7,7 +7,6 @@ import { boundMethod } from 'autobind-decorator';
 import { clone, isEqual } from 'lodash';
 import { parse } from 'papaparse';
 
-import { communicationService } from '../../../services/communication.service';
 import { CoordinateEdited, GeometryType } from '../../../services/geoserver/wfs/wfs.models';
 import { selectLabelForGeometryType } from '../../../services/geoserver/wfs/wfs.util';
 import { exportAsCSV } from '../../../services/util/export';
@@ -73,8 +72,6 @@ export class EditFeatureGeometryCSV extends Component<EditFeatureGeometryCSVProp
   @boundMethod
   private handleImportClick() {
     this.inputRef.current?.click();
-
-    communicationService.drawOff.emit();
   }
 
   @boundMethod
@@ -88,8 +85,6 @@ export class EditFeatureGeometryCSV extends Component<EditFeatureGeometryCSVProp
       }),
       'coordinates'
     );
-
-    communicationService.drawOff.emit();
   }
 
   @boundMethod

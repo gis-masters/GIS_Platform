@@ -40,7 +40,7 @@ class EditFeatureGeometryFormTypePoint extends EditFeatureGeometryFormBase {
       <div className={cnEditFeatureGeometryForm(null, [className])}>
         <EditFeatureGeometryToolbar>
           <EditFeatureGeometryToolbarLeft>
-            <EditFeatureGeometryDraw store={store} point={geometry.coordinates} onDraw={this.handleChange} />
+            <EditFeatureGeometryDraw store={store} onDraw={this.handleChange} />
             <EditFeatureGeometryAsText
               coordinates={[geometry.coordinates]}
               mustBeClosed={false}

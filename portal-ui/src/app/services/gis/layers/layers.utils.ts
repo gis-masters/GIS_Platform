@@ -58,8 +58,12 @@ export function externalLayerDefaults(): Pick<
 export function getLayerByFeatureInCurrentProject(
   feature: WfsFeature<Coordinate | CoordinateEdited>
 ): CrgVectorLayer | undefined {
+  return getLayerByFeatureIdFromCurrentProject(feature.id);
+}
+
+export function getLayerByFeatureIdFromCurrentProject(featureId: string): CrgVectorLayer | undefined {
   return currentProject.vectorableLayers.find(
-    ({ tableName }) => tableName === extractTableNameFromFeatureId(feature.id)
+    ({ tableName }) => tableName === extractTableNameFromFeatureId(featureId)
   );
 }
 

@@ -9,6 +9,8 @@ import { boundMethod } from 'autobind-decorator';
 
 import { FtsType } from '../../../server-types/common-contracts';
 import { SearchItemDataSource } from '../../services/data/search/search.model';
+import { MapAction } from '../../services/map/map.models';
+import { mapStore } from '../../stores/Map.store';
 import { ExplorerSearchValue } from '../Explorer/Explorer.models';
 import { IconButton } from '../IconButton/IconButton';
 
@@ -40,6 +42,7 @@ export class SearchField extends Component<SearchFieldProps> {
     return (
       <form className={cnSearchField(null, [this.props.className])} onSubmit={this.onSubmit}>
         <TextField
+          disabled={!mapStore.allowedActions.includes(MapAction.SEARCH_FIELD)}
           className={cnSearchField('Input', {
             whiteStyle: this.props.whiteStyle
           })}
@@ -48,7 +51,12 @@ export class SearchField extends Component<SearchFieldProps> {
           placeholder='Поиск'
           InputProps={{
             endAdornment: (
-              <IconButton type='submit' size='small' color='inherit'>
+              <IconButton
+                type='submit'
+                size='small'
+                color='inherit'
+                disabled={!mapStore.allowedActions.includes(MapAction.SEARCH_FIELD)}
+              >
                 <Search />
               </IconButton>
             )

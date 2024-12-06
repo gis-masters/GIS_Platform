@@ -1,8 +1,17 @@
 import { Feature } from 'ol';
 import { Coordinate } from 'ol/coordinate';
-import { LineString, MultiLineString, MultiPoint, MultiPolygon, Point, Polygon, SimpleGeometry } from 'ol/geom';
+import {
+  Geometry,
+  LineString,
+  MultiLineString,
+  MultiPoint,
+  MultiPolygon,
+  Point,
+  Polygon,
+  SimpleGeometry
+} from 'ol/geom';
 
-import { GeometryType, WfsFeature, WfsGeometry } from '../geoserver/wfs/wfs.models';
+import { GeometryType, WfsFeature, WfsFeatureCollection, WfsGeometry } from '../geoserver/wfs/wfs.models';
 
 export enum UnitsOfAreaMeasurement {
   HECTARE = 'га',
@@ -60,6 +69,24 @@ export function wfsFeatureToFeature(wfsFeature: WfsFeature): Feature<SimpleGeome
   olFeature.setProperties(wfsFeature.properties);
 
   return olFeature;
+}
+
+export function wfsFeaturesToFeatures(features: WfsFeature[]): Feature<Geometry>[] {
+  const result: Feature<Geometry>[] = [];
+  features.forEach(feature => {
+    result.push(wfsFeatureToFeature(feature));
+  });
+
+  return result;
+}
+
+export function wfsFeatureCollectionToFeature(featureCollection: WfsFeatureCollection): Feature<Geometry>[] {
+  const result: Feature<Geometry>[] = [];
+  featureCollection.features?.forEach(feature => {
+    result.push(wfsFeatureToFeature(feature));
+  });
+
+  return result;
 }
 
 /**

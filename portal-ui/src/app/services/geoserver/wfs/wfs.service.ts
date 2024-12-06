@@ -57,9 +57,6 @@ function getBaseWfsParams(layer: CrgVectorLayer): { [key: string]: string } {
 
 const MAX_PAGE_SIZE = 10_000;
 
-/**
- * @deprecated
- */
 export async function updateFeature(payload: string): Promise<string> {
   return wfsClient.update(payload);
 }

@@ -5,6 +5,8 @@ import { BugReport, BugReportOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
+import { MapAction } from '../../../services/map/map.models';
+import { mapStore } from '../../../stores/Map.store';
 import { organizationSettings } from '../../../stores/OrganizationSettings.store';
 import { Pages, route } from '../../../stores/Route.store';
 import { sidebars } from '../../../stores/Sidebars.store';
@@ -35,7 +37,11 @@ export class WorkspaceHeaderButtons extends Component {
         {route.data.page === Pages.MAP && <PrintMapButton />}
         {route.data.page === Pages.MAP && organizationSettings.viewBugReport && (
           <Tooltip title='Проверка ошибок по приказу'>
-            <IconButton onClick={this.handleBugsClick} color='inherit'>
+            <IconButton
+              onClick={this.handleBugsClick}
+              color='inherit'
+              disabled={!mapStore.allowedActions.includes(MapAction.CHECK_BUGS)}
+            >
               {sidebars.bugReportOpen ? <BugReport /> : <BugReportOutlined />}
             </IconButton>
           </Tooltip>

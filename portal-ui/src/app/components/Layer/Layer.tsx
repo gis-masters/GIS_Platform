@@ -8,7 +8,9 @@ import { CrgLayer, CrgLayersGroup, CrgLayerType, CrgVectorLayer } from '../../se
 import { getLayerSchema } from '../../services/gis/layers/layers.service';
 import { isVectorFromFile } from '../../services/gis/layers/layers.utils';
 import { TreeItemPayload } from '../../services/gis/projects/projects.models';
+import { MapAction } from '../../services/map/map.models';
 import { currentProject } from '../../stores/CurrentProject.store';
+import { mapStore } from '../../stores/Map.store';
 import { Highlight } from '../Highlight/Highlight';
 import { LayerBurger } from './Burger/Layer-Burger';
 import { LayerCard } from './Card/Layer-Card';
@@ -88,7 +90,7 @@ export class Layer extends Component<LayerProps> {
           {hiddenByZoom && <LayerZoomWarning out={out} tooltipText={hiddenByZoomTooltipText} />}
           <LayerEye
             enabled={!!enabled}
-            disabled={this.isError}
+            disabled={this.isError || !mapStore.allowedActions.includes(MapAction.LAYER_EYE)}
             onClick={onEyeClick}
             tooltipText={hiddenByZoomTooltipText}
           />

@@ -2,7 +2,7 @@ import { Coordinate } from 'ol/coordinate';
 
 import { communicationService } from '../../communication.service';
 import { extractFeatureId } from '../../geoserver/featureType/featureType.util';
-import { CoordinateEdited, NewWfsFeature, WfsFeature } from '../../geoserver/wfs/wfs.models';
+import { CoordinateEdited, CrgFeature, NewWfsFeature, WfsFeature } from '../../geoserver/wfs/wfs.models';
 import { CrgLayer } from '../../gis/layers/layers.models';
 import { PageOptions } from '../../models';
 import { Schema } from '../schema/schema.models';
@@ -159,11 +159,9 @@ export async function createFeature(
 export async function updateFeature(
   datasetIdentifier: string,
   vectorTableIdentifier: string,
-  recordId: number,
-  patch: Partial<WfsFeature>
+  patchedFeature: CrgFeature
 ): Promise<void> {
-  await vectorDataClient.updateFeature(datasetIdentifier, vectorTableIdentifier, recordId, patch);
-  communicationService.featuresUpdated.emit({ type: 'update', data: null });
+  await vectorDataClient.updateFeature(datasetIdentifier, vectorTableIdentifier, patchedFeature);
 }
 
 export async function copyFeaturesBetweenLayers(

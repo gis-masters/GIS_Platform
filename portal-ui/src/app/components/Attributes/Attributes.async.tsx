@@ -33,6 +33,7 @@ export default class Attributes extends Component<IClassNameProps> {
   @observable private causedByUserLayers: CrgVectorLayer[] = [];
   @observable private currentLayer?: CrgVectorLayer;
   @observable private tablePageOptions?: PageOptions;
+
   private tableInvoke: XTableInvoke = {};
 
   constructor(props: IClassNameProps) {
@@ -41,6 +42,10 @@ export default class Attributes extends Component<IClassNameProps> {
   }
 
   componentDidMount() {
+    communicationService.minimizeAttributesBar.on(() => {
+      this.minimizeBar();
+    }, this);
+
     communicationService.openAttributesBar.on((e: CustomEvent<CrgVectorLayer>) => {
       this.openBar(e.detail);
     }, this);

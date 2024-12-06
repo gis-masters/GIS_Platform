@@ -150,7 +150,7 @@ export async function filterLegendForCurrentMapView(layers: CrgVectorLayer[]): P
     throw new Error('Карта не инициализирована');
   }
 
-  const [x1, y1, x2, y2] = mapService.view.calculateExtent();
+  const [x1, y1, x2, y2] = mapService.getCurrentExtend();
   const filterDisabled = cloneDeep(attributesTableStore.filterDisabled);
   const requestData: FilteredStylesLayerRequest[] = await Promise.all(
     layers.map(async layer => {

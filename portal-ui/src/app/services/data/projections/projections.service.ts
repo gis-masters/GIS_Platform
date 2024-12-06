@@ -8,6 +8,7 @@ import { projectionsStore } from '../../../stores/Projections.store';
 import { CoordinateEdited, WfsFeature } from '../../geoserver/wfs/wfs.models';
 import { getLayerByFeatureInCurrentProject } from '../../gis/layers/layers.utils';
 import { PageOptions } from '../../models';
+import { services } from '../../services';
 import { projectionsClient } from './projections.client';
 import { defaultOlProjectionCode, Projection } from './projections.models';
 import { getProjectionCode, getProjectionTitle, getProjectionUnit, getSrid } from './projections.util';
@@ -87,8 +88,8 @@ export async function getFeatureProjection(
   feature: WfsFeature<Coordinate | CoordinateEdited>
 ): Promise<Projection | undefined> {
   const layer = getLayerByFeatureInCurrentProject(feature);
-
   if (!layer) {
+    services.logger.error('Не корректная feature: ', feature);
     throw new Error('Не удалось определить проекцию слоя. Не найден слой для объекта: ' + feature.id);
   }
 
@@ -143,7 +144,7 @@ function proj4Str({ lat_0, lon_0, x_0 }: { lat_0: number; lon_0: number; x_0: nu
   return `+proj=tmerc +lat_0=${lat_0} +lon_0=${lon_0} +k=1 +x_0=${x_0} +y_0=0 +ellps=krass +towgs84=43.822,-108.842,-119.585,1.455,-0.761,0.737,0.549 +units=m +no_defs`;
 }
 
-// СК для яндекс подложек
+// СК для подложек Яндекса
 proj4.defs('EPSG:3395', '+proj=merc +lon_0=0 +k=1 +x_0=0 +y_0=0 +datum=WGS84 +units=m +no_defs');
 register(proj4);
 

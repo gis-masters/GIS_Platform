@@ -4,6 +4,7 @@ import { Tooltip } from '@mui/material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
+import { MapAction } from '../../../services/map/map.models';
 import { mapSelectionService } from '../../../services/map/map-selection.service';
 import { mapStore } from '../../../stores/Map.store';
 import { IconButton } from '../../IconButton/IconButton';
@@ -28,18 +29,16 @@ export class MapSelectionCancel extends Component {
 
   render() {
     return (
-      Boolean(mapStore.selectedFeatures.length) && (
-        <Tooltip title='Снять выделение (Esc, Esc)'>
-          <IconButton
-            disabled={!mapStore.selectedFeatures.length}
-            className={cnMapSelectionCancel()}
-            onClick={this.clearSelectedFeatures}
-            size='small'
-          >
-            <RectangleSelectionCancel />
-          </IconButton>
-        </Tooltip>
-      )
+      <Tooltip title='Снять выделение (Esc, Esc)'>
+        <IconButton
+          disabled={!mapStore.selectedFeatures.length || !mapStore.allowedActions.includes(MapAction.MAP_SELECTION)}
+          className={cnMapSelectionCancel()}
+          onClick={this.clearSelectedFeatures}
+          size='small'
+        >
+          <RectangleSelectionCancel />
+        </IconButton>
+      </Tooltip>
     );
   }
 

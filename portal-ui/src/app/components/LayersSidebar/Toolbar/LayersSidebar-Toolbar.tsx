@@ -15,8 +15,10 @@ import { cloneDeep } from 'lodash';
 
 import { CrgLayer, CrgLayersGroup } from '../../../services/gis/layers/layers.models';
 import { projectsService } from '../../../services/gis/projects/projects.service';
+import { MapAction } from '../../../services/map/map.models';
 import { focusToLayer } from '../../../services/sidebarActions.service';
 import { currentProject } from '../../../stores/CurrentProject.store';
+import { mapStore } from '../../../stores/Map.store';
 import { organizationSettings } from '../../../stores/OrganizationSettings.store';
 import { AddLayerDialog } from '../../AddLayerDialog/AddLayerDialog';
 import { IconButton } from '../../IconButton/IconButton';
@@ -98,28 +100,43 @@ export class LayersSidebarToolbar extends Component<LayersSidebarToolbarProps> {
           {!this.isLayersFilterActive && (
             <LayersSidebarToolbarRight>
               <Tooltip title='Фильтрация слоёв'>
-                <IconButton className={cnLayersSidebarFilterBtn()} onClick={this.turnOnLayersFilter}>
+                <IconButton
+                  className={cnLayersSidebarFilterBtn()}
+                  onClick={this.turnOnLayersFilter}
+                  disabled={!mapStore.allowedActions.includes(MapAction.LAYER_FILTRATION)}
+                >
                   <FilterAltOutlined />
                 </IconButton>
               </Tooltip>
 
               {editMode && (
                 <Tooltip title='Создать группу'>
-                  <IconButton onClick={this.openCreateGroupDialog}>
+                  <IconButton
+                    onClick={this.openCreateGroupDialog}
+                    disabled={!mapStore.allowedActions.includes(MapAction.CREATE_LAYER_GROUP)}
+                  >
                     {this.createGroupDialogOpen ? <CreateNewFolder /> : <CreateNewFolderOutlined />}
                   </IconButton>
                 </Tooltip>
               )}
 
               <Tooltip title='Подключить слой'>
-                <IconButton className={cnLayersSidebarAddLayerBtn()} onClick={this.openAddLayerDialog}>
+                <IconButton
+                  className={cnLayersSidebarAddLayerBtn()}
+                  onClick={this.openAddLayerDialog}
+                  disabled={!mapStore.allowedActions.includes(MapAction.ADD_LAYER)}
+                >
                   {this.addLayerDialogOpen ? <LayerAdd /> : <LayerAddOutlined />}
                 </IconButton>
               </Tooltip>
 
               {organizationSettings.editProjectLayer && (
                 <Tooltip title='Настроить слои проекта'>
-                  <IconButton className={cnLayersSidebarEditBtn()} onClick={this.handleEditModeClick}>
+                  <IconButton
+                    className={cnLayersSidebarEditBtn()}
+                    onClick={this.handleEditModeClick}
+                    disabled={!mapStore.allowedActions.includes(MapAction.EDIT_PROJECT_LAYER)}
+                  >
                     {editMode ? <LayersSettings /> : <LayersSettingsOutline />}
                   </IconButton>
                 </Tooltip>

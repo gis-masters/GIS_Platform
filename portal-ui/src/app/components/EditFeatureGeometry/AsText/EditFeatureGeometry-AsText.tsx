@@ -7,7 +7,6 @@ import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 import { clone, isEqual } from 'lodash';
 
-import { communicationService } from '../../../services/communication.service';
 import {
   CoordinateEdited,
   GeometryType,
@@ -114,8 +113,6 @@ export class EditFeatureGeometryAsText extends Component<EditFeatureGeometryAsTe
   private openDialog() {
     this.initText();
     this.isOpen = true;
-
-    communicationService.drawOff.emit();
   }
 
   @action.bound

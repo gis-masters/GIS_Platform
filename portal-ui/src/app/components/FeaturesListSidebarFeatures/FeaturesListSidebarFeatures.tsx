@@ -1,17 +1,23 @@
 import React, { Component } from 'react';
 import { IReactionDisposer, reaction } from 'mobx';
 import { observer } from 'mobx-react';
-import { Close } from '@mui/icons-material';
+import { ButtonGroup, Tooltip } from '@mui/material';
+import { CancelOutlined, Close, SaveOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
 import { communicationService } from '../../services/communication.service';
+import { MapMode } from '../../services/map/map.models';
+import { mapService } from '../../services/map/map.service';
+import { mapVerticesModificationService } from '../../services/map/vertices-modification/vertices-modification.service';
 import { mapStore } from '../../stores/Map.store';
+import { mapVerticesModificationStore } from '../../stores/MapVerticesModification.store';
 import { sidebars } from '../../stores/Sidebars.store';
 import { IconButton } from '../IconButton/IconButton';
 import { SearchFeaturesList } from '../SearchFeaturesList/SearchFeaturesList';
 import { SearchInfo } from '../SearchField/SearchField';
 import { SelectedFeaturesList } from '../SelectedFeaturesList/SelectedFeaturesList';
+import { VerticesModificationIcon } from '../VerticesModificationIcon/VerticesModificationIcon';
 
 import '!style-loader!css-loader!sass-loader!./FeaturesListSidebarFeatures.scss';
 
@@ -53,6 +59,41 @@ export default class FeaturesListSidebarFeatures extends Component<FeaturesListS
         {singleTab && (
           <div className={cnFeaturesListSidebarFeatures('Header')}>
             {searchValue ? 'Результаты поиска' : 'Выделенные объекты'}
+
+            {mapStore.mode === MapMode.VERTICES_MODIFICATION && (
+              <div className={cnFeaturesListSidebarFeatures('Actions')}>
+                <div className={cnFeaturesListSidebarFeatures('Fon')} />
+                <ButtonGroup size='small' aria-label='vertices-mode-actions'>
+                  <Tooltip title='Сохранить изменения'>
+                    <IconButton
+                      color='primary'
+                      onClick={this.saveVerticesModification}
+                      disabled={
+                        mapVerticesModificationStore.modifiedFeatures.length < 1 || mapVerticesModificationStore.saving
+                      }
+                      loading={mapVerticesModificationStore.saving}
+                    >
+                      <SaveOutlined />
+                    </IconButton>
+                  </Tooltip>
+
+                  <Tooltip title='Отменить изменения'>
+                    <IconButton
+                      color='secondary'
+                      onClick={this.cancelVerticesModification}
+                      disabled={
+                        mapVerticesModificationStore.modifiedFeatures.length < 1 || mapVerticesModificationStore.saving
+                      }
+                    >
+                      <CancelOutlined />
+                    </IconButton>
+                  </Tooltip>
+                </ButtonGroup>
+              </div>
+            )}
+
+            <VerticesModificationIcon />
+
             <IconButton className={cnFeaturesListSidebarFeatures('Close')} onClick={this.close}>
               <Close />
             </IconButton>
@@ -81,5 +122,13 @@ export default class FeaturesListSidebarFeatures extends Component<FeaturesListS
     if (sidebars.memorizedViewFeatures?.length) {
       sidebars.setMemorizedFeatures([]);
     }
+  }
+
+  private saveVerticesModification() {
+    void mapVerticesModificationService.save(mapVerticesModificationStore.modifiedFeatures);
+  }
+
+  private cancelVerticesModification() {
+    mapService.verticesModificationClear();
   }
 }

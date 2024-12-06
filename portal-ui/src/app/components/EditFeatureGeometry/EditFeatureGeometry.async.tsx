@@ -5,7 +5,9 @@ import { Tooltip } from '@mui/material';
 import { cn } from '@bem-react/classname';
 import { polygon } from '@turf/turf';
 import { boundMethod } from 'autobind-decorator';
-import { Geometry, SimpleGeometry } from 'ol/geom';
+import Feature from 'ol/Feature';
+import { SimpleGeometry } from 'ol/geom';
+import { ModifyEvent } from 'ol/interaction/Modify';
 
 import { Emitter } from '../../services/common/Emitter';
 import { communicationService } from '../../services/communication.service';
@@ -17,7 +19,6 @@ import { recalculateBboxAndGetFeatureType } from '../../services/geoserver/featu
 import { GeometryType, supportedGeometryTypes, WfsGeometry } from '../../services/geoserver/wfs/wfs.models';
 import { CrgLayerType, CrgVectorLayer } from '../../services/gis/layers/layers.models';
 import { isVectorFromFile } from '../../services/gis/layers/layers.utils';
-import { mapService } from '../../services/map/map.service';
 import { notFalsyFilter } from '../../services/util/NotFalsyFilter';
 import { EditFeatureGeometryStore } from '../../stores/EditFeatureGeometry.store';
 import { projectionsStore } from '../../stores/Projections.store';
@@ -43,7 +44,7 @@ export default class EditFeatureGeometry extends Component<EditFeatureGeometryPr
   async componentDidMount() {
     await this.updateExtent();
 
-    mapService.modificationDone.on(this.handleModify, this);
+    communicationService.modifyEnd.on(this.handleModify, this);
     communicationService.featuresUpdated.on(this.updateExtent, this);
   }
 
@@ -91,7 +92,14 @@ export default class EditFeatureGeometry extends Component<EditFeatureGeometryPr
   }
 
   @boundMethod
-  private handleModify(e: CustomEvent<Geometry>) {
+  private handleModify(event: CustomEvent<ModifyEvent>) {
+    const modifyEvent = event.detail;
+    if (modifyEvent === null) {
+      return;
+    }
+
+    const modifiedGeometry = (modifyEvent.features.item(0) as Feature<SimpleGeometry>).getGeometry();
+
     const { nativeProjection, geometry, geometryType, setGeometry } = this.props.store;
 
     if (!geometryType || !projectionsStore.olProjection || !nativeProjection) {
@@ -99,11 +107,11 @@ export default class EditFeatureGeometry extends Component<EditFeatureGeometryPr
     }
 
     const coordinates =
-      e.detail instanceof SimpleGeometry
+      modifiedGeometry instanceof SimpleGeometry
         ? transformGeometry(
             {
               type: geometryType,
-              coordinates: e.detail.getCoordinates() || []
+              coordinates: modifiedGeometry.getCoordinates() || []
             },
             projectionsStore.olProjection,
             nativeProjection

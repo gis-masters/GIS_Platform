@@ -5,6 +5,8 @@ import { IconButton, Tooltip } from '@mui/material';
 import { Print, PrintOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
+import { MapAction } from '../../services/map/map.models';
+import { mapStore } from '../../stores/Map.store';
 import { printSettings } from '../../stores/PrintSettings.store';
 import { Loading } from '../Loading/Loading';
 import { PrintMapDialog } from '../PrintMapDialog/PrintMapDialog';
@@ -26,7 +28,12 @@ export class PrintMapButton extends Component {
     return (
       <>
         <Tooltip title='Распечатать карту (PDF)'>
-          <IconButton className={cnPrintMapButton()} onClick={this.openDialog} color='inherit'>
+          <IconButton
+            className={cnPrintMapButton()}
+            onClick={this.openDialog}
+            color='inherit'
+            disabled={!mapStore.allowedActions.includes(MapAction.PRINT_MAP_PDF)}
+          >
             {this.dialogOpen ? <Print /> : <PrintOutlined />}
           </IconButton>
         </Tooltip>

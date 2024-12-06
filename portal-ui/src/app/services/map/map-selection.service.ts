@@ -60,7 +60,7 @@ class MapSelectionService {
       const originalEvent = e.originalEvent as MouseEvent;
 
       if (
-        mapStore.allowedActions.includes(MapAction.SELECT) &&
+        mapStore.allowedActions.includes(MapAction.SELECT_BY_BORDER) &&
         !originalEvent.shiftKey &&
         !originalEvent.ctrlKey &&
         !originalEvent.altKey &&
@@ -121,10 +121,12 @@ class MapSelectionService {
       mapService.map.on('pointermove', (e: MapBrowserEvent<UIEvent>) => {
         const originalEvent = e.originalEvent as MouseEvent;
 
-        if (!originalEvent.shiftKey && !originalEvent.ctrlKey) {
-          mapStore.setSelectionActive(false);
-        } else {
+        if (originalEvent.shiftKey) {
           mapStore.setSelectionActive(true);
+        } else if (originalEvent.ctrlKey) {
+          mapStore.setSelectionActive(true);
+        } else {
+          mapStore.setSelectionActive(false);
         }
       });
 
@@ -157,7 +159,7 @@ class MapSelectionService {
           !originalEvent.shiftKey &&
           !originalEvent.ctrlKey &&
           this.activeModifierKey === ActiveModifierKey.EMPTY &&
-          mapStore.allowedActions.includes(MapAction.SELECT) &&
+          mapStore.allowedActions.includes(MapAction.SELECT_BY_BORDER) &&
           originalEvent.button !== 1
         ) {
           await this.selectFeaturesOnMap(MapSelectionTypes.REPLACE, this.areaExtentReplace, e.coordinate);
@@ -295,6 +297,13 @@ class MapSelectionService {
   }
 
   selectFeatures(features: WfsFeature[], selectionType: MapSelectionTypes = MapSelectionTypes.REPLACE) {
+    // TODO: Отрефакторить. Все события по 'Esc, Esc' сваливаются сюда...
+    if (mapStore.mode === MapMode.VERTICES_MODIFICATION) {
+      mapService.verticesModificationOff();
+
+      return;
+    }
+
     if (sidebars.needEditConfirmation(this.selectFeatures.bind(this, features, selectionType))) {
       return;
     }

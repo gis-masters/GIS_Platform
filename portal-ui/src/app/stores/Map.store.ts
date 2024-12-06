@@ -7,22 +7,129 @@ import { flags } from '../services/feature-flags';
 import { extractTableNameFromFeatureId } from '../services/geoserver/featureType/featureType.util';
 import { WfsFeature } from '../services/geoserver/wfs/wfs.models';
 import { CrgLayer } from '../services/gis/layers/layers.models';
-import { MapAction, MapMode } from '../services/map/map.models';
+import { MapAction, MapMode, MeasureMode } from '../services/map/map.models';
 import { LabelType } from '../services/map/map-labels.models';
-import { MeasureItem, MeasureMode } from '../services/map/map-measure.service';
+import { MeasureItem } from '../services/map/map-measure.service';
 import { prepareLike } from '../services/util/filters/filterObjects';
 import { UnitsOfAreaMeasurement } from '../services/util/open-layers.util';
 import { attributesTableStore } from './AttributesTable.store';
 import { currentProject } from './CurrentProject.store';
 import { Pages, route } from './Route.store';
 
-const actionsInModes = {
-  [MapMode.DEFAULT]: [MapAction.MOVE, MapAction.PROKOL, MapAction.SELECT_WITH_MODIFICATORS],
-  [MapMode.SELECTION]: [MapAction.MOVE, MapAction.PROKOL, MapAction.SELECT, MapAction.SELECT_WITH_MODIFICATORS],
-  [MapMode.MEASURE]: [MapAction.MOVE, MapAction.MEASUREMENT],
-  [MapMode.DRAW]: [MapAction.MOVE, MapAction.DRAW],
-  [MapMode.PICK]: [MapAction.MOVE, MapAction.PICK],
-  [MapMode.ADDING_LABEL]: [MapAction.MOVE, MapAction.ADD_LABEL]
+const mapModeAndActionMatrix = {
+  [MapMode.DEFAULT]: [
+    MapAction.PROKOL,
+    MapAction.LAYER_EYE,
+    MapAction.ADD_LAYER,
+    MapAction.CHECK_BUGS,
+    MapAction.EXPORT_GML,
+    MapAction.EXPORT_SHP,
+    MapAction.MAP_LABELS,
+    MapAction.ADD_FEATURE,
+    MapAction.MAP_MEASURE,
+    MapAction.SEARCH_FIELD,
+    MapAction.DELETE_LAYER,
+    MapAction.DELETE_GROUP,
+    MapAction.MAP_SELECTION,
+    MapAction.PRINT_MAP_PDF,
+    MapAction.ATTRIBUTES_TAB,
+    MapAction.ZOOM_TO_FEATURE,
+    MapAction.LAYER_FILTRATION,
+    MapAction.OPEN_EDIT_FEATURE,
+    MapAction.OPEN_LAYER_SOURCE,
+    MapAction.RENAME_LAYER_GROUP,
+    MapAction.CREATE_LAYER_GROUP,
+    MapAction.EDIT_PROJECT_LAYER,
+    MapAction.OPEN_ATTRIBUTE_TABLE,
+    MapAction.OPEN_IMPORTS_SUBMENU,
+    MapAction.OPEN_LAYER_PROPERTIES,
+    MapAction.VERTICES_MODIFICATION,
+    MapAction.SELECT_WITH_MODIFICATORS
+  ],
+  [MapMode.SELECTION]: [
+    MapAction.PROKOL,
+    MapAction.LAYER_EYE,
+    MapAction.CHECK_BUGS,
+    MapAction.EXPORT_GML,
+    MapAction.EXPORT_SHP,
+    MapAction.MAP_LABELS,
+    MapAction.ADD_FEATURE,
+    MapAction.MAP_MEASURE,
+    MapAction.SEARCH_FIELD,
+    MapAction.MAP_SELECTION,
+    MapAction.PRINT_MAP_PDF,
+    MapAction.ATTRIBUTES_TAB,
+    MapAction.ZOOM_TO_FEATURE,
+    MapAction.SELECT_BY_BORDER,
+    MapAction.LAYER_FILTRATION,
+    MapAction.OPEN_EDIT_FEATURE,
+    MapAction.OPEN_LAYER_SOURCE,
+    MapAction.OPEN_ATTRIBUTE_TABLE,
+    MapAction.OPEN_IMPORTS_SUBMENU,
+    MapAction.OPEN_LAYER_PROPERTIES,
+    MapAction.VERTICES_MODIFICATION,
+    MapAction.SELECT_WITH_MODIFICATORS
+  ],
+  [MapMode.MEASURE]: [
+    MapAction.PROKOL,
+    MapAction.LAYER_EYE,
+    MapAction.ADD_LAYER,
+    MapAction.CHECK_BUGS,
+    MapAction.EXPORT_GML,
+    MapAction.EXPORT_SHP,
+    MapAction.MAP_LABELS,
+    MapAction.ADD_FEATURE,
+    MapAction.MAP_MEASURE,
+    MapAction.SEARCH_FIELD,
+    MapAction.DELETE_LAYER,
+    MapAction.DELETE_GROUP,
+    MapAction.MAP_SELECTION,
+    MapAction.PRINT_MAP_PDF,
+    MapAction.ATTRIBUTES_TAB,
+    MapAction.ZOOM_TO_FEATURE,
+    MapAction.LAYER_FILTRATION,
+    MapAction.OPEN_EDIT_FEATURE,
+    MapAction.OPEN_LAYER_SOURCE,
+    MapAction.RENAME_LAYER_GROUP,
+    MapAction.CREATE_LAYER_GROUP,
+    MapAction.EDIT_PROJECT_LAYER,
+    MapAction.OPEN_ATTRIBUTE_TABLE,
+    MapAction.OPEN_IMPORTS_SUBMENU,
+    MapAction.OPEN_LAYER_PROPERTIES,
+    MapAction.VERTICES_MODIFICATION,
+    MapAction.SELECT_WITH_MODIFICATORS
+  ],
+  [MapMode.DRAW]: [MapAction.DRAW],
+  [MapMode.ADDING_LABEL]: [
+    MapAction.PROKOL,
+    MapAction.LAYER_EYE,
+    MapAction.ADD_LAYER,
+    MapAction.CHECK_BUGS,
+    MapAction.EXPORT_GML,
+    MapAction.EXPORT_SHP,
+    MapAction.MAP_LABELS,
+    MapAction.ADD_FEATURE,
+    MapAction.MAP_MEASURE,
+    MapAction.SEARCH_FIELD,
+    MapAction.DELETE_LAYER,
+    MapAction.DELETE_GROUP,
+    MapAction.MAP_SELECTION,
+    MapAction.PRINT_MAP_PDF,
+    MapAction.ATTRIBUTES_TAB,
+    MapAction.ZOOM_TO_FEATURE,
+    MapAction.LAYER_FILTRATION,
+    MapAction.OPEN_EDIT_FEATURE,
+    MapAction.OPEN_LAYER_SOURCE,
+    MapAction.RENAME_LAYER_GROUP,
+    MapAction.CREATE_LAYER_GROUP,
+    MapAction.EDIT_PROJECT_LAYER,
+    MapAction.OPEN_ATTRIBUTE_TABLE,
+    MapAction.OPEN_IMPORTS_SUBMENU,
+    MapAction.OPEN_LAYER_PROPERTIES,
+    MapAction.VERTICES_MODIFICATION,
+    MapAction.SELECT_WITH_MODIFICATORS
+  ],
+  [MapMode.VERTICES_MODIFICATION]: [MapAction.VERTICES_MODIFICATION]
 };
 
 const defaultValues: Partial<MapStore> = {
@@ -76,6 +183,17 @@ class MapStore {
     return flags.selectingFeaturesLimit ? Number(flags.selectingFeaturesLimit) : this._selectingFeaturesLimit;
   }
 
+  // TODO: переделать на mapStore.allowedActions.includes({some_action})
+  isProkolAllowed() {
+    if (this.mode === MapMode.DEFAULT || this.mode === MapMode.SELECTION) {
+      return true;
+    }
+  }
+
+  getFeatureInSelectionById(id: string): WfsFeature | undefined {
+    return this.selectedFeatures.find(feature => feature.id === id);
+  }
+
   @computed
   get selectedFeaturesByTableName(): Record<string, WfsFeature[]> {
     const result: Record<string, WfsFeature[]> = {};
@@ -93,7 +211,7 @@ class MapStore {
 
   @computed
   get allowedActions(): MapAction[] {
-    return actionsInModes[this.mode];
+    return mapModeAndActionMatrix[this.mode];
   }
 
   @computed
@@ -126,25 +244,9 @@ class MapStore {
     });
   }
 
-  getFeatureInSelectionById(id: string): WfsFeature | undefined {
-    return this.selectedFeatures.find(feature => feature.id === id);
-  }
-
-  private prepareLayerFilter(layer: CrgLayer) {
-    if (!layer.tableName) {
-      throw new Error(`Слой ${layer.title} не имеет tableName`);
-    }
-
-    const [ids, filter, negativeIds] = extractFeatureIdsFromAttributesFilter(
-      attributesTableStore.getLayerFilter(layer.tableName, true),
-      layer
-    );
-
-    return {
-      tester: Object.keys(filter).length ? sift(prepareLike(filter)) : undefined,
-      ids,
-      negativeIds
-    };
+  @computed
+  get limitReached(): boolean {
+    return this.selectedFeatures.length >= this.selectingFeaturesLimit;
   }
 
   @action
@@ -182,7 +284,6 @@ class MapStore {
   addMeasureItem(item: MeasureItem) {
     this.measureItems.push(item);
   }
-
   @action
   removeMeasureItem(item: MeasureItem) {
     const itemIndex = this.measureItems.findIndex(({ id }) => id === item.id);
@@ -193,6 +294,7 @@ class MapStore {
   }
 
   // use only in map-selection.service.ts
+
   @action
   setSelectedFeatures(features: WfsFeature[]) {
     this.selectedFeatures = features;
@@ -218,9 +320,21 @@ class MapStore {
     Object.assign(this, defaultValues);
   }
 
-  @computed
-  get limitReached(): boolean {
-    return this.selectedFeatures.length >= this.selectingFeaturesLimit;
+  private prepareLayerFilter(layer: CrgLayer) {
+    if (!layer.tableName) {
+      throw new Error(`Слой ${layer.title} не имеет tableName`);
+    }
+
+    const [ids, filter, negativeIds] = extractFeatureIdsFromAttributesFilter(
+      attributesTableStore.getLayerFilter(layer.tableName, true),
+      layer
+    );
+
+    return {
+      tester: Object.keys(filter).length ? sift(prepareLike(filter)) : undefined,
+      ids,
+      negativeIds
+    };
   }
 }
 

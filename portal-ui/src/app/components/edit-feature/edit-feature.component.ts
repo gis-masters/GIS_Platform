@@ -23,7 +23,7 @@ import {
 import { OldPropertySchema, ValueType } from '../../services/data/schema/schemaOld.models';
 import { createFeature, deleteFeatures, updateFeature } from '../../services/data/vectorData/vectorData.service';
 import { extractFeatureId } from '../../services/geoserver/featureType/featureType.util';
-import { transformFeature } from '../../services/geoserver/transform-feature.service';
+import { transformFeature } from '../../services/geoserver/wfs/transform-feature.service';
 import { CoordinateEdited, WfsFeature, WfsGeometry } from '../../services/geoserver/wfs/wfs.models';
 import { getFeaturesById } from '../../services/geoserver/wfs/wfs.service';
 import { getEmptyGeometry } from '../../services/geoserver/wfs/wfs.util';
@@ -294,7 +294,7 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
                     geometry: changedGeometry
                   };
 
-                  await mapService.highlightFeatures([feature]);
+                  await mapService.highlightMoreFeatures([feature]);
                 });
 
               fromMobx(() => this.editGeometryStore.isValid)
@@ -474,7 +474,7 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
 
   deleteFeature(): void {
     const data: ConfirmDialogData = {
-      title: 'Удалить объект?',
+      title: 'Вы действительно хотите удалить 1 объект?',
       approveBtnName: 'Удалить'
     };
 
@@ -485,7 +485,7 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
     const { dataset, tableName } = this.layer;
 
     this.dialog
-      .open(ConfirmDialogComponent, { width: '400px', data })
+      .open(ConfirmDialogComponent, { width: '390px', data, autoFocus: false })
       .afterClosed()
       .pipe(filter(value => !!value))
       .subscribe(async () => {
@@ -577,14 +577,16 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
 
     const { dataset, tableName } = this.layer;
 
+    // А как это работает? Передавая массив features, мы обновляем только одну: features[0].id ???
     if (features.length === 1) {
-      await updateFeature(dataset, tableName, extractFeatureId(features[0].id), {
+      await updateFeature(dataset, tableName, {
+        id: String(extractFeatureId(features[0].id)),
         type: 'Feature',
         geometry: geometry,
         properties: newProperties
       });
 
-      communicationService.featuresUpdated.emit();
+      communicationService.featuresUpdated.emit({ type: 'update', data: null });
 
       return;
     }

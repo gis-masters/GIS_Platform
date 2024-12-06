@@ -22,12 +22,12 @@ import { SystemManagementPageComponent } from './pages/system-management/system-
 import { TasksJournalPageComponent } from './pages/tasks-journal/tasks-journal-page.component';
 import { TestDataPreparationPageComponent } from './pages/test-data-preparation/test-data-preparation-page.component';
 import { VectorTableRegistryPageComponent } from './pages/vector-table-registry/vector-table-registry-page.component';
-import { OrgAdminGuardService } from './services/org-admin-guard.service';
-import { ProjectsGuardService } from './services/projects-guard.service';
+import { OrgAdminGuardService } from './services/guards/org-admin-guard.service';
+import { ProjectsGuardService } from './services/guards/projects-guard.service';
+import { SystemAdminGuardService } from './services/guards/system-admin-guard.service';
+import { SystemManagementGuardService } from './services/guards/system-management-guard.service';
+import { WorkflowGuardService } from './services/guards/workflow-guard.service';
 import { CurrentUserResolver } from './services/resolvers/current-user-resolver.service';
-import { SystemAdminGuardService } from './services/system-admin-guard.service';
-import { SystemManagementGuardService } from './services/system-management-guard.service';
-import { WorkflowGuardService } from './services/workflow-guard.service';
 import { Pages } from './stores/Route.store';
 
 export interface AppRouteData extends Data {

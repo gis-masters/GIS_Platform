@@ -6,6 +6,7 @@ import proj4 from 'proj4';
 import {
   CoordinateEdited,
   GeometryType,
+  WfsFeature,
   WfsGeometry,
   WfsLineStringGeometry,
   WfsMultiLineStringGeometry,
@@ -30,6 +31,29 @@ export function getSrid(projectionCode: string): number {
   return Number(srid);
 }
 
+export function projectionCodeToProjection(projectionCode: string): Projection {
+  const split = projectionCode.split(':');
+  const authName = split[0];
+  if (!authName) {
+    throw new Error(`Некорректный код проекции:${projectionCode}`);
+  }
+
+  const authSrid = split[1];
+  if (!authSrid) {
+    throw new Error(`Некорректный код проекции:${projectionCode}`);
+  }
+
+  return {
+    auth_name: authName,
+    authName: authName,
+    auth_srid: Number(authSrid),
+    authSrid: Number(authSrid),
+    title: projectionCode,
+    srtext: '',
+    proj4Text: ''
+  };
+}
+
 export function getProjectionCode(projection: Projection): string {
   return `${projection.authName}:${projection.authSrid}`;
 }
@@ -40,6 +64,10 @@ export function transform(projFrom: Projection, projTo: Projection, coordinate: 
   }
 
   return proj4(getProjectionCode(projFrom), getProjectionCode(projTo), coordinate).map(dis => Number(dis.toFixed(4)));
+}
+
+export function transformCoordinates(projFrom: Projection, projTo: Projection, coords: Coordinate[][]): Coordinate[] {
+  return coords.flatMap(line => line.map(coordinate => transform(projFrom, projTo, coordinate)));
 }
 
 export function transformGeometry(
@@ -235,4 +263,14 @@ export function getProjectionTitle(proj: string): string {
   console.warn('Тип SRID не определен');
 
   return 'Тип SRID не определен';
+}
+
+export function transformGeometryToLayerProjectionInWfsFeature(
+  feature: WfsFeature,
+  projFrom: Projection,
+  projTo: Projection
+): void {
+  if (feature.geometry) {
+    feature.geometry = transformGeometry(feature.geometry, projFrom, projTo);
+  }
 }

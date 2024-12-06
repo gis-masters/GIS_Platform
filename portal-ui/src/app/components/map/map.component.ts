@@ -7,6 +7,7 @@ import { debounceTime, takeUntil } from 'rxjs/operators';
 import '!style-loader!css-loader!ol/ol.css';
 
 import { Emitter } from '../../services/common/Emitter';
+import { cursorHandler } from '../../services/cursor.handler';
 import { getOlProjection } from '../../services/data/projections/projections.service';
 import { CrgExternalLayer, CrgLayerType } from '../../services/gis/layers/layers.models';
 import { fetchCurrentProjectBasemaps } from '../../services/gis/project-basemaps/project-basemaps.service';
@@ -105,14 +106,19 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit {
           }
         }
 
-        if (currentProject.visibleOnMapLayers.length) {
-          await mapService.highlightFeatures(mapStore.highlightedFeatures);
-        }
+        // Убираю highlightFeatures так как это действие вызывается каждый раз при зуме и очищает draft слой на
+        // котором мы рисуем и редактируем фичи. Подскажите что тут и зачем, чтобы починить.
+        // if (currentProject.visibleOnMapLayers.length) {
+        //   await mapService.highlightFeatures(mapStore.highlightedFeatures);
+        // }
       },
       { fireImmediately: true }
     );
+
     mapService.mapMoved.on(e => setMapPositionToUrl(e.detail.zoom, e.detail.center), this);
     mapService.zoomChanged.on(e => currentProject.changeZoom(e.detail), this);
+
+    cursorHandler.init();
   }
 
   ngAfterViewInit() {

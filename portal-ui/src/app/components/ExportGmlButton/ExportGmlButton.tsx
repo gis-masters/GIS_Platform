@@ -4,6 +4,8 @@ import { observer } from 'mobx-react';
 import { IconButton, Tooltip } from '@mui/material';
 import { GetApp, GetAppOutlined } from '@mui/icons-material';
 
+import { MapAction } from '../../services/map/map.models';
+import { mapStore } from '../../stores/Map.store';
 import { ExportGmlDialog } from '../ExportGmlDialog/ExportGmlDialog';
 
 @observer
@@ -19,10 +21,15 @@ export class ExportGmlButton extends Component {
     return (
       <>
         <Tooltip title='Выгрузка GML'>
-          <IconButton onClick={this.openDialog} color='inherit'>
+          <IconButton
+            onClick={this.openDialog}
+            color='inherit'
+            disabled={!mapStore.allowedActions.includes(MapAction.EXPORT_GML)}
+          >
             {this.open ? <GetApp /> : <GetAppOutlined />}
           </IconButton>
         </Tooltip>
+
         <ExportGmlDialog open={this.open} onClose={this.onClose} />
       </>
     );

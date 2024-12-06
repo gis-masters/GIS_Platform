@@ -36,6 +36,9 @@ import {
 import { getLayerSchema } from '../../../services/gis/layers/layers.service';
 import { isVectorFromFile } from '../../../services/gis/layers/layers.utils';
 import { TreeItemPayload } from '../../../services/gis/projects/projects.models';
+import { toDrawGeometry } from '../../../services/map/draw/map-draw.util';
+import { MapAction } from '../../../services/map/map.models';
+import { mapService } from '../../../services/map/map.service';
 import {
   isLayersManagementAllowed,
   isShapeImportAllowed,
@@ -45,6 +48,7 @@ import {
 import { services } from '../../../services/services';
 import { focusToLayer } from '../../../services/sidebarActions.service';
 import { currentProject } from '../../../stores/CurrentProject.store';
+import { mapStore } from '../../../stores/Map.store';
 import { EditFeatureMode, sidebars } from '../../../stores/Sidebars.store';
 import { Button } from '../../Button/Button';
 import { EditLayerDialog } from '../../EditLayerDialog/EditLayerDialog';
@@ -58,8 +62,6 @@ import { SelectProjectionDialog } from '../../SelectProjectionDialog/SelectProje
 import { Toast } from '../../Toast/Toast';
 import { VectorTableCard } from '../../VectorTableCard/VectorTableCard';
 import { LayerTransparency } from '../Transparency/Layer-Transparency';
-
-export const cnLayerPropertiesDialog = cn('Layer', 'PropertiesDialog');
 
 const cnLayerMenu = cn('Layer', 'Menu');
 
@@ -136,7 +138,10 @@ export class LayerMenu extends Component<LayerMenuProps> {
               </MenuItem>
 
               {!editMode && (this.isVectorLayer || this.isVectorFromFileWithPaginationLayer) && (
-                <MenuItem onClick={this.openAttributeTable}>
+                <MenuItem
+                  onClick={this.openAttributeTable}
+                  disabled={!mapStore.allowedActions.includes(MapAction.OPEN_ATTRIBUTE_TABLE)}
+                >
                   <ListItemIcon>
                     <ListAlt />
                   </ListItemIcon>
@@ -145,7 +150,7 @@ export class LayerMenu extends Component<LayerMenuProps> {
               )}
 
               {!editMode && this.isVectorLayer && this.featuresCreateAllowed && (
-                <MenuItem onClick={this.addFeature}>
+                <MenuItem onClick={this.addFeature} disabled={!mapStore.allowedActions.includes(MapAction.ADD_FEATURE)}>
                   <ListItemIcon>
                     <AddCircleOutline />
                   </ListItemIcon>
@@ -164,7 +169,10 @@ export class LayerMenu extends Component<LayerMenuProps> {
             </>
           )}
           {!editMode && this.isVectorLayer && this.isVectorTableInfoEnabled && (
-            <MenuItem onClick={this.getLayerVectorTable}>
+            <MenuItem
+              onClick={this.getLayerVectorTable}
+              disabled={!mapStore.allowedActions.includes(MapAction.OPEN_LAYER_SOURCE)}
+            >
               <ListItemIcon>
                 <FileOpenOutlined />
               </ListItemIcon>
@@ -173,7 +181,10 @@ export class LayerMenu extends Component<LayerMenuProps> {
           )}
 
           {!editMode && (this.isVectorFromFileLayer || this.isRasterLayer) && this.isDocumentInfoEnabled && (
-            <MenuItem onClick={this.getLayerDocument}>
+            <MenuItem
+              onClick={this.getLayerDocument}
+              disabled={!mapStore.allowedActions.includes(MapAction.OPEN_LAYER_SOURCE)}
+            >
               <ListItemIcon>
                 <FileOpenOutlined />
               </ListItemIcon>
@@ -185,6 +196,7 @@ export class LayerMenu extends Component<LayerMenuProps> {
               {!editMode && this.isVectorLayer && this.featuresCreateAllowed && (
                 <MenuNestedItem
                   parentMenuOpen={open}
+                  disabled={!mapStore.allowedActions.includes(MapAction.OPEN_IMPORTS_SUBMENU)}
                   submenu={[
                     (this.geometryType === GeometryType.MULTI_POLYGON ||
                       this.geometryType === GeometryType.POLYGON) && (
@@ -204,7 +216,10 @@ export class LayerMenu extends Component<LayerMenuProps> {
               )}
 
               {!editMode && this.isVectorLayer && this.layerExportAllowed && (
-                <MenuItem onClick={this.openSelectProjectionDialog}>
+                <MenuItem
+                  onClick={this.openSelectProjectionDialog}
+                  disabled={!mapStore.allowedActions.includes(MapAction.EXPORT_SHP)}
+                >
                   <ListItemIcon>
                     <UnarchiveOutlined />
                   </ListItemIcon>
@@ -214,7 +229,10 @@ export class LayerMenu extends Component<LayerMenuProps> {
             </>
           )}
           {!isGroup && (
-            <MenuItem onClick={this.openLayerEditDialog}>
+            <MenuItem
+              onClick={this.openLayerEditDialog}
+              disabled={!mapStore.allowedActions.includes(MapAction.OPEN_LAYER_PROPERTIES)}
+            >
               <ListItemIcon>
                 <TuneOutlined />
               </ListItemIcon>
@@ -223,7 +241,7 @@ export class LayerMenu extends Component<LayerMenuProps> {
           )}
 
           {((!isGroup && layerWithError) || (!isGroup && editMode && this.layersDeleteAllowed)) && (
-            <MenuItem onClick={this.deleteLayer}>
+            <MenuItem onClick={this.deleteLayer} disabled={!mapStore.allowedActions.includes(MapAction.DELETE_LAYER)}>
               <ListItemIcon>
                 <DeleteOutline />
               </ListItemIcon>
@@ -232,7 +250,10 @@ export class LayerMenu extends Component<LayerMenuProps> {
           )}
 
           {isGroup && editMode && (
-            <MenuItem onClick={this.openEditGroupDialog}>
+            <MenuItem
+              onClick={this.openEditGroupDialog}
+              disabled={!mapStore.allowedActions.includes(MapAction.RENAME_LAYER_GROUP)}
+            >
               <ListItemIcon>
                 <Edit />
               </ListItemIcon>
@@ -241,7 +262,7 @@ export class LayerMenu extends Component<LayerMenuProps> {
           )}
 
           {isGroup && editMode && (
-            <MenuItem onClick={this.deleteGroup}>
+            <MenuItem onClick={this.deleteGroup} disabled={!mapStore.allowedActions.includes(MapAction.DELETE_GROUP)}>
               <ListItemIcon>
                 <Delete />
               </ListItemIcon>
@@ -414,6 +435,8 @@ export class LayerMenu extends Component<LayerMenuProps> {
       layer: entity as CrgVectorLayer,
       isNew: true
     });
+
+    mapService.drawOn(toDrawGeometry(emptyFeature.geometry?.type));
 
     onClose();
   }

@@ -1,5 +1,7 @@
+import { DrawEvent } from 'ol/interaction/Draw';
+import { ModifyEvent } from 'ol/interaction/Modify';
+
 import { ObjectDto } from '../components/edit-bug-object/edit-bug-object.component';
-import { ExplorerSearchValue } from '../components/Explorer/Explorer.models';
 import { Emitter } from './common/Emitter';
 import { Basemap } from './data/basemaps/basemaps.models';
 import { FileInfo } from './data/files/files.models';
@@ -38,10 +40,12 @@ class CommunicationService {
   allProjectsFetched = new Emitter();
   editBugObject = new Emitter<ObjectDto[]>();
   beforeMapDestroy = new Emitter();
-  drawOff = new Emitter();
-  openGlobalSearchResults = new Emitter<ExplorerSearchValue>();
   openAttributesBar = new Emitter<CrgVectorLayer>();
+  minimizeAttributesBar = new Emitter();
   utilityDialogClosed = new Emitter<UtilityDialogCloseEventDetail>();
+
+  drawEnd = new Emitter<DrawEvent>();
+  modifyEnd = new Emitter<ModifyEvent>();
 
   basemapUpdated = new Emitter<DataChangeEventDetail<Basemap>>();
   datasetUpdated = new Emitter<DataChangeEventDetail<Dataset>>();

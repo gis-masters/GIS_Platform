@@ -23,10 +23,8 @@ import { Projection } from '../data/projections/projections.models';
 import { getOlProjection } from '../data/projections/projections.service';
 import { GeometryType } from '../geoserver/wfs/wfs.models';
 import { UnitsOfAreaMeasurement } from '../util/open-layers.util';
-import { MapMode } from './map.models';
+import { MapMode, MeasureMode } from './map.models';
 import { mapService } from './map.service';
-
-export type MeasureMode = 'area' | 'length';
 
 export interface MeasureItem {
   id: symbol;
@@ -95,7 +93,7 @@ class MapMeasureService {
     reaction(
       () => mapStore.mode,
       mode => {
-        if (mode === MapMode.SELECTION || mode === MapMode.DEFAULT || mode === MapMode.PICK) {
+        if (mode === MapMode.SELECTION || mode === MapMode.DEFAULT) {
           this.measureOff();
         }
       }

@@ -5,8 +5,8 @@ import { DeleteSweepOutlined, SquareFoot } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
-import { MapMode } from '../../services/map/map.models';
-import { mapMeasureService, MeasureMode } from '../../services/map/map-measure.service';
+import { MapAction, MapMode, MeasureMode } from '../../services/map/map.models';
+import { mapMeasureService } from '../../services/map/map-measure.service';
 import { mapStore } from '../../stores/Map.store';
 import { IconButton } from '../IconButton/IconButton';
 import { Ruler } from '../Icons/Ruler';
@@ -28,6 +28,7 @@ export class MapMeasure extends Component {
             onClick={this.handleLengthClick}
             checked={isMeasureActive && mapStore.measureMode === 'length'}
             size='small'
+            disabled={!mapStore.allowedActions.includes(MapAction.MAP_MEASURE)}
           >
             <Ruler />
           </IconButton>
@@ -37,6 +38,7 @@ export class MapMeasure extends Component {
             onClick={this.handleAreaClick}
             checked={isMeasureActive && mapStore.measureMode === 'area'}
             size='small'
+            disabled={!mapStore.allowedActions.includes(MapAction.MAP_MEASURE)}
           >
             <SquareFoot />
           </IconButton>

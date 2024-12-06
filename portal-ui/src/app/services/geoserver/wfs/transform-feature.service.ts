@@ -3,19 +3,20 @@ import { Coordinate } from 'ol/coordinate';
 import WFS, { WriteTransactionOptions } from 'ol/format/WFS';
 import { Geometry, LineString, MultiLineString, MultiPoint, MultiPolygon, Point, Polygon } from 'ol/geom';
 
-import { currentUser } from '../../stores/CurrentUser.store';
-import { http } from '../api/http.service';
-import { getVectorTableMultipleRecordsUrl } from '../api/server-urls.service';
-import { usersService } from '../auth/users/users.service';
-import { getFeatureProjection } from '../data/projections/projections.service';
-import { getProjectionCode } from '../data/projections/projections.util';
-import { OldSchema } from '../data/schema/schemaOld.models';
-import { environment } from '../environment';
-import { services } from '../services';
-import { FeatureUtil } from '../util/FeatureUtil';
-import { extractFeatureId } from './featureType/featureType.util';
-import { CoordinateEdited, GeometryType, WfsFeature, WfsGeometry } from './wfs/wfs.models';
-import { updateFeature } from './wfs/wfs.service';
+import { currentUser } from '../../../stores/CurrentUser.store';
+import { http } from '../../api/http.service';
+import { getVectorTableMultipleRecordsUrl } from '../../api/server-urls.service';
+import { usersService } from '../../auth/users/users.service';
+import { defaultOlProjectionCode } from '../../data/projections/projections.models';
+import { getFeatureProjection } from '../../data/projections/projections.service';
+import { getProjectionCode } from '../../data/projections/projections.util';
+import { OldSchema } from '../../data/schema/schemaOld.models';
+import { environment } from '../../environment';
+import { services } from '../../services';
+import { FeatureUtil } from '../../util/FeatureUtil';
+import { extractFeatureId } from '../featureType/featureType.util';
+import { CoordinateEdited, GeometryType, WfsFeature, WfsGeometry } from './wfs.models';
+import { updateFeature } from './wfs.service';
 
 export enum TransactionType {
   INSERT = 'insert',
@@ -38,6 +39,7 @@ export class TransformFeatureService {
   private xs = new XMLSerializer();
   private formatWFS = new WFS();
 
+  // TODO: Это сохранение через data-service - оно не должно быть рядом с geoserver
   async multipleEdit(
     datasetId: string,
     tableId: string,
@@ -51,6 +53,7 @@ export class TransformFeatureService {
     await http.patch(url, properties);
   }
 
+  // TODO: Это сохранение через geoserver - оно не должно быть рядом с data-service
   async updateFeatures(
     layerName: string,
     features: WfsFeature<Coordinate | CoordinateEdited>[],
@@ -108,6 +111,66 @@ export class TransformFeatureService {
       nativeElements: [],
       gmlOptions: {
         srsName: crs
+      }
+    };
+
+    const payload = this.xs
+      .serializeToString(this.getNode(TransactionType.UPDATE, featuresForUpdate, options))
+      .replaceAll(new RegExp(`xmlns:${workspace}="castyl_for_remove"`, 'g'), '')
+      .replaceAll('<Name>geometry</Name>', '<Name>shape</Name>');
+
+    return updateFeature(payload);
+  }
+
+  async updateFeaturesGeometry(layerName: string, features: WfsFeature[]): Promise<string> {
+    await usersService.fetchCurrentUser();
+
+    const workspace = `${environment.scratchWorkspaceName}_${currentUser.orgId}`;
+
+    const featuresForUpdate: Feature<Geometry>[] = features.map(feature => {
+      const newFeature = new Feature();
+      newFeature.setId(feature.id);
+
+      let geom: Geometry | undefined;
+
+      if (feature.geometry === undefined) {
+        return newFeature;
+      }
+
+      const geometry = feature.geometry;
+      if (geometry) {
+        if (geometry.type === GeometryType.POINT) {
+          geom = new Point(geometry.coordinates);
+        }
+        if (geometry.type === GeometryType.MULTI_POINT) {
+          geom = new MultiPoint(geometry.coordinates);
+        }
+        if (geometry.type === GeometryType.LINE_STRING) {
+          geom = new LineString(geometry.coordinates);
+        }
+        if (geometry.type === GeometryType.MULTI_LINE_STRING) {
+          geom = new MultiLineString(geometry.coordinates);
+        }
+        if (geometry.type === GeometryType.POLYGON) {
+          geom = new Polygon(geometry.coordinates);
+        }
+        if (geometry.type === GeometryType.MULTI_POLYGON) {
+          geom = new MultiPolygon(geometry.coordinates);
+        }
+
+        newFeature.setGeometry(geom);
+      }
+
+      return newFeature;
+    });
+
+    const options: WriteTransactionOptions = {
+      featureNS: 'castyl_for_remove',
+      featureType: layerName,
+      featurePrefix: workspace,
+      nativeElements: [],
+      gmlOptions: {
+        srsName: defaultOlProjectionCode // Модифицированные координаты всегда в ol проекции (3857)
       }
     };
 

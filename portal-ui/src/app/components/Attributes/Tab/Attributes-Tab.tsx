@@ -8,6 +8,7 @@ import { boundMethod } from 'autobind-decorator';
 
 import { communicationService } from '../../../services/communication.service';
 import { CrgVectorLayer } from '../../../services/gis/layers/layers.models';
+import { MapAction } from '../../../services/map/map.models';
 import { attributesTableStore } from '../../../stores/AttributesTable.store';
 import { mapStore } from '../../../stores/Map.store';
 import { IconButton } from '../../IconButton/IconButton';
@@ -42,6 +43,7 @@ export class AttributesTab extends Component<AttributesTabProps> {
       <Tab
         className={cnAttributesTab({ grade, selected }, [className])}
         onClick={this.handleClick}
+        disabled={!mapStore.allowedActions.includes(MapAction.ATTRIBUTES_TAB)}
         label={
           <TabInner>
             <TabTitle selected={selected}>{layer.title}</TabTitle>

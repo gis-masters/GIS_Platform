@@ -1,5 +1,6 @@
 import { Then, When } from '@wdio/cucumber-framework';
 
+import { sleep } from '../../../../src/app/services/util/sleep';
 import { getMapPosition } from '../../commands/map/getMapPosition';
 import { MapPage } from '../../pages/Map.page';
 import { ScenarioScope } from '../../ScenarioScope';
@@ -11,6 +12,7 @@ When('я протыкаю карту в центре', async function () {
 
 When('я выделяю область с центра карты к шкале отображения масштаба', async function () {
   await mapBlock.dragAndDropFromMapCenterToMapScaleBar();
+  await sleep(300); // анимация выдвижения FeaturesSidebarTeaser
 });
 
 When('я жду когда карта станет кликабельной', async function () {

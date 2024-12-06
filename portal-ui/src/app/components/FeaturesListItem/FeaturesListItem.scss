@@ -2,11 +2,11 @@ body .FeaturesListItem {
   position: relative;
 
   display: grid;
-  grid-template: 20px 16px auto / 50px 18px auto 100px;
+  grid-template: 20px 16px auto / 50px 20px auto 85px;
   grid-template-areas: 'id icon title buttons' 'id icon layer buttons' 'id icon search buttons';
 
   height: 64px;
-  padding: 7px 5px;
+  padding: 7px 4px;
 
   transition: background-color 0.15s;
 
@@ -41,7 +41,7 @@ body .FeaturesListItem {
 
     overflow: hidden;
 
-    width: 30px;
+    width: 44px;
 
     text-align: center;
     white-space: nowrap;
@@ -63,6 +63,10 @@ body .FeaturesListItem {
 
     &_disabled {
       color: var(--gray);
+    }
+
+    &_verticesModified {
+      font-weight: bold;
     }
   }
 
@@ -87,6 +91,10 @@ body .FeaturesListItem {
 
       font-style: italic;
     }
+
+    &_verticesModified {
+      font-weight: bold;
+    }
   }
 
   &-Layer {
@@ -101,6 +109,10 @@ body .FeaturesListItem {
 
     font-size: 12px;
     line-height: 1.1;
+
+    &_verticesModified {
+      font-weight: bold;
+    }
   }
 
   & &-Buttons {
@@ -116,7 +128,7 @@ body .FeaturesListItem {
   &-Icon {
     grid-area: icon;
 
-    width: 26px;
+    width: 22px;
 
     line-height: 16px;
 

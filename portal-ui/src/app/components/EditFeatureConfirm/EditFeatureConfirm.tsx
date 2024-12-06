@@ -15,7 +15,7 @@ export const EditFeatureConfirm: FC = observer(() => (
     onClose={sidebars.closeEditFeatureConfirmation}
   >
     <DialogContent>
-      <DialogContentText>Есть несохранённые изменения. Они будут потеряны при закрытии.</DialogContentText>
+      <DialogContentText>Все несохраненные данные будут утеряны.</DialogContentText>
     </DialogContent>
     <DialogActions>
       <Button onClick={sidebars.featuresClosingConfirmationCallback} color='primary'>

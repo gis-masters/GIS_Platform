@@ -15,6 +15,7 @@ const cnZoomToFeature = cn('ZoomToFeature');
 
 interface ZoomToFeatureProps extends IClassNameProps {
   feature: WfsFeature;
+  disabled?: boolean;
   onClick?(feature: WfsFeature): void;
 }
 
@@ -22,11 +23,16 @@ export class ZoomToFeature extends Component<ZoomToFeatureProps> {
   private btnRef = createRef<HTMLButtonElement>();
 
   render() {
-    const { className } = this.props;
+    const { disabled, className } = this.props;
 
     return (
       <Tooltip title='Перейти к объекту'>
-        <IconButton className={cnZoomToFeature(null, [className])} onClick={this.handleClick} ref={this.btnRef}>
+        <IconButton
+          className={cnZoomToFeature(null, [className])}
+          onClick={this.handleClick}
+          ref={this.btnRef}
+          disabled={disabled}
+        >
           <MyLocation />
         </IconButton>
       </Tooltip>

@@ -14,8 +14,11 @@ import { getFeaturesById } from '../../services/geoserver/wfs/wfs.service';
 import { CrgLayer } from '../../services/gis/layers/layers.models';
 import { getLayerSchema } from '../../services/gis/layers/layers.service';
 import { projectsService } from '../../services/gis/projects/projects.service';
+import { MapAction, MapMode } from '../../services/map/map.models';
 import { FeatureError } from '../../services/map/map-link-following.service';
 import { currentProject } from '../../stores/CurrentProject.store';
+import { mapStore } from '../../stores/Map.store';
+import { mapVerticesModificationStore } from '../../stores/MapVerticesModification.store';
 import { FeatureIcon } from '../FeatureIcon/FeatureIcon';
 import { ZoomToFeature } from '../ZoomToFeature/ZoomToFeature';
 import { FeaturesListItemTitle, getFeaturesListItemTitle } from './FeaturesListItem.util';
@@ -59,32 +62,59 @@ export class FeaturesListItem extends Component<FeaturesListItemProps> {
   render() {
     const { feature, highlighted, searchResultHighlight, errorData, style } = this.props;
 
+    const verticesModified = () =>
+      mapStore.mode === MapMode.VERTICES_MODIFICATION &&
+      mapVerticesModificationStore.modifiedFeatures.some(f => f.getId() === feature?.id);
+
     return (
       <div className={cnFeaturesListItem({ highlighted, foundFeature: !!searchResultHighlight })} style={style}>
         <div
-          className={cnFeaturesListItem('Id', { disabled: !!errorData })}
+          className={cnFeaturesListItem('Id', { disabled: !!errorData, verticesModified: verticesModified() })}
           onDoubleClick={this.selectIt}
           onClick={this.highlightIt}
         >
           {errorData ? errorData.id : feature?.id && extractFeatureId(feature.id)}
         </div>
+
         <div className={cnFeaturesListItem('Icon')}>
           {feature?.geometry?.type && (
             <FeatureIcon geometryType={feature?.geometry?.type} className={cnFeaturesListItem('Svg')} />
           )}
         </div>
+
         <div
-          className={cnFeaturesListItem('Title', { disabled: !!errorData, isEmpty: this.titleAndEmptiness?.isEmpty })}
+          className={cnFeaturesListItem('Title', {
+            disabled: !!errorData,
+            isEmpty: this.titleAndEmptiness?.isEmpty,
+            verticesModified: verticesModified()
+          })}
         >
           {errorData ? errorData.message : this.titleAndEmptiness?.title}
         </div>
-        <div className={cnFeaturesListItem('Layer')}>{errorData ? errorData.layerTitle : this.subTitle}</div>
+        <div
+          className={cnFeaturesListItem('Layer', {
+            verticesModified: verticesModified()
+          })}
+        >
+          {errorData ? errorData.layerTitle : this.subTitle}
+        </div>
+
         {searchResultHighlight}
         {!errorData && (
           <div className={cnFeaturesListItem('Buttons')}>
-            {feature && <ZoomToFeature feature={feature} onClick={this.handleZoom} />}
+            {feature && (
+              <ZoomToFeature
+                disabled={!mapStore.allowedActions.includes(MapAction.ZOOM_TO_FEATURE)}
+                feature={feature}
+                onClick={this.handleZoom}
+              />
+            )}
             <Tooltip title='Открыть'>
-              <IconButton className={cnFeaturesListItemOpenEdit()} onClick={this.selectIt}>
+              <IconButton
+                className={cnFeaturesListItemOpenEdit()}
+                onClick={this.selectIt}
+                disabled={!mapStore.allowedActions.includes(MapAction.OPEN_EDIT_FEATURE)}
+              >
                 <ArrowForward />
               </IconButton>
             </Tooltip>
@@ -129,6 +159,10 @@ export class FeaturesListItem extends Component<FeaturesListItemProps> {
 
   @boundMethod
   private async selectIt() {
+    if (mapStore.mode === MapMode.VERTICES_MODIFICATION) {
+      return;
+    }
+
     if (!this.props.errorData) {
       const { onSelect, isSearchList } = this.props;
       let { feature } = this.props;
@@ -151,6 +185,10 @@ export class FeaturesListItem extends Component<FeaturesListItemProps> {
 
   @boundMethod
   private highlightIt() {
+    if (mapStore.mode === MapMode.VERTICES_MODIFICATION) {
+      return;
+    }
+
     if (!this.props.errorData) {
       const { feature, highlighted, onHighlight } = this.props;
       if (onHighlight && feature) {
