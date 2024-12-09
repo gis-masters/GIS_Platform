@@ -8,7 +8,7 @@ import { Extent, getTopLeft, getWidth } from 'ol/extent';
 import Feature from 'ol/Feature';
 import { Geometry, MultiPolygon, SimpleGeometry } from 'ol/geom';
 import ImageWrapper from 'ol/Image';
-import { Draw, Modify, Select, Snap } from 'ol/interaction';
+import { Draw, Modify, Select } from 'ol/interaction';
 import { DrawEvent } from 'ol/interaction/Draw';
 import { ModifyEvent } from 'ol/interaction/Modify';
 import { Tile as TileLayer, Vector as VectorLayer } from 'ol/layer';
@@ -55,6 +55,7 @@ import { wfsFeatureToFeature } from '../util/open-layers.util';
 import { konfirmieren } from '../utility-dialogs.service';
 import { SingleDrawGeometryType } from './draw/map-draw.models';
 import { MapMode, MapPosition } from './map.models';
+import { mapSnapService } from './snap/snap.service';
 
 // WMS request parameters. At least a LAYERS param is required.
 interface CrgWmsParams {
@@ -110,6 +111,7 @@ class MapService {
 
   view?: View;
   scaleLine?: ScaleLine;
+
   draftSource: VectorSource = new VectorSource<Feature<Geometry>>({
     features: []
   });
@@ -694,11 +696,8 @@ class MapService {
 
     this.verticesModification.init();
     this.verticesModification.setActive(true);
-    this.map.addInteraction(
-      new Snap({
-        source: this.draftSource
-      })
-    );
+
+    mapSnapService.activate();
   }
 
   verticesModificationOff() {
@@ -714,6 +713,8 @@ class MapService {
           void this.highlightFeatures(mapStore.selectedFeatures);
 
           this.verticesModification.setActive(false);
+
+          mapSnapService.deactivate();
         }
       });
     } else {
@@ -722,6 +723,7 @@ class MapService {
       void this.highlightFeatures(mapStore.selectedFeatures);
 
       this.verticesModification.setActive(false);
+      mapSnapService.deactivate();
     }
   }
 
@@ -775,12 +777,7 @@ class MapService {
     });
     this.map.addInteraction(this.currentDraw);
 
-    // Snap
-    this.map.addInteraction(
-      new Snap({
-        source: this.draftSource
-      })
-    );
+    mapSnapService.activate();
   }
 
   drawOff() {
@@ -797,6 +794,8 @@ class MapService {
       this.map.removeInteraction(this.drawModify);
       this.drawModify = null;
     }
+
+    mapSnapService.deactivate();
   }
 
   async positionToFeature(feature: WfsFeature, proj?: Projection) {

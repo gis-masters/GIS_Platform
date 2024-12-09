@@ -1,0 +1,16 @@
+body .MapSnapPixelTolerance {
+  position: absolute;
+  z-index: 2;
+  top: 55px;
+  right: 375px;
+
+  display: flex;
+  align-items: center;
+
+  width: 85px;
+  padding: 3px 5px 0 1px;
+
+  &-Icon {
+    color: var(--gray);
+  }
+}
