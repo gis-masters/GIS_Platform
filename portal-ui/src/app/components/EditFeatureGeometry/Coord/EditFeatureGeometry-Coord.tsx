@@ -21,6 +21,7 @@ import { isDimensionValid, isGeometryValid } from '../../../services/geoserver/w
 import { mapService } from '../../../services/map/map.service';
 import { wfsFeatureToFeature } from '../../../services/util/open-layers.util';
 import { isNumberArray } from '../../../services/util/typeGuards/isNumberArray';
+import { bufferFeatureStore } from '../../../stores/BufferFeature.store';
 import { EditFeatureGeometryStore } from '../../../stores/EditFeatureGeometry.store';
 import { projectionsStore } from '../../../stores/Projections.store';
 import { Toast } from '../../Toast/Toast';
@@ -118,6 +119,10 @@ export class EditFeatureGeometryCoord extends Component<EditFeatureGeometryCoord
 
   @computed
   private get warning(): boolean {
+    if (bufferFeatureStore.bufferFeature) {
+      return false;
+    }
+
     const {
       store: { layer, currentProjection, layerExtent },
       val
@@ -141,11 +146,11 @@ export class EditFeatureGeometryCoord extends Component<EditFeatureGeometryCoord
         currentProjection,
         this.defaultProjection
       );
+
       if (geometry) {
         cloneVal = geometry.coordinates.map(Number);
       }
     }
-
     const checkPoint = point(cloneVal);
     const isPointInPolygon = booleanPointInPolygon(checkPoint, layerExtent);
 

@@ -13,6 +13,7 @@ export class EditFeatureGeometryStore {
   @observable geometry?: WfsGeometry;
   @observable currentProjection?: Projection;
   @observable nativeProjection?: Projection;
+  @observable previousProjection?: Projection;
   @observable defaultProjection?: Projection;
   @observable private virginGeometry?: WfsGeometry;
   @observable layer?: CrgVectorableLayer;

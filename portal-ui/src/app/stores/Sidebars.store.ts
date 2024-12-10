@@ -59,6 +59,7 @@ class Sidebars {
   @observable bugReportOpen?: boolean;
   @observable infoOpen?: boolean;
   @observable photoLayerOpen: boolean = false;
+  @observable validateGeometry: boolean = false;
   @observable featuresForPhotoMode: WfsFeature[] = [];
 
   private static _instance: Sidebars;
@@ -85,6 +86,11 @@ class Sidebars {
   @action
   openLeftSidebar() {
     this.leftOpen = true;
+  }
+
+  @action
+  setValidateGeometry() {
+    this.validateGeometry = !this.validateGeometry;
   }
 
   @action

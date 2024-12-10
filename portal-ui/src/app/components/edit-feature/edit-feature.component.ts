@@ -45,7 +45,9 @@ import { FeaturePropertyValidators } from '../../services/util/FeaturePropertyVa
 import { calculateValues } from '../../services/util/form/formValidation.utils';
 import { fromMobx } from '../../services/util/fromMobx';
 import { sleep } from '../../services/util/sleep';
+import { isCoordinateArrayArray, isMultiPolygonCoordinate } from '../../services/util/typeGuards/isCoordinate';
 import { konfirmieren } from '../../services/utility-dialogs.service';
+import { bufferFeatureStore } from '../../stores/BufferFeature.store';
 import { currentProject } from '../../stores/CurrentProject.store';
 import { EditFeatureGeometryStore } from '../../stores/EditFeatureGeometry.store';
 import { mapStore } from '../../stores/Map.store';
@@ -77,6 +79,7 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
 
   isSaveInProgress = false;
   changedGeometry?: WfsGeometry<Coordinate>;
+  primalGeometry?: WfsGeometry<Coordinate>;
   isGeometryValid = false;
   isGeometryChanged = false;
   editGeometryStore = new EditFeatureGeometryStore();
@@ -288,6 +291,7 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
                 .pipe(takeUntil(this.unsubscribeFromMobx$))
                 .subscribe(async changedGeometry => {
                   this.changedGeometry = changedGeometry;
+                  delete this.primalGeometry;
 
                   const feature = {
                     ...firstFeature,
@@ -327,6 +331,7 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
         const currentLayer = layers.find(item => item.id === this.layer?.id);
         if (!currentLayer) {
           sidebars.closeEdit();
+          bufferFeatureStore.clearBufferFeature();
 
           return;
         }
@@ -335,6 +340,7 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
 
         if (currentLayer.view !== view) {
           sidebars.closeEdit();
+          bufferFeatureStore.clearBufferFeature();
 
           await sleep(0);
 
@@ -345,6 +351,30 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
             properties: this.properties,
             isNew: this.isNew
           });
+        }
+      });
+
+    fromMobx<boolean>(() => sidebars.validateGeometry)
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(async () => {
+        if (this.isNew && this.features?.length) {
+          if (
+            isCoordinateArrayArray(this.features[0].geometry?.coordinates) ||
+            isMultiPolygonCoordinate(this.features[0].geometry?.coordinates)
+          ) {
+            this.primalGeometry = this.features[0].geometry as WfsGeometry<Coordinate>;
+          }
+
+          await mapService.highlightFeatures([this.features[0]]);
+          this.isGeometryChanged = true;
+
+          if (
+            this.editGeometryStore.currentProjection ||
+            this.editGeometryStore.geometry ||
+            this.editGeometryStore.nativeProjection
+          ) {
+            this.isGeometryValid = this.editGeometryStore.isValid;
+          }
         }
       });
   }
@@ -404,7 +434,9 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
     this.isSaveInProgress = true;
 
     const featureProperties = convertOldToNewProperties(this.featureDescription?.properties || []);
+
     let actualProperties = this.getActualValuesFromForm();
+
     for (const key of Object.keys(actualProperties)) {
       const propertyByKey = featureProperties.find(({ name }) => name === key);
       if (propertyByKey) {
@@ -419,12 +451,17 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
 
     let ids = this.features?.map(({ id }) => id) || [];
     const feature = this.features?.[0];
-
     if (this.isNew && feature) {
+      let geometry = this.primalGeometry || this.changedGeometry;
+
+      if (isCoordinateArrayArray(feature.geometry?.coordinates)) {
+        geometry = feature.geometry as WfsGeometry<Coordinate>;
+      }
+
       const createdFeature = await createFeature(layer.dataset, layer.tableName, {
         ...feature,
         properties: actualProperties,
-        geometry: this.changedGeometry
+        geometry
       });
       ids = [createdFeature.id];
     } else {
@@ -450,6 +487,7 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
     const savedFeatures = await getFeaturesById(ids, this.layer.complexName);
 
     sidebars.closeEdit();
+    bufferFeatureStore.clearBufferFeature();
 
     await sleep(0);
     this.isSaveInProgress = false;
@@ -513,6 +551,7 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
           sidebars.openSelectedFeaturesSidebar();
         } else {
           sidebars.closeEdit();
+          bufferFeatureStore.clearBufferFeature();
         }
       });
   }
@@ -552,6 +591,7 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
       });
     }
     sidebars.closeEdit();
+    bufferFeatureStore.clearBufferFeature();
   }
 
   getDateTime(value: string | number): string {

@@ -35,6 +35,7 @@ export interface ChooseXTableDialogBaseProps<T> extends IClassNameProps {
   secondarySortField?: keyof T;
   afterTable?: ReactNode;
   single?: boolean;
+  alwaysShowActionButton?: boolean;
   withoutSelectAll?: boolean;
   additionalAction?: ReactNode;
   getRowId?(rowData: T): string | number;
@@ -72,6 +73,7 @@ export default class ChooseXTableDialog<T> extends Component<ChooseXTableDialogP
       secondarySortField,
       actionButtonProps = {},
       single,
+      alwaysShowActionButton,
       disabledItems,
       disabledItemsMessage,
       withoutSelectAll,
@@ -120,7 +122,7 @@ export default class ChooseXTableDialog<T> extends Component<ChooseXTableDialogP
         <DialogActions>
           <ActionsLeft>{additionalAction}</ActionsLeft>
           <ActionsRight>
-            {this.changed && (
+            {(alwaysShowActionButton || this.changed) && (
               <Button
                 disabled={!this.selected.length}
                 onClick={this.submit}
@@ -132,7 +134,7 @@ export default class ChooseXTableDialog<T> extends Component<ChooseXTableDialogP
                 {actionButtonProps.children || 'Выбрать'}
               </Button>
             )}
-            <Button onClick={this.close}>{this.changed ? 'Отмена' : 'Закрыть'}</Button>
+            <Button onClick={this.close}>{alwaysShowActionButton || this.changed ? 'Отмена' : 'Закрыть'}</Button>
           </ActionsRight>
         </DialogActions>
       </Dialog>

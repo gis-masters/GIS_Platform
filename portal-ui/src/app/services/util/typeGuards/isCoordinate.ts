@@ -13,3 +13,7 @@ export function isCoordinateArray(value: unknown): value is Coordinate[] {
 export function isCoordinateArrayArray(value: unknown): value is Coordinate[][] {
   return Array.isArray(value) && value.every(part => isCoordinateArray(part));
 }
+
+export function isMultiPolygonCoordinate(value: unknown): value is Coordinate[][][] {
+  return Array.isArray(value) && value.every(part => isCoordinateArrayArray(part));
+}

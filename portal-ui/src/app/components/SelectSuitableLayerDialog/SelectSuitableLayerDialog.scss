@@ -1,0 +1,33 @@
+body .SelectSuitableLayerDialog {
+  &-LayerSelect {
+    width: 100%;
+    height: 22px;
+    padding: 0;
+
+    text-transform: none;
+
+    color: black;
+    background: var(--light);
+
+    font-size: 16px;
+    font-weight: 400;
+
+    &_empty {
+      border: 1px var(--gray) dashed;
+      background: var(--white);
+
+      &:hover {
+        background: var(--white);
+      }
+    }
+  }
+
+  &-Description {
+    margin: 0 20px;
+
+    color: var(--gray);
+
+    font-size: 14px;
+    line-height: 1.2;
+  }
+}

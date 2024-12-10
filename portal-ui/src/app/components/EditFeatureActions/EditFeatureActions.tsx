@@ -5,8 +5,10 @@ import { cn } from '@bem-react/classname';
 import { WfsFeature } from '../../services/geoserver/wfs/wfs.models';
 import { CrgVectorLayer } from '../../services/gis/layers/layers.models';
 import { organizationSettings } from '../../stores/OrganizationSettings.store';
+import { sidebars } from '../../stores/Sidebars.store';
 import { CopyFeaturesButton } from '../CopyFeaturesButton/CopyFeaturesButton';
 import { CopyUrlButton } from '../CopyUrlButton/CopyUrlButton';
+import { CreateBufferButton } from '../CreateBufferButton/CreateBufferButton';
 import { OpenInAnotherProject } from '../OpenInAnotherProject/OpenInAnotherProject';
 import { PrintFeature } from '../PrintFeature/PrintFeature';
 import { XmlDownload } from '../XmlDownload/XmlDownload';
@@ -29,7 +31,12 @@ export class EditFeatureActions extends Component<EditFeatureActionsProps> {
     return (
       <div className={cnEditFeatureActions()}>
         {layer && (
-          <CopyFeaturesButton layer={layer} features={[feature]} tooltipTitle='Копировать объект в другой слой' />
+          <>
+            {!sidebars.editFeaturesData?.isNew && (
+              <CreateBufferButton layer={layer} feature={feature} tooltipTitle='Создать буфер' />
+            )}
+            <CopyFeaturesButton layer={layer} features={[feature]} tooltipTitle='Копировать объект в другой слой' />
+          </>
         )}
         <PrintFeature feature={feature} layer={layer} />
         {organizationSettings.downloadXml && layer && <XmlDownload feature={feature} layer={layer} />}

@@ -108,10 +108,11 @@ const FilesSignatureFC: FC<FilesSignatureProps> = observer(
             <Tooltip placement='top' title={cryptoProStore.isPluginActive ? '' : 'Плагин КрипроПро не подключен'}>
               <span>
                 <MenuItem disabled={!cryptoProStore.isPluginActive} onClick={handleCoSignClick}>
-                  Доподписать
+                  Утвердить
                 </MenuItem>
               </span>
             </Tooltip>
+
             <MenuItem component={Link} href={filesClient.getFileEcpUrl(id)} variant='none' download={title}>
               Скачать ЭЦП
             </MenuItem>
