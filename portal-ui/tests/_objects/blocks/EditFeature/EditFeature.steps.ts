@@ -54,6 +54,10 @@ When('в форме редактирования объекта я нажима�
   await editFeatureBlock.clickSaveButton();
 });
 
+When('в вкладке просмотра геометрии я нажимаю кнопку `Координаты контура как текст`', async function () {
+  await editFeatureBlock.clickGeometryAsTextButton();
+});
+
 Then(
   'в форме редактирования объекта в поле {string} значение {string}',
   async function (title: string, value: string): Promise<void> {

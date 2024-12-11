@@ -21,6 +21,7 @@ import { simpleMultiLine } from './testSchemas/simpleMultiline';
 import { simpleMultiLineReadonly } from './testSchemas/simpleMultilineReadonly';
 import { simpleMultiPoint } from './testSchemas/simpleMultipoint';
 import { simpleMultiPointReadonly } from './testSchemas/simpleMultipointReadonly';
+import { simplePoint } from './testSchemas/simplePoint';
 import { simpleReadonly } from './testSchemas/simpleReadonly';
 import { testNotSorting } from './testSchemas/testNotSorting';
 import { testShapeFeaturesCopy } from './testSchemas/testShapeFeaturesCopy';
@@ -55,6 +56,7 @@ const testSchemas: Schema[] = [
   simple,
   simpleMultiLine,
   simpleMultiPoint,
+  simplePoint,
   simpleReadonly,
   simpleMultiLineReadonly,
   simpleMultiPointReadonly,

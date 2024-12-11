@@ -59,6 +59,7 @@ class EditFeatureBlock extends Block {
 
   async clickGeometryAsTextButton(): Promise<void> {
     const $editFeatureGeometryAsText = await editFeatureBlock.$('editFeatureGeometryAsTextBtn');
+
     await $editFeatureGeometryAsText.waitForDisplayed();
     await $editFeatureGeometryAsText.click();
   }
@@ -85,6 +86,9 @@ class EditFeatureBlock extends Block {
   }
 
   async getGeometryInEditMode(): Promise<string[]> {
+    const $showAsTextBtn = await editFeatureBlock.$('editFeatureGeometryAsTextBtn');
+    await $showAsTextBtn.scrollIntoView();
+
     const $container = await editFeatureBlock.$('container');
 
     return await extractValues([...(await $container.$$('.EditFeatureGeometry-CoordInput input'))]);

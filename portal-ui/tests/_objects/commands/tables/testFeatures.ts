@@ -23,9 +23,14 @@ import { forSimpleFiltering } from './testFeatures/forSimpleFiltering';
 import { forSorting } from './testFeatures/forSorting';
 import { forTitles } from './testFeatures/forTitles';
 import { line } from './testFeatures/line';
+import { line2 } from './testFeatures/line2';
 import { multiLine } from './testFeatures/multiline';
+import { multiLine2 } from './testFeatures/multiline2';
 import { multiPoint } from './testFeatures/multipoint';
+import { multiPoint2 } from './testFeatures/multipoint2';
 import { multiPolygon } from './testFeatures/multiPolygon';
+import { multiPolygon2 } from './testFeatures/multiPolygon2';
+import { point } from './testFeatures/point';
 import { singleFeature } from './testFeatures/singleFeature';
 
 const KEY = 'тестовые данные';
@@ -111,14 +116,29 @@ export async function getTestFeatures(key: string, schema?: Schema): Promise<New
     case 'мультиполигон': {
       return multiPolygon;
     }
+    case 'мультиполигон c 2 полигонами': {
+      return multiPolygon2;
+    }
     case 'линия': {
       return line;
+    }
+    case 'линия которая выглядит как линия': {
+      return line2;
     }
     case 'мультилиния': {
       return multiLine;
     }
+    case 'мультилиния 2 линиями': {
+      return multiLine2;
+    }
+    case 'точка': {
+      return point;
+    }
     case 'мультиточка': {
       return multiPoint;
+    }
+    case 'мультиточка с 2 точками': {
+      return multiPoint2;
     }
     case 'тестирование панели объектов': {
       return forFeaturesSidebar;

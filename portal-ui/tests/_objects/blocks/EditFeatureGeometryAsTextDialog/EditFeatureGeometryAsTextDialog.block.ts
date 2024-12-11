@@ -19,6 +19,13 @@ class EditFeatureGeometryAsTextDialogBlock extends Block {
     const $editFeatureGeometryAsTextDialogSaveBtn = await this.$('editFeatureGeometryAsTextDialogSaveBtn');
     await $editFeatureGeometryAsTextDialogSaveBtn.click();
   }
+
+  async getObjectCoordinates(): Promise<string> {
+    const $editFeatureGeometryAsTextDialogTextarea = await this.$('editFeatureGeometryAsTextDialogTextarea');
+    await $editFeatureGeometryAsTextDialogTextarea.waitForDisplayed();
+
+    return await $editFeatureGeometryAsTextDialogTextarea.getText();
+  }
 }
 
 export const editFeatureGeometryAsTextDialogBlock = new EditFeatureGeometryAsTextDialogBlock();
