@@ -37,7 +37,6 @@ import ru.mycrg.data_service.service.smev3.SmevMessageService;
 import ru.mycrg.data_service.service.smev3.config.Smev3Config;
 import ru.mycrg.data_service.service.smev3.fields.CommonFields;
 import ru.mycrg.data_service.service.smev3.model.CustomMultipartFile;
-import ru.mycrg.data_service.service.smev3.request.accept_rns.DocumentCreationService;
 import ru.mycrg.data_service.service.storage.FileStorageService;
 import ru.mycrg.data_service.util.JsonConverter;
 import ru.mycrg.data_service.util.xml.XmlMarshaller;
@@ -74,9 +73,9 @@ import static ru.mycrg.data_service_contract.enums.TaskStatus.*;
 import static ru.mycrg.data_service_contract.enums.TaskStatus.CANCELED;
 import static ru.mycrg.data_service_contract.enums.TaskType.CUSTOM;
 
-public abstract class AcceptSerivceBase {
+public abstract class AcceptServiceBase {
 
-    private static final Logger log = LoggerFactory.getLogger(AcceptSerivceBase.class);
+    private static final Logger log = LoggerFactory.getLogger(AcceptServiceBase.class);
 
     protected static final String DATA_SECTION_KEY_DATA_CONNECTION_ATTRIBUTE = "data_section_key_data_connection";
     protected static final String INBOX_DATA_KEY_DATA_CONNECTION_ATTRIBUTE = "inbox_data_key_data_connection";
@@ -125,7 +124,7 @@ public abstract class AcceptSerivceBase {
     protected final SmevMessageSenderService smevMessageSenderService;
     protected final DocumentCreationService documentCreationService;
 
-    public AcceptSerivceBase(TaskLogService taskLogService,
+    public AcceptServiceBase(TaskLogService taskLogService,
                              TasksDetachedDao tasksDao,
                              SmevMessageService smevMessageService,
                              ISchemaTemplateService schemaService,

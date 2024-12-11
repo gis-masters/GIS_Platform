@@ -1,14 +1,16 @@
-package ru.mycrg.data_service.service.smev3.request.accept_rns;
+package ru.mycrg.data_service.service.smev3.request.accept_rnv;
 
-import org.apache.poi.xwpf.usermodel.*;
+import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
+import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.springframework.stereotype.Component;
-import ru.mycrg.data_service.accept_rns_1_0_3.*;
+import ru.mycrg.data_service.accept_rnv_1_0_6.*;
 import ru.mycrg.data_service.service.smev3.request.IDocumentDataProvider;
 
 import static ru.mycrg.data_service.service.smev3.request.DocumentCreationUtils.*;
+import static ru.mycrg.data_service.service.smev3.request.DocumentCreationUtils.addTextWithSpacing;
 
 @Component
-public class RnsFixTechErrorStrategy implements IRnsRequestDocumentCreator {
+public class RnvFixTechErrorStrategy implements IRnvRequestDocumentCreator {
 
     @Override
     public int getGoal() {
@@ -21,8 +23,8 @@ public class RnsFixTechErrorStrategy implements IRnsRequestDocumentCreator {
     }
 
     private static XWPFDocument createTemplate(RequestType request) {
-        IDocumentDataProvider dataProvider = new RnsDocumentDataProvider();
         XWPFDocument document = new XWPFDocument();
+        IDocumentDataProvider dataProvider = new RnvDocumentDataProvider();
         addText(document, "Приложение № 4", ParagraphAlignment.BOTH, 5000, 5, 12);
         addText(document, "к Административному регламенту", ParagraphAlignment.BOTH, 5000, 5, 12);
         addText(document, "предоставления                Министерством", ParagraphAlignment.BOTH, 5000, 5, 12);
@@ -33,6 +35,10 @@ public class RnsFixTechErrorStrategy implements IRnsRequestDocumentCreator {
         addText(document, "разрешения      на      ввод      объекта     в", ParagraphAlignment.BOTH, 5000, 5, 12);
         addText(document, "эксплуатацию            на          территории", ParagraphAlignment.BOTH, 5000, 5, 12);
         addText(document, "Республики Крым  ", ParagraphAlignment.BOTH, 5000, 5, 12);
+        addText(document, "", ParagraphAlignment.BOTH, 5000, 5, 12);
+        addText(document, "Министерство государственного строительного", ParagraphAlignment.BOTH, 3875, 5, 12);
+        addText(document, "надзора ", ParagraphAlignment.BOTH, 3875, 5, 12);
+        addText(document, "Республики Крым", ParagraphAlignment.BOTH, 3875, 5, 12);
         addText(document, "", ParagraphAlignment.BOTH, 5000, 5, 12);
         addTextWithUnderline(document, "от кого: ____" + dataProvider.getOrgFullName(request) + "____",
                              ParagraphAlignment.LEFT, 3875, 5,
@@ -71,7 +77,7 @@ public class RnsFixTechErrorStrategy implements IRnsRequestDocumentCreator {
                              12);
         addText(document, "_", ParagraphAlignment.LEFT, 3875, 5, 12);
         addText(document, "кем выдан, гражданство, адрес проживания,", ParagraphAlignment.LEFT, 3875, 5, 12);
-        addTextWithUnderline(document, "____" + dataProvider.getPhone(request) + "__" + dataProvider.getPhone(request) +
+        addTextWithUnderline(document, "____" + dataProvider.getPhone(request) + "__" + dataProvider.getEmail(request) +
                                      "____",
                              ParagraphAlignment.LEFT, 3875,
                              5, 12);
@@ -85,10 +91,10 @@ public class RnsFixTechErrorStrategy implements IRnsRequestDocumentCreator {
         addCenterText(document, "об исправлении опечаток и (или) ошибок в документе, являющегося результатом ");
         addCenterText(document, "предоставления государственной услуги ");
         addText(document, "", ParagraphAlignment.BOTH, 5000, 5, 12);
-        addTextWithSpacing(document, "В тексте Разрешения на строительство № " + dataProvider.getPermitNumber(request),
-                           5,
+        addTextWithSpacing(document, "В тексте документа № " + dataProvider.getPermitNumber(request), 5, 13);
+        addTextWithSpacing(document,
+                           "от " + dataProvider.getPermitDate(request) + " " + dataProvider.getPermitIssuer(request), 0,
                            13);
-        addTextWithSpacing(document, "от " + dataProvider.getPermitDate(request), 0, 13);
         addCenterText(document, "(наименование, реквизиты документа)", 10, false);
         addTextWithSpacing(document, "являющегося    результатом    предоставления    государственной    услуги, по ",
                            5, 13);

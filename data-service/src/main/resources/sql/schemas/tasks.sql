@@ -9,8 +9,8 @@ SET class_rule =
        '{
           "name": "tasks_schema_v1",
           "tags": [
-            "system",
-            "Задачи"
+          "system",
+          "Задачи"
           ],
           "title": "Схема задач",
           "tableName": "tasks",
@@ -21,14 +21,15 @@ SET class_rule =
           "properties": [
             {
               "name": "id",
-              "hidden": true,
               "title": "Идентификатор",
-              "valueType": "INT"
+              "valueType": "INT",
+              "hidden": true
             },
             {
               "name": "type",
               "title": "Тип задачи",
               "valueType": "CHOICE",
+              "hidden":true,
               "enumerations": [
                 {
                   "value": "ASSIGNABLE",
@@ -47,11 +48,11 @@ SET class_rule =
             {
               "name": "content_type_id",
               "title": "Вид задачи",
+              "valueType": "CHOICE",
               "readOnly": true,
               "display": "radiogroup",
               "maxLength": 50,
               "minWidth": 300,
-              "valueType": "CHOICE",
               "enumerations": [
                 {
                   "value": "common_task",
@@ -111,38 +112,38 @@ SET class_rule =
               ]
             },
             {
-             "name": "intermediate_status",
-             "title": "Промежуточный статус выполнения задачи",
-             "description": "Финальный статус устанавливается системой, не заполняйте вручную",
-             "valueType": "CHOICE",
-             "enumerations": [
-               {
-                 "value": "1",
-                 "title": "Заявление прибыло из СМЭВ-3"
-               },
-               {
-                 "value": "2",
-                 "title": "Заявлению назначен исполнитель"
-               },
-               {
-                 "value": "3",
-                 "title": "Подготовленные документы ожидают подпись"
-               },
-               {
-                 "value": "4",
-                 "title": "Документы готовы к отправке"
-               },
-               {
-                 "value": "5",
-                 "title": "РНС успешно отправлен в СМЭВ-3"
-               },
-               {
-                 "value": "6",
-                 "title": "Мотивированный отказ успешно отправлен в СМЭВ-3"
-               }
-             ]
-           },
-           {
+              "name": "intermediate_status",
+              "title": "Промежуточный статус выполнения задачи",
+              "valueType": "CHOICE",
+              "description": "Финальный статус устанавливается системой, не заполняйте вручную",
+              "enumerations": [
+                {
+                  "value": "1",
+                  "title": "Заявление прибыло из СМЭВ-3"
+                },
+                {
+                  "value": "2",
+                  "title": "Заявлению назначен исполнитель"
+                },
+                {
+                  "value": "3",
+                  "title": "Подготовленные документы ожидают подпись"
+                },
+                {
+                  "value": "4",
+                  "title": "Документы готовы к отправке"
+                },
+                {
+                  "value": "5",
+                  "title": "РНС успешно отправлен в СМЭВ-3"
+                },
+                {
+                  "value": "6",
+                  "title": "Мотивированный отказ успешно отправлен в СМЭВ-3"
+                }
+              ]
+            },
+            {
               "name": "description",
               "title": "Описание",
               "valueType": "STRING",
@@ -150,38 +151,28 @@ SET class_rule =
             },
             {
               "name": "assigned_to",
-              "required": true,
               "title": "Исполнитель",
-              "onlySubordinates": true,
-              "valueType": "USER_ID"
+              "valueType": "USER_ID",
+              "required": true,
+              "onlySubordinates": true
             },
             {
               "name": "owner_id",
-              "required": true,
               "title": "Начальник",
-              "readOnly": true,
-              "valueType": "USER_ID"
-            },
-            {
-              "name": "due_date",
-              "title": "Срок исполнения",
-              "valueType": "DATETIME"
-            },
-            {
-              "name": "guid",
-              "title": "guid",
-              "hidden": true,
-              "valueType": "UUID"
+              "valueType": "USER_ID",
+              "required": true,
+              "readOnly": true
             },
             {
               "name": "inbox_data_key_data_connection",
               "title": "Материалы для обработки",
-              "required":true,
-              "valueType": "DOCUMENT"
+              "valueType": "DOCUMENT",
+              "required": true
             },
             {
               "name": "data_section_key_data_connection",
               "title": "Связь с библиотеками",
+              "valueType": "DOCUMENT",
               "multiple": true,
               "libraries": [
                 "dl_data_section1",
@@ -203,33 +194,81 @@ SET class_rule =
                 "dl_data_section17",
                 "dl_data_section18"
               ],
-              "maxDocuments": 18,
-              "valueType": "DOCUMENT"
+              "maxDocuments": 18
             },
             {
               "name": "created_by",
               "title": "Создано",
-              "hidden": true,
-              "valueType": "STRING"
-            },
-            {
-              "name": "updated_by",
-              "hidden": true,
-              "title": "Модифицировано",
-              "valueType": "STRING"
+              "valueType": "STRING",
+              "hidden": true
             },
             {
               "name": "created_at",
               "title": "Дата создания",
-              "readOnly": true,
+              "valueType": "DATETIME",
+              "readOnly": true
+            },
+            {
+              "name": "due_date",
+              "title": "Срок исполнения",
+              "valueType": "DATETIME"
+            },
+            {
+              "name": "record_status",
+              "title": "Контроль скоков исполнения",
+              "readOnly":true,
+              "valueType": "CHOICE",
+              "enumerations": [
+                {
+                  "value": "В установленный срок",
+                  "title": "В установленный срок"
+                },
+                {
+                  "value": "С нарушением срока",
+                  "title": "С нарушением срока"
+                }
+              ]
+            },
+            {
+              "name": "guid",
+              "title": "guid",
+              "valueType": "UUID",
+              "hidden": true
+            },
+            {
+              "name": "number",
+              "title": "Просроченных дней",
+              "readOnly":true,
+              "valueType": "INT"
+            },
+            {
+              "name": "updated_by",
+              "title": "Модифицировано",
+              "valueType": "STRING",
+              "hidden": true
+            },
+            {
+              "name": "date",
+              "title": "Дата выполнения",
+              "readOnly":true,
               "valueType": "DATETIME"
             },
             {
               "name": "last_modified",
               "title": "Дата последнего изменения",
-              "readOnly": true,
-              "valueType": "DATETIME"
+              "valueType": "DATETIME",
+              "hidden": true,
+              "readOnly": true
             }
+          ],
+          "description": "Реестр системных и настраиваемых задач",
+          "originName": "tasks",
+          "styleName": "tasks_schema_v1",
+          "readOnly": false,
+          "geometryType": "MultiPolygon",
+          "tags": [
+            "system",
+            "Задачи"
           ],
           "contentTypes": [
             {
@@ -258,6 +297,9 @@ SET class_rule =
                 },
                 {
                   "name": "due_date"
+                },
+                {
+                  "name": "date"
                 },
                 {
                   "name": "created_at"
@@ -415,7 +457,7 @@ SET class_rule =
                   "name": "data_section_key_data_connection"
                 },
                 {
-                "name": "description"
+                  "name": "description"
                 }
               ]
             },
@@ -455,10 +497,13 @@ SET class_rule =
                   "name": "due_date"
                 },
                 {
+                  "name": "record_status"
+                },
+                {
                   "name": "created_at"
                 },
                 {
-                  "name": "last_modified"
+                  "name": "date"
                 },
                 {
                   "name": "description",
@@ -472,54 +517,59 @@ SET class_rule =
               "title": "РНС. Выдача или внесение изменений",
               "attributes": [
                 {
-                 "name": "id",
-                 "hidden": true
+                  "name": "id",
+                  "hidden": true
                 },
                 {
-                 "name": "content_type_id",
-                 "readOnly": true
+                  "name": "content_type_id",
+                  "readOnly": true
                 },
                 {
-                 "name": "status",
-                 "readOnly": true
-               },
-               {
-                 "name": "intermediate_status"
+                  "name": "status"
                 },
                 {
-                 "name": "assigned_to"
+                  "name": "intermediate_status"
                 },
                 {
-                 "name": "owner_id"
+                  "name": "assigned_to"
+                },
+                {
+                  "name": "owner_id"
                 },
                 {
                   "name": "inbox_data_key_data_connection",
                   "title": "Заявка",
-                  "description": "Заявление, доставленное из ЕПГУ посредством СМЭВ-3",
                   "multiple": false,
-                  "readOnly": true
+                  "readOnly": true,
+                  "description": "Заявление, доставленное из ЕПГУ посредством СМЭВ-3"
                 },
                 {
                   "name": "data_section_key_data_connection",
                   "title": "Размещенный документ",
-                  "description": "Мотивированный отказ вносится в библиотеку Реестр предоставления сведений",
                   "multiple": false,
                   "libraries": [
                     "dl_data_section13",
                     "dl_data_section19"
                   ],
+                  "description": "Мотивированный отказ вносится в библиотеку Реестр предоставления сведений",
                   "valueType": "DOCUMENT"
                 },
                 {
                   "name": "due_date",
-                  "description": "Срок исполнения устанавливается с момента подачи заявки в систему и не подлежит изменению.",
-                  "readOnly": true
+                  "readOnly": true,
+                  "description": "Срок исполнения устанавливается с момента подачи заявки в систему и не подлежит изменению."
+                },
+                {
+                  "name": "record_status"
                 },
                 {
                   "name": "created_at"
                 },
                 {
-                  "name": "last_modified"
+                  "name": "date"
+                },
+                {
+                  "name": "number"
                 },
                 {
                   "name": "description",
@@ -530,57 +580,62 @@ SET class_rule =
             {
               "id": "rnv_smev_rostelekom",
               "type": "DOCUMENT",
-              "title": "ГПЗУ. Выдача или внесение изменений",
+              "title": "РНВ. Выдача или внесение изменений",
               "attributes": [
                 {
-                 "name": "id",
-                 "hidden": true
+                  "name": "id",
+                  "hidden": true
                 },
                 {
-                 "name": "content_type_id",
-                 "readOnly": true
+                  "name": "content_type_id",
+                  "readOnly": true
                 },
                 {
-                 "name": "status",
-                 "readOnly": true
-               },
-               {
-                 "name": "intermediate_status"
+                  "name": "status"
                 },
                 {
-                 "name": "assigned_to"
+                  "name": "intermediate_status"
                 },
                 {
-                 "name": "owner_id"
+                  "name": "assigned_to"
+                },
+                {
+                  "name": "owner_id"
                 },
                 {
                   "name": "inbox_data_key_data_connection",
                   "title": "Заявка",
-                  "description": "Заявление, доставленное из ЕПГУ посредством СМЭВ-3",
                   "multiple": false,
-                  "readOnly": true
+                  "readOnly": true,
+                  "description": "Заявление, доставленное из ЕПГУ посредством СМЭВ-3"
                 },
                 {
                   "name": "data_section_key_data_connection",
                   "title": "Размещенный документ",
-                  "description": "Мотивированный отказ вносится в библиотеку Реестр предоставления сведений",
                   "multiple": false,
                   "libraries": [
                     "dl_data_section13",
                     "dl_data_section19"
                   ],
+                  "description": "Мотивированный отказ вносится в библиотеку Реестр предоставления сведений",
                   "valueType": "DOCUMENT"
                 },
                 {
                   "name": "due_date",
-                  "description": "Срок исполнения устанавливается с момента подачи заявки в систему и не подлежит изменению.",
-                  "readOnly": true
+                  "readOnly": true,
+                  "description": "Срок исполнения устанавливается с момента подачи заявки в систему и не подлежит изменению."
+                },
+                {
+                  "name": "record_status"
                 },
                 {
                   "name": "created_at"
                 },
                 {
-                  "name": "last_modified"
+                  "name": "date"
+                },
+                {
+                  "name": "number"
                 },
                 {
                   "name": "description",
@@ -594,54 +649,60 @@ SET class_rule =
               "title": "ГПЗУ. Выдача или внесение изменений",
               "attributes": [
                 {
-                 "name": "id",
-                 "hidden": true
+                  "name": "id",
+                  "hidden": true
                 },
                 {
-                 "name": "content_type_id",
-                 "readOnly": true
+                  "name": "content_type_id",
+                  "readOnly": true
                 },
                 {
-                 "name": "status",
-                 "readOnly": true
-               },
-               {
-                 "name": "intermediate_status"
+                  "name": "status",
+                  "readOnly": true
                 },
                 {
-                 "name": "assigned_to"
+                  "name": "intermediate_status"
                 },
                 {
-                 "name": "owner_id"
+                  "name": "assigned_to"
+                },
+                {
+                  "name": "owner_id"
                 },
                 {
                   "name": "inbox_data_key_data_connection",
                   "title": "Заявка",
-                  "description": "Заявление, доставленное из ЕПГУ посредством СМЭВ-3",
                   "multiple": false,
-                  "readOnly": true
+                  "readOnly": true,
+                  "description": "Заявление, доставленное из ЕПГУ посредством СМЭВ-3"
                 },
                 {
                   "name": "data_section_key_data_connection",
                   "title": "Размещенный документ",
-                  "description": "Мотивированный отказ вносится в библиотеку Реестр предоставления сведений",
                   "multiple": false,
                   "libraries": [
                     "dl_data_section13",
                     "dl_data_section19"
                   ],
+                  "description": "Мотивированный отказ вносится в библиотеку Реестр предоставления сведений",
                   "valueType": "DOCUMENT"
                 },
                 {
                   "name": "due_date",
-                  "description": "Срок исполнения устанавливается с момента подачи заявки в систему и не подлежит изменению.",
-                  "readOnly": true
+                  "readOnly": true,
+                  "description": "Срок исполнения устанавливается с момента подачи заявки в систему и не подлежит изменению."
+                },
+                {
+                  "name": "record_status"
                 },
                 {
                   "name": "created_at"
                 },
                 {
-                  "name": "last_modified"
+                  "name": "date"
+                },
+                {
+                  "name": "number"
                 },
                 {
                   "name": "description",

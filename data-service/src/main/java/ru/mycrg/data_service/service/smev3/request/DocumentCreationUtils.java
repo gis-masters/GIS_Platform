@@ -1,4 +1,4 @@
-package ru.mycrg.data_service.service.smev3.request.accept_rns;
+package ru.mycrg.data_service.service.smev3.request;
 
 import org.apache.poi.xwpf.usermodel.*;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTTblWidth;
@@ -59,6 +59,102 @@ public class DocumentCreationUtils {
         addTextToParagraph(paragraph,
                            "Министерство жилищной политики и государственного строительного надзора Республики Крым",
                            true, 12);
+    }
+
+    public static void setupSpecialRow(XWPFTable table) {
+        XWPFTableRow firstRow = table.getRow(32);
+        XWPFTableCell mergedCell = firstRow.getCell(0);
+        XWPFParagraph paragraph = mergedCell.getParagraphs().get(0);
+        paragraph.setAlignment(ParagraphAlignment.CENTER);
+        addTextToParagraph(paragraph,
+                           "Раздел 5.1. Сведения о ранее выданных разрешениях на ввод объекта в эксплуатацию в отношении этапа строительства, реконструкции объекта капитального строительства ",
+                           false, 12);
+        paragraph.createRun().addBreak();
+        addTextToParagraph(paragraph, "(при наличии)", false, true, 12);
+        paragraph.createRun().addBreak();
+        addTextToParagraph(paragraph,
+                           "(указывается в случае, предусмотренном частью 3.5 статьи 55 Градостроительного кодекса Российской Федерации)",
+                           false, true, 12);
+    }
+
+    public static void setupRowTable2(XWPFTable table, int rowNumber, String text, String text2, String text3) {
+        mergeCellsHorizontally(table, rowNumber, 2, 4);
+        XWPFTableRow row = table.getRow(rowNumber);
+        XWPFTableCell mergedCell = row.getCell(0);
+        XWPFParagraph paragraph = mergedCell.getParagraphs().get(0);
+        paragraph.setAlignment(ParagraphAlignment.LEFT);
+        addTextToParagraph(paragraph, text, false, 12);
+
+        XWPFTableCell mergedCell1 = row.getCell(1);
+        XWPFParagraph paragraph1 = mergedCell1.getParagraphs().get(0);
+        paragraph1.setAlignment(ParagraphAlignment.LEFT);
+        addTextToParagraph(paragraph1, text2, false, 12);
+
+        XWPFTableCell mergedCell2 = row.getCell(2);
+        XWPFParagraph paragraph2 = mergedCell2.getParagraphs().get(0);
+        paragraph2.setAlignment(ParagraphAlignment.LEFT);
+        addTextToParagraph(paragraph2, text3, false, 12);
+    }
+
+    public static void setupRowTable2(XWPFTable table, String text) {
+        mergeCellsHorizontally(table, 4, 0, 1);
+        XWPFTableRow row = table.getRow(4);
+        XWPFTableCell mergedCell = row.getCell(0);
+        XWPFParagraph paragraph = mergedCell.getParagraphs().get(0);
+        paragraph.setAlignment(ParagraphAlignment.LEFT);
+        addTextToParagraph(paragraph, text, false, 12);
+    }
+
+    public static void setupRowTable2(XWPFTable table, int row, String text) {
+        mergeCellsHorizontally(table, row, 0, 4);
+        XWPFTableRow firstRow = table.getRow(row);
+        XWPFTableCell mergedCell = firstRow.getCell(0);
+        XWPFParagraph paragraph = mergedCell.getParagraphs().get(0);
+        paragraph.setAlignment(ParagraphAlignment.LEFT);
+        addTextToParagraph(paragraph, text, false, 12);
+    }
+
+    public static void setupSpecialRowTable2(XWPFTable table) {
+        mergeCellsHorizontally(table, 3, 0, 1);
+        XWPFTableRow row = table.getRow(3);
+        XWPFTableCell mergedCell = row.getCell(2);
+        XWPFParagraph paragraph = mergedCell.getParagraphs().get(0);
+        paragraph.setAlignment(ParagraphAlignment.LEFT);
+        addTextToParagraph(paragraph,
+                           "Фамилия, имя, отчество (при наличии) – для физического лица, осуществлявшего финансирование; Полное наименование – для юридического лица, осуществлявшего финансирование:",
+                           false, 12);
+
+        XWPFTableCell mergedCell2 = row.getCell(3);
+        XWPFParagraph paragraph2 = mergedCell2.getParagraphs().get(0);
+        paragraph2.setAlignment(ParagraphAlignment.LEFT);
+        addTextToParagraph(paragraph2, "Реквизиты документа, удостоверяющего личность – для физического лица, " +
+                                   "осуществлявшего финансирование; Основной государственный регистрационный номер – для юридического лица, осуществлявшего финансирование:",
+                           false, 12);
+
+        XWPFTableCell mergedCell3 = row.getCell(4);
+        XWPFParagraph paragraph3 = mergedCell3.getParagraphs().get(0);
+        paragraph3.setAlignment(ParagraphAlignment.LEFT);
+        addTextToParagraph(paragraph3, "Адрес (адреса) электронной почты лица, осуществлявшего финансирование:",
+                           false, 12);
+    }
+
+    public static void setupSpecialRowTable2(XWPFTable table, int rowNumber, String text) {
+        mergeCellsHorizontally(table, rowNumber, 1, 4);
+        XWPFTableRow row = table.getRow(rowNumber);
+        XWPFTableCell mergedCell = row.getCell(1);
+        XWPFParagraph paragraph = mergedCell.getParagraphs().get(0);
+        paragraph.setAlignment(ParagraphAlignment.LEFT);
+        addTextToParagraph(paragraph, text, false, 12);
+    }
+
+    private static void addTextToParagraph(XWPFParagraph paragraph, String text, boolean isBold,
+                                           boolean isItalic, int fontSize) {
+        XWPFRun run = paragraph.createRun();
+        run.setText(text);
+        run.setFontFamily("Times New Roman");
+        run.setFontSize(fontSize);
+        run.setBold(isBold);
+        run.setItalic(isItalic);
     }
 
     public static void addTextToParagraph(XWPFParagraph paragraph, String text, boolean isBold, int fontSize) {
@@ -178,6 +274,20 @@ public class DocumentCreationUtils {
         run.setText(text);
         run.setFontFamily("Times New Roman");
         run.setFontSize(fontSize);
+    }
+
+    public static void addTextWithSuperscript(XWPFDocument document) {
+        XWPFParagraph paragraph = document.createParagraph();
+        paragraph.setAlignment(ParagraphAlignment.CENTER);
+        paragraph.setSpacingAfter(5);
+        addTextToParagraph(paragraph, "машино-места (не заполняется в случаях, указанных в пунктах 1-2 части ", false,
+                           12);
+        addTextToParagraph(paragraph, "3", false, 12);
+        XWPFRun superscriptRun = paragraph.createRun();
+        superscriptRun.setText("9");
+        superscriptRun.setFontSize(12);
+        superscriptRun.setSubscript(VerticalAlign.SUPERSCRIPT);
+        addTextToParagraph(paragraph, "статьи 55", false, 12);
     }
 
     public static void setCenterTableNode(XWPFTable table, int rowNumber, String rowName, String rowValue1,
@@ -326,7 +436,7 @@ public class DocumentCreationUtils {
         run.setBold(isBold);
     }
 
-    public static void addCenterText(XWPFDocument document, String text, int fontSize) {
+    public static void addCenterText(XWPFDocument document, String text, int fontSize, boolean isBold) {
         XWPFParagraph paragraph = document.createParagraph();
         paragraph.setAlignment(ParagraphAlignment.CENTER);
         paragraph.setSpacingAfter(5);
@@ -335,6 +445,7 @@ public class DocumentCreationUtils {
         run.setText(text);
         run.setFontFamily("Times New Roman");
         run.setFontSize(fontSize);
+        run.setBold(isBold);
     }
 
     public static void addTextWithUnderline(XWPFDocument document, String text) {

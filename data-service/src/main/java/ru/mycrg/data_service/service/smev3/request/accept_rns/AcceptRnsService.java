@@ -22,7 +22,8 @@ import ru.mycrg.data_service.service.smev3.SmevMessageService;
 import ru.mycrg.data_service.service.smev3.config.Smev3Config;
 import ru.mycrg.data_service.service.smev3.fields.CommonFields;
 import ru.mycrg.data_service.service.smev3.model.CustomMultipartFile;
-import ru.mycrg.data_service.service.smev3.request.AcceptSerivceBase;
+import ru.mycrg.data_service.service.smev3.request.AcceptServiceBase;
+import ru.mycrg.data_service.service.smev3.request.DocumentCreationService;
 import ru.mycrg.data_service.service.storage.FileStorageService;
 import ru.mycrg.data_service.util.xml.XmlMarshaller;
 import ru.mycrg.data_service_contract.enums.TaskStatus;
@@ -35,7 +36,7 @@ import java.util.stream.Collectors;
         value = "crg-options.integration.smev3.enabled",
         havingValue = "true",
         matchIfMissing = true)
-public class AcceptRnsService extends AcceptSerivceBase {
+public class AcceptRnsService extends AcceptServiceBase {
 
     private static final String TITLE = "РНC из ЕПГУ";
     private static final String EVENT_TYPE_LOG = "Входящее сообщение РНC успешно записано в реестр";
@@ -139,7 +140,8 @@ public class AcceptRnsService extends AcceptSerivceBase {
         QueryResult result = (QueryResult) queryResult;
         RequestType request = result.getMessage().getRequestContent().getContent().getMessagePrimaryContent()
                                     .getRequest();
-        return documentCreationService.createDoc(request);
+
+        return documentCreationService.createRnsDoc(request);
     }
 
     @Override
