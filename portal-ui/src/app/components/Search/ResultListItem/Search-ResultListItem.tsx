@@ -9,9 +9,9 @@ import { Extent } from 'ol/extent';
 import { SimpleGeometry } from 'ol/geom';
 import Point from 'ol/geom/Point';
 import { fromLonLat } from 'ol/proj';
-import { Icon, Style } from 'ol/style';
 
 import { mapService } from '../../../services/map/map.service';
+import { getStyle, KnownStyleKey } from '../../../services/map/styles/map-styles';
 import { YaGeoObject } from '../../../services/yandex-geocode.service';
 
 const cnSearch = cn('Search');
@@ -62,21 +62,11 @@ export class SearchResultListItem extends Component<SearchResultListItemProps> {
   }
 
   private drawMarker(pos: number[]) {
-    const lonLat = fromLonLat(pos);
-
-    const iconStyle = new Style({
-      image: new Icon({
-        anchorXUnits: 'fraction',
-        anchorYUnits: 'pixels',
-        src: '/assets/images/map-marker.png'
-      })
-    });
-
     const iconFeature = new Feature<SimpleGeometry>({
-      geometry: new Point(lonLat)
+      geometry: new Point(fromLonLat(pos))
     });
 
-    iconFeature.setStyle(iconStyle);
+    iconFeature.setStyle(getStyle(KnownStyleKey.MapMarkerStyles));
 
     mapService.drawMarkers([iconFeature]);
   }

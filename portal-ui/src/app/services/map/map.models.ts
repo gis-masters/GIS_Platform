@@ -46,6 +46,7 @@ export enum MapAction {
   OPEN_IMPORTS_SUBMENU,
   OPEN_LAYER_PROPERTIES,
   VERTICES_MODIFICATION,
+  LAYER_SIDEBAR_LEFT_TOOLS,
   SELECT_WITH_MODIFICATORS
 }
 
@@ -58,4 +59,22 @@ export enum FilterBySelectionMode {
 export interface MapPosition {
   zoom: number;
   center: Coordinate;
+}
+
+// WMS request parameters. At least a LAYERS param is required.
+export interface CrgWmsParams {
+  LAYERS: string;
+  FORMAT?: string;
+  STYLES?: string;
+  CQL_FILTER?: string;
+  featureId?: string;
+  featureIdsNegative?: string;
+}
+
+export interface CrgAdditionalLayerInfo {
+  isUserLayer: boolean;
+}
+
+export interface LayerAdditionalProps {
+  crgInfo: CrgAdditionalLayerInfo;
 }

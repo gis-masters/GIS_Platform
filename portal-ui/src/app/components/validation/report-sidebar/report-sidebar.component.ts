@@ -8,7 +8,7 @@ import { ProcessStatus, ProcessType, WsImportModel } from '../../../services/dat
 import { ValidationShortInfo } from '../../../services/data/validation/validation.models';
 import { getValidationShortInfo } from '../../../services/data/validation/validation.service';
 import { CrgLayer, CrgVectorLayer } from '../../../services/gis/layers/layers.models';
-import { mapService } from '../../../services/map/map.service';
+import { mapDrawService } from '../../../services/map/draw/map-draw.service';
 import { ExportWsMsg, IWsMessage, ValidationWsMsg, wsService } from '../../../services/ws.service';
 import { currentProject } from '../../../stores/CurrentProject.store';
 import { sidebars } from '../../../stores/Sidebars.store';
@@ -92,7 +92,7 @@ export class ReportSidebarComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   closeMe(): void {
-    mapService.clearDraft();
+    mapDrawService.clearDraft();
     sidebars.closeBugReport();
   }
 

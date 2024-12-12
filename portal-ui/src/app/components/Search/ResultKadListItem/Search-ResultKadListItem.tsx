@@ -10,10 +10,10 @@ import { Feature } from 'ol';
 import { Extent } from 'ol/extent';
 import { SimpleGeometry } from 'ol/geom';
 import Point from 'ol/geom/Point';
-import { Icon, Style } from 'ol/style';
 
 import { KadItem, KadObject } from '../../../services/kad-search.models';
 import { mapService } from '../../../services/map/map.service';
+import { getStyle, KnownStyleKey } from '../../../services/map/styles/map-styles';
 import { getRosreestrSingleAreaData, getRosreestrSingleOksData } from '../../../services/rosreestr-data.service';
 import { services } from '../../../services/services';
 import { Toast } from '../../Toast/Toast';
@@ -83,19 +83,11 @@ export class SearchResultKadListItem extends Component<SearchResultKadListItemPr
   }
 
   private drawMarker(pos: number[]) {
-    const iconStyle = new Style({
-      image: new Icon({
-        anchorXUnits: 'fraction',
-        anchorYUnits: 'pixels',
-        src: '/assets/images/map-marker.png'
-      })
-    });
-
     const iconFeature = new Feature<SimpleGeometry>({
       geometry: new Point(pos)
     });
 
-    iconFeature.setStyle(iconStyle);
+    iconFeature.setStyle(getStyle(KnownStyleKey.MapMarkerStyles));
 
     mapService.drawMarkers([iconFeature]);
   }

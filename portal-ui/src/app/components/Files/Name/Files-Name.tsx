@@ -5,10 +5,10 @@ import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 import { saveAs } from 'file-saver';
 
-import { organizationSettings } from '../../../../app/stores/OrganizationSettings.store';
 import { filesClient } from '../../../services/data/files/files.client';
 import { compoundFileFullType, FileInfo } from '../../../services/data/files/files.models';
 import { getFileExtension, getReadableFileSize } from '../../../services/data/files/files.util';
+import { organizationSettings } from '../../../stores/OrganizationSettings.store';
 import { Link } from '../../Link/Link';
 import { LookupName } from '../../Lookup/Name/Lookup-Name';
 import { LookupStatusType } from '../../Lookup/Status/Lookup-Status';

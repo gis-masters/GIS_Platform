@@ -5,8 +5,9 @@ import { Gamepad, GamepadOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
+import { mapDrawService } from '../../services/map/draw/map-draw.service';
 import { MapAction, MapMode } from '../../services/map/map.models';
-import { mapService } from '../../services/map/map.service';
+import { mapVerticesModificationService } from '../../services/map/vertices-modification/map-vertices-modification.service';
 import { wfsFeaturesToFeatures } from '../../services/util/open-layers.util';
 import { mapStore } from '../../stores/Map.store';
 import { mapVerticesModificationStore } from '../../stores/MapVerticesModification.store';
@@ -46,10 +47,10 @@ export class VerticesModificationIcon extends Component {
   @boundMethod
   private editVertex() {
     if (this.verticesModificationMode()) {
-      mapService.verticesModificationOff();
+      mapVerticesModificationService.verticesModificationOff();
     } else {
-      mapService.verticesModificationOn();
-      mapService.addFeaturesToDraft(wfsFeaturesToFeatures(mapStore.selectedFeatures));
+      mapVerticesModificationService.verticesModificationOn();
+      mapDrawService.addFeatures(wfsFeaturesToFeatures(mapStore.selectedFeatures));
     }
   }
 

@@ -12,6 +12,7 @@ import { getOlProjection } from '../../services/data/projections/projections.ser
 import { CrgExternalLayer, CrgLayerType } from '../../services/gis/layers/layers.models';
 import { fetchCurrentProjectBasemaps } from '../../services/gis/project-basemaps/project-basemaps.service';
 import { projectsService } from '../../services/gis/projects/projects.service';
+import { mapDrawService } from '../../services/map/draw/map-draw.service';
 import { MapMode } from '../../services/map/map.models';
 import { mapService } from '../../services/map/map.service';
 import { applyMapStateFromNavigator } from '../../services/map/map-link-following.service';
@@ -68,6 +69,7 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     mapService.createMap();
+    mapDrawService.initializeDraw();
     await applyMapStateFromNavigator();
 
     // Позиционируемся по BBOX проекта

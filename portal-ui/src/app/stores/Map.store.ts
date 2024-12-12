@@ -44,6 +44,7 @@ const mapModeAndActionMatrix = {
     MapAction.OPEN_IMPORTS_SUBMENU,
     MapAction.OPEN_LAYER_PROPERTIES,
     MapAction.VERTICES_MODIFICATION,
+    MapAction.LAYER_SIDEBAR_LEFT_TOOLS,
     MapAction.SELECT_WITH_MODIFICATORS
   ],
   [MapMode.SELECTION]: [

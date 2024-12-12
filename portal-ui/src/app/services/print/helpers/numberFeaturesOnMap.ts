@@ -1,10 +1,10 @@
 import { pointOnFeature } from '@turf/turf';
 
 import { getOlProjection, getProjectionByCode } from '../../data/projections/projections.service';
-import { transform } from '../../data/projections/projections.util';
 import { WfsFeature } from '../../geoserver/wfs/wfs.models';
 import { getLayerByFeatureInCurrentProject } from '../../gis/layers/layers.utils';
 import { mapLabelsService } from '../../map/map-labels.service';
+import { transform } from '../../util/coordinates-transform.util';
 
 export async function numberFeaturesOnMap(wfsFeatures: WfsFeature[]): Promise<void> {
   for (const [i, wfsFeature] of wfsFeatures.entries()) {
@@ -17,7 +17,7 @@ export async function numberFeaturesOnMap(wfsFeatures: WfsFeature[]): Promise<vo
 
       if (geometry && projection && olProjection) {
         const point = pointOnFeature({ ...wfsFeature, geometry });
-        const coordinate = transform(projection, olProjection, point.geometry.coordinates);
+        const coordinate = transform(point.geometry.coordinates, projection, olProjection);
 
         mapLabelsService.addPrintLabel(coordinate, i + 1);
       }

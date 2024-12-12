@@ -17,6 +17,7 @@ import { ValidationResultsResponse } from '../../../services/data/validation/val
 import { getValidationResults } from '../../../services/data/validation/validation.service';
 import { getFeaturesById } from '../../../services/geoserver/wfs/wfs.service';
 import { CrgVectorLayer } from '../../../services/gis/layers/layers.models';
+import { mapDrawService } from '../../../services/map/draw/map-draw.service';
 import { mapService } from '../../../services/map/map.service';
 import { isUpdateAllowed } from '../../../services/permissions/permissions.service';
 
@@ -171,7 +172,7 @@ export class BugsTableComponent implements OnInit, OnChanges, AfterViewInit, OnD
     const [wfsFeature] = await getFeaturesById([objectId], this.crgLayer.complexName);
     const projection = await getProjectionByCode(this.crgLayer.nativeCRS);
 
-    await mapService.highlightFeatures([wfsFeature], projection);
+    await mapDrawService.highlightFeatures([wfsFeature], projection);
     await mapService.positionToFeature(wfsFeature, projection);
   }
 

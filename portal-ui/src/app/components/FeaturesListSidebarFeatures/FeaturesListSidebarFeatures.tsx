@@ -8,8 +8,7 @@ import { boundMethod } from 'autobind-decorator';
 
 import { communicationService } from '../../services/communication.service';
 import { MapMode } from '../../services/map/map.models';
-import { mapService } from '../../services/map/map.service';
-import { mapVerticesModificationService } from '../../services/map/vertices-modification/vertices-modification.service';
+import { mapVerticesModificationService } from '../../services/map/vertices-modification/map-vertices-modification.service';
 import { mapStore } from '../../stores/Map.store';
 import { mapVerticesModificationStore } from '../../stores/MapVerticesModification.store';
 import { sidebars } from '../../stores/Sidebars.store';
@@ -129,6 +128,6 @@ export default class FeaturesListSidebarFeatures extends Component<FeaturesListS
   }
 
   private cancelVerticesModification() {
-    mapService.verticesModificationClear();
+    mapVerticesModificationService.verticesModificationClear();
   }
 }

@@ -7,7 +7,6 @@ import { currentUser } from '../../../stores/CurrentUser.store';
 import { http } from '../../api/http.service';
 import { getVectorTableMultipleRecordsUrl } from '../../api/server-urls.service';
 import { usersService } from '../../auth/users/users.service';
-import { defaultOlProjectionCode } from '../../data/projections/projections.models';
 import { getFeatureProjection } from '../../data/projections/projections.service';
 import { getProjectionCode } from '../../data/projections/projections.util';
 import { OldSchema } from '../../data/schema/schemaOld.models';
@@ -122,66 +121,6 @@ export class TransformFeatureService {
     return updateFeature(payload);
   }
 
-  async updateFeaturesGeometry(layerName: string, features: WfsFeature[]): Promise<string> {
-    await usersService.fetchCurrentUser();
-
-    const workspace = `${environment.scratchWorkspaceName}_${currentUser.orgId}`;
-
-    const featuresForUpdate: Feature<Geometry>[] = features.map(feature => {
-      const newFeature = new Feature();
-      newFeature.setId(feature.id);
-
-      let geom: Geometry | undefined;
-
-      if (feature.geometry === undefined) {
-        return newFeature;
-      }
-
-      const geometry = feature.geometry;
-      if (geometry) {
-        if (geometry.type === GeometryType.POINT) {
-          geom = new Point(geometry.coordinates);
-        }
-        if (geometry.type === GeometryType.MULTI_POINT) {
-          geom = new MultiPoint(geometry.coordinates);
-        }
-        if (geometry.type === GeometryType.LINE_STRING) {
-          geom = new LineString(geometry.coordinates);
-        }
-        if (geometry.type === GeometryType.MULTI_LINE_STRING) {
-          geom = new MultiLineString(geometry.coordinates);
-        }
-        if (geometry.type === GeometryType.POLYGON) {
-          geom = new Polygon(geometry.coordinates);
-        }
-        if (geometry.type === GeometryType.MULTI_POLYGON) {
-          geom = new MultiPolygon(geometry.coordinates);
-        }
-
-        newFeature.setGeometry(geom);
-      }
-
-      return newFeature;
-    });
-
-    const options: WriteTransactionOptions = {
-      featureNS: 'castyl_for_remove',
-      featureType: layerName,
-      featurePrefix: workspace,
-      nativeElements: [],
-      gmlOptions: {
-        srsName: defaultOlProjectionCode // Модифицированные координаты всегда в ol проекции (3857)
-      }
-    };
-
-    const payload = this.xs
-      .serializeToString(this.getNode(TransactionType.UPDATE, featuresForUpdate, options))
-      .replaceAll(new RegExp(`xmlns:${workspace}="castyl_for_remove"`, 'g'), '')
-      .replaceAll('<Name>geometry</Name>', '<Name>shape</Name>');
-
-    return updateFeature(payload);
-  }
-
   private getNode(type: TransactionType, features: Feature<Geometry>[], options: WriteTransactionOptions): Node {
     let node: Node | undefined;
     switch (type) {
@@ -210,4 +149,4 @@ export class TransformFeatureService {
   }
 }
 
-export const transformFeature = TransformFeatureService.instance;
+export const transformFeatureService = TransformFeatureService.instance;

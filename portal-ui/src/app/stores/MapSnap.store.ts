@@ -25,6 +25,11 @@ class MapVerticesModificationStore {
   isSnapActive(): boolean {
     return mapStore.mode === MapMode.VERTICES_MODIFICATION || mapStore.mode === MapMode.DRAW;
   }
+
+  @observable
+  isSnapNotActive(): boolean {
+    return !this.isSnapActive();
+  }
 }
 
 export const mapSnapStore = MapVerticesModificationStore.instance;

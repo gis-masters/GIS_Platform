@@ -13,7 +13,6 @@ import { DrawEvent } from 'ol/interaction/Draw';
 import VectorLayer from 'ol/layer/Vector';
 import VectorSource from 'ol/source/Vector';
 import { Fill, Icon, Stroke, Style, Text } from 'ol/style';
-import CircleStyle from 'ol/style/Circle';
 import { v4 as uuid } from 'uuid';
 
 import { MapLabelToolbox } from '../../components/MapLabelToolbox/MapLabelToolbox';
@@ -23,10 +22,10 @@ import { mapStore } from '../../stores/Map.store';
 import { communicationService } from '../communication.service';
 import { defaultOlProjectionCode, Projection } from '../data/projections/projections.models';
 import { getOlProjection } from '../data/projections/projections.service';
-import { Coord, transformCoord, transformGroup } from '../data/projections/projections.util';
 import { registry } from '../di-registry';
 import { GeometryType, WfsFeature } from '../geoserver/wfs/wfs.models';
 import { isLinear, isPolygonal } from '../geoserver/wfs/wfs.util';
+import { Coord, transformAnyCoordinates, transformCoord, transformGroup } from '../util/coordinates-transform.util';
 import { notFalsyFilter } from '../util/NotFalsyFilter';
 import { featureToWfsFeature, UnitsOfAreaMeasurement, wfsFeatureToFeature } from '../util/open-layers.util';
 import { sleep } from '../util/sleep';
@@ -36,6 +35,7 @@ import { isCircleProperties } from '../util/typeGuards/isCircleProperties';
 import { isCoordinate, isCoordinateArray, isCoordinateArrayArray } from '../util/typeGuards/isCoordinate';
 import { isNumberArray } from '../util/typeGuards/isNumberArray';
 import { prompto } from '../utility-dialogs.service';
+import { mapDrawService } from './draw/map-draw.service';
 import { MapMode } from './map.models';
 import { mapService } from './map.service';
 import { AnnotationsFontProperties, CircleProperties, Distance, FontProperties, LabelType } from './map-labels.models';
@@ -49,10 +49,10 @@ import {
   getRotationByAzimuth,
   getSelectedFeatureProjection,
   getSelectedOrActiveFeature,
-  getTextStyle,
-  transformAnyCoordinates
+  getTextStyle
 } from './map-labels.util';
 import { mapMeasureService } from './map-measure.service';
+import { getStyle, KnownStyleKey } from './styles/map-styles';
 
 const projectionError = 'Отсутствует проекция';
 const baseStyle: FontProperties = {
@@ -67,7 +67,6 @@ const baseCircleStyle: CircleProperties = {
   strokeColor: '#fff',
   radius: '6'
 };
-const MARK_FILL_COLOR = 'rgba(255, 255, 255, 0.5)';
 
 class MapLabelsService {
   private static _instance: MapLabelsService;
@@ -263,7 +262,7 @@ class MapLabelsService {
       throw new Error('Ошибка геометрии объекта');
     }
 
-    const [value, units] = getFeatureArea(geometry, UnitsOfAreaMeasurement.HECTARE, 4);
+    const [value, units] = getFeatureArea(geometry, UnitsOfAreaMeasurement.HECTARE);
     const middlePoints = getMiddlePoints(feature);
 
     for (const point of middlePoints) {
@@ -448,7 +447,7 @@ class MapLabelsService {
 
   dropInteractions() {
     this.drawOff();
-    mapService.drawOff();
+    mapDrawService.drawOff();
     mapMeasureService.measureOff();
   }
 
@@ -512,25 +511,7 @@ class MapLabelsService {
     return new Draw({
       source: this.source,
       type: type === 'line' ? GeometryType.LINE_STRING : GeometryType.POINT,
-      style: new Style({
-        fill: new Fill({
-          color: MARK_FILL_COLOR
-        }),
-        stroke: new Stroke({
-          color: '#3399ff',
-          lineDash: [10, 10],
-          width: 2
-        }),
-        image: new CircleStyle({
-          radius: 5,
-          stroke: new Stroke({
-            color: '#3399ff'
-          }),
-          fill: new Fill({
-            color: MARK_FILL_COLOR
-          })
-        })
-      })
+      style: getStyle(KnownStyleKey.LabelsDrawStyles)
     });
   }
 
@@ -553,7 +534,11 @@ class MapLabelsService {
   private async editLabel(feature: Feature) {
     const currentText = feature.getProperties().text as string | undefined;
 
-    const text = await prompto({ title: 'Текст аннотации:', defaultValue: currentText || '', multiline: true });
+    const text = await prompto({
+      title: 'Текст аннотации:',
+      defaultValue: currentText || 'аннотация',
+      multiline: true
+    });
 
     if (!text) {
       if (!currentText) {
@@ -733,10 +718,6 @@ class MapLabelsService {
   private createLabelStyle(feature: Feature, selected?: boolean): Style {
     const properties = feature.getProperties();
 
-    if (typeof properties.text !== 'string') {
-      throw new TypeError('Текст не текст');
-    }
-
     const svg =
       '<svg xmlns="http://www.w3.org/2000/svg" height="20" width="20" viewBox="0 0 24 24"><path d="M10 9h4V6h3l-5-5-5 5h3v3zm-1 1H6V7l-5 5 5 5v-3h3v-4zm14 2-5-5v3h-3v4h3v3l5-5zm-9 3h-4v3H7l5 5 5-5h-3v-3z"/></svg>';
 
@@ -751,9 +732,6 @@ class MapLabelsService {
 
   private createPrintLabelStyle(feature: Feature): Style {
     const properties = feature.getProperties();
-    if (typeof properties.text !== 'string') {
-      throw new TypeError('Текст не текст');
-    }
 
     return new Style({
       text: new Text({
@@ -762,7 +740,7 @@ class MapLabelsService {
         justify: 'center',
         offsetX: 0,
         offsetY: 0,
-        text: properties.text,
+        text: typeof properties.text === 'string' ? properties.text : 'Ваш текст',
         fill: new Fill({
           color: [20, 20, 20, 1]
         }),

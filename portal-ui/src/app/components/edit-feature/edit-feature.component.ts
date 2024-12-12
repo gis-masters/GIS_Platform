@@ -23,7 +23,7 @@ import {
 import { OldPropertySchema, ValueType } from '../../services/data/schema/schemaOld.models';
 import { createFeature, deleteFeatures, updateFeature } from '../../services/data/vectorData/vectorData.service';
 import { extractFeatureId } from '../../services/geoserver/featureType/featureType.util';
-import { transformFeature } from '../../services/geoserver/wfs/transform-feature.service';
+import { transformFeatureService } from '../../services/geoserver/wfs/transform-feature.service';
 import { CoordinateEdited, WfsFeature, WfsGeometry } from '../../services/geoserver/wfs/wfs.models';
 import { getFeaturesById } from '../../services/geoserver/wfs/wfs.service';
 import { getEmptyGeometry } from '../../services/geoserver/wfs/wfs.util';
@@ -35,6 +35,7 @@ import {
 } from '../../services/gis/layers/layers.models';
 import { getLayerSchema } from '../../services/gis/layers/layers.service';
 import { getLayerByFeatureInCurrentProject } from '../../services/gis/layers/layers.utils';
+import { mapDrawService } from '../../services/map/draw/map-draw.service';
 import { MapSelectionTypes } from '../../services/map/map.models';
 import { mapService } from '../../services/map/map.service';
 import { mapSelectionService } from '../../services/map/map-selection.service';
@@ -116,7 +117,7 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
         this.isNew = data.isNew;
         this.selectedTab = Number(data.isNew);
         if (!this.isNew) {
-          await mapService.highlightFeatures(this.features);
+          await mapDrawService.highlightFeatures(this.features);
           this.isGeometryChanged = false;
         }
 
@@ -298,7 +299,7 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
                     geometry: changedGeometry
                   };
 
-                  await mapService.highlightMoreFeatures([feature]);
+                  await mapDrawService.highlightMoreFeatures([feature]);
                 });
 
               fromMobx(() => this.editGeometryStore.isValid)
@@ -365,7 +366,7 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
             this.primalGeometry = this.features[0].geometry as WfsGeometry<Coordinate>;
           }
 
-          await mapService.highlightFeatures([this.features[0]]);
+          await mapDrawService.highlightFeatures([this.features[0]]);
           this.isGeometryChanged = true;
 
           if (
@@ -388,7 +389,7 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
 
   async ngOnDestroy() {
     if (currentProject.visibleOnMapLayers.length) {
-      await mapService.highlightFeatures(mapStore.highlightedFeatures);
+      await mapDrawService.highlightFeatures(mapStore.highlightedFeatures);
     }
   }
 
@@ -631,11 +632,11 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
       return;
     }
 
-    await transformFeature.multipleEdit(dataset, tableName, features, newProperties);
+    await transformFeatureService.multipleEdit(dataset, tableName, features, newProperties);
 
     this.isSaveInProgress = false;
     mapService.refreshAllLayers();
-    mapService.clearDraft();
+    mapDrawService.clearDraft();
 
     Toast.success('Сохранено');
 

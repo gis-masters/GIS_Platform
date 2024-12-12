@@ -15,10 +15,10 @@ import {
   Projection
 } from '../../../services/data/projections/projections.models';
 import { getProjectionByCode } from '../../../services/data/projections/projections.service';
-import { transformGeometry } from '../../../services/data/projections/projections.util';
 import { CoordinateEdited, GeometryType, WfsFeature, WfsGeometry } from '../../../services/geoserver/wfs/wfs.models';
 import { isDimensionValid, isGeometryValid } from '../../../services/geoserver/wfs/wfs.util';
-import { mapService } from '../../../services/map/map.service';
+import { mapDrawService } from '../../../services/map/draw/map-draw.service';
+import { transformGeometry } from '../../../services/util/coordinates-transform.util';
 import { wfsFeatureToFeature } from '../../../services/util/open-layers.util';
 import { isNumberArray } from '../../../services/util/typeGuards/isNumberArray';
 import { bufferFeatureStore } from '../../../stores/BufferFeature.store';
@@ -231,7 +231,7 @@ export class EditFeatureGeometryCoord extends Component<EditFeatureGeometryCoord
       }
 
       if (this.focusedPointMarker) {
-        mapService.draftSource?.addFeature(this.focusedPointMarker);
+        mapDrawService.addFeatures([this.focusedPointMarker]);
       }
     } else {
       this.clearFocusedPointMarker();
@@ -241,7 +241,7 @@ export class EditFeatureGeometryCoord extends Component<EditFeatureGeometryCoord
   private clearFocusedPointMarker() {
     try {
       if (this.focusedPointMarker) {
-        mapService.draftSource?.removeFeature(this.focusedPointMarker);
+        mapDrawService.removeFeature(this.focusedPointMarker);
       }
     } catch {
       // мы ожидаем exception в случае, если указанной фичи нет в слое либо если переменная не содержит фичи

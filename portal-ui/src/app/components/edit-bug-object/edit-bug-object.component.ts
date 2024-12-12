@@ -8,11 +8,12 @@ import { schemaService } from '../../services/data/schema/schema.service';
 import { convertNewToOldSchema } from '../../services/data/schema/schema.utils';
 import { ValueType } from '../../services/data/schema/schemaOld.models';
 import { initValidation } from '../../services/data/validation/validation.service';
-import { transformFeature } from '../../services/geoserver/wfs/transform-feature.service';
+import { transformFeatureService } from '../../services/geoserver/wfs/transform-feature.service';
 import { WfsFeature } from '../../services/geoserver/wfs/wfs.models';
 import { getFeaturesById } from '../../services/geoserver/wfs/wfs.service';
 import { CrgVectorLayer } from '../../services/gis/layers/layers.models';
 import { getLayerSchema } from '../../services/gis/layers/layers.service';
+import { mapDrawService } from '../../services/map/draw/map-draw.service';
 import { mapService } from '../../services/map/map.service';
 import { FeaturePropertyValidators } from '../../services/util/FeaturePropertyValidators';
 import { Toast } from '../Toast/Toast';
@@ -69,13 +70,14 @@ export class EditBugObjectComponent extends BaseEdit implements OnChanges, OnIni
   ngOnDestroy() {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
-    mapService.clearDraft();
+
+    mapDrawService.clearDraft();
   }
 
   async editFeature(): Promise<void> {
     const { crgLayer } = this.data[0];
     if (this.wfsFeature && this.wfsFeature.properties && this.featureDescription) {
-      const response = await transformFeature.updateFeatures(
+      const response = await transformFeatureService.updateFeatures(
         crgLayer.tableName,
         [this.wfsFeature],
         this.featureDescription,
@@ -99,7 +101,7 @@ export class EditBugObjectComponent extends BaseEdit implements OnChanges, OnIni
   close(): void {
     this.closeMe.emit(true);
 
-    mapService.clearDraft();
+    mapDrawService.clearDraft();
   }
 
   private async handleObject(objectDto: ObjectDto) {
@@ -128,7 +130,7 @@ export class EditBugObjectComponent extends BaseEdit implements OnChanges, OnIni
         this.logger.warn('Не найдена схемы слоя: ', objectDto.crgLayer.title);
       }
 
-      await mapService.highlightFeatures([wfsFeature]);
+      await mapDrawService.highlightFeatures([wfsFeature]);
     } catch {
       this.isFeatureTypeLoaded = true;
     }

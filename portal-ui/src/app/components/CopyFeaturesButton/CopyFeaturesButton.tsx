@@ -10,13 +10,13 @@ import { pluralize } from 'numeralize-ru';
 
 import { communicationService } from '../../services/communication.service';
 import { getProjectionByCode } from '../../services/data/projections/projections.service';
-import { transformGeometry } from '../../services/data/projections/projections.util';
 import { createFeature } from '../../services/data/vectorData/vectorData.service';
 import { WfsFeature } from '../../services/geoserver/wfs/wfs.models';
 import { CrgLayer, CrgLayerType, CrgVectorLayer } from '../../services/gis/layers/layers.models';
 import { isVectorFromFile } from '../../services/gis/layers/layers.utils';
 import { mapService } from '../../services/map/map.service';
 import { mapSelectionService } from '../../services/map/map-selection.service';
+import { transformGeometry } from '../../services/util/coordinates-transform.util';
 import { sidebars } from '../../stores/Sidebars.store';
 import { IconButton } from '../IconButton/IconButton';
 import { Loading } from '../Loading/Loading';

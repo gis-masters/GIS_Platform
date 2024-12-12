@@ -43,6 +43,8 @@ public class CustomRuleCalculator {
         propsWithFunctions.forEach((key, value) -> {
             String formula = propsWithFunctions.get(key);
             result.putAll(scriptCalculator.calculate(initialProps, key, formula));
+
+            log.debug("Add prop: {} = {}, calculated by: {}", key, value, formula);
         });
 
         return result;

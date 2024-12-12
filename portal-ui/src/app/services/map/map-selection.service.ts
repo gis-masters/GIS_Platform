@@ -12,9 +12,11 @@ import { hasPhotoModeInFeatures } from '../data/files/files.util';
 import { WfsFeature } from '../geoserver/wfs/wfs.models';
 import { getFeatureCollectionByXmlFilter, makeXmlPolygonIntersect } from '../geoserver/wfs/wfs.service';
 import { services } from '../services';
+import { mapDrawService } from './draw/map-draw.service';
 import { MapAction, MapMode, MapSelectionTypes } from './map.models';
 import { mapService } from './map.service';
 import { setSelectedFeaturesToUrl } from './map-url.service';
+import { mapVerticesModificationService } from './vertices-modification/map-vertices-modification.service';
 
 type NamesChunks = { [srsName: string]: string[] };
 
@@ -93,7 +95,7 @@ class MapSelectionService {
   }
 
   private constructor() {
-    mapService.mapCreate.on((): void => {
+    mapService.mapCreated.on((): void => {
       mapService.map.addInteraction(this.dragPanWheel);
       mapService.map.addInteraction(this.areaExtentReplace);
       mapService.map.addInteraction(this.areaExtentRemove);
@@ -258,7 +260,7 @@ class MapSelectionService {
       }
       visibleLayersComplexNamesByCrs[nativeCRS]?.push(complexName);
     }
-    mapService.showSelectionMarker(buffer.getCoordinates());
+    mapDrawService.showSelectionMarker(buffer.getCoordinates());
 
     const collections = await Promise.all(
       Object.entries(visibleLayersComplexNamesByCrs).flatMap(([srsName, complexNames]) => {
@@ -299,7 +301,7 @@ class MapSelectionService {
   selectFeatures(features: WfsFeature[], selectionType: MapSelectionTypes = MapSelectionTypes.REPLACE) {
     // TODO: Отрефакторить. Все события по 'Esc, Esc' сваливаются сюда...
     if (mapStore.mode === MapMode.VERTICES_MODIFICATION) {
-      mapService.verticesModificationOff();
+      mapVerticesModificationService.verticesModificationOff();
 
       return;
     }
@@ -344,7 +346,7 @@ class MapSelectionService {
       }
     }
 
-    void mapService.highlightFeatures(mapStore.highlightedFeatures);
+    void mapDrawService.highlightFeatures(mapStore.highlightedFeatures);
     void setSelectedFeaturesToUrl();
 
     setTimeout(() => {

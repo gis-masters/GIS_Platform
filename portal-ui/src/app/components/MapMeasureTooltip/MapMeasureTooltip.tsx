@@ -37,7 +37,7 @@ export class MapMeasureTooltip extends Component<MapMeasureTooltipProps> {
     let switchingUnitsEnabled = false;
 
     if (geom instanceof Polygon) {
-      [value, units] = getFeatureArea(geom, mapStore.unitsOfAreaMeasurement);
+      [value, units] = getFeatureArea(geom, mapStore.unitsOfAreaMeasurement, 2);
       if (
         !sketch &&
         (value > 100 || units === UnitsOfAreaMeasurement.HECTARE || units === UnitsOfAreaMeasurement.SQUARE_KILOMETER)

@@ -13,8 +13,6 @@ import { ModifyEvent } from 'ol/interaction/Modify';
 import VectorLayer from 'ol/layer/Vector';
 import { unByKey } from 'ol/Observable';
 import VectorSource from 'ol/source/Vector';
-import { Fill, Stroke, Style } from 'ol/style';
-import CircleStyle from 'ol/style/Circle';
 
 import { MapMeasureTooltip } from '../../components/MapMeasureTooltip/MapMeasureTooltip';
 import { mapStore } from '../../stores/Map.store';
@@ -23,8 +21,10 @@ import { Projection } from '../data/projections/projections.models';
 import { getOlProjection } from '../data/projections/projections.service';
 import { GeometryType } from '../geoserver/wfs/wfs.models';
 import { UnitsOfAreaMeasurement } from '../util/open-layers.util';
+import { mapDrawService } from './draw/map-draw.service';
 import { MapMode, MeasureMode } from './map.models';
 import { mapService } from './map.service';
+import { getStyle, KnownStyleKey } from './styles/map-styles';
 
 export interface MeasureItem {
   id: symbol;
@@ -41,7 +41,6 @@ class MapMeasureService {
   private draw?: Draw;
   private featureGeometryChangeListenersKeys?: EventsKey | EventsKey[];
   private sketchItem?: MeasureItem;
-  private markFillColor = 'rgba(255, 255, 255, 0.5)';
   private helpTooltipElement?: HTMLDivElement;
   private helpTooltip?: Overlay;
   private helpMsg?: string;
@@ -51,21 +50,7 @@ class MapMeasureService {
     source: this.source,
     zIndex: mapService.MEASURE_LAYER_ZINDEX,
     properties: { name: 'measure' },
-    style: new Style({
-      fill: new Fill({
-        color: this.markFillColor
-      }),
-      stroke: new Stroke({
-        color: '#ffcc33',
-        width: 2
-      }),
-      image: new CircleStyle({
-        radius: 7,
-        fill: new Fill({
-          color: '#ffcc33'
-        })
-      })
-    })
+    style: getStyle(KnownStyleKey.MeasureLayerStyles)
   });
 
   static get instance() {
@@ -81,7 +66,7 @@ class MapMeasureService {
       // do nothing
     }
 
-    mapService.mapCreate.on((): void => {
+    mapService.mapCreated.on((): void => {
       this.addMapEventsListeners();
     });
 
@@ -103,7 +88,7 @@ class MapMeasureService {
   }
 
   async measureOn(mode: MeasureMode) {
-    mapService.drawOff();
+    mapDrawService.drawOff();
     this.measureOff();
     mapStore.setMode(MapMode.MEASURE);
     mapStore.setMeasureMode(mode);
@@ -252,25 +237,7 @@ class MapMeasureService {
     return new Draw({
       source: this.source,
       type: mode === 'length' ? GeometryType.LINE_STRING : GeometryType.POLYGON,
-      style: new Style({
-        fill: new Fill({
-          color: this.markFillColor
-        }),
-        stroke: new Stroke({
-          color: '#ffcc33',
-          lineDash: [10, 10],
-          width: 2
-        }),
-        image: new CircleStyle({
-          radius: 5,
-          stroke: new Stroke({
-            color: '#ffcc33'
-          }),
-          fill: new Fill({
-            color: this.markFillColor
-          })
-        })
-      })
+      style: getStyle(KnownStyleKey.MeasureDrawStyles)
     });
   }
 

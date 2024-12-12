@@ -36,9 +36,9 @@ import {
 import { getLayerSchema } from '../../../services/gis/layers/layers.service';
 import { isVectorFromFile } from '../../../services/gis/layers/layers.utils';
 import { TreeItemPayload } from '../../../services/gis/projects/projects.models';
+import { mapDrawService } from '../../../services/map/draw/map-draw.service';
 import { toDrawGeometry } from '../../../services/map/draw/map-draw.util';
 import { MapAction } from '../../../services/map/map.models';
-import { mapService } from '../../../services/map/map.service';
 import {
   isLayersManagementAllowed,
   isShapeImportAllowed,
@@ -436,7 +436,7 @@ export class LayerMenu extends Component<LayerMenuProps> {
       isNew: true
     });
 
-    mapService.drawOn(toDrawGeometry(emptyFeature.geometry?.type));
+    mapDrawService.drawOn(toDrawGeometry(emptyFeature.geometry?.type));
 
     onClose();
   }

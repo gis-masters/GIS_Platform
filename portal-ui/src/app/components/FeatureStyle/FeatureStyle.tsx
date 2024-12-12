@@ -13,7 +13,7 @@ import {
   getFeatureFontString,
   getFeatureStringValue
 } from '../../services/map/map-labels.util';
-import { createStyle } from '../../services/util/style.util';
+import { createStyle } from '../../services/map/styles/map-styles';
 import { Button } from '../Button/Button';
 import { IconButton } from '../IconButton/IconButton';
 import { LabelStylesSettings } from '../LabelStylesSettings/LabelStylesSettings';

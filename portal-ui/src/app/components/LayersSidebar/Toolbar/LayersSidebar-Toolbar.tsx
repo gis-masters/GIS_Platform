@@ -79,7 +79,10 @@ export class LayersSidebarToolbar extends Component<LayersSidebarToolbarProps> {
                   <IconButton
                     className={cnLayersSidebarSaveBtn()}
                     onClick={this.save}
-                    disabled={!currentProject.canBeEdited}
+                    disabled={
+                      !currentProject.canBeEdited ||
+                      !mapStore.allowedActions.includes(MapAction.LAYER_SIDEBAR_LEFT_TOOLS)
+                    }
                     color='primary'
                   >
                     <SaveOutlined />
@@ -88,7 +91,12 @@ export class LayersSidebarToolbar extends Component<LayersSidebarToolbarProps> {
               </Tooltip>
 
               <Tooltip title='Отменить изменения'>
-                <IconButton className={cnLayersSidebarCancelBtn()} onClick={this.cancel} color='secondary'>
+                <IconButton
+                  className={cnLayersSidebarCancelBtn()}
+                  onClick={this.cancel}
+                  color='secondary'
+                  disabled={!mapStore.allowedActions.includes(MapAction.LAYER_SIDEBAR_LEFT_TOOLS)}
+                >
                   <CancelOutlined />
                 </IconButton>
               </Tooltip>

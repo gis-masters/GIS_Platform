@@ -6,7 +6,7 @@ import { boundMethod } from 'autobind-decorator';
 import { FixedSizeList, ListChildComponentProps } from 'react-window';
 
 import { WfsFeature } from '../../services/geoserver/wfs/wfs.models';
-import { mapService } from '../../services/map/map.service';
+import { mapDrawService } from '../../services/map/draw/map-draw.service';
 import { FeatureError } from '../../services/map/map-link-following.service';
 import { mapStore } from '../../stores/Map.store';
 import { EditFeatureMode, sidebars } from '../../stores/Sidebars.store';
@@ -89,9 +89,9 @@ export class FeaturesList extends Component<FeaturesListProps> {
   private async highlightItem(feature: WfsFeature | null) {
     if (feature) {
       clearTimeout(this.highlightAllFeaturesTimeout);
-      await mapService.highlightFeatures([feature]);
+      await mapDrawService.highlightFeatures([feature]);
     } else {
-      await mapService.highlightFeatures(mapStore.highlightedFeatures);
+      await mapDrawService.highlightFeatures(mapStore.highlightedFeatures);
     }
     this.highlightedFeatureId = feature?.id;
   }

@@ -3,13 +3,13 @@ import { isEqual } from 'lodash';
 
 import { Toast } from '../components/Toast/Toast';
 import { getOlProjection, getProjectionByCode } from './data/projections/projections.service';
-import { transform } from './data/projections/projections.util';
 import { recalculateBboxAndGetCoverage } from './geoserver/coverages/coverages.service';
 import { recalculateBboxAndGetFeatureType } from './geoserver/featureType/featureType.service';
 import { CrgLayer, CrgLayerType, CrgVectorLayer } from './gis/layers/layers.models';
 import { isVectorFromFile } from './gis/layers/layers.utils';
 import { mapService } from './map/map.service';
 import { services } from './services';
+import { transform } from './util/coordinates-transform.util';
 
 export async function focusToLayer(layer: CrgLayer): Promise<void> {
   try {
@@ -33,8 +33,8 @@ export async function focusToLayer(layer: CrgLayer): Promise<void> {
       return;
     }
 
-    const [x1, y1] = transform(geoserverProjection, olProjection, [minx, miny]);
-    const [x2, y2] = transform(geoserverProjection, olProjection, [maxx, maxy]);
+    const [x1, y1] = transform([minx, miny], geoserverProjection, olProjection);
+    const [x2, y2] = transform([maxx, maxy], geoserverProjection, olProjection);
 
     if (Number.isNaN(x1) || Number.isNaN(x2) || Number.isNaN(y1) || Number.isNaN(y2)) {
       showGoToBoundingBoxError();

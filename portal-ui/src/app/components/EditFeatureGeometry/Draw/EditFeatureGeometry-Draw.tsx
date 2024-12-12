@@ -10,13 +10,13 @@ import { DrawEvent } from 'ol/interaction/Draw';
 
 import { Emitter } from '../../../services/common/Emitter';
 import { communicationService } from '../../../services/communication.service';
-import { transform, transformCoordinates } from '../../../services/data/projections/projections.util';
 import { CoordinateEdited, GeometryType } from '../../../services/geoserver/wfs/wfs.models';
 import { SingleDrawGeometryType } from '../../../services/map/draw/map-draw.models';
+import { mapDrawService } from '../../../services/map/draw/map-draw.service';
 import { toDrawGeometry } from '../../../services/map/draw/map-draw.util';
 import { MapMode } from '../../../services/map/map.models';
-import { mapService } from '../../../services/map/map.service';
 import { services } from '../../../services/services';
+import { transform, transformCoordinates } from '../../../services/util/coordinates-transform.util';
 import { isCoordinate, isCoordinateArrayArray } from '../../../services/util/typeGuards/isCoordinate';
 import { EditFeatureGeometryStore } from '../../../stores/EditFeatureGeometry.store';
 import { mapStore } from '../../../stores/Map.store';
@@ -44,7 +44,7 @@ export class EditFeatureGeometryDraw extends Component<EditFeatureGeometryDrawPr
   }
 
   componentWillUnmount() {
-    mapService.drawOff();
+    mapDrawService.drawOff();
 
     communicationService.off(this);
     Emitter.scopeOff(this);
@@ -83,7 +83,7 @@ export class EditFeatureGeometryDraw extends Component<EditFeatureGeometryDrawPr
     switch (drawGeometryType) {
       case GeometryType.POINT: {
         if (isCoordinate(rawCoordinates)) {
-          onDraw(transform(projectionsStore.olProjection, store.currentProjection, rawCoordinates));
+          onDraw(transform(rawCoordinates, projectionsStore.olProjection, store.currentProjection));
         } else {
           services.logger.warn(
             `Координаты ${rawCoordinates?.toString()} не соответствуют типу геометрии ${drawGeometryType}`
@@ -95,7 +95,7 @@ export class EditFeatureGeometryDraw extends Component<EditFeatureGeometryDrawPr
       case GeometryType.POLYGON:
       case GeometryType.MULTI_LINE_STRING: {
         if (isCoordinateArrayArray(rawCoordinates)) {
-          onDraw(transformCoordinates(projectionsStore.olProjection, store.currentProjection, rawCoordinates));
+          onDraw(transformCoordinates(rawCoordinates, projectionsStore.olProjection, store.currentProjection));
         } else {
           services.logger.warn(
             `Координаты ${rawCoordinates?.toString()} не соответствуют типу геометрии ${drawGeometryType}`
@@ -109,9 +109,9 @@ export class EditFeatureGeometryDraw extends Component<EditFeatureGeometryDrawPr
   @boundMethod
   private handleClick() {
     if (this.isDrawEnabled()) {
-      mapService.drawOff();
+      mapDrawService.drawOff();
     } else {
-      mapService.drawOn(toDrawGeometry(this.props.store.geometryType));
+      mapDrawService.drawOn(toDrawGeometry(this.props.store.geometryType));
     }
   }
 

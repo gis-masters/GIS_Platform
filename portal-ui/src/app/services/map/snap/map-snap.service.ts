@@ -2,6 +2,7 @@ import { reaction } from 'mobx';
 import { Snap } from 'ol/interaction';
 
 import { mapSnapStore } from '../../../stores/MapSnap.store';
+import { mapDrawService } from '../draw/map-draw.service';
 import { mapService } from '../map.service';
 
 class MapSnapService {
@@ -39,7 +40,7 @@ class MapSnapService {
     this.deactivate();
 
     this.currentSnap = new Snap({
-      source: mapService.draftSource,
+      source: mapDrawService.getDrawSource(),
       pixelTolerance: pixelTolerance
     });
 

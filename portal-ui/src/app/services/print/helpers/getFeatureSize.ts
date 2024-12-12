@@ -1,6 +1,7 @@
 import { Projection } from '../../data/projections/projections.models';
 import { WfsFeature } from '../../geoserver/wfs/wfs.models';
 import { isLinear, isPolygonal } from '../../geoserver/wfs/wfs.util';
+import { mapService } from '../../map/map.service';
 import { getFeatureArea, getFeatureLength } from '../../map/map-labels.util';
 import { UnitsOfAreaMeasurement, wfsFeatureToFeature } from '../../util/open-layers.util';
 
@@ -35,11 +36,11 @@ export function getFeatureSize({ feature: wfsFeature, projection }: FeatureSizeD
 
     if (isPolygonal(type)) {
       sizeType = 'area';
-      const [value, units] = getFeatureArea(geometry, UnitsOfAreaMeasurement.HECTARE, 4);
+      const [value, units] = getFeatureArea(geometry, UnitsOfAreaMeasurement.HECTARE);
 
       return { value, units, sizeType };
     } else if (isLinear(type)) {
-      const [value, units] = getFeatureLength({ geometry, projection, precision: 4 });
+      const [value, units] = getFeatureLength({ geometry, projection, precision: mapService.PRECISION });
 
       return { value, units, sizeType };
     }

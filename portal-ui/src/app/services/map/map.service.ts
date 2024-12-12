@@ -1,16 +1,12 @@
 import { reaction } from 'mobx';
 import { debounce } from 'lodash';
 import { Map, View } from 'ol';
-import Collection from 'ol/Collection';
 import { defaults as defaultControls } from 'ol/control';
 import { Coordinate } from 'ol/coordinate';
 import { Extent, getTopLeft, getWidth } from 'ol/extent';
 import Feature from 'ol/Feature';
-import { Geometry, MultiPolygon, SimpleGeometry } from 'ol/geom';
+import { MultiPolygon, SimpleGeometry } from 'ol/geom';
 import ImageWrapper from 'ol/Image';
-import { Draw, Modify, Select } from 'ol/interaction';
-import { DrawEvent } from 'ol/interaction/Draw';
-import { ModifyEvent } from 'ol/interaction/Modify';
 import { Tile as TileLayer, Vector as VectorLayer } from 'ol/layer';
 import BaseLayer from 'ol/layer/Base';
 import ImageLayer from 'ol/layer/Image';
@@ -20,26 +16,22 @@ import ImageSource from 'ol/source/Image';
 import TileSource from 'ol/source/Tile';
 import { Options as TileWMSOptions } from 'ol/source/TileWMS';
 import { ServerType } from 'ol/source/wms';
-import { Circle, Fill, Stroke, Style } from 'ol/style';
 import Tile from 'ol/Tile';
 import WMTSTileGrid from 'ol/tilegrid/WMTS';
 
 import { extractFeatureIdsFromAttributesFilter } from '../../components/Attributes/Attributes.utils';
-import { Toast } from '../../components/Toast/Toast';
 import { attributesTableStore } from '../../stores/AttributesTable.store';
 import { basemapsStore } from '../../stores/Basemaps.store';
 import { mapStore } from '../../stores/Map.store';
-import { mapVerticesModificationStore } from '../../stores/MapVerticesModification.store';
 import { route } from '../../stores/Route.store';
 import { Emitter } from '../common/Emitter';
 import { communicationService } from '../communication.service';
 import { Basemap, SourceType } from '../data/basemaps/basemaps.models';
 import { defaultOlProjectionCode, Projection } from '../data/projections/projections.models';
 import { getFeatureProjection, getOlProjection } from '../data/projections/projections.service';
-import { transformExtent, transformGeometry } from '../data/projections/projections.util';
 import { Schema } from '../data/schema/schema.models';
 import { applyView } from '../data/schema/schema.utils';
-import { CoordinateEdited, GeometryType, WfsFeature } from '../geoserver/wfs/wfs.models';
+import { GeometryType, WfsFeature } from '../geoserver/wfs/wfs.models';
 import { getFeatureExtent, mergeExtents } from '../geoserver/wfs/wfs.util';
 import { wmsClient } from '../geoserver/wms/wms.client';
 import { getMap } from '../geoserver/wms/wms.service';
@@ -47,74 +39,32 @@ import { CrgExternalLayer, CrgLayer, CrgLayerType } from '../gis/layers/layers.m
 import { getLayerSchema } from '../gis/layers/layers.service';
 import { ScaleLine } from '../ol/ScaleLine';
 import { services } from '../services';
+import { transformExtent } from '../util/coordinates-transform.util';
 import { buildCql } from '../util/cql/buildCql';
 import { concatCql } from '../util/cql/concatCql';
 import { Mime } from '../util/Mime';
 import { notFalsyFilter } from '../util/NotFalsyFilter';
-import { wfsFeatureToFeature } from '../util/open-layers.util';
-import { konfirmieren } from '../utility-dialogs.service';
-import { SingleDrawGeometryType } from './draw/map-draw.models';
-import { MapMode, MapPosition } from './map.models';
-import { mapSnapService } from './snap/snap.service';
-
-// WMS request parameters. At least a LAYERS param is required.
-interface CrgWmsParams {
-  LAYERS: string;
-  FORMAT?: string;
-  STYLES?: string;
-  CQL_FILTER?: string;
-  featureId?: string;
-  featureIdsNegative?: string;
-}
-
-interface CrgAdditionalLayerInfo {
-  isUserLayer: boolean;
-}
-
-interface LayerAdditionalProps {
-  crgInfo: CrgAdditionalLayerInfo;
-}
+import { mapDrawService } from './draw/map-draw.service';
+import { CrgAdditionalLayerInfo, CrgWmsParams, LayerAdditionalProps, MapPosition } from './map.models';
 
 class MapService {
   private static _instance: MapService;
-
-  private readonly isTiledWms: boolean;
-
-  private readonly debouncedZoomEvent: () => void;
-
   static get instance() {
     return this._instance || (this._instance = new this());
   }
 
   mapClick = new Emitter<Coordinate>();
   mapMoved = new Emitter<MapPosition>();
-  mapCreate = new Emitter();
+  mapCreated = new Emitter();
   zoomChanged = new Emitter<number>();
-
-  private _map?: Map;
-
-  get map(): Map {
-    if (!this._map) {
-      throw new Error('Map is not initialized');
-    }
-
-    return this._map;
-  }
-
-  set map(map: Map) {
-    this._map = map;
-  }
-
-  get mapInited(): boolean {
-    return !!this._map;
-  }
 
   view?: View;
   scaleLine?: ScaleLine;
 
-  draftSource: VectorSource = new VectorSource<Feature<Geometry>>({
-    features: []
-  });
+  private _map?: Map;
+
+  private readonly isTiledWms: boolean;
+  private readonly debouncedZoomEvent: () => void;
 
   // Подложка
   private basemapLayer = new TileLayer();
@@ -123,13 +73,13 @@ class MapService {
   private zoom?: number;
   private center?: number[];
 
-  // Кол-во десятичных в координатах
-  private PRECISION = 4;
-
   // Hit-detection tolerance. Pixels inside the square around the given position will be checked for features.
   private HIT_TOLERANCE = 10;
 
-  readonly DRAFT_LAYER_ZINDEX = 10_000;
+  // Кол-во десятичных в координатах
+  readonly PRECISION = 4;
+
+  readonly DRAFT_LAYER_Z_INDEX = 10_000;
   readonly MEASURE_LAYER_ZINDEX = 10_100;
   readonly LABELS_LAYER_ZINDEX = 10_150;
   readonly MARKERS_LAYER_ZINDEX = 10_200;
@@ -137,55 +87,6 @@ class MapService {
   // Default view options
   private defaultZoomValue = 9;
   private defaultViewPoint = [3_844_444, 5_644_444];
-
-  private select?: Select;
-  private modify?: Modify;
-
-  private drawModify?: Modify | null;
-  private currentDraw?: Draw | null;
-  private verticesModification = {
-    init: () => {
-      this.select = new Select();
-      this._map?.addInteraction(this.select);
-
-      this.modify = new Modify({
-        features: this.select.getFeatures(),
-        style: new Style({
-          image: new Circle({
-            radius: 8,
-            fill: new Fill({
-              color: 'green'
-            })
-          })
-        })
-      });
-      this._map?.addInteraction(this.modify);
-
-      this.verticesModification.setEvents();
-    },
-    setEvents: () => {
-      const collectionOfSelectedFeatures: Collection<Feature> = this.select?.getFeatures() ?? new Collection([]);
-      this.select?.on('change:active', () => {
-        collectionOfSelectedFeatures.forEach(feature => {
-          collectionOfSelectedFeatures.remove(feature);
-        });
-      });
-
-      this.modify?.on('modifyend', (e: ModifyEvent) => {
-        mapVerticesModificationStore.updateModifiedCollection(e.features.getArray());
-      });
-    },
-    setActive: (active: boolean) => {
-      this.select?.setActive(active);
-      this.modify?.setActive(active);
-    },
-    reset: () => {
-      this.select?.setActive(false);
-      this.select?.setActive(true);
-      this.modify?.setActive(false);
-      this.modify?.setActive(true);
-    }
-  };
 
   constructor() {
     reaction(
@@ -216,7 +117,7 @@ class MapService {
       if (this.mapInited) {
         resolve();
       } else {
-        this.mapCreate.once(() => {
+        this.mapCreated.once(() => {
           resolve();
         });
       }
@@ -225,10 +126,6 @@ class MapService {
 
   createMap(): void {
     this.markersSource = new VectorSource<Feature<SimpleGeometry>>({
-      features: []
-    });
-
-    this.draftSource = new VectorSource<Feature<Geometry>>({
       features: []
     });
 
@@ -255,26 +152,6 @@ class MapService {
       controls: defaultControls().extend([this.scaleLine]),
       layers: [
         this.basemapLayer,
-        new VectorLayer({
-          source: this.draftSource,
-          zIndex: this.DRAFT_LAYER_ZINDEX,
-          style: new Style({
-            fill: new Fill({
-              color: 'rgba(255, 255, 0, 0.5)'
-            }),
-            stroke: new Stroke({
-              color: '#ff0018',
-              width: 2
-            }),
-            image: new Circle({
-              radius: 6,
-              fill: new Fill({
-                color: '#0092F3FF'
-              })
-            })
-          }),
-          properties: { name: 'draft' }
-        }),
         new VectorLayer({
           source: this.markersSource,
           zIndex: this.MARKERS_LAYER_ZINDEX,
@@ -308,7 +185,7 @@ class MapService {
 
     this.view.on('change:resolution', this.debouncedZoomEvent);
     this.debouncedZoomEvent();
-    this.mapCreate.emit();
+    this.mapCreated.emit();
   }
 
   destroyMap() {
@@ -316,7 +193,7 @@ class MapService {
       throw new Error('Невозможно выполнить destroyMap. Карта не создана');
     }
     communicationService.beforeMapDestroy.emit();
-    this.drawOff();
+    mapDrawService.drawOff();
     this.map.unset('target');
     delete this._map;
     delete this.view;
@@ -495,97 +372,8 @@ class MapService {
     this.map.addLayer(olLayer);
   }
 
-  /**
-   * @param complexLayerName Название слоя в формате 'workspace:layerName'
-   */
-  private getLayerByName(complexLayerName: string): ImageLayer<ImageSource> | TileLayer<TileSource> | undefined {
-    return this.getUserLayers().find(layer => {
-      const source = layer.getSource() as TileWMS;
-
-      return source && (source.getParams() as CrgWmsParams).LAYERS === complexLayerName;
-    });
-  }
-
   refreshAllLayers() {
     this.getUserLayers().forEach(layer => layer.getSource()?.refresh());
-  }
-
-  // Очистить карту от слоя, который отображал объект.
-  clearDraft() {
-    this.throwIfDraftNotCreated();
-
-    const collection = this.draftSource.getFeaturesCollection();
-    const count = collection ? collection.getLength() : 0;
-    this.draftSource.clear(count > 10);
-  }
-
-  addFeaturesToDraft(features: Feature<Geometry>[]) {
-    this.throwIfDraftNotCreated();
-
-    this.draftSource.addFeatures(features);
-  }
-
-  /**
-   * Подсвечивает объекты. (очищает черновой слой)
-   */
-  async highlightFeatures(features: WfsFeature<Coordinate | CoordinateEdited>[], projection?: Projection) {
-    this.throwIfDraftNotCreated();
-
-    const featuresInOlProjection: WfsFeature[] = await Promise.all(
-      [...features]
-        .filter(({ geometry }) => geometry)
-        .map(async (feature: WfsFeature<Coordinate | CoordinateEdited>): Promise<WfsFeature> => {
-          const currentProjection = projection || (await getFeatureProjection(feature));
-          const olProjection = await getOlProjection();
-
-          if (!currentProjection || !olProjection) {
-            throw new Error('Не найдена проекция выбранного объекта');
-          }
-          const geometry = feature.geometry && transformGeometry(feature.geometry, currentProjection, olProjection);
-
-          if (!geometry) {
-            throw new Error('Геометрия не определена');
-          }
-
-          return {
-            ...feature,
-            geometry
-          };
-        })
-    );
-
-    this.clearDraft();
-
-    const olFeatures: Feature<SimpleGeometry>[] = [];
-    for (const wfsFeature of featuresInOlProjection) {
-      if (!wfsFeature.geometry) {
-        Toast.error({
-          message: 'Ошибка отображения объекта',
-          details: `ID: ${wfsFeature.id}.
-                      Нет геометрии.`
-        });
-
-        continue;
-      }
-
-      try {
-        const olFeature = wfsFeatureToFeature(wfsFeature);
-        if (olFeature) {
-          olFeatures.push(olFeature);
-        }
-      } catch (error) {
-        services.logger.error(`Can't highlight feature: '${wfsFeature.id}'`, error);
-      }
-    }
-
-    this.draftSource.addFeatures(olFeatures);
-  }
-
-  private getSystemLayer(name: string): BaseLayer | undefined {
-    return this.map
-      .getLayers()
-      .getArray()
-      .find(layer => layer.getProperties().name === name);
   }
 
   hideSystemLayer(name: string) {
@@ -594,49 +382,6 @@ class MapService {
 
   showSystemLayer(name: string) {
     this.getSystemLayer(name)?.setOpacity(1);
-  }
-
-  showSelectionMarker(coordinates: Coordinate[][][]) {
-    if (!this.draftSource) {
-      throw new Error('Невозможно отобразить рамку выделения, нет соответствующего слоя');
-    }
-
-    const feature: WfsFeature = {
-      type: 'Feature',
-      geometry: {
-        type: GeometryType.MULTI_POLYGON,
-        coordinates
-      },
-      id: '',
-      geometry_name: '',
-      properties: {}
-    };
-
-    const olFeature = wfsFeatureToFeature(feature);
-    if (olFeature) {
-      this.draftSource.addFeature(olFeature);
-
-      setTimeout(() => {
-        try {
-          this.draftSource?.removeFeature(olFeature);
-        } catch {}
-      }, 500);
-    }
-  }
-
-  // Обновим "выделенные фичи" "измененными"
-  async highlightMoreFeatures(modifiedFeatures: WfsFeature[]) {
-    const selectedFeatures = mapStore.selectedFeatures;
-    for (const modifiedFeature of modifiedFeatures) {
-      const existingFeatureIndex = selectedFeatures.findIndex(f => f.id === modifiedFeature.id);
-      if (existingFeatureIndex === -1) {
-        selectedFeatures.push(modifiedFeature);
-      } else {
-        selectedFeatures[existingFeatureIndex] = modifiedFeature;
-      }
-    }
-
-    await this.highlightFeatures(selectedFeatures);
   }
 
   fitToBbox(bbox: Extent, padding: [number, number, number, number], minResolution?: number) {
@@ -656,10 +401,6 @@ class MapService {
     }
 
     return resolution;
-  }
-
-  private round(n: number) {
-    return Number(n.toFixed(this.PRECISION));
   }
 
   getBufferByCoordinates(pos: Coordinate): MultiPolygon {
@@ -685,117 +426,6 @@ class MapService {
     ];
 
     return new MultiPolygon(buffer);
-  }
-
-  verticesModificationOn() {
-    // TODO: Мы не должны вызывать off каких то других режимов. Должен быть отдельный обработчик который рулит режимами.
-    this.drawOff();
-    communicationService.minimizeAttributesBar.emit();
-
-    mapStore.setMode(MapMode.VERTICES_MODIFICATION);
-
-    this.verticesModification.init();
-    this.verticesModification.setActive(true);
-
-    mapSnapService.activate();
-  }
-
-  verticesModificationOff() {
-    if (mapVerticesModificationStore.modifiedFeatures.length > 0) {
-      void konfirmieren({
-        message: 'Все несохраненные данные будут утеряны.',
-        okText: 'Всё равно закрыть',
-        cancelText: 'Не закрывать'
-      }).then(confirmed => {
-        if (confirmed) {
-          mapStore.setMode(MapMode.DEFAULT);
-          void mapVerticesModificationStore.updateModifiedCollection([]);
-          void this.highlightFeatures(mapStore.selectedFeatures);
-
-          this.verticesModification.setActive(false);
-
-          mapSnapService.deactivate();
-        }
-      });
-    } else {
-      mapStore.setMode(MapMode.DEFAULT);
-      void mapVerticesModificationStore.updateModifiedCollection([]);
-      void this.highlightFeatures(mapStore.selectedFeatures);
-
-      this.verticesModification.setActive(false);
-      mapSnapService.deactivate();
-    }
-  }
-
-  verticesModificationClear(simple?: boolean) {
-    if (simple) {
-      this.verticesModification.reset();
-
-      return;
-    }
-
-    void mapVerticesModificationStore.updateModifiedCollection([]);
-    void this.highlightFeatures(mapStore.selectedFeatures);
-    this.verticesModification.reset();
-  }
-
-  drawOn(geometryType: SingleDrawGeometryType) {
-    this.verticesModificationOff();
-
-    mapStore.setMode(MapMode.DRAW);
-
-    // Modify
-    this.drawModify = new Modify({ source: this.draftSource });
-    this.drawModify.on('modifyend', (event: ModifyEvent) => {
-      communicationService.modifyEnd.emit(event);
-    });
-    this.map.addInteraction(this.drawModify);
-
-    // Draw
-    this.currentDraw = new Draw({
-      source: this.draftSource,
-      type: geometryType,
-      style: new Style({
-        fill: new Fill({
-          color: 'rgba(255, 255, 255, 0.33)'
-        }),
-        stroke: new Stroke({
-          color: '#0092F3FF',
-          width: 2
-        }),
-        image: new Circle({
-          radius: 6,
-          fill: new Fill({
-            color: '#0092F3FF'
-          })
-        })
-      })
-    });
-    this.currentDraw.setActive(true);
-    this.currentDraw?.on('drawend', (event: DrawEvent) => {
-      communicationService.drawEnd.emit(event);
-    });
-    this.map.addInteraction(this.currentDraw);
-
-    mapSnapService.activate();
-  }
-
-  drawOff() {
-    mapStore.setMode(MapMode.DEFAULT);
-
-    if (this.currentDraw) {
-      this.currentDraw.setActive(false);
-      this.map.removeInteraction(this.currentDraw);
-      this.currentDraw = null;
-    }
-
-    if (this.drawModify) {
-      this.drawModify.setActive(false);
-      this.map.removeInteraction(this.drawModify);
-      this.drawModify = null;
-    }
-
-    mapSnapService.deactivate();
   }
 
   async positionToFeature(feature: WfsFeature, proj?: Projection) {
@@ -829,6 +459,14 @@ class MapService {
     }
   }
 
+  drawMarkers(features: Feature<SimpleGeometry>[]) {
+    this.markersSource?.addFeatures(features);
+  }
+
+  clearMarkers() {
+    this.markersSource?.clear();
+  }
+
   private positionToExtent(extent: Extent, pointMode?: boolean) {
     if (pointMode) {
       const size = this.map.getSize();
@@ -843,14 +481,6 @@ class MapService {
     }
   }
 
-  drawMarkers(features: Feature<SimpleGeometry>[]) {
-    this.markersSource?.addFeatures(features);
-  }
-
-  clearMarkers() {
-    this.markersSource?.clear();
-  }
-
   private async crgLayersLoadFunction(tile: Tile | ImageWrapper, url: string) {
     mapStore.enrollLoadingStart();
     let data: Blob = new Blob();
@@ -863,6 +493,17 @@ class MapService {
     ((tile as ImageWrapper).getImage() as HTMLImageElement).src = URL.createObjectURL(blob);
 
     mapStore.enrollLoadingFinish();
+  }
+
+  /**
+   * @param complexLayerName Название слоя в формате 'workspace:layerName'
+   */
+  private getLayerByName(complexLayerName: string): ImageLayer<ImageSource> | TileLayer<TileSource> | undefined {
+    return this.getUserLayers().find(layer => {
+      const source = layer.getSource() as TileWMS;
+
+      return source && (source.getParams() as CrgWmsParams).LAYERS === complexLayerName;
+    });
   }
 
   private async externalGisMapServerLoadFunction(tile: Tile | ImageWrapper, url: string) {
@@ -1018,16 +659,37 @@ class MapService {
     return false;
   }
 
+  private getSystemLayer(name: string): BaseLayer | undefined {
+    return this.map
+      .getLayers()
+      .getArray()
+      .find(layer => layer.getProperties().name === name);
+  }
+
+  private round(n: number) {
+    return Number(n.toFixed(this.PRECISION));
+  }
+
   private throwIfMapNotCreated() {
     if (!this.map) {
       throw new Error('Что-то пошло не так - карта не создана');
     }
   }
 
-  private throwIfDraftNotCreated() {
-    if (!this.draftSource) {
-      throw new Error('Что-то пошло не так - draft слой не создан');
+  get map(): Map {
+    if (!this._map) {
+      throw new Error('Карта не инициализирована');
     }
+
+    return this._map;
+  }
+
+  set map(map: Map) {
+    this._map = map;
+  }
+
+  get mapInited(): boolean {
+    return !!this._map;
   }
 }
 

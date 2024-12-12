@@ -4,10 +4,10 @@ import { isEqual } from 'lodash';
 import { Coordinate } from 'ol/coordinate';
 
 import { Projection } from '../services/data/projections/projections.models';
-import { transformGeometry } from '../services/data/projections/projections.util';
 import { GeometryType, WfsGeometry } from '../services/geoserver/wfs/wfs.models';
 import { isGeometryValid } from '../services/geoserver/wfs/wfs.util';
 import { CrgVectorableLayer } from '../services/gis/layers/layers.models';
+import { transformGeometry } from '../services/util/coordinates-transform.util';
 
 export class EditFeatureGeometryStore {
   @observable geometry?: WfsGeometry;
