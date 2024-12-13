@@ -151,7 +151,11 @@ const FilesItemFC: FC<FilesItemProps> = observer(
     }, [setFileSignDialogOpen]);
 
     const fetchConnections = useCallback(async () => {
-      const { id: newId } = item;
+      const { id: newId, size } = item;
+
+      if (!size) {
+        return;
+      }
 
       setIds(newId);
 
@@ -209,7 +213,9 @@ const FilesItemFC: FC<FilesItemProps> = observer(
             await fetchConnections();
           }
         }, this);
+
         await fetchConnections();
+
         if (!item.signed) {
           await updateFileInfo();
         }
