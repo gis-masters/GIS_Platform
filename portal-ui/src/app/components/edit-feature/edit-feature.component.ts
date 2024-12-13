@@ -108,6 +108,7 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
         if (!firstFeature) {
           return;
         }
+
         const layer = data.layer || getLayerByFeatureInCurrentProject(firstFeature);
         if (layer) {
           sidebars.setLayerOfEditedFeature(layer);
@@ -127,6 +128,7 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
         if (!layerSchema) {
           return;
         }
+
         const oldSchema = convertNewToOldSchema(layerSchema);
         const view = isVectorLayer(this.layer) ? this.layer.view : undefined;
         this.featureDescription = applyViewOld(changeSchemaNamesCaseByFeature(oldSchema, firstFeature), view);
@@ -165,7 +167,6 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
           })
           .forEach(key => {
             const propertyByKey = convertedProperties.find(({ name }) => name.toLowerCase() === key.toLowerCase());
-
             let currentProperty = propertyByKey
               ? convertToComplexField(propertyByKey, firstFeature.properties)
               : firstFeature.properties[key];

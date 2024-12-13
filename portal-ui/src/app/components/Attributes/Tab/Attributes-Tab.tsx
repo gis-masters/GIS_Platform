@@ -79,6 +79,7 @@ export class AttributesTab extends Component<AttributesTabProps> {
   @boundMethod
   private handleClick() {
     const { layer, selected, onMinimize } = this.props;
+
     if (selected) {
       onMinimize(layer);
     } else {

@@ -311,7 +311,6 @@ class MapSelectionService {
     }
 
     sidebars.closeEdit();
-
     if (selectionType === MapSelectionTypes.REPLACE) {
       mapStore.setSelectedFeatures(features);
     } else {

@@ -11,6 +11,7 @@ import { pluralize } from 'numeralize-ru';
 import { communicationService } from '../../services/communication.service';
 import { getProjectionByCode } from '../../services/data/projections/projections.service';
 import { createFeature } from '../../services/data/vectorData/vectorData.service';
+import { createFeatureId } from '../../services/geoserver/featureType/featureType.util';
 import { WfsFeature } from '../../services/geoserver/wfs/wfs.models';
 import { CrgLayer, CrgLayerType, CrgVectorLayer } from '../../services/gis/layers/layers.models';
 import { isVectorFromFile } from '../../services/gis/layers/layers.utils';
@@ -44,6 +45,7 @@ export class CopyFeaturesButton extends Component<CopyFeaturesButtonProps> {
   @observable private busy = false;
   @observable private createdFeaturesCounter = 0;
   @observable private wfsFeatures: WfsFeature[] = [];
+  @observable private selectedLayer: CrgVectorLayer | null = null;
 
   constructor(props: CopyFeaturesButtonProps) {
     super(props);
@@ -101,9 +103,14 @@ export class CopyFeaturesButton extends Component<CopyFeaturesButtonProps> {
   private setWfsFeature(wfsFeatures: WfsFeature[]) {
     this.wfsFeatures = wfsFeatures;
   }
+  @action
+  private setSelectedLayer(selectedLayer: CrgVectorLayer) {
+    this.selectedLayer = selectedLayer;
+  }
 
   @boundMethod
   private async copy([selectedLayer]: CrgVectorLayer[]) {
+    this.setSelectedLayer(selectedLayer);
     this.setCreatedFeaturesCounter(0);
     this.setBusy(true);
 
@@ -141,7 +148,8 @@ export class CopyFeaturesButton extends Component<CopyFeaturesButtonProps> {
       }
 
       const featuresWithId: WfsFeature[] = createdFeatures.map(feat => {
-        feat.id = `${selectedLayer.tableName}.${feat.id}`;
+        feat.properties.objectid = feat.id;
+        feat.id = createFeatureId(selectedLayer.tableName, selectedLayer.nativeCRS, feat.id);
 
         return feat;
       });
@@ -181,5 +189,9 @@ export class CopyFeaturesButton extends Component<CopyFeaturesButtonProps> {
     mapSelectionService.selectFeatures(this.wfsFeatures);
     await mapService.positionToFeatures(this.wfsFeatures);
     sidebars.openSelectedFeaturesSidebar();
+
+    if (this.selectedLayer) {
+      communicationService.openAttributesBar.emit(this.selectedLayer);
+    }
   }
 }

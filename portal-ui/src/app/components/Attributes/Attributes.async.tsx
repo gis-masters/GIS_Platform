@@ -127,7 +127,8 @@ export default class Attributes extends Component<IClassNameProps> {
         )
       ) {
         const layer = getLayerByFeatureInCurrentProject(feature);
-        if (layer) {
+
+        if (layer && !this.hardTabs.some(({ complexName }) => complexName === layer.complexName)) {
           layers.push(layer);
         }
       }

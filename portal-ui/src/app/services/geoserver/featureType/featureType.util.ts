@@ -1,3 +1,5 @@
+import { getSrid } from '../../data/projections/projections.util';
+
 export function extractFeatureId(featureId: string): number {
   const errMsg = `Передан некорректный идентификатор объекта: '${featureId}'`;
 
@@ -78,6 +80,10 @@ export function buildComplexName(workspace: string, tableName: string, crs?: str
 
   return epsgCode ? `${workspace}:${tableName}__${epsgCode}` : `${workspace}:${tableName}`;
 }
+
+export const createFeatureId = (tableName: string, nativeCRS: string, id: string): string => {
+  return `${tableName}__${getSrid(nativeCRS)}.${id}`;
+};
 
 function splitComplexName(complexName: string | undefined): [string, string] {
   const errMsg = `Передан некорректный complexName: '${complexName}'`;
