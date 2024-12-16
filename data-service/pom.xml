@@ -555,17 +555,17 @@
                     </execution>
 
                     <execution>
-                        <id>gpzu_1_0_4</id>
+                        <id>gpzu_1_0_1</id>
                         <goals>
                             <goal>xjc</goal>
                         </goals>
                         <configuration>
                             <sources>
-                                <source>${basedir}/src/main/resources/xsd_smev3/gpzu_1_0_4/core/service-adapter-types.xsd</source>
+                                <source>${basedir}/src/main/resources/xsd_smev3/gpzu_1_0_1/core/service-adapter-types.xsd</source>
                             </sources>
                             <verbose>false</verbose>
                             <extension>true</extension>
-                            <packageName>ru.mycrg.data_service.gpzu_1_0_4</packageName>
+                            <packageName>ru.mycrg.data_service.gpzu_1_0_1</packageName>
                             <encoding>UTF-8</encoding>
                             <clearOutputDir>false</clearOutputDir>
                         </configuration>

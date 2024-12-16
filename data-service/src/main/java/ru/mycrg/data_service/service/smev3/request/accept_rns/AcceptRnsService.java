@@ -16,6 +16,7 @@ import ru.mycrg.data_service.service.MinioService;
 import ru.mycrg.data_service.service.TaskLogService;
 import ru.mycrg.data_service.service.binary_analyzers.SimpleIntentHandler;
 import ru.mycrg.data_service.service.files.FileService;
+import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service.service.schemas.ISchemaTemplateService;
 import ru.mycrg.data_service.service.smev3.SmevMessageSenderService;
 import ru.mycrg.data_service.service.smev3.SmevMessageService;
@@ -30,6 +31,8 @@ import ru.mycrg.data_service_contract.enums.TaskStatus;
 
 import java.util.*;
 import java.util.stream.Collectors;
+
+import static ru.mycrg.data_service.service.resources.ResourceQualifier.libraryQualifier;
 
 @Service
 @ConditionalOnProperty(
@@ -55,6 +58,22 @@ public class AcceptRnsService extends AcceptServiceBase {
         super(taskLogService, tasksDao, smevMessageService, schemaService, fileStorageService, recordsDao,
               libraryRepository, fileRepository, simpleIntentHandler, minioService, smev3Config, fileService,
               smevMessageSenderService, documentCreationService);
+    }
+
+    @Override
+    protected List<IRecord> getDocRecords() {
+        String filter = String.format("path like '%s'", "/root/" + folderId);
+        ResourceQualifier libraryQualifier = libraryQualifier(TASK_ALLOCATION_LIBRARY_ID);
+        IRecord docRecord = recordsDao
+                .findBy(libraryQualifier, filter)
+                .orElseThrow(() -> new SmevRequestException("Не найден исполнитель по пути " + "/root/" + folderId));
+
+        return List.of(docRecord);
+    }
+
+    @Override
+    protected <T> Long getPerformerId(List<IRecord> docRecords, T queryResult) {
+        return Long.valueOf(Objects.requireNonNull(docRecords.get(0).getAsString(PERFORMER_ATTRIBUTE)));
     }
 
     @Override
@@ -222,6 +241,7 @@ public class AcceptRnsService extends AcceptServiceBase {
     private ClientMessage createClientMessage() {
         ClientMessage clientMessage = new ClientMessage();
         clientMessage.setItSystem(smev3Config.getSystemMnemonic());
+
         return clientMessage;
     }
 
@@ -231,6 +251,7 @@ public class AcceptRnsService extends AcceptServiceBase {
         responseMetadataType.setClientId(UUID.randomUUID().toString());
         responseMetadataType.setReplyToClientId(docRecord.getAsString(SMEV_CLIENT_ID_ATTRIBUTE));
         responseMessageType.setResponseMetadata(responseMetadataType);
+
         return responseMessageType;
     }
 

@@ -166,12 +166,8 @@ public abstract class AcceptServiceBase {
 
         smevMessageService.saveIncoming(body);
 
-        String filter = String.format("path like '%s'", "/root/" + folderId);
-        ResourceQualifier libraryQualifier = libraryQualifier(TASK_ALLOCATION_LIBRARY_ID);
-        IRecord docRecord = recordsDao
-                .findBy(libraryQualifier, filter)
-                .orElseThrow(() -> new SmevRequestException("Не найден исполнитель по пути " + "/root/" + folderId));
-        Long performerId = Long.valueOf(Objects.requireNonNull(docRecord.getAsString(PERFORMER_ATTRIBUTE)));
+        List<IRecord> docRecords = getDocRecords();
+        Long performerId = getPerformerId(docRecords, queryResult);
         Map<String, Object> taskContent = prepareTaskContent(performerId);
 
         long taskId = tasksDao.createTask(dbName, taskContent);
@@ -356,6 +352,10 @@ public abstract class AcceptServiceBase {
 
         taskLogService.create(new TaskLogDto(eventType, taskId), propsMap);
     }
+
+    protected abstract List<IRecord> getDocRecords();
+
+    protected abstract <T> Long getPerformerId(List<IRecord> docRecords, T queryResult);
 
     protected abstract String getContentType();
 

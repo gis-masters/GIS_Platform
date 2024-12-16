@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tns="urn://rostelekom.ru/GPZU/1.0.4" targetNamespace="urn://rostelekom.ru/GPZU/1.0.4" elementFormDefault="qualified" attributeFormDefault="unqualified">
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tns="urn://rostelekom.ru/GPZU/1.0.1"
+			targetNamespace="urn://rostelekom.ru/GPZU/1.0.1" elementFormDefault="qualified"
+			attributeFormDefault="unqualified">
 	<xsd:element name="request" type="tns:requestType">
 		<xsd:annotation>
 			<xsd:documentation>Корневой элемент запроса</xsd:documentation>

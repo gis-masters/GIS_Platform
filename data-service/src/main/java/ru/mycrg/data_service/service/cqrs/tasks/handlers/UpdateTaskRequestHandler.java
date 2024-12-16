@@ -14,6 +14,7 @@ import ru.mycrg.data_service.service.TaskLogService;
 import ru.mycrg.data_service.service.TaskService;
 import ru.mycrg.data_service.service.cqrs.tasks.requests.UpdateTaskRequest;
 import ru.mycrg.data_service.service.schemas.ISchemaTemplateService;
+import ru.mycrg.data_service.service.smev3.request.accept_gpzu.AcceptGpzuService;
 import ru.mycrg.data_service.service.smev3.request.accept_rns.AcceptRnsService;
 import ru.mycrg.data_service.service.smev3.request.accept_rnv.AcceptRnvService;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
@@ -40,6 +41,7 @@ public class UpdateTaskRequestHandler implements IRequestHandler<UpdateTaskReque
     private final TaskLogService taskLogService;
     private final AcceptRnsService acceptRnsService;
     private final AcceptRnvService acceptRnvService;
+    private final AcceptGpzuService acceptGpzuService;
     private final ISchemaTemplateService schemaService;
     private final IAuthenticationFacade authenticationFacade;
 
@@ -48,6 +50,7 @@ public class UpdateTaskRequestHandler implements IRequestHandler<UpdateTaskReque
                                     TaskLogService taskLogService,
                                     AcceptRnsService acceptRnsService,
                                     AcceptRnvService acceptRnvService,
+                                    AcceptGpzuService acceptGpzuService,
                                     ISchemaTemplateService schemaService,
                                     IAuthenticationFacade authenticationFacade) {
         this.recordsDao = recordsDao;
@@ -56,6 +59,7 @@ public class UpdateTaskRequestHandler implements IRequestHandler<UpdateTaskReque
         this.taskLogService = taskLogService;
         this.acceptRnsService = acceptRnsService;
         this.acceptRnvService = acceptRnvService;
+        this.acceptGpzuService = acceptGpzuService;
         this.authenticationFacade = authenticationFacade;
     }
 
@@ -96,6 +100,18 @@ public class UpdateTaskRequestHandler implements IRequestHandler<UpdateTaskReque
 
                 if (DONE.name().equals(status)) {
                     acceptRnvService.updateTablesAndSendStatusMessageToSmev(task, DONE, taskId);
+                }
+            }
+        }
+        if (contentType != null && contentType.toString().equals(GPZU_CONTENT_TYPE)) {
+            String status = newTask.getAsString(STATUS);
+            if (status != null) {
+                if (IN_PROGRESS.name().equals(status)) {
+                    acceptGpzuService.updateTablesAndSendStatusMessageToSmev(task, IN_PROGRESS, taskId);
+                }
+
+                if (DONE.name().equals(status)) {
+                    acceptGpzuService.updateTablesAndSendStatusMessageToSmev(task, DONE, taskId);
                 }
             }
         }

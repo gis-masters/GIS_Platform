@@ -1,15 +1,17 @@
-package ru.mycrg.data_service.service.smev3.request.accept_rnv;
+package ru.mycrg.data_service.service.smev3.request.accept_gpzu;
 
 import com.sun.xml.bind.marshaller.NamespacePrefixMapper;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import ru.mycrg.data_service.accept_rnv_1_0_6.*;
 import ru.mycrg.data_service.dao.RecordsDao;
 import ru.mycrg.data_service.dao.detached.TasksDetachedDao;
+import ru.mycrg.data_service.dto.LibraryModel;
 import ru.mycrg.data_service.dto.record.IRecord;
+import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.exceptions.SmevRequestException;
+import ru.mycrg.data_service.gpzu_1_0_1.*;
 import ru.mycrg.data_service.repository.DocumentLibraryRepository;
 import ru.mycrg.data_service.repository.FileRepository;
 import ru.mycrg.data_service.service.MinioService;
@@ -27,6 +29,7 @@ import ru.mycrg.data_service.service.smev3.request.AcceptServiceBase;
 import ru.mycrg.data_service.service.smev3.request.DocumentCreationService;
 import ru.mycrg.data_service.service.storage.FileStorageService;
 import ru.mycrg.data_service.util.xml.XmlMarshaller;
+import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.data_service_contract.enums.TaskStatus;
 
 import java.util.*;
@@ -39,22 +42,23 @@ import static ru.mycrg.data_service.service.resources.ResourceQualifier.libraryQ
         value = "crg-options.integration.smev3.enabled",
         havingValue = "true",
         matchIfMissing = true)
-public class AcceptRnvService extends AcceptServiceBase {
+public class AcceptGpzuService extends AcceptServiceBase {
 
-    private static final String TITLE = "РНВ из ЕПГУ";
-    private static final String EVENT_TYPE_LOG = "Входящее сообщение РНВ успешно записано в реестр";
+    private static final String TITLE = "ГПЗУ из ЕПГУ";
+    private static final String EVENT_TYPE_LOG = "Входящее сообщение ГПЗУ успешно записано в реестр";
+    private static final String DEFAULT_PERFORMER_ID = "1547";
 
-    public AcceptRnvService(TaskLogService taskLogService, TasksDetachedDao tasksDao,
-                            SmevMessageService smevMessageService,
-                            ISchemaTemplateService schemaService,
-                            FileStorageService fileStorageService, RecordsDao recordsDao,
-                            DocumentLibraryRepository libraryRepository,
-                            FileRepository fileRepository,
-                            SimpleIntentHandler simpleIntentHandler,
-                            MinioService minioService, Smev3Config smev3Config,
-                            FileService fileService,
-                            SmevMessageSenderService smevMessageSenderService,
-                            DocumentCreationService documentCreationService) {
+    public AcceptGpzuService(TaskLogService taskLogService, TasksDetachedDao tasksDao,
+                             SmevMessageService smevMessageService,
+                             ISchemaTemplateService schemaService,
+                             FileStorageService fileStorageService, RecordsDao recordsDao,
+                             DocumentLibraryRepository libraryRepository,
+                             FileRepository fileRepository,
+                             SimpleIntentHandler simpleIntentHandler,
+                             MinioService minioService, Smev3Config smev3Config,
+                             FileService fileService,
+                             SmevMessageSenderService smevMessageSenderService,
+                             DocumentCreationService documentCreationService) {
         super(taskLogService, tasksDao, smevMessageService, schemaService, fileStorageService, recordsDao,
               libraryRepository, fileRepository, simpleIntentHandler, minioService, smev3Config, fileService,
               smevMessageSenderService, documentCreationService);
@@ -62,23 +66,70 @@ public class AcceptRnvService extends AcceptServiceBase {
 
     @Override
     protected List<IRecord> getDocRecords() {
-        String filter = String.format("path like '%s'", "/root/" + folderId);
+        String filter = String.format("path like '%s'", "/root/" + "32");
         ResourceQualifier libraryQualifier = libraryQualifier(TASK_ALLOCATION_LIBRARY_ID);
-        IRecord docRecord = recordsDao
-                .findBy(libraryQualifier, filter)
-                .orElseThrow(() -> new SmevRequestException("Не найден исполнитель по пути " + "/root/" + folderId));
+        LibraryModel libraryModel = libraryRepository
+                .findByTableName(TASK_ALLOCATION_LIBRARY_ID)
+                .map(LibraryModel::new)
+                .orElseThrow(() -> new NotFoundException(
+                        "Не найдена библиотека TASK_ALLOCATION: " + libraryQualifier.getQualifier()));
+        SchemaDto schema = libraryModel.getSchema();
 
-        return List.of(docRecord);
+        return recordsDao.findAll(libraryQualifier, filter, schema);
     }
 
     @Override
     protected <T> Long getPerformerId(List<IRecord> docRecords, T queryResult) {
-        return Long.valueOf(Objects.requireNonNull(docRecords.get(0).getAsString(PERFORMER_ATTRIBUTE)));
+        final String TARGET_WORD_AREA = "района";
+        final String TARGET_WORD_CITY = "города";
+
+        QueryResult result = (QueryResult) queryResult;
+        RequestType request = result.getMessage().getRequestContent().getContent().getMessagePrimaryContent()
+                                    .getRequest();
+
+        if (request.getCompetentOrganization() == null || request.getCompetentOrganization().getName() == null) {
+
+            return Long.valueOf(DEFAULT_PERFORMER_ID);
+        }
+
+        String competentOrgName = request.getCompetentOrganization().getName();
+
+        Long performerId = getPerformerIdFromCompetentOrgName(docRecords, competentOrgName, TARGET_WORD_AREA);
+        if (performerId != null) {
+            return performerId;
+        }
+        performerId = getPerformerIdFromCompetentOrgName(docRecords, competentOrgName, TARGET_WORD_CITY);
+
+        return performerId != null ? performerId : Long.valueOf(DEFAULT_PERFORMER_ID);
+    }
+
+    private Long getPerformerIdFromCompetentOrgName(List<IRecord> docRecords, String orgName, String targetWord) {
+        int index = orgName.indexOf(targetWord);
+        if (index != -1) {
+            String substring = orgName.substring(index + targetWord.length()).trim();
+            String[] words = substring.split(" ");
+            if (words.length > 0) {
+                String[] parts = orgName.substring(0, index).trim().split(" ");
+                String wordToMatch = targetWord.equals("района") ? parts[parts.length - 1] : words[0];
+
+                return docRecords.stream()
+                                 .filter(iRecord -> Objects.requireNonNull(iRecord.getTitle())
+                                                           .contains(wordToMatch))
+                                 .map(iRecord -> iRecord.getAsString(
+                                         PERFORMER_ATTRIBUTE) == null ? DEFAULT_PERFORMER_ID : iRecord.getAsString(
+                                         PERFORMER_ATTRIBUTE))
+                                 .findFirst()
+                                 .map(Long::valueOf)
+                                 .orElse(null);
+            }
+        }
+
+        return null;
     }
 
     @Override
     protected String getContentType() {
-        return CommonFields.RNV_CONTENT_TYPE;
+        return CommonFields.GPZU_CONTENT_TYPE;
     }
 
     @Override
@@ -101,6 +152,7 @@ public class AcceptRnvService extends AcceptServiceBase {
         QueryResult result = (QueryResult) queryResult;
         RequestType request = result.getMessage().getRequestContent().getContent().getMessagePrimaryContent()
                                     .getRequest();
+
         return Optional.ofNullable(request.getRecipientPersonalData())
                        .map(RecipientPersonalDataType::getFullfio)
                        .orElse("");
@@ -157,11 +209,7 @@ public class AcceptRnvService extends AcceptServiceBase {
 
     @Override
     protected <T> XWPFDocument getWordDocument(T queryResult) {
-        QueryResult result = (QueryResult) queryResult;
-        RequestType request = result.getMessage().getRequestContent().getContent().getMessagePrimaryContent()
-                                    .getRequest();
-
-        return documentCreationService.createRnvDoc(request);
+        return null;
     }
 
     @Override
@@ -189,6 +237,11 @@ public class AcceptRnvService extends AcceptServiceBase {
     @Override
     protected <T> List<String> getAttachIds(T queryResult) {
         QueryResult result = (QueryResult) queryResult;
+        if (result.getMessage().getRequestContent().getContent().getAttachmentHeaderList() == null) {
+
+            return Collections.emptyList();
+        }
+
         return result.getMessage().getRequestContent().getContent()
                      .getAttachmentHeaderList().getAttachmentHeader().stream()
                      .map(AttachmentHeaderType::getId)
@@ -200,35 +253,15 @@ public class AcceptRnvService extends AcceptServiceBase {
         QueryResult result = (QueryResult) queryResult;
         RequestType request = result.getMessage().getRequestContent().getContent().getMessagePrimaryContent()
                                     .getRequest();
+        if (request.getDocuments() == null) {
+            return Collections.emptyList();
+        }
         List<MultipartFile> files = new ArrayList<>();
+        addFileIfNotEmpty(files, request.getDocuments().getAdditionalDocument(), map);
+        addFileIfNotEmpty(files, request.getDocuments().getDecisionDocumentsBlock(), map);
         addFileIfNotEmpty(files, request.getDocuments().getDelegateLegalDocFile(), map);
         addFileIfNotEmpty(files, request.getDocuments().getDelegateLegalDocSigFile(), map);
         addFileIfNotEmpty(files, request.getDocuments().getDelegateDocFile(), map);
-        addFileIfNotEmpty(files, request.getDocuments().getDelegateDocSigFile(), map);
-        addFileIfNotEmpty(files, request.getDocuments().getAdditionalDocument(), map);
-        addFileIfNotEmpty(files, request.getDocuments().getTitleDocLandPlot(), map);
-        addFileIfNotEmpty(files, request.getDocuments().getCertificateAcceptanceObject(), map);
-        addFileIfNotEmpty(files, request.getDocuments().getConfirmingComplianceParameters(), map);
-        addFileIfNotEmpty(files, request.getDocuments().getActConnection(), map);
-        addFileIfNotEmpty(files, request.getDocuments().getActConnectionOwnedNoState(), map);
-        addFileIfNotEmpty(files, request.getDocuments().getDiagramLocationObject(), map);
-        addFileIfNotEmpty(files, request.getDocuments().getContractCivilLiabilityInsurance(), map);
-        addFileIfNotEmpty(files, request.getDocuments().getTechnicalPlanObject(), map);
-        addFileIfNotEmpty(files, request.getDocuments().getContractConcludedDeveloperAnotherPerson(), map);
-        addFileIfNotEmpty(files, request.getDocuments().getSignedStatement(), map);
-        addFileIfNotEmpty(files, request.getDocuments().getExtractEgrul(), map);
-        addFileIfNotEmpty(files, request.getDocuments().getExtractEgrip(), map);
-        addFileIfNotEmpty(files, request.getDocuments().getExtractEgrn(), map);
-        addFileIfNotEmpty(files, request.getDocuments().getGPZUDocument(), map);
-        addFileIfNotEmpty(files, request.getDocuments().getProjectPlanningTerritory(), map);
-        addFileIfNotEmpty(files, request.getDocuments().getProjectSurveyingTerritory(), map);
-        addFileIfNotEmpty(files, request.getDocuments().getConstructionPermit(), map);
-        addFileIfNotEmpty(files, request.getDocuments().getConclusionStateConstruction(), map);
-        addFileIfNotEmpty(files, request.getDocuments().getPermissionObjectOperation(), map);
-        addFileIfNotEmpty(files, request.getDocuments().getConsentProcessingPersonalData(), map);
-        addFileIfNotEmpty(files, request.getDocuments().getLicenseUseMineralResources(), map);
-        addFileIfNotEmpty(files, request.getDocuments().getIdentityDocument(), map);
-        addFileIfNotEmpty(files, request.getDocuments().getActAcceptanceObjectCultural(), map);
 
         return files;
     }

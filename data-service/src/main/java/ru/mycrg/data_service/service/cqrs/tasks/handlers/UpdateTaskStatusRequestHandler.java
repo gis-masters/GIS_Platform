@@ -13,6 +13,7 @@ import ru.mycrg.data_service.service.TaskLogService;
 import ru.mycrg.data_service.service.TaskService;
 import ru.mycrg.data_service.service.cqrs.tasks.requests.UpdateTaskStatusRequest;
 import ru.mycrg.data_service.service.schemas.ISchemaTemplateService;
+import ru.mycrg.data_service.service.smev3.request.accept_gpzu.AcceptGpzuService;
 import ru.mycrg.data_service.service.smev3.request.accept_rns.AcceptRnsService;
 import ru.mycrg.data_service.service.smev3.request.accept_rnv.AcceptRnvService;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
@@ -29,8 +30,7 @@ import static java.util.Objects.nonNull;
 import static ru.mycrg.data_service.service.TaskService.TASKS_SCHEMA;
 import static ru.mycrg.data_service.service.TaskService.TASK_QUALIFIER;
 import static ru.mycrg.data_service.service.resources.ResourceQualifier.recordQualifier;
-import static ru.mycrg.data_service.service.smev3.fields.CommonFields.RNS_CONTENT_TYPE;
-import static ru.mycrg.data_service.service.smev3.fields.CommonFields.RNV_CONTENT_TYPE;
+import static ru.mycrg.data_service.service.smev3.fields.CommonFields.*;
 import static ru.mycrg.data_service.util.SystemLibraryAttributes.*;
 import static ru.mycrg.data_service_contract.enums.TaskStatus.DONE;
 import static ru.mycrg.data_service_contract.enums.TaskStatus.IN_PROGRESS;
@@ -45,6 +45,7 @@ public class UpdateTaskStatusRequestHandler implements IRequestHandler<UpdateTas
     private final IAuthenticationFacade authenticationFacade;
     private final AcceptRnsService acceptRnsService;
     private final AcceptRnvService acceptRnvService;
+    private final AcceptGpzuService acceptGpzuService;
 
     public UpdateTaskStatusRequestHandler(RecordsDao recordsDao,
                                           TaskService taskService,
@@ -52,7 +53,8 @@ public class UpdateTaskStatusRequestHandler implements IRequestHandler<UpdateTas
                                           TaskLogService taskLogService,
                                           IAuthenticationFacade authenticationFacade,
                                           AcceptRnsService acceptRnsService,
-                                          AcceptRnvService acceptRnvService) {
+                                          AcceptRnvService acceptRnvService,
+                                          AcceptGpzuService acceptGpzuService) {
         this.recordsDao = recordsDao;
         this.taskService = taskService;
         this.schemaService = schemaService;
@@ -60,6 +62,7 @@ public class UpdateTaskStatusRequestHandler implements IRequestHandler<UpdateTas
         this.authenticationFacade = authenticationFacade;
         this.acceptRnsService = acceptRnsService;
         this.acceptRnvService = acceptRnvService;
+        this.acceptGpzuService = acceptGpzuService;
     }
 
     @Override
@@ -86,14 +89,14 @@ public class UpdateTaskStatusRequestHandler implements IRequestHandler<UpdateTas
         }
 
         Object contentType = task.get(CONTENT_TYPE_ID.getName());
-        if (contentType != null && contentType.toString().equals(RNS_CONTENT_TYPE)) {
-            if ((newStatus == IN_PROGRESS) || newStatus == DONE) {
+        if (contentType != null && (newStatus == IN_PROGRESS || newStatus == DONE)) {
+            String contentTypeString = contentType.toString();
+            if (contentTypeString.equals(RNS_CONTENT_TYPE)) {
                 acceptRnsService.updateTablesAndSendStatusMessageToSmev(task, newStatus, taskId);
-            }
-        }
-        if (contentType != null && contentType.toString().equals(RNV_CONTENT_TYPE)) {
-            if ((newStatus == IN_PROGRESS) || newStatus == DONE) {
+            } else if (contentTypeString.equals(RNV_CONTENT_TYPE)) {
                 acceptRnvService.updateTablesAndSendStatusMessageToSmev(task, newStatus, taskId);
+            } else if (contentTypeString.equals(GPZU_CONTENT_TYPE)) {
+                acceptGpzuService.updateTablesAndSendStatusMessageToSmev(task, newStatus, taskId);
             }
         }
 
