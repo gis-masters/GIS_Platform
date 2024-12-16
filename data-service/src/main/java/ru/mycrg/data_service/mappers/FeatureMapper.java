@@ -1,19 +1,39 @@
 package ru.mycrg.data_service.mappers;
 
+import ru.mycrg.data_service.dao.config.DaoProperties;
 import ru.mycrg.geo_json.Feature;
 
 import java.util.Map;
 
+import static ru.mycrg.data_service.dao.config.DaoProperties.DEFAULT_GEOMETRY_COLUMN_NAME;
+
 public class FeatureMapper {
 
-    public static Feature map(Feature oldFeature, Map<String, Object> props) {
-        Feature modifiedFeature = new Feature(props);
-        modifiedFeature.setId(oldFeature.getId());
-        modifiedFeature.setCrs(oldFeature.getCrs());
-        modifiedFeature.setSrs(oldFeature.getSrs());
-        modifiedFeature.setBbox(oldFeature.getBbox());
-        modifiedFeature.setGeometry(oldFeature.getGeometry());
+    public static Feature map(Long id,
+                              Feature oldFeature,
+                              Map<String, Object> props) {
+        Feature newFeature = new Feature(props);
+        newFeature.setId(id);
+        newFeature.setCrs(oldFeature.getCrs());
+        newFeature.setSrs(oldFeature.getSrs());
+        newFeature.setBbox(oldFeature.getBbox());
+        newFeature.setGeometry(oldFeature.getGeometry());
 
-        return modifiedFeature;
+        return newFeature;
+    }
+
+    public static Feature mapToFeature(Feature oldFeature,
+                                       Map<String, Object> props) {
+        if (props == null || props.isEmpty()) {
+            return new Feature();
+        }
+
+        props.remove(DEFAULT_GEOMETRY_COLUMN_NAME);
+        Long id = (Long) props.get(DaoProperties.PRIMARY_KEY);
+        if (id == null) {
+            id = (Long) props.get(DaoProperties.ID);
+        }
+
+        return map(id, oldFeature, props);
     }
 }

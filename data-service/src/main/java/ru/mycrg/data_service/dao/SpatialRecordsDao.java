@@ -8,11 +8,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.jdbc.core.RowMapperResultSetExtractor;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
 import ru.mycrg.data_service.dao.mappers.FeatureRowMapper;
 import ru.mycrg.data_service.dao.utils.SqlParameterSourceFactory;
+import ru.mycrg.data_service.mappers.FeatureMapper;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.data_service_contract.dto.SimplePropertyDto;
@@ -108,14 +110,12 @@ public class SpatialRecordsDao {
     public Feature save(@NotNull ResourceQualifier qualifier,
                         @NotNull Feature feature,
                         @NotNull SchemaDto schema) throws CrgDaoException {
-        String query = buildParameterizedInsertQuery(qualifier, feature, true);
+        String query = buildParameterizedInsertQuery(qualifier, feature, false);
         MapSqlParameterSource parameterSource = sqlParameterSourceFactory.buildParameterizedSource(feature, schema);
 
-        Long id = pBaseDao.save(query, parameterSource);
+        KeyHolder keyHolder = pBaseDao.save(query, parameterSource);
 
-        feature.setId(id);
-
-        return feature;
+        return FeatureMapper.mapToFeature(feature, keyHolder.getKeys());
     }
 
     public void updateByIds(ResourceQualifier qualifier,

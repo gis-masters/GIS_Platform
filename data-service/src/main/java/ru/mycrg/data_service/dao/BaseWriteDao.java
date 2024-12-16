@@ -6,6 +6,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
@@ -30,13 +32,16 @@ public class BaseWriteDao {
         this.pJdbcTemplate = parameterJdbcTemplate;
     }
 
-    public Long save(@NotNull String query,
-                     @NotNull MapSqlParameterSource parameterSource) throws CrgDaoException {
+    public KeyHolder save(@NotNull String query,
+                          @NotNull MapSqlParameterSource parameterSource) throws CrgDaoException {
         try {
             log.debug("Execute parameterized save query: [{}]",
                       buildQueryWithParams(query, parameterSource.getValues()));
 
-            return pJdbcTemplate.queryForObject(query, parameterSource, Long.class);
+            KeyHolder keyHolder = new GeneratedKeyHolder();
+            pJdbcTemplate.update(query, parameterSource, keyHolder);
+
+            return keyHolder;
         } catch (Exception e) {
             String msg = "Не удалось выполнить сохранение => " + e.getMessage();
 

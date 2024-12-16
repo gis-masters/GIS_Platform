@@ -10,6 +10,7 @@ import ru.mycrg.gis_service.service.BasemapService;
 import ru.mycrg.gis_service.service.layers.LayerService;
 
 import java.util.List;
+import java.util.UUID;
 
 import static ru.mycrg.auth_service_contract.Authorities.HAS_ANY_AUTHORITY;
 
@@ -40,12 +41,7 @@ public class RelatedObjectsController {
 
     @GetMapping("/find-related-to-file-layers")
     @PreAuthorize(HAS_ANY_AUTHORITY)
-    public List<RelatedLayersModel> findRelatedToFilesProjectsAndLayers(@RequestParam("fileId") String fileId) {
-        if (fileId.isEmpty()) {
-            throw new BadRequestException("FileId required parameter is not present",
-                                          new ErrorInfo("fileId", "fileId parameter is empty"));
-        }
-
+    public List<RelatedLayersModel> findRelatedToFilesProjectsAndLayers(@RequestParam("fileId") UUID fileId) {
         return layerService.getRelatedToFilesLayers(fileId);
     }
 

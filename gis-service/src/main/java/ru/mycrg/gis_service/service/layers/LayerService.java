@@ -205,13 +205,13 @@ public class LayerService {
         return mapToRelatedLayersModel(relatedLayers);
     }
 
-    public List<RelatedLayersModel> getRelatedToFilesLayers(String fileId) {
+    public List<RelatedLayersModel> getRelatedToFilesLayers(UUID fileId) {
         Set<Long> projectIds = projectService.getAll().stream()
                                              .map(Project::getId)
                                              .collect(Collectors.toSet());
         List<Layer> relatedLayers = projectIds.isEmpty()
                 ? new ArrayList<>()
-                : layerRepository.findRelatedByFileId(fileId, projectIds);
+                : layerRepository.findRelatedByFileId(fileId.toString(), projectIds);
 
         return mapToRelatedLayersModel(relatedLayers);
     }
