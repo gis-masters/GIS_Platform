@@ -22,19 +22,19 @@ class XTableFilterTypeDateTimeBlock extends Block {
   async checkFilterableLteItems() {
     const values = await xTableBlock.getFirstColCellValues();
     await expect(values.length).toEqual(2);
-    await expect(values).toEqual(['18.12.2021', '19.05.2019']);
+    await expect(values).toEqual(['19.05.2019', '18.12.2021']);
   }
 
   async checkFilterableGteItems() {
     const values = await xTableBlock.getFirstColCellValues();
     await expect(values.length).toEqual(4);
-    await expect(values).toEqual(['05.08.2017', '02.08.2013', '13.06.2016', '16.06.2017']);
+    await expect(values).toEqual(['02.08.2013', '13.06.2016', '16.06.2017', '05.08.2017']);
   }
 
   async checkFilterableItems() {
     const values = await xTableBlock.getFirstColCellValues();
     await expect(values.length).toEqual(2);
-    await expect(values).toEqual(['05.08.2017', '16.06.2017']);
+    await expect(values).toEqual(['16.06.2017', '05.08.2017']);
   }
 }
 

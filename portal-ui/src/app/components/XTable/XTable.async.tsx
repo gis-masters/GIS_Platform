@@ -475,9 +475,10 @@ export default class XTable<T> extends Component<XTableProps<T>> {
     this._page = opts.page || 1;
 
     const sortOpts = { field: opts.sort as keyof T, asc: opts.sortOrder === SortOrder.ASC };
+
     this.sortParams = {
-      ...this.props.defaultSort,
-      ...sortOpts
+      ...sortOpts,
+      ...this.props.defaultSort
     };
 
     this.filterQuery = opts.filter || this.props.defaultFilter || {};

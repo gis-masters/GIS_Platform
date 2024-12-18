@@ -41,7 +41,7 @@ export default class TasksJournal extends Component {
   @observable private hiddenFields: string[] = [];
   @observable private schema?: Schema;
   @observable private primalSchema?: Schema;
-  private defaultSort: SortParams<Task> = { field: 'id', asc: true };
+  private defaultSort: SortParams<Task> = { field: 'id', asc: false };
   private defaultFilter: FilterQuery = registryDefaultFilter;
   private tableInvoke: XTableProps<Task>['invoke'] = {};
 

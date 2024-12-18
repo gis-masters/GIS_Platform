@@ -57,7 +57,7 @@ class XTableFilterTypeChoiceBlock extends Block {
 
     const values = await xTableBlock.getFirstColCellValues();
     await expect(values.length).toEqual(6);
-    await expect(values).toEqual(['Дерево', 'Железо', 'Стекло', 'Железо', 'Стекло', 'Стекло']);
+    await expect(values).toEqual(['Стекло', 'Стекло', 'Стекло', 'Железо', 'Железо', 'Дерево']);
   }
 }
 
