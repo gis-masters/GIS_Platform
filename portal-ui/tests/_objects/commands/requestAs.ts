@@ -125,3 +125,11 @@ export const requestAsAdmin = requestAs.bind(null, getTestUser('Админист
   clientMethod: (...b: A) => Promise<R>,
   ...args: A
 ) => Promise<R>;
+
+export const requestAsSuperAdmin = requestAs.bind(null, getTestUser('Администратор системы')) as <
+  R,
+  A extends unknown[]
+>(
+  clientMethod: (...b: A) => Promise<R>,
+  ...args: A
+) => Promise<R>;

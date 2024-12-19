@@ -180,6 +180,7 @@ class Http {
     const cacheConfig = { disabled: true, clear: true, ...requestCacheConfig };
     const cacheKey = 'POST:' + this.axios.getUri({ url, ...config }) + ' DATA:' + JSON.stringify(data);
     const fromCache = this.cache.match(cacheKey, cacheConfig);
+
     let promise: Promise<AxiosResponse<T>>;
 
     if (fromCache) {

@@ -5,6 +5,7 @@ import { Client } from '../../api/Client';
 import { http } from '../../api/http.service';
 import { preparePageOptions } from '../../api/http.utils';
 import { PageOptions } from '../../models';
+import { Mime } from '../../util/Mime';
 import { Task, TaskHistory, TaskStatus } from './task.models';
 
 @boundClass
@@ -49,8 +50,10 @@ class TasksClient extends Client {
     return await http.get<PageableResources<Task>>(this.getTasksUrl(), { params });
   }
 
-  async createTask(task: Omit<Task, 'id'>): Promise<Task> {
-    return await http.post(this.getTasksUrl(), task);
+  async createTask(task: Task): Promise<Task> {
+    return await http.post(this.getTasksUrl(), task, {
+      headers: { 'Content-Type': Mime.JSON }
+    });
   }
 
   async deleteAllTask(): Promise<void> {

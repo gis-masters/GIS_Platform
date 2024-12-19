@@ -103,6 +103,28 @@ export class FormBlock extends Block {
     }
   }
 
+  async getAllFields(): Promise<string[]> {
+    await this.waitForVisible();
+    const $content = await this.$('content');
+    await $content.waitForDisplayed();
+
+    const $$fields = await this.$$('formFields');
+
+    const fieldTitles: string[] = [];
+
+    if (!$$fields.length) {
+      throw new Error('В форме отсутствуют поля');
+    }
+
+    for (const $field of $$fields) {
+      const title = await $field.$('.Form-Label').getText();
+
+      fieldTitles.push(title);
+    }
+
+    return fieldTitles;
+  }
+
   async getFieldCheckboxInputRoot(title: string): Promise<WebdriverIO.Element> {
     const $tableField = await this.getField(title);
 

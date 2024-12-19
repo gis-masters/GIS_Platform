@@ -79,6 +79,7 @@ export async function authenticateAsOtherAdmin(thenPage?: Page): Promise<void> {
 
 export async function authenticateAs({ email, password }: TestUser, thenPage?: Page): Promise<void> {
   const { ok } = await authenticate(email, password, thenPage);
+
   if (!ok) {
     await authenticateAsAdmin();
     await authenticate(email, password, thenPage);

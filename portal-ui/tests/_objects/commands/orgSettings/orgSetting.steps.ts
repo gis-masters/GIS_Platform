@@ -1,19 +1,36 @@
 import { Given } from '@wdio/cucumber-framework';
 
 import { usersClient } from '../../../../src/app/services/auth/users/users.client';
-import { CompositeSettings, OrgSettings } from '../../../../src/app/stores/OrganizationSettings.store';
+import {
+  CompositeSettings,
+  organizationSettings,
+  OrgSettings
+} from '../../../../src/app/stores/OrganizationSettings.store';
 import { requestAsAdmin } from '../requestAs';
-import { setOrgSetting } from './setOrgSetting';
+import { setOrgSetting, setOrgSettingAsSuperAdmin } from './setOrgSetting';
+
+type orgSettings = {
+  id: number;
+  settings: OrgSettings;
+};
 
 Given('настройка {string} в настройках организации включена', async function (setting: string) {
-  await setOrgSetting(await setOption(setting, true));
+  await setOrgSetting(await updateOrgSettings(setting, true));
 });
 
 Given('в настройках организации отключен пункт {string}', async function (setting: string) {
-  await setOrgSetting(await setOption(setting, false));
+  await setOrgSetting(await updateOrgSettings(setting, false));
 });
 
-async function setOption(setting: string, status: boolean): Promise<CompositeSettings> {
+Given('в настройках организации добавлен тэг {string}', async function (tag: string) {
+  await setOrgSetting(await updateTagSetting(tag));
+});
+
+Given('в настройках организации суперадмином добавлен тэг {string}', async function (tag: string) {
+  await setOrgSettingAsSuperAdmin(await updateTagSetting(tag));
+});
+
+async function getOption(orgName?: string): Promise<orgSettings> {
   const user = await requestAsAdmin(usersClient.getCurrentUser);
 
   // будет исправлено в #2155
@@ -42,10 +59,24 @@ async function setOption(setting: string, status: boolean): Promise<CompositeSet
     defaultEpsg: ''
   };
 
+  const testOrg = organizationSettings.systemSettings?.find(org => org.name === orgName);
+
+  let id: number = user.orgId;
+
+  if (testOrg) {
+    id = testOrg.id;
+  }
+
   const payload: { id: number; settings: OrgSettings } = {
-    id: user.orgId,
+    id,
     settings
   };
+
+  return payload;
+}
+
+async function updateOrgSettings(setting: string, status: boolean) {
+  const payload = await getOption();
 
   switch (setting) {
     case 'Управление задачами': {
@@ -66,6 +97,13 @@ async function setOption(setting: string, status: boolean): Promise<CompositeSet
       break;
     }
   }
+
+  return payload;
+}
+
+async function updateTagSetting(tag: string): Promise<CompositeSettings> {
+  const payload = await getOption('Hogwarts 1');
+  payload.settings.tags.push(tag);
 
   return payload;
 }

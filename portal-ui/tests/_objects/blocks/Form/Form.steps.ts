@@ -24,6 +24,11 @@ Then('в форме существует поле {string}', async (fieldTitle: 
   await expect(await formBlock.hasField(fieldTitle)).toBeTruthy();
 });
 
+Then('в форме существуют поля: {strings}', async (fieldTitles: string[]) => {
+  const formBlock = new FormBlock();
+  await expect(await formBlock.getAllFields()).toEqual(fieldTitles);
+});
+
 // url
 
 When('в форме в поле {string} типа url я нажимаю на кнопку добавления нового url', async (title: string) => {
