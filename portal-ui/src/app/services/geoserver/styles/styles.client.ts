@@ -8,7 +8,6 @@ import { FilteredStylesLayerRequest, FilteredStylesResponse, StyleGeoserverInfo 
 @boundClass
 class StylesClient extends GeoserverClient {
   private static _instance: StylesClient;
-
   static get instance(): StylesClient {
     return this._instance || (this._instance = new this());
   }

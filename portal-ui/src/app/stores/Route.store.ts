@@ -31,6 +31,9 @@ export enum Pages {
 
 class Route {
   private static _instance: Route;
+  static get instance() {
+    return this._instance || (this._instance = new this());
+  }
 
   @observable url?: UrlSegment[];
   @observable params: Params = {};
@@ -43,10 +46,6 @@ class Route {
   private constructor() {
     makeObservable(this);
     void this.subscribe();
-  }
-
-  static get instance() {
-    return this._instance || (this._instance = new this());
   }
 
   @action

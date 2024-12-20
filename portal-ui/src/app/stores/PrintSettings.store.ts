@@ -100,6 +100,11 @@ export const defaultPrintSettings: PrintSettings = {
 };
 
 class PrintSettingsStore implements PrintSettings {
+  private static _instance: PrintSettingsStore;
+  static get instance() {
+    return this._instance || (this._instance = new this());
+  }
+
   @observable pageFormatId: string = defaultPrintSettings.pageFormatId;
   @observable resolution: number = defaultPrintSettings.resolution;
   @observable scale: number = defaultPrintSettings.scale;
@@ -120,12 +125,6 @@ class PrintSettingsStore implements PrintSettings {
   @observable showSystemLayers: { draft: boolean; measure: boolean } = defaultPrintSettings.showSystemLayers;
   @observable rotation = 0;
   @observable allLegend: StyleRuleExtended[] = [];
-
-  private static _instance: PrintSettingsStore;
-
-  static get instance() {
-    return this._instance || (this._instance = new this());
-  }
 
   private constructor() {
     makeObservable(this);

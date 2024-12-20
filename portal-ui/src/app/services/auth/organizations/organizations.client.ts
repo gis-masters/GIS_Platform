@@ -8,7 +8,6 @@ import { OccupiedStorage, Organization } from './organizations.models';
 @boundClass
 class OrganizationsClient extends Client {
   private static _instance: OrganizationsClient;
-
   static get instance(): OrganizationsClient {
     return this._instance || (this._instance = new this());
   }

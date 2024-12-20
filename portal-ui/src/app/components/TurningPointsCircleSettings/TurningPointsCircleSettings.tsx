@@ -6,8 +6,8 @@ import { cn } from '@bem-react/classname';
 import { debounce } from 'lodash';
 import { HexColorPicker } from 'react-colorful';
 
-import { CircleProperties } from '../../services/map/map-labels.models';
-import { mapLabelsService } from '../../services/map/map-labels.service';
+import { CircleProperties } from '../../services/map/labels/map-labels.models';
+import { mapLabelsService } from '../../services/map/labels/map-labels.service';
 import { isKeyofCircleProperties } from '../../services/util/typeGuards/isKeyOfCircleProperties';
 import { IconButton } from '../IconButton/IconButton';
 

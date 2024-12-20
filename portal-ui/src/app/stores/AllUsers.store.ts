@@ -3,14 +3,13 @@ import { action, makeObservable, observable } from 'mobx';
 import { CrgUser } from '../services/auth/users/users.models';
 
 class AllUsers {
-  @observable fetching = false;
-  @observable list: CrgUser[] = [];
-
   private static _instance: AllUsers;
-
   static get instance() {
     return this._instance || (this._instance = new this());
   }
+
+  @observable fetching = false;
+  @observable list: CrgUser[] = [];
 
   private constructor() {
     makeObservable(this);

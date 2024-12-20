@@ -9,6 +9,9 @@ import { OccupiedStorage } from './organizations.models';
 
 class OrganizationsService {
   private static _instance: OrganizationsService;
+  static get instance() {
+    return this._instance || (this._instance = new this());
+  }
 
   async loadSettings() {
     try {
@@ -58,10 +61,6 @@ class OrganizationsService {
         }
       }
     }
-  }
-
-  static get instance() {
-    return this._instance || (this._instance = new this());
   }
 }
 

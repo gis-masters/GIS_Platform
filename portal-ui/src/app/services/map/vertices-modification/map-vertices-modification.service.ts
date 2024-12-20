@@ -1,4 +1,5 @@
 import Collection from 'ol/Collection';
+import { SnapEvent } from 'ol/events/SnapEvent';
 import Feature from 'ol/Feature';
 import { Geometry } from 'ol/geom';
 import { Modify, Select } from 'ol/interaction';
@@ -19,6 +20,7 @@ import { getLayerByFeatureIdFromCurrentProject } from '../../gis/layers/layers.u
 import { services } from '../../services';
 import { transformGeometryToLayerProjectionInWfsFeature } from '../../util/coordinates-transform.util';
 import { featureToWfsFeature } from '../../util/open-layers.util';
+import { getVertexRemover } from '../../util/vertex/VertexRemoverFactory';
 import { konfirmieren } from '../../utility-dialogs.service';
 import { mapDrawService } from '../draw/map-draw.service';
 import { MapMode } from '../map.models';
@@ -43,8 +45,7 @@ class MapVerticesModificationService {
       mapService.map.addInteraction(this.select);
 
       this.modify = new Modify({
-        features: this.select.getFeatures(),
-        style: getStyle(KnownStyleKey.VerticesModificationStyles)
+        features: this.select.getFeatures()
       });
       mapService.map.addInteraction(this.modify);
 
@@ -85,6 +86,7 @@ class MapVerticesModificationService {
     this.verticesModification.setActive(true);
 
     mapSnapService.activate();
+    communicationService.snapDblClick.on((event: CustomEvent<SnapEvent>) => this.handleDblClick(event), this);
   }
 
   verticesModificationOff() {
@@ -102,6 +104,7 @@ class MapVerticesModificationService {
           this.verticesModification.setActive(false);
 
           mapSnapService.deactivate();
+          communicationService.off(this);
         }
       });
     } else {
@@ -111,6 +114,7 @@ class MapVerticesModificationService {
 
       this.verticesModification.setActive(false);
       mapSnapService.deactivate();
+      communicationService.off(this);
     }
   }
 
@@ -167,6 +171,23 @@ class MapVerticesModificationService {
     mapVerticesModificationStore.updateModifiedCollection([]);
 
     mapVerticesModificationStore.saveOff();
+  }
+
+  private handleDblClick(event: CustomEvent<SnapEvent>) {
+    if (event.detail === null) {
+      return;
+    }
+
+    const { vertex, feature } = event.detail;
+    if (vertex === undefined || feature === undefined) {
+      return;
+    }
+
+    const vertexRemover = getVertexRemover(feature);
+    if (vertexRemover !== null) {
+      vertexRemover.removeVertex(feature, vertex);
+      mapVerticesModificationStore.updateModifiedCollection([feature]);
+    }
   }
 
   private async saveFeature(

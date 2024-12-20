@@ -5,9 +5,11 @@ import { DeleteSweepOutlined, SquareFoot } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
-import { MapAction, MapMode, MeasureMode } from '../../services/map/map.models';
-import { mapMeasureService } from '../../services/map/map-measure.service';
+import { MapAction, MapMode } from '../../services/map/map.models';
+import { MeasureMode } from '../../services/map/measure/map-measure.models';
+import { mapMeasureService } from '../../services/map/measure/map-measure.service';
 import { mapStore } from '../../stores/Map.store';
+import { mapMeasureStore } from '../../stores/MapMeasure.store';
 import { IconButton } from '../IconButton/IconButton';
 import { Ruler } from '../Icons/Ruler';
 
@@ -26,7 +28,7 @@ export class MapMeasure extends Component {
         <Tooltip title='Измерить длину'>
           <IconButton
             onClick={this.handleLengthClick}
-            checked={isMeasureActive && mapStore.measureMode === 'length'}
+            checked={isMeasureActive && mapMeasureStore.measureMode === 'length'}
             size='small'
             disabled={!mapStore.allowedActions.includes(MapAction.MAP_MEASURE)}
           >
@@ -36,16 +38,16 @@ export class MapMeasure extends Component {
         <Tooltip title='Измерить площадь'>
           <IconButton
             onClick={this.handleAreaClick}
-            checked={isMeasureActive && mapStore.measureMode === 'area'}
+            checked={isMeasureActive && mapMeasureStore.measureMode === 'area'}
             size='small'
             disabled={!mapStore.allowedActions.includes(MapAction.MAP_MEASURE)}
           >
             <SquareFoot />
           </IconButton>
         </Tooltip>
-        {Boolean(mapStore.measureItems.length) && (
+        {Boolean(mapMeasureStore.measureItems.length) && (
           <Tooltip title='Удалить все измерения'>
-            <IconButton onClick={this.clearAll} size='small'>
+            <IconButton onClick={mapMeasureService.clearAll} size='small'>
               <DeleteSweepOutlined />
             </IconButton>
           </Tooltip>
@@ -55,31 +57,26 @@ export class MapMeasure extends Component {
   }
 
   @boundMethod
-  private async handleLengthClick() {
-    await this.selectMode('length');
+  private handleLengthClick() {
+    this.selectMode('length');
   }
 
   @boundMethod
-  private async handleAreaClick() {
-    await this.selectMode('area');
+  private handleAreaClick() {
+    this.selectMode('area');
   }
 
-  private async selectMode(mode?: MeasureMode) {
+  private selectMode(mode?: MeasureMode) {
     mapMeasureService.removeHelpMsg();
-    if (mode && mapStore.measureMode === mode) {
+    if (mode && mapMeasureStore.measureMode === mode) {
       mapMeasureService.measureOff();
     } else if (mode) {
       mapMeasureService.createMeasureStartTooltip();
-      await mapMeasureService.measureOn(mode);
+      mapMeasureService.measureOn(mode);
     }
 
-    if (mapStore.mode === MapMode.MEASURE && !mapStore.measureMode) {
+    if (mapStore.mode === MapMode.MEASURE && !mapMeasureStore.measureMode) {
       mapStore.setMode(MapMode.DEFAULT);
     }
-  }
-
-  @boundMethod
-  private clearAll() {
-    mapMeasureService.clearAll();
   }
 }

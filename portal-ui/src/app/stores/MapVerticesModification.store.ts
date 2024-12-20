@@ -4,7 +4,6 @@ import { Geometry } from 'ol/geom';
 
 class MapVerticesModificationStore {
   private static _instance: MapVerticesModificationStore;
-
   static get instance() {
     return this._instance || (this._instance = new this());
   }

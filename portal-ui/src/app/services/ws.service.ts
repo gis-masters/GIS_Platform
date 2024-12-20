@@ -41,6 +41,10 @@ export interface ValidationWsMsg {
 
 class WsService {
   private static _instance: WsService;
+  static get instance() {
+    return this._instance || (this._instance = new this());
+  }
+
   private _wsMsg$: BehaviorSubject<IWsMessage | undefined> = new BehaviorSubject<IWsMessage | undefined>(undefined);
 
   messages$: Observable<IWsMessage | undefined> = this._wsMsg$.asObservable().pipe(
@@ -48,10 +52,6 @@ class WsService {
     publishReplay(1),
     refCount()
   );
-
-  static get instance() {
-    return this._instance || (this._instance = new this());
-  }
 
   disabled = true;
 

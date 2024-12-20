@@ -11,7 +11,6 @@ import { CrgProject, NewCrgProject } from './projects.models';
 @boundClass
 class ProjectsClient extends Client {
   private static _instance: ProjectsClient;
-
   static get instance(): ProjectsClient {
     return this._instance || (this._instance = new this());
   }

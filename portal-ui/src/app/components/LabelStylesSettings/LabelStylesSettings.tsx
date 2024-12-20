@@ -5,7 +5,7 @@ import { cn } from '@bem-react/classname';
 import { debounce } from 'lodash';
 import { HexColorPicker } from 'react-colorful';
 
-import { FontProperties } from '../../services/map/map-labels.models';
+import { FontProperties } from '../../services/map/labels/map-labels.models';
 import { IconButton } from '../IconButton/IconButton';
 import { FormatBold } from '../Icons/FormatBold';
 import { FormatColorText } from '../Icons/FormatColorText';

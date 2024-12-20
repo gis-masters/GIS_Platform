@@ -8,7 +8,6 @@ import { FileConnection, FileInfo } from './files.models';
 @boundClass
 class FilesClient extends Client {
   private static _instance: FilesClient;
-
   static get instance(): FilesClient {
     return this._instance || (this._instance = new this());
   }

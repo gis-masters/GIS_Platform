@@ -17,6 +17,11 @@ export enum PhotoUploaderScreens {
 }
 
 class PhotoUploaderStore {
+  private static _instance: PhotoUploaderStore;
+  static get instance() {
+    return this._instance || (this._instance = new this());
+  }
+
   @observable private _currentScreen: PhotoUploaderScreens = PhotoUploaderScreens.MAIN;
   @observable previousScreen?: PhotoUploaderScreens;
   @observable files: UploadedFile[] = [];
@@ -30,12 +35,6 @@ class PhotoUploaderStore {
   @observable uploaded: boolean = false;
   @observable uploadResult: UploadResultType | null = null;
   @observable labelValue: string = '';
-
-  private static _instance: PhotoUploaderStore;
-
-  static get instance() {
-    return this._instance || (this._instance = new this());
-  }
 
   private constructor() {
     makeObservable(this);

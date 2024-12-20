@@ -7,10 +7,10 @@ import { boundMethod } from 'autobind-decorator';
 import { LineString, Polygon } from 'ol/geom';
 
 import { Projection } from '../../services/data/projections/projections.models';
-import { getFeatureArea, getFeatureLength } from '../../services/map/map-labels.util';
-import { MeasureItem } from '../../services/map/map-measure.service';
+import { getFeatureArea, getFeatureLength } from '../../services/map/labels/map-labels.util';
+import { MeasureItem } from '../../services/map/measure/map-measure.models';
 import { UnitsOfAreaMeasurement, UnitsOfLengthMeasurement } from '../../services/util/open-layers.util';
-import { mapStore } from '../../stores/Map.store';
+import { mapMeasureStore } from '../../stores/MapMeasure.store';
 import { printSettings } from '../../stores/PrintSettings.store';
 import { PseudoLink } from '../PseudoLink/PseudoLink';
 
@@ -37,7 +37,7 @@ export class MapMeasureTooltip extends Component<MapMeasureTooltipProps> {
     let switchingUnitsEnabled = false;
 
     if (geom instanceof Polygon) {
-      [value, units] = getFeatureArea(geom, mapStore.unitsOfAreaMeasurement, 2);
+      [value, units] = getFeatureArea(geom, mapMeasureStore.unitsOfAreaMeasurement, 2);
       if (
         !sketch &&
         (value > 100 || units === UnitsOfAreaMeasurement.HECTARE || units === UnitsOfAreaMeasurement.SQUARE_KILOMETER)
@@ -81,10 +81,10 @@ export class MapMeasureTooltip extends Component<MapMeasureTooltipProps> {
 
   @boundMethod
   private switchSquareUnits() {
-    if (mapStore.unitsOfAreaMeasurement === UnitsOfAreaMeasurement.HECTARE) {
-      mapStore.setUnitsOfAreaMeasurement(UnitsOfAreaMeasurement.SQUARE_KILOMETER);
-    } else if (mapStore.unitsOfAreaMeasurement === UnitsOfAreaMeasurement.SQUARE_KILOMETER) {
-      mapStore.setUnitsOfAreaMeasurement(UnitsOfAreaMeasurement.HECTARE);
+    if (mapMeasureStore.unitsOfAreaMeasurement === UnitsOfAreaMeasurement.HECTARE) {
+      mapMeasureStore.setUnitsOfAreaMeasurement(UnitsOfAreaMeasurement.SQUARE_KILOMETER);
+    } else if (mapMeasureStore.unitsOfAreaMeasurement === UnitsOfAreaMeasurement.SQUARE_KILOMETER) {
+      mapMeasureStore.setUnitsOfAreaMeasurement(UnitsOfAreaMeasurement.HECTARE);
     }
   }
 }

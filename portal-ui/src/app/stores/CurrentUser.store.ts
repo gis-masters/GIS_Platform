@@ -19,6 +19,9 @@ const emptyOrgInfo: OrgInfo = {
 
 class CurrentUser implements OrgInfo {
   private static _instance: CurrentUser;
+  static get instance() {
+    return this._instance || (this._instance = new this());
+  }
 
   @observable id: number = emptyOrgInfo.id;
   @observable email: string = emptyOrgInfo.email;
@@ -31,10 +34,6 @@ class CurrentUser implements OrgInfo {
   @observable createdAt: string = emptyOrgInfo.createdAt;
   @observable orgName: string = emptyOrgInfo.orgName;
   @observable orgId: number = emptyOrgInfo.orgId;
-
-  static get instance() {
-    return this._instance || (this._instance = new this());
-  }
 
   private constructor() {
     makeObservable(this);

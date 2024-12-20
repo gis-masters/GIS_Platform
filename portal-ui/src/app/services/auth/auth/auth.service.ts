@@ -24,7 +24,6 @@ const TOKEN_KEY = 'crgAuthToken';
 
 class AuthService {
   private static _instance: AuthService;
-
   static get instance() {
     return this._instance || (this._instance = new this());
   }

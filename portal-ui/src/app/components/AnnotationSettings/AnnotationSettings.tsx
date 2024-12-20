@@ -14,8 +14,12 @@ import {
 import { TabContext } from '@mui/lab';
 import { cn } from '@bem-react/classname';
 
-import { AnnotationsFontProperties, AnnotationsType, FontProperties } from '../../services/map/map-labels.models';
-import { mapLabelsService } from '../../services/map/map-labels.service';
+import {
+  AnnotationsFontProperties,
+  AnnotationsType,
+  FontProperties
+} from '../../services/map/labels/map-labels.models';
+import { mapLabelsService } from '../../services/map/labels/map-labels.service';
 import { isAnnotationType } from '../../services/util/typeGuards/isAnnotationType';
 import { Button } from '../Button/Button';
 import { IconButton } from '../IconButton/IconButton';

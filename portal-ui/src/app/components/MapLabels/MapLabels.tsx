@@ -4,9 +4,9 @@ import { Tooltip } from '@mui/material';
 import { DeleteSweepOutlined, LabelOutlined, PolylineOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
+import { LabelType } from '../../services/map/labels/map-labels.models';
+import { mapLabelsService } from '../../services/map/labels/map-labels.service';
 import { MapAction, MapMode } from '../../services/map/map.models';
-import { LabelType } from '../../services/map/map-labels.models';
-import { mapLabelsService } from '../../services/map/map-labels.service';
 import { konfirmieren } from '../../services/utility-dialogs.service';
 import { mapStore } from '../../stores/Map.store';
 import { AnnotationSettings } from '../AnnotationSettings/AnnotationSettings';

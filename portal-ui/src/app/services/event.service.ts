@@ -21,6 +21,9 @@ export interface IEvent {
  */
 class EventService {
   private static _instance: EventService;
+  static get instance() {
+    return this._instance || (this._instance = new this());
+  }
 
   private EVENTS_KEY = 'events';
 
@@ -30,10 +33,6 @@ class EventService {
     publishReplay(1),
     refCount()
   );
-
-  static get instance() {
-    return this._instance || (this._instance = new this());
-  }
 
   /**
    * Delete event by Id

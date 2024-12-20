@@ -12,7 +12,6 @@ import { GeoserverLayerInfo } from './geoserver-layer.models';
 @boundClass
 class GeoserverLayerClient extends GeoserverClient {
   private static _instance: GeoserverLayerClient;
-
   static get instance(): GeoserverLayerClient {
     return this._instance || (this._instance = new this());
   }

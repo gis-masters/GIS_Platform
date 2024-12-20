@@ -13,7 +13,6 @@ const headers = { 'Content-Type': Mime.JSON };
 @boundClass
 class ValidationClient extends Client {
   private static _instance: ValidationClient;
-
   static get instance(): ValidationClient {
     return this._instance || (this._instance = new this());
   }

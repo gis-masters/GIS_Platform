@@ -20,16 +20,15 @@ export interface CompositeSettings {
 
 export class OrganizationSettings {
   private static _instance: OrganizationSettings;
+  static get instance(): OrganizationSettings {
+    return this._instance || (this._instance = new this());
+  }
 
   @observable settingsError?: boolean;
   @observable orgSettings?: CompositeSettings;
   @observable systemSettings?: CompositeSettings[];
   @observable schema?: Schema;
   @observable occupiedStorage?: OccupiedStorage;
-
-  static get instance(): OrganizationSettings {
-    return this._instance || (this._instance = new this());
-  }
 
   private constructor() {
     makeObservable(this);

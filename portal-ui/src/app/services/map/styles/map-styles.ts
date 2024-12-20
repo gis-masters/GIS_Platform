@@ -1,16 +1,15 @@
 import { Feature } from 'ol';
-import { Coordinate } from 'ol/coordinate';
 import { FeatureLike } from 'ol/Feature';
-import { LineString, MultiPoint, MultiPolygon } from 'ol/geom';
+import { MultiPoint } from 'ol/geom';
 import Point from 'ol/geom/Point';
 import { Circle, Fill, Icon, Stroke, Style } from 'ol/style';
 import CircleStyle from 'ol/style/Circle';
 
 import { mapSnapStore } from '../../../stores/MapSnap.store';
 import { extractFeatureTypeName } from '../../geoserver/featureType/featureType.util';
-import { services } from '../../services';
-import { LabelType } from '../map-labels.models';
-import { getTextStyle } from '../map-labels.util';
+import { convertToFlatMultiPoint } from '../../util/GeometryUtil';
+import { LabelType } from '../labels/map-labels.models';
+import { getTextStyle } from '../labels/map-labels.util';
 
 export enum KnownStyleKey {
   LabelTurningPointsStyles = 'LabelTurningPointsStyles',
@@ -22,7 +21,6 @@ export enum KnownStyleKey {
   MeasureDrawStyles = 'MeasureDrawStyles',
   MeasureLayerStyles = 'MeasureLayerStyles',
   SelectStyles = 'selectStyles',
-  VerticesModificationStyles = 'VerticesModificationStyles',
   LabelsDrawStyles = 'LabelsDrawStyles'
 }
 
@@ -154,7 +152,7 @@ const styles = new Map<KnownStyleKey, Style[]>([
             color: 'red'
           })
         }),
-        geometry: circleGeometry()
+        geometry: circleGeometry
       })
     ]
   ],
@@ -203,7 +201,7 @@ const styles = new Map<KnownStyleKey, Style[]>([
             color: 'red'
           })
         }),
-        geometry: circleGeometry()
+        geometry: circleGeometry
       })
     ]
   ],
@@ -226,51 +224,8 @@ const styles = new Map<KnownStyleKey, Style[]>([
         })
       })
     ]
-  ],
-  [
-    KnownStyleKey.VerticesModificationStyles,
-    [
-      new Style({
-        image: new Circle({
-          radius: DEFAULT_CIRCLE_RADIUS,
-          fill: new Fill({
-            color: 'red'
-          })
-        })
-      })
-    ]
   ]
 ]);
-
-function circleGeometry() {
-  return function (feature: FeatureLike) {
-    const geometry = feature.getGeometry();
-    if (geometry === undefined) {
-      return;
-    }
-
-    // Когда приходит фича как "не существующая" точка, то это от клика по отдельной координате для подсветки
-    if (extractFeatureTypeName(String(feature.getId())).length === 0 && geometry.getType() === 'Point') {
-      return new MultiPoint([(geometry as Point).getCoordinates()]);
-    }
-
-    if (mapSnapStore.isSnapNotActive()) {
-      return;
-    }
-
-    if (geometry.getType() === 'MultiPolygon') {
-      return new MultiPoint(groupFlatCoordinates((geometry as MultiPolygon).getFlatCoordinates()));
-    } else if (geometry.getType() === 'MultiLineString') {
-      return new MultiPoint(groupFlatCoordinates((geometry as LineString).getFlatCoordinates()));
-    } else if (geometry.getType() === 'Point') {
-      return new MultiPoint([(geometry as Point).getCoordinates()]);
-    }
-
-    services.logger.warn(`Не поддерживаемый тип геометрии: ${geometry.getType()}`);
-
-    return new MultiPoint([]);
-  };
-}
 
 export function createStyle(feature: Feature): Style[] {
   const labelType = feature.getProperties().type as LabelType;
@@ -294,15 +249,21 @@ export function createStyle(feature: Feature): Style[] {
   throw new Error(`Unknown label type: ${String(labelType)}`);
 }
 
-function groupFlatCoordinates(flatList: number[]): Coordinate[] {
-  if (flatList.length % 2 !== 0) {
-    throw new Error('The flat list must contain an even number of elements.');
+function circleGeometry(feature: FeatureLike) {
+  const geometry = feature.getGeometry();
+  if (geometry === undefined) {
+    return;
   }
 
-  const groupedCoordinates: Coordinate[] = [];
-  for (let i = 0; i < flatList.length; i += 2) {
-    groupedCoordinates.push([flatList[i], flatList[i + 1]]);
+  // Когда приходит фича как "не существующая" точка, то это от клика по отдельной координате, из правой панели, для
+  // подсветки
+  if (extractFeatureTypeName(String(feature.getId())).length === 0 && geometry.getType() === 'Point') {
+    return new MultiPoint([(geometry as Point).getCoordinates()]);
   }
 
-  return groupedCoordinates;
+  if (mapSnapStore.isSnapNotActive()) {
+    return;
+  }
+
+  return convertToFlatMultiPoint(geometry);
 }

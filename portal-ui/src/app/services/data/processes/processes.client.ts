@@ -11,7 +11,6 @@ import { Process, ProcessableModel, ProcessResponse } from './processes.models';
 @boundClass
 class ProcessesClient extends Client {
   private static _instance: ProcessesClient;
-
   static get instance() {
     return this._instance || (this._instance = new this());
   }

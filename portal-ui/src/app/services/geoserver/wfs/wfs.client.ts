@@ -12,7 +12,6 @@ import { WfsFeatureCollection } from './wfs.models';
 @boundClass
 class WfsClient extends GeoserverClient {
   private static _instance: WfsClient;
-
   static get instance(): WfsClient {
     return this._instance || (this._instance = new this());
   }

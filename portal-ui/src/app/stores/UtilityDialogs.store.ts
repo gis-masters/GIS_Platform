@@ -21,14 +21,13 @@ export interface UtilityDialogInfo {
 }
 
 class UtilityDialogsStore {
-  @observable dialogs: UtilityDialogInfo[] = [];
-  root?: Component;
-
   private static _instance: UtilityDialogsStore;
-
   static get instance() {
     return this._instance || (this._instance = new this());
   }
+
+  @observable dialogs: UtilityDialogInfo[] = [];
+  root?: Component; // Оно тут точно надо?
 
   private constructor() {
     makeObservable(this);

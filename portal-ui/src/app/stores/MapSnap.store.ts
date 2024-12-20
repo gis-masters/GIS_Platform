@@ -3,9 +3,8 @@ import { action, makeObservable, observable } from 'mobx';
 import { MapMode } from '../services/map/map.models';
 import { mapStore } from './Map.store';
 
-class MapVerticesModificationStore {
-  private static _instance: MapVerticesModificationStore;
-
+class MapSnapStore {
+  private static _instance: MapSnapStore;
   static get instance() {
     return this._instance || (this._instance = new this());
   }
@@ -32,4 +31,4 @@ class MapVerticesModificationStore {
   }
 }
 
-export const mapSnapStore = MapVerticesModificationStore.instance;
+export const mapSnapStore = MapSnapStore.instance;

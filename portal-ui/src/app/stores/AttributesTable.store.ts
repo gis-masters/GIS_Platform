@@ -10,13 +10,13 @@ const errorMessage = 'Отсутствует имя таблицы';
 const defaultValues: Partial<AttributesTableStore> = {};
 
 class AttributesTableStore {
-  @observable filter: Record<string, FilterQuery> = {};
-  @observable filterDisabled: Record<string, true> = {};
-
   private static _instance: AttributesTableStore;
   static get instance() {
     return this._instance || (this._instance = new this());
   }
+
+  @observable filter: Record<string, FilterQuery> = {};
+  @observable filterDisabled: Record<string, true> = {};
 
   private constructor() {
     makeObservable(this);

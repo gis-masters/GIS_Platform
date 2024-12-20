@@ -15,6 +15,9 @@ import { OldPropertySchema, OldSchema } from './schemaOld.models';
 
 class SchemaService {
   private static _instance: SchemaService;
+  static get instance() {
+    return this._instance || (this._instance = new this());
+  }
 
   private schemas: { [key: string]: Promise<OldSchema> } = {};
   private schemasResolvers: { [key: string]: (value: OldSchema | PromiseLike<OldSchema>) => void } = {};
@@ -26,10 +29,6 @@ class SchemaService {
 
   private constructor() {
     this.debouncedFetch = debounce(this.fetch, 20);
-  }
-
-  static get instance() {
-    return this._instance || (this._instance = new this());
   }
 
   @boundMethod

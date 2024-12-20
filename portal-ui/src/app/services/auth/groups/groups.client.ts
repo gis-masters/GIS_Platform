@@ -7,7 +7,6 @@ import { CrgGroup, GroupData } from './groups.models';
 @boundClass
 class AuthClient extends Client {
   private static _instance: AuthClient;
-
   static get instance(): AuthClient {
     return this._instance || (this._instance = new this());
   }

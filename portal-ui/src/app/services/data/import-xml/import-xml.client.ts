@@ -6,7 +6,6 @@ import { http } from '../../api/http.service';
 @boundClass
 class ImportXmlClient extends Client {
   private static _instance: ImportXmlClient;
-
   static get instance(): ImportXmlClient {
     return this._instance || (this._instance = new this());
   }

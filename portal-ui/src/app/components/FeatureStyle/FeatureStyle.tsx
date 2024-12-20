@@ -5,14 +5,14 @@ import { EditOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { Feature } from 'ol';
 
-import { FontProperties } from '../../services/map/map-labels.models';
-import { mapLabelsService } from '../../services/map/map-labels.service';
+import { FontProperties } from '../../services/map/labels/map-labels.models';
+import { mapLabelsService } from '../../services/map/labels/map-labels.service';
 import {
   convertFromRGBAToHEX,
   getFeatureFontPropertiesByString,
   getFeatureFontString,
   getFeatureStringValue
-} from '../../services/map/map-labels.util';
+} from '../../services/map/labels/map-labels.util';
 import { createStyle } from '../../services/map/styles/map-styles';
 import { Button } from '../Button/Button';
 import { IconButton } from '../IconButton/IconButton';

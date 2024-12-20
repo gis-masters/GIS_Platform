@@ -1,7 +1,7 @@
 import { Coordinate } from 'ol/coordinate';
 import { SimpleGeometry } from 'ol/geom';
 
-import { Projection } from '../data/projections/projections.models';
+import { Projection } from '../../data/projections/projections.models';
 
 const textAlignTypes = new Set(['left', 'center', 'right', 'justify']);
 

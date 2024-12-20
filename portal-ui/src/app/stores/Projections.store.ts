@@ -5,12 +5,12 @@ import { mapToProjections } from '../services/util/projectionMapper';
 import { organizationSettings } from './OrganizationSettings.store';
 
 class ProjectionsStore {
-  @observable olProjection?: Projection;
   private static _instance: ProjectionsStore;
-
   static get instance() {
     return this._instance || (this._instance = new this());
   }
+
+  @observable olProjection?: Projection;
 
   constructor() {
     makeObservable(this);

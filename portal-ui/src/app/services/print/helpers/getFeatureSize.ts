@@ -1,8 +1,8 @@
 import { Projection } from '../../data/projections/projections.models';
 import { WfsFeature } from '../../geoserver/wfs/wfs.models';
 import { isLinear, isPolygonal } from '../../geoserver/wfs/wfs.util';
+import { getFeatureArea, getFeatureLength } from '../../map/labels/map-labels.util';
 import { mapService } from '../../map/map.service';
-import { getFeatureArea, getFeatureLength } from '../../map/map-labels.util';
 import { UnitsOfAreaMeasurement, wfsFeatureToFeature } from '../../util/open-layers.util';
 
 type FeatureSizeData = {

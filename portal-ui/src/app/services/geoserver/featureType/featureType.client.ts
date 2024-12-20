@@ -9,7 +9,6 @@ import { extractFeatureTypeNameFromComplexName, extractWorkspaceFromComplexName 
 @boundClass
 class FeatureTypeClient extends GeoserverClient {
   private static _instance: FeatureTypeClient;
-
   static get instance(): FeatureTypeClient {
     return this._instance || (this._instance = new this());
   }

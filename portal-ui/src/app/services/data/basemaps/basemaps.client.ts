@@ -10,7 +10,6 @@ import { Basemap } from './basemaps.models';
 @boundClass
 class BasemapsClient extends Client {
   private static _instance: BasemapsClient;
-
   static get instance(): BasemapsClient {
     return this._instance || (this._instance = new this());
   }

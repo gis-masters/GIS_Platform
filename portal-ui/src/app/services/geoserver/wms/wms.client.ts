@@ -7,7 +7,6 @@ import { GeoserverClient } from '../GeoserverClient';
 @boundClass
 class WmsClient extends GeoserverClient {
   private static _instance: WmsClient;
-
   static get instance(): WmsClient {
     return this._instance || (this._instance = new this());
   }

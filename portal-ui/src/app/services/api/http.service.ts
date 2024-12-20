@@ -28,15 +28,15 @@ interface RequestConfigWithCache extends RequestConfig {
 }
 
 class Http {
-  axios: AxiosInstance;
-  cache: CustomCache<Promise<AxiosResponse>>;
-  @observable waitingForAuth = false;
-
   private static _instance: Http;
-
   static get instance(): Http {
     return this._instance || (this._instance = new this());
   }
+
+  axios: AxiosInstance;
+  cache: CustomCache<Promise<AxiosResponse>>;
+
+  @observable waitingForAuth = false;
 
   private constructor() {
     this.cache = new CustomCache({ maxAge: 2 * 60 * 1000 });

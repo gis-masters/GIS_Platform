@@ -7,7 +7,6 @@ import { ResourcePermissions, RoleAssignmentBody } from './permissions.models';
 @boundClass
 class PermissionsClient extends DataClient {
   private static _instance: PermissionsClient;
-
   static get instance(): PermissionsClient {
     return this._instance || (this._instance = new this());
   }

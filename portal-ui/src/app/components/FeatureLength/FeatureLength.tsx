@@ -5,8 +5,8 @@ import { ArchitectureOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
 import { isLinear, isPolygonal } from '../../services/geoserver/wfs/wfs.util';
-import { mapLabelsService } from '../../services/map/map-labels.service';
-import { getSelectedOrActiveFeature } from '../../services/map/map-labels.util';
+import { mapLabelsService } from '../../services/map/labels/map-labels.service';
+import { getSelectedOrActiveFeature } from '../../services/map/labels/map-labels.util';
 import { mapStore } from '../../stores/Map.store';
 import { sidebars } from '../../stores/Sidebars.store';
 import { IconButton } from '../IconButton/IconButton';

@@ -5,7 +5,6 @@ import { MapMode } from './map/map.models';
 
 class CursorHandler {
   private static _instance: CursorHandler;
-
   static get instance() {
     return this._instance || (this._instance = new this());
   }

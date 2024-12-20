@@ -15,6 +15,9 @@ export type Toc = TocItem[];
 
 class Help {
   private static _instance: Help;
+  static get instance() {
+    return this._instance || (this._instance = new this());
+  }
 
   @observable toc: Toc = [];
   @observable tocLoaded = false;
@@ -32,10 +35,6 @@ class Help {
   @action
   setItemContent(content: string, item: TocItem) {
     item.content = content;
-  }
-
-  static get instance() {
-    return this._instance || (this._instance = new this());
   }
 }
 

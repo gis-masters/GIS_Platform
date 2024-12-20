@@ -38,6 +38,9 @@ const emptyProject: Required<CrgProjectData> & { layers: CrgLayer[]; groups: Crg
 
 class CurrentProject implements CrgProjectData {
   private static _instance: CurrentProject;
+  static get instance() {
+    return this._instance || (this._instance = new this());
+  }
 
   @observable bbox: string = emptyProject.bbox;
   @observable createdAt: string = emptyProject.createdAt;
@@ -60,10 +63,6 @@ class CurrentProject implements CrgProjectData {
 
   private constructor() {
     makeObservable(this);
-  }
-
-  static get instance() {
-    return this._instance || (this._instance = new this());
   }
 
   @computed

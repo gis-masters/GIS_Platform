@@ -7,7 +7,6 @@ import { OldSchema } from './schemaOld.models';
 @boundClass
 class SchemaClient extends Client {
   private static _instance: SchemaClient;
-
   static get instance(): SchemaClient {
     return this._instance || (this._instance = new this());
   }

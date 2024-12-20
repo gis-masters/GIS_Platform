@@ -7,7 +7,6 @@ import { http } from '../../api/http.service';
 @boundClass
 class SpecializationsClient extends Client {
   private static _instance: SpecializationsClient;
-
   static get instance(): SpecializationsClient {
     return this._instance || (this._instance = new this());
   }

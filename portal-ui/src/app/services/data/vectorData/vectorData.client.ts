@@ -19,7 +19,6 @@ import {
 @boundClass
 class VectorDataClient extends DataClient {
   private static _instance: VectorDataClient;
-
   static get instance(): VectorDataClient {
     return this._instance || (this._instance = new this());
   }

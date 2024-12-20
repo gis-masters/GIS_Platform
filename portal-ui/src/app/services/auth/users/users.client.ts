@@ -10,7 +10,6 @@ import { CrgUser, CrgUserRaw, NewUserData, OrgInfo } from './users.models';
 @boundClass
 class UsersClient extends Client {
   private static _instance: UsersClient;
-
   static get instance(): UsersClient {
     return this._instance || (this._instance = new this());
   }

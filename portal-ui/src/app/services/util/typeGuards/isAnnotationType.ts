@@ -1,4 +1,4 @@
-import { AnnotationsType } from '../../map/map-labels.models';
+import { AnnotationsType } from '../../map/labels/map-labels.models';
 
 const AnnotationsTypes = ['length', 'area', 'turningPoints', 'distances', 'annotations', 'turningPointsSettings'];
 

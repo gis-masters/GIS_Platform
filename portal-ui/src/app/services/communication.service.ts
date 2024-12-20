@@ -1,3 +1,4 @@
+import { SnapEvent } from 'ol/events/SnapEvent';
 import { DrawEvent } from 'ol/interaction/Draw';
 import { ModifyEvent } from 'ol/interaction/Modify';
 
@@ -27,7 +28,6 @@ export interface UtilityDialogCloseEventDetail {
 
 class CommunicationService {
   private static _instance: CommunicationService;
-
   static get instance() {
     return this._instance || (this._instance = new this());
   }
@@ -46,6 +46,7 @@ class CommunicationService {
 
   drawEnd = new Emitter<DrawEvent>();
   modifyEnd = new Emitter<ModifyEvent>();
+  snapDblClick = new Emitter<SnapEvent>();
 
   basemapUpdated = new Emitter<DataChangeEventDetail<Basemap>>();
   datasetUpdated = new Emitter<DataChangeEventDetail<Dataset>>();

@@ -55,6 +55,9 @@ const taskPendingCodes: Set<TaskStatusCode> = new Set([
 
 class CurrentImport implements ImportInfo {
   private static _instance: CurrentImport;
+  static get instance() {
+    return this._instance || (this._instance = new this());
+  }
 
   @observable file?: File;
   @observable scratch?: ScratchImport;
@@ -72,10 +75,6 @@ class CurrentImport implements ImportInfo {
 
   private constructor() {
     makeObservable(this);
-  }
-
-  static get instance() {
-    return this._instance || (this._instance = new this());
   }
 
   @computed

@@ -28,6 +28,9 @@ enum ActiveModifierKey {
 
 class MapSelectionService {
   private static _instance: MapSelectionService;
+  static get instance() {
+    return this._instance || (this._instance = new this());
+  }
 
   private areaExtentAdd = new ExtentInteraction({
     condition: (e: MapBrowserEvent<UIEvent>) => {
@@ -90,10 +93,6 @@ class MapSelectionService {
 
   private activeModifierKey?: ActiveModifierKey;
 
-  static get instance() {
-    return this._instance || (this._instance = new this());
-  }
-
   private constructor() {
     mapService.mapCreated.on((): void => {
       mapService.map.addInteraction(this.dragPanWheel);
@@ -122,7 +121,6 @@ class MapSelectionService {
 
       mapService.map.on('pointermove', (e: MapBrowserEvent<UIEvent>) => {
         const originalEvent = e.originalEvent as MouseEvent;
-
         if (originalEvent.shiftKey) {
           mapStore.setSelectionActive(true);
         } else if (originalEvent.ctrlKey) {

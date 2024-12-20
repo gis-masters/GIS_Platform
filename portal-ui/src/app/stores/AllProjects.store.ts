@@ -7,6 +7,10 @@ import { sortObjects } from '../services/util/sortObjects';
 
 class AllProjects {
   private static _instance: AllProjects;
+  static get instance() {
+    return this._instance || (this._instance = new this());
+  }
+
   @observable private _list?: CrgProject[];
 
   @observable nameFilter = '';
@@ -15,10 +19,6 @@ class AllProjects {
 
   private constructor() {
     makeObservable(this);
-  }
-
-  static get instance() {
-    return this._instance || (this._instance = new this());
   }
 
   @computed

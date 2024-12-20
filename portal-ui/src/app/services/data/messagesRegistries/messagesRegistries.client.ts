@@ -10,7 +10,6 @@ import { MessagesRegistriesMessages, MessagesRegistry } from './messagesRegistri
 @boundClass
 class MessagesRegistriesClient extends Client {
   private static _instance: MessagesRegistriesClient;
-
   static get instance(): MessagesRegistriesClient {
     return this._instance || (this._instance = new this());
   }

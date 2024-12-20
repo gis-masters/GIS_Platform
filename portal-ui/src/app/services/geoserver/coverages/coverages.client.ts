@@ -12,7 +12,6 @@ import { CoverageTransparentColor, GeoserverCoverage } from './coverages.model';
 @boundClass
 class CoveragesClient extends GeoserverClient {
   private static _instance: CoveragesClient;
-
   static get instance(): CoveragesClient {
     return this._instance || (this._instance = new this());
   }

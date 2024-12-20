@@ -7,7 +7,6 @@ import { CrgLayer, CrgRasterLayer, NewCrgLayer } from './layers.models';
 @boundClass
 class LayersClient extends Client {
   private static _instance: LayersClient;
-
   static get instance(): LayersClient {
     return this._instance || (this._instance = new this());
   }

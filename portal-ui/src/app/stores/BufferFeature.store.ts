@@ -4,14 +4,13 @@ import { Projection } from '../services/data/projections/projections.models';
 import { WfsFeature } from '../services/geoserver/wfs/wfs.models';
 
 class BufferFeatureStore {
-  @observable bufferFeature: WfsFeature | null;
-  @observable prevProjection?: Projection;
-
   private static _instance: BufferFeatureStore;
-
   static get instance() {
     return this._instance || (this._instance = new this());
   }
+
+  @observable bufferFeature: WfsFeature | null;
+  @observable prevProjection?: Projection;
 
   constructor() {
     makeObservable(this);

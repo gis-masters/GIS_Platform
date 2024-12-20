@@ -11,7 +11,6 @@ import { Task, TaskHistory, TaskStatus } from './task.models';
 @boundClass
 class TasksClient extends Client {
   private static _instance: TasksClient;
-
   static get instance(): TasksClient {
     return this._instance || (this._instance = new this());
   }

@@ -62,15 +62,14 @@ interface Country {
 
 class YandexGeocodeService {
   private static _instance: YandexGeocodeService;
+  static get instance() {
+    return this._instance || (this._instance = new this());
+  }
 
   private URL = 'https://geocode-maps.yandex.ru/1.x?';
   private API_KEY = '41cc9996-6a3b-4048-8430-c0f2f8ac6995';
 
   private constructor() {}
-
-  static get instance() {
-    return this._instance || (this._instance = new this());
-  }
 
   async search(value: string): Promise<YaGeoObjectCollection> {
     const response = await fetch(

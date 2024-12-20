@@ -8,7 +8,6 @@ import { ProjectBasemap } from './project-basemaps.models';
 @boundClass
 class ProjectBasemapClient extends Client {
   private static _instance: ProjectBasemapClient;
-
   static get instance(): ProjectBasemapClient {
     return this._instance || (this._instance = new this());
   }

@@ -1,4 +1,4 @@
-import { FontProperties, isTextAlignTypes } from '../../map/map-labels.models';
+import { FontProperties, isTextAlignTypes } from '../../map/labels/map-labels.models';
 
 export function isFontProperties(value: unknown): value is FontProperties {
   return (

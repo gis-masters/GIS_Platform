@@ -7,16 +7,17 @@ import { CrgGroup, GroupData } from './groups.models';
 
 class GroupsService {
   private static _instance: GroupsService;
+  static get instance() {
+    return this._instance || (this._instance = new this());
+  }
+
   private allGroupsStoreInited = false;
-  private debouncedFetchGroupsListStore: DebouncedFunc<() => Promise<void>>;
   private allGroupsFetching?: Promise<CrgGroup[]>;
+
+  readonly debouncedFetchGroupsListStore: DebouncedFunc<() => Promise<void>>;
 
   private constructor() {
     this.debouncedFetchGroupsListStore = debounce(this.fetchGroupsListStore, 300);
-  }
-
-  static get instance() {
-    return this._instance || (this._instance = new this());
   }
 
   async getAll(): Promise<CrgGroup[]> {

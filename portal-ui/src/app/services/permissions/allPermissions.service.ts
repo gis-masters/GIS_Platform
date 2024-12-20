@@ -7,16 +7,17 @@ import { permissionsClient } from './permissions.client';
 
 class AllPermissionsService {
   private static _instance: AllPermissionsService;
+  static get instance() {
+    return this._instance || (this._instance = new this());
+  }
+
   private allPermissionsStoreInited = false;
   private fetchingOperationId?: symbol;
-  private debouncedFetchPermissionsListStore: DebouncedFunc<() => Promise<void>>;
+
+  readonly debouncedFetchPermissionsListStore: DebouncedFunc<() => Promise<void>>;
 
   private constructor() {
     this.debouncedFetchPermissionsListStore = debounce(this.fetchPermissionsListStore, 300);
-  }
-
-  static get instance() {
-    return this._instance || (this._instance = new this());
   }
 
   async initAllPermissionsStore() {

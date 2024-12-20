@@ -11,16 +11,17 @@ import { CrgUser, CrgUserRaw, NewUserData } from './users.models';
 
 class UsersService {
   private static _instance: UsersService;
+  static get instance() {
+    return this._instance || (this._instance = new this());
+  }
+
   private usersListStoreInited = false;
-  private debouncedFetchUsersListStore: DebouncedFunc<() => Promise<void>>;
   private allUsersRequest?: Promise<void> | null;
+
+  readonly debouncedFetchUsersListStore: DebouncedFunc<() => Promise<void>>;
 
   private constructor() {
     this.debouncedFetchUsersListStore = debounce(this.fetchUsersListStore, 300);
-  }
-
-  static get instance() {
-    return this._instance || (this._instance = new this());
   }
 
   async fetchCurrentUser(autoLogin?: boolean) {

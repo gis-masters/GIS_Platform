@@ -12,7 +12,6 @@ import { DocumentVersion, LibraryRaw, LibraryRecord, LibraryRecordNew, LibraryRe
 @boundClass
 class LibraryClient extends Client {
   private static _instance: LibraryClient;
-
   static get instance(): LibraryClient {
     return this._instance || (this._instance = new this());
   }

@@ -23,6 +23,9 @@ import { CrgProject, NewCrgProject } from './projects.models';
 
 class ProjectsService {
   private static _instance: ProjectsService;
+  static get instance() {
+    return this._instance || (this._instance = new this());
+  }
 
   private fetchingCurrentProject?: Promise<CrgProject | void>;
   private fetchingAllProjectsRequest?: Promise<CrgProject[]>;
@@ -53,10 +56,6 @@ class ProjectsService {
       },
       { fireImmediately: true }
     );
-  }
-
-  static get instance() {
-    return this._instance || (this._instance = new this());
   }
 
   async initAllProjectsStore() {

@@ -1,7 +1,5 @@
 import { Coordinate } from 'ol/coordinate';
 
-export type MeasureMode = 'area' | 'length';
-
 export enum MapSelectionTypes {
   ADD,
   REMOVE,

@@ -7,6 +7,7 @@ import { Extent, getTopLeft, getWidth } from 'ol/extent';
 import Feature from 'ol/Feature';
 import { MultiPolygon, SimpleGeometry } from 'ol/geom';
 import ImageWrapper from 'ol/Image';
+import { DoubleClickZoom } from 'ol/interaction';
 import { Tile as TileLayer, Vector as VectorLayer } from 'ol/layer';
 import BaseLayer from 'ol/layer/Base';
 import ImageLayer from 'ol/layer/Image';
@@ -159,6 +160,16 @@ class MapService {
         })
       ]
     });
+
+    // Удалим с карты событие зума по-умоланию по двойному клику(DoubleClickZoom).
+    const interactions = this.map.getInteractions();
+    for (let i = 0; i < interactions.getLength(); i++) {
+      const interaction = interactions.item(i);
+      if (interaction instanceof DoubleClickZoom) {
+        this.map.removeInteraction(interaction);
+        break;
+      }
+    }
 
     this.map.on('moveend', () => {
       const view = this.map?.getView();

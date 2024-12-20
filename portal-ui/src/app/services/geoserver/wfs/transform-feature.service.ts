@@ -30,7 +30,6 @@ interface Properties {
 // TODO: пофиксить ошибки типизации
 export class TransformFeatureService {
   private static _instance: TransformFeatureService;
-
   static get instance(): TransformFeatureService {
     return this._instance || (this._instance = new this());
   }

@@ -6,7 +6,7 @@ import { getPointResolution } from 'ol/proj';
 import { Legend } from '../../components/Legend/Legend';
 import { PrintMapDialogDate } from '../../components/PrintMapDialog/Date/PrintMapDialog-Date';
 import { currentProject } from '../../stores/CurrentProject.store';
-import { mapStore } from '../../stores/Map.store';
+import { mapMeasureStore } from '../../stores/MapMeasure.store';
 import { printSettings } from '../../stores/PrintSettings.store';
 import { StyleRuleExtended } from '../geoserver/styles/styles.models';
 import { filterLegendForCurrentMapView, getLayerStyleRules } from '../geoserver/styles/styles.service';
@@ -332,7 +332,7 @@ async function getDateImageSrc(resolution?: number): Promise<string> {
 }
 
 async function drawMeasurementsTooltips(mapContext: CanvasRenderingContext2D): Promise<void> {
-  for (const item of mapStore.measureItems) {
+  for (const item of mapMeasureStore.measureItems) {
     const container = item.tooltipOverlay.getElement()?.parentElement;
     if (!container) {
       continue;

@@ -91,7 +91,7 @@ export default class FeaturesListSidebarFeatures extends Component<FeaturesListS
               </div>
             )}
 
-            <VerticesModificationIcon />
+            {!searchValue && <VerticesModificationIcon />}
 
             <IconButton className={cnFeaturesListSidebarFeatures('Close')} onClick={this.close}>
               <Close />

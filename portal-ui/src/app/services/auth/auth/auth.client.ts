@@ -8,7 +8,6 @@ import { AuthCredentials, OrganizationsListItemInfo, RegData } from './auth.mode
 @boundClass
 class AuthClient extends Client {
   private static _instance: AuthClient;
-
   static get instance(): AuthClient {
     return this._instance || (this._instance = new this());
   }

@@ -10,7 +10,6 @@ import { CreateProjectionModel } from './projections.models';
 @boundClass
 class ProjectionsClient extends Client {
   private static _instance: ProjectionsClient;
-
   static get instance(): ProjectionsClient {
     return this._instance || (this._instance = new this());
   }

@@ -9,7 +9,6 @@ import { ExportRequest } from './export.models';
 @boundClass
 class ExportClient extends Client {
   private static _instance: ExportClient;
-
   static get instance(): ExportClient {
     return this._instance || (this._instance = new this());
   }

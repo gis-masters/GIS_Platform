@@ -4,7 +4,7 @@ import { Tooltip } from '@mui/material';
 import { Adjust } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
-import { mapLabelsService } from '../../services/map/map-labels.service';
+import { mapLabelsService } from '../../services/map/labels/map-labels.service';
 import { mapStore } from '../../stores/Map.store';
 import { sidebars } from '../../stores/Sidebars.store';
 import { IconButton } from '../IconButton/IconButton';

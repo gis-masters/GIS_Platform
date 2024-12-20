@@ -40,6 +40,11 @@ const defaultValues: Partial<Sidebars> = {
 };
 
 class Sidebars {
+  private static _instance: Sidebars;
+  static get instance() {
+    return this._instance || (this._instance = new this());
+  }
+
   @observable leftOpen?: boolean;
   @observable featuresSidebarOpen?: boolean;
   @observable editOpen?: boolean;
@@ -61,12 +66,6 @@ class Sidebars {
   @observable photoLayerOpen: boolean = false;
   @observable validateGeometry: boolean = false;
   @observable featuresForPhotoMode: WfsFeature[] = [];
-
-  private static _instance: Sidebars;
-
-  static get instance() {
-    return this._instance || (this._instance = new this());
-  }
 
   private constructor() {
     makeObservable(this);

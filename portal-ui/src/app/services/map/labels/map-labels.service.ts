@@ -15,29 +15,31 @@ import VectorSource from 'ol/source/Vector';
 import { Fill, Icon, Stroke, Style, Text } from 'ol/style';
 import { v4 as uuid } from 'uuid';
 
-import { MapLabelToolbox } from '../../components/MapLabelToolbox/MapLabelToolbox';
-import { currentProject } from '../../stores/CurrentProject.store';
-import { currentUser } from '../../stores/CurrentUser.store';
-import { mapStore } from '../../stores/Map.store';
-import { communicationService } from '../communication.service';
-import { defaultOlProjectionCode, Projection } from '../data/projections/projections.models';
-import { getOlProjection } from '../data/projections/projections.service';
-import { registry } from '../di-registry';
-import { GeometryType, WfsFeature } from '../geoserver/wfs/wfs.models';
-import { isLinear, isPolygonal } from '../geoserver/wfs/wfs.util';
-import { Coord, transformAnyCoordinates, transformCoord, transformGroup } from '../util/coordinates-transform.util';
-import { notFalsyFilter } from '../util/NotFalsyFilter';
-import { featureToWfsFeature, UnitsOfAreaMeasurement, wfsFeatureToFeature } from '../util/open-layers.util';
-import { sleep } from '../util/sleep';
-import { isAnnotationsFontProperties } from '../util/typeGuards/isAnnotationsFontProperties';
-import { isArrayOf } from '../util/typeGuards/isArrayOf';
-import { isCircleProperties } from '../util/typeGuards/isCircleProperties';
-import { isCoordinate, isCoordinateArray, isCoordinateArrayArray } from '../util/typeGuards/isCoordinate';
-import { isNumberArray } from '../util/typeGuards/isNumberArray';
-import { prompto } from '../utility-dialogs.service';
-import { mapDrawService } from './draw/map-draw.service';
-import { MapMode } from './map.models';
-import { mapService } from './map.service';
+import { MapLabelToolbox } from '../../../components/MapLabelToolbox/MapLabelToolbox';
+import { currentProject } from '../../../stores/CurrentProject.store';
+import { currentUser } from '../../../stores/CurrentUser.store';
+import { mapStore } from '../../../stores/Map.store';
+import { communicationService } from '../../communication.service';
+import { defaultOlProjectionCode, Projection } from '../../data/projections/projections.models';
+import { getOlProjection } from '../../data/projections/projections.service';
+import { registry } from '../../di-registry';
+import { GeometryType, WfsFeature } from '../../geoserver/wfs/wfs.models';
+import { isLinear, isPolygonal } from '../../geoserver/wfs/wfs.util';
+import { Coord, transformAnyCoordinates, transformCoord, transformGroup } from '../../util/coordinates-transform.util';
+import { notFalsyFilter } from '../../util/NotFalsyFilter';
+import { featureToWfsFeature, UnitsOfAreaMeasurement, wfsFeatureToFeature } from '../../util/open-layers.util';
+import { sleep } from '../../util/sleep';
+import { isAnnotationsFontProperties } from '../../util/typeGuards/isAnnotationsFontProperties';
+import { isArrayOf } from '../../util/typeGuards/isArrayOf';
+import { isCircleProperties } from '../../util/typeGuards/isCircleProperties';
+import { isCoordinate, isCoordinateArray, isCoordinateArrayArray } from '../../util/typeGuards/isCoordinate';
+import { isNumberArray } from '../../util/typeGuards/isNumberArray';
+import { prompto } from '../../utility-dialogs.service';
+import { mapDrawService } from '../draw/map-draw.service';
+import { MapMode } from '../map.models';
+import { mapService } from '../map.service';
+import { mapMeasureService } from '../measure/map-measure.service';
+import { getStyle, KnownStyleKey } from '../styles/map-styles';
 import { AnnotationsFontProperties, CircleProperties, Distance, FontProperties, LabelType } from './map-labels.models';
 import {
   getCircleStyle,
@@ -51,8 +53,6 @@ import {
   getSelectedOrActiveFeature,
   getTextStyle
 } from './map-labels.util';
-import { mapMeasureService } from './map-measure.service';
-import { getStyle, KnownStyleKey } from './styles/map-styles';
 
 const projectionError = 'Отсутствует проекция';
 const baseStyle: FontProperties = {
@@ -70,6 +70,10 @@ const baseCircleStyle: CircleProperties = {
 
 class MapLabelsService {
   private static _instance: MapLabelsService;
+  static get instance() {
+    return this._instance || (this._instance = new this());
+  }
+
   private draw?: Draw;
   private modify?: Modify;
   private source = new VectorSource();
@@ -97,6 +101,7 @@ class MapLabelsService {
   private renderLabelToolboxDebounced = debounce(this.renderLabelToolbox, 500);
   private removeLabelToolboxDebounced = debounce(this.removeLabelToolbox, 500);
   private toolboxHovered = false;
+
   turningPointsCircleStyles: CircleProperties = baseCircleStyle;
   userLabelsSettings: AnnotationsFontProperties = {
     area: { ...baseStyle },
@@ -105,10 +110,6 @@ class MapLabelsService {
     distances: { ...baseStyle, fontSize: 14 },
     annotations: { ...baseStyle }
   };
-
-  static get instance() {
-    return this._instance || (this._instance = new this());
-  }
 
   private constructor() {
     reaction(
@@ -603,6 +604,14 @@ class MapLabelsService {
     mapService.map.on('pointermove', this.handlePointerMove);
   }
 
+  hide() {
+    this.drawOff();
+    this.modifyOff();
+    mapService.map.removeLayer(this.layer);
+    mapService.map.removeLayer(this.layerForTurningPoints);
+    mapService.map.un('pointermove', this.handlePointerMove);
+  }
+
   private restoreLabelsState() {
     let wfsFeatures: WfsFeature[] = [];
 
@@ -651,13 +660,6 @@ class MapLabelsService {
     );
 
     mapStore.setLabels(olFeatures);
-  }
-
-  hide() {
-    this.drawOff();
-    this.modifyOff();
-    mapService.map.removeLayer(this.layer);
-    mapService.map.removeLayer(this.layerForTurningPoints);
   }
 
   @boundMethod

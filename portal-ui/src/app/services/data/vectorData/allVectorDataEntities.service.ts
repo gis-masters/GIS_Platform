@@ -9,17 +9,16 @@ import { getAllVectorTablesInDataset } from './vectorData.service';
 
 class AllDataEntitiesService {
   private static _instance: AllDataEntitiesService;
+  static get instance() {
+    return this._instance || (this._instance = new this());
+  }
 
   private allDataEntitiesStoreInited = false;
   private fetchingOperationId?: symbol;
-  private debouncedFetchAllDataEntitiesStore: DebouncedFunc<() => Promise<void>>;
+  readonly debouncedFetchAllDataEntitiesStore: DebouncedFunc<() => Promise<void>>;
 
   private constructor() {
     this.debouncedFetchAllDataEntitiesStore = debounce(this.fetchAllDataEntitiesStore, 300);
-  }
-
-  static get instance() {
-    return this._instance || (this._instance = new this());
   }
 
   async initAllDataEntitiesStore() {

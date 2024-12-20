@@ -7,7 +7,6 @@ import { ImportLayer, ImportTaskFull, ImportTaskProgress, InputStartResponseDto 
 @boundClass
 class ImportClient extends GeoserverClient {
   private static _instance: ImportClient;
-
   static get instance(): ImportClient {
     return this._instance || (this._instance = new this());
   }

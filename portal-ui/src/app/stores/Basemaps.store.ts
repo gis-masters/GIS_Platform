@@ -5,11 +5,10 @@ import { Basemap, SourceType } from '../services/data/basemaps/basemaps.models';
 const osmBasemap = { title: 'OSM', thumbnailUrn: '/assets/images/thumbnail-osm.jpg', type: SourceType.OSM, id: 666 };
 
 class Basemaps {
+  private static _instance: Basemaps;
   static get instance() {
     return this._instance || (this._instance = new this());
   }
-
-  private static _instance: Basemaps;
 
   @observable basemaps: Basemap[] = [];
   @observable currentBasemap?: Basemap;

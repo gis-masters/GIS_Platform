@@ -7,11 +7,9 @@ import { flags } from '../services/feature-flags';
 import { extractTableNameFromFeatureId } from '../services/geoserver/featureType/featureType.util';
 import { WfsFeature } from '../services/geoserver/wfs/wfs.models';
 import { CrgLayer } from '../services/gis/layers/layers.models';
-import { MapAction, MapMode, MeasureMode } from '../services/map/map.models';
-import { LabelType } from '../services/map/map-labels.models';
-import { MeasureItem } from '../services/map/map-measure.service';
+import { LabelType } from '../services/map/labels/map-labels.models';
+import { MapAction, MapMode } from '../services/map/map.models';
 import { prepareLike } from '../services/util/filters/filterObjects';
-import { UnitsOfAreaMeasurement } from '../services/util/open-layers.util';
 import { attributesTableStore } from './AttributesTable.store';
 import { currentProject } from './CurrentProject.store';
 import { Pages, route } from './Route.store';
@@ -136,34 +134,28 @@ const mapModeAndActionMatrix = {
 const defaultValues: Partial<MapStore> = {
   selectionActive: false,
   mode: MapMode.DEFAULT,
-  unitsOfAreaMeasurement: UnitsOfAreaMeasurement.HECTARE,
   selectedFeatures: [],
   labelsVisible: false,
   labels: observable.array([], { deep: false })
 };
 
 class MapStore {
-  @observable private loadingCount = 0;
-
-  measureItems: MeasureItem[] = observable.array([], { deep: false });
-  @observable measureMode: MeasureMode | null = null;
-  @observable unitsOfAreaMeasurement: UnitsOfAreaMeasurement = UnitsOfAreaMeasurement.HECTARE;
-
-  @observable mode: MapMode = MapMode.DEFAULT;
-
-  @observable selectionActive: boolean = false;
-  @observable selectedFeatures: WfsFeature[] = [];
-
-  @observable labelsVisible = false;
-  @observable currentLabelType?: LabelType;
-  labels: Feature[] = observable.array([], { deep: false });
-
-  private _selectingFeaturesLimit = 500;
-
   private static _instance: MapStore;
   static get instance() {
     return this._instance || (this._instance = new this());
   }
+
+  @observable mode: MapMode = MapMode.DEFAULT;
+  @observable selectionActive: boolean = false;
+  @observable selectedFeatures: WfsFeature[] = [];
+  @observable labelsVisible = false;
+  @observable currentLabelType?: LabelType;
+
+  @observable private loadingCount = 0;
+
+  labels: Feature[] = observable.array([], { deep: false });
+
+  private _selectingFeaturesLimit = 500;
 
   private constructor() {
     makeObservable(this);
@@ -261,11 +253,6 @@ class MapStore {
   }
 
   @action
-  setMeasureMode(measureMode: MeasureMode | null) {
-    this.measureMode = measureMode;
-  }
-
-  @action
   setMode(mode: MapMode) {
     this.mode = mode;
   }
@@ -273,25 +260,6 @@ class MapStore {
   @action
   setSelectionActive(status: boolean) {
     this.selectionActive = status;
-  }
-
-  @action
-  setUnitsOfAreaMeasurement(units: UnitsOfAreaMeasurement) {
-    this.unitsOfAreaMeasurement = units;
-    localStorage.setItem('UnitsOfAreaMeasurement', units);
-  }
-
-  @action
-  addMeasureItem(item: MeasureItem) {
-    this.measureItems.push(item);
-  }
-  @action
-  removeMeasureItem(item: MeasureItem) {
-    const itemIndex = this.measureItems.findIndex(({ id }) => id === item.id);
-
-    if (itemIndex !== -1) {
-      this.measureItems.splice(itemIndex, 1);
-    }
   }
 
   // use only in map-selection.service.ts

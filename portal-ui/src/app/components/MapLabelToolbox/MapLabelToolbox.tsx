@@ -6,7 +6,7 @@ import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 import { Feature } from 'ol';
 
-import { LabelType } from '../../services/map/map-labels.models';
+import { LabelType } from '../../services/map/labels/map-labels.models';
 import { FeatureStyle } from '../FeatureStyle/FeatureStyle';
 import { IconButton } from '../IconButton/IconButton';
 

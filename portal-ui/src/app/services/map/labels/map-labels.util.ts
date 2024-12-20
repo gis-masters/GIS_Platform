@@ -10,21 +10,21 @@ import Polygon from 'ol/geom/Polygon';
 import { getLength } from 'ol/sphere';
 import { Circle, Fill, Stroke, Style, Text } from 'ol/style';
 
-import { currentProject } from '../../stores/CurrentProject.store';
-import { mapStore } from '../../stores/Map.store';
-import { sidebars } from '../../stores/Sidebars.store';
-import { Projection } from '../data/projections/projections.models';
-import { getProjectionByCode } from '../data/projections/projections.service';
-import { getProjectionCode, getProjectionUnit } from '../data/projections/projections.util';
-import { extractTableNameFromFeatureId } from '../geoserver/featureType/featureType.util';
-import { GeometryType, supportedGeometryTypes, WfsFeature } from '../geoserver/wfs/wfs.models';
-import { UnitsOfAreaMeasurement, UnitsOfLengthMeasurement } from '../util/open-layers.util';
-import { isArrayOf } from '../util/typeGuards/isArrayOf';
-import { isCircleProperties } from '../util/typeGuards/isCircleProperties';
-import { isCoordinateArray, isCoordinateArrayArray } from '../util/typeGuards/isCoordinate';
-import { isLabelTextProperties } from '../util/typeGuards/isLabelTextProperties';
-import { isNumberArray } from '../util/typeGuards/isNumberArray';
-import { mapService } from './map.service';
+import { currentProject } from '../../../stores/CurrentProject.store';
+import { mapStore } from '../../../stores/Map.store';
+import { sidebars } from '../../../stores/Sidebars.store';
+import { Projection } from '../../data/projections/projections.models';
+import { getProjectionByCode } from '../../data/projections/projections.service';
+import { getProjectionCode, getProjectionUnit } from '../../data/projections/projections.util';
+import { extractTableNameFromFeatureId } from '../../geoserver/featureType/featureType.util';
+import { GeometryType, supportedGeometryTypes, WfsFeature } from '../../geoserver/wfs/wfs.models';
+import { UnitsOfAreaMeasurement, UnitsOfLengthMeasurement } from '../../util/open-layers.util';
+import { isArrayOf } from '../../util/typeGuards/isArrayOf';
+import { isCircleProperties } from '../../util/typeGuards/isCircleProperties';
+import { isCoordinateArray, isCoordinateArrayArray } from '../../util/typeGuards/isCoordinate';
+import { isLabelTextProperties } from '../../util/typeGuards/isLabelTextProperties';
+import { isNumberArray } from '../../util/typeGuards/isNumberArray';
+import { mapService } from '../map.service';
 import {
   FeatureFontStringData,
   FeatureLengthData,

@@ -1,4 +1,4 @@
-import { CircleProperties } from '../../map/map-labels.models';
+import { CircleProperties } from '../../map/labels/map-labels.models';
 
 const circlePropertiesKeys = new Set(['fillColor', 'strokeColor', 'radius']);
 

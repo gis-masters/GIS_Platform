@@ -1,5 +1,5 @@
 import { createElement } from 'react';
-import { createRoot, Root } from 'react-dom/client';
+import { createRoot } from 'react-dom/client';
 import { reaction } from 'mobx';
 import { boundMethod } from 'autobind-decorator';
 import { Feature, MapBrowserEvent, Overlay } from 'ol';
@@ -14,28 +14,24 @@ import VectorLayer from 'ol/layer/Vector';
 import { unByKey } from 'ol/Observable';
 import VectorSource from 'ol/source/Vector';
 
-import { MapMeasureTooltip } from '../../components/MapMeasureTooltip/MapMeasureTooltip';
-import { mapStore } from '../../stores/Map.store';
-import { communicationService } from '../communication.service';
-import { Projection } from '../data/projections/projections.models';
-import { getOlProjection } from '../data/projections/projections.service';
-import { GeometryType } from '../geoserver/wfs/wfs.models';
-import { UnitsOfAreaMeasurement } from '../util/open-layers.util';
-import { mapDrawService } from './draw/map-draw.service';
-import { MapMode, MeasureMode } from './map.models';
-import { mapService } from './map.service';
-import { getStyle, KnownStyleKey } from './styles/map-styles';
-
-export interface MeasureItem {
-  id: symbol;
-  feature: Feature;
-  tooltipRoot: Root;
-  tooltipNode: HTMLElement;
-  tooltipOverlay: Overlay;
-}
+import { MapMeasureTooltip } from '../../../components/MapMeasureTooltip/MapMeasureTooltip';
+import { mapStore } from '../../../stores/Map.store';
+import { mapMeasureStore } from '../../../stores/MapMeasure.store';
+import { projectionsStore } from '../../../stores/Projections.store';
+import { communicationService } from '../../communication.service';
+import { GeometryType } from '../../geoserver/wfs/wfs.models';
+import { UnitsOfAreaMeasurement } from '../../util/open-layers.util';
+import { mapDrawService } from '../draw/map-draw.service';
+import { MapMode } from '../map.models';
+import { mapService } from '../map.service';
+import { getStyle, KnownStyleKey } from '../styles/map-styles';
+import { MeasureItem, MeasureMode } from './map-measure.models';
 
 class MapMeasureService {
   private static _instance: MapMeasureService;
+  static get instance() {
+    return this._instance || (this._instance = new this());
+  }
 
   private source = new VectorSource();
   private draw?: Draw;
@@ -44,7 +40,6 @@ class MapMeasureService {
   private helpTooltipElement?: HTMLDivElement;
   private helpTooltip?: Overlay;
   private helpMsg?: string;
-  private projection?: Projection;
 
   private layer = new VectorLayer({
     source: this.source,
@@ -53,26 +48,10 @@ class MapMeasureService {
     style: getStyle(KnownStyleKey.MeasureLayerStyles)
   });
 
-  static get instance() {
-    return this._instance || (this._instance = new this());
-  }
-
   private constructor() {
-    try {
-      if (mapService.map) {
-        this.addMapEventsListeners();
-      }
-    } catch {
-      // do nothing
-    }
-
-    mapService.mapCreated.on((): void => {
-      this.addMapEventsListeners();
-    });
-
     communicationService.beforeMapDestroy.on(() => {
       this.clearAll();
-      mapStore.setMeasureMode(null);
+      mapMeasureStore.setMeasureMode(null);
     });
 
     reaction(
@@ -87,13 +66,13 @@ class MapMeasureService {
     this.initUnitsOfAreaMeasurement();
   }
 
-  async measureOn(mode: MeasureMode) {
+  measureOn(mode: MeasureMode) {
     mapDrawService.drawOff();
     this.measureOff();
     mapStore.setMode(MapMode.MEASURE);
-    mapStore.setMeasureMode(mode);
+    mapMeasureStore.setMeasureMode(mode);
     if (!this.inited) {
-      await this.init();
+      this.init();
     }
 
     this.draw = this.getDraw(mode);
@@ -102,10 +81,64 @@ class MapMeasureService {
     this.draw.on('drawend', this.handleDrawEnd);
 
     mapService.map.addInteraction(this.draw);
+
+    // @ts-expect-error - ошибка в типах ol
+    mapService.map.on('pointerdown', this.handlePointerDown);
+    mapService.map.on('pointermove', this.handlePointerMove);
   }
 
-  private async init() {
-    this.projection = await getOlProjection();
+  measureOff() {
+    if (this.draw) {
+      this.draw.un('drawend', this.handleDrawEnd);
+
+      if (this.featureGeometryChangeListenersKeys) {
+        unByKey(this.featureGeometryChangeListenersKeys);
+      }
+
+      if (this.sketchItem) {
+        this.clearItem(this.sketchItem);
+      }
+
+      mapService.map.removeInteraction(this.draw);
+      delete this.draw;
+      mapMeasureStore.setMeasureMode(null);
+    }
+
+    // @ts-expect-error - ошибка в типах ol
+    mapService.map.un('pointerdown', this.handlePointerDown);
+    mapService.map.un('pointermove', this.handlePointerMove);
+  }
+
+  setHelpMsg(helpMsg: string) {
+    this.helpMsg = helpMsg;
+  }
+
+  removeHelpMsg() {
+    this.helpTooltipElement?.remove();
+  }
+
+  createMeasureStartTooltip() {
+    this.helpMsg = 'клик для начала измерения';
+    this.helpTooltipElement = document.createElement('div');
+    this.helpTooltipElement.className = 'HelpMessage';
+    this.helpTooltip = new Overlay({
+      element: this.helpTooltipElement,
+      offset: [15, 0],
+      positioning: 'center-left'
+    });
+
+    mapService.map.addOverlay(this.helpTooltip);
+  }
+
+  @boundMethod
+  private handleMeasureDrawStart(e: DrawEvent) {
+    this.sketchItem = this.createItem(e.feature);
+    this.featureGeometryChangeListenersKeys = (e.feature as Feature<SimpleGeometry>)
+      .getGeometry()
+      ?.on('change', this.handleFeatureGeometryChange);
+  }
+
+  private init() {
     mapService.map.addLayer(this.layer);
     const modify = new Modify({ source: this.source });
     mapService.map.addInteraction(modify);
@@ -120,7 +153,7 @@ class MapMeasureService {
         ...this.featureGeometryChangeListenersKeys,
         ...(e.features.getArray() as Feature<SimpleGeometry>[]).map(feature => {
           return feature.getGeometry()?.on('change', (e: BaseEvent) => {
-            const modifyingItem = mapStore.measureItems.find(item => item.feature === feature);
+            const modifyingItem = mapMeasureStore.measureItems.find(item => item.feature === feature);
             this.handleFeatureGeometryChange(e, modifyingItem);
           });
         })
@@ -129,11 +162,18 @@ class MapMeasureService {
   }
 
   @boundMethod
-  private handleMeasureDrawStart(e: DrawEvent) {
-    this.sketchItem = this.createItem(e.feature);
-    this.featureGeometryChangeListenersKeys = (e.feature as Feature<SimpleGeometry>)
-      .getGeometry()
-      ?.on('change', this.handleFeatureGeometryChange);
+  private handleDrawEnd() {
+    if (!this.sketchItem) {
+      return;
+    }
+    this.setHelpMsg('клик для начала измерения');
+    this.sketchItem.tooltipOverlay.setOffset([0, -6]);
+    this.renderTooltip(this.sketchItem, false);
+    mapMeasureStore.addMeasureItem(this.sketchItem);
+    if (this.featureGeometryChangeListenersKeys) {
+      unByKey(this.featureGeometryChangeListenersKeys);
+    }
+    delete this.sketchItem;
   }
 
   @boundMethod
@@ -158,18 +198,35 @@ class MapMeasureService {
   }
 
   @boundMethod
-  private handleDrawEnd() {
-    if (!this.sketchItem) {
+  clearAll() {
+    [...mapMeasureStore.measureItems].forEach(this.clearItem);
+  }
+
+  @boundMethod
+  private clearItem(item: MeasureItem) {
+    if (this.source.hasFeature(item.feature)) {
+      this.source.removeFeature(item.feature);
+    }
+    item.tooltipRoot.unmount();
+    mapService.map.removeOverlay(item.tooltipOverlay);
+    mapMeasureStore.removeMeasureItem(item);
+  }
+
+  @boundMethod
+  private handlePointerDown() {
+    this.setHelpMsg('двойной клик для завершения измерения');
+  }
+
+  @boundMethod
+  private handlePointerMove(e: MapBrowserEvent<UIEvent>) {
+    if (e.dragging) {
       return;
     }
-    this.setHelpMsg('клик для начала измерения');
-    this.sketchItem.tooltipOverlay.setOffset([0, -6]);
-    this.renderTooltip(this.sketchItem, false);
-    mapStore.addMeasureItem(this.sketchItem);
-    if (this.featureGeometryChangeListenersKeys) {
-      unByKey(this.featureGeometryChangeListenersKeys);
+
+    if (this.helpTooltipElement && this.helpMsg) {
+      this.helpTooltipElement.innerHTML = this.helpMsg;
+      this.helpTooltip?.setPosition(e.coordinate);
     }
-    delete this.sketchItem;
   }
 
   private createItem(feature: Feature): MeasureItem {
@@ -189,36 +246,6 @@ class MapMeasureService {
       tooltipNode,
       tooltipOverlay
     };
-  }
-
-  measureOff() {
-    if (this.draw) {
-      this.draw.un('drawend', this.handleDrawEnd);
-      if (this.featureGeometryChangeListenersKeys) {
-        unByKey(this.featureGeometryChangeListenersKeys);
-      }
-      if (this.sketchItem) {
-        this.clearItem(this.sketchItem);
-      }
-      mapService.map.removeInteraction(this.draw);
-      delete this.draw;
-      mapStore.setMeasureMode(null);
-    }
-  }
-
-  @boundMethod
-  clearAll() {
-    [...mapStore.measureItems].forEach(this.clearItem);
-  }
-
-  @boundMethod
-  private clearItem(item: MeasureItem) {
-    if (this.source.hasFeature(item.feature)) {
-      this.source.removeFeature(item.feature);
-    }
-    item.tooltipRoot.unmount();
-    mapService.map.removeOverlay(item.tooltipOverlay);
-    mapStore.removeMeasureItem(item);
   }
 
   private get inited(): boolean {
@@ -242,14 +269,14 @@ class MapMeasureService {
   }
 
   private renderTooltip(item: MeasureItem, sketch: boolean) {
-    if (!this.projection) {
+    if (!projectionsStore.olProjection) {
       return;
     }
 
     const reactElement = createElement(MapMeasureTooltip, {
       item: { ...item },
       sketch,
-      projection: this.projection,
+      projection: projectionsStore.olProjection,
       onClear: this.clearItem
     });
 
@@ -259,53 +286,9 @@ class MapMeasureService {
   private initUnitsOfAreaMeasurement() {
     const storedUnits =
       (localStorage.getItem('UnitsOfAreaMeasurement') as UnitsOfAreaMeasurement) || UnitsOfAreaMeasurement.HECTARE;
-    if (mapStore.unitsOfAreaMeasurement !== storedUnits) {
-      mapStore.setUnitsOfAreaMeasurement(storedUnits);
+    if (mapMeasureStore.unitsOfAreaMeasurement !== storedUnits) {
+      mapMeasureStore.setUnitsOfAreaMeasurement(storedUnits);
     }
-  }
-
-  setHelpMsg(helpMsg: string) {
-    this.helpMsg = helpMsg;
-  }
-
-  removeHelpMsg() {
-    this.helpTooltipElement?.remove();
-  }
-
-  createMeasureStartTooltip() {
-    this.helpMsg = 'клик для начала измерения';
-    this.helpTooltipElement = document.createElement('div');
-    this.helpTooltipElement.className = 'HelpMessage';
-    this.helpTooltip = new Overlay({
-      element: this.helpTooltipElement,
-      offset: [15, 0],
-      positioning: 'center-left'
-    });
-
-    mapService.map.addOverlay(this.helpTooltip);
-  }
-
-  handlePointerMove(evt: MapBrowserEvent<UIEvent>) {
-    if (evt.dragging) {
-      return;
-    }
-    if (this.helpTooltipElement && this.helpMsg) {
-      this.helpTooltipElement.innerHTML = this.helpMsg;
-      this.helpTooltip?.setPosition(evt.coordinate);
-    }
-  }
-
-  private addMapEventsListeners() {
-    // ошибка в типах ol
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    mapService.map.on('pointerdown', () => {
-      this.setHelpMsg('двойной клик для завершения измерения');
-    });
-
-    mapService.map.on('pointermove', (e: MapBrowserEvent<UIEvent>) => {
-      this.handlePointerMove(e);
-    });
   }
 }
 

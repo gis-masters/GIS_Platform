@@ -11,15 +11,14 @@ import { allDataEntitiesStore } from './AllDataEntities.store';
 import { allProjects } from './AllProjects.store';
 
 class AllPermissions {
-  @observable fetching = false;
-  @observable private tablesAndDatasetsPermissionsHeap: ResourcePermissions[] = [];
-  @observable private projectsPermissionsHeap: { [projectId: string]: RoleAssignmentBody[] } = {};
-
   private static _instance: AllPermissions;
-
   static get instance() {
     return this._instance || (this._instance = new this());
   }
+
+  @observable fetching = false;
+  @observable private tablesAndDatasetsPermissionsHeap: ResourcePermissions[] = [];
+  @observable private projectsPermissionsHeap: { [projectId: string]: RoleAssignmentBody[] } = {};
 
   private constructor() {
     makeObservable(this);

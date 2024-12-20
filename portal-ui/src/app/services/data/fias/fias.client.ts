@@ -7,7 +7,6 @@ import { FiasApiItem } from './fias.models';
 @boundClass
 class FiasClient extends DataClient {
   private static _instance: FiasClient;
-
   static get instance(): FiasClient {
     return this._instance || (this._instance = new this());
   }

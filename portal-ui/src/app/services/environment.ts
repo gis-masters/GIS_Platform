@@ -66,6 +66,9 @@ export interface EnvironmentData {
 
 export class Environment implements EnvironmentData {
   private static _instance: Environment;
+  static get instance(): Environment {
+    return this._instance || (this._instance = new this());
+  }
 
   inited = false;
 
@@ -87,10 +90,6 @@ export class Environment implements EnvironmentData {
   favicon?: string;
   suppressToastErrors: ProtocolsBoolean = emptyEnv.suppressToastErrors;
   sendErrorsToTG: ProtocolsBoolean = emptyEnv.sendErrorsToTG;
-
-  static get instance(): Environment {
-    return this._instance || (this._instance = new this());
-  }
 
   private constructor() {
     if (typeof _environmentRaw === 'object') {
