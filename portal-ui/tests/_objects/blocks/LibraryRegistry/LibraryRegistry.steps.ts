@@ -1,5 +1,5 @@
 import { Then, When } from '@wdio/cucumber-framework';
-import { isEqual } from 'lodash';
+import { isEqual, sortBy } from 'lodash';
 
 import { ScenarioScope } from '../../ScenarioScope';
 import { xTableFilterTypeBoolBlock } from '../XTable/Filter/_type/XTable-Filter_type_bool.block';
@@ -112,10 +112,12 @@ When(
   'я дожидаюсь, пока в реестре документов отобразятся только документы с указанными идентификаторами',
   async function (this: ScenarioScope) {
     const ids = [2, 3].map(index => this.latestLibraryRecords[index]?.id).filter(Boolean);
+    await browser.pause(200); // баг waitUntil
 
-    await browser.pause(100); // баг waitUntil
+    const currentIds = await libraryRegistryBlock.getVisibleDocumentsIds();
 
-    await browser.waitUntil(async () => isEqual(ids, await libraryRegistryBlock.getVisibleDocumentsIds()), {
+    // sortBy т.к. фильтр по умолчанию настроен на поле title
+    await browser.waitUntil(() => isEqual(sortBy(ids), sortBy(currentIds)), {
       timeout: 10_000
     });
   }
@@ -125,8 +127,12 @@ Then(
   'в реестре документов отображается только документы с указанными идентификаторами',
   async function (this: ScenarioScope) {
     const ids = [2, 3].map(index => this.latestLibraryRecords[index]?.id).filter(Boolean);
+    await browser.pause(200); // баг waitUntil
 
-    await browser.waitUntil(async () => isEqual(ids, await libraryRegistryBlock.getVisibleDocumentsIds()), {
+    const currentIds = await libraryRegistryBlock.getVisibleDocumentsIds();
+
+    // sortBy т.к. фильтр по умолчанию настроен на поле title
+    await browser.waitUntil(() => isEqual(sortBy(ids), sortBy(currentIds)), {
       timeout: 10_000
     });
   }

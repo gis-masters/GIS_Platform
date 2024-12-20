@@ -13,6 +13,7 @@ class LibraryRegistryBlock extends Block {
   xTable = new XTableBlock(this.selectors.container);
 
   async getVisibleDocumentsIds(): Promise<number[]> {
+    await this.waitForVisible();
     const colValues = await xTableBlock.getSecondColValues();
 
     return colValues.map(Number);
