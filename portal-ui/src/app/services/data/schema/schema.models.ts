@@ -229,6 +229,7 @@ export interface PropertySchemaCustom extends BasePropertySchema {
   ControlComponent: ComponentType<FormControlProps>;
   ViewComponent?: ComponentType<FormControlProps>;
   defaultValue?: unknown;
+
   [key: string]: unknown;
 }
 
@@ -288,6 +289,11 @@ export type PropertySchema =
   | PropertySchemaCustom
   | PropertySchemaGeometry
   | PropertySchemaUuid;
+
+export type PropertiesAfterValidation = {
+  validProperties: PropertySchema[];
+  invalidProperties: unknown[];
+};
 
 export function isPropertySchema(obj: unknown): obj is PropertySchema {
   return (
