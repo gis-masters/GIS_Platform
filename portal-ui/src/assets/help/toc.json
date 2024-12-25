@@ -454,6 +454,11 @@
             "title": "Реестр документов",
             "contentUrl": "/assets/help/5dataManagement/5registry/05registry.html"
           },
+          {
+            "id": "8createdBuffer",
+            "title": "Создание буферной зоны",
+            "contentUrl": "/assets/help/map/dataEdit/8createdBuffer/8createdBuffer.html"
+          },
 
           {
             "id": "placement_project",
@@ -527,8 +532,8 @@
             "title": "Подпись документов",
             "children": [
               {
-                "id": "libraryKpt",
-                "title": "Библиотека «КПТ»",
+                "id": "cryptoPro",
+                "title": "Подпись документов",
                 "contentUrl": "/assets/help/5dataManagement/28cryptoPro/28cryptoPro.html"
               }
             ]
