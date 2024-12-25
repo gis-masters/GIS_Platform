@@ -15,8 +15,6 @@ import { BasemapsSelectComponent } from './components/basemaps-select/basemaps-s
 import { ChangePasswordFormComponent } from './components/change-password-form/change-password-form.component';
 import { DataImportComponent } from './components/data-import/data-import.component';
 import { DataManagementComponent } from './components/data-management/data-management.component';
-import { AlertDialogComponent } from './components/dialogs/alert-dialog/alert-dialog.component';
-import { ConfirmDialogComponent } from './components/dialogs/confirm-dialog/confirm-dialog.component';
 import { EditBugObjectComponent } from './components/edit-bug-object/edit-bug-object.component';
 import { EditFeatureComponent } from './components/edit-feature/edit-feature.component';
 import { EditFeatureActionsComponent } from './components/edit-feature-actions/edit-feature-actions.component';
@@ -94,7 +92,6 @@ import { GlobalErrorHandler } from './services/global-error.handler';
     ProgressItemComponent,
     ProjectsComponent,
     OrgRegistrationFormComponent,
-    ConfirmDialogComponent,
     EditFeaturesSidebarComponent,
     EditFeatureComponent,
     AttributesNgComponent,
@@ -106,7 +103,6 @@ import { GlobalErrorHandler } from './services/global-error.handler';
     MapComponent,
     ServicesProvider,
     WorkImportPreviewComponent,
-    AlertDialogComponent,
     WorkspaceComponent,
     EditFeatureFieldComponent,
     EditFeatureGeometryComponent,

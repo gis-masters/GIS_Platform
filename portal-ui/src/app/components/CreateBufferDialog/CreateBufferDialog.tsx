@@ -2,16 +2,16 @@ import React, { FC, useCallback } from 'react';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { Geometry } from 'jsts/org/locationtech/jts/geom';
+import GeometryFactory from 'jsts/org/locationtech/jts/geom/GeometryFactory';
 import { GeoJSONReader, GeoJSONWriter } from 'jsts/org/locationtech/jts/io';
 import { BufferOp } from 'jsts/org/locationtech/jts/operation/buffer';
 import { cloneDeep } from 'lodash';
 
-import { getProjectionByCode } from '../../services/data/projections/projections.service';
 import { PropertyType, SimpleSchema } from '../../services/data/schema/schema.models';
 import { WfsFeature, WfsMultiPolygonGeometry } from '../../services/geoserver/wfs/wfs.models';
 import { getEmptyFeature } from '../../services/geoserver/wfs/wfs.service';
 import { CrgLayer, CrgVectorLayer } from '../../services/gis/layers/layers.models';
-import { bufferFeatureStore } from '../../stores/BufferFeature.store';
+import { mapDrawService } from '../../services/map/draw/map-draw.service';
 import { EditFeatureMode, sidebars } from '../../stores/Sidebars.store';
 import { FormDialog } from '../FormDialog/FormDialog';
 import { SelectSuitableLayerDialog } from '../SelectSuitableLayerDialog/SelectSuitableLayerDialog';
@@ -33,41 +33,28 @@ interface BufferForm {
 export const CreateBufferDialog: FC<CreateBufferDialogProps> = observer(({ open, layer, feature, onClose }) => {
   const createBuffer = useCallback(
     async (formValue: BufferForm) => {
-      // игнорируем ошибку конструктора т.к. нам нужен метод read с значениями по умолчанию
+      if (!(formValue.layer?.dataset && formValue.layer?.tableName)) {
+        return;
+      }
 
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-expect-error
-      const reader = new GeoJSONReader();
+      sidebars.closeEdit();
+
+      const reader = new GeoJSONReader(new GeometryFactory());
       const writer = new GeoJSONWriter();
       const geom = BufferOp.bufferOp(reader.read(feature.geometry), formValue.buffer) as Geometry;
       const featureWithBuffer = { ...cloneDeep(feature), geometry: writer.write(geom) as WfsMultiPolygonGeometry };
+      const emptyFeature = (await getEmptyFeature(formValue.layer as CrgVectorLayer)) as WfsFeature;
+      featureWithBuffer.id = emptyFeature.id;
+      featureWithBuffer.properties = emptyFeature.properties;
 
-      if (formValue.layer?.dataset && formValue.layer?.tableName) {
-        sidebars.closeEdit();
-        const emptyFeature = (await getEmptyFeature(formValue.layer as CrgVectorLayer)) as WfsFeature;
+      sidebars.openEdit({
+        features: [featureWithBuffer],
+        mode: EditFeatureMode.single,
+        layer: formValue.layer as CrgVectorLayer,
+        isNew: true
+      });
 
-        featureWithBuffer.id = emptyFeature.id;
-        featureWithBuffer.properties = emptyFeature.properties;
-
-        sidebars.openEdit({
-          features: [featureWithBuffer],
-          mode: EditFeatureMode.single,
-          layer: formValue.layer as CrgVectorLayer,
-          isNew: true
-        });
-
-        sidebars.setValidateGeometry();
-        sidebars.setFeaturesEdited(true);
-
-        bufferFeatureStore.setBufferFeature(featureWithBuffer);
-
-        if (layer.nativeCRS) {
-          const projection = await getProjectionByCode(layer.nativeCRS);
-          if (projection) {
-            bufferFeatureStore.setPrevProjection(projection);
-          }
-        }
-      }
+      void mapDrawService.highlightFeatures([featureWithBuffer]);
     },
     [feature]
   );
@@ -90,6 +77,7 @@ export const CreateBufferDialog: FC<CreateBufferDialogProps> = observer(({ open,
         required: true,
         defaultValue: 10,
         maxValue: 100_000,
+        minValue: -100_000,
         propertyType: PropertyType.INT
       }
     ]

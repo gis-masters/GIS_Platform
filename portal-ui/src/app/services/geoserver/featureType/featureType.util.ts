@@ -31,11 +31,11 @@ export function extractFeatureId(featureId: string): number {
 }
 
 export const extractFeatureTypeName = (featureId: string): string => {
-  if (featureId.length === 0) {
+  if (featureId === undefined || featureId.length === 0) {
     return featureId;
   }
 
-  const [featureTypeName] = featureId.split('.');
+  const [featureTypeName] = String(featureId).split('.');
   if (!featureTypeName) {
     throw new Error('Не удалось извлечь featureTypeName. Передан некорректный идентификатор объекта: ' + featureId);
   }

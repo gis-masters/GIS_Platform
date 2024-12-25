@@ -38,8 +38,6 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit {
   isBugReportSidebarActive = false;
   isFeaturesSidebarActive = false;
   isEditSidebarActive = false;
-  isDefaultActive = false;
-  isSelectionActive = false;
 
   cn = cn('map');
 
@@ -161,22 +159,6 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit {
           window.dispatchEvent(new Event('resize'));
         }, 0);
       });
-
-    fromMobx(() => mapStore.mode, true)
-      .pipe(takeUntil(this.unsubscribe$))
-      .subscribe(mode => {
-        setTimeout(() => {
-          this.isDefaultActive = mode === MapMode.SELECTION;
-        }, 0);
-      });
-
-    fromMobx(() => mapStore.selectionActive, true)
-      .pipe(takeUntil(this.unsubscribe$))
-      .subscribe(selectionActive => {
-        setTimeout(() => {
-          this.isSelectionActive = selectionActive;
-        }, 0);
-      });
   }
 
   ngOnDestroy(): void {
@@ -190,4 +172,7 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit {
     this.unsubscribe$.complete();
     Emitter.scopeOff(this);
   }
+
+  protected readonly mapStore = mapStore;
+  protected readonly MapMode = MapMode;
 }

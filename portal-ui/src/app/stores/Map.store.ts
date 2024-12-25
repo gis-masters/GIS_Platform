@@ -1,5 +1,4 @@
 import { action, computed, makeObservable, observable, reaction } from 'mobx';
-import { Feature } from 'ol';
 import sift from 'sift';
 
 import { extractFeatureIdsFromAttributesFilter } from '../components/Attributes/Attributes.utils';
@@ -7,7 +6,6 @@ import { flags } from '../services/feature-flags';
 import { extractTableNameFromFeatureId } from '../services/geoserver/featureType/featureType.util';
 import { WfsFeature } from '../services/geoserver/wfs/wfs.models';
 import { CrgLayer } from '../services/gis/layers/layers.models';
-import { LabelType } from '../services/map/labels/map-labels.models';
 import { MapAction, MapMode } from '../services/map/map.models';
 import { prepareLike } from '../services/util/filters/filterObjects';
 import { attributesTableStore } from './AttributesTable.store';
@@ -134,9 +132,7 @@ const mapModeAndActionMatrix = {
 const defaultValues: Partial<MapStore> = {
   selectionActive: false,
   mode: MapMode.DEFAULT,
-  selectedFeatures: [],
-  labelsVisible: false,
-  labels: observable.array([], { deep: false })
+  selectedFeatures: []
 };
 
 class MapStore {
@@ -148,14 +144,10 @@ class MapStore {
   @observable mode: MapMode = MapMode.DEFAULT;
   @observable selectionActive: boolean = false;
   @observable selectedFeatures: WfsFeature[] = [];
-  @observable labelsVisible = false;
-  @observable currentLabelType?: LabelType;
 
   @observable private loadingCount = 0;
 
-  labels: Feature[] = observable.array([], { deep: false });
-
-  private _selectingFeaturesLimit = 500;
+  private readonly SELECTING_FEATURES_LIMIT = 500;
 
   private constructor() {
     makeObservable(this);
@@ -173,7 +165,7 @@ class MapStore {
   }
 
   get selectingFeaturesLimit(): number {
-    return flags.selectingFeaturesLimit ? Number(flags.selectingFeaturesLimit) : this._selectingFeaturesLimit;
+    return flags.selectingFeaturesLimit ? Number(flags.selectingFeaturesLimit) : this.SELECTING_FEATURES_LIMIT;
   }
 
   // TODO: переделать на mapStore.allowedActions.includes({some_action})
@@ -267,21 +259,6 @@ class MapStore {
   @action
   setSelectedFeatures(features: WfsFeature[]) {
     this.selectedFeatures = features;
-  }
-
-  @action
-  setLabelsVisibility(status: boolean) {
-    this.labelsVisible = status;
-  }
-
-  @action
-  setCurrentLabelType(type?: LabelType) {
-    this.currentLabelType = type;
-  }
-
-  @action
-  setLabels(labels: Feature[]) {
-    this.labels.splice(0, this.labels.length, ...labels);
   }
 
   @action

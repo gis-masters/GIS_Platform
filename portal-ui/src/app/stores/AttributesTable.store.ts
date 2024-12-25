@@ -42,12 +42,10 @@ class AttributesTableStore {
   }
 
   isLayerFiltered(layer: CrgLayer): boolean {
-    return this.isLayerFilterExist(layer) && this.isLayerFilterEnabled(layer);
+    return this.isLayerFilterExist(layer) && this.isLayerFilterEnabled(layer.tableName);
   }
 
-  isLayerFilterEnabled(layerOrTableName: CrgLayer | string): boolean {
-    const tableName = typeof layerOrTableName === 'string' ? layerOrTableName : layerOrTableName.tableName;
-
+  isLayerFilterEnabled(tableName: string | undefined): boolean {
     if (!tableName) {
       throw new Error(errorMessage);
     }
@@ -55,9 +53,7 @@ class AttributesTableStore {
     return !this.filterDisabled[tableName];
   }
 
-  getLayerFilter(layerOrTableName: CrgVectorLayer | string, considerEnabledness = false): FilterQuery {
-    const tableName = typeof layerOrTableName === 'string' ? layerOrTableName : layerOrTableName.tableName;
-
+  getLayerFilter(tableName: string, considerEnabledness = false): FilterQuery {
     if (considerEnabledness && !this.isLayerFilterEnabled(tableName)) {
       return {};
     }

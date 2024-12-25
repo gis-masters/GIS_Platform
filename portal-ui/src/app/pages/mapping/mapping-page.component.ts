@@ -5,7 +5,6 @@ import { NGXLogger } from 'ngx-logger';
 import { interval, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
-import { AlertDialogComponent } from '../../components/dialogs/alert-dialog/alert-dialog.component';
 import { Toast } from '../../components/Toast/Toast';
 import { Process, ProcessStatus } from '../../services/data/processes/processes.models';
 import { getProcess } from '../../services/data/processes/processes.service';
@@ -19,6 +18,7 @@ import {
   ImportDataHolderService
 } from '../../services/geoserver/import/import-data-holder.service';
 import { projectsService } from '../../services/gis/projects/projects.service';
+import { achtung } from '../../services/utility-dialogs.service';
 import { currentImport } from '../../stores/CurrentImport.store';
 import { currentProject } from '../../stores/CurrentProject.store';
 
@@ -86,7 +86,10 @@ export class MappingPageComponent implements OnInit, OnDestroy {
 
   async startWorkImport(): Promise<void> {
     if (!this.importData.isWorkImportReady) {
-      this.dialog.open(AlertDialogComponent, { data: { message: 'Есть не обработанные слои' } });
+      await achtung({
+        message: 'Есть не обработанные слои',
+        okText: 'Закончить обработку слоёв'
+      });
 
       return;
     }

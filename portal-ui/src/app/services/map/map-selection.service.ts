@@ -292,10 +292,6 @@ class MapSelectionService {
     }
   }
 
-  enableSelectionMode(enabled: boolean): void {
-    mapStore.setMode(enabled ? MapMode.DEFAULT : MapMode.SELECTION);
-  }
-
   selectFeatures(features: WfsFeature[], selectionType: MapSelectionTypes = MapSelectionTypes.REPLACE) {
     // TODO: Отрефакторить. Все события по 'Esc, Esc' сваливаются сюда...
     if (mapStore.mode === MapMode.VERTICES_MODIFICATION) {

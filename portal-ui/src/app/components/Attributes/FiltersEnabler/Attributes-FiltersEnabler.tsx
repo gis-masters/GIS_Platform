@@ -25,7 +25,7 @@ export class AttributesFiltersEnabler extends Component<AttributesFiltersEnabler
         <Switch
           className={cnAttributesFiltersEnabler()}
           size='small'
-          checked={attributesTableStore.isLayerFilterEnabled(layer)}
+          checked={attributesTableStore.isLayerFilterEnabled(layer.tableName)}
           onChange={this.handleChange}
         />
       </Tooltip>

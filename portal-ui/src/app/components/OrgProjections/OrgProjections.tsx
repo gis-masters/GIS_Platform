@@ -18,7 +18,7 @@ export const OrgProjections: FC = observer(() => (
     headerActions={<OrgProjectionsCreate />}
     getData={getProjections}
     cols={projectionXTableCols}
-    defaultSort={{ field: 'authSrid', asc: true }}
+    defaultSort={{ field: 'auth_srid', asc: true }}
     getRowId={getProjectionCode}
     filterable
     showFiltersPanel

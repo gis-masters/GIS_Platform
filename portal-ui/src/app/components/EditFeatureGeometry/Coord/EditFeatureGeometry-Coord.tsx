@@ -21,7 +21,6 @@ import { mapDrawService } from '../../../services/map/draw/map-draw.service';
 import { transformGeometry } from '../../../services/util/coordinates-transform.util';
 import { wfsFeatureToFeature } from '../../../services/util/open-layers.util';
 import { isNumberArray } from '../../../services/util/typeGuards/isNumberArray';
-import { bufferFeatureStore } from '../../../stores/BufferFeature.store';
 import { EditFeatureGeometryStore } from '../../../stores/EditFeatureGeometry.store';
 import { projectionsStore } from '../../../stores/Projections.store';
 import { Toast } from '../../Toast/Toast';
@@ -119,10 +118,6 @@ export class EditFeatureGeometryCoord extends Component<EditFeatureGeometryCoord
 
   @computed
   private get warning(): boolean {
-    if (bufferFeatureStore.bufferFeature) {
-      return false;
-    }
-
     const {
       store: { layer, currentProjection, layerExtent },
       val

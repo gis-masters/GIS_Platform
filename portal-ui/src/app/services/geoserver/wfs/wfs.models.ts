@@ -12,6 +12,8 @@ export enum GeometryType {
   CIRCLE = 'Circle'
 }
 
+// TODO: По-моему этот тип полная хуйня!
+//  Схуяли 'number' или 'string'- где то поленились привести всё к 'number'???
 export type CoordinateEdited = (number | string)[];
 
 export type SupportedGeometryType =

@@ -440,14 +440,19 @@ class MapService {
   }
 
   async positionToFeature(feature: WfsFeature, proj?: Projection) {
-    if (!proj) {
-      proj = await getFeatureProjection(feature);
-    }
-    const extent = getFeatureExtent(feature);
-    const olProjection = await getOlProjection();
-    if (extent && olProjection && proj) {
-      const transformedExtent = transformExtent(extent, proj, olProjection);
-      this.positionToExtent(transformedExtent, feature.geometry?.type === GeometryType.POINT);
+    try {
+      if (!proj) {
+        proj = await getFeatureProjection(feature);
+      }
+
+      const extent = getFeatureExtent(feature);
+      const olProjection = await getOlProjection();
+      if (extent && olProjection && proj) {
+        const transformedExtent = transformExtent(extent, proj, olProjection);
+        this.positionToExtent(transformedExtent, feature.geometry?.type === GeometryType.POINT);
+      }
+    } catch (error) {
+      services.logger.warn('Не удалось позиционироваться на фиче', error);
     }
   }
 
@@ -478,7 +483,7 @@ class MapService {
     this.markersSource?.clear();
   }
 
-  private positionToExtent(extent: Extent, pointMode?: boolean) {
+  positionToExtent(extent: Extent, pointMode?: boolean) {
     if (pointMode) {
       const size = this.map.getSize();
 

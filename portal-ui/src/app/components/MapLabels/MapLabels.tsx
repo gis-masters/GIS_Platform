@@ -9,6 +9,7 @@ import { mapLabelsService } from '../../services/map/labels/map-labels.service';
 import { MapAction, MapMode } from '../../services/map/map.models';
 import { konfirmieren } from '../../services/utility-dialogs.service';
 import { mapStore } from '../../stores/Map.store';
+import { mapLabelsStore } from '../../stores/MapLabels.store';
 import { AnnotationSettings } from '../AnnotationSettings/AnnotationSettings';
 import { FeatureArea } from '../FeatureArea/FeatureArea';
 import { FeatureLength } from '../FeatureLength/FeatureLength';
@@ -23,8 +24,9 @@ const cnMapLabels = cn('MapLabels');
 
 export const MapLabels: FC = observer(() => {
   const handleTogglerClick = useCallback(() => {
-    const visible = !mapStore.labelsVisible;
-    mapStore.setLabelsVisibility(visible);
+    const visible = !mapLabelsStore.labelsVisible;
+    mapLabelsStore.setLabelsVisibility(visible);
+
     localStorage.setItem(mapLabelsService.getStorageKey('visible'), visible.toString());
     if (!visible) {
       mapLabelsService.addingLabelOff();
@@ -32,7 +34,7 @@ export const MapLabels: FC = observer(() => {
   }, []);
 
   const startLabelAdding = useCallback(async (type: LabelType) => {
-    if (mapStore.mode === MapMode.ADDING_LABEL && type && mapStore.currentLabelType === type) {
+    if (mapStore.mode === MapMode.ADDING_LABEL && type && mapLabelsStore.currentLabelType === type) {
       mapLabelsService.addingLabelOff();
     } else {
       await mapLabelsService.addingLabelOn(type);
@@ -50,7 +52,7 @@ export const MapLabels: FC = observer(() => {
   const restoreLabelsVisibilityState = useCallback(async () => {
     const labelsVisible = localStorage.getItem(`${mapLabelsService.getStorageKey('visible')}`);
     if (labelsVisible) {
-      mapStore.setLabelsVisibility(labelsVisible === 'true');
+      mapLabelsStore.setLabelsVisibility(labelsVisible === 'true');
       if (labelsVisible === 'true') {
         await mapLabelsService.show();
       }
@@ -76,7 +78,7 @@ export const MapLabels: FC = observer(() => {
 
   return (
     <div className={cnMapLabels()}>
-      {mapStore.labelsVisible && (
+      {mapLabelsStore.labelsVisible && (
         <>
           <FeatureArea />
           <FeatureLength />
@@ -85,7 +87,7 @@ export const MapLabels: FC = observer(() => {
           <Tooltip title='Добавить аннотацию'>
             <IconButton
               className={cnMapLabels('AddLabel')}
-              checked={mapStore.mode === MapMode.ADDING_LABEL && mapStore.currentLabelType === 'label'}
+              checked={mapStore.mode === MapMode.ADDING_LABEL && mapLabelsStore.currentLabelType === 'label'}
               onClick={handleAddLabelClick}
               size='small'
             >
@@ -95,7 +97,7 @@ export const MapLabels: FC = observer(() => {
           <Tooltip title='Нарисовать вспомогательную линию'>
             <IconButton
               className={cnMapLabels('AddLine')}
-              checked={mapStore.mode === MapMode.ADDING_LABEL && mapStore.currentLabelType === 'line'}
+              checked={mapStore.mode === MapMode.ADDING_LABEL && mapLabelsStore.currentLabelType === 'line'}
               onClick={handleAddLineClick}
               size='small'
             >
@@ -103,7 +105,7 @@ export const MapLabels: FC = observer(() => {
             </IconButton>
           </Tooltip>
           <AnnotationSettings />
-          {mapStore.labels.length > 0 && (
+          {mapLabelsStore.labels.length > 0 && (
             <Tooltip title='Удалить все аннотации'>
               <IconButton className={cnMapLabels('ClearAll')} onClick={handleClearAllClick} size='small'>
                 <DeleteSweepOutlined />
@@ -115,7 +117,7 @@ export const MapLabels: FC = observer(() => {
       <Tooltip title='Показать/скрыть аннотации'>
         <IconButton
           className={cnMapLabels('Toggler')}
-          checked={mapStore.labelsVisible}
+          checked={mapLabelsStore.labelsVisible}
           size='small'
           onClick={handleTogglerClick}
           disabled={!mapStore.allowedActions.includes(MapAction.MAP_LABELS)}

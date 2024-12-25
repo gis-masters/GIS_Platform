@@ -161,15 +161,8 @@ class VectorDataClient extends DataClient {
 
   // feature
 
-  async createFeature(
-    datasetIdentifier: string,
-    vectorTableIdentifier: string,
-    feature: NewWfsFeature
-  ): Promise<WfsFeature> {
-    return await http.post<WfsFeature>(
-      this.getVectorTableRecordsUrl(datasetIdentifier, vectorTableIdentifier),
-      feature
-    );
+  async createFeature(datasetIdentifier: string, tableIdentifier: string, feature: NewWfsFeature): Promise<WfsFeature> {
+    return await http.post<WfsFeature>(this.getVectorTableRecordsUrl(datasetIdentifier, tableIdentifier), feature);
   }
 
   async updateFeature(

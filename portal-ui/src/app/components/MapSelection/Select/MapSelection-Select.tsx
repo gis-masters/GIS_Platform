@@ -5,7 +5,6 @@ import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
 import { MapAction, MapMode } from '../../../services/map/map.models';
-import { mapSelectionService } from '../../../services/map/map-selection.service';
 import { mapStore } from '../../../stores/Map.store';
 import { IconButton } from '../../IconButton/IconButton';
 import { RectangleSelectionAdd } from '../../Icons/RectangleSelectionAdd';
@@ -40,6 +39,6 @@ export class MapSelectionSelect extends Component {
 
   @boundMethod
   private handleViewModeClick(): void {
-    mapSelectionService.enableSelectionMode(mapStore.mode === MapMode.SELECTION);
+    mapStore.setMode(mapStore.mode === MapMode.SELECTION ? MapMode.DEFAULT : MapMode.SELECTION);
   }
 }

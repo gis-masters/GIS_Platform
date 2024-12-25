@@ -107,9 +107,7 @@ type Coords = Coordinate | Coordinate[][] | Coordinate[][][];
 type CoordsEdited = CoordinateEdited | CoordinateEdited[][] | CoordinateEdited[][][];
 
 export function normalizeCoordinates(coord: CoordsEdited | string | number): Coords | number {
-  return Array.isArray(coord)
-    ? ((coord as CoordsEdited[]).map(normalizeCoordinates) as Coords)
-    : transformDimension(coord);
+  return Array.isArray(coord) ? ((coord as CoordsEdited[]).map(normalizeCoordinates) as Coords) : asNumber(coord);
 }
 
 export function isGeometryValid(geometry: WfsGeometry): boolean {
@@ -129,10 +127,10 @@ export function isCoordinateValid(coord: Coordinate): boolean {
 }
 
 export function isDimensionValid(dimension: string | number): boolean {
-  return !Number.isNaN(transformDimension(dimension));
+  return !Number.isNaN(asNumber(dimension));
 }
 
-export function transformDimension(dimension: number | string): number {
+export function asNumber(dimension: number | string): number {
   return String(dimension).trim() === '' ? Number.NaN : Number(dimension);
 }
 

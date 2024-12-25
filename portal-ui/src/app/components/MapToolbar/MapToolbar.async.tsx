@@ -2,7 +2,7 @@ import React, { FC } from 'react';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 
-import { mapStore } from '../../stores/Map.store';
+import { mapLabelsStore } from '../../stores/MapLabels.store';
 import { MapLabels } from '../MapLabels/MapLabels';
 import { MapMeasure } from '../MapMeasure/MapMeasure';
 import { MapSelection } from '../MapSelection/MapSelection';
@@ -20,7 +20,7 @@ const MapToolbar: FC = observer(() => (
     <div
       className={cnMapToolbar()}
       style={{
-        '--MapToolbarLeftButtons': Number(mapStore.labelsVisible) * (6 + Number(mapStore.labels.length > 0))
+        '--MapToolbarLeftButtons': Number(mapLabelsStore.labelsVisible) * (6 + Number(mapLabelsStore.labels.length > 0))
       }}
     >
       <MapToolbarBar>

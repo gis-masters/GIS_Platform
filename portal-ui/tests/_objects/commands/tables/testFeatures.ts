@@ -7,6 +7,7 @@ import { getUserByEmail } from '../auth/getUserByEmail';
 import { getTestUser } from '../auth/testUsers';
 import { blackSea } from './testFeatures/blackSea';
 import { crimea } from './testFeatures/crimea';
+import { smallTriangle } from './testFeatures/featuresForTests';
 import { forCopy } from './testFeatures/forCopy';
 import { forFeaturesSidebar } from './testFeatures/forFeaturesSidebar';
 import { forFiltering } from './testFeatures/forFiltering';
@@ -112,6 +113,9 @@ export async function getTestFeatures(key: string, schema?: Schema): Promise<New
     }
     case 'тестирование прокола': {
       return forProkol;
+    }
+    case 'небольшой треугольник': {
+      return smallTriangle;
     }
     case 'мультиполигон': {
       return multiPolygon;

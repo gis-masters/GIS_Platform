@@ -172,7 +172,6 @@ export function transformCoord(
 ): Coord {
   const coord = normalizeCoordinates(coordEdited) as Coordinate;
   const originIndex = originGroup ? originGroup.findIndex(originCoord => isEqual(coord, originCoord)) : -1;
-
   if (originIndex !== -1) {
     return cloneDeep(transformedOriginGroup[originIndex]);
   }

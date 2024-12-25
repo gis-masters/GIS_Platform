@@ -110,6 +110,7 @@ export class EditFeatureGeometryDraw extends Component<EditFeatureGeometryDrawPr
   private handleClick() {
     if (this.isDrawEnabled()) {
       mapDrawService.drawOff();
+      void mapDrawService.highlightFeatures(mapStore.selectedFeatures);
     } else {
       mapDrawService.drawOn(toDrawGeometry(this.props.store.geometryType));
     }

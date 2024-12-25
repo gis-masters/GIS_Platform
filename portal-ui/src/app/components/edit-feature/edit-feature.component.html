@@ -5,13 +5,13 @@
         *ngIf="updatingAllowed"
         mat-stroked-button
         color="primary"
-        (click)="editFeature()"
+        (click)="saveFeature()"
         class="float-left save-feature-edit-btn"
         matBadge="{{ features.length > 1 ? features.length : null }}"
         matBadgePosition="after"
         matBadgeColor="accent"
         matTooltip="{{ getTooltip() }}"
-        [disabled]="editFeatureForm?.pristine && (!isGeometryChanged || !isGeometryValid)"
+        [disabled]="!isNew && editFeatureForm?.pristine && (!isGeometryChanged || !isGeometryValid)"
       >
         <mat-icon *ngIf="mode === 'multipleEdit'">list</mat-icon>
         Сохранить

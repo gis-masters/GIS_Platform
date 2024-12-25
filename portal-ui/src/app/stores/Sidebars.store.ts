@@ -64,7 +64,6 @@ class Sidebars {
   @observable bugReportOpen?: boolean;
   @observable infoOpen?: boolean;
   @observable photoLayerOpen: boolean = false;
-  @observable validateGeometry: boolean = false;
   @observable featuresForPhotoMode: WfsFeature[] = [];
 
   private constructor() {
@@ -85,11 +84,6 @@ class Sidebars {
   @action
   openLeftSidebar() {
     this.leftOpen = true;
-  }
-
-  @action
-  setValidateGeometry() {
-    this.validateGeometry = !this.validateGeometry;
   }
 
   @action
@@ -195,8 +189,9 @@ class Sidebars {
 
     this.editFeaturesData = data;
     this.closeBugReport();
-    this.editOpen = true;
     this.closeFeaturesSidebar();
+
+    this.editOpen = true;
   }
 
   @action.bound
@@ -209,6 +204,7 @@ class Sidebars {
     if (this.needEditConfirmation(this.closeEdit)) {
       return;
     }
+
     this.editOpen = false;
     this.featuresEdited = false;
     this.editFeaturesData = undefined;

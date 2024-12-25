@@ -1,11 +1,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormControl } from '@angular/forms';
-import { MatDialog } from '@angular/material/dialog';
 import { boundMethod } from 'autobind-decorator';
 import { cloneDeep, isNumber } from 'lodash';
 import { Coordinate } from 'ol/coordinate';
 import { Subject } from 'rxjs';
-import { filter, first, takeUntil } from 'rxjs/operators';
+import { first, takeUntil } from 'rxjs/operators';
 
 import { communicationService } from '../../services/communication.service';
 import { getFeatureProjection } from '../../services/data/projections/projections.service';
@@ -46,14 +45,11 @@ import { FeaturePropertyValidators } from '../../services/util/FeaturePropertyVa
 import { calculateValues } from '../../services/util/form/formValidation.utils';
 import { fromMobx } from '../../services/util/fromMobx';
 import { sleep } from '../../services/util/sleep';
-import { isCoordinateArrayArray, isMultiPolygonCoordinate } from '../../services/util/typeGuards/isCoordinate';
 import { konfirmieren } from '../../services/utility-dialogs.service';
-import { bufferFeatureStore } from '../../stores/BufferFeature.store';
 import { currentProject } from '../../stores/CurrentProject.store';
 import { EditFeatureGeometryStore } from '../../stores/EditFeatureGeometry.store';
 import { mapStore } from '../../stores/Map.store';
 import { EditFeatureMode, EditFeaturesData, sidebars } from '../../stores/Sidebars.store';
-import { ConfirmDialogComponent, ConfirmDialogData } from '../dialogs/confirm-dialog/confirm-dialog.component';
 import { BaseEdit } from '../edit-bug-object/base-edit';
 import { applyFieldValue, convertToComplexField } from '../Form/Form.utils';
 import { Toast } from '../Toast/Toast';
@@ -70,26 +66,21 @@ export interface Properties {
 export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy {
   mode?: EditFeatureMode;
   features?: WfsFeature<Coordinate | CoordinateEdited>[];
-  private viewFeatures?: WfsFeature[];
   layer?: CrgVectorableLayer;
-  private properties?: Properties;
   isNew?: boolean;
   selectedTab?: number;
-
   updatingAllowed = false;
 
   isSaveInProgress = false;
-  changedGeometry?: WfsGeometry<Coordinate>;
-  primalGeometry?: WfsGeometry<Coordinate>;
+
   isGeometryValid = false;
   isGeometryChanged = false;
   editGeometryStore = new EditFeatureGeometryStore();
+
+  private properties?: Properties;
   private unsubscribeFromMobx$: Subject<void> = new Subject<void>();
 
-  constructor(
-    private formBuilder: UntypedFormBuilder,
-    private dialog: MatDialog
-  ) {
+  constructor(private formBuilder: UntypedFormBuilder) {
     super();
   }
 
@@ -255,7 +246,6 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
         }, 22);
 
         this.unsubscribeFromMobx$.next();
-        delete this.changedGeometry;
         this.isGeometryValid = false;
         this.isGeometryChanged = false;
         this.updatingAllowed = !!this.layer && (await isUpdateAllowed(this.layer));
@@ -288,21 +278,6 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
             .pipe(takeUntil(this.unsubscribe$))
             .pipe(takeUntil(this.unsubscribeFromMobx$))
             .subscribe(() => {
-              fromMobx(() => this.editGeometryStore.resultGeometry)
-                .pipe(takeUntil(this.unsubscribe$))
-                .pipe(takeUntil(this.unsubscribeFromMobx$))
-                .subscribe(async changedGeometry => {
-                  this.changedGeometry = changedGeometry;
-                  delete this.primalGeometry;
-
-                  const feature = {
-                    ...firstFeature,
-                    geometry: changedGeometry
-                  };
-
-                  await mapDrawService.highlightMoreFeatures([feature]);
-                });
-
               fromMobx(() => this.editGeometryStore.isValid)
                 .pipe(takeUntil(this.unsubscribe$))
                 .pipe(takeUntil(this.unsubscribeFromMobx$))
@@ -333,7 +308,6 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
         const currentLayer = layers.find(item => item.id === this.layer?.id);
         if (!currentLayer) {
           sidebars.closeEdit();
-          bufferFeatureStore.clearBufferFeature();
 
           return;
         }
@@ -342,7 +316,6 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
 
         if (currentLayer.view !== view) {
           sidebars.closeEdit();
-          bufferFeatureStore.clearBufferFeature();
 
           await sleep(0);
 
@@ -353,30 +326,6 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
             properties: this.properties,
             isNew: this.isNew
           });
-        }
-      });
-
-    fromMobx<boolean>(() => sidebars.validateGeometry)
-      .pipe(takeUntil(this.unsubscribe$))
-      .subscribe(async () => {
-        if (this.isNew && this.features?.length) {
-          if (
-            isCoordinateArrayArray(this.features[0].geometry?.coordinates) ||
-            isMultiPolygonCoordinate(this.features[0].geometry?.coordinates)
-          ) {
-            this.primalGeometry = this.features[0].geometry as WfsGeometry<Coordinate>;
-          }
-
-          await mapDrawService.highlightFeatures([this.features[0]]);
-          this.isGeometryChanged = true;
-
-          if (
-            this.editGeometryStore.currentProjection ||
-            this.editGeometryStore.geometry ||
-            this.editGeometryStore.nativeProjection
-          ) {
-            this.isGeometryValid = this.editGeometryStore.isValid;
-          }
         }
       });
   }
@@ -394,36 +343,24 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
     }
   }
 
-  async editFeature(): Promise<void> {
+  async saveFeature(): Promise<void> {
     await (this.editGeometryStore.hasGeometryWarning
-      ? this.editFeatureWithConfirm()
-      : this.editFeatureWithoutConfirm());
+      ? this.saveFeatureWithConfirm()
+      : this.saveFeatureWithoutConfirm());
   }
 
-  async editFeatureWithConfirm(): Promise<void> {
-    const feature = sidebars.editFeaturesData?.features[0];
-
-    if (feature) {
-      await mapService.positionToFeature(feature);
-    }
-
+  async saveFeatureWithConfirm(): Promise<void> {
     if (
       await konfirmieren({
         message: 'Точки геометрии, выходят за рамки слоя. Вы уверенны, что хотите внести изменения в геометрию?'
       })
     ) {
-      await this.editFeatureWithoutConfirm();
+      await this.saveFeatureWithoutConfirm();
     }
   }
 
-  async editFeatureWithoutConfirm(): Promise<void> {
-    if (this.isNew && !this.isGeometryValid) {
-      this.selectedTab = Number(!this.isGeometryValid);
-
-      return;
-    }
-
-    if (this.editFeatureForm?.pristine && (!this.isGeometryChanged || !this.isGeometryValid)) {
+  async saveFeatureWithoutConfirm(): Promise<void> {
+    if (!this.isNew && this.editFeatureForm?.pristine && (!this.isGeometryChanged || !this.isGeometryValid)) {
       return;
     }
 
@@ -431,14 +368,10 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
       return;
     }
 
-    const layer = this.layer as CrgVectorLayer;
-
     this.isSaveInProgress = true;
 
     const featureProperties = convertOldToNewProperties(this.featureDescription?.properties || []);
-
     let actualProperties = this.getActualValuesFromForm();
-
     for (const key of Object.keys(actualProperties)) {
       const propertyByKey = featureProperties.find(({ name }) => name === key);
       if (propertyByKey) {
@@ -452,18 +385,17 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
     }
 
     let ids = this.features?.map(({ id }) => id) || [];
-    const feature = this.features?.[0];
-    if (this.isNew && feature) {
-      let geometry = this.primalGeometry || this.changedGeometry;
+    const layer = this.layer as CrgVectorLayer;
+    if (!layer.complexName) {
+      throw new Error('Не установлен complexName слоя');
+    }
 
-      if (isCoordinateArrayArray(feature.geometry?.coordinates)) {
-        geometry = feature.geometry as WfsGeometry<Coordinate>;
-      }
-
+    const firstFeature: WfsFeature = this.features?.[0] as WfsFeature;
+    if (this.isNew && firstFeature) {
       const createdFeature = await createFeature(layer.dataset, layer.tableName, {
-        ...feature,
+        type: firstFeature.type,
         properties: actualProperties,
-        geometry
+        geometry: this.editGeometryStore.resultGeometry
       });
       ids = [createdFeature.id];
     } else {
@@ -474,7 +406,7 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
       }
 
       if (this.isGeometryChanged) {
-        geometry = this.changedGeometry;
+        geometry = this.editGeometryStore.resultGeometry;
       }
 
       await this.batchUpdateFeatures(this.features || [], actualProperties, geometry);
@@ -482,14 +414,9 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
 
     sidebars.setFeaturesEdited(false);
 
-    if (!this.layer.complexName) {
-      throw new Error('Не установлен complexName слоя');
-    }
-
-    const savedFeatures = await getFeaturesById(ids, this.layer.complexName);
+    const savedFeatures = await getFeaturesById(ids, layer.complexName);
 
     sidebars.closeEdit();
-    bufferFeatureStore.clearBufferFeature();
 
     await sleep(0);
     this.isSaveInProgress = false;
@@ -510,58 +437,50 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
 
     mapService.refreshAllLayers();
     communicationService.featuresUpdated.emit();
+
+    mapDrawService.drawOff();
   }
 
-  deleteFeature(): void {
-    const data: ConfirmDialogData = {
-      title: 'Вы действительно хотите удалить 1 объект?',
-      approveBtnName: 'Удалить'
-    };
-
+  async deleteFeature(): Promise<void> {
     if (!isVectorLayer(this.layer)) {
       throw new Error('Невозможно удалить объект');
     }
 
-    const { dataset, tableName } = this.layer;
+    if (
+      await konfirmieren({
+        message: 'Вы действительно хотите удалить 1 объект?',
+        okText: 'Удалить',
+        cancelText: 'Отмена'
+      })
+    ) {
+      const { dataset, tableName } = this.layer;
 
-    this.dialog
-      .open(ConfirmDialogComponent, { width: '390px', data, autoFocus: false })
-      .afterClosed()
-      .pipe(filter(value => !!value))
-      .subscribe(async () => {
-        if (sidebars.editFeaturesData?.mode === EditFeatureMode.multipleEdit) {
-          for (const feature of this.features || []) {
-            const featureLayer = getLayerByFeatureInCurrentProject(feature);
+      const firstWfsFeature = (this.features || [])[0];
+      if (sidebars.editFeaturesData?.mode === EditFeatureMode.multipleEdit) {
+        for (const feature of this.features || []) {
+          const featureLayer = getLayerByFeatureInCurrentProject(feature);
 
-            if (!featureLayer) {
-              continue;
-            }
-
-            await deleteFeatures(featureLayer.dataset, featureLayer.tableName, [feature]);
+          if (!featureLayer) {
+            continue;
           }
-        } else {
-          await deleteFeatures(dataset, tableName, [(this.features || [])[0]]);
-        }
 
-        mapService.refreshAllLayers();
-        communicationService.featuresUpdated.emit();
-        sidebars.setFeaturesEdited(false);
-
-        // TODO: (рефакторинг) этот if всегда false
-        if (this.viewFeatures) {
-          mapSelectionService.selectFeatures(this.viewFeatures, MapSelectionTypes.REPLACE);
-          sidebars.openSelectedFeaturesSidebar();
-        } else {
-          sidebars.closeEdit();
-          bufferFeatureStore.clearBufferFeature();
+          await deleteFeatures(featureLayer.dataset, featureLayer.tableName, [feature]);
         }
-      });
+      } else {
+        await deleteFeatures(dataset, tableName, [firstWfsFeature]);
+      }
+
+      mapService.refreshAllLayers();
+      communicationService.featuresUpdated.emit();
+      sidebars.closeEdit();
+      mapStore.setSelectedFeatures([]);
+    }
   }
 
   getTooltip(): string {
-    const count = this.features?.length;
+    const count = Number(this.features?.length);
 
-    return count ? `Сохранить данные для ${count} объектов` : 'Сохранить объект';
+    return count > 1 ? `Сохранить данные для ${count} объектов` : 'Сохранить объект';
   }
 
   switchControl(property: OldPropertySchema): void {
@@ -593,7 +512,6 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
       });
     }
     sidebars.closeEdit();
-    bufferFeatureStore.clearBufferFeature();
   }
 
   getDateTime(value: string | number): string {

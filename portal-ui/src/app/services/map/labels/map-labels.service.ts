@@ -19,6 +19,7 @@ import { MapLabelToolbox } from '../../../components/MapLabelToolbox/MapLabelToo
 import { currentProject } from '../../../stores/CurrentProject.store';
 import { currentUser } from '../../../stores/CurrentUser.store';
 import { mapStore } from '../../../stores/Map.store';
+import { mapLabelsStore } from '../../../stores/MapLabels.store';
 import { communicationService } from '../../communication.service';
 import { defaultOlProjectionCode, Projection } from '../../data/projections/projections.models';
 import { getOlProjection } from '../../data/projections/projections.service';
@@ -122,7 +123,7 @@ class MapLabelsService {
     );
 
     reaction(
-      () => mapStore.labelsVisible,
+      () => mapLabelsStore.labelsVisible,
       async labelsVisible => {
         await mapService.waitForMap();
 
@@ -476,7 +477,7 @@ class MapLabelsService {
     this.dropInteractions();
 
     mapStore.setMode(MapMode.ADDING_LABEL);
-    mapStore.setCurrentLabelType(type);
+    mapLabelsStore.setCurrentLabelType(type);
 
     await this.show();
 
@@ -487,7 +488,7 @@ class MapLabelsService {
   }
 
   addingLabelOff() {
-    mapStore.setCurrentLabelType();
+    mapLabelsStore.setCurrentLabelType();
     mapStore.setMode(MapMode.DEFAULT);
   }
 
@@ -520,8 +521,8 @@ class MapLabelsService {
   private async handleDrawEnd(e: DrawEvent) {
     const feature = e.feature;
     feature.setId(uuid());
-    feature.setProperties({ type: mapStore.currentLabelType });
-    if (mapStore.currentLabelType === 'label' || mapStore.currentLabelType === 'turningPoints') {
+    feature.setProperties({ type: mapLabelsStore.currentLabelType });
+    if (mapLabelsStore.currentLabelType === 'label' || mapLabelsStore.currentLabelType === 'turningPoints') {
       await this.editLabel(feature);
     } else {
       await sleep(0);
@@ -659,7 +660,7 @@ class MapLabelsService {
       olFeatures.filter(features => features.getProperties().type === 'turningPoints')
     );
 
-    mapStore.setLabels(olFeatures);
+    mapLabelsStore.setLabels(olFeatures);
   }
 
   @boundMethod
@@ -678,7 +679,7 @@ class MapLabelsService {
     const olFeatures = [...this.source.getFeatures(), ...this.turningPointsSource.getFeatures()];
     const wfsFeatures: WfsFeature[] = olFeatures.map(featureToWfsFeature);
 
-    mapStore.setLabels(olFeatures);
+    mapLabelsStore.setLabels(olFeatures);
     localStorage.setItem(this.getStorageKey('labels'), JSON.stringify(wfsFeatures));
   }
 
