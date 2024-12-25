@@ -1,6 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-// TODO: eslint на говно исходится при типизации файла, нужно потом поправить как то
-
 /* eslint-disable unicorn/prefer-node-protocol */
 import { Buffer } from 'buffer';
 
@@ -20,14 +17,14 @@ export async function createSignature(
   // Алгоритм хэширования, при помощи которого было вычислено хэш-значение
   const hashAlg = cadesplugin.CADESCOM_HASH_ALGORITHM_CP_GOST_3411_2012_256;
 
-  const oHashedData: CAdESCOM.CPHashedDataAsync = await cadesplugin.CreateObjectAsync('CAdESCOM.HashedData');
+  const oHashedData = (await cadesplugin.CreateObjectAsync('CAdESCOM.HashedData')) as CAdESCOM.CPHashedDataAsync;
 
   // Инициализируем объект заранее вычисленным хэш-значением
   // Алгоритм хэширования нужно указать до того, как будет передано хэш-значение
   await oHashedData.propset_Algorithm(hashAlg);
   await oHashedData.SetHashValue(hashValue);
 
-  const oSignedData: CAdESCOM.CadesSignedDataAsync = await cadesplugin.CreateObjectAsync(CADES_SIGNED_DATA);
+  const oSignedData = (await cadesplugin.CreateObjectAsync(CADES_SIGNED_DATA)) as CAdESCOM.CadesSignedDataAsync;
 
   if (existingSign) {
     const sign = isBinary(existingSign) ? convertToBase64(existingSign) : new TextDecoder().decode(existingSign);
@@ -35,9 +32,8 @@ export async function createSignature(
     await oSignedData.VerifyHash(oHashedData, sign, cadesplugin.CADESCOM_CADES_BES);
   }
 
-  /* eslint-disable @typescript-eslint/ban-ts-comment */
-  // @ts-expect-error
-  const oStore: CAPICOM_ASYNC.StoreAsync = await cadesplugin.CreateObjectAsync('CAdESCOM.Store');
+  const oStore = (await cadesplugin.CreateObjectAsync('CAPICOM.Store')) as CAPICOM_ASYNC.StoreAsync;
+
   await oStore.Open(
     cadesplugin.CAPICOM_CURRENT_USER_STORE,
     cadesplugin.CAPICOM_MY_STORE,
@@ -61,7 +57,7 @@ export async function createSignature(
   }
   await oStore.Close();
 
-  const oSigner: CAdESCOM.CPSignerAsync = await cadesplugin.CreateObjectAsync('CAdESCOM.CPSigner');
+  const oSigner = (await cadesplugin.CreateObjectAsync('CAdESCOM.CPSigner')) as CAdESCOM.CPSignerAsync;
 
   await oSigner.propset_Certificate(oCertificate);
   await oSigner.propset_CheckCertificate(true);
@@ -77,7 +73,7 @@ export async function createSignature(
 }
 
 async function verifyHash(hash: CAdESCOM.CPHashedDataAsync, sSignedMessage: string) {
-  const signedDataForVerify: CAdESCOM.CadesSignedDataAsync = await cadesplugin.CreateObjectAsync(CADES_SIGNED_DATA);
+  const signedDataForVerify = (await cadesplugin.CreateObjectAsync(CADES_SIGNED_DATA)) as CAdESCOM.CadesSignedDataAsync;
 
   try {
     await signedDataForVerify.VerifyHash(hash, sSignedMessage, cadesplugin.CADESCOM_CADES_BES);
@@ -89,25 +85,21 @@ async function verifyHash(hash: CAdESCOM.CPHashedDataAsync, sSignedMessage: stri
 export async function getUsedCertificates(hashValue: string, existingSign: ArrayBuffer): Promise<string[]> {
   const hashAlg = cadesplugin.CADESCOM_HASH_ALGORITHM_CP_GOST_3411_2012_256;
 
-  const oHashedData: CAdESCOM.CPHashedDataAsync = await cadesplugin.CreateObjectAsync('CAdESCOM.HashedData');
+  const oHashedData = (await cadesplugin.CreateObjectAsync('CAdESCOM.HashedData')) as CAdESCOM.CPHashedDataAsync;
 
   // Инициализируем объект заранее вычисленным хэш-значением
   // Алгоритм хэширования нужно указать до того, как будет передано хэш-значение
   await oHashedData.propset_Algorithm(hashAlg);
   await oHashedData.SetHashValue(hashValue);
-
-  const oSignedData: CAdESCOM.CadesSignedDataAsync = await cadesplugin.CreateObjectAsync(CADES_SIGNED_DATA);
-
+  const oSignedData = (await cadesplugin.CreateObjectAsync(CADES_SIGNED_DATA)) as CAdESCOM.CadesSignedDataAsync;
   const existingSignaturesThumbprints = [];
 
   // параллельная подпись
   if (existingSign) {
     const signBase64 = convertToBase64(existingSign);
-
     await oSignedData.VerifyHash(oHashedData, signBase64, cadesplugin.CADESCOM_CADES_BES);
-
     // собираем thumbprint каждой существующей подписи для запрета дублирующих подписей
-    const existingSignatures: CAPICOM_ASYNC.ICertificatesAsync = await oSignedData.Certificates;
+    const existingSignatures = (await oSignedData.Certificates) as CAPICOM_ASYNC.ICertificatesAsync;
     const centsLength = await existingSignatures?.Count;
 
     for (let i = 1; i <= centsLength; i++) {

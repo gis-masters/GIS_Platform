@@ -13,6 +13,7 @@ export declare namespace CAPICOM_ASYNC {
       varCriteria?: any,
       bFindValidOnly?: boolean
     ): Promise<ICertificatesAsync>;
+    propset_Count(): Promise<unknown>;
   }
 
   interface StoreAsync {
@@ -23,6 +24,17 @@ export declare namespace CAPICOM_ASYNC {
     ): Promise<void>;
     Close(): Promise<void>;
     Delete(): Promise<boolean>;
+    Add(): Promise<unknown>;
+    AddCRL(): Promise<unknown>;
+    Export(): Promise<unknown>;
+    Remove(): Promise<unknown>;
+    addEventListener(): Promise<unknown>;
+    removeEventListener(): Promise<unknown>;
+    propset_Certificates(): Promise<unknown>;
+    propset_Location(): Promise<unknown>;
+    propset_Name(): Promise<unknown>;
     readonly Certificates: Promise<ICertificatesAsync>;
+    readonly Location: Promise<unknown>;
+    readonly Name: Promise<unknown>;
   }
 }

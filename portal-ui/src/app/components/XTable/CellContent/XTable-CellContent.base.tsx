@@ -30,6 +30,7 @@ export const XTableCellContentBase: <T>(props: XTableCellContentProps<T>) => Rea
   type,
   col,
   inHead,
+  filterParams,
   ...spanProps
 }) => (
   <span

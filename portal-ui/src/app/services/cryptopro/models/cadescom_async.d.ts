@@ -2,8 +2,6 @@ export declare namespace CAdESCOM {
   interface CPSignerAsync {
     readonly Certificate: Promise<CAPICOM.ICertificateAsync>;
     propset_Certificate(certificate: CAPICOM.ICertificateAsync): Promise<void>;
-    Display(hwndParent?: number, title?: string): Promise<void>;
-    Load(fileName: string, password?: string): Promise<void>;
     readonly CheckCertificate: Promise<boolean>;
     propset_CheckCertificate(checkCertificate: boolean): Promise<void>;
     readonly KeyPin: Promise<string>;
@@ -13,16 +11,38 @@ export declare namespace CAdESCOM {
     readonly SignatureTimeStampTime: Promise<VarDate>;
     readonly SigningTime: Promise<VarDate>;
     readonly TSAAddress: Promise<string>;
+    readonly AuthenticatedAttributes: Promise<unknown>;
+    readonly AuthenticatedAttributes2: Promise<unknown>;
+    readonly CRLs: Promise<unknown>;
+    readonly OCSPResponses: Promise<unknown>;
+    readonly SignatureStatus: Promise<unknown>;
+    readonly UnauthenticatedAttributes: Promise<unknown>;
     propset_TSAAddress(TSAAddress: string): Promise<void>;
+    AdditionalTSAAddress(): Promise<unknown>;
+    propset_AuthenticatedAttributes(): Promise<unknown>;
+    propset_AuthenticatedAttributes2(): Promise<unknown>;
+    propset_CRLs(): Promise<unknown>;
+    propset_OCSPResponses(): Promise<unknown>;
+    propset_SignatureStatus(): Promise<unknown>;
+    propset_SignatureTimeStampTime(): Promise<unknown>;
+    propset_SigningTime(): Promise<unknown>;
+    propset_UnauthenticatedAttributes(): Promise<unknown>;
   }
 
   interface CadesSignedDataAsync {
-    Display(hwndParent?: number, title?: string): Promise<void>;
+    objid: number;
     EnhanceCades(
       cadesType?: CADESCOM_CADES_TYPE,
       TSAAddress?: string,
       encodingType?: CAPICOM.CAPICOM_ENCODING_TYPE
     ): Promise<string>;
+    AdditionalStore(): unknown;
+    propset_Certificates(): unknown;
+    propset_Signers(): unknown;
+    Sign(): unknown;
+    Verify(): unknown;
+    CoSign(): unknown;
+    CoSignCades(): unknown;
     readonly Certificates: Promise<CAPICOM.ICertificates>;
     readonly DisplayData: Promise<CADESCOM_DISPLAY_DATA>;
     propset_DisplayData(displayData: CADESCOM_DISPLAY_DATA): Promise<void>;
@@ -88,7 +108,7 @@ export declare namespace CAdESCOM {
     Hash(newVal: string): Promise<void>;
     SetHashValue(newVal: string): Promise<void>;
     readonly Algorithm: Promise<CAPICOM.CAPICOM_HASH_ALGORITHM>;
-    propset_Algorithm(algorithm: CAPICOM.CADESCOM_HASH_ALGORITHM): Promise<void>;
+    propset_Algorithm(algorithm: CAdESCOM.CADESCOM_HASH_ALGORITHM): Promise<void>;
     readonly DataEncoding: Promise<CADESCOM_CONTENT_ENCODING_TYPE>;
     propset_DataEncoding(dataEncoding: CADESCOM_CONTENT_ENCODING_TYPE): Promise<void>;
     readonly Value: Promise<string>;
