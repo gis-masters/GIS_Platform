@@ -29,11 +29,11 @@ public class FeatureMapper {
         }
 
         props.remove(DEFAULT_GEOMETRY_COLUMN_NAME);
-        Long id = (Long) props.get(DaoProperties.PRIMARY_KEY);
+        Object id = props.get(DaoProperties.PRIMARY_KEY);
         if (id == null) {
-            id = (Long) props.get(DaoProperties.ID);
+            id = props.get(DaoProperties.ID);
         }
 
-        return map(id, oldFeature, props);
+        return map(Long.parseLong(id.toString()), oldFeature, props);
     }
 }
