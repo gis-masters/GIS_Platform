@@ -50,23 +50,12 @@ public class XmlParser {
 
     public Map<String, Object> parseByScheme(MultipartFile xmlFile,
                                              List<SimplePropertyDto> simpleProperties,
-                                             Integer srid,
-                                             boolean isSchemaZu2) {
+                                             Integer srid) {
         Map<String, Object> result = new HashMap<>();
 
         List<String> schemaProperties = simpleProperties.stream()
                                                         .map(dto -> dto.getName().toLowerCase())
                                                         .collect(Collectors.toList());
-
-        Map<String, String> mapFieldsForZuSchema = new HashMap<>();
-        mapFieldsForZuSchema.put("address", "raddress");
-        mapFieldsForZuSchema.put("cadastralnumber", "cad_num");
-        mapFieldsForZuSchema.put("area", "area_doc");
-        mapFieldsForZuSchema.put("category", "ccode");
-        mapFieldsForZuSchema.put("utilization", "category");
-        if (isSchemaZu2) {
-            schemaProperties.addAll(mapFieldsForZuSchema.keySet());
-        }
 
         try (InputStream inputStream = xmlFile.getInputStream()) {
             Document doc = documentBuilder.parse(inputStream);
@@ -110,10 +99,6 @@ public class XmlParser {
             String msg = "Что-то пошло не так во время обработки xml файла " + e.getMessage();
             log.error(msg);
             throw new XmlParserException(msg);
-        }
-
-        if (isSchemaZu2) {
-            mapResultForZuSchema(result, mapFieldsForZuSchema);
         }
 
         return result;
