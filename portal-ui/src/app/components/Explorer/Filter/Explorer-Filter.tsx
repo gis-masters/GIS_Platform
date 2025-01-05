@@ -25,13 +25,18 @@ export class ExplorerFilter extends Component<ExplorerFilterProps> {
   render() {
     const { filter, openedItem } = this.props.store;
     const filterField = getChildrenFilterField(openedItem, this.props.store) || null;
+    let clearedValue: string = filterField ? filter[filterField] : '';
+
+    if (clearedValue) {
+      clearedValue = clearedValue.replaceAll("''", "'");
+    }
 
     return (
       filterField && (
         <div className={cnExplorerFilter()}>
           <TextField
             label={getChildrenFilterLabel(openedItem, this.props.store) || 'Поиск'}
-            value={filter[filterField] || ''}
+            value={clearedValue}
             onChange={this.handleFilterChange}
             InputProps={{
               endAdornment: (
@@ -54,7 +59,7 @@ export class ExplorerFilter extends Component<ExplorerFilterProps> {
     const filterField = getChildrenFilterField(openedItem, store);
 
     if (filterField) {
-      store.setFilter({ [filterField]: e.target.value });
+      store.setFilter({ [filterField]: e.target.value.replaceAll("'", "''") });
     }
 
     onChange();

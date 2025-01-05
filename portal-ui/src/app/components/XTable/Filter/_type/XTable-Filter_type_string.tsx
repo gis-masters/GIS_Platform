@@ -47,7 +47,9 @@ class XTableFilterTypeString extends Component<XTableFilterProps> {
     const { filterQuery, field } = this.props;
     const value = ((getFieldFilterValue(filterQuery, field) as FilterQuery)?.$ilike as string) || '';
 
-    return this.strictFiltering ? value : value.replaceAll(/^%|%$/g, '');
+    const clearedValue = value.replaceAll("''", "'");
+
+    return this.strictFiltering ? clearedValue : clearedValue.replaceAll(/^%|%$/g, '');
   }
 
   @computed
@@ -66,10 +68,12 @@ class XTableFilterTypeString extends Component<XTableFilterProps> {
     onBeforeFilterChange();
 
     if (e.target.value?.length) {
+      const escapedValue = e.target.value.replaceAll("'", "''");
+
       modifyFieldFilterValue(
         filterQuery,
         field,
-        this.strictFiltering ? { $ilike: e.target.value } : { $ilike: `%${e.target.value}%` }
+        this.strictFiltering ? { $ilike: escapedValue } : { $ilike: `%${escapedValue}%` }
       );
     } else if (this.strictFiltering) {
       modifyFieldFilterValue(filterQuery, field, { $in: ['', null] });
@@ -86,11 +90,13 @@ class XTableFilterTypeString extends Component<XTableFilterProps> {
 
     onBeforeFilterChange();
 
+    const escapedValue = this.value.replaceAll("'", "''");
+
     if (this.value) {
       modifyFieldFilterValue(
         filterQuery,
         field,
-        this.strictFiltering ? { $ilike: `%${this.value}%` } : { $ilike: this.value }
+        this.strictFiltering ? { $ilike: `%${escapedValue}%` } : { $ilike: escapedValue }
       );
     } else if (this.strictFiltering) {
       modifyFieldFilterValue(filterQuery, field);

@@ -37,7 +37,13 @@ class XTableFilterTypeDocument extends Component<XTableFilterProps> {
     const { filterQuery, field } = this.props;
     const value = getFieldFilterValue(filterQuery, field);
 
-    return (((value as FilterQuery)?.$ilike as string) || '').replaceAll(/^%|%$/g, '');
+    let clearedValue = ((value as FilterQuery)?.$ilike as string) || '';
+
+    if (clearedValue) {
+      clearedValue = clearedValue.replaceAll(/^%|%$/g, '').replaceAll("''", "'");
+    }
+
+    return clearedValue;
   }
 
   @action.bound
@@ -45,8 +51,9 @@ class XTableFilterTypeDocument extends Component<XTableFilterProps> {
     const { field, filterQuery, onBeforeFilterChange, onFilterChange } = this.props;
 
     onBeforeFilterChange();
+    const escapedValue = e.target.value.replaceAll("'", "''");
 
-    modifyFieldFilterValue(filterQuery, field, e.target.value?.length ? { $ilike: `%${e.target.value}%` } : undefined);
+    modifyFieldFilterValue(filterQuery, field, e.target.value?.length ? { $ilike: `%${escapedValue}%` } : undefined);
 
     onFilterChange();
   }
