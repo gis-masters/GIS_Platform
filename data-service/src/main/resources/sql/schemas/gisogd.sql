@@ -821,6 +821,7 @@ SET class_rule =
         {
             "name": "gisogdrf_sync_status",
             "title": "Статус синхронизации",
+            "calculatedValueWellKnownFormula": "gisogdRfSyncStatus",
             "asTitle": true,
             "readOnly": true,
             "minWidth": 200,
@@ -1404,6 +1405,7 @@ SET class_rule =
         {
           "name": "gisogdrf_sync_status",
           "title": "Статус синхронизации",
+          "calculatedValueWellKnownFormula": "gisogdRfSyncStatus",
           "minWidth": 200,
           "asTitle": true,
           "readOnly": true,
@@ -2302,6 +2304,7 @@ SET class_rule =
         {
             "name": "gisogdrf_sync_status",
             "title": "Статус синхронизации",
+            "calculatedValueWellKnownFormula": "gisogdRfSyncStatus",
             "asTitle": true,
             "readOnly": true,
             "minWidth": 200,
@@ -2933,6 +2936,7 @@ SET class_rule =
         {
             "name": "gisogdrf_sync_status",
             "title": "Статус синхронизации",
+            "calculatedValueWellKnownFormula": "gisogdRfSyncStatus",
             "asTitle": true,
             "readOnly": true,
             "minWidth": 200,
@@ -4400,6 +4404,7 @@ SET class_rule =
         {
             "name": "gisogdrf_sync_status",
             "title": "Статус синхронизации",
+            "calculatedValueWellKnownFormula": "gisogdRfSyncStatus",
             "asTitle": true,
             "readOnly": true,
             "minWidth": 200,
@@ -4717,6 +4722,7 @@ SET class_rule =
         {
             "name": "gisogdrf_sync_status",
             "title": "Статус синхронизации",
+            "calculatedValueWellKnownFormula": "gisogdRfSyncStatus",
             "asTitle": true,
             "readOnly": true,
             "minWidth": 200,
@@ -5525,6 +5531,7 @@ SET class_rule =
         {
             "name": "gisogdrf_sync_status",
             "title": "Статус синхронизации",
+            "calculatedValueWellKnownFormula": "gisogdRfSyncStatus",
             "asTitle": true,
             "readOnly": true,
             "minWidth": 200,
@@ -7613,6 +7620,7 @@ SET class_rule =
         {
             "name": "gisogdrf_sync_status",
             "title": "Статус синхронизации",
+            "calculatedValueWellKnownFormula": "gisogdRfSyncStatus",
             "asTitle": true,
             "readOnly": true,
             "minWidth": 200,
@@ -10889,6 +10897,7 @@ SET class_rule =
         {
             "name": "gisogdrf_sync_status",
             "title": "Статус синхронизации",
+            "calculatedValueWellKnownFormula": "gisogdRfSyncStatus",
             "asTitle": true,
             "readOnly": true,
             "minWidth": 200,
@@ -11251,6 +11260,7 @@ SET class_rule =
         {
             "name": "gisogdrf_sync_status",
             "title": "Статус синхронизации",
+            "calculatedValueWellKnownFormula": "gisogdRfSyncStatus",
             "asTitle": true,
             "readOnly": true,
             "minWidth": 200,
@@ -15645,6 +15655,7 @@ SET class_rule =
         {
             "name": "gisogdrf_sync_status",
             "title": "Статус синхронизации",
+            "calculatedValueWellKnownFormula": "gisogdRfSyncStatus",
             "minWidth": 200,
             "asTitle": true,
             "readOnly": true,
@@ -15836,6 +15847,7 @@ SET class_rule =
         {
             "name": "gisogdrf_sync_status",
             "title": "Статус синхронизации",
+            "calculatedValueWellKnownFormula": "gisogdRfSyncStatus",
             "asTitle": true,
             "readOnly": true,
             "minWidth": 200,
@@ -16310,6 +16322,7 @@ SET class_rule =
         {
             "name": "gisogdrf_sync_status",
             "title": "Статус синхронизации",
+            "calculatedValueWellKnownFormula": "gisogdRfSyncStatus",
             "asTitle": true,
             "readOnly": true,
             "minWidth": 200,
@@ -16536,6 +16549,7 @@ SET class_rule =
         {
             "name": "gisogdrf_sync_status",
             "title": "Статус синхронизации",
+            "calculatedValueWellKnownFormula": "gisogdRfSyncStatus",
             "asTitle": true,
             "readOnly": true,
             "minWidth": 200,
@@ -16888,6 +16902,7 @@ SET class_rule =
         {
             "name": "gisogdrf_sync_status",
             "title": "Статус синхронизации",
+            "calculatedValueWellKnownFormula": "gisogdRfSyncStatus",
             "asTitle": true,
             "readOnly": true,
             "minWidth": 200,
@@ -17201,6 +17216,7 @@ SET class_rule =
         {
             "name": "gisogdrf_sync_status",
             "title": "Статус синхронизации",
+            "calculatedValueWellKnownFormula": "gisogdRfSyncStatus",
             "asTitle": true,
             "readOnly": true,
             "minWidth": 200,
@@ -17483,6 +17499,7 @@ SET class_rule =
         {
             "name": "gisogdrf_sync_status",
             "title": "Статус синхронизации",
+            "calculatedValueWellKnownFormula": "gisogdRfSyncStatus",
             "asTitle": true,
             "readOnly": true,
             "minWidth": 200,
@@ -17776,6 +17793,7 @@ SET class_rule =
         {
             "name": "gisogdrf_sync_status",
             "title": "Статус синхронизации",
+            "calculatedValueWellKnownFormula": "gisogdRfSyncStatus",
             "asTitle": true,
             "readOnly": true,
             "minWidth": 200,
@@ -18089,6 +18107,7 @@ SET class_rule =
         {
             "name": "gisogdrf_sync_status",
             "title": "Статус синхронизации",
+            "calculatedValueWellKnownFormula": "gisogdRfSyncStatus",
             "asTitle": true,
             "readOnly": true,
             "minWidth": 200,
@@ -18349,6 +18368,7 @@ SET class_rule =
         {
             "name": "gisogdrf_sync_status",
             "title": "Статус синхронизации",
+            "calculatedValueWellKnownFormula": "gisogdRfSyncStatus",
             "asTitle": true,
             "readOnly": true,
             "minWidth": 200,
@@ -18903,6 +18923,7 @@ SET class_rule =
          {
            "name": "gisogdrf_sync_status",
            "title": "Статус синхронизации",
+           "calculatedValueWellKnownFormula": "gisogdRfSyncStatus",
            "minWidth": 200,
            "asTitle": true,
            "readOnly": true,
@@ -19672,6 +19693,7 @@ SET class_rule =
         {
             "name": "gisogdrf_sync_status",
             "title": "Статус синхронизации",
+            "calculatedValueWellKnownFormula": "gisogdRfSyncStatus",
             "asTitle": true,
             "readOnly": true,
             "minWidth": 200,
@@ -20111,6 +20133,7 @@ SET class_rule =
         {
             "name": "gisogdrf_sync_status",
             "title": "Статус синхронизации",
+            "calculatedValueWellKnownFormula": "gisogdRfSyncStatus",
             "asTitle": true,
             "readOnly": true,
             "minWidth": 200,
@@ -21671,6 +21694,7 @@ SET class_rule =
     {
       "name": "gisogdrf_sync_status",
       "title": "Статус синхронизации",
+      "calculatedValueWellKnownFormula": "gisogdRfSyncStatus",
       "minWidth": 200,
       "asTitle": true,
       "readOnly": true,
@@ -22610,6 +22634,7 @@ SET class_rule =
     {
       "name": "gisogdrf_sync_status",
       "title": "Статус синхронизации",
+      "calculatedValueWellKnownFormula": "gisogdRfSyncStatus",
       "minWidth": 200,
       "asTitle": true,
       "readOnly": true,
@@ -23973,6 +23998,7 @@ SET class_rule =
             {
                 "name": "gisogdrf_sync_status",
                 "title": "Статус синхронизации",
+                "calculatedValueWellKnownFormula": "gisogdRfSyncStatus",
                 "minWidth": 200,
                 "asTitle": true,
                 "readOnly": true,
@@ -25032,6 +25058,7 @@ SET class_rule =
             {
                 "name": "gisogdrf_sync_status",
                 "title": "Статус синхронизации",
+                "calculatedValueWellKnownFormula": "gisogdRfSyncStatus",
                 "minWidth": 200,
                 "asTitle": true,
                 "readOnly": true,
@@ -25541,6 +25568,7 @@ SET class_rule =
             {
                 "name": "gisogdrf_sync_status",
                 "title": "Статус синхронизации",
+                "calculatedValueWellKnownFormula": "gisogdRfSyncStatus",
                 "minWidth": 200,
                 "asTitle": true,
                 "readOnly": true,
@@ -26352,6 +26380,7 @@ SET class_rule =
             {
                 "name": "gisogdrf_sync_status",
                 "title": "Статус синхронизации",
+                "calculatedValueWellKnownFormula": "gisogdRfSyncStatus",
                 "minWidth": 200,
                 "asTitle": true,
                 "readOnly": true,
@@ -26869,6 +26898,7 @@ SET class_rule =
             {
                 "name": "gisogdrf_sync_status",
                 "title": "Статус синхронизации",
+                "calculatedValueWellKnownFormula": "gisogdRfSyncStatus",
                 "minWidth": 200,
                 "asTitle": true,
                 "readOnly": true,
@@ -28045,6 +28075,7 @@ SET class_rule =
             {
                 "name": "gisogdrf_sync_status",
                 "title": "Статус синхронизации",
+                "calculatedValueWellKnownFormula": "gisogdRfSyncStatus",
                 "minWidth": 200,
                 "asTitle": true,
                 "readOnly": true,
@@ -28912,6 +28943,7 @@ SET class_rule =
             {
                 "name": "gisogdrf_sync_status",
                 "title": "Статус синхронизации",
+                "calculatedValueWellKnownFormula": "gisogdRfSyncStatus",
                 "minWidth": 200,
                 "asTitle": true,
                 "readOnly": true,
@@ -30202,6 +30234,7 @@ SET class_rule =
             {
                 "name": "gisogdrf_sync_status",
                 "title": "Статус синхронизации",
+                "calculatedValueWellKnownFormula": "gisogdRfSyncStatus",
                 "minWidth": 200,
                 "asTitle": true,
                 "readOnly": true,
@@ -31184,6 +31217,7 @@ SET class_rule =
             {
                 "name": "gisogdrf_sync_status",
                 "title": "Статус синхронизации",
+                "calculatedValueWellKnownFormula": "gisogdRfSyncStatus",
                 "minWidth": 200,
                 "asTitle": true,
                 "readOnly": true,
@@ -31918,6 +31952,7 @@ SET class_rule =
             {
                 "name": "gisogdrf_sync_status",
                 "title": "Статус синхронизации",
+                "calculatedValueWellKnownFormula": "gisogdRfSyncStatus",
                 "minWidth": 200,
                 "asTitle": true,
                 "readOnly": true,
@@ -32136,6 +32171,7 @@ SET class_rule =
             {
                 "name": "gisogdrf_sync_status",
                 "title": "Статус синхронизации",
+                "calculatedValueWellKnownFormula": "gisogdRfSyncStatus",
                 "minWidth": 200,
                 "asTitle": true,
                 "readOnly": true,
@@ -32370,6 +32406,7 @@ SET class_rule =
             {
                 "name": "gisogdrf_sync_status",
                 "title": "Статус синхронизации",
+                "calculatedValueWellKnownFormula": "gisogdRfSyncStatus",
                 "minWidth": 200,
                 "asTitle": true,
                 "readOnly": true,
@@ -32645,6 +32682,7 @@ SET class_rule =
             {
                 "name": "gisogdrf_sync_status",
                 "title": "Статус синхронизации",
+                "calculatedValueWellKnownFormula": "gisogdRfSyncStatus",
                 "minWidth": 200,
                 "asTitle": true,
                 "readOnly": true,
@@ -32992,6 +33030,7 @@ SET class_rule =
             {
                 "name": "gisogdrf_sync_status",
                 "title": "Статус синхронизации",
+                "calculatedValueWellKnownFormula": "gisogdRfSyncStatus",
                 "minWidth": 200,
                 "asTitle": true,
                 "readOnly": true,
@@ -33285,6 +33324,7 @@ SET class_rule =
             {
                 "name": "gisogdrf_sync_status",
                 "title": "Статус синхронизации",
+                "calculatedValueWellKnownFormula": "gisogdRfSyncStatus",
                 "minWidth": 200,
                 "asTitle": true,
                 "readOnly": true,
@@ -33542,6 +33582,7 @@ SET class_rule =
             {
                 "name": "gisogdrf_sync_status",
                 "title": "Статус синхронизации",
+                "calculatedValueWellKnownFormula": "gisogdRfSyncStatus",
                 "minWidth": 200,
                 "asTitle": true,
                 "readOnly": true,
@@ -33752,6 +33793,7 @@ SET class_rule =
             {
                 "name": "gisogdrf_sync_status",
                 "title": "Статус синхронизации",
+                "calculatedValueWellKnownFormula": "gisogdRfSyncStatus",
                 "minWidth": 200,
                 "asTitle": true,
                 "readOnly": true,
@@ -33970,6 +34012,7 @@ SET class_rule =
             {
                 "name": "gisogdrf_sync_status",
                 "title": "Статус синхронизации",
+                "calculatedValueWellKnownFormula": "gisogdRfSyncStatus",
                 "minWidth": 200,
                 "asTitle": true,
                 "readOnly": true,
@@ -34212,6 +34255,7 @@ SET class_rule =
             {
                 "name": "gisogdrf_sync_status",
                 "title": "Статус синхронизации",
+                "calculatedValueWellKnownFormula": "gisogdRfSyncStatus",
                 "minWidth": 200,
                 "asTitle": true,
                 "readOnly": true,
@@ -34529,6 +34573,7 @@ SET class_rule =
         {
             "name": "gisogdrf_sync_status",
             "title": "Статус синхронизации",
+            "calculatedValueWellKnownFormula": "gisogdRfSyncStatus",
             "asTitle": true,
             "readOnly": true,
             "minWidth": 200,
@@ -35461,6 +35506,7 @@ SET class_rule =
         {
             "name": "gisogdrf_sync_status",
             "title": "Статус синхронизации",
+            "calculatedValueWellKnownFormula": "gisogdRfSyncStatus",
             "asTitle": true,
             "readOnly": true,
             "minWidth": 200,
@@ -35689,6 +35735,7 @@ SET class_rule =
         {
             "name": "gisogdrf_sync_status",
             "title": "Статус синхронизации",
+            "calculatedValueWellKnownFormula": "gisogdRfSyncStatus",
             "asTitle": true,
             "readOnly": true,
             "minWidth": 200,
@@ -35927,6 +35974,7 @@ SET class_rule =
         {
             "name": "gisogdrf_sync_status",
             "title": "Статус синхронизации",
+            "calculatedValueWellKnownFormula": "gisogdRfSyncStatus",
             "asTitle": true,
             "readOnly": true,
             "minWidth": 200,
@@ -36148,6 +36196,7 @@ SET class_rule =
         {
             "name": "gisogdrf_sync_status",
             "title": "Статус синхронизации",
+            "calculatedValueWellKnownFormula": "gisogdRfSyncStatus",
             "asTitle": true,
             "readOnly": true,
             "minWidth": 200,
@@ -36547,6 +36596,7 @@ SET class_rule =
         {
             "name": "gisogdrf_sync_status",
             "title": "Статус синхронизации",
+            "calculatedValueWellKnownFormula": "gisogdRfSyncStatus",
             "asTitle": true,
             "readOnly": true,
             "minWidth": 200,
@@ -37514,6 +37564,7 @@ SET class_rule =
         {
             "name": "gisogdrf_sync_status",
             "title": "Статус синхронизации",
+            "calculatedValueWellKnownFormula": "gisogdRfSyncStatus",
             "asTitle": true,
             "readOnly": true,
             "minWidth": 200,
@@ -38647,6 +38698,7 @@ SET class_rule =
     {
       "name": "gisogdrf_sync_status",
       "title": "Статус синхронизации с ГИСОГД РФ",
+      "calculatedValueWellKnownFormula": "gisogdRfSyncStatus",
       "minWidth": 200,
       "asTitle": true,
       "readOnly": true,
@@ -43118,6 +43170,7 @@ SET class_rule =
         {
             "name": "gisogdrf_sync_status",
             "title": "Статус синхронизации",
+            "calculatedValueWellKnownFormula": "gisogdRfSyncStatus",
             "asTitle": true,
             "readOnly": true,
             "minWidth": 200,
@@ -45044,6 +45097,7 @@ SET class_rule =
       {
         "name": "gisogdrf_sync_status",
         "title": "Статус синхронизации с ГИСОГД РФ",
+        "calculatedValueWellKnownFormula": "gisogdRfSyncStatus",
         "minWidth": 200,
         "asTitle": true,
         "readOnly": true,
@@ -46681,6 +46735,7 @@ SET class_rule =
         {
             "name": "gisogdrf_sync_status",
             "title": "Статус синхронизации",
+            "calculatedValueWellKnownFormula": "gisogdRfSyncStatus",
             "asTitle": true,
             "readOnly": true,
             "minWidth": 200,
@@ -47326,6 +47381,7 @@ SET class_rule =
         {
             "name": "gisogdrf_sync_status",
             "title": "Статус синхронизации",
+            "calculatedValueWellKnownFormula": "gisogdRfSyncStatus",
             "minWidth": 200,
             "asTitle": true,
             "readOnly": true,
