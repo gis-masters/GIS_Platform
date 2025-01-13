@@ -12,6 +12,7 @@ import { attributesTableStore } from './AttributesTable.store';
 import { currentProject } from './CurrentProject.store';
 import { Pages, route } from './Route.store';
 
+// TODO: сейчас матрица прав запрещающая, т.е. всё что указано запрещено... может быть выгоднее сделать наоборот.
 const mapModeAndActionMatrix = {
   [MapMode.DEFAULT]: [
     MapAction.PROKOL,
@@ -41,7 +42,8 @@ const mapModeAndActionMatrix = {
     MapAction.OPEN_LAYER_PROPERTIES,
     MapAction.VERTICES_MODIFICATION,
     MapAction.LAYER_SIDEBAR_LEFT_TOOLS,
-    MapAction.SELECT_WITH_MODIFICATORS
+    MapAction.SELECT_WITH_MODIFICATORS,
+    MapAction.REMOVE_FEATURE_FROM_SELECTED
   ],
   [MapMode.SELECTION]: [
     MapAction.PROKOL,
@@ -65,7 +67,8 @@ const mapModeAndActionMatrix = {
     MapAction.OPEN_IMPORTS_SUBMENU,
     MapAction.OPEN_LAYER_PROPERTIES,
     MapAction.VERTICES_MODIFICATION,
-    MapAction.SELECT_WITH_MODIFICATORS
+    MapAction.SELECT_WITH_MODIFICATORS,
+    MapAction.REMOVE_FEATURE_FROM_SELECTED
   ],
   [MapMode.MEASURE]: [
     MapAction.PROKOL,
@@ -94,7 +97,8 @@ const mapModeAndActionMatrix = {
     MapAction.OPEN_IMPORTS_SUBMENU,
     MapAction.OPEN_LAYER_PROPERTIES,
     MapAction.VERTICES_MODIFICATION,
-    MapAction.SELECT_WITH_MODIFICATORS
+    MapAction.SELECT_WITH_MODIFICATORS,
+    MapAction.REMOVE_FEATURE_FROM_SELECTED
   ],
   [MapMode.DRAW]: [MapAction.DRAW],
   [MapMode.ADDING_LABEL]: [
@@ -124,7 +128,8 @@ const mapModeAndActionMatrix = {
     MapAction.OPEN_IMPORTS_SUBMENU,
     MapAction.OPEN_LAYER_PROPERTIES,
     MapAction.VERTICES_MODIFICATION,
-    MapAction.SELECT_WITH_MODIFICATORS
+    MapAction.SELECT_WITH_MODIFICATORS,
+    MapAction.REMOVE_FEATURE_FROM_SELECTED
   ],
   [MapMode.VERTICES_MODIFICATION]: [MapAction.VERTICES_MODIFICATION]
 };

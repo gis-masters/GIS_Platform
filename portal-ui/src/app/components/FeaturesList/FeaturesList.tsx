@@ -34,7 +34,7 @@ export class FeaturesList extends Component<FeaturesListProps> {
   private resizeObserver: ResizeObserver = new ResizeObserver(this.handleResize);
   @observable private width = 0;
   @observable private height = 0;
-  @observable private highlightedFeatureId: string | undefined;
+
   private highlightAllFeaturesTimeout: number | undefined;
 
   constructor(props: FeaturesListProps) {
@@ -93,7 +93,6 @@ export class FeaturesList extends Component<FeaturesListProps> {
     } else {
       await mapDrawService.highlightFeatures(mapStore.highlightedFeatures);
     }
-    this.highlightedFeatureId = feature?.id;
   }
 
   @boundMethod
@@ -143,7 +142,6 @@ export class FeaturesList extends Component<FeaturesListProps> {
     return (
       <FeaturesListItem
         feature={feature}
-        highlighted={feature?.id === this.highlightedFeatureId}
         onHighlight={this.highlightItem}
         onSelect={this.handleItemSelect}
         key={feature?.id}

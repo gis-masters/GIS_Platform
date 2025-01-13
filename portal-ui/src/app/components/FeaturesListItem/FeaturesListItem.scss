@@ -2,7 +2,7 @@ body .FeaturesListItem {
   position: relative;
 
   display: grid;
-  grid-template: 20px 16px auto / 50px 20px auto 85px;
+  grid-template: 20px 16px auto / 50px 20px auto 102px;
   grid-template-areas: 'id icon title buttons' 'id icon layer buttons' 'id icon search buttons';
 
   height: 64px;
@@ -29,11 +29,6 @@ body .FeaturesListItem {
     &::before {
       background: rgb(0 0 0 / 5%);
     }
-  }
-
-  &_highlighted,
-  &_highlighted:hover {
-    background: rgb(100 0 100 / 10%);
   }
 
   &-Id {

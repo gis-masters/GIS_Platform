@@ -2,8 +2,9 @@ import React, { Component } from 'react';
 import { action, IReactionDisposer, makeObservable, observable, reaction } from 'mobx';
 import { observer } from 'mobx-react';
 import { Badge } from '@mui/material';
-import { EditLocationOutlined, PinDropOutlined } from '@mui/icons-material';
+import { ChevronRight, EditLocationOutlined, PinDropOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
+import { boundMethod } from 'autobind-decorator';
 
 import { getLayerByFeatureInCurrentProject } from '../../services/gis/layers/layers.utils';
 import { isUpdateAllowed } from '../../services/permissions/permissions.service';
@@ -20,6 +21,7 @@ const cnFeaturesSidebarTeaser = cn('FeaturesSidebarTeaser');
 export class FeaturesSidebarTeaser extends Component {
   private reactionDisposer?: IReactionDisposer;
   private testingFeatureUpdateabilityOperationId?: symbol;
+
   @observable private featureIsUpdatable = false;
 
   constructor(props: Record<string, never>) {
@@ -54,26 +56,42 @@ export class FeaturesSidebarTeaser extends Component {
     }
 
     return (
-      !sidebars.featuresSidebarOpen &&
-      !sidebars.bugReportOpen &&
-      !sidebars.editOpen && (
-        <div
-          className={cnFeaturesSidebarTeaser({ hidden: !count })}
-          style={{ '--FeaturesSidebarTeaserBadgeDigits': Math.min(String(count).length, 5) }}
-        >
-          <IconButton onClick={sidebars.openSelectedFeaturesSidebar}>
-            <Badge
-              badgeContent={count}
-              anchorOrigin={{ horizontal: 'left', vertical: 'top' }}
-              color='primary'
-              max={9999}
-            >
-              <Icon />
-            </Badge>
-          </IconButton>
-        </div>
-      )
+      <>
+        {this.isBadgeMode ? (
+          <div
+            className={cnFeaturesSidebarTeaser({ badge: true, hidden: !count })}
+            style={{ '--FeaturesSidebarTeaserBadgeDigits': Math.min(String(count).length, 5) }}
+          >
+            <IconButton onClick={sidebars.openSelectedFeaturesSidebar}>
+              <Badge
+                badgeContent={count}
+                anchorOrigin={{ horizontal: 'left', vertical: 'top' }}
+                color='primary'
+                max={9999}
+              >
+                <Icon />
+              </Badge>
+            </IconButton>
+          </div>
+        ) : (
+          <div>
+            <div className={cnFeaturesSidebarTeaser({ chevron: true })}>
+              <ChevronRight onClick={this.hideFeatureSidebar} />
+            </div>
+          </div>
+        )}
+      </>
     );
+  }
+
+  private get isBadgeMode(): boolean {
+    return !sidebars.featuresSidebarOpen && !sidebars.editOpen;
+  }
+
+  @boundMethod
+  private hideFeatureSidebar() {
+    sidebars.closeFeaturesSidebar();
+    sidebars.closeEdit();
   }
 
   private async testFeatureUpdateability() {

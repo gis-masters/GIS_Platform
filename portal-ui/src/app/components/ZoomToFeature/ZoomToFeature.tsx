@@ -32,6 +32,7 @@ export class ZoomToFeature extends Component<ZoomToFeatureProps> {
           onClick={this.handleClick}
           ref={this.btnRef}
           disabled={disabled}
+          size='small'
         >
           <MyLocation />
         </IconButton>

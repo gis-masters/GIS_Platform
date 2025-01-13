@@ -8,6 +8,7 @@ import { boundMethod } from 'autobind-decorator';
 
 import { communicationService } from '../../services/communication.service';
 import { MapMode } from '../../services/map/map.models';
+import { mapSelectionService } from '../../services/map/map-selection.service';
 import { mapVerticesModificationService } from '../../services/map/vertices-modification/map-vertices-modification.service';
 import { mapStore } from '../../stores/Map.store';
 import { mapVerticesModificationStore } from '../../stores/MapVerticesModification.store';
@@ -93,9 +94,11 @@ export default class FeaturesListSidebarFeatures extends Component<FeaturesListS
 
             {!searchValue && <VerticesModificationIcon />}
 
-            <IconButton className={cnFeaturesListSidebarFeatures('Close')} onClick={this.close}>
-              <Close />
-            </IconButton>
+            <Tooltip title='Снять выделение со всех объектов (Esc, Esc)'>
+              <IconButton className={cnFeaturesListSidebarFeatures('Close')} onClick={this.close}>
+                <Close />
+              </IconButton>
+            </Tooltip>
           </div>
         )}
         {!searchValue && mapStore.selectedFeatures.length >= mapStore.selectingFeaturesLimit && (
@@ -115,7 +118,7 @@ export default class FeaturesListSidebarFeatures extends Component<FeaturesListS
     }
 
     if (this.props.singleTab || !sidebars.searchValue) {
-      sidebars.closeFeaturesSidebar();
+      mapSelectionService.selectFeatures([]);
     }
 
     if (sidebars.memorizedViewFeatures?.length) {
