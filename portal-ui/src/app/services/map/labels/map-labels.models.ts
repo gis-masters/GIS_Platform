@@ -2,6 +2,7 @@ import { Coordinate } from 'ol/coordinate';
 import { SimpleGeometry } from 'ol/geom';
 
 import { Projection } from '../../data/projections/projections.models';
+import { UnitsOfAreaMeasurement } from '../../util/open-layers.util';
 
 const textAlignTypes = new Set(['left', 'center', 'right', 'justify']);
 
@@ -19,6 +20,13 @@ export type FeatureLengthData = {
   projection: Projection;
   precision?: number;
   isMeasure?: boolean;
+};
+
+export type FeatureAreaData = {
+  geometry: SimpleGeometry;
+  units: UnitsOfAreaMeasurement;
+  projection?: Projection | string;
+  precision?: number;
 };
 
 export type PointWithAngle = { angle: number; point: Coordinate; isLabelInPolygon: boolean };

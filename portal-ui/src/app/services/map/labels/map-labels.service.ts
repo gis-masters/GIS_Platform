@@ -20,11 +20,14 @@ import { currentProject } from '../../../stores/CurrentProject.store';
 import { currentUser } from '../../../stores/CurrentUser.store';
 import { mapStore } from '../../../stores/Map.store';
 import { mapLabelsStore } from '../../../stores/MapLabels.store';
+import { sidebars } from '../../../stores/Sidebars.store';
 import { communicationService } from '../../communication.service';
 import { defaultOlProjectionCode, Projection } from '../../data/projections/projections.models';
-import { getOlProjection } from '../../data/projections/projections.service';
+import { getOlProjection, getProjectionByCode } from '../../data/projections/projections.service';
+import { getProjectionCode } from '../../data/projections/projections.util';
 import { registry } from '../../di-registry';
-import { GeometryType, WfsFeature } from '../../geoserver/wfs/wfs.models';
+import { extractTableNameFromFeatureId } from '../../geoserver/featureType/featureType.util';
+import { GeometryType, supportedGeometryTypes, WfsFeature } from '../../geoserver/wfs/wfs.models';
 import { isLinear, isPolygonal } from '../../geoserver/wfs/wfs.util';
 import { Coord, transformAnyCoordinates, transformCoord, transformGroup } from '../../util/coordinates-transform.util';
 import { notFalsyFilter } from '../../util/NotFalsyFilter';
@@ -50,8 +53,6 @@ import {
   getMiddlePoints,
   getPointsWithAngles,
   getRotationByAzimuth,
-  getSelectedFeatureProjection,
-  getSelectedOrActiveFeature,
   getTextStyle
 } from './map-labels.util';
 
@@ -250,8 +251,8 @@ class MapLabelsService {
   async addFeatureArea(): Promise<void> {
     this.dropInteractions();
 
-    const currentLayerProjection = await getSelectedFeatureProjection();
-    const wfsFeature = getSelectedOrActiveFeature();
+    const currentLayerProjection = await this.getSelectedFeatureProjection();
+    const wfsFeature = this.getSelectedOrActiveFeature();
 
     if (!currentLayerProjection || !wfsFeature) {
       throw new Error(projectionError);
@@ -264,7 +265,13 @@ class MapLabelsService {
       throw new Error('Ошибка геометрии объекта');
     }
 
-    const [value, units] = getFeatureArea(geometry, UnitsOfAreaMeasurement.HECTARE);
+    const [value, units] = getFeatureArea({
+      geometry,
+      projection:
+        getProjectionCode(currentLayerProjection) === defaultOlProjectionCode ? currentLayerProjection : undefined,
+      units: UnitsOfAreaMeasurement.HECTARE,
+      precision: 4
+    });
     const middlePoints = getMiddlePoints(feature);
 
     for (const point of middlePoints) {
@@ -299,8 +306,8 @@ class MapLabelsService {
   async addFeatureLength(): Promise<void> {
     this.dropInteractions();
 
-    const currentLayerProjection = await getSelectedFeatureProjection();
-    const wfsFeature = getSelectedOrActiveFeature();
+    const currentLayerProjection = await this.getSelectedFeatureProjection();
+    const wfsFeature = this.getSelectedOrActiveFeature();
 
     if (!currentLayerProjection || !wfsFeature) {
       throw new Error(projectionError);
@@ -347,8 +354,8 @@ class MapLabelsService {
   async addPointsDistances(): Promise<void> {
     this.dropInteractions();
 
-    const currentLayerProjection = await getSelectedFeatureProjection();
-    const coordinates = getSelectedOrActiveFeature()?.geometry?.coordinates;
+    const currentLayerProjection = await this.getSelectedFeatureProjection();
+    const coordinates = this.getSelectedOrActiveFeature()?.geometry?.coordinates;
 
     if (!currentLayerProjection || !coordinates || isNumberArray(coordinates)) {
       return;
@@ -370,8 +377,8 @@ class MapLabelsService {
   async addTurningPoints() {
     this.dropInteractions();
 
-    const currentLayerProjection = await getSelectedFeatureProjection();
-    const wfsFeature = getSelectedOrActiveFeature();
+    const currentLayerProjection = await this.getSelectedFeatureProjection();
+    const wfsFeature = this.getSelectedOrActiveFeature();
 
     if (!currentLayerProjection || !wfsFeature) {
       throw new Error(projectionError);
@@ -882,6 +889,45 @@ class MapLabelsService {
     });
     feature.setStyle(this.createPrintLabelStyle(feature));
     this.sourceForPrintLabels.addFeatures([feature]);
+  }
+
+  // если выделена всего одна фича - то возвращаем ее
+  // если выделено несколько и одна из них открыта для редактирования - то возвращаем открытую
+  // иначе null
+  getSelectedOrActiveFeature(): WfsFeature | null {
+    const selectedFeatureId = sidebars.editFeaturesData?.features[0].id;
+    const selectedFeature = selectedFeatureId
+      ? mapStore.getFeatureInSelectionById(selectedFeatureId)
+      : mapStore.selectedFeatures[0];
+
+    return selectedFeature || null;
+  }
+
+  async getSelectedFeatureProjection(): Promise<Projection> {
+    const selectedFeature = this.getSelectedOrActiveFeature();
+    const layerTableName = selectedFeature ? extractTableNameFromFeatureId(selectedFeature.id) : null;
+    const geometryType = selectedFeature?.geometry?.type;
+
+    if (!geometryType || !layerTableName) {
+      throw new Error('Отсутствует векторная таблица');
+    }
+
+    const layer = currentProject.layers.find(layer => layer.tableName === layerTableName);
+
+    if (!supportedGeometryTypes.includes(geometryType)) {
+      throw new Error('Неподдерживаемый тип геометрии');
+    }
+
+    if (!layer?.nativeCRS) {
+      throw new Error('В слое не указана система координат');
+    }
+
+    const currentLayerProjection = await getProjectionByCode(layer?.nativeCRS);
+    if (!currentLayerProjection) {
+      throw new Error('Отсутствует проекция');
+    }
+
+    return currentLayerProjection;
   }
 }
 

@@ -7,25 +7,19 @@ import MultiLineString from 'ol/geom/MultiLineString';
 import MultiPolygon from 'ol/geom/MultiPolygon';
 import Point from 'ol/geom/Point';
 import Polygon from 'ol/geom/Polygon';
-import { getLength } from 'ol/sphere';
+import { getArea, getLength } from 'ol/sphere';
 import { Circle, Fill, Stroke, Style, Text } from 'ol/style';
 
-import { currentProject } from '../../../stores/CurrentProject.store';
-import { mapStore } from '../../../stores/Map.store';
-import { sidebars } from '../../../stores/Sidebars.store';
-import { Projection } from '../../data/projections/projections.models';
-import { getProjectionByCode } from '../../data/projections/projections.service';
 import { getProjectionCode, getProjectionUnit } from '../../data/projections/projections.util';
-import { extractTableNameFromFeatureId } from '../../geoserver/featureType/featureType.util';
-import { GeometryType, supportedGeometryTypes, WfsFeature } from '../../geoserver/wfs/wfs.models';
+import { GeometryType } from '../../geoserver/wfs/wfs.models';
 import { UnitsOfAreaMeasurement, UnitsOfLengthMeasurement } from '../../util/open-layers.util';
 import { isArrayOf } from '../../util/typeGuards/isArrayOf';
 import { isCircleProperties } from '../../util/typeGuards/isCircleProperties';
 import { isCoordinateArray, isCoordinateArrayArray } from '../../util/typeGuards/isCoordinate';
 import { isLabelTextProperties } from '../../util/typeGuards/isLabelTextProperties';
 import { isNumberArray } from '../../util/typeGuards/isNumberArray';
-import { mapService } from '../map.service';
 import {
+  FeatureAreaData,
   FeatureFontStringData,
   FeatureLengthData,
   FontProperties,
@@ -61,18 +55,6 @@ export function getRotationByAzimuth(azimuth: number): number {
   const rotation = (3.14 / 180) * azimuth;
 
   return rotation > 0 ? rotation - 1.57 : rotation + 1.57;
-}
-
-// если выделена всего одна фича - то возвращаем ее
-// если выделено несколько и одна из них открыта для редактирования - то возвращаем открытую
-// иначе null
-export function getSelectedOrActiveFeature(): WfsFeature | null {
-  const selectedFeatureId = sidebars.editFeaturesData?.features[0].id;
-  const selectedFeature = selectedFeatureId
-    ? mapStore.getFeatureInSelectionById(selectedFeatureId)
-    : mapStore.selectedFeatures[0];
-
-  return selectedFeature || null;
 }
 
 export function getDecarticFeatureLength(geometry: SimpleGeometry): number {
@@ -127,60 +109,36 @@ export function getMiddlePoints(feature: Feature<SimpleGeometry>): Point[] {
   return [];
 }
 
-export async function getSelectedFeatureProjection(): Promise<Projection> {
-  const selectedFeature = getSelectedOrActiveFeature();
-  const layerTableName = selectedFeature ? extractTableNameFromFeatureId(selectedFeature.id) : null;
-
-  if (!layerTableName) {
-    throw new Error('Отсутствует векторная таблица');
-  }
-
-  const layer = currentProject.layers.find(layer => layer.tableName === layerTableName);
-
-  const geometryType = selectedFeature?.geometry?.type;
-
-  if (!geometryType || !supportedGeometryTypes.includes(geometryType)) {
-    throw new Error('Неподдерживаемый тип геометрии');
-  }
-
-  if (!layer?.nativeCRS) {
-    throw new Error('В слое не указана система координат');
-  }
-
-  const currentLayerProjection = await getProjectionByCode(layer?.nativeCRS);
-  if (!currentLayerProjection) {
-    throw new Error('Отсутствует проекция');
-  }
-
-  return currentLayerProjection;
-}
-
-export function getFeatureArea(
-  geometry: SimpleGeometry,
-  units: UnitsOfAreaMeasurement,
-  precision: number = mapService.PRECISION
-): [number, UnitsOfAreaMeasurement] {
+export function getFeatureArea({
+  geometry,
+  units,
+  projection,
+  precision
+}: FeatureAreaData): [number, UnitsOfAreaMeasurement] {
   if (!(geometry instanceof Polygon) && !(geometry instanceof MultiPolygon)) {
     throw new TypeError('Невозможно высчитать площадь объекта');
   }
 
-  const area = geometry.getArea();
+  const area = projection
+    ? getArea(geometry, { projection: typeof projection === 'string' ? projection : getProjectionCode(projection) })
+    : geometry.getArea();
+
   let value: number;
   let outputUnits: UnitsOfAreaMeasurement;
 
   if (units === UnitsOfAreaMeasurement.HECTARE) {
     if (area > 10_000) {
-      value = Number((area / 10_000).toFixed(precision));
+      value = Number((area / 10_000).toFixed(precision || 2));
       outputUnits = UnitsOfAreaMeasurement.HECTARE;
     } else {
-      value = Number(area.toFixed(precision));
+      value = Number(area.toFixed(precision || 2));
       outputUnits = UnitsOfAreaMeasurement.SQUARE_METER;
     }
   } else if (area > 10_000) {
-    value = Number((area / 1_000_000).toFixed(precision));
+    value = Number((area / 1_000_000).toFixed(precision || 2));
     outputUnits = UnitsOfAreaMeasurement.SQUARE_KILOMETER;
   } else {
-    value = Number(area.toFixed(precision));
+    value = Number(area.toFixed(precision || 2));
     outputUnits = UnitsOfAreaMeasurement.SQUARE_METER;
   }
 

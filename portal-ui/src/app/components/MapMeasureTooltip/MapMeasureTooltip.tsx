@@ -22,6 +22,7 @@ interface MapMeasureTooltipProps {
   item: MeasureItem;
   sketch: boolean;
   projection: Projection;
+
   onClear(item: MeasureItem): void;
 }
 
@@ -30,22 +31,27 @@ export class MapMeasureTooltip extends Component<MapMeasureTooltipProps> {
   render() {
     const { item, sketch, projection } = this.props;
     const { printingInProcess, printingResolution } = printSettings;
-    const geom = item.feature.getGeometry();
+    const geometry = item.feature.getGeometry();
 
     let value: number | undefined;
     let units: UnitsOfAreaMeasurement | UnitsOfLengthMeasurement | undefined;
     let switchingUnitsEnabled = false;
 
-    if (geom instanceof Polygon) {
-      [value, units] = getFeatureArea(geom, mapMeasureStore.unitsOfAreaMeasurement, 2);
+    if (geometry instanceof Polygon) {
+      [value, units] = getFeatureArea({
+        geometry,
+        units: mapMeasureStore.unitsOfAreaMeasurement,
+        projection,
+        precision: 2
+      });
       if (
         !sketch &&
         (value > 100 || units === UnitsOfAreaMeasurement.HECTARE || units === UnitsOfAreaMeasurement.SQUARE_KILOMETER)
       ) {
         switchingUnitsEnabled = true;
       }
-    } else if (geom instanceof LineString) {
-      [value, units] = getFeatureLength({ geometry: geom, projection, isMeasure: true });
+    } else if (geometry instanceof LineString) {
+      [value, units] = getFeatureLength({ geometry, projection, isMeasure: true });
     }
 
     return (
