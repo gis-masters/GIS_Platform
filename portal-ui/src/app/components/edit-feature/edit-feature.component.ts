@@ -430,9 +430,26 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
     });
 
     if (mapStore.selectedFeatures) {
+      const savedFeaturesMap = new Map(savedFeatures.map(({ id, ...props }) => [id, { id, ...props }]));
+
+      const features = mapStore.selectedFeatures.map(feature => {
+        const savedFeature = savedFeaturesMap.get(feature.id);
+
+        if (savedFeature) {
+          savedFeaturesMap.delete(savedFeature.id);
+
+          return savedFeature;
+        }
+
+        return feature;
+      });
+
+      mapStore.setSelectedFeatures([...features, ...savedFeaturesMap.values()]);
       sidebars.setMemorizedFeatures(
         mapStore.selectedFeatures.map(feature => savedFeatures.find(feat => feat.id === feature.id) || feature)
       );
+    } else {
+      mapStore.setSelectedFeatures(savedFeatures);
     }
 
     mapService.refreshAllLayers();
