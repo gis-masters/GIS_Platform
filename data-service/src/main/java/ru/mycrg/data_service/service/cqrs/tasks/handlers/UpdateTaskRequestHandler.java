@@ -30,8 +30,7 @@ import static ru.mycrg.data_service.service.TaskService.TASK_QUALIFIER;
 import static ru.mycrg.data_service.service.resources.ResourceQualifier.recordQualifier;
 import static ru.mycrg.data_service.service.smev3.fields.CommonFields.*;
 import static ru.mycrg.data_service.util.SystemLibraryAttributes.*;
-import static ru.mycrg.data_service_contract.enums.TaskStatus.DONE;
-import static ru.mycrg.data_service_contract.enums.TaskStatus.IN_PROGRESS;
+import static ru.mycrg.data_service_contract.enums.TaskStatus.*;
 
 @Component
 public class UpdateTaskRequestHandler implements IRequestHandler<UpdateTaskRequest, Voidy> {
@@ -89,6 +88,9 @@ public class UpdateTaskRequestHandler implements IRequestHandler<UpdateTaskReque
                 if (DONE.name().equals(status)) {
                     acceptRnsService.updateTablesAndSendStatusMessageToSmev(task, DONE, taskId);
                 }
+                if (CANCELED.name().equals(status)) {
+                    acceptRnsService.updateTablesAndSendStatusMessageToSmev(task, CANCELED, taskId);
+                }
             }
         }
         if (contentType != null && contentType.toString().equals(RNV_CONTENT_TYPE)) {
@@ -101,6 +103,10 @@ public class UpdateTaskRequestHandler implements IRequestHandler<UpdateTaskReque
                 if (DONE.name().equals(status)) {
                     acceptRnvService.updateTablesAndSendStatusMessageToSmev(task, DONE, taskId);
                 }
+
+                if (CANCELED.name().equals(status)) {
+                    acceptRnvService.updateTablesAndSendStatusMessageToSmev(task, CANCELED, taskId);
+                }
             }
         }
         if (contentType != null && contentType.toString().equals(GPZU_CONTENT_TYPE)) {
@@ -112,6 +118,10 @@ public class UpdateTaskRequestHandler implements IRequestHandler<UpdateTaskReque
 
                 if (DONE.name().equals(status)) {
                     acceptGpzuService.updateTablesAndSendStatusMessageToSmev(task, DONE, taskId);
+                }
+
+                if (CANCELED.name().equals(status)) {
+                    acceptGpzuService.updateTablesAndSendStatusMessageToSmev(task, CANCELED, taskId);
                 }
             }
         }

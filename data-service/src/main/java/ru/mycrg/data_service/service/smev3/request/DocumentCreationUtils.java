@@ -236,6 +236,27 @@ public class DocumentCreationUtils {
         run.setFontSize(fontSize);
     }
 
+    public static void addTextWithUnderlineText(XWPFDocument doc, String text, String underlineText,
+                                                ParagraphAlignment align, int indentationLeft,
+                                                int spacing, int fontSize) {
+        XWPFParagraph paragraph = doc.createParagraph();
+        paragraph.setAlignment(align);
+        paragraph.setSpacingAfter(spacing);
+        paragraph.setIndentationLeft(indentationLeft);
+        paragraph.setIndentationRight(125);
+
+        XWPFRun run = paragraph.createRun();
+        run.setText(text);
+        run.setFontFamily("Times New Roman");
+        run.setFontSize(fontSize);
+
+        XWPFRun run2 = paragraph.createRun();
+        run2.setText(underlineText);
+        run2.setFontFamily("Times New Roman");
+        run2.setUnderline(UnderlinePatterns.SINGLE);
+        run2.setFontSize(fontSize);
+    }
+
     public static void addCenterText(XWPFDocument document, String text) {
         XWPFParagraph paragraph = document.createParagraph();
         paragraph.setAlignment(ParagraphAlignment.CENTER);
@@ -263,6 +284,29 @@ public class DocumentCreationUtils {
         run2.setFontFamily("Times New Roman");
         run2.setUnderline(UnderlinePatterns.SINGLE);
         run2.setFontSize(fontSize);
+    }
+
+    public static void addTextWithSpacingAndUnderlineAndTextAfter(XWPFDocument document, String text, int spacing, int fontSize,
+                                                      String underLineText, String text2) {
+        XWPFParagraph paragraph = document.createParagraph();
+        paragraph.setAlignment(ParagraphAlignment.LEFT);
+        paragraph.setSpacingAfter(spacing);
+
+        XWPFRun run = paragraph.createRun();
+        run.setText(text);
+        run.setFontFamily("Times New Roman");
+        run.setFontSize(fontSize);
+
+        XWPFRun run2 = paragraph.createRun();
+        run2.setText(underLineText);
+        run2.setFontFamily("Times New Roman");
+        run2.setUnderline(UnderlinePatterns.SINGLE);
+        run2.setFontSize(fontSize);
+
+        XWPFRun run3 = paragraph.createRun();
+        run3.setText(text2);
+        run3.setFontFamily("Times New Roman");
+        run3.setFontSize(fontSize);
     }
 
     public static void addTextWithSpacing(XWPFDocument document, String text, int spacing, int fontSize) {

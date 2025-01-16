@@ -82,6 +82,9 @@ public abstract class AcceptServiceBase {
     protected static final String LIBRARY_ID = "dl_data_inbox_data";
     protected static final String TASK_ALLOCATION_LIBRARY_ID = "dl_data_task_allocation";
     protected static final String DATE_ATTRIBUTE = "date";
+    protected static final String GOAL = "goal";
+    protected static final String CADASTRAL_NUMBER = "cadastral_number";
+    protected static final String PERMIT_NUMBER = "permits_data_number";
     protected static final String FILE_ATTRIBUTE = "file";
     protected static final String PERSON_NAME_ATTRIBUTE = "person_name";
     protected static final String PERFORMER_ATTRIBUTE = "performer";
@@ -103,6 +106,8 @@ public abstract class AcceptServiceBase {
     protected static final String PDF_CONTENT_TYPE = "application/pdf";
     protected static final String PDF_EXTENSION = ".pdf";
     protected static final String DOCUMENT_CODE = "electrSigFile";
+    protected static final String BUILDING_PERMIT_FILENAME = "Разрешение на строительство_";
+    protected static final String MOTIVATED_DECLINE_FILENAME = "Мотивированный отказ_";
 
     @Value("${crg-options.taskDb}")
     protected String dbName;
@@ -181,8 +186,11 @@ public abstract class AcceptServiceBase {
 
     @Transactional
     public void updateTablesAndSendStatusMessageToSmev(Map<String, Object> task, TaskStatus taskStatus, Long taskId) {
+        if (task.get(INBOX_DATA_KEY_DATA_CONNECTION_ATTRIBUTE) == null) {
+            throw new BadRequestException("Блок inbox_data_key_data_connection у задачи не заполнен");
+        }
         Optional<List<TypeDocumentData>> oInboxDocs = JsonConverter.fromJson(
-                task.get(INBOX_DATA_KEY_DATA_CONNECTION_ATTRIBUTE).toString(),
+                String.valueOf(task.get(INBOX_DATA_KEY_DATA_CONNECTION_ATTRIBUTE)),
                 new TypeReference<List<TypeDocumentData>>() {
                 });
         if (oInboxDocs.isEmpty()) {
@@ -208,13 +216,20 @@ public abstract class AcceptServiceBase {
 
         String statusMesage = null;
         if (taskStatus == IN_PROGRESS) {
-            statusMesage = getStatusMessage(docRecord, taskStatus, null, null, null);
-            updateTaskAndDocument(libraryQualifier, rnvSchema, taskId, taskStatus);
+            statusMesage = getStatusMessage(docRecord, taskStatus, null, null, null, false);
+            updateTaskAndDocument(libraryQualifier, rnvSchema, taskId, taskStatus, false);
+        }
+        if (taskStatus == CANCELED) {
+            statusMesage = getStatusMessage(docRecord, taskStatus, null, null, null, true);
+            updateTaskAndDocument(libraryQualifier, rnvSchema, taskId, taskStatus, true);
         }
 
         if (taskStatus == DONE) {
+            if (task.get(DATA_SECTION_KEY_DATA_CONNECTION_ATTRIBUTE) == null) {
+                throw new BadRequestException("Блок data_key_data_connection у задачи не заполнен");
+            }
             Optional<List<TypeDocumentData>> oDataSectionDocs = JsonConverter.fromJson(
-                    task.get(DATA_SECTION_KEY_DATA_CONNECTION_ATTRIBUTE).toString(),
+                    String.valueOf(task.get(DATA_SECTION_KEY_DATA_CONNECTION_ATTRIBUTE)),
                     new TypeReference<List<TypeDocumentData>>() {
                     });
             if (oDataSectionDocs.isEmpty()) {
@@ -259,13 +274,18 @@ public abstract class AcceptServiceBase {
             }
 
             byte[] ecp;
-            String fileName;
+            String fileName = null;
             String fileExtension;
             ecp = file.getEcp();
             try {
                 Resource resource = fileStorageService.loadFromMainStorage(file.getPath());
                 fileExtension = "." + FilenameUtils.getExtension(resource.getFile().getPath());
-                fileName = "Разрешение_" + UUID.randomUUID() + fileExtension;
+                if (firstDocument.getLibraryTableName().equalsIgnoreCase(TABLE_13)) {
+                    fileName = BUILDING_PERMIT_FILENAME + UUID.randomUUID() + fileExtension;
+                }
+                if (firstDocument.getLibraryTableName().equalsIgnoreCase(TABLE_19)) {
+                    fileName = MOTIVATED_DECLINE_FILENAME + UUID.randomUUID() + fileExtension;
+                }
 
                 minioService.uploadFile(fileName,
                                         Files.readAllBytes(resource.getFile().toPath()),
@@ -275,13 +295,13 @@ public abstract class AcceptServiceBase {
             }
 
             if (firstDocument.getLibraryTableName().equalsIgnoreCase(TABLE_13)) {
-                statusMesage = getStatusMessage(docRecord, taskStatus, fileName, fileExtension, ecp);
-                updateTaskAndDocument(libraryQualifier, rnvSchema, taskId, taskStatus);
+                statusMesage = getStatusMessage(docRecord, taskStatus, fileName, fileExtension, ecp, false);
+                updateTaskAndDocument(libraryQualifier, rnvSchema, taskId, taskStatus, false);
             }
 
             if (firstDocument.getLibraryTableName().equalsIgnoreCase(TABLE_19)) {
-                statusMesage = getStatusMessage(docRecord, CANCELED, fileName, fileExtension, ecp);
-                updateTaskAndDocument(libraryQualifier, rnvSchema, taskId, CANCELED);
+                statusMesage = getStatusMessage(docRecord, CANCELED, fileName, fileExtension, ecp, false);
+                updateTaskAndDocument(libraryQualifier, rnvSchema, taskId, CANCELED, false);
             }
         }
 
@@ -291,7 +311,8 @@ public abstract class AcceptServiceBase {
     private void updateTaskAndDocument(ResourceQualifier libraryQualifier,
                                        SchemaDto rnvSchema,
                                        Long taskId,
-                                       TaskStatus taskStatus) {
+                                       TaskStatus taskStatus,
+                                       boolean isCanceledByUser) {
         Map<String, Object> docPayload = new HashMap<>();
         Map<String, Object> taskPayload = new HashMap<>();
         SchemaDto tasksSchema = this.schemaService
@@ -327,6 +348,19 @@ public abstract class AcceptServiceBase {
         }
 
         if (taskStatus == CANCELED) {
+            if (isCanceledByUser) {
+                docPayload.put(EPGU_STATUS_CODE_ATTRIBUTE, "Заявление отменено");
+                taskPayload.put(DESCRIPTION_ATTRIBUTE, "\"Заявление отменено\" отправлено в СМЭВ-3");
+                try {
+                    recordsDao.updateRecordById(libraryQualifier, docPayload, rnvSchema);
+                    recordsDao.updateRecordById(recordQualifier(TASK_QUALIFIER, taskId), taskPayload, tasksSchema);
+                } catch (Exception e) {
+                    throw new BadRequestException("Не удалось обновить запись в БД");
+                }
+
+                createLog("Статусное Сообщение \"Заявление отменено\" отправлено в СМЭВ-3",
+                          "Статусное Сообщение \"Заявление отменено\" отправлено в СМЭВ-3", taskId);
+            }
             docPayload.put(EPGU_STATUS_CODE_ATTRIBUTE, "Отказано в предоставлении услуги");
             taskPayload.put(DESCRIPTION_ATTRIBUTE, "\"Отказано в предоставлении услуги\" отправлено в СМЭВ-3");
             try {
@@ -359,11 +393,15 @@ public abstract class AcceptServiceBase {
 
     protected abstract String getContentType();
 
+    protected abstract String getDocumentPath();
+
     protected abstract String getTitle();
 
     protected abstract String getEventTypeLog();
 
     protected abstract String getDescriptionLog();
+
+    protected abstract <T> void addAdditionalFields(T queryResult, Map<String, Object> documentPayload);
 
     protected abstract <T> String getFullFio(T queryResult);
 
@@ -380,7 +418,7 @@ public abstract class AcceptServiceBase {
     protected abstract <T> XWPFDocument getWordDocument(T queryResult);
 
     protected abstract String getStatusMessage(IRecord docRecord, TaskStatus taskStatus, String fileName,
-                                               String fileExtension, byte[] ecp);
+                                               String fileExtension, byte[] ecp, boolean isCanceledByUser);
 
     protected abstract <T> List<String> getAttachIds(T queryResult);
 
@@ -420,7 +458,7 @@ public abstract class AcceptServiceBase {
         }
     }
 
-    private  <T> Map<String, byte[]> uploadRequestAttaches(T queryResult) {
+    private <T> Map<String, byte[]> uploadRequestAttaches(T queryResult) {
         Map<String, byte[]> filesAsBytes = new HashMap<>();
 
         try {
@@ -493,10 +531,11 @@ public abstract class AcceptServiceBase {
         documentPayload.put(TITLE.getName(), getTitle());
         documentPayload.put(CONTENT_TYPE_ID.getName(), getContentType());
         documentPayload.put(IS_FOLDER.getName(), false);
-        documentPayload.put(PATH.getName(), ROOT_FOLDER_PATH);
+        documentPayload.put(PATH.getName(), getDocumentPath());
         documentPayload.put(SMEV_MESSAGE_ID_ATTRIBUTE, getMessageId(queryResult));
         documentPayload.put(SMEV_CLIENT_ID_ATTRIBUTE, getClientId(queryResult));
         documentPayload.put(PGUID_ATTRIBUTE, String.valueOf(getOrderId(queryResult)));
+        addAdditionalFields(queryResult, documentPayload);
 
         RecordEntity document = new RecordEntity(documentPayload);
         IRecord savedDocument = recordsDao.addRecord(rnvLibraryQualifier, document, rnvSchema);

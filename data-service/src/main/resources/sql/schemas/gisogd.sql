@@ -19023,6 +19023,57 @@ SET class_rule =
            "readOnly": true,
            "maxLength": 200,
            "valueType": "STRING"
+         },
+         {
+            "name": "goal",
+            "title": "Подуслуга",
+            "minWidth": 200,
+            "readOnly": true,
+            "valueType": "CHOICE",
+            "enumerations": [
+              {
+                "title": "1",
+                "value": "Выдача разрешения на строительство"
+              },
+              {
+                "title": "2FormLandCombiningDividingRedistributingAllocating",
+                "value": "Внесение изменений. Изменение конфигурации земельного участка"
+              },
+              {
+                "title": "2ChangeOwnerLand",
+                "value": "Внесение изменений. Изменение правообладателя"
+              },
+              {
+                "title": "2RenewalConstructionPermit",
+                "value": "Внесение изменений. Продление разрешения на строительство"
+              },
+              {
+                "title": "2DesignDocumentationAmended",
+                "value": "Внесение изменений в разрешение на строительство по иным причинам"
+              },
+              {
+                "title": "3",
+                "value": "Исправление технической ошибки в разрешении на строительство"
+              },
+              {
+                "title": "4",
+                "value": "Получение дубликата на строительство"
+              }
+            ]
+         },
+         {
+            "name": "cadastral_number",
+            "title": "Кадастровый номер",
+            "readOnly": true,
+            "maxLength": 200,
+            "valueType": "STRING"
+         },
+         {
+            "name": "permits_data_number",
+            "title": "Номер прошлого документа",
+            "readOnly": true,
+            "maxLength": 200,
+            "valueType": "STRING"
          }
        ],
        "description": "Реестр учета сведений, документов, материалов, поступивших на размещение в информационную систему",

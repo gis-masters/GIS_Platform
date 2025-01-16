@@ -273,8 +273,9 @@ public class FileService {
             if (baseFile.getEcp() != null) {
                 VerifyEcpResponse response = verificationFailed(
                         "Подпись 'Подписанта' загружена не будет. Файл уже подписан. До-подписать можно плагином");
-
-                report.put(ecpFile.getId(), List.of(response));
+                if (report != null) {
+                    report.put(ecpFile.getId(), List.of(response));
+                }
             } else {
                 byte[] ecpAsBytes = getFileAsBytes(ecpFile);
                 List<VerifyEcpResponse> result = ecpVerifier.verify(baseFile.getPath(), ecpAsBytes);

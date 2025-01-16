@@ -32,8 +32,7 @@ import static ru.mycrg.data_service.service.TaskService.TASK_QUALIFIER;
 import static ru.mycrg.data_service.service.resources.ResourceQualifier.recordQualifier;
 import static ru.mycrg.data_service.service.smev3.fields.CommonFields.*;
 import static ru.mycrg.data_service.util.SystemLibraryAttributes.*;
-import static ru.mycrg.data_service_contract.enums.TaskStatus.DONE;
-import static ru.mycrg.data_service_contract.enums.TaskStatus.IN_PROGRESS;
+import static ru.mycrg.data_service_contract.enums.TaskStatus.*;
 
 @Component
 public class UpdateTaskStatusRequestHandler implements IRequestHandler<UpdateTaskStatusRequest, Voidy> {
@@ -89,7 +88,7 @@ public class UpdateTaskStatusRequestHandler implements IRequestHandler<UpdateTas
         }
 
         Object contentType = task.get(CONTENT_TYPE_ID.getName());
-        if (contentType != null && (newStatus == IN_PROGRESS || newStatus == DONE)) {
+        if (contentType != null && (newStatus == IN_PROGRESS || newStatus == DONE || newStatus == CANCELED)) {
             String contentTypeString = contentType.toString();
             if (contentTypeString.equals(RNS_CONTENT_TYPE)) {
                 acceptRnsService.updateTablesAndSendStatusMessageToSmev(task, newStatus, taskId);

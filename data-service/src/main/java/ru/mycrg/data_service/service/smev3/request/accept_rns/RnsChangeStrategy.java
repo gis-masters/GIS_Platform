@@ -4,7 +4,6 @@ import org.apache.poi.xwpf.usermodel.*;
 import org.springframework.stereotype.Component;
 import ru.mycrg.data_service.accept_rns_1_0_3.*;
 import ru.mycrg.data_service.service.smev3.request.IDocumentDataProvider;
-import ru.mycrg.data_service.service.smev3.request.accept_rnv.RnvDocumentDataProvider;
 
 import static org.apache.poi.xwpf.usermodel.ParagraphAlignment.*;
 import static ru.mycrg.data_service.service.smev3.request.DocumentCreationUtils.*;
@@ -182,7 +181,7 @@ public class RnsChangeStrategy implements IRnsRequestDocumentCreator {
 
     private static XWPFDocument createTemplate2(RequestType request) {
         XWPFDocument document = new XWPFDocument();
-        IDocumentDataProvider dataProvider = new RnvDocumentDataProvider();
+        IDocumentDataProvider dataProvider = new RnsDocumentDataProvider();
         addParagraph(document, "Приложение № 5");
         addParagraph(document, "к Административному регламенту");
         addParagraph(document, "предоставления Министерством жилищной политики");

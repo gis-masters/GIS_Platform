@@ -82,6 +82,11 @@ public class AcceptRnsService extends AcceptServiceBase {
     }
 
     @Override
+    protected String getDocumentPath() {
+        return "/root/40";
+    }
+
+    @Override
     protected String getTitle() {
         return TITLE;
     }
@@ -94,6 +99,16 @@ public class AcceptRnsService extends AcceptServiceBase {
     @Override
     protected String getDescriptionLog() {
         return EVENT_TYPE_LOG;
+    }
+
+    @Override
+    protected <T> void addAdditionalFields(T queryResult, Map<String, Object> documentPayload) {
+        QueryResult result = (QueryResult) queryResult;
+        RequestType request = result.getMessage().getRequestContent().getContent().getMessagePrimaryContent()
+                                    .getRequest();
+        documentPayload.put(GOAL, getGoalDescription(request));
+        documentPayload.put(CADASTRAL_NUMBER, getCadastalNumbers(request));
+        documentPayload.put(PERMIT_NUMBER, getPermitNumber(request));
     }
 
     @Override
@@ -165,7 +180,7 @@ public class AcceptRnsService extends AcceptServiceBase {
 
     @Override
     protected String getStatusMessage(IRecord docRecord, TaskStatus taskStatus, String fileName, String fileExtension,
-                                      byte[] ecp) {
+                                      byte[] ecp, boolean isCanceledByUser) {
         ClientMessage clientMessage = createClientMessage();
         ResponseMessageType responseMessageType = createResponseMessageType(docRecord);
         ResponseContentType responseContentType = new ResponseContentType();
@@ -173,7 +188,8 @@ public class AcceptRnsService extends AcceptServiceBase {
         Content content = new Content();
         ChangeOrderInfoType changeOrderInfoType = new ChangeOrderInfoType();
 
-        setChangeOrderInfo(taskStatus, docRecord, changeOrderInfoType, fileName, fileExtension, ecp, content);
+        setChangeOrderInfo(taskStatus, docRecord, changeOrderInfoType, fileName, fileExtension, ecp, content,
+                           isCanceledByUser);
         FormResponseType formResponseType = new FormResponseType();
         formResponseType.setChangeOrderInfo(changeOrderInfoType);
         messagePrimaryContent.setFormResponse(formResponseType);
@@ -245,6 +261,48 @@ public class AcceptRnsService extends AcceptServiceBase {
         return clientMessage;
     }
 
+    private String getPermitNumber(RequestType request) {
+        return request.getConstructionPermitsData() == null ? null : request.getConstructionPermitsData().getNumber();
+    }
+
+    private String getCadastalNumbers(RequestType request) {
+        return Optional.ofNullable(request)
+                       .map(RequestType::getLandPlotData)
+                       .map(LandPlotDataType::getLandPlotCadastralNumberBlock)
+                       .stream()
+                       .flatMap(List::stream)
+                       .map(block -> String.join(", ", block.getLandPlotCadastralNumber()))
+                       .collect(Collectors.joining(", "));
+    }
+
+    private String getGoalDescription(RequestType request) {
+        if (request.getGoal() != 2) {
+
+            return String.valueOf(request.getGoal());
+        }
+        Optional<KPVI25Type> variantChoice = Optional.ofNullable(request.getVariantChoice())
+                                              .map(VariantChoiceType::getKPVI25);
+
+        if (variantChoice.map(KPVI25Type::isRenewalConstructionPermit).orElse(false)) {
+
+            return request.getGoal() + "RenewalConstructionPermit";
+        }
+        if (variantChoice.map(KPVI25Type::isChangeOwnerLand).orElse(false)) {
+
+            return request.getGoal() + "ChangeOwnerLand";
+        }
+        if (variantChoice.map(KPVI25Type::isFormLandCombiningDividingRedistributingAllocating).orElse(false)) {
+
+            return request.getGoal() + "FormLandCombiningDividingRedistributingAllocating";
+        }
+        if (variantChoice.map(KPVI25Type::isDesignDocumentationAmended).orElse(false)) {
+
+            return request.getGoal() + "DesignDocumentationAmended";
+        }
+
+        return null;
+    }
+
     private ResponseMessageType createResponseMessageType(IRecord docRecord) {
         ResponseMessageType responseMessageType = new ResponseMessageType();
         ResponseMetadataType responseMetadataType = new ResponseMetadataType();
@@ -257,7 +315,7 @@ public class AcceptRnsService extends AcceptServiceBase {
 
     private void setChangeOrderInfo(TaskStatus taskStatus, IRecord docRecord,
                                     ChangeOrderInfoType changeOrderInfoType, String fileName,
-                                    String fileExtension, byte[] ecp, Content content) {
+                                    String fileExtension, byte[] ecp, Content content, boolean isCanceledByUser) {
         OrderIdType orderIdType = new OrderIdType();
         orderIdType.setPguId(Long.parseLong(Objects.requireNonNull(docRecord.getAsString(PGUID_ATTRIBUTE))));
         changeOrderInfoType.setOrderId(orderIdType);
@@ -274,9 +332,15 @@ public class AcceptRnsService extends AcceptServiceBase {
                 addAttachmentHeader(fileName, fileExtension, ecp, content);
                 break;
             case CANCELED:
-                statusCodeType.setTechCode("4");
-                changeOrderInfoType.setComment("Отказано в предоставлении услуги");
-                addAttachmentHeader(fileName, fileExtension, ecp, content);
+                if (isCanceledByUser) {
+                    statusCodeType.setTechCode("10");
+                    changeOrderInfoType.setComment("Заявление отменено");
+                    addAttachmentHeader(fileName, fileExtension, ecp, content);
+                } else {
+                    statusCodeType.setTechCode("4");
+                    changeOrderInfoType.setComment("Отказано в предоставлении услуги");
+                    addAttachmentHeader(fileName, fileExtension, ecp, content);
+                }
                 break;
             default:
                 throw new IllegalArgumentException("Неизвестный статус: " + taskStatus);
@@ -287,7 +351,13 @@ public class AcceptRnsService extends AcceptServiceBase {
     private void addAttachmentHeader(String fileName, String fileExtension, byte[] ecp, Content content) {
         AttachmentHeaderList attachmentHeaderList = new AttachmentHeaderList();
         AttachmentHeaderType attachmentHeaderType = new AttachmentHeaderType();
-        attachmentHeaderType.setId(fileName.replace("Разрешение_", "").replace(fileExtension, ""));
+        if (fileName.contains(BUILDING_PERMIT_FILENAME)) {
+            attachmentHeaderType.setId(fileName.replace(BUILDING_PERMIT_FILENAME, "")
+                                               .replace(fileExtension, ""));
+        } else {
+            attachmentHeaderType.setId(fileName.replace(MOTIVATED_DECLINE_FILENAME, "")
+                                               .replace(fileExtension, ""));
+        }
         attachmentHeaderType.setFilePath(fileName);
         attachmentHeaderType.setSignaturePKCS7(ecp);
         attachmentHeaderList.getAttachmentHeader().add(attachmentHeaderType);
