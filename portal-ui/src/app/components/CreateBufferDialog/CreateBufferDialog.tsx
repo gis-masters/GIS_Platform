@@ -15,6 +15,7 @@ import { mapDrawService } from '../../services/map/draw/map-draw.service';
 import { EditFeatureMode, sidebars } from '../../stores/Sidebars.store';
 import { FormDialog } from '../FormDialog/FormDialog';
 import { SelectSuitableLayerDialog } from '../SelectSuitableLayerDialog/SelectSuitableLayerDialog';
+import { Toast } from '../Toast/Toast';
 
 const cnCreateBufferDialog = cn('CreateBufferDialog');
 
@@ -37,8 +38,6 @@ export const CreateBufferDialog: FC<CreateBufferDialogProps> = observer(({ open,
         return;
       }
 
-      sidebars.closeEdit();
-
       const reader = new GeoJSONReader(new GeometryFactory());
       const writer = new GeoJSONWriter();
       const geom = BufferOp.bufferOp(reader.read(feature.geometry), formValue.buffer) as Geometry;
@@ -46,6 +45,14 @@ export const CreateBufferDialog: FC<CreateBufferDialogProps> = observer(({ open,
       const emptyFeature = (await getEmptyFeature(formValue.layer as CrgVectorLayer)) as WfsFeature;
       featureWithBuffer.id = emptyFeature.id;
       featureWithBuffer.properties = emptyFeature.properties;
+
+      if (!featureWithBuffer.geometry.coordinates[0].length) {
+        Toast.warn('Буфер не создан: внутренний отступ слишком большой.');
+
+        return;
+      }
+
+      sidebars.closeEdit();
 
       sidebars.openEdit({
         features: [featureWithBuffer],

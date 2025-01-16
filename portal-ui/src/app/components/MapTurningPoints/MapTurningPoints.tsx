@@ -15,6 +15,7 @@ const cnMapTurningPoints = cn('MapTurningPoints');
 export class MapTurningPoints extends Component {
   render() {
     const disabled =
+      sidebars.editFeaturesData?.isNew ||
       !mapStore.selectedFeatures.length ||
       (mapStore.selectedFeatures.length > 1 && sidebars.editFeaturesData?.features.length !== 1);
 

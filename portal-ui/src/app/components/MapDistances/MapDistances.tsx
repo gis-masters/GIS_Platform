@@ -17,6 +17,7 @@ export const MapDistances: FC = observer(() => {
   }, []);
 
   const disabled =
+    sidebars.editFeaturesData?.isNew ||
     !mapStore.selectedFeatures.length ||
     (mapStore.selectedFeatures.length > 1 && sidebars.editFeaturesData?.features.length !== 1);
 
