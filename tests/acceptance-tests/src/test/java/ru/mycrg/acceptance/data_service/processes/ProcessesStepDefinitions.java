@@ -17,6 +17,7 @@ import static ru.mycrg.acceptance.data_service.FilesStepDefinitions.currentFileI
 import static ru.mycrg.acceptance.data_service.FilesStepDefinitions.currentFiles;
 import static ru.mycrg.acceptance.data_service.datasets.DatasetsStepsDefinitions.currentDatasetIdentifier;
 import static ru.mycrg.acceptance.data_service.tables.TablesStepsDefinitions.anotherTableName;
+import static ru.mycrg.acceptance.data_service.tables.TablesStepsDefinitions.currentTableName;
 import static ru.mycrg.acceptance.gis_service.ProjectStepsDefinitions.projectId;
 
 public class ProcessesStepDefinitions extends BaseStepsDefinitions {
@@ -72,8 +73,8 @@ public class ProcessesStepDefinitions extends BaseStepsDefinitions {
         placeFileInCurrentProject(fileForPublication.getId());
     }
 
-    @When("Пользователь импортирует геометрию из shape файла в существующий слой")
-    public void tryImportGeometryShapeAsProcessAsUser() {
+    @When("Пользователь импортирует геометрию из shape файла в существующий слой {string}")
+    public void tryImportShapeAsProcessAsUser(String filename) {
         authorizationBase.loginAsCurrentUser();
 
         GeometryShapePlacementModel shapePlacementModel = new GeometryShapePlacementModel();
@@ -81,19 +82,19 @@ public class ProcessesStepDefinitions extends BaseStepsDefinitions {
         shapePlacementModel.setTableName(anotherTableName);
         shapePlacementModel.setFileType("SHP");
 
-        placeGeometryFromShape(shapePlacementModel, "transplogisticobj_point.zip");
+        placeGeometryFromShape(shapePlacementModel, filename);
     }
 
-    @When("Администратор импортирует геометрию из shape файла в существующий слой")
-    public void tryImportGeometryShapeAsProcessAsAdmin() {
+    @When("Владелец импортирует геометрию из shape файла в существующий слой {string}")
+    public void tryImportShapeAsProcessAsOwner(String filename) {
         authorizationBase.loginAsOwner();
 
         GeometryShapePlacementModel shapePlacementModel = new GeometryShapePlacementModel();
         shapePlacementModel.setDatasetId(currentDatasetIdentifier);
-        shapePlacementModel.setTableName(anotherTableName);
+        shapePlacementModel.setTableName(currentTableName);
         shapePlacementModel.setFileType("SHP");
 
-        placeGeometryFromShape(shapePlacementModel, "z_5_functionalzone.zip");
+        placeGeometryFromShape(shapePlacementModel, filename);
     }
 
     @When("администратор импортирует геометрию из shape файла, имеющую \"EPSG:7829\" в существующий слой")

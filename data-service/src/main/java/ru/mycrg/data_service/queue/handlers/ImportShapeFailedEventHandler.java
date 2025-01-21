@@ -13,13 +13,13 @@ import ru.mycrg.messagebus_contract.events.IMessageBusEvent;
 import static java.util.Objects.nonNull;
 
 @Service
-public class ImportGeometryShapeFailedEventHandler implements IEventHandler {
+public class ImportShapeFailedEventHandler implements IEventHandler {
 
-    private final Logger log = LoggerFactory.getLogger(ImportGeometryShapeFailedEventHandler.class);
+    private final Logger log = LoggerFactory.getLogger(ImportShapeFailedEventHandler.class);
 
     private final ProcessService processService;
 
-    public ImportGeometryShapeFailedEventHandler(ProcessService processService) {
+    public ImportShapeFailedEventHandler(ProcessService processService) {
         this.processService = processService;
     }
 
@@ -31,7 +31,7 @@ public class ImportGeometryShapeFailedEventHandler implements IEventHandler {
     @Override
     public void handle(IMessageBusEvent mqEvent) {
         ShapeImportedFailedEvent event = (ShapeImportedFailedEvent) mqEvent;
-        ShapeLoadedEvent requestEvent = event.getImportGeometryShapeEvent();
+        ShapeLoadedEvent requestEvent = event.getImportShapeEvent();
 
         log.debug("In ShapeImportedFailedEvent! {}", requestEvent);
 

@@ -8,7 +8,7 @@ import static ru.mycrg.messagebus_contract.MessageBusProperties.GEO_WRAPPER_TO_D
 
 public class ShapeImportedFailedEvent extends DefaultMessageBusResponseEvent {
 
-    private ShapeLoadedEvent importGeometryShapeEvent;
+    private ShapeLoadedEvent importShapeEvent;
     private ProcessStatus status;
     private String description;
     private int progress;
@@ -32,17 +32,17 @@ public class ShapeImportedFailedEvent extends DefaultMessageBusResponseEvent {
         this.description = description;
         this.payload = payload;
         this.progress = progress;
-        this.importGeometryShapeEvent = event;
+        this.importShapeEvent = event;
         this.warningMessage = warningMessage;
         this.errorMessage = errorMessage;
     }
 
-    public ShapeLoadedEvent getImportGeometryShapeEvent() {
-        return importGeometryShapeEvent;
+    public ShapeLoadedEvent getImportShapeEvent() {
+        return importShapeEvent;
     }
 
-    public void setImportGeometryShapeEvent(ShapeLoadedEvent importGeometryShapeEvent) {
-        this.importGeometryShapeEvent = importGeometryShapeEvent;
+    public void setImportShapeEvent(ShapeLoadedEvent importShapeEvent) {
+        this.importShapeEvent = importShapeEvent;
     }
 
     public ProcessStatus getStatus() {

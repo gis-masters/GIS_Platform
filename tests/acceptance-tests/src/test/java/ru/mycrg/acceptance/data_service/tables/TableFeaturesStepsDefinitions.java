@@ -14,10 +14,7 @@ import ru.mycrg.acceptance.data_service.dto.GeoJsonModel;
 import ru.mycrg.acceptance.data_service.dto.QualifierDto;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static io.restassured.http.ContentType.JSON;
 import static java.lang.String.join;
@@ -463,6 +460,51 @@ public class TableFeaturesStepsDefinitions extends BaseStepsDefinitions {
         assertEquals(userDto.getEmail(), updatedBy);
     }
 
+    @Then("количество объектов в слое равно {int}")
+    public void checkObjectsCount(int count) {
+        getAllFeatures();
+        response.prettyPrint();
+        assertEquals(count, response.jsonPath().getInt("page.totalElements"));
+    }
+
+    @And("геометрия в объекте равна {string}")
+    public void checkObjectGeom(String geom) {
+        List<Map<String, Object>> features = response.jsonPath().getList("content.properties");
+        boolean geometryMatches = features.stream().anyMatch(properties ->
+                                                                     geom.equals(properties.get("shape"))
+        );
+        Assert.assertTrue("Геометрия не совпадает", geometryMatches);
+    }
+
+
+    @And("атрибуты объекта с полем {string} равным {int} такие")
+    public void checkRecordFields(String fieldName, int value, Map<String, List<Object>> expectedFields) {
+        List<Map<String, Object>> content = response.jsonPath().getList("content.properties");
+
+        Map<String, Object> matchingRecord = content.stream()
+                                                    .filter(properties -> properties.containsKey(
+                                                            fieldName) && properties.get(fieldName).equals(value))
+                                                    .findFirst()
+                                                    .orElse(null);
+
+        boolean areEqual = true;
+
+        for (Map.Entry<String, List<Object>> entry: expectedFields.entrySet()) {
+            String key = entry.getKey();
+            List<Object> list = entry.getValue();
+            Object valueFromList = (list != null && !list.isEmpty()) ? list.get(0) : null;
+
+            Object matchingValue = matchingRecord.get(key);
+            if (!Objects.equals(String.valueOf(valueFromList), String.valueOf(matchingValue))) {
+                System.out.printf("Mismatch for key '%s': expected '%s', but found '%s'%n",
+                                  key, valueFromList, matchingValue);
+                areEqual = false;
+            }
+        }
+
+        assertTrue("The expected fields do not match the record fields", areEqual);
+    }
+
     private void createFeature(GeoJsonModel geoJsonModel) {
         response = getBaseRequestWithCurrentCookie()
                 .given().
@@ -498,6 +540,14 @@ public class TableFeaturesStepsDefinitions extends BaseStepsDefinitions {
                         contentType(JSON)
                 .when().
                         get("/" + id);
+    }
+
+    private void getAllFeatures() {
+        response = getBaseRequestWithCurrentCookie()
+                .given()
+                        .contentType(JSON)
+                .when()
+                        .get();
     }
 
     public void deleteFeature(Integer id) {

@@ -16,7 +16,7 @@ import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service.service.resources.TableService;
 import ru.mycrg.data_service.service.resources.protectors.TableProtector;
 import ru.mycrg.data_service.service.storage.FileStorageService;
-import ru.mycrg.data_service_contract.dto.ImportGeometryShapeReport;
+import ru.mycrg.data_service_contract.dto.ImportShapeReport;
 import ru.mycrg.data_service_contract.dto.ProcessModel;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.data_service_contract.enums.FileType;
@@ -30,7 +30,7 @@ import static ru.mycrg.data_service.service.storage.FileStorageUtil.generateFile
 import static ru.mycrg.data_service.util.JsonConverter.mapper;
 
 @Component
-public class ShapeGeometryImporterExecutor implements IExecutor<ImportGeometryShapeReport> {
+public class ShapeGeometryImporterExecutor implements IExecutor<ImportShapeReport> {
 
     private final Logger log = LoggerFactory.getLogger(ShapeGeometryImporterExecutor.class);
 
@@ -43,7 +43,7 @@ public class ShapeGeometryImporterExecutor implements IExecutor<ImportGeometrySh
     private final IAuthenticationFacade authenticationFacade;
 
     private ProcessModel processModel;
-    private ImportGeometryShapeReport importReport;
+    private ImportShapeReport importReport;
     private GeometryFromShapePlacementPayloadModel payload;
 
     public ShapeGeometryImporterExecutor(IMessageBusProducer messageBus,
@@ -59,13 +59,14 @@ public class ShapeGeometryImporterExecutor implements IExecutor<ImportGeometrySh
     }
 
     @Override
-    public ImportGeometryShapeReport execute() {
-        importReport = new ImportGeometryShapeReport();
+    public ImportShapeReport execute() {
+        importReport = new ImportShapeReport();
 
         log.debug("Начало публикации импорта геометрии из SHAPE файла: {}", this.payload);
 
         long orgId = authenticationFacade.getOrganizationId();
         String dbName = getDefaultDatabaseName(orgId);
+        String login = authenticationFacade.getLogin();
 
         String datasetId = payload.getDatasetId();
         String tableName = payload.getTableName();
@@ -106,7 +107,8 @@ public class ShapeGeometryImporterExecutor implements IExecutor<ImportGeometrySh
         }
 
         messageBus.produce(
-                new ShapeLoadedEvent(processModel.getId(), dbName, payload.getFilePath(),
+                new ShapeLoadedEvent(processModel.getId(), dbName,  login,
+                                     payload.getFilePath(),
                                      table.getCrs(), tableName, datasetId, schema.getGeometryType().getType()));
 
         importReport.setDatasetIdentifier(datasetId);
@@ -116,7 +118,7 @@ public class ShapeGeometryImporterExecutor implements IExecutor<ImportGeometrySh
     }
 
     @Override
-    public ImportGeometryShapeReport getReport() {
+    public ImportShapeReport getReport() {
         return this.importReport;
     }
 
@@ -126,14 +128,14 @@ public class ShapeGeometryImporterExecutor implements IExecutor<ImportGeometrySh
     }
 
     @Override
-    public IExecutor<ImportGeometryShapeReport> setPayload(ProcessModel processModel) {
+    public IExecutor<ImportShapeReport> setPayload(ProcessModel processModel) {
         this.processModel = processModel;
 
         return this;
     }
 
     @Override
-    public IExecutor<ImportGeometryShapeReport> initialize(Object data) {
+    public IExecutor<ImportShapeReport> initialize(Object data) {
         MultipartFile file;
         try {
             LinkedHashMap<String, Object> geometryShapeModel = mapper.convertValue(data, LinkedHashMap.class);
@@ -156,7 +158,7 @@ public class ShapeGeometryImporterExecutor implements IExecutor<ImportGeometrySh
     }
 
     @Override
-    public IExecutor<ImportGeometryShapeReport> validate() {
+    public IExecutor<ImportShapeReport> validate() {
         // Nothing to do
 
         return this;

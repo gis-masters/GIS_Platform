@@ -18,13 +18,13 @@ import static ru.mycrg.data_service_contract.enums.ProcessStatus.ERROR;
 import static ru.mycrg.data_service_contract.enums.ProcessStatus.PENDING;
 
 @Service
-public class ImportGeometryShapeRequestHandler implements IEventHandler {
+public class ImportShapeRequestHandler implements IEventHandler {
 
-    private static final Logger log = LoggerFactory.getLogger(ImportGeometryShapeRequestHandler.class);
+    private static final Logger log = LoggerFactory.getLogger(ImportShapeRequestHandler.class);
     private final IMessageBusProducer messageBus;
     private final GDALService gdalService;
 
-    public ImportGeometryShapeRequestHandler(IMessageBusProducer messageBus, GDALService gdalService) {
+    public ImportShapeRequestHandler(IMessageBusProducer messageBus, GDALService gdalService) {
         this.messageBus = messageBus;
         this.gdalService = gdalService;
     }
@@ -43,10 +43,10 @@ public class ImportGeometryShapeRequestHandler implements IEventHandler {
                                      .toLowerCase();
             event.setSourceTableName(tableName);
             log.debug("Table name : {}", tableName);
-            ErrorReport errorReport = gdalService.importGeometryFromShape(event.getFilePath(),
-                                                                          event.getDbName(),
-                                                                          tableName,
-                                                                          event.getSrs());
+            ErrorReport errorReport = gdalService.importFromShape(event.getFilePath(),
+                                                                  event.getDbName(),
+                                                                  tableName,
+                                                                  event.getSrs());
 
             messageBus.produce(
                     new ShapeImportedSucceededEvent(event, PENDING,

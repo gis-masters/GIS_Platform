@@ -1,6 +1,6 @@
 package ru.mycrg.data_service_contract.dto;
 
-public class ImportGeometryShapeReport {
+public class ImportShapeReport {
 
     private String datasetIdentifier;
     private String tableIdentifier;
@@ -14,7 +14,7 @@ public class ImportGeometryShapeReport {
     private boolean shapeFileHasProjection;
     private String targetCrs;
 
-    public ImportGeometryShapeReport() {
+    public ImportShapeReport() {
         // Required
     }
 

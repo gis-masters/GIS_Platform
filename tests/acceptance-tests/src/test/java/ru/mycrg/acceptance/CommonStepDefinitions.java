@@ -26,6 +26,7 @@ public class CommonStepDefinitions extends BaseStepsDefinitions {
 
     @Then("Сервер отвечает со статус-кодом {int}")
     public void assertResponseCode(int status) {
+        response.prettyPrint();
         assertEquals(status, response.getStatusCode());
     }
 

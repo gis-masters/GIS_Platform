@@ -53,6 +53,7 @@ public class SchemasStepsDefinitions extends BaseStepsDefinitions {
 
     @Then("В выборке схем присутствуют схемы с тэгом {string}")
     public void checkThatSchemasWithTag(String tag) {
+        response.prettyPrint();
         List<List<String>> tagsFromSchemas = response.jsonPath().getList("tags");
 
         assertNotNull(tagsFromSchemas);

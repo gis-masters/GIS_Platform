@@ -10,6 +10,7 @@ public class ShapeLoadedEvent extends DefaultMessageBusRequestEvent {
 
     private Long processId;
     private String dbName;
+    private String login;
     private String filePath;
     private String srs;
     private String targetTableName;
@@ -21,12 +22,13 @@ public class ShapeLoadedEvent extends DefaultMessageBusRequestEvent {
         super();
     }
 
-    public ShapeLoadedEvent(Long processId, String dbName, String filePath, String srs,
+    public ShapeLoadedEvent(Long processId, String dbName, String login, String filePath, String srs,
                             String targetTableName, String datasetId, String geometryType) {
         super(UUID.randomUUID(), DATA_TO_GEO_WRAPPER_QUEUE);
 
         this.processId = processId;
         this.dbName = dbName;
+        this.login = login;
         this.filePath = filePath;
         this.srs = srs;
         this.targetTableName = targetTableName;
@@ -48,6 +50,14 @@ public class ShapeLoadedEvent extends DefaultMessageBusRequestEvent {
 
     public void setDbName(String dbName) {
         this.dbName = dbName;
+    }
+
+    public String getLogin() {
+        return login;
+    }
+
+    public void setLogin(String login) {
+        this.login = login;
     }
 
     public String getFilePath() {
@@ -103,6 +113,7 @@ public class ShapeLoadedEvent extends DefaultMessageBusRequestEvent {
         return "{" +
                 "\"processId\":" + (processId == null ? "null" : "\"" + processId + "\"") + ", " +
                 "\"dbName\":" + (dbName == null ? "null" : "\"" + dbName + "\"") + ", " +
+                "\"login\":" + (login == null ? "null" : "\"" + login + "\"") + ", " +
                 "\"filePath\":" + (filePath == null ? "null" : "\"" + filePath + "\"") + ", " +
                 "\"srs\":" + (srs == null ? "null" : "\"" + srs + "\"") + ", " +
                 "\"targetTableName\":" + (targetTableName == null ? "null" : "\"" + targetTableName + "\"") + ", " +

@@ -75,7 +75,7 @@ public class GDALService implements IExporter {
         }
     }
 
-    public ErrorReport importGeometryFromShape(String filePath, String dbName, String tableName, String srs) {
+    public ErrorReport importFromShape(String filePath, String dbName, String tableName, String srs) {
         ErrorReport errorReport;
         ProcessBuilder processBuilder = new ProcessBuilder();
 

@@ -12,6 +12,8 @@ public class SchemaTemplates {
 
     public static SchemaDto getSchemaTemplateByTitle(String schemaTitle) {
         switch (schemaTitle) {
+            case "Точечный слой с атрибутами":
+                return testPointAttributes();
             case "Тест FTS - исключение hidden полей":
                 return testFtsHiddenFieldsSchema();
             case "Тестовая схема dl_default":
@@ -127,6 +129,79 @@ public class SchemaTemplates {
                 return simpleSchema(schemaTitle);
         }
     }
+
+    private static SchemaDto testPointAttributes() {
+        return gson.fromJson(
+                "{\n" +
+                        "  \"name\": \"nto_all_point\",\n" +
+                        "  \"title\": \"Точечный слой с атрибутами\",\n" +
+                        "  \"styleName\": \"generic\",\n" +
+                        "  \"tableName\": \"nto_all_point\",\n" +
+                        "  \"properties\": [\n" +
+                        "    {\n" +
+                        "      \"name\": \"number\",\n" +
+                        "      \"title\": \"Номер на схеме\",\n" +
+                        "      \"valueType\": \"INT\"\n" +
+                        "    },\n" +
+                        "    {\n" +
+                        "      \"name\": \"location\",\n" +
+                        "      \"title\": \"Местоположение\",\n" +
+                        "      \"maxLength\": 400,\n" +
+                        "      \"valueType\": \"STRING\"\n" +
+                        "    },\n" +
+                        "    {\n" +
+                        "      \"name\": \"specialty\",\n" +
+                        "      \"title\": \"Специализация\",\n" +
+                        "      \"valueType\": \"STRING\"\n" +
+                        "    },\n" +
+                        "    {\n" +
+                        "      \"name\": \"status\",\n" +
+                        "      \"title\": \"Период функционирования НТО\",\n" +
+                        "      \"valueType\": \"STRING\"\n" +
+                        "    },\n" +
+                        "    {\n" +
+                        "      \"name\": \"area_doc\",\n" +
+                        "      \"title\": \"Площадь, м.кв.\",\n" +
+                        "      \"valueType\": \"DOUBLE\",\n" +
+                        "      \"fractionDigits\": 6\n" +
+                        "    },\n" +
+                        "    {\n" +
+                        "      \"name\": \"created_at\",\n" +
+                        "      \"title\": \"Дата создания\",\n" +
+                        "      \"valueType\": \"DATETIME\"\n" +
+                        "    },\n" +
+                        "    {\n" +
+                        "      \"name\": \"last_modified\",\n" +
+                        "      \"title\": \"Дата модификации\",\n" +
+                        "      \"valueType\": \"DATETIME\"\n" +
+                        "    },\n" +
+                        "    {\n" +
+                        "      \"name\": \"updated_by\",\n" +
+                        "      \"title\": \"Кто обновил\",\n" +
+                        "      \"maxLength\": 50,\n" +
+                        "      \"valueType\": \"STRING\"\n" +
+                        "    },\n" +
+                        "    {\n" +
+                        "      \"name\": \"created_by\",\n" +
+                        "      \"title\": \"Создатель\",\n" +
+                        "      \"maxLength\": 50,\n" +
+                        "      \"valueType\": \"STRING\"\n" +
+                        "    },\n" +
+                        "    {\n" +
+                        "      \"name\": \"shape\",\n" +
+                        "      \"title\": \"shape\",\n" +
+                        "      \"hidden\": true,\n" +
+                        "      \"valueType\": \"GEOMETRY\",\n" +
+                        "      \"allowedValues\": [\n" +
+                        "        \"Point\"\n" +
+                        "      ]\n" +
+                        "    }\n" +
+                        "  ],\n" +
+                        "  \"description\": \"Точечный слой с атрибутами\",\n" +
+                        "  \"geometryType\": \"Point\"\n" +
+                        "}", SchemaDto.class);
+    }
+
 
     private static SchemaDto testFtsHiddenFieldsSchema() {
         return gson.fromJson(
