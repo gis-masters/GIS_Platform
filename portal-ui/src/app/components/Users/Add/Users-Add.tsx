@@ -8,7 +8,9 @@ import { boundMethod } from 'autobind-decorator';
 import { MinimizedCrgUser } from '../../../services/auth/users/users.models';
 import { usersService } from '../../../services/auth/users/users.service';
 import { PageOptions } from '../../../services/models';
+import { isFilterQuery } from '../../../services/util/filters/filters.models';
 import { notFalsyFilter } from '../../../services/util/NotFalsyFilter';
+import { replaceObjectKeys } from '../../../services/util/object';
 import { currentUser } from '../../../stores/CurrentUser.store';
 import { Button } from '../../Button/Button';
 import { ChooseXTableDialog } from '../../ChooseXTableDialog/ChooseXTableDialog';
@@ -70,6 +72,17 @@ export class UsersAdd extends Component<UsersAddProps> {
   private async getUsers(pageOptions: PageOptions): Promise<[MinimizedCrgUser[], number]> {
     if (this.props.onlySubordinates) {
       pageOptions.filter = { ...pageOptions.filter, boss_id: currentUser.id };
+    }
+
+    if (pageOptions.filter && Object.keys(pageOptions.filter).length) {
+      const newFilter = replaceObjectKeys(pageOptions.filter, {
+        surname: 'sur_name',
+        middleName: 'middle_name'
+      });
+
+      if (isFilterQuery(newFilter)) {
+        pageOptions.filter = newFilter;
+      }
     }
 
     const [users, totalPages] = await usersService.getUsers(pageOptions);

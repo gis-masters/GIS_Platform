@@ -14,6 +14,22 @@ When('в диалоговом окне выбора пользователя д�
   await Promise.all(users.map(async user => await usersAddDialogBlock.findUser(getTestUser(user[0]).firstName)));
 });
 
+When(
+  'в диалоговом окне выбора пользователя я ввожу в фильтр поля типа string {string} значение {string}',
+  async (colTitle: string, filter: string) => {
+    await usersAddDialogBlock.setFilter(colTitle, filter);
+  }
+);
+
 Then('блок UsersAddDialog вариант {string} выглядит как положено', async (variant: string) => {
   await usersAddDialogBlock.assertSelfie(variant);
 });
+
+Then(
+  'в диалоговом окне выбора пользователя в первой колонке таблицы xTable содержатся только элементы:',
+  async ({ rawTable }: { rawTable: string[][] }) => {
+    const values = rawTable.flat();
+
+    await expect(values).toEqual(await usersAddDialogBlock.getSecondColValues());
+  }
+);

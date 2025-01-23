@@ -17,6 +17,14 @@ class UsersAddDialogBlock extends Block {
     await browser.pause(300); // анимация появления диалога
   }
 
+  async setFilter(colTitle: string, filter: string): Promise<void> {
+    await this.xTable.filterStringColumn(colTitle, filter);
+  }
+
+  async getSecondColValues(): Promise<string[]> {
+    return await this.xTable.getSecondColValues();
+  }
+
   async selectUser(userName: string): Promise<void> {
     await this.waitForTableContainer();
 
