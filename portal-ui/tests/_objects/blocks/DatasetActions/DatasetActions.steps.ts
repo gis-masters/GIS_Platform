@@ -1,5 +1,6 @@
 import { Then, When } from '@wdio/cucumber-framework';
 
+import { utilityDialogBlock } from '../UtilityDialog/UtilityDialog.block';
 import { datasetActionsBlock } from './DatasetActions.block';
 
 When('я нажимаю кнопку удалить в панели свойств набора данных', async () => {
@@ -22,10 +23,6 @@ Then('в панели свойств набора данных есть кноп
   await expect(await datasetActionsBlock.isDeleteBtnEnabled()).toBeFalsy();
 });
 
-When('нажимаю на кнопку подтверждения удаления набора данных в появившемся диалоговом окне', async () => {
-  await datasetActionsBlock.confirmDeletion();
-});
-
 When('я открываю карточку редактирования набора данных', async () => {
   await datasetActionsBlock.clickEditBtn();
 });
@@ -38,5 +35,5 @@ When(
 );
 
 Then('появляется диалоговое окно запрещающее удаление', async () => {
-  await datasetActionsBlock.prohibitDeletionDialog();
+  await utilityDialogBlock.waitForVisible();
 });

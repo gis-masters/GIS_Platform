@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { action, computed, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { Dialog, DialogActions, DialogContent, DialogContentText, Tooltip } from '@mui/material';
+import { Tooltip } from '@mui/material';
 import { DeleteOutlined, EditOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
@@ -16,9 +16,9 @@ import { mapSelectionService } from '../../../services/map/map-selection.service
 import { PageOptions } from '../../../services/models';
 import { isUpdateAllowed } from '../../../services/permissions/permissions.service';
 import { featuresCollectionPrintTemplates } from '../../../services/print/print.service';
+import { konfirmieren } from '../../../services/utility-dialogs.service';
 import { mapStore } from '../../../stores/Map.store';
 import { EditFeatureMode, sidebars } from '../../../stores/Sidebars.store';
-import { Button } from '../../Button/Button';
 import { CopyFeaturesButton } from '../../CopyFeaturesButton/CopyFeaturesButton';
 import { IconButton } from '../../IconButton/IconButton';
 import { PrintAction } from '../../PrintAction/PrintAction';
@@ -40,7 +40,6 @@ interface AttributesBarActionsProps {
 
 @observer
 export class AttributesBarActions extends Component<AttributesBarActionsProps> {
-  @observable private multipleDeleteDialogOpen = false;
   @observable private featuresUpdateAllowed = false;
 
   private operationId?: symbol;
@@ -62,17 +61,25 @@ export class AttributesBarActions extends Component<AttributesBarActionsProps> {
     }
   }
 
+  @computed
+  private get selectedCount(): number {
+    return this.selectedFeatures.length;
+  }
+
+  @computed
+  private get objLabel(): string {
+    return ` ${this.selectedCount} объект${pluralize(this.selectedCount, '', 'а', 'ов')}`;
+  }
+
   render() {
     const { layer, cols, pageOptions, featuresTotal, getData } = this.props;
-    const count = this.selectedFeatures.length;
-    const objLabel = ` ${count} объект${pluralize(count, '', 'а', 'ов')}`;
 
     return (
       <div className={cnAttributesBarActions()}>
-        {!!count && (
+        {!!this.selectedCount && (
           <>
             {isVectorLayer(layer) && this.featuresUpdateAllowed && (
-              <Tooltip title={`Редактировать${objLabel}`}>
+              <Tooltip title={`Редактировать${this.objLabel}`}>
                 <IconButton size='small' onClick={this.multipleEdit}>
                   <EditOutlined fontSize='small' />
                 </IconButton>
@@ -80,14 +87,14 @@ export class AttributesBarActions extends Component<AttributesBarActionsProps> {
             )}
 
             <CopyFeaturesButton
-              tooltipTitle={`Копировать${objLabel} в другой слой`}
+              tooltipTitle={`Копировать${this.objLabel} в другой слой`}
               layer={layer}
               features={this.selectedFeatures}
               size='small'
             />
 
             {isVectorLayer(layer) && this.featuresUpdateAllowed && (
-              <Tooltip title={`Удалить${objLabel}`}>
+              <Tooltip title={`Удалить${this.objLabel}`}>
                 <IconButton size='small' onClick={this.openMultipleDeleteDialog}>
                   <DeleteOutlined fontSize='small' />
                 </IconButton>
@@ -104,7 +111,7 @@ export class AttributesBarActions extends Component<AttributesBarActionsProps> {
             getData={getData}
           />
         )}
-        {!!count && (
+        {!!this.selectedCount && (
           <PrintAction<WfsFeature[]>
             as='iconButton'
             entity={this.selectedFeatures}
@@ -112,17 +119,6 @@ export class AttributesBarActions extends Component<AttributesBarActionsProps> {
             size='small'
           />
         )}
-        <Dialog open={this.multipleDeleteDialogOpen} onClose={this.closeMultipleDeleteDialog}>
-          <DialogContent>
-            <DialogContentText>Вы действительно хотите удалить {objLabel}?</DialogContentText>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={this.multipleDelete} color='primary'>
-              Удалить
-            </Button>
-            <Button onClick={this.closeMultipleDeleteDialog}>Отмена</Button>
-          </DialogActions>
-        </Dialog>
       </div>
     );
   }
@@ -147,8 +143,6 @@ export class AttributesBarActions extends Component<AttributesBarActionsProps> {
     const { layer } = this.props;
     const features: WfsFeature[] = mapStore.selectedFeaturesByTableName[layer.tableName];
 
-    this.closeMultipleDeleteDialog();
-
     if (!isVectorLayer(layer)) {
       throw new Error('Невозможно удалить');
     }
@@ -170,14 +164,17 @@ export class AttributesBarActions extends Component<AttributesBarActionsProps> {
     }
   }
 
-  @action.bound
-  private openMultipleDeleteDialog() {
-    this.multipleDeleteDialogOpen = true;
-  }
+  @boundMethod
+  private async openMultipleDeleteDialog() {
+    const confirmed = await konfirmieren({
+      message: `Вы действительно хотите удалить${this.objLabel}?`,
+      okText: 'Удалить',
+      cancelText: 'Отмена'
+    });
 
-  @action.bound
-  private closeMultipleDeleteDialog() {
-    this.multipleDeleteDialogOpen = false;
+    if (confirmed) {
+      await this.multipleDelete();
+    }
   }
 
   @action.bound

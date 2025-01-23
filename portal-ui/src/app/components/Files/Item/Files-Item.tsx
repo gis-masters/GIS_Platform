@@ -1,6 +1,6 @@
 import React, { FC, memo, useCallback, useEffect, useMemo } from 'react';
 import { observer, useLocalObservable } from 'mobx-react';
-import { Dialog, DialogActions, DialogContent, DialogTitle, Tooltip } from '@mui/material';
+import { Tooltip } from '@mui/material';
 import { WorkspacePremiumOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { isValidSystemSetup } from 'crypto-pro';
@@ -17,9 +17,9 @@ import {
   isTifFile
 } from '../../../services/data/files/files.util';
 import { LibraryRecord } from '../../../services/data/library/library.models';
+import { konfirmieren } from '../../../services/utility-dialogs.service';
 import { cryptoProStore } from '../../../stores/CryptoPro.store';
 import { sidebars } from '../../../stores/Sidebars.store';
-import { Button } from '../../Button/Button';
 import { ConnectionsToProjects } from '../../ConnectionsToProjects/ConnectionsToProjects';
 import { IconButton } from '../../IconButton/IconButton';
 import { LookupActions } from '../../Lookup/Actions/Lookup-Actions';
@@ -60,13 +60,11 @@ interface FilesItemProps {
 type FilesItemState = {
   connections: FileConnection[];
   id: string;
-  deleteDialogOpen: boolean;
   fileInfo: FileInfo | null;
   fileSignDialogOpen: boolean;
   setFileSignDialogOpen(fileSignDialogOpen: boolean): void;
   setConnections(connections: FileConnection[]): void;
   setIds(id: string): void;
-  setDeleteDialogOpen(isOpen: boolean): void;
   setFileInfo(fileInfo: FileInfo): void;
 };
 
@@ -89,19 +87,18 @@ const FilesItemFC: FC<FilesItemProps> = observer(
     const {
       connections,
       id,
-      deleteDialogOpen,
+
       fileInfo,
       fileSignDialogOpen,
       setFileSignDialogOpen,
       setConnections,
       setIds,
-      setDeleteDialogOpen,
+
       setFileInfo
     } = useLocalObservable(
       (): FilesItemState => ({
         connections: [],
         id: item.id,
-        deleteDialogOpen: false,
         fileInfo: null,
         fileSignDialogOpen: false,
 
@@ -114,37 +111,35 @@ const FilesItemFC: FC<FilesItemProps> = observer(
         setIds(this: FilesItemState, id: string): void {
           this.id = id;
         },
-        setDeleteDialogOpen(this: FilesItemState, isOpen: boolean): void {
-          this.deleteDialogOpen = isOpen;
-        },
         setFileInfo(this: FilesItemState, fileInfo: FileInfo): void {
           this.fileInfo = fileInfo;
         }
       })
     );
 
-    const handleDelete = useCallback(() => {
-      onDelete([item]);
-    }, [item, onDelete]);
-
-    const openDeleteDialog = useCallback(() => {
-      setDeleteDialogOpen(true);
-    }, [setDeleteDialogOpen]);
-
     const handleDeleteButtonClick = useCallback(
-      (item: FileInfo) => {
+      async (item: FileInfo) => {
         if (connections?.length) {
-          openDeleteDialog();
+          const confirmed = await konfirmieren({
+            message: (
+              <>
+                Файл {item.title} подключен в проекты:
+                <ConnectionsToProjects type='list' connections={connections} />
+              </>
+            ),
+            okText: 'Удалить',
+            cancelText: 'Отмена'
+          });
+
+          if (confirmed) {
+            onDelete([item]);
+          }
         } else {
           onDelete([item]);
         }
       },
-      [connections?.length, onDelete, openDeleteDialog]
+      [connections, onDelete]
     );
-
-    const closeDeleteDialog = useCallback(() => {
-      setDeleteDialogOpen(false);
-    }, [setDeleteDialogOpen]);
 
     const fileSignDialogOpenHandler = useCallback(() => {
       setFileSignDialogOpen(true);
@@ -316,20 +311,6 @@ const FilesItemFC: FC<FilesItemProps> = observer(
             )}
           </LookupActions>
         </LookupItem>
-
-        <Dialog open={deleteDialogOpen} onClose={closeDeleteDialog}>
-          <DialogTitle>Подтверждение удаления</DialogTitle>
-          <DialogContent className='scroll'>
-            Файл {item.title} подключен в проекты:
-            <ConnectionsToProjects type='list' connections={connections} />
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handleDelete} color='primary'>
-              Удалить
-            </Button>
-            <Button onClick={closeDeleteDialog}>Закрыть</Button>
-          </DialogActions>
-        </Dialog>
       </>
     );
   }

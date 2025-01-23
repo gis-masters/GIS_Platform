@@ -15,7 +15,6 @@ class ProjectsBlock extends Block {
     container: '.Projects',
     add: '.Projects-Add',
     firstCard: '.Projects-Card:first-child',
-    cardDeleteYesButton: '.ProjectCard-DeleteDialogYes',
     projectsCards: '.Projects-Card',
     projectsFilter: '.Projects-Filter input'
   };
@@ -41,13 +40,6 @@ class ProjectsBlock extends Block {
   async clickProjectDeleteButton(projectName: string): Promise<void> {
     const $cardDeleteBtn = await this.getProjectCardDeleteButton(projectName);
     await $cardDeleteBtn.click();
-  }
-
-  async clickDeleteYesButton(): Promise<void> {
-    const $cardDeleteYesButton = await this.$('cardDeleteYesButton');
-    await $cardDeleteYesButton.waitForDisplayed();
-    await browser.pause(300); // анимация появления кнопки
-    await $cardDeleteYesButton.click();
   }
 
   async openAddForm(): Promise<void> {

@@ -18,10 +18,6 @@ When(/^я нажимаю кнопку удаления проекта "(.*)"$/, 
   await projectsBlock.clickProjectDeleteButton(title);
 });
 
-When(/^нажимаю на кнопку подтверждения удаления проекта в появившемся диалоговом окне$/, async () => {
-  await projectsBlock.clickDeleteYesButton();
-});
-
 When(/^я открываю форму создания проекта$/, async () => {
   await projectsBlock.openAddForm();
 });

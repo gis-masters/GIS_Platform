@@ -14,10 +14,6 @@ Then('в панели свойств проекта нет кнопки реда
   await projectActionsBlock.editBtnNotExist();
 });
 
-When('я нажимаю на кнопку подтверждения удаления проекта в появившемся диалоговом окне', async () => {
-  await projectActionsBlock.confirmDeletion();
-});
-
 When('я открываю карточку редактирования проекта', async () => {
   await projectActionsBlock.clickEditBtn();
 });

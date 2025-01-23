@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
-import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { Dialog, DialogActions, DialogTitle } from '@mui/material';
 import { DeleteOutline, EditLocationOutlined, MyLocationOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
@@ -13,10 +11,10 @@ import { MapSelectionTypes } from '../../../services/map/map.models';
 import { mapService } from '../../../services/map/map.service';
 import { mapSelectionService } from '../../../services/map/map-selection.service';
 import { sleep } from '../../../services/util/sleep';
+import { konfirmieren } from '../../../services/utility-dialogs.service';
 import { EditFeatureMode, sidebars } from '../../../stores/Sidebars.store';
 import { Actions } from '../../Actions/Actions.composed';
 import { ActionsItem } from '../../Actions/Item/Actions-Item.composed';
-import { Button } from '../../Button/Button';
 import { ViewLocation } from '../../Icons/ViewLocation';
 
 import '!style-loader!css-loader!sass-loader!./Attributes-RowActions.scss';
@@ -31,41 +29,20 @@ interface AttributesRowActionsProps {
 
 @observer
 export class AttributesRowActions extends Component<AttributesRowActionsProps> {
-  @observable private deletionDialogOpen = false;
-
-  constructor(props: AttributesRowActionsProps) {
-    super(props);
-    makeObservable(this);
-  }
-
   render() {
     const { editable } = this.props;
 
     return (
-      <>
-        <Actions as='menu' className={cnAttributesRowActions()}>
-          <ActionsItem as='menu' icon={<MyLocationOutlined />} title='Перейти к объекту' onClick={this.zoomTo} />
-          <ActionsItem
-            as='menu'
-            icon={editable ? <EditLocationOutlined /> : <ViewLocation />}
-            title={editable ? 'Редактировать' : 'Открыть'}
-            onClick={this.edit}
-          />
-          {editable && (
-            <ActionsItem as='menu' icon={<DeleteOutline />} title='Удалить' onClick={this.openDeletionDialog} />
-          )}
-        </Actions>
-
-        <Dialog open={this.deletionDialogOpen} onClose={this.closeDeletionDialog} maxWidth='xs' fullWidth>
-          <DialogTitle>Удалить объект?</DialogTitle>
-          <DialogActions>
-            <Button color='error' onClick={this.delete}>
-              Удалить
-            </Button>
-            <Button onClick={this.closeDeletionDialog}>Отмена</Button>
-          </DialogActions>
-        </Dialog>
-      </>
+      <Actions as='menu' className={cnAttributesRowActions()}>
+        <ActionsItem as='menu' icon={<MyLocationOutlined />} title='Перейти к объекту' onClick={this.zoomTo} />
+        <ActionsItem
+          as='menu'
+          icon={editable ? <EditLocationOutlined /> : <ViewLocation />}
+          title={editable ? 'Редактировать' : 'Открыть'}
+          onClick={this.edit}
+        />
+        {editable && <ActionsItem as='menu' icon={<DeleteOutline />} title='Удалить' onClick={this.delete} />}
+      </Actions>
     );
   }
 
@@ -87,19 +64,17 @@ export class AttributesRowActions extends Component<AttributesRowActionsProps> {
   @boundMethod
   private async delete() {
     const { feature, layer } = this.props;
-    await deleteFeatures(layer.dataset, layer.tableName, [feature]);
-    mapSelectionService.selectFeatures([feature], MapSelectionTypes.REMOVE);
-    mapService.refreshAllLayers();
-    this.closeDeletionDialog();
-  }
 
-  @action.bound
-  private openDeletionDialog() {
-    this.deletionDialogOpen = true;
-  }
+    const confirmed = await konfirmieren({
+      message: 'Вы действительно хотите удалить 1 объект?',
+      okText: 'Удалить',
+      cancelText: 'Отмена'
+    });
 
-  @action.bound
-  private closeDeletionDialog() {
-    this.deletionDialogOpen = false;
+    if (confirmed) {
+      await deleteFeatures(layer.dataset, layer.tableName, [feature]);
+      mapSelectionService.selectFeatures([feature], MapSelectionTypes.REMOVE);
+      mapService.refreshAllLayers();
+    }
   }
 }

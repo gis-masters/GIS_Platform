@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { Dialog, DialogActions, DialogContent, DialogContentText, IconButton, Tooltip } from '@mui/material';
+import { IconButton, Tooltip } from '@mui/material';
 import { Delete } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
 import { deleteTask } from '../../../services/geoserver/import/import.service';
+import { konfirmieren } from '../../../services/utility-dialogs.service';
 import { currentImport, ImportTaskExtended } from '../../../stores/CurrentImport.store';
-import { Button } from '../../Button/Button';
 
 const cnDataImportTasksList = cn('DataImportTasksList');
 
@@ -19,7 +19,6 @@ interface DataImportTasksListTaskProps {
 
 @observer
 export class DataImportTasksListTask extends Component<DataImportTasksListTaskProps> {
-  @observable private deleteDialogOpen = false;
   @observable private isDeleting = false;
 
   constructor(props: DataImportTasksListTaskProps) {
@@ -49,7 +48,7 @@ export class DataImportTasksListTask extends Component<DataImportTasksListTaskPr
                     className={cnDataImportTasksList('TaskDel')}
                     size='small'
                     disabled={this.isDeleting}
-                    onClick={this.openDeleteDialog}
+                    onClick={this.deleteTask}
                   >
                     <Delete fontSize='inherit' className={cnDataImportTasksList('TaskDelIcon')} />
                   </IconButton>
@@ -58,37 +57,22 @@ export class DataImportTasksListTask extends Component<DataImportTasksListTaskPr
             </>
           )}
         </tr>
-
-        <Dialog open={this.deleteDialogOpen} onClose={this.closeDeleteDialog}>
-          <DialogContent>
-            <DialogContentText>Вы действительно хотите удалить слой?</DialogContentText>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={this.deleteTask} color='primary'>
-              OK
-            </Button>
-            <Button onClick={this.closeDeleteDialog}>Отмена</Button>
-          </DialogActions>
-        </Dialog>
       </>
     );
   }
 
   @action.bound
   private async deleteTask() {
-    this.isDeleting = true;
-    this.closeDeleteDialog();
-    await deleteTask(this.props.task);
-    this.props.onDeleteTask();
-  }
+    const confirmed = await konfirmieren({
+      message: 'Вы действительно хотите удалить слой?',
+      okText: 'Удалить',
+      cancelText: 'Отмена'
+    });
 
-  @action.bound
-  private openDeleteDialog() {
-    this.deleteDialogOpen = true;
-  }
-
-  @action.bound
-  private closeDeleteDialog() {
-    this.deleteDialogOpen = false;
+    if (confirmed) {
+      this.isDeleting = true;
+      await deleteTask(this.props.task);
+      this.props.onDeleteTask();
+    }
   }
 }

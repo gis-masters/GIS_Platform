@@ -7,8 +7,7 @@ class ProjectActionsBlock extends Block {
     deleteBtn: '.ProjectActions .ProjectActions-Delete',
     editBtn: '.ProjectActions .ProjectActions-Edit',
     editDialog: '.ProjectActions-EditDialog',
-    editDialogSave: '.ProjectActions-EditDialog .MuiButton-outlinedPrimary',
-    deleteDialogYes: '.ProjectActions-DeleteDialog .MuiButton-outlinedPrimary'
+    editDialogSave: '.ProjectActions-EditDialog .MuiButton-outlinedPrimary'
   };
 
   async clickDeleteBtn(): Promise<void> {
@@ -42,13 +41,6 @@ class ProjectActionsBlock extends Block {
 
     await $editDialogYes.click();
     await $editDialogYes.waitForDisplayed({ reverse: true });
-  }
-
-  async confirmDeletion(): Promise<void> {
-    const $confirmDeletionBtn = await this.$('deleteDialogYes');
-    await $confirmDeletionBtn.waitForDisplayed();
-    await $confirmDeletionBtn.click();
-    await $confirmDeletionBtn.waitForDisplayed({ reverse: true });
   }
 }
 

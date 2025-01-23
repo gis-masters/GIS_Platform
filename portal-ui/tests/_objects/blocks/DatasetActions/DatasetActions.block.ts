@@ -8,9 +8,7 @@ class DatasetActionsBlock extends Block {
     editBtn: '.DatasetActions .DatasetActions-Edit',
     dialogEdit: '.DatasetActions-EditDialog',
     dialogEditFields: '.DatasetActions-Dialog .Form-Field',
-    dialogEditYes: '.DatasetActions-EditDialogYes',
-    deleteDialogYes: '.DatasetActions-DeleteDialogYes',
-    deleteProhibitDeletionDialog: '.DatasetActions-DeleteProhibitDeletionDialog'
+    dialogEditYes: '.DatasetActions-EditDialogYes'
   };
 
   async clickDeleteBtn(): Promise<void> {
@@ -19,23 +17,11 @@ class DatasetActionsBlock extends Block {
     await $deleteBtn.click();
   }
 
-  async deleteBtnExisting(): Promise<boolean> {
-    const $deleteBtn = await this.$('deleteBtn');
-
-    return await $deleteBtn.isExisting();
-  }
-
   async isDeleteBtnEnabled(): Promise<boolean> {
     const $deleteBtn = await this.$('deleteBtn');
     await $deleteBtn.waitForDisplayed();
 
     return await $deleteBtn.isEnabled();
-  }
-
-  async editBtnExist(): Promise<boolean> {
-    const $editBtn = await this.$('editBtn');
-
-    return await $editBtn.isExisting();
   }
 
   async isEditBtnEnabled(): Promise<boolean> {
@@ -60,30 +46,6 @@ class DatasetActionsBlock extends Block {
 
     await $editDialogYes.click();
     await $editDialogYes.waitForDisplayed({ reverse: true });
-  }
-
-  async getDatasetEditDialogField(fieldName: string): Promise<WebdriverIO.Element | undefined> {
-    const $$dialogEditFields = await this.$$('dialogEditFields');
-
-    for (const $editField of $$dialogEditFields) {
-      const editFieldName = await $editField.getText();
-
-      if (editFieldName === fieldName) {
-        return await $editField.$('.MuiInputBase-root');
-      }
-    }
-  }
-
-  async confirmDeletion(): Promise<void> {
-    const $confirmDeletionBtn = await this.$('deleteDialogYes');
-    await $confirmDeletionBtn.waitForDisplayed();
-    await $confirmDeletionBtn.click();
-    await $confirmDeletionBtn.waitForDisplayed({ reverse: true });
-  }
-
-  async prohibitDeletionDialog(): Promise<void> {
-    const $prohibitDeletionDialog = await this.$('deleteProhibitDeletionDialog');
-    await $prohibitDeletionDialog.waitForDisplayed();
   }
 }
 
