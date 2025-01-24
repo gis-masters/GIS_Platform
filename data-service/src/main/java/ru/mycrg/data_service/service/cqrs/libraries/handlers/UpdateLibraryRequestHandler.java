@@ -3,12 +3,9 @@ package ru.mycrg.data_service.service.cqrs.libraries.handlers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-import ru.mycrg.data_service.dao.FtsDao;
 import ru.mycrg.data_service.dao.ddl.columns.DdlColumnBase;
-import ru.mycrg.data_service.dao.ddl.tables.DdlTriggers;
 import ru.mycrg.data_service.dto.LibraryUpdateDto;
 import ru.mycrg.data_service.entity.DocumentLibrary;
-import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.exceptions.ForbiddenException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.repository.DocumentLibraryRepository;
@@ -16,36 +13,26 @@ import ru.mycrg.data_service.service.cqrs.libraries.requests.UpdateLibraryReques
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service.service.resources.protectors.IMasterResourceProtector;
 import ru.mycrg.data_service.service.resources.protectors.MasterResourceProtector;
-import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.mediator.IRequestHandler;
 import ru.mycrg.mediator.Voidy;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
-import java.util.List;
 
 import static java.util.Objects.nonNull;
-import static ru.mycrg.data_service.mappers.SchemaMapper.jsonToDto;
-import static ru.mycrg.data_service.service.schemas.SchemaUtil.getFtsProperties;
 
 @Component
 public class UpdateLibraryRequestHandler implements IRequestHandler<UpdateLibraryRequest, Voidy> {
 
     private final Logger log = LoggerFactory.getLogger(UpdateLibraryRequestHandler.class);
 
-    private final FtsDao ftsDao;
-    private final DdlTriggers ddlTriggers;
     private final DdlColumnBase ddlColumnBase;
     private final IMasterResourceProtector resourceProtector;
     private final DocumentLibraryRepository libraryRepository;
 
-    public UpdateLibraryRequestHandler(FtsDao ftsDao,
-                                       DdlTriggers ddlTriggers,
-                                       DdlColumnBase ddlColumnBase,
+    public UpdateLibraryRequestHandler(DdlColumnBase ddlColumnBase,
                                        MasterResourceProtector resourceProtector,
                                        DocumentLibraryRepository libraryRepository) {
-        this.ftsDao = ftsDao;
-        this.ddlTriggers = ddlTriggers;
         this.ddlColumnBase = ddlColumnBase;
         this.resourceProtector = resourceProtector;
         this.libraryRepository = libraryRepository;
@@ -77,31 +64,6 @@ public class UpdateLibraryRequestHandler implements IRequestHandler<UpdateLibrar
 
         if (updateDto.isReadyForFts() != null) {
             library.setReadyForFts(updateDto.isReadyForFts());
-
-            if (updateDto.isReadyForFts()) {
-                log.debug("Добавляем библиотеку: '{}' к полнотекстовому поиску", qualifier.getQualifier());
-
-                SchemaDto schema = jsonToDto(library.getSchema());
-                if (schema == null) {
-                    throw new BadRequestException(
-                            "Не возможно обновить библиотеку. Не существует схемы для: " + qualifier.getQualifier());
-                }
-
-                List<String> ftsProperties = getFtsProperties(schema);
-                ddlTriggers.createInsertTrigger(qualifier, ftsProperties);
-                ddlTriggers.createUpdateTrigger(qualifier, ftsProperties);
-                ddlTriggers.createDeleteTrigger(qualifier);
-
-                ftsDao.copySourceData(qualifier, schema);
-            } else {
-                log.debug("Удаляем библиотеку: '{}' из полнотекстового поиска", qualifier.getQualifier());
-
-                ddlTriggers.dropInsertTrigger(qualifier);
-                ddlTriggers.dropUpdateTrigger(qualifier);
-                ddlTriggers.dropDeleteTrigger(qualifier);
-
-                ftsDao.dropSourceData(qualifier);
-            }
         }
 
         Boolean versioned = updateDto.isVersioned();

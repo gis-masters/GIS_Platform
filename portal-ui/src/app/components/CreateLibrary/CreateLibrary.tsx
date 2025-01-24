@@ -34,7 +34,6 @@ export class CreateLibrary extends Component {
           title='Создание новой библиотеки'
           className={cnCreateLibrary('Form')}
           open={this.dialogOpen}
-          value={{}}
           schema={librarySchema}
           onClose={this.closeDialog}
           closeWithConfirm

@@ -137,6 +137,7 @@ const vectorTableSchemaBase: SimpleSchema = {
     {
       name: 'readyForFts',
       title: 'Полнотекстовый поиск',
+      defaultValue: true,
       propertyType: PropertyType.BOOL
     },
     {

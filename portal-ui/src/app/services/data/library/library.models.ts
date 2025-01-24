@@ -50,6 +50,7 @@ export const librarySchema: SimpleSchema = {
     {
       name: 'readyForFts',
       title: 'Полнотекстовый поиск',
+      defaultValue: true,
       propertyType: PropertyType.BOOL
     }
   ]

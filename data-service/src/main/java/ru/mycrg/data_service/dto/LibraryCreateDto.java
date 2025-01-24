@@ -12,7 +12,7 @@ public class LibraryCreateDto {
     @Size(max = 50)
     private String schemaId;
     private boolean versioned = false;
-    private boolean readyForFts = false;
+    private boolean readyForFts = true;
 
     public LibraryCreateDto() {
         // Required

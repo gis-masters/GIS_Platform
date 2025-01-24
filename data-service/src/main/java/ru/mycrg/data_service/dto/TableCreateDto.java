@@ -31,7 +31,7 @@ public class TableCreateDto extends ResourceCreateDto {
 
     private Boolean isPublic = false;
 
-    private Boolean readyForFts = false;
+    private Boolean readyForFts = true;
 
     private String fias__address;
 

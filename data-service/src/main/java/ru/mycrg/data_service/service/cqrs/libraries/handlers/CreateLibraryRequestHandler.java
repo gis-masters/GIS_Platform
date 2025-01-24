@@ -90,12 +90,11 @@ public class CreateLibraryRequestHandler implements IRequestHandler<CreateLibrar
 
         ddlTablesBase.create(SYSTEM_SCHEMA_NAME, library.getTableName(), schemaProperties, ID);
 
-        if (dto.isReadyForFts()) {
-            List<String> ftsProperties = getFtsProperties(schema);
-            ddlTriggers.createInsertTrigger(dlQualifier, ftsProperties);
-            ddlTriggers.createUpdateTrigger(dlQualifier, ftsProperties);
-            ddlTriggers.createDeleteTrigger(dlQualifier);
-        }
+        // Create FTS triggers
+        List<String> ftsProperties = getFtsProperties(schema);
+        ddlTriggers.createInsertTrigger(dlQualifier, ftsProperties);
+        ddlTriggers.createUpdateTrigger(dlQualifier, ftsProperties);
+        ddlTriggers.createDeleteTrigger(dlQualifier);
 
         LibraryModel libraryModel = new LibraryModel(library);
         request.setLibraryModel(libraryModel);

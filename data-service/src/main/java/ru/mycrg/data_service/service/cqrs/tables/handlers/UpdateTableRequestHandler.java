@@ -8,7 +8,6 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.mycrg.auth_facade.IAuthenticationFacade;
 import ru.mycrg.data_service.dao.BasePermissionsRepository;
 import ru.mycrg.data_service.dao.FtsDao;
-import ru.mycrg.data_service.dao.ddl.tables.DdlTriggers;
 import ru.mycrg.data_service.dto.TableUpdateDto;
 import ru.mycrg.data_service.entity.SchemasAndTables;
 import ru.mycrg.data_service.exceptions.ForbiddenException;
@@ -17,42 +16,34 @@ import ru.mycrg.data_service.repository.SchemasAndTablesRepository;
 import ru.mycrg.data_service.service.PermissionsService;
 import ru.mycrg.data_service.service.cqrs.tables.requests.UpdateTableRequest;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
-import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.mediator.IRequestHandler;
 import ru.mycrg.mediator.Voidy;
 
-import java.util.List;
 import java.util.Optional;
 
 import static java.time.LocalDateTime.now;
 import static java.util.Objects.nonNull;
-import static ru.mycrg.data_service.mappers.SchemaMapper.jsonToDto;
-import static ru.mycrg.data_service.service.schemas.SchemaUtil.getFtsProperties;
 
 @Component
 public class UpdateTableRequestHandler implements IRequestHandler<UpdateTableRequest, Voidy> {
 
     private final Logger log = LoggerFactory.getLogger(UpdateTableRequestHandler.class);
 
-    private final FtsDao ftsDao;
-    private final DdlTriggers ddlTriggers;
     private final IAuthenticationFacade authenticationFacade;
     private final SchemasAndTablesRepository schemasAndTablesRepository;
     private final PermissionsService permissionsService;
     private final BasePermissionsRepository permissionsRepository;
+    private final FtsDao ftsDao;
 
-    public UpdateTableRequestHandler(FtsDao ftsDao,
-                                     DdlTriggers ddlTriggers,
-                                     PermissionsService permissionsService,
+    public UpdateTableRequestHandler(PermissionsService permissionsService,
                                      IAuthenticationFacade authenticationFacade,
-                                     SchemasAndTablesRepository schemasAndTablesRepository,
+                                     SchemasAndTablesRepository schemasAndTablesRepository,FtsDao ftsDao,
                                      BasePermissionsRepository permissionsRepository) {
-        this.ftsDao = ftsDao;
-        this.ddlTriggers = ddlTriggers;
         this.authenticationFacade = authenticationFacade;
         this.schemasAndTablesRepository = schemasAndTablesRepository;
         this.permissionsService = permissionsService;
         this.permissionsRepository = permissionsRepository;
+        this.ftsDao = ftsDao;
     }
 
     @Override
@@ -94,28 +85,6 @@ public class UpdateTableRequestHandler implements IRequestHandler<UpdateTableReq
 
         if (nonNull(dto.getReadyForFts())) {
             tableForUpdate.setReadyForFts(dto.getReadyForFts());
-
-            if (dto.getReadyForFts()) {
-                log.debug("Добавляем таблицу: '{}' к полнотекстовому поиску", qualifier.getQualifier());
-
-                SchemaDto schema = jsonToDto(tableForUpdate.getSchema());
-                if (schema != null) {
-                    List<String> ftsProperties = getFtsProperties(schema);
-                    ddlTriggers.createInsertTrigger(qualifier, ftsProperties);
-                    ddlTriggers.createUpdateTrigger(qualifier, ftsProperties);
-                    ddlTriggers.createDeleteTrigger(qualifier);
-
-                    ftsDao.copySourceData(qualifier, schema);
-                }
-            } else {
-                log.debug("Удаляем таблицу: '{}' из полнотекстового поиска", qualifier.getQualifier());
-
-                ddlTriggers.dropInsertTrigger(qualifier);
-                ddlTriggers.dropUpdateTrigger(qualifier);
-                ddlTriggers.dropDeleteTrigger(qualifier);
-
-                ftsDao.dropSourceData(qualifier);
-            }
         }
 
         if (nonNull(dto.getDocApproveDate())) {

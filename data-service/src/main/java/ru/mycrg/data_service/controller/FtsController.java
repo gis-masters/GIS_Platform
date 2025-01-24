@@ -17,6 +17,8 @@ import java.util.List;
 import java.util.Map;
 
 import static ru.mycrg.auth_service_contract.Authorities.HAS_ANY_AUTHORITY;
+import static ru.mycrg.auth_service_contract.Authorities.ORG_ADMIN_AUTHORITY;
+import static ru.mycrg.data_service_contract.enums.ProcessType.FTS_RELOAD;
 import static ru.mycrg.data_service_contract.enums.ProcessType.FULL_TEXT_SEARCH;
 
 @RestController
@@ -42,6 +44,15 @@ public class FtsController {
                 "ftsDto", dto,
                 "pageable", pageable
         ));
+
+        return processesController.initProcess(processDto);
+    }
+
+    @PostMapping("/fts/reload")
+    @PreAuthorize(ORG_ADMIN_AUTHORITY)
+    public ResponseEntity<Resource<Process>> reloadFTSData() {
+        ProcessDto processDto = new ProcessDto();
+        processDto.setType(FTS_RELOAD.name());
 
         return processesController.initProcess(processDto);
     }

@@ -6,5 +6,6 @@ public enum ProcessType {
     VALIDATION_REPORT,
     EXPORT,
     IMPORT_GEOMETRY,
-    FULL_TEXT_SEARCH
+    FULL_TEXT_SEARCH,
+    FTS_RELOAD
 }

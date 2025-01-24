@@ -676,6 +676,13 @@ public class SqlBuilder {
                 ? buildFtsWhere(ecqlFilter, requestedTables)
                 : buildFtsWhere(ecqlFilter);
 
+        String onlyFtsReady = "";
+        if ("fts_layers".equals(ftsTable)) {
+            onlyFtsReady = "INNER JOIN data.schemas_and_tables st ON (d.\"table\" = st.identifier AND st.ready_for_fts)";
+        } else if("fts_documents".equals(ftsTable)) {
+            onlyFtsReady = "INNER JOIN (SELECT table_name, ready_for_fts FROM data.doc_libraries) dl ON (d.\"table\" = dl.table_name AND dl.ready_for_fts)";
+        }
+
         // В данном запросе внутренний SELECT это первое сужение всего набора данных - выборка по найденным словам в
         // словаре, с ранжированием и ограничением с плавающим лимитом.
         // Результат этой выборки передается на обработку нечетким поиском оператором <<<->.
@@ -697,8 +704,10 @@ public class SqlBuilder {
                 "              d.schema," +
                 "              d.table," +
                 "              d.id," +
-                "              d.concatenated_data " +
-                "       FROM data." + ftsTable + " AS d, to_tsquery('" + String.join(" | ", words) + "') query " +
+                "              d.concatenated_data" +
+                "       FROM data." + ftsTable + " AS d " +
+                "            CROSS JOIN to_tsquery('" + String.join(" | ", words) + "') query " +
+                "   " + onlyFtsReady + " " +
                 "   " + ftsWhere + " " +
                 "       ORDER BY _rank_ DESC, d.id LIMIT " + limit +
                 "     ) AS subquery " +

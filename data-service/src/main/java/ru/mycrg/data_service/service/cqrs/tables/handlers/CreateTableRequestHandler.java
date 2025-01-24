@@ -17,10 +17,10 @@ import ru.mycrg.data_service.exceptions.ForbiddenException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.repository.SchemasAndTablesRepository;
 import ru.mycrg.data_service.service.PermissionsService;
-import ru.mycrg.data_service.service.schemas.ISchemaTemplateService;
 import ru.mycrg.data_service.service.cqrs.tables.requests.CreateTableRequest;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service.service.resources.protectors.IResourceProtector;
+import ru.mycrg.data_service.service.schemas.ISchemaTemplateService;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.data_service_contract.dto.SimplePropertyDto;
 import ru.mycrg.data_service_contract.enums.ValueType;
@@ -41,8 +41,8 @@ import static ru.mycrg.data_service.dao.config.DaoProperties.PRIMARY_KEY;
 import static ru.mycrg.data_service.dto.ResourceType.TABLE;
 import static ru.mycrg.data_service.dto.Roles.OWNER;
 import static ru.mycrg.data_service.service.resources.DatasetService.SCHEMAS_AND_TABLES_QUALIFIER;
-import static ru.mycrg.data_service.util.DetailedLogger.logError;
 import static ru.mycrg.data_service.service.schemas.SchemaUtil.getFtsProperties;
+import static ru.mycrg.data_service.util.DetailedLogger.logError;
 import static ru.mycrg.data_service.util.JsonConverter.toJsonNode;
 
 @Component
@@ -95,13 +95,12 @@ public class CreateTableRequestHandler implements IRequestHandler<CreateTableReq
 
         createTable(schema, dataset.getIdentifier(), dto);
 
-        if (dto.getReadyForFts()) {
-            ResourceQualifier qualifier = new ResourceQualifier(dataset.getIdentifier(), tableName);
-            List<String> ftsProperties = getFtsProperties(schema);
-            ddlTriggers.createInsertTrigger(qualifier, ftsProperties);
-            ddlTriggers.createUpdateTrigger(qualifier, ftsProperties);
-            ddlTriggers.createDeleteTrigger(qualifier);
-        }
+        // Create FTS triggers
+        ResourceQualifier qualifier = new ResourceQualifier(dataset.getIdentifier(), tableName);
+        List<String> ftsProperties = getFtsProperties(schema);
+        ddlTriggers.createInsertTrigger(qualifier, ftsProperties);
+        ddlTriggers.createUpdateTrigger(qualifier, ftsProperties);
+        ddlTriggers.createDeleteTrigger(qualifier);
 
         // Add record to schemasAndTables table
         String pathToParent = dataset.getPath() + "/" + dataset.getId();

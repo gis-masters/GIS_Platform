@@ -19,7 +19,7 @@ public class FtsRequest implements IRequest<PageableResources<FtsResponseDto>> {
 
     @Override
     public String getType() {
-        return "FtsRequest";
+        return FtsRequest.class.getSimpleName();
     }
 
     public FtsRequestDto getFtsRequestDto() {
