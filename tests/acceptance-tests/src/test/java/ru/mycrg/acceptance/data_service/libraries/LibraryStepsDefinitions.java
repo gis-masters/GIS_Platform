@@ -334,7 +334,6 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
 
     @And("Запись успешно создана")
     public void checkRecordCreation() {
-        response.prettyPrint();
         response.then()
                 .body("title", equalTo("test"))
                 .body("native_crs", equalTo("EPSG:28406"))
@@ -408,8 +407,6 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
     @When("Тело ответа содержит предыдущие версии изменений текущего документа")
     public void responseContainsAllVersionOfDocument() {
         if (response.statusCode() != 200) {
-            response.prettyPrint();
-
             throw new IllegalStateException("Предыдущий запрос закончился неудачей");
         }
 
@@ -814,7 +811,6 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
         SchemaDto schema = CurrentScenarioSchema.getSchemaByTitle(schemaTitle);
 
         createLibrary(schema.getName(), versioning);
-        response.prettyPrint();
 
         if (response.statusCode() == 409) {
             System.out.println("Библиотека " + schema.getTableName() + " уже существует");

@@ -106,8 +106,6 @@ public class FilesStepDefinitions extends BaseStepsDefinitions {
 
     @Then("файл {string} успешно до-подписан")
     public void fileCoSignedSuccessfully(String fileName) {
-        response.prettyPrint();
-
         assertEquals(200, response.getStatusCode());
     }
 

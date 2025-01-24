@@ -206,7 +206,7 @@ export class LayerMenu extends Component<LayerMenuProps> {
                     ),
                     this.importShapeAllowed && (
                       <MenuItem key='shp' onClick={this.openImportShapeDialog}>
-                        Импорт геометрии из Shape-файла
+                        Импорт из Shape-файла
                       </MenuItem>
                     )
                   ]}

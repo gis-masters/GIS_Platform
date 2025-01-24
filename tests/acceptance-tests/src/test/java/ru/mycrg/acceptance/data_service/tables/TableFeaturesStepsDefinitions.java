@@ -463,7 +463,6 @@ public class TableFeaturesStepsDefinitions extends BaseStepsDefinitions {
     @Then("количество объектов в слое равно {int}")
     public void checkObjectsCount(int count) {
         getAllFeatures();
-        response.prettyPrint();
         assertEquals(count, response.jsonPath().getInt("page.totalElements"));
     }
 
@@ -475,7 +474,6 @@ public class TableFeaturesStepsDefinitions extends BaseStepsDefinitions {
         );
         Assert.assertTrue("Геометрия не совпадает", geometryMatches);
     }
-
 
     @And("атрибуты объекта с полем {string} равным {int} такие")
     public void checkRecordFields(String fieldName, int value, Map<String, List<Object>> expectedFields) {
@@ -514,7 +512,6 @@ public class TableFeaturesStepsDefinitions extends BaseStepsDefinitions {
                         post("");
 
         if (response.statusCode() != 201) {
-            response.prettyPrint();
             assertEquals(201, response.statusCode());
         }
 

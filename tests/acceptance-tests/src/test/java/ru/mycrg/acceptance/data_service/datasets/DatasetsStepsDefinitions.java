@@ -287,8 +287,6 @@ public class DatasetsStepsDefinitions extends BaseStepsDefinitions {
 
         String[] split = location.split("/datasets/");
         if (split.length < 1) {
-            response.prettyPrint();
-
             throw new IllegalArgumentException("Вернулся не корректный location");
         }
 

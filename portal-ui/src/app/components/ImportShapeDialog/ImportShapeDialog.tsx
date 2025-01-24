@@ -53,7 +53,7 @@ export class ImportShapeDialog extends Component<ImportShapeDialogProps> {
     return (
       <>
         <Dialog open={open} onClose={onClose} fullWidth maxWidth='sm'>
-          <DialogTitle>Импорт геометрии из Shape-файла</DialogTitle>
+          <DialogTitle>Импорт из Shape-файла</DialogTitle>
           <DialogContent>
             <DialogContentText>Выберите zip архив, в котором содержится Shape-файл</DialogContentText>
             <Form id='importShapeFileForm' onSubmit={this.handleSubmit}>

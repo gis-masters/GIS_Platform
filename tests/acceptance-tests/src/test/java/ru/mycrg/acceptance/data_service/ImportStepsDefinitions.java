@@ -148,8 +148,6 @@ public class ImportStepsDefinitions extends BaseStepsDefinitions {
 
         List<Object> tableNames = path.getList("tableName");
         if (tableNames == null || tableNames.isEmpty()) {
-            response.prettyPrint();
-
             throw new IllegalStateException("Не корректное тело ответа, не найден tableName");
         }
         tableName = tableNames.get(0).toString();

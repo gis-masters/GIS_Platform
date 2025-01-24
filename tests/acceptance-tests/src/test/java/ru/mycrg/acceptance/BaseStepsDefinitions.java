@@ -144,7 +144,7 @@ public class BaseStepsDefinitions {
     public String getLocation(Response response) {
         String location = response.getHeader("Location");
         if (location == null || location.isBlank()) {
-            response.prettyPrint();
+            
 
             throw new IllegalArgumentException("Header Location отсутствует!");
         }

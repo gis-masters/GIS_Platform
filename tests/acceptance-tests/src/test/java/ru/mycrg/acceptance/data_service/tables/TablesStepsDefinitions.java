@@ -217,9 +217,7 @@ public class TablesStepsDefinitions extends BaseStepsDefinitions {
         updateTable(latestTable.getName(), dto);
 
         if (response.statusCode() != 200) {
-            response.prettyPrint();
-
-            throw new IllegalStateException("Не удалось включить FTS для таблицы: " + latestTable.getName());
+           throw new IllegalStateException("Не удалось включить FTS для таблицы: " + latestTable.getName());
         }
     }
 

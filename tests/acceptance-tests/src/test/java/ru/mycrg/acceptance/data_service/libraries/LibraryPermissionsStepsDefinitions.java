@@ -113,9 +113,7 @@ public class LibraryPermissionsStepsDefinitions extends BaseStepsDefinitions {
             currentPermissionId = super.extractId(response);
         } else if (statusCode == 409) {
             System.out.println("Роль: " + role + " уже установлена для: " + libraryName);
-            response.prettyPrint();
         } else {
-            response.prettyPrint();
             String msg = String.format("Роль: %s уже установлена для: %s", role, libraryName);
 
             throw new IllegalStateException(msg);
@@ -132,9 +130,7 @@ public class LibraryPermissionsStepsDefinitions extends BaseStepsDefinitions {
             currentPermissionId = super.extractId(response);
         } else if (statusCode == 409) {
             System.out.println("Роль: " + role + " уже установлена для: " + currentLibrary.getTableName());
-            response.prettyPrint();
         } else {
-            response.prettyPrint();
             String msg = String.format("Роль: %s уже установлена для: %s", role, currentLibrary.getTableName());
 
             throw new IllegalStateException(msg);
@@ -151,9 +147,7 @@ public class LibraryPermissionsStepsDefinitions extends BaseStepsDefinitions {
             currentPermissionId = super.extractId(response);
         } else if (statusCode == 409) {
             System.out.println("Роль: " + role + " уже установлена для: " + libraryName);
-            response.prettyPrint();
         } else {
-            response.prettyPrint();
             String msg = String.format("Роль: %s уже установлена для: %s", role, libraryName);
 
             throw new IllegalStateException(msg);
