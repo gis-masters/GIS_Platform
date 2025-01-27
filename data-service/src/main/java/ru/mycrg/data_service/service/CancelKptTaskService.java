@@ -25,7 +25,9 @@ import java.util.stream.Collectors;
 import static ru.mycrg.data_service.service.import_.kpt.KptSourceFilesService.KPT_LIBRARY_ID;
 import static ru.mycrg.data_service.service.resources.ResourceQualifier.libraryQualifier;
 import static ru.mycrg.data_service.service.resources.ResourceQualifier.libraryRecordQualifier;
-import static ru.mycrg.data_service.service.smev3.request.get_cadastrial_plan.GetCadastrialPlanRequestService.KPT_CONTENT_TYPE;
+import static ru.mycrg.data_service.service.import_.kpt.ImportKptService.KPT_IMPORT_CONTENT_TYPE;
+import static ru.mycrg.data_service.service.smev3.request.get_cadastrial_plan.GetCadastrialPlanRequestService.KPT_ORDER_CONTENT_TYPE;
+import java.util.ArrayList;
 import static ru.mycrg.data_service.util.SystemLibraryAttributes.TITLE;
 import static ru.mycrg.data_service_contract.enums.TaskStatus.CANCELED;
 
@@ -57,7 +59,9 @@ public class CancelKptTaskService {
     @Transactional
     public void cancelOldKptTasks(String databaseName, int deadlineTime) {
         try {
-            List<Long> tasksForCancel = tasksDao.findTasksForCancel(databaseName, deadlineTime, KPT_CONTENT_TYPE);
+            List<Long> tasksForCancel = new ArrayList<>();
+            tasksForCancel.addAll(tasksDao.findTasksForCancel(databaseName, deadlineTime, KPT_ORDER_CONTENT_TYPE));
+            tasksForCancel.addAll(tasksDao.findTasksForCancel(databaseName, deadlineTime, KPT_IMPORT_CONTENT_TYPE));
             log.debug("Задачи к отмене: {}", tasksForCancel);
 
             tasksForCancel.forEach(taskId -> {

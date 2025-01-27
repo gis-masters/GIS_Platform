@@ -28,7 +28,8 @@ import static ru.mycrg.data_service.service.TaskService.TASKS_SCHEMA;
 import static ru.mycrg.data_service.service.TaskService.TASK_TABLE_NAME;
 import static ru.mycrg.data_service.service.resources.ResourceQualifier.systemTable;
 import static ru.mycrg.data_service.service.smev3.fields.CommonFields.*;
-import static ru.mycrg.data_service.service.smev3.request.get_cadastrial_plan.GetCadastrialPlanRequestService.KPT_CONTENT_TYPE;
+import static ru.mycrg.data_service.service.import_.kpt.ImportKptService.KPT_IMPORT_CONTENT_TYPE;
+import static ru.mycrg.data_service.service.smev3.request.get_cadastrial_plan.GetCadastrialPlanRequestService.KPT_ORDER_CONTENT_TYPE;
 import static ru.mycrg.data_service_contract.enums.TaskStatus.*;
 import static ru.mycrg.data_service_contract.enums.TaskType.ASSIGNABLE;
 
@@ -74,7 +75,8 @@ public class TasksDetachedDao {
                 "SET status = '" + DONE + "', " +
                 "    last_modified = now() " +
                 "WHERE status <> '" + DONE + "' AND " +
-                "      content_type_id <> '" + KPT_CONTENT_TYPE + "' AND " +
+                "      content_type_id <> '" + KPT_ORDER_CONTENT_TYPE + "' AND " +
+                "      content_type_id <> '" + KPT_IMPORT_CONTENT_TYPE + "' AND " +
                 "      content_type_id <> '" + RNS_CONTENT_TYPE + "' AND " +
                 "      content_type_id <> '" + RNV_CONTENT_TYPE + "' AND " +
                 "      content_type_id <> '" + GPZU_CONTENT_TYPE + "' AND " +

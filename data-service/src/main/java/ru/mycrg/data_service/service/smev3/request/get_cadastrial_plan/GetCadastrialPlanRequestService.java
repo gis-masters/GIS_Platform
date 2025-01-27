@@ -73,7 +73,7 @@ public class GetCadastrialPlanRequestService extends RequestProcessor {
 
     private static final Logger log = LoggerFactory.getLogger(GetCadastrialPlanRequestService.class);
 
-    public static final String KPT_CONTENT_TYPE = "common_task_kpt_order";
+    public static final String KPT_ORDER_CONTENT_TYPE = "common_task_kpt_order";
     public static final String DATA_SECTION_KEY_DATA_CONNECTION_ATTRIBUTE = "data_section_key_data_connection";
 
     private static final String FOLDER_CONTENT_TYPE = "folder_v1";
@@ -215,7 +215,7 @@ public class GetCadastrialPlanRequestService extends RequestProcessor {
         body.put(TASK_ASSIGNED_TO_PROPERTY, userDetails.getUserId());
         body.put(TASK_OWNER_ID_PROPERTY, userDetails.getUserId());
         body.put(TASK_DESCRIPTION_PROPERTY, description);
-        body.put(CONTENT_TYPE_ID.getName(), KPT_CONTENT_TYPE);
+        body.put(CONTENT_TYPE_ID.getName(), KPT_ORDER_CONTENT_TYPE);
         body.put(CREATED_AT.getName(), LocalDate.now());
 
         return new RecordEntity(body);
@@ -272,7 +272,7 @@ public class GetCadastrialPlanRequestService extends RequestProcessor {
 
     private void createLog(String eventType, String description, Map<String, Object> propsMap, Long taskId) {
         propsMap.put(TASK_DESCRIPTION_PROPERTY, description);
-        propsMap.put(CONTENT_TYPE_ID.getName(), KPT_CONTENT_TYPE);
+        propsMap.put(CONTENT_TYPE_ID.getName(), KPT_ORDER_CONTENT_TYPE);
         propsMap.put(TASK_TYPE_PROPERTY, CUSTOM.name());
         propsMap.put(STATUS_PROPERTY, "IN_PROGRESS");
         propsMap.put(TASK_ASSIGNED_TO_PROPERTY, propsMap.get(PERFORMER_PROPERTY));
