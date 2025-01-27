@@ -240,6 +240,16 @@
             "contentUrl": "/assets/help/map/dataEdit/1createObjectMap/01createObjectMap.html"
           },
           {
+            "id": "snapping",
+            "title": "Создание объекта с помощью прилипания",
+            "contentUrl": "/assets/help/map/dataEdit/08snapping/08snapping.html"
+          },
+          {
+            "id": "vertexMode",
+            "title": "Режим изменения вершин",
+            "contentUrl": "/assets/help/map/dataEdit/09vertexMode/09vertexMode.html"
+          },
+          {
             "id": "createObjectNotepad",
             "title": "Создание объекта по координатам путем вставки их из блокнота",
             "contentUrl": "/assets/help/map/dataEdit/2createObjectNotepad/02createObjectNotepad.html"
