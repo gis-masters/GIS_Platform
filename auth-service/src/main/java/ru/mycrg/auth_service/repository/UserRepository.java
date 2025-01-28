@@ -36,7 +36,7 @@ public interface UserRepository extends PagingAndSortingRepository<User, Long> {
     Optional<User> findByLoginIgnoreCase(@Param("login") String login);
 
     @RestResource(exported = false)
-    Optional<User> findByEmail(@Param("email") String email);
+    Optional<User> findByEmailIgnoreCase(@Param("email") String email);
 
     @RestResource(exported = false)
     List<User> findByBossId(Integer bossId);

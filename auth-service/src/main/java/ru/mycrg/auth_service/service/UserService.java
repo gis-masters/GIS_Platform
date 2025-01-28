@@ -140,7 +140,7 @@ public class UserService {
     public UserProjection create(UserCreateDto dto, Long orgId, String accessToken, String creator, boolean enabled) {
         log.debug("'{}' create user: '{}' in organization: '{}'", creator, dto.getEmail(), orgId);
 
-        Optional<User> userByEmail = userRepository.findByEmail(dto.getEmail());
+        Optional<User> userByEmail = userRepository.findByEmailIgnoreCase(dto.getEmail());
         if (userByEmail.isPresent()) {
             throw new ConflictException(String.format("Пользователь с email: %s уже существует", dto.getEmail()));
         }
@@ -271,7 +271,7 @@ public class UserService {
     public void invite(String email, Long orgId) {
         log.debug("Try to invite user: {} in organization: {}", email, orgId);
 
-        User user = userRepository.findByEmail(email)
+        User user = userRepository.findByEmailIgnoreCase(email)
                                   .orElseThrow(() -> new NotFoundException("Пользователь", email));
 
         Organization organization = orgRepository.findById(orgId)

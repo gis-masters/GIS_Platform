@@ -86,7 +86,7 @@ public class OrganizationService {
     synchronized
     public Organization create(@Valid OrganizationCreateDto createDto) {
         UserCreateDto owner = createDto.getOwner();
-        Optional<User> userByEmail = userRepository.findByEmail(owner.getEmail());
+        Optional<User> userByEmail = userRepository.findByEmailIgnoreCase(owner.getEmail());
         if (userByEmail.isPresent()) {
             throw new ConflictException(String.format("email: '%s' уже занят", owner.getEmail()));
         }

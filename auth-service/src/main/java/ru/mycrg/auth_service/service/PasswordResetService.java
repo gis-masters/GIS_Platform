@@ -51,7 +51,7 @@ public class PasswordResetService {
     }
 
     public void init(InitPasswordResetDto dto) {
-        userRepository.findByEmail(dto.getEmail())
+        userRepository.findByEmailIgnoreCase(dto.getEmail())
                       .ifPresentOrElse(
                               user -> {
                                   throwIfTokenRequestToOften(user.getId());

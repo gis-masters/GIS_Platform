@@ -73,7 +73,7 @@ public class OrganizationIntentService {
                             throw new ConflictException(msg);
                         });
 
-        Optional<User> userByEmail = userRepository.findByEmail(email);
+        Optional<User> userByEmail = userRepository.findByEmailIgnoreCase(email);
         if (userByEmail.isPresent()) {
             throw new ConflictException(msg);
         }

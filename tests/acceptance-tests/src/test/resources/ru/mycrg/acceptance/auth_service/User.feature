@@ -28,6 +28,17 @@ Feature: Действия с пользователями
       | userName     | userSurname     | userEmail | userPassword  |
       | testUserName | testUserSurname | EMAIL_20  | testPassword1 |
 
+  Scenario Outline: Нельзя создать пользователя с email, отличающимся только регистром
+    Given Существует пользователь
+      | userName1 | userSurname1 | <existingEmail> | testPassword1 |
+    When Администратор создает пользователя
+      | userName2 | userSurname2 | <newEmail> | testPassword1 |
+    Then Сервер отвечает со статус-кодом 409
+    Examples:
+      | existingEmail      | newEmail           |
+      | test@example.com   | TEST@example.com   |
+      | user@example.com   | User@Example.COM   |
+
   Scenario Outline: Создание пользователя c невалидными данными (<reason>)
     When Администратор создает пользователя
       | <userName> | <userSurname> | <userEmail> | <userPassword> | <middleName> | <job> | <phone> | <department> |
@@ -89,6 +100,7 @@ Feature: Действия с пользователями
       | STRING_15 | STRING_15 | EMAIL_20 | testPassword1 |
     When Администратор делает запрос с сортировкой по "<sorting factor>" и "<sorting direction>" на всех пользователей
     Then Сервер отвечает со статус-кодом 200
+    #
     And Данные отсортированы по "<sorting factor>" и "<sorting direction>"
     Examples:
       | sorting factor | sorting direction |
