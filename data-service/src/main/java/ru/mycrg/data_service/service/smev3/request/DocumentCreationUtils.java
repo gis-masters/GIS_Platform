@@ -286,6 +286,75 @@ public class DocumentCreationUtils {
         run2.setFontSize(fontSize);
     }
 
+    public static void addTextWithUnderlineAndTab(XWPFDocument document, String text, int spacing, int fontSize,
+                                                  String underLineText) {
+        XWPFParagraph paragraph = document.createParagraph();
+        paragraph.setAlignment(ParagraphAlignment.LEFT);
+        paragraph.setSpacingAfter(spacing);
+
+        XWPFRun run = paragraph.createRun();
+        run.setText(text);
+        run.setFontFamily("Times New Roman");
+        run.setFontSize(fontSize);
+
+        XWPFRun runWithSpaces = paragraph.createRun();
+        runWithSpaces.setText("                                                                     ");
+        runWithSpaces.setFontFamily("Times New Roman");
+        runWithSpaces.setFontSize(fontSize);
+        runWithSpaces.setUnderline(UnderlinePatterns.SINGLE);
+
+        XWPFRun run2 = paragraph.createRun();
+        run2.setText(underLineText);
+        run2.setFontFamily("Times New Roman");
+        run2.setUnderline(UnderlinePatterns.SINGLE);
+        run2.setFontSize(fontSize);
+
+        XWPFRun runSpacesAfter = paragraph.createRun();
+        runSpacesAfter.addTab();
+        runSpacesAfter.addTab();
+        runSpacesAfter.addTab();
+        runSpacesAfter.addTab();
+        runSpacesAfter.addTab();
+        runSpacesAfter.setUnderline(UnderlinePatterns.SINGLE);
+        runSpacesAfter.setFontFamily("Times New Roman");
+        runSpacesAfter.setFontSize(fontSize);
+    }
+
+    public static void addTextWithSpacingAndUnderline(XWPFDocument document, String text, int spacing, int fontSize,
+                                                      String underLineText, String text2, String underLineText2,
+                                                       String text3) {
+        XWPFParagraph paragraph = document.createParagraph();
+        paragraph.setAlignment(ParagraphAlignment.LEFT);
+        paragraph.setSpacingAfter(spacing);
+
+        XWPFRun run = paragraph.createRun();
+        run.setText(text);
+        run.setFontFamily("Times New Roman");
+        run.setFontSize(fontSize);
+
+        XWPFRun run2 = paragraph.createRun();
+        run2.setText(underLineText);
+        run2.setFontFamily("Times New Roman");
+        run2.setUnderline(UnderlinePatterns.SINGLE);
+        run2.setFontSize(fontSize);
+
+        XWPFRun run3 = paragraph.createRun();
+        run3.setText(text2);
+        run3.setFontFamily("Times New Roman");
+        run3.setFontSize(fontSize);
+
+        XWPFRun run4 = paragraph.createRun();
+        run4.setText(underLineText2);
+        run4.setFontFamily("Times New Roman");
+        run4.setUnderline(UnderlinePatterns.SINGLE);
+        run4.setFontSize(fontSize);
+
+        XWPFRun run5 = paragraph.createRun();
+        run5.setText(text3);
+        run5.setFontFamily("Times New Roman");
+        run5.setFontSize(fontSize);
+    }
+
     public static void addTextWithSpacingAndUnderlineAndTextAfter(XWPFDocument document, String text, int spacing, int fontSize,
                                                       String underLineText, String text2) {
         XWPFParagraph paragraph = document.createParagraph();
@@ -495,6 +564,19 @@ public class DocumentCreationUtils {
     public static void addTextWithUnderline(XWPFDocument document, String text) {
         XWPFParagraph paragraph = document.createParagraph();
         paragraph.setAlignment(ParagraphAlignment.LEFT);
+        paragraph.setSpacingAfter(5);
+
+        XWPFRun run = paragraph.createRun();
+        run.setText(text);
+        run.setBold(true);
+        run.setUnderline(UnderlinePatterns.SINGLE);
+        run.setFontFamily("Times New Roman");
+        run.setFontSize(13);
+    }
+
+    public static void addTextWithUnderline(XWPFDocument document, String text, ParagraphAlignment alignment) {
+        XWPFParagraph paragraph = document.createParagraph();
+        paragraph.setAlignment(alignment);
         paragraph.setSpacingAfter(5);
 
         XWPFRun run = paragraph.createRun();

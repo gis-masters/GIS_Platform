@@ -106,8 +106,8 @@ public abstract class AcceptServiceBase {
     protected static final String PDF_CONTENT_TYPE = "application/pdf";
     protected static final String PDF_EXTENSION = ".pdf";
     protected static final String DOCUMENT_CODE = "electrSigFile";
-    protected static final String BUILDING_PERMIT_FILENAME = "Разрешение на строительство_";
-    protected static final String MOTIVATED_DECLINE_FILENAME = "Мотивированный отказ_";
+    protected static final String BUILDING_PERMIT_FILENAME = "Разрешение_на_строительство_";
+    protected static final String MOTIVATED_DECLINE_FILENAME = "Мотивированный_отказ_";
 
     @Value("${crg-options.taskDb}")
     protected String dbName;
@@ -254,6 +254,10 @@ public abstract class AcceptServiceBase {
             IRecord inboxDocRecord = recordsDao
                     .findById(inboxLibraryQualifier, inboxRnvSchema)
                     .orElseThrow(() -> new SmevRequestException("Не найден документ с id: " + docId));
+
+            if (inboxDocRecord.getAsString(FILE_ATTRIBUTE) == null) {
+                throw new BadRequestException("Поле File у связанного документа не заполнено");
+            }
 
             Optional<List<FileDescription>> oFileDescriptions = JsonConverter.fromJson(
                     inboxDocRecord.getAsString(FILE_ATTRIBUTE),

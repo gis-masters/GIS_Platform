@@ -47,13 +47,17 @@ public class RnsGiveStrategy implements IRnsRequestDocumentCreator {
         setTableNode(table, 6, "2.1.4. ИНН:", dataProvider.getInn(request));
         setTableNode(table, 7, "2.1.5. ОГРНИП:", dataProvider.getOgrnip(request));
         setTableNode(table, 8, "2.1.6. Адрес регистрации по месту жительства/адрес для почтовой корреспонденции:",
-                     dataProvider.getRegAddress(request) + "/" + dataProvider.getFactAddress(request));
+                     dataProvider.getRegAddress(request) + (dataProvider.getFactAddress(
+                             request).equals("") ? dataProvider.getFactAddress(request) :
+                             " / " + dataProvider.getFactAddress(request)));
         mergeCellsAndSetValue(table, 9, "2.2. Сведения о юридическом лице:", false, LEFT);
         setTableNode(table, 10, "2.2.1. Полное наименование:", dataProvider.getOrgFullName(request));
         setTableNode(table, 11, "2.2.2. ИНН:", dataProvider.getOrgInn(request));
         setTableNode(table, 12, "2.2.3. ОГРН:", dataProvider.getOrgOgrn(request));
         setTableNode(table, 13, "2.2.4. Адрес регистрации/адрес для почтовой корреспонденции:",
-                     dataProvider.getOrgRegAddress(request) + "/" + dataProvider.getOrgPostAddress(request));
+                     dataProvider.getOrgRegAddress(request) + (dataProvider.getOrgPostAddress(
+                             request).equals("") ? dataProvider.getOrgPostAddress(request) :
+                             " / " + dataProvider.getOrgPostAddress(request)));
         setTableNode(table, 14, "2.2.5. адрес электронной почты для связи с застройщиком:",
                      dataProvider.getOrgEmail(request));
         setTableNode(table, 15, "2.2.6. Контактный номер телефона:", dataProvider.getOrgPhone(request));
@@ -146,7 +150,8 @@ public class RnsGiveStrategy implements IRnsRequestDocumentCreator {
         setTableNode(table, 69, "6.1.X.1. Дата утверждения:", dataProvider.getDocumentationExpertiseDate(request));
         setTableNode(table, 70, "6.1.X.2. Номер: ", dataProvider.getDocExpertiseNumber(request));
         setTableNode(table, 71, "6.1.X.3. Наименование органа или организации, выдавшей положительное заключение " +
-                "экспертизы проектной документации:", dataProvider.getDocExpIssuer(request));
+                "экспертизы проектной документации:", dataProvider.getDocExpIssuer(request).trim().equals("null") ?
+                "" : dataProvider.getDocExpIssuer(request));
         mergeCellsAndSetValue(table, 72, "6.2. Сведения о государственной экологической экспертизе ", false, LEFT);
         setTableNode(table, 73, "6.2.X.1. Дата утверждения:", dataProvider.getEcoExpertiseDate(request));
         setTableNode(table, 74, "6.2.X.2. Номер:", dataProvider.getEcoExpertiseNumber(request));
@@ -210,14 +215,19 @@ public class RnsGiveStrategy implements IRnsRequestDocumentCreator {
         addText(document, "Правоустанавливающие документы на земельный участок:");
         addText(document, "- реквизиты документа (решения), устанавливающего право собственности на");
         addText(document, "земельный участок, дата и номер государственной регистрации права собственности");
-        addText(document, "__________________________________________________________________________");
+        addTextWithUnderline(document,
+                             "   " + dataProvider.getTitleDocName(request) + " "
+                                     + dataProvider.getTitleDocDate(request) + " "
+                                     + dataProvider.getTitleDocNumber(request) + "   ");
         addText(document, "- Договор аренды, субаренды (ненужное зачеркнуть) земельного участка,");
         addText(document, "заключенный с ____________________________________________ \"__\" _______ 20__ ");
         addText(document, "г. N _____,");
         addText(document, "                                    (указывается арендодатель)");
         addText(document, "срок аренды (субаренды) по договору: до \"___\" ___________ 20___ г.");
         addText(document, "- иное ____________________________________________________________________;");
-        addText(document, "Градостроительный план земельного участка N _____ выдан \"__\" ______ 20__ г.");
+        addTextWithSpacingAndUnderlineAndTextAfter(document, "Градостроительный план земельного участка N ", 30, 12,
+                                                   dataProvider.getGPZUNumber(request), " выдан");
+        addTextWithUnderline(document, dataProvider.getGPZUDate(request));
         addText(document, "Проектная документация на строительство разработана __________________________");
         addText(document, "__________________________________________________________________________,");
         addText(document, "                        (название и адрес местонахождения проектной организации)");
@@ -246,8 +256,11 @@ public class RnsGiveStrategy implements IRnsRequestDocumentCreator {
         addTextWithSpacing(document, "- нарочно (в случае подачи заявления нарочно) ___");
         addText(document, "К настоящему заявлению прилагаю <*>:");
         addText(document, "1) правоустанавливающие документы на земельный участок, в том числе соглашение ");
-        addText(document, "об установлении сервитута, решение об установлении публичного сервитута ________");
-        addText(document, "_________________________________________________________________ на __ л.;");
+        addText(document, "об установлении сервитута, решение об установлении публичного сервитута");
+        addTextWithUnderline(document,
+                             "   " + dataProvider.getTitleDocName(request) + " "
+                                     + dataProvider.getTitleDocDate(request) + " "
+                                     + dataProvider.getTitleDocNumber(request) + "   ");
         addText(document, "(указывается наименование, N и дата выдачи документа)");
         addText(document, "2) соглашение о передаче в случаях, установленных бюджетным законодательством");
         addText(document, "Российской Федерации, органом государственной власти (государственным органом),");
@@ -257,10 +270,19 @@ public class RnsGiveStrategy implements IRnsRequestDocumentCreator {
         addText(document, "полномочий государственного (муниципального) заказчика ");
         addText(document, "_______________________________________________,");
         addText(document, "(указывается N и дата заключения соглашения)");
-        addText(document, "3) градостроительный план земельного участка N _____________________");
-        addText(document, "выдан \"_____\" ________________ 20____ или в случае строительства, реконструкции ");
+        addTextWithSpacingAndUnderline(document, "3) градостроительный план земельного участка N ", 30, 12,
+                                       dataProvider.getGPZUNumber(request));
+        addTextWithSpacingAndUnderlineAndTextAfter(document, "выдан ", 30, 12,
+                                                   dataProvider.getGPZUDate(request),
+                                                   " или в случае строительства, реконструкции ");
         addText(document, "линейного объекта - реквизиты проекта планировки территории и проекта межевания ");
-        addText(document, "территории________________________________________________________________;");
+        addTextWithSpacingAndUnderline(document, "территории  ", 30, 12,
+                                       " " + dataProvider.getPlanProjectNumber(request) + " "
+                                               + dataProvider.getPlanProjectDate(request) +
+                                               " " + dataProvider.getPlanProjectIssuer(request) + " ");
+        addTextWithUnderline(document, dataProvider.getSurveyingNumber(request) + " "
+                + dataProvider.getSurveyingDate(request) + " "
+                + dataProvider.getSurveyingIssuer(request));
         addText(document, "(наименование проекта, название и N документа об утверждении проекта, дата его");
         addText(document, "принятия)");
         addText(document, "4) результаты инженерных изысканий и следующие материалы, содержащиеся в");
@@ -286,13 +308,16 @@ public class RnsGiveStrategy implements IRnsRequestDocumentCreator {
         addText(document, "проект организации работ по сносу объектов капитального строительства, их частей в ");
         addText(document, "случае необходимости сноса объектов капитального строительства, их частей для ");
         addText(document, "строительства, реконструкции других объектов капитального строительства);");
-        addText(document, "5) заключение экспертизы проектной документации, выданной ___________________");
-        addText(document, "___________________________________________ \"___\" _______ _______ г. N ");
-        addText(document, "_______;");
+        addText(document, "5) заключение экспертизы проектной документации, выданной ");
+        addTextWithUnderline(document,
+                             " " + dataProvider.getPlanProjectIssuer(request) + " "
+                                     + dataProvider.getPlanProjectDate(request) + " г. N "
+                                     + dataProvider.getPlanProjectNumber(request));
         addText(document, "(наименование экспертной организации)");
-        addText(document, "6) заключение государственной экологической экспертизы проектной документации ");
-        addText(document, "от \"___\" _______ г. N _____________________ (в случаях, установленных пунктом 6");
-        addText(document, "статьи 49 Градостроительного кодекса РФ);");
+        addTextWithSpacingAndUnderline(document, "от ", 30, 12,
+                                       " " + dataProvider.getEcoExpertiseDate(request) + " г. N "
+                                               + dataProvider.getEcoExpertiseNumber(request));
+        addText(document, "(в случаях, установленных пунктом 6 статьи 49 Градостроительного кодекса РФ);");
         addText(document, "7) подтверждение соответствия вносимых в проектную документацию изменений ");
         addText(document, "требованиям, указанным в части 3.8 статьи 49 Градостроительного кодекса РФ;");
         addText(document, "8) подтверждение соответствия вносимых в проектную документацию изменений ");

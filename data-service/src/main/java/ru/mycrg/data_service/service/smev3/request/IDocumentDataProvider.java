@@ -192,6 +192,36 @@ public interface IDocumentDataProvider {
                 .orElse("");
     }
 
+    default String getTitleDocName(RequestType request) {
+
+        return ofNullable(request.getTitleDocConstructionObject())
+                .map(titleDocType -> titleDocType.getTitleDocConstructionObjectBlock()
+                                                   .stream()
+                                                   .map(TitleDocConstructionObjectBlockType::getDocumentName)
+                                                   .collect(Collectors.joining(", ")))
+                .orElse("");
+    }
+
+    default String getTitleDocDate(RequestType request) {
+
+        return ofNullable(request.getTitleDocConstructionObject())
+                .map(titleDocType -> titleDocType.getTitleDocConstructionObjectBlock()
+                                                 .stream()
+                                                 .map(TitleDocConstructionObjectBlockType::getDate)
+                                                 .collect(Collectors.joining(", ")))
+                .orElse("");
+    }
+
+    default String getTitleDocNumber(RequestType request) {
+
+        return ofNullable(request.getTitleDocConstructionObject())
+                .map(titleDocType -> titleDocType.getTitleDocConstructionObjectBlock()
+                                                 .stream()
+                                                 .map(TitleDocConstructionObjectBlockType::getNumber)
+                                                 .collect(Collectors.joining(", ")))
+                .orElse("");
+    }
+
     default String getArchitectSolutionDate(RequestType request) {
 
         return ofNullable(request.getTypicalArchitectSolution())
