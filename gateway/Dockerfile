@@ -8,7 +8,7 @@ COPY ./target/apm-agent.jar apm-agent.jar
 
 COPY ./target/gateway.jar gateway.jar
 
-ENV XMX_SIZE=1200m
+ENV XMX_SIZE=${GATEWAY_XMX_SIZE:-1200m}
 
 HEALTHCHECK --interval=30s --timeout=10s --retries=6 --start-period=1m \
     CMD curl -f http://localhost:8100/actuator/health || exit 1

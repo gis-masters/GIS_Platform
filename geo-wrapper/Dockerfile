@@ -12,7 +12,7 @@ RUN set -eux; \
     apt autoremove -y; \
     apt autoclean -y;
 
-ENV XMX_SIZE=1G
+ENV XMX_SIZE=${WRAPPER_XMX_SIZE:-1G}
 
 ENTRYPOINT sleep 1m && exec java -Xmx${XMX_SIZE} -javaagent:apm-agent.jar \
                                                  -Delastic.apm.service_name=crg-geo-wrapper \

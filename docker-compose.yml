@@ -13,7 +13,7 @@ services:
     environment:
       RABBITMQ_DEFAULT_USER: ${CRG_USER}
       RABBITMQ_DEFAULT_PASS: ${RABBIT_PASS}
-    mem_limit: ${RABBITMQ_MEM_LIMIT:-250}m
+    mem_limit: ${RABBITMQ_MEM_LIMIT:-2500}m
 
   postgis:
     container_name: postgis
@@ -55,8 +55,8 @@ services:
       APM_URL: ${APM_URL}
       GEOSERVER_ADMIN_USER: ${GEOSERVER_USER}
       GEOSERVER_ADMIN_PASSWORD: ${GEOSERVER_PASSWORD}
-      INITIAL_MEMORY: ${JAVA_XMS_SIZE:-7000}
-      MAXIMUM_MEMORY: ${JAVA_XMX_SIZE:-7000}
+      INITIAL_MEMORY: ${GEOSERVER_XMS_SIZE:-7000}
+      MAXIMUM_MEMORY: ${GEOSERVER_XMX_SIZE:-7000}
       STABLE_EXTENSIONS: importer-plugin,jp2k-plugin
       COMMUNITY_EXTENSIONS: ogr-datastore-plugin,jdbcconfig-plugin,jdbcstore-plugin
     mem_limit: ${GEOSERVER_MEM_LIMIT:-7400}m
@@ -70,6 +70,7 @@ services:
       - "logstash:${LOGSTASH_HOST}"
     environment:
       APM_URL: ${APM_URL}
+      AUTH_XMX_SIZE: ${AUTH_XMX_SIZE:-1000m}
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgis:5432/crg_auth_service
       SPRING_DATASOURCE_USERNAME: ${CRG_USER}
       SPRING_DATASOURCE_PASSWORD: ${DB_PASS}
@@ -113,6 +114,7 @@ services:
       - "logstash:${LOGSTASH_HOST}"
     environment:
       APM_URL: ${APM_URL}
+      XMX_SIZE: ${INTEGRATION_XMX_SIZE:-200m}
 
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgis:5432/bpmn_camunda
       SPRING_DATASOURCE_USERNAME: ${CRG_USER}
@@ -143,6 +145,7 @@ services:
       - "logstash:${LOGSTASH_HOST}"
     environment:
       APM_URL: ${APM_URL}
+      XMX_SIZE: ${DATA_XMX_SIZE:-1200m}
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgis:5432/crg_data_service
       SPRING_DATASOURCE_USERNAME: ${CRG_USER}
       SPRING_DATASOURCE_PASSWORD: ${DB_PASS}
@@ -205,6 +208,7 @@ services:
       - "logstash:${LOGSTASH_HOST}"
     environment:
       APM_URL: ${APM_URL}
+      XMX_SIZE: ${GIS_XMX_SIZE:-1200m}
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgis:5432/crg_gis_service
       SPRING_DATASOURCE_USERNAME: ${CRG_USER}
       SPRING_DATASOURCE_PASSWORD: ${DB_PASS}
@@ -244,6 +248,7 @@ services:
       - "logstash:${LOGSTASH_HOST}"
     environment:
       APM_URL: ${APM_URL}
+      XMX_SIZE: ${GATEWAY_XMX_SIZE:-1200m}
       CRG_OPTIONS_AUTH_SERVICE_URL: http://auth-service:9000
       CRG_OPTIONS_CLIENT_ID: admin
       CRG_OPTIONS_CLIENT_SECRET: geoserver
@@ -269,6 +274,7 @@ services:
       - "logstash:${LOGSTASH_HOST}"
     environment:
       APM_URL: ${APM_URL}
+      XMX_SIZE: ${WRAPPER_XMX_SIZE:-1G}
 
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgis:5432/postgres
       SPRING_DATASOURCE_USERNAME: ${CRG_USER}
@@ -338,6 +344,7 @@ services:
     restart: always
     environment:
       APM_URL: ${APM_URL}
+      XMX_SIZE: ${AUDIT_XMX_SIZE:-200m}
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgis:5432/crg_audit_service
       SPRING_DATASOURCE_USERNAME: ${CRG_USER}
       SPRING_DATASOURCE_PASSWORD: ${DB_PASS}
@@ -362,6 +369,7 @@ services:
     restart: always
     environment:
       APM_URL: ${APM_URL}
+      XMX_SIZE: ${GISOGD_XMX_SIZE:-1111m}
 
       SPRING_RABBITMQ_HOST: rabbitmq
       SPRING_RABBITMQ_USERNAME: ${CRG_USER}

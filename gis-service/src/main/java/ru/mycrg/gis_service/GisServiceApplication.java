@@ -20,7 +20,7 @@ public class GisServiceApplication {
 
     public static final ObjectMapper objectMapper = new ObjectMapper();
 
-    private final Logger log = LoggerFactory.getLogger(GisServiceApplication.class);
+    private static final Logger log = LoggerFactory.getLogger(GisServiceApplication.class);
 
     private final CrgProperties properties;
 
@@ -29,6 +29,14 @@ public class GisServiceApplication {
     }
 
     public static void main(String[] args) {
+        Runtime runtime = Runtime.getRuntime();
+        long maxMemory = runtime.maxMemory();
+        long totalMemory = runtime.totalMemory();
+
+        log.info("=== HEAP MEMORY INFO ===");
+        log.info("Max Memory (Xmx): {} MB", maxMemory / (1024*1024));
+        log.info("Initial Memory (Xms): {} MB", totalMemory / (1024*1024));
+        log.info("=======================");
         SpringApplication.run(GisServiceApplication.class, args);
     }
 

@@ -27,7 +27,7 @@ public class IntegrationApplication {
             .setSerializationInclusion(JsonInclude.Include.NON_NULL)
             .setDateFormat(new SimpleDateFormat("dd-MM-yyyy HH:mm"));
 
-    private final Logger log = LoggerFactory.getLogger(IntegrationApplication.class);
+    private static final Logger log = LoggerFactory.getLogger(IntegrationApplication.class);
     private final CrgIntegrationProperties properties;
 
     public IntegrationApplication(CrgIntegrationProperties properties) {
@@ -35,6 +35,14 @@ public class IntegrationApplication {
     }
 
     public static void main(String[] args) {
+        Runtime runtime = Runtime.getRuntime();
+        long maxMemory = runtime.maxMemory();
+        long totalMemory = runtime.totalMemory();
+
+        log.info("=== HEAP MEMORY INFO ===");
+        log.info("Max Memory (Xmx): {} MB", maxMemory / (1024*1024));
+        log.info("Initial Memory (Xms): {} MB", totalMemory / (1024*1024));
+        log.info("=======================");
         SpringApplication.run(IntegrationApplication.class, args);
     }
 

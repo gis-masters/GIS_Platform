@@ -21,7 +21,7 @@ import ru.mycrg.data_service.service.SystemTagsPublisher;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class DataServiceApplication extends RepositoryRestConfigurerAdapter {
 
-    private final Logger log = LoggerFactory.getLogger(DataServiceApplication.class);
+    private static final Logger log = LoggerFactory.getLogger(DataServiceApplication.class);
 
     @Value("${spring.servlet.multipart.max-file-size}")
     private String maxFileSize;
@@ -39,6 +39,14 @@ public class DataServiceApplication extends RepositoryRestConfigurerAdapter {
     }
 
     public static void main(String[] args) {
+        Runtime runtime = Runtime.getRuntime();
+        long maxMemory = runtime.maxMemory();
+        long totalMemory = runtime.totalMemory();
+
+        log.info("=== HEAP MEMORY INFO ===");
+        log.info("Max Memory (Xmx): {} MB", maxMemory / (1024*1024));
+        log.info("Initial Memory (Xms): {} MB", totalMemory / (1024*1024));
+        log.info("=======================");
         SpringApplication.run(DataServiceApplication.class, args);
     }
 

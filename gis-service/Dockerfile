@@ -8,7 +8,7 @@ COPY ./target/apm-agent.jar apm-agent.jar
 
 COPY ./target/gis-service.jar gis-service.jar
 
-ENV XMX_SIZE=1200m
+ENV XMX_SIZE=${GIS_XMX_SIZE:-1200m}
 
 HEALTHCHECK --interval=30s --timeout=10s --retries=6 --start-period=1m \
     CMD curl -f http://localhost:8082/actuator/health || exit 1

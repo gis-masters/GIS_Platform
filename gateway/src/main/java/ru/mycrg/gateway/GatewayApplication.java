@@ -14,7 +14,7 @@ import org.springframework.context.event.EventListener;
 @SpringBootApplication
 public class GatewayApplication {
 
-    private final Logger log = LoggerFactory.getLogger(GatewayApplication.class);
+    private static final Logger log = LoggerFactory.getLogger(GatewayApplication.class);
 
     @Value("${spring.servlet.multipart.max-file-size}")
     private String maxFileSize;
@@ -25,6 +25,15 @@ public class GatewayApplication {
     public static final ObjectMapper objectMapper = new ObjectMapper();
 
     public static void main(String[] args) {
+
+        Runtime runtime = Runtime.getRuntime();
+        long maxMemory = runtime.maxMemory();
+        long totalMemory = runtime.totalMemory();
+
+        log.info("=== HEAP MEMORY INFO ===");
+        log.info("Max Memory (Xmx): {} MB", maxMemory / (1024*1024));
+        log.info("Initial Memory (Xms): {} MB", totalMemory / (1024*1024));
+        log.info("=======================");
         SpringApplication.run(GatewayApplication.class, args);
     }
 
