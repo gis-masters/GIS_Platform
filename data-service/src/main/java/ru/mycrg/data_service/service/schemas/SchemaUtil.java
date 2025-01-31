@@ -170,14 +170,13 @@ public class SchemaUtil {
 
             schemaProperties.add(createdBy);
         }
-
+        
         if (!propertyNames.contains(CREATED_AT.getName())) {
             SimplePropertyDto createdAt = new SimplePropertyDto();
             createdAt.setName(CREATED_AT.getName());
             createdAt.setTitle("Дата создания");
             createdAt.setDescription("Дата создания объекта (Заполняется автоматически)");
             createdAt.setReadOnly(true);
-            createdAt.setHidden(true);
             createdAt.setValueType(ValueType.DATETIME);
 
             schemaProperties.add(createdAt);

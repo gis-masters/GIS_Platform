@@ -122,22 +122,24 @@ public class CreateLibraryRequestHandler implements IRequestHandler<CreateLibrar
             path.setTitle("Путь");
             path.setDescription("Полный путь, отражающий иерархию объектов");
             path.setValueType(ValueType.TEXT);
+            path.setMinWidth(250);
             path.setDefaultValue(ROOT_FOLDER_PATH);
 
             schemaProperties.add(path);
         }
 
-        SimplePropertyDto id = new SimplePropertyDto();
-        id.setName(ID);
-        id.setTitle("Идентификатор");
-        id.setDescription("Заполняется автоматически");
-        id.setRequired(true);
-        id.setReadOnly(true);
-        id.setValueType(ValueType.INT);
+        if (!schemaPropertyName.contains(ID)) {
+            SimplePropertyDto id = new SimplePropertyDto();
+            id.setName(ID);
+            id.setTitle("Номер");
+            id.setDescription("Заполняется автоматически");
+            id.setReadOnly(true);
+            id.setValueType(ValueType.INT);
 
-        schemaProperties.removeIf(prop -> ID.equals(prop.getName()));
+            schemaProperties.removeIf(prop -> ID.equals(prop.getName()));
 
-        schemaProperties.add(0, id);
+            schemaProperties.add(0, id);
+        }
     }
 
     private void generateSystemBackAttributes(List<SimplePropertyDto> schemaProperties) {

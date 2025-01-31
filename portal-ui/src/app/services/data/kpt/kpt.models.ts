@@ -33,11 +33,6 @@ export const kptMassUploadSchema: Schema = {
   title: 'Массовая загрузка КПТ',
   properties: [
     {
-      name: 'owner_doc',
-      title: 'Орган отправивший документ',
-      propertyType: PropertyType.STRING
-    },
-    {
       name: 'performer',
       title: 'Исполнитель',
       propertyType: PropertyType.USER_ID,
@@ -45,34 +40,10 @@ export const kptMassUploadSchema: Schema = {
       hidden: true
     },
     {
-      name: 'receipt_type',
-      title: 'Способ получение данных',
-      minWidth: 400,
-      readOnly: true,
-      propertyType: PropertyType.CHOICE,
-      defaultValue: 'Из файла',
-      options: [{ title: 'Из файла', value: 'Из файла' }]
-    },
-    {
-      name: 'date_order',
-      title: 'Дата создания заказа',
-      propertyType: PropertyType.DATETIME,
-      hidden: true
-    },
-    {
-      name: 'date_order_completion',
-      title: 'Дата завершения заказа',
-      propertyType: PropertyType.DATETIME,
-      hidden: true
-    },
-    {
-      name: 'source_doc',
-      title: 'Версии',
-      multiple: true,
-      libraries: ['dl_data_kpt'],
-      propertyType: PropertyType.DOCUMENT,
-      description: 'Предыдущая версия данных',
-      maxDocuments: 5,
+      name: 'location',
+      title: 'Местоположение',
+      propertyType: PropertyType.STRING,
+      hidden: true,
       defaultValueWellKnownFormula: 'inherit'
     },
     {
