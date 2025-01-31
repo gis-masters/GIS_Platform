@@ -29,7 +29,9 @@ class XTableCellContentTypeUrl extends Component<XTableCellContentProps<unknown>
         const parsed = JSON.parse(String(cellData)) as UrlInfo | UrlInfo[];
         value = Array.isArray(parsed) ? parsed : [parsed];
       }
-    } catch {}
+    } catch {
+      // do nothing
+    }
 
     if (!col.field) {
       console.error('xTable: не указан field у колонки с типом url');

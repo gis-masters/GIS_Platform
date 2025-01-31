@@ -8,6 +8,7 @@ import { getTestUser } from '../auth/testUsers';
 import { blackSea } from './testFeatures/blackSea';
 import { crimea } from './testFeatures/crimea';
 import { smallTriangle } from './testFeatures/featuresForTests';
+import { forAttrEllipsis } from './testFeatures/forAttrEllipsis';
 import { forCopy } from './testFeatures/forCopy';
 import { forFeaturesSidebar } from './testFeatures/forFeaturesSidebar';
 import { forFiltering } from './testFeatures/forFiltering';
@@ -97,6 +98,7 @@ async function setUserFieldsData(feature: NewWfsFeature[]): Promise<NewWfsFeatur
 }
 
 export async function getTestFeatures(key: string, schema?: Schema): Promise<NewWfsFeature[]> {
+  // eslint-disable-next-line sonarjs/max-switch-cases
   switch (key) {
     case 'для тестирования прокола':
     case 'данные для тестирования сортировки': {
@@ -110,6 +112,9 @@ export async function getTestFeatures(key: string, schema?: Schema): Promise<New
     }
     case 'тестирование формы объекта 2': {
       return setUserFieldsData(forForm2);
+    }
+    case 'тестирование обрезания текста в аттрабутивке': {
+      return forAttrEllipsis;
     }
     case 'тестирование прокола': {
       return forProkol;

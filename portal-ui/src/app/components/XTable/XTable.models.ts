@@ -47,6 +47,8 @@ export interface XTableColumn<T> {
   align?: TableCellProps['align'];
   hidden?: boolean;
   width?: number;
+  maxDefaultWidth?: number;
+  enableMaxDefaultWidth?: boolean;
   minWidth?: number;
 }
 

@@ -26,6 +26,7 @@ import { simpleReadonly } from './testSchemas/simpleReadonly';
 import { testNotSorting } from './testSchemas/testNotSorting';
 import { testShapeFeaturesCopy } from './testSchemas/testShapeFeaturesCopy';
 import { testSorting } from './testSchemas/testSorting';
+import { typesForAttrEllipsis } from './testSchemas/typesForAttrEllipsis';
 import { withCalculatedArea } from './testSchemas/withCalculatedArea';
 import { withDefinitionQuery } from './testSchemas/withDefinitionQuery';
 import { withFias } from './testSchemas/withFias';
@@ -60,6 +61,7 @@ const testSchemas: Schema[] = [
   simpleReadonly,
   simpleMultiLineReadonly,
   simpleMultiPointReadonly,
+  typesForAttrEllipsis,
   testNotSorting,
   testShapeFeaturesCopy,
   testSorting,

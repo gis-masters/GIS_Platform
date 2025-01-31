@@ -1,3 +1,5 @@
+import { WdioCheckElementMethodOptions } from 'wdio-image-comparison-service';
+
 import { Block } from '../../Block';
 import { extractText } from '../../commands/extractText';
 import { CopyFeaturesButtonBlock } from '../CopyFeaturesButton/CopyFeaturesButton.block';
@@ -17,6 +19,7 @@ class AttributesBlock extends Block {
     attributesTab: '.Attributes-Tabs .Attributes-Tab',
     attributesTableHead: '.Attributes-Table .XTable-Head',
     attributesTableHeadCellContent: '.Attributes-Table .XTable-Head .XTable-CellContent',
+    attributesTableCellContentTooltip: '.Attributes-Table .XTable-CellContent .XTable-TooltipTrigger',
     selectedYes: '.Attributes-CheckFilterButton_selected_yes',
     selectedNo: '.Attributes-CheckFilterButton_selected_no',
     multipleCopy: '.Attributes .CopyFeaturesButton',
@@ -77,6 +80,12 @@ class AttributesBlock extends Block {
     }
 
     return contents;
+  }
+
+  async clickFirstTooltip(): Promise<void> {
+    const $$cellContents = await this.$$('attributesTableCellContentTooltip');
+
+    await $$cellContents[0].click();
   }
 
   async getTitle(): Promise<string> {
@@ -166,6 +175,16 @@ class AttributesBlock extends Block {
     const counterNumber = counterItemTest.split(':')[1];
 
     return Number(counterNumber);
+  }
+
+  async assertSelfie(tag?: string, checkElementOptions?: WdioCheckElementMethodOptions): Promise<void> {
+    const $container = await this.$('container');
+    await $container.waitForDisplayed();
+
+    await super.assertSelfie(tag, {
+      hideElements: [...(checkElementOptions?.hideElements || [])],
+      ...checkElementOptions
+    });
   }
 }
 

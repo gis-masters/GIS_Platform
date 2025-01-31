@@ -21,9 +21,10 @@ interface XTableCellProps<T> {
   singleLineContent: boolean;
   filterActive: boolean;
   filterQuery: FilterQuery;
-  width: number | undefined;
-  hidden: boolean | undefined;
-  align: TableCellProps['align'] | undefined;
+  width?: number;
+  enableMaxDefaultWidth?: boolean;
+  hidden?: boolean;
+  align?: TableCellProps['align'];
 }
 
 export const XTableCell = observer((({
@@ -31,6 +32,7 @@ export const XTableCell = observer((({
   col,
   singleLineContent,
   width,
+  enableMaxDefaultWidth,
   filterActive,
   filterQuery,
   align,
@@ -59,6 +61,7 @@ export const XTableCell = observer((({
       align={align}
       {...(cellProps || {})}
       style={width ? { '--XTableCellWidth': width } : undefined}
+      data-field={field}
     >
       {BeforeCellContent && (
         <BeforeCellContent rowData={rowData} filterActive={filterActive} filterParams={filterQuery} col={col} />
@@ -67,6 +70,8 @@ export const XTableCell = observer((({
         singleLineContent={singleLineContent}
         type={type}
         col={col}
+        width={width}
+        enableMaxDefaultWidth={enableMaxDefaultWidth}
         filterParams={filterQuery}
         cellData={field && rowData[field]}
         {...cellContentProps}

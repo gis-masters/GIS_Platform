@@ -28,7 +28,7 @@ export enum PropertyType {
   CUSTOM = 'custom' // frontend only
 }
 
-function isPropertyType(value: unknown): value is PropertyType {
+export function isPropertyType(value: unknown): value is PropertyType {
   return Object.values(PropertyType).includes(value as PropertyType);
 }
 
@@ -118,6 +118,7 @@ export interface BasePropertySchema {
   asTitle?: boolean;
   readOnly?: boolean;
   minWidth?: number;
+  defaultWidth?: number;
   defaultValue?: unknown;
   defaultValueFormula?: string | ValueFormula;
   defaultValueWellKnownFormula?: string;
@@ -134,6 +135,7 @@ export interface PropertySchemaString extends BasePropertySchema {
   mask?: string;
   minLength?: number;
   maxLength?: number;
+  maxDefaultWidth?: number;
   wellKnownRegex?: string;
   regex?: string;
   regexErrorMessage?: string;
@@ -189,6 +191,7 @@ export interface PropertySchemaChoice extends BasePropertySchema {
   propertyType: PropertyType.CHOICE;
   display?: 'select' | 'radiogroup' | 'buttongroup';
   multiple?: boolean;
+  maxDefaultWidth?: number;
   defaultValue?: string | number;
   options: PropertyOption[];
 }

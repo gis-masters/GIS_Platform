@@ -79,6 +79,11 @@ function _getXTableColumnsFromSchema<T>(schema: Schema, overrides: XTableColumn<
       hidden: property.hidden,
       sortable: sortableTypes.has(property.propertyType),
       minWidth: property.minWidth,
+      maxDefaultWidth:
+        property.propertyType === PropertyType.CHOICE || property.propertyType === PropertyType.STRING
+          ? property.maxDefaultWidth
+          : undefined,
+      width: property.defaultWidth || undefined,
       BeforeCellContent: relations?.length
         ? (XTableRelationsButton as XTableColumn<T>['BeforeCellContent'])
         : undefined,

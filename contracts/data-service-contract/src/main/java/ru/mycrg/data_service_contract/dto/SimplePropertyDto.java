@@ -77,6 +77,7 @@ public class SimplePropertyDto {
     private Integer maxSize;
     private Integer maxFiles;
     private Integer maxDocuments;
+    private Integer maxDefaultWidth;
     private List<ValueTitleProjection> enumerations;
     private List<String> allowedValues;
 
@@ -485,4 +486,13 @@ public class SimplePropertyDto {
     public void setOnlySubordinates(Boolean onlySubordinates) {
         this.onlySubordinates = onlySubordinates;
     }
+        
+    public Integer getMaxDefaultWidth() {
+        return maxDefaultWidth;
+    }
+
+    public void setMaxDefaultWidth(Integer maxDefaultWidth) {
+        this.maxDefaultWidth = maxDefaultWidth;
+    }
+
 }

@@ -20,5 +20,27 @@
   &_singleLineContent {
     white-space: nowrap;
     text-overflow: ellipsis;
+
+    & .TextOverflow-Value {
+      display: block;
+      overflow: hidden;
+
+      text-overflow: ellipsis;
+    }
+  }
+
+  .XTable-TooltipTrigger {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+
+    display: inline-block;
+
+    width: 16px;
+    height: 100%;
+
+    cursor: pointer;
+
+    background: transparent;
   }
 }

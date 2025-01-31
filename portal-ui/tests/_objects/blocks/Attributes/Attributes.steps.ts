@@ -266,3 +266,12 @@ When('в атрибутивной таблице я выбираю {int} объ�
 When('в атрибутивной таблице я нажимаю на кнопку множественного копирования', async function () {
   await attributesBlock.clickMultipleCopy();
 });
+
+// если будет необходимость, можно будет дописать полноценный поиск ячеек по названию колонки
+When('в атрибутивной таблице я нажимаю на первый тултип', async function () {
+  await attributesBlock.clickFirstTooltip();
+});
+
+Then('в атрибутивной таблице отображаются {string}', async (variant: string) => {
+  await attributesBlock.assertSelfie(variant.split(' ').join('-'));
+});

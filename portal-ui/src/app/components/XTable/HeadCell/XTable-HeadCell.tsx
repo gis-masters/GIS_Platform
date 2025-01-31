@@ -29,6 +29,7 @@ interface XTableHeadCellProps<T> extends TableCellProps {
   singleLineContent: boolean;
   width: number | undefined;
   hidden: boolean | undefined;
+  enableMaxDefaultWidth?: boolean;
   onBeforeFilterChange(): void;
   onFilterChange(): void;
   onWidthChange(field: keyof T, width: number): void;
@@ -57,6 +58,7 @@ export class XTableHeadCell<T> extends Component<XTableHeadCellProps<T>> {
       style = {},
       width,
       hidden,
+      enableMaxDefaultWidth,
       onBeforeFilterChange,
       onFilterChange,
       onWidthChange,
@@ -90,8 +92,14 @@ export class XTableHeadCell<T> extends Component<XTableHeadCellProps<T>> {
     const FilterComponent = col.CustomFilterComponent || XTableFilter;
 
     return (
-      <TableCell {...cellProps} ref={this.cellRef}>
-        <XTableCellContent singleLineContent={singleLineContent} col={col as XTableColumn<unknown>} inHead>
+      <TableCell {...cellProps} ref={this.cellRef} data-field={col.field}>
+        <XTableCellContent
+          singleLineContent={singleLineContent}
+          enableMaxDefaultWidth={enableMaxDefaultWidth}
+          width={width}
+          col={col as XTableColumn<unknown>}
+          inHead
+        >
           <XTableHeadCellLabel
             col={col}
             onSort={this.handleSort}

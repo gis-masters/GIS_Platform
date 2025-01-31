@@ -102,6 +102,7 @@ export class AttributesTable extends Component<AttributesTableProps> {
         headerless
         footerless
         singleLineContent
+        enableMaxDefaultWidth
         containerProps={{ className: cnAttributesTableContainer(), square: true }}
         size='small'
         getData={getData}

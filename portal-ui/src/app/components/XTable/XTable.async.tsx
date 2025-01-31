@@ -40,6 +40,7 @@ interface XTablePropsBase<T> extends IClassNameProps {
   headerless?: boolean;
   footerless?: boolean;
   showFiltersPanel?: boolean;
+  enableMaxDefaultWidth?: boolean;
   counter?: ReactNode;
   customActionFirst?: boolean;
   size?: 'small' | 'medium';
@@ -118,6 +119,9 @@ export default class XTable<T> extends Component<XTableProps<T>> {
 
     this.fillInvoke();
 
+    // Добавляем обработчик изменения ширины колонки
+    window.addEventListener('columnWidthChange', this.handleColumnWidthChange as EventListener);
+
     this.pageOptionsReactionDisposer = reaction(
       () => [
         { ...this.sortParams },
@@ -160,6 +164,7 @@ export default class XTable<T> extends Component<XTableProps<T>> {
     this.clearInvoke();
     this.pageOptionsReactionDisposer?.();
     this.pagedDataReactionDisposer?.();
+    window.removeEventListener('columnWidthChange', this.handleColumnWidthChange as EventListener);
   }
 
   render() {
@@ -175,6 +180,7 @@ export default class XTable<T> extends Component<XTableProps<T>> {
       size,
       loading = false,
       singleLineContent = false,
+      enableMaxDefaultWidth = false,
       customActionFirst = false,
       containerProps,
       showFiltersPanel,
@@ -227,6 +233,7 @@ export default class XTable<T> extends Component<XTableProps<T>> {
                     sortParams={this.sortParams}
                     filterActive={this.filterActive}
                     filterQuery={this.filterQuery}
+                    enableMaxDefaultWidth={enableMaxDefaultWidth}
                     singleLineContent={singleLineContent}
                     onBeforeFilterChange={this.beforeFilterChange}
                     onFilterChange={this.afterFilterChange}
@@ -255,6 +262,7 @@ export default class XTable<T> extends Component<XTableProps<T>> {
                         filterQuery={this.filterQuery}
                         singleLineContent={Boolean(singleLineContent)}
                         width={this.getColWidth(col)}
+                        enableMaxDefaultWidth={enableMaxDefaultWidth}
                         hidden={this.colsSettings[col.field]?.hidden}
                         key={`${i}_${String(col.field)}`}
                         align={col.align || (col.type && colsTypesAlign[col.type]) || undefined}
@@ -317,11 +325,15 @@ export default class XTable<T> extends Component<XTableProps<T>> {
 
   @computed
   private get dataPaged(): T[] {
-    if (this.isAsync) {
-      return this._asyncData;
-    }
+    return this.isAsync
+      ? this._asyncData
+      : this.syncData.slice((this.page - 1) * this.pageSize, (this.page - 1) * this.pageSize + this.pageSize);
+  }
 
-    return this.syncData.slice((this.page - 1) * this.pageSize, (this.page - 1) * this.pageSize + this.pageSize);
+  @boundMethod
+  private handleColumnWidthChange(event: CustomEvent<{ field: keyof T; width: number }>) {
+    const { field, width } = event.detail;
+    this.changeColWidth(field, width);
   }
 
   @computed
@@ -497,7 +509,8 @@ export default class XTable<T> extends Component<XTableProps<T>> {
   }
 
   private getColWidth(col: XTableColumn<T>) {
-    return Math.max(this.colsSettings[col.field]?.width || col.width || 0, col.minWidth || 0) || undefined;
+    // Используем только сохраненные значения ширины из localStorage или схемы
+    return this.colsSettings[col.field]?.width || col.width || undefined;
   }
 
   private fillInvoke() {
