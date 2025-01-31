@@ -44,11 +44,14 @@ export class VectorTableActionsDelete extends Component<VectorTableActionsDelete
     return (
       <>
         <Tooltip title={disabled && tooltipText ? tooltipText : 'Удалить'}>
-          <span>
-            <IconButton className={cnVectorTableActionsDelete()} onClick={this.openDialog} disabled={disabled}>
-              {this.dialogOpen ? <Delete /> : <DeleteOutline />}
-            </IconButton>
-          </span>
+          <IconButton
+            className={cnVectorTableActionsDelete()}
+            onClick={this.openDialog}
+            disabled={disabled}
+            color='error'
+          >
+            {this.dialogOpen ? <Delete /> : <DeleteOutline />}
+          </IconButton>
         </Tooltip>
 
         {this.errorMessage ? (
@@ -79,11 +82,6 @@ export class VectorTableActionsDelete extends Component<VectorTableActionsDelete
     );
   }
 
-  @action.bound
-  private openDialog() {
-    this.dialogOpen = true;
-  }
-
   @boundMethod
   private async doDeletion() {
     const { vectorTable } = this.props;
@@ -97,6 +95,11 @@ export class VectorTableActionsDelete extends Component<VectorTableActionsDelete
     }
 
     this.closeDialog();
+  }
+
+  @action.bound
+  private openDialog() {
+    this.dialogOpen = true;
   }
 
   @action.bound

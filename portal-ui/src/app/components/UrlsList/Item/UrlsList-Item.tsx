@@ -65,19 +65,15 @@ export class UrlsListItem extends Component<UrlFieldItemProps> {
           {editable && (
             <>
               <Tooltip title='Редактировать'>
-                <span>
-                  <IconButton className={cnUrlsList('Button')} size='small' onClick={this.openEditDialog}>
-                    <EditOutlined fontSize='inherit' />
-                  </IconButton>
-                </span>
+                <IconButton className={cnUrlsList('Button')} size='small' onClick={this.openEditDialog}>
+                  <EditOutlined fontSize='inherit' />
+                </IconButton>
               </Tooltip>
 
               <Tooltip title='Удалить'>
-                <span>
-                  <IconButton className={cnUrlsList('Button')} size='small' onClick={this.deleteUrl}>
-                    <DeleteOutlined fontSize='inherit' />
-                  </IconButton>
-                </span>
+                <IconButton className={cnUrlsList('Button')} size='small' onClick={this.deleteUrl}>
+                  <DeleteOutlined color='error' fontSize='inherit' />
+                </IconButton>
               </Tooltip>
             </>
           )}

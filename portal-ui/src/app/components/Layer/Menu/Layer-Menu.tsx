@@ -243,7 +243,7 @@ export class LayerMenu extends Component<LayerMenuProps> {
           {((!isGroup && layerWithError) || (!isGroup && editMode && this.layersDeleteAllowed)) && (
             <MenuItem onClick={this.deleteLayer} disabled={!mapStore.allowedActions.includes(MapAction.DELETE_LAYER)}>
               <ListItemIcon>
-                <DeleteOutline />
+                <DeleteOutline color='error' />
               </ListItemIcon>
               Удалить слой
             </MenuItem>

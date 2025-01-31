@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import { action, observable } from 'mobx';
+import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { IconButton, Tooltip } from '@mui/material';
-import { DeleteOutline } from '@mui/icons-material';
+import { Delete, DeleteOutline } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 import { AxiosError } from 'axios';
@@ -22,30 +22,39 @@ interface DatasetActionsDeleteProps {
 @observer
 export class DatasetActionsDelete extends Component<DatasetActionsDeleteProps> {
   @observable private loading = false;
+  @observable private dialogOpen = false;
+
+  constructor(props: DatasetActionsDeleteProps) {
+    super(props);
+    makeObservable(this);
+  }
 
   render() {
     const { disabled, tooltipText } = this.props;
 
     return (
-      <>
-        <Tooltip title={disabled && tooltipText ? tooltipText : 'Удалить'}>
-          <span>
-            <IconButton className={cnDatasetActionsDelete()} onClick={this.delete} disabled={disabled || this.loading}>
-              <DeleteOutline />
-            </IconButton>
-          </span>
-        </Tooltip>
-      </>
+      <Tooltip title={disabled && tooltipText ? tooltipText : 'Удалить'}>
+        <IconButton
+          className={cnDatasetActionsDelete()}
+          onClick={this.handleDelete}
+          disabled={disabled || this.loading}
+          color='error'
+        >
+          {this.dialogOpen ? <Delete /> : <DeleteOutline />}
+        </IconButton>
+      </Tooltip>
     );
   }
 
   @boundMethod
-  private async delete() {
+  private async handleDelete() {
     if (this.loading) {
       return;
     }
 
     this.setLoading(true);
+    this.setDialogOpen(true);
+
     try {
       const { dataset } = this.props;
 
@@ -56,6 +65,7 @@ export class DatasetActionsDelete extends Component<DatasetActionsDeleteProps> {
           title: 'Невозможно удалить',
           message: 'Набор данных не пустой. Для его удаления необходимо сперва удалить все таблицы внутри.'
         });
+        this.setDialogOpen(false);
 
         return;
       }
@@ -71,6 +81,8 @@ export class DatasetActionsDelete extends Component<DatasetActionsDeleteProps> {
       if (confirmed) {
         await deleteDataset(dataset);
       }
+
+      this.setDialogOpen(false);
     } catch (error) {
       const err = error as AxiosError<{ message: string }>;
       await achtung({
@@ -79,11 +91,17 @@ export class DatasetActionsDelete extends Component<DatasetActionsDeleteProps> {
       });
     } finally {
       this.setLoading(false);
+      this.setDialogOpen(false);
     }
   }
 
   @action.bound
   private setLoading(loading: boolean) {
     this.loading = loading;
+  }
+
+  @action
+  private setDialogOpen(open: boolean) {
+    this.dialogOpen = open;
   }
 }

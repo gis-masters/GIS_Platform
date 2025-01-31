@@ -24,7 +24,7 @@ export const UpActionsRemoveItemButton: FC<UpActionsRemoveItemButtonProps> = obs
 
   return (
     <IconButton onClick={clickHandler} color={error ? 'error' : undefined}>
-      <DeleteOutline />
+      <DeleteOutline color='error' />
     </IconButton>
   );
 });

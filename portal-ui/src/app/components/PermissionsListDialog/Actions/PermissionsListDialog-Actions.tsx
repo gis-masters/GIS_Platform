@@ -18,7 +18,7 @@ export class PermissionsListActions extends Component<PermissionsListActionsProp
       <div className={cnPermissionsListDialogActions()}>
         <Tooltip title='Удалить'>
           <IconButton onClick={this.handleDelete}>
-            <DeleteOutline />
+            <DeleteOutline color='error' />
           </IconButton>
         </Tooltip>
       </div>

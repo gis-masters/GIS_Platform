@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
+import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { IconButton, Tooltip } from '@mui/material';
-import { DeleteOutline } from '@mui/icons-material';
+import { Delete, DeleteOutline } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
@@ -20,17 +21,21 @@ interface ProjectActionsDeleteProps {
 
 @observer
 export class ProjectActionsDelete extends Component<ProjectActionsDeleteProps> {
+  @observable private dialogOpen = false;
+
+  constructor(props: ProjectActionsDeleteProps) {
+    super(props);
+    makeObservable(this);
+  }
   render() {
     const { disabled, tooltipText } = this.props;
 
     return (
       <>
         <Tooltip title={disabled && tooltipText ? tooltipText : 'Удалить'}>
-          <span>
-            <IconButton className={cnProjectActionsDelete()} onClick={this.delete} disabled={disabled}>
-              <DeleteOutline />
-            </IconButton>
-          </span>
+          <IconButton className={cnProjectActionsDelete()} onClick={this.delete} disabled={disabled} color='error'>
+            {this.dialogOpen ? <Delete /> : <DeleteOutline />}
+          </IconButton>
         </Tooltip>
       </>
     );
@@ -40,6 +45,7 @@ export class ProjectActionsDelete extends Component<ProjectActionsDeleteProps> {
   private async delete() {
     const { project } = this.props;
 
+    this.setDialogOpen(true);
     const confirmed = await konfirmieren({
       title: 'Подтверждение удаления',
       message: `Вы действительно хотите удалить "${project.name}"?`,
@@ -51,5 +57,12 @@ export class ProjectActionsDelete extends Component<ProjectActionsDeleteProps> {
       await projectsService.delete(project.id);
       communicationService.projectUpdated.emit({ type: 'delete', data: project });
     }
+
+    this.setDialogOpen(false);
+  }
+
+  @action
+  private setDialogOpen(open: boolean) {
+    this.dialogOpen = open;
   }
 }

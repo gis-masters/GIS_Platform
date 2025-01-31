@@ -73,7 +73,7 @@ export class DocumentsListItem extends Component<DocumentItemProps> {
               {this.isDeleteDocumentDialogOpen ? (
                 <Delete color='action' fontSize='small' />
               ) : (
-                <DeleteOutline color='action' fontSize='small' />
+                <DeleteOutline color='error' fontSize='small' />
               )}
             </IconButton>
           )}

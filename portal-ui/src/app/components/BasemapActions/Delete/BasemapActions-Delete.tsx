@@ -1,15 +1,7 @@
 import React, { Component } from 'react';
 import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import {
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-  IconButton,
-  Tooltip
-} from '@mui/material';
+import { IconButton, Tooltip } from '@mui/material';
 import { Delete, DeleteOutline } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
@@ -19,7 +11,7 @@ import { pluralize } from 'numeralize-ru';
 import { Basemap } from '../../../services/data/basemaps/basemaps.models';
 import { deleteBasemap } from '../../../services/data/basemaps/basemaps.service';
 import { getBasemapConnections } from '../../../services/gis/project-basemaps/project-basemaps.service';
-import { Button } from '../../Button/Button';
+import { konfirmieren } from '../../../services/utility-dialogs.service';
 
 const cnBasemapActionsDelete = cn('BasemapActions', 'Delete');
 
@@ -29,9 +21,8 @@ interface BasemapActionsDeleteProps {
 
 @observer
 export class BasemapActionsDelete extends Component<BasemapActionsDeleteProps> {
-  @observable private dialogOpen = false;
-  @observable private btnLoading = false;
   @observable private projectsCount = 0;
+  @observable private dialogOpen = false;
 
   constructor(props: BasemapActionsDeleteProps) {
     super(props);
@@ -45,41 +36,18 @@ export class BasemapActionsDelete extends Component<BasemapActionsDeleteProps> {
   async componentDidUpdate(prevProps: BasemapActionsDeleteProps) {
     const { basemap } = this.props;
     if (!isEqual(prevProps.basemap, basemap)) {
-      this.closeDialog();
+      this.setDialogOpen(false);
       await this.fetchProjectsCount();
     }
   }
 
   render() {
-    const { basemap } = this.props;
-    const textProjects = pluralize(this.projectsCount, 'проекте', 'проектах', 'проектах');
-
     return (
-      <>
-        <Tooltip title='Удалить'>
-          <IconButton className={cnBasemapActionsDelete()} onClick={this.openDialog}>
-            {this.dialogOpen ? <Delete /> : <DeleteOutline />}
-          </IconButton>
-        </Tooltip>
-
-        <Dialog open={this.dialogOpen} onClose={this.closeDialog}>
-          <DialogTitle>Подтверждение удаления</DialogTitle>
-          <DialogContent>
-            <DialogContentText>
-              {this.projectsCount
-                ? `Используется в ${this.projectsCount} ${textProjects}.`
-                : 'Не используется в проектах.'}
-            </DialogContentText>
-            <DialogContentText>Вы действительно хотите удалить "{basemap.title}"?</DialogContentText>
-          </DialogContent>
-          <DialogActions>
-            <Button loading={this.btnLoading} onClick={this.doDeletion} color='primary'>
-              Удалить
-            </Button>
-            <Button onClick={this.closeDialog}>Отмена</Button>
-          </DialogActions>
-        </Dialog>
-      </>
+      <Tooltip title='Удалить'>
+        <IconButton className={cnBasemapActionsDelete()} onClick={this.handleDelete} color='error'>
+          {this.dialogOpen ? <Delete /> : <DeleteOutline />}
+        </IconButton>
+      </Tooltip>
     );
   }
 
@@ -94,18 +62,37 @@ export class BasemapActionsDelete extends Component<BasemapActionsDeleteProps> {
     this.projectsCount = count;
   }
 
-  @action.bound
-  private openDialog() {
-    this.dialogOpen = true;
-  }
-
-  @action.bound
-  private closeDialog() {
-    this.dialogOpen = false;
-  }
-
   @boundMethod
-  private async doDeletion() {
-    await deleteBasemap(this.props.basemap);
+  private async handleDelete() {
+    const { basemap } = this.props;
+    const textProjects = pluralize(this.projectsCount, 'проекте', 'проектах', 'проектах');
+    const usageText = this.projectsCount
+      ? `Используется в ${this.projectsCount} ${textProjects}.`
+      : 'Не используется в проектах.';
+
+    this.setDialogOpen(true);
+
+    const confirmed = await konfirmieren({
+      title: 'Подтверждение удаления',
+      message: (
+        <>
+          <p>{usageText}</p>
+          <p>Вы действительно хотите удалить "{basemap.title}"?</p>
+        </>
+      ),
+      okText: 'Удалить',
+      cancelText: 'Отмена'
+    });
+
+    if (confirmed) {
+      await deleteBasemap(basemap);
+    }
+
+    this.setDialogOpen(false);
+  }
+
+  @action
+  private setDialogOpen(open: boolean) {
+    this.dialogOpen = open;
   }
 }

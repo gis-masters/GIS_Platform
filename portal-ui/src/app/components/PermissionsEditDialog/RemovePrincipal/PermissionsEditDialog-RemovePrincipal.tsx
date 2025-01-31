@@ -20,7 +20,7 @@ export class PermissionsEditDialogRemovePrincipal extends Component<PermissionsE
 
     return (
       <Tooltip title={`Удалить ${principalType === PrincipalType.USER ? 'пользователя' : 'группу'}`}>
-        <IconButton className={cnPermissionsEditDialogRemovePrincipal()} onClick={this.handleClick}>
+        <IconButton className={cnPermissionsEditDialogRemovePrincipal()} onClick={this.handleClick} color='error'>
           <DeleteOutline />
         </IconButton>
       </Tooltip>

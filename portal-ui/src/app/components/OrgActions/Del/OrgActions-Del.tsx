@@ -34,7 +34,7 @@ export class OrgActionsDel extends Component<OrgActionsDelProps> {
     return (
       <>
         <Tooltip title='Удалить'>
-          <IconButton className={cnOrgActionsDel()} onClick={this.handleDelete}>
+          <IconButton className={cnOrgActionsDel()} onClick={this.handleDelete} color='error'>
             {this.dialogOpen ? <Delete /> : <DeleteOutline />}
           </IconButton>
         </Tooltip>

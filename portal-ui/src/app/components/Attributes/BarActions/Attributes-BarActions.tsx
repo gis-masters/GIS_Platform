@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { action, computed, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { Tooltip } from '@mui/material';
-import { DeleteOutlined, EditOutlined } from '@mui/icons-material';
+import { Delete, DeleteOutline, EditOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 import { pluralize } from 'numeralize-ru';
@@ -41,6 +41,7 @@ interface AttributesBarActionsProps {
 @observer
 export class AttributesBarActions extends Component<AttributesBarActionsProps> {
   @observable private featuresUpdateAllowed = false;
+  @observable private dialogOpen = false;
 
   private operationId?: symbol;
 
@@ -95,8 +96,8 @@ export class AttributesBarActions extends Component<AttributesBarActionsProps> {
 
             {isVectorLayer(layer) && this.featuresUpdateAllowed && (
               <Tooltip title={`Удалить${this.objLabel}`}>
-                <IconButton size='small' onClick={this.openMultipleDeleteDialog}>
-                  <DeleteOutlined fontSize='small' />
+                <IconButton size='small' onClick={this.openMultipleDeleteDialog} color='error'>
+                  {this.dialogOpen ? <Delete fontSize='small' /> : <DeleteOutline fontSize='small' />}
                 </IconButton>
               </Tooltip>
             )}
@@ -166,6 +167,7 @@ export class AttributesBarActions extends Component<AttributesBarActionsProps> {
 
   @boundMethod
   private async openMultipleDeleteDialog() {
+    this.setDialogOpen(true);
     const confirmed = await konfirmieren({
       message: `Вы действительно хотите удалить${this.objLabel}?`,
       okText: 'Удалить',
@@ -175,10 +177,17 @@ export class AttributesBarActions extends Component<AttributesBarActionsProps> {
     if (confirmed) {
       await this.multipleDelete();
     }
+
+    this.setDialogOpen(false);
   }
 
   @action.bound
   private setFeaturesUpdateAllowed(featuresUpdateAllowed: boolean) {
     this.featuresUpdateAllowed = featuresUpdateAllowed;
+  }
+
+  @action
+  private setDialogOpen(open: boolean) {
+    this.dialogOpen = open;
   }
 }

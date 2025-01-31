@@ -41,7 +41,9 @@ export class AttributesRowActions extends Component<AttributesRowActionsProps> {
           title={editable ? 'Редактировать' : 'Открыть'}
           onClick={this.edit}
         />
-        {editable && <ActionsItem as='menu' icon={<DeleteOutline />} title='Удалить' onClick={this.delete} />}
+        {editable && (
+          <ActionsItem as='menu' icon={<DeleteOutline color='error' />} title='Удалить' onClick={this.delete} />
+        )}
       </Actions>
     );
   }
