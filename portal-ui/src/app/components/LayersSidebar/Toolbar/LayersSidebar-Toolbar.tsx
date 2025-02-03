@@ -58,6 +58,10 @@ export class LayersSidebarToolbar extends Component<LayersSidebarToolbarProps> {
     makeObservable(this);
   }
 
+  componentDidMount(): void {
+    currentProject.setFilter('');
+  }
+
   render() {
     const { editMode, above } = this.props;
     const hasChangedLayers: boolean = currentProject.canBeEdited
