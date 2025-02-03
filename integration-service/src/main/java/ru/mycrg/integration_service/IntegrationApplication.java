@@ -40,9 +40,9 @@ public class IntegrationApplication {
         long totalMemory = runtime.totalMemory();
 
         log.info("=== HEAP MEMORY INFO ===");
-        log.info("Max Memory (Xmx): {} MB", maxMemory / (1024*1024));
-        log.info("Initial Memory (Xms): {} MB", totalMemory / (1024*1024));
-        log.info("=======================");
+        log.info("HEAP: Max Memory (Xmx): {} MB", maxMemory / (1024*1024));
+        log.info("HEAP: Initial Memory (Xms): {} MB", totalMemory / (1024*1024));
+        log.info("========= END HEAP =========");
         SpringApplication.run(IntegrationApplication.class, args);
     }
 
