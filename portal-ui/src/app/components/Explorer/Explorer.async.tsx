@@ -309,6 +309,7 @@ export default class Explorer extends Component<ExplorerProps> {
 
     if (this.props.onOpen) {
       this.props.onOpen(item, this.store.path);
+      this.store.setFilter({});
     }
   }
 

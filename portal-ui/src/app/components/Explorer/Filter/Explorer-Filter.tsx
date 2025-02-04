@@ -36,7 +36,7 @@ export class ExplorerFilter extends Component<ExplorerFilterProps> {
         <div className={cnExplorerFilter()}>
           <TextField
             label={getChildrenFilterLabel(openedItem, this.props.store) || 'Поиск'}
-            value={clearedValue}
+            value={clearedValue || ''}
             onChange={this.handleFilterChange}
             InputProps={{
               endAdornment: (
