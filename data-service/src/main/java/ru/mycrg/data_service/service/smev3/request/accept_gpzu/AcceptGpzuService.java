@@ -143,6 +143,11 @@ public class AcceptGpzuService extends AcceptServiceBase {
     }
 
     @Override
+    protected String getFileName() {
+        return BUILDING_PERMIT_FILENAME;
+    }
+
+    @Override
     protected String getEventTypeLog() {
         return EVENT_TYPE_LOG;
     }
@@ -222,7 +227,7 @@ public class AcceptGpzuService extends AcceptServiceBase {
     }
 
     @Override
-    protected String getStatusMessage(IRecord docRecord, TaskStatus taskStatus, String fileName, String fileExtension,
+    protected String getStatusMessage(IRecord docRecord, TaskStatus taskStatus, String fileName,
                                       byte[] ecp, boolean isCanceledByUser) {
         ClientMessage clientMessage = createClientMessage();
         ResponseMessageType responseMessageType = createResponseMessageType(docRecord);
@@ -231,7 +236,7 @@ public class AcceptGpzuService extends AcceptServiceBase {
         Content content = new Content();
         ChangeOrderInfoType changeOrderInfoType = new ChangeOrderInfoType();
 
-        setChangeOrderInfo(taskStatus, docRecord, changeOrderInfoType, fileName, fileExtension, ecp, content,
+        setChangeOrderInfo(taskStatus, docRecord, changeOrderInfoType, fileName, ecp, content,
                            isCanceledByUser);
         FormResponseType formResponseType = new FormResponseType();
         formResponseType.setChangeOrderInfo(changeOrderInfoType);
@@ -295,7 +300,7 @@ public class AcceptGpzuService extends AcceptServiceBase {
 
     private void setChangeOrderInfo(TaskStatus taskStatus, IRecord docRecord,
                                     ChangeOrderInfoType changeOrderInfoType, String fileName,
-                                    String fileExtension, byte[] ecp, Content content, boolean isCanceledByUser) {
+                                    byte[] ecp, Content content, boolean isCanceledByUser) {
         OrderIdType orderIdType = new OrderIdType();
         orderIdType.setPguId(Long.parseLong(Objects.requireNonNull(docRecord.getAsString(PGUID_ATTRIBUTE))));
         changeOrderInfoType.setOrderId(orderIdType);
@@ -309,17 +314,17 @@ public class AcceptGpzuService extends AcceptServiceBase {
             case DONE:
                 statusCodeType.setTechCode("3");
                 changeOrderInfoType.setComment("Услуга оказана");
-                addAttachmentHeader(fileName, fileExtension, ecp, content);
+                addAttachmentHeader(fileName, ecp, content);
                 break;
             case CANCELED:
                 if (isCanceledByUser) {
                     statusCodeType.setTechCode("10");
                     changeOrderInfoType.setComment("Заявление отменено");
-                    addAttachmentHeader(fileName, fileExtension, ecp, content);
+                    addAttachmentHeader(fileName, ecp, content);
                 } else {
                     statusCodeType.setTechCode("4");
                     changeOrderInfoType.setComment("Отказано в предоставлении услуги");
-                    addAttachmentHeader(fileName, fileExtension, ecp, content);
+                    addAttachmentHeader(fileName, ecp, content);
                 }
                 break;
             default:
@@ -328,16 +333,10 @@ public class AcceptGpzuService extends AcceptServiceBase {
         changeOrderInfoType.setStatusCode(statusCodeType);
     }
 
-    private void addAttachmentHeader(String fileName, String fileExtension, byte[] ecp, Content content) {
+    private void addAttachmentHeader(String fileName, byte[] ecp, Content content) {
         AttachmentHeaderList attachmentHeaderList = new AttachmentHeaderList();
         AttachmentHeaderType attachmentHeaderType = new AttachmentHeaderType();
-        if (fileName.contains(BUILDING_PERMIT_FILENAME)) {
-            attachmentHeaderType.setId(fileName.replace(BUILDING_PERMIT_FILENAME, "")
-                                               .replace(fileExtension, ""));
-        } else {
-            attachmentHeaderType.setId(fileName.replace(MOTIVATED_DECLINE_FILENAME, "")
-                                               .replace(fileExtension, ""));
-        }
+        attachmentHeaderType.setId(UUID.randomUUID().toString());
         attachmentHeaderType.setFilePath(fileName);
         attachmentHeaderType.setSignaturePKCS7(ecp);
         attachmentHeaderList.getAttachmentHeader().add(attachmentHeaderType);

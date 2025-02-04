@@ -59,12 +59,11 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
-import static ru.mycrg.data_service.config.CrgCommonConfig.ROOT_FOLDER_PATH;
 import static ru.mycrg.data_service.dto.Roles.OWNER;
 import static ru.mycrg.data_service.service.TaskService.*;
 import static ru.mycrg.data_service.service.resources.ResourceQualifier.*;
 import static ru.mycrg.data_service.service.smev3.fields.FieldsSection.TABLE_13;
-import static ru.mycrg.data_service.service.smev3.fields.FieldsSection.TABLE_19;
+import static ru.mycrg.data_service.service.smev3.fields.FieldsSection.DL_DATA_SECTION_DELIVERY_DATA_TABLE;
 import static ru.mycrg.data_service.service.storage.FileStorageUtil.generateFileName;
 import static ru.mycrg.data_service.util.JsonConverter.mapper;
 import static ru.mycrg.data_service.util.JsonConverter.toJsonNode;
@@ -106,8 +105,8 @@ public abstract class AcceptServiceBase {
     protected static final String PDF_CONTENT_TYPE = "application/pdf";
     protected static final String PDF_EXTENSION = ".pdf";
     protected static final String DOCUMENT_CODE = "electrSigFile";
-    protected static final String BUILDING_PERMIT_FILENAME = "Разрешение_на_строительство_";
-    protected static final String MOTIVATED_DECLINE_FILENAME = "Мотивированный_отказ_";
+    protected static final String BUILDING_PERMIT_FILENAME = "Разрешение_на_строительство";
+    protected static final String MOTIVATED_DECLINE_FILENAME = "Мотивированный_отказ";
 
     @Value("${crg-options.taskDb}")
     protected String dbName;
@@ -216,11 +215,11 @@ public abstract class AcceptServiceBase {
 
         String statusMesage = null;
         if (taskStatus == IN_PROGRESS) {
-            statusMesage = getStatusMessage(docRecord, taskStatus, null, null, null, false);
+            statusMesage = getStatusMessage(docRecord, taskStatus, null, null, false);
             updateTaskAndDocument(libraryQualifier, rnvSchema, taskId, taskStatus, false);
         }
         if (taskStatus == CANCELED) {
-            statusMesage = getStatusMessage(docRecord, taskStatus, null, null, null, true);
+            statusMesage = getStatusMessage(docRecord, taskStatus, null, null, true);
             updateTaskAndDocument(libraryQualifier, rnvSchema, taskId, taskStatus, true);
         }
 
@@ -285,10 +284,10 @@ public abstract class AcceptServiceBase {
                 Resource resource = fileStorageService.loadFromMainStorage(file.getPath());
                 fileExtension = "." + FilenameUtils.getExtension(resource.getFile().getPath());
                 if (firstDocument.getLibraryTableName().equalsIgnoreCase(TABLE_13)) {
-                    fileName = BUILDING_PERMIT_FILENAME + UUID.randomUUID() + fileExtension;
+                    fileName = getFileName() + fileExtension;
                 }
-                if (firstDocument.getLibraryTableName().equalsIgnoreCase(TABLE_19)) {
-                    fileName = MOTIVATED_DECLINE_FILENAME + UUID.randomUUID() + fileExtension;
+                if (firstDocument.getLibraryTableName().equalsIgnoreCase(DL_DATA_SECTION_DELIVERY_DATA_TABLE)) {
+                    fileName = MOTIVATED_DECLINE_FILENAME + fileExtension;
                 }
 
                 minioService.uploadFile(fileName,
@@ -299,12 +298,12 @@ public abstract class AcceptServiceBase {
             }
 
             if (firstDocument.getLibraryTableName().equalsIgnoreCase(TABLE_13)) {
-                statusMesage = getStatusMessage(docRecord, taskStatus, fileName, fileExtension, ecp, false);
+                statusMesage = getStatusMessage(docRecord, taskStatus, fileName, ecp, false);
                 updateTaskAndDocument(libraryQualifier, rnvSchema, taskId, taskStatus, false);
             }
 
-            if (firstDocument.getLibraryTableName().equalsIgnoreCase(TABLE_19)) {
-                statusMesage = getStatusMessage(docRecord, CANCELED, fileName, fileExtension, ecp, false);
+            if (firstDocument.getLibraryTableName().equalsIgnoreCase(DL_DATA_SECTION_DELIVERY_DATA_TABLE)) {
+                statusMesage = getStatusMessage(docRecord, CANCELED, fileName, ecp, false);
                 updateTaskAndDocument(libraryQualifier, rnvSchema, taskId, CANCELED, false);
             }
         }
@@ -401,6 +400,8 @@ public abstract class AcceptServiceBase {
 
     protected abstract String getTitle();
 
+    protected abstract String getFileName();
+
     protected abstract String getEventTypeLog();
 
     protected abstract String getDescriptionLog();
@@ -422,7 +423,7 @@ public abstract class AcceptServiceBase {
     protected abstract <T> XWPFDocument getWordDocument(T queryResult);
 
     protected abstract String getStatusMessage(IRecord docRecord, TaskStatus taskStatus, String fileName,
-                                               String fileExtension, byte[] ecp, boolean isCanceledByUser);
+                                               byte[] ecp, boolean isCanceledByUser);
 
     protected abstract <T> List<String> getAttachIds(T queryResult);
 

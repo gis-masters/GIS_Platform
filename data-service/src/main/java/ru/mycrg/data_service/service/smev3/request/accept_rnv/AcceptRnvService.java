@@ -32,6 +32,7 @@ import ru.mycrg.data_service_contract.enums.TaskStatus;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static java.util.Optional.ofNullable;
 import static ru.mycrg.data_service.service.resources.ResourceQualifier.libraryQualifier;
 
 @Service
@@ -43,6 +44,7 @@ public class AcceptRnvService extends AcceptServiceBase {
 
     private static final String TITLE = "РНВ из ЕПГУ";
     private static final String EVENT_TYPE_LOG = "Входящее сообщение РНВ успешно записано в реестр";
+    private static final String PERMIT_TO_COMMISSION = "Разрешение_на_ввод_в_эксплуатацию";
 
     public AcceptRnvService(TaskLogService taskLogService, TasksDetachedDao tasksDao,
                             SmevMessageService smevMessageService,
@@ -92,6 +94,11 @@ public class AcceptRnvService extends AcceptServiceBase {
     }
 
     @Override
+    protected String getFileName() {
+        return PERMIT_TO_COMMISSION;
+    }
+
+    @Override
     protected String getEventTypeLog() {
         return EVENT_TYPE_LOG;
     }
@@ -103,6 +110,12 @@ public class AcceptRnvService extends AcceptServiceBase {
 
     @Override
     protected <T> void addAdditionalFields(T queryResult, Map<String, Object> documentPayload) {
+        QueryResult result = (QueryResult) queryResult;
+        RequestType request = result.getMessage().getRequestContent().getContent().getMessagePrimaryContent()
+                                                                           .getRequest();
+        documentPayload.put(GOAL, getGoalDescription(request));
+        documentPayload.put(CADASTRAL_NUMBER, getCadastalNumbers(request));
+        documentPayload.put(PERMIT_NUMBER, getPermitNumber(request));
     }
 
     @Override
@@ -174,7 +187,7 @@ public class AcceptRnvService extends AcceptServiceBase {
     }
 
     @Override
-    protected String getStatusMessage(IRecord docRecord, TaskStatus taskStatus, String fileName, String fileExtension,
+    protected String getStatusMessage(IRecord docRecord, TaskStatus taskStatus, String fileExtension,
                                       byte[] ecp, boolean isCanceledByUser) {
         ClientMessage clientMessage = createClientMessage();
         ResponseMessageType responseMessageType = createResponseMessageType(docRecord);
@@ -183,7 +196,7 @@ public class AcceptRnvService extends AcceptServiceBase {
         Content content = new Content();
         ChangeOrderInfoType changeOrderInfoType = new ChangeOrderInfoType();
 
-        setChangeOrderInfo(taskStatus, docRecord, changeOrderInfoType, fileName, fileExtension, ecp, content,
+        setChangeOrderInfo(taskStatus, docRecord, changeOrderInfoType, fileExtension, ecp, content,
                            isCanceledByUser);
         FormResponseType formResponseType = new FormResponseType();
         formResponseType.setChangeOrderInfo(changeOrderInfoType);
@@ -250,6 +263,26 @@ public class AcceptRnvService extends AcceptServiceBase {
         return clientMessage;
     }
 
+    private String getPermitNumber(RequestType request) {
+        return ofNullable(request.getPermissionObjectOperation())
+                .map(PermissionObjectOperationType::getPermissionObjectOperationBlock)
+                .map(PermissionObjectOperationBlockType::getNumber)
+                .orElse("");
+    }
+
+    private String getCadastalNumbers(RequestType request) {
+        return ofNullable(request.getDataLandPlot())
+                .map(data -> data.getDataLandPlotBlock()
+                                 .stream()
+                                 .map(DataLandPlotBlockType::getLandPlotCadastralNumber)
+                                 .collect(Collectors.joining(", ")))
+                .orElse("");
+    }
+
+    private String getGoalDescription(RequestType request) {
+        return String.valueOf(request.getGoal());
+    }
+
     private ResponseMessageType createResponseMessageType(IRecord docRecord) {
         ResponseMessageType responseMessageType = new ResponseMessageType();
         ResponseMetadataType responseMetadataType = new ResponseMetadataType();
@@ -262,7 +295,8 @@ public class AcceptRnvService extends AcceptServiceBase {
 
     private void setChangeOrderInfo(TaskStatus taskStatus, IRecord docRecord,
                                     ChangeOrderInfoType changeOrderInfoType, String fileName,
-                                    String fileExtension, byte[] ecp, Content content, boolean isCanceledByUser) {
+                                    byte[] ecp,
+                                    Content content, boolean isCanceledByUser) {
         OrderIdType orderIdType = new OrderIdType();
         orderIdType.setPguId(Long.parseLong(Objects.requireNonNull(docRecord.getAsString(PGUID_ATTRIBUTE))));
         changeOrderInfoType.setOrderId(orderIdType);
@@ -276,17 +310,16 @@ public class AcceptRnvService extends AcceptServiceBase {
             case DONE:
                 statusCodeType.setTechCode("3");
                 changeOrderInfoType.setComment("Услуга оказана");
-                addAttachmentHeader(fileName, fileExtension, ecp, content);
+                addAttachmentHeader(fileName, ecp, content);
                 break;
             case CANCELED:
                 if (isCanceledByUser) {
                     statusCodeType.setTechCode("10");
                     changeOrderInfoType.setComment("Заявление отменено");
-                    addAttachmentHeader(fileName, fileExtension, ecp, content);
                 } else {
                     statusCodeType.setTechCode("4");
                     changeOrderInfoType.setComment("Отказано в предоставлении услуги");
-                    addAttachmentHeader(fileName, fileExtension, ecp, content);
+                    addAttachmentHeader(fileName, ecp, content);
                 }
                 break;
             default:
@@ -295,16 +328,10 @@ public class AcceptRnvService extends AcceptServiceBase {
         changeOrderInfoType.setStatusCode(statusCodeType);
     }
 
-    private void addAttachmentHeader(String fileName, String fileExtension, byte[] ecp, Content content) {
+    private void addAttachmentHeader(String fileName, byte[] ecp, Content content) {
         AttachmentHeaderList attachmentHeaderList = new AttachmentHeaderList();
         AttachmentHeaderType attachmentHeaderType = new AttachmentHeaderType();
-        if (fileName.contains(BUILDING_PERMIT_FILENAME)) {
-            attachmentHeaderType.setId(fileName.replace(BUILDING_PERMIT_FILENAME, "")
-                                               .replace(fileExtension, ""));
-        } else {
-            attachmentHeaderType.setId(fileName.replace(MOTIVATED_DECLINE_FILENAME, "")
-                                               .replace(fileExtension, ""));
-        }
+        attachmentHeaderType.setId(UUID.randomUUID().toString());
         attachmentHeaderType.setFilePath(fileName);
         attachmentHeaderType.setSignaturePKCS7(ecp);
         attachmentHeaderList.getAttachmentHeader().add(attachmentHeaderType);

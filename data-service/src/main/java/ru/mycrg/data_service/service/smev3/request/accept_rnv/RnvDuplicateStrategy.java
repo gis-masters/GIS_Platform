@@ -37,8 +37,10 @@ public class RnvDuplicateStrategy implements IRnvRequestDocumentCreator {
         addText(document, "юридического лица,", ParagraphAlignment.LEFT, 3875, 5, 12);
         addTextWithUnderline(document,
                              "    " + dataProvider.getOrgInn(request) + "  " + dataProvider.getOrgOgrn(
-                                     request) + "    " + dataProvider.getOrgRegAddress(
-                                     request) + "/" + dataProvider.getOrgPostAddress(request) +
+                                     request) + "  " + dataProvider.getOrgRegAddress(
+                                     request) + (dataProvider.getOrgPostAddress(
+                                     request).equals("") ? dataProvider.getOrgPostAddress(request) :
+                                     " / " + dataProvider.getOrgPostAddress(request)) +
                                      "    ", ParagraphAlignment.LEFT, 3875, 5, 12);
         addText(document, "ИНН, ОГРН, дата и № регистрации;", ParagraphAlignment.LEFT, 3875, 5, 12);
         addText(document, "юридический и почтовый адреса;", ParagraphAlignment.LEFT, 3875, 5, 12);
@@ -62,8 +64,9 @@ public class RnvDuplicateStrategy implements IRnvRequestDocumentCreator {
         addText(document, "паспортные данные: серия, номер, дата выдачи,", ParagraphAlignment.LEFT, 3875, 5, 12);
         addTextWithUnderline(document,
                              "    " + dataProvider.getIssueOrg(request) + "  " + dataProvider.getNameDoc(request) +
-                                     "  " + dataProvider.getRegAddress(request) + "/" + dataProvider.getFactAddress(
-                                     request) +
+                                     "  " + dataProvider.getRegAddress(request) + (dataProvider.getFactAddress(
+                                     request).equals("") ? dataProvider.getFactAddress(request) :
+                                     " / " + dataProvider.getFactAddress(request)) +
                                      "    ",
                              ParagraphAlignment.LEFT,
                              3875, 5,
