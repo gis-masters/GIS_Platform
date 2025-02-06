@@ -1,5 +1,5 @@
 <div class="container-fluid edit-feature" [ngClass]="{ 'edit-feature_readonly': !updatingAllowed }">
-  <div class="row" style="padding-top: 5px; padding-bottom: 5px; background-color: gainsboro">
+  <div class="row" style="padding: 16px 5px 16px 5px; border-bottom: 1px solid rgba(0, 0, 0, 0.12)">
     <div class="col-12" style="padding-right: 5px; padding-left: 5px; display: flex">
       <button
         *ngIf="updatingAllowed"
@@ -29,8 +29,8 @@
 
       <crg-edit-feature-navigation *ngIf="mode !== 'multipleEdit'"></crg-edit-feature-navigation>
 
-      <button mat-icon-button (click)="close()" class="float-right close-button">
-        <mat-icon>close</mat-icon>
+      <button mat-icon-button (click)="backToList()" class="float-right back-icon" matTooltip = 'Вернуться к списку'>
+        <mat-icon>keyboard_arrow_left</mat-icon>
       </button>
     </div>
   </div>

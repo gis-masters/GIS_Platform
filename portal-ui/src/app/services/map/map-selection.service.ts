@@ -191,9 +191,10 @@ class MapSelectionService {
     }
 
     const buffer = this.generateBuffer(areaExtent, coordinate);
-
     if (buffer) {
       await this.selectFeaturesByCoordinates(selectionType, buffer);
+      sidebars.clearFeaturesWithError();
+      sidebars.openSelectedFeaturesSidebar();
     }
   }
 
@@ -245,7 +246,6 @@ class MapSelectionService {
     }
 
     const visibleLayersComplexNamesByCrs: NamesChunks = {};
-
     for (const layer of visibleLayers) {
       const { nativeCRS, complexName } = layer;
 
@@ -258,6 +258,7 @@ class MapSelectionService {
       }
       visibleLayersComplexNamesByCrs[nativeCRS]?.push(complexName);
     }
+
     mapDrawService.showSelectionMarker(buffer.getCoordinates());
 
     const collections = await Promise.all(
@@ -288,7 +289,7 @@ class MapSelectionService {
     }
 
     if (hasPhotoModeInFeatures(features)) {
-      sidebars.openPhotoLayers(features);
+      sidebars.openPhotoModePreviewer(features);
     }
   }
 
@@ -297,10 +298,6 @@ class MapSelectionService {
     if (mapStore.mode === MapMode.VERTICES_MODIFICATION) {
       mapVerticesModificationService.verticesModificationOff();
 
-      return;
-    }
-
-    if (sidebars.needEditConfirmation(this.selectFeatures.bind(this, features, selectionType))) {
       return;
     }
 

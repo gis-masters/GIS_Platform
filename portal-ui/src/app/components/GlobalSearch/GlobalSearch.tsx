@@ -4,6 +4,7 @@ import { observer } from 'mobx-react';
 import { boundMethod } from 'autobind-decorator';
 
 import { SearchItemDataSource } from '../../services/data/search/search.model';
+import { EditFeatureMode, sidebars } from '../../stores/Sidebars.store';
 import { ExplorerSearchValue } from '../Explorer/Explorer.models';
 import { SearchField } from '../SearchField/SearchField';
 import { SearchResultDialog } from '../SearchResultDialog/SearchResultDialog';
@@ -28,7 +29,11 @@ export class GlobalSearch extends Component<GlobalSearchProps> {
       <>
         <SearchField whiteStyle={this.props.whiteStyle} onSubmit={this.onSubmit} />
 
-        <SearchResultDialog open={this.dialogOpen} onClose={this.closeDialog} search={this.search} />
+        <SearchResultDialog
+          open={!!(sidebars.editOpen && this.dialogOpen)}
+          onClose={this.closeDialog}
+          search={this.search}
+        />
       </>
     );
   }
@@ -44,6 +49,10 @@ export class GlobalSearch extends Component<GlobalSearchProps> {
       });
 
       this.openDialog();
+      sidebars.openEdit({
+        features: [],
+        mode: EditFeatureMode.single
+      });
     }
   }
 

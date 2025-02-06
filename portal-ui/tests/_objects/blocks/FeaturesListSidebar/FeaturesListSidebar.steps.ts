@@ -8,6 +8,7 @@ When('я закрываю панель выделенных объектов н�
 });
 
 When('в боковой панели выделенных объектов я нажимаю `Открыть` у объекта {string}', async function (itemTitle: string) {
+  await featuresListSidebarBlock.waitForVisible();
   await featuresListSidebarBlock.openEdit(itemTitle);
 });
 
@@ -54,6 +55,10 @@ Then('в боковой панели выделенных объектов су�
 
 Then('панель выделенных объектов закрывается', async function () {
   await featuresListSidebarBlock.waitForHidden();
+});
+
+When('панель выделенных объектов отобразилась', async function () {
+  await featuresListSidebarBlock.waitForVisible();
 });
 
 Then('открывается боковая панель выделенных объектов', async function () {

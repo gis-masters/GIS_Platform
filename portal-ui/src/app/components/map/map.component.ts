@@ -1,9 +1,8 @@
 import { IReactionDisposer, reaction } from 'mobx';
-import { AfterViewInit, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { cloneDeep } from 'lodash';
 import { Extent } from 'ol/extent';
 import { Subject } from 'rxjs';
-import { debounceTime, takeUntil } from 'rxjs/operators';
 import '!style-loader!css-loader!ol/ol.css';
 
 import { Emitter } from '../../services/common/Emitter';
@@ -19,7 +18,6 @@ import { applyMapStateFromNavigator } from '../../services/map/map-link-followin
 import { mapSelectionService } from '../../services/map/map-selection.service';
 import { setMapPositionToUrl } from '../../services/map/map-url.service';
 import { cn } from '../../services/util/cn';
-import { fromMobx } from '../../services/util/fromMobx';
 import { attributesTableStore } from '../../stores/AttributesTable.store';
 import { basemapsStore } from '../../stores/Basemaps.store';
 import { currentProject } from '../../stores/CurrentProject.store';
@@ -34,11 +32,7 @@ import { Toast } from '../Toast/Toast';
   templateUrl: './map.component.html',
   styleUrls: ['./map.component.scss']
 })
-export class MapComponent implements OnInit, OnDestroy, AfterViewInit {
-  isBugReportSidebarActive = false;
-  isFeaturesSidebarActive = false;
-  isEditSidebarActive = false;
-
+export class MapComponent implements OnInit, OnDestroy {
   cn = cn('map');
 
   private reactionDisposer?: IReactionDisposer;
@@ -121,46 +115,6 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit {
     cursorHandler.init();
   }
 
-  ngAfterViewInit() {
-    fromMobx(() => sidebars.leftOpen)
-      .pipe(takeUntil(this.unsubscribe$))
-      .subscribe(() => {
-        setTimeout(() => {
-          window.dispatchEvent(new Event('resize'));
-        }, 0);
-      });
-
-    fromMobx(() => sidebars.featuresSidebarOpen, true)
-      .pipe(takeUntil(this.unsubscribe$), debounceTime(0))
-      .subscribe(featuresOpen => {
-        this.isFeaturesSidebarActive = Boolean(featuresOpen);
-        this.cdRef.detectChanges();
-        setTimeout(() => {
-          window.dispatchEvent(new Event('resize'));
-        }, 0);
-      });
-
-    fromMobx(() => sidebars.editOpen, true)
-      .pipe(takeUntil(this.unsubscribe$), debounceTime(0))
-      .subscribe(editOpen => {
-        this.isEditSidebarActive = Boolean(editOpen);
-        this.cdRef.detectChanges();
-        setTimeout(() => {
-          window.dispatchEvent(new Event('resize'));
-        }, 0);
-      });
-
-    fromMobx(() => sidebars.bugReportOpen, true)
-      .pipe(takeUntil(this.unsubscribe$))
-      .subscribe(bugReportOpen => {
-        this.isBugReportSidebarActive = Boolean(bugReportOpen);
-        this.cdRef.detectChanges();
-        setTimeout(() => {
-          window.dispatchEvent(new Event('resize'));
-        }, 0);
-      });
-  }
-
   ngOnDestroy(): void {
     mapStore.setMode(MapMode.DEFAULT);
     mapService.destroyMap();
@@ -175,4 +129,5 @@ export class MapComponent implements OnInit, OnDestroy, AfterViewInit {
 
   protected readonly mapStore = mapStore;
   protected readonly MapMode = MapMode;
+  protected readonly sidebars = sidebars;
 }

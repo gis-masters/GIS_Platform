@@ -10,6 +10,7 @@ class CreateVectorTableDialogBlock extends Block {
 
   async clickSaveFormDialog(): Promise<void> {
     const $editDialogYes = await this.$('dialogYes');
+    await $editDialogYes.waitForDisplayed();
     await $editDialogYes.click();
     await $editDialogYes.waitForDisplayed({ reverse: true });
   }

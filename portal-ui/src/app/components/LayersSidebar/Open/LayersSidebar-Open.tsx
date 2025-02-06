@@ -12,15 +12,15 @@ const cnLayersSidebarOpen = cn('LayersSidebar', 'Open');
 @observer
 export class LayersSidebarOpen extends Component {
   render() {
-    return <button className={cnLayersSidebarOpen({ open: sidebars.leftOpen })} onClick={this.toggleOpen} />;
+    return <button className={cnLayersSidebarOpen({ open: sidebars.layerSidebarOpen })} onClick={this.toggleOpen} />;
   }
 
   @boundMethod
   private toggleOpen() {
-    if (sidebars.leftOpen) {
-      sidebars.closeLeftSidebar();
+    if (sidebars.layerSidebarOpen) {
+      sidebars.closeLayersSidebar();
     } else {
-      sidebars.openLeftSidebar();
+      sidebars.openLayersSidebar();
     }
   }
 }

@@ -41,7 +41,7 @@ export default class LayersSidebar extends Component {
 
   render() {
     return (
-      <div className={cnLayersSidebar({ open: sidebars.leftOpen })}>
+      <div className={cnLayersSidebar({ open: sidebars.layerSidebarOpen })}>
         <LayersSidebarOpen />
         <LayersSidebarInner>
           <LayersSidebarToolbar

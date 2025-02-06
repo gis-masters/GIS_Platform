@@ -128,9 +128,13 @@
   height: 58px;
 }
 
-.close-button {
-  margin-left: auto;
+.back-icon {
+  margin: 2px 0 0 auto;
   padding: 6px;
+
+  transform: scale(1.2);
+
+  color: rgb(0 0 0 / 54%);
 
   --mdc-icon-button-state-layer-size: 36px;
 }

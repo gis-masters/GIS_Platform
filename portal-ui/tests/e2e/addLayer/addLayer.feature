@@ -5,7 +5,7 @@ Feature: Добавление слоя на карте
     *     существует проект "Проект Ялты", созданный пользователем "Гарри"
     *     в текущий проект подключена пустая подложка
 
-  Scenario Outline: Пользователь может подключить файловый слой (dxf, shp, mid, tab, tif) на странице карты
+  Scenario Outline: Пользователь может создать слой из файла "<тип>" на странице карты
     Given существует заготовленная схема "документы с простым контент типом в новой библиотеке"
     *     существует библиотека "документы с простым контент типом в новой библиотеке" документов по заготовленной схеме без версионирования
     *     у пользователя "Гарри" есть право на "Владение" на библиотеку документов "документы с простым контент типом в новой библиотеке"
@@ -33,12 +33,12 @@ Feature: Добавление слоя на карте
     Then  в списке слоев панели слоёв отображается пункт "<файл>"
     *     на карте отображаются "файловый слой <файл>"
     Examples:
-      | файл              | файлы                                                                          |
-      | testDXF.dxf       | "testDXF.dxf"                                                                  |
-      | raster.tif        | "raster.tif"                                                                   |
-      | shapeFileSet.shp  | "shapeFileSet.shp", "shapeFileSet.shx", "shapeFileSet.dbf", "shapeFileSet.prj" |
-      | midMifFileSet.mid | "midMifFileSet.mid", "midMifFileSet.mif"                                       |
-      | tabFileSet.tab    | "tabFileSet.tab", "tabFileSet.id", "tabFileSet.map", "tabFileSet.dat"          |
+      | файл              | файлы                                                                          | тип |
+      | testDXF.dxf       | "testDXF.dxf"                                                                  | dxf |
+      | raster.tif        | "raster.tif"                                                                   | tif |
+      | shapeFileSet.shp  | "shapeFileSet.shp", "shapeFileSet.shx", "shapeFileSet.dbf", "shapeFileSet.prj" | shp |
+      | midMifFileSet.mid | "midMifFileSet.mid", "midMifFileSet.mif"                                       | mid |
+      | tabFileSet.tab    | "tabFileSet.tab", "tabFileSet.id", "tabFileSet.map", "tabFileSet.dat"          | tab |
 
   Scenario: Пользователь может подключить векторный слой на странице карты
     Given все наборы данных удалены

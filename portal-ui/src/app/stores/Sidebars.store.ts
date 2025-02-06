@@ -1,5 +1,4 @@
 import { action, makeObservable, observable, reaction } from 'mobx';
-import { boundMethod } from 'autobind-decorator';
 
 import { Properties } from '../components/edit-feature/edit-feature.component';
 import { SearchInfo } from '../components/SearchField/SearchField';
@@ -24,19 +23,19 @@ export interface EditFeaturesData {
 }
 
 const defaultValues: Partial<Sidebars> = {
-  leftOpen: true,
+  layerSidebarOpen: true,
+  infoOpen: false,
+  photoLayerOpen: false,
   featuresSidebarOpen: false,
+  bugReportOpen: false,
+  editOpen: false,
   memorizedViewFeatures: undefined,
   deletedFeatures: undefined,
   editFeaturesData: undefined,
   featuresWithErrors: undefined,
-  editOpen: false,
   featuresEdited: false,
   featuresClosingConfirmationOpen: false,
-  featuresClosingConfirmationCallback: undefined,
-  bugReportOpen: false,
-  infoOpen: false,
-  photoLayerOpen: false
+  featuresClosingConfirmationCallback: undefined
 };
 
 class Sidebars {
@@ -45,9 +44,18 @@ class Sidebars {
     return this._instance || (this._instance = new this());
   }
 
-  @observable leftOpen?: boolean;
+  @observable layerSidebarOpen?: boolean;
+
+  // Панель уведомлений - справа, поверх остальных панелей
+  @observable infoOpen?: boolean;
+
+  // Режим фотослоя - по центру, поверх остальных панелей
+  @observable photoLayerOpen: boolean = false;
+
   @observable featuresSidebarOpen?: boolean;
+  @observable bugReportOpen?: boolean;
   @observable editOpen?: boolean;
+
   @observable memorizedViewFeatures?: WfsFeature[];
   @observable deletedFeatures?: FeatureError[];
   @observable featuresWithNoAccess?: FeatureError[];
@@ -61,9 +69,6 @@ class Sidebars {
   @observable searchValue?: SearchInfo;
   @observable featuresEdited?: boolean;
   @observable featuresClosingConfirmationOpen = false;
-  @observable bugReportOpen?: boolean;
-  @observable infoOpen?: boolean;
-  @observable photoLayerOpen: boolean = false;
   @observable featuresForPhotoMode: WfsFeature[] = [];
 
   private constructor() {
@@ -82,18 +87,20 @@ class Sidebars {
   }
 
   @action
-  openLeftSidebar() {
-    this.leftOpen = true;
+  openLayersSidebar() {
+    this.layerSidebarOpen = true;
   }
 
   @action
-  closeLeftSidebar() {
-    this.leftOpen = false;
+  closeLayersSidebar() {
+    this.layerSidebarOpen = false;
   }
 
-  openPhotoLayers(features: WfsFeature[]) {
-    this.openPhotoModePreviewer(features);
-    this.openSelectedFeaturesSidebar();
+  @action
+  openPhotoModePreviewer(features: WfsFeature[]) {
+    this.featuresForPhotoMode = features;
+
+    this.photoLayerOpen = true;
   }
 
   @action.bound
@@ -107,45 +114,20 @@ class Sidebars {
   }
 
   @action.bound
-  openFeaturesSidebar() {
+  openSelectedFeaturesSidebar() {
     this.closeBugReport();
     this.closeEdit();
-    if (!this.photoLayerOpen) {
+
+    if (mapStore.selectedFeatures.length > 0 && this.featuresSidebarOpen === false) {
       this.featuresSidebarOpen = true;
     }
   }
 
-  @boundMethod
-  openSelectedFeaturesSidebar() {
-    if (this.needEditConfirmation(this.openSelectedFeaturesSidebar.bind(this))) {
-      return;
-    }
-    this.openFeaturesSidebar();
-    if (this.needEditConfirmation(this.openFeaturesSidebar.bind(this))) {
-      return;
-    }
-
+  openSearchSidebar() {
     this.closeBugReport();
     this.closeEdit();
 
-    if (!this.featuresWithErrors && mapStore.selectedFeatures.length === 1 && !this.photoLayerOpen) {
-      this.closeFeaturesSidebar();
-      this.openEdit({
-        features: mapStore.selectedFeatures,
-        mode: EditFeatureMode.single
-      });
-    }
-
-    if (
-      mapStore.selectedFeatures.length === 0 &&
-      !this.featuresWithErrors &&
-      !this.deletedFeatures?.length &&
-      !this.featuresWithNoAccess?.length &&
-      !this.deletedLayers?.length
-    ) {
-      this.closeFeaturesSidebar();
-      this.closeEdit();
-    }
+    this.featuresSidebarOpen = true;
   }
 
   @action.bound
@@ -154,7 +136,7 @@ class Sidebars {
   }
 
   @action
-  closeSidebar() {
+  closeSidebars() {
     this.closeFeaturesSidebar();
     this.closeEdit();
   }
@@ -175,18 +157,7 @@ class Sidebars {
   }
 
   @action
-  openPhotoModePreviewer(features: WfsFeature[]) {
-    this.featuresForPhotoMode = features;
-
-    this.photoLayerOpen = true;
-  }
-
-  @action
   openEdit(data: EditFeaturesData) {
-    if (this.needEditConfirmation(this.openEdit.bind(this, data))) {
-      return;
-    }
-
     this.editFeaturesData = data;
     this.closeBugReport();
     this.closeFeaturesSidebar();
@@ -201,10 +172,6 @@ class Sidebars {
 
   @action.bound
   closeEdit() {
-    if (this.needEditConfirmation(this.closeEdit)) {
-      return;
-    }
-
     this.editOpen = false;
     this.featuresEdited = false;
     this.editFeaturesData = undefined;
@@ -212,9 +179,6 @@ class Sidebars {
 
   @action.bound
   openBugReport() {
-    if (this.needEditConfirmation(this.openBugReport)) {
-      return;
-    }
     this.bugReportOpen = true;
     this.closeFeaturesSidebar();
     this.closeEdit();
@@ -271,24 +235,6 @@ class Sidebars {
   closeEditFeatureConfirmation() {
     this.featuresClosingConfirmationOpen = false;
     this.featuresClosingConfirmationCallback = undefined;
-  }
-
-  @action
-  needEditConfirmation(callback: () => void): boolean {
-    if (this.featuresEdited && !this.featuresClosingConfirmationOpen) {
-      this.featuresClosingConfirmationOpen = true;
-      this.featuresClosingConfirmationCallback = () => {
-        this.setFeaturesEdited(false);
-        this.closeEditFeatureConfirmation();
-        callback();
-      };
-
-      return true;
-    }
-
-    this.closeEditFeatureConfirmation();
-
-    return false;
   }
 
   @action

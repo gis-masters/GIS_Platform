@@ -243,6 +243,7 @@ Given('я на странице корзины удаленных докумен
   const libraryRegistryPage = new LibraryRegistryPage(table_name);
 
   await libraryRegistryPage.openDeletedLibraryRegistryPage();
+  await libraryRegistryPage.waitForVisible();
 });
 
 // tasks

@@ -119,7 +119,7 @@ export class FeaturesList extends Component<FeaturesListProps> {
       sidebars.setMemorizedFeatures(mapStore.selectedFeatures);
       sidebars.setSelectedFeaturesEdited(true);
     }
-    sidebars.closeSidebar();
+    sidebars.closeSidebars();
     sidebars.openEdit({ features: [feature], mode: EditFeatureMode.single });
   }
 

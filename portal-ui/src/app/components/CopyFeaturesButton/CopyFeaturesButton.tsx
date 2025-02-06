@@ -188,6 +188,7 @@ export class CopyFeaturesButton extends Component<CopyFeaturesButtonProps> {
   private async positionToCopiedFeatures() {
     mapSelectionService.selectFeatures(this.wfsFeatures);
     await mapService.positionToFeatures(this.wfsFeatures);
+
     sidebars.openSelectedFeaturesSidebar();
 
     if (this.selectedLayer) {

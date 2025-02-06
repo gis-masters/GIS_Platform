@@ -515,12 +515,12 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
   }
 
   @boundMethod
-  async close(): Promise<void> {
+  async backToList(): Promise<void> {
     if (sidebars.memorizedViewFeatures?.length) {
       mapSelectionService.selectFeatures(sidebars.memorizedViewFeatures, MapSelectionTypes.REPLACE);
       sidebars.openSelectedFeaturesSidebar();
     } else if (sidebars.foundBySearchFeatureEdited) {
-      sidebars.openFeaturesSidebar();
+      sidebars.openSelectedFeaturesSidebar();
     } else {
       await services.provided;
       await services.router.navigate([location.pathname], {

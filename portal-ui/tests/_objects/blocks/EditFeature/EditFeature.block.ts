@@ -5,12 +5,13 @@ import { sleep } from '../../../../src/app/services/util/sleep';
 import { Block } from '../../Block';
 import { extractValues } from '../../commands/extractText';
 import { hasClass } from '../../utils/hasClass';
+import { CopyFeaturesButtonBlock } from '../CopyFeaturesButton/CopyFeaturesButton.block';
 import { MuiInputBlock } from '../MuiInput/MuiInput.block';
 
 class EditFeatureBlock extends Block {
   selectors = {
     container: '.edit-feature',
-    editFeatureClose: '.edit-feature .close-button',
+    editFeatureBack: '.edit-feature .back-icon',
     editFeatureSaveBtn: '.edit-feature .save-feature-edit-btn',
     editFeatureForm: '.edit-feature__form',
     editFeatureLabel: '.edit-feature__label',
@@ -21,14 +22,17 @@ class EditFeatureBlock extends Block {
     loader: 'edit-feature .MuiLinearProgress-root'
   };
 
+  copyFeaturesButton = new CopyFeaturesButtonBlock(this.selectors.container);
+
   async clickSaveButton(): Promise<void> {
     const $saveNewObjectBtn = await this.$('editFeatureSaveBtn');
     await $saveNewObjectBtn.click();
   }
 
-  async close(): Promise<void> {
-    const $editFeatureClose = await this.$('editFeatureClose');
-    await $editFeatureClose.click();
+  async goBack(): Promise<void> {
+    const $editFeatureBack = await this.$('editFeatureBack');
+    await $editFeatureBack.waitForClickable();
+    await $editFeatureBack.click();
   }
 
   async checkObjectAttributeFields(titles: string[]): Promise<void> {
@@ -150,7 +154,6 @@ class EditFeatureBlock extends Block {
 
   async checkFormFieldValue(title: string, value: string): Promise<boolean> {
     const $formField = await this.getFeatureEditField(title);
-
     if (!$formField) {
       throw new Error(`Не найден элемент ${title}`);
     }

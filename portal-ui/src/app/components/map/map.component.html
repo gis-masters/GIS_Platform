@@ -7,18 +7,18 @@
 
   <crg-layers-sidebar [class]="cn('bar', { dir: 'left' })"> </crg-layers-sidebar>
 
-  <crg-edit-features-sidebar [class]="cn('bar', { dir: 'right' })" *ngIf="isEditSidebarActive">
+  <crg-edit-features-sidebar [class]="cn('bar', { dir: 'right' })" *ngIf="sidebars.editOpen">
   </crg-edit-features-sidebar>
 
-  <crg-features-list-sidebar [class]="cn('bar', { dir: 'right' })" *ngIf="isFeaturesSidebarActive">
+  <crg-features-list-sidebar [class]="cn('bar', { dir: 'right' })" *ngIf="sidebars.featuresSidebarOpen">
   </crg-features-list-sidebar>
 
   <crg-photo-mode-previewer> </crg-photo-mode-previewer>
 
   <crg-report-sidebar
     [class]="cn('bar', { dir: 'right' })"
-    *ngIf="isBugReportSidebarActive"
-    [isActive]="isBugReportSidebarActive"
+    *ngIf="sidebars.bugReportOpen"
+    [isActive]="sidebars.bugReportOpen"
   >
   </crg-report-sidebar>
 

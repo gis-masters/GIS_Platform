@@ -30,14 +30,16 @@ export class MapSelectionCancel extends Component {
   render() {
     return (
       <Tooltip title='Снять выделение со всех объектов (Esc, Esc)'>
-        <IconButton
-          disabled={!mapStore.selectedFeatures.length || !mapStore.allowedActions.includes(MapAction.MAP_SELECTION)}
-          className={cnMapSelectionCancel()}
-          onClick={this.clearSelectedFeatures}
-          size='small'
-        >
-          <RectangleSelectionCancel />
-        </IconButton>
+        <span>
+          <IconButton
+            disabled={!mapStore.selectedFeatures.length || !mapStore.allowedActions.includes(MapAction.MAP_SELECTION)}
+            className={cnMapSelectionCancel()}
+            onClick={this.clearSelectedFeatures}
+            size='small'
+          >
+            <RectangleSelectionCancel />
+          </IconButton>
+        </span>
       </Tooltip>
     );
   }

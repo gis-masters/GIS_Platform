@@ -49,17 +49,19 @@ export class SearchField extends Component<SearchFieldProps> {
           value={this.search.searchValue || ''}
           onChange={this.handleSearchChange}
           placeholder='Поиск'
-          InputProps={{
-            endAdornment: (
-              <IconButton
-                type='submit'
-                size='small'
-                color='inherit'
-                disabled={!mapStore.allowedActions.includes(MapAction.SEARCH_FIELD)}
-              >
-                <Search />
-              </IconButton>
-            )
+          slotProps={{
+            input: {
+              endAdornment: (
+                <IconButton
+                  type='submit'
+                  size='small'
+                  color='inherit'
+                  disabled={!mapStore.allowedActions.includes(MapAction.SEARCH_FIELD)}
+                >
+                  <Search />
+                </IconButton>
+              )
+            }
           }}
           variant='standard'
         />

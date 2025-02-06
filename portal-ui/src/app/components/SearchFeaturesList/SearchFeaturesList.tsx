@@ -4,10 +4,11 @@ import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { AxiosError } from 'axios';
 
-import { FoundWfsFeature } from '../../services/data/search/search.model';
+import { FoundFeature } from '../../services/data/search/search.model';
 import { getSearchResults } from '../../services/data/search/search.service';
 import { WfsFeature } from '../../services/geoserver/wfs/wfs.models';
 import { services } from '../../services/services';
+import { EmptyListView } from '../EmptyListView/EmptyListView';
 import { FeaturesList } from '../FeaturesList/FeaturesList';
 import { Loading } from '../Loading/Loading';
 import { SearchInfo } from '../SearchField/SearchField';
@@ -25,7 +26,7 @@ interface SearchFeaturesListProps {
 export class SearchFeaturesList extends Component<SearchFeaturesListProps> {
   @observable private loading = false;
   @observable private error?: string;
-  @observable private foundWfsFeature: FoundWfsFeature[] = [];
+  @observable private foundFeatures: FoundFeature[] = [];
 
   constructor(props: SearchFeaturesListProps) {
     super(props);
@@ -47,7 +48,11 @@ export class SearchFeaturesList extends Component<SearchFeaturesListProps> {
   render() {
     return (
       <>
-        {this.showResults && <FeaturesList items={this.foundWfsFeature} forSearch />}
+        {this.showResults && <FeaturesList items={this.foundFeatures} forSearch />}
+
+        {!this.loading && !this.showResults && !this.error && (
+          <EmptyListView text='Ничего не нашлось, попробуйте уточнить запрос' />
+        )}
 
         {this.error && <div className={cnSearchFeaturesList('Error')}>{this.error}</div>}
 
@@ -61,8 +66,8 @@ export class SearchFeaturesList extends Component<SearchFeaturesListProps> {
     const { searchValue } = this.props;
 
     return !!(
-      (searchValue?.searchValue && this.foundWfsFeature.length) ||
-      (!searchValue?.searchValue && this.foundWfsFeature.length)
+      (searchValue?.searchValue && this.foundFeatures.length) ||
+      (!searchValue?.searchValue && this.foundFeatures.length)
     );
   }
 
@@ -81,7 +86,6 @@ export class SearchFeaturesList extends Component<SearchFeaturesListProps> {
     this.setError('');
 
     const { searchValue } = this.props;
-
     if (searchValue?.searchValue) {
       const searchRequest = {
         text: searchValue.searchValue,
@@ -91,16 +95,14 @@ export class SearchFeaturesList extends Component<SearchFeaturesListProps> {
 
       try {
         const [items] = await getSearchResults(searchRequest, { page: 0, pageSize: 50 });
-        const foundWfsFeature = items.map(item => {
+        const foundFeatures = items.map(item => {
           return {
             feature: item.payload as WfsFeature,
             searchResultHighlight: <SearchResultHighlightWrapper item={item} />
           };
         });
 
-        if (foundWfsFeature.length) {
-          this.setFoundWfsFeature(foundWfsFeature);
-        }
+        this.setFoundFeatures(foundFeatures.length ? foundFeatures : []);
       } catch (error) {
         const err = error as AxiosError<{ message?: string }>;
         this.setError(err.message || err.response?.data.message || 'Ошибка поиска');
@@ -113,7 +115,7 @@ export class SearchFeaturesList extends Component<SearchFeaturesListProps> {
   }
 
   @action
-  private setFoundWfsFeature(foundWfsFeature: FoundWfsFeature[]) {
-    this.foundWfsFeature = foundWfsFeature;
+  private setFoundFeatures(foundFeatures: FoundFeature[]) {
+    this.foundFeatures = foundFeatures;
   }
 }

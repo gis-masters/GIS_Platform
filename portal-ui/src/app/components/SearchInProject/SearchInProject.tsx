@@ -44,7 +44,7 @@ export class SearchInProject extends Component {
       });
 
       sidebars.setSearchValue({ ...searchValue, source: sources });
-      sidebars.openFeaturesSidebar();
+      sidebars.openSearchSidebar();
     }
   }
 

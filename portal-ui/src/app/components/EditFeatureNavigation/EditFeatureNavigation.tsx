@@ -1,7 +1,7 @@
 import React, { FC, useCallback } from 'react';
 import { observer } from 'mobx-react';
 import { Tooltip } from '@mui/material';
-import { ArrowBackIos, ArrowForwardIos } from '@mui/icons-material';
+import { ArrowBackIosNew, ArrowForwardIos } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
 import { EditFeatureMode, sidebars } from '../../stores/Sidebars.store';
@@ -13,7 +13,7 @@ const changeFeature = (index: number) => {
   if (!sidebars.memorizedViewFeatures) {
     return;
   }
-  sidebars.closeSidebar();
+  sidebars.closeSidebars();
   sidebars.openEdit({ features: [sidebars.memorizedViewFeatures[index]], mode: EditFeatureMode.single });
 };
 
@@ -45,15 +45,17 @@ export const EditFeatureNavigation: FC = observer(() => {
             <Tooltip title='Предыдущий объект'>
               <span className={cnEditFeatureNavigation('Wrap')}>
                 <IconButton disabled={!sidebars.memorizedViewFeatures || currentIndex === 0} onClick={prevHandler}>
-                  <ArrowBackIos />
+                  <ArrowBackIosNew />
                 </IconButton>
               </span>
             </Tooltip>
-            <span className={cnEditFeatureNavigation('FeaturesInfo')}>
+
+            <span className={cnEditFeatureNavigation('TextBox')}>
               {currentIndex + 1}
               <span className={cnEditFeatureNavigation('Text')}> из</span>
               {sidebars.memorizedViewFeatures.length}
             </span>
+
             <Tooltip title='Следующий объект'>
               <span className={cnEditFeatureNavigation('Wrap')}>
                 <IconButton

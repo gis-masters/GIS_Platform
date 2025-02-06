@@ -2,12 +2,13 @@ import React, { Component } from 'react';
 import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { ListItemIcon, Menu, MenuItem, Tooltip } from '@mui/material';
-import { AccountCircle, ExitToApp } from '@mui/icons-material';
+import { AccountCircle, ContentCopy, ExitToApp } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { IClassNameProps } from '@bem-react/core';
 import { boundMethod } from 'autobind-decorator';
 
 import { authService } from '../../services/auth/auth/auth.service';
+import { copyToClipboard } from '../../services/util/clipboard.util';
 import { currentUser } from '../../stores/CurrentUser.store';
 import { Button } from '../Button/Button';
 
@@ -48,8 +49,13 @@ export class User extends Component<UserProps> {
           <MenuItem>
             {
               <div className={cnUser('Info')}>
-                <div>{`${currentUser.surname} ${currentUser.name}`}</div>
-                <div>{currentUser.email}</div>
+                <div className={cnUser('Fio')}>{`${currentUser.surname} ${currentUser.name}`}</div>
+                <div className={cnUser('Email')}>
+                  {currentUser.email}
+                  <Tooltip title='Копировать email'>
+                    <ContentCopy className={cnUser('Email-CopyIcon')} onClick={this.handleCopyClick} />
+                  </Tooltip>
+                </div>
               </div>
             }
           </MenuItem>
@@ -72,5 +78,11 @@ export class User extends Component<UserProps> {
   @boundMethod
   private logout() {
     void authService.logout(this.props.logoutUrl);
+  }
+
+  @boundMethod
+  private handleCopyClick(e: React.MouseEvent) {
+    e.stopPropagation();
+    copyToClipboard(currentUser.email);
   }
 }

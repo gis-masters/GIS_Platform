@@ -32,7 +32,9 @@ const tooltipMsg = (
 export class VerticesModificationIcon extends Component {
   render() {
     const actionDisabled =
-      !mapStore.allowedActions.includes(MapAction.VERTICES_MODIFICATION) || mapVerticesModificationStore.saving;
+      mapStore.selectedFeatures.length === 0 ||
+      !mapStore.allowedActions.includes(MapAction.VERTICES_MODIFICATION) ||
+      mapVerticesModificationStore.saving;
     const Icon = this.verticesModificationMode() ? Gamepad : GamepadOutlined;
     const color = actionDisabled ? 'disabled' : 'primary';
 

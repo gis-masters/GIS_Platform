@@ -29,14 +29,16 @@ export class ExportValidationReportButton extends Component<ExportValidationRepo
     return (
       <>
         <Tooltip title='Выгрузка отчета об ошибках'>
-          <IconButton
-            className={cnExportValidationReportButton()}
-            disabled={!layers.length}
-            onClick={this.openDialog}
-            color='primary'
-          >
-            {this.open ? <GetApp /> : <GetAppOutlined />}
-          </IconButton>
+          <span>
+            <IconButton
+              className={cnExportValidationReportButton()}
+              disabled={!layers.length}
+              onClick={this.openDialog}
+              color='primary'
+            >
+              {this.open ? <GetApp /> : <GetAppOutlined />}
+            </IconButton>
+          </span>
         </Tooltip>
         <ExportValidationReportDialog layers={layers} open={this.open} onClose={this.onClose} />
       </>

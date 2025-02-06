@@ -3,8 +3,8 @@ import { Then, When } from '@wdio/cucumber-framework';
 
 import { editFeatureBlock } from './EditFeature.block';
 
-When('я закрываю панель редактирования объекта нажимая на крестик', async function () {
-  await editFeatureBlock.close();
+When('я нажимаю на стрелку назад в панели просмотра объекта', async function () {
+  await editFeatureBlock.goBack();
 });
 
 Then(
@@ -31,10 +31,6 @@ Then('не открывается форма просмотра объекта',
   await editFeatureBlock.waitForHidden();
 });
 
-When('дожидаюсь появления формы редактирования объекта', async function () {
-  await editFeatureBlock.waitForVisible();
-});
-
 When('в форме просмотра объекта, я перехожу на вкладку просмотра геометрии', async function () {
   await editFeatureBlock.openGeometryTab();
 });
@@ -50,6 +46,10 @@ When(
   }
 );
 
+When('на панели выделенного объекта я нажимаю `Копировать объект в другой слой`', async function () {
+  await editFeatureBlock.copyFeaturesButton.click();
+});
+
 When('в форме редактирования объекта я нажимаю кнопку `Сохранить`', async function () {
   await editFeatureBlock.clickSaveButton();
 });
@@ -58,12 +58,12 @@ When('в вкладке просмотра геометрии я нажимаю 
   await editFeatureBlock.clickGeometryAsTextButton();
 });
 
-Then(
-  'в форме редактирования объекта в поле {string} значение {string}',
-  async function (title: string, value: string): Promise<void> {
-    await expect(await editFeatureBlock.checkFormFieldValue(title, value)).toBe(true);
-  }
-);
+Then('в форме редактирования объекта в поле {string} значение {string}', async function (title: string, value: string) {
+  await editFeatureBlock.waitForVisible();
+  await editFeatureBlock.waitForEditFeatureForm();
+
+  await expect(await editFeatureBlock.checkFormFieldValue(title, value)).toBe(true);
+});
 
 Then('вкладка просмотра геометрии в режиме чтения содержит следующую геометрию', async function (data: DataTable) {
   const expectedGeometry = data

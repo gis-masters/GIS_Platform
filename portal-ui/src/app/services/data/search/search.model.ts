@@ -39,13 +39,6 @@ export interface SearchItemDataTypeFeature extends FtsResponseDto {
   headlines: string[];
 }
 
-export interface SearchRawItemDataTypeFeature extends FtsResponseDto {
-  type: 'FEATURE';
-  source: SearchSourceForFeature;
-  payload: { properties: Record<string, unknown> };
-  headlines: string[];
-}
-
 interface SearchItemDataTypeDocument extends FtsResponseDto {
   type: 'DOCUMENT';
   source: SearchSourceForDocument;
@@ -53,11 +46,10 @@ interface SearchItemDataTypeDocument extends FtsResponseDto {
   headlines: string[];
 }
 
-export interface FoundWfsFeature {
+export interface FoundFeature {
   feature: WfsFeature;
   searchResultHighlight: ReactNode;
 }
 
 export type SearchItemData = SearchItemDataTypeDocument | SearchItemDataTypeFeature;
-export type SearchRawItemData = SearchItemDataTypeDocument | SearchRawItemDataTypeFeature;
 export type SearchItemDataSource = SearchSourcesForFeature | SearchSourcesForDocument;

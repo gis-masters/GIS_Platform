@@ -84,14 +84,19 @@ export class FeaturesSidebarTeaser extends Component {
     );
   }
 
-  private get isBadgeMode(): boolean {
-    return !sidebars.featuresSidebarOpen && !sidebars.editOpen;
-  }
-
   @boundMethod
   private hideFeatureSidebar() {
     sidebars.closeFeaturesSidebar();
     sidebars.closeEdit();
+  }
+
+  private get isBadgeMode(): boolean {
+    return !sidebars.featuresSidebarOpen && !sidebars.editOpen;
+  }
+
+  @action
+  private setFeatureUpdateability(updatable: boolean) {
+    this.featureIsUpdatable = updatable;
   }
 
   private async testFeatureUpdateability() {
@@ -103,11 +108,11 @@ export class FeaturesSidebarTeaser extends Component {
 
     let updatingAllowed: boolean = false;
 
-    const feature = mapStore.selectedFeatures[0];
     const operationId = Symbol();
     this.testingFeatureUpdateabilityOperationId = operationId;
 
-    const layer = getLayerByFeatureInCurrentProject(feature);
+    const firstFeature = mapStore.selectedFeatures[0];
+    const layer = getLayerByFeatureInCurrentProject(firstFeature);
     if (layer) {
       updatingAllowed = await isUpdateAllowed(layer);
     }
@@ -115,10 +120,5 @@ export class FeaturesSidebarTeaser extends Component {
     if (this.testingFeatureUpdateabilityOperationId === operationId) {
       this.setFeatureUpdateability(updatingAllowed);
     }
-  }
-
-  @action
-  private setFeatureUpdateability(updatable: boolean) {
-    this.featureIsUpdatable = updatable;
   }
 }
