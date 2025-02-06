@@ -5685,7 +5685,7 @@ SET class_rule =
             "title": "Идентификатор стиля",
             "hidden": true,
             "valueType": "STRING",
-            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
+            "calculatedValueWellKnownFormula": "rule_id_terr_Rf_subRf"
           },
           {
             "name": "globalid",
@@ -8627,7 +8627,7 @@ SET class_rule =
             "title": "Идентификатор стиля",
             "hidden": true,
             "valueType": "STRING",
-            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
+            "calculatedValueWellKnownFormula": "rule_id_terr_Rf_subRf"
           },
           {
             "name": "globalid",
@@ -25003,7 +25003,7 @@ SET class_rule =
             "title": "Идентификатор стиля",
             "hidden": true,
             "valueType": "STRING",
-            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
+            "calculatedValueWellKnownFormula": "rule_id_terr_Rf_subRf"
           },
           {
             "name": "globalid",
@@ -25591,7 +25591,7 @@ SET class_rule =
             "title": "Идентификатор стиля",
             "hidden": true,
             "valueType": "STRING",
-            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+            "calculatedValueWellKnownFormula": "rule_id_terr_Rf_subRf"
           },
           {
             "name": "globalid",
@@ -28722,7 +28722,7 @@ SET class_rule =
             "title": "Идентификатор стиля",
             "hidden": true,
             "valueType": "STRING",
-            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
+            "calculatedValueWellKnownFormula": "rule_id_terr_Rf_subRf"
           },
           {
             "name": "globalid",
@@ -34643,7 +34643,7 @@ SET class_rule =
             "title": "Идентификатор стиля",
             "hidden": true,
             "valueType": "STRING",
-            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
+            "calculatedValueWellKnownFormula": "rule_id_terr_Rf_subRf"
           },
           {
             "name": "globalid",
@@ -36161,7 +36161,7 @@ SET class_rule =
             "title": "Идентификатор стиля",
             "hidden": true,
             "valueType": "STRING",
-            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+            "calculatedValueWellKnownFormula": "rule_id_terr_Rf_subRf"
           },
           {
             "name": "globalid",
@@ -36510,7 +36510,7 @@ SET class_rule =
             "title": "Идентификатор стиля",
             "hidden": true,
             "valueType": "STRING",
-            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+            "calculatedValueWellKnownFormula": "rule_id_terr_Rf_subRf"
           },
           {
             "name": "globalid",
@@ -38538,7 +38538,7 @@ SET class_rule =
             "title": "Идентификатор стиля",
             "hidden": true,
             "valueType": "STRING",
-            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
+            "calculatedValueWellKnownFormula": "rule_id_terr_Rf_subRf"
           },
           {
             "name": "globalid",
@@ -39005,7 +39005,7 @@ SET class_rule =
             "title": "Идентификатор стиля",
             "hidden": true,
             "valueType": "STRING",
-            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
+            "calculatedValueWellKnownFormula": "rule_id_terr_Rf_subRf"
           },
           {
             "name": "globalid",

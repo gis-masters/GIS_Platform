@@ -6364,7 +6364,7 @@ SET class_rule =
             "title": "Идентификатор стиля",
             "hidden": true,
             "valueType": "STRING",
-            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
+            "calculatedValueWellKnownFormula": "rule_id_terr_Rf_subRf"
           },
           {
             "name": "globalid",
@@ -9331,7 +9331,7 @@ SET class_rule =
             "title": "Идентификатор стиля",
             "hidden": true,
             "valueType": "STRING",
-            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
+            "calculatedValueWellKnownFormula": "rule_id_terr_Rf_subRf"
           },
           {
             "name": "globalid",
@@ -26281,7 +26281,7 @@ SET class_rule =
             "title": "Идентификатор стиля",
             "hidden": true,
             "valueType": "STRING",
-            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
+            "calculatedValueWellKnownFormula": "rule_id_terr_Rf_subRf"
           },
           {
             "name": "globalid",
@@ -26913,7 +26913,7 @@ SET class_rule =
             "title": "Идентификатор стиля",
             "hidden": true,
             "valueType": "STRING",
-            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+            "calculatedValueWellKnownFormula": "rule_id_terr_Rf_subRf"
           },
           {
             "name": "globalid",
@@ -30200,7 +30200,7 @@ SET class_rule =
             "title": "Идентификатор стиля",
             "hidden": true,
             "valueType": "STRING",
-            "calculatedValueWellKnownFormula": "rule_id_with_regstatus"
+            "calculatedValueWellKnownFormula": "rule_id_terr_Rf_subRf"
           },
           {
             "name": "globalid",
@@ -38317,7 +38317,7 @@ SET class_rule =
             "title": "Идентификатор стиля",
             "hidden": true,
             "valueType": "STRING",
-            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+            "calculatedValueWellKnownFormula": "rule_id_terr_Rf_subRf"
           },
           {
             "name": "globalid",
@@ -38776,7 +38776,7 @@ SET class_rule =
             "title": "Идентификатор стиля",
             "hidden": true,
             "valueType": "STRING",
-            "calculatedValueWellKnownFormula": "rule_id_without_regstatus"
+            "calculatedValueWellKnownFormula": "rule_id_terr_Rf_subRf"
           },
           {
             "name": "globalid",
@@ -41198,8 +41198,10 @@ SET class_rule =
     },
     {
       "name": "ruleid",
-      "title": "Цифры",
-      "valueType": "STRING"
+      "title": "Идентификатор стиля",
+      "hidden": true,
+      "valueType": "STRING",
+      "calculatedValueWellKnownFormula": "rule_id_terr_Rf_subRf"
     }
   ],
   "description": "Класс объектов Территории, подверженные риску возникновения чрезвычайных ситуаций природного характера",
