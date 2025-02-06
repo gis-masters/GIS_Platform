@@ -237,23 +237,28 @@ export async function makeXmlPolygonIntersect(
   const tableName = extractTableNameFromComplexName(complexName);
   const layer = currentProject.getLayerByTableNameFromVisibleVectorLayers(tableName);
   const baseSchema = await getLayerSchema(layer as CrgVectorLayer);
+
   if (!baseSchema) {
     throw new Error(`Не найдена схема для слоя ${layer.title}`);
   }
+
+  const isFilterEnabled = !attributesTableStore.filterDisabled[tableName];
   const schema = applyView(baseSchema, layer.view);
   const geometryFieldName = getGeometryFieldName(baseSchema);
   const cqlFilter: string = concatCql(buildCql(attributesTableStore.getLayerFilter(tableName)), schema.definitionQuery);
   const olProjection = await getOlProjection();
+  const filterToUse = isFilterEnabled ? cqlFilter : '';
 
-  const olFilter = cqlFilter
-    ? and(intersects(geometryFieldName, polygon, getProjectionCode(olProjection)), cql2ol(cqlFilter))
+  const olFilter = filterToUse
+    ? and(intersects(geometryFieldName, polygon, getProjectionCode(olProjection)), cql2ol(filterToUse))
     : intersects(geometryFieldName, polygon, getProjectionCode(olProjection));
+  const filter = olFilter || undefined;
 
   const featureRequest = new WFS().writeGetFeature({
     srsName,
     featureTypes: [complexName],
     outputFormat: Mime.JSON,
-    filter: olFilter,
+    filter,
     featureNS: '',
     featurePrefix: '',
     maxFeatures:
