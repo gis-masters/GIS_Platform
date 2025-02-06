@@ -325,17 +325,11 @@
             "id": "turningPoints",
             "title": "Поворотные точки",
             "contentUrl": "/assets/help/map/mapTools/turningPoints/turningPoints.html"
-          }
-        ]
-      },
-      {
-        "id": "edit-object1",
-        "title": "Управление данными",
-        "children": [
+          },
           {
-            "id": "dataManagement1",
-            "title": "Управление данными",
-            "contentUrl": "/assets/help/map/MapDataManagement/00dataManagement.html"
+            "id": "customStyleForAnnotations",
+            "title": "Настройка стиля создаваемых аннотаций",
+            "contentUrl": "/assets/help/map/mapTools/customStyleForAnnotations/customStyleForAnnotations.html"
           }
         ]
       }
