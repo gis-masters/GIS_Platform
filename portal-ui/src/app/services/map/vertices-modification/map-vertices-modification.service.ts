@@ -1,8 +1,7 @@
-import Collection from 'ol/Collection';
 import { SnapEvent } from 'ol/events/SnapEvent';
 import Feature from 'ol/Feature';
 import { Geometry } from 'ol/geom';
-import { Modify, Select } from 'ol/interaction';
+import { Modify } from 'ol/interaction';
 import { ModifyEvent } from 'ol/interaction/Modify';
 
 import { Toast } from '../../../components/Toast/Toast';
@@ -26,7 +25,6 @@ import { mapDrawService } from '../draw/map-draw.service';
 import { MapMode } from '../map.models';
 import { mapService } from '../map.service';
 import { mapSnapService } from '../snap/map-snap.service';
-import { getStyle, KnownStyleKey } from '../styles/map-styles';
 
 class MapVerticesModificationService {
   private static _instance: MapVerticesModificationService;
@@ -34,42 +32,26 @@ class MapVerticesModificationService {
     return this._instance || (this._instance = new this());
   }
 
-  private select?: Select;
   private modify?: Modify;
 
   private verticesModification = {
     init: () => {
-      this.select = new Select({
-        style: getStyle(KnownStyleKey.SelectStyles)
-      });
-      mapService.map.addInteraction(this.select);
-
       this.modify = new Modify({
-        features: this.select.getFeatures()
+        source: mapDrawService.getDrawSource()
       });
       mapService.map.addInteraction(this.modify);
 
       this.verticesModification.setEvents();
     },
     setEvents: () => {
-      const collectionOfSelectedFeatures: Collection<Feature> = this.select?.getFeatures() ?? new Collection([]);
-      this.select?.on('change:active', () => {
-        collectionOfSelectedFeatures.forEach(feature => {
-          collectionOfSelectedFeatures.remove(feature);
-        });
-      });
-
       this.modify?.on('modifyend', (e: ModifyEvent) => {
         mapVerticesModificationStore.updateModifiedCollection(e.features.getArray());
       });
     },
     setActive: (active: boolean) => {
-      this.select?.setActive(active);
       this.modify?.setActive(active);
     },
     reset: () => {
-      this.select?.setActive(false);
-      this.select?.setActive(true);
       this.modify?.setActive(false);
       this.modify?.setActive(true);
     }

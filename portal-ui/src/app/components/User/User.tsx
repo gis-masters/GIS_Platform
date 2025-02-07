@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { ListItemIcon, Menu, MenuItem, Tooltip } from '@mui/material';
-import { AccountCircle, ContentCopy, ExitToApp } from '@mui/icons-material';
+import { Divider, ListItemIcon, Menu, MenuItem, Tooltip } from '@mui/material';
+import { AccountCircle, ContentCopy, Logout } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { IClassNameProps } from '@bem-react/core';
 import { boundMethod } from 'autobind-decorator';
@@ -59,9 +59,11 @@ export class User extends Component<UserProps> {
               </div>
             }
           </MenuItem>
+
+          <Divider />
           <MenuItem className={cnUser('Info', { type: 'action' })} onClick={this.logout}>
             <ListItemIcon>
-              <ExitToApp />
+              <Logout />
             </ListItemIcon>
             Выход
           </MenuItem>

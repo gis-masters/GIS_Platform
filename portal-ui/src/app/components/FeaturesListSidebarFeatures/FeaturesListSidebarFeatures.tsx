@@ -65,28 +65,34 @@ export default class FeaturesListSidebarFeatures extends Component<FeaturesListS
                 <div className={cnFeaturesListSidebarFeatures('Fon')} />
                 <ButtonGroup size='small' aria-label='vertices-mode-actions'>
                   <Tooltip title='Сохранить изменения'>
-                    <IconButton
-                      color='primary'
-                      onClick={this.saveVerticesModification}
-                      disabled={
-                        mapVerticesModificationStore.modifiedFeatures.length < 1 || mapVerticesModificationStore.saving
-                      }
-                      loading={mapVerticesModificationStore.saving}
-                    >
-                      <SaveOutlined />
-                    </IconButton>
+                    <span>
+                      <IconButton
+                        color='primary'
+                        onClick={this.saveVerticesModification}
+                        disabled={
+                          mapVerticesModificationStore.modifiedFeatures.length < 1 ||
+                          mapVerticesModificationStore.saving
+                        }
+                        loading={mapVerticesModificationStore.saving}
+                      >
+                        <SaveOutlined />
+                      </IconButton>
+                    </span>
                   </Tooltip>
 
                   <Tooltip title='Отменить изменения'>
-                    <IconButton
-                      color='secondary'
-                      onClick={this.cancelVerticesModification}
-                      disabled={
-                        mapVerticesModificationStore.modifiedFeatures.length < 1 || mapVerticesModificationStore.saving
-                      }
-                    >
-                      <CancelOutlined />
-                    </IconButton>
+                    <span>
+                      <IconButton
+                        color='secondary'
+                        onClick={this.cancelVerticesModification}
+                        disabled={
+                          mapVerticesModificationStore.modifiedFeatures.length < 1 ||
+                          mapVerticesModificationStore.saving
+                        }
+                      >
+                        <CancelOutlined />
+                      </IconButton>
+                    </span>
                   </Tooltip>
                 </ButtonGroup>
               </div>
