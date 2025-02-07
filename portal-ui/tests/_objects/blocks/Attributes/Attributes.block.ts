@@ -54,23 +54,6 @@ class AttributesBlock extends Block {
     await $attributesTab.click();
   }
 
-  private async getAttributesTabByName(name: string): Promise<WebdriverIO.Element> {
-    const $attributesTabs = await this.$('attributesTabs');
-    await $attributesTabs.waitForDisplayed();
-
-    const $$attributesTab = await this.$$('attributesTab');
-
-    for (const $tab of $$attributesTab) {
-      const tabName = await $tab.getText();
-
-      if (tabName === name) {
-        return $tab;
-      }
-    }
-
-    throw new Error(`Не найден элемент "${name}"`);
-  }
-
   async getHeadCellsValues(): Promise<string[]> {
     const $$cellContents = await this.$$('attributesTableHeadCellContent');
 
@@ -138,12 +121,6 @@ class AttributesBlock extends Block {
     return await extractText(await $attributesTabs.$$('.TabTitle'));
   }
 
-  async getAllRowsLength() {
-    const $$rows = await this.xTable.getAllRows();
-
-    return $$rows.length;
-  }
-
   async closeTab(layerTitle: string) {
     const $attributesTabs = await this.$('attributesTabs');
     const $tabTitle = await $attributesTabs.$(`.TabTitle=${layerTitle}`);
@@ -177,6 +154,14 @@ class AttributesBlock extends Block {
     return Number(counterNumber);
   }
 
+  async getSelectedObjectsCount(): Promise<number> {
+    const $counterItem = await this.$('counterItem');
+    const counterText = await $counterItem.getText();
+    const selectedCount = counterText.split('выделено: ')[1].split(' ')[0];
+
+    return Number(selectedCount);
+  }
+
   async assertSelfie(tag?: string, checkElementOptions?: WdioCheckElementMethodOptions): Promise<void> {
     const $container = await this.$('container');
     await $container.waitForDisplayed();
@@ -185,6 +170,23 @@ class AttributesBlock extends Block {
       hideElements: [...(checkElementOptions?.hideElements || [])],
       ...checkElementOptions
     });
+  }
+
+  private async getAttributesTabByName(name: string): Promise<WebdriverIO.Element> {
+    const $attributesTabs = await this.$('attributesTabs');
+    await $attributesTabs.waitForDisplayed();
+
+    const $$attributesTab = await this.$$('attributesTab');
+
+    for (const $tab of $$attributesTab) {
+      const tabName = await $tab.getText();
+
+      if (tabName === name) {
+        return $tab;
+      }
+    }
+
+    throw new Error(`Не найден элемент "${name}"`);
   }
 }
 

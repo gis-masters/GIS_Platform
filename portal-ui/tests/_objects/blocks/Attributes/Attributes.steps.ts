@@ -275,3 +275,20 @@ When('в атрибутивной таблице я нажимаю на перв
 Then('в атрибутивной таблице отображаются {string}', async (variant: string) => {
   await attributesBlock.assertSelfie(variant.split(' ').join('-'));
 });
+
+Then(
+  'в атрибутивной таблице слоя {string} количество выделенных объектов равно {int}',
+  async (layerName: string, expectedCount: number) => {
+    await layersSidebarBlock.openAttributeTable(layerName);
+
+    await browser.waitUntil(async () => {
+      return (await attributesBlock.getTitle()) === layerName;
+    });
+
+    await attributesBlock.waitForTableVisible();
+    await attributesBlock.waitForLoadingDisappear();
+
+    const selectedCount = await attributesBlock.getSelectedObjectsCount();
+    await expect(selectedCount).toEqual(expectedCount);
+  }
+);

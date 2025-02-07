@@ -74,3 +74,11 @@ Then(
     await expect([values[0], values[2]]).toEqual([id, layer]);
   }
 );
+
+Then('в списке выделенных объектов отображаются {int} объекта', async (expectedCount: number) => {
+  const actualCount = await featuresListSidebarBlock.getFeaturesCount();
+
+  if (actualCount !== expectedCount) {
+    throw new Error(`Ожидалось ${expectedCount} объектов в списке выделенных, но найдено ${actualCount}`);
+  }
+});

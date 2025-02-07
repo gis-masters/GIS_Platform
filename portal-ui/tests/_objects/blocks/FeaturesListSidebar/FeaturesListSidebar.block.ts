@@ -64,6 +64,13 @@ class FeaturesListSidebarBlock extends Block {
 
     throw new Error(`Не найден элемент "${title}"`);
   }
+
+  async getFeaturesCount(): Promise<number> {
+    await this.waitForVisible();
+    const $$items = await this.$$('item');
+
+    return $$items.length;
+  }
 }
 
 export const featuresListSidebarBlock = new FeaturesListSidebarBlock();
