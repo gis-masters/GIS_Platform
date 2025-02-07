@@ -108,7 +108,13 @@ export async function getAllLibraryRecordsAsRegistry(
   schemaId: string,
   pageOptions: PageOptions
 ): Promise<LibraryRecord[]> {
-  const response = await libraryClient.getAllLibraryRecordsAsRegistry(libraryTableName, pageOptions);
+  // при выгрузке сортируем только по id для предотвращения создания дублирующих записей
+  const queryParams = { ...pageOptions.queryParams, sort: 'id,asc' };
+
+  const response = await libraryClient.getAllLibraryRecordsAsRegistry(libraryTableName, {
+    ...pageOptions,
+    queryParams
+  });
 
   return enrichLibraryRecordsResponse(response, libraryTableName);
 }
