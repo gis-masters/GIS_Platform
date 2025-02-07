@@ -9,8 +9,6 @@ import { Actions } from '../Actions/Actions.composed';
 import { ActionsItemVariant } from '../Actions/Item/Actions-Item.base';
 import { TasksJournalActionsEdit } from './Edit/TasksJournalActions-Edit';
 import { TasksJournalActionsHistory } from './History/TasksJournalActions-History';
-// Дорофей сказал вроде не нужно  2648
-//import { TasksJournalActionsStatus } from './Status/TasksJournalActions-Status';
 
 export const cnLibraryTaskActions = cn('LibraryTaskActions');
 
@@ -32,7 +30,6 @@ export default class TasksJournalActions extends Component<TasksJournalActionsPr
 
     return (
       <Actions className={cnLibraryTaskActions(null, [className])} as={as}>
-        {/* <TasksJournalActionsStatus task={task} as={as} /> */}
         {primalSchema && <TasksJournalActionsEdit primalSchema={primalSchema} task={task} as={as} />}
         <TasksJournalActionsHistory schema={schema} task={task} as={as} />
       </Actions>

@@ -24,7 +24,7 @@ When(
   async function (this: ScenarioScope, formValues: DataTable) {
     const values = formValues.raw()[1];
     const currentValues = await tasksJournalBlock.getTaskRowValue();
-    const staticFieldsValue = [currentValues[3], currentValues[4], currentValues[8], currentValues[9]];
+    const staticFieldsValue = [currentValues[2], currentValues[3], currentValues[6], currentValues[7]];
 
     await expect(staticFieldsValue).toEqual(values);
   }

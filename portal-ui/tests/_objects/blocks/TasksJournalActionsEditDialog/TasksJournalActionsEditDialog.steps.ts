@@ -4,7 +4,7 @@ import { TestUser } from '../../commands/auth/testUsers';
 import { usersAddDialogBlock } from '../Users/AddDialog/Users-AddDialog.block';
 import { tasksJournalActionsEditDialogBlock } from './TasksJournalActionsEditDialog.block';
 
-When('я нажимаю кнопку `Создать` в диалоговом окне редактирования задачи', async function () {
+When('я нажимаю кнопку `Сохранить` в диалоговом окне редактирования задачи', async function () {
   await tasksJournalActionsEditDialogBlock.clickSelectSchemaConfirm();
 });
 

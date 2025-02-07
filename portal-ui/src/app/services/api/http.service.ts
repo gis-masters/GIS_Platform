@@ -43,7 +43,6 @@ class Http {
     this.axios = axios.create();
 
     this.axios.defaults.withCredentials = true;
-
     this.axios.interceptors.request.use(config => {
       config.url = replaceUrl(config.url || '');
 
@@ -63,6 +62,7 @@ class Http {
     const cacheKey = 'GET:' + this.axios.getUri({ url, ...config });
     const fromCache = this.cache.match(cacheKey, cacheConfig);
     let promise: Promise<AxiosResponse<T>>;
+
     if (fromCache) {
       promise = fromCache as Promise<AxiosResponse<T>>;
     } else {

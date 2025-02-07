@@ -161,14 +161,14 @@ public class MainAuthFilter extends OncePerRequestFilter implements CrgFilter {
         JwtToken token = authConclusion.getToken();
 
         if ("authByAccessToken".equals(authConclusion.getCause())) {
-            log.debug("Success auth by access token");
+            log.debug("Успешно авторизованы по access-токену");
 
             // Передаем далее только access токен
             request.setAttribute(TEMPLATE_ATTRIBUTE, token.getAccess_token());
 
             gotoNextFilter(request, response, chain);
         } else if ("authByRefreshToken".equals(authConclusion.getCause())) {
-            log.debug("Success auth by refresh token");
+            log.debug("Успешно авторизованы по refresh-токену");
 
             // Передаем далее только access токен
             request.setAttribute(TEMPLATE_ATTRIBUTE, token.getAccess_token());
@@ -178,16 +178,23 @@ public class MainAuthFilter extends OncePerRequestFilter implements CrgFilter {
 
             gotoNextFilter(request, response, chain);
         } else if ("refreshTokenNotPassed".equals(authConclusion.getCause())) {
-            log.warn("Refresh token not passed");
+            log.warn("Refresh-токен не предоставлен");
 
             // Удалим куку/разлогинем пользователя
             response.addCookie(cookieProducer.makeDeletionCookie());
 
-            String msg = String.format("Попытка авторизации без токена восстановления. Токен авторизации: %s",
-                                       token.getAccess_token());
-            sendUnauthorized(response, request.getParameter("orgId"), msg);
+            if (token == null) {
+                log.debug("Не предоставлен ни refresh, ни access токены!");
+
+                sendUnauthorized(response, request.getParameter("orgId"), "Не предоставлен ни refresh, ни access токены!");
+            } else if (token.getAccess_token() != null) {
+                log.debug("Попытка авторизации без токена восстановления. Токен авторизации: {}",
+                          token.getAccess_token());
+
+                sendUnauthorized(response, request.getParameter("orgId"), "Попытка авторизации без токена восстановления");
+            }
         } else if ("refreshTokenExpired".equals(authConclusion.getCause())) {
-            log.debug("Refresh token expired");
+            log.debug("Refresh-токен просрочен");
 
             // Удалим куку/разлогинем пользователя
             response.addCookie(cookieProducer.makeDeletionCookie());
@@ -195,7 +202,7 @@ public class MainAuthFilter extends OncePerRequestFilter implements CrgFilter {
             sendUnauthorized(response, request.getParameter("orgId"),
                              "Попытка авторизации с просроченным токеном: " + token.getAccess_token());
         } else {
-            log.info("Error authorize");
+            log.info("Не удалось авторизоваться");
 
             // Удалим куку/разлогинем пользователя
             response.addCookie(cookieProducer.makeDeletionCookie());

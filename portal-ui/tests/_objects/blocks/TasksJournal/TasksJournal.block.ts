@@ -39,8 +39,14 @@ export class TasksJournalBlock extends Block {
     const taskRowValue = [];
 
     for (const $taskCell of $$taskCells) {
-      const taskCell = await $taskCell.getText();
-      taskRowValue.push(taskCell);
+      try {
+        const $textOverflow = await $taskCell.$('.TextOverflow-Value');
+        const taskCell = await $textOverflow.getText();
+        taskRowValue.push(taskCell);
+      } catch {
+        const taskCell = await $taskCell.getText();
+        taskRowValue.push(taskCell);
+      }
     }
 
     return taskRowValue;
