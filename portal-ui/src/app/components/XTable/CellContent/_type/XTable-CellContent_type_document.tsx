@@ -27,7 +27,9 @@ class XTableCellContentTypeDocument extends Component<XTableCellContentProps<unk
       if (typeof cellData === 'string') {
         value = JSON.parse(String(cellData)) as DocumentInfo[];
       }
-    } catch {}
+    } catch {
+      // do nothing
+    }
 
     if (!col.field) {
       console.error('xTable: не указан field у колонки с типом document');

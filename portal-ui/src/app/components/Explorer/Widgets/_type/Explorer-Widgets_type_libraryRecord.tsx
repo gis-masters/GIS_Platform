@@ -47,6 +47,7 @@ export class ExplorerWidgetsTypeLibraryRecord extends Component<ExplorerWidgetsP
 
     communicationService.libraryRecordUpdated.on(async (e: CustomEvent<DataChangeEventDetail<LibraryRecord>>) => {
       const { type, data } = e.detail;
+
       if (
         getId({ type: ExplorerItemType.DOCUMENT, payload: data }, store) === getId(item, store) &&
         type !== 'delete'
