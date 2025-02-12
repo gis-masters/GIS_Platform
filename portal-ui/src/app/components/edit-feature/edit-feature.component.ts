@@ -23,7 +23,7 @@ import { OldPropertySchema, ValueType } from '../../services/data/schema/schemaO
 import { createFeature, deleteFeatures, updateFeature } from '../../services/data/vectorData/vectorData.service';
 import { extractFeatureId } from '../../services/geoserver/featureType/featureType.util';
 import { transformFeatureService } from '../../services/geoserver/wfs/transform-feature.service';
-import { CoordinateEdited, WfsFeature, WfsGeometry } from '../../services/geoserver/wfs/wfs.models';
+import { WfsFeature, WfsGeometry } from '../../services/geoserver/wfs/wfs.models';
 import { getFeaturesById } from '../../services/geoserver/wfs/wfs.service';
 import { getEmptyGeometry } from '../../services/geoserver/wfs/wfs.util';
 import {
@@ -47,7 +47,7 @@ import { fromMobx } from '../../services/util/fromMobx';
 import { sleep } from '../../services/util/sleep';
 import { konfirmieren } from '../../services/utility-dialogs.service';
 import { currentProject } from '../../stores/CurrentProject.store';
-import { EditFeatureGeometryStore } from '../../stores/EditFeatureGeometry.store';
+import { editFeatureStore } from '../../stores/EditFeatureStore';
 import { mapStore } from '../../stores/Map.store';
 import { EditFeatureMode, EditFeaturesData, sidebars } from '../../stores/Sidebars.store';
 import { BaseEdit } from '../edit-bug-object/base-edit';
@@ -65,7 +65,7 @@ export interface Properties {
 })
 export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy {
   mode?: EditFeatureMode;
-  features?: WfsFeature<Coordinate | CoordinateEdited>[];
+  features?: WfsFeature[];
   layer?: CrgVectorableLayer;
   isNew?: boolean;
   selectedTab?: number;
@@ -75,7 +75,6 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
 
   isGeometryValid = false;
   isGeometryChanged = false;
-  editGeometryStore = new EditFeatureGeometryStore();
 
   private properties?: Properties;
   private unsubscribeFromMobx$: Subject<void> = new Subject<void>();
@@ -251,7 +250,7 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
         this.updatingAllowed = !!this.layer && (await isUpdateAllowed(this.layer));
 
         if (this.layer) {
-          this.editGeometryStore.setLayer(this.layer);
+          editFeatureStore.setLayer(this.layer);
         }
 
         if (
@@ -263,29 +262,23 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
           firstFeature.geometry = getEmptyGeometry(this.featureDescription.geometryType);
         }
 
-        const projection = await getFeatureProjection(firstFeature);
-
-        if (firstFeature.geometry && projection) {
-          this.editGeometryStore.initGeometry(firstFeature.geometry, projection);
-        } else {
-          Toast.error('Не удалось получить проекцию или геометрию объекта');
-        }
+        editFeatureStore.initFeature(firstFeature, await getFeatureProjection(firstFeature));
 
         if (this.updatingAllowed) {
           // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-          fromMobx(() => this.editGeometryStore.geometry?.coordinates?.flat(5), false)
+          fromMobx(() => editFeatureStore.geometry?.coordinates?.flat(5), false)
             .pipe(first())
             .pipe(takeUntil(this.unsubscribe$))
             .pipe(takeUntil(this.unsubscribeFromMobx$))
             .subscribe(() => {
-              fromMobx(() => this.editGeometryStore.isValid)
+              fromMobx(() => editFeatureStore.isValid)
                 .pipe(takeUntil(this.unsubscribe$))
                 .pipe(takeUntil(this.unsubscribeFromMobx$))
                 .subscribe(isValid => {
                   this.isGeometryValid = isValid;
                 });
 
-              fromMobx(() => this.editGeometryStore.isChanged)
+              fromMobx(() => editFeatureStore.isChanged)
                 .pipe(takeUntil(this.unsubscribe$))
                 .pipe(takeUntil(this.unsubscribeFromMobx$))
                 .subscribe(isChanged => {
@@ -344,9 +337,7 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
   }
 
   async saveFeature(): Promise<void> {
-    await (this.editGeometryStore.hasGeometryWarning
-      ? this.saveFeatureWithConfirm()
-      : this.saveFeatureWithoutConfirm());
+    await (editFeatureStore.hasGeometryWarning ? this.saveFeatureWithConfirm() : this.saveFeatureWithoutConfirm());
   }
 
   async saveFeatureWithConfirm(): Promise<void> {
@@ -395,7 +386,7 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
       const createdFeature = await createFeature(layer.dataset, layer.tableName, {
         type: firstFeature.type,
         properties: actualProperties,
-        geometry: this.editGeometryStore.resultGeometry
+        geometry: editFeatureStore.resultGeometry
       });
       ids = [createdFeature.id];
     } else {
@@ -406,7 +397,7 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
       }
 
       if (this.isGeometryChanged) {
-        geometry = this.editGeometryStore.resultGeometry;
+        geometry = editFeatureStore.resultGeometry;
       }
 
       await this.batchUpdateFeatures(this.features || [], actualProperties, geometry);
@@ -543,11 +534,7 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
     return this.updatingAllowed;
   }
 
-  private async batchUpdateFeatures(
-    features: WfsFeature<Coordinate | CoordinateEdited>[],
-    newProperties: Properties,
-    geometry?: WfsGeometry<Coordinate>
-  ) {
+  private async batchUpdateFeatures(features: WfsFeature[], newProperties: Properties, geometry?: WfsGeometry) {
     if (!isVectorLayer(this.layer)) {
       throw new Error('Невозможно обновить объект');
     }

@@ -2,11 +2,12 @@ import React, { FC } from 'react';
 import { withBemMod } from '@bem-react/core';
 
 import { GeometryType, WfsPolygonGeometry } from '../../../../services/geoserver/wfs/wfs.models';
+import { editFeatureStore } from '../../../../stores/EditFeatureStore';
 import { EditFeatureGeometrySuperGroup } from '../../SuperGroup/EditFeatureGeometry-SuperGroup';
 import { cnEditFeatureGeometryForm, EditFeatureGeometryFormProps } from '../EditFeatureGeometry-Form.base';
 
-const EditFeatureGeometryFormTypePolygon: FC<EditFeatureGeometryFormProps> = ({ store, className }) => {
-  const geometry = store.geometry as WfsPolygonGeometry;
+const EditFeatureGeometryFormTypePolygon: FC<EditFeatureGeometryFormProps> = ({ className }) => {
+  const geometry = editFeatureStore.geometry as WfsPolygonGeometry;
 
   return (
     <div className={cnEditFeatureGeometryForm(null, [className, 'scroll'])}>
@@ -14,7 +15,6 @@ const EditFeatureGeometryFormTypePolygon: FC<EditFeatureGeometryFormProps> = ({ 
         geometryPart={geometry.coordinates}
         minCoordsPerGroup={4}
         groupsMustBeClosed
-        store={store}
         index={0}
       />
     </div>

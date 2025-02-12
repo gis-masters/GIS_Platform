@@ -6,9 +6,9 @@ import { ListAlt } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 import { clone, isEqual } from 'lodash';
+import { Coordinate } from 'ol/coordinate';
 
 import {
-  CoordinateEdited,
   GeometryType,
   WfsLineStringGeometry,
   WfsMultiLineStringGeometry,
@@ -16,7 +16,6 @@ import {
   WfsPointGeometry
 } from '../../../services/geoserver/wfs/wfs.models';
 import { getEmptyGeometry, selectLabelForGeometryType } from '../../../services/geoserver/wfs/wfs.util';
-import { notFalsyFilter } from '../../../services/util/NotFalsyFilter';
 import { Button } from '../../Button/Button';
 import { IconButton } from '../../IconButton/IconButton';
 
@@ -26,11 +25,11 @@ import '!style-loader!css-loader!sass-loader!../Text/EditFeatureGeometry-Text.sc
 const cnEditFeatureGeometry = cn('EditFeatureGeometry');
 
 interface EditFeatureGeometryAsTextProps {
-  coordinates: CoordinateEdited[];
+  coordinates: Coordinate[];
   mustBeClosed: boolean;
   geometryType: GeometryType;
   first: boolean;
-  onChange?(coordinates: CoordinateEdited[]): void;
+  onChange?(coordinates: Coordinate[]): void;
 }
 
 @observer
@@ -123,13 +122,13 @@ export class EditFeatureGeometryAsText extends Component<EditFeatureGeometryAsTe
   @action.bound
   private save() {
     const { coordinates, mustBeClosed, onChange, geometryType } = this.props;
-    let newCoordinates: CoordinateEdited[] = this.text
+    let newCoordinates: Coordinate[] = this.text
       .replaceAll(',', '.')
       .split('\n')
       .map(row => row.trim().replaceAll(/\s+/g, ' '))
-      .filter(notFalsyFilter)
+      .filter(row => row.length > 0)
       .map(row => {
-        const rowArr = row.split(/\s/);
+        const rowArr = row.split(/\s/).map(Number);
         rowArr.reverse();
 
         return rowArr;
@@ -139,7 +138,7 @@ export class EditFeatureGeometryAsText extends Component<EditFeatureGeometryAsTe
       const emptyGeometry = getEmptyGeometry(geometryType);
       switch (geometryType) {
         case GeometryType.POINT: {
-          newCoordinates = [(emptyGeometry as WfsPointGeometry<CoordinateEdited>).coordinates];
+          newCoordinates = [(emptyGeometry as WfsPointGeometry).coordinates];
           break;
         }
         case GeometryType.LINE_STRING:

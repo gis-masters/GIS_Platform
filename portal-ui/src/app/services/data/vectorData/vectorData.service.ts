@@ -1,8 +1,6 @@
-import { Coordinate } from 'ol/coordinate';
-
 import { communicationService } from '../../communication.service';
 import { extractFeatureId } from '../../geoserver/featureType/featureType.util';
-import { CoordinateEdited, CrgFeature, NewWfsFeature, WfsFeature } from '../../geoserver/wfs/wfs.models';
+import { CrgFeature, NewWfsFeature, WfsFeature } from '../../geoserver/wfs/wfs.models';
 import { CrgLayer } from '../../gis/layers/layers.models';
 import { PageOptions } from '../../models';
 import { Schema } from '../schema/schema.models';
@@ -189,7 +187,7 @@ export async function copyFeaturesBetweenLayers(
 export async function deleteFeatures(
   datasetIdentifier: string,
   vectorTableIdentifier: string,
-  features: WfsFeature<Coordinate | CoordinateEdited>[]
+  features: WfsFeature[]
 ): Promise<void> {
   const featureIds = features.map(feature => extractFeatureId(feature.id));
   await vectorDataClient.deleteFeatures(datasetIdentifier, vectorTableIdentifier, featureIds);

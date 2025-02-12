@@ -1,31 +1,41 @@
 import { action, computed, makeObservable, observable } from 'mobx';
 import { Feature, Polygon } from '@turf/turf';
 import { isEqual } from 'lodash';
-import { Coordinate } from 'ol/coordinate';
 
+import { Toast } from '../components/Toast/Toast';
 import { Projection } from '../services/data/projections/projections.models';
-import { GeometryType, WfsGeometry } from '../services/geoserver/wfs/wfs.models';
+import { GeometryType, WfsFeature, WfsGeometry } from '../services/geoserver/wfs/wfs.models';
 import { isGeometryValid } from '../services/geoserver/wfs/wfs.util';
 import { CrgVectorableLayer } from '../services/gis/layers/layers.models';
 import { transformGeometry } from '../services/util/coordinates-transform.util';
 
-export class EditFeatureGeometryStore {
+class EditFeatureStore {
+  private static _instance: EditFeatureStore;
+  static get instance() {
+    return this._instance || (this._instance = new this());
+  }
+
+  @observable feature?: WfsFeature;
+
   @observable geometry?: WfsGeometry;
+  @observable hasGeometryWarning: boolean = false;
+
   @observable currentProjection?: Projection;
   @observable nativeProjection?: Projection;
   @observable previousProjection?: Projection;
   @observable defaultProjection?: Projection;
-  @observable private virginGeometry?: WfsGeometry;
+
   @observable layer?: CrgVectorableLayer;
   @observable layerExtent?: Feature<Polygon>;
-  @observable hasGeometryWarning: boolean = false;
+
+  @observable private virginGeometry?: WfsGeometry;
 
   constructor() {
     makeObservable(this);
   }
 
   @computed
-  get resultGeometry(): WfsGeometry<Coordinate> | undefined {
+  get resultGeometry(): WfsGeometry | undefined {
     if (!this.currentProjection || !this.geometry || !this.nativeProjection) {
       throw new Error('Отсутствует проекция, невозможно получить координаты');
     }
@@ -64,6 +74,16 @@ export class EditFeatureGeometryStore {
   }
 
   @action
+  initFeature(feature: WfsFeature, projection: Projection | undefined): void {
+    if (feature.geometry && projection) {
+      this.setFeature(feature);
+      this.initGeometry(feature.geometry, projection);
+    } else {
+      Toast.error('Не удалось получить проекцию или геометрию объекта');
+    }
+  }
+
+  @action
   initGeometry(geometry: WfsGeometry, projection: Projection): void {
     this.nativeProjection = projection;
     this.currentProjection = projection;
@@ -86,7 +106,13 @@ export class EditFeatureGeometryStore {
     if (!this.nativeProjection || !this.currentProjection) {
       throw new Error('Отсутствует проекция');
     }
+
     this.geometry = transformGeometry(geometry, this.nativeProjection, this.currentProjection);
+  }
+
+  @action.bound
+  setFeature(feature: WfsFeature | undefined): void {
+    this.feature = feature;
   }
 
   @action.bound
@@ -94,6 +120,7 @@ export class EditFeatureGeometryStore {
     if (!this.resultGeometry || !this.nativeProjection) {
       throw new Error('Отсутствует геометрия или базовая проекция');
     }
+
     this.geometry = transformGeometry(this.resultGeometry, this.nativeProjection, proj);
     this.currentProjection = proj;
   }
@@ -103,3 +130,5 @@ export class EditFeatureGeometryStore {
     this.layer = layer;
   }
 }
+
+export const editFeatureStore = EditFeatureStore.instance;

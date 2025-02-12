@@ -5,18 +5,19 @@ import { ArchiveOutlined, UnarchiveOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 import { clone, isEqual } from 'lodash';
+import { Coordinate } from 'ol/coordinate';
 import { parse } from 'papaparse';
 
-import { CoordinateEdited, GeometryType } from '../../../services/geoserver/wfs/wfs.models';
+import { GeometryType } from '../../../services/geoserver/wfs/wfs.models';
 import { selectLabelForGeometryType } from '../../../services/geoserver/wfs/wfs.util';
 import { exportAsCSV } from '../../../services/util/export';
-import { isCoordinateEdited } from '../../../services/util/typeGuards/isCoordinateEdited';
+import { isCoordinate } from '../../../services/util/typeGuards/isCoordinate';
 import { EditFeatureGeometryCSVInput } from '../CSVInput/EditFeatureGeometry-CSVInput';
 
 const cnEditFeatureGeometryCSV = cn('EditFeatureGeometry', 'CSV');
 
 interface EditFeatureGeometryCSVProps {
-  coordinates: CoordinateEdited[];
+  coordinates: Coordinate[];
   empty?: boolean;
   mustBeClosed?: boolean;
   readOnly?: boolean;
@@ -108,9 +109,9 @@ export class EditFeatureGeometryCSV extends Component<EditFeatureGeometryCSVProp
     }
 
     const { coordinates, mustBeClosed } = this.props;
-    const newCoordinates: CoordinateEdited[] = result.data
+    const newCoordinates: Coordinate[] = result.data
       .map(point => {
-        if (!isCoordinateEdited(point)) {
+        if (!isCoordinate(point)) {
           throw new Error('Некорректная геометрия');
         }
 
@@ -118,7 +119,7 @@ export class EditFeatureGeometryCSV extends Component<EditFeatureGeometryCSVProp
 
         return point;
       })
-      .filter((point: CoordinateEdited) => point[0] && point[1]);
+      .filter((point: Coordinate) => point[0] && point[1]);
 
     if (mustBeClosed && !isEqual(newCoordinates[0], newCoordinates.at(-1))) {
       newCoordinates.push(newCoordinates[0]);

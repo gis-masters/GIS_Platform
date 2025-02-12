@@ -5,7 +5,8 @@ import { Coordinate } from 'ol/coordinate';
 
 import { GeometryType, WfsLineStringGeometry } from '../../../../services/geoserver/wfs/wfs.models';
 import { isArrayOf } from '../../../../services/util/typeGuards/isArrayOf';
-import { isCoordinateEdited } from '../../../../services/util/typeGuards/isCoordinateEdited';
+import { isCoordinate } from '../../../../services/util/typeGuards/isCoordinate';
+import { editFeatureStore } from '../../../../stores/EditFeatureStore';
 import { EditFeatureGeometryDraw } from '../../Draw/EditFeatureGeometry-Draw';
 import { EditFeatureGeometryGroup } from '../../Group/EditFeatureGeometry-Group.composed';
 import { EditFeatureGeometryToolbar } from '../../Toolbar/EditFeatureGeometry-Toolbar';
@@ -18,13 +19,13 @@ class EditFeatureGeometryFormTypeLineString extends Component<EditFeatureGeometr
   }
 
   render() {
-    const { store, className } = this.props;
-    const geometry = store.geometry as WfsLineStringGeometry;
+    const { className } = this.props;
+    const geometry = editFeatureStore.geometry as WfsLineStringGeometry;
 
     return (
       <div className={cnEditFeatureGeometryForm(null, [className, 'scroll'])}>
         <EditFeatureGeometryToolbar>
-          <EditFeatureGeometryDraw store={store} onDraw={this.handleDraw} />
+          <EditFeatureGeometryDraw onDraw={this.handleDraw} />
         </EditFeatureGeometryToolbar>
 
         <EditFeatureGeometryGroup
@@ -32,7 +33,6 @@ class EditFeatureGeometryFormTypeLineString extends Component<EditFeatureGeometr
           canBeDeleted={false}
           minCoordsCount={2}
           multiple={false}
-          store={store}
           index={0}
         />
       </div>
@@ -41,8 +41,8 @@ class EditFeatureGeometryFormTypeLineString extends Component<EditFeatureGeometr
 
   @action.bound
   private handleDraw(coords: Coordinate[]) {
-    const coordinates = this.props.store.geometry?.coordinates;
-    if (isArrayOf(coordinates, isCoordinateEdited)) {
+    const coordinates = editFeatureStore.geometry?.coordinates;
+    if (isArrayOf(coordinates, isCoordinate)) {
       coordinates.splice(0, coordinates.length, ...coords);
     }
   }

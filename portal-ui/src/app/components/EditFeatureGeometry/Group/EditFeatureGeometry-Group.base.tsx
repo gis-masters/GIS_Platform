@@ -5,10 +5,11 @@ import { cn } from '@bem-react/classname';
 import { IClassNameProps } from '@bem-react/core';
 import { boundMethod } from 'autobind-decorator';
 import { debounce } from 'lodash';
+import { Coordinate } from 'ol/coordinate';
 
-import { CoordinateEdited, GeometryType } from '../../../services/geoserver/wfs/wfs.models';
+import { GeometryType } from '../../../services/geoserver/wfs/wfs.models';
 import { selectLabelForGeometryType } from '../../../services/geoserver/wfs/wfs.util';
-import { EditFeatureGeometryStore } from '../../../stores/EditFeatureGeometry.store';
+import { editFeatureStore } from '../../../stores/EditFeatureStore';
 import { EditFeatureGeometryAddNode } from '../AddNode/EditFeatureGeometry-AddNode';
 import { EditFeatureGeometryAsText } from '../AsText/EditFeatureGeometry-AsText';
 import { EditFeatureGeometryCoord } from '../Coord/EditFeatureGeometry-Coord';
@@ -25,14 +26,13 @@ export const cnEditFeatureGeometryGroup = cn('EditFeatureGeometry', 'Group');
 export type ContainerProps = PropsWithChildren<IClassNameProps>;
 
 export interface EditFeatureGeometryGroupProps extends IClassNameProps {
-  coordinates: CoordinateEdited[];
+  coordinates: Coordinate[];
   minCoordsCount: number;
   mustBeClosed?: boolean;
   canBeDeleted: boolean;
   Container?: ComponentType<ContainerProps>;
   multiple: boolean;
   index: number;
-  store: EditFeatureGeometryStore;
   startIndex?: number;
   onDelete?(index: number): void;
 }
@@ -69,14 +69,13 @@ export class EditFeatureGeometryGroupBase extends Component<EditFeatureGeometryG
       className,
       Container,
       mustBeClosed = false,
-      store,
       index,
       startIndex = 0
     } = this.props;
 
     const Tag = Container || Div;
 
-    if (!store.geometryType) {
+    if (!editFeatureStore.geometryType) {
       return null;
     }
 
@@ -96,17 +95,19 @@ export class EditFeatureGeometryGroupBase extends Component<EditFeatureGeometryG
             const isLast = i + this.startOffset === coordinates.length - 1;
             let displayIndex = i + this.startOffset;
 
-            if (store.geometryType === GeometryType.MULTI_POLYGON || store.geometryType === GeometryType.POLYGON) {
+            if (
+              editFeatureStore.geometryType === GeometryType.MULTI_POLYGON ||
+              editFeatureStore.geometryType === GeometryType.POLYGON
+            ) {
               displayIndex = isLast ? startIndex || index : startIndex + i + this.startOffset;
             }
 
-            if (store.geometryType === GeometryType.MULTI_LINE_STRING) {
+            if (editFeatureStore.geometryType === GeometryType.MULTI_LINE_STRING) {
               displayIndex = startIndex + i + this.startOffset;
             }
 
             return (
               <EditFeatureGeometryCoord
-                store={store}
                 val={coordinate}
                 key={i + this.startOffset}
                 displayIndex={displayIndex}
@@ -126,21 +127,21 @@ export class EditFeatureGeometryGroupBase extends Component<EditFeatureGeometryG
           <EditFeatureGeometryAsText
             coordinates={coordinates}
             mustBeClosed={mustBeClosed}
-            geometryType={store.geometryType}
+            geometryType={editFeatureStore.geometryType}
             first={!index}
           />
           <EditFeatureGeometryCSV
             coordinates={coordinates}
             empty={this.empty}
             mustBeClosed={mustBeClosed}
-            geometryType={store.geometryType}
+            geometryType={editFeatureStore.geometryType}
             first={!index}
           />
           {canBeDeleted ? (
             <EditFeatureGeometryDelButton
               onClick={this.handleGroupDeleting}
               labelToDelete={selectLabelForGeometryType(
-                store.geometryType,
+                editFeatureStore.geometryType,
                 `контур${index ? ' (вырезку)' : ''}`,
                 'линию',
                 'группу'
@@ -174,7 +175,7 @@ export class EditFeatureGeometryGroupBase extends Component<EditFeatureGeometryG
   private handleAdd() {
     const { coordinates, mustBeClosed } = this.props;
     const where = coordinates.length - (mustBeClosed ? 1 : 0);
-    coordinates.splice(where, 0, ['', '']);
+    coordinates.splice(where, 0, [0, 0]);
     this.updateOffsets();
   }
 
@@ -185,7 +186,7 @@ export class EditFeatureGeometryGroupBase extends Component<EditFeatureGeometryG
   }
 
   @action.bound
-  private handleChange(val: CoordinateEdited, i: number) {
+  private handleChange(val: Coordinate, i: number) {
     const { mustBeClosed, coordinates } = this.props;
 
     coordinates[i] = val;

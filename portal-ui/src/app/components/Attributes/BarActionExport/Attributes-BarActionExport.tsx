@@ -42,17 +42,19 @@ export class AttributesBarActionExport extends Component<AttributesBarActionExpo
 
   render() {
     return (
-      <IconButton
-        className={cnAttributesBarActionExport()}
-        loading={this.busy}
-        disabled={this.busy}
-        onClick={this.export}
-        size='small'
-      >
-        <Tooltip title='Экспортировать текущую таблицу в XLSX'>
-          <FileUploadOutlined fontSize='small' />
-        </Tooltip>
-      </IconButton>
+      <Tooltip title='Экспортировать текущую таблицу в XLSX'>
+        <span>
+          <IconButton
+            className={cnAttributesBarActionExport()}
+            loading={this.busy}
+            disabled={this.busy}
+            onClick={this.export}
+            size='small'
+          >
+            <FileUploadOutlined fontSize='small' />
+          </IconButton>
+        </span>
+      </Tooltip>
     );
   }
 

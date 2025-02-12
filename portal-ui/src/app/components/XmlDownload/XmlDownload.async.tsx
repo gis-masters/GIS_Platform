@@ -9,15 +9,7 @@ import { Coordinate } from 'ol/coordinate';
 import { v4 as uuid } from 'uuid';
 import xmlbuilder from 'xmlbuilder';
 
-import {
-  CoordinateEdited,
-  GeometryType,
-  WfsFeature,
-  WfsGeometry,
-  WfsMultiLineStringGeometry,
-  WfsMultiPolygonGeometry,
-  WfsPointGeometry
-} from '../../services/geoserver/wfs/wfs.models';
+import { GeometryType, WfsFeature, WfsGeometry } from '../../services/geoserver/wfs/wfs.models';
 import { CrgVectorLayer } from '../../services/gis/layers/layers.models';
 
 const cnXmlDownload = cn('XmlDownload');
@@ -136,7 +128,7 @@ export default class XmlDownload extends Component<XmlDownloadProps> {
 
   private getContours(geometry: WfsGeometry) {
     if (geometry.type === GeometryType.POINT) {
-      const pointGeometry = geometry as WfsPointGeometry<CoordinateEdited>;
+      const pointGeometry = geometry;
 
       return {
         EntitySpatial: {
@@ -156,7 +148,7 @@ export default class XmlDownload extends Component<XmlDownloadProps> {
     }
 
     if (geometry.type === GeometryType.MULTI_LINE_STRING) {
-      const { coordinates } = geometry as WfsMultiLineStringGeometry;
+      const { coordinates } = geometry;
 
       return {
         Contours: {
@@ -174,7 +166,7 @@ export default class XmlDownload extends Component<XmlDownloadProps> {
     }
 
     if (geometry.type === GeometryType.MULTI_POLYGON) {
-      const geometryMultiPolygon = geometry as WfsMultiPolygonGeometry;
+      const geometryMultiPolygon = geometry;
 
       return {
         Contours: {

@@ -6,7 +6,6 @@ import proj4 from 'proj4';
 import { Projection } from '../data/projections/projections.models';
 import { getProjectionCode } from '../data/projections/projections.util';
 import {
-  CoordinateEdited,
   GeometryType,
   WfsFeature,
   WfsGeometry,
@@ -19,23 +18,17 @@ import {
 } from '../geoserver/wfs/wfs.models';
 import { isCoordinateValid, normalizeCoordinates } from '../geoserver/wfs/wfs.util';
 import { mapService } from '../map/map.service';
+import { services } from '../services';
 import { isArrayOf } from './typeGuards/isArrayOf';
-import { isCoordinate, isCoordinateArray, isCoordinateArrayArray } from './typeGuards/isCoordinate';
+import {
+  isCoordinate,
+  isCoordinateArray,
+  isCoordinateArrayArray,
+  isMultiPolygonCoordinate
+} from './typeGuards/isCoordinate';
 import { isNumberArray } from './typeGuards/isNumberArray';
 
-export type Coord = Coordinate | CoordinateEdited;
-
-export function flipPoint(coordinate: Coordinate): Coordinate {
-  return [coordinate[1], coordinate[0]];
-}
-
-export function flipLine(line: Coordinate[]): Coordinate[] {
-  return line.map(flipPoint);
-}
-
-export function flipPolygon(polygon: Coordinate[][]): Coordinate[][] {
-  return polygon.map(flipLine);
-}
+export type Coord = Coordinate;
 
 export function transformExtent(extent: Extent, projFrom: Projection, projTo: Projection): Extent {
   return chunk(extent, 2).flatMap(coord => transform(coord, projFrom, projTo)) as Extent;
@@ -93,7 +86,7 @@ export function transformGeometry(
   projTo: Projection,
   originGeometry?: WfsGeometry,
   transformedOriginGeometry?: WfsGeometry
-): WfsGeometry<Coordinate> | undefined {
+): WfsGeometry | undefined {
   if (!geometry) {
     return;
   }
@@ -102,7 +95,7 @@ export function transformGeometry(
 
   if (geometryType === GeometryType.POINT) {
     const newCoordinates = transformCoord(
-      coordinates as Coordinate,
+      coordinates,
       projFrom,
       projTo,
       originGeometry && ([originGeometry.coordinates] as Coordinate[]),
@@ -117,7 +110,7 @@ export function transformGeometry(
 
   if (geometryType === GeometryType.MULTI_POINT || geometryType === GeometryType.LINE_STRING) {
     const newCoordinates = transformGroup(
-      coordinates as Coordinate[],
+      coordinates,
       projFrom,
       projTo,
       originGeometry && ([originGeometry.coordinates] as Coordinate[]),
@@ -132,7 +125,7 @@ export function transformGeometry(
 
   if (geometryType === GeometryType.MULTI_LINE_STRING || geometryType === GeometryType.POLYGON) {
     const newCoordinates = transformSuperGroup(
-      coordinates as Coordinate[][],
+      coordinates,
       projFrom,
       projTo,
       originGeometry && (originGeometry.coordinates as Coordinate[][]),
@@ -146,13 +139,29 @@ export function transformGeometry(
   }
 
   if (geometryType === GeometryType.MULTI_POLYGON) {
-    const newCoordinates = transformMultiSuperGroup(
-      coordinates as Coordinate[][][],
-      projFrom,
-      projTo,
-      originGeometry && (originGeometry.coordinates as Coordinate[][][]),
-      transformedOriginGeometry && (transformedOriginGeometry.coordinates as Coordinate[][][])
-    );
+    let newCoordinates;
+
+    if (isMultiPolygonCoordinate(coordinates)) {
+      newCoordinates = transformMultiSuperGroup(
+        coordinates,
+        projFrom,
+        projTo,
+        originGeometry?.coordinates as Coordinate[][][],
+        transformedOriginGeometry?.coordinates as Coordinate[][][]
+      );
+    } else if (isCoordinateArrayArray(coordinates)) {
+      newCoordinates = transformMultiSuperGroup(
+        [coordinates],
+        projFrom,
+        projTo,
+        originGeometry?.coordinates as Coordinate[][][],
+        transformedOriginGeometry?.coordinates as Coordinate[][][]
+      );
+    } else {
+      services.logger.warn('Неожиданные координаты:', coordinates);
+
+      newCoordinates = [[[]]];
+    }
 
     return {
       ...geometry,
@@ -160,7 +169,7 @@ export function transformGeometry(
     } as WfsMultiPolygonGeometry;
   }
 
-  return geometry as WfsGeometry<Coordinate>;
+  return geometry as WfsGeometry;
 }
 
 export function transformCoord(

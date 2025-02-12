@@ -28,14 +28,16 @@ export class PrintMapButton extends Component {
     return (
       <>
         <Tooltip title='Распечатать карту (PDF)'>
-          <IconButton
-            className={cnPrintMapButton()}
-            onClick={this.openDialog}
-            color='inherit'
-            disabled={!mapStore.allowedActions.includes(MapAction.PRINT_MAP_PDF)}
-          >
-            {this.dialogOpen ? <Print /> : <PrintOutlined />}
-          </IconButton>
+          <span>
+            <IconButton
+              className={cnPrintMapButton()}
+              onClick={this.openDialog}
+              color='inherit'
+              disabled={!mapStore.allowedActions.includes(MapAction.PRINT_MAP_PDF)}
+            >
+              {this.dialogOpen ? <Print /> : <PrintOutlined />}
+            </IconButton>
+          </span>
         </Tooltip>
 
         <PrintMapDialog onClose={this.closeDialog} open={this.dialogOpen} directlyPrint allowPdf allowJpg />

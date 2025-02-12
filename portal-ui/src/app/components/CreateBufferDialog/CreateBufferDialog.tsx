@@ -42,7 +42,7 @@ export const CreateBufferDialog: FC<CreateBufferDialogProps> = observer(({ open,
       const writer = new GeoJSONWriter();
       const geom = BufferOp.bufferOp(reader.read(feature.geometry), formValue.buffer) as Geometry;
       const featureWithBuffer = { ...cloneDeep(feature), geometry: writer.write(geom) as WfsMultiPolygonGeometry };
-      const emptyFeature = (await getEmptyFeature(formValue.layer as CrgVectorLayer)) as WfsFeature;
+      const emptyFeature = await getEmptyFeature(formValue.layer as CrgVectorLayer);
       featureWithBuffer.id = emptyFeature.id;
       featureWithBuffer.properties = emptyFeature.properties;
 

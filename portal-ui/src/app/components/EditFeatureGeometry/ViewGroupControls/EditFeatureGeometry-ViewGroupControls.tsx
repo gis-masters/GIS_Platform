@@ -3,7 +3,7 @@ import { Paper } from '@mui/material';
 import { cn } from '@bem-react/classname';
 import { Coordinate } from 'ol/coordinate';
 
-import { EditFeatureGeometryStore } from '../../../stores/EditFeatureGeometry.store';
+import { editFeatureStore } from '../../../stores/EditFeatureStore';
 import { EditFeatureGeometryCopy } from '../Copy/EditFeatureGeometry-Copy';
 import { EditFeatureGeometryCSV } from '../CSV/EditFeatureGeometry-CSV';
 
@@ -14,24 +14,27 @@ const cnEditFeatureGeometryViewGroupControls = cn('EditFeatureGeometry', 'ViewGr
 interface EditFeatureGeometryViewGroupControlsProps {
   coordinates: Coordinate[];
   tableRef: RefObject<HTMLTableElement>;
-  store: EditFeatureGeometryStore;
   index: number;
 }
 
 export const EditFeatureGeometryViewGroupControls: FC<EditFeatureGeometryViewGroupControlsProps> = ({
   coordinates,
   tableRef,
-  store,
   index
 }) =>
-  !!store.geometryType && (
+  !!editFeatureStore.geometryType && (
     <Paper className={cnEditFeatureGeometryViewGroupControls()} square>
       <EditFeatureGeometryCopy
         coordinates={coordinates}
         tableRef={tableRef}
-        geometryType={store.geometryType}
+        geometryType={editFeatureStore.geometryType}
         first={!index}
       />
-      <EditFeatureGeometryCSV coordinates={coordinates} readOnly geometryType={store.geometryType} first={!index} />
+      <EditFeatureGeometryCSV
+        coordinates={coordinates}
+        readOnly
+        geometryType={editFeatureStore.geometryType}
+        first={!index}
+      />
     </Paper>
   );

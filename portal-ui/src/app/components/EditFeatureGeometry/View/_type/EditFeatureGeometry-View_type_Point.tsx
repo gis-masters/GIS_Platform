@@ -2,15 +2,15 @@ import React, { FC } from 'react';
 import { withBemMod } from '@bem-react/core';
 
 import { GeometryType, WfsPointGeometry } from '../../../../services/geoserver/wfs/wfs.models';
+import { editFeatureStore } from '../../../../stores/EditFeatureStore';
 import { EditFeatureGeometryViewGroup } from '../../ViewGroup/EditFeatureGeometry-ViewGroup';
 import { cnEditFeatureGeometryView, EditFeatureGeometryViewProps } from '../EditFeatureGeometry-View';
 
-const EditFeatureGeometryViewTypePoint: FC<EditFeatureGeometryViewProps> = ({ store, className }) => (
+const EditFeatureGeometryViewTypePoint: FC<EditFeatureGeometryViewProps> = ({ className }) => (
   <div className={cnEditFeatureGeometryView(null, [className])}>
     <EditFeatureGeometryViewGroup
-      coordinates={[(store.geometry as WfsPointGeometry).coordinates]}
+      coordinates={[(editFeatureStore.geometry as WfsPointGeometry).coordinates]}
       isPoint
-      store={store}
       index={0}
     />
   </div>

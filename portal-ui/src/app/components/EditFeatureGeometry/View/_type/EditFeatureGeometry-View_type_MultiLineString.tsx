@@ -2,11 +2,12 @@ import React, { FC } from 'react';
 import { withBemMod } from '@bem-react/core';
 
 import { GeometryType, WfsMultiLineStringGeometry } from '../../../../services/geoserver/wfs/wfs.models';
+import { editFeatureStore } from '../../../../stores/EditFeatureStore';
 import { EditFeatureGeometryViewGroup } from '../../ViewGroup/EditFeatureGeometry-ViewGroup';
 import { cnEditFeatureGeometryView, EditFeatureGeometryViewProps } from '../EditFeatureGeometry-View';
 
-const EditFeatureGeometryViewTypeMultiLineString: FC<EditFeatureGeometryViewProps> = ({ store, className }) => {
-  const geometry = store.geometry as WfsMultiLineStringGeometry;
+const EditFeatureGeometryViewTypeMultiLineString: FC<EditFeatureGeometryViewProps> = ({ className }) => {
+  const geometry = editFeatureStore.geometry as WfsMultiLineStringGeometry;
 
   let coordinatesCounter: number = 0;
 
@@ -20,13 +21,12 @@ const EditFeatureGeometryViewTypeMultiLineString: FC<EditFeatureGeometryViewProp
 
   return (
     <div className={cnEditFeatureGeometryView(null, [className, 'scroll'])}>
-      {(store.geometry as WfsMultiLineStringGeometry).coordinates.map((coordinatesGroup, i) => (
+      {(editFeatureStore.geometry as WfsMultiLineStringGeometry).coordinates.map((coordinatesGroup, i) => (
         <EditFeatureGeometryViewGroup
           coordinates={coordinatesGroup}
           key={i}
           index={i}
           startIndex={startingIndexes[i][0]}
-          store={store}
         />
       ))}
     </div>

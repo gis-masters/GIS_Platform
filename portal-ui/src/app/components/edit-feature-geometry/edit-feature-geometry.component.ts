@@ -4,7 +4,7 @@ import { Component, ElementRef, Input, OnChanges, OnDestroy, OnInit, ViewChild }
 import { withRegistry } from '@bem-react/di';
 
 import { registry } from '../../services/di-registry';
-import { EditFeatureGeometryStore } from '../../stores/EditFeatureGeometry.store';
+import { editFeatureStore } from '../../stores/EditFeatureStore';
 import { EditFeatureGeometry } from '../EditFeatureGeometry/EditFeatureGeometry';
 
 const EditFeatureGeometryWithRegistry = withRegistry(registry)(EditFeatureGeometry);
@@ -15,7 +15,6 @@ const EditFeatureGeometryWithRegistry = withRegistry(registry)(EditFeatureGeomet
   styleUrls: ['./edit-feature-geometry.component.scss']
 })
 export class EditFeatureGeometryComponent implements OnInit, OnDestroy, OnChanges {
-  @Input() store?: EditFeatureGeometryStore;
   @Input() readOnly?: boolean;
   @ViewChild('react', { read: ElementRef, static: true }) ref?: ElementRef<HTMLDivElement>;
   private root?: Root;
@@ -38,11 +37,11 @@ export class EditFeatureGeometryComponent implements OnInit, OnDestroy, OnChange
   }
 
   private renderReactElement() {
-    if (!this.store) {
+    if (!editFeatureStore) {
       return;
     }
+
     const reactElement = createElement(EditFeatureGeometryWithRegistry, {
-      store: this.store,
       readOnly: Boolean(this.readOnly)
     });
 

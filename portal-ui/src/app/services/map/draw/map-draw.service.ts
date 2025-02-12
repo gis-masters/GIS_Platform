@@ -8,11 +8,12 @@ import { Vector as VectorLayer } from 'ol/layer';
 import { Vector as VectorSource } from 'ol/source';
 
 import { Toast } from '../../../components/Toast/Toast';
+import { editFeatureStore } from '../../../stores/EditFeatureStore';
 import { mapStore } from '../../../stores/Map.store';
 import { communicationService } from '../../communication.service';
 import { Projection } from '../../data/projections/projections.models';
 import { getFeatureProjection, getOlProjection } from '../../data/projections/projections.service';
-import { CoordinateEdited, GeometryType, WfsFeature } from '../../geoserver/wfs/wfs.models';
+import { GeometryType, WfsFeature } from '../../geoserver/wfs/wfs.models';
 import { services } from '../../services';
 import { transformGeometry } from '../../util/coordinates-transform.util';
 import { wfsFeatureToFeature } from '../../util/open-layers.util';
@@ -52,7 +53,17 @@ class MapDrawService {
     mapStore.setMode(MapMode.DRAW);
 
     // Modify
-    this.modify = new Modify({ source: this.source });
+    this.modify = new Modify({
+      source: this.source,
+      condition: event => {
+        const closestFeature = this.source.getClosestFeatureToCoordinate(event.coordinate);
+        if (closestFeature === undefined || closestFeature?.getId() === undefined) {
+          return true;
+        }
+
+        return editFeatureStore.feature?.id === closestFeature.getId();
+      }
+    });
     this.modify.on('modifyend', (event: ModifyEvent) => {
       communicationService.modifyEnd.emit(event);
     });
@@ -75,6 +86,7 @@ class MapDrawService {
 
   drawOff() {
     mapStore.setMode(MapMode.DEFAULT);
+    editFeatureStore.setFeature(undefined);
 
     if (this.draw) {
       this.draw.setActive(false);
@@ -94,11 +106,11 @@ class MapDrawService {
   /**
    * Подсвечивает объекты. (очищает черновой слой)
    */
-  async highlightFeatures(features: WfsFeature<Coordinate | CoordinateEdited>[], projection?: Projection) {
+  async highlightFeatures(features: WfsFeature[], projection?: Projection) {
     const featuresInOlProjection: WfsFeature[] = await Promise.all(
       [...features]
         .filter(({ geometry }) => geometry)
-        .map(async (feature: WfsFeature<Coordinate | CoordinateEdited>): Promise<WfsFeature> => {
+        .map(async (feature: WfsFeature): Promise<WfsFeature> => {
           const currentProjection = projection || (await getFeatureProjection(feature));
           const olProjection = await getOlProjection();
 

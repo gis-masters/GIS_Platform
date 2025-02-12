@@ -1,15 +1,12 @@
-import { Coordinate } from 'ol/coordinate';
-
 import { currentProject } from '../../../stores/CurrentProject.store';
 import { currentUser } from '../../../stores/CurrentUser.store';
-import { FilePlacementMode } from '../../data/file-placement/file-placement.models';
 import { defaultOlProjectionCode } from '../../data/projections/projections.models';
 import {
   extractTableNameFromComplexName,
   extractTableNameFromFeatureId
 } from '../../geoserver/featureType/featureType.util';
-import { CoordinateEdited, WfsFeature } from '../../geoserver/wfs/wfs.models';
-import { CrgLayer, CrgLayerType, CrgRasterLayer, CrgVectorLayer, NewCrgLayer } from './layers.models';
+import { WfsFeature } from '../../geoserver/wfs/wfs.models';
+import { CrgLayer, CrgLayerType, CrgVectorLayer, NewCrgLayer } from './layers.models';
 
 const defaultProps = {
   enabled: true,
@@ -31,19 +28,6 @@ export function vectorLayerDefaults(): Pick<
   };
 }
 
-export function rasterLayerDefaults(): Pick<
-  CrgRasterLayer,
-  'nativeCRS' | 'mode' | 'enabled' | 'position' | 'transparency' | 'minZoom' | 'maxZoom' | 'type'
-> {
-  return {
-    ...defaultProps,
-    nativeCRS: defaultOlProjectionCode,
-    mode: FilePlacementMode.GIS,
-    enabled: true,
-    type: CrgLayerType.RASTER
-  };
-}
-
 export function externalLayerDefaults(): Pick<
   NewCrgLayer,
   'nativeCRS' | 'enabled' | 'position' | 'transparency' | 'minZoom' | 'maxZoom' | 'type'
@@ -55,9 +39,7 @@ export function externalLayerDefaults(): Pick<
   };
 }
 
-export function getLayerByFeatureInCurrentProject(
-  feature: WfsFeature<Coordinate | CoordinateEdited>
-): CrgVectorLayer | undefined {
+export function getLayerByFeatureInCurrentProject(feature: WfsFeature): CrgVectorLayer | undefined {
   return getLayerByFeatureIdFromCurrentProject(feature.id);
 }
 

@@ -4,7 +4,7 @@ import { cn } from '@bem-react/classname';
 import { Coordinate } from 'ol/coordinate';
 
 import { GeometryType } from '../../../services/geoserver/wfs/wfs.models';
-import { EditFeatureGeometryStore } from '../../../stores/EditFeatureGeometry.store';
+import { editFeatureStore } from '../../../stores/EditFeatureStore';
 import { EditFeatureGeometryViewGroupControls } from '../ViewGroupControls/EditFeatureGeometry-ViewGroupControls';
 
 import '!style-loader!css-loader!sass-loader!./EditFeatureGeometry-ViewGroup.scss';
@@ -14,7 +14,6 @@ const cnEditFeatureGeometryViewGroupIndexCell = cn('EditFeatureGeometry', 'ViewG
 
 interface EditFeatureGeometryViewGroupProps {
   coordinates: Coordinate[];
-  store: EditFeatureGeometryStore;
   index: number;
   isPoint?: boolean;
   startIndex?: number;
@@ -26,16 +25,11 @@ export class EditFeatureGeometryViewGroup extends Component<EditFeatureGeometryV
   tableRef: RefObject<HTMLTableElement> = createRef();
 
   render() {
-    const { coordinates, isPoint, store, index, startIndex = 0 } = this.props;
+    const { coordinates, isPoint, index, startIndex = 0 } = this.props;
 
     return (
       <TableContainer component={Container} className={cnEditFeatureGeometryViewGroup()}>
-        <EditFeatureGeometryViewGroupControls
-          coordinates={coordinates}
-          tableRef={this.tableRef}
-          store={store}
-          index={index}
-        />
+        <EditFeatureGeometryViewGroupControls coordinates={coordinates} tableRef={this.tableRef} index={index} />
         <Table size='small' ref={this.tableRef}>
           <TableHead>
             <TableRow>
@@ -49,11 +43,14 @@ export class EditFeatureGeometryViewGroup extends Component<EditFeatureGeometryV
               const isLast = i === coordinates.length - 1;
               let displayIndex = i;
 
-              if (store.geometryType === GeometryType.MULTI_POLYGON || store.geometryType === GeometryType.POLYGON) {
+              if (
+                editFeatureStore.geometryType === GeometryType.MULTI_POLYGON ||
+                editFeatureStore.geometryType === GeometryType.POLYGON
+              ) {
                 displayIndex = isLast ? startIndex || index : startIndex + i;
               }
 
-              if (store.geometryType === GeometryType.MULTI_LINE_STRING) {
+              if (editFeatureStore.geometryType === GeometryType.MULTI_LINE_STRING) {
                 displayIndex = startIndex + i;
               }
 

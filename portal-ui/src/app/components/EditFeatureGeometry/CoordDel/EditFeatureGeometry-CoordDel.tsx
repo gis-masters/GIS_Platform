@@ -24,7 +24,7 @@ export class EditFeatureGeometryCoordDel extends Component<EditFeatureGeometryCo
             size='small'
             disabled={this.props.disabled}
           >
-            <DeleteOutline />
+            <DeleteOutline color='error' fontSize='small' />
           </IconButton>
         </span>
       </Tooltip>

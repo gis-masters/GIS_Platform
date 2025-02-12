@@ -20,7 +20,7 @@ import { CrgLayerType, CrgVectorLayer } from '../../services/gis/layers/layers.m
 import { isVectorFromFile } from '../../services/gis/layers/layers.utils';
 import { transformGeometry } from '../../services/util/coordinates-transform.util';
 import { notFalsyFilter } from '../../services/util/NotFalsyFilter';
-import { EditFeatureGeometryStore } from '../../stores/EditFeatureGeometry.store';
+import { editFeatureStore } from '../../stores/EditFeatureStore';
 import { projectionsStore } from '../../stores/Projections.store';
 import { FeatureIcon } from '../FeatureIcon/FeatureIcon';
 import { EditFeatureGeometryError } from './Error/EditFeatureGeometry-Error';
@@ -35,7 +35,6 @@ import '!style-loader!css-loader!sass-loader!./EditFeatureGeometry.scss';
 const cnEditFeatureGeometry = cn('EditFeatureGeometry');
 
 export interface EditFeatureGeometryProps {
-  store: EditFeatureGeometryStore;
   readOnly: boolean;
 }
 
@@ -54,9 +53,9 @@ export default class EditFeatureGeometry extends Component<EditFeatureGeometryPr
   }
 
   render() {
-    const { store, readOnly } = this.props;
+    const { readOnly } = this.props;
 
-    if (!(store && store.geometry && store.currentProjection)) {
+    if (!(editFeatureStore && editFeatureStore.geometry && editFeatureStore.currentProjection)) {
       return (
         <div className={cnEditFeatureGeometry()}>
           <EditFeatureGeometryError>Отсутствует геометрия.</EditFeatureGeometryError>
@@ -64,7 +63,7 @@ export default class EditFeatureGeometry extends Component<EditFeatureGeometryPr
       );
     }
 
-    const { geometry } = store;
+    const { geometry } = editFeatureStore;
     const geometryType = supportedGeometryTypes.includes(geometry?.type) ? geometry.type : undefined;
 
     return (
@@ -72,7 +71,10 @@ export default class EditFeatureGeometry extends Component<EditFeatureGeometryPr
         <EditFeatureGeometryHeader>
           <EditFeatureGeometryField>
             Система координат:
-            <EditFeatureGeometrySelectProjection value={store.currentProjection} onChange={store.setProjection} />
+            <EditFeatureGeometrySelectProjection
+              value={editFeatureStore.currentProjection}
+              onChange={editFeatureStore.setProjection}
+            />
           </EditFeatureGeometryField>
         </EditFeatureGeometryHeader>
         {geometryType && (
@@ -85,8 +87,8 @@ export default class EditFeatureGeometry extends Component<EditFeatureGeometryPr
             </Tooltip>
           </EditFeatureGeometryField>
         )}
-        {geometryType && !readOnly && <EditFeatureGeometryForm type={geometryType} store={store} />}
-        {geometryType && readOnly && <EditFeatureGeometryView type={geometryType} store={store} />}
+        {geometryType && !readOnly && <EditFeatureGeometryForm type={geometryType} />}
+        {geometryType && readOnly && <EditFeatureGeometryView type={geometryType} />}
       </div>
     );
   }
@@ -100,7 +102,7 @@ export default class EditFeatureGeometry extends Component<EditFeatureGeometryPr
 
     const modifiedGeometry = (modifyEvent.features.item(0) as Feature<SimpleGeometry>).getGeometry();
 
-    const { nativeProjection, geometry, geometryType, setGeometry } = this.props.store;
+    const { nativeProjection, geometry, geometryType, setGeometry } = editFeatureStore;
 
     if (!geometryType || !projectionsStore.olProjection || !nativeProjection) {
       throw new Error('Не удалось изменить геометрию');
@@ -123,11 +125,11 @@ export default class EditFeatureGeometry extends Component<EditFeatureGeometryPr
 
   @action
   private async updateExtent() {
-    if (!this.props?.store?.layer) {
+    if (!editFeatureStore?.layer) {
       return;
     }
 
-    const { layer } = this.props.store;
+    const { layer } = editFeatureStore;
 
     const { nativeBoundingBox } =
       layer.type === CrgLayerType.VECTOR || isVectorFromFile(layer.type)
@@ -162,7 +164,7 @@ export default class EditFeatureGeometry extends Component<EditFeatureGeometryPr
       }
     }
 
-    this.props.store.setLayerExtent(polygon([polygonCoordinates]));
+    editFeatureStore.setLayerExtent(polygon([polygonCoordinates]));
   }
 
   private getFeatureIconGeometryType(geometryType: GeometryType): string | undefined {

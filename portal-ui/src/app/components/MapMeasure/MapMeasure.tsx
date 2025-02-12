@@ -26,24 +26,28 @@ export class MapMeasure extends Component {
     return (
       <div className={cnMapMeasure()}>
         <Tooltip title='Измерить длину'>
-          <IconButton
-            onClick={this.handleLengthClick}
-            checked={isMeasureActive && mapMeasureStore.measureMode === 'length'}
-            size='small'
-            disabled={!mapStore.allowedActions.includes(MapAction.MAP_MEASURE)}
-          >
-            <Ruler />
-          </IconButton>
+          <span>
+            <IconButton
+              onClick={this.handleLengthClick}
+              checked={isMeasureActive && mapMeasureStore.measureMode === 'length'}
+              size='small'
+              disabled={!mapStore.allowedActions.includes(MapAction.MAP_MEASURE)}
+            >
+              <Ruler />
+            </IconButton>
+          </span>
         </Tooltip>
         <Tooltip title='Измерить площадь'>
-          <IconButton
-            onClick={this.handleAreaClick}
-            checked={isMeasureActive && mapMeasureStore.measureMode === 'area'}
-            size='small'
-            disabled={!mapStore.allowedActions.includes(MapAction.MAP_MEASURE)}
-          >
-            <SquareFoot />
-          </IconButton>
+          <span>
+            <IconButton
+              onClick={this.handleAreaClick}
+              checked={isMeasureActive && mapMeasureStore.measureMode === 'area'}
+              size='small'
+              disabled={!mapStore.allowedActions.includes(MapAction.MAP_MEASURE)}
+            >
+              <SquareFoot />
+            </IconButton>
+          </span>
         </Tooltip>
         {Boolean(mapMeasureStore.measureItems.length) && (
           <Tooltip title='Удалить все измерения'>

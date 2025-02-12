@@ -3,7 +3,6 @@ import { cn } from '@bem-react/classname';
 import { isNumber } from 'lodash';
 import { Coordinate } from 'ol/coordinate';
 
-import { EditFeatureGeometryStore } from '../../../stores/EditFeatureGeometry.store';
 import { EditFeatureGeometryViewGroup } from '../ViewGroup/EditFeatureGeometry-ViewGroup';
 
 import '!style-loader!css-loader!sass-loader!./EditFeatureGeometry-ViewSuperGroup.scss';
@@ -12,13 +11,11 @@ const cnEditFeatureGeometryViewSuperGroup = cn('EditFeatureGeometry', 'ViewSuper
 
 interface EditFeatureGeometryViewSuperGroupProps {
   coordinates: Coordinate[][];
-  store: EditFeatureGeometryStore;
   startingIndexes?: number[][];
 }
 
 export const EditFeatureGeometryViewSuperGroup: FC<EditFeatureGeometryViewSuperGroupProps> = ({
   coordinates,
-  store,
   startingIndexes
 }) => (
   <div className={cnEditFeatureGeometryViewSuperGroup()}>
@@ -29,15 +26,7 @@ export const EditFeatureGeometryViewSuperGroup: FC<EditFeatureGeometryViewSuperG
         startIndex = startingIndexes[i][0];
       }
 
-      return (
-        <EditFeatureGeometryViewGroup
-          coordinates={coordinatesGroup}
-          startIndex={startIndex}
-          key={i}
-          store={store}
-          index={0}
-        />
-      );
+      return <EditFeatureGeometryViewGroup coordinates={coordinatesGroup} startIndex={startIndex} key={i} index={0} />;
     })}
   </div>
 );

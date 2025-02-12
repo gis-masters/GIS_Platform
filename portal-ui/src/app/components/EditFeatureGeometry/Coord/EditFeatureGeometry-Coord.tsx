@@ -7,6 +7,7 @@ import { cn } from '@bem-react/classname';
 import { booleanPointInPolygon, point } from '@turf/turf';
 import { boundMethod } from 'autobind-decorator';
 import { Feature } from 'ol';
+import { Coordinate } from 'ol/coordinate';
 import { SimpleGeometry } from 'ol/geom';
 
 import {
@@ -15,13 +16,13 @@ import {
   Projection
 } from '../../../services/data/projections/projections.models';
 import { getProjectionByCode } from '../../../services/data/projections/projections.service';
-import { CoordinateEdited, GeometryType, WfsFeature, WfsGeometry } from '../../../services/geoserver/wfs/wfs.models';
+import { GeometryType, WfsFeature, WfsGeometry } from '../../../services/geoserver/wfs/wfs.models';
 import { isDimensionValid, isGeometryValid } from '../../../services/geoserver/wfs/wfs.util';
 import { mapDrawService } from '../../../services/map/draw/map-draw.service';
 import { transformGeometry } from '../../../services/util/coordinates-transform.util';
 import { wfsFeatureToFeature } from '../../../services/util/open-layers.util';
 import { isNumberArray } from '../../../services/util/typeGuards/isNumberArray';
-import { EditFeatureGeometryStore } from '../../../stores/EditFeatureGeometry.store';
+import { editFeatureStore } from '../../../stores/EditFeatureStore';
 import { projectionsStore } from '../../../stores/Projections.store';
 import { Toast } from '../../Toast/Toast';
 import { EditFeatureGeometryCoordDel } from '../CoordDel/EditFeatureGeometry-CoordDel';
@@ -35,15 +36,14 @@ const warningText = 'Внимание. Заданная координата м�
 const cnEditFeatureGeometry = cn('EditFeatureGeometry');
 
 interface EditFeatureGeometryCoordProps {
-  store: EditFeatureGeometryStore;
-  val: CoordinateEdited;
+  val: Coordinate;
   withControls?: boolean;
   canBeDeleted?: boolean;
   disabled?: boolean;
   displayIndex?: number;
   index?: number;
   active?: boolean;
-  onChange(val: CoordinateEdited, i: number): void;
+  onChange(val: Coordinate, i: number): void;
   onDelete?(index: number): void;
 }
 
@@ -118,12 +118,14 @@ export class EditFeatureGeometryCoord extends Component<EditFeatureGeometryCoord
 
   @computed
   private get warning(): boolean {
-    const {
-      store: { layer, currentProjection, layerExtent },
-      val
-    } = this.props;
+    const { val } = this.props;
 
-    if (!layer || !currentProjection || !layerExtent || !this.defaultProjection) {
+    if (
+      !editFeatureStore.layer ||
+      !editFeatureStore.currentProjection ||
+      !editFeatureStore.layerExtent ||
+      !this.defaultProjection
+    ) {
       return false;
     }
 
@@ -135,10 +137,14 @@ export class EditFeatureGeometryCoord extends Component<EditFeatureGeometryCoord
       return false;
     }
 
-    if (currentProjection.authSrid !== DEFAULT_OL_PROJECTION.srid && currentProjection && this.defaultProjection) {
+    if (
+      editFeatureStore.currentProjection.authSrid !== DEFAULT_OL_PROJECTION.srid &&
+      editFeatureStore.currentProjection &&
+      this.defaultProjection
+    ) {
       const geometry = transformGeometry(
         { type: GeometryType.POINT, coordinates: cloneVal },
-        currentProjection,
+        editFeatureStore.currentProjection,
         this.defaultProjection
       );
 
@@ -147,9 +153,9 @@ export class EditFeatureGeometryCoord extends Component<EditFeatureGeometryCoord
       }
     }
     const checkPoint = point(cloneVal);
-    const isPointInPolygon = booleanPointInPolygon(checkPoint, layerExtent);
+    const isPointInPolygon = booleanPointInPolygon(checkPoint, editFeatureStore.layerExtent);
 
-    this.props.store.setGeometryWarning(!isPointInPolygon);
+    editFeatureStore.setGeometryWarning(!isPointInPolygon);
 
     return !isPointInPolygon;
   }
@@ -162,7 +168,7 @@ export class EditFeatureGeometryCoord extends Component<EditFeatureGeometryCoord
   @action.bound
   private handleChangeX(e: React.ChangeEvent<HTMLInputElement>) {
     const { val, onChange, index } = this.props;
-    val[0] = e.target.value;
+    val[0] = Number(e.target.value);
     if (index || index === 0) {
       onChange(val, index);
     }
@@ -172,7 +178,7 @@ export class EditFeatureGeometryCoord extends Component<EditFeatureGeometryCoord
   @action.bound
   private handleChangeY(e: React.ChangeEvent<HTMLInputElement>) {
     const { val, onChange, index } = this.props;
-    val[1] = e.target.value;
+    val[1] = Number(e.target.value);
     if (index || index === 0) {
       onChange(val, index);
     }
@@ -199,9 +205,9 @@ export class EditFeatureGeometryCoord extends Component<EditFeatureGeometryCoord
   }
 
   private drawFocusedPointMarker() {
-    const { store, val } = this.props;
+    const { val } = this.props;
 
-    if (store.geometryType === GeometryType.POINT) {
+    if (editFeatureStore.geometryType === GeometryType.POINT) {
       return;
     }
 
@@ -211,10 +217,14 @@ export class EditFeatureGeometryCoord extends Component<EditFeatureGeometryCoord
     };
 
     if (isGeometryValid(markerGeometry)) {
-      if (projectionsStore.olProjection && store.currentProjection) {
+      if (projectionsStore.olProjection && editFeatureStore.currentProjection) {
         const feature: WfsFeature = {
           type: 'Feature',
-          geometry: transformGeometry(markerGeometry, store.currentProjection, projectionsStore.olProjection),
+          geometry: transformGeometry(
+            markerGeometry,
+            editFeatureStore.currentProjection,
+            projectionsStore.olProjection
+          ),
           id: '',
           geometry_name: '',
           properties: {}

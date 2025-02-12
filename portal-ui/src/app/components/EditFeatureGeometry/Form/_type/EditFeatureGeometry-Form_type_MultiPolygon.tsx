@@ -5,12 +5,12 @@ import { withBemMod } from '@bem-react/core';
 import { Coordinate } from 'ol/coordinate';
 
 import {
-  CoordinateEdited,
   GeometryType,
   WfsMultiPolygonGeometry,
   WfsPolygonGeometry
 } from '../../../../services/geoserver/wfs/wfs.models';
 import { getEmptyGeometry } from '../../../../services/geoserver/wfs/wfs.util';
+import { editFeatureStore } from '../../../../stores/EditFeatureStore';
 import { EditFeatureGeometryAddButton } from '../../AddButton/EditFeatureGeometry-AddButton';
 import { EditFeatureGeometrySuperGroup } from '../../SuperGroup/EditFeatureGeometry-SuperGroup';
 import { cnEditFeatureGeometryForm, EditFeatureGeometryFormProps } from '../EditFeatureGeometry-Form.base';
@@ -23,8 +23,8 @@ class EditFeatureGeometryFormTypeMultiPolygon extends Component<EditFeatureGeome
   }
 
   render() {
-    const { className, store } = this.props;
-    const geometry = store.geometry as WfsMultiPolygonGeometry;
+    const { className } = this.props;
+    const geometry = editFeatureStore.geometry as WfsMultiPolygonGeometry;
     const startingIndexes = this.getCoordinatesIndexArray(geometry.coordinates);
 
     return (
@@ -34,7 +34,6 @@ class EditFeatureGeometryFormTypeMultiPolygon extends Component<EditFeatureGeome
             geometryPart={geometryPart}
             minCoordsPerGroup={4}
             groupsMustBeClosed
-            store={store}
             index={index}
             startingIndexes={startingIndexes[index]}
             key={index}
@@ -68,14 +67,14 @@ class EditFeatureGeometryFormTypeMultiPolygon extends Component<EditFeatureGeome
 
   @action.bound
   private handlePolygonAdd() {
-    const geometry = this.props.store.geometry as WfsMultiPolygonGeometry<CoordinateEdited>;
-    const { coordinates } = getEmptyGeometry(GeometryType.POLYGON) as WfsPolygonGeometry<CoordinateEdited>;
+    const geometry = editFeatureStore.geometry as WfsMultiPolygonGeometry;
+    const { coordinates } = getEmptyGeometry(GeometryType.POLYGON) as WfsPolygonGeometry;
     geometry.coordinates.push(coordinates);
   }
 
   @action.bound
   private handleDeletePolygon(i: number) {
-    const geometry = this.props.store.geometry as WfsMultiPolygonGeometry<CoordinateEdited>;
+    const geometry = editFeatureStore.geometry as WfsMultiPolygonGeometry;
     geometry.coordinates.splice(i, 1);
   }
 }

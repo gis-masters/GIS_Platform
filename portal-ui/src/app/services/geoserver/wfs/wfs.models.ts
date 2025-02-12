@@ -12,10 +12,6 @@ export enum GeometryType {
   CIRCLE = 'Circle'
 }
 
-// TODO: По-моему этот тип полная хуйня!
-//  Схуяли 'number' или 'string'- где то поленились привести всё к 'number'???
-export type CoordinateEdited = (number | string)[];
-
 export type SupportedGeometryType =
   | GeometryType.POINT
   | GeometryType.MULTI_POINT
@@ -85,11 +81,11 @@ export type SupportedWfsGeometry<T = Coordinate> =
   | WfsPolygonGeometry<T>
   | WfsMultiPolygonGeometry<T>;
 
-export type WfsGeometry<T = Coordinate | CoordinateEdited> = SupportedWfsGeometry<T> | OtherGeometry<T>;
+export type WfsGeometry<T = Coordinate> = SupportedWfsGeometry<T> | OtherGeometry<T>;
 
 export type CrgFeature = Pick<WfsFeature, 'id' | 'type' | 'geometry' | 'properties'>;
 export type NewWfsFeature = Omit<CrgFeature, 'id'>;
-export interface WfsFeature<T extends Coordinate | CoordinateEdited = Coordinate> extends GeoJSONObject {
+export interface WfsFeature<T extends Coordinate = Coordinate> extends GeoJSONObject {
   type: 'Feature';
   id: string;
   geometry?: WfsGeometry<T>;

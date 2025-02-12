@@ -6,27 +6,20 @@ import { SimpleGeometry } from 'ol/geom';
 
 import { PageOptions, SortOrder } from '../../models';
 import { wfsFeatureToFeature } from '../../util/open-layers.util';
-import {
-  CoordinateEdited,
-  GeometryType,
-  WfsFeature,
-  WfsGeometry,
-  WfsMultiPolygonGeometry,
-  WfsPointGeometry
-} from './wfs.models';
+import { GeometryType, WfsFeature, WfsGeometry, WfsPointGeometry } from './wfs.models';
 
-export function getEmptyGeometry(type: GeometryType): WfsGeometry<CoordinateEdited> {
+export function getEmptyGeometry(type: GeometryType): WfsGeometry {
   if (type === GeometryType.POINT) {
     return {
       type,
-      coordinates: ['', '']
-    } as WfsPointGeometry<CoordinateEdited>;
+      coordinates: [0, 0]
+    } as WfsPointGeometry;
   }
 
   if (type === GeometryType.LINE_STRING || type === GeometryType.MULTI_POINT) {
     return {
       type,
-      coordinates: [['', '']]
+      coordinates: [[0, 0]]
     };
   }
 
@@ -35,8 +28,8 @@ export function getEmptyGeometry(type: GeometryType): WfsGeometry<CoordinateEdit
       type,
       coordinates: [
         [
-          ['', ''],
-          ['', '']
+          [0, 0],
+          [0, 0]
         ]
       ]
     };
@@ -48,10 +41,10 @@ export function getEmptyGeometry(type: GeometryType): WfsGeometry<CoordinateEdit
       coordinates: [
         [
           [
-            ['', ''],
-            ['', ''],
-            ['', ''],
-            ['', '']
+            [0, 0],
+            [0, 0],
+            [0, 0],
+            [0, 0]
           ]
         ]
       ]
@@ -104,10 +97,9 @@ export function generateWfsSortParam(pageOptions: PageOptions): string {
 }
 
 type Coords = Coordinate | Coordinate[][] | Coordinate[][][];
-type CoordsEdited = CoordinateEdited | CoordinateEdited[][] | CoordinateEdited[][][];
 
-export function normalizeCoordinates(coord: CoordsEdited | string | number): Coords | number {
-  return Array.isArray(coord) ? ((coord as CoordsEdited[]).map(normalizeCoordinates) as Coords) : asNumber(coord);
+export function normalizeCoordinates(coord: Coords | string | number): Coords | number {
+  return Array.isArray(coord) ? ((coord as Coords[]).map(normalizeCoordinates) as Coords) : asNumber(coord);
 }
 
 export function isGeometryValid(geometry: WfsGeometry): boolean {
@@ -116,9 +108,7 @@ export function isGeometryValid(geometry: WfsGeometry): boolean {
 
 function hasUnclosedPolygons(geometry: WfsGeometry): boolean {
   return geometry.type === GeometryType.MULTI_POLYGON
-    ? (geometry as WfsMultiPolygonGeometry).coordinates.some(polygon =>
-        polygon.some(loop => !isEqual(loop[0], loop.at(-1)))
-      )
+    ? geometry.coordinates.some(polygon => polygon.some(loop => !isEqual(loop[0], loop.at(-1))))
     : false;
 }
 

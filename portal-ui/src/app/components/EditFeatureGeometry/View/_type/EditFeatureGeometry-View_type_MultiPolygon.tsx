@@ -2,11 +2,12 @@ import React, { FC } from 'react';
 import { withBemMod } from '@bem-react/core';
 
 import { GeometryType, WfsMultiPolygonGeometry } from '../../../../services/geoserver/wfs/wfs.models';
+import { editFeatureStore } from '../../../../stores/EditFeatureStore';
 import { EditFeatureGeometryViewSuperGroup } from '../../ViewSuperGroup/EditFeatureGeometry-ViewSuperGroup';
 import { cnEditFeatureGeometryView, EditFeatureGeometryViewProps } from '../EditFeatureGeometry-View';
 
-const EditFeatureGeometryViewTypeMultiPolygon: FC<EditFeatureGeometryViewProps> = ({ store, className }) => {
-  const geometry = store.geometry as WfsMultiPolygonGeometry;
+const EditFeatureGeometryViewTypeMultiPolygon: FC<EditFeatureGeometryViewProps> = ({ className }) => {
+  const geometry = editFeatureStore.geometry as WfsMultiPolygonGeometry;
   let coordinatesCounter: number = 0;
 
   const startingIndexes = geometry.coordinates.map((coord, i) => {
@@ -25,12 +26,11 @@ const EditFeatureGeometryViewTypeMultiPolygon: FC<EditFeatureGeometryViewProps> 
 
   return (
     <div className={cnEditFeatureGeometryView(null, [className, 'scroll'])}>
-      {(store.geometry as WfsMultiPolygonGeometry).coordinates.map((coordinatesGroup, i) => (
+      {(editFeatureStore.geometry as WfsMultiPolygonGeometry).coordinates.map((coordinatesGroup, i) => (
         <EditFeatureGeometryViewSuperGroup
           coordinates={coordinatesGroup}
           startingIndexes={startingIndexes[i]}
           key={i}
-          store={store}
         />
       ))}
     </div>

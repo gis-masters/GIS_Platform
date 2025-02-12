@@ -24,7 +24,7 @@ import { Projection } from '../../../services/data/projections/projections.model
 import { Schema } from '../../../services/data/schema/schema.models';
 import { VectorTable } from '../../../services/data/vectorData/vectorData.models';
 import { getVectorTable } from '../../../services/data/vectorData/vectorData.service';
-import { GeometryType, WfsFeature } from '../../../services/geoserver/wfs/wfs.models';
+import { GeometryType } from '../../../services/geoserver/wfs/wfs.models';
 import { getEmptyFeature, getShapeFile } from '../../../services/geoserver/wfs/wfs.service';
 import {
   CrgLayer,
@@ -428,7 +428,7 @@ export class LayerMenu extends Component<LayerMenuProps> {
   @boundMethod
   private async addFeature() {
     const { entity, onClose } = this.props;
-    const emptyFeature = (await getEmptyFeature(entity as CrgVectorLayer)) as WfsFeature;
+    const emptyFeature = await getEmptyFeature(entity as CrgVectorLayer);
     sidebars.openEdit({
       features: [emptyFeature],
       mode: EditFeatureMode.single,

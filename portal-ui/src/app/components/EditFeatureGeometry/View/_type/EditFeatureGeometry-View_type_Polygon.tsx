@@ -2,13 +2,14 @@ import React, { FC } from 'react';
 import { withBemMod } from '@bem-react/core';
 
 import { GeometryType, WfsPolygonGeometry } from '../../../../services/geoserver/wfs/wfs.models';
+import { editFeatureStore } from '../../../../stores/EditFeatureStore';
 import { EditFeatureGeometryViewGroup } from '../../ViewGroup/EditFeatureGeometry-ViewGroup';
 import { cnEditFeatureGeometryView, EditFeatureGeometryViewProps } from '../EditFeatureGeometry-View';
 
-const EditFeatureGeometryViewTypePolygon: FC<EditFeatureGeometryViewProps> = ({ store, className }) => (
+const EditFeatureGeometryViewTypePolygon: FC<EditFeatureGeometryViewProps> = ({ className }) => (
   <div className={cnEditFeatureGeometryView(null, [className, 'scroll'])}>
-    {(store.geometry as WfsPolygonGeometry).coordinates.map((coordinatesGroup, i) => (
-      <EditFeatureGeometryViewGroup coordinates={coordinatesGroup} key={i} index={i} store={store} />
+    {(editFeatureStore.geometry as WfsPolygonGeometry).coordinates.map((coordinatesGroup, i) => (
+      <EditFeatureGeometryViewGroup coordinates={coordinatesGroup} key={i} index={i} />
     ))}
   </div>
 );

@@ -3,8 +3,10 @@ import { makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { withBemMod } from '@bem-react/core';
 import { boundMethod } from 'autobind-decorator';
+import { Coordinate } from 'ol/coordinate';
 
-import { CoordinateEdited, GeometryType, WfsPointGeometry } from '../../../../services/geoserver/wfs/wfs.models';
+import { GeometryType, WfsPointGeometry } from '../../../../services/geoserver/wfs/wfs.models';
+import { editFeatureStore } from '../../../../stores/EditFeatureStore';
 import { EditFeatureGeometryAsText } from '../../AsText/EditFeatureGeometry-AsText';
 import { EditFeatureGeometryCoord } from '../../Coord/EditFeatureGeometry-Coord';
 import { EditFeatureGeometryDraw } from '../../Draw/EditFeatureGeometry-Draw';
@@ -29,10 +31,10 @@ class EditFeatureGeometryFormTypePoint extends EditFeatureGeometryFormBase {
   }
 
   render() {
-    const { className, store } = this.props;
-    const geometry = store.geometry as WfsPointGeometry;
+    const { className } = this.props;
+    const geometry = editFeatureStore.geometry as WfsPointGeometry;
 
-    if (!store.geometryType) {
+    if (!editFeatureStore.geometryType) {
       return <></>;
     }
 
@@ -40,40 +42,36 @@ class EditFeatureGeometryFormTypePoint extends EditFeatureGeometryFormBase {
       <div className={cnEditFeatureGeometryForm(null, [className])}>
         <EditFeatureGeometryToolbar>
           <EditFeatureGeometryToolbarLeft>
-            <EditFeatureGeometryDraw store={store} onDraw={this.handleChange} />
+            <EditFeatureGeometryDraw onDraw={this.handleChange} />
             <EditFeatureGeometryAsText
               coordinates={[geometry.coordinates]}
               mustBeClosed={false}
               onChange={this.handleAsTextChange}
-              geometryType={store.geometryType}
+              geometryType={editFeatureStore.geometryType}
               first
             />
           </EditFeatureGeometryToolbarLeft>
         </EditFeatureGeometryToolbar>
 
         <EditFeatureGeometryXY />
-        <EditFeatureGeometryCoord val={geometry.coordinates} store={store} onChange={this.handleChange} />
+        <EditFeatureGeometryCoord val={geometry.coordinates} onChange={this.handleChange} />
       </div>
     );
   }
 
   @boundMethod
-  private handleChange(val: CoordinateEdited) {
-    const { store } = this.props;
-
-    if (!store.geometry) {
+  private handleChange(val: Coordinate) {
+    if (!editFeatureStore.geometry) {
       throw new Error('Отсутствует геометрия');
     }
 
-    store.geometry.coordinates = val;
+    editFeatureStore.geometry.coordinates = val;
   }
 
   @boundMethod
-  private handleAsTextChange(val: CoordinateEdited[]) {
-    const { store } = this.props;
-
-    if (store.geometry) {
-      store.geometry.coordinates = val[0] || [];
+  private handleAsTextChange(val: Coordinate[]) {
+    if (editFeatureStore.geometry) {
+      editFeatureStore.geometry.coordinates = val[0] || [];
     }
   }
 }

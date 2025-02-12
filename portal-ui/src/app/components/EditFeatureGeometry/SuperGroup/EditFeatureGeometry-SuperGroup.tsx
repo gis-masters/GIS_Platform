@@ -7,9 +7,9 @@ import { boundMethod } from 'autobind-decorator';
 import { isNumber } from 'lodash';
 import { Coordinate } from 'ol/coordinate';
 
-import { CoordinateEdited, GeometryType } from '../../../services/geoserver/wfs/wfs.models';
+import { GeometryType } from '../../../services/geoserver/wfs/wfs.models';
 import { selectLabelForGeometryType } from '../../../services/geoserver/wfs/wfs.util';
-import { EditFeatureGeometryStore } from '../../../stores/EditFeatureGeometry.store';
+import { editFeatureStore } from '../../../stores/EditFeatureStore';
 import { ContourAdd } from '../../Icons/ContourAdd';
 import { EditFeatureGeometryDelButton } from '../DelButton/EditFeatureGeometry-DelButton';
 import { EditFeatureGeometryDraw } from '../Draw/EditFeatureGeometry-Draw';
@@ -23,11 +23,10 @@ import '!style-loader!css-loader!sass-loader!./EditFeatureGeometry-SuperGroup.sc
 const cnEditFeatureGeometry = cn('EditFeatureGeometry');
 
 interface EditFeatureGeometrySuperGroupProps {
-  geometryPart: CoordinateEdited[][];
+  geometryPart: Coordinate[][];
   minCoordsPerGroup: number;
   groupsMustBeClosed?: boolean;
   index: number;
-  store: EditFeatureGeometryStore;
   startingIndexes?: number[][];
   onPolygonDelete?(index: number): void;
 }
@@ -40,11 +39,12 @@ export class EditFeatureGeometrySuperGroup extends Component<EditFeatureGeometry
   }
 
   render() {
-    const { geometryPart, minCoordsPerGroup, groupsMustBeClosed, store, startingIndexes } = this.props;
+    const { geometryPart, minCoordsPerGroup, groupsMustBeClosed, startingIndexes } = this.props;
     const anotherPolygonExists =
-      store.geometryType === GeometryType.MULTI_POLYGON && (store.geometry?.coordinates.length || 0) > 1;
+      editFeatureStore.geometryType === GeometryType.MULTI_POLYGON &&
+      (editFeatureStore.geometry?.coordinates.length || 0) > 1;
     const labelPart = selectLabelForGeometryType(
-      store.geometryType,
+      editFeatureStore.geometryType,
       'новый контур (вырезку)',
       'новую линию',
       'новую группу'
@@ -54,7 +54,7 @@ export class EditFeatureGeometrySuperGroup extends Component<EditFeatureGeometry
       <div className={cnEditFeatureGeometry('SuperGroup')}>
         <EditFeatureGeometryToolbar>
           <EditFeatureGeometryToolbarLeft>
-            <EditFeatureGeometryDraw store={store} onDraw={this.handleNewGroupDraw} />
+            <EditFeatureGeometryDraw onDraw={this.handleNewGroupDraw} />
             <Tooltip title={`Добавить ${labelPart} списком координат`}>
               <IconButton onClick={this.handleGroupAdd}>
                 <ContourAdd />
@@ -83,7 +83,6 @@ export class EditFeatureGeometrySuperGroup extends Component<EditFeatureGeometry
               canBeDeleted={coordinates.length > 1}
               onDelete={this.handleGroupDelete}
               multiple={coordinates.length > 1}
-              store={store}
               index={i}
               startIndex={startIndex}
               key={i}
@@ -103,10 +102,10 @@ export class EditFeatureGeometrySuperGroup extends Component<EditFeatureGeometry
 
   @action.bound
   private handleGroupAdd() {
-    const group: CoordinateEdited[] = [];
+    const group: Coordinate[] = [];
 
     for (let i = 0; i < this.props.minCoordsPerGroup; i++) {
-      group.push(['', '']);
+      group.push([0, 0]);
     }
 
     this.props.geometryPart.push(group);

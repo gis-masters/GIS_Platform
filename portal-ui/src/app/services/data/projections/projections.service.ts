@@ -1,11 +1,10 @@
 import { reaction } from 'mobx';
-import { Coordinate } from 'ol/coordinate';
 import { get } from 'ol/proj';
 import { register } from 'ol/proj/proj4';
 import proj4 from 'proj4';
 
 import { projectionsStore } from '../../../stores/Projections.store';
-import { CoordinateEdited, WfsFeature } from '../../geoserver/wfs/wfs.models';
+import { WfsFeature } from '../../geoserver/wfs/wfs.models';
 import { getLayerByFeatureInCurrentProject } from '../../gis/layers/layers.utils';
 import { PageOptions } from '../../models';
 import { services } from '../../services';
@@ -84,9 +83,7 @@ export async function getOlProjection(): Promise<Projection> {
   return projection;
 }
 
-export async function getFeatureProjection(
-  feature: WfsFeature<Coordinate | CoordinateEdited>
-): Promise<Projection | undefined> {
+export async function getFeatureProjection(feature: WfsFeature): Promise<Projection | undefined> {
   const layer = getLayerByFeatureInCurrentProject(feature);
   if (!layer) {
     services.logger.error('Не корректная feature: ', feature);

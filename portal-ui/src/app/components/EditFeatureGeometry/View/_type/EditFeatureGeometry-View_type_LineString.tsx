@@ -2,14 +2,14 @@ import React, { FC } from 'react';
 import { withBemMod } from '@bem-react/core';
 
 import { GeometryType, WfsLineStringGeometry } from '../../../../services/geoserver/wfs/wfs.models';
+import { editFeatureStore } from '../../../../stores/EditFeatureStore';
 import { EditFeatureGeometryViewGroup } from '../../ViewGroup/EditFeatureGeometry-ViewGroup';
 import { cnEditFeatureGeometryView, EditFeatureGeometryViewProps } from '../EditFeatureGeometry-View';
 
-const EditFeatureGeometryViewTypeLineString: FC<EditFeatureGeometryViewProps> = ({ store, className }) => (
+const EditFeatureGeometryViewTypeLineString: FC<EditFeatureGeometryViewProps> = ({ className }) => (
   <div className={cnEditFeatureGeometryView(null, [className, 'scroll'])}>
     <EditFeatureGeometryViewGroup
-      coordinates={(store.geometry as WfsLineStringGeometry).coordinates}
-      store={store}
+      coordinates={(editFeatureStore.geometry as WfsLineStringGeometry).coordinates}
       index={0}
     />
   </div>

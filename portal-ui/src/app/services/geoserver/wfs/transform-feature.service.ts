@@ -1,5 +1,4 @@
 import { Feature } from 'ol';
-import { Coordinate } from 'ol/coordinate';
 import WFS, { WriteTransactionOptions } from 'ol/format/WFS';
 import { Geometry, LineString, MultiLineString, MultiPoint, MultiPolygon, Point, Polygon } from 'ol/geom';
 
@@ -14,7 +13,7 @@ import { environment } from '../../environment';
 import { services } from '../../services';
 import { FeatureUtil } from '../../util/FeatureUtil';
 import { extractFeatureId } from '../featureType/featureType.util';
-import { CoordinateEdited, GeometryType, WfsFeature, WfsGeometry } from './wfs.models';
+import { GeometryType, WfsFeature, WfsGeometry } from './wfs.models';
 import { updateFeature } from './wfs.service';
 
 export enum TransactionType {
@@ -41,7 +40,7 @@ export class TransformFeatureService {
   async multipleEdit(
     datasetId: string,
     tableId: string,
-    features: WfsFeature<Coordinate | CoordinateEdited>[],
+    features: WfsFeature[],
     properties: Properties
   ): Promise<void> {
     const featureCutIds: string = features.map(feature => extractFeatureId(feature.id)).join(',');
@@ -54,10 +53,10 @@ export class TransformFeatureService {
   // TODO: Это сохранение через geoserver - оно не должно быть рядом с data-service
   async updateFeatures(
     layerName: string,
-    features: WfsFeature<Coordinate | CoordinateEdited>[],
+    features: WfsFeature[],
     schema: OldSchema,
     newProperties: Properties,
-    geometry?: WfsGeometry<Coordinate>
+    geometry?: WfsGeometry
   ): Promise<string> {
     await usersService.fetchCurrentUser();
 

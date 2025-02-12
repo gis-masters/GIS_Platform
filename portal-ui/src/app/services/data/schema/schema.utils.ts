@@ -1,10 +1,9 @@
 import { cloneDeep } from 'lodash';
-import { Coordinate } from 'ol/coordinate';
 
 import { getIdsFromPath } from '../../../components/DataManagement/DataManagement.utils';
 import { DocumentInfo } from '../../../components/Documents/Documents';
 import { Attribute } from '../../geoserver/featureType/featureType.model';
-import { CoordinateEdited, GeometryType, WfsFeature } from '../../geoserver/wfs/wfs.models';
+import { GeometryType, WfsFeature } from '../../geoserver/wfs/wfs.models';
 import { convertComplexNamesArrayToTableNamesUriFragment } from '../../gis/layers/layers.utils';
 import { services } from '../../services';
 import { formatDate } from '../../util/date.util';
@@ -478,7 +477,7 @@ export const valueWellKnownFormulas: Record<string, ValueFormula> = {
       )
       .join(')%20OR%20(');
 
-    const ps = ids.length > 1 ? '()' : ['', ''];
+    const ps = ids.length > 1 ? '()' : [0, 0];
     const filter = `${ps[0]}${parts}${ps[1]}`;
 
     if (!id || !libraryTableName) {
@@ -611,10 +610,7 @@ export function getGeometryFieldName(schema: Schema): string {
   return gProperty.name || 'shape';
 }
 
-export function changeSchemaNamesCaseByFeature<T extends Schema | OldSchema>(
-  schema: T,
-  feature?: WfsFeature<Coordinate | CoordinateEdited>
-): T {
+export function changeSchemaNamesCaseByFeature<T extends Schema | OldSchema>(schema: T, feature?: WfsFeature): T {
   return {
     ...schema,
     properties: schema.properties.map((property: PropertySchema | OldPropertySchema) => ({
@@ -718,7 +714,7 @@ export function getGeometryTypeFromGeoserverAttributes(attributes: Attribute[] =
   throw new Error(error);
 }
 
-function getNameFromFeatureKeys(name: string, feature?: WfsFeature<Coordinate | CoordinateEdited>): string {
+function getNameFromFeatureKeys(name: string, feature?: WfsFeature): string {
   return (
     Object.keys(feature?.properties || {}).find(key => key.toLowerCase() === name.toLowerCase()) || name.toLowerCase()
   );

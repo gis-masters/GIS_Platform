@@ -29,7 +29,7 @@ import {
   extractTableNameFromComplexName
 } from '../featureType/featureType.util';
 import { wfsClient } from './wfs.client';
-import { CoordinateEdited, WfsFeature, WfsFeatureCollection } from './wfs.models';
+import { WfsFeature, WfsFeatureCollection } from './wfs.models';
 import { generateWfsSortParam, getEmptyGeometry } from './wfs.util';
 
 function getBaseWfsParams(layer: CrgVectorLayer): { [key: string]: string } {
@@ -274,7 +274,7 @@ export async function makeXmlPolygonIntersect(
   return new XMLSerializer().serializeToString(featureRequest);
 }
 
-export async function getEmptyFeature(layer: CrgVectorLayer): Promise<WfsFeature<CoordinateEdited>> {
+export async function getEmptyFeature(layer: CrgVectorLayer): Promise<WfsFeature> {
   const schema = await getLayerSchema(layer);
   if (!schema) {
     throw new Error(`Не найден схема для слоя ${layer.title}`);
