@@ -157,6 +157,7 @@ export default class Form<T> extends Component<FormProps<T>> {
   @computed
   get schema(): Schema | SimpleSchema | undefined {
     const { schema } = this.props;
+
     if (schema) {
       return computeDynamicProperties(this.value, schema);
     }
@@ -234,7 +235,7 @@ export default class Form<T> extends Component<FormProps<T>> {
       return [];
     }
 
-    const errors = validateFormValue(this.value, schema.properties);
+    const errors = validateFormValue(this.value, this.schema?.properties || schema.properties);
     this.setErrors(errors);
 
     return errors;

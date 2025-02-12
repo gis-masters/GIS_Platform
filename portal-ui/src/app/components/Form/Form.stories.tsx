@@ -3,6 +3,7 @@ import { action, observable } from 'mobx';
 import { TextField } from '@mui/material';
 import { Agriculture, Biotech, CheckCircleOutline, Clear, DataUsage, ErrorOutline, Send } from '@mui/icons-material';
 import { StoryFn } from '@storybook/react';
+import { cloneDeep } from 'lodash';
 
 import { PropertySchema, PropertyType, SimpleSchema } from '../../services/data/schema/schema.models';
 import { FieldErrors, validateFormValue } from '../../services/util/form/formValidation.utils';
@@ -447,9 +448,30 @@ export const schemaWithDynamicProperties: SimpleSchema = {
   ]
 };
 
+const currentSchemaWithDynamicProperties: SimpleSchema = cloneDeep(schemaWithDynamicProperties);
+currentSchemaWithDynamicProperties.properties[0] = {
+  ...currentSchemaWithDynamicProperties.properties[0],
+  dynamicPropertyFormula: obj => ({ required: !(isRecordStringUnknown(obj) && !!obj.name) })
+};
+
+const validateDynamicProperties = action(() => {
+  errors.splice(0, errors.length, ...validateFormValue(value, testFields));
+});
+
+const dynamicPropertiesStoryActions = (
+  <FormStoryActions>
+    <Button startIcon={<Biotech />} className={cnFormStoryActions('ValidateData')} onClick={validateDynamicProperties}>
+      Validate
+    </Button>
+  </FormStoryActions>
+);
+
 export const DynamicProperties = Template.bind({});
 DynamicProperties.args = {
   id: 'dynamicProperty',
-  schema: schemaWithDynamicProperties,
+  schema: currentSchemaWithDynamicProperties,
+  actions: dynamicPropertiesStoryActions,
+  actionFunction,
+  errors,
   value: getDefaultValues(schemaWithDynamicProperties.properties)
 };
