@@ -1,5 +1,6 @@
 package ru.mycrg.data_service.service.smev3.request;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import io.minio.Result;
@@ -43,6 +44,7 @@ import ru.mycrg.data_service.util.xml.XmlMarshaller;
 import ru.mycrg.data_service_contract.dto.FileDescription;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.data_service_contract.dto.TypeDocumentData;
+import ru.mycrg.data_service_contract.enums.TaskIntermediateStatus;
 import ru.mycrg.data_service_contract.enums.TaskStatus;
 
 import javax.xml.bind.JAXBException;
@@ -68,6 +70,7 @@ import static ru.mycrg.data_service.service.storage.FileStorageUtil.generateFile
 import static ru.mycrg.data_service.util.JsonConverter.mapper;
 import static ru.mycrg.data_service.util.JsonConverter.toJsonNode;
 import static ru.mycrg.data_service.util.SystemLibraryAttributes.*;
+import static ru.mycrg.data_service_contract.enums.TaskIntermediateStatus.*;
 import static ru.mycrg.data_service_contract.enums.TaskStatus.*;
 import static ru.mycrg.data_service_contract.enums.TaskStatus.CANCELED;
 import static ru.mycrg.data_service_contract.enums.TaskType.CUSTOM;
@@ -85,6 +88,9 @@ public abstract class AcceptServiceBase {
     protected static final String CADASTRAL_NUMBER = "cadastral_number";
     protected static final String PERMIT_NUMBER = "permits_data_number";
     protected static final String FILE_ATTRIBUTE = "file";
+    protected static final String RECORD_STATUS_ATTRIBUTE = "record_status";
+    protected static final String USER_NAME_ATTRIBUTE = "user_name";
+    protected static final String LIBRARY_DOC_ATTRIBUTE = "library_doc";
     protected static final String PERSON_NAME_ATTRIBUTE = "person_name";
     protected static final String PERFORMER_ATTRIBUTE = "performer";
     protected static final String REQUEST_TYPE_ATTRIBUTE = "request_type";
@@ -326,6 +332,7 @@ public abstract class AcceptServiceBase {
             docPayload.put(EPGU_STATUS_CODE_ATTRIBUTE, "Заявление зарегистрировано");
             taskPayload.put(DESCRIPTION_ATTRIBUTE,
                             "Статусное Сообщение \"Заявление зарегистрировано\" отправлено в СМЭВ-3");
+            taskPayload.put(CommonFields.STATUS, IN_PROGRESS.name());
             try {
                 recordsDao.updateRecordById(libraryQualifier, docPayload, rnvSchema);
                 recordsDao.updateRecordById(recordQualifier(TASK_QUALIFIER, taskId), taskPayload, tasksSchema);
@@ -339,7 +346,12 @@ public abstract class AcceptServiceBase {
 
         if (taskStatus == DONE) {
             docPayload.put(EPGU_STATUS_CODE_ATTRIBUTE, "Выполнено");
+            docPayload.put(USER_NAME_ATTRIBUTE, "Губченко Андрей Владимирович");
+            docPayload.put(RECORD_STATUS_ATTRIBUTE, "1.А.2");
             taskPayload.put(DESCRIPTION_ATTRIBUTE, " Ответ отправлен в ГосУслуги");
+            taskPayload.put(CommonFields.INTERMEDIATE_STATUS,
+                            APPLICATION_REVIEW_ENDED_AND_ALLOWED.getIntermediateStatus());
+            taskPayload.put(CommonFields.STATUS, DONE.name());
             try {
                 recordsDao.updateRecordById(libraryQualifier, docPayload, rnvSchema);
                 recordsDao.updateRecordById(recordQualifier(TASK_QUALIFIER, taskId), taskPayload, tasksSchema);
@@ -353,7 +365,10 @@ public abstract class AcceptServiceBase {
         if (taskStatus == CANCELED) {
             if (isCanceledByUser) {
                 docPayload.put(EPGU_STATUS_CODE_ATTRIBUTE, "Заявление отменено");
+                docPayload.put(USER_NAME_ATTRIBUTE, "Губченко Андрей Владимирович");
+                docPayload.put(RECORD_STATUS_ATTRIBUTE, "1.А.3");
                 taskPayload.put(DESCRIPTION_ATTRIBUTE, "\"Заявление отменено\" отправлено в СМЭВ-3");
+                taskPayload.put(CommonFields.STATUS, CANCELED.name());
                 try {
                     recordsDao.updateRecordById(libraryQualifier, docPayload, rnvSchema);
                     recordsDao.updateRecordById(recordQualifier(TASK_QUALIFIER, taskId), taskPayload, tasksSchema);
@@ -363,18 +378,24 @@ public abstract class AcceptServiceBase {
 
                 createLog("Статусное Сообщение \"Заявление отменено\" отправлено в СМЭВ-3",
                           "Статусное Сообщение \"Заявление отменено\" отправлено в СМЭВ-3", taskId);
-            }
-            docPayload.put(EPGU_STATUS_CODE_ATTRIBUTE, "Отказано в предоставлении услуги");
-            taskPayload.put(DESCRIPTION_ATTRIBUTE, "\"Отказано в предоставлении услуги\" отправлено в СМЭВ-3");
-            try {
-                recordsDao.updateRecordById(libraryQualifier, docPayload, rnvSchema);
-                recordsDao.updateRecordById(recordQualifier(TASK_QUALIFIER, taskId), taskPayload, tasksSchema);
-            } catch (Exception e) {
-                throw new BadRequestException("Не удалось обновить запись в БД");
-            }
+            } else {
+                docPayload.put(EPGU_STATUS_CODE_ATTRIBUTE, "Отказано в предоставлении услуги");
+                docPayload.put(USER_NAME_ATTRIBUTE, "Губченко Андрей Владимирович");
+                docPayload.put(RECORD_STATUS_ATTRIBUTE, "1.А.3");
+                taskPayload.put(CommonFields.INTERMEDIATE_STATUS,
+                                APPLICATION_REVIEW_ENDED_AND_DECLINED.getIntermediateStatus());
+                taskPayload.put(CommonFields.STATUS, DONE.name());
+                taskPayload.put(DESCRIPTION_ATTRIBUTE, "\"Отказано в предоставлении услуги\" отправлено в СМЭВ-3");
+                try {
+                    recordsDao.updateRecordById(libraryQualifier, docPayload, rnvSchema);
+                    recordsDao.updateRecordById(recordQualifier(TASK_QUALIFIER, taskId), taskPayload, tasksSchema);
+                } catch (Exception e) {
+                    throw new BadRequestException("Не удалось обновить запись в БД");
+                }
 
-            createLog("Статусное Сообщение \"Отказано в предоставлении услуги\" отправлено в СМЭВ-3",
-                      "Статусное Сообщение \"Отказано в предоставлении услуги\" отправлено в СМЭВ-3", taskId);
+                createLog("Статусное Сообщение \"Отказано в предоставлении услуги\" отправлено в СМЭВ-3",
+                          "Статусное Сообщение \"Отказано в предоставлении услуги\" отправлено в СМЭВ-3", taskId);
+            }
             createLog("Задача выполнена", "Задача выполнена", taskId);
         }
     }
@@ -407,6 +428,8 @@ public abstract class AcceptServiceBase {
     protected abstract String getDescriptionLog();
 
     protected abstract <T> void addAdditionalFields(T queryResult, Map<String, Object> documentPayload);
+
+    protected abstract <T> String getPermitNumber(T queryResult);
 
     protected abstract <T> String getFullFio(T queryResult);
 
@@ -503,6 +526,7 @@ public abstract class AcceptServiceBase {
         Map<String, Object> body = new HashMap<>();
         body.put(TASK_TYPE_PROPERTY, CUSTOM.name());
         body.put(CommonFields.STATUS, TaskStatus.CREATED.name());
+        body.put(CommonFields.INTERMEDIATE_STATUS, APPLICATION_RECEIVED.getIntermediateStatus());
         body.put(CONTENT_TYPE_ID.getName(), getContentType());
         body.put(CREATED_AT.getName(), LocalDate.now());
         body.put(TASK_OWNER_ID_PROPERTY, performerId);
@@ -529,6 +553,7 @@ public abstract class AcceptServiceBase {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
 
         String fullfio = getFullFio(queryResult);
+        documentPayload.put(RECORD_STATUS_ATTRIBUTE, "1.А.1");
         documentPayload.put(DATE_ATTRIBUTE, LocalDate.parse(getCurrentDate(queryResult), formatter));
         documentPayload.put(PERSON_NAME_ATTRIBUTE, fullfio);
         documentPayload.put(REQUEST_TYPE_ATTRIBUTE, REQUEST_TYPE);
@@ -540,6 +565,10 @@ public abstract class AcceptServiceBase {
         documentPayload.put(SMEV_MESSAGE_ID_ATTRIBUTE, getMessageId(queryResult));
         documentPayload.put(SMEV_CLIENT_ID_ATTRIBUTE, getClientId(queryResult));
         documentPayload.put(PGUID_ATTRIBUTE, String.valueOf(getOrderId(queryResult)));
+        String permitNumber = getPermitNumber(queryResult);
+        if (!permitNumber.equals("")) {
+            documentPayload.put(LIBRARY_DOC_ATTRIBUTE, createLibraryDocJson(permitNumber));
+        }
         addAdditionalFields(queryResult, documentPayload);
 
         RecordEntity document = new RecordEntity(documentPayload);
@@ -589,6 +618,23 @@ public abstract class AcceptServiceBase {
                 .getSchemaByName(TASKS_SCHEMA)
                 .orElseThrow(() -> new NotFoundException("Не найдена схема задач: " + TASKS_SCHEMA));
         recordsDao.updateRecordById(recordQualifier(TASK_QUALIFIER, taskId), taskContent, tasksSchema);
+    }
+
+    private String createLibraryDocJson(String permitNumber) throws JsonProcessingException {
+        ResourceQualifier libraryQualifier = libraryQualifier(TABLE_13);
+        LibraryModel libraryModel = libraryRepository
+                .findByTableName(TABLE_13)
+                .map(documentLibrary -> new LibraryModel(documentLibrary, OWNER.name()))
+                .orElseThrow(() -> new NotFoundException("Библиотека не найдена по идентификатору: "
+                                                                 + TABLE_13));
+        SchemaDto schema = libraryModel.getSchema();
+        String docnumFilter = String.format("docnum = '%s'", "_fiz_" + permitNumber);
+        List<TypeDocumentData> documentsData = recordsDao.findAll(libraryQualifier, docnumFilter, schema).stream()
+                                                         .map(iRecord -> new TypeDocumentData(iRecord.getId(),
+                                                                                            iRecord.getTitle(),
+                                                                                            TABLE_13))
+                                                         .collect(Collectors.toList());
+        return JsonConverter.getJsonString(documentsData);
     }
 
     private <T> void collectFileDescriptions(T queryResult,

@@ -18467,15 +18467,15 @@ SET class_rule =
 }'
 WHERE name = 'dl_data_gpzu_info_p6';
 
-UPDATE data.schemas 
+UPDATE data.schemas
 SET class_rule =
     '{
+       "name": "dl_data_inbox_data",
        "tags": [
          "system",
          "Библиотека",
          "ГИСОГД"
        ],
-       "name": "dl_data_inbox_data",
        "title": "Реестр учета сведений",
        "children": [
          {
@@ -18483,6 +18483,21 @@ SET class_rule =
            "contentType": "doc_13.04"
          }
        ],
+       "readOnly": false,
+       "relations": [
+         {
+           "type": "feature",
+           "title": "Перейти к ЗУ",
+           "layers": [
+             "scratch_database_1:zu_pro_789_d839"
+           ],
+           "library": null,
+           "property": "cadastral_number",
+           "projectId": 789,
+           "targetProperty": "cadastralnum"
+         }
+       ],
+       "styleName": "dl_data_inbox_data",
        "tableName": "dl_data_inbox_data",
        "properties": [
          {
@@ -18916,16 +18931,15 @@ SET class_rule =
          {
            "name": "gisogdrf_audit_datetime",
            "title": "Дата публикации в ГИСОГД",
-           "readOnly": true,
            "minWidth": 200,
+           "readOnly": true,
            "valueType": "DATETIME"
          },
          {
            "name": "gisogdrf_sync_status",
            "title": "Статус синхронизации",
-           "calculatedValueWellKnownFormula": "gisogdRfSyncStatus",
-           "minWidth": 200,
            "asTitle": true,
+           "minWidth": 200,
            "readOnly": true,
            "valueType": "CHOICE",
            "enumerations": [
@@ -18953,7 +18967,8 @@ SET class_rule =
                "title": "Не синхронизирован",
                "value": "Не синхронизирован"
              }
-           ]
+           ],
+           "calculatedValueWellKnownFormula": "gisogdRfSyncStatus"
          },
          {
            "name": "gisogdrf_response",
@@ -19025,55 +19040,55 @@ SET class_rule =
            "valueType": "STRING"
          },
          {
-            "name": "goal",
-            "title": "Подуслуга",
-            "minWidth": 200,
-            "readOnly": true,
-            "valueType": "CHOICE",
-            "enumerations": [
-              {
-                "title": "1",
-                "value": "Выдача разрешения на строительство"
-              },
-              {
-                "title": "2FormLandCombiningDividingRedistributingAllocating",
-                "value": "Внесение изменений. Изменение конфигурации земельного участка"
-              },
-              {
-                "title": "2ChangeOwnerLand",
-                "value": "Внесение изменений. Изменение правообладателя"
-              },
-              {
-                "title": "2RenewalConstructionPermit",
-                "value": "Внесение изменений. Продление разрешения на строительство"
-              },
-              {
-                "title": "2DesignDocumentationAmended",
-                "value": "Внесение изменений в разрешение на строительство по иным причинам"
-              },
-              {
-                "title": "3",
-                "value": "Исправление технической ошибки в разрешении на строительство"
-              },
-              {
-                "title": "4",
-                "value": "Получение дубликата на строительство"
-              }
-            ]
+           "name": "goal",
+           "title": "Подуслуга",
+           "minWidth": 200,
+           "readOnly": true,
+           "valueType": "CHOICE",
+           "enumerations": [
+             {
+               "title": "Выдача разрешения на строительство",
+               "value": "1"
+             },
+             {
+               "title": "Внесение изменений. Изменение конфигурации земельного участка",
+               "value": "2FormLandCombiningDividingRedistributingAllocating"
+             },
+             {
+               "title": "Внесение изменений. Изменение правообладателя",
+               "value": "2ChangeOwnerLand"
+             },
+             {
+               "title": "Внесение изменений. Продление разрешения на строительство",
+               "value": "2RenewalConstructionPermit"
+             },
+             {
+               "title": "Внесение изменений в разрешение на строительство по иным причинам",
+               "value": "2DesignDocumentationAmended"
+             },
+             {
+               "title": "Исправление технической ошибки в разрешении на строительство",
+               "value": "3"
+             },
+             {
+               "title": "Получение дубликата на строительство",
+               "value": "4"
+             }
+           ]
          },
          {
-            "name": "cadastral_number",
-            "title": "Кадастровый номер",
-            "readOnly": true,
-            "maxLength": 200,
-            "valueType": "STRING"
+           "name": "cadastral_number",
+           "title": "Кадастровый номер",
+           "readOnly": true,
+           "maxLength": 200,
+           "valueType": "STRING"
          },
          {
-            "name": "permits_data_number",
-            "title": "Номер прошлого документа",
-            "readOnly": true,
-            "maxLength": 200,
-            "valueType": "STRING"
+           "name": "permits_data_number",
+           "title": "Номер прошлого документа",
+           "readOnly": true,
+           "maxLength": 200,
+           "valueType": "STRING"
          }
        ],
        "description": "Реестр учета сведений, документов, материалов, поступивших на размещение в информационную систему",
@@ -19264,6 +19279,20 @@ SET class_rule =
                "defaultValue": "rns_smev_rostelekom"
              },
              {
+               "name": "goal"
+             },
+             {
+               "name": "cadastral_number"
+             },
+             {
+               "name": "permits_data_number"
+             },
+             {
+               "name": "library_doc",
+               "title": "Сопутствующие материалы",
+               "readOnly": true
+             },
+             {
                "name": "title"
              },
              {
@@ -19305,7 +19334,7 @@ SET class_rule =
              },
              {
                "name": "file",
-               "required":true
+               "required": true
              },
              {
                "name": "gisogdrf_publication_datetime"
@@ -19330,8 +19359,8 @@ SET class_rule =
            "attributes": [
              {
                "name": "content_type_id",
-               "readOnly":true,
-               "defaultValue":"rnv_smev_rostelekom"
+               "readOnly": true,
+               "defaultValue": "rnv_smev_rostelekom"
              },
              {
                "name": "title"
@@ -19347,35 +19376,35 @@ SET class_rule =
              },
              {
                "name": "date",
-               "readOnly":true
+               "readOnly": true
              },
              {
                "name": "person_name",
-               "readOnly":true
+               "readOnly": true
              },
              {
                "name": "request_type",
-               "readOnly":true
+               "readOnly": true
              },
              {
                "name": "is_name",
-               "readOnly":true
+               "readOnly": true
              },
              {
                "name": "data_type",
-               "readOnly":true
+               "readOnly": true
              },
              {
                "name": "record_status",
-               "readOnly":true
+               "readOnly": true
              },
              {
                "name": "user_name",
-               "readOnly":true
+               "readOnly": true
              },
              {
                "name": "file",
-               "readOnly":true
+               "readOnly": true
              },
              {
                "name": "gisogdrf_publication_datetime"
@@ -19400,8 +19429,8 @@ SET class_rule =
            "attributes": [
              {
                "name": "content_type_id",
-               "readOnly":true,
-               "defaultValue":"gpzu_smev_rostelekom"
+               "readOnly": true,
+               "defaultValue": "gpzu_smev_rostelekom"
              },
              {
                "name": "title"
@@ -19417,35 +19446,35 @@ SET class_rule =
              },
              {
                "name": "date",
-               "readOnly":true
+               "readOnly": true
              },
              {
                "name": "person_name",
-               "readOnly":true
+               "readOnly": true
              },
              {
                "name": "request_type",
-               "readOnly":true
+               "readOnly": true
              },
              {
                "name": "is_name",
-               "readOnly":true
+               "readOnly": true
              },
              {
                "name": "data_type",
-               "readOnly":true
+               "readOnly": true
              },
              {
                "name": "record_status",
-               "readOnly":true
+               "readOnly": true
              },
              {
                "name": "user_name",
-               "readOnly":true
+               "readOnly": true
              },
              {
                "name": "file",
-               "readOnly":true
+               "readOnly": true
              },
              {
                "name": "gisogdrf_publication_datetime"
@@ -19581,9 +19610,11 @@ SET class_rule =
            "title": "Папка",
            "children": [
              {
+               "library": null,
                "contentType": "InboxData_min_gp"
              },
              {
+               "library": null,
                "contentType": "folder_min_gp"
              }
            ],
@@ -19613,8 +19644,8 @@ SET class_rule =
              }
            ]
          }
-      ]
-   }'
+       ]
+     }'
 WHERE name = 'dl_data_inbox_data';
 
 UPDATE data.schemas 

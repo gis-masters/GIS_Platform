@@ -8,16 +8,17 @@ UPDATE data.schemas
 SET class_rule =
        '{
           "name": "tasks_schema_v1",
-          "tags": [
-          "system",
-          "Задачи"
-          ],
           "title": "Схема задач",
           "tableName": "tasks",
           "description": "Реестр системных и настраиваемых задач",
           "originName": "tasks",
+          "styleName": "tasks_schema_v1",
           "readOnly": false,
           "geometryType": "MultiPolygon",
+          "tags": [
+                  "system",
+                  "Задачи"
+                  ],
           "properties": [
             {
               "name": "id",
@@ -29,7 +30,7 @@ SET class_rule =
               "name": "type",
               "title": "Тип задачи",
               "valueType": "CHOICE",
-              "hidden":true,
+              "hidden": true,
               "enumerations": [
                 {
                   "value": "ASSIGNABLE",
@@ -131,15 +132,23 @@ SET class_rule =
                 },
                 {
                   "value": "4",
-                  "title": "Документы готовы к отправке"
+                  "title": "Доработка документов"
                 },
                 {
                   "value": "5",
-                  "title": "РНС успешно отправлен в СМЭВ-3"
+                  "title": "Документы готовы к отправке"
                 },
                 {
                   "value": "6",
-                  "title": "Мотивированный отказ успешно отправлен в СМЭВ-3"
+                  "title": "Рассмотрение завершено (разрешено)"
+                },
+                {
+                  "value": "7",
+                  "title": "Рассмотрение завершено (отказано)"
+                },
+                {
+                  "value": "8",
+                  "title": "Отмена оказания услуги"
                 }
               ]
             },
@@ -216,8 +225,8 @@ SET class_rule =
             {
               "name": "record_status",
               "title": "Контроль скоков исполнения",
-              "readOnly":true,
               "valueType": "CHOICE",
+              "readOnly": true,
               "enumerations": [
                 {
                   "value": "В установленный срок",
@@ -238,8 +247,8 @@ SET class_rule =
             {
               "name": "number",
               "title": "Просроченных дней",
-              "readOnly":true,
-              "valueType": "INT"
+              "valueType": "INT",
+              "readOnly": true
             },
             {
               "name": "updated_by",
@@ -250,8 +259,8 @@ SET class_rule =
             {
               "name": "date",
               "title": "Дата выполнения",
-              "readOnly":true,
-              "valueType": "DATETIME"
+              "valueType": "DATETIME",
+              "readOnly": true
             },
             {
               "name": "last_modified",
@@ -260,15 +269,6 @@ SET class_rule =
               "hidden": true,
               "readOnly": true
             }
-          ],
-          "description": "Реестр системных и настраиваемых задач",
-          "originName": "tasks",
-          "styleName": "tasks_schema_v1",
-          "readOnly": false,
-          "geometryType": "MultiPolygon",
-          "tags": [
-            "system",
-            "Задачи"
           ],
           "contentTypes": [
             {
@@ -525,7 +525,8 @@ SET class_rule =
                   "readOnly": true
                 },
                 {
-                  "name": "status"
+                  "name": "status",
+                  "readOnly":true
                 },
                 {
                   "name": "intermediate_status"
@@ -549,7 +550,7 @@ SET class_rule =
                   "multiple": false,
                   "libraries": [
                     "dl_data_section13",
-                    "dl_data_section19"
+                    "dl_data_section_delivery_data"
                   ],
                   "description": "Мотивированный отказ вносится в библиотеку Реестр предоставления сведений",
                   "valueType": "DOCUMENT"
@@ -591,7 +592,8 @@ SET class_rule =
                   "readOnly": true
                 },
                 {
-                  "name": "status"
+                  "name": "status",
+                  "readOnly":true
                 },
                 {
                   "name": "intermediate_status"
@@ -615,7 +617,7 @@ SET class_rule =
                   "multiple": false,
                   "libraries": [
                     "dl_data_section13",
-                    "dl_data_section19"
+                    "dl_data_section_delivery_data"
                   ],
                   "description": "Мотивированный отказ вносится в библиотеку Реестр предоставления сведений",
                   "valueType": "DOCUMENT"

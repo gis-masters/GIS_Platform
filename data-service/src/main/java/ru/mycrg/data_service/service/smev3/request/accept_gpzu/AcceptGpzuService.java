@@ -35,6 +35,7 @@ import ru.mycrg.data_service_contract.enums.TaskStatus;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static java.util.Optional.ofNullable;
 import static ru.mycrg.data_service.service.resources.ResourceQualifier.libraryQualifier;
 
 @Service
@@ -162,13 +163,36 @@ public class AcceptGpzuService extends AcceptServiceBase {
     }
 
     @Override
-    protected <T> String getFullFio(T queryResult) {
+    protected <T> String getPermitNumber(T queryResult) {
         QueryResult result = (QueryResult) queryResult;
         RequestType request = result.getMessage().getRequestContent().getContent().getMessagePrimaryContent()
                                     .getRequest();
 
-        return Optional.ofNullable(request.getRecipientPersonalData())
-                       .map(RecipientPersonalDataType::getFullfio)
+        return ofNullable(request.getGPZUInformation())
+                .map(GPZUInformationType::getNumber)
+                .orElse("");
+    }
+
+    @Override
+    protected <T> String getFullFio(T queryResult) {
+        QueryResult result = (QueryResult) queryResult;
+        RequestType request = result.getMessage().getRequestContent().getContent().getMessagePrimaryContent()
+                                    .getRequest();
+        String recipientFio = Optional.ofNullable(request.getRecipientPersonalData())
+                                      .map(RecipientPersonalDataType::getFullfio)
+                                      .orElse(null);
+        String delegateRecipientFio = Optional.ofNullable(request.getDelegatePersonalData())
+                                              .map(DelegatePersonalDataType::getFullfio)
+                                              .orElse(null);
+        String representativeFio = Optional.ofNullable(request.getLegalData())
+                                           .map(LegalDataType::getRepresentativeInfo)
+                                           .map(RepresentativeInfoType::getFullfio)
+                                           .orElse(null);
+        List<String> fullfios = Arrays.asList(recipientFio, delegateRecipientFio, representativeFio);
+
+        return fullfios.stream()
+                       .filter(Objects::nonNull)
+                       .findFirst()
                        .orElse("");
     }
 

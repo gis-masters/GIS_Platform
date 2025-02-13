@@ -32,6 +32,7 @@ import ru.mycrg.data_service_contract.enums.TaskStatus;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static java.util.Optional.ofNullable;
 import static ru.mycrg.data_service.service.resources.ResourceQualifier.libraryQualifier;
 
 @Service
@@ -117,12 +118,36 @@ public class AcceptRnsService extends AcceptServiceBase {
     }
 
     @Override
+    protected <T> String getPermitNumber(T queryResult) {
+        QueryResult result = (QueryResult) queryResult;
+        RequestType request = result.getMessage().getRequestContent().getContent().getMessagePrimaryContent()
+                                    .getRequest();
+        return ofNullable(request.getConstructionPermitsData())
+                .map(ConstructionPermitsDataType::getNumber)
+                .orElse("");
+    }
+
+    @Override
     protected <T> String getFullFio(T queryResult) {
         QueryResult result = (QueryResult) queryResult;
         RequestType request = result.getMessage().getRequestContent().getContent().getMessagePrimaryContent()
                                     .getRequest();
-        return Optional.ofNullable(request.getRecipientPersonalData())
-                       .map(RecipientPersonalDataType::getFullfio)
+        String recipientFio = Optional.ofNullable(request.getRecipientPersonalData())
+                                      .map(RecipientPersonalDataType::getFullfio)
+                                      .orElse(null);
+        String delegateRecipientFio = Optional.ofNullable(request.getDelegatePersonalData())
+                                              .map(DelegatePersonalDataType::getFullfio)
+                                              .orElse(null);
+        String representativeFio = Optional.ofNullable(request.getLegalData())
+                                           .map(LegalDataType::getRepresentativeInfo)
+                                           .map(RepresentativeInfoType::getFullfio)
+                                           .orElse(null);
+
+        List<String> fullfios = Arrays.asList(recipientFio, delegateRecipientFio, representativeFio);
+
+        return fullfios.stream()
+                       .filter(Objects::nonNull)
+                       .findFirst()
                        .orElse("");
     }
 
@@ -286,7 +311,7 @@ public class AcceptRnsService extends AcceptServiceBase {
             return String.valueOf(request.getGoal());
         }
         Optional<KPVI25Type> variantChoice = Optional.ofNullable(request.getVariantChoice())
-                                              .map(VariantChoiceType::getKPVI25);
+                                                     .map(VariantChoiceType::getKPVI25);
 
         if (variantChoice.map(KPVI25Type::isRenewalConstructionPermit).orElse(false)) {
 

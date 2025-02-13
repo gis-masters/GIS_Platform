@@ -14,13 +14,16 @@ import ru.mycrg.data_service.service.TaskLogService;
 import ru.mycrg.data_service.service.TaskService;
 import ru.mycrg.data_service.service.cqrs.tasks.requests.UpdateTaskRequest;
 import ru.mycrg.data_service.service.schemas.ISchemaTemplateService;
+import ru.mycrg.data_service.service.smev3.request.AcceptServiceBase;
 import ru.mycrg.data_service.service.smev3.request.accept_gpzu.AcceptGpzuService;
 import ru.mycrg.data_service.service.smev3.request.accept_rns.AcceptRnsService;
 import ru.mycrg.data_service.service.smev3.request.accept_rnv.AcceptRnvService;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
+import ru.mycrg.data_service_contract.enums.TaskStatus;
 import ru.mycrg.mediator.IRequestHandler;
 import ru.mycrg.mediator.Voidy;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -31,6 +34,7 @@ import static ru.mycrg.data_service.service.resources.ResourceQualifier.recordQu
 import static ru.mycrg.data_service.service.smev3.fields.CommonFields.*;
 import static ru.mycrg.data_service.util.SystemLibraryAttributes.*;
 import static ru.mycrg.data_service_contract.enums.TaskStatus.*;
+import static ru.mycrg.data_service_contract.enums.TaskIntermediateStatus.*;
 
 @Component
 public class UpdateTaskRequestHandler implements IRequestHandler<UpdateTaskRequest, Voidy> {
@@ -77,54 +81,6 @@ public class UpdateTaskRequestHandler implements IRequestHandler<UpdateTaskReque
         }
 
         IRecord newTask = request.getNewTask();
-        Object contentType = task.get(CONTENT_TYPE_ID.getName());
-        if (contentType != null && contentType.toString().equals(RNS_CONTENT_TYPE)) {
-            String status = newTask.getAsString(STATUS);
-            if (status != null) {
-                if (IN_PROGRESS.name().equals(status)) {
-                    acceptRnsService.updateTablesAndSendStatusMessageToSmev(task, IN_PROGRESS, taskId);
-                }
-
-                if (DONE.name().equals(status)) {
-                    acceptRnsService.updateTablesAndSendStatusMessageToSmev(task, DONE, taskId);
-                }
-                if (CANCELED.name().equals(status)) {
-                    acceptRnsService.updateTablesAndSendStatusMessageToSmev(task, CANCELED, taskId);
-                }
-            }
-        }
-        if (contentType != null && contentType.toString().equals(RNV_CONTENT_TYPE)) {
-            String status = newTask.getAsString(STATUS);
-            if (status != null) {
-                if (IN_PROGRESS.name().equals(status)) {
-                    acceptRnvService.updateTablesAndSendStatusMessageToSmev(task, IN_PROGRESS, taskId);
-                }
-
-                if (DONE.name().equals(status)) {
-                    acceptRnvService.updateTablesAndSendStatusMessageToSmev(task, DONE, taskId);
-                }
-
-                if (CANCELED.name().equals(status)) {
-                    acceptRnvService.updateTablesAndSendStatusMessageToSmev(task, CANCELED, taskId);
-                }
-            }
-        }
-        if (contentType != null && contentType.toString().equals(GPZU_CONTENT_TYPE)) {
-            String status = newTask.getAsString(STATUS);
-            if (status != null) {
-                if (IN_PROGRESS.name().equals(status)) {
-                    acceptGpzuService.updateTablesAndSendStatusMessageToSmev(task, IN_PROGRESS, taskId);
-                }
-
-                if (DONE.name().equals(status)) {
-                    acceptGpzuService.updateTablesAndSendStatusMessageToSmev(task, DONE, taskId);
-                }
-
-                if (CANCELED.name().equals(status)) {
-                    acceptGpzuService.updateTablesAndSendStatusMessageToSmev(task, CANCELED, taskId);
-                }
-            }
-        }
 
         SchemaDto tasksSchema = this.schemaService
                 .getSchemaByName(TASKS_SCHEMA)
@@ -145,6 +101,49 @@ public class UpdateTaskRequestHandler implements IRequestHandler<UpdateTaskReque
             throw new DataServiceException("Не удалось обновить статус задачи: " + taskId);
         }
 
+        Object contentType = task.get(CONTENT_TYPE_ID.getName());
+        if (contentType != null) {
+            String status = newTask.getAsString(INTERMEDIATE_STATUS);
+            if (status != null) {
+                switch (contentType.toString()) {
+                    case RNS_CONTENT_TYPE:
+                        handleStatus(acceptRnsService, status, task, taskId);
+                        break;
+                    case RNV_CONTENT_TYPE:
+                        handleStatus(acceptRnvService, status, task, taskId);
+                        break;
+                }
+            }
+        }
+        if (contentType != null && contentType.toString().equals(GPZU_CONTENT_TYPE)) {
+            String status = newTask.getAsString(STATUS);
+            if (status != null) {
+                if (IN_PROGRESS.name().equals(status)) {
+                    acceptGpzuService.updateTablesAndSendStatusMessageToSmev(task, IN_PROGRESS, taskId);
+                }
+
+                if (DONE.name().equals(status)) {
+                    acceptGpzuService.updateTablesAndSendStatusMessageToSmev(task, DONE, taskId);
+                }
+
+                if (CANCELED.name().equals(status)) {
+                    acceptGpzuService.updateTablesAndSendStatusMessageToSmev(task, CANCELED, taskId);
+                }
+            }
+        }
+
         return new Voidy();
+    }
+
+    private void handleStatus(AcceptServiceBase service, String status, Map<String, Object> task, Long taskId) {
+        Map<String, TaskStatus> statusActionMap = new HashMap<>();
+        statusActionMap.put(APPLICATION_ASSIGNED_TO_PERFORMER.getIntermediateStatus(), IN_PROGRESS);
+        statusActionMap.put(DOCUMENTS_READY_TO_SENDING.getIntermediateStatus(), DONE);
+        statusActionMap.put(APPLICATION_CANCELED.getIntermediateStatus(), CANCELED);
+
+        TaskStatus taskStatus = statusActionMap.get(status);
+        if (taskStatus != null) {
+            service.updateTablesAndSendStatusMessageToSmev(task, taskStatus, taskId);
+        }
     }
 }
