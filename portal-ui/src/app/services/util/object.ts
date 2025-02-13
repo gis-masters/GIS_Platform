@@ -1,7 +1,7 @@
 import { isRecordStringUnknown } from './typeGuards/isRecordStringUnknown';
 
 export function replaceObjectKeys(
-  obj: Record<string, unknown> | string | unknown[],
+  obj: Record<string, unknown> | string | number | unknown[],
   keyMap: Record<string, string>
 ): unknown {
   if (Array.isArray(obj)) {
@@ -20,7 +20,7 @@ export function replaceObjectKeys(
 
       if (
         typeof newKey === 'string' &&
-        (isRecordStringUnknown(value) || typeof value === 'string' || Array.isArray(value))
+        (isRecordStringUnknown(value) || typeof value === 'string' || typeof value === 'number' || Array.isArray(value))
       ) {
         acc[newKey] = replaceObjectKeys(value, keyMap);
       }

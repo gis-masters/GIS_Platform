@@ -53,6 +53,14 @@ class UsersAddDialogBlock extends Block {
     }
   }
 
+  async getUsersAmount(): Promise<number> {
+    await this.waitForVisible();
+
+    const $$userRows = await this.$$('userRow');
+
+    return $$userRows.length - 1;
+  }
+
   async findUserRow(userName: string): Promise<WebdriverIO.Element | undefined> {
     await this.waitForVisible();
 

@@ -16,3 +16,10 @@ When(
     await usersAddDialogBlock.selectUser(user.firstName);
   }
 );
+
+When(
+  'в диалоговом окне редактирования задачи я нажимаю `Выбрать пользователя` у поля {string}',
+  async function (field: string) {
+    await tasksJournalActionsEditDialogBlock.clickAddUserBtn(field);
+  }
+);

@@ -14,6 +14,16 @@ When('в диалоговом окне выбора пользователя д�
   await Promise.all(users.map(async user => await usersAddDialogBlock.findUser(getTestUser(user[0]).firstName)));
 });
 
+When('в диалоговом окне выбора пользователя доступны только пользователи', async function (data: DataTable) {
+  const users = data.raw();
+
+  await Promise.all(users.map(async user => await usersAddDialogBlock.findUser(getTestUser(user[0]).firstName)));
+
+  const currentRowsLength = await usersAddDialogBlock.getUsersAmount();
+
+  await expect(users.length).toEqual(currentRowsLength);
+});
+
 When(
   'в диалоговом окне выбора пользователя я ввожу в фильтр поля типа string {string} значение {string}',
   async (colTitle: string, filter: string) => {
