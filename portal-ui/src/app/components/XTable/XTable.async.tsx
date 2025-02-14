@@ -510,7 +510,7 @@ export default class XTable<T> extends Component<XTableProps<T>> {
 
   private getColWidth(col: XTableColumn<T>) {
     // Используем только сохраненные значения ширины из localStorage или схемы
-    return this.colsSettings[col.field]?.width || col.width || undefined;
+    return this.colsSettings[col.field]?.width || col.width || col.minWidth || undefined;
   }
 
   private fillInvoke() {
