@@ -28,8 +28,7 @@ import java.util.List;
 import java.util.Map;
 
 import static java.time.LocalDateTime.now;
-import static ru.mycrg.data_service.service.TaskService.TASKS_SCHEMA;
-import static ru.mycrg.data_service.service.TaskService.TASK_QUALIFIER;
+import static ru.mycrg.data_service.service.TaskService.*;
 import static ru.mycrg.data_service.service.resources.ResourceQualifier.recordQualifier;
 import static ru.mycrg.data_service.service.smev3.fields.CommonFields.*;
 import static ru.mycrg.data_service.util.SystemLibraryAttributes.*;
@@ -73,9 +72,9 @@ public class UpdateTaskRequestHandler implements IRequestHandler<UpdateTaskReque
         Map<String, Object> task = taskService.getById(taskId);
 
         UserDetails userDetails = authenticationFacade.getUserDetails();
-        Long ownerId = Long.valueOf(task.get("owner_id").toString());
+        Long assignedId = Long.valueOf(task.get(TASK_ASSIGNED_TO_PROPERTY).toString());
         List<Long> directMinions = userDetails.getDirectMinions();
-        if (!userDetails.getUserId().equals(ownerId) && !directMinions.contains(ownerId)) {
+        if (!userDetails.getUserId().equals(assignedId) && !directMinions.contains(assignedId)) {
             throw new BadRequestException(
                     "Возможно редактировать только свои задачи или задачи своих непосредственных подчиненных");
         }
@@ -91,6 +90,12 @@ public class UpdateTaskRequestHandler implements IRequestHandler<UpdateTaskReque
         dataForUpdate.put(LAST_MODIFIED.getName(), now());
 
         try {
+
+            String assignedTo = newTask.getAsString(TASK_ASSIGNED_TO_PROPERTY);
+            if (assignedTo != null) {
+                dataForUpdate.put(TASK_OWNER_ID_PROPERTY, userDetails.getUserId());
+            }
+
             recordsDao.updateRecordById(recordQualifier(TASK_QUALIFIER, taskId), dataForUpdate, tasksSchema);
 
             Map<String, Object> updatedTask = taskService.getById(taskId);

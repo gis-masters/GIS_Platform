@@ -8,7 +8,9 @@ import io.restassured.specification.RequestSpecification;
 import ru.mycrg.acceptance.BaseStepsDefinitions;
 import ru.mycrg.acceptance.auth_service.AuthorizationBase;
 import ru.mycrg.acceptance.auth_service.UserStepsDefinitions;
+import ru.mycrg.auth_service_contract.dto.UserCommonDto;
 import ru.mycrg.auth_service_contract.dto.UserCreateDto;
+import ru.mycrg.auth_service_contract.dto.UserInfoModel;
 import ru.mycrg.data_service_contract.enums.TaskStatus;
 
 import java.util.HashMap;
@@ -71,6 +73,11 @@ public class TaskStepDefinition extends BaseStepsDefinitions {
         assertEquals(204, response.getStatusCode());
     }
 
+    @When("я меняю исполнителя текущей задачи на: {string}")
+    public void updateAssigned(String assignedTo) {
+        updateCurrentTask("{\"assigned_to\": " + getUserIdByName(assignedTo) + "}");
+    }
+
     @When("я меняю статус текущей задачи на: {string}")
     public void updateStatus2(String status) {
         updateCurrentTaskStatus(TaskStatus.valueOf(status));
@@ -87,7 +94,6 @@ public class TaskStepDefinition extends BaseStepsDefinitions {
         taskCreateDto.put("owner_id", (long) ownerId);
         taskCreateDto.put("description", description);
 
-
         createTask(taskCreateDto);
         currentTaskId = extractEntityIdFromResponse(response);
     }
@@ -101,7 +107,6 @@ public class TaskStepDefinition extends BaseStepsDefinitions {
         taskCreateDto.put("assigned_to", (long) ownerId);
         taskCreateDto.put("owner_id", (long) ownerId);
         taskCreateDto.put("description", "description");
-
 
         createTask(taskCreateDto);
         currentTaskId = extractEntityIdFromResponse(response);
@@ -158,6 +163,14 @@ public class TaskStepDefinition extends BaseStepsDefinitions {
         String currentStatus = response.jsonPath().get("status");
 
         assertEquals(expectedStatus, currentStatus);
+    }
+
+    @Then("начальник в текущей задаче соответствует: {string}")
+    public void checkOwnerForCurrentTask(String expectedOwner) {
+        getTaskByIdentifier(currentTaskId);
+        int currentOwner = response.jsonPath().get("owner_id");
+
+        assertEquals(getUserIdByName(expectedOwner), currentOwner);
     }
 
     private void createTask(Map<String, Object> dto) {

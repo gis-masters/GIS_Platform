@@ -16,5 +16,6 @@ ENTRYPOINT exec java -Xmx${XMX_SIZE} -javaagent:apm-agent.jar \
                                      -Delastic.apm.server_url=${APM_URL} \
                                      -Delastic.apm.enable_log_correlation=true \
                                      -Delastic.apm.application_packages=ru.mycrg.data_service \
+                                     -Delastic.apm.config.thread_pool_size=${APM_DATA_CPU} \
                                      -Duser.timezone=Europe/Moscow \
                                      -jar data-service.jar
