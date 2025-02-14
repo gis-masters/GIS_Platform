@@ -97,7 +97,7 @@ public class RasterLayerHandler implements ILayerHandler {
         String accessToken = crgAuthHandler.getRootAccessToken();
 
         ResponseModel<Object> response = new RasterStorage(accessToken).createGeoTIFF(workspaceName, store, path);
-        if (!response.isSuccessful() && !response.getBody().toString().contains("already exists in workspace")) {
+        if (!response.isSuccessful() && !response.getBody().toString().contains("already exists")) {
             throw new IllegalStateException("Не удалось создать хранилище на геосервере");
         }
     }
@@ -108,7 +108,7 @@ public class RasterLayerHandler implements ILayerHandler {
         String accessToken = crgAuthHandler.getRootAccessToken();
 
         ResponseModel<Object> response = new CoverageHandler(accessToken).create(workspaceName, store, coverage);
-        if (!response.isSuccessful() && !response.getBody().toString().contains("already exists in store")) {
+        if (!response.isSuccessful() && !response.getBody().toString().contains("already exists")) {
             throw new IllegalStateException("Не удалось создать растровый слой на геосервере");
         }
     }
