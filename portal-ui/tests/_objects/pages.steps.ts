@@ -260,3 +260,14 @@ Given('я нахожусь во вкладке `Пользователи` на �
 When('я перехожу во вкладку `Пользователи` на странице управлении организацией', async () => {
   await new OrgAdminPage().open();
 });
+
+// document
+Given('я на странице просмотра созданной папки', async function (this: ScenarioScope) {
+  if (this.latestFolder.id) {
+    await browser.url(
+      `/data-management/library/${this.latestFolder.libraryTableName}/document/${this.latestFolder.id}`
+    );
+  } else {
+    throw new Error('Нет документов в библиотеке');
+  }
+});

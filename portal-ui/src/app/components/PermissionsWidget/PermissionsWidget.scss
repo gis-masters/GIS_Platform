@@ -26,9 +26,13 @@ body .PermissionsWidget {
   }
 
   &-Content {
+    visibility: hidden;
+
     height: 0;
 
     &_open {
+      visibility: visible;
+
       height: auto;
     }
   }

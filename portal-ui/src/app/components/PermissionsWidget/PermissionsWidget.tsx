@@ -41,7 +41,7 @@ export class PermissionsWidget extends Component<PermissionsWidgetProps> {
   @observable private _fetching = false;
   @observable private dialogOpen = false;
   @observable private permissions: RoleAssignmentBody[] = [];
-  @observable private moarExpanded: Partial<{ [key in Role]: true }> = {};
+  @observable private expandedList: Partial<{ [key in Role]: true }> = {};
   @observable private isAccordionOpen: boolean = false;
 
   constructor(props: PermissionsWidgetProps) {
@@ -83,8 +83,8 @@ export class PermissionsWidget extends Component<PermissionsWidgetProps> {
               </PseudoLink>
             )}
             {disabled && <span className={cnPermissionsWidget('Header', { disabled: true })}>Разрешения</span>}
-            <IconButton onClick={this.setAccordionIsOpen}>
-              {this.isAccordionOpen ? <ChevronRightOutlined /> : <KeyboardArrowDown />}
+            <IconButton className={cnPermissionsWidget('Open')} onClick={this.setAccordionIsOpen}>
+              {this.isAccordionOpen ? <KeyboardArrowDown /> : <ChevronRightOutlined />}
             </IconButton>
           </div>
           <div className={cnPermissionsWidget('Content', { open: this.isAccordionOpen })}>
@@ -99,7 +99,7 @@ export class PermissionsWidget extends Component<PermissionsWidgetProps> {
                 .map(role => {
                   const groups = this.getListForRole(role, allGroups.list, PrincipalType.GROUP);
                   const users = this.getListForRole(role, allUsers.list, PrincipalType.USER);
-                  const expanded = this.moarExpanded[role];
+                  const expanded = this.expandedList[role];
                   const totalCount = groups.length + users.length;
                   const hiddenCount =
                     !expanded && totalCount > MAX_PRINCIPALS_TO_SHOW
@@ -131,7 +131,7 @@ export class PermissionsWidget extends Component<PermissionsWidgetProps> {
                             ...
                             <PseudoLink
                               className={cnPermissionsWidget('MoarLink')}
-                              onClick={this.handleMoar}
+                              onClick={this.handleExpandedList}
                               data-role={role}
                             >
                               (ещё {hiddenCount})
@@ -169,7 +169,7 @@ export class PermissionsWidget extends Component<PermissionsWidgetProps> {
   private setPermissions(permissions: RoleAssignmentBody[], fetching: boolean) {
     this.permissions = permissions;
     this._fetching = fetching;
-    this.moarExpanded = {};
+    this.expandedList = {};
   }
 
   @action.bound
@@ -228,8 +228,8 @@ export class PermissionsWidget extends Component<PermissionsWidgetProps> {
   }
 
   @action.bound
-  private handleMoar(e: React.MouseEvent<HTMLSpanElement, MouseEvent>) {
+  private handleExpandedList(e: React.MouseEvent<HTMLSpanElement, MouseEvent>) {
     const role = e.currentTarget.dataset.role as Role;
-    this.moarExpanded[role] = true;
+    this.expandedList[role] = true;
   }
 }
