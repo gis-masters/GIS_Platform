@@ -9,7 +9,6 @@ import { Schema } from '../../../services/data/schema/schema.models';
 import { applyContentType } from '../../../services/data/schema/schema.utils';
 import { Task } from '../../../services/data/task/task.models';
 import { updateTask } from '../../../services/data/task/task.service';
-import { services } from '../../../services/services';
 import { getPatch } from '../../../services/util/patch';
 import { ActionsItemVariant } from '../../Actions/Item/Actions-Item.base';
 import { ActionsItem } from '../../Actions/Item/Actions-Item.composed';
@@ -71,8 +70,9 @@ export class TasksJournalActionsEdit extends Component<TasksJournalActionsEditPr
         await updateTask(this.props.task.id, getPatch(formValue, this.props.task));
         this.closeDialog();
       } catch (error) {
-        Toast.error('Ошибка при редактировании задачи');
-        services.logger.error(error);
+        this.setLoading(false);
+
+        throw error;
       }
     } else {
       Toast.error('Ошибка получения идентификатора задачи');
