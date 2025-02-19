@@ -296,6 +296,13 @@ export default class Explorer extends Component<ExplorerProps> {
     } else {
       this.store.setPath(Array.isArray(path) && path.length ? path : [emptyItem]);
     }
+
+    // Инициализируем сортировку сразу при открытии
+    const openedItem = this.store.openedItem;
+    this.store.setFilter({});
+    this.store.setSort(getChildrenSortDefaultValue(openedItem, this.store));
+    this.store.setSortOrder(getChildrenSortDefaultOrder(openedItem, this.store));
+    this.store.setSortItems(getChildrenSortItems(openedItem, this.store));
   }
 
   @boundMethod
