@@ -40,9 +40,12 @@ public class TaskService {
     public static final String TASKS_SCHEMA = "tasks_schema_v1";
     public static final ResourceQualifier TASK_QUALIFIER =
             new ResourceQualifier(SYSTEM_SCHEMA_NAME, TASK_TABLE_NAME, TASK);
+
+    public static final String TASK_INTERMEDIATE_STATUS_PROPERTY = "intermediate_status";
     public static final String TASK_TYPE_PROPERTY = "type";
-    public static final String TASK_ASSIGNED_TO_PROPERTY = "assigned_to";
+    public static final String TASK_STATUS_PROPERTY = "status";
     public static final String TASK_OWNER_ID_PROPERTY = "owner_id";
+    public static final String TASK_ASSIGNED_TO_PROPERTY = "assigned_to";
     public static final String TASK_DESCRIPTION_PROPERTY = "description";
 
     private final BaseReadDao baseDao;

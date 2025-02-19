@@ -58,6 +58,9 @@ public class SystemAttributeHandler {
         return this;
     }
 
+    /**
+     * Только для документов.
+     */
     public SystemAttributeHandler fillByContentType() {
         if (!attributeDefined(CONTENT_TYPE_ID)) {
             return this;
@@ -169,6 +172,71 @@ public class SystemAttributeHandler {
         return this;
     }
 
+    /**
+     * Заполнит системное поле: "Создатель" {@link SystemLibraryAttributes#CREATED_BY} если свойство существует.
+     * <p>
+     * В зависимости от флага заполниться как id или email. Если свойства не существует - скажем об этом в лог, как
+     * WARN.
+     */
+    public SystemAttributeHandler fillCreator(boolean byId) {
+        if (result.containsKey(CREATED_BY.getName())) {
+            Object value = byId ? authenticationFacade.getUserDetails().getUserId() : authenticationFacade.getLogin();
+            result.put(CREATED_BY.getName(), value);
+        } else {
+            logColumnNotExist(CREATED_BY);
+        }
+
+        return this;
+    }
+
+    /**
+     * Заполнит системное поле: "Редактор" {@link SystemLibraryAttributes#UPDATED_BY} если свойство существует.
+     * <p>
+     * В зависимости от флага заполниться как id или email. Если свойства не существует - скажем об этом в лог, как
+     * WARN.
+     */
+    public SystemAttributeHandler fillUpdatedBy(boolean byId) {
+        if (result.containsKey(UPDATED_BY.getName())) {
+            Object value = byId ? authenticationFacade.getUserDetails().getUserId() : authenticationFacade.getLogin();
+            this.result.put(UPDATED_BY.getName(), value);
+        } else {
+            logColumnNotExist(UPDATED_BY);
+        }
+
+        return this;
+    }
+
+    /**
+     * Заполнит системное поле: "дата создания" {@link SystemLibraryAttributes#CREATED_AT} если свойство существует.
+     * <p>
+     * Если свойства не существует - скажем об этом в лог, как WARN.
+     */
+    public SystemAttributeHandler fillCreationDate() {
+        if (result.containsKey(CREATED_AT.getName())) {
+            result.put(CREATED_AT.getName(), now());
+        } else {
+            logColumnNotExist(CREATED_AT);
+        }
+
+        return this;
+    }
+
+    /**
+     * Заполнит системное поле: "дата последней модификации" {@link SystemLibraryAttributes#LAST_MODIFIED} если свойство
+     * существует.
+     * <p>
+     * Если свойства не существует - скажем об этом в лог, как WARN.
+     */
+    public SystemAttributeHandler fillLastModified() {
+        if (result.containsKey(LAST_MODIFIED.getName())) {
+            result.put(LAST_MODIFIED.getName(), now());
+        } else {
+            logColumnNotExist(LAST_MODIFIED);
+        }
+
+        return this;
+    }
+
     public SystemAttributeHandler fillCreatorAndCreationDate(List<String> allColumns) {
         if (allColumns.contains(CREATED_AT.getName())) {
             result.put(CREATED_AT.getName(), now());
@@ -191,6 +259,7 @@ public class SystemAttributeHandler {
         } else {
             logColumnNotExist(LAST_MODIFIED);
         }
+
         if (allColumns.contains(UPDATED_BY.getName())) {
             result.put(UPDATED_BY.getName(), authenticationFacade.getLogin());
         } else {

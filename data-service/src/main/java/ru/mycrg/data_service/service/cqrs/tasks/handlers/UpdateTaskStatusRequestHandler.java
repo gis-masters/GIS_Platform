@@ -34,6 +34,11 @@ import static ru.mycrg.data_service.service.smev3.fields.CommonFields.*;
 import static ru.mycrg.data_service.util.SystemLibraryAttributes.*;
 import static ru.mycrg.data_service_contract.enums.TaskStatus.*;
 
+/**
+ * @deprecated Используйте {@link UpdateTaskRequestHandler} вместо этого класса.
+ * Там более актуальный код, на данный момент по обновлению статусов.
+ */
+@Deprecated
 @Component
 public class UpdateTaskStatusRequestHandler implements IRequestHandler<UpdateTaskStatusRequest, Voidy> {
 

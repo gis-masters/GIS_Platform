@@ -36,7 +36,6 @@ import ru.mycrg.data_service.service.schemas.ISchemaTemplateService;
 import ru.mycrg.data_service.service.smev3.SmevMessageSenderService;
 import ru.mycrg.data_service.service.smev3.SmevMessageService;
 import ru.mycrg.data_service.service.smev3.config.Smev3Config;
-import ru.mycrg.data_service.service.smev3.fields.CommonFields;
 import ru.mycrg.data_service.service.smev3.model.CustomMultipartFile;
 import ru.mycrg.data_service.service.storage.FileStorageService;
 import ru.mycrg.data_service.util.JsonConverter;
@@ -44,7 +43,6 @@ import ru.mycrg.data_service.util.xml.XmlMarshaller;
 import ru.mycrg.data_service_contract.dto.FileDescription;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.data_service_contract.dto.TypeDocumentData;
-import ru.mycrg.data_service_contract.enums.TaskIntermediateStatus;
 import ru.mycrg.data_service_contract.enums.TaskStatus;
 
 import javax.xml.bind.JAXBException;
@@ -64,15 +62,14 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 import static ru.mycrg.data_service.dto.Roles.OWNER;
 import static ru.mycrg.data_service.service.TaskService.*;
 import static ru.mycrg.data_service.service.resources.ResourceQualifier.*;
-import static ru.mycrg.data_service.service.smev3.fields.FieldsSection.TABLE_13;
 import static ru.mycrg.data_service.service.smev3.fields.FieldsSection.DL_DATA_SECTION_DELIVERY_DATA_TABLE;
+import static ru.mycrg.data_service.service.smev3.fields.FieldsSection.TABLE_13;
 import static ru.mycrg.data_service.service.storage.FileStorageUtil.generateFileName;
 import static ru.mycrg.data_service.util.JsonConverter.mapper;
 import static ru.mycrg.data_service.util.JsonConverter.toJsonNode;
 import static ru.mycrg.data_service.util.SystemLibraryAttributes.*;
 import static ru.mycrg.data_service_contract.enums.TaskIntermediateStatus.*;
 import static ru.mycrg.data_service_contract.enums.TaskStatus.*;
-import static ru.mycrg.data_service_contract.enums.TaskStatus.CANCELED;
 import static ru.mycrg.data_service_contract.enums.TaskType.CUSTOM;
 
 public abstract class AcceptServiceBase {
@@ -182,9 +179,7 @@ public abstract class AcceptServiceBase {
 
         long taskId = tasksDao.createTask(dbName, taskContent);
 
-        createLog(getEventTypeLog(),
-                  getDescriptionLog(),
-                  taskId);
+        createLog(getEventTypeLog(), getDescriptionLog(), taskId);
 
         createDocumentAndLinkToTask(queryResult, taskContent, taskId);
     }
@@ -194,6 +189,7 @@ public abstract class AcceptServiceBase {
         if (task.get(INBOX_DATA_KEY_DATA_CONNECTION_ATTRIBUTE) == null) {
             throw new BadRequestException("Блок inbox_data_key_data_connection у задачи не заполнен");
         }
+
         Optional<List<TypeDocumentData>> oInboxDocs = JsonConverter.fromJson(
                 String.valueOf(task.get(INBOX_DATA_KEY_DATA_CONNECTION_ATTRIBUTE)),
                 new TypeReference<List<TypeDocumentData>>() {
@@ -224,6 +220,7 @@ public abstract class AcceptServiceBase {
             statusMesage = getStatusMessage(docRecord, taskStatus, null, null, false);
             updateTaskAndDocument(libraryQualifier, rnvSchema, taskId, taskStatus, false);
         }
+
         if (taskStatus == CANCELED) {
             statusMesage = getStatusMessage(docRecord, taskStatus, null, null, true);
             updateTaskAndDocument(libraryQualifier, rnvSchema, taskId, taskStatus, true);
@@ -233,10 +230,12 @@ public abstract class AcceptServiceBase {
             if (task.get(DATA_SECTION_KEY_DATA_CONNECTION_ATTRIBUTE) == null) {
                 throw new BadRequestException("Блок data_key_data_connection у задачи не заполнен");
             }
+
             Optional<List<TypeDocumentData>> oDataSectionDocs = JsonConverter.fromJson(
                     String.valueOf(task.get(DATA_SECTION_KEY_DATA_CONNECTION_ATTRIBUTE)),
                     new TypeReference<List<TypeDocumentData>>() {
                     });
+
             if (oDataSectionDocs.isEmpty()) {
                 throw new BadRequestException("Не удалось распарсить блок data_key_data_connection у задачи");
             }
@@ -332,7 +331,7 @@ public abstract class AcceptServiceBase {
             docPayload.put(EPGU_STATUS_CODE_ATTRIBUTE, "Заявление зарегистрировано");
             taskPayload.put(DESCRIPTION_ATTRIBUTE,
                             "Статусное Сообщение \"Заявление зарегистрировано\" отправлено в СМЭВ-3");
-            taskPayload.put(CommonFields.STATUS, IN_PROGRESS.name());
+            taskPayload.put(TASK_STATUS_PROPERTY, IN_PROGRESS.name());
             try {
                 recordsDao.updateRecordById(libraryQualifier, docPayload, rnvSchema);
                 recordsDao.updateRecordById(recordQualifier(TASK_QUALIFIER, taskId), taskPayload, tasksSchema);
@@ -348,10 +347,12 @@ public abstract class AcceptServiceBase {
             docPayload.put(EPGU_STATUS_CODE_ATTRIBUTE, "Выполнено");
             docPayload.put(USER_NAME_ATTRIBUTE, "Губченко Андрей Владимирович");
             docPayload.put(RECORD_STATUS_ATTRIBUTE, "1.А.2");
+
             taskPayload.put(DESCRIPTION_ATTRIBUTE, " Ответ отправлен в ГосУслуги");
-            taskPayload.put(CommonFields.INTERMEDIATE_STATUS,
+            taskPayload.put(TASK_INTERMEDIATE_STATUS_PROPERTY,
                             APPLICATION_REVIEW_ENDED_AND_ALLOWED.getIntermediateStatus());
-            taskPayload.put(CommonFields.STATUS, DONE.name());
+            taskPayload.put(TASK_STATUS_PROPERTY, DONE.name());
+
             try {
                 recordsDao.updateRecordById(libraryQualifier, docPayload, rnvSchema);
                 recordsDao.updateRecordById(recordQualifier(TASK_QUALIFIER, taskId), taskPayload, tasksSchema);
@@ -362,53 +363,59 @@ public abstract class AcceptServiceBase {
             createLog("Формируем сообщение в СМЭВ", "Формируем сообщение в СМЭВ", taskId);
         }
 
-        if (taskStatus == CANCELED) {
-            if (isCanceledByUser) {
-                docPayload.put(EPGU_STATUS_CODE_ATTRIBUTE, "Заявление отменено");
-                docPayload.put(USER_NAME_ATTRIBUTE, "Губченко Андрей Владимирович");
-                docPayload.put(RECORD_STATUS_ATTRIBUTE, "1.А.3");
-                taskPayload.put(DESCRIPTION_ATTRIBUTE, "\"Заявление отменено\" отправлено в СМЭВ-3");
-                taskPayload.put(CommonFields.STATUS, CANCELED.name());
-                try {
-                    recordsDao.updateRecordById(libraryQualifier, docPayload, rnvSchema);
-                    recordsDao.updateRecordById(recordQualifier(TASK_QUALIFIER, taskId), taskPayload, tasksSchema);
-                } catch (Exception e) {
-                    throw new BadRequestException("Не удалось обновить запись в БД");
-                }
-
-                createLog("Статусное Сообщение \"Заявление отменено\" отправлено в СМЭВ-3",
-                          "Статусное Сообщение \"Заявление отменено\" отправлено в СМЭВ-3", taskId);
-            } else {
-                docPayload.put(EPGU_STATUS_CODE_ATTRIBUTE, "Отказано в предоставлении услуги");
-                docPayload.put(USER_NAME_ATTRIBUTE, "Губченко Андрей Владимирович");
-                docPayload.put(RECORD_STATUS_ATTRIBUTE, "1.А.3");
-                taskPayload.put(CommonFields.INTERMEDIATE_STATUS,
-                                APPLICATION_REVIEW_ENDED_AND_DECLINED.getIntermediateStatus());
-                taskPayload.put(CommonFields.STATUS, DONE.name());
-                taskPayload.put(DESCRIPTION_ATTRIBUTE, "\"Отказано в предоставлении услуги\" отправлено в СМЭВ-3");
-                try {
-                    recordsDao.updateRecordById(libraryQualifier, docPayload, rnvSchema);
-                    recordsDao.updateRecordById(recordQualifier(TASK_QUALIFIER, taskId), taskPayload, tasksSchema);
-                } catch (Exception e) {
-                    throw new BadRequestException("Не удалось обновить запись в БД");
-                }
-
-                createLog("Статусное Сообщение \"Отказано в предоставлении услуги\" отправлено в СМЭВ-3",
-                          "Статусное Сообщение \"Отказано в предоставлении услуги\" отправлено в СМЭВ-3", taskId);
-            }
-            createLog("Задача выполнена", "Задача выполнена", taskId);
+        if (taskStatus != CANCELED) {
+            return;
         }
+
+        if (isCanceledByUser) {
+            docPayload.put(EPGU_STATUS_CODE_ATTRIBUTE, "Заявление отменено");
+            docPayload.put(USER_NAME_ATTRIBUTE, "Губченко Андрей Владимирович");
+            docPayload.put(RECORD_STATUS_ATTRIBUTE, "1.А.3");
+
+            taskPayload.put(DESCRIPTION_ATTRIBUTE, "\"Заявление отменено\" отправлено в СМЭВ-3");
+            taskPayload.put(TASK_STATUS_PROPERTY, CANCELED.name());
+
+            try {
+                recordsDao.updateRecordById(libraryQualifier, docPayload, rnvSchema);
+                recordsDao.updateRecordById(recordQualifier(TASK_QUALIFIER, taskId), taskPayload, tasksSchema);
+            } catch (Exception e) {
+                throw new BadRequestException("Не удалось обновить запись в БД");
+            }
+
+            createLog("Статусное Сообщение \"Заявление отменено\" отправлено в СМЭВ-3",
+                      "Статусное Сообщение \"Заявление отменено\" отправлено в СМЭВ-3", taskId);
+        } else {
+            docPayload.put(EPGU_STATUS_CODE_ATTRIBUTE, "Отказано в предоставлении услуги");
+            docPayload.put(USER_NAME_ATTRIBUTE, "Губченко Андрей Владимирович");
+            docPayload.put(RECORD_STATUS_ATTRIBUTE, "1.А.3");
+
+            taskPayload.put(TASK_INTERMEDIATE_STATUS_PROPERTY,
+                            APPLICATION_REVIEW_ENDED_AND_DECLINED.getIntermediateStatus());
+            taskPayload.put(TASK_STATUS_PROPERTY, DONE.name());
+            taskPayload.put(DESCRIPTION_ATTRIBUTE, "\"Отказано в предоставлении услуги\" отправлено в СМЭВ-3");
+
+            try {
+                recordsDao.updateRecordById(libraryQualifier, docPayload, rnvSchema);
+                recordsDao.updateRecordById(recordQualifier(TASK_QUALIFIER, taskId), taskPayload, tasksSchema);
+            } catch (Exception e) {
+                throw new BadRequestException("Не удалось обновить запись в БД");
+            }
+
+            createLog("Статусное Сообщение \"Отказано в предоставлении услуги\" отправлено в СМЭВ-3",
+                      "Статусное Сообщение \"Отказано в предоставлении услуги\" отправлено в СМЭВ-3", taskId);
+        }
+        createLog("Задача выполнена", "Задача выполнена", taskId);
     }
 
     private void createLog(String eventType, String description, Long taskId) {
-        Map<String, Object> propsMap = new HashMap<>();
-        propsMap.put(TASK_DESCRIPTION_PROPERTY, description);
-        propsMap.put(CONTENT_TYPE_ID.getName(), getContentType());
-        propsMap.put(TASK_TYPE_PROPERTY, CUSTOM.name());
-        propsMap.put(CommonFields.STATUS, TaskStatus.CREATED);
-        propsMap.put(TASK_OWNER_ID_PROPERTY, Long.valueOf("2"));
+        Map<String, Object> taskProps = new HashMap<>();
+        taskProps.put(TASK_DESCRIPTION_PROPERTY, description);
+        taskProps.put(CONTENT_TYPE_ID.getName(), getContentType());
+        taskProps.put(TASK_TYPE_PROPERTY, CUSTOM.name());
+        taskProps.put(TASK_STATUS_PROPERTY, TaskStatus.CREATED);
+        taskProps.put(TASK_OWNER_ID_PROPERTY, Long.valueOf("2"));
 
-        taskLogService.create(new TaskLogDto(eventType, taskId), propsMap);
+        taskLogService.create(new TaskLogDto(eventType, taskId), taskProps);
     }
 
     protected abstract List<IRecord> getDocRecords();
@@ -519,20 +526,21 @@ public abstract class AcceptServiceBase {
             log.error(e.getMessage());
             throw new SmevRequestException("Не удалось загрузить вложения");
         }
+
         return filesAsBytes;
     }
 
     private Map<String, Object> prepareTaskContent(Long performerId) {
-        Map<String, Object> body = new HashMap<>();
-        body.put(TASK_TYPE_PROPERTY, CUSTOM.name());
-        body.put(CommonFields.STATUS, TaskStatus.CREATED.name());
-        body.put(CommonFields.INTERMEDIATE_STATUS, APPLICATION_RECEIVED.getIntermediateStatus());
-        body.put(CONTENT_TYPE_ID.getName(), getContentType());
-        body.put(CREATED_AT.getName(), LocalDate.now());
-        body.put(TASK_OWNER_ID_PROPERTY, performerId);
-        body.put(TASK_ASSIGNED_TO_PROPERTY, performerId);
+        Map<String, Object> taskProps = new HashMap<>();
+        taskProps.put(TASK_TYPE_PROPERTY, CUSTOM.name());
+        taskProps.put(TASK_STATUS_PROPERTY, TaskStatus.CREATED.name());
+        taskProps.put(TASK_INTERMEDIATE_STATUS_PROPERTY, APPLICATION_RECEIVED.getIntermediateStatus());
+        taskProps.put(CONTENT_TYPE_ID.getName(), getContentType());
+        taskProps.put(CREATED_AT.getName(), LocalDate.now());
+        taskProps.put(TASK_OWNER_ID_PROPERTY, performerId);
+        taskProps.put(TASK_ASSIGNED_TO_PROPERTY, performerId);
 
-        return body;
+        return taskProps;
     }
 
     private <T> void createDocumentAndLinkToTask(T queryResult,
@@ -590,6 +598,7 @@ public abstract class AcceptServiceBase {
             wordDocumentOutputStream = new ByteArrayOutputStream();
             wordDocument.write(wordDocumentOutputStream);
         }
+
         if (wordDocumentOutputStream != null) {
             byte[] wordDocumentBytes = wordDocumentOutputStream.toByteArray();
             wordDocumentOutputStream.close();
@@ -617,6 +626,7 @@ public abstract class AcceptServiceBase {
         SchemaDto tasksSchema = this.schemaService
                 .getSchemaByName(TASKS_SCHEMA)
                 .orElseThrow(() -> new NotFoundException("Не найдена схема задач: " + TASKS_SCHEMA));
+
         recordsDao.updateRecordById(recordQualifier(TASK_QUALIFIER, taskId), taskContent, tasksSchema);
     }
 
@@ -629,11 +639,11 @@ public abstract class AcceptServiceBase {
                                                                  + TABLE_13));
         SchemaDto schema = libraryModel.getSchema();
         String docnumFilter = String.format("docnum = '%s'", "_fiz_" + permitNumber);
-        List<TypeDocumentData> documentsData = recordsDao.findAll(libraryQualifier, docnumFilter, schema).stream()
-                                                         .map(iRecord -> new TypeDocumentData(iRecord.getId(),
-                                                                                            iRecord.getTitle(),
-                                                                                            TABLE_13))
-                                                         .collect(Collectors.toList());
+        List<TypeDocumentData> documentsData = recordsDao
+                .findAll(libraryQualifier, docnumFilter, schema).stream()
+                .map(iRecord -> new TypeDocumentData(iRecord.getId(), iRecord.getTitle(), TABLE_13))
+                .collect(Collectors.toList());
+
         return JsonConverter.getJsonString(documentsData);
     }
 
@@ -646,17 +656,16 @@ public abstract class AcceptServiceBase {
         collectFilesToFileDescriptionList(files, fileResQualifier, fileQualifier, fileDescriptions);
     }
 
-    private void saveMultipartFile(List<FileDescription> fileDescriptions, JsonNode jsonNode, String type,
+    private void saveMultipartFile(List<FileDescription> fileDescriptions,
+                                   JsonNode jsonNode,
+                                   String type,
                                    MultipartFile wordDocumentFile) {
         String fileName = generateFileName(wordDocumentFile);
-        String path = fileStorageService.copyToTrash(wordDocumentFile,
-                                                     fileName);
+        String path = fileStorageService.copyToTrash(wordDocumentFile, fileName);
         String intents = simpleIntentHandler.defineIntent(wordDocumentFile);
 
-        path = fileStorageService
-                .moveToMainStorage(Paths.get(path),
-                                   Paths.get(DEFAULT_PATH + fileName))
-                .normalize().toString();
+        path = fileStorageService.moveToMainStorage(Paths.get(path), Paths.get(DEFAULT_PATH + fileName))
+                                 .normalize().toString();
         File wordDocumentEntity = new File(wordDocumentFile, intents, path, DEFAULT_USER_LOGIN);
         File savedEntity = fileRepository.save(wordDocumentEntity);
         UUID savedEntityId = savedEntity.getId();
