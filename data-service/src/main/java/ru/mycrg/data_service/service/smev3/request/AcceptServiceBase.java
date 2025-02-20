@@ -51,6 +51,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -81,6 +82,8 @@ public abstract class AcceptServiceBase {
     protected static final String LIBRARY_ID = "dl_data_inbox_data";
     protected static final String TASK_ALLOCATION_LIBRARY_ID = "dl_data_task_allocation";
     protected static final String DATE_ATTRIBUTE = "date";
+    protected static final String DUE_DATE_ATTRIBUTE = "due_date";
+    protected static final String NUMBER_ATTRIBUTE = "number";
     protected static final String GOAL = "goal";
     protected static final String CADASTRAL_NUMBER = "cadastral_number";
     protected static final String PERMIT_NUMBER = "permits_data_number";
@@ -218,12 +221,12 @@ public abstract class AcceptServiceBase {
         String statusMesage = null;
         if (taskStatus == IN_PROGRESS) {
             statusMesage = getStatusMessage(docRecord, taskStatus, null, null, false);
-            updateTaskAndDocument(libraryQualifier, rnvSchema, taskId, taskStatus, false);
+            updateTaskAndDocument(libraryQualifier, rnvSchema, taskId, taskStatus, task, false);
         }
 
         if (taskStatus == CANCELED) {
             statusMesage = getStatusMessage(docRecord, taskStatus, null, null, true);
-            updateTaskAndDocument(libraryQualifier, rnvSchema, taskId, taskStatus, true);
+            updateTaskAndDocument(libraryQualifier, rnvSchema, taskId, taskStatus, task, true);
         }
 
         if (taskStatus == DONE) {
@@ -304,12 +307,12 @@ public abstract class AcceptServiceBase {
 
             if (firstDocument.getLibraryTableName().equalsIgnoreCase(TABLE_13)) {
                 statusMesage = getStatusMessage(docRecord, taskStatus, fileName, ecp, false);
-                updateTaskAndDocument(libraryQualifier, rnvSchema, taskId, taskStatus, false);
+                updateTaskAndDocument(libraryQualifier, rnvSchema, taskId, taskStatus, task, false);
             }
 
             if (firstDocument.getLibraryTableName().equalsIgnoreCase(DL_DATA_SECTION_DELIVERY_DATA_TABLE)) {
                 statusMesage = getStatusMessage(docRecord, CANCELED, fileName, ecp, false);
-                updateTaskAndDocument(libraryQualifier, rnvSchema, taskId, CANCELED, false);
+                updateTaskAndDocument(libraryQualifier, rnvSchema, taskId, CANCELED, task, false);
             }
         }
 
@@ -320,6 +323,7 @@ public abstract class AcceptServiceBase {
                                        SchemaDto rnvSchema,
                                        Long taskId,
                                        TaskStatus taskStatus,
+                                       Map<String, Object> task,
                                        boolean isCanceledByUser) {
         Map<String, Object> docPayload = new HashMap<>();
         Map<String, Object> taskPayload = new HashMap<>();
@@ -352,7 +356,7 @@ public abstract class AcceptServiceBase {
             taskPayload.put(TASK_INTERMEDIATE_STATUS_PROPERTY,
                             APPLICATION_REVIEW_ENDED_AND_ALLOWED.getIntermediateStatus());
             taskPayload.put(TASK_STATUS_PROPERTY, DONE.name());
-
+            addCompleteDatesToTask(taskPayload, task);
             try {
                 recordsDao.updateRecordById(libraryQualifier, docPayload, rnvSchema);
                 recordsDao.updateRecordById(recordQualifier(TASK_QUALIFIER, taskId), taskPayload, tasksSchema);
@@ -375,12 +379,13 @@ public abstract class AcceptServiceBase {
             taskPayload.put(DESCRIPTION_ATTRIBUTE, "\"Заявление отменено\" отправлено в СМЭВ-3");
             taskPayload.put(TASK_STATUS_PROPERTY, CANCELED.name());
 
-            try {
-                recordsDao.updateRecordById(libraryQualifier, docPayload, rnvSchema);
-                recordsDao.updateRecordById(recordQualifier(TASK_QUALIFIER, taskId), taskPayload, tasksSchema);
-            } catch (Exception e) {
-                throw new BadRequestException("Не удалось обновить запись в БД");
-            }
+            addCompleteDatesToTask(taskPayload, task);
+                try {
+                    recordsDao.updateRecordById(libraryQualifier, docPayload, rnvSchema);
+                    recordsDao.updateRecordById(recordQualifier(TASK_QUALIFIER, taskId), taskPayload, tasksSchema);
+                } catch (Exception e) {
+                    throw new BadRequestException("Не удалось обновить запись в БД");
+                }
 
             createLog("Статусное Сообщение \"Заявление отменено\" отправлено в СМЭВ-3",
                       "Статусное Сообщение \"Заявление отменено\" отправлено в СМЭВ-3", taskId);
@@ -394,12 +399,13 @@ public abstract class AcceptServiceBase {
             taskPayload.put(TASK_STATUS_PROPERTY, DONE.name());
             taskPayload.put(DESCRIPTION_ATTRIBUTE, "\"Отказано в предоставлении услуги\" отправлено в СМЭВ-3");
 
-            try {
-                recordsDao.updateRecordById(libraryQualifier, docPayload, rnvSchema);
-                recordsDao.updateRecordById(recordQualifier(TASK_QUALIFIER, taskId), taskPayload, tasksSchema);
-            } catch (Exception e) {
-                throw new BadRequestException("Не удалось обновить запись в БД");
-            }
+            addCompleteDatesToTask(taskPayload, task);
+                try {
+                    recordsDao.updateRecordById(libraryQualifier, docPayload, rnvSchema);
+                    recordsDao.updateRecordById(recordQualifier(TASK_QUALIFIER, taskId), taskPayload, tasksSchema);
+                } catch (Exception e) {
+                    throw new BadRequestException("Не удалось обновить запись в БД");
+                }
 
             createLog("Статусное Сообщение \"Отказано в предоставлении услуги\" отправлено в СМЭВ-3",
                       "Статусное Сообщение \"Отказано в предоставлении услуги\" отправлено в СМЭВ-3", taskId);
@@ -435,6 +441,10 @@ public abstract class AcceptServiceBase {
     protected abstract String getDescriptionLog();
 
     protected abstract <T> void addAdditionalFields(T queryResult, Map<String, Object> documentPayload);
+
+    protected abstract void addDueDateToTask(Map<String, Object> taskPayload);
+
+    protected abstract void addCompleteDatesToTask(Map<String, Object> taskPayload, Map<String, Object> oldTaskPayload);
 
     protected abstract <T> String getPermitNumber(T queryResult);
 
@@ -539,6 +549,7 @@ public abstract class AcceptServiceBase {
         taskProps.put(CREATED_AT.getName(), LocalDate.now());
         taskProps.put(TASK_OWNER_ID_PROPERTY, performerId);
         taskProps.put(TASK_ASSIGNED_TO_PROPERTY, performerId);
+        addDueDateToTask(taskProps);
 
         return taskProps;
     }
@@ -675,5 +686,39 @@ public abstract class AcceptServiceBase {
 
         FileDescription fileDescription = new FileDescription(savedEntityId, savedEntityTitle, savedEntitySize);
         fileDescriptions.add(fileDescription);
+    }
+
+    protected LocalDate calculateDueDate(int daysForAdd) {
+        LocalDate dueDate = LocalDate.now();
+        int counter = 0;
+
+        while (counter < daysForAdd) {
+            dueDate = dueDate.plusDays(1);
+            if (dueDate.getDayOfWeek() != DayOfWeek.SATURDAY && dueDate.getDayOfWeek() != DayOfWeek.SUNDAY) {
+                counter++;
+            }
+        }
+
+        return dueDate;
+    }
+
+    protected long calculateOverdueDays(LocalDate startDate, LocalDate endDate) {
+        long workingDays = 0;
+        LocalDate date = startDate;
+
+        int step = startDate.isBefore(endDate) ? 1 : -1;
+
+        while (!date.isEqual(endDate)) {
+            if (date.getDayOfWeek() != DayOfWeek.SATURDAY && date.getDayOfWeek() != DayOfWeek.SUNDAY) {
+                workingDays += step;
+            }
+            date = date.plusDays(step);
+        }
+
+        return workingDays;
+    }
+
+    protected String getRecordStatus(LocalDate dueDate) {
+        return dueDate.isBefore(LocalDate.now()) ? "С нарушением срока" : "В установленный срок";
     }
 }

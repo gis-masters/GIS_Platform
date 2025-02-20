@@ -163,6 +163,14 @@ public class AcceptGpzuService extends AcceptServiceBase {
     }
 
     @Override
+    protected void addDueDateToTask(Map<String, Object> taskPayload) {
+    }
+
+    @Override
+    protected void addCompleteDatesToTask(Map<String, Object> taskPayload, Map<String, Object> oldTaskPayload) {
+    }
+
+    @Override
     protected <T> String getPermitNumber(T queryResult) {
         QueryResult result = (QueryResult) queryResult;
         RequestType request = result.getMessage().getRequestContent().getContent().getMessagePrimaryContent()

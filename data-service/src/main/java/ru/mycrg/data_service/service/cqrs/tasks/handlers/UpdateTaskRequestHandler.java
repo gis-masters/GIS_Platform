@@ -119,16 +119,17 @@ public class UpdateTaskRequestHandler implements IRequestHandler<UpdateTaskReque
         Object contentType = task.get(CONTENT_TYPE_ID.getName());
         if (contentType != null) {
             String intermediateStatus = newTask.getAsString(TASK_INTERMEDIATE_STATUS_PROPERTY);
-            if (intermediateStatus != null) {
+            TaskStatus status = mapStatus(intermediateStatus);
+            if (intermediateStatus != null && status != null) {
                 switch (contentType.toString()) {
                     case RNS_CONTENT_TYPE:
                         acceptRnsService.updateTablesAndSendStatusMessageToSmev(task,
-                                                                                mapStatus(intermediateStatus),
+                                                                                status,
                                                                                 taskId);
                         break;
                     case RNV_CONTENT_TYPE:
                         acceptRnvService.updateTablesAndSendStatusMessageToSmev(task,
-                                                                                mapStatus(intermediateStatus),
+                                                                                status,
                                                                                 taskId);
 
                         break;
@@ -158,21 +159,12 @@ public class UpdateTaskRequestHandler implements IRequestHandler<UpdateTaskReque
         return new Voidy();
     }
 
-    @NotNull
     private TaskStatus mapStatus(String intermediateStatus) {
         Map<String, TaskStatus> statusActionMap = new HashMap<>();
         statusActionMap.put(APPLICATION_ASSIGNED_TO_PERFORMER.getIntermediateStatus(), IN_PROGRESS);
         statusActionMap.put(DOCUMENTS_READY_TO_SENDING.getIntermediateStatus(), DONE);
         statusActionMap.put(APPLICATION_CANCELED.getIntermediateStatus(), CANCELED);
 
-        TaskStatus status = statusActionMap.get(intermediateStatus);
-        if (status != null) {
-            return status;
-        } else {
-            logError("Не корректный intermediate_status: '" + intermediateStatus + "' !!!",
-                     new IllegalStateException());
-
-            return IN_PROGRESS;
-        }
+        return statusActionMap.get(intermediateStatus);
     }
 }
