@@ -42,7 +42,7 @@ public class GisogdRfSyncStatusFormulaGenerator implements IWellKnownFormulaGene
                 "  WHEN (last_modified < gisogdrf_publication_datetime)" +
                 "    THEN 'В процессе синхронизации'::text" +
                 "  ELSE 'Не синхронизирован'::text" +
-                "END) STORED";
+                " END) STORED";
     }
 
     @Override
