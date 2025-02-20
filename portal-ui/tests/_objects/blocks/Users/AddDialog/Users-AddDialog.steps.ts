@@ -8,6 +8,10 @@ When('в диалоговом окне выбора пользователя я 
   await usersAddDialogBlock.selectUser(user);
 });
 
+When('в диалоговом окне выбора пользователя я нажимаю кнопку `Выбрать`', async () => {
+  await usersAddDialogBlock.save();
+});
+
 When('в диалоговом окне выбора пользователя доступны пользователи', async function (data: DataTable) {
   const users = data.raw();
 

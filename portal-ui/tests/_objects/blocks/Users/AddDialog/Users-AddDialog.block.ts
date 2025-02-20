@@ -42,6 +42,12 @@ class UsersAddDialogBlock extends Block {
     await $saveBtn.waitForDisplayed({ reverse: true });
   }
 
+  async save(): Promise<void> {
+    const $saveBtn = await this.$('saveBtn');
+    await $saveBtn.click();
+    await $saveBtn.waitForDisplayed({ reverse: true });
+  }
+
   async findUser(userName: string): Promise<void> {
     const $tableContainer = await this.$('tableContainer');
     await $tableContainer.waitForDisplayed();
