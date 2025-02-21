@@ -262,7 +262,7 @@ function circleGeometry(feature: FeatureLike) {
   }
 
   if (mapSnapStore.isSnapNotActive()) {
-    return;
+    return new MultiPoint([(geometry as Point).getCoordinates()]);
   }
 
   return convertToFlatMultiPoint(geometry);
