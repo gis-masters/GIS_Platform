@@ -192,7 +192,7 @@ class MapVerticesModificationService {
         id: String(extractFeatureId(featureId)),
         type: 'Feature',
         geometry: wfsFeature.geometry,
-        properties: wfsFeature.properties
+        properties: {}
       });
 
       return wfsFeature;
