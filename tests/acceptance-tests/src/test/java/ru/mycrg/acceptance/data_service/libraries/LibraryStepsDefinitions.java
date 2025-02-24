@@ -243,6 +243,14 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
         updateCurrentDocument(gson.toJson(currentDocument));
     }
 
+    @When("к текущему документу прикреплён GML файл: {string}")
+    public void addSomeFileToCurrentDocument(String fileName) {
+        currentDocument = new DefaultDocumentModel(fileName + generateString("STRING_4"));
+        currentDocument.addFile(new FileDescriptionModel(currentFileId, 314L, fileName));
+
+        updateCurrentDocument(gson.toJson(currentDocument));
+    }
+
     @When("создан новый набор данных, с таблицами в нём")
     public void checkDatasetIsCreated() {
         datasetsStepsDefinitions.getDatasetsByFilter("title", currentDocument.getTitle());

@@ -56,6 +56,18 @@ public class DatasetsStepsDefinitions extends BaseStepsDefinitions {
         assertEquals(Integer.valueOf(1), response.jsonPath().get("page.totalElements"));
     }
 
+    @And("в созданном наборе данных {int} слоёв")
+    public void checkDatasetTablesCount(int count) {
+        currentDatasetIdentifier = response.jsonPath().getString("details.datasetIdentifier");
+
+        response = getBaseRequestWithCurrentCookie()
+                .when()
+                        .get("/" + currentDatasetIdentifier + "/tables");
+
+        int actualCount = response.jsonPath().getList("content").size();
+        assertEquals(count, actualCount);
+    }
+
     @When("Пользователь делает запрос на несуществующий набор данных {string}")
     public void getNotExistDataset(String datasetKey) {
         getDatasetByIdentifier(generateString(datasetKey));

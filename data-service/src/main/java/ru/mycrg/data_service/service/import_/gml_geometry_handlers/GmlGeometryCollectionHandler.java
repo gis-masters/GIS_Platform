@@ -21,6 +21,7 @@ import static ru.mycrg.data_service_contract.enums.GeometryType.GEOMETRY_COLLECT
 public class GmlGeometryCollectionHandler implements IGmlImportGeometryHandler {
 
     private static final String GML_GEOMETRY_COLLECTION = "gml:GeometryCollection";
+
     private static final String GML_GEOMETRY_MEMBER = "gml:geometryMember";
 
     private static final Logger log = LoggerFactory.getLogger(GmlGeometryCollectionHandler.class);
@@ -36,6 +37,10 @@ public class GmlGeometryCollectionHandler implements IGmlImportGeometryHandler {
     @Override
     public Optional<PGgeometry> generate(Element element, boolean invertCoordinates, String defaultEpsg) {
         Element geometryCollectionElement = (Element) element.getElementsByTagName(GML_GEOMETRY_COLLECTION).item(0);
+        if (geometryCollectionElement == null) {
+            return Optional.empty();
+        }
+
         String epsg = null;
         if (!geometryCollectionElement.getAttribute("srsName").isEmpty()) {
             epsg = geometryCollectionElement.getAttribute("srsName");

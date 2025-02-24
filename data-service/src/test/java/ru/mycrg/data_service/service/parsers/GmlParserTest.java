@@ -28,13 +28,19 @@ public class GmlParserTest {
 
     public GmlParserTest() throws ParserConfigurationException {
         GmlPointHandler gmlPointHandler = new GmlPointHandler();
-        GmlPolygonHandler gmlPolygonHandler = new GmlPolygonHandler();
-        GmlCurveHandler gmlCurveHandler = new GmlCurveHandler();
-        GmlSurfaceHandler gmlSurfaceHandler = new GmlSurfaceHandler();
-        GmlLineStringHandler gmlLineStringHandler = new GmlLineStringHandler();
-        GmlMultiCurveHandler gmlMultiCurveHandler = new GmlMultiCurveHandler(gmlLineStringHandler);
         GmlMultiPointHandler gmlMultiPointHandler = new GmlMultiPointHandler();
-        GmlMultiSurfaceHandler gmlMultiSurfaceHandler = new GmlMultiSurfaceHandler(gmlPolygonHandler);
+
+        GmlLineStringHandler gmlLineStringHandler = new GmlLineStringHandler();
+        GmlMultiLineStringHandler gmlMultiLineStringHandler = new GmlMultiLineStringHandler();
+
+        GmlPolygonHandler gmlPolygonHandler = new GmlPolygonHandler();
+        GmlMultiPolygonHandler gmlMultiPolygonHandler = new GmlMultiPolygonHandler();
+
+        GmlCurveHandler gmlCurveHandler = new GmlCurveHandler();
+        GmlMultiCurveHandler gmlMultiCurveHandler = new GmlMultiCurveHandler(gmlMultiLineStringHandler);
+
+        GmlSurfaceHandler gmlSurfaceHandler = new GmlSurfaceHandler();
+        GmlMultiSurfaceHandler gmlMultiSurfaceHandler = new GmlMultiSurfaceHandler(gmlMultiPolygonHandler);
 
         List<IGmlImportGeometryHandler> geomHandlers = new ArrayList<>(Arrays.asList(gmlPolygonHandler,
                                                                                      gmlCurveHandler,

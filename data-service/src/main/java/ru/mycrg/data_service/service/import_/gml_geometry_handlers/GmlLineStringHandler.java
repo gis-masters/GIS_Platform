@@ -6,7 +6,9 @@ import org.postgis.PGgeometry;
 import org.postgis.Point;
 import org.springframework.stereotype.Component;
 import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,16 +23,17 @@ public class GmlLineStringHandler implements IGmlImportGeometryHandler {
 
     @Override
     public Optional<PGgeometry> generate(Element element, boolean invertCoordinates, String defaultEpsg) {
-        Element attributeElement = (Element) element.getElementsByTagName(GML_LINE_STRING).item(0);
-        Integer srid = getCrs(defaultEpsg, attributeElement);
+        Element lineStringElement = (Element) element.getElementsByTagName(GML_LINE_STRING).item(0);
+        if (lineStringElement == null) {
+            return Optional.empty();
+        }
 
-        List<Point> coordinateList = getCoordinatesFromElement(attributeElement, invertCoordinates);
-
+        Integer srid = getCrs(defaultEpsg, lineStringElement);
+        List<Point> coordinateList = getCoordinatesFromElement(lineStringElement, invertCoordinates);
         LineString lineString = new LineString(coordinateList.toArray(Point[]::new));
-        MultiLineString multiLineString = new MultiLineString(List.of(lineString).toArray(LineString[]::new));
-        multiLineString.setSrid(srid);
+        lineString.setSrid(srid);
 
-        return Optional.of(new PGgeometry(multiLineString));
+        return Optional.of(new PGgeometry(lineString));
     }
 
     @Override

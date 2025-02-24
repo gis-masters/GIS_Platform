@@ -51,6 +51,22 @@ public class ProcessesStepDefinitions extends BaseStepsDefinitions {
         currentProcessId = extractId((String) response.jsonPath().get("_links.self.href"));
     }
 
+    @When("Пользователь публикует GML")
+    public void tryPlacementGmlAsProcesss() {
+        GmlPlacementModel gmlPlacementModel = new GmlPlacementModel();
+        gmlPlacementModel.setFileId(currentFileId);
+        gmlPlacementModel.setWsUiId("Fiat lux");
+        gmlPlacementModel.setProjectId(Long.valueOf(projectId));
+
+        ProcessableModel processableModel = new ProcessableModel();
+        processableModel.setType("IMPORT");
+        processableModel.setPayload(gmlPlacementModel);
+
+        initProcess(processableModel);
+
+        currentProcessId = extractId((String) response.jsonPath().get("_links.self.href"));
+    }
+
     @When("Пользователь публикует DXF")
     public void tryPlacementDxfAsProcess() {
         placeFileInCurrentProject(currentFileId);
@@ -112,6 +128,11 @@ public class ProcessesStepDefinitions extends BaseStepsDefinitions {
     @When("процесс завершается успешно")
     public void waitUntilCurrentProcessIsDone() {
         waitUntilProcessCompleteWithStatus(currentProcessId, "DONE");
+    }
+
+    @When("пользователь опрашивает процесс")
+    public void gineMeThisProcess() {
+        getCurrentProcess();
     }
 
     @When("процесс завершается со статусом {string}")

@@ -1,5 +1,6 @@
 package ru.mycrg.acceptance.data_service.tables;
 
+import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
@@ -501,6 +502,50 @@ public class TableFeaturesStepsDefinitions extends BaseStepsDefinitions {
         }
 
         assertTrue("The expected fields do not match the record fields", areEqual);
+    }
+
+    @And("атрибуты фичи равны ожидаемым")
+    public void checkAllFeaturesInDataset(DataTable dataTable) {
+        List<Map<Object, Object>> rawRows = dataTable.asMaps(Object.class, Object.class);
+        List<Map<String, Object>> tablesList = response.jsonPath().getList("content");
+
+        for (Map<Object, Object> rawRow: rawRows) {
+            Map<String, String> expectedValues = new HashMap<>();
+            for (Map.Entry<Object, Object> entry: rawRow.entrySet()) {
+                expectedValues.put(String.valueOf(entry.getKey()), String.valueOf(entry.getValue()));
+            }
+
+            String expectedLayer = expectedValues.get("layer");
+            String expectedGlobalId = expectedValues.get("globalid");
+            String expectedShape = expectedValues.get("shape");
+
+            Map<String, Object> table = tablesList
+                    .stream()
+                    .filter(tableMap -> {
+                        Map<String, Object> schema = (Map<String, Object>) tableMap.get("schema");
+                        return expectedLayer.equals(schema.get("name"));
+                    })
+                    .findFirst()
+                    .orElseThrow(() -> new AssertionError("Ожидаемый слой: " + expectedLayer + " не найден"));
+
+            String fullIdentifier = table.get("identifier").toString();
+
+            response = getBaseRequestWithCurrentCookie()
+                    .basePath(String.format("/api/data/datasets/%s/tables/%s/records",
+                                            currentDatasetIdentifier, fullIdentifier))
+                    .when()
+                            .get();
+
+            List<Map<String, Object>> features = response.jsonPath().getList("content");
+            assertFalse("No features found in layer " + expectedLayer, features.isEmpty());
+
+            Map<String, Object> firstFeature = features.get(0);
+            Map<String, Object> properties = (Map<String, Object>) firstFeature.get("properties");
+            assertEquals("Несоответствие значения globalid для слоя " + expectedLayer, expectedGlobalId,
+                         properties.get("globalid"));
+            assertEquals("Несоответствие значения shape для слоя " + expectedLayer, expectedShape,
+                         properties.get("shape"));
+        }
     }
 
     private void createFeature(GeoJsonModel geoJsonModel) {

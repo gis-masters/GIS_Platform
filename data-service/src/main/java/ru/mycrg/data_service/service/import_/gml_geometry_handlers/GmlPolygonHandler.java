@@ -5,7 +5,9 @@ import org.postgis.PGgeometry;
 import org.postgis.Polygon;
 import org.springframework.stereotype.Component;
 import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,13 +23,15 @@ public class GmlPolygonHandler implements IGmlImportGeometryHandler {
     @Override
     public Optional<PGgeometry> generate(Element element, boolean invertCoordinates, String defaultEpsg) {
         Element polygonElement = (Element) element.getElementsByTagName(GML_POLYGON).item(0);
+        if (polygonElement == null) {
+            return Optional.empty();
+        }
+
         Integer srid = getCrs(defaultEpsg, polygonElement);
-
         Polygon polygon = makePolygonFromRing(invertCoordinates, polygonElement);
-        MultiPolygon multiPolygon = new MultiPolygon(List.of(polygon).toArray(Polygon[]::new));
-        multiPolygon.setSrid(srid);
+        polygon.setSrid(srid);
 
-        return Optional.of(new PGgeometry(multiPolygon));
+        return Optional.of(new PGgeometry(polygon));
     }
 
     @Override

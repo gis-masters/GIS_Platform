@@ -133,10 +133,14 @@ public class GmlParserUtils {
             return MULTI_POINT.getType();
         } else if (element.getElementsByTagName("gml:Point").getLength() > 0) {
             return POINT.getType();
+        } else if (element.getElementsByTagName("gml:MultiPolygon").getLength() > 0) {
+            return MULTI_POLYGON.getType();
         } else if (element.getElementsByTagName("gml:Polygon").getLength() > 0) {
             return POLYGON.getType();
         } else if (element.getElementsByTagName("gml:Surface").getLength() > 0) {
             return SURFACE.getType();
+        } else if (element.getElementsByTagName("gml:MultiLineString").getLength() > 0) {
+            return MULTI_LINE_STRING.getType();
         } else if (element.getElementsByTagName("gml:LineString").getLength() > 0) {
             return LINE_STRING.getType();
         } else if (element.getElementsByTagName("gml:Curve").getLength() > 0) {

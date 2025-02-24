@@ -231,7 +231,7 @@ public class GmlParser {
         } catch (EpsgParserException epsgParserException) {
             throw new DataServiceException(epsgParserException.getMessage());
         } catch (Exception ex) {
-            String msg = String.format("Error while getting attribute in %s. %s", schemaDto.getName(), ex.getMessage());
+            String msg = String.format("Ошибка получения атрибутов из %s. %s", schemaDto.getName(), ex.getMessage());
             log.debug(msg);
         }
 
@@ -268,7 +268,7 @@ public class GmlParser {
         } else if (element.getElementsByTagName("gml:Curve").getLength() > 0) {
             return "line";
         } else {
-            throw new GmlParserException("Undefined geometry type!");
+            throw new GmlParserException("Геометрия невалидного типа!");
         }
     }
 
@@ -327,7 +327,6 @@ public class GmlParser {
 
             return;
         }
-
         geometryHandler.generate(element, invertCoordinates, defaultEpsg)
                        .ifPresent(shape::setValue);
     }
@@ -337,7 +336,7 @@ public class GmlParser {
         if (CHOICE.equals(schemaProperty.getValueTypeAsEnum())) {
             if (schemaProperty.getForeignKeyType() == null) {
                 log.trace("Не задан параметр: foreignKeyType для свойства типа CHOICE: '{}'. " +
-                                 "По дефолту будет использован STRING", schemaProperty.getName());
+                                  "По дефолту будет использован STRING", schemaProperty.getName());
 
                 vType = schemaProperty.getValueTypeAsEnum();
             } else {
