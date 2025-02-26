@@ -6,12 +6,11 @@ import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 import { clone, isEqual } from 'lodash';
 import { Coordinate } from 'ol/coordinate';
-import { parse } from 'papaparse';
 
 import { GeometryType } from '../../../services/geoserver/wfs/wfs.models';
 import { selectLabelForGeometryType } from '../../../services/geoserver/wfs/wfs.util';
 import { exportAsCSV } from '../../../services/util/export';
-import { isCoordinate } from '../../../services/util/typeGuards/isCoordinate';
+import { extractCoordinates } from '../../../services/util/extractCoordinates.util';
 import { EditFeatureGeometryCSVInput } from '../CSVInput/EditFeatureGeometry-CSVInput';
 
 const cnEditFeatureGeometryCSV = cn('EditFeatureGeometry', 'CSV');
@@ -102,24 +101,8 @@ export class EditFeatureGeometryCSV extends Component<EditFeatureGeometryCSVProp
 
   @action
   private doImport(csv: string) {
-    const result = parse(csv, { skipEmptyLines: 'greedy' });
-
-    if (result.errors.length) {
-      throw new Error('Ошибка чтения CSV');
-    }
-
     const { coordinates, mustBeClosed } = this.props;
-    const newCoordinates: Coordinate[] = result.data
-      .map(point => {
-        if (!isCoordinate(point)) {
-          throw new Error('Некорректная геометрия');
-        }
-
-        point.reverse();
-
-        return point;
-      })
-      .filter((point: Coordinate) => point[0] && point[1]);
+    const newCoordinates: Coordinate[] = extractCoordinates(csv);
 
     if (mustBeClosed && !isEqual(newCoordinates[0], newCoordinates.at(-1))) {
       newCoordinates.push(newCoordinates[0]);
