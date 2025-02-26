@@ -8,9 +8,7 @@ import io.restassured.specification.RequestSpecification;
 import ru.mycrg.acceptance.BaseStepsDefinitions;
 import ru.mycrg.acceptance.auth_service.AuthorizationBase;
 import ru.mycrg.acceptance.auth_service.UserStepsDefinitions;
-import ru.mycrg.auth_service_contract.dto.UserCommonDto;
 import ru.mycrg.auth_service_contract.dto.UserCreateDto;
-import ru.mycrg.auth_service_contract.dto.UserInfoModel;
 import ru.mycrg.data_service_contract.enums.TaskStatus;
 
 import java.util.HashMap;
@@ -147,6 +145,13 @@ public class TaskStepDefinition extends BaseStepsDefinitions {
         assertEquals(200, response.getStatusCode());
     }
 
+    @When("я делаю выборку задач с ID {string}")
+    public void getTasksById(String taskId) {
+        getTasksByRecords(taskId);
+
+        assertEquals(200, response.getStatusCode());
+    }
+
     @Then("описание текущей задачи изменено на: {string}")
     public void checkDescriptionForCurrentTask(String expectedDescription) {
         getTaskByIdentifier(currentTaskId);
@@ -171,6 +176,27 @@ public class TaskStepDefinition extends BaseStepsDefinitions {
         int currentOwner = response.jsonPath().get("owner_id");
 
         assertEquals(getUserIdByName(expectedOwner), currentOwner);
+    }
+
+    @Then("В выборке только задачи с ID {string}")
+    public void checkCountTasks(String expectedTaskIds) {
+        if (expectedTaskIds.isEmpty()) {
+            int totalElements = response.jsonPath().get("page.totalElements");
+            assertEquals("Выборка должна быть пустой", 0, totalElements);
+            return;
+        }
+
+        String[] expectedIds = expectedTaskIds.split(",");
+        List<Integer> actualIds = response.jsonPath().getList("content.id");
+        
+        assertEquals("Количество задач в выборке не соответствует ожидаемому", 
+            expectedIds.length, actualIds.size());
+
+        for (int i = 0; i < expectedIds.length; i++) {
+            int expectedId = Integer.parseInt(expectedIds[i].trim());
+            assertEquals("ID задачи на позиции " + i + " не соответствует ожидаемому",
+                expectedId, actualIds.get(i).intValue());
+        }
     }
 
     private void createTask(Map<String, Object> dto) {
@@ -199,6 +225,12 @@ public class TaskStepDefinition extends BaseStepsDefinitions {
         response = getBaseRequestWithCurrentCookie()
                 .when().
                         get("?filter=" + filter);
+    }
+
+    private void getTasksByRecords(String tasksId) {
+        response = getBaseRequestWithCurrentCookie()
+                .when().
+                        get("?recordId=" + tasksId);
     }
 
     private void updateCurrentTaskStatus(TaskStatus status) {

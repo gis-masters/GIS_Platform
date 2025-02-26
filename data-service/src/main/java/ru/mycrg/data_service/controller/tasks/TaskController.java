@@ -14,9 +14,11 @@ import ru.mycrg.data_service.service.cqrs.tasks.requests.DeleteAllTasksRequest;
 import ru.mycrg.data_service.service.cqrs.tasks.requests.UpdateTaskRequest;
 import ru.mycrg.data_service.service.cqrs.tasks.requests.UpdateTaskStatusRequest;
 import ru.mycrg.data_service.service.schemas.ISchemaTemplateService;
+import ru.mycrg.data_service.util.EcqlRecordIdHandler;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.mediator.Mediator;
 
+import java.util.List;
 import java.util.Map;
 
 import static org.springframework.http.HttpStatus.CREATED;
@@ -46,8 +48,11 @@ public class TaskController {
     @GetMapping
     @PreAuthorize(HAS_ANY_AUTHORITY)
     public ResponseEntity<Object> getAll(
-            @RequestParam(name = "filter", required = false, defaultValue = "") String ecqlFilter,
+            @RequestParam(name = "filter", required = false, defaultValue = "") String filter,
+            @RequestParam(name = "recordId", required = false) List<Long> taskId,
             Pageable pageable) {
+        String ecqlFilter = EcqlRecordIdHandler.joinAsIn(filter, taskId);
+
         Page<Object> tasks = taskService.getAll(camelCaseToSnakeCaseForEcqlFilter(ecqlFilter), pageable);
 
         return ResponseEntity.ok(pageFromList(tasks, pageable));
