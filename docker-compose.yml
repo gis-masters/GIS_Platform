@@ -61,6 +61,9 @@ services:
       GEOSERVER_ADMIN_PASSWORD: ${GEOSERVER_PASSWORD}
       STABLE_EXTENSIONS: importer-plugin,jp2k-plugin
       COMMUNITY_EXTENSIONS: ogr-datastore-plugin,jdbcconfig-plugin,jdbcstore-plugin
+
+      JAVA_OPTS: "-Dorg.geoserver.wfs.timeout=5000"
+
     mem_limit: ${GEOSERVER_MEM_LIMIT:-21000}m
 
 
@@ -276,7 +279,7 @@ services:
       options:
         max-size: "10m"
         max-file: "10"
-    mem_limit: ${GATEWAY_MEM_LIMIT:-1000}m
+    mem_limit: ${GATEWAY_MEM_LIMIT:-20000}m
 
   geo-wrapper:
     container_name: geo-wrapper

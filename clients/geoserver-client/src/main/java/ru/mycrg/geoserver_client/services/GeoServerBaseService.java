@@ -36,4 +36,15 @@ public class GeoServerBaseService {
                 .addPathSegment("wms")
                 .build();
     }
+
+    @NotNull
+    public static HttpUrl getGeoserverWfsUrl() {
+        return new HttpUrl.Builder()
+                .scheme("http")
+                .host(geoserverInfo.getHost())
+                .port(geoserverInfo.getPort())
+                .addPathSegment("geoserver")
+                .addPathSegment("wfs")
+                .build();
+    }
 }

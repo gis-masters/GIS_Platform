@@ -38,9 +38,9 @@ public class ExportController extends BaseController {
     public ExportController(FileStorageService fileStorageService,
                             LayerValidationReportService reporter,
                             List<Exporter> exporters) {
-        this.exporters = exporters;
-        this.reporter = reporter;
         this.fileStorageService = fileStorageService;
+        this.reporter = reporter;
+        this.exporters = exporters;
     }
 
     @PostMapping("/export")

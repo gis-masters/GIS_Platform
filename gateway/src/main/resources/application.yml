@@ -70,6 +70,10 @@ zuul:
       path: /gis/specializations/**
       url: http://crg-gis-service:8082/specializations/
 
+    crg-gis-service-export:
+      path: /gis/export/**
+      url: http://crg-gis-service:8082/export/
+
     # INTEGRATION SERVICE
     crg-gis-integration-resource-analyzers:
       path: /resource-analyzers/**

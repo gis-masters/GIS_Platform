@@ -42,11 +42,11 @@ public class ShapeExportService implements Exporter {
                               IAuthenticationFacade authenticationFacade,
                               WsNotificationService wsNotificationService,
                               SchemasAndTablesRepository schemasAndTablesRepository) {
-        this.messageBus = messageBus;
         this.processService = processService;
-        this.schemasAndTablesRepository = schemasAndTablesRepository;
+        this.messageBus = messageBus;
         this.authenticationFacade = authenticationFacade;
         this.wsNotificationService = wsNotificationService;
+        this.schemasAndTablesRepository = schemasAndTablesRepository;
     }
 
     @Override
