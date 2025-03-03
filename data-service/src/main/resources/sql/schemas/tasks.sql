@@ -23,8 +23,8 @@ SET class_rule =
             {
               "name": "id",
               "title": "Идентификатор",
-              "valueType": "INT",
-              "hidden": true
+              "hidden": true,
+              "valueType": "INT"
             },
             {
               "name": "type",
@@ -51,7 +51,6 @@ SET class_rule =
               "title": "Вид задачи",
               "valueType": "CHOICE",
               "readOnly": true,
-              "display": "radiogroup",
               "maxLength": 50,
               "minWidth": 300,
               "enumerations": [
@@ -546,6 +545,7 @@ SET class_rule =
                 },
                 {
                   "name": "data_section_key_data_connection",
+                  "dynamicPropertyFormula": "return {  required: obj?.intermediate_status !== \"1\" && obj?.intermediate_status !== \"2\"&& obj?.intermediate_status !== \"8\"}",
                   "title": "Размещенный документ",
                   "multiple": false,
                   "libraries": [
@@ -613,6 +613,7 @@ SET class_rule =
                 },
                 {
                   "name": "data_section_key_data_connection",
+                  "dynamicPropertyFormula": "return {  required: obj?.intermediate_status !== \"1\" && obj?.intermediate_status !== \"2\"&& obj?.intermediate_status !== \"8\"}",
                   "title": "Размещенный документ",
                   "multiple": false,
                   "libraries": [

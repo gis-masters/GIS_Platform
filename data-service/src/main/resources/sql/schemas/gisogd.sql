@@ -18991,6 +18991,14 @@ SET class_rule =
            "maxDocuments": 10
          },
          {
+           "name": "file_dop",
+           "title": "Дополнительные файлы",
+           "maxSize": 100000000,
+           "multiple": true,
+           "valueType": "FILE",
+           "maxDocuments": 5
+         },
+         {
            "name": "library_doc",
            "title": "Материалы библиотеки данных",
            "multiple": true,
@@ -19262,6 +19270,9 @@ SET class_rule =
                "name": "file"
              },
              {
+               "name": "file_dop"
+             },
+             {
                "name": "last_modified"
              }
            ]
@@ -19337,6 +19348,9 @@ SET class_rule =
                "required": true
              },
              {
+               "name": "file_dop"
+             },
+             {
                "name": "gisogdrf_publication_datetime"
              },
              {
@@ -19405,6 +19419,9 @@ SET class_rule =
              {
                "name": "file",
                "readOnly": true
+             },
+             {
+               "name": "file_dop"
              },
              {
                "name": "gisogdrf_publication_datetime"
@@ -19568,6 +19585,9 @@ SET class_rule =
              },
              {
                "name": "file"
+             },
+             {
+               "name": "file_dop"
              },
              {
                "name": "last_modified"
@@ -38531,6 +38551,15 @@ SET class_rule =
       "valueType": "BOOLEAN"
     },
     {
+      "name": "file_project",
+      "title": "Проект решения",
+      "maxSize": 100000000,
+      "multiple": true,
+      "valueType": "FILE",
+      "description": "Заполняется только Министерством",
+      "maxDocuments": 10
+    },
+    {
       "name": "file",
       "title": "Выбор файла",
       "maxSize": 100000000,
@@ -39248,8 +39277,15 @@ SET class_rule =
           "name": "note"
         },
         {
+          "name": "file_project",
+          "title": "Проект РНС"
+        },
+        {
           "name": "file",
-          "defaultValueWellKnownFormula": "inherit"
+          "defaultValueWellKnownFormula": "inherit",
+          "dynamicPropertyFormula": "return { required: !(obj?.file_project != null) }",
+          "title": "Выданный РНС",   
+          "maxDocuments": 1
         },
         {
           "name": "guiddocpreviousversion"
@@ -40730,7 +40766,14 @@ SET class_rule =
           "name": "note"
         },
         {
-          "name": "file"
+          "name": "file_project",
+          "title": "Проект РНВ"
+        },
+        {
+          "name": "file",      
+          "maxDocuments": 1,
+          "dynamicPropertyFormula": "return { required: !(obj?.file_project != null) }",
+          "title": "Решение РНВ"
         },
         {
           "name": "guiddocpreviousversion"
@@ -48568,25 +48611,24 @@ SET class_rule =
     {
       "name": "id",
       "title": "Идентификатор",
-      "required": true,
+      "readOnly": true,
       "valueType": "INT"
     },
     {
       "name": "is_folder",
       "title": "Папка/Документ",
-      "required": true,
       "valueType": "BOOLEAN"
     },
     {
       "name": "path",
       "title": "Полный путь, отражающий иерархию объектов",
-      "required": true,
       "valueType": "STRING"
     },
     {
       "name": "content_type_id",
       "title": "Идентификатор контент типа",
       "valueType": "CHOICE",
+      "minWidth": 300,
       "hidden": true,
       "maxLength": 50,
       "enumerations": [
@@ -48603,6 +48645,7 @@ SET class_rule =
     {
       "name": "title",
       "title": "Наименование",
+      "minWidth": 500,
       "valueType": "STRING",
       "required": true
     },
@@ -48610,6 +48653,7 @@ SET class_rule =
       "name": "fias",
       "title": "Населённый пункт",
       "required": true,
+      "minWidth": 300,
       "valueType": "FIAS",
       "searchMode": "oktmo"
     },
@@ -48641,6 +48685,7 @@ SET class_rule =
       "name": "delivery_status",
       "title": "Статус обработки запроса",
       "required": true,
+      "minWidth": 300,
       "valueType": "CHOICE",
       "enumerations": [
         {
@@ -48668,17 +48713,20 @@ SET class_rule =
     {
       "name": "date",
       "title": "Дата поступления запроса на предоставление данных",
+      "minWidth": 400,
       "required": true,
       "valueType": "DATETIME"
     },
     {
       "name": "delivery_date",
       "title": "Дата предоставления данных",
+      "minWidth": 300,
       "valueType": "DATETIME"
     },
     {
       "name": "person_name",
       "title": "Информация о лице, направившим запрос на предоставление данных",
+      "minWidth": 400,
       "description": "Заполняется наименованием юридического лица или указывается фамилия, имя, отчество (последнее при наличии) для физического лица",
       "required": true,
       "valueType": "STRING"
@@ -48686,6 +48734,7 @@ SET class_rule =
     {
       "name": "request_description",
       "title": "Описание запрашиваемых данных",
+      "minWidth": 300,
       "description": "Реквизиты необходимых сведений и (или) кадастровый номер(а) земельного(ых) участка(ов), и (или) адрес(а) объектов недвижимости, и (или) сведения о границах территории, перечень координат характерных точек этих границ, заполняется в случае получения описания запрашиваемых сведений в электронном виде, в случае получения описания на бумажном носителе, в File загружается скан-образ",
       "required": true,
       "valueType": "STRING"
@@ -48693,6 +48742,7 @@ SET class_rule =
     {
       "name": "delivery_type",
       "title": "Способ предоставления данных из информационной системы",
+      "minWidth": 400,
       "required": true,
       "valueType": "CHOICE",
       "enumerations": [
@@ -48713,6 +48763,7 @@ SET class_rule =
     {
       "name": "request_type",
       "title": "Способ направления запроса на предоставление данных",
+      "minWidth": 400,
       "required": true,
       "valueType": "CHOICE",
       "enumerations": [
@@ -48765,6 +48816,7 @@ SET class_rule =
     {
       "name": "data_delivery_type",
       "title": "Формат предоставления данных",
+      "minWidth": 300,
       "required": true,
       "valueType": "CHOICE",
       "enumerations": [
@@ -48785,29 +48837,43 @@ SET class_rule =
     {
       "name": "amount_pay",
       "title": "Сумма к оплате",
+      "hidden": true,
       "valueType": "INT"
     },
     {
       "name": "invoice_date",
       "title": "Дата выставления счета",
+      "minWidth": 300,
+      "hidden": true,
       "valueType": "DATETIME"
     },
     {
       "name": "paid_amount",
       "title": "Оплаченная сумма",
+      "hidden": true,
       "valueType": "INT"
     },
     {
       "name": "paid_date",
       "title": "Дата оплаты",
+      "hidden": true,
       "valueType": "DATETIME"
     },
     {
       "name": "user_name",
       "title": "ФИО",
+      "minWidth": 300,
       "description": "Фамилия, имя, отчество (последнее при наличии) уполномоченного лица, органа, осуществляющего ведение информационной системы, или наименование автоматического сервиса программных средств информационной системы, обработавшего запрос на предоставление данных",
       "required": true,
       "valueType": "STRING"
+    },
+    {
+      "name": "file_project",
+      "title": "Проект решения",
+      "valueType": "FILE",
+      "description": "Заполняется только Министерством",
+      "multiple": true,
+      "maxDocuments": 10
     },
     {
       "name": "file",
@@ -48851,6 +48917,7 @@ SET class_rule =
       "icon": "DOCUMENT",
       "type": "DOCUMENT",
       "title": "Документ",
+      "childOnly": true,
       "attributes": [
         {
           "name": "id",
@@ -48901,16 +48968,20 @@ SET class_rule =
           "name": "request_description"
         },
         {
-          "name": "delivery_type"
+          "name": "delivery_type",  
+          "defaultValue": "0G.2"
         },
         {
-          "name": "request_type"
+          "name": "request_type",  
+          "defaultValue": "0B.6"
         },
         {
-          "name": "data_type"
+          "name": "data_type",  
+          "defaultValue": "0E.1"
         },
         {
-          "name": "data_delivery_type"
+          "name": "data_delivery_type",  
+          "defaultValue": "0F.1"
         },
         {
           "name": "amount_pay"
@@ -48928,13 +48999,18 @@ SET class_rule =
           "name": "user_name"
         },
         {
-          "name": "file"
+          "name": "file_project"
+        },
+        {
+          "name": "file",
+          "dynamicPropertyFormula": "return { required: !(obj?.file_project != null) }"
         },
         {
           "name": "relations"
         },
         {
-          "name": "created_by"
+          "name": "created_by",
+          "hidden": true
         },
         {
           "name": "note"
@@ -48945,6 +49021,9 @@ SET class_rule =
       "id": "folder_v1",
       "icon": "FOLDER_CREATE",
       "type": "FOLDER",
+      "children": [
+      { "contentType": "doc" }
+      ],
       "title": "Папка",
       "attributes": [
         {

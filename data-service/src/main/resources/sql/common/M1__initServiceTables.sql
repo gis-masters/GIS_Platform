@@ -357,10 +357,13 @@ CREATE TABLE IF NOT EXISTS data.tasks
     owner_id                         bigint,
     due_date                         timestamp without time zone,
     guid                             uuid,
+    record_status                    character varying,
+    number                           INT,
     inbox_data_key_data_connection   character varying,
     data_section_key_data_connection character varying,
     created_by                       bigint,
     updated_by                       bigint,
+    date                             timestamp without time zone,
     created_at                       timestamp without time zone DEFAULT now(),
     last_modified                    timestamp without time zone DEFAULT now(),
     CONSTRAINT tasks_id_pkey PRIMARY KEY (id)
