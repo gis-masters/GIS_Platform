@@ -9,6 +9,8 @@ import ru.mycrg.http_client.handlers.BaseRequestHandler;
 import ru.mycrg.http_client.handlers.IHttpRequestHandler;
 import ru.mycrg.http_client.handlers.RetryableRequestHandler;
 
+import java.util.concurrent.TimeUnit;
+
 public class GeoserverClient {
 
     public static final MediaType JSON_MEDIA_TYPE = MediaType.parse("application/json; charset=utf-8");
@@ -30,13 +32,16 @@ public class GeoserverClient {
     public static void initialize(GeoserverInfo geoserverInfo, RetryConfig retryConfig) {
         GeoServerBaseService.geoserverInfo = geoserverInfo;
 
-        IHttpRequestHandler requestHandler = new BaseRequestHandler(new OkHttpClient());
-        if (retryConfig != null) {
-            requestHandler = new RetryableRequestHandler(
-                    new BaseRequestHandler(new OkHttpClient()),
-                    retryConfig
-            );
-        }
+        OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                .readTimeout(retryConfig.getWaitDuration(), TimeUnit.MILLISECONDS)
+                .writeTimeout(retryConfig.getWaitDuration(), TimeUnit.MILLISECONDS)
+                .connectTimeout(retryConfig.getWaitDuration(), TimeUnit.MILLISECONDS)
+                .build();
+
+        IHttpRequestHandler requestHandler = new RetryableRequestHandler(
+                new BaseRequestHandler(okHttpClient),
+                retryConfig
+        );
 
         GeoServerBaseService.httpClient = new HttpClient(requestHandler);
     }

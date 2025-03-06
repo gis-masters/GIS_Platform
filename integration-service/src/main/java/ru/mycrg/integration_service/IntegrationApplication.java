@@ -56,7 +56,7 @@ public class IntegrationApplication {
                                                         properties.getUserServiceName());
 
         // TODO: Не ходить из integration-service на прямую на геосервер.
-        GeoserverClient.initialize(geoserverInfo, null);
+        GeoserverClient.initialize(geoserverInfo);
 
         log.info("Integration service ready with:");
         log.info("geoserver-host {}", geoserverHost);

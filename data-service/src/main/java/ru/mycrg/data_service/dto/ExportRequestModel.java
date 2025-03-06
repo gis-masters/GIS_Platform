@@ -7,6 +7,7 @@ import javax.validation.constraints.Pattern;
 import java.util.ArrayList;
 import java.util.List;
 
+// TODO: в будущем вернуться к врапперу. пока как есть
 public class ExportRequestModel {
 
     private String wsUiId;

@@ -28,6 +28,7 @@ import static ru.mycrg.data_service.util.CrsHandler.extractCrsNumber;
 import static ru.mycrg.data_service_contract.enums.ProcessStatus.PENDING;
 import static ru.mycrg.data_service_contract.enums.ProcessType.EXPORT;
 
+// TODO: в будущем вернуться к врапперу. пока как есть
 @Service
 public class ShapeExportService implements Exporter {
 

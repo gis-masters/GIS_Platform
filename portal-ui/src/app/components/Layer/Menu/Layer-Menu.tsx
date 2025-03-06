@@ -25,7 +25,8 @@ import { Schema } from '../../../services/data/schema/schema.models';
 import { VectorTable } from '../../../services/data/vectorData/vectorData.models';
 import { getVectorTable } from '../../../services/data/vectorData/vectorData.service';
 import { GeometryType } from '../../../services/geoserver/wfs/wfs.models';
-import { getEmptyFeature, getShapeFile } from '../../../services/geoserver/wfs/wfs.service';
+import { getEmptyFeature } from '../../../services/geoserver/wfs/wfs.service';
+import { exportShape } from '../../../services/gis/export/export.service';
 import {
   CrgLayer,
   CrgLayersGroup,
@@ -468,7 +469,7 @@ export class LayerMenu extends Component<LayerMenuProps> {
   @boundMethod
   private async export(projection: Projection) {
     const { entity, onClose } = this.props;
-    const { complexName } = entity as CrgVectorLayer;
+    const { complexName, title } = entity as CrgVectorLayer;
 
     if (!complexName) {
       Toast.error('Некорректный слой: отсутствует complexName');
@@ -477,7 +478,7 @@ export class LayerMenu extends Component<LayerMenuProps> {
       return;
     }
 
-    await getShapeFile(complexName, projection);
+    await exportShape(complexName, projection, title);
 
     onClose();
   }

@@ -1,11 +1,7 @@
 import { boundClass } from 'autobind-decorator';
 
 import { http } from '../../api/http.service';
-import { Projection } from '../../data/projections/projections.models';
-import { getProjectionCode } from '../../data/projections/projections.util';
-import { saveAsBlob } from '../../util/FileSaver';
 import { Mime } from '../../util/Mime';
-import { extractFeatureTypeNameFromComplexName } from '../featureType/featureType.util';
 import { GeoserverClient } from '../GeoserverClient';
 import { WfsFeatureCollection } from './wfs.models';
 
@@ -29,30 +25,6 @@ class WfsClient extends GeoserverClient {
       },
       cache: { clear: false, disabled: false }
     });
-  }
-
-  async getShapeFile(layerComplexName: string, projection: Projection): Promise<void> {
-    const file = await http.get<string>(this.getWfsUrl(), {
-      responseType: 'blob',
-      headers: { 'Content-Type': Mime.ZIP },
-      params: {
-        service: 'WFS',
-        version: '1.0.0',
-        request: 'GetFeature',
-        typeNames: layerComplexName,
-        exceptions: Mime.JSON,
-        outputFormat: Mime.SHAPE_ZIP,
-        encoding: undefined,
-        srsName: getProjectionCode(projection),
-        format_options: 'CHARSET:UTF-8'
-      },
-      cache: { clear: false, disabled: false }
-    });
-
-    const blob = new Blob([file], { type: Mime.ZIP });
-    const nameForZip = `${extractFeatureTypeNameFromComplexName(layerComplexName)}__${projection.authSrid}.zip`;
-
-    saveAsBlob(nameForZip, blob);
   }
 
   async getFeatureCollection(params: Record<string, string>): Promise<WfsFeatureCollection> {

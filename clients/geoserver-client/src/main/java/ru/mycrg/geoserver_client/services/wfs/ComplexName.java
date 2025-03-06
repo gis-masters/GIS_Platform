@@ -1,8 +1,9 @@
 package ru.mycrg.geoserver_client.services.wfs;
 
-public class ComplexName {
+import ru.mycrg.geoserver_client.exceptions.GeoserverClientException;
+import static ru.mycrg.common_utils.CrgGlobalProperties.buildGeoserverComplexLayerName;
 
-    private static final String WORKSPACE_PATTERN = "^scratch_database_\\d+$";
+public class ComplexName {
 
     private final String workspace;
     private final String layerName;
@@ -13,21 +14,22 @@ public class ComplexName {
     }
 
     public static ComplexName of(String workspace, String layerName) {
-        if (workspace == null || !workspace.matches(WORKSPACE_PATTERN)) {
-            throw new WfsExceptions("Неверный формат. Ожидается: scratch_database_№:..., а у вас: " + workspace);
+        if (workspace == null || workspace.trim().isEmpty()) {
+            throw new GeoserverClientException("Workspace не может быть пустым");
         }
         if (layerName == null || layerName.trim().isEmpty()) {
-            throw new WfsExceptions("Имя слоя не может быть пустым");
+            throw new GeoserverClientException("Имя слоя не может быть пустым");
         }
-        return new ComplexName(workspace, layerName.trim());
+
+        return new ComplexName(workspace.trim(), layerName.trim());
     }
 
-    public static ComplexName parse(String fullName) {
-        if (fullName == null || !fullName.contains(":")) {
-            throw new WfsExceptions("Неверный формат typeName. Ожидается: workspace:layer, получено: " + fullName);
+    public static ComplexName parse(String complexName) {
+        if (complexName == null || !complexName.contains(":")) {
+            throw new GeoserverClientException("Неверный формат typeName. Ожидается: workspace:layer, получено: " + complexName);
         }
+        String[] parts = complexName.split(":", 2);
 
-        String[] parts = fullName.split(":", 2);
         return ComplexName.of(parts[0], parts[1]);
     }
 
@@ -40,6 +42,6 @@ public class ComplexName {
     }
 
     public String getComplexName() {
-        return workspace + ":" + layerName;
+        return buildGeoserverComplexLayerName(workspace, layerName);
     }
 }
