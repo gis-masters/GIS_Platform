@@ -20,6 +20,7 @@ export enum Pages {
   SYSTEM_MANAGEMENT = 'system-management',
   DATA_MANAGEMENT = 'data-management',
   TASKS_JOURNAL = 'tasks-journal',
+  TASK = 'task',
   REGISTRY = 'registry',
   DOCUMENT = 'document',
   SERVICES_CALCULATOR = 'services-calculator',

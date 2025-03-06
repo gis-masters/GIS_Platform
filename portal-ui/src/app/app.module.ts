@@ -59,6 +59,7 @@ import { ReValidateButtonNgComponent } from './components/reValidateButton-ng/re
 import { ServicesCalculatorComponent } from './components/services-calculator/services-calculator.component';
 import { ServicesProvider } from './components/services-provider/services-provider.component';
 import { SystemManagementComponent } from './components/system-management/system-management.component';
+import { TaskPageContainerComponent } from './components/task-page-container/task-page-container.component';
 import { TasksJournalComponent } from './components/tasks-journal/tasks-journal.component';
 import { UtilityDialogsRootComponent } from './components/utility-dialogs-root/utility-dialogs-root.component';
 import { BugsTableComponent } from './components/validation/bugs-table/bugs-table.component';
@@ -122,6 +123,7 @@ import { GlobalErrorHandler } from './services/global-error.handler';
     LibraryRegistryComponent,
     VectorTableRegistryComponent,
     LibraryDocumentPageContainerComponent,
+    TaskPageContainerComponent,
     FormControlComponent,
     ServicesCalculatorComponent,
     FormDescriptionComponent,

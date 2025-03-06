@@ -1,0 +1,15 @@
+body .TaskDialog {
+  &-TaskCard {
+    max-height: calc(100vh - 220px);
+    margin-bottom: 15px;
+  }
+
+  &-TypeIcon {
+    position: relative;
+    top: -1px;
+
+    display: inline;
+
+    margin-right: 8px;
+  }
+}

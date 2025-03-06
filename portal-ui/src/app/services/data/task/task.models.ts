@@ -22,6 +22,7 @@ export interface Task {
   status?: TaskStatus;
   description?: string;
   dueDate?: string;
+  created_at?: string;
   last_modified?: string;
 }
 

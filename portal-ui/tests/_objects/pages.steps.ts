@@ -252,6 +252,14 @@ Given('я на странице журнала задач', async () => {
   await tasksJournalPage.open();
 });
 
+Given('я перешел по ссылке к созданной задаче', async function (this: ScenarioScope) {
+  if (this.latestTask.id) {
+    await browser.url(`/data-management/tasks-journal/${this.latestTask.id}`);
+  } else {
+    throw new Error('Нет созданной задачи');
+  }
+});
+
 // org Admin
 Given('я нахожусь во вкладке `Пользователи` на странице управлении организацией', async () => {
   await new OrgAdminPage().open();

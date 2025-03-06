@@ -19,6 +19,7 @@ import { RegisterComponent } from './pages/register/register.component';
 import { RestorePasswordFormPageComponent } from './pages/restore-password-form/restore-password-form-page.component';
 import { ServicesCalculatorPageComponent } from './pages/services-calculator/services-calculator-page.component';
 import { SystemManagementPageComponent } from './pages/system-management/system-management-page.component';
+import { TaskPageComponent } from './pages/task/task-page.component';
 import { TasksJournalPageComponent } from './pages/tasks-journal/tasks-journal-page.component';
 import { TestDataPreparationPageComponent } from './pages/test-data-preparation/test-data-preparation-page.component';
 import { VectorTableRegistryPageComponent } from './pages/vector-table-registry/vector-table-registry-page.component';
@@ -218,6 +219,15 @@ const routes: AppRoutes = [
     data: { page: Pages.TASKS_JOURNAL }
   },
   {
+    path: 'data-management/tasks-journal/:taskId',
+    component: TaskPageComponent,
+    canActivate: [SystemAdminGuardService],
+    resolve: {
+      user: CurrentUserResolver
+    },
+    data: { page: Pages.TASK }
+  },
+  {
     path: 'data-management/library/:libraryTableName/document/:documentId',
     component: LibraryDocumentPageComponent,
     canActivate: [SystemAdminGuardService],
@@ -260,6 +270,7 @@ export const routingComponents = [
   LibraryRegistryPageComponent,
   VectorTableRegistryPageComponent,
   LibraryDocumentPageComponent,
+  TaskPageComponent,
   ServicesCalculatorPageComponent,
   RestorePasswordFormPageComponent,
   ChangePasswordFormPageComponent,
