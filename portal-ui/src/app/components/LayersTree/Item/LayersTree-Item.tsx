@@ -7,9 +7,9 @@ import { extractTableNameFromFeatureId } from '../../../services/geoserver/featu
 import { CrgLayer, isVectorLayer } from '../../../services/gis/layers/layers.models';
 import { TreeItem } from '../../../services/gis/projects/projects.models';
 import { projectsService } from '../../../services/gis/projects/projects.service';
-import { MapSelectionTypes } from '../../../services/map/map.models';
-import { mapSelectionService } from '../../../services/map/map-selection.service';
-import { mapStore } from '../../../stores/Map.store';
+import { mapModeManager } from '../../../services/map/a-map-mode/MapModeManager';
+import { selectedFeaturesStore } from '../../../services/map/a-map-mode/selected-features/SelectedFeatures.store';
+import { MapMode, MapSelectionTypes } from '../../../services/map/map.models';
 import { Layer } from '../../Layer/Layer';
 
 import '!style-loader!css-loader!sass-loader!./LayersTree-Item.scss';
@@ -51,7 +51,7 @@ export class LayersTreeItem extends Component<LayersTreeItemProps> {
   }
 
   @action.bound
-  private handleEye() {
+  private async handleEye() {
     const { item } = this.props;
 
     if (item.visible) {
@@ -64,8 +64,20 @@ export class LayersTreeItem extends Component<LayersTreeItemProps> {
       }
 
       // при выключении видимости слоя снимаем выделение с его объектов
-      const features = mapStore.selectedFeatures.filter(f => extractTableNameFromFeatureId(f.id) !== layer.tableName);
-      mapSelectionService.selectFeatures(features, MapSelectionTypes.REPLACE);
+      const features = selectedFeaturesStore.features.filter(
+        f => extractTableNameFromFeatureId(f.id) !== layer.tableName
+      );
+
+      await mapModeManager.changeMode(
+        MapMode.SELECTED_FEATURES,
+        {
+          payload: {
+            features: features,
+            type: MapSelectionTypes.REPLACE
+          }
+        },
+        'handleEye'
+      );
 
       return;
     }

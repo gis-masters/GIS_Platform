@@ -20,7 +20,6 @@ import { currentProject } from '../../../stores/CurrentProject.store';
 import { currentUser } from '../../../stores/CurrentUser.store';
 import { mapStore } from '../../../stores/Map.store';
 import { mapLabelsStore } from '../../../stores/MapLabels.store';
-import { sidebars } from '../../../stores/Sidebars.store';
 import { communicationService } from '../../communication.service';
 import { defaultOlProjectionCode, Projection } from '../../data/projections/projections.models';
 import { getOlProjection, getProjectionByCode } from '../../data/projections/projections.service';
@@ -39,8 +38,10 @@ import { isCircleProperties } from '../../util/typeGuards/isCircleProperties';
 import { isCoordinate, isCoordinateArray, isCoordinateArrayArray } from '../../util/typeGuards/isCoordinate';
 import { isNumberArray } from '../../util/typeGuards/isNumberArray';
 import { prompto } from '../../utility-dialogs.service';
+import { editFeatureStore } from '../a-map-mode/edit-feature/EditFeatureStore';
+import { selectedFeaturesStore } from '../a-map-mode/selected-features/SelectedFeatures.store';
 import { mapDrawService } from '../draw/map-draw.service';
-import { MapMode } from '../map.models';
+import { MapMode, ToolMode } from '../map.models';
 import { mapService } from '../map.service';
 import { mapMeasureService } from '../measure/map-measure.service';
 import { getStyle, KnownStyleKey } from '../styles/map-styles';
@@ -115,9 +116,9 @@ class MapLabelsService {
 
   private constructor() {
     reaction(
-      () => mapStore.mode,
+      () => mapStore.toolMode,
       mode => {
-        if (mode !== MapMode.ADDING_LABEL && this.shown) {
+        if (mode !== ToolMode.ADDING_LABEL && this.shown) {
           this.drawOff();
         }
       }
@@ -148,112 +149,145 @@ class MapLabelsService {
     });
   }
 
-  private get shown(): boolean {
-    for (const layer of mapService.map.getLayers().getArray()) {
-      if (layer === this.layer) {
-        return true;
+  setLabelsSettings(fontProperties: AnnotationsFontProperties): void {
+    this.userLabelsSettings = fontProperties;
+    localStorage.setItem(this.getStorageKey('userLabelsSettings'), JSON.stringify(fontProperties)); // do something
+  }
+
+  removeLabelToolbox() {
+    this.renderLabelToolboxDebounced.cancel();
+    if (this.currentOverlay) {
+      this.currentToolboxRoot?.unmount();
+      mapService.map.removeOverlay(this.currentOverlay);
+      delete this.currentOverlay;
+      delete this.currentToolboxRoot;
+      this.toolboxHovered = false;
+    }
+  }
+
+  @boundMethod
+  setTurningPointsCircleStyles(turningPointsCircleStyles: CircleProperties) {
+    this.turningPointsCircleStyles = turningPointsCircleStyles;
+
+    localStorage.setItem(
+      this.getStorageKey('turningPointsCircleStyles'),
+      JSON.stringify(this.turningPointsCircleStyles)
+    );
+  }
+
+  showPrintLabels() {
+    mapService.map.addLayer(this.layerForPrintLabels);
+  }
+
+  hidePrintLabels() {
+    mapService.map.removeLayer(this.layerForPrintLabels);
+    this.sourceForPrintLabels.clear();
+  }
+
+  addPrintLabel(center: Coordinate, text: string | number) {
+    const feature = new Feature({
+      geometry: new Point(center),
+      type: 'label',
+      text: String(text)
+    });
+    feature.setStyle(this.createPrintLabelStyle(feature));
+    this.sourceForPrintLabels.addFeatures([feature]);
+  }
+
+  clearAll() {
+    for (const feature of this.source.getFeatures()) {
+      this.source.removeFeature(feature);
+    }
+
+    for (const feature of this.turningPointsSource.getFeatures()) {
+      this.turningPointsSource.removeFeature(feature);
+    }
+
+    this.saveToStorages();
+  }
+
+  saveToStorages() {
+    const olFeatures = [...this.source.getFeatures(), ...this.turningPointsSource.getFeatures()];
+    const wfsFeatures: WfsFeature[] = olFeatures.map(featureToWfsFeature);
+
+    mapLabelsStore.setLabels(olFeatures);
+    localStorage.setItem(this.getStorageKey('labels'), JSON.stringify(wfsFeatures));
+  }
+
+  async show() {
+    await mapService.waitForMap();
+
+    if (this.shown) {
+      return;
+    }
+
+    mapService.map.addLayer(this.layer);
+    mapService.map.addLayer(this.layerForTurningPoints);
+
+    this.modify = new Modify({ source: this.source });
+
+    mapService.map.addInteraction(this.modify);
+    this.modify.on(['modifystart'], this.handleModifyStart);
+    this.modify.on(['modifyend'], this.handleModifyEnd);
+
+    this.restoreLabelsState();
+
+    mapService.map.on('pointermove', this.handlePointerMove);
+  }
+
+  @boundMethod
+  getStorageKey(key: string): string {
+    return `mapLabels_${key}_${currentUser.id}_${currentProject.id}`;
+  }
+
+  @boundMethod
+  async addingLabelOn(type: LabelType) {
+    this.dropInteractions();
+
+    mapStore.setToolMode(ToolMode.ADDING_LABEL);
+    mapLabelsStore.setCurrentLabelType(type);
+
+    await this.show();
+
+    this.draw = this.getDraw(type);
+    this.draw.on('drawend', this.handleDrawEnd);
+
+    mapService.map.addInteraction(this.draw);
+  }
+
+  @boundMethod
+  addingLabelOff() {
+    mapLabelsStore.setCurrentLabelType();
+    mapStore.setToolMode(ToolMode.NONE);
+  }
+
+  // Пока мы умеем работать(площадь, периметр, поворотные точки, промеры) только с одной фичей, будет следующая логика.
+  // При редактировании - возвращаем ту фичу что редактируем.
+  // При выборе - вернем только если выбрана только одна фича.
+  // Иначе null
+  getSelectedOneOrEditedFeature(): WfsFeature | null {
+    if (mapStore.mode === MapMode.SELECTED_FEATURES) {
+      if (selectedFeaturesStore.features.length > 1) {
+        return null;
       }
+
+      return selectedFeaturesStore.features[0] || null;
+    } else if (mapStore.mode === MapMode.EDIT_FEATURE) {
+      return editFeatureStore.editFeaturesData?.features[0] || null;
     }
 
-    return false;
-  }
-
-  private getDistancesByCoords(coordinates: Coord[], projFrom: Projection, projTo: Projection): Distance[] {
-    if (!isCoordinateArray(coordinates)) {
-      throw new Error('Указанные координаты не являются полигоном');
-    }
-
-    const polygon = new Polygon([coordinates]);
-    const distances = [];
-
-    for (let i = 0; i < coordinates.length; i += 1) {
-      const pointA = coordinates[i];
-      const pointB = coordinates[i === coordinates.length - 1 ? 0 : i + 1];
-
-      const lineString = new LineString([pointA, pointB]);
-      const [value, units] = getFeatureLength({ geometry: lineString, projection: projFrom });
-      const center = lineString.getFlatMidpoint();
-      const perpendicularPoint = [center[0], center[1] + 10];
-      const isLabelInPolygon = polygon.intersectsCoordinate(perpendicularPoint);
-      const azimuth = bearing(
-        toWgs84(point(pointA, { crs: { type: 'pointA', properties: { name: defaultOlProjectionCode } } })),
-        toWgs84(point(pointB, { crs: { type: 'pointB', properties: { name: defaultOlProjectionCode } } }))
-      );
-
-      distances.push({
-        distance: { value, units },
-        center: transformCoord(center, projFrom, projTo) as number[],
-        isLabelInPolygon,
-        azimuth
-      });
-    }
-
-    return distances;
-  }
-
-  private getFlatGroups(coordinates: Coordinate[] | Coordinate[][] | Coordinate[][][]): Coordinate[][] {
-    if (isArrayOf(coordinates, isCoordinate)) {
-      return [coordinates];
-    } else if (isCoordinateArrayArray(coordinates)) {
-      return coordinates;
-    }
-
-    return this.getFlatGroups(coordinates.flat());
-  }
-
-  private getDistancesFeatures({
-    projFrom,
-    olProjection: projTo,
-    coordinates,
-    properties
-  }: {
-    projFrom: Projection;
-    olProjection: Projection;
-    coordinates: Coordinate[] | Coordinate[][] | Coordinate[][][];
-    properties?: Record<string, unknown>;
-  }): Feature<Point>[] {
-    let distances: Distance[] = [];
-
-    for (const group of this.getFlatGroups(coordinates)) {
-      distances.push(...this.getDistancesByCoords(group, projFrom, projTo));
-    }
-
-    if (!distances?.length) {
-      return [];
-    }
-
-    distances = distances.filter(({ distance }) => distance.value > 0);
-
-    return distances
-      .map(coord => {
-        if (isNumberArray(coord.center)) {
-          const rotation = getRotationByAzimuth(coord.azimuth);
-
-          const feature = new Feature({
-            geometry: new Point(coord.center),
-            type: 'label',
-            text: `${coord.distance.value} ${coord.distance.units}`,
-            textProperties: properties ? { ...properties } : undefined,
-            rotation,
-            isLabelInPolygon: coord.isLabelInPolygon,
-            centred: true
-          });
-
-          feature.setId(uuid());
-          feature.setStyle(this.createStyle(feature));
-
-          return feature;
-        }
-      })
-      .filter(notFalsyFilter);
+    return null;
   }
 
   async addFeatureArea(): Promise<void> {
+    const wfsFeature = this.getSelectedOneOrEditedFeature();
+    if (!wfsFeature) {
+      return;
+    }
+
     this.dropInteractions();
 
-    const currentLayerProjection = await this.getSelectedFeatureProjection();
-    const wfsFeature = this.getSelectedOrActiveFeature();
-
+    const currentLayerProjection = await this.getSelectedFeatureProjection(wfsFeature);
     if (!currentLayerProjection || !wfsFeature) {
       throw new Error(projectionError);
     }
@@ -304,11 +338,14 @@ class MapLabelsService {
   }
 
   async addFeatureLength(): Promise<void> {
+    const wfsFeature = this.getSelectedOneOrEditedFeature();
+    if (!wfsFeature) {
+      return;
+    }
+
     this.dropInteractions();
 
-    const currentLayerProjection = await this.getSelectedFeatureProjection();
-    const wfsFeature = this.getSelectedOrActiveFeature();
-
+    const currentLayerProjection = await this.getSelectedFeatureProjection(wfsFeature);
     if (!currentLayerProjection || !wfsFeature) {
       throw new Error(projectionError);
     }
@@ -352,10 +389,15 @@ class MapLabelsService {
   }
 
   async addPointsDistances(): Promise<void> {
+    const wfsFeature = this.getSelectedOneOrEditedFeature();
+    if (!wfsFeature) {
+      return;
+    }
+
     this.dropInteractions();
 
-    const currentLayerProjection = await this.getSelectedFeatureProjection();
-    const coordinates = this.getSelectedOrActiveFeature()?.geometry?.coordinates;
+    const currentLayerProjection = await this.getSelectedFeatureProjection(wfsFeature);
+    const coordinates = wfsFeature.geometry?.coordinates;
 
     if (!currentLayerProjection || !coordinates || isNumberArray(coordinates)) {
       return;
@@ -375,22 +417,22 @@ class MapLabelsService {
   }
 
   async addTurningPoints() {
+    const wfsFeature = this.getSelectedOneOrEditedFeature();
+    if (!wfsFeature) {
+      return;
+    }
+
     this.dropInteractions();
 
-    const currentLayerProjection = await this.getSelectedFeatureProjection();
-    const wfsFeature = this.getSelectedOrActiveFeature();
-
+    const currentLayerProjection = await this.getSelectedFeatureProjection(wfsFeature);
     if (!currentLayerProjection || !wfsFeature) {
       throw new Error(projectionError);
     }
-
     const coordinates = wfsFeature.geometry?.coordinates;
     const geometryType = wfsFeature.geometry?.type;
-
     if (!coordinates || !geometryType) {
       throw new Error('Отсутствие координат объекта');
     }
-
     if (currentLayerProjection) {
       const pointsCoordinates = this.getTurningPointsFromCoordinates(coordinates, geometryType);
       const transformedCoordinates = transformGroup(pointsCoordinates, currentLayerProjection, await getOlProjection());
@@ -454,13 +496,13 @@ class MapLabelsService {
     return resultCoordinates;
   }
 
-  dropInteractions() {
+  private dropInteractions() {
     this.drawOff();
     mapDrawService.drawOff();
     mapMeasureService.measureOff();
   }
 
-  createFeatures(transformedCoordinates: Coord[], type: LabelType): Feature<Point>[] {
+  private createFeatures(transformedCoordinates: Coord[], type: LabelType): Feature<Point>[] {
     return transformedCoordinates
       .map((coord, index) => {
         if (isNumberArray(coord)) {
@@ -480,25 +522,6 @@ class MapLabelsService {
       .filter(notFalsyFilter);
   }
 
-  async addingLabelOn(type: LabelType) {
-    this.dropInteractions();
-
-    mapStore.setMode(MapMode.ADDING_LABEL);
-    mapLabelsStore.setCurrentLabelType(type);
-
-    await this.show();
-
-    this.draw = this.getDraw(type);
-    this.draw.on('drawend', this.handleDrawEnd);
-
-    mapService.map.addInteraction(this.draw);
-  }
-
-  addingLabelOff() {
-    mapLabelsStore.setCurrentLabelType();
-    mapStore.setMode(MapMode.DEFAULT);
-  }
-
   private drawOff() {
     if (this.draw) {
       this.draw.un('drawend', this.handleDrawEnd);
@@ -516,14 +539,6 @@ class MapLabelsService {
     }
   }
 
-  private getDraw(type: LabelType): Draw {
-    return new Draw({
-      source: this.source,
-      type: type === 'line' ? GeometryType.LINE_STRING : GeometryType.POINT,
-      style: getStyle(KnownStyleKey.LabelsDrawStyles)
-    });
-  }
-
   @boundMethod
   private async handleDrawEnd(e: DrawEvent) {
     const feature = e.feature;
@@ -537,6 +552,14 @@ class MapLabelsService {
     }
     feature.setStyle(this.createStyle(feature));
     this.addingLabelOff();
+  }
+
+  private getDraw(type: LabelType): Draw {
+    return new Draw({
+      source: this.source,
+      type: type === 'line' ? GeometryType.LINE_STRING : GeometryType.POINT,
+      style: getStyle(KnownStyleKey.LabelsDrawStyles)
+    });
   }
 
   @boundMethod
@@ -579,40 +602,7 @@ class MapLabelsService {
     this.removeLabelToolbox();
   }
 
-  clearAll() {
-    for (const feature of this.source.getFeatures()) {
-      this.source.removeFeature(feature);
-    }
-
-    for (const feature of this.turningPointsSource.getFeatures()) {
-      this.turningPointsSource.removeFeature(feature);
-    }
-
-    this.saveToStorages();
-  }
-
-  async show() {
-    await mapService.waitForMap();
-
-    if (this.shown) {
-      return;
-    }
-
-    mapService.map.addLayer(this.layer);
-    mapService.map.addLayer(this.layerForTurningPoints);
-
-    this.modify = new Modify({ source: this.source });
-
-    mapService.map.addInteraction(this.modify);
-    this.modify.on(['modifystart'], this.handleModifyStart);
-    this.modify.on(['modifyend'], this.handleModifyEnd);
-
-    this.restoreLabelsState();
-
-    mapService.map.on('pointermove', this.handlePointerMove);
-  }
-
-  hide() {
+  private hide() {
     this.drawOff();
     this.modifyOff();
     mapService.map.removeLayer(this.layer);
@@ -682,19 +672,7 @@ class MapLabelsService {
     this.saveToStorages();
   }
 
-  saveToStorages() {
-    const olFeatures = [...this.source.getFeatures(), ...this.turningPointsSource.getFeatures()];
-    const wfsFeatures: WfsFeature[] = olFeatures.map(featureToWfsFeature);
-
-    mapLabelsStore.setLabels(olFeatures);
-    localStorage.setItem(this.getStorageKey('labels'), JSON.stringify(wfsFeatures));
-  }
-
-  getStorageKey(key: string): string {
-    return `mapLabels_${key}_${currentUser.id}_${currentProject.id}`;
-  }
-
-  createStyle(feature: Feature, selected?: boolean): Style[] {
+  private createStyle(feature: Feature, selected?: boolean): Style[] {
     if (this.getLabelType(feature) === 'line') {
       return [this.createLineStyle(selected)];
     }
@@ -740,6 +718,12 @@ class MapLabelsService {
     });
   }
 
+  private getLabelType(feature: Feature): LabelType {
+    const properties = feature.getProperties();
+
+    return properties.type as LabelType;
+  }
+
   private createPrintLabelStyle(feature: Feature): Style {
     const properties = feature.getProperties();
 
@@ -760,17 +744,6 @@ class MapLabelsService {
         })
       })
     });
-  }
-
-  getLabelType(feature: Feature): LabelType {
-    const properties = feature.getProperties();
-
-    return properties.type as LabelType;
-  }
-
-  setLabelsSettings(fontProperties: AnnotationsFontProperties): void {
-    this.userLabelsSettings = fontProperties;
-    localStorage.setItem(this.getStorageKey('userLabelsSettings'), JSON.stringify(fontProperties)); // do something
   }
 
   @boundMethod
@@ -840,27 +813,6 @@ class MapLabelsService {
     mapService.map.addOverlay(this.currentOverlay);
   }
 
-  removeLabelToolbox() {
-    this.renderLabelToolboxDebounced.cancel();
-    if (this.currentOverlay) {
-      this.currentToolboxRoot?.unmount();
-      mapService.map.removeOverlay(this.currentOverlay);
-      delete this.currentOverlay;
-      delete this.currentToolboxRoot;
-      this.toolboxHovered = false;
-    }
-  }
-
-  @boundMethod
-  setTurningPointsCircleStyles(turningPointsCircleStyles: CircleProperties) {
-    this.turningPointsCircleStyles = turningPointsCircleStyles;
-
-    localStorage.setItem(
-      this.getStorageKey('turningPointsCircleStyles'),
-      JSON.stringify(this.turningPointsCircleStyles)
-    );
-  }
-
   @boundMethod
   private handleToolboxMouseEnter() {
     this.toolboxHovered = true;
@@ -872,41 +824,9 @@ class MapLabelsService {
     this.toolboxHovered = false;
   }
 
-  showPrintLabels() {
-    mapService.map.addLayer(this.layerForPrintLabels);
-  }
-
-  hidePrintLabels() {
-    mapService.map.removeLayer(this.layerForPrintLabels);
-    this.sourceForPrintLabels.clear();
-  }
-
-  addPrintLabel(center: Coordinate, text: string | number) {
-    const feature = new Feature({
-      geometry: new Point(center),
-      type: 'label',
-      text: String(text)
-    });
-    feature.setStyle(this.createPrintLabelStyle(feature));
-    this.sourceForPrintLabels.addFeatures([feature]);
-  }
-
-  // если выделена всего одна фича - то возвращаем ее
-  // если выделено несколько и одна из них открыта для редактирования - то возвращаем открытую
-  // иначе null
-  getSelectedOrActiveFeature(): WfsFeature | null {
-    const selectedFeatureId = sidebars.editFeaturesData?.features[0].id;
-    const selectedFeature = selectedFeatureId
-      ? mapStore.getFeatureInSelectionById(selectedFeatureId)
-      : mapStore.selectedFeatures[0];
-
-    return selectedFeature || null;
-  }
-
-  async getSelectedFeatureProjection(): Promise<Projection> {
-    const selectedFeature = this.getSelectedOrActiveFeature();
-    const layerTableName = selectedFeature ? extractTableNameFromFeatureId(selectedFeature.id) : null;
-    const geometryType = selectedFeature?.geometry?.type;
+  private async getSelectedFeatureProjection(feature?: WfsFeature): Promise<Projection> {
+    const layerTableName = feature ? extractTableNameFromFeatureId(feature.id) : null;
+    const geometryType = feature?.geometry?.type;
 
     if (!geometryType || !layerTableName) {
       throw new Error('Отсутствует векторная таблица');
@@ -928,6 +848,106 @@ class MapLabelsService {
     }
 
     return currentLayerProjection;
+  }
+
+  private getDistancesFeatures({
+    projFrom,
+    olProjection: projTo,
+    coordinates,
+    properties
+  }: {
+    projFrom: Projection;
+    olProjection: Projection;
+    coordinates: Coordinate[] | Coordinate[][] | Coordinate[][][];
+    properties?: Record<string, unknown>;
+  }): Feature<Point>[] {
+    let distances: Distance[] = [];
+
+    for (const group of this.getFlatGroups(coordinates)) {
+      distances.push(...this.getDistancesByCoords(group, projFrom, projTo));
+    }
+
+    if (!distances?.length) {
+      return [];
+    }
+
+    distances = distances.filter(({ distance }) => distance.value > 0);
+
+    return distances
+      .map(coord => {
+        if (isNumberArray(coord.center)) {
+          const rotation = getRotationByAzimuth(coord.azimuth);
+
+          const feature = new Feature({
+            geometry: new Point(coord.center),
+            type: 'label',
+            text: `${coord.distance.value} ${coord.distance.units}`,
+            textProperties: properties ? { ...properties } : undefined,
+            rotation,
+            isLabelInPolygon: coord.isLabelInPolygon,
+            centred: true
+          });
+
+          feature.setId(uuid());
+          feature.setStyle(this.createStyle(feature));
+
+          return feature;
+        }
+      })
+      .filter(notFalsyFilter);
+  }
+
+  private get shown(): boolean {
+    for (const layer of mapService.map.getLayers().getArray()) {
+      if (layer === this.layer) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  private getDistancesByCoords(coordinates: Coord[], projFrom: Projection, projTo: Projection): Distance[] {
+    if (!isCoordinateArray(coordinates)) {
+      throw new Error('Указанные координаты не являются полигоном');
+    }
+
+    const polygon = new Polygon([coordinates]);
+    const distances = [];
+
+    for (let i = 0; i < coordinates.length; i += 1) {
+      const pointA = coordinates[i];
+      const pointB = coordinates[i === coordinates.length - 1 ? 0 : i + 1];
+
+      const lineString = new LineString([pointA, pointB]);
+      const [value, units] = getFeatureLength({ geometry: lineString, projection: projFrom });
+      const center = lineString.getFlatMidpoint();
+      const perpendicularPoint = [center[0], center[1] + 10];
+      const isLabelInPolygon = polygon.intersectsCoordinate(perpendicularPoint);
+      const azimuth = bearing(
+        toWgs84(point(pointA, { crs: { type: 'pointA', properties: { name: defaultOlProjectionCode } } })),
+        toWgs84(point(pointB, { crs: { type: 'pointB', properties: { name: defaultOlProjectionCode } } }))
+      );
+
+      distances.push({
+        distance: { value, units },
+        center: transformCoord(center, projFrom, projTo) as number[],
+        isLabelInPolygon,
+        azimuth
+      });
+    }
+
+    return distances;
+  }
+
+  private getFlatGroups(coordinates: Coordinate[] | Coordinate[][] | Coordinate[][][]): Coordinate[][] {
+    if (isArrayOf(coordinates, isCoordinate)) {
+      return [coordinates];
+    } else if (isCoordinateArrayArray(coordinates)) {
+      return coordinates;
+    }
+
+    return this.getFlatGroups(coordinates.flat());
   }
 }
 

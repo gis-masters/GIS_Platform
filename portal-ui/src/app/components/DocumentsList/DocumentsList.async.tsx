@@ -63,7 +63,7 @@ export default class DocumentsList extends Component<DocumentsListProps> {
           type='file'
           onChange={this.handleFileChange}
         />
-        {!featureInfo.isNew && featureInfo.isReadOnly && (
+        {featureInfo.isReadOnly && (
           <label className={cnDocumentsList('Label')} htmlFor={htmlId}>
             Добавить файл
             <AddBoxOutlined className={cnDocumentsList('AddIcon')} color='primary' fontSize='small' />

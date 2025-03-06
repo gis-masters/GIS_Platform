@@ -5,8 +5,9 @@ import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
 import { SearchItemDataSource } from '../../services/data/search/search.model';
+import { mapModeManager } from '../../services/map/a-map-mode/MapModeManager';
+import { MapMode } from '../../services/map/map.models';
 import { currentProject } from '../../stores/CurrentProject.store';
-import { sidebars } from '../../stores/Sidebars.store';
 import { ExplorerSearchValue } from '../Explorer/Explorer.models';
 import { SearchInProjectSearchField } from './SearchField/SearchInProject-SearchField';
 import { SearchInProjectToggler } from './Toggler/SearchInProject-Toggler';
@@ -34,7 +35,7 @@ export class SearchInProject extends Component {
   }
 
   @boundMethod
-  private search(searchValue: ExplorerSearchValue) {
+  private async search(searchValue: ExplorerSearchValue) {
     if (searchValue.searchValue) {
       const sources: SearchItemDataSource[] = currentProject.vectorLayers.map(({ dataset, tableName }) => {
         return {
@@ -43,8 +44,13 @@ export class SearchInProject extends Component {
         };
       });
 
-      sidebars.setSearchValue({ ...searchValue, source: sources });
-      sidebars.openSearchSidebar();
+      await mapModeManager.changeMode(
+        MapMode.SEARCH_IN_PROJECT,
+        {
+          payload: { ...searchValue, source: sources }
+        },
+        'search - 1'
+      );
     }
   }
 

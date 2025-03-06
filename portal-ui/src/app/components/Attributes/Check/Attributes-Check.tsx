@@ -5,9 +5,9 @@ import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
 import { WfsFeature } from '../../../services/geoserver/wfs/wfs.models';
-import { MapSelectionTypes } from '../../../services/map/map.models';
-import { mapSelectionService } from '../../../services/map/map-selection.service';
-import { mapStore } from '../../../stores/Map.store';
+import { mapModeManager } from '../../../services/map/a-map-mode/MapModeManager';
+import { selectedFeaturesStore } from '../../../services/map/a-map-mode/selected-features/SelectedFeatures.store';
+import { MapMode, MapSelectionTypes } from '../../../services/map/map.models';
 
 import '!style-loader!css-loader!sass-loader!./Attributes-Check.scss';
 
@@ -25,7 +25,7 @@ export class AttributesCheck extends Component<AttributesCheckProps> {
     return (
       <Checkbox
         className={cnAttributesCheck()}
-        checked={mapStore.selectedFeatures.some(({ id }) => id === feature.id)}
+        checked={selectedFeaturesStore.features.some(({ id }) => id === feature.id)}
         value={feature.id}
         onChange={this.handleChange}
       />
@@ -33,13 +33,31 @@ export class AttributesCheck extends Component<AttributesCheckProps> {
   }
 
   @boundMethod
-  private handleChange(e: React.ChangeEvent<HTMLInputElement>, checked: boolean) {
+  private async handleChange(e: React.ChangeEvent<HTMLInputElement>, checked: boolean) {
     const { feature } = this.props;
-    if (mapStore.limitReached) {
-      mapSelectionService.selectFeatures([feature], (!checked && MapSelectionTypes.REMOVE) || undefined);
+    if (selectedFeaturesStore.limitReached) {
+      await mapModeManager.changeMode(
+        MapMode.SELECTED_FEATURES,
+        {
+          payload: {
+            features: [feature],
+            type: (!checked && MapSelectionTypes.REMOVE) || undefined
+          }
+        },
+        'check handleChange 1'
+      );
     } else {
       const selectionType = checked ? MapSelectionTypes.ADD : MapSelectionTypes.REMOVE;
-      mapSelectionService.selectFeatures([feature], selectionType);
+      await mapModeManager.changeMode(
+        MapMode.SELECTED_FEATURES,
+        {
+          payload: {
+            features: [feature],
+            type: selectionType
+          }
+        },
+        'check handleChange 2'
+      );
     }
   }
 }

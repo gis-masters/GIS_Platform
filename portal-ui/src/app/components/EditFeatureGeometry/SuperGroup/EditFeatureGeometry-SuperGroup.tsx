@@ -9,7 +9,7 @@ import { Coordinate } from 'ol/coordinate';
 
 import { GeometryType } from '../../../services/geoserver/wfs/wfs.models';
 import { selectLabelForGeometryType } from '../../../services/geoserver/wfs/wfs.util';
-import { editFeatureStore } from '../../../stores/EditFeatureStore';
+import { editFeatureStore } from '../../../services/map/a-map-mode/edit-feature/EditFeatureStore';
 import { ContourAdd } from '../../Icons/ContourAdd';
 import { EditFeatureGeometryDelButton } from '../DelButton/EditFeatureGeometry-DelButton';
 import { EditFeatureGeometryDraw } from '../Draw/EditFeatureGeometry-Draw';

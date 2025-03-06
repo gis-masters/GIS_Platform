@@ -8,5 +8,3 @@ export interface MeasureItem {
   tooltipNode: HTMLElement;
   tooltipOverlay: Overlay;
 }
-
-export type MeasureMode = 'area' | 'length';

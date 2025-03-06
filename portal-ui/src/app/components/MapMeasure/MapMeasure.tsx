@@ -5,8 +5,7 @@ import { DeleteSweepOutlined, SquareFoot } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
-import { MapAction, MapMode } from '../../services/map/map.models';
-import { MeasureMode } from '../../services/map/measure/map-measure.models';
+import { MapAction, ToolMode } from '../../services/map/map.models';
 import { mapMeasureService } from '../../services/map/measure/map-measure.service';
 import { mapStore } from '../../stores/Map.store';
 import { mapMeasureStore } from '../../stores/MapMeasure.store';
@@ -21,17 +20,15 @@ const cnMapMeasure = cn('MapMeasure');
 @observer
 export class MapMeasure extends Component {
   render() {
-    const isMeasureActive = mapStore.mode === MapMode.MEASURE;
-
     return (
       <div className={cnMapMeasure()}>
         <Tooltip title='Измерить длину'>
           <span>
             <IconButton
               onClick={this.handleLengthClick}
-              checked={isMeasureActive && mapMeasureStore.measureMode === 'length'}
+              checked={mapStore.toolMode === ToolMode.MEASURE_LENGTH}
               size='small'
-              disabled={!mapStore.allowedActions.includes(MapAction.MAP_MEASURE)}
+              disabled={!mapStore.allowedActions.includes(MapAction.MAP_TOOL_MEASURE_LENGTH)}
             >
               <Ruler />
             </IconButton>
@@ -41,9 +38,9 @@ export class MapMeasure extends Component {
           <span>
             <IconButton
               onClick={this.handleAreaClick}
-              checked={isMeasureActive && mapMeasureStore.measureMode === 'area'}
+              checked={mapStore.toolMode === ToolMode.MEASURE_AREA}
               size='small'
-              disabled={!mapStore.allowedActions.includes(MapAction.MAP_MEASURE)}
+              disabled={!mapStore.allowedActions.includes(MapAction.MAP_TOOL_MEASURE_AREA)}
             >
               <SquareFoot />
             </IconButton>
@@ -61,26 +58,27 @@ export class MapMeasure extends Component {
   }
 
   @boundMethod
+  private handleMeasureClick(toolMode: ToolMode) {
+    mapMeasureService.removeHelpMsg();
+
+    const isActive = mapStore.toolMode === toolMode;
+    if (isActive) {
+      mapMeasureService.measureOff();
+      mapStore.setToolMode(ToolMode.NONE);
+    } else {
+      mapMeasureService.createMeasureStartTooltip();
+      mapMeasureService.measureOn(toolMode);
+      mapStore.setToolMode(toolMode);
+    }
+  }
+
+  @boundMethod
   private handleLengthClick() {
-    this.selectMode('length');
+    this.handleMeasureClick(ToolMode.MEASURE_LENGTH);
   }
 
   @boundMethod
   private handleAreaClick() {
-    this.selectMode('area');
-  }
-
-  private selectMode(mode?: MeasureMode) {
-    mapMeasureService.removeHelpMsg();
-    if (mode && mapMeasureStore.measureMode === mode) {
-      mapMeasureService.measureOff();
-    } else if (mode) {
-      mapMeasureService.createMeasureStartTooltip();
-      mapMeasureService.measureOn(mode);
-    }
-
-    if (mapStore.mode === MapMode.MEASURE && !mapMeasureStore.measureMode) {
-      mapStore.setMode(MapMode.DEFAULT);
-    }
+    this.handleMeasureClick(ToolMode.MEASURE_AREA);
   }
 }

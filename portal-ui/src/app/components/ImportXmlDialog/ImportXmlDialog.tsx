@@ -7,8 +7,9 @@ import { AxiosError } from 'axios';
 
 import { importXml } from '../../services/data/import-xml/import-xml.service';
 import { getFeaturesById } from '../../services/geoserver/wfs/wfs.service';
+import { mapModeManager } from '../../services/map/a-map-mode/MapModeManager';
+import { MapMode, MapSelectionTypes } from '../../services/map/map.models';
 import { mapService } from '../../services/map/map.service';
-import { mapSelectionService } from '../../services/map/map-selection.service';
 import { services } from '../../services/services';
 import { Mime } from '../../services/util/Mime';
 import { Button } from '../Button/Button';
@@ -87,7 +88,17 @@ export class ImportXmlDialog extends Component<ImportXmlDialogProps> {
       const objectId = await importXml(this.file, datasetId, tableId);
       const wfsFeatures = await getFeaturesById([objectId.toString()], complexName);
       if (wfsFeatures.length > 0) {
-        mapSelectionService.selectFeatures(wfsFeatures);
+        await mapModeManager.changeMode(
+          MapMode.SELECTED_FEATURES,
+          {
+            payload: {
+              features: wfsFeatures,
+              type: MapSelectionTypes.REPLACE
+            }
+          },
+          'XMLimport handleSubmit'
+        );
+
         await mapService.positionToFeatures(wfsFeatures);
       }
       Toast.success('Объекты из файла импортированы успешно');

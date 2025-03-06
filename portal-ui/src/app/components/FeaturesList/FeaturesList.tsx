@@ -6,10 +6,13 @@ import { boundMethod } from 'autobind-decorator';
 import { FixedSizeList, ListChildComponentProps } from 'react-window';
 
 import { WfsFeature } from '../../services/geoserver/wfs/wfs.models';
+import { EditFeatureMode } from '../../services/map/a-map-mode/edit-feature/EditFeature.models';
+import { mapModeManager } from '../../services/map/a-map-mode/MapModeManager';
+import { selectedFeaturesStore } from '../../services/map/a-map-mode/selected-features/SelectedFeatures.store';
 import { mapDrawService } from '../../services/map/draw/map-draw.service';
+import { MapMode } from '../../services/map/map.models';
 import { FeatureError } from '../../services/map/map-link-following.service';
-import { mapStore } from '../../stores/Map.store';
-import { EditFeatureMode, sidebars } from '../../stores/Sidebars.store';
+import { sidebars } from '../../stores/Sidebars.store';
 import { FeaturesListItem } from '../FeaturesListItem/FeaturesListItem';
 import { FeaturesListEmpty } from './Empty/FeaturesList-Empty';
 
@@ -32,6 +35,7 @@ interface FeaturesListProps {
 export class FeaturesList extends Component<FeaturesListProps> {
   private ref: RefObject<HTMLDivElement> = createRef();
   private resizeObserver: ResizeObserver = new ResizeObserver(this.handleResize);
+
   @observable private width = 0;
   @observable private height = 0;
 
@@ -91,7 +95,7 @@ export class FeaturesList extends Component<FeaturesListProps> {
       clearTimeout(this.highlightAllFeaturesTimeout);
       await mapDrawService.highlightFeatures([feature]);
     } else {
-      await mapDrawService.highlightFeatures(mapStore.highlightedFeatures);
+      await mapDrawService.highlightFeatures(selectedFeaturesStore.highlightedFeatures);
     }
   }
 
@@ -112,15 +116,20 @@ export class FeaturesList extends Component<FeaturesListProps> {
   }
 
   @action.bound
-  private handleItemSelect(feature: WfsFeature) {
+  private async handleItemSelect(feature: WfsFeature) {
     if (this.props.forSearch) {
       sidebars.setFoundBySearchFeatureEdited(true);
     } else {
-      sidebars.setMemorizedFeatures(mapStore.selectedFeatures);
       sidebars.setSelectedFeaturesEdited(true);
     }
-    sidebars.closeSidebars();
-    sidebars.openEdit({ features: [feature], mode: EditFeatureMode.single });
+
+    await mapModeManager.changeMode(
+      MapMode.EDIT_FEATURE,
+      {
+        payload: { features: [feature], mode: EditFeatureMode.single }
+      },
+      'handleItemSelect'
+    );
   }
 
   @boundMethod
@@ -131,7 +140,7 @@ export class FeaturesList extends Component<FeaturesListProps> {
       return <FeaturesListEmpty />;
     }
 
-    if (!forSearch && mapStore.selectedFeatures.length && index >= mapStore.selectedFeatures.length) {
+    if (!forSearch && selectedFeaturesStore.features.length && index >= selectedFeaturesStore.features.length) {
       const featureError = items[index].error;
 
       return <FeaturesListItem errorData={featureError} key={`err_${index}_${featureError?.id}`} style={style} />;

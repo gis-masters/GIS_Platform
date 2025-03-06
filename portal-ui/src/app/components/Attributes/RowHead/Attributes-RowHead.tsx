@@ -6,6 +6,7 @@ import { cn } from '@bem-react/classname';
 import { extractTableNameFromFeatureId } from '../../../services/geoserver/featureType/featureType.util';
 import { CrgVectorLayer } from '../../../services/gis/layers/layers.models';
 import { getLayerByFeatureInCurrentProject } from '../../../services/gis/layers/layers.utils';
+import { editFeatureStore } from '../../../services/map/a-map-mode/edit-feature/EditFeatureStore';
 import { isUpdateAllowed } from '../../../services/permissions/permissions.service';
 import { FilterQuery } from '../../../services/util/filters/filters.models';
 import { sidebars } from '../../../stores/Sidebars.store';
@@ -50,7 +51,9 @@ export class AttributesRowHead extends Component<AttributesRowHeadProps> {
 
   render() {
     const { rowData } = this.props;
-    const opened = sidebars.editOpen && sidebars.editFeaturesData?.features.some(({ id }) => id === rowData.feature.id);
+    const opened =
+      sidebars.editFeatureOpen &&
+      editFeatureStore.editFeaturesData?.features.some(({ id }) => id === rowData.feature.id);
 
     return (
       <span className={cnAttributesRowHead()}>

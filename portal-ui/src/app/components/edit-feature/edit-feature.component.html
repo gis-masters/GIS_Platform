@@ -11,7 +11,7 @@
         matBadgePosition="after"
         matBadgeColor="accent"
         matTooltip="{{ getTooltip() }}"
-        [disabled]="!isNew && editFeatureForm?.pristine && (!isGeometryChanged || !isGeometryValid)"
+        [disabled]="editFeatureStore.pristine"
       >
         <mat-icon *ngIf="mode === 'multipleEdit'">list</mat-icon>
         Сохранить
@@ -23,6 +23,7 @@
         mat-stroked-button
         color="warn"
         (click)="deleteFeature()"
+        [disabled]="editFeatureStore.dirty"
       >
         Удалить
       </button>
@@ -45,7 +46,7 @@
         </mat-tab>
         <mat-tab label="Геометрия">
           <ng-template matTabContent>
-            <crg-edit-feature-geometry [store]="editGeometryStore" [readOnly]="!updatingAllowed">
+            <crg-edit-feature-geometry [readOnly]="!updatingAllowed">
             </crg-edit-feature-geometry>
           </ng-template>
         </mat-tab>
@@ -312,5 +313,3 @@
     </ng-container>
   </form>
 </ng-template>
-
-<crg-edit-feature-confirm></crg-edit-feature-confirm>

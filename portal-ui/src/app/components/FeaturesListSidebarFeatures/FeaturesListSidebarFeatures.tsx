@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { IReactionDisposer, reaction } from 'mobx';
+import { IReactionDisposer } from 'mobx';
 import { observer } from 'mobx-react';
 import { ButtonGroup, Tooltip } from '@mui/material';
 import { CancelOutlined, Close, SaveOutlined } from '@mui/icons-material';
@@ -7,8 +7,9 @@ import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
 import { communicationService } from '../../services/communication.service';
+import { mapModeManager } from '../../services/map/a-map-mode/MapModeManager';
+import { selectedFeaturesStore } from '../../services/map/a-map-mode/selected-features/SelectedFeatures.store';
 import { MapMode } from '../../services/map/map.models';
-import { mapSelectionService } from '../../services/map/map-selection.service';
 import { mapVerticesModificationService } from '../../services/map/vertices-modification/map-vertices-modification.service';
 import { mapStore } from '../../stores/Map.store';
 import { mapVerticesModificationStore } from '../../stores/MapVerticesModification.store';
@@ -31,20 +32,6 @@ interface FeaturesListSidebarFeaturesProps {
 @observer
 export default class FeaturesListSidebarFeatures extends Component<FeaturesListSidebarFeaturesProps> {
   private reactionDisposer?: IReactionDisposer;
-
-  componentDidMount() {
-    communicationService.featuresUpdated.on(this.close, this);
-    this.reactionDisposer = reaction(
-      () => {
-        return mapStore.selectedFeatures.length;
-      },
-      selectedFeaturesLength => {
-        if (!selectedFeaturesLength && !this.props.searchValue) {
-          this.close();
-        }
-      }
-    );
-  }
 
   componentWillUnmount() {
     communicationService.off(this);
@@ -107,9 +94,9 @@ export default class FeaturesListSidebarFeatures extends Component<FeaturesListS
             </Tooltip>
           </div>
         )}
-        {!searchValue && mapStore.selectedFeatures.length >= mapStore.selectingFeaturesLimit && (
+        {!searchValue && selectedFeaturesStore.features.length >= selectedFeaturesStore.limit && (
           <div className={cnFeaturesListSidebarFeatures('Error')}>
-            Максимальное количество выбираемых объектов — {mapStore.selectingFeaturesLimit}
+            Максимальное количество выбираемых объектов — {selectedFeaturesStore.limit}
           </div>
         )}
         {searchValue ? <SearchFeaturesList searchValue={searchValue} /> : <SelectedFeaturesList />}
@@ -118,17 +105,21 @@ export default class FeaturesListSidebarFeatures extends Component<FeaturesListS
   }
 
   @boundMethod
-  private close() {
-    if (this.props.searchValue) {
+  private async close() {
+    let success: boolean;
+    if (mapStore.mode === MapMode.VERTICES_MODIFICATION) {
+      success = await mapModeManager.changeMode(MapMode.SELECTED_FEATURES, undefined, 'flc - 1');
+      success = await mapModeManager.changeMode(MapMode.NONE, undefined, 'flc - 1.2');
+    } else if (mapStore.mode === MapMode.SELECTED_FEATURES) {
+      success = await mapModeManager.changeMode(MapMode.NONE, undefined, 'flc - 2');
+    } else {
+      success = await (selectedFeaturesStore.features.length > 0
+        ? mapModeManager.changeMode(MapMode.SELECTED_FEATURES, undefined, 'flc - 3')
+        : mapModeManager.changeMode(MapMode.NONE, undefined, 'flc - 4'));
+    }
+
+    if (success && this.props.searchValue) {
       sidebars.setSearchValue({});
-    }
-
-    if (this.props.singleTab || !sidebars.searchValue) {
-      mapSelectionService.selectFeatures([]);
-    }
-
-    if (sidebars.memorizedViewFeatures?.length) {
-      sidebars.setMemorizedFeatures([]);
     }
   }
 

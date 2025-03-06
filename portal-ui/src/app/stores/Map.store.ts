@@ -1,20 +1,11 @@
 import { action, computed, makeObservable, observable, reaction } from 'mobx';
-import sift from 'sift';
 
-import { extractFeatureIdsFromAttributesFilter } from '../components/Attributes/Attributes.utils';
-import { flags } from '../services/feature-flags';
-import { extractTableNameFromFeatureId } from '../services/geoserver/featureType/featureType.util';
-import { WfsFeature } from '../services/geoserver/wfs/wfs.models';
-import { CrgLayer } from '../services/gis/layers/layers.models';
-import { MapAction, MapMode } from '../services/map/map.models';
-import { prepareLike } from '../services/util/filters/filterObjects';
-import { attributesTableStore } from './AttributesTable.store';
-import { currentProject } from './CurrentProject.store';
+import { MapAction, MapMode, ToolMode } from '../services/map/map.models';
 import { Pages, route } from './Route.store';
 
-// TODO: сейчас матрица прав запрещающая, т.е. всё что указано запрещено... может быть выгоднее сделать наоборот.
+// TODO: Матрица прав "разрешающая", т.е. разрешено только то, что указано... может удобнее сделать наоборот?
 const mapModeAndActionMatrix = {
-  [MapMode.DEFAULT]: [
+  [MapMode.NONE]: [
     MapAction.PROKOL,
     MapAction.LAYER_EYE,
     MapAction.ADD_LAYER,
@@ -23,7 +14,6 @@ const mapModeAndActionMatrix = {
     MapAction.EXPORT_SHP,
     MapAction.MAP_LABELS,
     MapAction.ADD_FEATURE,
-    MapAction.MAP_MEASURE,
     MapAction.SEARCH_FIELD,
     MapAction.DELETE_LAYER,
     MapAction.DELETE_GROUP,
@@ -32,6 +22,7 @@ const mapModeAndActionMatrix = {
     MapAction.ATTRIBUTES_TAB,
     MapAction.ZOOM_TO_FEATURE,
     MapAction.LAYER_FILTRATION,
+    MapAction.SELECT_BY_BORDER,
     MapAction.OPEN_EDIT_FEATURE,
     MapAction.OPEN_LAYER_SOURCE,
     MapAction.RENAME_LAYER_GROUP,
@@ -41,36 +32,14 @@ const mapModeAndActionMatrix = {
     MapAction.OPEN_IMPORTS_SUBMENU,
     MapAction.OPEN_LAYER_PROPERTIES,
     MapAction.VERTICES_MODIFICATION,
+    MapAction.MAP_TOOL_MEASURE_AREA,
+    MapAction.MAP_TOOL_MEASURE_LENGTH,
     MapAction.LAYER_SIDEBAR_LEFT_TOOLS,
     MapAction.SELECT_WITH_MODIFICATORS,
     MapAction.REMOVE_FEATURE_FROM_SELECTED
   ],
-  [MapMode.SELECTION]: [
-    MapAction.PROKOL,
-    MapAction.LAYER_EYE,
-    MapAction.CHECK_BUGS,
-    MapAction.EXPORT_GML,
-    MapAction.EXPORT_SHP,
-    MapAction.MAP_LABELS,
-    MapAction.ADD_FEATURE,
-    MapAction.MAP_MEASURE,
-    MapAction.SEARCH_FIELD,
-    MapAction.MAP_SELECTION,
-    MapAction.PRINT_MAP_PDF,
-    MapAction.ATTRIBUTES_TAB,
-    MapAction.ZOOM_TO_FEATURE,
-    MapAction.SELECT_BY_BORDER,
-    MapAction.LAYER_FILTRATION,
-    MapAction.OPEN_EDIT_FEATURE,
-    MapAction.OPEN_LAYER_SOURCE,
-    MapAction.OPEN_ATTRIBUTE_TABLE,
-    MapAction.OPEN_IMPORTS_SUBMENU,
-    MapAction.OPEN_LAYER_PROPERTIES,
-    MapAction.VERTICES_MODIFICATION,
-    MapAction.SELECT_WITH_MODIFICATORS,
-    MapAction.REMOVE_FEATURE_FROM_SELECTED
-  ],
-  [MapMode.MEASURE]: [
+  [MapMode.DRAW_FEATURE]: [MapAction.DRAW],
+  [MapMode.EDIT_FEATURE]: [
     MapAction.PROKOL,
     MapAction.LAYER_EYE,
     MapAction.ADD_LAYER,
@@ -79,7 +48,6 @@ const mapModeAndActionMatrix = {
     MapAction.EXPORT_SHP,
     MapAction.MAP_LABELS,
     MapAction.ADD_FEATURE,
-    MapAction.MAP_MEASURE,
     MapAction.SEARCH_FIELD,
     MapAction.DELETE_LAYER,
     MapAction.DELETE_GROUP,
@@ -97,11 +65,12 @@ const mapModeAndActionMatrix = {
     MapAction.OPEN_IMPORTS_SUBMENU,
     MapAction.OPEN_LAYER_PROPERTIES,
     MapAction.VERTICES_MODIFICATION,
+    MapAction.MAP_TOOL_MEASURE_AREA,
+    MapAction.MAP_TOOL_MEASURE_LENGTH,
     MapAction.SELECT_WITH_MODIFICATORS,
     MapAction.REMOVE_FEATURE_FROM_SELECTED
   ],
-  [MapMode.DRAW]: [MapAction.DRAW],
-  [MapMode.ADDING_LABEL]: [
+  [MapMode.SELECTED_FEATURES]: [
     MapAction.PROKOL,
     MapAction.LAYER_EYE,
     MapAction.ADD_LAYER,
@@ -110,7 +79,6 @@ const mapModeAndActionMatrix = {
     MapAction.EXPORT_SHP,
     MapAction.MAP_LABELS,
     MapAction.ADD_FEATURE,
-    MapAction.MAP_MEASURE,
     MapAction.SEARCH_FIELD,
     MapAction.DELETE_LAYER,
     MapAction.DELETE_GROUP,
@@ -128,6 +96,40 @@ const mapModeAndActionMatrix = {
     MapAction.OPEN_IMPORTS_SUBMENU,
     MapAction.OPEN_LAYER_PROPERTIES,
     MapAction.VERTICES_MODIFICATION,
+    MapAction.MAP_TOOL_MEASURE_AREA,
+    MapAction.MAP_TOOL_MEASURE_LENGTH,
+    MapAction.LAYER_SIDEBAR_LEFT_TOOLS,
+    MapAction.SELECT_WITH_MODIFICATORS,
+    MapAction.REMOVE_FEATURE_FROM_SELECTED
+  ],
+  [MapMode.SEARCH_IN_PROJECT]: [
+    MapAction.PROKOL,
+    MapAction.LAYER_EYE,
+    MapAction.ADD_LAYER,
+    MapAction.CHECK_BUGS,
+    MapAction.EXPORT_GML,
+    MapAction.EXPORT_SHP,
+    MapAction.MAP_LABELS,
+    MapAction.ADD_FEATURE,
+    MapAction.SEARCH_FIELD,
+    MapAction.DELETE_LAYER,
+    MapAction.DELETE_GROUP,
+    MapAction.MAP_SELECTION,
+    MapAction.PRINT_MAP_PDF,
+    MapAction.ATTRIBUTES_TAB,
+    MapAction.ZOOM_TO_FEATURE,
+    MapAction.LAYER_FILTRATION,
+    MapAction.OPEN_EDIT_FEATURE,
+    MapAction.OPEN_LAYER_SOURCE,
+    MapAction.RENAME_LAYER_GROUP,
+    MapAction.CREATE_LAYER_GROUP,
+    MapAction.EDIT_PROJECT_LAYER,
+    MapAction.OPEN_ATTRIBUTE_TABLE,
+    MapAction.OPEN_IMPORTS_SUBMENU,
+    MapAction.OPEN_LAYER_PROPERTIES,
+    MapAction.VERTICES_MODIFICATION,
+    MapAction.MAP_TOOL_MEASURE_AREA,
+    MapAction.MAP_TOOL_MEASURE_LENGTH,
     MapAction.SELECT_WITH_MODIFICATORS,
     MapAction.REMOVE_FEATURE_FROM_SELECTED
   ],
@@ -135,9 +137,8 @@ const mapModeAndActionMatrix = {
 };
 
 const defaultValues: Partial<MapStore> = {
-  selectionActive: false,
-  mode: MapMode.DEFAULT,
-  selectedFeatures: []
+  mode: MapMode.NONE,
+  toolMode: ToolMode.NONE
 };
 
 class MapStore {
@@ -146,13 +147,10 @@ class MapStore {
     return this._instance || (this._instance = new this());
   }
 
-  @observable mode: MapMode = MapMode.DEFAULT;
-  @observable selectionActive: boolean = false;
-  @observable selectedFeatures: WfsFeature[] = [];
+  @observable mode: MapMode = MapMode.NONE;
+  @observable toolMode: ToolMode = ToolMode.NONE;
 
   @observable private loadingCount = 0;
-
-  private readonly SELECTING_FEATURES_LIMIT = 500;
 
   private constructor() {
     makeObservable(this);
@@ -169,36 +167,6 @@ class MapStore {
     );
   }
 
-  get selectingFeaturesLimit(): number {
-    return flags.selectingFeaturesLimit ? Number(flags.selectingFeaturesLimit) : this.SELECTING_FEATURES_LIMIT;
-  }
-
-  // TODO: переделать на mapStore.allowedActions.includes({some_action})
-  isProkolAllowed() {
-    if (this.mode === MapMode.DEFAULT || this.mode === MapMode.SELECTION) {
-      return true;
-    }
-  }
-
-  getFeatureInSelectionById(id: string): WfsFeature | undefined {
-    return this.selectedFeatures.find(feature => feature.id === id);
-  }
-
-  @computed
-  get selectedFeaturesByTableName(): Record<string, WfsFeature[]> {
-    const result: Record<string, WfsFeature[]> = {};
-
-    for (const feature of this.selectedFeatures) {
-      const tableName = extractTableNameFromFeatureId(feature.id);
-      if (!result[tableName]) {
-        result[tableName] = [];
-      }
-      result[tableName].push(feature);
-    }
-
-    return result;
-  }
-
   @computed
   get allowedActions(): MapAction[] {
     return mapModeAndActionMatrix[this.mode];
@@ -207,36 +175,6 @@ class MapStore {
   @computed
   get isLoading(): boolean {
     return Boolean(this.loadingCount);
-  }
-
-  @computed
-  get highlightedFeatures(): WfsFeature[] {
-    const filtersByLayers: {
-      [tableName: string]: {
-        tester?: (properties: WfsFeature['properties']) => boolean;
-        ids: string[];
-        negativeIds: boolean;
-      };
-    } = {};
-
-    return this.selectedFeatures.filter(feature => {
-      const tableName = extractTableNameFromFeatureId(feature.id);
-
-      if (!filtersByLayers[tableName]) {
-        const layer = currentProject.getLayerByTableNameFromAllVectorableLayers(tableName);
-
-        filtersByLayers[tableName] = this.prepareLayerFilter(layer);
-      }
-
-      const { negativeIds, ids, tester } = filtersByLayers[tableName];
-
-      return !negativeIds && (!tester || tester(feature.properties)) && (!ids.length || ids.includes(feature.id));
-    });
-  }
-
-  @computed
-  get limitReached(): boolean {
-    return this.selectedFeatures.length >= this.selectingFeaturesLimit;
   }
 
   @action
@@ -255,37 +193,13 @@ class MapStore {
   }
 
   @action
-  setSelectionActive(status: boolean) {
-    this.selectionActive = status;
-  }
-
-  // use only in map-selection.service.ts
-
-  @action
-  setSelectedFeatures(features: WfsFeature[]) {
-    this.selectedFeatures = features;
+  setToolMode(toolMode: ToolMode) {
+    this.toolMode = toolMode;
   }
 
   @action
   private reset() {
     Object.assign(this, defaultValues);
-  }
-
-  private prepareLayerFilter(layer: CrgLayer) {
-    if (!layer.tableName) {
-      throw new Error(`Слой ${layer.title} не имеет tableName`);
-    }
-
-    const [ids, filter, negativeIds] = extractFeatureIdsFromAttributesFilter(
-      attributesTableStore.getLayerFilter(layer.tableName, true),
-      layer
-    );
-
-    return {
-      tester: Object.keys(filter).length ? sift(prepareLike(filter)) : undefined,
-      ids,
-      negativeIds
-    };
   }
 }
 

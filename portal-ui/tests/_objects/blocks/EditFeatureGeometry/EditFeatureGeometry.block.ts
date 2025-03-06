@@ -6,7 +6,8 @@ class EditFeatureGeometryBlock extends Block {
     container: '.EditFeatureGeometry',
     view: '.EditFeatureGeometry-View',
     coord: '.EditFeatureGeometry-Coord',
-    coordInput: '.EditFeatureGeometry-CoordInput',
+    coordInputX: '.EditFeatureGeometry-CoordInput_d_x',
+    coordInputY: '.EditFeatureGeometry-CoordInput_d_y',
     warningIcon: '.MuiSvgIcon-colorWarning',
     geometryForm: '.EditFeatureGeometry-Form'
   };
@@ -35,10 +36,19 @@ class EditFeatureGeometryBlock extends Block {
     return indexes;
   }
 
-  async changeFormInputValue(fieldNumber: number, value: string): Promise<void> {
-    const $formInput = await this.getFormInputByNumber(fieldNumber);
-    await $formInput.clearValue();
-    await $formInput.setValue(value);
+  async changeFormInputValue(fieldNumber: number, value: number, coordinate: 'x' | 'y' = 'x'): Promise<void> {
+    const $$coords = await this.$$('coord');
+    const coordElement = $$coords[fieldNumber - 1];
+    const selector = coordinate === 'x' ? this.selectors.coordInputX : this.selectors.coordInputY;
+    const $input = await coordElement.$(selector);
+    const inputBlock = new MuiInputBlock($input);
+    await inputBlock.clearValue();
+    await inputBlock.setValue(value.toString());
+  }
+
+  async changeCoordinates(fieldNumber: number, x: number, y: number): Promise<void> {
+    await this.changeFormInputValue(fieldNumber, x, 'x');
+    await this.changeFormInputValue(fieldNumber, y, 'y');
   }
 
   async getFormInputByNumber(fieldNumber: number): Promise<MuiInputBlock> {

@@ -2,9 +2,8 @@ import { action } from 'mobx';
 
 import { Toast } from '../../components/Toast/Toast';
 import { currentProject } from '../../stores/CurrentProject.store';
-import { mapStore } from '../../stores/Map.store';
 import { route } from '../../stores/Route.store';
-import { EditFeatureMode, sidebars } from '../../stores/Sidebars.store';
+import { sidebars } from '../../stores/Sidebars.store';
 import { applyView } from '../data/schema/schema.utils';
 import {
   extractFeatureId,
@@ -19,8 +18,11 @@ import { projectsService } from '../gis/projects/projects.service';
 import { services } from '../services';
 import { Mime } from '../util/Mime';
 import { notFalsyFilter } from '../util/NotFalsyFilter';
+import { EditFeatureMode } from './a-map-mode/edit-feature/EditFeature.models';
+import { mapModeManager } from './a-map-mode/MapModeManager';
+import { selectedFeaturesStore } from './a-map-mode/selected-features/SelectedFeatures.store';
+import { MapMode } from './map.models';
 import { mapService } from './map.service';
-import { mapSelectionService } from './map-selection.service';
 
 export interface FeatureError {
   id: string;
@@ -86,7 +88,7 @@ export async function applyMapStateFromNavigator(): Promise<void> {
           typeName: layer,
           CQL_FILTER: route.queryParams.queryFilter,
           startindex: '0',
-          count: String(mapStore.selectingFeaturesLimit)
+          count: String(selectedFeaturesStore.limit)
         };
 
         const response = await getFeatureCollection(params);
@@ -100,7 +102,7 @@ export async function applyMapStateFromNavigator(): Promise<void> {
     }
 
     if (features.length) {
-      selectFeatures(features);
+      await selectFeatures(features);
     } else {
       const details = `Запрос: ${route.queryParams.queryFilter}\n\nСлои:\n${layers.join('\n')}`;
       Toast.warn({ message: 'Не найдено', details });
@@ -261,24 +263,33 @@ async function restoreRecentOpenedFeatures() {
   sidebars.setNoAccessFeatures(featuresWithNoAccess);
   sidebars.setDeletedLayers(deletedLayers);
 
-  const hasErrors = Boolean(deletedFeatures.length + featuresWithNoAccess.length + deletedLayers.length);
+  // TODO: надо бы найти кейсы, восстановить логику, добавить e2e тестов.
+  // const hasErrors = Boolean(deletedFeatures.length + featuresWithNoAccess.length + deletedLayers.length);
 
-  selectFeatures(features, hasErrors);
+  await selectFeatures(features);
 }
 
-function selectFeatures(features: WfsFeature[], hasErrors?: boolean) {
-  mapSelectionService.selectFeatures(features);
-
-  if (!hasErrors && !route.queryParams.center) {
-    if (features.length === 1) {
-      sidebars.openEdit({
-        features,
-        mode: EditFeatureMode.single
-      });
-    }
-
-    setTimeout(async () => {
-      await mapService.positionToFeatures(features);
-    }, 200);
+async function selectFeatures(features: WfsFeature[]) {
+  if (!features || features.length === 0) {
+    await mapModeManager.changeMode(MapMode.NONE, undefined, 'RROF selectFeatures === 0');
   }
+
+  await mapModeManager.changeMode(MapMode.SELECTED_FEATURES, { payload: { features } }, 'RROF selectFeatures 1.1');
+
+  if (features.length === 1) {
+    await mapModeManager.changeMode(
+      MapMode.EDIT_FEATURE,
+      {
+        payload: {
+          features,
+          mode: EditFeatureMode.single
+        }
+      },
+      'RROF selectFeatures === 1.2'
+    );
+  }
+
+  setTimeout(async () => {
+    await mapService.positionToFeatures(features);
+  }, 200);
 }

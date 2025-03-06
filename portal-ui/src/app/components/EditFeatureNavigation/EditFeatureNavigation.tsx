@@ -4,72 +4,83 @@ import { Tooltip } from '@mui/material';
 import { ArrowBackIosNew, ArrowForwardIos } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
-import { EditFeatureMode, sidebars } from '../../stores/Sidebars.store';
+import { EditFeatureMode } from '../../services/map/a-map-mode/edit-feature/EditFeature.models';
+import { editFeatureStore } from '../../services/map/a-map-mode/edit-feature/EditFeatureStore';
+import { mapModeManager } from '../../services/map/a-map-mode/MapModeManager';
+import { selectedFeaturesStore } from '../../services/map/a-map-mode/selected-features/SelectedFeatures.store';
+import { MapMode } from '../../services/map/map.models';
 import { IconButton } from '../IconButton/IconButton';
 
 import '!style-loader!css-loader!sass-loader!./EditFeatureNavigation.scss';
 
-const changeFeature = (index: number) => {
-  if (!sidebars.memorizedViewFeatures) {
+const changeFeature = async (index: number) => {
+  if (!selectedFeaturesStore.features) {
     return;
   }
-  sidebars.closeSidebars();
-  sidebars.openEdit({ features: [sidebars.memorizedViewFeatures[index]], mode: EditFeatureMode.single });
+
+  await mapModeManager.changeMode(
+    MapMode.EDIT_FEATURE,
+    {
+      payload: { features: [selectedFeaturesStore.features[index]], mode: EditFeatureMode.single }
+    },
+    'changeFeature'
+  );
 };
 
 const cnEditFeatureNavigation = cn('EditFeatureNavigation');
 
 export const EditFeatureNavigation: FC = observer(() => {
-  const feature = sidebars.editFeaturesData?.features[0];
-  const currentIndex = feature ? sidebars.memorizedViewFeatures?.findIndex(feat => feature.id === feat.id) : undefined;
+  const feature = editFeatureStore.editFeaturesData?.features[0];
+  const currentIndex = feature ? selectedFeaturesStore.features?.findIndex(feat => feature.id === feat.id) : undefined;
 
   const prevHandler = useCallback(() => {
     if (typeof currentIndex === 'number' && currentIndex >= 0 && currentIndex >= 0) {
-      changeFeature(currentIndex - 1);
+      void changeFeature(currentIndex - 1);
     }
   }, [currentIndex]);
 
   const nextHandler = useCallback(() => {
     if (typeof currentIndex === 'number' && currentIndex >= 0) {
-      changeFeature(currentIndex + 1);
+      void changeFeature(currentIndex + 1);
     }
   }, [currentIndex]);
 
+  const canBeRendered =
+    !!selectedFeaturesStore.features &&
+    selectedFeaturesStore.features?.length > 1 &&
+    typeof currentIndex === 'number' &&
+    currentIndex >= 0;
+
   return (
     <>
-      {!!sidebars.memorizedViewFeatures &&
-        sidebars.memorizedViewFeatures?.length > 1 &&
-        typeof currentIndex === 'number' &&
-        currentIndex >= 0 && (
-          <div className={cnEditFeatureNavigation()}>
-            <Tooltip title='Предыдущий объект'>
-              <span className={cnEditFeatureNavigation('Wrap')}>
-                <IconButton disabled={!sidebars.memorizedViewFeatures || currentIndex === 0} onClick={prevHandler}>
-                  <ArrowBackIosNew />
-                </IconButton>
-              </span>
-            </Tooltip>
-
-            <span className={cnEditFeatureNavigation('TextBox')}>
-              {currentIndex + 1}
-              <span className={cnEditFeatureNavigation('Text')}> из</span>
-              {sidebars.memorizedViewFeatures.length}
+      {canBeRendered && (
+        <div className={cnEditFeatureNavigation()}>
+          <Tooltip title='Предыдущий объект'>
+            <span className={cnEditFeatureNavigation('Wrap')}>
+              <IconButton disabled={!selectedFeaturesStore.features || currentIndex === 0} onClick={prevHandler}>
+                <ArrowBackIosNew />
+              </IconButton>
             </span>
+          </Tooltip>
 
-            <Tooltip title='Следующий объект'>
-              <span className={cnEditFeatureNavigation('Wrap')}>
-                <IconButton
-                  disabled={
-                    !sidebars.memorizedViewFeatures || currentIndex + 1 === sidebars.memorizedViewFeatures.length
-                  }
-                  onClick={nextHandler}
-                >
-                  <ArrowForwardIos />
-                </IconButton>
-              </span>
-            </Tooltip>
-          </div>
-        )}
+          <span className={cnEditFeatureNavigation('TextBox')}>
+            {currentIndex + 1}
+            <span className={cnEditFeatureNavigation('Text')}> из</span>
+            {selectedFeaturesStore.features.length}
+          </span>
+
+          <Tooltip title='Следующий объект'>
+            <span className={cnEditFeatureNavigation('Wrap')}>
+              <IconButton
+                disabled={!selectedFeaturesStore.features || currentIndex + 1 === selectedFeaturesStore.features.length}
+                onClick={nextHandler}
+              >
+                <ArrowForwardIos />
+              </IconButton>
+            </span>
+          </Tooltip>
+        </div>
+      )}
     </>
   );
 });

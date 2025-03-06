@@ -10,15 +10,16 @@ import { pluralize } from 'numeralize-ru';
 import { deleteFeatures } from '../../../services/data/vectorData/vectorData.service';
 import { WfsFeature } from '../../../services/geoserver/wfs/wfs.models';
 import { CrgVectorableLayer, isVectorLayer } from '../../../services/gis/layers/layers.models';
-import { MapSelectionTypes } from '../../../services/map/map.models';
+import { EditFeatureMode } from '../../../services/map/a-map-mode/edit-feature/EditFeature.models';
+import { editFeatureStore } from '../../../services/map/a-map-mode/edit-feature/EditFeatureStore';
+import { mapModeManager } from '../../../services/map/a-map-mode/MapModeManager';
+import { selectedFeaturesStore } from '../../../services/map/a-map-mode/selected-features/SelectedFeatures.store';
+import { MapMode } from '../../../services/map/map.models';
 import { mapService } from '../../../services/map/map.service';
-import { mapSelectionService } from '../../../services/map/map-selection.service';
 import { PageOptions } from '../../../services/models';
 import { isUpdateAllowed } from '../../../services/permissions/permissions.service';
 import { featuresCollectionPrintTemplates } from '../../../services/print/print.service';
 import { konfirmieren } from '../../../services/utility-dialogs.service';
-import { mapStore } from '../../../stores/Map.store';
-import { EditFeatureMode, sidebars } from '../../../stores/Sidebars.store';
 import { CopyFeaturesButton } from '../../CopyFeaturesButton/CopyFeaturesButton';
 import { IconButton } from '../../IconButton/IconButton';
 import { PrintAction } from '../../PrintAction/PrintAction';
@@ -96,9 +97,16 @@ export class AttributesBarActions extends Component<AttributesBarActionsProps> {
 
             {isVectorLayer(layer) && this.featuresUpdateAllowed && (
               <Tooltip title={`Удалить${this.objLabel}`}>
-                <IconButton size='small' onClick={this.openMultipleDeleteDialog} color='error'>
-                  {this.dialogOpen ? <Delete fontSize='small' /> : <DeleteOutline fontSize='small' />}
-                </IconButton>
+                <span>
+                  <IconButton
+                    size='small'
+                    onClick={this.openMultipleDeleteDialog}
+                    color='error'
+                    disabled={editFeatureStore.dirty}
+                  >
+                    {this.dialogOpen ? <Delete fontSize='small' /> : <DeleteOutline fontSize='small' />}
+                  </IconButton>
+                </span>
               </Tooltip>
             )}
           </>
@@ -126,32 +134,23 @@ export class AttributesBarActions extends Component<AttributesBarActionsProps> {
 
   @computed
   private get selectedFeatures(): WfsFeature[] {
-    return mapStore.selectedFeaturesByTableName[this.props.layer.tableName] || [];
+    return selectedFeaturesStore.featuresByTableName[this.props.layer.tableName] || [];
   }
 
   @boundMethod
-  private multipleEdit() {
-    const features: WfsFeature[] = mapStore.selectedFeaturesByTableName[this.props.layer.tableName];
+  private async multipleEdit() {
+    const features: WfsFeature[] = selectedFeaturesStore.featuresByTableName[this.props.layer.tableName];
 
-    sidebars.openEdit({
-      features,
-      mode: features.length > 1 ? EditFeatureMode.multipleEdit : EditFeatureMode.single
-    });
-  }
-
-  @boundMethod
-  private async multipleDelete() {
-    const { layer } = this.props;
-    const features: WfsFeature[] = mapStore.selectedFeaturesByTableName[layer.tableName];
-
-    if (!isVectorLayer(layer)) {
-      throw new Error('Невозможно удалить');
-    }
-
-    const { dataset, tableName } = layer;
-    await deleteFeatures(dataset, tableName, features);
-    mapSelectionService.selectFeatures(features, MapSelectionTypes.REMOVE);
-    mapService.refreshAllLayers();
+    await mapModeManager.changeMode(
+      MapMode.EDIT_FEATURE,
+      {
+        payload: {
+          features,
+          mode: features.length > 1 ? EditFeatureMode.multipleEdit : EditFeatureMode.single
+        }
+      },
+      'multipleEdit'
+    );
   }
 
   private async init() {
@@ -175,7 +174,18 @@ export class AttributesBarActions extends Component<AttributesBarActionsProps> {
     });
 
     if (confirmed) {
-      await this.multipleDelete();
+      const { layer } = this.props;
+      const features: WfsFeature[] = selectedFeaturesStore.featuresByTableName[layer.tableName];
+      if (!isVectorLayer(layer)) {
+        throw new Error('Невозможно удалить');
+      }
+
+      const { dataset, tableName } = layer;
+      await deleteFeatures(dataset, tableName, features);
+
+      mapService.refreshAllLayers();
+
+      await mapModeManager.changeMode(MapMode.NONE, undefined, 'openMultipleDeleteDialog');
     }
 
     this.setDialogOpen(false);

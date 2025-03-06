@@ -36,9 +36,9 @@ import {
 import { getLayerSchema } from '../../../services/gis/layers/layers.service';
 import { isVectorFromFile } from '../../../services/gis/layers/layers.utils';
 import { TreeItemPayload } from '../../../services/gis/projects/projects.models';
-import { mapDrawService } from '../../../services/map/draw/map-draw.service';
-import { toDrawGeometry } from '../../../services/map/draw/map-draw.util';
-import { MapAction } from '../../../services/map/map.models';
+import { EditFeatureMode } from '../../../services/map/a-map-mode/edit-feature/EditFeature.models';
+import { mapModeManager } from '../../../services/map/a-map-mode/MapModeManager';
+import { MapAction, MapMode, MapSelectionTypes, ToolMode } from '../../../services/map/map.models';
 import {
   isLayersManagementAllowed,
   isShapeImportAllowed,
@@ -49,7 +49,6 @@ import { services } from '../../../services/services';
 import { focusToLayer } from '../../../services/sidebarActions.service';
 import { currentProject } from '../../../stores/CurrentProject.store';
 import { mapStore } from '../../../stores/Map.store';
-import { EditFeatureMode, sidebars } from '../../../stores/Sidebars.store';
 import { Button } from '../../Button/Button';
 import { EditLayerDialog } from '../../EditLayerDialog/EditLayerDialog';
 import { ImportOutlined } from '../../Icons/ImportOutlined';
@@ -429,14 +428,31 @@ export class LayerMenu extends Component<LayerMenuProps> {
   private async addFeature() {
     const { entity, onClose } = this.props;
     const emptyFeature = await getEmptyFeature(entity as CrgVectorLayer);
-    sidebars.openEdit({
-      features: [emptyFeature],
-      mode: EditFeatureMode.single,
-      layer: entity as CrgVectorLayer,
-      isNew: true
-    });
 
-    mapDrawService.drawOn(toDrawGeometry(emptyFeature.geometry?.type));
+    mapStore.setToolMode(ToolMode.NONE);
+
+    await mapModeManager.changeMode(
+      MapMode.SELECTED_FEATURES,
+      {
+        payload: {
+          features: [emptyFeature],
+          type: MapSelectionTypes.ADD
+        }
+      },
+      'addFeature 1.1'
+    );
+
+    await mapModeManager.changeMode(
+      MapMode.DRAW_FEATURE,
+      {
+        payload: {
+          features: [emptyFeature],
+          mode: EditFeatureMode.single,
+          layer: entity as CrgVectorLayer
+        }
+      },
+      'addFeature 1.2'
+    );
 
     onClose();
   }

@@ -10,7 +10,7 @@ import {
   WfsPolygonGeometry
 } from '../../../../services/geoserver/wfs/wfs.models';
 import { getEmptyGeometry } from '../../../../services/geoserver/wfs/wfs.util';
-import { editFeatureStore } from '../../../../stores/EditFeatureStore';
+import { editFeatureStore } from '../../../../services/map/a-map-mode/edit-feature/EditFeatureStore';
 import { EditFeatureGeometryAddButton } from '../../AddButton/EditFeatureGeometry-AddButton';
 import { EditFeatureGeometrySuperGroup } from '../../SuperGroup/EditFeatureGeometry-SuperGroup';
 import { cnEditFeatureGeometryForm, EditFeatureGeometryFormProps } from '../EditFeatureGeometry-Form.base';

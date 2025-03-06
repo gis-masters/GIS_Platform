@@ -2,10 +2,9 @@ import { reaction } from 'mobx';
 import { debounce } from 'lodash';
 import { Map, View } from 'ol';
 import { defaults as defaultControls } from 'ol/control';
-import { Coordinate } from 'ol/coordinate';
 import { Extent, getTopLeft, getWidth } from 'ol/extent';
 import Feature from 'ol/Feature';
-import { MultiPolygon, SimpleGeometry } from 'ol/geom';
+import { SimpleGeometry } from 'ol/geom';
 import ImageWrapper from 'ol/Image';
 import { DoubleClickZoom } from 'ol/interaction';
 import { Tile as TileLayer, Vector as VectorLayer } from 'ol/layer';
@@ -54,7 +53,6 @@ class MapService {
     return this._instance || (this._instance = new this());
   }
 
-  mapClick = new Emitter<Coordinate>();
   mapMoved = new Emitter<MapPosition>();
   mapCreated = new Emitter();
   zoomChanged = new Emitter<number>();
@@ -73,9 +71,6 @@ class MapService {
   private markersSource?: VectorSource<Feature<SimpleGeometry>>;
   private zoom?: number;
   private center?: number[];
-
-  // Hit-detection tolerance. Pixels inside the square around the given position will be checked for features.
-  private HIT_TOLERANCE = 10;
 
   // Кол-во десятичных в координатах
   readonly PRECISION = 4;
@@ -178,19 +173,6 @@ class MapService {
 
       if (center && zoom) {
         this.mapMoved.emit({ zoom, center });
-      }
-    });
-
-    this.map.on('singleclick', e => {
-      const originalEvent = e.originalEvent as MouseEvent;
-      if (!originalEvent.shiftKey && !originalEvent.ctrlKey) {
-        if (e.coordinate) {
-          if (mapStore.isProkolAllowed()) {
-            this.mapClick.emit(e.coordinate);
-          }
-        } else {
-          this.mapClick.emit([0, 0]);
-        }
       }
     });
 
@@ -412,31 +394,6 @@ class MapService {
     }
 
     return resolution;
-  }
-
-  getBufferByCoordinates(pos: Coordinate): MultiPolygon {
-    const res = this.round(this.getResolution() * this.HIT_TOLERANCE);
-
-    pos = pos.map(num => this.round(num));
-
-    const x1 = pos[0] + res / 2;
-    const x2 = x1 - res;
-    const y1 = pos[1] + res / 2;
-    const y2 = y1 - res;
-
-    const buffer = [
-      [
-        [
-          [x1, y1],
-          [x2, y1],
-          [x2, y2],
-          [x1, y2],
-          [x1, y1]
-        ]
-      ]
-    ];
-
-    return new MultiPolygon(buffer);
   }
 
   async positionToFeature(feature: WfsFeature, proj?: Projection) {
@@ -680,10 +637,6 @@ class MapService {
       .getLayers()
       .getArray()
       .find(layer => layer.getProperties().name === name);
-  }
-
-  private round(n: number) {
-    return Number(n.toFixed(this.PRECISION));
   }
 
   private throwIfMapNotCreated() {

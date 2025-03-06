@@ -12,6 +12,7 @@ import { DrawEvent } from 'ol/interaction/Draw';
 import { Emitter } from '../../../services/common/Emitter';
 import { communicationService } from '../../../services/communication.service';
 import { GeometryType } from '../../../services/geoserver/wfs/wfs.models';
+import { editFeatureStore } from '../../../services/map/a-map-mode/edit-feature/EditFeatureStore';
 import { SingleDrawGeometryType } from '../../../services/map/draw/map-draw.models';
 import { mapDrawService } from '../../../services/map/draw/map-draw.service';
 import { toDrawGeometry } from '../../../services/map/draw/map-draw.util';
@@ -19,7 +20,6 @@ import { MapMode } from '../../../services/map/map.models';
 import { services } from '../../../services/services';
 import { transform, transformCoordinates } from '../../../services/util/coordinates-transform.util';
 import { isCoordinate, isCoordinateArrayArray } from '../../../services/util/typeGuards/isCoordinate';
-import { editFeatureStore } from '../../../stores/EditFeatureStore';
 import { mapStore } from '../../../stores/Map.store';
 import { projectionsStore } from '../../../stores/Projections.store';
 import { IconButton } from '../../IconButton/IconButton';
@@ -60,9 +60,9 @@ export class EditFeatureGeometryDraw extends Component<EditFeatureGeometryDrawPr
         <IconButton
           className={cnEditFeatureGeometryDraw()}
           onClick={this.handleClick}
-          checked={mapStore.mode === MapMode.DRAW}
+          checked={mapStore.mode === MapMode.DRAW_FEATURE}
         >
-          {mapStore.mode === MapMode.DRAW ? <IconActive /> : <IconNormal />}
+          {mapStore.mode === MapMode.DRAW_FEATURE ? <IconActive /> : <IconNormal />}
         </IconButton>
       </Tooltip>
     );
@@ -110,17 +110,20 @@ export class EditFeatureGeometryDraw extends Component<EditFeatureGeometryDrawPr
 
   @boundMethod
   private handleClick() {
+    if (!editFeatureStore.editFeaturesData?.features.length) {
+      services.logger.error('Нет фичи для редактирования геометрии');
+
+      return;
+    }
+
     if (this.isDrawEnabled()) {
-      editFeatureStore.setFeature(undefined);
       mapDrawService.drawOff();
-      void mapDrawService.highlightFeatures(mapStore.selectedFeatures);
     } else {
-      editFeatureStore.setFeature(editFeatureStore.feature);
       mapDrawService.drawOn(toDrawGeometry(editFeatureStore.geometryType));
     }
   }
 
   private isDrawEnabled(): boolean {
-    return mapStore.mode === MapMode.DRAW;
+    return mapStore.mode === MapMode.DRAW_FEATURE;
   }
 }

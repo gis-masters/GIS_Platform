@@ -6,7 +6,7 @@ import { cn } from '@bem-react/classname';
 
 import { LabelType } from '../../services/map/labels/map-labels.models';
 import { mapLabelsService } from '../../services/map/labels/map-labels.service';
-import { MapAction, MapMode } from '../../services/map/map.models';
+import { MapAction, ToolMode } from '../../services/map/map.models';
 import { konfirmieren } from '../../services/utility-dialogs.service';
 import { mapStore } from '../../stores/Map.store';
 import { mapLabelsStore } from '../../stores/MapLabels.store';
@@ -34,7 +34,7 @@ export const MapLabels: FC = observer(() => {
   }, []);
 
   const startLabelAdding = useCallback(async (type: LabelType) => {
-    if (mapStore.mode === MapMode.ADDING_LABEL && type && mapLabelsStore.currentLabelType === type) {
+    if (mapStore.toolMode === ToolMode.ADDING_LABEL && type && mapLabelsStore.currentLabelType === type) {
       mapLabelsService.addingLabelOff();
     } else {
       await mapLabelsService.addingLabelOn(type);
@@ -87,7 +87,7 @@ export const MapLabels: FC = observer(() => {
           <Tooltip title='Добавить аннотацию'>
             <IconButton
               className={cnMapLabels('AddLabel')}
-              checked={mapStore.mode === MapMode.ADDING_LABEL && mapLabelsStore.currentLabelType === 'label'}
+              checked={mapStore.toolMode === ToolMode.ADDING_LABEL && mapLabelsStore.currentLabelType === 'label'}
               onClick={handleAddLabelClick}
               size='small'
             >
@@ -97,7 +97,7 @@ export const MapLabels: FC = observer(() => {
           <Tooltip title='Нарисовать вспомогательную линию'>
             <IconButton
               className={cnMapLabels('AddLine')}
-              checked={mapStore.mode === MapMode.ADDING_LABEL && mapLabelsStore.currentLabelType === 'line'}
+              checked={mapStore.toolMode === ToolMode.ADDING_LABEL && mapLabelsStore.currentLabelType === 'line'}
               onClick={handleAddLineClick}
               size='small'
             >

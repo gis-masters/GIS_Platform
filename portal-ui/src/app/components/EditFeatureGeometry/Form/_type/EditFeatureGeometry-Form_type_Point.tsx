@@ -6,7 +6,7 @@ import { boundMethod } from 'autobind-decorator';
 import { Coordinate } from 'ol/coordinate';
 
 import { GeometryType, WfsPointGeometry } from '../../../../services/geoserver/wfs/wfs.models';
-import { editFeatureStore } from '../../../../stores/EditFeatureStore';
+import { editFeatureStore } from '../../../../services/map/a-map-mode/edit-feature/EditFeatureStore';
 import { EditFeatureGeometryAsText } from '../../AsText/EditFeatureGeometry-AsText';
 import { EditFeatureGeometryCoord } from '../../Coord/EditFeatureGeometry-Coord';
 import { EditFeatureGeometryDraw } from '../../Draw/EditFeatureGeometry-Draw';

@@ -12,6 +12,7 @@ import { applyContentType, mergeContentTypes } from '../../services/data/schema/
 import { Task } from '../../services/data/task/task.models';
 import { getTasks, getTaskSchema } from '../../services/data/task/task.service';
 import { PageOptions, ValueOf } from '../../services/models';
+import { services } from '../../services/services';
 import { getFieldFilterValue, modifyFieldFilterValue } from '../../services/util/filters/filters';
 import { FilterQuery } from '../../services/util/filters/filters.models';
 import { calculateValues } from '../../services/util/form/formValidation.utils';
@@ -73,8 +74,12 @@ export default class TasksJournal extends Component {
           <>
             <Breadcrumbs
               items={[
-                { title: <HomeOutlined />, url: '/data-management' },
-                { title: 'Задачи', url: '/data-management' }
+                {
+                  title: <HomeOutlined />,
+                  itemType: 'button',
+                  onClick: this.handleClick
+                },
+                { title: 'Задачи', itemType: 'button' }
               ]}
               itemsType='link'
               size='medium'
@@ -119,6 +124,11 @@ export default class TasksJournal extends Component {
         {!organizationSettings.taskManagement && <EmptyListView text={'Доступ запрещён'} />}
       </div>
     );
+  }
+
+  @boundMethod
+  private handleClick() {
+    void services.router.navigateByUrl('/data-management');
   }
 
   @computed

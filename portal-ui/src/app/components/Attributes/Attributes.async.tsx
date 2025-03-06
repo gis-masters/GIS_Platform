@@ -13,11 +13,12 @@ import {
 } from '../../services/geoserver/featureType/featureType.util';
 import { CrgLayer, CrgVectorLayer } from '../../services/gis/layers/layers.models';
 import { getLayerByFeatureInCurrentProject } from '../../services/gis/layers/layers.utils';
-import { mapSelectionService } from '../../services/map/map-selection.service';
+import { mapModeManager } from '../../services/map/a-map-mode/MapModeManager';
+import { selectedFeaturesStore } from '../../services/map/a-map-mode/selected-features/SelectedFeatures.store';
+import { MapMode } from '../../services/map/map.models';
 import { PageOptions } from '../../services/models';
 import { attributesTableStore } from '../../stores/AttributesTable.store';
 import { currentProject } from '../../stores/CurrentProject.store';
-import { mapStore } from '../../stores/Map.store';
 import { XTableInvoke } from '../XTable/XTable';
 import { AttributesBar } from './Bar/Attributes-Bar';
 import { AttributesFooter } from './Footer/Attributes-Footer';
@@ -120,7 +121,7 @@ export default class Attributes extends Component<IClassNameProps> {
   private get softTabs(): CrgVectorLayer[] {
     const layers: CrgVectorLayer[] = [];
 
-    for (const feature of mapStore.selectedFeatures) {
+    for (const feature of selectedFeaturesStore.features) {
       if (
         ![...this.hardTabs, ...layers].some(
           ({ complexName }) => extractFeatureTypeName(feature.id) === extractFeatureTypeNameFromComplexName(complexName)
@@ -150,11 +151,21 @@ export default class Attributes extends Component<IClassNameProps> {
       this.causedByUserLayers.splice(index, 1);
     }
 
-    const selectedFeaturesWithoutLayer = mapStore.selectedFeatures.filter(
+    const selectedFeaturesWithoutLayer = selectedFeaturesStore.features.filter(
       ({ id }) => extractTableNameFromFeatureId(id) !== layer.tableName
     );
 
-    mapSelectionService.selectFeatures(selectedFeaturesWithoutLayer);
+    if (selectedFeaturesWithoutLayer.length > 0) {
+      void mapModeManager.changeMode(
+        MapMode.SELECTED_FEATURES,
+        {
+          payload: { features: selectedFeaturesWithoutLayer }
+        },
+        'selectedFeaturesWithoutLayer-1'
+      );
+    } else {
+      void mapModeManager.changeMode(MapMode.NONE, undefined, 'selectedFeaturesWithoutLayer-2');
+    }
   }
 
   @action.bound

@@ -14,9 +14,9 @@ import { getFeaturesById } from '../../services/geoserver/wfs/wfs.service';
 import { CrgLayer } from '../../services/gis/layers/layers.models';
 import { getLayerSchema } from '../../services/gis/layers/layers.service';
 import { projectsService } from '../../services/gis/projects/projects.service';
+import { mapModeManager } from '../../services/map/a-map-mode/MapModeManager';
 import { MapAction, MapMode, MapSelectionTypes } from '../../services/map/map.models';
 import { FeatureError } from '../../services/map/map-link-following.service';
-import { mapSelectionService } from '../../services/map/map-selection.service';
 import { currentProject } from '../../stores/CurrentProject.store';
 import { mapStore } from '../../stores/Map.store';
 import { mapVerticesModificationStore } from '../../stores/MapVerticesModification.store';
@@ -197,13 +197,22 @@ export class FeaturesListItem extends Component<FeaturesListItemProps> {
   }
 
   @boundMethod
-  private removeFromSelected() {
+  private async removeFromSelected() {
     const { feature } = this.props;
     if (feature === undefined) {
       return;
     }
 
-    mapSelectionService.selectFeatures([feature], MapSelectionTypes.REMOVE);
+    await mapModeManager.changeMode(
+      MapMode.SELECTED_FEATURES,
+      {
+        payload: {
+          features: [feature],
+          type: MapSelectionTypes.REMOVE
+        }
+      },
+      'removeFromSelected'
+    );
   }
 
   @boundMethod

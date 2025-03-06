@@ -2,9 +2,9 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormControl } from '@angular/forms';
 import { boundMethod } from 'autobind-decorator';
 import { cloneDeep, isNumber } from 'lodash';
-import { Coordinate } from 'ol/coordinate';
 import { Subject } from 'rxjs';
-import { first, takeUntil } from 'rxjs/operators';
+import { debounceTime, first, takeUntil } from 'rxjs/operators';
+import { EditFeatureMode, EditFeaturesData } from 'src/app/services/map/a-map-mode/edit-feature/EditFeature.models';
 
 import { communicationService } from '../../services/communication.service';
 import { getFeatureProjection } from '../../services/data/projections/projections.service';
@@ -34,22 +34,21 @@ import {
 } from '../../services/gis/layers/layers.models';
 import { getLayerSchema } from '../../services/gis/layers/layers.service';
 import { getLayerByFeatureInCurrentProject } from '../../services/gis/layers/layers.utils';
+import { editFeatureStore } from '../../services/map/a-map-mode/edit-feature/EditFeatureStore';
+import { mapModeManager } from '../../services/map/a-map-mode/MapModeManager';
+import { selectedFeaturesStore } from '../../services/map/a-map-mode/selected-features/SelectedFeatures.store';
 import { mapDrawService } from '../../services/map/draw/map-draw.service';
-import { MapSelectionTypes } from '../../services/map/map.models';
+import { MapMode, MapSelectionTypes } from '../../services/map/map.models';
 import { mapService } from '../../services/map/map.service';
-import { mapSelectionService } from '../../services/map/map-selection.service';
 import { isUpdateAllowed } from '../../services/permissions/permissions.service';
 import { services } from '../../services/services';
 import { formatDate, systemFormat } from '../../services/util/date.util';
 import { FeaturePropertyValidators } from '../../services/util/FeaturePropertyValidators';
 import { calculateValues } from '../../services/util/form/formValidation.utils';
 import { fromMobx } from '../../services/util/fromMobx';
-import { sleep } from '../../services/util/sleep';
 import { konfirmieren } from '../../services/utility-dialogs.service';
 import { currentProject } from '../../stores/CurrentProject.store';
-import { editFeatureStore } from '../../stores/EditFeatureStore';
-import { mapStore } from '../../stores/Map.store';
-import { EditFeatureMode, EditFeaturesData, sidebars } from '../../stores/Sidebars.store';
+import { sidebars } from '../../stores/Sidebars.store';
 import { BaseEdit } from '../edit-bug-object/base-edit';
 import { applyFieldValue, convertToComplexField } from '../Form/Form.utils';
 import { Toast } from '../Toast/Toast';
@@ -84,14 +83,17 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
   }
 
   ngOnInit() {
-    fromMobx<EditFeaturesData | undefined>(() => sidebars.editFeaturesData, true)
+    fromMobx<EditFeaturesData | undefined>(() => editFeatureStore.editFeaturesData, true)
       .pipe(takeUntil(this.unsubscribe$))
+      // TODO: не происходит отписка unsubscribeFromMobx$, что приводит к многократному выполнению этого кода.
+      // Но просто добавить отписку не получается, ломается изменение геометрии через координаты - перестаёт их
+      // отслеживать. Надеемся, что правая панель умрет раньше, чем с этим придется разбираться.
+      // .pipe(takeUntil(this.unsubscribeFromMobx$))
       .subscribe(async data => {
         if (!data || !data.features) {
           return;
         }
 
-        this.editFeatureForm = this.formBuilder.group({});
         this.mode = data.mode;
         this.features = data.features;
         const firstFeature = this.features[0];
@@ -104,15 +106,27 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
           sidebars.setLayerOfEditedFeature(layer);
           this.layer = { ...layer };
         }
-        this.properties = data.properties;
-        this.isNew = data.isNew;
-        this.selectedTab = Number(data.isNew);
+
+        this.setIsNew(firstFeature);
+        this.selectedTab = Number(this.isNew);
         if (!this.isNew) {
           await mapDrawService.highlightFeatures(this.features);
           this.isGeometryChanged = false;
         }
 
         this.editFeatureForm = this.formBuilder.group({});
+        this.editFeatureForm.statusChanges.pipe(debounceTime(50)).subscribe(() => {
+          this.publishPristine();
+        });
+        // Если объект новый и уже с координатами
+        if (this.isNew && this.featureHasNotEmptyGeometry(firstFeature)) {
+          // Используем setTimeout, чтобы дать время на инициализацию всех подписок
+          setTimeout(() => {
+            this.isGeometryValid = true;
+            this.isGeometryChanged = true;
+            editFeatureStore.setFeaturesEdited(true);
+          }, 100);
+        }
 
         const layerSchema = await getLayerSchema(this.layer);
         if (!layerSchema) {
@@ -123,6 +137,7 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
         const view = isVectorLayer(this.layer) ? this.layer.view : undefined;
         this.featureDescription = applyViewOld(changeSchemaNamesCaseByFeature(oldSchema, firstFeature), view);
 
+        this.properties = data.properties;
         const propertiesWithAppliedView = applyView(layerSchema, view).properties;
         const propertiesWithChangedNames = changeSchemaNamesCaseByFeature(oldSchema, firstFeature).properties;
 
@@ -283,7 +298,7 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
                 .pipe(takeUntil(this.unsubscribeFromMobx$))
                 .subscribe(isChanged => {
                   this.isGeometryChanged = isChanged;
-                  sidebars.setFeaturesEdited(!this.editFeatureForm?.pristine || isChanged);
+                  editFeatureStore.setFeaturesEdited(!this.editFeatureForm?.pristine || isChanged);
                 });
             });
         }
@@ -291,53 +306,50 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
         this.editFeatureForm.valueChanges.subscribe((featureProperties: Record<string, unknown>) => {
           this.validateCustomRules(featureProperties);
 
-          sidebars.setFeaturesEdited(!this.editFeatureForm?.pristine);
+          editFeatureStore.setFeaturesEdited(!this.editFeatureForm?.pristine);
         });
       });
 
+    // Подписка на изменение слоёв, для реакции на изменение "представления" у слоя
     fromMobx<CrgVectorLayer[]>(() => cloneDeep(currentProject.vectorableLayers))
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(async layers => {
         const currentLayer = layers.find(item => item.id === this.layer?.id);
         if (!currentLayer) {
-          sidebars.closeEdit();
+          await mapModeManager.changeMode(MapMode.NONE, undefined, 'cloneDeep(currentProject.vectorableLayers)');
 
           return;
         }
 
         const view = isVectorLayer(this.layer) ? this.layer.view : undefined;
-
         if (currentLayer.view !== view) {
-          sidebars.closeEdit();
-
-          await sleep(0);
-
-          sidebars.openEdit({
-            mode: this.mode || EditFeatureMode.single,
-            features: this.features as WfsFeature<Coordinate>[],
-            layer: currentLayer,
-            properties: this.properties,
-            isNew: this.isNew
-          });
+          await mapModeManager.changeMode(
+            MapMode.EDIT_FEATURE,
+            {
+              payload: {
+                mode: this.mode || EditFeatureMode.single,
+                features: this.features as WfsFeature[],
+                layer: currentLayer,
+                properties: this.properties
+              }
+            },
+            'edit feature vectorableLayers'
+          );
         }
       });
   }
 
-  private keyMatchBySchemas(key: string, newProperties: PropertySchema[], oldProperties: OldPropertySchema[]) {
-    const keyExistInNew = newProperties.some(item => key.toLowerCase() === item.name.toLowerCase());
-    const keyExistInOld = oldProperties.some(item => key.toLowerCase() === item.name.toLowerCase());
-
-    return keyExistInNew || (!keyExistInNew && !keyExistInOld);
-  }
-
   async ngOnDestroy() {
     if (currentProject.visibleOnMapLayers.length) {
-      await mapDrawService.highlightFeatures(mapStore.highlightedFeatures);
+      await mapDrawService.highlightFeatures(selectedFeaturesStore.highlightedFeatures);
     }
   }
 
   async saveFeature(): Promise<void> {
     await (editFeatureStore.hasGeometryWarning ? this.saveFeatureWithConfirm() : this.saveFeatureWithoutConfirm());
+
+    this.editFeatureForm?.markAsPristine();
+    this.publishPristine();
   }
 
   async saveFeatureWithConfirm(): Promise<void> {
@@ -351,7 +363,7 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
   }
 
   async saveFeatureWithoutConfirm(): Promise<void> {
-    if (!this.isNew && this.editFeatureForm?.pristine && (!this.isGeometryChanged || !this.isGeometryValid)) {
+    if (this.editFeatureForm?.pristine && (!this.isGeometryChanged || !this.isGeometryValid)) {
       return;
     }
 
@@ -390,10 +402,10 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
       });
       ids = [createdFeature.id];
     } else {
-      let geometry: WfsGeometry<Coordinate> | undefined;
+      let geometry: WfsGeometry | undefined;
 
       if (this.features?.length === 1 && this.isGeometryChanged) {
-        geometry = this.features[0].geometry as WfsGeometry<Coordinate>;
+        geometry = this.features[0].geometry as WfsGeometry;
       }
 
       if (this.isGeometryChanged) {
@@ -403,45 +415,35 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
       await this.batchUpdateFeatures(this.features || [], actualProperties, geometry);
     }
 
-    sidebars.setFeaturesEdited(false);
+    editFeatureStore.setFeaturesEdited(false);
 
     const savedFeatures = await getFeaturesById(ids, layer.complexName);
 
-    sidebars.closeEdit();
-
-    await sleep(0);
     this.isSaveInProgress = false;
 
-    sidebars.openEdit({
-      mode: this.mode || EditFeatureMode.single,
-      features: savedFeatures,
-      layer: this.layer,
-      properties: this.properties,
-      isNew: false
-    });
-
-    if (mapStore.selectedFeatures) {
-      const savedFeaturesMap = new Map(savedFeatures.map(({ id, ...props }) => [id, { id, ...props }]));
-
-      const features = mapStore.selectedFeatures.map(feature => {
-        const savedFeature = savedFeaturesMap.get(feature.id);
-
-        if (savedFeature) {
-          savedFeaturesMap.delete(savedFeature.id);
-
-          return savedFeature;
+    await mapModeManager.changeMode(
+      MapMode.SELECTED_FEATURES,
+      {
+        payload: {
+          features: savedFeatures,
+          type: MapSelectionTypes.ADD
         }
+      },
+      'saveFeatureWithConfirm reopen 1'
+    );
 
-        return feature;
-      });
-
-      mapStore.setSelectedFeatures([...features, ...savedFeaturesMap.values()]);
-      sidebars.setMemorizedFeatures(
-        mapStore.selectedFeatures.map(feature => savedFeatures.find(feat => feat.id === feature.id) || feature)
-      );
-    } else {
-      mapStore.setSelectedFeatures(savedFeatures);
-    }
+    await mapModeManager.changeMode(
+      MapMode.EDIT_FEATURE,
+      {
+        payload: {
+          mode: this.mode || EditFeatureMode.single,
+          features: savedFeatures,
+          layer: this.layer,
+          properties: this.properties
+        }
+      },
+      'saveFeatureWithConfirm reopen 1.2'
+    );
 
     mapService.refreshAllLayers();
     communicationService.featuresUpdated.emit();
@@ -464,7 +466,7 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
       const { dataset, tableName } = this.layer;
 
       const firstWfsFeature = (this.features || [])[0];
-      if (sidebars.editFeaturesData?.mode === EditFeatureMode.multipleEdit) {
+      if (editFeatureStore.editFeaturesData?.mode === EditFeatureMode.multipleEdit) {
         for (const feature of this.features || []) {
           const featureLayer = getLayerByFeatureInCurrentProject(feature);
 
@@ -473,15 +475,27 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
           }
 
           await deleteFeatures(featureLayer.dataset, featureLayer.tableName, [feature]);
+
+          // После удаления всех фичей переходим в NONE
+          await mapModeManager.changeMode(MapMode.NONE, undefined, 'remove all features');
         }
       } else {
         await deleteFeatures(dataset, tableName, [firstWfsFeature]);
+
+        await mapModeManager.changeMode(
+          MapMode.SELECTED_FEATURES,
+          {
+            payload: {
+              features: [firstWfsFeature],
+              type: MapSelectionTypes.REMOVE
+            }
+          },
+          'remove 1 feature'
+        );
       }
 
       mapService.refreshAllLayers();
       communicationService.featuresUpdated.emit();
-      sidebars.closeEdit();
-      mapStore.setSelectedFeatures([]);
     }
   }
 
@@ -507,19 +521,23 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
 
   @boundMethod
   async backToList(): Promise<void> {
-    if (sidebars.memorizedViewFeatures?.length) {
-      mapSelectionService.selectFeatures(sidebars.memorizedViewFeatures, MapSelectionTypes.REPLACE);
-      sidebars.openSelectedFeaturesSidebar();
-    } else if (sidebars.foundBySearchFeatureEdited) {
-      sidebars.openSelectedFeaturesSidebar();
-    } else {
+    if (!selectedFeaturesStore.features?.length) {
       await services.provided;
       await services.router.navigate([location.pathname], {
         queryParams: { features: null, queryFilter: null, queryLayers: null },
         queryParamsHandling: 'merge'
       });
     }
-    sidebars.closeEdit();
+
+    await mapModeManager.changeMode(MapMode.SELECTED_FEATURES, undefined, 'backToList');
+  }
+
+  setIsNew(firstFeature: WfsFeature): void {
+    if (firstFeature?.id === undefined) {
+      this.isNew = true;
+    }
+
+    this.isNew = extractFeatureId(firstFeature?.id) === 0;
   }
 
   getDateTime(value: string | number): string {
@@ -565,4 +583,35 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
 
     communicationService.featuresUpdated.emit();
   }
+
+  private publishPristine() {
+    if (editFeatureStore.editFeaturesData) {
+      editFeatureStore.editFeaturesData.pristine = this.editFeatureForm?.pristine;
+    } else {
+      editFeatureStore.setEditFeaturesData({
+        pristine: false
+      } as EditFeaturesData);
+    }
+  }
+
+  private keyMatchBySchemas(key: string, newProperties: PropertySchema[], oldProperties: OldPropertySchema[]) {
+    const keyExistInNew = newProperties.some(item => key.toLowerCase() === item.name.toLowerCase());
+    const keyExistInOld = oldProperties.some(item => key.toLowerCase() === item.name.toLowerCase());
+
+    return keyExistInNew || (!keyExistInNew && !keyExistInOld);
+  }
+
+  private featureHasNotEmptyGeometry(feature: WfsFeature): boolean {
+    if (!feature?.geometry || !feature?.geometry?.coordinates) {
+      return false;
+    }
+
+    const coordinates = feature.geometry.coordinates.flat(5);
+
+    return coordinates.some(coord => coord !== 0);
+  }
+
+  protected readonly sidebars = sidebars;
+  protected readonly Number = Number;
+  protected readonly editFeatureStore = editFeatureStore;
 }

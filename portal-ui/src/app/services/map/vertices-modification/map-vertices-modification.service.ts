@@ -5,7 +5,6 @@ import { Modify } from 'ol/interaction';
 import { ModifyEvent } from 'ol/interaction/Modify';
 
 import { Toast } from '../../../components/Toast/Toast';
-import { mapStore } from '../../../stores/Map.store';
 import { mapVerticesModificationStore } from '../../../stores/MapVerticesModification.store';
 import { projectionsStore } from '../../../stores/Projections.store';
 import { communicationService } from '../../communication.service';
@@ -20,9 +19,8 @@ import { services } from '../../services';
 import { transformGeometryToLayerProjectionInWfsFeature } from '../../util/coordinates-transform.util';
 import { featureToWfsFeature } from '../../util/open-layers.util';
 import { getVertexRemover } from '../../util/vertex/VertexRemoverFactory';
-import { konfirmieren } from '../../utility-dialogs.service';
+import { selectedFeaturesStore } from '../a-map-mode/selected-features/SelectedFeatures.store';
 import { mapDrawService } from '../draw/map-draw.service';
-import { MapMode } from '../map.models';
 import { mapService } from '../map.service';
 import { mapSnapService } from '../snap/map-snap.service';
 
@@ -58,11 +56,7 @@ class MapVerticesModificationService {
   };
 
   verticesModificationOn() {
-    // TODO: Мы не должны вызывать off каких то других режимов. Должен быть отдельный обработчик который рулит режимами.
-    mapDrawService.drawOff();
     communicationService.minimizeAttributesBar.emit();
-
-    mapStore.setMode(MapMode.VERTICES_MODIFICATION);
 
     this.verticesModification.init();
     this.verticesModification.setActive(true);
@@ -72,32 +66,13 @@ class MapVerticesModificationService {
   }
 
   verticesModificationOff() {
-    if (mapVerticesModificationStore.modifiedFeatures.length > 0) {
-      void konfirmieren({
-        message: 'Все несохраненные данные будут утеряны.',
-        okText: 'Всё равно закрыть',
-        cancelText: 'Не закрывать'
-      }).then(confirmed => {
-        if (confirmed) {
-          mapStore.setMode(MapMode.DEFAULT);
-          void mapVerticesModificationStore.updateModifiedCollection([]);
-          void mapDrawService.highlightFeatures(mapStore.selectedFeatures);
+    void mapVerticesModificationStore.updateModifiedCollection([]);
+    void mapDrawService.highlightFeatures(selectedFeaturesStore.features);
 
-          this.verticesModification.setActive(false);
+    this.verticesModification.setActive(false);
 
-          mapSnapService.deactivate();
-          communicationService.off(this);
-        }
-      });
-    } else {
-      mapStore.setMode(MapMode.DEFAULT);
-      void mapVerticesModificationStore.updateModifiedCollection([]);
-      void mapDrawService.highlightFeatures(mapStore.selectedFeatures);
-
-      this.verticesModification.setActive(false);
-      mapSnapService.deactivate();
-      communicationService.off(this);
-    }
+    mapSnapService.deactivate();
+    communicationService.off(this);
   }
 
   verticesModificationClear(simple?: boolean) {
@@ -108,7 +83,7 @@ class MapVerticesModificationService {
     }
 
     void mapVerticesModificationStore.updateModifiedCollection([]);
-    void mapDrawService.highlightFeatures(mapStore.selectedFeatures);
+    void mapDrawService.highlightFeatures(selectedFeaturesStore.features);
     this.verticesModification.reset();
   }
 

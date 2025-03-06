@@ -10,10 +10,10 @@ import { extractFeatureId } from '../../../services/geoserver/featureType/featur
 import { getFeatures } from '../../../services/geoserver/wfs/wfs.service';
 import { CrgVectorLayer } from '../../../services/gis/layers/layers.models';
 import { getLayerSchema } from '../../../services/gis/layers/layers.service';
+import { selectedFeaturesStore } from '../../../services/map/a-map-mode/selected-features/SelectedFeatures.store';
 import { PageOptions } from '../../../services/models';
 import { calculateValues } from '../../../services/util/form/formValidation.utils';
 import { currentProject } from '../../../stores/CurrentProject.store';
-import { mapStore } from '../../../stores/Map.store';
 import { convertToComplexField } from '../../Form/Form.utils';
 import { XTableInvoke } from '../../XTable/XTable';
 import { XTableColumn } from '../../XTable/XTable.models';
@@ -136,7 +136,7 @@ export class AttributesBar extends Component<AttributesBarProps> {
           />
         ),
         CustomFilterComponent: AttributesCheckFilter,
-        filterable: !!mapStore.selectedFeaturesByTableName[layer.tableName]?.length,
+        filterable: !!selectedFeaturesStore.featuresByTableName[layer.tableName]?.length,
         CellContent: AttributesRowHead,
         cellContentProps: { style: { overflow: 'visible' } },
         align: 'left',

@@ -4,7 +4,7 @@ import { Component, ElementRef, Input, OnChanges, OnDestroy, OnInit, ViewChild }
 import { withRegistry } from '@bem-react/di';
 
 import { registry } from '../../services/di-registry';
-import { editFeatureStore } from '../../stores/EditFeatureStore';
+import { editFeatureStore } from '../../services/map/a-map-mode/edit-feature/EditFeatureStore';
 import { EditFeatureGeometry } from '../EditFeatureGeometry/EditFeatureGeometry';
 
 const EditFeatureGeometryWithRegistry = withRegistry(registry)(EditFeatureGeometry);

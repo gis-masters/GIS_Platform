@@ -7,17 +7,16 @@ import { boundMethod } from 'autobind-decorator';
 import { communicationService } from '../../../services/communication.service';
 import { Schema } from '../../../services/data/schema/schema.models';
 import { CrgVectorLayer } from '../../../services/gis/layers/layers.models';
-import { FilterBySelectionMode, MapSelectionTypes } from '../../../services/map/map.models';
+import { EditFeatureMode } from '../../../services/map/a-map-mode/edit-feature/EditFeature.models';
+import { mapModeManager } from '../../../services/map/a-map-mode/MapModeManager';
+import { selectedFeaturesStore } from '../../../services/map/a-map-mode/selected-features/SelectedFeatures.store';
+import { FilterBySelectionMode, MapMode, MapSelectionTypes } from '../../../services/map/map.models';
 import { mapService } from '../../../services/map/map.service';
-import { mapSelectionService } from '../../../services/map/map-selection.service';
 import { PageOptions } from '../../../services/models';
 import { getFieldFilterValue } from '../../../services/util/filters/filters';
 import { FilterQuery } from '../../../services/util/filters/filters.models';
-import { sleep } from '../../../services/util/sleep';
 import { SortParams } from '../../../services/util/sortObjects';
 import { attributesTableStore } from '../../../stores/AttributesTable.store';
-import { mapStore } from '../../../stores/Map.store';
-import { EditFeatureMode, sidebars } from '../../../stores/Sidebars.store';
 import { Loading } from '../../Loading/Loading';
 import { XTable, XTableInvoke } from '../../XTable/XTable';
 import { XTableColumn } from '../../XTable/XTable.models';
@@ -67,7 +66,7 @@ export class AttributesTable extends Component<AttributesTableProps> {
     invoke.reset = this.forwardInvoke('reset');
 
     this.selectionReactionDisposer = reaction(
-      () => mapStore.selectedFeaturesByTableName[layer.tableName],
+      () => selectedFeaturesStore.featuresByTableName[layer.tableName],
       async () => {
         if (this.filterBySelectionEnabled) {
           await this.reloadTable();
@@ -154,13 +153,26 @@ export class AttributesTable extends Component<AttributesTableProps> {
   private async handleRowDoubleClick({ feature }: AttributesTableRecord) {
     await mapService.positionToFeature(feature);
 
-    if (!mapStore.limitReached) {
-      mapSelectionService.selectFeatures([feature], MapSelectionTypes.ADD);
+    if (!selectedFeaturesStore.limitReached) {
+      await mapModeManager.changeMode(
+        MapMode.SELECTED_FEATURES,
+        {
+          payload: {
+            features: [feature],
+            type: MapSelectionTypes.ADD
+          }
+        },
+        'handleRowDoubleClick 2'
+      );
     }
 
-    sidebars.closeEdit();
-    await sleep(0);
-    sidebars.openEdit({ features: [feature], mode: EditFeatureMode.single });
+    await mapModeManager.changeMode(
+      MapMode.EDIT_FEATURE,
+      {
+        payload: { features: [feature], mode: EditFeatureMode.single }
+      },
+      'handleRowDoubleClick 2'
+    );
   }
 
   @boundMethod

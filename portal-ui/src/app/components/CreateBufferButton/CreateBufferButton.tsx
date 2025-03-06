@@ -5,6 +5,7 @@ import { cn } from '@bem-react/classname';
 
 import { WfsFeature } from '../../services/geoserver/wfs/wfs.models';
 import { CrgLayer } from '../../services/gis/layers/layers.models';
+import { editFeatureStore } from '../../services/map/a-map-mode/edit-feature/EditFeatureStore';
 import { CreateBufferDialog } from '../CreateBufferDialog/CreateBufferDialog';
 import { IconButton } from '../IconButton/IconButton';
 import { BufferAdd } from '../Icons/Buffer';
@@ -32,9 +33,16 @@ export const CreateBufferButton: FC<CreateBufferButtonProps> = observer(({ toolt
   return (
     <>
       <Tooltip title={tooltipTitle}>
-        <IconButton className={cnCreateBufferButton()} size={size} onClick={openDialog}>
-          <BufferAdd />
-        </IconButton>
+        <span>
+          <IconButton
+            className={cnCreateBufferButton()}
+            size={size}
+            onClick={openDialog}
+            disabled={editFeatureStore.dirty}
+          >
+            <BufferAdd />
+          </IconButton>
+        </span>
       </Tooltip>
 
       <CreateBufferDialog feature={feature} layer={layer} open={open} onClose={closeDialog} />

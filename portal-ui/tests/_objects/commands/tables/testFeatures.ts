@@ -34,6 +34,7 @@ import { multiPolygon } from './testFeatures/multiPolygon';
 import { multiPolygon2 } from './testFeatures/multiPolygon2';
 import { point } from './testFeatures/point';
 import { singleFeature } from './testFeatures/singleFeature';
+import { theLetterC } from './testFeatures/theLetterC';
 
 const KEY = 'тестовые данные';
 
@@ -103,6 +104,9 @@ export async function getTestFeatures(key: string, schema?: Schema): Promise<New
     case 'для тестирования прокола':
     case 'данные для тестирования сортировки': {
       return forSorting;
+    }
+    case 'объект как буква С': {
+      return theLetterC;
     }
     case 'тестирование фильтрации': {
       return forFiltering;

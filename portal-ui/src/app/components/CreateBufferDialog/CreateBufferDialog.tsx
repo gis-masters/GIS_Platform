@@ -11,8 +11,10 @@ import { PropertyType, SimpleSchema } from '../../services/data/schema/schema.mo
 import { WfsFeature, WfsMultiPolygonGeometry } from '../../services/geoserver/wfs/wfs.models';
 import { getEmptyFeature } from '../../services/geoserver/wfs/wfs.service';
 import { CrgLayer, CrgVectorLayer } from '../../services/gis/layers/layers.models';
+import { EditFeatureMode } from '../../services/map/a-map-mode/edit-feature/EditFeature.models';
+import { mapModeManager } from '../../services/map/a-map-mode/MapModeManager';
 import { mapDrawService } from '../../services/map/draw/map-draw.service';
-import { EditFeatureMode, sidebars } from '../../stores/Sidebars.store';
+import { MapMode } from '../../services/map/map.models';
 import { FormDialog } from '../FormDialog/FormDialog';
 import { SelectSuitableLayerDialog } from '../SelectSuitableLayerDialog/SelectSuitableLayerDialog';
 import { Toast } from '../Toast/Toast';
@@ -52,15 +54,19 @@ export const CreateBufferDialog: FC<CreateBufferDialogProps> = observer(({ open,
         return;
       }
 
-      sidebars.closeEdit();
+      await mapModeManager.changeMode(
+        MapMode.EDIT_FEATURE,
+        {
+          payload: {
+            features: [featureWithBuffer],
+            mode: EditFeatureMode.single,
+            layer: formValue.layer as CrgVectorLayer
+          }
+        },
+        'CreateBufferDialog'
+      );
 
-      sidebars.openEdit({
-        features: [featureWithBuffer],
-        mode: EditFeatureMode.single,
-        layer: formValue.layer as CrgVectorLayer,
-        isNew: true
-      });
-
+      // TODO: "режим" сам должен принимать решение, что подсвечивать
       void mapDrawService.highlightFeatures([featureWithBuffer]);
     },
     [feature]
@@ -95,7 +101,6 @@ export const CreateBufferDialog: FC<CreateBufferDialogProps> = observer(({ open,
       className={cnCreateBufferDialog()}
       open={open}
       onClose={onClose}
-      closeWithConfirm
       title='Создание буфера'
       actionFunction={createBuffer}
       schema={schema}

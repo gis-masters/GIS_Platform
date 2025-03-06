@@ -1,6 +1,6 @@
 import { action, makeObservable, observable } from 'mobx';
 
-import { MeasureItem, MeasureMode } from '../services/map/measure/map-measure.models';
+import { MeasureItem } from '../services/map/measure/map-measure.models';
 import { UnitsOfAreaMeasurement } from '../services/util/open-layers.util';
 
 class MapMeasureStore {
@@ -9,7 +9,6 @@ class MapMeasureStore {
     return this._instance || (this._instance = new this());
   }
 
-  @observable measureMode: MeasureMode | null = null;
   @observable measureItems: MeasureItem[] = observable.array([], { deep: false });
   @observable unitsOfAreaMeasurement: UnitsOfAreaMeasurement = UnitsOfAreaMeasurement.HECTARE;
 
@@ -21,11 +20,6 @@ class MapMeasureStore {
   setUnitsOfAreaMeasurement(units: UnitsOfAreaMeasurement) {
     this.unitsOfAreaMeasurement = units;
     localStorage.setItem('UnitsOfAreaMeasurement', units);
-  }
-
-  @action
-  setMeasureMode(measureMode: MeasureMode | null) {
-    this.measureMode = measureMode;
   }
 
   @action

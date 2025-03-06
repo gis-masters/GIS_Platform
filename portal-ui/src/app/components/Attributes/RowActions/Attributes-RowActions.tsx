@@ -3,16 +3,16 @@ import { observer } from 'mobx-react';
 import { DeleteOutline, EditLocationOutlined, MyLocationOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
+import { EditFeatureMode } from 'src/app/services/map/a-map-mode/edit-feature/EditFeature.models';
 
 import { deleteFeatures } from '../../../services/data/vectorData/vectorData.service';
 import { WfsFeature } from '../../../services/geoserver/wfs/wfs.models';
 import { CrgVectorLayer } from '../../../services/gis/layers/layers.models';
-import { MapSelectionTypes } from '../../../services/map/map.models';
+import { editFeatureStore } from '../../../services/map/a-map-mode/edit-feature/EditFeatureStore';
+import { mapModeManager } from '../../../services/map/a-map-mode/MapModeManager';
+import { MapMode, MapSelectionTypes } from '../../../services/map/map.models';
 import { mapService } from '../../../services/map/map.service';
-import { mapSelectionService } from '../../../services/map/map-selection.service';
-import { sleep } from '../../../services/util/sleep';
 import { konfirmieren } from '../../../services/utility-dialogs.service';
-import { EditFeatureMode, sidebars } from '../../../stores/Sidebars.store';
 import { Actions } from '../../Actions/Actions.composed';
 import { ActionsItem } from '../../Actions/Item/Actions-Item.composed';
 import { ViewLocation } from '../../Icons/ViewLocation';
@@ -42,7 +42,13 @@ export class AttributesRowActions extends Component<AttributesRowActionsProps> {
           onClick={this.edit}
         />
         {editable && (
-          <ActionsItem as='menu' icon={<DeleteOutline color='error' />} title='Удалить' onClick={this.delete} />
+          <ActionsItem
+            as='menu'
+            icon={<DeleteOutline color='error' />}
+            title='Удалить'
+            onClick={this.delete}
+            disabled={editFeatureStore.dirty}
+          />
         )}
       </Actions>
     );
@@ -57,10 +63,14 @@ export class AttributesRowActions extends Component<AttributesRowActionsProps> {
   @boundMethod
   private async edit() {
     const { feature } = this.props;
-    mapSelectionService.selectFeatures([feature], MapSelectionTypes.ADD);
-    sidebars.closeEdit();
-    await sleep(0);
-    sidebars.openEdit({ features: [feature], mode: EditFeatureMode.single });
+
+    await mapModeManager.changeMode(
+      MapMode.EDIT_FEATURE,
+      {
+        payload: { features: [feature], mode: EditFeatureMode.single }
+      },
+      'edit'
+    );
   }
 
   @boundMethod
@@ -75,8 +85,21 @@ export class AttributesRowActions extends Component<AttributesRowActionsProps> {
 
     if (confirmed) {
       await deleteFeatures(layer.dataset, layer.tableName, [feature]);
-      mapSelectionService.selectFeatures([feature], MapSelectionTypes.REMOVE);
+
+      await mapModeManager.changeMode(
+        MapMode.SELECTED_FEATURES,
+        {
+          payload: {
+            features: [feature],
+            type: MapSelectionTypes.REMOVE
+          }
+        },
+        'delete 1'
+      );
+
       mapService.refreshAllLayers();
+
+      await mapModeManager.changeMode(MapMode.NONE, undefined, 'delete 2');
     }
   }
 }

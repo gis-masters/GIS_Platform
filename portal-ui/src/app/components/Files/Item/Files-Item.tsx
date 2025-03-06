@@ -17,9 +17,9 @@ import {
   isTifFile
 } from '../../../services/data/files/files.util';
 import { LibraryRecord } from '../../../services/data/library/library.models';
+import { editFeatureStore } from '../../../services/map/a-map-mode/edit-feature/EditFeatureStore';
 import { konfirmieren } from '../../../services/utility-dialogs.service';
 import { cryptoProStore } from '../../../stores/CryptoPro.store';
-import { sidebars } from '../../../stores/Sidebars.store';
 import { ConnectionsToProjects } from '../../ConnectionsToProjects/ConnectionsToProjects';
 import { IconButton } from '../../IconButton/IconButton';
 import { LookupActions } from '../../Lookup/Actions/Lookup-Actions';
@@ -186,10 +186,10 @@ const FilesItemFC: FC<FilesItemProps> = observer(
       return { ext, baseName, disabled, isFileConnected, isFileCanBePlaced, signed };
     }, [connections, fileInfo?.signed, item, showMainCompoundFileActions, showPlaceAction, status]);
 
-    const showSign = (sidebars.editFeaturesData?.features[0] && editable) || (document && !editable);
+    const showSign = (editFeatureStore.editFeaturesData?.features[0] && editable) || (document && !editable);
     const showFilesSignatureInExplorer =
       (showPlaceAction || showMainCompoundFileActions || showMainCompoundFileActions === undefined) && !editable;
-    const showFileSignatureOnMap = sidebars.editFeaturesData?.features[0] && signed;
+    const showFileSignatureOnMap = editFeatureStore.editFeaturesData?.features[0] && signed;
     const showSignButton = cryptoProStore.isPluginActive && !signed && !!item.size && showSign;
     const showLookupDeleteButton =
       (showMainCompoundFileActions && editable) || (!showMainCompoundFileActions && editable);
@@ -266,7 +266,7 @@ const FilesItemFC: FC<FilesItemProps> = observer(
                 signed={signed}
                 propertyName={propertyName}
                 document={document}
-                feature={sidebars.editFeaturesData?.features[0]}
+                feature={editFeatureStore.editFeaturesData?.features[0]}
                 updateFileInfo={updateFileInfo}
               />
             )}
@@ -287,7 +287,7 @@ const FilesItemFC: FC<FilesItemProps> = observer(
                 title={item.title}
                 propertyName={propertyName}
                 document={document}
-                feature={sidebars.editFeaturesData?.features[0]}
+                feature={editFeatureStore.editFeaturesData?.features[0]}
                 open={fileSignDialogOpen}
                 onClose={setFileSignDialogOpen}
                 updateFileInfo={updateFileInfo}

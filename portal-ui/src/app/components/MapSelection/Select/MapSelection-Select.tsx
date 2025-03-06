@@ -4,7 +4,7 @@ import { Tooltip } from '@mui/material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
-import { MapAction, MapMode } from '../../../services/map/map.models';
+import { MapAction, ToolMode } from '../../../services/map/map.models';
 import { mapStore } from '../../../stores/Map.store';
 import { IconButton } from '../../IconButton/IconButton';
 import { RectangleSelectionAdd } from '../../Icons/RectangleSelectionAdd';
@@ -28,7 +28,7 @@ export class MapSelectionSelect extends Component {
           className={cnMapSelectionSelect()}
           onClick={this.handleViewModeClick}
           size='small'
-          checked={mapStore.mode === MapMode.SELECTION}
+          checked={mapStore.toolMode === ToolMode.SELECTION}
           disabled={!mapStore.allowedActions.includes(MapAction.MAP_SELECTION)}
         >
           <RectangleSelectionAdd />
@@ -38,7 +38,7 @@ export class MapSelectionSelect extends Component {
   }
 
   @boundMethod
-  private handleViewModeClick(): void {
-    mapStore.setMode(mapStore.mode === MapMode.SELECTION ? MapMode.DEFAULT : MapMode.SELECTION);
+  private handleViewModeClick() {
+    mapStore.setToolMode(mapStore.toolMode === ToolMode.SELECTION ? ToolMode.NONE : ToolMode.SELECTION);
   }
 }

@@ -4,7 +4,10 @@ import { observer } from 'mobx-react';
 import { boundMethod } from 'autobind-decorator';
 
 import { SearchItemDataSource } from '../../services/data/search/search.model';
-import { EditFeatureMode, sidebars } from '../../stores/Sidebars.store';
+import { EditFeatureMode } from '../../services/map/a-map-mode/edit-feature/EditFeature.models';
+import { mapModeManager } from '../../services/map/a-map-mode/MapModeManager';
+import { MapMode } from '../../services/map/map.models';
+import { sidebars } from '../../stores/Sidebars.store';
 import { ExplorerSearchValue } from '../Explorer/Explorer.models';
 import { SearchField } from '../SearchField/SearchField';
 import { SearchResultDialog } from '../SearchResultDialog/SearchResultDialog';
@@ -30,7 +33,7 @@ export class GlobalSearch extends Component<GlobalSearchProps> {
         <SearchField whiteStyle={this.props.whiteStyle} onSubmit={this.onSubmit} />
 
         <SearchResultDialog
-          open={!!(sidebars.editOpen && this.dialogOpen)}
+          open={!!(sidebars.editFeatureOpen && this.dialogOpen)}
           onClose={this.closeDialog}
           search={this.search}
         />
@@ -39,7 +42,7 @@ export class GlobalSearch extends Component<GlobalSearchProps> {
   }
 
   @boundMethod
-  private onSubmit(search: ExplorerSearchValue) {
+  private async onSubmit(search: ExplorerSearchValue) {
     const { source } = this.props;
     if (search.searchValue && source) {
       this.setSearch({
@@ -48,11 +51,19 @@ export class GlobalSearch extends Component<GlobalSearchProps> {
         source: [source]
       });
 
+      // TODO: Тоже привести это к смене режима
       this.openDialog();
-      sidebars.openEdit({
-        features: [],
-        mode: EditFeatureMode.single
-      });
+
+      await mapModeManager.changeMode(
+        MapMode.EDIT_FEATURE,
+        {
+          payload: {
+            features: [],
+            mode: EditFeatureMode.single
+          }
+        },
+        'search onSubmit'
+      );
     }
   }
 

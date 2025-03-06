@@ -14,16 +14,15 @@ import {
 import { WorkspacePremiumOutlined } from '@mui/icons-material';
 import CloseIcon from '@mui/icons-material/Close';
 import { cn } from '@bem-react/classname';
-import { Coordinate } from 'ol/coordinate';
 
 import { VerifyEcpResponse } from '../../../../server-types/common-contracts';
 import { filesClient } from '../../../services/data/files/files.client';
 import { verifyEcp } from '../../../services/data/files/files.service';
 import { LibraryRecord } from '../../../services/data/library/library.models';
 import { WfsFeature } from '../../../services/geoserver/wfs/wfs.models';
+import { editFeatureStore } from '../../../services/map/a-map-mode/edit-feature/EditFeatureStore';
 import { services } from '../../../services/services';
 import { cryptoProStore } from '../../../stores/CryptoPro.store';
-import { sidebars } from '../../../stores/Sidebars.store';
 import { IconButton } from '../../IconButton/IconButton';
 import { Link } from '../../Link/Link';
 import { MenuIconButton } from '../../MenuIconButton/MenuIconButton';
@@ -35,7 +34,7 @@ interface FilesSignatureProps {
   signed: boolean;
   propertyName?: string;
   document?: LibraryRecord;
-  feature?: WfsFeature<Coordinate>;
+  feature?: WfsFeature;
   updateFileInfo(): Promise<void>;
 }
 
@@ -161,7 +160,7 @@ const FilesSignatureFC: FC<FilesSignatureProps> = observer(
             title={title}
             propertyName={propertyName}
             document={document}
-            feature={sidebars.editFeaturesData?.features[0] || feature}
+            feature={editFeatureStore.editFeaturesData?.features[0] || feature}
             open={fileSignDialogOpen}
             onClose={setFileSignDialogOpen}
             updateFileInfo={updateFileInfo}

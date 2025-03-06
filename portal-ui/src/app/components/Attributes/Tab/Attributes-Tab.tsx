@@ -8,6 +8,7 @@ import { boundMethod } from 'autobind-decorator';
 
 import { communicationService } from '../../../services/communication.service';
 import { CrgVectorLayer } from '../../../services/gis/layers/layers.models';
+import { selectedFeaturesStore } from '../../../services/map/a-map-mode/selected-features/SelectedFeatures.store';
 import { MapAction } from '../../../services/map/map.models';
 import { attributesTableStore } from '../../../stores/AttributesTable.store';
 import { mapStore } from '../../../stores/Map.store';
@@ -73,7 +74,7 @@ export class AttributesTab extends Component<AttributesTabProps> {
 
   @computed
   private get selectedFeaturesCount(): number {
-    return mapStore.selectedFeaturesByTableName[this.props.layer.tableName]?.length || 0;
+    return selectedFeaturesStore.featuresByTableName[this.props.layer.tableName]?.length || 0;
   }
 
   @boundMethod

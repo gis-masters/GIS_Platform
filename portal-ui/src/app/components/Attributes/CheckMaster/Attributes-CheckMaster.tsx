@@ -9,11 +9,11 @@ import { cloneDeep } from 'lodash';
 import { WfsFeature } from '../../../services/geoserver/wfs/wfs.models';
 import { getFeatures } from '../../../services/geoserver/wfs/wfs.service';
 import { CrgVectorLayer } from '../../../services/gis/layers/layers.models';
-import { MapSelectionTypes } from '../../../services/map/map.models';
-import { mapSelectionService } from '../../../services/map/map-selection.service';
+import { mapModeManager } from '../../../services/map/a-map-mode/MapModeManager';
+import { selectedFeaturesStore } from '../../../services/map/a-map-mode/selected-features/SelectedFeatures.store';
+import { MapMode, MapSelectionTypes } from '../../../services/map/map.models';
 import { PageOptions } from '../../../services/models';
 import { removeFieldFilter } from '../../../services/util/filters/filters';
-import { mapStore } from '../../../stores/Map.store';
 import { FILTER_BY_SELECTION } from '../Attributes.models';
 
 import '!style-loader!css-loader!sass-loader!./Attributes-CheckMaster.scss';
@@ -30,6 +30,7 @@ interface AttributesCheckMasterProps {
 @observer
 export class AttributesCheckMaster extends Component<AttributesCheckMasterProps> {
   @observable private allSelected = false;
+
   private reactionDisposer?: IReactionDisposer;
   private testSelectionAllnessOperationId?: symbol;
   private selectingAllOperationId?: symbol;
@@ -69,7 +70,7 @@ export class AttributesCheckMaster extends Component<AttributesCheckMasterProps>
 
   @computed
   get selectedFeatures(): WfsFeature[] {
-    return mapStore.selectedFeaturesByTableName[this.props.layer.tableName] || [];
+    return selectedFeaturesStore.featuresByTableName[this.props.layer.tableName] || [];
   }
 
   @boundMethod
@@ -80,18 +81,35 @@ export class AttributesCheckMaster extends Component<AttributesCheckMasterProps>
       const features = await this.getAllFeatures();
 
       if (this.selectingAllOperationId === operationId) {
-        mapSelectionService.selectFeatures(this.selectedFeatures, MapSelectionTypes.REMOVE);
-        mapSelectionService.selectFeatures(features, MapSelectionTypes.ADD);
+        await mapModeManager.changeMode(
+          MapMode.SELECTED_FEATURES,
+          {
+            payload: {
+              features: features,
+              type: MapSelectionTypes.REPLACE
+            }
+          },
+          'selectAll-1'
+        );
       }
     } else {
-      mapSelectionService.selectFeatures(this.selectedFeatures, MapSelectionTypes.REMOVE);
+      await mapModeManager.changeMode(
+        MapMode.SELECTED_FEATURES,
+        {
+          payload: {
+            features: this.selectedFeatures,
+            type: MapSelectionTypes.REMOVE
+          }
+        },
+        'selectAll-2'
+      );
     }
   }
 
   private async testSelectionAllness() {
     const { featuresMatched } = this.props;
     if (
-      mapStore.selectingFeaturesLimit !== this.selectedFeatures.length &&
+      selectedFeaturesStore.limit !== this.selectedFeatures.length &&
       featuresMatched !== this.selectedFeatures.length
     ) {
       this.setSelectionAllness(false);
@@ -125,7 +143,7 @@ export class AttributesCheckMaster extends Component<AttributesCheckMasterProps>
 
   private async getAllFeatures(): Promise<WfsFeature[]> {
     const { layer, pageOptions, definitionQuery } = this.props;
-    const options = { ...cloneDeep(pageOptions), page: 0, pageSize: mapStore.selectingFeaturesLimit };
+    const options = { ...cloneDeep(pageOptions), page: 0, pageSize: selectedFeaturesStore.limit };
 
     if (options.filter) {
       removeFieldFilter(options.filter, FILTER_BY_SELECTION);

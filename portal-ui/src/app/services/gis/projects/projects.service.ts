@@ -5,13 +5,13 @@ import { debounce, DebouncedFunc } from 'lodash';
 import { Toast } from '../../../components/Toast/Toast';
 import { allProjects } from '../../../stores/AllProjects.store';
 import { currentProject } from '../../../stores/CurrentProject.store';
-import { mapStore } from '../../../stores/Map.store';
 import { route } from '../../../stores/Route.store';
 import { usersService } from '../../auth/users/users.service';
 import { communicationService } from '../../communication.service';
 import { isArrayOfProjections } from '../../data/projections/projections.models';
 import { getProjectionByCode, registerProjectionArrayInProj4 } from '../../data/projections/projections.service';
 import { testLayerByWms } from '../../geoserver/wms/wms.service';
+import { selectedFeaturesStore } from '../../map/a-map-mode/selected-features/SelectedFeatures.store';
 import { PageOptions } from '../../models';
 import { isLayerReadAllowed } from '../../permissions/permissions.service';
 import { services } from '../../services';
@@ -50,7 +50,7 @@ class ProjectsService {
 
     // при выделении фичи включать её слой
     reaction(
-      () => Object.keys(mapStore.selectedFeaturesByTableName),
+      () => Object.keys(selectedFeaturesStore.featuresByTableName),
       tableNames => {
         this.enableLayersByTableNames(tableNames);
       },

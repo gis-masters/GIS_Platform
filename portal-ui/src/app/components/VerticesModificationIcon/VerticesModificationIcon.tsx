@@ -5,10 +5,9 @@ import { Gamepad, GamepadOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
-import { mapDrawService } from '../../services/map/draw/map-draw.service';
+import { mapModeManager } from '../../services/map/a-map-mode/MapModeManager';
+import { selectedFeaturesStore } from '../../services/map/a-map-mode/selected-features/SelectedFeatures.store';
 import { MapAction, MapMode } from '../../services/map/map.models';
-import { mapVerticesModificationService } from '../../services/map/vertices-modification/map-vertices-modification.service';
-import { wfsFeaturesToFeatures } from '../../services/util/open-layers.util';
 import { mapStore } from '../../stores/Map.store';
 import { mapVerticesModificationStore } from '../../stores/MapVerticesModification.store';
 import { IconButton } from '../IconButton/IconButton';
@@ -32,10 +31,10 @@ const tooltipMsg = (
 export class VerticesModificationIcon extends Component {
   render() {
     const actionDisabled =
-      mapStore.selectedFeatures.length === 0 ||
+      selectedFeaturesStore.features.length === 0 ||
       !mapStore.allowedActions.includes(MapAction.VERTICES_MODIFICATION) ||
       mapVerticesModificationStore.saving;
-    const Icon = this.verticesModificationMode() ? Gamepad : GamepadOutlined;
+    const Icon = this.verticesModificationModeActive() ? Gamepad : GamepadOutlined;
     const color = actionDisabled ? 'disabled' : 'primary';
 
     return (
@@ -48,16 +47,13 @@ export class VerticesModificationIcon extends Component {
   }
 
   @boundMethod
-  private editVertex() {
-    if (this.verticesModificationMode()) {
-      mapVerticesModificationService.verticesModificationOff();
-    } else {
-      mapVerticesModificationService.verticesModificationOn();
-      mapDrawService.addFeatures(wfsFeaturesToFeatures(mapStore.selectedFeatures));
-    }
+  private async editVertex() {
+    await (this.verticesModificationModeActive()
+      ? mapModeManager.changeMode(MapMode.SELECTED_FEATURES, undefined, 'editVertex - 1')
+      : mapModeManager.changeMode(MapMode.VERTICES_MODIFICATION, undefined, 'editVertex - 2'));
   }
 
-  private verticesModificationMode(): boolean {
+  private verticesModificationModeActive(): boolean {
     return mapStore.mode === MapMode.VERTICES_MODIFICATION;
   }
 }

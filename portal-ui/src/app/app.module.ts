@@ -6,6 +6,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 configure({ enforceActions: 'observed' }); // don't allow state modifications outside actions
 
+import { DatePipe } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { LoggerModule, NgxLoggerLevel } from 'ngx-logger';
 
@@ -18,7 +19,6 @@ import { DataManagementComponent } from './components/data-management/data-manag
 import { EditBugObjectComponent } from './components/edit-bug-object/edit-bug-object.component';
 import { EditFeatureComponent } from './components/edit-feature/edit-feature.component';
 import { EditFeatureActionsComponent } from './components/edit-feature-actions/edit-feature-actions.component';
-import { EditFeatureConfirmComponent } from './components/edit-feature-confirm/edit-feature-confirm.component';
 import { EditFeatureFieldComponent } from './components/edit-feature-field/edit-feature-field.component';
 import { EditFeatureGeometryComponent } from './components/edit-feature-geometry/edit-feature-geometry.component';
 import { EditFeatureNavigationComponent } from './components/edit-feature-navigation/edit-feature-navigation.component';
@@ -110,7 +110,6 @@ import { GlobalErrorHandler } from './services/global-error.handler';
     ReValidateButtonNgComponent,
     EditFeatureGeometryComponent,
     OrgAdminComponent,
-    EditFeatureConfirmComponent,
     BasemapsSelectComponent,
     DataManagementComponent,
     LogoNgComponent,
@@ -150,11 +149,13 @@ import { GlobalErrorHandler } from './services/global-error.handler';
     LoggerModule.forRoot({
       // serverLoggingUrl: '/api/logs', // send logs to server endpoint
       level: NgxLoggerLevel.DEBUG,
-      serverLogLevel: NgxLoggerLevel.WARN
+      serverLogLevel: NgxLoggerLevel.WARN,
+      timestampFormat: 'short'
     }),
     LoadingNgModule
   ],
   providers: [
+    DatePipe,
     {
       provide: ErrorHandler,
       useClass: GlobalErrorHandler

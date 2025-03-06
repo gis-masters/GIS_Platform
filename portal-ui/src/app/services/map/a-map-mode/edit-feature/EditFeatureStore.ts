@@ -2,20 +2,19 @@ import { action, computed, makeObservable, observable } from 'mobx';
 import { Feature, Polygon } from '@turf/turf';
 import { isEqual } from 'lodash';
 
-import { Toast } from '../components/Toast/Toast';
-import { Projection } from '../services/data/projections/projections.models';
-import { GeometryType, WfsFeature, WfsGeometry } from '../services/geoserver/wfs/wfs.models';
-import { isGeometryValid } from '../services/geoserver/wfs/wfs.util';
-import { CrgVectorableLayer } from '../services/gis/layers/layers.models';
-import { transformGeometry } from '../services/util/coordinates-transform.util';
+import { Toast } from '../../../../components/Toast/Toast';
+import { Projection } from '../../../data/projections/projections.models';
+import { GeometryType, WfsFeature, WfsGeometry } from '../../../geoserver/wfs/wfs.models';
+import { isGeometryValid } from '../../../geoserver/wfs/wfs.util';
+import { CrgVectorableLayer } from '../../../gis/layers/layers.models';
+import { transformGeometry } from '../../../util/coordinates-transform.util';
+import { EditFeaturesData } from './EditFeature.models';
 
 class EditFeatureStore {
   private static _instance: EditFeatureStore;
   static get instance() {
     return this._instance || (this._instance = new this());
   }
-
-  @observable feature?: WfsFeature;
 
   @observable geometry?: WfsGeometry;
   @observable hasGeometryWarning: boolean = false;
@@ -28,10 +27,24 @@ class EditFeatureStore {
   @observable layer?: CrgVectorableLayer;
   @observable layerExtent?: Feature<Polygon>;
 
+  @observable editFeaturesData?: EditFeaturesData;
+
+  // Некий агрегатор, впитывающий в себя изменения ангулар формы и изменения геометрии
+  @observable private featuresEdited?: boolean;
   @observable private virginGeometry?: WfsGeometry;
 
   constructor() {
     makeObservable(this);
+  }
+
+  @computed
+  get pristine() {
+    return this.editFeaturesData === undefined ? true : !this.featuresEdited ?? true;
+  }
+
+  @computed
+  get dirty() {
+    return !this.pristine;
   }
 
   @computed
@@ -76,7 +89,6 @@ class EditFeatureStore {
   @action
   initFeature(feature: WfsFeature, projection: Projection | undefined): void {
     if (feature.geometry && projection) {
-      this.setFeature(feature);
       this.initGeometry(feature.geometry, projection);
     } else {
       Toast.error('Не удалось получить проекцию или геометрию объекта');
@@ -111,11 +123,6 @@ class EditFeatureStore {
   }
 
   @action.bound
-  setFeature(feature: WfsFeature | undefined): void {
-    this.feature = feature;
-  }
-
-  @action.bound
   setProjection(proj: Projection): void {
     if (!this.resultGeometry || !this.nativeProjection) {
       throw new Error('Отсутствует геометрия или базовая проекция');
@@ -128,6 +135,22 @@ class EditFeatureStore {
   @action
   setLayer(layer: CrgVectorableLayer): void {
     this.layer = layer;
+  }
+
+  @action
+  setFeaturesEdited(edited: boolean) {
+    this.featuresEdited = edited;
+  }
+
+  @action
+  setEditFeaturesData(editFeaturesData: EditFeaturesData) {
+    this.editFeaturesData = editFeaturesData;
+  }
+
+  @action
+  reset() {
+    this.editFeaturesData = undefined;
+    this.featuresEdited = false;
   }
 }
 

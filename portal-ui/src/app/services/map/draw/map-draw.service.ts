@@ -8,8 +8,6 @@ import { Vector as VectorLayer } from 'ol/layer';
 import { Vector as VectorSource } from 'ol/source';
 
 import { Toast } from '../../../components/Toast/Toast';
-import { editFeatureStore } from '../../../stores/EditFeatureStore';
-import { mapStore } from '../../../stores/Map.store';
 import { communicationService } from '../../communication.service';
 import { Projection } from '../../data/projections/projections.models';
 import { getFeatureProjection, getOlProjection } from '../../data/projections/projections.service';
@@ -17,7 +15,8 @@ import { GeometryType, WfsFeature } from '../../geoserver/wfs/wfs.models';
 import { services } from '../../services';
 import { transformGeometry } from '../../util/coordinates-transform.util';
 import { wfsFeatureToFeature } from '../../util/open-layers.util';
-import { MapMode } from '../map.models';
+import { editFeatureStore } from '../a-map-mode/edit-feature/EditFeatureStore';
+import { selectedFeaturesStore } from '../a-map-mode/selected-features/SelectedFeatures.store';
 import { mapService } from '../map.service';
 import { mapSnapService } from '../snap/map-snap.service';
 import { getStyle, KnownStyleKey } from '../styles/map-styles';
@@ -50,8 +49,6 @@ class MapDrawService {
   drawOn(geometryType: SingleDrawGeometryType) {
     mapVerticesModificationService.verticesModificationOff();
 
-    mapStore.setMode(MapMode.DRAW);
-
     // Modify
     this.modify = new Modify({
       source: this.source,
@@ -61,7 +58,7 @@ class MapDrawService {
           return true;
         }
 
-        return editFeatureStore.feature?.id === closestFeature.getId();
+        return editFeatureStore.editFeaturesData?.features[0]?.id === closestFeature.getId();
       }
     });
     this.modify.on('modifyend', (event: ModifyEvent) => {
@@ -85,9 +82,6 @@ class MapDrawService {
   }
 
   drawOff() {
-    mapStore.setMode(MapMode.DEFAULT);
-    editFeatureStore.setFeature(undefined);
-
     if (this.draw) {
       this.draw.setActive(false);
       mapService.map.removeInteraction(this.draw);
@@ -159,7 +153,7 @@ class MapDrawService {
 
   // Обновим "выделенные фичи" "измененными"
   async highlightMoreFeatures(modifiedFeatures: WfsFeature[]) {
-    const selectedFeatures = mapStore.selectedFeatures;
+    const selectedFeatures = selectedFeaturesStore.features;
     for (const modifiedFeature of modifiedFeatures) {
       const existingFeatureIndex = selectedFeatures.findIndex(f => f.id === modifiedFeature.id);
       if (existingFeatureIndex === -1) {
@@ -211,7 +205,7 @@ class MapDrawService {
         try {
           this.source?.removeFeature(olFeature);
         } catch {}
-      }, 500);
+      }, 200);
     }
   }
 

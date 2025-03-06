@@ -7,7 +7,7 @@ import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
 import { communicationService } from '../../services/communication.service';
-import { mapStore } from '../../stores/Map.store';
+import { selectedFeaturesStore } from '../../services/map/a-map-mode/selected-features/SelectedFeatures.store';
 import { sidebars } from '../../stores/Sidebars.store';
 import FeaturesListSidebarFeatures from '../FeaturesListSidebarFeatures/FeaturesListSidebarFeatures';
 import { Loading } from '../Loading/Loading';
@@ -43,7 +43,7 @@ export default class FeaturesListSidebar extends Component {
 
     communicationService.featuresUpdated.on(this.closeSelectedFeaturesTab, this);
     this.selectionReactionDisposer = reaction(
-      () => mapStore.selectedFeatures.map(({ id }) => id),
+      () => selectedFeaturesStore.features.map(({ id }) => id),
       () => {
         this.selectedFeaturesUpdate();
       },
@@ -128,7 +128,7 @@ export default class FeaturesListSidebar extends Component {
       return;
     }
 
-    if (sidebars.selectedFeaturesEdited && mapStore.selectedFeatures.length) {
+    if (sidebars.selectedFeaturesEdited && selectedFeaturesStore.features.length) {
       this.setActiveTabValue(0);
       this.setLoading(false);
       sidebars.setSelectedFeaturesEdited(false);
@@ -140,7 +140,7 @@ export default class FeaturesListSidebar extends Component {
       this.setActiveTabValue(1);
     }
 
-    if (mapStore.selectedFeatures.length && !sidebars?.searchValue?.searchValue) {
+    if (selectedFeaturesStore.features.length && !sidebars?.searchValue?.searchValue) {
       this.setActiveTabValue(0);
     }
 
@@ -151,12 +151,12 @@ export default class FeaturesListSidebar extends Component {
   private setTabState() {
     this.setLoading(true);
 
-    if (sidebars?.searchValue?.searchValue && mapStore.selectedFeatures.length) {
+    if (sidebars?.searchValue?.searchValue && selectedFeaturesStore.features.length) {
       this.setSingleTab(false);
-    } else if (sidebars?.searchValue?.searchValue || mapStore.selectedFeatures.length) {
+    } else if (sidebars?.searchValue?.searchValue || selectedFeaturesStore.features.length) {
       this.setSingleTab(true);
-    } else if (!sidebars?.searchValue?.searchValue && !mapStore.selectedFeatures.length) {
-      sidebars.closeFeaturesSidebar();
+    } else if (!sidebars?.searchValue?.searchValue && !selectedFeaturesStore.features.length) {
+      sidebars.closeSelectedFeaturesSidebar();
     }
 
     this.setLoading(false);
@@ -204,8 +204,6 @@ export default class FeaturesListSidebar extends Component {
 
   @boundMethod
   private closeSelectedFeaturesTab() {
-    sidebars.setMemorizedFeatures([]);
-    mapStore.setSelectedFeatures([]);
     this.setSingleTab(true);
     this.setActiveTabValue();
   }
@@ -225,7 +223,7 @@ export default class FeaturesListSidebar extends Component {
       return;
     }
 
-    if (!mapStore.selectedFeatures.length) {
+    if (!selectedFeaturesStore.features.length) {
       this.setActiveTab(1);
 
       return;

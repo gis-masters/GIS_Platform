@@ -22,7 +22,7 @@ class MapSnapStore {
 
   @observable
   isSnapActive(): boolean {
-    return mapStore.mode === MapMode.VERTICES_MODIFICATION || mapStore.mode === MapMode.DRAW;
+    return mapStore.mode === MapMode.VERTICES_MODIFICATION || mapStore.mode === MapMode.DRAW_FEATURE;
   }
 
   @observable

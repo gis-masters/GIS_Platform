@@ -15,10 +15,11 @@ import { createFeatureId } from '../../services/geoserver/featureType/featureTyp
 import { WfsFeature } from '../../services/geoserver/wfs/wfs.models';
 import { CrgLayer, CrgLayerType, CrgVectorLayer } from '../../services/gis/layers/layers.models';
 import { isVectorFromFile } from '../../services/gis/layers/layers.utils';
+import { editFeatureStore } from '../../services/map/a-map-mode/edit-feature/EditFeatureStore';
+import { mapModeManager } from '../../services/map/a-map-mode/MapModeManager';
+import { MapMode, MapSelectionTypes } from '../../services/map/map.models';
 import { mapService } from '../../services/map/map.service';
-import { mapSelectionService } from '../../services/map/map-selection.service';
 import { transformGeometry } from '../../services/util/coordinates-transform.util';
-import { sidebars } from '../../stores/Sidebars.store';
 import { IconButton } from '../IconButton/IconButton';
 import { Loading } from '../Loading/Loading';
 import { PseudoLink } from '../PseudoLink/PseudoLink';
@@ -58,9 +59,16 @@ export class CopyFeaturesButton extends Component<CopyFeaturesButtonProps> {
     return (
       <>
         <Tooltip title={tooltipTitle}>
-          <IconButton className={cnCopyFeaturesButton()} size={size} onClick={this.openDialog}>
-            <ContentCopyOutlined fontSize={size} />
-          </IconButton>
+          <span>
+            <IconButton
+              className={cnCopyFeaturesButton()}
+              size={size}
+              onClick={this.openDialog}
+              disabled={editFeatureStore.dirty}
+            >
+              <ContentCopyOutlined fontSize={size} />
+            </IconButton>
+          </span>
         </Tooltip>
 
         <SelectSuitableVectorLayerDialog
@@ -186,10 +194,18 @@ export class CopyFeaturesButton extends Component<CopyFeaturesButtonProps> {
 
   @boundMethod
   private async positionToCopiedFeatures() {
-    mapSelectionService.selectFeatures(this.wfsFeatures);
-    await mapService.positionToFeatures(this.wfsFeatures);
+    await mapModeManager.changeMode(
+      MapMode.SELECTED_FEATURES,
+      {
+        payload: {
+          features: this.wfsFeatures,
+          type: MapSelectionTypes.REPLACE
+        }
+      },
+      'positionToCopiedFeatures'
+    );
 
-    sidebars.openSelectedFeaturesSidebar();
+    await mapService.positionToFeatures(this.wfsFeatures);
 
     if (this.selectedLayer) {
       communicationService.openAttributesBar.emit(this.selectedLayer);

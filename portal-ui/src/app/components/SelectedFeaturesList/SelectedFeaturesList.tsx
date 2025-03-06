@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { computed } from 'mobx';
 import { observer } from 'mobx-react';
 
-import { mapStore } from '../../stores/Map.store';
+import { selectedFeaturesStore } from '../../services/map/a-map-mode/selected-features/SelectedFeatures.store';
 import { sidebars } from '../../stores/Sidebars.store';
 import { FeaturesList, FeaturesListItemInfo } from '../FeaturesList/FeaturesList';
 
@@ -14,7 +14,7 @@ export class SelectedFeaturesList extends Component<Record<string, unknown>> {
 
   @computed
   private get features(): FeaturesListItemInfo[] {
-    const allFeatures = [...mapStore.selectedFeatures].map(item => {
+    const allFeatures = [...selectedFeaturesStore.features].map(item => {
       return { feature: item };
     });
 

@@ -18,9 +18,9 @@ import { recalculateBboxAndGetFeatureType } from '../../services/geoserver/featu
 import { GeometryType, supportedGeometryTypes, WfsGeometry } from '../../services/geoserver/wfs/wfs.models';
 import { CrgLayerType, CrgVectorLayer } from '../../services/gis/layers/layers.models';
 import { isVectorFromFile } from '../../services/gis/layers/layers.utils';
+import { editFeatureStore } from '../../services/map/a-map-mode/edit-feature/EditFeatureStore';
 import { transformGeometry } from '../../services/util/coordinates-transform.util';
 import { notFalsyFilter } from '../../services/util/NotFalsyFilter';
-import { editFeatureStore } from '../../stores/EditFeatureStore';
 import { projectionsStore } from '../../stores/Projections.store';
 import { FeatureIcon } from '../FeatureIcon/FeatureIcon';
 import { EditFeatureGeometryError } from './Error/EditFeatureGeometry-Error';

@@ -4,8 +4,9 @@ import { Tooltip } from '@mui/material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
-import { MapAction } from '../../../services/map/map.models';
-import { mapSelectionService } from '../../../services/map/map-selection.service';
+import { mapModeManager } from '../../../services/map/a-map-mode/MapModeManager';
+import { selectedFeaturesStore } from '../../../services/map/a-map-mode/selected-features/SelectedFeatures.store';
+import { MapAction, MapMode } from '../../../services/map/map.models';
 import { mapStore } from '../../../stores/Map.store';
 import { IconButton } from '../../IconButton/IconButton';
 import { RectangleSelectionCancel } from '../../Icons/RectangleSelectionCancel';
@@ -32,7 +33,9 @@ export class MapSelectionCancel extends Component {
       <Tooltip title='Снять выделение со всех объектов (Esc, Esc)'>
         <span>
           <IconButton
-            disabled={!mapStore.selectedFeatures.length || !mapStore.allowedActions.includes(MapAction.MAP_SELECTION)}
+            disabled={
+              !selectedFeaturesStore.features.length || !mapStore.allowedActions.includes(MapAction.MAP_SELECTION)
+            }
             className={cnMapSelectionCancel()}
             onClick={this.clearSelectedFeatures}
             size='small'
@@ -49,7 +52,7 @@ export class MapSelectionCancel extends Component {
     clearTimeout(this.timer);
 
     if (this.escKeyPressed && event.key === 'Escape') {
-      this.clearSelectedFeatures();
+      void this.clearSelectedFeatures();
     }
   }
 
@@ -64,7 +67,7 @@ export class MapSelectionCancel extends Component {
     }, 400);
   }
 
-  private clearSelectedFeatures(): void {
-    mapSelectionService.selectFeatures([]);
+  private async clearSelectedFeatures(): Promise<void> {
+    await mapModeManager.changeMode(MapMode.NONE, undefined, 'clearSelectedFeatures');
   }
 }

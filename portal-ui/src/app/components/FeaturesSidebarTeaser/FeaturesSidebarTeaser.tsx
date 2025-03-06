@@ -7,6 +7,9 @@ import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
 import { getLayerByFeatureInCurrentProject } from '../../services/gis/layers/layers.utils';
+import { editFeatureStore } from '../../services/map/a-map-mode/edit-feature/EditFeatureStore';
+import { selectedFeaturesStore } from '../../services/map/a-map-mode/selected-features/SelectedFeatures.store';
+import { MapMode } from '../../services/map/map.models';
 import { isUpdateAllowed } from '../../services/permissions/permissions.service';
 import { mapStore } from '../../stores/Map.store';
 import { sidebars } from '../../stores/Sidebars.store';
@@ -31,7 +34,7 @@ export class FeaturesSidebarTeaser extends Component {
 
   componentDidMount() {
     this.reactionDisposer = reaction(
-      () => [...mapStore.selectedFeatures],
+      () => [...selectedFeaturesStore.features],
       async () => {
         await this.testFeatureUpdateability();
       },
@@ -45,7 +48,7 @@ export class FeaturesSidebarTeaser extends Component {
 
   render() {
     const count =
-      mapStore.selectedFeatures.length ||
+      selectedFeaturesStore.features.length ||
       sidebars.deletedFeatures?.length ||
       sidebars.featuresWithNoAccess?.length ||
       sidebars.deletedLayers?.length;
@@ -62,7 +65,7 @@ export class FeaturesSidebarTeaser extends Component {
             className={cnFeaturesSidebarTeaser({ badge: true, hidden: !count })}
             style={{ '--FeaturesSidebarTeaserBadgeDigits': Math.min(String(count).length, 5) }}
           >
-            <IconButton onClick={sidebars.openSelectedFeaturesSidebar}>
+            <IconButton onClick={this.showSidebar}>
               <Badge
                 badgeContent={count}
                 anchorOrigin={{ horizontal: 'left', vertical: 'top' }}
@@ -74,10 +77,8 @@ export class FeaturesSidebarTeaser extends Component {
             </IconButton>
           </div>
         ) : (
-          <div>
-            <div className={cnFeaturesSidebarTeaser({ chevron: true })}>
-              <ChevronRight onClick={this.hideFeatureSidebar} />
-            </div>
+          <div className={cnFeaturesSidebarTeaser({ chevron: true })}>
+            <ChevronRight onClick={this.hideSidebar} color={this.canBeHidden() ? 'primary' : 'disabled'} />
           </div>
         )}
       </>
@@ -85,13 +86,33 @@ export class FeaturesSidebarTeaser extends Component {
   }
 
   @boundMethod
-  private hideFeatureSidebar() {
-    sidebars.closeFeaturesSidebar();
-    sidebars.closeEdit();
+  private showSidebar() {
+    if (mapStore.mode === MapMode.SELECTED_FEATURES) {
+      sidebars.openSelectedFeaturesSidebar();
+    } else if (mapStore.mode === MapMode.EDIT_FEATURE) {
+      sidebars.openEdit();
+    }
+  }
+
+  @boundMethod
+  private hideSidebar() {
+    if (mapStore.mode === MapMode.SELECTED_FEATURES && this.canBeHidden()) {
+      sidebars.closeSelectedFeaturesSidebar();
+    } else if (mapStore.mode === MapMode.EDIT_FEATURE && this.canBeHidden()) {
+      sidebars.closeEdit('hideFeatureSidebar');
+    }
+  }
+
+  private canBeHidden() {
+    if (mapStore.mode === MapMode.SELECTED_FEATURES) {
+      return true;
+    } else if (mapStore.mode === MapMode.EDIT_FEATURE) {
+      return editFeatureStore.pristine;
+    }
   }
 
   private get isBadgeMode(): boolean {
-    return !sidebars.featuresSidebarOpen && !sidebars.editOpen;
+    return !sidebars.selectedFeaturesSidebarOpen && !sidebars.editFeatureOpen;
   }
 
   @action
@@ -100,7 +121,7 @@ export class FeaturesSidebarTeaser extends Component {
   }
 
   private async testFeatureUpdateability() {
-    if (mapStore.selectedFeatures.length !== 1) {
+    if (selectedFeaturesStore.features.length !== 1) {
       this.setFeatureUpdateability(false);
 
       return;
@@ -111,7 +132,7 @@ export class FeaturesSidebarTeaser extends Component {
     const operationId = Symbol();
     this.testingFeatureUpdateabilityOperationId = operationId;
 
-    const firstFeature = mapStore.selectedFeatures[0];
+    const firstFeature = selectedFeaturesStore.features[0];
     const layer = getLayerByFeatureInCurrentProject(firstFeature);
     if (layer) {
       updatingAllowed = await isUpdateAllowed(layer);

@@ -11,11 +11,12 @@ import { getOlProjection } from '../../services/data/projections/projections.ser
 import { CrgExternalLayer, CrgLayerType } from '../../services/gis/layers/layers.models';
 import { fetchCurrentProjectBasemaps } from '../../services/gis/project-basemaps/project-basemaps.service';
 import { projectsService } from '../../services/gis/projects/projects.service';
+import { mapModeManager } from '../../services/map/a-map-mode/MapModeManager';
+import { selectedFeaturesStore } from '../../services/map/a-map-mode/selected-features/SelectedFeatures.store';
 import { mapDrawService } from '../../services/map/draw/map-draw.service';
-import { MapMode } from '../../services/map/map.models';
+import { MapMode, ToolMode } from '../../services/map/map.models';
 import { mapService } from '../../services/map/map.service';
 import { applyMapStateFromNavigator } from '../../services/map/map-link-following.service';
-import { mapSelectionService } from '../../services/map/map-selection.service';
 import { setMapPositionToUrl } from '../../services/map/map-url.service';
 import { cn } from '../../services/util/cn';
 import { attributesTableStore } from '../../stores/AttributesTable.store';
@@ -113,12 +114,14 @@ export class MapComponent implements OnInit, OnDestroy {
     mapService.zoomChanged.on(e => currentProject.changeZoom(e.detail), this);
 
     cursorHandler.init();
+    await mapModeManager.init();
   }
 
   ngOnDestroy(): void {
-    mapStore.setMode(MapMode.DEFAULT);
     mapService.destroyMap();
-    mapSelectionService.selectFeatures([]);
+
+    void mapModeManager.changeMode(MapMode.NONE, undefined, 'map ngOnDestroy');
+
     projectsService.clearCurrent();
     printSettings.reset();
     this.reactionDisposer?.();
@@ -130,4 +133,6 @@ export class MapComponent implements OnInit, OnDestroy {
   protected readonly mapStore = mapStore;
   protected readonly MapMode = MapMode;
   protected readonly sidebars = sidebars;
+  protected readonly ToolMode = ToolMode;
+  protected readonly selectedFeaturesStore = selectedFeaturesStore;
 }

@@ -5,7 +5,6 @@ import { MultiPolygon } from 'ol/geom';
 import { attributesTableStore } from '../../../stores/AttributesTable.store';
 import { currentProject } from '../../../stores/CurrentProject.store';
 import { currentUser } from '../../../stores/CurrentUser.store';
-import { mapStore } from '../../../stores/Map.store';
 import { usersService } from '../../auth/users/users.service';
 import { Projection } from '../../data/projections/projections.models';
 import { getOlProjection } from '../../data/projections/projections.service';
@@ -13,6 +12,7 @@ import { getProjectionCode } from '../../data/projections/projections.util';
 import { applyView, getGeometryFieldName } from '../../data/schema/schema.utils';
 import { CrgVectorLayer } from '../../gis/layers/layers.models';
 import { getLayerSchema } from '../../gis/layers/layers.service';
+import { selectedFeaturesStore } from '../../map/a-map-mode/selected-features/SelectedFeatures.store';
 import { MapSelectionTypes } from '../../map/map.models';
 import { PageOptions } from '../../models';
 import { WFS } from '../../ol/WFS';
@@ -265,8 +265,8 @@ export async function makeXmlPolygonIntersect(
       selectionType === MapSelectionTypes.REMOVE
         ? undefined
         : Math.max(
-            mapStore.selectingFeaturesLimit -
-              (selectionType === MapSelectionTypes.ADD ? mapStore.selectedFeatures.length : 0),
+            selectedFeaturesStore.limit -
+              (selectionType === MapSelectionTypes.ADD ? selectedFeaturesStore.features.length : 0),
             1
           )
   });

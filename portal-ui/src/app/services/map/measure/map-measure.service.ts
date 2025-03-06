@@ -22,10 +22,10 @@ import { communicationService } from '../../communication.service';
 import { GeometryType } from '../../geoserver/wfs/wfs.models';
 import { UnitsOfAreaMeasurement } from '../../util/open-layers.util';
 import { mapDrawService } from '../draw/map-draw.service';
-import { MapMode } from '../map.models';
+import { ToolMode } from '../map.models';
 import { mapService } from '../map.service';
 import { getStyle, KnownStyleKey } from '../styles/map-styles';
-import { MeasureItem, MeasureMode } from './map-measure.models';
+import { MeasureItem } from './map-measure.models';
 
 class MapMeasureService {
   private static _instance: MapMeasureService;
@@ -51,13 +51,12 @@ class MapMeasureService {
   private constructor() {
     communicationService.beforeMapDestroy.on(() => {
       this.clearAll();
-      mapMeasureStore.setMeasureMode(null);
     });
 
     reaction(
-      () => mapStore.mode,
+      () => mapStore.toolMode,
       mode => {
-        if (mode === MapMode.SELECTION || mode === MapMode.DEFAULT) {
+        if (mode === ToolMode.SELECTION || mode === ToolMode.NONE || mode === ToolMode.ADDING_LABEL) {
           this.measureOff();
         }
       }
@@ -66,11 +65,11 @@ class MapMeasureService {
     this.initUnitsOfAreaMeasurement();
   }
 
-  measureOn(mode: MeasureMode) {
+  measureOn(mode: ToolMode) {
     mapDrawService.drawOff();
+
     this.measureOff();
-    mapStore.setMode(MapMode.MEASURE);
-    mapMeasureStore.setMeasureMode(mode);
+
     if (!this.inited) {
       this.init();
     }
@@ -101,7 +100,6 @@ class MapMeasureService {
 
       mapService.map.removeInteraction(this.draw);
       delete this.draw;
-      mapMeasureStore.setMeasureMode(null);
     }
 
     // @ts-expect-error - ошибка в типах ol
@@ -260,10 +258,10 @@ class MapMeasureService {
     return connected;
   }
 
-  private getDraw(mode: MeasureMode): Draw {
+  private getDraw(mode: ToolMode): Draw {
     return new Draw({
       source: this.source,
-      type: mode === 'length' ? GeometryType.LINE_STRING : GeometryType.POLYGON,
+      type: mode === ToolMode.MEASURE_LENGTH ? GeometryType.LINE_STRING : GeometryType.POLYGON,
       style: getStyle(KnownStyleKey.MeasureDrawStyles)
     });
   }

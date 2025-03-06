@@ -2,13 +2,13 @@ import { cloneDeep } from 'lodash';
 
 import { extractFeatureTypeNameFromComplexName } from '../../services/geoserver/featureType/featureType.util';
 import { CrgLayer } from '../../services/gis/layers/layers.models';
+import { selectedFeaturesStore } from '../../services/map/a-map-mode/selected-features/SelectedFeatures.store';
 import { FilterBySelectionMode } from '../../services/map/map.models';
 import { getFieldFilterValue, modifyFieldFilterValue } from '../../services/util/filters/filters';
 import { FilterQuery } from '../../services/util/filters/filters.models';
 import { isFilterBySelection } from '../../services/util/typeGuards/isFilterBySelection';
 import { isNumberArray } from '../../services/util/typeGuards/isNumberArray';
 import { isRecordStringUnknown } from '../../services/util/typeGuards/isRecordStringUnknown';
-import { mapStore } from '../../stores/Map.store';
 import { FILTER_BY_SELECTION } from './Attributes.models';
 
 export function extractFeatureIdsFromAttributesFilter(
@@ -40,7 +40,7 @@ export function extractFeatureIdsFromAttributesFilter(
   featureIds =
     filterBySelection === FilterBySelectionMode.DISABLED
       ? []
-      : mapStore.selectedFeaturesByTableName[layer.tableName]?.map(({ id }) => id) || [];
+      : selectedFeaturesStore.featuresByTableName[layer.tableName]?.map(({ id }) => id) || [];
 
   if (idsFromTableFilter.length) {
     featureIds =

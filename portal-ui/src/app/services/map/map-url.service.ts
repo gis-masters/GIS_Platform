@@ -1,7 +1,6 @@
 import { Coordinate } from 'ol/coordinate';
 
 import { currentProject } from '../../stores/CurrentProject.store';
-import { mapStore } from '../../stores/Map.store';
 import { Pages, route } from '../../stores/Route.store';
 import { extractFeatureId } from '../geoserver/featureType/featureType.util';
 import { WfsFeature } from '../geoserver/wfs/wfs.models';
@@ -9,6 +8,7 @@ import { getLayerByFeatureInCurrentProject } from '../gis/layers/layers.utils';
 import { services } from '../services';
 import { notFalsyFilter } from '../util/NotFalsyFilter';
 import { sleep } from '../util/sleep';
+import { selectedFeaturesStore } from './a-map-mode/selected-features/SelectedFeatures.store';
 import { buildFeaturesUrlFragment, FeaturesUrlFragment } from './map.util';
 
 export async function setMapPositionToUrl(zoom: number, center: Coordinate): Promise<void> {
@@ -80,7 +80,7 @@ export async function setSelectedFeaturesToUrl(): Promise<void> {
   await services.ngZone.run(async () => {
     await services.router.navigate([location.pathname], {
       queryParams: {
-        features: mapStore.selectedFeatures ? getFeaturesUrlFragment(mapStore.selectedFeatures) : null,
+        features: selectedFeaturesStore.features ? getFeaturesUrlFragment(selectedFeaturesStore.features) : null,
         queryFilter: null,
         queryLayers: null
       },

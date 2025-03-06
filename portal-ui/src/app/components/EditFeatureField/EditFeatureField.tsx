@@ -14,7 +14,6 @@ export interface EditFeatureInfo {
   layerName: string;
   feature: WfsFeature;
   isReadOnly: boolean;
-  isNew?: boolean;
 }
 
 interface EditFeatureFieldProps {

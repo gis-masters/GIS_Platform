@@ -1,41 +1,22 @@
 import { action, makeObservable, observable, reaction } from 'mobx';
 
-import { Properties } from '../components/edit-feature/edit-feature.component';
 import { SearchInfo } from '../components/SearchField/SearchField';
 import { WfsFeature } from '../services/geoserver/wfs/wfs.models';
 import { CrgVectorableLayer } from '../services/gis/layers/layers.models';
+import { selectedFeaturesStore } from '../services/map/a-map-mode/selected-features/SelectedFeatures.store';
 import { FeatureError } from '../services/map/map-link-following.service';
-import { mapStore } from './Map.store';
+import { services } from '../services/services';
 import { Pages, route } from './Route.store';
-
-export enum EditFeatureMode {
-  multipleEdit = 'multipleEdit',
-  single = 'single'
-}
-
-export interface EditFeaturesData {
-  features: WfsFeature[];
-  mode: EditFeatureMode;
-  viewFeatures?: WfsFeature[];
-  layer?: CrgVectorableLayer;
-  properties?: Properties;
-  isNew?: boolean;
-}
 
 const defaultValues: Partial<Sidebars> = {
   layerSidebarOpen: true,
   infoOpen: false,
   photoLayerOpen: false,
-  featuresSidebarOpen: false,
+  selectedFeaturesSidebarOpen: false,
   bugReportOpen: false,
-  editOpen: false,
-  memorizedViewFeatures: undefined,
+  editFeatureOpen: false,
   deletedFeatures: undefined,
-  editFeaturesData: undefined,
-  featuresWithErrors: undefined,
-  featuresEdited: false,
-  featuresClosingConfirmationOpen: false,
-  featuresClosingConfirmationCallback: undefined
+  featuresWithErrors: undefined
 };
 
 class Sidebars {
@@ -52,23 +33,19 @@ class Sidebars {
   // Режим фотослоя - по центру, поверх остальных панелей
   @observable photoLayerOpen: boolean = false;
 
-  @observable featuresSidebarOpen?: boolean;
   @observable bugReportOpen?: boolean;
-  @observable editOpen?: boolean;
+  @observable editFeatureOpen?: boolean;
+  @observable selectedFeaturesSidebarOpen?: boolean;
 
-  @observable memorizedViewFeatures?: WfsFeature[];
   @observable deletedFeatures?: FeatureError[];
   @observable featuresWithNoAccess?: FeatureError[];
   @observable deletedLayers?: FeatureError[];
   @observable layerOfEditedFeature?: CrgVectorableLayer;
-  @observable editFeaturesData?: EditFeaturesData;
   @observable featuresWithErrors?: number;
   @observable foundBySearchFeatureEdited?: boolean;
   @observable selectedFeaturesEdited?: boolean;
-  @observable featuresClosingConfirmationCallback?: () => void;
   @observable searchValue?: SearchInfo;
-  @observable featuresEdited?: boolean;
-  @observable featuresClosingConfirmationOpen = false;
+
   @observable featuresForPhotoMode: WfsFeature[] = [];
 
   private constructor() {
@@ -104,6 +81,11 @@ class Sidebars {
   }
 
   @action.bound
+  closePhotoModePreviewer() {
+    this.photoLayerOpen = false;
+  }
+
+  @action.bound
   setSearchValue(searchValue: SearchInfo) {
     this.searchValue = searchValue;
   }
@@ -115,30 +97,19 @@ class Sidebars {
 
   @action.bound
   openSelectedFeaturesSidebar() {
-    this.closeBugReport();
-    this.closeEdit();
-
-    if (mapStore.selectedFeatures.length > 0 && this.featuresSidebarOpen === false) {
-      this.featuresSidebarOpen = true;
+    if (selectedFeaturesStore.features.length > 0 && this.selectedFeaturesSidebarOpen === false) {
+      this.selectedFeaturesSidebarOpen = true;
     }
   }
 
-  openSearchSidebar() {
-    this.closeBugReport();
-    this.closeEdit();
-
-    this.featuresSidebarOpen = true;
+  @action.bound
+  closeSelectedFeaturesSidebar() {
+    this.selectedFeaturesSidebarOpen = false;
   }
 
   @action.bound
-  closeFeaturesSidebar() {
-    this.featuresSidebarOpen = false;
-  }
-
-  @action
-  closeSidebars() {
-    this.closeFeaturesSidebar();
-    this.closeEdit();
+  openSearchSidebar() {
+    this.selectedFeaturesSidebarOpen = true;
   }
 
   @action
@@ -152,36 +123,23 @@ class Sidebars {
   }
 
   @action
-  setMemorizedFeatures(features: WfsFeature[]) {
-    this.memorizedViewFeatures = features;
+  openEdit() {
+    this.editFeatureOpen = true;
   }
 
-  @action
-  openEdit(data: EditFeaturesData) {
-    this.editFeaturesData = data;
-    this.closeBugReport();
-    this.closeFeaturesSidebar();
-
-    this.editOpen = true;
-  }
-
+  // TODO: Свести к режимам
   @action.bound
-  closePhotoModePreviewer() {
-    this.photoLayerOpen = false;
-  }
+  closeEdit(reason?: string) {
+    services.logger.trace('closeEdit', reason);
 
-  @action.bound
-  closeEdit() {
-    this.editOpen = false;
-    this.featuresEdited = false;
-    this.editFeaturesData = undefined;
+    this.editFeatureOpen = false;
   }
 
   @action.bound
   openBugReport() {
     this.bugReportOpen = true;
-    this.closeFeaturesSidebar();
-    this.closeEdit();
+    this.closeSelectedFeaturesSidebar();
+    this.closeEdit('openBugReport');
   }
 
   @action
@@ -197,11 +155,6 @@ class Sidebars {
   @action
   closeInfo() {
     this.infoOpen = false;
-  }
-
-  @action
-  setFeaturesEdited(edited: boolean) {
-    this.featuresEdited = edited;
   }
 
   @action
@@ -229,12 +182,6 @@ class Sidebars {
     this.deletedLayers = [];
     this.deletedFeatures = [];
     this.featuresWithNoAccess = [];
-  }
-
-  @action.bound
-  closeEditFeatureConfirmation() {
-    this.featuresClosingConfirmationOpen = false;
-    this.featuresClosingConfirmationCallback = undefined;
   }
 
   @action

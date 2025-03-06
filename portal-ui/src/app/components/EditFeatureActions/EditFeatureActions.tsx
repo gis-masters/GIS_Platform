@@ -5,7 +5,6 @@ import { cn } from '@bem-react/classname';
 import { WfsFeature } from '../../services/geoserver/wfs/wfs.models';
 import { CrgVectorLayer } from '../../services/gis/layers/layers.models';
 import { organizationSettings } from '../../stores/OrganizationSettings.store';
-import { sidebars } from '../../stores/Sidebars.store';
 import { CopyFeaturesButton } from '../CopyFeaturesButton/CopyFeaturesButton';
 import { CopyUrlButton } from '../CopyUrlButton/CopyUrlButton';
 import { CreateBufferButton } from '../CreateBufferButton/CreateBufferButton';
@@ -32,9 +31,7 @@ export class EditFeatureActions extends Component<EditFeatureActionsProps> {
       <div className={cnEditFeatureActions()}>
         {layer && (
           <>
-            {!sidebars.editFeaturesData?.isNew && (
-              <CreateBufferButton layer={layer} feature={feature} tooltipTitle='Создать буфер' />
-            )}
+            <CreateBufferButton layer={layer} feature={feature} tooltipTitle='Создать буфер' />
             <CopyFeaturesButton layer={layer} features={[feature]} tooltipTitle='Копировать объект в другой слой' />
           </>
         )}

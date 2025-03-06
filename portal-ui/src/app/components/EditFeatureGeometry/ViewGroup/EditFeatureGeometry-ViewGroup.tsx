@@ -4,7 +4,7 @@ import { cn } from '@bem-react/classname';
 import { Coordinate } from 'ol/coordinate';
 
 import { GeometryType } from '../../../services/geoserver/wfs/wfs.models';
-import { editFeatureStore } from '../../../stores/EditFeatureStore';
+import { editFeatureStore } from '../../../services/map/a-map-mode/edit-feature/EditFeatureStore';
 import { EditFeatureGeometryViewGroupControls } from '../ViewGroupControls/EditFeatureGeometry-ViewGroupControls';
 
 import '!style-loader!css-loader!sass-loader!./EditFeatureGeometry-ViewGroup.scss';
