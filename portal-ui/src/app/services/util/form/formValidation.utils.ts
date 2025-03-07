@@ -198,13 +198,17 @@ function stringLength(value: unknown, property: PropertySchema): string[] {
   }
 
   const { maxLength, minLength } = property;
-
   const errors: string[] = [];
-  if (maxLength && String(value).length > maxLength && maxLength > 0) {
-    errors.push(`Максимальное количество символов ${maxLength} `);
+
+  const stringValue = typeof value === 'string' ? value : '';
+  const length = stringValue.length;
+
+  if (maxLength && length > maxLength) {
+    errors.push(`Максимальное количество символов ${maxLength}`);
   }
-  if (minLength && String(value).length < minLength && String(value).length !== 0 && minLength > 0) {
-    errors.push(`Минимальное количество символов ${minLength} `);
+
+  if (minLength && length && length < minLength) {
+    errors.push(`Минимальное количество символов ${minLength}`);
   }
 
   return errors;
