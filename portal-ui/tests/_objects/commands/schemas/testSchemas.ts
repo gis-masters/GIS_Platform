@@ -24,6 +24,7 @@ import { simpleMultiPointReadonly } from './testSchemas/simpleMultipointReadonly
 import { simplePoint } from './testSchemas/simplePoint';
 import { simplePointDifferentStyle } from './testSchemas/simplePointDifferentStyle';
 import { simpleReadonly } from './testSchemas/simpleReadonly';
+import { simpleDocumentsWidthPattern } from './testSchemas/simpleWidthValidate';
 import { testNotSorting } from './testSchemas/testNotSorting';
 import { testShapeFeaturesCopy } from './testSchemas/testShapeFeaturesCopy';
 import { testSorting } from './testSchemas/testSorting';
@@ -61,6 +62,7 @@ const testSchemas: Schema[] = [
   simplePoint,
   simplePointDifferentStyle,
   simpleReadonly,
+  simpleDocumentsWidthPattern,
   simpleMultiLineReadonly,
   simpleMultiPointReadonly,
   typesForAttrEllipsis,

@@ -360,6 +360,7 @@ export default class Form<T> extends Component<FormProps<T>> {
   @boundMethod
   private fieldValidate(value: T[keyof T], fieldName: string) {
     const { auto, schema, onFieldNeedValidate } = this.props;
+
     if (!schema) {
       throw new Error('Не удалось отправить форму: нет схемы');
     }

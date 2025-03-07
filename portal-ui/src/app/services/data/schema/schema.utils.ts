@@ -34,6 +34,7 @@ import {
   OldPropertySchemaDatetime,
   OldPropertySchemaDouble,
   OldPropertySchemaSet,
+  OldPropertySchemaStringText,
   OldPropertySchemaUrl,
   OldSchema,
   ValueType
@@ -228,6 +229,16 @@ export function convertOldToNewProperties(oldFields: OldPropertySchema[]): Prope
 
     if (oldField.valueType === ValueType.STRING || oldField.valueType === ValueType.TEXT) {
       field.propertyType = PropertyType.STRING;
+
+      if (oldField.pattern) {
+        (field as Partial<PropertySchemaString>).regex = oldField.pattern;
+        delete (field as Partial<OldPropertySchemaStringText>).pattern;
+      }
+
+      if (oldField.patternDescription) {
+        (field as Partial<PropertySchemaString>).regexErrorMessage = oldField.patternDescription;
+        delete (field as Partial<OldPropertySchemaStringText>).patternDescription;
+      }
     }
 
     if (oldField.objectIdentityOnUi !== undefined) {
@@ -333,6 +344,16 @@ export function convertNewToOldProperties(newFields: PropertySchema[]): OldPrope
 
     if (newField.propertyType === PropertyType.STRING) {
       field.valueType = ValueType.STRING;
+
+      if (newField.regex) {
+        (field as Partial<OldPropertySchemaStringText>).pattern = newField.regex;
+        delete (field as Partial<PropertySchemaString>).regex;
+      }
+
+      if (newField.regexErrorMessage) {
+        (field as Partial<OldPropertySchemaStringText>).patternDescription = newField.regexErrorMessage;
+        delete (field as Partial<PropertySchemaString>).regexErrorMessage;
+      }
     }
 
     if (newField.propertyType === PropertyType.FLOAT) {

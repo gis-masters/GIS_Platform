@@ -1,3 +1,4 @@
+/* eslint-disable sonarjs/no-duplicate-string */
 import { sleep } from '../../../../src/app/services/util/sleep';
 import { Block } from '../../Block';
 import { FormBlock } from '../Form/Form.block';
@@ -126,5 +127,52 @@ export class ExplorerBlock extends Block {
     }
 
     throw new Error('Не найдет элемент' + itemName);
+  }
+
+  async getExplorerItemById(id: string): Promise<WebdriverIO.Element> {
+    const $container = await this.$('container');
+    await $container.waitForDisplayed();
+
+    const $loader = await this.$('loader');
+    await $loader.waitForDisplayed({ reverse: true });
+
+    const $$explorerItems = await this.$$('item');
+
+    for (const $explorerItem of $$explorerItems) {
+      const $itemId = await $explorerItem.$('.MuiListItemText-secondary');
+      const currentId = await $itemId.getText();
+
+      if (currentId === id) {
+        return $explorerItem;
+      }
+    }
+
+    throw new Error('Не найден элемент с id ' + id);
+  }
+
+  async waitForDocumentTitle(id: string, expectedTitle: string): Promise<void> {
+    await browser.waitUntil(
+      async () => {
+        try {
+          const $item = await this.getExplorerItemById(id);
+          const $title = await $item.$('.Explorer-ItemTitle');
+          const actualTitle = await $title.getText();
+
+          return actualTitle === expectedTitle;
+        } catch {
+          return false;
+        }
+      },
+      {
+        timeout: 5000,
+        timeoutMsg: `Документ с id ${id} не отображается с названием "${expectedTitle}"`
+      }
+    );
+  }
+
+  async clickEditButton(): Promise<void> {
+    const $editButton = await $('button[aria-label="Редактировать"]');
+    await $editButton.waitForDisplayed();
+    await $editButton.click();
   }
 }
