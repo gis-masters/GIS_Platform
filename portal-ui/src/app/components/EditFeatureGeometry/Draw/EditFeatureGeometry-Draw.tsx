@@ -80,9 +80,12 @@ export class EditFeatureGeometryDraw extends Component<EditFeatureGeometryDrawPr
 
     const rawCoordinates = (e.feature as Feature<SimpleGeometry>).getGeometry()?.getCoordinates();
     const drawGeometryType: SingleDrawGeometryType = toDrawGeometry(editFeatureStore.geometryType);
+
     switch (drawGeometryType) {
       case GeometryType.POINT: {
         if (isCoordinate(rawCoordinates)) {
+          mapDrawService.clearDraft();
+
           onDraw(transform(rawCoordinates, projectionsStore.olProjection, editFeatureStore.currentProjection));
         } else {
           services.logger.warn(
