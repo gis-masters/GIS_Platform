@@ -1,10 +1,10 @@
 INSERT INTO data.schemas (name, class_rule)
 SELECT 'tasks_schema_v1',
-'{}'
+       '{}'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'tasks_schema_v1');
 
 -- Схема должна соответствовать таблице: M1__initServiceTables.sql:347
-UPDATE data.schemas 
+UPDATE data.schemas
 SET class_rule =
         '{
           "name": "tasks_schema_v1",
@@ -76,6 +76,10 @@ SET class_rule =
                 {
                   "value": "gpzu_smev_rostelekom",
                   "title": "ГПЗУ. Выдача или внесение изменений"
+                },
+                {
+                  "value": "task_with_attachments",
+                  "title": "Задача с вложениями"
                 }
               ]
             },
@@ -261,6 +265,12 @@ SET class_rule =
               "valueType": "DATETIME",
               "hidden": true,
               "readOnly": true
+            },
+            {
+              "name": "attachments",
+              "title": "Вложения",
+              "valueType": "FILE",
+              "multiple": true
             }
           ],
           "description": "Реестр системных и настраиваемых задач",
@@ -823,6 +833,30 @@ SET class_rule =
                 {
                   "name": "description",
                   "title": "Комментарий"
+                }
+              ]
+            },
+            {
+              "id": "task_with_attachments",
+              "type": "DOCUMENT",
+              "title": "Задача с вложениями",
+              "attributes": [
+                {
+                  "name": "id",
+                  "hidden": true
+                },
+                {
+                  "name": "content_type_id",
+                  "readOnly": true
+                },
+                {
+                  "name": "assigned_to"
+                },
+                {
+                  "name": "description"
+                },
+                {
+                  "name": "attachments"
                 }
               ]
             }

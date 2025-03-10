@@ -67,8 +67,7 @@ public class UpdateLibraryRecordRequestHandler implements IRequestHandler<Update
 
     @Override
     public ResponseWithReport handle(UpdateLibraryRecordRequest request) {
-        log.debug("UpdateLibraryRecordRequestHandler-UpdateLibraryRecordRequestHandler: {}",
-                  request.getNewRecord().getContent());
+        log.debug("UpdateLibraryRecordRequestHandler: {}", request.getNewRecord().getContent());
 
         ResourceQualifier recordQualifier = request.getQualifier();
 

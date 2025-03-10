@@ -8,6 +8,7 @@ import io.restassured.http.ContentType;
 import io.restassured.specification.RequestSpecification;
 import org.jetbrains.annotations.Nullable;
 import ru.mycrg.acceptance.auth_service.AuthorizationBase;
+import ru.mycrg.acceptance.data_service.TestFilesManager;
 import ru.mycrg.acceptance.data_service.datasets.DatasetsStepsDefinitions;
 import ru.mycrg.acceptance.data_service.dto.DefaultDocumentModel;
 import ru.mycrg.acceptance.data_service.dto.FileDescriptionModel;
@@ -512,7 +513,7 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
 
     @When("я заново пытаюсь подвязать подпись {string} к файлу {string} в текущей записи")
     public void updateRecordWithNewEcpOnDefaultLibrary(String ecpFileName, String fileName) {
-        FileDescriptionModel ecpFile = getFileByTitleOrThrow(ecpFileName);
+        FileDescriptionModel ecpFile = TestFilesManager.getFileDescriptionByTitleOrThrow(ecpFileName);
 
         DefaultDocumentModel record = new DefaultDocumentModel("plug-in files");
         record.setSome_files(currentFiles);

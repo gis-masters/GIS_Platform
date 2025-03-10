@@ -13,19 +13,22 @@ import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.service.CancelKptTaskService;
 import ru.mycrg.data_service.service.smev3.support_classes.TransactionWrapper;
 
-import static ru.mycrg.data_service.service.import_.kpt.ImportKptService.KPT_IMPORT_CONTENT_TYPE;
-import static ru.mycrg.data_service.service.smev3.request.get_cadastrial_plan.GetCadastrialPlanRequestService.KPT_ORDER_CONTENT_TYPE;
-import static ru.mycrg.data_service_contract.enums.TaskType.ASSIGNABLE;
-
 import java.util.Arrays;
 import java.util.List;
+
+import static ru.mycrg.data_service.service.import_.kpt.ImportKptService.KPT_IMPORT_CONTENT_TYPE;
+import static ru.mycrg.data_service.service.smev3.fields.CommonFields.*;
+import static ru.mycrg.data_service.service.smev3.request.get_cadastrial_plan.GetCadastrialPlanRequestService.KPT_ORDER_CONTENT_TYPE;
+import static ru.mycrg.data_service_contract.enums.TaskType.ASSIGNABLE;
 
 @Component
 public class TasksScheduler {
 
     private final Logger log = LoggerFactory.getLogger(TasksScheduler.class);
 
-    private static final List<String> KPT_CONTENT_TYPES = Arrays.asList(KPT_ORDER_CONTENT_TYPE, KPT_IMPORT_CONTENT_TYPE);
+    private static final List<String> EXCEPTED_CONTENT_TYPES =
+            Arrays.asList(KPT_ORDER_CONTENT_TYPE, KPT_IMPORT_CONTENT_TYPE,
+                          RNS_CONTENT_TYPE, RNV_CONTENT_TYPE, GPZU_CONTENT_TYPE);
 
     private final int deadlineTime; // in hours
     private final int kptDeadlineTime; // in hours
@@ -50,8 +53,8 @@ public class TasksScheduler {
     @Scheduled(cron = "0 0 * * * *")
     public void closeOldTasks() {
         log.debug("Закрываем старые задачи (Дедлайн: {} часов). " +
-                          "За исключением задач c контент-типами КПТ: {} и задач типа: {}",
-                  deadlineTime, KPT_CONTENT_TYPES, ASSIGNABLE);
+                          "За исключением задач c контент-типами: {} и задач типа: {}",
+                  deadlineTime, EXCEPTED_CONTENT_TYPES, ASSIGNABLE);
 
         SecurityContext securityContext = SecurityContextHolder.getContext();
         DelegatingSecurityContextRunnable wrappedRunnable = new DelegatingSecurityContextRunnable(() -> {

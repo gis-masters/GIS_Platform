@@ -45,6 +45,7 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
     public static OrganizationCreateDto orgDto;
 
     private static final Map<String, Boolean> knownOrgTemplates = new HashMap<>() {{
+        put("для тестирования доступности вложений задач", false);
         put("для тестирования доступности задач согласно иерархии пользователей", false);
     }};
 
@@ -91,7 +92,7 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
             UserCreateDto owner = new UserCreateDto("ownerName_" + i,
                                                     "ownerSurName_" + i,
                                                     ownerEmail,
-                                                    "aA111111");
+                                                    DEFAULT_TEST_PASSWORD);
 
             System.out.println("Organization owner: " + ownerEmail);
 
@@ -324,18 +325,55 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
                 org1.add("orgOwner");
                 org1.add("Задач");
                 org1.add("EMAIL_11");
-                org1.add("aA111111");
+                org1.add(DEFAULT_TEST_PASSWORD);
 
                 List<List<String>> orgData = new ArrayList<>();
                 orgData.add(org1);
 
+                // Организация
                 sendCreateOrganizationRequest(DataTable.create(orgData));
+
                 assertEquals(SC_ACCEPTED, response.getStatusCode());
                 checkOrgIdInLocationSetAsCurrentPutInPool();
                 waitUntilOrganizationSuccessfullyCreated(orgId);
 
+                // Пользователи
                 authorizationBase.loginAsOwner();
                 userStepsDefinitions.createUsersByHierarchy("Иерархия вариант 1");
+
+                // Задачи
+                initTasks();
+
+                knownOrgTemplates.put(orgTemplate, true);
+            } else {
+                System.out.println("Organization already created by template: " + orgTemplate);
+            }
+        } else if ("для тестирования доступности вложений задач".equals(orgTemplate)) {
+            Boolean orgCreated = knownOrgTemplates.get(orgTemplate);
+            if (!orgCreated) {
+                List<String> org1 = new ArrayList<>();
+                org1.add("ООО Задачи 2");
+                org1.add("1234567888");
+                org1.add("orgOwner");
+                org1.add("Владелец");
+                org1.add("EMAIL_11");
+                org1.add(DEFAULT_TEST_PASSWORD);
+
+                List<List<String>> orgData = new ArrayList<>();
+                orgData.add(org1);
+
+                // Организация
+                sendCreateOrganizationRequest(DataTable.create(orgData));
+
+                assertEquals(SC_ACCEPTED, response.getStatusCode());
+                checkOrgIdInLocationSetAsCurrentPutInPool();
+                waitUntilOrganizationSuccessfullyCreated(orgId);
+
+                // Пользователи
+                authorizationBase.loginAsOwner();
+                userStepsDefinitions.createUsersByHierarchy("Иерархия вариант 1");
+
+                // Задачи
                 initTasks();
 
                 knownOrgTemplates.put(orgTemplate, true);

@@ -1,6 +1,7 @@
 package ru.mycrg.data_service.service.cqrs.tasks.handlers;
 
-import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import ru.mycrg.auth_facade.IAuthenticationFacade;
 import ru.mycrg.auth_facade.UserDetails;
@@ -8,13 +9,13 @@ import ru.mycrg.data_service.dao.RecordsDao;
 import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
 import ru.mycrg.data_service.dto.TaskLogDto;
 import ru.mycrg.data_service.dto.record.IRecord;
+import ru.mycrg.data_service.dto.record.RecordEntity;
 import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.exceptions.DataServiceException;
-import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.service.TaskLogService;
 import ru.mycrg.data_service.service.TaskService;
 import ru.mycrg.data_service.service.cqrs.tasks.requests.UpdateTaskRequest;
-import ru.mycrg.data_service.service.schemas.ISchemaTemplateService;
+import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service.service.schemas.SystemAttributeHandler;
 import ru.mycrg.data_service.service.smev3.request.accept_gpzu.AcceptGpzuService;
 import ru.mycrg.data_service.service.smev3.request.accept_rns.AcceptRnsService;
@@ -29,7 +30,6 @@ import java.util.List;
 import java.util.Map;
 
 import static ru.mycrg.data_service.service.TaskService.*;
-import static ru.mycrg.data_service.service.resources.ResourceQualifier.recordQualifier;
 import static ru.mycrg.data_service.service.smev3.fields.CommonFields.*;
 import static ru.mycrg.data_service.util.DetailedLogger.logError;
 import static ru.mycrg.data_service.util.SystemLibraryAttributes.CONTENT_TYPE_ID;
@@ -39,13 +39,14 @@ import static ru.mycrg.data_service_contract.enums.TaskStatus.*;
 @Component
 public class UpdateTaskRequestHandler implements IRequestHandler<UpdateTaskRequest, Voidy> {
 
+    private final Logger log = LoggerFactory.getLogger(UpdateTaskRequestHandler.class);
+
     private final RecordsDao recordsDao;
     private final TaskService taskService;
     private final TaskLogService taskLogService;
     private final AcceptRnsService acceptRnsService;
     private final AcceptRnvService acceptRnvService;
     private final AcceptGpzuService acceptGpzuService;
-    private final ISchemaTemplateService schemaService;
     private final IAuthenticationFacade authenticationFacade;
     private final SystemAttributeHandler systemAttributeHandler;
 
@@ -55,12 +56,10 @@ public class UpdateTaskRequestHandler implements IRequestHandler<UpdateTaskReque
                                     AcceptRnsService acceptRnsService,
                                     AcceptRnvService acceptRnvService,
                                     AcceptGpzuService acceptGpzuService,
-                                    ISchemaTemplateService schemaService,
                                     IAuthenticationFacade authenticationFacade,
                                     SystemAttributeHandler systemAttributeHandler) {
         this.recordsDao = recordsDao;
         this.taskService = taskService;
-        this.schemaService = schemaService;
         this.taskLogService = taskLogService;
         this.acceptRnsService = acceptRnsService;
         this.acceptRnvService = acceptRnvService;
@@ -71,9 +70,16 @@ public class UpdateTaskRequestHandler implements IRequestHandler<UpdateTaskReque
 
     @Override
     public Voidy handle(UpdateTaskRequest request) {
-        Long taskId = request.getTaskId();
+        log.debug("UpdateTaskRequestHandler: {}", request.getNewRecord().getContent());
+
+        IRecord newTask = request.getNewRecord();
+        SchemaDto tasksSchema = request.getSchema();
+        ResourceQualifier taskQualifier = request.getQualifier();
+        Long taskId = taskQualifier.getRecordIdAsLong();
 
         Map<String, Object> task = taskService.getById(taskId);
+
+        request.setOldRecord(new RecordEntity(task));
 
         UserDetails userDetails = authenticationFacade.getUserDetails();
         Long assignedId = Long.valueOf(task.get(TASK_ASSIGNED_TO_PROPERTY).toString());
@@ -82,12 +88,6 @@ public class UpdateTaskRequestHandler implements IRequestHandler<UpdateTaskReque
             throw new BadRequestException(
                     "Возможно редактировать только свои задачи или задачи своих непосредственных подчиненных");
         }
-
-        IRecord newTask = request.getNewTask();
-
-        SchemaDto tasksSchema = this.schemaService
-                .getSchemaByName(TASKS_SCHEMA)
-                .orElseThrow(() -> new NotFoundException("Не найдена схема задач: " + TASKS_SCHEMA));
 
         Map<String, Object> props = newTask.getContent();
         Map<String, Object> modifiedProps = systemAttributeHandler
@@ -105,7 +105,9 @@ public class UpdateTaskRequestHandler implements IRequestHandler<UpdateTaskReque
                 modifiedProps.put(TASK_OWNER_ID_PROPERTY, userDetails.getUserId());
             }
 
-            recordsDao.updateRecordById(recordQualifier(TASK_QUALIFIER, taskId), modifiedProps, tasksSchema);
+            newTask.setContent(modifiedProps);
+
+            recordsDao.updateRecordById(taskQualifier, modifiedProps, tasksSchema);
 
             Map<String, Object> updatedTask = taskService.getById(taskId);
 
@@ -123,14 +125,10 @@ public class UpdateTaskRequestHandler implements IRequestHandler<UpdateTaskReque
             if (intermediateStatus != null && status != null) {
                 switch (contentType.toString()) {
                     case RNS_CONTENT_TYPE:
-                        acceptRnsService.updateTablesAndSendStatusMessageToSmev(task,
-                                                                                status,
-                                                                                taskId);
+                        acceptRnsService.updateTablesAndSendStatusMessageToSmev(task, status, taskId);
                         break;
                     case RNV_CONTENT_TYPE:
-                        acceptRnvService.updateTablesAndSendStatusMessageToSmev(task,
-                                                                                status,
-                                                                                taskId);
+                        acceptRnvService.updateTablesAndSendStatusMessageToSmev(task, status, taskId);
 
                         break;
                 }

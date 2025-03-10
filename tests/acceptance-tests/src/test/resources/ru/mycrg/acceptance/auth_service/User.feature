@@ -35,9 +35,9 @@ Feature: Действия с пользователями
       | userName2 | userSurname2 | <newEmail> | testPassword1 |
     Then Сервер отвечает со статус-кодом 409
     Examples:
-      | existingEmail      | newEmail           |
-      | test@example.com   | TEST@example.com   |
-      | user@example.com   | User@Example.COM   |
+      | existingEmail    | newEmail         |
+      | test@example.com | TEST@example.com |
+      | user@example.com | User@Example.COM |
 
   Scenario Outline: Создание пользователя c невалидными данными (<reason>)
     When Администратор создает пользователя
@@ -76,8 +76,8 @@ Feature: Действия с пользователями
     When Авторизуемся пользователем
     Then Эндпоинт на выборку инфы текущего пользователя доступен и тело имеет корректное представление
     Examples:
-      | userName | userSurname | userEmail | userPassword |
-      | fizname  | fizsurname  | EMAIL_10  | aA111111     |
+      | userName | userSurname | userEmail | userPassword  |
+      | fizname  | fizsurname  | EMAIL_10  | testPassword1 |
 
   Scenario Outline: Выборка всех пользователей доступна авторизованным пользователям с любыми ролями
     Given Существует пользователь

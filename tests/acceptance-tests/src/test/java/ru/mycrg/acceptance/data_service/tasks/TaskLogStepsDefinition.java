@@ -4,6 +4,8 @@ import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.restassured.specification.RequestSpecification;
 import ru.mycrg.acceptance.BaseStepsDefinitions;
+import ru.mycrg.acceptance.data_service.TestFilesManager;
+import ru.mycrg.acceptance.data_service.dto.FileDescriptionModel;
 
 import java.util.Arrays;
 import java.util.List;

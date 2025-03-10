@@ -9,19 +9,19 @@ Feature: Доступность и управление задачами сог�
   # fiz5          пользователь-5 без начальника                 1             1
 
   #  Задачи:
-  #  |   owner  | ownerName| type   | description     |
-  #  | orgOwner | orgOwner | CUSTOM | orgOwner task 1 |
-  #  | orgOwner | orgOwner | CUSTOM | orgOwner task 2 |
-  #  | fiz1     | fiz1     | CUSTOM | fiz1 task 1     |
-  #  | fiz1     | fiz1     | CUSTOM | fiz1 task 2     |
-  #  | fiz1     | fiz1     | CUSTOM | fiz1 task 3     |
-  #  | fiz2     | fiz2     | CUSTOM | fiz2 task 1     |
-  #  | fiz2     | fiz2     | CUSTOM | fiz2 task 2     |
-  #  | fiz3     | fiz3     | CUSTOM | fiz3 task 1     |
-  #  | fiz4     | fiz4     | CUSTOM | fiz4 task 1     |
-  #  | fiz4     | fiz4     | CUSTOM | fiz4 task 2     |
-  #  | fiz4     | fiz4     | CUSTOM | fiz4 task 3     |
-  #  | fiz5     | fiz5     | CUSTOM | fiz5 task 1     |
+  #  | owner    | ownerName | type   | description     | taskId |
+  #  | orgOwner | orgOwner  | CUSTOM | orgOwner task 1 | 1      |
+  #  | orgOwner | orgOwner  | CUSTOM | orgOwner task 2 | 2      |
+  #  | fiz1     | fiz1      | CUSTOM | fiz1 task 1     | 3      |
+  #  | fiz1     | fiz1      | CUSTOM | fiz1 task 2     | 4      |
+  #  | fiz1     | fiz1      | CUSTOM | fiz1 task 3     | 5      |
+  #  | fiz2     | fiz2      | CUSTOM | fiz2 task 1     | 6      |
+  #  | fiz2     | fiz2      | CUSTOM | fiz2 task 2     | 7      |
+  #  | fiz3     | fiz3      | CUSTOM | fiz3 task 1     | 8      |
+  #  | fiz4     | fiz4      | CUSTOM | fiz4 task 1     | 9      |
+  #  | fiz4     | fiz4      | CUSTOM | fiz4 task 2     | 10     |
+  #  | fiz4     | fiz4      | CUSTOM | fiz4 task 3     | 11     |
+  #  | fiz5     | fiz5      | CUSTOM | fiz5 task 1     | 12     |
 
   Background:
     Given Существует организация созданная по шаблону: "для тестирования доступности задач согласно иерархии пользователей"
@@ -88,15 +88,15 @@ Feature: Доступность и управление задачами сог�
     Given я авторизован как "<actor>"
     When  я меняю описание текущей задачи на: "I'll be back!"
     Then  Сервер отвечает со статус-кодом <httpCode>
-    And   описание текущей задачи изменено на: "<expectedStatus>"
+    And   описание текущей задачи изменено на: "<expectedDescription>"
     Examples:
-      | creator  | owner    | actor    | httpCode | expectedStatus  | reason                                     |
-      | orgOwner | fiz2     | orgOwner | 204      | I'll be back!   | Задача непосредственного подчиненного      |
-      | orgOwner | orgOwner | orgOwner | 204      | I'll be back!   | Своя задача                                |
-      | fiz2     | fiz3     | orgOwner | 400      | old description | Задача НЕ непосредственного подчиненного   |
-      | fiz2     | fiz3     | fiz2     | 204      | I'll be back!   | Задача непосредственного подчиненного      |
-      | fiz3     | fiz4     | orgOwner | 400      | old description | Задача НЕ непосредственного   подчиненного |
-      | fiz3     | fiz4     | fiz4     | 204      | I'll be back!   | Своя задача                                |
+      | creator  | owner    | actor    | httpCode | expectedDescription | reason                                     |
+      | orgOwner | fiz2     | orgOwner | 204      | I'll be back!       | Задача непосредственного подчиненного      |
+      | orgOwner | orgOwner | orgOwner | 204      | I'll be back!       | Своя задача                                |
+      | fiz2     | fiz3     | orgOwner | 400      | old description     | Задача НЕ непосредственного подчиненного   |
+      | fiz2     | fiz3     | fiz2     | 204      | I'll be back!       | Задача непосредственного подчиненного      |
+      | fiz3     | fiz4     | orgOwner | 400      | old description     | Задача НЕ непосредственного   подчиненного |
+      | fiz3     | fiz4     | fiz4     | 204      | I'll be back!       | Своя задача                                |
 
   Scenario Outline: Изменять статус возможно только своих задач и задач непосредственных подчиненных. <reason>
     Given пользователем "<creator>" создана задача на пользователя "<owner>"

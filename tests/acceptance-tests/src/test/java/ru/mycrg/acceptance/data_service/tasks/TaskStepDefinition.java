@@ -8,6 +8,8 @@ import io.restassured.specification.RequestSpecification;
 import ru.mycrg.acceptance.BaseStepsDefinitions;
 import ru.mycrg.acceptance.auth_service.AuthorizationBase;
 import ru.mycrg.acceptance.auth_service.UserStepsDefinitions;
+import ru.mycrg.acceptance.data_service.TestFilesManager;
+import ru.mycrg.acceptance.data_service.dto.FileDescriptionModel;
 import ru.mycrg.auth_service_contract.dto.UserCreateDto;
 import ru.mycrg.data_service_contract.enums.TaskStatus;
 
@@ -199,6 +201,15 @@ public class TaskStepDefinition extends BaseStepsDefinitions {
         }
     }
 
+    @When("файл {string} добавлен к задаче {int}")
+    public void currentUserAddFileToTask(String fileName, int taskId) {
+        FileDescriptionModel fileDescription = TestFilesManager.getFileDescriptionByTitleOrThrow(fileName);
+
+        updateTask(taskId, "{\"attachments\": [" + fileDescription.asJson() + "]}");
+
+        assertEquals(204, response.getStatusCode());
+    }
+
     private void createTask(Map<String, Object> dto) {
         response = getBaseRequestWithCurrentCookie()
                 .given().
@@ -258,11 +269,15 @@ public class TaskStepDefinition extends BaseStepsDefinitions {
     }
 
     private void updateCurrentTask(String json) {
+        updateTask(currentTaskId, json);
+    }
+
+    private void updateTask(Integer taskId, String json) {
         response = getBaseRequestWithCurrentCookie()
                 .given().
                         body(json).
                         contentType(PATCH_CONTENT_TYPE)
                 .when().
-                        patch("/" + currentTaskId);
+                        patch("/" + taskId);
     }
 }

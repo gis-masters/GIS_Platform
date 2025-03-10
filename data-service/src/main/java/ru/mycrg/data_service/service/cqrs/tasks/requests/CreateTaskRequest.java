@@ -3,16 +3,24 @@ package ru.mycrg.data_service.service.cqrs.tasks.requests;
 import com.fasterxml.jackson.databind.JsonNode;
 import ru.mycrg.audit_service_contract.Auditable;
 import ru.mycrg.audit_service_contract.events.CrgAuditEvent;
+import ru.mycrg.common_contracts.generated.ecp.VerifyEcpResponse;
 import ru.mycrg.data_service.dto.record.IRecord;
 import ru.mycrg.data_service.dto.record.RecordEntity;
+import ru.mycrg.data_service.dto.record.ResponseWithReport;
+import ru.mycrg.data_service.service.cqrs.files.ICreateFilesRelation;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
+import ru.mycrg.geo_json.Feature;
 import ru.mycrg.mediator.IRequest;
+
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 import static ru.mycrg.data_service.dto.ResourceType.TASK;
 import static ru.mycrg.data_service.util.JsonConverter.mapper;
 
-public class CreateTaskRequest implements IRequest<IRecord>, Auditable {
+public class CreateTaskRequest implements IRequest<IRecord>, Auditable, ICreateFilesRelation {
 
     private final SchemaDto schema;
     private final RecordEntity record;
@@ -44,6 +52,21 @@ public class CreateTaskRequest implements IRequest<IRecord>, Auditable {
 
     public RecordEntity getRecord() {
         return record;
+    }
+
+    @Override
+    public Feature getFeature() {
+        return null;
+    }
+
+    @Override
+    public ResponseWithReport getResponseWithReport() {
+        return null;
+    }
+
+    @Override
+    public void addEcpReport(Map<UUID, List<VerifyEcpResponse>> ecpReport) {
+
     }
 
     public ResourceQualifier getQualifier() {

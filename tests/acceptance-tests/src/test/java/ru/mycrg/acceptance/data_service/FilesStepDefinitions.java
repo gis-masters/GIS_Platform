@@ -7,10 +7,10 @@ import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.restassured.specification.RequestSpecification;
 import org.hamcrest.core.IsEqual;
-import org.jetbrains.annotations.NotNull;
 import ru.mycrg.acceptance.BaseStepsDefinitions;
 import ru.mycrg.acceptance.auth_service.AuthorizationBase;
 import ru.mycrg.acceptance.data_service.dto.FileDescriptionModel;
+import ru.mycrg.auth_service_contract.dto.UserCreateDto;
 
 import java.io.File;
 import java.util.*;
@@ -22,6 +22,7 @@ import static org.apache.http.HttpStatus.SC_OK;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.*;
 import static ru.mycrg.acceptance.auth_service.OrganizationStepsDefinitions.orgId;
+import static ru.mycrg.acceptance.data_service.TestFilesManager.getFileDescriptionByTitleOrThrow;
 import static ru.mycrg.acceptance.data_service.libraries.LibraryStepsDefinitions.currentDocumentId;
 import static ru.mycrg.acceptance.data_service.libraries.LibraryStepsDefinitions.currentLibrary;
 import static ru.mycrg.acceptance.data_service.tables.TablesStepsDefinitions.currentTableName;
@@ -67,7 +68,7 @@ public class FilesStepDefinitions extends BaseStepsDefinitions {
         Arrays.stream(fileNamesInString.split(","))
               .map(String::trim)
               .forEach(fileName -> {
-                  File file = getFile(fileName);
+                  File file = TestFilesManager.getFile(fileName);
                   List<UUID> ids = createFiles(new File[]{file});
 
                   currentFiles.add(new FileDescriptionModel(ids.get(0), file.getTotalSpace(), fileName));
@@ -76,16 +77,28 @@ public class FilesStepDefinitions extends BaseStepsDefinitions {
         assertEquals(currentFiles.size(), fileNamesInString.split(",").length);
     }
 
+    @Given("я загрузил на сервер файл {string}")
+    public void currentUserLoadFile(String fileName) {
+        currentFiles.clear();
+
+        File file = TestFilesManager.getFile(fileName);
+        List<UUID> ids = createFiles(new File[]{file});
+
+        currentFiles.add(new FileDescriptionModel(ids.get(0), file.getTotalSpace(), fileName));
+
+        assertEquals(1, currentFiles.size());
+    }
+
     @Given("файл {string} подписан подписью {string}")
     public void fileSigned(String baseFileName, String ecpFileName) {
         signFile(
-                getFileByTitleOrThrow(baseFileName).getId(),
+                getFileDescriptionByTitleOrThrow(baseFileName).getId(),
                 new File("src/test/resources/ru/mycrg/acceptance/resources/" + ecpFileName));
     }
 
     @Given("подпись файла {string} имеет размер {int}")
     public void checkFileSignature(String baseFileName, Integer signSize) {
-        downloadEcp(getFileByTitleOrThrow(baseFileName).getId());
+        downloadEcp(getFileDescriptionByTitleOrThrow(baseFileName).getId());
 
         assertEquals(SC_OK, response.getStatusCode());
         assertEquals((int) signSize, response.asByteArray().length);
@@ -95,7 +108,7 @@ public class FilesStepDefinitions extends BaseStepsDefinitions {
     @When("я подписываю файл {string} подписью {string}")
     public void signFile(String baseFileName, String ecpFileName) {
         signFile(
-                getFileByTitleOrThrow(baseFileName).getId(),
+                getFileDescriptionByTitleOrThrow(baseFileName).getId(),
                 new File("src/test/resources/ru/mycrg/acceptance/resources/" + ecpFileName));
     }
 
@@ -114,7 +127,7 @@ public class FilesStepDefinitions extends BaseStepsDefinitions {
         Arrays.stream(fileNamesInString.split(","))
               .map(String::trim)
               .forEach(fileName -> {
-                  File file = getFile(fileName);
+                  File file = TestFilesManager.getFile(fileName);
                   List<UUID> ids = createFiles(new File[]{file});
 
                   currentFiles.add(new FileDescriptionModel(ids.get(0), file.getTotalSpace(), fileName));
@@ -125,7 +138,7 @@ public class FilesStepDefinitions extends BaseStepsDefinitions {
     public void loadEcpAgain(String ecpFileName) {
         currentFiles.removeIf(item -> item.getTitle().equals(ecpFileName));
 
-        File file = getFile(ecpFileName);
+        File file = TestFilesManager.getFile(ecpFileName);
         List<UUID> ids = createFiles(new File[]{file});
 
         currentFiles.add(new FileDescriptionModel(ids.get(0), file.getTotalSpace(), ecpFileName));
@@ -138,17 +151,17 @@ public class FilesStepDefinitions extends BaseStepsDefinitions {
 
     @Given("я скачиваю ЭЦП файла {string}")
     public void downloadOnlyEcp(String fileName) {
-        downloadEcp(getFileByTitleOrThrow(fileName).getId());
+        downloadEcp(getFileDescriptionByTitleOrThrow(fileName).getId());
     }
 
     @Given("я скачиваю архивом файл {string} c ЭЦП")
     public void downloadFileWithEcpAsZip(String fileName) {
-        downloadFileWithEcp(getFileByTitleOrThrow(fileName).getId());
+        downloadFileWithEcp(getFileDescriptionByTitleOrThrow(fileName).getId());
     }
 
     @Given("я скачиваю группу файлов архивом с ЭЦП, передав главный файл группы: {string}")
     public void downloadGroupWithEcp(String baseFileName) {
-        downloadGroupWithEcp(getFileByTitleOrThrow(baseFileName).getId());
+        downloadGroupWithEcp(getFileDescriptionByTitleOrThrow(baseFileName).getId());
     }
 
     @Given("я скачиваю группу файлов архивом, передав не корректный идентификатор файла: {string}")
@@ -340,7 +353,7 @@ public class FilesStepDefinitions extends BaseStepsDefinitions {
 
     @Given("Существует файл {string}")
     public void createFile(String fileName) {
-        File testFile = getFile(fileName);
+        File testFile = TestFilesManager.getFile(fileName);
 
         List<UUID> ids = createFiles(new File[]{testFile});
         currentFileId = ids.get(0);
@@ -355,7 +368,7 @@ public class FilesStepDefinitions extends BaseStepsDefinitions {
 
         dataTable.asList()
                  .forEach(fileName -> {
-                     File file = getFile(fileName);
+                     File file = TestFilesManager.getFile(fileName);
                      List<UUID> ids = createFiles(new File[]{file});
 
                      getFile(ids.get(0));
@@ -383,13 +396,13 @@ public class FilesStepDefinitions extends BaseStepsDefinitions {
 
     @Given("я запрашиваю информацию о файле {string}")
     public void getFileInfo(String fileName) {
-        getFile(getFileByTitleOrThrow(fileName).getId());
+        getFile(getFileDescriptionByTitleOrThrow(fileName).getId());
     }
 
     @Given("я отправляю запрос на проверку соответствия файла {string} подписи {string}")
     public void verifyFileByEcpStep(String baseFileName, String ecpFileName) {
-        FileDescriptionModel baseFile = getFileByTitleOrThrow(baseFileName);
-        FileDescriptionModel ecpFile = getFileByTitleOrThrow(ecpFileName);
+        FileDescriptionModel baseFile = getFileDescriptionByTitleOrThrow(baseFileName);
+        FileDescriptionModel ecpFile = getFileDescriptionByTitleOrThrow(ecpFileName);
 
         verifyFileByEcp(baseFile, ecpFile);
     }
@@ -414,6 +427,16 @@ public class FilesStepDefinitions extends BaseStepsDefinitions {
 
         List<UUID> ids = createFiles(new File[]{testGml});
         currentFileId = ids.get(0);
+    }
+
+    @Then("загруженный файл {string} запрашивается пользователем {string}")
+    public void checkFileAsUser(String fileName, String userName) {
+        UserCreateDto user = getUserByName(userName);
+        authorizationBase.loginAs(user.getEmail(), user.getPassword());
+
+        response = getBaseRequestWithCurrentCookie()
+                .when().
+                        get("/" + getFileDescriptionByTitleOrThrow(fileName).getId());
     }
 
     private void getFile(UUID id) {
@@ -490,25 +513,7 @@ public class FilesStepDefinitions extends BaseStepsDefinitions {
         }
     }
 
-    @NotNull
-    private static File getFile(String fileName) {
-        File testFile = new File("src/test/resources/ru/mycrg/acceptance/resources/" + fileName);
-        if (!testFile.exists()) {
-            throw new IllegalStateException("Not exist test resource: " + fileName);
-        }
-
-        return testFile;
-    }
-
     private void downloadAsArchive(String fileName) {
-        downloadArchive(getFileByTitleOrThrow(fileName).getId());
-    }
-
-    public static FileDescriptionModel getFileByTitleOrThrow(String title) {
-        return currentFiles
-                .stream()
-                .filter(file -> file.getTitle().equals(title))
-                .findFirst()
-                .orElseThrow(() -> new IllegalStateException("Среди текущих файлов не найден искомый: " + title));
+        downloadArchive(getFileDescriptionByTitleOrThrow(fileName).getId());
     }
 }

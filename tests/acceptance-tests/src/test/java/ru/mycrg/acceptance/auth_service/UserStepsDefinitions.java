@@ -126,7 +126,7 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
         userDto.setName("testEmail");
         userDto.setSurname("testEmail");
         userDto.setEmail(email);
-        userDto.setPassword("aA111111");
+        userDto.setPassword(DEFAULT_TEST_PASSWORD);
 
         createRandomUser(userDto);
     }
@@ -299,11 +299,9 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
             userPool.put(ownerId, dto);
             userPool.remove(-1);
 
-            String password = "aA111111";
-
             // Пользователь fiz1, у которого начальником будет владелец организации
             UserCreateDto fiz1 = new UserCreateDto("fiz1", "fiz1", "fiz1", "job", generateString("NUMBER_10"),
-                                                   generateString("EMAIL_10"), password, "dep");
+                                                   generateString("EMAIL_10"), DEFAULT_TEST_PASSWORD, "dep");
             fiz1.setBossId(ownerId);
 
             System.out.println("*** *** Create user fiz1");
@@ -312,7 +310,7 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
 
             // Пользователь fiz2, у которого начальником будет владелец организации
             UserCreateDto fiz2 = new UserCreateDto("fiz2", "fiz2", "fiz2", "job", generateString("NUMBER_10"),
-                                                   generateString("EMAIL_10"), password, "dep");
+                                                   generateString("EMAIL_10"), DEFAULT_TEST_PASSWORD, "dep");
             fiz2.setBossId(ownerId);
 
             System.out.println("*** *** Create user fiz2");
@@ -322,7 +320,7 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
 
             // Пользователь fiz3, у которого начальником будет fiz2
             UserCreateDto fiz3 = new UserCreateDto("fiz3", "fiz3", "fiz3", "job", generateString("NUMBER_10"),
-                                                   generateString("EMAIL_10"), password, "dep");
+                                                   generateString("EMAIL_10"), DEFAULT_TEST_PASSWORD, "dep");
             fiz3.setBossId(fiz2Id);
 
             System.out.println("*** *** Create user fiz3");
@@ -332,7 +330,7 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
 
             // Пользователь fiz4, у которого начальником будет fiz3
             UserCreateDto fiz4 = new UserCreateDto("fiz4", "fiz4", "fiz4", "job", generateString("NUMBER_10"),
-                                                   generateString("EMAIL_10"), password, "dep");
+                                                   generateString("EMAIL_10"), DEFAULT_TEST_PASSWORD, "dep");
             fiz4.setBossId(fiz3Id);
 
             System.out.println("*** *** Create user fiz4");
@@ -341,7 +339,7 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
 
             // Пользователь fiz5, без начальника
             UserCreateDto fiz5 = new UserCreateDto("fiz5", "fiz5", "fiz5", "job", generateString("NUMBER_10"),
-                                                   generateString("EMAIL_10"), password, "dep");
+                                                   generateString("EMAIL_10"), DEFAULT_TEST_PASSWORD, "dep");
 
             System.out.println("*** *** Create user fiz5");
             userDto = fiz5;

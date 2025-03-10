@@ -1,0 +1,15 @@
+meta {
+  name: Get All tasks
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{host}}:{{port}}/api/data/tasks
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{access_token}}
+}

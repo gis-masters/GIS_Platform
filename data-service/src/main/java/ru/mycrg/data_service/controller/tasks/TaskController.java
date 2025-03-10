@@ -5,6 +5,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import ru.mycrg.data_service.dto.ResourceType;
 import ru.mycrg.data_service.dto.record.IRecord;
 import ru.mycrg.data_service.dto.record.RecordEntity;
 import ru.mycrg.data_service.exceptions.NotFoundException;
@@ -13,6 +14,7 @@ import ru.mycrg.data_service.service.cqrs.tasks.requests.CreateTaskRequest;
 import ru.mycrg.data_service.service.cqrs.tasks.requests.DeleteAllTasksRequest;
 import ru.mycrg.data_service.service.cqrs.tasks.requests.UpdateTaskRequest;
 import ru.mycrg.data_service.service.cqrs.tasks.requests.UpdateTaskStatusRequest;
+import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service.service.schemas.ISchemaTemplateService;
 import ru.mycrg.data_service.util.EcqlRecordIdHandler;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
@@ -84,7 +86,12 @@ public class TaskController {
     @PatchMapping("/{id}")
     @PreAuthorize(HAS_ANY_AUTHORITY)
     public ResponseEntity<Object> update(@RequestBody Map<String, Object> payload, @PathVariable Long id) {
-        mediator.execute(new UpdateTaskRequest(id, new RecordEntity(payload)));
+        SchemaDto tasksSchema = this.schemaService
+                .getSchemaByName(TASKS_SCHEMA)
+                .orElseThrow(() -> new NotFoundException("Не найдена схема задач: " + TASKS_SCHEMA));
+
+        ResourceQualifier taskQualifier = new ResourceQualifier(TASK_QUALIFIER, id, ResourceType.TASK);
+        mediator.execute(new UpdateTaskRequest(new RecordEntity(payload), taskQualifier, tasksSchema));
 
         return ResponseEntity.noContent().build();
     }

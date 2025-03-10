@@ -37,4 +37,12 @@ public class FileDescriptionModel {
     public void setTitle(String title) {
         this.title = title;
     }
+
+    public String asJson() {
+        return "{" +
+                "\"size\":" + (size == null ? "null" : size) + ", " +
+                "\"id\":" + (id == null ? "null" : "\"" + id + "\"") + ", " +
+                "\"title\":" + (title == null ? "null" : "\"" + title + "\"") +
+                "}";
+    }
 }

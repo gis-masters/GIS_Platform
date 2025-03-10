@@ -361,6 +361,7 @@ CREATE TABLE IF NOT EXISTS data.tasks
     number                           INT,
     inbox_data_key_data_connection   character varying,
     data_section_key_data_connection character varying,
+    attachments                      jsonb,
     created_by                       bigint,
     updated_by                       bigint,
     date                             timestamp without time zone,

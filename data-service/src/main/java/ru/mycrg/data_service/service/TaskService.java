@@ -1,8 +1,6 @@
 package ru.mycrg.data_service.service;
 
 import org.jetbrains.annotations.NotNull;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -33,8 +31,6 @@ import static ru.mycrg.data_service.util.StringUtil.join;
 @Service
 @Transactional(readOnly = true)
 public class TaskService {
-
-    private static final Logger log = LoggerFactory.getLogger(TaskService.class);
 
     public static final String TASK_TABLE_NAME = "tasks";
     public static final String TASKS_SCHEMA = "tasks_schema_v1";
@@ -74,8 +70,6 @@ public class TaskService {
             if (!authenticationFacade.isOrganizationAdmin()) {
                 filter = modifyFilterByAssignedToMe(ecqlFilter);
             }
-
-            log.debug("filter: {}", filter);
 
             SchemaDto tasksSchema = this.schemaService
                     .getSchemaByName(TASKS_SCHEMA)

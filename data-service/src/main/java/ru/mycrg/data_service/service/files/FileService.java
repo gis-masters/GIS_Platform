@@ -227,32 +227,27 @@ public class FileService {
         // TODO: (1) Используется только в AcceptKptService, захардкожена первая организация "organization_1" -
         //  пересмотреть бы подход к KPT
 
-        UUID fileId = file.getId();
-        String resultPath = transferFileFromTempDirectory(qualifier,
-                                                          file.getPath(),
-                                                          "organization_1",
-                                                          type);
+        String resultPath = transferFileFromTempDirectory(qualifier, file.getPath(), "organization_1", type);
 
-        fileRepository.setPathById(resultPath, fileId);
+        fileRepository.setPathById(resultPath, file.getId());
     }
 
     public List<File> checkSignatures(List<File> allFiles) {
-        return processFiles(allFiles, null);
+        return addSignatureToAllFiles(allFiles, null);
     }
 
-    private Map<UUID, List<VerifyEcpResponse>> addSignature(ResourceQualifier qualifier, List<File> allFiles,
+    private Map<UUID, List<VerifyEcpResponse>> addSignature(ResourceQualifier qualifier,
+                                                            List<File> allFiles,
                                                             @NotNull SchemaDto schema) {
         Map<UUID, List<VerifyEcpResponse>> report = new HashMap<>();
-        List<File> baseFiles = processFiles(allFiles, report);
-        // После всего обновляем запись только базовыми файлами
-        log.debug("Содержимое ResourceQualifier: {}", qualifier);
+        List<File> baseFiles = addSignatureToAllFiles(allFiles, report);
 
         updateRecord(qualifier, baseFiles, schema);
 
         return report;
     }
 
-    private List<File> processFiles(List<File> allFiles, Map<UUID, List<VerifyEcpResponse>> report) {
+    private List<File> addSignatureToAllFiles(List<File> allFiles, Map<UUID, List<VerifyEcpResponse>> report) {
         List<File> baseFiles = allFiles.stream().filter(FileService::isNotEcp).collect(Collectors.toList());
         log.debug("Базовые файлы: {}", baseFiles);
 
@@ -260,14 +255,15 @@ public class FileService {
         log.debug("Файлы ЭЦП: {}", ecpFiles);
 
         for (File ecpFile: ecpFiles) {
-            Optional<File> oBaseFile = getBaseFile(baseFiles, ecpFile.getTitle());
-            processEcpFile(oBaseFile, ecpFile, report);
+            addSignatureToFile(getBaseFile(baseFiles, ecpFile.getTitle()), ecpFile, report);
         }
 
         return baseFiles;
     }
 
-    private void processEcpFile(Optional<File> oBaseFile, File ecpFile, Map<UUID, List<VerifyEcpResponse>> report) {
+    private void addSignatureToFile(Optional<File> oBaseFile,
+                                    File ecpFile,
+                                    Map<UUID, List<VerifyEcpResponse>> report) {
         if (oBaseFile.isPresent()) { // Для ЭЦП нашли базовый файл... подписываем и удаляем ЭЦП
             File baseFile = oBaseFile.get();
             if (baseFile.getEcp() != null) {
@@ -319,11 +315,10 @@ public class FileService {
     }
 
     private void updateRecord(ResourceQualifier qualifier, List<File> baseFiles, @NotNull SchemaDto schema) {
-        List<FileDescription> allFilesAsDescription = baseFiles.stream()
-                                                               .map(file -> new FileDescription(file.getId(),
-                                                                                                file.getTitle(),
-                                                                                                file.getSize()))
-                                                               .collect(Collectors.toList());
+        List<FileDescription> allFilesAsDescription = baseFiles
+                .stream()
+                .map(file -> new FileDescription(file.getId(), file.getTitle(), file.getSize()))
+                .collect(Collectors.toList());
 
         Map<String, Object> modifiedProps = new HashMap<>();
         JsonNode payload = toJsonNode(allFilesAsDescription);
