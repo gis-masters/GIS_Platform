@@ -12,16 +12,16 @@ import { LabelType } from '../labels/map-labels.models';
 import { getTextStyle } from '../labels/map-labels.util';
 
 export enum KnownStyleKey {
-  LabelTurningPointsStyles = 'LabelTurningPointsStyles',
-  LabelCreateLineStyles = 'LabelCreateLineStyles',
-  LabelCreateLabelStyles = 'LabelCreateLabelStyles',
-  MapMarkerStyles = 'MapMarkerStyles',
-  DrawStyles = 'DrawStyles',
-  DrawLayerStyles = 'drawLayerStyles',
-  MeasureDrawStyles = 'MeasureDrawStyles',
-  MeasureLayerStyles = 'MeasureLayerStyles',
-  SelectStyles = 'selectStyles',
-  LabelsDrawStyles = 'LabelsDrawStyles'
+  LabelTurningPointsStyles = 'labelTurningPointsStyles',
+  LabelCreateLineStyles = 'labelCreateLineStyles',
+  LabelCreateLabelStyles = 'labelCreateLabelStyles',
+  MapMarkerStyles = 'mapMarkerStyles',
+  DrawStyles = 'drawStyles', // Стиль, которым рисуем новые объекты
+  DrawLayerStyles = 'drawLayerStyles', // Стиль, как видим уже нарисованные и выделенные объекты
+  MeasureDrawStyles = 'measureDrawStyles',
+  MeasureLayerStyles = 'measureLayerStyles',
+  ActiveFeature = 'activeFeature',
+  LabelsDrawStyles = 'labelsDrawStyles'
 }
 
 export function getStyle(knownStyleKey: KnownStyleKey): Style[] {
@@ -31,6 +31,9 @@ export function getStyle(knownStyleKey: KnownStyleKey): Style[] {
 const DEFAULT_CIRCLE_RADIUS = 4;
 const DEFAULT_STROKE_WIDTH = 2;
 const DEFAULT_FILL_COLOR = 'rgba(255, 255, 255, 0.5)';
+const RED = '#ff0018';
+const BLUE = '#3399ff';
+const YELLOW = '#ffcc33';
 
 const styles = new Map<KnownStyleKey, Style[]>([
   [
@@ -52,7 +55,7 @@ const styles = new Map<KnownStyleKey, Style[]>([
     [
       new Style({
         stroke: new Stroke({
-          color: '#3399ff',
+          color: BLUE,
           width: DEFAULT_STROKE_WIDTH
         })
       })
@@ -95,14 +98,14 @@ const styles = new Map<KnownStyleKey, Style[]>([
           color: DEFAULT_FILL_COLOR
         }),
         stroke: new Stroke({
-          color: '#ffcc33',
+          color: YELLOW,
           lineDash: [10, 10],
           width: DEFAULT_STROKE_WIDTH
         }),
         image: new CircleStyle({
           radius: 5,
           stroke: new Stroke({
-            color: '#ffcc33'
+            color: YELLOW
           }),
           fill: new Fill({
             color: DEFAULT_FILL_COLOR
@@ -119,29 +122,29 @@ const styles = new Map<KnownStyleKey, Style[]>([
           color: DEFAULT_FILL_COLOR
         }),
         stroke: new Stroke({
-          color: '#ffcc33',
+          color: YELLOW,
           width: DEFAULT_STROKE_WIDTH
         }),
         image: new CircleStyle({
           radius: 7,
           fill: new Fill({
-            color: '#ffcc33'
+            color: YELLOW
           })
         })
       })
     ]
   ],
   [
-    KnownStyleKey.SelectStyles,
+    KnownStyleKey.ActiveFeature,
     [
       new Style({
         fill: new Fill({
-          color: 'rgba(0, 255, 0, 0.3)'
+          color: 'rgba(255, 255, 0, 0.5)'
         })
       }),
       new Style({
         stroke: new Stroke({
-          color: 'green',
+          color: RED,
           width: DEFAULT_STROKE_WIDTH
         })
       }),
@@ -149,10 +152,10 @@ const styles = new Map<KnownStyleKey, Style[]>([
         image: new Circle({
           radius: DEFAULT_CIRCLE_RADIUS,
           fill: new Fill({
-            color: 'red'
+            color: RED
           })
         }),
-        geometry: circleGeometry
+        geometry: showVertices
       })
     ]
   ],
@@ -164,14 +167,14 @@ const styles = new Map<KnownStyleKey, Style[]>([
           color: DEFAULT_FILL_COLOR
         }),
         stroke: new Stroke({
-          color: '#3399ff',
+          color: BLUE,
           lineDash: [10, 10],
           width: DEFAULT_STROKE_WIDTH
         }),
         image: new CircleStyle({
           radius: 5,
           stroke: new Stroke({
-            color: '#3399ff'
+            color: BLUE
           }),
           fill: new Fill({
             color: DEFAULT_FILL_COLOR
@@ -190,7 +193,7 @@ const styles = new Map<KnownStyleKey, Style[]>([
       }),
       new Style({
         stroke: new Stroke({
-          color: '#ff0018',
+          color: RED,
           width: DEFAULT_STROKE_WIDTH
         })
       }),
@@ -198,10 +201,10 @@ const styles = new Map<KnownStyleKey, Style[]>([
         image: new Circle({
           radius: DEFAULT_CIRCLE_RADIUS,
           fill: new Fill({
-            color: 'red'
+            color: RED
           })
         }),
-        geometry: circleGeometry
+        geometry: showVerticesSnapping
       })
     ]
   ],
@@ -210,16 +213,16 @@ const styles = new Map<KnownStyleKey, Style[]>([
     [
       new Style({
         fill: new Fill({
-          color: 'rgba(255, 255, 255, 0.33)'
+          color: DEFAULT_FILL_COLOR
         }),
         stroke: new Stroke({
-          color: '#0092F3FF',
+          color: BLUE,
           width: DEFAULT_STROKE_WIDTH
         }),
         image: new Circle({
           radius: DEFAULT_CIRCLE_RADIUS,
           fill: new Fill({
-            color: 'red'
+            color: RED
           })
         })
       })
@@ -249,7 +252,7 @@ export function createStyle(feature: Feature): Style[] {
   throw new Error(`Unknown label type: ${String(labelType)}`);
 }
 
-function circleGeometry(feature: FeatureLike) {
+function showVerticesSnapping(feature: FeatureLike) {
   const geometry = feature.getGeometry();
   if (geometry === undefined) {
     return;
@@ -263,6 +266,15 @@ function circleGeometry(feature: FeatureLike) {
 
   if (mapSnapStore.isSnapNotActive()) {
     return new MultiPoint([(geometry as Point).getCoordinates()]);
+  }
+
+  return convertToFlatMultiPoint(geometry);
+}
+
+function showVertices(feature: FeatureLike) {
+  const geometry = feature.getGeometry();
+  if (geometry === undefined) {
+    return;
   }
 
   return convertToFlatMultiPoint(geometry);

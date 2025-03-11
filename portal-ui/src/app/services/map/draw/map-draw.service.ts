@@ -1,20 +1,18 @@
 import { Coordinate } from 'ol/coordinate';
 import Feature from 'ol/Feature';
-import { Geometry, SimpleGeometry } from 'ol/geom';
+import { Geometry } from 'ol/geom';
 import { Draw, Modify } from 'ol/interaction';
 import { DrawEvent } from 'ol/interaction/Draw';
 import { ModifyEvent } from 'ol/interaction/Modify';
 import { Vector as VectorLayer } from 'ol/layer';
 import { Vector as VectorSource } from 'ol/source';
 
-import { Toast } from '../../../components/Toast/Toast';
 import { communicationService } from '../../communication.service';
 import { Projection } from '../../data/projections/projections.models';
 import { getFeatureProjection, getOlProjection } from '../../data/projections/projections.service';
 import { GeometryType, WfsFeature } from '../../geoserver/wfs/wfs.models';
-import { services } from '../../services';
 import { transformGeometry } from '../../util/coordinates-transform.util';
-import { wfsFeatureToFeature } from '../../util/open-layers.util';
+import { wfsFeaturesToOlFeatures, wfsFeatureToFeature } from '../../util/open-layers.util';
 import { editFeatureStore } from '../a-map-mode/edit-feature/EditFeatureStore';
 import { selectedFeaturesStore } from '../a-map-mode/selected-features/SelectedFeatures.store';
 import { mapService } from '../map.service';
@@ -126,29 +124,9 @@ class MapDrawService {
 
     this.clearDraft();
 
-    const olFeatures: Feature<SimpleGeometry>[] = [];
-    for (const wfsFeature of featuresInOlProjection) {
-      if (!wfsFeature.geometry) {
-        Toast.error({
-          message: 'Ошибка отображения объекта',
-          details: `ID: ${wfsFeature.id}.
-                      Нет геометрии.`
-        });
+    const olFeatures = wfsFeaturesToOlFeatures(featuresInOlProjection);
 
-        continue;
-      }
-
-      try {
-        const olFeature = wfsFeatureToFeature(wfsFeature);
-        if (olFeature) {
-          olFeatures.push(olFeature);
-        }
-      } catch (error) {
-        services.logger.error(`Can't highlight feature: '${wfsFeature.id}'`, error);
-      }
-    }
-
-    this.source.addFeatures(olFeatures);
+    this.addFeatures(olFeatures);
   }
 
   // Обновим "выделенные фичи" "измененными"

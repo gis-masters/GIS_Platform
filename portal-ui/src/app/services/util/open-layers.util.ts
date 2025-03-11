@@ -1,5 +1,4 @@
 import { Feature } from 'ol';
-import { Coordinate } from 'ol/coordinate';
 import {
   Geometry,
   LineString,
@@ -12,6 +11,7 @@ import {
 } from 'ol/geom';
 
 import { GeometryType, WfsFeature, WfsFeatureCollection, WfsGeometry } from '../geoserver/wfs/wfs.models';
+import { services } from '../services';
 
 export enum UnitsOfAreaMeasurement {
   HECTARE = 'га',
@@ -71,6 +71,29 @@ export function wfsFeatureToFeature(wfsFeature: WfsFeature): Feature<SimpleGeome
   return olFeature;
 }
 
+export function wfsFeaturesToOlFeatures(wfsFeatures: WfsFeature[]): Feature<SimpleGeometry>[] {
+  const result: Feature<SimpleGeometry>[] = [];
+
+  for (const wfsFeature of wfsFeatures) {
+    if (!wfsFeature.geometry) {
+      services.logger.error(`ID: ${wfsFeature.id}. Нет геометрии.`);
+
+      continue;
+    }
+
+    try {
+      const olFeature = wfsFeatureToFeature(wfsFeature);
+      if (olFeature) {
+        result.push(olFeature);
+      }
+    } catch (error) {
+      services.logger.error(`Не удалось смапить wfs фичу в openlayers фичу: '${wfsFeature.id}'`, error);
+    }
+  }
+
+  return result;
+}
+
 export function wfsFeaturesToFeatures(features: WfsFeature[]): Feature<Geometry>[] {
   const result: Feature<Geometry>[] = [];
   features.forEach(feature => {
@@ -92,7 +115,7 @@ export function wfsFeatureCollectionToFeature(featureCollection: WfsFeatureColle
 /**
  * Из {@link WfsGeometry} формируем OpenLayer {@link SimpleGeometry}
  */
-export function wfsGeometryToGeometry(wfsGeometry: WfsGeometry<Coordinate>): SimpleGeometry {
+export function wfsGeometryToGeometry(wfsGeometry: WfsGeometry): SimpleGeometry {
   if (!wfsGeometry) {
     throw new Error('Некорректная геометрия');
   }
