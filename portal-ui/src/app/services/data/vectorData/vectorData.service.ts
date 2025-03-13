@@ -1,7 +1,6 @@
 import { communicationService } from '../../communication.service';
 import { extractFeatureId } from '../../geoserver/featureType/featureType.util';
 import { CrgFeature, NewWfsFeature, WfsFeature } from '../../geoserver/wfs/wfs.models';
-import { CrgLayer } from '../../gis/layers/layers.models';
 import { PageOptions } from '../../models';
 import { Schema } from '../schema/schema.models';
 import { convertNewToOldSchema, convertOldToNewSchema } from '../schema/schema.utils';
@@ -162,28 +161,6 @@ export async function updateFeature(
   await vectorDataClient.updateFeature(datasetIdentifier, vectorTableIdentifier, patchedFeature);
 }
 
-export async function copyFeaturesBetweenLayers(
-  sourceLayer: CrgLayer,
-  targetLayer: CrgLayer,
-  features: WfsFeature[]
-): Promise<void> {
-  if (!sourceLayer.dataset || !targetLayer.dataset || !sourceLayer.tableName || !targetLayer.tableName) {
-    throw new Error(`Ошибка копирования: некорректный слой (${sourceLayer.id}, ${targetLayer.id})`);
-  }
-
-  const featureIds = features.map(feature => extractFeatureId(feature.id));
-
-  await vectorDataClient.copyFeaturesBetweenLayers(
-    sourceLayer.dataset,
-    sourceLayer.tableName,
-    targetLayer.dataset,
-    targetLayer.tableName,
-    featureIds
-  );
-
-  communicationService.featuresUpdated.emit({ type: 'create', data: null });
-}
-
 export async function deleteFeatures(
   datasetIdentifier: string,
   vectorTableIdentifier: string,
@@ -191,5 +168,6 @@ export async function deleteFeatures(
 ): Promise<void> {
   const featureIds = features.map(feature => extractFeatureId(feature.id));
   await vectorDataClient.deleteFeatures(datasetIdentifier, vectorTableIdentifier, featureIds);
+
   communicationService.featuresUpdated.emit({ type: 'delete', data: null });
 }

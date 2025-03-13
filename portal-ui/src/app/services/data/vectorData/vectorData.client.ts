@@ -173,28 +173,6 @@ class VectorDataClient extends DataClient {
     return http.patch(this.getFeatureUrl(datasetIdentifier, vectorTableIdentifier, patchedFeature.id), patchedFeature);
   }
 
-  async copyFeaturesBetweenLayers(
-    sourceDatasetIdentifier: string,
-    sourceVectorTableIdentifier: string,
-    targetDatasetIdentifier: string,
-    targetVectorTableIdentifier: string,
-    featureIds: number[]
-  ): Promise<void> {
-    const copyFeaturesInfo = {
-      source: {
-        schema: sourceDatasetIdentifier,
-        table: sourceVectorTableIdentifier
-      },
-      target: {
-        schema: targetDatasetIdentifier,
-        table: targetVectorTableIdentifier
-      },
-      featureIds
-    };
-
-    return http.post(this.getRecordsCopyUrl(), copyFeaturesInfo);
-  }
-
   async deleteFeatures(datasetIdentifier: string, vectorTableIdentifier: string, featureIds: number[]): Promise<void> {
     return http.delete(this.getFeatureUrl(datasetIdentifier, vectorTableIdentifier, featureIds.join(',')));
   }

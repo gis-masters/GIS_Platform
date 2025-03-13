@@ -466,20 +466,7 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
       const { dataset, tableName } = this.layer;
 
       const firstWfsFeature = (this.features || [])[0];
-      if (editFeatureStore.editFeaturesData?.mode === EditFeatureMode.multipleEdit) {
-        for (const feature of this.features || []) {
-          const featureLayer = getLayerByFeatureInCurrentProject(feature);
-
-          if (!featureLayer) {
-            continue;
-          }
-
-          await deleteFeatures(featureLayer.dataset, featureLayer.tableName, [feature]);
-
-          // После удаления всех фичей переходим в NONE
-          await mapModeManager.changeMode(MapMode.NONE, undefined, 'remove all features');
-        }
-      } else {
+      if (editFeatureStore.editFeaturesData?.mode === EditFeatureMode.single) {
         await deleteFeatures(dataset, tableName, [firstWfsFeature]);
 
         await mapModeManager.changeMode(
@@ -492,6 +479,8 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
           },
           'remove 1 feature'
         );
+      } else {
+        services.logger.warn(`Удаление только для режима ${EditFeatureMode[EditFeatureMode.single]}`);
       }
 
       mapService.refreshAllLayers();

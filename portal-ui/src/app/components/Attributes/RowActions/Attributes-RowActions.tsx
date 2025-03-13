@@ -5,6 +5,7 @@ import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 import { EditFeatureMode } from 'src/app/services/map/a-map-mode/edit-feature/EditFeature.models';
 
+import { communicationService } from '../../../services/communication.service';
 import { deleteFeatures } from '../../../services/data/vectorData/vectorData.service';
 import { WfsFeature } from '../../../services/geoserver/wfs/wfs.models';
 import { CrgVectorLayer } from '../../../services/gis/layers/layers.models';
@@ -98,8 +99,7 @@ export class AttributesRowActions extends Component<AttributesRowActionsProps> {
       );
 
       mapService.refreshAllLayers();
-
-      await mapModeManager.changeMode(MapMode.NONE, undefined, 'delete 2');
+      communicationService.featuresUpdated.emit();
     }
   }
 }
