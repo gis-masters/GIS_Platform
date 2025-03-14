@@ -59,7 +59,7 @@ public class EcqlHandler {
             boolean waitOpenBrace = false;
             boolean isFirstSingleQuoter = true;
             boolean startReplacing = false;
-            for (int i = 0; i < target.getBytes(UTF_8).length; i++) {
+            for (int i = 0; i < target.length(); i++) {
                 char currentChar = target.charAt(i);
                 if (!startReplacing) {
                     if (!waitOpenBrace) { // Пока флаг "найдена открывающая скобка" не активна
@@ -84,7 +84,7 @@ public class EcqlHandler {
                     if (currentChar == '\'') {
                         if (isFirstSingleQuoter) { // Заменяем только встретив первую одиночную кавычку
                             result.append(currentChar);
-                            for (int m = 0; m < marker.getBytes(UTF_8).length; m++) {
+                            for (int m = 0; m < marker.length(); m++) {
                                 result.append(marker.charAt(m));
                             }
 

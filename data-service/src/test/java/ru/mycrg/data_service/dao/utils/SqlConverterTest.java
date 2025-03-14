@@ -3,6 +3,7 @@ package ru.mycrg.data_service.dao.utils;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 import static ru.mycrg.data_service.dao.utils.EcqlHandler.buildWhereSection;
 import static ru.mycrg.data_service.dao.utils.EcqlHandler.markSingleQuotesIn;
 
@@ -84,5 +85,16 @@ public class SqlConverterTest {
         assertEquals("some1 IN ('__1', '__2') OR some2 IN ('__333','__5','__314314')",
                      markSingleQuotesIn("some1 IN ('1', '2') OR some2 IN ('333','5','314314')", "__"));
         assertEquals("((ttt IN('fiz1')))", markSingleQuotesIn("((ttt IN('1')))", "fiz"));
+    }
+
+    @Test
+    public void shouldNotThrowIndexOutOfBoundsForCyrillicCharacters() {
+        String input = "description LIKE ILIKE '%феод%'";
+        String result = markSingleQuotesIn(input, "_маркер_");
+        assertNotEquals("Метод не должен возвращать исключения",
+                        System.identityHashCode(input),
+                        System.identityHashCode(result));
+
+        assertEquals(input, result);
     }
 }
