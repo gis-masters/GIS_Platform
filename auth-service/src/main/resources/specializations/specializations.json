@@ -270,5 +270,48 @@
         "schemaId": "dl_data_kpt"
       }
     ]
+  },
+  {
+    "id": 5,
+    "title": "ГИСОГД",
+    "description": "ГИСОГД",
+    "settings": {
+      "storageSize": 2,
+      "createLibraryItem": true,
+      "viewDocumentLibrary": true,
+      "viewBugReport": true,
+      "downloadGml": true,
+      "importShp": true,
+      "downloadFiles": true,
+      "createProject": true,
+      "editProjectLayer": true,
+      "taskManagement": true,
+      "tags": [
+        "Приказ 10",
+        "Приказ 123",
+        "Приказ 10, версия 5 изм. от 6 октября 2023 № 698",
+        "КПТ",
+        "Тер.планирование",
+        "ГИСОГД",
+        "Библиотека",
+        "Реестры",
+        "Задачи",
+        "Фотофиксация"
+      ]
+    },
+    "documentLibraries": [
+      {
+        "schemaId": "dl_data_inbox_data"
+      },
+      {
+        "schemaId": "dl_data_section13"
+      },
+      {
+        "schemaId": "dl_data_section_delivery_data"
+      },
+      {
+        "schemaId": "dl_data_task_allocation"
+      }
+    ]
   }
 ]

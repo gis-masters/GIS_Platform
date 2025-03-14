@@ -1,0 +1,17 @@
+version: '3.7'
+
+services:
+  smev-minio:
+    container_name: smev-minio
+    image: ${DOCKER_CRG_HOST}/minio:two
+    command: server --console-address ":9001" /data
+    restart: always
+    ports:
+      - '9090:9000'
+      - '9001:9001'
+    environment:
+      MINIO_ROOT_USER: admin
+      MINIO_ROOT_PASSWORD: oFzB?S3KFv%oFX
+      MINIO_DOMAIN: smev-minio
+      MINIO_SERVER_URL: http://localhost:9000
+      MINIO_BROWSER_REDIRECT_URL: http://localhost:9001

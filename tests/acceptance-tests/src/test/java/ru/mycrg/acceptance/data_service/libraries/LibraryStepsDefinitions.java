@@ -8,7 +8,9 @@ import io.restassured.http.ContentType;
 import io.restassured.specification.RequestSpecification;
 import org.jetbrains.annotations.Nullable;
 import ru.mycrg.acceptance.auth_service.AuthorizationBase;
+import ru.mycrg.acceptance.auth_service.UserStepsDefinitions;
 import ru.mycrg.acceptance.data_service.TestFilesManager;
+import ru.mycrg.acceptance.auth_service.UserStepsDefinitions;
 import ru.mycrg.acceptance.data_service.datasets.DatasetsStepsDefinitions;
 import ru.mycrg.acceptance.data_service.dto.DefaultDocumentModel;
 import ru.mycrg.acceptance.data_service.dto.FileDescriptionModel;
@@ -182,6 +184,34 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
     public void initRecordInDefaultLibrary() throws InterruptedException {
         String body = String.format("{\"title\":\"%s\"}", generateString("STRING_10"));
         createDocumentAndWriteAsCurrent(body, DEFAULT_LIBRARY);
+
+        sleep(800);
+
+        assertEquals(201, response.getStatusCode());
+    }
+
+    @Given("В библиотеке документов {string} существует запись")
+    public void initRecordInTargetLibrary(String targetLibrary) throws InterruptedException {
+        String body = String.format("{\"title\":\"%s\"}", generateString("STRING_10"));
+        createDocumentAndWriteAsCurrent(body, targetLibrary);
+
+        sleep(800);
+
+        assertEquals(201, response.getStatusCode());
+    }
+
+    @Given("В библиотеке документов {string}, в папке с id {int}, существует запись")
+    public void initRecordInTargetLibraryInTargetFolder(String targetLibrary, int targetFolder) throws InterruptedException {
+
+        UserStepsDefinitions userStepsDefinitions = new UserStepsDefinitions();
+        authorizationBase.loginAsOwner();
+        userStepsDefinitions.getCurrent();
+        Long ownerId = response.jsonPath().getLong("id");
+
+        String path = "/root/" + targetFolder;
+        String body = String.format("{\"title\":\"%s\", \"performer\": %d, \"path\":\"%s\"}",
+                                    generateString("STRING_10"), ownerId, path);
+        createDocumentAndWriteAsCurrent(body, targetLibrary);
 
         sleep(800);
 
@@ -627,6 +657,34 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
                                                 new RecordDto(folderName, null, folderContentType));
     }
 
+    @When("В библиотеке документов {string} существует папка {string}")
+    public void createFolderInTargetLibrary(String targetLibrary, String folderName) {
+        String folderContentType = "folder_v1";
+        currentFolderId = createRecordWithCheck(targetLibrary,
+                                                new RecordDto(folderName, null, folderContentType));
+    }
+
+    @When("В библиотеке документов {string} существует папка {string} с id {int}")
+    public void createFolderInTargetLibraryWithId(String targetLibrary, String folderName, int targetFolderId) {
+        String folderContentType = "folder_v1";
+        int createdId;
+
+        do {
+            createdId = createRecordWithCheck(targetLibrary,
+                                              new RecordDto(folderName, null, folderContentType));
+
+            if (createdId < targetFolderId) {
+                getBaseRequestWithCurrentCookie()
+                        .when()
+                        .delete(String.format("/%s/records/%d", targetLibrary, createdId))
+                        .then()
+                        .statusCode(SC_NO_CONTENT);
+            }
+        } while (createdId < targetFolderId);
+
+        currentFolderId = createdId;
+    }
+
     @When("В текущей папке существует запись")
     public void createRecordInCurrentFolder() {
         String pathToFolder1 = "/root/" + currentFolderId;
@@ -893,7 +951,7 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
                        get("/" + libraryId);
     }
 
-    private void getRecordById(Integer id, String libraryId) {
+    public void getRecordById(Integer id, String libraryId) {
         response = getBaseRequestWithCurrentCookie()
                 .when().
                        get(String.format("/%s/records/%d", libraryId, id));

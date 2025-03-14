@@ -1,10 +1,12 @@
 package ru.mycrg.acceptance.data_service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+import io.restassured.RestAssured;
 import io.restassured.specification.RequestSpecification;
 import org.hamcrest.core.IsEqual;
 import ru.mycrg.acceptance.BaseStepsDefinitions;
@@ -397,6 +399,34 @@ public class FilesStepDefinitions extends BaseStepsDefinitions {
     @Given("я запрашиваю информацию о файле {string}")
     public void getFileInfo(String fileName) {
         getFile(getFileDescriptionByTitleOrThrow(fileName).getId());
+    }
+
+    @Given("я из документа запрашиваю информацию о файле {string}")
+    public void getFileInfoFromDocument(String fileName) {
+        try {
+            // Получаем список файлов из ответа
+            List<Map<String, Object>> files = response.jsonPath().getList("file");
+
+            // Ищем нужный файл по имени
+            Optional<Map<String, Object>> targetFile = files.stream()
+                                                            .filter(file -> fileName.equals(file.get("title")))
+                                                            .findFirst();
+
+            if (targetFile.isEmpty()) {
+                throw new RuntimeException("Файл " + fileName + " не найден");
+            }
+
+            // Создаем FileDescriptionModel и добавляем в currentFiles
+            Map<String, Object> fileInfo = targetFile.get();
+            UUID fileId = UUID.fromString(fileInfo.get("id").toString());
+            Long fileSize = Long.valueOf(fileInfo.get("size").toString());
+            currentFiles.add(new FileDescriptionModel(fileId, fileSize, fileName));
+
+            // Получаем информацию о файле через стандартный метод
+            getFile(getFileDescriptionByTitleOrThrow(fileName).getId());
+        } catch (Exception e) {
+            throw new RuntimeException("Процесс полупения данных сломался: " + e.getMessage(), e);
+        }
     }
 
     @Given("я отправляю запрос на проверку соответствия файла {string} подписи {string}")

@@ -83,7 +83,7 @@ crg-options:
       transportMnemonic: U629301
       targetDb: database_1
       s3:
-        endpoint: http://10.10.10.32:9000
+        endpoint: http://smev-minio:9000
         accesskey: admin
         secretkey: oFzB?S3KFv%oFX
         bucketOutgoing: outgoing-attachments

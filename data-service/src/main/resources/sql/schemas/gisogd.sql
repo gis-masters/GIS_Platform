@@ -7,6 +7,10 @@ SELECT 'dl_data_section4',
 '{}'
 WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_data_section4');
 INSERT INTO data.schemas (name, class_rule)
+SELECT 'dl_data_task_allocation',
+'{}'
+WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_data_task_allocation');
+INSERT INTO data.schemas (name, class_rule)
 SELECT 'dl_data_section6',
 '{}'
 WHERE NOT EXISTS( SELECT id FROM data.schemas WHERE name = 'dl_data_section6');
@@ -663,7 +667,7 @@ SET class_rule =
         },
         {
             "name": "inbox_data_key_data_connection",
-            "title": "Реестр учета сведений",
+            "title": "00. Реестр учета сведений",
             "multiple": true,
             "libraries": [
                 "dl_data_inbox_data"
@@ -1097,6 +1101,204 @@ SET class_rule =
     ]
 }'
 WHERE name = 'dl_data_section2';
+
+UPDATE data.schemas
+SET class_rule =
+    '{
+      "tags": [
+        "system",
+        "Библиотека",
+        "ГИСОГД"
+      ],
+      "name": "dl_data_task_allocation",
+      "title": "Распределение Задач",
+      "readOnly": false,
+      "styleName": "dl_data_task_allocation",
+      "tableName": "dl_data_task_allocation",
+      "properties": [
+        {
+          "name": "id",
+          "title": "№",
+          "valueType": "INT"
+        },
+        {
+          "name": "path",
+          "title": "Путь",
+          "hidden": true,
+          "maxLength": 522,
+          "valueType": "STRING",
+          "description": "Полный путь, отражающий иерархию объектов"
+        },
+        {
+          "name": "is_folder",
+          "title": "Папка/Документ",
+          "valueType": "BOOLEAN",
+          "description": "Папка или Документ"
+        },
+        {
+          "name": "created_at",
+          "title": "Дата создания",
+          "readOnly": true,
+          "valueType": "DATETIME"
+        },
+        {
+          "name": "last_modified",
+          "title": "Дата модификации",
+          "valueType": "DATETIME",
+          "description": "Дата последней модификации документа"
+        },
+        {
+          "name": "updated_by",
+          "title": "Кто обновил",
+          "readOnly": true,
+          "maxLength": 50,
+          "valueType": "STRING"
+        },
+        {
+          "name": "content_type_id",
+          "title": "Вид документа",
+          "minWidth": 300,
+          "maxLength": 50,
+          "valueType": "CHOICE",
+          "enumerations": [
+            {
+              "title": "Документ",
+              "value": "doc1"
+            },
+            {
+              "title": "Папка",
+              "value": "folder_v1"
+            }
+          ]
+        },
+        {
+          "name": "task_types",
+          "title": "Вид задачи",
+          "minWidth": 300,
+          "required": true,
+          "maxLength": 50,
+          "valueType": "CHOICE",
+          "description": "Выберите вид подходящий под имя папки",
+          "enumerations": [
+            {
+              "title": "Документы из СЭД Диалог",
+              "value": "sed_task_introduction"
+            },
+            {
+              "title": "Выдача ГПЗУ из ЕПГУ",
+              "value": "gpzy_epgy"
+            },
+            {
+              "title": "Выдача РНС и РНВ из ЕПГУ",
+              "value": "rns_epgy"
+            }
+          ]
+        },
+        {
+          "name": "title",
+          "title": "Наименование",
+          "minWidth": 400,
+          "required": true,
+          "maxLength": 254,
+          "valueType": "STRING"
+        },
+        {
+          "name": "performer",
+          "title": "Исполнитель",
+          "valueType": "USER_ID"
+        },
+        {
+          "name": "fias",
+          "title": "Населённый пункт",
+          "required": true,
+          "valueType": "FIAS",
+          "searchMode": "oktmo"
+        },
+        {
+          "name": "fias__oktmo",
+          "title": "ОКТМО",
+          "hidden": true,
+          "valueType": "STRING"
+        },
+        {
+          "name": "fias__address",
+          "title": "Адрес",
+          "hidden": true,
+          "valueType": "STRING"
+        },
+        {
+          "name": "fias__id",
+          "title": "id",
+          "hidden": true,
+          "valueType": "INT"
+        },
+        {
+          "name": "created_by",
+          "title": "Создатель",
+          "maxLength": 50,
+          "valueType": "STRING"
+        }
+      ],
+      "description": "Распределениe Задач",
+      "contentTypes": [
+        {
+          "id": "doc1",
+          "icon": "DOCUMENT",
+          "type": "DOCUMENT",
+          "title": "Районы и города республиканского значения",
+          "childOnly": true,
+          "attributes": [
+            {
+              "name": "title",
+              "description": "Районы и города республиканского значения"
+            },
+            {
+              "name": "task_types"
+            },
+            {
+              "name": "performer"
+            },
+            {
+              "name": "fias"
+            },
+            {
+              "name": "fias__oktmo",
+              "defaultValueWellKnownFormula": "inherit"
+            },
+            {
+              "name": "fias__address",
+              "defaultValueWellKnownFormula": "inherit"
+            },
+            {
+              "name": "fias__id",
+              "defaultValueWellKnownFormula": "inherit"
+            }
+          ]
+        },
+        {
+          "id": "folder_v1",
+          "icon": "FOLDER_CREATE",
+          "type": "FOLDER",
+          "title": "Блок распределения задачи",
+          "children": [
+            {
+              "library": null,
+              "contentType": "doc1"
+            }
+          ],
+          "attributes": [
+            {
+              "name": "title",
+              "title": "Наименование",
+              "required": true,
+              "maxLength": 500,
+              "description": "Каждая папка это вид задачи"
+            }
+          ]
+        }
+      ]
+    }'
+WHERE name = 'dl_data_task_allocation';
 
 UPDATE data.schemas 
 SET class_rule =
@@ -19026,6 +19228,14 @@ SET class_rule =
          },
          {
            "name": "smev_message_id",
+           "title": "Номер сообщения СМЭВ-3",
+           "readOnly": true,
+           "maxLength": 40,
+           "valueType": "STRING",
+           "description": "Для отслеживания судьбы сообщения СМЭВ-3"
+         },
+         {
+           "name": "smev_client_id",
            "title": "Номер сообщения СМЭВ-3",
            "readOnly": true,
            "maxLength": 40,

@@ -16,6 +16,7 @@ import ru.mycrg.data_service_contract.enums.TaskStatus;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import static io.restassured.http.ContentType.JSON;
 import static org.junit.Assert.assertEquals;
@@ -190,15 +191,52 @@ public class TaskStepDefinition extends BaseStepsDefinitions {
 
         String[] expectedIds = expectedTaskIds.split(",");
         List<Integer> actualIds = response.jsonPath().getList("content.id");
-        
-        assertEquals("Количество задач в выборке не соответствует ожидаемому", 
-            expectedIds.length, actualIds.size());
+
+        assertEquals("Количество задач в выборке не соответствует ожидаемому",
+                     expectedIds.length, actualIds.size());
 
         for (int i = 0; i < expectedIds.length; i++) {
             int expectedId = Integer.parseInt(expectedIds[i].trim());
             assertEquals("ID задачи на позиции " + i + " не соответствует ожидаемому",
-                expectedId, actualIds.get(i).intValue());
+                         expectedId, actualIds.get(i).intValue());
         }
+    }
+
+    @Then("я жду пока новая задача с контент типом {string} создаётся")
+    public void waitUntilCreate(String contentType) throws InterruptedException {
+        String filter = "content_type_id IN('" + contentType + "')";
+
+        int maxAttempts = 10;
+        int delaySeconds = 10;
+
+        for (int attempt = 0; attempt < maxAttempts; attempt++) {
+            getTasks(filter);
+            int totalElements = response.jsonPath().get("page.totalElements");
+
+            if (totalElements > 0) {
+                List<Map<String, Object>> content = response.jsonPath().getList("content");
+                for (Map<String, Object> task: content) {
+                    Integer taskId = (Integer) task.get("id");
+                    if (taskId != null && taskId == totalElements) {
+                        String connection = (String) task.get("inbox_data_key_data_connection");
+                        if (isValidConnection(connection)) {
+                            currentTaskId = taskId;
+                            return;
+                        }
+                    }
+                }
+            }
+
+            if (attempt < maxAttempts - 1) {
+                TimeUnit.SECONDS.sleep(delaySeconds);
+            }
+        }
+
+        throw new AssertionError(
+                String.format(
+                        "Задача с content_type_id '%s' и корректным inbox_data_key_data_connection не создалась после %d попыток",
+                        contentType, maxAttempts)
+        );
     }
 
     @When("файл {string} добавлен к задаче {int}")
@@ -279,5 +317,24 @@ public class TaskStepDefinition extends BaseStepsDefinitions {
                         contentType(PATCH_CONTENT_TYPE)
                 .when().
                         patch("/" + taskId);
+    }
+
+    private boolean isValidConnection(String connection) {
+        if (connection == null || connection.trim().isEmpty()) {
+            return false;
+        }
+
+        try {
+            List<Map<String, Object>> connections = gson.fromJson(connection, List.class);
+            return !connections.isEmpty()
+                    && connections.get(0).containsKey("id")
+                    && connections.get(0).containsKey("title")
+                    && connections.get(0).containsKey("libraryTableName");
+        } catch (Exception e) {
+            System.out.println(String.format("Ошибка при парсинге JSON connection: %s", connection));
+            e.printStackTrace();
+
+            return false;
+        }
     }
 }
