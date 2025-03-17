@@ -28,11 +28,10 @@ export interface FtsResponseDto {
   headlines: string[];
 }
 
-export interface ProjectCreateDto {
-  name: string;
-  bbox: string;
-  description: string;
+export interface ProjectCreateDto extends ProjectUpdateDto {
+  parentId: number;
   default: boolean;
+  folder: boolean;
 }
 
 export interface ProjectDto extends ProjectCreateDto {
@@ -40,6 +39,12 @@ export interface ProjectDto extends ProjectCreateDto {
   organizationId: string;
   createdAt: string;
   role: string;
+}
+
+export interface ProjectUpdateDto {
+  name: string;
+  bbox: string;
+  description: string;
 }
 
 export interface Page {
@@ -76,10 +81,10 @@ export interface Settings {
   taskManagement: boolean;
   createProject: boolean;
   downloadFiles: boolean;
+  showPermissions: boolean;
   editProjectLayer: boolean;
   createLibraryItem: boolean;
   importShp: boolean;
-  showPermissions: boolean;
   downloadGml: boolean;
   viewBugReport: boolean;
   viewDocumentLibrary: boolean;

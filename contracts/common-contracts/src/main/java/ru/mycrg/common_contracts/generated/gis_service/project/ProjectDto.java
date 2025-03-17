@@ -13,7 +13,7 @@ public class ProjectDto extends ProjectCreateDto {
 
     public ProjectDto(String name, String description, String bbox, boolean isDefault, String id, String organizationId,
                       String createdAt, String role) {
-        super(name, description, bbox, isDefault);
+        super(name, description, bbox, isDefault, false, null);
 
         this.id = id;
         this.organizationId = organizationId;

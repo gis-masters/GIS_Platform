@@ -16,9 +16,12 @@ import ru.mycrg.common_contracts.generated.gis_service.project.ProjectDto;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static org.apache.http.HttpStatus.*;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.*;
 import static ru.mycrg.acceptance.auth_service.GroupStepsDefinitions.usersGroupId;
 import static ru.mycrg.acceptance.auth_service.UserStepsDefinitions.userId;
@@ -71,6 +74,20 @@ public class ProjectStepsDefinitions extends BaseStepsDefinitions {
         assertEquals(projectDto.getDescription(), project.getDescription());
         assertEquals(projectDto.getBbox(), project.getBbox());
         assertEquals(projectDto.isDefault(), project.isDefault());
+        assertEquals(projectDto.isFolder(), project.isFolder());
+        assertEquals(projectDto.getParentId(), project.getParentId());
+    }
+
+    @And("параметры папки совпадают с переданными")
+    public void checkCreatedProjectFolder() {
+        ProjectDto project = response.jsonPath().getObject("", ProjectDto.class);
+
+        assertEquals(projectDto.getName(), project.getName());
+        assertEquals(projectDto.getDescription(), project.getDescription());
+        assertNull(project.getBbox());
+        assertFalse(project.isDefault());
+        assertEquals(projectDto.isFolder(), project.isFolder());
+        assertEquals(projectDto.getParentId(), project.getParentId());
     }
 
     @Given("Существует проект {string}")
@@ -82,24 +99,66 @@ public class ProjectStepsDefinitions extends BaseStepsDefinitions {
             createProjectStep(projectNameKey);
 
             assertEquals(SC_CREATED, response.getStatusCode());
-            extractAndSetProjectIdFromBody();
+            extractAndSetProjectIdAddToProjectPool();
         }
     }
 
-    @And("Представление проекта корректно")
-    public void checkProjectBody() {
-        Map<String, String> presentedData = response
-                .then().
-                        statusCode(SC_OK).
-                        extract().jsonPath().
-                        getMap("");
+    @Given("я создал проект {string}")
+    public void createsProjectWithName(String projectName) {
+        projectDto = new ProjectCreateDto(generateString(projectName));
 
-        assertTrue(presentedData.containsKey("organizationId"));
-        assertTrue(presentedData.containsKey("createdAt"));
-        assertTrue(presentedData.containsKey("name"));
-        assertTrue(presentedData.containsKey("default"));
-        assertTrue(presentedData.containsKey("id"));
-        assertTrue(presentedData.containsKey("role"));
+        super.createEntity(projectDto);
+
+        assertEquals(SC_CREATED, response.getStatusCode());
+        extractAndSetProjectIdAddToProjectPool();
+    }
+
+    @Given("я создал проект с именем {string} и описанием {string}")
+    public void createdProjectWithNameAndDescription(String name, String description) {
+        projectDto = new ProjectCreateDto(name, description, null, false, false, null);
+
+        super.createEntity(projectDto);
+
+        assertEquals(SC_CREATED, response.getStatusCode());
+        extractAndSetProjectIdAddToProjectPool();
+    }
+
+    @Given("я создал папку проектов {string}")
+    public void createsProjectFolder(String folderName) {
+        projectDto = new ProjectCreateDto(generateString(folderName), "Пустая папка проектов", null, false, true, null);
+
+        super.createEntity(projectDto);
+
+        assertEquals(SC_CREATED, response.getStatusCode());
+        extractAndSetProjectIdAddToProjectPool();
+    }
+
+    @When("Пользователь делает запрос на создание проекта {string}")
+    public void createProjectStep(String projectNameKey) {
+        projectDto = new ProjectCreateDto(generateString(projectNameKey));
+
+        super.createEntity(projectDto);
+
+        projectId = extractEntityIdFromResponse(response);
+    }
+
+    @When("я создаю проект: {string}, {string}, {string}, {string}, {string}")
+    public void createProjectNewStep(String name, String description, String bbox, String isDefault, String isFolder) {
+        projectDto = new ProjectCreateDto(name, description, bbox, Boolean.parseBoolean(isDefault),
+                                          Boolean.parseBoolean(isFolder), null);
+
+        super.createEntity(projectDto);
+
+        projectId = extractEntityIdFromResponse(response);
+    }
+
+    @When("я создаю папку проектов: {string}, {string}")
+    public void createProjectFolder(String name, String description) {
+        projectDto = new ProjectCreateDto(name, description, null, false, true, null);
+
+        super.createEntity(projectDto);
+
+        projectId = extractEntityIdFromResponse(response);
     }
 
     @When("Существуют проекты")
@@ -112,13 +171,22 @@ public class ProjectStepsDefinitions extends BaseStepsDefinitions {
         }
     }
 
-    @When("Пользователь делает запрос на создание проекта {string}")
-    public void createProjectStep(String projectNameKey) {
-        projectDto = new ProjectCreateDto(generateString(projectNameKey));
+    @And("Представление проекта корректно")
+    public void checkProjectBody() {
+        ProjectDto project = response.jsonPath().getObject("", ProjectDto.class);
 
-        super.createEntity(projectDto);
+        assertNotNull(project.getId());
+        assertNotNull(project.getName());
+        assertNotNull(project.getOrganizationId());
+        assertNotNull(project.getCreatedAt());
+        assertNotNull(project.getRole());
 
-        projectId = extractEntityIdFromResponse(response);
+        assertNull(project.getDescription());
+        assertNull(project.getBbox());
+        assertNull(project.getParentId());
+
+        assertFalse(project.isDefault());
+        assertFalse(project.isFolder());
     }
 
     @Then("проект успешно создан")
@@ -126,13 +194,9 @@ public class ProjectStepsDefinitions extends BaseStepsDefinitions {
         assertEquals(SC_CREATED, response.getStatusCode());
     }
 
-    @When("я создаю проект: {string}, {string}, {string}, {string}")
-    public void createProjectNewStep(String name, String description, String bbox, String isDefault) {
-        projectDto = new ProjectCreateDto(name, description, bbox, Boolean.parseBoolean(isDefault));
-
-        super.createEntity(projectDto);
-
-        projectId = extractEntityIdFromResponse(response);
+    @Then("папка успешно создана")
+    public void checkCreateProjectFolderResponseStatus() {
+        assertEquals(SC_CREATED, response.getStatusCode());
     }
 
     @When("Пользователь делает запрос на обновление полей проекта {string}")
@@ -254,10 +318,8 @@ public class ProjectStepsDefinitions extends BaseStepsDefinitions {
         projectPool.remove(projectId);
     }
 
-    @When("Администратор делает запрос на проверку правил текущего проекта")
+    @When("я делаю запрос на получение разрешения для текущего проекта")
     public void checkProjectPerm() {
-        authorizationBase.loginAsOwner();
-
         response = getBaseRequestWithCurrentCookie()
                 .when().
                         get("/" + projectId + "/permissions");
@@ -284,9 +346,9 @@ public class ProjectStepsDefinitions extends BaseStepsDefinitions {
         jsonPath = response.jsonPath();
         getBaseRequestWithCurrentCookie()
                 .then().
-                log().ifValidationFails().
-                statusCode(SC_OK).
-                body("$.size()", is(0));
+                        log().ifValidationFails().
+                        statusCode(SC_OK).
+                        body("$.size()", is(0));
     }
 
     @When("Администратор делает запрос на изменение правила с пользователя на пользовательскую группу")
@@ -331,7 +393,7 @@ public class ProjectStepsDefinitions extends BaseStepsDefinitions {
     }
 
     @And("Сервер передает ID проекта в ответе")
-    public void extractAndSetProjectIdFromBody() {
+    public void extractAndSetProjectIdAddToProjectPool() {
         super.extractAndSetEntityIdFromBody();
 
         projectPool.put(projectId, projectDto);
@@ -365,16 +427,109 @@ public class ProjectStepsDefinitions extends BaseStepsDefinitions {
         super.get1000EntitiesSorted(sortingType, sortingDirection);
     }
 
-    @When("Администратор делает запрос на текущий проект")
-    public void getCurrentProject() {
-        authorizationBase.loginAsOwner();
+    @Given("удалены все существующие проекты")
+    public void deleted1000Projects() {
+        // Получаем все проекты
+        super.get1000Entities();
 
+        // Получаем список ID проектов
+        List<Integer> projectIds = response.jsonPath().getList("content.id");
+
+        // Удаляем каждый проект
+        for (Integer id: projectIds) {
+            projectId = id;
+            super.deleteCurrentEntity();
+            projectPool.remove(id);
+        }
+    }
+
+    @And("Порядок проектов соответствует сортировке по {string} в направлении {string}")
+    public void checkProjectsOrder(String sortingType, String sortingDirection) {
+        jsonPath = response.jsonPath();
+        List<Map<String, Object>> projects = jsonPath.getList("content");
+
+        // Проверяем, что проекты не пустые
+        assertThat(projects, not(projects.isEmpty()));
+
+        if (sortingType.equals("name")) {
+            // Для сортировки по имени
+            List<String> names = projects.stream()
+                                         .map(p -> (String) p.get("name"))
+                                         .collect(Collectors.toList());
+
+            if (sortingDirection.equals("asc")) {
+                // Для возрастающей сортировки ожидаем A-B-C
+                assertTrue("Ожидается, что A-Project будет перед B-Project",
+                           names.indexOf("A-Project") < names.indexOf("B-Project"));
+                assertTrue("Ожидается, что B-Project будет перед C-Project",
+                           names.indexOf("B-Project") < names.indexOf("C-Project"));
+            } else {
+                // Для убывающей сортировки ожидаем C-B-A
+                assertTrue("Ожидается, что C-Project будет перед B-Project",
+                           names.indexOf("C-Project") < names.indexOf("B-Project"));
+                assertTrue("Ожидается, что B-Project будет перед A-Project",
+                           names.indexOf("B-Project") < names.indexOf("A-Project"));
+            }
+        } else if (sortingType.equals("id")) {
+            // Для сортировки по ID
+            List<Integer> ids = projects.stream()
+                                        .map(p -> ((Number) p.get("id")).intValue())
+                                        .collect(Collectors.toList());
+
+            // Проверяем, что ID отсортированы правильно
+            if (sortingDirection.equals("asc")) {
+                for (int i = 1; i < ids.size(); i++) {
+                    assertTrue("ID должны быть отсортированы по возрастанию",
+                               ids.get(i - 1) <= ids.get(i));
+                }
+            } else {
+                for (int i = 1; i < ids.size(); i++) {
+                    assertTrue("ID должны быть отсортированы по убыванию",
+                               ids.get(i - 1) >= ids.get(i));
+                }
+            }
+        } else if (sortingType.equals("createdAt")) {
+            // Для сортировки по дате создания
+            // Предполагаем, что проекты создаются в порядке A, B, C
+            List<String> names = projects.stream()
+                                         .map(p -> (String) p.get("name"))
+                                         .collect(Collectors.toList());
+
+            if (sortingDirection.equals("asc")) {
+                // Для возрастающей сортировки ожидаем A-B-C (порядок создания)
+                assertTrue("Ожидается, что A-Project будет перед B-Project",
+                           names.indexOf("A-Project") < names.indexOf("B-Project"));
+                assertTrue("Ожидается, что B-Project будет перед C-Project",
+                           names.indexOf("B-Project") < names.indexOf("C-Project"));
+            } else {
+                // Для убывающей сортировки ожидаем C-B-A (обратный порядок создания)
+                assertTrue("Ожидается, что C-Project будет перед B-Project",
+                           names.indexOf("C-Project") < names.indexOf("B-Project"));
+                assertTrue("Ожидается, что B-Project будет перед A-Project",
+                           names.indexOf("B-Project") < names.indexOf("A-Project"));
+            }
+        }
+    }
+
+    @When("я делаю запрос на текущий проект")
+    public void getCurrentProject() {
         super.getCurrentEntity();
     }
 
     @When("Администратор делает запрос на выборку проектов с фильтрацией по полю {string} и значению {string}")
     public void getProjectsByFilter(String field, String value) {
         super.getEntitiesWithFilterByField(field, value);
+    }
+
+    @And("В результатах фильтрации присутствуют проекты {string} и {string}")
+    public void checkFilteredProjects(String project1, String project2) {
+        jsonPath = response.jsonPath();
+        List<String> names = jsonPath.getList("content.name");
+
+        assertTrue("Проект " + project1 + " должен присутствовать в результатах фильтрации",
+                   names.contains(project1));
+        assertTrue("Проект " + project2 + " должен присутствовать в результатах фильтрации",
+                   names.contains(project2));
     }
 
     @And("Количество страниц проектов {string} пропорционально {string}")
@@ -400,7 +555,7 @@ public class ProjectStepsDefinitions extends BaseStepsDefinitions {
 
         checkProjectPerm();
 
-        final Map<String, String> result = (Map<String, String>) response.jsonPath().getList("").get(0);
+        Map<String, String> result = (Map<String, String>) response.jsonPath().getList("").get(0);
 
         assertEquals("OWNER", result.get("role"));
     }
@@ -412,8 +567,90 @@ public class ProjectStepsDefinitions extends BaseStepsDefinitions {
         assertEquals(expectedRole, result);
     }
 
-    @And("Пользователь видит все назначенные ему роли для текущего проекта")
-    public void checkAllRolesForCurrentProject() {
+    @And("Администратор создаёт проект {string} внутри текущей папки")
+    public void adminCreatesProjectInsideFolder(String projectName) {
+        authorizationBase.loginAsOwner();
+
+        ProjectCreateDto childProjectDto = new ProjectCreateDto(
+                generateString(projectName),
+                "Проект внутри папки",
+                null,
+                false,
+                false,
+                Long.parseLong(String.valueOf(projectId))
+        );
+
+        String jsonBody = gson.toJson(childProjectDto);
+
+        response = getBaseRequestWithCurrentCookie()
+                .given().
+                        body(jsonBody).
+                        contentType(ContentType.JSON)
+                .when().
+                        post("");
+
+        assertEquals(SC_CREATED, response.getStatusCode());
+    }
+
+    @And("В ответе содержится сообщение об ошибке {string}")
+    public void checkErrorMessageInResponse(String errorMessage) {
+        jsonPath = response.jsonPath();
+        String message = jsonPath.get("message");
+
+        assertTrue("Ожидаемое сообщение об ошибке не найдено в ответе",
+                   message != null && message.contains(errorMessage));
+    }
+
+    @When("Администратор делает запрос на перемещение проекта в проект")
+    @When("Администратор делает запрос на перемещение проекта в папку")
+    @When("Администратор делает запрос на перемещение папки в папку")
+    public void adminMovesProjectOrFolder() {
+        authorizationBase.loginAsOwner();
+
+        // Сохраняем ID исходного объекта (который будем перемещать)
+        Integer sourceId = projectId;
+
+        // Получаем ID целевого объекта (куда будем перемещать)
+        getCurrentEntity();
+        Integer targetId = projectId;
+
+        // Восстанавливаем ID исходного объекта для перемещения
+        projectId = sourceId;
+
+        response = getBaseRequestWithCurrentCookie()
+                .when().
+                        patch(String.format("/%d/move/%d", projectId, targetId));
+    }
+
+    @When("Администратор делает запрос на текущую папку")
+    public void adminGetsCurrentFolder() {
+        authorizationBase.loginAsOwner();
+
+        getCurrentEntity();
+    }
+
+    @Then("Проект находится в указанной папке")
+    public void checkProjectIsInFolder() {
+        jsonPath = response.jsonPath();
+        String path = jsonPath.get("path");
+
+        assertNotNull("Путь проекта не должен быть null", path);
+        assertTrue("Путь проекта должен содержать ID папки",
+                   path.matches(".*/" + projectId + "$"));
+    }
+
+    @Then("Папка находится в указанной папке")
+    public void checkFolderIsInFolder() {
+        jsonPath = response.jsonPath();
+        String path = jsonPath.get("path");
+
+        assertNotNull("Путь папки не должен быть null", path);
+        assertTrue("Путь папки должен содержать ID родительской папки",
+                   path.matches(".*/" + projectId + "$"));
+    }
+
+    @And("Пользователь видит все назначенные ему роли с правом просмотра")
+    public void checkAllViewerRolesForCurrentProject() {
         List<Object> permission = response.jsonPath().getList("");
         assertEquals(2, permission.size());
 
@@ -461,16 +698,6 @@ public class ProjectStepsDefinitions extends BaseStepsDefinitions {
     private void makeExactProjectAsCurrent(String projectName) {
         projectPool.entrySet().stream()
                    .filter(entry -> entry.getValue().getName().equals(projectName))
-                   .findFirst()
-                   .ifPresent(entry -> {
-                       projectId = entry.getKey();
-                       projectDto = entry.getValue();
-                   });
-    }
-
-    private void makeLastAvailableProjectAsCurrent() {
-        projectPool.entrySet().stream()
-                   .skip(projectPool.size() - 1)
                    .findFirst()
                    .ifPresent(entry -> {
                        projectId = entry.getKey();

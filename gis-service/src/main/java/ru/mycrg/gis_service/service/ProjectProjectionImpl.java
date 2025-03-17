@@ -14,6 +14,7 @@ public class ProjectProjectionImpl implements ProjectProjection {
     private long organizationId;
     private String bbox;
     private boolean isDefault;
+    private boolean isFolder;
     private LocalDateTime createdAt;
     private String role;
     private String description;
@@ -28,6 +29,7 @@ public class ProjectProjectionImpl implements ProjectProjection {
         this.organizationId = project.getOrganizationId();
         this.bbox = project.getBbox();
         this.isDefault = project.isDefault();
+        this.isFolder = project.isFolder();
         this.createdAt = project.getCreatedAt();
         this.description = project.getDescription();
     }
@@ -55,6 +57,11 @@ public class ProjectProjectionImpl implements ProjectProjection {
     @Override
     public boolean isDefault() {
         return this.isDefault;
+    }
+
+    @Override
+    public boolean isFolder() {
+        return this.isFolder;
     }
 
     @Override

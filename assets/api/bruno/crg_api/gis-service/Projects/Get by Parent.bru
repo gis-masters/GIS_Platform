@@ -1,18 +1,17 @@
 meta {
-  name: Get all
+  name: Get by Parent
   type: http
-  seq: 1
+  seq: 6
 }
 
 get {
-  url: {{host}}:{{port}}/projects?page=0&size=10
+  url: {{host}}:{{port}}/projects?parent=15
   body: none
   auth: bearer
 }
 
 params:query {
-  page: 0
-  size: 10
+  parent: 15
 }
 
 auth:bearer {

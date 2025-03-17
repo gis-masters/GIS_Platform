@@ -22,5 +22,7 @@ public interface ProjectProjection {
 
     boolean isDefault();
 
+    boolean isFolder();
+
     LocalDateTime getCreatedAt();
 }

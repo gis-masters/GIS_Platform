@@ -55,7 +55,7 @@ public class PermissionsStepsDefinitions extends BaseStepsDefinitions {
         checkDeletedPermission(usersGroupId);
     }
 
-    private boolean checkDeletedProjectPermission(String role) {
+    private void checkDeletedProjectPermission(String role) {
         try {
             int currentAttempt = 0;
             do {
@@ -67,7 +67,7 @@ public class PermissionsStepsDefinitions extends BaseStepsDefinitions {
                 projectSteps.checkProjectPerm();
 
                 if (isNonContainsProjectPermissionsRole(role)) {
-                    return true;
+                    return; // Успешно проверили, что разрешения удалены
                 }
             } while (currentAttempt < MAX_RETRY_ATTEMPT);
 
@@ -77,7 +77,7 @@ public class PermissionsStepsDefinitions extends BaseStepsDefinitions {
         }
     }
 
-    private boolean checkDeletedPermission(Integer entityId) {
+    private void checkDeletedPermission(Integer entityId) {
         try {
             int currentAttempt = 0;
             do {
@@ -89,7 +89,7 @@ public class PermissionsStepsDefinitions extends BaseStepsDefinitions {
                 getAllPermissions();
 
                 if (isNonContainsEntityPermissions(entityId)) {
-                    return true;
+                    return; // Успешно проверили, что разрешения удалены
                 }
             } while (currentAttempt < MAX_RETRY_ATTEMPT);
 

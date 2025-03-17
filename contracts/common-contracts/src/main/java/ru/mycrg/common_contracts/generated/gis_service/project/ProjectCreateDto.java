@@ -1,53 +1,35 @@
 package ru.mycrg.common_contracts.generated.gis_service.project;
 
-public class ProjectCreateDto {
+public class ProjectCreateDto extends ProjectUpdateDto {
 
-    private String name;
-    private String bbox;
-    private String description;
     private boolean isDefault;
+    private boolean isFolder;
+    private Long parentId;
 
     public ProjectCreateDto() {
         // Required
     }
 
     public ProjectCreateDto(String name) {
-        this(name, null, null, false);
+        this(name, null, null, false, false, null);
     }
 
     public ProjectCreateDto(String name, String description, String bbox) {
-        this(name, description, bbox, false);
+        this(name, description, bbox, false, false, null);
     }
 
     public ProjectCreateDto(String name, String description, String bbox, boolean isDefault) {
-        this.name = name;
-        this.bbox = bbox;
-        this.description = description;
+        super(name, description, bbox);
+
         this.isDefault = isDefault;
     }
 
-    public String getName() {
-        return name;
-    }
+    public ProjectCreateDto(String name, String des, String bbox, boolean isDefault, boolean isFolder, Long parentId) {
+        super(name, des, bbox);
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getBbox() {
-        return bbox;
-    }
-
-    public void setBbox(String bbox) {
-        this.bbox = bbox;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
+        this.isDefault = isDefault;
+        this.isFolder = isFolder;
+        this.parentId = parentId;
     }
 
     public boolean isDefault() {
@@ -56,5 +38,33 @@ public class ProjectCreateDto {
 
     public void setDefault(boolean aDefault) {
         this.isDefault = aDefault;
+    }
+
+    public boolean isFolder() {
+        return isFolder;
+    }
+
+    public void setFolder(boolean folder) {
+        isFolder = folder;
+    }
+
+    public Long getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(Long parentId) {
+        this.parentId = parentId;
+    }
+
+    @Override
+    public String toString() {
+        return "{" +
+                "\"name\":" + (getName() == null ? "null" : "\"" + getName() + "\"") + ", " +
+                "\"bbox\":" + (getBbox() == null ? "null" : "\"" + getBbox() + "\"") + ", " +
+                "\"description\":" + (getDescription() == null ? "null" : "\"" + getDescription() + "\"") +
+                "\"isDefault\":\"" + isDefault + "\"" + ", " +
+                "\"isFolder\":\"" + isFolder + "\"" + ", " +
+                "\"parentId\":" + (parentId == null ? "null" : "\"" + parentId + "\"") +
+                "}";
     }
 }

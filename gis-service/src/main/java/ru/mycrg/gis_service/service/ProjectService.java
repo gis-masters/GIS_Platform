@@ -5,21 +5,20 @@ import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.mycrg.audit_service_contract.events.CrgAuditEvent;
 import ru.mycrg.auth_facade.IAuthenticationFacade;
 import ru.mycrg.auth_facade.UserDetails;
-import ru.mycrg.gis_service.dao.ProjectsDao;
-import ru.mycrg.gis_service.dto.project.ProjectCreateDto;
+import ru.mycrg.common_contracts.generated.gis_service.project.ProjectCreateDto;
+import ru.mycrg.common_contracts.generated.gis_service.project.ProjectUpdateDto;
 import ru.mycrg.gis_service.dto.project.ProjectProjection;
-import ru.mycrg.gis_service.dto.project.ProjectUpdateDto;
 import ru.mycrg.gis_service.entity.BaseMap;
 import ru.mycrg.gis_service.entity.Permission;
 import ru.mycrg.gis_service.entity.Project;
 import ru.mycrg.gis_service.entity.Role;
+import ru.mycrg.gis_service.exceptions.BadRequestException;
 import ru.mycrg.gis_service.exceptions.ForbiddenException;
 import ru.mycrg.gis_service.exceptions.NotFoundException;
 import ru.mycrg.gis_service.queue.MessageBusProducer;
@@ -47,7 +46,6 @@ public class ProjectService {
     private final PermissionRepository permissionRepository;
     private final IAuthenticationFacade authenticationFacade;
     private final MessageBusProducer messageBus;
-    private final ProjectsDao projectsDao;
     private final BaseMapRepository baseMapRepository;
     private final DataServiceBasemapsClient dataServiceBasemapsClient;
     private final RoleRepository roleRepository;
@@ -57,7 +55,6 @@ public class ProjectService {
                           PermissionRepository permissionRepository,
                           IAuthenticationFacade authenticationFacade,
                           MessageBusProducer messageBus,
-                          ProjectsDao projectsDao,
                           BaseMapRepository baseMapRepository,
                           DataServiceBasemapsClient dataServiceBasemapsClient,
                           RoleRepository roleRepository) {
@@ -66,24 +63,35 @@ public class ProjectService {
         this.permissionRepository = permissionRepository;
         this.authenticationFacade = authenticationFacade;
         this.messageBus = messageBus;
-        this.projectsDao = projectsDao;
         this.baseMapRepository = baseMapRepository;
         this.dataServiceBasemapsClient = dataServiceBasemapsClient;
         this.roleRepository = roleRepository;
     }
 
-    public Page<ProjectProjection> getPaged(String name, Pageable pageable) {
-        if (authenticationFacade.isOrganizationAdmin()) {
-            Long orgId = authenticationFacade.getOrganizationId();
+    /**
+     * Получает страницу проектов с фильтрацией по имени и родительской папке
+     *
+     * @param parentFolderId идентификатор родительской папки (null для корневого уровня)
+     * @param name           фильтр по имени проекта
+     * @param pageable       параметры пагинации
+     *
+     * @return страница проекций проектов
+     */
+    public Page<ProjectProjection> getPaged(Long parentFolderId, String name, Pageable pageable) {
+        Long orgId = authenticationFacade.getOrganizationId();
 
-            return projectRepository
-                    .findAllByOrganizationIdAndNameContainingIgnoreCase(orgId, name, pageable)
-                    .map(projectionFactory::setRoleAndCreateProjection);
+        if (parentFolderId == null) {
+            return projectRepository.findAllByRoot(orgId, name, pageable)
+                                    .map(projectionFactory::setRoleAndCreateProjection);
         } else {
-            List<ProjectProjection> projects = projectsDao.allowedProjects(name, pageable);
-            Long totalAllowed = projectsDao.totalAllowedProjects(name);
+            // Проверяем, что родительский проект существует и является папкой
+            Project parentProject = getById(parentFolderId);
+            if (!parentProject.isFolder()) {
+                throw new BadRequestException("Указанный проект не является папкой: " + parentFolderId);
+            }
 
-            return new PageImpl<>(projects, pageable, totalAllowed);
+            return projectRepository.findAllByPath(orgId, name, "/" + parentFolderId, pageable)
+                                    .map(projectionFactory::setRoleAndCreateProjection);
         }
     }
 
@@ -141,13 +149,6 @@ public class ProjectService {
         return projectionFactory.setRoleAndCreateProjection(project);
     }
 
-    /**
-     * Обновление проекта. До тех пор, пока меняется только название проекта, можно менять только алиас в нашей БД. Не
-     * меняя названия рабочей области на геосервере и схемы в БД.
-     *
-     * @param projectId Идентификатор проекта.
-     * @param updateDto Сущность для обновления проекта.
-     */
     @Transactional
     public void update(long projectId, ProjectUpdateDto updateDto) {
         Project project;
@@ -172,17 +173,11 @@ public class ProjectService {
             project.setBbox(updateDto.getBbox());
         }
 
-        project.setDefault(updateDto.isDefault());
         project.setLastModified(now());
 
         projectRepository.save(project);
 
-        messageBus.produce(new CrgAuditEvent(authenticationFacade.getAccessToken(),
-                                             "UPDATE",
-                                             project.getName(),
-                                             "PROJECT",
-                                             project.getId(),
-                                             objectMapper.convertValue(project, JsonNode.class)));
+        sendAuditEvent("UPDATE", project);
     }
 
     @Transactional
@@ -190,24 +185,27 @@ public class ProjectService {
         Long orgId = authenticationFacade.getOrganizationId();
         Long userId = authenticationFacade.getUserDetails().getUserId();
 
-        log.info("Init create project: {} for organization: {}", dto, orgId);
+        log.info("Init create project/folder: {} for organization: {}", dto, orgId);
 
-        Project savedProject = projectRepository.save(new Project(dto, orgId));
+        Project project = new Project(dto, orgId);
+
+        // Если указана родительская папка, устанавливаем путь
+        project.setPath(getPathForParent(dto.getParentId()));
+
+        Project savedProject = projectRepository.save(project);
 
         Role role = roleRepository.findByNameIgnoreCase(OWNER.name())
                                   .orElseThrow(() -> new NotFoundException("Не найдена роль: " + OWNER.name()));
 
-        projectRepository.save(savedProject);
         permissionRepository.save(new Permission("user", userId, role, savedProject));
 
-        plugInBaseMapToNewProject(savedProject);
+        // Добавляем базовые карты только для проектов, не для папок
+        if (!dto.isFolder()) {
+            plugInBaseMapToNewProject(savedProject);
+        }
 
-        messageBus.produce(new CrgAuditEvent(authenticationFacade.getAccessToken(),
-                                             "CREATE",
-                                             savedProject.getName(),
-                                             "PROJECT",
-                                             savedProject.getId(),
-                                             objectMapper.convertValue(savedProject, JsonNode.class)));
+        // Отправляем событие аудита
+        sendAuditEvent("CREATE", savedProject);
 
         ProjectProjectionImpl projection = new ProjectProjectionImpl(savedProject);
         projection.setRole(OWNER.name());
@@ -215,20 +213,51 @@ public class ProjectService {
         return projection;
     }
 
+    /**
+     * Перемещает проект в другую папку
+     *
+     * @param projectId      идентификатор проекта для перемещения
+     * @param parentFolderId идентификатор родительской папки (может быть null для перемещения на корневой уровень)
+     */
+    @Transactional
+    public void moveProject(long projectId, Long parentFolderId) {
+        Project project = getById(projectId);
+
+        if (!isOwner(project)) {
+            throw new ForbiddenException("Недостаточно прав для перемещения проекта: " + projectId);
+        }
+
+        project.setPath(getPathForParent(parentFolderId));
+
+        project.setLastModified(now());
+        projectRepository.save(project);
+
+        sendAuditEvent("MOVE", project);
+    }
+
+    /**
+     * Удаляет проект или папку
+     *
+     * @param projectId идентификатор проекта или папки
+     *
+     * @throws BadRequestException если папка не пуста
+     * @throws ForbiddenException  если у пользователя недостаточно прав
+     */
     public void delete(Long projectId) {
         Project project = getById(projectId);
         if (!isOwner(project)) {
             throw new ForbiddenException("Недостаточно прав для удаления проекта: " + projectId);
         }
 
+        // Если это папка, проверяем, что она пуста
+        if (project.isFolder() && projectRepository.existsByPath(projectId)) {
+            throw new BadRequestException(
+                    "Невозможно удалить непустую папку. Пожалуйста, сначала удалите всё содержимое");
+        }
+
         projectRepository.delete(project);
 
-        messageBus.produce(
-                new CrgAuditEvent(authenticationFacade.getAccessToken(),
-                                  "DELETE",
-                                  project.getName(),
-                                  "PROJECT",
-                                  projectId));
+        sendDeleteAuditEvent(project);
     }
 
     private void plugInBaseMapToNewProject(Project project) {
@@ -289,5 +318,51 @@ public class ProjectService {
         }
 
         return isExist;
+    }
+
+    /**
+     * Получает путь для родительской папки
+     *
+     * @param parentId идентификатор родительской папки
+     *
+     * @return путь для родительской папки
+     *
+     * @throws BadRequestException если указанный проект не является папкой
+     */
+    private String getPathForParent(Long parentId) {
+        if (parentId == null || parentId == 0) {
+            return null;
+        }
+
+        Project parentFolder = getById(parentId);
+        if (!parentFolder.isFolder()) {
+            throw new BadRequestException("Указанный проект не является папкой: " + parentId);
+        }
+
+        String folderPath = parentFolder.getPath();
+        if (folderPath == null) {
+            return "/" + parentFolder.getId();
+        } else {
+            return folderPath + "/" + parentFolder.getId();
+        }
+    }
+
+    private void sendAuditEvent(String action, Project project) {
+        messageBus.produce(
+                new CrgAuditEvent(authenticationFacade.getAccessToken(),
+                                  action,
+                                  project.getName(),
+                                  project.isFolder() ? "FOLDER" : "PROJECT",
+                                  project.getId(),
+                                  objectMapper.convertValue(project, JsonNode.class)));
+    }
+
+    private void sendDeleteAuditEvent(Project project) {
+        messageBus.produce(
+                new CrgAuditEvent(authenticationFacade.getAccessToken(),
+                                  "DELETE",
+                                  project.getName(),
+                                  project.isFolder() ? "FOLDER" : "PROJECT",
+                                  project.getId()));
     }
 }

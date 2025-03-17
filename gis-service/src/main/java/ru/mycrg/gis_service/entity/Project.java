@@ -5,7 +5,7 @@ import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.hateoas.Identifiable;
-import ru.mycrg.gis_service.dto.project.ProjectCreateDto;
+import ru.mycrg.common_contracts.generated.gis_service.project.ProjectCreateDto;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -34,6 +34,12 @@ public class Project implements Identifiable<Long> {
 
     @Column
     private boolean isDefault;
+
+    @Column
+    private String path;
+
+    @Column
+    private boolean isFolder;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;
@@ -69,6 +75,7 @@ public class Project implements Identifiable<Long> {
         this.description = dto.getDescription();
         this.bbox = dto.getBbox();
         this.isDefault = dto.isDefault();
+        this.isFolder = dto.isFolder();
         this.createdAt = LocalDateTime.now();
         this.lastModified = LocalDateTime.now();
         this.organizationId = organizationId;
@@ -181,6 +188,22 @@ public class Project implements Identifiable<Long> {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
+    }
+
+    public boolean isFolder() {
+        return isFolder;
+    }
+
+    public void setFolder(boolean folder) {
+        isFolder = folder;
     }
 
     @Override
