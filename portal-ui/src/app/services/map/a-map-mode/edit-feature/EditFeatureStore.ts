@@ -2,12 +2,13 @@ import { action, computed, makeObservable, observable } from 'mobx';
 import { Feature, Polygon } from '@turf/turf';
 import { isEqual } from 'lodash';
 
-import { Toast } from '../../../../components/Toast/Toast';
 import { Projection } from '../../../data/projections/projections.models';
 import { GeometryType, WfsFeature, WfsGeometry } from '../../../geoserver/wfs/wfs.models';
 import { isGeometryValid } from '../../../geoserver/wfs/wfs.util';
 import { CrgVectorableLayer } from '../../../gis/layers/layers.models';
+import { services } from '../../../services';
 import { transformGeometry } from '../../../util/coordinates-transform.util';
+import { selectedFeaturesStore } from '../selected-features/SelectedFeatures.store';
 import { EditFeaturesData } from './EditFeature.models';
 
 class EditFeatureStore {
@@ -16,30 +17,21 @@ class EditFeatureStore {
     return this._instance || (this._instance = new this());
   }
 
-  @observable geometry?: WfsGeometry;
-  @observable hasGeometryWarning: boolean = false;
+  @observable pristine: boolean = true;
+  @observable editFeaturesData?: EditFeaturesData;
 
   @observable currentProjection?: Projection;
   @observable nativeProjection?: Projection;
-  @observable previousProjection?: Projection;
-  @observable defaultProjection?: Projection;
 
-  @observable layer?: CrgVectorableLayer;
+  // Зона слоя допустимая для добавления объектов без предупреждения
   @observable layerExtent?: Feature<Polygon>;
+  // Признак нарушения границ зоны layerExtent какой-либо из точек геометрии
+  @observable hasGeometryWarning: boolean = false;
 
-  @observable editFeaturesData?: EditFeaturesData;
-
-  // Некий агрегатор, впитывающий в себя изменения ангулар формы и изменения геометрии
-  @observable private featuresEdited?: boolean;
   @observable private virginGeometry?: WfsGeometry;
 
   constructor() {
     makeObservable(this);
-  }
-
-  @computed
-  get pristine() {
-    return this.editFeaturesData === undefined ? true : !this.featuresEdited ?? true;
   }
 
   @computed
@@ -48,13 +40,36 @@ class EditFeatureStore {
   }
 
   @computed
+  get geometry(): WfsGeometry | undefined {
+    return this.firstFeature?.geometry;
+  }
+
+  @computed
   get resultGeometry(): WfsGeometry | undefined {
-    if (!this.currentProjection || !this.geometry || !this.nativeProjection) {
-      throw new Error('Отсутствует проекция, невозможно получить координаты');
+    const feature = this.firstFeature;
+    if (!feature) {
+      services.logger.info('resultGeometry Отсутствует фича');
+
+      return;
+    }
+
+    const geometry = feature.geometry;
+    if (!this.currentProjection) {
+      services.logger.info('resultGeometry Отсутствует текущая проекция');
+
+      return;
+    } else if (!geometry) {
+      services.logger.info('resultGeometry Отсутствует геометрия');
+
+      return;
+    } else if (!this.nativeProjection) {
+      services.logger.info('resultGeometry Отсутствует нативная проекция');
+
+      return;
     }
 
     return transformGeometry(
-      this.geometry,
+      geometry,
       this.currentProjection,
       this.nativeProjection,
       this.virginGeometryInCurrentProjection,
@@ -63,44 +78,31 @@ class EditFeatureStore {
   }
 
   @computed
-  get isValid(): boolean {
+  get isGeometryValid(): boolean {
     return Boolean(this.resultGeometry && isGeometryValid(this.resultGeometry));
   }
 
   @computed
-  get isChanged(): boolean {
-    return this.isValid && !isEqual(this.resultGeometry, this.virginGeometry);
+  get isGeometryChanged(): boolean {
+    return this.isGeometryValid && !isEqual(this.resultGeometry, this.virginGeometry);
   }
 
   @computed
   get geometryType(): GeometryType | undefined {
-    return this.geometry?.type;
-  }
-
-  @computed
-  private get virginGeometryInCurrentProjection(): WfsGeometry | undefined {
-    if (!this.virginGeometry || !this.nativeProjection || !this.currentProjection) {
-      throw new Error('Отсутствует проекция или начальная геометрия');
-    }
-
-    return transformGeometry(this.virginGeometry, this.nativeProjection, this.currentProjection);
+    return this.firstFeature?.geometry?.type;
   }
 
   @action
-  initFeature(feature: WfsFeature, projection: Projection | undefined): void {
-    if (feature.geometry && projection) {
-      this.initGeometry(feature.geometry, projection);
+  initFeature(feature: WfsFeature, projection: Projection): void {
+    if (feature && feature.geometry) {
+      this.nativeProjection = projection;
+      this.currentProjection = projection;
+      this.virginGeometry = feature.geometry;
+
+      this.setGeometry(feature.geometry);
     } else {
-      Toast.error('Не удалось получить проекцию или геометрию объекта');
+      services.logger.warn('Не корректная фича');
     }
-  }
-
-  @action
-  initGeometry(geometry: WfsGeometry, projection: Projection): void {
-    this.nativeProjection = projection;
-    this.currentProjection = projection;
-    this.virginGeometry = geometry;
-    this.setGeometry(geometry);
   }
 
   @action
@@ -119,38 +121,61 @@ class EditFeatureStore {
       throw new Error('Отсутствует проекция');
     }
 
-    this.geometry = transformGeometry(geometry, this.nativeProjection, this.currentProjection);
+    if (this.firstFeature) {
+      this.firstFeature.geometry = transformGeometry(geometry, this.nativeProjection, this.currentProjection);
+    }
   }
 
   @action.bound
-  setProjection(proj: Projection): void {
+  setCurrentProjectionAndTransformGeometry(proj: Projection): void {
     if (!this.resultGeometry || !this.nativeProjection) {
       throw new Error('Отсутствует геометрия или базовая проекция');
     }
 
-    this.geometry = transformGeometry(this.resultGeometry, this.nativeProjection, proj);
-    this.currentProjection = proj;
+    if (this.firstFeature) {
+      this.firstFeature.geometry = transformGeometry(this.resultGeometry, this.nativeProjection, proj);
+      this.currentProjection = proj;
+    }
   }
 
   @action
   setLayer(layer: CrgVectorableLayer): void {
-    this.layer = layer;
+    if (this.editFeaturesData) {
+      this.editFeaturesData.layer = layer;
+    }
   }
 
   @action
-  setFeaturesEdited(edited: boolean) {
-    this.featuresEdited = edited;
+  setPristine(pristine: boolean) {
+    this.pristine = pristine;
   }
 
   @action
-  setEditFeaturesData(editFeaturesData: EditFeaturesData) {
+  setEditFeaturesData(editFeaturesData: EditFeaturesData | undefined) {
+    if (editFeaturesData === undefined) {
+      this.setPristine(false);
+    }
+
     this.editFeaturesData = editFeaturesData;
+
+    // Обновляем фичу в списке выделенных
+    editFeatureStore.editFeaturesData?.features.forEach(feature => {
+      selectedFeaturesStore.updateFeature(feature);
+    });
   }
 
-  @action
-  reset() {
-    this.editFeaturesData = undefined;
-    this.featuresEdited = false;
+  @computed
+  private get virginGeometryInCurrentProjection(): WfsGeometry | undefined {
+    if (!this.virginGeometry || !this.nativeProjection || !this.currentProjection) {
+      throw new Error('Отсутствует проекция или начальная геометрия');
+    }
+
+    return transformGeometry(this.virginGeometry, this.nativeProjection, this.currentProjection);
+  }
+
+  @computed
+  private get firstFeature(): WfsFeature | undefined {
+    return this.editFeaturesData?.features[0];
   }
 }
 

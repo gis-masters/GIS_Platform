@@ -5,8 +5,7 @@ import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 import { EditFeatureMode } from 'src/app/services/map/a-map-mode/edit-feature/EditFeature.models';
 
-import { communicationService } from '../../../services/communication.service';
-import { deleteFeatures } from '../../../services/data/vectorData/vectorData.service';
+import { deleteFeaturesAndEmitEvent } from '../../../services/data/vectorData/vectorData.service';
 import { WfsFeature } from '../../../services/geoserver/wfs/wfs.models';
 import { CrgVectorLayer } from '../../../services/gis/layers/layers.models';
 import { editFeatureStore } from '../../../services/map/a-map-mode/edit-feature/EditFeatureStore';
@@ -79,13 +78,14 @@ export class AttributesRowActions extends Component<AttributesRowActionsProps> {
     const { feature, layer } = this.props;
 
     const confirmed = await konfirmieren({
-      message: 'Вы действительно хотите удалить 1 объект?',
+      message: 'Вы действительно хотите удалить объект?',
       okText: 'Удалить',
       cancelText: 'Отмена'
     });
 
     if (confirmed) {
-      await deleteFeatures(layer.dataset, layer.tableName, [feature]);
+      await deleteFeaturesAndEmitEvent(layer.dataset, layer.tableName, [feature]);
+      mapService.refreshAllLayers();
 
       await mapModeManager.changeMode(
         MapMode.SELECTED_FEATURES,
@@ -97,9 +97,6 @@ export class AttributesRowActions extends Component<AttributesRowActionsProps> {
         },
         'delete 1'
       );
-
-      mapService.refreshAllLayers();
-      communicationService.featuresUpdated.emit();
     }
   }
 }

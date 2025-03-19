@@ -7,7 +7,7 @@ import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 import { pluralize } from 'numeralize-ru';
 
-import { deleteFeatures } from '../../../services/data/vectorData/vectorData.service';
+import { deleteFeaturesAndEmitEvent } from '../../../services/data/vectorData/vectorData.service';
 import { WfsFeature } from '../../../services/geoserver/wfs/wfs.models';
 import { CrgVectorableLayer, isVectorLayer } from '../../../services/gis/layers/layers.models';
 import { EditFeatureMode } from '../../../services/map/a-map-mode/edit-feature/EditFeature.models';
@@ -181,8 +181,7 @@ export class AttributesBarActions extends Component<AttributesBarActionsProps> {
       }
 
       const { dataset, tableName } = layer;
-      await deleteFeatures(dataset, tableName, features);
-
+      await deleteFeaturesAndEmitEvent(dataset, tableName, features);
       mapService.refreshAllLayers();
 
       await mapModeManager.changeMode(MapMode.NONE, undefined, 'openMultipleDeleteDialog');

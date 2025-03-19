@@ -73,7 +73,7 @@ export default class EditFeatureGeometry extends Component<EditFeatureGeometryPr
             Система координат:
             <EditFeatureGeometrySelectProjection
               value={editFeatureStore.currentProjection}
-              onChange={editFeatureStore.setProjection}
+              onChange={editFeatureStore.setCurrentProjectionAndTransformGeometry}
             />
           </EditFeatureGeometryField>
         </EditFeatureGeometryHeader>
@@ -125,11 +125,11 @@ export default class EditFeatureGeometry extends Component<EditFeatureGeometryPr
 
   @action
   private async updateExtent() {
-    if (!editFeatureStore?.layer) {
+    if (!editFeatureStore?.editFeaturesData?.layer) {
       return;
     }
 
-    const { layer } = editFeatureStore;
+    const { layer } = editFeatureStore.editFeaturesData;
 
     const { nativeBoundingBox } =
       layer.type === CrgLayerType.VECTOR || isVectorFromFile(layer.type)

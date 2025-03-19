@@ -94,6 +94,15 @@ class SelectedFeaturesStore {
     this.active = status;
   }
 
+  @action
+  updateFeature(updatedFeature: WfsFeature) {
+    const findFeature = this.features.find(feature => feature.id === updatedFeature.id);
+    if (findFeature) {
+      findFeature.properties = updatedFeature.properties;
+      findFeature.geometry = updatedFeature.geometry;
+    }
+  }
+
   // use only in map-selection.service.ts
 
   @action

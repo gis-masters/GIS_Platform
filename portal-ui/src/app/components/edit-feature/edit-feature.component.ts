@@ -20,7 +20,11 @@ import {
   getFieldRelations
 } from '../../services/data/schema/schema.utils';
 import { OldPropertySchema, ValueType } from '../../services/data/schema/schemaOld.models';
-import { createFeature, deleteFeatures, updateFeature } from '../../services/data/vectorData/vectorData.service';
+import {
+  createFeature,
+  deleteFeaturesAndEmitEvent,
+  updateFeature
+} from '../../services/data/vectorData/vectorData.service';
 import { extractFeatureId } from '../../services/geoserver/featureType/featureType.util';
 import { transformFeatureService } from '../../services/geoserver/wfs/transform-feature.service';
 import { WfsFeature, WfsGeometry } from '../../services/geoserver/wfs/wfs.models';
@@ -48,6 +52,7 @@ import { calculateValues } from '../../services/util/form/formValidation.utils';
 import { fromMobx } from '../../services/util/fromMobx';
 import { konfirmieren } from '../../services/utility-dialogs.service';
 import { currentProject } from '../../stores/CurrentProject.store';
+import { mapStore } from '../../stores/Map.store';
 import { sidebars } from '../../stores/Sidebars.store';
 import { BaseEdit } from '../edit-bug-object/base-edit';
 import { applyFieldValue, convertToComplexField } from '../Form/Form.utils';
@@ -75,7 +80,6 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
   isGeometryValid = false;
   isGeometryChanged = false;
 
-  private properties?: Properties;
   private unsubscribeFromMobx$: Subject<void> = new Subject<void>();
 
   constructor(private formBuilder: UntypedFormBuilder) {
@@ -124,7 +128,7 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
           setTimeout(() => {
             this.isGeometryValid = true;
             this.isGeometryChanged = true;
-            editFeatureStore.setFeaturesEdited(true);
+            editFeatureStore.setPristine(true);
           }, 100);
         }
 
@@ -137,7 +141,6 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
         const view = isVectorLayer(this.layer) ? this.layer.view : undefined;
         this.featureDescription = applyViewOld(changeSchemaNamesCaseByFeature(oldSchema, firstFeature), view);
 
-        this.properties = data.properties;
         const propertiesWithAppliedView = applyView(layerSchema, view).properties;
         const propertiesWithChangedNames = changeSchemaNamesCaseByFeature(oldSchema, firstFeature).properties;
 
@@ -277,7 +280,12 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
           firstFeature.geometry = getEmptyGeometry(this.featureDescription.geometryType);
         }
 
-        editFeatureStore.initFeature(firstFeature, await getFeatureProjection(firstFeature));
+        const projection = await getFeatureProjection(firstFeature);
+        if (projection) {
+          editFeatureStore.initFeature(firstFeature, projection);
+        } else {
+          services.logger.error('Не удалось получить проекцию или геометрию объекта');
+        }
 
         if (this.updatingAllowed) {
           // eslint-disable-next-line @typescript-eslint/no-unsafe-return
@@ -286,28 +294,22 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
             .pipe(takeUntil(this.unsubscribe$))
             .pipe(takeUntil(this.unsubscribeFromMobx$))
             .subscribe(() => {
-              fromMobx(() => editFeatureStore.isValid)
+              fromMobx(() => editFeatureStore.isGeometryValid)
                 .pipe(takeUntil(this.unsubscribe$))
                 .pipe(takeUntil(this.unsubscribeFromMobx$))
                 .subscribe(isValid => {
                   this.isGeometryValid = isValid;
                 });
 
-              fromMobx(() => editFeatureStore.isChanged)
+              fromMobx(() => editFeatureStore.isGeometryChanged)
                 .pipe(takeUntil(this.unsubscribe$))
                 .pipe(takeUntil(this.unsubscribeFromMobx$))
-                .subscribe(isChanged => {
-                  this.isGeometryChanged = isChanged;
-                  editFeatureStore.setFeaturesEdited(!this.editFeatureForm?.pristine || isChanged);
+                .subscribe(isGeometryChanged => {
+                  this.isGeometryChanged = isGeometryChanged;
+                  editFeatureStore.setPristine(false);
                 });
             });
         }
-
-        this.editFeatureForm.valueChanges.subscribe((featureProperties: Record<string, unknown>) => {
-          this.validateCustomRules(featureProperties);
-
-          editFeatureStore.setFeaturesEdited(!this.editFeatureForm?.pristine);
-        });
       });
 
     // Подписка на изменение слоёв, для реакции на изменение "представления" у слоя
@@ -329,8 +331,7 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
               payload: {
                 mode: this.mode || EditFeatureMode.single,
                 features: this.features as WfsFeature[],
-                layer: currentLayer,
-                properties: this.properties
+                layer: currentLayer
               }
             },
             'edit feature vectorableLayers'
@@ -343,6 +344,10 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
     if (currentProject.visibleOnMapLayers.length) {
       await mapDrawService.highlightFeatures(selectedFeaturesStore.highlightedFeatures);
     }
+  }
+
+  cantBeSaved(): boolean {
+    return mapStore.mode === MapMode.EDIT_FEATURE ? editFeatureStore.pristine : false;
   }
 
   async saveFeature(): Promise<void> {
@@ -363,7 +368,7 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
   }
 
   async saveFeatureWithoutConfirm(): Promise<void> {
-    if (this.editFeatureForm?.pristine && (!this.isGeometryChanged || !this.isGeometryValid)) {
+    if (this.cantBeSaved()) {
       return;
     }
 
@@ -415,7 +420,7 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
       await this.batchUpdateFeatures(this.features || [], actualProperties, geometry);
     }
 
-    editFeatureStore.setFeaturesEdited(false);
+    editFeatureStore.setPristine(true);
 
     const savedFeatures = await getFeaturesById(ids, layer.complexName);
 
@@ -438,8 +443,7 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
         payload: {
           mode: this.mode || EditFeatureMode.single,
           features: savedFeatures,
-          layer: this.layer,
-          properties: this.properties
+          layer: this.layer
         }
       },
       'saveFeatureWithConfirm reopen 1.2'
@@ -458,7 +462,7 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
 
     if (
       await konfirmieren({
-        message: 'Вы действительно хотите удалить 1 объект?',
+        message: 'Вы действительно хотите удалить объект?',
         okText: 'Удалить',
         cancelText: 'Отмена'
       })
@@ -467,7 +471,8 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
 
       const firstWfsFeature = (this.features || [])[0];
       if (editFeatureStore.editFeaturesData?.mode === EditFeatureMode.single) {
-        await deleteFeatures(dataset, tableName, [firstWfsFeature]);
+        await deleteFeaturesAndEmitEvent(dataset, tableName, [firstWfsFeature]);
+        mapService.refreshAllLayers();
 
         await mapModeManager.changeMode(
           MapMode.SELECTED_FEATURES,
@@ -482,9 +487,6 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
       } else {
         services.logger.warn(`Удаление только для режима ${EditFeatureMode[EditFeatureMode.single]}`);
       }
-
-      mapService.refreshAllLayers();
-      communicationService.featuresUpdated.emit();
     }
   }
 
@@ -574,12 +576,10 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
   }
 
   private publishPristine() {
-    if (editFeatureStore.editFeaturesData) {
-      editFeatureStore.editFeaturesData.pristine = this.editFeatureForm?.pristine;
+    if (this.editFeatureForm) {
+      editFeatureStore.setPristine(this.editFeatureForm.pristine);
     } else {
-      editFeatureStore.setEditFeaturesData({
-        pristine: false
-      } as EditFeaturesData);
+      editFeatureStore.setPristine(false);
     }
   }
 
@@ -603,4 +603,6 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
   protected readonly sidebars = sidebars;
   protected readonly Number = Number;
   protected readonly editFeatureStore = editFeatureStore;
+  protected readonly mapStore = mapStore;
+  protected readonly MapMode = MapMode;
 }

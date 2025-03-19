@@ -40,7 +40,7 @@ class EditFeatureModeHandler implements IMapModeHandler {
       sidebars.closeSelectedFeaturesSidebar();
     }
 
-    editFeatureStore.reset();
+    editFeatureStore.setEditFeaturesData(undefined);
 
     return Promise.resolve();
   }

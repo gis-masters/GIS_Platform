@@ -121,7 +121,7 @@ export class EditFeatureGeometryCoord extends Component<EditFeatureGeometryCoord
     const { val } = this.props;
 
     if (
-      !editFeatureStore.layer ||
+      !editFeatureStore.editFeaturesData?.layer ||
       !editFeatureStore.currentProjection ||
       !editFeatureStore.layerExtent ||
       !this.defaultProjection

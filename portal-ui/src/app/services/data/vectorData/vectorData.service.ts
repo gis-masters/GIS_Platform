@@ -161,7 +161,7 @@ export async function updateFeature(
   await vectorDataClient.updateFeature(datasetIdentifier, vectorTableIdentifier, patchedFeature);
 }
 
-export async function deleteFeatures(
+export async function deleteFeaturesAndEmitEvent(
   datasetIdentifier: string,
   vectorTableIdentifier: string,
   features: WfsFeature[]

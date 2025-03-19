@@ -55,7 +55,7 @@ export const CreateBufferDialog: FC<CreateBufferDialogProps> = observer(({ open,
       }
 
       await mapModeManager.changeMode(
-        MapMode.EDIT_FEATURE,
+        MapMode.DRAW_FEATURE,
         {
           payload: {
             features: [featureWithBuffer],
@@ -63,7 +63,7 @@ export const CreateBufferDialog: FC<CreateBufferDialogProps> = observer(({ open,
             layer: formValue.layer as CrgVectorLayer
           }
         },
-        'CreateBufferDialog'
+        'add buffer'
       );
 
       // TODO: "режим" сам должен принимать решение, что подсвечивать
