@@ -155,18 +155,18 @@ public class RnvGiveStrategy implements IRnvRequestDocumentCreator {
         setTableNode(table, 70, "7.X.7. Дата подготовки технического плана:", "");
         setTableNode(table, 71, "7.X.8. Страховой номер индивидуального лицевого счета кадастрового инженера, " +
                 "подготовившего технический план:", "");
-        addCenterText(document, "");
+        addCenterText(document, "", 13, false);
         addBoldText(document, "При заполнении заявления рекомендуем руководствоваться Приказом Минстроя");
         addBoldText(document, "России от 03.06.2022 N 446/пр \"Об утверждении формы разрешения на строительство");
         addBoldText(document, "и формы разрешения на ввод объекта в эксплуатацию\".");
         addText(document, "__________________________________________________________________________");
-        addCenterText(document, "Информация о согласии застройщика и иного лица (иных лиц) на осуществление");
-        addCenterText(document, "государственной регистрации права собственности на построенные, реконструированные");
+        addCenterText(document, "Информация о согласии застройщика и иного лица (иных лиц) на осуществление", 13, false);
+        addCenterText(document, "государственной регистрации права собственности на построенные, реконструированные", 13, false);
         addCenterText(document,
-                      "здание, сооружение и (или) на все расположенные в таких здании, сооружении помещения,");
+                      "здание, сооружение и (или) на все расположенные в таких здании, сооружении помещения,", 13, false);
         addTextWithSuperscript(document);
-        addCenterText(document, "Градостроительного кодекса Российской Федерации)");
-        addCenterText(document, "");
+        addCenterText(document, "Градостроительного кодекса Российской Федерации)", 13, false);
+        addCenterText(document, "", 13, false);
 
         Optional<ConfirmationConsentType> oConfirmationConsent = ofNullable(request.getConfirmationConsent());
         boolean isConfirmConstructionWithoutInvolvement = oConfirmationConsent
@@ -183,14 +183,15 @@ public class RnvGiveStrategy implements IRnvRequestDocumentCreator {
         setColumnWidth(table2, 3, 2600);
         setColumnWidth(table2, 4, 2600);
 
-        setupRowTable2(table2, 0, "1 Подтверждаю, что строительство, реконструкция здания, сооружения осуществлялись:");
+        setupRowTable2(table2, 0, "1 Подтверждаю, что строительство, реконструкция здания, сооружения " +
+                "осуществлялись:", 4);
         setupRowTable2(table2, 1, "1.1", confirmWithoutInvolvement, "застройщиком без привлечения средств иных лиц");
         setupRowTable2(table2, 2, "1.2", "",
                        "исключительно с привлечением средств застройщика и указанного ниже лица " +
                                "(лиц), осуществлявшего финансирование строительства, реконструкции здания, сооружения (далее – лицо (лица), осуществлявшее финансирование):");
         setupSpecialRowTable2(table2);
-        setupRowTable2(table2, "1.2.1");
-        setupRowTable2(table2, 5, "2. Подтверждаю наличие:");
+        setupRowTable2(table2, 4,  "1.2.1", 1);
+        setupRowTable2(table2, 5, "2. Подтверждаю наличие:", 4);
         setupRowTable2(table2, 6, "2.1", confirm, "согласия застройщика");
         setupRowTable2(table2, 7, "2.2", "", "согласия застройщика и лица (лиц), осуществлявшего финансирование");
         setupSpecialRowTable2(table2, 8, "На осуществление государственной регистрации права собственности:");
@@ -207,11 +208,12 @@ public class RnvGiveStrategy implements IRnvRequestDocumentCreator {
                                " " +
                                "в построенном, реконструированном здании, сооружении помещений, машино-мест");
         setupRowTable2(table2, 16,
-                       "5. Сведения об уплате государственной пошлины за осуществление государственной регистрации прав: _____________________________________");
+                       "5. Сведения об уплате государственной пошлины за осуществление государственной регистрации " +
+                               "прав: _____________________________________", 4);
 
-        addCenterText(document, "");
-        addCenterText(document, "");
-        addCenterText(document, "");
+        addCenterText(document, "", 13, false);
+        addCenterText(document, "", 13, false);
+        addCenterText(document, "", 13, false);
         addText(document, "К настоящему заявлению прилагаю <*>:");
         addText(document, "1) правоустанавливающие документы на земельный участок, в том числе соглашение");
         addText(document, "об установлении сервитута, решение об установлении публичного сервитута");

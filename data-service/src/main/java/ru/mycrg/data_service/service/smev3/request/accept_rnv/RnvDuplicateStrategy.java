@@ -79,7 +79,7 @@ public class RnvDuplicateStrategy implements IRnvRequestDocumentCreator {
         addText(document, "контактный телефон и (или) иные контакты)", ParagraphAlignment.LEFT, 3875, 5, 12);
         addText(document, "", ParagraphAlignment.BOTH, 5000, 5, 12);
         addText(document, "", ParagraphAlignment.BOTH, 5000, 5, 12);
-        addCenterText(document, "Заявление о выдаче дубликата разрешения на строительство");
+        addCenterText(document, "Заявление о выдаче дубликата разрешения на строительство", 13, false);
         addText(document, "", ParagraphAlignment.BOTH, 5000, 5, 12);
         addTextWithSpacingAndUnderline(document,
                                        "Прошу выдать дубликат разрешение на строительство (реконструкцию) от ",

@@ -81,9 +81,9 @@ public class RnsFixTechErrorStrategy implements IRnsRequestDocumentCreator {
         addText(document, "", ParagraphAlignment.BOTH, 5000, 5, 12);
         addText(document, "", ParagraphAlignment.BOTH, 5000, 5, 12);
         addText(document, "", ParagraphAlignment.BOTH, 5000, 5, 12);
-        addCenterText(document, "ЗАЯВЛЕНИЕ");
-        addCenterText(document, "об исправлении опечаток и (или) ошибок в документе, являющегося результатом ");
-        addCenterText(document, "предоставления государственной услуги ");
+        addCenterText(document, "ЗАЯВЛЕНИЕ", 13, false);
+        addCenterText(document, "об исправлении опечаток и (или) ошибок в документе, являющегося результатом ", 13, false);
+        addCenterText(document, "предоставления государственной услуги ", 13, false);
         addText(document, "", ParagraphAlignment.BOTH, 5000, 5, 12);
         addTextWithSpacing(document, "В тексте Разрешения на строительство № " + dataProvider.getPermitNumber(request),
                            5,
@@ -93,20 +93,22 @@ public class RnsFixTechErrorStrategy implements IRnsRequestDocumentCreator {
         addTextWithSpacing(document, "являющегося    результатом    предоставления    государственной    услуги, по ",
                            5, 13);
         addTextWithSpacing(document, "заявлению от__№__, допущена опечатка и (или) ошибка, а именно:", 5, 13);
-        addTextWithSpacingAndUnderline(document, "____" + dataProvider.getCurrentVersion(request) + "____", 5, 13);
+        addTextWithSpacingAndUnderline(document, "____" + dataProvider.getCurrentVersion(request) + "____", 5, 13, false);
         addCenterText(document, "(указать где и какая ошибка (опечатка) допущена)", 10, false);
         addTextWithSpacing(document, "В   соответствии  с  имеющимися   в  учетном  деле  по  заявлению о ", 5, 13);
         addTextWithSpacing(document, "предоставлении государственной услуги документами (сведениями), прошу ", 5, 13);
         addTextWithSpacing(document, "исправить допущенную опечатку и (или) ошибку без изменения содержания", 5, 13);
         addTextWithSpacing(document, "документа, указав следующее:", 5, 13);
         addTextWithSpacingAndUnderline(document, "____" + dataProvider.getNewVersion(request) + "____", 5,
-                                       13);
+                                       13, false);
         addCenterText(document, "(указать правильный вариант)", 10, false);
         addText(document, "", ParagraphAlignment.BOTH, 5000, 5, 12);
         addText(document, "", ParagraphAlignment.BOTH, 5000, 5, 12);
         addTextWithSpacing(document, "Приложение:", 5, 13);
         addTextWithSpacing(document, "_______________________________________________________________________", 5, 13);
-        addTextWithUnderline(document, "_______________________________________________________________________");
+        addTextWithSpacingAndUnderline(document,
+                                       "_______________________________________________________________________", 5,
+                                       13, true);
         addTextWithSpacing(document, "_______________________________________________________________________", 5, 13);
         addText(document, "", ParagraphAlignment.BOTH, 5000, 5, 12);
         addText(document, "", ParagraphAlignment.BOTH, 5000, 5, 12);

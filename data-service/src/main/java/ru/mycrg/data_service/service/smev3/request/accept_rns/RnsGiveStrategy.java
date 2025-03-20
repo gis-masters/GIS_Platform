@@ -215,10 +215,10 @@ public class RnsGiveStrategy implements IRnsRequestDocumentCreator {
         addText(document, "Правоустанавливающие документы на земельный участок:");
         addText(document, "- реквизиты документа (решения), устанавливающего право собственности на");
         addText(document, "земельный участок, дата и номер государственной регистрации права собственности");
-        addTextWithUnderline(document,
+        addTextWithSpacingAndUnderline(document,
                              "   " + dataProvider.getTitleDocName(request) + " "
                                      + dataProvider.getTitleDocDate(request) + " "
-                                     + dataProvider.getTitleDocNumber(request) + "   ");
+                                     + dataProvider.getTitleDocNumber(request) + "   ", 5, 13, true);
         addText(document, "- Договор аренды, субаренды (ненужное зачеркнуть) земельного участка,");
         addText(document, "заключенный с ____________________________________________ \"__\" _______ 20__ ");
         addText(document, "г. N _____,");
@@ -227,7 +227,7 @@ public class RnsGiveStrategy implements IRnsRequestDocumentCreator {
         addText(document, "- иное ____________________________________________________________________;");
         addTextWithSpacingAndUnderlineAndTextAfter(document, "Градостроительный план земельного участка N ", 30, 12,
                                                    dataProvider.getGPZUNumber(request), " выдан");
-        addTextWithUnderline(document, dataProvider.getGPZUDate(request));
+        addTextWithSpacingAndUnderline(document, dataProvider.getGPZUDate(request), 5, 13, true);
         addText(document, "Проектная документация на строительство разработана __________________________");
         addText(document, "__________________________________________________________________________,");
         addText(document, "                        (название и адрес местонахождения проектной организации)");
@@ -257,10 +257,10 @@ public class RnsGiveStrategy implements IRnsRequestDocumentCreator {
         addText(document, "К настоящему заявлению прилагаю <*>:");
         addText(document, "1) правоустанавливающие документы на земельный участок, в том числе соглашение ");
         addText(document, "об установлении сервитута, решение об установлении публичного сервитута");
-        addTextWithUnderline(document,
+        addTextWithSpacingAndUnderline(document,
                              "   " + dataProvider.getTitleDocName(request) + " "
                                      + dataProvider.getTitleDocDate(request) + " "
-                                     + dataProvider.getTitleDocNumber(request) + "   ");
+                                     + dataProvider.getTitleDocNumber(request) + "   ", 5, 13, true);
         addText(document, "(указывается наименование, N и дата выдачи документа)");
         addText(document, "2) соглашение о передаче в случаях, установленных бюджетным законодательством");
         addText(document, "Российской Федерации, органом государственной власти (государственным органом),");
@@ -280,9 +280,9 @@ public class RnsGiveStrategy implements IRnsRequestDocumentCreator {
                                        " " + dataProvider.getPlanProjectNumber(request) + " "
                                                + dataProvider.getPlanProjectDate(request) +
                                                " " + dataProvider.getPlanProjectIssuer(request) + " ");
-        addTextWithUnderline(document, dataProvider.getSurveyingNumber(request) + " "
+        addTextWithSpacingAndUnderline(document, dataProvider.getSurveyingNumber(request) + " "
                 + dataProvider.getSurveyingDate(request) + " "
-                + dataProvider.getSurveyingIssuer(request));
+                + dataProvider.getSurveyingIssuer(request), 5, 13, true);
         addText(document, "(наименование проекта, название и N документа об утверждении проекта, дата его");
         addText(document, "принятия)");
         addText(document, "4) результаты инженерных изысканий и следующие материалы, содержащиеся в");
@@ -309,10 +309,10 @@ public class RnsGiveStrategy implements IRnsRequestDocumentCreator {
         addText(document, "случае необходимости сноса объектов капитального строительства, их частей для ");
         addText(document, "строительства, реконструкции других объектов капитального строительства);");
         addText(document, "5) заключение экспертизы проектной документации, выданной ");
-        addTextWithUnderline(document,
+        addTextWithSpacingAndUnderline(document,
                              " " + dataProvider.getPlanProjectIssuer(request) + " "
                                      + dataProvider.getPlanProjectDate(request) + " г. N "
-                                     + dataProvider.getPlanProjectNumber(request));
+                                     + dataProvider.getPlanProjectNumber(request), 5, 13, true);
         addText(document, "(наименование экспертной организации)");
         addTextWithSpacingAndUnderline(document, "от ", 30, 12,
                                        " " + dataProvider.getEcoExpertiseDate(request) + " г. N "

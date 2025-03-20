@@ -7,6 +7,7 @@ import ru.mycrg.data_service.accept_rns_1_0_3.ConstructionPermitsDataType;
 import ru.mycrg.data_service.accept_rns_1_0_3.RequestType;
 
 import java.math.BigInteger;
+import java.util.List;
 import java.util.Optional;
 
 import static java.util.Optional.ofNullable;
@@ -54,11 +55,11 @@ public class DocumentCreationUtils {
         paragraph.setAlignment(CENTER);
         addTextToParagraph(paragraph,
                            "Раздел 1. Наименование исполнительного органа Республики Крым, куда подается заявление о выдаче разрешения на строительство:",
-                           false, 12);
+                           false, 12, false);
         paragraph.createRun().addBreak();
         addTextToParagraph(paragraph,
                            "Министерство жилищной политики и государственного строительного надзора Республики Крым",
-                           true, 12);
+                           true, 12, false);
     }
 
     public static void setupSpecialRow(XWPFTable table) {
@@ -68,13 +69,13 @@ public class DocumentCreationUtils {
         paragraph.setAlignment(ParagraphAlignment.CENTER);
         addTextToParagraph(paragraph,
                            "Раздел 5.1. Сведения о ранее выданных разрешениях на ввод объекта в эксплуатацию в отношении этапа строительства, реконструкции объекта капитального строительства ",
-                           false, 12);
+                           false, 12, false);
         paragraph.createRun().addBreak();
-        addTextToParagraph(paragraph, "(при наличии)", false, true, 12);
+        addTextToParagraph(paragraph, "(при наличии)", false, 12, true);
         paragraph.createRun().addBreak();
         addTextToParagraph(paragraph,
                            "(указывается в случае, предусмотренном частью 3.5 статьи 55 Градостроительного кодекса Российской Федерации)",
-                           false, true, 12);
+                           false, 12, true);
     }
 
     public static void setupRowTable2(XWPFTable table, int rowNumber, String text, String text2, String text3) {
@@ -83,35 +84,26 @@ public class DocumentCreationUtils {
         XWPFTableCell mergedCell = row.getCell(0);
         XWPFParagraph paragraph = mergedCell.getParagraphs().get(0);
         paragraph.setAlignment(ParagraphAlignment.LEFT);
-        addTextToParagraph(paragraph, text, false, 12);
+        addTextToParagraph(paragraph, text, false, 12, false);
 
         XWPFTableCell mergedCell1 = row.getCell(1);
         XWPFParagraph paragraph1 = mergedCell1.getParagraphs().get(0);
         paragraph1.setAlignment(ParagraphAlignment.LEFT);
-        addTextToParagraph(paragraph1, text2, false, 12);
+        addTextToParagraph(paragraph1, text2, false, 12, false);
 
         XWPFTableCell mergedCell2 = row.getCell(2);
         XWPFParagraph paragraph2 = mergedCell2.getParagraphs().get(0);
         paragraph2.setAlignment(ParagraphAlignment.LEFT);
-        addTextToParagraph(paragraph2, text3, false, 12);
+        addTextToParagraph(paragraph2, text3, false, 12, false);
     }
 
-    public static void setupRowTable2(XWPFTable table, String text) {
-        mergeCellsHorizontally(table, 4, 0, 1);
-        XWPFTableRow row = table.getRow(4);
-        XWPFTableCell mergedCell = row.getCell(0);
-        XWPFParagraph paragraph = mergedCell.getParagraphs().get(0);
-        paragraph.setAlignment(ParagraphAlignment.LEFT);
-        addTextToParagraph(paragraph, text, false, 12);
-    }
-
-    public static void setupRowTable2(XWPFTable table, int row, String text) {
-        mergeCellsHorizontally(table, row, 0, 4);
+    public static void setupRowTable2(XWPFTable table, int row, String text, int toCell) {
+        mergeCellsHorizontally(table, row, 0, toCell);
         XWPFTableRow firstRow = table.getRow(row);
         XWPFTableCell mergedCell = firstRow.getCell(0);
         XWPFParagraph paragraph = mergedCell.getParagraphs().get(0);
         paragraph.setAlignment(ParagraphAlignment.LEFT);
-        addTextToParagraph(paragraph, text, false, 12);
+        addTextToParagraph(paragraph, text, false, 12, false);
     }
 
     public static void setupSpecialRowTable2(XWPFTable table) {
@@ -122,20 +114,20 @@ public class DocumentCreationUtils {
         paragraph.setAlignment(ParagraphAlignment.LEFT);
         addTextToParagraph(paragraph,
                            "Фамилия, имя, отчество (при наличии) – для физического лица, осуществлявшего финансирование; Полное наименование – для юридического лица, осуществлявшего финансирование:",
-                           false, 12);
+                           false, 12, false);
 
         XWPFTableCell mergedCell2 = row.getCell(3);
         XWPFParagraph paragraph2 = mergedCell2.getParagraphs().get(0);
         paragraph2.setAlignment(ParagraphAlignment.LEFT);
         addTextToParagraph(paragraph2, "Реквизиты документа, удостоверяющего личность – для физического лица, " +
                                    "осуществлявшего финансирование; Основной государственный регистрационный номер – для юридического лица, осуществлявшего финансирование:",
-                           false, 12);
+                           false, 12, false);
 
         XWPFTableCell mergedCell3 = row.getCell(4);
         XWPFParagraph paragraph3 = mergedCell3.getParagraphs().get(0);
         paragraph3.setAlignment(ParagraphAlignment.LEFT);
         addTextToParagraph(paragraph3, "Адрес (адреса) электронной почты лица, осуществлявшего финансирование:",
-                           false, 12);
+                           false, 12, false);
     }
 
     public static void setupSpecialRowTable2(XWPFTable table, int rowNumber, String text) {
@@ -144,11 +136,11 @@ public class DocumentCreationUtils {
         XWPFTableCell mergedCell = row.getCell(1);
         XWPFParagraph paragraph = mergedCell.getParagraphs().get(0);
         paragraph.setAlignment(ParagraphAlignment.LEFT);
-        addTextToParagraph(paragraph, text, false, 12);
+        addTextToParagraph(paragraph, text, false, 12, false);
     }
 
-    private static void addTextToParagraph(XWPFParagraph paragraph, String text, boolean isBold,
-                                           boolean isItalic, int fontSize) {
+    public static void addTextToParagraph(XWPFParagraph paragraph, String text, boolean isBold, int fontSize,
+                                          boolean isItalic) {
         XWPFRun run = paragraph.createRun();
         run.setText(text);
         run.setFontFamily("Times New Roman");
@@ -157,12 +149,15 @@ public class DocumentCreationUtils {
         run.setItalic(isItalic);
     }
 
-    public static void addTextToParagraph(XWPFParagraph paragraph, String text, boolean isBold, int fontSize) {
-        XWPFRun run = paragraph.createRun();
-        run.setText(text);
-        run.setFontFamily("Times New Roman");
-        run.setFontSize(fontSize);
-        run.setBold(isBold);
+    public static void addTextToParagraph(XWPFParagraph paragraph, List<String> text, boolean isBold, int fontSize) {
+        for (int i = 0; i < text.size(); i++) {
+            String value = text.get(i);
+            XWPFRun run = addRunToParagraph(paragraph, value, fontSize, false, isBold);
+
+            if (i < text.size() - 1) {
+                run.addBreak();
+            }
+        }
     }
 
     public static void mergeCellsAndSetValue(XWPFTable table, int rowNumber, String value, boolean isBold,
@@ -172,19 +167,43 @@ public class DocumentCreationUtils {
         XWPFTableCell mergedCell = row.getCell(0);
         XWPFParagraph paragraph = mergedCell.getParagraphs().get(0);
         paragraph.setAlignment(alignment);
-        addTextToParagraph(paragraph, value, isBold, 12);
+        addTextToParagraph(paragraph, value, isBold, 12, false);
     }
 
-    public static void setTableNode(XWPFTable table, int rowNumber, String rowName, String rowValue) {
+    public static void setTableNode(XWPFTable table, int rowNumber, String rowName, String... rowValues) {
         XWPFTableRow row = table.getRow(rowNumber);
         setCellText(row.getCell(0), rowName);
-        setCellText(row.getCell(1), rowValue);
+        for (int i = 0; i < rowValues.length; i++) {
+            setCellText(row.getCell(i + 1), rowValues[i]);
+        }
+    }
+
+    public static void setCenterTableNode(XWPFTable table, int rowNumber, String rowName, String... rowValues) {
+        XWPFTableRow row = table.getRow(rowNumber);
+        setCenterCellText(row.getCell(0), rowName);
+        for (int i = 0; i < rowValues.length; i++) {
+            setCenterCellText(row.getCell(i + 1), rowValues[i]);
+        }
+    }
+
+    public static void setTableNode(XWPFTable table, int rowNumber, String rowName, String rowValue1,
+                                    List<String> rowValues) {
+        XWPFTableRow row = table.getRow(rowNumber);
+        setCellText(row.getCell(0), rowName);
+        setCellText(row.getCell(1), rowValue1);
+        setCellText(row.getCell(2), rowValues);
+    }
+
+    private static void setCellText(XWPFTableCell cell, List<String> text) {
+        XWPFParagraph paragraph = cell.getParagraphs().get(0);
+        paragraph.setAlignment(ParagraphAlignment.LEFT);
+        addTextToParagraph(paragraph, text, false, 12);
     }
 
     public static void setCellText(XWPFTableCell cell, String text) {
         XWPFParagraph paragraph = cell.getParagraphs().get(0);
         paragraph.setAlignment(LEFT);
-        addTextToParagraph(paragraph, text, false, 12);
+        addTextToParagraph(paragraph, text, false, 12, false);
     }
 
     public static void addBoldText(XWPFDocument document, String text) {
@@ -195,7 +214,7 @@ public class DocumentCreationUtils {
         XWPFParagraph paragraph = document.createParagraph();
         paragraph.setAlignment(BOTH);
         paragraph.setSpacingAfter(spacingAfter);
-        addTextToParagraph(paragraph, text, isBold, 12);
+        addTextToParagraph(paragraph, text, isBold, 12, false);
     }
 
     public static void addText(XWPFDocument document, String text) {
@@ -214,10 +233,7 @@ public class DocumentCreationUtils {
         paragraph.setIndentationLeft(indentationLeft);
         paragraph.setIndentationRight(125);
 
-        XWPFRun run = paragraph.createRun();
-        run.setText(text);
-        run.setFontFamily("Times New Roman");
-        run.setFontSize(fontSize);
+        addRunToParagraph(paragraph, text, fontSize, false, false);
     }
 
     public static void addTextWithUnderline(XWPFDocument doc, String text, ParagraphAlignment align,
@@ -229,11 +245,7 @@ public class DocumentCreationUtils {
         paragraph.setIndentationLeft(indentationLeft);
         paragraph.setIndentationRight(125);
 
-        XWPFRun run = paragraph.createRun();
-        run.setText(text);
-        run.setFontFamily("Times New Roman");
-        run.setUnderline(UnderlinePatterns.SINGLE);
-        run.setFontSize(fontSize);
+        addRunToParagraph(paragraph, text, fontSize, true, false);
     }
 
     public static void addTextWithUnderlineText(XWPFDocument doc, String text, String underlineText,
@@ -245,70 +257,22 @@ public class DocumentCreationUtils {
         paragraph.setIndentationLeft(indentationLeft);
         paragraph.setIndentationRight(125);
 
-        XWPFRun run = paragraph.createRun();
-        run.setText(text);
-        run.setFontFamily("Times New Roman");
-        run.setFontSize(fontSize);
-
-        XWPFRun run2 = paragraph.createRun();
-        run2.setText(underlineText);
-        run2.setFontFamily("Times New Roman");
-        run2.setUnderline(UnderlinePatterns.SINGLE);
-        run2.setFontSize(fontSize);
-    }
-
-    public static void addCenterText(XWPFDocument document, String text) {
-        XWPFParagraph paragraph = document.createParagraph();
-        paragraph.setAlignment(ParagraphAlignment.CENTER);
-        paragraph.setSpacingAfter(5);
-
-        XWPFRun run = paragraph.createRun();
-        run.setText(text);
-        run.setFontFamily("Times New Roman");
-        run.setFontSize(13);
+        addRunToParagraph(paragraph, text, fontSize, false, false);
+        addRunToParagraph(paragraph, underlineText, fontSize, true, false);
     }
 
     public static void addTextWithSpacingAndUnderline(XWPFDocument document, String text, int spacing, int fontSize,
                                                       String underLineText) {
-        XWPFParagraph paragraph = document.createParagraph();
-        paragraph.setAlignment(ParagraphAlignment.LEFT);
-        paragraph.setSpacingAfter(spacing);
-
-        XWPFRun run = paragraph.createRun();
-        run.setText(text);
-        run.setFontFamily("Times New Roman");
-        run.setFontSize(fontSize);
-
-        XWPFRun run2 = paragraph.createRun();
-        run2.setText(underLineText);
-        run2.setFontFamily("Times New Roman");
-        run2.setUnderline(UnderlinePatterns.SINGLE);
-        run2.setFontSize(fontSize);
+        XWPFParagraph paragraph = createParagraph(document, text, spacing, fontSize);
+        addRunToParagraph(paragraph, underLineText, fontSize, true, false);
     }
 
     public static void addTextWithUnderlineAndTab(XWPFDocument document, String text, int spacing, int fontSize,
                                                   String underLineText) {
-        XWPFParagraph paragraph = document.createParagraph();
-        paragraph.setAlignment(ParagraphAlignment.LEFT);
-        paragraph.setSpacingAfter(spacing);
-
-        XWPFRun run = paragraph.createRun();
-        run.setText(text);
-        run.setFontFamily("Times New Roman");
-        run.setFontSize(fontSize);
-
-        XWPFRun runWithSpaces = paragraph.createRun();
-        runWithSpaces.setText("                                                                     ");
-        runWithSpaces.setFontFamily("Times New Roman");
-        runWithSpaces.setFontSize(fontSize);
-        runWithSpaces.setUnderline(UnderlinePatterns.SINGLE);
-
-        XWPFRun run2 = paragraph.createRun();
-        run2.setText(underLineText);
-        run2.setFontFamily("Times New Roman");
-        run2.setUnderline(UnderlinePatterns.SINGLE);
-        run2.setFontSize(fontSize);
-
+        XWPFParagraph paragraph = createParagraph(document, text, spacing, fontSize);
+        addRunToParagraph(paragraph, "                                                                     ", fontSize,
+                          true, false);
+        addRunToParagraph(paragraph, underLineText, fontSize, true, false);
         XWPFRun runSpacesAfter = paragraph.createRun();
         runSpacesAfter.addTab();
         runSpacesAfter.addTab();
@@ -322,71 +286,24 @@ public class DocumentCreationUtils {
 
     public static void addTextWithSpacingAndUnderline(XWPFDocument document, String text, int spacing, int fontSize,
                                                       String underLineText, String text2, String underLineText2,
-                                                       String text3) {
-        XWPFParagraph paragraph = document.createParagraph();
-        paragraph.setAlignment(ParagraphAlignment.LEFT);
-        paragraph.setSpacingAfter(spacing);
-
-        XWPFRun run = paragraph.createRun();
-        run.setText(text);
-        run.setFontFamily("Times New Roman");
-        run.setFontSize(fontSize);
-
-        XWPFRun run2 = paragraph.createRun();
-        run2.setText(underLineText);
-        run2.setFontFamily("Times New Roman");
-        run2.setUnderline(UnderlinePatterns.SINGLE);
-        run2.setFontSize(fontSize);
-
-        XWPFRun run3 = paragraph.createRun();
-        run3.setText(text2);
-        run3.setFontFamily("Times New Roman");
-        run3.setFontSize(fontSize);
-
-        XWPFRun run4 = paragraph.createRun();
-        run4.setText(underLineText2);
-        run4.setFontFamily("Times New Roman");
-        run4.setUnderline(UnderlinePatterns.SINGLE);
-        run4.setFontSize(fontSize);
-
-        XWPFRun run5 = paragraph.createRun();
-        run5.setText(text3);
-        run5.setFontFamily("Times New Roman");
-        run5.setFontSize(fontSize);
+                                                      String text3) {
+        XWPFParagraph paragraph = createParagraph(document, text, spacing, fontSize);
+        addRunToParagraph(paragraph, underLineText, fontSize, true, false);
+        addRunToParagraph(paragraph, text2, fontSize, false, false);
+        addRunToParagraph(paragraph, underLineText2, fontSize, true, false);
+        addRunToParagraph(paragraph, text3, fontSize, false, false);
     }
 
-    public static void addTextWithSpacingAndUnderlineAndTextAfter(XWPFDocument document, String text, int spacing, int fontSize,
-                                                      String underLineText, String text2) {
-        XWPFParagraph paragraph = document.createParagraph();
-        paragraph.setAlignment(ParagraphAlignment.LEFT);
-        paragraph.setSpacingAfter(spacing);
-
-        XWPFRun run = paragraph.createRun();
-        run.setText(text);
-        run.setFontFamily("Times New Roman");
-        run.setFontSize(fontSize);
-
-        XWPFRun run2 = paragraph.createRun();
-        run2.setText(underLineText);
-        run2.setFontFamily("Times New Roman");
-        run2.setUnderline(UnderlinePatterns.SINGLE);
-        run2.setFontSize(fontSize);
-
-        XWPFRun run3 = paragraph.createRun();
-        run3.setText(text2);
-        run3.setFontFamily("Times New Roman");
-        run3.setFontSize(fontSize);
+    public static void addTextWithSpacingAndUnderlineAndTextAfter(XWPFDocument document, String text, int spacing,
+                                                                  int fontSize,
+                                                                  String underLineText, String text2) {
+        XWPFParagraph paragraph = createParagraph(document, text, spacing, fontSize);
+        addRunToParagraph(paragraph, underLineText, fontSize, true, false);
+        addRunToParagraph(paragraph, text2, fontSize, false, false);
     }
 
     public static void addTextWithSpacing(XWPFDocument document, String text, int spacing, int fontSize) {
-        XWPFParagraph paragraph = document.createParagraph();
-        paragraph.setAlignment(ParagraphAlignment.LEFT);
-        paragraph.setSpacingAfter(spacing);
-
-        XWPFRun run = paragraph.createRun();
-        run.setText(text);
-        run.setFontFamily("Times New Roman");
-        run.setFontSize(fontSize);
+        createParagraph(document, text, spacing, fontSize);
     }
 
     public static void addTextWithSuperscript(XWPFDocument document) {
@@ -394,63 +311,19 @@ public class DocumentCreationUtils {
         paragraph.setAlignment(ParagraphAlignment.CENTER);
         paragraph.setSpacingAfter(5);
         addTextToParagraph(paragraph, "машино-места (не заполняется в случаях, указанных в пунктах 1-2 части ", false,
-                           12);
-        addTextToParagraph(paragraph, "3", false, 12);
+                           12, false);
+        addTextToParagraph(paragraph, "3", false, 12, false);
         XWPFRun superscriptRun = paragraph.createRun();
         superscriptRun.setText("9");
         superscriptRun.setFontSize(12);
         superscriptRun.setSubscript(VerticalAlign.SUPERSCRIPT);
-        addTextToParagraph(paragraph, "статьи 55", false, 12);
-    }
-
-    public static void setCenterTableNode(XWPFTable table, int rowNumber, String rowName, String rowValue1,
-                                          String rowValue2) {
-        XWPFTableRow row = table.getRow(rowNumber);
-        setCenterCellText(row.getCell(0), rowName);
-        setCenterCellText(row.getCell(1), rowValue1);
-        setCenterCellText(row.getCell(2), rowValue2);
+        addTextToParagraph(paragraph, "статьи 55", false, 12, false);
     }
 
     private static void setCenterCellText(XWPFTableCell cell, String text) {
         XWPFParagraph paragraph = cell.getParagraphs().get(0);
         paragraph.setAlignment(ParagraphAlignment.CENTER);
-        addTextToParagraph(paragraph, text, false, 11);
-    }
-
-    public static void setTableNode(XWPFTable table, int rowNumber, String rowName, String rowValue1,
-                                    String rowValue2) {
-        XWPFTableRow row = table.getRow(rowNumber);
-        setCellText(row.getCell(0), rowName);
-        setCellText(row.getCell(1), rowValue1);
-        setCellText(row.getCell(2), rowValue2);
-    }
-
-    public static void addTextWithSpacingAndUnderline(XWPFDocument document,
-                                                      String underLineText1,
-                                                      String text,
-                                                      String underLineText2,
-                                                      int spacing,
-                                                      int fontSize) {
-        XWPFParagraph paragraph = document.createParagraph();
-        paragraph.setAlignment(ParagraphAlignment.LEFT);
-        paragraph.setSpacingAfter(spacing);
-
-        XWPFRun run = paragraph.createRun();
-        run.setText(underLineText1);
-        run.setFontFamily("Times New Roman");
-        run.setUnderline(UnderlinePatterns.SINGLE);
-        run.setFontSize(fontSize);
-
-        XWPFRun run2 = paragraph.createRun();
-        run2.setText(text);
-        run2.setFontFamily("Times New Roman");
-        run2.setFontSize(fontSize);
-
-        XWPFRun run3 = paragraph.createRun();
-        run3.setText(underLineText2);
-        run3.setFontFamily("Times New Roman");
-        run3.setUnderline(UnderlinePatterns.SINGLE);
-        run3.setFontSize(fontSize);
+        addTextToParagraph(paragraph, text, false, 11, false);
     }
 
     public static void mergeCellsAndSetValue(XWPFTable table, RequestType request) {
@@ -462,49 +335,51 @@ public class DocumentCreationUtils {
         XWPFParagraph paragraph1 = mergedCell.getParagraphs().get(0);
         paragraph1.setAlignment(ParagraphAlignment.CENTER);
         if (Boolean.TRUE.equals(request.getVariantChoice().getKPVI25().isDesignDocumentationAmended())) {
-            addTextToParagraph(paragraph1, "<*> Заявление", true, 12);
+            addTextToParagraph(paragraph1, "<*> Заявление", true, 12, false);
             paragraph1.createRun().addBreak();
-            addTextToParagraph(paragraph1, "о необходимости внесения изменений в разрешение", true, 12);
+            addTextToParagraph(paragraph1, "о необходимости внесения изменений в разрешение", true, 12, false);
             paragraph1.createRun().addBreak();
-            addTextToParagraph(paragraph1, "на строительство в связи с возникновением необходимости", true, 12);
+            addTextToParagraph(paragraph1, "на строительство в связи с возникновением необходимости", true, 12, false);
             paragraph1.createRun().addBreak();
-            addTextToParagraph(paragraph1, "внесения иных изменений, предусмотренных Градостроительным", true, 12);
+            addTextToParagraph(paragraph1, "внесения иных изменений, предусмотренных Градостроительным", true, 12,
+                               false);
             paragraph1.createRun().addBreak();
-            addTextToParagraph(paragraph1, "кодексом Российской Федерации", true, 12);
-            paragraph1.createRun().addBreak();
-            addTextToParagraph(paragraph1, "или выдела из земельных участков ", true, 12);
+            addTextToParagraph(paragraph1, "кодексом Российской Федерации", true, 12, false);
         } else {
-            addTextToParagraph(paragraph1, "<*> Уведомление ", true, 12);
+            addTextToParagraph(paragraph1, "<*> Уведомление ", true, 12, false);
             paragraph1.createRun().addBreak();
-            addTextToParagraph(paragraph1, "о необходимости внесения изменений в разрешение", true, 12);
+            addTextToParagraph(paragraph1, "о необходимости внесения изменений в разрешение", true, 12, false);
             paragraph1.createRun().addBreak();
-            addTextToParagraph(paragraph1, "на строительство в связи с переходом прав на земельный(-ые)", true, 12);
+            addTextToParagraph(paragraph1, "на строительство в связи с переходом прав на земельный(-ые)", true, 12,
+                               false);
             paragraph1.createRun().addBreak();
-            addTextToParagraph(paragraph1, "участок(-и), образованием земельного участка путем", true, 12);
+            addTextToParagraph(paragraph1, "участок(-и), образованием земельного участка путем", true, 12, false);
             paragraph1.createRun().addBreak();
-            addTextToParagraph(paragraph1, "объединения, раздела, перераспределения земельных участков ", true, 12);
-            paragraph1.createRun().addBreak();
-            addTextToParagraph(paragraph1, "или выдела из земельных участков ", true, 12);
+            addTextToParagraph(paragraph1, "объединения, раздела, перераспределения земельных участков ", true, 12,
+                               false);
         }
+        paragraph1.createRun().addBreak();
+        addTextToParagraph(paragraph1, "или выдела из земельных участков ", true, 12, false);
 
         paragraph1.createRun().addBreak();
 
         XWPFParagraph paragraph2 = mergedCell.addParagraph();
         paragraph2.setAlignment(ParagraphAlignment.BOTH);
         addTextToParagraph(paragraph2, "Сообщаю о необходимости внесения изменений в разрешение на строительство",
-                           false, 12);
+                           false, 12, false);
         paragraph2.createRun().addBreak();
-        addTextToParagraph(paragraph2, "(реконструкцию) от ", false, 12);
+        addTextToParagraph(paragraph2, "(реконструкцию) от ", false, 12, false);
         Optional<ConstructionPermitsDataType> oConstructionPermitsData = ofNullable(
                 request.getConstructionPermitsData());
         String permitNumber = oConstructionPermitsData.map(ConstructionPermitsDataType::getNumber).orElse("");
         String permitDate = oConstructionPermitsData.map(ConstructionPermitsDataType::getDate).orElse("");
         addUnderlineTextToParagraph(paragraph2, permitDate + " № " + permitNumber, false, 12);
-        addTextToParagraph(paragraph2, " выданное Министерством жилищной политики и государственного ", false, 12);
+        addTextToParagraph(paragraph2, " выданное Министерством жилищной политики и государственного ", false, 12,
+                           false);
         paragraph2.createRun().addBreak();
-        addTextToParagraph(paragraph2, "строительного надзора Республики Крым,", false, 12);
+        addTextToParagraph(paragraph2, "строительного надзора Республики Крым,", false, 12, false);
         paragraph2.createRun().addBreak();
-        addTextToParagraph(paragraph2, "в связи с ", false, 12);
+        addTextToParagraph(paragraph2, "в связи с ", false, 12, false);
         if (Boolean.TRUE.equals(
                 request.getVariantChoice().getKPVI25().isFormLandCombiningDividingRedistributingAllocating())) {
             addUnderlineTextToParagraph(paragraph2, "образованием земельного участка путем объединения, раздела,",
@@ -529,73 +404,56 @@ public class DocumentCreationUtils {
         XWPFParagraph paragraph3 = mergedCell.addParagraph();
         paragraph3.setAlignment(ParagraphAlignment.CENTER);
         addTextToParagraph(paragraph3, "(указать одно из обстоятельств, предусмотренных частями 21.5 - 21.7, 21.9",
-                           false, 12);
+                           false, 12, false);
         paragraph3.createRun().addBreak();
         addTextToParagraph(paragraph3, "Градостроительного кодекса Российской Федерации, иные случаи)",
-                           false, 12);
+                           false, 12, false);
         paragraph3.createRun().addBreak();
         paragraph3.createRun().addBreak();
         addTextToParagraph(paragraph3, "Данные об объекте капитального строительства с учетом изменений:",
-                           false, 12);
+                           false, 12, false);
     }
 
     private static void addUnderlineTextToParagraph(XWPFParagraph paragraph, String text, boolean isBold,
                                                     int fontSize) {
-        XWPFRun run = paragraph.createRun();
-        run.setText(text);
-        run.setFontFamily("Times New Roman");
-        run.setFontSize(fontSize);
-        run.setUnderline(UnderlinePatterns.SINGLE);
-        run.setBold(isBold);
+        addRunToParagraph(paragraph, text, fontSize, true, isBold);
     }
 
     public static void addCenterText(XWPFDocument document, String text, int fontSize, boolean isBold) {
         XWPFParagraph paragraph = document.createParagraph();
         paragraph.setAlignment(ParagraphAlignment.CENTER);
         paragraph.setSpacingAfter(5);
-
-        XWPFRun run = paragraph.createRun();
-        run.setText(text);
-        run.setFontFamily("Times New Roman");
-        run.setFontSize(fontSize);
-        run.setBold(isBold);
+        addRunToParagraph(paragraph, text, fontSize, false, isBold);
     }
 
-    public static void addTextWithUnderline(XWPFDocument document, String text) {
-        XWPFParagraph paragraph = document.createParagraph();
-        paragraph.setAlignment(ParagraphAlignment.LEFT);
-        paragraph.setSpacingAfter(5);
-
-        XWPFRun run = paragraph.createRun();
-        run.setText(text);
-        run.setBold(true);
-        run.setUnderline(UnderlinePatterns.SINGLE);
-        run.setFontFamily("Times New Roman");
-        run.setFontSize(13);
-    }
-
-    public static void addTextWithUnderline(XWPFDocument document, String text, ParagraphAlignment alignment) {
-        XWPFParagraph paragraph = document.createParagraph();
-        paragraph.setAlignment(alignment);
-        paragraph.setSpacingAfter(5);
-
-        XWPFRun run = paragraph.createRun();
-        run.setText(text);
-        run.setBold(true);
-        run.setUnderline(UnderlinePatterns.SINGLE);
-        run.setFontFamily("Times New Roman");
-        run.setFontSize(13);
-    }
-
-    public static void addTextWithSpacingAndUnderline(XWPFDocument document, String text, int spacing, int fontSize) {
+    public static void addTextWithSpacingAndUnderline(XWPFDocument document, String text, int spacing, int fontSize,
+                                                      boolean isBold) {
         XWPFParagraph paragraph = document.createParagraph();
         paragraph.setAlignment(ParagraphAlignment.LEFT);
         paragraph.setSpacingAfter(spacing);
+        addRunToParagraph(paragraph, text, fontSize, true, isBold);
+    }
 
+    public static XWPFParagraph createParagraph(XWPFDocument document, String text, int spacing, int fontSize) {
+        XWPFParagraph paragraph = document.createParagraph();
+        paragraph.setAlignment(ParagraphAlignment.LEFT);
+        paragraph.setSpacingAfter(spacing);
+        addRunToParagraph(paragraph, text, fontSize, false, false);
+        return paragraph;
+    }
+
+    public static XWPFRun addRunToParagraph(XWPFParagraph paragraph, String text, int fontSize, boolean isUnderline,
+                                            boolean isBold) {
         XWPFRun run = paragraph.createRun();
         run.setText(text);
         run.setFontFamily("Times New Roman");
-        run.setUnderline(UnderlinePatterns.SINGLE);
+        if (isUnderline) {
+            run.setUnderline(UnderlinePatterns.SINGLE);
+        }
+        if (isBold) {
+            run.setBold(true);
+        }
         run.setFontSize(fontSize);
+        return run;
     }
 }

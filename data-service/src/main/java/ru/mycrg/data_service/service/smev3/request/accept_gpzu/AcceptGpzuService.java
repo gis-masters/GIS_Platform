@@ -255,7 +255,11 @@ public class AcceptGpzuService extends AcceptServiceBase {
 
     @Override
     protected <T> XWPFDocument getWordDocument(T queryResult) {
-        return null;
+        QueryResult result = (QueryResult) queryResult;
+        RequestType request = result.getMessage().getRequestContent().getContent().getMessagePrimaryContent()
+                                    .getRequest();
+
+        return documentCreationService.createGpzuDoc(request);
     }
 
     @Override
