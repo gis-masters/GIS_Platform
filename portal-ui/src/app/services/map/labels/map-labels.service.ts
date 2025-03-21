@@ -418,6 +418,7 @@ class MapLabelsService {
 
   async addTurningPoints() {
     const wfsFeature = this.getSelectedOneOrEditedFeature();
+
     if (!wfsFeature) {
       return;
     }
@@ -425,14 +426,18 @@ class MapLabelsService {
     this.dropInteractions();
 
     const currentLayerProjection = await this.getSelectedFeatureProjection(wfsFeature);
+
     if (!currentLayerProjection || !wfsFeature) {
       throw new Error(projectionError);
     }
+
     const coordinates = wfsFeature.geometry?.coordinates;
     const geometryType = wfsFeature.geometry?.type;
+
     if (!coordinates || !geometryType) {
       throw new Error('Отсутствие координат объекта');
     }
+
     if (currentLayerProjection) {
       const pointsCoordinates = this.getTurningPointsFromCoordinates(coordinates, geometryType);
       const transformedCoordinates = transformGroup(pointsCoordinates, currentLayerProjection, await getOlProjection());

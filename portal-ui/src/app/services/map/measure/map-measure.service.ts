@@ -164,6 +164,7 @@ class MapMeasureService {
     if (!this.sketchItem) {
       return;
     }
+
     this.setHelpMsg('клик для начала измерения');
     this.sketchItem.tooltipOverlay.setOffset([0, -6]);
     this.renderTooltip(this.sketchItem, false);

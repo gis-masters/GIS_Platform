@@ -131,6 +131,7 @@ class Sidebars {
   @action.bound
   closeEdit(reason?: string) {
     services.logger.trace('closeEdit', reason);
+    selectedFeaturesStore.clearActiveFeature();
 
     this.editFeatureOpen = false;
   }

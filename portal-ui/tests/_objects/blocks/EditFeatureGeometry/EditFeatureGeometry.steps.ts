@@ -16,6 +16,10 @@ When(
   }
 );
 
+When('в форме редактирования геометрии я выбираю первое поле в списке координат', async function () {
+  await editFeatureGeometryBlock.selectFirstInput();
+});
+
 Then(
   'у координаты с номером {int} появляется предупреждение о превышении границы слоя',
   async function (index: number) {

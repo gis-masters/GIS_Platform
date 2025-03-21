@@ -9,7 +9,8 @@ class EditFeatureGeometryBlock extends Block {
     coordInputX: '.EditFeatureGeometry-CoordInput_d_x',
     coordInputY: '.EditFeatureGeometry-CoordInput_d_y',
     warningIcon: '.MuiSvgIcon-colorWarning',
-    geometryForm: '.EditFeatureGeometry-Form'
+    geometryForm: '.EditFeatureGeometry-Form',
+    coordInput: '.EditFeatureGeometry-Form .EditFeatureGeometry-CoordInput'
   };
 
   async getEditFormCoordsIndexes(): Promise<string[]> {
@@ -61,6 +62,13 @@ class EditFeatureGeometryBlock extends Block {
     const inputRoot = await this.getFormInputByNumber(fieldNumber);
 
     return await inputRoot.hasWarningIcon();
+  }
+
+  async selectFirstInput(): Promise<void> {
+    const $$coordInput = await this.$$('coordInput');
+
+    await $$coordInput[0].waitForClickable();
+    await $$coordInput[0].click();
   }
 }
 

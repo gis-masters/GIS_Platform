@@ -9,6 +9,7 @@ import { WfsFeature } from '../../services/geoserver/wfs/wfs.models';
 import { getFeaturesById } from '../../services/geoserver/wfs/wfs.service';
 import { getLayerByFeatureInCurrentProject } from '../../services/gis/layers/layers.utils';
 import { projectsService } from '../../services/gis/projects/projects.service';
+import { selectedFeaturesStore } from '../../services/map/a-map-mode/selected-features/SelectedFeatures.store';
 import { mapService } from '../../services/map/map.service';
 
 const cnZoomToFeature = cn('ZoomToFeature');
@@ -62,5 +63,7 @@ export class ZoomToFeature extends Component<ZoomToFeatureProps> {
     if (onClick) {
       onClick(feature);
     }
+
+    selectedFeaturesStore.setActiveFeature(feature.id);
   }
 }

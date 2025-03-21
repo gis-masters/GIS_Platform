@@ -35,6 +35,12 @@ export class FeaturesListItemBlock extends Block {
     await $title.click();
   }
 
+  async focusToObject(): Promise<void> {
+    const $title = await this.$('id');
+    await $title.waitForClickable();
+    await $title.moveTo();
+  }
+
   async getItemData(): Promise<string[]> {
     const $icon = await this.$('icon');
     await $icon.waitForDisplayed();

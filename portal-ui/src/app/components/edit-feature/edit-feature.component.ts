@@ -101,18 +101,22 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
         this.mode = data.mode;
         this.features = data.features;
         const firstFeature = this.features[0];
+
         if (!firstFeature) {
           return;
         }
 
         const layer = data.layer || getLayerByFeatureInCurrentProject(firstFeature);
+
         if (layer) {
           sidebars.setLayerOfEditedFeature(layer);
           this.layer = { ...layer };
         }
 
         this.setIsNew(firstFeature);
+
         this.selectedTab = Number(this.isNew);
+
         if (!this.isNew) {
           await mapDrawService.highlightFeatures(this.features);
           this.isGeometryChanged = false;
@@ -122,6 +126,7 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
         this.editFeatureForm.statusChanges.pipe(debounceTime(50)).subscribe(() => {
           this.publishPristine();
         });
+
         // Если объект новый и уже с координатами
         if (this.isNew && this.featureHasNotEmptyGeometry(firstFeature)) {
           // Используем setTimeout, чтобы дать время на инициализацию всех подписок
@@ -286,6 +291,8 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
         } else {
           services.logger.error('Не удалось получить проекцию или геометрию объекта');
         }
+
+        selectedFeaturesStore.setActiveFeature(firstFeature.id);
 
         if (this.updatingAllowed) {
           // eslint-disable-next-line @typescript-eslint/no-unsafe-return
@@ -520,7 +527,11 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
       });
     }
 
-    await mapModeManager.changeMode(MapMode.SELECTED_FEATURES, undefined, 'backToList');
+    const success = await mapModeManager.changeMode(MapMode.SELECTED_FEATURES, undefined, 'backToList');
+
+    if (success) {
+      selectedFeaturesStore.clearActiveFeature();
+    }
   }
 
   setIsNew(firstFeature: WfsFeature): void {

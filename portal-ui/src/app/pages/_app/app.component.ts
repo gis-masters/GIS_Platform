@@ -18,11 +18,15 @@ export class AppComponent implements OnInit, OnDestroy, OnChanges {
   refToastContainer?: ElementRef<HTMLDivElement>;
   private root?: Root;
 
-  ngOnInit() {
+  async ngOnInit() {
     if (this.refToastContainer?.nativeElement) {
       this.root = createRoot(this.refToastContainer.nativeElement);
       this.renderReactElement();
       this.addOnErrorWindowHandler();
+
+      // Инициализируем сервисы в правильном порядке
+      const { serviceInitializer } = await import('../../services/map/ServiceInitializer');
+      await serviceInitializer.initialize();
     }
   }
 

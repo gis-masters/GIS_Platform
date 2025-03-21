@@ -32,10 +32,18 @@ When('в боковой панели выделенных объектов я д
   await featuresListSidebarBlock.selectObject(itemTitle);
 });
 
+When('в боковой панели выделенных объектов я навожу курсор на объект {string}', async function (itemTitle: string) {
+  await featuresListSidebarBlock.focusToObject(itemTitle);
+});
+
 Then('в боковой панели выделенных объектов изменились названия объектов на:', async (expectedNames: DataTable) => {
   const currentNames = await featuresListSidebarBlock.getFeaturesNames();
 
   await expect(expectedNames.raw()[0]).toEqual(currentNames);
+});
+
+Then('в боковой панели выделенных объектов отображаются {string}', async (variant: string) => {
+  await featuresListSidebarBlock.assertSelfie(variant);
 });
 
 Then('в боковой панели выделенных объектов существуют объекты:', async (expectedNames: DataTable) => {

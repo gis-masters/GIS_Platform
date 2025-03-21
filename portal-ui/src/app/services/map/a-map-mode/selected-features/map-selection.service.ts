@@ -195,6 +195,7 @@ class MapSelectionService {
             const features: WfsFeature[] = await this.fetchFeatures(MapSelectionTypes.REPLACE, buffer);
 
             await mapModeManager.changeMode(MapMode.NONE, undefined, 'прокол - нет фичей');
+
             if (features.length > 1) {
               await mapModeManager.changeMode(
                 MapMode.SELECTED_FEATURES,

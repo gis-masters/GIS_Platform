@@ -1,3 +1,5 @@
+import { WdioCheckElementMethodOptions } from 'wdio-image-comparison-service';
+
 import { Block } from '../../Block';
 import { extractText } from '../../commands/extractText';
 import { FeaturesListItemBlock } from '../FeaturesListItem/FeaturesListItem.block';
@@ -36,6 +38,11 @@ class FeaturesListSidebarBlock extends Block {
     await featuresListItemBlock.selectObject();
   }
 
+  async focusToObject(itemName: string) {
+    const featuresListItemBlock = await this.getFeaturesListItemByTitle(itemName);
+    await featuresListItemBlock.focusToObject();
+  }
+
   async getFeaturesNames(): Promise<string[]> {
     await this.waitForVisible();
     const $titles = await this.$$('title');
@@ -70,6 +77,16 @@ class FeaturesListSidebarBlock extends Block {
     const $$items = await this.$$('item');
 
     return $$items.length;
+  }
+
+  async assertSelfie(tag?: string, checkElementOptions?: WdioCheckElementMethodOptions): Promise<void> {
+    const $container = await this.$('container');
+    await $container.waitForDisplayed();
+
+    await super.assertSelfie(tag, {
+      hideElements: [...(checkElementOptions?.hideElements || [])],
+      ...checkElementOptions
+    });
   }
 }
 

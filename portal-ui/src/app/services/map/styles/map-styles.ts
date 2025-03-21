@@ -21,6 +21,7 @@ export enum KnownStyleKey {
   MeasureDrawStyles = 'measureDrawStyles',
   MeasureLayerStyles = 'measureLayerStyles',
   ActiveFeature = 'activeFeature',
+  SelectedSingleCoordStyles = 'selectedSingleCoordStyles',
   LabelsDrawStyles = 'labelsDrawStyles'
 }
 
@@ -30,10 +31,12 @@ export function getStyle(knownStyleKey: KnownStyleKey): Style[] {
 
 const DEFAULT_CIRCLE_RADIUS = 4;
 const DEFAULT_STROKE_WIDTH = 2;
+const ACTIVE_STROKE_WIDTH = 4;
 const DEFAULT_FILL_COLOR = 'rgba(255, 255, 255, 0.5)';
 const RED = '#ff0018';
 const BLUE = '#3399ff';
 const YELLOW = '#ffcc33';
+const ORANGE = '#ffa500';
 
 const styles = new Map<KnownStyleKey, Style[]>([
   [
@@ -57,6 +60,22 @@ const styles = new Map<KnownStyleKey, Style[]>([
         stroke: new Stroke({
           color: BLUE,
           width: DEFAULT_STROKE_WIDTH
+        })
+      })
+    ]
+  ],
+  [
+    KnownStyleKey.SelectedSingleCoordStyles,
+    [
+      new Style({
+        image: new CircleStyle({
+          radius: 5,
+          stroke: new Stroke({
+            color: BLUE
+          }),
+          fill: new Fill({
+            color: BLUE
+          })
         })
       })
     ]
@@ -139,20 +158,21 @@ const styles = new Map<KnownStyleKey, Style[]>([
     [
       new Style({
         fill: new Fill({
-          color: 'rgba(255, 255, 0, 0.5)'
+          color: 'rgba(255, 255, 0, 0.74)'
         })
       }),
       new Style({
         stroke: new Stroke({
-          color: RED,
-          width: DEFAULT_STROKE_WIDTH
+          color: ORANGE,
+          lineDash: [10, 10],
+          width: ACTIVE_STROKE_WIDTH
         })
       }),
       new Style({
         image: new Circle({
           radius: DEFAULT_CIRCLE_RADIUS,
           fill: new Fill({
-            color: RED
+            color: ORANGE
           })
         }),
         geometry: showVertices
@@ -271,7 +291,7 @@ function showVerticesSnapping(feature: FeatureLike) {
   return convertToFlatMultiPoint(geometry);
 }
 
-function showVertices(feature: FeatureLike) {
+function showVertices(feature: FeatureLike): MultiPoint | undefined {
   const geometry = feature.getGeometry();
   if (geometry === undefined) {
     return;

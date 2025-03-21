@@ -37,7 +37,13 @@ class MapDrawService {
     const drawLayer = new VectorLayer({
       source: this.source,
       zIndex: mapService.DRAFT_LAYER_Z_INDEX,
-      style: getStyle(KnownStyleKey.DrawLayerStyles),
+      style: feature => {
+        if (feature.getId() === undefined) {
+          return getStyle(KnownStyleKey.ActiveFeature);
+        }
+
+        return getStyle(KnownStyleKey.DrawLayerStyles);
+      },
       properties: { name: 'draft' }
     });
 
@@ -46,7 +52,6 @@ class MapDrawService {
 
   drawOn(geometryType: SingleDrawGeometryType) {
     mapVerticesModificationService.verticesModificationOff();
-
     // Modify
     this.modify = new Modify({
       source: this.source,
@@ -59,21 +64,25 @@ class MapDrawService {
         return editFeatureStore.editFeaturesData?.features[0]?.id === closestFeature.getId();
       }
     });
+
     this.modify.on('modifyend', (event: ModifyEvent) => {
       communicationService.modifyEnd.emit(event);
     });
+
     mapService.map.addInteraction(this.modify);
 
     // Draw
     this.draw = new Draw({
       source: this.source,
       type: geometryType,
-      style: getStyle(KnownStyleKey.DrawStyles)
+      style: getStyle(KnownStyleKey.ActiveFeature)
     });
+
     this.draw.setActive(true);
     this.draw?.on('drawend', (event: DrawEvent) => {
       communicationService.drawEnd.emit(event);
     });
+
     mapService.map.addInteraction(this.draw);
 
     mapSnapService.activate();
@@ -98,8 +107,36 @@ class MapDrawService {
   /**
    * Подсвечивает объекты. (очищает черновой слой)
    */
-  async highlightFeatures(features: WfsFeature[], projection?: Projection) {
-    const featuresInOlProjection: WfsFeature[] = await Promise.all(
+  async highlightFeatures(features: WfsFeature[] = [], projection?: Projection) {
+    const featuresInOlProjection: WfsFeature[] = await this.convertFeatureToOlProjection(
+      [...selectedFeaturesStore.features, ...features],
+      projection
+    );
+
+    this.clearDraft();
+
+    const olFeatures = wfsFeaturesToOlFeatures(featuresInOlProjection);
+    const highlightedFeature = olFeatures.find(feature => feature.getId() === selectedFeaturesStore.activeFeature);
+
+    if (selectedFeaturesStore.activeFeature && highlightedFeature) {
+      const geometryType = highlightedFeature.getGeometry()?.getType();
+
+      if (geometryType) {
+        highlightedFeature.setStyle(getStyle(KnownStyleKey.ActiveFeature));
+      }
+
+      this.addFeatures([...olFeatures, highlightedFeature]);
+    } else {
+      this.addFeatures(olFeatures);
+      selectedFeaturesStore.clearActiveFeature();
+    }
+  }
+
+  async convertFeatureToOlProjection(
+    features: WfsFeature[],
+    projection?: Projection
+  ): Promise<WfsFeature<Coordinate>[]> {
+    return await Promise.all(
       [...features]
         .filter(({ geometry }) => geometry)
         .map(async (feature: WfsFeature): Promise<WfsFeature> => {
@@ -109,6 +146,7 @@ class MapDrawService {
           if (!currentProjection || !olProjection) {
             throw new Error('Не найдена проекция выбранного объекта');
           }
+
           const geometry = feature.geometry && transformGeometry(feature.geometry, currentProjection, olProjection);
 
           if (!geometry) {
@@ -121,12 +159,6 @@ class MapDrawService {
           };
         })
     );
-
-    this.clearDraft();
-
-    const olFeatures = wfsFeaturesToOlFeatures(featuresInOlProjection);
-
-    this.addFeatures(olFeatures);
   }
 
   // Обновим "выделенные фичи" "измененными"

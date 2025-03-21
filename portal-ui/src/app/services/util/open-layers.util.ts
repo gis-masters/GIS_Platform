@@ -83,6 +83,7 @@ export function wfsFeaturesToOlFeatures(wfsFeatures: WfsFeature[]): Feature<Simp
 
     try {
       const olFeature = wfsFeatureToFeature(wfsFeature);
+
       if (olFeature) {
         result.push(olFeature);
       }

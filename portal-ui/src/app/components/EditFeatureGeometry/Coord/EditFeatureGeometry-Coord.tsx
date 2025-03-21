@@ -20,6 +20,7 @@ import { GeometryType, WfsFeature, WfsGeometry } from '../../../services/geoserv
 import { isDimensionValid, isGeometryValid } from '../../../services/geoserver/wfs/wfs.util';
 import { editFeatureStore } from '../../../services/map/a-map-mode/edit-feature/EditFeatureStore';
 import { mapDrawService } from '../../../services/map/draw/map-draw.service';
+import { getStyle, KnownStyleKey } from '../../../services/map/styles/map-styles';
 import { transformGeometry } from '../../../services/util/coordinates-transform.util';
 import { wfsFeatureToFeature } from '../../../services/util/open-layers.util';
 import { isNumberArray } from '../../../services/util/typeGuards/isNumberArray';
@@ -207,10 +208,6 @@ export class EditFeatureGeometryCoord extends Component<EditFeatureGeometryCoord
   private drawFocusedPointMarker() {
     const { val } = this.props;
 
-    if (editFeatureStore.geometryType === GeometryType.POINT) {
-      return;
-    }
-
     const markerGeometry: WfsGeometry = {
       type: GeometryType.POINT,
       coordinates: val
@@ -230,12 +227,15 @@ export class EditFeatureGeometryCoord extends Component<EditFeatureGeometryCoord
           properties: {}
         };
 
-        this.focusedPointMarker = wfsFeatureToFeature(feature);
+        const focusedPointMarker = wfsFeatureToFeature(feature);
+
+        this.focusedPointMarker = focusedPointMarker || wfsFeatureToFeature(feature);
       } else {
         Toast.error('Отсутствует проекция необходимая для изменения координат объекта');
       }
 
       if (this.focusedPointMarker) {
+        this.focusedPointMarker.setStyle(getStyle(KnownStyleKey.SelectedSingleCoordStyles));
         mapDrawService.addFeatures([this.focusedPointMarker]);
       }
     } else {

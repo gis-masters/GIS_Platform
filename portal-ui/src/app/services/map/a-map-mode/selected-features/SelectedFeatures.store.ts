@@ -24,6 +24,7 @@ class SelectedFeaturesStore {
 
   @observable active: boolean = false;
   @observable features: WfsFeature[] = [];
+  @observable activeFeature: string | null = null;
 
   private readonly SELECTING_FEATURES_LIMIT = 500;
 
@@ -40,6 +41,20 @@ class SelectedFeaturesStore {
         }
       }
     );
+  }
+
+  @action
+  clearActiveFeature() {
+    this.activeFeature = null;
+  }
+
+  @action
+  setActiveFeature(activeFeature: string) {
+    this.activeFeature = activeFeature;
+  }
+
+  isFeatureActive(id: string | undefined): boolean {
+    return !!id && id === this.activeFeature;
   }
 
   @computed

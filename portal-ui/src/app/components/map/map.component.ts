@@ -37,6 +37,7 @@ export class MapComponent implements OnInit, OnDestroy {
   cn = cn('map');
 
   private reactionDisposer?: IReactionDisposer;
+  private activeFeatureReactionDisposer?: IReactionDisposer;
   private unsubscribe$: Subject<void> = new Subject<void>();
 
   constructor(private cdRef: ChangeDetectorRef) {
@@ -69,6 +70,14 @@ export class MapComponent implements OnInit, OnDestroy {
     if (currentProject.bbox && !route.queryParams.center) {
       mapService.fitToBbox(JSON.parse(currentProject.bbox) as Extent, [0, 0, 0, 0]);
     }
+
+    this.activeFeatureReactionDisposer = reaction(
+      () => selectedFeaturesStore.activeFeature,
+      async () => {
+        await mapDrawService.highlightFeatures();
+      },
+      { fireImmediately: true }
+    );
 
     this.reactionDisposer = reaction(
       () => [
@@ -125,6 +134,7 @@ export class MapComponent implements OnInit, OnDestroy {
     projectsService.clearCurrent();
     printSettings.reset();
     this.reactionDisposer?.();
+    this.activeFeatureReactionDisposer?.();
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
     Emitter.scopeOff(this);

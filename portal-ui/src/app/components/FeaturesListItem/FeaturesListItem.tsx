@@ -1,10 +1,8 @@
-import React, { Component, CSSProperties, ReactNode } from 'react';
-import { action, computed, makeObservable, observable } from 'mobx';
-import { observer } from 'mobx-react';
+import React, { CSSProperties, ReactNode, useCallback, useEffect, useMemo } from 'react';
+import { observer, useLocalObservable } from 'mobx-react-lite';
 import { IconButton, Tooltip } from '@mui/material';
 import { ArrowForward } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
-import { boundMethod } from 'autobind-decorator';
 
 import { Schema } from '../../services/data/schema/schema.models';
 import { applyView, changeSchemaNamesCaseByFeature } from '../../services/data/schema/schema.utils';
@@ -15,6 +13,7 @@ import { CrgLayer } from '../../services/gis/layers/layers.models';
 import { getLayerSchema } from '../../services/gis/layers/layers.service';
 import { projectsService } from '../../services/gis/projects/projects.service';
 import { mapModeManager } from '../../services/map/a-map-mode/MapModeManager';
+import { selectedFeaturesStore } from '../../services/map/a-map-mode/selected-features/SelectedFeatures.store';
 import { MapAction, MapMode, MapSelectionTypes } from '../../services/map/map.models';
 import { FeatureError } from '../../services/map/map-link-following.service';
 import { currentProject } from '../../stores/CurrentProject.store';
@@ -36,131 +35,30 @@ interface FeaturesListItemProps {
   message?: string;
   style?: CSSProperties;
   isSearchList?: boolean;
+
   onSelect?(item: WfsFeature): void;
   onHighlight?(item: WfsFeature | null): void;
 }
 
-@observer
-export class FeaturesListItem extends Component<FeaturesListItemProps> {
-  @observable private rawSchema?: Schema;
+interface FeaturesListItemStore {
+  rawSchema: Schema | undefined;
+  setRawSchema(schema: Schema): void;
+}
 
-  constructor(props: FeaturesListItemProps) {
-    super(props);
-    makeObservable(this);
-  }
+export const FeaturesListItem = observer((props: FeaturesListItemProps) => {
+  const { feature, searchResultHighlight, errorData, style, isSearchList, onSelect, onHighlight } = props;
 
-  async componentDidMount() {
-    await this.loadSchema();
-  }
+  const { rawSchema, setRawSchema } = useLocalObservable(
+    (): FeaturesListItemStore => ({
+      rawSchema: undefined,
 
-  async componentDidUpdate(prevProps: FeaturesListItemProps) {
-    if (prevProps.feature?.id !== this.props.feature?.id) {
-      await this.loadSchema();
-    }
-  }
+      setRawSchema(this: FeaturesListItemStore, schema: Schema) {
+        this.rawSchema = schema;
+      }
+    })
+  );
 
-  render() {
-    const { feature, searchResultHighlight, errorData, style } = this.props;
-
-    const verticesModified = () =>
-      mapStore.mode === MapMode.VERTICES_MODIFICATION &&
-      mapVerticesModificationStore.modifiedFeatures.some(f => f.getId() === feature?.id);
-
-    return (
-      <div className={cnFeaturesListItem({ foundFeature: !!searchResultHighlight })} style={style}>
-        <div
-          className={cnFeaturesListItem('Id', { disabled: !!errorData, verticesModified: verticesModified() })}
-          onDoubleClick={this.selectIt}
-          onClick={this.highlightIt}
-        >
-          {errorData ? errorData.id : feature?.id && extractFeatureId(feature.id)}
-        </div>
-
-        <div className={cnFeaturesListItem('Icon')}>
-          {feature?.geometry?.type && (
-            <FeatureIcon geometryType={feature?.geometry?.type} className={cnFeaturesListItem('Svg')} />
-          )}
-        </div>
-
-        <div
-          className={cnFeaturesListItem('Title', {
-            disabled: !!errorData,
-            isEmpty: this.titleAndEmptiness?.isEmpty,
-            verticesModified: verticesModified()
-          })}
-        >
-          {errorData ? errorData.message : this.titleAndEmptiness?.title}
-        </div>
-        <div
-          className={cnFeaturesListItem('Layer', {
-            verticesModified: verticesModified()
-          })}
-        >
-          {errorData ? errorData.layerTitle : this.subTitle}
-        </div>
-
-        {searchResultHighlight}
-        {!errorData && (
-          <div className={cnFeaturesListItem('Buttons')}>
-            <Tooltip title='Снять выделение с этого объекта'>
-              <IconButton
-                className={cnFeaturesListItem('RemoveFromSelected')}
-                size='small'
-                onClick={this.removeFromSelected}
-                disabled={!mapStore.allowedActions.includes(MapAction.REMOVE_FEATURE_FROM_SELECTED)}
-              >
-                <RectangleSelectionCancel />
-              </IconButton>
-            </Tooltip>
-
-            {feature && (
-              <ZoomToFeature
-                disabled={!mapStore.allowedActions.includes(MapAction.ZOOM_TO_FEATURE)}
-                feature={feature}
-                onClick={this.handleZoom}
-              />
-            )}
-
-            <Tooltip title='Открыть'>
-              <IconButton
-                className={cnFeaturesListItem('OpenEdit')}
-                size='small'
-                onClick={this.selectIt}
-                disabled={!mapStore.allowedActions.includes(MapAction.OPEN_EDIT_FEATURE)}
-              >
-                <ArrowForward />
-              </IconButton>
-            </Tooltip>
-          </div>
-        )}
-      </div>
-    );
-  }
-
-  @computed
-  private get schema(): Schema | undefined {
-    return this.layer?.view && this.rawSchema ? applyView(this.rawSchema, this.layer?.view) : this.rawSchema;
-  }
-
-  @computed
-  private get subTitle(): string {
-    return this.layer?.title || this.schema?.title || '';
-  }
-
-  @computed
-  private get titleAndEmptiness(): FeaturesListItemTitle | undefined {
-    if (this.schema && this.props.feature) {
-      return getFeaturesListItemTitle(
-        this.props.feature,
-        changeSchemaNamesCaseByFeature(this.schema, this.props.feature)
-      );
-    }
-  }
-
-  @computed
-  private get layer(): CrgLayer | undefined {
-    const { feature, isSearchList } = this.props;
-
+  const layer = useMemo<CrgLayer | undefined>(() => {
     if (feature) {
       const tableName = extractTableNameFromFeatureId(feature.id);
 
@@ -168,86 +66,150 @@ export class FeaturesListItem extends Component<FeaturesListItemProps> {
         ? currentProject.getLayerByTableNameFromAllVectorableLayers(tableName)
         : currentProject.getLayerByTableNameFromVisibleAndHiddenByZoomVectorLayers(tableName);
     }
-  }
+  }, [feature, isSearchList]);
 
-  @boundMethod
-  private async selectIt() {
-    if (mapStore.mode === MapMode.VERTICES_MODIFICATION) {
-      return;
+  const schema = useMemo<Schema | undefined>(() => {
+    return layer?.view && rawSchema ? applyView(rawSchema, layer.view) : rawSchema;
+  }, [layer?.view, rawSchema]);
+
+  const subTitle = useMemo<string>(() => {
+    return layer?.title || schema?.title || '';
+  }, [layer?.title, schema?.title]);
+
+  const titleAndEmptiness = useMemo<FeaturesListItemTitle | undefined>(() => {
+    if (schema && feature) {
+      return getFeaturesListItemTitle(feature, changeSchemaNamesCaseByFeature(schema, feature));
     }
+  }, [schema, feature]);
 
-    if (!this.props.errorData) {
-      const { onSelect, isSearchList } = this.props;
-      let { feature } = this.props;
-
-      if (this.layer?.complexName && feature && isSearchList) {
-        const [currentFeature] = await getFeaturesById([feature.id], this.layer?.complexName);
-
-        feature = currentFeature;
-      }
-
-      if (onSelect && feature) {
-        onSelect(feature);
-      }
-    }
-
-    if (this.layer?.tableName) {
-      projectsService.enableLayersByTableNames([this.layer.tableName]);
-    }
-  }
-
-  @boundMethod
-  private async removeFromSelected() {
-    const { feature } = this.props;
-    if (feature === undefined) {
-      return;
-    }
-
-    await mapModeManager.changeMode(
-      MapMode.SELECTED_FEATURES,
-      {
-        payload: {
-          features: [feature],
-          type: MapSelectionTypes.REMOVE
+  useEffect(() => {
+    const loadSchema = async () => {
+      if (!errorData && layer) {
+        const schema = await getLayerSchema(layer);
+        if (schema) {
+          setRawSchema(schema);
         }
-      },
-      'removeFromSelected'
-    );
-  }
+      }
+    };
 
-  @boundMethod
-  private highlightIt() {
-    if (mapStore.mode === MapMode.VERTICES_MODIFICATION) {
+    void loadSchema();
+  }, [feature?.id, errorData, layer]);
+
+  const verticesModified = () =>
+    mapStore.mode === MapMode.VERTICES_MODIFICATION &&
+    mapVerticesModificationStore.modifiedFeatures.some(f => f.getId() === feature?.id);
+
+  const selectIt = useCallback(async () => {
+    if (mapStore.mode === MapMode.VERTICES_MODIFICATION || errorData) {
       return;
     }
 
-    if (!this.props.errorData) {
-      const { feature, onHighlight } = this.props;
-      if (onHighlight && feature) {
-        onHighlight(feature);
-      }
-    }
-  }
+    selectedFeaturesStore.clearActiveFeature();
 
-  @boundMethod
-  private handleZoom() {
-    const { onHighlight, feature } = this.props;
+    let selectedFeature = feature;
+    if (layer?.complexName && feature && isSearchList) {
+      const [currentFeature] = await getFeaturesById([feature.id], layer.complexName);
+      selectedFeature = currentFeature;
+    }
+
+    if (onSelect && selectedFeature) {
+      onSelect(selectedFeature);
+    }
+
+    if (layer?.tableName) {
+      projectsService.enableLayersByTableNames([layer.tableName]);
+    }
+  }, [feature, errorData, isSearchList, onSelect, layer]);
+
+  const removeFromSelected = useCallback(async () => {
+    if (feature) {
+      await mapModeManager.changeMode(
+        MapMode.SELECTED_FEATURES,
+        {
+          payload: { features: [feature], type: MapSelectionTypes.REMOVE }
+        },
+        'removeFromSelected'
+      );
+    }
+  }, [feature]);
+
+  const highlightIt = useCallback(() => {
+    if (mapStore.mode === MapMode.VERTICES_MODIFICATION || errorData) {
+      return;
+    }
+
+    if (onHighlight && feature) {
+      onHighlight(feature);
+
+      selectedFeaturesStore.setActiveFeature(feature.id);
+    }
+  }, [feature, errorData, onHighlight]);
+
+  const handleZoom = useCallback(() => {
     if (onHighlight && feature) {
       onHighlight(feature);
     }
-  }
+  }, [feature, onHighlight]);
 
-  private async loadSchema(): Promise<void> {
-    if (!this.props.errorData && this.layer) {
-      const schema = await getLayerSchema(this.layer);
-      if (schema) {
-        this.setRawSchema(schema);
-      }
-    }
-  }
+  return (
+    <div
+      className={cnFeaturesListItem({
+        foundFeature: !!searchResultHighlight,
+        highlighted: selectedFeaturesStore.isFeatureActive(feature?.id)
+      })}
+      onDoubleClick={selectIt}
+      style={style}
+    >
+      <div className={cnFeaturesListItem('Id', { verticesModified: verticesModified() })} onClick={highlightIt}>
+        {errorData ? errorData.id : feature?.id && extractFeatureId(feature.id)}
+      </div>
 
-  @action
-  private setRawSchema(schema: Schema) {
-    this.rawSchema = schema;
-  }
-}
+      <div className={cnFeaturesListItem('Icon')}>
+        {feature?.geometry?.type && (
+          <FeatureIcon className={cnFeaturesListItem('Svg')} geometryType={feature.geometry.type} />
+        )}
+      </div>
+
+      <div className={cnFeaturesListItem('Title', { verticesModified: verticesModified() })}>
+        {errorData ? errorData.message : titleAndEmptiness?.title}
+      </div>
+      <div className={cnFeaturesListItem('Layer', { verticesModified: verticesModified() })}>
+        {errorData ? errorData.layerTitle : subTitle}
+      </div>
+
+      {searchResultHighlight}
+
+      {!errorData && (
+        <div className={cnFeaturesListItem('Buttons')}>
+          <Tooltip title='Снять выделение с этого объекта'>
+            <IconButton
+              className={cnFeaturesListItem('RemoveFromSelected')}
+              size='small'
+              onClick={removeFromSelected}
+              disabled={!mapStore.allowedActions.includes(MapAction.REMOVE_FEATURE_FROM_SELECTED)}
+            >
+              <RectangleSelectionCancel />
+            </IconButton>
+          </Tooltip>
+          {feature && (
+            <ZoomToFeature
+              disabled={!mapStore.allowedActions.includes(MapAction.ZOOM_TO_FEATURE)}
+              feature={feature}
+              onClick={handleZoom}
+            />
+          )}
+          <Tooltip title='Открыть'>
+            <IconButton
+              className={cnFeaturesListItem('OpenEdit')}
+              size='small'
+              onClick={selectIt}
+              disabled={!mapStore.allowedActions.includes(MapAction.OPEN_EDIT_FEATURE)}
+            >
+              <ArrowForward />
+            </IconButton>
+          </Tooltip>
+        </div>
+      )}
+    </div>
+  );
+});

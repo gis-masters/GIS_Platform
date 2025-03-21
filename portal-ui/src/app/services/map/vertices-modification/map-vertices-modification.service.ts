@@ -84,6 +84,7 @@ class MapVerticesModificationService {
 
     void mapVerticesModificationStore.updateModifiedCollection([]);
     void mapDrawService.highlightFeatures(selectedFeaturesStore.features);
+
     this.verticesModification.reset();
   }
 

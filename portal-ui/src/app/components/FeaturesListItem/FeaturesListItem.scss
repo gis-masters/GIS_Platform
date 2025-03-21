@@ -136,6 +136,10 @@ body .FeaturesListItem {
     font-size: 16px;
   }
 
+  &_highlighted {
+    background-color: rgb(0 0 0 / 10%);
+  }
+
   &_highlighted &-Buttons,
   &:hover &-Buttons,
   & &-Buttons:focus {

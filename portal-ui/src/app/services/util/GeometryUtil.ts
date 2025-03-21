@@ -17,6 +17,8 @@ export function convertToFlatMultiPoint(geometry: Geometry | RenderFeature): Mul
       return new MultiPoint(groupFlatCoordinates((geometry as MultiLineString).getFlatCoordinates()));
     } else if (geometry.getType() === 'Point') {
       return new MultiPoint([(geometry as Point).getCoordinates()]);
+    } else if (geometry.getType() === 'MultiPoint') {
+      return new MultiPoint(groupFlatCoordinates((geometry as MultiPoint).getFlatCoordinates()));
     }
 
     services.logger.warn(`Не поддерживаемый тип геометрии: ${geometry.getType()}`);
