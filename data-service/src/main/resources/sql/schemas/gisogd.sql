@@ -4324,9 +4324,10 @@ SET class_rule =
             "valueType": "STRING"
         },
         {
-            "name": "binary",
+            "name": "file",
+            "title": "Выбор файла",
             "required": true,
-            "valueType": "BINARY"
+            "valueType": "FILE"
         }
     ],
     "description": "documents_schema_v1",
@@ -4345,10 +4346,10 @@ SET class_rule =
                     "valueType": "STRING"
                 },
                 {
-                    "name": "binary",
+                    "name": "file",
                     "title": "Выбор файла",
                     "required": true,
-                    "valueType": "BINARY"
+                    "valueType": "FILE"
                 }
             ]
         },
@@ -4385,10 +4386,10 @@ SET class_rule =
                     "valueType": "STRING"
                 },
                 {
-                    "name": "binary",
+                    "name": "file",
                     "title": "Выбор файла",
                     "required": true,
-                    "valueType": "BINARY"
+                    "valueType": "FILE"
                 }
             ]
         },
@@ -4674,7 +4675,7 @@ SET class_rule =
         },
         {
             "name": "shape",
-            "title": "shape",
+            "title": "Геометрия",
             "hidden": true,
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -4998,7 +4999,7 @@ SET class_rule =
         },
         {
             "name": "shape",
-            "title": "shape",
+            "title": "Геометрия",
             "hidden": true,
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -5472,6 +5473,7 @@ SET class_rule =
     },
     {
       "name": "shape",
+      "title": "Геометрия",
       "valueType": "GEOMETRY",
       "allowedValues": [
         "Polygon"
@@ -5818,7 +5820,7 @@ SET class_rule =
         },
         {
             "name": "shape",
-            "title": "shape",
+            "title": "Геометрия",
             "valueType": "GEOMETRY",
             "allowedValues": [
                 "Polygon"
@@ -7902,7 +7904,7 @@ SET class_rule =
         },
         {
             "name": "shape",
-            "title": "shape",
+            "title": "Геометрия",
             "valueType": "GEOMETRY",
             "allowedValues": [
                 "Polygon"
@@ -11173,7 +11175,7 @@ SET class_rule =
         },
         {
             "name": "shape",
-            "title": "shape",
+            "title": "Геометрия",
             "hidden": true,
             "valueType": "GEOMETRY",
             "allowedValues": [
@@ -11536,7 +11538,7 @@ SET class_rule =
         },
         {
             "name": "shape",
-            "title": "shape",
+            "title": "Геометрия",
             "valueType": "GEOMETRY",
             "allowedValues": [
                 "Polygon"
@@ -47747,7 +47749,7 @@ SET class_rule =
         },
         {
             "name": "shape",
-            "title": "shape",
+            "title": "Геометрия",
             "valueType": "GEOMETRY",
             "allowedValues": [
                 "Polygon"
@@ -48637,9 +48639,10 @@ SET class_rule =
       "valueType": "INT"
     },
     {
-      "name": "binary",
+      "name": "file",
       "required": true,
-      "valueType": "BINARY"
+      "title": "Выбор файла",
+      "valueType": "FILE"
     }
   ],
   "description": "Раздел1",
@@ -48658,10 +48661,10 @@ SET class_rule =
           "valueType": "STRING"
         },
         {
-          "name": "binary",
+          "name": "file",
           "title": "Выбор файла",
           "required": true,
-          "valueType": "BINARY"
+          "valueType": "FILE"
         }
       ]
     },
@@ -48692,10 +48695,10 @@ SET class_rule =
           "valueType": "STRING"
         },
         {
-          "name": "binary",
+          "name": "file",
           "title": "Выбор файла",
           "required": true,
-          "valueType": "BINARY"
+          "valueType": "FILE"
         }
       ]
     },

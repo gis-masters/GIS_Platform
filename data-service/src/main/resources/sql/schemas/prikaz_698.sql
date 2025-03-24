@@ -28664,6 +28664,7 @@ SET class_rule =
           },
           {
             "name": "globalid",
+            "title": "Глобальный идентификатор",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
             "valueType": "STRING"

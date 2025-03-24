@@ -58,6 +58,7 @@ SET class_rule =
             },
             {
               "name": "shape",
+              "title": "Геометрия",
               "hidden": true,
               "valueType": "GEOMETRY",
               "allowedValues": [
@@ -123,6 +124,7 @@ SET class_rule =
             },
             {
               "name": "shape",
+              "title": "Геометрия",
               "hidden": true,
               "valueType": "GEOMETRY",
               "allowedValues": [
@@ -344,6 +346,7 @@ SET class_rule =
             },
             {
               "name": "shape",
+              "title": "Геометрия",
               "hidden": true,
               "valueType": "GEOMETRY",
               "allowedValues": [
@@ -383,6 +386,7 @@ SET class_rule =
             },
             {
               "name": "shape",
+              "title": "Геометрия",
               "hidden": true,
               "valueType": "GEOMETRY",
               "allowedValues": [

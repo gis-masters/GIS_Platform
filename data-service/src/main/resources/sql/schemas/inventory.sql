@@ -282,6 +282,7 @@ SET class_rule =
             },
             {
               "name": "shape",
+              "title": "Геометрия",
               "required": true,
               "valueType": "GEOMETRY",
               "allowedValues": [

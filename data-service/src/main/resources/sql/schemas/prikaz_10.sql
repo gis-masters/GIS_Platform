@@ -5503,7 +5503,7 @@ SET class_rule =
             "fractionDigits": 8
           },
           {
-            "name": "EXB_area",
+            "name": "exb_area",
             "title": "Площадь выставочных (экспозиционных) залов, кв. м",
             "valueType": "DOUBLE",
             "totalDigits": 38,
@@ -7270,7 +7270,7 @@ SET class_rule =
             "fractionDigits": 8
           },
           {
-            "name": "EXB_area",
+            "name": "exb_area",
             "title": "Площадь выставочных (экспозиционных) залов, кв. м",
             "valueType": "DOUBLE",
             "totalDigits": 38,
@@ -25595,6 +25595,7 @@ SET class_rule =
           },
           {
             "name": "globalid",
+            "title": "Глобальный идентификатор",
             "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
             "required": true,
             "valueType": "STRING"
@@ -36975,6 +36976,7 @@ SET class_rule =
           },
           {
             "name": "classid",
+            "title": "classid",
             "required": true,
             "valueType": "CHOICE",
             "enumerations": [

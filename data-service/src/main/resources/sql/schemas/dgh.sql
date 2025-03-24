@@ -90,7 +90,7 @@ SET class_rule =
             },
             {
               "name": "shape",
-              "title": "shape",
+              "title": "Геометрия",
               "hidden": true,
               "valueType": "GEOMETRY",
               "allowedValues": [
@@ -324,6 +324,7 @@ SET class_rule =
             },
             {
               "name": "shape",
+              "title": "Геометрия",
               "hidden": true,
               "valueType": "GEOMETRY",
               "allowedValues": [
@@ -698,7 +699,6 @@ SET class_rule =
               "title": "Площадь по документу",
               "required": true,
               "valueType": "DOUBLE",
-              "totalDigits": 38,
               "fractionDigits": 8
             },
             {
