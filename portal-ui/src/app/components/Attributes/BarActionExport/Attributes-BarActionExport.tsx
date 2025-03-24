@@ -6,7 +6,7 @@ import { FileUploadOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
-import { PropertySchema, PropertyType } from '../../../services/data/schema/schema.models';
+import { PropertySchema } from '../../../services/data/schema/schema.models';
 import { applyView, getReadablePropertyValue } from '../../../services/data/schema/schema.utils';
 import { CrgVectorableLayer, isVectorLayer } from '../../../services/gis/layers/layers.models';
 import { getLayerSchema } from '../../../services/gis/layers/layers.service';
@@ -84,15 +84,12 @@ export class AttributesBarActionExport extends Component<AttributesBarActionExpo
 
     const schemaWithView = isVectorLayer(layer) && layer.view ? applyView(schema, layer.view) : schema;
 
-    const properties: PropertySchema[] = [
-      { name: 'cutId', title: 'ID', propertyType: PropertyType.INT },
-      ...cols
-        .filter(({ field, hidden }) => field && !hidden)
-        .map(({ field }) =>
-          schemaWithView.properties.find(({ name }) => name.toLowerCase() === String(field).toLowerCase())
-        )
-        .filter(notFalsyFilter)
-    ];
+    const properties: PropertySchema[] = cols
+      .filter(({ field, hidden }) => field && !hidden)
+      .map(({ field }) =>
+        schemaWithView.properties.find(({ name }) => name.toLowerCase() === String(field).toLowerCase())
+      )
+      .filter(notFalsyFilter);
     const header = properties.map(prop => prop.title || prop.name);
     const body = records.map(record => this.prepareFeature(properties, record));
 

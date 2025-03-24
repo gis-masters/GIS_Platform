@@ -199,6 +199,7 @@ public class CreateTableRequestHandler implements IRequestHandler<CreateTableReq
         objectId.setTitle("№");
         objectId.setDescription("Идентификатор объекта (Заполняется автоматически)");
         objectId.setReadOnly(true);
+        objectId.setMaxDefaultWidth(105);
         objectId.setValueType(ValueType.INT);
 
         schemaProperties.removeIf(prop -> PRIMARY_KEY.equals(prop.getName()));
