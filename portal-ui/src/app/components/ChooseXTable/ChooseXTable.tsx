@@ -108,12 +108,12 @@ export class ChooseXTable<T> extends Component<ChooseXTableProps<T>> {
         title: this.props.withoutSelectAll
           ? null
           : !this.props.single && (
-            <Checkbox
-              indeterminate={this.selected.length > 0 && !this.allSelected}
-              checked={this.allSelected}
-              onChange={this.selectAll}
-            />
-          ),
+              <Checkbox
+                indeterminate={this.selected.length > 0 && !this.allSelected}
+                checked={this.allSelected}
+                onChange={this.selectAll}
+              />
+            ),
         cellProps: { padding: 'checkbox' },
         CellContent: this.renderCheckbox
       },

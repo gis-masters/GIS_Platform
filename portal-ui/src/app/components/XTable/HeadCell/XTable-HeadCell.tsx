@@ -9,6 +9,7 @@ import { PropertyType } from '../../../services/data/schema/schema.models';
 import { FilterQuery } from '../../../services/util/filters/filters.models';
 import { SortParams } from '../../../services/util/sortObjects';
 import { DescriptionMark } from '../../DescriptionMark/DescriptionMark';
+import { MIN_COLUMN_WIDTH } from '../CellContent/XTable-CellContent.base';
 import { XTableCellContent } from '../CellContent/XTable-CellContent.composed';
 import { XTableFilter } from '../Filter/XTable-Filter.composed';
 import { XTableHeadCellBorder } from '../HeadCellBorder/XTable-HeadCellBorder';
@@ -17,9 +18,11 @@ import { XTableHeadCellTitle } from '../HeadCellTitle/XTable-HeadCellTitle';
 import { XTableColumn } from '../XTable.models';
 
 import '!style-loader!css-loader!sass-loader!./XTable-HeadCell.scss';
+import '!style-loader!css-loader!sass-loader!../FilterActions/XTable-FilterActions.scss';
 
 const cnXTableHeadCell = cn('XTable', 'HeadCell');
 const cnXTableFilter = cn('XTable', 'Filter');
+const cnXTableFilterActions = cn('XTable', 'FilterActions');
 
 interface XTableHeadCellProps<T> extends TableCellProps {
   col: XTableColumn<T>;
@@ -34,8 +37,6 @@ interface XTableHeadCellProps<T> extends TableCellProps {
   onFilterChange(): void;
   onWidthChange(field: keyof T, width: number): void;
 }
-
-const MIN_CELL_WIDTH = 80;
 
 @observer
 export class XTableHeadCell<T> extends Component<XTableHeadCellProps<T>> {
@@ -107,20 +108,22 @@ export class XTableHeadCell<T> extends Component<XTableHeadCellProps<T>> {
             singleLineContent={singleLineContent}
           >
             <XTableHeadCellTitle col={col} singleLineContent={singleLineContent} />
-            {col.description && (
-              <>
-                &nbsp;
-                <DescriptionMark>{col.description}</DescriptionMark>
-              </>
-            )}
-            {col.hidden && (
-              <>
-                &nbsp;
-                <Tooltip title='Колонка скрыта настройками. Отображается из-за наличия фильтрации или сортировки.'>
-                  <VisibilityOff color='action' fontSize='small' />
-                </Tooltip>
-              </>
-            )}
+            <div className={cnXTableFilterActions()}>
+              {col.description && (
+                <>
+                  &nbsp;
+                  <DescriptionMark>{col.description}</DescriptionMark>
+                </>
+              )}
+              {col.hidden && (
+                <>
+                  &nbsp;
+                  <Tooltip title='Колонка скрыта настройками. Отображается из-за наличия фильтрации или сортировки.'>
+                    <VisibilityOff color='action' fontSize='small' />
+                  </Tooltip>
+                </>
+              )}
+            </div>
           </XTableHeadCellLabel>
         </XTableCellContent>
         {filterable && col.field && (
@@ -176,6 +179,6 @@ export class XTableHeadCell<T> extends Component<XTableHeadCellProps<T>> {
       return;
     }
 
-    onWidthChange(col.field, Math.max(this.initialWidth + deltaX, col.minWidth || MIN_CELL_WIDTH));
+    onWidthChange(col.field, Math.max(this.initialWidth + deltaX, col.minWidth || MIN_COLUMN_WIDTH));
   }
 }

@@ -15,7 +15,7 @@ import { dataManagementPage } from './pages/DataManagement.page';
 import { LibraryRegistryPage } from './pages/LibraryRegistry.page';
 import { MapPage } from './pages/Map.page';
 import { OrgAdminPage } from './pages/OrgAdmin';
-import { tasksJournalPage } from './pages/TasksJournal.page';
+import { TasksJournalPage } from './pages/TasksJournal.page';
 import { ScenarioScope } from './ScenarioScope';
 
 async function findPage(title: string): Promise<Page> {
@@ -249,7 +249,7 @@ Given('я на странице корзины удаленных докумен
 // tasks
 
 Given('я на странице журнала задач', async () => {
-  await tasksJournalPage.open();
+  await new TasksJournalPage().open();
 });
 
 Given('я перешел по ссылке к созданной задаче', async function (this: ScenarioScope) {

@@ -125,7 +125,7 @@ export default class MessagesRegistry extends Component<MessagesRegistryProps> {
     const checkCol: XTableColumn<MessagesRegistriesMessages> = {
       CellContent: this.renderActions,
       align: 'center',
-      minWidth: 60,
+      minWidth: 30,
       filterable: false,
       cellProps: { padding: 'checkbox' }
     };

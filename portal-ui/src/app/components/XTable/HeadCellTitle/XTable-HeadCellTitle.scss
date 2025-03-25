@@ -1,10 +1,28 @@
 .XTable-HeadCellTitle {
-  &_singleLineContent {
-    position: relative;
+  display: -webkit-box;
+  overflow: hidden;
+  flex: 1;
 
-    overflow: hidden;
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  height: auto;
+  max-height: 40px;
+  margin: 0;
+  padding: 0 8px 0 0;
 
-    white-space: nowrap;
-    text-overflow: ellipsis;
+  word-wrap: break-word;
+  word-break: normal;
+  
+  line-height: 20px;
+
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow-wrap: break-word;
+
+  &_singleLineContent,
+  &_multiLineContent {
+    width: 100%;
+    min-width: 0;
   }
 }

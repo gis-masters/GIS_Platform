@@ -16,8 +16,8 @@ const INDENT = 29;
 
 export interface XTableCellContentProps<T>
   extends ChildrenProps,
-    IClassNameProps,
-    React.HTMLAttributes<HTMLSpanElement> {
+  IClassNameProps,
+  React.HTMLAttributes<HTMLSpanElement> {
   singleLineContent: boolean;
   col: XTableColumn<T>;
   type?: XTableColumnType;
@@ -37,6 +37,8 @@ const isColTypeAllowed = (type?: XTableColumnType): boolean => {
   return false;
 };
 
+export const MIN_COLUMN_WIDTH = 108; // минимальная ширина с учетом отступов
+
 export function XTableCellContentBase<T>({
   children,
   singleLineContent,
@@ -53,8 +55,6 @@ export function XTableCellContentBase<T>({
   const cellRef = useRef<HTMLSpanElement>(null);
   const cutWidthRef = useRef<boolean>(false);
   const maxDefaultWidth = col.maxDefaultWidth ? col.maxDefaultWidth + 28 : undefined;
-
-  const MIN_COLUMN_WIDTH = 45;
 
   // высчитываем ширину элемента и устанавливаем ограничение при первом рендере
   const updateTooltipVisibility = useCallback(
@@ -82,7 +82,7 @@ export function XTableCellContentBase<T>({
         // При первом рендере, если нет установленной ширины, проверяем ограничения
         if (!spanProps.width) {
           let newWidth: number | undefined;
-          if (fullWidth <= 30) {
+          if (fullWidth <= MIN_COLUMN_WIDTH) {
             // Если ширина меньше или равна 30px, устанавливаем минимальную ширину
             newWidth = MIN_COLUMN_WIDTH;
           } else if (fullWidth > (maxDefaultWidth || 500)) {
@@ -145,6 +145,22 @@ export function XTableCellContentBase<T>({
 
   const tooltipText = (cellData?.toString() as string) || childrenText || '';
 
+  const getXTableCellMinWidth = (): number => {
+    if (col.field === '_idCheck') {
+      return col.minWidth || 30;
+    }
+
+    return col.field ? MIN_COLUMN_WIDTH : col.minWidth || 30;
+  };
+
+  const getXTableCellWidth = (): number | string => {
+    if (col.field === '_idCheck') {
+      return 'auto';
+    }
+
+    return currentWidth || 'auto';
+  };
+
   return (
     <span
       ref={cellRef}
@@ -161,7 +177,8 @@ export function XTableCellContentBase<T>({
       {...spanProps}
       style={{
         ...spanProps.style,
-        '--XTableCellWidth': currentWidth || 'auto'
+        '--XTableCellWidth': getXTableCellWidth(),
+        '--XTableCellMinWidth': getXTableCellMinWidth()
       }}
     >
       {children !== null && children !== undefined ? children : ''}

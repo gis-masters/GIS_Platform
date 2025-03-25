@@ -232,16 +232,16 @@ export default class LibraryRegistry extends Component<LibraryRegistryProps> {
         field: 'title',
         AfterCellContent: pathHidden
           ? ({ rowData, filterParams }) =>
-            this.library && (
-              <LibraryRegistryBreadcrumbs
-                size='small'
-                filter={filterParams}
-                library={this.library}
-                path={getIdsFromPath(rowData.path)}
-                onItemClick={this.handleBreadcrumbsItemClick}
-                menuButtonOnly
-              />
-            )
+              this.library && (
+                <LibraryRegistryBreadcrumbs
+                  size='small'
+                  filter={filterParams}
+                  library={this.library}
+                  path={getIdsFromPath(rowData.path)}
+                  onItemClick={this.handleBreadcrumbsItemClick}
+                  menuButtonOnly
+                />
+              )
           : undefined
       }
     ];
@@ -249,7 +249,7 @@ export default class LibraryRegistry extends Component<LibraryRegistryProps> {
     const checkboxColumn: XTableColumn<LibraryRecord> = {
       CellContent: this.props.inDialog ? this.renderCheck : this.renderActions,
       align: 'center',
-      minWidth: 60,
+      minWidth: 30,
       cellProps: { padding: 'checkbox' }
     };
 

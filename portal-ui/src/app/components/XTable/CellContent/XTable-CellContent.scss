@@ -3,8 +3,15 @@
 
   display: block;
   overflow: hidden;
+  align-items: center;
 
   width: calc(calc(var(--XTableCellWidth) - 28) * 1px);
+  min-width: calc(var(--XTableCellMinWidth) * 1px);
+
+  .DescriptionMark {
+    margin-left: auto;
+    padding-left: 2px;
+  }
 
   &_display {
     &_code {

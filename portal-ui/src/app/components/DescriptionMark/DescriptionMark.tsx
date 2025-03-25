@@ -10,8 +10,20 @@ import '!style-loader!css-loader!sass-loader!./DescriptionMark.scss';
 
 const cnDescriptionMark = cn('DescriptionMark');
 
-export const DescriptionMark: FC<ChildrenProps & IClassNameProps> = ({ children, className }) => (
-  <Tooltip title={children} open={!!children && undefined}>
-    <HelpOutline className={cnDescriptionMark(null, [className])} color='primary' fontSize='inherit' />
-  </Tooltip>
-);
+const handleMouseEvent = (e: React.MouseEvent) => {
+  e.stopPropagation();
+};
+
+export const DescriptionMark: FC<ChildrenProps & IClassNameProps> = ({ children, className }) => {
+  return (
+    <Tooltip title={children} open={!!children && undefined}>
+      <HelpOutline
+        className={cnDescriptionMark(null, [className])}
+        color='primary'
+        fontSize='inherit'
+        onMouseOver={handleMouseEvent}
+        onMouseOut={handleMouseEvent}
+      />
+    </Tooltip>
+  );
+};

@@ -141,7 +141,7 @@ export class AttributesBar extends Component<AttributesBarProps> {
         cellContentProps: { style: { overflow: 'visible' } },
         align: 'left',
         width: 74,
-        minWidth: 74,
+        minWidth: 40,
         headerCellProps: {
           padding: 'checkbox',
           size: 'small',

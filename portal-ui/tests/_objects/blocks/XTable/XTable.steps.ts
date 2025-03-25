@@ -11,6 +11,10 @@ Then('в первой колонке таблицы xTable содержатся 
   await expect(values).toEqual(await xTableBlock.getFirstColCellValues());
 });
 
+When('в таблице в первой колонке я навожусь на заголовок', async () => {
+  await xTableBlock.focusFirstColTitle();
+});
+
 Then('в первой колонке таблицы xTable содержатся только элементы {string}', async (valuesDirty: string) => {
   const values = valuesDirty.split(', ');
   await expect(values).toEqual(await xTableBlock.getFirstColCellValues());

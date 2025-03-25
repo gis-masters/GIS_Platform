@@ -140,7 +140,7 @@ export default class TasksJournal extends Component {
     const actions: XTableColumn<Task> = {
       CellContent: this.renderActions,
       align: 'center',
-      minWidth: 60,
+      minWidth: 30,
       cellProps: { padding: 'checkbox' }
     };
 

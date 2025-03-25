@@ -153,7 +153,7 @@ export default class VectorTableRegistry extends Component<VectorTableRegistryPr
     const checkboxCell: XTableColumn<Record<string, unknown>> = {
       CellContent: this.renderActions,
       align: 'center',
-      minWidth: 60,
+      minWidth: 30,
       filterable: false,
       cellProps: { padding: 'checkbox' }
     };

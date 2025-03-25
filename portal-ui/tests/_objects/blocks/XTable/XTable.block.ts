@@ -19,8 +19,15 @@ export class XTableBlock extends Block {
     colTitle: '.XTable-HeadCellTitle',
     rows: '.XTable-Row',
     firstColCellContent: '.XTable .XTable-Cell:first-child .XTable-CellContent',
+    firstColCellTitle: '.XTable .XTable-Head .MuiTableRow-head .XTable-HeadCell:first-child .XTable-HeadCellTitle',
     secondColCellContent: '.XTable-Row .XTable-Cell:nth-child(2) .XTable-CellContent'
   };
+
+  async focusFirstColTitle(): Promise<void> {
+    const $cellContents = await this.$('firstColCellTitle');
+
+    await $cellContents.moveTo();
+  }
 
   async getFirstColCellValues(): Promise<string[]> {
     const $$cellContents = await this.$$('firstColCellContent');

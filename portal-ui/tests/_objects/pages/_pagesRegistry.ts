@@ -6,7 +6,6 @@ import { passwordRestorePage } from './PasswordRestore.page';
 import { projectsPage } from './Projects.page';
 import { registerPage } from './Register.page';
 import { systemManagementPage } from './SystemManagement.page';
-import { tasksJournalPage } from './TasksJournal.page';
 import { testDataPreparationPage } from './TestDataPreparationPage.page';
 
 export const pagesRegistry: Page[] = [
@@ -17,6 +16,5 @@ export const pagesRegistry: Page[] = [
   projectsPage,
   registerPage,
   systemManagementPage,
-  tasksJournalPage,
   testDataPreparationPage
 ];

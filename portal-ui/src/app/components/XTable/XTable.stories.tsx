@@ -105,6 +105,22 @@ const cols: XTableColumn<TestData>[] = [
   }
 ];
 
+const colsWIthLongTitles: XTableColumn<TestData>[] = [
+  {
+    field: 'amount',
+    sortable: true,
+    title:
+      'Колонка с длинным-предлинным многострочным названием + Колонка с длинным-предлинным многострочным названием + Колонка с длинным-предлинным многострочным названием',
+    description:
+      'Бессмысленное шаблонное описание ещё одной бесполезной колонки с длинным-предлинным многострочным названием.'
+  },
+  {
+    field: 'long',
+    title:
+      'Просто ещё одна бесполезная колонка с длинным-предлинным многострочным названием и бессмысленным шаблонным описанием'
+  }
+];
+
 const lastCol = cols.at(-1);
 if (!lastCol) {
   throw new Error('Ошибка: нет колонок');
@@ -203,5 +219,16 @@ RedundantColWidth.args = {
   filtersAlwaysEnabled: true,
   cols: [cols[2]],
   singleLineContent: true,
+  size: 'small'
+};
+
+export const RedundantColWidthMultiline = Template.bind({}) as StoryFn<XTableForTestData>;
+RedundantColWidthMultiline.args = {
+  title: 'Многострочная таблица с избыточной шириной колонки',
+  data: testDataForTables,
+  filtersAlwaysEnabled: true,
+  cols: colsWIthLongTitles,
+  filterable: true,
+  defaultSort,
   size: 'small'
 };
