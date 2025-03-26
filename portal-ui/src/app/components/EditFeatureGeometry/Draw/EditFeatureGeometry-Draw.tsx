@@ -112,7 +112,7 @@ export class EditFeatureGeometryDraw extends Component<EditFeatureGeometryDrawPr
   }
 
   @boundMethod
-  private handleClick() {
+  private async handleClick() {
     if (!editFeatureStore.editFeaturesData?.features.length) {
       services.logger.error('Нет фичи для редактирования геометрии');
 
@@ -120,9 +120,12 @@ export class EditFeatureGeometryDraw extends Component<EditFeatureGeometryDrawPr
     }
 
     if (this.isDrawEnabled()) {
+      mapStore.setMode(MapMode.NONE);
       mapDrawService.drawOff();
+      await mapDrawService.highlightFeatures(editFeatureStore.editFeaturesData?.features);
     } else {
       mapDrawService.drawOn(toDrawGeometry(editFeatureStore.geometryType));
+      mapStore.setMode(MapMode.DRAW_FEATURE);
     }
   }
 

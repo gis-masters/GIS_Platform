@@ -17,6 +17,7 @@ class EditFeatureBlock extends Block {
     editFeatureLabel: '.edit-feature__label',
     editFeatureField: '.edit-feature__field',
     editFeatureLoading: '.edit-feature .loading',
+    editFeatureGeometryDraw: '.edit-feature .EditFeatureGeometryDraw',
     editFeatureGeometryAsTextBtn: '.edit-feature .EditFeatureGeometry-AsText',
     lookupStatus: '.edit-feature .Lookup-Status',
     loader: 'edit-feature .MuiLinearProgress-root'
@@ -66,6 +67,13 @@ class EditFeatureBlock extends Block {
 
     await $editFeatureGeometryAsText.waitForDisplayed();
     await $editFeatureGeometryAsText.click();
+  }
+
+  async clickEditOnMap(): Promise<void> {
+    const $editFeatureGeometryDraw = await editFeatureBlock.$('editFeatureGeometryDraw');
+
+    await $editFeatureGeometryDraw.waitForDisplayed();
+    await $editFeatureGeometryDraw.click();
   }
 
   async isReadonlyMode(): Promise<boolean> {

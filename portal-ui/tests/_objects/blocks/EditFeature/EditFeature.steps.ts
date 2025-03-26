@@ -58,6 +58,10 @@ When('в вкладке просмотра геометрии я нажимаю 
   await editFeatureBlock.clickGeometryAsTextButton();
 });
 
+When('в вкладке просмотра геометрии я нажимаю кнопку `Рисовать на карте`', async function () {
+  await editFeatureBlock.clickEditOnMap();
+});
+
 Then('в форме редактирования объекта в поле {string} значение {string}', async function (title: string, value: string) {
   await editFeatureBlock.waitForVisible();
   await editFeatureBlock.waitForEditFeatureForm();

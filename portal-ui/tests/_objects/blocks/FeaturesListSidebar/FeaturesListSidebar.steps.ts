@@ -32,6 +32,10 @@ When('в боковой панели выделенных объектов я д
   await featuresListSidebarBlock.selectObject(itemTitle);
 });
 
+When('в боковой панели выделенных объектов я открываю первый объект в списке', async function () {
+  await featuresListSidebarBlock.openFirstFeature();
+});
+
 When('в боковой панели выделенных объектов я навожу курсор на объект {string}', async function (itemTitle: string) {
   await featuresListSidebarBlock.focusToObject(itemTitle);
 });

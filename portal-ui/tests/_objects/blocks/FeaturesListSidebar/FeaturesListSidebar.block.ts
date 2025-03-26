@@ -56,6 +56,17 @@ class FeaturesListSidebarBlock extends Block {
     return await featuresListItemBlock.getItemData();
   }
 
+  async openFirstFeature(): Promise<void> {
+    await this.waitForVisible();
+
+    const $$items = await this.$$('item');
+
+    if ($$items.length) {
+      await $$items[0].waitForClickable();
+      await $$items[0].doubleClick();
+    }
+  }
+
   async getFeaturesListItemByTitle(title: string): Promise<FeaturesListItemBlock> {
     await this.waitForVisible();
 
