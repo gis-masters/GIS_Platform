@@ -5,6 +5,7 @@ import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,6 +14,7 @@ import ru.mycrg.auth_facade.IAuthenticationFacade;
 import ru.mycrg.auth_facade.UserDetails;
 import ru.mycrg.common_contracts.generated.gis_service.project.ProjectCreateDto;
 import ru.mycrg.common_contracts.generated.gis_service.project.ProjectUpdateDto;
+import ru.mycrg.gis_service.dao.ProjectsDao;
 import ru.mycrg.gis_service.dto.project.ProjectProjection;
 import ru.mycrg.gis_service.entity.BaseMap;
 import ru.mycrg.gis_service.entity.Permission;
@@ -49,6 +51,7 @@ public class ProjectService {
     private final BaseMapRepository baseMapRepository;
     private final DataServiceBasemapsClient dataServiceBasemapsClient;
     private final RoleRepository roleRepository;
+    private final ProjectsDao projectsDao;
 
     public ProjectService(ProjectProjectionFactory projectionFactory,
                           ProjectRepository projectRepository,
@@ -57,7 +60,8 @@ public class ProjectService {
                           MessageBusProducer messageBus,
                           BaseMapRepository baseMapRepository,
                           DataServiceBasemapsClient dataServiceBasemapsClient,
-                          RoleRepository roleRepository) {
+                          RoleRepository roleRepository,
+                          ProjectsDao projectsDao) {
         this.projectionFactory = projectionFactory;
         this.projectRepository = projectRepository;
         this.permissionRepository = permissionRepository;
@@ -66,6 +70,7 @@ public class ProjectService {
         this.baseMapRepository = baseMapRepository;
         this.dataServiceBasemapsClient = dataServiceBasemapsClient;
         this.roleRepository = roleRepository;
+        this.projectsDao = projectsDao;
     }
 
     /**
@@ -81,8 +86,15 @@ public class ProjectService {
         Long orgId = authenticationFacade.getOrganizationId();
 
         if (parentFolderId == null) {
-            return projectRepository.findAllByRoot(orgId, name, pageable)
-                                    .map(projectionFactory::setRoleAndCreateProjection);
+            if (authenticationFacade.isOrganizationAdmin()) {
+                return projectRepository.findAllByRoot(orgId, name, pageable)
+                                        .map(projectionFactory::setRoleAndCreateProjection);
+            } else {
+                List<ProjectProjection> projects = projectsDao.allowedProjects(name, pageable);
+                Long totalAllowed = projectsDao.totalAllowedProjects(name);
+
+                return new PageImpl<>(projects, pageable, totalAllowed);
+            }
         } else {
             // Проверяем, что родительский проект существует и является папкой
             Project parentProject = getById(parentFolderId);
