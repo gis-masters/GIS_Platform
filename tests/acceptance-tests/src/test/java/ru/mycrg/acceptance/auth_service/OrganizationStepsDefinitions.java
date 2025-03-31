@@ -403,6 +403,10 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
                 checkOrgIdInLocationSetAsCurrentPutInPool();
                 waitUntilOrganizationSuccessfullyCreated(orgId);
 
+                // Пользователи
+                authorizationBase.loginAsOwner();
+                userStepsDefinitions.createUsersByHierarchy("Иерархия вариант 2");
+
                 knownOrgTemplates.put(orgTemplate, true);
             } else {
                 System.out.println("Организация успешно создана по шаблону: " + orgTemplate);

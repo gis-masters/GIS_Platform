@@ -353,6 +353,35 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
 
             // После изменения иерархии получаем новый актуальный токен
             authorizationBase.loginAsOwner(false);
+        } else if ("Иерархия вариант 2".equals(hierarchy)) {
+            System.out.printf("*** *** Разворачиваем иерархическую структуру пользователей, вариант: '%s'", hierarchy);
+
+            getCurrent();
+            Integer ownerId = response.jsonPath().get("id");
+            assertNotNull(ownerId);
+            System.out.println(" Id владельца организации: " + ownerId);
+
+            UserCreateDto dto = userPool.get(-1);
+            userPool.put(ownerId, dto);
+            userPool.remove(-1);
+
+            // Пользователь fiz1, у которого начальником будет владелец организации
+            UserCreateDto fiz1 = new UserCreateDto("fiz1", "fiz1", "fiz1", "job", generateString("NUMBER_10"),
+                                                   generateString("EMAIL_10"), DEFAULT_TEST_PASSWORD, "dep");
+            fiz1.setBossId(ownerId);
+
+            System.out.println("*** *** Create user fiz1");
+            userDto = fiz1;
+            createRandomUser(fiz1);
+
+            System.out.println("============= Print userPool =============");
+            userPool.forEach((id, userDto) -> {
+                System.out.printf("id: %d. Name: '%s' Email: '%s'%n", id, userDto.getName(), userDto.getEmail());
+            });
+            System.out.println("==========================================");
+
+            // После изменения иерархии получаем новый актуальный токен
+            authorizationBase.loginAsOwner(false);
         } else {
             throw new IllegalStateException(
                     String.format("Unknown hierarchy: '%s'. Plz implement it first.", hierarchy));

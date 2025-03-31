@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<tns:ClientMessage xmlns:tns="urn://x-artefacts-smev-gov-ru/services/service-adapter/types" xmlns:ns2="urn://rostelekom.ru/PermissionObjectOperation/1.0.6" xmlns:ns3="urn://x-artefacts-smev-gov-ru/services/service-adapter/types/faults">
+    <tns:itSystem>U629301</tns:itSystem>
+    <tns:ResponseMessage>
+        <tns:ResponseMetadata>
+            <tns:clientId>bb363cfc-3516-4c8f-909b-d8c9d86e861c</tns:clientId>
+            <tns:replyToClientId>8d5c4e0f-373a-46ea-8f99-b5f8161bbd9c</tns:replyToClientId>
+        </tns:ResponseMetadata>
+        <tns:ResponseContent>
+            <tns:content>
+                <tns:MessagePrimaryContent>
+                    <ns2:FormResponse>
+                        <ns2:changeOrderInfo>
+                            <ns2:orderId>
+                                <ns2:pguId>4650657114</ns2:pguId>
+                            </ns2:orderId>
+                            <ns2:statusCode>
+                                <ns2:techCode>1</ns2:techCode>
+                            </ns2:statusCode>
+                            <ns2:comment>Заявление зарегистрировано</ns2:comment>
+                        </ns2:changeOrderInfo>
+                    </ns2:FormResponse>
+                </tns:MessagePrimaryContent>
+            </tns:content>
+        </tns:ResponseContent>
+    </tns:ResponseMessage>
+</tns:ClientMessage>

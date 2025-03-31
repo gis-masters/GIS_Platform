@@ -1,5 +1,6 @@
 package ru.mycrg.acceptance.data_service.libraries;
 
+import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
@@ -12,10 +13,7 @@ import ru.mycrg.acceptance.auth_service.UserStepsDefinitions;
 import ru.mycrg.acceptance.data_service.TestFilesManager;
 import ru.mycrg.acceptance.auth_service.UserStepsDefinitions;
 import ru.mycrg.acceptance.data_service.datasets.DatasetsStepsDefinitions;
-import ru.mycrg.acceptance.data_service.dto.DefaultDocumentModel;
-import ru.mycrg.acceptance.data_service.dto.FileDescriptionModel;
-import ru.mycrg.acceptance.data_service.dto.LibraryModel;
-import ru.mycrg.acceptance.data_service.dto.RecordDto;
+import ru.mycrg.acceptance.data_service.dto.*;
 import ru.mycrg.acceptance.data_service.dto.schemas.SchemaDto;
 import ru.mycrg.acceptance.data_service.schemas.CurrentScenarioSchema;
 import ru.mycrg.data_service_contract.dto.DocumentVersioningDto;
@@ -200,17 +198,18 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
         assertEquals(201, response.getStatusCode());
     }
 
-    @Given("В библиотеке документов {string}, в папке с id {int}, существует запись")
-    public void initRecordInTargetLibraryInTargetFolder(String targetLibrary, int targetFolder) throws InterruptedException {
-
+    @Given("В библиотеке документов Распределения задач, в папке с id {int}, существует запись")
+    public void initRecordInTaskAllocationLibraryInTargetFolder(int targetFolder)
+            throws InterruptedException {
         UserStepsDefinitions userStepsDefinitions = new UserStepsDefinitions();
-        authorizationBase.loginAsOwner();
         userStepsDefinitions.getCurrent();
-        Long ownerId = response.jsonPath().getLong("id");
 
         String path = "/root/" + targetFolder;
+        int performerId = 3;
+        String targetLibrary = "dl_data_task_allocation";
+
         String body = String.format("{\"title\":\"%s\", \"performer\": %d, \"path\":\"%s\"}",
-                                    generateString("STRING_10"), ownerId, path);
+                                    generateString("STRING_10"), performerId, path);
         createDocumentAndWriteAsCurrent(body, targetLibrary);
 
         sleep(800);
@@ -541,6 +540,14 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
         updateDocument(currentDocumentId, gson.toJson(record), DEFAULT_LIBRARY);
     }
 
+    @Given("Загруженные файлы успешно подвязаны к записи в {string}")
+    public void updateRecordWithFilesOnListOfLibrary(String libraryName) {
+        DefaultDocumentModel record = new SmevLibsDocModel("SmevFiles", null, null, null, currentFiles);
+        updateDocument(currentDocumentId, gson.toJson(record), libraryName);
+
+        assertEquals(200, response.getStatusCode());
+    }
+
     @When("я заново пытаюсь подвязать подпись {string} к файлу {string} в текущей записи")
     public void updateRecordWithNewEcpOnDefaultLibrary(String ecpFileName, String fileName) {
         FileDescriptionModel ecpFile = TestFilesManager.getFileDescriptionByTitleOrThrow(ecpFileName);
@@ -666,23 +673,31 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
 
     @When("В библиотеке документов {string} существует папка {string} с id {int}")
     public void createFolderInTargetLibraryWithId(String targetLibrary, String folderName, int targetFolderId) {
-        String folderContentType = "folder_v1";
-        int createdId;
+        // Сначала проверяем, существует ли уже папка с нужным ID
+        response = getBaseRequestWithCurrentCookie()
+                .when().
+                        get(String.format("/%s/records/%d", targetLibrary, targetFolderId));
 
-        do {
-            createdId = createRecordWithCheck(targetLibrary,
-                                              new RecordDto(folderName, null, folderContentType));
+        if (response.getStatusCode() == 200) {
+            // Папка уже существует, ничего не делаем
+            return;
+        }
 
-            if (createdId < targetFolderId) {
-                getBaseRequestWithCurrentCookie()
-                        .when()
-                        .delete(String.format("/%s/records/%d", targetLibrary, createdId))
-                        .then()
-                        .statusCode(SC_NO_CONTENT);
-            }
-        } while (createdId < targetFolderId);
+        // Проверяем текущий максимальный ID
+        response = getBaseRequestWithCurrentCookie()
+                .when().
+                        get(String.format("/%s/records", targetLibrary));
 
-        currentFolderId = createdId;
+        List<Integer> existingIds = response.jsonPath().getList("content.id");
+        int maxExistingId = existingIds.isEmpty() ? 0 : Collections.max(existingIds);
+
+        // Если максимальный существующий ID меньше целевого,
+        // создаем недостающие папки по порядку
+        for (int i = maxExistingId + 1; i <= targetFolderId; i++) {
+            String folderContentType = "folder_v1";
+            createRecordWithCheck(targetLibrary,
+                                  new RecordDto(folderName, null, folderContentType));
+        }
     }
 
     @When("В текущей папке существует запись")

@@ -379,6 +379,14 @@ public class LibraryPermissionsStepsDefinitions extends BaseStepsDefinitions {
         libraryBasePermissions.addPermission(urlToFile, userId, "user", role);
     }
 
+    @When("Текущему пользователю установлена роль {string}, для каталога {int} в библиотеке {string}")
+    public void setRoleForCurrentUserForFolderIdForLibrary(String role, int folderId, String library) {
+        authorizationBase.loginAsOwner();
+
+        String urlToFile = String.format("/%s/records/%d/roleAssignment", library, folderId);
+        libraryBasePermissions.addPermission(urlToFile, userId, "user", role);
+    }
+
     @When("Текущему пользователю установлена роль {string}, для каталога folder_1_1")
     public void setRoleForCurrentUserForFolder11(String role) {
         authorizationBase.loginAsOwner();

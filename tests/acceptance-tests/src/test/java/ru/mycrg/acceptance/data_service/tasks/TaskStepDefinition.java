@@ -134,6 +134,21 @@ public class TaskStepDefinition extends BaseStepsDefinitions {
         updateCurrentTask("{\"description\": \"" + description + "\"}");
     }
 
+    @When("я сохраняю промежуточный статус со значением: {string}")
+    public void updateTasksIntermediateStatus(String intermediateStatus) {
+        updateCurrentTask("{\"intermediate_status\": \"" + intermediateStatus + "\"}");
+    }
+
+    @When("я привязываю к задаче, в поле для отправки, документ {string}")
+    public void updateTasksDataSectionKeyDataConnection(String input) {
+        String[] parts = input.split(" ", 2);
+        String title = parts[0];
+        String libraryTableName = parts[1];
+
+        String body = "[{\"id\":1,\"title\":\"" + title + "\", \"libraryTableName\":\"" + libraryTableName + "\"}]";
+        updateCurrentTask("{\"data_section_key_data_connection\": \"" + body.replace("\"", "\\\"") + "\"}");
+    }
+
     @When("я делаю выборку всех задач")
     public void getAllTasks() {
         getTasks();
@@ -203,40 +218,51 @@ public class TaskStepDefinition extends BaseStepsDefinitions {
     }
 
     @Then("я жду пока новая задача с контент типом {string} создаётся")
-    public void waitUntilCreate(String contentType) throws InterruptedException {
+    public void waitUntilTaskCreate(String contentType) throws InterruptedException {
         String filter = "content_type_id IN('" + contentType + "')";
 
-        int maxAttempts = 10;
-        int delaySeconds = 10;
+        int maxAttempts = 4;
+        int delaySeconds = 5;
+        TimeUnit.SECONDS.sleep(delaySeconds);
 
         for (int attempt = 0; attempt < maxAttempts; attempt++) {
             getTasks(filter);
-            int totalElements = response.jsonPath().get("page.totalElements");
-
-            if (totalElements > 0) {
-                List<Map<String, Object>> content = response.jsonPath().getList("content");
+            List<Map<String, Object>> content = response.jsonPath().getList("content");
+            if (content != null && !content.isEmpty()) {
+                // Находим задачу с максимальным ID
+                Integer maxTaskId = null;
+                Map<String, Object> taskWithMaxId = null;
                 for (Map<String, Object> task: content) {
                     Integer taskId = (Integer) task.get("id");
-                    if (taskId != null && taskId == totalElements) {
-                        String connection = (String) task.get("inbox_data_key_data_connection");
-                        if (isValidConnection(connection)) {
-                            currentTaskId = taskId;
-                            return;
-                        }
+                    if (taskId != null && (maxTaskId == null || taskId > maxTaskId)) {
+                        maxTaskId = taskId;
+                        taskWithMaxId = task;
+                    }
+                }
+
+                if (taskWithMaxId != null) {
+                    String connection = (String) taskWithMaxId.get("inbox_data_key_data_connection");
+                    if (isValidConnection(connection)) {
+                        currentTaskId = maxTaskId;
+
+                        return;
                     }
                 }
             }
-
             if (attempt < maxAttempts - 1) {
                 TimeUnit.SECONDS.sleep(delaySeconds);
             }
         }
 
-        throw new AssertionError(
-                String.format(
-                        "Задача с content_type_id '%s' и корректным inbox_data_key_data_connection не создалась после %d попыток",
-                        contentType, maxAttempts)
-        );
+        StringBuilder errorDetails = new StringBuilder();
+        errorDetails.append(String.format(
+                "Задача с content_type_id '%s' и корректным inbox_data_key_data_connection не найдена после %d попыток\n",
+                contentType, maxAttempts));
+        errorDetails.append("Ожидаемые условия:\n");
+        errorDetails.append("1. Задача должна иметь content_type_id = ").append(contentType).append("\n");
+        errorDetails.append("2. Задача должна иметь максимальный ID среди всех задач с указанным content_type_id\n");
+
+        throw new AssertionError(errorDetails);
     }
 
     @When("файл {string} добавлен к задаче {int}")
@@ -246,6 +272,13 @@ public class TaskStepDefinition extends BaseStepsDefinitions {
         updateTask(taskId, "{\"attachments\": [" + fileDescription.asJson() + "]}");
 
         assertEquals(204, response.getStatusCode());
+    }
+
+    @Then("статус текущей задачи равен {string}")
+    public void taskStatusCheck(String expectedStatus) throws InterruptedException {
+        getTaskByIdentifier(currentTaskId);
+        String actualStatus = response.jsonPath().get("status");
+        assertEquals("Статус задачи не соответствует ожидаемому", expectedStatus, actualStatus);
     }
 
     private void createTask(Map<String, Object> dto) {

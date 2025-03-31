@@ -45,7 +45,7 @@ import static ru.mycrg.data_service.service.resources.ResourceQualifier.libraryQ
         matchIfMissing = true)
 public class AcceptRnsService extends AcceptServiceBase {
 
-    private static final String TITLE = "РНC из ЕПГУ";
+    private static final String TITLE = "РНС из ЕПГУ";
     private static final String EVENT_TYPE_LOG = "Входящее сообщение РНC успешно записано в реестр";
 
     public AcceptRnsService(TaskLogService taskLogService, TasksDetachedDao tasksDao,

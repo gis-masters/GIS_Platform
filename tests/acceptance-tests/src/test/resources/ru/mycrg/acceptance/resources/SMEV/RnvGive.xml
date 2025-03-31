@@ -1,0 +1,142 @@
+<tns:QueryResult xmlns:tns="urn://x-artefacts-smev-gov-ru/services/service-adapter/types" xmlns:ns2="urn://rostelekom.ru/PermissionObjectOperation/1.0.6" xmlns:ns3="urn://x-artefacts-smev-gov-ru/services/service-adapter/types/faults">
+    <tns:smevMetadata>
+        <tns:MessageId>12e8c0ec-08bd-11f0-8758-5af749e6a72a</tns:MessageId>
+        <tns:TransactionCode>3ebc6f05-81f6-4fc2-9051-7f80f05e7381</tns:TransactionCode>
+        <tns:Sender>MNSV05</tns:Sender>
+        <tns:Recipient>U629301</tns:Recipient>
+        <tns:SendingDate>2025-03-24T14:34:26.994Z</tns:SendingDate>
+    </tns:smevMetadata>
+    <tns:Message xmlns:ns4="http://www.w3.org/2001/XMLSchema-instance" ns4:type="tns:RequestMessageType">
+        <tns:RequestMetadata>
+            <tns:clientId>cdba0a20-ca07-4b49-9080-e365a37974c7</tns:clientId>
+            <tns:linkedGroupIdentity>
+                <tns:refClientId>cdba0a20-ca07-4b49-9080-e365a37974c7</tns:refClientId>
+                <tns:refGroupId>3ebc6f05-81f6-4fc2-9051-7f80f05e7381</tns:refGroupId>
+            </tns:linkedGroupIdentity>
+            <tns:testMessage>false</tns:testMessage>
+            <tns:TransactionCode>3ebc6f05-81f6-4fc2-9051-7f80f05e7381</tns:TransactionCode>
+        </tns:RequestMetadata>
+        <tns:RequestContent>
+            <tns:content>
+                <tns:MessagePrimaryContent>
+                    <ns2:request oktmo="35000000">
+                        <ns2:Service>
+                            <ns2:currentDate>24.03.2025</ns2:currentDate>
+                            <ns2:userType>PERSON_RF</ns2:userType>
+                            <ns2:orderId>4650657044</ns2:orderId>
+                            <ns2:orderStatusCode>draft</ns2:orderStatusCode>
+                            <ns2:TargetId>-10000115324</ns2:TargetId>
+                            <ns2:TargetName>Выдача разрешения на ввод объекта в эксплуатацию</ns2:TargetName>
+                            <ns2:DepartmentId>-10003772917</ns2:DepartmentId>
+                            <ns2:DepartmentName>Уполномоченный орган субъекта Российской Федерации</ns2:DepartmentName>
+                            <ns2:okato>35701000000</ns2:okato>
+                        </ns2:Service>
+                        <ns2:Goal>1</ns2:Goal>
+                        <ns2:VariantChoice>
+                            <ns2:KP_OA_04>1</ns2:KP_OA_04>
+                            <ns2:KP_OA_05>
+                                <ns2:IsCapitalConstructionObject>true</ns2:IsCapitalConstructionObject>
+                                <ns2:IsLinearObject>false</ns2:IsLinearObject>
+                            </ns2:KP_OA_05>
+                            <ns2:KP_OA_05_1>1</ns2:KP_OA_05_1>
+                            <ns2:KP_OA_06>1</ns2:KP_OA_06>
+                            <ns2:KP_OA_07>1</ns2:KP_OA_07>
+                            <ns2:KP_OA_09>1</ns2:KP_OA_09>
+                            <ns2:KP_OA_11>1</ns2:KP_OA_11>
+                            <ns2:KP_OA_12>1</ns2:KP_OA_12>
+                            <ns2:KP_OA_13>1</ns2:KP_OA_13>
+                            <ns2:KP_OA_14>1</ns2:KP_OA_14>
+                            <ns2:KP_OA_15>1</ns2:KP_OA_15>
+                            <ns2:KP_OA_16>1</ns2:KP_OA_16>
+                        </ns2:VariantChoice>
+                        <ns2:DelegateInfo>1</ns2:DelegateInfo>
+                        <ns2:RecipientPersonalData>
+                            <ns2:fullfio>Ионов Вячеслав Владимирович</ns2:fullfio>
+                            <ns2:lastname>Ионов</ns2:lastname>
+                            <ns2:firstname>Вячеслав</ns2:firstname>
+                            <ns2:middlename>Владимирович</ns2:middlename>
+                            <ns2:snils>864-644-056 34</ns2:snils>
+                            <ns2:gender>1</ns2:gender>
+                            <ns2:dateBirth>09.06.2001</ns2:dateBirth>
+                            <ns2:citizenship>РОССИЯ</ns2:citizenship>
+                            <ns2:Phone>+7(978)2400862</ns2:Phone>
+                            <ns2:Email>ionov.vy@mail.ru</ns2:Email>
+                            <ns2:regAddress>295014, Респ. Крым, г. Симферополь, ул. Хромченко, д. 23, кв. 15</ns2:regAddress>
+                            <ns2:DocumentPersonal>
+                                <ns2:typeDoc>Паспорт гражданина РФ</ns2:typeDoc>
+                                <ns2:nameDoc>Паспорт гражданина РФ</ns2:nameDoc>
+                                <ns2:docseries>3921</ns2:docseries>
+                                <ns2:docnumber>586046</ns2:docnumber>
+                                <ns2:issuedate>29.06.2021</ns2:issuedate>
+                                <ns2:issueorg>МВД по Республике Крым</ns2:issueorg>
+                                <ns2:issueidPassportRF>910004</ns2:issueidPassportRF>
+                            </ns2:DocumentPersonal>
+                        </ns2:RecipientPersonalData>
+                        <ns2:CompetentOrganization>
+                            <ns2:OrganizationID>1209100011383</ns2:OrganizationID>
+                            <ns2:Name>МИНИСТЕРСТВО ЖИЛИЩНОЙ ПОЛИТИКИ И ГОСУДАРСТВЕННОГО СТРОИТЕЛЬНОГО НАДЗОРА РЕСПУБЛИКИ КРЫМ</ns2:Name>
+                        </ns2:CompetentOrganization>
+                        <ns2:DataLandPlot>
+                            <ns2:DataLandPlotBlock>
+                                <ns2:LandPlotCadastralNumber>12:23:5432167:98765</ns2:LandPlotCadastralNumber>
+                            </ns2:DataLandPlotBlock>
+                        </ns2:DataLandPlot>
+                        <ns2:ObjectData>
+                            <ns2:ObjectName>Дом</ns2:ObjectName>
+                        </ns2:ObjectData>
+                        <ns2:BuildingPermit>
+                            <ns2:BuildingPermitBlock>
+                                <ns2:Number>RU01-2-3456-2020</ns2:Number>
+                                <ns2:Date>02.03.2025</ns2:Date>
+                                <ns2:Issuer>Уполномоченный</ns2:Issuer>
+                            </ns2:BuildingPermitBlock>
+                        </ns2:BuildingPermit>
+                        <ns2:MethodGettingResults>
+                            <ns2:IsPaperDocumentRequired>false</ns2:IsPaperDocumentRequired>
+                        </ns2:MethodGettingResults>
+                        <ns2:Documents>
+                            <ns2:ConfirmingComplianceParameters>
+                                <ns2:CodeDocument>ConfirmingComplianceParameters</ns2:CodeDocument>
+                                <ns2:Name>90 15 030601 31.pdf</ns2:Name>
+                                <ns2:URL>ConfirmingComplianceParameters.FileUploadComponent.actPD.4650657044</ns2:URL>
+                                <ns2:type>application/pdf</ns2:type>
+                            </ns2:ConfirmingComplianceParameters>
+                            <ns2:DiagramLocationObject>
+                                <ns2:CodeDocument>SchemeLandPlotPartition</ns2:CodeDocument>
+                                <ns2:Name>TextPart_fca79772-23fd-4b9a-acb1-0a6d1f1daef6.pdf</ns2:Name>
+                                <ns2:URL>SchemeLocationObject.FileUploadComponent.ShcemaOKS.4650657044</ns2:URL>
+                                <ns2:type>application/pdf</ns2:type>
+                            </ns2:DiagramLocationObject>
+                            <ns2:TechnicalPlanObject>
+                                <ns2:CodeDocument>TechnicalPlanObject</ns2:CodeDocument>
+                                <ns2:Name>DiagramParcelsSubParcels_1.pdf</ns2:Name>
+                                <ns2:URL>TechnicalPlanObject.FileUploadComponent.TechPlan.4650657044</ns2:URL>
+                                <ns2:type>application/pdf</ns2:type>
+                            </ns2:TechnicalPlanObject>
+                            <ns2:SignedStatement>
+                                <ns2:CodeDocument>SignedStatement</ns2:CodeDocument>
+                                <ns2:Name>SchemeDisposition.pdf.sig</ns2:Name>
+                                <ns2:URL>SignedStatement.FileUploadComponent.electrSigFile.4650657044</ns2:URL>
+                                <ns2:type>application/pgp-signature</ns2:type>
+                            </ns2:SignedStatement>
+                            <ns2:SignedStatement>
+                                <ns2:CodeDocument>SignedStatement</ns2:CodeDocument>
+                                <ns2:Name>SchemeDisposition.pdf</ns2:Name>
+                                <ns2:URL>SignedStatement.FileUploadComponent.electrSigFile.4650657045</ns2:URL>
+                                <ns2:type>application/pdf</ns2:type>
+                            </ns2:SignedStatement>
+                        </ns2:Documents>
+                    </ns2:request>
+                </tns:MessagePrimaryContent>
+                <tns:AttachmentHeaderList>
+                    <tns:AttachmentHeader>
+                        <tns:Id>12e8c0ed-08bd-11f0-8758-5af749e6a72a</tns:Id>
+                        <tns:filePath>SignedContent.zip</tns:filePath>
+                        <tns:SignaturePKCS7>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</tns:SignaturePKCS7>
+                        <tns:TransferMethod>REFERENCE</tns:TransferMethod>
+                    </tns:AttachmentHeader>
+                </tns:AttachmentHeaderList>
+            </tns:content>
+        </tns:RequestContent>
+    </tns:Message>
+</tns:QueryResult>
