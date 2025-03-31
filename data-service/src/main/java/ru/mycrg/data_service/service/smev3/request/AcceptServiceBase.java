@@ -53,6 +53,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -60,6 +61,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
+import static ru.mycrg.data_service.config.CrgCommonConfig.SYSTEM_DATETIME_PATTERN;
 import static ru.mycrg.data_service.dto.Roles.OWNER;
 import static ru.mycrg.data_service.service.TaskService.*;
 import static ru.mycrg.data_service.service.resources.ResourceQualifier.*;
@@ -444,8 +446,6 @@ public abstract class AcceptServiceBase {
 
     protected abstract void addDueDateToTask(Map<String, Object> taskPayload);
 
-    protected abstract void addCompleteDatesToTask(Map<String, Object> taskPayload, Map<String, Object> oldTaskPayload);
-
     protected abstract <T> String getPermitNumber(T queryResult);
 
     protected abstract <T> String getFullFio(T queryResult);
@@ -686,6 +686,15 @@ public abstract class AcceptServiceBase {
 
         FileDescription fileDescription = new FileDescription(savedEntityId, savedEntityTitle, savedEntitySize);
         fileDescriptions.add(fileDescription);
+    }
+
+    private void addCompleteDatesToTask(Map<String, Object> taskPayload, Map<String, Object> oldTaskPayload) {
+        String dueDateString = oldTaskPayload.get(DUE_DATE_ATTRIBUTE).toString();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(SYSTEM_DATETIME_PATTERN);
+        LocalDate dueDate = LocalDateTime.parse(dueDateString, formatter).toLocalDate();
+        taskPayload.put(RECORD_STATUS_ATTRIBUTE, getRecordStatus(dueDate));
+        taskPayload.put(NUMBER_ATTRIBUTE, calculateOverdueDays(dueDate, LocalDate.now()));
+        taskPayload.put(DATE_ATTRIBUTE, LocalDate.now());
     }
 
     protected LocalDate calculateDueDate(int daysForAdd) {

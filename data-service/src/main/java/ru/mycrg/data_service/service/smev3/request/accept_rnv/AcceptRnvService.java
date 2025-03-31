@@ -127,16 +127,6 @@ public class AcceptRnvService extends AcceptServiceBase {
     }
 
     @Override
-    protected void addCompleteDatesToTask(Map<String, Object> taskPayload, Map<String, Object> oldTaskPayload) {
-        String dueDateString = oldTaskPayload.get(DUE_DATE_ATTRIBUTE).toString();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        LocalDate dueDate = LocalDateTime.parse(dueDateString, formatter).toLocalDate();
-        taskPayload.put(RECORD_STATUS_ATTRIBUTE, getRecordStatus(dueDate));
-        taskPayload.put(NUMBER_ATTRIBUTE, calculateOverdueDays(dueDate, LocalDate.now()));
-        taskPayload.put(DATE_ATTRIBUTE, LocalDate.now());
-    }
-
-    @Override
     protected <T> String getPermitNumber(T queryResult) {
         QueryResult result = (QueryResult) queryResult;
         RequestType request = result.getMessage().getRequestContent().getContent().getMessagePrimaryContent()

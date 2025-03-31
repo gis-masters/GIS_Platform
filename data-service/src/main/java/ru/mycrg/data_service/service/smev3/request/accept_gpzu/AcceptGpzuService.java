@@ -32,10 +32,14 @@ import ru.mycrg.data_service.util.xml.XmlMarshaller;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.data_service_contract.enums.TaskStatus;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.util.Optional.ofNullable;
+import static ru.mycrg.data_service.config.CrgCommonConfig.SYSTEM_DATETIME_PATTERN;
 import static ru.mycrg.data_service.service.resources.ResourceQualifier.libraryQualifier;
 
 @Service
@@ -48,6 +52,7 @@ public class AcceptGpzuService extends AcceptServiceBase {
     private static final String TITLE = "ГПЗУ из ЕПГУ";
     private static final String EVENT_TYPE_LOG = "Входящее сообщение ГПЗУ успешно записано в реестр";
     private static final String DEFAULT_PERFORMER_ID = "1547";
+    private static final String DEFAULT_FILENAME = "Градостроительный_план_земельного_участка";
 
     public AcceptGpzuService(TaskLogService taskLogService, TasksDetachedDao tasksDao,
                              SmevMessageService smevMessageService,
@@ -145,7 +150,7 @@ public class AcceptGpzuService extends AcceptServiceBase {
 
     @Override
     protected String getFileName() {
-        return BUILDING_PERMIT_FILENAME;
+        return DEFAULT_FILENAME;
     }
 
     @Override
@@ -160,14 +165,17 @@ public class AcceptGpzuService extends AcceptServiceBase {
 
     @Override
     protected <T> void addAdditionalFields(T queryResult, Map<String, Object> documentPayload) {
+        QueryResult result = (QueryResult) queryResult;
+        RequestType request = result.getMessage().getRequestContent().getContent().getMessagePrimaryContent()
+                                    .getRequest();
+        documentPayload.put(GOAL, request.getGoal());
+        documentPayload.put(CADASTRAL_NUMBER, getCadastalNumbers(request));
+        documentPayload.put(PERMIT_NUMBER, getPermitNumber(queryResult));
     }
 
     @Override
     protected void addDueDateToTask(Map<String, Object> taskPayload) {
-    }
-
-    @Override
-    protected void addCompleteDatesToTask(Map<String, Object> taskPayload, Map<String, Object> oldTaskPayload) {
+        taskPayload.put(DUE_DATE_ATTRIBUTE, calculateDueDate(13));
     }
 
     @Override
@@ -356,7 +364,6 @@ public class AcceptGpzuService extends AcceptServiceBase {
                 if (isCanceledByUser) {
                     statusCodeType.setTechCode("10");
                     changeOrderInfoType.setComment("Заявление отменено");
-                    addAttachmentHeader(fileName, ecp, content);
                 } else {
                     statusCodeType.setTechCode("4");
                     changeOrderInfoType.setComment("Отказано в предоставлении услуги");
@@ -412,5 +419,11 @@ public class AcceptGpzuService extends AcceptServiceBase {
                 }
             }
         }
+    }
+
+    private String getCadastalNumbers(RequestType request) {
+        return ofNullable(request.getDataLandPlotData())
+                .map(data -> String.join(", ", data.getLandPlotCadastralNumber()))
+                .orElse("");
     }
 }

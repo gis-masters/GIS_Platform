@@ -3,6 +3,7 @@ package ru.mycrg.data_service.service.cqrs.tasks.handlers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import ru.mycrg.auth_facade.IAuthenticationFacade;
 import ru.mycrg.auth_facade.UserDetails;
 import ru.mycrg.data_service.dao.RecordsDao;
@@ -69,6 +70,7 @@ public class UpdateTaskRequestHandler implements IRequestHandler<UpdateTaskReque
     }
 
     @Override
+    @Transactional
     public Voidy handle(UpdateTaskRequest request) {
         log.debug("UpdateTaskRequestHandler: {}", request.getNewRecord().getContent());
 
@@ -129,28 +131,10 @@ public class UpdateTaskRequestHandler implements IRequestHandler<UpdateTaskReque
                         break;
                     case RNV_CONTENT_TYPE:
                         acceptRnvService.updateTablesAndSendStatusMessageToSmev(task, status, taskId);
-
                         break;
+                    case GPZU_CONTENT_TYPE:
+                        acceptGpzuService.updateTablesAndSendStatusMessageToSmev(task, status, taskId);
                 }
-            }
-        }
-
-        if (contentType != null && contentType.toString().equals(GPZU_CONTENT_TYPE)) {
-            String status = newTask.getAsString(TASK_STATUS_PROPERTY);
-            if (status == null) {
-                return new Voidy();
-            }
-
-            if (IN_PROGRESS.name().equals(status)) {
-                acceptGpzuService.updateTablesAndSendStatusMessageToSmev(task, IN_PROGRESS, taskId);
-            }
-
-            if (DONE.name().equals(status)) {
-                acceptGpzuService.updateTablesAndSendStatusMessageToSmev(task, DONE, taskId);
-            }
-
-            if (CANCELED.name().equals(status)) {
-                acceptGpzuService.updateTablesAndSendStatusMessageToSmev(task, CANCELED, taskId);
             }
         }
 
