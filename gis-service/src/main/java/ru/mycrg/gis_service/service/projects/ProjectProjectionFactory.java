@@ -1,8 +1,10 @@
-package ru.mycrg.gis_service.service;
+package ru.mycrg.gis_service.service.projects;
 
 import org.springframework.stereotype.Service;
 import ru.mycrg.auth_facade.IAuthenticationFacade;
+import ru.mycrg.gis_service.dto.project.ProjectProjectionImpl;
 import ru.mycrg.gis_service.entity.Project;
+import ru.mycrg.gis_service.service.ResourceProtector;
 
 import static ru.mycrg.gis_service.security.Roles.OWNER;
 

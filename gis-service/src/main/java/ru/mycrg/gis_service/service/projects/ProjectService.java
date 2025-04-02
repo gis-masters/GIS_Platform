@@ -1,4 +1,4 @@
-package ru.mycrg.gis_service.service;
+package ru.mycrg.gis_service.service.projects;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import org.jetbrains.annotations.NotNull;
@@ -16,6 +16,7 @@ import ru.mycrg.common_contracts.generated.gis_service.project.ProjectCreateDto;
 import ru.mycrg.common_contracts.generated.gis_service.project.ProjectUpdateDto;
 import ru.mycrg.gis_service.dao.ProjectsDao;
 import ru.mycrg.gis_service.dto.project.ProjectProjection;
+import ru.mycrg.gis_service.dto.project.ProjectProjectionImpl;
 import ru.mycrg.gis_service.entity.BaseMap;
 import ru.mycrg.gis_service.entity.Permission;
 import ru.mycrg.gis_service.entity.Project;
@@ -28,6 +29,7 @@ import ru.mycrg.gis_service.repository.BaseMapRepository;
 import ru.mycrg.gis_service.repository.PermissionRepository;
 import ru.mycrg.gis_service.repository.ProjectRepository;
 import ru.mycrg.gis_service.repository.RoleRepository;
+import ru.mycrg.gis_service.service.DataServiceBasemapsClient;
 
 import java.util.List;
 import java.util.Objects;
@@ -226,25 +228,30 @@ public class ProjectService {
     }
 
     /**
-     * Перемещает проект в другую папку
+     * Перемещает элемент(папку или проект) в другую папку
      *
-     * @param projectId      идентификатор проекта для перемещения
-     * @param parentFolderId идентификатор родительской папки (может быть null для перемещения на корневой уровень)
+     * @param movedItemId    что перемещаем
+     * @param targetFolderId куда перемещаем (может быть null для перемещения на корневой уровень)
      */
     @Transactional
-    public void moveProject(long projectId, Long parentFolderId) {
-        Project project = getById(projectId);
-
-        if (!isOwner(project)) {
-            throw new ForbiddenException("Недостаточно прав для перемещения проекта: " + projectId);
+    public void move(Long movedItemId, Long targetFolderId) {
+        Project movedItem = getById(movedItemId);
+        if (!isOwner(movedItem)) {
+            throw new ForbiddenException("Недостаточно прав для перемещения: " + movedItem.getName());
         }
 
-        project.setPath(getPathForParent(parentFolderId));
+        Project targetFolder = getById(movedItemId);
+        if (!isOwner(targetFolder)) {
+            throw new ForbiddenException("Недостаточно прав для перемещения в: " + targetFolder.getName());
+        }
 
-        project.setLastModified(now());
-        projectRepository.save(project);
+        String pathForParent = getPathForParent(targetFolderId);
+        movedItem.setPath(pathForParent);
+        movedItem.setLastModified(now());
 
-        sendAuditEvent("MOVE", project);
+        projectRepository.save(movedItem);
+
+        sendAuditEvent("MOVE", movedItem);
     }
 
     /**

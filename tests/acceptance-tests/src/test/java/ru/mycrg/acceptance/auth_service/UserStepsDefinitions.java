@@ -279,8 +279,14 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
     }
 
     @Given("Существует иерархия пользователей {string}")
-    public void createUsersByHierarchy(String hierarchy) throws InterruptedException {
-        if ("Иерархия вариант 1".equals(hierarchy)) {
+    public void createUsersByTemplate(String template) throws InterruptedException {
+        if ("тестирование прав на проекты".equals(template)) {
+            createRandomUser(new UserCreateDto("fiz1", "fiz1", generateString("EMAIL_10"), DEFAULT_TEST_PASSWORD));
+            createRandomUser(new UserCreateDto("fiz2", "fiz2", generateString("EMAIL_10"), DEFAULT_TEST_PASSWORD));
+            createRandomUser(new UserCreateDto("fiz3", "fiz3", generateString("EMAIL_10"), DEFAULT_TEST_PASSWORD));
+            createRandomUser(new UserCreateDto("fiz4", "fiz4", generateString("EMAIL_10"), DEFAULT_TEST_PASSWORD));
+            createRandomUser(new UserCreateDto("fiz5", "fiz5", generateString("EMAIL_10"), DEFAULT_TEST_PASSWORD));
+        } else if ("Иерархия вариант 1".equals(template)) {
             // orgOwner
             //   fiz1
             //   fiz2
@@ -288,15 +294,15 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
             //       fiz4
             // fiz5
 
-            System.out.printf("*** *** Разворачиваем иерархическую структуру пользователей, вариант: '%s'", hierarchy);
+            System.out.printf("*** *** Разворачиваем иерархическую структуру пользователей, вариант: '%s'", template);
 
             getCurrent();
             Integer ownerId = response.jsonPath().get("id");
             assertNotNull(ownerId);
             System.out.println(" Id владельца организации: " + ownerId);
 
-            UserCreateDto dto = userPool.get(-1);
-            userPool.put(ownerId, dto);
+            UserCreateDto orgOwner = userPool.get(-1);
+            userPool.put(ownerId, orgOwner);
             userPool.remove(-1);
 
             // Пользователь fiz1, у которого начальником будет владелец организации
@@ -353,8 +359,8 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
 
             // После изменения иерархии получаем новый актуальный токен
             authorizationBase.loginAsOwner(false);
-        } else if ("Иерархия вариант 2".equals(hierarchy)) {
-            System.out.printf("*** *** Разворачиваем иерархическую структуру пользователей, вариант: '%s'", hierarchy);
+        } else if ("Иерархия вариант 2".equals(template)) {
+            System.out.printf("*** *** Разворачиваем иерархическую структуру пользователей, вариант: '%s'", template);
 
             getCurrent();
             Integer ownerId = response.jsonPath().get("id");
@@ -384,7 +390,7 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
             authorizationBase.loginAsOwner(false);
         } else {
             throw new IllegalStateException(
-                    String.format("Unknown hierarchy: '%s'. Plz implement it first.", hierarchy));
+                    String.format("Unknown template: '%s'. Plz implement it first.", template));
         }
     }
 
@@ -734,6 +740,8 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
         if (isUserExistInPool(dto.getEmail())) {
             makeExactUserAsCurrent(dto.getEmail());
         } else {
+            userDto = dto;
+
             super.createEntity(dto);
             assertEquals(SC_ACCEPTED, response.getStatusCode());
             extractUserIdFromLocation();

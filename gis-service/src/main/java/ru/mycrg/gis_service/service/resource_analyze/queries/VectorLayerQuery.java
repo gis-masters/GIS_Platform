@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import ru.mycrg.gis_service.entity.Layer;
 import ru.mycrg.gis_service.entity.Project;
 import ru.mycrg.gis_service.service.layers.LayerService;
-import ru.mycrg.gis_service.service.ProjectService;
+import ru.mycrg.gis_service.service.projects.ProjectService;
 import ru.mycrg.resource_analyzer_contract.IResource;
 import ru.mycrg.resource_analyzer_contract.IResourceDefinition;
 import ru.mycrg.resource_analyzer_contract.IResourceQueryService;

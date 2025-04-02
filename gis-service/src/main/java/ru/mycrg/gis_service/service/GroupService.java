@@ -13,6 +13,7 @@ import ru.mycrg.gis_service.exceptions.ForbiddenException;
 import ru.mycrg.gis_service.exceptions.NotFoundException;
 import ru.mycrg.gis_service.json.JsonPatcher;
 import ru.mycrg.gis_service.repository.GroupRepository;
+import ru.mycrg.gis_service.service.projects.ProjectService;
 
 import javax.json.JsonMergePatch;
 import java.time.LocalDateTime;

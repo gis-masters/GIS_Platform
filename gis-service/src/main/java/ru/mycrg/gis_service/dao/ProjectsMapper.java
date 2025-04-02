@@ -2,7 +2,7 @@ package ru.mycrg.gis_service.dao;
 
 import org.springframework.jdbc.core.RowMapper;
 import ru.mycrg.gis_service.dto.project.ProjectProjection;
-import ru.mycrg.gis_service.service.ProjectProjectionImpl;
+import ru.mycrg.gis_service.dto.project.ProjectProjectionImpl;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

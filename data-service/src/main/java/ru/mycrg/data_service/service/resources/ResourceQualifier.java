@@ -134,7 +134,7 @@ public class ResourceQualifier extends AQualifier {
         } else if (Objects.equals(type, TABLE) || Objects.equals(type, LIBRARY)) {
             return table;
         } else {
-            return recordId.toString();
+            return recordId == null ? "" : recordId.toString();
         }
     }
 

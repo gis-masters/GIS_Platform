@@ -19,7 +19,7 @@ import ru.mycrg.gis_service.exceptions.*;
 import ru.mycrg.gis_service.json.JsonPatcher;
 import ru.mycrg.gis_service.queue.MessageBusProducer;
 import ru.mycrg.gis_service.repository.LayerRepository;
-import ru.mycrg.gis_service.service.ProjectService;
+import ru.mycrg.gis_service.service.projects.ProjectService;
 import ru.mycrg.gis_service.service.ResourceProtector;
 
 import javax.json.JsonMergePatch;

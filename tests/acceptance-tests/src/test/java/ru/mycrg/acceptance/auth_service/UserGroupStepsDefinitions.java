@@ -19,10 +19,10 @@ import static org.hamcrest.CoreMatchers.not;
 import static org.junit.Assert.assertEquals;
 import static ru.mycrg.acceptance.auth_service.UserStepsDefinitions.userId;
 
-public class GroupStepsDefinitions extends BaseStepsDefinitions {
+public class UserGroupStepsDefinitions extends BaseStepsDefinitions {
 
-    public static GroupCreateDto usersGroupDto;
     public static Integer usersGroupId;
+    public static GroupCreateDto usersGroupDto;
     private final AuthorizationBase authorizationBase = new AuthorizationBase();
 
     @Override
@@ -135,7 +135,7 @@ public class GroupStepsDefinitions extends BaseStepsDefinitions {
 
         getBaseRequestWithCurrentCookie()
                 .given().
-                contentType(ContentType.JSON)
+                        contentType(ContentType.JSON)
                 .when().
                         body("{}").
                         post(String.format("/%s/users/%s", usersGroupId, userId))
@@ -148,7 +148,7 @@ public class GroupStepsDefinitions extends BaseStepsDefinitions {
     public void isUserInUsersGroup() {
         getBaseRequestWithCurrentCookie()
                 .when().
-                get("/" + usersGroupId)
+                        get("/" + usersGroupId)
                 .then().
                         log().ifValidationFails().
                         statusCode(SC_OK).
@@ -159,17 +159,17 @@ public class GroupStepsDefinitions extends BaseStepsDefinitions {
     public void deleteUserFromUsersGroup() {
         getBaseRequestWithCurrentCookie()
                 .when().
-                delete(String.format("/%s/users/%s", usersGroupId, userId))
+                        delete(String.format("/%s/users/%s", usersGroupId, userId))
                 .then().
                         log().ifValidationFails().
                         statusCode(SC_NO_CONTENT);
     }
 
-    @And("В пользовательской групппе отсутствует указанный пользователь")
+    @And("В пользовательской группе отсутствует указанный пользователь")
     public void isNotUserInUsersGroup() {
         getBaseRequestWithCurrentCookie()
                 .when().
-                get("/" + usersGroupId)
+                        get("/" + usersGroupId)
                 .then().
                         log().ifValidationFails().
                         statusCode(SC_OK).
@@ -201,6 +201,27 @@ public class GroupStepsDefinitions extends BaseStepsDefinitions {
         super.checkSomethingOnPages(entitiesPerPage);
     }
 
+    public void createGroupsByTemplate(String template) {
+        if ("тестирование прав на проекты".equals(template)) {
+            // Группа 1
+            usersGroupDto = new GroupCreateDto("группа 1", "Группа с пользователями fiz3, fiz4");
+            super.createEntity(usersGroupDto);
+            usersGroupId = response.jsonPath().get("id");
+
+            addUserToGroup(usersGroupId, getUserIdByName("fiz3"));
+            addUserToGroup(usersGroupId, getUserIdByName("fiz4"));
+
+            // Группа 2
+            usersGroupDto = new GroupCreateDto("группа 2", "Группа с пользователем fiz5");
+            super.createEntity(usersGroupDto);
+            usersGroupId = response.jsonPath().get("id");
+
+            addUserToGroup(usersGroupId, getUserIdByName("fiz5"));
+        } else {
+            throw new IllegalStateException("Создание групп пользователей. Передан не известный шаблон: " + template);
+        }
+    }
+
     private void createUserGroupAsOwner(List<String> group) {
         usersGroupDto = new GroupCreateDto(generateString(group.get(0)), generateString(group.get(1)));
 
@@ -230,5 +251,11 @@ public class GroupStepsDefinitions extends BaseStepsDefinitions {
                 .when().
                         body(payload).
                         patch("/" + usersGroupId);
+    }
+
+    private void addUserToGroup(Integer groupId, Integer userId) {
+        response = getBaseRequestWithCurrentCookie()
+                .when().
+                        post(String.format("/%s/users/%s", groupId, userId));
     }
 }

@@ -15,6 +15,7 @@ import ru.mycrg.gis_service.exceptions.ForbiddenException;
 import ru.mycrg.gis_service.exceptions.NotFoundException;
 import ru.mycrg.gis_service.repository.PermissionRepository;
 import ru.mycrg.gis_service.repository.RoleRepository;
+import ru.mycrg.gis_service.service.projects.ProjectService;
 
 import javax.json.JsonMergePatch;
 import java.io.IOException;

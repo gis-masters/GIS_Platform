@@ -7,7 +7,7 @@ import ru.mycrg.acceptance.BaseStepsDefinitions;
 import ru.mycrg.acceptance.gis_service.ProjectStepsDefinitions;
 
 import static java.lang.Thread.sleep;
-import static ru.mycrg.acceptance.auth_service.GroupStepsDefinitions.usersGroupId;
+import static ru.mycrg.acceptance.auth_service.UserGroupStepsDefinitions.usersGroupId;
 import static ru.mycrg.acceptance.auth_service.OrganizationStepsDefinitions.MAX_RETRY_ATTEMPT;
 import static ru.mycrg.acceptance.auth_service.OrganizationStepsDefinitions.RETRY_DELAY_SM;
 import static ru.mycrg.acceptance.auth_service.UserStepsDefinitions.userId;

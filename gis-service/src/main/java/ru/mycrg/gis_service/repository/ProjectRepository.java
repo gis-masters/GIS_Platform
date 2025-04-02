@@ -2,6 +2,7 @@ package ru.mycrg.gis_service.repository;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
@@ -42,4 +43,23 @@ public interface ProjectRepository extends PagingAndSortingRepository<Project, L
      */
     @Query("SELECT COUNT(p) > 0 FROM Project p WHERE p.path LIKE CONCAT('%/', :folderId) OR p.path = CONCAT('/', :folderId)")
     boolean existsByPath(@Param("folderId") Long folderId);
+
+    @Modifying
+    @Query("UPDATE Project SET " +
+            "   path = CASE WHEN id = :movedFolderId THEN NULL " +
+            "               ELSE REPLACE(path, :movedFolderSelfPath, :newParentForChildren) END, " +
+            "   lastModified = now() " +
+            " WHERE id = :movedFolderId OR path LIKE CONCAT(:movedFolderSelfPath, '%')")
+    void moveFolderToRoot(Long movedFolderId, String movedFolderSelfPath, String newParentForChildren);
+
+    @Modifying
+    @Query("UPDATE Project SET " +
+            "   path = CASE WHEN id = :movedFolderId THEN :targetFolderSelfPath " +
+            "               ELSE REPLACE(path, :movedFolderSelfPath, :newParentForChildren) END, " +
+            "   lastModified = now()" +
+            " WHERE id = :movedFolderId OR path LIKE CONCAT(:movedFolderSelfPath, '%')")
+    void moveFolder(Long movedFolderId,
+                    String movedFolderSelfPath,
+                    String newParentForChildren,
+                    String targetFolderSelfPath);
 }

@@ -15,7 +15,7 @@ import ru.mycrg.gis_service.entity.Project;
 import ru.mycrg.gis_service.exceptions.BindingErrorsException;
 import ru.mycrg.gis_service.exceptions.ForbiddenException;
 import ru.mycrg.gis_service.exceptions.NotFoundException;
-import ru.mycrg.gis_service.service.ProjectService;
+import ru.mycrg.gis_service.service.projects.ProjectService;
 import ru.mycrg.gis_service.service.ResourceProtector;
 import ru.mycrg.gis_service.service.layers.LayerService;
 import ru.mycrg.gis_service.validators.CrgLayerValidator;

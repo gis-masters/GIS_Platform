@@ -13,9 +13,13 @@ import org.springframework.web.bind.annotation.*;
 import ru.mycrg.common_contracts.generated.gis_service.project.ProjectCreateDto;
 import ru.mycrg.common_contracts.generated.gis_service.project.ProjectUpdateDto;
 import ru.mycrg.gis_service.dto.project.ProjectProjection;
+import ru.mycrg.gis_service.entity.Project;
 import ru.mycrg.gis_service.exceptions.BadRequestException;
 import ru.mycrg.gis_service.security.OrgSettingsKeeper;
-import ru.mycrg.gis_service.service.ProjectService;
+import ru.mycrg.gis_service.service.projects.IProjectMover;
+import ru.mycrg.gis_service.service.projects.ProjectFolderMover;
+import ru.mycrg.gis_service.service.projects.ProjectMover;
+import ru.mycrg.gis_service.service.projects.ProjectService;
 import ru.mycrg.gis_service.validators.project.ProjectCreateValidator;
 import ru.mycrg.gis_service.validators.project.ProjectUpdateValidator;
 
@@ -28,15 +32,21 @@ import static ru.mycrg.common_utils.page.PageHandler.pageFromList;
 @RequestMapping(value = "/projects")
 public class ProjectController {
 
+    private final IProjectMover projectMover;
+    private final IProjectMover projectFolderMover;
     private final ProjectService projectService;
-    private final OrgSettingsKeeper orgSettingsKeeper;
     private final Validator projectUpdateValidator;
     private final Validator projectCreateValidator;
+    private final OrgSettingsKeeper orgSettingsKeeper;
 
-    public ProjectController(ProjectService projectService,
+    public ProjectController(ProjectMover projectMover,
+                             ProjectFolderMover projectFolderMover,
+                             ProjectService projectService,
                              OrgSettingsKeeper orgSettingsKeeper,
                              ProjectUpdateValidator projectUpdateValidator,
                              ProjectCreateValidator projectCreateValidator) {
+        this.projectMover = projectMover;
+        this.projectFolderMover = projectFolderMover;
         this.orgSettingsKeeper = orgSettingsKeeper;
         this.projectService = projectService;
         this.projectUpdateValidator = projectUpdateValidator;
@@ -87,7 +97,7 @@ public class ProjectController {
 
     @PatchMapping("/{itemId}")
     @PreAuthorize(HAS_ANY_AUTHORITY)
-    public ResponseEntity<?> updateItem(@PathVariable long itemId,
+    public ResponseEntity<?> updateItem(@PathVariable Long itemId,
                                         @Valid @RequestBody ProjectUpdateDto projectDto,
                                         BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
@@ -101,17 +111,26 @@ public class ProjectController {
 
     @DeleteMapping("/{itemId}")
     @PreAuthorize(HAS_ANY_AUTHORITY)
-    public ResponseEntity<?> deleteItem(@PathVariable long itemId) {
+    public ResponseEntity<?> deleteItem(@PathVariable Long itemId) {
         projectService.delete(itemId);
 
         return ResponseEntity.noContent().build();
     }
 
-    @PatchMapping("/{movedItemId}/move/{targetFolderId}")
+    @PostMapping("/{movedItemId}/move/{targetFolderId}")
     @PreAuthorize(HAS_ANY_AUTHORITY)
-    public ResponseEntity<?> moveItem(@PathVariable long movedItemId,
-                                      @PathVariable long targetFolderId) {
-        projectService.moveProject(movedItemId, targetFolderId);
+    public ResponseEntity<?> moveItem(@PathVariable Long movedItemId,
+                                      @PathVariable Long targetFolderId) {
+        if (movedItemId.equals(targetFolderId)) {
+            return ResponseEntity.ok().build();
+        }
+
+        Project movedItem = projectService.getById(movedItemId);
+        if (movedItem.isFolder()) {
+            projectFolderMover.move(movedItemId, targetFolderId == 0 ? null : targetFolderId);
+        } else {
+            projectMover.move(movedItemId, targetFolderId == 0 ? null : targetFolderId);
+        }
 
         return ResponseEntity.ok().build();
     }

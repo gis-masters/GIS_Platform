@@ -442,6 +442,14 @@ public class BaseStepsDefinitions {
                        .getValue();
     }
 
+    public int getProjectIdByName(String name) {
+        return projectPool.entrySet().stream()
+                          .filter(item -> item.getValue().getName().equals(name))
+                          .findFirst()
+                          .orElseThrow(() -> new IllegalStateException("Not found project in pool by name: " + name))
+                          .getKey();
+    }
+
     private void createEntity(String jsonPayload) {
         response = getBaseRequestWithCurrentCookie()
                 .given().

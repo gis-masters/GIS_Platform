@@ -23,7 +23,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.*;
-import static ru.mycrg.acceptance.auth_service.GroupStepsDefinitions.usersGroupId;
+import static ru.mycrg.acceptance.auth_service.UserGroupStepsDefinitions.usersGroupId;
 import static ru.mycrg.acceptance.auth_service.UserStepsDefinitions.userId;
 
 public class ProjectStepsDefinitions extends BaseStepsDefinitions {
@@ -104,7 +104,7 @@ public class ProjectStepsDefinitions extends BaseStepsDefinitions {
     }
 
     @Given("я создал проект {string}")
-    public void createsProjectWithName(String projectName) {
+    public void createProject(String projectName) {
         projectDto = new ProjectCreateDto(generateString(projectName));
 
         super.createEntity(projectDto);
@@ -124,12 +124,21 @@ public class ProjectStepsDefinitions extends BaseStepsDefinitions {
     }
 
     @Given("я создал папку проектов {string}")
-    public void createsProjectFolder(String folderName) {
-        projectDto = new ProjectCreateDto(generateString(folderName), "Пустая папка проектов", null, false, true, null);
+    public void createProjectFolder(String folderName) {
+        projectDto = new ProjectCreateDto(folderName, "Пустая папка проектов", null, false, true, null);
 
         super.createEntity(projectDto);
 
         assertEquals(SC_CREATED, response.getStatusCode());
+        extractAndSetProjectIdAddToProjectPool();
+    }
+
+    @When("я создаю папку проектов: {string}, {string}")
+    public void createProjectFolder(String folderName, String description) {
+        projectDto = new ProjectCreateDto(folderName, description, null, false, true, null);
+
+        super.createEntity(projectDto);
+
         extractAndSetProjectIdAddToProjectPool();
     }
 
@@ -146,15 +155,6 @@ public class ProjectStepsDefinitions extends BaseStepsDefinitions {
     public void createProjectNewStep(String name, String description, String bbox, String isDefault, String isFolder) {
         projectDto = new ProjectCreateDto(name, description, bbox, Boolean.parseBoolean(isDefault),
                                           Boolean.parseBoolean(isFolder), null);
-
-        super.createEntity(projectDto);
-
-        projectId = extractEntityIdFromResponse(response);
-    }
-
-    @When("я создаю папку проектов: {string}, {string}")
-    public void createProjectFolder(String name, String description) {
-        projectDto = new ProjectCreateDto(name, description, null, false, true, null);
 
         super.createEntity(projectDto);
 
@@ -601,25 +601,12 @@ public class ProjectStepsDefinitions extends BaseStepsDefinitions {
                    message != null && message.contains(errorMessage));
     }
 
-    @When("Администратор делает запрос на перемещение проекта в проект")
-    @When("Администратор делает запрос на перемещение проекта в папку")
-    @When("Администратор делает запрос на перемещение папки в папку")
-    public void adminMovesProjectOrFolder() {
-        authorizationBase.loginAsOwner();
+    @When("я делаю запрос на перемещение проекта {string} в {string}")
+    public void adminMovesProjectOrFolder(String movedItem, String targetItem) {
+        int movedItemId = getProjectIdByName(movedItem);
+        int targetItemId = getProjectIdByName(targetItem);
 
-        // Сохраняем ID исходного объекта (который будем перемещать)
-        Integer sourceId = projectId;
-
-        // Получаем ID целевого объекта (куда будем перемещать)
-        getCurrentEntity();
-        Integer targetId = projectId;
-
-        // Восстанавливаем ID исходного объекта для перемещения
-        projectId = sourceId;
-
-        response = getBaseRequestWithCurrentCookie()
-                .when().
-                        patch(String.format("/%d/move/%d", projectId, targetId));
+        moveItem(movedItemId, targetItemId);
     }
 
     @When("Администратор делает запрос на текущую папку")
@@ -683,7 +670,78 @@ public class ProjectStepsDefinitions extends BaseStepsDefinitions {
 
         JsonPath jsonPath = response.jsonPath();
 
-        assertTrue(jsonPath.getList("").size() > 0);
+        assertFalse(jsonPath.getList("").isEmpty());
+    }
+
+    public void createProjectsByTemplate(String template) {
+        if ("тестирование прав на проекты".equals(template)) {
+            // Проекты в корне
+            createProject("Проект0.1");
+            createProject("Проект0.2");
+            createProject("Проект0.3");
+
+            // Папка 1 и её наполнение
+            createProjectFolder("Папка1", "Папка 1");
+            createProject("Проект1.1");
+            createProject("Проект1.2");
+            createProject("Проект1.3");
+
+            int folder1 = getProjectIdByName("Папка1");
+
+            moveItem(getProjectIdByName("Проект1.1"), folder1);
+            moveItem(getProjectIdByName("Проект1.2"), folder1);
+            moveItem(getProjectIdByName("Проект1.3"), folder1);
+
+            // Папка 2 и её наполнение
+            createProjectFolder("Папка2", "Папка 2");
+            createProject("Проект2.1");
+            createProject("Проект2.2");
+            createProject("Проект2.3");
+
+            int folder2 = getProjectIdByName("Папка2");
+
+            moveItem(getProjectIdByName("Проект2.1"), folder2);
+            moveItem(getProjectIdByName("Проект2.2"), folder2);
+            moveItem(getProjectIdByName("Проект2.3"), folder2);
+
+            // Папка 6 и её наполнение
+            createProjectFolder("Папка6", "Папка 6");
+            createProject("Проект6.1");
+
+            moveItem(getProjectIdByName("Проект6.1"), getProjectIdByName("Папка6"));
+
+            // Папка 5 и её наполнение
+            createProjectFolder("Папка5", "Папка 5");
+            int pFolder5 = getProjectIdByName("Папка5");
+
+            createProject("Проект345.1");
+            createProject("Проект345.2");
+
+            moveItem(getProjectIdByName("Проект345.1"), pFolder5);
+            moveItem(getProjectIdByName("Проект345.2"), pFolder5);
+
+            // Папка 4 и её наполнение
+            createProjectFolder("Папка4", "Папка 4");
+            int pFolder4 = getProjectIdByName("Папка4");
+
+            createProject("Проект34.1");
+            createProject("Проект34.2");
+
+            moveItem(pFolder5, pFolder4);
+            moveItem(getProjectIdByName("Проект34.1"), pFolder4);
+            moveItem(getProjectIdByName("Проект34.2"), pFolder4);
+
+            // Папка 3 и её наполнение
+            createProjectFolder("Папка3", "Папка 3");
+            int pFolder3 = getProjectIdByName("Папка3");
+
+            createProject("Проект3.1");
+
+            moveItem(pFolder4, pFolder3);
+            moveItem(getProjectIdByName("Проект3.1"), pFolder3);
+        } else {
+            throw new IllegalStateException("Создание проектов. Передан не известный шаблон: " + template);
+        }
     }
 
     private boolean isProjectExistInPool(String projectName) {
@@ -725,6 +783,12 @@ public class ProjectStepsDefinitions extends BaseStepsDefinitions {
         response = getBaseRequestWithCurrentCookie()
                 .when().
                         delete(String.format("/%d/permissions/%s", projectId, permId));
+    }
+
+    private void moveItem(Integer movedItemId, Integer targetId) {
+        response = getBaseRequestWithCurrentCookie()
+                .when().
+                        post(String.format("/%d/move/%d", movedItemId, targetId));
     }
 
     private void updateProject(String jsonBody) {

@@ -19,7 +19,7 @@ import static ru.mycrg.data_service.config.CrgCommonConfig.ROOT_FOLDER_PATH;
 @Component
 public class FolderMover implements IRecordMover {
 
-    private final Logger log = LoggerFactory.getLogger(RecordMover.class);
+    private final Logger log = LoggerFactory.getLogger(FolderMover.class);
 
     private final SchemableRecordsDao recordsDao;
     private final BaseWriteDao baseWriteDao;
@@ -58,6 +58,8 @@ public class FolderMover implements IRecordMover {
                     "                ELSE REPLACE(path, :movedFolderSelfPath, :newParentForChildren)" +
                     "  END" +
                     "  WHERE id = :movedFolderId OR path LIKE :movedFolderSelfPathLike";
+
+            log.debug("Запрос на перемещение папки документов: [{}]", query);
 
             baseWriteDao.update(
                     query,

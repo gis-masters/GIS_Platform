@@ -112,7 +112,7 @@ Feature: Действия с пользовательскими группами
     When Администратор удаляет пользователя из пользовательской группы
     When Администратор делает запрос на указанную группу
     Then Сервер отвечает со статус-кодом 200
-    And В пользовательской групппе отсутствует указанный пользователь
+    And В пользовательской группе отсутствует указанный пользователь
     Examples:
       | groupName | groupDescription | userName      | userSurname      | userEmail | userPassword  |
       | STRING_15 | STRING_15        | testUserNameD | testUserSurnameD | EMAIL_20  | testPassword1 |

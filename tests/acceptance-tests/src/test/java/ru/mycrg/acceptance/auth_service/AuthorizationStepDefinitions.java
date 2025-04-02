@@ -69,11 +69,6 @@ public class AuthorizationStepDefinitions extends BaseStepsDefinitions {
         authorizationBase.loginAsOwner();
     }
 
-    @Given("Пользователь авторизован как {string}, {string}")
-    public void authorizedAs(String email, String pass) {
-        authorizationBase.loginAs(email, pass);
-    }
-
     @Given("Владелец организации пытается авторизоваться с не корректным логином {string}")
     public void tryAuthorizeWithIncorrectEmail(String email) {
         authorizationBase.authorizeAs(email, orgDto.getOwner().getPassword());
