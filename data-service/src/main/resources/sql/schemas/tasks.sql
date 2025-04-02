@@ -616,7 +616,7 @@ SET class_rule =
                     "dl_data_section_delivery_data"
                   ],
                   "description": "Мотивированный отказ вносится в библиотеку Реестр предоставления сведений",
-                  "dynamicPropertyFormula": "return { hidden: !(obj?.intermediate_status === \"3\" || obj?.intermediate_status === \"4\" || obj?.intermediate_status === \"9\"|| obj?.intermediate_status === \"2\"|| obj?.intermediate_status === \"5\"|| obj?.intermediate_status === \"6\"|| obj?.intermediate_status === \"7\"), readOnly: obj?.intermediate_status === \"6\" || obj?.intermediate_status === \"7\" || obj?.intermediate_status === \"8\",   required: obj?.intermediate_status !== \"2\" && obj?.intermediate_status !== \"4\"}",
+                  "dynamicPropertyFormula": "return { hidden: !(obj?.intermediate_status === \"3\" || obj?.intermediate_status === \"4\" || obj?.intermediate_status === \"9\"|| obj?.intermediate_status === \"2\"|| obj?.intermediate_status === \"5\"|| obj?.intermediate_status === \"6\"|| obj?.intermediate_status === \"7\"), readOnly: obj?.intermediate_status === \"6\" || obj?.intermediate_status === \"7\" || obj?.intermediate_status === \"8\",   required: obj?.intermediate_status !== \"2\" && obj?.intermediate_status !== \"4\"&& obj?.intermediate_status !== \"8\"}",
                   "valueType": "DOCUMENT"
                 },
                 {
@@ -739,7 +739,7 @@ SET class_rule =
                     "dl_data_section_delivery_data"
                   ],
                   "description": "Мотивированный отказ вносится в библиотеку Реестр предоставления сведений",
-                  "dynamicPropertyFormula": "return { hidden: !(obj?.intermediate_status === \"3\" || obj?.intermediate_status === \"4\" || obj?.intermediate_status === \"9\"|| obj?.intermediate_status === \"2\"|| obj?.intermediate_status === \"5\"|| obj?.intermediate_status === \"6\"|| obj?.intermediate_status === \"7\"), readOnly: obj?.intermediate_status === \"6\" || obj?.intermediate_status === \"7\" || obj?.intermediate_status === \"8\",   required: obj?.intermediate_status !== \"2\" && obj?.intermediate_status !== \"4\"}",
+                  "dynamicPropertyFormula": "return { hidden: !(obj?.intermediate_status === \"3\" || obj?.intermediate_status === \"4\" || obj?.intermediate_status === \"9\"|| obj?.intermediate_status === \"2\"|| obj?.intermediate_status === \"5\"|| obj?.intermediate_status === \"6\"|| obj?.intermediate_status === \"7\"), readOnly: obj?.intermediate_status === \"6\" || obj?.intermediate_status === \"7\" || obj?.intermediate_status === \"8\",   required: obj?.intermediate_status !== \"2\" && obj?.intermediate_status !== \"4\"&& obj?.intermediate_status !== \"8\"}",
                   "valueType": "DOCUMENT"
                 },
                 {
@@ -787,13 +787,64 @@ SET class_rule =
                   "readOnly": true
                 },
                 {
-                  "name": "intermediate_status"
+                  "name": "intermediate_status",
+                  "title": "Промежуточный статус выполнения задачи",
+                  "dynamicPropertyFormula": "return { options: [ obj?.intermediate_status === \"1\" || obj?.intermediate_status === \"8\" || obj?.intermediate_status === null || obj?.intermediate_status === undefined ? { value: \"1\", title: \"Заявление прибыло из СМЭВ-3\" } : null, obj?.intermediate_status === \"1\" || obj?.intermediate_status === \"2\" || obj?.intermediate_status === null || obj?.intermediate_status === undefined ? { value: \"2\", title: \"Заявлению назначен исполнитель\" } : null, obj?.intermediate_status === \"3\" || obj?.intermediate_status === \"4\" ? { value: \"4\", title: \"Требуется доработка документов\" } : null, obj?.intermediate_status === \"2\" || obj?.intermediate_status === \"3\" || obj?.intermediate_status === \"4\" ? { value: \"3\", title: \"Подготовленные документы ожидают подпись\" } : null, obj?.intermediate_status === \"3\" || obj?.intermediate_status === \"5\" || obj?.intermediate_status === \"9\" ? { value: \"9\", title: \"Регистрация проекта решения\" } : null, obj?.intermediate_status === \"6\" ? { value: \"6\", title: \"Рассмотрение завершено (разрешено)\" } : null, obj?.intermediate_status === \"7\" ? { value: \"7\", title: \"Рассмотрение завершено (отказано)\" } : null, obj?.intermediate_status === \"5\" || obj?.intermediate_status === \"9\" ? { value: \"5\", title: \"Документы готовы к отправке\" } : null, obj?.intermediate_status === \"1\" || obj?.intermediate_status === \"2\" || obj?.intermediate_status === \"8\" || obj?.intermediate_status === null || obj?.intermediate_status === undefined ? { value: \"8\", title: \"Отмена оказания услуги\" } : null ].filter(Boolean)}",
+                  "valueType": "CHOICE",
+                  "enumerations": [
+                    {
+                      "title": "Заявление прибыло из СМЭВ-3",
+                      "value": "1"
+                    },
+                    {
+                      "title": "Заявлению назначен исполнитель",
+                      "value": "2"
+                    },
+                    {
+                      "title": "Подготовленные документы ожидают подпись",
+                      "value": "3"
+                    },
+                    {
+                      "title": "Требуется доработка документов",
+                      "value": "4"
+                    },
+                    {
+                      "title": "Регистрация проекта решения",
+                      "value": "9"
+                    },
+                    {
+                      "title": "Документы готовы к отправке",
+                      "value": "5"
+                    },
+                    {
+                      "title": "Рассмотрение завершено (разрешено)",
+                      "value": "6"
+                    },
+                    {
+                      "title": "Рассмотрение завершено (отказано)",
+                      "value": "7"
+                    },
+                    {
+                      "title": "Отмена оказания услуги",
+                      "value": "8"
+                    }
+                  ]
                 },
                 {
-                  "name": "assigned_to"
+                  "name": "assigned_to",
+                  "title": "Исполнитель",
+                  "required": false,
+                  "onlySubordinates": true,
+                  "dynamicPropertyFormula": "return { readOnly: obj?.intermediate_status === \"6\" || obj?.intermediate_status === \"7\" || obj?.intermediate_status === \"8\"}",
+                  "valueType": "USER_ID"
                 },
                 {
-                  "name": "owner_id"
+                  "name": "owner_id",
+                  "title": "Начальник",
+                  "readOnly": true,
+                  "required": false,
+                  "dynamicPropertyFormula": "return { hidden: !(obj?.intermediate_status === \"6\" || obj?.intermediate_status === \"7\" || obj?.intermediate_status === \"8\"), readOnly: obj?.intermediate_status === \"6\" || obj?.intermediate_status === \"7\" || obj?.intermediate_status === \"8\"}",
+                  "valueType": "USER_ID"
                 },
                 {
                   "name": "inbox_data_key_data_connection",
@@ -808,10 +859,14 @@ SET class_rule =
                   "multiple": false,
                   "libraries": [
                     "dl_data_section13",
-                    "dl_data_section19"
+                    "dl_data_section_delivery_data"
                   ],
                   "description": "Мотивированный отказ вносится в библиотеку Реестр предоставления сведений",
+                  "dynamicPropertyFormula": "return { hidden: !(obj?.intermediate_status === \"3\" || obj?.intermediate_status === \"4\" || obj?.intermediate_status === \"9\"|| obj?.intermediate_status === \"2\"|| obj?.intermediate_status === \"5\"|| obj?.intermediate_status === \"6\"|| obj?.intermediate_status === \"7\"), readOnly: obj?.intermediate_status === \"6\" || obj?.intermediate_status === \"7\" || obj?.intermediate_status === \"8\",   required: obj?.intermediate_status !== \"2\" && obj?.intermediate_status !== \"4\"&& obj?.intermediate_status !== \"8\"}",
                   "valueType": "DOCUMENT"
+                },
+                {
+                  "name": "created_at"
                 },
                 {
                   "name": "due_date",
@@ -819,20 +874,21 @@ SET class_rule =
                   "description": "Срок исполнения устанавливается с момента подачи заявки в систему и не подлежит изменению."
                 },
                 {
-                  "name": "record_status"
+                  "name": "record_status",
+                  "dynamicPropertyFormula": "return { hidden: !(obj?.intermediate_status === \"6\" || obj?.intermediate_status === \"7\" || obj?.intermediate_status === \"8\"), readOnly: obj?.intermediate_status === \"6\" || obj?.intermediate_status === \"7\" || obj?.intermediate_status === \"8\"}"
                 },
                 {
-                  "name": "created_at"
+                  "name": "date",
+                  "dynamicPropertyFormula": "return { hidden: !(obj?.intermediate_status === \"6\" || obj?.intermediate_status === \"7\" || obj?.intermediate_status === \"8\"), readOnly: obj?.intermediate_status === \"6\" || obj?.intermediate_status === \"7\" || obj?.intermediate_status === \"8\"}"
                 },
                 {
-                  "name": "date"
-                },
-                {
-                  "name": "number"
+                  "name": "number",
+                  "dynamicPropertyFormula": "return { hidden: !(obj?.intermediate_status === \"6\" || obj?.intermediate_status === \"7\" || obj?.intermediate_status === \"8\"), readOnly: obj?.intermediate_status === \"6\" || obj?.intermediate_status === \"7\" || obj?.intermediate_status === \"8\"}"
                 },
                 {
                   "name": "description",
-                  "title": "Комментарий"
+                  "title": "Комментарий",
+                  "dynamicPropertyFormula": "return { hidden: !(obj?.intermediate_status === \"6\" || obj?.intermediate_status === \"7\" || obj?.intermediate_status === \"8\"), readOnly: obj?.intermediate_status === \"6\" || obj?.intermediate_status === \"7\" || obj?.intermediate_status === \"8\"}"
                 }
               ]
             },
