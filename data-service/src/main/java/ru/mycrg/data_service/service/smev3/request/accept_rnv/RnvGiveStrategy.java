@@ -72,7 +72,7 @@ public class RnvGiveStrategy implements IRnvRequestDocumentCreator {
                               ParagraphAlignment.CENTER);
         setTableNode(table, 16, "3.1. Наименование объекта капитального строительства (этапа) в соответствии с " +
                 "проектной документацией:", dataProvider.getObjectName(request));
-        setTableNode(table, 17, "3.2. Вид выполненных работ в отношении объекта капитального строительства:", "test");
+        setTableNode(table, 17, "3.2. Вид выполненных работ в отношении объекта капитального строительства:", "");
         mergeCellsAndSetValue(table, 18, "3.3. Адрес (местоположение) объекта капитального строительства ", false,
                               ParagraphAlignment.LEFT);
         setTableNode(table, 19, "3.3.1. Субъект Российской Федерации:", "");

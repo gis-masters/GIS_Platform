@@ -115,7 +115,7 @@ public class AcceptRnvService extends AcceptServiceBase {
     protected <T> void addAdditionalFields(T queryResult, Map<String, Object> documentPayload) {
         QueryResult result = (QueryResult) queryResult;
         RequestType request = result.getMessage().getRequestContent().getContent().getMessagePrimaryContent()
-                                                                           .getRequest();
+                                    .getRequest();
         documentPayload.put(GOAL, getGoalDescription(request));
         documentPayload.put(CADASTRAL_NUMBER, getCadastalNumbers(request));
         documentPayload.put(PERMIT_NUMBER, getPermitNumber(request));
@@ -135,7 +135,13 @@ public class AcceptRnvService extends AcceptServiceBase {
         return ofNullable(request.getPermissionObjectOperation())
                 .map(PermissionObjectOperationType::getPermissionObjectOperationBlock)
                 .map(PermissionObjectOperationBlockType::getNumber)
-                .orElse("");
+                .filter(num -> !num.isEmpty())
+                .orElseGet(() -> ofNullable(request.getPermissionObjectOperation())
+                        .map(objectOperationType -> objectOperationType.getPermissionObjectOperationStageBlock().stream()
+                                                                       .map(PermissionObjectOperationBlockType::getNumber)
+                                                                       .collect(Collectors.joining(", ")))
+                        .filter(num -> !num.isEmpty())
+                        .orElse(""));
     }
 
     @Override

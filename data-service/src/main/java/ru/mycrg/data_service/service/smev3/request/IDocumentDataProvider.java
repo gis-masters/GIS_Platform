@@ -1,10 +1,10 @@
 package ru.mycrg.data_service.service.smev3.request;
 
 import ru.mycrg.data_service.accept_rns_1_0_3.*;
-import ru.mycrg.data_service.accept_rnv_1_0_6.BuildingPermitBlockType;
 import ru.mycrg.data_service.accept_rnv_1_0_6.PermissionObjectOperationBlockType;
 import ru.mycrg.data_service.accept_rnv_1_0_6.PermissionObjectOperationType;
 
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static java.util.Optional.ofNullable;
@@ -334,75 +334,51 @@ public interface IDocumentDataProvider {
     }
 
     default String getCapObjectName(RequestType request) {
-        String capObjectName = "";
-        if (request.getVariantChoice() != null) {
-            if (request.getVariantChoice().getKPOA10() != null) {
-                if (request.getVariantChoice().getKPOA10().intValue() == 1) {
-                    capObjectName = getObjectName(request);
-                }
-            }
-        }
-
-        return capObjectName;
+        return Optional.ofNullable(request.getVariantChoice())
+                       .map(VariantChoiceType::getKPOA10)
+                       .filter(kpoa -> kpoa.intValue() == 1)
+                       .map(k -> getObjectName(request))
+                       .orElse("");
     }
 
     default String getCapObjectCadastralNumber(RequestType request) {
-        String capObjectCadastralNumber = "";
-        if (request.getVariantChoice() != null) {
-            if (request.getVariantChoice().getKPOA10() != null) {
-                if (request.getVariantChoice().getKPOA10().intValue() == 1) {
-                    capObjectCadastralNumber = getObjCadastralNumber(request);
-                }
-            }
-        }
-
-        return capObjectCadastralNumber;
+        return Optional.ofNullable(request.getVariantChoice())
+                       .map(VariantChoiceType::getKPOA10)
+                       .filter(kpoa -> kpoa.intValue() == 1)
+                       .map(k -> getObjCadastralNumber(request))
+                       .orElse("");
     }
 
     default String getLineObjectName(RequestType request) {
-        String lineObjectName = "";
-        if (request.getVariantChoice() != null) {
-            if (request.getVariantChoice().getKPOA10() != null) {
-                if (request.getVariantChoice().getKPOA10().intValue() == 2) {
-                    lineObjectName = getObjectName(request);
-                }
-            }
-        }
-
-        return lineObjectName;
+        return Optional.ofNullable(request.getVariantChoice())
+                       .map(VariantChoiceType::getKPOA10)
+                       .filter(kpoa -> kpoa.intValue() == 2)
+                       .map(k -> getObjectName(request))
+                       .orElse("");
     }
 
     default String getLineObjectCadastralNumber(RequestType request) {
-        String lineObjectCadastralNumber = "";
-        if (request.getVariantChoice() != null) {
-            if (request.getVariantChoice().getKPOA10() != null) {
-                if (request.getVariantChoice().getKPOA10().intValue() == 2) {
-                    lineObjectCadastralNumber = getObjCadastralNumber(request);
-                }
-            }
-        }
-
-        return lineObjectCadastralNumber;
+        return Optional.ofNullable(request.getVariantChoice())
+                       .map(VariantChoiceType::getKPOA10)
+                       .filter(kpoa -> kpoa.intValue() == 2)
+                       .map(k -> getObjCadastralNumber(request))
+                       .orElse("");
     }
 
     default String getObjectAppointment(RequestType request) {
-        String objectAppointment = "";
-        if (request.getVariantChoice() != null) {
-            if (request.getVariantChoice().getKPOA10() != null) {
-                if (request.getVariantChoice().getKPOA10().intValue() == 1) {
-                    if (request.getVariantChoice().getKPOA12() != null) {
-                        if (Boolean.TRUE.equals(request.getVariantChoice().getKPOA12().isResidential())) {
-                            objectAppointment = "Жилой многоквартирный дом";
-                        }
-                        if (Boolean.TRUE.equals(request.getVariantChoice().getKPOA12().isUninhabited())) {
-                            objectAppointment = "Нежилой";
-                        }
-                    }
-                }
-            }
-        }
-
-        return objectAppointment;
+        return Optional.ofNullable(request.getVariantChoice())
+                       .filter(vc -> vc.getKPOA10() != null && vc.getKPOA10().intValue() == 1)
+                       .map(VariantChoiceType::getKPOA12)
+                       .map(kpoa12 -> {
+                           if (Boolean.TRUE.equals(kpoa12.isResidential())) {
+                               return "Жилой многоквартирный дом";
+                           }
+                           if (Boolean.TRUE.equals(kpoa12.isUninhabited())) {
+                               return "Нежилой";
+                           }
+                           return "";
+                       })
+                       .orElse("");
     }
 
     default String getConstruction(RequestType request) {
@@ -424,31 +400,31 @@ public interface IDocumentDataProvider {
 
     default String getBuildingPermitDate(ru.mycrg.data_service.accept_rnv_1_0_6.RequestType request) {
 
-        return ofNullable(request.getBuildingPermit())
-                .map(buildingPermitType -> buildingPermitType.getBuildingPermitBlock()
-                                                             .stream()
-                                                             .map(BuildingPermitBlockType::getDate)
-                                                             .collect(Collectors.joining(", ")))
-                .orElse("");
+        return ofNullable(request.getPermissionObjectOperation())
+                        .map(objectOperationType -> objectOperationType.getPermissionObjectOperationStageBlock().stream()
+                                                                       .map(PermissionObjectOperationBlockType::getDate)
+                                                                       .collect(Collectors.joining(", ")))
+                        .filter(date -> !date.isEmpty())
+                        .orElse("");
     }
 
     default String getBuildingPermitNumber(ru.mycrg.data_service.accept_rnv_1_0_6.RequestType request) {
 
-        return ofNullable(request.getBuildingPermit())
-                .map(buildingPermitType -> buildingPermitType.getBuildingPermitBlock()
-                                                             .stream()
-                                                             .map(BuildingPermitBlockType::getNumber)
-                                                             .collect(Collectors.joining(", ")))
-                .orElse("");
+        return ofNullable(request.getPermissionObjectOperation())
+                        .map(objectOperationType -> objectOperationType.getPermissionObjectOperationStageBlock().stream()
+                                                                       .map(PermissionObjectOperationBlockType::getNumber)
+                                                                       .collect(Collectors.joining(", ")))
+                        .filter(num -> !num.isEmpty())
+                        .orElse("");
     }
 
     default String getBuildingPermitIssuer(ru.mycrg.data_service.accept_rnv_1_0_6.RequestType request) {
 
-        return ofNullable(request.getBuildingPermit())
-                .map(buildingPermitType -> buildingPermitType.getBuildingPermitBlock()
-                                                             .stream()
-                                                             .map(BuildingPermitBlockType::getIssuer)
-                                                             .collect(Collectors.joining(", ")))
-                .orElse("");
+        return ofNullable(request.getPermissionObjectOperation())
+                        .map(objectOperationType -> objectOperationType.getPermissionObjectOperationStageBlock().stream()
+                                                                       .map(PermissionObjectOperationBlockType::getIssuer)
+                                                                       .collect(Collectors.joining(", ")))
+                        .filter(issuer -> !issuer.isEmpty())
+                        .orElse("");
     }
 }
