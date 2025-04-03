@@ -16,7 +16,7 @@ import { editFeatureStore } from '../../../services/map/a-map-mode/edit-feature/
 import { SingleDrawGeometryType } from '../../../services/map/draw/map-draw.models';
 import { mapDrawService } from '../../../services/map/draw/map-draw.service';
 import { toDrawGeometry } from '../../../services/map/draw/map-draw.util';
-import { MapMode } from '../../../services/map/map.models';
+import { MapMode, ToolMode } from '../../../services/map/map.models';
 import { services } from '../../../services/services';
 import { transform, transformCoordinates } from '../../../services/util/coordinates-transform.util';
 import { isCoordinate, isCoordinateArrayArray } from '../../../services/util/typeGuards/isCoordinate';
@@ -126,6 +126,7 @@ export class EditFeatureGeometryDraw extends Component<EditFeatureGeometryDrawPr
     } else {
       mapDrawService.drawOn(toDrawGeometry(editFeatureStore.geometryType));
       mapStore.setMode(MapMode.DRAW_FEATURE);
+      mapStore.setToolMode(ToolMode.NONE);
     }
   }
 
