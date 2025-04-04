@@ -313,5 +313,98 @@
         "schemaId": "dl_data_task_allocation"
       }
     ]
+  },
+  {
+    "id": 6,
+    "title": "Инвентаризация и таксация зеленых насаждений",
+    "description": "Предназначена для оценки состояния, учета и мониторинга зеленых насаждений с целью рационального их использования и сохранения экологического баланса",
+    "settings": {
+      "storageSize": 2,
+      "createLibraryItem": true,
+      "viewDocumentLibrary": true,
+      "viewBugReport": true,
+      "downloadGml": true,
+      "importShp": true,
+      "downloadFiles": true,
+      "createProject": true,
+      "editProjectLayer": true,
+      "tags": [
+        "Зеленые насаждения",
+        "Фотофиксация"
+      ]
+    },
+    "projects": [
+      {
+        "title": "Инвентаризация многолетних насаждений",        
+        "bbox": "[3798507.8,5540219.2, 3799563.0, 5540809.4]",
+        "isDefault": true,
+        "layers": [
+          604,
+          603,
+          602,
+          601
+        ]
+      }
+    ],
+    "datasets": [
+      {
+        "title": "Инвентаризация многолетних насаждений",
+        "tables": [
+          {
+            "id": 601,
+            "content": [
+              "border_park.sql"
+            ],
+            "body": {
+              "title": "Граница парковой зоны",
+              "schemaId": "border_park",
+              "crs": "EPSG:3857",
+              "styleName": "border_park"
+            }
+          },
+          {
+            "id": 602,
+            "content": [
+              "zone_park.sql"
+            ],
+            "body": {
+              "title": "Парковое зонирование",
+              "schemaId": "zone_park",
+              "crs": "EPSG:3857",
+              "styleName": "zone_park"
+            }
+          },
+          {
+            "id": 603,
+            "content": [
+              "trees.sql"
+            ],
+            "body": {
+              "title": "Древесная растительность",
+              "schemaId": "trees",
+              "crs": "EPSG:3857",
+              "styleName": "trees"
+            }
+          },
+          {
+            "id": 604,
+            "content": [
+              "photo_uploader.sql"
+            ],
+            "body": {
+              "title": "Фотофиксация",
+              "schemaId": "photo_uploader",
+              "crs": "EPSG:3857",
+              "styleName": "photo_uploader"
+            }
+          }
+        ]
+      }
+    ],
+    "documentLibraries": [
+      {
+        "schemaId": "dl_data_universal_for_document"
+      }
+    ]
   }
 ]

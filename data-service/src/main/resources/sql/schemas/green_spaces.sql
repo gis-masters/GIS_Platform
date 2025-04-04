@@ -28,6 +28,16 @@ SELECT 'zone_park',
        '{}'
 WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'zone_park');
 
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'border_park',
+       '{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'border_park');
+
+INSERT INTO data.schemas (name, class_rule)
+SELECT 'dl_data_universal_for_document',
+       '{}'
+WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'dl_data_universal_for_document');
+
 
 
 UPDATE data.schemas
@@ -43,6 +53,13 @@ SET class_rule =
           "tableName": "footpath",
           "originName": "footpath",
           "properties": [
+            {
+              "name": "objectid",
+              "title": "№",
+              "readOnly": true,
+              "valueType": "INT",
+              "description": "Идентификатор объекта (Заполняется автоматически)"
+            },
             {
               "name": "name",
               "title": "Наименование объекта",
@@ -70,6 +87,36 @@ SET class_rule =
               "title": "Идентификатор стиля",
               "hidden": true,
               "valueType": "INT"
+            },
+            {
+              "name": "created_at",
+              "title": "Дата",
+              "hidden": true,
+              "readOnly": true,
+              "valueType": "DATETIME"
+            },
+            {
+              "name": "last_modified",
+              "title": "Дата модификации",
+              "hidden": true,
+              "readOnly": true,
+              "valueType": "DATETIME",
+              "description": "Дата последней модификации документа"
+            },
+            {
+              "name": "updated_by",
+              "title": "Кто обновил",
+              "hidden": true,
+              "readOnly": true,
+              "maxLength": 50,
+              "valueType": "STRING"
+            },
+            {
+              "name": "created_by",
+              "title": "Создатель",
+              "hidden": true,
+              "maxLength": 50,
+              "valueType": "STRING"
             }
           ],
           "description": "Транспортные и пешеходные пути",
@@ -90,6 +137,13 @@ SET class_rule =
           "tableName": "greenery",
           "originName": "greenery",
           "properties": [
+            {
+              "name": "objectid",
+              "title": "№",
+              "readOnly": true,
+              "valueType": "INT",
+              "description": "Идентификатор объекта (Заполняется автоматически)"
+            },
             {
               "name": "status",
               "title": "Статус",
@@ -136,6 +190,36 @@ SET class_rule =
               "title": "Идентификатор стиля",
               "hidden": true,
               "valueType": "INT"
+            },
+            {
+              "name": "created_at",
+              "title": "Дата",
+              "hidden": true,
+              "readOnly": true,
+              "valueType": "DATETIME"
+            },
+            {
+              "name": "last_modified",
+              "title": "Дата модификации",
+              "hidden": true,
+              "readOnly": true,
+              "valueType": "DATETIME",
+              "description": "Дата последней модификации документа"
+            },
+            {
+              "name": "updated_by",
+              "title": "Кто обновил",
+              "hidden": true,
+              "readOnly": true,
+              "maxLength": 50,
+              "valueType": "STRING"
+            },
+            {
+              "name": "created_by",
+              "title": "Создатель",
+              "hidden": true,
+              "maxLength": 50,
+              "valueType": "STRING"
             }
           ],
           "description": "Участки растительности",
@@ -156,6 +240,13 @@ SET class_rule =
           "tableName": "park_building",
           "originName": "park_building",
           "properties": [
+            {
+              "name": "objectid",
+              "title": "№",
+              "readOnly": true,
+              "valueType": "INT",
+              "description": "Идентификатор объекта (Заполняется автоматически)"
+            },
             {
               "name": "name",
               "title": "Наименование",
@@ -182,6 +273,36 @@ SET class_rule =
               "title": "Идентификатор стиля",
               "hidden": true,
               "valueType": "INT"
+            },
+            {
+              "name": "created_at",
+              "title": "Дата",
+              "hidden": true,
+              "readOnly": true,
+              "valueType": "DATETIME"
+            },
+            {
+              "name": "last_modified",
+              "title": "Дата модификации",
+              "hidden": true,
+              "readOnly": true,
+              "valueType": "DATETIME",
+              "description": "Дата последней модификации документа"
+            },
+            {
+              "name": "updated_by",
+              "title": "Кто обновил",
+              "hidden": true,
+              "readOnly": true,
+              "maxLength": 50,
+              "valueType": "STRING"
+            },
+            {
+              "name": "created_by",
+              "title": "Создатель",
+              "hidden": true,
+              "maxLength": 50,
+              "valueType": "STRING"
             }
           ],
           "description": "Здания и сооружения",
@@ -202,6 +323,13 @@ SET class_rule =
           "tableName": "park_structures",
           "originName": "park_structures",
           "properties": [
+            {
+              "name": "objectid",
+              "title": "№",
+              "readOnly": true,
+              "valueType": "INT",
+              "description": "Идентификатор объекта (Заполняется автоматически)"
+            },
             {
               "name": "name",
               "title": "Наименование объекта",
@@ -228,6 +356,36 @@ SET class_rule =
               "allowedValues": [
                 "LineString"
               ]
+            },
+            {
+              "name": "created_at",
+              "title": "Дата",
+              "hidden": true,
+              "readOnly": true,
+              "valueType": "DATETIME"
+            },
+            {
+              "name": "last_modified",
+              "title": "Дата модификации",
+              "hidden": true,
+              "readOnly": true,
+              "valueType": "DATETIME",
+              "description": "Дата последней модификации документа"
+            },
+            {
+              "name": "updated_by",
+              "title": "Кто обновил",
+              "hidden": true,
+              "readOnly": true,
+              "maxLength": 50,
+              "valueType": "STRING"
+            },
+            {
+              "name": "created_by",
+              "title": "Создатель",
+              "hidden": true,
+              "maxLength": 50,
+              "valueType": "STRING"
             }
           ],
           "description": "Защитные сооружения",
@@ -248,6 +406,13 @@ SET class_rule =
           "tableName": "trees",
           "originName": "trees",
           "properties": [
+            {
+              "name": "objectid",
+              "title": "№",
+              "readOnly": true,
+              "valueType": "INT",
+              "description": "Идентификатор объекта (Заполняется автоматически)"
+            },
             {
               "name": "vid",
               "title": "Вид",
@@ -326,9 +491,10 @@ SET class_rule =
             {
               "name": "documents",
               "title": "Документы",
-              "library": "dl_default",
+              "maxSize": 50000000,
+              "maxFiles": 10,
               "multiple": true,
-              "valueType": "DOCUMENT"
+              "valueType": "FILE"
             },
             {
               "name": "photo",
@@ -352,6 +518,36 @@ SET class_rule =
               "allowedValues": [
                 "Point"
               ]
+            },
+            {
+              "name": "created_at",
+              "title": "Дата",
+              "hidden": true,
+              "readOnly": true,
+              "valueType": "DATETIME"
+            },
+            {
+              "name": "last_modified",
+              "title": "Дата модификации",
+              "hidden": true,
+              "readOnly": true,
+              "valueType": "DATETIME",
+              "description": "Дата последней модификации документа"
+            },
+            {
+              "name": "updated_by",
+              "title": "Кто обновил",
+              "hidden": true,
+              "readOnly": true,
+              "maxLength": 50,
+              "valueType": "STRING"
+            },
+            {
+              "name": "created_by",
+              "title": "Создатель",
+              "hidden": true,
+              "maxLength": 50,
+              "valueType": "STRING"
             }
           ],
           "description": "Древесная растительность",
@@ -373,6 +569,13 @@ SET class_rule =
           "originName": "zone_park",
           "properties": [
             {
+              "name": "objectid",
+              "title": "№",
+              "readOnly": true,
+              "valueType": "INT",
+              "description": "Идентификатор объекта (Заполняется автоматически)"
+            },
+            {
               "name": "zone_name",
               "title": "Наименование зоны",
               "valueType": "STRING",
@@ -381,8 +584,26 @@ SET class_rule =
             {
               "name": "area",
               "title": "Площадь, кв.м",
+              "hidden": true,
               "valueType": "DOUBLE",
               "fractionDigits": 2
+            },
+            {
+              "name": "area_doc",
+              "title": "Площадь фактическая, м. кв.",
+              "valueType": "DOUBLE",
+              "description": "Площадь посчитана автоматически",
+              "readOnly": true,
+              "totalDigits": 38,
+              "fractionDigits": 2,
+              "calculatedValueWellKnownFormula": "st_area"
+            },
+            {
+              "name": "photo",
+              "title": "Фотофиксация (фотоматериалы)",
+              "maxSize": 50000000,
+              "multiple": true,
+              "valueType": "FILE"
             },
             {
               "name": "shape",
@@ -398,9 +619,317 @@ SET class_rule =
               "title": "Идентификатор стиля",
               "hidden": true,
               "valueType": "INT"
+            },
+            {
+              "name": "created_at",
+              "title": "Дата",
+              "hidden": true,
+              "readOnly": true,
+              "valueType": "DATETIME"
+            },
+            {
+              "name": "last_modified",
+              "title": "Дата модификации",
+              "hidden": true,
+              "readOnly": true,
+              "valueType": "DATETIME",
+              "description": "Дата последней модификации документа"
+            },
+            {
+              "name": "updated_by",
+              "title": "Кто обновил",
+              "hidden": true,
+              "readOnly": true,
+              "maxLength": 50,
+              "valueType": "STRING"
+            },
+            {
+              "name": "created_by",
+              "title": "Создатель",
+              "hidden": true,
+              "maxLength": 50,
+              "valueType": "STRING"
             }
           ],
           "description": "Парковое зонирование",
           "geometryType": "MultiPolygon"
         }'
 WHERE name = 'zone_park';
+
+UPDATE data.schemas
+SET class_rule =
+        '{
+          "styleName": "trees",
+          "tags": [
+            "system",
+            "Зеленые насаждения"
+          ],
+          "name": "border_park",
+          "title": "Граница парковой зоны",
+          "readOnly": false,
+          "tableName": "border_park",
+          "originName": "border_park",
+          "properties": [
+            {
+              "name": "objectid",
+              "title": "№",
+              "readOnly": true,
+              "valueType": "INT",
+              "description": "Идентификатор объекта (Заполняется автоматически)"
+            },
+            {
+              "name": "documents",
+              "title": "Утверждающий документ",
+              "valueType": "STRING"
+            },
+            {
+              "name": "name",
+              "title": "Наименование объкта",
+              "asTitle": true,
+              "valueType": "STRING"
+            },
+            {
+              "name": "area",
+              "title": "Площадь, кв.м",
+              "hidden": true,
+              "valueType": "DOUBLE",
+              "fractionDigits": 2
+            },
+            {
+              "name": "area_doc",
+              "title": "Площадь фактическая, м. кв.",
+              "valueType": "DOUBLE",
+              "description": "Площадь посчитана автоматически",
+              "readOnly": true,
+              "totalDigits": 38,
+              "fractionDigits": 2,
+              "calculatedValueWellKnownFormula": "st_area"
+            },
+            {
+              "name": "shape",
+              "title": "Геометрия",
+              "hidden": true,
+              "valueType": "GEOMETRY",
+              "allowedValues": [
+                "Polygon"
+              ]
+            },
+            {
+              "name": "ruleid",
+              "title": "Идентификатор стиля",
+              "hidden": true,
+              "valueType": "INT"
+            },
+            {
+              "name": "created_at",
+              "title": "Дата",
+              "hidden": true,
+              "readOnly": true,
+              "valueType": "DATETIME"
+            },
+            {
+              "name": "last_modified",
+              "title": "Дата модификации",
+              "hidden": true,
+              "readOnly": true,
+              "valueType": "DATETIME",
+              "description": "Дата последней модификации документа"
+            },
+            {
+              "name": "updated_by",
+              "title": "Кто обновил",
+              "hidden": true,
+              "readOnly": true,
+              "maxLength": 50,
+              "valueType": "STRING"
+            },
+            {
+              "name": "created_by",
+              "title": "Создатель",
+              "hidden": true,
+              "maxLength": 50,
+              "valueType": "STRING"
+            }
+          ],
+          "description": "Граница парковой зоны",
+          "geometryType": "MultiPolygon"
+        }'
+WHERE name = 'border_park';
+
+UPDATE data.schemas
+SET class_rule =
+        '{
+          "name": "dl_data_universal_for_document",
+          "title": "Документы зеленых насаждений",
+          "tags": [
+            "system",
+            "Библиотека",
+            "Зеленые насаждения"
+          ],
+          "tableName": "dl_data_universal_for_document",
+          "properties": [
+            {
+              "name": "id",
+              "title": "№",
+              "description": "Уникальный номер документа",
+              "minWidth": 150,
+              "valueType": "INT"
+            },
+            {
+              "name": "is_folder",
+              "title": "Признак раздела",
+              "description": "Папка или Документ",
+              "valueType": "BOOLEAN"
+            },
+            {
+              "name": "path",
+              "title": "Путь",
+              "maxLength": 522,
+              "minWidth": 250,
+              "valueType": "STRING",
+              "description": "Полный путь, отражающий иерархию объектов"
+            },
+            {
+              "name": "content_type_id",
+              "title": "Идентификатор контент типа",
+              "valueType": "CHOICE",
+              "hidden": true,
+              "minWidth": 150,
+              "maxLength": 50,
+              "enumerations": [
+                {
+                  "value": "doc",
+                  "title": "Документ"
+                },
+                {
+                  "value": "folder",
+                  "title": "Папка"
+                }
+              ]
+            },
+            {
+              "name": "title",
+              "title": "Наименование",
+              "valueType": "STRING",
+              "minWidth": 300,
+              "required": true,
+              "maxLength": 500
+            },
+            {
+              "name": "status_type",
+              "title": "Статус документа",
+              "valueType": "CHOICE",
+              "enumerations": [
+                {
+                  "value": "Проектный",
+                  "title": "Проектный"
+                },
+                {
+                  "value": "Действующий",
+                  "title": "Действующий"
+                },
+                {
+                  "value": "Архивный",
+                  "title": "Архивный"
+                }
+              ]
+            },
+            {
+              "name": "doc_num",
+              "title": "Номер документа",
+              "minWidth": 150,
+              "valueType": "STRING",
+              "required": true
+            },
+            {
+              "name": "approve_date",
+              "title": "Дата утверждения",
+              "valueType": "DATETIME"
+            },
+            {
+              "name": "files",
+              "title": "Файлы",
+              "valueType": "FILE",
+              "multiple": true,
+              "maxSize": 50000000
+            },
+            {
+              "name": "relations",
+              "title": "Связанные документы",
+              "library": "dl_data_universal_for_document",
+              "minWidth": 200,
+              "multiple": true,
+              "valueType": "DOCUMENT",
+              "maxDocuments": 10
+            },
+            {
+              "name": "guiddocpreviousversion",
+              "title": "Версии",
+              "valueType": "DOCUMENT",
+              "multiple": true,
+              "description": "Предыдущие версии документа",
+              "libraries": [
+                "dl_data_universal_for_document"
+              ],
+              "maxDocuments": 10
+            },
+            {
+              "name": "note",
+              "title": "Примечания",
+              "minWidth": 250,
+              "maxLength": 522,
+              "valueType": "STRING",
+              "display": "multiline"
+            },
+            {
+              "name": "created_at",
+              "title": "Дата документа",
+              "hidden": true,
+              "readOnly": true,
+              "valueType": "DATETIME"
+            }
+          ],
+          "description": "Документы зеленых насаждений",
+          "originName": "dl_data_universal_for_document",
+          "styleName": "dl_data_universal_for_document",
+          "contentTypes": [
+            {
+              "id": "doc",
+              "type": "DOCUMENT",
+              "title": "Документ",
+              "icon": "GPZU",
+              "attributes": [
+                {
+                  "name": "title"
+                },
+                {
+                  "name": "files"
+                },
+                {
+                  "name": "note"
+                },
+                {
+                  "name": "relations"
+                }
+              ]
+            },
+            {
+              "id": "folder",
+              "type": "FOLDER",
+              "title": "Папка",
+              "attributes": [
+                {
+                  "name": "title",
+                  "title": "Наименование раздела"
+                },
+                {
+                  "name": "note"
+                },
+                {
+                  "name": "relations"
+                }
+              ]
+            }
+          ]
+        }'
+WHERE name = 'dl_data_universal_for_document';
