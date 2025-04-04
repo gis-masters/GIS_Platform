@@ -501,6 +501,7 @@ class MapService {
   private async crgLayersLoadFunction(tile: Tile | ImageWrapper, url: string) {
     mapStore.enrollLoadingStart();
     let data: Blob = new Blob();
+
     try {
       data = await getMap(url);
     } catch (error) {

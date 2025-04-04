@@ -1,47 +1,46 @@
 import React, { Component } from 'react';
-import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { IconButton, ListItem, ListItemSecondaryAction, ListItemText } from '@mui/material';
 import { MyLocation } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
-import { AxiosError } from 'axios';
 import { Feature } from 'ol';
 import { Extent } from 'ol/extent';
 import { SimpleGeometry } from 'ol/geom';
 import Point from 'ol/geom/Point';
 
-import { KadItem, KadObject } from '../../../services/kad-search.models';
+import { WfsFeature } from '../../../services/geoserver/wfs/wfs.models';
+import { mapDrawService } from '../../../services/map/draw/map-draw.service';
 import { mapService } from '../../../services/map/map.service';
 import { getStyle, KnownStyleKey } from '../../../services/map/styles/map-styles';
-import { getRosreestrSingleAreaData, getRosreestrSingleOksData } from '../../../services/rosreestr-data.service';
 import { services } from '../../../services/services';
-import { Toast } from '../../Toast/Toast';
+import { calculateBbox } from '../../../services/util/Bbox';
+import { wfsFeaturesToOlFeatures } from '../../../services/util/open-layers.util';
+import { isCoordinate, isCoordinateArrayArray } from '../../../services/util/typeGuards/isCoordinate';
+import { isNspdProperties, NspdProperties } from '../../../services/util/typeGuards/isNspdProperties';
 
 const cnSearch = cn('Search');
 
 export interface SearchResultKadListItemProps {
-  kadObject: KadObject;
+  feature: WfsFeature;
 }
 
 @observer
 export class SearchResultKadListItem extends Component<SearchResultKadListItemProps> {
-  @observable private pointExist = true;
-
-  constructor(props: SearchResultKadListItemProps) {
-    super(props);
-    makeObservable(this);
-  }
-
   render() {
-    const { value, title } = this.props.kadObject;
+    const { id } = this.props.feature;
+    const properties: NspdProperties = this.props.feature.properties;
+
+    if (!isNspdProperties(properties)) {
+      services.logger.error('Ошибка проверки наличия свойств объекта');
+    }
 
     return (
-      <ListItem key={value} className={cnSearch('ResultListItem')}>
+      <ListItem key={id} className={cnSearch('ResultListItem')}>
         <ListItemText
           className={cnSearch('PrimaryText')}
-          primary={title}
-          secondary={this.pointExist ? '' : 'Нет координат'}
+          primary={properties.label || ''}
+          secondary={properties.options?.readable_address || ''}
         />
         <ListItemSecondaryAction>
           <IconButton edge='end' onClick={this.handleClick}>
@@ -52,29 +51,59 @@ export class SearchResultKadListItem extends Component<SearchResultKadListItemPr
     );
   }
 
-  @boundMethod
-  private async handleClick() {
-    const kadNum = this.props.kadObject.value;
-    try {
-      mapService.clearMarkers();
+  private getPointCoordinates(coordinates: unknown): [number, number] | null {
+    // Для точки
+    if (isCoordinate(coordinates) && coordinates.length === 2) {
+      return [coordinates[0], coordinates[1]];
+    }
+    // Для полигона (берем центроид первого кольца)
+    if (isCoordinateArrayArray(coordinates) && coordinates.length > 0) {
+      const ring = coordinates[0];
 
-      const value = await Promise.all([getRosreestrSingleAreaData(kadNum), getRosreestrSingleOksData(kadNum)]);
+      if (ring.length > 0) {
+        // Вычисляем центроид полигона
+        let sumX = 0;
+        let sumY = 0;
 
-      const item = value.flat(2)[0] as KadItem | undefined;
+        ring.forEach(point => {
+          sumX += point[0];
+          sumY += point[1];
+        });
 
-      if (item?.center) {
-        const center = item.center;
-
-        this.drawMarker([center.x, center.y]);
-
-        this.fitToBbox([center.x, center.x, center.y, center.y], [0, 0, 0, 0], 0.85);
-      } else {
-        this.pointNotExist();
+        return [sumX / ring.length, sumY / ring.length];
       }
-    } catch (error) {
-      const err = error as AxiosError;
-      Toast.warn(`Ошибка ответа росреестра ${kadNum}`);
-      services.logger.error(`Ошибка ответа росреестра: ${kadNum}`, err.message);
+    }
+
+    return null;
+  }
+
+  @boundMethod
+  private handleClick() {
+    mapService.clearMarkers();
+
+    const item = this.props.feature;
+    const geometry = item.geometry;
+
+    if (item && geometry) {
+      const coordinates = geometry.coordinates;
+      const point = this.getPointCoordinates(coordinates);
+
+      if (point) {
+        this.drawMarker(point);
+      }
+
+      if (geometry.bbox && Array.isArray(geometry.bbox) && geometry.bbox.length >= 4) {
+        this.fitToBbox(geometry.bbox, [0, 0, 0, 0], 0.85);
+      } else {
+        const calculatedBbox = calculateBbox(coordinates);
+
+        if (calculatedBbox) {
+          mapService.positionToExtent(calculatedBbox);
+        }
+      }
+
+      const olFeatures = wfsFeaturesToOlFeatures([item]);
+      mapDrawService.addFeatures(olFeatures);
     }
   }
 
@@ -88,12 +117,6 @@ export class SearchResultKadListItem extends Component<SearchResultKadListItemPr
     });
 
     iconFeature.setStyle(getStyle(KnownStyleKey.MapMarkerStyles));
-
     mapService.drawMarkers([iconFeature]);
-  }
-
-  @action
-  private pointNotExist() {
-    this.pointExist = false;
   }
 }

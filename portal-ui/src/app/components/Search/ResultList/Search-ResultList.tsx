@@ -3,7 +3,7 @@ import { observer } from 'mobx-react';
 import { List } from '@mui/material';
 import { cn } from '@bem-react/classname';
 
-import { KadObject } from '../../../services/kad-search.models';
+import { WfsFeature } from '../../../services/geoserver/wfs/wfs.models';
 import { YaGeoObjectCollection } from '../../../services/yandex-geocode.service';
 import { SearchResultKadListItem } from '../ResultKadListItem/Search-ResultKadListItem';
 import { SearchResultListItem } from '../ResultListItem/Search-ResultListItem';
@@ -15,28 +15,20 @@ import '!style-loader!css-loader!sass-loader!../PrimaryText/Search-PrimaryText.s
 const cnSearch = cn('Search');
 
 interface SearchResultListProps {
+  value: string;
   addressData?: YaGeoObjectCollection;
-  kadAreasData?: KadObject[];
-  kadOksData?: KadObject[];
+  features: WfsFeature[];
 }
 
-export const SearchResultList: FC<SearchResultListProps> = observer(({ addressData, kadAreasData, kadOksData }) => (
+export const SearchResultList: FC<SearchResultListProps> = observer(({ addressData, features }) => (
   <div className={cnSearch('ResultList')}>
-    {(addressData && addressData.featureMember.length) || kadAreasData?.length || kadOksData?.length ? (
+    {(addressData && addressData.featureMember.length) || features?.length ? (
       <List dense>
-        {kadAreasData?.length ? (
+        {features.length ? (
           <>
             <div className={cnSearch('ListTitle')}>Участки:</div>
-            {kadAreasData.map(item => (
-              <SearchResultKadListItem key={item.value} kadObject={item} />
-            ))}
-          </>
-        ) : null}
-        {kadOksData?.length ? (
-          <>
-            <div className={cnSearch('ListTitle')}>ОКС:</div>
-            {kadOksData.map(item => (
-              <SearchResultKadListItem key={item.value} kadObject={item} />
+            {features.map((item, i) => (
+              <SearchResultKadListItem key={`${item.id}_${i}`} feature={item} />
             ))}
           </>
         ) : null}

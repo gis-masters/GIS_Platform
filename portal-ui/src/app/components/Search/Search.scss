@@ -13,4 +13,16 @@ body .Search {
   &-Input {
     width: 100%;
   }
+
+  .MuiFormHelperText-root {
+    position: absolute;
+    top: 100%;
+
+    margin: 3px 0 0;
+    padding: 2px 4px;
+
+    border-radius: 4px;
+    background: white;
+    box-shadow: 0 2px 4px rgb(0 0 0 / 10%);
+  }
 }
