@@ -179,7 +179,10 @@ export class EditLayerDialog extends Component<EditLayerDialogProps> {
           property.hidden = true;
         }
 
-        if (layer.type && [CrgLayerType.EXTERNAL, CrgLayerType.EXTERNAL_GEOSERVER].includes(layer.type)) {
+        if (
+          layer.type &&
+          [CrgLayerType.EXTERNAL, CrgLayerType.EXTERNAL_GEOSERVER, CrgLayerType.EXTERNAL_NSPD].includes(layer.type)
+        ) {
           property.hidden = true;
         }
       }

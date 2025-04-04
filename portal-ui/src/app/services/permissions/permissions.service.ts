@@ -130,7 +130,12 @@ export async function removeProjectPermission(payload: RoleAssignmentBody, proje
 }
 
 export async function isLayerReadAllowed(layer: CrgLayer): Promise<boolean> {
-  if (currentUser.isAdmin || layer.type === CrgLayerType.EXTERNAL || layer.type === CrgLayerType.EXTERNAL_GEOSERVER) {
+  if (
+    currentUser.isAdmin ||
+    layer.type === CrgLayerType.EXTERNAL ||
+    layer.type === CrgLayerType.EXTERNAL_GEOSERVER ||
+    layer.type === CrgLayerType.EXTERNAL_NSPD
+  ) {
     return true;
   }
 

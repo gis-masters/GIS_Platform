@@ -101,12 +101,25 @@ export class MapComponent implements OnInit, OnDestroy {
           const { actualTransparency = 0, payload: layer } = currentProject.visibleOnMapLayers[i];
           const zIndex = currentProject.visibleOnMapLayers.length - i;
 
-          if (layer.type === CrgLayerType.EXTERNAL) {
-            mapService.addExternalLayer(layer as CrgExternalLayer, zIndex);
-          } else if (layer.type === CrgLayerType.EXTERNAL_GEOSERVER) {
-            mapService.addExternalGeoserverLayer(layer as CrgExternalLayer, zIndex);
-          } else {
-            await mapService.addLayer(layer, zIndex, actualTransparency / 100);
+          switch (layer.type) {
+            case CrgLayerType.EXTERNAL: {
+              mapService.addExternalLayer(layer as CrgExternalLayer, zIndex);
+
+              break;
+            }
+            case CrgLayerType.EXTERNAL_NSPD: {
+              mapService.addNspdExternalLayer(layer as CrgExternalLayer, zIndex);
+
+              break;
+            }
+            case CrgLayerType.EXTERNAL_GEOSERVER: {
+              mapService.addExternalGeoserverLayer(layer as CrgExternalLayer, zIndex);
+
+              break;
+            }
+            default: {
+              await mapService.addLayer(layer, zIndex, actualTransparency / 100);
+            }
           }
         }
 

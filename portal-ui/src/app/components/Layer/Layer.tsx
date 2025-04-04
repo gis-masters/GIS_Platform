@@ -189,6 +189,7 @@ export class Layer extends Component<LayerProps> {
         ((type !== CrgLayerType.SHP &&
           type !== CrgLayerType.VECTOR &&
           type !== CrgLayerType.EXTERNAL &&
+          type !== CrgLayerType.EXTERNAL_NSPD &&
           type !== CrgLayerType.EXTERNAL_GEOSERVER) ||
           editMode) &&
         !this.isError

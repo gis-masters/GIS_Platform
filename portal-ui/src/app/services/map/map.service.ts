@@ -286,6 +286,50 @@ class MapService {
     this.map.addLayer(tileLayer);
   }
 
+  addNspdExternalLayer(layer: CrgExternalLayer, zIndex: number) {
+    this.throwIfMapNotCreated();
+
+    const { tableName, transparency, dataSourceUri } = layer;
+    const layerOnMap = this.getLayerByName(tableName);
+    if (layerOnMap) {
+      layerOnMap.setVisible(true);
+      layerOnMap.setOpacity((transparency ?? 100) / 100);
+      layerOnMap.setZIndex(zIndex);
+
+      return;
+    }
+
+    const sourceParams = {
+      LAYERS: undefined,
+      F: undefined,
+      FORMAT: undefined,
+      TRANSPARENT: undefined,
+      SIZE: undefined,
+      BBOXSR: undefined,
+      IMAGESR: undefined,
+      DPI: undefined
+    };
+
+    const tileLayer = new TileLayer({
+      source: new TileArcGISRest({
+        url: dataSourceUri,
+        params: sourceParams,
+        tileLoadFunction: undefined
+      }),
+      visible: true,
+      opacity: (transparency ?? 100) / 100,
+      zIndex: zIndex
+    });
+
+    const props: LayerAdditionalProps = {
+      crgInfo: { isUserLayer: true }
+    };
+
+    tileLayer.setProperties(props);
+
+    this.map.addLayer(tileLayer);
+  }
+
   async addLayer(layer: CrgLayer, zIndex: number, opacity: number): Promise<void> {
     this.throwIfMapNotCreated();
 
@@ -482,12 +526,15 @@ class MapService {
   private async externalGisMapServerLoadFunction(tile: Tile | ImageWrapper, url: string) {
     mapStore.enrollLoadingStart();
     let data: Blob = new Blob();
-
-    const replacedUrl = url
+    let replacedUrl = url
       .replace('256%2C256', '1024%2C1024')
       .replace('DPI=90', 'DPI=360')
       .replace('BBOXSR=3857', 'bboxSR=102100')
       .replace('IMAGESR=3857', 'imageSR=102100');
+
+    if (url.includes('nspd.gov.ru')) {
+      replacedUrl = url;
+    }
 
     try {
       const response = await fetch(replacedUrl);

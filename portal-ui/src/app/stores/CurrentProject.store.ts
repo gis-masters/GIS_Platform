@@ -199,7 +199,12 @@ class CurrentProject implements CrgProjectData {
   @computed
   get externalLayers() {
     return (
-      this.layers?.filter(l => l.type === CrgLayerType.EXTERNAL || l.type === CrgLayerType.EXTERNAL_GEOSERVER) || []
+      this.layers?.filter(
+        l =>
+          l.type === CrgLayerType.EXTERNAL ||
+          l.type === CrgLayerType.EXTERNAL_GEOSERVER ||
+          l.type === CrgLayerType.EXTERNAL_NSPD
+      ) || []
     );
   }
 

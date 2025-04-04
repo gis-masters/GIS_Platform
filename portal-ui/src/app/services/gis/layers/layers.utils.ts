@@ -28,14 +28,13 @@ export function vectorLayerDefaults(): Pick<
   };
 }
 
-export function externalLayerDefaults(): Pick<
-  NewCrgLayer,
-  'nativeCRS' | 'enabled' | 'position' | 'transparency' | 'minZoom' | 'maxZoom' | 'type'
-> {
+export function externalLayerDefaults(
+  url?: string
+): Pick<NewCrgLayer, 'nativeCRS' | 'enabled' | 'position' | 'transparency' | 'minZoom' | 'maxZoom' | 'type'> {
   return {
     ...defaultProps,
     nativeCRS: defaultOlProjectionCode,
-    type: CrgLayerType.EXTERNAL
+    type: url?.includes('nspd.gov.ru') ? CrgLayerType.EXTERNAL_NSPD : CrgLayerType.EXTERNAL
   };
 }
 

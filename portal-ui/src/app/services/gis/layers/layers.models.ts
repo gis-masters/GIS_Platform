@@ -10,6 +10,7 @@ export enum CrgLayerType {
   SHP = 'shp',
   RASTER = 'raster',
   EXTERNAL = 'external',
+  EXTERNAL_NSPD = 'external_nspd',
   EXTERNAL_GEOSERVER = 'external_geoserver'
 }
 
@@ -73,7 +74,7 @@ export interface CrgVectorableLayer extends CrgBaseLayer {
 }
 
 export interface CrgExternalLayer extends CrgBaseLayer {
-  type: CrgLayerType.EXTERNAL | CrgLayerType.EXTERNAL_GEOSERVER;
+  type: CrgLayerType.EXTERNAL | CrgLayerType.EXTERNAL_GEOSERVER | CrgLayerType.EXTERNAL_NSPD;
   dataSourceUri: string;
 }
 

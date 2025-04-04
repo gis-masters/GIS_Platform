@@ -194,7 +194,11 @@ export async function testLayerByWms(layer: CrgLayer): Promise<{ ok: boolean; er
 
       return { ok: false, errors };
     }
-  } else if (layer.type === CrgLayerType.EXTERNAL_GEOSERVER || layer.type === CrgLayerType.EXTERNAL) {
+  } else if (
+    layer.type === CrgLayerType.EXTERNAL_GEOSERVER ||
+    layer.type === CrgLayerType.EXTERNAL ||
+    layer.type === CrgLayerType.EXTERNAL_NSPD
+  ) {
     if (!layer.errorText) {
       return { ok: true };
     }

@@ -382,7 +382,7 @@ export class AddLayerDialog extends Component<AddLayerDialogProps> {
       this.close();
     }
 
-    const externalDefaults = externalLayerDefaults();
+    const externalDefaults = externalLayerDefaults(dataSourceUri);
 
     if (this.valid && layerType === CrgLayerType.RASTER && this.formValue.datasource) {
       const { libraryRecord, file } = this.formValue.datasource;
