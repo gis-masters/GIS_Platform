@@ -5,6 +5,11 @@ export interface SpatialReferenceSystem {
   proj4Text: string;
 }
 
+export interface GeometryValidationResultDto {
+  message: string;
+  valid: boolean;
+}
+
 export interface VerifyEcpResponse {
   message: string;
   signer: string;

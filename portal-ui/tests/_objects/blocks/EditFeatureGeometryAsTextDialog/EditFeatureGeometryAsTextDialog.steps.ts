@@ -1,10 +1,6 @@
-import { DataTable, Then, When } from '@wdio/cucumber-framework';
+import { DataTable, Then } from '@wdio/cucumber-framework';
 
 import { editFeatureGeometryAsTextDialogBlock } from './EditFeatureGeometryAsTextDialog.block';
-
-When('в форме редактирования объекта на карте заполняю координаты объекта', async () => {
-  await editFeatureGeometryAsTextDialogBlock.setObjectDummyCoordinates();
-});
 
 Then('объект содержит следующую геометрию', async function (data: DataTable) {
   const expectedGeometry = data

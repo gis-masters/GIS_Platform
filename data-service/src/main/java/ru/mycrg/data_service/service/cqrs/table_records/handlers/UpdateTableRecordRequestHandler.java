@@ -10,6 +10,7 @@ import ru.mycrg.data_service.service.schemas.CustomRuleCalculator;
 import ru.mycrg.data_service.service.schemas.SystemAttributeHandler;
 import ru.mycrg.data_service.service.cqrs.table_records.requests.UpdateTableRecordRequest;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
+import ru.mycrg.data_service.service.validation.GeometryValidationService;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.geo_json.Feature;
 import ru.mycrg.mediator.IRequestHandler;
@@ -19,7 +20,6 @@ import java.util.List;
 import java.util.Map;
 
 import static com.google.common.primitives.Longs.asList;
-import static ru.mycrg.data_service.dao.config.DaoProperties.PRIMARY_KEY;
 import static ru.mycrg.data_service.util.DetailedLogger.logError;
 import static ru.mycrg.data_service.util.TableUtils.throwIfNotMatchTableColumns;
 
@@ -30,15 +30,18 @@ public class UpdateTableRecordRequestHandler implements IRequestHandler<UpdateTa
     private final CustomRuleCalculator customRuleCalculator;
     private final SystemAttributeHandler systemAttributeHandler;
     private final DdlTablesSpecial ddlTablesSpecial;
+    private final GeometryValidationService geometryValidationService;
 
     public UpdateTableRecordRequestHandler(SpatialRecordsDao spatialRecordsDao,
                                            CustomRuleCalculator customRuleCalculator,
                                            SystemAttributeHandler systemAttributeHandler,
-                                           DdlTablesSpecial ddlTablesSpecial) {
+                                           DdlTablesSpecial ddlTablesSpecial,
+                                           GeometryValidationService geometryValidationService) {
         this.spatialRecordsDao = spatialRecordsDao;
         this.customRuleCalculator = customRuleCalculator;
         this.systemAttributeHandler = systemAttributeHandler;
         this.ddlTablesSpecial = ddlTablesSpecial;
+        this.geometryValidationService = geometryValidationService;
     }
 
     @Override
@@ -46,6 +49,12 @@ public class UpdateTableRecordRequestHandler implements IRequestHandler<UpdateTa
         ResourceQualifier rQualifier = request.getQualifier();
         SchemaDto schema = request.getSchema();
         Feature newFeature = request.getNewFeature();
+
+        //Если геометрия невалидная, мы никогда не внесём её через кнопку "Сохранить"
+        //но если меняем только пропсы, то и смысла в проверке нет
+        if (newFeature.getGeometry() != null) {
+            geometryValidationService.validateGeometry(newFeature, newFeature.getSrs());
+        }
 
         List<String> allColumnNames = ddlTablesSpecial.getAllColumnNames(rQualifier.getTable());
         throwIfNotMatchTableColumns(newFeature.getPropertyNames(),

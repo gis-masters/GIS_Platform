@@ -12,6 +12,7 @@ import ru.mycrg.data_service.service.cqrs.table_records.requests.CreateTableReco
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service.service.schemas.CustomRuleCalculator;
 import ru.mycrg.data_service.service.schemas.SystemAttributeHandler;
+import ru.mycrg.data_service.service.validation.GeometryValidationService;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.geo_json.Feature;
 import ru.mycrg.mediator.IRequestHandler;
@@ -29,15 +30,18 @@ public class CreateTableRecordRequestHandler implements IRequestHandler<CreateTa
     private final SystemAttributeHandler systemAttributeHandler;
     private final SpatialRecordsDao spatialRecordsDao;
     private final DdlTablesSpecial ddlTablesSpecial;
+    private final GeometryValidationService geometryValidationService;
 
     public CreateTableRecordRequestHandler(CustomRuleCalculator customRuleCalculator,
                                            SystemAttributeHandler systemAttributeHandler,
                                            SpatialRecordsDao spatialRecordsDao,
-                                           DdlTablesSpecial ddlTablesSpecial) {
+                                           DdlTablesSpecial ddlTablesSpecial,
+                                           GeometryValidationService geometryValidationService) {
         this.customRuleCalculator = customRuleCalculator;
         this.systemAttributeHandler = systemAttributeHandler;
         this.spatialRecordsDao = spatialRecordsDao;
         this.ddlTablesSpecial = ddlTablesSpecial;
+        this.geometryValidationService = geometryValidationService;
     }
 
     @Override
@@ -45,6 +49,12 @@ public class CreateTableRecordRequestHandler implements IRequestHandler<CreateTa
         Feature feature = request.getFeature();
         SchemaDto schema = request.getSchema();
         ResourceQualifier qualifier = request.getQualifier();
+
+        //Если геометрия невалидная, мы никогда не внесём её через кнопку "Сохранить"
+        //но если геометрии нет, то и проверять нечего
+        if (feature.getGeometry() != null) {
+            geometryValidationService.validateGeometry(feature, feature.getSrs());
+        }
 
         List<String> allColumnNames = ddlTablesSpecial.getAllColumnNames(qualifier.getTable());
         excludeSystemPropertiesFromFeature(feature);

@@ -1,4 +1,4 @@
-import { Then, When } from '@wdio/cucumber-framework';
+import { DataTable, Then, When } from '@wdio/cucumber-framework';
 
 import { attributesBlock } from '../Attributes/Attributes.block';
 import { layersSidebarBlock } from './LayersSidebar.block';
@@ -30,8 +30,10 @@ When(
   }
 );
 
-When('в панели атрибутов объекта создаю новый объект', async () => {
-  await layersSidebarBlock.createNewObjectInLayer();
+When('в панели окне координаты контура объекта я ввожу координаты:', async (data: DataTable) => {
+  const coord = data.raw();
+
+  await layersSidebarBlock.createNewObjectInLayer(coord);
 });
 
 When('в списке слоёв я нажимаю на кнопку `Подключить слой`', async () => {

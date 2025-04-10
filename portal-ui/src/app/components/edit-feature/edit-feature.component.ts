@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormControl } from '@angular/forms';
 import { boundMethod } from 'autobind-decorator';
+import { AxiosError } from 'axios';
 import { cloneDeep, isNumber } from 'lodash';
 import { Subject } from 'rxjs';
 import { debounceTime, first, takeUntil } from 'rxjs/operators';
@@ -559,31 +560,38 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
       throw new Error('Невозможно обновить объект');
     }
 
-    const { dataset, tableName } = this.layer;
+    try {
+      const { dataset, tableName } = this.layer;
 
-    // А как это работает? Передавая массив features, мы обновляем только одну: features[0].id ???
-    if (features.length === 1) {
-      await updateFeature(dataset, tableName, {
-        id: String(extractFeatureId(features[0].id)),
-        type: 'Feature',
-        geometry: geometry,
-        properties: newProperties
-      });
+      // А как это работает? Передавая массив features, мы обновляем только одну: features[0].id ???
+      if (features.length === 1) {
+        await updateFeature(dataset, tableName, {
+          id: String(extractFeatureId(features[0].id)),
+          type: 'Feature',
+          geometry: geometry,
+          properties: newProperties
+        });
 
-      communicationService.featuresUpdated.emit({ type: 'update', data: null });
+        communicationService.featuresUpdated.emit({ type: 'update', data: null });
 
-      return;
+        return;
+      }
+
+      await transformFeatureService.multipleEdit(dataset, tableName, features, newProperties);
+
+      this.isSaveInProgress = false;
+      mapService.refreshAllLayers();
+      mapDrawService.clearDraft();
+
+      Toast.success('Сохранено');
+
+      communicationService.featuresUpdated.emit();
+    } catch (error) {
+      const err = error as AxiosError<{ errors: Record<string, unknown>[]; message?: string }>;
+      Toast.error(err.response?.data.message || 'Ошибка при сохранении объекта');
+
+      this.isSaveInProgress = false;
     }
-
-    await transformFeatureService.multipleEdit(dataset, tableName, features, newProperties);
-
-    this.isSaveInProgress = false;
-    mapService.refreshAllLayers();
-    mapDrawService.clearDraft();
-
-    Toast.success('Сохранено');
-
-    communicationService.featuresUpdated.emit();
   }
 
   private publishPristine() {

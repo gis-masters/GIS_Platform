@@ -2,7 +2,6 @@ import { WdioCheckElementMethodOptions } from 'wdio-image-comparison-service';
 
 import { Block } from '../../Block';
 import { changeLayerParent } from '../../commands/layers/changeLayerParent';
-import { editFeatureBlock } from '../EditFeature/EditFeature.block';
 import { editFeatureGeometryAsTextDialogBlock } from '../EditFeatureGeometryAsTextDialog/EditFeatureGeometryAsTextDialog.block';
 import { layerCardBlock } from '../Layer/Card/Layer-Card.block';
 import { MuiMenuBlock, muiMenuBlock } from '../MuiMenu/MuiMenu.block';
@@ -85,9 +84,8 @@ class LayersSidebarBlock extends Block {
     await $addLayerBtn.click();
   }
 
-  async createNewObjectInLayer(): Promise<void> {
-    await editFeatureGeometryAsTextDialogBlock.setObjectDummyCoordinates();
-    await editFeatureBlock.clickSaveButton();
+  async createNewObjectInLayer(coord: string[][]): Promise<void> {
+    await editFeatureGeometryAsTextDialogBlock.setObjectDummyCoordinates(coord);
   }
 
   async clickAddLayerBtn(): Promise<void> {

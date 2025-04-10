@@ -96,7 +96,7 @@ public class BySchemaRowMapper {
         try {
             Optional<SimplePropertyDto> oProperty = getPropertyByName(schema, columnName);
             if (oProperty.isEmpty()) {
-                log.warn("Не удалось найти свойство: '{}' в схеме", columnName);
+                log.warn("Не удалось найти свойство: '{}' в схеме: '{}'", columnName, schema.getName());
                 properties.put(columnName, object.toString());
 
                 return;

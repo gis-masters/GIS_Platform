@@ -139,5 +139,4 @@ public class CommonStepDefinitions extends BaseStepsDefinitions {
     public void checkErrorMsg(String msg) {
         checkResponseValue("message", msg);
     }
-
 }

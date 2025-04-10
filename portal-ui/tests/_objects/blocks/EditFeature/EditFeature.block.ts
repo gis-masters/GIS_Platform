@@ -6,6 +6,7 @@ import { Block } from '../../Block';
 import { extractValues } from '../../commands/extractText';
 import { hasClass } from '../../utils/hasClass';
 import { CopyFeaturesButtonBlock } from '../CopyFeaturesButton/CopyFeaturesButton.block';
+import { konfirmierenBlock } from '../Konfirmieren/Konfirmieren.block';
 import { MuiInputBlock } from '../MuiInput/MuiInput.block';
 
 class EditFeatureBlock extends Block {
@@ -28,6 +29,8 @@ class EditFeatureBlock extends Block {
   async clickSaveButton(): Promise<void> {
     const $saveNewObjectBtn = await this.$('editFeatureSaveBtn');
     await $saveNewObjectBtn.click();
+
+    await konfirmierenBlock.closeDialog();
   }
 
   async goBack(): Promise<void> {

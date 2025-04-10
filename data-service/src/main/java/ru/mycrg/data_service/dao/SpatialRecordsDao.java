@@ -13,6 +13,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
 import ru.mycrg.data_service.dao.mappers.FeatureRowMapper;
+import ru.mycrg.common_contracts.generated.data_service.GeometryValidationResultDto;
 import ru.mycrg.data_service.dao.utils.SqlParameterSourceFactory;
 import ru.mycrg.data_service.mappers.FeatureMapper;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
@@ -227,5 +228,71 @@ public class SpatialRecordsDao {
 
         return pJdbcTemplate.getJdbcTemplate()
                             .queryForList(copyQuery, Long.class);
+    }
+
+    public GeometryValidationResultDto validateGeometry(String geometryJson) {
+        String geometryValidMessage = "Valid Geometry";
+        String query =
+                "SELECT public.st_isvalidreason(geom) as reason " +
+                        "FROM ( " +
+                        "    SELECT public.st_geomfromgeojson(:geometry::jsonb) as geom " +
+                        ") t";
+
+        return pJdbcTemplate.queryForObject(
+                query,
+                new MapSqlParameterSource("geometry", geometryJson),
+                (validationRow, rowNum) -> {
+                    String reason = validationRow.getString("reason");
+
+                    return new GeometryValidationResultDto(geometryValidMessage.equals(reason), reason);
+                }
+        );
+    }
+
+    //Если мы не можем корректно трансформировать координаты в общемировые, то мы считаем что они за пределами мира
+    public GeometryValidationResultDto checkOnEarthSurface(String geometryJson, String layerEpsg) {
+        String defaultEpsgConvert = "4326";
+        String geometryValidMessage = "Valid Geometry";
+
+        String query =
+                "WITH transformed AS ( " +
+                        "  SELECT public.st_transform( " +
+                        "           public.st_setsrid( " +
+                        "             public.st_geomfromgeojson(CAST(:geometry AS json)), " +
+                        "             :fromSRID " +
+                        "           ), " +
+                        "           :toSRID " +
+                        "         ) AS geom " +
+                        ") " +
+                        "SELECT public.st_isvalidreason(geom) AS reason FROM transformed";
+
+        MapSqlParameterSource params = new MapSqlParameterSource()
+                .addValue("geometry", geometryJson)
+                .addValue("fromSRID", Integer.parseInt(layerEpsg))
+                .addValue("toSRID", Integer.parseInt(defaultEpsgConvert));
+
+        return pJdbcTemplate.queryForObject(
+                query,
+                params,
+                (validationRow, rowNum) -> {
+                    String reason = validationRow.getString("reason");
+                    return new GeometryValidationResultDto(geometryValidMessage.equals(reason), reason);
+                }
+        );
+    }
+
+    public String makeValidGeometry(String geometryJson) {
+        String query =
+                "SELECT public.st_asgeojson(" +
+                        "    public.st_makevalid(" +
+                        "        public.st_geomfromgeojson(:geometry::jsonb)" +
+                        "    )" +
+                        ")::jsonb AS geometry";
+
+        return pJdbcTemplate.queryForObject(
+                query,
+                new MapSqlParameterSource("geometry", geometryJson),
+                String.class
+        );
     }
 }
