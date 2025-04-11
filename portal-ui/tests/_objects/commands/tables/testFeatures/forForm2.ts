@@ -30,7 +30,7 @@ export const forForm2: NewWfsFeature[] = [
       field_fias__oktmo: '35656401',
       field_fias__address: 'Черноморское',
       field_fias__id: 5,
-      field_file: '[{"id":"295380fc-3eb3-44fc-888f-f4564ed54058","title":"some super file","size":314}]'
+      field_file: ''
     }
   }
 ];

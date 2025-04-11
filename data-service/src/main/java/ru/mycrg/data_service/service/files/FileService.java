@@ -74,14 +74,22 @@ public class FileService {
     public Map<UUID, List<VerifyEcpResponse>> relateFiles(SchemaDto schema,
                                                           ResourceQualifier qualifier,
                                                           IRecord newRecord) {
-        Map<UUID, List<VerifyEcpResponse>> result = new HashMap<>();
+        List<String> fileFieldNames = getFileFieldNames(schema);
+        if (!isChangeNeeded(newRecord, fileFieldNames)) {
+            return Map.of();
+        }
 
+        Map<UUID, List<VerifyEcpResponse>> result = new HashMap<>();
         try {
-            for (String fieldName: getFileFieldNames(schema)) {
+            for (String fieldName: fileFieldNames) {
                 Set<UUID> allFileIds = getFilesDescription(newRecord.getContent(), fieldName)
                         .stream()
                         .map(FileDescription::getId)
                         .collect(Collectors.toSet());
+
+                if (allFileIds.isEmpty()) {
+                    return Map.of();
+                }
 
                 List<File> allFoundsFiles = fileRepository.findAllByIdIn(allFileIds);
                 Set<UUID> allFoundFilesIds = allFoundsFiles.stream().map(File::getId).collect(Collectors.toSet());
