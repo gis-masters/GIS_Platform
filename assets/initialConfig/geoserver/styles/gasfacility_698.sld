@@ -6,8 +6,8 @@ xmlns:se="http://www.opengis.net/se">
 	<NamedLayer>
 		<se:Name>Объекты добычи и транспортировки газа</se:Name>
 		<UserStyle>
-			<se:Name>GasFacility_698</se:Name>
-			<se:FeatureTypeStyle>		 
+			<se:Name>gasfacility_698</se:Name>
+			<se:FeatureTypeStyle>
 				<se:Rule>
 					<se:Name>60204050111</se:Name>
 					<se:Description>
@@ -22,7 +22,7 @@ xmlns:se="http://www.opengis.net/se">
 					<se:PointSymbolizer>
 						<se:Graphic>
 							<se:ExternalGraphic>
-								<se:OnlineResource xlink:type="simple" xlink:href="svg_698/04_Engineering/03_GasFacility/602040519.svg" />
+								<se:OnlineResource xlink:type="simple" xlink:href="svg_698/04_Engineering/03_GasFacility/60204050111.svg" />
 								<se:Format>image/svg+xml</se:Format>
 							</se:ExternalGraphic>
 							<se:Size>40</se:Size>
@@ -30,49 +30,7 @@ xmlns:se="http://www.opengis.net/se">
 					</se:PointSymbolizer>
 				</se:Rule>
 				<se:Rule>
-					<se:Name>602040520</se:Name>
-					<se:Description>
-						<se:Title>Газорегуляторный пункт</se:Title>
-					</se:Description>
-					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
-						<ogc:PropertyIsEqualTo>
-							<ogc:PropertyName>ruleid</ogc:PropertyName>
-							<ogc:Literal>602040520</ogc:Literal>
-						</ogc:PropertyIsEqualTo>
-					</ogc:Filter>
-					<se:PointSymbolizer>
-						<se:Graphic>
-							<se:ExternalGraphic>
-								<se:OnlineResource xlink:type="simple" xlink:href="svg_698/04_Engineering/03_GasFacility/602040520.svg" />
-								<se:Format>image/svg+xml</se:Format>
-							</se:ExternalGraphic>
-							<se:Size>40</se:Size>
-						</se:Graphic>
-					</se:PointSymbolizer>
-				</se:Rule>
-				<se:Rule>
-					<se:Name>602040519</se:Name>
-					<se:Description>
-						<se:Title>Газоперерабатывающий комплекс</se:Title>
-					</se:Description>
-					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
-						<ogc:PropertyIsEqualTo>
-							<ogc:PropertyName>ruleid</ogc:PropertyName>
-							<ogc:Literal>602040519</ogc:Literal>
-						</ogc:PropertyIsEqualTo>
-					</ogc:Filter>
-					<se:PointSymbolizer>
-						<se:Graphic>
-							<se:ExternalGraphic>
-								<se:OnlineResource xlink:type="simple" xlink:href="svg_698/04_Engineering/03_GasFacility/602040519.svg" />
-								<se:Format>image/svg+xml</se:Format>
-							</se:ExternalGraphic>
-							<se:Size>40</se:Size>
-						</se:Graphic>
-					</se:PointSymbolizer>
-				</se:Rule>
-				<se:Rule>
-					<se:Name>602040519</se:Name>
+					<se:Name>60204050112</se:Name>
 					<se:Description>
 						<se:Title>Газовый промысел планируемый к размещению федерального значения</se:Title>
 					</se:Description>
@@ -85,7 +43,7 @@ xmlns:se="http://www.opengis.net/se">
 					<se:PointSymbolizer>
 						<se:Graphic>
 							<se:ExternalGraphic>
-								<se:OnlineResource xlink:type="simple" xlink:href="svg_698/04_Engineering/03_GasFacility/602040519.svg" />
+								<se:OnlineResource xlink:type="simple" xlink:href="svg_698/04_Engineering/03_GasFacility/60204050112.svg" />
 								<se:Format>image/svg+xml</se:Format>
 							</se:ExternalGraphic>
 							<se:Size>40</se:Size>
@@ -1114,7 +1072,7 @@ xmlns:se="http://www.opengis.net/se">
 					<se:PointSymbolizer>
 						<se:Graphic>
 							<se:ExternalGraphic>
-								<se:OnlineResource xlink:type="simple" xlink:href="svg_1svg_69823/04_Engineering/03_GasFacility/60204050513.svg" />
+								<se:OnlineResource xlink:type="simple" xlink:href="svg_698/04_Engineering/03_GasFacility/60204050513.svg" />
 								<se:Format>image/svg+xml</se:Format>
 							</se:ExternalGraphic>
 							<se:Size>40</se:Size>
@@ -4082,17 +4040,15 @@ xmlns:se="http://www.opengis.net/se">
 						</se:Graphic>
 					</se:PointSymbolizer>
 				</se:Rule>
-				
-				
 				<se:Rule>
-					<se:Name>60204051711</se:Name>
+					<se:Name>60204051911</se:Name>
 					<se:Description>
 						<se:Title>Газоперерабатывающий комплекс существующий федерального значения</se:Title>
 					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
-							<ogc:Literal>60204051711</ogc:Literal>
+							<ogc:Literal>60204051911</ogc:Literal>
 						</ogc:PropertyIsEqualTo>
 					</ogc:Filter>
 					<se:PointSymbolizer>
@@ -4106,14 +4062,14 @@ xmlns:se="http://www.opengis.net/se">
 					</se:PointSymbolizer>
 				</se:Rule>
 				<se:Rule>
-					<se:Name>60204051712</se:Name>
+					<se:Name>60204051912</se:Name>
 					<se:Description>
-						<se:Title>Газоперерабатывающий комплекс планируемый у размещению федерального значения</se:Title>
+						<se:Title>Газоперерабатывающий комплекс планируемый к размещению федерального значения</se:Title>
 					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
-							<ogc:Literal>60204051712</ogc:Literal>
+							<ogc:Literal>60204051912</ogc:Literal>
 						</ogc:PropertyIsEqualTo>
 					</ogc:Filter>
 					<se:PointSymbolizer>
@@ -4127,14 +4083,14 @@ xmlns:se="http://www.opengis.net/se">
 					</se:PointSymbolizer>
 				</se:Rule>
 				<se:Rule>
-					<se:Name>60204051713</se:Name>
+					<se:Name>60204051913</se:Name>
 					<se:Description>
-						<se:Title>Газоперерабатывающий комплекс планируемый у реконструкции федерального значения</se:Title>
+						<se:Title>Газоперерабатывающий комплекс планируемый к реконструкции федерального значения</se:Title>
 					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
-							<ogc:Literal>60204051713</ogc:Literal>
+							<ogc:Literal>60204051913</ogc:Literal>
 						</ogc:PropertyIsEqualTo>
 					</ogc:Filter>
 					<se:PointSymbolizer>
@@ -4148,14 +4104,14 @@ xmlns:se="http://www.opengis.net/se">
 					</se:PointSymbolizer>
 				</se:Rule>
 				<se:Rule>
-					<se:Name>60204051714</se:Name>
+					<se:Name>60204051914</se:Name>
 					<se:Description>
-						<se:Title>Газоперерабатывающий комплекс планируемый у ликвидации федерального значения</se:Title>
+						<se:Title>Газоперерабатывающий комплекс планируемый к ликвидации федерального значения</se:Title>
 					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
-							<ogc:Literal>60204051714</ogc:Literal>
+							<ogc:Literal>60204051914</ogc:Literal>
 						</ogc:PropertyIsEqualTo>
 					</ogc:Filter>
 					<se:PointSymbolizer>
@@ -4169,14 +4125,14 @@ xmlns:se="http://www.opengis.net/se">
 					</se:PointSymbolizer>
 				</se:Rule>
 				<se:Rule>
-					<se:Name>60204051721</se:Name>
+					<se:Name>60204051921</se:Name>
 					<se:Description>
 						<se:Title>Газоперерабатывающий комплекс существующий регионального значения</se:Title>
 					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
-							<ogc:Literal>60204051721</ogc:Literal>
+							<ogc:Literal>60204051921</ogc:Literal>
 						</ogc:PropertyIsEqualTo>
 					</ogc:Filter>
 					<se:PointSymbolizer>
@@ -4190,14 +4146,14 @@ xmlns:se="http://www.opengis.net/se">
 					</se:PointSymbolizer>
 				</se:Rule>
 				<se:Rule>
-					<se:Name>60204051722</se:Name>
+					<se:Name>60204051922</se:Name>
 					<se:Description>
 						<se:Title>Газоперерабатывающий комплекс планируемый к размещению регионального значения</se:Title>
 					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
-							<ogc:Literal>60204051722</ogc:Literal>
+							<ogc:Literal>60204051922</ogc:Literal>
 						</ogc:PropertyIsEqualTo>
 					</ogc:Filter>
 					<se:PointSymbolizer>
@@ -4211,14 +4167,14 @@ xmlns:se="http://www.opengis.net/se">
 					</se:PointSymbolizer>
 				</se:Rule>
 				<se:Rule>
-					<se:Name>60204051723</se:Name>
+					<se:Name>60204051923</se:Name>
 					<se:Description>
 						<se:Title>Газоперерабатывающий комплекс планируемый к реконструкции регионального значения</se:Title>
 					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
-							<ogc:Literal>60204051723</ogc:Literal>
+							<ogc:Literal>60204051923</ogc:Literal>
 						</ogc:PropertyIsEqualTo>
 					</ogc:Filter>
 					<se:PointSymbolizer>
@@ -4232,14 +4188,14 @@ xmlns:se="http://www.opengis.net/se">
 					</se:PointSymbolizer>
 				</se:Rule>
 				<se:Rule>
-					<se:Name>60204051724</se:Name>
+					<se:Name>60204051924</se:Name>
 					<se:Description>
 						<se:Title>Газоперерабатывающий комплекс планируемый к ликвидации регионального значения</se:Title>
 					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
-							<ogc:Literal>60204051724</ogc:Literal>
+							<ogc:Literal>60204051924</ogc:Literal>
 						</ogc:PropertyIsEqualTo>
 					</ogc:Filter>
 					<se:PointSymbolizer>
@@ -4253,14 +4209,14 @@ xmlns:se="http://www.opengis.net/se">
 					</se:PointSymbolizer>
 				</se:Rule>
 				<se:Rule>
-					<se:Name>60204051731</se:Name>
+					<se:Name>60204051931</se:Name>
 					<se:Description>
 						<se:Title>Газоперерабатывающий комплекс существующий местного значения</se:Title>
 					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
-							<ogc:Literal>60204051731</ogc:Literal>
+							<ogc:Literal>60204051931</ogc:Literal>
 						</ogc:PropertyIsEqualTo>
 					</ogc:Filter>
 					<se:PointSymbolizer>
@@ -4274,14 +4230,14 @@ xmlns:se="http://www.opengis.net/se">
 					</se:PointSymbolizer>
 				</se:Rule>
 				<se:Rule>
-					<se:Name>60204051732</se:Name>
+					<se:Name>60204051932</se:Name>
 					<se:Description>
 						<se:Title>Газоперерабатывающий комплекс планируемый к размещению местного значения</se:Title>
 					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
-							<ogc:Literal>60204051732</ogc:Literal>
+							<ogc:Literal>60204051932</ogc:Literal>
 						</ogc:PropertyIsEqualTo>
 					</ogc:Filter>
 					<se:PointSymbolizer>
@@ -4295,14 +4251,14 @@ xmlns:se="http://www.opengis.net/se">
 					</se:PointSymbolizer>
 				</se:Rule>
 				<se:Rule>
-					<se:Name>60204051733</se:Name>
+					<se:Name>60204051933</se:Name>
 					<se:Description>
 						<se:Title>Газоперерабатывающий комплекс планируемый к реконструкции местного значения</se:Title>
 					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
-							<ogc:Literal>60204051733</ogc:Literal>
+							<ogc:Literal>60204051933</ogc:Literal>
 						</ogc:PropertyIsEqualTo>
 					</ogc:Filter>
 					<se:PointSymbolizer>
@@ -4316,14 +4272,14 @@ xmlns:se="http://www.opengis.net/se">
 					</se:PointSymbolizer>
 				</se:Rule>
 				<se:Rule>
-					<se:Name>60204051734</se:Name>
+					<se:Name>60204051934</se:Name>
 					<se:Description>
 						<se:Title>Газоперерабатывающий комплекс планируемый к ликвидации местного значения</se:Title>
 					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
-							<ogc:Literal>60204051734</ogc:Literal>
+							<ogc:Literal>60204051934</ogc:Literal>
 						</ogc:PropertyIsEqualTo>
 					</ogc:Filter>
 					<se:PointSymbolizer>
@@ -4337,14 +4293,14 @@ xmlns:se="http://www.opengis.net/se">
 					</se:PointSymbolizer>
 				</se:Rule>
 				<se:Rule>
-					<se:Name>60204051811</se:Name>
+					<se:Name>60204052011</se:Name>
 					<se:Description>
 						<se:Title>Газорегуляторный пункт существующий федерального значения</se:Title>
 					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
-							<ogc:Literal>60204051811</ogc:Literal>
+							<ogc:Literal>60204052011</ogc:Literal>
 						</ogc:PropertyIsEqualTo>
 					</ogc:Filter>
 					<se:PointSymbolizer>
@@ -4358,14 +4314,14 @@ xmlns:se="http://www.opengis.net/se">
 					</se:PointSymbolizer>
 				</se:Rule>
 				<se:Rule>
-					<se:Name>60204051812</se:Name>
+					<se:Name>60204052012</se:Name>
 					<se:Description>
-						<se:Title>Газорегуляторный пункт планируемый у размещению федерального значения</se:Title>
+						<se:Title>Газорегуляторный пункт планируемый к размещению федерального значения</se:Title>
 					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
-							<ogc:Literal>60204051812</ogc:Literal>
+							<ogc:Literal>60204052012</ogc:Literal>
 						</ogc:PropertyIsEqualTo>
 					</ogc:Filter>
 					<se:PointSymbolizer>
@@ -4379,14 +4335,14 @@ xmlns:se="http://www.opengis.net/se">
 					</se:PointSymbolizer>
 				</se:Rule>
 				<se:Rule>
-					<se:Name>60204051813</se:Name>
+					<se:Name>60204052013</se:Name>
 					<se:Description>
-						<se:Title>Газорегуляторный пункт планируемый у реконструкции федерального значения</se:Title>
+						<se:Title>Газорегуляторный пункт планируемый к реконструкции федерального значения</se:Title>
 					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
-							<ogc:Literal>60204051813</ogc:Literal>
+							<ogc:Literal>60204052013</ogc:Literal>
 						</ogc:PropertyIsEqualTo>
 					</ogc:Filter>
 					<se:PointSymbolizer>
@@ -4400,14 +4356,14 @@ xmlns:se="http://www.opengis.net/se">
 					</se:PointSymbolizer>
 				</se:Rule>
 				<se:Rule>
-					<se:Name>60204051814</se:Name>
+					<se:Name>60204052014</se:Name>
 					<se:Description>
-						<se:Title>Газорегуляторный пункт планируемый у ликвидации федерального значения</se:Title>
+						<se:Title>Газорегуляторный пункт планируемый к ликвидации федерального значения</se:Title>
 					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
-							<ogc:Literal>60204051814</ogc:Literal>
+							<ogc:Literal>60204052014</ogc:Literal>
 						</ogc:PropertyIsEqualTo>
 					</ogc:Filter>
 					<se:PointSymbolizer>
@@ -4421,14 +4377,14 @@ xmlns:se="http://www.opengis.net/se">
 					</se:PointSymbolizer>
 				</se:Rule>
 				<se:Rule>
-					<se:Name>60204051821</se:Name>
+					<se:Name>60204052021</se:Name>
 					<se:Description>
 						<se:Title>Газорегуляторный пункт существующий регионального значения</se:Title>
 					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
-							<ogc:Literal>60204051821</ogc:Literal>
+							<ogc:Literal>60204052021</ogc:Literal>
 						</ogc:PropertyIsEqualTo>
 					</ogc:Filter>
 					<se:PointSymbolizer>
@@ -4441,36 +4397,15 @@ xmlns:se="http://www.opengis.net/se">
 						</se:Graphic>
 					</se:PointSymbolizer>
 				</se:Rule>
-                <se:Rule>
-					<se:Name>602040519</se:Name>
-					<se:Description>
-						<se:Title>Газоперерабатывающий комплекс</se:Title>
-					</se:Description>
-					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
-						<ogc:PropertyIsEqualTo>
-							<ogc:PropertyName>ruleid</ogc:PropertyName>
-							<ogc:Literal>602040519</ogc:Literal>
-						</ogc:PropertyIsEqualTo>
-					</ogc:Filter>
-					<se:PointSymbolizer>
-						<se:Graphic>
-							<se:ExternalGraphic>
-								<se:OnlineResource xlink:type="simple" xlink:href="svg_698/04_Engineering/03_GasFacility/602040519.svg" />
-								<se:Format>image/svg+xml</se:Format>
-							</se:ExternalGraphic>
-							<se:Size>40</se:Size>
-						</se:Graphic>
-					</se:PointSymbolizer>
-				</se:Rule>
 				<se:Rule>
-					<se:Name>60204051822</se:Name>
+					<se:Name>60204052022</se:Name>
 					<se:Description>
 						<se:Title>Газорегуляторный пункт планируемый к размещению регионального значения</se:Title>
 					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
-							<ogc:Literal>60204051822</ogc:Literal>
+							<ogc:Literal>60204052022</ogc:Literal>
 						</ogc:PropertyIsEqualTo>
 					</ogc:Filter>
 					<se:PointSymbolizer>
@@ -4484,14 +4419,14 @@ xmlns:se="http://www.opengis.net/se">
 					</se:PointSymbolizer>
 				</se:Rule>
 				<se:Rule>
-					<se:Name>60204051823</se:Name>
+					<se:Name>60204052023</se:Name>
 					<se:Description>
 						<se:Title>Газорегуляторный пункт планируемый к реконструкции регионального значения</se:Title>
 					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
-							<ogc:Literal>60204051823</ogc:Literal>
+							<ogc:Literal>60204052023</ogc:Literal>
 						</ogc:PropertyIsEqualTo>
 					</ogc:Filter>
 					<se:PointSymbolizer>
@@ -4505,14 +4440,14 @@ xmlns:se="http://www.opengis.net/se">
 					</se:PointSymbolizer>
 				</se:Rule>
 				<se:Rule>
-					<se:Name>60204051824</se:Name>
+					<se:Name>60204052024</se:Name>
 					<se:Description>
 						<se:Title>Газорегуляторный пункт планируемый к ликвидации регионального значения</se:Title>
 					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
-							<ogc:Literal>60204051824</ogc:Literal>
+							<ogc:Literal>60204052024</ogc:Literal>
 						</ogc:PropertyIsEqualTo>
 					</ogc:Filter>
 					<se:PointSymbolizer>
@@ -4526,14 +4461,14 @@ xmlns:se="http://www.opengis.net/se">
 					</se:PointSymbolizer>
 				</se:Rule>
 				<se:Rule>
-					<se:Name>60204051831</se:Name>
+					<se:Name>60204052031</se:Name>
 					<se:Description>
 						<se:Title>Газорегуляторный пункт существующий местного значения</se:Title>
 					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
-							<ogc:Literal>60204051831</ogc:Literal>
+							<ogc:Literal>60204052031</ogc:Literal>
 						</ogc:PropertyIsEqualTo>
 					</ogc:Filter>
 					<se:PointSymbolizer>
@@ -4547,14 +4482,14 @@ xmlns:se="http://www.opengis.net/se">
 					</se:PointSymbolizer>
 				</se:Rule>
 				<se:Rule>
-					<se:Name>60204051832</se:Name>
+					<se:Name>60204052032</se:Name>
 					<se:Description>
 						<se:Title>Газорегуляторный пункт планируемый к размещению местного значения</se:Title>
 					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
-							<ogc:Literal>60204051832</ogc:Literal>
+							<ogc:Literal>60204052032</ogc:Literal>
 						</ogc:PropertyIsEqualTo>
 					</ogc:Filter>
 					<se:PointSymbolizer>
@@ -4568,14 +4503,14 @@ xmlns:se="http://www.opengis.net/se">
 					</se:PointSymbolizer>
 				</se:Rule>
 				<se:Rule>
-					<se:Name>60204051833</se:Name>
+					<se:Name>60204052033</se:Name>
 					<se:Description>
 						<se:Title>Газорегуляторный пункт планируемый к реконструкции местного значения</se:Title>
 					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
-							<ogc:Literal>60204051833</ogc:Literal>
+							<ogc:Literal>60204052033</ogc:Literal>
 						</ogc:PropertyIsEqualTo>
 					</ogc:Filter>
 					<se:PointSymbolizer>
@@ -4589,14 +4524,14 @@ xmlns:se="http://www.opengis.net/se">
 					</se:PointSymbolizer>
 				</se:Rule>
 				<se:Rule>
-					<se:Name>60204051834</se:Name>
+					<se:Name>60204052034</se:Name>
 					<se:Description>
 						<se:Title>Газорегуляторный пункт планируемый к ликвидации местного значения</se:Title>
 					</se:Description>
 					<ogc:Filter xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
-							<ogc:Literal>60204051834</ogc:Literal>
+							<ogc:Literal>60204052034</ogc:Literal>
 						</ogc:PropertyIsEqualTo>
 					</ogc:Filter>
 					<se:PointSymbolizer>
@@ -4662,43 +4597,6 @@ xmlns:se="http://www.opengis.net/se">
 						</se:Graphic>
 					</se:PointSymbolizer>
 				</se:Rule>
-				<se:Rule>
-          <se:Description>
-            <se:Title>планируемый к размещению</se:Title>
-          </se:Description>
-          <ogc:Filter>
-            <ogc:PropertyIsLike  wildCard="*" singleChar="." escapeChar="!">
-            <ogc:PropertyName>ruleid</ogc:PropertyName>
-            <ogc:Literal>*2</ogc:Literal>
-            </ogc:PropertyIsLike>
-          </ogc:Filter>
-          <se:LineSymbolizer>
-            <se:Stroke>
-              <se:SvgParameter name="stroke">#808080</se:SvgParameter>
-              <se:SvgParameter name="stroke-width">1.1</se:SvgParameter>
-              <se:SvgParameter name="stroke-dasharray">15 7.5</se:SvgParameter>
-            </se:Stroke>
-          </se:LineSymbolizer>
-        </se:Rule>
-        <se:Rule>
-          <se:Description>
-            <se:Title>Иной объект</se:Title>
-          </se:Description>
-          <ogc:Filter>
-            <ogc:Not>
-            <ogc:PropertyIsLike  wildCard="*" singleChar="." escapeChar="!">
-            <ogc:PropertyName>ruleid</ogc:PropertyName>
-            <ogc:Literal>*2</ogc:Literal>
-            </ogc:PropertyIsLike>
-            </ogc:Not>
-          </ogc:Filter>
-          <se:LineSymbolizer>
-            <se:Stroke>
-              <se:SvgParameter name="stroke">#808080</se:SvgParameter>
-              <se:SvgParameter name="stroke-width">1.1</se:SvgParameter>
-            </se:Stroke>
-          </se:LineSymbolizer>
-        </se:Rule>
 			</se:FeatureTypeStyle>
 		</UserStyle>
 	</NamedLayer>

@@ -8,7 +8,7 @@
 	<NamedLayer>
 		<se:Name>Трубопроводы жидких углеводородов</se:Name>
 		<UserStyle>
-			<se:Name>OilPipeline_123</se:Name>
+			<se:Name>oilpipeline_line_698</se:Name>
 			<se:FeatureTypeStyle>
 				<se:Rule>
 					<se:Name>60204080101</se:Name>

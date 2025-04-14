@@ -8,7 +8,7 @@
 	<NamedLayer>
 		<se:Name>Магистральные трубопроводы для транспортировки жидких и газообразных углеводородов</se:Name>
 		<UserStyle>
-			<se:Name>Pipeline_123</se:Name>
+			<se:Name>pipeline_line_698</se:Name>
 			<se:FeatureTypeStyle>
 				<se:Rule>
 					<se:Name>60204040101</se:Name>
