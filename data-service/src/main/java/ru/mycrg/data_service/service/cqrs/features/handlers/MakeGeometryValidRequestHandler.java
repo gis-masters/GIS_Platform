@@ -1,10 +1,15 @@
 package ru.mycrg.data_service.service.cqrs.features.handlers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.stereotype.Component;
+
+import java.util.Map;
+import java.util.Set;
+
 import ru.mycrg.data_service.dao.SpatialRecordsDao;
+import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
 import ru.mycrg.data_service.exceptions.BadRequestException;
-import ru.mycrg.data_service.exceptions.ErrorInfo;
 import ru.mycrg.data_service.service.cqrs.features.requests.MakeGeometryValidRequest;
 import ru.mycrg.data_service.util.JsonConverter;
 import ru.mycrg.geo_json.Feature;
@@ -14,6 +19,20 @@ import ru.mycrg.mediator.IRequestHandler;
 @Component
 public class MakeGeometryValidRequestHandler implements IRequestHandler<MakeGeometryValidRequest, Feature> {
 
+    private static final Map<String, Integer> SUPPORTED_GEOMETRY_TYPES = Map.of(
+            "MultiPoint", 1,
+            "Point", 1,
+            "MultiLineString", 2,
+            "LineString", 2,
+            "MultiPolygon", 3,
+            "Polygon", 3
+    );
+
+    private static final Set<String> SIMPLE_GEOMETRY_SET = Set.of(
+            "Point",
+            "LineString",
+            "Polygon");
+
     private final SpatialRecordsDao spatialRecordsDao;
 
     public MakeGeometryValidRequestHandler(SpatialRecordsDao spatialRecordsDao) {
@@ -22,32 +41,75 @@ public class MakeGeometryValidRequestHandler implements IRequestHandler<MakeGeom
 
     @Override
     public Feature handle(MakeGeometryValidRequest request) {
-        Feature feature = request.getFeature();
-
-        if (feature == null) {
-            throw new BadRequestException("Feature не может быть пустой");
-        }
-
-        if (feature.getGeometry() == null) {
-            throw new BadRequestException("Geometry не может быть пустой");
+        Feature incomeFeature = request.getFeature();
+        if (incomeFeature == null || incomeFeature.getGeometry() == null) {
+            throw new BadRequestException("Feature или Geometry не могут быть пустыми");
         }
 
         try {
-            String geometryJson = JsonConverter.getJsonString(feature.getGeometry());
-            String validGeometryJson = spatialRecordsDao.makeValidGeometry(geometryJson);
+            JsonNode incomeGeometryNode = parseGeometryToNode(incomeFeature.getGeometry());
+            validateCoordinates(incomeGeometryNode.get("coordinates"), "Coordinates не могут быть пустыми");
 
-            if (validGeometryJson != null) {
-                JsonConverter.fromJson(validGeometryJson, GeoJsonObject.class)
-                             .ifPresent(feature::setGeometry);
+            String incomeGeometryJson = JsonConverter.getJsonString(incomeFeature.getGeometry());
+            String validGeometryJson = spatialRecordsDao.makeValidGeometry(incomeGeometryJson);
+
+            Feature validFeature = new Feature();
+            setGeometryToFeature(validGeometryJson, validFeature);
+
+            String incomeGeometryType = incomeGeometryNode.get("type").asText();
+            String validGeometryType = JsonConverter.toJsonNodeFromString(validGeometryJson).get("type").asText();
+
+            if (!incomeGeometryType.equalsIgnoreCase(validGeometryType)) {
+                forceValidGeomToIncome(incomeGeometryType, validGeometryJson, validFeature);
             }
 
-            return feature;
+            return validFeature;
         } catch (JsonProcessingException e) {
-            ErrorInfo errorInfo = new ErrorInfo("geometry", "Ошибка при обработке JSON геометрии: " + e.getMessage());
-            throw new BadRequestException("Ошибка обработки json", errorInfo);
+            throw new BadRequestException("Ошибка при обработке JSON геометрии: " + e.getMessage());
+        } catch (CrgDaoException e) {
+            throw new BadRequestException("Ошибка при приведении геометрии: " + e.getMessage());
         } catch (Exception e) {
-            ErrorInfo errorInfo = new ErrorInfo("geometry", "Неожиданная ошибка: " + e.getMessage());
-            throw new BadRequestException("Ошибка: ", errorInfo);
+            throw new BadRequestException("Неожиданная ошибка: " + e.getMessage());
+        }
+    }
+
+    private void forceValidGeomToIncome(String incomeGeometryType, String validGeometryJson, Feature validFeature)
+            throws CrgDaoException, JsonProcessingException {
+        Integer incomeGeometryCode = SUPPORTED_GEOMETRY_TYPES.get(incomeGeometryType);
+        if (incomeGeometryCode == null) {
+            throw new BadRequestException("Неподдерживаемый тип геометрии: " + incomeGeometryType);
+        }
+
+        String formattedValidGeometry = spatialRecordsDao.makeGeometryOptionType(
+                validGeometryJson,
+                incomeGeometryCode,
+                SIMPLE_GEOMETRY_SET.contains(incomeGeometryType)
+        );
+        if (formattedValidGeometry == null) {
+            throw new BadRequestException("Не получилось привести объект к геометрии слоя.");
+        }
+
+        setGeometryToFeature(formattedValidGeometry, validFeature);
+
+        JsonNode validGeometryNode = parseGeometryToNode(validFeature.getGeometry());
+        validateCoordinates(validGeometryNode.get("coordinates"),
+                            "Не удалось привести геометрию к требуемому типу!");
+    }
+
+    private void validateCoordinates(JsonNode coordinatesNode, String message) {
+        if (coordinatesNode == null || !coordinatesNode.isArray() || coordinatesNode.size() == 0) {
+            throw new BadRequestException(message);
+        }
+    }
+
+    private JsonNode parseGeometryToNode(GeoJsonObject geometry) throws JsonProcessingException {
+        return JsonConverter.toJsonNodeFromString(JsonConverter.getJsonString(geometry));
+    }
+
+    private void setGeometryToFeature(String geometryJson, Feature feature) {
+        if (geometryJson != null) {
+            JsonConverter.fromJson(geometryJson, GeoJsonObject.class)
+                         .ifPresent(feature::setGeometry);
         }
     }
 }

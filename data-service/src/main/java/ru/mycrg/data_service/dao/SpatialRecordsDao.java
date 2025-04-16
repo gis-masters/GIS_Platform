@@ -96,7 +96,7 @@ public class SpatialRecordsDao {
             String query = format("SELECT * FROM %s WHERE %s IN (%s)",
                                   qualifier.getTableQualifier(), fieldId, join(ids));
 
-            log.debug("find feature by id: [{}]", query);
+            log.debug("find feature by id's: [{}]", query);
 
             return pJdbcTemplate.query(query,
                                        new MapSqlParameterSource(fieldId, join(ids)),
@@ -294,5 +294,58 @@ public class SpatialRecordsDao {
                 new MapSqlParameterSource("geometry", geometryJson),
                 String.class
         );
+    }
+
+    /**
+     * Преобразует геометрию в формате GeoJSON к заданному типу.
+     * <p>
+     * В зависимости от флага {@code isSimpleGeometry}:
+     * <ul>
+     *     <li>true — извлекается первый объект нужного типа из коллекции;</li>
+     *     <li>false — формируется мульти-геометрия из всех подходящих объектов.</li>
+     * </ul>
+     * Может вернуть пустую геометрию, например когда дали полигон и просят вернуть точку.
+     * Может вернуть пустоту.
+     *
+     * @param geometryJson     входная геометрия в формате GeoJSON
+     * @param geometryType     тип геометрии (например, 1 — Multi/Point, 2 — Multi/LineString, 3 — Multi/Polygon)
+     * @param isSimpleGeometry нужно ли возвращать простую геометрию (true) или мульти-объект (false)
+     */
+    public String makeGeometryOptionType(String geometryJson, Integer geometryType, Boolean isSimpleGeometry)
+            throws CrgDaoException {
+        String query;
+        if (isSimpleGeometry) {
+            query = "SELECT public.ST_AsGeoJSON(" +
+                    "    public.ST_GeometryN(" +
+                    "        public.ST_CollectionExtract(" +
+                    "            public.ST_GeomFromGeoJSON(:geometry), :geometryType" +
+                    "        ), 1" +
+                    "    )" +
+                    ") AS geometry";
+        } else {
+            query = "SELECT public.ST_AsGeoJSON(" +
+                    "    public.ST_Multi(" +
+                    "        public.ST_Union(" +
+                    "            public.ST_CollectionExtract(" +
+                    "                public.ST_GeomFromGeoJSON(:geometry), :geometryType" +
+                    "            )" +
+                    "        )" +
+                    "    )" +
+                    ") AS geometry";
+        }
+
+        try {
+            return pJdbcTemplate.queryForObject(
+                    query,
+                    new MapSqlParameterSource()
+                            .addValue("geometry", geometryJson)
+                            .addValue("geometryType", geometryType),
+                    String.class);
+        } catch (Exception e) {
+            String msg = "Не удалось выполнить запрос преобразования геометрии";
+            logError(msg, e);
+
+            throw new CrgDaoException(msg, e.getCause());
+        }
     }
 }
