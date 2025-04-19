@@ -59,7 +59,7 @@ const testUsers: Record<
     firstName: 'Harry',
     middleName: 'James',
     lastName: 'Potter',
-    email: 'harry@owner',
+    email: 'harry@owner.ru',
     job: 'Владелец',
     department: 'Ravenclaw',
     password: 'Avadakedavra2',
