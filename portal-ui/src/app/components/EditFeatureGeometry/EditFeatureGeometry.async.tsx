@@ -111,13 +111,13 @@ export default class EditFeatureGeometry extends Component<EditFeatureGeometryPr
     const coordinates =
       modifiedGeometry instanceof SimpleGeometry
         ? transformGeometry(
-            {
-              type: geometryType,
-              coordinates: modifiedGeometry.getCoordinates() || []
-            },
-            projectionsStore.olProjection,
-            nativeProjection
-          )?.coordinates
+          {
+            type: geometryType,
+            coordinates: modifiedGeometry.getCoordinates() || []
+          },
+          projectionsStore.olProjection,
+          nativeProjection
+        )?.coordinates
         : geometry?.coordinates;
 
     setGeometry({ ...geometry, coordinates } as WfsGeometry);
@@ -131,12 +131,16 @@ export default class EditFeatureGeometry extends Component<EditFeatureGeometryPr
 
     const { layer } = editFeatureStore.editFeaturesData;
 
-    const { nativeBoundingBox } =
+    const featureType =
       layer.type === CrgLayerType.VECTOR || isVectorFromFile(layer.type)
-        ? await recalculateBboxAndGetFeatureType(layer as CrgVectorLayer)
+        ? await recalculateBboxAndGetFeatureType(layer as CrgVectorLayer, true)
         : await recalculateBboxAndGetCoverage(layer);
 
-    const { minx, miny, maxx, maxy, crs } = nativeBoundingBox;
+    if (!featureType?.nativeBoundingBox) {
+      return;
+    }
+
+    const { minx, miny, maxx, maxy, crs } = featureType.nativeBoundingBox;
     const crsStringValue = typeof crs === 'string' ? crs : crs.$;
 
     let polygonCoordinates = [

@@ -1,3 +1,5 @@
+import { debounce } from 'lodash';
+
 import { Toast } from '../../../components/Toast/Toast';
 import { CrgLayer } from '../../gis/layers/layers.models';
 import { featureTypeClient } from './featureType.client';
@@ -38,12 +40,25 @@ export async function deleteFeatureTypeFromScratchDatastore(
   }
 }
 
-export async function recalculateBboxAndGetFeatureType(layer: CrgLayer): Promise<FeatureType> {
+export async function recalculateBboxAndGetFeatureType(
+  layer: CrgLayer,
+  withoutMessage?: boolean
+): Promise<FeatureType | undefined> {
   try {
     await featureTypeClient.recalculateBbox(layer);
 
     return await featureTypeClient.getFeatureType(layer);
-  } catch (error) {
-    throw new Error(`Не удалось пересчитать bbox для слоя "${layer.title}": ${String(error)}`);
+  } catch {
+    if (!withoutMessage) {
+      const showWarning = debounce(() => {
+        Toast.warn({
+          message: `Не удалось пересчитать bbox для слоя "${layer.title}"`
+        });
+      }, 1000);
+
+      showWarning();
+    }
+
+    return;
   }
 }

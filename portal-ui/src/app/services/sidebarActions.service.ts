@@ -13,10 +13,16 @@ import { transform } from './util/coordinates-transform.util';
 
 export async function focusToLayer(layer: CrgLayer): Promise<void> {
   try {
-    const { latLonBoundingBox } =
+    const featureType =
       layer.type === CrgLayerType.VECTOR || isVectorFromFile(layer.type)
         ? await recalculateBboxAndGetFeatureType(layer as CrgVectorLayer)
         : await recalculateBboxAndGetCoverage(layer);
+
+    if (!featureType?.latLonBoundingBox) {
+      return;
+    }
+
+    const { latLonBoundingBox } = featureType;
 
     // не переходим к слою если хотя бы одна из координат = 0, что бы не улетать неизвестно куда
     if (!latLonBoundingBox.minx || !latLonBoundingBox.maxx || !latLonBoundingBox.miny || !latLonBoundingBox.maxy) {
