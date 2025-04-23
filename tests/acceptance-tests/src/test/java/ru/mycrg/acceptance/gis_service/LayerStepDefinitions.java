@@ -517,6 +517,21 @@ public class LayerStepDefinitions extends BaseStepsDefinitions {
         assertTrue(parameters.contains("#000000"));
     }
 
+    @When("Пользователь пытается выгрузить ESRI Shape-файл текущего слоя")
+    public void exportShpOfCurrentLayer() {
+        String exportEndpoint = "http://localhost/gis/export/shape";
+
+        response = super.getBaseRequestWithCurrentCookie()
+                        .basePath("")
+                .given().
+                    queryParam("typeName", layerComplexName).
+                    queryParam("srsName", "EPSG:28406").
+                    urlEncodingEnabled(true).
+                    queryParam("layerTitle", layerCreateDto.getTitle())
+                .when().
+                    get(exportEndpoint);
+    }
+
     private void getCurrentLayerFromGeoserver(String workspace, String coveragestore, String coverage) {
         response = getBaseRequestWithCurrentCookie()
                        .basePath("geoserver/rest")

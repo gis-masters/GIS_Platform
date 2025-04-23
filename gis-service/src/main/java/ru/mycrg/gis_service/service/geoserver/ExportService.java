@@ -23,9 +23,11 @@ public class ExportService {
 
     private final Logger log = LoggerFactory.getLogger(ExportService.class);
     private final IAuthenticationFacade authenticationFacade;
+    private final DbfDateConverterService dbfDateConverterService;
 
-    public ExportService(IAuthenticationFacade authenticationFacade) {
+    public ExportService(IAuthenticationFacade authenticationFacade, DbfDateConverterService dbfDateConverterService) {
         this.authenticationFacade = authenticationFacade;
+        this.dbfDateConverterService = dbfDateConverterService;
     }
 
     public byte[] getShapeFile(ComplexName complexName, String srsName, String layerTitle, String charset) {
@@ -36,9 +38,12 @@ public class ExportService {
             log.debug("Original data size: {} bytes", originalData.length);
 
             byte[] dataWithCpg = convertCstToCpg(originalData);
+            log.debug("Конвертируем DBF файл для корректной кодировки");
+
+            byte[] dataWithFixedDbf = fixDbfInZip(dataWithCpg, charset);
             log.debug("Переименовываем: {} на {}", complexName.getLayerName(), layerTitle);
 
-            return renameFilesInZip(dataWithCpg, layerTitle);
+            return renameFilesInZip(dataWithFixedDbf, layerTitle);
         } catch (GeoserverClientException e) {
             log.error("Ошибка в присланном запросе: ", e);
 
@@ -213,5 +218,63 @@ public class ExportService {
         }
 
         return suffix;
+    }
+
+    /**
+     * Исправляет кодировку DBF файла в ZIP архиве, конвертируя поля TIMESTAMP_DBASE7 в DATE.
+     *
+     * @param zipData байтовый массив, содержащий ZIP архив с файлами ShapeFile
+     * @param charset кодировка для чтения/записи DBF файла
+     *
+     * @return байтовый массив с обработанным ZIP архивом
+     */
+    private byte[] fixDbfInZip(byte[] zipData, String charset) {
+        if (zipData == null || zipData.length == 0) {
+            throw new ShapeFileProcessingException("Получены пустые данные для обработки");
+        }
+
+        try (ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(zipData);
+             ZipInputStream zipInputStream = new ZipInputStream(byteArrayInputStream)) {
+
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            try (ZipOutputStream zipOutputStream = new ZipOutputStream(byteArrayOutputStream)) {
+                ZipEntry entry;
+                while ((entry = zipInputStream.getNextEntry()) != null) {
+                    // Читаем содержимое текущего файла
+                    ByteArrayOutputStream entryContent = new ByteArrayOutputStream();
+                    byte[] buffer = new byte[1024];
+                    int len;
+                    while ((len = zipInputStream.read(buffer)) > 0) {
+                        entryContent.write(buffer, 0, len);
+                    }
+
+                    byte[] fileData = entryContent.toByteArray();
+
+                    // Если это DBF файл, конвертируем его
+                    if (entry.getName().toLowerCase().endsWith(".dbf")) {
+                        log.debug("Обрабатываем DBF файл: {}", entry.getName());
+                        fileData = dbfDateConverterService.convertTimestampToDateField(fileData, charset);
+                    }
+
+                    // Создаем новую запись с тем же именем
+                    ZipEntry newEntry = new ZipEntry(entry.getName());
+                    zipOutputStream.putNextEntry(newEntry);
+                    zipOutputStream.write(fileData);
+                    zipOutputStream.closeEntry();
+                }
+                zipOutputStream.finish();
+            }
+
+            return byteArrayOutputStream.toByteArray();
+        } catch (ZipException e) {
+            log.error("Ошибка при работе с ZIP архивом: ", e);
+            throw new ShapeFileProcessingException("ZIP архив поврежден или имеет неверный формат: " + e.getMessage());
+        } catch (OutOfMemoryError e) {
+            log.error("Недостаточно памяти для обработки файла: ", e);
+            throw new ShapeFileProcessingException("Недостаточно памяти для обработки файла: " + e.getMessage());
+        } catch (IOException e) {
+            log.error("Ошибка при обработке файла: ", e);
+            throw new ShapeFileProcessingException("Ошибка при обработке потока данных: " + e.getMessage());
+        }
     }
 }
