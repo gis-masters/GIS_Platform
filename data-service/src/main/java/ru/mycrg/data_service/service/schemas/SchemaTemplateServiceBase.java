@@ -15,13 +15,12 @@ import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
+import static ru.mycrg.data_service.service.schemas.SchemaUtil.SYSTEM_TAG_NAME;
 import static ru.mycrg.data_service.service.schemas.SchemaUtil.enrichPropsBySystemAttributes;
 import static ru.mycrg.data_service_contract.enums.ValueType.URL;
 
 @Service
 public class SchemaTemplateServiceBase implements ISchemaTemplateService {
-
-    private final static String SYSTEM_TAG_NAME = "system";
 
     private final SchemaTemplateRepository schemaRepository;
 

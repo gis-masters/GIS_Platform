@@ -4,12 +4,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
+import ru.mycrg.data_service_contract.dto.SchemaDto;
+import ru.mycrg.data_service.util.JsonConverter;
 
 import javax.validation.constraints.NotNull;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collections;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -44,6 +47,36 @@ public class SpecializationManager {
                          .collect(Collectors.toSet());
         } catch (IOException e) {
             log.error("Не удалось получить скрипты из каталога: {}", resultPath.toUri(), e);
+
+            return Collections.emptySet();
+        }
+    }
+
+    @NotNull
+    public Set<SchemaDto> getSchemas(Integer specializationId) {
+        Path schemaPath = Path.of(specializationsRootPath.toString(),
+                                  specializationId.toString(),
+                                  "schemas");
+
+        log.debug("Путь считывания схем: {}", schemaPath);
+
+        try (Stream<Path> stream = Files.list(schemaPath)) {
+            return stream.filter(Files::isRegularFile)
+                         .map(file -> {
+                             try {
+                                 String jsonContent = Files.readString(file);
+
+                                 return JsonConverter.fromJson(jsonContent, SchemaDto.class).orElse(null);
+                             } catch (IOException e) {
+                                 log.error("Не удалось прочитать схему из файла: {}", file.toUri(), e);
+
+                                 return null;
+                             }
+                         })
+                         .filter(Objects::nonNull)
+                         .collect(Collectors.toSet());
+        } catch (IOException e) {
+            log.error("Не удалось получить схемы из каталога: {}", schemaPath.toUri(), e);
 
             return Collections.emptySet();
         }

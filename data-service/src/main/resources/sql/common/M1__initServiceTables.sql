@@ -342,35 +342,6 @@ SELECT 'Реестр исходящих',
        'migration'
 WHERE NOT EXISTS(SELECT id FROM data.reestrs WHERE table_name = 'reestr_outgoing');
 
--- TASKS
--- Common
--- Таблица должна соответствовать схеме: tasks_schema_v1 -> tasks.sql
-CREATE TABLE IF NOT EXISTS data.tasks
-(
-    id                               bigserial NOT NULL,
-    type                             character varying(30),
-    content_type_id                  character varying(50),
-    status                           character varying(30),
-    intermediate_status              character varying(30),
-    description                      character varying,
-    assigned_to                      bigint,
-    owner_id                         bigint,
-    due_date                         timestamp without time zone,
-    guid                             uuid,
-    record_status                    character varying,
-    number                           INT,
-    inbox_data_key_data_connection   character varying,
-    data_section_key_data_connection character varying,
-    attachments                      jsonb,
-    created_by                       bigint,
-    updated_by                       bigint,
-    date                             timestamp without time zone,
-    created_at                       timestamp without time zone DEFAULT now(),
-    last_modified                    timestamp without time zone DEFAULT now(),
-    CONSTRAINT tasks_id_pkey PRIMARY KEY (id)
-) TABLESPACE pg_default;
-ALTER TABLE data.tasks
-    OWNER to fiz;
 
 -- Task log
 CREATE TABLE IF NOT EXISTS data.tasks_log
@@ -380,10 +351,7 @@ CREATE TABLE IF NOT EXISTS data.tasks_log
     event_type character varying NOT NULL,
     message    jsonb,
     created_at timestamp without time zone DEFAULT now(),
-    CONSTRAINT tasks_log_id_pkey PRIMARY KEY (id),
-    CONSTRAINT fkjm34ygwboc77dpgpbfageb3k FOREIGN KEY (task_id)
-        REFERENCES data.tasks (id) MATCH SIMPLE
-        ON UPDATE NO ACTION
+    CONSTRAINT tasks_log_id_pkey PRIMARY KEY (id)
 ) TABLESPACE pg_default;
 ALTER TABLE data.tasks_log
     OWNER to fiz;

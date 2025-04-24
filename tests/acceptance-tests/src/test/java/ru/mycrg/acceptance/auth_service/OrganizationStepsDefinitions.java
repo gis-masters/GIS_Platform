@@ -14,6 +14,7 @@ import ru.mycrg.acceptance.auth_service.dto.OrganizationBase;
 import ru.mycrg.acceptance.data_service.datasets.DatasetsStepsDefinitions;
 import ru.mycrg.acceptance.data_service.features.FeaturesStepsDefinitions;
 import ru.mycrg.acceptance.data_service.libraries.LibraryBaseRecords;
+import ru.mycrg.acceptance.data_service.schemas.SchemasStepsDefinitions;
 import ru.mycrg.acceptance.data_service.tables.TablesStepsDefinitions;
 import ru.mycrg.acceptance.data_service.tasks.TaskStepDefinition;
 import ru.mycrg.acceptance.gis_service.LayerStepDefinitions;
@@ -62,6 +63,7 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
     private final ProjectStepsDefinitions projectStepsDefinitions = new ProjectStepsDefinitions();
     private final DatasetsStepsDefinitions datasetsStepsDefinitions = new DatasetsStepsDefinitions();
     private final GeoserverStepDefinitions geoserverStepDefinitions = new GeoserverStepDefinitions();
+    private final SchemasStepsDefinitions schemasSteps = new SchemasStepsDefinitions();
 
     @When("Отправляется запрос на создание организации")
     public void sendCreateOrganizationRequest(DataTable dataTable) {
@@ -70,7 +72,9 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
 
         String password = DEFAULT_TEST_PASSWORD;
         if (data.size() > 5 && data.get(5) != null) {
-            password = generateString(data.get(5));
+            if (!data.get(5).equalsIgnoreCase("DEFAULT_TEST_PASSWORD")) {
+                password = generateString(data.get(5));
+            }
         }
 
         UserCreateDto owner = new UserCreateDto(generateString(data.get(2)), generateString(data.get(3)),
@@ -334,6 +338,7 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
             org1.add("Задач");
             org1.add("EMAIL_11");
             org1.add(DEFAULT_TEST_PASSWORD);
+            org1.add("1");
 
             List<List<String>> orgData = new ArrayList<>();
             orgData.add(org1);
@@ -361,6 +366,7 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
             org1.add("Владелец");
             org1.add("EMAIL_11");
             org1.add(DEFAULT_TEST_PASSWORD);
+            org1.add("1");
 
             List<List<String>> orgData = new ArrayList<>();
             orgData.add(org1);
@@ -621,6 +627,29 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
         assertEquals("Тестовое название первой таблицы", layerJsonPath.get("title[0]"));
         assertEquals("EPSG:7829", layerJsonPath.get("nativeCRS[0]"));
         assertEquals("zu_pro", layerJsonPath.get("styleName[0]"));
+    }
+
+    @When("Согласно специализации созданы: схема задач и таблица задач")
+    public void checkTasksInSpecialization1() {
+        // Получаем схему tasks_schema_v1
+        schemasSteps.getCurrentSchema("tasks_schema_v1");
+
+        // Проверяем статус ответа
+        assertEquals(SC_OK, response.getStatusCode());
+
+        // Проверяем содержимое ответа
+        JsonPath jsonPath = response.jsonPath();
+        List<Map<String, Object>> schemas = jsonPath.getList("$");
+
+        // Проверяем что получили ровно одну схему
+        assertEquals(1, schemas.size());
+
+        Map<String, Object> schema = schemas.get(0);
+        // Проверяем title схемы
+        assertEquals("Схема задач специализации 1", schema.get("title"));
+
+        // Проверяем таблицу задач
+        taskStepDefinition.getAllTasks();
     }
 
     @When("Пользователь делает запрос на все организации")

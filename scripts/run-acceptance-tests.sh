@@ -11,10 +11,11 @@ pushd ../
                    -Dconfig.file=../../.env \
                    -Dcucumber.filter.tags="@OnlyThis"
   elif [[ -z "$1" ]]; then
-    printHeader2 "Run ALL acceptance tests"
+    printHeader2 "Run ALL acceptance tests (except @Smev)"
 
     mvn clean test -DskipAcceptanceTests=false \
-                   -Dconfig.file=../../.env
+                   -Dconfig.file=../../.env \
+                   -Dcucumber.filter.tags="not @Smev"
   else
     printHeader2 "Not acceptable parameter"
   fi

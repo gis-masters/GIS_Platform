@@ -17,6 +17,9 @@ sudo rm -rf /opt/data/geoserver
 printInfo "Clear database"
 sudo rm -rf /opt/data/postgis
 
+printInfo "Clear crg folder"
+sudo rm -rf /opt/crg
+
 printInfo "Clear file storage"
 sudo rm -rf /opt/file_storage/*
 

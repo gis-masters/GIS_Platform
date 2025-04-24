@@ -97,6 +97,10 @@ public class InitDocumentLibrariesBySpecializationDelegate implements JavaDelega
         }
     }
 
+    //код снизу не работает потому что "что удалять?" не передаётся
+    //решено искать причину почему dl_default вообще создаётся и прибираться в коде нормально
+    //так что всё что ниже по сути потом удалим
+    //задача 2115
     private void removeDlDefaultLibrary(String token) {
         Response response = null;
         try {

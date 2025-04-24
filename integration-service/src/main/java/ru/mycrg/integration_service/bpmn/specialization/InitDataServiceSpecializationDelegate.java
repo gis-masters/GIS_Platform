@@ -50,15 +50,21 @@ public class InitDataServiceSpecializationDelegate implements JavaDelegate {
         int currentIteration = (int) getVariable(execution, ITERATION_COUNTER_VAR_NAME, getClass().getName());
         log.error("Инициализация специализации на data-service, осталось попыток: [{}]", currentIteration);
 
+        String ownerToken;
+        Integer specializationId;
+
+        //1 - try создаёт наборы данных с таблицами и заполняет их данными
         try {
             OrganizationInitializedEvent event = objectMapper.readValue(
                     (String) getVariable(execution, EVENT_VAR_NAME, getClass().getName()),
                     OrganizationInitializedEvent.class);
 
+            ownerToken = event.getOwnerToken();
+            Specialization specialization = specializationManager.getSpecialization(event.getSpecializationId());
+            specializationId = specialization.getId();
+
             List<SpecializationLayerPublicationModel> publicationModels = new ArrayList<>();
 
-            String ownerToken = event.getOwnerToken();
-            Specialization specialization = specializationManager.getSpecialization(event.getSpecializationId());
             specialization.getDatasets()
                           .forEach(dataset -> {
                               String datasetIdentifier = createDataset(dataset, ownerToken);
@@ -82,6 +88,7 @@ public class InitDataServiceSpecializationDelegate implements JavaDelegate {
                           });
 
             log.info("Инициализация специализации: '{}' на data-service, успешно выполнена", specialization.getId());
+
             execution.setVariable(ITERATION_COUNTER_VAR_NAME, 3);
             execution.setVariable(SPECIALIZATION_LAYERS_FOR_PUBLICATION, publicationModels);
         } catch (Exception e) {
@@ -95,6 +102,49 @@ public class InitDataServiceSpecializationDelegate implements JavaDelegate {
                           e.getMessage(), e);
 
                 throw new BpmnError("initDataServiceSpecializationFailedTryOneMore");
+            }
+        }
+
+        //2 - try приносит в организацию схемы из папки schemas
+        try {
+            createSchemas(ownerToken, specializationId);
+            log.info("Созданы схемы данных");
+        } catch (Exception e) {
+            log.error("Не получилось принести кастомные схемы в специализацию => {}", e.getMessage());
+            throw new BpmnError("initDataServiceSpecializationFailedTryOneMore");
+        }
+
+        //3 - try создаст таблицу задач и привяжет внешний ключ к таблице лога
+        try {
+            createTaskTable(ownerToken);
+            log.info("Создание таблицы задач успешно выполнено");
+        } catch (Exception e) {
+            log.error("Не получилось создать таблицу задач => {}", e.getMessage());
+            throw new BpmnError("initDataServiceSpecializationFailedTryOneMore");
+        }
+    }
+
+    private void createSchemas(String token, Integer specId) {
+        Response response = null;
+        try {
+
+            Request request = new Request.Builder()
+                    .url(new URL(baseHttpService.getDataServiceUrl(), "/specializations/" + specId + "/schemasInit"))
+                    .addHeader("Authorization", "Bearer " + token)
+                    .post(RequestBody.create(JSON_MEDIA_TYPE, new byte[0]))
+                    .build();
+
+            response = httpClient.newCall(request).execute();
+            if (!response.isSuccessful()) {
+                log.warn("Не удалось принести схемы в специализацию.");
+
+                throw new IllegalStateException();
+            }
+        } catch (Exception e) {
+            throw new IllegalStateException("Не удалось принести схемы в специализацию => " + e.getMessage(), e);
+        } finally {
+            if (response != null) {
+                response.close();
             }
         }
     }
@@ -127,6 +177,30 @@ public class InitDataServiceSpecializationDelegate implements JavaDelegate {
         }
     }
 
+    private void createTaskTable(String token) {
+        Response response = null;
+        try {
+            Request request = new Request.Builder()
+                    .url(new URL(baseHttpService.getDataServiceUrl(), "/tasks/crateTable/tasks_schema_v1"))
+                    .addHeader("Authorization", "Bearer " + token)
+                    .post(RequestBody.create(JSON_MEDIA_TYPE, new byte[0]))
+                    .build();
+
+            response = httpClient.newCall(request).execute();
+            if (!response.isSuccessful()) {
+                log.warn("Не удалось создать таблицу задач по схеме");
+
+                throw new IllegalStateException();
+            }
+        } catch (Exception e) {
+            throw new IllegalStateException("Не удалось создать таблицу задач => " + e.getMessage(), e);
+        } finally {
+            if (response != null) {
+                response.close();
+            }
+        }
+    }
+
     private String establishTable(Integer specId,
                                   String datasetIdentifier,
                                   Table table,
@@ -151,7 +225,7 @@ public class InitDataServiceSpecializationDelegate implements JavaDelegate {
             String payload = objectMapper.writeValueAsString(tableContentModel);
 
             Request request = new Request.Builder()
-                    .url(new URL(baseHttpService.getDataServiceUrl(), "/specializations/" + specId))
+                    .url(new URL(baseHttpService.getDataServiceUrl(), "/specializations/" + specId + "/datasetsInit"))
                     .addHeader("Authorization", "Bearer " + token)
                     .post(RequestBody.create(JSON_MEDIA_TYPE, payload))
                     .build();

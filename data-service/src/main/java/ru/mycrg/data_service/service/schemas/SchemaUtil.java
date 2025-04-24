@@ -25,6 +25,8 @@ public class SchemaUtil {
 
     private static final Logger log = LoggerFactory.getLogger(SchemaUtil.class);
 
+    public static final String SYSTEM_TAG_NAME = "system";
+
     private static final List<ValueType> typesReadyForFts = List.of(STRING, DOCUMENT, CHOICE, FILE, FIAS, LOOKUP,
                                                                     UUID, USER, TEXT, URL);
 
@@ -170,7 +172,7 @@ public class SchemaUtil {
 
             schemaProperties.add(createdBy);
         }
-        
+
         if (!propertyNames.contains(CREATED_AT.getName())) {
             SimplePropertyDto createdAt = new SimplePropertyDto();
             createdAt.setName(CREATED_AT.getName());

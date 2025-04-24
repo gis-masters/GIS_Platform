@@ -136,6 +136,12 @@ public class SchemasStepsDefinitions extends BaseStepsDefinitions {
                         .contains(title));
     }
 
+    public void getCurrentSchema(String schemaName) {
+        response = getBaseRequestWithCurrentCookie()
+                .when().
+                        get("?schemaIds=" + schemaName);
+    }
+
     private void createSchemaWithRandomName() {
         SchemaDto schema = getSchemaTemplateByTitle(generateString("STRING_8"));
 
@@ -161,12 +167,6 @@ public class SchemasStepsDefinitions extends BaseStepsDefinitions {
                 .when().
                         log().all().
                         get("?schemaIds=");
-    }
-
-    private void getCurrentSchema(String schemaName) {
-        response = getBaseRequestWithCurrentCookie()
-                .when().
-                        get("?schemaIds=" + schemaName);
     }
 
     private void updateSchema(SchemaDto dto) {

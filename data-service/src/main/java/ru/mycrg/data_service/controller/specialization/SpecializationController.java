@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.mycrg.common_contracts.generated.specialization.TableContentModel;
 import ru.mycrg.data_service.service.cqrs.specialization.requests.GetSpecializationResourcesRequest;
 import ru.mycrg.data_service.service.cqrs.specialization.requests.InitSpecializationRequest;
+import ru.mycrg.data_service.service.cqrs.specialization.requests.InitSpecializationSchemaRequest;
 import ru.mycrg.mediator.Mediator;
 
 import java.util.Set;
@@ -32,11 +33,20 @@ public class SpecializationController {
     }
 
     @PreAuthorize(ORG_ADMIN_AUTHORITY)
-    @PostMapping("/specializations/{id}")
+    @PostMapping("/specializations/{id}/datasetsInit")
     public ResponseEntity<?> initSpecialization(@PathVariable Integer id,
                                                 @RequestBody TableContentModel tableContentModel) {
         mediator.execute(
                 new InitSpecializationRequest(id, tableContentModel));
+
+        return ResponseEntity.ok().build();
+    }
+
+    @PreAuthorize(ORG_ADMIN_AUTHORITY)
+    @PostMapping("/specializations/{id}/schemasInit")
+    public ResponseEntity<?> initSpecializationSchema(@PathVariable Integer id) {
+        mediator.execute(
+                new InitSpecializationSchemaRequest(id));
 
         return ResponseEntity.ok().build();
     }

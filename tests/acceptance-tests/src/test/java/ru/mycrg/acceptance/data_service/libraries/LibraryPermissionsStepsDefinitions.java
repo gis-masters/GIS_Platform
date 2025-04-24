@@ -54,6 +54,15 @@ public class LibraryPermissionsStepsDefinitions extends BaseStepsDefinitions {
                         get();
     }
 
+    @When("Владелец организации делает запрос на выборку библиотек")
+    public void ownerGetAllLibraries() {
+        authorizationBase.loginAsOwner();
+
+        response = getBaseRequestWithCurrentCookie()
+                .when().
+                        get();
+    }
+
     @When("Пользователь делает запрос на выборку библиотеки {string}")
     public void getLibrary(String libraryName) {
         response = getBaseRequestWithCurrentCookie()
@@ -497,7 +506,7 @@ public class LibraryPermissionsStepsDefinitions extends BaseStepsDefinitions {
     public void tryRemoveFolder1FromDefaultLibrary(String libraryName) {
         authorizationBase.loginAsCurrentUser();
 
-        baseRecords.deleteRecordFromDefaultLibrary(folder1Id, DEFAULT_LIBRARY);
+        baseRecords.deleteRecordFromDefaultLibrary(folder1Id, libraryName);
     }
 
     @When("Владелец организации устанавливает роль VIEWER для текущего пользователя, на файл file_1_1_1_2")

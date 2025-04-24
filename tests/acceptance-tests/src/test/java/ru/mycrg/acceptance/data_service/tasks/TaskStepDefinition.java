@@ -40,9 +40,12 @@ public class TaskStepDefinition extends BaseStepsDefinitions {
     @Given("Создана задача")
     public void createTaskForOrgOwner() {
         userStepsDefinitions.getCurrent();
+
         Integer ownerId = response.jsonPath().get("id");
 
         createTaskRequest(ownerId, ownerId, "CUSTOM", "test description");
+
+        assertEquals(201, response.getStatusCode());
     }
 
     @Given("Существуют задачи")
