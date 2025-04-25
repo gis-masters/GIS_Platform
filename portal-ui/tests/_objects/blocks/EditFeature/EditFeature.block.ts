@@ -29,7 +29,9 @@ class EditFeatureBlock extends Block {
   async clickSaveButton(): Promise<void> {
     const $saveNewObjectBtn = await this.$('editFeatureSaveBtn');
     await $saveNewObjectBtn.click();
+  }
 
+  async closeConfirmDialog(): Promise<void> {
     await konfirmierenBlock.closeDialog();
   }
 

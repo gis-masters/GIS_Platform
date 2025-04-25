@@ -54,6 +54,10 @@ When('в форме редактирования объекта я нажима�
   await editFeatureBlock.clickSaveButton();
 });
 
+When('в форме редактирования объекта я закрываю окно подтверждения сохранения', async function () {
+  await editFeatureBlock.closeConfirmDialog();
+});
+
 When('в вкладке просмотра геометрии я нажимаю кнопку `Координаты контура как текст`', async function () {
   await editFeatureBlock.clickGeometryAsTextButton();
 });
