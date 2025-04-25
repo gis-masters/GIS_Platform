@@ -8,7 +8,7 @@ COPY ./target/apm-agent.jar apm-agent.jar
 
 COPY ./target/gis-service.jar gis-service.jar
 
-HEALTHCHECK --interval=30s --timeout=10s --retries=6 --start-period=1m \
+HEALTHCHECK --interval=15s --timeout=3s --retries=3 --start-period=2m \
     CMD curl -f http://localhost:8082/actuator/health || exit 1
 
 ENTRYPOINT exec java -Xmx${XMX_SIZE} -javaagent:apm-agent.jar \

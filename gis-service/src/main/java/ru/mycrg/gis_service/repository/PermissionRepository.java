@@ -42,4 +42,6 @@ public interface PermissionRepository extends PagingAndSortingRepository<Permiss
             "AND p.project.id  = :projectId) ")
     Optional<String> getBestRoleForProject(@Param("allPrincipalIds") List<Long> allPrincipalIds,
                                            @Param("projectId") Long projectId);
+
+    void deleteAllByProjectIdIn(List<Long> projectIds);
 }

@@ -12,8 +12,7 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import ru.mycrg.common_contracts.generated.gis_service.project.ProjectCreateDto;
 import ru.mycrg.common_contracts.generated.gis_service.project.ProjectUpdateDto;
-import ru.mycrg.gis_service.dto.project.ProjectProjection;
-import ru.mycrg.gis_service.entity.Project;
+import ru.mycrg.gis_service.dto.project.ProjectProjectionImpl;
 import ru.mycrg.gis_service.exceptions.BadRequestException;
 import ru.mycrg.gis_service.security.OrgSettingsKeeper;
 import ru.mycrg.gis_service.service.projects.IProjectMover;
@@ -67,30 +66,30 @@ public class ProjectController {
     public ResponseEntity<?> getProjects(@RequestParam(required = false, defaultValue = "") String name,
                                          @RequestParam(required = false, name = "parent") Long parentFolderId,
                                          Pageable pageable) {
-        Page<ProjectProjection> projects = projectService.getPaged(parentFolderId, name, pageable);
+        Page<ProjectProjectionImpl> projects = projectService.getPaged(parentFolderId, name, pageable);
 
         return ResponseEntity.ok(pageFromList(projects, pageable));
     }
 
     @GetMapping("/{id}")
     @PreAuthorize(HAS_ANY_AUTHORITY)
-    public Resource<ProjectProjection> getItemById(@PathVariable Long id) {
-        ProjectProjection project = projectService.getProjectionById(id);
+    public Resource<ProjectProjectionImpl> getItemById(@PathVariable Long id) {
+        ProjectProjectionImpl project = projectService.getByIdWithRole(id);
 
         return new Resource<>(project);
     }
 
     @PostMapping
     @PreAuthorize(HAS_ANY_AUTHORITY)
-    public ResponseEntity<ProjectProjection> createItem(@Valid @RequestBody ProjectCreateDto projectDto,
-                                                        BindingResult bindingResult) {
+    public ResponseEntity<ProjectProjectionImpl> createItem(@Valid @RequestBody ProjectCreateDto projectDto,
+                                                            BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             throw new BadRequestException(bindingResult.getAllErrors().get(0).getDefaultMessage());
         }
 
         orgSettingsKeeper.throwIfCreateProjectNotAllowed();
 
-        ProjectProjection project = projectService.create(projectDto);
+        ProjectProjectionImpl project = projectService.create(projectDto);
 
         return new ResponseEntity<>(project, HttpStatus.CREATED);
     }
@@ -111,8 +110,9 @@ public class ProjectController {
 
     @DeleteMapping("/{itemId}")
     @PreAuthorize(HAS_ANY_AUTHORITY)
-    public ResponseEntity<?> deleteItem(@PathVariable Long itemId) {
-        projectService.delete(itemId);
+    public ResponseEntity<?> deleteItem(@PathVariable Long itemId,
+                                        @RequestParam(required = false) boolean forced) {
+        projectService.delete(itemId, forced);
 
         return ResponseEntity.noContent().build();
     }
@@ -125,7 +125,7 @@ public class ProjectController {
             return ResponseEntity.ok().build();
         }
 
-        Project movedItem = projectService.getById(movedItemId);
+        ProjectProjectionImpl movedItem = projectService.getByIdWithRole(movedItemId);
         if (movedItem.isFolder()) {
             projectFolderMover.move(movedItemId, targetFolderId == 0 ? null : targetFolderId);
         } else {

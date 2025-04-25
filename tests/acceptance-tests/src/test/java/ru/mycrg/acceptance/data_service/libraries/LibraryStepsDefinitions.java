@@ -1,6 +1,5 @@
 package ru.mycrg.acceptance.data_service.libraries;
 
-import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
@@ -11,7 +10,6 @@ import org.jetbrains.annotations.Nullable;
 import ru.mycrg.acceptance.auth_service.AuthorizationBase;
 import ru.mycrg.acceptance.auth_service.UserStepsDefinitions;
 import ru.mycrg.acceptance.data_service.TestFilesManager;
-import ru.mycrg.acceptance.auth_service.UserStepsDefinitions;
 import ru.mycrg.acceptance.data_service.datasets.DatasetsStepsDefinitions;
 import ru.mycrg.acceptance.data_service.dto.*;
 import ru.mycrg.acceptance.data_service.dto.schemas.SchemaDto;
@@ -212,7 +210,7 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
                                     generateString("STRING_10"), performerId, path);
         createDocumentAndWriteAsCurrent(body, targetLibrary);
 
-        sleep(800);
+        sleep(400);
 
         assertEquals(201, response.getStatusCode());
     }

@@ -131,8 +131,8 @@ public class CommonStepDefinitions extends BaseStepsDefinitions {
     }
 
     @Then("В ответе пункт {string} имеет значение {string}")
-    public void checkResponseValue(String field, String value) {
-        super.checkResponseValue(field, value);
+    public void checkResponseValue(String field, String expectedValue) {
+        super.checkResponseValue(field, expectedValue);
     }
 
     @When("сообщение об ошибке соответствует ожидаемому: {string}")

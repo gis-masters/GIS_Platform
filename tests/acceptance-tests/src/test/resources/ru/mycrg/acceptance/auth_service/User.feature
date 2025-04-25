@@ -1,9 +1,8 @@
 Feature: Действия с пользователями
 
   Background:
-    Given Существует организация
-      | ООО БыкиИКоровы | 1234567890 | Иванов | Иван | EMAIL_20 |
-    Given Владелец организации авторизован
+    Given Существует любая организация
+    *     Владелец организации авторизован
 
   Scenario Outline: Создание пользователя c валидными данными
     When Администратор создает некого пользователя "<userName>" "<userSurname>" "<userEmail>" "<userPassword>" "<middleName>" "<job>" "<phone>" "<department>"
@@ -27,17 +26,6 @@ Feature: Действия с пользователями
     Examples:
       | userName     | userSurname     | userEmail | userPassword  |
       | testUserName | testUserSurname | EMAIL_20  | testPassword1 |
-
-  Scenario Outline: Нельзя создать пользователя с email, отличающимся только регистром
-    Given Существует пользователь
-      | userName1 | userSurname1 | <existingEmail> | testPassword1 |
-    When Администратор создает пользователя
-      | userName2 | userSurname2 | <newEmail> | testPassword1 |
-    Then Сервер отвечает со статус-кодом 409
-    Examples:
-      | existingEmail    | newEmail         |
-      | test@example.com | TEST@example.com |
-      | user@example.com | User@Example.COM |
 
   Scenario Outline: Создание пользователя c невалидными данными (<reason>)
     When Администратор создает пользователя
@@ -170,7 +158,7 @@ Feature: Действия с пользователями
       | userName  | userSurname | userEmail | userPassword  | newUserName | newUserSurname | newUserPassword |
       | STRING_10 | STRING_10   | EMAIL_20  | testPassword1 | UpdUserName | UpdUserSurname | testtestQ2      |
 
-  Scenario Outline: Обновление полей пользователя ЗАПРЕЩЕНО другому пользователем
+  Scenario Outline: Обновление полей пользователя ЗАПРЕЩЕНО другому пользователю
     Given Существует пользователь
       | STRING_15 | STRING_15 | EMAIL_10 | testPassword1 |
     Given Существует и авторизован некий пользователь

@@ -12,13 +12,16 @@ import ru.mycrg.acceptance.data_service.TestFilesManager;
 import ru.mycrg.acceptance.data_service.dto.FileDescriptionModel;
 import ru.mycrg.auth_service_contract.dto.UserCreateDto;
 import ru.mycrg.data_service_contract.enums.TaskStatus;
+import ru.mycrg.data_service_contract.enums.TaskType;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 import static io.restassured.http.ContentType.JSON;
+import static java.lang.Thread.sleep;
+import static org.apache.http.HttpStatus.SC_NO_CONTENT;
 import static org.junit.Assert.assertEquals;
 import static ru.mycrg.acceptance.Config.PATCH_CONTENT_TYPE;
 import static ru.mycrg.data_service_contract.enums.TaskStatus.*;
@@ -37,6 +40,19 @@ public class TaskStepDefinition extends BaseStepsDefinitions {
                     .basePath("/api/data/tasks");
     }
 
+    @When("Согласно специализации 1 создана таблица задач")
+    public void checkTasksBySpecialization1() {
+        getAllTasks();
+    }
+
+    @Given("задачи актуализированы согласно шаблона {string}")
+    public void recreateTasks(String tasksTemplate) {
+        authorizationBase.loginAsOwner();
+
+        allTasksRemoved();
+        createTasksByTemplate(tasksTemplate);
+    }
+
     @Given("Создана задача")
     public void createTaskForOrgOwner() {
         userStepsDefinitions.getCurrent();
@@ -46,6 +62,13 @@ public class TaskStepDefinition extends BaseStepsDefinitions {
         createTaskRequest(ownerId, ownerId, "CUSTOM", "test description");
 
         assertEquals(201, response.getStatusCode());
+    }
+
+    @Given("удалены все существующие задачи")
+    public void allTasksRemoved() {
+        deleteAllTasks();
+
+        response.then().statusCode(SC_NO_CONTENT);
     }
 
     @Given("Существуют задачи")
@@ -166,7 +189,7 @@ public class TaskStepDefinition extends BaseStepsDefinitions {
         assertEquals(200, response.getStatusCode());
     }
 
-    @When("я делаю выборку задач с ID {string}")
+    @When("я делаю выборку задач по фильтру ?recordId={string}")
     public void getTasksById(String taskId) {
         getTasksByRecords(taskId);
 
@@ -204,6 +227,7 @@ public class TaskStepDefinition extends BaseStepsDefinitions {
         if (expectedTaskIds.isEmpty()) {
             int totalElements = response.jsonPath().get("page.totalElements");
             assertEquals("Выборка должна быть пустой", 0, totalElements);
+
             return;
         }
 
@@ -224,12 +248,13 @@ public class TaskStepDefinition extends BaseStepsDefinitions {
     public void waitUntilTaskCreate(String contentType) throws InterruptedException {
         String filter = "content_type_id IN('" + contentType + "')";
 
-        int maxAttempts = 4;
-        int delaySeconds = 5;
-        TimeUnit.SECONDS.sleep(delaySeconds);
+        int attempts = 40;
+        int delay = 500;
 
-        for (int attempt = 0; attempt < maxAttempts; attempt++) {
+        sleep(delay);
+        for (int attempt = 0; attempt < attempts; attempt++) {
             getTasks(filter);
+
             List<Map<String, Object>> content = response.jsonPath().getList("content");
             if (content != null && !content.isEmpty()) {
                 // Находим задачу с максимальным ID
@@ -252,15 +277,16 @@ public class TaskStepDefinition extends BaseStepsDefinitions {
                     }
                 }
             }
-            if (attempt < maxAttempts - 1) {
-                TimeUnit.SECONDS.sleep(delaySeconds);
+
+            if (attempt < attempts - 1) {
+                sleep(delay);
             }
         }
 
         StringBuilder errorDetails = new StringBuilder();
         errorDetails.append(String.format(
                 "Задача с content_type_id '%s' и корректным inbox_data_key_data_connection не найдена после %d попыток\n",
-                contentType, maxAttempts));
+                contentType, attempts));
         errorDetails.append("Ожидаемые условия:\n");
         errorDetails.append("1. Задача должна иметь content_type_id = ").append(contentType).append("\n");
         errorDetails.append("2. Задача должна иметь максимальный ID среди всех задач с указанным content_type_id\n");
@@ -318,6 +344,12 @@ public class TaskStepDefinition extends BaseStepsDefinitions {
                         get("?recordId=" + tasksId);
     }
 
+    private void deleteAllTasks() {
+        response = getBaseRequestWithCurrentCookie()
+                .when().
+                       delete("/all");
+    }
+
     private void updateCurrentTaskStatus(TaskStatus status) {
         String apiWay = "";
         if (status.equals(IN_PROGRESS)) {
@@ -367,10 +399,240 @@ public class TaskStepDefinition extends BaseStepsDefinitions {
                     && connections.get(0).containsKey("title")
                     && connections.get(0).containsKey("libraryTableName");
         } catch (Exception e) {
-            System.out.println(String.format("Ошибка при парсинге JSON connection: %s", connection));
+            System.out.printf("Ошибка при парсинге JSON connection: %s%n", connection);
             e.printStackTrace();
 
             return false;
+        }
+    }
+
+    private void createTasksByTemplate(String template) {
+        if ("для тестирования доступности вложений задач".equals(template)) {
+            List<String> task1 = new ArrayList<>();
+            task1.add("orgOwner");
+            task1.add("orgOwner");
+            task1.add(TaskType.CUSTOM.name());
+            task1.add("orgOwner task 1");
+
+            List<String> task2 = new ArrayList<>();
+            task2.add("orgOwner");
+            task2.add("orgOwner");
+            task2.add(TaskType.CUSTOM.name());
+            task2.add("orgOwner task 2");
+
+            List<String> task3 = new ArrayList<>();
+            task3.add("fiz1");
+            task3.add("fiz1");
+            task3.add(TaskType.CUSTOM.name());
+            task3.add("fiz1 task 1");
+
+            List<String> task4 = new ArrayList<>();
+            task4.add("fiz1");
+            task4.add("fiz1");
+            task4.add(TaskType.CUSTOM.name());
+            task4.add("fiz1 task 2");
+
+            List<String> task5 = new ArrayList<>();
+            task5.add("fiz1");
+            task5.add("fiz1");
+            task5.add(TaskType.CUSTOM.name());
+            task5.add("fiz1 task 3");
+
+            List<String> task6 = new ArrayList<>();
+            task6.add("fiz2");
+            task6.add("fiz2");
+            task6.add(TaskType.CUSTOM.name());
+            task6.add("fiz2 task 1");
+
+            List<String> task7 = new ArrayList<>();
+            task7.add("fiz2");
+            task7.add("fiz2");
+            task7.add(TaskType.CUSTOM.name());
+            task7.add("fiz2 task 2");
+
+            List<List<String>> tasksForOwner = new ArrayList<>();
+            tasksForOwner.add(task1);
+            tasksForOwner.add(task2);
+            tasksForOwner.add(task3);
+            tasksForOwner.add(task4);
+            tasksForOwner.add(task5);
+            tasksForOwner.add(task6);
+            tasksForOwner.add(task7);
+
+            initTasks(DataTable.create(tasksForOwner));
+
+            // Create tasks as fiz2
+            UserCreateDto user2 = getUserByName("fiz2");
+            authorizationBase.loginAs(user2.getEmail(), user2.getPassword());
+
+            List<String> task8 = new ArrayList<>();
+            task8.add("fiz3");
+            task8.add("fiz3");
+            task8.add(TaskType.CUSTOM.name());
+            task8.add("fiz3 task 1");
+
+            List<List<String>> tasksForFiz2 = new ArrayList<>();
+            tasksForFiz2.add(task8);
+
+            initTasks(DataTable.create(tasksForFiz2));
+
+            // Create tasks as fiz3
+            UserCreateDto user3 = getUserByName("fiz3");
+            authorizationBase.loginAs(user3.getEmail(), user3.getPassword());
+
+            List<String> task9 = new ArrayList<>();
+            task9.add("fiz4");
+            task9.add("fiz4");
+            task9.add(TaskType.CUSTOM.name());
+            task9.add("fiz4 task 1");
+
+            List<String> task10 = new ArrayList<>();
+            task10.add("fiz4");
+            task10.add("fiz4");
+            task10.add(TaskType.CUSTOM.name());
+            task10.add("fiz4 task 2");
+
+            List<String> task11 = new ArrayList<>();
+            task11.add("fiz4");
+            task11.add("fiz4");
+            task11.add(TaskType.CUSTOM.name());
+            task11.add("fiz4 task 3");
+
+            List<List<String>> tasksForFiz4 = new ArrayList<>();
+            tasksForFiz4.add(task9);
+            tasksForFiz4.add(task10);
+            tasksForFiz4.add(task11);
+
+            initTasks(DataTable.create(tasksForFiz4));
+
+            // Create tasks as fiz5
+            UserCreateDto user5 = getUserByName("fiz5");
+            authorizationBase.loginAs(user5.getEmail(), user5.getPassword());
+
+            List<String> task5_1 = new ArrayList<>();
+            task5_1.add("fiz5");
+            task5_1.add("fiz5");
+            task5_1.add(TaskType.CUSTOM.name());
+            task5_1.add("description of fiz5 task 1");
+
+            List<List<String>> tasksForFiz5 = new ArrayList<>();
+            tasksForFiz5.add(task5_1);
+
+            initTasks(DataTable.create(tasksForFiz5));
+        } else if ("для тестирования доступности задач согласно иерархии пользователей".equals(template)) {
+            List<String> task1 = new ArrayList<>();
+            task1.add("orgOwner");
+            task1.add("orgOwner");
+            task1.add(TaskType.CUSTOM.name());
+            task1.add("orgOwner task 1");
+
+            List<String> task2 = new ArrayList<>();
+            task2.add("orgOwner");
+            task2.add("orgOwner");
+            task2.add(TaskType.CUSTOM.name());
+            task2.add("orgOwner task 2");
+
+            List<String> task3 = new ArrayList<>();
+            task3.add("fiz1");
+            task3.add("fiz1");
+            task3.add(TaskType.CUSTOM.name());
+            task3.add("fiz1 task 1");
+
+            List<String> task4 = new ArrayList<>();
+            task4.add("fiz1");
+            task4.add("fiz1");
+            task4.add(TaskType.CUSTOM.name());
+            task4.add("fiz1 task 2");
+
+            List<String> task5 = new ArrayList<>();
+            task5.add("fiz1");
+            task5.add("fiz1");
+            task5.add(TaskType.CUSTOM.name());
+            task5.add("fiz1 task 3");
+
+            List<String> task6 = new ArrayList<>();
+            task6.add("fiz2");
+            task6.add("fiz2");
+            task6.add(TaskType.CUSTOM.name());
+            task6.add("fiz2 task 1");
+
+            List<String> task7 = new ArrayList<>();
+            task7.add("fiz2");
+            task7.add("fiz2");
+            task7.add(TaskType.CUSTOM.name());
+            task7.add("fiz2 task 2");
+
+            List<List<String>> tasksForOwner = new ArrayList<>();
+            tasksForOwner.add(task1);
+            tasksForOwner.add(task2);
+            tasksForOwner.add(task3);
+            tasksForOwner.add(task4);
+            tasksForOwner.add(task5);
+            tasksForOwner.add(task6);
+            tasksForOwner.add(task7);
+
+            initTasks(DataTable.create(tasksForOwner));
+
+            // Create tasks as fiz2
+            UserCreateDto user2 = getUserByName("fiz2");
+            authorizationBase.loginAs(user2.getEmail(), user2.getPassword());
+
+            List<String> task8 = new ArrayList<>();
+            task8.add("fiz3");
+            task8.add("fiz3");
+            task8.add(TaskType.CUSTOM.name());
+            task8.add("fiz3 task 1");
+
+            List<List<String>> tasksForFiz2 = new ArrayList<>();
+            tasksForFiz2.add(task8);
+
+            initTasks(DataTable.create(tasksForFiz2));
+
+            // Create tasks as fiz3
+            UserCreateDto user3 = getUserByName("fiz3");
+            authorizationBase.loginAs(user3.getEmail(), user3.getPassword());
+
+            List<String> task9 = new ArrayList<>();
+            task9.add("fiz4");
+            task9.add("fiz4");
+            task9.add(TaskType.CUSTOM.name());
+            task9.add("fiz4 task 1");
+
+            List<String> task10 = new ArrayList<>();
+            task10.add("fiz4");
+            task10.add("fiz4");
+            task10.add(TaskType.CUSTOM.name());
+            task10.add("fiz4 task 2");
+
+            List<String> task11 = new ArrayList<>();
+            task11.add("fiz4");
+            task11.add("fiz4");
+            task11.add(TaskType.CUSTOM.name());
+            task11.add("fiz4 task 3");
+
+            List<List<String>> tasksForFiz4 = new ArrayList<>();
+            tasksForFiz4.add(task9);
+            tasksForFiz4.add(task10);
+            tasksForFiz4.add(task11);
+
+            initTasks(DataTable.create(tasksForFiz4));
+
+            // Create tasks as fiz5
+            UserCreateDto user5 = getUserByName("fiz5");
+            authorizationBase.loginAs(user5.getEmail(), user5.getPassword());
+
+            List<String> task5_1 = new ArrayList<>();
+            task5_1.add("fiz5");
+            task5_1.add("fiz5");
+            task5_1.add(TaskType.CUSTOM.name());
+            task5_1.add("description of fiz5 task 1");
+
+            List<List<String>> tasksForFiz5 = new ArrayList<>();
+            tasksForFiz5.add(task5_1);
+
+            initTasks(DataTable.create(tasksForFiz5));
+        } else {
+            throw new IllegalStateException("Создание задач. Передан не известный шаблон: " + template);
         }
     }
 }

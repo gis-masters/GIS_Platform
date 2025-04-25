@@ -16,7 +16,7 @@ public class PermissionCreateDto {
     private String principalType;
 
     @NotBlank
-    @Pattern(regexp = "^(VIEWER|OWNER)$", message = "Допустимые значения поля role: VIEWER, OWNER")
+    @Pattern(regexp = "^(VIEWER|CONTRIBUTOR|OWNER)$", message = "Допустимые значения поля role: VIEWER, CONTRIBUTOR, OWNER")
     private String role;
 
     public PermissionCreateDto() {

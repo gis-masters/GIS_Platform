@@ -314,7 +314,6 @@ public class TableFeaturesStepsDefinitions extends BaseStepsDefinitions {
 
         response = getBaseRequestWithCurrentCookie()
                 .when().basePath("/")
-                       .log().all()
                        .get(geoserverPath);
 
         jsonPath = response.jsonPath();

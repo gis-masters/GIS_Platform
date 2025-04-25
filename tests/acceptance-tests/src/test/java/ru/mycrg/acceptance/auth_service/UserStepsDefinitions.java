@@ -20,8 +20,7 @@ import java.util.concurrent.Executors;
 
 import static java.lang.String.format;
 import static java.lang.Thread.sleep;
-import static org.apache.http.HttpStatus.SC_ACCEPTED;
-import static org.apache.http.HttpStatus.SC_OK;
+import static org.apache.http.HttpStatus.*;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -281,11 +280,13 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
     @Given("Существует иерархия пользователей {string}")
     public void createUsersByTemplate(String template) throws InterruptedException {
         if ("тестирование прав на проекты".equals(template)) {
-            createRandomUser(new UserCreateDto("fiz1", "fiz1", generateString("EMAIL_10"), DEFAULT_TEST_PASSWORD));
-            createRandomUser(new UserCreateDto("fiz2", "fiz2", generateString("EMAIL_10"), DEFAULT_TEST_PASSWORD));
-            createRandomUser(new UserCreateDto("fiz3", "fiz3", generateString("EMAIL_10"), DEFAULT_TEST_PASSWORD));
-            createRandomUser(new UserCreateDto("fiz4", "fiz4", generateString("EMAIL_10"), DEFAULT_TEST_PASSWORD));
-            createRandomUser(new UserCreateDto("fiz5", "fiz5", generateString("EMAIL_10"), DEFAULT_TEST_PASSWORD));
+            createRandomUser(new UserCreateDto("fiz1", "fiz1", "fiz1@fiz", DEFAULT_TEST_PASSWORD));
+            createRandomUser(new UserCreateDto("fiz2", "fiz2", "fiz2@fiz", DEFAULT_TEST_PASSWORD));
+            createRandomUser(new UserCreateDto("fiz3", "fiz3", "fiz3@fiz", DEFAULT_TEST_PASSWORD));
+            createRandomUser(new UserCreateDto("fiz4", "fiz4", "fiz4@fiz", DEFAULT_TEST_PASSWORD));
+            createRandomUser(new UserCreateDto("fiz5", "fiz5", "fiz5@fiz", DEFAULT_TEST_PASSWORD));
+        } else if ("для тестирования задач РНС по СМЭВ".equals(template)) {
+            createRandomUser(new UserCreateDto("rns1", "rns1", "rns1@smev.ru", DEFAULT_TEST_PASSWORD));
         } else if ("Иерархия вариант 1".equals(template)) {
             // orgOwner
             //   fiz1
@@ -350,35 +351,6 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
             System.out.println("*** *** Create user fiz5");
             userDto = fiz5;
             createRandomUser(fiz5);
-
-            System.out.println("============= Print userPool =============");
-            userPool.forEach((id, userDto) -> {
-                System.out.printf("id: %d. Name: '%s' Email: '%s'%n", id, userDto.getName(), userDto.getEmail());
-            });
-            System.out.println("==========================================");
-
-            // После изменения иерархии получаем новый актуальный токен
-            authorizationBase.loginAsOwner(false);
-        } else if ("Иерархия вариант 2".equals(template)) {
-            System.out.printf("*** *** Разворачиваем иерархическую структуру пользователей, вариант: '%s'", template);
-
-            getCurrent();
-            Integer ownerId = response.jsonPath().get("id");
-            assertNotNull(ownerId);
-            System.out.println(" Id владельца организации: " + ownerId);
-
-            UserCreateDto dto = userPool.get(-1);
-            userPool.put(ownerId, dto);
-            userPool.remove(-1);
-
-            // Пользователь fiz1, у которого начальником будет владелец организации
-            UserCreateDto fiz1 = new UserCreateDto("fiz1", "fiz1", "fiz1", "job", generateString("NUMBER_10"),
-                                                   generateString("EMAIL_10"), DEFAULT_TEST_PASSWORD, "dep");
-            fiz1.setBossId(ownerId);
-
-            System.out.println("*** *** Create user fiz1");
-            userDto = fiz1;
-            createRandomUser(fiz1);
 
             System.out.println("============= Print userPool =============");
             userPool.forEach((id, userDto) -> {

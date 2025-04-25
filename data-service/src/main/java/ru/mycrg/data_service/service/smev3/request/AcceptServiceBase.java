@@ -286,13 +286,11 @@ public abstract class AcceptServiceBase {
                 throw new BadRequestException("Файл не подписан, id: " + file.getId());
             }
 
-            byte[] ecp;
+            byte[] bytes;
             String fileName = null;
-            String fileExtension;
-            ecp = file.getEcp();
             try {
                 Resource resource = fileStorageService.loadFromMainStorage(file.getPath());
-                fileExtension = "." + FilenameUtils.getExtension(resource.getFile().getPath());
+                String fileExtension = "." + FilenameUtils.getExtension(resource.getFile().getPath());
                 if (firstDocument.getLibraryTableName().equalsIgnoreCase(TABLE_13)) {
                     fileName = getFileName() + fileExtension;
                 }
@@ -300,20 +298,20 @@ public abstract class AcceptServiceBase {
                     fileName = MOTIVATED_DECLINE_FILENAME + fileExtension;
                 }
 
-                minioService.uploadFile(fileName,
-                                        Files.readAllBytes(resource.getFile().toPath()),
-                                        smev3Config.getS3bucketOutgoing());
+                bytes = Files.readAllBytes(resource.getFile().toPath());
             } catch (Exception e) {
-                throw new BadRequestException("Ошибка загрузки файла в минио: " + e.getMessage());
+                throw new BadRequestException("Не удалось подготовить ресурс для загрузки в минио: " + e.getMessage());
             }
 
+            minioService.uploadFile(fileName, bytes, smev3Config.getS3bucketOutgoing());
+
             if (firstDocument.getLibraryTableName().equalsIgnoreCase(TABLE_13)) {
-                statusMesage = getStatusMessage(docRecord, taskStatus, fileName, ecp, false);
+                statusMesage = getStatusMessage(docRecord, taskStatus, fileName, file.getEcp(), false);
                 updateTaskAndDocument(libraryQualifier, rnvSchema, taskId, taskStatus, task, false);
             }
 
             if (firstDocument.getLibraryTableName().equalsIgnoreCase(DL_DATA_SECTION_DELIVERY_DATA_TABLE)) {
-                statusMesage = getStatusMessage(docRecord, CANCELED, fileName, ecp, false);
+                statusMesage = getStatusMessage(docRecord, CANCELED, fileName, file.getEcp(), false);
                 updateTaskAndDocument(libraryQualifier, rnvSchema, taskId, CANCELED, task, false);
             }
         }
@@ -382,12 +380,12 @@ public abstract class AcceptServiceBase {
             taskPayload.put(TASK_STATUS_PROPERTY, CANCELED.name());
 
             addCompleteDatesToTask(taskPayload, task);
-                try {
-                    recordsDao.updateRecordById(libraryQualifier, docPayload, rnvSchema);
-                    recordsDao.updateRecordById(recordQualifier(TASK_QUALIFIER, taskId), taskPayload, tasksSchema);
-                } catch (Exception e) {
-                    throw new BadRequestException("Не удалось обновить запись в БД");
-                }
+            try {
+                recordsDao.updateRecordById(libraryQualifier, docPayload, rnvSchema);
+                recordsDao.updateRecordById(recordQualifier(TASK_QUALIFIER, taskId), taskPayload, tasksSchema);
+            } catch (Exception e) {
+                throw new BadRequestException("Не удалось обновить запись в БД");
+            }
 
             createLog("Статусное Сообщение \"Заявление отменено\" отправлено в СМЭВ-3",
                       "Статусное Сообщение \"Заявление отменено\" отправлено в СМЭВ-3", taskId);
@@ -402,12 +400,12 @@ public abstract class AcceptServiceBase {
             taskPayload.put(DESCRIPTION_ATTRIBUTE, "\"Отказано в предоставлении услуги\" отправлено в СМЭВ-3");
 
             addCompleteDatesToTask(taskPayload, task);
-                try {
-                    recordsDao.updateRecordById(libraryQualifier, docPayload, rnvSchema);
-                    recordsDao.updateRecordById(recordQualifier(TASK_QUALIFIER, taskId), taskPayload, tasksSchema);
-                } catch (Exception e) {
-                    throw new BadRequestException("Не удалось обновить запись в БД");
-                }
+            try {
+                recordsDao.updateRecordById(libraryQualifier, docPayload, rnvSchema);
+                recordsDao.updateRecordById(recordQualifier(TASK_QUALIFIER, taskId), taskPayload, tasksSchema);
+            } catch (Exception e) {
+                throw new BadRequestException("Не удалось обновить запись в БД");
+            }
 
             createLog("Статусное Сообщение \"Отказано в предоставлении услуги\" отправлено в СМЭВ-3",
                       "Статусное Сообщение \"Отказано в предоставлении услуги\" отправлено в СМЭВ-3", taskId);

@@ -10,13 +10,15 @@ public class ProjectProjectionImpl implements ProjectProjection {
 
     private long id;
     private String name;
+    private String description;
     private long organizationId;
     private String bbox;
     private boolean isDefault;
+    private String path;
     private boolean isFolder;
     private LocalDateTime createdAt;
+
     private String role;
-    private String description;
 
     public ProjectProjectionImpl() {
         // Required
@@ -31,6 +33,7 @@ public class ProjectProjectionImpl implements ProjectProjection {
         this.isFolder = project.isFolder();
         this.createdAt = project.getCreatedAt();
         this.description = project.getDescription();
+        this.path = project.getPath();
     }
 
     @Override
@@ -107,5 +110,13 @@ public class ProjectProjectionImpl implements ProjectProjection {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
     }
 }

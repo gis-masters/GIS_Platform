@@ -1,7 +1,5 @@
 package ru.mycrg.acceptance.auth_service.dto;
 
-import ru.mycrg.auth_service_contract.dto.UserCommonDto;
-
 import java.util.List;
 
 public class OrganizationBase {
@@ -11,7 +9,7 @@ public class OrganizationBase {
     private List<UserDto> users;
     private String createdAt;
     private String phone;
-    private List<Object> groups;
+    private List<UserGroupDto> groups;
     private Object settings;
     private String status;
 
@@ -59,11 +57,11 @@ public class OrganizationBase {
         this.phone = phone;
     }
 
-    public List<Object> getGroups() {
+    public List<UserGroupDto> getGroups() {
         return groups;
     }
 
-    public void setGroups(List<Object> groups) {
+    public void setGroups(List<UserGroupDto> groups) {
         this.groups = groups;
     }
 

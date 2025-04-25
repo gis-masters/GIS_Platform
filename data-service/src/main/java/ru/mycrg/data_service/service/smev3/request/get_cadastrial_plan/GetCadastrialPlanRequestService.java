@@ -59,6 +59,7 @@ import static ru.mycrg.data_service.service.import_.kpt.KptSourceFilesService.KP
 import static ru.mycrg.data_service.service.resources.ResourceQualifier.libraryQualifier;
 import static ru.mycrg.data_service.service.resources.ResourceQualifier.recordQualifier;
 import static ru.mycrg.data_service.service.schemas.SchemaUtil.excludeUnknownProperties;
+import static ru.mycrg.data_service.util.DetailedLogger.logError;
 import static ru.mycrg.data_service.util.JsonConverter.mapper;
 import static ru.mycrg.data_service.util.JsonConverter.toJsonNode;
 import static ru.mycrg.data_service.util.SystemLibraryAttributes.*;
@@ -172,15 +173,21 @@ public class GetCadastrialPlanRequestService extends RequestProcessor {
         AtomicInteger counter = new AtomicInteger(0);
         clientIdToCadastrialNumber.forEach((clientId, cadastrialNumber) -> {
             String kptArchiveFileName = buildKptArchiveFileName(cadastrialNumber);
-            try {
-                File kptArchive = fileStorageService.loadFromKptStorage(kptArchiveFileName);
-                byte[] archiveBytes = Files.readAllBytes(kptArchive.toPath());
 
-                minioService.uploadFile(kptArchive.getName(), archiveBytes, getSmev3Config().getS3bucketOutgoing());
+            File kptArchive;
+            byte[] archiveBytes;
+            try {
+                kptArchive = fileStorageService.loadFromKptStorage(kptArchiveFileName);
+                archiveBytes = Files.readAllBytes(kptArchive.toPath());
             } catch (Exception e) {
-                log.error("Возникла ошибка при попытке загрузить архив в Minio: {}", e.getMessage());
-                throw new BadRequestException("Ошибка загрузки файла в минио: " + e.getMessage());
+                String msg = "Возникла ошибка при подготовке ресурсов для загрузки в минио";
+                logError(msg, e);
+
+                throw new BadRequestException(msg + e.getMessage());
             }
+
+            minioService.uploadFile(kptArchive.getName(), archiveBytes, getSmev3Config().getS3bucketOutgoing());
+
             GetCadastrialPlanDto dto = new GetCadastrialPlanDto();
             dto.setClientId(clientId);
             dto.setArchiveFilename(kptArchiveFileName);

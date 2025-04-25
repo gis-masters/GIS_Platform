@@ -10,8 +10,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.mycrg.audit_service_contract.events.CrgAuditEvent;
 import ru.mycrg.auth_facade.IAuthenticationFacade;
-import ru.mycrg.gis_service.dto.*;
+import ru.mycrg.gis_service.dto.LayerCreateDto;
+import ru.mycrg.gis_service.dto.LayerProjection;
+import ru.mycrg.gis_service.dto.LayerUpdateDto;
+import ru.mycrg.gis_service.dto.RelatedLayersModel;
 import ru.mycrg.gis_service.dto.project.ProjectProjection;
+import ru.mycrg.gis_service.dto.project.ProjectProjectionImpl;
 import ru.mycrg.gis_service.entity.Group;
 import ru.mycrg.gis_service.entity.Layer;
 import ru.mycrg.gis_service.entity.Project;
@@ -19,8 +23,8 @@ import ru.mycrg.gis_service.exceptions.*;
 import ru.mycrg.gis_service.json.JsonPatcher;
 import ru.mycrg.gis_service.queue.MessageBusProducer;
 import ru.mycrg.gis_service.repository.LayerRepository;
+import ru.mycrg.gis_service.service.ProjectProtector;
 import ru.mycrg.gis_service.service.projects.ProjectService;
-import ru.mycrg.gis_service.service.ResourceProtector;
 
 import javax.json.JsonMergePatch;
 import java.time.LocalDateTime;
@@ -44,7 +48,7 @@ public class LayerService {
     private final LayerRepository layerRepository;
     private final IAuthenticationFacade authenticationFacade;
     private final MessageBusProducer messageBus;
-    private final ResourceProtector resourceProtector;
+    private final ProjectProtector projectProtector;
     private final Map<String, ILayerHandler> layerHandlers;
 
     public LayerService(JsonPatcher jsonPatcher,
@@ -52,14 +56,14 @@ public class LayerService {
                         ProjectService projectService,
                         IAuthenticationFacade authenticationFacade,
                         MessageBusProducer messageBus,
-                        ResourceProtector resourceProtector,
+                        ProjectProtector projectProtector,
                         List<ILayerHandler> layerHandlers) {
         this.jsonPatcher = jsonPatcher;
         this.projectService = projectService;
         this.layerRepository = layerRepository;
         this.authenticationFacade = authenticationFacade;
         this.messageBus = messageBus;
-        this.resourceProtector = resourceProtector;
+        this.projectProtector = projectProtector;
         this.layerHandlers = layerHandlers.stream()
                                           .collect(toMap(ILayerHandler::getType, Function.identity()));
     }
@@ -101,6 +105,11 @@ public class LayerService {
      * @param layerDto  Модель слоя
      */
     public Optional<LayerProjection> create(long projectId, LayerCreateDto layerDto) {
+        ProjectProjectionImpl projectProjection = projectService.getByIdWithRole(projectId);
+        if (projectProtector.lessThenContributor(projectProjection)) {
+            throw new ForbiddenException("редактирования", "проекта", projectProjection.getName());
+        }
+
         Project project = projectService.getById(projectId);
 
         try {
@@ -137,12 +146,13 @@ public class LayerService {
     }
 
     public void update(long projectId, long layerId, JsonMergePatch patchDto) {
-        Project project = projectService.getById(projectId);
-        if (!resourceProtector.isOwner(project)) {
-            throw new ForbiddenException("редактирования", "проекта", project.getName());
+        ProjectProjectionImpl projectProjection = projectService.getByIdWithRole(projectId);
+        if (projectProtector.lessThenContributor(projectProjection)) {
+            throw new ForbiddenException("редактирования", "проекта", projectProjection.getName());
         }
 
-        Layer layerForUpdate = getLayerById(project.getLayers(), layerId);
+        Layer layerForUpdate = layerRepository.findById(layerId)
+                                              .orElseThrow(() -> new NotFoundException(layerId));
 
         try {
             LayerUpdateDto layerDto = layerMapper.toDto(layerForUpdate);
@@ -150,6 +160,7 @@ public class LayerService {
 
             layerMapper.update(layerForUpdate, patchedLayer);
 
+            Project project = projectService.getById(projectId);
             updateGroup(layerForUpdate, patchedLayer.getParentId(), project.getGroups());
 
             layerForUpdate.setLastModified(LocalDateTime.now());
@@ -170,14 +181,22 @@ public class LayerService {
         }
     }
 
-    public void delete(@NotNull Layer layer) {
-        layerRepository.deleteLayerById(layer.getId());
+    public void delete(long projectId, long layerId) {
+        ProjectProjectionImpl project = projectService.getByIdWithRole(projectId);
+        if (projectProtector.lessThenContributor(project)) {
+            throw new ForbiddenException("редактирования", "проекта", project.getName());
+        }
 
-        messageBus.produce(new CrgAuditEvent(authenticationFacade.getAccessToken(),
-                                             "DELETE",
-                                             layer.getTableName(),
-                                             "LAYER",
-                                             layer.getId()));
+        Layer layerForDelete = layerRepository.findById(layerId)
+                                              .orElseThrow(() -> new NotFoundException(layerId));
+        layerRepository.deleteLayerById(layerId);
+
+        messageBus.produce(
+                new CrgAuditEvent(authenticationFacade.getAccessToken(),
+                                  "DELETE",
+                                  layerForDelete.getTableName(),
+                                  "LAYER",
+                                  layerForDelete.getId()));
     }
 
     public void deleteByTableName(String tableName) {
@@ -250,8 +269,7 @@ public class LayerService {
                             .map(layer -> {
                                 LayerProjection lProjection = new LayerProjection(layer, getOrgWorkspaceName());
                                 ProjectProjection pProjection = projectService
-                                        .getProjectionByIdUnsafe(
-                                                layer.getProject().getId());
+                                        .getProjectionByIdUnsafe(layer.getProject().getId());
 
                                 return new RelatedLayersModel(lProjection, pProjection);
                             })

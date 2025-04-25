@@ -6,19 +6,10 @@ public class ProjectDto extends ProjectCreateDto {
     private String organizationId;
     private String createdAt;
     private String role;
+    private String path;
 
     public ProjectDto() {
         // Required
-    }
-
-    public ProjectDto(String name, String description, String bbox, boolean isDefault, String id, String organizationId,
-                      String createdAt, String role) {
-        super(name, description, bbox, isDefault, false, null);
-
-        this.id = id;
-        this.organizationId = organizationId;
-        this.createdAt = createdAt;
-        this.role = role;
     }
 
     public String getId() {
@@ -51,5 +42,13 @@ public class ProjectDto extends ProjectCreateDto {
 
     public void setRole(String role) {
         this.role = role;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
     }
 }

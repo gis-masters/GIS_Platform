@@ -63,6 +63,13 @@ public class LibraryPermissionsStepsDefinitions extends BaseStepsDefinitions {
                         get();
     }
 
+    @When("Текущий пользователь делает запрос на выборку библиотек")
+    public void getAllLibrariesAsCurrentUser() {
+        response = getBaseRequestWithCurrentCookie()
+                .when().
+                        get();
+    }
+
     @When("Пользователь делает запрос на выборку библиотеки {string}")
     public void getLibrary(String libraryName) {
         response = getBaseRequestWithCurrentCookie()
@@ -146,11 +153,37 @@ public class LibraryPermissionsStepsDefinitions extends BaseStepsDefinitions {
         }
     }
 
+    @Given("для пользователя {string} установлена роль {string}, для каталога {int} в библиотеке {string}")
+    public void setRoleForUserForFolderIdForLibrary(String userName, String role, int folderId, String library) {
+        String urlToFile = String.format("/%s/records/%d/roleAssignment", library, folderId);
+
+        libraryBasePermissions.addPermission(urlToFile, getUserIdByName(userName), "user", role);
+    }
+
+    @Given("для пользователя {string} установлена роль {string}, для библиотеки: {string}")
+    public void setPermissionToLibraryForUser(String userName, String role, String libraryName) {
+        int userId = getUserIdByName(userName);
+        setRoleForUserToLibrary(userId, libraryName, role);
+
+        int statusCode = response.statusCode();
+        if (statusCode == 201) {
+            currentPermissionId = super.extractId(response);
+        } else if (statusCode == 409) {
+            System.out.println("Роль: " + role + " уже установлена для: " + libraryName);
+        } else {
+            String msg = String.format("Пользователю: %d Не удалось установить роль: %s для: %s => %d",
+                                       userId, role, libraryName, statusCode);
+
+            throw new IllegalStateException(msg);
+        }
+    }
+
     @Given("Текущему пользователю установлена роль {string}, для библиотеки: {string}")
     public void setPermissionToLibraryForCurrentUser(String role, String libraryName) {
         authorizationBase.loginAsOwner();
 
         setRoleForCurrentUserToLibrary(libraryName, role);
+
         int statusCode = response.statusCode();
         if (statusCode == 201) {
             currentPermissionId = super.extractId(response);
@@ -618,6 +651,12 @@ public class LibraryPermissionsStepsDefinitions extends BaseStepsDefinitions {
     }
 
     private void setRoleForCurrentUserToLibrary(String libraryName, String role) {
+        String url = String.format("/%s/roleAssignment", libraryName);
+
+        libraryBasePermissions.addPermission(url, userId, "user", role);
+    }
+
+    private void setRoleForUserToLibrary(Integer userId, String libraryName, String role) {
         String url = String.format("/%s/roleAssignment", libraryName);
 
         libraryBasePermissions.addPermission(url, userId, "user", role);

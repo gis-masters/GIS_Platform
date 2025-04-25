@@ -62,4 +62,6 @@ public interface ProjectRepository extends PagingAndSortingRepository<Project, L
                     String movedFolderSelfPath,
                     String newParentForChildren,
                     String targetFolderSelfPath);
+
+    void deleteAllByIdIn(List<Long> ids);
 }

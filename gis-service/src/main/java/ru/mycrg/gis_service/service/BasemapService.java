@@ -128,9 +128,8 @@ public class BasemapService {
     }
 
     private Set<BaseMap> getBaseMaps(long projectId) {
-        return projectService
-                .getById(projectId)
-                .getBaseMaps();
+        return projectService.getById(projectId)
+                             .getBaseMaps();
     }
 
     private BaseMap getBaseMapById(Set<BaseMap> baseMaps, Long baseMapId) {

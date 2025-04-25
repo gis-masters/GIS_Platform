@@ -12,6 +12,7 @@ import ru.mycrg.acceptance.auth_service.AuthorizationBase;
 import ru.mycrg.acceptance.data_service.dto.TableCreateDto;
 import ru.mycrg.acceptance.gis_service.dto.LayerCreateDto;
 import ru.mycrg.acceptance.gis_service.dto.LayerUpdateDto;
+import ru.mycrg.auth_service_contract.dto.UserCreateDto;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -112,6 +113,23 @@ public class LayerStepDefinitions extends BaseStepsDefinitions {
         super.createEntity(layerCreateDto);
 
         layerId = extractEntityIdFromResponse(response);
+    }
+
+    @When("{string} делает запрос на создание внешнего слоя в проекте {string}")
+    public void userCreateExternalLayerInProject(String userName, String itemName) {
+        UserCreateDto user = getUserByName(userName);
+        authorizationBase.loginAs(user.getEmail(), user.getPassword());
+
+        projectId = getProjectIdByName(itemName);
+
+        layerCreateDto = new LayerCreateDto("Земельные участки", "external");
+        layerCreateDto.setDataSourceUri(
+                "https://pkk.rosreestr.ru/arcgis/rest/services/PKK6/CadastreObjects/MapServer/export");
+        layerCreateDto.setTableName("show:24");
+        layerCreateDto.setMinZoom(15);
+        layerCreateDto.setMaxZoom(40);
+
+        super.createEntity(layerCreateDto);
     }
 
     @When("Пользователь делает запрос на добавление слоя в проект")
@@ -373,7 +391,7 @@ public class LayerStepDefinitions extends BaseStepsDefinitions {
         assertNull(presentedData.get("parentId"));
     }
 
-    @When("Владелец делает запрос на удаление слоя")
+    @When("Владелец организации делает запрос на удаление слоя")
     public void deleteLayerAsOwner() {
         authorizationBase.loginAsOwner();
 

@@ -11,19 +11,19 @@ import io.restassured.response.Response;
 import ru.mycrg.acceptance.BaseStepsDefinitions;
 import ru.mycrg.acceptance.GeoserverStepDefinitions;
 import ru.mycrg.acceptance.auth_service.dto.OrganizationBase;
+import ru.mycrg.acceptance.auth_service.dto.UserDto;
+import ru.mycrg.acceptance.auth_service.dto.UserGroupDto;
 import ru.mycrg.acceptance.data_service.datasets.DatasetsStepsDefinitions;
 import ru.mycrg.acceptance.data_service.features.FeaturesStepsDefinitions;
 import ru.mycrg.acceptance.data_service.libraries.LibraryBaseRecords;
-import ru.mycrg.acceptance.data_service.schemas.SchemasStepsDefinitions;
 import ru.mycrg.acceptance.data_service.tables.TablesStepsDefinitions;
-import ru.mycrg.acceptance.data_service.tasks.TaskStepDefinition;
 import ru.mycrg.acceptance.gis_service.LayerStepDefinitions;
 import ru.mycrg.acceptance.gis_service.ProjectStepsDefinitions;
 import ru.mycrg.auth_service_contract.dto.AuthorityCommonDto;
+import ru.mycrg.auth_service_contract.dto.GroupCreateDto;
 import ru.mycrg.auth_service_contract.dto.OrganizationCreateDto;
 import ru.mycrg.auth_service_contract.dto.UserCreateDto;
 import ru.mycrg.common_contracts.generated.gis_service.project.ProjectDto;
-import ru.mycrg.data_service_contract.enums.TaskType;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -37,23 +37,16 @@ import static ru.mycrg.acceptance.gis_service.ProjectStepsDefinitions.projectId;
 
 public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
 
-    public static final int MAX_RETRY_ATTEMPT = 20;
-    public static final int RETRY_DELAY = 6000;
-    public static final int RETRY_DELAY_SM = 1000;
+    public static final int MAX_RETRY_ATTEMPT = 100;
+    public static final int RETRY_DELAY = 1000;
 
     public static Integer orgId;
     public static String emailForFeature;
     public static OrganizationCreateDto orgDto;
 
-    private static final Map<String, Boolean> knownOrgTemplates = new HashMap<>() {{
-        put("тестирование прав на проекты", false);
-        put("для тестирования задач РНС по СМЭВ", false);
-        put("для тестирования доступности вложений задач", false);
-        put("для тестирования доступности задач согласно иерархии пользователей", false);
-    }};
+    private static final Map<String, Boolean> knownOrgTemplates = new HashMap<>();
 
     private final AuthorizationBase authorizationBase = new AuthorizationBase();
-    private final TaskStepDefinition taskStepDefinition = new TaskStepDefinition();
     private final UserStepsDefinitions userStepsDefinitions = new UserStepsDefinitions();
     private final UserGroupStepsDefinitions userGroupStepsDefinitions = new UserGroupStepsDefinitions();
     private final TablesStepsDefinitions tablesStepsDefinitions = new TablesStepsDefinitions();
@@ -63,7 +56,6 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
     private final ProjectStepsDefinitions projectStepsDefinitions = new ProjectStepsDefinitions();
     private final DatasetsStepsDefinitions datasetsStepsDefinitions = new DatasetsStepsDefinitions();
     private final GeoserverStepDefinitions geoserverStepDefinitions = new GeoserverStepDefinitions();
-    private final SchemasStepsDefinitions schemasSteps = new SchemasStepsDefinitions();
 
     @When("Отправляется запрос на создание организации")
     public void sendCreateOrganizationRequest(DataTable dataTable) {
@@ -144,7 +136,7 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
             assertNotNull(jsonPath.get("createdAt"));
         }
 
-        // Наличие найстроек организаций у системного администратора
+        // Наличие настроек организаций у системного администратора
         authorizationBase.loginAsSystemAdmin();
         getSystemSettings();
 
@@ -316,140 +308,48 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
         }
     }
 
+    /**
+     * Создавать организацию по шаблону означает создание организации и только того, что непосредственно к ней
+     * относится, т.е. - пользователи их иерархии, группы пользователей.
+     */
     @Given("Существует организация созданная по шаблону: {string}")
     public void initEnhancedOrganization(String orgTemplate) throws InterruptedException {
-        if (!knownOrgTemplates.containsKey(orgTemplate)) {
-            throw new IllegalStateException(
-                    String.format("Unknown orgTemplate: %s Plz implement it first!", orgTemplate));
-        }
-
-        Boolean orgCreated = knownOrgTemplates.get(orgTemplate);
-        if (orgCreated) {
-            System.out.println("Организация уже создана по шаблону: " + orgTemplate);
+        Boolean isOrgCreatedInFeature = knownOrgTemplates.getOrDefault(orgTemplate, false);
+        if (isOrgCreatedInFeature) {
+            System.out.println("Организация уже создана при выполнении текущего feature: " + orgTemplate);
 
             return;
         }
 
-        if ("для тестирования доступности задач согласно иерархии пользователей".equals(orgTemplate)) {
-            List<String> org1 = new ArrayList<>();
-            org1.add("ООО Задачи");
-            org1.add("1234567888");
-            org1.add("orgOwner");
-            org1.add("Задач");
-            org1.add("EMAIL_11");
-            org1.add(DEFAULT_TEST_PASSWORD);
-            org1.add("1");
+        Optional<OrganizationBase> oOrganization = tryFetchOrganizationFromServer(orgTemplate);
+        if (oOrganization.isPresent()) {
+            System.out.println("Организация уже существует: " + orgTemplate);
 
-            List<List<String>> orgData = new ArrayList<>();
-            orgData.add(org1);
+            UserCreateDto owner = null;
+            OrganizationBase org = oOrganization.get();
+            for (UserDto user: org.getUsers()) {
+                UserCreateDto dto = new UserCreateDto(user.getName(), user.getSurname(), user.getEmail(),
+                                                      DEFAULT_TEST_PASSWORD);
+                userPool.put(Math.toIntExact(user.getId()), dto);
 
-            // Организация
-            sendCreateOrganizationRequest(DataTable.create(orgData));
+                if (hasAdminAuthority(user.getAuthorities())) {
+                    owner = dto;
+                }
+            }
 
-            assertEquals(SC_ACCEPTED, response.getStatusCode());
-            checkOrgIdInLocationSetAsCurrentPutInPool();
-            waitUntilOrganizationSuccessfullyCreated(orgId);
+            for (UserGroupDto group: org.getGroups()) {
+                GroupCreateDto dto = new GroupCreateDto(group.getName(), group.getDescription());
+                usersGroupPool.put(group.getId(), dto);
+            }
 
-            // Пользователи
-            authorizationBase.loginAsOwner();
-            userStepsDefinitions.createUsersByTemplate("Иерархия вариант 1");
+            orgId = org.getId();
+            orgDto = new OrganizationCreateDto(org.getName(), org.getPhone(), owner);
+            orgPool.put(orgId, orgDto);
+        } else {
+            System.out.println("Организация '" + orgTemplate + "' НЕ найдена на сервере. Создаём новую.");
 
-            // Задачи
-            initTasks();
-
-            knownOrgTemplates.put(orgTemplate, true);
-        } else if ("для тестирования доступности вложений задач".equals(orgTemplate)) {
-            List<String> org1 = new ArrayList<>();
-            org1.add("ООО Задачи 2");
-            org1.add("1234567888");
-            org1.add("orgOwner");
-            org1.add("Владелец");
-            org1.add("EMAIL_11");
-            org1.add(DEFAULT_TEST_PASSWORD);
-            org1.add("1");
-
-            List<List<String>> orgData = new ArrayList<>();
-            orgData.add(org1);
-
-            // Организация
-            sendCreateOrganizationRequest(DataTable.create(orgData));
-
-            assertEquals(SC_ACCEPTED, response.getStatusCode());
-            checkOrgIdInLocationSetAsCurrentPutInPool();
-            waitUntilOrganizationSuccessfullyCreated(orgId);
-
-            // Пользователи
-            authorizationBase.loginAsOwner();
-            userStepsDefinitions.createUsersByTemplate("Иерархия вариант 1");
-
-            // Проекты
-            initTasks();
-
-            knownOrgTemplates.put(orgTemplate, true);
-        } else if ("тестирование прав на проекты".equals(orgTemplate)) {
-            List<String> orgParams = new ArrayList<>();
-            orgParams.add("БИГ Тест - права на проекты");
-            orgParams.add("314159265");
-            orgParams.add("orgOwner");
-            orgParams.add("Владелец");
-            orgParams.add("EMAIL_7");
-            orgParams.add(DEFAULT_TEST_PASSWORD);
-
-            List<List<String>> orgData = new ArrayList<>();
-            orgData.add(orgParams);
-
-            // Организация
-            sendCreateOrganizationRequest(DataTable.create(orgData));
-
-            assertEquals(SC_ACCEPTED, response.getStatusCode());
-            checkOrgIdInLocationSetAsCurrentPutInPool();
-            waitUntilOrganizationSuccessfullyCreated(orgId);
-
-            // Пользователи
-            authorizationBase.loginAsOwner();
-            userStepsDefinitions.createUsersByTemplate("тестирование прав на проекты");
-            userGroupStepsDefinitions.createGroupsByTemplate("тестирование прав на проекты");
-
-            // Проекты
-            projectStepsDefinitions.createProjectsByTemplate("тестирование прав на проекты");
-
-            knownOrgTemplates.put(orgTemplate, true);
-        } else if ("для тестирования задач РНС по СМЭВ".equals(orgTemplate)) {
-            List<String> org1 = new ArrayList<>();
-            org1.add("ООО Задачи по РНС");
-            org1.add("1234567888");
-            org1.add("orgOwner");
-            org1.add("Владелец");
-            org1.add("EMAIL_11");
-            org1.add(DEFAULT_TEST_PASSWORD);
-            org1.add("5");
-
-            List<List<String>> orgData = new ArrayList<>();
-            orgData.add(org1);
-
-            // Организация
-            sendCreateOrganizationRequest(DataTable.create(orgData));
-
-            assertEquals(SC_ACCEPTED, response.getStatusCode());
-            checkOrgIdInLocationSetAsCurrentPutInPool();
-            waitUntilOrganizationSuccessfullyCreated(orgId);
-
-            // Пользователи
-            authorizationBase.loginAsOwner();
-            userStepsDefinitions.createUsersByTemplate("Иерархия вариант 2");
-            knownOrgTemplates.put(orgTemplate, true);
+            initNewEnhancedOrganization(orgTemplate);
         }
-    }
-
-    @Given("Существует новая организация")
-    public void initNewOrg(DataTable dataTable) throws InterruptedException {
-        sendCreateOrganizationRequest(dataTable);
-
-        assertEquals(SC_ACCEPTED, response.getStatusCode());
-
-        checkOrgIdInLocationSetAsCurrentPutInPool();
-
-        waitUntilOrganizationSuccessfullyCreated(orgId);
     }
 
     @Given("Существует другая организация")
@@ -484,83 +384,12 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
      * Берем любую существующую организацию из пула. Создаём если пул организаций еще пуст.
      */
     @Given("Существует любая организация")
-    public void getExistOrg() throws InterruptedException {
-        fillOrganizationPoolFromServer();
-
-        Iterator<Map.Entry<Integer, OrganizationCreateDto>> iterator = orgPool.entrySet().iterator();
-        if (iterator.hasNext()) {
-            Map.Entry<Integer, OrganizationCreateDto> entry = iterator.next();
-            orgId = entry.getKey();
-            orgDto = entry.getValue();
-
-            System.out.println("Выбрана организация с id: " + orgId);
-            System.out.println("Org owner: [" + orgDto.getOwner().getEmail() + "]");
-        } else {
-            List<String> data = new ArrayList<>();
-            data.add("ООО AnyOrganization");
-            data.add("1234567890");
-            data.add("AnyAny");
-            data.add("Any");
-            data.add("EMAIL_12");
-            data.add(DEFAULT_TEST_PASSWORD);
-
-            List<List<String>> raw = new ArrayList<>();
-            raw.add(data);
-
-            initOrg(DataTable.create(raw));
-        }
-    }
-
-    /**
-     * Берем только организации созданные acceptance тестами. (Они имеют правильные логины и пароли)
-     */
-    private void fillOrganizationPoolFromServer() {
-        authorizationBase.loginAsSystemAdmin();
-
-        response = getBaseRequestWithCurrentCookie()
-                .when().
-                        get("/organizations");
-
-        List<OrganizationBase> organizations = response.jsonPath().getList("content", OrganizationBase.class);
-        for (OrganizationBase org: organizations) {
-            String orgName = org.getName();
-            if (!orgName.contains("ООО ")) {
-                continue;
-            }
-
-            UserCreateDto[] ownerTmp = new UserCreateDto[1];
-            org.getUsers().stream()
-               .filter(user -> hasAdminAuthority(user.getAuthorities()))
-               .findFirst()
-               .ifPresent(userDto -> {
-                   ownerTmp[0] = new UserCreateDto(userDto.getName(), userDto.getSurname(), userDto.getEmail(),
-                                                   DEFAULT_TEST_PASSWORD);
-               });
-
-            if (ownerTmp[0] != null) {
-                orgPool.put(org.getId(), new OrganizationCreateDto(orgName, org.getPhone(), ownerTmp[0]));
-            }
-        }
+    public void getExistOrgOrCreate() throws InterruptedException {
+        initEnhancedOrganization("");
     }
 
     @When("Посылается запрос на удаление текущей организации")
     public void deleteCurrentOrganization() {
-        assertNotNull(orgId);
-
-        deleteOrganization(orgId);
-    }
-
-    @When("Посылается запрос на удаление чужой организации")
-    public void deleteOtherOrganization() {
-        Integer orgId = null;
-        for (Map.Entry<Integer, OrganizationCreateDto> entry: orgPool.entrySet()) {
-            Integer id = entry.getKey();
-            OrganizationCreateDto dto = entry.getValue();
-            if (!orgDto.getOwner().getEmail().equals(dto.getOwner().getEmail())) {
-                orgId = id;
-            }
-        }
-
         assertNotNull(orgId);
 
         deleteOrganization(orgId);
@@ -582,7 +411,7 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
         checkStatusCodeIs(response, SC_OK);
     }
 
-    @And("Согласно специализации созданы: набор данных, таблица с данными, библиотека документов, проект и слои")
+    @And("Согласно специализации 1 созданы: набор данных, таблица с данными, библиотека документов, проект и слои")
     public void checkBySpecialization1() {
         JsonPath datasetsJsonPath = datasetsStepsDefinitions.getAllDatasets().jsonPath();
         assertEquals("Набор данных по специализации 1", datasetsJsonPath.get("content.title[0]"));
@@ -627,29 +456,6 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
         assertEquals("Тестовое название первой таблицы", layerJsonPath.get("title[0]"));
         assertEquals("EPSG:7829", layerJsonPath.get("nativeCRS[0]"));
         assertEquals("zu_pro", layerJsonPath.get("styleName[0]"));
-    }
-
-    @When("Согласно специализации созданы: схема задач и таблица задач")
-    public void checkTasksInSpecialization1() {
-        // Получаем схему tasks_schema_v1
-        schemasSteps.getCurrentSchema("tasks_schema_v1");
-
-        // Проверяем статус ответа
-        assertEquals(SC_OK, response.getStatusCode());
-
-        // Проверяем содержимое ответа
-        JsonPath jsonPath = response.jsonPath();
-        List<Map<String, Object>> schemas = jsonPath.getList("$");
-
-        // Проверяем что получили ровно одну схему
-        assertEquals(1, schemas.size());
-
-        Map<String, Object> schema = schemas.get(0);
-        // Проверяем title схемы
-        assertEquals("Схема задач специализации 1", schema.get("title"));
-
-        // Проверяем таблицу задач
-        taskStepDefinition.getAllTasks();
     }
 
     @When("Пользователь делает запрос на все организации")
@@ -798,8 +604,23 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
     private void getOrganization(Integer id) {
         response = getBaseRequestWithCurrentCookie()
                 .when().
-                        log().all().
                         get("/organizations/" + id);
+    }
+
+    private Optional<OrganizationBase> tryFetchOrganizationFromServer(String orgTemplate) {
+        clearAllOrganizationPools();
+
+        authorizationBase.loginAsSystemAdmin();
+        response = getBaseRequestWithCurrentCookie()
+                .when().
+                        get("/organizations?size=314");
+
+        List<OrganizationBase> organizations = response.jsonPath().getList("content", OrganizationBase.class);
+
+        return organizations.stream()
+                            .filter(org -> org.getId() > 0)
+                            .filter(org -> org.getName().contains(orgTemplate))
+                            .findFirst();
     }
 
     private void getSystemSettings() {
@@ -827,123 +648,6 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
                });
     }
 
-    private void initTasks() {
-        // Create tasks as owner
-        authorizationBase.loginAsOwner();
-
-        List<String> task1 = new ArrayList<>();
-        task1.add("orgOwner");
-        task1.add("orgOwner");
-        task1.add(TaskType.CUSTOM.name());
-        task1.add("orgOwner task 1");
-
-        List<String> task2 = new ArrayList<>();
-        task2.add("orgOwner");
-        task2.add("orgOwner");
-        task2.add(TaskType.CUSTOM.name());
-        task2.add("orgOwner task 2");
-
-        List<String> task3 = new ArrayList<>();
-        task3.add("fiz1");
-        task3.add("fiz1");
-        task3.add(TaskType.CUSTOM.name());
-        task3.add("fiz1 task 1");
-
-        List<String> task4 = new ArrayList<>();
-        task4.add("fiz1");
-        task4.add("fiz1");
-        task4.add(TaskType.CUSTOM.name());
-        task4.add("fiz1 task 2");
-
-        List<String> task5 = new ArrayList<>();
-        task5.add("fiz1");
-        task5.add("fiz1");
-        task5.add(TaskType.CUSTOM.name());
-        task5.add("fiz1 task 3");
-
-        List<String> task6 = new ArrayList<>();
-        task6.add("fiz2");
-        task6.add("fiz2");
-        task6.add(TaskType.CUSTOM.name());
-        task6.add("fiz2 task 1");
-
-        List<String> task7 = new ArrayList<>();
-        task7.add("fiz2");
-        task7.add("fiz2");
-        task7.add(TaskType.CUSTOM.name());
-        task7.add("fiz2 task 2");
-
-        List<List<String>> tasksForOwner = new ArrayList<>();
-        tasksForOwner.add(task1);
-        tasksForOwner.add(task2);
-        tasksForOwner.add(task3);
-        tasksForOwner.add(task4);
-        tasksForOwner.add(task5);
-        tasksForOwner.add(task6);
-        tasksForOwner.add(task7);
-
-        taskStepDefinition.initTasks(DataTable.create(tasksForOwner));
-
-        // Create tasks as fiz2
-        UserCreateDto user2 = getUserByName("fiz2");
-        authorizationBase.loginAs(user2.getEmail(), user2.getPassword());
-
-        List<String> task8 = new ArrayList<>();
-        task8.add("fiz3");
-        task8.add("fiz3");
-        task8.add(TaskType.CUSTOM.name());
-        task8.add("fiz3 task 1");
-
-        List<List<String>> tasksForFiz2 = new ArrayList<>();
-        tasksForFiz2.add(task8);
-
-        taskStepDefinition.initTasks(DataTable.create(tasksForFiz2));
-
-        // Create tasks as fiz3
-        UserCreateDto user3 = getUserByName("fiz3");
-        authorizationBase.loginAs(user3.getEmail(), user3.getPassword());
-
-        List<String> task9 = new ArrayList<>();
-        task9.add("fiz4");
-        task9.add("fiz4");
-        task9.add(TaskType.CUSTOM.name());
-        task9.add("fiz4 task 1");
-
-        List<String> task10 = new ArrayList<>();
-        task10.add("fiz4");
-        task10.add("fiz4");
-        task10.add(TaskType.CUSTOM.name());
-        task10.add("fiz4 task 2");
-
-        List<String> task11 = new ArrayList<>();
-        task11.add("fiz4");
-        task11.add("fiz4");
-        task11.add(TaskType.CUSTOM.name());
-        task11.add("fiz4 task 3");
-
-        List<List<String>> tasksForFiz4 = new ArrayList<>();
-        tasksForFiz4.add(task9);
-        tasksForFiz4.add(task10);
-        tasksForFiz4.add(task11);
-
-        taskStepDefinition.initTasks(DataTable.create(tasksForFiz4));
-
-        // Create tasks as fiz5
-        UserCreateDto user5 = getUserByName("fiz5");
-        authorizationBase.loginAs(user5.getEmail(), user5.getPassword());
-
-        List<String> task5_1 = new ArrayList<>();
-        task5_1.add("fiz5");
-        task5_1.add("fiz5");
-        task5_1.add(TaskType.CUSTOM.name());
-        task5_1.add("description of fiz5 task 1");
-
-        List<List<String>> tasksForFiz5 = new ArrayList<>();
-        tasksForFiz5.add(task5_1);
-
-        taskStepDefinition.initTasks(DataTable.create(tasksForFiz5));
-    }
-
     private boolean hasAdminAuthority(Set<AuthorityCommonDto> authorities) {
         AtomicBoolean result = new AtomicBoolean(false);
         authorities.forEach(authority -> {
@@ -953,5 +657,129 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
         });
 
         return result.get();
+    }
+
+    private void initNewEnhancedOrganization(String orgTemplate) throws InterruptedException {
+        if ("для тестирования доступности задач согласно иерархии пользователей".equals(orgTemplate)) {
+            List<String> org1 = new ArrayList<>();
+            org1.add(orgTemplate);
+            org1.add("1234567888");
+            org1.add("orgOwner");
+            org1.add("Задач");
+            org1.add("EMAIL_11");
+            org1.add(DEFAULT_TEST_PASSWORD);
+            org1.add("1");
+
+            List<List<String>> orgData = new ArrayList<>();
+            orgData.add(org1);
+
+            // Организация
+            sendCreateOrganizationRequest(DataTable.create(orgData));
+
+            assertEquals(SC_ACCEPTED, response.getStatusCode());
+            checkOrgIdInLocationSetAsCurrentPutInPool();
+            waitUntilOrganizationSuccessfullyCreated(orgId);
+
+            // Пользователи
+            authorizationBase.loginAsOwner();
+            userStepsDefinitions.createUsersByTemplate("Иерархия вариант 1");
+
+            knownOrgTemplates.put(orgTemplate, true);
+        } else if ("для тестирования доступности вложений задач".equals(orgTemplate)) {
+            List<String> org1 = new ArrayList<>();
+            org1.add(orgTemplate);
+            org1.add("1234567888");
+            org1.add("orgOwner");
+            org1.add("Владелец");
+            org1.add("EMAIL_11");
+            org1.add(DEFAULT_TEST_PASSWORD);
+            org1.add("1");
+
+            List<List<String>> orgData = new ArrayList<>();
+            orgData.add(org1);
+
+            // Организация
+            sendCreateOrganizationRequest(DataTable.create(orgData));
+
+            assertEquals(SC_ACCEPTED, response.getStatusCode());
+            checkOrgIdInLocationSetAsCurrentPutInPool();
+            waitUntilOrganizationSuccessfullyCreated(orgId);
+
+            // Пользователи
+            authorizationBase.loginAsOwner();
+            userStepsDefinitions.createUsersByTemplate("Иерархия вариант 1");
+
+            knownOrgTemplates.put(orgTemplate, true);
+        } else if ("тестирование прав на проекты".equals(orgTemplate)) {
+            List<String> orgParams = new ArrayList<>();
+            orgParams.add(orgTemplate);
+            orgParams.add("314159265");
+            orgParams.add("orgOwner");
+            orgParams.add("Владелец");
+            orgParams.add("orgOwner@fiz");
+            orgParams.add(DEFAULT_TEST_PASSWORD);
+
+            List<List<String>> orgData = new ArrayList<>();
+            orgData.add(orgParams);
+
+            // Организация
+            sendCreateOrganizationRequest(DataTable.create(orgData));
+
+            assertEquals(SC_ACCEPTED, response.getStatusCode());
+            checkOrgIdInLocationSetAsCurrentPutInPool();
+            waitUntilOrganizationSuccessfullyCreated(orgId);
+
+            // Пользователи
+            authorizationBase.loginAsOwner();
+            userStepsDefinitions.createUsersByTemplate(orgTemplate);
+            userGroupStepsDefinitions.createGroupsByTemplate(orgTemplate);
+
+            knownOrgTemplates.put(orgTemplate, true);
+        } else if ("для тестирования задач РНС по СМЭВ".equals(orgTemplate)) {
+            List<String> orgParams = new ArrayList<>();
+            orgParams.add(orgTemplate);
+            orgParams.add("1234567888");
+            orgParams.add("rnsSmev");
+            orgParams.add("Владелец");
+            orgParams.add("rnsSmev@smev.ru");
+            orgParams.add(DEFAULT_TEST_PASSWORD);
+            orgParams.add("5");
+
+            List<List<String>> orgData = new ArrayList<>();
+            orgData.add(orgParams);
+
+            // Организация
+            sendCreateOrganizationRequest(DataTable.create(orgData));
+
+            assertEquals(SC_ACCEPTED, response.getStatusCode());
+            checkOrgIdInLocationSetAsCurrentPutInPool();
+            waitUntilOrganizationSuccessfullyCreated(orgId);
+
+            // Пользователи
+            authorizationBase.loginAsOwner();
+            userStepsDefinitions.createUsersByTemplate(orgTemplate);
+            knownOrgTemplates.put(orgTemplate, true);
+        } else if (orgTemplate.isEmpty()) {
+            List<String> orgParams = new ArrayList<>();
+            orgParams.add("ООО Любая организация");
+            orgParams.add("654987640");
+            orgParams.add("orgOwner");
+            orgParams.add("Владелец");
+            orgParams.add("orgOwner@any.ru");
+            orgParams.add(DEFAULT_TEST_PASSWORD);
+            orgParams.add("1");
+
+            List<List<String>> orgData = new ArrayList<>();
+            orgData.add(orgParams);
+
+            // Организация
+            sendCreateOrganizationRequest(DataTable.create(orgData));
+
+            assertEquals(SC_ACCEPTED, response.getStatusCode());
+            checkOrgIdInLocationSetAsCurrentPutInPool();
+            waitUntilOrganizationSuccessfullyCreated(orgId);
+        } else {
+            throw new IllegalArgumentException("Передан не поддерживаемый шаблон организации: " + orgTemplate);
+        }
     }
 }

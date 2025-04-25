@@ -329,7 +329,6 @@ public class BaseStepsDefinitions {
     public void getCurrentEntityByFilter(String field, String value) {
         response = getBaseRequestWithCurrentCookie()
                 .when().
-                        log().all().
                         get("?filter=" + field + " iLike '%" + value + "%'");
     }
 
@@ -402,8 +401,8 @@ public class BaseStepsDefinitions {
         layerPool.clear();
     }
 
-    public void checkResponseValue(String field, String value) {
-        assertEquals(value, response.jsonPath().get(field));
+    public void checkResponseValue(String field, String expectedValue) {
+        assertEquals(expectedValue, response.jsonPath().get(field));
     }
 
     public TableCreateDto getLatestTable() {
@@ -424,6 +423,20 @@ public class BaseStepsDefinitions {
 
     public void checkResponseValueContains(String field, String value) {
         assertTrue(((String) response.jsonPath().get(field)).contains(value));
+    }
+
+    public Optional<Map.Entry<Integer, OrganizationCreateDto>> getOrgByName(String name) {
+        return orgPool.entrySet().stream()
+                      .filter(item -> item.getValue().getName().contains(name))
+                      .findFirst();
+    }
+
+    public int getUserGroupIdByName(String name) {
+        return usersGroupPool.entrySet().stream()
+                             .filter(item -> item.getValue().getName().equals(name))
+                             .findFirst()
+                             .orElseThrow(() -> new IllegalStateException("Not found userGroup in pool by name: " + name))
+                             .getKey();
     }
 
     public int getUserIdByName(String name) {

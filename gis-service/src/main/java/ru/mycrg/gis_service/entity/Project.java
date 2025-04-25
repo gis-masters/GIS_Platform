@@ -3,6 +3,7 @@ package ru.mycrg.gis_service.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.hateoas.Identifiable;
 import ru.mycrg.common_contracts.generated.gis_service.project.ProjectCreateDto;
@@ -190,6 +191,7 @@ public class Project implements Identifiable<Long> {
         this.description = description;
     }
 
+    @Nullable
     public String getPath() {
         return path;
     }

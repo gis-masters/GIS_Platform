@@ -44,7 +44,7 @@ public class SqlParameterSourceMapperDatetime implements SqlParameterSourceMappe
 
             dateTime = LocalDateTime.parse(asString, DateTimeFormatter.ofPattern(SYSTEM_DATETIME_PATTERN));
         } catch (Exception e) {
-            log.warn("Not a DateTime '{}'", SYSTEM_DATETIME_PATTERN);
+            log.debug("Not a DateTime '{}'", SYSTEM_DATETIME_PATTERN);
             try {
                 log.debug("Try as LocalDateTime 'yyyy-MM-ddTHH:mm:ss'");
                 dateTime = LocalDateTime.parse(asString, DateTimeFormatter.ISO_LOCAL_DATE_TIME).withNano(0);

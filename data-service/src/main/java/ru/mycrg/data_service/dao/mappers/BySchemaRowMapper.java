@@ -94,6 +94,18 @@ public class BySchemaRowMapper {
                                   String columnName,
                                   @NotNull Object object) {
         try {
+            // Костыляка для 'versions' - поле не добавляется в схему
+            if (VERSIONS.name().equalsIgnoreCase(columnName)) {
+                List<DocumentVersioningDto> descriptions = mapper
+                        .readValue(object.toString(),
+                                   new TypeReference<List<DocumentVersioningDto>>() {
+                                   });
+
+                properties.put(columnName, descriptions);
+
+                return;
+            }
+
             Optional<SimplePropertyDto> oProperty = getPropertyByName(schema, columnName);
             if (oProperty.isEmpty()) {
                 log.warn("Не удалось найти свойство: '{}' в схеме: '{}'", columnName, schema.getName());
@@ -108,13 +120,6 @@ public class BySchemaRowMapper {
                 List<FileDescription> descriptions = mapper.readValue(object.toString(),
                                                                       new TypeReference<List<FileDescription>>() {
                                                                       });
-
-                properties.put(columnName, descriptions);
-            } else if (valueType.equals(VERSIONS)) {
-                List<DocumentVersioningDto> descriptions = mapper
-                        .readValue(object.toString(),
-                                   new TypeReference<List<DocumentVersioningDto>>() {
-                                   });
 
                 properties.put(columnName, descriptions);
             } else if (valueType.equals(UUID)) {

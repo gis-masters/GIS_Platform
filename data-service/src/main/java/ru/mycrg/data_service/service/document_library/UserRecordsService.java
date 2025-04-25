@@ -17,10 +17,10 @@ import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.exceptions.ForbiddenException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
-import ru.mycrg.data_service.service.schemas.SystemAttributeHandler;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service.service.resources.protectors.IMasterResourceProtector;
 import ru.mycrg.data_service.service.resources.protectors.MasterResourceProtector;
+import ru.mycrg.data_service.service.schemas.SystemAttributeHandler;
 import ru.mycrg.data_service_contract.dto.DocumentVersioningDto;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 
@@ -84,6 +84,9 @@ public class UserRecordsService implements IRecordsService {
 
             Set<String> ids = systemAttributeHandler.extractFolderIdsFromPath(path);
 
+            // При выборке первое, что делаем - проверяем доступна ли запрашиваемая папка по правам от родительских
+            // папок, по цепочке вверх.
+            // Нам не важна детализация прав - наличие любых прав подразумевает, что чтение разрешено.
             boolean allowedByParentPermissions = permissionsRepository.isAllowedByParentsPermissions(lQualifier, ids);
             if (allowedByParentPermissions) {
                 records = recordsDao.findAll(lQualifier, ecqlFilter, schema, pageable);
@@ -224,18 +227,7 @@ public class UserRecordsService implements IRecordsService {
 
     @Override
     public List<DocumentVersioningDto> getVersionsByRecordId(ResourceQualifier rQualifier, Object recordId) {
-        IRecord record = getById(rQualifier, recordId);
-        String versions = record.getAsString(VERSIONS.getName());
-        if (record.isFolder() || !nonNull(versions)) {
-            return new ArrayList<>();
-        }
-
-        try {
-            return mapper.readValue(versions, new TypeReference<List<DocumentVersioningDto>>() {
-            });
-        } catch (IOException e) {
-            throw new DataServiceException("Не удалось получить версии документа: " + rQualifier);
-        }
+        return ownerRecordsService.getVersionsByRecordId(rQualifier, recordId);
     }
 
     @Override

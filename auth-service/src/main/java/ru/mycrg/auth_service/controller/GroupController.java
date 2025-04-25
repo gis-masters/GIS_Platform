@@ -65,8 +65,8 @@ public class GroupController {
 
     @PostMapping("/groups/{id}/users/{userId}")
     @PreAuthorize(HAS_ANY_AUTHORITY)
-    public ResponseEntity<Object> addAuthority(@PathVariable Long id,
-                                               @PathVariable Long userId) {
+    public ResponseEntity<Object> addUser(@PathVariable Long id,
+                                          @PathVariable Long userId) {
         groupService.addUser(id, userId);
 
         return new ResponseEntity<>(NO_CONTENT);
@@ -74,8 +74,8 @@ public class GroupController {
 
     @DeleteMapping("/groups/{id}/users/{userId}")
     @PreAuthorize(HAS_ANY_AUTHORITY)
-    public ResponseEntity<Object> removeAuthority(@PathVariable Long id,
-                                                  @PathVariable Long userId) {
+    public ResponseEntity<Object> removeUser(@PathVariable Long id,
+                                             @PathVariable Long userId) {
         groupService.removeUser(id, userId);
 
         return new ResponseEntity<>(NO_CONTENT);

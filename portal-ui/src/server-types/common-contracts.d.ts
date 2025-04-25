@@ -44,6 +44,7 @@ export interface ProjectDto extends ProjectCreateDto {
   organizationId: string;
   createdAt: string;
   role: string;
+  path: string;
 }
 
 export interface ProjectUpdateDto {

@@ -22,8 +22,8 @@ import static ru.mycrg.acceptance.gis_service.ProjectStepsDefinitions.projectId;
 
 public class ImportStepsDefinitions extends BaseStepsDefinitions {
 
-    public static final int MAX_RETRY_ATTEMPT = 20;
-    public static final int RETRY_DELAY = 6000;
+    public static final int MAX_RETRY_ATTEMPT = 40;
+    public static final int RETRY_DELAY = 1000;
 
     public static Integer processId;
     public static Integer importId;

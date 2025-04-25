@@ -10,13 +10,7 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import ru.mycrg.gis_service.dto.LayerCreateDto;
 import ru.mycrg.gis_service.dto.LayerProjection;
-import ru.mycrg.gis_service.entity.Layer;
-import ru.mycrg.gis_service.entity.Project;
 import ru.mycrg.gis_service.exceptions.BindingErrorsException;
-import ru.mycrg.gis_service.exceptions.ForbiddenException;
-import ru.mycrg.gis_service.exceptions.NotFoundException;
-import ru.mycrg.gis_service.service.projects.ProjectService;
-import ru.mycrg.gis_service.service.ResourceProtector;
 import ru.mycrg.gis_service.service.layers.LayerService;
 import ru.mycrg.gis_service.validators.CrgLayerValidator;
 
@@ -35,9 +29,7 @@ public class LayerController {
     private final Logger log = LoggerFactory.getLogger(LayerController.class);
 
     private final LayerService layerService;
-    private final ProjectService projectService;
     private final CrgLayerValidator layerValidator;
-    private final ResourceProtector resourceProtector;
 
     @InitBinder
     protected void initBinder(WebDataBinder binder) {
@@ -45,13 +37,9 @@ public class LayerController {
     }
 
     public LayerController(LayerService layerService,
-                           ProjectService projectService,
-                           CrgLayerValidator layerValidator,
-                           ResourceProtector resourceProtector) {
+                           CrgLayerValidator layerValidator) {
         this.layerService = layerService;
-        this.projectService = projectService;
         this.layerValidator = layerValidator;
-        this.resourceProtector = resourceProtector;
     }
 
     @GetMapping("/layers")
@@ -105,18 +93,7 @@ public class LayerController {
                                               @PathVariable(name = "layerId") long layerId) {
         log.debug("Request for deletion layer: {}", layerId);
 
-        Project project = projectService.getById(projectId);
-        if (!resourceProtector.isOwner(project)) {
-            throw new ForbiddenException("редактирования", "проекта", project.getName());
-        }
-
-        Layer layer = project
-                .getLayers().stream()
-                .filter(l -> layerId == l.getId())
-                .findFirst()
-                .orElseThrow(() -> new NotFoundException(layerId));
-
-        layerService.delete(layer);
+        layerService.delete(projectId, layerId);
 
         return ResponseEntity.noContent().build();
     }

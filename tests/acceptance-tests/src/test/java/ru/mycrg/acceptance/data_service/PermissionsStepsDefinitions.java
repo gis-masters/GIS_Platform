@@ -4,17 +4,17 @@ import io.cucumber.java.en.And;
 import io.cucumber.java.en.Then;
 import io.restassured.specification.RequestSpecification;
 import ru.mycrg.acceptance.BaseStepsDefinitions;
-import ru.mycrg.acceptance.gis_service.ProjectStepsDefinitions;
+import ru.mycrg.acceptance.gis_service.ProjectPermissionStepsDefinitions;
 
 import static java.lang.Thread.sleep;
 import static ru.mycrg.acceptance.auth_service.UserGroupStepsDefinitions.usersGroupId;
 import static ru.mycrg.acceptance.auth_service.OrganizationStepsDefinitions.MAX_RETRY_ATTEMPT;
-import static ru.mycrg.acceptance.auth_service.OrganizationStepsDefinitions.RETRY_DELAY_SM;
 import static ru.mycrg.acceptance.auth_service.UserStepsDefinitions.userId;
+import static ru.mycrg.acceptance.data_service.ImportStepsDefinitions.RETRY_DELAY;
 
 public class PermissionsStepsDefinitions extends BaseStepsDefinitions {
 
-    private final ProjectStepsDefinitions projectSteps = new ProjectStepsDefinitions();
+    private final ProjectPermissionStepsDefinitions projectPermission = new ProjectPermissionStepsDefinitions();
 
     @Override
     public RequestSpecification getBaseRequest() {
@@ -59,12 +59,12 @@ public class PermissionsStepsDefinitions extends BaseStepsDefinitions {
         try {
             int currentAttempt = 0;
             do {
-                sleep(RETRY_DELAY_SM);
+                sleep(RETRY_DELAY);
 
                 currentAttempt++;
                 System.out.println("attempt checkDeletedProjectPermission " + currentAttempt);
 
-                projectSteps.checkProjectPerm();
+                projectPermission.checkProjectPerm();
 
                 if (isNonContainsProjectPermissionsRole(role)) {
                     return; // Успешно проверили, что разрешения удалены
@@ -81,7 +81,7 @@ public class PermissionsStepsDefinitions extends BaseStepsDefinitions {
         try {
             int currentAttempt = 0;
             do {
-                sleep(RETRY_DELAY_SM);
+                sleep(RETRY_DELAY);
 
                 currentAttempt++;
                 System.out.println("attempt checkDeletedPermission " + currentAttempt);

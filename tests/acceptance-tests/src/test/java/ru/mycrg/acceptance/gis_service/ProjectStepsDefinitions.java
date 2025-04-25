@@ -7,13 +7,14 @@ import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.restassured.http.ContentType;
 import io.restassured.path.json.JsonPath;
+import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import ru.mycrg.acceptance.BaseStepsDefinitions;
 import ru.mycrg.acceptance.auth_service.AuthorizationBase;
+import ru.mycrg.auth_service_contract.dto.UserCreateDto;
 import ru.mycrg.common_contracts.generated.gis_service.project.ProjectCreateDto;
 import ru.mycrg.common_contracts.generated.gis_service.project.ProjectDto;
 
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -23,14 +24,11 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.*;
-import static ru.mycrg.acceptance.auth_service.UserGroupStepsDefinitions.usersGroupId;
-import static ru.mycrg.acceptance.auth_service.UserStepsDefinitions.userId;
 
 public class ProjectStepsDefinitions extends BaseStepsDefinitions {
 
     public static ProjectCreateDto projectDto;
     public static Integer projectId;
-    public static Integer permId;
 
     private final AuthorizationBase authorizationBase = new AuthorizationBase();
 
@@ -200,7 +198,7 @@ public class ProjectStepsDefinitions extends BaseStepsDefinitions {
     }
 
     @When("Пользователь делает запрос на обновление полей проекта {string}")
-    public void updateCurrentProject(String projectName) {
+    public void updateCurrentProjectStep(String projectName) {
         authorizationBase.loginAsCurrentUser();
 
         String projName = generateString(projectName);
@@ -209,7 +207,7 @@ public class ProjectStepsDefinitions extends BaseStepsDefinitions {
         String jsonBody = gson.toJson(updateDto);
         projectDto = mapToProjectDto(projName);
 
-        updateProject(jsonBody);
+        updateCurrentProject(jsonBody);
     }
 
     @When("Пользователь делает запрос на обновление полей проекта {string} имея старый токен")
@@ -228,13 +226,6 @@ public class ProjectStepsDefinitions extends BaseStepsDefinitions {
                         patch("" + projectId);
     }
 
-    @When("Администратор делает запрос на обновление полей проекта {string}")
-    public void updateCurrentProjectAsAdmin(String projectName) {
-        authorizationBase.loginAsOwner();
-
-        updateProject(projectName);
-    }
-
     @When("Администратор отправляет запрос на обновление проекта")
     public void updateCurrentProjectAsAdmin() {
         authorizationBase.loginAsOwner();
@@ -246,7 +237,7 @@ public class ProjectStepsDefinitions extends BaseStepsDefinitions {
         String jsonBody = gson.toJson(updateDto);
         projectDto = mapToProjectDto(projName);
 
-        updateProject(jsonBody);
+        updateCurrentProject(jsonBody);
     }
 
     @When("Администратор делает запрос на обновление полей проекта {string} {string} {string}")
@@ -258,35 +249,7 @@ public class ProjectStepsDefinitions extends BaseStepsDefinitions {
         String jsonBody = gson.toJson(updateDto);
         projectDto = mapToProjectDto(projName);
 
-        updateProject(jsonBody);
-    }
-
-    @When("Администратор даёт доступ: {string} для текущего пользователя на текущий проект")
-    public void giveCurrentUserPermToCurrentProject(String role) {
-        authorizationBase.loginAsOwner();
-
-        addPermissionToProject(userId, "user", role);
-    }
-
-    @When("Пользователь даёт доступ: {string} для текущей пользовательской группы на текущий проект")
-    public void giveCurrentUserPermToCurrentProjectAsUser(String role) {
-        authorizationBase.loginAsCurrentUser();
-
-        addPermissionToProject(usersGroupId, "group", role);
-    }
-
-    @When("Администратор даёт доступ: {string} для текущей пользовательской группы на текущий проект")
-    public void giveCurrentGroupPermToCurrentProject(String role) {
-        authorizationBase.loginAsOwner();
-
-        addPermissionToProject(usersGroupId, "group", role);
-    }
-
-    @When("Администратор присваивает группе роль {string} на текущий проект")
-    public void addPermissionToCurrentGroup(String role) {
-        addPermissionToProject(usersGroupId, "group", role);
-
-        assertEquals(SC_CREATED, response.getStatusCode());
+        updateCurrentProject(jsonBody);
     }
 
     @Then("В ответе присутствует текущий проект")
@@ -318,29 +281,6 @@ public class ProjectStepsDefinitions extends BaseStepsDefinitions {
         projectPool.remove(projectId);
     }
 
-    @When("я делаю запрос на получение разрешения для текущего проекта")
-    public void checkProjectPerm() {
-        response = getBaseRequestWithCurrentCookie()
-                .when().
-                        get("/" + projectId + "/permissions");
-    }
-
-    @When("Пользователь делает запрос на проверку правил текущего проекта")
-    public void checkProjectPermAsUser() {
-        authorizationBase.loginAsCurrentUser();
-
-        response = getBaseRequestWithCurrentCookie()
-                .when().
-                        get("/" + projectId + "/permissions");
-    }
-
-    @When("Пользователь делает запрос на удаление правил текущего проекта")
-    public void deleteProjectPermAsUser() {
-        authorizationBase.loginAsCurrentUser();
-
-        deletePermissionById();
-    }
-
     @And("Сервер отвечает с пустым телом")
     public void checkBodilessAnswer() {
         jsonPath = response.jsonPath();
@@ -349,36 +289,6 @@ public class ProjectStepsDefinitions extends BaseStepsDefinitions {
                         log().ifValidationFails().
                         statusCode(SC_OK).
                         body("$.size()", is(0));
-    }
-
-    @When("Администратор делает запрос на изменение правила с пользователя на пользовательскую группу")
-    public void changePermFromUserToUsersGroup() {
-        Map<String, String> queryParams = new LinkedHashMap<>();
-
-        queryParams.put("principalType", "group");
-
-        response = getBaseRequestWithCurrentCookie()
-                .given().
-                        body(gson.toJson(queryParams)).
-                        contentType("application/merge-patch+json")
-                .when().
-                        patch(String.format("/%d/permissions/%d", projectId, permId));
-    }
-
-    @When("Администратор делает запрос на указанное правило")
-    public void checkPerm() {
-        response = getBaseRequestWithCurrentCookie()
-                .given().
-                        contentType(ContentType.JSON)
-                .when().
-                        get(String.format("/%d/permissions/%d", projectId, permId));
-    }
-
-    @And("Сервер передает ID правила в ответе")
-    public void extractPermIdFromResponse() {
-        permId = extractEntityIdFromResponse(response);
-
-        assertNotNull(permId);
     }
 
     @When("Пользователь делает повторный запрос на создание проекта")
@@ -406,6 +316,89 @@ public class ProjectStepsDefinitions extends BaseStepsDefinitions {
         super.getCurrentEntity();
     }
 
+    @When("я делаю выборку всех проектов")
+    public void currentUserGetAllProjects() {
+        super.getAllEntities();
+    }
+
+    @When("я делаю выборку проектов из папки {string}")
+    public void currentUserGetAllProjects(String projectFolderName) {
+        getByParent(String.valueOf(getProjectIdByName(projectFolderName)));
+    }
+
+    @When("я перемещаю {string} в {string}")
+    public void moveProjectToProjectFolder(String projectName, String projectFolderName) {
+        moveItem(getProjectIdByName(projectName),
+                 getProjectIdByName(projectFolderName));
+    }
+
+    @When("я удаляю {string}")
+    public void removeProject(String projectName) {
+        int id = getProjectIdByName(projectName);
+
+        forcedDeleteProjectItemById(String.valueOf(id));
+    }
+
+    @When("я меняю название проекта {string} на {string}")
+    public void updateProjectItemName(String oldName, String newName) {
+        updateProject(getProjectIdByName(oldName),
+                      gson.toJson(new ProjectCreateDto(newName)));
+    }
+
+    @When("название проекта {string} изменено на {string}")
+    public void checkProjectItemName(String oldName, String expectedName) {
+        int id = getProjectIdByName(oldName);
+
+        getProjectById(id)
+                .then()
+                .body("name", is(expectedName));
+    }
+
+    // Этот шаг проверяет правильность права при массовой выборке
+    @Then("{string} имеет роль {string}")
+    public void checkRoleForProjectItem(String projectItemName, String expectedRole) {
+        List<ProjectDto> projects = response.jsonPath().getList("content", ProjectDto.class);
+        ProjectDto project = projects
+                .stream()
+                .filter(p -> p.getName().equals(projectItemName))
+                .findFirst()
+                .orElseThrow(() -> new IllegalStateException("Не найден проект: " + projectItemName));
+
+        String message = String.format("Проект '%s' имеет роль: '%s'. Ожидается роль: '%s'",
+                                       projectItemName, project.getRole(), expectedRole);
+
+        assertEquals(message, project.getRole(), expectedRole);
+    }
+
+    // Этот шаг проверяет правильность права при выборке конкретного объекта.
+    @When("пользователь {string} обладает правом {string} на {string}")
+    public void checkUserPermissionsForProjectItem(String userName, String expectedRole, String projectItemName) {
+        UserCreateDto user = getUserByName(userName);
+        authorizationBase.loginAs(user.getEmail(), user.getPassword());
+
+        Response response = getProjectById(getProjectIdByName(projectItemName));
+        response.then()
+                .statusCode(SC_OK)
+                .body("role", is(expectedRole));
+    }
+
+    @When("проекты актуализированы согласно шаблона {string}")
+    public void recreateProjects(String projectsTemplate) {
+        authorizationBase.loginAsOwner();
+
+        super.getAllEntities()
+             .jsonPath()
+             .getList("content", ProjectDto.class)
+             .forEach(project -> {
+                 forcedDeleteProjectItemById(project.getId())
+                         .then()
+                         .statusCode(SC_NO_CONTENT);
+             });
+
+        // Создадим новые
+        createProjectsByTemplate(projectsTemplate);
+    }
+
     @When("Пользователь делает запрос на все проекты организации")
     public void getAllProjects() {
         authorizationBase.loginAsCurrentUser();
@@ -428,19 +421,15 @@ public class ProjectStepsDefinitions extends BaseStepsDefinitions {
     }
 
     @Given("удалены все существующие проекты")
-    public void deleted1000Projects() {
-        // Получаем все проекты
-        super.get1000Entities();
-
-        // Получаем список ID проектов
-        List<Integer> projectIds = response.jsonPath().getList("content.id");
-
-        // Удаляем каждый проект
-        for (Integer id: projectIds) {
-            projectId = id;
-            super.deleteCurrentEntity();
-            projectPool.remove(id);
-        }
+    public void deletedProjects() {
+        super.getAllEntities()
+             .jsonPath()
+             .getList("content", ProjectDto.class)
+             .forEach(project -> {
+                 forcedDeleteProjectItemById(project.getId())
+                         .then()
+                         .statusCode(SC_NO_CONTENT);
+             });
     }
 
     @And("Порядок проектов соответствует сортировке по {string} в направлении {string}")
@@ -516,6 +505,11 @@ public class ProjectStepsDefinitions extends BaseStepsDefinitions {
         super.getCurrentEntity();
     }
 
+    @Then("количество доступных мне проектов равно {int}")
+    public void allowedForCurrentUser(int expectedCount) {
+        assertEquals(expectedCount, response.jsonPath().getInt("page.totalElements"));
+    }
+
     @When("Администратор делает запрос на выборку проектов с фильтрацией по полю {string} и значению {string}")
     public void getProjectsByFilter(String field, String value) {
         super.getEntitiesWithFilterByField(field, value);
@@ -545,26 +539,6 @@ public class ProjectStepsDefinitions extends BaseStepsDefinitions {
     @When("Администратор делает постраничный запрос на проекты")
     public void getProjectCount() {
         getAllAndFillEntityCount();
-    }
-
-    @And("Пользователь является владельцем проекта")
-    public void checkIsCurrentUserOwnCurrentProject() {
-        extractAndSetEntityIdFromBody();
-
-        assertNotNull(projectId);
-
-        checkProjectPerm();
-
-        Map<String, String> result = (Map<String, String>) response.jsonPath().getList("").get(0);
-
-        assertEquals("OWNER", result.get("role"));
-    }
-
-    @And("Пользователь имеет роль {string} для текущего проекта")
-    public void checkUserRoleForCurrentProject(String expectedRole) {
-        String result = response.jsonPath().get("role");
-
-        assertEquals(expectedRole, result);
     }
 
     @And("Администратор создаёт проект {string} внутри текущей папки")
@@ -636,23 +610,6 @@ public class ProjectStepsDefinitions extends BaseStepsDefinitions {
                    path.matches(".*/" + projectId + "$"));
     }
 
-    @And("Пользователь видит все назначенные ему роли с правом просмотра")
-    public void checkAllViewerRolesForCurrentProject() {
-        List<Object> permission = response.jsonPath().getList("");
-        assertEquals(2, permission.size());
-
-        List<String> roles = response.jsonPath().getList("role");
-        roles.forEach(role -> assertEquals("VIEWER", role));
-    }
-
-    @And("Многократная проверка получения роли {string} для текущего пользователя, даёт одинаковый результат")
-    public void checkRoleForCurrentUserSeveralTimes(String expectedRole) {
-        for (int i = 0; i < 5; i++) {
-            getCurrentProjectInfoById();
-            checkUserRoleForCurrentProject(expectedRole);
-        }
-    }
-
     @And("Сервер отвечает со статус-кодом 204, проект успешно удален")
     public void checkProjectWasDeleted() {
         assertEquals(SC_NO_CONTENT, response.getStatusCode());
@@ -673,7 +630,62 @@ public class ProjectStepsDefinitions extends BaseStepsDefinitions {
         assertFalse(jsonPath.getList("").isEmpty());
     }
 
+    private void makeExactProjectAsCurrent(String projectName) {
+        projectPool.entrySet().stream()
+                   .filter(entry -> entry.getValue().getName().equals(projectName))
+                   .findFirst()
+                   .ifPresent(entry -> {
+                       projectId = entry.getKey();
+                       projectDto = entry.getValue();
+                   });
+    }
+
+    private void moveItem(Integer movedItemId, Integer targetId) {
+        response = getBaseRequestWithCurrentCookie()
+                .when().
+                        post(String.format("/%d/move/%d", movedItemId, targetId));
+    }
+
+    private void updateProject(Integer id, String jsonBody) {
+        response = getBaseRequestWithCurrentCookie()
+                .given().
+                        body(jsonBody).
+                        contentType(ContentType.JSON)
+                .when().log().all().
+                        patch("" + id);
+    }
+
+    private void updateCurrentProject(String jsonBody) {
+        updateProject(projectId, jsonBody);
+    }
+
+    private Response getByParent(String parentId) {
+        response = getBaseRequestWithCurrentCookie()
+                .when().
+                        get("/?parent=" + parentId);
+
+        return response;
+    }
+
+    private Response forcedDeleteProjectItemById(String id) {
+        response = getBaseRequestWithCurrentCookie()
+                .when().
+                        delete("/" + id + "?forced=true");
+
+        return response;
+    }
+
+    private Response getProjectById(Integer projectItemId) {
+        response = getBaseRequestWithCurrentCookie()
+                .when().
+                       get("/" + projectItemId);
+
+        return response;
+    }
+
     public void createProjectsByTemplate(String template) {
+        projectPool.clear();
+
         if ("тестирование прав на проекты".equals(template)) {
             // Проекты в корне
             createProject("Проект0.1");
@@ -703,6 +715,13 @@ public class ProjectStepsDefinitions extends BaseStepsDefinitions {
             moveItem(getProjectIdByName("Проект2.1"), folder2);
             moveItem(getProjectIdByName("Проект2.2"), folder2);
             moveItem(getProjectIdByName("Проект2.3"), folder2);
+
+            // Папка 7 и её наполнение
+            createProjectFolder("Папка7", "Папка 7");
+            int pFolder7 = getProjectIdByName("Папка7");
+            createProject("Проект37.1");
+
+            moveItem(getProjectIdByName("Проект37.1"), pFolder7);
 
             // Папка 6 и её наполнение
             createProjectFolder("Папка6", "Папка 6");
@@ -738,65 +757,19 @@ public class ProjectStepsDefinitions extends BaseStepsDefinitions {
             createProject("Проект3.1");
 
             moveItem(pFolder4, pFolder3);
+            moveItem(pFolder7, pFolder3);
             moveItem(getProjectIdByName("Проект3.1"), pFolder3);
         } else {
             throw new IllegalStateException("Создание проектов. Передан не известный шаблон: " + template);
         }
     }
 
-    private boolean isProjectExistInPool(String projectName) {
-        return projectPool.values().stream()
-                          .anyMatch(dto -> projectName.equals(dto.getName()));
-    }
-
     private ProjectCreateDto mapToProjectDto(String projectName) {
         return new ProjectCreateDto(projectName);
     }
 
-    private void makeExactProjectAsCurrent(String projectName) {
-        projectPool.entrySet().stream()
-                   .filter(entry -> entry.getValue().getName().equals(projectName))
-                   .findFirst()
-                   .ifPresent(entry -> {
-                       projectId = entry.getKey();
-                       projectDto = entry.getValue();
-                   });
-    }
-
-    private void addPermissionToProject(Integer principalId, String principalType, String role) {
-        Map<String, String> payload = new LinkedHashMap<>();
-        payload.put("principalId", principalId.toString());
-        payload.put("principalType", principalType);
-        payload.put("role", role);
-
-        response = getBaseRequestWithCurrentCookie()
-                .given().
-                        body(gson.toJson(payload)).
-                        contentType(ContentType.JSON)
-                .when().
-                        post(String.format("/%d/permissions", projectId));
-
-        permId = extractEntityIdFromResponse(response);
-    }
-
-    private void deletePermissionById() {
-        response = getBaseRequestWithCurrentCookie()
-                .when().
-                        delete(String.format("/%d/permissions/%s", projectId, permId));
-    }
-
-    private void moveItem(Integer movedItemId, Integer targetId) {
-        response = getBaseRequestWithCurrentCookie()
-                .when().
-                        post(String.format("/%d/move/%d", movedItemId, targetId));
-    }
-
-    private void updateProject(String jsonBody) {
-        response = getBaseRequestWithCurrentCookie()
-                .given().
-                        body(jsonBody).
-                        contentType(ContentType.JSON)
-                .when().
-                        patch("" + projectId);
+    private boolean isProjectExistInPool(String projectName) {
+        return projectPool.values().stream()
+                          .anyMatch(dto -> projectName.equals(dto.getName()));
     }
 }

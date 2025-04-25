@@ -4,8 +4,8 @@ meta {
   seq: 2
 }
 
-put {
-  url: http://localhost:8100/api/projects/11
+patch {
+  url: http://localhost:8082/projects/24
   body: json
   auth: bearer
 }
@@ -15,11 +15,11 @@ headers {
 }
 
 auth:bearer {
-  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJ1c2VyX25hbWUiOiJhZG1pbkBtYWlsLnJ1Iiwic2NvcGUiOlsiY3JnIl0sIm9yZ2FuaXphdGlvbnMiOltdLCJleHAiOjE1Nzk2MTIyMjQsImF1dGhvcml0aWVzIjpbIkFETUlOIl0sImp0aSI6ImQxZmRjYTk0LTk5OTctNDQ1ZS05N2U5LWZkYjk5MDNlZDk0YyIsImNsaWVudF9pZCI6ImFkbWluIn0.0oCV4RmaV7kaBsTMl7tPGZWF-7k6lsmLCg0WBtoEJlw
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjcmdfbG9naW4iOiJmaXoxQGZpeiIsInVzZXJfbmFtZSI6ImZpejFfZml6XzMiLCJncm91cHMiOltdLCJ2ZXJzaW9uIjowLCJhdXRob3JpdGllcyI6WyJVU0VSIl0sIm1pbmlvbnMiOltdLCJjbGllbnRfaWQiOiJhZG1pbiIsInVzZXJfaWQiOjMsInNjb3BlIjpbImNyZyJdLCJvcmdhbml6YXRpb25zIjpbeyJpZCI6MSwibmFtZSI6ItGC0LXRgdGC0LjRgNC-0LLQsNC90LjQtSDQv9GA0LDQsiDQvdCwINC_0YDQvtC10LrRgtGLIn1dLCJleHAiOjE3NDU0ODMwMjQsImRpcmVjdE1pbmlvbnMiOltdLCJqdGkiOiJiZmZhZDdiNi0xOGNjLTQzNjMtOThhYS01ODdiMjk1ZTNlNDQifQ.inBboE0-ieJT08frmzBFMpP6o9TkKFXhgKrWXCtU0Ek
 }
 
 body:json {
   {
-    "projectName": "new name of 11 project"
+    "name": "Проект0.1_"
   }
 }

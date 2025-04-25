@@ -33,6 +33,7 @@ import static org.junit.Assert.assertTrue;
 public class SmevTasksDefinitions extends BaseStepsDefinitions {
 
     private final LibraryStepsDefinitions libraryStepsDefinitions = new LibraryStepsDefinitions();
+
     private final String RECEIVE_RABBIT_QUEUE = "U629301_QUEUE_RECEIVE";
     private final String SEND_RABBIT_QUEUE = "U629301_QUEUE_SEND";
     private final String SMEV_RESOURCE_PATH = "ru/mycrg/acceptance/resources/SMEV/";

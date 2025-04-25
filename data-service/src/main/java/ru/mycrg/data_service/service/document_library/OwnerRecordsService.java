@@ -127,15 +127,14 @@ public class OwnerRecordsService implements IRecordsService {
     public List<DocumentVersioningDto> getVersionsByRecordId(ResourceQualifier rQualifier, Object recordId) {
         IRecord record = getById(rQualifier, recordId);
         Object versions = record.getContent().get(VERSIONS.getName());
-        if (!record.isFolder() && Objects.nonNull(versions)) {
-            try {
-                return mapper.readValue(versions.toString(), new TypeReference<List<DocumentVersioningDto>>() {
-                });
-            } catch (IOException e) {
-                throw new DataServiceException("Не удалось получить версии документа: " + rQualifier);
-            }
-        } else {
+        if (versions == null) {
             return new ArrayList<>();
+        }
+
+        try {
+            return (List<DocumentVersioningDto>) record.getContent().get(VERSIONS.getName());
+        } catch (Exception e) {
+            throw new DataServiceException("Не удалось получить версии документа: " + rQualifier);
         }
     }
 

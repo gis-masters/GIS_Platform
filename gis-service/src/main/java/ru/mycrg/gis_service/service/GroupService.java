@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.mycrg.gis_service.dto.GroupCreateDto;
 import ru.mycrg.gis_service.dto.GroupProjection;
 import ru.mycrg.gis_service.dto.GroupUpdateDto;
+import ru.mycrg.gis_service.dto.project.ProjectProjectionImpl;
 import ru.mycrg.gis_service.entity.Group;
 import ru.mycrg.gis_service.entity.Project;
 import ru.mycrg.gis_service.exceptions.BadRequestException;
@@ -31,18 +32,18 @@ public class GroupService {
     private final GroupRepository groupRepository;
     private final JsonPatcher jsonPatcher;
     private final ProjectionFactory projectionFactory;
-    private final ResourceProtector resourceProtector;
+    private final ProjectProtector projectProtector;
 
     public GroupService(GroupRepository groupRepository,
                         ProjectService projectService,
                         JsonPatcher jsonPatcher,
                         ProjectionFactory projectionFactory,
-                        ResourceProtector resourceProtector) {
+                        ProjectProtector projectProtector) {
         this.jsonPatcher = jsonPatcher;
         this.projectService = projectService;
         this.groupRepository = groupRepository;
         this.projectionFactory = projectionFactory;
-        this.resourceProtector = resourceProtector;
+        this.projectProtector = projectProtector;
     }
 
     public List<GroupProjection> getAll(long projectId) {
@@ -53,12 +54,13 @@ public class GroupService {
     }
 
     public GroupProjection create(long projectId, GroupCreateDto dto) {
-        Project project = projectService.getById(projectId);
-        if (!resourceProtector.isOwner(project)) {
-            throw new ForbiddenException("редактирования", "проекта", project.getName());
+        ProjectProjectionImpl projectProjection = projectService.getByIdWithRole(projectId);
+        if (projectProtector.lessThenContributor(projectProjection)) {
+            throw new ForbiddenException("редактирования", "проекта", projectProjection.getName());
         }
 
         Group group = new Group(dto);
+        Project project = projectService.getById(projectId);
         if (isInvalidGroupRelation(group, project.getGroups())) {
             throw new BadRequestException("parent: Родительская группа задана неверно");
         }
@@ -78,12 +80,12 @@ public class GroupService {
     }
 
     public void update(long projectId, long groupId, JsonMergePatch patchDto) {
-        final Project project = projectService.getById(projectId);
-        if (!resourceProtector.isOwner(project)) {
-            throw new ForbiddenException("редактирования", "проекта", project.getName());
+        ProjectProjectionImpl projectProjection = projectService.getByIdWithRole(projectId);
+        if (projectProtector.lessThenContributor(projectProjection)) {
+            throw new ForbiddenException("редактирования", "проекта", projectProjection.getName());
         }
 
-        List<Group> groups = project.getGroups();
+        List<Group> groups = projectService.getById(projectId).getGroups();
         Group groupForUpdate = getGroupById(groups, groupId);
 
         GroupUpdateDto groupDto = groupMapper.toDto(groupForUpdate);
@@ -101,21 +103,20 @@ public class GroupService {
     }
 
     public void delete(long projectId, long groupId) {
-        final Project project = projectService.getById(projectId);
-        if (!resourceProtector.isOwner(project)) {
-            throw new ForbiddenException("редактирования", "проекта", project.getName());
+        ProjectProjectionImpl projectProjection = projectService.getByIdWithRole(projectId);
+        if (projectProtector.lessThenContributor(projectProjection)) {
+            throw new ForbiddenException("редактирования", "проекта", projectProjection.getName());
         }
 
-        List<Group> groups = project.getGroups();
+        List<Group> groups = projectService.getById(projectId).getGroups();
         Group group = getGroupById(groups, groupId);
 
         groupRepository.deleteGroupById(group.getId());
     }
 
     private List<Group> getProjectGroups(long projectId) {
-        return projectService
-                .getById(projectId)
-                .getGroups();
+        return projectService.getById(projectId)
+                             .getGroups();
     }
 
     private Group getGroupById(List<Group> groups, Long groupId) {

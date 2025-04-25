@@ -34,18 +34,18 @@ public class PermissionsService {
     private final PermissionRepository permissionRepository;
     private final ProjectionFactory projectionFactory;
     private final ProjectService projectService;
-    private final ResourceProtector resourceProtector;
+    private final ProjectProtector projectProtector;
     private final RoleRepository roleRepository;
 
     public PermissionsService(PermissionRepository permissionRepository,
                               ProjectionFactory projectionFactory,
                               ProjectService projectService,
-                              ResourceProtector resourceProtector,
+                              ProjectProtector projectProtector,
                               RoleRepository roleRepository) {
         this.projectService = projectService;
         this.projectionFactory = projectionFactory;
         this.permissionRepository = permissionRepository;
-        this.resourceProtector = resourceProtector;
+        this.projectProtector = projectProtector;
         this.roleRepository = roleRepository;
     }
 
@@ -64,7 +64,7 @@ public class PermissionsService {
 
     public List<PermissionProjection> getAllAllowed(long projectId) {
         Project project = projectService.getById(projectId);
-        if (resourceProtector.isOwner(project)) {
+        if (projectProtector.isOwner(project.getId())) {
             return getProjectPermissions(project);
         } else {
             return getAllowedPermissions(project);
@@ -198,7 +198,7 @@ public class PermissionsService {
     }
 
     private List<PermissionProjection> getAllowedPermissions(Project project) {
-        List<Permission> permissionsForProject = resourceProtector.getUserPermissionsForProject(project);
+        List<Permission> permissionsForProject = projectProtector.getUserPermissionsForProject(project);
 
         return permissionsForProject.stream()
                                     .map(this::mapToProjection)
@@ -211,7 +211,7 @@ public class PermissionsService {
     }
 
     private boolean throwIfNotOwnerOrAdmin(@NotNull Project project) {
-        if (resourceProtector.isOwner(project)) {
+        if (projectProtector.isOwner(project.getId())) {
             return true;
         }
 

@@ -208,6 +208,8 @@ public class UserGroupStepsDefinitions extends BaseStepsDefinitions {
             super.createEntity(usersGroupDto);
             usersGroupId = response.jsonPath().get("id");
 
+            usersGroupPool.put(usersGroupId, usersGroupDto);
+
             addUserToGroup(usersGroupId, getUserIdByName("fiz3"));
             addUserToGroup(usersGroupId, getUserIdByName("fiz4"));
 
@@ -215,6 +217,8 @@ public class UserGroupStepsDefinitions extends BaseStepsDefinitions {
             usersGroupDto = new GroupCreateDto("группа 2", "Группа с пользователем fiz5");
             super.createEntity(usersGroupDto);
             usersGroupId = response.jsonPath().get("id");
+
+            usersGroupPool.put(usersGroupId, usersGroupDto);
 
             addUserToGroup(usersGroupId, getUserIdByName("fiz5"));
         } else {
@@ -257,5 +261,7 @@ public class UserGroupStepsDefinitions extends BaseStepsDefinitions {
         response = getBaseRequestWithCurrentCookie()
                 .when().
                         post(String.format("/%s/users/%s", groupId, userId));
+
+        response.then().statusCode(SC_NO_CONTENT);
     }
 }

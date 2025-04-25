@@ -7,11 +7,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.mycrg.audit_service_contract.events.CrgAuditEvent;
 import ru.mycrg.auth_facade.IAuthenticationFacade;
-import ru.mycrg.gis_service.entity.Project;
+import ru.mycrg.gis_service.dto.project.ProjectProjectionImpl;
 import ru.mycrg.gis_service.exceptions.ForbiddenException;
 import ru.mycrg.gis_service.queue.MessageBusProducer;
 import ru.mycrg.gis_service.repository.ProjectRepository;
-import ru.mycrg.gis_service.service.ResourceProtector;
+import ru.mycrg.gis_service.service.ProjectProtector;
 
 import static ru.mycrg.gis_service.GisServiceApplication.objectMapper;
 
@@ -22,19 +22,19 @@ public class ProjectFolderMover implements IProjectMover {
 
     private final MessageBusProducer messageBus;
     private final ProjectService projectService;
+    private final ProjectProtector projectProtector;
     private final ProjectRepository projectRepository;
-    private final ResourceProtector resourceProtector;
     private final IAuthenticationFacade authenticationFacade;
 
     public ProjectFolderMover(MessageBusProducer messageBus,
                               ProjectService projectService,
+                              ProjectProtector projectProtector,
                               ProjectRepository projectRepository,
-                              ResourceProtector resourceProtector,
                               IAuthenticationFacade authenticationFacade) {
         this.messageBus = messageBus;
         this.projectService = projectService;
+        this.projectProtector = projectProtector;
         this.projectRepository = projectRepository;
-        this.resourceProtector = resourceProtector;
         this.authenticationFacade = authenticationFacade;
     }
 
@@ -47,10 +47,9 @@ public class ProjectFolderMover implements IProjectMover {
     @Override
     @Transactional
     public void move(Long movedFolderId, Long targetFolderId) {
-        Project movedFolder = projectService.getById(movedFolderId);
-        if (!resourceProtector.isOwner(movedFolder)) {
-            throw new ForbiddenException("Недостаточно прав для перемещения проекта: " + movedFolder.getName());
-        }
+        ProjectProjectionImpl movedFolder = projectService.getByIdWithRole(movedFolderId);
+
+        projectProtector.throwIfMoveNotAllowed(movedFolder);
 
         if (targetFolderId == null) {
             String oldSelfPath = getSelfPath(movedFolder);
@@ -60,8 +59,8 @@ public class ProjectFolderMover implements IProjectMover {
 
             log.debug("Переместили папку проектов: {} в корень", movedFolderId);
         } else {
-            Project targetFolder = projectService.getById(targetFolderId);
-            if (!resourceProtector.isOwner(targetFolder)) {
+            ProjectProjectionImpl targetFolder = projectService.getByIdWithRole(targetFolderId);
+            if (projectProtector.lessThenContributor(targetFolder)) {
                 throw new ForbiddenException("Недостаточно прав для перемещения в: " + targetFolder.getName());
             }
 

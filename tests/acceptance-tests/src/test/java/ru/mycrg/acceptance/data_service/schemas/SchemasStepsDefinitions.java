@@ -3,14 +3,17 @@ package ru.mycrg.acceptance.data_service.schemas;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.restassured.http.ContentType;
+import io.restassured.path.json.JsonPath;
 import io.restassured.specification.RequestSpecification;
 import ru.mycrg.acceptance.BaseStepsDefinitions;
 import ru.mycrg.acceptance.auth_service.AuthorizationBase;
 import ru.mycrg.acceptance.data_service.dto.schemas.SchemaDto;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
+import static org.apache.http.HttpStatus.SC_OK;
 import static org.junit.Assert.*;
 import static ru.mycrg.acceptance.data_service.schemas.SchemaTemplates.getSchemaTemplateByTitle;
 
@@ -24,6 +27,24 @@ public class SchemasStepsDefinitions extends BaseStepsDefinitions {
 
         return super.getBaseRequestWithCurrentCookie()
                     .basePath(basePath);
+    }
+
+    @When("Согласно специализации 1 создана схема задач")
+    public void checkSchemasBySpecialization1() {
+        getCurrentSchema("tasks_schema_v1");
+
+        assertEquals(SC_OK, response.getStatusCode());
+
+        // Проверяем содержимое ответа
+        JsonPath jsonPath = response.jsonPath();
+        List<Map<String, Object>> schemas = jsonPath.getList("$");
+
+        // Проверяем что получили ровно одну схему
+        assertEquals(1, schemas.size());
+
+        Map<String, Object> schema = schemas.get(0);
+        // Проверяем title схемы
+        assertEquals("Схема задач специализации 1", schema.get("title"));
     }
 
     @When("Владелец организации делает запрос на все схемы")
@@ -165,7 +186,6 @@ public class SchemasStepsDefinitions extends BaseStepsDefinitions {
     private void getAllSchemas() {
         response = getBaseRequestWithCurrentCookie()
                 .when().
-                        log().all().
                         get("?schemaIds=");
     }
 

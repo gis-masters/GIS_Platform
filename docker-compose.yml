@@ -39,11 +39,12 @@ services:
     image: ${DOCKER_CRG_HOST}/geoserver:${GEOSERVER_TAG}
     restart: always
     healthcheck:
-      test: [ "CMD-SHELL", "curl -f http://localhost:8080/geoserver || exit 1" ]
-      interval: 100s
-      timeout: 100s
-      retries: 6
-      start_period: 300s
+      test:
+        [ "CMD-SHELL", "curl -f http://localhost:8080/geoserver || exit 1" ]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+      start_period: 120s
     ports:
       - "8080:8080"
     volumes:
