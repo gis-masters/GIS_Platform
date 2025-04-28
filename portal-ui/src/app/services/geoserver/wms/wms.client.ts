@@ -18,7 +18,7 @@ class WmsClient extends GeoserverClient {
   getMap(url: string): Promise<Blob> {
     return http.get<Blob>(url, {
       responseType: 'blob',
-      cache: { disabled: true }
+      cache: { maxAge: 1000 }
     });
   }
 
