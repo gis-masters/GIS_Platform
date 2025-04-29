@@ -81,6 +81,8 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
   isGeometryValid = false;
   isGeometryChanged = false;
 
+  isGeometryAutoFixed = false;
+
   private unsubscribeFromMobx$: Subject<void> = new Subject<void>();
 
   constructor(private formBuilder: UntypedFormBuilder) {
@@ -116,7 +118,7 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
 
         this.setIsNew(firstFeature);
 
-        this.selectedTab = Number(this.isNew);
+        this.selectedTab = editFeatureStore.geometryValidationError ? 1 : Number(this.isNew);
 
         if (!this.isNew) {
           await mapDrawService.highlightFeatures(this.features);
@@ -316,6 +318,15 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
                   this.isGeometryChanged = isGeometryChanged;
                   editFeatureStore.setPristine(false);
                 });
+
+              fromMobx(() => editFeatureStore.geometryValidationErrorMessage)
+                .pipe(takeUntil(this.unsubscribe$))
+                .pipe(takeUntil(this.unsubscribeFromMobx$))
+                .subscribe(() => {
+                  if (!editFeatureStore.geometryValidationErrorMessage) {
+                    this.isGeometryAutoFixed = true;
+                  }
+                });
             });
         }
       });
@@ -407,13 +418,27 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
     }
 
     const firstFeature: WfsFeature = this.features?.[0] as WfsFeature;
+
     if (this.isNew && firstFeature) {
-      const createdFeature = await createFeature(layer.dataset, layer.tableName, {
-        type: firstFeature.type,
-        properties: actualProperties,
-        geometry: editFeatureStore.resultGeometry
-      });
-      ids = [createdFeature.id];
+      try {
+        const createdFeature = await createFeature(layer.dataset, layer.tableName, {
+          type: firstFeature.type,
+          properties: actualProperties,
+          geometry: editFeatureStore.resultGeometry
+        });
+        ids = [createdFeature.id];
+      } catch (error) {
+        const err = error as AxiosError<{ errors: Record<string, unknown>[]; message?: string }>;
+
+        editFeatureStore.setGeometryValidationErrorMessage(
+          err.response?.data.message || 'Ошибка при сохранении объекта'
+        );
+        editFeatureStore.setGeometryValidationError(true);
+
+        this.isSaveInProgress = false;
+
+        return;
+      }
     } else {
       let geometry: WfsGeometry | undefined;
 
@@ -421,7 +446,7 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
         geometry = this.features[0].geometry as WfsGeometry;
       }
 
-      if (this.isGeometryChanged) {
+      if (this.isGeometryChanged || this.isGeometryAutoFixed) {
         geometry = editFeatureStore.resultGeometry;
       }
 
@@ -434,28 +459,31 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
 
     this.isSaveInProgress = false;
 
-    await mapModeManager.changeMode(
-      MapMode.SELECTED_FEATURES,
-      {
-        payload: {
-          features: savedFeatures,
-          type: MapSelectionTypes.ADD
-        }
-      },
-      'saveFeatureWithConfirm reopen 1'
-    );
+    // если есть ошибка при сохранении объекта, то не дергаем режимы что бы не провоцировать кучу проблем
+    if (!editFeatureStore.geometryValidationError) {
+      await mapModeManager.changeMode(
+        MapMode.SELECTED_FEATURES,
+        {
+          payload: {
+            features: savedFeatures,
+            type: MapSelectionTypes.ADD
+          }
+        },
+        'saveFeatureWithConfirm reopen 1'
+      );
 
-    await mapModeManager.changeMode(
-      MapMode.EDIT_FEATURE,
-      {
-        payload: {
-          mode: this.mode || EditFeatureMode.single,
-          features: savedFeatures,
-          layer: this.layer
-        }
-      },
-      'saveFeatureWithConfirm reopen 1.2'
-    );
+      await mapModeManager.changeMode(
+        MapMode.EDIT_FEATURE,
+        {
+          payload: {
+            mode: this.mode || EditFeatureMode.single,
+            features: savedFeatures,
+            layer: this.layer
+          }
+        },
+        'saveFeatureWithConfirm reopen 1.2'
+      );
+    }
 
     mapService.refreshAllLayers();
     communicationService.featuresUpdated.emit();
@@ -573,6 +601,7 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
         });
 
         communicationService.featuresUpdated.emit({ type: 'update', data: null });
+        editFeatureStore.setPristineFromGeometryFix(false);
 
         return;
       }
@@ -588,13 +617,21 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
       communicationService.featuresUpdated.emit();
     } catch (error) {
       const err = error as AxiosError<{ errors: Record<string, unknown>[]; message?: string }>;
-      Toast.error(err.response?.data.message || 'Ошибка при сохранении объекта');
+
+      editFeatureStore.setGeometryValidationErrorMessage(err.response?.data.message || 'Ошибка при сохранении объекта');
+      editFeatureStore.setGeometryValidationError(true);
 
       this.isSaveInProgress = false;
     }
   }
 
   private publishPristine() {
+    if (editFeatureStore.pristineFromGeometryFix) {
+      editFeatureStore.setPristine(false);
+
+      return;
+    }
+
     if (this.editFeatureForm) {
       editFeatureStore.setPristine(this.editFeatureForm.pristine);
     } else {

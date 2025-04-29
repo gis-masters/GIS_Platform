@@ -26,13 +26,20 @@ class EditFeatureBlock extends Block {
 
   copyFeaturesButton = new CopyFeaturesButtonBlock(this.selectors.container);
 
+  async waitForLoading(): Promise<void> {
+    const $editFeatureLoader = await this.$('editFeatureLoading');
+    await $editFeatureLoader.waitForDisplayed({ reverse: true });
+  }
+
   async clickSaveButton(): Promise<void> {
     const $saveNewObjectBtn = await this.$('editFeatureSaveBtn');
     await $saveNewObjectBtn.click();
+    await this.waitForLoading();
   }
 
   async closeConfirmDialog(): Promise<void> {
     await konfirmierenBlock.closeDialog();
+    await this.waitForLoading();
   }
 
   async goBack(): Promise<void> {
@@ -42,8 +49,7 @@ class EditFeatureBlock extends Block {
   }
 
   async checkObjectAttributeFields(titles: string[]): Promise<void> {
-    const $editFeatureLoader = await this.$('editFeatureLoading');
-    await $editFeatureLoader.waitForDisplayed({ reverse: true });
+    await this.waitForLoading();
     await this.waitForEditFeatureForm();
 
     await browser.waitUntil(

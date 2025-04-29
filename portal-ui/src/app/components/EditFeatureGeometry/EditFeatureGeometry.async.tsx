@@ -28,6 +28,7 @@ import { EditFeatureGeometryField } from './Field/EditFeatureGeometry-Field';
 import { EditFeatureGeometryForm } from './Form/EditFeatureGeometry-Form.composed';
 import { EditFeatureGeometryHeader } from './Header/EditFeatureGeometry-Header';
 import { EditFeatureGeometrySelectProjection } from './SelectProjection/EditFeatureGeometry-SelectProjection';
+import { EditFeatureGeometryValidationError } from './ValidationError/EditFeatureGeometry-ValidationError';
 import { EditFeatureGeometryView } from './View/EditFeatureGeometry-View.composed';
 
 import '!style-loader!css-loader!sass-loader!./EditFeatureGeometry.scss';
@@ -63,7 +64,7 @@ export default class EditFeatureGeometry extends Component<EditFeatureGeometryPr
       );
     }
 
-    const { geometry } = editFeatureStore;
+    const { geometry, geometryValidationErrorMessage } = editFeatureStore;
     const geometryType = supportedGeometryTypes.includes(geometry?.type) ? geometry.type : undefined;
 
     return (
@@ -77,6 +78,7 @@ export default class EditFeatureGeometry extends Component<EditFeatureGeometryPr
             />
           </EditFeatureGeometryField>
         </EditFeatureGeometryHeader>
+        {!!geometryValidationErrorMessage && <EditFeatureGeometryValidationError />}
         {geometryType && (
           <EditFeatureGeometryField>
             Тип геометрии:

@@ -29,6 +29,7 @@ class DrawFeatureModeHandler implements IMapModeHandler {
     mapStore.setMode(this.mode());
 
     const data = props?.payload as EditFeaturesData;
+
     editFeatureStore.setEditFeaturesData(data);
     sidebars.openEdit();
     sidebars.closeSelectedFeaturesSidebar();

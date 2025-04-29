@@ -138,3 +138,17 @@
 
   --mdc-icon-button-state-layer-size: 36px;
 }
+
+.edit-feature__geometryErrorMessage {
+  padding: 5px 20px;
+  
+  color: tomato;
+
+  font-size: 15px;
+}
+
+.geometryError-button {
+  margin-left: 10px;
+  
+  font-size: 15px;
+}

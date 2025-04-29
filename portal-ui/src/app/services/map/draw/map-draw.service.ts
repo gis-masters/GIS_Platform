@@ -128,7 +128,10 @@ class MapDrawService {
       this.addFeatures([...olFeatures, highlightedFeature]);
     } else {
       this.addFeatures(olFeatures);
-      selectedFeaturesStore.clearActiveFeature();
+
+      if (!editFeatureStore.geometryValidationError) {
+        selectedFeaturesStore.clearActiveFeature();
+      }
     }
   }
 

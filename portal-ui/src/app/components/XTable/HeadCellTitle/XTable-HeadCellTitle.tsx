@@ -19,10 +19,6 @@ export class XTableHeadCellTitle<T> extends Component<XTableHeadCellTitleProps<T
     const { col, singleLineContent } = this.props;
     const { title } = col;
 
-    return (
-      <span className={cnXTableHeadCellTitle({ singleLineContent })}>
-        {title}
-      </span>
-    );
+    return <span className={cnXTableHeadCellTitle({ singleLineContent })}>{title}</span>;
   }
 }

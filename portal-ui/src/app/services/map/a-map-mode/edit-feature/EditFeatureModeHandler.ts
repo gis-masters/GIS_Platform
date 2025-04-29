@@ -24,6 +24,7 @@ class EditFeatureModeHandler implements IMapModeHandler {
     mapStore.setMode(this.mode());
 
     editFeatureStore.setEditFeaturesData(props?.payload as EditFeaturesData);
+
     sidebars.openEdit();
     sidebars.closeSelectedFeaturesSidebar();
 

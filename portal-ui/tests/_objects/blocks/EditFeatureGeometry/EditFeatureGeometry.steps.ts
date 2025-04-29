@@ -16,6 +16,14 @@ When(
   }
 );
 
+When('в геометрии первого контура я добавляю новый узел', async function () {
+  await editFeatureGeometryBlock.addNodeClick();
+});
+
+When('в вкладке геометрии я нажимаю кнопку `Исправить`', async function () {
+  await editFeatureGeometryBlock.geometryFixBtnClick();
+});
+
 When('в форме редактирования геометрии я выбираю первое поле в списке координат', async function () {
   await editFeatureGeometryBlock.selectFirstInput();
 });

@@ -188,6 +188,7 @@ export class EditFeatureGeometryGroupBase extends Component<EditFeatureGeometryG
   @action.bound
   private handleChange(val: Coordinate, i: number) {
     const { mustBeClosed, coordinates } = this.props;
+    editFeatureStore.updateGeometryTab();
 
     coordinates[i] = val;
     if (i === 0 && mustBeClosed) {

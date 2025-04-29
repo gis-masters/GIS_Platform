@@ -95,7 +95,7 @@ Then(
     const expectedGeometry = data
       .raw()
       .flat()
-      .filter(item => item.length > 2);
+      .filter(item => !Number.isNaN(Number(item)));
 
     const geometry = await editFeatureBlock.getGeometryInEditMode();
 

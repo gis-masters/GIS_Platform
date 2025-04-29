@@ -192,6 +192,7 @@ export class EditFeatureGeometryCoord extends Component<EditFeatureGeometryCoord
 
     if (onDelete && index) {
       onDelete(index);
+      editFeatureStore.updateGeometryTab();
     }
   }
 

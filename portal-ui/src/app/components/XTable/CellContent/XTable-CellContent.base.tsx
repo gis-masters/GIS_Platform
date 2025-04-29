@@ -16,8 +16,8 @@ const INDENT = 29;
 
 export interface XTableCellContentProps<T>
   extends ChildrenProps,
-  IClassNameProps,
-  React.HTMLAttributes<HTMLSpanElement> {
+    IClassNameProps,
+    React.HTMLAttributes<HTMLSpanElement> {
   singleLineContent: boolean;
   col: XTableColumn<T>;
   type?: XTableColumnType;

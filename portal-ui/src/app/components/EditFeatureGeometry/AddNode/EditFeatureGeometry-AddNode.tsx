@@ -1,6 +1,9 @@
 import React, { FC } from 'react';
 import { IconButton, Tooltip } from '@mui/material';
 import { AddCircleOutline } from '@mui/icons-material';
+import { cn } from '@bem-react/classname';
+
+const cnEditFeatureGeometryAddNode = cn('EditFeatureGeometry', 'AddNode');
 
 interface EditFeatureGeometryAddNodeProps {
   onClick(): void;
@@ -8,7 +11,7 @@ interface EditFeatureGeometryAddNodeProps {
 
 export const EditFeatureGeometryAddNode: FC<EditFeatureGeometryAddNodeProps> = ({ onClick }) => (
   <Tooltip title='Добавить узел'>
-    <IconButton onClick={onClick}>
+    <IconButton className={cnEditFeatureGeometryAddNode()} onClick={onClick}>
       <AddCircleOutline />
     </IconButton>
   </Tooltip>

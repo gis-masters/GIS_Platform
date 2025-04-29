@@ -40,10 +40,6 @@ class VectorDataClient extends DataClient {
     return `${this.getDatasetUrl(datasetIdentifier)}/tables/${tableIdentifier}/records/${recordId}`;
   }
 
-  private getRecordsCopyUrl(): string {
-    return `${this.getDataUrl()}/records/copy`;
-  }
-
   // dataset
 
   async getDataset(identifier: string): Promise<Dataset> {

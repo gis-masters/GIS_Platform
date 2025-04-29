@@ -17,6 +17,10 @@ class EditFeatureStore {
     return this._instance || (this._instance = new this());
   }
 
+  @observable geometryValidationErrorMessage: string | null = null;
+  @observable geometryValidationError: boolean = false;
+
+  @observable pristineFromGeometryFix: boolean = false;
   @observable pristine: boolean = true;
   @observable editFeaturesData?: EditFeaturesData;
 
@@ -151,7 +155,26 @@ class EditFeatureStore {
   }
 
   @action
+  setGeometryValidationErrorMessage(geometryValidationErrorMessage: string | null) {
+    this.geometryValidationErrorMessage = geometryValidationErrorMessage;
+  }
+
+  @action
+  setGeometryValidationError(geometryValidationError: boolean) {
+    this.geometryValidationError = geometryValidationError;
+  }
+
+  @action
+  setPristineFromGeometryFix(pristineFromGeometryFix: boolean) {
+    this.pristineFromGeometryFix = pristineFromGeometryFix;
+  }
+
+  @action
   setEditFeaturesData(editFeaturesData: EditFeaturesData | undefined) {
+    if (this.geometryValidationErrorMessage) {
+      return;
+    }
+
     if (editFeaturesData === undefined) {
       this.setPristine(false);
     }
@@ -176,6 +199,14 @@ class EditFeatureStore {
   @computed
   private get firstFeature(): WfsFeature | undefined {
     return this.editFeaturesData?.features[0];
+  }
+
+  @action
+  updateGeometryTab() {
+    this.setPristine(false);
+    this.setGeometryValidationErrorMessage(null);
+    this.setGeometryValidationError(false);
+    this.setPristineFromGeometryFix(false);
   }
 }
 

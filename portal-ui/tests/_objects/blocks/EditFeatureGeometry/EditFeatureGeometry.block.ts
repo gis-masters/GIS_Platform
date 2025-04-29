@@ -10,7 +10,9 @@ class EditFeatureGeometryBlock extends Block {
     coordInputY: '.EditFeatureGeometry-CoordInput_d_y',
     warningIcon: '.MuiSvgIcon-colorWarning',
     geometryForm: '.EditFeatureGeometry-Form',
-    coordInput: '.EditFeatureGeometry-Form .EditFeatureGeometry-CoordInput'
+    groupFooter: '.EditFeatureGeometry-GroupFooter',
+    coordInput: '.EditFeatureGeometry-Form .EditFeatureGeometry-CoordInput',
+    geometryFixBtn: '.EditFeatureGeometryValidationError-Button'
   };
 
   async getEditFormCoordsIndexes(): Promise<string[]> {
@@ -45,6 +47,20 @@ class EditFeatureGeometryBlock extends Block {
     const inputBlock = new MuiInputBlock($input);
     await inputBlock.clearValue();
     await inputBlock.setValue(value.toString());
+  }
+
+  async addNodeClick(): Promise<void> {
+    const $$groupFooter = await this.$$('groupFooter');
+    const $firstGroupFooter = $$groupFooter[0];
+
+    const $addCoord = await $firstGroupFooter.$('.EditFeatureGeometry-AddNode');
+    await $addCoord.click();
+  }
+
+  async geometryFixBtnClick(): Promise<void> {
+    const $geometryFixBtn = await this.$('geometryFixBtn');
+
+    await $geometryFixBtn.click();
   }
 
   async changeCoordinates(fieldNumber: number, x: number, y: number): Promise<void> {

@@ -68,6 +68,8 @@ public class MakeGeometryValidRequestHandler implements IRequestHandler<MakeGeom
             throw new BadRequestException("Ошибка при обработке JSON геометрии: " + e.getMessage());
         } catch (CrgDaoException e) {
             throw new BadRequestException("Ошибка при приведении геометрии: " + e.getMessage());
+        } catch (IllegalArgumentException e) {
+            throw new BadRequestException("Невозможно исправить данную геометрию автоматически: " + e.getMessage());
         } catch (Exception e) {
             throw new BadRequestException("Неожиданная ошибка: " + e.getMessage());
         }
@@ -77,7 +79,7 @@ public class MakeGeometryValidRequestHandler implements IRequestHandler<MakeGeom
             throws CrgDaoException, JsonProcessingException {
         Integer incomeGeometryCode = SUPPORTED_GEOMETRY_TYPES.get(incomeGeometryType);
         if (incomeGeometryCode == null) {
-            throw new BadRequestException("Неподдерживаемый тип геометрии: " + incomeGeometryType);
+            throw new IllegalArgumentException("Неподдерживаемый тип геометрии: " + incomeGeometryType);
         }
 
         String formattedValidGeometry = spatialRecordsDao.makeGeometryOptionType(
@@ -86,7 +88,7 @@ public class MakeGeometryValidRequestHandler implements IRequestHandler<MakeGeom
                 SIMPLE_GEOMETRY_SET.contains(incomeGeometryType)
         );
         if (formattedValidGeometry == null) {
-            throw new BadRequestException("Не получилось привести объект к геометрии слоя.");
+            throw new IllegalArgumentException("Не получилось привести объект к геометрии слоя.");
         }
 
         setGeometryToFeature(formattedValidGeometry, validFeature);
@@ -98,7 +100,7 @@ public class MakeGeometryValidRequestHandler implements IRequestHandler<MakeGeom
 
     private void validateCoordinates(JsonNode coordinatesNode, String message) {
         if (coordinatesNode == null || !coordinatesNode.isArray() || coordinatesNode.size() == 0) {
-            throw new BadRequestException(message);
+            throw new IllegalArgumentException(message);
         }
     }
 
