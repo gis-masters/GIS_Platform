@@ -405,7 +405,7 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
         });
     }
 
-    @When("Администратор делает постраничный запрос на всех пользователей, по {int} пользователей на странице")
+    @When("Владелец организации делает постраничный запрос на всех пользователей, по {int} пользователей на странице")
     public void getAllUsersByPage(Integer usersPerPage) {
         getAllAndFillEntityCount();
         getAllUsersIdAllPages(usersPerPage);
@@ -419,15 +419,16 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
         assertEquals(usersId.size(), userIdsSet.size());
     }
 
-    @When("Администратор отправляет приглашение несуществующему пользователю")
+    @When("Владелец организации отправляет приглашение несуществующему пользователю")
     public void inviteNonExistingUser() {
         authorizationBase.loginAsOwner();
         inviteUserByEmail(generateString("EMAIL_8"));
     }
 
-    @When("Администратор отправляет приглашение существующему пользователю")
+    @When("Владелец организации отправляет приглашение существующему пользователю")
     public void inviteExistingUser() {
         authorizationBase.loginAsOwner();
+
         inviteUserByEmail(userDto.getEmail());
     }
 

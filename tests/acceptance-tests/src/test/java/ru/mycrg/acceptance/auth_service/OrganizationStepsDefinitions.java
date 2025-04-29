@@ -486,7 +486,7 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
         createOrganization(orgDto);
     }
 
-    @When("Администратор запрашивает данные о своей организации")
+    @When("Владелец организации запрашивает данные о своей организации")
     public void checkOrgInfo() {
         response = getBaseRequestWithCurrentCookie()
                 .when().

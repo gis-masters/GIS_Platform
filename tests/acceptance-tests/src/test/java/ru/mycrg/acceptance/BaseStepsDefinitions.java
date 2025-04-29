@@ -58,6 +58,7 @@ public class BaseStepsDefinitions {
     public static Map<Integer, GroupCreateDto> usersGroupPool = new LinkedHashMap<>();
     public static Map<Integer, InitialBaseMapCreateDto> baseMapsPool = new LinkedHashMap<>();
     public static Map<Integer, ProjectCreateDto> projectPool = new LinkedHashMap<>();
+    public static Map<Integer, Map<String, Object>> taskPool = new LinkedHashMap<>();
     public static Map<Integer, BaseMapCreateDto> projectBaseMapsPool = new LinkedHashMap<>();
     public static Map<Integer, LayerGroupCreateDto> layerGroupPool = new LinkedHashMap<>();
     public static Map<String, DatasetCreateDto> datasetsPool = new LinkedHashMap<>();
@@ -395,6 +396,7 @@ public class BaseStepsDefinitions {
         usersGroupPool.clear();
         baseMapsPool.clear();
         projectPool.clear();
+        taskPool.clear();
         projectBaseMapsPool.clear();
         layerGroupPool.clear();
         datasetsPool.clear();
@@ -432,18 +434,20 @@ public class BaseStepsDefinitions {
     }
 
     public int getUserGroupIdByName(String name) {
-        return usersGroupPool.entrySet().stream()
-                             .filter(item -> item.getValue().getName().equals(name))
-                             .findFirst()
-                             .orElseThrow(() -> new IllegalStateException("Not found userGroup in pool by name: " + name))
-                             .getKey();
+        return usersGroupPool
+                .entrySet().stream()
+                .filter(item -> item.getValue().getName().equals(name))
+                .findFirst()
+                .orElseThrow(
+                        () -> new IllegalStateException("Not found userGroup in pool by name: '" + name + "'"))
+                .getKey();
     }
 
     public int getUserIdByName(String name) {
         return userPool.entrySet().stream()
                        .filter(item -> item.getValue().getName().equals(name))
                        .findFirst()
-                       .orElseThrow(() -> new IllegalStateException("Not found user in pool by name: " + name))
+                       .orElseThrow(() -> new IllegalStateException("Not found user in pool by name: '" + name + "'"))
                        .getKey();
     }
 
@@ -451,7 +455,7 @@ public class BaseStepsDefinitions {
         return userPool.entrySet().stream()
                        .filter(item -> item.getValue().getName().equals(name))
                        .findFirst()
-                       .orElseThrow(() -> new IllegalStateException("Not found user in pool by name: " + name))
+                       .orElseThrow(() -> new IllegalStateException("Not found user in pool by name: '" + name + "'"))
                        .getValue();
     }
 
@@ -459,8 +463,17 @@ public class BaseStepsDefinitions {
         return projectPool.entrySet().stream()
                           .filter(item -> item.getValue().getName().equals(name))
                           .findFirst()
-                          .orElseThrow(() -> new IllegalStateException("Not found project in pool by name: " + name))
+                          .orElseThrow(
+                                  () -> new IllegalStateException("Not found project in pool by name: '" + name + "'"))
                           .getKey();
+    }
+
+    public int getTaskByDescription(String desc) {
+        return taskPool.entrySet().stream()
+                       .filter(item -> item.getValue().get("description").equals(desc))
+                       .findFirst()
+                       .orElseThrow(() -> new IllegalStateException("Not found task in pool by desc: '" + desc + "'"))
+                       .getKey();
     }
 
     private void createEntity(String jsonPayload) {

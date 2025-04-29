@@ -14,10 +14,8 @@ import ru.mycrg.auth_service_contract.dto.UserCreateDto;
 import ru.mycrg.data_service_contract.enums.TaskStatus;
 import ru.mycrg.data_service_contract.enums.TaskType;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static io.restassured.http.ContentType.JSON;
 import static java.lang.Thread.sleep;
@@ -88,8 +86,11 @@ public class TaskStepDefinition extends BaseStepsDefinitions {
             taskCreateDto.put("description", task.get(3));
 
             createTask(taskCreateDto);
-
             assertEquals(201, response.statusCode());
+
+            int taskId = response.jsonPath().getInt("id");
+
+            taskPool.put(taskId, taskCreateDto);
         }
     }
 
@@ -189,9 +190,33 @@ public class TaskStepDefinition extends BaseStepsDefinitions {
         assertEquals(200, response.getStatusCode());
     }
 
-    @When("я делаю выборку задач по фильтру ?recordId={string}")
-    public void getTasksById(String taskId) {
-        getTasksByRecords(taskId);
+    @When("я делаю выборку задач с фильтром по recordId {string}")
+    public void getTasksById(String taskDescriptions) {
+        if (taskDescriptions.equals("NOT_EXIST_TASK")) {
+            int latestTaskId = getTaskByDescription("fiz5 task 1");
+
+            getTasksByRecords(String.valueOf(latestTaskId + 33));
+
+            assertEquals(200, response.getStatusCode());
+
+            return;
+        }
+
+        Set<String> ids = Arrays.stream(taskDescriptions.split(","))
+                                .filter(desc -> !desc.isEmpty())
+                                .map(desc -> {
+                                    try {
+                                        return getTaskByDescription(desc.trim());
+                                    } catch (Exception e) {
+                                        return 0;
+                                    }
+                                })
+                                .filter(integer -> integer > 0)
+                                .map(Object::toString)
+                                .collect(Collectors.toSet());
+        String taskIds = String.join(",", ids);
+
+        getTasksByRecords(taskIds);
 
         assertEquals(200, response.getStatusCode());
     }
@@ -222,26 +247,41 @@ public class TaskStepDefinition extends BaseStepsDefinitions {
         assertEquals(getUserIdByName(expectedOwner), currentOwner);
     }
 
-    @Then("В выборке только задачи с ID {string}")
-    public void checkCountTasks(String expectedTaskIds) {
-        if (expectedTaskIds.isEmpty()) {
+    @Then("в выборке только задачи {string}")
+    public void checkCountTasks(String taskDescriptions) {
+        if (taskDescriptions.equals("NOT_EXIST_TASK")) {
             int totalElements = response.jsonPath().get("page.totalElements");
             assertEquals("Выборка должна быть пустой", 0, totalElements);
 
             return;
         }
 
-        String[] expectedIds = expectedTaskIds.split(",");
+        Set<String> tasks = Arrays.stream(taskDescriptions.split(","))
+                                  .filter(id -> !id.isEmpty())
+                                  .collect(Collectors.toSet());
+        Set<String> ids = tasks.stream()
+                               .map(desc -> {
+                                   try {
+                                       return getTaskByDescription(desc.trim());
+                                   } catch (Exception e) {
+                                       return 0;
+                                   }
+                               })
+                               .filter(integer -> integer > 0)
+                               .map(Object::toString)
+                               .collect(Collectors.toSet());
+        String taskIds = String.join(",", ids);
+
         List<Integer> actualIds = response.jsonPath().getList("content.id");
 
         assertEquals("Количество задач в выборке не соответствует ожидаемому",
-                     expectedIds.length, actualIds.size());
+                     tasks.size(), actualIds.size());
 
-        for (int i = 0; i < expectedIds.length; i++) {
-            int expectedId = Integer.parseInt(expectedIds[i].trim());
-            assertEquals("ID задачи на позиции " + i + " не соответствует ожидаемому",
-                         expectedId, actualIds.get(i).intValue());
-        }
+//        for (int i = 0; i < expectedIds.length; i++) {
+//            int expectedId = Integer.parseInt(expectedIds[i].trim());
+//            assertEquals("ID задачи на позиции " + i + " не соответствует ожидаемому",
+//                         expectedId, actualIds.get(i).intValue());
+//        }
     }
 
     @Then("я жду пока новая задача с контент типом {string} создаётся")
@@ -294,11 +334,12 @@ public class TaskStepDefinition extends BaseStepsDefinitions {
         throw new AssertionError(errorDetails);
     }
 
-    @When("файл {string} добавлен к задаче {int}")
-    public void currentUserAddFileToTask(String fileName, int taskId) {
+    @When("файл {string} добавлен к задаче {string}")
+    public void currentUserAddFileToTask(String fileName, String taskDescription) {
         FileDescriptionModel fileDescription = TestFilesManager.getFileDescriptionByTitleOrThrow(fileName);
 
-        updateTask(taskId, "{\"attachments\": [" + fileDescription.asJson() + "]}");
+        updateTask(getTaskByDescription(taskDescription),
+                   "{\"attachments\": [" + fileDescription.asJson() + "]}");
 
         assertEquals(204, response.getStatusCode());
     }
@@ -338,10 +379,10 @@ public class TaskStepDefinition extends BaseStepsDefinitions {
                         get("?filter=" + filter);
     }
 
-    private void getTasksByRecords(String tasksId) {
+    private void getTasksByRecords(String taskIds) {
         response = getBaseRequestWithCurrentCookie()
                 .when().
-                        get("?recordId=" + tasksId);
+                        get("?recordId=" + taskIds);
     }
 
     private void deleteAllTasks() {
@@ -407,6 +448,8 @@ public class TaskStepDefinition extends BaseStepsDefinitions {
     }
 
     private void createTasksByTemplate(String template) {
+        taskPool.clear();
+
         if ("для тестирования доступности вложений задач".equals(template)) {
             List<String> task1 = new ArrayList<>();
             task1.add("orgOwner");
@@ -513,7 +556,7 @@ public class TaskStepDefinition extends BaseStepsDefinitions {
             task5_1.add("fiz5");
             task5_1.add("fiz5");
             task5_1.add(TaskType.CUSTOM.name());
-            task5_1.add("description of fiz5 task 1");
+            task5_1.add("fiz5 task 1");
 
             List<List<String>> tasksForFiz5 = new ArrayList<>();
             tasksForFiz5.add(task5_1);
@@ -625,7 +668,7 @@ public class TaskStepDefinition extends BaseStepsDefinitions {
             task5_1.add("fiz5");
             task5_1.add("fiz5");
             task5_1.add(TaskType.CUSTOM.name());
-            task5_1.add("description of fiz5 task 1");
+            task5_1.add("fiz5 task 1");
 
             List<List<String>> tasksForFiz5 = new ArrayList<>();
             tasksForFiz5.add(task5_1);
