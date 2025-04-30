@@ -12,8 +12,8 @@ export token
 
 # Проверка токена
 if [[ -z "$token" ]]; then
-  echo "Failed to retrieve token"
-  exit 1
+    echo "Failed to retrieve token"
+    exit 1
 fi
 
 # Установим пути к папкам
@@ -28,6 +28,7 @@ different_files=()
 xmlUpload() {
     local name="$1"
     local objectPath="$2"
+
     # Проверка, содержит ли имя файла "dxf" или "raster"
     if [[ "$name" == *dxf* ]] || [[ "$name" == *raster* ]]; then
         # XML v1.0 данные
@@ -91,6 +92,11 @@ compare_dirs() {
         fileName=$(basename "$file")
         local rel_file_path="$relative_path/$fileName"
 
+        # Пропустить XML-файлы
+        if [[ "$fileName" == *.xml ]]; then
+            continue
+        fi
+
         if [ -f "$file" ]; then
             # Проверим наличие файла с таким же именем в DIR1
             if [ -e "$dir1/$fileName" ]; then
@@ -109,8 +115,8 @@ compare_dirs() {
                 xmlFile="${fileName%.sld}.xml"
                 # Проверим наличие соответствующего XML файла
                 get=$(curl --location --request GET "http://localhost:8080/geoserver/rest/styles/$xmlFile" \
-                --header "Authorization: Bearer $token" \
-                --header "Accept: application/json")
+                           --header "Authorization: Bearer $token" \
+                           --header "Accept: application/json")
                 if [[ "$get" == "No such style"* ]]; then
                     missing_files+=("${relative_path#/}/${xmlFile}")
                     xmlUpload "${fileName%.sld}" "${relative_path#/}/${fileName}"
@@ -122,25 +128,30 @@ compare_dirs() {
 
 # Обрабатываем каждый файл и папку в указанной директории
 uploadAll() {
-  local sourceFolder="$1"
-  local targetPath="$2"
+    local sourceFolder="$1"
+    local targetPath="$2"
 
-  for object in "$sourceFolder"*
-  do
-    objectPath="$targetPath$(basename "$object")"
-    # Проверка на папку
-    if [ -d "$object" ]; then
-      uploadAll "$object/" "$objectPath/"
-    else
-      fileUpload "$objectPath" "$object"
+    for object in "$sourceFolder"*; do
+        objectPath="$targetPath$(basename "$object")"
 
-      # Для привязки sld к стилю. Только для sld
-      if [[ "$object" == *.sld ]]; then
-        name=$(basename "$object" .sld)
-        xmlUpload "${name}" "${objectPath}"
-      fi
-    fi
-  done
+        # Проверка на папку
+        if [ -d "$object" ]; then
+            uploadAll "$object/" "$objectPath/"
+        else
+            # Пропустить XML-файлы
+            if [[ "$object" == *.xml ]]; then
+                continue
+            fi
+
+            fileUpload "$objectPath" "$object"
+
+            # Для привязки sld к стилю. Только для sld
+            if [[ "$object" == *.sld ]]; then
+                name=$(basename "$object" .sld)
+                xmlUpload "${name}" "${objectPath}"
+            fi
+        fi
+    done
 }
 
 # Проверим наличие файла stylesMigrationVersion

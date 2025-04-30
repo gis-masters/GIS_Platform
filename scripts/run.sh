@@ -33,6 +33,7 @@ docker compose -f ../docker-compose.dev.yml -f ../docker-compose.yml -f ../S3min
 
 ./wait.sh
 
-pushd ../assets/migration-scripts/ || exit
-./uploadStylesFolder.sh "admin@mail.ru" "Esterhazy2022"
-popd || exit
+#мне кажется есть кейсы когда это будет полезно
+#pushd ../assets/migration-scripts/ || exit
+#./uploadStylesFolder.sh "admin@mail.ru" "Esterhazy2022"
+#popd || exit
