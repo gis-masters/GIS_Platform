@@ -5,6 +5,7 @@ import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
@@ -23,8 +24,11 @@ public class DatasourceFactory {
     public static final String INITIAL_SCHEMA_NAME = "public";
     public static final String INITIAL_DB_NAME = "crg_data_service";
 
-    private static final int MINIMAL_POOL = 2;
-    private static final int DEFAULT_POOL = 10;
+    @Value("${spring.datasource.hikari.minimum-pool-size:2}")
+    private int MINIMAL_POOL;
+    
+    @Value("${spring.datasource.hikari.maximum-pool-size:10}")
+    private int DEFAULT_POOL;
 
     private final Map<String, HikariDataSource> dataSources = new HashMap<>();
 

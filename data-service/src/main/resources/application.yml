@@ -19,12 +19,17 @@ spring:
     url: jdbc:postgresql://127.0.0.1:5434/crg_data_service
     username: fiz
     password: 314
+    hikari:
+      minimum-pool-size: ${SPRING_DATASOURCE_HIKARI_MINIMUM_POOL_SIZE:10}
+      maximum-pool-size: ${SPRING_DATASOURCE_HIKARI_MAXIMUM_POOL_SIZE:20}
+      # у data-service финальная цифра: (кол-во организаций * POOL + 1)
   flyway:
     enabled: true
     url: jdbc:postgresql://127.0.0.1:5434/crg_data_service
     user: fiz
     password: 314
   jpa:
+    database: POSTGRESQL
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     show-sql: false
     properties:
