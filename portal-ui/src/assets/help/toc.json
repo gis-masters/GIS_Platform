@@ -536,7 +536,7 @@
             "title": "Подпись документов",
             "children": [
               {
-                "id": "cryptoPro",
+                "id": "cryptoProDoc",
                 "title": "Подпись документов",
                 "contentUrl": "/assets/help/5dataManagement/28cryptoPro/28cryptoPro.html"
               }
