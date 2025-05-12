@@ -11,6 +11,7 @@ import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.data_service_contract.dto.SimplePropertyDto;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
@@ -33,9 +34,11 @@ public class SchemaTemplateServiceBase implements ISchemaTemplateService {
         return (featureNames == null || featureNames.isEmpty())
                 ? schemaRepository.findAll().stream()
                                   .map(SchemaEntityMapper::mapToDto)
+                                  .filter(Objects::nonNull)
                                   .collect(Collectors.toList())
                 : schemaRepository.findByNameIn(featureNames).stream()
                                   .map(SchemaEntityMapper::mapToDto)
+                                  .filter(Objects::nonNull)
                                   .collect(Collectors.toList());
     }
 
@@ -57,6 +60,7 @@ public class SchemaTemplateServiceBase implements ISchemaTemplateService {
         return schemaRepository.findAll().stream()
                                .filter(this::isReglamentsExist)
                                .map(SchemaEntityMapper::mapToDto)
+                               .filter(Objects::nonNull)
                                .collect(Collectors.toList());
     }
 
@@ -64,6 +68,7 @@ public class SchemaTemplateServiceBase implements ISchemaTemplateService {
     public List<SchemaDto> getBySpecificProperty(String propertyName) {
         return schemaRepository.findBySpecificPropertyName(propertyName).stream()
                                .map(SchemaEntityMapper::mapToDto)
+                               .filter(Objects::nonNull)
                                .collect(Collectors.toList());
     }
 

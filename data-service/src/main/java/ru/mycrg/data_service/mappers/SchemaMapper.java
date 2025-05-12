@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.node.TextNode;
 import org.jetbrains.annotations.Nullable;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 
-import static ru.mycrg.data_service.util.JsonConverter.fromJson;
+import static ru.mycrg.http_client.JsonConverter.fromJson;
 
 /**
  * Маппер для поля class_rule.

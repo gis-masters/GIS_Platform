@@ -26,6 +26,8 @@ public class CreateTaskRequest implements IRequest<IRecord>, Auditable, ICreateF
     private final RecordEntity record;
     private final ResourceQualifier qualifier;
 
+    private Long id;
+
     public CreateTaskRequest(SchemaDto schema, ResourceQualifier qualifier, RecordEntity record) {
         this.schema = schema;
         this.record = record;
@@ -46,10 +48,12 @@ public class CreateTaskRequest implements IRequest<IRecord>, Auditable, ICreateF
                                  record.getId() == null ? -1 : record.getId());
     }
 
+    @Override
     public SchemaDto getSchema() {
         return schema;
     }
 
+    @Override
     public RecordEntity getRecord() {
         return record;
     }
@@ -69,7 +73,16 @@ public class CreateTaskRequest implements IRequest<IRecord>, Auditable, ICreateF
 
     }
 
+    @Override
     public ResourceQualifier getQualifier() {
         return qualifier;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }

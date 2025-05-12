@@ -32,7 +32,8 @@ public class CrgScriptEngine {
 
             result = invocable.invokeFunction("someFiz", data);
         } catch (ScriptException | NoSuchMethodException e) {
-            log.error("Ошибка при анализе доп. правил, {} ", e.getLocalizedMessage());
+            log.error("Не удалось применить функцию: [{}], для объекта: [{}] => {}",
+                      function, data, e.getLocalizedMessage());
         }
 
         if (result != null) {
@@ -51,7 +52,8 @@ public class CrgScriptEngine {
 
             result = (String) invocable.invokeFunction("someFiz", data);
         } catch (ScriptException | NoSuchMethodException e) {
-            log.error("Ошибка при анализе доп. правил, {} ", e.getLocalizedMessage());
+            log.error("Не удалось применить функцию: [{}], для объекта: [{}] => {}",
+                      function, data, e.getLocalizedMessage());
         }
 
         return result;

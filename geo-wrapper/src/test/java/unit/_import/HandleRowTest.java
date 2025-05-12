@@ -69,7 +69,7 @@ public class HandleRowTest {
 
         LocalDateTime now = LocalDateTime.now();
         SchemaDto schema = getSchemaFromFile("educationSchema.json");
-        Map<String, Object> dbRow = new HashMap<String, Object>() {{
+        Map<String, Object> dbRow = new HashMap<>() {{
             put("classid", "602010101");
             put("edu_stype", "0");
             put("edu_sdtype", "0");
@@ -102,6 +102,27 @@ public class HandleRowTest {
         assertEquals("1", result.get("reg_status"));
         assertNotEquals(NULL_MARKER, result.get("created_da"));
         assertEquals(NULL_MARKER, result.get("created_da2"));
+    }
+
+    @Test
+    public void shouldCorrectHandle() {
+        CrgScriptEngine scriptEngine = new CrgScriptEngine();
+
+        Map<String, Object> payload = new HashMap<>() {{
+            put("record_status", null);
+            put("owner_id", "2");
+            put("fiz", 314);
+            put("status", "CREATED");
+        }};
+
+        assertTrue((boolean) scriptEngine.invokeFunction(payload, "return obj.owner_id === '2'"));
+        assertFalse((boolean) scriptEngine.invokeFunction(payload, "return obj.owner_id === '3'"));
+        assertFalse((boolean) scriptEngine.invokeFunction(payload, "return obj.fiz < 100"));
+        assertTrue((boolean) scriptEngine.invokeFunction(payload, "return obj.fiz == 314"));
+        assertTrue((boolean) scriptEngine.invokeFunction(payload, "return obj.status === 'CREATED'"));
+        assertFalse((boolean) scriptEngine.invokeFunction(payload, "return obj.status === 'NEW'"));
+        assertFalse((boolean) scriptEngine.invokeFunction(payload, "return obj.record_status === 'NEW'"));
+        assertTrue((boolean) scriptEngine.invokeFunction(payload, "return obj.owner_id === '2' && obj.fiz > 100"));
     }
 
     private SchemaDto getSchemaFromFile(String fName) throws IOException, URISyntaxException {

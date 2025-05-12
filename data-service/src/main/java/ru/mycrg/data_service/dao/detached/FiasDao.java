@@ -41,7 +41,7 @@ public class FiasDao {
                 }
             }
         } catch (DataAccessException e) {
-            log.error(String.format("Не удалось записать в БД, sql:[%s],error: %s", queryUpdate, e.getMessage()));
+            log.error("Не удалось записать в БД, sql:[{}],error: {}", queryUpdate, e.getMessage());
         }
     }
 

@@ -34,5 +34,4 @@ public class PropertyBuilderWithFormula {
 
         return props.toString();
     }
-
 }

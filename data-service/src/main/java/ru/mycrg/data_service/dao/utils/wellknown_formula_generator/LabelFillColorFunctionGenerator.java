@@ -7,8 +7,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static ru.mycrg.data_service.dao.config.DaoProperties.RULE_ID;
-import static ru.mycrg.data_service_contract.enums.ValueType.*;
+import static ru.mycrg.data_service_contract.enums.ValueType.CHOICE;
+import static ru.mycrg.data_service_contract.enums.ValueType.STRING;
 
 /**
  * Рассчёт цвета заливки по label.

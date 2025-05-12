@@ -1,8 +1,8 @@
 package ru.mycrg.data_service.mappers;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import ru.mycrg.data_service.entity.SchemaTemplate;
-import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 
 import static ru.mycrg.data_service.util.JsonConverter.toJsonNode;
@@ -16,10 +16,11 @@ public class SchemaEntityMapper {
         throw new IllegalStateException("Utility class");
     }
 
+    @Nullable
     public static SchemaDto mapToDto(SchemaTemplate schemaTemplate) {
         SchemaDto schemaDto = SchemaMapper.jsonToDto(schemaTemplate.getClassRule());
         if (schemaDto == null) {
-            throw new DataServiceException("Не удалось прочитать схему");
+            return null;
         }
 
         schemaDto.setCustomRuleFunction(schemaTemplate.getCustomRule());

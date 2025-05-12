@@ -11,10 +11,13 @@ import ru.mycrg.data_service.dao.SpatialRecordsDao;
 import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
 import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.service.cqrs.features.requests.MakeGeometryValidRequest;
-import ru.mycrg.data_service.util.JsonConverter;
 import ru.mycrg.geo_json.Feature;
 import ru.mycrg.geo_json.GeoJsonObject;
+import ru.mycrg.http_client.JsonConverter;
 import ru.mycrg.mediator.IRequestHandler;
+
+import static ru.mycrg.data_service.util.JsonConverter.getJsonString;
+import static ru.mycrg.data_service.util.JsonConverter.toJsonNodeFromString;
 
 @Component
 public class MakeGeometryValidRequestHandler implements IRequestHandler<MakeGeometryValidRequest, Feature> {
@@ -50,14 +53,14 @@ public class MakeGeometryValidRequestHandler implements IRequestHandler<MakeGeom
             JsonNode incomeGeometryNode = parseGeometryToNode(incomeFeature.getGeometry());
             validateCoordinates(incomeGeometryNode.get("coordinates"), "Coordinates не могут быть пустыми");
 
-            String incomeGeometryJson = JsonConverter.getJsonString(incomeFeature.getGeometry());
+            String incomeGeometryJson = getJsonString(incomeFeature.getGeometry());
             String validGeometryJson = spatialRecordsDao.makeValidGeometry(incomeGeometryJson);
 
             Feature validFeature = new Feature();
             setGeometryToFeature(validGeometryJson, validFeature);
 
             String incomeGeometryType = incomeGeometryNode.get("type").asText();
-            String validGeometryType = JsonConverter.toJsonNodeFromString(validGeometryJson).get("type").asText();
+            String validGeometryType = toJsonNodeFromString(validGeometryJson).get("type").asText();
 
             if (!incomeGeometryType.equalsIgnoreCase(validGeometryType)) {
                 forceValidGeomToIncome(incomeGeometryType, validGeometryJson, validFeature);
@@ -105,7 +108,7 @@ public class MakeGeometryValidRequestHandler implements IRequestHandler<MakeGeom
     }
 
     private JsonNode parseGeometryToNode(GeoJsonObject geometry) throws JsonProcessingException {
-        return JsonConverter.toJsonNodeFromString(JsonConverter.getJsonString(geometry));
+        return toJsonNodeFromString(getJsonString(geometry));
     }
 
     private void setGeometryToFeature(String geometryJson, Feature feature) {

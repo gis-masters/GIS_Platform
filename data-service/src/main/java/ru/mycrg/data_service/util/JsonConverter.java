@@ -13,10 +13,9 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 
+// TODO: Должен остаться только один -> package ru.mycrg.http_client.JsonConverter;
 public class JsonConverter {
 
     private JsonConverter() {
@@ -62,17 +61,7 @@ public class JsonConverter {
         try {
             return Optional.of(mapper.readValue(stringJson, valueTypeRef));
         } catch (IOException e) {
-            log.error("Сбой при конвертации из string(as type) в JSON: {}", e.getMessage());
-
-            return Optional.empty();
-        }
-    }
-
-    public static <T> Optional<T> fromJson(String stringJson, Class<T> classOfT) {
-        try {
-            return Optional.of(mapper.readValue(stringJson, classOfT));
-        } catch (IOException e) {
-            log.error("Сбой при конвертации из string(as class) в JSON: {}", e.getMessage());
+            log.error("Сбой при конвертации из string(as type) в JSON: {}", e.getMessage(), e);
 
             return Optional.empty();
         }
@@ -96,28 +85,6 @@ public class JsonConverter {
             log.error("Не удалось конвертировать объект: [{}] в JSON строку", value);
 
             return "FAIL";
-        }
-    }
-
-    public static <T> T fromKeyValueMap(Map<String, Object> value, Class<T> tClass) {
-        try {
-            return mapper.convertValue(value, tClass);
-        } catch (Exception e) {
-            log.error("Не удалось конвертировать мапу: [{}] в объект", value);
-
-            return null;
-        }
-    }
-
-    @NotNull
-    public static Map<String, Object> asKeyValueMap(Object value) {
-        try {
-            return mapper.convertValue(value, new TypeReference<Map<String, Object>>() {
-            });
-        } catch (Exception e) {
-            log.error("Не удалось конвертировать объект: [{}] в мапу", value);
-
-            return new HashMap<>();
         }
     }
 }

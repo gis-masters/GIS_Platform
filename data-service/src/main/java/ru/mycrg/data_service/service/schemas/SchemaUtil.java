@@ -6,9 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.exceptions.ErrorInfo;
-import ru.mycrg.data_service_contract.dto.SchemaDto;
-import ru.mycrg.data_service_contract.dto.SimplePropertyDto;
-import ru.mycrg.data_service_contract.dto.ValueTitleProjection;
+import ru.mycrg.data_service_contract.dto.*;
 import ru.mycrg.data_service_contract.enums.ValueType;
 
 import java.util.*;
@@ -20,6 +18,7 @@ import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 import static ru.mycrg.data_service.util.SystemLibraryAttributes.*;
 import static ru.mycrg.data_service_contract.enums.ValueType.*;
+import static ru.mycrg.http_client.JsonConverter.prettyPrint;
 
 public class SchemaUtil {
 
@@ -232,6 +231,49 @@ public class SchemaUtil {
         }
 
         return result;
+    }
+
+    /**
+     * Возвращает найденные "пост действия" с актуализированными параметрами по контент типу
+     */
+    public static List<FollowUpAction> getFollowUpActionsByContentType(SchemaDto schema,
+                                                                       @Nullable String contentTypeId) {
+        Map<String, List<FollowUpAction>> followUpActions = new HashMap<>();
+
+        schema.getProperties()
+              .forEach(simplePropertyDto -> {
+                  if (simplePropertyDto.getFollowUpActions() != null) {
+                      followUpActions.putIfAbsent(simplePropertyDto.getName(), simplePropertyDto.getFollowUpActions());
+                  }
+              });
+
+        if (contentTypeId != null) {
+            schema.getContentTypes().stream()
+                  .filter(contentType -> contentType.getId().equals(contentTypeId))
+                  .findFirst()
+                  .ifPresent(contentType -> applyContentType(followUpActions, contentType));
+        }
+
+        log.debug("Обнаружены следующие действия в схеме: '{}'. ContentType: '{}' [{}]",
+                  schema.getName(), contentTypeId, prettyPrint(followUpActions));
+
+        return followUpActions.values().stream()
+                              .filter(actions -> !actions.isEmpty())
+                              .flatMap(Collection::stream)
+                              .collect(Collectors.toList());
+    }
+
+    private static void applyContentType(Map<String, List<FollowUpAction>> initialFollowUpActions,
+                                         ContentType contentType) {
+        contentType.getAttributes()
+                   .forEach(attr -> {
+                       String name = attr.getName();
+                       if (initialFollowUpActions.containsKey(name)) {
+                           // Заменяем actions полностью.
+                           // Именно заменяем, а не обновляем - доработать при необходимости и покрыть unit тестами.
+                           initialFollowUpActions.putIfAbsent(name, attr.getFollowUpActions());
+                       }
+                   });
     }
 
     @NotNull

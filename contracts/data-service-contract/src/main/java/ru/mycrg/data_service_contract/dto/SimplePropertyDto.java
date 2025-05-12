@@ -9,6 +9,7 @@ import ru.mycrg.data_service_contract.enums.ValueType;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
+import java.util.ArrayList;
 import java.util.List;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -65,6 +66,9 @@ public class SimplePropertyDto {
     private String defaultValueWellKnownFormula;
     private String dynamicPropertyFormula;
     private Object valueFormulaParams;
+
+    private List<FollowUpAction> followUpActions;
+    private List<Object> options;
 
     private Integer length;
     private Integer minLength;
@@ -495,4 +499,19 @@ public class SimplePropertyDto {
         this.maxDefaultWidth = maxDefaultWidth;
     }
 
+    public List<FollowUpAction> getFollowUpActions() {
+        return followUpActions;
+    }
+
+    public void setFollowUpActions(List<FollowUpAction> followUpActions) {
+        this.followUpActions = followUpActions;
+    }
+
+    public List<Object> getOptions() {
+        return options;
+    }
+
+    public void setOptions(List<Object> options) {
+        this.options = options;
+    }
 }

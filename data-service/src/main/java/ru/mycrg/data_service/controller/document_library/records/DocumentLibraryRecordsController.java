@@ -44,9 +44,9 @@ import static ru.mycrg.data_service.service.resources.ResourceQualifier.libraryQ
 import static ru.mycrg.data_service.service.resources.ResourceQualifier.libraryRecordQualifier;
 import static ru.mycrg.data_service.service.schemas.SchemaUtil.excludeUnknownProperties;
 import static ru.mycrg.data_service.service.schemas.SchemaUtil.throwIfNotMatchSchema;
-import static ru.mycrg.data_service.util.JsonConverter.fromJson;
 import static ru.mycrg.data_service.util.SystemLibraryAttributes.IS_FOLDER;
 import static ru.mycrg.data_service.util.SystemLibraryAttributes.VERSIONS;
+import static ru.mycrg.http_client.JsonConverter.fromJson;
 
 @Validated
 @RestController

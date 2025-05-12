@@ -5,7 +5,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import ru.mycrg.data_service.dto.LibraryCreateDto;
 import ru.mycrg.data_service.dto.ResourceType;
 import ru.mycrg.data_service.dto.record.IRecord;
 import ru.mycrg.data_service.dto.record.RecordEntity;
@@ -18,7 +17,6 @@ import ru.mycrg.data_service.util.EcqlRecordIdHandler;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.mediator.Mediator;
 
-import javax.validation.Valid;
 import java.util.List;
 import java.util.Map;
 

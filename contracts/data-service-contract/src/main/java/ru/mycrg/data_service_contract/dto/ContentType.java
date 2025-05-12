@@ -17,7 +17,7 @@ public class ContentType {
     private String definitionQuery;
 
     private List<SchemaChild> children = new ArrayList<>();
-    private List<Object> attributes = new ArrayList<>();
+    private List<SimplePropertyDto> attributes = new ArrayList<>();
     private List<String> printTemplates = new ArrayList<>();
     private List<SchemaRelation> relations = new ArrayList<>();
 
@@ -49,11 +49,11 @@ public class ContentType {
         this.type = type;
     }
 
-    public List<Object> getAttributes() {
+    public List<SimplePropertyDto> getAttributes() {
         return attributes;
     }
 
-    public void setAttributes(List<Object> attributes) {
+    public void setAttributes(List<SimplePropertyDto> attributes) {
         this.attributes = attributes;
     }
 

@@ -5,7 +5,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
-import ru.mycrg.data_service.util.JsonConverter;
 
 import javax.validation.constraints.NotNull;
 import java.io.IOException;
@@ -16,6 +15,8 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import static ru.mycrg.http_client.JsonConverter.fromJson;
 
 @Component
 public class SpecializationManager {
@@ -66,7 +67,7 @@ public class SpecializationManager {
                              try {
                                  String jsonContent = Files.readString(file);
 
-                                 return JsonConverter.fromJson(jsonContent, SchemaDto.class).orElse(null);
+                                 return fromJson(jsonContent, SchemaDto.class).orElse(null);
                              } catch (IOException e) {
                                  log.error("Не удалось прочитать схему из файла: {}", file.toUri(), e);
 

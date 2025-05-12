@@ -104,6 +104,8 @@ public class CreateTaskRequestHandler implements IRequestHandler<CreateTaskReque
 
             IRecord newTask = recordsDao.addRecord(qualifier, record, schema);
 
+            request.setId(newTask.getId());
+
             taskLogService.create(new TaskLogDto("Создание новой задачи", newTask.getId()), newTask.getContent());
 
             return newTask;

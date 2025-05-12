@@ -1,15 +1,20 @@
 package ru.mycrg.http_client;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.jetbrains.annotations.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.text.SimpleDateFormat;
 import java.util.Optional;
 
 public class JsonConverter {
+
+    private static final Logger log = LoggerFactory.getLogger(JsonConverter.class);
 
     private static final ObjectMapper mapper =
             new ObjectMapper()
@@ -40,10 +45,21 @@ public class JsonConverter {
         }
     }
 
+    public static String prettyPrint(Object object) {
+        try {
+            return mapper.writerWithDefaultPrettyPrinter()
+                         .writeValueAsString(object);
+        } catch (JsonProcessingException e) {
+            return toJson(object);
+        }
+    }
+
     public static <T> Optional<T> fromJson(String stringJson, Class<T> classOfT) {
         try {
             return Optional.ofNullable(mapper.readValue(stringJson, classOfT));
         } catch (Exception e) {
+            log.error("Сбой при конвертации из string(as class) в JSON: {}", e.getMessage(), e);
+
             return Optional.empty();
         }
     }

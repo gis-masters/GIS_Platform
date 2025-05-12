@@ -12,6 +12,7 @@ import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.dto.ProcessDto;
 import ru.mycrg.data_service.service.processes.ProcessHandler;
 import ru.mycrg.data_service.service.processes.ProcessService;
+import ru.mycrg.http_client.JsonConverter;
 
 import javax.validation.Valid;
 import java.security.Principal;
@@ -19,7 +20,6 @@ import java.util.Map;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static ru.mycrg.common_utils.page.PageHandler.pageFromList;
-import static ru.mycrg.data_service.util.JsonConverter.fromJson;
 
 @RestController
 @RequestMapping(value = "/processes")
@@ -48,8 +48,8 @@ public class ProcessesController {
     @PostMapping("/file")
     public ResponseEntity<Resource<Process>> initProcessWithFile(@Valid @RequestParam String processModelJson,
                                                                  @RequestParam MultipartFile file) {
-        ProcessDto processableModel = fromJson(processModelJson, ProcessDto.class)
-                .orElseThrow(() -> new DataServiceException("Некорректное тело запроса"));
+        ProcessDto processableModel = JsonConverter.fromJson(processModelJson, ProcessDto.class)
+                                                   .orElseThrow(() -> new DataServiceException("Некорректное тело запроса"));
 
         Map<String, Object> payloadWithFile = (Map<String, Object>) processableModel.getPayload();
         payloadWithFile.put("file", file);

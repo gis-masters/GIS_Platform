@@ -7,7 +7,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static ru.mycrg.data_service_contract.enums.ValueType.*;
+import static ru.mycrg.data_service_contract.enums.ValueType.DATETIME;
+import static ru.mycrg.data_service_contract.enums.ValueType.TEXT;
 
 /**
  * Расчёт статуса при публикации документа в ГИСОГД РФ.
