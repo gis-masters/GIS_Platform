@@ -26,6 +26,7 @@ public class ImportKptEvent extends DefaultMessageBusRequestEvent {
 
     private String initiatorLogin;
     private long taskId;
+    private long userIdAssignedToTask;
 
     /**
      * Настройки валидации
@@ -41,6 +42,7 @@ public class ImportKptEvent extends DefaultMessageBusRequestEvent {
                           List<ImportKptTableDto> tables,
                           String initiatorLogin,
                           long taskId,
+                          long userIdAssignedToTask,
                           KptImportValidationSettings validationSettings) {
         super(UUID.randomUUID(), IMPORT_KPT_TASK_QUEUE);
 
@@ -49,6 +51,7 @@ public class ImportKptEvent extends DefaultMessageBusRequestEvent {
         this.tables = tables;
         this.initiatorLogin = initiatorLogin;
         this.taskId = taskId;
+        this.userIdAssignedToTask = userIdAssignedToTask;
         this.validationSettings = validationSettings;
     }
 
@@ -90,6 +93,14 @@ public class ImportKptEvent extends DefaultMessageBusRequestEvent {
 
     public void setTaskId(long taskId) {
         this.taskId = taskId;
+    }
+
+    public long getUserIdAssignedToTask() {
+        return userIdAssignedToTask;
+    }
+
+    public void setUserIdAssignedToTask(long userIdAssignedToTask) {
+        this.userIdAssignedToTask = userIdAssignedToTask;
     }
 
     public KptImportValidationSettings getValidationSettings() {

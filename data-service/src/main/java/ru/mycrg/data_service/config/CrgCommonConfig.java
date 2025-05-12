@@ -11,6 +11,8 @@ import static org.springframework.amqp.core.MessageProperties.CONTENT_TYPE_JSON;
 @Configuration
 public class CrgCommonConfig {
 
+    public static final Long SYSTEM_USER_ID = -1L;
+
     /**
      * EPSG:4326. Degree.
      * <br><br>

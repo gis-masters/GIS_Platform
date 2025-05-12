@@ -8,7 +8,7 @@ import ru.mycrg.auth_facade.IAuthenticationFacade;
 import ru.mycrg.auth_facade.UserDetails;
 import ru.mycrg.data_service.dao.RecordsDao;
 import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
-import ru.mycrg.data_service.dto.TaskLogDto;
+import ru.mycrg.common_contracts.generated.data_service.TaskLogDto;
 import ru.mycrg.data_service.dto.record.IRecord;
 import ru.mycrg.data_service.dto.record.RecordEntity;
 import ru.mycrg.data_service.exceptions.BadRequestException;
@@ -113,7 +113,7 @@ public class UpdateTaskRequestHandler implements IRequestHandler<UpdateTaskReque
 
             Map<String, Object> updatedTask = taskService.getById(taskId);
 
-            taskLogService.create(new TaskLogDto("Изменение задачи", taskId), updatedTask);
+            taskLogService.create(new TaskLogDto("Изменение задачи", taskId, userDetails.getUserId()), updatedTask);
         } catch (CrgDaoException e) {
             logError("Не удалось обновить задачу", e);
 

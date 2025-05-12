@@ -8,7 +8,7 @@ import ru.mycrg.data_service.dao.RecordsDao;
 import ru.mycrg.data_service.dao.detached.TasksDetachedDao;
 import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
 import ru.mycrg.data_service.dto.LibraryModel;
-import ru.mycrg.data_service.dto.TaskLogDto;
+import ru.mycrg.common_contracts.generated.data_service.TaskLogDto;
 import ru.mycrg.data_service.dto.record.IRecord;
 import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
@@ -22,12 +22,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static ru.mycrg.data_service.config.CrgCommonConfig.SYSTEM_USER_ID;
 import static ru.mycrg.data_service.service.import_.kpt.KptSourceFilesService.KPT_LIBRARY_ID;
 import static ru.mycrg.data_service.service.resources.ResourceQualifier.libraryQualifier;
 import static ru.mycrg.data_service.service.resources.ResourceQualifier.libraryRecordQualifier;
 import static ru.mycrg.data_service.service.import_.kpt.ImportKptService.KPT_IMPORT_CONTENT_TYPE;
 import static ru.mycrg.data_service.service.smev3.request.get_cadastrial_plan.GetCadastrialPlanRequestService.KPT_ORDER_CONTENT_TYPE;
+
 import java.util.ArrayList;
+
 import static ru.mycrg.data_service.util.SystemLibraryAttributes.TITLE;
 import static ru.mycrg.data_service_contract.enums.TaskStatus.CANCELED;
 
@@ -102,7 +105,7 @@ public class CancelKptTaskService {
                 logMap.put(DESCRIPTION_ATTRIBUTE, "Срок ожидания ответа истёк. " +
                         "Задача отменена. Если ответ всё-таки поступит, файлы будут прикреплены в библиотеке.");
 
-                taskLogService.create(new TaskLogDto("Отмена задачи", taskId), logMap);
+                taskLogService.create(new TaskLogDto("Отмена задачи", taskId, SYSTEM_USER_ID), logMap);
 
                 tasksDao.updateStatus(databaseName, taskId, CANCELED);
             });

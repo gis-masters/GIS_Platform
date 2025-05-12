@@ -2,7 +2,7 @@ package ru.mycrg.data_service.kpt_import.validation;
 
 import org.springframework.stereotype.Service;
 import ru.mycrg.data_service.dao.detached.TaskLogDetachedDao;
-import ru.mycrg.data_service.dto.TaskLogDto;
+import ru.mycrg.common_contracts.generated.data_service.TaskLogDto;
 import ru.mycrg.data_service_contract.dto.import_.ImportKptTableDto;
 import ru.mycrg.data_service_contract.dto.import_.KptImportValidationSettings;
 
@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 import static ru.mycrg.data_service.kpt_import.KptImportUtils.DS_ID;
+import static ru.mycrg.data_service.config.CrgCommonConfig.SYSTEM_USER_ID;
 
 /**
  * Сервис, управляющей валидацией импортируемых КПТ
@@ -40,7 +41,8 @@ public class KptValidator {
         for (String tableName: results.keySet()) {
             List<KptImportValidationResult> tableResults = results.get(tableName);
             for (KptImportValidationResult tableResult: tableResults) {
-                taskLogDetachedDao.createTaskLog(dbName, new TaskLogDto("Импорт КПТ", taskId), tableResult, DS_ID);
+                taskLogDetachedDao.createTaskLog(dbName, new TaskLogDto("Импорт КПТ", taskId, SYSTEM_USER_ID), tableResult,
+                                                 DS_ID);
             }
         }
 

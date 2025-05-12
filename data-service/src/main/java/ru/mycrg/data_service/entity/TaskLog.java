@@ -30,16 +30,20 @@ public class TaskLog {
     @Column(name = "created_at")
     private LocalDateTime createdAt = now();
 
+    @Column(name = "created_by")
+    private Long createdBy;
+
     public TaskLog() {
         //Required
     }
 
-    public TaskLog(Long id, Long taskId, JsonNode message, String eventType, LocalDateTime createdAt) {
+    public TaskLog(Long id, Long taskId, JsonNode message, String eventType, LocalDateTime createdAt, Long createdBy) {
         this.id = id;
         this.taskId = taskId;
         this.message = message;
         this.eventType = eventType;
         this.createdAt = createdAt;
+        this.createdBy = createdBy;
     }
 
     public Long getId() {
@@ -72,6 +76,14 @@ public class TaskLog {
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public Long getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(Long createdBy) {
+        this.createdBy = createdBy;
     }
 
     public Long getTaskId() {

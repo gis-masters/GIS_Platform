@@ -19,7 +19,7 @@ import ru.mycrg.data_service.dao.detached.TasksDetachedDao;
 import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
 import ru.mycrg.data_service.dto.FileResourceQualifier;
 import ru.mycrg.data_service.dto.LibraryModel;
-import ru.mycrg.data_service.dto.TaskLogDto;
+import ru.mycrg.common_contracts.generated.data_service.TaskLogDto;
 import ru.mycrg.data_service.dto.record.IRecord;
 import ru.mycrg.data_service.entity.File;
 import ru.mycrg.data_service.exceptions.BadRequestException;
@@ -47,6 +47,7 @@ import java.util.*;
 import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_NAME;
 import static ru.mycrg.data_service.dto.ResourceType.LIBRARY_RECORD;
 import static ru.mycrg.data_service.dto.Roles.OWNER;
+import static ru.mycrg.data_service.config.CrgCommonConfig.SYSTEM_USER_ID;
 import static ru.mycrg.data_service.service.import_.kpt.KptSourceFilesService.KPT_LIBRARY_ID;
 import static ru.mycrg.data_service.service.reestrs.Systems.FGIS_EGRN;
 import static ru.mycrg.data_service.service.reestrs.Systems.SMEV_3;
@@ -162,7 +163,7 @@ public class AcceptKptService {
             Map<String, Object> acceptLog = new HashMap<>();
             acceptLog.put(DESCRIPTION_ATTRIBUTE, "Пришёл результат для квартала " +
                     docRecord.getAsString(CAD_KVARTAL_ATTRIBUTE));
-            taskLogService.create(new TaskLogDto("Получение ответа", taskId), acceptLog);
+            taskLogService.create(new TaskLogDto("Получение ответа", taskId, SYSTEM_USER_ID), acceptLog);
 
             Document document = builder
                     .parse(new InputSource(new StringReader(processResult.getXmlBuildMeta().getRequestXmlString())));
@@ -177,7 +178,7 @@ public class AcceptKptService {
             Map<String, Object> attachmentLog = new HashMap<>();
             attachmentLog.put(DESCRIPTION_ATTRIBUTE, "ZIP архив прикреплён к документу " +
                     docRecord.getAsString(CAD_KVARTAL_ATTRIBUTE));
-            taskLogService.create(new TaskLogDto("Добавление ответа", taskId), attachmentLog);
+            taskLogService.create(new TaskLogDto("Добавление ответа", taskId, SYSTEM_USER_ID), attachmentLog);
 
             updateFolderAndTaskIfAllFileProcessed(docRecord,
                                                   folder,
@@ -265,7 +266,7 @@ public class AcceptKptService {
             recordsDao.updateRecordById(libraryRecordQualifier, folderPayload, schema);
             tasksDetachedDao.updateStatus(dbName, taskId, DONE);
 
-            taskLogService.create(new TaskLogDto("Закрытие задачи", taskId),
+            taskLogService.create(new TaskLogDto("Закрытие задачи", taskId, SYSTEM_USER_ID),
                                   Map.of(DESCRIPTION_ATTRIBUTE, "Все архивы получены"));
         }
     }

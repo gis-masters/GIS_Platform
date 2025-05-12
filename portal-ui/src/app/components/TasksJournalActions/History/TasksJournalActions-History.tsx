@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { ArchiveOutlined } from '@mui/icons-material';
+import { RestoreOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
 import { Schema } from '../../../services/data/schema/schema.models';
@@ -36,7 +36,7 @@ export class TasksJournalActionsHistory extends Component<TasksJournalActionsHis
           className={cnTasksJournalActionsHistory()}
           title='История'
           as={as}
-          icon={<ArchiveOutlined />}
+          icon={<RestoreOutlined />}
           onClick={this.openDialog}
         />
 

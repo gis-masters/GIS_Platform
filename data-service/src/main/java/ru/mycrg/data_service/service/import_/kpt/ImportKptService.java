@@ -43,7 +43,6 @@ import static ru.mycrg.data_service.mappers.SchemaMapper.jsonToDto;
 import static ru.mycrg.data_service.service.TaskService.*;
 import static ru.mycrg.data_service.service.import_.kpt.KptSourceFilesService.KPT_LIBRARY_ID;
 import static ru.mycrg.data_service.service.smev3.request.get_cadastrial_plan.GetCadastrialPlanRequestService.DATA_SECTION_KEY_DATA_CONNECTION_ATTRIBUTE;
-import static ru.mycrg.data_service.service.smev3.request.get_cadastrial_plan.GetCadastrialPlanRequestService.KPT_ORDER_CONTENT_TYPE; //нужно убрать
 import static ru.mycrg.data_service.util.JsonConverter.toJsonNode;
 import static ru.mycrg.data_service.util.SystemLibraryAttributes.CONTENT_TYPE_ID;
 import static ru.mycrg.data_service.util.SystemLibraryAttributes.CREATED_AT;
@@ -103,6 +102,7 @@ public class ImportKptService {
                                    buildTableImportDtoList(importRequest.getTables()),
                                    authenticationFacade.getLogin(),
                                    task.getId(),
+                                   authenticationFacade.getUserDetails().getUserId(),
                                    importRequest.getValidationSettings()));
 
         return task;

@@ -9,7 +9,7 @@ import org.springframework.jdbc.BadSqlGrammarException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.mycrg.data_service.dao.BaseReadDao;
-import ru.mycrg.data_service.dto.TaskLogDto;
+import ru.mycrg.common_contracts.generated.data_service.TaskLogDto;
 import ru.mycrg.data_service.entity.TaskLog;
 import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
@@ -73,6 +73,7 @@ public class TaskLogService {
         taskLog.setEventType(logDto.getEventType());
         taskLog.setMassage(mapper.convertValue(taskBody, JsonNode.class));
         taskLog.setCreatedAt(now());
+        taskLog.setCreatedBy(logDto.getCreatedBy());
 
         taskLogRepository.save(taskLog);
     }

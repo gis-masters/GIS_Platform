@@ -351,6 +351,7 @@ CREATE TABLE IF NOT EXISTS data.tasks_log
     event_type character varying NOT NULL,
     message    jsonb,
     created_at timestamp without time zone DEFAULT now(),
+    created_by bigint,
     CONSTRAINT tasks_log_id_pkey PRIMARY KEY (id)
 ) TABLESPACE pg_default;
 ALTER TABLE data.tasks_log

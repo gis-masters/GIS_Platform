@@ -351,6 +351,18 @@ public class TaskStepDefinition extends BaseStepsDefinitions {
         assertEquals("Статус задачи не соответствует ожидаемому", expectedStatus, actualStatus);
     }
 
+    @Given("Существует таблица задач")
+    public void initTaskTable() {
+        getTasks();
+
+        if (response.getStatusCode() == 400) {
+            System.out.println("Необходимо создать таблицу задач");
+            createTaskTableByTaskSchemaV1();
+        } else {
+            System.out.println("Таблица задач уже существует");
+        }
+    }
+
     private void createTask(Map<String, Object> dto) {
         response = getBaseRequestWithCurrentCookie()
                 .given().
@@ -365,6 +377,12 @@ public class TaskStepDefinition extends BaseStepsDefinitions {
         response = getBaseRequestWithCurrentCookie()
                 .when().
                         get("/" + taskId);
+    }
+
+    private void createTaskTableByTaskSchemaV1() {
+        response = getBaseRequestWithCurrentCookie()
+                .when()
+                        .post("/crateTable/tasks_schema_v1");
     }
 
     private void getTasks() {

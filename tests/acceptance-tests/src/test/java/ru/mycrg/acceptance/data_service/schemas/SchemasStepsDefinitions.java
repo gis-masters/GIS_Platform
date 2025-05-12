@@ -1,5 +1,6 @@
 package ru.mycrg.acceptance.data_service.schemas;
 
+import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.restassured.http.ContentType;
@@ -95,6 +96,13 @@ public class SchemasStepsDefinitions extends BaseStepsDefinitions {
     @When("Существует схема для библиотеки документов")
     public void createSomeSchemaForDocumentLibrary() {
         createSchemaWithRandomName();
+    }
+
+    @Given("Существует схема для задач")
+    public void createTaskSchema() {
+        SchemaDto schema = getSchemaTemplateByTitle("tasks_schema_v1");
+
+        createOrUpdateSchema(schema);
     }
 
     @When("Пользователь отправляет POST запрос на создание новой схемы")

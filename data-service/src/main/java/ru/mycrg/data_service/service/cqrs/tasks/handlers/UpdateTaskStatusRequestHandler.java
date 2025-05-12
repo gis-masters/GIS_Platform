@@ -5,7 +5,7 @@ import ru.mycrg.auth_facade.IAuthenticationFacade;
 import ru.mycrg.auth_facade.UserDetails;
 import ru.mycrg.data_service.dao.RecordsDao;
 import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
-import ru.mycrg.data_service.dto.TaskLogDto;
+import ru.mycrg.common_contracts.generated.data_service.TaskLogDto;
 import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
@@ -35,8 +35,8 @@ import static ru.mycrg.data_service.util.SystemLibraryAttributes.*;
 import static ru.mycrg.data_service_contract.enums.TaskStatus.*;
 
 /**
- * @deprecated Используйте {@link UpdateTaskRequestHandler} вместо этого класса.
- * Там более актуальный код, на данный момент по обновлению статусов.
+ * @deprecated Используйте {@link UpdateTaskRequestHandler} вместо этого класса. Там более актуальный код, на данный
+ * момент по обновлению статусов.
  */
 @Deprecated
 @Component
@@ -115,7 +115,9 @@ public class UpdateTaskStatusRequestHandler implements IRequestHandler<UpdateTas
 
             Map<String, Object> updatedTask = taskService.getById(taskId);
             taskLogService.create(
-                    new TaskLogDto("Статус задачи обновлён на: " + newStatus.getTranslatedStatus(), taskId),
+                    new TaskLogDto("Статус задачи обновлён на: " + newStatus.getTranslatedStatus(),
+                                   taskId,
+                                   userDetails.getUserId()),
                     updatedTask
             );
         } catch (CrgDaoException e) {

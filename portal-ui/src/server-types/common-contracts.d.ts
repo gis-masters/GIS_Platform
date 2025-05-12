@@ -10,6 +10,12 @@ export interface GeometryValidationResultDto {
   valid: boolean;
 }
 
+export interface TaskLogDto {
+  eventType: string;
+  taskId: number;
+  createdBy: number;
+}
+
 export interface VerifyEcpResponse {
   message: string;
   signer: string;

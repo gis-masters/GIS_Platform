@@ -8,7 +8,7 @@ import ru.mycrg.auth_facade.UserDetails;
 import ru.mycrg.data_service.dao.RecordsDao;
 import ru.mycrg.data_service.dao.ddl.tables.DdlTablesSpecial;
 import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
-import ru.mycrg.data_service.dto.TaskLogDto;
+import ru.mycrg.common_contracts.generated.data_service.TaskLogDto;
 import ru.mycrg.data_service.dto.record.IRecord;
 import ru.mycrg.data_service.dto.record.RecordEntity;
 import ru.mycrg.data_service.exceptions.BadRequestException;
@@ -66,10 +66,10 @@ public class CreateTaskRequestHandler implements IRequestHandler<CreateTaskReque
 
             log.debug("Запрос на создание задачи: [{}]", record);
 
-            String ownerAsString = record.getAsString(TASK_OWNER_ID_PROPERTY);
-            if (ownerAsString == null) {
+            if (record.getAsString(TASK_OWNER_ID_PROPERTY) == null) {
                 throw new BadRequestException("Отсутствует обязательное поле: owner_id");
             }
+
             UserDetails userDetails = authenticationFacade.getUserDetails();
             List<Long> directMinions = userDetails.getDirectMinions();
 
@@ -106,7 +106,8 @@ public class CreateTaskRequestHandler implements IRequestHandler<CreateTaskReque
 
             request.setId(newTask.getId());
 
-            taskLogService.create(new TaskLogDto("Создание новой задачи", newTask.getId()), newTask.getContent());
+            taskLogService.create(new TaskLogDto("Создание новой задачи", newTask.getId(), userDetails.getUserId()),
+                                  newTask.getContent());
 
             return newTask;
         } catch (CrgDaoException e) {

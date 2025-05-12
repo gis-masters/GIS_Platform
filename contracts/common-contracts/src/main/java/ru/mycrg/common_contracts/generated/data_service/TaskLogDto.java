@@ -1,17 +1,19 @@
-package ru.mycrg.data_service.dto;
+package ru.mycrg.common_contracts.generated.data_service;
 
 public class TaskLogDto {
 
     private String eventType;
     private Long taskId;
+    private Long createdBy;
 
     public TaskLogDto() {
         // Required
     }
 
-    public TaskLogDto(String eventType, Long taskId) {
+    public TaskLogDto(String eventType, Long taskId, Long createdBy) {
         this.eventType = eventType;
         this.taskId = taskId;
+        this.createdBy = createdBy;
     }
 
     public String getEventType() {
@@ -28,5 +30,13 @@ public class TaskLogDto {
 
     public void setTaskId(Long taskId) {
         this.taskId = taskId;
+    }
+
+    public Long getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(Long createdBy) {
+        this.createdBy = createdBy;
     }
 }

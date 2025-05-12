@@ -10,7 +10,7 @@ import ru.mycrg.data_service.dao.detached.KptImportDao;
 import ru.mycrg.data_service.dao.detached.TaskLogDetachedDao;
 import ru.mycrg.data_service.dao.detached.TasksDetachedDao;
 import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
-import ru.mycrg.data_service.dto.TaskLogDto;
+import ru.mycrg.common_contracts.generated.data_service.TaskLogDto;
 import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.kpt_import.TmpTablesService;
 import ru.mycrg.data_service.kpt_import.model.*;
@@ -73,6 +73,7 @@ import static ru.mycrg.data_service.util.KptZipUtil.extractXmlReport;
 import static ru.mycrg.data_service.util.SystemLibraryAttributes.CREATED_AT;
 import static ru.mycrg.data_service.util.SystemLibraryAttributes.CREATED_BY;
 import static ru.mycrg.data_service_contract.enums.TaskStatus.*;
+import static ru.mycrg.data_service.config.CrgCommonConfig.SYSTEM_USER_ID;
 
 /**
  * Обработчик запроса на импорт КПТ из XML
@@ -174,7 +175,7 @@ public class ImportKptHandler implements IEventHandler {
             } catch (Exception e) {
                 String message = "Не удалось создать временные таблицы для импорта!";
                 log.error(message, e);
-                writeErrorToTaskLog(dbName, event.getTaskId(), message);
+                writeErrorToTaskLog(dbName, event.getTaskId(), SYSTEM_USER_ID, message);
 
                 return;
             }
@@ -183,7 +184,10 @@ public class ImportKptHandler implements IEventHandler {
                 tmpTablesService.cleanTmpTables(dbName, schemas);
             } catch (CrgDaoException e) {
                 log.error("Ошибка очистки временной таблицы!", e);
-                writeErrorToTaskLog(dbName, event.getTaskId(), "Не удалось очистить временные таблицы");
+                writeErrorToTaskLog(dbName,
+                                    event.getTaskId(),
+                                    SYSTEM_USER_ID,
+                                    "Не удалось очистить временные таблицы");
 
                 return;
             }
@@ -305,7 +309,11 @@ public class ImportKptHandler implements IEventHandler {
                 for (KptElementWriter writer: toWrite.keySet()) {
                     List<KptElement> batch = toWrite.get(writer);
                     if (!batch.isEmpty()) {
-                        writeBatch(writer, batch, getKptElementSchema(schemas, writer.getSchemaName()), dbName, taskId);
+                        writeBatch(writer,
+                                   batch,
+                                   getKptElementSchema(schemas, writer.getSchemaName()),
+                                   dbName,
+                                   taskId);
                     }
                 }
 
@@ -400,14 +408,14 @@ public class ImportKptHandler implements IEventHandler {
             String msg = "Ошибка обработки КПТ: " + kpt.getId();
             log.error("{} => {}", msg, ex.getMessage(), ex);
 
-            writeErrorToTaskLog(dbName, taskId, msg);
+            writeErrorToTaskLog(dbName, taskId, SYSTEM_USER_ID, msg);
 
             return;
         } catch (Exception ex) {
             String msg = "Непредвиденная ошибка импорта файла КПТ: %s" + kpt.getPath();
             log.error("{} из файла: '{}'", msg, kpt.getDocument().getId(), ex);
 
-            writeErrorToTaskLog(dbName, taskId, msg);
+            writeErrorToTaskLog(dbName, taskId, importEvent.getUserIdAssignedToTask(), msg);
 
             return;
         }
@@ -450,7 +458,7 @@ public class ImportKptHandler implements IEventHandler {
                          documentTitle);
             } catch (Exception e) {
                 log.error("Ошибка переноса данных из временной таблицы в '{}'", table, e);
-                writeErrorToTaskLog(dbName, taskId, e.getMessage());
+                writeErrorToTaskLog(dbName, taskId, SYSTEM_USER_ID, e.getMessage());
             }
         }
     }
@@ -527,9 +535,9 @@ public class ImportKptHandler implements IEventHandler {
                   sourceTable, targetTableQualifier, timer.getTotalTimeSeconds());
     }
 
-    private void writeErrorToTaskLog(String dbName, Long taskId, String message) {
+    private void writeErrorToTaskLog(String dbName, Long taskId, Long createdBy, String message) {
         taskLogDetachedDao.createTaskLog(dbName,
-                                         new TaskLogDto("Импорт КПТ", taskId),
+                                         new TaskLogDto("Импорт КПТ", taskId, createdBy),
                                          new KptImportValidationResult(ERROR, message),
                                          DS_ID);
     }
@@ -597,7 +605,7 @@ public class ImportKptHandler implements IEventHandler {
         } catch (Exception e) {
             log.error("Ошибка сохранения данных слоя {}", writer.getSchemaName(), e);
 
-            writeErrorToTaskLog(databaseName, taskId, e.getMessage());
+            writeErrorToTaskLog(databaseName, taskId, SYSTEM_USER_ID, e.getMessage());
         }
 
         batch.clear();

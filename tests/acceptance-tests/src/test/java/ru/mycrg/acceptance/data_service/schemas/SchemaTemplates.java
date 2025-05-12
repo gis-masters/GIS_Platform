@@ -12,6 +12,8 @@ public class SchemaTemplates {
 
     public static SchemaDto getSchemaTemplateByTitle(String schemaTitle) {
         switch (schemaTitle) {
+            case "tasks_schema_v1":
+                return prepareTaskSchema();
             case "Точечный слой с атрибутами":
                 return testPointAttributes();
             case "Тест FTS - исключение hidden полей":
@@ -201,7 +203,6 @@ public class SchemaTemplates {
                         "  \"geometryType\": \"Point\"\n" +
                         "}", SchemaDto.class);
     }
-
 
     private static SchemaDto testFtsHiddenFieldsSchema() {
         return gson.fromJson(
@@ -702,6 +703,201 @@ public class SchemaTemplates {
                         "      \"valueType\": \"GEOMETRY\"" +
                         "    }" +
                         "  ]" +
+                        "}", SchemaDto.class);
+    }
+
+    private static SchemaDto prepareTaskSchema() {
+        return gson.fromJson(
+                "{\n" +
+                        "  \"name\": \"tasks_schema_v1\",\n" +
+                        "  \"title\": \"Схема задач специализации 3\",\n" +
+                        "  \"tableName\": \"tasks\",\n" +
+                        "  \"description\": \"Реестр системных и настраиваемых задач\",\n" +
+                        "  \"originName\": \"tasks\",\n" +
+                        "  \"styleName\": \"tasks_schema_v1\",\n" +
+                        "  \"readOnly\": false,\n" +
+                        "  \"geometryType\": \"MultiPolygon\",\n" +
+                        "  \"tags\": [\"system\", \"Задачи\"],\n" +
+                        "  \"properties\": [\n" +
+                        "    {\n" +
+                        "      \"name\": \"id\",\n" +
+                        "      \"title\": \"Идентификатор\",\n" +
+                        "      \"valueType\": \"INT\",\n" +
+                        "      \"hidden\": true\n" +
+                        "    },\n" +
+                        "    {\n" +
+                        "      \"name\": \"type\",\n" +
+                        "      \"title\": \"Тип задачи\",\n" +
+                        "      \"valueType\": \"CHOICE\",\n" +
+                        "      \"hidden\": true,\n" +
+                        "      \"enumerations\": [\n" +
+                        "        {\"value\": \"ASSIGNABLE\", \"title\": \"Назначаемая\"},\n" +
+                        "        {\"value\": \"CUSTOM\", \"title\": \"Настраиваемая\"},\n" +
+                        "        {\"value\": \"SYSTEM\", \"title\": \"Системная\"}\n" +
+                        "      ]\n" +
+                        "    },\n" +
+                        "    {\n" +
+                        "      \"name\": \"content_type_id\",\n" +
+                        "      \"title\": \"Вид задачи\",\n" +
+                        "      \"valueType\": \"CHOICE\",\n" +
+                        "      \"readOnly\": true,\n" +
+                        "      \"maxLength\": 50,\n" +
+                        "      \"minWidth\": 300,\n" +
+                        "      \"enumerations\": [\n" +
+                        "        {\"value\": \"common_task_kpt_import\", \"title\": \"Обновление данных в слоях КПТ\"}\n" +
+                        "      ]\n" +
+                        "    },\n" +
+                        "    {\n" +
+                        "      \"name\": \"status\",\n" +
+                        "      \"title\": \"Статус задачи\",\n" +
+                        "      \"valueType\": \"CHOICE\",\n" +
+                        "      \"enumerations\": [\n" +
+                        "        {\"value\": \"DONE\", \"title\": \"Выполнена\"},\n" +
+                        "        {\"value\": \"CANCELED\", \"title\": \"Отменена\"},\n" +
+                        "        {\"value\": \"CREATED\", \"title\": \"Создана\"},\n" +
+                        "        {\"value\": \"IN_PROGRESS\", \"title\": \"В работе\"}\n" +
+                        "      ]\n" +
+                        "    },\n" +
+                        "    {\n" +
+                        "      \"name\": \"description\",\n" +
+                        "      \"title\": \"Описание\",\n" +
+                        "      \"valueType\": \"STRING\",\n" +
+                        "      \"display\": \"multiline\"\n" +
+                        "    },\n" +
+                        "    {\n" +
+                        "      \"name\": \"assigned_to\",\n" +
+                        "      \"title\": \"Исполнитель\",\n" +
+                        "      \"valueType\": \"USER_ID\",\n" +
+                        "      \"required\": true,\n" +
+                        "      \"onlySubordinates\": true\n" +
+                        "    },\n" +
+                        "    {\n" +
+                        "      \"name\": \"owner_id\",\n" +
+                        "      \"title\": \"Начальник\",\n" +
+                        "      \"valueType\": \"USER_ID\",\n" +
+                        "      \"required\": true,\n" +
+                        "      \"readOnly\": true\n" +
+                        "    },\n" +
+                        "    {\n" +
+                        "      \"name\": \"inbox_data_key_data_connection\",\n" +
+                        "      \"title\": \"Материалы для обработки\",\n" +
+                        "      \"valueType\": \"DOCUMENT\",\n" +
+                        "      \"required\": true\n" +
+                        "    },\n" +
+                        "    {\n" +
+                        "      \"name\": \"data_section_key_data_connection\",\n" +
+                        "      \"title\": \"Связь с библиотеками\",\n" +
+                        "      \"valueType\": \"DOCUMENT\",\n" +
+                        "      \"multiple\": true,\n" +
+                        "      \"libraries\": [\"dl_data_kpt\"],\n" +
+                        "      \"maxDocuments\": 18\n" +
+                        "    },\n" +
+                        "    {\n" +
+                        "      \"name\": \"created_by\",\n" +
+                        "      \"title\": \"Создано\",\n" +
+                        "      \"valueType\": \"STRING\",\n" +
+                        "      \"hidden\": true\n" +
+                        "    },\n" +
+                        "    {\n" +
+                        "      \"name\": \"created_at\",\n" +
+                        "      \"title\": \"Дата создания\",\n" +
+                        "      \"valueType\": \"DATETIME\",\n" +
+                        "      \"readOnly\": true\n" +
+                        "    },\n" +
+                        "    {\n" +
+                        "      \"name\": \"due_date\",\n" +
+                        "      \"title\": \"Срок исполнения\",\n" +
+                        "      \"valueType\": \"DATETIME\"\n" +
+                        "    },\n" +
+                        "    {\n" +
+                        "      \"name\": \"record_status\",\n" +
+                        "      \"title\": \"Контроль скоков исполнения\",\n" +
+                        "      \"valueType\": \"CHOICE\",\n" +
+                        "      \"readOnly\": true,\n" +
+                        "      \"enumerations\": [\n" +
+                        "        {\"value\": \"В установленный срок\", \"title\": \"В установленный срок\"},\n" +
+                        "        {\"value\": \"С нарушением срока\", \"title\": \"С нарушением срока\"}\n" +
+                        "      ]\n" +
+                        "    },\n" +
+                        "    {\n" +
+                        "      \"name\": \"guid\",\n" +
+                        "      \"title\": \"guid\",\n" +
+                        "      \"valueType\": \"UUID\",\n" +
+                        "      \"hidden\": true\n" +
+                        "    },\n" +
+                        "    {\n" +
+                        "      \"name\": \"number\",\n" +
+                        "      \"title\": \"Просроченных дней\",\n" +
+                        "      \"valueType\": \"INT\",\n" +
+                        "      \"readOnly\": true\n" +
+                        "    },\n" +
+                        "    {\n" +
+                        "      \"name\": \"updated_by\",\n" +
+                        "      \"title\": \"Модифицировано\",\n" +
+                        "      \"valueType\": \"STRING\",\n" +
+                        "      \"hidden\": true\n" +
+                        "    },\n" +
+                        "    {\n" +
+                        "      \"name\": \"date\",\n" +
+                        "      \"title\": \"Дата выполнения\",\n" +
+                        "      \"valueType\": \"DATETIME\",\n" +
+                        "      \"readOnly\": true\n" +
+                        "    },\n" +
+                        "    {\n" +
+                        "      \"name\": \"last_modified\",\n" +
+                        "      \"title\": \"Дата последнего изменения\",\n" +
+                        "      \"valueType\": \"DATETIME\",\n" +
+                        "      \"hidden\": true,\n" +
+                        "      \"readOnly\": true\n" +
+                        "    },\n" +
+                        "    {\n" +
+                        "      \"name\": \"attachments\",\n" +
+                        "      \"title\": \"Вложения\",\n" +
+                        "      \"valueType\": \"FILE\",\n" +
+                        "      \"multiple\": true\n" +
+                        "    }\n" +
+                        "  ],\n" +
+                        "  \"contentTypes\": [\n" +
+                        "    {\n" +
+                        "      \"id\": \"common_task_kpt_import\",\n" +
+                        "      \"type\": \"DOCUMENT\",\n" +
+                        "      \"title\": \"Обновление данных в слоях КПТ\",\n" +
+                        "      \"childOnly\": false,\n" +
+                        "      \"attributes\": [\n" +
+                        "        {\"name\": \"id\", \"hidden\": true},\n" +
+                        "        {\"name\": \"content_type_id\", \"hidden\": true},\n" +
+                        "        {\"name\": \"status\", \"hidden\": true},\n" +
+                        "        {\"name\": \"owner_id\"},\n" +
+                        "        {\"name\": \"assigned_to\"},\n" +
+                        "        {\"name\": \"due_date\"},\n" +
+                        "        {\"name\": \"guid\"},\n" +
+                        "        {\"name\": \"created_at\"},\n" +
+                        "        {\"name\": \"last_modified\"},\n" +
+                        "        {\n" +
+                        "          \"name\": \"inbox_data_key_data_connection\",\n" +
+                        "          \"title\": \"Библиотека КПТ\",\n" +
+                        "          \"multiple\": true,\n" +
+                        "          \"libraries\": [\"dl_data_kpt\"],\n" +
+                        "          \"maxDocuments\": 10,\n" +
+                        "          \"valueType\": \"DOCUMENT\"\n" +
+                        "        },\n" +
+                        "        {\"name\": \"data_section_key_data_connection\"},\n" +
+                        "        {\"name\": \"description\"}\n" +
+                        "      ]\n" +
+                        "    },\n" +
+                        "    {\n" +
+                        "      \"id\": \"task_with_attachments\",\n" +
+                        "      \"type\": \"DOCUMENT\",\n" +
+                        "      \"title\": \"Задача с вложениями\",\n" +
+                        "      \"attributes\": [\n" +
+                        "        {\"name\": \"id\", \"hidden\": true},\n" +
+                        "        {\"name\": \"content_type_id\", \"readOnly\": true},\n" +
+                        "        {\"name\": \"assigned_to\"},\n" +
+                        "        {\"name\": \"description\"},\n" +
+                        "        {\"name\": \"attachments\"}\n" +
+                        "      ]\n" +
+                        "    }\n" +
+                        "  ]\n" +
                         "}", SchemaDto.class);
     }
 

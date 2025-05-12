@@ -9,7 +9,7 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 import ru.mycrg.data_service.dao.config.DatasourceFactory;
-import ru.mycrg.data_service.dto.TaskLogDto;
+import ru.mycrg.common_contracts.generated.data_service.TaskLogDto;
 
 import java.sql.SQLException;
 import java.sql.Types;
@@ -45,15 +45,16 @@ public class TaskLogDetachedDao {
         String eventTypeField = "event_type";
         String messageField = "message";
         String createdAtField = "created_at";
+        String createdByField = "created_by";
 
         NamedParameterJdbcTemplate pJdbcTemplate = (datasourceId == null)
                 ? new NamedParameterJdbcTemplate(datasourceFactory.getDataSource(dbName))
                 : new NamedParameterJdbcTemplate(datasourceFactory.getNamedDataSource(dbName, datasourceId));
 
         String query = String.format(
-                "INSERT INTO data.tasks_log (%s,%s,%s,%s) values (:%s,:%s,:%s,:%s)",
-                taskIdField, eventTypeField, messageField, createdAtField,
-                taskIdField, eventTypeField, messageField, createdAtField
+                "INSERT INTO data.tasks_log (%s,%s,%s,%s,%s) values (:%s,:%s,:%s,:%s,:%s)",
+                taskIdField, eventTypeField, messageField, createdAtField, createdByField,
+                taskIdField, eventTypeField, messageField, createdAtField, createdByField
         );
         log.debug("INSERT TASK LOG QUERY: [{}]", query);
 
@@ -62,6 +63,7 @@ public class TaskLogDetachedDao {
         params.addValue(eventTypeField, taskLogDto.getEventType(), Types.VARCHAR);
         params.addValue(messageField, message, Types.OTHER);
         params.addValue(createdAtField, LocalDateTime.now(), Types.TIMESTAMP);
+        params.addValue(createdByField, taskLogDto.getCreatedBy(), BIGINT);
         try {
             pJdbcTemplate.update(query, params);
         } catch (Exception ex) {

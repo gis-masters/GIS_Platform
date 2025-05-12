@@ -18,7 +18,7 @@ import ru.mycrg.data_service.dao.detached.TasksDetachedDao;
 import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
 import ru.mycrg.data_service.dto.FileResourceQualifier;
 import ru.mycrg.data_service.dto.LibraryModel;
-import ru.mycrg.data_service.dto.TaskLogDto;
+import ru.mycrg.common_contracts.generated.data_service.TaskLogDto;
 import ru.mycrg.data_service.dto.record.IRecord;
 import ru.mycrg.data_service.dto.record.RecordEntity;
 import ru.mycrg.data_service.entity.File;
@@ -64,6 +64,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 import static ru.mycrg.data_service.config.CrgCommonConfig.SYSTEM_DATETIME_PATTERN;
 import static ru.mycrg.data_service.dto.Roles.OWNER;
 import static ru.mycrg.data_service.service.TaskService.*;
+import static ru.mycrg.data_service.config.CrgCommonConfig.SYSTEM_USER_ID;
 import static ru.mycrg.data_service.service.resources.ResourceQualifier.*;
 import static ru.mycrg.data_service.service.smev3.fields.FieldsSection.DL_DATA_SECTION_DELIVERY_DATA_TABLE;
 import static ru.mycrg.data_service.service.smev3.fields.FieldsSection.TABLE_13;
@@ -421,7 +422,7 @@ public abstract class AcceptServiceBase {
         taskProps.put(TASK_STATUS_PROPERTY, TaskStatus.CREATED);
         taskProps.put(TASK_OWNER_ID_PROPERTY, Long.valueOf("2"));
 
-        taskLogService.create(new TaskLogDto(eventType, taskId), taskProps);
+        taskLogService.create(new TaskLogDto(eventType, taskId, SYSTEM_USER_ID), taskProps);
     }
 
     protected abstract List<IRecord> getDocRecords();

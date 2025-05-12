@@ -15,7 +15,7 @@ import ru.mycrg.auth_facade.UserDetails;
 import ru.mycrg.data_service.service.smev3.config.Smev3Config;
 import ru.mycrg.data_service.dao.RecordsDao;
 import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
-import ru.mycrg.data_service.dto.TaskLogDto;
+import ru.mycrg.common_contracts.generated.data_service.TaskLogDto;
 import ru.mycrg.data_service.dto.record.IRecord;
 import ru.mycrg.data_service.dto.record.RecordEntity;
 import ru.mycrg.data_service.dto.record.ResponseWithReport;
@@ -285,7 +285,7 @@ public class GetCadastrialPlanRequestService extends RequestProcessor {
         propsMap.put(TASK_ASSIGNED_TO_PROPERTY, propsMap.get(PERFORMER_PROPERTY));
         propsMap.put(TASK_OWNER_ID_PROPERTY, propsMap.get(PERFORMER_PROPERTY));
 
-        taskLogService.create(new TaskLogDto(eventType, taskId), propsMap);
+        taskLogService.create(new TaskLogDto(eventType, taskId, authenticationFacade.getUserDetails().getUserId()), propsMap);
     }
 
     private void linkFolderToTask(IRecord folder, IRecord task) throws JsonProcessingException, CrgDaoException {

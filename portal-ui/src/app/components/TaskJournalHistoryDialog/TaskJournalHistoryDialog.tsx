@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { computed, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
-import { ArchiveOutlined } from '@mui/icons-material';
+import { RestoreOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
 import { Schema } from '../../services/data/schema/schema.models';
@@ -37,7 +37,7 @@ export class TaskJournalHistoryDialog extends Component<TaskJournalHistoryDialog
       <Dialog className={cnTaskJournalHistoryDialog()} open={dialogOpen} onClose={onClose} fullWidth maxWidth='xl'>
         <DialogTitle>
           <div className={cnTaskJournalHistoryDialog('TypeIcon')}>
-            <ArchiveOutlined color='primary' />
+            <RestoreOutlined color='primary' />
           </div>
           История изменений задачи
         </DialogTitle>
