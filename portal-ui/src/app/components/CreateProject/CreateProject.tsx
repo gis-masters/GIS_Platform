@@ -1,72 +1,67 @@
-import React, { Component } from 'react';
-import { action, makeObservable, observable } from 'mobx';
+import React, { useCallback, useState } from 'react';
 import { observer } from 'mobx-react';
 import { Tooltip } from '@mui/material';
-import { PlaylistAdd } from '@mui/icons-material';
+import { CreateNewFolderOutlined, PlaylistAdd } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
-import { boundMethod } from 'autobind-decorator';
 
-import { communicationService } from '../../services/communication.service';
 import { CrgProject, NewCrgProject } from '../../services/gis/projects/projects.models';
 import { projectsService } from '../../services/gis/projects/projects.service';
 import { FormDialog } from '../FormDialog/FormDialog';
 import { IconButton } from '../IconButton/IconButton';
-import { crgProjectSchema } from '../ProjectActions/ProjectActions';
+import { crgProjectFolderSchema, crgProjectSchema } from '../ProjectActions/ProjectActions';
 
 const cnCreateProject = cn('CreateProject');
 
 interface CreateProjectProps {
+  isFolder?: boolean;
+  currentProjectFolderId?: number;
   onCreate(project: CrgProject): void;
 }
 
-@observer
-export class CreateProject extends Component<CreateProjectProps> {
-  @observable private dialogOpen = false;
+export const CreateProject = observer(({ isFolder, currentProjectFolderId, onCreate }: CreateProjectProps) => {
+  const [dialogOpen, setDialogOpen] = useState(false);
 
-  constructor(props: CreateProjectProps) {
-    super(props);
-    makeObservable(this);
-  }
+  const openDialog = useCallback(() => {
+    setDialogOpen(true);
+  }, []);
 
-  render() {
-    return (
-      <>
-        <Tooltip title='Создать проект'>
-          <IconButton className={cnCreateProject()} onClick={this.openDialog}>
-            <PlaylistAdd />
-          </IconButton>
-        </Tooltip>
-        <FormDialog<CrgProject>
-          title='Создание нового проекта'
-          className={cnCreateProject('Dialog')}
-          open={this.dialogOpen}
-          value={{}}
-          schema={crgProjectSchema}
-          onClose={this.closeDialog}
-          closeWithConfirm
-          actionFunction={this.create}
-          actionButtonProps={{ children: 'Создать' }}
-        />
-      </>
-    );
-  }
+  const closeDialog = useCallback(() => {
+    setDialogOpen(false);
+  }, []);
 
-  @action.bound
-  private openDialog() {
-    this.dialogOpen = true;
-  }
+  const create = useCallback(async (project: NewCrgProject) => {
+    if (isFolder) {
+      project.folder = true;
+    }
 
-  @action.bound
-  private closeDialog() {
-    this.dialogOpen = false;
-  }
+    if (currentProjectFolderId && !project.parentId) {
+      project.parentId = currentProjectFolderId;
+    }
 
-  @boundMethod
-  private async create(project: NewCrgProject) {
     const newProject = await projectsService.create(project);
 
-    communicationService.projectUpdated.emit({ type: 'create', data: newProject });
+    onCreate(newProject);
+  }, [currentProjectFolderId, isFolder, onCreate]);
 
-    this.props.onCreate(newProject);
-  }
-}
+  return (
+    <>
+      <Tooltip title={isFolder ? 'Создать папку проектов' : 'Создать проект'}>
+        <IconButton className={cnCreateProject()} onClick={openDialog}>
+          {isFolder ? <CreateNewFolderOutlined /> : <PlaylistAdd />}
+        </IconButton>
+      </Tooltip>
+
+      <FormDialog<CrgProject>
+        title={isFolder ? 'Создание папки проектов' : 'Создание нового проекта'}
+        className={cnCreateProject('Dialog')}
+        open={dialogOpen}
+        value={{}}
+        schema={isFolder ? crgProjectFolderSchema : crgProjectSchema}
+        onClose={closeDialog}
+        closeWithConfirm
+        actionFunction={create}
+        actionButtonProps={{ children: 'Создать' }}
+      />
+    </>
+  );
+});

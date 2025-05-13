@@ -1,4 +1,4 @@
-import React, { Component, createRef } from 'react';
+import React, { useRef } from 'react';
 import { observer } from 'mobx-react';
 import { Popover } from '@mui/material';
 import { cn } from '@bem-react/classname';
@@ -14,48 +14,45 @@ interface ProjectsAddProps extends IClassNameProps {
   busy: boolean;
   buttonProps?: Omit<ButtonProps, 'ref'>;
   errors: string[];
+  title: string;
   onClose(): void;
   onOpen(): void;
   onSubmit(name: string): void;
   onChange(): void;
 }
 
-@observer
-export class ProjectsAdd extends Component<ProjectsAddProps> {
-  btnRef = createRef<HTMLButtonElement>();
+export const ProjectsAdd = observer((props: ProjectsAddProps) => {
+  const { onOpen, open, onClose, title, busy, onSubmit, className, buttonProps = {}, onChange, errors } = props;
+  const btnRef = useRef<HTMLButtonElement>(null);
 
-  render() {
-    const { onOpen, open, onClose, busy, onSubmit, className, buttonProps = {}, onChange, errors } = this.props;
+  return (
+    <>
+      <Button
+        className={cnProjectsAdd(null, [className])}
+        ref={btnRef}
+        onClick={onOpen}
+        children={title}
+        variant='outlined'
+        {...buttonProps}
+      />
 
-    return (
-      <>
-        <Button
-          className={cnProjectsAdd(null, [className])}
-          ref={this.btnRef}
-          onClick={onOpen}
-          children='Создать проект'
-          variant='outlined'
-          {...buttonProps}
-        />
-
-        <Popover
-          open={open}
-          anchorEl={this.btnRef.current}
+      <Popover
+        open={open}
+        anchorEl={btnRef.current}
+        onClose={onClose}
+        PaperProps={{ elevation: 5, square: true }}
+      >
+        <ProjectForm
+          errors={errors}
+          busy={busy}
           onClose={onClose}
-          PaperProps={{ elevation: 5, square: true }}
-        >
-          <ProjectForm
-            errors={errors}
-            busy={busy}
-            onClose={onClose}
-            onSubmit={onSubmit}
-            onChange={onChange}
-            buttonProps={{
-              children: 'Создать'
-            }}
-          />
-        </Popover>
-      </>
-    );
-  }
-}
+          onSubmit={onSubmit}
+          onChange={onChange}
+          buttonProps={{
+            children: 'Создать'
+          }}
+        />
+      </Popover>
+    </>
+  );
+});

@@ -35,7 +35,8 @@ export enum DataTypes {
   DATASET = 'Набор данных',
   DOC = 'Документ',
   VECTOR_TABLE = 'Векторная таблица',
-  PROJECT = 'Проект'
+  PROJECT = 'Проект',
+  PROJECT_FOLDER = 'Папка проекта'
 }
 
 export const roles: Role[] = [Role.VIEWER, Role.CONTRIBUTOR, Role.OWNER];

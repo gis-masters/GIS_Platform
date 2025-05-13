@@ -38,8 +38,13 @@ class AllProjects {
     return Boolean(this._list);
   }
 
+  @computed
+  private get projectsMap(): Map<number, CrgProject> {
+    return new Map(this._list?.map(project => [project.id, project]) || []);
+  }
+
   getById(id: number): CrgProject {
-    const project = this._list?.find(project => project.id === id);
+    const project = this.projectsMap.get(id);
 
     if (!project) {
       throw new Error(`Проект с id ${id} не найден`);
@@ -58,6 +63,13 @@ class AllProjects {
     if (this._list) {
       const project = this.getById(id);
       patch(project, patchData);
+    }
+  }
+
+  @action
+  addProject(newProject: CrgProject) {
+    if (this._list && !this.projectsMap.has(newProject.id)) {
+      this._list.push(newProject);
     }
   }
 

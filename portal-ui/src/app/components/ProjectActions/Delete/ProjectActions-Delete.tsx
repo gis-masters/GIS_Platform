@@ -1,51 +1,38 @@
-import React, { Component } from 'react';
-import { action, makeObservable, observable } from 'mobx';
+import React, { useCallback } from 'react';
 import { observer } from 'mobx-react';
-import { IconButton, Tooltip } from '@mui/material';
 import { Delete, DeleteOutline } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
-import { boundMethod } from 'autobind-decorator';
 
 import { communicationService } from '../../../services/communication.service';
 import { CrgProject } from '../../../services/gis/projects/projects.models';
 import { projectsService } from '../../../services/gis/projects/projects.service';
-import { konfirmieren } from '../../../services/utility-dialogs.service';
+import { ActionTypes, DataTypes } from '../../../services/permissions/permissions.models';
+import { getAvailableActionsTooltipByRole } from '../../../services/permissions/permissions.utils';
+import { achtung, konfirmieren } from '../../../services/utility-dialogs.service';
+import { ActionsItemVariant } from '../../Actions/Item/Actions-Item.base';
+import { ActionsItem } from '../../Actions/Item/Actions-Item.composed';
 
 const cnProjectActionsDelete = cn('ProjectActions', 'Delete');
 
 interface ProjectActionsDeleteProps {
   project: CrgProject;
+  as: ActionsItemVariant;
   disabled?: boolean;
   tooltipText?: string;
 }
 
-@observer
-export class ProjectActionsDelete extends Component<ProjectActionsDeleteProps> {
-  @observable private dialogOpen = false;
+export const ProjectActionsDelete = observer((props: ProjectActionsDeleteProps) => {
+  const { disabled, project, tooltipText, as } = props;
+  const [dialogOpen, setDialogOpen] = React.useState(false);
 
-  constructor(props: ProjectActionsDeleteProps) {
-    super(props);
-    makeObservable(this);
-  }
-  render() {
-    const { disabled, tooltipText } = this.props;
+  const role = project.role;
 
-    return (
-      <>
-        <Tooltip title={disabled && tooltipText ? tooltipText : 'Удалить'}>
-          <IconButton className={cnProjectActionsDelete()} onClick={this.delete} disabled={disabled} color='error'>
-            {this.dialogOpen ? <Delete /> : <DeleteOutline />}
-          </IconButton>
-        </Tooltip>
-      </>
-    );
+  if (!role) {
+    return null;
   }
 
-  @boundMethod
-  private async delete() {
-    const { project } = this.props;
-
-    this.setDialogOpen(true);
+  const handleDelete = useCallback(async () => {
+    setDialogOpen(true);
     const confirmed = await konfirmieren({
       title: 'Подтверждение удаления',
       message: `Вы действительно хотите удалить "${project.name}"?`,
@@ -58,11 +45,42 @@ export class ProjectActionsDelete extends Component<ProjectActionsDeleteProps> {
       communicationService.projectUpdated.emit({ type: 'delete', data: project });
     }
 
-    this.setDialogOpen(false);
-  }
+    setDialogOpen(false);
+  }, [project]);
 
-  @action
-  private setDialogOpen(open: boolean) {
-    this.dialogOpen = open;
-  }
-}
+  const testEmptiness = useCallback(async () => {
+    const [projects] = await projectsService.getProjects({
+      page: 0,
+      pageSize: 1,
+      filter: {
+        parent: project.id
+      }
+    });
+
+    if (projects.length) {
+      await achtung({
+        title: 'Невозможно удалить',
+        message: 'Папка проектов не пуста. Для её удаления необходимо сперва удалить все проекты внутри.'
+      });
+
+      return;
+    }
+
+    await handleDelete();
+  }, [handleDelete, project.id]);
+
+  return (
+    <ActionsItem
+      title={disabled && tooltipText ? tooltipText : 'Удалить'}
+      tooltipText={disabled ?
+        getAvailableActionsTooltipByRole(ActionTypes.DELETE, role, DataTypes.PROJECT) :
+        undefined}
+      className={cnProjectActionsDelete()}
+      icon={dialogOpen ? <Delete /> : <DeleteOutline />}
+      onClick={project.folder ? testEmptiness : handleDelete}
+      color='error'
+      as={as}
+      disabled={disabled}
+    />
+  );
+});

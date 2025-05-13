@@ -1,9 +1,7 @@
-import React, { Component, createRef } from 'react';
-import { action, makeObservable, observable } from 'mobx';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { observer } from 'mobx-react';
 import { AddBoxOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
-import { boundMethod } from 'autobind-decorator';
 import { AxiosError } from 'axios';
 
 import { communicationService, DataChangeEventDetail } from '../../services/communication.service';
@@ -14,6 +12,7 @@ import { allProjects } from '../../stores/AllProjects.store';
 import { organizationSettings } from '../../stores/OrganizationSettings.store';
 import { ProjectsAdd } from '../ProjectAdd/ProjectsAdd';
 import { ProjectCard } from '../ProjectCard/ProjectCard';
+import { ProjectFolder } from '../ProjectFolder/ProjectFolder';
 import { Toast } from '../Toast/Toast';
 import { ProjectsFilter } from './Filter/Projects-Filter';
 import { ProjectsHeader } from './Header/Projects-Header';
@@ -27,99 +26,33 @@ import '!style-loader!css-loader!sass-loader!./Add/Projects-Add.scss';
 
 const cnProjects = cn('Projects');
 
-@observer
-export default class Projects extends Component {
-  private thisRef = createRef<HTMLDivElement>();
-  private newProjectRef = createRef<HTMLDivElement>();
+const Projects: React.FC = observer(() => {
+  const thisRef = useRef<HTMLDivElement>(null);
+  const newProjectRef = useRef<HTMLDivElement>(null);
 
-  @observable private newProjectId = 0;
-  @observable private addFormBusy = false;
-  @observable private addFormOpen = false;
-  @observable private addFormErrors: string[] = [];
+  const [newProjectId, setNewProjectId] = useState(0);
+  const [addFormBusy, setAddFormBusy] = useState(false);
+  const [addFormOpen, setAddFormOpen] = useState(false);
+  const [addFormErrors, setAddFormErrors] = useState<string[]>([]);
 
-  constructor(props: Record<string, never>) {
-    super(props);
-    makeObservable(this);
-  }
-
-  async componentDidMount() {
-    await projectsService.initAllProjectsStore();
-
-    communicationService.projectUpdated.on(async (e: CustomEvent<DataChangeEventDetail<CrgProject>>) => {
-      const { type, data } = e.detail;
-      if (type === 'create') {
-        await this.scrollTo(data);
-      }
-    }, this);
-  }
-
-  componentWillUnmount() {
-    communicationService.off(this);
-  }
-
-  render() {
-    return (
-      <div className={cnProjects(null, ['scroll'])} ref={this.thisRef}>
-        {allProjects.inited ? (
-          <>
-            <ProjectsHeader>
-              <ProjectsFilter />
-              <ProjectsSortBy />
-              <ProjectsSortOrder />
-              {organizationSettings.createProject && (
-                <ProjectsAdd
-                  className={cnProjects('Add')}
-                  busy={this.addFormBusy}
-                  onSubmit={this.handleProjectCreation}
-                  onChange={this.setErrors}
-                  onClose={this.closeAddForm}
-                  onOpen={this.openAddForm}
-                  open={this.addFormOpen}
-                  errors={this.addFormErrors}
-                  buttonProps={{
-                    variant: 'contained',
-                    color: 'primary',
-                    startIcon: <AddBoxOutlined />
-                  }}
-                />
-              )}
-            </ProjectsHeader>
-            <ProjectsList>
-              {allProjects.displayedList.map((project, i) => (
-                <ProjectCard
-                  className={cnProjects('Card')}
-                  project={project}
-                  key={i}
-                  cardRef={this.newProjectId === project.id ? this.newProjectRef : undefined}
-                />
-              ))}
-            </ProjectsList>
-          </>
-        ) : (
-          <ProjectsLoader />
-        )}
-      </div>
-    );
-  }
-
-  private async scrollTo(project: CrgProject) {
-    this.setNewProjectId(project.id);
+  const scrollTo = async (project: CrgProject) => {
+    setNewProjectId(project.id);
 
     const waitForRefTimeout = 2500;
     const waitForRefStep = 50;
     for (let i = 0; i < waitForRefTimeout; i += waitForRefStep) {
       await sleep(50);
-      if (this.newProjectRef.current) {
+      if (newProjectRef.current) {
         break;
       }
     }
 
-    if (!this.newProjectRef.current) {
+    if (!newProjectRef.current) {
       return;
     }
 
-    const containerElem = this.thisRef.current;
-    const projectElem = this.newProjectRef.current;
+    const containerElem = thisRef.current;
+    const projectElem = newProjectRef.current;
 
     if (containerElem) {
       if (containerElem.scrollTop < projectElem.offsetTop + projectElem.offsetHeight) {
@@ -131,35 +64,29 @@ export default class Projects extends Component {
     }
 
     await sleep(2000);
-    this.setNewProjectId(0);
-  }
+    setNewProjectId(0);
+  };
 
-  @action
-  private setNewProjectId(id: number) {
-    this.newProjectId = id;
-  }
-
-  @boundMethod
-  private async handleProjectCreation(name: string) {
-    if (this.addFormBusy) {
+  const handleProjectCreation = async (name: string) => {
+    if (addFormBusy) {
       return;
     }
 
-    this.setErrors([]);
-    this.setBusy(true);
+    setAddFormErrors([]);
+    setAddFormBusy(true);
 
     try {
-      const newProject = await projectsService.create({ name });
+      const newProject = await projectsService.create({ name, folder: false });
       communicationService.allProjectsFetched.once(() => {
         communicationService.projectUpdated.emit({ type: 'create', data: newProject });
       });
       Toast.success('Проект создан');
 
-      this.closeAddForm();
+      closeAddForm();
     } catch (error) {
       const err = error as AxiosError<{ errors: Record<string, unknown>[] }>;
       if (err.response?.status === 409) {
-        this.setErrors([err?.message]);
+        setAddFormErrors([err?.message]);
       } else {
         const errors: string[] = [];
         err.response?.data?.errors?.forEach(({ message }) => {
@@ -172,31 +99,97 @@ export default class Projects extends Component {
           errors.push('Не удалось создать проект');
         }
 
-        this.setErrors(errors);
+        setAddFormErrors(errors);
       }
     } finally {
-      this.setBusy(false);
+      setAddFormBusy(false);
     }
-  }
+  };
 
-  @action.bound
-  private closeAddForm() {
-    this.addFormOpen = false;
-    this.addFormErrors = [];
-  }
+  const closeAddForm = () => {
+    setAddFormOpen(false);
+    setAddFormErrors([]);
+  };
 
-  @action.bound
-  private openAddForm() {
-    this.addFormOpen = true;
-  }
+  const openAddForm = () => {
+    setAddFormOpen(true);
+  };
 
-  @action.bound
-  setErrors(errors: string[] = []): void {
-    this.addFormErrors = errors;
-  }
+  const setErrors = useCallback((errors: string[] = []) => {
+    setAddFormErrors(errors);
+  }, []);
 
-  @action
-  private setBusy(busy: boolean) {
-    this.addFormBusy = busy;
-  }
-}
+  useEffect(() => {
+    const init = async () => {
+      await projectsService.initAllProjectsStore();
+    };
+
+    void init();
+
+    const handleProjectUpdate = async (e: CustomEvent<DataChangeEventDetail<CrgProject>>) => {
+      const { type, data } = e.detail;
+      if (type === 'create') {
+        await scrollTo(data);
+      }
+    };
+
+    communicationService.projectUpdated.on(handleProjectUpdate);
+
+    return () => {
+      communicationService.off(handleProjectUpdate);
+    };
+  }, []);
+
+  return (
+    <div className={cnProjects(null, ['scroll'])} ref={thisRef}>
+      {allProjects.inited ? (
+        <>
+          <ProjectsHeader>
+            <ProjectsFilter />
+            <ProjectsSortBy />
+            <ProjectsSortOrder />
+            {organizationSettings.createProject && (
+              <ProjectsAdd
+                className={cnProjects('Add')}
+                busy={addFormBusy}
+                onSubmit={handleProjectCreation}
+                onChange={setErrors}
+                onClose={closeAddForm}
+                onOpen={openAddForm}
+                open={addFormOpen}
+                errors={addFormErrors}
+                title='Создать проект'
+                buttonProps={{
+                  variant: 'contained',
+                  color: 'primary',
+                  startIcon: <AddBoxOutlined />
+                }}
+              />
+            )}
+          </ProjectsHeader>
+          <ProjectsList>
+            {allProjects.displayedList.filter(proj => !proj.folder).map((project, i) => (
+              project.folder ? <ProjectFolder
+                className={cnProjects('Card')}
+                project={project}
+                key={i}
+                cardRef={newProjectId === project.id ? newProjectRef : undefined}
+              />
+                :
+                <ProjectCard
+                  className={cnProjects('Card')}
+                  project={project}
+                  key={i}
+                  cardRef={newProjectId === project.id ? newProjectRef : undefined}
+                />
+            ))}
+          </ProjectsList>
+        </>
+      ) : (
+        <ProjectsLoader />
+      )}
+    </div>
+  );
+});
+
+export default Projects;

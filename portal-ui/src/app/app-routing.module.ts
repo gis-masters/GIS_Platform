@@ -13,6 +13,7 @@ import { MappingPageComponent } from './pages/mapping/mapping-page.component';
 import { MessagesRegistryPageComponent } from './pages/messages-registry/messages-registry-page.component';
 import { OrgAdminPageComponent } from './pages/org-admin/org-admin-page.component';
 import { PhotoUploaderPageComponent } from './pages/photo-uploader/photo-uploader-page.component';
+import { ProjectFolderPageComponent } from './pages/project-folder/project-folder-page.component';
 import { ProjectsPageComponent } from './pages/projects/projects-page.component';
 import { RecoveryComponent } from './pages/recovery/recovery.component';
 import { RegisterComponent } from './pages/register/register.component';
@@ -237,6 +238,15 @@ const routes: AppRoutes = [
     data: { page: Pages.DOCUMENT }
   },
   {
+    path: 'data-management/projectFolder/:projectId',
+    component: ProjectFolderPageComponent,
+    canActivate: [SystemAdminGuardService],
+    resolve: {
+      user: CurrentUserResolver
+    },
+    data: { page: Pages.PROJECTS }
+  },
+  {
     path: 'test-data-preparation',
     component: TestDataPreparationPageComponent,
     data: { page: Pages.TEST_DATA_PREPARATION }
@@ -276,5 +286,6 @@ export const routingComponents = [
   ChangePasswordFormPageComponent,
   MessagesRegistryPageComponent,
   TasksJournalPageComponent,
-  TestDataPreparationPageComponent
+  TestDataPreparationPageComponent,
+  ProjectFolderPageComponent
 ];

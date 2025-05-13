@@ -144,6 +144,7 @@ class EventService {
             data: {
               id: importGml.payload.projectId,
               name: importGml.payload.projectName,
+              folder: false,
               role: Role.OWNER
             }
           });

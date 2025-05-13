@@ -52,6 +52,7 @@ import { PageTitleComponent } from './components/page-title/page-title.component
 import { PhotoModePreviewerComponent } from './components/photo-mode-previewer/photo-mode-previewer.component';
 import { PickupDatasetsComponent } from './components/pickup-datasets/pickup-datasets.component';
 import { ProgressItemComponent } from './components/progress-item/progress-item.component';
+import { ProjectFolderComponent } from './components/project-folder/project-folder.component';
 import { ProjectsComponent } from './components/projects-ng/projects-ng.component';
 import { RelationsButtonComponent } from './components/relations-button/relations-button.component';
 import { RestorePasswordFormComponent } from './components/restore-password-form/restore-password-form.component';
@@ -137,7 +138,8 @@ import { GlobalErrorHandler } from './services/global-error.handler';
     TasksJournalComponent,
     UtilityDialogsRootComponent,
     PhotoModePreviewerComponent,
-    EditFeatureNavigationComponent
+    EditFeatureNavigationComponent,
+    ProjectFolderComponent
   ],
   imports: [
     HttpClientModule,

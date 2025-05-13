@@ -25,6 +25,7 @@ import { ExplorerAdapterTypeMessagesRegistriesRoot } from './_type/Explorer-Adap
 import { ExplorerAdapterTypeMessagesRegistry } from './_type/Explorer-Adapter_type_messagesRegistry';
 import { ExplorerAdapterTypeNone } from './_type/Explorer-Adapter_type_none';
 import { ExplorerAdapterTypeProject } from './_type/Explorer-Adapter_type_project';
+import { ExplorerAdapterTypeProjectFolder } from './_type/Explorer-Adapter_type_projectFolder';
 import { ExplorerAdapterTypeProjectsRoot } from './_type/Explorer-Adapter_type_projectsRoot';
 import { ExplorerAdapterTypeRoot } from './_type/Explorer-Adapter_type_root';
 import { ExplorerAdapterTypeSchema } from './_type/Explorer-Adapter_type_schema';
@@ -49,6 +50,7 @@ const adapters: Record<keyof ExplorerItemDataAllTypes, Adapter> = {
   [ExplorerItemType.ROOT]: ExplorerAdapterTypeRoot,
   [ExplorerItemType.PROJECT]: ExplorerAdapterTypeProject,
   [ExplorerItemType.PROJECTS_ROOT]: ExplorerAdapterTypeProjectsRoot,
+  [ExplorerItemType.PROJECT_FOLDER]: ExplorerAdapterTypeProjectFolder,
   [ExplorerItemType.BASEMAP]: ExplorerAdapterTypeBasemap,
   [ExplorerItemType.BASEMAPS_ROOT]: ExplorerAdapterTypeBasemapsRoot,
   [ExplorerItemType.MESSAGES_REGISTRIES_ROOT]: ExplorerAdapterTypeMessagesRegistriesRoot,

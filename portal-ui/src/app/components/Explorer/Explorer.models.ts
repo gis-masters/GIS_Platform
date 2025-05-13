@@ -29,6 +29,7 @@ export type ExplorerRole =
   | 'taskJournalHistory'
   | 'SearchResultDialog'
   | 'FolderPreview'
+  | 'SelectProjectFromExplorer'
   | '';
 
 export enum ExplorerItemType {
@@ -41,6 +42,7 @@ export enum ExplorerItemType {
 
   PROJECTS_ROOT = 'pr',
   PROJECT = 'project',
+  PROJECT_FOLDER = 'prf',
 
   LIBRARY_ROOT = 'lr',
   LIBRARY = 'lib',
@@ -77,6 +79,7 @@ export interface ExplorerItemDataAllTypes {
   [ExplorerItemType.TABLE]: { type: ExplorerItemType.TABLE; payload: VectorTable };
 
   [ExplorerItemType.PROJECTS_ROOT]: { type: ExplorerItemType.PROJECTS_ROOT; payload: null };
+  [ExplorerItemType.PROJECT_FOLDER]: { type: ExplorerItemType.PROJECT_FOLDER; payload: CrgProject };
   [ExplorerItemType.PROJECT]: { type: ExplorerItemType.PROJECT; payload: CrgProject };
 
   [ExplorerItemType.LIBRARY_ROOT]: { type: ExplorerItemType.LIBRARY_ROOT; payload: null };
@@ -115,7 +118,8 @@ export enum ExplorerItemEntityTypeTitle {
   FOLDER = 'папки',
   DOCUMENT = 'документа',
 
-  PROJECT = 'проекта'
+  PROJECT = 'проекта',
+  PROJECT_FOLDER = 'папка проекта'
 }
 
 export interface ExplorerSearchValue {

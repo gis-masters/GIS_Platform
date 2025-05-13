@@ -57,6 +57,10 @@ class ProjectsClient extends Client {
     return http.patch(this.getProjectUrl(id), patch);
   }
 
+  async moveProject(currentProjId: number, targetProjId: number): Promise<void> {
+    return http.post(this.getProjectMoveUrl(currentProjId, targetProjId));
+  }
+
   async deleteProject(id: number): Promise<void> {
     return http.delete(this.getProjectUrl(id));
   }

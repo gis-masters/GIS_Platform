@@ -18,4 +18,8 @@ export abstract class Client {
   protected getProjectUrl(projectId: number): string {
     return `${this.getProjectsUrl()}/${projectId}`;
   }
+
+  protected getProjectMoveUrl(currentProjId: number, targetProjId: number): string {
+    return `${this.getProjectUrl(currentProjId)}/move/${targetProjId}`;
+  }
 }

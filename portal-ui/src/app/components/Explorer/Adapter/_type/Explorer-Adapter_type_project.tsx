@@ -56,7 +56,7 @@ export class ExplorerAdapterTypeProject {
   static getActions(item: ExplorerItemData): ReactNode {
     assertExplorerItemDataTypeProject(item);
 
-    return <ProjectActions project={item.payload} />;
+    return <ProjectActions project={item.payload} as='iconButton' />;
   }
 
   static customOpenActionIcon(): ReactNode {

@@ -191,6 +191,8 @@ class ProjectsService {
     const result = await projectsClient.createProject(project);
     communicationService.projectUpdated.emit({ type: 'create', data: result });
 
+    allProjects.addProject(result);
+
     return result;
   }
 
@@ -210,11 +212,13 @@ class ProjectsService {
   async update(project: CrgProject, patch: Partial<CrgProject>) {
     await projectsClient.updateProject(project.id, patch);
 
-    if (allProjects.inited) {
-      allProjects.update(project.id, patch);
-    }
-
     communicationService.projectUpdated.emit({ type: 'update', data: { ...project, ...patch } });
+  }
+
+  async move(currentProj: CrgProject, targetProjId: number) {
+    await projectsClient.moveProject(currentProj.id, targetProjId);
+
+    communicationService.projectUpdated.emit({ type: 'delete', data: currentProj });
   }
 
   async delete(id: number) {

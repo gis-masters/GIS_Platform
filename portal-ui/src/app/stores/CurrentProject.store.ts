@@ -33,6 +33,9 @@ const emptyProject: Required<CrgProjectData> & { layers: CrgLayer[]; groups: Crg
   layers: [],
   layersErrors: {},
   groups: [],
+  folder: false,
+  path: '',
+  parentId: 0,
   role: Role.VIEWER
 };
 
@@ -57,6 +60,7 @@ class CurrentProject implements CrgProjectData {
   @observable layersErrors: Record<string, string[]> = emptyProject.layersErrors;
   @observable rawLayersFromApi: CrgLayer[] = [];
   @observable role: Role = emptyProject.role;
+  @observable folder: boolean = emptyProject.folder;
   @observable filter: string = '';
 
   @observable viewZoom: number = 0;

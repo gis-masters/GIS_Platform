@@ -26,6 +26,9 @@ export interface CrgProject {
   organizationId?: number;
   createdAt?: string;
   role: Role;
+  path?: string;
+  parentId?: number;
+  folder: boolean;
 }
 
-export type NewCrgProject = Pick<CrgProject, 'name' | 'description' | 'bbox'>;
+export type NewCrgProject = Pick<CrgProject, 'name' | 'description' | 'bbox' | 'folder' | 'parentId'>;

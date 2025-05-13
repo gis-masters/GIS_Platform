@@ -18,8 +18,10 @@ public class ProjectsMapper implements RowMapper<ProjectProjectionImpl> {
         project.setOrganizationId(rs.getLong("organization_id"));
         project.setBbox(rs.getString("bbox"));
         project.setDefault(rs.getBoolean("is_default"));
+        project.setFolder(rs.getBoolean("is_folder"));
         project.setDescription(rs.getString("description"));
         project.setRole(Roles.valueToRole(rs.getLong("role")).name());
+        project.setPath(rs.getString("path"));
 
         Timestamp createdAt = rs.getTimestamp("created_at");
         if (createdAt != null) {

@@ -99,6 +99,10 @@ public class ProjectProjectionImpl implements ProjectProjection {
         isDefault = aDefault;
     }
 
+    public void setFolder(boolean folder) {
+        isFolder = folder;
+    }
+
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }

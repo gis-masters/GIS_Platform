@@ -46,7 +46,24 @@ export class ExplorerAdapterTypeProjectsRoot {
       filter: service.mergeCustomFilter(filter, item, store)
     });
 
-    return [projects.map(payload => ({ type: ExplorerItemType.PROJECT, payload })), pagesCount];
+    const mappedItems = projects.map(payload => ({
+      type: payload.folder ? ExplorerItemType.PROJECT_FOLDER : ExplorerItemType.PROJECT,
+      payload
+    }));
+
+    // Сортируем так, чтобы папки (PROJECT_FOLDER) шли первыми
+    const sortedItems = [...mappedItems].sort((a, b) => {
+      if (a.type === ExplorerItemType.PROJECT_FOLDER && b.type !== ExplorerItemType.PROJECT_FOLDER) {
+        return -1;
+      }
+      if (a.type !== ExplorerItemType.PROJECT_FOLDER && b.type === ExplorerItemType.PROJECT_FOLDER) {
+        return 1;
+      }
+
+      return 0;
+    }) as ExplorerItemData[];
+
+    return [sortedItems, pagesCount];
   }
 
   static async getChildrenWithParticularOne(
@@ -67,7 +84,24 @@ export class ExplorerAdapterTypeProjectsRoot {
 
     const [libraries, totalPages, pageNumber] = response;
 
-    return [libraries.map(payload => ({ type: ExplorerItemType.PROJECT, payload })), totalPages, pageNumber];
+    const mappedItems = libraries.map(payload => ({
+      type: payload.folder ? ExplorerItemType.PROJECT_FOLDER : ExplorerItemType.PROJECT,
+      payload
+    }));
+
+    // Сортируем так, чтобы папки (PROJECT_FOLDER) шли первыми
+    const sortedItems = [...mappedItems].sort((a, b) => {
+      if (a.type === ExplorerItemType.PROJECT_FOLDER && b.type !== ExplorerItemType.PROJECT_FOLDER) {
+        return -1;
+      }
+      if (a.type !== ExplorerItemType.PROJECT_FOLDER && b.type === ExplorerItemType.PROJECT_FOLDER) {
+        return 1;
+      }
+
+      return 0;
+    }) as ExplorerItemData[];
+
+    return [sortedItems, totalPages, pageNumber];
   }
 
   static async getChildById(item: ExplorerItemData, id: string): Promise<ExplorerItemData> {
@@ -78,7 +112,7 @@ export class ExplorerAdapterTypeProjectsRoot {
     }
 
     return {
-      type: ExplorerItemType.PROJECT,
+      type: project.folder ? ExplorerItemType.PROJECT_FOLDER : ExplorerItemType.PROJECT,
       payload: project
     };
   }
@@ -121,6 +155,13 @@ export class ExplorerAdapterTypeProjectsRoot {
       store.selectItem({ payload: record, type: ExplorerItemType.PROJECT });
     };
 
-    return organizationSettings.createProject ? <CreateProject onCreate={handleCreate} /> : null;
+    const parentId = Number((item.payload as CrgProject)?.id) || undefined;
+
+    return organizationSettings.createProject ?
+      <>
+        <CreateProject currentProjectFolderId={parentId} onCreate={handleCreate} />
+        <CreateProject currentProjectFolderId={parentId} isFolder onCreate={handleCreate} />
+      </>
+      : null;
   }
 }

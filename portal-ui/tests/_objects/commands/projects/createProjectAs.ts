@@ -4,5 +4,5 @@ import { TestUser } from '../auth/testUsers';
 import { requestAs } from '../requestAs';
 
 export async function createProjectAs(user: TestUser, name: string): Promise<CrgProject> {
-  return await requestAs(user, projectsClient.createProject, { name });
+  return await requestAs(user, projectsClient.createProject, { name, folder: false });
 }
