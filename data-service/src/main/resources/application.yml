@@ -56,6 +56,11 @@ management:
       enabled: false
 
 crg-options:
+  storage:
+    cache:
+      recordStats: true
+      maximumSize: 1000
+      expireAfterWrite: 30
   taskDb: database_1
   taskDeadlineTime: 5
   taskManagementFolderId: ${CRG_OPTIONS_TASK_MANAGEMENT_FOLDER_ID:29}

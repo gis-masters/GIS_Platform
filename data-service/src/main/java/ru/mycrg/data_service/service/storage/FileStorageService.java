@@ -8,6 +8,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StopWatch;
 import org.springframework.web.multipart.MultipartFile;
 import ru.mycrg.auth_facade.IAuthenticationFacade;
 import ru.mycrg.data_service.exceptions.DataServiceException;
@@ -26,13 +27,11 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 import static org.springframework.util.StringUtils.getFilename;
 import static org.springframework.util.StringUtils.getFilenameExtension;
 import static ru.mycrg.common_utils.CrgGlobalProperties.getDefaultOrganizationName;
-import static ru.mycrg.data_service.service.storage.FileStorageUtil.calculateSize;
 import static ru.mycrg.data_service.service.storage.FileStorageUtil.readableFileSize;
 import static ru.mycrg.data_service.util.DetailedLogger.logError;
 
@@ -47,16 +46,18 @@ public class FileStorageService {
     private final Path kptStoragePath;
 
     private final IAuthenticationFacade authenticationFacade;
+    private final StorageOccupiedSpaceService occupiedSpaceService;
 
     @Autowired
     public FileStorageService(Environment environment,
-                              IAuthenticationFacade authenticationFacade) {
-        this.authenticationFacade = authenticationFacade;
-
+                              IAuthenticationFacade authenticationFacade,
+                              StorageOccupiedSpaceService occupiedSpaceService) {
         String kptStoragePath = environment.getRequiredProperty("crg-options.kptStoragePath");
         String mainStoragePath = environment.getRequiredProperty("crg-options.mainStoragePath");
         String exportStoragePath = environment.getRequiredProperty("crg-options.exportStoragePath");
 
+        this.authenticationFacade = authenticationFacade;
+        this.occupiedSpaceService = occupiedSpaceService;
         this.kptStoragePath = Paths.get(kptStoragePath).toAbsolutePath().normalize();
         this.mainStoragePath = Paths.get(mainStoragePath).toAbsolutePath().normalize();
         this.exportStoragePath = Paths.get(exportStoragePath).toAbsolutePath().normalize();
@@ -68,10 +69,10 @@ public class FileStorageService {
             throw new DataServiceException("Не удалось создать каталог: " + trashPath, e);
         }
 
-        long trashSize = calculateSize(trashPath);
-        long mainStorageSize = calculateSize(this.mainStoragePath);
-        long exportStorageSize = calculateSize(this.exportStoragePath);
-        long kptStorageSize = calculateSize(this.kptStoragePath);
+        long trashSize = occupiedSpaceService.calculateSize(trashPath);
+        long mainStorageSize = occupiedSpaceService.calculateSize(this.mainStoragePath);
+        long exportStorageSize = occupiedSpaceService.calculateSize(this.exportStoragePath);
+        long kptStorageSize = occupiedSpaceService.calculateSize(this.kptStoragePath);
         long allOccupied = trashSize + mainStorageSize + exportStorageSize + kptStorageSize;
 
         log.info("Отчет по занятому месту: \n" +
@@ -123,8 +124,7 @@ public class FileStorageService {
 
             if (Files.exists(resultPath)) {
                 if (!sourcePath.equals(resultPath)) {
-                    Files.move(sourcePath, resultPath, REPLACE_EXISTING);
-                    log.debug("Перемещение с заменой выполнено успешно: [{}] в [{}]", sourcePath, resultPath);
+                    moveWithReplace(sourcePath, resultPath);
                 } else {
                     log.debug("Пути одинаковы: : [{}] в [{}] только удаляем источник", sourcePath, resultPath);
 
@@ -134,8 +134,7 @@ public class FileStorageService {
                 Files.createDirectories(resultPath);
                 log.info("Создали каталог: [{}]", resultPath);
 
-                Files.move(sourcePath, resultPath, REPLACE_EXISTING);
-                log.debug("Перемещение с заменой выполнено успешно: [{}] в [{}]", sourcePath, resultPath);
+                moveWithReplace(sourcePath, resultPath);
             }
 
             return resultPath;
@@ -202,39 +201,51 @@ public class FileStorageService {
      * На данный момент подсчитываем только в главном хранилище.
      */
     public Map<String, Object> occupiedSpace() {
-        Path targetPath = buildPathToOrganizationMainStorage();
+        StopWatch osWatcher = new StopWatch("occupiedSpace");
 
+        osWatcher.start("buildPathToOrganizationMainStorage");
+        Path orgMainStoragePath = buildPathToOrganizationMainStorage();
+        osWatcher.stop();
+
+        osWatcher.start("getTotalFiles");
         Map<String, Object> result = new HashMap<>();
+        result.put("totalFiles", occupiedSpaceService.getTotalFiles(orgMainStoragePath));
+        osWatcher.stop();
 
-        long totalFiles = 0;
-        try (Stream<Path> filesStream = Files.walk(Paths.get(targetPath.toUri()))) {
-            totalFiles = filesStream.parallel()
-                                    .filter(p -> !p.toFile().isDirectory())
-                                    .count();
-        } catch (IOException e) {
-            log.error("Не удалось подсчитать кол-во файлов в хранилище: '{}'", targetPath);
-        }
-
-        result.put("totalFiles", totalFiles);
-        result.put("allocated", readableFileSize(calculateSize(targetPath)));
+        osWatcher.start("mainStorageOccupiedSpace");
+        result.put("allocated", readableFileSize(mainStorageOccupiedSpace()));
+        osWatcher.stop();
+        log.debug(osWatcher.prettyPrint());
 
         return result;
     }
 
     public long mainStorageOccupiedSpace() {
+        StopWatch watcher = new StopWatch("mainStorageOccupiedSpace");
+        watcher.start("buildPathToOrganizationMainStorage");
         Path orgMainStoragePath = buildPathToOrganizationMainStorage();
-        if (Files.notExists(orgMainStoragePath)) {
-            try {
-                Files.createDirectory(orgMainStoragePath);
-            } catch (IOException e) {
-                String msg = "Не удалось создать основное хранилище организации: " + orgMainStoragePath;
-                log.error("{} => {}", msg, e.getMessage(), e);
+        watcher.stop();
 
-                throw new DataServiceException(msg);
-            }
-        }
+        // TODO: Это действие тоже много может отнять ресурсов процессора
+        watcher.start("createOrgMainStorageIfNotExist");
+        createOrgMainStorageIfNotExist(orgMainStoragePath);
+        watcher.stop();
 
-        return calculateSize(orgMainStoragePath);
+        watcher.start("calculateSize");
+        long size = occupiedSpaceService.calculateSize(orgMainStoragePath);
+        watcher.stop();
+        log.debug(watcher.prettyPrint());
+
+        return size;
+    }
+
+    private void moveWithReplace(Path sourcePath, Path resultPath) throws IOException {
+        Files.move(sourcePath, resultPath, REPLACE_EXISTING);
+
+        log.debug("Перемещение с заменой выполнено успешно: [{}] в [{}]", sourcePath, resultPath);
+
+        occupiedSpaceService.evictCacheOccupiedSpace(buildPathToOrganizationMainStorage());
+        occupiedSpaceService.evictCacheTotalFiles(buildPathToOrganizationMainStorage());
     }
 
     public void deleteIfExists(String path) throws StorageException {
@@ -268,6 +279,21 @@ public class FileStorageService {
 
     public Path getTrashPath() {
         return trashPath;
+    }
+
+    private void createOrgMainStorageIfNotExist(Path orgMainStoragePath) {
+        if (!Files.notExists(orgMainStoragePath)) {
+            return;
+        }
+
+        try {
+            Files.createDirectory(orgMainStoragePath);
+        } catch (IOException e) {
+            String msg = "Не удалось создать основное хранилище организации: " + orgMainStoragePath;
+            log.error("{} => {}", msg, e.getMessage(), e);
+
+            throw new DataServiceException(msg);
+        }
     }
 
     private Path buildPathToOrganizationMainStorage() {

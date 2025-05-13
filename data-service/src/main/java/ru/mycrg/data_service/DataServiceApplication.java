@@ -12,6 +12,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import ru.mycrg.data_service.config.props.NotificationProperties;
+import ru.mycrg.data_service.config.props.StorageProperties;
 import ru.mycrg.data_service.dao.migrations.CrgMigrationHandler;
 import ru.mycrg.data_service.dao.migrations.GeoserverMigrationHandler;
 import ru.mycrg.data_service.service.SystemTagsPublisher;
@@ -28,15 +29,18 @@ public class DataServiceApplication extends RepositoryRestConfigurerAdapter {
     private String maxFileSize;
 
     private final SystemTagsPublisher systemTagsPublisher;
+    private final StorageProperties storageProperties;
     private final CrgMigrationHandler migrationHandler;
     private final NotificationProperties notificationProperties;
     private final GeoserverMigrationHandler geoserverMigrationHandler;
 
     public DataServiceApplication(SystemTagsPublisher systemTagsPublisher,
+                                  StorageProperties storageProperties,
                                   CrgMigrationHandler migrationHandler,
                                   NotificationProperties notificationProperties,
                                   GeoserverMigrationHandler geoserverMigrationHandler) {
         this.systemTagsPublisher = systemTagsPublisher;
+        this.storageProperties = storageProperties;
         this.migrationHandler = migrationHandler;
         this.notificationProperties = notificationProperties;
         this.geoserverMigrationHandler = geoserverMigrationHandler;
@@ -48,8 +52,8 @@ public class DataServiceApplication extends RepositoryRestConfigurerAdapter {
         long totalMemory = runtime.totalMemory();
 
         log.info("=== HEAP MEMORY INFO ===");
-        log.info("HEAP: Max Memory (Xmx): {} MB", maxMemory / (1024*1024));
-        log.info("HEAP: Initial Memory (Xms): {} MB", totalMemory / (1024*1024));
+        log.info("HEAP: Max Memory (Xmx): {} MB", maxMemory / (1024 * 1024));
+        log.info("HEAP: Initial Memory (Xms): {} MB", totalMemory / (1024 * 1024));
         log.info("========= END HEAP =========");
 
         SpringApplication.run(DataServiceApplication.class, args);
@@ -59,7 +63,8 @@ public class DataServiceApplication extends RepositoryRestConfigurerAdapter {
     public void appReadyEvent() {
         log.info("App ready with:");
         log.info("max-file-size: {}", maxFileSize);
-        log.info("{}", notificationProperties);
+        log.info("Настройки нотификаций {}", notificationProperties);
+        log.info("Настройки хранилища {}", storageProperties);
 
         migrationHandler.handle();
         geoserverMigrationHandler.handle();
