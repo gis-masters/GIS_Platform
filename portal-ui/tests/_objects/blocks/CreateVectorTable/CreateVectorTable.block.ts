@@ -20,6 +20,7 @@ class CreateVectorTableBlock extends Block {
     );
     await createVectorTableDialogBlock.openSchemaSelection();
     await selectSchemaControlDialogBlock.waitForSelectSchemaTableDisplay();
+    await selectSchemaControlDialogBlock.setOptionTitleFilter();
     await selectSchemaControlDialogBlock.clickSelectSchemaFirstOption();
     await selectSchemaControlDialogBlock.clickSelectSchemaConfirm();
     await selectSchemaControlDialogBlock.waitForSelectSchemaDisappear();
