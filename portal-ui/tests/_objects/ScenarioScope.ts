@@ -15,6 +15,7 @@ export class ScenarioScope extends World {
   private _latestSchema?: Schema;
   private _latestDataset?: Dataset;
   private _latestProject?: CrgProject;
+  private _latestProjectFolder?: CrgProject;
   private _latestFeatures?: NewWfsFeature[];
   private _latestFilter?: FilterQuery;
   private _latestLibraryRecords?: LibraryRecord[];
@@ -85,6 +86,14 @@ export class ScenarioScope extends World {
 
   set latestProject(project: CrgProject) {
     this._latestProject = project;
+  }
+
+  get latestProjectFolder(): CrgProject {
+    return this.getEntityOrThrow<CrgProject>(this._latestProjectFolder, 'проект');
+  }
+
+  set latestProjectFolder(projectFolder: CrgProject) {
+    this._latestProjectFolder = projectFolder;
   }
 
   get latestFilter(): FilterQuery {

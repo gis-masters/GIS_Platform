@@ -6,9 +6,10 @@ import { cn } from '@bem-react/classname';
 import { SimpleSchema } from '../../../services/data/schema/schema.models';
 import { CrgProject } from '../../../services/gis/projects/projects.models';
 import { projectsService } from '../../../services/gis/projects/projects.service';
-import { ActionTypes, DataTypes } from '../../../services/permissions/permissions.models';
+import { ActionTypes, DataTypes, Role } from '../../../services/permissions/permissions.models';
 import { getAvailableActionsTooltipByRole } from '../../../services/permissions/permissions.utils';
 import { isAxiosError } from '../../../services/util/typeGuards/isAxiosError';
+import { currentUser } from '../../../stores/CurrentUser.store';
 import { ActionsItemVariant } from '../../Actions/Item/Actions-Item.base';
 import { ActionsItem } from '../../Actions/Item/Actions-Item.composed';
 import { emptyItem, ExplorerItemData, ExplorerItemType } from '../../Explorer/Explorer.models';
@@ -122,7 +123,13 @@ export const ProjectActionsMove = observer((props: ProjectActionsFilesPlacementP
 
   const customTestForDisabled = useCallback((item: ExplorerItemData) => {
     if (item.type === ExplorerItemType.PROJECT_FOLDER) {
-      return item.payload.id === project.id;
+      if (item.payload.id === project.id) {
+        return true;
+      }
+
+      const isEditAllowed = currentUser.isAdmin || [Role.OWNER, Role.CONTRIBUTOR].includes(item.payload?.role);
+
+      return !isEditAllowed;
     }
   }, [project]);
 
@@ -130,7 +137,8 @@ export const ProjectActionsMove = observer((props: ProjectActionsFilesPlacementP
     <>
       <ActionsItem
         title='Переместить'
-        tooltipText={disabled ? getAvailableActionsTooltipByRole(ActionTypes.MOVE, role, DataTypes.DOC) : undefined}
+        tooltipText={disabled ? getAvailableActionsTooltipByRole(ActionTypes.MOVE, role,
+          DataTypes.PROJECT_FOLDER) : undefined}
         className={cnProjectActionsMove()}
         icon={projectMoveDialogOpen ? <DriveFileMove /> : <DriveFileMoveOutlined />}
         onClick={handleOpenProjectMoveDialog}

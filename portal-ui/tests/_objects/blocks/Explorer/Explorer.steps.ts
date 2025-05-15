@@ -40,6 +40,18 @@ When('в наборах данных я выбираю векторную таб
   await explorerBlock.selectExplorerItem(datatable);
 });
 
+When('в списке элементов explorer я выбираю элемент {string}', async (datatable: string) => {
+  const explorerBlock = new ExplorerBlock();
+  await explorerBlock.selectExplorerItem(datatable);
+});
+
+When('в списке элементов explorer все элементы недоступны', async () => {
+  const explorerBlock = new ExplorerBlock();
+  const disabled = await explorerBlock.allItemsIsDisabled();
+
+  await expect(disabled).toEqual(true);
+});
+
 When('я нажимаю кнопку `Подключить в проект` в панели свойств векторной таблицы', async () => {
   const explorerBlock = new ExplorerBlock();
   await explorerBlock.addToProject();

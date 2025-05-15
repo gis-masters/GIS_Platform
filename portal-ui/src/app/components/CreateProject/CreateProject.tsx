@@ -11,6 +11,7 @@ import { IconButton } from '../IconButton/IconButton';
 import { crgProjectFolderSchema, crgProjectSchema } from '../ProjectActions/ProjectActions';
 
 const cnCreateProject = cn('CreateProject');
+const cnCreateProjectFolder = cn('CreateProjectFolder');
 
 interface CreateProjectProps {
   isFolder?: boolean;
@@ -46,14 +47,14 @@ export const CreateProject = observer(({ isFolder, currentProjectFolderId, onCre
   return (
     <>
       <Tooltip title={isFolder ? 'Создать папку проектов' : 'Создать проект'}>
-        <IconButton className={cnCreateProject()} onClick={openDialog}>
+        <IconButton className={isFolder ? cnCreateProjectFolder() : cnCreateProject()} onClick={openDialog}>
           {isFolder ? <CreateNewFolderOutlined /> : <PlaylistAdd />}
         </IconButton>
       </Tooltip>
 
       <FormDialog<CrgProject>
         title={isFolder ? 'Создание папки проектов' : 'Создание нового проекта'}
-        className={cnCreateProject('Dialog')}
+        className={isFolder ? cnCreateProjectFolder('Dialog') : cnCreateProject('Dialog')}
         open={dialogOpen}
         value={{}}
         schema={isFolder ? crgProjectFolderSchema : crgProjectSchema}

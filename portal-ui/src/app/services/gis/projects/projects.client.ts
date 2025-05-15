@@ -49,6 +49,15 @@ class ProjectsClient extends Client {
     return http.getPaged<CrgProject>(this.getProjectsUrl(), { cache: { disabled: true } });
   }
 
+  async getAllProjectsInFolder(folderId: number): Promise<CrgProject[]> {
+    return http.getPaged<CrgProject>(this.getProjectsUrl(), {
+      params: {
+        parent: folderId
+      },
+      cache: { disabled: true }
+    });
+  }
+
   async createProject(project: NewCrgProject): Promise<CrgProject> {
     return http.post<CrgProject>(this.getProjectsUrl(), project);
   }

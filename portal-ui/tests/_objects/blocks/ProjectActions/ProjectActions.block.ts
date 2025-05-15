@@ -6,6 +6,7 @@ class ProjectActionsBlock extends Block {
     container: '.ProjectActions',
     deleteBtn: '.ProjectActions .ProjectActions-Delete',
     editBtn: '.ProjectActions .ProjectActions-Edit',
+    moveBtn: '.ProjectActions .ProjectActions-Move',
     editDialog: '.ProjectActions-EditDialog',
     editDialogSave: '.ProjectActions-EditDialog .MuiButton-outlinedPrimary'
   };
@@ -14,6 +15,12 @@ class ProjectActionsBlock extends Block {
     const $deleteBtn = await this.$('deleteBtn');
     await $deleteBtn.waitForDisplayed();
     await $deleteBtn.click();
+  }
+
+  async clickMoveBtn(): Promise<void> {
+    const $moveBtn = await this.$('moveBtn');
+    await $moveBtn.waitForDisplayed();
+    await $moveBtn.click();
   }
 
   async deleteBtnNotExist(): Promise<void> {

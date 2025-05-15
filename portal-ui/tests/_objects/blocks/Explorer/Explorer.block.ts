@@ -7,6 +7,7 @@ export class ExplorerBlock extends Block {
   selectors = {
     container: '.Explorer',
     item: '.Explorer-Item',
+    disabledItem: '.Explorer-Item.Mui-disabled',
     title: '.Explorer-ItemTitle',
     loader: '.Explorer .Loading',
     viewContentWidget: '.Explorer .ViewContentWidget',
@@ -36,6 +37,19 @@ export class ExplorerBlock extends Block {
     }
 
     await $item.click();
+  }
+
+  async allItemsIsDisabled(): Promise<boolean> {
+    const $container = await this.$('container');
+    await $container.waitForDisplayed();
+
+    const $loader = await this.$('loader');
+    await $loader.waitForDisplayed({ reverse: true });
+
+    const $$explorerItems = await this.$$('item');
+    const $$explorerDisablesItems = await this.$$('disabledItem');
+
+    return $$explorerItems.length === $$explorerDisablesItems.length;
   }
 
   async selectFirstExplorerItem(): Promise<void> {
