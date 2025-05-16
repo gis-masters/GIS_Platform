@@ -1,5 +1,5 @@
-import { projectsClient } from '../../../../src/app/services/gis/projects/projects.client';
 import { layersClient } from '../../../../src/app/services/gis/layers/layers.client';
+import { projectsClient } from '../../../../src/app/services/gis/projects/projects.client';
 import { getProjectByTitle } from '../projects/getProjectByTitle';
 import { requestAsAdmin } from '../requestAs';
 

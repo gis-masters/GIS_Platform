@@ -1,13 +1,7 @@
-import { Component, OnInit } from '@angular/core';
-
-import { projectsService } from '../../services/gis/projects/projects.service';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'crg-map-page',
   templateUrl: './map-page.component.html'
 })
-export class MapPageComponent implements OnInit {
-  async ngOnInit() {
-    await projectsService.fetchCurrent();
-  }
-}
+export class MapPageComponent {}

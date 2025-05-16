@@ -2,6 +2,7 @@ import { boundMethod } from 'autobind-decorator';
 import { debounce, DebouncedFunc } from 'lodash';
 
 import { Toast } from '../../../components/Toast/Toast';
+import { schemaCacheService } from '../../cache/schema-cache.service';
 import { communicationService } from '../../communication.service';
 import { ImportLayerItem } from '../../geoserver/import/import.models';
 import { CrgVectorLayer } from '../../gis/layers/layers.models';
@@ -58,6 +59,13 @@ class SchemaService {
     await this.fetchingAllSchemas;
 
     return Promise.all(Object.values(this.schemas));
+  }
+
+  async fetchAndCacheSchemas(tableIdentifiers: string[]): Promise<void> {
+    const schemas = await schemaClient.getTableSchemas(tableIdentifiers);
+    schemas.forEach((schemaDto, identifier) => {
+      schemaCacheService.addToCache(identifier, convertOldToNewSchema(schemaDto));
+    });
   }
 
   async getAllSchemas(): Promise<Schema[]> {

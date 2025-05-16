@@ -10,6 +10,7 @@ import { usersService } from '../../auth/users/users.service';
 import { communicationService } from '../../communication.service';
 import { isArrayOfProjections } from '../../data/projections/projections.models';
 import { getProjectionByCode, registerProjectionArrayInProj4 } from '../../data/projections/projections.service';
+import { schemaService } from '../../data/schema/schema.service';
 import { testLayerByWms } from '../../geoserver/wms/wms.service';
 import { selectedFeaturesStore } from '../../map/a-map-mode/selected-features/SelectedFeatures.store';
 import { PageOptions } from '../../models';
@@ -34,15 +35,6 @@ class ProjectsService {
 
   private constructor() {
     this.debouncedFetchAllProjects = debounce(this.fetchAllProjects, 300);
-
-    reaction(
-      () => route.params?.projectId,
-      async id => {
-        if (id) {
-          await this.fetchCurrent(Number(id));
-        }
-      }
-    );
 
     communicationService.projectUpdated.on(async () => {
       await this.debouncedFetchAllProjects();
@@ -70,10 +62,6 @@ class ProjectsService {
       return;
     }
     await this.fetchAllProjects();
-  }
-
-  async getAllProjects(): Promise<CrgProject[]> {
-    return await projectsClient.getAllProjects();
   }
 
   private async fetchAllProjects() {
@@ -134,6 +122,11 @@ class ProjectsService {
 
     await this.registerLayersProjection(allowedLayers);
 
+    const tableIdentifiers = allowedLayers
+      .map(layer => layer.tableName)
+      .filter((tableName): tableName is string => tableName !== undefined);
+    await schemaService.fetchAndCacheSchemas(tableIdentifiers);
+
     currentProject.setProject(project, allowedLayers, groups, layersErrors, layers);
 
     if (project.id !== id) {
@@ -152,21 +145,26 @@ class ProjectsService {
     }
   }
 
-  async testCurrentProjectLayers() {
-    const testingProjectId = currentProject.id;
+  /**
+   * Тестируем слой, "дергая" его по WMS в заранее определенной небольшой области.
+   *
+   * Целью проверки является заблаговременное распознавание "битых" по разным причинам слоёв на геосервере.
+   * Частые причины отсутствие слоя, отсутствие данных, на которые слой ссылается, будь-то файл или источник в БД.
+   *
+   * По результатам проверки слой будет помечен сломанным в текущем проекте в currentProject.layersErrors
+   *
+   * @param layer Тестируемый слой
+   */
+  async checkLayerHealthy(layer: CrgLayer): Promise<boolean> {
+    const result = await testLayerByWms(layer);
+    if (result?.errors?.length && layer.complexName) {
+      currentProject.setLayerError(layer.complexName, result.errors);
+      services.logger.error(result.errors);
 
-    for (const layer of currentProject.layers) {
-      // если пользователь успел убежать из проекта, пока мы слои щупали
-      if (currentProject.id !== testingProjectId) {
-        break;
-      }
-
-      const result = await testLayerByWms(layer);
-      if (result?.errors?.length && layer.complexName) {
-        currentProject.setLayerError(layer.complexName, result.errors);
-        services.logger.error(result.errors);
-      }
+      return false;
     }
+
+    return true;
   }
 
   async registerLayersProjection(allowedLayers: CrgLayer[]) {

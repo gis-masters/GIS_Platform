@@ -44,9 +44,10 @@ public class TelegramFollowUpActionHandler implements IFollowUpActionHandler {
         log.debug("Выполняем отправку данных в телегу, с настройками: [{}] для: [{}]",
                   prettyPrint(followUpAction), prettyPrint(payload));
 
-        Map<String, Object> settings = followUpAction.getSettings();
-        TelegramNotificationProperties notificationProfile = getTelegramNotificationProfile(settings);
+        TelegramNotificationProperties notificationProfile =
+                getTelegramNotificationProfile(followUpAction.getSettings());
         Feature feature = (Feature) payload;
+
         enrichChatIdIfNeed(notificationProfile, feature);
 
         List<String> sendableAttributes = followUpAction.getPayload();
@@ -122,13 +123,17 @@ public class TelegramFollowUpActionHandler implements IFollowUpActionHandler {
                             "[profileName], который должен ссылаться на [crg-options.notification.telegram]");
         }
 
-        return notificationProperties
+        Optional<TelegramNotificationProperties> oFirst = notificationProperties
                 .getTelegram().stream()
                 .filter(item -> profileName.equals(item.getName()))
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException(
-                        "Профиль [" + profileName + "] не найден среди заданных на сервере." +
-                                "\nТекущие профили сервера: " + notificationProperties));
+                .findFirst();
+
+        if (oFirst.isEmpty()) {
+            throw new IllegalArgumentException("Профиль [" + profileName + "] не найден среди заданных на сервере." +
+                                                       "\nТекущие профили сервера: " + notificationProperties);
+        }
+
+        return new TelegramNotificationProperties(oFirst.get());
     }
 
     @Override

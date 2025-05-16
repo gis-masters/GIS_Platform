@@ -34,7 +34,8 @@ export class GlobalErrorHandler implements ErrorHandler {
         Toast.error({ error, canBeSuppressed: true });
       }
     } else {
-      Toast.error({ error, canBeSuppressed: true });
+      // #NoRedToast :)
+      // Toast.error({ error, canBeSuppressed: true });
     }
 
     this.logger.error(error);

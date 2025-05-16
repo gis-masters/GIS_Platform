@@ -6,7 +6,6 @@ import { boundMethod } from 'autobind-decorator';
 import { DragDropContext, DragUpdate, Droppable, DropResult } from 'react-beautiful-dnd';
 
 import { TreeItem } from '../../services/gis/projects/projects.models';
-import { projectsService } from '../../services/gis/projects/projects.service';
 import { setEnabledLayerToUrl } from '../../services/map/map-url.service';
 import { currentProject } from '../../stores/CurrentProject.store';
 import { Pages, route } from '../../stores/Route.store';
@@ -29,7 +28,7 @@ export class LayersTree extends Component<LayersTreeProps> {
     makeObservable(this);
   }
 
-  async componentDidMount() {
+  componentDidMount() {
     this.reactionDisposer = reaction(
       () => currentProject.visibleOnMapLayers,
       async () => {
@@ -38,8 +37,6 @@ export class LayersTree extends Component<LayersTreeProps> {
         }
       }
     );
-
-    await projectsService.testCurrentProjectLayers();
   }
 
   componentWillUnmount() {

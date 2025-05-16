@@ -7,7 +7,10 @@ import { boundMethod } from 'autobind-decorator';
 
 import { PropertyType } from '../../services/data/schema/schema.models';
 import { Dataset, VectorTable } from '../../services/data/vectorData/vectorData.models';
+import { getVectorTable } from '../../services/data/vectorData/vectorData.service';
+import { CrgLayerType } from '../../services/gis/layers/layers.models';
 import { isFeaturesUpdateAllowed } from '../../services/permissions/permissions.service';
+import { currentProject } from '../../stores/CurrentProject.store';
 import { Breadcrumbs, BreadcrumbsItemData } from '../Breadcrumbs/Breadcrumbs';
 import { Button } from '../Button/Button';
 import { Explorer } from '../Explorer/Explorer';
@@ -27,20 +30,27 @@ interface Datasource {
   vectorTable: VectorTable;
 }
 
-interface SelectVectorTableControlProps extends FormControlProps {
-  usedVectorTables?: VectorTable[];
-}
-
 @observer
-export class SelectVectorTableControl extends Component<SelectVectorTableControlProps> {
+export class SelectVectorTableControl extends Component<FormControlProps> {
   @observable private dialogOpen = false;
+  @observable private usedVectorTables: VectorTable[] = [];
   @observable private selectedVectorTable?: VectorTable;
+
+  private usedVectorTablesRequest?: Promise<VectorTable[]>;
   private selectedDataset?: Dataset;
   private path?: ExplorerItemData[];
 
-  constructor(props: SelectVectorTableControlProps) {
+  constructor(props: FormControlProps) {
     super(props);
     makeObservable(this);
+  }
+
+  async componentDidMount() {
+    await this.checkUsedTables();
+  }
+
+  async componentDidUpdate() {
+    await this.checkUsedTables();
   }
 
   render() {
@@ -180,11 +190,61 @@ export class SelectVectorTableControl extends Component<SelectVectorTableControl
         return !isFeaturesUpdateAllowed(table.dataset, table.identifier);
       }
 
-      return Boolean(
-        this.props.usedVectorTables?.some(({ id, dataset }) => id === table.id && dataset === table.dataset)
-      );
+      return Boolean(this.usedVectorTables?.some(({ id, dataset }) => id === table.id && dataset === table.dataset));
     }
 
     return false;
+  }
+
+  private async checkUsedTables(): Promise<void> {
+    if (this.usedVectorTablesRequest) {
+      await this.usedVectorTablesRequest;
+      delete this.usedVectorTablesRequest;
+      await this.checkUsedTables();
+
+      return;
+    }
+
+    const alreadyUsedVectorTables = this.usedVectorTables.filter(table =>
+      currentProject.layers.some(
+        layer =>
+          layer.type === CrgLayerType.VECTOR && table.dataset === layer.dataset && table.identifier === layer.tableName
+      )
+    );
+
+    this.usedVectorTablesRequest = Promise.all(
+      currentProject.vectorLayers
+        .filter(
+          layer =>
+            !this.usedVectorTables.some(
+              table => table.dataset === layer.dataset && table.identifier === layer.tableName
+            )
+        )
+        .map(async layer => {
+          const table = await getVectorTable(layer.dataset, layer.tableName);
+
+          // с бэка тут временами приходит всякая хрень
+          if (!table.dataset) {
+            table.dataset = layer.dataset;
+          }
+          if (!table.identifier) {
+            table.identifier = layer.tableName;
+          }
+
+          return table;
+        })
+    );
+
+    const newUsedVectorTables = await this.usedVectorTablesRequest;
+    delete this.usedVectorTablesRequest;
+
+    if (alreadyUsedVectorTables.length !== this.usedVectorTables.length || newUsedVectorTables.length > 0) {
+      this.setUsedVectorTables([...alreadyUsedVectorTables, ...newUsedVectorTables]);
+    }
+  }
+
+  @action
+  private setUsedVectorTables(vectorTables: VectorTable[]) {
+    this.usedVectorTables = vectorTables;
   }
 }

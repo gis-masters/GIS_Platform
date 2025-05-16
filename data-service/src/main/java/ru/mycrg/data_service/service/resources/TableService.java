@@ -8,8 +8,8 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ru.mycrg.auth_facade.IAuthenticationFacade;
-import ru.mycrg.data_service.dao.BaseReadDao;
 import ru.mycrg.data_service.dao.BasePermissionsRepository;
+import ru.mycrg.data_service.dao.BaseReadDao;
 import ru.mycrg.data_service.dao.mappers.SchemasAndTablesMapper;
 import ru.mycrg.data_service.dto.TableModel;
 import ru.mycrg.data_service.entity.SchemasAndTables;
@@ -22,6 +22,7 @@ import ru.mycrg.data_service.service.schemas.SystemAttributeHandler;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
@@ -32,6 +33,7 @@ import static ru.mycrg.data_service.config.CrgCommonConfig.ROOT_FOLDER_PATH;
 import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_NAME;
 import static ru.mycrg.data_service.dto.ResourceType.TABLE;
 import static ru.mycrg.data_service.dto.Roles.OWNER;
+import static ru.mycrg.data_service.mappers.SchemaMapper.jsonToDto;
 import static ru.mycrg.data_service.service.resources.DatasetService.SCHEMAS_AND_TABLES_QUALIFIER;
 
 @Service
@@ -163,6 +165,17 @@ public class TableService {
         return getInfo(qualifier).getSchema();
     }
 
+    public Map<String, SchemaDto> getSchemas(List<String> tableIdentifiers) {
+        return schemasAndTablesRepository
+                .findByIdentifierIn(tableIdentifiers)
+                .stream()
+                .filter(schemasAndTables -> schemasAndTables.getSchema() != null)
+                .map(schemasAndTables -> Map.entry(schemasAndTables.getIdentifier(),
+                                                   jsonToDto(schemasAndTables.getSchema())))
+                .filter(entry -> entry.getValue() != null)
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+    }
+
     public String getDatasetByTableName(String tableName) {
         Optional<SchemasAndTables> table = schemasAndTablesRepository.findByIdentifier(tableName);
         if (table.isEmpty()) {
@@ -210,7 +223,7 @@ public class TableService {
 
             Optional<SchemasAndTables> oParent = schemasAndTablesRepository.findById(oParentId.get());
             if (oParent.isEmpty()) {
-                log.warn("Не найден набор данных по id: " + oParentId.get());
+                log.warn("Не найден набор данных по id: {}", oParentId.get());
 
                 return null;
             }

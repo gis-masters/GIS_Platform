@@ -15,6 +15,7 @@ import ru.mycrg.geo_json.Feature;
 import java.util.List;
 import java.util.Optional;
 
+import static ru.mycrg.data_service.util.DetailedLogger.logError;
 import static ru.mycrg.data_service_contract.enums.ValueType.FILE;
 import static ru.mycrg.http_client.JsonConverter.fromJson;
 
@@ -33,12 +34,16 @@ public class TelegramNotifierFile implements ITelegramNotifier {
 
     @Override
     public void notify(TelegramNotificationProperties notificationProfile, Object payload, String attribute) {
-        Feature feature = (Feature) payload;
+        Optional<List<FileDescription>> oDescription = Optional.empty();
+        try {
+            Feature feature = (Feature) payload;
 
-        Optional<List<FileDescription>> oDescription =
-                fromJson(feature.getProperties().get(attribute).toString(),
-                         new TypeReference<>() {
-                         });
+            oDescription = fromJson(feature.getProperties().get(attribute).toString(),
+                                    new TypeReference<>() {
+                                    });
+        } catch (Exception e) {
+            logError("Не удалось обработать данные атрибута: " + attribute, e);
+        }
 
         if (oDescription.isPresent()) {
             oDescription.get().forEach(fileDescription -> {

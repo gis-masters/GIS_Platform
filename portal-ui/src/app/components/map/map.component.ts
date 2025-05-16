@@ -101,6 +101,11 @@ export class MapComponent implements OnInit, OnDestroy {
           const { actualTransparency = 0, payload: layer } = currentProject.visibleOnMapLayers[i];
           const zIndex = currentProject.visibleOnMapLayers.length - i;
 
+          const isHealthy = await projectsService.checkLayerHealthy(layer);
+          if (!isHealthy) {
+            continue;
+          }
+
           switch (layer.type) {
             case CrgLayerType.EXTERNAL: {
               mapService.addExternalLayer(layer as CrgExternalLayer, zIndex);

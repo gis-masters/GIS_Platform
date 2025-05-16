@@ -5,6 +5,7 @@ import { AxiosError } from 'axios';
 
 import { Toast } from '../../../components/Toast/Toast';
 import { currentProject } from '../../../stores/CurrentProject.store';
+import { schemaCacheService } from '../../cache/schema-cache.service';
 import { getFileInfo } from '../../data/files/files.service';
 import { getFileBaseName, getLibraryRecordFiles } from '../../data/files/files.util';
 import { getLibraryRecord } from '../../data/library/library.service';
@@ -108,11 +109,21 @@ export async function getLayerSchema(layer?: CrgLayer): Promise<Schema | undefin
     return undefined;
   }
 
+  schemaCacheService.prettyPrint();
+
   if (layer.type === CrgLayerType.VECTOR) {
     if (!layer.dataset || !layer.tableName) {
       throw new Error('Векторный слой подключен с ошибкой');
     }
+
+    const schemaFromCache = schemaCacheService.getFromCache(layer.tableName);
+    if (schemaFromCache) {
+      return schemaFromCache;
+    }
+
     const vectorTable = await getVectorTable(layer.dataset, layer.tableName);
+
+    schemaCacheService.addToCache(layer.tableName, vectorTable.schema);
 
     return vectorTable.schema;
   } else if (layer.type === CrgLayerType.DXF) {

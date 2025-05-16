@@ -10,6 +10,7 @@ import { Emitter } from '../../../services/common/Emitter';
 import { StyleRule } from '../../../services/geoserver/styles/styles.models';
 import { filterLegendForCurrentMapView, getLayerStyleRules } from '../../../services/geoserver/styles/styles.service';
 import { CrgVectorLayer } from '../../../services/gis/layers/layers.models';
+import { projectsService } from '../../../services/gis/projects/projects.service';
 import { mapService } from '../../../services/map/map.service';
 import { attributesTableStore } from '../../../stores/AttributesTable.store';
 import { Legend } from '../../Legend/Legend';
@@ -89,6 +90,11 @@ export class LayerLegend extends Component<LayerLegendProps> {
 
     const operationId = Symbol();
     this.operationId = operationId;
+
+    const isHealthy = await projectsService.checkLayerHealthy(layer);
+    if (!isHealthy) {
+      return;
+    }
 
     try {
       const filteredStylesResponse = await filterLegendForCurrentMapView([layer]);

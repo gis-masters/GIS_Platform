@@ -197,7 +197,7 @@ export async function isShapeImportAllowed(datasetIdentifier: string, tableIdent
     const table: VectorTable = await getVectorTable(datasetIdentifier, tableIdentifier);
     const role = table?.role;
 
-    return !!(currentUser.isAdmin || role === Role.OWNER || role === Role.CONTRIBUTOR);
+    return currentUser.isAdmin || role === Role.OWNER || role === Role.CONTRIBUTOR;
   } catch (error) {
     const err = error as AxiosError;
 

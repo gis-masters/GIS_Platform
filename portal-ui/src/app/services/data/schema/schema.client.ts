@@ -15,6 +15,10 @@ class SchemaClient extends Client {
     return this.getDataUrl() + '/schemas';
   }
 
+  private getTablesSchemasUrl(): string {
+    return this.getDataUrl() + '/tablesSchemas';
+  }
+
   async getSchemaAtUrl(url: string): Promise<OldSchema> {
     return http.get<OldSchema>(url);
   }
@@ -23,6 +27,12 @@ class SchemaClient extends Client {
     const params = { schemaIds: schemaIds.join(',') };
 
     return await http.get<(OldSchema | null)[]>(this.getSchemaUrl(), { params });
+  }
+
+  async getTableSchemas(tableIdentifiers: string[]): Promise<Map<string, OldSchema>> {
+    const response = await http.post<Record<string, OldSchema>>(this.getTablesSchemasUrl(), tableIdentifiers);
+
+    return new Map<string, OldSchema>(Object.entries(response));
   }
 
   async createSchema(schema: OldSchema): Promise<OldSchema> {

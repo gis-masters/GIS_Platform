@@ -30,8 +30,9 @@ public class SchemaTemplateController {
 
     @GetMapping("/schemas")
     @PreAuthorize("isAuthenticated()")
-    public List<SchemaDto> getSchemaTemplates(@RequestParam(name = "schemaIds") List<String> schemaIds) {
-        return schemaTemplateService.getSchemas(schemaIds);
+    public ResponseEntity<List<SchemaDto>> getSchemaTemplates(@RequestParam List<String> schemaIds) {
+
+        return ResponseEntity.ok(schemaTemplateService.getSchemas(schemaIds));
     }
 
     @GetMapping("/schemas/tags")

@@ -10,6 +10,8 @@ import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.mediator.Mediator;
 
 import javax.validation.Valid;
+import java.util.List;
+import java.util.Map;
 
 import static org.springframework.http.HttpStatus.OK;
 import static ru.mycrg.auth_service_contract.Authorities.HAS_ANY_AUTHORITY;
@@ -24,6 +26,14 @@ public class TablesSchemaController {
                                   TableService tableService) {
         this.mediator = mediator;
         this.tableService = tableService;
+    }
+
+    @PostMapping("/tablesSchemas")
+    @PreAuthorize(HAS_ANY_AUTHORITY)
+    public ResponseEntity<Map<String, SchemaDto>> getSchemas(@RequestBody List<String> tableIdentifiers) {
+        Map<String, SchemaDto> schemas = tableService.getSchemas(tableIdentifiers);
+
+        return ResponseEntity.ok(schemas);
     }
 
     @PreAuthorize(HAS_ANY_AUTHORITY)

@@ -37,6 +37,7 @@ import {
 import { getLayerSchema } from '../../../services/gis/layers/layers.service';
 import { isVectorFromFile } from '../../../services/gis/layers/layers.utils';
 import { TreeItemPayload } from '../../../services/gis/projects/projects.models';
+import { projectsService } from '../../../services/gis/projects/projects.service';
 import { EditFeatureMode } from '../../../services/map/a-map-mode/edit-feature/EditFeature.models';
 import { mapModeManager } from '../../../services/map/a-map-mode/MapModeManager';
 import { MapAction, MapMode, MapSelectionTypes, ToolMode } from '../../../services/map/map.models';
@@ -417,10 +418,16 @@ export class LayerMenu extends Component<LayerMenuProps> {
   }
 
   @boundMethod
-  private openAttributeTable() {
+  private async openAttributeTable() {
     const { entity, onClose } = this.props;
+    const layer = entity as CrgVectorLayer;
 
-    communicationService.openAttributesBar.emit(entity as CrgVectorLayer);
+    const isHealthy = await projectsService.checkLayerHealthy(layer);
+    if (!isHealthy) {
+      return;
+    }
+
+    communicationService.openAttributesBar.emit(layer);
 
     onClose();
   }
@@ -461,6 +468,11 @@ export class LayerMenu extends Component<LayerMenuProps> {
   @boundMethod
   private async goToLayer() {
     const layer = this.props.entity as CrgVectorLayer;
+
+    const isHealthy = await projectsService.checkLayerHealthy(layer);
+    if (!isHealthy) {
+      return;
+    }
 
     await focusToLayer(layer);
     this.props.onClose();

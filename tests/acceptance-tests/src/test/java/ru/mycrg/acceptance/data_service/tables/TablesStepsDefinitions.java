@@ -16,7 +16,9 @@ import ru.mycrg.acceptance.data_service.schemas.CurrentScenarioSchema;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
+import static org.hamcrest.core.IsEqual.equalTo;
 import static org.hamcrest.core.IsNull.notNullValue;
 import static org.junit.Assert.*;
 import static ru.mycrg.acceptance.auth_service.UserStepsDefinitions.userId;
@@ -92,6 +94,27 @@ public class TablesStepsDefinitions extends BaseStepsDefinitions {
                                              generateString(schema));
 
         super.createEntity(anotherTableDto);
+    }
+
+    @When("я запрашиваю схемы созданных таблиц")
+    public void getTableSchemas() {
+        List<String> payload = scenarioTables.stream()
+                                             .map(TableCreateDto::getName)
+                                             .collect(Collectors.toList());
+
+        response = getBaseRequestWithCurrentCookie().basePath("/api/data/tablesSchemas/")
+                .given().
+                        body(payload).
+                        contentType(ContentType.JSON)
+                .when().
+                        post();
+
+        response.then().body("size()", equalTo(2));
+    }
+
+    @Then("в ответе содержится {int} схемы")
+    public void checkCountOfSchemas(int expectedCount) {
+        response.then().body("size()", equalTo(expectedCount));
     }
 
     @When("Пользователь делает запрос на выборку таблиц из 'набора данных'")
@@ -217,7 +240,7 @@ public class TablesStepsDefinitions extends BaseStepsDefinitions {
         updateTable(latestTable.getName(), dto);
 
         if (response.statusCode() != 200) {
-           throw new IllegalStateException("Не удалось включить FTS для таблицы: " + latestTable.getName());
+            throw new IllegalStateException("Не удалось включить FTS для таблицы: " + latestTable.getName());
         }
     }
 

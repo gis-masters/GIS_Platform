@@ -11,6 +11,13 @@ public class TelegramNotificationProperties {
         // Required
     }
 
+    public TelegramNotificationProperties(TelegramNotificationProperties properties) {
+        this.name = properties.name;
+        this.chatId = properties.chatId;
+        this.token = properties.token;
+        this.messageThreadId = properties.messageThreadId;
+    }
+
     public String getName() {
         return name;
     }
