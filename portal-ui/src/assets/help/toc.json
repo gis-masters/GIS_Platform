@@ -566,6 +566,17 @@
         ]
       },
       {
+        "id": "projects",
+        "title": "Проекты",
+        "children": [
+          {
+            "id": "projectsFolders",
+            "title": "Папки проектов",
+            "contentUrl": "/assets/help/5dataManagement/29foldersProjects/29foldersProjects.html"
+          }
+        ]
+      },
+      {
         "id": "substrate",
         "title": "Картографические подосновы",
         "contentUrl": "/assets/help/5dataManagement/3substrate/03substrate.html"
