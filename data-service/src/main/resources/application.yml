@@ -95,6 +95,8 @@ crg-options:
         message_thread_id: 18
       - name: testAndrewBot
         token: 7622977618:AAGwNy2PRT-LkwDZjZq3o0JXORF6inrDh2M
+      - name: GeoplanTask_bot
+        token: 8079974978:AAEuXdrMATIE9CCFz5ppt-IB_vlRlrbu9Ko
   integration:
     sed-url: https://httpbin.org/anything
     gisogd-rf: https://gisogd.npc.ba/api/rgmu
