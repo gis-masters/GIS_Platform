@@ -60,10 +60,14 @@ public class CrgLayerValidator implements Validator {
                 validateAsRaster(errors, dto);
                 break;
             case "external":
+            case "external_nspd":
+            case "external_geoserver":
                 validateAsExternal(errors, dto);
                 break;
             default:
-                log.warn("Unsupported layer type: {}", type);
+                errors.rejectValue("type", "incorrect", "Не поддерживаемый тип слоя");
+
+                log.warn("Не поддерживаемый тип слоя: {}", type);
                 break;
         }
     }

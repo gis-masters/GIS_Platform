@@ -39,6 +39,10 @@ spring:
     multipart:
       max-file-size: 1001MB
       max-request-size: 1001MB
+  redis:
+    host: redis
+    port: 6379
+    password: ${SPRING_REDIS_PASSWORD}
   rabbitmq:
     host: localhost
     port: 5672

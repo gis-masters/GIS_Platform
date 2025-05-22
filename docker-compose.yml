@@ -39,8 +39,7 @@ services:
     image: ${DOCKER_CRG_HOST}/geoserver:${GEOSERVER_TAG}
     restart: always
     healthcheck:
-      test:
-        [ "CMD-SHELL", "curl -f http://localhost:8080/geoserver || exit 1" ]
+      test: curl -f http://localhost:8080/geoserver || exit 1
       interval: 10s
       timeout: 3s
       retries: 3
@@ -64,6 +63,19 @@ services:
       COMMUNITY_EXTENSIONS: ogr-datastore-plugin,jdbcconfig-plugin,jdbcstore-plugin
 
     mem_limit: ${GEOSERVER_MEM_LIMIT:-21000}m
+
+  redis:
+    container_name: redis
+    image: redis:latest
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - /opt/data/redis:/data
+    environment:
+      REDIS_PASSWORD: ${REDIS_PASS}
+    command: redis-server --requirepass ${REDIS_PASS}
+    mem_limit: ${REDIS_MEM_LIMIT:-500}m
 
 
   auth-service:
@@ -167,6 +179,7 @@ services:
       SPRING_RABBITMQ_HOST: rabbitmq
       SPRING_RABBITMQ_USERNAME: ${CRG_USER}
       SPRING_RABBITMQ_PASSWORD: ${RABBIT_PASS}
+      SPRING_REDIS_PASSWORD: ${REDIS_PASS}
 
       SPRING_FLYWAY_URL: jdbc:postgresql://postgis:5432/crg_data_service
       SPRING_FLYWAY_USER: ${CRG_USER}
@@ -429,3 +442,16 @@ services:
       - "8448:8448"
     mem_limit: ${CRYPTOPRO_MEM_LIMIT:-400}m
     privileged: true
+
+  notification-service:
+    container_name: crg-notification-service
+    image: ${DOCKER_CRG_HOST}/crg-notification-service:latest
+    restart: always
+    extra_hosts:
+      - "logstash:${LOGSTASH_HOST}"
+    volumes:
+      - /opt/logs:/opt/logs
+      - /opt/file_storage:/opt/file_storage
+    ports:
+      - "8668:8668"
+    mem_limit: ${CRYPTOPRO_MEM_LIMIT:-400}m
