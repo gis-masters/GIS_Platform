@@ -1,53 +1,99 @@
-import React, { Component, createRef } from 'react';
-import { action, makeObservable, observable } from 'mobx';
+import React, { FC, useEffect, useState } from 'react';
 import { observer } from 'mobx-react';
+import { HomeOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
-import { ChildrenProps } from '../../../services/models';
+import { projectsService } from '../../../services/gis/projects/projects.service';
+import { notFalsyFilter } from '../../../services/util/NotFalsyFilter';
+import { currentProjectFolderStore } from '../../../stores/CurrentProjectFolder.store';
+import { Breadcrumbs, BreadcrumbsItemData } from '../../Breadcrumbs/Breadcrumbs';
+import { ProjectsFilter } from '../Filter/Projects-Filter';
+import { ProjectsSortBy } from '../SortBy/Projects-SortBy';
+import { ProjectsSortOrder } from '../SortOrder/Projects-SortOrder';
 
 import '!style-loader!css-loader!sass-loader!./Projects-Header.scss';
 
 const cnProjectsHeader = cn('Projects', 'Header');
 
-@observer
-export class ProjectsHeader extends Component<ChildrenProps> {
-  private ref = createRef<HTMLDivElement>();
-  private intersectionObserver: IntersectionObserver;
-  @observable private stuck = false;
+const HOME_BREADCRUMB: BreadcrumbsItemData = {
+  title: <HomeOutlined fontSize='inherit' />,
+  url: '/projects'
+};
 
-  constructor(props: ChildrenProps) {
-    super(props);
+export const ProjectsHeader: FC = observer(() => {
+  const [breadcrumbs, setBreadcrumbs] = useState<BreadcrumbsItemData[]>([HOME_BREADCRUMB]);
 
-    makeObservable(this);
+  useEffect(() => {
+    let mounted = true;
 
-    this.intersectionObserver = new IntersectionObserver(
-      ([e]) => {
-        this.setStuck(e.intersectionRatio < 1);
-      },
-      { threshold: [1] }
-    );
-  }
+    const loadBreadcrumbs = async () => {
+      const { currentFolder } = currentProjectFolderStore;
 
-  componentDidMount() {
-    if (this.ref.current) {
-      this.intersectionObserver.observe(this.ref.current);
-    }
-  }
+      if (!currentFolder) {
+        setBreadcrumbs([]);
 
-  componentWillUnmount() {
-    this.intersectionObserver.disconnect();
-  }
+        return;
+      }
 
-  render() {
-    return (
-      <div className={cnProjectsHeader({ stuck: this.stuck })} ref={this.ref}>
-        {this.props.children}
+      const { path, name } = currentFolder;
+
+      const newBreadcrumbs: BreadcrumbsItemData[] = [HOME_BREADCRUMB];
+
+      // Если нет пути, добавляем только текущую папку
+      if (!path) {
+        if (mounted) {
+          setBreadcrumbs([...newBreadcrumbs, { title: name, itemType: 'none' }]);
+        }
+
+        return;
+      }
+
+      try {
+        // Получаем массив ID из пути, фильтруем пустые значения
+        const pathIds = path.split('/').filter(Boolean).filter(notFalsyFilter);
+
+        // Загружаем информацию о родительских папках
+        const parentFolders = await Promise.all(pathIds.map(id => projectsService.getById(Number(id))));
+
+        // Добавляем родительские папки в хлебные крошки
+        parentFolders.forEach(folder => {
+          if (folder && mounted) {
+            newBreadcrumbs.push({
+              title: folder.name,
+              url: `/projects?projectFolderId=${folder.id}`
+            });
+          }
+        });
+
+        // Добавляем текущую папку
+        newBreadcrumbs.push({
+          title: name,
+          itemType: 'none'
+        });
+
+        if (mounted) {
+          setBreadcrumbs(newBreadcrumbs);
+        }
+      } catch (error) {
+        console.error('Ошибка построения хлебных крошек:', error);
+      }
+    };
+
+    void loadBreadcrumbs();
+
+    return () => {
+      mounted = false;
+    };
+  }, [currentProjectFolderStore.currentFolder]);
+
+  return (
+    <div className={cnProjectsHeader()}>
+      <Breadcrumbs items={breadcrumbs} itemsType='link' size='medium' />
+      <div className={cnProjectsHeader({ rightActions: true })}>
+        <ProjectsFilter />
+        <ProjectsSortBy />
+        <ProjectsSortOrder />
       </div>
-    );
-  }
-
-  @action
-  private setStuck(stuck: boolean) {
-    this.stuck = stuck;
-  }
-}
+    </div>
+  );
+});

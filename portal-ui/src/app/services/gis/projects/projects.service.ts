@@ -61,6 +61,7 @@ class ProjectsService {
     if (allProjects.inited) {
       return;
     }
+
     await this.fetchAllProjects();
   }
 
@@ -200,6 +201,10 @@ class ProjectsService {
     return [response.content || [], response.page.totalPages];
   }
 
+  async getAllProjects(): Promise<CrgProject[]> {
+    return await projectsClient.getAllProjects();
+  }
+
   async getProjectsWithParticularOne(
     id: string | number,
     pageOptions: PageOptions
@@ -251,6 +256,20 @@ class ProjectsService {
   async getById(id: number): Promise<CrgProject | undefined> {
     try {
       return await projectsClient.getProject(id);
+    } catch (error) {
+      const err = error as AxiosError<{ status: string; message: string }>;
+      const message = err?.response?.data?.message;
+      if (message) {
+        Toast.warn(message);
+      } else {
+        throw error;
+      }
+    }
+  }
+
+  async getAllProjectsInFolder(id: number): Promise<CrgProject[] | undefined> {
+    try {
+      return await projectsClient.getAllProjectsInFolder(id);
     } catch (error) {
       const err = error as AxiosError<{ status: string; message: string }>;
       const message = err?.response?.data?.message;

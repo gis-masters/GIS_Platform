@@ -1,32 +1,43 @@
 import React, { FC, useCallback } from 'react';
 import { observer } from 'mobx-react';
-import { Button } from '@mui/material';
 import { cn } from '@bem-react/classname';
+import { AxiosError } from 'axios';
 
 import { CrgProject } from '../../../services/gis/projects/projects.models';
-import { ProjectFolderFooter } from '../Footer/ProjectFolder-Footer';
+import { projectsService } from '../../../services/gis/projects/projects.service';
+import { allProjects } from '../../../stores/AllProjects.store';
+import { currentProjectFolderStore } from '../../../stores/CurrentProjectFolder.store';
+import { Button } from '../../Button/Button';
+import { Toast } from '../../Toast/Toast';
 import { ProjectFolderName } from '../Name/ProjectFolder-Name';
 
 import '!style-loader!css-loader!sass-loader!./ProjectFolder-Card.scss';
 
-const cnProjectFolder = cn('ProjectFolder');
+const cnProjectFolderCard = cn('ProjectFolder', 'Card');
 
 interface ProjectFolderCardProps {
   project: CrgProject;
-  setOpenedFolder?: (id: number) => void;
 }
 
-export const ProjectFolderCard: FC<ProjectFolderCardProps> = observer(({ project, setOpenedFolder }) => {
-  const openFolder = useCallback(() => {
-    if (setOpenedFolder) {
-      setOpenedFolder(project.id);
+export const ProjectFolderCard: FC<ProjectFolderCardProps> = observer(({ project }) => {
+  const openFolder = useCallback(async () => {
+    try {
+      const folder = allProjects.list.find(item => item.id === project.id && project.folder);
+
+      if (folder) {
+        currentProjectFolderStore.setCurrentFolder(folder);
+      }
+
+      const projects = await projectsService.getAllProjectsInFolder(project.id);
+      allProjects.setList(projects);
+    } catch (error) {
+      Toast.error((error as AxiosError).message || 'Не удалось загрузить проекты из папки');
     }
-  }, [setOpenedFolder, project]);
+  }, [project]);
 
   return (
-    <Button className={cnProjectFolder('Card')} onClick={openFolder}>
+    <Button className={cnProjectFolderCard()} onClick={openFolder}>
       <ProjectFolderName>{project.name}</ProjectFolderName>
-      <ProjectFolderFooter />
     </Button>
   );
 });

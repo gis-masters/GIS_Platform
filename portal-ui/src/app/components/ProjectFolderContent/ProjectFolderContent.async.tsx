@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import { observer } from 'mobx-react';
 import { HomeOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
@@ -27,7 +27,7 @@ export interface ProjectFolderContentProps extends IClassNameProps {
   project: CrgProject;
 }
 
-const ProjectFolderContent: React.FC<ProjectFolderContentProps> = observer(props => {
+const ProjectFolderContent: FC<ProjectFolderContentProps> = observer(props => {
   const { project, className } = props;
   const [url, setUrl] = useState<string>();
   const [breadcrumbsItems, setBreadcrumbsItems] = useState<BreadcrumbsItemData[]>([]);
@@ -110,12 +110,14 @@ const ProjectFolderContent: React.FC<ProjectFolderContentProps> = observer(props
         {project.createdAt && formatDate(project.createdAt, 'LL')}
       </div>
 
-      {url && <PermissionsWidget
-        url={url}
-        title={project.name}
-        itemEntityType={ExplorerItemEntityTypeTitle.PROJECT}
-        disabled={!(currentUser.isAdmin || project.role === Role.OWNER)}
-      />}
+      {url && (
+        <PermissionsWidget
+          url={url}
+          title={project.name}
+          itemEntityType={ExplorerItemEntityTypeTitle.PROJECT}
+          disabled={!(currentUser.isAdmin || project.role === Role.OWNER)}
+        />
+      )}
     </div>
   );
 });

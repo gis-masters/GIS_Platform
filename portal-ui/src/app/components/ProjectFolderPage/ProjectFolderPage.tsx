@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { FC, useEffect, useRef, useState } from 'react';
 import { observer } from 'mobx-react';
 import { FolderOutlined, InsertDriveFileOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
@@ -20,7 +20,7 @@ import '!style-loader!css-loader!sass-loader!./ProjectFolderPage.scss';
 
 const cnProjectFolderPageContainer = cn('ProjectFolderPageContainer');
 
-export const ProjectFolderPage: React.FC = observer(() => {
+export const ProjectFolderPage: FC = observer(() => {
   const [project, setProject] = useState<CrgProject>();
   const [error, setError] = useState<string>();
   const [busy, setBusy] = useState(false);
@@ -80,11 +80,7 @@ export const ProjectFolderPage: React.FC = observer(() => {
             {project.id && <TextBadge id={project.id} className={cnProjectFolderPageContainer('Id')} />}
           </h1>
           <ProjectFolderContent project={project} />
-          <ProjectActions
-            className={cnProjectFolderPageContainer('Actions')}
-            project={project}
-            as='button'
-          />
+          <ProjectActions className={cnProjectFolderPageContainer('Actions')} project={project} as='button' />
         </>
       )}
 

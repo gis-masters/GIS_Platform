@@ -5,7 +5,6 @@ import { cn } from '@bem-react/classname';
 
 import { CrgProject } from '../../../services/gis/projects/projects.models';
 import { Link } from '../../Link/Link';
-import { ProjectCardFooter } from '../Footer/ProjectCard-Footer';
 import { ProjectCardName } from '../Name/ProjectCard-Name';
 
 import '!style-loader!css-loader!sass-loader!./ProjectCard-Card.scss';
@@ -29,7 +28,6 @@ export class ProjectCardCard extends Component<ProjectCardCardProps> {
     return (
       <Link className={cnProjectCard('Card')} href={this.url}>
         <ProjectCardName>{project.name}</ProjectCardName>
-        <ProjectCardFooter />
       </Link>
     );
   }

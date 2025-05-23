@@ -3,26 +3,23 @@
   z-index: 2;
   top: -1px;
 
-  display: flex;
+  display: grid;
   align-items: center;
-  justify-content: center;
-  gap: 30px;
+  gap: 20px;
+  grid-template-rows: 1fr;
+  grid-template-columns: auto minmax(auto, max-content);
 
-  margin-top: 20px;
-  margin-bottom: 20px;
-  padding: 20px;
-
-  transition: none;
+  width: 100%;
+  max-width: 1220px;
+  margin: 0 auto;
+  padding: 30px 40px;
 
   background: white;
 
-  &_stuck {
-    transition: box-shadow 0.3s;
-
-    box-shadow:
-      0 3px 3px -2px rgb(0 0 0 / 20%),
-      0 3px 4px 0 rgb(0 0 0 / 14%),
-      0 1px 8px 0 rgb(0 0 0 / 12%);
+  &_rightActions {
+    display: flex;
+    align-items: center;
+    gap: 16px;
   }
 
   &::before {
@@ -36,5 +33,15 @@
     content: '';
 
     background: white;
+  }
+
+  > div:first-child {
+    min-width: 0;
+  }
+
+  & .Breadcrumbs .Link {
+    text-decoration: none;
+
+    color: var(--black);
   }
 }

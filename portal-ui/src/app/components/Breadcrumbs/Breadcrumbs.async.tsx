@@ -128,7 +128,7 @@ export default class Breadcrumbs extends Component<BreadcrumbsProps> {
         >
           {items?.map((item, i) => (
             <MenuItem key={i} onClick={this.closeMenu}>
-              <BreadcrumbsItem {...item} nestingLevel={i && i + 1} type={'button'} />
+              <BreadcrumbsItem {...item} nestingLevel={i && i + 1} type={itemsType || 'button'} />
             </MenuItem>
           ))}
         </Menu>

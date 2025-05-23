@@ -13,9 +13,10 @@ export const sortDirections: Record<string, SortOrder> = {
 class ProjectsBlock extends Block {
   selectors = {
     container: '.Projects',
-    add: '.Projects-Add',
-    firstCard: '.Projects-Card:first-child',
-    projectsCards: '.Projects-Card',
+    breadcrumbsItemsTitle: '.Projects .Breadcrumbs-ItemTitle',
+    firstCard: '.ProjectCard:first-child',
+    projectsCards: '.ProjectCard',
+    projectsFolder: '.ProjectFolder',
     projectsFilter: '.Projects-Filter input'
   };
 
@@ -25,13 +26,17 @@ class ProjectsBlock extends Block {
     await $projectCard.moveTo();
   }
 
-  async clickAddButton(): Promise<void> {
-    const $add = await this.$('add');
-    await $add.click();
+  async clickCard(projectName: string): Promise<void> {
+    await loadingBlock.waitForGlobalHidden();
+    const $projectCard = await this.getProjectCard(projectName);
+
+    await $projectCard.moveTo();
+    await $projectCard.click();
   }
 
-  async clickCard(projectName: string): Promise<void> {
-    const $projectCard = await this.getProjectCard(projectName);
+  async clickFolderCard(projectFolderName: string): Promise<void> {
+    await loadingBlock.waitForGlobalHidden();
+    const $projectCard = await this.getProjectCard(projectFolderName, true);
 
     await $projectCard.moveTo();
     await $projectCard.click();
@@ -40,18 +45,6 @@ class ProjectsBlock extends Block {
   async clickProjectDeleteButton(projectName: string): Promise<void> {
     const $cardDeleteBtn = await this.getProjectCardDeleteButton(projectName);
     await $cardDeleteBtn.click();
-  }
-
-  async openAddForm(): Promise<void> {
-    await this.clickAddButton();
-    await this.waitForProjectFormVisible();
-  }
-
-  async createProject(title: string) {
-    await this.openAddForm();
-    await projectFormBlock.setInputValue(title);
-    await projectFormBlock.submit();
-    await loadingBlock.waitForHidden();
   }
 
   async createProjectBtn() {
@@ -119,6 +112,12 @@ class ProjectsBlock extends Block {
     return await $projectName.getText();
   }
 
+  async getProjectFolderCardText($card: WebdriverIO.Element): Promise<string> {
+    const $projectName = await $card.$('.ProjectFolder-Name');
+
+    return await $projectName.getText();
+  }
+
   async setProjectsFilerValue(value: string): Promise<void> {
     const $projectsFilter = await this.$('projectsFilter');
     await $projectsFilter.waitForDisplayed();
@@ -126,14 +125,14 @@ class ProjectsBlock extends Block {
     await $projectsFilter.setValue(value);
   }
 
-  async getProjectCard(name: string): Promise<WebdriverIO.Element> {
+  async getProjectCard(name: string, folder = false): Promise<WebdriverIO.Element> {
     const $container = await this.$('container');
     await $container.waitForDisplayed();
 
-    const $$projectsCards = await this.$$('projectsCards');
+    const $$projectsCards = await (folder ? this.$$('projectsFolder') : this.$$('projectsCards'));
 
     for (const $card of $$projectsCards) {
-      const projectName = await this.getProjectCardText($card);
+      const projectName = await (folder ? this.getProjectFolderCardText($card) : this.getProjectCardText($card));
 
       if (projectName === name) {
         return $card;
@@ -144,10 +143,13 @@ class ProjectsBlock extends Block {
   }
 
   async multipleVisibleProject(): Promise<string[]> {
+    await loadingBlock.waitForGlobalHidden();
+
     const $container = await this.$('container');
     await $container.waitForDisplayed();
 
     const $$projectsCards = await this.$$('projectsCards');
+
     const currentProjectsNames: string[] = [];
 
     for (const $card of $$projectsCards) {
@@ -168,6 +170,34 @@ class ProjectsBlock extends Block {
   async selectProjectSortingDescending(direction: SortOrder): Promise<void> {
     await sortOrderButtonBlock.waitForVisible();
     await sortOrderButtonBlock.setSortOrder(direction);
+  }
+
+  async currentFolder(): Promise<[string | undefined, string | null]> {
+    await loadingBlock.waitForGlobalHidden();
+
+    const $$breadcrumbsItemsTitle = await this.$$('breadcrumbsItemsTitle');
+    const breadcrumbsItemTitle = await $$breadcrumbsItemsTitle.at(-1)?.getText();
+
+    const url = await browser.getUrl();
+    const urlObj = new URL(url);
+    const projectFolderId = urlObj.searchParams.get('projectFolderId');
+
+    return [breadcrumbsItemTitle, projectFolderId];
+  }
+
+  async currentFolderBreadcrumbsPath(): Promise<string[]> {
+    await loadingBlock.waitForGlobalHidden();
+
+    const $$breadcrumbsItemsTitle = await this.$$('breadcrumbsItemsTitle');
+
+    const titles = [];
+    for (const $title of $$breadcrumbsItemsTitle) {
+      const breadcrumbTitle = await $title.getText();
+
+      titles.push(breadcrumbTitle);
+    }
+
+    return titles;
   }
 }
 

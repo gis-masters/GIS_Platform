@@ -1,189 +1,140 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { observer } from 'mobx-react';
-import { AddBoxOutlined } from '@mui/icons-material';
+import React, { FC, useCallback, useEffect } from 'react';
+import { observer, useLocalObservable } from 'mobx-react';
 import { cn } from '@bem-react/classname';
-import { AxiosError } from 'axios';
 
-import { communicationService, DataChangeEventDetail } from '../../services/communication.service';
-import { CrgProject } from '../../services/gis/projects/projects.models';
 import { projectsService } from '../../services/gis/projects/projects.service';
-import { sleep } from '../../services/util/sleep';
 import { allProjects } from '../../stores/AllProjects.store';
-import { organizationSettings } from '../../stores/OrganizationSettings.store';
-import { ProjectsAdd } from '../ProjectAdd/ProjectsAdd';
-import { ProjectCard } from '../ProjectCard/ProjectCard';
-import { ProjectFolder } from '../ProjectFolder/ProjectFolder';
-import { Toast } from '../Toast/Toast';
-import { ProjectsFilter } from './Filter/Projects-Filter';
+import { currentProjectFolderStore, FOLDER_PARAM } from '../../stores/CurrentProjectFolder.store';
+import { Loading } from '../Loading/Loading';
+import { ProjectsContent } from './Content/ProjectsContent';
 import { ProjectsHeader } from './Header/Projects-Header';
 import { ProjectsList } from './List/Projects-List';
 import { ProjectsLoader } from './Loader/Projects-Loader';
-import { ProjectsSortBy } from './SortBy/Projects-SortBy';
-import { ProjectsSortOrder } from './SortOrder/Projects-SortOrder';
 
 import '!style-loader!css-loader!sass-loader!./Projects.scss';
 import '!style-loader!css-loader!sass-loader!./Add/Projects-Add.scss';
 
 const cnProjects = cn('Projects');
 
-const Projects: React.FC = observer(() => {
-  const thisRef = useRef<HTMLDivElement>(null);
-  const newProjectRef = useRef<HTMLDivElement>(null);
+interface ProjectsState {
+  lastFolderId: string | null;
+}
 
-  const [newProjectId, setNewProjectId] = useState(0);
-  const [addFormBusy, setAddFormBusy] = useState(false);
-  const [addFormOpen, setAddFormOpen] = useState(false);
-  const [addFormErrors, setAddFormErrors] = useState<string[]>([]);
+interface ProjectsStore {
+  busy: boolean;
+  setBusy(busy: boolean): void;
+}
 
-  const scrollTo = async (project: CrgProject) => {
-    setNewProjectId(project.id);
-
-    const waitForRefTimeout = 2500;
-    const waitForRefStep = 50;
-    for (let i = 0; i < waitForRefTimeout; i += waitForRefStep) {
-      await sleep(50);
-      if (newProjectRef.current) {
-        break;
+const Projects: FC = observer(() => {
+  const { busy, setBusy } = useLocalObservable(
+    (): ProjectsStore => ({
+      busy: false,
+      setBusy(this: ProjectsStore, busy: boolean): void {
+        this.busy = busy;
       }
-    }
+    })
+  );
 
-    if (!newProjectRef.current) {
-      return;
-    }
-
-    const containerElem = thisRef.current;
-    const projectElem = newProjectRef.current;
-
-    if (containerElem) {
-      if (containerElem.scrollTop < projectElem.offsetTop + projectElem.offsetHeight) {
-        containerElem.scrollTo({ top: projectElem.offsetTop + projectElem.offsetHeight, behavior: 'smooth' });
-      }
-      if (containerElem.scrollTop > projectElem.offsetTop) {
-        containerElem.scrollTo({ top: projectElem.offsetTop - projectElem.offsetHeight, behavior: 'smooth' });
-      }
-    }
-
-    await sleep(2000);
-    setNewProjectId(0);
-  };
-
-  const handleProjectCreation = async (name: string) => {
-    if (addFormBusy) {
-      return;
-    }
-
-    setAddFormErrors([]);
-    setAddFormBusy(true);
-
+  // Загрузка проектов для папки
+  const loadFolderProjects = useCallback(async (folderId: number) => {
     try {
-      const newProject = await projectsService.create({ name, folder: false });
-      communicationService.allProjectsFetched.once(() => {
-        communicationService.projectUpdated.emit({ type: 'create', data: newProject });
-      });
-      Toast.success('Проект создан');
+      setBusy(true);
+      const folder = await projectsService.getById(folderId);
 
-      closeAddForm();
-    } catch (error) {
-      const err = error as AxiosError<{ errors: Record<string, unknown>[] }>;
-      if (err.response?.status === 409) {
-        setAddFormErrors([err?.message]);
-      } else {
-        const errors: string[] = [];
-        err.response?.data?.errors?.forEach(({ message }) => {
-          if (message) {
-            errors.push(message as string);
-          }
-        });
-
-        if (!errors.length) {
-          errors.push('Не удалось создать проект');
-        }
-
-        setAddFormErrors(errors);
+      if (!folder) {
+        throw new Error('Folder not found');
       }
+
+      currentProjectFolderStore.setCurrentFolder(folder);
+      const projects = await projectsService.getAllProjectsInFolder(folderId);
+      allProjects.setList(projects);
+    } catch (error) {
+      console.error('Error loading folder projects:', error);
+      currentProjectFolderStore.setCurrentFolder(null);
+      await loadRootProjects();
     } finally {
-      setAddFormBusy(false);
+      setBusy(false);
     }
-  };
-
-  const closeAddForm = () => {
-    setAddFormOpen(false);
-    setAddFormErrors([]);
-  };
-
-  const openAddForm = () => {
-    setAddFormOpen(true);
-  };
-
-  const setErrors = useCallback((errors: string[] = []) => {
-    setAddFormErrors(errors);
   }, []);
+
+  // Загрузка корневых проектов
+  const loadRootProjects = useCallback(async () => {
+    try {
+      setBusy(true);
+      const projects = await projectsService.getAllProjects();
+      allProjects.setList(projects);
+
+      const url = new URL(window.location.href);
+      url.searchParams.delete(FOLDER_PARAM);
+
+      currentProjectFolderStore.setCurrentFolder(null);
+    } catch (error) {
+      console.error('Error loading root projects:', error);
+      allProjects.setList([]);
+    } finally {
+      setBusy(false);
+    }
+  }, []);
+
+  // Обработка изменений URL
+  const handleUrlChange = useCallback(
+    async (state: ProjectsState) => {
+      const url = new URL(window.location.href);
+      const currentFolderId = url.searchParams.get(FOLDER_PARAM);
+
+      if (currentFolderId === state.lastFolderId) {
+        return state;
+      }
+
+      state.lastFolderId = currentFolderId;
+
+      await (currentFolderId ? loadFolderProjects(Number(currentFolderId)) : loadRootProjects());
+
+      return state;
+    },
+    [loadFolderProjects, loadRootProjects]
+  );
 
   useEffect(() => {
-    const init = async () => {
-      await projectsService.initAllProjectsStore();
+    const state: ProjectsState = { lastFolderId: null };
+
+    // Инициализация: проверяем сохраненную папку
+    const initializeProjects = async () => {
+      setBusy(true);
+      const savedFolderId = currentProjectFolderStore.getSavedFolderId();
+
+      await (savedFolderId ? loadFolderProjects(savedFolderId) : loadRootProjects());
+      setBusy(false);
     };
 
-    void init();
+    void initializeProjects();
 
-    const handleProjectUpdate = async (e: CustomEvent<DataChangeEventDetail<CrgProject>>) => {
-      const { type, data } = e.detail;
-      if (type === 'create') {
-        await scrollTo(data);
-      }
-    };
+    // Наблюдаем за изменениями URL
+    const observer = new MutationObserver(() => {
+      void handleUrlChange(state);
+    });
 
-    communicationService.projectUpdated.on(handleProjectUpdate);
+    observer.observe(document.body, {
+      subtree: true,
+      childList: true
+    });
 
-    return () => {
-      communicationService.off(handleProjectUpdate);
-    };
-  }, []);
+    // Проверяем URL при первой загрузке
+    void handleUrlChange(state);
+
+    return () => observer.disconnect();
+  }, [handleUrlChange, loadFolderProjects, loadRootProjects]);
 
   return (
-    <div className={cnProjects(null, ['scroll'])} ref={thisRef}>
+    <div className={cnProjects(null, ['scroll'])}>
       {allProjects.inited ? (
         <>
-          <ProjectsHeader>
-            <ProjectsFilter />
-            <ProjectsSortBy />
-            <ProjectsSortOrder />
-            {organizationSettings.createProject && (
-              <ProjectsAdd
-                className={cnProjects('Add')}
-                busy={addFormBusy}
-                onSubmit={handleProjectCreation}
-                onChange={setErrors}
-                onClose={closeAddForm}
-                onOpen={openAddForm}
-                open={addFormOpen}
-                errors={addFormErrors}
-                title='Создать проект'
-                buttonProps={{
-                  variant: 'contained',
-                  color: 'primary',
-                  startIcon: <AddBoxOutlined />
-                }}
-              />
-            )}
-          </ProjectsHeader>
+          <ProjectsHeader />
           <ProjectsList>
-            {allProjects.displayedList.filter(proj => !proj.folder).map((project, i) => (
-              project.folder ? <ProjectFolder
-                className={cnProjects('Card')}
-                project={project}
-                key={i}
-                cardRef={newProjectId === project.id ? newProjectRef : undefined}
-              />
-                :
-                <ProjectCard
-                  className={cnProjects('Card')}
-                  project={project}
-                  key={i}
-                  cardRef={newProjectId === project.id ? newProjectRef : undefined}
-                />
-            ))}
+            <ProjectsContent projects={allProjects.displayedList} />
           </ProjectsList>
+
+          <Loading visible={busy} />
         </>
       ) : (
         <ProjectsLoader />

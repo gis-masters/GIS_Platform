@@ -36,6 +36,17 @@ Given(
   }
 );
 
+Given(
+  'в папке проекта создана папка проекта {string} пользователем {user}',
+  async function (this: ScenarioScope, title: string, user: TestUser) {
+    const folder = this.latestProjectFolder;
+
+    if (this.latestProjectFolder) {
+      this.latestProject = await createProjectAs(user, { name: title, folder: true, parentId: folder.id });
+    }
+  }
+);
+
 Given('существует проект, созданный пользователем {user}', async function (this: ScenarioScope, user: TestUser) {
   this.latestProject = await createProjectAs(user, { name: faker.lorem.sentence(7), folder: false });
 });

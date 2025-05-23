@@ -1,6 +1,7 @@
 .Projects-List {
   display: grid;
   justify-content: center;
+  gap: 20px 10px;
   grid-template-columns: repeat(var(--ProjectsListColumns), minmax(310px, 410px));
 
   padding: 0 40px;

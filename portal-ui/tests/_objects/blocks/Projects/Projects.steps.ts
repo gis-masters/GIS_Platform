@@ -6,22 +6,6 @@ import { addBasemapToProject } from '../../commands/projects/addBasemapToProject
 import { ScenarioScope } from '../../ScenarioScope';
 import { projectsBlock, sortDirections } from './Projects.block';
 
-When(/^я нажимаю кнопку `Создать проект`$/, async () => {
-  await projectsBlock.clickAddButton();
-});
-
-When(/^я навожу курсор на проект "(.*)"$/, async (title: string) => {
-  await projectsBlock.hoverProjectCard(title);
-});
-
-When(/^я нажимаю кнопку удаления проекта "(.*)"$/, async (title: string) => {
-  await projectsBlock.clickProjectDeleteButton(title);
-});
-
-When(/^я открываю форму создания проекта$/, async () => {
-  await projectsBlock.openAddForm();
-});
-
 Then(/^появляется форма создания проекта$/, async () => {
   await projectsBlock.waitForProjectFormVisible();
 });
@@ -30,22 +14,12 @@ Then(/^список проектов пуст$/, async () => {
   await projectsBlock.checkProjectListIsEmpty();
 });
 
-Then(/^кнопка удаления проекта "(.*)" отсутствует$/, async (title: string) => {
-  const deleteBtn = await projectsBlock.isProjectCardDeleteButtonNotDisplayed(title);
-
-  await expect(deleteBtn).toEqual(true);
-});
-
-When(/^я создаю проект с названием "(.*)"$/, async (title: string) => {
-  await projectsBlock.createProject(title);
-});
-
 When(/^я нажимаю на карточку проекта "(.*)" в списке проектов$/, async (title: string) => {
   await projectsBlock.clickCard(title);
 });
 
-When(/^в форме создания проекта я нажимаю кнопку `Создать`$/, async () => {
-  await projectsBlock.createProjectBtn();
+When('я нажимаю на карточку папки проекта {string} в списке проектов', async (projectFolderName: string) => {
+  await projectsBlock.clickFolderCard(projectFolderName);
 });
 
 When(/^на странице проектов в поле `Фильтр по названию` я ввожу значение "(.*)"$/, async (value: string) => {
@@ -94,13 +68,23 @@ Then(/^в списке проектов отображаются проекты:
   await expect(currentProjectsNames).toEqual(projectsNames);
 });
 
+Then('я перешел на страницу созданной папки проектов', async function (this: ScenarioScope) {
+  const folder = this.latestProjectFolder;
+  const currentFolder = await projectsBlock.currentFolder();
+
+  await expect([folder.name, String(folder.id)]).toEqual(currentFolder);
+});
+
+Then('в хлебных крошках отображается {string} и {string}', async function (firstFolder: string, secondFolder: string) {
+  const currentFolderBreadcrumbsPath = await projectsBlock.currentFolderBreadcrumbsPath();
+
+  // первый элемент - иконка корневой папки
+  await expect(['', firstFolder, secondFolder]).toEqual(currentFolderBreadcrumbsPath);
+});
+
 Then(/^сортировка проектов соответствует ожидаемому (".+"[ ,]*)+$/, async (names: string) => {
   const currentProjectsNames = await projectsBlock.multipleVisibleProject();
   const newNames = names.replaceAll(/^.|.$/g, '');
 
   await expect(currentProjectsNames).toEqual(newNames.slice(1, -1).split('", "'));
-});
-
-Then(/^в форме создания проекта появляется сообщение об ошибке валидации$/, async () => {
-  await projectsBlock.projectValidationError();
 });

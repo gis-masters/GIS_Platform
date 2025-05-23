@@ -1,0 +1,14 @@
+.ProjectsContent {
+  &-Empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 100%;
+    height: 200px;
+
+    color: rgb(0 0 0 / 60%);
+
+    font-size: 1.25rem;
+  }
+}

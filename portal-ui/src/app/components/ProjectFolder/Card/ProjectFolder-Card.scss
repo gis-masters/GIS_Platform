@@ -1,4 +1,4 @@
-.ProjectFolder-Card {
+body .ProjectFolder-Card {
   position: absolute;
   inset: 0;
 
@@ -11,5 +11,11 @@
 
   &:hover {
     text-decoration: none;
+
+    background-color: transparent !important;
+  }
+
+  &.Button.MuiButton-outlined {
+    border: none;
   }
 }
