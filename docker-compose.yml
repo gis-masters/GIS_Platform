@@ -28,7 +28,7 @@ services:
       - /opt/data/postgis:/var/lib/postgresql
       - /opt/data/configs/db/extra.conf:/settings/extra.conf
     environment:
-      POSTGRES_DBNAME: crg_auth_service,crg_gis_service,crg_data_service,geoserver_db,bpmn_camunda,crg_audit_service,gsstore,gscatalog
+      POSTGRES_DBNAME: crg_notification_db,crg_auth_service,crg_gis_service,crg_data_service,geoserver_db,bpmn_camunda,crg_audit_service,gsstore,gscatalog
       POSTGRES_USER: ${CRG_USER}
       POSTGRES_PASS: ${DB_PASS}
       RECREATE_DATADIR: ${RECREATE_DATADIR}

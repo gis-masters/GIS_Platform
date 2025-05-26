@@ -60,7 +60,7 @@ public class LayerCreateDto {
     @Length(min = 8, max = 50, message = "Ожидается строка вида: 'EPSG:28406'")
     private String nativeCRS;
 
-    @Length(min = 1, max = 255)
+    @Length(min = 1, max = 1255)
     private String dataSourceUri;
 
     @Length(min = 1, max = 255)

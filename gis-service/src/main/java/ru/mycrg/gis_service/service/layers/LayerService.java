@@ -141,6 +141,8 @@ public class LayerService {
         } catch (Exception e) {
             String msg = String.format("Не удалось создать слой: '%s'", layerDto.getTitle());
 
+            log.error("{} => {}", msg, e.getMessage(), e);
+
             throw new GisServiceException(msg, e.getCause());
         }
     }

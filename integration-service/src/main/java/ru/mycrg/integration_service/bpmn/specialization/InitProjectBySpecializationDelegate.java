@@ -148,7 +148,7 @@ public class InitProjectBySpecializationDelegate implements JavaDelegate {
 
             response = httpClient.newCall(request).execute();
             if (!response.isSuccessful()) {
-                log.warn("Не удалось создать слой: '{}'", publicationModel);
+                log.warn("Не удалось создать слой в проекте: '{}'", publicationModel);
 
                 throw new IllegalStateException();
             }
