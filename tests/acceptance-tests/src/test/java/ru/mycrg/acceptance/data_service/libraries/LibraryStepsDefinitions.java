@@ -530,6 +530,19 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
         currentDocumentId = extractEntityIdFromResponse(response);
     }
 
+    @When("в библиотеке по-умолчанию существует запись c прикреплённым файлом для {string}")
+    public void createRecordWithFilesOnDefaultLibraryInDiffProp(String propName) {
+        Map<String, Object> data = new HashMap<>();
+        data.put("title", "Different properties");
+        data.put("content_type_id", "doc_v4");
+
+        data.put(propName, currentFiles);
+
+        createDocumentAndWriteAsCurrent(gson.toJson(data), DEFAULT_LIBRARY);
+
+        currentDocumentId = extractEntityIdFromResponse(response);
+    }
+
     @Given("Загруженные файлы подвязаны к текущей записи")
     public void updateRecordWithFilesOnDefaultLibrary() {
         DefaultDocumentModel record = new DefaultDocumentModel("plug-in files");

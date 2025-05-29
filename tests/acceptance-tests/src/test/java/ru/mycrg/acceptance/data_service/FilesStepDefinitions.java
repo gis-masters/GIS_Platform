@@ -1,12 +1,10 @@
 package ru.mycrg.acceptance.data_service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
-import io.restassured.RestAssured;
 import io.restassured.specification.RequestSpecification;
 import org.hamcrest.core.IsEqual;
 import ru.mycrg.acceptance.BaseStepsDefinitions;
@@ -467,6 +465,28 @@ public class FilesStepDefinitions extends BaseStepsDefinitions {
         response = getBaseRequestWithCurrentCookie()
                 .when().
                         get("/" + getFileDescriptionByTitleOrThrow(fileName).getId());
+    }
+
+    @Then("файл лежит в библиотеке по-умолчанию")
+    public void currentFilePathCheck() {
+        getFile(currentFiles.get(0).getId());
+
+        String filePath = response.jsonPath().getString("path");
+
+        assertFalse("Файл не должен лежать в 'trash'", filePath.contains("trash"));
+        assertTrue("Файл должен содержать в пути 'library_record/dl_default'",
+                   filePath.contains("library_record" + "/dl_default"));
+    }
+
+    @And("другие поля файла корректно заполнены")
+    public void currentQualifierCheck() {
+        getFile(currentFiles.get(0).getId());
+
+        String fileResourceType = response.jsonPath().getString("resourceType");
+        String fileResourceQualifier = response.jsonPath().getString("resourceQualifier");
+
+        assertFalse("Файл должен иметь заполненный 'resourceType'", fileResourceType.isEmpty());
+        assertFalse("Файл должен иметь заполненный 'resourceQualifier'", fileResourceQualifier.isEmpty());
     }
 
     private void getFile(UUID id) {

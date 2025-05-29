@@ -87,8 +87,9 @@ public class FileService {
                         .map(FileDescription::getId)
                         .collect(Collectors.toSet());
 
+                //пропускаем поля без файлов
                 if (allFileIds.isEmpty()) {
-                    return Map.of();
+                    continue;
                 }
 
                 List<File> allFoundsFiles = fileRepository.findAllByIdIn(allFileIds);
