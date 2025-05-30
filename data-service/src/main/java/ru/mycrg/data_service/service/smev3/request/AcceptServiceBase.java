@@ -116,9 +116,12 @@ public abstract class AcceptServiceBase {
     protected static final String DOCUMENT_CODE = "electrSigFile";
     protected static final String BUILDING_PERMIT_FILENAME = "Разрешение_на_строительство";
     protected static final String MOTIVATED_DECLINE_FILENAME = "Мотивированный_отказ";
+    protected final long ORGANIZATION_ID = Long.parseLong(
+            DEFAULT_PATH.substring(DEFAULT_PATH.indexOf("_") + 1, DEFAULT_PATH.indexOf("/")));
 
     @Value("${crg-options.taskDb}")
     protected String dbName;
+
     @Value("${crg-options.taskManagementFolderId}")
     protected String folderId;
 
@@ -482,7 +485,8 @@ public abstract class AcceptServiceBase {
             JsonNode jsonNode = toJsonNode(fileResQualifier);
             path = fileStorageService
                     .moveToMainStorage(Paths.get(path),
-                                       Paths.get(DEFAULT_PATH + filename))
+                                       Paths.get(DEFAULT_PATH + filename),
+                                       ORGANIZATION_ID)
                     .normalize().toString();
             File file = new File(multipartFile, intents, path, DEFAULT_USER_LOGIN);
             File savedEntity = fileRepository.save(file);
@@ -570,13 +574,13 @@ public abstract class AcceptServiceBase {
         Map<String, Object> documentPayload = new HashMap<>();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
 
-        String fullfio = getFullFio(queryResult);
+        String fullFio = getFullFio(queryResult);
         documentPayload.put(RECORD_STATUS_ATTRIBUTE, "1.А.1");
         documentPayload.put(DATE_ATTRIBUTE, LocalDate.parse(getCurrentDate(queryResult), formatter));
-        documentPayload.put(PERSON_NAME_ATTRIBUTE, fullfio);
+        documentPayload.put(PERSON_NAME_ATTRIBUTE, fullFio);
         documentPayload.put(REQUEST_TYPE_ATTRIBUTE, REQUEST_TYPE);
         documentPayload.put(DATA_TYPE_ATTRIBUTE, DATA_TYPE);
-        documentPayload.put(TITLE.getName(), getTitle());
+        documentPayload.put(TITLE.getName(), (getTitle() + " от " + fullFio));
         documentPayload.put(CONTENT_TYPE_ID.getName(), getContentType());
         documentPayload.put(IS_FOLDER.getName(), false);
         documentPayload.put(PATH.getName(), getDocumentPath());
@@ -674,7 +678,9 @@ public abstract class AcceptServiceBase {
         String path = fileStorageService.copyToTrash(wordDocumentFile, fileName);
         String intents = simpleIntentHandler.defineIntent(wordDocumentFile);
 
-        path = fileStorageService.moveToMainStorage(Paths.get(path), Paths.get(DEFAULT_PATH + fileName))
+        path = fileStorageService.moveToMainStorage(Paths.get(path),
+                                                    Paths.get(DEFAULT_PATH + fileName),
+                                                    ORGANIZATION_ID)
                                  .normalize().toString();
         File wordDocumentEntity = new File(wordDocumentFile, intents, path, DEFAULT_USER_LOGIN);
         File savedEntity = fileRepository.save(wordDocumentEntity);

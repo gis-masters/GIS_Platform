@@ -16,7 +16,7 @@ Feature: Тесты осуществления услуги "Выдача раз
     *     я авторизован как "rns1"
 
   # Одинокий тест подписи
-  Scenario: Файл поступивший из ЕПГУ с валидной ЭЦП подписывается корректно
+  Scenario: Файл поступивший от Ионов Вячеслав Владимирович с валидной ЭЦП подписывается корректно
     Given в minio лежит архив с приходящими данными "РНС дубликат"
     *     в очередь попадает запрос на "РНС дубликат"
     *     я жду пока новая задача с контент типом "rns_smev_rostelekom" создаётся
@@ -31,10 +31,10 @@ Feature: Тесты осуществления услуги "Выдача раз
     And   я жду пока новая задача с контент типом "<type>" создаётся
     Then  создана задача ожидаемого вида "<type>" "<view>"
     Examples:
-      | type                | epguType     | view        |
-      | rns_smev_rostelekom | РНС дубликат | РНС из ЕПГУ |
-      | rnv_smev_rostelekom | РНВ дубликат | РНВ из ЕПГУ |
-#      | gpzu_smev_rostelekom | ГПЗУ выдача   | ГПЗУ из ЕПГУ |
+      | type                | epguType     | view                               |
+      | rns_smev_rostelekom | РНС дубликат | РНС от Ионов Вячеслав Владимирович |
+      | rnv_smev_rostelekom | РНВ дубликат | РНВ от Ионов Вячеслав Владимирович |
+#      | gpzu_smev_rostelekom | ГПЗУ выдача   | ГПЗУ от Ионов Вячеслав Владимирович |
 
   # Тестируем создание документов
   Scenario Outline: Документ в задаче "<epguType>" создается с правильно заполненными атрибутами
@@ -43,14 +43,14 @@ Feature: Тесты осуществления услуги "Выдача раз
     And   я жду пока новая задача с контент типом "<type>" создаётся
     Then  прикреплённый документ в новой задаче заполнен ожидаемо "<view>"
     Examples:
-      | type                | epguType      | view                                                                                                                                                                                                                                                                                                                               |
-      | rns_smev_rostelekom | РНС дубликат  | permits_data_number=RU01-2-3456-2222,pguid=4650656602,goal=4,content_type_id=rns_smev_rostelekom,person_name=Ионов Вячеслав Владимирович,smev_message_id=efa213da-08b3-11f0-8e72-1ed50ed0293c,request_type=0B.5,record_status=1.А.1,title=РНС из ЕПГУ,smev_client_id=86c6ea29-3273-44f3-9560-8398cdc55daf,data_type=0Е.2           |
-      | rns_smev_rostelekom | РНС выдача    | pguid=4650656574,goal=1,content_type_id=rns_smev_rostelekom,person_name=Ионов Вячеслав Владимирович,smev_message_id=7e9976ba-08b3-11f0-8758-5af749e6a72a,request_type=0B.5,record_status=1.А.1,title=РНС из ЕПГУ,smev_client_id=0c3082d9-b450-4b1a-846a-a1b9701b3c3f,data_type=0Е.2                                                |
-      | rns_smev_rostelekom | РНС продление | permits_data_number=RU01-2-3456-2020,pguid=4650656596,goal=2RenewalConstructionPermit,content_type_id=rns_smev_rostelekom,person_name=Ионов Вячеслав Владимирович,smev_message_id=c3456b7e-08b3-11f0-8758-5af749e6a72a,request_type=0B.5,record_status=1.А.1,title=РНС из ЕПГУ,smev_client_id=7b283e7d-e002-4744-95ee-8fe7dd9b386e |
-      | rnv_smev_rostelekom | РНВ выдача    | pguid=4650657044,goal=1,content_type_id=rnv_smev_rostelekom,person_name=Ионов Вячеслав Владимирович,smev_message_id=12e8c0ec-08bd-11f0-8758-5af749e6a72a,request_type=0B.5,record_status=1.А.1,title=РНВ из ЕПГУ,smev_client_id=cdba0a20-ca07-4b49-9080-e365a37974c7                                                               |
-      | rnv_smev_rostelekom | РНВ изменение | pguid=4650657079,goal=2,content_type_id=rnv_smev_rostelekom,person_name=Ионов Вячеслав Владимирович,smev_message_id=7ec29dfc-08bd-11f0-8758-5af749e6a72a,request_type=0B.5,record_status=1.А.1,title=РНВ из ЕПГУ,smev_client_id=4a5c0de5-99b1-490f-a55f-55c70b0dcea6                                                               |
+      | type                | epguType      | view                                                                                                                                                                                                                                                                                                                                                      |
+      | rns_smev_rostelekom | РНС дубликат  | permits_data_number=RU01-2-3456-2222,pguid=4650656602,goal=4,content_type_id=rns_smev_rostelekom,person_name=Ионов Вячеслав Владимирович,smev_message_id=efa213da-08b3-11f0-8e72-1ed50ed0293c,request_type=0B.5,record_status=1.А.1,title=РНС от Ионов Вячеслав Владимирович,smev_client_id=86c6ea29-3273-44f3-9560-8398cdc55daf,data_type=0Е.2           |
+      | rns_smev_rostelekom | РНС выдача    | pguid=4650656574,goal=1,content_type_id=rns_smev_rostelekom,person_name=Ионов Вячеслав Владимирович,smev_message_id=7e9976ba-08b3-11f0-8758-5af749e6a72a,request_type=0B.5,record_status=1.А.1,title=РНС от Ионов Вячеслав Владимирович,smev_client_id=0c3082d9-b450-4b1a-846a-a1b9701b3c3f,data_type=0Е.2                                                |
+      | rns_smev_rostelekom | РНС продление | permits_data_number=RU01-2-3456-2020,pguid=4650656596,goal=2RenewalConstructionPermit,content_type_id=rns_smev_rostelekom,person_name=Ионов Вячеслав Владимирович,smev_message_id=c3456b7e-08b3-11f0-8758-5af749e6a72a,request_type=0B.5,record_status=1.А.1,title=РНС от Ионов Вячеслав Владимирович,smev_client_id=7b283e7d-e002-4744-95ee-8fe7dd9b386e |
+      | rnv_smev_rostelekom | РНВ выдача    | pguid=4650657044,goal=1,content_type_id=rnv_smev_rostelekom,person_name=Ионов Вячеслав Владимирович,smev_message_id=12e8c0ec-08bd-11f0-8758-5af749e6a72a,request_type=0B.5,record_status=1.А.1,title=РНВ от Ионов Вячеслав Владимирович,smev_client_id=cdba0a20-ca07-4b49-9080-e365a37974c7                                                               |
+      | rnv_smev_rostelekom | РНВ изменение | pguid=4650657079,goal=2,content_type_id=rnv_smev_rostelekom,person_name=Ионов Вячеслав Владимирович,smev_message_id=7ec29dfc-08bd-11f0-8758-5af749e6a72a,request_type=0B.5,record_status=1.А.1,title=РНВ от Ионов Вячеслав Владимирович,smev_client_id=4a5c0de5-99b1-490f-a55f-55c70b0dcea6                                                               |
 #      поле permits_data_number=RU01-2-3456-2020 должно быть заполнено. но не заполняется. это баг. пока не хочу править баги
-      | rnv_smev_rostelekom | РНВ дубликат  | permits_data_number=RU01-2-3456-6666,pguid=4650657114,goal=4,content_type_id=rnv_smev_rostelekom,person_name=Ионов Вячеслав Владимирович,smev_message_id=1c5c6176-08be-11f0-8e72-1ed50ed0293c,request_type=0B.5,record_status=1.А.1,title=РНВ из ЕПГУ,smev_client_id=8d5c4e0f-373a-46ea-8f99-b5f8161bbd9c                          |
+      | rnv_smev_rostelekom | РНВ дубликат  | permits_data_number=RU01-2-3456-6666,pguid=4650657114,goal=4,content_type_id=rnv_smev_rostelekom,person_name=Ионов Вячеслав Владимирович,smev_message_id=1c5c6176-08be-11f0-8e72-1ed50ed0293c,request_type=0B.5,record_status=1.А.1,title=РНВ от Ионов Вячеслав Владимирович,smev_client_id=8d5c4e0f-373a-46ea-8f99-b5f8161bbd9c                          |
 #      | gpzu_smev_rostelekom | ГПЗУ выдача    | перечисление ожиданий |
 #      | gpzu_smev_rostelekom | ГПЗУ продление | перечисление ожиданий |
 #      | gpzu_smev_rostelekom | ГПЗУ дубликат  | перечисление ожиданий |

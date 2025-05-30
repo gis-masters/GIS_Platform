@@ -112,9 +112,10 @@ public class FileStorageService {
      * @param sourcePath Путь откуда перемещаем файл
      * @param targetPath Путь куда перемещаем файл
      *
+     * @param organizationId
      * @throws DataServiceException в случае если не удается переместить файл
      */
-    public Path moveToMainStorage(Path sourcePath, Path targetPath) {
+    public Path moveToMainStorage(Path sourcePath, Path targetPath, Long organizationId) {
         Path resultPath = null;
         try {
             resultPath = mainStoragePath.resolve(targetPath);
@@ -124,7 +125,7 @@ public class FileStorageService {
 
             if (Files.exists(resultPath)) {
                 if (!sourcePath.equals(resultPath)) {
-                    moveWithReplace(sourcePath, resultPath);
+                    moveWithReplace(sourcePath, resultPath, organizationId);
                 } else {
                     log.debug("Пути одинаковы: : [{}] в [{}] только удаляем источник", sourcePath, resultPath);
 
@@ -134,7 +135,7 @@ public class FileStorageService {
                 Files.createDirectories(resultPath);
                 log.info("Создали каталог: [{}]", resultPath);
 
-                moveWithReplace(sourcePath, resultPath);
+                moveWithReplace(sourcePath, resultPath, organizationId);
             }
 
             return resultPath;
@@ -204,7 +205,7 @@ public class FileStorageService {
         StopWatch osWatcher = new StopWatch("occupiedSpace");
 
         osWatcher.start("buildPathToOrganizationMainStorage");
-        Path orgMainStoragePath = buildPathToOrganizationMainStorage();
+        Path orgMainStoragePath = buildPathToOrganizationMainStorage(authenticationFacade.getOrganizationId());
         osWatcher.stop();
 
         osWatcher.start("getTotalFiles");
@@ -223,7 +224,7 @@ public class FileStorageService {
     public long mainStorageOccupiedSpace() {
         StopWatch watcher = new StopWatch("mainStorageOccupiedSpace");
         watcher.start("buildPathToOrganizationMainStorage");
-        Path orgMainStoragePath = buildPathToOrganizationMainStorage();
+        Path orgMainStoragePath = buildPathToOrganizationMainStorage(authenticationFacade.getOrganizationId());
         watcher.stop();
 
         // TODO: Это действие тоже много может отнять ресурсов процессора
@@ -239,13 +240,16 @@ public class FileStorageService {
         return size;
     }
 
-    private void moveWithReplace(Path sourcePath, Path resultPath) throws IOException {
+    private void moveWithReplace(Path sourcePath, Path resultPath, Long organizationId) throws IOException {
         Files.move(sourcePath, resultPath, REPLACE_EXISTING);
 
         log.debug("Перемещение с заменой выполнено успешно: [{}] в [{}]", sourcePath, resultPath);
 
-        occupiedSpaceService.evictCacheOccupiedSpace(buildPathToOrganizationMainStorage());
-        occupiedSpaceService.evictCacheTotalFiles(buildPathToOrganizationMainStorage());
+        occupiedSpaceService.evictCacheOccupiedSpace(buildPathToOrganizationMainStorage(
+                organizationId));
+
+        occupiedSpaceService.evictCacheTotalFiles(buildPathToOrganizationMainStorage(
+                organizationId));
     }
 
     public void deleteIfExists(String path) throws StorageException {
@@ -296,8 +300,8 @@ public class FileStorageService {
         }
     }
 
-    private Path buildPathToOrganizationMainStorage() {
-        return mainStoragePath.resolve(getDefaultOrganizationName(authenticationFacade.getOrganizationId()));
+    private Path buildPathToOrganizationMainStorage(Long organizationId) {
+        return mainStoragePath.resolve(getDefaultOrganizationName(organizationId));
     }
 
     private String copyTo(MultipartFile file, Path storagePath, String fileName) {

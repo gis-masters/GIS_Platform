@@ -32,14 +32,10 @@ import ru.mycrg.data_service.util.xml.XmlMarshaller;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.data_service_contract.enums.TaskStatus;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.util.Optional.ofNullable;
-import static ru.mycrg.data_service.config.CrgCommonConfig.SYSTEM_DATETIME_PATTERN;
 import static ru.mycrg.data_service.service.resources.ResourceQualifier.libraryQualifier;
 
 @Service
@@ -49,7 +45,7 @@ import static ru.mycrg.data_service.service.resources.ResourceQualifier.libraryQ
         matchIfMissing = true)
 public class AcceptGpzuService extends AcceptServiceBase {
 
-    private static final String TITLE = "ГПЗУ из ЕПГУ";
+    private static final String TITLE = "ГПЗУ";
     private static final String EVENT_TYPE_LOG = "Входящее сообщение ГПЗУ успешно записано в реестр";
     private static final String DEFAULT_PERFORMER_ID = "1547";
     private static final String DEFAULT_FILENAME = "Градостроительный_план_земельного_участка";

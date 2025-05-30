@@ -29,9 +29,6 @@ import ru.mycrg.data_service.service.storage.FileStorageService;
 import ru.mycrg.data_service.util.xml.XmlMarshaller;
 import ru.mycrg.data_service_contract.enums.TaskStatus;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -45,7 +42,7 @@ import static ru.mycrg.data_service.service.resources.ResourceQualifier.libraryQ
         matchIfMissing = true)
 public class AcceptRnvService extends AcceptServiceBase {
 
-    private static final String TITLE = "РНВ из ЕПГУ";
+    private static final String TITLE = "РНВ";
     private static final String EVENT_TYPE_LOG = "Входящее сообщение РНВ успешно записано в реестр";
     private static final String PERMIT_TO_COMMISSION = "Разрешение_на_ввод_в_эксплуатацию";
 

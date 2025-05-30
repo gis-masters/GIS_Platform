@@ -363,8 +363,9 @@ public class FileService {
                                           qualifier.getTable(),
                                           resultFileName);
 
-        return fileStorageService.moveToMainStorage(Path.of(currentFilePath), Path.of(pathToFile))
-                                 .toString();
+        return fileStorageService.moveToMainStorage(Path.of(currentFilePath),
+                                                    Path.of(pathToFile),
+                                                    authenticationFacade.getOrganizationId()).toString();
     }
 
     private Optional<File> getBaseFile(List<File> baseFiles, String title) {
