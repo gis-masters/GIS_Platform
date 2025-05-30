@@ -58,7 +58,8 @@ public class JsonConverter {
         try {
             return Optional.ofNullable(mapper.readValue(stringJson, classOfT));
         } catch (Exception e) {
-            log.error("Сбой при конвертации из string(as class) в JSON: {}", e.getMessage(), e);
+            log.error("Сбой при конвертации строки: [{}] в класс: [{}] в JSON: {}",
+                      stringJson, classOfT.getSimpleName(), e.getMessage(), e);
 
             return Optional.empty();
         }

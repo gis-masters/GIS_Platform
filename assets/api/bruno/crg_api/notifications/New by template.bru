@@ -1,0 +1,31 @@
+meta {
+  name: New by template
+  type: http
+  seq: 2
+}
+
+post {
+  url: http://localhost:8668/notifications
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+      "type": "TELEGRAM",
+      "templateName": "Заявка принята",
+      "strategyName": "Стандартная",
+      "payload": {
+          "profileName": "GeoplanTask_bot",
+          "chatId": "210282076",
+          "props": [
+              {
+                  "name": "name",
+                  "type": "STRING",
+                  "value": "Алексеев Денис"
+              }
+          ]
+      },
+      "createdBy": "fiz"
+  }
+}

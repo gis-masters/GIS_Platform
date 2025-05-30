@@ -1,0 +1,25 @@
+meta {
+  name: Create new by user
+  type: http
+  seq: 2
+}
+
+post {
+  url: http://localhost:8086/events
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjcmdfbG9naW4iOiI2NWwxbzh0enFAdCIsInVzZXJfbmFtZSI6IjY1bDFvOHR6cV90XzIiLCJncm91cHMiOltdLCJ2ZXJzaW9uIjpudWxsLCJhdXRob3JpdGllcyI6WyJPUkdfQURNSU4iXSwibWluaW9ucyI6WzUsNl0sImNsaWVudF9pZCI6ImFkbWluIiwidXNlcl9pZCI6Miwic2NvcGUiOlsiY3JnIl0sIm9yZ2FuaXphdGlvbnMiOlt7ImlkIjoxLCJuYW1lIjoi0LTQu9GPINGC0LXRgdGC0LjRgNC-0LLQsNC90LjRjyDQtNC-0YHRgtGD0L_QvdC-0YHRgtC4INC30LDQtNCw0Ycg0YHQvtCz0LvQsNGB0L3QviDQuNC10YDQsNGA0YXQuNC4INC_0L7Qu9GM0LfQvtCy0LDRgtC10LvQtdC5In1dLCJleHAiOjE3NDg2Nzc5OTAsImRpcmVjdE1pbmlvbnMiOlszLDRdLCJqdGkiOiJhNTRlMGUxZS1kYWMyLTRjMzQtOTk2ZS04MDQ1ZjZhYjhkMWMifQ.CkNih9ukPT8Q3jN2hvMVtKfOcg9upo6JMESpjpIg_k8
+}
+
+body:json {
+  {
+    "actionType": "FIZ",
+    "entityName": "entityName",
+    "entityType": "entityType",
+    "entityStateAfter": "привет мир, hello world",
+    "eventDateTime": "2025-05-30T10:31:40"
+  }
+}

@@ -202,42 +202,22 @@ public class FileStorageService {
      * На данный момент подсчитываем только в главном хранилище.
      */
     public Map<String, Object> occupiedSpace() {
-        StopWatch osWatcher = new StopWatch("occupiedSpace");
-
-        osWatcher.start("buildPathToOrganizationMainStorage");
         Path orgMainStoragePath = buildPathToOrganizationMainStorage(authenticationFacade.getOrganizationId());
-        osWatcher.stop();
 
-        osWatcher.start("getTotalFiles");
         Map<String, Object> result = new HashMap<>();
         result.put("totalFiles", occupiedSpaceService.getTotalFiles(orgMainStoragePath));
-        osWatcher.stop();
-
-        osWatcher.start("mainStorageOccupiedSpace");
         result.put("allocated", readableFileSize(mainStorageOccupiedSpace()));
-        osWatcher.stop();
-        log.debug(osWatcher.prettyPrint());
 
         return result;
     }
 
     public long mainStorageOccupiedSpace() {
-        StopWatch watcher = new StopWatch("mainStorageOccupiedSpace");
-        watcher.start("buildPathToOrganizationMainStorage");
         Path orgMainStoragePath = buildPathToOrganizationMainStorage(authenticationFacade.getOrganizationId());
-        watcher.stop();
 
         // TODO: Это действие тоже много может отнять ресурсов процессора
-        watcher.start("createOrgMainStorageIfNotExist");
         createOrgMainStorageIfNotExist(orgMainStoragePath);
-        watcher.stop();
 
-        watcher.start("calculateSize");
-        long size = occupiedSpaceService.calculateSize(orgMainStoragePath);
-        watcher.stop();
-        log.debug(watcher.prettyPrint());
-
-        return size;
+        return occupiedSpaceService.calculateSize(orgMainStoragePath);
     }
 
     private void moveWithReplace(Path sourcePath, Path resultPath, Long organizationId) throws IOException {

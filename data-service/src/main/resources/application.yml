@@ -73,6 +73,7 @@ crg-options:
   auth-service-url: http://127.0.0.1:9000
   gis-service-url: http://127.0.0.1:8082
   cryptopro-service-url: http://127.0.0.1:8448
+  notification-service-url: http://127.0.0.1:8668
   data-service-url: http://127.0.0.1:8084
   ui-service-url: http://127.0.0.1:80
   kptStoragePath: /opt/kpt_order/
@@ -85,22 +86,6 @@ crg-options:
   system-admin-login: admin@mail.ru
   system-admin-password: geoserver
   initFullTextSearch: true
-  notification:
-    telegram:
-      - name: fiz
-        chat_id: 210282076
-        token: 7622977618:AAGwNy2PRT-LkwDZjZq3o0JXORF6inrDh2M
-      - name: gisPortalErrors
-        chat_id: -1001382334246
-        token: 1683355693:AAFwnEU6EAHeiNy7zEX_4CH9-VypZ5JFJq4
-      - name: crgServerInfo98
-        chat_id: -1002069940567
-        token: 7136713814:AAGhCJavknIIOWniI8LybHWQfCa2iQgO-64
-        message_thread_id: 18
-      - name: testAndrewBot
-        token: 7622977618:AAGwNy2PRT-LkwDZjZq3o0JXORF6inrDh2M
-      - name: GeoplanTask_bot
-        token: 8079974978:AAEuXdrMATIE9CCFz5ppt-IB_vlRlrbu9Ko
   integration:
     sed-url: https://httpbin.org/anything
     gisogd-rf: https://gisogd.npc.ba/api/rgmu

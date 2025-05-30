@@ -26,7 +26,7 @@ public class RegisterDocumentRequest implements IRequest<String>, Auditable {
     public CrgAuditEvent getEvent() {
         return new CrgAuditEvent(mapper.convertValue(dQualifier, JsonNode.class),
                                  "REGISTER",
-                                 "unknown",
+                                 dQualifier.getTable() == null ? "unknown" : dQualifier.getTable(),
                                  LIBRARY_RECORD.name(),
                                  dQualifier.getRecordIdAsLong());
     }

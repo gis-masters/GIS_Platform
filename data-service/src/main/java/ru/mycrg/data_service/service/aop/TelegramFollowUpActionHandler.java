@@ -3,9 +3,10 @@ package ru.mycrg.data_service.service.aop;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-import ru.mycrg.data_service.config.props.NotificationProperties;
-import ru.mycrg.data_service.config.props.TelegramNotificationProperties;
-import ru.mycrg.data_service.service.notifiers.telegram.ITelegramNotifier;
+import ru.mycrg.auth_facade.IAuthenticationFacade;
+import ru.mycrg.data_service.service.notification.ITelegramNotifier;
+import ru.mycrg.data_service.service.notification.client.NotificationPayload;
+import ru.mycrg.data_service.service.notification.client.TelegramNotificationModel;
 import ru.mycrg.data_service_contract.dto.FollowUpAction;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.data_service_contract.dto.SimplePropertyDto;
@@ -26,15 +27,20 @@ public class TelegramFollowUpActionHandler implements IFollowUpActionHandler {
 
     private final Logger log = LoggerFactory.getLogger(TelegramFollowUpActionHandler.class);
 
-    private final NotificationProperties notificationProperties;
+    public final String TEMPLATE_NAME = "templateName";
+    public final String STRATEGY_NAME = "strategyName";
+    public final String PROFILE_NAME = "profileName";
+    public final String CLIENT_ID = "client_id";
+
+    private final IAuthenticationFacade authenticationFacade;
     private final Map<ValueType, ITelegramNotifier> telegramNotifiers;
 
-    public TelegramFollowUpActionHandler(NotificationProperties notificationProperties,
-                                         List<ITelegramNotifier> telegramNotifiers) {
-        this.notificationProperties = notificationProperties;
+    public TelegramFollowUpActionHandler(List<ITelegramNotifier> telegramNotifiers,
+                                         IAuthenticationFacade authenticationFacade) {
         this.telegramNotifiers = telegramNotifiers
                 .stream()
                 .collect(toMap(ITelegramNotifier::getType, Function.identity()));
+        this.authenticationFacade = authenticationFacade;
     }
 
     @Override
@@ -44,22 +50,19 @@ public class TelegramFollowUpActionHandler implements IFollowUpActionHandler {
         log.debug("Выполняем отправку данных в телегу, с настройками: [{}] для: [{}]",
                   prettyPrint(followUpAction), prettyPrint(payload));
 
-        TelegramNotificationProperties notificationProfile =
-                getTelegramNotificationProfile(followUpAction.getSettings());
         Feature feature = (Feature) payload;
-
-        enrichChatIdIfNeed(notificationProfile, feature);
+        TelegramNotificationModel notificationModel = buildNotificationModel(followUpAction.getSettings(), feature);
 
         List<String> sendableAttributes = followUpAction.getPayload();
         sendableAttributes.forEach(attribute -> {
-            sendAttributeData(schema, attribute, feature, notificationProfile);
+            sendAttributeData(schema, attribute, feature, notificationModel);
         });
     }
 
     private void sendAttributeData(SchemaDto schema,
                                    String attribute,
                                    Feature feature,
-                                   TelegramNotificationProperties notificationProfile) {
+                                   TelegramNotificationModel notificationPayload) {
         if (!feature.getProperties().containsKey(attribute)) {
             log.warn("Отправка данных в телеграмм. В фиче не найден атрибут {}", attribute);
 
@@ -74,66 +77,49 @@ public class TelegramFollowUpActionHandler implements IFollowUpActionHandler {
             return;
         }
 
-        ITelegramNotifier telegramNotifier = telegramNotifiers.get(ValueType.valueOf(oProperty.get().getValueType()));
+        ValueType type = ValueType.valueOf(oProperty.get().getValueType());
+        ITelegramNotifier telegramNotifier = telegramNotifiers.get(type);
         if (telegramNotifier == null) {
-            log.warn("Не найдена реализация отправителя для: {}", oProperty.get().getValueType());
+            log.warn("Не найдена реализация отправителя для: {}", type);
 
             return;
         }
 
-        telegramNotifier.notify(notificationProfile, feature, attribute);
+        telegramNotifier.notify(notificationPayload, feature, attribute);
     }
 
-    /**
-     * Условимся, что chat_id из настроек сервера важнее чем client_id в фиче.
-     *
-     * @throws IllegalArgumentException Если не удается найти chat_id в настройках и нет client_id у фичи.
-     */
-    private void enrichChatIdIfNeed(TelegramNotificationProperties notificationProfile,
-                                    Feature feature) {
-        if (notificationProfile.getChatId() != null) {
-            return;
+    private TelegramNotificationModel buildNotificationModel(Map<String, Object> settings, Feature feature) {
+        String profileName;
+        Object templateName;
+        Object strategyName;
+        try {
+            profileName = settings.get(PROFILE_NAME).toString();
+            templateName = settings.getOrDefault(TEMPLATE_NAME, null);
+            strategyName = settings.getOrDefault(STRATEGY_NAME, null);
+        } catch (Exception e) {
+            throw new IllegalArgumentException(
+                    "Действие TelegramNotificator настроено неверно.\n" +
+                            "В настройках отсутствует обязательный ключ [profileName]");
         }
 
+        String chatId;
         try {
-            notificationProfile.setChatId(feature.getProperties().get("client_id").toString());
+            chatId = feature.getProperties().get(CLIENT_ID).toString();
         } catch (Exception e) {
             throw new IllegalArgumentException(
                     "Не возможно выполнить отправку! 'chat_id' не указан в профиле сервера." +
                             "Не удается найти 'client_id' в фиче");
         }
-    }
 
-    /**
-     * В схемах контент менеджеры НЕ указывают пароли и прочее напрямую.
-     * <p>
-     * Указывается название одного из профилей прописанных в конфигах, при запуске сервиса.
-     *
-     * @throws IllegalArgumentException Если followUpSettings не содержат название профиля или если профиль не найден
-     *                                  среди конфига сервера.
-     */
-    private TelegramNotificationProperties getTelegramNotificationProfile(Object followUpSettings) {
-        String profileName;
-        try {
-            Map<String, Object> settings = (Map<String, Object>) followUpSettings;
-            profileName = settings.get("profileName").toString();
-        } catch (Exception e) {
-            throw new IllegalArgumentException(
-                    "Действие TelegramNotificator настроено неверно.\nВ настройках отсутствует обязательный ключ " +
-                            "[profileName], который должен ссылаться на [crg-options.notification.telegram]");
-        }
+        TelegramNotificationModel model =
+                new TelegramNotificationModel(
+                        new NotificationPayload(profileName, chatId),
+                        authenticationFacade.getLogin());
 
-        Optional<TelegramNotificationProperties> oFirst = notificationProperties
-                .getTelegram().stream()
-                .filter(item -> profileName.equals(item.getName()))
-                .findFirst();
+        model.setTemplateName(templateName == null ? null : templateName.toString());
+        model.setStrategyName(strategyName == null ? null : strategyName.toString());
 
-        if (oFirst.isEmpty()) {
-            throw new IllegalArgumentException("Профиль [" + profileName + "] не найден среди заданных на сервере." +
-                                                       "\nТекущие профили сервера: " + notificationProperties);
-        }
-
-        return new TelegramNotificationProperties(oFirst.get());
+        return model;
     }
 
     @Override

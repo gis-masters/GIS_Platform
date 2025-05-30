@@ -11,7 +11,6 @@ import org.springframework.data.rest.webmvc.config.RepositoryRestConfigurerAdapt
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-import ru.mycrg.data_service.config.props.NotificationProperties;
 import ru.mycrg.data_service.config.props.StorageProperties;
 import ru.mycrg.data_service.dao.migrations.CrgMigrationHandler;
 import ru.mycrg.data_service.dao.migrations.GeoserverMigrationHandler;
@@ -31,18 +30,15 @@ public class DataServiceApplication extends RepositoryRestConfigurerAdapter {
     private final SystemTagsPublisher systemTagsPublisher;
     private final StorageProperties storageProperties;
     private final CrgMigrationHandler migrationHandler;
-    private final NotificationProperties notificationProperties;
     private final GeoserverMigrationHandler geoserverMigrationHandler;
 
     public DataServiceApplication(SystemTagsPublisher systemTagsPublisher,
                                   StorageProperties storageProperties,
                                   CrgMigrationHandler migrationHandler,
-                                  NotificationProperties notificationProperties,
                                   GeoserverMigrationHandler geoserverMigrationHandler) {
         this.systemTagsPublisher = systemTagsPublisher;
         this.storageProperties = storageProperties;
         this.migrationHandler = migrationHandler;
-        this.notificationProperties = notificationProperties;
         this.geoserverMigrationHandler = geoserverMigrationHandler;
     }
 
@@ -63,7 +59,6 @@ public class DataServiceApplication extends RepositoryRestConfigurerAdapter {
     public void appReadyEvent() {
         log.info("App ready with:");
         log.info("max-file-size: {}", maxFileSize);
-        log.info("Настройки нотификаций {}", notificationProperties);
         log.info("Настройки хранилища {}", storageProperties);
 
         migrationHandler.handle();

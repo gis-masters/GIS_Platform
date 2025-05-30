@@ -7,6 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 import ru.mycrg.auth_facade.IAuthenticationFacade;
 import ru.mycrg.data_service.dto.FileProjection;
 import ru.mycrg.data_service.entity.File;
+import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.repository.FileRepository;
 import ru.mycrg.data_service.service.binary_analyzers.SimpleIntentHandler;
 import ru.mycrg.data_service.service.cqrs.files.requests.CreateFileRequest;
@@ -53,8 +54,12 @@ public class CreateFileHandler implements IRequestHandler<CreateFileRequest, Lis
 
                 fileProjections.add(new FileProjection(savedEntity));
             } else {
-                log.debug("Файл пуст");
+                log.debug("Файл: '{}' пуст", file == null ? "unknown" : file.getName());
             }
+        }
+
+        if (fileProjections.isEmpty()) {
+            throw new BadRequestException("Переданные файлы не корректны");
         }
 
         return fileProjections;

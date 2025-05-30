@@ -29,7 +29,7 @@ public class RecoverLibraryRecordRequest implements IRequest<Voidy>, Auditable {
     public CrgAuditEvent getEvent() {
         return new CrgAuditEvent(mapper.convertValue(rQualifier.getRecordId(), JsonNode.class),
                                  "RECOVER",
-                                 "unknown",
+                                 rQualifier.getTable() == null ? "unknown" : rQualifier.getTable(),
                                  LIBRARY_RECORD.name(),
                                  rQualifier.getRecordIdAsLong());
     }

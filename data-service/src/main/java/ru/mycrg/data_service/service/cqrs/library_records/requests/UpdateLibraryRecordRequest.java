@@ -55,7 +55,7 @@ public class UpdateLibraryRecordRequest implements IRequest<ResponseWithReport>,
     public CrgAuditEvent getEvent() {
         return new CrgAuditEvent(mapper.convertValue(newRecord, JsonNode.class),
                                  "UPDATE",
-                                 newRecord.getTitle() == null ? "unknown" : newRecord.getTitle(),
+                                 rQualifier.getTable() == null ? "unknown" : rQualifier.getTable(),
                                  LIBRARY_RECORD.name(),
                                  rQualifier.getRecordIdAsLong());
     }

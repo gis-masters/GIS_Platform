@@ -76,6 +76,7 @@ services:
       REDIS_PASSWORD: ${REDIS_PASS}
     command: redis-server --requirepass ${REDIS_PASS}
     mem_limit: ${REDIS_MEM_LIMIT:-500}m
+    privileged: true
 
 
   auth-service:
@@ -193,6 +194,7 @@ services:
       CRG_OPTIONS_AUTH_SERVICE_URL: http://auth-service:9000
       CRG_OPTIONS_GIS_SERVICE_URL: http://gis-service:8082
       CRG_OPTIONS_CRYPTOPRO_SERVICE_URL: http://cryptopro-service:8448
+      CRG_OPTIONS_NOTIFICATION_SERVICE_URL: http://notification-service:8668
       CRG_OPTIONS_DATA_SERVICE_URL: http://data-service:8084
       CRG_OPTIONS_UI_SERVICE_URL: http://portal-ui:80
       CRG_OPTIONS_KPT_STORAGE_PATH: /opt/kpt_order/
@@ -447,6 +449,19 @@ services:
     container_name: crg-notification-service
     image: ${DOCKER_CRG_HOST}/crg-notification-service:latest
     restart: always
+    environment:
+      APM_URL: ${APM_URL}
+
+      XMX_SIZE: ${NOTIFICATION_XMX_SIZE:-1100m}
+
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgis:5432/crg_notification_db
+      SPRING_DATASOURCE_USERNAME: ${CRG_USER}
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASS}
+
+      SPRING_FLYWAY_URL: jdbc:postgresql://postgis:5432/crg_notification_db
+      SPRING_FLYWAY_USER: ${CRG_USER}
+      SPRING_FLYWAY_PASSWORD: ${DB_PASS}
+
     extra_hosts:
       - "logstash:${LOGSTASH_HOST}"
     volumes:
@@ -454,4 +469,5 @@ services:
       - /opt/file_storage:/opt/file_storage
     ports:
       - "8668:8668"
-    mem_limit: ${CRYPTOPRO_MEM_LIMIT:-400}m
+    mem_limit: ${NOTIFICATION_MEM_LIMIT:-1000}m
+    privileged: true

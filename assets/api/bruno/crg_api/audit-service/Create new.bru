@@ -1,0 +1,21 @@
+meta {
+  name: Create new
+  type: http
+  seq: 3
+}
+
+post {
+  url: http://localhost:8086/events
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "actionType": "FIZ",
+    "entityName": "entityName",
+    "entityType": "entityType",
+    "entityStateAfter": "привет мир, hello world",
+    "eventDateTime": "2025-05-30T10:31:40"
+  }
+}
