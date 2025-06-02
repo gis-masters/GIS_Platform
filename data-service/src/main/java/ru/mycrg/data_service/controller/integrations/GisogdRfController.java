@@ -51,6 +51,17 @@ public class GisogdRfController {
         return ResponseEntity.status(CREATED).body(taskId);
     }
 
+    @PostMapping("/send-library")
+    @PreAuthorize(ORG_ADMIN_AUTHORITY)
+    public ResponseEntity<Object> publishOneLibrary(
+            @RequestParam String libraryName,
+            @RequestParam(defaultValue = "100") Long limit,
+            @RequestParam(defaultValue = DEFAULT_SRID_DEGREE, required = false) Integer srid) {
+        Long taskId = gisogdRfService.libraryPublication(libraryName, limit, srid);
+
+        return ResponseEntity.status(CREATED).body(taskId);
+    }
+
     @PostMapping("/publish")
     @PreAuthorize(ORG_ADMIN_AUTHORITY)
     public ResponseEntity<Object> publishAll(

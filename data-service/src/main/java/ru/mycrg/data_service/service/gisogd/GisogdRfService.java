@@ -1,5 +1,6 @@
 package ru.mycrg.data_service.service.gisogd;
 
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -113,18 +114,49 @@ public class GisogdRfService {
 
         log.debug("Установлен следующий порядок отправки: {}", sortedGisogdEntities);
 
-        Map<String, Long> resultLog = new HashMap<>();
-        sortedGisogdEntities.forEach(gisogdData -> {
-            Map<String, Long> currentLog = publish(taskId, gisogdData.getResourceQualifier(), srid, limit);
-
-            currentLog.forEach((k, v) -> {
-                Long resultTime = resultLog.getOrDefault(k, 0L);
-
-                resultLog.put(k, resultTime + v);
-            });
-        });
+        Map<String, Long> resultLog = doPublishForAllEntities(limit, srid, sortedGisogdEntities, taskId);
 
         log.debug("Все события были разосланы. Задача: [{}] \n Result time Log: {}", taskId, resultLog);
+        recordsCache.printStatistics();
+
+        return taskId;
+    }
+
+    /**
+     * Публикация всех объектов из конкретной библиотеки.
+     *
+     * @param libraryName Имя библиотеки
+     * @param limit       Максимальное количество объектов для публикации
+     * @param srid        Система координат
+     *
+     * @return Идентификатор начатой системной задачи
+     */
+    public Long libraryPublication(String libraryName, Long limit, int srid) {
+        IRecord record = createSystemTask();
+        Long taskId = record.getId();
+
+        recordsCache.clear();
+        log.debug("Старт публикации библиотеки [{}] в ГИСОГД РФ с лимитом: [{}] Создана задача: [{}]",
+                  libraryName,
+                  limit,
+                  taskId);
+
+        cacheSchemasAndTables();
+
+        List<GisogdData> sortedGisogdEntities = gisogdRfUtil
+                .getSchemasPreparedForGisogdRf()
+                .stream()
+                .flatMap(schemaId -> gisogdRfUtil.collectGisogdRfEntities(schemaId).stream())
+                .filter(gisogdData -> gisogdData.getPublishOrder() >= 0)
+                .filter(gisogdData -> libraryName.equals(gisogdData.getResourceQualifier().getTable()))
+                .collect(Collectors.toList());
+
+        log.debug("Найдено [{}] объектов для публикации из библиотеки [{}]", sortedGisogdEntities.size(), libraryName);
+
+        Map<String, Long> resultLog = doPublishForAllEntities(limit, srid, sortedGisogdEntities, taskId);
+
+        log.debug("Все объекты из библиотеки [{}] были разосланы. Задача: [{}] \n Result time Log: {}", libraryName,
+                  taskId, resultLog);
         recordsCache.printStatistics();
 
         return taskId;
@@ -162,5 +194,23 @@ public class GisogdRfService {
                                    record.getAsString("table"),
                                    record);
         });
+    }
+
+    private @NotNull Map<String, Long> doPublishForAllEntities(Long limit,
+                                                              int srid,
+                                                              List<GisogdData> sortedGisogdEntities,
+                                                              Long taskId) {
+        Map<String, Long> resultLog = new HashMap<>();
+        sortedGisogdEntities.forEach(gisogdData -> {
+            Map<String, Long> currentLog = publish(taskId, gisogdData.getResourceQualifier(), srid, limit);
+
+            currentLog.forEach((k, v) -> {
+                Long resultTime = resultLog.getOrDefault(k, 0L);
+
+                resultLog.put(k, resultTime + v);
+            });
+        });
+
+        return resultLog;
     }
 }
