@@ -51,7 +51,7 @@ public class RetryableRequestHandler implements IHttpRequestHandler {
                     resultResponse = response;
 
                     log.debug("The request: {} will be retried. Attempt: {} of: {}",
-                            request, currentAttempt, config.getMaxAttempts());
+                              request, currentAttempt, config.getMaxAttempts());
 
                     waitConfiguredTime();
                 } else {
@@ -59,7 +59,7 @@ public class RetryableRequestHandler implements IHttpRequestHandler {
                 }
             } catch (IOException e) {
                 log.debug("Host unreachable request: {} will be retried. Attempt: {} of: {}",
-                        request, currentAttempt, config.getMaxAttempts());
+                          request, currentAttempt, config.getMaxAttempts());
 
                 if (currentAttempt > config.getMaxAttempts()) {
                     throw e;

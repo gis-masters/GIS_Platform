@@ -49,7 +49,9 @@ public class DataStoreClient {
                     .post(RequestBody.create(DEFAULT_MEDIA_TYPE, ""))
                     .build();
 
-            return httpClient.handleRequest(request);
+            ResponseModel<String> responseModel = httpClient.handleRequestAsString(request);
+
+            return new ResponseModel<>(responseModel, responseModel.getBody());
         } catch (HttpClientException | MalformedURLException e) {
             throw new DataServiceException("Не удалось создать хранилище на gis-service", e.getCause());
         }

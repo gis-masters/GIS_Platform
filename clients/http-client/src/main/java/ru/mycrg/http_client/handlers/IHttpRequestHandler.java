@@ -11,5 +11,4 @@ public interface IHttpRequestHandler {
 
     @NotNull
     Response handle(Request request) throws HttpClientException, IOException;
-
 }

@@ -19,22 +19,53 @@ public class CrsHandler {
         throw new IllegalStateException("Utility class");
     }
 
+    /**
+     * Извлекает номер CRS из строки. Поддерживаются форматы: - "EPSG:XXXX" - "urn:ogc:def:crs:EPSG:XXXX" где XXXX -
+     * только цифры
+     *
+     * @param crs строка с кодом CRS
+     *
+     * @return числовое значение CRS
+     *
+     * @throws DataServiceException если строка пустая или null
+     * @throws EpsgParserException  если формат строки некорректен или после EPSG: есть нецифровые символы
+     */
     public static Integer extractCrsNumber(String crs) {
+        if (crs == null || crs.isBlank()) {
+            throw new DataServiceException("Строка CRS не может быть null или пустой");
+        }
+
+        // Нормализация строки (верхний регистр + обрезка пробелов)
+        String normalizedCrs = crs.toUpperCase().trim();
+
+        // Определение позиции "EPSG:" в строке
+        int epsgIndex = normalizedCrs.indexOf("EPSG:");
+        if (epsgIndex == -1) {
+            String errorMsg = String.format("Неверный формат CRS: '%s'. Не найден префикс EPSG", crs);
+            log.error(errorMsg);
+            throw new EpsgParserException(errorMsg);
+        }
+
+        // Извлечение части после "EPSG:"
+        String numberPart = normalizedCrs.substring(epsgIndex + 5); // 5 - длина "EPSG:"
+
+        // Проверка, что после EPSG: идут только цифры до конца строки или до следующего разделителя
+        if (!numberPart.matches("^\\d+($|[^\\w])")) {
+            String errorMsg = String.format("Неверный формат номера CRS: '%s'. После 'EPSG:' должны быть только цифры",
+                                            crs);
+            log.error(errorMsg);
+            throw new EpsgParserException(errorMsg);
+        }
+
+        // Извлечение только цифр
+        String digitsOnly = numberPart.replaceAll("[^0-9]", "");
+
         try {
-            String[] splitCrs = crs.split("EPSG:");
-            if (splitCrs.length >= 2) {
-                return Integer.valueOf(splitCrs[1].replaceAll("[^0-9]", ""));
-            } else {
-                String errorMsg = "Ошибка при получении EPSG кода. Некорректно указан формат системы координат";
-                log.error(errorMsg);
-
-                throw new EpsgParserException(errorMsg);
-            }
-        } catch (Exception ex) {
-            String errorMsg = "Ошибка при получении EPSG кода from: " + crs;
-            log.error("{}. Reason: {}", errorMsg, ex.getMessage());
-
-            throw new DataServiceException(errorMsg);
+            return Integer.valueOf(digitsOnly);
+        } catch (NumberFormatException e) {
+            String errorMsg = String.format("Невозможно преобразовать номер CRS: '%s'. Число слишком большое", crs);
+            log.error("Ошибка преобразования числа: {}", errorMsg, e);
+            throw new DataServiceException(errorMsg, e);
         }
     }
 
@@ -56,11 +87,13 @@ public class CrsHandler {
             } else {
                 String msg = "Координатная система не может быть определена";
                 log.warn(msg);
+
                 throw new TransformationException(msg);
             }
         } catch (FactoryException e) {
             String msg = "Что-то пошло не так во время трансформации геометрии " + e.getMessage();
             log.error(msg);
+
             throw new TransformationException(msg);
         }
     }
@@ -75,8 +108,9 @@ public class CrsHandler {
                 return CRS.decode("EPSG:" + srid);
             }
         } catch (FactoryException e) {
-            String msg = "Что-то пошло не так во время трансформации геометрии " + e.getMessage();
+            String msg = "Не удалось определить код EPSG => " + e.getMessage();
             log.error(msg);
+
             throw new TransformationException(msg);
         }
     }

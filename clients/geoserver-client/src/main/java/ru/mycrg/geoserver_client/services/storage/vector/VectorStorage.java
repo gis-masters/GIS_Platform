@@ -40,7 +40,9 @@ public class VectorStorage extends GeoServerBaseService {
                 .post(RequestBody.create(JSON_MEDIA_TYPE, json))
                 .build();
 
-        return httpClient.handleRequest(request);
+        ResponseModel<String> responseModel = httpClient.handleRequestAsString(request);
+
+        return new ResponseModel<>(responseModel, responseModel.getBody());
     }
 
     /**

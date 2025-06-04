@@ -23,7 +23,7 @@ public class RetryConfig {
         defaultRetryableCodes.add(503);
         defaultRetryableCodes.add(504);
 
-        this.retryCodes = Collections.unmodifiableSet(retryCodes != null ? retryCodes: defaultRetryableCodes);
+        this.retryCodes = Collections.unmodifiableSet(retryCodes != null ? retryCodes : defaultRetryableCodes);
     }
 
     public static RHttpClientConfigBuilder builder() {
@@ -50,6 +50,7 @@ public class RetryConfig {
     }
 
     public static class RHttpClientConfigBuilder {
+
         private int maxAttempts;
         private long waitDuration;
         private Set<Integer> retryCodes = new HashSet<>();

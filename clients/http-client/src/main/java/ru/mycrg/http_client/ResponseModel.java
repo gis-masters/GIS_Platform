@@ -26,6 +26,14 @@ public class ResponseModel<T> {
         this.body = (T) body;
     }
 
+    public ResponseModel(ResponseModel responseModel, String body) {
+        this.code = responseModel.getCode();
+        this.msg = responseModel.getMsg();
+        this.headers = responseModel.getHeaders();
+        this.successful = responseModel.isSuccessful();
+        this.body = (T) body;
+    }
+
     public int getCode() {
         return code;
     }

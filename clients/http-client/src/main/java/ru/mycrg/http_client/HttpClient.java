@@ -38,7 +38,7 @@ public class HttpClient {
 
                 return model;
             } else {
-                log.error("Request failed: {} / RequestBody: '{}'", response, body);
+                log.error("RequestAsString failed: {} / RequestBody: '{}'", response, body);
 
                 return new ResponseModel<>(response, body);
             }
