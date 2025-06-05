@@ -26,8 +26,6 @@ public class CacheInfoStepsDefinitions extends BaseStepsDefinitions {
         getCacheInfo();
 
         this.currentHitCount = response.jsonPath().getLong("storageOccupiedSpace.hitCount");
-
-        response.prettyPrint();
     }
 
     @When("Администратор системы видит измененные данные о использовании кеша")

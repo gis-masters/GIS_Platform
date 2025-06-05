@@ -3,14 +3,14 @@ package ru.mycrg.data_service.queue.handlers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import ru.mycrg.common_contracts.exceptions.ClientException;
 import ru.mycrg.data_service.dao.config.DatasourceFactory;
 import ru.mycrg.data_service.dao.core.CoreTemplateDao;
+import ru.mycrg.data_service.dao.ddl.tables.DdlTablesSpecial;
 import ru.mycrg.data_service.dao.mappers.SchemasAndTablesMapper;
-import ru.mycrg.data_service.dto.ColumnInfoDto;
+import ru.mycrg.data_service.dto.ColumnShortInfo;
 import ru.mycrg.data_service.entity.SchemasAndTables;
 import ru.mycrg.data_service.mappers.TypeMapper;
 import ru.mycrg.data_service.service.processes.ProcessService;
@@ -26,7 +26,10 @@ import ru.mycrg.data_service_contract.queue.response.ShapeImportedSucceededEvent
 import ru.mycrg.messagebus_contract.IEventHandler;
 import ru.mycrg.messagebus_contract.events.IMessageBusEvent;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static java.time.LocalDateTime.now;
@@ -44,13 +47,16 @@ public class ImportShapeSucceededEventHandler implements IEventHandler {
     private final ProcessService processService;
     private final DatasourceFactory datasourceFactory;
     private final CoreTemplateDao coreTemplateDao;
+    private final DdlTablesSpecial ddlTablesSpecial;
 
     public ImportShapeSucceededEventHandler(ProcessService processService,
                                             DatasourceFactory datasourceFactory,
-                                            CoreTemplateDao coreTemplateDao) {
+                                            CoreTemplateDao coreTemplateDao,
+                                            DdlTablesSpecial ddlTablesSpecial) {
         this.processService = processService;
         this.datasourceFactory = datasourceFactory;
         this.coreTemplateDao = coreTemplateDao;
+        this.ddlTablesSpecial = ddlTablesSpecial;
     }
 
     @Override
@@ -81,16 +87,16 @@ public class ImportShapeSucceededEventHandler implements IEventHandler {
                                                CREATED_BY.getName(),
                                                LAST_MODIFIED.getName());
 
-        List<ColumnInfoDto> tableColumns = getColumnsInfo(jdbcTemplate, sourceTable.getTable());
+        List<ColumnShortInfo> tableColumns = getColumnsInfo(jdbcTemplate, sourceTable.getTable());
         tableColumns = tableColumns.stream()
-                                   .filter(column -> !columnsForExclude.contains(column.getName()))
+                                   .filter(columnInfo -> !columnsForExclude.contains(columnInfo.getColumnName()))
                                    .collect(Collectors.toList());
 
         List<SimplePropertyDto> sourcePropsWithoutSystemFields = tableColumns
                 .stream()
                 .map(columnInfo -> {
                     SimplePropertyDto sourseSimplePropertyDto = new SimplePropertyDto();
-                    sourseSimplePropertyDto.setName(columnInfo.getName());
+                    sourseSimplePropertyDto.setName(columnInfo.getColumnName());
                     sourseSimplePropertyDto.setValueType(TypeMapper.map(columnInfo).orElse(ValueType.STRING));
 
                     return sourseSimplePropertyDto;
@@ -169,16 +175,15 @@ public class ImportShapeSucceededEventHandler implements IEventHandler {
                                  JsonConverter.toJsonNode(importShapeReport));
         }
 
-        String deleteTableQuery = buildDeleteTableQuery(sourceTable);
-        log.debug("SQL Delete temporary table Query: {}", deleteTableQuery);
-        coreTemplateDao.execute(jdbcTemplate, deleteTableQuery);
+        coreTemplateDao.execute(jdbcTemplate, buildDeleteTableQuery(sourceTable));
+
         log.debug("Временная таблица {} удалена.", sourceTable.getQualifier());
     }
 
     private SchemaDto getSchema(JdbcTemplate jdbcTemplate, ResourceQualifier targetTable) {
         try {
             SchemasAndTables data = jdbcTemplate.queryForObject("SELECT * FROM data.schemas_and_tables where " +
-                                                                        "identifier like '" + targetTable.getTable() +"'",
+                                                                        "identifier like '" + targetTable.getTable() + "'",
                                                                 new SchemasAndTablesMapper());
 
             return jsonToDto(data.getSchema());
@@ -189,13 +194,9 @@ public class ImportShapeSucceededEventHandler implements IEventHandler {
         }
     }
 
-    private List<ColumnInfoDto> getColumnsInfo(JdbcTemplate jdbcTemplate, String tableName) {
+    private List<ColumnShortInfo> getColumnsInfo(JdbcTemplate jdbcTemplate, String tableName) {
         try {
-            String query = "SELECT column_name AS name, udt_name AS type, numeric_scale AS scale " +
-                    "FROM INFORMATION_SCHEMA.COLUMNS " +
-                    "WHERE table_name = '" + tableName + "'";
-
-            return coreTemplateDao.query(jdbcTemplate, query, new BeanPropertyRowMapper<>(ColumnInfoDto.class));
+            return ddlTablesSpecial.getColumnShortInfo(tableName, jdbcTemplate);
         } catch (Exception e) {
             log.error("Сбор колонок после импорта shp файла провалился: {}", e.getMessage(), e);
 

@@ -46,7 +46,7 @@ import static ru.mycrg.data_service_contract.enums.ProcessType.IMPORT;
 @Component
 public class ShapePlacementExecutor implements IExecutor<ImportReport>, IFilePlacer {
 
-    private static final Logger log = LoggerFactory.getLogger(MidMifPlacementExecutor.class);
+    private static final Logger log = LoggerFactory.getLogger(ShapePlacementExecutor.class);
 
     private final FileRepository fileRepository;
     private final FileStorageService fileStorageService;

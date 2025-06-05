@@ -1,22 +1,26 @@
 package ru.mycrg.data_service.mappers;
 
 import org.jetbrains.annotations.NotNull;
-import ru.mycrg.data_service.dto.ColumnInfoDto;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import ru.mycrg.data_service.dto.ColumnShortInfo;
 import ru.mycrg.data_service_contract.enums.ValueType;
 
 import java.util.Optional;
 
 public class TypeMapper {
 
-    public static Optional<ValueType> map(@NotNull ColumnInfoDto columnInfo) {
-        String type = columnInfo.getType();
-        Integer scale = columnInfo.getScale();
+    private static final Logger log = LoggerFactory.getLogger(TypeMapper.class);
 
-        if (type == null || type.trim().isEmpty()) {
+    public static Optional<ValueType> map(@NotNull ColumnShortInfo columnShortInfo) {
+        String udtName = columnShortInfo.getUdtName();
+        Integer scale = columnShortInfo.getNumericScale();
+
+        if (udtName == null || udtName.trim().isEmpty()) {
             return Optional.empty();
         }
 
-        switch (type.trim().toLowerCase()) {
+        switch (udtName.trim().toLowerCase()) {
             case "varchar":
                 return Optional.of(ValueType.STRING);
             case "data":
@@ -38,6 +42,41 @@ public class TypeMapper {
                 return Optional.of(ValueType.INT);
             default:
                 return Optional.empty();
+        }
+    }
+
+    public static boolean compare(String dbType, ValueType schemaType) {
+        switch (schemaType) {
+            case GEOMETRY:
+                return dbType.equalsIgnoreCase(schemaType.name());
+            case LONG:
+                return dbType.toLowerCase().contains("int8");
+            case INT:
+            case USER_ID:
+                return dbType.toLowerCase().contains("int4");
+            case DOUBLE:
+                return dbType.toLowerCase().contains("numeric");
+            case CHOICE:
+                return dbType.equalsIgnoreCase("varchar") || dbType.contains("int");
+            case STRING:
+                return dbType.equalsIgnoreCase("varchar");
+            case DATETIME:
+                return dbType.equalsIgnoreCase("timestamp");
+            case URL:
+            case TEXT:
+            case USER:
+            case LOOKUP:
+                return dbType.equalsIgnoreCase("text");
+            case BOOLEAN:
+                return dbType.equalsIgnoreCase("bool");
+            case FILE:
+            case VERSIONS:
+            case DOCUMENT:
+                return dbType.equalsIgnoreCase("jsonb");
+            default:
+                log.warn("TypeComparator не знает как сравнить '{}' и '{}'", schemaType.name(), dbType);
+
+                return false;
         }
     }
 }

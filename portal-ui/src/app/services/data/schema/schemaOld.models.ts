@@ -8,6 +8,7 @@ import { Relation } from './schema.models';
 // contracts/data-service-contract/src/main/java/ru/mycrg/data_service_contract/enums/ValueType.java
 export enum ValueType {
   INT = 'INT',
+  LONG = 'LONG',
   STRING = 'STRING',
   TEXT = 'TEXT',
   DOUBLE = 'DOUBLE',
@@ -110,6 +111,11 @@ export interface OldPropertySchemaInt extends OldBasePropertySchema, OldProperty
   defaultValue?: number;
 }
 
+export interface OldPropertySchemaLong extends OldBasePropertySchema, OldPropertySchemaBaseNumber {
+  valueType: ValueType.LONG;
+  defaultValue?: number;
+}
+
 export interface OldPropertySchemaDouble extends OldBasePropertySchema, OldPropertySchemaBaseNumber {
   valueType: ValueType.DOUBLE;
   fractionDigits?: number;
@@ -189,6 +195,7 @@ export interface OldPropertySchemaOther extends OldBasePropertySchema {
 export type OldPropertySchema =
   | OldPropertySchemaStringText
   | OldPropertySchemaInt
+  | OldPropertySchemaLong
   | OldPropertySchemaDouble
   | OldPropertySchemaDatetime
   | OldPropertySchemaBoolean

@@ -257,6 +257,10 @@ export function convertOldToNewProperties(oldFields: OldPropertySchema[]): Prope
       field.propertyType = PropertyType.INT;
     }
 
+    if (oldField.valueType === ValueType.LONG) {
+      field.propertyType = PropertyType.LONG;
+    }
+
     if (oldField.valueType === ValueType.CHECKBOX) {
       field.propertyType = PropertyType.BOOL;
     }
@@ -365,6 +369,10 @@ export function convertNewToOldProperties(newFields: PropertySchema[]): OldPrope
 
     if (newField.propertyType === PropertyType.INT) {
       field.valueType = ValueType.INT;
+    }
+
+    if (newField.propertyType === PropertyType.LONG) {
+      field.valueType = ValueType.LONG;
     }
 
     if (newField.propertyType === PropertyType.BOOL) {

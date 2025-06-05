@@ -29,6 +29,12 @@ import static ru.mycrg.common_utils.CrgGlobalProperties.getDefaultDatabaseName;
 import static ru.mycrg.data_service.service.storage.FileStorageUtil.generateFileName;
 import static ru.mycrg.data_service.util.JsonConverter.mapper;
 
+/**
+ * В общем, это уже не про импорт геометрии. Стоит когда-нить переназвать всё что с этим связано.
+ * <p>
+ * Эта штука импортит все поля. И работаем мы тут с zip архивом. Импорт происходит на geo-wrapper с помощью gdal.
+ * Создается временная таблица и мы делаем перенос в целевую.
+ */
 @Component
 public class ShapeGeometryImporterExecutor implements IExecutor<ImportShapeReport> {
 
@@ -107,9 +113,8 @@ public class ShapeGeometryImporterExecutor implements IExecutor<ImportShapeRepor
         }
 
         messageBus.produce(
-                new ShapeLoadedEvent(processModel.getId(), dbName,  login,
-                                     payload.getFilePath(),
-                                     table.getCrs(), tableName, datasetId, schema.getGeometryType().getType()));
+                new ShapeLoadedEvent(processModel.getId(), dbName, login, payload.getFilePath(), table.getCrs(),
+                                     tableName, datasetId, schema.getGeometryType().getType()));
 
         importReport.setDatasetIdentifier(datasetId);
         importReport.setTableIdentifier(tableName);

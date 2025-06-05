@@ -8,12 +8,14 @@ import io.restassured.http.ContentType;
 import io.restassured.specification.RequestSpecification;
 import ru.mycrg.acceptance.BaseStepsDefinitions;
 import ru.mycrg.acceptance.auth_service.AuthorizationBase;
+import ru.mycrg.acceptance.data_service.dto.ErrorInfo;
 import ru.mycrg.acceptance.data_service.dto.PermissionCreateDto;
 import ru.mycrg.acceptance.data_service.dto.TableCreateDto;
 import ru.mycrg.acceptance.data_service.dto.TableUpdateDto;
 import ru.mycrg.acceptance.data_service.dto.schemas.SchemaDto;
 import ru.mycrg.acceptance.data_service.schemas.CurrentScenarioSchema;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -33,7 +35,7 @@ public class TablesStepsDefinitions extends BaseStepsDefinitions {
     public static TableCreateDto currentTableDto;
     public static TableCreateDto anotherTableDto;
 
-    private String TEST_TABLE_SCHEMA = "schema_for_test_table";
+    private final String TEST_TABLE_SCHEMA = "schema_for_test_table";
 
     private final AuthorizationBase authorizationBase = new AuthorizationBase();
 
@@ -256,6 +258,18 @@ public class TablesStepsDefinitions extends BaseStepsDefinitions {
         datasetsPool.remove(currentDatasetIdentifier);
     }
 
+    @When("я пытаюсь применить к текущей таблице схему: {string}")
+    public void tryUpdateTableSchema(String schemaTitle) {
+        SchemaDto schema = CurrentScenarioSchema.getSchemaByTitle(schemaTitle);
+
+        response = getBaseRequestWithCurrentCookie()
+                .given().
+                        contentType(ContentType.JSON).
+                        body(gson.toJson(schema))
+                .when().
+                        put(String.format("/%s/schema", tableName));
+    }
+
     @Given("В текущем наборе данных существует таблица, созданная по тестовой схеме")
     public void createAnyTableInCurrentDatasetAndByTestSchema() {
         currentTableName = generateString("STRING_5");
@@ -376,5 +390,27 @@ public class TablesStepsDefinitions extends BaseStepsDefinitions {
                         contentType(ContentType.JSON)
                 .when().
                         post("/" + tableName + "/roleAssignment");
+    }
+
+    @And("ошибки соответствуют ожидаемым")
+    public void checkServerErrors(List<String> errorDescriptions) {
+        List<ErrorInfo> expectedErrors = new ArrayList<>();
+
+        // Обработка ожидаемых ошибок из таблицы
+        for (String errorDescription: errorDescriptions) {
+            String[] parts = errorDescription.split(" --- ");
+            if (parts.length == 2) {
+                expectedErrors.add(new ErrorInfo(parts[0].trim(), parts[1].trim()));
+            }
+        }
+
+        // Извлечение ошибок из ответа
+        List<ErrorInfo> actualErrors = response.jsonPath().getList("errors", ErrorInfo.class);
+
+        // Сравнение размера ожидаемых и фактических ошибок
+        assertEquals(actualErrors.size(), expectedErrors.size());
+
+        // Сравнение ожидаемых и фактических ошибок
+        assertTrue(actualErrors.containsAll(expectedErrors) && expectedErrors.containsAll(actualErrors));
     }
 }

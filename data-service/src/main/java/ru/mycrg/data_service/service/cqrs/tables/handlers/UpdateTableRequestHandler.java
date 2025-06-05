@@ -1,13 +1,10 @@
 package ru.mycrg.data_service.service.cqrs.tables.handlers;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import ru.mycrg.auth_facade.IAuthenticationFacade;
 import ru.mycrg.data_service.dao.BasePermissionsRepository;
-import ru.mycrg.data_service.dao.FtsDao;
 import ru.mycrg.data_service.dto.TableUpdateDto;
 import ru.mycrg.data_service.entity.SchemasAndTables;
 import ru.mycrg.data_service.exceptions.ForbiddenException;
@@ -27,23 +24,19 @@ import static java.util.Objects.nonNull;
 @Component
 public class UpdateTableRequestHandler implements IRequestHandler<UpdateTableRequest, Voidy> {
 
-    private final Logger log = LoggerFactory.getLogger(UpdateTableRequestHandler.class);
-
     private final IAuthenticationFacade authenticationFacade;
     private final SchemasAndTablesRepository schemasAndTablesRepository;
     private final PermissionsService permissionsService;
     private final BasePermissionsRepository permissionsRepository;
-    private final FtsDao ftsDao;
 
     public UpdateTableRequestHandler(PermissionsService permissionsService,
                                      IAuthenticationFacade authenticationFacade,
-                                     SchemasAndTablesRepository schemasAndTablesRepository,FtsDao ftsDao,
+                                     SchemasAndTablesRepository schemasAndTablesRepository,
                                      BasePermissionsRepository permissionsRepository) {
         this.authenticationFacade = authenticationFacade;
         this.schemasAndTablesRepository = schemasAndTablesRepository;
         this.permissionsService = permissionsService;
         this.permissionsRepository = permissionsRepository;
-        this.ftsDao = ftsDao;
     }
 
     @Override

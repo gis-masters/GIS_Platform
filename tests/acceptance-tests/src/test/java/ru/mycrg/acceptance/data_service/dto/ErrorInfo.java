@@ -1,4 +1,4 @@
-package ru.mycrg.data_service.exceptions;
+package ru.mycrg.acceptance.data_service.dto;
 
 import java.util.Objects;
 
@@ -38,9 +38,8 @@ public class ErrorInfo {
             return false;
         }
         ErrorInfo errorInfo = (ErrorInfo) o;
-
-        return Objects.equals(getField(), errorInfo.getField()) &&
-                Objects.equals(getMessage(), errorInfo.getMessage());
+        return Objects.equals(getField(), errorInfo.getField()) && Objects.equals(getMessage(),
+                                                                                  errorInfo.getMessage());
     }
 
     @Override

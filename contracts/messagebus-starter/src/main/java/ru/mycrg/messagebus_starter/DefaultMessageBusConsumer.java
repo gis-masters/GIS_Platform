@@ -37,8 +37,7 @@ public class DefaultMessageBusConsumer implements IMessageBusConsumer {
             eventHandlers.getOrDefault(event.getClass().getSimpleName(), defaultHandler)
                          .handle(event);
         } catch (Exception e) {
-            log.error(String.format("Failed consume event: %s:%s", event.getClass().getSimpleName(), event.getId()),
-                      e.getCause());
+            log.error("Failed consume event: {}:{}", event.getClass().getSimpleName(), event.getId(), e.getCause());
         }
     }
 }

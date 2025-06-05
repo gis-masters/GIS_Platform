@@ -8,6 +8,7 @@ import { FieldValidator } from '../../util/form/formValidation.utils';
 export enum PropertyType {
   STRING = 'string',
   INT = 'integer',
+  LONG = 'long',
   FLOAT = 'float',
   BOOL = 'bool',
   DATETIME = 'dateTime',
@@ -19,7 +20,6 @@ export enum PropertyType {
   UUID = 'uuid',
   BINARY = 'binary',
   FILE = 'file',
-  IDENTITIES = 'identities',
   SET = 'set',
   FIAS = 'fias',
   DOCUMENT = 'document',
@@ -155,6 +155,11 @@ export interface PropertySchemaInt extends BasePropertySchema, PropertySchemaBas
   defaultValue?: number;
 }
 
+export interface PropertySchemaLong extends BasePropertySchema, PropertySchemaBaseNumber {
+  propertyType: PropertyType.LONG;
+  defaultValue?: number;
+}
+
 export interface PropertySchemaFloat extends BasePropertySchema, PropertySchemaBaseNumber {
   propertyType: PropertyType.FLOAT;
   precision?: number;
@@ -276,6 +281,7 @@ export interface PropertySchemaUuid extends BasePropertySchema {
 export type PropertySchema =
   | PropertySchemaString
   | PropertySchemaInt
+  | PropertySchemaLong
   | PropertySchemaFloat
   | PropertySchemaBool
   | PropertySchemaDatetime

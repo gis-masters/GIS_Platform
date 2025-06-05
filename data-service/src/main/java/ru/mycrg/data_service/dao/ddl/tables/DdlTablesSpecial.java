@@ -2,8 +2,10 @@ package ru.mycrg.data_service.dao.ddl.tables;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+import ru.mycrg.data_service.dto.ColumnShortInfo;
 import ru.mycrg.data_service.dto.TableCreateDto;
 import ru.mycrg.data_service_contract.dto.AdditionalFieldDto;
 import ru.mycrg.data_service_contract.dto.SimplePropertyDto;
@@ -65,6 +67,18 @@ public class DdlTablesSpecial {
                 "WHERE TABLE_NAME = '" + tableName.toLowerCase() + "'";
 
         return jdbcTemplate.queryForList(query, String.class);
+    }
+
+    public List<ColumnShortInfo> getColumnShortInfo(String tableName) {
+        return getColumnShortInfo(tableName, jdbcTemplate);
+    }
+
+    public List<ColumnShortInfo> getColumnShortInfo(String tableName, JdbcTemplate jdbcTemplate) {
+        String query = "SELECT column_name, udt_name, character_maximum_length, numeric_scale " +
+                "FROM INFORMATION_SCHEMA.COLUMNS " +
+                "WHERE TABLE_NAME = '" + tableName.toLowerCase() + "'";
+
+        return jdbcTemplate.query(query, new BeanPropertyRowMapper<>(ColumnShortInfo.class));
     }
 
     private boolean isGeometryExist(List<SimplePropertyDto> properties) {

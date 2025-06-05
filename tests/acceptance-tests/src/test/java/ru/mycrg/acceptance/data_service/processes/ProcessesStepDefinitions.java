@@ -101,7 +101,7 @@ public class ProcessesStepDefinitions extends BaseStepsDefinitions {
         placeGeometryFromShape(shapePlacementModel, filename);
     }
 
-    @When("Владелец импортирует shape файл в существующий слой {string}")
+    @When("Владелец импортирует shape файл {string} в существующий слой")
     public void tryImportShapeAsProcessAsOwner(String filename) {
         authorizationBase.loginAsOwner();
 

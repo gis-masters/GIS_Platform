@@ -31,7 +31,6 @@ import static ru.mycrg.acceptance.data_service.FilesStepDefinitions.*;
 import static ru.mycrg.acceptance.data_service.datasets.DatasetsStepsDefinitions.currentDatasetIdentifier;
 import static ru.mycrg.acceptance.data_service.tables.TablesStepsDefinitions.anotherTableName;
 import static ru.mycrg.acceptance.data_service.tables.TablesStepsDefinitions.currentTableName;
-import static ru.mycrg.acceptance.gis_service.ProjectStepsDefinitions.projectId;
 
 public class TableFeaturesStepsDefinitions extends BaseStepsDefinitions {
 
@@ -477,16 +476,20 @@ public class TableFeaturesStepsDefinitions extends BaseStepsDefinitions {
 
     @And("атрибуты объекта с полем {string} равным {int} такие")
     public void checkRecordFields(String fieldName, int value, Map<String, List<Object>> expectedFields) {
+        response.prettyPrint();
+
         List<Map<String, Object>> content = response.jsonPath().getList("content.properties");
 
-        Map<String, Object> matchingRecord = content.stream()
-                                                    .filter(properties -> properties.containsKey(
-                                                            fieldName) && properties.get(fieldName).equals(value))
-                                                    .findFirst()
-                                                    .orElse(null);
+        Map<String, Object> matchingRecord = content
+                .stream()
+                .filter(properties -> properties.containsKey(fieldName) && properties.get(fieldName).equals(value))
+                .findFirst()
+                .orElse(null);
+
+        String msg = String.format("Объект не найден в выборке по заданным параметрам [%s:%s]", fieldName, value);
+        assertNotNull(msg, matchingRecord);
 
         boolean areEqual = true;
-
         for (Map.Entry<String, List<Object>> entry: expectedFields.entrySet()) {
             String key = entry.getKey();
             List<Object> list = entry.getValue();

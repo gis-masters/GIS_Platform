@@ -243,15 +243,16 @@ public class LayerStepDefinitions extends BaseStepsDefinitions {
     public void createVectorLayerOnCurrentTable() {
         layerCreateDto = new LayerCreateDto("Тестовый вектор", "vector");
 
-        // layerCreateDto.setSchemaId("schema_for_test_table");
-        layerCreateDto.setStyleName("schema_for_test_table");
+        layerCreateDto.setStyleName("generic");
         layerCreateDto.setDataStoreName("scratch_database_" + orgId);
         layerCreateDto.setDataset(currentDatasetIdentifier);
         layerCreateDto.setMode("full");
         layerCreateDto.setNativeCRS("EPSG:28406");
-        layerCreateDto.setTableName(anotherTableName);
+        layerCreateDto.setTableName(currentTableName);
 
         super.createEntity(layerCreateDto);
+
+        assertEquals(201, response.statusCode());
 
         layerId = extractEntityIdFromResponse(response);
         layerComplexName = response.jsonPath().get("complexName");

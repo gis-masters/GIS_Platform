@@ -16,6 +16,27 @@ public class SchemaTemplates {
                 return prepareTaskSchema();
             case "Точечный слой с атрибутами":
                 return testPointAttributes();
+            case "Точечный слой с атрибутами - ошибочная, для теста":
+                return testPointAttributesIncorrect();
+            case "Точечный слой с атрибутами - исправленная":
+                SchemaDto correctTestPointSchema = testPointAttributes();
+                correctTestPointSchema.setTitle("Точечный слой с атрибутами - исправленная");
+
+                List<SimplePropertyDto> ctpsProperties = correctTestPointSchema.getProperties();
+                SimplePropertyDto ruleId = new SimplePropertyDto();
+                ruleId.setName("ruleid");
+                ruleId.setTitle("Идентификатор стиля");
+                ruleId.setValueType("STRING");
+
+                SimplePropertyDto objectId = new SimplePropertyDto();
+                objectId.setName("objectid");
+                objectId.setTitle("Идентификатор объекта");
+                objectId.setValueType("LONG");
+
+                ctpsProperties.add(ruleId);
+                ctpsProperties.add(objectId);
+
+                return correctTestPointSchema;
             case "Тест FTS - исключение hidden полей":
                 return testFtsHiddenFieldsSchema();
             case "Тестовая схема dl_default":
@@ -134,12 +155,12 @@ public class SchemaTemplates {
 
     private static SchemaDto testPointAttributes() {
         return gson.fromJson(
-                "{\n" +
-                        "  \"name\": \"nto_all_point\",\n" +
-                        "  \"title\": \"Точечный слой с атрибутами\",\n" +
-                        "  \"styleName\": \"generic\",\n" +
-                        "  \"tableName\": \"nto_all_point\",\n" +
-                        "  \"properties\": [\n" +
+                "{" +
+                        "  \"name\": \"nto_all_point\"," +
+                        "  \"title\": \"Точечный слой с атрибутами\"," +
+                        "  \"styleName\": \"generic\"," +
+                        "  \"tableName\": \"nto_all_point\"," +
+                        "  \"properties\": [" +
                         "    {\n" +
                         "      \"name\": \"number\",\n" +
                         "      \"title\": \"Номер на схеме\",\n" +
@@ -201,6 +222,63 @@ public class SchemaTemplates {
                         "  ],\n" +
                         "  \"description\": \"Точечный слой с атрибутами\",\n" +
                         "  \"geometryType\": \"Point\"\n" +
+                        "}", SchemaDto.class);
+    }
+
+    private static SchemaDto testPointAttributesIncorrect() {
+        return gson.fromJson(
+                "{" +
+                        "  \"name\": \"nto_all_point_incorrect\"," +
+                        "  \"title\": \"Точечный слой с атрибутами - ошибочная, для теста\"," +
+                        "  \"styleName\": \"generic\"," +
+                        "  \"tableName\": \"nto_all_point_incorrect\"," +
+                        "  \"properties\": [" +
+                        "    {" +
+                        "      \"name\": \"location\"," +
+                        "      \"title\": \"Местоположение\"," +
+                        "      \"length\": 1000," +
+                        "      \"valueType\": \"STRING\"" +
+                        "    }," +
+                        "    {" +
+                        "      \"name\": \"specialty_new\"," +
+                        "      \"title\": \"Специализация\"," +
+                        "      \"valueType\": \"STRING\"" +
+                        "    }," +
+                        "    {\n" +
+                        "      \"name\": \"status\",\n" +
+                        "      \"title\": \"Период функционирования НТО\",\n" +
+                        "      \"valueType\": \"STRING\"\n" +
+                        "    },\n" +
+                        "    {" +
+                        "      \"name\": \"area_doc\"," +
+                        "      \"title\": \"Площадь, м.кв.\"," +
+                        "      \"valueType\": \"INT\"" +
+                        "    }," +
+                        "    {" +
+                        "      \"name\": \"created_at\"," +
+                        "      \"title\": \"Дата создания\"," +
+                        "      \"valueType\": \"STRING\"" +
+                        "    }," +
+                        "    {\n" +
+                        "      \"name\": \"last_modified\",\n" +
+                        "      \"title\": \"Дата модификации\",\n" +
+                        "      \"valueType\": \"DATETIME\"\n" +
+                        "    },\n" +
+                        "    {\n" +
+                        "      \"name\": \"updated_by\",\n" +
+                        "      \"title\": \"Кто обновил\",\n" +
+                        "      \"length\": 500,\n" +
+                        "      \"valueType\": \"STRING\"\n" +
+                        "    },\n" +
+                        "    {" +
+                        "      \"name\": \"created_by\"," +
+                        "      \"title\": \"Создатель\"," +
+                        "      \"maxLength\": 20," +
+                        "      \"valueType\": \"STRING\"" +
+                        "    }" +
+                        "  ]," +
+                        "  \"description\": \"Точечный слой с атрибутами\"," +
+                        "  \"geometryType\": \"Point\"" +
                         "}", SchemaDto.class);
     }
 
