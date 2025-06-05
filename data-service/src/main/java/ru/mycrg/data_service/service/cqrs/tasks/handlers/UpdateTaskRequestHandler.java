@@ -86,9 +86,14 @@ public class UpdateTaskRequestHandler implements IRequestHandler<UpdateTaskReque
         UserDetails userDetails = authenticationFacade.getUserDetails();
         Long assignedId = Long.valueOf(task.get(TASK_ASSIGNED_TO_PROPERTY).toString());
         List<Long> directMinions = userDetails.getDirectMinions();
+
         if (!userDetails.getUserId().equals(assignedId) && !directMinions.contains(assignedId)) {
-            throw new BadRequestException(
-                    "Возможно редактировать только свои задачи или задачи своих непосредственных подчиненных");
+            List<Long> allMinions = userDetails.getAllMinions();
+
+            if (!allMinions.contains(assignedId)) {
+                throw new BadRequestException(
+                        "Возможно редактировать только свои задачи или задачи своих подчиненных");
+            }
         }
 
         Map<String, Object> props = newTask.getContent();

@@ -91,13 +91,15 @@ Feature: Доступность и управление задачами сог�
     Then  Сервер отвечает со статус-кодом <httpCode>
     And   описание текущей задачи изменено на: "<expectedDescription>"
     Examples:
-      | creator  | owner    | actor    | httpCode | expectedDescription | reason                                     |
-      | orgOwner | fiz2     | orgOwner | 204      | I'll be back!       | Задача непосредственного подчиненного      |
-      | orgOwner | orgOwner | orgOwner | 204      | I'll be back!       | Своя задача                                |
-      | fiz2     | fiz3     | orgOwner | 400      | old description     | Задача НЕ непосредственного подчиненного   |
-      | fiz2     | fiz3     | fiz2     | 204      | I'll be back!       | Задача непосредственного подчиненного      |
-      | fiz3     | fiz4     | orgOwner | 400      | old description     | Задача НЕ непосредственного   подчиненного |
-      | fiz3     | fiz4     | fiz4     | 204      | I'll be back!       | Своя задача                                |
+      | creator  | owner    | actor    | httpCode | expectedDescription | reason                                            |
+      | orgOwner | fiz2     | orgOwner | 204      | I'll be back!       | Задача непосредственного подчиненного             |
+      | orgOwner | orgOwner | orgOwner | 204      | I'll be back!       | Своя задача                                       |
+      | fiz2     | fiz3     | orgOwner | 204      | I'll be back!       | Задача подчиненного-подчиненного                  |
+      | fiz3     | fiz4     | orgOwner | 204      | I'll be back!       | Задача под-под-подчиненного                       |
+      | fiz2     | fiz3     | fiz2     | 204      | I'll be back!       | Задача непосредственного подчиненного             |
+      | fiz3     | fiz4     | fiz4     | 204      | I'll be back!       | Своя задача                                       |
+      | fiz3     | fiz4     | fiz5     | 400      | old description     | Пользователь не является наследуемым  начальником |
+      | orgOwner | fiz2     | fiz3     | 400      | old description     | Пользователь не является наследуемым  начальником |
 
   Scenario Outline: Изменять статус возможно только своих задач и задач непосредственных подчиненных. <reason>
     Given пользователем "<creator>" создана задача на пользователя "<owner>"

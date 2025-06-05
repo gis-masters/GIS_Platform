@@ -124,6 +124,10 @@
           "title": "Регистрация проекта решения"
         },
         {
+          "title": "Зарегистрированный документ ожидает подпись",
+          "value": "99"
+        },
+        {
           "value": "5",
           "title": "Документы готовы к отправке"
         },
@@ -535,7 +539,7 @@
         {
           "name": "intermediate_status",
           "title": "Промежуточный статус выполнения задачи",
-          "dynamicPropertyFormula": "return { options: [ obj?.intermediate_status === \"1\" || obj?.intermediate_status === \"8\" || obj?.intermediate_status === null || obj?.intermediate_status === undefined ? { value: \"1\", title: \"Заявление прибыло из СМЭВ-3\" } : null, obj?.intermediate_status === \"1\" || obj?.intermediate_status === \"2\" || obj?.intermediate_status === null || obj?.intermediate_status === undefined ? { value: \"2\", title: \"Заявлению назначен исполнитель\" } : null, obj?.intermediate_status === \"3\" || obj?.intermediate_status === \"4\" ? { value: \"4\", title: \"Требуется доработка документов\" } : null, obj?.intermediate_status === \"2\" || obj?.intermediate_status === \"3\" || obj?.intermediate_status === \"4\" ? { value: \"3\", title: \"Подготовленные документы ожидают подпись\" } : null, obj?.intermediate_status === \"3\" || obj?.intermediate_status === \"5\" || obj?.intermediate_status === \"9\" ? { value: \"9\", title: \"Регистрация проекта решения\" } : null, obj?.intermediate_status === \"6\" ? { value: \"6\", title: \"Рассмотрение завершено (разрешено)\" } : null, obj?.intermediate_status === \"7\" ? { value: \"7\", title: \"Рассмотрение завершено (отказано)\" } : null, obj?.intermediate_status === \"5\" || obj?.intermediate_status === \"9\" ? { value: \"5\", title: \"Документы готовы к отправке\" } : null, obj?.intermediate_status === \"1\" || obj?.intermediate_status === \"2\" || obj?.intermediate_status === \"8\" || obj?.intermediate_status === null || obj?.intermediate_status === undefined ? { value: \"8\", title: \"Отмена оказания услуги\" } : null ].filter(Boolean)}",
+          "dynamicPropertyFormula": "return {options: [obj?.intermediate_status === \"1\" || obj?.intermediate_status === \"8\" || obj?.intermediate_status === null || obj?.intermediate_status === undefined ? { value: \"1\", title: \"Заявление прибыло из СМЭВ-3\" } : null, obj?.intermediate_status === \"1\" || obj?.intermediate_status === \"2\" || obj?.intermediate_status === null || obj?.intermediate_status === undefined ? { value: \"2\", title: \"Заявлению назначен исполнитель\" } : null, obj?.intermediate_status === \"3\" || obj?.intermediate_status === \"4\" || obj?.intermediate_status === \"99\"? { value: \"4\", title: \"Требуется доработка документов\" } : null, obj?.intermediate_status === \"2\" || obj?.intermediate_status === \"3\" || obj?.intermediate_status === \"4\" ? { value: \"3\", title: \"Подготовленные документы ожидают подпись\" } : null, obj?.intermediate_status === \"3\" || obj?.intermediate_status === \"5\" || obj?.intermediate_status === \"9\" ? { value: \"9\", title: \"Регистрация проекта решения\" } : null, obj?.intermediate_status === \"9\" || obj?.intermediate_status === \"5\" || obj?.intermediate_status === \"99\" ? { value: \"99\", title: \"Зарегистрированный документ ожидает подпись\" } : null, obj?.intermediate_status === \"6\" ? { value: \"6\", title: \"Рассмотрение завершено (разрешено)\" } : null, obj?.intermediate_status === \"7\" ? { value: \"7\", title: \"Рассмотрение завершено (отказано)\" } : null, obj?.intermediate_status === \"5\" || obj?.intermediate_status === \"99\" ? { value: \"5\", title: \"Документы готовы к отправке\" } : null, obj?.intermediate_status === \"1\" || obj?.intermediate_status === \"2\" || obj?.intermediate_status === \"8\" || obj?.intermediate_status === null || obj?.intermediate_status === undefined ? { value: \"8\", title: \"Отмена оказания услуги\" } : null ].filter(Boolean)}",
           "valueType": "CHOICE",
           "enumerations": [
             {
@@ -557,6 +561,10 @@
             {
               "title": "Регистрация проекта решения",
               "value": "9"
+            },
+            {
+              "title": "Зарегистрированный документ ожидает подпись",
+              "value": "99"
             },
             {
               "title": "Документы готовы к отправке",
@@ -658,7 +666,7 @@
         {
           "name": "intermediate_status",
           "title": "Промежуточный статус выполнения задачи",
-          "dynamicPropertyFormula": "return { options: [ obj?.intermediate_status === \"1\" || obj?.intermediate_status === \"8\" || obj?.intermediate_status === null || obj?.intermediate_status === undefined ? { value: \"1\", title: \"Заявление прибыло из СМЭВ-3\" } : null, obj?.intermediate_status === \"1\" || obj?.intermediate_status === \"2\" || obj?.intermediate_status === null || obj?.intermediate_status === undefined ? { value: \"2\", title: \"Заявлению назначен исполнитель\" } : null, obj?.intermediate_status === \"3\" || obj?.intermediate_status === \"4\" ? { value: \"4\", title: \"Требуется доработка документов\" } : null, obj?.intermediate_status === \"2\" || obj?.intermediate_status === \"3\" || obj?.intermediate_status === \"4\" ? { value: \"3\", title: \"Подготовленные документы ожидают подпись\" } : null, obj?.intermediate_status === \"3\" || obj?.intermediate_status === \"5\" || obj?.intermediate_status === \"9\" ? { value: \"9\", title: \"Регистрация проекта решения\" } : null, obj?.intermediate_status === \"6\" ? { value: \"6\", title: \"Рассмотрение завершено (разрешено)\" } : null, obj?.intermediate_status === \"7\" ? { value: \"7\", title: \"Рассмотрение завершено (отказано)\" } : null, obj?.intermediate_status === \"5\" || obj?.intermediate_status === \"9\" ? { value: \"5\", title: \"Документы готовы к отправке\" } : null, obj?.intermediate_status === \"1\" || obj?.intermediate_status === \"2\" || obj?.intermediate_status === \"8\" || obj?.intermediate_status === null || obj?.intermediate_status === undefined ? { value: \"8\", title: \"Отмена оказания услуги\" } : null ].filter(Boolean)}",
+          "dynamicPropertyFormula": "return {options: [obj?.intermediate_status === \"1\" || obj?.intermediate_status === \"8\" || obj?.intermediate_status === null || obj?.intermediate_status === undefined ? { value: \"1\", title: \"Заявление прибыло из СМЭВ-3\" } : null, obj?.intermediate_status === \"1\" || obj?.intermediate_status === \"2\" || obj?.intermediate_status === null || obj?.intermediate_status === undefined ? { value: \"2\", title: \"Заявлению назначен исполнитель\" } : null, obj?.intermediate_status === \"3\" || obj?.intermediate_status === \"4\" || obj?.intermediate_status === \"99\"? { value: \"4\", title: \"Требуется доработка документов\" } : null, obj?.intermediate_status === \"2\" || obj?.intermediate_status === \"3\" || obj?.intermediate_status === \"4\" ? { value: \"3\", title: \"Подготовленные документы ожидают подпись\" } : null, obj?.intermediate_status === \"3\" || obj?.intermediate_status === \"5\" || obj?.intermediate_status === \"9\" ? { value: \"9\", title: \"Регистрация проекта решения\" } : null, obj?.intermediate_status === \"9\" || obj?.intermediate_status === \"5\" || obj?.intermediate_status === \"99\" ? { value: \"99\", title: \"Зарегистрированный документ ожидает подпись\" } : null, obj?.intermediate_status === \"6\" ? { value: \"6\", title: \"Рассмотрение завершено (разрешено)\" } : null, obj?.intermediate_status === \"7\" ? { value: \"7\", title: \"Рассмотрение завершено (отказано)\" } : null, obj?.intermediate_status === \"5\" || obj?.intermediate_status === \"99\" ? { value: \"5\", title: \"Документы готовы к отправке\" } : null, obj?.intermediate_status === \"1\" || obj?.intermediate_status === \"2\" || obj?.intermediate_status === \"8\" || obj?.intermediate_status === null || obj?.intermediate_status === undefined ? { value: \"8\", title: \"Отмена оказания услуги\" } : null ].filter(Boolean)}",
           "valueType": "CHOICE",
           "enumerations": [
             {
@@ -680,6 +688,10 @@
             {
               "title": "Регистрация проекта решения",
               "value": "9"
+            },
+            {
+              "title": "Зарегистрированный документ ожидает подпись",
+              "value": "99"
             },
             {
               "title": "Документы готовы к отправке",
@@ -781,7 +793,7 @@
         {
           "name": "intermediate_status",
           "title": "Промежуточный статус выполнения задачи",
-          "dynamicPropertyFormula": "return { options: [ obj?.intermediate_status === \"1\" || obj?.intermediate_status === \"8\" || obj?.intermediate_status === null || obj?.intermediate_status === undefined ? { value: \"1\", title: \"Заявление прибыло из СМЭВ-3\" } : null, obj?.intermediate_status === \"1\" || obj?.intermediate_status === \"2\" || obj?.intermediate_status === null || obj?.intermediate_status === undefined ? { value: \"2\", title: \"Заявлению назначен исполнитель\" } : null, obj?.intermediate_status === \"3\" || obj?.intermediate_status === \"4\" ? { value: \"4\", title: \"Требуется доработка документов\" } : null, obj?.intermediate_status === \"2\" || obj?.intermediate_status === \"3\" || obj?.intermediate_status === \"4\" ? { value: \"3\", title: \"Подготовленные документы ожидают подпись\" } : null, obj?.intermediate_status === \"3\" || obj?.intermediate_status === \"5\" || obj?.intermediate_status === \"9\" ? { value: \"9\", title: \"Регистрация проекта решения\" } : null, obj?.intermediate_status === \"6\" ? { value: \"6\", title: \"Рассмотрение завершено (разрешено)\" } : null, obj?.intermediate_status === \"7\" ? { value: \"7\", title: \"Рассмотрение завершено (отказано)\" } : null, obj?.intermediate_status === \"5\" || obj?.intermediate_status === \"9\" ? { value: \"5\", title: \"Документы готовы к отправке\" } : null, obj?.intermediate_status === \"1\" || obj?.intermediate_status === \"2\" || obj?.intermediate_status === \"8\" || obj?.intermediate_status === null || obj?.intermediate_status === undefined ? { value: \"8\", title: \"Отмена оказания услуги\" } : null ].filter(Boolean)}",
+          "dynamicPropertyFormula": "return {options: [obj?.intermediate_status === \"1\" || obj?.intermediate_status === \"8\" || obj?.intermediate_status === null || obj?.intermediate_status === undefined ? { value: \"1\", title: \"Заявление прибыло из СМЭВ-3\" } : null, obj?.intermediate_status === \"1\" || obj?.intermediate_status === \"2\" || obj?.intermediate_status === null || obj?.intermediate_status === undefined ? { value: \"2\", title: \"Заявлению назначен исполнитель\" } : null, obj?.intermediate_status === \"3\" || obj?.intermediate_status === \"4\" || obj?.intermediate_status === \"99\"? { value: \"4\", title: \"Требуется доработка документов\" } : null, obj?.intermediate_status === \"2\" || obj?.intermediate_status === \"3\" || obj?.intermediate_status === \"4\" ? { value: \"3\", title: \"Подготовленные документы ожидают подпись\" } : null, obj?.intermediate_status === \"3\" || obj?.intermediate_status === \"5\" || obj?.intermediate_status === \"9\" ? { value: \"9\", title: \"Регистрация проекта решения\" } : null, obj?.intermediate_status === \"9\" || obj?.intermediate_status === \"5\" || obj?.intermediate_status === \"99\" ? { value: \"99\", title: \"Зарегистрированный документ ожидает подпись\" } : null, obj?.intermediate_status === \"6\" ? { value: \"6\", title: \"Рассмотрение завершено (разрешено)\" } : null, obj?.intermediate_status === \"7\" ? { value: \"7\", title: \"Рассмотрение завершено (отказано)\" } : null, obj?.intermediate_status === \"5\" || obj?.intermediate_status === \"99\" ? { value: \"5\", title: \"Документы готовы к отправке\" } : null, obj?.intermediate_status === \"1\" || obj?.intermediate_status === \"2\" || obj?.intermediate_status === \"8\" || obj?.intermediate_status === null || obj?.intermediate_status === undefined ? { value: \"8\", title: \"Отмена оказания услуги\" } : null ].filter(Boolean)}",
           "valueType": "CHOICE",
           "enumerations": [
             {
@@ -803,6 +815,10 @@
             {
               "title": "Регистрация проекта решения",
               "value": "9"
+            },
+            {
+              "title": "Зарегистрированный документ ожидает подпись",
+              "value": "99"
             },
             {
               "title": "Документы готовы к отправке",
