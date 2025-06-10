@@ -411,6 +411,25 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
         checkStatusCodeIs(response, SC_OK);
     }
 
+    @And("В базе аутентификации удалены упоминания о организации")
+    public void isOrgExistInSettings() {
+        getOrganization(orgId);
+        assertEquals(SC_NOT_FOUND, response.getStatusCode());
+
+        getAllOrganizations();
+        JsonPath jsonPath = response.jsonPath();
+
+        // Добавляем ID организаций
+        List<Integer> orgIds = jsonPath.getList("content.id", Integer.class);
+        List<Integer> allIds = new ArrayList<>(orgIds);
+
+        // Добавляем ID настроек
+        List<Integer> settingsIds = jsonPath.getList("content.settings.id.flatten()", Integer.class);
+        allIds.addAll(settingsIds);
+
+        assertFalse("Организация с ID " + orgId + " все еще существует в списке организаций", allIds.contains(orgId));
+    }
+
     @And("Согласно специализации 1 созданы: набор данных, таблица с данными, библиотека документов, проект и слои")
     public void checkBySpecialization1() {
         JsonPath datasetsJsonPath = datasetsStepsDefinitions.getAllDatasets().jsonPath();
@@ -460,9 +479,7 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
 
     @When("Пользователь делает запрос на все организации")
     public void checkAllOrganizationsByRoot() {
-        response = getBaseRequestWithCurrentCookie()
-                .when().
-                        get("/organizations");
+        getAllOrganizations();
     }
 
     @And("Представление организации корректно")
@@ -488,9 +505,7 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
 
     @When("Владелец организации запрашивает данные о своей организации")
     public void checkOrgInfo() {
-        response = getBaseRequestWithCurrentCookie()
-                .when().
-                        get("/organizations/" + orgId);
+        getOrganization(orgId);
     }
 
     @When("Администратор запрашивает данные о чужой организации")
@@ -505,9 +520,7 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
             }
         }
 
-        response = getBaseRequestWithCurrentCookie()
-                .when().
-                        get("/organizations/" + orgId);
+        getOrganization(orgId);
 
         assertNotNull(orgId);
     }
@@ -550,9 +563,7 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
             System.out.println("attempt delete org: " + currentAttempt);
             currentAttempt++;
 
-            Response response = getBaseRequestWithCurrentCookie()
-                    .when().
-                            get("/organizations/" + id);
+            getOrganization(id);
 
             if (response.statusCode() == SC_NOT_FOUND) {
                 return;
@@ -573,9 +584,7 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
             System.out.println("check organization: " + id + " attempt: " + currentAttempt);
             currentAttempt++;
 
-            Response response = getBaseRequestWithCurrentCookie()
-                    .when().
-                            get("/organizations/" + id);
+            getOrganization(id);
 
             if (response.statusCode() == SC_OK && "PROVISIONED".equals(response.jsonPath().get("status"))) {
                 return;
@@ -599,6 +608,12 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
                         delete("/organizations/" + id);
 
         orgPool.remove(orgId);
+    }
+
+    private void getAllOrganizations() {
+        response = getBaseRequestWithCurrentCookie()
+                .when().
+                        get("/organizations/");
     }
 
     private void getOrganization(Integer id) {

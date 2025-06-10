@@ -3,11 +3,14 @@ package ru.mycrg.auth_service.service.organization.settings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import ru.mycrg.auth_service.exceptions.NotFoundException;
+import ru.mycrg.auth_service_contract.dto.OrgSettingsRequestDto;
 import ru.mycrg.auth_service_contract.dto.OrgSettingsResponseDto;
 import ru.mycrg.auth_service_contract.events.request.OrgSettingsUpdatedEvent;
 import ru.mycrg.messagebus_contract.IMessageBusProducer;
 
 import java.util.Map;
+import java.util.Set;
 
 import static ru.mycrg.auth_service.service.organization.settings.SettingsUtil.mergeSettings;
 
@@ -27,10 +30,26 @@ public class OrganizationSettingsBroadcaster implements IOrgSettingsBroadcaster 
 
     @Override
     public void broadcast() {
-        orgSettingsRepository
-                .readSystemSettings().stream()
-                .map(systemOrgSetting -> orgSettingsRepository.readOrganizationSettings(systemOrgSetting.getId()))
-                .forEach(this::broadcast);
+        Set<OrgSettingsRequestDto> systemSettings = orgSettingsRepository.readSystemSettings();
+
+        if (systemSettings == null) {
+            log.debug("Системные настройки пусты!!! Делать ничего не будем!!!");
+
+            return;
+        }
+
+        for (OrgSettingsRequestDto systemOrgSetting: systemSettings) {
+            try {
+                OrgSettingsResponseDto orgSetting = orgSettingsRepository
+                        .readOrganizationSettings(systemOrgSetting.getId());
+
+                broadcast(orgSetting);
+            } catch (NotFoundException e) {
+                log.warn("Не удалось прочесть/отправить настройки организации: {} => {}",
+                         systemOrgSetting.getId(),
+                         e.getMessage());
+            }
+        }
     }
 
     @Override
