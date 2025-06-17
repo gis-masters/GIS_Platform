@@ -135,10 +135,7 @@ class MapDrawService {
     }
   }
 
-  async convertFeatureToOlProjection(
-    features: WfsFeature[],
-    projection?: Projection
-  ): Promise<WfsFeature<Coordinate>[]> {
+  async convertFeatureToOlProjection(features: WfsFeature[], projection?: Projection): Promise<WfsFeature[]> {
     return await Promise.all(
       [...features]
         .filter(({ geometry }) => geometry)

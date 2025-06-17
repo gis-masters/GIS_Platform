@@ -2,7 +2,6 @@ import React, { FC, memo, useCallback, useEffect } from 'react';
 import { observer, useLocalObservable } from 'mobx-react';
 import { AxiosError } from 'axios';
 import { Certificate, getUserCertificates } from 'crypto-pro';
-import { Coordinate } from 'ol/coordinate';
 
 import { communicationService } from '../../../services/communication.service';
 import { createSignature, getUsedCertificates } from '../../../services/cryptopro/cryptoPro.service';
@@ -37,7 +36,7 @@ interface FilesSignatureProps {
   open: boolean;
   propertyName?: string;
   document?: LibraryRecord;
-  feature?: WfsFeature<Coordinate>;
+  feature?: WfsFeature;
   onClose(open: boolean): void;
   updateFileInfo(): Promise<void>;
 }

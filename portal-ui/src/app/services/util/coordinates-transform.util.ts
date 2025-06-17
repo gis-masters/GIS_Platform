@@ -28,8 +28,6 @@ import {
 } from './typeGuards/isCoordinate';
 import { isNumberArray } from './typeGuards/isNumberArray';
 
-export type Coord = Coordinate;
-
 export function transformExtent(extent: Extent, projFrom: Projection, projTo: Projection): Extent {
   return chunk(extent, 2).flatMap(coord => transform(coord, projFrom, projTo)) as Extent;
 }
@@ -173,12 +171,12 @@ export function transformGeometry(
 }
 
 export function transformCoord(
-  coordEdited: Coord,
+  coordEdited: Coordinate,
   projFrom: Projection,
   projTo: Projection,
-  originGroup?: Coord[],
-  transformedOriginGroup: Coord[] = []
-): Coord {
+  originGroup?: Coordinate[],
+  transformedOriginGroup: Coordinate[] = []
+): Coordinate {
   const coord = normalizeCoordinates(coordEdited) as Coordinate;
   const originIndex = originGroup ? originGroup.findIndex(originCoord => isEqual(coord, originCoord)) : -1;
   if (originIndex !== -1) {
@@ -189,22 +187,22 @@ export function transformCoord(
 }
 
 export function transformGroup(
-  group: Coord[],
+  group: Coordinate[],
   projFrom: Projection,
   projTo: Projection,
-  origin?: Coord[],
-  transformedOrigin?: Coord[]
-): Coord[] {
+  origin?: Coordinate[],
+  transformedOrigin?: Coordinate[]
+): Coordinate[] {
   return group.map(coord => transformCoord(coord, projFrom, projTo, origin, transformedOrigin));
 }
 
 export function transformSuperGroup(
-  superGroup: Coord[][],
+  superGroup: Coordinate[][],
   projFrom: Projection,
   projTo: Projection,
-  origin?: Coord[][],
-  transformedOrigin?: Coord[][]
-): Coord[][] {
+  origin?: Coordinate[][],
+  transformedOrigin?: Coordinate[][]
+): Coordinate[][] {
   return superGroup.map((group, i) =>
     transformGroup(
       group,
@@ -217,12 +215,12 @@ export function transformSuperGroup(
 }
 
 export function transformMultiSuperGroup(
-  superGroups: Coord[][][],
+  superGroups: Coordinate[][][],
   projFrom: Projection,
   projTo: Projection,
-  origin?: Coord[][][],
-  transformedOrigin?: Coord[][][]
-): Coord[][][] {
+  origin?: Coordinate[][][],
+  transformedOrigin?: Coordinate[][][]
+): Coordinate[][][] {
   return superGroups.map((superGroup, i) =>
     transformSuperGroup(
       superGroup,

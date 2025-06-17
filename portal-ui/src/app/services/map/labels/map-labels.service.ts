@@ -28,7 +28,7 @@ import { registry } from '../../di-registry';
 import { extractTableNameFromFeatureId } from '../../geoserver/featureType/featureType.util';
 import { GeometryType, supportedGeometryTypes, WfsFeature } from '../../geoserver/wfs/wfs.models';
 import { isLinear, isPolygonal } from '../../geoserver/wfs/wfs.util';
-import { Coord, transformAnyCoordinates, transformCoord, transformGroup } from '../../util/coordinates-transform.util';
+import { transformAnyCoordinates, transformCoord, transformGroup } from '../../util/coordinates-transform.util';
 import { notFalsyFilter } from '../../util/NotFalsyFilter';
 import { featureToWfsFeature, UnitsOfAreaMeasurement, wfsFeatureToFeature } from '../../util/open-layers.util';
 import { sleep } from '../../util/sleep';
@@ -507,7 +507,7 @@ class MapLabelsService {
     mapMeasureService.measureOff();
   }
 
-  private createFeatures(transformedCoordinates: Coord[], type: LabelType): Feature<Point>[] {
+  private createFeatures(transformedCoordinates: Coordinate[], type: LabelType): Feature<Point>[] {
     return transformedCoordinates
       .map((coord, index) => {
         if (isNumberArray(coord)) {
@@ -912,7 +912,7 @@ class MapLabelsService {
     return false;
   }
 
-  private getDistancesByCoords(coordinates: Coord[], projFrom: Projection, projTo: Projection): Distance[] {
+  private getDistancesByCoords(coordinates: Coordinate[], projFrom: Projection, projTo: Projection): Distance[] {
     if (!isCoordinateArray(coordinates)) {
       throw new Error('Указанные координаты не являются полигоном');
     }

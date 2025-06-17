@@ -38,57 +38,68 @@ interface Geometry extends GeoJSONObject {
   type: GeometryType;
 }
 
-export interface WfsPointGeometry<T = Coordinate> extends Geometry {
+export interface WfsLinearRingGeometry extends Geometry {
+  type: GeometryType.LINEAR_RING;
+  coordinates: Coordinate;
+}
+
+export interface WfsCircleGeometry extends Geometry {
+  type: GeometryType.CIRCLE;
+  coordinates: Coordinate;
+}
+
+export interface WfsCollectionGeometry extends Geometry {
+  type: GeometryType.GEOMETRY_COLLECTION;
+  coordinates: Coordinate;
+}
+
+export interface WfsPointGeometry extends Geometry {
   type: GeometryType.POINT;
-  coordinates: T;
+  coordinates: Coordinate;
 }
 
-export interface WfsMultiPointGeometry<T = Coordinate> extends Geometry {
+export interface WfsMultiPointGeometry extends Geometry {
   type: GeometryType.MULTI_POINT;
-  coordinates: T[];
+  coordinates: Coordinate[];
 }
 
-export interface WfsLineStringGeometry<T = Coordinate> extends Geometry {
+export interface WfsLineStringGeometry extends Geometry {
   type: GeometryType.LINE_STRING;
-  coordinates: T[];
+  coordinates: Coordinate[];
 }
 
-export interface WfsMultiLineStringGeometry<T = Coordinate> extends Geometry {
+export interface WfsMultiLineStringGeometry extends Geometry {
   type: GeometryType.MULTI_LINE_STRING;
-  coordinates: T[][];
+  coordinates: Coordinate[][];
 }
 
-export interface WfsPolygonGeometry<T = Coordinate> extends Geometry {
+export interface WfsPolygonGeometry extends Geometry {
   type: GeometryType.POLYGON;
-  coordinates: T[][];
+  coordinates: Coordinate[][];
 }
 
-export interface WfsMultiPolygonGeometry<T = Coordinate> extends Geometry {
+export interface WfsMultiPolygonGeometry extends Geometry {
   type: GeometryType.MULTI_POLYGON;
-  coordinates: T[][][];
+  coordinates: Coordinate[][][];
 }
 
-interface OtherGeometry<T = Coordinate> extends Geometry {
-  type: Exclude<GeometryType, SupportedGeometryType>;
-  coordinates: T | T[] | T[][] | T[][][];
-}
-
-export type SupportedWfsGeometry<T = Coordinate> =
-  | WfsPointGeometry<T>
-  | WfsMultiPointGeometry<T>
-  | WfsLineStringGeometry<T>
-  | WfsMultiLineStringGeometry<T>
-  | WfsPolygonGeometry<T>
-  | WfsMultiPolygonGeometry<T>;
-
-export type WfsGeometry<T = Coordinate> = SupportedWfsGeometry<T> | OtherGeometry<T>;
+export type WfsGeometry =
+  | WfsPointGeometry
+  | WfsMultiPointGeometry
+  | WfsLineStringGeometry
+  | WfsMultiLineStringGeometry
+  | WfsPolygonGeometry
+  | WfsMultiPolygonGeometry
+  | WfsCollectionGeometry
+  | WfsLinearRingGeometry
+  | WfsCircleGeometry;
 
 export type CrgFeature = Pick<WfsFeature, 'id' | 'type' | 'geometry' | 'properties'>;
 export type NewWfsFeature = Omit<CrgFeature, 'id'>;
-export interface WfsFeature<T extends Coordinate = Coordinate> extends GeoJSONObject {
+export interface WfsFeature extends GeoJSONObject {
   type: 'Feature';
   id: string;
-  geometry?: WfsGeometry<T>;
+  geometry?: WfsGeometry;
   geometry_name: string;
   properties: Record<string, unknown>;
 }
