@@ -46,16 +46,6 @@
         "contentUrl": "/assets/help/3projects/0projects/00projects.html"
       },
       {
-        "id": "create",
-        "title": "Создание проекта",
-        "contentUrl": "/assets/help/3projects/1create/01create.html"
-      },
-      {
-        "id": "delete",
-        "title": "Удаление проекта",
-        "contentUrl": "/assets/help/3projects/2delete/02delete.html"
-      },
-      {
         "id": "select",
         "title": "Выбор проекта",
         "contentUrl": "/assets/help/3projects/3select/03select.html"
@@ -570,9 +560,24 @@
         "title": "Проекты",
         "children": [
           {
+            "id": "propertiesProjects",
+            "title": "Проекты",
+            "contentUrl": "/assets/help/5dataManagement/31propertiesProjects/31propertiesProjects.html"
+          },
+          {
+            "id": "createProjects",
+            "title": "Создание проекта",
+            "contentUrl": "/assets/help/5dataManagement/32createProjects/32createProjects.html"
+          },
+          {
             "id": "projectsFolders",
-            "title": "Папки проектов",
+            "title": "Создание папки проектов",
             "contentUrl": "/assets/help/5dataManagement/29foldersProjects/29foldersProjects.html"
+          },
+          {
+            "id": "displacementFolders",
+            "title": "Перемещение проектов",
+            "contentUrl": "/assets/help/5dataManagement/30displacementFolders/30displacementFolders.html"
           }
         ]
       },
