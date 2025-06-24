@@ -267,6 +267,12 @@
       "title": "Вложения",
       "valueType": "FILE",
       "multiple": true
+    },
+    {
+      "name": "is_done_in_sed",
+      "title": "Признак обработки задачи по СЭД",
+      "valueType": "BOOLEAN",
+      "hidden": true
     }
   ],
   "description": "Реестр системных и настраиваемых задач",
@@ -516,6 +522,9 @@
         {
           "name": "description",
           "title": "Комментарий"
+        },
+        {
+          "name": "is_done_in_sed"
         }
       ]
     },

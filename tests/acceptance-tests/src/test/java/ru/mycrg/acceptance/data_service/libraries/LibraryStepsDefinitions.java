@@ -1,5 +1,6 @@
 package ru.mycrg.acceptance.data_service.libraries;
 
+import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
@@ -898,6 +899,37 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
         checkResponseValueContains("message", msg);
     }
 
+    @Given("В библиотеке документов {string} существуют папки с октмо")
+    public void createOktmoFolderInLibrary(String targetLibrary, DataTable dataTable) {
+        dataTable.asList().forEach(oktmo -> {
+            createFolderInTargetLibrary(targetLibrary, oktmo);
+            updateDocument(currentFolderId, "{\"fias__oktmo\": \"" + oktmo + "\"}", targetLibrary);
+        });
+    }
+
+    @Given("В библиотеке документов {string} существует документ с октмо: {string}")
+    public void createOktmoDocInLibrary(String targetLibrary, String oktmo) {
+        currentDocumentId = createRecordWithCheck(targetLibrary, new RecordDto(oktmo, null, "inboxData"));
+        updateDocument(currentDocumentId, "{\"fias__oktmo\": \"" + oktmo + "\"}", targetLibrary);
+    }
+
+    @And("Документ оказывается в папке с октмо: {string}")
+    public void docInFolder(String folderOktmo) {
+        getRecordById(currentDocumentId, "dl_data_inbox_data");
+
+        String path = response.jsonPath().getString("path");
+        String folderId = path.substring(path.lastIndexOf("/") + 1);
+
+        getRecordById(Integer.parseInt(folderId), "dl_data_inbox_data");
+        String folderActualFOktmo = response.jsonPath().getString("fias__oktmo");
+
+        if ("null".equals(folderOktmo)) {
+            assertNull(folderActualFOktmo);
+        } else {
+            assertEquals(folderOktmo, folderActualFOktmo);
+        }
+    }
+
     public void createOrGetDocumentLibrary(String schemaTitle, boolean versioning) {
         currentLibrary = null;
 
@@ -914,6 +946,12 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
         }
 
         currentLibrary = extractCurrentLibraryModel();
+    }
+
+    public void getRecordById(Integer id, String libraryId) {
+        response = getBaseRequestWithCurrentCookie()
+                .when().
+                       get(String.format("/%s/records/%d", libraryId, id));
     }
 
     private LibraryModel extractCurrentLibraryModel() {
@@ -975,12 +1013,6 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
         response = getBaseRequestWithCurrentCookie()
                 .when().
                        get("/" + libraryId);
-    }
-
-    public void getRecordById(Integer id, String libraryId) {
-        response = getBaseRequestWithCurrentCookie()
-                .when().
-                       get(String.format("/%s/records/%d", libraryId, id));
     }
 
     private void createDocumentAndWriteAsCurrent(String body, String libraryId) {

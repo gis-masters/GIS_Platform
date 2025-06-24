@@ -28,6 +28,10 @@ pushd ../assets/ || exit
 ./migration-scripts/run.sh
 popd || exit
 
+printHeader "Copy database configs"
+sudo mkdir -p /opt/data/configs/db
+sudo cp ../configs/db/extra.conf /opt/data/configs/db/extra.conf
+
 printHeader "Docker compose UP"
 docker compose -f ../docker-compose.dev.yml -f ../docker-compose.yml -f ../S3minio.yml --env-file ../.env up -d
 

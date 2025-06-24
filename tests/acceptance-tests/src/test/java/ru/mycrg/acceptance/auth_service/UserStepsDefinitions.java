@@ -20,7 +20,8 @@ import java.util.concurrent.Executors;
 
 import static java.lang.String.format;
 import static java.lang.Thread.sleep;
-import static org.apache.http.HttpStatus.*;
+import static org.apache.http.HttpStatus.SC_ACCEPTED;
+import static org.apache.http.HttpStatus.SC_OK;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -287,6 +288,7 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
             createRandomUser(new UserCreateDto("fiz5", "fiz5", "fiz5@fiz", DEFAULT_TEST_PASSWORD));
         } else if ("для тестирования задач РНС по СМЭВ".equals(template)) {
             createRandomUser(new UserCreateDto("rns1", "rns1", "rns1@smev.ru", DEFAULT_TEST_PASSWORD));
+            createRandomUser(new UserCreateDto("sed1", "sed1", "sed_user_integration@mycrg.ru", DEFAULT_TEST_PASSWORD));
         } else if ("Иерархия вариант 1".equals(template)) {
             // orgOwner
             //   fiz1

@@ -19309,6 +19309,12 @@ SET class_rule =
            "readOnly": true,
            "maxLength": 200,
            "valueType": "STRING"
+         },
+         {
+          "name": "is_distributed",
+          "title": "Статус заявки в СЭД",
+          "valueType": "BOOLEAN",
+          "hidden": true
          }
        ],
        "description": "Реестр учета сведений, документов, материалов, поступивших на размещение в информационную систему",
@@ -19399,6 +19405,9 @@ SET class_rule =
              {
                "name": "fias__id",
                "defaultValueWellKnownFormula": "inherit"
+             },
+             {
+               "name": "is_distributed"
              }
            ]
          },

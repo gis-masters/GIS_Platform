@@ -13,12 +13,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import ru.mycrg.common_contracts.generated.data_service.TaskLogDto;
 import ru.mycrg.data_service.dao.RecordsDao;
 import ru.mycrg.data_service.dao.detached.TasksDetachedDao;
 import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
 import ru.mycrg.data_service.dto.FileResourceQualifier;
 import ru.mycrg.data_service.dto.LibraryModel;
-import ru.mycrg.common_contracts.generated.data_service.TaskLogDto;
 import ru.mycrg.data_service.dto.record.IRecord;
 import ru.mycrg.data_service.dto.record.RecordEntity;
 import ru.mycrg.data_service.entity.File;
@@ -62,9 +62,9 @@ import java.util.zip.ZipInputStream;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static ru.mycrg.data_service.config.CrgCommonConfig.SYSTEM_DATETIME_PATTERN;
+import static ru.mycrg.data_service.config.CrgCommonConfig.SYSTEM_USER_ID;
 import static ru.mycrg.data_service.dto.Roles.OWNER;
 import static ru.mycrg.data_service.service.TaskService.*;
-import static ru.mycrg.data_service.config.CrgCommonConfig.SYSTEM_USER_ID;
 import static ru.mycrg.data_service.service.resources.ResourceQualifier.*;
 import static ru.mycrg.data_service.service.smev3.fields.FieldsSection.DL_DATA_SECTION_DELIVERY_DATA_TABLE;
 import static ru.mycrg.data_service.service.smev3.fields.FieldsSection.TABLE_13;
@@ -81,9 +81,9 @@ public abstract class AcceptServiceBase {
     private static final Logger log = LoggerFactory.getLogger(AcceptServiceBase.class);
 
     protected static final String DATA_SECTION_KEY_DATA_CONNECTION_ATTRIBUTE = "data_section_key_data_connection";
-    protected static final String INBOX_DATA_KEY_DATA_CONNECTION_ATTRIBUTE = "inbox_data_key_data_connection";
-    protected static final String LIBRARY_ID = "dl_data_inbox_data";
-    protected static final String TASK_ALLOCATION_LIBRARY_ID = "dl_data_task_allocation";
+    public static final String INBOX_DATA_KEY_DATA_CONNECTION_ATTRIBUTE = "inbox_data_key_data_connection";
+    public static final String INBOX_LIBRARY_ID = "dl_data_inbox_data";
+    public static final String TASK_ALLOCATION_LIBRARY_ID = "dl_data_task_allocation";
     protected static final String DATE_ATTRIBUTE = "date";
     protected static final String DUE_DATE_ATTRIBUTE = "due_date";
     protected static final String NUMBER_ATTRIBUTE = "number";
@@ -196,7 +196,7 @@ public abstract class AcceptServiceBase {
     @Transactional
     public void updateTablesAndSendStatusMessageToSmev(Map<String, Object> task, TaskStatus taskStatus, Long taskId) {
         if (task.get(INBOX_DATA_KEY_DATA_CONNECTION_ATTRIBUTE) == null) {
-            throw new BadRequestException("Блок inbox_data_key_data_connection у задачи не заполнен");
+            throw new BadRequestException("Блок " + INBOX_DATA_KEY_DATA_CONNECTION_ATTRIBUTE + " у задачи не заполнен");
         }
 
         Optional<List<TypeDocumentData>> oInboxDocs = JsonConverter.fromJson(
@@ -204,20 +204,22 @@ public abstract class AcceptServiceBase {
                 new TypeReference<List<TypeDocumentData>>() {
                 });
         if (oInboxDocs.isEmpty()) {
-            throw new BadRequestException("Не удалось распарсить блок inbox_data_key_data_connection у задачи");
+            throw new BadRequestException(
+                    "Не удалось распарсить блок " + INBOX_DATA_KEY_DATA_CONNECTION_ATTRIBUTE + " у задачи");
         }
 
         List<TypeDocumentData> inboxDocuments = oInboxDocs.get();
         if (inboxDocuments.isEmpty()) {
-            throw new BadRequestException("Пустой массив в блоке inbox_data_key_data_connection у задачи");
+            throw new BadRequestException(
+                    "Пустой массив в блоке " + INBOX_DATA_KEY_DATA_CONNECTION_ATTRIBUTE + " у задачи");
         }
 
         Long docId = inboxDocuments.get(0).getId();
-        ResourceQualifier libraryQualifier = libraryRecordQualifier(LIBRARY_ID, docId);
+        ResourceQualifier libraryQualifier = libraryRecordQualifier(INBOX_LIBRARY_ID, docId);
         SchemaDto rnvSchema = libraryRepository
-                .findByTableName(LIBRARY_ID)
+                .findByTableName(INBOX_LIBRARY_ID)
                 .map(documentLibrary -> new LibraryModel(documentLibrary, OWNER.name()))
-                .orElseThrow(() -> new NotFoundException("Библиотека не найдена по идентификатору: " + LIBRARY_ID))
+                .orElseThrow(() -> new NotFoundException("Библиотека не найдена по идентификатору: " + INBOX_LIBRARY_ID))
                 .getSchema();
 
         IRecord docRecord = recordsDao
@@ -561,15 +563,15 @@ public abstract class AcceptServiceBase {
                                                  Map<String, Object> taskContent,
                                                  Long taskId) throws CrgDaoException, IOException {
 
-        ResourceQualifier rnvLibraryQualifier = libraryQualifier(LIBRARY_ID);
+        ResourceQualifier rnvLibraryQualifier = libraryQualifier(INBOX_LIBRARY_ID);
         LibraryModel rnvLibraryModel = libraryRepository
-                .findByTableName(LIBRARY_ID)
+                .findByTableName(INBOX_LIBRARY_ID)
                 .map(documentLibrary -> new LibraryModel(documentLibrary, OWNER.name()))
                 .orElseThrow(() -> new NotFoundException("Библиотека не найдена по идентификатору: "
-                                                                 + LIBRARY_ID));
+                                                                 + INBOX_LIBRARY_ID));
         SchemaDto rnvSchema = rnvLibraryModel.getSchema();
         if (rnvSchema == null) {
-            throw new NotFoundException("Не удалось получить схему из библиотеки " + LIBRARY_ID);
+            throw new NotFoundException("Не удалось получить схему из библиотеки " + INBOX_LIBRARY_ID);
         }
         Map<String, Object> documentPayload = new HashMap<>();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
@@ -632,10 +634,10 @@ public abstract class AcceptServiceBase {
         String jacksonData = JsonConverter.getJsonString(fileDescriptions);
         Map<String, Object> payload = savedDocument.getContent();
         payload.put(FILE_ATTRIBUTE, jacksonData);
-        ResourceQualifier rnvResQualifier = ResourceQualifier.libraryRecordQualifier(LIBRARY_ID, savedDocumentId);
+        ResourceQualifier rnvResQualifier = ResourceQualifier.libraryRecordQualifier(INBOX_LIBRARY_ID, savedDocumentId);
         recordsDao.updateRecordById(rnvResQualifier, payload, rnvSchema);
 
-        TypeDocumentData documentData = new TypeDocumentData(savedDocumentId, savedDocumentTitle, LIBRARY_ID);
+        TypeDocumentData documentData = new TypeDocumentData(savedDocumentId, savedDocumentTitle, INBOX_LIBRARY_ID);
         taskContent.put(INBOX_DATA_KEY_DATA_CONNECTION_ATTRIBUTE, mapper.writeValueAsString(List.of(documentData)));
         SchemaDto tasksSchema = this.schemaService
                 .getSchemaByName(TASKS_SCHEMA)

@@ -276,12 +276,6 @@ public class TaskStepDefinition extends BaseStepsDefinitions {
 
         assertEquals("Количество задач в выборке не соответствует ожидаемому",
                      tasks.size(), actualIds.size());
-
-//        for (int i = 0; i < expectedIds.length; i++) {
-//            int expectedId = Integer.parseInt(expectedIds[i].trim());
-//            assertEquals("ID задачи на позиции " + i + " не соответствует ожидаемому",
-//                         expectedId, actualIds.get(i).intValue());
-//        }
     }
 
     @Then("я жду пока новая задача с контент типом {string} создаётся")
@@ -363,7 +357,7 @@ public class TaskStepDefinition extends BaseStepsDefinitions {
         }
     }
 
-    private void createTask(Map<String, Object> dto) {
+    public void createTask(Map<String, Object> dto) {
         response = getBaseRequestWithCurrentCookie()
                 .given().
                         body(gson.toJson(dto)).
@@ -373,10 +367,16 @@ public class TaskStepDefinition extends BaseStepsDefinitions {
                         post();
     }
 
-    private void getTaskByIdentifier(Integer taskId) {
+    public void getTaskByIdentifier(Integer taskId) {
         response = getBaseRequestWithCurrentCookie()
                 .when().
                         get("/" + taskId);
+    }
+
+    public void getTasks() {
+        response = getBaseRequestWithCurrentCookie()
+                .when().
+                        get();
     }
 
     private void createTaskTableByTaskSchemaV1() {
@@ -385,10 +385,8 @@ public class TaskStepDefinition extends BaseStepsDefinitions {
                         .post("/crateTable/tasks_schema_v1");
     }
 
-    private void getTasks() {
-        response = getBaseRequestWithCurrentCookie()
-                .when().
-                        get();
+    public void updateCurrentTask(String json) {
+        updateTask(currentTaskId, json);
     }
 
     private void getTasks(String filter) {
@@ -431,10 +429,6 @@ public class TaskStepDefinition extends BaseStepsDefinitions {
                 .when().
                         log().ifValidationFails().
                         put(url);
-    }
-
-    private void updateCurrentTask(String json) {
-        updateTask(currentTaskId, json);
     }
 
     private void updateTask(Integer taskId, String json) {
