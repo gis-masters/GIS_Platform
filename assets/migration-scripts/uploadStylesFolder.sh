@@ -17,7 +17,7 @@ if [[ -z "$token" ]]; then
 fi
 
 # Установим пути к папкам
-DIR1="/opt/data/geoserver/styles/"
+DIR1="/opt/crg/data/geoserver/styles/"
 DIR2="../initialConfig/geoserver/styles/"
 
 # Массивы для отсутствующих и отличающихся файлов

@@ -157,7 +157,7 @@
         "guid": "85eda40e-ca7b-4a5f-a718-7a5068810dbd",
         "regnum": null,
         "territorykey": null,
-        "inner_path": "/opt/file_storage/561709a9-2cab.tif",
+        "inner_path": "/opt/crg/file_storage/561709a9-2cab.tif",
         "fias__address": null,
         "docname": null
       }
@@ -199,7 +199,7 @@
         "guid": "a71e027b-f402-45f1-9ed8-1b30f7f45c92",
         "regnum": null,
         "territorykey": null,
-        "inner_path": "/opt/file_storage/9da1510e-7c27.tif",
+        "inner_path": "/opt/crg/file_storage/9da1510e-7c27.tif",
         "fias__address": null,
         "docname": null
       }

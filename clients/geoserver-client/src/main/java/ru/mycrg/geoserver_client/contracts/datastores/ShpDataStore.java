@@ -11,7 +11,7 @@ public class ShpDataStore extends BaseParameterizedDataStore<Map<String, Object>
      * Create shape dataStore with default connection parameters.
      *
      * @param name       Data store name
-     * @param pathToFile inner path to file like "/opt/geoserver/data_dir/some.shp".
+     * @param pathToFile inner path to file like "/opt/crg/geoserver/data_dir/some.shp".
      */
     public ShpDataStore(String name, String pathToFile) {
         super(name, new HashMap<>());

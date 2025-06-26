@@ -14,7 +14,7 @@ some-directory
 
 ### Пример запуска
 ```
-sudo ./restore-from-backup.sh /opt/db_dump_2022-05-25.sql.gz /opt/geoserver_backup_2022-05-25.tar
+sudo ./restore-from-backup.sh /opt/crg/db_dump_2022-05-25.sql.gz /opt/crg/geoserver_backup_2022-05-25.tar
 ```
 
 ###### Первый аргумент файл бекапа БД

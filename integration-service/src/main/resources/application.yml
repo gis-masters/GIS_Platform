@@ -3,7 +3,7 @@ spring:
     active: fiz-dev
 
 logging:
-  file: /opt/logs/integration-service.log
+  file: /opt/crg/logs/integration-service.log
   level:
     ru.mycrg: DEBUG
 

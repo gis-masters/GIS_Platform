@@ -1817,7 +1817,7 @@
     &quot;workspace&quot;: &quot;workspace_${project_id}&quot;,&#xd;
     &quot;enabled&quot;: true,&#xd;
     &quot;type&quot;: &quot;GeoTIFF&quot;,&#xd;
-    &quot;url&quot;: &quot;file:///opt/spatial_data/testSamples/testSample.tif&quot;&#xd;
+    &quot;url&quot;: &quot;file:///opt/crg/spatial_data/testSamples/testSample.tif&quot;&#xd;
   }&#xd;
 }</stringProp>
                       <stringProp name="Argument.metadata">=</stringProp>

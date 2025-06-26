@@ -2,7 +2,7 @@ spring:
   profiles:
     active: fiz-dev
 logging:
-  file: /opt/logs/auth-service.log
+  file: /opt/crg/logs/auth-service.log
   level:
     ru.mycrg: DEBUG
 
@@ -64,7 +64,7 @@ esia:
   org_id: 1
   group_id: 314314
   key-store:
-    path: /opt/key_storage/esia_store.pfx
+    path: /opt/crg/key_storage/esia_store.pfx
     pass: 314314
     key_pass: 314314
     alias: fpy

@@ -25,6 +25,6 @@ crg-options:
   geoserver-host: 127.0.0.1:8080
   userServiceName: postgres_db_user_service
 
-  exportStoragePath: /opt/export/
+  exportStoragePath: /opt/crg/export/
 server:
   port: 8354

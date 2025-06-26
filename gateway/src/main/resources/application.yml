@@ -114,7 +114,7 @@ logging:
   level:
     ru.mycrg: DEBUG
   file:
-    name: /opt/logs/gateway.log
+    name: /opt/crg/logs/gateway.log
 
 crg-options:
   auth-service-url: http://127.0.0.1:9000

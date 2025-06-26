@@ -4,7 +4,7 @@
 . utils/textUtil
 
 # Variables
-BASE_DIR=/opt/data
+BASE_DIR=/opt/crg/data
 
 # Checks
 if [ -z "$1" ]; then

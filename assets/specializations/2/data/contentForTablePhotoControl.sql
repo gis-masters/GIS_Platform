@@ -133,7 +133,7 @@ VALUES
 	'_006.jpg',
 	'2319368',
 	'jpg',
-	'/opt/file_storage/organization_42/feature/photo_uploader_3_7a9c3/18874547_photo_1068810117.jpg',
+	'/opt/crg/file_storage/organization_42/feature/photo_uploader_3_7a9c3/18874547_photo_1068810117.jpg',
 	'image/jpeg',
 	'FEATURE',
 	'{
@@ -149,7 +149,7 @@ VALUES
 	'_036.jpg',
 	'1875456',
 	'jpg',
-	'/opt/file_storage/organization_42/feature/photo_uploader_3_7a9c3/18874548_photo_1475682903.jpg',
+	'/opt/crg/file_storage/organization_42/feature/photo_uploader_3_7a9c3/18874548_photo_1475682903.jpg',
 	'image/jpeg',
 	'FEATURE',
 	'{
@@ -165,7 +165,7 @@ VALUES
 	'_067.jpg',
 	'1795008',
 	'jpg',
-	'/opt/file_storage/organization_42/feature/photo_uploader_3_7a9c3/18874549_photo_416112565.jpg',
+	'/opt/crg/file_storage/organization_42/feature/photo_uploader_3_7a9c3/18874549_photo_416112565.jpg',
 	'image/jpeg',
 	'FEATURE',
 	'{
@@ -181,7 +181,7 @@ VALUES
 	'_098.jpg',
 	'1834311',
 	'jpg',
-	'/opt/file_storage/organization_42/feature/photo_uploader_3_7a9c3/18874550_photo_1099775895.jpg',
+	'/opt/crg/file_storage/organization_42/feature/photo_uploader_3_7a9c3/18874550_photo_1099775895.jpg',
 	'image/jpeg',
 	'FEATURE',
 	'{
@@ -197,7 +197,7 @@ VALUES
 	'_128.jpg',
 	'1928509',
 	'jpg',
-	'/opt/file_storage/organization_42/feature/photo_uploader_3_7a9c3/18874551_photo_202662426.jpg',
+	'/opt/crg/file_storage/organization_42/feature/photo_uploader_3_7a9c3/18874551_photo_202662426.jpg',
 	'image/jpeg',
 	'FEATURE',
 	'{

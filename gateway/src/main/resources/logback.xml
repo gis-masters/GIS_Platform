@@ -2,10 +2,10 @@
 <configuration>
     <property scope="context" name="HOSTNAME" value="gateway" />
     <appender name="STASH" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>/opt/logs/gateway.log</file>
+        <file>/opt/crg/logs/gateway.log</file>
 
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>/opt/logs/gateway.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <fileNamePattern>/opt/crg/logs/gateway.%d{yyyy-MM-dd}.log</fileNamePattern>
             <maxHistory>30</maxHistory>
         </rollingPolicy>
 

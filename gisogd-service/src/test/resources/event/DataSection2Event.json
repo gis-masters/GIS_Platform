@@ -166,7 +166,7 @@
         "supplier_data_connection": null,
         "guid": "470a19b6-6f52-415e-a66f-ccbd09beb7f3",
         "regnum": null,
-        "inner_path": "/opt/spatial_data/Crimea_Data/STP/MO/CrimeaSTP_MO_Chs_2018_200k_P.tif",
+        "inner_path": "/opt/crg/spatial_data/Crimea_Data/STP/MO/CrimeaSTP_MO_Chs_2018_200k_P.tif",
         "territorykey": null,
         "fias__address": "Республика Крым",
         "relations": null
@@ -213,7 +213,7 @@
         "supplier_data_connection": null,
         "guid": "33c69668-0315-47d9-b7c6-971c7e07d492",
         "regnum": null,
-        "inner_path": "/opt/spatial_data/Crimea_Data/STP/MO/CrimeaSTP_MO_Zouit_2018_200k_P.tif",
+        "inner_path": "/opt/crg/spatial_data/Crimea_Data/STP/MO/CrimeaSTP_MO_Zouit_2018_200k_P.tif",
         "territorykey": null,
         "fias__address": "Республика Крым",
         "relations": null

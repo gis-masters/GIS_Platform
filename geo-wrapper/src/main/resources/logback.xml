@@ -2,10 +2,10 @@
 <configuration>
   <property scope="context" name="HOSTNAME" value="geo-wrapper" />
     <appender name="STASH" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>/opt/logs/wrapper.log</file>
+        <file>/opt/crg/logs/wrapper.log</file>
 
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>/opt/logs/wrapper.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <fileNamePattern>/opt/crg/logs/wrapper.%d{yyyy-MM-dd}.log</fileNamePattern>
             <maxHistory>30</maxHistory>
         </rollingPolicy>
 

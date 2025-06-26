@@ -21,16 +21,16 @@ while [ -n "$1" ]; do
 done
 
 printHeader "Init migrations"
-export GEOSERVER_DATA_DIR=${GEOSERVER_DATA_DIR:-/opt/data/geoserver}
-export DB_DATA_DIR=${DB_DATA_DIR:-/opt/data/postgres}
+export GEOSERVER_DATA_DIR=${GEOSERVER_DATA_DIR:-/opt/crg/data/geoserver}
+export DB_DATA_DIR=${DB_DATA_DIR:-/opt/crg/data/postgres}
 
 pushd ../assets/ || exit
 ./migration-scripts/run.sh
 popd || exit
 
 printHeader "Copy database configs"
-sudo mkdir -p /opt/data/configs/db
-sudo cp ../configs/db/extra.conf /opt/data/configs/db/extra.conf
+mkdir -p /opt/crg/data/configs/db
+cp ../configs/db/extra.conf /opt/crg/data/configs/db/extra.conf
 
 printHeader "Docker compose UP"
 docker compose -f ../docker-compose.dev.yml -f ../docker-compose.yml -f ../S3minio.yml --env-file ../.env up -d

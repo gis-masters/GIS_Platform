@@ -533,7 +533,7 @@ export const libraryRecords: Record<string, LocalLibraryRecord[]> = {
       territory_key: null,
       is_public: false,
       developer: null,
-      inner_path: '/opt/file_storage/b726dcb0-1aa2.gml'
+      inner_path: '/opt/crg/file_storage/b726dcb0-1aa2.gml'
     },
     {
       id: 12352,

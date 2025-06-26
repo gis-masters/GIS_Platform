@@ -20,7 +20,7 @@ fi
 printHeader2 "Восстанавливаем каталог геосервера, по пути: $BASE_DIR/geoserver"
 
 tar -xf $FILE -C $BASE_DIR
-mv $BASE_DIR/opt/data/* $BASE_DIR
+mv $BASE_DIR/opt/crg/data/* $BASE_DIR
 rm -rf $BASE_DIR/opt
 
 printInfo "Каталог геосервера восстановлен"

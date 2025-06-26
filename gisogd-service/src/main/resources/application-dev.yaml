@@ -73,7 +73,7 @@ logging:
   level:
     ru.mycrg: DEBUG
   file:
-    name: /opt/logs/gisogd-service.log
+    name: /opt/crg/logs/gisogd-service.log
 
 camel:
   get-requested-documents:

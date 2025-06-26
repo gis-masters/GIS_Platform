@@ -25,8 +25,8 @@ services:
     ports:
       - "5434:5432"
     volumes:
-      - /opt/data/postgis:/var/lib/postgresql
-      - /opt/data/configs/db/extra.conf:/settings/extra.conf
+      - /opt/crg/data/postgis:/var/lib/postgresql
+      - /opt/crg/data/configs/db/extra.conf:/settings/extra.conf
     environment:
       POSTGRES_DBNAME: crg_notification_db,crg_auth_service,crg_gis_service,crg_data_service,geoserver_db,bpmn_camunda,crg_audit_service,gsstore,gscatalog
       POSTGRES_USER: ${CRG_USER}
@@ -47,10 +47,10 @@ services:
     ports:
       - "8080:8080"
     volumes:
-      - /opt/data/geoserver:/opt/geoserver/data_dir
-      - /opt/gwc_storage:/opt/gwc_storage
-      - /opt/spatial_data:/opt/spatial_data
-      - /opt/file_storage:/opt/file_storage
+      - /opt/crg/data/geoserver:/opt/geoserver/data_dir
+      - /opt/crg/gwc_storage:/opt/crg/gwc_storage
+      - /opt/crg/spatial_data:/opt/crg/spatial_data
+      - /opt/crg/file_storage:/opt/crg/file_storage
     environment:
       APM_URL: ${APM_URL}
 
@@ -71,7 +71,7 @@ services:
     ports:
       - "6379:6379"
     volumes:
-      - /opt/data/redis:/data
+      - /opt/crg/data/redis:/data
     environment:
       REDIS_PASSWORD: ${REDIS_PASS}
     command: redis-server --requirepass ${REDIS_PASS}
@@ -112,7 +112,7 @@ services:
       ESIA_CLIENT_CERTIFICATE_HASH: ${ESIA_CLIENT_CERTIFICATE_HASH:-A36D6A216A23D945484AD96DE11AED862F950AC88165A6A9D1D2F8F583D6DA4C}
       ESIA_ORG_ID: 1
       ESIA_GROUP_ID: ${ESIA_GROUP_ID:-314314}
-      ESIA_KEY_STORE_PATH: /opt/key_storage/esia_store.pfx
+      ESIA_KEY_STORE_PATH: /opt/crg/key_storage/esia_store.pfx
       ESIA_KEY_STORE_PASS: ${ESIA_KEY_STORE_PASS:-314314}
       ESIA_KEY_STORE_ALIAS: ${ESIA_KEY_STORE_ALIAS:-1}
       ESIA_KEY_STORE_SIGN_ALG: GOST3411-2012-256WITHECGOST3410-2012-256
@@ -120,8 +120,8 @@ services:
       SECURITY_JWT_ACCESS_TOKEN_VALIDITY_SECONDS: ${JWT_ACCESS_TOKEN_VALIDITY_SECONDS:-}
       SECURITY_JWT_REFRESH_TOKEN_VALIDITY_SECONDS: ${JWT_REFRESH_TOKEN_VALIDITY_SECONDS:-}
     volumes:
-      - /opt/logs:/opt/logs
-      - /opt/key_storage:/opt/key_storage
+      - /opt/crg/logs:/opt/logs
+      - /opt/crg/key_storage:/opt/crg/key_storage
     logging:
       options:
         max-size: "10m"
@@ -157,7 +157,7 @@ services:
     ports:
       - "8338:8338"
     volumes:
-      - /opt/logs:/opt/logs
+      - /opt/crg/logs:/opt/logs
     mem_limit: ${INTEGRATION_MEM_LIMIT:-1100}m
 
   data-service:
@@ -197,9 +197,9 @@ services:
       CRG_OPTIONS_NOTIFICATION_SERVICE_URL: http://notification-service:8668
       CRG_OPTIONS_DATA_SERVICE_URL: http://data-service:8084
       CRG_OPTIONS_UI_SERVICE_URL: http://portal-ui:80
-      CRG_OPTIONS_KPT_STORAGE_PATH: /opt/kpt_order/
-      CRG_OPTIONS_MAIN_STORAGE_PATH: /opt/file_storage
-      CRG_OPTIONS_EXPORT_STORAGE_PATH: /opt/export/
+      CRG_OPTIONS_KPT_STORAGE_PATH: /opt/crg/kpt_order/
+      CRG_OPTIONS_MAIN_STORAGE_PATH: /opt/crg/file_storage
+      CRG_OPTIONS_EXPORT_STORAGE_PATH: /opt/crg/export/
       CRG_OPTIONS_GEOSERVER_DB_NAME: geoserver_db
       CRG_OPTIONS_CLIENT_ID: admin
       CRG_OPTIONS_CLIENT_SECRET: geoserver
@@ -220,11 +220,11 @@ services:
       CRG_OPTIONS_INTEGRATION_SMEV3_S3_ACCESSKEY: ${SMEV3_S3_ACCESSKEY:-admin}
       CRG_OPTIONS_INTEGRATION_SMEV3_S3_SECRETKEY: ${SMEV3_S3_SECRETKEY:-oFzB?S3KFv%oFX}
     volumes:
-      - /opt/logs:/opt/logs
-      - /opt/file_storage:/opt/file_storage
-      - /opt/export:/opt/export
-      - /opt/spatial_data:/opt/spatial_data
-      - /opt/kpt_order:/opt/kpt_order
+      - /opt/crg/logs:/opt/crg/logs
+      - /opt/crg/file_storage:/opt/crg/file_storage
+      - /opt/crg/export:/opt/crg/export
+      - /opt/crg/spatial_data:/opt/crg/spatial_data
+      - /opt/crg/kpt_order:/opt/crg/kpt_order
       - /opt/crg/specializations:/opt/crg/specializations
     ports:
       - "8084:8084"
@@ -265,7 +265,7 @@ services:
       CRG_OPTIONS_GEOSERVER_HOST: geoserver:8080
       CRG_OPTIONS_USER_SERVICE_NAME: postgres_db_user_service
     volumes:
-      - /opt/logs:/opt/logs
+      - /opt/crg/logs:/opt/logs
       - /opt/crg/specializations:/opt/crg/specializations
     ports:
       - "8082:8082"
@@ -296,7 +296,7 @@ services:
     ports:
       - "8100:8100"
     volumes:
-      - /opt/logs:/opt/logs
+      - /opt/crg/logs:/opt/logs
     logging:
       options:
         max-size: "10m"
@@ -326,13 +326,13 @@ services:
       CRG_OPTIONS_GEOSERVER_HOST: geoserver:8080
       CRG_OPTIONS_USER_SERVICE_NAME: postgres_db_user_service
 
-      CRG_OPTIONS_EXPORT_STORAGE_PATH: /opt/export/
+      CRG_OPTIONS_EXPORT_STORAGE_PATH: /opt/crg/export/
     depends_on:
       - rabbitmq
     volumes:
-      - /opt/fgistp:/opt/fgistp
-      - /opt/export:/opt/export
-      - /opt/logs:/opt/logs
+      - /opt/crg/fgistp:/opt/fgistp
+      - /opt/crg/export:/opt/crg/export
+      - /opt/crg/logs:/opt/logs
     logging:
       options:
         max-size: "10m"
@@ -369,8 +369,8 @@ services:
       UI_SEND_ERRORS_TO_TG_HTTP: ${UI_SEND_ERRORS_TO_TG_HTTP:-}
       UI_SEND_ERRORS_TO_TG_HTTPS: ${UI_SEND_ERRORS_TO_TG_HTTPS:-}
     volumes:
-      - /opt/reglaments:/usr/share/nginx/html/reglaments
-      - /opt/ssl:/opt/ssl
+      - /opt/crg/reglaments:/usr/share/nginx/html/reglaments
+      - /opt/crg/ssl:/opt/crg/ssl
     ports:
       - "80:80"
       - "443:443"
@@ -396,7 +396,7 @@ services:
     ports:
       - "8086:8086"
     volumes:
-      - /opt/logs:/opt/logs
+      - /opt/crg/logs:/opt/logs
     logging:
       options:
         max-size: "10m"
@@ -424,7 +424,7 @@ services:
     ports:
       - "8088:8088"
     volumes:
-      - /opt/logs:/opt/logs
+      - /opt/crg/logs:/opt/logs
     logging:
       options:
         max-size: "10m"
@@ -438,8 +438,8 @@ services:
     extra_hosts:
       - "logstash:${LOGSTASH_HOST}"
     volumes:
-      - /opt/logs:/opt/logs
-      - /opt/file_storage:/opt/file_storage
+      - /opt/crg/logs:/opt/logs
+      - /opt/crg/file_storage:/opt/crg/file_storage
     ports:
       - "8448:8448"
     mem_limit: ${CRYPTOPRO_MEM_LIMIT:-400}m
@@ -465,8 +465,8 @@ services:
     extra_hosts:
       - "logstash:${LOGSTASH_HOST}"
     volumes:
-      - /opt/logs:/opt/logs
-      - /opt/file_storage:/opt/file_storage
+      - /opt/crg/logs:/opt/logs
+      - /opt/crg/file_storage:/opt/file_storage
     ports:
       - "8668:8668"
     mem_limit: ${NOTIFICATION_MEM_LIMIT:-1000}m

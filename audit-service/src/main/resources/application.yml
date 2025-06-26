@@ -2,7 +2,7 @@ spring:
   profiles:
     active: fiz-dev
 logging:
-  file: /opt/logs/audit-service.log
+  file: /opt/crg/logs/audit-service.log
   level:
     ru.mycrg: DEBUG
 

@@ -3,7 +3,7 @@ spring:
     active: fiz-dev
 
 logging:
-  file: /opt/logs/data-service.log
+  file: /opt/crg/logs/data-service.log
   level:
     ru.mycrg: debug
 
@@ -76,9 +76,9 @@ crg-options:
   notification-service-url: http://127.0.0.1:8668
   data-service-url: http://127.0.0.1:8084
   ui-service-url: http://127.0.0.1:80
-  kptStoragePath: /opt/kpt_order/
-  mainStoragePath: /opt/file_storage
-  exportStoragePath: /opt/export/
+  kptStoragePath: /opt/crg/kpt_order/
+  mainStoragePath: /opt/crg/file_storage
+  exportStoragePath: /opt/crg/export/
   specializationsPath: /opt/crg/specializations
   geoserverDbName: geoserver_db
   client_id: admin

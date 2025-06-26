@@ -11,22 +11,7 @@ printHeader2 "Stop images"
 printInfo "As sudo"
 sudo echo ...
 
-printInfo "Clear geoserver data"
-sudo rm -rf /opt/data/geoserver
-
-printInfo "Clear database"
-sudo rm -rf /opt/data/postgis
-
-printInfo "Clear crg folder"
-sudo rm -rf /opt/crg
-
-printInfo "Clear file storage"
-sudo rm -rf /opt/file_storage/*
-
-printInfo "Clear qwc storage"
-sudo rm -rf /opt/gwc_storage/*
-
-printInfo "Clear export"
-sudo rm -rf /opt/export/*
+printInfo "Clear data"
+sudo rm -rf /opt/crg/*
 
 printSuccess "Done"
