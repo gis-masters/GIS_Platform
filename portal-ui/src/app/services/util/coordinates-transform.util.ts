@@ -19,14 +19,7 @@ import {
 import { isCoordinateValid, normalizeCoordinates } from '../geoserver/wfs/wfs.util';
 import { mapService } from '../map/map.service';
 import { services } from '../services';
-import { isArrayOf } from './typeGuards/isArrayOf';
-import {
-  isCoordinate,
-  isCoordinateArray,
-  isCoordinateArrayArray,
-  isMultiPolygonCoordinate
-} from './typeGuards/isCoordinate';
-import { isNumberArray } from './typeGuards/isNumberArray';
+import { isCoordinateArrayArray, isMultiPolygonCoordinate } from './typeGuards/isCoordinate';
 
 export function transformExtent(extent: Extent, projFrom: Projection, projTo: Projection): Extent {
   return chunk(extent, 2).flatMap(coord => transform(coord, projFrom, projTo)) as Extent;
@@ -40,42 +33,6 @@ export function transform(coordinate: Coordinate, projFrom: Projection, projTo: 
   return proj4(getProjectionCode(projFrom), getProjectionCode(projTo), coordinate).map(dis =>
     Number(dis.toFixed(mapService.PRECISION))
   );
-}
-
-export function transformCoordinates(
-  coordinates: Coordinate[][],
-  projFrom: Projection,
-  projTo: Projection
-): Coordinate[] {
-  return coordinates.flatMap(line => line.map(coordinate => transform(coordinate, projFrom, projTo)));
-}
-
-export function transformAnyCoordinates(
-  coordinates: Coordinate | Coordinate[] | Coordinate[][] | Coordinate[][][],
-  projFrom: Projection,
-  projTo: Projection
-): false | Coordinate | Coordinate[] | Coordinate[][] | Coordinate[][][] {
-  if (isCoordinate(coordinates)) {
-    const olCoordinates = transformCoord(coordinates, projFrom, projTo);
-
-    return isNumberArray(olCoordinates) && olCoordinates;
-  }
-
-  if (isCoordinateArray(coordinates)) {
-    const olCoordinates = transformGroup(coordinates, projFrom, projTo);
-
-    return isCoordinateArray(olCoordinates) && olCoordinates;
-  }
-
-  if (isArrayOf(coordinates, isCoordinateArray)) {
-    const olCoordinates = transformSuperGroup(coordinates, projFrom, projTo);
-
-    return isArrayOf(olCoordinates, isCoordinateArray) && olCoordinates;
-  }
-
-  const olCoordinates = transformMultiSuperGroup(coordinates, projFrom, projTo);
-
-  return isArrayOf(olCoordinates, isCoordinateArrayArray) && olCoordinates;
 }
 
 export function transformGeometry(

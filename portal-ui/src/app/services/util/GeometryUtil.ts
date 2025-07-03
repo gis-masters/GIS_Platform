@@ -43,3 +43,15 @@ function groupFlatCoordinates(flatList: number[]): Coordinate[] {
 
   return groupedCoordinates;
 }
+
+// Функция для округления одного числа с опциональным параметром precision
+export function roundNumber(num: number, precision: number = 4): number {
+  const factor = Math.pow(10, precision);
+
+  return Math.round(num * factor) / factor;
+}
+
+// Функция для округления координаты
+export function roundCoordinate(coord: Coordinate, precision: number = 4): Coordinate {
+  return [roundNumber(coord[0], precision), roundNumber(coord[1], precision)] as Coordinate;
+}

@@ -36,11 +36,13 @@
     </div>
   </div>
 
-  <div class="row edit-content">
-    <crg-loading *ngIf="isSaveInProgress"></crg-loading>
+  <crg-loading *ngIf="isSaveInProgress"></crg-loading>
 
+  <div class="row edit-content">
     <ng-container *ngIf="mode === 'single'; else editAttrsForm">
-      <mat-tab-group class="tabs" [(selectedIndex)]="selectedTab" mat-stretch-tabs="false">
+      <mat-tab-group class="tabs"
+                     [(selectedIndex)]="selectedTab"
+                     mat-stretch-tabs="false">
         <mat-tab label="Атрибуты">
           <ng-container *ngTemplateOutlet="editAttrsForm"></ng-container>
         </mat-tab>

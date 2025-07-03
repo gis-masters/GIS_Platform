@@ -18,9 +18,11 @@ export class LookupDelete<T> extends Component<LookupDeleteProps<T>> {
   render() {
     return (
       <Tooltip title={this.props.tooltip || 'Удалить'}>
-        <IconButton className={cnLookupDelete()} onClick={this.handleDelete} size='small' color='error'>
-          <DeleteOutline fontSize='small' />
-        </IconButton>
+        <span>
+          <IconButton className={cnLookupDelete()} onClick={this.handleDelete} size='small' color='error'>
+            <DeleteOutline fontSize='small' />
+          </IconButton>
+        </span>
       </Tooltip>
     );
   }

@@ -34,7 +34,7 @@ class DrawFeatureModeHandler implements IMapModeHandler {
     sidebars.openEdit();
     sidebars.closeSelectedFeaturesSidebar();
 
-    mapDrawService.drawOn(toDrawGeometry(data.features[0].geometry?.type));
+    void mapDrawService.drawOn(toDrawGeometry(data.features[0].geometry?.type));
 
     return Promise.resolve();
   }
@@ -69,7 +69,7 @@ class DrawFeatureModeHandler implements IMapModeHandler {
   }
 
   pristine(): boolean {
-    return editFeatureStore.pristine;
+    return !editFeatureStore.dirty;
   }
 }
 

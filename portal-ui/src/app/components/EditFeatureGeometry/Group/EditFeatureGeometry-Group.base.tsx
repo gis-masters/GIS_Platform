@@ -1,6 +1,7 @@
 import React, { Component, ComponentType, createRef, PropsWithChildren } from 'react';
 import { action, computed, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
+import { Paper } from '@mui/material';
 import { cn } from '@bem-react/classname';
 import { IClassNameProps } from '@bem-react/core';
 import { boundMethod } from 'autobind-decorator';
@@ -81,74 +82,76 @@ export class EditFeatureGeometryGroupBase extends Component<EditFeatureGeometryG
 
     return (
       <Tag className={cnEditFeatureGeometryGroup(null, [className])}>
-        <EditFeatureGeometryXY />
+        <Paper elevation={2}>
+          <EditFeatureGeometryXY />
 
-        <EditFeatureGeometryGroupInner
-          coordHeight={COORD_HEIGHT}
-          coordsInViewport={COORDS_IN_VIEWPORT}
-          startOffset={this.startOffset}
-          endOffset={this.endOffset}
-          onScroll={this.handleScroll}
-          innerRef={this.innerRef}
-        >
-          {coordinates.slice(this.startOffset, coordinates.length - this.endOffset).map((coordinate, i) => {
-            const isLast = i + this.startOffset === coordinates.length - 1;
-            let displayIndex = i + this.startOffset;
+          <EditFeatureGeometryGroupInner
+            coordHeight={COORD_HEIGHT}
+            coordsInViewport={COORDS_IN_VIEWPORT}
+            startOffset={this.startOffset}
+            endOffset={this.endOffset}
+            onScroll={this.handleScroll}
+            innerRef={this.innerRef}
+          >
+            {coordinates.slice(this.startOffset, coordinates.length - this.endOffset).map((coordinate, i) => {
+              const isLast = i + this.startOffset === coordinates.length - 1;
+              let displayIndex = i + this.startOffset;
 
-            if (
-              editFeatureStore.geometryType === GeometryType.MULTI_POLYGON ||
-              editFeatureStore.geometryType === GeometryType.POLYGON
-            ) {
-              displayIndex = isLast ? startIndex || index : startIndex + i + this.startOffset;
-            }
+              if (
+                editFeatureStore.geometryType === GeometryType.MULTI_POLYGON ||
+                editFeatureStore.geometryType === GeometryType.POLYGON
+              ) {
+                displayIndex = isLast ? startIndex || index : startIndex + i + this.startOffset;
+              }
 
-            if (editFeatureStore.geometryType === GeometryType.MULTI_LINE_STRING) {
-              displayIndex = startIndex + i + this.startOffset;
-            }
+              if (editFeatureStore.geometryType === GeometryType.MULTI_LINE_STRING) {
+                displayIndex = startIndex + i + this.startOffset;
+              }
 
-            return (
-              <EditFeatureGeometryCoord
-                val={coordinate}
-                key={i + this.startOffset}
-                displayIndex={displayIndex}
-                index={i}
-                onDelete={this.handleDelete}
-                withControls
-                canBeDeleted={coordinates.length > minCoordsCount}
-                disabled={isLast && mustBeClosed}
-                onChange={this.handleChange}
-              />
-            );
-          })}
-        </EditFeatureGeometryGroupInner>
+              return (
+                <EditFeatureGeometryCoord
+                  val={coordinate}
+                  key={i + this.startOffset}
+                  displayIndex={displayIndex}
+                  index={i}
+                  onDelete={this.handleDelete}
+                  withControls
+                  canBeDeleted={coordinates.length > minCoordsCount}
+                  disabled={isLast && mustBeClosed}
+                  onChange={this.handleChange}
+                />
+              );
+            })}
+          </EditFeatureGeometryGroupInner>
 
-        <EditFeatureGeometryGroupFooter>
-          <EditFeatureGeometryAddNode onClick={this.handleAdd} />
-          <EditFeatureGeometryAsText
-            coordinates={coordinates}
-            mustBeClosed={mustBeClosed}
-            geometryType={editFeatureStore.geometryType}
-            first={!index}
-          />
-          <EditFeatureGeometryCSV
-            coordinates={coordinates}
-            empty={this.empty}
-            mustBeClosed={mustBeClosed}
-            geometryType={editFeatureStore.geometryType}
-            first={!index}
-          />
-          {canBeDeleted ? (
-            <EditFeatureGeometryDelButton
-              onClick={this.handleGroupDeleting}
-              labelToDelete={selectLabelForGeometryType(
-                editFeatureStore.geometryType,
-                `контур${index ? ' (вырезку)' : ''}`,
-                'линию',
-                'группу'
-              )}
+          <EditFeatureGeometryGroupFooter>
+            <EditFeatureGeometryAddNode onClick={this.handleAdd} />
+            <EditFeatureGeometryAsText
+              coordinates={coordinates}
+              mustBeClosed={mustBeClosed}
+              geometryType={editFeatureStore.geometryType}
+              first={!index}
             />
-          ) : null}
-        </EditFeatureGeometryGroupFooter>
+            <EditFeatureGeometryCSV
+              coordinates={coordinates}
+              empty={this.empty}
+              mustBeClosed={mustBeClosed}
+              geometryType={editFeatureStore.geometryType}
+              first={!index}
+            />
+            {canBeDeleted ? (
+              <EditFeatureGeometryDelButton
+                onClick={this.handleGroupDeleting}
+                labelToDelete={selectLabelForGeometryType(
+                  editFeatureStore.geometryType,
+                  `контур${index ? ' (вырезку)' : ''}`,
+                  'линию',
+                  'группу'
+                )}
+              />
+            ) : null}
+          </EditFeatureGeometryGroupFooter>
+        </Paper>
       </Tag>
     );
   }
@@ -188,7 +191,6 @@ export class EditFeatureGeometryGroupBase extends Component<EditFeatureGeometryG
   @action.bound
   private handleChange(val: Coordinate, i: number) {
     const { mustBeClosed, coordinates } = this.props;
-    editFeatureStore.updateGeometryTab();
 
     coordinates[i] = val;
     if (i === 0 && mustBeClosed) {

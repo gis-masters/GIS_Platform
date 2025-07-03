@@ -24,7 +24,7 @@ class SelectedFeaturesStore {
 
   @observable active: boolean = false;
   @observable features: WfsFeature[] = [];
-  @observable activeFeature: string | null = null;
+  @observable activeFeature: WfsFeature | null = null;
 
   private readonly SELECTING_FEATURES_LIMIT = 500;
 
@@ -49,12 +49,8 @@ class SelectedFeaturesStore {
   }
 
   @action
-  setActiveFeature(activeFeature: string) {
+  setActiveFeature(activeFeature: WfsFeature) {
     this.activeFeature = activeFeature;
-  }
-
-  isFeatureActive(id: string | undefined): boolean {
-    return !!id && id === this.activeFeature;
   }
 
   @computed
@@ -73,9 +69,8 @@ class SelectedFeaturesStore {
     return result;
   }
 
-  // TODO: Разобраться и описать, чем эти фичи отличаются от выделенных
   @computed
-  get highlightedFeatures(): WfsFeature[] {
+  get filtersByLayersFeatures(): WfsFeature[] {
     const filtersByLayers: {
       [tableName: string]: {
         tester?: (properties: WfsFeature['properties']) => boolean;
@@ -118,8 +113,6 @@ class SelectedFeaturesStore {
     }
   }
 
-  // use only in map-selection.service.ts
-
   @action
   setFeatures(features: WfsFeature[]) {
     this.features = features;
@@ -128,6 +121,10 @@ class SelectedFeaturesStore {
   @action
   private reset() {
     Object.assign(this, defaultValues);
+  }
+
+  isFeatureHighlighted(id: string | undefined): boolean {
+    return !!id && id === this.activeFeature?.id;
   }
 
   get limit(): number {

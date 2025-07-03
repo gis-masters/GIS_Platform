@@ -287,7 +287,7 @@ class MapSelectionService {
       }
     }
 
-    void mapDrawService.highlightFeatures(selectedFeaturesStore.highlightedFeatures);
+    void mapDrawService.reDrawFeatures(selectedFeaturesStore.filtersByLayersFeatures);
     void setSelectedFeaturesToUrl();
 
     setTimeout(() => {

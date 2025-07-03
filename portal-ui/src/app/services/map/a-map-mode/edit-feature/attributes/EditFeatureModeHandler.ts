@@ -1,11 +1,11 @@
-import { mapStore } from '../../../../stores/Map.store';
-import { sidebars } from '../../../../stores/Sidebars.store';
-import { services } from '../../../services';
-import { MapMode, MapSelectionTypes } from '../../map.models';
-import { IMapModeHandler, ModeProps } from '../models';
-import { mapSelectionService } from '../selected-features/map-selection.service';
-import { EditFeaturesData } from './EditFeature.models';
-import { editFeatureStore } from './EditFeatureStore';
+import { mapStore } from '../../../../../stores/Map.store';
+import { sidebars } from '../../../../../stores/Sidebars.store';
+import { services } from '../../../../services';
+import { MapMode, MapSelectionTypes } from '../../../map.models';
+import { IMapModeHandler, ModeProps } from '../../models';
+import { mapSelectionService } from '../../selected-features/map-selection.service';
+import { EditFeaturesData } from '../EditFeature.models';
+import { editFeatureStore } from '../EditFeatureStore';
 
 class EditFeatureModeHandler implements IMapModeHandler {
   private static _instance: EditFeatureModeHandler;
@@ -34,14 +34,12 @@ class EditFeatureModeHandler implements IMapModeHandler {
   deactivate(newMode: MapMode): Promise<void> {
     services.logger.trace('EditFeatureModeHandler deactivate: ', MapMode[newMode]);
 
-    sidebars.closeEdit('Edit deactivate');
-
     if (newMode === MapMode.NONE) {
       mapSelectionService.selectFeatures([], MapSelectionTypes.REPLACE);
       sidebars.closeSelectedFeaturesSidebar();
     }
 
-    editFeatureStore.setEditFeaturesData(undefined);
+    sidebars.closeEdit();
 
     return Promise.resolve();
   }
@@ -51,7 +49,7 @@ class EditFeatureModeHandler implements IMapModeHandler {
   }
 
   pristine(): boolean {
-    return editFeatureStore.pristine;
+    return !editFeatureStore.dirty;
   }
 }
 

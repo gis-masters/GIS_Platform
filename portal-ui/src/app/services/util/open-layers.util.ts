@@ -10,7 +10,7 @@ import {
   SimpleGeometry
 } from 'ol/geom';
 
-import { GeometryType, WfsFeature, WfsFeatureCollection, WfsGeometry } from '../geoserver/wfs/wfs.models';
+import { GeometryType, WfsFeature, WfsGeometry } from '../geoserver/wfs/wfs.models';
 import { services } from '../services';
 
 export enum UnitsOfAreaMeasurement {
@@ -98,15 +98,6 @@ export function wfsFeaturesToOlFeatures(wfsFeatures: WfsFeature[]): Feature<Simp
 export function wfsFeaturesToFeatures(features: WfsFeature[]): Feature<Geometry>[] {
   const result: Feature<Geometry>[] = [];
   features.forEach(feature => {
-    result.push(wfsFeatureToFeature(feature));
-  });
-
-  return result;
-}
-
-export function wfsFeatureCollectionToFeature(featureCollection: WfsFeatureCollection): Feature<Geometry>[] {
-  const result: Feature<Geometry>[] = [];
-  featureCollection.features?.forEach(feature => {
     result.push(wfsFeatureToFeature(feature));
   });
 

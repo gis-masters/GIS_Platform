@@ -25,9 +25,11 @@ export class CreateDataset extends Component {
     return (
       <>
         <Tooltip title='Создать набор данных'>
-          <IconButton className={cnCreateDataset()} onClick={this.openDialog}>
-            <PlaylistAdd />
-          </IconButton>
+          <span>
+            <IconButton className={cnCreateDataset()} onClick={this.openDialog}>
+              <PlaylistAdd />
+            </IconButton>
+          </span>
         </Tooltip>
 
         <FormDialog<Dataset>

@@ -45,7 +45,7 @@ import { concatCql } from '../util/cql/concatCql';
 import { Mime } from '../util/Mime';
 import { notFalsyFilter } from '../util/NotFalsyFilter';
 import { mapDrawService } from './draw/map-draw.service';
-import { CrgAdditionalLayerInfo, CrgWmsParams, LayerAdditionalProps, MapPosition } from './map.models';
+import { CrgAdditionalLayerInfo, CrgWmsParams, CursorType, LayerAdditionalProps, MapPosition } from './map.models';
 
 class MapService {
   private static _instance: MapService;
@@ -482,6 +482,10 @@ class MapService {
 
   clearMarkers() {
     this.markersSource?.clear();
+  }
+
+  updateCursor(cursor: CursorType) {
+    this.map.getViewport().style.cursor = cursor;
   }
 
   positionToExtent(extent: Extent, pointMode?: boolean) {

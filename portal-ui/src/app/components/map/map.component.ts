@@ -74,7 +74,7 @@ export class MapComponent implements OnInit, OnDestroy {
     this.activeFeatureReactionDisposer = reaction(
       () => selectedFeaturesStore.activeFeature,
       async () => {
-        await mapDrawService.highlightFeatures();
+        await mapDrawService.reDrawFeatures();
       },
       { fireImmediately: true }
     );

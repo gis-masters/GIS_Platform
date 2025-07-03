@@ -186,10 +186,10 @@ const FilesItemFC: FC<FilesItemProps> = observer(
       return { ext, baseName, disabled, isFileConnected, isFileCanBePlaced, signed };
     }, [connections, fileInfo?.signed, item, showMainCompoundFileActions, showPlaceAction, status]);
 
-    const showSign = (editFeatureStore.editFeaturesData?.features[0] && editable) || (document && !editable);
+    const showSign = (editFeatureStore.firstFeature && editable) || (document && !editable);
     const showFilesSignatureInExplorer =
       (showPlaceAction || showMainCompoundFileActions || showMainCompoundFileActions === undefined) && !editable;
-    const showFileSignatureOnMap = editFeatureStore.editFeaturesData?.features[0] && signed;
+    const showFileSignatureOnMap = editFeatureStore.firstFeature && signed;
     const showSignButton = cryptoProStore.isPluginActive && !signed && !!item.size && showSign;
     const showLookupDeleteButton =
       (showMainCompoundFileActions && editable) || (!showMainCompoundFileActions && editable);
@@ -266,7 +266,7 @@ const FilesItemFC: FC<FilesItemProps> = observer(
                 signed={signed}
                 propertyName={propertyName}
                 document={document}
-                feature={editFeatureStore.editFeaturesData?.features[0]}
+                feature={editFeatureStore.firstFeature}
                 updateFileInfo={updateFileInfo}
               />
             )}
@@ -287,7 +287,7 @@ const FilesItemFC: FC<FilesItemProps> = observer(
                 title={item.title}
                 propertyName={propertyName}
                 document={document}
-                feature={editFeatureStore.editFeaturesData?.features[0]}
+                feature={editFeatureStore.firstFeature}
                 open={fileSignDialogOpen}
                 onClose={setFileSignDialogOpen}
                 updateFileInfo={updateFileInfo}

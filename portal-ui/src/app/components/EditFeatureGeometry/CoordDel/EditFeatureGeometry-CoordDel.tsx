@@ -16,7 +16,7 @@ interface EditFeatureGeometryCoordDelProps {
 export class EditFeatureGeometryCoordDel extends Component<EditFeatureGeometryCoordDelProps> {
   render() {
     return (
-      <Tooltip title='Удалить узел' enterDelay={800}>
+      <Tooltip title='Удалить вершину' enterDelay={800}>
         <span>
           <IconButton
             className={cnEditFeatureGeometryCoordDel()}
@@ -24,7 +24,7 @@ export class EditFeatureGeometryCoordDel extends Component<EditFeatureGeometryCo
             size='small'
             disabled={this.props.disabled}
           >
-            <DeleteOutline color='error' fontSize='small' />
+            <DeleteOutline color={this.props.disabled ? 'disabled' : 'error'} fontSize='small' />
           </IconButton>
         </span>
       </Tooltip>

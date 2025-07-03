@@ -20,9 +20,11 @@ export const LayerZoomWarning: FC<LayerZoomWarningProps> = observer(({ tooltipTe
 
   return (
     <Tooltip title={tooltipText}>
-      <div className={cnLayerZoomWarning()}>
-        <CurrentIcon fontSize='inherit' />
-      </div>
+      <span>
+        <div className={cnLayerZoomWarning()}>
+          <CurrentIcon fontSize='inherit' />
+        </div>
+      </span>
     </Tooltip>
   );
 });

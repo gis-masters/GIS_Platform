@@ -35,14 +35,16 @@ export class User extends Component<UserProps> {
     return (
       <>
         <Tooltip title={currentUser.login}>
-          <Button
-            className={className || cnUser()}
-            onClick={this.toggleMenu}
-            endIcon={<AccountCircle />}
-            color='inherit'
-            variant='text'
-            size='large'
-          />
+          <span>
+            <Button
+              className={className || cnUser()}
+              onClick={this.toggleMenu}
+              endIcon={<AccountCircle />}
+              color='inherit'
+              variant='text'
+              size='large'
+            />
+          </span>
         </Tooltip>
 
         <Menu open={Boolean(this.anchorEl)} onClose={this.toggleMenu} anchorEl={this.anchorEl}>

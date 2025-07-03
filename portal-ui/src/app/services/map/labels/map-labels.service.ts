@@ -28,7 +28,7 @@ import { registry } from '../../di-registry';
 import { extractTableNameFromFeatureId } from '../../geoserver/featureType/featureType.util';
 import { GeometryType, supportedGeometryTypes, WfsFeature } from '../../geoserver/wfs/wfs.models';
 import { isLinear, isPolygonal } from '../../geoserver/wfs/wfs.util';
-import { transformAnyCoordinates, transformCoord, transformGroup } from '../../util/coordinates-transform.util';
+import { transformCoord, transformGroup } from '../../util/coordinates-transform.util';
 import { notFalsyFilter } from '../../util/NotFalsyFilter';
 import { featureToWfsFeature, UnitsOfAreaMeasurement, wfsFeatureToFeature } from '../../util/open-layers.util';
 import { sleep } from '../../util/sleep';
@@ -273,7 +273,7 @@ class MapLabelsService {
 
       return selectedFeaturesStore.features[0] || null;
     } else if (mapStore.mode === MapMode.EDIT_FEATURE) {
-      return editFeatureStore.editFeaturesData?.features[0] || null;
+      return editFeatureStore.firstFeature || null;
     }
 
     return null;
@@ -358,9 +358,9 @@ class MapLabelsService {
     }
 
     const [value, units] = getFeatureLength({ geometry, projection: currentLayerProjection, precision: 4 });
-    const middlePoints = getMiddlePoints(feature);
+    const middlePoints: Point[] = getMiddlePoints(feature);
 
-    const olMiddlePoints = transformAnyCoordinates(
+    const olMiddlePoints = transformGroup(
       middlePoints.map(point => point.getCoordinates()),
       currentLayerProjection,
       await getOlProjection()

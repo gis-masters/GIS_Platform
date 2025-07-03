@@ -97,7 +97,9 @@ export const CarouselWrapper: FC<CarouselWrapperProps> = ({
       )}
       {currentImage && isPdfFile(currentImage.file) && (
         <Tooltip title={expanded ? 'Свернуть' : 'Развернуть'}>
-          <CarouselOpenInFull expanded={expanded} onExpand={onExpand} />
+          <span>
+            <CarouselOpenInFull expanded={expanded} onExpand={onExpand} />
+          </span>
         </Tooltip>
       )}
       <Loading visible={busy} />

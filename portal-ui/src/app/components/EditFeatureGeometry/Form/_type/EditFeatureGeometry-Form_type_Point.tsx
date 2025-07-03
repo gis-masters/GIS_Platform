@@ -9,7 +9,6 @@ import { GeometryType, WfsPointGeometry } from '../../../../services/geoserver/w
 import { editFeatureStore } from '../../../../services/map/a-map-mode/edit-feature/EditFeatureStore';
 import { EditFeatureGeometryAsText } from '../../AsText/EditFeatureGeometry-AsText';
 import { EditFeatureGeometryCoord } from '../../Coord/EditFeatureGeometry-Coord';
-import { EditFeatureGeometryDraw } from '../../Draw/EditFeatureGeometry-Draw';
 import { EditFeatureGeometryToolbar } from '../../Toolbar/EditFeatureGeometry-Toolbar';
 import { EditFeatureGeometryToolbarLeft } from '../../ToolbarLeft/EditFeatureGeometry-ToolbarLeft';
 import { EditFeatureGeometryXY } from '../../XY/EditFeatureGeometry-XY';
@@ -42,7 +41,6 @@ class EditFeatureGeometryFormTypePoint extends EditFeatureGeometryFormBase {
       <div className={cnEditFeatureGeometryForm(null, [className])}>
         <EditFeatureGeometryToolbar>
           <EditFeatureGeometryToolbarLeft>
-            <EditFeatureGeometryDraw onDraw={this.handleChange} />
             <EditFeatureGeometryAsText
               coordinates={[geometry.coordinates]}
               mustBeClosed={false}

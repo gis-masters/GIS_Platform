@@ -1,15 +1,10 @@
 import React, { Component } from 'react';
-import { action, makeObservable } from 'mobx';
+import { makeObservable } from 'mobx';
 import { withBemMod } from '@bem-react/core';
-import { Coordinate } from 'ol/coordinate';
 
 import { GeometryType, WfsLineStringGeometry } from '../../../../services/geoserver/wfs/wfs.models';
 import { editFeatureStore } from '../../../../services/map/a-map-mode/edit-feature/EditFeatureStore';
-import { isArrayOf } from '../../../../services/util/typeGuards/isArrayOf';
-import { isCoordinate } from '../../../../services/util/typeGuards/isCoordinate';
-import { EditFeatureGeometryDraw } from '../../Draw/EditFeatureGeometry-Draw';
 import { EditFeatureGeometryGroup } from '../../Group/EditFeatureGeometry-Group.composed';
-import { EditFeatureGeometryToolbar } from '../../Toolbar/EditFeatureGeometry-Toolbar';
 import { cnEditFeatureGeometryForm, EditFeatureGeometryFormProps } from '../EditFeatureGeometry-Form.base';
 
 class EditFeatureGeometryFormTypeLineString extends Component<EditFeatureGeometryFormProps> {
@@ -24,10 +19,6 @@ class EditFeatureGeometryFormTypeLineString extends Component<EditFeatureGeometr
 
     return (
       <div className={cnEditFeatureGeometryForm(null, [className, 'scroll'])}>
-        <EditFeatureGeometryToolbar>
-          <EditFeatureGeometryDraw onDraw={this.handleDraw} />
-        </EditFeatureGeometryToolbar>
-
         <EditFeatureGeometryGroup
           coordinates={geometry.coordinates}
           canBeDeleted={false}
@@ -37,14 +28,6 @@ class EditFeatureGeometryFormTypeLineString extends Component<EditFeatureGeometr
         />
       </div>
     );
-  }
-
-  @action.bound
-  private handleDraw(coords: Coordinate[]) {
-    const coordinates = editFeatureStore.geometry?.coordinates;
-    if (isArrayOf(coordinates, isCoordinate)) {
-      coordinates.splice(0, coordinates.length, ...coords);
-    }
   }
 }
 

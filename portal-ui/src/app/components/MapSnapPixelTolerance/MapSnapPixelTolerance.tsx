@@ -16,7 +16,7 @@ export class MapSnapPixelTolerance extends Component {
   render() {
     return (
       <>
-        {mapSnapStore.isSnapActive() && (
+        {mapSnapStore.isSnapToolActive() && (
           <Paper className={cnMapSnapPixelTolerance()} component='form'>
             <InputBase
               size='small'

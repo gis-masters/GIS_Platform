@@ -15,15 +15,15 @@ class SelectedFeaturesModeHandler implements IMapModeHandler {
 
   activate(props?: ModeProps): Promise<void> {
     services.logger.trace('SelectedFeaturesModeHandler activate', props);
+    mapStore.setMode(this.mode());
+
     if (props === undefined) {
-      mapStore.setMode(this.mode());
       mapSelectionService.selectFeatures(selectedFeaturesStore.features, MapSelectionTypes.REPLACE);
       sidebars.openSelectedFeaturesSidebar();
 
       return Promise.resolve();
     }
 
-    mapStore.setMode(this.mode());
     const selectedFeaturesData = props?.payload as SelectedFeaturesData;
     mapSelectionService.selectFeatures(selectedFeaturesData.features, selectedFeaturesData.type);
     sidebars.openSelectedFeaturesSidebar();

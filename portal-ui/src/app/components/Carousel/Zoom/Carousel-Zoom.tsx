@@ -19,9 +19,11 @@ export const CarouselZoom: FC<CarouselZoomProps> = ({ zoomed, onZoomChange }) =>
 
   return (
     <Tooltip title={zoomed ? 'Увеличить' : 'Уменьшить'}>
-      <IconButton className={cnCarouselZoom()} onClick={onZoomChange}>
-        <IconType fontSize='large' />
-      </IconButton>
+      <span>
+        <IconButton className={cnCarouselZoom()} onClick={onZoomChange}>
+          <IconType fontSize='large' />
+        </IconButton>
+      </span>
     </Tooltip>
   );
 };

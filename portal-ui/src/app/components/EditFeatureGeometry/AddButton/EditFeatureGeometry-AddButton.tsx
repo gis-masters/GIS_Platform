@@ -11,15 +11,21 @@ const cnEditFeatureGeometry = cn('EditFeatureGeometry');
 
 interface EditFeatureGeometryAddButtonProps extends ChildrenProps {
   onClick(): void;
+  disabled?: boolean;
 }
 
-export const EditFeatureGeometryAddButton: FC<EditFeatureGeometryAddButtonProps> = ({ onClick, children }) => (
+export const EditFeatureGeometryAddButton: FC<EditFeatureGeometryAddButtonProps> = ({
+  onClick,
+  disabled,
+  children
+}) => (
   <Button
     className={cnEditFeatureGeometry('AddButton')}
     color='primary'
     startIcon={<AddCircleOutline />}
     onClick={onClick}
     variant='text'
+    disabled={disabled}
   >
     {children}
   </Button>

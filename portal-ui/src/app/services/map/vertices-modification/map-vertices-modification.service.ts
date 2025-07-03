@@ -23,6 +23,7 @@ import { selectedFeaturesStore } from '../a-map-mode/selected-features/SelectedF
 import { mapDrawService } from '../draw/map-draw.service';
 import { mapService } from '../map.service';
 import { mapSnapService } from '../snap/map-snap.service';
+import { getStyle, KnownStyleKey } from '../styles/map-styles';
 
 class MapVerticesModificationService {
   private static _instance: MapVerticesModificationService;
@@ -67,7 +68,7 @@ class MapVerticesModificationService {
 
   verticesModificationOff() {
     void mapVerticesModificationStore.updateModifiedCollection([]);
-    void mapDrawService.highlightFeatures(selectedFeaturesStore.features);
+    void mapDrawService.reDrawFeatures(selectedFeaturesStore.features);
 
     this.verticesModification.setActive(false);
 
@@ -75,7 +76,7 @@ class MapVerticesModificationService {
     communicationService.off(this);
   }
 
-  verticesModificationClear(simple?: boolean) {
+  async verticesModificationClear(simple?: boolean) {
     if (simple) {
       this.verticesModification.reset();
 
@@ -83,7 +84,11 @@ class MapVerticesModificationService {
     }
 
     void mapVerticesModificationStore.updateModifiedCollection([]);
-    void mapDrawService.highlightFeatures(selectedFeaturesStore.features);
+    void mapDrawService.reDrawFeatures(selectedFeaturesStore.features);
+    const features = await mapDrawService.getFeatures();
+    features.forEach(feature => {
+      feature.setStyle(getStyle(KnownStyleKey.SelectedFeaturesWithVertices));
+    });
 
     this.verticesModification.reset();
   }
@@ -121,12 +126,16 @@ class MapVerticesModificationService {
     }
 
     // После успешного сохранения, обновим фичи на карте.
-    void mapDrawService.highlightMoreFeatures(savedFeatures);
-    this.verticesModificationClear(true);
+    void mapDrawService.drawMoreFeatures(savedFeatures);
+    await this.verticesModificationClear(true);
 
     // Вызываем рефреш для обновления картинки (WMS). (Рефрешим ВСЁ - можно оптимальнее)
     mapService.refreshAllLayers();
     mapVerticesModificationStore.updateModifiedCollection([]);
+    const features = await mapDrawService.getFeatures();
+    features.forEach(feature => {
+      feature.setStyle(getStyle(KnownStyleKey.SelectedFeaturesWithVertices));
+    });
 
     mapVerticesModificationStore.saveOff();
   }

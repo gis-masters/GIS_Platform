@@ -60,9 +60,11 @@ export class ExplorerWidgetsTypeSchema extends Component<ExplorerWidgetsProps> {
             <CardRow>
               <CardRowTitle>Тип геометрии:</CardRowTitle>
               <Tooltip title={this.getGeometryType()}>
-                <CardValue>
-                  <GeometryIcon colorized size='small' geometryType={schema.geometryType} />
-                </CardValue>
+                <span>
+                  <CardValue>
+                    <GeometryIcon colorized size='small' geometryType={schema.geometryType} />
+                  </CardValue>
+                </span>
               </Tooltip>
             </CardRow>
           ) : null}

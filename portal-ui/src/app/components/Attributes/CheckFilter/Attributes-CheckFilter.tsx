@@ -39,7 +39,9 @@ export class AttributesCheckFilter extends Component<XTableFilterProps> {
           size='small'
         >
           <Tooltip title='Оставить только выделенные объекты' enterDelay={700}>
-            <Check fontSize='small' />
+            <span>
+              <Check fontSize='small' />
+            </span>
           </Tooltip>
         </ToggleButton>
         <ToggleButton
@@ -48,7 +50,9 @@ export class AttributesCheckFilter extends Component<XTableFilterProps> {
           size='small'
         >
           <Tooltip title='Оставить только не выделенные объекты' enterDelay={700}>
-            <Close fontSize='small' />
+            <span>
+              <Close fontSize='small' />
+            </span>
           </Tooltip>
         </ToggleButton>
       </ToggleButtonGroup>

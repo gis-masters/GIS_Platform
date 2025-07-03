@@ -1,24 +1,29 @@
+import { MapBrowserEvent } from 'ol';
 import { Coordinate } from 'ol/coordinate';
 import Feature from 'ol/Feature';
-import { Geometry } from 'ol/geom';
-import { Draw, Modify } from 'ol/interaction';
+import { Geometry, MultiPolygon } from 'ol/geom';
+import { Draw, Modify, Translate } from 'ol/interaction';
 import { DrawEvent } from 'ol/interaction/Draw';
 import { ModifyEvent } from 'ol/interaction/Modify';
 import { Vector as VectorLayer } from 'ol/layer';
+import Overlay from 'ol/Overlay';
 import { Vector as VectorSource } from 'ol/source';
 
+import { mapStore } from '../../../stores/Map.store';
 import { communicationService } from '../../communication.service';
 import { Projection } from '../../data/projections/projections.models';
 import { getFeatureProjection, getOlProjection } from '../../data/projections/projections.service';
-import { GeometryType, WfsFeature } from '../../geoserver/wfs/wfs.models';
+import { WfsFeature } from '../../geoserver/wfs/wfs.models';
 import { transformGeometry } from '../../util/coordinates-transform.util';
-import { wfsFeaturesToOlFeatures, wfsFeatureToFeature } from '../../util/open-layers.util';
+import { wfsFeaturesToOlFeatures } from '../../util/open-layers.util';
+import { sleep } from '../../util/sleep';
+import { isBoolean } from '../../util/typeGuards/isBoolean';
 import { editFeatureStore } from '../a-map-mode/edit-feature/EditFeatureStore';
 import { selectedFeaturesStore } from '../a-map-mode/selected-features/SelectedFeatures.store';
+import { FeatureState, ToolMode } from '../map.models';
 import { mapService } from '../map.service';
 import { mapSnapService } from '../snap/map-snap.service';
 import { getStyle, KnownStyleKey } from '../styles/map-styles';
-import { mapVerticesModificationService } from '../vertices-modification/map-vertices-modification.service';
 import { SingleDrawGeometryType } from './map-draw.models';
 
 class MapDrawService {
@@ -27,8 +32,13 @@ class MapDrawService {
     return this._instance || (this._instance = new this());
   }
 
-  private modify?: Modify | null;
-  private draw?: Draw | null;
+  private removeVerticesHintElement: HTMLDivElement | undefined;
+  private removeVerticesHintOverlay: Overlay | undefined;
+  private isAltPressed = false;
+
+  private translate: Translate | undefined;
+  private modify: Modify | undefined;
+  private draw: Draw | undefined;
   private source: VectorSource = new VectorSource<Feature<Geometry>>({
     features: []
   });
@@ -37,21 +47,23 @@ class MapDrawService {
     const drawLayer = new VectorLayer({
       source: this.source,
       zIndex: mapService.DRAFT_LAYER_Z_INDEX,
-      style: feature => {
-        if (feature.getId() === undefined) {
-          return getStyle(KnownStyleKey.ActiveFeature);
-        }
-
-        return getStyle(KnownStyleKey.DrawLayerStyles);
-      },
       properties: { name: 'draft' }
     });
 
     mapService.map.addLayer(drawLayer);
   }
 
-  drawOn(geometryType: SingleDrawGeometryType) {
-    mapVerticesModificationService.verticesModificationOff();
+  async drawOn(geometryType: SingleDrawGeometryType) {
+    const features = await mapDrawService.getFeatures();
+    features.forEach(feature => {
+      const isActive: unknown = feature.get(FeatureState.ACTIVE);
+      if (isBoolean(isActive) && isActive) {
+        feature.setStyle(getStyle(KnownStyleKey.DrawingFeature));
+      } else {
+        feature.setStyle(getStyle(KnownStyleKey.SelectedFeaturesWithVertices));
+      }
+    });
+
     // Modify
     this.modify = new Modify({
       source: this.source,
@@ -61,7 +73,7 @@ class MapDrawService {
           return true;
         }
 
-        return editFeatureStore.editFeaturesData?.features[0]?.id === closestFeature.getId();
+        return editFeatureStore.firstFeature?.id === closestFeature.getId();
       }
     });
 
@@ -75,7 +87,8 @@ class MapDrawService {
     this.draw = new Draw({
       source: this.source,
       type: geometryType,
-      style: getStyle(KnownStyleKey.ActiveFeature)
+      style: getStyle(KnownStyleKey.DrawingFeature),
+      freehandCondition: () => false
     });
 
     this.draw.setActive(true);
@@ -83,59 +96,151 @@ class MapDrawService {
       communicationService.drawEnd.emit(event);
     });
 
+    mapStore.setToolMode(ToolMode.DRAW);
     mapService.map.addInteraction(this.draw);
-
     mapSnapService.activate();
+
+    this.initHintOverlay();
   }
 
   drawOff() {
     if (this.draw) {
       this.draw.setActive(false);
       mapService.map.removeInteraction(this.draw);
-      this.draw = null;
+      this.draw = undefined;
     }
 
     if (this.modify) {
       this.modify.setActive(false);
       mapService.map.removeInteraction(this.modify);
-      this.modify = null;
+      this.modify = undefined;
     }
 
+    if (this.translate) {
+      this.translate.setActive(false);
+      mapService.map.removeInteraction(this.translate);
+      this.translate = undefined;
+    }
+
+    mapStore.setToolMode(ToolMode.NONE);
     mapSnapService.deactivate();
+
+    mapDrawService
+      .getDrawSource()
+      .getFeatures()
+      .forEach(feature => {
+        const isActive: unknown = feature.get(FeatureState.ACTIVE);
+        if (isBoolean(isActive) && isActive) {
+          feature.setStyle(getStyle(KnownStyleKey.ActiveFeature));
+        } else {
+          feature.setStyle(getStyle(KnownStyleKey.SelectedFeatures));
+        }
+      });
+
+    document.removeEventListener('keydown', this.handleKeyDown);
+    document.removeEventListener('keyup', this.handleKeyUp);
+    mapService.map.un('pointermove', this.handlePointerMove);
+
+    if (this.removeVerticesHintOverlay) {
+      mapService.map.removeOverlay(this.removeVerticesHintOverlay);
+    }
   }
 
   /**
-   * Подсвечивает объекты. (очищает черновой слой)
+   * Перерисовывает фичи на черновом слое. (очищает черновой слой)
    */
-  async highlightFeatures(features: WfsFeature[] = [], projection?: Projection) {
+  async reDrawFeatures(newFeatures: WfsFeature[] = [], projection?: Projection) {
+    this.clearDraft();
+
+    const { features, activeFeature } = selectedFeaturesStore;
     const featuresInOlProjection: WfsFeature[] = await this.convertFeatureToOlProjection(
-      [...selectedFeaturesStore.features, ...features],
+      [...features, ...newFeatures],
       projection
     );
 
-    this.clearDraft();
+    const selectedFeatures = wfsFeaturesToOlFeatures(featuresInOlProjection);
+    selectedFeatures.forEach(feature => {
+      feature.set(FeatureState.SELECTED, true);
+      feature.setStyle(getStyle(KnownStyleKey.SelectedFeatures));
+    });
 
-    const olFeatures = wfsFeaturesToOlFeatures(featuresInOlProjection);
-    const highlightedFeature = olFeatures.find(feature => feature.getId() === selectedFeaturesStore.activeFeature);
+    const highlightedFeature = selectedFeatures.find(feature => feature.getId() === activeFeature?.id);
+    if (activeFeature && highlightedFeature) {
+      highlightedFeature.set(FeatureState.ACTIVE, true);
+      highlightedFeature.setStyle(getStyle(KnownStyleKey.ActiveFeature));
 
-    if (selectedFeaturesStore.activeFeature && highlightedFeature) {
-      const geometryType = highlightedFeature.getGeometry()?.getType();
-
-      if (geometryType) {
-        highlightedFeature.setStyle(getStyle(KnownStyleKey.ActiveFeature));
-      }
-
-      this.addFeatures([...olFeatures, highlightedFeature]);
+      this.addFeatures([...selectedFeatures, highlightedFeature]);
     } else {
-      this.addFeatures(olFeatures);
-
-      if (!editFeatureStore.geometryValidationError) {
-        selectedFeaturesStore.clearActiveFeature();
-      }
+      this.addFeatures(selectedFeatures);
     }
   }
 
-  async convertFeatureToOlProjection(features: WfsFeature[], projection?: Projection): Promise<WfsFeature[]> {
+  // Обновим "выделенные фичи" "измененными"
+  async drawMoreFeatures(modifiedFeatures: WfsFeature[]) {
+    const selectedFeatures = selectedFeaturesStore.features;
+    for (const modifiedFeature of modifiedFeatures) {
+      const existingFeatureIndex = selectedFeatures.findIndex(f => f.id === modifiedFeature.id);
+      if (existingFeatureIndex === -1) {
+        selectedFeatures.push(modifiedFeature);
+      } else {
+        selectedFeatures[existingFeatureIndex] = modifiedFeature;
+      }
+    }
+
+    await this.reDrawFeatures(selectedFeatures);
+  }
+
+  // Очистить карту от слоя, который отображал объект.
+  clearDraft() {
+    const collection = this.source.getFeaturesCollection();
+    const count = collection ? collection.getLength() : 0;
+    this.source.clear(count > 10);
+  }
+
+  addFeatures(features: Feature<Geometry>[]) {
+    this.source.addFeatures(features);
+  }
+
+  removeFeature(feature: Feature<Geometry>) {
+    this.source.removeFeature(feature);
+  }
+
+  showSelectionMarker(coordinates: Coordinate[][][]) {
+    if (!this.source) {
+      throw new Error('Невозможно отобразить рамку выделения, нет соответствующего слоя');
+    }
+
+    const olFeature = new Feature(new MultiPolygon(coordinates));
+    olFeature.setStyle(getStyle(KnownStyleKey.Prokol));
+    if (olFeature) {
+      this.source.addFeature(olFeature);
+
+      setTimeout(() => {
+        try {
+          this.source?.removeFeature(olFeature);
+        } catch {}
+      }, 200);
+    }
+  }
+
+  getDrawSource(): VectorSource {
+    return this.source;
+  }
+
+  async getFeatures(): Promise<Feature<Geometry>[]> {
+    await sleep(0);
+
+    return this.source.getFeatures();
+  }
+
+  getActiveFeature(): Feature<Geometry> | undefined {
+    const activeFeatures = mapDrawService.getDrawSource().getFeatures().filter(this.isFeatureActive);
+    if (activeFeatures && activeFeatures.length > 0) {
+      return activeFeatures[0];
+    }
+  }
+
+  private async convertFeatureToOlProjection(features: WfsFeature[], projection?: Projection): Promise<WfsFeature[]> {
     return await Promise.all(
       [...features]
         .filter(({ geometry }) => geometry)
@@ -161,67 +266,65 @@ class MapDrawService {
     );
   }
 
-  // Обновим "выделенные фичи" "измененными"
-  async highlightMoreFeatures(modifiedFeatures: WfsFeature[]) {
-    const selectedFeatures = selectedFeaturesStore.features;
-    for (const modifiedFeature of modifiedFeatures) {
-      const existingFeatureIndex = selectedFeatures.findIndex(f => f.id === modifiedFeature.id);
-      if (existingFeatureIndex === -1) {
-        selectedFeatures.push(modifiedFeature);
-      } else {
-        selectedFeatures[existingFeatureIndex] = modifiedFeature;
+  private isFeatureActive = (feature: Feature) => {
+    const isActive: unknown = feature.get(FeatureState.ACTIVE);
+
+    return isBoolean(isActive) ? isActive : false;
+  };
+
+  private initHintOverlay(): void {
+    this.removeVerticesHintElement = document.createElement('div');
+    this.removeVerticesHintElement.className = 'remove-vertices-hint';
+
+    this.removeVerticesHintOverlay = new Overlay({
+      element: this.removeVerticesHintElement,
+      positioning: 'center-left',
+      offset: [15, 0],
+      stopEvent: false
+    });
+
+    mapService.map.addOverlay(this.removeVerticesHintOverlay);
+
+    this.setupEventListeners();
+  }
+
+  private setupEventListeners(): void {
+    mapService.map.on('pointermove', this.handlePointerMove);
+
+    // Обработчики клавиш
+    document.addEventListener('keydown', this.handleKeyDown);
+    document.addEventListener('keyup', this.handleKeyUp);
+  }
+
+  private handlePointerMove = (e: MapBrowserEvent<UIEvent>): void => {
+    if (!this.draw) {
+      return;
+    }
+
+    if (this.isAltPressed) {
+      if (this.removeVerticesHintElement) {
+        this.removeVerticesHintElement.innerHTML = 'Удалить вершину';
       }
+
+      if (this.removeVerticesHintOverlay) {
+        this.removeVerticesHintOverlay.setPosition(e.coordinate);
+      }
+    } else if (this.removeVerticesHintOverlay) {
+      this.removeVerticesHintOverlay.setPosition(undefined);
     }
+  };
 
-    await this.highlightFeatures(selectedFeatures);
-  }
-
-  // Очистить карту от слоя, который отображал объект.
-  clearDraft() {
-    const collection = this.source.getFeaturesCollection();
-    const count = collection ? collection.getLength() : 0;
-    this.source.clear(count > 10);
-  }
-
-  addFeatures(features: Feature<Geometry>[]) {
-    this.source.addFeatures(features);
-  }
-
-  removeFeature(feature: Feature<Geometry>) {
-    this.source.removeFeature(feature);
-  }
-
-  showSelectionMarker(coordinates: Coordinate[][][]) {
-    if (!this.source) {
-      throw new Error('Невозможно отобразить рамку выделения, нет соответствующего слоя');
+  private handleKeyDown = (e: KeyboardEvent): void => {
+    if (e.key === 'Alt') {
+      this.isAltPressed = true;
     }
+  };
 
-    const feature: WfsFeature = {
-      type: 'Feature',
-      geometry: {
-        type: GeometryType.MULTI_POLYGON,
-        coordinates
-      },
-      id: '',
-      geometry_name: '',
-      properties: {}
-    };
-
-    const olFeature = wfsFeatureToFeature(feature);
-    if (olFeature) {
-      this.source.addFeature(olFeature);
-
-      setTimeout(() => {
-        try {
-          this.source?.removeFeature(olFeature);
-        } catch {}
-      }, 200);
+  private handleKeyUp = (e: KeyboardEvent): void => {
+    if (e.key === 'Alt') {
+      this.isAltPressed = false;
     }
-  }
-
-  getDrawSource(): VectorSource {
-    return this.source;
-  }
+  };
 }
 
 export const mapDrawService = MapDrawService.instance;

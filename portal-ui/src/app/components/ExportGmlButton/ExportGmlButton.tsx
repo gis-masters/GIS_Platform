@@ -21,13 +21,15 @@ export class ExportGmlButton extends Component {
     return (
       <>
         <Tooltip title='Выгрузка GML'>
-          <IconButton
-            onClick={this.openDialog}
-            color='inherit'
-            disabled={!mapStore.allowedActions.includes(MapAction.EXPORT_GML)}
-          >
-            {this.open ? <GetApp /> : <GetAppOutlined />}
-          </IconButton>
+          <span>
+            <IconButton
+              onClick={this.openDialog}
+              color='inherit'
+              disabled={!mapStore.allowedActions.includes(MapAction.EXPORT_GML)}
+            >
+              {this.open ? <GetApp /> : <GetAppOutlined />}
+            </IconButton>
+          </span>
         </Tooltip>
 
         <ExportGmlDialog open={this.open} onClose={this.onClose} />

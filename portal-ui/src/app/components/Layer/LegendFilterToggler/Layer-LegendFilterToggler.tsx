@@ -19,9 +19,11 @@ export const LayerLegendFilterToggler: FC<LayerLegendFilterTogglerProps> = ({ en
 
   return (
     <Tooltip title='Показывать знаки только для отображаемых на карте объектов' enterDelay={700}>
-      <IconButton className={cnLayerLegendFilterToggler()} onClick={onClick} size='small'>
-        <Icon fontSize='inherit' />
-      </IconButton>
+      <span>
+        <IconButton className={cnLayerLegendFilterToggler()} onClick={onClick} size='small'>
+          <Icon fontSize='inherit' />
+        </IconButton>
+      </span>
     </Tooltip>
   );
 };

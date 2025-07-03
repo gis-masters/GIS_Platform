@@ -172,7 +172,7 @@ export class BugsTableComponent implements OnInit, OnChanges, AfterViewInit, OnD
     const [wfsFeature] = await getFeaturesById([objectId], this.crgLayer.complexName);
     const projection = await getProjectionByCode(this.crgLayer.nativeCRS);
 
-    await mapDrawService.highlightFeatures([wfsFeature], projection);
+    await mapDrawService.reDrawFeatures([wfsFeature], projection);
     await mapService.positionToFeature(wfsFeature, projection);
   }
 

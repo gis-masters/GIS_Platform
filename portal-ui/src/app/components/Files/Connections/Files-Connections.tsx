@@ -69,24 +69,28 @@ export class FilesConnections extends Component<ConnectionsProps> {
     return (
       <>
         <Tooltip title='Подключено в проекты'>
-          <IconButton onClick={this.openConnectionsListDialog} size='small'>
-            <Badge
-              badgeContent={connections.length}
-              anchorOrigin={{ horizontal: 'right', vertical: 'top' }}
-              color='default'
-            >
-              {this.connectionsListDialogOpen ? <Map fontSize='small' /> : <MapOutlined fontSize='small' />}
-            </Badge>
-          </IconButton>
+          <span>
+            <IconButton onClick={this.openConnectionsListDialog} size='small'>
+              <Badge
+                badgeContent={connections.length}
+                anchorOrigin={{ horizontal: 'right', vertical: 'top' }}
+                color='default'
+              >
+                {this.connectionsListDialogOpen ? <Map fontSize='small' /> : <MapOutlined fontSize='small' />}
+              </Badge>
+            </IconButton>
+          </span>
         </Tooltip>
 
         <Dialog open={this.connectionsListDialogOpen} onClose={this.closeConnectionsListDialog}>
           <DialogTitle>Проекты, в которые подключен файл: {file.title}</DialogTitle>
           <DialogContentText className={cnFilesEditLayer()}>
             <Tooltip title='Настройки растрового слоя'>
-              <IconButton onClick={this.openEditRasterLayerDialog} size='small'>
-                <MapSettingsOutlined fontSize='small' />
-              </IconButton>
+              <span>
+                <IconButton onClick={this.openEditRasterLayerDialog} size='small'>
+                  <MapSettingsOutlined fontSize='small' />
+                </IconButton>
+              </span>
             </Tooltip>
           </DialogContentText>
           <DialogContent className={cnFilesConnections(null, ['scroll'])}>

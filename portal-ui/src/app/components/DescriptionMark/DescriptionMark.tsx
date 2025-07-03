@@ -17,13 +17,15 @@ const handleMouseEvent = (e: React.MouseEvent) => {
 export const DescriptionMark: FC<ChildrenProps & IClassNameProps> = ({ children, className }) => {
   return (
     <Tooltip title={children} open={!!children && undefined}>
-      <HelpOutline
-        className={cnDescriptionMark(null, [className])}
-        color='primary'
-        fontSize='inherit'
-        onMouseOver={handleMouseEvent}
-        onMouseOut={handleMouseEvent}
-      />
+      <span>
+        <HelpOutline
+          className={cnDescriptionMark(null, [className])}
+          color='primary'
+          fontSize='inherit'
+          onMouseOver={handleMouseEvent}
+          onMouseOut={handleMouseEvent}
+        />
+      </span>
     </Tooltip>
   );
 };

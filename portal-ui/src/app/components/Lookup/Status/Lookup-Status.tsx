@@ -25,20 +25,22 @@ interface LookupStatusProps {
 
 export const LookupStatus: FC<LookupStatusProps> = ({ status, statusText }) => (
   <Tooltip title={statusText}>
-    {((status === 'loading' || status === 'new') && (
-      <CircularProgress size={16} className={cnLookupStatus({ status })} disableShrink={status === 'new'} />
-    )) ||
-      ((status === 'success' || status === 'successFadeOut') && (
-        <CheckOutlined color='success' className={cnLookupStatus({ fadeOut: status === 'successFadeOut', status })} />
+    <span>
+      {((status === 'loading' || status === 'new') && (
+        <CircularProgress size={16} className={cnLookupStatus({ status })} disableShrink={status === 'new'} />
       )) ||
-      (status === 'forbidden' && (
-        <LockOutlined color='info' fontSize='small' className={cnLookupStatus({ status })} />
-      )) ||
-      (status === 'error' && (
-        <ReportGmailerrorredOutlined color='error' fontSize='small' className={cnLookupStatus({ status })} />
-      )) ||
-      (status === 'deleted' && (
-        <CancelOutlined fontSize='small' className={cnLookupStatus({ status })} color='warning' />
-      )) || <span className={cnLookupStatus({ status })} />}
+        ((status === 'success' || status === 'successFadeOut') && (
+          <CheckOutlined color='success' className={cnLookupStatus({ fadeOut: status === 'successFadeOut', status })} />
+        )) ||
+        (status === 'forbidden' && (
+          <LockOutlined color='info' fontSize='small' className={cnLookupStatus({ status })} />
+        )) ||
+        (status === 'error' && (
+          <ReportGmailerrorredOutlined color='error' fontSize='small' className={cnLookupStatus({ status })} />
+        )) ||
+        (status === 'deleted' && (
+          <CancelOutlined fontSize='small' className={cnLookupStatus({ status })} color='warning' />
+        )) || <span className={cnLookupStatus({ status })} />}
+    </span>
   </Tooltip>
 );

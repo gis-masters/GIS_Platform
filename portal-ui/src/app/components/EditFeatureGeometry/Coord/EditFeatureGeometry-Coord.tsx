@@ -21,6 +21,7 @@ import { isDimensionValid, isGeometryValid } from '../../../services/geoserver/w
 import { editFeatureStore } from '../../../services/map/a-map-mode/edit-feature/EditFeatureStore';
 import { mapDrawService } from '../../../services/map/draw/map-draw.service';
 import { getStyle, KnownStyleKey } from '../../../services/map/styles/map-styles';
+import { services } from '../../../services/services';
 import { transformGeometry } from '../../../services/util/coordinates-transform.util';
 import { wfsFeatureToFeature } from '../../../services/util/open-layers.util';
 import { isNumberArray } from '../../../services/util/typeGuards/isNumberArray';
@@ -67,7 +68,7 @@ export class EditFeatureGeometryCoord extends Component<EditFeatureGeometryCoord
   }
 
   render() {
-    const { val, withControls, displayIndex, canBeDeleted, disabled, active } = this.props;
+    const { val, withControls, displayIndex, disabled, active, canBeDeleted } = this.props;
 
     // у росреестра своё понимание X и Y
     return (
@@ -117,48 +118,53 @@ export class EditFeatureGeometryCoord extends Component<EditFeatureGeometryCoord
     );
   }
 
+  private isDisabled() {
+    const { canBeDeleted, disabled } = this.props;
+
+    return !canBeDeleted || !!disabled;
+  }
+
   @computed
   private get warning(): boolean {
     const { val } = this.props;
 
-    if (
-      !editFeatureStore.editFeaturesData?.layer ||
-      !editFeatureStore.currentProjection ||
-      !editFeatureStore.layerExtent ||
-      !this.defaultProjection
-    ) {
-      return false;
-    }
-
-    let cloneVal = val.map(Number);
-
-    if (!isNumberArray(cloneVal) || cloneVal.some(item => Number.isNaN(item))) {
-      //ошибку подсвечивает isDimensionValid(val)
-
-      return false;
-    }
-
-    if (
-      editFeatureStore.currentProjection.authSrid !== DEFAULT_OL_PROJECTION.srid &&
-      editFeatureStore.currentProjection &&
-      this.defaultProjection
-    ) {
-      const geometry = transformGeometry(
-        { type: GeometryType.POINT, coordinates: cloneVal },
-        editFeatureStore.currentProjection,
-        this.defaultProjection
-      );
-
-      if (geometry) {
-        cloneVal = geometry.coordinates.map(Number);
+    try {
+      const { currentProjection, editFeaturesData, layerExtent } = editFeatureStore;
+      if (!editFeaturesData?.layer || !currentProjection || !layerExtent || !this.defaultProjection) {
+        return false;
       }
+
+      let cloneVal = val.map(Number);
+
+      if (!isNumberArray(cloneVal) || cloneVal.some(item => Number.isNaN(item))) {
+        //ошибку подсвечивает isDimensionValid(val)
+
+        return false;
+      }
+
+      if (currentProjection.authSrid !== DEFAULT_OL_PROJECTION.srid && currentProjection && this.defaultProjection) {
+        const geometry = transformGeometry(
+          { type: GeometryType.POINT, coordinates: cloneVal },
+          currentProjection,
+          this.defaultProjection
+        );
+
+        if (geometry) {
+          cloneVal = geometry.coordinates.map(Number);
+        }
+      }
+
+      const checkPoint = point(cloneVal);
+      const isPointInPolygon = booleanPointInPolygon(checkPoint, layerExtent);
+
+      editFeatureStore.setGeometryWarning(!isPointInPolygon);
+
+      return !isPointInPolygon;
+    } catch {
+      services.logger.error('Не удалось провалидировать координату: ', val);
+
+      return true;
     }
-    const checkPoint = point(cloneVal);
-    const isPointInPolygon = booleanPointInPolygon(checkPoint, editFeatureStore.layerExtent);
-
-    editFeatureStore.setGeometryWarning(!isPointInPolygon);
-
-    return !isPointInPolygon;
   }
 
   @action
@@ -168,21 +174,54 @@ export class EditFeatureGeometryCoord extends Component<EditFeatureGeometryCoord
 
   @action.bound
   private handleChangeX(e: React.ChangeEvent<HTMLInputElement>) {
-    const { val, onChange, index } = this.props;
-    val[0] = Number(e.target.value);
-    if (index || index === 0) {
-      onChange(val, index);
-    }
-    this.drawFocusedPointMarker();
+    this.handleCoordinateChange(e, 0);
   }
 
   @action.bound
   private handleChangeY(e: React.ChangeEvent<HTMLInputElement>) {
+    this.handleCoordinateChange(e, 1);
+  }
+
+  @action.bound
+  private handleCoordinateChange(
+    e: React.ChangeEvent<HTMLInputElement>,
+    coordIndex: 0 | 1 // 0 для X, 1 для Y
+  ) {
     const { val, onChange, index } = this.props;
-    val[1] = Number(e.target.value);
-    if (index || index === 0) {
-      onChange(val, index);
+
+    let value = e.target.value;
+
+    // 1. Нормализация ввода
+    value = value
+      .replaceAll(',', '.') // Заменяем запятые на точки
+      .replaceAll(/[^\d.]/g, '') // Удаляем все нецифровые символы
+      .replaceAll(/(\..*)\./g, '$1'); // Удаляем лишние точки
+
+    // 2. Обработка целой и дробной частей
+    const [integerPart = '', fractionalPart = ''] = value.split('.');
+    const processedInteger = integerPart.slice(0, 10); // Макс 10 цифр
+    const processedFraction = fractionalPart.slice(0, 4); // Макс 4 цифры
+
+    // 3. Формирование конечного значения
+    let finalValue = processedInteger;
+    if (value.includes('.') || value.endsWith('.')) {
+      finalValue += fractionalPart ? `.${processedFraction}` : '.';
     }
+
+    // 4. Обновление поля ввода
+    e.target.value = finalValue;
+
+    // 5. Преобразование в число (если ввод завершен)
+    const numericValue = value.endsWith('.') ? Number(finalValue.replace(/\.$/, '')) || 0 : Number(finalValue);
+
+    // 6. Обновление состояния
+    if (numericValue !== val[coordIndex]) {
+      val[coordIndex] = numericValue;
+      if (index !== undefined) {
+        onChange(val, index);
+      }
+    }
+
     this.drawFocusedPointMarker();
   }
 
@@ -192,7 +231,6 @@ export class EditFeatureGeometryCoord extends Component<EditFeatureGeometryCoord
 
     if (onDelete && index) {
       onDelete(index);
-      editFeatureStore.updateGeometryTab();
     }
   }
 

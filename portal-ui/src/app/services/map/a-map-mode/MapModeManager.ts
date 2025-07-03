@@ -3,7 +3,7 @@ import { konfirmieren } from '../../utility-dialogs.service';
 import { MapMode } from '../map.models';
 import { defaultModeHandler } from './DefaultModeHandler';
 import { drawFeatureModeHandler } from './DrawFeatureModeHandler';
-import { editFeatureModeHandler } from './edit-feature/EditFeatureModeHandler';
+import { editFeatureModeHandler } from './edit-feature/attributes/EditFeatureModeHandler';
 import { IMapModeHandler, ModeProps } from './models';
 import { searchInProjectModeHandler } from './SearchInProjectModeHandler';
 import { selectedFeaturesModeHandler } from './selected-features/SelectedFeaturesModeHandler';

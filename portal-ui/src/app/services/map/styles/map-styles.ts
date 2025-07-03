@@ -5,24 +5,27 @@ import Point from 'ol/geom/Point';
 import { Circle, Fill, Icon, Stroke, Style } from 'ol/style';
 import CircleStyle from 'ol/style/Circle';
 
-import { mapSnapStore } from '../../../stores/MapSnap.store';
+import { mapStore } from '../../../stores/Map.store';
 import { extractFeatureTypeName } from '../../geoserver/featureType/featureType.util';
 import { convertToFlatMultiPoint } from '../../util/GeometryUtil';
 import { LabelType } from '../labels/map-labels.models';
 import { getTextStyle } from '../labels/map-labels.util';
+import { MapMode } from '../map.models';
 
 export enum KnownStyleKey {
   LabelTurningPointsStyles = 'labelTurningPointsStyles',
   LabelCreateLineStyles = 'labelCreateLineStyles',
   LabelCreateLabelStyles = 'labelCreateLabelStyles',
   MapMarkerStyles = 'mapMarkerStyles',
-  DrawStyles = 'drawStyles', // Стиль, которым рисуем новые объекты
-  DrawLayerStyles = 'drawLayerStyles', // Стиль, как видим уже нарисованные и выделенные объекты
   MeasureDrawStyles = 'measureDrawStyles',
   MeasureLayerStyles = 'measureLayerStyles',
-  ActiveFeature = 'activeFeature',
   SelectedSingleCoordStyles = 'selectedSingleCoordStyles',
-  LabelsDrawStyles = 'labelsDrawStyles'
+  LabelsDrawStyles = 'labelsDrawStyles',
+  DrawingFeature = 'drawingFeature', // Стиль, которым рисуем новые объекты
+  ActiveFeature = 'activeFeature',
+  SelectedFeatures = 'SelectedFeatures',
+  SelectedFeaturesWithVertices = 'SelectedFeaturesWithVertices',
+  Prokol = 'prokol'
 }
 
 export function getStyle(knownStyleKey: KnownStyleKey): Style[] {
@@ -31,12 +34,20 @@ export function getStyle(knownStyleKey: KnownStyleKey): Style[] {
 
 const DEFAULT_CIRCLE_RADIUS = 4;
 const DEFAULT_STROKE_WIDTH = 2;
-const ACTIVE_STROKE_WIDTH = 4;
-const DEFAULT_FILL_COLOR = 'rgba(255, 255, 255, 0.5)';
-const RED = '#ff0018';
-const BLUE = '#3399ff';
-const YELLOW = '#ffcc33';
-const ORANGE = '#ffa500';
+const ACTIVE_STROKE_WIDTH = 3;
+
+const WHITE = '#FFF';
+const GRAY = '#646464';
+const RED = '#FF0018';
+const BLUE = '#3399FF';
+const ORANGE = '#FFA500';
+
+const FILL_ACTIVE = 'rgba(255,165,0, 0.8)';
+const FILL_DRAW = 'rgba(255,255,0, 0.8)';
+const STROKE_ACTIVE = 'rgba(255,255,255,0.9)';
+
+const FILL_YELLOW = 'rgba(255, 255, 0, 0.5)';
+const FILL_GRAY = 'rgba(255, 255, 255, 0.5)';
 
 const styles = new Map<KnownStyleKey, Style[]>([
   [
@@ -68,6 +79,7 @@ const styles = new Map<KnownStyleKey, Style[]>([
     KnownStyleKey.SelectedSingleCoordStyles,
     [
       new Style({
+        zIndex: 11_000,
         image: new CircleStyle({
           radius: 5,
           stroke: new Stroke({
@@ -86,11 +98,11 @@ const styles = new Map<KnownStyleKey, Style[]>([
       new Style({
         image: new Circle({
           fill: new Fill({
-            color: '#FFA343'
+            color: ORANGE
           }),
           stroke: new Stroke({
             width: 1,
-            color: '#fff'
+            color: WHITE
           }),
           radius: 6
         })
@@ -114,20 +126,20 @@ const styles = new Map<KnownStyleKey, Style[]>([
     [
       new Style({
         fill: new Fill({
-          color: DEFAULT_FILL_COLOR
+          color: FILL_GRAY
         }),
         stroke: new Stroke({
-          color: YELLOW,
+          color: ORANGE,
           lineDash: [10, 10],
           width: DEFAULT_STROKE_WIDTH
         }),
         image: new CircleStyle({
           radius: 5,
           stroke: new Stroke({
-            color: YELLOW
+            color: ORANGE
           }),
           fill: new Fill({
-            color: DEFAULT_FILL_COLOR
+            color: FILL_GRAY
           })
         })
       })
@@ -138,16 +150,16 @@ const styles = new Map<KnownStyleKey, Style[]>([
     [
       new Style({
         fill: new Fill({
-          color: DEFAULT_FILL_COLOR
+          color: FILL_GRAY
         }),
         stroke: new Stroke({
-          color: YELLOW,
+          color: ORANGE,
           width: DEFAULT_STROKE_WIDTH
         }),
         image: new CircleStyle({
           radius: 7,
           fill: new Fill({
-            color: YELLOW
+            color: ORANGE
           })
         })
       })
@@ -157,58 +169,88 @@ const styles = new Map<KnownStyleKey, Style[]>([
     KnownStyleKey.ActiveFeature,
     [
       new Style({
+        zIndex: 5000,
         fill: new Fill({
-          color: 'rgba(255, 255, 0, 0.74)'
+          color: FILL_ACTIVE
         })
       }),
       new Style({
+        zIndex: 5000,
         stroke: new Stroke({
-          color: ORANGE,
+          color: RED,
+          width: ACTIVE_STROKE_WIDTH
+        })
+      }),
+      new Style({
+        zIndex: 5000,
+        stroke: new Stroke({
+          color: WHITE,
           lineDash: [10, 10],
           width: ACTIVE_STROKE_WIDTH
         })
       }),
       new Style({
+        zIndex: 5000,
         image: new Circle({
           radius: DEFAULT_CIRCLE_RADIUS,
           fill: new Fill({
-            color: ORANGE
-          })
-        }),
-        geometry: showVertices
-      })
-    ]
-  ],
-  [
-    KnownStyleKey.LabelsDrawStyles,
-    [
-      new Style({
-        fill: new Fill({
-          color: DEFAULT_FILL_COLOR
-        }),
-        stroke: new Stroke({
-          color: BLUE,
-          lineDash: [10, 10],
-          width: DEFAULT_STROKE_WIDTH
-        }),
-        image: new CircleStyle({
-          radius: 5,
-          stroke: new Stroke({
-            color: BLUE
+            color: RED
           }),
-          fill: new Fill({
-            color: DEFAULT_FILL_COLOR
+          stroke: new Stroke({
+            color: STROKE_ACTIVE,
+            width: 1
           })
-        })
+        }),
+        geometry: showVerticesSnapping
       })
     ]
   ],
   [
-    KnownStyleKey.DrawLayerStyles,
+    KnownStyleKey.DrawingFeature,
+    [
+      new Style({
+        zIndex: 10_000,
+        fill: new Fill({
+          color: FILL_DRAW
+        })
+      }),
+      new Style({
+        zIndex: 10_000,
+        stroke: new Stroke({
+          color: ORANGE,
+          width: ACTIVE_STROKE_WIDTH
+        })
+      }),
+      new Style({
+        zIndex: 10_000,
+        stroke: new Stroke({
+          color: WHITE,
+          lineDash: [10, 10],
+          width: ACTIVE_STROKE_WIDTH
+        })
+      }),
+      new Style({
+        zIndex: 10_000,
+        image: new Circle({
+          radius: DEFAULT_CIRCLE_RADIUS + 0.5,
+          fill: new Fill({
+            color: WHITE
+          }),
+          stroke: new Stroke({
+            color: GRAY,
+            width: 1.5
+          })
+        }),
+        geometry: showVerticesSnapping
+      })
+    ]
+  ],
+  [
+    KnownStyleKey.SelectedFeaturesWithVertices,
     [
       new Style({
         fill: new Fill({
-          color: 'rgba(255, 255, 0, 0.5)'
+          color: FILL_YELLOW
         })
       }),
       new Style({
@@ -222,6 +264,10 @@ const styles = new Map<KnownStyleKey, Style[]>([
           radius: DEFAULT_CIRCLE_RADIUS,
           fill: new Fill({
             color: RED
+          }),
+          stroke: new Stroke({
+            color: GRAY,
+            width: 1
           })
         }),
         geometry: showVerticesSnapping
@@ -229,21 +275,55 @@ const styles = new Map<KnownStyleKey, Style[]>([
     ]
   ],
   [
-    KnownStyleKey.DrawStyles,
+    KnownStyleKey.SelectedFeatures,
+    [
+      new Style({
+        zIndex: 1000,
+        fill: new Fill({
+          color: FILL_YELLOW
+        })
+      }),
+      new Style({
+        zIndex: 1000,
+        stroke: new Stroke({
+          color: RED,
+          width: DEFAULT_STROKE_WIDTH
+        })
+      })
+    ]
+  ],
+  [
+    KnownStyleKey.LabelsDrawStyles,
     [
       new Style({
         fill: new Fill({
-          color: DEFAULT_FILL_COLOR
+          color: FILL_GRAY
         }),
         stroke: new Stroke({
           color: BLUE,
+          lineDash: [10, 10],
           width: DEFAULT_STROKE_WIDTH
         }),
-        image: new Circle({
-          radius: DEFAULT_CIRCLE_RADIUS,
+        image: new CircleStyle({
+          radius: 5,
+          stroke: new Stroke({
+            color: BLUE
+          }),
           fill: new Fill({
-            color: RED
+            color: FILL_GRAY
           })
+        })
+      })
+    ]
+  ],
+  [
+    KnownStyleKey.Prokol,
+    [
+      new Style({
+        zIndex: 15_000,
+        stroke: new Stroke({
+          color: RED,
+          width: DEFAULT_STROKE_WIDTH
         })
       })
     ]
@@ -284,18 +364,14 @@ function showVerticesSnapping(feature: FeatureLike) {
     return new MultiPoint([(geometry as Point).getCoordinates()]);
   }
 
-  if (mapSnapStore.isSnapNotActive()) {
-    return new MultiPoint([(geometry as Point).getCoordinates()]);
-  }
-
-  return convertToFlatMultiPoint(geometry);
+  return showVertices() ? convertToFlatMultiPoint(geometry) : new MultiPoint([(geometry as Point).getCoordinates()]);
 }
 
-function showVertices(feature: FeatureLike): MultiPoint | undefined {
-  const geometry = feature.getGeometry();
-  if (geometry === undefined) {
-    return;
-  }
-
-  return convertToFlatMultiPoint(geometry);
+function showVertices(): boolean {
+  return (
+    mapStore.mode === MapMode.VERTICES_MODIFICATION ||
+    mapStore.mode === MapMode.SELECTED_FEATURES ||
+    mapStore.mode === MapMode.DRAW_FEATURE ||
+    mapStore.mode === MapMode.EDIT_FEATURE
+  );
 }

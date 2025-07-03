@@ -37,7 +37,6 @@ interface FeaturesListItemProps {
   isSearchList?: boolean;
 
   onSelect?(item: WfsFeature): void;
-  onHighlight?(item: WfsFeature | null): void;
 }
 
 interface FeaturesListItemStore {
@@ -46,7 +45,7 @@ interface FeaturesListItemStore {
 }
 
 export const FeaturesListItem = observer((props: FeaturesListItemProps) => {
-  const { feature, searchResultHighlight, errorData, style, isSearchList, onSelect, onHighlight } = props;
+  const { feature, searchResultHighlight, errorData, style, isSearchList, onSelect } = props;
 
   const { rawSchema, setRawSchema } = useLocalObservable(
     (): FeaturesListItemStore => ({
@@ -138,24 +137,16 @@ export const FeaturesListItem = observer((props: FeaturesListItemProps) => {
       return;
     }
 
-    if (onHighlight && feature) {
-      onHighlight(feature);
-
-      selectedFeaturesStore.setActiveFeature(feature.id);
+    if (feature) {
+      selectedFeaturesStore.setActiveFeature(feature);
     }
-  }, [feature, errorData, onHighlight]);
-
-  const handleZoom = useCallback(() => {
-    if (onHighlight && feature) {
-      onHighlight(feature);
-    }
-  }, [feature, onHighlight]);
+  }, [feature, errorData]);
 
   return (
     <div
       className={cnFeaturesListItem({
         foundFeature: !!searchResultHighlight,
-        highlighted: selectedFeaturesStore.isFeatureActive(feature?.id)
+        highlighted: selectedFeaturesStore.isFeatureHighlighted(feature?.id)
       })}
       onDoubleClick={selectIt}
       style={style}
@@ -192,11 +183,7 @@ export const FeaturesListItem = observer((props: FeaturesListItemProps) => {
             </IconButton>
           </Tooltip>
           {feature && (
-            <ZoomToFeature
-              disabled={!mapStore.allowedActions.includes(MapAction.ZOOM_TO_FEATURE)}
-              feature={feature}
-              onClick={handleZoom}
-            />
+            <ZoomToFeature disabled={!mapStore.allowedActions.includes(MapAction.ZOOM_TO_FEATURE)} feature={feature} />
           )}
           <Tooltip title='Открыть'>
             <IconButton

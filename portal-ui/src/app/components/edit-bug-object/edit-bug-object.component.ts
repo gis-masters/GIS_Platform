@@ -130,7 +130,7 @@ export class EditBugObjectComponent extends BaseEdit implements OnChanges, OnIni
         this.logger.warn('Не найдена схемы слоя: ', objectDto.crgLayer.title);
       }
 
-      await mapDrawService.highlightFeatures([wfsFeature]);
+      await mapDrawService.reDrawFeatures([wfsFeature]);
     } catch {
       this.isFeatureTypeLoaded = true;
     }

@@ -34,14 +34,16 @@ export class DatasetActionsDelete extends Component<DatasetActionsDeleteProps> {
 
     return (
       <Tooltip title={disabled && tooltipText ? tooltipText : 'Удалить'}>
-        <IconButton
-          className={cnDatasetActionsDelete()}
-          onClick={this.handleDelete}
-          disabled={disabled || this.loading}
-          color='error'
-        >
-          {this.dialogOpen ? <Delete /> : <DeleteOutline />}
-        </IconButton>
+        <span>
+          <IconButton
+            className={cnDatasetActionsDelete()}
+            onClick={this.handleDelete}
+            disabled={disabled || this.loading}
+            color='error'
+          >
+            {this.dialogOpen ? <Delete /> : <DeleteOutline />}
+          </IconButton>
+        </span>
       </Tooltip>
     );
   }

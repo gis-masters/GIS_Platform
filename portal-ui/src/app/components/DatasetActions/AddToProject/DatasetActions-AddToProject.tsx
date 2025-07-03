@@ -58,9 +58,11 @@ export class DatasetActionsAddToProject extends Component<DatasetActionsAddToPro
     return (
       <>
         <Tooltip title='Добавить в проект'>
-          <IconButton className={cnDatasetActionsAddToProject()} onClick={this.openProjectsListDialog}>
-            {this.projectsListDialogOpen ? <LayerAdd /> : <LayerAddOutlined />}
-          </IconButton>
+          <span>
+            <IconButton className={cnDatasetActionsAddToProject()} onClick={this.openProjectsListDialog}>
+              {this.projectsListDialogOpen ? <LayerAdd /> : <LayerAddOutlined />}
+            </IconButton>
+          </span>
         </Tooltip>
 
         <SelectProjectsDialog

@@ -6,7 +6,6 @@ import { AxiosError } from 'axios';
 
 import { makeGeometryValid } from '../../../services/data/geometryValidation/geometryValidation.service';
 import { editFeatureStore } from '../../../services/map/a-map-mode/edit-feature/EditFeatureStore';
-import { isEditFeaturesData } from '../../../services/util/typeGuards/isEditFeaturesData';
 import { Button } from '../../Button/Button';
 
 import '!style-loader!css-loader!sass-loader!./EditFeatureGeometry-ValidationError.scss';
@@ -34,32 +33,20 @@ export const EditFeatureGeometryValidationError: FC<EditFeatureGeometryValidatio
   );
 
   const fixGeometry = useCallback(async () => {
-    if (editFeatureStore.editFeaturesData?.features) {
+    const firstFeature = editFeatureStore.firstFeature;
+    if (firstFeature) {
       try {
-        const currentFeature = { ...editFeatureStore.editFeaturesData?.features[0], id: null };
-        const feature = await makeGeometryValid(currentFeature);
-        const data = {
-          ...editFeatureStore.editFeaturesData,
-          features: [{ ...feature, id: editFeatureStore.editFeaturesData?.features[0].id }]
-        };
+        const validWfsFeature = await makeGeometryValid(firstFeature);
+        if (validWfsFeature.geometry) {
+          editFeatureStore.setGeometry(validWfsFeature.geometry);
 
-        if (isEditFeaturesData(data)) {
-          editFeatureStore.setGeometryValidationErrorMessage(null);
-
-          if (data.features[0].geometry) {
-            editFeatureStore.setEditFeaturesData(data);
-          }
-
-          editFeatureStore.setPristineFromGeometryFix(true);
-          editFeatureStore.setGeometryValidationError(false);
           editFeatureStore.setPristine(false);
+          editFeatureStore.setGeometryErrorMessage(null);
+          editFeatureStore.setPristineFromGeometryFix(false);
         }
       } catch (error) {
         const err = error as AxiosError<{ errors: Record<string, unknown>[]; message?: string }>;
-        editFeatureStore.setGeometryValidationErrorMessage(
-          err.response?.data.message || 'Ошибка при сохранении объекта'
-        );
-        editFeatureStore.setGeometryValidationError(true);
+        editFeatureStore.setGeometryErrorMessage(err.response?.data.message || 'Ошибка при сохранении объекта');
 
         setShowButton(false);
       }
@@ -68,9 +55,7 @@ export const EditFeatureGeometryValidationError: FC<EditFeatureGeometryValidatio
 
   return (
     <div className={cnEditFeatureGeometryValidationError()}>
-      <div className={cnEditFeatureGeometryValidationError('Message')}>
-        {editFeatureStore.geometryValidationErrorMessage}
-      </div>
+      <div className={cnEditFeatureGeometryValidationError('Message')}>{editFeatureStore.geometryErrorMessage}</div>
       {showButton && (
         <Button className={cnEditFeatureGeometryValidationError('Button')} onClick={fixGeometry} color='error'>
           Исправить

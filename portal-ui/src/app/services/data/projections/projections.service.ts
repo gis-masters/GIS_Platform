@@ -31,7 +31,7 @@ export async function getProjections(pageOptions: PageOptions): Promise<[Project
 
 export async function getProjectionByCode(code: string): Promise<Projection | undefined> {
   if (projectionCache[code]) {
-    return await projectionCache[code];
+    return projectionCache[code];
   }
 
   projectionCache[code] = fetchProjection(code);

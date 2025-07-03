@@ -9,7 +9,6 @@ import { WfsFeature } from '../../services/geoserver/wfs/wfs.models';
 import { EditFeatureMode } from '../../services/map/a-map-mode/edit-feature/EditFeature.models';
 import { mapModeManager } from '../../services/map/a-map-mode/MapModeManager';
 import { selectedFeaturesStore } from '../../services/map/a-map-mode/selected-features/SelectedFeatures.store';
-import { mapDrawService } from '../../services/map/draw/map-draw.service';
 import { MapMode } from '../../services/map/map.models';
 import { FeatureError } from '../../services/map/map-link-following.service';
 import { sidebars } from '../../stores/Sidebars.store';
@@ -39,8 +38,6 @@ export class FeaturesList extends Component<FeaturesListProps> {
   @observable private width = 0;
   @observable private height = 0;
 
-  private highlightAllFeaturesTimeout: number | undefined;
-
   constructor(props: FeaturesListProps) {
     super(props);
     makeObservable(this);
@@ -52,8 +49,7 @@ export class FeaturesList extends Component<FeaturesListProps> {
     }
   }
 
-  async componentWillUnmount() {
-    await this.highlightItem(null);
+  componentWillUnmount() {
     if (this.ref.current) {
       this.resizeObserver.unobserve(this.ref.current);
     }
@@ -87,16 +83,6 @@ export class FeaturesList extends Component<FeaturesListProps> {
   private setSize(width: number, height: number) {
     this.width = width;
     this.height = height;
-  }
-
-  @action.bound
-  private async highlightItem(feature: WfsFeature | null) {
-    if (feature) {
-      clearTimeout(this.highlightAllFeaturesTimeout);
-      await mapDrawService.highlightFeatures([feature]);
-    } else {
-      await mapDrawService.highlightFeatures(selectedFeaturesStore.highlightedFeatures);
-    }
   }
 
   @boundMethod
@@ -151,7 +137,6 @@ export class FeaturesList extends Component<FeaturesListProps> {
     return (
       <FeaturesListItem
         feature={feature}
-        onHighlight={this.highlightItem}
         onSelect={this.handleItemSelect}
         key={feature?.id}
         searchResultHighlight={items[index].searchResultHighlight}

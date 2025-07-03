@@ -12,7 +12,6 @@ import { selectLabelForGeometryType } from '../../../services/geoserver/wfs/wfs.
 import { editFeatureStore } from '../../../services/map/a-map-mode/edit-feature/EditFeatureStore';
 import { ContourAdd } from '../../Icons/ContourAdd';
 import { EditFeatureGeometryDelButton } from '../DelButton/EditFeatureGeometry-DelButton';
-import { EditFeatureGeometryDraw } from '../Draw/EditFeatureGeometry-Draw';
 import { EditFeatureGeometryGroup } from '../Group/EditFeatureGeometry-Group.composed';
 import { EditFeatureGeometryToolbar } from '../Toolbar/EditFeatureGeometry-Toolbar';
 import { EditFeatureGeometryToolbarLeft } from '../ToolbarLeft/EditFeatureGeometry-ToolbarLeft';
@@ -54,11 +53,12 @@ export class EditFeatureGeometrySuperGroup extends Component<EditFeatureGeometry
       <div className={cnEditFeatureGeometry('SuperGroup')}>
         <EditFeatureGeometryToolbar>
           <EditFeatureGeometryToolbarLeft>
-            <EditFeatureGeometryDraw onDraw={this.handleNewGroupDraw} />
             <Tooltip title={`Добавить ${labelPart} списком координат`}>
-              <IconButton onClick={this.handleGroupAdd}>
-                <ContourAdd />
-              </IconButton>
+              <span>
+                <IconButton onClick={this.handleGroupAdd} color='primary'>
+                  <ContourAdd />
+                </IconButton>
+              </span>
             </Tooltip>
           </EditFeatureGeometryToolbarLeft>
           <EditFeatureGeometryToolbarRight>

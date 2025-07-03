@@ -1,5 +1,49 @@
 import { Coordinate } from 'ol/coordinate';
 
+export enum FeatureState {
+  EMPTY = 'emptyFeature',
+  ACTIVE = 'activeFeature',
+  SELECTED = 'selectedFeature'
+}
+
+export type CursorType =
+  | 'auto'
+  | 'default'
+  | 'none'
+  | 'context-menu'
+  | 'help'
+  | 'pointer'
+  | 'progress'
+  | 'wait'
+  | 'cell'
+  | 'crosshair'
+  | 'text'
+  | 'vertical-text'
+  | 'alias'
+  | 'copy'
+  | 'move'
+  | 'no-drop'
+  | 'not-allowed'
+  | 'grab'
+  | 'grabbing'
+  | 'e-resize'
+  | 'n-resize'
+  | 'ne-resize'
+  | 'nw-resize'
+  | 's-resize'
+  | 'se-resize'
+  | 'sw-resize'
+  | 'w-resize'
+  | 'ew-resize'
+  | 'ns-resize'
+  | 'nesw-resize'
+  | 'nwse-resize'
+  | 'col-resize'
+  | 'row-resize'
+  | 'all-scroll'
+  | 'zoom-in'
+  | 'zoom-out';
+
 export enum MapSelectionTypes {
   ADD,
   REMOVE,
@@ -8,6 +52,7 @@ export enum MapSelectionTypes {
 
 export enum ToolMode {
   NONE,
+  DRAW,
   MEASURE_LENGTH,
   MEASURE_AREA,
   SELECTION,

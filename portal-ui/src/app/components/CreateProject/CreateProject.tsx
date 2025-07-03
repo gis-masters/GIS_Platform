@@ -30,26 +30,31 @@ export const CreateProject = observer(({ isFolder, currentProjectFolderId, onCre
     setDialogOpen(false);
   }, []);
 
-  const create = useCallback(async (project: NewCrgProject) => {
-    if (isFolder) {
-      project.folder = true;
-    }
+  const create = useCallback(
+    async (project: NewCrgProject) => {
+      if (isFolder) {
+        project.folder = true;
+      }
 
-    if (currentProjectFolderId && !project.parentId) {
-      project.parentId = currentProjectFolderId;
-    }
+      if (currentProjectFolderId && !project.parentId) {
+        project.parentId = currentProjectFolderId;
+      }
 
-    const newProject = await projectsService.create(project);
+      const newProject = await projectsService.create(project);
 
-    onCreate(newProject);
-  }, [currentProjectFolderId, isFolder, onCreate]);
+      onCreate(newProject);
+    },
+    [currentProjectFolderId, isFolder, onCreate]
+  );
 
   return (
     <>
       <Tooltip title={isFolder ? 'Создать папку проектов' : 'Создать проект'}>
-        <IconButton className={isFolder ? cnCreateProjectFolder() : cnCreateProject()} onClick={openDialog}>
-          {isFolder ? <CreateNewFolderOutlined /> : <PlaylistAdd />}
-        </IconButton>
+        <span>
+          <IconButton className={isFolder ? cnCreateProjectFolder() : cnCreateProject()} onClick={openDialog}>
+            {isFolder ? <CreateNewFolderOutlined /> : <PlaylistAdd />}
+          </IconButton>
+        </span>
       </Tooltip>
 
       <FormDialog<CrgProject>

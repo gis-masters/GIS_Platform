@@ -14,6 +14,8 @@ interface FormViewErrorsProps {
 export const FormViewErrors: FC<FormViewErrorsProps> = ({ errors = [] }) =>
   errors.length > 0 && (
     <Tooltip title={errors.join('\n')} className={cnFormViewErrors()}>
-      <ErrorOutline color='error' />
+      <span>
+        <ErrorOutline color='error' />
+      </span>
     </Tooltip>
   );

@@ -128,6 +128,6 @@ export default class FeaturesListSidebarFeatures extends Component<FeaturesListS
   }
 
   private cancelVerticesModification() {
-    mapVerticesModificationService.verticesModificationClear();
+    void mapVerticesModificationService.verticesModificationClear();
   }
 }

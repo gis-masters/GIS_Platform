@@ -1,6 +1,6 @@
 import { action, makeObservable, observable } from 'mobx';
 
-import { MapMode } from '../services/map/map.models';
+import { MapMode, ToolMode } from '../services/map/map.models';
 import { mapStore } from './Map.store';
 
 class MapSnapStore {
@@ -21,13 +21,8 @@ class MapSnapStore {
   }
 
   @observable
-  isSnapActive(): boolean {
-    return mapStore.mode === MapMode.VERTICES_MODIFICATION || mapStore.mode === MapMode.DRAW_FEATURE;
-  }
-
-  @observable
-  isSnapNotActive(): boolean {
-    return !this.isSnapActive();
+  isSnapToolActive(): boolean {
+    return mapStore.mode === MapMode.VERTICES_MODIFICATION || mapStore.toolMode === ToolMode.DRAW;
   }
 }
 

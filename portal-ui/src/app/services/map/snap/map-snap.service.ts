@@ -14,11 +14,11 @@ class MapSnapService {
     return this._instance || (this._instance = new this());
   }
 
-  private currentSnap: Snap | null;
-  private latestSnapEvent: SnapEvent | null = null;
+  private currentSnap: Snap | undefined;
+  private latestSnapEvent: SnapEvent | undefined;
 
   constructor() {
-    this.currentSnap = null;
+    this.currentSnap = undefined;
 
     reaction(
       () => mapSnapStore.pixelTolerance,
@@ -37,9 +37,10 @@ class MapSnapService {
       this.currentSnap.setActive(false);
       mapService.map.removeInteraction(this.currentSnap);
       mapService.map.un('dblclick', this.handleDblClick);
+      mapService.updateCursor('default');
 
       this.currentSnap.un('snap', this.handleSnap);
-      this.currentSnap = null;
+      this.currentSnap = undefined;
     }
   }
 
@@ -54,6 +55,9 @@ class MapSnapService {
 
     mapService.map.addInteraction(this.currentSnap);
     mapService.map.on('dblclick', this.handleDblClick);
+    this.currentSnap.on('snap', function () {
+      mapService.updateCursor('pointer');
+    });
   }
 
   @boundMethod

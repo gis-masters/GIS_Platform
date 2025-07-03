@@ -44,9 +44,11 @@ export class BasemapActionsDelete extends Component<BasemapActionsDeleteProps> {
   render() {
     return (
       <Tooltip title='Удалить'>
-        <IconButton className={cnBasemapActionsDelete()} onClick={this.handleDelete} color='error'>
-          {this.dialogOpen ? <Delete /> : <DeleteOutline />}
-        </IconButton>
+        <span>
+          <IconButton className={cnBasemapActionsDelete()} onClick={this.handleDelete} color='error'>
+            {this.dialogOpen ? <Delete /> : <DeleteOutline />}
+          </IconButton>
+        </span>
       </Tooltip>
     );
   }

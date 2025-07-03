@@ -107,7 +107,7 @@ export class FeaturesSidebarTeaser extends Component {
     if (mapStore.mode === MapMode.SELECTED_FEATURES) {
       return true;
     } else if (mapStore.mode === MapMode.EDIT_FEATURE) {
-      return editFeatureStore.pristine;
+      return !editFeatureStore.dirty;
     }
   }
 

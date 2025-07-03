@@ -4,6 +4,7 @@ import { Tooltip } from '@mui/material';
 import { ArrowBackIosNew, ArrowForwardIos } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
+import { WfsFeature } from '../../services/geoserver/wfs/wfs.models';
 import { EditFeatureMode } from '../../services/map/a-map-mode/edit-feature/EditFeature.models';
 import { editFeatureStore } from '../../services/map/a-map-mode/edit-feature/EditFeatureStore';
 import { mapModeManager } from '../../services/map/a-map-mode/MapModeManager';
@@ -13,35 +14,38 @@ import { IconButton } from '../IconButton/IconButton';
 
 import '!style-loader!css-loader!sass-loader!./EditFeatureNavigation.scss';
 
-const changeFeature = async (index: number) => {
+const changeFeature = async (feature: WfsFeature) => {
   if (!selectedFeaturesStore.features) {
     return;
   }
 
-  await mapModeManager.changeMode(
-    MapMode.EDIT_FEATURE,
-    {
-      payload: { features: [selectedFeaturesStore.features[index]], mode: EditFeatureMode.single }
-    },
-    'changeFeature'
-  );
+  if (feature) {
+    await mapModeManager.changeMode(
+      MapMode.EDIT_FEATURE,
+      {
+        payload: { features: [feature], mode: EditFeatureMode.single }
+      },
+      'changeFeature'
+    );
+  }
 };
 
 const cnEditFeatureNavigation = cn('EditFeatureNavigation');
 
 export const EditFeatureNavigation: FC = observer(() => {
-  const feature = editFeatureStore.editFeaturesData?.features[0];
-  const currentIndex = feature ? selectedFeaturesStore.features?.findIndex(feat => feature.id === feat.id) : undefined;
+  const currentIndex = editFeatureStore.firstFeature
+    ? selectedFeaturesStore.features?.findIndex(feat => editFeatureStore.firstFeature?.id === feat.id)
+    : undefined;
 
   const prevHandler = useCallback(() => {
     if (typeof currentIndex === 'number' && currentIndex >= 0 && currentIndex >= 0) {
-      void changeFeature(currentIndex - 1);
+      void changeFeature(selectedFeaturesStore.features[currentIndex - 1]);
     }
   }, [currentIndex]);
 
   const nextHandler = useCallback(() => {
     if (typeof currentIndex === 'number' && currentIndex >= 0) {
-      void changeFeature(currentIndex + 1);
+      void changeFeature(selectedFeaturesStore.features[currentIndex + 1]);
     }
   }, [currentIndex]);
 

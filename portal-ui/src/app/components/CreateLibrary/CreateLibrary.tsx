@@ -26,9 +26,11 @@ export class CreateLibrary extends Component {
     return (
       <>
         <Tooltip title='Создать библиотеку'>
-          <IconButton className={cnCreateLibrary()} onClick={this.openDialog}>
-            {this.dialogOpen ? <LibraryAdd /> : <LibraryAddOutlined />}
-          </IconButton>
+          <span>
+            <IconButton className={cnCreateLibrary()} onClick={this.openDialog}>
+              {this.dialogOpen ? <LibraryAdd /> : <LibraryAddOutlined />}
+            </IconButton>
+          </span>
         </Tooltip>
         <FormDialog<LibraryNew>
           title='Создание новой библиотеки'

@@ -82,9 +82,11 @@ export class AttributesBarActions extends Component<AttributesBarActionsProps> {
           <>
             {isVectorLayer(layer) && this.featuresUpdateAllowed && (
               <Tooltip title={`Редактировать${this.objLabel}`}>
-                <IconButton size='small' onClick={this.multipleEdit}>
-                  <EditOutlined fontSize='small' />
-                </IconButton>
+                <span>
+                  <IconButton size='small' onClick={this.multipleEdit}>
+                    <EditOutlined fontSize='small' />
+                  </IconButton>
+                </span>
               </Tooltip>
             )}
 

@@ -10,6 +10,7 @@ import {
   OldPropertySchemaChoice,
   OldPropertySchemaDouble,
   OldPropertySchemaInt,
+  OldPropertySchemaLong,
   OldPropertySchemaStringText,
   PropertyEnumeration,
   ValueType
@@ -115,6 +116,12 @@ export class FeaturePropertyValidators {
 
           break;
         }
+        case ValueType.LONG: {
+          this.minInclusive(currentValue, propertySchema, errors);
+          this.maxInclusive(currentValue, propertySchema, errors);
+
+          break;
+        }
         case ValueType.DOUBLE: {
           this.totalDigits(currentValue, propertySchema, errors);
           this.fractionDigits(currentValue, propertySchema, errors);
@@ -142,7 +149,7 @@ export class FeaturePropertyValidators {
           break;
         }
         default: {
-          console.error('Unsupported ValueType:', propertySchema.valueType);
+          console.error('validate - не поддерживаемый ValueType:', propertySchema.valueType);
 
           return errors;
         }
@@ -219,7 +226,7 @@ export class FeaturePropertyValidators {
   // Определяет точное количество допустимых цифр. Должно быть больше нуля
   private static totalDigits(
     value: string,
-    propertySchema: OldPropertySchemaInt | OldPropertySchemaDouble,
+    propertySchema: OldPropertySchemaInt | OldPropertySchemaDouble | OldPropertySchemaLong,
     errors: ErrorMessages
   ): void {
     if (!propertySchema.totalDigits || propertySchema.totalDigits === -1) {
@@ -246,7 +253,7 @@ export class FeaturePropertyValidators {
   // Определяет нижнюю границу для числовых значений (значение должно быть больше указанного здесь)
   private static minInclusive(
     value: string,
-    propertySchema: OldPropertySchemaInt | OldPropertySchemaDouble,
+    propertySchema: OldPropertySchemaInt | OldPropertySchemaDouble | OldPropertySchemaLong,
     errors: ErrorMessages
   ): void {
     if (!propertySchema.minInclusive || propertySchema.minInclusive === -1) {
@@ -261,7 +268,7 @@ export class FeaturePropertyValidators {
   // Определяет верхнюю границу для числовых значений (значение должно быть меньше или равно указанному здесь)
   private static maxInclusive(
     value: string,
-    propertySchema: OldPropertySchemaInt | OldPropertySchemaDouble,
+    propertySchema: OldPropertySchemaInt | OldPropertySchemaDouble | OldPropertySchemaLong,
     errors: ErrorMessages
   ): void {
     if (!propertySchema.maxInclusive || propertySchema.maxInclusive === -1) {

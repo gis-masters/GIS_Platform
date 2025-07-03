@@ -33,7 +33,7 @@ class ContainerComponent extends Component<BreadcrumbsItemProps> {
 
     return this.needTooltip ? (
       <Tooltip title={title} placement='top' disableInteractive>
-        {inner}
+        <span>{inner}</span>
       </Tooltip>
     ) : (
       inner

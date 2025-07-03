@@ -102,6 +102,17 @@ body.global-crosshair-cursor * {
   font-size: inherit;
 }
 
+.remove-vertices-hint {
+  padding: 2px 4px;
+
+  border: 1px solid rgb(0 0 0 / 10%);
+  border-radius: 4px;
+  background: #fff;
+  box-shadow: rgb(0 0 0 / 10%) 0 1px 3px 0;
+
+  font-family: ui-monospace;
+}
+
 html {
   --mdc-outlined-button-label-text-tracking: 0;
   --mdc-protected-button-label-text-tracking: 0;

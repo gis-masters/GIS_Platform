@@ -70,14 +70,12 @@ class EditFeatureGeometryFormTypeMultiPolygon extends Component<EditFeatureGeome
     const geometry = editFeatureStore.geometry as WfsMultiPolygonGeometry;
     const { coordinates } = getEmptyGeometry(GeometryType.POLYGON) as WfsPolygonGeometry;
     geometry.coordinates.push(coordinates);
-    editFeatureStore.updateGeometryTab();
   }
 
   @action.bound
   private handleDeletePolygon(i: number) {
     const geometry = editFeatureStore.geometry as WfsMultiPolygonGeometry;
     geometry.coordinates.splice(i, 1);
-    editFeatureStore.updateGeometryTab();
   }
 }
 

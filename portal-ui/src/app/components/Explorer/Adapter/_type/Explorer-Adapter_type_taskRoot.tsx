@@ -35,7 +35,9 @@ export class ExplorerAdapterTypeTasksRoot {
   static customOpenActionIcon(): ReactNode {
     return (
       <Tooltip title='Перейти в журнал задач'>
-        <ViewListOutlined />
+        <span>
+          <ViewListOutlined />
+        </span>
       </Tooltip>
     );
   }

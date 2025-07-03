@@ -12,31 +12,35 @@ import '!style-loader!css-loader!sass-loader!./FeatureIcon.scss';
 const cnFeatureIcon = cn('FeatureIcon');
 
 interface FeatureIconProps {
-  geometryType: GeometryType;
+  geometryType: GeometryType | undefined;
   className?: string;
 }
 
 export const FeatureIcon: FC<FeatureIconProps> = ({ geometryType, className }) => {
-  if (!geometryType) {
-    return;
-  }
-
-  let Icon: SvgIconComponent;
   let error = false;
+  let Icon: SvgIconComponent;
+  let tooltip: string = `Тип геометрии: ${geometryType} не поддерживается`;
 
   switch (geometryType) {
-    case GeometryType.POLYGON:
+    case GeometryType.POLYGON: {
+      tooltip = 'Тип геометрии: полигон';
+      Icon = Shape;
+      break;
+    }
     case GeometryType.MULTI_POLYGON: {
+      tooltip = 'Тип геометрии: мультиполигон';
       Icon = Shape;
       break;
     }
     case GeometryType.LINE_STRING:
     case GeometryType.MULTI_LINE_STRING: {
+      tooltip = 'Тип геометрии: линия';
       Icon = PolylineOutlined;
       break;
     }
     case GeometryType.POINT:
     case GeometryType.MULTI_POINT: {
+      tooltip = 'Тип геометрии: точка';
       Icon = Adjust;
       break;
     }
@@ -49,5 +53,9 @@ export const FeatureIcon: FC<FeatureIconProps> = ({ geometryType, className }) =
 
   const icon = <Icon className={cnFeatureIcon(null, [className])} color={error ? 'warning' : 'primary'} />;
 
-  return error ? <Tooltip title={`Тип геометрии: ${geometryType} не поддерживается`}>{icon}</Tooltip> : icon;
+  return (
+    <Tooltip title={tooltip}>
+      <span>{error ? <span>{icon}</span> : icon}</span>
+    </Tooltip>
+  );
 };

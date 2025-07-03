@@ -12,7 +12,7 @@ import { applyView, getGeometryFieldName } from '../../data/schema/schema.utils'
 import { CrgVectorLayer } from '../../gis/layers/layers.models';
 import { getLayerSchema } from '../../gis/layers/layers.service';
 import { selectedFeaturesStore } from '../../map/a-map-mode/selected-features/SelectedFeatures.store';
-import { MapSelectionTypes } from '../../map/map.models';
+import { FeatureState, MapSelectionTypes } from '../../map/map.models';
 import { PageOptions } from '../../models';
 import { WFS } from '../../ol/WFS';
 import { buildCql } from '../../util/cql/buildCql';
@@ -275,8 +275,19 @@ export async function getEmptyFeature(layer: CrgVectorLayer): Promise<WfsFeature
     throw new Error(`Не найден схема для слоя ${layer.title}`);
   }
 
-  const properties = Object.fromEntries(schema.properties.map(({ name }) => [name.toLowerCase(), null]));
+  // Создаем entries с явной типизацией
+  const propertyEntries: Array<[string, null]> = schema.properties.map(
+    ({ name }) => [name.toLowerCase(), null] as [string, null]
+  );
 
+  // Добавляем флаг пустой сущности с явной типизацией
+  const isEmptyFeatureEntry: [string, boolean] = [FeatureState.EMPTY, true];
+
+  // Объединяем entries с явной типизацией
+  const allEntries: Array<[string, null | boolean]> = [...propertyEntries, isEmptyFeatureEntry];
+
+  // Создаем объект свойств с правильной типизацией
+  const properties: Record<string, null | boolean> = Object.fromEntries(allEntries);
   if (!schema.geometryType) {
     throw new Error(`Не задан тип геометрии для слоя ${layer.title}`);
   }

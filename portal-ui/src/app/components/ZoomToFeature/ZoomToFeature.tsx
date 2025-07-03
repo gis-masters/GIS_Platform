@@ -28,15 +28,17 @@ export class ZoomToFeature extends Component<ZoomToFeatureProps> {
 
     return (
       <Tooltip title='Перейти к объекту'>
-        <IconButton
-          className={cnZoomToFeature(null, [className])}
-          onClick={this.handleClick}
-          ref={this.btnRef}
-          disabled={disabled}
-          size='small'
-        >
-          <MyLocation />
-        </IconButton>
+        <span>
+          <IconButton
+            className={cnZoomToFeature(null, [className])}
+            onClick={this.handleClick}
+            ref={this.btnRef}
+            disabled={disabled}
+            size='small'
+          >
+            <MyLocation />
+          </IconButton>
+        </span>
       </Tooltip>
     );
   }
@@ -64,6 +66,6 @@ export class ZoomToFeature extends Component<ZoomToFeatureProps> {
       onClick(feature);
     }
 
-    selectedFeaturesStore.setActiveFeature(feature.id);
+    selectedFeaturesStore.setActiveFeature(feature);
   }
 }

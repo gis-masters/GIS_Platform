@@ -36,13 +36,15 @@ export class CopyUrlButton extends Component<CopyUrlButtonProps> {
             : 'Копировать текущую ссылку'
         }
       >
-        <IconButton
-          className={cnCopyUrlButton({ in: inHeader ? 'header' : 'sidebar' })}
-          onClick={this.handleClick}
-          color={inHeader ? 'inherit' : undefined}
-        >
-          <Share />
-        </IconButton>
+        <span>
+          <IconButton
+            className={cnCopyUrlButton({ in: inHeader ? 'header' : 'sidebar' })}
+            onClick={this.handleClick}
+            color={inHeader ? 'inherit' : undefined}
+          >
+            <Share />
+          </IconButton>
+        </span>
       </Tooltip>
     );
   }

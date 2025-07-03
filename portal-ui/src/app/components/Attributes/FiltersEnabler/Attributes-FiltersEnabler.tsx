@@ -22,12 +22,14 @@ export class AttributesFiltersEnabler extends Component<AttributesFiltersEnabler
 
     return (
       <Tooltip title='Фильтровать объекты на карте, используя фильтры атрибутивной таблицы'>
-        <Switch
-          className={cnAttributesFiltersEnabler()}
-          size='small'
-          checked={attributesTableStore.isLayerFilterEnabled(layer.tableName)}
-          onChange={this.handleChange}
-        />
+        <span>
+          <Switch
+            className={cnAttributesFiltersEnabler()}
+            size='small'
+            checked={attributesTableStore.isLayerFilterEnabled(layer.tableName)}
+            onChange={this.handleChange}
+          />
+        </span>
       </Tooltip>
     );
   }

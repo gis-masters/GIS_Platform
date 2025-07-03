@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormControl } from '@angular/forms';
 import { boundMethod } from 'autobind-decorator';
 import { AxiosError } from 'axios';
@@ -45,6 +45,7 @@ import { selectedFeaturesStore } from '../../services/map/a-map-mode/selected-fe
 import { mapDrawService } from '../../services/map/draw/map-draw.service';
 import { MapMode, MapSelectionTypes } from '../../services/map/map.models';
 import { mapService } from '../../services/map/map.service';
+import { getStyle, KnownStyleKey } from '../../services/map/styles/map-styles';
 import { isUpdateAllowed } from '../../services/permissions/permissions.service';
 import { services } from '../../services/services';
 import { formatDate, systemFormat } from '../../services/util/date.util';
@@ -68,7 +69,7 @@ export interface Properties {
   templateUrl: './edit-feature.component.html',
   styleUrls: ['./edit-feature.component.css']
 })
-export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy {
+export class EditFeatureComponent extends BaseEdit implements OnInit {
   mode?: EditFeatureMode;
   features?: WfsFeature[];
   layer?: CrgVectorableLayer;
@@ -118,10 +119,10 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
 
         this.setIsNew(firstFeature);
 
-        this.selectedTab = editFeatureStore.geometryValidationError ? 1 : Number(this.isNew);
+        this.selectedTab = this.isNew ? 1 : 0;
 
         if (!this.isNew) {
-          await mapDrawService.highlightFeatures(this.features);
+          await mapDrawService.reDrawFeatures(this.features);
           this.isGeometryChanged = false;
         }
 
@@ -290,12 +291,12 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
 
         const projection = await getFeatureProjection(firstFeature);
         if (projection) {
-          editFeatureStore.initFeature(firstFeature, projection);
+          await editFeatureStore.initFeature(firstFeature, projection);
         } else {
           services.logger.error('Не удалось получить проекцию или геометрию объекта');
         }
 
-        selectedFeaturesStore.setActiveFeature(firstFeature.id);
+        selectedFeaturesStore.setActiveFeature(firstFeature);
 
         if (this.updatingAllowed) {
           // eslint-disable-next-line @typescript-eslint/no-unsafe-return
@@ -311,19 +312,19 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
                   this.isGeometryValid = isValid;
                 });
 
-              fromMobx(() => editFeatureStore.isGeometryChanged)
-                .pipe(takeUntil(this.unsubscribe$))
-                .pipe(takeUntil(this.unsubscribeFromMobx$))
-                .subscribe(isGeometryChanged => {
-                  this.isGeometryChanged = isGeometryChanged;
-                  editFeatureStore.setPristine(false);
-                });
-
-              fromMobx(() => editFeatureStore.geometryValidationErrorMessage)
+              fromMobx(() => editFeatureStore.getPool)
                 .pipe(takeUntil(this.unsubscribe$))
                 .pipe(takeUntil(this.unsubscribeFromMobx$))
                 .subscribe(() => {
-                  if (!editFeatureStore.geometryValidationErrorMessage) {
+                  this.isGeometryChanged = true;
+                  editFeatureStore.setPristine(false);
+                });
+
+              fromMobx(() => editFeatureStore.geometryErrorMessage)
+                .pipe(takeUntil(this.unsubscribe$))
+                .pipe(takeUntil(this.unsubscribeFromMobx$))
+                .subscribe(() => {
+                  if (!editFeatureStore.geometryErrorMessage) {
                     this.isGeometryAutoFixed = true;
                   }
                 });
@@ -359,14 +360,12 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
       });
   }
 
-  async ngOnDestroy() {
-    if (currentProject.visibleOnMapLayers.length) {
-      await mapDrawService.highlightFeatures(selectedFeaturesStore.highlightedFeatures);
-    }
-  }
-
   cantBeSaved(): boolean {
-    return mapStore.mode === MapMode.EDIT_FEATURE ? editFeatureStore.pristine : false;
+    if (mapStore.mode === MapMode.EDIT_FEATURE) {
+      return !editFeatureStore.dirty;
+    }
+
+    return false;
   }
 
   async saveFeature(): Promise<void> {
@@ -424,16 +423,13 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
         const createdFeature = await createFeature(layer.dataset, layer.tableName, {
           type: firstFeature.type,
           properties: actualProperties,
-          geometry: editFeatureStore.resultGeometry
+          geometry: editFeatureStore.geometry
         });
         ids = [createdFeature.id];
       } catch (error) {
         const err = error as AxiosError<{ errors: Record<string, unknown>[]; message?: string }>;
 
-        editFeatureStore.setGeometryValidationErrorMessage(
-          err.response?.data.message || 'Ошибка при сохранении объекта'
-        );
-        editFeatureStore.setGeometryValidationError(true);
+        editFeatureStore.setGeometryErrorMessage(err.response?.data.message || 'Ошибка при сохранении объекта');
 
         this.isSaveInProgress = false;
 
@@ -447,7 +443,7 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
       }
 
       if (this.isGeometryChanged || this.isGeometryAutoFixed) {
-        geometry = editFeatureStore.resultGeometry;
+        geometry = editFeatureStore.geometry;
       }
 
       await this.batchUpdateFeatures(this.features || [], actualProperties, geometry);
@@ -459,8 +455,8 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
 
     this.isSaveInProgress = false;
 
-    // если есть ошибка при сохранении объекта, то не дергаем режимы что бы не провоцировать кучу проблем
-    if (!editFeatureStore.geometryValidationError) {
+    // если есть ошибка при сохранении объекта, то остаемся на текущем объекте
+    if (!editFeatureStore.geometryErrorMessage) {
       await mapModeManager.changeMode(
         MapMode.SELECTED_FEATURES,
         {
@@ -510,16 +506,21 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
         await deleteFeaturesAndEmitEvent(dataset, tableName, [firstWfsFeature]);
         mapService.refreshAllLayers();
 
-        await mapModeManager.changeMode(
-          MapMode.SELECTED_FEATURES,
-          {
-            payload: {
-              features: [firstWfsFeature],
-              type: MapSelectionTypes.REMOVE
-            }
-          },
-          'remove 1 feature'
-        );
+        if (selectedFeaturesStore.features.length > 1) {
+          await mapModeManager.changeMode(
+            MapMode.SELECTED_FEATURES,
+            {
+              payload: {
+                features: [firstWfsFeature],
+                type: MapSelectionTypes.REMOVE
+              }
+            },
+            'remove 2222 feature'
+          );
+        } else {
+          selectedFeaturesStore.setFeatures([]);
+          await mapModeManager.changeMode(MapMode.NONE, undefined, 'remove 1 feature');
+        }
       } else {
         services.logger.warn(`Удаление только для режима ${EditFeatureMode[EditFeatureMode.single]}`);
       }
@@ -557,9 +558,12 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
     }
 
     const success = await mapModeManager.changeMode(MapMode.SELECTED_FEATURES, undefined, 'backToList');
-
     if (success) {
       selectedFeaturesStore.clearActiveFeature();
+      const features = await mapDrawService.getFeatures();
+      features.forEach(feature => {
+        feature.setStyle(getStyle(KnownStyleKey.SelectedFeaturesWithVertices));
+      });
     }
   }
 
@@ -601,7 +605,7 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
         });
 
         communicationService.featuresUpdated.emit({ type: 'update', data: null });
-        editFeatureStore.setPristineFromGeometryFix(false);
+        editFeatureStore.setPristineFromGeometryFix(true);
 
         return;
       }
@@ -618,22 +622,16 @@ export class EditFeatureComponent extends BaseEdit implements OnInit, OnDestroy 
     } catch (error) {
       const err = error as AxiosError<{ errors: Record<string, unknown>[]; message?: string }>;
 
-      editFeatureStore.setGeometryValidationErrorMessage(err.response?.data.message || 'Ошибка при сохранении объекта');
-      editFeatureStore.setGeometryValidationError(true);
+      editFeatureStore.setGeometryErrorMessage(err.response?.data.message || 'Ошибка при сохранении объекта');
+      editFeatureStore.setPristineFromGeometryFix(false);
 
       this.isSaveInProgress = false;
     }
   }
 
   private publishPristine() {
-    if (editFeatureStore.pristineFromGeometryFix) {
-      editFeatureStore.setPristine(false);
-
-      return;
-    }
-
-    if (this.editFeatureForm) {
-      editFeatureStore.setPristine(this.editFeatureForm.pristine);
+    if (this.editFeatureForm && editFeatureStore.pristineFromGeometryFix) {
+      editFeatureStore.setPristine(this.editFeatureForm.pristine && editFeatureStore.pristineFromGeometryFix);
     } else {
       editFeatureStore.setPristine(false);
     }

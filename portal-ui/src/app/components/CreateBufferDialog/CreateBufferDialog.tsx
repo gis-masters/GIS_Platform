@@ -67,7 +67,7 @@ export const CreateBufferDialog: FC<CreateBufferDialogProps> = observer(({ open,
       );
 
       // TODO: "режим" сам должен принимать решение, что подсвечивать
-      void mapDrawService.highlightFeatures([featureWithBuffer]);
+      void mapDrawService.reDrawFeatures([featureWithBuffer]);
     },
     [feature]
   );

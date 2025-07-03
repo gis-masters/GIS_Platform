@@ -1,9 +1,9 @@
 import { mapStore } from '../../../stores/Map.store';
 import { mapVerticesModificationStore } from '../../../stores/MapVerticesModification.store';
 import { services } from '../../services';
-import { wfsFeaturesToFeatures } from '../../util/open-layers.util';
 import { mapDrawService } from '../draw/map-draw.service';
 import { MapMode } from '../map.models';
+import { getStyle, KnownStyleKey } from '../styles/map-styles';
 import { mapVerticesModificationService } from '../vertices-modification/map-vertices-modification.service';
 import { IMapModeHandler } from './models';
 import { selectedFeaturesStore } from './selected-features/SelectedFeatures.store';
@@ -14,24 +14,24 @@ class VerticesModificationModeHandler implements IMapModeHandler {
     return this._instance || (this._instance = new this());
   }
 
-  activate(): Promise<void> {
+  async activate(): Promise<void> {
     services.logger.trace('VerticesModificationModeHandler activate');
 
-    mapDrawService.drawOff();
-
     mapVerticesModificationService.verticesModificationOn();
-    mapDrawService.addFeatures(wfsFeaturesToFeatures(selectedFeaturesStore.features));
 
-    mapStore.setMode(this.mode());
+    selectedFeaturesStore.clearActiveFeature();
+    const features = await mapDrawService.getFeatures();
+    features.forEach(feature => {
+      feature.setStyle(getStyle(KnownStyleKey.SelectedFeaturesWithVertices));
+    });
 
-    return Promise.resolve();
+    mapStore.setMode(MapMode.VERTICES_MODIFICATION);
   }
 
   deactivate(): Promise<void> {
     services.logger.trace('VerticesModificationModeHandler deactivate');
 
     mapVerticesModificationService.verticesModificationOff();
-    mapStore.setMode(MapMode.NONE);
 
     return Promise.resolve();
   }
