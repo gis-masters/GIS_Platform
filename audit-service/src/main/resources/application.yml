@@ -11,14 +11,14 @@ spring:
   profiles: fiz-dev
   datasource:
     platform: postgres
-    url: jdbc:postgresql://127.0.0.1:5434/crg_audit_service
-    username: fiz
-    password: 314
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
   flyway:
     enabled: true
-    url: jdbc:postgresql://127.0.0.1:5434/crg_audit_service
-    user: fiz
-    password: 314
+    url: ${SPRING_FLYWAY_URL}
+    user: ${SPRING_FLYWAY_USER}
+    password: ${SPRING_FLYWAY_PASSWORD}
 
 server:
   port: 8086

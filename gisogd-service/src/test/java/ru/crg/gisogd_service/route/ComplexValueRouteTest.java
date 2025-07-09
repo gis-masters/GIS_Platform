@@ -12,6 +12,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import ru.crg.gisogd_service.test.route.dto.ComplexValueObj;
 
 import java.util.ArrayList;
@@ -24,7 +25,8 @@ import static ru.crg.gisogd_service.test.route.TestRoute.TEST_COMPLEX_VALUE_ROUT
 import static ru.crg.gisogd_service.test.route.TestRoute.TEST_COMPLEX_VALUE_SUB_ROUTE_ID;
 
 @RequiredArgsConstructor(onConstructor_ = {@Autowired})
-@SpringBootTest(properties = {"camel.springboot.auto-startup=false"})
+@SpringBootTest
+@ActiveProfiles("test-base")
 @CamelSpringBootTest
 class ComplexValueRouteTest {
     private final CamelContext camelContext;

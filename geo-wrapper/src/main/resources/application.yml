@@ -8,16 +8,16 @@ spring:
   profiles: fiz-dev
   datasource:
     platform: postgres
-    url: jdbc:postgresql://127.0.0.1:5434/postgres
-    username: fiz
-    password: 314
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
     hikari:
       maximum-pool-size: 1
   rabbitmq:
-    host: localhost
-    port: 5672
-    username: fiz
-    password: 314
+    host: ${SPRING_RABBITMQ_HOST}
+    port: ${SPRING_RABBITMQ_PORT}
+    username: ${SPRING_RABBITMQ_USERNAME}
+    password: ${SPRING_RABBITMQ_PASSWORD}
 
 crg-options:
   gis_service_url: http://127.0.0.1:8082

@@ -8,10 +8,10 @@ spring:
       max-request-size: 1001MB
 
   rabbitmq:
-    host: localhost
-    port: 5672
-    username: fiz
-    password: 314
+    host: ${SPRING_RABBITMQ_HOST}
+    port: ${SPRING_RABBITMQ_PORT}
+    username: ${SPRING_RABBITMQ_USERNAME}
+    password: ${SPRING_RABBITMQ_PASSWORD}
 
 zuul:
   host:
@@ -117,8 +117,8 @@ logging:
     name: /opt/crg/logs/gateway.log
 
 crg-options:
-  auth-service-url: http://127.0.0.1:9000
-  secret: vjp4lLW_QmjMHiUw1OBVRIZH
-  client-id: admin
-  client-secret: geoserver
-  auth-method: COOKIE_BEARER
+  auth-service-url: ${CRG_OPTIONS_AUTH_SERVICE_URL}
+  secret: ${CRG_OPTIONS_SECRET}
+  client-id: ${CRG_OPTIONS_CLIENT_ID}
+  client-secret: ${CRG_OPTIONS_CLIENT_SECRET}
+  auth-method: ${CRG_OPTIONS_AUTH_METHOD}

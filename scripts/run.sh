@@ -33,7 +33,7 @@ mkdir -p /opt/crg/data/configs/db
 cp ../configs/db/extra.conf /opt/crg/data/configs/db/extra.conf
 
 printHeader "Docker compose UP"
-docker compose -f ../docker-compose.dev.yml -f ../docker-compose.yml -f ../S3minio.yml --env-file ../.env up -d
+docker compose -f ../docker-compose.dev.yml -f ../docker-compose.yml -f ../S3minio.yml --env-file ../.env.dev up -d
 
 ./wait.sh
 

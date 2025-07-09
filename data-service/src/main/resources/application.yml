@@ -16,18 +16,18 @@ spring:
   profiles: fiz-dev
   datasource:
     platform: postgres
-    url: jdbc:postgresql://127.0.0.1:5434/crg_data_service
-    username: fiz
-    password: 314
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
     hikari:
       minimum-pool-size: ${SPRING_DATASOURCE_HIKARI_MINIMUM_POOL_SIZE:10}
       maximum-pool-size: ${SPRING_DATASOURCE_HIKARI_MAXIMUM_POOL_SIZE:20}
       # у data-service финальная цифра: (кол-во организаций * POOL + 1)
   flyway:
     enabled: true
-    url: jdbc:postgresql://127.0.0.1:5434/crg_data_service
-    user: fiz
-    password: 314
+    url: ${SPRING_FLYWAY_URL}
+    user: ${SPRING_FLYWAY_USER}
+    password: ${SPRING_FLYWAY_PASSWORD}
   jpa:
     database: POSTGRESQL
     database-platform: org.hibernate.dialect.PostgreSQLDialect
@@ -40,19 +40,19 @@ spring:
       max-file-size: 1001MB
       max-request-size: 1001MB
   redis:
-    host: redis
-    port: 6379
+    host: ${SPRING_REDIS_HOST}
+    port: ${SPRING_REDIS_PORT}
     password: ${SPRING_REDIS_PASSWORD}
   rabbitmq:
-    host: localhost
-    port: 5672
-    username: fiz
-    password: 314
+    host: ${SPRING_RABBITMQ_HOST}
+    port: ${SPRING_RABBITMQ_PORT}
+    username: ${SPRING_RABBITMQ_USERNAME}
+    password: ${SPRING_RABBITMQ_PASSWORD}
   jackson:
     default-property-inclusion: non_null
   devtools:
     remote:
-      secret: some_fiz_sercret
+      secret: ${SPRING_DEVTOOLS_REMOTE_SECRET}
 
 management:
   health:
@@ -65,8 +65,8 @@ crg-options:
       recordStats: true
       maximumSize: 1000
       expireAfterWrite: 30
-  taskDb: database_1
-  taskDeadlineTime: 5
+  taskDb: ${CRG_OPTIONS_TASK_DB}
+  taskDeadlineTime: ${CRG_OPTIONS_TASK_DEADLINE_TIME}
   taskManagementFolderId: ${CRG_OPTIONS_TASK_MANAGEMENT_FOLDER_ID:29}
   kptTaskJobCron: ${CRG_OPTIONS_KPT_TASK_JOB_CRON:0 0 0 * * *}
   kptTaskDeadlineTime: ${CRG_OPTIONS_KPT_TASK_DEADLINE_TIME:720}
@@ -81,25 +81,25 @@ crg-options:
   exportStoragePath: /opt/crg/export/
   specializationsPath: /opt/crg/specializations
   geoserverDbName: geoserver_db
-  client_id: admin
-  client_secret: geoserver
-  system-admin-login: admin@mail.ru
-  system-admin-password: geoserver
+  client_id: ${CRG_OPTIONS_CLIENT_ID}
+  client_secret: ${CRG_OPTIONS_CLIENT_SECRET}
+  system-admin-login: ${CRG_OPTIONS_SYSTEM_ADMIN_LOGIN}
+  system-admin-password: ${CRG_OPTIONS_SYSTEM_ADMIN_PASSWORD}
   initFullTextSearch: true
   integration:
-    sed-url: https://httpbin.org/anything
-    gisogd-rf: https://gisogd.npc.ba/api/rgmu
-    gisogd-rf-token: https://id-gisogd.npc.ba/oidc/connect/token
-    gisogd-rf-client-id: gisogdrfclient1
-    gisogd-rf-client-secret: XDZ8XHY8TPR2WKXR6MHPTJ0MH0V4RT9QGHZOB90D6SQG9VNA67Y2QQJ4R
+    sed-url: ${CRG_OPTIONS_INTEGRATION_SED_URL}
+    gisogd-rf: ${CRG_OPTIONS_INTEGRATION_GISOGD_RF}
+    gisogd-rf-token: ${CRG_OPTIONS_INTEGRATION_GISOGD_RF_TOKEN}
+    gisogd-rf-client-id: ${CRG_OPTIONS_INTEGRATION_GISOGD_RF_CLIENT_ID}
+    gisogd-rf-client-secret: ${CRG_OPTIONS_INTEGRATION_GISOGD_RF_CLIENT_SECRET}
     smev3:
       enabled: true
-      mnemonic: U629301
-      transportMnemonic: U629301
+      mnemonic: ${CRG_OPTIONS_INTEGRATION_SMEV3_MNEMONIC}
+      transportMnemonic: ${CRG_OPTIONS_INTEGRATION_SMEV3_TRANSPORT_MNEMONIC}
       targetDb: database_1
       s3:
         endpoint: http://smev-minio:9000
-        accesskey: admin
-        secretkey: oFzB?S3KFv%oFX
+        accesskey: ${CRG_OPTIONS_INTEGRATION_SMEV3_S3_ACCESS_KEY}
+        secretkey: ${CRG_OPTIONS_INTEGRATION_SMEV3_S3_SECRET_KEY}
         bucketOutgoing: outgoing-attachments
         bucketIncoming: incoming-attachments

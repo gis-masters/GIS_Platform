@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
+import org.springframework.test.context.ActiveProfiles;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;
@@ -33,7 +34,8 @@ import ru.mycrg.gisog_service_contract.dto.Document;
  * @author Vladimir Nomokonov
  */
 
-@SpringBootTest(properties = {"camel.springboot.auto-startup=false"})
+@SpringBootTest
+@ActiveProfiles("test-base")
 class BadRequestErrorsResolverTest {
 
     @Autowired

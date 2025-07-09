@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
+import org.springframework.test.context.ActiveProfiles;
 import ru.crg.gisogd_service.converter.RfObjectConverter;
 import ru.crg.gisogd_service.model.rf.*;
 import ru.mycrg.gisog_service_contract.PublishToGisogdRfEvent;
@@ -19,7 +20,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * Aggregate service tests.
  * @author Vladimir Nomokonov
  */
-@SpringBootTest(properties = {"camel.springboot.auto-startup=false"})
+@SpringBootTest
+@ActiveProfiles("test-base")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class AggregateServiceTest {
 

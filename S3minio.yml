@@ -10,8 +10,8 @@ services:
       - '9090:9000'
       - '9001:9001'
     environment:
-      MINIO_ROOT_USER: admin
-      MINIO_ROOT_PASSWORD: oFzB?S3KFv%oFX
+      MINIO_ROOT_USER: ${CRG_OPTIONS_INTEGRATION_SMEV3_S3_ACCESS_KEY}
+      MINIO_ROOT_PASSWORD: ${CRG_OPTIONS_INTEGRATION_SMEV3_S3_SECRET_KEY}
       MINIO_DOMAIN: smev-minio
       MINIO_SERVER_URL: http://localhost:9000
       MINIO_BROWSER_REDIRECT_URL: http://localhost:9001

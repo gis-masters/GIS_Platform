@@ -7,6 +7,7 @@ import org.reflections.Reflections;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.util.FileCopyUtils;
 import ru.crg.gisogd_service.annotation.CrimeaRelationResolve;
 import ru.crg.gisogd_service.service.DocumentTypeResolver;
@@ -23,7 +24,8 @@ import static ru.crg.gisogd_service.service.DocumentTypeResolver.PACKAGE_FOR_SCA
  * Check endpoint api gisogd for classes.
  * @author Vladimir Nomokonov
  */
-@SpringBootTest(properties = {"camel.springboot.auto-startup=false"})
+@SpringBootTest
+@ActiveProfiles("test-base")
 class EndpointChecksTest {
     @Autowired
     private DocumentTypeResolver resolver;

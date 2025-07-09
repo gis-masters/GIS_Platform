@@ -3,9 +3,9 @@ spring:
     active: fiz-dez
 
   rabbitmq:
-    username: fiz
-    password: 314
-    host: localhost
+    host: ${SPRING_RABBITMQ_HOST}
+    username: ${SPRING_RABBITMQ_USERNAME}
+    password: ${SPRING_RABBITMQ_PASSWORD}
     exchanges:
       exchange-receive-data:
         name: gisogdPublicationQueue
@@ -37,13 +37,13 @@ spring:
       client:
         registration:
           dataServiceClient:
-            client-id: arh_grad_rk@mail.ru
-            client-secret: Fiorentina12
+            client-id: ${SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_DATASERVICECLIENT_CLIENT-ID}
+            client-secret: ${SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_DATASERVICECLIENT_CLIENT-SECRET}
             authorization-grant-type: password
             provider: dataServiceClient
           gisogdRfClient:
-            client-id: preprodkrym
-            client-secret: TBKJFJJ3MQH0JFIDJFX7K7WWROIP96H76IEMU8FPAV7S87ISPX7AR5LOK
+            client-id: ${SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_GISOGDRFCLIENT_CLIENT-ID}
+            client-secret: ${SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_GISOGDRFCLIENT_CLIENT-SECRET}
             authorization-grant-type: client_credentials
             provider: gisogdRfClient
         provider:
