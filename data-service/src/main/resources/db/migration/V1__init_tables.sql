@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS public.ais_ums
 ) TABLESPACE pg_default;
 
 ALTER TABLE public.ais_ums
-    OWNER to fiz;
+    OWNER to ${db_owner};
 
 CREATE TABLE IF NOT EXISTS public.integration_tokens
 (
@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS public.integration_tokens
 ) TABLESPACE pg_default;
 
 ALTER TABLE public.integration_tokens
-    OWNER to fiz;
+    OWNER to ${db_owner};
 
 INSERT INTO public.integration_tokens (id, service_name, token)
 VALUES (1, 'ais_ums', 's-mxDFHIgKFSSppWScJoq_ZbcRFlNiaQ')

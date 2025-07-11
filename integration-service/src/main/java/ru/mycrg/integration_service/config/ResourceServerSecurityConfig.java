@@ -18,7 +18,7 @@ import ru.mycrg.auth_facade.IAuthenticationFacade;
 @EnableResourceServer
 public class ResourceServerSecurityConfig extends ResourceServerConfigurerAdapter {
 
-    @Value("${security.jwt.secret:vjp4lLW_QmjMHiUw1OBVRIZH}")
+    @Value("${security.jwt.secret}")
     private String secret;
 
     private final CustomAccessTokenConverter customAccessTokenConverter;

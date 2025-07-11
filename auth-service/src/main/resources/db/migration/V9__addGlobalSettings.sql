@@ -1,6 +1,6 @@
 INSERT INTO public.organizations(id, name, status, created_at, last_modified, settings)
 SELECT -1,
-       'fiz',
+       'zif',
        'PROVISIONED',
        now(),
        now(),

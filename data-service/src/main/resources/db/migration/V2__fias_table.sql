@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS fiaz.full_address
     );
 
 alter table fiaz.full_address
-    owner to fiz;
+    OWNER to ${db_owner};
 
 CREATE INDEX IF NOT EXISTS  full_address_index ON fiaz.full_address (fulladdress);
 
@@ -23,7 +23,7 @@ CREATE TABLE IF NOT EXISTS fiaz.locality_oktmo
     );
 
 alter table fiaz.locality_oktmo
-    owner to fiz;
+    OWNER to ${db_owner};
 
 CREATE INDEX IF NOT EXISTS  locality_oktmo_index ON fiaz.locality_oktmo (locality);
 
@@ -48,7 +48,7 @@ CREATE TABLE IF NOT EXISTS fiaz.address_objects
 );
 
 ALTER TABLE fiaz.address_objects
-    OWNER to fiz;
+    OWNER to ${db_owner};
 
 CREATE TABLE IF NOT EXISTS fiaz.address_objects_division
 (
@@ -60,7 +60,7 @@ CREATE TABLE IF NOT EXISTS fiaz.address_objects_division
 );
 
 ALTER TABLE fiaz.address_objects_division
-    OWNER to fiz;
+    OWNER to ${db_owner};
 
 CREATE TABLE IF NOT EXISTS fiaz.address_objects_types
 (
@@ -77,7 +77,7 @@ CREATE TABLE IF NOT EXISTS fiaz.address_objects_types
 );
 
 ALTER TABLE fiaz.address_objects_types
-    OWNER to fiz;
+    OWNER to ${db_owner};
 
 CREATE TABLE IF NOT EXISTS fiaz.adm_hierarchy
 (
@@ -101,7 +101,7 @@ CREATE TABLE IF NOT EXISTS fiaz.adm_hierarchy
 );
 
 ALTER TABLE fiaz.adm_hierarchy
-    OWNER to fiz;
+    OWNER to ${db_owner};
 
 
 CREATE TABLE IF NOT EXISTS fiaz.apartments
@@ -124,7 +124,7 @@ CREATE TABLE IF NOT EXISTS fiaz.apartments
 );
 
 ALTER TABLE fiaz.apartments
-    OWNER to fiz;
+    OWNER to ${db_owner};
 
 CREATE TABLE IF NOT EXISTS fiaz.apartment_types
 (
@@ -140,7 +140,7 @@ CREATE TABLE IF NOT EXISTS fiaz.apartment_types
 );
 
 ALTER TABLE fiaz.apartment_types
-    OWNER to fiz;
+    OWNER to ${db_owner};
 
 CREATE TABLE IF NOT EXISTS fiaz.car_places
 (
@@ -161,7 +161,7 @@ CREATE TABLE IF NOT EXISTS fiaz.car_places
 );
 
 ALTER TABLE fiaz.car_places
-    OWNER to fiz;
+    OWNER to ${db_owner};
 
 CREATE TABLE IF NOT EXISTS fiaz.change_history
 (
@@ -175,7 +175,7 @@ CREATE TABLE IF NOT EXISTS fiaz.change_history
 );
 
 ALTER TABLE fiaz.change_history
-    OWNER to fiz;
+    OWNER to ${db_owner};
 
 CREATE TABLE IF NOT EXISTS fiaz.houses
 (
@@ -201,7 +201,7 @@ CREATE TABLE IF NOT EXISTS fiaz.houses
 );
 
 ALTER TABLE fiaz.houses
-    OWNER to fiz;
+    OWNER to ${db_owner};
 
 CREATE TABLE IF NOT EXISTS fiaz.house_types
 (
@@ -217,7 +217,7 @@ CREATE TABLE IF NOT EXISTS fiaz.house_types
 );
 
 ALTER TABLE fiaz.house_types
-    OWNER to fiz;
+    OWNER to ${db_owner};
 
 CREATE TABLE IF NOT EXISTS fiaz.mun_hierarchy
 (
@@ -236,7 +236,7 @@ CREATE TABLE IF NOT EXISTS fiaz.mun_hierarchy
 );
 
 ALTER TABLE fiaz.mun_hierarchy
-    OWNER to fiz;
+    OWNER to ${db_owner};
 
 CREATE TABLE IF NOT EXISTS fiaz.normative_docs
 (
@@ -256,7 +256,7 @@ CREATE TABLE IF NOT EXISTS fiaz.normative_docs
 );
 
 ALTER TABLE fiaz.normative_docs
-    OWNER to fiz;
+    OWNER to ${db_owner};
 
 CREATE TABLE IF NOT EXISTS fiaz.normative_docs_kinds
 (
@@ -268,7 +268,7 @@ CREATE TABLE IF NOT EXISTS fiaz.normative_docs_kinds
 );
 
 ALTER TABLE fiaz.normative_docs_kinds
-    OWNER to fiz;
+    OWNER to ${db_owner};
 
 CREATE TABLE IF NOT EXISTS fiaz.normative_docs_types
 (
@@ -280,7 +280,7 @@ CREATE TABLE IF NOT EXISTS fiaz.normative_docs_types
 );
 
 ALTER TABLE fiaz.normative_docs_types
-    OWNER to fiz;
+    OWNER to ${db_owner};
 
 CREATE TABLE IF NOT EXISTS fiaz.object_levels
 (
@@ -295,7 +295,7 @@ CREATE TABLE IF NOT EXISTS fiaz.object_levels
 );
 
 ALTER TABLE fiaz.object_levels
-    OWNER to fiz;
+    OWNER to ${db_owner};
 
 CREATE TABLE IF NOT EXISTS fiaz.operation_types
 (
@@ -311,7 +311,7 @@ CREATE TABLE IF NOT EXISTS fiaz.operation_types
 );
 
 ALTER TABLE fiaz.operation_types
-    OWNER to fiz;
+    OWNER to ${db_owner};
 
 CREATE TABLE IF NOT EXISTS fiaz.param
 (
@@ -328,7 +328,7 @@ CREATE TABLE IF NOT EXISTS fiaz.param
 );
 
 ALTER TABLE fiaz.param
-    OWNER to fiz;
+    OWNER to ${db_owner};
 
 CREATE TABLE IF NOT EXISTS fiaz.param_types
 (
@@ -344,7 +344,7 @@ CREATE TABLE IF NOT EXISTS fiaz.param_types
 );
 
 ALTER TABLE fiaz.param_types
-    OWNER to fiz;
+    OWNER to ${db_owner};
 
 
 
@@ -361,7 +361,7 @@ CREATE TABLE IF NOT EXISTS fiaz.reestr_objects
 );
 
 ALTER TABLE fiaz.reestr_objects
-    OWNER to fiz;
+    OWNER to ${db_owner};
 
 CREATE TABLE IF NOT EXISTS fiaz.rooms
 (
@@ -383,7 +383,7 @@ CREATE TABLE IF NOT EXISTS fiaz.rooms
 );
 
 ALTER TABLE fiaz.rooms
-    OWNER to fiz;
+    OWNER to ${db_owner};
 
 CREATE TABLE IF NOT EXISTS fiaz.room_types
 (
@@ -399,7 +399,7 @@ CREATE TABLE IF NOT EXISTS fiaz.room_types
 );
 
 ALTER TABLE fiaz.room_types
-    OWNER to fiz;
+    OWNER to ${db_owner};
 
 CREATE TABLE IF NOT EXISTS fiaz.steads
 (
@@ -420,4 +420,4 @@ CREATE TABLE IF NOT EXISTS fiaz.steads
 );
 
 ALTER TABLE fiaz.steads
-    OWNER to fiz;
+    OWNER to ${db_owner};

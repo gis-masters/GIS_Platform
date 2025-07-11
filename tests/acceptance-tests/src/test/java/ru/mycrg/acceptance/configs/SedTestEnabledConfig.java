@@ -1,4 +1,4 @@
-package ru.mycrg.acceptance.customHooks;
+package ru.mycrg.acceptance.configs;
 
 import io.cucumber.java.Before;
 import io.cucumber.java.Scenario;
@@ -8,14 +8,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
-public class SedTestsHook {
+public class SedTestEnabledConfig {
 
     private static final Properties properties;
 
     static {
         properties = new Properties();
-        try (InputStream input = SedTestsHook.class.getClassLoader()
-                                                   .getResourceAsStream("application.properties")) {
+        try (InputStream input = SedTestEnabledConfig.class.getClassLoader()
+                                                           .getResourceAsStream("application.properties")) {
             if (input != null) {
                 properties.load(input);
             }

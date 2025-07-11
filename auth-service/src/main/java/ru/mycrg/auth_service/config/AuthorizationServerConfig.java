@@ -34,13 +34,13 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     @Autowired
     private UserService userService;
 
-    @Value("${security.jwt.secret:vjp4lLW_QmjMHiUw1OBVRIZH}")
+    @Value("${security.jwt.secret}")
     private String secret;
 
-    @Value("${security.jwt.client_id:admin}")
+    @Value("${security.jwt.client_id}")
     private String clientId;
 
-    @Value("${security.jwt.client_secret:geoserver}")
+    @Value("${security.jwt.client_secret}")
     private String clientSecret;
 
     @Value("#{ '${security.jwt.access_token_validity_seconds}'.isEmpty() " +

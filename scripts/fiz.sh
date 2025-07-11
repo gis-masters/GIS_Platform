@@ -25,7 +25,6 @@ while true; do
     r ) . remove-our-images.sh ;;
     rd) . remove-data.sh ;;
     b ) . build-run.sh ;;
-    lr) . light-run.sh ;;
     g ) . build-and-copy-generated-types.sh ;;
     t ) . run-acceptance-tests.sh ;;
     to) . run-acceptance-tests.sh -o ;;

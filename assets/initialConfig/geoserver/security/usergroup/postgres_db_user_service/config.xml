@@ -7,8 +7,8 @@
   <jndi>false</jndi>
   <driverClassName>org.postgresql.Driver</driverClassName>
   <connectURL>jdbc:postgresql://database:5432/geoserver_db</connectURL>
-  <userName>postgres</userName>
-  <password>plain:314</password>
+  <userName>${CRG_USER}</userName>
+  <password>plain:${DB_PASS}</password>
   <creatingTables>true</creatingTables>
   <passwordEncoderName>strongPbePasswordEncoder</passwordEncoderName>
   <passwordPolicyName>master</passwordPolicyName>

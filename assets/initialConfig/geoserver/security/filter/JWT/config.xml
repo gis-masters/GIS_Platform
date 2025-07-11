@@ -5,7 +5,7 @@
   <roleSource class="org.geoserver.security.config.PreAuthenticatedUserNameFilterConfig$PreAuthenticatedUserNameRoleSource">RoleService</roleSource>
   <roleServiceName>postgres_db_role_service</roleServiceName>
   <cliendId>834804246009-sh7165n9rffo334cdqsone1rsnmf0hjn.apps.googleusercontent.com</cliendId>
-  <clientSecret>vjp4lLW_QmjMHiUw1OBVRIZH</clientSecret>
+  <clientSecret>${SECURITY_JWT_SECRET}</clientSecret>
   <accessTokenUri>https://accounts.google.com/o/oauth2/token</accessTokenUri>
   <userAuthorizationUri>https://accounts.google.com/o/oauth2/auth</userAuthorizationUri>
   <redirectUri>http://localhost:8080/geoserver</redirectUri>

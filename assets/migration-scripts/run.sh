@@ -1,4 +1,22 @@
 #!/usr/bin/env bash
+
+# Check if required parameters are provided
+if [ $# -lt 2 ]; then
+    echo "Usage: $0 CRG_USER DB_PASS [JWT_SECRET]"
+    echo "Example: $0 myuser mypassword jwt_secret_token"
+    exit 1
+fi
+
+CRG_USER="$1"
+DB_PASS="$2"
+JWT_SECRET="$3"
+
+# Export variables for child scripts
+export CRG_USER
+export DB_PASS
+export JWT_SECRET
+
+
 pushd migration-scripts/ || exit
 
 echo "List of migrations for geoserver catalog: ${GEOSERVER_DATA_DIR}"

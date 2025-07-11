@@ -8,7 +8,7 @@ spring:
   profiles: fiz-dev
   datasource:
     platform: postgres
-    url: ${SPRING_DATASOURCE_URL}
+    url: jdbc:postgresql://127.0.0.1:5434/postgres
     username: ${SPRING_DATASOURCE_USERNAME}
     password: ${SPRING_DATASOURCE_PASSWORD}
     hikari:

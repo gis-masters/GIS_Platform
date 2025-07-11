@@ -16,7 +16,7 @@ spring:
   profiles: fiz-dev
   datasource:
     platform: postgres
-    url: ${SPRING_DATASOURCE_URL}
+    url: jdbc:postgresql://127.0.0.1:5434/crg_data_service
     username: ${SPRING_DATASOURCE_USERNAME}
     password: ${SPRING_DATASOURCE_PASSWORD}
     hikari:
@@ -25,9 +25,11 @@ spring:
       # у data-service финальная цифра: (кол-во организаций * POOL + 1)
   flyway:
     enabled: true
-    url: ${SPRING_FLYWAY_URL}
+    url: jdbc:postgresql://127.0.0.1:5434/crg_data_service
     user: ${SPRING_FLYWAY_USER}
     password: ${SPRING_FLYWAY_PASSWORD}
+    placeholders:
+      db_owner: ${SPRING_FLYWAY_PLACEHOLDERS_DB_OWNER}
   jpa:
     database: POSTGRESQL
     database-platform: org.hibernate.dialect.PostgreSQLDialect
@@ -53,6 +55,10 @@ spring:
   devtools:
     remote:
       secret: ${SPRING_DEVTOOLS_REMOTE_SECRET}
+
+security:
+  jwt:
+    secret: ${SECURITY_JWT_SECRET}
 
 management:
   health:
@@ -85,9 +91,10 @@ crg-options:
   client_secret: ${CRG_OPTIONS_CLIENT_SECRET}
   system-admin-login: ${CRG_OPTIONS_SYSTEM_ADMIN_LOGIN}
   system-admin-password: ${CRG_OPTIONS_SYSTEM_ADMIN_PASSWORD}
+  system-admin-crypted-password: ${CRG_OPTIONS_SYSTEM_ADMIN_CRYPTED_PASSWORD}
   initFullTextSearch: true
   integration:
-    sed-url: ${CRG_OPTIONS_INTEGRATION_SED_URL}
+    sed-url: ${CRG_OPTIONS_INTEGRATION_SED_URL:-https://sed-server/docker-config-endpoint}
     gisogd-rf: ${CRG_OPTIONS_INTEGRATION_GISOGD_RF}
     gisogd-rf-token: ${CRG_OPTIONS_INTEGRATION_GISOGD_RF_TOKEN}
     gisogd-rf-client-id: ${CRG_OPTIONS_INTEGRATION_GISOGD_RF_CLIENT_ID}

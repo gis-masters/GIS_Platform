@@ -27,6 +27,11 @@ public class GeoserverMigrationHandler {
         String dbUser = environment.getRequiredProperty("spring.datasource.username");
         String dbName = environment.getRequiredProperty("crg-options.geoserverDbName");
 
+        String adminGeoserver = environment.getRequiredProperty("crg-options.client_id");
+        String systemAdminLogin = environment.getRequiredProperty("crg-options.system-admin-login");
+        String systemAdminCryptedPassword = environment.getRequiredProperty(
+                "crg-options.system-admin-crypted-password");
+
         HikariDataSource tempDataSource = datasourceFactory.getNotPoolableDataSource(dbName, "public");
 
         try {
@@ -96,19 +101,29 @@ public class GeoserverMigrationHandler {
             jdbcTemplate.execute(groupMembers);
 
             // Data
-            jdbcTemplate.execute("INSERT INTO public.users(name, password, enabled) " +
-                    "VALUES ('admin', 'crypt2:ojhS6ig90F+0anXifb6Me+eAyosubCbLXJTpIvXJSMw=', 'Y') " +
-                    "ON CONFLICT DO NOTHING");
-            jdbcTemplate.execute("INSERT INTO public.users(name, password, enabled) " +
-                    "VALUES ('admin@mail.ru', 'crypt2:ojhS6ig90F+0anXifb6Me+eAyosubCbLXJTpIvXJSMw=', 'Y') " +
-                    "ON CONFLICT DO NOTHING");
+            String adminGeoserverAddCryptPass = "INSERT INTO public.users(name, password, enabled) " +
+                    "VALUES ('" + adminGeoserver + "', '" + systemAdminCryptedPassword + "', 'Y') " +
+                    "ON CONFLICT DO NOTHING";
+            log.debug("Execute sql for add adminGeoserver pass [{}]", adminGeoserverAddCryptPass);
+            jdbcTemplate.execute(adminGeoserverAddCryptPass);
+
+            String systemAdminAddCryptPass = "INSERT INTO public.users(name, password, enabled) " +
+                    "VALUES ('" + systemAdminLogin + "', '" + systemAdminCryptedPassword + "', 'Y') " +
+                    "ON CONFLICT DO NOTHING";
+            log.debug("Execute sql for add systemAdmin pass [{}]", systemAdminAddCryptPass);
+            jdbcTemplate.execute(systemAdminAddCryptPass);
 
             jdbcTemplate.execute("INSERT INTO public.roles(name) VALUES ('_ADMIN_') ON CONFLICT DO NOTHING");
 
-            jdbcTemplate.execute("INSERT INTO public.user_roles(username, rolename) " +
-                    "VALUES ('admin', '_ADMIN_') ON CONFLICT DO NOTHING");
-            jdbcTemplate.execute("INSERT INTO public.user_roles(username, rolename) " +
-                    "VALUES ('admin@mail.ru', '_ADMIN_') ON CONFLICT DO NOTHING");
+            String adminGeoserverAddPrivilege = "INSERT INTO public.user_roles(username, rolename) " +
+                    "VALUES ('" + adminGeoserver + "', '_ADMIN_') ON CONFLICT DO NOTHING";
+            log.debug("Execute sql for add privileges to adminGeoserver [{}]", adminGeoserverAddPrivilege);
+            jdbcTemplate.execute(adminGeoserverAddPrivilege);
+
+            String systemAdminAddPrivilege = "INSERT INTO public.user_roles(username, rolename) " +
+                    "VALUES ('" + systemAdminLogin + "', '_ADMIN_') ON CONFLICT DO NOTHING";
+            log.debug("Execute sql for add privileges to systemAdmin [{}]", systemAdminAddPrivilege);
+            jdbcTemplate.execute(systemAdminAddPrivilege);
         } catch (DataAccessException e) {
             log.error("Error handle migrations: {}", e.getMessage());
         } finally {

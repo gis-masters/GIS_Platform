@@ -111,14 +111,14 @@ public class HandleRowTest {
         Map<String, Object> payload = new HashMap<>() {{
             put("record_status", null);
             put("owner_id", "2");
-            put("fiz", 314);
+            put("fiz", 413);
             put("status", "CREATED");
         }};
 
         assertTrue((boolean) scriptEngine.invokeFunction(payload, "return obj.owner_id === '2'"));
         assertFalse((boolean) scriptEngine.invokeFunction(payload, "return obj.owner_id === '3'"));
         assertFalse((boolean) scriptEngine.invokeFunction(payload, "return obj.fiz < 100"));
-        assertTrue((boolean) scriptEngine.invokeFunction(payload, "return obj.fiz == 314"));
+        assertTrue((boolean) scriptEngine.invokeFunction(payload, "return obj.fiz == 413"));
         assertTrue((boolean) scriptEngine.invokeFunction(payload, "return obj.status === 'CREATED'"));
         assertFalse((boolean) scriptEngine.invokeFunction(payload, "return obj.status === 'NEW'"));
         assertFalse((boolean) scriptEngine.invokeFunction(payload, "return obj.record_status === 'NEW'"));

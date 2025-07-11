@@ -6,8 +6,8 @@
 # Variables
 CONTAINER_NAME=postgis
 DB_NAME=postgres
-DB_USERNAME=fiz
-DB_PASS=314
+DB_USERNAME=full_me_up
+DB_PASS=and_me_too
 HOST=localhost
 PORT=5432
 
@@ -30,7 +30,7 @@ dropDatabase crg_gis_service
 dropDatabase geoserver_db
 
 # Для посмотреть всех интересных нам БД можно использовать такой запрос
-# psql --dbname=postgres://fiz:314@localhost:5432/postgres -c "SELECT datname FROM pg_database WHERE datname NOT LIKE 'template%' AND datname <> 'postgres'"
+# psql --dbname=postgres://DB_USERNAME:DB_PASS@localhost:5432/postgres -c "SELECT datname FROM pg_database WHERE datname NOT LIKE 'template%' AND datname <> 'postgres'"
 
 # Пока хардкод на одну таблицу
 dropDatabase database_1

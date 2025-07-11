@@ -5,17 +5,17 @@ CREATE TABLE IF NOT EXISTS data.fts_dictionary_types
     type character varying(10),
     CONSTRAINT unique_id UNIQUE (id),
     CONSTRAINT unique_type UNIQUE (type)
-) TABLESPACE pg_default;
+    ) TABLESPACE pg_default;
 ALTER TABLE data.fts_dictionary_types
-    OWNER to fiz;
+    OWNER to ${db_owner};
 
 INSERT INTO data.fts_dictionary_types(id, type)
 VALUES (1, 'LAYER')
-ON CONFLICT (id) DO NOTHING;
+    ON CONFLICT (id) DO NOTHING;
 
 INSERT INTO data.fts_dictionary_types(id, type)
 VALUES (2, 'DOCUMENT')
-ON CONFLICT (id) DO NOTHING;
+    ON CONFLICT (id) DO NOTHING;
 
 CREATE TABLE IF NOT EXISTS data.fts_dictionary
 (
@@ -23,12 +23,12 @@ CREATE TABLE IF NOT EXISTS data.fts_dictionary
     type_id smallint          NOT NULL,
     CONSTRAINT unique_words UNIQUE (word, type_id),
     CONSTRAINT pk_dictionary_type_id FOREIGN KEY (type_id)
-        REFERENCES data.fts_dictionary_types (id) MATCH SIMPLE
-        ON UPDATE NO ACTION
-        ON DELETE NO ACTION
-) TABLESPACE pg_default;
+    REFERENCES data.fts_dictionary_types (id) MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION
+    ) TABLESPACE pg_default;
 ALTER TABLE data.fts_dictionary
-    OWNER to fiz;
+    OWNER to ${db_owner};
 
 CREATE INDEX IF NOT EXISTS trgm_gist_indx ON data.fts_dictionary USING gist (word public.gist_trgm_ops);
 

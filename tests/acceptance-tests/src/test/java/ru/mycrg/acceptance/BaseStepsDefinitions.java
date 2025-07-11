@@ -16,6 +16,7 @@ import ru.mycrg.acceptance.data_service.dto.schemas.SchemaDto;
 import ru.mycrg.acceptance.gis_service.dto.BaseMapCreateDto;
 import ru.mycrg.acceptance.gis_service.dto.LayerCreateDto;
 import ru.mycrg.acceptance.gis_service.dto.LayerGroupCreateDto;
+import ru.mycrg.acceptance.configs.GeneralEnvironmentsConfig;
 import ru.mycrg.auth_service_contract.dto.GroupCreateDto;
 import ru.mycrg.auth_service_contract.dto.OrganizationCreateDto;
 import ru.mycrg.auth_service_contract.dto.UserCreateDto;
@@ -81,26 +82,23 @@ public class BaseStepsDefinitions {
     }
 
     public void setup() {
-        testServerHost = System.getProperty("env.HOST");
-        if (testServerHost == null) {
-            testServerHost = "http://localhost";
-        }
+        testServerHost = GeneralEnvironmentsConfig.getConfigValue("env.HOST", "http://localhost");
 
-        rootPassword = System.getProperty("env.ROOT_PASS");
+        rootPassword = GeneralEnvironmentsConfig.getConfigValue("env.ROOT_PASS");
         if (rootPassword == null) {
-            rootPassword = "Esterhazy2022";
+            fail("Переменная rootPassword == null true");
         }
 
-        rootUserName = System.getProperty("env.ROOT_NAME");
+        rootUserName = GeneralEnvironmentsConfig.getConfigValue("env.ROOT_NAME");
         if (rootUserName == null) {
-            rootUserName = "admin@mail.ru";
+            fail("Переменная rootUserName == null true");
         }
 
-        String testServerPortAsString = System.getProperty("env.PORT");
+        String testServerPortAsString = GeneralEnvironmentsConfig.getConfigValue("env.PORT");
         if (testServerPortAsString == null) {
             testServerPort = 8100;
         } else {
-            testServerPort = Integer.parseInt(System.getProperty("env.PORT"));
+            testServerPort = Integer.parseInt(testServerPortAsString);
         }
 
         request = getBaseRequest();

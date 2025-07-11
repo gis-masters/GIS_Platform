@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS public.permissions
     last_modified  timestamp without time zone,
     CONSTRAINT permissions_pkey PRIMARY KEY (id),
     CONSTRAINT fjcjb3tlhbfy31bkd1j86y1kw3e FOREIGN KEY (project_id) REFERENCES public.projects
-) TABLESPACE pg_default;
+    ) TABLESPACE pg_default;
 
 ALTER TABLE public.permissions
-    OWNER to fiz;
+    OWNER to ${db_owner};

@@ -12,6 +12,6 @@ CREATE TABLE IF NOT EXISTS public.audit_events
 ) TABLESPACE pg_default;
 
 ALTER TABLE public.audit_events
-    OWNER to fiz;
+    OWNER to ${db_owner};
 
 CREATE INDEX crg_audit_events_org_id_idx ON public.audit_events (organization_id);

@@ -11,7 +11,7 @@ spring:
   profiles: fiz-dev
   datasource:
     platform: postgres
-    url: ${SPRING_DATASOURCE_URL}
+    url: jdbc:postgresql://127.0.0.1:5434/crg_auth_service
     username: ${SPRING_DATASOURCE_USERNAME}
     password: ${SPRING_DATASOURCE_PASSWORD}
     hikari:
@@ -24,9 +24,13 @@ spring:
       hibernate.temp.use_jdbc_metadata_defaults: false
   flyway:
     enabled: true
-    url: ${SPRING_FLYWAY_URL}
+    url: jdbc:postgresql://127.0.0.1:5434/crg_auth_service
     user: ${SPRING_FLYWAY_USER}
     password: ${SPRING_FLYWAY_PASSWORD}
+    placeholders:
+      db_owner: ${SPRING_FLYWAY_PLACEHOLDERS_DB_OWNER}
+      admin_username: ${SPRING_FLYWAY_PLACEHOLDERS_ADMIN_USERNAME}
+      admin_password: ${SPRING_FLYWAY_PLACEHOLDERS_ADMIN_PASSWORD}
   rabbitmq:
     host: ${SPRING_RABBITMQ_HOST}
     port: ${SPRING_RABBITMQ_PORT}
@@ -65,8 +69,6 @@ esia:
   group_id: ${ESIA_GROUP_ID}
   key-store:
     path: /opt/crg/key_storage/esia_store.pfx
-    #Посмотри, пожалуйста, на обе переменные, как будто бы нам нужно только 1 из них.
-    #Если да то я сделаю Ту_Душку и багу, а там видно будет
     pass: ${ESIA_KEY_STORE_PASS}
     key_pass: ${ESIA_KEY_STORE_KEY_PASS}
     alias: ${ESIA_KEY_STORE_ALIAS}

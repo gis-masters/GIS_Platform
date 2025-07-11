@@ -27,10 +27,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Value("${spring.datasource.url:jdbc:postgresql://127.0.0.1:5432/gis_portal}")
     private String jdbcUrl;
 
-    @Value("${spring.datasource.username:postgres}")
+    @Value("${spring.datasource.username}")
     private String username;
 
-    @Value("${spring.datasource.password:314}")
+    @Value("${spring.datasource.password}")
     private String password;
 
     @Bean

@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS public.organizations
     phone  character varying(20),
     status character varying(20),
     CONSTRAINT organizations_pkey PRIMARY KEY (id)
-) TABLESPACE pg_default;
+    ) TABLESPACE pg_default;
 
 CREATE TABLE IF NOT EXISTS public.users
 (
@@ -20,7 +20,7 @@ CREATE TABLE IF NOT EXISTS public.users
     last_modified timestamp without time zone,
     CONSTRAINT users_pkey PRIMARY KEY (id),
     CONSTRAINT ukr43af9ap4edm43mmtq01oddj6 UNIQUE (username)
-) TABLESPACE pg_default;
+    ) TABLESPACE pg_default;
 
 CREATE TABLE IF NOT EXISTS public.organizations_users
 (
@@ -28,14 +28,14 @@ CREATE TABLE IF NOT EXISTS public.organizations_users
     users_id        integer NOT NULL,
     CONSTRAINT uk_ag03e4qasggh4qxd93rfod6wk UNIQUE (users_id),
     CONSTRAINT fk15s2npsq3mkltwy8r6fuc3yky FOREIGN KEY (organization_id)
-        REFERENCES public.organizations (id) MATCH SIMPLE
-        ON UPDATE NO ACTION
-        ON DELETE NO ACTION,
+    REFERENCES public.organizations (id) MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION,
     CONSTRAINT fknk8jfecnwa0ihxjd2p6dph3ih FOREIGN KEY (users_id)
-        REFERENCES public.users (id) MATCH SIMPLE
-        ON UPDATE NO ACTION
-        ON DELETE NO ACTION
-) TABLESPACE pg_default;
+    REFERENCES public.users (id) MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION
+    ) TABLESPACE pg_default;
 
 CREATE TABLE IF NOT EXISTS public.authorities
 (
@@ -44,10 +44,10 @@ CREATE TABLE IF NOT EXISTS public.authorities
     user_id   integer   NOT NULL,
     CONSTRAINT authorities_pkey PRIMARY KEY (id),
     CONSTRAINT fkk91upmbueyim93v469wj7b2qh FOREIGN KEY (user_id)
-        REFERENCES public.users (id) MATCH SIMPLE
-        ON UPDATE NO ACTION
-        ON DELETE NO ACTION
-) TABLESPACE pg_default;
+    REFERENCES public.users (id) MATCH SIMPLE
+    ON UPDATE NO ACTION
+    ON DELETE NO ACTION
+    ) TABLESPACE pg_default;
 
 ALTER TABLE public.organizations
     OWNER to postgres;
@@ -60,8 +60,8 @@ ALTER TABLE public.authorities
 
 
 INSERT INTO public.users(email, enabled, name, password, sur_name, username, created_at, last_modified)
-    VALUES ('d.alekseev@mycrg.ru', true, 'admin', '$2a$10$qux9ZvBIbaUrWHSLXzO2MOkhYzzeY1WPxmVRtjd0Xly0RPVEbAunW',
-            'fiz', 'admin@mail.ru', NOW(), NOW());
+VALUES ('d.alekseev@mycrg.ru', true, 'admin', '${admin_password}',
+        'zif', '${admin_username}', NOW(), NOW());
 
 INSERT INTO public.authorities(authority, user_id)
-    VALUES ('GLOBAL_ADMIN', 1);
+VALUES ('GLOBAL_ADMIN', 1);

@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS public.external_statements
 ) TABLESPACE pg_default;
 
 ALTER TABLE public.external_statements
-    OWNER to fiz;
+    OWNER to ${db_owner};
 
 INSERT INTO public.integration_tokens (id, service_name, token)
 VALUES (2, 'external_statements', 'eea1dcfc-e18e-11ec-8fea-0242ac120002');

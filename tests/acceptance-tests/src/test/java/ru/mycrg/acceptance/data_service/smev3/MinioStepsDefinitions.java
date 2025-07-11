@@ -2,11 +2,7 @@ package ru.mycrg.acceptance.data_service.smev3;
 
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
-
 import io.minio.*;
-
-import java.util.Map;
-
 import io.minio.messages.Item;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -17,6 +13,7 @@ import ru.mycrg.acceptance.data_service.smev3.config.PropertiesConfig;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.InputStream;
+import java.util.Map;
 import java.util.Properties;
 
 /**
@@ -51,6 +48,8 @@ public class MinioStepsDefinitions extends BaseStepsDefinitions {
         String endpoint = properties.getProperty("SMEV3_S3_ENDPOINT_TEST");
         String accessKey = properties.getProperty("SMEV3_S3_ACCESSKEY");
         String secretKey = properties.getProperty("SMEV3_S3_SECRETKEY");
+
+        System.out.println("SMEV3_S3_CONF: " + endpoint + " " + accessKey + " " + secretKey);
 
         minioClient = MinioClient.builder()
                                  .endpoint(endpoint)

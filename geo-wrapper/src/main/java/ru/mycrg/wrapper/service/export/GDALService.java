@@ -2,6 +2,7 @@ package ru.mycrg.wrapper.service.export;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
@@ -40,6 +41,12 @@ public class GDALService implements IExporter {
     private final CrgProperties crgProperties;
     private final BaseDaoService baseDaoService;
     private final DatasourceFactory datasourceFactory;
+
+    @Value("${spring.datasource.username}")
+    private String DATASOURCE_USERNAME;
+
+    @Value("${spring.datasource.password}")
+    private String DATASOURCE_PASSWORD;
 
     public GDALService(CrgProperties crgProperties,
                        Environment environment,
@@ -240,8 +247,8 @@ public class GDALService implements IExporter {
      * Выполняются следующие команды <p> - mkdir SOME_DIR; <p> - cd SOME_DIR; <p>
      * <br>
      * Экспорт с помощью ogr2ogr <p> - ogr2ogr -file "ESRi Shapefile" agriculture_point.shp PG:"host=localhost port=5434
-     * user=fiz password=314 dbname=database_1" -sql "SELECT * from test1_1.agriculture_point" --config SHAPE_ENCODING
-     * UTF-8;
+     * user=DATASOURCE_USERNAME password=DATASOURCE_PASSWORD dbname=database_1" -sql "SELECT * from test1_1
+     * .agriculture_point" --config SHAPE_ENCODING UTF-8;
      * <p>
      * <br>
      * Серия команд для смена 29 бита, отвечающего за кодировку для arcMap, в файле dbf.
@@ -351,16 +358,27 @@ public class GDALService implements IExporter {
     }
 
     private String getOgr2OgrImportFromSHPToTableCommand(String dbName, String tableName, String srs, String filePath) {
-        return String.format("ogr2ogr -skipfailures -f \"PostgreSQL\" PG:\"host=postgis user=fiz password=314 " +
-                                     "port=5432 dbname=%s\" -nln %s -t_srs \"%s\" %s;", dbName, tableName, srs,
+        return String.format("ogr2ogr -skipfailures -f \"PostgreSQL\" PG:\"host=postgis user=%s password=%s " +
+                                     "port=5432 dbname=%s\" -nln %s -t_srs \"%s\" %s;",
+                             DATASOURCE_USERNAME,
+                             DATASOURCE_PASSWORD,
+                             dbName,
+                             tableName,
+                             srs,
                              filePath);
     }
 
     private String getOgr2OgrImportFromSHPToTableWithoutSourceSrs(String dbName, String tableName, String srs,
                                                                   String filePath) {
-        return String.format("ogr2ogr -skipfailures -f \"PostgreSQL\" PG:\"host=postgis user=fiz password=314 " +
+        return String.format("ogr2ogr -skipfailures -f \"PostgreSQL\" PG:\"host=postgis user=%s password=%s " +
                                      "port=5432 dbname=%s\" -nln %s -s_srs \"%s\" -t_srs \"%s\" %s;",
-                             dbName, tableName, srs, srs, filePath);
+                             DATASOURCE_USERNAME,
+                             DATASOURCE_PASSWORD,
+                             dbName,
+                             tableName,
+                             srs,
+                             srs,
+                             filePath);
     }
 
     private void logStream(InputStream inputStream) throws IOException {

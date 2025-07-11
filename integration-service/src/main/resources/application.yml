@@ -15,7 +15,7 @@ server:
 spring:
   datasource:
     platform: postgres
-    url: ${SPRING_DATASOURCE_URL}
+    url: jdbc:postgresql://127.0.0.1:5434/bpmn_camunda
     username: ${SPRING_DATASOURCE_USERNAME}
     password: ${SPRING_DATASOURCE_PASSWORD}
   jpa:
@@ -29,11 +29,15 @@ spring:
     username: ${SPRING_RABBITMQ_USERNAME}
     password: ${SPRING_RABBITMQ_PASSWORD}
 
+security:
+  jwt:
+    secret: ${SECURITY_JWT_SECRET}
+
 camunda:
   bpm:
     admin-user:
-      id: demo
-      password: demo
+      id: ${CAMUNDA_BPM_ADMIN-USER_ID}
+      password: ${CAMUNDA_BPM_ADMIN-USER_PASSWORD}
 
 management:
   endpoint:

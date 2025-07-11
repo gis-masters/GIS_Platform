@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.EncodedResource;
 import org.springframework.dao.DataAccessException;
@@ -12,6 +13,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapperResultSetExtractor;
 import org.springframework.jdbc.datasource.init.ScriptUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StreamUtils;
 import ru.mycrg.data_service.dao.config.DatasourceFactory;
 import ru.mycrg.data_service.dao.ddl.tables.DdlTriggers;
 import ru.mycrg.data_service.dao.mappers.DocLibraryMapper;
@@ -22,10 +24,13 @@ import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 
+import java.io.ByteArrayInputStream;
+import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 
 import static ru.mycrg.common_utils.CrgGlobalProperties.getDefaultDatabaseName;
 import static ru.mycrg.data_service.dao.config.DatasourceFactory.INITIAL_SCHEMA_NAME;
@@ -46,6 +51,9 @@ public class CrgMigrationHandler {
 
     @Value("${crg-options.initFullTextSearch:false}")
     private boolean initFullTextSearch;
+
+    @Value("${spring.flyway.placeholders.db_owner}")
+    private String dbOwner;
 
     public CrgMigrationHandler(ApplicationContext ctx,
                                DatasourceFactory datasourceFactory) {
@@ -285,13 +293,33 @@ public class CrgMigrationHandler {
 
     private void executeMigration(Connection connection, Resource resource) {
         try {
-            ScriptUtils.executeSqlScript(connection, resource);
+            String sqlContent = StreamUtils.copyToString(resource.getInputStream(), StandardCharsets.UTF_8);
+            String processedSql = replacePlaceholders(sqlContent);
+
+            // Создаем EncodedResource из обработанной строки SQL
+            ByteArrayInputStream inputStream = new ByteArrayInputStream(processedSql.getBytes(StandardCharsets.UTF_8));
+            EncodedResource encodedResource = new EncodedResource(new InputStreamResource(inputStream),
+                                                                  StandardCharsets.UTF_8);
+
+            ScriptUtils.executeSqlScript(connection, encodedResource);
         } catch (Exception e) {
             String msg = String.format("Не удалось развернуть миграции из файла: '%s'. \nПо причине: %s",
                                        resource.getFilename(), e.getMessage());
 
             throw new DataServiceException(msg);
         }
+    }
+
+    private String replacePlaceholders(String sqlContent) {
+        Map<String, String> placeholders = Map.of("db_owner", dbOwner);
+
+        String result = sqlContent;
+        for (Map.Entry<String, String> entry: placeholders.entrySet()) {
+            String placeholder = "${" + entry.getKey() + "}";
+            result = result.replace(placeholder, entry.getValue());
+        }
+
+        return result;
     }
 
     private boolean isFile(String fileName) {

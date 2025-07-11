@@ -121,4 +121,4 @@ crg-options:
   secret: ${CRG_OPTIONS_SECRET}
   client-id: ${CRG_OPTIONS_CLIENT_ID}
   client-secret: ${CRG_OPTIONS_CLIENT_SECRET}
-  auth-method: ${CRG_OPTIONS_AUTH_METHOD}
+  auth-method: COOKIE_BEARER

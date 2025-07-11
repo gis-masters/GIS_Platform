@@ -21,9 +21,9 @@ CREATE TABLE IF NOT EXISTS data.dl_default
     one_file        jsonb,
     is_deleted      boolean            DEFAULT false,
     CONSTRAINT dl_default_pkey PRIMARY KEY (id)
-) TABLESPACE pg_default;
+    ) TABLESPACE pg_default;
 ALTER TABLE data.dl_default
-    OWNER to fiz;
+    OWNER to ${db_owner};
 
 INSERT INTO data.doc_libraries(title, details, table_name, created_by, created_at, last_modified, path)
 SELECT 'Тестовая библиотека',
@@ -33,4 +33,4 @@ SELECT 'Тестовая библиотека',
        now(),
        now(),
        '/root'
-WHERE NOT EXISTS(SELECT id FROM data.doc_libraries WHERE table_name = 'dl_default');
+    WHERE NOT EXISTS(SELECT id FROM data.doc_libraries WHERE table_name = 'dl_default');

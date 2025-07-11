@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS public.groups
     TABLESPACE pg_default;
 
 ALTER TABLE public.groups
-    OWNER to fiz;
+    OWNER to ${db_owner};
 
 CREATE TABLE public.groups_users
 (
@@ -30,7 +30,7 @@ CREATE TABLE public.groups_users
     TABLESPACE pg_default;
 
 ALTER TABLE public.groups_users
-    OWNER to fiz;
+    OWNER to ${db_owner};
 
 ALTER TABLE public.organizations
     ADD COLUMN created_at timestamp without time zone;

@@ -1,7 +1,6 @@
 package ru.mycrg.acceptance.data_service.smev3;
 
 import com.rabbitmq.client.*;
-import com.rabbitmq.client.AMQP.BasicProperties;
 import ru.mycrg.acceptance.data_service.smev3.config.PropertiesConfig;
 
 import java.io.IOException;
@@ -32,7 +31,7 @@ public class RabbitMQManager {
         ConnectionFactory factory = new ConnectionFactory();
         factory.setHost(properties.getProperty("RABBIT_HOST"));
         factory.setPort(Integer.parseInt(properties.getProperty("RABBIT_PORT")));
-        factory.setUsername(properties.getProperty("CRG_USER"));
+        factory.setUsername(properties.getProperty("RABBIT_USER"));
         factory.setPassword(properties.getProperty("RABBIT_PASS"));
 
         return factory;

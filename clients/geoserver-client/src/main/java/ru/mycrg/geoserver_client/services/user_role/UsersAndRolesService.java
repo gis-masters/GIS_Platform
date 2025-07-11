@@ -92,8 +92,8 @@ public class UsersAndRolesService extends GeoServerBaseService {
     }
 
     // Вот тут (org/geoserver/rest/security/RolesRestController.java) видно, что прилетающее имя пользователя, например:
-    // "admin@mail.ru" обрезается до "admin@mail" а
-    // "admin@mail.ru.ru" обрезается до "admin@mail.ru" Где обрезается и зачем не искал.
+    // "test@mail.ru" обрезается до "test@mail" а
+    // "test@mail.ru.ru" обрезается до "test@mail.ru" Где обрезается и зачем не искал.
     // Цель метода продублировать то что за точкой, чтобы на геосервере, после обрезки получить нормальное имя
     // пользователя - email. Никаких извращений писать не буду, предусматриваю только валидный e-mail
     public String prepareUserNameForGeoserver(String userName) {

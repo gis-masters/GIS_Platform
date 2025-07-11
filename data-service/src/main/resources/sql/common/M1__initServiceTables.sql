@@ -18,9 +18,9 @@ CREATE TABLE IF NOT EXISTS data.base_maps
     created_at               timestamp without time zone,
     last_modified            timestamp without time zone,
     CONSTRAINT base_maps_pkey PRIMARY KEY (id)
-) TABLESPACE pg_default;
+    ) TABLESPACE pg_default;
 ALTER TABLE data.base_maps
-    OWNER to fiz;
+    OWNER to ${db_owner};
 
 CREATE TABLE IF NOT EXISTS data.schemas_and_tables
 (
@@ -48,9 +48,9 @@ CREATE TABLE IF NOT EXISTS data.schemas_and_tables
     last_modified               timestamp without time zone,
     CONSTRAINT schemas_and_tables_description_pkey PRIMARY KEY (id),
     CONSTRAINT schemas_and_tables_identifier_type UNIQUE (identifier, is_folder, path)
-) TABLESPACE pg_default;
+    ) TABLESPACE pg_default;
 ALTER TABLE data.schemas_and_tables
-    OWNER to fiz;
+    OWNER to ${db_owner};
 
 CREATE TABLE IF NOT EXISTS data.schemas
 (
@@ -60,9 +60,9 @@ CREATE TABLE IF NOT EXISTS data.schemas
     custom_rule       text,
     calculated_fields text,
     CONSTRAINT schemas_pkey PRIMARY KEY (id)
-) TABLESPACE pg_default;
+    ) TABLESPACE pg_default;
 ALTER TABLE data.schemas
-    OWNER to fiz;
+    OWNER to ${db_owner};
 
 CREATE TABLE IF NOT EXISTS data.processes
 (
@@ -74,9 +74,9 @@ CREATE TABLE IF NOT EXISTS data.processes
     extra     json,
     details   json,
     CONSTRAINT rus43af9ap4edm43mm3141oddj6 PRIMARY KEY (id)
-) TABLESPACE pg_default;
+    ) TABLESPACE pg_default;
 ALTER TABLE data.processes
-    OWNER to fiz;
+    OWNER to ${db_owner};
 
 CREATE TABLE IF NOT EXISTS data.doc_libraries
 (
@@ -95,9 +95,9 @@ CREATE TABLE IF NOT EXISTS data.doc_libraries
     last_modified               timestamp without time zone,
     CONSTRAINT doc_libraries_pkey PRIMARY KEY (id),
     CONSTRAINT doc_libraries_table UNIQUE (table_name)
-) TABLESPACE pg_default;
+    ) TABLESPACE pg_default;
 ALTER TABLE data.doc_libraries
-    OWNER to fiz;
+    OWNER to ${db_owner};
 
 CREATE TABLE IF NOT EXISTS data.files
 (
@@ -113,18 +113,18 @@ CREATE TABLE IF NOT EXISTS data.files
     created_by         character varying(50),
     created_at         timestamp without time zone,
     CONSTRAINT files_pkey PRIMARY KEY (id)
-) TABLESPACE pg_default;
+    ) TABLESPACE pg_default;
 ALTER TABLE data.files
-    OWNER to fiz;
+    OWNER to ${db_owner};
 
 CREATE TABLE IF NOT EXISTS data.acl_roles
 (
     id   bigserial NOT NULL,
     name character varying,
     CONSTRAINT acl_roles_pkey PRIMARY KEY (id)
-) TABLESPACE pg_default;
+    ) TABLESPACE pg_default;
 ALTER TABLE data.acl_roles
-    OWNER to fiz;
+    OWNER to ${db_owner};
 
 CREATE TABLE IF NOT EXISTS data.acl_principals
 (
@@ -133,9 +133,9 @@ CREATE TABLE IF NOT EXISTS data.acl_principals
     type       character varying(20) NOT NULL,
     CONSTRAINT acl_principals_pkey PRIMARY KEY (id),
     CONSTRAINT acl_principals_unique_id_type UNIQUE (identifier, type)
-) TABLESPACE pg_default;
+    ) TABLESPACE pg_default;
 ALTER TABLE data.acl_principals
-    OWNER to fiz;
+    OWNER to ${db_owner};
 
 CREATE TABLE IF NOT EXISTS data.acl_permissions
 (
@@ -150,16 +150,16 @@ CREATE TABLE IF NOT EXISTS data.acl_permissions
     CONSTRAINT acl_permissions_pkey PRIMARY KEY (id),
     CONSTRAINT acl_permissions_fiz_unique UNIQUE (role_id, principal_id, resource_table, resource_id),
     CONSTRAINT fk6qrdpnlh0khdvkr4usr5ip7ov FOREIGN KEY (principal_id)
-        REFERENCES data.acl_principals (id) MATCH SIMPLE
-        ON UPDATE NO ACTION
-        ON DELETE CASCADE,
+    REFERENCES data.acl_principals (id) MATCH SIMPLE
+                             ON UPDATE NO ACTION
+                             ON DELETE CASCADE,
     CONSTRAINT fkjm34ygwboc77dpgpbfageb3ja FOREIGN KEY (role_id)
-        REFERENCES data.acl_roles (id) MATCH SIMPLE
-        ON UPDATE NO ACTION
-        ON DELETE CASCADE
-) TABLESPACE pg_default;
+    REFERENCES data.acl_roles (id) MATCH SIMPLE
+                             ON UPDATE NO ACTION
+                             ON DELETE CASCADE
+    ) TABLESPACE pg_default;
 ALTER TABLE data.acl_permissions
-    OWNER to fiz;
+    OWNER to ${db_owner};
 
 CREATE INDEX IF NOT EXISTS idx_resource_table ON data.acl_permissions (resource_table);
 CREATE INDEX IF NOT EXISTS idx_principal_id ON data.acl_permissions (principal_id);
@@ -175,9 +175,9 @@ CREATE TABLE IF NOT EXISTS data.entity_description
     calc_fields_function       text,
     entity_validation_function text,
     CONSTRAINT entity_description_pkey PRIMARY KEY (table_name)
-) TABLESPACE pg_default;
+    ) TABLESPACE pg_default;
 ALTER TABLE data.entity_description
-    OWNER to fiz;
+    OWNER to ${db_owner};
 
 CREATE TABLE IF NOT EXISTS data.entity_properties
 (
@@ -241,9 +241,9 @@ CREATE TABLE IF NOT EXISTS data.entity_properties
     CONSTRAINT entity_properties_pkey PRIMARY KEY (id),
     CONSTRAINT ukl6md4800a2xf7rbrq2qgmkprb UNIQUE (id, name, property_type, title)
 
-) TABLESPACE pg_default;
+    ) TABLESPACE pg_default;
 ALTER TABLE data.entity_properties
-    OWNER to fiz;
+    OWNER to ${db_owner};
 
 CREATE TABLE IF NOT EXISTS data.entity_content_types
 (
@@ -254,22 +254,22 @@ CREATE TABLE IF NOT EXISTS data.entity_content_types
     entity_description_table_name character varying(64),
 
     CONSTRAINT entity_content_types_pkey PRIMARY KEY (name)
-) TABLESPACE pg_default;
+    ) TABLESPACE pg_default;
 ALTER TABLE data.entity_content_types
-    OWNER to fiz;
+    OWNER to ${db_owner};
 
 
 INSERT INTO data.acl_roles (id, name)
 SELECT 10, 'VIEWER'
-WHERE NOT EXISTS(SELECT id FROM data.acl_roles WHERE name = 'VIEWER');
+    WHERE NOT EXISTS(SELECT id FROM data.acl_roles WHERE name = 'VIEWER');
 
 INSERT INTO data.acl_roles (id, name)
 SELECT 20, 'CONTRIBUTOR'
-WHERE NOT EXISTS(SELECT id FROM data.acl_roles WHERE name = 'CONTRIBUTOR');
+    WHERE NOT EXISTS(SELECT id FROM data.acl_roles WHERE name = 'CONTRIBUTOR');
 
 INSERT INTO data.acl_roles (id, name)
 SELECT 30, 'OWNER'
-WHERE NOT EXISTS(SELECT id FROM data.acl_roles WHERE name = 'OWNER');
+    WHERE NOT EXISTS(SELECT id FROM data.acl_roles WHERE name = 'OWNER');
 
 -- REESTRS
 -- Common
@@ -285,9 +285,9 @@ CREATE TABLE IF NOT EXISTS data.reestrs
     created_at    timestamp without time zone DEFAULT now(),
     last_modified timestamp without time zone DEFAULT now(),
     CONSTRAINT reestrs_id_pkey PRIMARY KEY (id)
-) TABLESPACE pg_default;
+    ) TABLESPACE pg_default;
 ALTER TABLE data.reestrs
-    OWNER to fiz;
+    OWNER to ${db_owner};
 
 -- Incoming
 CREATE TABLE IF NOT EXISTS data.reestr_incoming
@@ -305,9 +305,9 @@ CREATE TABLE IF NOT EXISTS data.reestr_incoming
     created_at    timestamp without time zone DEFAULT now(),
     last_modified timestamp without time zone DEFAULT now(),
     CONSTRAINT reestr_incoming_id_pkey PRIMARY KEY (id)
-) TABLESPACE pg_default;
+    ) TABLESPACE pg_default;
 ALTER TABLE data.reestr_incoming
-    OWNER to fiz;
+    OWNER to ${db_owner};
 
 -- Outgoing
 CREATE TABLE IF NOT EXISTS data.reestr_outgoing
@@ -324,23 +324,23 @@ CREATE TABLE IF NOT EXISTS data.reestr_outgoing
     created_at    timestamp without time zone DEFAULT now(),
     last_modified timestamp without time zone DEFAULT now(),
     CONSTRAINT reestr_outgoing_id_pkey PRIMARY KEY (id)
-) TABLESPACE pg_default;
+    ) TABLESPACE pg_default;
 ALTER TABLE data.reestr_outgoing
-    OWNER to fiz;
+    OWNER to ${db_owner};
 
 INSERT INTO data.reestrs (title, table_name, schema_name, created_by)
 SELECT 'Реестр входящих',
        'reestr_incoming',
        'reestr_incoming_schema',
        'migration'
-WHERE NOT EXISTS(SELECT id FROM data.reestrs WHERE table_name = 'reestr_incoming');
+    WHERE NOT EXISTS(SELECT id FROM data.reestrs WHERE table_name = 'reestr_incoming');
 
 INSERT INTO data.reestrs (title, table_name, schema_name, created_by)
 SELECT 'Реестр исходящих',
        'reestr_outgoing',
        'reestr_outgoing_schema',
        'migration'
-WHERE NOT EXISTS(SELECT id FROM data.reestrs WHERE table_name = 'reestr_outgoing');
+    WHERE NOT EXISTS(SELECT id FROM data.reestrs WHERE table_name = 'reestr_outgoing');
 
 
 -- Task log
@@ -353,6 +353,6 @@ CREATE TABLE IF NOT EXISTS data.tasks_log
     created_at timestamp without time zone DEFAULT now(),
     created_by bigint,
     CONSTRAINT tasks_log_id_pkey PRIMARY KEY (id)
-) TABLESPACE pg_default;
+    ) TABLESPACE pg_default;
 ALTER TABLE data.tasks_log
-    OWNER to fiz;
+    OWNER to ${db_owner};

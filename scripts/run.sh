@@ -3,6 +3,13 @@
 # Imports
 . utils/textUtil
 
+# Load environment variables from .env with proper variable expansion
+if [ -f "../.env" ]; then
+    set -a  # automatically export all variables
+    source ../.env
+    set +a  # disable auto-export
+fi
+
 # Actions
 printHeader "Run CRG GIS"
 
@@ -25,7 +32,14 @@ export GEOSERVER_DATA_DIR=${GEOSERVER_DATA_DIR:-/opt/crg/data/geoserver}
 export DB_DATA_DIR=${DB_DATA_DIR:-/opt/crg/data/postgres}
 
 pushd ../assets/ || exit
-./migration-scripts/run.sh
+
+echo "Using migration parameters:"
+echo "  CRG_USER: ${CRG_USER}"
+echo "  DB_PASS: ${DB_PASS}"
+echo "  SECURITY_JWT_SECRET: ${SECURITY_JWT_SECRET}"
+echo "#👻👻👻👻👻👻👻👻👻👻👻👻👻👻👻👻👻👻👻👻👻👻👻👻👻👻👻👻#"
+
+./migration-scripts/run.sh "${CRG_USER}" "${DB_PASS}" "${SECURITY_JWT_SECRET}"
 popd || exit
 
 printHeader "Copy database configs"
@@ -33,11 +47,10 @@ mkdir -p /opt/crg/data/configs/db
 cp ../configs/db/extra.conf /opt/crg/data/configs/db/extra.conf
 
 printHeader "Docker compose UP"
-docker compose -f ../docker-compose.dev.yml -f ../docker-compose.yml -f ../S3minio.yml --env-file ../.env.dev up -d
+docker compose -f ../docker-compose.dev.yml \
+-f ../docker-compose.core.yml \
+-f ../docker-compose.os.yml \
+-f ../S3minio.yml \
+--env-file ../.env  up -d
 
 ./wait.sh
-
-#мне кажется есть кейсы когда это будет полезно
-#pushd ../assets/migration-scripts/ || exit
-#./uploadStylesFolder.sh "admin@mail.ru" "Esterhazy2022"
-#popd || exit
