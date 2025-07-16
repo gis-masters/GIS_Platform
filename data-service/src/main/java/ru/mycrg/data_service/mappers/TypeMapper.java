@@ -59,6 +59,7 @@ public class TypeMapper {
             case CHOICE:
                 return dbType.equalsIgnoreCase("varchar") || dbType.contains("int");
             case STRING:
+            case DOCUMENT:
                 return dbType.equalsIgnoreCase("varchar");
             case DATETIME:
                 return dbType.equalsIgnoreCase("timestamp");
@@ -71,7 +72,6 @@ public class TypeMapper {
                 return dbType.equalsIgnoreCase("bool");
             case FILE:
             case VERSIONS:
-            case DOCUMENT:
                 return dbType.equalsIgnoreCase("jsonb");
             default:
                 log.warn("TypeComparator не знает как сравнить '{}' и '{}'", schemaType.name(), dbType);
