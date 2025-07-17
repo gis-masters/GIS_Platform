@@ -18,6 +18,7 @@ import ru.mycrg.oauth_client.JwtToken;
 import ru.mycrg.oauth_client.OAuthClient;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -32,9 +33,14 @@ public class Authenticator {
     private final OAuthClient authClient;
     private final TokenHandler tokenHandler;
     private final String secret;
+    private final String basicAuthAsBase64;
 
     public Authenticator(Environment environment, OAuthClient authClient, TokenHandler tokenHandler) {
-        secret = environment.getRequiredProperty("crg-options.secret");
+        String clientId = environment.getRequiredProperty("crg-options.jwt.client-id");
+        String clientSecret = environment.getRequiredProperty("crg-options.jwt.client-secret");
+        basicAuthAsBase64 = Base64.getEncoder().encodeToString((clientId + ":" + clientSecret).getBytes());
+
+        secret = environment.getRequiredProperty("crg-options.jwt.secret");
 
         this.authClient = authClient;
         this.tokenHandler = tokenHandler;
@@ -175,7 +181,8 @@ public class Authenticator {
                 throw new IllegalArgumentException("Refresh token not passed");
             }
 
-            final JwtToken jwtToken = authClient.refreshToken(tokenModel.getRefresh_token());
+            final JwtToken jwtToken = authClient.refreshToken(tokenModel.getRefresh_token(),
+                                                              basicAuthAsBase64);
 
             return Optional.ofNullable(jwtToken);
         } catch (HttpClientException e) {

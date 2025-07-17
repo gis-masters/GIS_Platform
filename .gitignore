@@ -31,4 +31,4 @@ geo-wrapper/src/main/resources/application.dev.yml
 gis-service/src/main/resources/application.dev.yml
 gisogd-service/src/main/resources/application-dev.yaml
 integration-service/src/main/resources/application.dev.yml
-.env.dev
+.env

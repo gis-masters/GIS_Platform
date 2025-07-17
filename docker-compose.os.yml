@@ -24,8 +24,6 @@ services:
       INITIAL_MEMORY: ${GEOSERVER_XMS_SIZE:-20G}
       MAXIMUM_MEMORY: ${GEOSERVER_XMX_SIZE:-20G}
 
-      GEOSERVER_ADMIN_USER: ${GEOSERVER_USER}
-      GEOSERVER_ADMIN_PASSWORD: ${GEOSERVER_PASSWORD}
       STABLE_EXTENSIONS: importer-plugin,jp2k-plugin
       COMMUNITY_EXTENSIONS: ogr-datastore-plugin,jdbcconfig-plugin,jdbcstore-plugin
     mem_limit: ${GEOSERVER_MEM_LIMIT:-21000}m

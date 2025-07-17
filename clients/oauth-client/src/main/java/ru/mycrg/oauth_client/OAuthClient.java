@@ -82,9 +82,10 @@ public class OAuthClient {
      *
      * @param refreshToken Рефреш токен.
      *
+     * @param basicAuthAsBase64
      * @return Новая пара ключей. {@link JwtToken}
      */
-    public JwtToken refreshToken(String refreshToken) throws HttpClientException {
+    public JwtToken refreshToken(String refreshToken, String basicAuthAsBase64) throws HttpClientException {
         try {
             RequestBody requestBody = new MultipartBody.Builder()
                     .setType(MultipartBody.FORM)
@@ -94,7 +95,7 @@ public class OAuthClient {
 
             Request request = new Request.Builder()
                     .url(new URL(baseUrl, TOKEN_PATH))
-                    .addHeader("Authorization", "Basic YWRtaW46Z2Vvc2VydmVy")
+                    .addHeader("Authorization", "Basic " + basicAuthAsBase64)
                     .post(requestBody)
                     .build();
 

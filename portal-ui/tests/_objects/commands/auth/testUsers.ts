@@ -33,11 +33,11 @@ const testUsers: Record<
     firstName: 'Albus',
     middleName: 'Percival',
     lastName: 'Dumbledore',
-    email: 'admin@mail.ru',
+    email: 'testcrguser@mail.ru',
     job: 'Администратор системы',
     department: 'Gryffindor',
-    password: 'Esterhazy2022',
-    password_: 'Esterhazy2022'
+    password: 'BigTestPass6834',
+    password_: 'BigTestPass6834'
   },
   'Администратор организации': {
     company: 'Hogwarts',

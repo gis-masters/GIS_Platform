@@ -10,7 +10,9 @@ import io.restassured.specification.RequestSpecification;
 import ru.mycrg.acceptance.BaseStepsDefinitions;
 import ru.mycrg.auth_service_contract.dto.GroupCreateDto;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static org.apache.http.HttpStatus.SC_NO_CONTENT;
 import static org.apache.http.HttpStatus.SC_OK;
@@ -188,6 +190,17 @@ public class UserGroupStepsDefinitions extends BaseStepsDefinitions {
         List<List<String>> data = dataTable.asLists();
         for (List<String> group: data) {
             createUserGroupAsOwner(group);
+        }
+    }
+
+    @Given("В организации удалены все пользовательские группы")
+    public void deleteMultipleUsersGroups() {
+        getAllUsersGroups();
+        List<Integer> groupIds = response.jsonPath().getList("content.id", Integer.class);
+        Set<Integer> ids = new HashSet<>(groupIds);
+
+        for (Integer id: ids) {
+            super.deleteEntityById(id);
         }
     }
 

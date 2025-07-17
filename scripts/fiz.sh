@@ -11,7 +11,6 @@ while true; do
     \n${GREEN}r  ${NC}- ${BLUE}remove all \
     \n${GREEN}rd ${NC}- ${BLUE}remove all created data \
     \n${GREEN}b  ${NC}- ${BLUE}build \
-    \n${GREEN}lr ${NC}- ${BLUE}light run (без мавена и стилей) \
     \n${GREEN}g  ${NC}- ${BLUE}generate frontend types \
     \n${GREEN}-----------------------------------${NC} \
     \n${GREEN}t  ${NC}- ${BLUE}run All       acceptance tests(without smev) \

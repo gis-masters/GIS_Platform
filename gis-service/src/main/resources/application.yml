@@ -47,10 +47,11 @@ crg-options:
   geoserver-host: 127.0.0.1:8080
   userServiceName: postgres_db_user_service
   specializationsPath: /opt/crg/specializations
-  client_id: ${CRG_OPTIONS_CLIENT_ID}
-  client_secret: ${CRG_OPTIONS_CLIENT_SECRET}
   system-admin-login: ${CRG_OPTIONS_SYSTEM_ADMIN_LOGIN}
   system-admin-password: ${CRG_OPTIONS_SYSTEM_ADMIN_PASSWORD}
+  jwt:
+    client_id: ${CRG_OPTIONS_JWT_CLIENT_ID}
+    client_secret: ${CRG_OPTIONS_JWT_CLIENT_SECRET}
 
 server:
   port: 8082

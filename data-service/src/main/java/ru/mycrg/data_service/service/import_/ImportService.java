@@ -104,8 +104,8 @@ public class ImportService {
     private String getRootAccessToken() {
         try {
             String authServiceUrl = environment.getRequiredProperty("crg-options.auth-service-url");
-            String clientId = environment.getRequiredProperty("crg-options.client_id");
-            String clientSecret = environment.getRequiredProperty("crg-options.client_secret");
+            String clientId = environment.getRequiredProperty("crg-options.jwt.client_id");
+            String clientSecret = environment.getRequiredProperty("crg-options.jwt.client_secret");
             String systemAdminLogin = environment.getRequiredProperty("crg-options.system-admin-login");
             String systemAdminPassword = environment.getRequiredProperty("crg-options.system-admin-password");
 

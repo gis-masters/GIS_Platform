@@ -76,7 +76,7 @@ public class ResourceServerSecurityConfig extends ResourceServerConfigurerAdapte
 
     @Bean
     AESCryptor aes(Environment environment) throws NoSuchAlgorithmException, NoSuchPaddingException {
-        final String clientSecret = environment.getRequiredProperty("crg-options.client_secret");
+        final String clientSecret = environment.getRequiredProperty("crg-options.jwt.client_secret");
 
         return new AESCryptor(clientSecret);
     }

@@ -87,11 +87,12 @@ crg-options:
   exportStoragePath: /opt/crg/export/
   specializationsPath: /opt/crg/specializations
   geoserverDbName: geoserver_db
-  client_id: ${CRG_OPTIONS_CLIENT_ID}
-  client_secret: ${CRG_OPTIONS_CLIENT_SECRET}
   system-admin-login: ${CRG_OPTIONS_SYSTEM_ADMIN_LOGIN}
   system-admin-password: ${CRG_OPTIONS_SYSTEM_ADMIN_PASSWORD}
   system-admin-crypted-password: ${CRG_OPTIONS_SYSTEM_ADMIN_CRYPTED_PASSWORD}
+  jwt:
+    client_id: ${CRG_OPTIONS_JWT_CLIENT_ID}
+    client_secret: ${CRG_OPTIONS_JWT_CLIENT_SECRET}
   initFullTextSearch: true
   integration:
     sed-url: ${CRG_OPTIONS_INTEGRATION_SED_URL:-https://sed-server/docker-config-endpoint}

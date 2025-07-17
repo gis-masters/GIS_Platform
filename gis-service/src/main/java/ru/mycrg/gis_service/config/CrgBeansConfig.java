@@ -18,8 +18,8 @@ public class CrgBeansConfig {
     @Bean
     public OAuthClient oAuthClient() throws MalformedURLException {
         String authServiceUrl = environment.getRequiredProperty("crg-options.auth-service-url");
-        String clientId = environment.getRequiredProperty("crg-options.client_id");
-        String clientSecret = environment.getRequiredProperty("crg-options.client_secret");
+        String clientId = environment.getRequiredProperty("crg-options.jwt.client_id");
+        String clientSecret = environment.getRequiredProperty("crg-options.jwt.client_secret");
 
         return OAuthClient.builder()
                           .url(new URL(authServiceUrl))

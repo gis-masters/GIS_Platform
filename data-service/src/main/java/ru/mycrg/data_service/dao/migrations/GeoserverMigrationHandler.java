@@ -27,7 +27,7 @@ public class GeoserverMigrationHandler {
         String dbUser = environment.getRequiredProperty("spring.datasource.username");
         String dbName = environment.getRequiredProperty("crg-options.geoserverDbName");
 
-        String adminGeoserver = environment.getRequiredProperty("crg-options.client_id");
+        String adminGeoserver = environment.getRequiredProperty("crg-options.jwt.client_id");
         String systemAdminLogin = environment.getRequiredProperty("crg-options.system-admin-login");
         String systemAdminCryptedPassword = environment.getRequiredProperty(
                 "crg-options.system-admin-crypted-password");

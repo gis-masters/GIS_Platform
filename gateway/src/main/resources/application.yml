@@ -118,7 +118,8 @@ logging:
 
 crg-options:
   auth-service-url: ${CRG_OPTIONS_AUTH_SERVICE_URL}
-  secret: ${CRG_OPTIONS_SECRET}
-  client-id: ${CRG_OPTIONS_CLIENT_ID}
-  client-secret: ${CRG_OPTIONS_CLIENT_SECRET}
   auth-method: COOKIE_BEARER
+  jwt:
+    secret: ${CRG_OPTIONS_JWT_SECRET}
+    client-id: ${CRG_OPTIONS_JWT_CLIENT_ID}
+    client-secret: ${CRG_OPTIONS_JWT_CLIENT_SECRET}

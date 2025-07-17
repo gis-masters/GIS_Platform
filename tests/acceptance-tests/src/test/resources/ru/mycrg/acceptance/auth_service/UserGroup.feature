@@ -41,6 +41,7 @@ Feature: Действия с пользовательскими группами
       | STRING_15 | STRING_15        |
 
   Scenario Outline: Выборка всех пользовательских групп c сортировкой (<sorting factor> | <sorting direction>)
+    Given В организации удалены все пользовательские группы
     Given Существуют пользовательские группы
       | STRING_15 | STRING_15 |
       | STRING_15 | STRING_15 |
