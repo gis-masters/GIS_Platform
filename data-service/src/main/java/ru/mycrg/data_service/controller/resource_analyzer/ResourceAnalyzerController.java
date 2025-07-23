@@ -14,7 +14,7 @@ import ru.mycrg.resource_analyzer_contract.impl.Resource;
 import java.util.ArrayList;
 import java.util.List;
 
-import static ru.mycrg.auth_service_contract.Authorities.SYSTEM_ADMIN_ORG_ADMIN_AUTHORITY;
+import static ru.mycrg.auth_service_contract.Authorities.HAS_ANY_AUTHORITY;
 
 @RestController
 @RequestMapping(value = "/resource-analyzers")
@@ -27,7 +27,7 @@ public class ResourceAnalyzerController {
     }
 
     @GetMapping
-    @PreAuthorize(SYSTEM_ADMIN_ORG_ADMIN_AUTHORITY)
+    @PreAuthorize(HAS_ANY_AUTHORITY)
     public ResponseEntity<List<IResourceAnalyzer>> getAllResourceAnalyzers() {
         final List<IResourceAnalyzer> analyzers = new ArrayList<>(resourceAnalyzerService.getAnalyzers().values());
 
@@ -35,7 +35,7 @@ public class ResourceAnalyzerController {
     }
 
     @GetMapping("/{analyzerId}")
-    @PreAuthorize(SYSTEM_ADMIN_ORG_ADMIN_AUTHORITY)
+    @PreAuthorize(HAS_ANY_AUTHORITY)
     public ResponseEntity<IResourceAnalyzer> getAnalyzerInfo(@PathVariable String analyzerId) {
         IResourceAnalyzer resourceAnalyzer = resourceAnalyzerService
                 .getById(analyzerId)
@@ -45,7 +45,7 @@ public class ResourceAnalyzerController {
     }
 
     @PostMapping("/{analyzerId}/analyze")
-    @PreAuthorize(SYSTEM_ADMIN_ORG_ADMIN_AUTHORITY)
+    @PreAuthorize(HAS_ANY_AUTHORITY)
     public ResponseEntity<List<IResourceAnalyzerResult>> analyze(@PathVariable String analyzerId,
                                                                  @RequestBody List<Resource> resources) {
         checkForIllegalObjects(resources);

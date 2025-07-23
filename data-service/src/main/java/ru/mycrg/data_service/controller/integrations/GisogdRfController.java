@@ -14,7 +14,7 @@ import ru.mycrg.data_service.service.resources.TableService;
 
 import static org.springframework.http.HttpStatus.ACCEPTED;
 import static org.springframework.http.HttpStatus.CREATED;
-import static ru.mycrg.auth_service_contract.Authorities.ORG_ADMIN_AUTHORITY;
+import static ru.mycrg.auth_service_contract.Authorities.HAS_ANY_AUTHORITY;
 import static ru.mycrg.data_service.config.CrgCommonConfig.DEFAULT_SRID_DEGREE;
 import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_NAME;
 import static ru.mycrg.data_service.dto.ResourceType.LIBRARY;
@@ -41,7 +41,7 @@ public class GisogdRfController {
     }
 
     @PostMapping("/send")
-    @PreAuthorize(ORG_ADMIN_AUTHORITY)
+    @PreAuthorize(HAS_ANY_AUTHORITY)
     public ResponseEntity<Object> publishSingle(
             @RequestParam String entityName,
             @RequestParam Long entityId,
@@ -52,7 +52,7 @@ public class GisogdRfController {
     }
 
     @PostMapping("/send-library")
-    @PreAuthorize(ORG_ADMIN_AUTHORITY)
+    @PreAuthorize(HAS_ANY_AUTHORITY)
     public ResponseEntity<Object> publishOneLibrary(
             @RequestParam String libraryName,
             @RequestParam(defaultValue = "100") Long limit,
@@ -63,7 +63,7 @@ public class GisogdRfController {
     }
 
     @PostMapping("/publish")
-    @PreAuthorize(ORG_ADMIN_AUTHORITY)
+    @PreAuthorize(HAS_ANY_AUTHORITY)
     public ResponseEntity<Object> publishAll(
             @RequestParam(defaultValue = "100") Long limit,
             @RequestParam(defaultValue = DEFAULT_SRID_DEGREE, required = false) Integer srid) {
@@ -73,7 +73,7 @@ public class GisogdRfController {
     }
 
     @PostMapping("/audit")
-    @PreAuthorize(ORG_ADMIN_AUTHORITY)
+    @PreAuthorize(HAS_ANY_AUTHORITY)
     public ResponseEntity<Object> audit(@RequestParam String entityName,
                                         @RequestParam Long entityId) {
         ResourceQualifier qualifier = makeQualifier(entityName, entityId);
@@ -84,7 +84,7 @@ public class GisogdRfController {
     }
 
     @PostMapping("/full-audit")
-    @PreAuthorize(ORG_ADMIN_AUTHORITY)
+    @PreAuthorize(HAS_ANY_AUTHORITY)
     public ResponseEntity<Object> fullAudit(@RequestParam(defaultValue = "100") Long limit) {
         gisogdRfAuditor.fullAudit(limit);
 
