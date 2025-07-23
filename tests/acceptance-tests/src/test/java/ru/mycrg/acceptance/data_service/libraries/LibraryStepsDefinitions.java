@@ -79,13 +79,6 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
         createDocumentLibraryByAdminStep();
     }
 
-    @When("Существует библиотека документов по текущей схеме")
-    public void createRandomDocumentLibraryByAdminByCurrentSchema() {
-        currentLibrary = null;
-
-        createDocumentLibraryByAdminStep();
-    }
-
     @Given("Существует библиотека документов, созданная по схеме {string}")
     public void createDocumentLibraryBySchema(String schemaTitle) {
         createOrGetDocumentLibrary(schemaTitle, false);
@@ -144,7 +137,9 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
 
     @When("Пользователь удаляет запись в библиотеке")
     public void deleteLibraryDocument() {
-        deleteRecordFromDefaultLibrary(currentDocumentId, DEFAULT_LIBRARY);
+        deleteRecordFromDefaultLibrary(currentDocumentId, currentLibrary.getTableName());
+
+        assertEquals(204, response.getStatusCode());
     }
 
     @Given("Текущая запись была удалена")
@@ -930,6 +925,18 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
         }
     }
 
+    @Given("Библиотеке {string} задано описание {string}")
+    public void updateLibraryDescription(String libraryName, String description) {
+        String body = String.format("{ \"details\": \"%s\" }", description);
+
+        response = getBaseRequestWithCurrentCookie()
+                .given()
+                    .contentType(ContentType.JSON)
+                    .body(body)
+                .when()
+                    .put("/" + libraryName);
+    }
+
     public void createOrGetDocumentLibrary(String schemaTitle, boolean versioning) {
         currentLibrary = null;
 
@@ -1112,7 +1119,7 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
                 "    \"oktmo\": \"123123\"," +
                 "    \"native_crs\": \"EPSG:28406\"," +
                 "    \"content_type_id\": \"doc_v4\"," +
-                "    \"test\": \"test\"" +
+                "    \"iwillnotexist\": \"test\"" +
                 "}";
     }
 
