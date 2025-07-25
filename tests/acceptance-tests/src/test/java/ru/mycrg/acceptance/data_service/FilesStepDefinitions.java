@@ -117,11 +117,6 @@ public class FilesStepDefinitions extends BaseStepsDefinitions {
         assertEquals(200, response.getStatusCode());
     }
 
-    @Then("файл {string} успешно до-подписан")
-    public void fileCoSignedSuccessfully(String fileName) {
-        assertEquals(200, response.getStatusCode());
-    }
-
     @Given("догружены новые файлы {string}")
     public void loadMoreFiles(String fileNamesInString) {
         Arrays.stream(fileNamesInString.split(","))

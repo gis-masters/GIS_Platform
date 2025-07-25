@@ -20,7 +20,7 @@ Feature: Выборка из библиотеки документов
     When  Администратор делает запрос с сортировкой по "<sorting factor>" и "<sorting direction>" по всем записям библиотеки по-умолчанию
     Then  Сервер отвечает со статус-кодом 200
     And   В ответе есть контент
-    *     Папки и записи отсортированы по "<sorting factor>" и "<sorting direction>" в "records.content"
+    *     Папки и записи отсортированы по "<sorting factor>" и "<sorting direction>"
     Examples:
       | sorting factor | sorting direction |
       | id             | asc               |
@@ -34,7 +34,7 @@ Feature: Выборка из библиотеки документов
     When  Пользователь делает запрос с сортировкой по "<sorting factor>" и "<sorting direction>" по всем записям библиотеки по-умолчанию
     Then  Сервер отвечает со статус-кодом 200
     And   В ответе есть контент
-    *     Папки и записи отсортированы по "<sorting factor>" и "<sorting direction>" в "records.content"
+    *     Папки и записи отсортированы по "<sorting factor>" и "<sorting direction>"
     Examples:
       | sorting factor | sorting direction |
       | id             | asc               |
@@ -45,7 +45,7 @@ Feature: Выборка из библиотеки документов
     When  Администратор делает запрос в реестре с сортировкой по "<sorting factor>" и "<sorting direction>" по всем записям библиотеки по-умолчанию
     Then  Сервер отвечает со статус-кодом 200
     And   В ответе есть контент
-    *     Папки и записи отсортированы по "<sorting factor>" и "<sorting direction>" в "records.content"
+    *     Папки и записи отсортированы по "<sorting factor>" и "<sorting direction>"
     Examples:
       | sorting factor | sorting direction |
       | id             | asc               |
@@ -59,7 +59,7 @@ Feature: Выборка из библиотеки документов
     When  Пользователь делает запрос в реестре с сортировкой по "<sorting factor>" и "<sorting direction>" по всем записям библиотеки по-умолчанию
     Then  Сервер отвечает со статус-кодом 200
     And   В ответе есть контент
-    *     Папки и записи отсортированы по "<sorting factor>" и "<sorting direction>" в "records.content"
+    *     Папки и записи отсортированы по "<sorting factor>" и "<sorting direction>"
     Examples:
       | sorting factor | sorting direction |
       | id             | asc               |

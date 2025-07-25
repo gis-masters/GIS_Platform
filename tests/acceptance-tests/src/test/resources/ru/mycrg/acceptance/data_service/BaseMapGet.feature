@@ -54,8 +54,8 @@ Feature: Выборка подложек
   Scenario Outline: Выборка всех подложек постранично (<baseMapsPerPage> page/pages)
     When Существует подложка источник
       | <name> | <title> | <thumbnailUrn> | <type> | <url> | <layerName> | <style> | <projection> | <format> | <size> | <resolution> | <matrixIDs> |
-    And Количество страниц подложек "basemaps" пропорционально "<baseMapsPerPage>"
-    And На всех страницах подложек "basemaps" есть "<baseMapsPerPage>"
+    And Количество страниц подложек пропорционально "<baseMapsPerPage>"
+    And На всех страницах подложек есть "<baseMapsPerPage>"
     Examples:
       | name  | title     | thumbnailUrn                     | type | url                                              | layerName | style  | projection  | format    | size | resolution | matrixIDs | baseMapsPerPage |
       | wmts1 | Ялте топо | /assets/images/thumbnail-our.jpg | WMTS | http://localhost:8100/geoserver/gwc/service/wmts | layerName | raster | EPSG:900913 | image/png | 256  | 21         | 21        | 1               |

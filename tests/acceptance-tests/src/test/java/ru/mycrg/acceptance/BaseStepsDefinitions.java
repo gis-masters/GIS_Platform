@@ -9,6 +9,7 @@ import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import org.junit.Ignore;
 import org.junit.Test;
+import ru.mycrg.acceptance.configs.GeneralEnvironmentsConfig;
 import ru.mycrg.acceptance.data_service.dto.DatasetCreateDto;
 import ru.mycrg.acceptance.data_service.dto.InitialBaseMapCreateDto;
 import ru.mycrg.acceptance.data_service.dto.TableCreateDto;
@@ -16,7 +17,6 @@ import ru.mycrg.acceptance.data_service.dto.schemas.SchemaDto;
 import ru.mycrg.acceptance.gis_service.dto.BaseMapCreateDto;
 import ru.mycrg.acceptance.gis_service.dto.LayerCreateDto;
 import ru.mycrg.acceptance.gis_service.dto.LayerGroupCreateDto;
-import ru.mycrg.acceptance.configs.GeneralEnvironmentsConfig;
 import ru.mycrg.auth_service_contract.dto.GroupCreateDto;
 import ru.mycrg.auth_service_contract.dto.OrganizationCreateDto;
 import ru.mycrg.auth_service_contract.dto.UserCreateDto;
@@ -194,7 +194,7 @@ public class BaseStepsDefinitions {
             case "NUMBER":
                 return random(length, false, true);
             case "EMAIL":
-                return String.format("%s@t", random((length - 2), true, true).toLowerCase());
+                return String.format("%s@t", random(length - 2, true, true).toLowerCase());
             default:
                 return controlKey;
         }
@@ -206,21 +206,6 @@ public class BaseStepsDefinitions {
         }
 
         return command;
-    }
-
-    public void checkPagesCount(String entityType, String entitiesPerPage) {
-        getAllAndFillEntityCount();
-
-        response = getBaseRequestWithCurrentCookie()
-                .when().
-                        get("/?size=" + entitiesPerPage);
-        jsonPath = response.jsonPath();
-
-        double entitiesPerPageDouble = Integer.parseInt(entitiesPerPage);
-        int estimatedPages = (int) Math.ceil(entityCount / entitiesPerPageDouble);
-        totalPages = jsonPath.get("page.totalPages");
-
-        assertEquals(totalPages, estimatedPages);
     }
 
     public void checkPagesCount(String entitiesPerPage) {

@@ -162,13 +162,13 @@ public class InitialBaseMapsStepsDefinitions extends BaseStepsDefinitions {
         super.get1000EntitiesSorted(sortingType, sortingDirection);
     }
 
-    @And("Количество страниц подложек {string} пропорционально {string}")
-    public void checkBaseMapsPagesCount(String checkType, String entitiesPerPage) {
-        super.checkPagesCount(checkType, entitiesPerPage);
+    @And("Количество страниц подложек пропорционально {string}")
+    public void checkBaseMapsPagesCount(String entitiesPerPage) {
+        super.checkPagesCount(entitiesPerPage);
     }
 
-    @And("На всех страницах подложек {string} есть {string}")
-    public void isBaseMapsOnPages(String checkType, String entitiesPerPage) {
+    @And("На всех страницах подложек есть {string}")
+    public void isBaseMapsOnPages(String entitiesPerPage) {
         super.checkSomethingOnPages(entitiesPerPage);
     }
 

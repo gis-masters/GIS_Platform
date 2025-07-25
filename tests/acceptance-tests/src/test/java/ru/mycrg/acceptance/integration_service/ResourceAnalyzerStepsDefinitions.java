@@ -16,7 +16,7 @@ import static org.junit.Assert.assertTrue;
 
 public class ResourceAnalyzerStepsDefinitions extends BaseStepsDefinitions {
 
-    public static String analyzeProcessId;
+    public String analyzeProcessId;
 
     @Override
     public RequestSpecification getBaseRequest() {

@@ -526,13 +526,13 @@ public class ProjectStepsDefinitions extends BaseStepsDefinitions {
                    names.contains(project2));
     }
 
-    @And("Количество страниц проектов {string} пропорционально {string}")
-    public void checkProjectPagesCount(String sortingType, String sortingDirection) {
-        super.checkPagesCount(sortingType, sortingDirection);
+    @And("Количество страниц проектов пропорционально {string}")
+    public void checkProjectPagesCount(String sortingDirection) {
+        super.checkPagesCount(sortingDirection);
     }
 
-    @And("На всех страницах проектов {string} есть {string}")
-    public void areProjectsOnPages(String checkType, String entitiesPerPage) {
+    @And("На всех страницах проектов есть {string}")
+    public void areProjectsOnPages(String entitiesPerPage) {
         super.checkSomethingOnPages(entitiesPerPage);
     }
 
@@ -652,7 +652,7 @@ public class ProjectStepsDefinitions extends BaseStepsDefinitions {
                         body(jsonBody).
                         contentType(ContentType.JSON)
                 .when().log().all().
-                        patch("" + id);
+                       patch("" + id);
     }
 
     private void updateCurrentProject(String jsonBody) {

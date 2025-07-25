@@ -256,26 +256,14 @@ public class TaskStepDefinition extends BaseStepsDefinitions {
             return;
         }
 
-        Set<String> tasks = Arrays.stream(taskDescriptions.split(","))
-                                  .filter(id -> !id.isEmpty())
-                                  .collect(Collectors.toSet());
-        Set<String> ids = tasks.stream()
-                               .map(desc -> {
-                                   try {
-                                       return getTaskByDescription(desc.trim());
-                                   } catch (Exception e) {
-                                       return 0;
-                                   }
-                               })
-                               .filter(integer -> integer > 0)
-                               .map(Object::toString)
-                               .collect(Collectors.toSet());
-        String taskIds = String.join(",", ids);
+        int expectedTaskCount = (int) Arrays.stream(taskDescriptions.split(","))
+                                            .filter(desc -> !desc.isEmpty())
+                                            .count();
 
-        List<Integer> actualIds = response.jsonPath().getList("content.id");
+        int actualTaskCount = response.jsonPath().getList("content").size();
 
         assertEquals("Количество задач в выборке не соответствует ожидаемому",
-                     tasks.size(), actualIds.size());
+                     expectedTaskCount, actualTaskCount);
     }
 
     @Then("я жду пока новая задача с контент типом {string} создаётся")

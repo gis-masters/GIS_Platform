@@ -10,7 +10,6 @@ import io.restassured.specification.RequestSpecification;
 import org.jetbrains.annotations.Nullable;
 import ru.mycrg.acceptance.auth_service.AuthorizationBase;
 import ru.mycrg.acceptance.auth_service.UserStepsDefinitions;
-import ru.mycrg.acceptance.data_service.TestFilesManager;
 import ru.mycrg.acceptance.data_service.datasets.DatasetsStepsDefinitions;
 import ru.mycrg.acceptance.data_service.dto.*;
 import ru.mycrg.acceptance.data_service.dto.schemas.SchemaDto;
@@ -555,11 +554,10 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
         assertEquals(200, response.getStatusCode());
     }
 
-    @When("я заново пытаюсь подвязать подпись {string} к файлу {string} в текущей записи")
-    public void updateRecordWithNewEcpOnDefaultLibrary(String ecpFileName, String fileName) {
-        FileDescriptionModel ecpFile = TestFilesManager.getFileDescriptionByTitleOrThrow(ecpFileName);
-
+    @When("я заново пытаюсь подвязать текущую подпись к текущему файлу в текущей записи")
+    public void updateRecordWithNewEcpOnDefaultLibrary() {
         DefaultDocumentModel record = new DefaultDocumentModel("plug-in files");
+
         record.setSome_files(currentFiles);
 
         updateDocument(currentDocumentId, gson.toJson(record), DEFAULT_LIBRARY);
@@ -571,8 +569,7 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
 
         assertTrue(response.jsonPath()
                            .getString("ecpReport")
-                           .contains(
-                                   "Подпись 'Подписанта' загружена не будет. Файл уже подписан. До-подписать можно плагином"));
+                           .contains(msg));
     }
 
     @Given("Существует запись в текущей библиотеке на основе растрового файла из БД {string}")
@@ -788,8 +785,8 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
         }
     }
 
-    @And("Папки и записи отсортированы по {string} и {string} в {string}")
-    public void isFoldersAndRecordsSorted(String sortingType, String sortingDirection, String entity) {
+    @And("Папки и записи отсортированы по {string} и {string}")
+    public void isFoldersAndRecordsSorted(String sortingType, String sortingDirection) {
         String contentTypeIdKey = "content_type_id";
         String folderContentType = "folder_v1";
 

@@ -493,7 +493,7 @@ public class TableFeaturesStepsDefinitions extends BaseStepsDefinitions {
         for (Map.Entry<String, List<Object>> entry: expectedFields.entrySet()) {
             String key = entry.getKey();
             List<Object> list = entry.getValue();
-            Object valueFromList = (list != null && !list.isEmpty()) ? list.get(0) : null;
+            Object valueFromList = list != null && !list.isEmpty() ? list.get(0) : null;
 
             Object matchingValue = matchingRecord.get(key);
             if (!Objects.equals(String.valueOf(valueFromList), String.valueOf(matchingValue))) {

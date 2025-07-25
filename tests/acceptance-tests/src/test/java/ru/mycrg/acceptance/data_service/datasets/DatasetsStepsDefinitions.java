@@ -248,7 +248,7 @@ public class DatasetsStepsDefinitions extends BaseStepsDefinitions {
 
         String body = format("{\"title\": \"%s\",\"details\": \"%s\"}", generateString(title), generateString(details));
 
-        updateDatasetByIdentifier(body);
+        updateCurrentDataset(body);
     }
 
     @When("Владелец организации делает запрос на редактирование текущего набора данных {string} {string}")
@@ -257,11 +257,11 @@ public class DatasetsStepsDefinitions extends BaseStepsDefinitions {
 
         String body = format("{\"title\": \"%s\",\"details\": \"%s\"}", generateString(title), generateString(details));
 
-        updateDatasetByIdentifier(body);
+        updateCurrentDataset(body);
     }
 
-    @When("Отправляется PATCH запрос на эндпоинт {string}")
-    public void sendRequestToEndpoint(String path) {
+    @When("Отправляется PATCH запрос на эндпоинт")
+    public void sendRequestToEndpoint() {
         orgOwnerUpdateCurrentDataset("test", "test");
     }
 
@@ -315,7 +315,7 @@ public class DatasetsStepsDefinitions extends BaseStepsDefinitions {
                         get("/" + currentDatasetIdentifier);
     }
 
-    private void updateDatasetByIdentifier(String body) {
+    private void updateCurrentDataset(String body) {
         response = getBaseRequestWithCurrentCookie()
                 .given().
                         body(body).

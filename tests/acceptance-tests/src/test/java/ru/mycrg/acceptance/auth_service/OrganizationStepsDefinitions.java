@@ -5,7 +5,6 @@ import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.When;
 import io.restassured.http.ContentType;
-import io.restassured.http.Cookie;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
 import ru.mycrg.acceptance.BaseStepsDefinitions;
@@ -199,7 +198,7 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
 
     @When("Ждем окончания процесса удаления организации")
     public void waitUntilOrganizationSuccessfullyDeleted() throws InterruptedException {
-        waitUntilOrganizationSuccessfullyDeleted(orgId, cookie);
+        waitUntilOrganizationSuccessfullyDeleted(orgId);
 
         orgPool.remove(orgId);
     }
@@ -555,7 +554,7 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
                         post("/organizations/init");
     }
 
-    private void waitUntilOrganizationSuccessfullyDeleted(Integer id, Cookie cookie) throws InterruptedException {
+    private void waitUntilOrganizationSuccessfullyDeleted(Integer id) throws InterruptedException {
         System.out.println("check status org: " + id);
 
         int currentAttempt = 0;

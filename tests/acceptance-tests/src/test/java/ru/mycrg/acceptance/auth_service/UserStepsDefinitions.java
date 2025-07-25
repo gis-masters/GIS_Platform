@@ -377,7 +377,7 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
     public void checkThatUsersDataIsFull() {
         List<Map<String, Object>> users = response.jsonPath().getList("content");
         users.stream()
-             .filter(user -> (user.get("name").equals("test1")) || (user.get("name").equals("test2")))
+             .filter(user -> user.get("name").equals("test1") || user.get("name").equals("test2"))
              .forEach(user -> assertTrue(checkUserDataIsFull(user)));
     }
 

@@ -39,8 +39,8 @@ Feature: Выборка проектов
     Given я создал проект с именем "Project-3" и описанием "Third project"
     When  Администратор делает постраничный запрос на проекты
     Then  Сервер отвечает со статус-кодом 200
-    And   Количество страниц проектов "projects" пропорционально "<projectsPerPage>"
-    And   На всех страницах проектов "projects" есть "<projectsPerPage>"
+    And   Количество страниц проектов пропорционально "<projectsPerPage>"
+    And   На всех страницах проектов есть "<projectsPerPage>"
     Examples:
       | projectsPerPage |
       | 1               |

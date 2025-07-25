@@ -131,7 +131,7 @@ public class TablesStepsDefinitions extends BaseStepsDefinitions {
     @When("Существует таблица")
     public void initTable() {
         String schemaId = "transportobj";
-        createTablesRequest((schemaId + "_" + generateString("STRING_5")),
+        createTablesRequest(schemaId + "_" + generateString("STRING_5"),
                             "Искусственные дорожные сооружения",
                             "some description",
                             "EPSG:28406",
@@ -183,7 +183,7 @@ public class TablesStepsDefinitions extends BaseStepsDefinitions {
         String schemaId = "advertising_point_simf_2022";
         anotherTableName = schemaId + "_" + generateString("STRING_5");
 
-        createTablesRequest((anotherTableName),
+        createTablesRequest(anotherTableName,
                             "Искусственные дорожные сооружения",
                             "some description",
                             "EPSG:28406",
@@ -195,7 +195,7 @@ public class TablesStepsDefinitions extends BaseStepsDefinitions {
         String schemaId = TEST_TABLE_SCHEMA;
         anotherTableName = schemaId + "_" + generateString("STRING_5");
 
-        createTablesRequest((anotherTableName),
+        createTablesRequest(anotherTableName,
                             "Искусственные дорожные сооружения",
                             "some description",
                             codeEpsg,
@@ -206,7 +206,7 @@ public class TablesStepsDefinitions extends BaseStepsDefinitions {
     public void initAnotherTableWithEpsg(String codeEpsg) {
         anotherTableName = TEST_TABLE_SCHEMA + "_" + generateString("STRING_5");
 
-        createAnotherTablesRequest((anotherTableName),
+        createAnotherTablesRequest(anotherTableName,
                                    "Искусственные дорожные сооружения",
                                    "some description",
                                    codeEpsg,

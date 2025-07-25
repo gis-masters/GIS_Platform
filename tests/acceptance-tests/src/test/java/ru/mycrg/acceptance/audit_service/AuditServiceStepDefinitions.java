@@ -35,7 +35,6 @@ import static ru.mycrg.acceptance.gis_service.ProjectStepsDefinitions.projectDto
 public class AuditServiceStepDefinitions extends BaseStepsDefinitions {
 
     private final String CURRENT_TIME = "CURRENT_TIME";
-    private final String EVENTS = "events";
 
     private final AuthorizationBase authorizationBase = new AuthorizationBase();
 
@@ -138,7 +137,7 @@ public class AuditServiceStepDefinitions extends BaseStepsDefinitions {
 
     @And("Количество страниц событий аудита пропорционально {string}")
     public void checkAuditEventsPagesCount(String sortingDirection) {
-        checkPagesCount(EVENTS, sortingDirection);
+        checkPagesCount(sortingDirection);
     }
 
     @And("На всех страницах событий аудита есть {string}")
