@@ -66,6 +66,10 @@ When('в вкладке просмотра геометрии я нажимаю 
   await editFeatureBlock.clickEditOnMap();
 });
 
+When('в вкладке просмотра геометрии я перевожу курсор на кнопку `Сохранить`', async function () {
+  await editFeatureBlock.focusSaveButton();
+});
+
 Then('в форме редактирования объекта в поле {string} значение {string}', async function (title: string, value: string) {
   await editFeatureBlock.waitForVisible();
   await editFeatureBlock.waitForEditFeatureForm();

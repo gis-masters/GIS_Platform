@@ -159,7 +159,6 @@ export async function getFeatures(
     featureIdsNegative,
     filter
   });
-
   const xml = new XMLSerializer().serializeToString(featureRequest);
 
   const collection = await getFeatureCollectionByXmlFilter(xml);

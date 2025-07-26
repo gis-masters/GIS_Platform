@@ -157,11 +157,11 @@ export class ExplorerAdapterTypeProjectsRoot {
 
     const parentId = Number((item.payload as CrgProject)?.id) || undefined;
 
-    return organizationSettings.createProject ?
+    return organizationSettings.createProject ? (
       <>
         <CreateProject currentProjectFolderId={parentId} onCreate={handleCreate} />
         <CreateProject currentProjectFolderId={parentId} isFolder onCreate={handleCreate} />
       </>
-      : null;
+    ) : null;
   }
 }

@@ -25,6 +25,7 @@ class SelectedFeaturesModeHandler implements IMapModeHandler {
     }
 
     const selectedFeaturesData = props?.payload as SelectedFeaturesData;
+
     mapSelectionService.selectFeatures(selectedFeaturesData.features, selectedFeaturesData.type);
     sidebars.openSelectedFeaturesSidebar();
 

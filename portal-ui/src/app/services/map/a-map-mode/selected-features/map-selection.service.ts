@@ -264,6 +264,7 @@ class MapSelectionService {
         if (selectionType === MapSelectionTypes.REMOVE && index !== -1) {
           const rests = [...selectedFeaturesStore.features];
           rests.splice(index, 1);
+
           selectedFeaturesStore.setFeatures(rests);
         }
 

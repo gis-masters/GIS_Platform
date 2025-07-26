@@ -11,8 +11,9 @@ import {
   extractFeatureTypeNameFromComplexName,
   extractTableNameFromFeatureId
 } from '../../services/geoserver/featureType/featureType.util';
-import { CrgLayer, CrgVectorLayer } from '../../services/gis/layers/layers.models';
+import { CrgLayer, CrgVectorableLayer, CrgVectorLayer } from '../../services/gis/layers/layers.models';
 import { getLayerByFeatureInCurrentProject } from '../../services/gis/layers/layers.utils';
+import { editFeatureStore } from '../../services/map/a-map-mode/edit-feature/EditFeatureStore';
 import { mapModeManager } from '../../services/map/a-map-mode/MapModeManager';
 import { selectedFeaturesStore } from '../../services/map/a-map-mode/selected-features/SelectedFeatures.store';
 import { MapMode } from '../../services/map/map.models';
@@ -58,6 +59,7 @@ export default class Attributes extends Component<IClassNameProps> {
       switch (type) {
         case 'update': {
           const isLayerFilterExist = attributesTableStore.isLayerFilterExist(modifiedLayer);
+          editFeatureStore.setLayer(modifiedLayer as CrgVectorableLayer);
 
           if (isLayerFilterExist) {
             if (modifiedLayer.id === this.currentLayer?.id) {

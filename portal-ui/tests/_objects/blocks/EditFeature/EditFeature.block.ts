@@ -11,17 +11,17 @@ import { MuiInputBlock } from '../MuiInput/MuiInput.block';
 
 class EditFeatureBlock extends Block {
   selectors = {
-    container: '.edit-feature',
-    editFeatureBack: '.edit-feature .back-icon',
-    editFeatureSaveBtn: '.edit-feature .save-feature-edit-btn',
-    editFeatureForm: '.edit-feature__form',
-    editFeatureLabel: '.edit-feature__label',
-    editFeatureField: '.edit-feature__field',
-    editFeatureLoading: '.edit-feature .loading',
-    editFeatureGeometryDraw: '.edit-feature .EditFeatureGeometryDraw',
-    editFeatureGeometryAsTextBtn: '.edit-feature .EditFeatureGeometry-AsText',
-    lookupStatus: '.edit-feature .Lookup-Status',
-    loader: 'edit-feature .MuiLinearProgress-root'
+    container: '.EditFeatureContainer',
+    editFeatureBack: '.EditFeatureContainer-Back',
+    editFeatureSaveBtn: '.EditFeatureContainer .save-feature-edit-btn',
+    editFeatureForm: '.EditFeatureContainer',
+    editFeatureLabel: '.EditFeatureForm-Label',
+    editFeatureField: '.EditFeatureForm-Row',
+    editFeatureLoading: '.EditFeatureContainer .loading',
+    editFeatureGeometryDraw: '.EditFeatureContainer .EditFeatureGeometryDraw',
+    editFeatureGeometryAsTextBtn: '.EditFeatureContainer .EditFeatureGeometry-AsText',
+    lookupStatus: '.EditFeatureContainer .Lookup-Status',
+    loader: 'EditFeatureContainer .MuiLinearProgress-root'
   };
 
   copyFeaturesButton = new CopyFeaturesButtonBlock(this.selectors.container);
@@ -35,6 +35,11 @@ class EditFeatureBlock extends Block {
     const $saveNewObjectBtn = await this.$('editFeatureSaveBtn');
     await $saveNewObjectBtn.click();
     await this.waitForLoading();
+  }
+
+  async focusSaveButton(): Promise<void> {
+    const $saveNewObjectBtn = await this.$('editFeatureSaveBtn');
+    await $saveNewObjectBtn.moveTo();
   }
 
   async closeConfirmDialog(): Promise<void> {
@@ -90,13 +95,13 @@ class EditFeatureBlock extends Block {
   async isReadonlyMode(): Promise<boolean> {
     const $container = await editFeatureBlock.$('container');
 
-    return hasClass($container, 'edit-feature_readonly');
+    return hasClass($container, 'EditFeatureContainer_readonly');
   }
 
   async openGeometryTab(): Promise<void> {
     const $container = await editFeatureBlock.$('container');
 
-    const $geometryTab = await $container.$('.mdc-tab__text-label=Геометрия');
+    const $geometryTab = await $container.$('.MuiButtonBase-root[role="Геометрия"]');
     await $geometryTab.waitForClickable();
     await $geometryTab.click();
     await sleep(500); // Анимация перелистывания ангуларовского таба
@@ -129,6 +134,7 @@ class EditFeatureBlock extends Block {
     }
 
     const inputBlock = new MuiInputBlock(await $formField.$('.Form-Control'));
+    await inputBlock.waitForVisible();
     await inputBlock.clearValue();
     await inputBlock.setValue(value);
   }
@@ -138,7 +144,7 @@ class EditFeatureBlock extends Block {
     const $$fields = await this.$$('editFeatureField');
 
     for (const $field of $$fields) {
-      const name = await $field.$('.edit-feature__label').getText();
+      const name = await $field.$('.EditFeatureForm-Label').getText();
 
       if (name === fieldName) {
         return $field;

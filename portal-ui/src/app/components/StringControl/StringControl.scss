@@ -8,18 +8,20 @@ body .StringControl {
   }
 
   &.StringControl_fullWidthForOldForm {
-    min-height: 38px;
-    padding: 10px;
+    & .MuiInputBase-root {
+      min-height: 38px;
+      padding: 10px;
 
-    border: 1px solid #ced4da;
-    border-radius: 4px;
+      border: 1px solid #ced4da;
+      border-radius: 4px;
 
-    font-size: 14px;
-    line-height: 1.2;
+      font-size: 14px;
+      line-height: 1.2;
 
-    input,
-    .MuiInputBase-root {
-      padding: 0;
+      input,
+      .MuiInputBase-root {
+        padding: 0;
+      }
     }
   }
 }

@@ -32,7 +32,6 @@ class MapModeManager {
 
   async changeMode(newMode: MapMode, props?: ModeProps, reason?: string): Promise<boolean> {
     services.logger.trace(`try change [${MapMode[this.currentMode.mode()]}->${MapMode[newMode]}] => [${reason}]`);
-
     let confirmed = true;
     if (!this.currentMode.pristine()) {
       confirmed = await konfirmieren({

@@ -215,7 +215,7 @@ export class PermissionsWidget extends Component<PermissionsWidgetProps> {
     try {
       const permissions =
         itemEntityType === ExplorerItemEntityTypeTitle.PROJECT ||
-          itemEntityType === ExplorerItemEntityTypeTitle.PROJECT_FOLDER
+        itemEntityType === ExplorerItemEntityTypeTitle.PROJECT_FOLDER
           ? await getProjectPermissions(url)
           : await getAllPermissions(url);
       // тут так надо

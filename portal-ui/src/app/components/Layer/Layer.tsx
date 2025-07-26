@@ -54,13 +54,20 @@ export class Layer extends Component<LayerProps> {
   @observable private _errors: string[] = [];
   @observable private menuAnchor?: HTMLElement | null;
 
+  private _isMounted = false;
+
   constructor(props: LayerProps) {
     super(props);
     makeObservable(this);
   }
 
   async componentDidMount() {
+    this._isMounted = true;
     await this.testSchema();
+  }
+
+  componentWillUnmount() {
+    this._isMounted = false;
   }
 
   componentDidUpdate({ editMode: prevEditMode }: LayerProps) {
@@ -158,6 +165,10 @@ export class Layer extends Component<LayerProps> {
   }
 
   private async testSchema() {
+    if (!this._isMounted) {
+      return;
+    }
+
     const { data, isGroup } = this.props;
     if (isGroup) {
       return;

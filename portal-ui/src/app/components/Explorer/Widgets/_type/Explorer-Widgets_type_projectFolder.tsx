@@ -42,7 +42,10 @@ class ExplorerWidgetsTypeProject extends Component<ExplorerWidgetsProps> {
 
     communicationService.projectUpdated.on(async (e: CustomEvent<DataChangeEventDetail<CrgProject>>) => {
       const { type, data } = e.detail;
-      if (getId({ type: ExplorerItemType.PROJECT_FOLDER, payload: data }, store) === getId(item, store) && type !== 'delete') {
+      if (
+        getId({ type: ExplorerItemType.PROJECT_FOLDER, payload: data }, store) === getId(item, store) &&
+        type !== 'delete'
+      ) {
         await this.fetchData();
       }
     }, this);
@@ -63,7 +66,8 @@ class ExplorerWidgetsTypeProject extends Component<ExplorerWidgetsProps> {
               <ViewContentWidget
                 schema={this.project.folder ? crgProjectFolderSchema : crgProjectSchema}
                 data={this.project}
-                title='Свойства папки проекта' />
+                title='Свойства папки проекта'
+              />
             </ExplorerInfoDescItem>
 
             <PermissionsWidget

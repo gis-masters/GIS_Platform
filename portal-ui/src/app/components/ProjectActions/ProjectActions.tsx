@@ -40,23 +40,26 @@ export const crgProjectFolderSchema: SimpleSchema = {
 };
 
 export const crgProjectSchema: SimpleSchema = {
-  properties: [...crgProjectFolderSchema.properties, {
-    name: 'bbox',
-    title: 'Bbox',
-    required: true,
-    description: (
-      <>
-        BBox (bounding box) для картографического слоя в метрах — это прямоугольная область, которая определяет
-        границы проекта на карте. Она указывается в метрах и содержит координаты минимального и максимального значений
-        по осям X и Y.
-        <br />
-        Пример заполнения:
-        <br />
-        [4336548,5630738,4337222,5632892]
-      </>
-    ),
-    propertyType: PropertyType.STRING
-  }]
+  properties: [
+    ...crgProjectFolderSchema.properties,
+    {
+      name: 'bbox',
+      title: 'Bbox',
+      required: true,
+      description: (
+        <>
+          BBox (bounding box) для картографического слоя в метрах — это прямоугольная область, которая определяет
+          границы проекта на карте. Она указывается в метрах и содержит координаты минимального и максимального значений
+          по осям X и Y.
+          <br />
+          Пример заполнения:
+          <br />
+          [4336548,5630738,4337222,5632892]
+        </>
+      ),
+      propertyType: PropertyType.STRING
+    }
+  ]
 };
 
 export const ProjectActions: FC<ProjectActionsProps> = observer(({ project, className, forDialog, as }) => {
@@ -79,10 +82,7 @@ export const ProjectActions: FC<ProjectActionsProps> = observer(({ project, clas
         as={as}
         tooltipText={getAvailableActionsTooltipByRole(ActionTypes.DELETE, project.role, DataTypes.PROJECT)}
       />
-      <ProjectActionsShare
-        project={project}
-        as={as}
-      />
+      <ProjectActionsShare project={project} as={as} />
       <ProjectActionsDelete
         project={project}
         disabled={!owningAllowed}

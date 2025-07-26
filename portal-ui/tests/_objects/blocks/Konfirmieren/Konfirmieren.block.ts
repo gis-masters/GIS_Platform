@@ -15,7 +15,9 @@ class KonfirmierenBlock extends Block {
   async closeDialog(): Promise<void> {
     if (await this.isDialogExist()) {
       const $yes = await this.$('yes');
+      await $yes.waitForClickable();
       await $yes.click();
+      await $yes.waitForDisplayed({ reverse: true });
     }
   }
 }

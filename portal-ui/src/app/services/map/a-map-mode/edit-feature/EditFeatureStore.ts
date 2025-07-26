@@ -68,10 +68,11 @@ class EditFeatureStore {
     return false;
   }
 
-  @computed
+  @computed.struct
   get isGeometryChanged(): boolean {
     if (this.isGeometryValid && !isEqual(this.geometry, this.currentGeometry)) {
       this.addGeometryToPool(cloneDeep(this.geometry));
+      this.setPristine(false);
 
       return true;
     }
@@ -183,7 +184,7 @@ class EditFeatureStore {
   @action
   setEditFeaturesData(editFeaturesData: EditFeaturesData | undefined) {
     if (editFeaturesData === undefined) {
-      this.setEditFeaturesData(undefined);
+      this.editFeaturesData = undefined;
       this.clear();
     } else {
       this.editFeaturesData = cloneDeep(editFeaturesData);

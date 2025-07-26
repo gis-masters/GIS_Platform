@@ -23,7 +23,7 @@ export interface ValidationError {
   error: string;
 }
 
-interface ErrorMessages {
+export interface ErrorMessages {
   required?: string;
   mustBeEmpty?: string;
   wrongChoice?: string;

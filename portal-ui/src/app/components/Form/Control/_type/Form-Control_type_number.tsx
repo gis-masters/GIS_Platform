@@ -12,11 +12,20 @@ import '!style-loader!css-loader!sass-loader!./Form-Control_type_number.scss';
 @observer
 export class FormControlTypeNumber extends Component<FormControlProps> {
   render() {
-    const { htmlId, className, fieldValue, property, inSet, errors, variant = 'standard' } = this.props;
+    const {
+      htmlId,
+      className,
+      fieldValue,
+      property,
+      inSet,
+      errors,
+      variant = 'standard',
+      fullWidthForOldForm
+    } = this.props;
     const { measureUnit, title, minValue, maxValue, step, display = 'number', name } = property as PropertySchemaNumber;
 
     return (
-      <div className={cnFormControl({ inSet, type: 'number', display }, [className])}>
+      <div className={cnFormControl({ inSet, fullWidthForOldForm, type: 'number', display }, [className])}>
         {display === 'number' && (
           <TextField
             id={htmlId}
@@ -56,10 +65,15 @@ export class FormControlTypeNumber extends Component<FormControlProps> {
 
   @boundMethod
   private handleNumberChange(event: React.ChangeEvent<{ value: string }>) {
-    const targetValue = event.target.value;
-    const value = targetValue ? Number(targetValue) : undefined;
+    let targetValue = event.target.value;
+    targetValue = targetValue.replaceAll(',', '.');
 
-    this.change(value);
+    if (
+      targetValue &&
+      (!Number.isNaN(targetValue) || targetValue === '' || targetValue === '-' || targetValue === '.')
+    ) {
+      this.change(targetValue ? Number(targetValue) : undefined);
+    }
   }
 
   @boundMethod

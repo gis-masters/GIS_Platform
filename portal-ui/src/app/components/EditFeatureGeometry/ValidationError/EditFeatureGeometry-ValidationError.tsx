@@ -39,7 +39,6 @@ export const EditFeatureGeometryValidationError: FC<EditFeatureGeometryValidatio
         const validWfsFeature = await makeGeometryValid(firstFeature);
         if (validWfsFeature.geometry) {
           editFeatureStore.setGeometry(validWfsFeature.geometry);
-
           editFeatureStore.setPristine(false);
           editFeatureStore.setGeometryErrorMessage(null);
           editFeatureStore.setPristineFromGeometryFix(false);

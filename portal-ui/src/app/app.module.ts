@@ -17,7 +17,7 @@ import { ChangePasswordFormComponent } from './components/change-password-form/c
 import { DataImportComponent } from './components/data-import/data-import.component';
 import { DataManagementComponent } from './components/data-management/data-management.component';
 import { EditBugObjectComponent } from './components/edit-bug-object/edit-bug-object.component';
-import { EditFeatureComponent } from './components/edit-feature/edit-feature.component';
+import { EditFeatureBoxComponent } from './components/edit-feature/edit-feature.component';
 import { EditFeatureActionsComponent } from './components/edit-feature-actions/edit-feature-actions.component';
 import { EditFeatureFieldComponent } from './components/edit-feature-field/edit-feature-field.component';
 import { EditFeatureGeometryComponent } from './components/edit-feature-geometry/edit-feature-geometry.component';
@@ -95,7 +95,7 @@ import { GlobalErrorHandler } from './services/global-error.handler';
     ProjectsComponent,
     OrgRegistrationFormComponent,
     EditFeaturesSidebarComponent,
-    EditFeatureComponent,
+    EditFeatureBoxComponent,
     AttributesNgComponent,
     PageTitleComponent,
     DataImportComponent,

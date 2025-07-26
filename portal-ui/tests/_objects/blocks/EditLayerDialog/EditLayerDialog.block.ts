@@ -26,6 +26,8 @@ class EditLayerPropertiesDialogBlock extends Block {
   }
 
   async selectOption(optionTitle: string, fieldTitle: string): Promise<void> {
+    await this.waitForLoadingHide();
+
     const formBlock = new FormBlock(this.selectors.container);
     const $field = await formBlock.getField(fieldTitle);
 

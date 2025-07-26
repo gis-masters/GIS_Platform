@@ -72,9 +72,7 @@ export const ProjectActionsDelete = observer((props: ProjectActionsDeleteProps) 
   return (
     <ActionsItem
       title={disabled && tooltipText ? tooltipText : 'Удалить'}
-      tooltipText={disabled ?
-        getAvailableActionsTooltipByRole(ActionTypes.DELETE, role, DataTypes.PROJECT) :
-        undefined}
+      tooltipText={disabled ? getAvailableActionsTooltipByRole(ActionTypes.DELETE, role, DataTypes.PROJECT) : undefined}
       className={cnProjectActionsDelete()}
       icon={dialogOpen ? <Delete /> : <DeleteOutline />}
       onClick={project.folder ? testEmptiness : handleDelete}

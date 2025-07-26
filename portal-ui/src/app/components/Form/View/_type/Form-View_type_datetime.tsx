@@ -13,7 +13,9 @@ import { cnFormView } from '../Form-View.base';
 @observer
 class FormViewTypeDatetime extends Component<FormControlProps> {
   render() {
-    const { className, errors, inSet, fieldValue = '—', property } = this.props;
+    const { className, errors, inSet, fieldValue: fv, property } = this.props;
+    const fieldValue = fv || '—';
+
     const date =
       typeof fieldValue === 'number' || typeof fieldValue === 'string' || fieldValue instanceof Date
         ? formatDate(fieldValue, (property as PropertySchemaDatetime).format)

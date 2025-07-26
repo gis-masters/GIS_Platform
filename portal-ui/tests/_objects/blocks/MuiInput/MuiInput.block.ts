@@ -19,7 +19,11 @@ export class MuiInputBlock extends Block {
 
   async setValue(value: string): Promise<void> {
     const $input = await this.$('input');
-    await $input.setValue(value);
+    await $input.waitForClickable({ timeout: 5000 });
+    for (const char of value) {
+      await $input.addValue(char);
+      await browser.pause(100);
+    }
   }
 
   async getValue(): Promise<string> {

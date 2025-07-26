@@ -181,12 +181,12 @@ export class ExplorerAdapterTypeProjectFolder {
       store.selectItem({ payload: record, type: ExplorerItemType.PROJECT });
     };
 
-    return organizationSettings.createProject ?
+    return organizationSettings.createProject ? (
       <>
         <CreateProject currentProjectFolderId={item.payload.id} onCreate={handleCreate} />
         <CreateProject currentProjectFolderId={item.payload.id} isFolder onCreate={handleCreate} />
       </>
-      : null;
+    ) : null;
   }
 
   static getChildrenSortItems(): SortItem[] {

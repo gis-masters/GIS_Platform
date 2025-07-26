@@ -1,0 +1,59 @@
+body .EditFeatureContainer {
+  position: absolute;
+  inset: 0;
+
+  display: flex;
+  overflow: hidden;
+  flex-direction: column;
+
+  padding-bottom: 120px;
+
+  &-ControlsWrapper {
+    display: flex;
+    flex-wrap: wrap;
+
+    box-sizing: border-box;
+    padding: 16px 10px;
+
+    border-bottom: 1px solid rgb(0 0 0 / 12%);
+  }
+
+  &-Controls {
+    position: relative;
+
+    display: flex;
+    flex: 0 0 100%;
+
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 100%;
+    padding-right: 5px;
+    padding-left: 5px;
+  }
+
+  &-Delete {
+    margin-left: 10px;
+  }
+
+  &-Back {
+    margin: 2px -6px 0 auto;
+    padding: 6px;
+
+    transform: scale(1.2);
+  }
+
+  &-Tabs {
+    display: contents;
+  }
+
+  &-Tab {
+    display: flex;
+    flex-direction: column;
+
+    .MuiTab-root {
+      padding: 0 24px;
+
+      text-transform: none;
+    }
+  }
+}

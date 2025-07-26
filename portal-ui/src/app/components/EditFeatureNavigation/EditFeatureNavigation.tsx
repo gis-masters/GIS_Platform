@@ -3,6 +3,7 @@ import { observer } from 'mobx-react';
 import { Tooltip } from '@mui/material';
 import { ArrowBackIosNew, ArrowForwardIos } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
+import { cloneDeep } from 'lodash';
 
 import { WfsFeature } from '../../services/geoserver/wfs/wfs.models';
 import { EditFeatureMode } from '../../services/map/a-map-mode/edit-feature/EditFeature.models';
@@ -10,44 +11,63 @@ import { editFeatureStore } from '../../services/map/a-map-mode/edit-feature/Edi
 import { mapModeManager } from '../../services/map/a-map-mode/MapModeManager';
 import { selectedFeaturesStore } from '../../services/map/a-map-mode/selected-features/SelectedFeatures.store';
 import { MapMode } from '../../services/map/map.models';
+import { EditFeatureContainerFormControl } from '../EditFeatureContainer/hooks/useEditFeatureState';
 import { IconButton } from '../IconButton/IconButton';
 
 import '!style-loader!css-loader!sass-loader!./EditFeatureNavigation.scss';
 
-const changeFeature = async (feature: WfsFeature) => {
+const changeFeature = async (
+  feature: WfsFeature,
+  setFeatures: (features: WfsFeature[]) => void,
+  setFormControls: (features: EditFeatureContainerFormControl[]) => void
+) => {
   if (!selectedFeaturesStore.features) {
     return;
   }
 
-  if (feature) {
-    await mapModeManager.changeMode(
-      MapMode.EDIT_FEATURE,
-      {
-        payload: { features: [feature], mode: EditFeatureMode.single }
-      },
-      'changeFeature'
-    );
+  const status = await mapModeManager.changeMode(
+    MapMode.EDIT_FEATURE,
+    {
+      payload: { features: [feature], mode: EditFeatureMode.single }
+    },
+    'changeFeature'
+  );
+
+  const editFeaturesData = cloneDeep(editFeatureStore.editFeaturesData);
+
+  if (status && editFeaturesData) {
+    editFeaturesData.features = [feature];
+
+    setFeatures([feature]);
+    setFormControls([]);
+
+    editFeatureStore.setEditFeaturesData(editFeaturesData);
+    editFeatureStore.setPristine(true);
   }
 };
 
 const cnEditFeatureNavigation = cn('EditFeatureNavigation');
 
-export const EditFeatureNavigation: FC = observer(() => {
-  const currentIndex = editFeatureStore.firstFeature
-    ? selectedFeaturesStore.features?.findIndex(feat => editFeatureStore.firstFeature?.id === feat.id)
-    : undefined;
+interface EditFeatureNavigationProps {
+  setFeatures(features: WfsFeature[]): void;
+  setFormControls(formControl: EditFeatureContainerFormControl[]): void;
+}
+
+export const EditFeatureNavigation: FC<EditFeatureNavigationProps> = observer(({ setFeatures, setFormControls }) => {
+  const feature = editFeatureStore.editFeaturesData?.features[0];
+  const currentIndex = feature ? selectedFeaturesStore.features?.findIndex(feat => feature.id === feat.id) : undefined;
 
   const prevHandler = useCallback(() => {
     if (typeof currentIndex === 'number' && currentIndex >= 0 && currentIndex >= 0) {
-      void changeFeature(selectedFeaturesStore.features[currentIndex - 1]);
+      void changeFeature(selectedFeaturesStore.features[currentIndex - 1], setFeatures, setFormControls);
     }
-  }, [currentIndex]);
+  }, [currentIndex, setFeatures, setFormControls]);
 
   const nextHandler = useCallback(() => {
     if (typeof currentIndex === 'number' && currentIndex >= 0) {
-      void changeFeature(selectedFeaturesStore.features[currentIndex + 1]);
+      void changeFeature(selectedFeaturesStore.features[currentIndex + 1], setFeatures, setFormControls);
     }
-  }, [currentIndex]);
+  }, [currentIndex, setFeatures, setFormControls]);
 
   const canBeRendered =
     !!selectedFeaturesStore.features &&

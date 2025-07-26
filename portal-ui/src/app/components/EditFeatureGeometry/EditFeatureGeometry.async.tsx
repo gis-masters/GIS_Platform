@@ -78,7 +78,7 @@ export default class EditFeatureGeometry extends Component<EditFeatureGeometryPr
     const geometryType = supportedGeometryTypes.includes(geometry?.type) ? geometry.type : undefined;
 
     return (
-      <div className={cnEditFeatureGeometry()}>
+      <div className={cnEditFeatureGeometry(null, ['scroll'])}>
         <EditFeatureGeometryHeader>
           <EditFeatureGeometryField>
             <FeatureIcon geometryType={geometryType} className={cnEditFeatureGeometry('Svg')} />
@@ -150,6 +150,7 @@ export default class EditFeatureGeometry extends Component<EditFeatureGeometryPr
       });
 
     let feature;
+
     switch (editFeatureStore.geometryType) {
       case GeometryType.POLYGON:
       case GeometryType.MULTI_POLYGON: {
@@ -176,6 +177,7 @@ export default class EditFeatureGeometry extends Component<EditFeatureGeometryPr
 
     if (feature) {
       const wfsFeature = featureToWfsFeature(feature);
+
       if (wfsFeature.geometry) {
         editFeatureStore.setGeometry(wfsFeature.geometry);
       }

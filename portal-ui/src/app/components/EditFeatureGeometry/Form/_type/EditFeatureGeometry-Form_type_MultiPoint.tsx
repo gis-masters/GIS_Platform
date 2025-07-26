@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { makeObservable } from 'mobx';
 import { withBemMod } from '@bem-react/core';
 
 import { GeometryType, WfsMultiPointGeometry } from '../../../../services/geoserver/wfs/wfs.models';
@@ -8,11 +7,6 @@ import { EditFeatureGeometryGroup } from '../../Group/EditFeatureGeometry-Group.
 import { cnEditFeatureGeometryForm, EditFeatureGeometryFormProps } from '../EditFeatureGeometry-Form.base';
 
 class EditFeatureGeometryFormTypeMultiPoint extends Component<EditFeatureGeometryFormProps> {
-  constructor(props: EditFeatureGeometryFormProps) {
-    super(props);
-    makeObservable(this);
-  }
-
   render() {
     const { className } = this.props;
     const geometry = editFeatureStore.geometry as WfsMultiPointGeometry;

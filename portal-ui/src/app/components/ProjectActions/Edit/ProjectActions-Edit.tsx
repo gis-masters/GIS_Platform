@@ -43,17 +43,18 @@ export const ProjectActionsEdit = observer((props: ProjectActionsProps) => {
     setDialogOpen(false);
   }, [setDialogOpen]);
 
-  const updateDocumentPage = useCallback(async (value: CrgProject) => {
-    await projectsService.update(project, getPatch(value, project));
-  }, [project]);
+  const updateDocumentPage = useCallback(
+    async (value: CrgProject) => {
+      await projectsService.update(project, getPatch(value, project));
+    },
+    [project]
+  );
 
   return (
     <>
       <ActionsItem
         title={disabled && tooltipText ? tooltipText : 'Редактировать'}
-        tooltipText={disabled ?
-          getAvailableActionsTooltipByRole(ActionTypes.EDIT, role, DataTypes.PROJECT) :
-          undefined}
+        tooltipText={disabled ? getAvailableActionsTooltipByRole(ActionTypes.EDIT, role, DataTypes.PROJECT) : undefined}
         className={cnProjectActionsEdit()}
         icon={dialogOpen ? <Edit /> : <EditOutlined />}
         onClick={handleOpenDialog}

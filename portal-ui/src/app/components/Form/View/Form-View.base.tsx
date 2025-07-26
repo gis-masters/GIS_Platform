@@ -17,6 +17,7 @@ export const FormViewBase: FC<FormControlProps> = ({
   property,
   fieldValue = '—',
   errors,
+  fullWidthForOldForm,
   inSet
 }) => {
   if (fieldValue === null) {
@@ -24,7 +25,11 @@ export const FormViewBase: FC<FormControlProps> = ({
   }
 
   return (
-    <div className={cnFormView({ inSet, empty: fieldValue === '—', type: property.propertyType }, [className])}>
+    <div
+      className={cnFormView({ inSet, fullWidthForOldForm, empty: fieldValue === '—', type: property.propertyType }, [
+        className
+      ])}
+    >
       {inSet && <FormSetLabel>{property.title}:</FormSetLabel>}
       <FormViewValue>{children || nl2br(String(fieldValue))}</FormViewValue>
       <FormViewErrors errors={errors} />

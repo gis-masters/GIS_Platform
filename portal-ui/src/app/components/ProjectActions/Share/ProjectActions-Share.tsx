@@ -17,9 +17,10 @@ interface ProjectActionsShareProps {
 
 export const ProjectActionsShare: FC<ProjectActionsShareProps> = ({ project, as }) => {
   const handleClick = useCallback(() => {
-    copyToClipboard(project.folder ?
-      `${location.protocol}//${location.host}/data-management/projectFolder/${project.id}` :
-      `${location.protocol}//${location.host}/projects/${project.id}/map`
+    copyToClipboard(
+      project.folder
+        ? `${location.protocol}//${location.host}/data-management/projectFolder/${project.id}`
+        : `${location.protocol}//${location.host}/projects/${project.id}/map`
     );
 
     Toast.success('Сохранено в буфер обмена');

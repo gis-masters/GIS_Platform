@@ -12,7 +12,7 @@ import { cnFormView } from '../Form-View.base';
 @observer
 class FormViewTypeFloat extends Component<FormControlProps> {
   render() {
-    const { className, errors, inSet, property } = this.props;
+    const { className, errors, fullWidthForOldForm, inSet, property } = this.props;
     let { fieldValue = '—' } = this.props;
     const { precision } = property as PropertySchemaFloat;
 
@@ -21,7 +21,11 @@ class FormViewTypeFloat extends Component<FormControlProps> {
     }
 
     return (
-      <div className={cnFormView({ inSet, empty: fieldValue === '—', type: property.propertyType }, [className])}>
+      <div
+        className={cnFormView({ inSet, fullWidthForOldForm, empty: fieldValue === '—', type: property.propertyType }, [
+          className
+        ])}
+      >
         {inSet && <FormSetLabel>{property.title}:</FormSetLabel>}
         <FormViewValue>{String(fieldValue)}</FormViewValue>
         <FormViewErrors errors={errors} />

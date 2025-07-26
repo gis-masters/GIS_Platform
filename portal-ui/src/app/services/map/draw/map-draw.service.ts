@@ -55,6 +55,14 @@ class MapDrawService {
 
   async drawOn(geometryType: SingleDrawGeometryType) {
     const features = await mapDrawService.getFeatures();
+
+    const { activeFeature } = selectedFeaturesStore;
+    const highlightedFeature = features.find(feature => feature.getId() === activeFeature?.id);
+
+    if (activeFeature && highlightedFeature) {
+      highlightedFeature.set(FeatureState.ACTIVE, true);
+    }
+
     features.forEach(feature => {
       const isActive: unknown = feature.get(FeatureState.ACTIVE);
       if (isBoolean(isActive) && isActive) {
@@ -150,8 +158,6 @@ class MapDrawService {
    * Перерисовывает фичи на черновом слое. (очищает черновой слой)
    */
   async reDrawFeatures(newFeatures: WfsFeature[] = [], projection?: Projection) {
-    this.clearDraft();
-
     const { features, activeFeature } = selectedFeaturesStore;
     const featuresInOlProjection: WfsFeature[] = await this.convertFeatureToOlProjection(
       [...features, ...newFeatures],
@@ -165,11 +171,25 @@ class MapDrawService {
     });
 
     const highlightedFeature = selectedFeatures.find(feature => feature.getId() === activeFeature?.id);
+
+    this.clearDraft();
+
     if (activeFeature && highlightedFeature) {
       highlightedFeature.set(FeatureState.ACTIVE, true);
       highlightedFeature.setStyle(getStyle(KnownStyleKey.ActiveFeature));
 
-      this.addFeatures([...selectedFeatures, highlightedFeature]);
+      const combinedFeatures = [...selectedFeatures];
+      const highlightedFeatureId = highlightedFeature.getId();
+
+      const existingIndex = selectedFeatures.findIndex(f => f.getId() === highlightedFeatureId);
+
+      if (existingIndex >= 0) {
+        combinedFeatures[existingIndex] = highlightedFeature;
+      } else {
+        combinedFeatures.push(highlightedFeature);
+      }
+
+      this.addFeatures(combinedFeatures);
     } else {
       this.addFeatures(selectedFeatures);
     }

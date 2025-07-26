@@ -41,15 +41,20 @@ export const ProjectActionsMove = observer((props: ProjectActionsFilesPlacementP
     return null;
   }
 
-  const successMessage = useCallback((url?: string) => {
-    Toast.success(
-      <>
-        {folder ? `Папка проекта "${project.name}" успешно перемещена. ` : `Проект "${project.name}" успешно перемещен. `}
-        {url && <Link href={url}>Перейти к {folder ? 'папке' : 'проекту'}</Link>}
-      </>,
-      { duration: 15_000 }
-    );
-  }, [project, folder]);
+  const successMessage = useCallback(
+    (url?: string) => {
+      Toast.success(
+        <>
+          {folder
+            ? `Папка проекта "${project.name}" успешно перемещена. `
+            : `Проект "${project.name}" успешно перемещен. `}
+          {url && <Link href={url}>Перейти к {folder ? 'папке' : 'проекту'}</Link>}
+        </>,
+        { duration: 15_000 }
+      );
+    },
+    [project, folder]
+  );
 
   const handleOpenProjectMoveDialog = useCallback(() => {
     setProjectMoveDialogOpen(true);
@@ -59,86 +64,89 @@ export const ProjectActionsMove = observer((props: ProjectActionsFilesPlacementP
     setProjectMoveDialogOpen(false);
   }, []);
 
-  const handleSelectProject = useCallback(async (selectedProject: CrgProject | null) => {
-    setLoading(true);
+  const handleSelectProject = useCallback(
+    async (selectedProject: CrgProject | null) => {
+      setLoading(true);
 
-    try {
-      if (!selectedProject?.id) {
-        Toast.error({ message: 'Не удалось переместить. Выберите проект' });
-
-        return;
-      }
-
-      if (onChange) {
-        onChange(selectedProject);
-      } else {
-        await projectsService.move(project, selectedProject.id);
-
-        const currentItem = folder ? ['prf', project.id] : ['project', project.id];
-        const path = selectedProject?.path?.split('/') || ['', selectedProject.id];
-
-        if (!path.length) {
-          Toast.error({ message: 'Не удалось получить путь к папке' });
+      try {
+        if (!selectedProject?.id) {
+          Toast.error({ message: 'Не удалось переместить. Выберите проект' });
 
           return;
         }
 
-        path.shift();
+        if (onChange) {
+          onChange(selectedProject);
+        } else {
+          await projectsService.move(project, selectedProject.id);
 
-        const folders: (string | number)[] = [];
+          const currentItem = folder ? ['prf', project.id] : ['project', project.id];
+          const path = selectedProject?.path?.split('/') || ['', selectedProject.id];
 
-        for (const parentId of path) {
-          folders.push('prf', parentId);
-        }
+          if (!path.length) {
+            Toast.error({ message: 'Не удалось получить путь к папке' });
 
-        if (path.at(-1) !== selectedProject.id) {
-          if (selectedProject.folder) {
-            folders.push('prf', selectedProject.id);
-          } else {
-            folders.push('project', selectedProject.id);
+            return;
           }
+
+          path.shift();
+
+          const folders: (string | number)[] = [];
+
+          for (const parentId of path) {
+            folders.push('prf', parentId);
+          }
+
+          if (path.at(-1) !== selectedProject.id) {
+            if (selectedProject.folder) {
+              folders.push('prf', selectedProject.id);
+            } else {
+              folders.push('project', selectedProject.id);
+            }
+          }
+
+          const pathWithCurrent = JSON.stringify([...projectsRootUrlItems, ...folders, ...currentItem]);
+
+          successMessage(`/data-management?path_dm=${pathWithCurrent}`);
+        }
+      } catch (error) {
+        if (isAxiosError<{ message?: string }>(error)) {
+          Toast.error({
+            message: error.response?.data?.message || error?.message
+          });
+        } else {
+          Toast.error({ message: 'Не удалось переместить' });
+        }
+      } finally {
+        setLoading(false);
+        handleCloseProjectMoveDialog();
+      }
+    },
+    [project, onChange, successMessage, handleCloseProjectMoveDialog]
+  );
+
+  const customTestForDisabled = useCallback(
+    (item: ExplorerItemData) => {
+      if (item.type === ExplorerItemType.PROJECT_FOLDER) {
+        if (item.payload.id === project.id) {
+          return true;
         }
 
-        const pathWithCurrent = JSON.stringify([
-          ...projectsRootUrlItems,
-          ...folders,
-          ...currentItem
-        ]);
+        const isEditAllowed = currentUser.isAdmin || [Role.OWNER, Role.CONTRIBUTOR].includes(item.payload?.role);
 
-        successMessage(`/data-management?path_dm=${pathWithCurrent}`);
+        return !isEditAllowed;
       }
-    } catch (error) {
-      if (isAxiosError<{ message?: string }>(error)) {
-        Toast.error({
-          message: error.response?.data?.message || error?.message
-        });
-      } else {
-        Toast.error({ message: 'Не удалось переместить' });
-      }
-    } finally {
-      setLoading(false);
-      handleCloseProjectMoveDialog();
-    }
-  }, [project, onChange, successMessage, handleCloseProjectMoveDialog]);
-
-  const customTestForDisabled = useCallback((item: ExplorerItemData) => {
-    if (item.type === ExplorerItemType.PROJECT_FOLDER) {
-      if (item.payload.id === project.id) {
-        return true;
-      }
-
-      const isEditAllowed = currentUser.isAdmin || [Role.OWNER, Role.CONTRIBUTOR].includes(item.payload?.role);
-
-      return !isEditAllowed;
-    }
-  }, [project]);
+    },
+    [project]
+  );
 
   return (
     <>
       <ActionsItem
         title='Переместить'
-        tooltipText={disabled ? getAvailableActionsTooltipByRole(ActionTypes.MOVE, role,
-          DataTypes.PROJECT_FOLDER) : undefined}
+        tooltipText={
+          disabled ? getAvailableActionsTooltipByRole(ActionTypes.MOVE, role, DataTypes.PROJECT_FOLDER) : undefined
+        }
         className={cnProjectActionsMove()}
         icon={projectMoveDialogOpen ? <DriveFileMove /> : <DriveFileMoveOutlined />}
         onClick={handleOpenProjectMoveDialog}
@@ -149,9 +157,7 @@ export const ProjectActionsMove = observer((props: ProjectActionsFilesPlacementP
       <SelectProjectFromExplorerDialog
         project={project}
         title='Укажите папку для перемещения'
-        startPath={
-          [{ type: ExplorerItemType.PROJECTS_ROOT, payload: null }, emptyItem] as ExplorerItemData[]
-        }
+        startPath={[{ type: ExplorerItemType.PROJECTS_ROOT, payload: null }, emptyItem] as ExplorerItemData[]}
         open={projectMoveDialogOpen}
         loading={loading}
         onClose={handleCloseProjectMoveDialog}

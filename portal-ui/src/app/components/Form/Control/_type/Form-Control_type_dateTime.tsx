@@ -13,12 +13,21 @@ import { cnFormControl, FormControlProps } from '../Form-Control';
 @observer
 class FormControlTypeDatetime extends Component<FormControlProps> {
   render() {
-    const { htmlId, className, fieldValue, inSet, property, errors, variant = 'standard' } = this.props;
+    const {
+      htmlId,
+      className,
+      fieldValue,
+      inSet,
+      property,
+      errors,
+      variant = 'standard',
+      fullWidthForOldForm
+    } = this.props;
     const { name } = property as PropertySchemaDatetime;
     const date = fieldValue ? moment(fieldValue) : undefined;
 
     return (
-      <div className={cnFormControl({ inSet }, [className])}>
+      <div className={cnFormControl({ inSet, fullWidthForOldForm }, [className])}>
         <TextField
           type='date'
           id={htmlId}
