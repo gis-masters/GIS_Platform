@@ -51,12 +51,26 @@ public class RpcConsumer {
             return;
         }
 
+        // Проверяем тип операции
+        String operation = messageProperties.getHeaders().get("operation") != null
+                ? messageProperties.getHeaders().get("operation").toString()
+                : "ADD";
+
         try {
-            srsService.addAndReload(srs.get(), token);
+            if ("DELETE".equals(operation)) {
+                Object reloadHeader = messageProperties.getHeaders().get("isNeedToReloadGeoserver");
+                boolean isNeedToReload = reloadHeader instanceof Boolean ? (Boolean) reloadHeader : true;
+                srsService.deleteAndReload(srs.get(), token, isNeedToReload);
+            } else {
+                srsService.addAndReload(srs.get(), token);
+            }
 
             success(correlationId);
         } catch (Exception e) {
-            fail(correlationId, "Не удалось добавить проекцию на геосервер => " + e.getMessage());
+            String errorMsg = "DELETE".equals(operation)
+                    ? "Не удалось удалить проекцию с геосервера => " + e.getMessage()
+                    : "Не удалось добавить проекцию на геосервер => " + e.getMessage();
+            fail(correlationId, errorMsg);
         }
     }
 

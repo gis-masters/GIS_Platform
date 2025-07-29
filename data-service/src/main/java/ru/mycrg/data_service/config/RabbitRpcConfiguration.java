@@ -19,7 +19,7 @@ import static ru.mycrg.messagebus_contract.MessageBusProperties.*;
 @Configuration
 public class RabbitRpcConfiguration {
 
-    private final int MAX_MESSAGE_AGE = 20_000;
+    private final int MAX_MESSAGE_AGE = 60_000;
 
     private final Jackson2JsonMessageConverter producerJackson2MessageConverter;
 
@@ -61,7 +61,7 @@ public class RabbitRpcConfiguration {
         RabbitTemplate template = new RabbitTemplate(connectionFactory);
         template.setMessageConverter(producerJackson2MessageConverter);
         template.setReplyAddress(RPC_REPLY_QUEUE);
-        template.setReplyTimeout(7000);
+        template.setReplyTimeout(50000);
 
         return template;
     }

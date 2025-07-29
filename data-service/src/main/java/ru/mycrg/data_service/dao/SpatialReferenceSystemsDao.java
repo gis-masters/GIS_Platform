@@ -1,5 +1,6 @@
 package ru.mycrg.data_service.dao;
 
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -9,6 +10,7 @@ import ru.mycrg.data_service.dao.core.CoreReadDao;
 import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
 
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static ru.mycrg.data_service.service.srs.SpatialReferenceSystemService.spatialTableQualifier;
 
@@ -19,6 +21,8 @@ public class SpatialReferenceSystemsDao {
 
     private final CoreReadDao coreReadDao;
     private final BaseWriteDao baseWriteDao;
+
+    private volatile AtomicInteger sridCounter;
 
     public SpatialReferenceSystemsDao(CoreReadDao coreReadDao,
                                       BaseWriteDao baseWriteDao) {
@@ -75,18 +79,50 @@ public class SpatialReferenceSystemsDao {
     }
 
     /**
-     * У талицы spatial_ref_sys нет sequence, поэтому ищем свободный идентификатор в заданном диапазоне.
+     * У талицы spatial_ref_sys нет sequence, поэтому ищем свободный идентификатор в заданном диапазоне. Использует
+     * AtomicInteger для предотвращения race condition между потоками.
      *
      * @return Свободный идентификатор.
      */
     public Optional<Integer> getNextSrid(Integer from, Integer to) {
+        if (sridCounter == null) {
+            synchronized (this) {
+                if (sridCounter == null) {
+                    return getNextSridFromDbQuery(from, to);
+                }
+            }
+        }
+
+        int nextSrid = sridCounter.incrementAndGet();
+        if (nextSrid > to) {
+            log.warn("SRID counter exceeded upper bound: {} > {}", nextSrid, to);
+
+            return Optional.empty();
+        }
+
+        log.debug("Generated next SRID from counter: {}", nextSrid);
+
+        return Optional.of(nextSrid);
+    }
+
+    private @NotNull Optional<Integer> getNextSridFromDbQuery(Integer from, Integer to) {
         String query = "SELECT generated_id FROM public.spatial_ref_sys " +
                 "  RIGHT JOIN generate_series(" + from + ", " + to + ") AS generated_id ON (srid = generated_id) " +
                 "WHERE srid IS NULL " +
                 "LIMIT 1";
 
-        log.debug("Execute 'getNextSrid' query: [{}]", query);
+        log.debug("Execute 'getNextSrid' query (first time): [{}]", query);
 
-        return coreReadDao.queryForObject(query, Integer.class);
+        Optional<Integer> result = coreReadDao.queryForObject(query, Integer.class);
+        if (result.isPresent()) {
+            sridCounter = new AtomicInteger(result.get());
+            log.debug("Initialized SRID counter with value: {}", result.get());
+
+            return result;
+        } else {
+            log.warn("No free SRID found in range [{}, {}]", from, to);
+
+            return Optional.empty();
+        }
     }
 }

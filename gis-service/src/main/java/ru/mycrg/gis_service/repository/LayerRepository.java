@@ -58,7 +58,9 @@ public interface LayerRepository extends PagingAndSortingRepository<Layer, Long>
 
     void deleteByTableName(String tableName);
 
-    boolean existsByProjectAndTableNameAndNativeCRS(Project project, String tableName, String nativeName);
+    boolean existsByProjectAndTableNameAndNativeCRS(Project project, String tableName, String nativeCrs);
 
-    List<Layer> findByTableNameAndNativeCRS(String tableName, String nativeNAme);
+    List<Layer> findByTableNameAndNativeCRS(String tableName, String nativeCrs);
+
+    List<Layer> findByNativeCRS(String nativeCrs);
 }

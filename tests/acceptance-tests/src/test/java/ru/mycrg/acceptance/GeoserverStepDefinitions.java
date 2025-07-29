@@ -2,6 +2,8 @@ package ru.mycrg.acceptance;
 
 import io.cucumber.core.exception.CucumberException;
 import io.cucumber.java.en.And;
+import io.cucumber.java.en.Given;
+import io.cucumber.java.en.Then;
 import io.restassured.response.Response;
 import ru.mycrg.acceptance.auth_service.UserStepsDefinitions;
 
@@ -237,13 +239,48 @@ public class GeoserverStepDefinitions extends BaseStepsDefinitions {
 
     @And("Система координат присутствует на геосервере: {string}")
     public void checkSrs(String expectedString) {
+        Response response = getEpsgPropertiesResponse();
+
+        assertTrue(response.asString().contains(expectedString));
+    }
+
+    @And("Система координат {string} успешна удалена")
+    public void checkSrsDelete(String expectedString) {
+        Response response = getEpsgPropertiesResponse();
+
+        assertFalse(response.asString().contains(expectedString));
+    }
+
+    @Given("Многопоточно созданные {int} проекции корректны")
+    public void checkSomeSrcInThread(int count) {
+        Response response = getEpsgPropertiesResponse();
+
+        String epsgProperties = response.asString();
+
+        for (int i = 1; i < count; i++) {
+            assertTrue("Проекция srsThread" + i + " не найдена", epsgProperties.contains("srsThread" + i));
+        }
+    }
+
+    @Then("После многопоточных изменений каждая проекция соответствует ожидаемым данным")
+    public void checkModifiedSrcInThread() throws InterruptedException {
+        Thread.sleep(20000);
+        Response response = getEpsgPropertiesResponse();
+
+        String epsgProperties = response.asString();
+
+        assertTrue("Проекция srsThread4 не найдена", epsgProperties.contains("srsThread4"));
+        assertTrue("Проекция srsThread5 не найдена", epsgProperties.contains("srsThread5"));
+        assertTrue("Проекция srsThread2Modified не найдена", epsgProperties.contains("srsThread2Modified"));
+    }
+
+    public Response getEpsgPropertiesResponse() {
         Response response = getBaseRequestWithCurrentCookie()
                 .when().
                         get("/geoserver/rest/resource/user_projections/epsg.properties");
 
         response.then().statusCode(SC_OK);
-
-        assertTrue(response.asString().contains(expectedString));
+        return response;
     }
 
     public void checkGeoserverWorkspaceAndStorage(Integer orgId) {

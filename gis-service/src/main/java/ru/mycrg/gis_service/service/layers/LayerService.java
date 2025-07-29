@@ -216,6 +216,8 @@ public class LayerService {
         List<Layer> relatedLayers;
         if ("table".equals(field)) {
             relatedLayers = layerRepository.findRelatedByTableName(value, projectIds);
+        } else if ("nativeCRS".equals(field)) {
+            relatedLayers = layerRepository.findByNativeCRS(value);
         } else if ("dataset".equals(field)) {
             relatedLayers = layerRepository.findRelatedByDataset(value, projectIds);
         } else {
