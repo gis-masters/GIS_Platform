@@ -39,7 +39,7 @@ export class EditFeatureActions extends Component<EditFeatureActionsProps> {
         {organizationSettings.downloadXml && layer && <XmlDownload feature={feature} layer={layer} />}
         <OpenInAnotherProject feature={feature} />
         <CopyUrlButton features={[feature]} />
-        <ZoomToFeature feature={feature} />
+        <ZoomToFeature featureId={feature.id} zoomToLastCoordinate />
       </div>
     );
   }

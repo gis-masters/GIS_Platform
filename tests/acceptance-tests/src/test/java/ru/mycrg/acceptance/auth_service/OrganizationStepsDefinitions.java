@@ -447,7 +447,7 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
         allFeatures.prettyPrint();
 
         JsonPath featuresJsonPath = allFeatures.jsonPath();
-        assertEquals("3", featuresJsonPath.get("page.totalElements").toString());
+        assertEquals("5", featuresJsonPath.get("page.totalElements").toString());
 
         JsonPath docLibrariesJsonPath = libraryBaseRecords.getAllEntities().jsonPath();
         List<String> docLibraries = docLibrariesJsonPath.get("content.schema.name");

@@ -1,6 +1,7 @@
 import { AxiosError } from 'axios';
 
 import { communicationService } from '../../../services/communication.service';
+import { projectionCodeToProjection } from '../../../services/data/projections/projections.util';
 import { PropertyType } from '../../../services/data/schema/schema.models';
 import { convertOldToNewProperties } from '../../../services/data/schema/schema.utils';
 import { EditedField, OldSchema } from '../../../services/data/schema/schemaOld.models';
@@ -21,6 +22,8 @@ import { mapModeManager } from '../../../services/map/a-map-mode/MapModeManager'
 import { mapDrawService } from '../../../services/map/draw/map-draw.service';
 import { MapMode, MapSelectionTypes } from '../../../services/map/map.models';
 import { mapService } from '../../../services/map/map.service';
+import { services } from '../../../services/services';
+import { transformGeometry } from '../../../services/util/coordinates-transform.util';
 import { konfirmieren } from '../../../services/utility-dialogs.service';
 import { mapStore } from '../../../stores/Map.store';
 import { applyFieldValue } from '../../Form/Form.utils';
@@ -39,8 +42,6 @@ export const useFeatureSave = ({
   featureDescription,
   editFeatureData,
   layer,
-  isGeometryChanged,
-  isGeometryAutoFixed,
   isNew,
   mode,
   setIsSaveInProgress
@@ -51,8 +52,6 @@ export const useFeatureSave = ({
   featureDescription: OldSchema | undefined;
   editFeatureData: EditedField[];
   layer: CrgVectorableLayer | CrgVectorLayer | undefined;
-  isGeometryChanged: boolean;
-  isGeometryAutoFixed: boolean;
   isNew: boolean;
   mode: EditFeatureMode;
   setIsSaveInProgress: (val: boolean) => void;
@@ -128,14 +127,14 @@ export const useFeatureSave = ({
     }
 
     const firstFeature: WfsFeature = features?.[0];
-
     if (layer.dataset && isNew && firstFeature) {
       try {
         const createdFeature = await createFeature(layer.dataset, layer.tableName, {
           type: firstFeature.type,
           properties: actualProperties,
-          geometry: editFeatureStore.currentGeometry
+          geometry: transformToNativeProjection(layer.nativeCRS, editFeatureStore.currentGeometry)
         });
+
         ids = [createdFeature.id];
       } catch (error) {
         const err = error as AxiosError<{
@@ -150,17 +149,15 @@ export const useFeatureSave = ({
         return;
       }
     } else {
-      let geometry: WfsGeometry | undefined;
+      if (!currentFeatures) {
+        services.logger.warn('Нет объектов для сохранения');
 
-      if (currentFeatures?.length === 1 && isGeometryChanged) {
-        geometry = currentFeatures[0].geometry as WfsGeometry;
+        return;
       }
 
-      if (isGeometryChanged || isGeometryAutoFixed) {
-        geometry = editFeatureStore.currentGeometry;
-      }
-
-      await batchUpdateFeatures(currentFeatures || [], actualProperties, geometry);
+      await (currentFeatures.length === 1
+        ? updateOneFeature(currentFeatures[0], actualProperties, editFeatureStore.currentGeometry)
+        : batchUpdateFeatures(currentFeatures || [], actualProperties));
     }
 
     editFeatureStore.setPristine(true);
@@ -201,32 +198,65 @@ export const useFeatureSave = ({
     mapDrawService.drawOff();
   };
 
-  const batchUpdateFeatures = async (features: WfsFeature[], newProperties: Properties, geometry?: WfsGeometry) => {
+  const updateOneFeature = async (feature: WfsFeature, newProperties: Properties, newGeometry?: WfsGeometry) => {
+    if (!isVectorLayer(layer)) {
+      throw new Error('Обновляем только векторные слои');
+    }
+
+    try {
+      const { dataset, tableName, nativeCRS } = layer;
+
+      await updateFeature(dataset, tableName, {
+        id: String(extractFeatureId(feature.id)),
+        type: 'Feature',
+        geometry: transformToNativeProjection(nativeCRS, newGeometry),
+        properties: newProperties
+      });
+
+      communicationService.featuresUpdated.emit({
+        type: 'update',
+        data: null
+      });
+
+      editFeatureStore.setPristineFromGeometryFix(true);
+
+      return;
+    } catch (error) {
+      const err = error as AxiosError<{
+        errors: Record<string, unknown>[];
+        message?: string;
+      }>;
+
+      editFeatureStore.setGeometryErrorMessage(
+        err.response?.data.message || `Ошибка при сохранении фичи: ${feature.id}`
+      );
+      editFeatureStore.setPristineFromGeometryFix(false);
+
+      setIsSaveInProgress(false);
+    }
+  };
+
+  // eslint-disable-next-line unicorn/consistent-function-scoping
+  const transformToNativeProjection = (nativeCRS: string, newGeometry?: WfsGeometry) => {
+    let transformedGeometry;
+    if (newGeometry && editFeatureStore.currentProjection) {
+      transformedGeometry = transformGeometry(
+        newGeometry,
+        editFeatureStore.currentProjection,
+        projectionCodeToProjection(nativeCRS)
+      );
+    }
+
+    return transformedGeometry;
+  };
+
+  const batchUpdateFeatures = async (features: WfsFeature[], newProperties: Properties) => {
     if (!isVectorLayer(layer)) {
       throw new Error('Невозможно обновить объект');
     }
 
     try {
       const { dataset, tableName } = layer;
-
-      // А как это работает? Передавая массив features, мы обновляем только одну: features[0].id ???
-      if (features.length === 1) {
-        await updateFeature(dataset, tableName, {
-          id: String(extractFeatureId(features[0].id)),
-          type: 'Feature',
-          geometry: geometry,
-          properties: newProperties
-        });
-
-        communicationService.featuresUpdated.emit({
-          type: 'update',
-          data: null
-        });
-
-        editFeatureStore.setPristineFromGeometryFix(true);
-
-        return;
-      }
 
       await transformFeatureService.multipleEdit(dataset, tableName, features, newProperties);
 
@@ -243,7 +273,7 @@ export const useFeatureSave = ({
         message?: string;
       }>;
 
-      editFeatureStore.setGeometryErrorMessage(err.response?.data.message || 'Ошибка при сохранении объекта');
+      editFeatureStore.setGeometryErrorMessage(err.response?.data.message || 'Ошибка при сохранении объектов');
       editFeatureStore.setPristineFromGeometryFix(false);
 
       setIsSaveInProgress(false);

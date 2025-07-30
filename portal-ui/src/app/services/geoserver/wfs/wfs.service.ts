@@ -222,6 +222,16 @@ export async function getFeaturesById(ids: string[], complexName: string, defini
   return features || [];
 }
 
+export async function getFeatureById(
+  featureId: string,
+  complexName: string,
+  definitionQuery = ''
+): Promise<WfsFeature> {
+  const [feature] = await getFeaturesById([featureId], complexName, definitionQuery);
+
+  return feature;
+}
+
 export async function makeXmlPolygonIntersect(
   complexName: string,
   polygon: MultiPolygon,

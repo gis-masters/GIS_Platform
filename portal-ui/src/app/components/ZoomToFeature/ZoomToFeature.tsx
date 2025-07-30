@@ -4,20 +4,25 @@ import { MyLocation } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { IClassNameProps } from '@bem-react/core';
 import { boundMethod } from 'autobind-decorator';
+import Feature from 'ol/Feature';
 
-import { WfsFeature } from '../../services/geoserver/wfs/wfs.models';
-import { getFeaturesById } from '../../services/geoserver/wfs/wfs.service';
-import { getLayerByFeatureInCurrentProject } from '../../services/gis/layers/layers.utils';
+import { getOlProjection } from '../../services/data/projections/projections.service';
+import { getFeatureById } from '../../services/geoserver/wfs/wfs.service';
+import { getLayerByFeatureIdInCurrentProject } from '../../services/gis/layers/layers.utils';
 import { projectsService } from '../../services/gis/projects/projects.service';
+import { editFeatureStore } from '../../services/map/a-map-mode/edit-feature/EditFeatureStore';
 import { selectedFeaturesStore } from '../../services/map/a-map-mode/selected-features/SelectedFeatures.store';
 import { mapService } from '../../services/map/map.service';
+import { services } from '../../services/services';
+import { transformGeometry } from '../../services/util/coordinates-transform.util';
+import { wfsGeometryToGeometry } from '../../services/util/open-layers.util';
 
 const cnZoomToFeature = cn('ZoomToFeature');
 
 interface ZoomToFeatureProps extends IClassNameProps {
-  feature: WfsFeature;
+  featureId: string;
   disabled?: boolean;
-  onClick?(feature: WfsFeature): void;
+  zoomToLastCoordinate?: boolean;
 }
 
 export class ZoomToFeature extends Component<ZoomToFeatureProps> {
@@ -45,27 +50,56 @@ export class ZoomToFeature extends Component<ZoomToFeatureProps> {
 
   @boundMethod
   private async handleClick() {
-    const { onClick } = this.props;
-    let { feature } = this.props;
-    const layer = getLayerByFeatureInCurrentProject(feature);
+    const { featureId, zoomToLastCoordinate } = this.props;
 
-    if (layer?.complexName && !feature.geometry?.coordinates.length) {
-      const [currentFeature] = await getFeaturesById([feature.id], layer?.complexName);
+    const layer = getLayerByFeatureIdInCurrentProject(featureId);
+    if (!layer?.complexName) {
+      services.logger.warn(
+        `Не возможно выполнить позиционирование на фиче ${featureId}. Слой ${layer?.id} не содержит complexName`
+      );
 
-      feature = currentFeature;
+      return;
     }
 
-    if (layer?.tableName) {
-      projectsService.enableLayersByTableNames([layer.tableName]);
+    const currentProjection = editFeatureStore.currentProjection;
+
+    if (zoomToLastCoordinate) {
+      const olProjection = await getOlProjection();
+      const currentGeometry = editFeatureStore.currentGeometry;
+      if (!currentGeometry || !currentProjection) {
+        services.logger.warn(
+          `Не возможно выполнить позиционирование на фиче ${featureId}. Отсутствует геометрия или проекция`
+        );
+
+        return;
+      }
+
+      const geometry3857 = transformGeometry(currentGeometry, currentProjection, olProjection);
+      if (!geometry3857) {
+        services.logger.warn(
+          `Не возможно выполнить позиционирование на фиче ${featureId}. Не удалось выполнить трансформацию координат в проекцию 3857`
+        );
+
+        return;
+      }
+
+      const extent = new Feature(wfsGeometryToGeometry(geometry3857)).getGeometry()?.getExtent();
+      if (extent) {
+        mapService.positionToExtent(extent);
+      }
+
+      this.btnRef.current?.blur();
+    } else {
+      const feature = await getFeatureById(featureId, layer?.complexName);
+
+      if (layer?.tableName) {
+        projectsService.enableLayersByTableNames([layer.tableName]);
+      }
+
+      await mapService.positionToFeature(feature, currentProjection);
+
+      this.btnRef.current?.blur();
+      selectedFeaturesStore.setActiveFeature(feature);
     }
-
-    await mapService.positionToFeature(feature);
-    this.btnRef.current?.blur();
-
-    if (onClick) {
-      onClick(feature);
-    }
-
-    selectedFeaturesStore.setActiveFeature(feature);
   }
 }

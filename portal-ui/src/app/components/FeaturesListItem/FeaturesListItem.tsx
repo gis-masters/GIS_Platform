@@ -8,7 +8,7 @@ import { Schema } from '../../services/data/schema/schema.models';
 import { applyView, changeSchemaNamesCaseByFeature } from '../../services/data/schema/schema.utils';
 import { extractFeatureId, extractTableNameFromFeatureId } from '../../services/geoserver/featureType/featureType.util';
 import { WfsFeature } from '../../services/geoserver/wfs/wfs.models';
-import { getFeaturesById } from '../../services/geoserver/wfs/wfs.service';
+import { getFeatureById } from '../../services/geoserver/wfs/wfs.service';
 import { CrgLayer } from '../../services/gis/layers/layers.models';
 import { getLayerSchema } from '../../services/gis/layers/layers.service';
 import { projectsService } from '../../services/gis/projects/projects.service';
@@ -107,8 +107,7 @@ export const FeaturesListItem = observer((props: FeaturesListItemProps) => {
 
     let selectedFeature = feature;
     if (layer?.complexName && feature && isSearchList) {
-      const [currentFeature] = await getFeaturesById([feature.id], layer.complexName);
-      selectedFeature = currentFeature;
+      selectedFeature = await getFeatureById(feature.id, layer.complexName);
     }
 
     if (onSelect && selectedFeature) {
@@ -183,7 +182,10 @@ export const FeaturesListItem = observer((props: FeaturesListItemProps) => {
             </IconButton>
           </Tooltip>
           {feature && (
-            <ZoomToFeature disabled={!mapStore.allowedActions.includes(MapAction.ZOOM_TO_FEATURE)} feature={feature} />
+            <ZoomToFeature
+              disabled={!mapStore.allowedActions.includes(MapAction.ZOOM_TO_FEATURE)}
+              featureId={feature.id}
+            />
           )}
           <Tooltip title='Открыть'>
             <IconButton

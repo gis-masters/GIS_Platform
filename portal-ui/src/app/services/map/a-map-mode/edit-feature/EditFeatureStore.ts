@@ -26,7 +26,6 @@ class EditFeatureStore {
 
   @observable currentProjection?: Projection;
   @observable olProjection?: Projection;
-  @observable nativeProjection?: Projection;
 
   // Зона слоя допустимая для добавления объектов без предупреждения
   @observable layerExtent?: Feature<Polygon>;
@@ -42,16 +41,6 @@ class EditFeatureStore {
   @computed
   get dirty() {
     return !this.pristine;
-  }
-
-  // Наверняка я тут чет навертел-на***вертел, делал это проходя мимо, время поджимало... нужен свежий взгляд.
-  @computed
-  get getPool(): number {
-    if (this.isGeometryChanged) {
-      return this.geometryPool.length;
-    }
-
-    return this.geometryPool.length;
   }
 
   @computed
@@ -100,7 +89,6 @@ class EditFeatureStore {
     this.olProjection = await getProjectionByCode(defaultOlProjectionCode);
 
     if (feature && feature.geometry) {
-      this.nativeProjection = projection;
       this.setCurrentProjection(projection);
       this.setGeometry(feature.geometry);
     } else {
@@ -137,8 +125,8 @@ class EditFeatureStore {
 
   @action.bound
   setGeometry(geometry: WfsGeometry): void {
-    if (!this.nativeProjection || !this.currentProjection) {
-      throw new Error('Отсутствует проекция');
+    if (!this.currentProjection) {
+      throw new Error('Отсутствует текущая проекция');
     }
 
     if (this.firstFeature) {
@@ -149,12 +137,12 @@ class EditFeatureStore {
 
   @action.bound
   setCurrentProjectionAndTransformGeometry(proj: Projection): void {
-    if (!this.geometry || !this.nativeProjection) {
-      throw new Error('Отсутствует геометрия или базовая проекция');
+    if (!this.geometry || !this.currentProjection) {
+      throw new Error('Отсутствует геометрия или текущая проекция');
     }
 
     if (this.firstFeature) {
-      this.firstFeature.geometry = transformGeometry(this.geometry, this.nativeProjection, proj);
+      this.firstFeature.geometry = transformGeometry(this.geometry, this.currentProjection, proj);
       this.currentProjection = proj;
     }
   }

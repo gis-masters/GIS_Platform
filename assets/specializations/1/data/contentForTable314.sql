@@ -51,4 +51,52 @@ VALUES (public.st_transform(
         CRG_OWNER_TEMPLATE,
         CRG_OWNER_TEMPLATE,
         now(),
-        now());
+        now()),
+
+        (
+            public.st_geomFromGeoJSON(
+                '{
+                    "type": "MultiPolygon",
+                    "coordinates": [[[
+                        [5263090, 4975943],
+                        [5263090, 4975942],
+                        [5263091, 4975942],
+                        [5263091, 4975943],
+                        [5263090, 4975943]
+                    ]]],
+                    "crs": {
+                        "type": "name",
+                        "properties": {
+                            "name": "EPSG:7829"
+                        }
+                    }
+                }'
+            ),
+            CRG_OWNER_TEMPLATE,
+            CRG_OWNER_TEMPLATE,
+            now(),
+            now()
+        ),
+        (
+            public.st_geomFromGeoJSON(
+                '{
+                    "type": "MultiPolygon",
+                    "coordinates": [[[
+                        [5263089, 4975943],
+                        [5263089, 4975951],
+                        [5263083, 4975943],
+                        [5263089, 4975943]
+                    ]]],
+                    "crs": {
+                        "type": "name",
+                        "properties": {
+                            "name": "EPSG:7829"
+                        }
+                    }
+                }'
+            ),
+            CRG_OWNER_TEMPLATE,
+            CRG_OWNER_TEMPLATE,
+            now(),
+            now()
+        );

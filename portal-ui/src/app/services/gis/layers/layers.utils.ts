@@ -42,6 +42,10 @@ export function getLayerByFeatureInCurrentProject(feature: WfsFeature): CrgVecto
   return getLayerByFeatureIdFromCurrentProject(feature.id);
 }
 
+export function getLayerByFeatureIdInCurrentProject(featureId: string): CrgVectorLayer | undefined {
+  return getLayerByFeatureIdFromCurrentProject(featureId);
+}
+
 export function getLayerByFeatureIdFromCurrentProject(featureId: string): CrgVectorLayer | undefined {
   return currentProject.vectorableLayers.find(
     ({ tableName }) => tableName === extractTableNameFromFeatureId(featureId)

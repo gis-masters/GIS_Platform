@@ -154,19 +154,19 @@ export default class EditFeatureGeometry extends Component<EditFeatureGeometryPr
     switch (editFeatureStore.geometryType) {
       case GeometryType.POLYGON:
       case GeometryType.MULTI_POLYGON: {
-        feature = mergeToMultiPolygon(activeAndNewFeatures, editFeatureStore.nativeProjection);
+        feature = mergeToMultiPolygon(activeAndNewFeatures, editFeatureStore.currentProjection);
 
         break;
       }
       case GeometryType.LINE_STRING:
       case GeometryType.MULTI_LINE_STRING: {
-        feature = mergeToMultiLineString(activeAndNewFeatures, editFeatureStore.nativeProjection);
+        feature = mergeToMultiLineString(activeAndNewFeatures, editFeatureStore.currentProjection);
 
         break;
       }
       case GeometryType.POINT:
       case GeometryType.MULTI_POINT: {
-        feature = mergeToMultiPoint(activeAndNewFeatures, editFeatureStore.nativeProjection);
+        feature = mergeToMultiPoint(activeAndNewFeatures, editFeatureStore.currentProjection);
 
         break;
       }
