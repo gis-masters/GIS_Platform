@@ -153,6 +153,7 @@ export const useFeatureFormGenerator = (
               property: {
                 name: key,
                 title: key,
+                hidden: key === 'emptyFeature',
                 valueType: ValueType.STRING
               },
               value: currentProperty === null ? null : String(currentProperty),
@@ -161,6 +162,7 @@ export const useFeatureFormGenerator = (
             });
 
             const currentControl = formControls.find(item => item.key === key);
+
             newFormControls.push({
               ...currentControl,
               key: key,
