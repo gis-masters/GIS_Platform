@@ -18,6 +18,8 @@ public interface OrganizationFullProjection {
 
     String getPhone();
 
+    String getDescription();
+
     String getStatus();
 
     Set<UserProjection> getUsers();

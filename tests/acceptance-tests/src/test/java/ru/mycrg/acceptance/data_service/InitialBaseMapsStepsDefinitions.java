@@ -79,7 +79,7 @@ public class InitialBaseMapsStepsDefinitions extends BaseStepsDefinitions {
 
     @Given("Существует подложка источник")
     public void initBaseMap(DataTable dataTable) {
-        String name = generateString(dataTable.asList().get(0));
+        String name = generateString(dataTable.cell(0, 1));
 
         if (isBaseMapExistInPool(name)) {
             makeExactBaseMapAsCurrent(name);
@@ -185,7 +185,7 @@ public class InitialBaseMapsStepsDefinitions extends BaseStepsDefinitions {
     //TODO: Переделать создание объектов
 
     private InitialBaseMapCreateDto mapToBaseMapDto(DataTable dataTable) {
-        List<String> data = dataTable.asList();
+        List<String> data = dataTable.asLists(String.class).get(0);
         switch (data.size()) {
             case 4:
                 return new InitialBaseMapCreateDto(generateString(data.get(0)), generateString(data.get(1)),

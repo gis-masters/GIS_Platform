@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { SmartCaptcha } from '@yandex/smart-captcha';
@@ -20,7 +19,6 @@ type JavascriptErrorData = {
 export class SmartCaptchaControl extends Component<FormControlProps> {
   constructor(props: FormControlProps) {
     super(props);
-    makeObservable(this);
   }
 
   render() {

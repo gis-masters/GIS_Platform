@@ -149,7 +149,8 @@ Feature: Действия с пользователями
     Given Существует пользователь
       | <userName> | <userSurname> | <userEmail> | <userPassword> |
     Given Отправляется запрос на создание организации
-      | ООО БыкиИКоровы | 1234567890 | Иванов | Иван | EMAIL_20 |
+      | name            | phone      | ownerSurname | ownerName | ownerEmail |
+      | ООО БыкиИКоровы | 1234567890 | Иванов       | Иван      | EMAIL_20   |
     Given Владелец организации авторизован
     When Пользователь делает запрос на обновление пользователя
       | <newUserName> | <newUserSurname> | <newUserPassword> |

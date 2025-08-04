@@ -2,7 +2,8 @@ Feature: Наборы данных (datasets)
 
   Background:
     Given Существует организация
-      | ООО НаборыДанных | 1234567890 | Наборов | Набор | EMAIL_13 |
+      | name             | phone      | ownerSurname | ownerName | ownerEmail |
+      | ООО НаборыДанных | 1234567890 | Наборов      | Набор     | EMAIL_13   |
     Given Владелец организации авторизован
 
   Scenario Outline: Постраничная выборка наборов данных

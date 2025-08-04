@@ -57,6 +57,7 @@ class AuthClient extends Client {
     const payload = {
       name: regData.company,
       phone: regData.contactPhone,
+      description: regData.description,
       specializationId: regData.specializationId,
       owner: {
         name: regData.firstName,

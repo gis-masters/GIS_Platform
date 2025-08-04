@@ -2,7 +2,8 @@ Feature: Регистрация новой организации
 
   Scenario: Создание организации с указанием валидных данных
     When Отправляется запрос на создание организации
-      | ООО БыкиИКоровы | 1234567890 | Иванов | Иван | EMAIL_9 | testPassword1 | 1 |
+      | name          | phone      | ownerSurname | ownerName | ownerEmail | ownerPassword | specializationId | description |
+      | ООО БыкиИКовы | 1234567890 | Иванов       | Иван      | EMAIL_9    | testPassword1 | 1                | MUSTACHE    |
     Then Сервер отвечает со статус-кодом 202
     *    В заголовке Location передается ID созданной организации
     *    Ждем окончания процесса создания организации
@@ -32,7 +33,8 @@ Feature: Регистрация новой организации
 
   Scenario Outline: Создание организации с указанием невалидных данных (<reason>)
     When Отправляется запрос на создание организации
-      | <orgName> | <orgPhone> | <adminName> | <adminSurname> | <adminEmail> | <adminPassword> |
+      | name      | phone      | ownerSurname   | ownerName   | ownerEmail   | ownerPassword   |
+      | <orgName> | <orgPhone> | <adminSurname> | <adminName> | <adminEmail> | <adminPassword> |
     Then Сервер отвечает со статус-кодом 400
     Examples:
       | orgName    | orgPhone   | adminName | adminSurname | adminEmail        | adminPassword | reason                             |

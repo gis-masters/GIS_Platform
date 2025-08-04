@@ -14,11 +14,12 @@ pushd ../
                    -Dconfig.file="$ENV_FILE_PATH" \
                    -Dcucumber.filter.tags="@OnlyThis"
   elif [[ -z "$1" ]]; then
-    printHeader2 "Run ALL acceptance tests (except @Smev)"
+    printHeader2 "Run ALL acceptance tests (except @GisogdIntegration)"
 
     mvn clean test -DskipAcceptanceTests=false \
-                   -Dconfig.file="$ENV_FILE_PATH" \
-                   -Dcucumber.filter.tags="not @Smev"
+                   -Dconfig.file="$ENV_FILE_PATH"\
+                   -Dcucumber.filter.tags="not @GisogdIntegration"
+
   else
     printHeader2 "Not acceptable parameter"
   fi

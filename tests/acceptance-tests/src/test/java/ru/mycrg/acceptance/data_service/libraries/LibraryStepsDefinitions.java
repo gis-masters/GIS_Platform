@@ -692,8 +692,8 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
                 .when().
                         get(String.format("/%s/records", targetLibrary));
 
-        List<Integer> existingIds = response.jsonPath().getList("content.id");
-        int maxExistingId = existingIds.isEmpty() ? 0 : Collections.max(existingIds);
+        int maxExistingId = response.jsonPath()
+                                    .getInt("content.collect { it.content.id }.max() ?: 0");
 
         // Если максимальный существующий ID меньше целевого,
         // создаем недостающие папки по порядку
@@ -958,6 +958,14 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
                        get(String.format("/%s/records/%d", libraryId, id));
     }
 
+    public void getRecordsAsRegistry(String ecqlFilter, String libraryId) {
+        String url = String.format("/%s/records/as_registry?filter=%s", libraryId, ecqlFilter);
+
+        response = getBaseRequestWithCurrentCookie()
+                .when().
+                       get(url);
+    }
+
     private LibraryModel extractCurrentLibraryModel() {
         Long id = response.jsonPath().getLong("id");
         String title = response.jsonPath().get("title");
@@ -1100,14 +1108,6 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
         response = getBaseRequestWithCurrentCookie()
                 .when().
                         get(url);
-    }
-
-    private void getRecordsAsRegistry(String ecqlFilter, String libraryId) {
-        String url = String.format("/%s/records/as_registry?filter=%s", libraryId, ecqlFilter);
-
-        response = getBaseRequestWithCurrentCookie()
-                .when().
-                       get(url);
     }
 
     private String getRecordBodyForDlDefaultWithIncorrectField() {

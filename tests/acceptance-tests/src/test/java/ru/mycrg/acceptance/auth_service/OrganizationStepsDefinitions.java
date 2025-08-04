@@ -1,6 +1,8 @@
 package ru.mycrg.acceptance.auth_service;
 
+import io.cucumber.datatable.CucumberDataTableException;
 import io.cucumber.datatable.DataTable;
+import io.cucumber.java.DataTableType;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.When;
@@ -10,6 +12,7 @@ import io.restassured.response.Response;
 import ru.mycrg.acceptance.BaseStepsDefinitions;
 import ru.mycrg.acceptance.GeoserverStepDefinitions;
 import ru.mycrg.acceptance.auth_service.dto.OrganizationBase;
+import ru.mycrg.acceptance.auth_service.dto.OrganizationTestDto;
 import ru.mycrg.acceptance.auth_service.dto.UserDto;
 import ru.mycrg.acceptance.auth_service.dto.UserGroupDto;
 import ru.mycrg.acceptance.data_service.datasets.DatasetsStepsDefinitions;
@@ -18,14 +21,12 @@ import ru.mycrg.acceptance.data_service.libraries.LibraryBaseRecords;
 import ru.mycrg.acceptance.data_service.tables.TablesStepsDefinitions;
 import ru.mycrg.acceptance.gis_service.LayerStepDefinitions;
 import ru.mycrg.acceptance.gis_service.ProjectStepsDefinitions;
-import ru.mycrg.auth_service_contract.dto.AuthorityCommonDto;
-import ru.mycrg.auth_service_contract.dto.GroupCreateDto;
-import ru.mycrg.auth_service_contract.dto.OrganizationCreateDto;
-import ru.mycrg.auth_service_contract.dto.UserCreateDto;
+import ru.mycrg.auth_service_contract.dto.*;
 import ru.mycrg.common_contracts.generated.gis_service.project.ProjectDto;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.Collectors;
 
 import static java.lang.Thread.sleep;
 import static org.apache.http.HttpStatus.*;
@@ -56,28 +57,60 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
     private final DatasetsStepsDefinitions datasetsStepsDefinitions = new DatasetsStepsDefinitions();
     private final GeoserverStepDefinitions geoserverStepDefinitions = new GeoserverStepDefinitions();
 
+    private OrganizationUpdateDto organizationUpdateDto = new OrganizationUpdateDto();
+    private OrganizationUpdateDto currentOrganizationProperty = new OrganizationUpdateDto();
+
     @When("Отправляется запрос на создание организации")
     public void sendCreateOrganizationRequest(DataTable dataTable) {
-        List<String> data = dataTable.asList();
-        String ownerEmail = generateString(data.get(4));
+        List<OrganizationTestDto> data;
+        try {
+            data = dataTable.asList(OrganizationTestDto.class);
+        } catch (CucumberDataTableException e) {
+            // если dataTable создал не кукумбер
+            List<String> headers = dataTable.row(0);
+            List<String> values = dataTable.row(1);
+
+            Map<String, String> testDataMap = new HashMap<>();
+            for (int i = 0; i < headers.size(); i++) {
+                testDataMap.put(headers.get(i), values.get(i));
+            }
+            OrganizationTestDto testDto = organizationTestDtoEntry(testDataMap);
+            data = List.of(testDto);
+        }
+
+        OrganizationTestDto testDto = data.get(0);
+
+        String ownerEmail = generateString(testDto.getOwnerEmail());
 
         String password = DEFAULT_TEST_PASSWORD;
-        if (data.size() > 5 && data.get(5) != null) {
-            if (!data.get(5).equalsIgnoreCase("DEFAULT_TEST_PASSWORD")) {
-                password = generateString(data.get(5));
+        if (testDto.getOwnerPassword() != null && !testDto.getOwnerPassword().isEmpty()) {
+            if (!testDto.getOwnerPassword().equalsIgnoreCase("DEFAULT_TEST_PASSWORD")) {
+                password = generateString(testDto.getOwnerPassword());
             }
         }
 
-        UserCreateDto owner = new UserCreateDto(generateString(data.get(2)), generateString(data.get(3)),
-                                                ownerEmail, password);
+        UserCreateDto owner = new UserCreateDto(
+                generateString(testDto.getOwnerName()),
+                generateString(testDto.getOwnerSurname()),
+                ownerEmail,
+                password
+        );
 
         System.out.println("Organization owner: " + ownerEmail);
 
         userPool.put(-1, owner);
-        orgDto = new OrganizationCreateDto(generateString(data.get(0)), generateString(data.get(1)), owner);
+        orgDto = new OrganizationCreateDto(
+                generateString(testDto.getName()),
+                generateString(testDto.getPhone()),
+                owner
+        );
 
-        if (data.size() > 6) {
-            orgDto.setSpecializationId(Integer.valueOf(data.get(6)));
+        if (testDto.getSpecializationId() != null && !testDto.getSpecializationId().isEmpty()) {
+            orgDto.setSpecializationId(Integer.valueOf(testDto.getSpecializationId()));
+        }
+
+        if (testDto.getDescription() != null && !testDto.getDescription().isEmpty()) {
+            orgDto.setDescription(generateString(testDto.getDescription()));
         }
 
         createOrganization(orgDto);
@@ -222,6 +255,7 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
 
         assertEquals(jsonPath.get("name"), orgDto.getName());
         assertEquals(jsonPath.get("phone"), orgDto.getPhone());
+        assertEquals(jsonPath.get("description"), orgDto.getDescription());
         assertEquals(jsonPath.getList("users.name").get(0), orgDto.getOwner().getName());
         assertEquals(jsonPath.getList("users.surname").get(0), orgDto.getOwner().getSurname());
         assertEquals(jsonPath.getList("users.email").get(0), orgDto.getOwner().getEmail());
@@ -281,8 +315,11 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
      */
     @Given("Существует организация")
     public void initOrg(DataTable dataTable) throws InterruptedException {
-        boolean isPassedEmailRandom = dataTable.asList().get(4).split("_")[0].equals("EMAIL");
-        String eMail = generateString(dataTable.asList().get(4));
+        List<OrganizationTestDto> data = dataTable.asList(OrganizationTestDto.class);
+        OrganizationTestDto testDto = data.get(0);
+
+        boolean isPassedEmailRandom = testDto.getOwnerEmail().split("_")[0].equals("EMAIL");
+        String eMail = generateString(testDto.getOwnerEmail());
 
         clearAllOrganizationPools();
 
@@ -353,21 +390,30 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
 
     @Given("Существует другая организация")
     public void createOrgForFeature(DataTable dataTable) throws InterruptedException {
-        List<String> data = dataTable.asList();
+        List<OrganizationTestDto> data = dataTable.asList(OrganizationTestDto.class);
+        OrganizationTestDto testDto = data.get(0);
 
         if (emailForFeature == null) {
-            emailForFeature = generateString(data.get(4));
+            emailForFeature = generateString(testDto.getOwnerEmail());
         }
         if (isOrgExistInPool(emailForFeature)) {
             makeExactOrgAsCurrent(emailForFeature);
         } else {
-            UserCreateDto owner = new UserCreateDto(generateString(data.get(2)), generateString(data.get(3)),
-                                                    emailForFeature, DEFAULT_TEST_PASSWORD);
+            UserCreateDto owner = new UserCreateDto(
+                    generateString(testDto.getOwnerName()),
+                    generateString(testDto.getOwnerSurname()),
+                    emailForFeature,
+                    DEFAULT_TEST_PASSWORD
+            );
 
             System.out.println("Org. Owner: " + emailForFeature);
 
             userPool.put(-1, owner);
-            orgDto = new OrganizationCreateDto(generateString(data.get(0)), generateString(data.get(1)), owner);
+            orgDto = new OrganizationCreateDto(
+                    generateString(testDto.getName()),
+                    generateString(testDto.getPhone()),
+                    owner
+            );
 
             createOrganization(orgDto);
 
@@ -507,6 +553,143 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
         getOrganization(orgId);
     }
 
+    @When("Текущий пользователь делает запрос на обновление организации")
+    public void updateCurrentOrganization() {
+        organizationUpdateDto = new OrganizationUpdateDto("привет", "911", "Я изменился");
+
+        updateOrganization(organizationUpdateDto, orgId);
+    }
+
+    @When("Текущий пользователь делает запросы на обновление текущей организации")
+    public void updatesOrganization(DataTable dataTable) {
+        List<String> data = dataTable.asLists(String.class).get(0);
+
+        OrganizationUpdateDto newOrgUpdate = new OrganizationUpdateDto(generateString(data.get(0)),
+                                                                       generateString(data.get(1)),
+                                                                       generateString(data.get(2)));
+        updateOrganization(newOrgUpdate, orgId);
+    }
+
+    @And("Текущая организация успешно обновлена")
+    public void checkOrganizationUpdate() {
+        getOrganization(orgId);
+
+        assertEquals(organizationUpdateDto.getName(), response.jsonPath().getString("name"));
+        assertEquals(organizationUpdateDto.getPhone(), response.jsonPath().getString("phone"));
+        assertEquals(organizationUpdateDto.getDescription(), response.jsonPath().getString("description"));
+    }
+
+    @And("В организации изменено только поле {string}")
+    public void checkOrganizationProperty(String propertyName) {
+        getOrganization(orgId);
+
+        String actualName = response.jsonPath().getString("name");
+        String actualPhone = response.jsonPath().getString("phone");
+        String actualDescription = response.jsonPath().getString("description");
+
+        // Проверяем, что указанное поле изменилось
+        switch (propertyName) {
+            case "name":
+                assertEquals("name должно быть как в изменённых данных", organizationUpdateDto.getName(),
+                             actualName);
+                assertEquals("phone не должно было измениться", currentOrganizationProperty.getPhone(),
+                             actualPhone);
+                assertEquals("description не должно было измениться", currentOrganizationProperty.getDescription(),
+                             actualDescription);
+                break;
+            case "phone":
+                assertEquals("name не должно было измениться",
+                             currentOrganizationProperty.getName(),
+                             actualName);
+
+                assertEquals("phone должно быть как в изменённых данных",
+                             organizationUpdateDto.getPhone(),
+                             actualPhone);
+
+                assertEquals("description не должно было измениться", currentOrganizationProperty.getDescription(),
+                             actualDescription);
+                break;
+            case "description":
+                assertEquals("name не должно было измениться",
+                             currentOrganizationProperty.getName(),
+                             actualName);
+
+                assertEquals("phone не должно было измениться",
+                             currentOrganizationProperty.getPhone(),
+                             actualPhone);
+
+                assertEquals("description должно быть как в изменённых данных",
+                             organizationUpdateDto.getDescription(),
+                             actualDescription);
+                break;
+            default:
+                fail("Неизвестное поле для проверки: " + propertyName);
+                break;
+        }
+    }
+
+    @When("Текущий пользователь делает запрос на обновление несуществующей организации")
+    public void updateNonexistentOrganization() {
+        updateOrganization(organizationUpdateDto, 413);
+    }
+
+    @Given("Запомнили текущее параметры организации")
+    public void rememberOrganization() {
+        getOrganization(orgId);
+        currentOrganizationProperty = new OrganizationUpdateDto(response.jsonPath().getString("name"),
+                                                                response.jsonPath().getString("phone"),
+                                                                response.jsonPath().getString("description"));
+    }
+
+    @When("Текущий пользователь обновляет {string} организации, значением {string}")
+    public void updatesOrganizationProperty(String property, String value) {
+        organizationUpdateDto = new OrganizationUpdateDto();
+
+        switch (property) {
+            case "name":
+                organizationUpdateDto.setName(value);
+                break;
+            case "phone":
+                organizationUpdateDto.setPhone(value);
+                break;
+            case "description":
+                organizationUpdateDto.setDescription(value);
+                break;
+            default:
+                fail("Переданное значение не может быть обработано: " + property);
+                break;
+        }
+
+        updateOrganization(organizationUpdateDto, orgId);
+    }
+
+    @Given("Существует любая организация, кроме текущей")
+    public void getOrCreateAnotherOrganization() throws InterruptedException {
+        String currentUserEmail = orgDto.getOwner().getEmail();
+
+        authorizationBase.loginAsSystemAdmin();
+        getAllOrganizations();
+
+        List<Integer> organizationIds = response.jsonPath().getList("content.id", Integer.class);
+        List<Integer> availableOrgIds = organizationIds.stream()
+                                                       .filter(id -> id > 0)
+                                                       .filter(id -> !id.equals(orgId))
+                                                       .collect(Collectors.toList());
+
+        if (!availableOrgIds.isEmpty()) {
+            Integer anotherOrgId = availableOrgIds.get(0);
+            System.out.println("Найдена другая организация с ID: " + anotherOrgId);
+
+            orgId = anotherOrgId;
+            authorizationBase.loginAs(currentUserEmail, DEFAULT_TEST_PASSWORD);
+        } else {
+            System.out.println("Других организаций не найдено, необходимо создать новую");
+            initEnhancedOrganization("для тестирования доступности вложений задач");
+
+            authorizationBase.loginAs(currentUserEmail, DEFAULT_TEST_PASSWORD);
+        }
+    }
+
     @When("Администратор запрашивает данные о чужой организации")
     public void checkOtherOrgInfo() {
         Integer orgId = null;
@@ -522,6 +705,19 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
         getOrganization(orgId);
 
         assertNotNull(orgId);
+    }
+
+    @DataTableType
+    public OrganizationTestDto organizationTestDtoEntry(Map<String, String> entry) {
+        return new OrganizationTestDto(
+                entry.get("name"),
+                entry.get("phone"),
+                entry.get("ownerSurname"),
+                entry.get("ownerName"),
+                entry.get("ownerEmail"),
+                entry.get("ownerPassword"),
+                entry.get("specializationId"),
+                entry.get("description"));
     }
 
     private Response getDatabase(Integer orgId) {
@@ -552,6 +748,16 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
                 .when().
                         log().ifValidationFails().
                         post("/organizations/init");
+    }
+
+    private void updateOrganization(OrganizationUpdateDto dto, Integer orgId) {
+        response = getBaseRequestWithCurrentCookie()
+                .given().
+                        body(gson.toJson(dto)).
+                        contentType(ContentType.JSON)
+                .when().
+                        log().ifValidationFails().
+                        patch("/organizations/" + orgId);
     }
 
     private void waitUntilOrganizationSuccessfullyDeleted(Integer id) throws InterruptedException {
@@ -627,7 +833,7 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
         authorizationBase.loginAsSystemAdmin();
         response = getBaseRequestWithCurrentCookie()
                 .when().
-                        get("/organizations?size=314");
+                        get("/organizations");
 
         List<OrganizationBase> organizations = response.jsonPath().getList("content", OrganizationBase.class);
 
@@ -675,17 +881,24 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
 
     private void initNewEnhancedOrganization(String orgTemplate) throws InterruptedException {
         if ("для тестирования доступности задач согласно иерархии пользователей".equals(orgTemplate)) {
-            List<String> org1 = new ArrayList<>();
-            org1.add(orgTemplate);
-            org1.add("1234567888");
-            org1.add("orgOwner");
-            org1.add("Задач");
-            org1.add("EMAIL_11");
-            org1.add(DEFAULT_TEST_PASSWORD);
-            org1.add("1");
-
-            List<List<String>> orgData = new ArrayList<>();
-            orgData.add(org1);
+            List<List<String>> orgData = Arrays.asList(
+                    Arrays.asList("name",
+                                  "phone",
+                                  "ownerSurname",
+                                  "ownerName",
+                                  "ownerEmail",
+                                  "ownerPassword",
+                                  "specializationId",
+                                  "description"),
+                    Arrays.asList(orgTemplate,
+                                  "1234567888",
+                                  "Задач",
+                                  "orgOwner",
+                                  "EMAIL_11",
+                                  DEFAULT_TEST_PASSWORD,
+                                  "1",
+                                  "Тестирование задач согласно иерархии")
+            );
 
             // Организация
             sendCreateOrganizationRequest(DataTable.create(orgData));
@@ -700,17 +913,22 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
 
             knownOrgTemplates.put(orgTemplate, true);
         } else if ("для тестирования доступности вложений задач".equals(orgTemplate)) {
-            List<String> org1 = new ArrayList<>();
-            org1.add(orgTemplate);
-            org1.add("1234567888");
-            org1.add("orgOwner");
-            org1.add("Владелец");
-            org1.add("EMAIL_11");
-            org1.add(DEFAULT_TEST_PASSWORD);
-            org1.add("1");
-
-            List<List<String>> orgData = new ArrayList<>();
-            orgData.add(org1);
+            List<List<String>> orgData = Arrays.asList(
+                    Arrays.asList("name",
+                                  "phone",
+                                  "ownerSurname",
+                                  "ownerName",
+                                  "ownerEmail",
+                                  "ownerPassword",
+                                  "specializationId"),
+                    Arrays.asList(orgTemplate,
+                                  "1234567888",
+                                  "orgOwner",
+                                  "orgOwner",
+                                  "EMAIL_11",
+                                  DEFAULT_TEST_PASSWORD,
+                                  "1")
+            );
 
             // Организация
             sendCreateOrganizationRequest(DataTable.create(orgData));
@@ -725,16 +943,20 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
 
             knownOrgTemplates.put(orgTemplate, true);
         } else if ("тестирование прав на проекты".equals(orgTemplate)) {
-            List<String> orgParams = new ArrayList<>();
-            orgParams.add(orgTemplate);
-            orgParams.add("314159265");
-            orgParams.add("orgOwner");
-            orgParams.add("Владелец");
-            orgParams.add("orgOwner@fiz");
-            orgParams.add(DEFAULT_TEST_PASSWORD);
-
-            List<List<String>> orgData = new ArrayList<>();
-            orgData.add(orgParams);
+            List<List<String>> orgData = Arrays.asList(
+                    Arrays.asList("name",
+                                  "phone",
+                                  "ownerSurname",
+                                  "ownerName",
+                                  "ownerEmail",
+                                  "ownerPassword"),
+                    Arrays.asList(orgTemplate,
+                                  "314159265",
+                                  "orgOwner",
+                                  "Владелец",
+                                  "orgOwner@fiz",
+                                  DEFAULT_TEST_PASSWORD)
+            );
 
             // Организация
             sendCreateOrganizationRequest(DataTable.create(orgData));
@@ -750,17 +972,24 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
 
             knownOrgTemplates.put(orgTemplate, true);
         } else if ("для тестирования задач РНС по СМЭВ".equals(orgTemplate)) {
-            List<String> orgParams = new ArrayList<>();
-            orgParams.add(orgTemplate);
-            orgParams.add("1234567888");
-            orgParams.add("rnsSmev");
-            orgParams.add("Владелец");
-            orgParams.add("rnsSmev@smev.ru");
-            orgParams.add(DEFAULT_TEST_PASSWORD);
-            orgParams.add("5");
-
-            List<List<String>> orgData = new ArrayList<>();
-            orgData.add(orgParams);
+            List<List<String>> orgData = Arrays.asList(
+                    Arrays.asList("name",
+                                  "phone",
+                                  "ownerSurname",
+                                  "ownerName",
+                                  "ownerEmail",
+                                  "ownerPassword",
+                                  "specializationId",
+                                  "description"),
+                    Arrays.asList(orgTemplate,
+                                  "1234567888",
+                                  "rnsSmev",
+                                  "Владелец",
+                                  "rnsSmev@smev.ru",
+                                  DEFAULT_TEST_PASSWORD,
+                                  "5",
+                                  "ГИСОГД тесты")
+            );
 
             // Организация
             sendCreateOrganizationRequest(DataTable.create(orgData));
@@ -774,17 +1003,25 @@ public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
             userStepsDefinitions.createUsersByTemplate(orgTemplate);
             knownOrgTemplates.put(orgTemplate, true);
         } else if (orgTemplate.isEmpty()) {
-            List<String> orgParams = new ArrayList<>();
-            orgParams.add("ООО Любая организация");
-            orgParams.add("654987640");
-            orgParams.add("orgOwner");
-            orgParams.add("Владелец");
-            orgParams.add("orgOwner@any.ru");
-            orgParams.add(DEFAULT_TEST_PASSWORD);
-            orgParams.add("1");
+            List<List<String>> orgData = Arrays.asList(
+                    Arrays.asList("name",
+                                  "phone",
+                                  "ownerSurname",
+                                  "ownerName",
+                                  "ownerEmail",
+                                  "ownerPassword",
+                                  "specializationId",
+                                  "description"),
 
-            List<List<String>> orgData = new ArrayList<>();
-            orgData.add(orgParams);
+                    Arrays.asList("ООО Любая организация",
+                                  "654987640",
+                                  "orgOwner",
+                                  "Владелец",
+                                  "orgOwner@any.ru",
+                                  DEFAULT_TEST_PASSWORD,
+                                  "1",
+                                  "Усы лапы хвост")
+            );
 
             // Организация
             sendCreateOrganizationRequest(DataTable.create(orgData));

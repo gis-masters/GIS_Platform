@@ -28,6 +28,7 @@ const cnOrgRegistrationForm = cn('OrgRegistrationForm');
 const defaultData: Partial<RegData> = {
   company: '',
   contactPhone: '',
+  description: '',
   specializationId: undefined,
   lastName: '',
   firstName: '',
@@ -140,6 +141,12 @@ export class OrgRegistrationForm extends Component {
           title: 'Контактный телефон',
           required: true,
           display: 'phone',
+          propertyType: PropertyType.STRING
+        },
+        {
+          name: 'description',
+          title: 'Описание',
+          maxLength: 2000,
           propertyType: PropertyType.STRING
         },
         {

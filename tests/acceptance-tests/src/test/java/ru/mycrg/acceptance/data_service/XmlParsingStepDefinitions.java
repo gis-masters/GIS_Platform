@@ -26,9 +26,9 @@ public class XmlParsingStepDefinitions extends BaseStepsDefinitions {
 
     @When("Пользователь делает запрос на импорт файла")
     public void importXml(DataTable dataTable) {
-        fileName = dataTable.asList().get(0);
-        datasetId = dataTable.asList().get(1);
-        tableId = dataTable.asList().get(2);
+        fileName = dataTable.cell(0, 0);
+        datasetId = dataTable.cell(0, 1);
+        tableId = dataTable.cell(0, 2);
 
         file = new File(String.format("src/test/resources/ru/mycrg/acceptance/resources/%s", fileName));
 

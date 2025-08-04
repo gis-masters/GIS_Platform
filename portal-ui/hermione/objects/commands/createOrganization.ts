@@ -6,14 +6,15 @@ declare const window: { authService: typeof authService };
 
 export async function createOrganization(
   browser: WebdriverIO.Browser,
-  { company, contactPhone, firstName, lastName, email, password, password_ }: RegData
+  { company, contactPhone, description, firstName, lastName, email, password, password_ }: RegData
 ): Promise<boolean> {
   return await browser.executeAsync(
-    (company, contactPhone, firstName, lastName, email, password, password_, callback) => {
+    (company, contactPhone, description, firstName, lastName, email, password, password_, callback) => {
       window.authService
         .registration({
           company,
           contactPhone,
+          description,
           firstName,
           lastName,
           email,
@@ -29,6 +30,7 @@ export async function createOrganization(
     },
     company,
     contactPhone,
+    description,
     firstName,
     lastName,
     email,

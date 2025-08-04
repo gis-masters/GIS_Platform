@@ -33,6 +33,9 @@ public class Organization {
     private String phone;
 
     @Column
+    private String description;
+
+    @Column
     private String status = PROVISIONING.toString();
 
     @Type(type = "jsonb-node")
@@ -57,11 +60,13 @@ public class Organization {
     private @LastModifiedDate
     LocalDateTime lastModified;
 
-    public Organization() {}
+    public Organization() {
+    }
 
-    public Organization(String name, String phone) {
+    public Organization(String name, String phone,  String description) {
         this.name = name;
         this.phone = phone;
+        this.description = description;
 
         this.createdAt = LocalDateTime.now();
         this.lastModified = LocalDateTime.now();
@@ -93,6 +98,14 @@ public class Organization {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public Set<User> getUsers() {

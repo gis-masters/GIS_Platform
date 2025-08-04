@@ -9,6 +9,7 @@ public class OrganizationBase {
     private List<UserDto> users;
     private String createdAt;
     private String phone;
+    private String description;
     private List<UserGroupDto> groups;
     private Object settings;
     private String status;
@@ -53,8 +54,16 @@ public class OrganizationBase {
         return phone;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public List<UserGroupDto> getGroups() {

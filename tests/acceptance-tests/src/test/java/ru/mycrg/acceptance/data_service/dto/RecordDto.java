@@ -1,6 +1,6 @@
 package ru.mycrg.acceptance.data_service.dto;
 
-import io.cucumber.messages.internal.com.google.gson.annotations.SerializedName;
+import com.google.gson.annotations.SerializedName;
 
 public class RecordDto {
 

@@ -1,5 +1,7 @@
 package ru.mycrg.auth_service.service.organization;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,6 +22,7 @@ import ru.mycrg.auth_service.repository.UserRepository;
 import ru.mycrg.auth_service.service.organization.settings.OrganizationSettingService;
 import ru.mycrg.auth_service.service.specialization.SpecializationService;
 import ru.mycrg.auth_service_contract.dto.OrganizationCreateDto;
+import ru.mycrg.auth_service_contract.dto.OrganizationUpdateDto;
 import ru.mycrg.auth_service_contract.dto.UserCreateDto;
 import ru.mycrg.auth_service_contract.events.request.OrganizationRemovedEvent;
 import ru.mycrg.common_contracts.specialization.Specialization;
@@ -29,6 +32,7 @@ import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
+import static java.time.LocalDateTime.now;
 import static java.util.stream.Collectors.toList;
 import static ru.mycrg.auth_service.service.organization.OrganizationStatus.DELETING;
 import static ru.mycrg.auth_service.service.organization.OrganizationStatus.PROVISIONED;
@@ -40,6 +44,7 @@ import static ru.mycrg.common_utils.CrgGlobalProperties.prepareGeoserverLogin;
 @Transactional
 public class OrganizationService {
 
+    private final Logger log = LoggerFactory.getLogger(OrganizationService.class);
     private final BCryptPasswordEncoder encoder;
     private final UserRepository userRepository;
     private final IMessageBusProducer messageBus;
@@ -119,6 +124,33 @@ public class OrganizationService {
         return projectionFactory.createProjection(OrganizationFullProjection.class, getById(orgId));
     }
 
+    public OrganizationFullProjection update(@Valid OrganizationUpdateDto updateDto, Long id) {
+        Organization existingOrganization = getById(id);
+        log.debug("Найдена организация для обновления: {}", existingOrganization.getName());
+
+        if (updateDto.getName() != null && !updateDto.getName().isEmpty()) {
+            existingOrganization.setName(updateDto.getName());
+        }
+
+        if (updateDto.getPhone() != null && !updateDto.getPhone().isEmpty()) {
+            existingOrganization.setPhone(updateDto.getPhone());
+        }
+
+        if (updateDto.getDescription() != null) {
+            existingOrganization.setDescription(
+                    updateDto.getDescription().isEmpty() ? null : updateDto.getDescription());
+        }
+
+        // Обновляем время последнего изменения
+        existingOrganization.setLastModified(now());
+
+        // Сохраняем изменения
+        Organization savedOrganization = organizationRepository.save(existingOrganization);
+        log.info("Организация с ID: {} успешно обновлена", id);
+
+        return projectionFactory.createProjection(OrganizationFullProjection.class, savedOrganization);
+    }
+
     public void delete(Long orgId) {
         final Organization organization = getById(orgId);
         if (!PROVISIONED.toString().equals(organization.getStatus())) {
@@ -147,7 +179,7 @@ public class OrganizationService {
     }
 
     private Organization mapDtoToOrganization(OrganizationCreateDto dto) {
-        return new Organization(dto.getName(), dto.getPhone());
+        return new Organization(dto.getName(), dto.getPhone(), dto.getDescription());
     }
 
     private User mapDtoToUser(UserCreateDto owner) {

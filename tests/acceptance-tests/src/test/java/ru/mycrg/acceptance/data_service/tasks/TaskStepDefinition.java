@@ -70,8 +70,7 @@ public class TaskStepDefinition extends BaseStepsDefinitions {
     }
 
     @Given("Существуют задачи")
-    public void initTasks(DataTable dataTable) {
-        List<List<String>> tasks = dataTable.asLists();
+    public void initTasks(List<List<String>> tasks) {
         for (List<String> task: tasks) {
             int assignedToId = getUserIdByName(task.get(0));
             int ownerId = getUserIdByName(task.get(1));
@@ -502,7 +501,7 @@ public class TaskStepDefinition extends BaseStepsDefinitions {
             tasksForOwner.add(task6);
             tasksForOwner.add(task7);
 
-            initTasks(DataTable.create(tasksForOwner));
+            initTasks(tasksForOwner);
 
             // Create tasks as fiz2
             UserCreateDto user2 = getUserByName("fiz2");
@@ -517,7 +516,7 @@ public class TaskStepDefinition extends BaseStepsDefinitions {
             List<List<String>> tasksForFiz2 = new ArrayList<>();
             tasksForFiz2.add(task8);
 
-            initTasks(DataTable.create(tasksForFiz2));
+            initTasks(tasksForFiz2);
 
             // Create tasks as fiz3
             UserCreateDto user3 = getUserByName("fiz3");
@@ -546,7 +545,7 @@ public class TaskStepDefinition extends BaseStepsDefinitions {
             tasksForFiz4.add(task10);
             tasksForFiz4.add(task11);
 
-            initTasks(DataTable.create(tasksForFiz4));
+            initTasks(tasksForFiz4);
 
             // Create tasks as fiz5
             UserCreateDto user5 = getUserByName("fiz5");
@@ -561,7 +560,7 @@ public class TaskStepDefinition extends BaseStepsDefinitions {
             List<List<String>> tasksForFiz5 = new ArrayList<>();
             tasksForFiz5.add(task5_1);
 
-            initTasks(DataTable.create(tasksForFiz5));
+            initTasks(tasksForFiz5);
         } else if ("для тестирования доступности задач согласно иерархии пользователей".equals(template)) {
             List<String> task1 = new ArrayList<>();
             task1.add("orgOwner");
@@ -614,7 +613,7 @@ public class TaskStepDefinition extends BaseStepsDefinitions {
             tasksForOwner.add(task6);
             tasksForOwner.add(task7);
 
-            initTasks(DataTable.create(tasksForOwner));
+            initTasks(tasksForOwner);
 
             // Create tasks as fiz2
             UserCreateDto user2 = getUserByName("fiz2");
@@ -629,7 +628,7 @@ public class TaskStepDefinition extends BaseStepsDefinitions {
             List<List<String>> tasksForFiz2 = new ArrayList<>();
             tasksForFiz2.add(task8);
 
-            initTasks(DataTable.create(tasksForFiz2));
+            initTasks(tasksForFiz2);
 
             // Create tasks as fiz3
             UserCreateDto user3 = getUserByName("fiz3");
@@ -658,7 +657,7 @@ public class TaskStepDefinition extends BaseStepsDefinitions {
             tasksForFiz4.add(task10);
             tasksForFiz4.add(task11);
 
-            initTasks(DataTable.create(tasksForFiz4));
+            initTasks(tasksForFiz4);
 
             // Create tasks as fiz5
             UserCreateDto user5 = getUserByName("fiz5");
@@ -673,7 +672,7 @@ public class TaskStepDefinition extends BaseStepsDefinitions {
             List<List<String>> tasksForFiz5 = new ArrayList<>();
             tasksForFiz5.add(task5_1);
 
-            initTasks(DataTable.create(tasksForFiz5));
+            initTasks(tasksForFiz5);
         } else {
             throw new IllegalStateException("Создание задач. Передан не известный шаблон: " + template);
         }

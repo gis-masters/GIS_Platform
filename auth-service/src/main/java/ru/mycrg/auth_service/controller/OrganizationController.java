@@ -17,13 +17,13 @@ import ru.mycrg.auth_service.service.AuthService;
 import ru.mycrg.auth_service.service.organization.OrganizationService;
 import ru.mycrg.auth_service_contract.AESCryptor;
 import ru.mycrg.auth_service_contract.dto.OrganizationCreateDto;
+import ru.mycrg.auth_service_contract.dto.OrganizationUpdateDto;
 import ru.mycrg.auth_service_contract.events.request.OrganizationInitializedEvent;
 import ru.mycrg.messagebus_contract.IMessageBusProducer;
 
 import javax.validation.Valid;
 import java.net.URI;
 
-import static org.springframework.http.HttpStatus.ACCEPTED;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static ru.mycrg.auth_service_contract.Authorities.SYSTEM_ADMIN_AUTHORITY;
 import static ru.mycrg.auth_service_contract.Authorities.SYSTEM_ADMIN_ORG_ADMIN_AUTHORITY;
@@ -101,6 +101,18 @@ public class OrganizationController {
         OrganizationFullProjection projection = organizationService.findById(id);
 
         return ResponseEntity.ok(projection);
+    }
+
+    @PatchMapping("/{id}")
+    @PreAuthorize(SYSTEM_ADMIN_ORG_ADMIN_AUTHORITY)
+    public ResponseEntity<OrganizationFullProjection> updateOrganization(@Valid
+                                                                         @RequestBody OrganizationUpdateDto updateDto,
+                                                                         @PathVariable Long id) {
+        log.debug("Запрос на обновление организации: {} с данными: {}", id, updateDto);
+
+        OrganizationFullProjection updatedOrganization = organizationService.update(updateDto, id);
+
+        return ResponseEntity.ok(updatedOrganization);
     }
 
     @DeleteMapping("/{id}")

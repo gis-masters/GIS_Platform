@@ -56,7 +56,7 @@ public class FtsStepsDefinitions extends BaseStepsDefinitions {
         assertEquals("Количество записей в ответе должно быть равно 0", 0, total);
     }
 
-    @Then("Полнотекстовый поиск нашёл (документы/документ)")
+    @Then("Полнотекстовый поиск нашёл документы")
     public void shouldFoundAnything() {
         int total = response.jsonPath().getInt("details.page.totalElements");
         assertNotEquals("Количество записей в ответе должно быть больше 0", 0, total);
@@ -67,5 +67,4 @@ public class FtsStepsDefinitions extends BaseStepsDefinitions {
         String respStr = response.jsonPath().getString("details.content[0].payload.properties.field_1");
         assertEquals("Должна быть найдена строка" + str, str, respStr);
     }
-
 }

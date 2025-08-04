@@ -1,6 +1,6 @@
 package ru.mycrg.acceptance;
 
-import io.cucumber.messages.internal.com.google.gson.Gson;
+import com.google.gson.Gson;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.http.Cookie;

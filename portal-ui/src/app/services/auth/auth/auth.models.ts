@@ -8,6 +8,7 @@ export interface RegData {
   company: string;
   specializationId: number;
   contactPhone: string;
+  description?: string;
   email: string;
   firstName: string;
   lastName: string;

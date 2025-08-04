@@ -5,6 +5,7 @@ import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.restassured.path.json.JsonPath;
 import ru.mycrg.acceptance.BaseStepsDefinitions;
+import ru.mycrg.acceptance.data_service.libraries.LibraryStepsDefinitions;
 
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
@@ -13,8 +14,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
-
-import ru.mycrg.acceptance.data_service.libraries.LibraryStepsDefinitions;
 
 import static junit.framework.TestCase.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -107,11 +106,17 @@ public class SmevTasksDefinitions extends BaseStepsDefinitions {
         assertEquals("Неверное значение status", "CREATED", task.get("status"));
         assertEquals("Неверное значение assigned_to", 3, task.get("assigned_to"));
 
+        //получаем последнюю запись из библиотеки документов
+        libraryStepsDefinitions.getRecordsAsRegistry("", "dl_data_inbox_data");
+
+        int maxExistingId = response.jsonPath()
+                                    .getInt("content.collect { it.content.id }.max()");
+
         //Поля которые должны различаться в зависимости от типа
         assertEquals("Неверное значение content_type_id", expectedType, task.get("content_type_id"));
         String inboxDataConnection = task.get("inbox_data_key_data_connection").toString();
         assertEquals("Неверное значение inbox_data_key_data_connection",
-                     "[{\"id\":" + (maxId + 40) + ",\"title\":\"" + expectedView + "\",\"libraryTableName" +
+                     "[{\"id\":" + maxExistingId + ",\"title\":\"" + expectedView + "\",\"libraryTableName" +
                              "\":\"dl_data_inbox_data\"}]", inboxDataConnection);
     }
 

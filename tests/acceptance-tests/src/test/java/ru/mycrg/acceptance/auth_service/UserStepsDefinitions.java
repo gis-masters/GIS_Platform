@@ -76,7 +76,7 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
     public void adminCreateUserWithoutCheck(DataTable dataTable) {
         authorizationBase.loginAsOwner();
 
-        userDto = mapToDto(dataTable.asList());
+        userDto = mapToDto(dataTable.asLists(String.class).get(0));
 
         super.createEntity(userDto);
     }
@@ -106,14 +106,14 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
 
     @Given("Существует пользователь")
     public void initializeUser(DataTable dataTable) throws InterruptedException {
-        userDto = mapToDto(dataTable.asList());
+        userDto = mapToDto(dataTable.asLists(String.class).get(0));
 
         createRandomUser(userDto);
     }
 
     @Given("Существует другой пользователь")
     public void initAnotherUser(DataTable dataTable) throws InterruptedException {
-        anotherUserDto = mapToDto(dataTable.asList());
+        anotherUserDto = mapToDto(dataTable.asLists(String.class).get(0));
 
         createAnotherUser(anotherUserDto);
     }
@@ -514,8 +514,8 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
     }
 
     @Then("Поля пользователя обновлены")
-    public void checkUserUpdatedFields(DataTable datatable) {
-        List<String> data = datatable.asList();
+    public void checkUserUpdatedFields(DataTable dataTable) {
+        List<String> data = dataTable.asLists(String.class).get(0);
 
         jsonPath = response.jsonPath();
 
@@ -656,8 +656,8 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
                         patch(String.valueOf(userId));
     }
 
-    private void setUserDtoFields(DataTable datatable) {
-        List<String> data = datatable.asList();
+    private void setUserDtoFields(DataTable dataTable) {
+        List<String> data = dataTable.asLists(String.class).get(0);
 
         userDto.setName(generateString(data.get(0)));
         userDto.setSurname(generateString(data.get(1)));

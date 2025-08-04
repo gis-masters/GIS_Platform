@@ -2,7 +2,8 @@ Feature: Перемещение документов и каталогов
 
   Background:
     Given Существует другая организация
-      | ООО Folder2 | 1234567890 | Folder | Fol | EMAIL_7 |
+      | name        | phone      | ownerSurname | ownerName | ownerEmail |
+      | ООО Folder2 | 1234567890 | Folder       | Fol       | EMAIL_7    |
     *     Владелец организации авторизован
     *     Существует схема "Тестовая схема dl_default"
     *     Существует библиотека документов, созданная по схеме "Тестовая схема dl_default"

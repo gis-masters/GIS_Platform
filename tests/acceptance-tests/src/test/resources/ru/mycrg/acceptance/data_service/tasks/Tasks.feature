@@ -5,7 +5,8 @@ Feature: Проверка сущности task
 
   Background:
     Given Существует организация
-      | ООО ASSIGNABLE task | 1234567890 | Допустимые | Значения | task0entity@t | DEFAULT_TEST_PASSWORD | 1 |
+      | name                | phone      | ownerSurname | ownerName | ownerEmail    | ownerPassword         | specializationId |
+      | ООО ASSIGNABLE task | 1234567890 | Допустимые   | Значения  | task0entity@t | DEFAULT_TEST_PASSWORD | 1                |
     Given Владелец организации авторизован
     Given Существует некий пользователь
 

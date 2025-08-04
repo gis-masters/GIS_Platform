@@ -1,4 +1,4 @@
-@SedIntegration
+@GisogdIntegration
 Feature: Интеграция с СЭД-ом
 
   Background:

@@ -33,7 +33,6 @@ import static ru.mycrg.acceptance.data_service.FilesStepDefinitions.currentFileP
 import static ru.mycrg.acceptance.data_service.datasets.DatasetsStepsDefinitions.currentDatasetIdentifier;
 import static ru.mycrg.acceptance.data_service.libraries.LibraryStepsDefinitions.currentDocumentId;
 import static ru.mycrg.acceptance.data_service.libraries.LibraryStepsDefinitions.currentLibrary;
-import static ru.mycrg.acceptance.data_service.tables.TablesStepsDefinitions.anotherTableName;
 import static ru.mycrg.acceptance.data_service.tables.TablesStepsDefinitions.currentTableName;
 import static ru.mycrg.acceptance.gis_service.LayerGroupStepsDefinitions.layerGroupId;
 import static ru.mycrg.acceptance.gis_service.ProjectStepsDefinitions.projectDto;
@@ -592,7 +591,7 @@ public class LayerStepDefinitions extends BaseStepsDefinitions {
     }
 
     private void updateLayer(DataTable dataTable) {
-        List<String> data = dataTable.asList();
+        List<String> data = dataTable.asLists(String.class).get(0);
         layerUpdateDto = new LayerUpdateDto(generateString(data.get(0)),
                                             currentDatasetIdentifier,
                                             Boolean.parseBoolean(generateString(data.get(1))),
