@@ -167,6 +167,11 @@ public class SchemaTemplates {
                         "      \"valueType\": \"INT\"\n" +
                         "    },\n" +
                         "    {\n" +
+                        "      \"name\": \"user_id\",\n" +
+                        "      \"title\": \"Нащальника\",\n" +
+                        "      \"valueType\": \"USER_ID\"\n" +
+                        "    },\n" +
+                        "    {\n" +
                         "      \"name\": \"location\",\n" +
                         "      \"title\": \"Местоположение\",\n" +
                         "      \"maxLength\": 400,\n" +
@@ -238,6 +243,11 @@ public class SchemaTemplates {
                         "      \"title\": \"Местоположение\"," +
                         "      \"length\": 1000," +
                         "      \"valueType\": \"STRING\"" +
+                        "    }," +
+                        "    {" +
+                        "      \"name\": \"user_id\"," +
+                        "      \"title\": \"Нащальника\"," +
+                        "      \"valueType\": \"INT\"" +
                         "    }," +
                         "    {" +
                         "      \"name\": \"specialty_new\"," +

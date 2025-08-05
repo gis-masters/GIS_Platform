@@ -50,9 +50,9 @@ public class TypeMapper {
             case GEOMETRY:
                 return dbType.equalsIgnoreCase(schemaType.name());
             case LONG:
+            case USER_ID:
                 return dbType.toLowerCase().contains("int8");
             case INT:
-            case USER_ID:
                 return dbType.toLowerCase().contains("int4");
             case DOUBLE:
                 return dbType.toLowerCase().contains("numeric");
