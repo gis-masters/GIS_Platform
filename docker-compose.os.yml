@@ -6,11 +6,7 @@ services:
     image: ${DOCKER_CRG_HOST}/geoserver:${GEOSERVER_TAG}
     restart: always
     healthcheck:
-      test: curl -f http://localhost:8080/geoserver || exit 1
-      interval: 10s
-      timeout: 3s
-      retries: 3
-      start_period: 120s
+      test: curl -f http://localhost:8080/geoserver/web || exit 1
     ports:
       - "8080:8080"
     volumes:
@@ -24,8 +20,8 @@ services:
       INITIAL_MEMORY: ${GEOSERVER_XMS_SIZE:-20G}
       MAXIMUM_MEMORY: ${GEOSERVER_XMX_SIZE:-20G}
 
-      STABLE_EXTENSIONS: importer-plugin,jp2k-plugin
-      COMMUNITY_EXTENSIONS: ogr-datastore-plugin,jdbcconfig-plugin,jdbcstore-plugin
+      DISABLE_CORS: true
+      USE_DEFAULT_CREDENTIALS: true
     mem_limit: ${GEOSERVER_MEM_LIMIT:-21000}m
 
   postgis:

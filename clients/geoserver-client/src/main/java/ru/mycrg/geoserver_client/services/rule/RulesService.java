@@ -197,9 +197,9 @@ public class RulesService extends GeoServerBaseService {
         Request request = builderWithBearerAuth.url(LAYERS_URL)
                                                .post(body).build();
 
-        ResponseModel<Object> response = httpClient.handleRequest(request, Object.class);
+        ResponseModel<String> response = httpClient.handleRequestAsString(request);
         if (!response.isSuccessful()) {
-            throw new HttpClientException("Не удалось добавить роль к ресурсу: layers", response);
+            throw new HttpClientException("Не удалось добавить роль к ресурсу: layers: " + response);
         }
     }
 
@@ -208,9 +208,9 @@ public class RulesService extends GeoServerBaseService {
         Request setRestRoles = builderWithBearerAuth.url(REST_URL)
                                                     .put(body).build();
 
-        ResponseModel<Object> response = httpClient.handleRequest(setRestRoles, Object.class);
+        ResponseModel<String> response = httpClient.handleRequestAsString(setRestRoles);
         if (!response.isSuccessful()) {
-            throw new HttpClientException("Не удалось обновить роли ресурса: rest", response);
+            throw new HttpClientException("Не удалось обновить роли ресурса: rest: " + response);
         }
     }
 
@@ -220,9 +220,9 @@ public class RulesService extends GeoServerBaseService {
         Request setServiceRoles = builderWithBearerAuth.url(SERVICES_URL)
                                                        .put(body).build();
 
-        ResponseModel<Object> response = httpClient.handleRequest(setServiceRoles, Object.class);
+        ResponseModel<String> response = httpClient.handleRequestAsString(setServiceRoles);
         if (!response.isSuccessful()) {
-            throw new HttpClientException("Не удалось обновить роли ресурса: Service", response);
+            throw new HttpClientException("Не удалось обновить роли ресурса: Service: " + response);
         }
     }
 

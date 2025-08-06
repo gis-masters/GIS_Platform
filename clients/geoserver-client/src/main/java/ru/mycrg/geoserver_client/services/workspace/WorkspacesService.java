@@ -22,7 +22,7 @@ public class WorkspacesService extends GeoServerBaseService {
                 .post(body)
                 .build();
 
-        httpClient.handleRequest(request);
+        httpClient.handleRequestAsString(request);
     }
 
     /**

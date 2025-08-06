@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { makeObservable } from 'mobx';
 import { withBemMod } from '@bem-react/core';
 
 import { GeometryType, WfsLineStringGeometry } from '../../../../services/geoserver/wfs/wfs.models';
@@ -10,7 +9,6 @@ import { cnEditFeatureGeometryForm, EditFeatureGeometryFormProps } from '../Edit
 class EditFeatureGeometryFormTypeLineString extends Component<EditFeatureGeometryFormProps> {
   constructor(props: EditFeatureGeometryFormProps) {
     super(props);
-    makeObservable(this);
   }
 
   render() {

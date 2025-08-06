@@ -19,13 +19,15 @@ export async function focusToLayer(layer: CrgLayer): Promise<void> {
         : await recalculateBboxAndGetCoverage(layer);
 
     if (!featureType?.latLonBoundingBox) {
+      showGoToBoundingBoxError('Не найден latLonBoundingBox');
+
       return;
     }
 
     const { latLonBoundingBox } = featureType;
-
-    // не переходим к слою если хотя бы одна из координат = 0, что бы не улетать неизвестно куда
     if (!latLonBoundingBox.minx || !latLonBoundingBox.maxx || !latLonBoundingBox.miny || !latLonBoundingBox.maxy) {
+      showGoToBoundingBoxError('Координаты latLonBoundingBox не корректны');
+
       return;
     }
 
@@ -34,16 +36,16 @@ export async function focusToLayer(layer: CrgLayer): Promise<void> {
     const olProjection = await getOlProjection();
 
     if (isEqual([maxx, maxy, minx, miny], [-1, -1, 0, 0]) || !geoserverProjection) {
-      showGoToBoundingBoxError();
+      showGoToBoundingBoxError('Координаты [-1, -1, 0, 0] считаем не корректными!');
 
       return;
     }
 
-    const [x1, y1] = transform([minx, miny], geoserverProjection, olProjection);
-    const [x2, y2] = transform([maxx, maxy], geoserverProjection, olProjection);
+    const [x1, y1] = transform([Number(minx), Number(miny)], geoserverProjection, olProjection);
+    const [x2, y2] = transform([Number(maxx), Number(maxy)], geoserverProjection, olProjection);
 
     if (Number.isNaN(x1) || Number.isNaN(x2) || Number.isNaN(y1) || Number.isNaN(y2)) {
-      showGoToBoundingBoxError();
+      showGoToBoundingBoxError('Трансформированные координаты не корректны');
 
       return;
     }

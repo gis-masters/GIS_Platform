@@ -23,8 +23,8 @@ public class UserGeoserverService {
 
         UsersAndRolesService usersAndRolesService = new UsersAndRolesService(token);
         try {
-            checkGeoserverResponse(usersAndRolesService.createUser(dto.getGeoserverLogin(), dto.getPassword()));
-            checkGeoserverResponse(usersAndRolesService.associateUserWithRole(dto.getGeoserverLogin(), dto.getRole()));
+            checkGeoserverResponseAsString(usersAndRolesService.createUser(dto.getGeoserverLogin(), dto.getPassword()));
+            checkGeoserverResponseAsString(usersAndRolesService.associateUserWithRole(dto.getGeoserverLogin(), dto.getRole()));
         } catch (Exception e) {
             throw new GisServiceException("Не удалось создать пользователя на геосервере: " + e.getMessage());
         }
@@ -48,6 +48,12 @@ public class UserGeoserverService {
     }
 
     private void checkGeoserverResponse(ResponseModel<Object> response) {
+        if (!response.isSuccessful()) {
+            throw new GisServiceException("Ответ геосервера: " + response);
+        }
+    }
+
+    private void checkGeoserverResponseAsString(ResponseModel<String> response) {
         if (!response.isSuccessful()) {
             throw new GisServiceException("Ответ геосервера: " + response);
         }

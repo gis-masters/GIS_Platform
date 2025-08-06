@@ -26,7 +26,7 @@ public class UsersAndRolesService extends GeoServerBaseService {
         Request request = builderWithBearerAuth.url(getGeoserverRestUrl() + "/security/roles/role/" + role)
                                                .post(body).build();
 
-        httpClient.handleRequest(request);
+        httpClient.handleRequestAsString(request);
     }
 
     public void deleteRole(String roleName) throws HttpClientException {
@@ -46,7 +46,7 @@ public class UsersAndRolesService extends GeoServerBaseService {
         return nonNull(body) ? body.getRoles() : List.of();
     }
 
-    public ResponseModel<Object> createUser(String login, String password) throws HttpClientException {
+    public ResponseModel<String> createUser(String login, String password) throws HttpClientException {
         UserGeoserverDtoWrapper user = new UserGeoserverDtoWrapper(new UserGeoserverDto(login, password, true));
         RequestBody body = RequestBody.create(JSON_MEDIA_TYPE, toJson(user));
 
@@ -56,7 +56,7 @@ public class UsersAndRolesService extends GeoServerBaseService {
         Request request = builderWithBearerAuth.url(url)
                                                .post(body).build();
 
-        return httpClient.handleRequest(request);
+        return httpClient.handleRequestAsString(request);
     }
 
     public ResponseModel<Object> deleteUser(String userName) throws HttpClientException {
@@ -71,14 +71,14 @@ public class UsersAndRolesService extends GeoServerBaseService {
 
     // https://docs.geoserver.org/2.13.2/user/rest/api/userrole.html
     // /rest/roles/[service/<serviceName>/]role/<role>/user/<user>
-    public ResponseModel<Object> associateUserWithRole(String userName, String role) throws HttpClientException {
+    public ResponseModel<String> associateUserWithRole(String userName, String role) throws HttpClientException {
         RequestBody body = RequestBody.create(JSON_MEDIA_TYPE, "");
 
         Request request = builderWithBearerAuth
                 .url(getGeoserverRestUrl() + "/security/roles/role/" + role + "/user/" + userName)
                 .post(body).build();
 
-        return httpClient.handleRequest(request);
+        return httpClient.handleRequestAsString(request);
     }
 
     // https://docs.geoserver.org/2.13.2/user/rest/api/userrole.html

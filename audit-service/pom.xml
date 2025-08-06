@@ -160,7 +160,7 @@
                                 <artifactItem>
                                     <groupId>co.elastic.apm</groupId>
                                     <artifactId>elastic-apm-agent</artifactId>
-                                    <version>1.11.0</version>
+                                    <version>1.55.0</version>
                                     <type>jar</type>
                                     <destFileName>apm-agent.jar</destFileName>
                                 </artifactItem>
