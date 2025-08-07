@@ -21,6 +21,7 @@ class EditFeatureBlock extends Block {
     editFeatureGeometryDraw: '.EditFeatureContainer .EditFeatureGeometryDraw',
     editFeatureGeometryAsTextBtn: '.EditFeatureContainer .EditFeatureGeometry-AsText',
     lookupStatus: '.EditFeatureContainer .Lookup-Status',
+    zoom: '.ZoomToFeature',
     loader: 'EditFeatureContainer .MuiLinearProgress-root'
   };
 
@@ -29,6 +30,12 @@ class EditFeatureBlock extends Block {
   async waitForLoading(): Promise<void> {
     const $editFeatureLoader = await this.$('editFeatureLoading');
     await $editFeatureLoader.waitForDisplayed({ reverse: true });
+  }
+
+  async zoomToFeature(): Promise<void> {
+    const $zoomToFeature = await this.$('zoom');
+    await $zoomToFeature.waitForClickable();
+    await $zoomToFeature.click();
   }
 
   async clickSaveButton(): Promise<void> {

@@ -50,6 +50,10 @@ When('на панели выделенного объекта я нажимаю 
   await editFeatureBlock.copyFeaturesButton.click();
 });
 
+When('на панели выделенного объекта я нажимаю `Перейти к объекту`', async function () {
+  await editFeatureBlock.zoomToFeature();
+});
+
 When('в форме редактирования объекта я нажимаю кнопку `Сохранить`', async function () {
   await editFeatureBlock.clickSaveButton();
 });
