@@ -172,6 +172,11 @@ public class SchemaTemplates {
                         "      \"valueType\": \"USER_ID\"\n" +
                         "    },\n" +
                         "    {\n" +
+                        "      \"name\": \"guid\",\n" +
+                        "      \"title\": \"ВсемирныйУникал\",\n" +
+                        "      \"valueType\": \"UUID\"\n" +
+                        "    },\n" +
+                        "    {\n" +
                         "      \"name\": \"location\",\n" +
                         "      \"title\": \"Местоположение\",\n" +
                         "      \"maxLength\": 400,\n" +
@@ -247,6 +252,11 @@ public class SchemaTemplates {
                         "    {" +
                         "      \"name\": \"user_id\"," +
                         "      \"title\": \"Нащальника\"," +
+                        "      \"valueType\": \"INT\"" +
+                        "    }," +
+                        "    {" +
+                        "      \"name\": \"guid\"," +
+                        "      \"title\": \"ВсемирныйУникал\"," +
                         "      \"valueType\": \"INT\"" +
                         "    }," +
                         "    {" +

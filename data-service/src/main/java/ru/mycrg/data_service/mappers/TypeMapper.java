@@ -73,6 +73,8 @@ public class TypeMapper {
             case FILE:
             case VERSIONS:
                 return dbType.equalsIgnoreCase("jsonb");
+            case UUID:
+                return dbType.equalsIgnoreCase("uuid");
             default:
                 log.warn("TypeComparator не знает как сравнить '{}' и '{}'", schemaType.name(), dbType);
 
