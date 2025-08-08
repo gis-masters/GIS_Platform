@@ -202,6 +202,24 @@ public class TablesStepsDefinitions extends BaseStepsDefinitions {
                             schemaId);
     }
 
+    @When("Пользователь делает запрос на поиск таблиц и наборов данных по SRID {string}")
+    public void findTablesBySrid(String srid) {
+        response = getBaseRequestWithCurrentCookie().basePath("/api/data/datasets")
+                .given().
+                        queryParam("srid", srid)
+                .when().
+                        get("/getTablesBySrid");
+    }
+
+    @When("Сервер возвращает имя схемы и слоя")
+    public void validateGetSridResponse() {
+        assertNotNull(response.jsonPath().getString("[0].datasetTitle"));
+        assertEquals(currentDatasetIdentifier, response.jsonPath().getString("[0].datasetIdentifier"));
+
+        assertNotNull(response.jsonPath().getString("[0].tableTitle"));
+        assertEquals(currentTableName, response.jsonPath().getString("[0].tableName"));
+    }
+
     @When("Существует другая таблица, имеющая код EPSG {string}")
     public void initAnotherTableWithEpsg(String codeEpsg) {
         anotherTableName = TEST_TABLE_SCHEMA + "_" + generateString("STRING_5");

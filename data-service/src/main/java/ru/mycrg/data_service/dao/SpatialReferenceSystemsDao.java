@@ -3,15 +3,20 @@ package ru.mycrg.data_service.dao;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.stereotype.Repository;
 import ru.mycrg.common_contracts.generated.SpatialReferenceSystem;
+import ru.mycrg.common_contracts.generated.data_service.DatasetAndTableModel;
 import ru.mycrg.data_service.dao.core.CoreReadDao;
 import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_NAME;
+import static ru.mycrg.data_service.service.resources.DatasetService.SCHEMAS_AND_TABLES_QUALIFIER;
 import static ru.mycrg.data_service.service.srs.SpatialReferenceSystemService.spatialTableQualifier;
 
 @Repository
@@ -28,6 +33,24 @@ public class SpatialReferenceSystemsDao {
                                       BaseWriteDao baseWriteDao) {
         this.coreReadDao = coreReadDao;
         this.baseWriteDao = baseWriteDao;
+    }
+
+    public List<DatasetAndTableModel> findDatasetsAndTablesModel(Long srid)
+            throws CrgDaoException {
+        try {
+            String query = "SELECT t2.title AS dataset_title, t2.identifier AS dataset_identifier," +
+                    " t1.title AS table_title, t1.identifier AS table_name" +
+                    " FROM " + SYSTEM_SCHEMA_NAME + "." + SCHEMAS_AND_TABLES_QUALIFIER.getTable() + " AS t1" +
+                    " LEFT JOIN " + SYSTEM_SCHEMA_NAME + "." + SCHEMAS_AND_TABLES_QUALIFIER.getTable() + " AS t2" +
+                    " ON t2.id = (split_part(t1.path, '/', 3))::int" +
+                    " WHERE t1.crs like 'EPSG:" + srid + "';";
+
+            log.debug("Execute search fullData query: [{}]", query);
+
+            return coreReadDao.query(query, DatasetAndTableModel.class);
+        } catch (DataAccessException e) {
+            throw new CrgDaoException(e.getMessage());
+        }
     }
 
     public void update(SpatialReferenceSystem srs) throws CrgDaoException {

@@ -5,6 +5,13 @@ export interface SpatialReferenceSystem {
   proj4Text: string;
 }
 
+export interface DatasetAndTableModel {
+  datasetTitle: string;
+  datasetIdentifier: string;
+  tableTitle: string;
+  tableName: string;
+}
+
 export interface GeometryValidationResultDto {
   message: string;
   valid: boolean;

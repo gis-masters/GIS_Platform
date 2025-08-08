@@ -1,8 +1,10 @@
 package ru.mycrg.data_service.dao.core;
 
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -32,5 +34,11 @@ public class CoreReadDao implements ICoreReadDao {
 
     public void execute(String query) {
         coreTemplateDao.execute(pJdbcTemplate.getJdbcTemplate(), query);
+    }
+
+    public <T> List<T> query(String query, Class<T> clazz) {
+        BeanPropertyRowMapper<T> rowMapper = new BeanPropertyRowMapper<>(clazz);
+
+        return coreTemplateDao.query(pJdbcTemplate.getJdbcTemplate(), query, rowMapper);
     }
 }
