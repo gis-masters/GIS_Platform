@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS public.projects
 ) TABLESPACE pg_default;
 
 ALTER TABLE public.projects
-    OWNER to postgres;
+    OWNER to ${db_owner};
 
 CREATE TABLE IF NOT EXISTS public.layers
 (
@@ -36,4 +36,4 @@ CREATE TABLE IF NOT EXISTS public.layers
 ) TABLESPACE pg_default;
 
 ALTER TABLE public.layers
-    OWNER to postgres;
+    OWNER to ${db_owner};

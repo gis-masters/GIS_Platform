@@ -50,13 +50,13 @@ CREATE TABLE IF NOT EXISTS public.authorities
     ) TABLESPACE pg_default;
 
 ALTER TABLE public.organizations
-    OWNER to postgres;
+    OWNER to ${db_owner};
 ALTER TABLE public.users
-    OWNER to postgres;
+    OWNER to ${db_owner};
 ALTER TABLE public.organizations_users
-    OWNER to postgres;
+    OWNER to ${db_owner};
 ALTER TABLE public.authorities
-    OWNER to postgres;
+    OWNER to ${db_owner};
 
 
 INSERT INTO public.users(email, enabled, name, password, sur_name, username, created_at, last_modified)
