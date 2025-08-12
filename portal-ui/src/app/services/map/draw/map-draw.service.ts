@@ -253,13 +253,6 @@ class MapDrawService {
     return this.source.getFeatures();
   }
 
-  getActiveFeature(): Feature<Geometry> | undefined {
-    const activeFeatures = mapDrawService.getDrawSource().getFeatures().filter(this.isFeatureActive);
-    if (activeFeatures && activeFeatures.length > 0) {
-      return activeFeatures[0];
-    }
-  }
-
   private async convertFeatureToOlProjection(features: WfsFeature[], projection?: Projection): Promise<WfsFeature[]> {
     return await Promise.all(
       [...features]
@@ -285,12 +278,6 @@ class MapDrawService {
         })
     );
   }
-
-  private isFeatureActive = (feature: Feature) => {
-    const isActive: unknown = feature.get(FeatureState.ACTIVE);
-
-    return isBoolean(isActive) ? isActive : false;
-  };
 
   private initHintOverlay(): void {
     this.removeVerticesHintElement = document.createElement('div');

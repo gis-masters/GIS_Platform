@@ -289,6 +289,18 @@ const styles = new Map<KnownStyleKey, Style[]>([
           color: RED,
           width: DEFAULT_STROKE_WIDTH
         })
+      }),
+      new Style({
+        image: new Circle({
+          radius: DEFAULT_CIRCLE_RADIUS,
+          fill: new Fill({
+            color: RED
+          }),
+          stroke: new Stroke({
+            color: GRAY,
+            width: 1
+          })
+        })
       })
     ]
   ],

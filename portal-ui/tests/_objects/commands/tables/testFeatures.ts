@@ -35,6 +35,7 @@ import { multiPolygon2 } from './testFeatures/multiPolygon2';
 import { point } from './testFeatures/point';
 import { singleFeature } from './testFeatures/singleFeature';
 import { theLetterC } from './testFeatures/theLetterC';
+import { ursaMajor } from './testFeatures/ursaMajor';
 
 const KEY = 'тестовые данные';
 
@@ -143,6 +144,9 @@ export async function getTestFeatures(key: string, schema?: Schema): Promise<New
     }
     case 'мультилиния 2 линиями': {
       return multiLine2;
+    }
+    case 'несколько точек': {
+      return ursaMajor;
     }
     case 'точка': {
       return point;
