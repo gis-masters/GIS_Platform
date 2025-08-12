@@ -330,19 +330,9 @@
     "title": "Загрузка данных",
     "children": [
       {
-        "id": "import-data",
-        "title": "Загрузка векторных данных в формате shp",
-        "contentUrl": "/assets/help/4import/0import/00import.html"
-      },
-      {
         "id": "upload",
-        "title": "Этап I: Загрузка zip архива со слоями.",
+        "title": "Загрузка zip архива со слоями.",
         "contentUrl": "/assets/help/4import/1upload/01upload.html"
-      },
-      {
-        "id": "mapping",
-        "title": "Этап II: Преобразование слоёв в формат GML и импортирование в проект.",
-        "contentUrl": "/assets/help/4import/2mapping/02mapping.html"
       }
     ]
   },
@@ -352,12 +342,6 @@
     "title": "Выгрузка данных",
     "platforms": ["conv"],
     "children": [
-      {
-        "id": "data-export",
-        "title": "Выгрузка данных",
-        "platforms": ["conv"],
-        "contentUrl": "/assets/help/7export/00export/00export.html"
-      },
       {
         "id": "exportShp",
         "title": "Экспорт ESRI Shape-файла",
