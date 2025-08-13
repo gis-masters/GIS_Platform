@@ -1,27 +1,22 @@
 INSERT INTO data.schemas (name, class_rule)
 SELECT 'ter_zone_nspd',
-       '{}'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'ter_zone_nspd');
+       '{}' WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'ter_zone_nspd');
 
 INSERT INTO data.schemas (name, class_rule)
 SELECT 'zouit_nspd',
-       '{}'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'zouit_nspd');
+       '{}' WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'zouit_nspd');
 
 INSERT INTO data.schemas (name, class_rule)
 SELECT 'zu_nspd',
-       '{}'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'zu_nspd');
+       '{}' WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'zu_nspd');
 
 INSERT INTO data.schemas (name, class_rule)
 SELECT 'border_nspd',
-       '{}'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'border_nspd');
+       '{}' WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'border_nspd');
 
 INSERT INTO data.schemas (name, class_rule)
 SELECT 'oks_nspd',
-       '{}'
-WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'oks_nspd');
+       '{}' WHERE NOT EXISTS(SELECT id FROM data.schemas WHERE name = 'oks_nspd');
 
 
 UPDATE data.schemas
@@ -36,13 +31,6 @@ SET class_rule =
           "tableName": "ter_zone_nspd",
           "styleName": "ter_zone_nspd",
           "properties": [
-            {
-              "name": "objectid",
-              "title": "№",
-              "valueType": "INT",
-              "readOnly": true,
-              "description": "Идентификатор объекта (Заполняется автоматически)"
-            },
             {
               "name": "type_boundary_value",
               "title": "Вид",
@@ -168,13 +156,6 @@ SET class_rule =
           "styleName": "zouit_nspd",
           "properties": [
             {
-              "name": "objectid",
-              "title": "№",
-              "valueType": "INT",
-              "readOnly": true,
-              "description": "Идентификатор объекта (Заполняется автоматически)"
-            },
-            {
               "name": "type_boundary_value",
               "title": "Вид",
               "valueType": "STRING"
@@ -299,13 +280,6 @@ SET class_rule =
           "tableName": "zu_nspd",
           "styleName": "zu_nspd",
           "properties": [
-            {
-              "name": "objectid",
-              "title": "№",
-              "valueType": "INT",
-              "readOnly": true,
-              "description": "Идентификатор объекта (Заполняется автоматически)"
-            },
             {
               "name": "land_record_type",
               "title": "Вид объекта недвижимости",
@@ -519,13 +493,6 @@ SET class_rule =
           "styleName": "border_nspd",
           "properties": [
             {
-              "name": "objectid",
-              "title": "№",
-              "valueType": "INT",
-              "readOnly": true,
-              "description": "Идентификатор объекта (Заполняется автоматически)"
-            },
-            {
               "name": "brd_nmb",
               "title": "Вид",
               "valueType": "STRING"
@@ -690,13 +657,6 @@ SET class_rule =
           "tableName": "oks_nspd",
           "styleName": "oks_nspd",
           "properties": [
-            {
-              "name": "objectid",
-              "title": "№",
-              "valueType": "INT",
-              "readOnly": true,
-              "description": "Идентификатор объекта (Заполняется автоматически)"
-            },
             {
               "name": "build_record_type_value",
               "title": "Вид объекта недвижимости",

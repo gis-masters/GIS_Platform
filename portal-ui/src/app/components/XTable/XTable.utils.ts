@@ -12,6 +12,7 @@ const filterableTypes = new Set([
   PropertyType.USER_ID,
   PropertyType.USER,
   PropertyType.INT,
+  PropertyType.LONG,
   PropertyType.STRING,
   PropertyType.TEXT,
   PropertyType.FIAS
@@ -25,6 +26,7 @@ const sortableTypes = new Set([
   PropertyType.DATETIME,
   PropertyType.FLOAT,
   PropertyType.INT,
+  PropertyType.LONG,
   PropertyType.STRING,
   PropertyType.TEXT,
   PropertyType.TIME

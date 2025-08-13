@@ -40,6 +40,7 @@ const checkType = (valueType: ValueType | undefined): boolean => {
       valueType?.includes('FILE') ||
       valueType?.includes('STRING') ||
       valueType?.includes('TEXT') ||
+      valueType?.includes('LONG') ||
       valueType?.includes('CHOICE') ||
       valueType?.includes('USER') ||
       valueType?.includes('USER_ID') ||

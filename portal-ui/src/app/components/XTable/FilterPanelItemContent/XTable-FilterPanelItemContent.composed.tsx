@@ -8,6 +8,7 @@ import { withTypeFias } from './_type/XTable-FilterPanelItemContent_type_fias';
 import { withTypeFloat } from './_type/XTable-FilterPanelItemContent_type_float';
 import { withTypeId } from './_type/XTable-FilterPanelItemContent_type_id';
 import { withTypeInt } from './_type/XTable-FilterPanelItemContent_type_int';
+import { withTypeLong } from './_type/XTable-FilterPanelItemContent_type_long';
 import { withTypeString } from './_type/XTable-FilterPanelItemContent_type_string';
 import { withTypeUserId } from './_type/XTable-FilterPanelItemContent_type_userId';
 import {
@@ -21,6 +22,7 @@ export const XTableFilterPanelItemContent = compose(
   withTypeDate as HOC<XTableFilterPanelItemContentProps<unknown>>,
   withTypeId as HOC<XTableFilterPanelItemContentProps<unknown>>,
   withTypeInt as HOC<XTableFilterPanelItemContentProps<unknown>>,
+  withTypeLong as HOC<XTableFilterPanelItemContentProps<unknown>>,
   withTypeFloat as HOC<XTableFilterPanelItemContentProps<unknown>>,
   withTypeDocument as HOC<XTableFilterPanelItemContentProps<unknown>>,
   withTypeUserId as HOC<XTableFilterPanelItemContentProps<unknown>>,

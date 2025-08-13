@@ -173,7 +173,7 @@ export interface PropertySchemaFloat extends BasePropertySchema, PropertySchemaB
   defaultValue?: number;
 }
 
-export type PropertySchemaNumber = PropertySchemaInt | PropertySchemaFloat;
+export type PropertySchemaNumber = PropertySchemaInt | PropertySchemaFloat | PropertySchemaLong;
 
 export interface PropertySchemaBool extends BasePropertySchema {
   propertyType: PropertyType.BOOL;

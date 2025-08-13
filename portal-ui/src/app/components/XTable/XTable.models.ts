@@ -64,5 +64,6 @@ export const colsTypesAlign: Partial<Record<XTableColumnType, TableCellProps['al
   [PropertyType.DATETIME]: 'center',
   [XTableExtraColumnType.ID]: 'right',
   [PropertyType.INT]: 'right',
+  [PropertyType.LONG]: 'right',
   [PropertyType.FLOAT]: 'right'
 };

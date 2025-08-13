@@ -11,6 +11,7 @@ import { withTypeFias } from './_type/Form-Control_type_fias';
 import { withTypeFile } from './_type/Form-Control_type_file';
 import { withTypeFloat } from './_type/Form-Control_type_float';
 import { withTypeInt } from './_type/Form-Control_type_int';
+import { withTypeLong } from './_type/Form-Control_type_long';
 import { withTypeSet } from './_type/Form-Control_type_set';
 import { withTypeString } from './_type/Form-Control_type_string';
 import { withTypeText } from './_type/Form-Control_type_text';
@@ -21,6 +22,7 @@ import { FormControl as Presenter } from './Form-Control';
 
 export const FormControl = compose(
   withTypeInt as HOC<FormControlProps>,
+  withTypeLong as HOC<FormControlProps>,
   withTypeFloat as HOC<FormControlProps>,
   withTypeText as HOC<FormControlProps>,
   withTypeString as HOC<FormControlProps>,

@@ -6,7 +6,7 @@
     {
       "name": "id",
       "title": "Идентификатор",
-      "valueType": "INT",
+      "valueType": "LONG",
       "hidden": true
     },
     {

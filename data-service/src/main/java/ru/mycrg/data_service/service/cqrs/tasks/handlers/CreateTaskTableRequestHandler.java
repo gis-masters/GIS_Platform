@@ -9,10 +9,8 @@ import ru.mycrg.data_service.dao.ddl.tables.DdlTablesBase;
 import ru.mycrg.data_service.dto.ResourceType;
 import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
-
 import ru.mycrg.data_service.service.cqrs.tasks.requests.CreateTaskTableRequest;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
-
 import ru.mycrg.data_service.service.schemas.ISchemaTemplateService;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.data_service_contract.dto.SimplePropertyDto;
@@ -31,6 +29,7 @@ import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_N
 public class CreateTaskTableRequestHandler implements IRequestHandler<CreateTaskTableRequest, Voidy> {
 
     private static final Logger log = LoggerFactory.getLogger(CreateTaskTableRequestHandler.class);
+
     private final DdlTablesBase ddlTablesBase;
     private final ISchemaTemplateService schemaService;
     private final DdlConstraints ddl;
@@ -80,18 +79,20 @@ public class CreateTaskTableRequestHandler implements IRequestHandler<CreateTask
                 .map(SimplePropertyDto::getName)
                 .collect(Collectors.toList());
 
-        if (!schemaPropertyName.contains(ID)) {
-            SimplePropertyDto id = new SimplePropertyDto();
-            id.setName(ID);
-            id.setTitle("Номер");
-            id.setDescription("Заполняется автоматически");
-            id.setReadOnly(true);
-            id.setValueType(ValueType.INT);
+        log.debug("{} поле 'Номер', как системное поле задач",
+                  schemaPropertyName.contains(ID) ? "Заменяем" : "Доносим");
 
-            schemaProperties.removeIf(prop -> ID.equals(prop.getName()));
+        SimplePropertyDto id = new SimplePropertyDto();
+        id.setName(ID);
+        id.setTitle("Номер");
+        id.setDescription("Заполняется автоматически");
+        id.setMaxDefaultWidth(105);
+        id.setReadOnly(true);
+        id.setValueType(ValueType.LONG);
 
-            schemaProperties.add(0, id);
-        }
+        schemaProperties.removeIf(prop -> ID.equals(prop.getName()));
+
+        schemaProperties.add(0, id);
     }
 
     private void validationSchema(SchemaDto schema) {

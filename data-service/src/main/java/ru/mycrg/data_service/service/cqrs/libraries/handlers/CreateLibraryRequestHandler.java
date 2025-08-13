@@ -1,5 +1,7 @@
 package ru.mycrg.data_service.service.cqrs.libraries.handlers;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import ru.mycrg.auth_facade.IAuthenticationFacade;
@@ -35,6 +37,8 @@ import static ru.mycrg.data_service.util.SystemLibraryAttributes.*;
 
 @Component
 public class CreateLibraryRequestHandler implements IRequestHandler<CreateLibraryRequest, LibraryModel> {
+
+    private static final Logger log = LoggerFactory.getLogger(CreateLibraryRequestHandler.class);
 
     private final DdlTriggers ddlTriggers;
     private final DdlTablesBase ddlTablesBase;
@@ -128,18 +132,20 @@ public class CreateLibraryRequestHandler implements IRequestHandler<CreateLibrar
             schemaProperties.add(path);
         }
 
-        if (!schemaPropertyName.contains(ID)) {
-            SimplePropertyDto id = new SimplePropertyDto();
-            id.setName(ID);
-            id.setTitle("Номер");
-            id.setDescription("Заполняется автоматически");
-            id.setReadOnly(true);
-            id.setValueType(ValueType.INT);
+        log.debug("{} поле '№', как системное поле библиотек",
+                  schemaPropertyName.contains(ID) ? "Заменяем" : "Доносим");
 
-            schemaProperties.removeIf(prop -> ID.equals(prop.getName()));
+        SimplePropertyDto id = new SimplePropertyDto();
+        id.setName(ID);
+        id.setTitle("Номер");
+        id.setDescription("Заполняется автоматически");
+        id.setReadOnly(true);
+        id.setMaxDefaultWidth(105);
+        id.setValueType(ValueType.LONG);
 
-            schemaProperties.add(0, id);
-        }
+        schemaProperties.removeIf(prop -> ID.equals(prop.getName()));
+
+        schemaProperties.add(0, id);
     }
 
     private void generateSystemBackAttributes(List<SimplePropertyDto> schemaProperties) {

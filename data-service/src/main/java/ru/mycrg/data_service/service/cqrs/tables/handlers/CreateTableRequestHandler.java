@@ -36,8 +36,7 @@ import java.util.stream.Collectors;
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 import static java.util.stream.Collectors.toMap;
-import static ru.mycrg.data_service.dao.config.DaoProperties.PRIMARY_KEY;
-import static ru.mycrg.data_service.dao.config.DaoProperties.RULE_ID;
+import static ru.mycrg.data_service.dao.config.DaoProperties.*;
 import static ru.mycrg.data_service.dto.ResourceType.TABLE;
 import static ru.mycrg.data_service.dto.Roles.OWNER;
 import static ru.mycrg.data_service.service.resources.DatasetService.SCHEMAS_AND_TABLES_QUALIFIER;
@@ -194,13 +193,16 @@ public class CreateTableRequestHandler implements IRequestHandler<CreateTableReq
             schemaProperties.add(ruleId);
         }
 
+        log.debug("{} поле '№', как системное поле векторных таблиц",
+                  schemaPropertyName.contains(ID) ? "Заменяем" : "Доносим");
+
         SimplePropertyDto objectId = new SimplePropertyDto();
         objectId.setName(PRIMARY_KEY);
         objectId.setTitle("№");
         objectId.setDescription("Идентификатор объекта (Заполняется автоматически)");
         objectId.setReadOnly(true);
         objectId.setMaxDefaultWidth(105);
-        objectId.setValueType(ValueType.INT);
+        objectId.setValueType(ValueType.LONG);
 
         schemaProperties.removeIf(prop -> PRIMARY_KEY.equals(prop.getName()));
 

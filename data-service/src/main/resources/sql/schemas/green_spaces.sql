@@ -54,13 +54,6 @@ SET class_rule =
           "originName": "footpath",
           "properties": [
             {
-              "name": "objectid",
-              "title": "№",
-              "readOnly": true,
-              "valueType": "INT",
-              "description": "Идентификатор объекта (Заполняется автоматически)"
-            },
-            {
               "name": "name",
               "title": "Наименование объекта",
               "maxLength": 50,
@@ -137,13 +130,6 @@ SET class_rule =
           "tableName": "greenery",
           "originName": "greenery",
           "properties": [
-            {
-              "name": "objectid",
-              "title": "№",
-              "readOnly": true,
-              "valueType": "INT",
-              "description": "Идентификатор объекта (Заполняется автоматически)"
-            },
             {
               "name": "status",
               "title": "Статус",
@@ -241,13 +227,6 @@ SET class_rule =
           "originName": "park_building",
           "properties": [
             {
-              "name": "objectid",
-              "title": "№",
-              "readOnly": true,
-              "valueType": "INT",
-              "description": "Идентификатор объекта (Заполняется автоматически)"
-            },
-            {
               "name": "name",
               "title": "Наименование",
               "maxLength": 150,
@@ -324,13 +303,6 @@ SET class_rule =
           "originName": "park_structures",
           "properties": [
             {
-              "name": "objectid",
-              "title": "№",
-              "readOnly": true,
-              "valueType": "INT",
-              "description": "Идентификатор объекта (Заполняется автоматически)"
-            },
-            {
               "name": "name",
               "title": "Наименование объекта",
               "maxLength": 50,
@@ -406,13 +378,6 @@ SET class_rule =
           "tableName": "trees",
           "originName": "trees",
           "properties": [
-            {
-              "name": "objectid",
-              "title": "№",
-              "readOnly": true,
-              "valueType": "INT",
-              "description": "Идентификатор объекта (Заполняется автоматически)"
-            },
             {
               "name": "vid",
               "title": "Вид",
@@ -569,13 +534,6 @@ SET class_rule =
           "originName": "zone_park",
           "properties": [
             {
-              "name": "objectid",
-              "title": "№",
-              "readOnly": true,
-              "valueType": "INT",
-              "description": "Идентификатор объекта (Заполняется автоматически)"
-            },
-            {
               "name": "zone_name",
               "title": "Наименование зоны",
               "valueType": "STRING",
@@ -670,13 +628,6 @@ SET class_rule =
           "tableName": "border_park",
           "originName": "border_park",
           "properties": [
-            {
-              "name": "objectid",
-              "title": "№",
-              "readOnly": true,
-              "valueType": "INT",
-              "description": "Идентификатор объекта (Заполняется автоматически)"
-            },
             {
               "name": "documents",
               "title": "Утверждающий документ",

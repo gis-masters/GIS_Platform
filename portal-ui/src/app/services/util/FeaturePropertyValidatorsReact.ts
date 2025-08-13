@@ -9,6 +9,7 @@ import {
   OldPropertySchemaChoice,
   OldPropertySchemaDouble,
   OldPropertySchemaInt,
+  OldPropertySchemaLong,
   OldPropertySchemaString,
   PropertyEnumeration,
   ValueType
@@ -106,6 +107,7 @@ export const validateField = (value: unknown, propertySchema: OldPropertySchema)
       validatePattern(currentValue, propertySchema, errors);
       break;
     }
+    case ValueType.LONG:
     case ValueType.INT: {
       validateMinInclusive(currentValue, propertySchema, errors);
       validateMaxInclusive(currentValue, propertySchema, errors);
@@ -202,7 +204,7 @@ const validatePattern = (value: string, propertySchema: OldPropertySchemaString,
 // Определяет точное количество допустимых цифр. Должно быть больше нуля
 const validateTotalDigits = (
   value: string,
-  propertySchema: OldPropertySchemaInt | OldPropertySchemaDouble,
+  propertySchema: OldPropertySchemaInt | OldPropertySchemaLong | OldPropertySchemaDouble,
   errors: ErrorMessages
 ): void => {
   if (!propertySchema.totalDigits || propertySchema.totalDigits === -1) {
@@ -233,7 +235,7 @@ const validateFractionDigits = (
 // Определяет нижнюю границу для числовых значений (значение должно быть больше указанного здесь)
 const validateMinInclusive = (
   value: string,
-  propertySchema: OldPropertySchemaInt | OldPropertySchemaDouble,
+  propertySchema: OldPropertySchemaInt | OldPropertySchemaLong | OldPropertySchemaDouble,
   errors: ErrorMessages
 ): void => {
   if (!propertySchema.minInclusive || propertySchema.minInclusive === -1) {
@@ -248,7 +250,7 @@ const validateMinInclusive = (
 // Определяет верхнюю границу для числовых значений (значение должно быть меньше или равно указанному здесь)
 const validateMaxInclusive = (
   value: string,
-  propertySchema: OldPropertySchemaInt | OldPropertySchemaDouble,
+  propertySchema: OldPropertySchemaInt | OldPropertySchemaLong | OldPropertySchemaDouble,
   errors: ErrorMessages
 ): void => {
   if (!propertySchema.maxInclusive || propertySchema.maxInclusive === -1) {
