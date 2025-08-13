@@ -1,9 +1,9 @@
 import { ReactElement } from 'react';
 import { StoryFn } from '@storybook/react';
 
+import { XTable, XTableProps } from '../../XTable';
+import { XTableColumn, XTableExtraColumnType } from '../../XTable.models';
 import { Template } from '../XTable-Filter-story-template';
-import { XTable, XTableProps } from './../../XTable';
-import { XTableColumn, XTableExtraColumnType } from './../../XTable.models';
 
 export default {
   title: 'XTable/Cols',

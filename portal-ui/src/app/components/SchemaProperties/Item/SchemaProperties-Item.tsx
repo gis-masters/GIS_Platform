@@ -12,6 +12,7 @@ import {
   Tooltip
 } from '@mui/material';
 import {
+  AbcOutlined,
   ArticleOutlined,
   AttachFileOutlined,
   CalendarMonthOutlined,
@@ -55,7 +56,8 @@ const getTypeIcon = (type: PropertyType): [SvgIconComponent, string] => {
     [PropertyType.FLOAT]: [LooksOneOutlined, 'Число (дробное)'],
     [PropertyType.GEOMETRY]: [SquareFootOutlined, 'Геометрия'],
     [PropertyType.INT]: [PinOutlined, 'Число (целое)'],
-    [PropertyType.STRING]: [TextFieldsOutlined, 'Строка'],
+    [PropertyType.TEXT]: [TextFieldsOutlined, 'Многострочный текст'],
+    [PropertyType.STRING]: [AbcOutlined, 'Строка'],
     [PropertyType.URL]: [LinkOutlined, 'Ссылка'],
     [PropertyType.USER]: [PersonOutline, 'Пользователь'],
     [PropertyType.USER_ID]: [PersonSearchOutlined, 'Идентификатор пользователя'],

@@ -9,7 +9,7 @@ import {
   OldPropertySchemaChoice,
   OldPropertySchemaDouble,
   OldPropertySchemaInt,
-  OldPropertySchemaStringText,
+  OldPropertySchemaString,
   PropertyEnumeration,
   ValueType
 } from '../data/schema/schemaOld.models';
@@ -122,6 +122,7 @@ export const validateField = (value: unknown, propertySchema: OldPropertySchema)
     case ValueType.FILE:
     case ValueType.DOCUMENT:
     case ValueType.DATETIME:
+    case ValueType.TEXT:
     case ValueType.URL: {
       break;
     }
@@ -166,7 +167,7 @@ const validateFacetLength = (value: string, propertySchema: OldPropertySchema, e
 };
 
 // Определяет минимальное число символов или объектов списка. Должно быть равно или больше нуля
-const validateMinLength = (value: string, propertySchema: OldPropertySchemaStringText, errors: ErrorMessages): void => {
+const validateMinLength = (value: string, propertySchema: OldPropertySchemaString, errors: ErrorMessages): void => {
   if (!propertySchema.minLength || propertySchema.minLength === -1) {
     return;
   }
@@ -177,7 +178,7 @@ const validateMinLength = (value: string, propertySchema: OldPropertySchemaStrin
 };
 
 // Определяет максимальное число символов или объектов списка. Должно быть равно или больше нуля
-const validateMaxLength = (value: string, propertySchema: OldPropertySchemaStringText, errors: ErrorMessages): void => {
+const validateMaxLength = (value: string, propertySchema: OldPropertySchemaString, errors: ErrorMessages): void => {
   if (!propertySchema.maxLength || propertySchema.maxLength === -1) {
     return;
   }
@@ -188,7 +189,7 @@ const validateMaxLength = (value: string, propertySchema: OldPropertySchemaStrin
 };
 
 // Определяет точную последовательность приемлемых символов
-const validatePattern = (value: string, propertySchema: OldPropertySchemaStringText, errors: ErrorMessages): void => {
+const validatePattern = (value: string, propertySchema: OldPropertySchemaString, errors: ErrorMessages): void => {
   if (!propertySchema.pattern) {
     return;
   }

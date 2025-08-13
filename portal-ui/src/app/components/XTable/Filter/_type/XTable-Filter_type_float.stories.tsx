@@ -3,9 +3,9 @@ import { StoryFn } from '@storybook/react';
 
 import { PropertyType } from '../../../../services/data/schema/schema.models';
 import { SortParams } from '../../../../services/util/sortObjects';
+import { XTable, XTableProps } from '../../XTable';
+import { XTableColumn } from '../../XTable.models';
 import { Template } from '../XTable-Filter-story-template';
-import { XTable, XTableProps } from './../../XTable';
-import { XTableColumn } from './../../XTable.models';
 
 export default {
   title: 'XTable/Cols',

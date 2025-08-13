@@ -31,7 +31,7 @@ export interface XTableCellContentProps<T>
 
 const isColTypeAllowed = (type?: XTableColumnType): boolean => {
   if (type && isPropertyType(type)) {
-    return [PropertyType.STRING, PropertyType.CHOICE, PropertyType.FIAS].includes(type);
+    return [PropertyType.TEXT, PropertyType.STRING, PropertyType.CHOICE, PropertyType.FIAS].includes(type);
   }
 
   return false;
@@ -59,48 +59,47 @@ export function XTableCellContentBase<T>({
   // высчитываем ширину элемента и устанавливаем ограничение при первом рендере
   const updateTooltipVisibility = useCallback(
     (setTooltip: (fullWidth: number) => void) => {
-      if (enableMaxDefaultWidth && cellRef.current && isColTypeAllowed(col.type)) {
-        // Проверяем весь контент ячейки, включая дополнительные элементы
-        const fullRect = cellRef.current.getBoundingClientRect();
-        const styles = window.getComputedStyle(cellRef.current);
-        const marginLeft = Number.parseFloat(styles.marginLeft);
-        const marginRight = Number.parseFloat(styles.marginRight);
-        const fullWidth = fullRect.width + marginLeft + marginRight;
-
-        // Проверяем текстовое содержимое для тултипа
-        const currentText =
-          cellRef.current.querySelector('.Highlight') || cellRef.current.querySelector('.TextOverflow-Value');
-        const textWidth = currentText ? currentText.getBoundingClientRect().width + marginLeft + marginRight : 0;
-
-        setTooltip(textWidth || fullWidth);
-
-        // Если контент помещается в родительский элемент, скрываем тултип
-        if (cellRef.current.parentElement && cellRef.current.parentElement.offsetWidth > (textWidth || fullWidth)) {
-          setShowTooltip(false);
-        }
-
-        // При первом рендере, если нет установленной ширины, проверяем ограничения
-        if (!spanProps.width) {
-          let newWidth: number | undefined;
-          if (fullWidth <= MIN_COLUMN_WIDTH) {
-            // Если ширина меньше или равна 30px, устанавливаем минимальную ширину
-            newWidth = MIN_COLUMN_WIDTH;
-          } else if (fullWidth > (maxDefaultWidth || 500)) {
-            // Если ширина превышает максимальную, устанавливаем максимальную ширину
-            newWidth = maxDefaultWidth || 500;
-          }
-
-          if (newWidth) {
-            const event = new CustomEvent<{ field: keyof T; width: number }>('columnWidthChange', {
-              detail: {
-                field: col.field as keyof T,
-                width: newWidth
-              }
-            });
-            window.dispatchEvent(event);
-          }
-        }
+      if (spanProps.width) {
+        return;
       }
+
+      if (!(enableMaxDefaultWidth && cellRef.current && isColTypeAllowed(col.type))) {
+        return;
+      }
+
+      const fullRect = cellRef.current.getBoundingClientRect();
+      const styles = window.getComputedStyle(cellRef.current);
+      const marginLeft = Number.parseFloat(styles.marginLeft);
+      const marginRight = Number.parseFloat(styles.marginRight);
+      const fullWidth = fullRect.width + marginLeft + marginRight;
+      const currentText =
+        cellRef.current.querySelector('.Highlight') || cellRef.current.querySelector('.TextOverflow-Value');
+      const textWidth = currentText ? currentText.getBoundingClientRect().width + marginLeft + marginRight : 0;
+      setTooltip(textWidth || fullWidth);
+      if (cellRef.current.parentElement && cellRef.current.parentElement.offsetWidth > (textWidth || fullWidth)) {
+        setShowTooltip(false);
+      }
+
+      let newWidth: number | undefined;
+      if (fullWidth <= MIN_COLUMN_WIDTH) {
+        // Если ширина меньше или равна 30px, устанавливаем минимальную ширину
+        newWidth = MIN_COLUMN_WIDTH;
+      } else if (fullWidth > (maxDefaultWidth || 500)) {
+        // Если ширина превышает максимальную, устанавливаем максимальную ширину
+        newWidth = maxDefaultWidth || 500;
+      }
+
+      if (!newWidth) {
+        return;
+      }
+
+      const event = new CustomEvent<{ field: keyof T; width: number }>('columnWidthChange', {
+        detail: {
+          field: col.field as keyof T,
+          width: newWidth
+        }
+      });
+      window.dispatchEvent(event);
     },
     [enableMaxDefaultWidth, col.type, col.field, maxDefaultWidth, spanProps.width]
   );

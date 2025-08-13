@@ -89,13 +89,18 @@ interface OldBasePropertySchema {
   folderId?: string;
 }
 
-export interface OldPropertySchemaStringText extends OldBasePropertySchema {
-  valueType: ValueType.STRING | ValueType.TEXT;
+export interface OldPropertySchemaString extends OldBasePropertySchema {
+  valueType: ValueType.STRING;
   length?: number;
   minLength?: number;
   maxLength?: number;
   pattern?: string;
   patternDescription?: string;
+  defaultValue?: string;
+}
+
+export interface OldPropertySchemaText extends OldBasePropertySchema {
+  valueType: ValueType.TEXT;
   defaultValue?: string;
 }
 
@@ -193,7 +198,8 @@ export interface OldPropertySchemaOther extends OldBasePropertySchema {
 }
 
 export type OldPropertySchema =
-  | OldPropertySchemaStringText
+  | OldPropertySchemaString
+  | OldPropertySchemaText
   | OldPropertySchemaInt
   | OldPropertySchemaLong
   | OldPropertySchemaDouble

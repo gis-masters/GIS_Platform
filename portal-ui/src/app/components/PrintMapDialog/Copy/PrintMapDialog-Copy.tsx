@@ -20,7 +20,7 @@ export class PrintMapDialogCopy extends Component {
   @observable private hover = false;
   private node?: HTMLDivElement;
   private operationId?: symbol;
-  private clipboardApiAvailable: boolean;
+  private readonly clipboardApiAvailable: boolean;
 
   constructor(props: Record<string, never>) {
     super(props);

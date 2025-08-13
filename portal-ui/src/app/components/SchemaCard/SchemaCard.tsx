@@ -7,14 +7,7 @@ import { IClassNameProps } from '@bem-react/core';
 import { boundMethod } from 'autobind-decorator';
 import { cloneDeep } from 'lodash';
 
-import {
-  ContentType,
-  PropertyOption,
-  PropertySchema,
-  PropertyType,
-  Schema,
-  SimpleSchema
-} from '../../services/data/schema/schema.models';
+import { ContentType, PropertyOption, PropertySchema, Schema } from '../../services/data/schema/schema.models';
 import { applyContentType, applyView } from '../../services/data/schema/schema.utils';
 import { isLinear, isPoint, isPolygonal } from '../../services/geoserver/wfs/wfs.util';
 import { Card } from '../Card/Card';
@@ -29,7 +22,6 @@ import { Select } from '../Select/Select';
 const EMPTY = '~~~empty_value~~~';
 
 export const cnSchemaCard = cn('SchemaCard');
-export const cnSchemaCardInput = cn('SchemaCard', 'Input');
 
 export interface SchemaCardProps extends IClassNameProps {
   schema: Schema;
@@ -37,26 +29,6 @@ export interface SchemaCardProps extends IClassNameProps {
   onSchemaChange(currentSchema: Schema): void;
   onError(error: string): void;
 }
-
-export const titleSchema: SimpleSchema = {
-  properties: [
-    {
-      name: 'title',
-      title: 'Название',
-      propertyType: PropertyType.STRING
-    }
-  ]
-};
-
-export const descriptionSchema: SimpleSchema = {
-  properties: [
-    {
-      name: 'description',
-      title: 'Описание',
-      propertyType: PropertyType.STRING
-    }
-  ]
-};
 
 @observer
 export class SchemaCard extends Component<SchemaCardProps> {
@@ -277,7 +249,7 @@ export class SchemaCard extends Component<SchemaCardProps> {
     }
 
     if (this.selectedViewId && this.selectedViewId !== EMPTY) {
-      const views = newSchema.views?.map(view => {
+      newSchema.views = newSchema.views?.map(view => {
         if (view.id === this.selectedViewId) {
           view.properties = view.properties.map(property => {
             if (property.name === newPropertySchema.name) {
@@ -291,13 +263,11 @@ export class SchemaCard extends Component<SchemaCardProps> {
         return view;
       });
 
-      newSchema.views = views;
-
       this.props.onSchemaChange(newSchema);
     }
 
     if (this.selectedContentTypeId && this.selectedContentTypeId !== EMPTY) {
-      const contentTypes = newSchema.contentTypes?.map(contentType => {
+      newSchema.contentTypes = newSchema.contentTypes?.map(contentType => {
         if (contentType.id === this.selectedContentTypeId) {
           contentType.properties = contentType.properties.map(property => {
             if (property.name === newPropertySchema.name) {
@@ -310,8 +280,6 @@ export class SchemaCard extends Component<SchemaCardProps> {
 
         return contentType;
       });
-
-      newSchema.contentTypes = contentTypes;
 
       this.props.onSchemaChange(newSchema);
     }

@@ -11,7 +11,7 @@ import {
   OldPropertySchemaDouble,
   OldPropertySchemaInt,
   OldPropertySchemaLong,
-  OldPropertySchemaStringText,
+  OldPropertySchemaString,
   PropertyEnumeration,
   ValueType
 } from '../data/schema/schemaOld.models';
@@ -191,7 +191,7 @@ export class FeaturePropertyValidators {
   }
 
   // Определяет минимальное число символов или объектов списка. Должно быть равно или больше нуля
-  private static minLength(value: string, propertySchema: OldPropertySchemaStringText, errors: ErrorMessages): void {
+  private static minLength(value: string, propertySchema: OldPropertySchemaString, errors: ErrorMessages): void {
     if (!propertySchema.minLength || propertySchema.minLength === -1) {
       return;
     }
@@ -202,7 +202,7 @@ export class FeaturePropertyValidators {
   }
 
   // Определяет максимальное число символов или объектов списка. Должно быть равно или больше нуля
-  private static maxLength(value: string, propertySchema: OldPropertySchemaStringText, errors: ErrorMessages): void {
+  private static maxLength(value: string, propertySchema: OldPropertySchemaString, errors: ErrorMessages): void {
     if (!propertySchema.maxLength || propertySchema.maxLength === -1) {
       return;
     }
@@ -213,7 +213,7 @@ export class FeaturePropertyValidators {
   }
 
   // Определяет точную последовательность приемлемых символов
-  private static pattern(value: string, propertySchema: OldPropertySchemaStringText, errors: ErrorMessages): void {
+  private static pattern(value: string, propertySchema: OldPropertySchemaString, errors: ErrorMessages): void {
     if (!propertySchema.pattern) {
       return;
     }

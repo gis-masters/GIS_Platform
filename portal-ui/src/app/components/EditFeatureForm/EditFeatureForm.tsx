@@ -4,7 +4,7 @@ import { EditOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { WfsFeature } from 'src/app/services/geoserver/wfs/wfs.models';
 
-import { convertOldToNewProperties } from '../../services/data/schema/schema.utils';
+import { convertOldToNewProperty } from '../../services/data/schema/schema.utils';
 import { EditedField, OldPropertySchema, ValueType } from '../../services/data/schema/schemaOld.models';
 import { CrgVectorLayer } from '../../services/gis/layers/layers.models';
 import { editFeatureStore } from '../../services/map/a-map-mode/edit-feature/EditFeatureStore';
@@ -39,6 +39,7 @@ const checkType = (valueType: ValueType | undefined): boolean => {
       valueType?.includes('BOOLEAN') ||
       valueType?.includes('FILE') ||
       valueType?.includes('STRING') ||
+      valueType?.includes('TEXT') ||
       valueType?.includes('CHOICE') ||
       valueType?.includes('USER') ||
       valueType?.includes('USER_ID') ||
@@ -122,38 +123,38 @@ export const EditFeatureForm: React.FC<EditFeatureFormProps> = ({
       >
         {editFeatureData
           .map((editFeatureItem, i) => {
-            if (editFeatureItem.property.hidden) {
+            const { property, relations } = editFeatureItem;
+            if (!property) {
+              return;
+            }
+
+            const { valueType, title, hidden, description } = property;
+            if (hidden) {
               return;
             }
 
             return (
               <div key={i}>
-                {checkType(editFeatureItem.property.valueType) && (
+                {checkType(valueType) && (
                   <div className={cnEditFeatureForm('Row')}>
                     <div className={cnEditFeatureForm('Label')}>
                       {editFeatureItem.isFgistpProperty ? (
-                        <span>{editFeatureItem.property?.title}</span>
+                        <span>{title}</span>
                       ) : (
                         <Tooltip title='Данное свойство не соответствует приказу'>
-                          <span style={{ color: 'grey' }}>{editFeatureItem.property?.title}</span>
+                          <span style={{ color: 'grey' }}>{title}</span>
                         </Tooltip>
                       )}
 
-                      {editFeatureItem.property?.description && (
-                        <FormDescription>
-                          {convertOldToNewProperties([editFeatureItem.property])[0].description}
-                        </FormDescription>
+                      {description && (
+                        <FormDescription>{convertOldToNewProperty(property).description}</FormDescription>
                       )}
                     </div>
 
-                    {!(
-                      mode === 'multipleEdit' &&
-                      (editFeatureItem.property?.valueType?.includes('FILE') ||
-                        editFeatureItem.property?.valueType?.includes('LOOKUP'))
-                    ) && (
-                      <div className={cnEditFeatureForm('Fields', { relations: !!editFeatureItem.relations?.length })}>
+                    {!(mode === 'multipleEdit' && (valueType?.includes('FILE') || valueType?.includes('LOOKUP'))) && (
+                      <div className={cnEditFeatureForm('Fields', { relations: !!relations?.length })}>
                         <FormControlWrapper
-                          property={editFeatureItem.property}
+                          property={property}
                           onChange={handleWrapperChange}
                           itemValue={formControls.find(({ key }) => key === editFeatureItem.name)?.value}
                           error={formControls.find(({ key }) => key === editFeatureItem.name)?.error}
@@ -161,12 +162,12 @@ export const EditFeatureForm: React.FC<EditFeatureFormProps> = ({
                         />
 
                         <div>
-                          {!!editFeatureItem.relations?.length && (
-                            <RelationsButton obj={features[0].properties} relations={editFeatureItem.relations} />
+                          {!!relations?.length && (
+                            <RelationsButton obj={features[0].properties} relations={relations} />
                           )}
                         </div>
 
-                        {isShowTemplate(editFeatureItem.property) && (
+                        {isShowTemplate(property) && (
                           <div className={cnEditFeatureForm('MultiEdit')}>
                             <span>Оставить как есть</span>
                           </div>
@@ -174,27 +175,25 @@ export const EditFeatureForm: React.FC<EditFeatureFormProps> = ({
 
                         {mode === 'multipleEdit' && (
                           <div className={cnEditFeatureForm('MultipleEditButton')}>
-                            <IconButton size='small' onClick={() => switchControl(editFeatureItem.property)}>
+                            <IconButton size='small' onClick={() => switchControl(property)}>
                               <EditOutlined fontSize='small' />
                             </IconButton>
                           </div>
                         )}
 
-                        {mode === 'multipleEdit' &&
-                          (editFeatureItem.property?.valueType?.includes('FILE') ||
-                            editFeatureItem.property?.valueType?.includes('LOOKUP')) && (
-                            <div className='col-6 px-0 new-form-fields not-editable-form-fields'>
-                              <div className='not-editable'>
-                                <span>Недоступно для множественного редактирования</span>
-                              </div>
+                        {mode === 'multipleEdit' && (valueType?.includes('FILE') || valueType?.includes('LOOKUP')) && (
+                          <div className='col-6 px-0 new-form-fields not-editable-form-fields'>
+                            <div className='not-editable'>
+                              <span>Недоступно для множественного редактирования</span>
                             </div>
-                          )}
+                          </div>
+                        )}
                       </div>
                     )}
                   </div>
                 )}
 
-                {editFeatureItem.property?.valueType?.includes('LOOKUP') && mode === 'single' && (
+                {valueType?.includes('LOOKUP') && mode === 'single' && (
                   <div className={cnEditFeatureForm('Row')}>
                     <EditFeatureField
                       type={ValueType.LOOKUP}
@@ -208,32 +207,23 @@ export const EditFeatureForm: React.FC<EditFeatureFormProps> = ({
                   </div>
                 )}
 
-                {editFeatureItem.property?.valueType?.includes('DATETIME') && (
+                {valueType?.includes('DATETIME') && (
                   <div className={cnEditFeatureForm('Row')}>
                     <div className={cnEditFeatureForm('Label')}>
-                      {!editFeatureItem.isFgistpProperty && (
-                        <span
-                          style={{ color: 'grey' }}
-                          // matTooltip='Данное свойство не соответствует приказу'
-                        >
-                          {editFeatureItem.property?.title}
-                        </span>
-                      )}
+                      {!editFeatureItem.isFgistpProperty && <span style={{ color: 'grey' }}>{title}</span>}
 
-                      {editFeatureItem.isFgistpProperty && <span>{editFeatureItem.property?.title}</span>}
+                      {editFeatureItem.isFgistpProperty && <span>{title}</span>}
 
-                      {editFeatureItem.property?.description && (
-                        <FormDescription>
-                          {convertOldToNewProperties([editFeatureItem.property])[0].description}
-                        </FormDescription>
+                      {description && (
+                        <FormDescription>{convertOldToNewProperty(property).description}</FormDescription>
                       )}
                     </div>
 
                     <div className='col-6 px-0'>
-                      {isReadOnly(editFeatureItem.property) && (
+                      {isReadOnly(property) && (
                         <div>
                           <FormControlWrapper
-                            property={editFeatureItem.property}
+                            property={property}
                             onChange={handleWrapperChange}
                             itemValue={formControls.find(({ key }) => key === editFeatureItem.name)?.value}
                             error={formControls.find(({ key }) => key === editFeatureItem.name)?.error}
@@ -250,14 +240,14 @@ export const EditFeatureForm: React.FC<EditFeatureFormProps> = ({
 
                           {mode === 'multipleEdit' && (
                             <>
-                              {isShowTemplate(editFeatureItem.property) && (
+                              {isShowTemplate(property) && (
                                 <div className={cnEditFeatureForm('MultiEdit')}>
                                   <span>Оставить как есть</span>
                                 </div>
                               )}
 
                               <div className={cnEditFeatureForm('MultipleEditButton')}>
-                                <IconButton size='small' onClick={() => switchControl(editFeatureItem.property)}>
+                                <IconButton size='small' onClick={() => switchControl(property)}>
                                   <EditOutlined fontSize='small' />
                                 </IconButton>
                               </div>
@@ -266,14 +256,14 @@ export const EditFeatureForm: React.FC<EditFeatureFormProps> = ({
                         </div>
                       )}
 
-                      {!isReadOnly(editFeatureItem.property) &&
+                      {!isReadOnly(property) &&
                         (() => {
                           const controlItem = formControls.find(({ key }) => key === editFeatureItem.name);
                           const value = typeof controlItem?.value === 'string' ? getDateTime(controlItem.value) : null;
 
                           return (
                             <FormControlWrapper
-                              property={editFeatureItem.property}
+                              property={property}
                               onChange={handleWrapperChange}
                               itemValue={value}
                               updatingAllowed={false}
@@ -284,7 +274,7 @@ export const EditFeatureForm: React.FC<EditFeatureFormProps> = ({
                   </div>
                 )}
 
-                {editFeatureItem.property?.valueType?.includes('INT') && (
+                {valueType?.includes('INT') && (
                   <div className={cnEditFeatureForm('Row')}>
                     <div className={cnEditFeatureForm('Label')}>
                       {!editFeatureItem.isFgistpProperty && (
@@ -292,22 +282,20 @@ export const EditFeatureForm: React.FC<EditFeatureFormProps> = ({
                           style={{ color: 'grey' }}
                           // matTooltip="Данное свойство не соответствует приказу"
                         >
-                          {editFeatureItem.property?.title}
+                          {title}
                         </span>
                       )}
-                      {editFeatureItem.isFgistpProperty && <span>{editFeatureItem.property?.title}</span>}
-                      {editFeatureItem.property?.description && (
-                        <FormDescription>
-                          {convertOldToNewProperties([editFeatureItem.property])[0].description}
-                        </FormDescription>
+                      {editFeatureItem.isFgistpProperty && <span>{title}</span>}
+                      {description && (
+                        <FormDescription>{convertOldToNewProperty(property).description}</FormDescription>
                       )}
                     </div>
 
                     <div className='col-6 px-0'>
-                      {isReadOnly(editFeatureItem.property) && (
+                      {isReadOnly(property) && (
                         <div>
                           <FormControlWrapper
-                            property={editFeatureItem.property}
+                            property={property}
                             onChange={handleWrapperChange}
                             itemValue={formControls.find(({ key }) => key === editFeatureItem.name)?.value}
                             error={formControls.find(({ key }) => key === editFeatureItem.name)?.error}
@@ -316,14 +304,14 @@ export const EditFeatureForm: React.FC<EditFeatureFormProps> = ({
 
                           {mode === 'multipleEdit' && (
                             <>
-                              {isShowTemplate(editFeatureItem.property) && (
+                              {isShowTemplate(property) && (
                                 <div className={cnEditFeatureForm('MultiEdit')}>
                                   <span>Оставить как есть</span>
                                 </div>
                               )}
 
                               <div className={cnEditFeatureForm('MultipleEditButton')}>
-                                <IconButton size='small' onClick={() => switchControl(editFeatureItem.property)}>
+                                <IconButton size='small' onClick={() => switchControl(property)}>
                                   <EditOutlined fontSize='small' />
                                 </IconButton>
                               </div>
@@ -332,9 +320,9 @@ export const EditFeatureForm: React.FC<EditFeatureFormProps> = ({
                         </div>
                       )}
 
-                      {!isReadOnly(editFeatureItem.property) && (
+                      {!isReadOnly(property) && (
                         <FormControlWrapper
-                          property={editFeatureItem.property}
+                          property={property}
                           onChange={handleWrapperChange}
                           itemValue={formControls.find(({ key }) => key === editFeatureItem.name)?.value}
                           error={formControls.find(({ key }) => key === editFeatureItem.name)?.error}
@@ -345,27 +333,23 @@ export const EditFeatureForm: React.FC<EditFeatureFormProps> = ({
                   </div>
                 )}
 
-                {editFeatureItem.property?.valueType?.includes('DOUBLE') && (
+                {valueType?.includes('DOUBLE') && (
                   <div className={cnEditFeatureForm('Row')}>
                     <div className={cnEditFeatureForm('Label')}>
-                      {!editFeatureItem.isFgistpProperty && (
-                        <span style={{ color: 'grey' }}>{editFeatureItem.property?.title}</span>
-                      )}
+                      {!editFeatureItem.isFgistpProperty && <span style={{ color: 'grey' }}>{title}</span>}
 
-                      {editFeatureItem.isFgistpProperty && <span>{editFeatureItem.property?.title}</span>}
+                      {editFeatureItem.isFgistpProperty && <span>{title}</span>}
 
-                      {editFeatureItem.property?.description && (
-                        <FormDescription>
-                          {convertOldToNewProperties([editFeatureItem.property])[0].description}
-                        </FormDescription>
+                      {description && (
+                        <FormDescription>{convertOldToNewProperty(property).description}</FormDescription>
                       )}
                     </div>
 
                     <div className='col-6 px-0'>
-                      {isReadOnly(editFeatureItem.property) && (
+                      {isReadOnly(property) && (
                         <div>
                           <FormControlWrapper
-                            property={editFeatureItem.property}
+                            property={property}
                             onChange={handleWrapperChange}
                             itemValue={formControls.find(({ key }) => key === editFeatureItem.name)?.value}
                             error={formControls.find(({ key }) => key === editFeatureItem.name)?.error}
@@ -374,14 +358,14 @@ export const EditFeatureForm: React.FC<EditFeatureFormProps> = ({
 
                           {mode === 'multipleEdit' && (
                             <>
-                              {isShowTemplate(editFeatureItem.property) && (
+                              {isShowTemplate(property) && (
                                 <div className={cnEditFeatureForm('MultiEdit')}>
                                   <span>Оставить как есть</span>
                                 </div>
                               )}
 
                               <div className={cnEditFeatureForm('MultipleEditButton')}>
-                                <IconButton size='small' onClick={() => switchControl(editFeatureItem.property)}>
+                                <IconButton size='small' onClick={() => switchControl(property)}>
                                   <EditOutlined fontSize='small' />
                                 </IconButton>
                               </div>
@@ -390,9 +374,9 @@ export const EditFeatureForm: React.FC<EditFeatureFormProps> = ({
                         </div>
                       )}
 
-                      {!isReadOnly(editFeatureItem.property) && (
+                      {!isReadOnly(property) && (
                         <FormControlWrapper
-                          property={editFeatureItem.property}
+                          property={property}
                           onChange={handleWrapperChange}
                           itemValue={formControls.find(({ key }) => key === editFeatureItem.name)?.value}
                           error={formControls.find(({ key }) => key === editFeatureItem.name)?.error}

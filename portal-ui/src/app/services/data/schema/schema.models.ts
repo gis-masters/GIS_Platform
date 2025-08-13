@@ -7,6 +7,7 @@ import { FieldValidator } from '../../util/form/formValidation.utils';
 
 export enum PropertyType {
   STRING = 'string',
+  TEXT = 'text',
   INT = 'integer',
   LONG = 'long',
   FLOAT = 'float',
@@ -139,6 +140,12 @@ export interface PropertySchemaString extends BasePropertySchema {
   wellKnownRegex?: string;
   regex?: string;
   regexErrorMessage?: string;
+  defaultValue?: string;
+}
+
+export interface PropertySchemaText extends BasePropertySchema {
+  propertyType: PropertyType.TEXT;
+  maxDefaultWidth?: number;
   defaultValue?: string;
 }
 
@@ -280,6 +287,7 @@ export interface PropertySchemaUuid extends BasePropertySchema {
 
 export type PropertySchema =
   | PropertySchemaString
+  | PropertySchemaText
   | PropertySchemaInt
   | PropertySchemaLong
   | PropertySchemaFloat

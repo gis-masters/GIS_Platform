@@ -1,8 +1,8 @@
 import { ReactElement } from 'react';
 import { StoryFn } from '@storybook/react';
 
-import { XTable, XTableProps } from './../XTable';
-import { XTableColumn } from './../XTable.models';
+import { XTable, XTableProps } from '../XTable';
+import { XTableColumn } from '../XTable.models';
 import { TemplateWide } from './XTable-Filter-story-template';
 
 export default {

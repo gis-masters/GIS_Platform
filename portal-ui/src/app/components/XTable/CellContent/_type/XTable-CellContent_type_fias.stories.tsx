@@ -2,11 +2,11 @@
 import { ReactElement } from 'react';
 import { StoryFn } from '@storybook/react';
 
-import { PropertyType } from '../../../../../app/services/data/schema/schema.models';
 import { FiasValue } from '../../../../services/data/fias/fias.models';
+import { PropertyType } from '../../../../services/data/schema/schema.models';
 import { Template } from '../../Filter/XTable-Filter-story-template';
+import { XTable, XTableProps } from '../../XTable';
 import { XTableColumn } from '../../XTable.models';
-import { XTable, XTableProps } from './../../XTable';
 
 interface TestData {
   id: number;

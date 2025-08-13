@@ -34,7 +34,7 @@ import {
   OldPropertySchemaDatetime,
   OldPropertySchemaDouble,
   OldPropertySchemaSet,
-  OldPropertySchemaStringText,
+  OldPropertySchemaString,
   OldPropertySchemaUrl,
   OldSchema,
   ValueType
@@ -223,21 +223,25 @@ function convertNewToOldContentType(contentType: ContentType): OldContentType {
   return oldContentType;
 }
 
+export function convertOldToNewProperty(oldField: OldPropertySchema): PropertySchema {
+  return convertOldToNewProperties([oldField])[0];
+}
+
 export function convertOldToNewProperties(oldFields: OldPropertySchema[]): PropertySchema[] {
   return oldFields?.map(oldField => {
     const field: Partial<PropertySchema> = { ...oldField } as OldPropertySchema;
 
-    if (oldField.valueType === ValueType.STRING || oldField.valueType === ValueType.TEXT) {
+    if (oldField.valueType === ValueType.STRING) {
       field.propertyType = PropertyType.STRING;
 
       if (oldField.pattern) {
         (field as Partial<PropertySchemaString>).regex = oldField.pattern;
-        delete (field as Partial<OldPropertySchemaStringText>).pattern;
+        delete (field as Partial<OldPropertySchemaString>).pattern;
       }
 
       if (oldField.patternDescription) {
         (field as Partial<PropertySchemaString>).regexErrorMessage = oldField.patternDescription;
-        delete (field as Partial<OldPropertySchemaStringText>).patternDescription;
+        delete (field as Partial<OldPropertySchemaString>).patternDescription;
       }
     }
 
@@ -251,6 +255,10 @@ export function convertOldToNewProperties(oldFields: OldPropertySchema[]): Prope
 
       (field as Partial<PropertySchemaFloat>).precision = oldField.fractionDigits;
       delete (field as Partial<OldPropertySchemaDouble>).fractionDigits;
+    }
+
+    if (oldField.valueType === ValueType.TEXT) {
+      field.propertyType = PropertyType.TEXT;
     }
 
     if (oldField.valueType === ValueType.INT) {
@@ -350,12 +358,12 @@ export function convertNewToOldProperties(newFields: PropertySchema[]): OldPrope
       field.valueType = ValueType.STRING;
 
       if (newField.regex) {
-        (field as Partial<OldPropertySchemaStringText>).pattern = newField.regex;
+        (field as Partial<OldPropertySchemaString>).pattern = newField.regex;
         delete (field as Partial<PropertySchemaString>).regex;
       }
 
       if (newField.regexErrorMessage) {
-        (field as Partial<OldPropertySchemaStringText>).patternDescription = newField.regexErrorMessage;
+        (field as Partial<OldPropertySchemaString>).patternDescription = newField.regexErrorMessage;
         delete (field as Partial<PropertySchemaString>).regexErrorMessage;
       }
     }
@@ -365,6 +373,10 @@ export function convertNewToOldProperties(newFields: PropertySchema[]): OldPrope
 
       (field as Partial<OldPropertySchemaDouble>).fractionDigits = newField.precision;
       delete (field as Partial<PropertySchemaFloat>).precision;
+    }
+
+    if (newField.propertyType === PropertyType.TEXT) {
+      field.valueType = ValueType.TEXT;
     }
 
     if (newField.propertyType === PropertyType.INT) {

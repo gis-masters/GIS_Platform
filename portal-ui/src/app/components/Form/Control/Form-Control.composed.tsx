@@ -13,6 +13,7 @@ import { withTypeFloat } from './_type/Form-Control_type_float';
 import { withTypeInt } from './_type/Form-Control_type_int';
 import { withTypeSet } from './_type/Form-Control_type_set';
 import { withTypeString } from './_type/Form-Control_type_string';
+import { withTypeText } from './_type/Form-Control_type_text';
 import { withTypeUrl } from './_type/Form-Control_type_url';
 import { withTypeUser } from './_type/Form-Control_type_user';
 import { withTypeUserId } from './_type/Form-Control_type_userId';
@@ -21,6 +22,7 @@ import { FormControl as Presenter } from './Form-Control';
 export const FormControl = compose(
   withTypeInt as HOC<FormControlProps>,
   withTypeFloat as HOC<FormControlProps>,
+  withTypeText as HOC<FormControlProps>,
   withTypeString as HOC<FormControlProps>,
   withTypeChoice as HOC<FormControlProps>,
   withTypeBinary as HOC<FormControlProps>,
