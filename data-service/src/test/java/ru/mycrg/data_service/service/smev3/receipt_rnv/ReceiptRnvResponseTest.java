@@ -109,14 +109,6 @@ public class ReceiptRnvResponseTest extends AProcessorTest {
         // объект, который будет сохранен в БД
         var records = dataEisZsServiceMock.getContent();
 
-        // Получаем объект из XML для дальнейшего сравнения
-        var response = XmlMarshaller.unmarshall(fileContent, QueryResult.class)
-                .getMessage()
-                .getResponseContent()
-                .getContent()
-                .getMessagePrimaryContent()
-                .getResponse();
-
         // size
         assertEquals(8, records.size());
 

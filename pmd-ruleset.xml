@@ -9,6 +9,9 @@
         Custom PMD rules focused on finding unused parameters and variables in acceptance tests
     </description>
 
+    <!-- Exclude controller files from all rules -->
+    <exclude-pattern>.*/controller/.*Controller\.java</exclude-pattern>
+
     <!-- Unused parameters and variables -->
     <rule ref="category/java/bestpractices.xml/UnusedFormalParameter">
         <priority>1</priority>

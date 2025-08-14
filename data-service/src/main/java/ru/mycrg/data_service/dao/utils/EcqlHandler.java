@@ -12,8 +12,6 @@ import ru.mycrg.data_service.exceptions.BadRequestException;
 
 import java.util.Optional;
 
-import static java.nio.charset.StandardCharsets.UTF_8;
-
 public class EcqlHandler {
 
     private static final Logger log = LoggerFactory.getLogger(EcqlHandler.class);
@@ -109,7 +107,7 @@ public class EcqlHandler {
 
     private static boolean isInFound(String target, int i) {
         return getItem(target, i + 1)
-                .filter(ch -> (target.charAt(i) == 'I' && ch == 'N') || (target.charAt(i) == 'i' && ch == 'n'))
+                .filter(ch -> target.charAt(i) == 'I' && ch == 'N' || target.charAt(i) == 'i' && ch == 'n')
                 .isPresent();
     }
 

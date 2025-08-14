@@ -64,8 +64,8 @@ public class GeoserverDeleteStoreDelegate implements JavaDelegate {
 //        }
     }
 
-    @NotNull
-    private String baseFailMsg() {
-        return "Не удалось удалить хранилище с геосервера";
-    }
+//    @NotNull
+//    private String baseFailMsg() {
+//        return "Не удалось удалить хранилище с геосервера";
+//    }
 }

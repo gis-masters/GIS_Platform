@@ -7,7 +7,7 @@ public class EcqlFilterUtil {
     }
 
     public static String addAsEqual(String sourceFilter, String param, String value) {
-        return (sourceFilter == null || sourceFilter.isBlank())
+        return sourceFilter == null || sourceFilter.isBlank()
                 ? String.format("%s='%s'", param, value)
                 : String.format("%s AND %s='%s'", sourceFilter, param, value);
     }

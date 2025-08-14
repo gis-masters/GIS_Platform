@@ -265,25 +265,4 @@ public class XmlParser {
             return otherAddress;
         }
     }
-
-    //TODO: Исправить такой способ мапинга в схему ZU2 (костыль)
-    private void mapResultForZuSchema(Map<String, Object> resultForCheck,
-                                      Map<String, String> mapFieldsForZuSchema) {
-        Object category = resultForCheck.get("category");
-
-        mapFieldsForZuSchema.keySet().forEach(key -> {
-            if (key.equalsIgnoreCase("utilization")) {
-                resultForCheck.put(mapFieldsForZuSchema.get(key), resultForCheck.get(key));
-            }
-
-            if (key.equalsIgnoreCase("category")) {
-                resultForCheck.put(mapFieldsForZuSchema.get(key), category);
-            } else if (resultForCheck.containsKey(key)) {
-                resultForCheck.put(mapFieldsForZuSchema.get(key), resultForCheck.get(key));
-                resultForCheck.remove(key, resultForCheck.get(key));
-            }
-        });
-
-        while (resultForCheck.values().remove(null)) ;
-    }
 }

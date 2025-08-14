@@ -122,7 +122,7 @@ public class ResourceQualifier extends AQualifier {
     }
 
     public String getPrimaryKeyName() {
-        return (this.type.equals(FEATURE) || this.type.equals(TABLE))
+        return this.type.equals(FEATURE) || this.type.equals(TABLE)
                 ? PRIMARY_KEY
                 : ID;
     }

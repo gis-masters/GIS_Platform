@@ -273,9 +273,9 @@ public class GmlParser {
     }
 
     private static boolean isElementContainsGeometry(Element element) {
-        return (element.getElementsByTagName("gml:posList").getLength() <= 0)
-                && (element.getElementsByTagName("gml:pos").getLength() <= 0)
-                && (element.getElementsByTagName("gml:coordinates").getLength() <= 0);
+        return element.getElementsByTagName("gml:posList").getLength() <= 0
+                && element.getElementsByTagName("gml:pos").getLength() <= 0
+                && element.getElementsByTagName("gml:coordinates").getLength() <= 0;
     }
 
     private void parsingElement(Element element,

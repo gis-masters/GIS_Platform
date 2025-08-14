@@ -55,9 +55,9 @@ public class FileResourceQualifier {
     @Override
     public String toString() {
         return join(
-                (table == null || table.isBlank()) ? "" : table,
+                table == null || table.isBlank() ? "" : table,
                 recordId == null ? "" : String.valueOf(recordId),
-                (field == null || field.isBlank()) ? "" : field
+                field == null || field.isBlank() ? "" : field
         );
     }
 }

@@ -582,7 +582,7 @@ public abstract class AcceptServiceBase {
         documentPayload.put(PERSON_NAME_ATTRIBUTE, fullFio);
         documentPayload.put(REQUEST_TYPE_ATTRIBUTE, REQUEST_TYPE);
         documentPayload.put(DATA_TYPE_ATTRIBUTE, DATA_TYPE);
-        documentPayload.put(TITLE.getName(), (getTitle() + " от " + fullFio));
+        documentPayload.put(TITLE.getName(), getTitle() + " от " + fullFio);
         documentPayload.put(CONTENT_TYPE_ID.getName(), getContentType());
         documentPayload.put(IS_FOLDER.getName(), false);
         documentPayload.put(PATH.getName(), getDocumentPath());

@@ -134,7 +134,8 @@ public class AcceptRnvService extends AcceptServiceBase {
                 .map(PermissionObjectOperationBlockType::getNumber)
                 .filter(num -> !num.isEmpty())
                 .orElseGet(() -> ofNullable(request.getPermissionObjectOperation())
-                        .map(objectOperationType -> objectOperationType.getPermissionObjectOperationStageBlock().stream()
+                        .map(objectOperationType -> objectOperationType.getPermissionObjectOperationStageBlock()
+                                                                       .stream()
                                                                        .map(PermissionObjectOperationBlockType::getNumber)
                                                                        .collect(Collectors.joining(", ")))
                         .filter(num -> !num.isEmpty())
@@ -398,9 +399,9 @@ public class AcceptRnvService extends AcceptServiceBase {
                         doc.getName(),
                         doc.getType()
                 );
-                if ((doc.getCodeDocument().equalsIgnoreCase(DOCUMENT_CODE))
-                        && (doc.getType().equalsIgnoreCase(PDF_CONTENT_TYPE))
-                        && (doc.getName().endsWith(PDF_EXTENSION))) {
+                if (doc.getCodeDocument().equalsIgnoreCase(DOCUMENT_CODE)
+                        && doc.getType().equalsIgnoreCase(PDF_CONTENT_TYPE)
+                        && doc.getName().endsWith(PDF_EXTENSION)) {
                     files.add(0, file);
                 } else {
                     files.add(file);

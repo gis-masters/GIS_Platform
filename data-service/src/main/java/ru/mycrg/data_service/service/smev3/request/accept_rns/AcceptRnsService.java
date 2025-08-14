@@ -416,9 +416,9 @@ public class AcceptRnsService extends AcceptServiceBase {
                         doc.getName(),
                         doc.getType()
                 );
-                if ((doc.getCodeDocument().equalsIgnoreCase(DOCUMENT_CODE))
-                        && (doc.getType().equalsIgnoreCase(PDF_CONTENT_TYPE))
-                        && (doc.getName().endsWith(PDF_EXTENSION))) {
+                if (doc.getCodeDocument().equalsIgnoreCase(DOCUMENT_CODE)
+                        && doc.getType().equalsIgnoreCase(PDF_CONTENT_TYPE)
+                        && doc.getName().endsWith(PDF_EXTENSION)) {
                     files.add(0, file);
                 } else {
                     files.add(file);

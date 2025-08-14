@@ -161,8 +161,7 @@ public class CustomRestExceptionHandler extends ResponseEntityExceptionHandler {
 
     //
     @ExceptionHandler({MethodArgumentTypeMismatchException.class})
-    public ResponseEntity<Object> handleMethodArgumentTypeMismatch(final MethodArgumentTypeMismatchException ex,
-                                                                   final WebRequest request) {
+    public ResponseEntity<Object> handleMethodArgumentTypeMismatch(final MethodArgumentTypeMismatchException ex) {
         String typeName = "";
         Class<?> requiredType = ex.getRequiredType();
         if (requiredType != null) {
@@ -177,16 +176,14 @@ public class CustomRestExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler({ResourceNotFoundException.class})
-    public ResponseEntity<Object> handleMethodArgumentTypeMismatch(final ResourceNotFoundException ex,
-                                                                   final WebRequest request) {
+    public ResponseEntity<Object> handleMethodArgumentTypeMismatch(final ResourceNotFoundException ex) {
         ApiErrorModel errorModel = new ApiErrorModel(NOT_FOUND, ex.getLocalizedMessage());
 
         return new ResponseEntity<>(errorModel, new HttpHeaders(), errorModel.getStatus());
     }
 
     @ExceptionHandler({ConstraintViolationException.class})
-    public ResponseEntity<Object> handleConstraintViolation(final ConstraintViolationException ex,
-                                                            final WebRequest request) {
+    public ResponseEntity<Object> handleConstraintViolation(final ConstraintViolationException ex) {
         List<ErrorInfo> errors = new ArrayList<>();
         for (ConstraintViolation<?> violation : ex.getConstraintViolations()) {
             Path propertyPath = violation.getPropertyPath();
@@ -202,7 +199,7 @@ public class CustomRestExceptionHandler extends ResponseEntityExceptionHandler {
 
     // 500
     @ExceptionHandler({Exception.class})
-    public ResponseEntity<Object> handleAll(final Exception ex, final WebRequest request) {
+    public ResponseEntity<Object> handleAll(final Exception ex) {
         String msg = "☠ Something went wrong ☠";
         logError(msg, ex);
 
@@ -275,7 +272,7 @@ public class CustomRestExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(EmptyResultDataAccessException.class)
-    public ResponseEntity<Object> emptyResultDataExceptionsHandler(final EmptyResultDataAccessException ex) {
+    public ResponseEntity<Object> emptyResultDataExceptionsHandler() {
         ApiErrorModel errorModel = new ApiErrorModel(NO_CONTENT, "No Content");
 
         return new ResponseEntity<>(errorModel, new HttpHeaders(), errorModel.getStatus());
@@ -290,7 +287,7 @@ public class CustomRestExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(MaxUploadSizeExceededException.class)
-    public ResponseEntity<Object> maxSizeExceptionHandler(final MaxUploadSizeExceededException ex) {
+    public ResponseEntity<Object> maxSizeExceptionHandler() {
         String maxUploadSize = environment.getRequiredProperty("spring.servlet.multipart.max-file-size");
 
         String message = "Maximum upload size exceeded, configured maximum: " + maxUploadSize;

@@ -42,7 +42,16 @@ public class BaseReadDao {
 
     public Optional<IRecord> findBy(ResourceQualifier qualifier,
                                     String ecqlFilter) {
-        return findBy(qualifier, ecqlFilter, new RecordRowMapper(null));
+        String query = String.format("SELECT * FROM %s %s",
+                                     qualifier.getTableQualifier(), buildWhereSection(ecqlFilter));
+
+        log.debug("Find one by filter: [{}]", query);
+        List<IRecord> records = pJdbcTemplate.getJdbcTemplate()
+                                             .query(query, new RecordRowMapper(null));
+
+        return records.isEmpty()
+                ? Optional.empty()
+                : Optional.of(records.get(0));
     }
 
     public IRecord getById(ResourceQualifier qualifier,
@@ -152,20 +161,5 @@ public class BaseReadDao {
         log.debug("Query find all with filter: [{}]", query);
 
         return pJdbcTemplate.query(query, rowMapper);
-    }
-
-    private <T> Optional<T> findBy(ResourceQualifier qualifier,
-                                   String ecqlFilter,
-                                   RowMapper<T> rowMapper) {
-        String query = String.format("SELECT * FROM %s %s",
-                                     qualifier.getTableQualifier(), buildWhereSection(ecqlFilter));
-        log.debug("Find one by filter: [{}]", query);
-
-        List<T> records = pJdbcTemplate.getJdbcTemplate()
-                                       .query(query, rowMapper);
-
-        return records.isEmpty()
-                ? Optional.empty()
-                : Optional.of(records.get(0));
     }
 }

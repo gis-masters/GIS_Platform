@@ -49,8 +49,6 @@ public class RasterLayerHandler implements ILayerHandler {
 
     @Override
     public Optional<Layer> create(Project project, LayerCreateDto dto) {
-        String mode = getMode(dto);
-
         String storeName = dto.getDataset();
         String workspaceName = null;
 

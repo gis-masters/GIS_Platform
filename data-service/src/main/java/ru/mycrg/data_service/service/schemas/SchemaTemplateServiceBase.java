@@ -31,7 +31,7 @@ public class SchemaTemplateServiceBase implements ISchemaTemplateService {
 
     @Override
     public List<SchemaDto> getSchemas(@Nullable List<String> featureNames) {
-        return (featureNames == null || featureNames.isEmpty())
+        return featureNames == null || featureNames.isEmpty()
                 ? schemaRepository.findAll().stream()
                                   .map(SchemaEntityMapper::mapToDto)
                                   .filter(Objects::nonNull)

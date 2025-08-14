@@ -5,12 +5,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StopWatch;
+import ru.mycrg.common_contracts.generated.data_service.TaskLogDto;
 import ru.mycrg.data_service.dao.config.DatasourceFactory;
 import ru.mycrg.data_service.dao.detached.KptImportDao;
 import ru.mycrg.data_service.dao.detached.TaskLogDetachedDao;
 import ru.mycrg.data_service.dao.detached.TasksDetachedDao;
 import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
-import ru.mycrg.common_contracts.generated.data_service.TaskLogDto;
 import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.kpt_import.TmpTablesService;
 import ru.mycrg.data_service.kpt_import.model.*;
@@ -51,6 +51,7 @@ import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
+import static ru.mycrg.data_service.config.CrgCommonConfig.SYSTEM_USER_ID;
 import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_NAME;
 import static ru.mycrg.data_service.kpt_import.KptImportUtils.DS_ID;
 import static ru.mycrg.data_service.kpt_import.KptImportUtils.tmbTableName;
@@ -73,7 +74,6 @@ import static ru.mycrg.data_service.util.KptZipUtil.extractXmlReport;
 import static ru.mycrg.data_service.util.SystemLibraryAttributes.CREATED_AT;
 import static ru.mycrg.data_service.util.SystemLibraryAttributes.CREATED_BY;
 import static ru.mycrg.data_service_contract.enums.TaskStatus.*;
-import static ru.mycrg.data_service.config.CrgCommonConfig.SYSTEM_USER_ID;
 
 /**
  * Обработчик запроса на импорт КПТ из XML
@@ -516,7 +516,7 @@ public class ImportKptHandler implements IEventHandler {
 
         Set<String> excludedValues = Set.of("area", "lenght", targetTableQualifier.getPrimaryKeyName());
         List<SimplePropertyDto> properties = schema.getProperties().stream()
-                                                   .filter(prop -> !excludedValues.contains((prop.getName())))
+                                                   .filter(prop -> !excludedValues.contains(prop.getName()))
                                                    .collect(Collectors.toList());
 
         kptImportDao.deleteAllByDocumentTitle(dbName, targetTableQualifier, documentTitle);

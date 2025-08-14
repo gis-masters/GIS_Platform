@@ -298,7 +298,7 @@ public class GmlPlacementExecutor implements IExecutor<ImportReport>, IFilePlace
                     .build();
 
             Map<String, Object> result = (Map<String, Object>) httpClient.handleRequest(request).getBody();
-            Long id = Double.valueOf(result.get("id").toString()).longValue();
+            Long id = (long) Double.parseDouble(result.get("id").toString());
 
             return Optional.of(id);
         } catch (Exception e) {

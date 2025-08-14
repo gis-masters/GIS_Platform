@@ -14,7 +14,7 @@ public class ExportResourceModel {
         // Framework required
     }
 
-    public ExportResourceModel(String dataset, String table, String schemaId) {
+    public ExportResourceModel(String dataset, String table) {
         this.dataset = dataset;
         this.table = table;
     }

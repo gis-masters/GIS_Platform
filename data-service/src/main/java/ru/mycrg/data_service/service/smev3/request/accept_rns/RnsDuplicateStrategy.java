@@ -38,9 +38,9 @@ public class RnsDuplicateStrategy implements IRnsRequestDocumentCreator {
         addText(document, " (для юридического лица - наименование", ParagraphAlignment.LEFT, 3875, 5, 12);
         addText(document, "юридического лица,", ParagraphAlignment.LEFT, 3875, 5, 12);
         if (dataProvider.getOrgInn(request).equals("")
-                && (dataProvider.getOrgOgrn(request).equals("")
-                && (dataProvider.getOrgRegAddress(request).equals("")
-                && dataProvider.getOrgPostAddress(request).equals("")))) {
+                && dataProvider.getOrgOgrn(request).equals("")
+                && dataProvider.getOrgRegAddress(request).equals("")
+                && dataProvider.getOrgPostAddress(request).equals("")) {
             addText(document, "____________________________________________", ParagraphAlignment.LEFT, 3875, 5, 12);
         } else {
             addTextWithUnderline(document,

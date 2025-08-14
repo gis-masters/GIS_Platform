@@ -1,8 +1,6 @@
 package ru.mycrg.data_service.service.smev3.request.receipt_rnv;
 
 import org.jetbrains.annotations.NotNull;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import ru.mycrg.data_service.dto.smev3.ReceiptRnvRequestDto;
 import ru.mycrg.data_service.exceptions.SmevRequestException;
 import ru.mycrg.data_service.receipt_rnv_1_0_9.ReceiptExploitationType;
@@ -16,7 +14,6 @@ import ru.mycrg.data_service.util.xml.XmlMapper;
 import static java.util.Optional.ofNullable;
 
 public class ReceiptRnvXmlBuildProcessor extends AXmlBuildProcessor {
-    private final Logger log = LoggerFactory.getLogger(ReceiptRnvXmlBuildProcessor.class);
 
     public ReceiptRnvXmlBuildProcessor(RequestProcessor requestProcessor) {
         super(requestProcessor);

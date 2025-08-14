@@ -291,7 +291,7 @@ public class SystemAttributeHandler {
         } else {
             Object fileType = content.get(FILE_TYPE.getName());
 
-            return (nonNull(fileType) && !fileType.toString().isEmpty())
+            return nonNull(fileType) && !fileType.toString().isEmpty()
                     ? String.format("%s.%s", "unknown", fileType)
                     : "unknown";
         }

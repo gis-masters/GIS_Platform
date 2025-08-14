@@ -35,7 +35,7 @@ public class TypeMapper {
                 if (scale == null) {
                     return Optional.of(ValueType.INT);
                 } else {
-                    return (scale <= 0) ? Optional.of(ValueType.INT) : Optional.of(ValueType.DOUBLE);
+                    return scale <= 0 ? Optional.of(ValueType.INT) : Optional.of(ValueType.DOUBLE);
                 }
             case "int8":
             case "int4":

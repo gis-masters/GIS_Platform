@@ -7,8 +7,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 import ru.mycrg.schemas.IEntityProperty;
-import ru.mycrg.schemas.properties.PropertyInt;
-import ru.mycrg.schemas.properties.PropertyString;
 
 @Component
 public class EntityPropertyValidator implements Validator {
@@ -26,18 +24,6 @@ public class EntityPropertyValidator implements Validator {
             final IEntityProperty property = (IEntityProperty) obj;
 
             validateBase(property, errors);
-
-            switch (property.getPropertyType()) {
-                case STRING:
-                    validateAsString(property, errors);
-                    break;
-                case INT:
-                    validateAsInt(property, errors);
-                    break;
-                default:
-                    log.warn("Unsupported entityProperty type: {}", property.getPropertyType());
-                    break;
-            }
         } catch (Exception e) {
             log.error("Failed to validate entity property. Reason: {}", e.getMessage());
 
@@ -58,17 +44,5 @@ public class EntityPropertyValidator implements Validator {
         if (property.getPropertyType() == null) {
             errors.rejectValue("propertyType", "required", "Обязательно к заполнению");
         }
-    }
-
-    private void validateAsString(IEntityProperty property, Errors errors) {
-        final PropertyString sProperty = (PropertyString) property;
-
-        // errors.rejectValue("name", "value.negative.fiz", "not valid string!");
-    }
-
-    private void validateAsInt(IEntityProperty property, Errors errors) {
-        final PropertyInt iProperty = (PropertyInt) property;
-
-        // errors.rejectValue("name", "value.negative.fiz", "not valid int!");
     }
 }

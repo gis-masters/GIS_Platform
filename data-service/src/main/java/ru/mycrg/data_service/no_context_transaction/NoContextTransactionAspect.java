@@ -39,6 +39,7 @@ public class NoContextTransactionAspect {
                 });
     }
 
+    @SuppressWarnings("PMD.UnusedFormalParameter")
     @AfterReturning(value = "@annotation(ru.mycrg.data_service.no_context_transaction.NoContextTransaction)",
                     returning = "f")
     void after(JoinPoint joinPoint, Object f) {
@@ -47,6 +48,7 @@ public class NoContextTransactionAspect {
         }
     }
 
+    @SuppressWarnings("PMD.UnusedFormalParameter")
     @AfterThrowing(value = "@annotation(ru.mycrg.data_service.no_context_transaction.NoContextTransaction)",
                    throwing = "ex")
     void throwing(JoinPoint joinPoint, Exception ex) {

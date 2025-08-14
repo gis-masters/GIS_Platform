@@ -13,7 +13,6 @@ import ru.mycrg.http_client.ResponseModel;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -66,11 +65,11 @@ public class DataServiceBasemapsClient {
         basemapsToConvert.forEach(baseMap -> {
             BaseMapCreateDto dto = new BaseMapCreateDto();
             if (baseMap.containsKey("id")) {
-                dto.setBaseMapId(Double.valueOf(baseMap.get("id").toString()).longValue());
+                dto.setBaseMapId((long) Double.parseDouble(baseMap.get("id").toString()));
             }
 
             if (baseMap.containsKey("position")) {
-                dto.setPosition(Double.valueOf(baseMap.get("position").toString()).intValue());
+                dto.setPosition((int) Double.parseDouble(baseMap.get("position").toString()));
             }
 
             if (baseMap.containsKey("title")) {

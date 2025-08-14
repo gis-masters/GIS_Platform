@@ -1,7 +1,5 @@
 package ru.mycrg.data_service.service.smev3.request.get_cadastrial_plan;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import ru.mycrg.data_service.egrn_cadastrial_plans_1_1_2.*;
 import ru.mycrg.data_service.exceptions.SmevRequestException;
 import ru.mycrg.data_service.service.smev3.model.RequestAndSources;
@@ -14,7 +12,6 @@ import static ru.mycrg.data_service.service.smev3.model.SmevRequestConst.CRIMEA_
 
 
 public class GetCadastrialPlanXmlBuildProcessor extends AXmlBuildProcessor {
-    private final Logger log = LoggerFactory.getLogger(GetCadastrialPlanXmlBuildProcessor.class);
 
     public GetCadastrialPlanXmlBuildProcessor(RequestProcessor requestProcessor) {
         super(requestProcessor);

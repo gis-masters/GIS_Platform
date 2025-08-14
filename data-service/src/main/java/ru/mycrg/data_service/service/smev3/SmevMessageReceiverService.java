@@ -100,7 +100,7 @@ public class SmevMessageReceiverService {
             var messageEntity = replyToClientId(message)
                     .map(messageService::getByClientId)
                     .orElseThrow(() -> new SmevRequestException("Не удалось найти исходное сообщение"));
-            if (!body.contains("<replyToClientId>") && (body.contains("RRTR02_3S"))) {
+            if (!body.contains("<replyToClientId>") && body.contains("RRTR02_3S")) {
                 String closingTag = "</clientId>";
                 int closingTabIndex = body.indexOf(closingTag) + closingTag.length();
                 String clientId = messageEntity.getClientId().toString();

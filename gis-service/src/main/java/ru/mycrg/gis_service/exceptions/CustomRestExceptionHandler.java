@@ -164,8 +164,7 @@ public class CustomRestExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler({ConstraintViolationException.class})
-    public ResponseEntity<Object> handleConstraintViolation(final ConstraintViolationException ex,
-                                                            final WebRequest request) {
+    public ResponseEntity<Object> handleConstraintViolation(final ConstraintViolationException ex) {
         final List<ErrorInfo> errors = new ArrayList<>();
         for (final ConstraintViolation<?> violation: ex.getConstraintViolations()) {
             errors.add(new ErrorInfo(violation.getRootBeanClass().getName(), violation.getMessage()));
@@ -178,7 +177,7 @@ public class CustomRestExceptionHandler extends ResponseEntityExceptionHandler {
 
     // 500
     @ExceptionHandler({Exception.class})
-    public ResponseEntity<Object> handleAll(final Exception ex, final WebRequest request) {
+    public ResponseEntity<Object> handleAll(final Exception ex) {
         final ApiErrorModel errorModel = new ApiErrorModel(INTERNAL_SERVER_ERROR,
                                                            "Shit happens: " + ex.getMessage());
 

@@ -91,7 +91,7 @@ public class SqlBuilder {
                                                           String ecqlFilter,
                                                           @Nullable RegistryData registryData,
                                                           @Nullable Pageable pageable) {
-        String patchedFilter = (ecqlFilter != null && ecqlFilter.toLowerCase().contains(IS_DELETED.getName()))
+        String patchedFilter = ecqlFilter != null && ecqlFilter.toLowerCase().contains(IS_DELETED.getName())
                 ? ecqlFilter
                 : addAsEqual(ecqlFilter, IS_DELETED.getName(), "false");
 
@@ -691,8 +691,7 @@ public class SqlBuilder {
         // Но особо уменьшать лимит не имеет смысла, гораздо важнее сокращать список слов.
         int limit = generateLimit(words);
 
-        String query = "" +
-                "SELECT :searchedText OPERATOR (public.<<<->) subquery.concatenated_data as dist, " +
+        return "SELECT :searchedText OPERATOR (public.<<<->) subquery.concatenated_data as dist, " +
                 "       subquery.schema, " +
                 "       subquery.table, " +
                 "       subquery.id, " +
@@ -710,8 +709,6 @@ public class SqlBuilder {
                 "       ORDER BY _rank_ DESC, d.id LIMIT " + limit +
                 "     ) AS subquery " +
                 "ORDER BY dist ";
-
-        return query;
     }
 
     private static String buildFtsWhere(String ecqlFilter) {

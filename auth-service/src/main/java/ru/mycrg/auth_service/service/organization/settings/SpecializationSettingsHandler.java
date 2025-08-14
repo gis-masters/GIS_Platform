@@ -26,7 +26,7 @@ public class SpecializationSettingsHandler {
         }
 
         // Tags
-        result.put("tags", (settings.getTags() != null && !settings.getTags().isEmpty())
+        result.put("tags", settings.getTags() != null && !settings.getTags().isEmpty()
                 ? settings.getTags()
                 : "[]");
 
@@ -37,7 +37,7 @@ public class SpecializationSettingsHandler {
 
         // favorites_epsg
         result.put("favorites_epsg",
-                   (settings.getFavoritesEpsg() != null && !settings.getFavoritesEpsg().isEmpty())
+                   settings.getFavoritesEpsg() != null && !settings.getFavoritesEpsg().isEmpty()
                            ? settings.getFavoritesEpsg()
                            : List.of(DEFAULT_FAVORITES_EPSG));
 
