@@ -12,6 +12,7 @@ import { LoggerModule, NgxLoggerLevel } from 'ngx-logger';
 
 import { AppRoutingModule, routingComponents } from './app-routing.module';
 import { AttributesNgComponent } from './components/attributes-ng/attributes-ng.component';
+import { AttributionComponent } from './components/attribution/attribution.component';
 import { BasemapsSelectComponent } from './components/basemaps-select/basemaps-select.component';
 import { ChangePasswordFormComponent } from './components/change-password-form/change-password-form.component';
 import { DataImportComponent } from './components/data-import/data-import.component';
@@ -113,6 +114,7 @@ import { GlobalErrorHandler } from './services/global-error.handler';
     EditFeatureGeometryComponent,
     OrgAdminComponent,
     BasemapsSelectComponent,
+    AttributionComponent,
     DataManagementComponent,
     LogoNgComponent,
     MapToolbarComponent,

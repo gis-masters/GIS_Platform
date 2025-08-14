@@ -1,0 +1,18 @@
+body .Attribution {
+  position: absolute;
+  z-index: 3;
+  right: 72px;
+  bottom: 4px;
+
+  padding: 3px;
+
+  color: darkgrey;
+
+  font-family: system-ui;
+  font-size: small;
+  font-weight: 600;
+
+  &-Link {
+    color: darkgrey;
+  }
+}

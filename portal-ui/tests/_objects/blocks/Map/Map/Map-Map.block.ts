@@ -8,7 +8,8 @@ class MapMapBlock extends Block {
     toolbar: '.MapToolbar',
     basemap: '.BasemapsSelect',
     zoom: '.ol-zoom',
-    sidebarOpenBtn: '.LayersSidebar-Open'
+    sidebarOpenBtn: '.LayersSidebar-Open',
+    attribution: '.Attribution'
   };
 
   async assertSelfie(tag?: string, checkElementOptions?: WdioCheckElementMethodOptions): Promise<void> {
@@ -18,6 +19,7 @@ class MapMapBlock extends Block {
         await this.$('basemap'),
         await this.$('zoom'),
         await this.$('sidebarOpenBtn'),
+        await this.$('attribution'),
         ...(checkElementOptions?.hideElements || [])
       ],
       ...checkElementOptions

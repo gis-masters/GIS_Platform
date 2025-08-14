@@ -24,6 +24,10 @@ echo -e "{\
 \"registration\":\"$UI_REGISTRATION\",\
 \"background\":\"$UI_BACKGROUND\",\
 \"production\":$UI_PROD,\
+\"attribution\":{\
+  \"url\":\"$UI_ATTRIBUTION_URL\",\
+  \"title\":\"$UI_ATTRIBUTION_TITLE\"\
+},\
 \"server\":{\
   \"host\":\"$UI_SERVER_HOST\",\
   \"port\":\"$UI_SERVER_PORT\",\

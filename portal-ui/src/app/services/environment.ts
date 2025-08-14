@@ -13,6 +13,11 @@ interface EnvironmentServer {
   protocol: string;
 }
 
+interface EnvironmentAttribution {
+  url?: string;
+  title?: string;
+}
+
 interface ProtocolsBoolean {
   http: boolean;
   https: boolean;
@@ -21,6 +26,7 @@ interface ProtocolsBoolean {
 const emptyEnv: EnvironmentData = {
   platform: 'simf',
   production: true,
+  attribution: {},
   server: {
     host: '',
     path: '',
@@ -47,6 +53,7 @@ export interface EnvironmentData {
   platform: Platform;
   production: boolean;
   server: EnvironmentServer;
+  attribution: EnvironmentAttribution;
   scratchWorkspaceName: string;
   flags?: FlagsList;
   logo?: string;
@@ -75,6 +82,7 @@ export class Environment implements EnvironmentData {
   platform: Platform = emptyEnv.platform;
   production: boolean = emptyEnv.production;
   server: EnvironmentServer = emptyEnv.server;
+  attribution: EnvironmentAttribution = emptyEnv.attribution;
   scratchWorkspaceName: string = emptyEnv.scratchWorkspaceName;
   flags?: FlagsList;
   logo?: string;
