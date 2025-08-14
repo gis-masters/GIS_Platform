@@ -19,7 +19,7 @@ export interface Projection extends SpatialReferenceSystem {
   proj4Str?: string;
 }
 
-export interface CreateProjectionModel {
+export interface EditProjectionModel {
   srtext: string;
   proj4Text: string;
 }

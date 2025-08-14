@@ -28,6 +28,13 @@ export interface Dataset extends DataEntity {
   type: DataEntityType.DATASET;
 }
 
+export interface TablesData {
+  datasetIdentifier: string;
+  datasetTitle: string;
+  tableName: string;
+  tableTitle: string;
+}
+
 export type NewDataset = Pick<Dataset, 'title' | 'details'>;
 
 export interface VectorTable extends DataEntity {

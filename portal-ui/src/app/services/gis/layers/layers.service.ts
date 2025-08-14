@@ -22,11 +22,22 @@ import { SupportedGeometryType, supportedGeometryTypes } from '../../geoserver/w
 import { services } from '../../services';
 import { CrgProject } from '../projects/projects.models';
 import { layersClient } from './layers.client';
-import { CrgLayer, CrgLayersGroup, CrgLayerType, CrgRasterLayer, NewCrgLayer } from './layers.models';
+import {
+  CrgLayer,
+  CrgLayersGroup,
+  CrgLayerType,
+  CrgRasterLayer,
+  NewCrgLayer,
+  RelatedVectorLayers
+} from './layers.models';
 import { isLayerFromFile, isVectorFromFile } from './layers.utils';
 
 export async function getLayers(projectId: number): Promise<CrgLayer[]> {
   return await layersClient.getLayers(projectId);
+}
+
+export async function getRelatedLayers(field: string, value: string): Promise<RelatedVectorLayers[]> {
+  return await layersClient.getRelatedLayers(field, value);
 }
 
 export async function createLayer(newLayer: NewCrgLayer, projectId: number): Promise<CrgLayer> {

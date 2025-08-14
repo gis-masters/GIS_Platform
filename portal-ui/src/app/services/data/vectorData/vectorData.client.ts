@@ -12,6 +12,7 @@ import {
   NewDataset,
   NewVectorTable,
   RawVectorTable,
+  TablesData,
   VectorTable,
   VectorTableConnection
 } from './vectorData.models';
@@ -44,6 +45,10 @@ class VectorDataClient extends DataClient {
 
   async getDataset(identifier: string): Promise<Dataset> {
     return http.get<Dataset>(this.getDatasetUrl(identifier));
+  }
+
+  async getTablesBySrid(srid: number): Promise<TablesData[]> {
+    return http.get<TablesData[]>(this.getDatasetTablesBySridUrl(), { params: { srid } });
   }
 
   async getDatasets(pageOptions: PageOptions): Promise<PageableResources<Dataset>> {

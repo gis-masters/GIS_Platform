@@ -5,12 +5,23 @@ import { PageOptions } from '../../models';
 import { Schema } from '../schema/schema.models';
 import { convertNewToOldSchema, convertOldToNewSchema } from '../schema/schema.utils';
 import { vectorDataClient } from './vectorData.client';
-import { Dataset, NewDataset, NewVectorTable, VectorTable, VectorTableConnection } from './vectorData.models';
+import {
+  Dataset,
+  NewDataset,
+  NewVectorTable,
+  TablesData,
+  VectorTable,
+  VectorTableConnection
+} from './vectorData.models';
 
 // dataset
 
 export function getDataset(identifier: string): Promise<Dataset> {
   return vectorDataClient.getDataset(identifier);
+}
+
+export function getTablesBySrid(srid: number): Promise<TablesData[]> {
+  return vectorDataClient.getTablesBySrid(srid);
 }
 
 export async function getDatasets(pageOptions: PageOptions): Promise<[Dataset[], number]> {

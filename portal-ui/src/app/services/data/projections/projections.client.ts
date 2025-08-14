@@ -5,7 +5,7 @@ import { Client } from '../../api/Client';
 import { http } from '../../api/http.service';
 import { preparePageOptions } from '../../api/http.utils';
 import { PageOptions } from '../../models';
-import { CreateProjectionModel } from './projections.models';
+import { EditProjectionModel } from './projections.models';
 
 @boundClass
 class ProjectionsClient extends Client {
@@ -24,8 +24,16 @@ class ProjectionsClient extends Client {
     return await http.get<PageableResources<SpatialReferenceSystem>>(this.getProjectionUrl(), { params });
   }
 
-  async createCustomProjection(projection: CreateProjectionModel): Promise<SpatialReferenceSystem> {
+  async createCustomProjection(projection: EditProjectionModel): Promise<SpatialReferenceSystem> {
     return await http.post(this.getProjectionUrl(), projection);
+  }
+
+  async deleteProjection(authSrid: number): Promise<void> {
+    return await http.delete(`${this.getProjectionUrl()}/${authSrid}`);
+  }
+
+  async updateProjection(authSrid: number, projection: EditProjectionModel): Promise<SpatialReferenceSystem> {
+    return await http.patch(`${this.getProjectionUrl()}/${authSrid}`, projection);
   }
 }
 

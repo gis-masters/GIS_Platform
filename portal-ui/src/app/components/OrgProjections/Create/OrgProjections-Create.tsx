@@ -5,7 +5,7 @@ import { Tooltip } from '@mui/material';
 import { Add } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
-import { CreateProjection } from '../../CreateProjection/CreateProjection';
+import { EditProjectionDialog } from '../../EditProjectionDialog/EditProjectionDialog';
 import { IconButton } from '../../IconButton/IconButton';
 
 const cnOrgProjectionsCreate = cn('OrgProjections', 'Create');
@@ -28,7 +28,7 @@ export class OrgProjectionsCreate extends Component {
           </IconButton>
         </Tooltip>
 
-        <CreateProjection open={this.dialogOpen} onClose={this.closeDialog} />
+        <EditProjectionDialog open={this.dialogOpen} onClose={this.closeDialog} />
       </>
     );
   }

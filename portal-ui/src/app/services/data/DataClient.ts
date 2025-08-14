@@ -4,8 +4,13 @@ export abstract class DataClient extends Client {
   protected getDatasetsUrl(): string {
     return `${this.getDataUrl()}/datasets`;
   }
+
   protected getDatasetUrl(datasetIdentifier: string): string {
     return `${this.getDatasetsUrl()}/${datasetIdentifier}`;
+  }
+
+  protected getDatasetTablesBySridUrl(): string {
+    return `${this.getDatasetsUrl()}/getTablesBySrid`;
   }
 
   protected getVectorTablesUrl(datasetIdentifier: string): string {

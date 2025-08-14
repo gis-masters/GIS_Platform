@@ -55,6 +55,7 @@ class CommunicationService {
   libraryUpdated = new Emitter<DataChangeEventDetail<Library>>();
   libraryRecordUpdated = new Emitter<DataChangeEventDetail<LibraryRecord>>();
   permissionsUpdated = new Emitter();
+  projectionUpdated = new Emitter();
   projectUpdated = new Emitter<DataChangeEventDetail<CrgProject>>();
   schemaUpdated = new Emitter<DataChangeEventDetail<Schema>>();
   vectorTableUpdated = new Emitter<DataChangeEventDetail<VectorTable>>();

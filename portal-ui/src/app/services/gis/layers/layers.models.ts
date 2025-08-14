@@ -1,6 +1,7 @@
 import { SelectProjectionCodeControl } from '../../../components/SelectProjectionCodeControl/SelectProjectionCodeControl';
 import { FilePlacementMode } from '../../data/file-placement/file-placement.models';
 import { PropertyType, SimpleSchema } from '../../data/schema/schema.models';
+import { CrgProject } from '../projects/projects.models';
 
 export enum CrgLayerType {
   VECTOR = 'vector',
@@ -76,6 +77,11 @@ export interface CrgVectorableLayer extends CrgBaseLayer {
 export interface CrgExternalLayer extends CrgBaseLayer {
   type: CrgLayerType.EXTERNAL | CrgLayerType.EXTERNAL_GEOSERVER | CrgLayerType.EXTERNAL_NSPD;
   dataSourceUri: string;
+}
+
+export interface RelatedVectorLayers {
+  layer: CrgVectorLayer;
+  project: CrgProject;
 }
 
 export type CrgLayer = Partial<

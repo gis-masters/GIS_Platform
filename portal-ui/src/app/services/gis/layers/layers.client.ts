@@ -2,7 +2,7 @@ import { boundClass } from 'autobind-decorator';
 
 import { Client } from '../../api/Client';
 import { http } from '../../api/http.service';
-import { CrgLayer, CrgRasterLayer, NewCrgLayer } from './layers.models';
+import { CrgLayer, CrgRasterLayer, NewCrgLayer, RelatedVectorLayers } from './layers.models';
 
 @boundClass
 class LayersClient extends Client {
@@ -15,6 +15,10 @@ class LayersClient extends Client {
     return this.getProjectUrl(projectId) + '/layers';
   }
 
+  private getRelatedLayersUrl(): string {
+    return this.getProjectsUrl() + '/find-related-layers';
+  }
+
   private getProjectLayerUrl(projectId: number, layerId: number): string {
     return `${this.getProjectUrl(projectId)}/layers/${layerId}`;
   }
@@ -25,6 +29,10 @@ class LayersClient extends Client {
 
   async getLayers(projectId: number): Promise<CrgLayer[]> {
     return http.get<CrgLayer[]>(this.getProjectLayersUrl(projectId));
+  }
+
+  async getRelatedLayers(field: string, value: string): Promise<RelatedVectorLayers[]> {
+    return http.get<RelatedVectorLayers[]>(this.getRelatedLayersUrl(), { params: { field, value } });
   }
 
   async createLayer(newLayer: NewCrgLayer | CrgRasterLayer, projectId: number): Promise<CrgLayer> {
