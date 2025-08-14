@@ -22,26 +22,30 @@ services:
 
       DISABLE_CORS: true
       USE_DEFAULT_CREDENTIALS: true
-    mem_limit: ${GEOSERVER_MEM_LIMIT:-21000}m
+    mem_limit: ${GEOSERVER_MEM_LIMIT:-51000}m
 
   postgis:
     container_name: postgis
-    image: ${DOCKER_CRG_HOST}/postgis:${POSTGIS_TAG}
-    shm_size: ${SHM_SIZE:-2g}
-    labels:
-      co.elastic.metrics/raw: "[{\"enabled\":true,\"metricsets\":[\"database\",\"bgwriter\",\"activity\",\"statement\"],\"module\":\"postgresql\",\"hosts\":[\"postgres://localhost:5434/crg_auth_service?sslmode=disable\"],\"username\":\"$CRG_USER\",\"password\":\"$DB_PASS\"}]"
+    image: ${DOCKER_CRG_HOST}/postgis_crg:${POSTGIS_TAG}
     restart: always
     ports:
       - "5434:5432"
     volumes:
-      - /opt/crg/data/postgis:/var/lib/postgresql
-      - /opt/crg/data/configs/db/extra.conf:/settings/extra.conf
+      - /opt/crg/data/postgis:/var/lib/postgresql/data
     environment:
-      POSTGRES_DBNAME: crg_notification_db,crg_auth_service,crg_gis_service,crg_data_service,geoserver_db,bpmn_camunda,crg_audit_service,gsstore,gscatalog
+      POSTGRES_DB: ${CRG_USER}
       POSTGRES_USER: ${CRG_USER}
-      POSTGRES_PASS: ${DB_PASS}
-      RECREATE_DATADIR: ${RECREATE_DATADIR}
-    mem_limit: ${POSTGIS_MEM_LIMIT:-2100}m
+      POSTGRES_PASSWORD: ${DB_PASS}
+      POSTGRES_DB_LIST: crg_notification_db,crg_auth_service,crg_gis_service,crg_data_service,geoserver_db,bpmn_camunda,crg_audit_service,gsstore,gscatalog
+    command:
+      - postgres
+      - -c
+      - shared_preload_libraries=pg_stat_statements
+      - -c
+      - max_connections=1000
+      - -c
+      - "shared_buffers=${PG_SHARED_BUFFERS:-5GB}"
+    mem_limit: ${POSTGIS_MEM_LIMIT:-10100}m
 
   rabbitmq:
     container_name: rabbitmq

@@ -10,10 +10,10 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 import ru.mycrg.data_service.dao.config.DatasourceFactory;
+import ru.mycrg.data_service.dto.GeometryProjection;
 import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.util.EpsgCodes;
-import ru.mycrg.data_service.dto.GeometryProjection;
 
 import static ru.mycrg.data_service.dao.config.DatasourceFactory.INITIAL_SCHEMA_NAME;
 
@@ -63,12 +63,13 @@ public class DdlDatabase {
             jdbcTemplate.execute(sql);
             jdbcTemplate.execute("GRANT ALL ON DATABASE " + dbName + " TO " + owner);
 
-            // Подсоединяемся к только что созданной БД и создаем расширение postgis
+            // Подсоединяемся к только что созданной БД и создаем расширения postgis и pg_stat_statements
             newDataSource = datasourceFactory.getNotPoolableDataSource(dbName, INITIAL_SCHEMA_NAME);
 
             JdbcTemplate newDbJdbcTemplate = new JdbcTemplate(newDataSource);
 
             newDbJdbcTemplate.execute("CREATE EXTENSION IF NOT EXISTS postgis");
+            newDbJdbcTemplate.execute("CREATE EXTENSION IF NOT EXISTS pg_stat_statements");
 
             // TODO: Кажется уже не надо учить БД этим проекциям
             GeometryProjection geometryProjection314314 = epsgCodes.getProjBySrid(314314);

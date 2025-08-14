@@ -87,6 +87,7 @@ public class CrgMigrationHandler {
 
             log.debug("====== Устанавливаем расширения ======");
             jdbcTemplate.execute("CREATE EXTENSION IF NOT EXISTS postgis");
+            jdbcTemplate.execute("CREATE EXTENSION IF NOT EXISTS pg_stat_statements");
             jdbcTemplate.execute("CREATE EXTENSION IF NOT EXISTS pg_trgm");
 
             log.debug("====== Создаем служебную схему '{}' ======", SYSTEM_SCHEMA_NAME);

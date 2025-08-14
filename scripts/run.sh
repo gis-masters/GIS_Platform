@@ -42,10 +42,6 @@ echo "#👻👻👻👻👻👻👻👻👻👻👻👻👻👻👻👻👻👻�
 ./migration-scripts/run.sh "${CRG_USER}" "${DB_PASS}" "${SECURITY_JWT_SECRET}"
 popd || exit
 
-printHeader "Copy database configs"
-mkdir -p /opt/crg/data/configs/db
-cp ../configs/db/extra.conf /opt/crg/data/configs/db/extra.conf
-
 printHeader "Docker compose UP"
 docker compose -f ../docker-compose.dev.yml \
 -f ../docker-compose.core.yml \
