@@ -40,6 +40,10 @@ class OrganizationsClient extends Client {
     return http.get<Organization>(this.getOrganizationUrl(orgId));
   }
 
+  async updateOrganization(orgId: number, data: Partial<Organization>): Promise<Organization> {
+    return http.patch<Organization>(this.getOrganizationUrl(orgId), data);
+  }
+
   async setOrganizationSettings(settings: CompositeSettings): Promise<void> {
     return http.patch(this.getOrganizationsSettingsUrl(), settings);
   }

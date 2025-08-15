@@ -1,0 +1,9 @@
+.OrganizationInfoStorageForm {
+  max-height: 100%;
+
+  & .Form-Content {
+    overflow: hidden auto;
+
+    max-height: calc(100% - 200px);
+  }
+}

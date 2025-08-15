@@ -147,6 +147,7 @@ export class OrgRegistrationForm extends Component {
           name: 'description',
           title: 'Описание',
           maxLength: 2000,
+          display: 'multiline',
           propertyType: PropertyType.STRING
         },
         {

@@ -45,6 +45,18 @@ class UsersService {
     await organizationsService.loadSettings();
   }
 
+  async updateUserOrgInfo() {
+    try {
+      const userInfo = await usersClient.getCurrentUser();
+
+      if (userInfo) {
+        currentUser.setOrgInfo(userInfo);
+      }
+    } catch {
+      currentUser.reset();
+    }
+  }
+
   async getAll(): Promise<CrgUser[]> {
     const rawUsers = await usersClient.getAllUsers();
 

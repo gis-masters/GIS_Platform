@@ -16,4 +16,7 @@ export interface Organization {
   settings: OrgSettings;
   groups: CrgGroup[];
   users: CrgUserRaw[];
+  description?: string;
 }
+
+export type OrganizationInformation = Pick<Organization, 'name' | 'phone' | 'description'>;
