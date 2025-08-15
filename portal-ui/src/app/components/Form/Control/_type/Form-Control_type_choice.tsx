@@ -46,15 +46,12 @@ class FormControlTypeChoice extends Component<FormControlProps> {
     const { options, name, display = 'select', defaultValue, multiple } = property;
     let fieldValue = this.props.fieldValue as string;
 
-    if ((display === 'select' && fieldValue === undefined) || fieldValue === null) {
+    // Устанавливаем начальное значение
+    if (display === 'select' && (fieldValue === undefined || fieldValue === null)) {
       fieldValue = multiple ? '' : EMPTY;
     }
 
     const value = multiple ? getMultipleChoiceValue(fieldValue) : fieldValue;
-
-    const valueCanBeDisplayed = !multiple && this.valueCanBeDisplayed(fieldValue);
-
-    const renderOptions = multiple ? options.filter(option => option.title !== emptyTitle) : options;
 
     return (
       <div className={cnFormControl({ fullWidthForOldForm, labelInField }, [className])}>
@@ -75,175 +72,165 @@ class FormControlTypeChoice extends Component<FormControlProps> {
               multiple={multiple}
               onChange={this.handleSelectChange}
               error={!!errors?.length}
-              inputProps={{
-                id: htmlId
-              }}
+              inputProps={{ id: htmlId }}
               renderValue={selected => {
                 if (multiple) {
-                  return this.renderValue(selected, value);
+                  const title = this.getMultipleTitle(options, selected);
+
+                  return title || <em>{emptyTitle}</em>;
                 }
 
-                return this.renderValue(selected) || <em>{valueCanBeDisplayed ? fieldValue : emptyTitle}</em>;
+                if (selected === EMPTY) {
+                  return <em>{emptyTitle}</em>;
+                }
+
+                const option = options.find(opt => String(opt.value) === String(selected));
+                if (option?.title) {
+                  return (
+                    <div className={cnFormChoiceRenderValue()}>
+                      {option.startIcon}
+                      <div className={cnFormChoiceRenderValueText()}>{option.title}</div>
+                      {option.endIcon}
+                    </div>
+                  );
+                }
+
+                return <em>{emptyTitle}</em>;
               }}
               variant={variant}
             >
-              {!this.isAllowedValues(options, !!multiple, value) &&
-                (Array.isArray(value) ? value.filter(item => !this.valueInOptions(item, options)) : [value]).map(
-                  (item, i) => {
-                    return (
-                      <MenuItem className={cnFormChoiceMenuItem()} key={i} value={item} color='#666'>
-                        {multiple && <Checkbox checked={value.includes(item)} />}
-                        <ListItemText>
-                          <em>{this.valueCanBeDisplayed(item) ? item : emptyTitle}</em>
-                        </ListItemText>
-                      </MenuItem>
-                    );
-                  }
-                )}
+              {/* Показываем "Не выбрано" только в одиночном режиме */}
+              {!multiple && (
+                <MenuItem className={cnFormChoiceMenuItem()} key='empty' value={EMPTY}>
+                  <ListItemText sx={{ fontStyle: 'italic', color: '#666' }}>{emptyTitle}</ListItemText>
+                </MenuItem>
+              )}
 
-              {renderOptions.map((item, i) => {
-                return (
-                  <MenuItem className={cnFormChoiceMenuItem()} key={i} value={item.value}>
-                    {multiple && <Checkbox checked={value.includes(item.value as string)} />}
-                    {item.startIcon}
-                    {<ListItemText>{item.title}</ListItemText>}
-                    {item.endIcon}
-                  </MenuItem>
-                );
-              })}
+              {/* Все опции */}
+              {options.map((item, i) => (
+                <MenuItem className={cnFormChoiceMenuItem()} key={i} value={item.value}>
+                  {multiple && <Checkbox checked={Array.isArray(value) && value.includes(item.value as string)} />}
+                  {item.startIcon}
+                  <ListItemText>{item.title}</ListItemText>
+                  {item.endIcon}
+                </MenuItem>
+              ))}
             </Select>
+
             <FormErrors errors={errors} />
           </>
         )}
+
         {display === 'buttongroup' && (
           <ToggleButtonGroup
             size='small'
             color='primary'
             value={fieldValue || defaultValue}
-            exclusive
+            exclusive={!multiple}
             onChange={this.handleChangeButtonToggle}
           >
-            {options.map((item, i) => {
-              return (
-                <ToggleButton size='small' key={i} value={item.value}>
-                  {item.title}
-                </ToggleButton>
-              );
-            })}
+            {!multiple && (
+              <ToggleButton size='small' value={EMPTY}>
+                {emptyTitle}
+              </ToggleButton>
+            )}
+            {options.map((item, i) => (
+              <ToggleButton size='small' key={i} value={item.value}>
+                {item.title}
+              </ToggleButton>
+            ))}
           </ToggleButtonGroup>
         )}
       </div>
     );
   }
 
-  private isAllowedValues(options: PropertyOption[], multiple: boolean, valueForSelect: string | string[]): boolean {
-    if (multiple && Array.isArray(valueForSelect)) {
-      return valueForSelect.every(item => this.valueInOptions(item, options));
-    }
-
-    return options.some(({ value }) => String(value) === String(valueForSelect));
-  }
-
-  private valueInOptions(value: string | number, options: PropertyOption[]): boolean {
-    return options.some(option => String(option.value) === String(value));
-  }
-
+  /**
+   * Рендерит выбранные значения в multiple режиме
+   */
   private getMultipleTitle(options: PropertyOption[], jsonValues: string | number | (string | number)[]): ReactNode {
-    if (typeof jsonValues === 'number') {
-      return [<em key={jsonValues}>{jsonValues}</em>];
-    }
-
     if (!jsonValues || jsonValues === '' || jsonValues === null || jsonValues === undefined) {
-      return <em>{emptyTitle}</em>;
+      return null;
     }
 
     let values: (string | number)[] | undefined = undefined;
 
     if (Array.isArray(jsonValues)) {
       values = jsonValues;
-    }
-
-    if (typeof jsonValues === 'string') {
+    } else if (typeof jsonValues === 'string') {
       try {
         values = JSON.parse(jsonValues) as string[];
       } catch {
-        //do nothing
+        return null;
       }
     }
 
-    if (values && !Array.isArray(values)) {
-      return [values];
+    if (!values || !Array.isArray(values)) {
+      return null;
     }
 
-    if (values !== null && Array.isArray(values)) {
-      const checkedOptions = options.filter(option => values?.includes(option.value as string));
-      const notInOptionsValues = values
-        .filter(value => options.every(option => option.value !== value))
-        .map((item, idx) => <em key={idx}>{item}</em>);
+    const checkedOptions = options.filter(option => values?.includes(option.value as string));
+    const titles = checkedOptions.map(option => option.title);
 
-      const titles = checkedOptions.map(option => option.title);
-
-      const titlesForRender = notInOptionsValues.length
-        ? [...notInOptionsValues, ...titles].filter(option => option !== emptyTitle)
-        : titles.filter(option => option !== emptyTitle);
-
-      if (!titlesForRender.length) {
-        return <em>{emptyTitle}</em>;
-      }
-
-      return (
-        <Box className={cnFormChoiceMenuItem({ type: 'selected' })}>
-          {titlesForRender.map((value, i) => (
-            <Chip key={i} label={value} />
-          ))}
-        </Box>
-      );
-    }
-  }
-
-  private renderValue(selected: string | string[] | number, value?: string | string[]) {
-    const { property } = this.props;
-    const { options, multiple } = property as PropertySchemaChoice;
-
-    if (multiple && value) {
-      return this.getMultipleTitle(options, value);
+    if (titles.length === 0) {
+      return null;
     }
 
-    const option = options.find(({ value }) => String(value) === String(selected));
-
-    if (option?.startIcon || option?.title || option?.endIcon) {
-      return (
-        <div className={cnFormChoiceRenderValue()}>
-          {option.startIcon} <div className={cnFormChoiceRenderValueText()}>{option.title}</div> {option.endIcon}
-        </div>
-      );
-    }
+    return (
+      <Box className={cnFormChoiceMenuItem({ type: 'selected' })}>
+        {titles.map((value, i) => (
+          <Chip key={i} label={value} size='small' />
+        ))}
+      </Box>
+    );
   }
 
   @boundMethod
   private handleSelectChange(event: SelectChangeEvent<number | string | string[]>) {
-    const { onChange, onNeedValidate, property } = this.props;
+    const { onChange, onNeedValidate, property, fieldValue } = this.props;
     const { multiple } = property as PropertySchemaChoice;
 
-    const value =
-      multiple && isStringArray(event.target.value)
-        ? JSON.stringify(event.target.value.filter(item => item !== EMPTY))
-        : event.target.value;
+    const nextValue = event.target.value;
 
-    onChange?.({ value, propertyName: property.name });
-    onNeedValidate?.({ value, propertyName: property.name });
+    // Конвертируем в финальное значение
+    let finalValue: string | null = null;
+
+    if (!multiple) {
+      finalValue = nextValue === EMPTY ? null : String(nextValue);
+    } else if (multiple && isStringArray(nextValue)) {
+      finalValue = nextValue.length === 0 ? null : JSON.stringify(nextValue);
+    }
+
+    // Нормализуем текущее значение
+    const normalizedCurrentValue = fieldValue == null || fieldValue === EMPTY ? null : String(fieldValue);
+
+    // 🔁 Не вызываем onChange, если значение не изменилось
+    if (normalizedCurrentValue === finalValue) {
+      return;
+    }
+
+    onChange?.({ value: finalValue, propertyName: property.name });
+    onNeedValidate?.({ value: finalValue, propertyName: property.name });
   }
 
   @boundMethod
   private handleChangeButtonToggle(event: React.MouseEvent<HTMLElement, MouseEvent>, value: string) {
-    const { onChange, onNeedValidate, property } = this.props;
+    const { onChange, onNeedValidate, property, fieldValue } = this.props;
+    const { multiple } = property as PropertySchemaChoice;
 
-    onChange?.({ value, propertyName: property.name });
-    onNeedValidate?.({ value, propertyName: property.name });
-  }
+    // Конвертируем EMPTY → null
+    const finalValue = !multiple && value === EMPTY ? null : value;
 
-  private valueCanBeDisplayed(value: string | number): boolean {
-    return value !== EMPTY && (typeof value === 'number' || typeof value === 'string');
+    // Нормализуем текущее значение
+    const normalizedCurrentValue = fieldValue == null || fieldValue === EMPTY ? null : String(fieldValue);
+
+    // 🔁 Не вызываем, если не изменилось
+    if (normalizedCurrentValue === finalValue) {
+      return;
+    }
+
+    onChange?.({ value: finalValue, propertyName: property.name });
+    onNeedValidate?.({ value: finalValue, propertyName: property.name });
   }
 }
 

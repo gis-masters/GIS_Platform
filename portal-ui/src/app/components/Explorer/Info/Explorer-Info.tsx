@@ -6,6 +6,7 @@ import { IClassNameProps } from '@bem-react/core';
 
 import { ExplorerActions } from '../Actions/Explorer-Actions';
 import { getDescription, getTitle } from '../Adapter/Explorer-Adapter';
+import { ExplorerItemType } from '../Explorer.models';
 import { ExplorerStore } from '../Explorer.store';
 import { ExplorerInfoContent } from '../InfoContent/Explorer-InfoContent';
 import { ExplorerInfoTitle } from '../InfoTitle/Explorer-InfoTitle';
@@ -24,7 +25,11 @@ export const ExplorerInfo: FC<ExplorerInfoProps> = observer(({ className, store 
   const { selectedItem } = store;
 
   return (
-    <Card className={cnExplorerInfo({}, [className])} elevation={3} square>
+    <Card
+      className={cnExplorerInfo({ empty: selectedItem.type === ExplorerItemType.NONE }, [className])}
+      elevation={3}
+      square
+    >
       <ExplorerInfoContent>
         <ExplorerInfoTitle>{getTitle(selectedItem, store)}</ExplorerInfoTitle>
         {getDescription(selectedItem, store)}

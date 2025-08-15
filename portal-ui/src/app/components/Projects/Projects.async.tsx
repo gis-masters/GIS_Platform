@@ -3,10 +3,12 @@ import { observer, useLocalObservable } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 
 import { projectsService } from '../../services/gis/projects/projects.service';
+import { services } from '../../services/services';
 import { allProjects } from '../../stores/AllProjects.store';
 import { currentProjectFolderStore, FOLDER_PARAM } from '../../stores/CurrentProjectFolder.store';
 import { Loading } from '../Loading/Loading';
 import { ProjectsContent } from './Content/ProjectsContent';
+import { ProjectsEmpty } from './Empty/ProjectsEmpty';
 import { ProjectsHeader } from './Header/Projects-Header';
 import { ProjectsList } from './List/Projects-List';
 import { ProjectsLoader } from './Loader/Projects-Loader';
@@ -35,28 +37,6 @@ const Projects: FC = observer(() => {
     })
   );
 
-  // Загрузка проектов для папки
-  const loadFolderProjects = useCallback(async (folderId: number) => {
-    try {
-      setBusy(true);
-      const folder = await projectsService.getById(folderId);
-
-      if (!folder) {
-        throw new Error('Folder not found');
-      }
-
-      currentProjectFolderStore.setCurrentFolder(folder);
-      const projects = await projectsService.getAllProjectsInFolder(folderId);
-      allProjects.setList(projects);
-    } catch (error) {
-      console.error('Error loading folder projects:', error);
-      currentProjectFolderStore.setCurrentFolder(null);
-      await loadRootProjects();
-    } finally {
-      setBusy(false);
-    }
-  }, []);
-
   // Загрузка корневых проектов
   const loadRootProjects = useCallback(async () => {
     try {
@@ -74,7 +54,34 @@ const Projects: FC = observer(() => {
     } finally {
       setBusy(false);
     }
-  }, []);
+  }, [setBusy]);
+
+  // Загрузка проектов для папки
+  const loadFolderProjects = useCallback(
+    async (folderId: number) => {
+      try {
+        setBusy(true);
+        const folder = await projectsService.getById(folderId);
+
+        if (!folder) {
+          services.logger.error('Folder not found');
+
+          return;
+        }
+
+        currentProjectFolderStore.setCurrentFolder(folder);
+        const projects = await projectsService.getAllProjectsInFolder(folderId);
+        allProjects.setList(projects);
+      } catch (error) {
+        console.error('Error loading folder projects:', error);
+        currentProjectFolderStore.setCurrentFolder(null);
+        await loadRootProjects();
+      } finally {
+        setBusy(false);
+      }
+    },
+    [loadRootProjects, setBusy]
+  );
 
   // Обработка изменений URL
   const handleUrlChange = useCallback(
@@ -123,16 +130,23 @@ const Projects: FC = observer(() => {
     void handleUrlChange(state);
 
     return () => observer.disconnect();
-  }, [handleUrlChange, loadFolderProjects, loadRootProjects]);
+  }, [handleUrlChange, loadFolderProjects, loadRootProjects, setBusy]);
+
+  const hasProjects = allProjects.displayedList.length > 0;
 
   return (
     <div className={cnProjects(null, ['scroll'])}>
       {allProjects.inited ? (
         <>
           <ProjectsHeader />
-          <ProjectsList>
-            <ProjectsContent projects={allProjects.displayedList} />
-          </ProjectsList>
+
+          {hasProjects ? (
+            <ProjectsList>
+              <ProjectsContent projects={allProjects.displayedList} />
+            </ProjectsList>
+          ) : (
+            <ProjectsEmpty />
+          )}
 
           <Loading visible={busy} />
         </>
