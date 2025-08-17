@@ -7,10 +7,11 @@
 printHeader "Down CRG GIS"
 
 docker compose -f ../docker-compose.dev.yml \
--f ../docker-compose.core.yml \
--f ../docker-compose.os.yml \
--f ../S3minio.yml \
--f ../gisogd-integration-sed.yml \
+-f ../coreApplication.yml \
+-f ../openSources.yml \
+-f ../monitoring.yml \
+-f ../S3MinioForTests.yml \
+-f ../gisogdIntegrationSed.yml \
 --env-file ../.env  down ||
   {
     echo '***** Failed stop containers *****'

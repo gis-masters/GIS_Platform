@@ -21,3 +21,19 @@ services:
       - "elasticsearch:${ELASTICSEARCH_HOST}"
       - "kibana:${KIBANA_HOST}"
     command:  metricbeat -e -strict.perms=false
+
+  pghero:
+    image: 10.10.10.165:5000/pghero_crg:3.7
+    container_name: pghero
+    restart: always
+    ports:
+      - "5435:8080"
+    environment:
+      PGHOST: postgis
+      PGPORT: 5432
+      PGUSER: ${CRG_USER}
+      PGPASSWORD: ${DB_PASS}
+      PGHERO_DB_LIST: ${PG_HERO_DATABASES_CONNECTION}
+      PGHERO_USERNAME: ${PG_HERO_UI}
+      PGHERO_PASSWORD: ${PG_HERO_UI}
+    mem_limit: 500m
