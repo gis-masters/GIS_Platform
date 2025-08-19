@@ -1,9 +1,6 @@
-import React, { Component } from 'react';
-import { action, makeObservable, observable } from 'mobx';
-import { observer } from 'mobx-react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { ButtonBase, Tooltip } from '@mui/material';
 import { IClassNameProps, withBemMod } from '@bem-react/core';
-import { boundMethod } from 'autobind-decorator';
 
 import { BreadcrumbsItemData } from '../../Breadcrumbs';
 import { BreadcrumbsItemProps, cnBreadcrumbsItem } from '../Breadcrumbs-Item.base';
@@ -13,51 +10,59 @@ interface BreadcrumbsItemTypeButtonProps extends IClassNameProps {
   onClick?(itemData: BreadcrumbsItemData['payload']): void;
 }
 
-@observer
-class ContainerComponent extends Component<BreadcrumbsItemProps> {
-  @observable private needTooltip = false;
+const ContainerComponent: React.FC<BreadcrumbsItemProps> = props => {
+  const { title, className, style, children, payload, onClick } = props;
 
-  constructor(props: BreadcrumbsItemProps) {
-    super(props);
-    makeObservable(this);
-  }
+  const [needTooltip, setNeedTooltip] = useState(false);
+  const buttonRef = useRef<HTMLButtonElement | null>(null);
 
-  render() {
-    const { title, className, style, children } = this.props;
-
-    const inner = (
-      <ButtonBase className={className} onMouseEnter={this.handleMouseEnter} onClick={this.handleClick} style={style}>
-        {children}
-      </ButtonBase>
-    );
-
-    return this.needTooltip ? (
-      <Tooltip title={title} placement='top' disableInteractive>
-        <span>{inner}</span>
-      </Tooltip>
-    ) : (
-      inner
-    );
-  }
-
-  @boundMethod
-  private handleClick() {
-    const { payload, onClick } = this.props;
-    if (onClick) {
-      onClick(payload);
-    }
-  }
-
-  @action.bound
-  private handleMouseEnter(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
-    const itemTitle = e.currentTarget.children[0];
-
-    if (!(itemTitle instanceof HTMLElement)) {
+  const checkOverflow = useCallback(() => {
+    const element = buttonRef.current?.firstElementChild as HTMLElement | null;
+    if (!element) {
       return;
     }
-    this.needTooltip = itemTitle.offsetWidth < itemTitle.scrollWidth;
-  }
-}
+
+    const next = element.offsetWidth < element.scrollWidth;
+    // меняем стейт только при реальном изменении, чтобы исключить лишние рендеры
+    setNeedTooltip(prev => (prev === next ? prev : next));
+  }, []);
+
+  const handleMouseEnter = useCallback(() => {
+    checkOverflow();
+  }, [checkOverflow]);
+
+  const handleClick = useCallback(() => {
+    onClick?.(payload);
+  }, [onClick, payload]);
+
+  // следим за изменениями размера/контента
+  useEffect(() => {
+    const element = buttonRef.current?.firstElementChild as HTMLElement | null;
+    if (!element || typeof ResizeObserver === 'undefined') {
+      return;
+    }
+
+    const resize = new ResizeObserver(() => checkOverflow());
+    resize.observe(element);
+
+    return () => resize.disconnect();
+  }, [checkOverflow]);
+
+  return (
+    <Tooltip title={needTooltip ? title : ''} placement='top'>
+      <ButtonBase
+        ref={buttonRef}
+        className={className}
+        style={style}
+        onMouseEnter={handleMouseEnter}
+        onFocus={handleMouseEnter}
+        onClick={handleClick}
+      >
+        {children}
+      </ButtonBase>
+    </Tooltip>
+  );
+};
 
 export const withTypeButton = withBemMod<BreadcrumbsItemProps, BreadcrumbsItemTypeButtonProps>(
   cnBreadcrumbsItem(),
