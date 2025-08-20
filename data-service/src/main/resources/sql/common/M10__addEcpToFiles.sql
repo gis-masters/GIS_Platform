@@ -1,0 +1,2 @@
+ALTER TABLE IF EXISTS data.files
+    ADD COLUMN IF NOT EXISTS ecp bytea;

@@ -1,0 +1,40 @@
+frame File placement
+
+actor User
+participant DataService
+participant Queue
+participant InregrationService
+participant Geoserver
+participant GisService
+
+User-#red:2>DataService:Place file request
+
+activate DataService #skyBlue
+DataService-#orange:2>DataService:check File and \ncreate process
+User <#red:2--DataService: HTTP response \n202 status code
+deactivate DataService
+DataService-#orange:2>DataService: from process
+activate DataService #skyBlue
+User <#green:2--DataService: WebSocket Message \n{PENDING}
+DataService-#blue:2>>Queue:PlaceFileEvent
+deactivate DataService
+activate Queue #skyBlue
+Queue-#blue:2>>InregrationService:PlaceFileEvent
+activate InregrationService #skyBlue
+deactivate Queue
+InregrationService-#red:2>Geoserver:Create store based on file\n{geoserverCreateStoreDelegate}
+activate Geoserver #skyBlue
+InregrationService<#red:2--Geoserver:Store successfully created
+deactivate Geoserver
+InregrationService -#red:2> GisService:Create layer via GisService in 'full' mode\n{gisCreateLayerDelegate}
+activate GisService #skyBlue
+InregrationService <#red:2-- GisService:Layer successfully created
+deactivate GisService
+Queue <#blue:2-- InregrationService:FilePlacedFailedEvent or\nFilePlacedSucceededEvent
+deactivate InregrationService
+activate Queue #skyBlue
+DataService <#blue:2-- Queue:FilePlacedFailedEvent or\nFilePlacedSucceededEvent
+activate DataService #skyBlue
+deactivate Queue
+User <#green:2-- DataService:    WebSocket \nMessage {DONE/ERROR}
+deactivate DataService

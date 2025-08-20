@@ -1,0 +1,18 @@
+.workspace {
+  display: flex;
+  flex-direction: column;
+
+  height: 100%;
+
+  &__container {
+    display: flex;
+    overflow: auto;
+    flex-direction: column;
+
+    height: 100%;
+
+    &_fixed {
+      overflow: hidden;
+    }
+  }
+}

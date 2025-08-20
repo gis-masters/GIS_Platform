@@ -1,0 +1,32 @@
+meta {
+  name: Create basemap
+  type: http
+  seq: 2
+}
+
+post {
+  url: http://localhost:8100/api/data/basemaps
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJ1c2VyX25hbWUiOiJhZG1pbkBtYWlsLnJ1Iiwic2NvcGUiOlsiY3JnIl0sIm9yZ2FuaXphdGlvbnMiOltdLCJleHAiOjE1Nzk1ODU2OTYsImF1dGhvcml0aWVzIjpbIkFETUlOIl0sImp0aSI6IjdhM2Q1MzE3LWYzMTMtNDgwNC1hMjM3LTg0OWY3YjljYjE2MSIsImNsaWVudF9pZCI6ImFkbWluIn0.j1bUXVObJd-WVjCGs1Ot53JcOuBOwI9WNbt4N-Qs1VU
+}
+
+body:json {
+  {
+      "name": "wmts",
+      "title": "Моя подложка",
+      "thumbnailUrn": "/assets/images/thumbnail-WMTS-sputnik.jpg",
+      "type": "WMTS",
+      "url": "https://localhost/api/geoserver/gwc/service/wmts",
+      "layerName": "scratch_database_1:ZolotoePole_GP_FuncZone_2018_BM_P",
+      "style": "raster",
+      "projection": "EPSG:900913",
+      "format": "image/png",
+      "size": 256,
+      "resolution": 21,
+      "matrixIds": 21
+  }
+}

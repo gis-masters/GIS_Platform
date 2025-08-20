@@ -1,0 +1,8 @@
+.CustomStyleControl-StrokeTile {
+  display: flex;
+  overflow: hidden;
+  align-items: center;
+
+  width: calc(var(--CustomStyleControlStrokeTileSize) * 1px);
+  height: 20px;
+}

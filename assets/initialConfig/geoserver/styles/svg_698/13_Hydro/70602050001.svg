@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" version="1.2">
+    <g font-weight="400" style="fill:none;fill-rule:evenodd;stroke:#000;stroke-width:1;stroke-linecap:square;stroke-linejoin:bevel">
+        <g style="font-style:normal;font-weight:400;font-size:11.33860016px;font-family:icomoon;fill:#009bc4;fill-opacity:1;stroke:none">
+            <path d="M11.191-4.966c-.566.166-1.003.232-1.31.198-.308-.034-.633-.212-.975-.535-.283-.254-.586-.383-.908-.388a4.035 4.035 0 0 0-.791.051 2.119 2.119 0 0 0-.769-.944 2.037 2.037 0 0 0-1.194-.374c-.596 0-1.1.208-1.516.623a2.046 2.046 0 0 0-.623 1.501c0 .596.208 1.101.623 1.516.415.415.916.623 1.501.623.528 0 .987-.164 1.377-.491.391-.327.63-.74.718-1.238a6.215 6.215 0 0 1 .44-.058c.498-.069.8.029.908.293.107.263.503.395 1.186.395.264 0 .577-.102.938-.308a8.495 8.495 0 0 0 1.025-.651c.323-.24.596-.457.82-.652l.337-.293-.46.234c-.309.156-.75.322-1.327.498" font-size="11.339" style="vector-effect:none;fill-rule:nonzero" transform="matrix(.75946 0 0 .75946 4.469 13.519)"/>
+        </g>
+    </g>
+</svg>

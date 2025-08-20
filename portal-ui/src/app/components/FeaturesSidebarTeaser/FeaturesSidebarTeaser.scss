@@ -1,0 +1,47 @@
+body .FeaturesSidebarTeaser {
+  &_badge {
+    position: absolute;
+    z-index: 1;
+    top: calc(50% - 24px);
+    right: 0;
+
+    padding: 5px 0 5px calc(var(--FeaturesSidebarTeaserBadgeDigits) * 3.5px);
+    padding-right: 0;
+
+    transition: transform 0.3s;
+
+    border-radius: 4px;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    background-color: var(--white);
+    box-shadow: 0 8px 16px 0 rgb(0 0 0 / 16%);
+
+    will-change: transform;
+  }
+
+  &_chevron {
+    position: absolute;
+    z-index: 2;
+    top: calc(50% - 18px);
+    right: 0;
+
+    height: 36px;
+    padding-top: 5px;
+
+    cursor: pointer;
+    transition: transform 0.3s;
+
+    color: var(--primary);
+    border-radius: 4px;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    background-color: var(--white);
+    box-shadow: 0 8px 16px 0 rgb(0 0 0 / 16%);
+
+    will-change: transform;
+  }
+
+  &_hidden {
+    transform: translateX(calc(100% + 16px));
+  }
+}

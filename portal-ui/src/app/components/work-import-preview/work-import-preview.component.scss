@@ -1,0 +1,23 @@
+.work-import-preview {
+  margin: 5px;
+
+  &__badge {
+    background-color: lightgrey;
+
+    &_mapped {
+      color: green;
+    }
+
+    &_not-mapped {
+      color: tomato;
+    }
+
+    &_disabled {
+      color: grey;
+    }
+  }
+}
+
+::ng-deep .work-import-preview__tooltip {
+  white-space: pre-line !important;
+}

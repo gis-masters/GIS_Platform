@@ -1,0 +1,55 @@
+.Legend {
+  margin-left: -4px;
+
+  --LegendResizeFactor: 1;
+
+  &-Title {
+    margin-bottom: calc(var(--LegendResizeFactor) * 2px);
+
+    text-align: center;
+
+    font-size: calc(var(--LegendResizeFactor) * 14px);
+  }
+
+  &-LayerTitle {
+    margin-top: calc(var(--LegendResizeFactor) * 8px);
+    margin-bottom: calc(var(--LegendResizeFactor) * 5px);
+
+    color: var(--grey);
+
+    font-size: calc(var(--LegendResizeFactor) * 11px);
+  }
+
+  &-Rule {
+    display: flex;
+    align-items: center;
+    gap: calc(var(--LegendResizeFactor) * 7px);
+
+    margin-bottom: calc(var(--LegendResizeFactor) * 3px);
+  }
+
+  &-Img {
+    width: calc(var(--LegendResizeFactor) * 40px);
+    height: calc(var(--LegendResizeFactor) * 20px);
+  }
+
+  &-RuleTitle {
+    flex-grow: 1;
+
+    color: var(--grey);
+
+    font-size: calc(var(--LegendResizeFactor) * 11px);
+    line-height: 1;
+  }
+
+  &_forPrint {
+    width: calc(var(--LegendResizeFactor) * 400px);
+    margin-left: 0;
+    padding: calc(var(--LegendResizeFactor) * 10px) calc(var(--LegendResizeFactor) * 13px);
+
+    background: rgb(255 255 255 / 80%);
+
+    --LegendResolutionFactor: calc(var(--LegendResolution) / 150);
+    --LegendResizeFactor: calc(var(--LegendResize) * var(--LegendResolutionFactor));
+  }
+}

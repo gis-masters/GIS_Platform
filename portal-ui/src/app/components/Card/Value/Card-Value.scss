@@ -1,0 +1,9 @@
+.Card {
+  &-Value {
+    &_block {
+      overflow: auto;
+
+      max-height: calc(100vh - 565px);
+    }
+  }
+}

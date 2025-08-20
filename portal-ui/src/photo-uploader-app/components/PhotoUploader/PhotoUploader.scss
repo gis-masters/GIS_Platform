@@ -1,0 +1,15 @@
+.PhotoUploader {
+  overflow: auto;
+
+  height: 100%;
+
+  &-Container {
+    overflow-y: auto;
+
+    max-height: calc(100vh - 60px);
+  }
+
+  & .LoginForm-OrgSelect {
+    max-height: none;
+  }
+}

@@ -1,0 +1,14 @@
+.Breadcrumbs-ItemTitle {
+  overflow: hidden;
+
+  max-width: 100%;
+
+  white-space: nowrap;
+  text-overflow: ellipsis;
+
+  font-size: calc(16px * var(--BreadcrumbsSize));
+
+  .MuiSvgIcon-root {
+    font-size: calc(1.5rem * var(--BreadcrumbsSize));
+  }
+}

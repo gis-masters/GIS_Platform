@@ -1,0 +1,85 @@
+<div class="report-sidebar">
+  <div class="crg-report-sidebar-header" *ngIf="!isEditMode">
+    <re-validate-button class="report-sidebar-button"></re-validate-button>
+    Проверка данных
+    <crg-export-validation-report-button [layers]="layersWithErrors"></crg-export-validation-report-button>
+    <mat-icon class="crg-close-icon" (click)="closeMe()">close</mat-icon>
+  </div>
+
+  <div class="crg-report-sidebar-content scroll">
+    <div *ngIf="!isEditMode">
+      <div class="container-fluid">
+        <div class="row">
+          <crg-loading *ngIf="isValidationInited" [percents]="commonProgress"></crg-loading>
+
+          <div class="h-100" style="width: 100%;">
+            <ng-container *ngIf="layers; else layersLoading">
+              <mat-accordion class="validation_accordion">
+                <mat-expansion-panel
+                  *ngFor="let layer of layers; let index = index"
+                  [expanded]="step === index + 1"
+                  (opened)="setStep(index + 1)"
+                  hideToggle
+                >
+                  <mat-expansion-panel-header>
+                    <mat-panel-title>
+                      <div style="position: relative; top: 4px;">
+                        <mat-icon *ngIf="commonInfo.get(layer.tableName)?.totalViolations > 0" style="color: tomato;"
+                        >error
+                        </mat-icon>
+                        <mat-icon *ngIf="!commonInfo.get(layer.tableName)?.validated" style="color: lightgrey;"
+                        >warning
+                        </mat-icon>
+                        <mat-icon *ngIf="isDone(layer.tableName)" style="color: forestgreen;">done</mat-icon>
+                      </div>
+                      <span style="padding-left: 10px;">{{ layer.title }} ({{ layer.geometryType }})</span>
+                    </mat-panel-title>
+
+                    <div class="float-right" *ngIf="!!commonInfo.get(layer.tableName)">
+                      <div *ngIf="commonInfo.get(layer.tableName)?.totalViolations">
+                        <mat-chip-list>
+                          <mat-chip style="color: tomato;">{{
+                            commonInfo.get(layer.tableName)?.totalViolations
+                            }}</mat-chip>
+                        </mat-chip-list>
+                      </div>
+                    </div>
+                  </mat-expansion-panel-header>
+
+                  <crg-bugs-table
+                    *ngIf="isActive"
+                    [crgLayer]="layer"
+                    [step]="step"
+                    [index]="index + 1"
+                    [isActive]="isActive"
+                  ></crg-bugs-table>
+
+                  <mat-action-row style="padding: 0;">
+                    <button mat-button *ngIf="index > 0" color="warn" (click)="prevStep()">Предыдущий</button>
+                    <button mat-button *ngIf="index < layers.length - 1" color="primary" (click)="nextStep()">
+                      Следующий
+                    </button>
+                    <button mat-button *ngIf="index == layers.length - 1" color="primary" (click)="nextStep()">
+                      Закончить
+                    </button>
+                  </mat-action-row>
+                </mat-expansion-panel>
+              </mat-accordion>
+            </ng-container>
+
+            <ng-template #layersLoading>
+              <div class="col-12 text-center">
+                Загрузка слоев...
+                <mat-progress-bar mode="query"></mat-progress-bar>
+              </div>
+            </ng-template>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="isEditMode">
+      <crg-edit-bug-object [data]="objectsToEdit" (closeMe)="switchMode()"></crg-edit-bug-object>
+    </div>
+  </div>
+</div>

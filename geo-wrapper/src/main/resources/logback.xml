@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+  <property scope="context" name="HOSTNAME" value="geo-wrapper" />
+    <appender name="STASH" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>/opt/crg/logs/wrapper.log</file>
+
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>/opt/crg/logs/wrapper.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+
+        <encoder class="net.logstash.logback.encoder.LogstashEncoder"/>
+    </appender>
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %5p ${PID:- } [%t] --- %-40.40logger{39} : %m%n</pattern>
+        </encoder>
+    </appender>
+
+
+    <appender name="LOGSTASH" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
+        <destination>logstash:5000</destination>
+
+        <!-- encoder is required -->
+        <encoder class="net.logstash.logback.encoder.LogstashEncoder"/>
+    </appender>
+
+
+    <logger name="ru.mycrg.wrapper" level="DEBUG"></logger>
+<!--    <logger name="com.zaxxer.hikari" level="DEBUG"></logger>-->
+<!--    <logger name="org.springframework.jdbc.datasource.DataSourceUtils" level="DEBUG"></logger>-->
+
+    <root level="INFO">
+        <appender-ref ref="STASH"/>
+        <appender-ref ref="LOGSTASH"/>
+        <appender-ref ref="STDOUT"/>
+    </root>
+</configuration>

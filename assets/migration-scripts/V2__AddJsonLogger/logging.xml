@@ -1,0 +1,4 @@
+<logging>
+    <level>JSON_LOGGING.properties</level>
+    <stdOutLogging>false</stdOutLogging>
+</logging>

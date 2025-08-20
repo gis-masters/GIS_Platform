@@ -1,0 +1,15 @@
+<jdbcusergroupservice>
+  <id>5bc374cd:16c67855a46:-7ffb</id>
+  <name>postgres_db_user_service</name>
+  <className>org.geoserver.security.jdbc.JDBCUserGroupService</className>
+  <propertyFileNameDDL>usersddl.xml</propertyFileNameDDL>
+  <propertyFileNameDML>usersdml.xml</propertyFileNameDML>
+  <jndi>false</jndi>
+  <driverClassName>org.postgresql.Driver</driverClassName>
+  <connectURL>jdbc:postgresql://database:5432/geoserver_db</connectURL>
+  <userName>${CRG_USER}</userName>
+  <password>plain:${DB_PASS}</password>
+  <creatingTables>true</creatingTables>
+  <passwordEncoderName>strongPbePasswordEncoder</passwordEncoderName>
+  <passwordPolicyName>master</passwordPolicyName>
+</jdbcusergroupservice>

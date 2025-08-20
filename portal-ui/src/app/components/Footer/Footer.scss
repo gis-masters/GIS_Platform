@@ -1,0 +1,18 @@
+body .Footer {
+  color: var(--white);
+  background: var(--blue);
+
+  &-Title {
+    font-size: 18px;
+  }
+
+  &-Info {
+    margin-bottom: 10px;
+  }
+
+  &-Copyright {
+    padding: 8px 0;
+
+    font-size: 14px;
+  }
+}

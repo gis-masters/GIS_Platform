@@ -1,0 +1,23 @@
+.LibraryRegistry-Breadcrumbs {
+  &_size_medium {
+    margin-bottom: 10px;
+  }
+
+  &_menuButtonOnly {
+    position: absolute;
+    top: calc(50% - 15px);
+    right: 0;
+
+    &:not(.Breadcrumbs_menuOpen) {
+      opacity: 0.2;
+    }
+  }
+}
+
+.XTable-Cell:has(.LibraryRegistry-Breadcrumbs_menuButtonOnly) .XTable-CellContent {
+  padding-right: 10px;
+}
+
+.XTable-Row:hover .LibraryRegistry-Breadcrumbs_menuButtonOnly {
+  opacity: 1;
+}

@@ -1,0 +1,31 @@
+body .Attributes {
+  &-RowActions {
+    position: relative;
+    z-index: 1;
+
+    margin-right: -10px;
+    margin-left: -17px;
+
+    opacity: 0;
+
+    &::before {
+      position: absolute;
+      z-index: -1;
+      inset: 0;
+
+      content: '';
+
+      background: var(--white);
+    }
+  }
+
+  &-RowActions:focus,
+  &-RowActions.Actions_open,
+  .MuiTableRow-hover:hover .Attributes-RowActions {
+    opacity: 1;
+  }
+
+  .MuiTableRow-hover:hover .Attributes-RowActions::before {
+    background: #f5f5f5;
+  }
+}

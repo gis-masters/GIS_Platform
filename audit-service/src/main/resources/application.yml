@@ -1,0 +1,30 @@
+spring:
+  profiles:
+    active: fiz-dev
+logging:
+  file: /opt/crg/logs/audit-service.log
+  level:
+    ru.mycrg: DEBUG
+
+---
+spring:
+  profiles: fiz-dev
+  datasource:
+    platform: postgres
+    url: jdbc:postgresql://127.0.0.1:5434/crg_audit_service
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+  flyway:
+    enabled: true
+    url: jdbc:postgresql://127.0.0.1:5434/crg_audit_service
+    user: ${SPRING_FLYWAY_USER}
+    password: ${SPRING_FLYWAY_PASSWORD}
+    placeholders:
+      db_owner: ${SPRING_FLYWAY_PLACEHOLDERS_DB_OWNER}
+
+security:
+  jwt:
+    secret: ${SECURITY_JWT_SECRET}
+
+server:
+  port: 8086

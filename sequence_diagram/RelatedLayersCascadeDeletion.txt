@@ -1,0 +1,28 @@
+title Deletion of layers related to deleted file
+
+actor User
+participant DataService
+participant Queue
+participant InregrationService
+participant GisService
+participant Geoserver
+
+User-#red:2>DataService:Delete files from document
+activate DataService
+DataService-#orange:2>DataService: delete of files
+DataService-#blue:2>>Queue:File deleted event
+activate Queue
+User <#red:2--DataService: response
+deactivate DataService
+Queue-#blue:2>>InregrationService:File deleted event
+activate InregrationService
+deactivate Queue
+InregrationService-#red:2>GisService:Delete related layer on gis-service
+activate GisService
+InregrationService<#red:2--GisService: Layer deletion is successful
+deactivate GisService
+InregrationService -#red:2> Geoserver: Delete related layer on Geosrver
+activate Geoserver
+InregrationService <#red:2-- Geoserver: Layer deletion is successful
+deactivate Geoserver
+deactivate InregrationService

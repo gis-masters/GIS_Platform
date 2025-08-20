@@ -1,0 +1,14 @@
+.OrgAdmin {
+  position: absolute;
+  inset: 75px 0 0;
+
+  display: flex;
+  flex-direction: column;
+
+  margin-top: -20px;
+  padding: 20px;
+
+  & &-Tabs {
+    margin-bottom: 10px;
+  }
+}

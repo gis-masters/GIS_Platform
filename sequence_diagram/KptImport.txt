@@ -1,0 +1,23 @@
+frame KPT import
+
+actor User
+participant DataService
+participant Database
+participant Queue
+
+
+User-#red:2>DataService: import request
+
+activate DataService #skyBlue
+DataService-#orange:2>Queue: KptImportXmlRequestEvent
+DataService-#orange:2>Database:Task
+User <#red:2--DataService: HTTP response \n202 status code
+deactivate DataService
+
+activate Queue #skyBlue
+Queue-#blue:2>DataService:KptImportXmlRequestEvent
+activate DataService #skyBlue
+DataService-#red:2>Database: TaskLog
+DataService-#red:2>Database: IRecord(элемент слоя)
+deactivate DataService
+deactivate Queue

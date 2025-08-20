@@ -1,0 +1,15 @@
+meta {
+  name: Get file hash
+  type: http
+  seq: 1
+}
+
+get {
+  url: http://localhost:8084/files/1c0a8a15-355b-4141-944d-e98e5c42790f/hash
+  body: multipartForm
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjcmdfbG9naW4iOiJhcmhfZ3JhZF9ya0BtYWlsLnJ1IiwidXNlcl9uYW1lIjoiYXJoX2dyYWRfcmtAbWFpbC5ydSIsImdyb3VwcyI6W10sInZlcnNpb24iOjYsImF1dGhvcml0aWVzIjpbIk9SR19BRE1JTiJdLCJtaW5pb25zIjpbXSwiY2xpZW50X2lkIjoiYWRtaW4iLCJ1c2VyX2lkIjoyLCJzY29wZSI6WyJjcmciXSwib3JnYW5pemF0aW9ucyI6W3siaWQiOjEsIm5hbWUiOiLQodC_0YDQsNCy0L7Rh9C90LDRjyDQuNC90YTQvtGA0LzQsNGG0LjQvtC90L3QsNGPINGB0LjRgdGC0LXQvNCwINCg0LXRgdC_0YPQsdC70LjQutC4INCa0YDRi9C8In1dLCJleHAiOjE3MzA4NjcxNDEsImRpcmVjdE1pbmlvbnMiOlsxNzAzLDE3NTddLCJqdGkiOiJhNTg4YTk4My1jYTcwLTRhODktYjYxNy1hZDk4MGY4ZmQ1NGEifQ.bVGcUFV8ghJR2-8HpFJM6qTXqFw_GJ-uHSPa-vPiJTg
+}

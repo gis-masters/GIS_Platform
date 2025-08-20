@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<SchemaParcels>
+    <eDocument Version="01" GUID="e1fbdb1b-6621-4c49-910a-2721f7a88222"/>
+    <FormingMethod FormingMethod="1"/>
+    <Document>
+        <Name>-</Name>
+        <Number>-</Number>
+        <Date>2021-09-01</Date>
+        <IssueOrgans>
+            <IssueOrgan>-</IssueOrgan>
+        </IssueOrgans>
+    </Document>
+    <NewParcels>
+        <NewParcel>
+            <CadastralBlock>90:12:000000</CadastralBlock>
+            <Area>
+                <Area>854569</Area>
+                <Unit>055</Unit>
+            </Area>
+            <EntitySpatial Ent_Sys="ID_1">
+                <SpatialElement>
+                    <SpelementUnit Type_Unit="Точка">
+                        <NewOrdinate X="4959440.00" Y="5203196.30" Num_Geopoint="1"/>
+                    </SpelementUnit>
+                    <SpelementUnit Type_Unit="Точка">
+                        <NewOrdinate X="4959424.89" Y="5203233.60" Num_Geopoint="2"/>
+                    </SpelementUnit>
+                    <SpelementUnit Type_Unit="Точка">
+                        <NewOrdinate X="4959230.91" Y="5203619.30" Num_Geopoint="3"/>
+                    </SpelementUnit>
+                    <SpelementUnit Type_Unit="Точка">
+                        <NewOrdinate X="4959441.56" Y="5203182.58" Num_Geopoint="4"/>
+                    </SpelementUnit>
+                    <SpelementUnit Type_Unit="Точка">
+                        <NewOrdinate X="4959440.00" Y="5203196.30" Num_Geopoint="1"/>
+                    </SpelementUnit>
+                </SpatialElement>
+            </EntitySpatial>
+            <Note>Российская Федерация, Республика Крым, Симферопольский р-н, на территории Добровского сельского
+                поселения
+            </Note>
+            <Utilization ByDoc="-"/>
+            <Category Category="003008000000"/>
+        </NewParcel>
+    </NewParcels>
+    <Coord_Systems>
+        <Coord_System Name="СК-63" Cs_Id="ID_1"/>
+    </Coord_Systems>
+    <ParcelSchema_In_Block>
+        <AppliedFile Name="Applied_files\ParcelSchema_In_Block1.pdf"/>
+        <AppliedFile Name="Applied_files\ParcelSchema_In_Block2.pdf"/>
+    </ParcelSchema_In_Block>
+</SchemaParcels>

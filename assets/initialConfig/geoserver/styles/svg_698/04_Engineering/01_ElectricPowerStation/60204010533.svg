@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" version="1.2">
+    <g font-weight="400" style="fill:none;fill-rule:evenodd;stroke:#000;stroke-width:1;stroke-linecap:square;stroke-linejoin:bevel">
+        <g style="font-style:normal;font-weight:400;font-size:17.00779915px;font-family:icomoon;fill:#ff0;fill-opacity:1;stroke:none">
+            <path d="M2.021-18.688h18.957c.555 0 1.03.199 1.427.596.397.396.595.872.595 1.426V2.291c0 .554-.198 1.03-.595 1.426a1.946 1.946 0 0 1-1.427.595H2.021c-.554 0-1.029-.198-1.426-.595A1.946 1.946 0 0 1 0 2.291v-18.957c0-.554.198-1.03.595-1.426a1.946 1.946 0 0 1 1.426-.596" font-size="17.008" style="vector-effect:none;fill-rule:nonzero" transform="matrix(.65217 0 0 .65217 2.5 14.687)"/>
+        </g>
+        <g style="font-style:normal;font-weight:400;font-size:17.00779915px;font-family:icomoon;fill:#000;fill-opacity:1;stroke:none">
+            <path d="M20.979-18.014a1.3 1.3 0 0 1 .954.393 1.3 1.3 0 0 1 .393.955V2.291a1.3 1.3 0 0 1-.393.955 1.3 1.3 0 0 1-.955.393H2.021a1.3 1.3 0 0 1-.954-.393 1.3 1.3 0 0 1-.393-.955v-18.957a1.3 1.3 0 0 1 .393-.955 1.3 1.3 0 0 1 .954-.393h18.957m0-.674H2.021c-.554 0-1.029.199-1.426.596A1.946 1.946 0 0 0 0-16.666V2.291c0 .554.198 1.03.595 1.426.397.397.872.595 1.426.595h18.957c.555 0 1.03-.198 1.427-.595.397-.397.595-.872.595-1.426v-18.957c0-.554-.198-1.03-.595-1.426a1.946 1.946 0 0 0-1.426-.596m-18.62 2.359V1.954h18.283v-18.283H2.358M3.728.584v-15.543h15.543L3.73.584" font-size="17.008" style="vector-effect:none;fill-rule:nonzero" transform="matrix(.65217 0 0 .65217 2.5 14.687)"/>
+        </g>
+    </g>
+</svg>

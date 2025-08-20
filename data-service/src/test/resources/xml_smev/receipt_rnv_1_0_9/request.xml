@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<typ:ClientMessage xmlns:typ="urn://x-artefacts-smev-gov-ru/services/service-adapter/types">
+    <typ:itSystem>U629301</typ:itSystem>
+    <typ:RequestMessage>
+        <typ:RequestMetadata>
+            <typ:clientId>307da951-afef-4aad-889d-fdd5d63974b2</typ:clientId>
+        </typ:RequestMetadata>
+        <typ:RequestContent>
+            <typ:content>
+                <typ:MessagePrimaryContent>
+                    <tns:Request xmlns:tns="urn://x-artefacts-uishc.domrf.ru/receipt-rnv/1.0.9"
+                                 xmlns:com="urn://x-artefacts-uishc.domrf.ru/receipt-rnv/commons/1.0.9">
+                        <tns:ReceiptListExploitation>
+                            <tns:PermitDateFrom>2001-01-01</tns:PermitDateFrom>
+                            <tns:PermitDateTo>2023-01-01</tns:PermitDateTo>
+                        </tns:ReceiptListExploitation>
+                    </tns:Request>
+                </typ:MessagePrimaryContent>
+            </typ:content>
+        </typ:RequestContent>
+    </typ:RequestMessage>
+</typ:ClientMessage>

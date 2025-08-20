@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<QueryResult xmlns="urn://x-artefacts-smev-gov-ru/services/service-adapter/types"
+             xmlns:ns2="urn://x-artefacts-smev-gov-ru/services/service-adapter/types/faults">
+    <smevMetadata>
+        <MessageId>28f66b34-f7f5-11ee-b5b8-001a4a166087</MessageId>
+        <TransactionCode>782da169-9ca4-4e28-b478-e739d341bc2d</TransactionCode>
+        <OriginalMessageID>2102bdd1-f7f5-11ee-b9a7-2a365dc37e6a</OriginalMessageID>
+        <Sender>emuOLD</Sender>
+        <Recipient>U629301</Recipient>
+        <SendingDate>2024-04-11T11:18:02.208Z</SendingDate>
+    </smevMetadata>
+    <Message xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="ResponseMessageType">
+        <messageType>StatusMessage</messageType>
+        <ResponseMetadata>
+            <clientId>1681187c-92b5-478c-8610-d504dba11a8f</clientId>
+            <replyToClientId>de513b08-7d8d-4253-8fdd-9f98f2178a40</replyToClientId>
+        </ResponseMetadata>
+        <ResponseContent>
+            <status>
+                <code>0</code>
+                <description>Процесс подтверждения технологической готовности информационной системы успешно
+                    инициализирован. Для завершения взаимодействия, и получения технологического доступа в продуктивной
+                    среде СМЭВ в качестве потребителя по ВС, необходимо вычитать данное сообщение методом
+                    GetResponseRequest и направить подтверждение успешного получения данного сообщения методом ACK. Если
+                    в процессе выполнений операций подтверждения возникли проблемы, повторите процедуру с отправкой
+                    тестового запроса ещё раз.
+                </description>
+            </status>
+        </ResponseContent>
+    </Message>
+</QueryResult>

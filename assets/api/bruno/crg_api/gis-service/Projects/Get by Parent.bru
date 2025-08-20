@@ -1,0 +1,19 @@
+meta {
+  name: Get by Parent
+  type: http
+  seq: 6
+}
+
+get {
+  url: {{host}}:{{port}}/projects?parent=15
+  body: none
+  auth: bearer
+}
+
+params:query {
+  parent: 15
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjcmdfbG9naW4iOiJmaXpAZml6IiwidXNlcl9uYW1lIjoiZml6X2Zpel8zNDIiLCJncm91cHMiOltdLCJ2ZXJzaW9uIjpudWxsLCJhdXRob3JpdGllcyI6WyJPUkdfQURNSU4iXSwibWluaW9ucyI6W10sImNsaWVudF9pZCI6ImFkbWluIiwidXNlcl9pZCI6MzQyLCJzY29wZSI6WyJjcmciXSwib3JnYW5pemF0aW9ucyI6W3siaWQiOjMxLCJuYW1lIjoi0JDQniDQk9C10L7QuNC90YTQvtGA0LzQsNGG0LjQvtC90L3Ri9C1INGB0LjRgdGC0LXQvNGLIn1dLCJleHAiOjE3NDE2Nzk5NDEsImRpcmVjdE1pbmlvbnMiOltdLCJqdGkiOiJhMjg5MTkwYi1mYmUwLTQ1NWQtOTkyNC1jM2QxNzY3MDJhZDEifQ.MDIC7tJgPHuh8p_Xfb7XyE7ErZRY9wGGw9I1rPg
+}

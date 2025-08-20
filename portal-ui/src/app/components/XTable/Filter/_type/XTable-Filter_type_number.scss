@@ -1,0 +1,17 @@
+.XTable-Filter_type_float,
+.XTable-Filter_type_long,
+.XTable-Filter_type_integer {
+  display: flex;
+  justify-content: end;
+  gap: 2px;
+
+  .MuiInputBase-input {
+    padding-top: 6px;
+
+    font-size: 14px;
+
+    &::-webkit-inner-spin-button {
+      display: none;
+    }
+  }
+}

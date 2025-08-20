@@ -1,0 +1,15 @@
+.Attributes-BarHead {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+
+  padding: 5px 10px;
+
+  border-bottom: 1px rgb(50 50 50 / 25%) solid;
+
+  --AttributesBarHeadHovered: 0;
+
+  &:hover {
+    --AttributesBarHeadHovered: 1;
+  }
+}

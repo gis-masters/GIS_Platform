@@ -1,0 +1,32 @@
+.SearchResultHighlightItem {
+  grid-area: search;
+
+  overflow: hidden;
+
+  white-space: nowrap;
+  text-overflow: ellipsis;
+
+  color: var(--gray);
+
+  font-size: 12px;
+  line-height: 1.1;
+
+  &-Icon {
+    width: 16px;
+    height: 18px;
+    margin-right: 6px;
+  }
+
+  &-FullResult {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &-Popover {
+    max-width: 450px;
+    margin-top: 17px;
+    padding: 15px;
+
+    line-height: 1.5;
+  }
+}

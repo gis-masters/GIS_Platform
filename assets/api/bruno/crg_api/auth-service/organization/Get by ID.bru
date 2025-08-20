@@ -1,0 +1,19 @@
+meta {
+  name: Get by ID
+  type: http
+  seq: 4
+}
+
+get {
+  url: http://localhost:8100/organizations/1
+  body: none
+  auth: bearer
+}
+
+headers {
+  Content-Type: application/json; charset=utf-8
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyLCJ1c2VyX25hbWUiOiJmaXpAZml6Iiwic2NvcGUiOlsiY3JnIl0sIm9yZ2FuaXphdGlvbnMiOlt7ImlkIjoxLCJuYW1lIjoiZml6IENvbXBhbnkifV0sImdyb3VwcyI6W10sImV4cCI6MTY0OTE0NjE3MiwiYXV0aG9yaXRpZXMiOlsiT1JHX0FETUlOIl0sImp0aSI6ImI3YWExNTljLTI5NTMtNDZhMy1iZDI1LWQ5YWQwZWQ1NjYwMSIsImNsaWVudF9pZCI6ImFkbWluIn0.zltKZrphQ-5F-QP-9vDRsyyQDJzC4Pxxmz-kkSUCNwQ
+}

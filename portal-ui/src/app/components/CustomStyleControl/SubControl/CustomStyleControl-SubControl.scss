@@ -1,0 +1,9 @@
+.CustomStyleControl-SubControl {
+  margin-left: 10px;
+
+  white-space: nowrap;
+
+  &:first-child {
+    margin-left: 0;
+  }
+}

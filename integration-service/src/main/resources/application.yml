@@ -1,0 +1,63 @@
+spring:
+  profiles:
+    active: fiz-dev
+
+logging:
+  file: /opt/crg/logs/integration-service.log
+  level:
+    ru.mycrg: DEBUG
+
+---
+
+server:
+  port: 8338
+
+spring:
+  datasource:
+    platform: postgres
+    url: jdbc:postgresql://127.0.0.1:5434/bpmn_camunda
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: false
+    hibernate:
+      ddl-auto: update
+  rabbitmq:
+    host: ${SPRING_RABBITMQ_HOST}
+    port: ${SPRING_RABBITMQ_PORT}
+    username: ${SPRING_RABBITMQ_USERNAME}
+    password: ${SPRING_RABBITMQ_PASSWORD}
+
+security:
+  jwt:
+    secret: ${SECURITY_JWT_SECRET}
+
+camunda:
+  bpm:
+    admin-user:
+      id: ${CAMUNDA_BPM_ADMIN-USER_ID}
+      password: ${CAMUNDA_BPM_ADMIN-USER_PASSWORD}
+
+management:
+  endpoint:
+    loggers:
+      enabled: true
+    health:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: loggers, health
+
+crg-options:
+  gis_service_url: http://127.0.0.1:8082
+  data_service_url: http://127.0.0.1:8084
+  audit_service_url: http://127.0.0.1:8086
+  auth_service_url: http://127.0.0.1:9000
+  jwt:
+    client_id: ${CRG_OPTIONS_JWT_CLIENT_ID}
+    client_secret: ${CRG_OPTIONS_JWT_CLIENT_SECRET}
+  geoserver-host: 127.0.0.1:8080
+  resources_query_base_path: "resources"
+  resource_analyzers_base_path: "resource-analyzers"

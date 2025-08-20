@@ -1,0 +1,10 @@
+.ViewContentWidget {
+  overflow: auto;
+  flex-shrink: 1;
+
+  &-Title {
+    margin-right: 0.4em;
+
+    color: grey;
+  }
+}

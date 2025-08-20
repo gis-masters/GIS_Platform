@@ -1,0 +1,30 @@
+meta {
+  name: Get all existed analyzers
+  type: http
+  seq: 2
+}
+
+get {
+  url: http://localhost:8082/resource-analyzers
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyLCJ1c2VyX25hbWUiOiJmaXpAZml6Iiwic2NvcGUiOlsiY3JnIl0sIm9yZ2FuaXphdGlvbnMiOlt7ImlkIjoxLCJuYW1lIjoiZml6IENvbXBhbnkifV0sImdyb3VwcyI6W10sImV4cCI6MTYyMTM0Njk4NCwiYXV0aG9yaXRpZXMiOlsiT1JHX0FETUlOIl0sImp0aSI6ImFkMjBhN2QzLTA5YzYtNGY3NC05NDJmLTdjZGViNjA4YTFkMSIsImNsaWVudF9pZCI6ImFkbWluIn0.-ZHBcAaL6GLfQmSwAuOb13Zpk-NrUnA_Ufb7bhmWtEE
+}
+
+body:json {
+  {
+      "id": "gaspipeline_line_1_fdfe",
+      "title": "Трубопроводы для транспортировки газа",
+      "resourceDefinition": {
+          "type": "VectorLayer",
+          "typeTitle": "Векторные слои"
+      },
+      "resourceProperties": {
+          "styleName": "gaspipeline_line",
+          "type": "vector"
+      }
+  }
+}

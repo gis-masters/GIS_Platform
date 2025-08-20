@@ -1,0 +1,33 @@
+        <!--  Published by JAX-WS RI at http://jax-ws.dev.java.net. RI's version is Metro/2.3 (tags/2.3-7528; 2013-04-29T19:34:10+0000) JAXWS-RI/2.2.8 JAXWS/2.2 svn-revision#unknown.  -->
+<xs:schema xmlns:tns="urn://x-artefacts-smev-gov-ru/services/service-adapter/types/faults" xmlns:xs="http://www.w3.org/2001/XMLSchema" version="1.0" targetNamespace="urn://x-artefacts-smev-gov-ru/services/service-adapter/types/faults">
+    <xs:element name="SyncFault" type="tns:SyncFault"/>
+    <xs:element name="SystemFault" type="tns:SystemFault"/>
+    <xs:element name="ValidationFault" type="tns:ValidationFault"/>
+    <xs:complexType name="Fault">
+        <xs:sequence>
+            <xs:element name="code" type="xs:string" form="qualified" minOccurs="0"/>
+            <xs:element name="description" type="xs:string" form="qualified" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="ValidationFault">
+        <xs:complexContent>
+            <xs:extension base="tns:Fault">
+                <xs:sequence/>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="SystemFault">
+        <xs:complexContent>
+            <xs:extension base="tns:Fault">
+                <xs:sequence/>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="SyncFault">
+        <xs:complexContent>
+            <xs:extension base="tns:Fault">
+                <xs:sequence/>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+</xs:schema>

@@ -1,0 +1,55 @@
+body .XTable-HeadCellLabel {
+  display: flex;
+
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  min-height: 20px;
+
+  transition: height 0.2s ease-out;
+
+  line-height: 20px;
+
+  &Wrapper {
+    display: flex;
+
+    width: 100%;
+    min-width: 0;
+
+    & .DescriptionMark {
+      flex-shrink: 0;
+
+      font-size: 20px;
+    }
+  }
+
+  &_singleLineContent {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    width: 100%;
+    min-width: 0;
+    height: 20px;
+  }
+
+  &_multiLineContent {
+    display: flex;
+    flex-direction: row;
+
+    width: 100%;
+    min-width: 0;
+    height: auto;
+    max-height: 40px;
+    margin: 0;
+    padding: 0;
+  }
+}
+
+body .MuiTableCell-alignRight .XTable-HeadCellLabel {
+  justify-content: end;
+}
+
+body .MuiTableCell-alignCenter .XTable-HeadCellLabel {
+  justify-content: center;
+}

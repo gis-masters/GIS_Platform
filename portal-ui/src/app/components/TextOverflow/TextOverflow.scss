@@ -1,0 +1,24 @@
+.TextOverflow {
+  &-Value {
+    display: block;
+    overflow: auto;
+
+    min-height: auto;
+    max-height: 400px;
+
+    &_hidePartOfText {
+      display: -webkit-box;
+      overflow: hidden;
+
+      width: auto;
+      margin: 0;
+
+      -webkit-line-clamp: var(--TextOverflowMaxLines);
+      -webkit-box-orient: vertical;
+    }
+  }
+
+  &-PseudoLink .PseudoLink-Inner {
+    font-size: 12px;
+  }
+}

@@ -1,0 +1,17 @@
+body .TaskCard {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+
+  height: 100%;
+
+  &-Breadcrumbs {
+    margin-bottom: 10px;
+  }
+
+  &-DateTitle {
+    margin-right: 0.4em;
+
+    color: var(--gray);
+  }
+}

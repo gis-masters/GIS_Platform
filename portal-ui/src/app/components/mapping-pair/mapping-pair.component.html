@@ -1,0 +1,28 @@
+<div class="row" [hidden]="importedLayerAttribute?.name === 'the_geom'">
+  <!--<div class="row" [hidden]="false">-->
+  <!--Исходные аттрибуты-->
+  <div class="col-3 p-0 align-self-center">
+    <h6>
+      {{ importedLayerAttribute?.name }}
+      <span style="color: grey">({{ typeToString(importedLayerAttribute?.binding) }})</span>
+    </h6>
+  </div>
+
+  <!--Рабочие аттрибуты из Р10-->
+  <form [formGroup]="columnForm" class="col-3 p-0 align-self-center">
+    <select
+      class="form-control form-control-sm"
+      formControlName="columnFiz"
+      [compareWith]="compareFn"
+      (change)="columnChanged()"
+    >
+      <option *ngFor="let property of propertySchemas" [ngValue]="property">
+        {{ getOptionText(property) }}
+      </option>
+    </select>
+  </form>
+
+  <div class="col-6 align-self-center" style="padding-left: 10px; padding-right: 0">
+    <span *ngIf="selectedProperty">{{ selectedProperty.title }}</span>
+  </div>
+</div>

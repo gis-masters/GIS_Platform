@@ -1,0 +1,10 @@
+.XTable-Head {
+  position: relative;
+  z-index: 3;
+
+  --XTableHeadHovered: 0;
+
+  &:hover {
+    --XTableHeadHovered: 1;
+  }
+}

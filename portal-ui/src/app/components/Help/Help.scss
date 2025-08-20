@@ -1,0 +1,23 @@
+.Help {
+  display: flex;
+  overflow: hidden;
+
+  height: calc(100vh - 240px);
+  margin-bottom: 20px;
+
+  &-Toc {
+    overflow: auto;
+    flex-basis: 33%;
+    flex-grow: 1;
+
+    min-width: 200px;
+    margin-right: 20px;
+  }
+
+  &-Content {
+    overflow: auto;
+    align-self: stretch;
+    flex-basis: 67%;
+    flex-grow: 2;
+  }
+}

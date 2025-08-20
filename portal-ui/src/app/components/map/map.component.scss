@@ -1,0 +1,95 @@
+::ng-deep .map {
+  position: absolute;
+  inset: 55px 0 0;
+
+  display: grid;
+  grid-template:
+    'bar-left map bar-right'
+    'bar-bottom bar-bottom bar-bottom';
+  grid-template-rows: 1fr auto;
+  grid-template-columns: auto 1fr auto;
+
+  place-content: stretch stretch;
+  place-items: stretch stretch;
+  grid-gap: 0;
+
+  &__map {
+    position: relative;
+    grid-area: map;
+
+    overflow: hidden;
+
+    .ol-attribution.ol-unselectable.ol-control.ol-uncollapsible {
+      display: none;
+    }
+
+    .ol-scale-step-text,
+    .ol-scale-text {
+      white-space: nowrap;
+
+      text-shadow:
+        1px 1px 2px #fff,
+        -1px 1px 2px #fff,
+        1px -1px 2px #fff,
+        -1px -1px 2px #fff,
+        2px 0 2px #fff,
+        0 2px 2px #fff,
+        -2px 0 2px #fff,
+        0 -2px 2px #fff;
+    }
+
+    .ol-scale-text {
+      font:
+        16px/1.3 Verdana,
+        Geneva,
+        Tahoma,
+        sans-serif;
+    }
+
+    .ol-scale-step-text {
+      font:
+        14px/1.3 Verdana,
+        Geneva,
+        Tahoma,
+        sans-serif;
+    }
+
+    .ol-rotate {
+      top: 60px;
+      right: 15px;
+    }
+
+    &:active {
+      cursor: grabbing;
+    }
+
+    &_default {
+      cursor: crosshair;
+    }
+
+    &:active.map__map_selection {
+      cursor: crosshair;
+    }
+  }
+
+  &__bar {
+    position: relative;
+    z-index: 1;
+
+    &_dir {
+      &_left {
+        grid-area: bar-left;
+      }
+
+      &_right {
+        grid-area: bar-right;
+
+        box-shadow: 0 8px 16px 0 rgb(0 0 0 / 16%);
+      }
+
+      &_bottom {
+        grid-area: bar-bottom;
+      }
+    }
+  }
+}

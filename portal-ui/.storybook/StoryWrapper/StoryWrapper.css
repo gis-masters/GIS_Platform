@@ -1,0 +1,8 @@
+.StoryWrapper {
+  position: absolute;
+  inset: 0;
+
+  overflow: auto;
+
+  padding: 15px 20px;
+}

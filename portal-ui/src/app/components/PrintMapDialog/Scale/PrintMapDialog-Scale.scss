@@ -1,0 +1,12 @@
+.PrintMapDialog-Scale {
+  position: absolute;
+  bottom: calc(var(--PrintMapDialogPreviewSizeFactor) * calc(2.77 * var(--PrintMapDialogPreviewControlsFactor)));
+  left: calc(var(--PrintMapDialogPreviewSizeFactor) * calc(2.77 * var(--PrintMapDialogPreviewControlsFactor)));
+
+  width: var(--PrintMapDialogScaleWidth);
+  height: calc(var(--PrintMapDialogScaleWidth) / 8);
+
+  --PrintMapDialogScaleWidth: calc(
+    var(--PrintMapDialogPreviewSizeFactor) * calc(69 * var(--PrintMapDialogPreviewControlsFactor))
+  );
+}

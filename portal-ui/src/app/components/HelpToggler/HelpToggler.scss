@@ -1,0 +1,11 @@
+body .HelpToggler {
+  &-Popup {
+    z-index: 100;
+  }
+
+  &-Dialog {
+    width: 80%;
+    max-width: 1200px;
+    min-height: 60%;
+  }
+}

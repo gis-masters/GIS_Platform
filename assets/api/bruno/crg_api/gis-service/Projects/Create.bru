@@ -1,0 +1,25 @@
+meta {
+  name: Create
+  type: http
+  seq: 3
+}
+
+post {
+  url: http://localhost:8100/projects
+  body: json
+  auth: bearer
+}
+
+headers {
+  Content-Type: application/json
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo3MCwidXNlcl9uYW1lIjoid0B3Iiwic2NvcGUiOlsiY3JnIl0sIm9yZ2FuaXphdGlvbnMiOlt7ImlkIjo2OSwibmFtZSI6IldXVyBDb21wYW55In1dLCJleHAiOjE1Nzk3NjY0ODEsImF1dGhvcml0aWVzIjpbIkdFT1NFUlZFUl9BRE1JTiJdLCJqdGkiOiI3Mjc0Y2U2Ni0xM2IyLTQ2NTUtYjNmYi0wNTc4NGEyMGQ4YzYiLCJjbGllbnRfaWQiOiJhZG1pbiJ9.ABE2Ii1fk1k_b-OD7tYjrZlascqQXrKtkvfOCabQgnM
+}
+
+body:json {
+  {
+    "name": "Project 2 for q user"
+  }
+}

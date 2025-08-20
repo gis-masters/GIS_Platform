@@ -1,0 +1,35 @@
+.edit-content {
+  overflow: auto;
+
+  height: calc(100vh - 105px);
+}
+
+.fiz-edit-item {
+  align-items: center;
+
+  padding: 4px 6px;
+}
+
+.edit-item-title {
+  font-family: monospace;
+  line-height: 1.1;
+}
+
+.error-badge {
+  padding: 0 2px;
+
+  background-color: tomato;
+}
+
+.object-errors {
+  margin-top: 5px;
+  margin-right: -10px;
+  margin-left: -10px;
+
+  color: white;
+  background: tomato;
+
+  font-family: monospace;
+  font-size: medium;
+  font-weight: bold;
+}

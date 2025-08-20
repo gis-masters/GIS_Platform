@@ -1,0 +1,12 @@
+.PermissionsCount {
+  font-size: 14px;
+  line-height: 1.3;
+
+  &-Line {
+    white-space: nowrap;
+  }
+
+  &-Title {
+    color: var(--gray);
+  }
+}

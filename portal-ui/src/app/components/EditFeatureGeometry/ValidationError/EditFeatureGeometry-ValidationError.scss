@@ -1,0 +1,27 @@
+.EditFeatureGeometryValidationError {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  margin: 10px 30px 20px;
+  padding: 16px;
+
+  border: 1px solid var(--error);
+  border-radius: 4px;
+  background-color: var(--white);
+
+  &-Message {
+    margin-right: 16px;
+
+    color: var(--error);
+
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  &-Button {
+    min-width: auto;
+    margin-right: 16px;
+    padding: 6px 16px;
+  }
+}

@@ -1,0 +1,20 @@
+body .VectorTableCard {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+
+  height: 100%;
+
+  &-Card {
+    display: flex;
+    overflow: hidden;
+    flex-direction: column;
+    flex-shrink: 1;
+  }
+
+  &-DateTitle {
+    margin-right: 0.4em;
+
+    color: var(--gray);
+  }
+}

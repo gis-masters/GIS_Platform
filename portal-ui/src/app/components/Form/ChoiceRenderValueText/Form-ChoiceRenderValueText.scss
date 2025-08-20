@@ -1,0 +1,10 @@
+body .Form-ChoiceRenderValueText {
+  overflow: hidden;
+
+  height: auto;
+  min-height: 1.4375em;
+  max-height: 30px;
+
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}

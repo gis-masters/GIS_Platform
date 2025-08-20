@@ -1,0 +1,26 @@
+.Layer-TransparencyIndicator {
+  position: absolute;
+  top: calc(50% - 6px);
+  left: 8px;
+
+  width: 3px;
+  height: 12px;
+
+  transition: transform 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transform: translateX(calc(18px * var(--LayerEditMode)));
+
+  background: silver;
+
+  &::before {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+
+    height: calc(var(--LayerTransparencyValue) * 1%);
+
+    content: '';
+
+    background: var(--blue);
+  }
+}

@@ -1,0 +1,389 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ClientMessage xmlns="urn://x-artefacts-smev-gov-ru/services/service-adapter/types">
+    <itSystem>U629301</itSystem>
+    <RequestMessage>
+        <RequestMetadata>
+            <clientId>04f1efb8-927a-11ee-b9d1-0242ac120002</clientId>
+        </RequestMetadata>
+        <RequestContent>
+            <content>
+                <MessagePrimaryContent>
+                    <tns:Request xmlns:tns="urn://x-artefacts-uishc.domrf.ru/register-rnv/1.0.8"
+                                 xmlns:com="urn://x-artefacts-uishc.domrf.ru/register-rnv/commons/1.0.8">
+                        <tns:RegisterNewExploitation>
+                            <tns:RecipientInfo>
+                                <com:OrganizationInfo>
+                                    <com:OGRN>1187746953976</com:OGRN>
+                                    <com:INN>7704466023</com:INN>
+                                </com:OrganizationInfo>
+                                <com:Email>tewtetastest@domrf.ru</com:Email>
+                                <com:MailingAddress>
+                                    <com:FIAS>ef8f9fe1-bc9f-48ca-8219-92a87f8af4c7</com:FIAS>
+                                    <com:Region>77</com:Region>
+                                    <com:Locality Name="Москва" Type="г"/>
+                                    <com:Street Name="Воздвиженка" Type="ул"/>
+                                    <com:HouseNumber>10</com:HouseNumber>
+                                    <com:BuildingNumber>соор 1</com:BuildingNumber>
+                                    <com:Note>125009 Москва, ул. Воздвиженка д 10, соор 1</com:Note>
+                                </com:MailingAddress>
+                            </tns:RecipientInfo>
+                            <tns:PermitNumber>50-RU03308000-112233-2022-1</tns:PermitNumber>
+                            <tns:GovernmentOrderId>3</tns:GovernmentOrderId>
+                            <tns:PermitDate>2022-11-22</tns:PermitDate>
+                            <tns:IssueOrgan>
+                                <com:OGRN>1185053037476</com:OGRN>
+                                <com:INN>5024190060</com:INN>
+                            </tns:IssueOrgan>
+                            <tns:IssuePersonPosition>Уполномоченный сотрудник ЕО</tns:IssuePersonPosition>
+                            <tns:IssuePerson>
+                                <com:Surname>Двадцатый</com:Surname>
+                                <com:Name>Андрей</com:Name>
+                                <com:MiddleName>Иванович</com:MiddleName>
+                            </tns:IssuePerson>
+                            <tns:ConstructionKind>
+                                <com:Code>1</com:Code>
+                                <com:Name>строительство объекта капитального строительства</com:Name>
+                            </tns:ConstructionKind>
+                            <tns:ObjectInfo>
+                                <tns:ObjectName>12-ти этажный жилой дом со встроенными помещениями</tns:ObjectName>
+                                <tns:ConstObjectID>253302</tns:ConstObjectID>
+                                <tns:ConstObjectName>12-ти этажный жилой дом со встроенными помещениями
+                                </tns:ConstObjectName>
+                                <tns:ObjectAddress AddressOrLocation="true">
+                                    <tns:AddressFull>
+                                        <com:FIAS>54035756-d38b-40bb-bd26-a7c045d82034</com:FIAS>
+                                        <com:OKTMO>46771000001</com:OKTMO>
+                                        <com:Region>50</com:Region>
+                                        <com:Locality Name="Москва" Type="г"/>
+                                        <com:ElementPlanStructure>
+                                            <com:Code>1</com:Code>
+                                            <com:Name>Район</com:Name>
+                                        </com:ElementPlanStructure>
+                                        <com:Street Name="Механизаторов" Type="переулок"/>
+                                        <com:HouseNumber>9</com:HouseNumber>
+                                        <com:Note>Московская область, г. Солнечногорск,переулок Механизаторов, дом. 9
+                                        </com:Note>
+                                    </tns:AddressFull>
+                                </tns:ObjectAddress>
+                                <tns:ObjectAddressDoc>
+                                    <tns:DocNumber>21-987-456</tns:DocNumber>
+                                    <tns:DocDate>2022-11-22</tns:DocDate>
+                                    <tns:DocIssueOrganization>ООО "ЦИФРОВЫЕ ТЕХНОЛОГИИ"</tns:DocIssueOrganization>
+                                    <tns:DocIssueOrganOPF>
+                                        <com:Code>4</com:Code>
+                                        <com:Name>ООО</com:Name>
+                                    </tns:DocIssueOrganOPF>
+                                    <tns:DocIssueOrganINN>7704466023</tns:DocIssueOrganINN>
+                                </tns:ObjectAddressDoc>
+                                <tns:CadastralNumberZU>02:09:0080607:2750</tns:CadastralNumberZU>
+                                <tns:ObjectBuildingAddress>
+                                    <com:Region>2</com:Region>
+                                    <com:Locality Name="Рысаево" Type="с"/>
+                                </tns:ObjectBuildingAddress>
+                                <tns:ObjectKind>
+                                    <com:Code>1</com:Code>
+                                    <com:Name>Многоквартирный дом</com:Name>
+                                </tns:ObjectKind>
+                                <tns:ObjectPurpose>
+                                    <com:Code>1</com:Code>
+                                    <com:Name>Жилое</com:Name>
+                                </tns:ObjectPurpose>
+                                <tns:ObjectPurposeFunctional>
+                                    <com:Code>3</com:Code>
+                                    <com:Name>Жилое здание</com:Name>
+                                </tns:ObjectPurposeFunctional>
+                                <tns:BuildCapitalType>
+                                    <com:Code>1</com:Code>
+                                    <com:Name>Здание</com:Name>
+                                </tns:BuildCapitalType>
+                                <tns:ObjectDescription>
+                                    <tns:OverallPerformance>
+                                        <tns:BuildingVolume>
+                                            <tns:InProject>29980</tns:InProject>
+                                            <tns:InFact>29980</tns:InFact>
+                                        </tns:BuildingVolume>
+                                        <tns:GroundPart>
+                                            <tns:InProject>100</tns:InProject>
+                                            <tns:InFact>100</tns:InFact>
+                                        </tns:GroundPart>
+                                        <tns:TotalArea>
+                                            <tns:InProject>8600</tns:InProject>
+                                            <tns:InFact>8600</tns:InFact>
+                                        </tns:TotalArea>
+                                        <tns:UnlivingArea>
+                                            <tns:InProject>3645</tns:InProject>
+                                            <tns:InFact>3645</tns:InFact>
+                                        </tns:UnlivingArea>
+                                        <tns:OutbuildingArea>
+                                            <tns:InProject>27480</tns:InProject>
+                                            <tns:InFact>27480</tns:InFact>
+                                        </tns:OutbuildingArea>
+                                        <tns:NumberBuildings>
+                                            <tns:InProject>1</tns:InProject>
+                                            <tns:InFact>1</tns:InFact>
+                                        </tns:NumberBuildings>
+                                        <tns:AreaObjectCap>
+                                            <tns:InProject>450</tns:InProject>
+                                            <tns:InFact>450</tns:InFact>
+                                        </tns:AreaObjectCap>
+                                        <tns:AreaBuildingPartObject>
+                                            <tns:InProject>450</tns:InProject>
+                                            <tns:InFact>450</tns:InFact>
+                                        </tns:AreaBuildingPartObject>
+                                        <tns:PremisesCount>
+                                            <tns:InProject>115</tns:InProject>
+                                            <tns:InFact>115</tns:InFact>
+                                        </tns:PremisesCount>
+                                        <tns:BuildingArea>
+                                            <tns:InProject>877</tns:InProject>
+                                            <tns:InFact>877</tns:InFact>
+                                        </tns:BuildingArea>
+                                        <tns:HeightObject>
+                                            <tns:InProject>40</tns:InProject>
+                                            <tns:InFact>40</tns:InFact>
+                                        </tns:HeightObject>
+                                    </tns:OverallPerformance>
+                                    <tns:LivingObjects>
+                                        <tns:LivingArea>
+                                            <tns:InProject>4955</tns:InProject>
+                                            <tns:InFact>4955</tns:InFact>
+                                        </tns:LivingArea>
+                                        <tns:UnlivingArea>
+                                            <tns:InProject>3645</tns:InProject>
+                                            <tns:InFact>3645</tns:InFact>
+                                        </tns:UnlivingArea>
+                                        <tns:MinNumberFloors>
+                                            <tns:InProject>12</tns:InProject>
+                                            <tns:InFact>12</tns:InFact>
+                                        </tns:MinNumberFloors>
+                                        <tns:MaxNumberFloors>
+                                            <tns:InProject>15</tns:InProject>
+                                            <tns:InFact>15</tns:InFact>
+                                        </tns:MaxNumberFloors>
+                                        <tns:MinUndergroundFloors>
+                                            <tns:InProject>0</tns:InProject>
+                                            <tns:InFact>0</tns:InFact>
+                                        </tns:MinUndergroundFloors>
+                                        <tns:MaxUndergroundFloors>
+                                            <tns:InProject>1</tns:InProject>
+                                            <tns:InFact>1</tns:InFact>
+                                        </tns:MaxUndergroundFloors>
+                                        <tns:NumberSections>
+                                            <tns:InProject>2</tns:InProject>
+                                            <tns:InFact>2</tns:InFact>
+                                        </tns:NumberSections>
+                                        <tns:NumberApartments>
+                                            <tns:InProject>95</tns:InProject>
+                                            <tns:InFact>95</tns:InFact>
+                                        </tns:NumberApartments>
+                                        <tns:PremisesLivingCount>
+                                            <tns:InProject>95</tns:InProject>
+                                            <tns:InFact>95</tns:InFact>
+                                        </tns:PremisesLivingCount>
+                                        <tns:AreaApartments>
+                                            <tns:InProject>8600</tns:InProject>
+                                            <tns:InFact>8600</tns:InFact>
+                                        </tns:AreaApartments>
+                                        <tns:NumberOneRoom>
+                                            <tns:InProject>30</tns:InProject>
+                                            <tns:InFact>30</tns:InFact>
+                                        </tns:NumberOneRoom>
+                                        <tns:AreaOneRoom>
+                                            <tns:InProject>1035</tns:InProject>
+                                            <tns:InFact>1035</tns:InFact>
+                                        </tns:AreaOneRoom>
+                                        <tns:NumberTwoRoom>
+                                            <tns:InProject>25</tns:InProject>
+                                            <tns:InFact>25</tns:InFact>
+                                        </tns:NumberTwoRoom>
+                                        <tns:AreaTwoRoom>
+                                            <tns:InProject>1195</tns:InProject>
+                                            <tns:InFact>1195</tns:InFact>
+                                        </tns:AreaTwoRoom>
+                                        <tns:NumberThreeRoom>
+                                            <tns:InProject>25</tns:InProject>
+                                            <tns:InFact>25</tns:InFact>
+                                        </tns:NumberThreeRoom>
+                                        <tns:AreaThreeRoom>
+                                            <tns:InProject>1545</tns:InProject>
+                                            <tns:InFact>1545</tns:InFact>
+                                        </tns:AreaThreeRoom>
+                                        <tns:NumberFourRoom>
+                                            <tns:InProject>10</tns:InProject>
+                                            <tns:InFact>10</tns:InFact>
+                                        </tns:NumberFourRoom>
+                                        <tns:AreaFourRoom>
+                                            <tns:InProject>791</tns:InProject>
+                                            <tns:InFact>791</tns:InFact>
+                                        </tns:AreaFourRoom>
+                                        <tns:NumberMoreRoom>
+                                            <tns:InProject>5</tns:InProject>
+                                            <tns:InFact>5</tns:InFact>
+                                        </tns:NumberMoreRoom>
+                                        <tns:AreaMoreRoom>
+                                            <tns:InProject>389</tns:InProject>
+                                            <tns:InFact>389</tns:InFact>
+                                        </tns:AreaMoreRoom>
+                                        <tns:NetworkEngineering>
+                                            <tns:NetworkHeatSupply>
+                                                <tns:InProject>1000</tns:InProject>
+                                                <tns:InFact>1000</tns:InFact>
+                                            </tns:NetworkHeatSupply>
+                                            <tns:NetworkHotWaterSupply>
+                                                <tns:InProject>1200</tns:InProject>
+                                                <tns:InFact>1200</tns:InFact>
+                                            </tns:NetworkHotWaterSupply>
+                                            <tns:NetworkColdWaterSupply>
+                                                <tns:InProject>1700</tns:InProject>
+                                                <tns:InFact>1700</tns:InFact>
+                                            </tns:NetworkColdWaterSupply>
+                                            <tns:NetworkLighting>
+                                                <tns:InProject>1300</tns:InProject>
+                                                <tns:InFact>1300</tns:InFact>
+                                            </tns:NetworkLighting>
+                                            <tns:NetworkStormWaterDisposal>
+                                                <tns:InProject>1400</tns:InProject>
+                                                <tns:InFact>1400</tns:InFact>
+                                            </tns:NetworkStormWaterDisposal>
+                                            <tns:NetworkDomesticWaterDisposal>
+                                                <tns:InProject>1500</tns:InProject>
+                                                <tns:InFact>1500</tns:InFact>
+                                            </tns:NetworkDomesticWaterDisposal>
+                                            <tns:NetworkEnergySaving>
+                                                <tns:InProject>1600</tns:InProject>
+                                                <tns:InFact>1600</tns:InFact>
+                                            </tns:NetworkEnergySaving>
+                                            <tns:NetworkGasSupply>
+                                                <tns:InProject>1800</tns:InProject>
+                                                <tns:InFact>1800</tns:InFact>
+                                            </tns:NetworkGasSupply>
+                                        </tns:NetworkEngineering>
+                                        <tns:Elevators>
+                                            <tns:InProject>5</tns:InProject>
+                                            <tns:InFact>5</tns:InFact>
+                                        </tns:Elevators>
+                                        <tns:Escalators>
+                                            <tns:InProject>3</tns:InProject>
+                                            <tns:InFact>3</tns:InFact>
+                                        </tns:Escalators>
+                                        <tns:WheelchairLifts>
+                                            <tns:InProject>2</tns:InProject>
+                                            <tns:InFact>2</tns:InFact>
+                                        </tns:WheelchairLifts>
+                                        <tns:MaterialsFoundations>
+                                            <tns:InProject>
+                                                <com:Code>5</com:Code>
+                                                <com:Name>Плитный</com:Name>
+                                            </tns:InProject>
+                                            <tns:InFact>
+                                                <com:Code>5</com:Code>
+                                                <com:Name>Плитный</com:Name>
+                                            </tns:InFact>
+                                        </tns:MaterialsFoundations>
+                                        <tns:CorrectMaterialsFoundations>Плитный фундамент
+                                        </tns:CorrectMaterialsFoundations>
+                                        <tns:MaterialsWall>
+                                            <tns:InProject>
+                                                <com:Code>7</com:Code>
+                                                <com:Name>С монолитным железобетонным каркасом и стенами из мелкоштучных
+                                                    каменных материалов (кирпич, керамические камни, блоки и др.)
+                                                </com:Name>
+                                            </tns:InProject>
+                                            <tns:InFact>
+                                                <com:Code>7</com:Code>
+                                                <com:Name>С монолитным железобетонным каркасом и стенами из мелкоштучных
+                                                    каменных материалов (кирпич, керамические камни, блоки и др.)
+                                                </com:Name>
+                                            </tns:InFact>
+                                        </tns:MaterialsWall>
+                                        <tns:CorrectMaterialsWall>С монолитным железобетонным каркасом и стенами из
+                                            мелкоштучных каменных материалов (кирпич, керамические камни, блоки и др.)
+                                        </tns:CorrectMaterialsWall>
+                                        <tns:CeilingMaterials>
+                                            <tns:InProject>
+                                                <com:Code>3</com:Code>
+                                                <com:Name>Сборные железобетонные по металлическим балкам</com:Name>
+                                            </tns:InProject>
+                                            <tns:InFact>
+                                                <com:Code>3</com:Code>
+                                                <com:Name>Сборные железобетонные по металлическим балкам</com:Name>
+                                            </tns:InFact>
+                                        </tns:CeilingMaterials>
+                                        <tns:CorrectCeilingMaterials>Сборные железобетонные по металлическим балкам
+                                        </tns:CorrectCeilingMaterials>
+                                        <tns:RoofingMaterials>
+                                            <tns:InProject>
+                                                <com:Code>8</com:Code>
+                                                <com:Name>Битумная черепица</com:Name>
+                                            </tns:InProject>
+                                            <tns:InFact>
+                                                <com:Code>8</com:Code>
+                                                <com:Name>Битумная черепица</com:Name>
+                                            </tns:InFact>
+                                        </tns:RoofingMaterials>
+                                        <tns:CorrectRoofingMaterials>Битумная черепица</tns:CorrectRoofingMaterials>
+                                        <tns:OtherIndex>Дополнительные сведения</tns:OtherIndex>
+                                    </tns:LivingObjects>
+                                    <tns:EnergyEfficiency>
+                                        <tns:EnergyEfficiency>
+                                            <tns:InProject>
+                                                <com:Code>9</com:Code>
+                                                <com:Name>A++</com:Name>
+                                            </tns:InProject>
+                                            <tns:InFact>
+                                                <com:Code>9</com:Code>
+                                                <com:Name>A++</com:Name>
+                                            </tns:InFact>
+                                        </tns:EnergyEfficiency>
+                                        <tns:HeatConsumption>
+                                            <tns:InProject>6600</tns:InProject>
+                                            <tns:InFact>6600</tns:InFact>
+                                        </tns:HeatConsumption>
+                                        <tns:InsulatedMaterials>
+                                            <tns:InProject>Материалы утепления наружных ограждающих конструкций
+                                            </tns:InProject>
+                                            <tns:InFact>Материалы утепления наружных ограждающих конструкций
+                                            </tns:InFact>
+                                        </tns:InsulatedMaterials>
+                                        <tns:Skylights>
+                                            <tns:InProject>Заполнение световых проемов</tns:InProject>
+                                            <tns:InFact>Заполнение световых проемов</tns:InFact>
+                                        </tns:Skylights>
+                                    </tns:EnergyEfficiency>
+                                </tns:ObjectDescription>
+                                <tns:TechnicalPlan>
+                                    <tns:TechnicalPlanID>16-15-801</tns:TechnicalPlanID>
+                                    <tns:Engineer>
+                                        <tns:EngineerFIO>
+                                            <com:Surname>Заворухин</com:Surname>
+                                            <com:Name>Олег</com:Name>
+                                            <com:MiddleName>Олегович</com:MiddleName>
+                                        </tns:EngineerFIO>
+                                        <tns:CertificateDoc>
+                                            <tns:DocNumber>16-15-801</tns:DocNumber>
+                                            <tns:DocDate>2022-06-03</tns:DocDate>
+                                            <tns:DocIssueOrganization>МИНСТРОЙ РБ</tns:DocIssueOrganization>
+                                            <tns:DocIssueOrganOPF>
+                                                <com:Code>110</com:Code>
+                                                <com:Name>ГКУ</com:Name>
+                                            </tns:DocIssueOrganOPF>
+                                            <tns:DocIssueOrganINN>0274151019</tns:DocIssueOrganINN>
+                                        </tns:CertificateDoc>
+                                        <tns:DCertificate>2022-06-03</tns:DCertificate>
+                                    </tns:Engineer>
+                                    <tns:DTechnicalPlan>2022-06-03</tns:DTechnicalPlan>
+                                </tns:TechnicalPlan>
+                            </tns:ObjectInfo>
+                            <tns:ConstPermitNumber>50-RU03308000-112233-2022-1</tns:ConstPermitNumber>
+                            <tns:ConstPermitDate>2022-11-22</tns:ConstPermitDate>
+                            <tns:ConstPermitIssueOrgan>
+                                <com:OGRN>1185053037476</com:OGRN>
+                                <com:INN>5024190060</com:INN>
+                            </tns:ConstPermitIssueOrgan>
+                        </tns:RegisterNewExploitation>
+                    </tns:Request>
+                </MessagePrimaryContent>
+            </content>
+        </RequestContent>
+    </RequestMessage>
+</ClientMessage>

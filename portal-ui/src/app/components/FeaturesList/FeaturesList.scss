@@ -1,0 +1,10 @@
+.FeaturesList {
+  overflow: auto;
+  flex-shrink: 2;
+
+  height: 100%;
+
+  &-Empty {
+    margin-right: 20px;
+  }
+}

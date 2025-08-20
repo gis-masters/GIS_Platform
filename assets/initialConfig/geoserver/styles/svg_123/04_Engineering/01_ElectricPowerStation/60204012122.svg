@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" version="1.2">
+    <g font-weight="400" style="fill:none;fill-rule:evenodd;stroke:#000;stroke-width:1;stroke-linecap:square;stroke-linejoin:bevel">
+        <g style="font-style:normal;font-weight:400;font-size:19.84250069px;font-family:icomoon;fill:red;fill-opacity:1;stroke:none">
+            <path d="M2.285-21.125h21.43a2.2 2.2 0 0 1 1.612.673A2.2 2.2 0 0 1 26-18.84V2.59a2.2 2.2 0 0 1-.673 1.612 2.2 2.2 0 0 1-1.612.673H2.285a2.2 2.2 0 0 1-1.612-.673A2.2 2.2 0 0 1 0 2.59v-21.43a2.2 2.2 0 0 1 .673-1.612 2.2 2.2 0 0 1 1.612-.673" font-size="19.843" style="vector-effect:none;fill-rule:nonzero" transform="matrix(.6923 0 0 .6923 1 15.625)"/>
+        </g>
+        <g style="font-style:normal;font-weight:400;font-size:14.17319965px;font-family:icomoon;fill:#00a900;fill-opacity:1;stroke:none">
+            <path d="M13.99 3.563H19l-19-19v5.01l13.99 13.99m-6.865 0h4.713L0-8.275v4.713l7.125 7.124M0-1.428v4.99h4.973L0-1.428" font-size="14.173" style="vector-effect:none;fill-rule:nonzero" transform="matrix(.6923 0 0 .6923 3.423 14.11)"/>
+        </g>
+        <g style="font-style:normal;font-weight:400;font-size:17.00779915px;font-family:icomoon;fill:#000;fill-opacity:1;stroke:none">
+            <path d="M21.18-18.081c.33 0 .615.12.854.36.24.239.36.523.36.853V2.493c0 .33-.12.614-.36.854s-.524.359-.853.359H1.819c-.33 0-.614-.12-.853-.36-.24-.239-.36-.523-.36-.853v-19.361c0-.33.12-.614.36-.854s.524-.36.853-.36h19.362m0-.606H1.819c-.509 0-.94.176-1.291.528A1.757 1.757 0 0 0 0-16.868V2.493c0 .51.176.94.528 1.292.352.352.782.527 1.291.527h19.362c.509 0 .94-.175 1.291-.527.352-.352.528-.783.528-1.292v-19.361c0-.51-.176-.94-.528-1.292a1.757 1.757 0 0 0-1.291-.528" font-size="17.008" style="vector-effect:none;fill-rule:nonzero" transform="matrix(.6923 0 0 .6923 2.038 14.976)"/>
+        </g>
+        <g style="font-style:normal;font-weight:400;font-size:19.84250069px;font-family:icomoon;fill:#000;fill-opacity:1;stroke:none">
+            <path d="M23.943-20.44c.373 0 .694.136.965.407.271.27.406.592.406.965V2.818c0 .373-.135.694-.406.965-.27.271-.592.406-.965.406H2.057c-.373 0-.694-.135-.965-.406a1.318 1.318 0 0 1-.406-.965v-21.886c0-.373.135-.694.406-.965.27-.271.592-.407.965-.407h21.886m0-.685H2.057c-.576 0-1.063.199-1.46.597A1.986 1.986 0 0 0 0-19.068V2.818c0 .576.199 1.063.597 1.46.397.398.884.597 1.46.597h21.886c.576 0 1.063-.199 1.46-.597.398-.397.597-.884.597-1.46v-21.886c0-.576-.199-1.063-.597-1.46a1.986 1.986 0 0 0-1.46-.597" font-size="19.843" style="vector-effect:none;fill-rule:nonzero" transform="matrix(.6923 0 0 .6923 1 15.625)"/>
+        </g>
+    </g>
+</svg>

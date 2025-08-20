@@ -1,0 +1,20 @@
+.LayersSidebar-Toolbar {
+  z-index: 2;
+
+  display: flex;
+
+  padding: 0 7px;
+
+  border-bottom: 1px solid rgb(0 0 0 / 12%);
+  background: white;
+
+  &_above {
+    transition: box-shadow 0.3s;
+
+    border-bottom: none;
+    box-shadow:
+      0 3px 3px -2px rgb(0 0 0 / 20%),
+      0 3px 4px 0 rgb(0 0 0 / 14%),
+      0 1px 8px 0 rgb(0 0 0 / 12%);
+  }
+}

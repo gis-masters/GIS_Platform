@@ -1,0 +1,28 @@
+body .Search {
+  display: flex;
+  align-items: center;
+
+  width: 350px;
+  max-width: calc(100% - 55px);
+  padding: 2px 4px 2px 8px;
+
+  &-Paper {
+    max-height: calc(100% - 150px);
+  }
+
+  &-Input {
+    width: 100%;
+  }
+
+  .MuiFormHelperText-root {
+    position: absolute;
+    top: 100%;
+
+    margin: 3px 0 0;
+    padding: 2px 4px;
+
+    border-radius: 4px;
+    background: white;
+    box-shadow: 0 2px 4px rgb(0 0 0 / 10%);
+  }
+}

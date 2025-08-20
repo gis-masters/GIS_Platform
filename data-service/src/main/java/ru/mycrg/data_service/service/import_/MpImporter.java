@@ -1,0 +1,170 @@
+package ru.mycrg.data_service.service.import_;
+
+import org.postgis.MultiPolygon;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+import org.w3c.dom.NodeList;
+import ru.mycrg.data_service.dao.RecordsDao;
+import ru.mycrg.data_service.dao.ddl.tables.DdlTablesSpecial;
+import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
+import ru.mycrg.data_service.dto.IResourceModel;
+import ru.mycrg.data_service.dto.record.IRecord;
+import ru.mycrg.data_service.dto.record.RecordEntity;
+import ru.mycrg.data_service.exceptions.BadRequestException;
+import ru.mycrg.data_service.exceptions.DataServiceException;
+import ru.mycrg.data_service.exceptions.NotFoundException;
+import ru.mycrg.data_service.exceptions.TransformationException;
+import ru.mycrg.data_service.service.import_.dto.ImportInitializingModel;
+import ru.mycrg.data_service.service.parsers.XmlParser;
+import ru.mycrg.data_service.service.parsers.exceptions.XmlParserException;
+import ru.mycrg.data_service.service.resources.ResourceQualifier;
+import ru.mycrg.data_service.service.resources.TableService;
+import ru.mycrg.data_service.service.schemas.SchemaUtil;
+import ru.mycrg.data_service.service.schemas.SystemAttributeHandler;
+import ru.mycrg.data_service.util.ImportValidationHandler;
+import ru.mycrg.data_service_contract.dto.SchemaDto;
+import ru.mycrg.data_service_contract.dto.SimplePropertyDto;
+import ru.mycrg.data_service_contract.enums.ValueType;
+
+import java.util.*;
+
+import static ru.mycrg.data_service.service.import_.ImportType.MP;
+import static ru.mycrg.data_service.service.schemas.SchemaUtil.getPropertyNameByType;
+import static ru.mycrg.data_service.util.CrsHandler.extractCrsNumber;
+
+@Service
+public class MpImporter implements Importer<Long> {
+
+    private final Logger log = LoggerFactory.getLogger(MpImporter.class);
+
+    private final RecordsDao recordsDao;
+    private final XmlParser xmlParser;
+    private final TableService tableService;
+    private final DdlTablesSpecial ddlTablesSpecial;
+    private final SystemAttributeHandler systemAttributeHandler;
+
+    public MpImporter(RecordsDao recordsDao,
+                      XmlParser xmlParser,
+                      TableService tableService,
+                      DdlTablesSpecial ddlTablesSpecial,
+                      SystemAttributeHandler systemAttributeHandler) {
+        this.recordsDao = recordsDao;
+        this.xmlParser = xmlParser;
+        this.tableService = tableService;
+        this.ddlTablesSpecial = ddlTablesSpecial;
+        this.systemAttributeHandler = systemAttributeHandler;
+    }
+
+    @Override
+    public ImportType getType() {
+        return MP;
+    }
+
+    @Override
+    public Importer<Long> validate() {
+        return null;
+    }
+
+    @Override
+    public Importer<Long> setPayload(ImportInitializingModel importInitialData, IRecord record) {
+        return null;
+    }
+
+    /**
+     * Импорт xml файла межевого плана в БД. При импорте межевого плана происходит парсинг файла, проверка типов полей,
+     * согласно схеме БД, добавление записи в БД
+     *
+     * @param file      xml файл межевого плана
+     * @param qualifier Квалификатор таблицы в БД куда осуществляется импорт данных
+     *
+     * @return objectId Возвращает id добавленной в БД записи
+     *
+     * @throws DataServiceException Если парсинг xml файла не выполнился успешно и если новая запись не добавлена в БД
+     * @throws BadRequestException  Если преобразование геометрии не удалось
+     */
+    @Override
+    public Long doImport(MultipartFile file, ResourceQualifier qualifier) {
+        IResourceModel tableModel = tableService.getInfo(qualifier);
+        SchemaDto schemaOfCurrentLayer = tableModel.getSchema();
+        if (schemaOfCurrentLayer == null) {
+            throw new NotFoundException("Не найдена схема данных для: " + qualifier.getQualifier());
+        }
+
+        List<SimplePropertyDto> currentProperties = schemaOfCurrentLayer.getProperties();
+        Map<String, Object> propertiesMatchingToDBColumns;
+        Map<String, Object> dataForSavingToDB = Map.of();
+
+        try {
+            dataForSavingToDB = xmlParser.parseByScheme(
+                    file,
+                    currentProperties,
+                    extractCrsNumber(tableModel.getCrs()));
+
+            Map<String, Object> dataForSavingToDBValid = ImportValidationHandler
+                    .removeNonMatchingBySchemaProperties(dataForSavingToDB, currentProperties);
+
+            List<String> columnNamesInTable = ddlTablesSpecial.getAllColumnNames(qualifier.getTable());
+            propertiesMatchingToDBColumns = getAllPropertiesMatchingToDBColumns(
+                    dataForSavingToDBValid, columnNamesInTable);
+
+            Map<String, Object> modifiedProps = systemAttributeHandler
+                    .init(schemaOfCurrentLayer, propertiesMatchingToDBColumns)
+                    .excludeAutoGeneratedFields()
+                    .build();
+
+            return recordsDao.addRecord(qualifier, new RecordEntity(modifiedProps), schemaOfCurrentLayer).getId();
+        } catch (CrgDaoException e) {
+            log.warn("Часть колонок не может быть импортирована: [{}] => {}", schemaOfCurrentLayer.getName(),
+                     e.getMessage());
+
+            return doGeomImport(schemaOfCurrentLayer, qualifier, dataForSavingToDB);
+        } catch (XmlParserException e) {
+            throw new DataServiceException(e.getMessage());
+        } catch (TransformationException e) {
+            throw new BadRequestException(e.getMessage());
+        }
+    }
+
+    private Map<String, Object> getAllPropertiesMatchingToDBColumns(Map<String, Object> dataForSavingToDB,
+                                                                    List<String> columnNames) {
+        Map<String, Object> matchingByColumnsProperties = new HashMap<>();
+        for (String columnName: columnNames) {
+            if (dataForSavingToDB.containsKey(columnName)) {
+                matchingByColumnsProperties.put(columnName, dataForSavingToDB.get(columnName));
+            }
+        }
+
+        return matchingByColumnsProperties;
+    }
+
+    private Long doGeomImport(SchemaDto schemaOfCurrentLayer,
+                              ResourceQualifier qualifier,
+                              Map<String, Object> dataForSavingToDB) {
+        log.debug("Пробуем сделать импорт только геометрии");
+
+        Optional<String> oGeom = getPropertyNameByType(ValueType.GEOMETRY, schemaOfCurrentLayer.getProperties());
+        if (oGeom.isEmpty()) {
+            throw new DataServiceException("В слое: " + qualifier + " нет колонки типа: " + ValueType.GEOMETRY);
+        }
+
+        Map<String, Object> onlyGeometry = new HashMap<>();
+        oGeom.ifPresent(geometryFieldName -> {
+            if (dataForSavingToDB.containsKey(geometryFieldName)) {
+                onlyGeometry.put(geometryFieldName.toLowerCase(), dataForSavingToDB.get(geometryFieldName));
+            }
+        });
+
+        if (onlyGeometry.isEmpty()) {
+            throw new DataServiceException(
+                    "Не получилось сопоставить колонки слоя: " + qualifier + " с объектом: " + dataForSavingToDB.keySet());
+        }
+
+        try {
+            return recordsDao.addRecord(qualifier, new RecordEntity(onlyGeometry), schemaOfCurrentLayer).getId();
+        } catch (CrgDaoException e) {
+            throw new DataServiceException("Ошибка при добавлении записи в таблицу " + qualifier);
+        }
+    }
+}

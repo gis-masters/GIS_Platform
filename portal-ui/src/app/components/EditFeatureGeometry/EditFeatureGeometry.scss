@@ -1,0 +1,17 @@
+.EditFeatureGeometry {
+  display: flex;
+  flex-direction: column;
+
+  max-height: 100%;
+  padding: 15px 0;
+
+  &-Svg {
+    position: relative;
+    top: -3px;
+
+    margin-right: 10px;
+    margin-left: 7px;
+
+    font-size: 16px;
+  }
+}

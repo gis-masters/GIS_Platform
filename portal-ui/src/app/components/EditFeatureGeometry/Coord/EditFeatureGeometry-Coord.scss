@@ -1,0 +1,36 @@
+.EditFeatureGeometry-Coord {
+  position: relative;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  height: calc(var(--EditFeatureGeometryCoordHeight) * 1px);
+  padding: 3px 0;
+
+  transition: background-color 0.3s;
+
+  &::before {
+    position: absolute;
+    top: calc(50% - 3px);
+    left: 9px;
+
+    width: 6px;
+    height: 6px;
+
+    content: '';
+    transition: opacity 0.3s;
+
+    opacity: 0;
+    border-radius: 50%;
+    background: var(--blue);
+  }
+
+  &_active {
+    background: var(--light);
+
+    &::before {
+      opacity: 0.8;
+    }
+  }
+}

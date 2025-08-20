@@ -1,0 +1,22 @@
+body .Layer-LegendFilterToggler {
+  position: absolute;
+  z-index: 1;
+  top: 1px;
+  left: -30px;
+
+  transition: opacity 0.3s;
+
+  opacity: calc(0.2 + calc(0.8 * var(--LayerInnardsHovered)));
+
+  &::before {
+    position: absolute;
+    z-index: -1;
+    inset: 0;
+
+    content: '';
+
+    border-radius: 50%;
+    background: white;
+    box-shadow: 0 0 4px 3px white;
+  }
+}

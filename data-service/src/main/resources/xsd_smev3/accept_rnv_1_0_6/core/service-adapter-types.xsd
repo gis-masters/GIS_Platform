@@ -1,0 +1,473 @@
+<?xml version='1.0' encoding='UTF-8'?><!-- Published by JAX-WS RI at http://jax-ws.dev.java.net. RI's version is Metro/2.3 (tags/2.3-7528; 2013-04-29T19:34:10+0000) JAXWS-RI/2.2.8 JAXWS/2.2 svn-revision#unknown. -->
+<xs:schema xmlns:typ="urn://x-artefacts-smev-gov-ru/services/service-adapter/types"
+           xmlns:faults="urn://x-artefacts-smev-gov-ru/services/service-adapter/types/faults"
+           xmlns:req="urn://rostelekom.ru/PermissionObjectOperation/1.0.6"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           elementFormDefault="qualified"
+           version="1.0"
+           targetNamespace="urn://x-artefacts-smev-gov-ru/services/service-adapter/types">
+    <xs:import namespace="urn://x-artefacts-smev-gov-ru/services/service-adapter/types/faults"
+               schemaLocation="./faults.xsd"/>
+    <xs:import namespace="urn://rostelekom.ru/PermissionObjectOperation/1.0.6"
+               schemaLocation="../schemas.xsd"/>
+    <xs:element name="AttachmentHeaderList">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="AttachmentHeader" type="typ:AttachmentHeaderType" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="BusinessProcessMetadata" type="typ:BusinessProcessMetadata"/>
+    <xs:element name="ClientMessage">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="itSystem" type="xs:string"/>
+                <xs:element name="replyToQueue" type="xs:string" minOccurs="0"/>
+                <xs:element name="RequestMessage" type="typ:RequestMessageType" minOccurs="0"/>
+                <xs:element name="ResponseMessage" type="typ:ResponseMessageType" minOccurs="0"/>
+                <xs:element name="QueryMessage" type="typ:QueryMessageType" minOccurs="0"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="ErrorMessage" type="typ:ErrorMessage"/>
+    <xs:element name="FindMessageQuery" type="typ:FindMessageQuery"/>
+    <xs:element name="Message" type="typ:Message"/>
+    <xs:element name="MessagePrimaryContent">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="req:request" minOccurs="0"/>
+                <xs:element ref="req:FormResponse" minOccurs="0"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="MessageQuery" type="typ:MessageQuery"/>
+
+    <xs:element name="MessageResult">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="itSystem" type="xs:string"/>
+                <xs:element name="MessageId" type="xs:string"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="PersonalSignature" type="typ:XMLDSigSignatureType1"/>
+
+    <xs:element name="QueryMessage" type="typ:QueryMessageType"/>
+
+    <xs:element name="QueryResult">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="smevMetadata" type="typ:SmevMetadata"/>
+                <xs:element name="Message" type="typ:Message"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="QueryResultList">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="QueryResult" type="typ:AdapterMessage" minOccurs="0" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="RequestContent" type="typ:RequestContentType"/>
+
+    <xs:element name="RequestMessage" type="typ:RequestMessageType"/>
+
+    <xs:element name="RequestMetadata" type="typ:RequestMetadataType"/>
+
+    <xs:element name="ResponseContent" type="typ:ResponseContentType"/>
+
+    <xs:element name="ResponseMessage" type="typ:ResponseMessageType"/>
+
+    <xs:element name="ResponseMetadata" type="typ:ResponseMetadataType"/>
+
+    <xs:element name="StatusMessage" type="typ:StatusMessage"/>
+
+    <xs:element name="SyncRequest" type="typ:SyncRequest"/>
+
+    <xs:element name="SyncResponse" type="typ:SyncResponse"/>
+
+    <xs:element name="itSystem" type="xs:string"/>
+
+    <xs:element name="smevMetadata" type="typ:SmevMetadata"/>
+
+    <xs:complexType name="ErrorMessage">
+        <xs:complexContent>
+            <xs:extension base="typ:StatusMessage">
+                <xs:sequence>
+                    <xs:element name="type" type="xs:string"/>
+                    <xs:element name="fault" type="faults:Fault"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="StatusMessage">
+        <xs:complexContent>
+            <xs:extension base="typ:Message">
+                <xs:sequence>
+                    <xs:element name="statusMetadata" type="typ:StatusMetadataType"/>
+                    <xs:element name="status" type="xs:string"/>
+                    <xs:element name="details" type="xs:string" minOccurs="0"/>
+                    <xs:element name="timestamp" type="xs:dateTime" minOccurs="0"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="Message">
+        <xs:sequence>
+            <xs:element name="messageType" type="xs:string" minOccurs="0"/>
+            <xs:element name="RequestMetadata" type="typ:RequestMetadataType"/>
+            <xs:element name="RequestContent" type="typ:RequestContentType"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="StatusMetadataType">
+        <xs:complexContent>
+            <xs:extension base="typ:Metadata">
+                <xs:sequence>
+                    <xs:element name="originalClientId" type="xs:string"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="Metadata">
+        <xs:sequence>
+            <xs:element name="clientId" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="RequestMetadataType">
+        <xs:complexContent>
+            <xs:extension base="typ:Metadata">
+                <xs:sequence>
+                    <xs:element name="linkedGroupIdentity" type="typ:LinkedGroupIdentity" minOccurs="0"/>
+                    <xs:element name="createGroupIdentity" type="typ:CreateGroupIdentity" minOccurs="0"/>
+                    <xs:element name="nodeId" type="xs:string" minOccurs="0"/>
+                    <xs:element name="eol" type="xs:dateTime" minOccurs="0"/>
+                    <xs:element name="testMessage" type="xs:boolean" minOccurs="0"/>
+                    <xs:element name="TransactionCode" type="xs:string" minOccurs="0"/>
+                    <xs:element name="BusinessProcessMetadata" type="typ:BusinessProcessMetadata" minOccurs="0"/>
+                    <xs:element name="RoutingInformation" type="typ:RoutingInformationType" minOccurs="0"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="LinkedGroupIdentity">
+        <xs:sequence>
+            <xs:element name="refClientId" type="xs:string" minOccurs="0"/>
+            <xs:element name="refGroupId" type="xs:string" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="CreateGroupIdentity">
+        <xs:sequence>
+            <xs:element name="FRGUServiceCode" type="xs:string"/>
+            <xs:element name="FRGUServiceDescription" type="xs:string" minOccurs="0"/>
+            <xs:element name="FRGUServiceRecipientDescription" type="xs:string" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="BusinessProcessMetadata">
+        <xs:sequence>
+            <xs:element name="filePath" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="RoutingInformationType">
+        <xs:sequence>
+            <xs:element name="DynamicRouting" type="typ:DynamicRoutingType" minOccurs="0"/>
+            <xs:element name="IdentifierRouting" type="typ:IdentifierRoutingType" minOccurs="0"/>
+            <xs:element name="RegistryRouting" type="typ:RegistryRoutingType" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="DynamicRoutingType">
+        <xs:sequence>
+            <xs:element name="DynamicValue" type="xs:string" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="IdentifierRoutingType">
+        <xs:sequence>
+            <xs:element name="IdentifierValue" type="xs:string" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="RegistryRoutingType">
+        <xs:sequence>
+            <xs:element name="RegistryRecordRouting" type="typ:RegistryRecordRoutingType" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="RegistryRecordRoutingType">
+        <xs:sequence>
+            <xs:element name="RecordId" type="xs:int"/>
+            <xs:element name="UseGeneralRouting" type="xs:boolean"/>
+            <xs:element name="DynamicRouting" type="typ:DynamicRoutingType" minOccurs="0"/>
+            <xs:element name="IdentifierRouting" type="typ:IdentifierRoutingType" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="ResponseMetadataType">
+        <xs:complexContent>
+            <xs:extension base="typ:Metadata">
+                <xs:sequence>
+                    <xs:element name="replyToClientId" type="xs:string"/>
+                    <xs:element name="replyTo" type="xs:string" minOccurs="0"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="QueryMessageType">
+        <xs:complexContent>
+            <xs:extension base="typ:Message">
+                <xs:sequence>
+                    <xs:element name="clientId" type="xs:string"/>
+                    <xs:element name="nodeId" type="xs:string" minOccurs="0"/>
+                    <xs:element name="queryType" type="xs:string"/>
+                    <xs:element name="queryFilter" type="xs:string"/>
+                    <xs:element name="queryRootTag" type="xs:string"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="ResponseMessageType">
+        <xs:complexContent>
+            <xs:extension base="typ:Message">
+                <xs:sequence>
+                    <xs:element name="ResponseMetadata" type="typ:ResponseMetadataType"/>
+                    <xs:element name="ResponseContent" type="typ:ResponseContentType"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="ResponseContentType">
+        <xs:sequence>
+            <xs:element name="content" type="typ:Content" minOccurs="0"/>
+            <xs:element name="rejects" type="typ:Reject" nillable="true" minOccurs="0" maxOccurs="unbounded"/>
+            <xs:element name="status" type="typ:Status" minOccurs="0"/>
+            <xs:element name="originalContent" type="xs:string" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="Content">
+        <xs:sequence>
+            <xs:element ref="typ:MessagePrimaryContent"/>
+            <xs:element name="PersonalSignature" type="typ:XMLDSigSignatureType1" minOccurs="0"/>
+            <xs:element ref="typ:AttachmentHeaderList" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="XMLDSigSignatureType1">
+        <xs:sequence>
+            <xs:element name="filePath" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="AttachmentHeaderType">
+        <xs:sequence>
+            <xs:element name="Id" type="xs:string" minOccurs="0"/>
+            <xs:element name="filePath" type="xs:string"/>
+            <xs:element name="passportId" type="xs:string" minOccurs="0"/>
+            <xs:element name="SignaturePKCS7" type="xs:base64Binary" minOccurs="0"/>
+            <xs:element name="TransferMethod" type="xs:string" minOccurs="0"/>
+            <xs:element name="ReusableAttachment" type="xs:boolean" minOccurs="0"/>
+            <xs:element name="Archive" type="typ:ArchiveType" minOccurs="0"/>
+            <xs:element name="RegistryRecords" type="typ:RegistryRecordsType" minOccurs="0"/>
+            <xs:element name="NamespaceUri" type="xs:string" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="ArchiveType">
+        <xs:sequence>
+            <xs:element name="File" type="typ:FileType1" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="FileType1">
+        <xs:sequence>
+            <xs:element name="name" type="xs:string"/>
+            <xs:element name="passportId" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="RegistryRecordsType">
+        <xs:sequence>
+            <xs:element name="RegistryRecordId" type="xs:int" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="Reject">
+        <xs:sequence>
+            <xs:element name="code" type="xs:string"/>
+            <xs:element name="description" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="Status">
+        <xs:sequence>
+            <xs:element name="code" type="xs:string"/>
+            <xs:element name="description" type="xs:string"/>
+            <xs:element name="parameter" nillable="true" minOccurs="0" maxOccurs="unbounded">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="key" type="xs:string"/>
+                        <xs:element name="value" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="RequestMessageType">
+        <xs:complexContent>
+            <xs:extension base="typ:Message">
+                <xs:sequence>
+                    <xs:element name="RequestMetadata" type="typ:RequestMetadataType"/>
+                    <xs:element name="RequestContent" type="typ:RequestContentType"/>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="RequestContentType">
+        <xs:sequence>
+            <xs:element name="content" type="typ:Content"/>
+            <xs:element name="originalContent" type="xs:string" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="AdapterMessage">
+        <xs:sequence>
+            <xs:element name="smevMetadata" type="typ:SmevMetadata"/>
+            <xs:element name="Message" type="typ:Message"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="SmevMetadata">
+        <xs:sequence>
+            <xs:element name="MessageId" type="xs:string" minOccurs="0"/>
+            <xs:element name="ReferenceMessageID" type="xs:string" minOccurs="0"/>
+            <xs:element name="TransactionCode" type="xs:string" minOccurs="0"/>
+            <xs:element name="OriginalMessageID" type="xs:string" minOccurs="0"/>
+            <xs:element name="Sender" type="xs:string" minOccurs="0"/>
+            <xs:element name="Recipient" type="xs:string" minOccurs="0"/>
+            <xs:element name="ReplyTo" type="xs:string" minOccurs="0"/>
+            <xs:element name="SendingDate" type="xs:dateTime" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="FindMessageQuery">
+        <xs:sequence>
+            <xs:element name="itSystem" type="xs:string"/>
+            <xs:element name="specificQuery" type="typ:FindTypeCriteria"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="FindTypeCriteria">
+        <xs:sequence>
+            <xs:element name="messagePeriodCriteria" type="typ:MessagePeriodCriteria" minOccurs="0"/>
+            <xs:element name="messageClientIdCriteria" type="typ:MessageClientIdCriteria" minOccurs="0"/>
+            <xs:element name="informationSystemCriteria" type="typ:InformationSystemCriteria" minOccurs="0"/>
+            <xs:element name="MessageCountToReturn" type="xs:int"/>
+            <xs:element name="MessageOffset" type="xs:int"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="MessagePeriodCriteria">
+        <xs:sequence>
+            <xs:element name="from" type="xs:dateTime"/>
+            <xs:element name="to" type="xs:dateTime" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="MessageClientIdCriteria">
+        <xs:sequence>
+            <xs:element name="clientId" type="xs:string"/>
+            <xs:element name="clientIdCriteria" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="InformationSystemCriteria">
+        <xs:sequence>
+            <xs:element name="sender" type="xs:string" minOccurs="0"/>
+            <xs:element name="recipient" type="xs:string" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="MessageQuery">
+        <xs:sequence>
+            <xs:element name="itSystem" type="xs:string"/>
+            <xs:element name="nodeId" type="xs:string" minOccurs="0"/>
+            <xs:element name="routerExtraQueue" type="xs:string" minOccurs="0"/>
+            <xs:element name="specificQuery" type="typ:QueryTypeCriteria" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="QueryTypeCriteria">
+        <xs:sequence>
+            <xs:element name="messageTypeCriteria" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="SyncRequest">
+        <xs:sequence>
+            <xs:element name="itSystem" type="xs:string"/>
+            <xs:element name="RequestMessage" type="typ:RequestMessageType"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="SyncResponse">
+        <xs:sequence>
+            <xs:element name="smevMetadata" type="typ:SmevMetadata"/>
+            <xs:element name="Message" type="typ:Message"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:simpleType name="ErrorType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="SERVER"/>
+            <xs:enumeration value="CLIENT"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="StatusMessageCategory">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="OTHER"/>
+            <xs:enumeration value="ERROR"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="TransferMethodType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="MTOM"/>
+            <xs:enumeration value="REFERENCE"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="RejectCode">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="ACCESS_DENIED"/>
+            <xs:enumeration value="NO_DATA"/>
+            <xs:enumeration value="UNKNOWN_REQUEST_DESCRIPTION"/>
+            <xs:enumeration value="FAILURE"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="ClientIdCriteria">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="GET_REQUEST_BY_REQUEST_CLIENTID"/>
+            <xs:enumeration value="GET_RESPONSE_BY_REQUEST_CLIENTID"/>
+            <xs:enumeration value="GET_RESPONSE_BY_RESPONSE_CLIENTID"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="TypeCriteria">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="RESPONSE"/>
+            <xs:enumeration value="REQUEST"/>
+        </xs:restriction>
+    </xs:simpleType>
+</xs:schema>

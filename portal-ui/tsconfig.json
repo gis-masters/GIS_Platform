@@ -1,0 +1,28 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "allowSyntheticDefaultImports": true,
+    "allowJs": true,
+    "baseUrl": "./",
+    "downlevelIteration": true,
+    "outDir": "./dist/out-tsc",
+    "sourceMap": true,
+    "declaration": false,
+    "module": "es2022",
+    "moduleResolution": "node",
+    "experimentalDecorators": true,
+    "useDefineForClassFields": true,
+    "importHelpers": true,
+    "target": "es2022",
+    "jsx": "react",
+    "skipLibCheck": true,
+    "typeRoots": ["node_modules/@types"],
+    "lib": ["es2022", "esnext.array", "dom", "dom.iterable"],
+    "paths": {
+      "txml/txml": ["node_modules/txml/dist/txml"]
+    },
+    "strict": true,
+    "strictBindCallApply": true
+  },
+  "exclude": ["my", "bl", ".vscode", "test", "dist", "dist*", "node_modules", "**/dist/*", "**/node_modules/*"]
+}

@@ -1,0 +1,33 @@
+.DocumentsSelectDialog {
+  &-Switcher {
+    position: absolute;
+    top: 16px;
+    right: 40px;
+  }
+
+  &-Error {
+    margin-right: 15px;
+
+    color: var(--red);
+  }
+
+  &-Explorer {
+    max-height: calc(100vh - 200px);
+  }
+
+  .LibraryRegistry-Table {
+    max-height: calc(100vh - 300px);
+  }
+
+  .LibraryRegistry {
+    padding: 0;
+  }
+
+  .MuiDialogContent-root {
+    padding: 0 24px;
+  }
+
+  .XTable-Footer {
+    justify-content: flex-start;
+  }
+}

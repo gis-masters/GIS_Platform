@@ -1,0 +1,130 @@
+.CustomStyleControl-HatchingTile {
+  width: 40px;
+  height: 20px;
+
+  --tileSize: calc(var(--CustomStyleControlHatchingTileSize) * 1px);
+  --strokeWidth: calc(var(--CustomStyleControlHatchingTileStrokeWidth) * 1px);
+
+  &_type {
+    &_none {
+      background: var(--CustomStyleControlHatchingTileColor);
+    }
+
+    &_slash {
+      background-image: linear-gradient(
+          -45deg,
+          transparent calc(50% - var(--strokeWidth) / 2),
+          var(--CustomStyleControlHatchingTileColor) calc(50% - var(--strokeWidth) / 2),
+          var(--CustomStyleControlHatchingTileColor) calc(50% + var(--strokeWidth) / 2),
+          transparent calc(50% + var(--strokeWidth) / 2)
+        ),
+        linear-gradient(
+          -45deg,
+          var(--CustomStyleControlHatchingTileColor) calc(var(--strokeWidth) / 2),
+          transparent calc(var(--strokeWidth) / 2)
+        ),
+        linear-gradient(
+          -45deg,
+          transparent calc(100% - var(--strokeWidth) / 2),
+          var(--CustomStyleControlHatchingTileColor) calc(100% - var(--strokeWidth) / 2)
+        );
+      background-size: var(--tileSize) var(--tileSize);
+    }
+
+    &_backslash {
+      background-image: linear-gradient(
+          45deg,
+          transparent calc(50% - var(--strokeWidth) / 2),
+          var(--CustomStyleControlHatchingTileColor) calc(50% - var(--strokeWidth) / 2),
+          var(--CustomStyleControlHatchingTileColor) calc(50% + var(--strokeWidth) / 2),
+          transparent calc(50% + var(--strokeWidth) / 2)
+        ),
+        linear-gradient(
+          45deg,
+          var(--CustomStyleControlHatchingTileColor) calc(var(--strokeWidth) / 2),
+          transparent calc(var(--strokeWidth) / 2)
+        ),
+        linear-gradient(
+          45deg,
+          transparent calc(100% - var(--strokeWidth) / 2),
+          var(--CustomStyleControlHatchingTileColor) calc(100% - var(--strokeWidth) / 2)
+        );
+      background-size: var(--tileSize) var(--tileSize);
+    }
+
+    &_times {
+      background-image: linear-gradient(
+          45deg,
+          transparent calc(50% - var(--strokeWidth) / 2),
+          var(--CustomStyleControlHatchingTileColor) calc(50% - var(--strokeWidth) / 2),
+          var(--CustomStyleControlHatchingTileColor) calc(50% + var(--strokeWidth) / 2),
+          transparent calc(50% + var(--strokeWidth) / 2)
+        ),
+        linear-gradient(
+          45deg,
+          var(--CustomStyleControlHatchingTileColor) calc(var(--strokeWidth) / 2),
+          transparent calc(var(--strokeWidth) / 2)
+        ),
+        linear-gradient(
+          45deg,
+          transparent calc(100% - var(--strokeWidth) / 2),
+          var(--CustomStyleControlHatchingTileColor) calc(100% - var(--strokeWidth) / 2)
+        ),
+        linear-gradient(
+          -45deg,
+          transparent calc(50% - var(--strokeWidth) / 2),
+          var(--CustomStyleControlHatchingTileColor) calc(50% - var(--strokeWidth) / 2),
+          var(--CustomStyleControlHatchingTileColor) calc(50% + var(--strokeWidth) / 2),
+          transparent calc(50% + var(--strokeWidth) / 2)
+        ),
+        linear-gradient(
+          -45deg,
+          var(--CustomStyleControlHatchingTileColor) calc(var(--strokeWidth) / 2),
+          transparent calc(var(--strokeWidth) / 2)
+        ),
+        linear-gradient(
+          -45deg,
+          transparent calc(100% - var(--strokeWidth) / 2),
+          var(--CustomStyleControlHatchingTileColor) calc(100% - var(--strokeWidth) / 2)
+        );
+      background-size: var(--tileSize) var(--tileSize);
+    }
+
+    &_horline {
+      background-image: linear-gradient(
+        var(--CustomStyleControlHatchingTileColor) 0,
+        var(--CustomStyleControlHatchingTileColor) var(--strokeWidth),
+        transparent var(--strokeWidth)
+      );
+      background-repeat: repeat-y;
+      background-size: 100% var(--tileSize);
+    }
+
+    &_vertline {
+      background-image: linear-gradient(
+        90deg,
+        var(--CustomStyleControlHatchingTileColor) 0,
+        var(--CustomStyleControlHatchingTileColor) var(--strokeWidth),
+        transparent var(--strokeWidth)
+      );
+      background-repeat: repeat-x;
+      background-size: var(--tileSize);
+    }
+
+    &_plus {
+      background-image: linear-gradient(
+          var(--CustomStyleControlHatchingTileColor) 0,
+          var(--CustomStyleControlHatchingTileColor) var(--strokeWidth),
+          transparent var(--strokeWidth)
+        ),
+        linear-gradient(
+          90deg,
+          var(--CustomStyleControlHatchingTileColor) 0,
+          var(--CustomStyleControlHatchingTileColor) var(--strokeWidth),
+          transparent var(--strokeWidth)
+        );
+      background-position: calc(var(--tileSize) / 2) calc(var(--tileSize) / 2);
+      background-size: var(--tileSize) var(--tileSize);
+    }
+  }
+}

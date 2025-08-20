@@ -1,0 +1,57 @@
+spring:
+  profiles:
+    active: fiz-dev
+logging:
+  file: /opt/crg/logs/gis-service.log
+  level:
+    ru.mycrg: DEBUG
+
+---
+spring:
+  profiles: fiz-dev
+  datasource:
+    platform: postgres
+    url: jdbc:postgresql://127.0.0.1:5434/crg_gis_service
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+    hikari:
+      minimum-pool-size: ${SPRING_DATASOURCE_HIKARI_MINIMUM_POOL_SIZE:10}
+      maximum-pool-size: ${SPRING_DATASOURCE_HIKARI_MAXIMUM_POOL_SIZE:20}
+  jpa:
+    properties:
+      hibernate.temp.use_jdbc_metadata_defaults: false
+      hibernate.format_sql: false
+    show-sql: false
+  flyway:
+    enabled: true
+    url: jdbc:postgresql://127.0.0.1:5434/crg_gis_service
+    user: ${SPRING_FLYWAY_USER}
+    password: ${SPRING_FLYWAY_PASSWORD}
+    placeholders:
+      db_owner: ${SPRING_FLYWAY_PLACEHOLDERS_DB_OWNER}
+  rabbitmq:
+    host: ${SPRING_RABBITMQ_HOST}
+    port: ${SPRING_RABBITMQ_PORT}
+    username: ${SPRING_RABBITMQ_USERNAME}
+    password: ${SPRING_RABBITMQ_PASSWORD}
+
+security:
+  jwt:
+    secret: ${SECURITY_JWT_SECRET}
+
+
+crg-options:
+  auth-service-url: http://127.0.0.1:9000
+  data-service-url: http://127.0.0.1:8084
+  gis-service-url: http://127.0.0.1:8082
+  geoserver-host: 127.0.0.1:8080
+  userServiceName: postgres_db_user_service
+  specializationsPath: /opt/crg/specializations
+  system-admin-login: ${CRG_OPTIONS_SYSTEM_ADMIN_LOGIN}
+  system-admin-password: ${CRG_OPTIONS_SYSTEM_ADMIN_PASSWORD}
+  jwt:
+    client_id: ${CRG_OPTIONS_JWT_CLIENT_ID}
+    client_secret: ${CRG_OPTIONS_JWT_CLIENT_SECRET}
+
+server:
+  port: 8082

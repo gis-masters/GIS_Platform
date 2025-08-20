@@ -1,0 +1,15 @@
+meta {
+  name: Delete
+  type: http
+  seq: 3
+}
+
+delete {
+  url: http://localhost:8100/api/data/datasets/dataset_test_1
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjozNCwidXNlcl9uYW1lIjoiZml6QGZpeiIsInNjb3BlIjpbImNyZyJdLCJvcmdhbml6YXRpb25zIjpbeyJpZCI6MSwibmFtZSI6ImZpeiBDb21wYW55In1dLCJncm91cHMiOltdLCJleHAiOjE2MDY5MTkwNjIsImF1dGhvcml0aWVzIjpbIk9SR19BRE1JTiJdLCJqdGkiOiJjMTQzNjZhNC02N2NiLTQ3NGEtOTdkYS1jMDUwYzY1Y2U2ZDMiLCJjbGllbnRfaWQiOiJhZG1pbiJ9.yYWIfFu_YWmaM5288Hssok6JAGidCQhOEEyxGry_3Kg
+}

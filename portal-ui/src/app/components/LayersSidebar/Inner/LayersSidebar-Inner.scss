@@ -1,0 +1,12 @@
+.LayersSidebar-Inner {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+
+  display: flex;
+  overflow: hidden;
+  flex-direction: column;
+
+  width: 400px;
+}

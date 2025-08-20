@@ -1,0 +1,9 @@
+#!/bin/sh
+# shellcheck source=./_/husky.sh
+. "$(dirname "$0")/_/husky.sh"
+
+#cd ../scripts || exit
+#./build-and-copy-generated-types.sh
+
+cd portal-ui || exit
+lint-staged

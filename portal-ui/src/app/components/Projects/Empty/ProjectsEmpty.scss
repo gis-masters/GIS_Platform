@@ -1,0 +1,16 @@
+.ProjectsEmpty {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+
+  padding: 40px;
+
+  color: rgb(0 0 0 / 65%);
+
+  font-size: 16px;
+
+  &-Title {
+    font-size: x-large;
+    font-weight: 500;
+  }
+}

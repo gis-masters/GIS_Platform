@@ -1,0 +1,13 @@
+.WorkspaceHeader-Breadcrumbs {
+  grid-area: breadcrumbs;
+
+  overflow: hidden;
+
+  min-width: 200px;
+  padding-left: 60px;
+
+  white-space: nowrap;
+  text-overflow: ellipsis;
+
+  font-size: 14px;
+}

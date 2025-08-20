@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" version="1.2">
+    <g font-weight="400" style="fill:none;fill-rule:evenodd;stroke:#000;stroke-width:1;stroke-linecap:square;stroke-linejoin:bevel">
+        <g style="font-style:normal;font-weight:400;font-size:17.00779915px;font-family:icomoon;fill:#fff;fill-opacity:1;stroke:none">
+            <path d="M2.021-18.688h18.957c.555 0 1.03.199 1.427.596.397.396.595.872.595 1.426V2.291c0 .554-.198 1.03-.595 1.426a1.946 1.946 0 0 1-1.427.595H2.021c-.554 0-1.029-.198-1.426-.595A1.946 1.946 0 0 1 0 2.291v-18.957c0-.554.198-1.03.595-1.426a1.946 1.946 0 0 1 1.426-.596" font-size="17.008" style="vector-effect:none;fill-rule:nonzero" transform="matrix(.65217 0 0 .65217 2.5 14.687)"/>
+        </g>
+        <g style="font-style:normal;font-weight:400;font-size:14.17319965px;font-family:icomoon;fill:#0080ff;fill-opacity:1;stroke:none">
+            <path d="M0-15.438V3.6h19.037v-19.038H0m16.588 1.41-3.525 3.526h-6.55v-1.744L3.34-9.796 6.513-7.33v-1.763h5.14L1.41 1.15v-15.177h15.178M2.412 2.189l3.655-3.673h5.92V.278l3.172-2.467-3.173-2.505v1.762H7.478l10.149-10.093V2.189H2.412" font-size="14.173" style="vector-effect:none;fill-rule:nonzero" transform="matrix(.65345 0 0 .65345 3.78 13.868)"/>
+        </g>
+        <g style="font-style:normal;font-weight:400;font-size:17.00779915px;font-family:icomoon;fill:#000;fill-opacity:1;stroke:none">
+            <path d="M21.18-18.081c.33 0 .615.12.854.36.24.239.36.523.36.853V2.493c0 .33-.12.614-.36.854s-.524.359-.853.359H1.819c-.33 0-.614-.12-.853-.36-.24-.239-.36-.523-.36-.853v-19.361c0-.33.12-.614.36-.854s.524-.36.853-.36h19.362m0-.606H1.819c-.509 0-.94.176-1.291.528A1.757 1.757 0 0 0 0-16.868V2.493c0 .51.176.94.528 1.292.352.352.782.527 1.291.527h19.362c.509 0 .94-.175 1.291-.527.352-.352.528-.783.528-1.292v-19.361c0-.51-.176-.94-.528-1.292a1.757 1.757 0 0 0-1.291-.528" font-size="17.008" style="vector-effect:none;fill-rule:nonzero" transform="matrix(.65217 0 0 .65217 2.5 14.687)"/>
+        </g>
+        <g style="font-style:normal;font-weight:400;font-size:15.8739996px;font-family:icomoon;fill:red;fill-opacity:1;stroke:none">
+            <path d="M.656 3.938A.613.613 0 0 1 .4 3.885a1.02 1.02 0 0 1-.215-.133 1.02 1.02 0 0 1-.134-.215A.613.613 0 0 1 0 3.28c0-.095.017-.18.051-.256a1.02 1.02 0 0 1 .134-.215l19.687-19.688c.068-.055.14-.1.215-.133a.613.613 0 0 1 .257-.051.63.63 0 0 1 .461.194.63.63 0 0 1 .195.462.613.613 0 0 1-.051.256 1.014 1.014 0 0 1-.134.215L1.128 3.753c-.068.055-.14.1-.215.133a.613.613 0 0 1-.257.051" font-size="15.874" style="vector-effect:none;fill-rule:nonzero" transform="matrix(.65217 0 0 .65217 3.152 14.28)"/>
+        </g>
+    </g>
+</svg>

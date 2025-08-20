@@ -1,0 +1,18 @@
+.EditFeatureGeometry {
+  &-XY {
+    display: flex;
+
+    padding: 0 41px 0 34px;
+  }
+
+  &-X,
+  &-Y {
+    flex-grow: 1;
+
+    margin: 0 4px;
+
+    text-align: center;
+
+    color: var(--gray);
+  }
+}

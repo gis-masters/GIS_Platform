@@ -1,0 +1,9 @@
+.HelpMessage {
+  padding: 0 4px;
+
+  border-radius: 5px;
+  background: var(--light);
+  background: color-mix(in srgb, var(--light), transparent 25%);
+
+  font-size: 12px;
+}

@@ -1,0 +1,28 @@
+meta {
+  name: Create layer
+  type: http
+  seq: 3
+}
+
+post {
+  url: http://localhost:8082/projects/58/layers
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo5MywidXNlcl9uYW1lIjoiZml6QGZpeiIsInNjb3BlIjpbImNyZyJdLCJvcmdhbml6YXRpb25zIjpbeyJpZCI6NywibmFtZSI6ImZpeiBDb21wYW55In1dLCJncm91cHMiOltdLCJleHAiOjE2MDU0NDM4NzcsImF1dGhvcml0aWVzIjpbIk9SR19BRE1JTiJdLCJqdGkiOiI0YWEzNmUxYy0wNjY3LTRiZjItOGVkNS1iNDcxMjIzMzY1ZGYiLCJjbGllbnRfaWQiOiJhZG1pbiJ9.fA2r2kDUeIKhjf_6NgkNRtED3D4su0MUlBQtjewS4Ks
+}
+
+body:json {
+  {
+      "type": "vector",
+      "title": "title",
+      "dataset": "dataset",
+      "internalName": "internalName",
+      "nativeCRS": "EPSG:28406",
+      "dataStoreName": "dataStoreName",
+      "schemaId": "schemaId",
+      "styleName": "styleName"
+  }
+}

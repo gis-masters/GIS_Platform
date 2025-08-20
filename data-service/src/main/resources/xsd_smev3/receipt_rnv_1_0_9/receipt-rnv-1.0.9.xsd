@@ -1,0 +1,1292 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:tns="urn://x-artefacts-uishc.domrf.ru/receipt-rnv/1.0.9"
+           xmlns:com="urn://x-artefacts-uishc.domrf.ru/receipt-rnv/commons/1.0.9"
+           targetNamespace="urn://x-artefacts-uishc.domrf.ru/receipt-rnv/1.0.9"
+           elementFormDefault="qualified">
+    <xs:import namespace="urn://x-artefacts-uishc.domrf.ru/receipt-rnv/commons/1.0.9"
+               schemaLocation="./commons/receipt-rnv-common-types-1.0.9.xsd"/>
+    <xs:import namespace="urn://x-artefacts-smev-gov-ru/supplementary/commons/1.3.0"
+               schemaLocation="./commons/smev-supplementary-commons-1.3.0.xsd"/>
+    <!-- Основные элементы Вида сведений -->
+    <xs:element name="Request">
+        <xs:annotation>
+            <xs:documentation>Запрос на получение сведений о РНВ (Разрешение на ввод в эксплуатацию)</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:annotation>
+                <xs:documentation>Тип Запрос с бизнес-данными</xs:documentation>
+            </xs:annotation>
+            <xs:choice>
+                <xs:element name="ReceiptExploitation" type="tns:ReceiptExploitationType">
+                    <xs:annotation>
+                        <xs:documentation>Получение РНВ (разрешение на строительство)</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="ReceiptListExploitation" type="tns:ReceiptListExploitationType">
+                    <xs:annotation>
+                        <xs:documentation>Получение списка РНВ</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+            </xs:choice>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="Response" type="tns:ResponseType">
+        <xs:annotation>
+            <xs:documentation>Ответ на запрос сведений о РНВ (Разрешение на ввод в эксплуатацию)</xs:documentation>
+        </xs:annotation>
+    </xs:element>
+    <!-- Сведения о запросе -->
+
+    <!-- Описание запроса -->
+    <!-- Получение ЭД РНВ -->
+    <xs:complexType name="ReceiptExploitationType">
+        <xs:annotation>
+            <xs:documentation>Получение ЭД РНВ. Тип Запрос с бизнес-данными</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="RecipientInfo" type="com:RecipientInfoType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Сведения о получателе (застройщике)</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="PermitNumber" type="com:stringMaxLength-45" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Номер разрешения на ввод в эксплуатацию</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="PermitDate" type="xs:date" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Дата разрешения на ввод в эксплуатацию</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="IssueOrgan" type="com:OrganizationInfoType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Организация, выдавшая разрешение</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="DocId" type="com:stringMaxLength-10" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Идентификатор электронного документа РНВ</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="BuildPermitId" type="com:stringMaxLength-10" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Идентификатор электронного документа РНC</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="RequestObjectInfo" type="tns:RequestObjectShortInfoType" minOccurs="0"
+                        maxOccurs="unbounded">
+                <xs:annotation>
+                    <xs:documentation>Сведения об объектах</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <!-- Описание запроса -->
+    <!-- Получение списка ЭД РНВ -->
+    <xs:complexType name="ReceiptListExploitationType">
+        <xs:annotation>
+            <xs:documentation>Получение списка ЭД РНВ. Тип Запрос с бизнес-данными</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="RecipientInfo" type="com:RecipientInfoType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Сведения о получателе (застройщике)</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="PermitNumber" type="com:stringMaxLength-45" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Номер разрешения на ввод в эксплуатацию</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="IssueOrgan" type="com:OrganizationInfoType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Организация, выдавшая разрешение</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="DocId" type="com:stringMaxLength-10" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Идентификатор электронного документа РНВ</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="BuildPermitId" type="com:stringMaxLength-10" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Идентификатор электронного документа РНC</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="RequestObjectInfo" type="tns:RequestObjectShortInfoType" minOccurs="0"
+                        maxOccurs="unbounded">
+                <xs:annotation>
+                    <xs:documentation>Сведения об объектах</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="CadastralNumberZU" type="com:sCadastralNumber" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Кадастровый номер земельного участка</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="PermitDateFrom" type="xs:date" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Дата начала периода выдачи разрешения</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="PermitDateTo" type="xs:date" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Дата окончания периода выдачи разрешения</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="RequestObjectShortInfoType">
+        <xs:annotation>
+            <xs:documentation>Краткие сведения об объектах РНВ</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="ObjectID" type="com:stringMaxLength-10" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Идентификатор объекта (этапа) в составе РНВ</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="ObjectBusinessID" type="com:ObjectBusinessIDType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Бизнес-идентификатор объекта (этапа) в составе РНВ</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <!-- Сведения об ответе -->
+    <xs:complexType name="ResponseType">
+        <xs:annotation>
+            <xs:documentation>Данные ответа на запрос получения сведений о РНВ(Разрешение на ввод в эксплуатацию)
+            </xs:documentation>
+        </xs:annotation>
+        <xs:choice>
+            <xs:element name="ResponseExploitation" type="tns:ExploitationType">
+                <xs:annotation>
+                    <xs:documentation>Данные ответа на запрос на получение РНВ</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="ResponseListExploitation" type="tns:ExploitationShortInfoType" maxOccurs="unbounded">
+                <xs:annotation>
+                    <xs:documentation>Данные ответа на запрос на получение списка РНВ</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:choice>
+    </xs:complexType>
+    <!-- Описание ответа -->
+    <!-- Получение списка РНВ -->
+    <xs:complexType name="ExploitationShortInfoType">
+        <xs:annotation>
+            <xs:documentation>
+                Ответ на запрос списка сведений о документе с дополнительными атрибутами версий документа
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="VersionInfo" type="tns:ExploitationVersionInfoType">
+                <xs:annotation>
+                    <xs:documentation>Сведения о документе</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="PreviousVersionInfo" type="tns:ExploitationVersionInfoType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Список сведений о предыдущих версиях документа</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="ExploitationVersionInfoType">
+        <xs:annotation>
+            <xs:documentation>Сведения о версии документа</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="RecipientInfo" type="com:RecipientInfoType">
+                <xs:annotation>
+                    <xs:documentation>Сведения о получателе (застройщике)</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="RecipientID" type="com:stringMaxLength-255">
+                <xs:annotation>
+                    <xs:documentation>Идентификатор получателя (Застройщика)</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="PermitNumber" type="com:stringMaxLength-255">
+                <xs:annotation>
+                    <xs:documentation>Сведения о документе</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="DocId" type="com:stringMaxLength-10" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Идентификатор электронного документа РНВ</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="PermitDate" type="xs:date">
+                <xs:annotation>
+                    <xs:documentation>Дата выдачи разрешения на ввод в эксплуатацию</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="RegTime" type="xs:dateTime">
+                <xs:annotation>
+                    <xs:documentation>Дата размещения РНВ в Едином окне</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="IssueOrgan" type="com:OrganizationInfoType">
+                <xs:annotation>
+                    <xs:documentation>Сведения об органе, организации, выдавшей (его) разрешение на ввод в эксплуатацию
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="ObjectShortInfo" type="tns:ObjectShortInfoListType" maxOccurs="unbounded">
+                <xs:annotation>
+                    <xs:documentation>Список кратких сведений об объектах</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="StatusExploitation" type="tns:StatusExploitationType">
+                <xs:annotation>
+                    <xs:documentation>Статус разрешения на ввод в эксплуатацию</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="OldId" type="xs:positiveInteger" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Старый идентификатор РНВ</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="OldVersionId" type="xs:positiveInteger" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Старый идентификатор версии РНВ</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:simpleType name="StatusExploitationType" final="restriction">
+        <xs:annotation>
+            <xs:documentation>Статус разрешения на ввод в эксплуатацию (ISSUED-Выдан, CANCELED-Аннулирован)
+            </xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="ISSUED">
+                <xs:annotation>
+                    <xs:documentation>Выдан</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="CANCELED">
+                <xs:annotation>
+                    <xs:documentation>Аннулирован</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:complexType name="ObjectShortInfoListType">
+        <xs:annotation>
+            <xs:documentation>Сведения об объекте</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="ObjectName" type="com:stringMaxLength-3500">
+                <xs:annotation>
+                    <xs:documentation>Наименование объекта</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="ObjectID" type="xs:long" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Идентификатор объекта из РНВ</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="ObjectBusinessID" type="com:ObjectBusinessIDType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Бизнес идентификатор объекта из РНВ</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="ConstObjectID" type="com:stringMaxLength-10">
+                <xs:annotation>
+                    <xs:documentation>Идентификатор объекта из разрешения на строительство</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="CadastralNumbersZU" type="tns:CadastralNumberListType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Список кадастровых номеров земельного участка (ЗУ)</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="ObjectKind" type="com:RefBookType">
+                <xs:annotation>
+                    <xs:documentation>Значение из справочника «Вид объекта»</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="ObjectPurpose" type="com:RefBookType">
+                <xs:annotation>
+                    <xs:documentation>Значение из справочника «Назначение объекта»</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="ObjectPurposeFunctional" type="com:RefBookType">
+                <xs:annotation>
+                    <xs:documentation>Значение из справочника «Функциональное назначение объекта»</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="BuildCapitalType" type="com:RefBookType">
+                <xs:annotation>
+                    <xs:documentation>Значение из справочника «Вид объекта капитального строительства»
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="CadastralNumberListType">
+        <xs:annotation>
+            <xs:documentation>Список кадастровых номеров</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="CadastralNumber" type="com:sCadastralNumber" maxOccurs="unbounded">
+                <xs:annotation>
+                    <xs:documentation>Кадастровый номер</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <!-- Описание ответа -->
+    <!-- Получение РНВ -->
+    <xs:complexType name="ExploitationType">
+        <xs:annotation>
+            <xs:documentation>Информация о выданном разрешении</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="RecipientInfo" type="com:RecipientInfoType">
+                <xs:annotation>
+                    <xs:documentation>Сведения о получателе (застройщике)</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="PermitNumber" type="com:stringMaxLength-45">
+                <xs:annotation>
+                    <xs:documentation>Номер разрешения на ввод в эксплуатацию</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="GovernmentOrderId" type="com:GovernmentOrder" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Идентификатор номера приказа, в соответсвии с которым выдается РНВ
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="CadastralDistrict" type="com:stringMaxLength-10" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Кадастровый округ</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="CadastralArea" type="com:stringMaxLength-10" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Кадастровый район</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="PermitDate" type="xs:date">
+                <xs:annotation>
+                    <xs:documentation>Дата разрешения на ввод в эксплуатацию</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="IssueOrgan" type="com:OrganizationInfoType">
+                <xs:annotation>
+                    <xs:documentation>Организация, выдавшая разрешение</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="IssuePersonPosition" type="com:stringMaxLength-500">
+                <xs:annotation>
+                    <xs:documentation>Должность уполномоченного сотрудника органа, осуществляющего выдачу разрешения на
+                        ввод объекта в эксплуатацию
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="IssuePerson" type="com:FIOType">
+                <xs:annotation>
+                    <xs:documentation>Сведения об уполномоченном сотруднике органа, осуществляющего выдачу разрешения на
+                        ввод объекта в эксплуатацию
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="ConstructionKind" type="com:RefBookType">
+                <xs:annotation>
+                    <xs:documentation>Значения справочника «Вид строительства»</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="ObjectInfo" type="tns:ObjectInfoType" maxOccurs="unbounded">
+                <xs:annotation>
+                    <xs:documentation>Сведения об объекте</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="ConstPermitNumber" type="com:stringMaxLength-45">
+                <xs:annotation>
+                    <xs:documentation>Номер разрешения на строительство</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="ConstPermitDate" type="xs:date">
+                <xs:annotation>
+                    <xs:documentation>Дата выдачи разрешения на строительство</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="ConstPermitIssueOrgan" type="com:OrganizationInfoType">
+                <xs:annotation>
+                    <xs:documentation>Наименование организации, выдавшей разрешение на строительство</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="ObjectInfoType">
+        <xs:annotation>
+            <xs:documentation>Сведения об объекте</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="ObjectName" type="com:stringMaxLength-1000">
+                <xs:annotation>
+                    <xs:documentation>Наименование объекта</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="ObjectID" type="com:stringMaxLength-10">
+                <xs:annotation>
+                    <xs:documentation>Идентификатор объекта из РНВ</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="ConstObjectID" type="com:stringMaxLength-10">
+                <xs:annotation>
+                    <xs:documentation>Идентификатор объекта из разрешения на строительство</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="ObjectBusinessID" type="com:ObjectBusinessIDType">
+                <xs:annotation>
+                    <xs:documentation>Бизнес идентификатор объекта из РНВ</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="ConstObjectName" type="com:stringMaxLength-3500">
+                <xs:annotation>
+                    <xs:documentation>Наименование объекта из разрешения на строительство</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="ObjectAddress" type="tns:AddressAttrType">
+                <xs:annotation>
+                    <xs:documentation>Адрес объекта (местоположение или присвоенный фактический адрес)
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="ObjectAddressDoc" type="tns:DocType" minOccurs="0" maxOccurs="unbounded">
+                <xs:annotation>
+                    <xs:documentation>Реквизиты документа о присвоении / изменении адреса объекта</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="CadastralNumberOKS" type="com:sCadastralNumber" minOccurs="0" maxOccurs="unbounded">
+                <xs:annotation>
+                    <xs:documentation>Кадастровый номер объекта капитального строительства (ОКС)</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="CadastralNumberZU" type="com:sCadastralNumber" minOccurs="0" maxOccurs="unbounded">
+                <xs:annotation>
+                    <xs:documentation>Кадастровый номер земельного участка (ЗУ)</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="ObjectBuildingAddress" type="com:AddressFullType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Строительный адрес</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="ObjectKind" type="com:RefBookType">
+                <xs:annotation>
+                    <xs:documentation>Значение из справочника «Объект капитального строительства»</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="ObjectPurpose" type="com:RefBookType">
+                <xs:annotation>
+                    <xs:documentation>Значение из справочника «Назначение объекта»</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="ObjectPurposeFunctional" type="com:RefBookType">
+                <xs:annotation>
+                    <xs:documentation>Значение из справочника «Функциональное назначение объекта»</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="BuildCapitalType" type="com:RefBookType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Значение из справочника «Вид объекта капитального строительства»
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="ObjectDescription" type="tns:ObjectDescriptionType">
+                <xs:annotation>
+                    <xs:documentation>Сведения о характеристиках объекта капитального строительства</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="TechnicalPlan" type="tns:TechnicalPlanType" maxOccurs="unbounded">
+                <xs:annotation>
+                    <xs:documentation>Технический план</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="ObjectDescriptionType">
+        <xs:annotation>
+            <xs:documentation>Сведения о характеристиках объекта</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="OverallPerformance" type="tns:OverallPerformanceType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Общие показатели вводимого в эксплуатацию объекта</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="UnlivingObjects" type="tns:UnlivingObjectsType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Нежилые объекты (объекты здравоохранения, образования, культуры, отдыха, спорта и
+                        т.д.)
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="LivingObjects" type="tns:LivingObjectsType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Объекты жилищного фонда</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="ProductiveObjects" type="tns:ProductiveObjectsType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Объекты производственного назначения</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="LongObjects" type="tns:LongObjectsType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Линейные объекты</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="EnergyEfficiency" type="tns:EnergyEfficiencyType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Соответствие требованиям энергетической эффективности и требованиям оснащенности
+                        приборами учета используемых энергетических ресурсов
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="OverallPerformanceType">
+        <xs:annotation>
+            <xs:documentation>Общие характеристики</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="BuildingVolume" type="tns:ProjectFactType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Строительный объем – всего (куб. м)</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="GroundPart" type="tns:ProjectFactType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>В том числе надземной части (куб. м)</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="TotalArea" type="tns:ProjectFactType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Общая площадь (кв. м)</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="UnlivingArea" type="tns:ProjectFactType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Площадь нежилых помещений (кв. м)</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="OutbuildingArea" type="tns:ProjectFactType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Площадь встроенно-пристроенных помещений (кв. м)</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="NumberBuildings" type="tns:ProjectFactType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Количество зданий, сооружений (шт.)</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="AreaObjectCap" type="tns:ProjectFactType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Площадь части объекта капитального строительства(кв. м)</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="AreaBuildingPartObject" type="tns:ProjectFactType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Площадь застройки части объекта капитального строительства(кв. м)
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="PremisesCount" type="tns:ProjectFactType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Количество помещений (шт.)</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="BuildingArea" type="tns:ProjectFactType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Площадь застройки (кв. м)</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="HeightObject" type="tns:ProjectFactType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Высота (м.)</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="UnlivingObjectsType">
+        <xs:annotation>
+            <xs:documentation>Характеристики нежилых объектов</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="NumberSeats" type="tns:ProjectFactType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Количество мест</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="NumberRooms" type="tns:ProjectFactType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Количество помещений</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="Capacity" type="tns:ProjectFactType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Вместимость</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="MinNumberFloors" type="tns:ProjectFactType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Минимальное кол-во этажей</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="MaxNumberFloors" type="tns:ProjectFactType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Максимальное кол-во этажей</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="MinUndergroundFloors" type="tns:ProjectFactType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Минимальное кол-во подземных этажей</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="MaxUndergroundFloors" type="tns:ProjectFactType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Максимальное кол-во подземных этажей</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="NetworkEngineering" type="tns:NetworkEngineeringType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Сети и системы инженерно-технического обеспечения</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="Elevators" type="tns:ProjectFactType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Лифты (шт.)</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="Escalators" type="tns:ProjectFactType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Эскалаторы (шт.)</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="WheelchairLifts" type="tns:ProjectFactType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Инвалидные подъемники (шт.)</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="MaterialsFoundations" type="tns:RefBookProjectFactType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Материалы фундаментов</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="CorrectMaterialsFoundations" type="com:stringMaxLength-500" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Уточнение материала фундаментов</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="MaterialsWall" type="tns:RefBookProjectFactType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Материалы стен</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="CorrectMaterialsWall" type="com:stringMaxLength-500" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Уточнение материала стен</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="CeilingMaterials" type="tns:RefBookProjectFactType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Материалы перекрытий</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="CorrectCeilingMaterials" type="com:stringMaxLength-500" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Уточнение материала перекрытий</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="RoofingMaterials" type="tns:RefBookProjectFactType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Материалы кровли</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="CorrectRoofingMaterials" type="com:stringMaxLength-500" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Уточнение материала кровли</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="OtherIndex" type="com:string-4000" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Иные показатели</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="LivingObjectsType">
+        <xs:annotation>
+            <xs:documentation>Характеристики объектов жилищного фонда</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="LivingArea" type="tns:ProjectFactType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Общая площадь жилых помещений (за исключением балконов, лоджий, веранд и террас)
+                        (кв. м)
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="UnlivingArea" type="tns:ProjectFactType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Общая площадь нежилых помещений, в том числе площадь общего имущества в
+                        многоквартирном доме (кв. м)
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="MinNumberFloors" type="tns:ProjectFactType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Минимальное кол-во этажей</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="MaxNumberFloors" type="tns:ProjectFactType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Максимальное кол-во этажей</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="MinUndergroundFloors" type="tns:ProjectFactType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Минимальное кол-во подземных этажей</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="MaxUndergroundFloors" type="tns:ProjectFactType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Максимальное кол-во подземных этажей</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="NumberSections" type="tns:ProjectFactType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Количество секций (секций)</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="NumberApartments" type="tns:ProjectFactType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Количество квартир</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="PremisesLivingCount" type="tns:ProjectFactType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Количество жилых помещений</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="AreaApartments" type="tns:ProjectFactType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Общая площадь квартир</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="NumberOneRoom" type="tns:ProjectFactType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Кол-во однокомнатных квартир</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="AreaOneRoom" type="tns:ProjectFactType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Площадь однокомнатных квартир</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="NumberTwoRoom" type="tns:ProjectFactType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Кол-во двухкомнатных квартир</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="AreaTwoRoom" type="tns:ProjectFactType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Площадь двухкомнатных квартир</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="NumberThreeRoom" type="tns:ProjectFactType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Кол-во трехкомнатных квартир</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="AreaThreeRoom" type="tns:ProjectFactType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Площадь трехкомнатных квартир</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="NumberFourRoom" type="tns:ProjectFactType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Кол-во четырехкомнатных квартир</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="AreaFourRoom" type="tns:ProjectFactType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Площадь четырехкомнатных квартир</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="NumberMoreRoom" type="tns:ProjectFactType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Кол-во более чем четырехкомнатных квартир</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="AreaMoreRoom" type="tns:ProjectFactType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Площадь более чем четырехкомнатных квартир</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="LivingArea2" type="tns:ProjectFactType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Общая площадь жилых помещений (с учетом балконов, лоджий, веранд и террас) (кв.
+                        м)
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="NetworkEngineering" type="tns:NetworkEngineeringType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Сети и системы инженерно-технического обеспечения</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="Elevators" type="tns:ProjectFactType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Лифты (шт.)</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="Escalators" type="tns:ProjectFactType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Эскалаторы (шт.)</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="WheelchairLifts" type="tns:ProjectFactType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Инвалидные подъемники (шт.)</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="MaterialsFoundations" type="tns:RefBookProjectFactType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Материалы фундаментов</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="CorrectMaterialsFoundations" type="com:stringMaxLength-500" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Уточнение материала фундаментов</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="MaterialsWall" type="tns:RefBookProjectFactType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Материалы стен</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="CorrectMaterialsWall" type="com:stringMaxLength-500" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Уточнение материала стен</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="CeilingMaterials" type="tns:RefBookProjectFactType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Материалы перекрытий</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="CorrectCeilingMaterials" type="com:stringMaxLength-500" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Уточнение материала перекрытий</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="RoofingMaterials" type="tns:RefBookProjectFactType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Материалы кровли</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="CorrectRoofingMaterials" type="com:stringMaxLength-500" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Уточнение материала кровли</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="OtherIndex" type="com:string-4000" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Иные показатели</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="ProductiveObjectsType">
+        <xs:annotation>
+            <xs:documentation>Характеристики объектов производственного назначения</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="ObjectName" type="com:stringMaxLength-500" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Наименование объекта</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="ObjectType" type="tns:ProjectFactType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Тип объекта</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="Power" type="tns:MesProjectFactType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Мощность</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="Performance" type="tns:MesProjectFactType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Производительность</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="NetworkEngineering" type="tns:NetworkEngineeringType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Сети и системы инженерно-технического обеспечения</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="Elevators" type="tns:ProjectFactType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Лифты (шт.)</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="Escalators" type="tns:ProjectFactType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Эскалаторы (шт.)</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="WheelchairLifts" type="tns:ProjectFactType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Инвалидные подъемники (шт.)</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="MaterialsFoundations" type="tns:RefBookProjectFactType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Материалы фундаментов</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="CorrectMaterialsFoundations" type="com:stringMaxLength-500" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Уточнение материала фундаментов</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="MaterialsWall" type="tns:RefBookProjectFactType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Материалы стен</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="CorrectMaterialsWall" type="com:stringMaxLength-500" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Уточнение материала стен</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="CeilingMaterials" type="tns:RefBookProjectFactType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Материалы перекрытий</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="CorrectCeilingMaterials" type="com:stringMaxLength-500" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Уточнение материала перекрытий</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="RoofingMaterials" type="tns:RefBookProjectFactType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Материалы кровли</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="CorrectRoofingMaterials" type="com:stringMaxLength-500" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Уточнение материала кровли</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="OtherIndex" type="com:string-4000" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Иные показатели</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="LongObjectsType">
+        <xs:annotation>
+            <xs:documentation>Характеристики Линейного объекта</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="Category" type="tns:RefBookProjectFactType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Категория(класс)</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="Extension" type="tns:ProjectFactType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Протяженность</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="LengthPart" type="tns:ProjectFactType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Протяженность участка или части линейного объекта</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="Power" type="tns:MesProjectFactType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Мощность (пропускная способность, грузооборот, интенсивность движения)
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="PipeCharacteristics" type="tns:ProjectFactType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Диаметры и количество трубопроводов, характеристики материалов труб
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="PowerLinesType" type="tns:RefBookProjectFactType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Типы линий электропередачи</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="PowerLinesLevel" type="tns:ProjectFactType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Уровень напряженности линии электропередач</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="StructuralElements" type="tns:ProjectFactType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Перечень конструктивных элементов, оказывающих влияние на безопасность
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="OtherIndex" type="com:string-4000" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Иные показатели</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="EnergyEfficiencyType">
+        <xs:annotation>
+            <xs:documentation>Характеристики энергоэффективности объекта</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="EnergyEfficiency" type="tns:RefBookProjectFactType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Класс энергоэффективности здания</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="HeatConsumption" type="tns:ProjectFactType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Удельный расход тепловой энергии на 1 кв. м площади (кВт•ч/м2)</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="InsulatedMaterials" type="tns:ProjectFactType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Материалы утепления наружных ограждающих конструкций</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="Skylights" type="tns:ProjectFactType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Заполнение световых проемов</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="NetworkEngineeringType">
+        <xs:annotation>
+            <xs:documentation>Сводные показатели сетевой структуры</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="NetworkHeatSupply" type="tns:ProjectFactType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Длина сетей теплоснабжения (м.)</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="NetworkHotWaterSupply" type="tns:ProjectFactType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Длина сетей горячего водоснабжения (м.)</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="NetworkColdWaterSupply" type="tns:ProjectFactType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Длина сетей холодного водоснабжения (м.)</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="NetworkLighting" type="tns:ProjectFactType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Длина сетей освещения (м.)</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="NetworkStormWaterDisposal" type="tns:ProjectFactType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Длина сетей ливневого водоотведения (м.)</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="NetworkDomesticWaterDisposal" type="tns:ProjectFactType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Длина сетей бытового или общесплавного водоотведения (м.)</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="NetworkEnergySaving" type="tns:ProjectFactType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Длина сетей электроснабжения (м.)</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="NetworkGasSupply" type="tns:ProjectFactType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Длина сетей газоснабжения (м.)</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="TechnicalPlanType">
+        <xs:annotation>
+            <xs:documentation>Технический план</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="TechnicalPlanID" type="com:stringMaxLength-50" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Имя пакета с документом технического плана. Требования к идентификаторам
+                        технических планов устанавливаются Росреестром.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="Engineer" type="tns:EngineerType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Сведения о кадастровом инженере, подготовившем технический план</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="DTechnicalPlan" type="xs:date">
+                <xs:annotation>
+                    <xs:documentation>Дата подготовки технического плана</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="EngineerType">
+        <xs:annotation>
+            <xs:documentation>Сведения о кадастровом инженере, подготовившем технический план</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="EngineerFIO" type="com:FIOType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Фамилия, имя, отчество (при наличии) кадастрового инженера</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="CertificateDoc" type="tns:DocType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Сведения о выданном квалификационном аттестате кадастрового инженера
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="DCertificate" type="xs:date" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Дата внесения сведений о кадастровом инженере в государственный реестр кадастровых
+                        инженеров
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="EngineerSnils" type="com:SNILSType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>
+                        СНИЛС кадастрового инженера, подготовившего технический план
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="DocType">
+        <xs:annotation>
+            <xs:documentation>Сведения о документе</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="DocNumber" type="com:stringMaxLength-45" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Номер документа</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="DocDate" type="xs:date" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation>Дата документа</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="DocIssueOrganization" type="com:stringMaxLength-255" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Наименование организации, выдавшей документ</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="DocIssueOrganOPF" type="com:RefBookType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Организационно правовая форма организации, выдавшей документ</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="DocIssueOrganINN" type="com:LegalPersonINNType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>ИНН Организации, выдавшей документ</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <!--Типы характеристик объектов-->
+    <xs:complexType name="ProjectFactType">
+        <xs:annotation>
+            <xs:documentation>Значения по проекту/фактические</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="InProject" type="com:stringMaxLength-255" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>По проекту</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="InFact" type="com:stringMaxLength-255" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Фактически</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="RefBookProjectFactType">
+        <xs:annotation>
+            <xs:documentation>Значения по проекту/фактические из справочника</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="InProject" type="com:RefBookType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Значение справочника по проекту</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="InFact" type="com:RefBookType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Значение справочника фактически</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="MesProjectFactType">
+        <xs:annotation>
+            <xs:documentation>Значения ед.измерения/по проекту/фактические из справочника</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="Measure" type="com:RefBookType">
+                <xs:annotation>
+                    <xs:documentation>Единица измерения из справочника</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="ProjectFact" type="tns:ProjectFactType">
+                <xs:annotation>
+                    <xs:documentation>Значения по проекту и фактически</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <!--Типы Адреса-->
+    <xs:complexType name="AddressAttrType">
+        <xs:annotation>
+            <xs:documentation>Адрес местоположения объектов с признаком присвоения.</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="AddressFull" type="com:AddressFullType">
+                <xs:annotation>
+                    <xs:documentation>Адрес без признака</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+        <xs:attribute name="AddressOrLocation" type="com:sAddressOrLocationType">
+            <xs:annotation>
+                <xs:documentation>Признак, позволяющий отличить присвоенный в установленном порядке адрес объекта
+                    недвижимости и описание местоположения объекта недвижимости (0- местоположение, 1-адрес)
+                </xs:documentation>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:complexType>
+</xs:schema>

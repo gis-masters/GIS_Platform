@@ -1,0 +1,627 @@
+[
+  {
+    "id": "about",
+    "title": "О программе",
+    "children": [
+      {
+        "id": "about-description",
+        "title": "Описание программы",
+        "contentUrl": "/assets/help/1about/0about/00about.html"
+      }
+    ]
+  },
+  {
+    "id": "login",
+    "title": "Вход в систему",
+    "children": [
+      {
+        "id": "login-description",
+        "title": "Запуск и авторизация в системе",
+        "contentUrl": "/assets/help/2login/0login/00login.html"
+      },
+      {
+        "id": "registration",
+        "title": "Регистрация новой организации",
+        "contentUrl": "/assets/help/2login/1registration/01registration.html"
+      },
+      {
+        "id": "signOut",
+        "title": "Выход из системы",
+        "contentUrl": "/assets/help/2login/2signOut/02signOut.html"
+      },
+      {
+        "id": "restorePassword",
+        "title": "Восстановление пароля",
+        "contentUrl": "/assets/help/2login/3restorePassword/03restorePassword.html"
+      }
+    ]
+  },
+  {
+    "id": "projects",
+    "title": "Управление проектами",
+    "children": [
+      {
+        "id": "projects-page",
+        "title": "Страница с проектами",
+        "contentUrl": "/assets/help/3projects/0projects/00projects.html"
+      },
+      {
+        "id": "select",
+        "title": "Выбор проекта",
+        "contentUrl": "/assets/help/3projects/3select/03select.html"
+      }
+    ]
+  },
+
+  {
+    "id": "map",
+    "title": "Карта",
+    "children": [
+      {
+        "id": "map-desription",
+        "title": "Управление пространственными данными",
+        "contentUrl": "/assets/help/map/0map/00map.html"
+      },
+      {
+        "id": "dataVerification",
+        "title": "Проверка данных",
+        "children": [
+          {
+            "id": "changeOrderLayers",
+            "title": "Проверка ошибок по приказу",
+            "contentUrl": "/assets/help/map/dataVerification/1validateLayers/01validateLayers.html"
+          },
+          {
+            "id": "chek_erors",
+            "title": "Просмотр ошибок",
+            "contentUrl": "/assets/help/map/dataVerification/3objectsList/03objectsList.html"
+          }
+        ]
+      },
+      {
+        "id": "projectManagementTitle",
+        "title": "Настройка структуры проекта",
+        "children": [
+          {
+            "id": "changeOrderLayers1",
+            "title": "Изменение порядка слоев/групп",
+            "contentUrl": "/assets/help/map/2projectManagement/1changeOrderLayers/01changeOrderLayers.html"
+          },
+          {
+            "id": "createGroup",
+            "title": "Создание группы",
+            "contentUrl": "/assets/help/map/2projectManagement/2createGroup/02createGroup.html"
+          },
+          {
+            "id": "renameGroup",
+            "title": "Переименование группы",
+            "contentUrl": "/assets/help/map/2projectManagement/3renameGroup/03renameGroup.html"
+          },
+          {
+            "id": "deleteGroup",
+            "title": "Удаление группы",
+            "contentUrl": "/assets/help/map/2projectManagement/4deleteGroup/04deleteGroup.html"
+          },
+          {
+            "id": "clearGroup",
+            "title": "Пустая группа",
+            "contentUrl": "/assets/help/map/2projectManagement/5clearGroup/05clearGroup.html"
+          },
+          {
+            "id": "changeDisplayLayers",
+            "title": "Изменение отображения слоев и групп по умолчанию",
+            "contentUrl": "/assets/help/map/2projectManagement/6changeDisplayLayers/06changeDisplayLayers.html"
+          },
+          {
+            "id": "createLayer",
+            "title": "Подключение слоя в проект",
+            "contentUrl": "/assets/help/map/2projectManagement/7createLayer/07createLayer.html"
+          },
+          {
+            "id": "saveAbortChanges",
+            "title": "Сохранение и отмена изменений",
+            "contentUrl": "/assets/help/map/2projectManagement/8saveAbortChanges/08saveAbortChanges.html"
+          },
+          {
+            "id": "controlLayers",
+            "title": "Управление слоями",
+            "contentUrl": "/assets/help/map/2projectManagement/1controlLayers/01controlLayers.html"
+          },
+          {
+            "id": "listProjects",
+            "title": "Переход к списку проектов",
+            "contentUrl": "/assets/help/map/2projectManagement/7listProjects/07listProjects.html"
+          }
+        ]
+      },
+      {
+        "id": "layersProperties",
+        "title": "Свойства слоя",
+        "children": [
+          {
+            "id": "visual_max_min",
+            "title": "Свойства слоя",
+            "contentUrl": "/assets/help/map/2projectManagement/9visual_max_min/09visual_max_min.html"
+          },
+          {
+            "id": "changesStyle",
+            "title": "Стиль для слоя",
+            "contentUrl": "/assets/help/map/2projectManagement/10changesStyle/10changesStyle.html"
+          },
+          {
+            "id": "styleCaptions",
+            "title": "Подписи для слоя",
+            "contentUrl": "/assets/help/map/2projectManagement/12styleCaptions/12styleCaptions.html"
+          },
+          {
+            "id": "visibilityControl",
+            "title": "Видимость слоя",
+            "contentUrl": "/assets/help/map/2projectManagement/13visibilityControl/13visibilityControl.html"
+          },
+          {
+            "id": "reprojection",
+            "title": "Перепроецирование слоя",
+            "contentUrl": "/assets/help/map/2projectManagement/14reprojection/14reprojection.html"
+          },
+          {
+            "id": "photoLayer",
+            "title": "Фотослой",
+            "contentUrl": "/assets/help/map/2projectManagement/11photoLayer/11photoLayer.html"
+          }
+        ]
+      },
+      {
+        "id": "org-admin",
+        "title": "Работа с данными слоя(Атрибутивная таблица)",
+        "children": [
+          {
+            "id": "new_atribut_table",
+            "title": "Работа с данными слоя",
+            "contentUrl": "/assets/help/map/dataWork/12new_atribut_table/12new_atribut_table.html"
+          },
+          {
+            "id": "punctureObject",
+            "title": "Получение дополнительной информации об объекте (прокол)",
+            "contentUrl": "/assets/help/map/dataWork/4punctureObject/04punctureObject.html"
+          },
+          {
+            "id": "allEditObjects",
+            "title": "Множественное редактирование/удаление объектов на карте через атрибутивную таблицу",
+            "contentUrl": "/assets/help/map/dataWork/8allEditObjects/08allEditObjects.html"
+          },
+          {
+            "id": "copy",
+            "title": "Копирование и перенос векторных данных между слоями",
+            "contentUrl": "/assets/help/map/dataWork/9copy/09copy.html"
+          },
+          {
+            "id": "edit",
+            "title": "Внесение изменений в требуемую Приказом информацию",
+            "platforms": ["conv"],
+            "contentUrl": "/assets/help/map/dataWork/10edit/10edit.html"
+          },
+          {
+            "id": "copyUrl",
+            "title": "Копирование ссылки на объект",
+            "platforms": ["conv"],
+            "contentUrl": "/assets/help/map/dataWork/8copy/08copy.html"
+          },
+          {
+            "id": "schemaDisposition",
+            "title": "Схема расположения объектов",
+            "platforms": ["conv"],
+            "contentUrl": "/assets/help/map/dataWork/13schemaDisposition/13schemaDisposition_1.html"
+          },
+          {
+            "id": "objectStatement",
+            "title": "Выписка об объекте",
+            "platforms": ["conv"],
+            "contentUrl": "/assets/help/map/dataWork/14objectStatement/14objectStatement_1.html"
+          }
+        ]
+      },
+      {
+        "id": "edit-object",
+        "title": "Редактирование объекта",
+        "children": [
+          {
+            "id": "createObjectMap",
+            "title": "Создание объекта путем рисования на карте",
+            "contentUrl": "/assets/help/map/dataEdit/1createObjectMap/01createObjectMap.html"
+          },
+          {
+            "id": "snapping",
+            "title": "Создание объекта с помощью прилипания",
+            "contentUrl": "/assets/help/map/dataEdit/08snapping/08snapping.html"
+          },
+          {
+            "id": "vertexMode",
+            "title": "Режим изменения вершин",
+            "contentUrl": "/assets/help/map/dataEdit/09vertexMode/09vertexMode.html"
+          },
+          {
+            "id": "createObjectNotepad",
+            "title": "Создание объекта по координатам путем вставки их из блокнота",
+            "contentUrl": "/assets/help/map/dataEdit/2createObjectNotepad/02createObjectNotepad.html"
+          },
+          {
+            "id": "createObjectCSV",
+            "title": "Создание объекта по координатам путем вставки их из файла CSV",
+            "contentUrl": "/assets/help/map/dataEdit/3createObjectCSV/03createObjectCSV.html"
+          },
+          {
+            "id": "editObject",
+            "title": "Редактирование объекта",
+            "contentUrl": "/assets/help/map/dataEdit/4editObject/04editObject.html"
+          },
+          {
+            "id": "addDocumentObject",
+            "title": "Прикрепление документов (файлов) к объектам",
+            "contentUrl": "/assets/help/map/dataEdit/5addDocumentObject/05addDocumentObject.html"
+          },
+          {
+            "id": "deleteObject",
+            "title": "Удаление объекта",
+            "contentUrl": "/assets/help/map/dataEdit/6deleteObject/06deleteObject.html"
+          },
+          {
+            "id": "downloadCoordinates",
+            "title": "Выгрузка координат существующего объекта в файл CSV",
+            "contentUrl": "/assets/help/map/dataEdit/7downloadCoordinates/07downloadCoordinates.html"
+          }
+        ]
+      },
+      {
+        "id": "ruler",
+        "title": "Инструменты для работы с картографическими данными",
+        "children": [
+          {
+            "id": "areaMeasurement",
+            "title": "Измерение площади",
+            "contentUrl": "/assets/help/map/mapTools/areaMeasurement/01areaMeasurement.html"
+          },
+          {
+            "id": "lengthMeasurement",
+            "title": "Измерение длины",
+            "contentUrl": "/assets/help/map/mapTools/lengthMeasurement/02lengthMeasurement.html"
+          },
+          {
+            "id": "print",
+            "title": "Печать фрагмента карты",
+            "contentUrl": "/assets/help/map/mapTools/print/00print.html"
+          },
+          {
+            "id": "multipleSampling",
+            "title": "Выбор и очистка объектов",
+            "contentUrl": "/assets/help/map/mapTools/multipleSampling/11multipleSampling.html"
+          },
+          {
+            "id": "unloadingGML",
+            "title": "Выгрузка GML",
+            "contentUrl": "/assets/help/map/mapTools/unloadingGML/03unloadingGML.html"
+          }
+        ]
+      },
+      {
+        "id": "label",
+        "title": "Аннотации",
+        "children": [
+          {
+            "id": "labels",
+            "title": "Аннотации на карте",
+            "contentUrl": "/assets/help/map/mapTools/labels/labels.html"
+          },
+          {
+            "id": "turningPoints",
+            "title": "Поворотные точки",
+            "contentUrl": "/assets/help/map/mapTools/turningPoints/turningPoints.html"
+          },
+          {
+            "id": "customStyleForAnnotations",
+            "title": "Настройка стиля создаваемых аннотаций",
+            "contentUrl": "/assets/help/map/mapTools/customStyleForAnnotations/customStyleForAnnotations.html"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "import",
+    "title": "Загрузка данных",
+    "children": [
+      {
+        "id": "upload",
+        "title": "Загрузка zip архива со слоями.",
+        "contentUrl": "/assets/help/4import/1upload/01upload.html"
+      }
+    ]
+  },
+
+  {
+    "id": "export",
+    "title": "Выгрузка данных",
+    "platforms": ["conv"],
+    "children": [
+      {
+        "id": "exportShp",
+        "title": "Экспорт ESRI Shape-файла",
+        "platforms": ["conv"],
+        "contentUrl": "/assets/help/7export/01exportShp/01exportShp.html"
+      },
+      {
+        "id": "exportGml",
+        "title": "Выгрузка документа территориального планирования в формате GML в соответствии с требованиями приказа.",
+        "platforms": ["conv"],
+        "contentUrl": "/assets/help/7export/02exportGml/02exportGml.html"
+      }
+    ]
+  },
+  {
+    "id": "data-management",
+    "title": "Управление данными",
+    "children": [
+      {
+        "id": "dataSetsMain",
+        "title": "Наборы данных",
+        "children": [
+          {
+            "id": "dataSets",
+            "title": "Наборы данных",
+            "contentUrl": "/assets/help/5dataManagement/1dataSets/01dataSets.html"
+          },
+          {
+            "id": "editDataset",
+            "title": "Редактирование набора данных",
+            "contentUrl": "/assets/help/5dataManagement/8editDataset/08editDataset.html"
+          },
+          {
+            "id": "11layerInDataset",
+            "title": "Создание пустой векторной таблицы",
+            "contentUrl": "/assets/help/5dataManagement/11layerInDataset/11layerInDataset.html"
+          },
+          {
+            "id": "tableProperties",
+            "title": "Свойства векторной таблицы",
+            "contentUrl": "/assets/help/5dataManagement/25tableProperties/25tableProperties.html"
+          },
+          {
+            "id": "editVectorTable",
+            "title": "Редактирование схемы векторной таблицы",
+            "contentUrl": "/assets/help/5dataManagement/23editVectorTable/23editVectorTable.html"
+          },
+          {
+            "id": "vectorTables",
+            "title": "Табличный вид векторной таблицы",
+            "contentUrl": "/assets/help/5dataManagement/22vectorTables/22vectorTables.html"
+          },
+          {
+            "id": "representation",
+            "title": "Публикация векторной таблицы",
+            "contentUrl": "/assets/help/5dataManagement/12representation/12representation.html"
+          },
+          {
+            "id": "deleteVectorTable",
+            "title": "Удаление векторной таблицы",
+            "contentUrl": "/assets/help/5dataManagement/24deleteVectorTable/24deleteVectorTable.html"
+          }
+        ]
+      },
+      {
+        "id": "libraryDocsMain",
+        "title": "Библиотеки документов",
+        "children": [
+          {
+            "id": "libraryDocs",
+            "title": "Библиотека документов",
+            "contentUrl": "/assets/help/5dataManagement/2libraryDocs/02libraryDocs.html"
+          },
+
+          {
+            "id": "documentCard",
+            "title": "Карточка документа",
+            "contentUrl": "/assets/help/5dataManagement/4documentCard/04documentCard.html"
+          },
+          {
+            "id": "compoundFile",
+            "title": "Набор связанных файлов",
+            "contentUrl": "/assets/help/5dataManagement/15compoundFile/15compoundFile.html"
+          },
+
+          {
+            "id": "registry",
+            "title": "Реестр документов",
+            "contentUrl": "/assets/help/5dataManagement/5registry/05registry.html"
+          },
+          {
+            "id": "8createdBuffer",
+            "title": "Создание буферной зоны",
+            "contentUrl": "/assets/help/map/dataEdit/8createdBuffer/8createdBuffer.html"
+          },
+
+          {
+            "id": "placement_project",
+            "title": "Размещение растровых файлов в проект",
+            "contentUrl": "/assets/help/5dataManagement/6placement_project/06placement_project.html"
+          },
+
+          {
+            "id": "00gmlImport(ENU_NED)",
+            "title": "Размещение файлов GML в проекте",
+            "contentUrl": "/assets/help/5dataManagement/9gmlImport(ENU_NED)/09gmlImport(ENU_NED).html"
+          },
+
+          {
+            "id": "dxf",
+            "title": "Размещение файлов DXF в проекте",
+            "contentUrl": "/assets/help/5dataManagement/10dxf/10dxf.html"
+          },
+
+          {
+            "id": "print_information",
+            "title": "Печать документа",
+            "contentUrl": "/assets/help/5dataManagement/7print_information/07print_information.html"
+          },
+
+          {
+            "id": "related_doc",
+            "title": "Связность документов",
+            "contentUrl": "/assets/help/5dataManagement/8related_doc/08related_doc.html"
+          },
+
+          {
+            "id": "recoverDelete",
+            "title": "Корзина",
+            "contentUrl": "/assets/help/5dataManagement/14recoverDelete/14recoverDelete.html"
+          },
+
+          {
+            "id": "moveDocument",
+            "title": "Перемещение документов",
+            "contentUrl": "/assets/help/5dataManagement/13moveDocument/13moveDocument.html"
+          },
+          {
+            "id": "kptGroup",
+            "title": "КПТ",
+            "children": [
+              {
+                "id": "libraryKpt",
+                "title": "Библиотека «КПТ»",
+                "contentUrl": "/assets/help/5dataManagement/27libraryKpt/27libraryKpt.html"
+              },
+              {
+                "id": "massLoadingKPT",
+                "title": "Массовая загрузка КПТ из zip-архивов",
+                "contentUrl": "/assets/help/5dataManagement/26massLoadingKPT/26massLoadingKPT.html"
+              },
+              {
+                "id": "kptOrder",
+                "title": "Заказ КПТ",
+                "contentUrl": "/assets/help/5dataManagement/19kptOrder/19kptOrder.html"
+              },
+              {
+                "id": "importKpt",
+                "title": "Импорт КПТ",
+                "contentUrl": "/assets/help/5dataManagement/20importKpt/20importKpt.html"
+              }
+            ]
+          },
+          {
+            "id": "cryptoPro",
+            "title": "Подпись документов",
+            "children": [
+              {
+                "id": "cryptoProDoc",
+                "title": "Подпись документов",
+                "contentUrl": "/assets/help/5dataManagement/28cryptoPro/28cryptoPro.html"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "dataSchemas",
+        "title": "Шаблоны схем данных",
+        "children": [
+          {
+            "id": "dataSchemasBasis",
+            "title": "Шаблоны схем данных",
+            "contentUrl": "/assets/help/5dataManagement/16dataSchemas/16dataSchemas.html"
+          },
+          {
+            "id": "visualSchemas",
+            "title": "Свойства схем",
+            "contentUrl": "/assets/help/5dataManagement/17visualSchemas/17visualSchemas.html"
+          },
+          {
+            "id": "editSchemas",
+            "title": "Редактирование свойств (схем)",
+            "contentUrl": "/assets/help/5dataManagement/21editSchemas/21editSchemas.html"
+          }
+        ]
+      },
+      {
+        "id": "projects",
+        "title": "Проекты",
+        "children": [
+          {
+            "id": "propertiesProjects",
+            "title": "Проекты",
+            "contentUrl": "/assets/help/5dataManagement/31propertiesProjects/31propertiesProjects.html"
+          },
+          {
+            "id": "createProjects",
+            "title": "Создание проекта",
+            "contentUrl": "/assets/help/5dataManagement/32createProjects/32createProjects.html"
+          },
+          {
+            "id": "projectsFolders",
+            "title": "Создание папки проектов",
+            "contentUrl": "/assets/help/5dataManagement/29foldersProjects/29foldersProjects.html"
+          },
+          {
+            "id": "displacementFolders",
+            "title": "Перемещение проектов",
+            "contentUrl": "/assets/help/5dataManagement/30displacementFolders/30displacementFolders.html"
+          }
+        ]
+      },
+      {
+        "id": "substrate",
+        "title": "Картографические подосновы",
+        "contentUrl": "/assets/help/5dataManagement/3substrate/03substrate.html"
+      },
+      {
+        "id": "fullText",
+        "title": "Полнотекстовый поиск",
+        "contentUrl": "/assets/help/5dataManagement/18fullText/18fullText.html"
+      }
+    ]
+  },
+
+  {
+    "id": "org-admin",
+    "title": "Управление организацией",
+    "children": [
+      {
+        "id": "org-admin-control",
+        "title": "Управление организацией",
+        "contentUrl": "/assets/help/8orgManagement/00orgManagement/00orgManagement.html"
+      },
+      {
+        "id": "1orgManagement",
+        "title": "Пользователи",
+        "contentUrl": "/assets/help/8orgManagement/01orgManagement/01orgManagement.html"
+      },
+      {
+        "id": "2orgManagement",
+        "title": "Группы",
+        "contentUrl": "/assets/help/8orgManagement/02orgManagement/02orgManagement.html"
+      },
+      {
+        "id": "3orgManagement",
+        "title": "Настройка организации",
+        "contentUrl": "/assets/help/8orgManagement/03orgManagement/03orgManagement.html"
+      },
+      {
+        "id": "05coordinateSystems",
+        "title": "Системы координат",
+        "contentUrl": "/assets/help/8orgManagement/05coordinateSystems/05coordinateSystems.html"
+      },
+      {
+        "id": "04addUser",
+        "title": "Приглашение пользователя",
+        "contentUrl": "/assets/help/8orgManagement/04addUser/04addUser.html"
+      },
+      {
+        "id": "06cleaningLayers",
+        "title": "Очистка",
+        "contentUrl": "/assets/help/8orgManagement/06cleaningLayers/06cleaningLayers.html"
+      }
+    ]
+  },
+  {
+    "id": "services-calculator",
+    "title": "Калькулятор услуг",
+    "contentUrl": "/assets/help/9calculator/calculated.html"
+  }
+]

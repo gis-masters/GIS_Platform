@@ -1,0 +1,17 @@
+.TextBadge {
+  display: inline-block;
+  align-self: center;
+
+  margin-left: 6px;
+  padding: 1px 2px 0;
+
+  vertical-align: middle;
+  white-space: nowrap;
+
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 10px;
+
+  &-Id {
+    user-select: none;
+  }
+}

@@ -1,0 +1,29 @@
+meta {
+  name: Patch layer
+  type: http
+  seq: 2
+}
+
+patch {
+  url: http://localhost:8100/projects/3/layers/45
+  body: json
+  auth: bearer
+}
+
+params:query {
+  ~Appl: null
+}
+
+headers {
+  Content-Type: application/merge-patch+json
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyLCJ1c2VyX25hbWUiOiJ3QHciLCJzY29wZSI6WyJjcmciXSwib3JnYW5pemF0aW9ucyI6W3siaWQiOjEsIm5hbWUiOiJXV1cgQ29tcGFueSJ9XSwiZ3JvdXBzIjpbXSwiZXhwIjoxNTkxODY3MTIyLCJhdXRob3JpdGllcyI6WyJPUkdfQURNSU4iXSwianRpIjoiZWY0OWI2ZTUtMmY2Ni00ODgwLWEwMTQtNGNhMGFmZDQ1YmY2IiwiY2xpZW50X2lkIjoiYWRtaW4ifQ.5aL-33NGtXCaee_cAQu3jvKjPOgR-OqKSDh11uDs4uM
+}
+
+body:json {
+  {
+    "transparency": 50
+  }
+}

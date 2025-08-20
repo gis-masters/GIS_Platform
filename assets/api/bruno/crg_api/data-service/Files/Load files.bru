@@ -1,0 +1,19 @@
+meta {
+  name: Load files
+  type: http
+  seq: 1
+}
+
+post {
+  url: http://localhost:8084/files
+  body: multipartForm
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjcmdfbG9naW4iOiJmaXpAZml6IiwidXNlcl9uYW1lIjoiZml6X2Zpel8yIiwiZ3JvdXBzIjpbXSwidmVyc2lvbiI6bnVsbCwiYXV0aG9yaXRpZXMiOlsiT1JHX0FETUlOIl0sIm1pbmlvbnMiOltdLCJjbGllbnRfaWQiOiJhZG1pbiIsInVzZXJfaWQiOjIsInNjb3BlIjpbImNyZyJdLCJvcmdhbml6YXRpb25zIjpbeyJpZCI6MSwibmFtZSI6ItCQ0J4g0JPQtdC-0LjQvdGE0L7RgNC80LDRhtC40L7QvdC90YvQtSDRgdC40YHRgtC10LzRiyJ9XSwiZXhwIjoxNzI2MTUyNDA5LCJkaXJlY3RNaW5pb25zIjpbXSwianRpIjoiODc2ZGM1ZTQtNWVlZi00ZmNiLWFjNmYtZWNjYWMxYmRmZjFjIn0.ataTYFLw6JEgmJvMdYKwEUR4prXm9HaEw-p0vC9NOz0
+}
+
+body:multipart-form {
+  files: @file(/home/denis/someTab.txt)
+}

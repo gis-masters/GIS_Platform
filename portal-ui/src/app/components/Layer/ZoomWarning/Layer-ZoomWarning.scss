@@ -1,0 +1,16 @@
+.Layer-ZoomWarning.Layer-ZoomWarning {
+  position: absolute;
+  z-index: 3;
+  top: 50%;
+  left: 4px;
+
+  margin-top: -9px;
+  padding: 1px;
+
+  cursor: help;
+
+  color: rgb(0 0 0 / 50%);
+
+  font-size: 14px;
+  line-height: 1;
+}

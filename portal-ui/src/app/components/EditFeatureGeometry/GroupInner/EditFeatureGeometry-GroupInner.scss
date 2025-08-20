@@ -1,0 +1,32 @@
+.EditFeatureGeometry-GroupInner {
+  overflow: auto;
+
+  max-height: calc(var(--EditFeatureGeometryCoordsInViewport) * var(--EditFeatureGeometryCoordHeight) * 1px);
+
+  &::before,
+  &::after {
+    display: block;
+
+    margin: 0 15px 0 36px;
+
+    content: '';
+
+    background-image: repeating-linear-gradient(
+      to bottom,
+      transparent,
+      transparent 3px,
+      var(--light) 3px,
+      var(--light) 36px,
+      transparent 36px,
+      transparent 39px
+    );
+  }
+
+  &::before {
+    height: calc(var(--EditFeatureGeometryGroupStartOffset) * var(--EditFeatureGeometryCoordHeight) * 1px);
+  }
+
+  &::after {
+    height: calc(var(--EditFeatureGeometryGroupEndOffset) * var(--EditFeatureGeometryCoordHeight) * 1px);
+  }
+}

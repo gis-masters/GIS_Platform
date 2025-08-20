@@ -1,0 +1,26 @@
+<svg
+	xmlns="http://www.w3.org/2000/svg"
+	xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" width="20" height="20">
+	<defs>
+		<path id="a" d="M954.424 863.471c-30.296-.244-34.588 8.353-34.14 22.656.463 14.746 7.367 20.007 33.748 19.588l240.627.068-10.134-40.46z"/>
+	</defs>
+	<g transform="matrix(1.33585 0 0 1.33362 103.528 80.015)">
+		<path fill="red" d="M-76.043-59.902h12.108c.354 0 .658.127.911.38.254.253.38.556.38.91v12.09c0 .353-.126.656-.38.909-.253.253-.557.38-.91.38h-12.11c-.353 0-.657-.127-.91-.38a1.24 1.24 0 0 1-.38-.91v-12.09c0-.353.126-.656.38-.91.253-.252.557-.379.91-.379" font-family="icomoon" font-size="19.843" font-weight="400"/>
+		<path d="M-76.182-60.001c-.361 0-.671.13-.93.389a1.269 1.269 0 0 0-.388.93v12.363c0 .361.13.672.388.93.259.26.569.389.93.389h12.364c.362 0 .672-.13.93-.389.26-.258.389-.569.389-.93v-12.363c0-.361-.13-.672-.388-.93a1.269 1.269 0 0 0-.93-.388zm0 .44h12.364c.245 0 .452.085.623.256.17.171.256.379.256.623v12.363a.848.848 0 0 1-.256.623.847.847 0 0 1-.623.256h-12.364a.847.847 0 0 1-.622-.256.848.848 0 0 1-.257-.623v-12.363a.85.85 0 0 1 .257-.623.848.848 0 0 1 .622-.256z" font-family="icomoon" font-size="17.008" font-weight="400"/>
+		<g paint-order="stroke markers fill" transform="translate(-88.832 -65.019) scale(.0186)">
+			<circle cx="1019.344" cy="445.21" r="109.043"/>
+			<path d="M1161.052 725.684c14.97 26.34 24.443 25.858 36.63 18.359 12.564-7.732 13.697-16.338.219-39.02l-130.735-219.837-27.71 26.555z"/>
+		</g>
+		<g paint-order="stroke markers fill" transform="translate(-88.832 -65.019) scale(.0186)">
+			<circle cx="133.021" cy="-1537.865" r="109.043" transform="rotate(119.81)"/>
+			<use xlink:href="#a"/>
+		</g>
+		<g paint-order="stroke markers fill" transform="rotate(120.264 -6.876 -44.357) scale(.0186)">
+			<circle cx="133.021" cy="-1537.865" r="109.043" transform="rotate(119.81)"/>
+			<use xlink:href="#a"/>
+		</g>
+		<circle cx="-70.483" cy="-57.341" r=".952" fill="red" paint-order="stroke markers fill"/>
+		<circle cx="-75.348" cy="-49.203" r=".952" fill="red" paint-order="stroke markers fill"/>
+		<circle cx="-65.753" cy="-49.203" r=".952" fill="red" paint-order="stroke markers fill"/>
+	</g>
+</svg>

@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_0qxz0l7" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.2.0">
+  <bpmn:process id="integration_deleteOrganizationProcess" name="DeleteOrganization" isExecutable="true">
+    <bpmn:startEvent id="StartEvent" name="Start">
+      <bpmn:outgoing>Flow_toDeleteDB</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="Flow_toDeleteDB" sourceRef="StartEvent" targetRef="Activity_deleteDB" />
+    <bpmn:serviceTask id="Activity_deleteDB" name="DeleteDB" camunda:asyncBefore="true" camunda:delegateExpression="${deleteDbDelegate}">
+      <bpmn:incoming>Flow_toDeleteDB</bpmn:incoming>
+      <bpmn:outgoing>Flow_1m7fjbk</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="Activity_1l4fugw" name="Clear geoserver" camunda:asyncBefore="true" camunda:delegateExpression="${geoserverDeleteOrgOperationsDelegate}">
+      <bpmn:incoming>Flow_1r7atep</bpmn:incoming>
+      <bpmn:outgoing>Flow_09rb3f1</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:endEvent id="Event_1vifkta" name="End">
+      <bpmn:incoming>Flow_0a6kbvh</bpmn:incoming>
+      <bpmn:incoming>Flow_0jzpdj9</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_09rb3f1" sourceRef="Activity_1l4fugw" targetRef="Gateway_1ymtasr" />
+    <bpmn:serviceTask id="Activity_0debaer" name="sent success event" camunda:delegateExpression="${orgDepRemovingSuccessEventDelegate}">
+      <bpmn:incoming>Flow_0rm820f</bpmn:incoming>
+      <bpmn:outgoing>Flow_0a6kbvh</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_0a6kbvh" sourceRef="Activity_0debaer" targetRef="Event_1vifkta" />
+    <bpmn:exclusiveGateway id="Gateway_1ymtasr">
+      <bpmn:incoming>Flow_09rb3f1</bpmn:incoming>
+      <bpmn:outgoing>Flow_0rm820f</bpmn:outgoing>
+      <bpmn:outgoing>Flow_08agmag</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="Flow_0rm820f" sourceRef="Gateway_1ymtasr" targetRef="Activity_0debaer">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${isDeleted == 'true'}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_08agmag" sourceRef="Gateway_1ymtasr" targetRef="Activity_0cpen6h">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${isDeleted == 'false'}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:serviceTask id="Activity_0cpen6h" name="send failed event" camunda:delegateExpression="${orgDepRemovingFailedEventDelegate}">
+      <bpmn:incoming>Flow_08agmag</bpmn:incoming>
+      <bpmn:incoming>Flow_0t1y12k</bpmn:incoming>
+      <bpmn:outgoing>Flow_0jzpdj9</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:exclusiveGateway id="Gateway_1qfggs6">
+      <bpmn:incoming>Flow_1m7fjbk</bpmn:incoming>
+      <bpmn:outgoing>Flow_1r7atep</bpmn:outgoing>
+      <bpmn:outgoing>Flow_0t1y12k</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="Flow_1m7fjbk" sourceRef="Activity_deleteDB" targetRef="Gateway_1qfggs6" />
+    <bpmn:sequenceFlow id="Flow_1r7atep" sourceRef="Gateway_1qfggs6" targetRef="Activity_1l4fugw">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${isDeleted == 'true'}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_0t1y12k" sourceRef="Gateway_1qfggs6" targetRef="Activity_0cpen6h">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${isDeleted == 'false'}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_0jzpdj9" sourceRef="Activity_0cpen6h" targetRef="Event_1vifkta" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="integration_deleteOrganizationProcess">
+      <bpmndi:BPMNEdge id="Flow_0jzpdj9_di" bpmnElement="Flow_0jzpdj9">
+        <di:waypoint x="910" y="250" />
+        <di:waypoint x="1000" y="250" />
+        <di:waypoint x="1000" y="138" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0t1y12k_di" bpmnElement="Flow_0t1y12k">
+        <di:waypoint x="440" y="145" />
+        <di:waypoint x="440" y="250" />
+        <di:waypoint x="810" y="250" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1r7atep_di" bpmnElement="Flow_1r7atep">
+        <di:waypoint x="465" y="120" />
+        <di:waypoint x="520" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1m7fjbk_di" bpmnElement="Flow_1m7fjbk">
+        <di:waypoint x="350" y="120" />
+        <di:waypoint x="415" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_08agmag_di" bpmnElement="Flow_08agmag">
+        <di:waypoint x="710" y="145" />
+        <di:waypoint x="710" y="250" />
+        <di:waypoint x="810" y="250" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0rm820f_di" bpmnElement="Flow_0rm820f">
+        <di:waypoint x="735" y="120" />
+        <di:waypoint x="810" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0a6kbvh_di" bpmnElement="Flow_0a6kbvh">
+        <di:waypoint x="910" y="120" />
+        <di:waypoint x="982" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_09rb3f1_di" bpmnElement="Flow_09rb3f1">
+        <di:waypoint x="620" y="120" />
+        <di:waypoint x="685" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0u3szlw_di" bpmnElement="Flow_toDeleteDB">
+        <di:waypoint x="188" y="120" />
+        <di:waypoint x="250" y="120" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="211" y="102" width="48" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent">
+        <dc:Bounds x="152" y="102" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="158" y="78" width="24" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0whkesl_di" bpmnElement="Activity_deleteDB">
+        <dc:Bounds x="250" y="80" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1h23xtu_di" bpmnElement="Activity_1l4fugw">
+        <dc:Bounds x="520" y="80" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1vifkta_di" bpmnElement="Event_1vifkta">
+        <dc:Bounds x="982" y="102" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="990" y="78" width="20" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1vd39hk_di" bpmnElement="Activity_0debaer">
+        <dc:Bounds x="810" y="80" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_1ymtasr_di" bpmnElement="Gateway_1ymtasr" isMarkerVisible="true">
+        <dc:Bounds x="685" y="95" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0blzt34_di" bpmnElement="Activity_0cpen6h">
+        <dc:Bounds x="810" y="210" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_1qfggs6_di" bpmnElement="Gateway_1qfggs6" isMarkerVisible="true">
+        <dc:Bounds x="415" y="95" width="50" height="50" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

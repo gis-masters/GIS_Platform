@@ -1,0 +1,21 @@
+body .Breadcrumbs-Item {
+  display: flex;
+  align-items: flex-start;
+  flex: 1 1 1%;
+  flex-direction: column;
+  justify-content: center;
+
+  min-width: calc(30px * var(--BreadcrumbsSize));
+  max-width: fit-content;
+  padding: calc(4px * var(--BreadcrumbsSize));
+  padding-left: calc(calc(4px * var(--BreadcrumbsSize)) + calc(14px * var(--BreadcrumbsItemNestingLevel)));
+
+  border-radius: calc(3px * var(--BreadcrumbsSize));
+
+  line-height: 1.15;
+}
+
+body .Link:last-child .Breadcrumbs-Item,
+body .Breadcrumbs > .Breadcrumbs-Item:last-child {
+  flex: 2 0.2 1%;
+}

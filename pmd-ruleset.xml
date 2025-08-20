@@ -1,0 +1,58 @@
+<?xml version="1.0"?>
+<ruleset name="Custom PMD Rules for Acceptance Tests"
+         xmlns="http://pmd.sourceforge.net/ruleset/2.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://pmd.sourceforge.net/ruleset/2.0.0 
+                             https://pmd.sourceforge.io/ruleset_2_0_0.xsd">
+
+    <description>
+        Custom PMD rules focused on finding unused parameters and variables in acceptance tests
+    </description>
+
+    <!-- Exclude controller files from all rules -->
+    <exclude-pattern>.*/controller/.*Controller\.java</exclude-pattern>
+
+    <!-- Unused parameters and variables -->
+    <rule ref="category/java/bestpractices.xml/UnusedFormalParameter">
+        <priority>1</priority>
+        <properties>
+            <property name="checkAll" value="true"/>
+        </properties>
+    </rule>
+    
+    <rule ref="category/java/bestpractices.xml/UnusedLocalVariable">
+        <priority>1</priority>
+    </rule>
+    
+    <rule ref="category/java/bestpractices.xml/UnusedPrivateField">
+        <priority>1</priority>
+    </rule>
+    
+    <rule ref="category/java/bestpractices.xml/UnusedPrivateMethod">
+        <priority>1</priority>
+    </rule>
+
+    <!-- Code style issues -->
+    <rule ref="category/java/codestyle.xml/UnnecessaryLocalBeforeReturn">
+        <priority>2</priority>
+    </rule>
+    
+    <rule ref="category/java/codestyle.xml/UselessParentheses">
+        <priority>3</priority>
+    </rule>
+
+    <!-- Error prone patterns -->
+    <rule ref="category/java/errorprone.xml/UnusedNullCheckInEquals">
+        <priority>2</priority>
+    </rule>
+    
+    <rule ref="category/java/errorprone.xml/UnnecessaryConversionTemporary">
+        <priority>2</priority>
+    </rule>
+
+    <!-- Performance issues -->
+    <rule ref="category/java/performance.xml/UnnecessaryWrapperObjectCreation">
+        <priority>2</priority>
+    </rule>
+
+</ruleset>

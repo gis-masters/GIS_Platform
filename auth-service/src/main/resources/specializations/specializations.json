@@ -1,0 +1,410 @@
+[
+  {
+    "id": 1,
+    "title": "НТО",
+    "description": "Описание специализации НТО",
+    "settings": {
+      "storageSize": 20,
+      "reestrs": true,
+      "sedDialog": true,
+      "downloadXml": true,
+      "createProject": true,
+      "downloadFiles": true,
+      "showPermissions": true,
+      "taskManagement": true,
+      "editProjectLayer": true,
+      "createLibraryItem": true,
+      "importShp": true,
+      "downloadGml": true,
+      "viewBugReport": true,
+      "viewDocumentLibrary": true,
+      "viewServicesCalculator": true,
+      "tags": [
+        "НТО",
+        "КПТ",
+        "Задачи",
+        "Инвентаризация недвижимости"
+      ]
+    },
+    "projects": [
+      {
+        "title": "Проект 1",
+        "bbox": "[3733187.3, 5540706.2,  3745910.5, 5550374.5]",
+        "isDefault": true,
+        "description": "Проект по-молчанию, с проставленным bbox и одним слоем внутри.",
+        "layers": [
+          314
+        ]
+      },
+      {
+        "title": "Проект 2"
+      }
+    ],
+    "datasets": [
+      {
+        "title": "Набор данных по специализации 1",
+        "tables": [
+          {
+            "id": 314,
+            "content": [
+              "contentForTable314.sql"
+            ],
+            "body": {
+              "title": "Тестовое название первой таблицы",
+              "schemaId": "zu_pro",
+              "crs": "EPSG:7829",
+              "styleName": "zu_pro"
+            }
+          }
+        ]
+      }
+    ],
+    "documentLibraries": [
+      {
+        "schemaId": "dl_data_kpt"
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "title": "Фотоконтроль",
+    "description": "Специализация для организации фотоконтроля при обследованиях территории. Специализация позволяет: загружать и размещать на карте результаты фото-контроля с привязкой к местности и направлением съемки.",
+    "settings": {
+      "storageSize": 2,
+      "createProject": true,
+      "downloadFiles": true,
+      "editProjectLayer": true,
+      "tags": [
+        "Фотофиксация"
+      ]
+    },
+    "projects": [
+      {
+        "title": "Проект - Фотоконтроль",
+        "bbox": "[3792253.008151856,5615245.025248059,3795198.5693183704,5618520.929722968]",
+        "isDefault": true,
+        "layers": [
+          201
+        ]
+      }
+    ],
+    "datasets": [
+      {
+        "title": "Набор данных Фотоконтроль",
+        "tables": [
+          {
+            "id": 201,
+            "content": [
+              "contentForTablePhotoControl.sql"
+            ],
+            "body": {
+              "title": "Фотофиксация",
+              "schemaId": "photo_uploader",
+              "crs": "EPSG:3857",
+              "styleName": "photo_uploader"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "title": "Нестационарные торговые объекты",
+    "description": "Специализация для инвентаризации и управления нестационарными торговыми объектами",
+    "settings": {
+      "storageSize": 2,
+      "createProject": true,
+      "downloadFiles": true,
+      "editProjectLayer": true,
+      "viewDocumentLibrary": true,
+      "tags": [
+        "НТО",
+        "Фотофиксация"
+      ]
+    },
+    "projects": [
+      {
+        "title": "Пример НТО",
+        "bbox": "[3717508.3943893416,5527049.639542008,3781854.2304529296,5598611.831051979]",
+        "isDefault": true,
+        "layers": [
+          301,
+          302,
+          303,
+          304
+        ]
+      }
+    ],
+    "datasets": [
+      {
+        "title": "Набор данных НТО",
+        "tables": [
+          {
+            "id": 301,
+            "content": [
+              "nto_zone.sql"
+            ],
+            "body": {
+              "title": "Зоны проведения мероприятий",
+              "schemaId": "nto_zone",
+              "crs": "EPSG:7828",
+              "styleName": "fair_zone"
+            }
+          },
+          {
+            "id": 302,
+            "content": [
+              "nto_doc.sql"
+            ],
+            "body": {
+              "title": "Нестационарные торговые объекты (полигональные)",
+              "schemaId": "nto_doc",
+              "crs": "EPSG:7828",
+              "styleName": "polygon_nto"
+            }
+          },
+          {
+            "id": 303,
+            "content": [
+              "nto_doc_point.sql"
+            ],
+            "body": {
+              "title": "Нестационарные торговые объекты (точечные)",
+              "schemaId": "nto_doc_point",
+              "crs": "EPSG:7828",
+              "styleName": "polygon_nto"
+            }
+          },
+          {
+            "id": 304,
+            "content": [
+              "photo_uploader.sql"
+            ],
+            "body": {
+              "title": "Фотофиксация",
+              "schemaId": "photo_uploader",
+              "crs": "EPSG:3857",
+              "styleName": "photo_uploader"
+            }
+          }
+        ]
+      }
+    ],
+    "documentLibraries": [
+      {
+        "schemaId": "dl_data_kpt"
+      }
+    ]
+  },
+  {
+    "id": 4,
+    "title": "Территориальное планирование",
+    "description": "Специализация для создания и проверки документов территориального планирования",
+    "settings": {
+      "storageSize": 2,
+      "createLibraryItem": true,
+      "viewDocumentLibrary": true,
+      "viewBugReport": true,
+      "downloadGml": true,
+      "importShp": true,
+      "downloadFiles": true,
+      "createProject": true,
+      "editProjectLayer": true,
+      "tags": [
+        "Приказ 10",
+        "Приказ 123",
+        "Приказ 10, версия 5 изм. от 6 октября 2023 № 698",
+        "КПТ",
+        "Тер.планирование",
+        "ДПТ"
+      ]
+    },
+    "projects": [
+      {
+        "title": "Проект Территориальное планирование",        
+        "bbox": "[3754400.4,5620318.1,3797570.2,5647634.6]",
+        "isDefault": true,
+        "layers": [
+          402,
+          401
+        ]
+      }
+    ],
+    "datasets": [
+      {
+        "title": "Векторные данные территориального планирования",
+        "tables": [
+          {
+            "id": 401,
+            "content": [
+              "functionalzone.sql"
+            ],
+            "body": {
+              "title": "Функциональные зоны",
+              "schemaId": "functionalzone_123",
+              "crs": "EPSG:7829",
+              "styleName": "functionalzone_123"
+            }
+          },
+          {
+            "id": 402,
+            "content": [
+              "admborder_line_123.sql"
+            ],
+            "body": {
+              "title": "Границы",
+              "schemaId": "admborder_line_123",
+              "crs": "EPSG:7829",
+              "styleName": "admborder_line_123"
+            }
+          }
+        ]
+      }
+    ],
+    "documentLibraries": [
+      {
+        "schemaId": "dl_data_terplan_doc"
+      },
+      {
+        "schemaId": "dl_data_kpt"
+      }
+    ]
+  },
+  {
+    "id": 5,
+    "title": "ГИСОГД",
+    "description": "ГИСОГД",
+    "settings": {
+      "storageSize": 2,
+      "createLibraryItem": true,
+      "viewDocumentLibrary": true,
+      "viewBugReport": true,
+      "downloadGml": true,
+      "importShp": true,
+      "downloadFiles": true,
+      "createProject": true,
+      "editProjectLayer": true,
+      "taskManagement": true,
+      "tags": [
+        "Приказ 10",
+        "Приказ 123",
+        "Приказ 10, версия 5 изм. от 6 октября 2023 № 698",
+        "КПТ",
+        "Тер.планирование",
+        "ГИСОГД",
+        "Библиотека",
+        "Реестры",
+        "Задачи",
+        "Фотофиксация"
+      ]
+    },
+    "documentLibraries": [
+      {
+        "schemaId": "dl_data_inbox_data"
+      },
+      {
+        "schemaId": "dl_data_section13"
+      },
+      {
+        "schemaId": "dl_data_section_delivery_data"
+      },
+      {
+        "schemaId": "dl_data_task_allocation"
+      }
+    ]
+  },
+  {
+    "id": 6,
+    "title": "Инвентаризация и таксация зеленых насаждений",
+    "description": "Предназначена для оценки состояния, учета и мониторинга зеленых насаждений с целью рационального их использования и сохранения экологического баланса",
+    "settings": {
+      "storageSize": 2,
+      "createLibraryItem": true,
+      "viewDocumentLibrary": true,
+      "viewBugReport": true,
+      "downloadGml": true,
+      "importShp": true,
+      "downloadFiles": true,
+      "createProject": true,
+      "editProjectLayer": true,
+      "tags": [
+        "Зеленые насаждения",
+        "Фотофиксация"
+      ]
+    },
+    "projects": [
+      {
+        "title": "Инвентаризация многолетних насаждений",        
+        "bbox": "[3798507.8,5540219.2, 3799563.0, 5540809.4]",
+        "isDefault": true,
+        "layers": [
+          604,
+          603,
+          602,
+          601
+        ]
+      }
+    ],
+    "datasets": [
+      {
+        "title": "Инвентаризация многолетних насаждений",
+        "tables": [
+          {
+            "id": 601,
+            "content": [
+              "border_park.sql"
+            ],
+            "body": {
+              "title": "Граница парковой зоны",
+              "schemaId": "border_park",
+              "crs": "EPSG:3857",
+              "styleName": "border_park"
+            }
+          },
+          {
+            "id": 602,
+            "content": [
+              "zone_park.sql"
+            ],
+            "body": {
+              "title": "Парковое зонирование",
+              "schemaId": "zone_park",
+              "crs": "EPSG:3857",
+              "styleName": "zone_park"
+            }
+          },
+          {
+            "id": 603,
+            "content": [
+              "trees.sql"
+            ],
+            "body": {
+              "title": "Древесная растительность",
+              "schemaId": "trees",
+              "crs": "EPSG:3857",
+              "styleName": "trees"
+            }
+          },
+          {
+            "id": 604,
+            "content": [
+              "photo_uploader.sql"
+            ],
+            "body": {
+              "title": "Фотофиксация",
+              "schemaId": "photo_uploader",
+              "crs": "EPSG:3857",
+              "styleName": "photo_uploader"
+            }
+          }
+        ]
+      }
+    ],
+    "documentLibraries": [
+      {
+        "schemaId": "dl_data_universal_for_document"
+      }
+    ]
+  }
+]

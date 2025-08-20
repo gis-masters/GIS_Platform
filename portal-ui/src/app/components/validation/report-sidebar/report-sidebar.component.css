@@ -1,0 +1,68 @@
+:host {
+  overflow: auto;
+}
+
+.validation_accordion {
+  width: 100%;
+  padding-right: 5px;
+  padding-left: 5px;
+}
+
+.validation_button {
+  margin-left: auto;
+}
+
+::ng-deep .validation_accordion .mat-expansion-panel-header {
+  display: grid;
+
+  height: 50px;
+  padding: 0 10px;
+}
+
+::ng-deep .validation_accordion .mat-paginator-container {
+  max-height: 36px;
+}
+
+.mat-raised-button {
+  width: 34px;
+  min-width: 34px;
+  height: 34px;
+  padding: 0;
+
+  border-radius: 50%;
+}
+
+.report-sidebar {
+  width: 550px;
+  height: 100%;
+
+  background-color: white;
+  box-shadow: 0 8px 16px 0 rgb(0 0 0 / 16%);
+}
+
+.crg-report-sidebar-header {
+  padding: 20px 20px 5px;
+
+  font-size: larger;
+}
+
+.crg-report-sidebar-content {
+  overflow: auto;
+
+  max-height: 100%;
+}
+
+.crg-close-icon {
+  position: relative;
+  top: 8px;
+
+  float: right;
+
+  cursor: pointer;
+
+  color: grey;
+}
+
+.report-sidebar-button {
+  display: inline-block;
+}

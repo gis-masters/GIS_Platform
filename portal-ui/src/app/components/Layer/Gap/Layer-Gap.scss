@@ -1,0 +1,5 @@
+.Layer-Gap {
+  flex-shrink: 0;
+
+  width: calc(var(--layer-gap) * 20px);
+}

@@ -1,0 +1,47 @@
+.Projects-Header {
+  position: sticky;
+  z-index: 2;
+  top: -1px;
+
+  display: grid;
+  align-items: center;
+  gap: 20px;
+  grid-template-rows: 1fr;
+  grid-template-columns: auto minmax(auto, max-content);
+
+  width: 100%;
+  max-width: 1220px;
+  margin: 0 auto;
+  padding: 30px 40px;
+
+  background: white;
+
+  &_rightActions {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  &::before {
+    position: absolute;
+    top: -8px;
+    right: 0;
+    left: 0;
+
+    height: 8px;
+
+    content: '';
+
+    background: white;
+  }
+
+  > div:first-child {
+    min-width: 0;
+  }
+
+  & .Breadcrumbs .Link {
+    text-decoration: none;
+
+    color: var(--black);
+  }
+}

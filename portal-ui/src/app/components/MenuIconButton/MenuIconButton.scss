@@ -1,0 +1,28 @@
+body .MenuIconButton {
+  position: relative;
+
+  &-Icon {
+    display: inline-flex;
+
+    width: 1em;
+    height: 1em;
+
+    transform: translateX(-4px);
+  }
+
+  &-Arrow {
+    position: absolute;
+    top: calc(50% - 12px);
+    left: calc(50% + 0px);
+
+    &_size_small {
+      top: calc(50% - 9px);
+    }
+  }
+
+  &-Anchor {
+    position: absolute;
+    z-index: -1;
+    inset: 0;
+  }
+}

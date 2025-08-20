@@ -1,0 +1,4 @@
+<logging>
+  <level>VERBOSE_LOGGING.properties</level>
+  <stdOutLogging>false</stdOutLogging>
+</logging>

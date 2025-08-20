@@ -1,0 +1,15 @@
+meta {
+  name: get all
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{host}}:{{port}}/api/data/srs
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjcmdfbG9naW4iOiJmaXpAZml6IiwidXNlcl9uYW1lIjoiZml6X2Zpel8zNCIsImdyb3VwcyI6W10sInZlcnNpb24iOm51bGwsImF1dGhvcml0aWVzIjpbIk9SR19BRE1JTiJdLCJtaW5pb25zIjpbXSwiY2xpZW50X2lkIjoiYWRtaW4iLCJ1c2VyX2lkIjozNCwic2NvcGUiOlsiY3JnIl0sIm9yZ2FuaXphdGlvbnMiOlt7ImlkIjoxLCJuYW1lIjoi0JDQniDQk9C10L7QuNC90YTQvtGA0LzQsNGG0LjQvtC90L3Ri9C1INGB0LjRgdGC0LXQvNGLIn1dLCJleHAiOjE3MTgyNzU4ODQsImRpcmVjdE1pbmlvbnMiOltdLCJqdGkiOiI2Y2E5NWQ4Ny0zMWZjLTQxMGYtODliOC01YjQyMGUyNDNmYTEifQ.t9xfSHIi3HveDy6ty4Aij1vhvJJabvLZuK-G1VadJIQ
+}

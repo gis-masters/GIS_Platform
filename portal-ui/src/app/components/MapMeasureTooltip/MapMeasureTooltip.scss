@@ -1,0 +1,73 @@
+.MapMeasureTooltipRoot {
+  display: contents;
+}
+
+body .MapMeasureTooltip {
+  position: relative;
+
+  padding: calc(5px * var(--MapMeasureTooltipResize)) calc(6px * var(--MapMeasureTooltipResize))
+    calc(3px * var(--MapMeasureTooltipResize)) calc(8px * var(--MapMeasureTooltipResize));
+
+  transition: opacity 0.3s;
+  white-space: nowrap;
+
+  opacity: 0.8;
+  color: white;
+  border-radius: calc(4px * var(--MapMeasureTooltipResize));
+  background: rgb(0 0 0 / 50%);
+
+  font-size: calc(12px * var(--MapMeasureTooltipResize));
+
+  --MapMeasureTooltipResize: 1;
+
+  &::before {
+    position: absolute;
+    bottom: calc(-6px * var(--MapMeasureTooltipResize));
+    left: 50%;
+
+    margin-left: calc(-6px * var(--MapMeasureTooltipResize));
+
+    content: '';
+
+    border-top: calc(6px * var(--MapMeasureTooltipResize)) solid rgb(0 0 0 / 50%);
+    border-right: calc(6px * var(--MapMeasureTooltipResize)) solid transparent;
+    border-left: calc(6px * var(--MapMeasureTooltipResize)) solid transparent;
+  }
+
+  &_state {
+    &_static {
+      color: black;
+      border: 1px solid white;
+      background-color: #fc3;
+
+      &::before {
+        bottom: calc(-5px * var(--MapMeasureTooltipResize));
+
+        border-top-color: #fc3;
+      }
+    }
+  }
+
+  &:hover {
+    opacity: 1;
+  }
+
+  &-Clear {
+    margin-top: -1px;
+    margin-left: 5px;
+
+    vertical-align: top;
+
+    font-size: 12px;
+  }
+
+  &_printing {
+    --MapMeasureTooltipResize: calc(var(--MapMeasureTooltipPrintingResolution) / 150);
+
+    .MapMeasureTooltip {
+      &-Clear {
+        display: none;
+      }
+    }
+  }
+}

@@ -1,0 +1,210 @@
+<div class="container-fluid">
+  <crg-loading-ng *ngIf="!isFeatureTypeLoaded"></crg-loading-ng>
+
+  <div
+    class="row"
+    style="
+      padding-top: 5px;
+      padding-bottom: 5px;
+
+      background-color: gainsboro;
+    "
+  >
+    <div class="col-12" style="padding-right: 5px; padding-left: 5px">
+      <button
+        mat-stroked-button
+        color="primary"
+        (click)="editFeature()"
+        class="float-left"
+      >
+        Сохранить
+      </button>
+      <button mat-stroked-button (click)="close()" class="float-right">
+        Отмена
+      </button>
+    </div>
+  </div>
+
+  <div class="row edit-content scroll" *ngIf="isFeatureTypeLoaded">
+    <form
+      class="example-form col-md-12"
+      [formGroup]="editFeatureForm"
+      *ngIf="editFeatureData.length > 0"
+    >
+      <div *ngFor="let editFeatureItem of editFeatureData">
+        <div
+          *ngIf="editFeatureItem.property?.valueType?.includes('STRING')"
+          class="row fiz-edit-item"
+        >
+          <div class="col-6 px-0 edit-item-title">
+            <span
+              *ngIf="!editFeatureItem.isFgistpProperty"
+              style="color: grey"
+              matTooltip="Данное свойство не соответствует приказу"
+              >{{ editFeatureItem.property?.title }}</span
+            >
+            <span *ngIf="editFeatureItem.isFgistpProperty">{{
+              editFeatureItem.property?.title
+            }}</span>
+          </div>
+          <div class="col-6 px-0">
+            <div class="input-group">
+              <input
+                class="form-control"
+                type="text"
+                formControlName="{{ editFeatureItem.name }}"
+              />
+              <div
+                class="input-group-append"
+                *ngIf="!editFeatureForm.controls[editFeatureItem.name]?.valid"
+              >
+                <span
+                  class="input-group-text error-badge"
+                  *ngIf="editFeatureForm.controls[editFeatureItem.name]?.errors"
+                >
+                  <crg-errors-badge
+                    [errors]="
+                      editFeatureForm.controls[editFeatureItem.name]?.errors
+                    "
+                  ></crg-errors-badge>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div
+          *ngIf="editFeatureItem.property?.valueType?.includes('INT')"
+          class="row fiz-edit-item"
+        >
+          <div class="col-6 px-0 edit-item-title">
+            {{ editFeatureItem.property?.title }}
+          </div>
+          <div class="col-6 px-0">
+            <div class="input-group">
+              <input
+                class="form-control"
+                type="number"
+                formControlName="{{ editFeatureItem.name }}"
+              />
+              <div
+                class="input-group-append"
+                *ngIf="!editFeatureForm.controls[editFeatureItem.name]?.valid"
+              >
+                <span class="input-group-text error-badge">
+                  <crg-errors-badge
+                    [errors]="
+                      editFeatureForm.controls[editFeatureItem.name]?.errors
+                    "
+                  ></crg-errors-badge>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div
+          *ngIf="editFeatureItem.property?.valueType?.includes('DOUBLE')"
+          class="row fiz-edit-item"
+        >
+          <div class="col-6 px-0 edit-item-title">
+            {{ editFeatureItem.property?.title }}
+          </div>
+          <div class="col-6 px-0">
+            <div class="input-group">
+              <input
+                class="form-control"
+                type="number"
+                formControlName="{{ editFeatureItem.name }}"
+              />
+              <div
+                class="input-group-append"
+                *ngIf="!editFeatureForm.controls[editFeatureItem.name]?.valid"
+              >
+                <span class="input-group-text error-badge">
+                  <crg-errors-badge
+                    [errors]="
+                      editFeatureForm.controls[editFeatureItem.name]?.errors
+                    "
+                  ></crg-errors-badge>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div
+          *ngIf="editFeatureItem.property?.valueType?.includes('DATETIME')"
+          class="row fiz-edit-item"
+        >
+          <div class="col-6 px-0 edit-item-title">
+            {{ editFeatureItem.property?.title }}
+          </div>
+          <div class="col-6 px-0">
+            <div class="input-group">
+              <input
+                class="form-control"
+                type="date"
+                formControlName="{{ editFeatureItem.name }}"
+              />
+              <div
+                class="input-group-append"
+                *ngIf="!editFeatureForm.controls[editFeatureItem.name]?.valid"
+              >
+                <span
+                  class="input-group-text error-badge"
+                  *ngIf="editFeatureForm.controls[editFeatureItem.name]?.errors"
+                >
+                  <crg-errors-badge
+                    [errors]="
+                      editFeatureForm.controls[editFeatureItem.name]?.errors
+                    "
+                  ></crg-errors-badge>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div
+          *ngIf="editFeatureItem.property?.valueType?.includes('CHOICE')"
+          class="row fiz-edit-item"
+        >
+          <div class="col-6 px-0 edit-item-title">
+            {{ editFeatureItem.property?.title }}
+          </div>
+          <div class="col-6 px-0">
+            <div class="input-group">
+              <select
+                class="custom-select"
+                formControlName="{{ editFeatureItem.name }}"
+              >
+                <option [value]=""></option>
+                <option
+                  *ngFor="
+                    let enumOption of editFeatureItem.property.enumerations
+                  "
+                  [value]="enumOption.value"
+                >
+                  {{ enumOption.title }}
+                </option>
+              </select>
+              <div
+                class="input-group-append"
+                *ngIf="!editFeatureForm.controls[editFeatureItem.name]?.valid"
+              >
+                <span class="input-group-text error-badge">
+                  <crg-errors-badge
+                    [errors]="
+                      editFeatureForm.controls[editFeatureItem.name]?.errors
+                    "
+                  ></crg-errors-badge>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

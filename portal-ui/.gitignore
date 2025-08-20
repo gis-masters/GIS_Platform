@@ -1,0 +1,54 @@
+# See http://help.github.com/ignore-files/ for more about ignoring files.
+
+# compiled output
+/dist
+/bl
+/tmp
+/out-tsc
+
+# dependencies
+/node_modules
+
+# profiling files
+chrome-profiler-events.json
+speed-measure-plugin.json
+
+# IDEs and editors
+/.idea
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+nbproject/
+.vscode/*
+.vs/*
+
+# misc
+/.angular/cache
+/.sass-cache
+/connect.lock
+/coverage
+/libpeerconnection.log
+npm-debug.log
+yarn-error.log
+testem.log
+/typings
+src/reglaments
+src/assets/config/environment.json
+
+# System Files
+.DS_Store
+Thumbs.db
+
+# hermione
+.hermione.my-conf.js
+/my
+
+# tests
+tests/_screens/.tmp
+
+# tests reports
+allure-results
+allure-report

@@ -1,0 +1,80 @@
+<crg-services-provider></crg-services-provider>
+
+<crg-workspace>
+  <div class="container" *ngIf="schemas">
+    <crg-work-import-preview></crg-work-import-preview>
+
+    <mat-card class="crg-card">
+      <mat-card-content class="crg-card-content">
+        <div class="row m-0 h-100">
+          <div class="col-3 p-0 crg-card-list scroll">
+            <mat-nav-list dense>
+              <mat-list-item
+                *ngFor="let comparablePair of comparableLayers"
+                [ngClass]="isActive(comparablePair) ? 'selected-element' : 'crg-list-item'"
+                (click)="selectLayer(comparablePair)"
+              >
+                <a matLine>{{ comparablePair.originalLayer.title }}.shp</a>
+
+                <mat-icon
+                  mat-list-icon
+                  *ngIf="!comparablePair.isDisabled && comparablePair.isMapped"
+                  style="color: green;"
+                >done
+                </mat-icon
+                >
+                <mat-icon
+                  mat-list-icon
+                  *ngIf="!comparablePair.isDisabled && !comparablePair.isMapped"
+                  style="color: tomato;"
+                >warning
+                </mat-icon
+                >
+                <mat-icon mat-list-icon *ngIf="comparablePair.isDisabled">cancel</mat-icon>
+
+                <div class="selected-element-marker" *ngIf="isActive(comparablePair)"></div>
+              </mat-list-item>
+            </mat-nav-list>
+          </div>
+          <div class="">
+            <div class="content-separator"></div>
+          </div>
+          <div class="col-9 crg-card-list scroll">
+            <crg-mapping-card [importLayer]="selectedLayer" [schemas]="schemas"></crg-mapping-card>
+          </div>
+        </div>
+      </mat-card-content>
+
+      <mat-card-footer class="crg-card-footer">
+        <button mat-stroked-button class="float-left crg-card-footer-b" [routerLink]="prevLink">
+          Назад
+        </button>
+
+        <button
+          mat-stroked-button
+          class="float-right crg-card-footer-b"
+          [disabled]="!selectedDataset"
+          (click)="startWorkImport()"
+        >
+          <span *ngIf="!isWorkImportInited">Импортировать</span>
+
+          <img
+            src="../../../../assets/images/loader.gif"
+            alt="logo"
+            *ngIf="isWorkImportInited"
+            style=" margin-right: 39px; margin-left: 39px;"
+            height="27"
+            width="27"
+          />
+        </button>
+
+        <pickup-datasets
+          class="float-right crg-card-footer-b"
+          (datasetSelect)="this.onDatasetSelected($event)">
+        </pickup-datasets>
+      </mat-card-footer>
+    </mat-card>
+  </div>
+
+  <crg-loading *ngIf="!schemas"></crg-loading>
+</crg-workspace>

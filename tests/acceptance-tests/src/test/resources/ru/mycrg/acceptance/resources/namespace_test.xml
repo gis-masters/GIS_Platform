@@ -1,0 +1,1178 @@
+<?xml version="1.0" encoding="utf-8"?>
+<MapPlan NameSoftware="ТехноКад-Экспресс" VersionSoftware="2.19.40529.0" GUID="000b5e92-aeb9-4d1c-a473-85198b214105" xmlns="urn://x-artefacts-rosreestr-ru/incoming/map-plan/1.0.7" xmlns:spat="urn://x-artefacts-rosreestr-ru/commons/complex-types/entity-spatial/1.0.2" xmlns:loc="urn://x-artefacts-rosreestr-ru/commons/complex-types/address-input/2.0.1" xmlns:bnd="urn://x-artefacts-rosreestr-ru/commons/complex-types/boundary/2.0.1" xmlns:fio="urn://x-artefacts-smev-gov-ru/supplementary/commons/1.0.1" xmlns:ki2="urn://x-artefacts-rosreestr-ru/commons/complex-types/cadastral-engineer/2.0.1">
+    <Title>
+        <Clients>
+            <Client Date="2019-05-30">
+                <Governance>
+                    <Name>Администрация Укромновского сельского поселения Симферопольского района Республики Крым</Name>
+                    <Agent>
+                        <Appointment>глава администрации Трудовского сельского поселения</Appointment>
+                        <fio:FamilyName>Бехтольд</fio:FamilyName>
+                        <fio:FirstName>Владимир</fio:FirstName>
+                        <fio:Patronymic>Анатольевич</fio:Patronymic>
+                    </Agent>
+                </Governance>
+            </Client>
+        </Clients>
+        <Contractor>
+            <CadastralEngineer>
+                <fio:FamilyName>Ибрагимов</fio:FamilyName>
+                <fio:FirstName>Азиз</fio:FirstName>
+                <fio:Patronymic>Энверович</fio:Patronymic>
+                <ki2:NCertificate>82-16-531</ki2:NCertificate>
+                <ki2:Telephone>+79781406501</ki2:Telephone>
+                <ki2:Address>город Евпатория, улица 60 лет Октября, 26</ki2:Address>
+                <ki2:Email>kadastrsim@mail.ru</ki2:Email>
+                <INN>911006441741</INN>
+            </CadastralEngineer>
+        </Contractor>
+        <Coordinations>
+            <Coordination>
+                <Name>Администрация Укромновского сельского поселения Симферопольского района Республики Крым</Name>
+                <Official>
+                    <Appointment>глава администрации Укромновского сельского поселения</Appointment>
+                    <fio:FamilyName>Бехтольд</fio:FamilyName>
+                    <fio:FirstName>Владимир</fio:FirstName>
+                    <fio:Patronymic>Анатольевич</fio:Patronymic>
+                </Official>
+            </Coordination>
+        </Coordinations>
+        <Information>
+            <NumberReg>-</NumberReg>
+            <DateReg>2019-05-30</DateReg>
+            <NameArchive>-</NameArchive>
+        </Information>
+    </Title>
+    <Documents>
+        <Document>
+            <CodeDocument>558299000000</CodeDocument>
+            <Name>Описание местоположения границ</Name>
+            <Number>б/н</Number>
+            <Date>2019-05-30</Date>
+            <IssueOrgan>Кадастровый инженер - Ибрагимов А. Э.</IssueOrgan>
+            <AppliedFile Kind="01" Name="6777a6c7-e8a2-4ba0-adf5-eda19543c4c7\Описание местоположения границ.pdf" />
+        </Document>
+        <Document>
+            <CodeDocument>558225000000</CodeDocument>
+            <Name>Решение "Об утверждении генерального плана Трудовского сельского поселения Симферопольского района Республики Крым"</Name>
+            <Number>1057</Number>
+            <Date>2018-10-24</Date>
+            <IssueOrgan>Симферопольский районный совет Республики Крым</IssueOrgan>
+            <AppliedFile Kind="01" Name="6777a6c7-e8a2-4ba0-adf5-eda19543c4c7\Утверждающий документ.pdf" />
+        </Document>
+        <Document>
+            <CodeDocument>558299000000</CodeDocument>
+            <Name>Генеральный план муниципального образования Трудовское сельское поселение Симферопольского района Республики Крым</Name>
+            <Number>б/н</Number>
+            <Date>2018-10-24</Date>
+            <IssueOrgan>ООО "Проектный институт "Геоплан"</IssueOrgan>
+            <AppliedFile Kind="01" Name="6777a6c7-e8a2-4ba0-adf5-eda19543c4c7\Материалы по обоснованию в текстовой форме.pdf" />
+        </Document>
+        <Document>
+            <CodeDocument>558299000000</CodeDocument>
+            <Name>Карта границ населенных пунктов, входящих в состав Трудовского сельского поселения Симферопольского района Республики Крым</Name>
+            <Number>б/н</Number>
+            <Date>2018-10-24</Date>
+            <IssueOrgan>ООО "Проектный институт "Геоплан"</IssueOrgan>
+            <AppliedFile Kind="01" Name="6777a6c7-e8a2-4ba0-adf5-eda19543c4c7\Копии карт границ населенных пунктов.pdf" />
+        </Document>
+        <Document>
+            <CodeDocument>558299000000</CodeDocument>
+            <Name>Карта планируемого размещения объектов местного значения Трудовского сельского поселения Симферопольского района Республики Крым</Name>
+            <Number>б/н</Number>
+            <Date>2018-10-24</Date>
+            <IssueOrgan>ООО "Проектный институт "Геоплан"</IssueOrgan>
+            <AppliedFile Kind="01" Name="6777a6c7-e8a2-4ba0-adf5-eda19543c4c7\Копии карт планируемого размещения объектов.pdf" />
+        </Document>
+        <Document>
+            <CodeDocument>558299000000</CodeDocument>
+            <Name>Карта функциональных зон Трудовского сельского поселения Симферопольского района Республики Крым</Name>
+            <Number>б/н</Number>
+            <Date>2018-10-24</Date>
+            <IssueOrgan>ООО "Проектный институт "Геоплан"</IssueOrgan>
+            <AppliedFile Kind="01" Name="6777a6c7-e8a2-4ba0-adf5-eda19543c4c7\Копии карт функциональных зон.pdf" />
+        </Document>
+    </Documents>
+    <Object>
+        <Bound>
+            <bnd:Description>граница села Укромное, Укромновского сельского поселения, Симферопольского района, Республики Крым</bnd:Description>
+            <bnd:InhabitedLocalityBoundary>
+                <loc:OKATO>35247000329</loc:OKATO>
+                <loc:KLADR>91012000091</loc:KLADR>
+                <loc:OKTMO>35647475101</loc:OKTMO>
+                <loc:PostalCode>297536</loc:PostalCode>
+                <loc:Region>91</loc:Region>
+                <loc:District Name="Симферопольский" Type="р-н" />
+                <loc:Locality Name="Укромное" Type="с" />
+            </bnd:InhabitedLocalityBoundary>
+            <EntitySpatial EntSys="Id6c6ba097-37ae-4500-8dd9-be6b2f83d8b2">
+                <spat:SpatialElement>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="1" PointPref="н" X="4983933.38" Y="5181094.73" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="2" PointPref="н" X="4983870.65" Y="5181097.03" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="3" PointPref="н" X="4983598.92" Y="5181109.43" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="4" PointPref="н" X="4983476.87" Y="5181113.24" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="5" PointPref="н" X="4983253.96" Y="5181124.00" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="6" PointPref="н" X="4983254.55" Y="5181079.51" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="7" PointPref="н" X="4983254.79" Y="5180874.67" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="8" PointPref="н" X="4983100.17" Y="5180788.37" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="9" PointPref="н" X="4983036.20" Y="5180791.56" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="10" PointPref="н" X="4982731.01" Y="5180815.22" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="11" PointPref="н" X="4982726.51" Y="5180755.49" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="12" PointPref="н" X="4982585.67" Y="5180750.75" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="13" PointPref="н" X="4982583.12" Y="5180404.94" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="14" PointPref="н" X="4982631.91" Y="5180224.03" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="15" PointPref="н" X="4982509.20" Y="5180191.37" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="16" PointPref="н" X="4982424.35" Y="5180168.78" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="17" PointPref="н" X="4982020.00" Y="5180061.14" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="18" PointPref="н" X="4981990.18" Y="5180062.08" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="19" PointPref="н" X="4981987.39" Y="5180062.26" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="20" PointPref="н" X="4981971.40" Y="5180062.69" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="21" PointPref="н" X="4981929.55" Y="5180053.31" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="22" PointPref="н" X="4981913.31" Y="5180049.39" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="23" PointPref="н" X="4981916.79" Y="5180031.08" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="24" PointPref="н" X="4981918.37" Y="5180024.38" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="25" PointPref="н" X="4981673.49" Y="5179963.33" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="26" PointPref="н" X="4981672.45" Y="5179930.57" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="27" PointPref="н" X="4981660.45" Y="5179927.47" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="28" PointPref="н" X="4981615.48" Y="5179916.20" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="29" PointPref="н" X="4981574.36" Y="5179905.64" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="30" PointPref="н" X="4981532.05" Y="5179894.27" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="31" PointPref="н" X="4981489.48" Y="5179883.39" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="32" PointPref="н" X="4981447.15" Y="5179872.23" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="33" PointPref="н" X="4981404.75" Y="5179861.07" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="34" PointPref="н" X="4981381.60" Y="5179854.98" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="35" PointPref="н" X="4981370.58" Y="5179850.18" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="36" PointPref="н" X="4981362.87" Y="5179848.19" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="37" PointPref="н" X="4981320.58" Y="5179836.42" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="38" PointPref="н" X="4981278.12" Y="5179825.45" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="39" PointPref="н" X="4981236.47" Y="5179814.83" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="40" PointPref="н" X="4981236.06" Y="5179814.73" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="41" PointPref="н" X="4981155.53" Y="5180117.57" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="42" PointPref="н" X="4981246.78" Y="5180141.94" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="43" PointPref="н" X="4981241.09" Y="5180163.25" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="44" PointPref="н" X="4981398.57" Y="5180204.85" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="45" PointPref="н" X="4981386.92" Y="5180248.44" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="46" PointPref="н" X="4981421.65" Y="5180257.55" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="47" PointPref="н" X="4981424.82" Y="5180258.90" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="48" PointPref="н" X="4981427.89" Y="5180260.46" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="49" PointPref="н" X="4981430.86" Y="5180262.21" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="50" PointPref="н" X="4981433.71" Y="5180264.15" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="51" PointPref="н" X="4981436.44" Y="5180266.27" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="52" PointPref="н" X="4981439.02" Y="5180268.56" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="53" PointPref="н" X="4981441.45" Y="5180271.01" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="54" PointPref="н" X="4981443.71" Y="5180273.61" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="55" PointPref="н" X="4981445.80" Y="5180276.35" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="56" PointPref="н" X="4981447.71" Y="5180279.22" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="57" PointPref="н" X="4981449.44" Y="5180282.20" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="58" PointPref="н" X="4981450.97" Y="5180285.29" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="59" PointPref="н" X="4981452.29" Y="5180288.48" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="60" PointPref="н" X="4981453.41" Y="5180291.74" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="61" PointPref="н" X="4981454.32" Y="5180295.06" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="62" PointPref="н" X="4981455.01" Y="5180298.44" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="63" PointPref="н" X="4981455.49" Y="5180301.85" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="64" PointPref="н" X="4981455.74" Y="5180305.29" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="65" PointPref="н" X="4981455.77" Y="5180308.74" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="66" PointPref="н" X="4981455.59" Y="5180312.18" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="67" PointPref="н" X="4981455.18" Y="5180315.60" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="68" PointPref="н" X="4981348.62" Y="5180714.52" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="69" PointPref="н" X="4981347.28" Y="5180717.18" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="70" PointPref="н" X="4981345.78" Y="5180719.74" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="71" PointPref="н" X="4981344.12" Y="5180722.20" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="72" PointPref="н" X="4981342.30" Y="5180724.55" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="73" PointPref="н" X="4981340.33" Y="5180726.78" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="74" PointPref="н" X="4981338.22" Y="5180728.88" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="75" PointPref="н" X="4981335.99" Y="5180730.83" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="76" PointPref="н" X="4981333.63" Y="5180732.64" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="77" PointPref="н" X="4981331.17" Y="5180734.30" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="78" PointPref="н" X="4981328.60" Y="5180735.79" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="79" PointPref="н" X="4981325.94" Y="5180737.12" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="80" PointPref="н" X="4981323.20" Y="5180738.27" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="81" PointPref="н" X="4981320.39" Y="5180739.24" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="82" PointPref="н" X="4981317.53" Y="5180740.04" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="83" PointPref="н" X="4981314.63" Y="5180740.64" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="84" PointPref="н" X="4981311.69" Y="5180741.06" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="85" PointPref="н" X="4981308.73" Y="5180741.29" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="86" PointPref="н" X="4981305.76" Y="5180741.33" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="87" PointPref="н" X="4981302.79" Y="5180741.17" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="88" PointPref="н" X="4981299.84" Y="5180740.83" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="89" PointPref="н" X="4981296.92" Y="5180740.30" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="90" PointPref="н" X="4981258.30" Y="5180729.97" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="91" PointPref="н" X="4981252.33" Y="5180752.40" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="92" PointPref="н" X="4981331.26" Y="5180773.66" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="93" PointPref="н" X="4981315.59" Y="5180831.90" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="94" PointPref="н" X="4981392.37" Y="5180852.06" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="95" PointPref="н" X="4981386.04" Y="5180875.75" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="96" PointPref="н" X="4981458.55" Y="5180895.18" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="97" PointPref="н" X="4981455.95" Y="5180904.91" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="98" PointPref="н" X="4981421.32" Y="5181034.57" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="99" PointPref="н" X="4981231.37" Y="5180983.98" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="100" PointPref="н" X="4981227.86" Y="5180982.93" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="101" PointPref="н" X="4981239.80" Y="5180881.10" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="102" PointPref="н" X="4981121.03" Y="5180859.53" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="103" PointPref="н" X="4981121.28" Y="5180883.40" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="104" PointPref="н" X="4981118.81" Y="5180885.39" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="105" PointPref="н" X="4981121.52" Y="5180886.62" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="106" PointPref="н" X="4981120.09" Y="5181028.02" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="107" PointPref="н" X="4981126.58" Y="5181052.06" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="108" PointPref="н" X="4981126.88" Y="5181064.03" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="109" PointPref="н" X="4981119.90" Y="5181111.40" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="110" PointPref="н" X="4981120.21" Y="5181123.59" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="111" PointPref="н" X="4981124.85" Y="5181143.97" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="112" PointPref="н" X="4981126.08" Y="5181149.36" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="113" PointPref="н" X="4981126.96" Y="5181154.10" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="114" PointPref="н" X="4981128.63" Y="5181162.23" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="115" PointPref="н" X="4981132.44" Y="5181169.14" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="116" PointPref="н" X="4981134.03" Y="5181170.89" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="117" PointPref="н" X="4981135.06" Y="5181172.03" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="118" PointPref="н" X="4981138.37" Y="5181174.49" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="119" PointPref="н" X="4981142.00" Y="5181175.97" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="120" PointPref="н" X="4981158.01" Y="5181179.09" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="121" PointPref="н" X="4981181.33" Y="5181182.63" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="122" PointPref="н" X="4981194.95" Y="5181184.75" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="123" PointPref="н" X="4981216.75" Y="5181188.14" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="124" PointPref="н" X="4981260.01" Y="5181195.70" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="125" PointPref="н" X="4981294.24" Y="5181201.77" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="126" PointPref="н" X="4981342.55" Y="5181210.34" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="127" PointPref="н" X="4981381.66" Y="5181217.97" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="128" PointPref="н" X="4981430.84" Y="5181227.27" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="129" PointPref="н" X="4981448.65" Y="5181230.73" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="130" PointPref="н" X="4981460.18" Y="5181234.09" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="131" PointPref="н" X="4981474.93" Y="5181239.36" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="132" PointPref="н" X="4981484.29" Y="5181244.38" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="133" PointPref="н" X="4981486.31" Y="5181245.78" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="134" PointPref="н" X="4981496.45" Y="5181252.85" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="135" PointPref="н" X="4981504.00" Y="5181260.26" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="136" PointPref="н" X="4981537.21" Y="5181299.91" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="137" PointPref="н" X="4981575.14" Y="5181346.08" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="138" PointPref="н" X="4981588.94" Y="5181358.53" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="139" PointPref="н" X="4981602.93" Y="5181367.41" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="140" PointPref="н" X="4981611.94" Y="5181368.45" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="141" PointPref="н" X="4981655.13" Y="5181373.42" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="142" PointPref="н" X="4981705.03" Y="5181379.15" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="143" PointPref="н" X="4981717.25" Y="5181380.56" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="144" PointPref="н" X="4981724.72" Y="5181405.72" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="145" PointPref="н" X="4981724.78" Y="5181406.73" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="146" PointPref="н" X="4981725.70" Y="5181407.61" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="147" PointPref="н" X="4981726.76" Y="5181412.61" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="148" PointPref="н" X="4981714.06" Y="5181462.25" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="149" PointPref="н" X="4981696.95" Y="5181477.39" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="150" PointPref="н" X="4981611.83" Y="5181552.87" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="151" PointPref="н" X="4981292.97" Y="5181556.45" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="152" PointPref="н" X="4981289.52" Y="5181555.81" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="153" PointPref="н" X="4980662.14" Y="5181566.04" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="154" PointPref="н" X="4980066.42" Y="5181575.13" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="155" PointPref="н" X="4979820.04" Y="5181578.91" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="156" PointPref="н" X="4979675.85" Y="5181780.30" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="157" PointPref="н" X="4979639.85" Y="5181846.30" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="158" PointPref="н" X="4979660.69" Y="5181863.36" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="159" PointPref="н" X="4979604.97" Y="5181959.72" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="160" PointPref="н" X="4979612.41" Y="5182384.98" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="161" PointPref="н" X="4979592.69" Y="5182385.82" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="162" PointPref="н" X="4979319.27" Y="5182393.79" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="163" PointPref="н" X="4979318.56" Y="5182375.55" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="164" PointPref="н" X="4979270.17" Y="5182370.53" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="165" PointPref="н" X="4979293.54" Y="5182431.46" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="166" PointPref="н" X="4979419.72" Y="5182754.20" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="167" PointPref="н" X="4979465.00" Y="5182870.22" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="168" PointPref="н" X="4979614.84" Y="5182762.68" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="169" PointPref="н" X="4979658.03" Y="5182731.70" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="170" PointPref="н" X="4979680.33" Y="5182770.30" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="171" PointPref="н" X="4979691.28" Y="5182789.25" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="172" PointPref="н" X="4979690.36" Y="5182790.01" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="173" PointPref="н" X="4979690.52" Y="5182790.29" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="174" PointPref="н" X="4979628.03" Y="5182842.16" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="175" PointPref="н" X="4979634.37" Y="5182850.52" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="176" PointPref="н" X="4979605.72" Y="5182872.24" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="177" PointPref="н" X="4979600.38" Y="5182865.12" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="178" PointPref="н" X="4979589.12" Y="5182874.46" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="179" PointPref="н" X="4979488.47" Y="5182957.58" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="180" PointPref="н" X="4979494.21" Y="5182993.56" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="181" PointPref="н" X="4979527.06" Y="5183067.19" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="182" PointPref="н" X="4979620.22" Y="5183263.04" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="183" PointPref="н" X="4979669.34" Y="5183274.87" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="184" PointPref="н" X="4979674.37" Y="5183269.93" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="185" PointPref="н" X="4979688.01" Y="5183257.25" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="186" PointPref="н" X="4979700.34" Y="5183245.78" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="187" PointPref="н" X="4979724.50" Y="5183223.33" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="188" PointPref="н" X="4979725.26" Y="5183222.62" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="189" PointPref="н" X="4979724.73" Y="5183221.77" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="190" PointPref="н" X="4979746.89" Y="5183201.61" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="191" PointPref="н" X="4979720.58" Y="5183114.28" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="192" PointPref="н" X="4979802.60" Y="5183031.45" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="193" PointPref="н" X="4979863.91" Y="5182964.15" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="194" PointPref="н" X="4980030.51" Y="5182803.49" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="195" PointPref="н" X="4980084.55" Y="5182754.84" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="196" PointPref="н" X="4980111.80" Y="5182730.99" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="197" PointPref="н" X="4980188.13" Y="5182668.06" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="198" PointPref="н" X="4980238.19" Y="5182629.36" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="199" PointPref="н" X="4980243.37" Y="5182438.68" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="200" PointPref="н" X="4980199.61" Y="5182383.82" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="201" PointPref="н" X="4980199.11" Y="5182381.99" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="202" PointPref="н" X="4980207.20" Y="5182376.66" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="203" PointPref="н" X="4980207.01" Y="5182376.32" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="204" PointPref="н" X="4980273.60" Y="5182328.15" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="205" PointPref="н" X="4980276.02" Y="5182326.75" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="206" PointPref="н" X="4980287.21" Y="5182320.74" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="207" PointPref="н" X="4980294.96" Y="5182316.58" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="208" PointPref="н" X="4980301.48" Y="5182329.06" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="209" PointPref="н" X="4980393.23" Y="5182506.89" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="210" PointPref="н" X="4980415.71" Y="5182515.14" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="211" PointPref="н" X="4980441.18" Y="5182512.32" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="212" PointPref="н" X="4980490.78" Y="5182491.72" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="213" PointPref="н" X="4980591.74" Y="5182446.23" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="214" PointPref="н" X="4980738.28" Y="5182624.66" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="215" PointPref="н" X="4980933.10" Y="5182872.97" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="216" PointPref="н" X="4980937.52" Y="5182870.08" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="217" PointPref="н" X="4981047.55" Y="5182819.48" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="218" PointPref="н" X="4981049.33" Y="5182822.68" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="219" PointPref="н" X="4981054.98" Y="5182819.75" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="220" PointPref="н" X="4981056.42" Y="5182823.68" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="221" PointPref="н" X="4981057.33" Y="5182826.00" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="222" PointPref="н" X="4981058.78" Y="5182829.74" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="223" PointPref="н" X="4981064.37" Y="5182827.57" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="224" PointPref="н" X="4981065.64" Y="5182830.83" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="225" PointPref="н" X="4981067.89" Y="5182829.96" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="226" PointPref="н" X="4981106.04" Y="5182899.50" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="227" PointPref="н" X="4981108.16" Y="5182903.42" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="228" PointPref="н" X="4981114.09" Y="5182899.77" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="229" PointPref="н" X="4981151.80" Y="5182876.72" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="230" PointPref="н" X="4981163.79" Y="5182871.00" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="231" PointPref="н" X="4981539.07" Y="5182767.16" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="232" PointPref="н" X="4981907.53" Y="5182697.47" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="233" PointPref="н" X="4981969.55" Y="5182645.64" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="234" PointPref="н" X="4982085.16" Y="5182633.04" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="235" PointPref="н" X="4982084.22" Y="5182655.80" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="236" PointPref="н" X="4982137.07" Y="5182713.02" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="237" PointPref="н" X="4982210.66" Y="5182722.22" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="238" PointPref="н" X="4982552.88" Y="5182700.15" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="239" PointPref="н" X="4982709.19" Y="5182692.54" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="240" PointPref="н" X="4982714.40" Y="5182742.58" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="241" PointPref="н" X="4982883.57" Y="5182725.68" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="242" PointPref="н" X="4982898.68" Y="5182724.40" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="243" PointPref="н" X="4982902.95" Y="5182746.41" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="244" PointPref="н" X="4982934.74" Y="5182743.68" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="245" PointPref="н" X="4982927.55" Y="5182660.19" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="246" PointPref="н" X="4982900.12" Y="5182660.07" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="247" PointPref="н" X="4982886.39" Y="5182660.05" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="248" PointPref="н" X="4982852.03" Y="5182481.04" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="249" PointPref="н" X="4982996.61" Y="5182475.13" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="250" PointPref="н" X="4983118.55" Y="5182436.85" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="251" PointPref="н" X="4984125.53" Y="5182412.62" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="252" PointPref="н" X="4984114.94" Y="5182139.69" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="253" PointPref="н" X="4984119.03" Y="5181863.21" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="254" PointPref="н" X="4984202.05" Y="5181586.56" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="255" PointPref="н" X="4984221.17" Y="5181556.81" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="256" PointPref="н" X="4984252.00" Y="5181579.11" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="257" PointPref="н" X="4984286.95" Y="5181620.71" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="258" PointPref="н" X="4984372.74" Y="5181634.01" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="259" PointPref="н" X="4984417.36" Y="5181587.98" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="260" PointPref="н" X="4984563.15" Y="5181550.13" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="261" PointPref="н" X="4984642.79" Y="5181545.11" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="262" PointPref="н" X="4984642.71" Y="5181544.38" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="263" PointPref="н" X="4984641.42" Y="5181531.86" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="264" PointPref="н" X="4984628.62" Y="5181230.55" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="265" PointPref="н" X="4984571.77" Y="5181221.55" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="266" PointPref="н" X="4984536.91" Y="5181216.03" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="267" PointPref="н" X="4984428.67" Y="5181220.70" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="268" PointPref="н" X="4984282.70" Y="5181226.98" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="269" PointPref="н" X="4984254.18" Y="5181228.21" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="270" PointPref="н" X="4984230.74" Y="5181229.22" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="271" PointPref="н" X="4984217.97" Y="5181228.80" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="272" PointPref="н" X="4984139.56" Y="5181232.37" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="273" PointPref="н" X="4983925.51" Y="5181242.11" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="274" PointPref="н" X="4983924.50" Y="5181132.02" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                    <spat:SpelementUnit TypeUnit="Точка">
+                        <spat:Ordinate NumGeopoint="1" PointPref="н" X="4983933.38" Y="5181094.73" DeltaGeopoint="0.10" GeopointOpred="692003000000" />
+                    </spat:SpelementUnit>
+                </spat:SpatialElement>
+                <spat:Borders>
+                    <spat:Border Point1="1" Point2="5" Spatial="1">
+                        <spat:Edge>
+                            <spat:Definition>граница села Укромное проходит на юг по восточной стороне СПК "Мечта"</spat:Definition>
+                            <spat:Neighbours>
+                                <spat:NeighboursName>-</spat:NeighboursName>
+                            </spat:Neighbours>
+                        </spat:Edge>
+                    </spat:Border>
+                    <spat:Border Point1="5" Point2="7" Spatial="1">
+                        <spat:Edge>
+                            <spat:Definition>граница села Укромное меняется на западное и проходит по северной стороне СПК "Мечта"</spat:Definition>
+                            <spat:Neighbours>
+                                <spat:NeighboursName>-</spat:NeighboursName>
+                            </spat:Neighbours>
+                        </spat:Edge>
+                    </spat:Border>
+                    <spat:Border Point1="7" Point2="8" Spatial="1">
+                        <spat:Edge>
+                            <spat:Definition>граница села Укромное меняется на северо-западное, проходит по обочине полевой дороги</spat:Definition>
+                            <spat:Neighbours>
+                                <spat:NeighboursName>-</spat:NeighboursName>
+                            </spat:Neighbours>
+                        </spat:Edge>
+                    </spat:Border>
+                    <spat:Border Point1="8" Point2="10" Spatial="1">
+                        <spat:Edge>
+                            <spat:Definition>граница села Укромное меняется на северное и проходит по естественной границы полевых угодий в сорока метрах от нежилого здания с кадастровым номером 90:12:180301:14</spat:Definition>
+                            <spat:Neighbours>
+                                <spat:NeighboursName>-</spat:NeighboursName>
+                            </spat:Neighbours>
+                        </spat:Edge>
+                    </spat:Border>
+                    <spat:Border Point1="10" Point2="11" Spatial="1">
+                        <spat:Edge>
+                            <spat:Definition>граница села Укромное меняется на западное, проходя по полевой дороги в 35 метрах от нежилого издания с кадастровым номером 90:12:180301:28</spat:Definition>
+                            <spat:Neighbours>
+                                <spat:NeighboursName>-</spat:NeighboursName>
+                            </spat:Neighbours>
+                        </spat:Edge>
+                    </spat:Border>
+                    <spat:Border Point1="11" Point2="12" Spatial="1">
+                        <spat:Edge>
+                            <spat:Definition>граница села Укромное меняется на северное проходя по границы полевых угодий в 32 метрах от нежилого здания с кадастровым номером 90:12:180301:51</spat:Definition>
+                            <spat:Neighbours>
+                                <spat:NeighboursName>-</spat:NeighboursName>
+                            </spat:Neighbours>
+                        </spat:Edge>
+                    </spat:Border>
+                    <spat:Border Point1="12" Point2="13" Spatial="1">
+                        <spat:Edge>
+                            <spat:Definition>граница села Укромное меняется на западное проходя через поле на угол земельного участка 90:12:180301:1</spat:Definition>
+                            <spat:Neighbours>
+                                <spat:NeighboursName>-</spat:NeighboursName>
+                            </spat:Neighbours>
+                        </spat:Edge>
+                    </spat:Border>
+                    <spat:Border Point1="13" Point2="14" Spatial="1">
+                        <spat:Edge>
+                            <spat:Definition>граница проходит в 3 метрах вдоль земельного участка 90:12:180301:1</spat:Definition>
+                            <spat:Neighbours>
+                                <spat:NeighboursName>-</spat:NeighboursName>
+                            </spat:Neighbours>
+                        </spat:Edge>
+                    </spat:Border>
+                    <spat:Border Point1="14" Point2="42" Spatial="1">
+                        <spat:Edge>
+                            <spat:Definition>граница села Укромное меняется на северо-западное и проходит по границе земельного участка аэропорта г. Симферополь</spat:Definition>
+                            <spat:Neighbours>
+                                <spat:NeighboursName>-</spat:NeighboursName>
+                            </spat:Neighbours>
+                        </spat:Edge>
+                    </spat:Border>
+                    <spat:Border Point1="42" Point2="107" Spatial="1">
+                        <spat:Edge>
+                            <spat:Definition>граница проходит по земельному участку с кадастровым номером 90:00:000000:346</spat:Definition>
+                            <spat:Neighbours>
+                                <spat:NeighboursName>-</spat:NeighboursName>
+                            </spat:Neighbours>
+                        </spat:Edge>
+                    </spat:Border>
+                    <spat:Border Point1="107" Point2="111" Spatial="1">
+                        <spat:Edge>
+                            <spat:Definition>граница проходит по южной стороне земельного участка с кадастровым номером 90:12:180301:2</spat:Definition>
+                            <spat:Neighbours>
+                                <spat:NeighboursName>-</spat:NeighboursName>
+                            </spat:Neighbours>
+                        </spat:Edge>
+                    </spat:Border>
+                    <spat:Border Point1="111" Point2="159" Spatial="1">
+                        <spat:Edge>
+                            <spat:Definition>граница села Укромное описывает конфигурацию северо-восточной части земельного участка 90:22:000000:366</spat:Definition>
+                            <spat:Neighbours>
+                                <spat:NeighboursName>-</spat:NeighboursName>
+                            </spat:Neighbours>
+                        </spat:Edge>
+                    </spat:Border>
+                    <spat:Border Point1="159" Point2="164" Spatial="1">
+                        <spat:Edge>
+                            <spat:Definition>граница села Укромное меняется на восточное и проходит по северной стороне пгт Аэрофлотский</spat:Definition>
+                            <spat:Neighbours>
+                                <spat:NeighboursName>-</spat:NeighboursName>
+                            </spat:Neighbours>
+                        </spat:Edge>
+                    </spat:Border>
+                    <spat:Border Point1="164" Point2="168" Spatial="1">
+                        <spat:Edge>
+                            <spat:Definition>граница села Укромное меняется на северное и проходит по восточной стороне стороне пгт Аэрофлотский в24 метрах от земельного участка с кадастровым номером 90:22:010401:211</spat:Definition>
+                            <spat:Neighbours>
+                                <spat:NeighboursName>-</spat:NeighboursName>
+                            </spat:Neighbours>
+                        </spat:Edge>
+                    </spat:Border>
+                    <spat:Border Point1="168" Point2="185" Spatial="1">
+                        <spat:Edge>
+                            <spat:Definition>граница проходит по северной стороне кадастрового квартала 90:12:180401</spat:Definition>
+                            <spat:Neighbours>
+                                <spat:NeighboursName>-</spat:NeighboursName>
+                            </spat:Neighbours>
+                        </spat:Edge>
+                    </spat:Border>
+                    <spat:Border Point1="185" Point2="186" Spatial="1">
+                        <spat:Edge>
+                            <spat:Definition>граница села Укромное меняется на Северо-западное и проходит в 9 метрах от земельного участка с кадастровым номером 90:12:180201:96</spat:Definition>
+                            <spat:Neighbours>
+                                <spat:NeighboursName>-</spat:NeighboursName>
+                            </spat:Neighbours>
+                        </spat:Edge>
+                    </spat:Border>
+                    <spat:Border Point1="186" Point2="187" Spatial="1">
+                        <spat:Edge>
+                            <spat:Definition>граница села Укромное меняется на северо-западное и проходит задним границам земельных учасков с кадастровыми номерами 90:12:180201:41, 90:12:180201:38, 90:12:180201:97 ,90:12:180201:96</spat:Definition>
+                            <spat:Neighbours>
+                                <spat:NeighboursName>-</spat:NeighboursName>
+                            </spat:Neighbours>
+                        </spat:Edge>
+                    </spat:Border>
+                    <spat:Border Point1="187" Point2="188" Spatial="1">
+                        <spat:Edge>
+                            <spat:Definition>граница села Укромное меняется на западное проходя по северной стороне земельных участков с кадастровыми номерами 90:12:000000:9402, 90:12:180401:116</spat:Definition>
+                            <spat:Neighbours>
+                                <spat:NeighboursName>-</spat:NeighboursName>
+                            </spat:Neighbours>
+                        </spat:Edge>
+                    </spat:Border>
+                    <spat:Border Point1="188" Point2="191" Spatial="1">
+                        <spat:Edge>
+                            <spat:Definition>граница села Укромное меняется на северо-восточное ,проходит по границы земельного участка 90:12:180401:124</spat:Definition>
+                            <spat:Neighbours>
+                                <spat:NeighboursName>-</spat:NeighboursName>
+                            </spat:Neighbours>
+                        </spat:Edge>
+                    </spat:Border>
+                    <spat:Border Point1="211" Point2="221" Spatial="1">
+                        <spat:Edge>
+                            <spat:Definition>граница села Укромное проходит по границы земельного участка с кадастровым номером 90:12:180103:603</spat:Definition>
+                            <spat:Neighbours>
+                                <spat:NeighboursName>-</spat:NeighboursName>
+                            </spat:Neighbours>
+                        </spat:Edge>
+                    </spat:Border>
+                    <spat:Border Point1="221" Point2="223" Spatial="1">
+                        <spat:Edge>
+                            <spat:Definition>граница села Укромное меняется на северо-западное проходя в 40 метрах от земельного участка с кадастровым номером 90:12:180103:463</spat:Definition>
+                            <spat:Neighbours>
+                                <spat:NeighboursName>-</spat:NeighboursName>
+                            </spat:Neighbours>
+                        </spat:Edge>
+                    </spat:Border>
+                    <spat:Border Point1="223" Point2="241" Spatial="1">
+                        <spat:Edge>
+                            <spat:Definition>граница проходит в непосредственной близости восточной границы кадастровых кварталов 90:12:180103, 90:12:180102 включая в площадь земельный участок с кадастровым номером 90:12:180301:249</spat:Definition>
+                            <spat:Neighbours>
+                                <spat:NeighboursName>-</spat:NeighboursName>
+                            </spat:Neighbours>
+                        </spat:Edge>
+                    </spat:Border>
+                    <spat:Border Point1="241" Point2="244" Spatial="1">
+                        <spat:Edge>
+                            <spat:Definition>граница села Укромное меняется на Северное проходит естественным границам полевых дорог и полевых угодий</spat:Definition>
+                            <spat:Neighbours>
+                                <spat:NeighboursName>-</spat:NeighboursName>
+                            </spat:Neighbours>
+                        </spat:Edge>
+                    </spat:Border>
+                    <spat:Border Point1="244" Point2="245" Spatial="1">
+                        <spat:Edge>
+                            <spat:Definition>граница села Укромное меняется на западное и проходит к северной границы земельного участка с кадастровым номером 90:12:000000:3737</spat:Definition>
+                            <spat:Neighbours>
+                                <spat:NeighboursName>-</spat:NeighboursName>
+                            </spat:Neighbours>
+                        </spat:Edge>
+                    </spat:Border>
+                    <spat:Border Point1="245" Point2="254" Spatial="1">
+                        <spat:Edge>
+                            <spat:Definition>граница села Укромное проходит по границы земельного участка с кадастровым номером 90:12:000000:3737</spat:Definition>
+                            <spat:Neighbours>
+                                <spat:NeighboursName>-</spat:NeighboursName>
+                            </spat:Neighbours>
+                        </spat:Edge>
+                    </spat:Border>
+                    <spat:Border Point1="254" Point2="257" Spatial="1">
+                        <spat:Edge>
+                            <spat:Definition>граница села Укромное меняется на западное проходя по границе двух сел Софиевка и Укромное</spat:Definition>
+                            <spat:Neighbours>
+                                <spat:NeighboursName>-</spat:NeighboursName>
+                            </spat:Neighbours>
+                        </spat:Edge>
+                    </spat:Border>
+                    <spat:Border Point1="257" Point2="266" Spatial="1">
+                        <spat:Edge>
+                            <spat:Definition>граница села Укромное меняется на северное и проходит по, ул Молодежная с Укромное до земельного участка с кадастровым номером 90:12:180101:468</spat:Definition>
+                            <spat:Neighbours>
+                                <spat:NeighboursName>-</spat:NeighboursName>
+                            </spat:Neighbours>
+                        </spat:Edge>
+                    </spat:Border>
+                    <spat:Border Point1="266" Point2="1" Spatial="1">
+                        <spat:Edge>
+                            <spat:Definition>граница села Укромное меняется на западное проходя вдоль земельного участка с кадастровым номером 90:12:010401:1458</spat:Definition>
+                            <spat:Neighbours>
+                                <spat:NeighboursName>-</spat:NeighboursName>
+                            </spat:Neighbours>
+                        </spat:Edge>
+                    </spat:Border>
+                </spat:Borders>
+            </EntitySpatial>
+        </Bound>
+        <Area>
+            <AreaMeter>
+                <Area>7962167</Area>
+                <Unit>055</Unit>
+                <Inaccuracy>988</Inaccuracy>
+            </AreaMeter>
+        </Area>
+    </Object>
+    <CoordSystems>
+        <spat:CoordSystem Name="СК кадастрового округа, зона 2" CsId="Id6c6ba097-37ae-4500-8dd9-be6b2f83d8b2" />
+    </CoordSystems>
+    <Diagram>
+        <AppliedFile Kind="01" Name="6777a6c7-e8a2-4ba0-adf5-eda19543c4c7\карта план.pdf" />
+    </Diagram>
+</MapPlan>

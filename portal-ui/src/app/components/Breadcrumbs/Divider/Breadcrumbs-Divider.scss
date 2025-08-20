@@ -1,0 +1,18 @@
+.Breadcrumbs-Divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: calc(36px * var(--BreadcrumbsSize));
+  padding-bottom: calc(1px * var(--BreadcrumbsSize));
+
+  color: var(--gray);
+
+  font-size: calc(1.5rem * var(--BreadcrumbsSize));
+
+  &_edge {
+    justify-content: flex-start;
+
+    width: calc(30px * var(--BreadcrumbsSize));
+  }
+}

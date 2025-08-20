@@ -1,0 +1,19 @@
+meta {
+  name: Delete org
+  type: http
+  seq: 2
+}
+
+delete {
+  url: http://localhost:8100/organizations/43
+  body: none
+  auth: bearer
+}
+
+headers {
+  Content-Type: application/json; charset=utf-8
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJ1c2VyX25hbWUiOiJhZG1pbkBtYWlsLnJ1Iiwic2NvcGUiOlsiY3JnIl0sIm9yZ2FuaXphdGlvbnMiOltdLCJncm91cHMiOltdLCJleHAiOjE2MDA5NzkyODIsImF1dGhvcml0aWVzIjpbIkdMT0JBTF9BRE1JTiJdLCJqdGkiOiIwMTkwMjk2My1mZmI5LTQyNGItYjg2Mi0wY2ZiYzEyODI0ZGEiLCJjbGllbnRfaWQiOiJhZG1pbiJ9.0Ct8bTmy96h-8BubYoif8hFPGPkCbb_V8F0sdDC3I1c
+}

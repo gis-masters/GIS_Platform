@@ -1,0 +1,27 @@
+meta {
+  name: PATCH
+  type: http
+  seq: 3
+}
+
+patch {
+  url: {{host}}:{{port}}/api/data/tasks/1
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{access_token}}
+}
+
+body:json {
+  {
+    "attachments": [
+      {
+        "id": "8bc7c636-29ca-4019-bc4c-2b7f989349f2",
+        "title": "CRG_24.04.2024.xml",
+        "size": 9463
+      }
+    ]
+  }
+}

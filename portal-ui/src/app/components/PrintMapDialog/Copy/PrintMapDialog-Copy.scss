@@ -1,0 +1,11 @@
+body .PrintMapDialog-Copy {
+  position: absolute;
+  z-index: 10000;
+  right: 5px;
+  bottom: 5px;
+
+  cursor: default;
+  transition: opacity 0.3s;
+
+  opacity: calc(0.4 + calc(0.6 * var(--PrintMapDialogPreviewHovered)));
+}

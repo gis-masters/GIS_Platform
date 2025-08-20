@@ -1,0 +1,17 @@
+.Form-Field {
+  position: relative;
+
+  display: flex;
+
+  margin-bottom: 15px;
+
+  --FormFieldRightGap: 0;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+
+  &_withRelations {
+    --FormFieldRightGap: 28px;
+  }
+}

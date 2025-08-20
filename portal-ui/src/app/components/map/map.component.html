@@ -1,0 +1,28 @@
+<div [class]="cn()">
+  <div id="fiz-openLayer-map" [class]="cn('map', { default: mapStore.toolMode === ToolMode.SELECTION, selection:
+  selectedFeaturesStore.active })">
+    <crg-map-toolbar></crg-map-toolbar>
+    <crg-features-sidebar-teaser></crg-features-sidebar-teaser>
+    <crg-basemaps-select></crg-basemaps-select>
+    <crg-attribution></crg-attribution>
+  </div>
+
+  <crg-layers-sidebar [class]="cn('bar', { dir: 'left' })"> </crg-layers-sidebar>
+
+  <crg-edit-features-sidebar [class]="cn('bar', { dir: 'right' })" *ngIf="sidebars.editFeatureOpen">
+  </crg-edit-features-sidebar>
+
+  <crg-features-list-sidebar [class]="cn('bar', { dir: 'right' })" *ngIf="sidebars.selectedFeaturesSidebarOpen">
+  </crg-features-list-sidebar>
+
+  <crg-photo-mode-previewer> </crg-photo-mode-previewer>
+
+  <crg-report-sidebar
+    [class]="cn('bar', { dir: 'right' })"
+    *ngIf="sidebars.bugReportOpen"
+    [isActive]="sidebars.bugReportOpen"
+  >
+  </crg-report-sidebar>
+
+  <crg-attributes-ng [class]="cn('bar', { dir: 'bottom' })"></crg-attributes-ng>
+</div>

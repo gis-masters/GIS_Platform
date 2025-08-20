@@ -1,0 +1,21 @@
+.Explorer {
+  position: relative;
+
+  display: grid;
+  align-items: flex-start;
+  gap: 20px;
+  grid-template: auto auto 1fr auto / 1fr;
+  grid-template-columns: 100%;
+  grid-template-areas: 'head' 'toolbar' 'list' 'pagination';
+
+  height: 100%;
+
+  &:focus {
+    outline: none;
+  }
+
+  &_withInfoPanel {
+    grid-template: auto auto 1fr auto / 3fr 2fr;
+    grid-template-areas: 'head head' 'toolbar toolbar' 'list info' 'pagination info';
+  }
+}

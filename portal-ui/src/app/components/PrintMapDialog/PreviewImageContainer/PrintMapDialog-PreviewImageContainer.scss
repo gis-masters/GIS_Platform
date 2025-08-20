@@ -1,0 +1,22 @@
+.PrintMapDialog-PreviewImageContainer {
+  position: relative;
+
+  overflow: hidden;
+
+  cursor: move;
+
+  background-color: #ccc;
+
+  &_border {
+    &::before {
+      position: absolute;
+      z-index: 2;
+      inset: 0;
+
+      content: '';
+
+      border: calc(var(--PrintMapDialogPreviewSizeFactor) * calc(var(--PrintMapDialogPreviewBorderWidth) * 1px)) black
+        solid;
+    }
+  }
+}

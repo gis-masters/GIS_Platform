@@ -1,0 +1,37 @@
+.Button {
+  color: rgb(0 0 0 / 87%);
+
+  &:not(.MuiButton-containedPrimary) {
+    &.MuiButton-root {
+      text-transform: none;
+
+      &:hover {
+        background-color: rgb(0 0 0 / 4%);
+      }
+
+      &:focus {
+        outline: none;
+      }
+    }
+
+    &.MuiButton-outlined {
+      border: 1px solid rgb(0 0 0 / 12%);
+    }
+
+    &.MuiButton-contained {
+      background-color: white;
+
+      &:hover {
+        background-color: rgb(0 0 0 / 4%);
+      }
+    }
+  }
+
+  &-Text {
+    overflow: hidden;
+    flex-shrink: 1;
+
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+}

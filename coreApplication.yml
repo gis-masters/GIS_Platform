@@ -1,0 +1,418 @@
+version: '3.7'
+
+services:
+  audit-service:
+    container_name: crg-audit-service
+    image: ${DOCKER_CRG_HOST}/crg-audit-service:${CRG_AUDIT_SERVICE_TAG}
+    restart: always
+    environment:
+      APM_URL: ${APM_URL}
+
+      XMX_SIZE: ${AUDIT_XMX_SIZE:-1120m}
+
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgis:5432/crg_audit_service
+      SPRING_DATASOURCE_USERNAME: ${CRG_USER}
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASS}
+
+      SPRING_FLYWAY_URL: jdbc:postgresql://postgis:5432/crg_audit_service
+      SPRING_FLYWAY_USER: ${CRG_USER}
+      SPRING_FLYWAY_PASSWORD: ${DB_PASS}
+      SPRING_FLYWAY_PLACEHOLDERS_DB_OWNER: ${CRG_USER}
+      SECURITY_JWT_SECRET: ${SECURITY_JWT_SECRET}
+
+    ports:
+      - "8086:8086"
+    volumes:
+      - /opt/crg/logs:/opt/logs
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "10"
+    mem_limit: ${AUDIT_MEM_LIMIT:-1200}m
+
+  auth-service:
+    container_name: crg-auth
+    image: ${DOCKER_CRG_HOST}/auth-service:${CRG_AUTH_TAG}
+    restart: always
+    extra_hosts:
+      - "logstash:${LOGSTASH_HOST}"
+    environment:
+      APM_URL: ${APM_URL}
+
+      XMX_SIZE: ${AUTH_XMX_SIZE:-1120m}
+
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgis:5432/crg_auth_service
+      SPRING_DATASOURCE_USERNAME: ${CRG_USER}
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASS}
+      SPRING_DATASOURCE_HIKARI_MINIMUM_POOL_SIZE: ${HIKARI_AUTH_MINIMUM_POOL_SIZE}
+      SPRING_DATASOURCE_HIKARI_MAXIMUM_POOL_SIZE: ${HIKARI_AUTH_MAXIMUM_POOL_SIZE}
+
+      SPRING_FLYWAY_URL: jdbc:postgresql://postgis:5432/crg_auth_service
+      SPRING_FLYWAY_USER: ${CRG_USER}
+      SPRING_FLYWAY_PASSWORD: ${DB_PASS}
+      SPRING_FLYWAY_PLACEHOLDERS_DB_OWNER: ${CRG_USER}
+      SPRING_FLYWAY_PLACEHOLDERS_ADMIN_USERNAME: ${SYSTEM_ADMIN_LOGIN}
+      SPRING_FLYWAY_PLACEHOLDERS_ADMIN_PASSWORD: ${SPRING_FLYWAY_PLACEHOLDERS_ADMIN_PASSWORD}
+
+      SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_RABBITMQ_PORT: 5672
+      SPRING_RABBITMQ_USERNAME: ${RABBIT_USER}
+      SPRING_RABBITMQ_PASSWORD: ${RABBIT_PASS}
+
+      SPRING_MAIL_HOST: ${SPRING_MAIL_HOST}
+      SPRING_MAIL_PORT: ${SPRING_MAIL_PORT}
+      SPRING_MAIL_USERNAME: ${SPRING_MAIL_USERNAME}
+      SPRING_MAIL_PASSWORD: ${SPRING_MAIL_PASSWORD}
+
+      SECURITY_JWT_SECRET: ${SECURITY_JWT_SECRET}
+      SECURITY_JWT_CLIENT_ID: ${SECURITY_JWT_CLIENT_ID}
+      SECURITY_JWT_CLIENT_SECRET: ${SECURITY_JWT_CLIENT_SECRET}
+      SECURITY_JWT_ACCESS_TOKEN_VALIDITY_SECONDS: ${JWT_ACCESS_TOKEN_VALIDITY_SECONDS:-}
+      SECURITY_JWT_REFRESH_TOKEN_VALIDITY_SECONDS: ${JWT_REFRESH_TOKEN_VALIDITY_SECONDS:-}
+
+      CRG_OPTIONS_SYSTEM_ADMIN_LOGIN: ${SYSTEM_ADMIN_LOGIN}
+      CRG_OPTIONS_SYSTEM_ADMIN_PASSWORD: ${SYSTEM_ADMIN_PASSWORD}
+
+      ESIA_URL: ${ESIA_URL}
+      ESIA_CLIENT_ID: ${ESIA_CLIENT_ID}
+      ESIA_CLIENT_CERTIFICATE_HASH: ${ESIA_CLIENT_CERTIFICATE_HASH}
+      ESIA_GROUP_ID: ${ESIA_GROUP_ID}
+      ESIA_KEY_STORE_KEY_PASS: ${ESIA_KEY_STORE_KEY_PASS}
+      ESIA_KEY_STORE_PASS: ${ESIA_KEY_STORE_PASS}
+      ESIA_KEY_STORE_ALIAS: ${ESIA_KEY_STORE_ALIAS}
+      ESIA_KEY_STORE_SIGN_ALG: ${ESIA_KEY_STORE_SIGN_ALG}
+      ESIA_ORG_ID: 1
+      ESIA_KEY_STORE_PATH: /opt/crg/key_storage/esia_store.pfx
+
+    volumes:
+      - /opt/crg/logs:/opt/logs
+      - /opt/crg/key_storage:/opt/crg/key_storage
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "10"
+    mem_limit: ${AUTH_MEM_LIMIT:-1200}m
+
+  data-service:
+    container_name: crg-data-service
+    image: ${DOCKER_CRG_HOST}/crg-data-service:${CRG_DATA_SERVICE_TAG}
+    restart: always
+    extra_hosts:
+      - "logstash:${LOGSTASH_HOST}"
+    environment:
+      APM_URL: ${APM_URL}
+      APM_DATA_CPU: ${APM_DATA_CPU:-4}
+
+      XMX_SIZE: ${DATA_XMX_SIZE:-2000m}
+
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgis:5432/crg_data_service
+      SPRING_DATASOURCE_USERNAME: ${CRG_USER}
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASS}
+      SPRING_DATASOURCE_HIKARI_MINIMUM_POOL_SIZE: ${HIKARI_DATA_MINIMUM_POOL_SIZE}
+      SPRING_DATASOURCE_HIKARI_MAXIMUM_POOL_SIZE: ${HIKARI_DATA_MAXIMUM_POOL_SIZE}
+
+      SPRING_FLYWAY_URL: jdbc:postgresql://postgis:5432/crg_data_service
+      SPRING_FLYWAY_USER: ${CRG_USER}
+      SPRING_FLYWAY_PASSWORD: ${DB_PASS}
+      SPRING_FLYWAY_PLACEHOLDERS_DB_OWNER: ${CRG_USER}
+
+      SPRING_REDIS_HOST: redis
+      SPRING_REDIS_PORT: 6379
+      SPRING_REDIS_PASSWORD: ${REDIS_PASS}
+
+      SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_RABBITMQ_PORT: 5672
+      SPRING_RABBITMQ_USERNAME: ${RABBIT_USER}
+      SPRING_RABBITMQ_PASSWORD: ${RABBIT_PASS}
+
+      SPRING_DEVTOOLS_REMOTE_SECRET: ${SPRING_DEVTOOLS_REMOTE_SECRET}
+
+      SECURITY_JWT_SECRET: ${SECURITY_JWT_SECRET}
+
+      CRG_OPTIONS_TASK_DB: ${CRG_OPTIONS_TASK_DB}
+      CRG_OPTIONS_TASK_DEADLINE_TIME: ${CRG_OPTIONS_TASK_DEADLINE_TIME:-5}
+      CRG_OPTIONS_TASK_MANAGEMENT_FOLDER_ID: ${CRG_OPTIONS_TASK_MANAGEMENT_FOLDER_ID}
+      CRG_OPTIONS_KPT_TASK_JOB_CRON: ${CRG_OPTIONS_KPT_TASK_JOB_CRON:-0 0 0 * * *}
+      CRG_OPTIONS_KPT_TASK_DEADLINE_TIME: ${CRG_OPTIONS_KPT_TASK_DEADLINE_TIME:-720}
+
+      CRG_OPTIONS_AUTH_SERVICE_URL: http://auth-service:9000
+      CRG_OPTIONS_GIS_SERVICE_URL: http://gis-service:8082
+      CRG_OPTIONS_CRYPTOPRO_SERVICE_URL: http://cryptopro-service:8448
+      CRG_OPTIONS_NOTIFICATION_SERVICE_URL: http://notification-service:8668
+      CRG_OPTIONS_DATA_SERVICE_URL: http://data-service:8084
+      CRG_OPTIONS_UI_SERVICE_URL: http://portal-ui:80
+      CRG_OPTIONS_KPT_STORAGE_PATH: /opt/crg/kpt_order/
+      CRG_OPTIONS_MAIN_STORAGE_PATH: /opt/crg/file_storage
+      CRG_OPTIONS_EXPORT_STORAGE_PATH: /opt/crg/export/
+      CRG_OPTIONS_GEOSERVER_DB_NAME: geoserver_db
+
+      CRG_OPTIONS_JWT_CLIENT_ID: ${SECURITY_JWT_CLIENT_ID}
+      CRG_OPTIONS_JWT_CLIENT_SECRET: ${SECURITY_JWT_CLIENT_SECRET}
+      CRG_OPTIONS_SYSTEM_ADMIN_LOGIN: ${SYSTEM_ADMIN_LOGIN}
+      CRG_OPTIONS_SYSTEM_ADMIN_PASSWORD: ${SYSTEM_ADMIN_PASSWORD}
+      CRG_OPTIONS_SYSTEM_ADMIN_CRYPTED_PASSWORD: ${CRG_OPTIONS_SYSTEM_ADMIN_CRYPTED_PASSWORD}
+
+      CRG_OPTIONS_INTEGRATION_SED_URL: ${CRG_OPTIONS_INTEGRATION_SED_URL:-https://sed-server/docker-config-endpoint}
+      CRG_OPTIONS_INTEGRATION_GISOGD_RF: ${CRG_OPTIONS_INTEGRATION_GISOGD_RF:-https://gisogd.npc.ba/api/rgmu}
+      CRG_OPTIONS_INTEGRATION_GISOGD_RF_TOKEN: ${CRG_OPTIONS_INTEGRATION_GISOGD_RF_TOKEN:-https://id-gisogd.npc.ba/oidc/connect/token}
+      CRG_OPTIONS_INTEGRATION_GISOGD_RF_CLIENT_ID: ${CRG_OPTIONS_INTEGRATION_GISOGD_RF_CLIENT_ID}
+      CRG_OPTIONS_INTEGRATION_GISOGD_RF_CLIENT_SECRET: ${CRG_OPTIONS_INTEGRATION_GISOGD_RF_CLIENT_SECRET}
+
+      CRG_OPTIONS_INTEGRATION_SMEV3_ENABLED: ${SMEV3_ENABLED}
+      CRG_OPTIONS_INTEGRATION_SMEV3_MNEMONIC: ${CRG_OPTIONS_INTEGRATION_SMEV3_MNEMONIC}
+      CRG_OPTIONS_INTEGRATION_SMEV3_TRANSPORT_MNEMONIC: ${CRG_OPTIONS_INTEGRATION_SMEV3_MNEMONIC}
+
+      CRG_OPTIONS_INTEGRATION_SMEV3_TARGET_DB: ${SMEV3_TARGET_DB}
+      CRG_OPTIONS_INTEGRATION_SMEV3_S3_ENDPOINT: ${SMEV3_S3_ENDPOINT}
+      CRG_OPTIONS_INTEGRATION_SMEV3_S3_ACCESS_KEY: ${CRG_OPTIONS_INTEGRATION_SMEV3_S3_ACCESS_KEY}
+      CRG_OPTIONS_INTEGRATION_SMEV3_S3_SECRET_KEY: ${CRG_OPTIONS_INTEGRATION_SMEV3_S3_SECRET_KEY}
+    volumes:
+      - /opt/crg/logs:/opt/crg/logs
+      - /opt/crg/file_storage:/opt/crg/file_storage
+      - /opt/crg/export:/opt/crg/export
+      - /opt/crg/spatial_data:/opt/crg/spatial_data
+      - /opt/crg/kpt_order:/opt/crg/kpt_order
+      - /opt/crg/specializations:/opt/crg/specializations
+    ports:
+      - "8084:8084"
+    mem_limit: ${DATA_MEM_LIMIT:-2100}m
+
+  gateway:
+    container_name: crg-gateway
+    image: ${DOCKER_CRG_HOST}/crg-gateway:${CRG_GATEWAY_TAG}
+    restart: always
+    extra_hosts:
+      - "logstash:${LOGSTASH_HOST}"
+    environment:
+      APM_URL: ${APM_URL}
+
+      XMX_SIZE: ${GATEWAY_XMX_SIZE:-920m}
+
+      SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_RABBITMQ_PORT: 5672
+      SPRING_RABBITMQ_USERNAME: ${RABBIT_USER}
+      SPRING_RABBITMQ_PASSWORD: ${RABBIT_PASS}
+
+      ZUUL_HOST_CONNECT_TIMEOUT_MILLIS: ${GATEWAY_ZUUL_TIMEOUT}
+      ZUUL_HOST_SOCKET_TIMEOUT_MILLIS: ${GATEWAY_ZUUL_TIMEOUT}
+
+      CRG_OPTIONS_AUTH_SERVICE_URL: http://auth-service:9000
+      CRG_OPTIONS_JWT_SECRET: ${SECURITY_JWT_SECRET}
+      CRG_OPTIONS_JWT_CLIENT_ID: ${SECURITY_JWT_CLIENT_ID}
+      CRG_OPTIONS_JWT_CLIENT_SECRET: ${SECURITY_JWT_CLIENT_SECRET}
+    ports:
+      - "8100:8100"
+    volumes:
+      - /opt/crg/logs:/opt/logs
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "10"
+    mem_limit: ${GATEWAY_MEM_LIMIT:-20000}m
+
+  geo-wrapper:
+    container_name: geo-wrapper
+    image: ${DOCKER_CRG_HOST}/geo-wrapper:${CRG_WRAPPER_TAG}
+    restart: always
+    extra_hosts:
+      - "logstash:${LOGSTASH_HOST}"
+    environment:
+      APM_URL: ${APM_URL}
+
+      XMX_SIZE: ${WRAPPER_XMX_SIZE:-1120m}
+
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgis:5432/postgres
+      SPRING_DATASOURCE_USERNAME: ${CRG_USER}
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASS}
+
+      SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_RABBITMQ_PORT: 5672
+      SPRING_RABBITMQ_USERNAME: ${RABBIT_USER}
+      SPRING_RABBITMQ_PASSWORD: ${RABBIT_PASS}
+
+      CRG_OPTIONS_GIS_SERVICE_URL: http://gis-service:8082
+      CRG_OPTIONS_DATA_SERVICE_URL: http://data-service:8084
+      CRG_OPTIONS_GEOSERVER_HOST: geoserver:8080
+      CRG_OPTIONS_USER_SERVICE_NAME: postgres_db_user_service
+
+      CRG_OPTIONS_EXPORT_STORAGE_PATH: /opt/crg/export/
+    depends_on:
+      - rabbitmq
+    volumes:
+      - /opt/crg/fgistp:/opt/fgistp
+      - /opt/crg/export:/opt/crg/export
+      - /opt/crg/logs:/opt/logs
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "10"
+    mem_limit: ${WRAPPER_MEM_LIMIT:-1200}m
+
+  gis-service:
+    container_name: crg-gis-service
+    image: ${DOCKER_CRG_HOST}/crg-gis-service:${CRG_GIS_SERVICE_TAG}
+    restart: always
+    extra_hosts:
+      - "logstash:${LOGSTASH_HOST}"
+    environment:
+      APM_URL: ${APM_URL}
+
+      XMX_SIZE: ${GIS_XMX_SIZE:-1640m}
+
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgis:5432/crg_gis_service
+      SPRING_DATASOURCE_USERNAME: ${CRG_USER}
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASS}
+      SPRING_DATASOURCE_HIKARI_MAXIMUM_POOL_SIZE: ${HIKARI_GIS_MAXIMUM_POOL_SIZE}
+      SPRING_DATASOURCE_HIKARI_MINIMUM_POOL_SIZE: ${HIKARI_GIS_MINIMUM_POOL_SIZE}
+
+      SPRING_FLYWAY_URL: jdbc:postgresql://postgis:5432/crg_gis_service
+      SPRING_FLYWAY_USER: ${CRG_USER}
+      SPRING_FLYWAY_PASSWORD: ${DB_PASS}
+      SPRING_FLYWAY_PLACEHOLDERS_DB_OWNER: ${CRG_USER}
+
+      SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_RABBITMQ_PORT: 5672
+      SPRING_RABBITMQ_USERNAME: ${RABBIT_USER}
+      SPRING_RABBITMQ_PASSWORD: ${RABBIT_PASS}
+
+      SECURITY_JWT_SECRET: ${SECURITY_JWT_SECRET}
+
+      CRG_OPTIONS_AUTH_SERVICE_URL: http://auth-service:9000
+      CRG_OPTIONS_GIS_SERVICE_URL: http://gis-service:8082
+      CRG_OPTIONS_DATA_SERVICE_URL: http://data-service:8084
+      CRG_OPTIONS_GEOSERVER_HOST: geoserver:8080
+      CRG_OPTIONS_USER_SERVICE_NAME: postgres_db_user_service
+
+      CRG_OPTIONS_JWT_CLIENT_ID: ${SECURITY_JWT_CLIENT_ID}
+      CRG_OPTIONS_JWT_CLIENT_SECRET: ${SECURITY_JWT_CLIENT_SECRET}
+      CRG_OPTIONS_SYSTEM_ADMIN_LOGIN: ${SYSTEM_ADMIN_LOGIN}
+      CRG_OPTIONS_SYSTEM_ADMIN_PASSWORD: ${SYSTEM_ADMIN_PASSWORD}
+    volumes:
+      - /opt/crg/logs:/opt/logs
+      - /opt/crg/specializations:/opt/crg/specializations
+    ports:
+      - "8082:8082"
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "10"
+    mem_limit: ${GIS_MEM_LIMIT:-1700}m
+
+  integration-service:
+    container_name: crg-integration-service
+    image: ${DOCKER_CRG_HOST}/crg-integration-service:${CRG_INTEGRATION_SERVICE_TAG}
+    restart: always
+    extra_hosts:
+      - "logstash:${LOGSTASH_HOST}"
+    environment:
+      APM_URL: ${APM_URL}
+
+      XMX_SIZE: ${INTEGRATION_XMX_SIZE:-1000m}
+
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgis:5432/bpmn_camunda
+      SPRING_DATASOURCE_USERNAME: ${CRG_USER}
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASS}
+
+      SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_RABBITMQ_PORT: 5672
+      SPRING_RABBITMQ_USERNAME: ${RABBIT_USER}
+      SPRING_RABBITMQ_PASSWORD: ${RABBIT_PASS}
+
+      SECURITY_JWT_SECRET: ${SECURITY_JWT_SECRET}
+
+      CAMUNDA_BPM_ADMIN-USER_ID: ${CAMUNDA_BPM_ADMIN_USER_ID}
+      CAMUNDA_BPM_ADMIN-USER_PASSWORD: ${CAMUNDA_BPM_ADMIN_USER_PASSWORD}
+
+      CRG_OPTIONS_JWT_CLIENT_ID: ${SECURITY_JWT_CLIENT_ID}
+      CRG_OPTIONS_JWT_CLIENT_SECRET: ${SECURITY_JWT_CLIENT_SECRET}
+
+      CRG_OPTIONS_GIS_SERVICE_URL: http://gis-service:8082
+      CRG_OPTIONS_DATA_SERVICE_URL: http://data-service:8084
+      CRG_OPTIONS_AUDIT_SERVICE_URL: http://audit-service:8086
+      CRG_OPTIONS_AUTH_SERVICE_URL: http://auth-service:9000
+      CRG_OPTIONS_GEOSERVER_HOST: geoserver:8080
+    ports:
+      - "8338:8338"
+    volumes:
+      - /opt/crg/logs:/opt/logs
+    mem_limit: ${INTEGRATION_MEM_LIMIT:-1100}m
+
+  portal-ui:
+    container_name: crg-ui
+    image: ${DOCKER_CRG_HOST}/crg-ui:${CRG_UI_TAG}
+    restart: always
+    environment:
+      UI_PLATFORM: $UI_PLATFORM
+      UI_PROD: $UI_PROD
+      UI_TITLE: ${UI_TITLE:-}
+      UI_OWNER: ${UI_OWNER:-}
+      UI_CONTACTS_PHONE: ${UI_CONTACTS_PHONE:-}
+      UI_CONTACTS_EMAIL: ${UI_CONTACTS_EMAIL:-}
+      UI_DESCRIPTION: ${UI_DESCRIPTION:-}
+      UI_PASSWORD_RESTORE: ${UI_PASSWORD_RESTORE:-}
+      UI_ESIA: ${UI_ESIA:-}
+      UI_REGISTRATION: ${UI_REGISTRATION:-}
+      UI_BACKGROUND: ${UI_BACKGROUND:-}
+      UI_SERVER_HOST: ${UI_SERVER_HOST:-}
+      UI_SERVER_PORT: ${UI_SERVER_PORT:-}
+      UI_SERVER_PATH: ${UI_SERVER_PATH:-/api}
+      UI_ATTRIBUTION_URL: ${UI_ATTRIBUTION_URL:-}
+      UI_ATTRIBUTION_TITLE: ${UI_ATTRIBUTION_TITLE:-}
+      UI_WS_PORT: ${UI_WS_PORT:-}
+      UI_WS_PATH: ${UI_WS_PATH:-/ws}
+      UI_SWN: $UI_SWN
+      UI_LOGO: ${UI_LOGO:-}
+      UI_FAVICON: ${UI_FAVICON:-}
+      UI_HTTPS: ${UI_HTTPS:-}
+      UI_SUPRESS_TOAST_ERRORS_HTTP: ${UI_SUPRESS_TOAST_ERRORS_HTTP:-}
+      UI_SUPRESS_TOAST_ERRORS_HTTPS: ${UI_SUPRESS_TOAST_ERRORS_HTTPS:-}
+      UI_SEND_ERRORS_TO_TG_HTTP: ${UI_SEND_ERRORS_TO_TG_HTTP:-}
+      UI_SEND_ERRORS_TO_TG_HTTPS: ${UI_SEND_ERRORS_TO_TG_HTTPS:-}
+    volumes:
+      - /opt/crg/reglaments:/usr/share/nginx/html/reglaments
+      - /opt/crg/ssl:/opt/crg/ssl
+    ports:
+      - "80:80"
+      - "443:443"
+    mem_limit: ${UI_MEM_LIMIT:-560}m
+
+  cryptopro-service:
+    container_name: crg-cryptopro-service
+    image: ${DOCKER_CRG_HOST}/crg-cryptopro:5.2
+    restart: always
+    extra_hosts:
+      - "logstash:${LOGSTASH_HOST}"
+    volumes:
+      - /opt/crg/logs:/opt/logs
+      - /opt/crg/file_storage:/opt/crg/file_storage
+    ports:
+      - "8448:8448"
+    mem_limit: ${CRYPTOPRO_MEM_LIMIT:-400}m
+    privileged: true
+
+  notification-service:
+    container_name: crg-notification-service
+    image: ${DOCKER_CRG_HOST}/crg-notification-service:latest
+    restart: always
+    environment:
+      APM_URL: ${APM_URL}
+
+      XMX_SIZE: ${NOTIFICATION_XMX_SIZE:-1100m}
+
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgis:5432/crg_notification_db
+      SPRING_DATASOURCE_USERNAME: ${CRG_USER}
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASS}
+
+      SPRING_FLYWAY_URL: jdbc:postgresql://postgis:5432/crg_notification_db
+      SPRING_FLYWAY_USER: ${CRG_USER}
+      SPRING_FLYWAY_PASSWORD: ${DB_PASS}
+
+    extra_hosts:
+      - "logstash:${LOGSTASH_HOST}"
+    volumes:
+      - /opt/crg/logs:/opt/logs
+      - /opt/crg/file_storage:/opt/file_storage
+    ports:
+      - "8668:8668"
+    mem_limit: ${NOTIFICATION_MEM_LIMIT:-1000}m
+    privileged: true

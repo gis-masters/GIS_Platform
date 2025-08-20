@@ -1,0 +1,60 @@
+.PrintMapDialog-Preview {
+  margin-bottom: 14px;
+  padding: calc(
+      var(--PrintMapDialogPreviewSizeFactor) *
+        calc(var(--PrintMapDialogPreviewMarginTop) * var(--PrintMapDialogPreviewFormatFactor))
+    )
+    calc(
+      var(--PrintMapDialogPreviewSizeFactor) *
+        calc(var(--PrintMapDialogPreviewMarginRight) * var(--PrintMapDialogPreviewFormatFactor))
+    )
+    calc(
+      var(--PrintMapDialogPreviewSizeFactor) *
+        calc(var(--PrintMapDialogPreviewMarginBottom) * var(--PrintMapDialogPreviewFormatFactor))
+    )
+    calc(
+      var(--PrintMapDialogPreviewSizeFactor) *
+        calc(var(--PrintMapDialogPreviewMarginLeft) * var(--PrintMapDialogPreviewFormatFactor))
+    );
+
+  --PrintMapDialogPreviewSizeFactor: 1.8;
+  --PrintMapDialogPreviewControlsFactor: calc(calc(var(--PrintMapDialogPreviewFormatFactor) + 2px) / 3);
+  --PrintMapDialogPreviewHovered: 0;
+
+  &:hover {
+    --PrintMapDialogPreviewHovered: 1;
+  }
+
+  &_orientation {
+    &_l {
+      width: calc(var(--PrintMapDialogPreviewSizeFactor) * 297px);
+      height: calc(var(--PrintMapDialogPreviewSizeFactor) * 210px);
+    }
+
+    &_p {
+      width: calc(var(--PrintMapDialogPreviewSizeFactor) * 210px);
+      height: calc(var(--PrintMapDialogPreviewSizeFactor) * 297px);
+    }
+  }
+
+  &_pageFormat {
+    &_a3 {
+      --PrintMapDialogPreviewFormatFactor: 0.5px;
+    }
+
+    &_a4 {
+      --PrintMapDialogPreviewFormatFactor: 1px;
+    }
+
+    &_a5 {
+      --PrintMapDialogPreviewFormatFactor: 2px;
+    }
+
+    &_square {
+      width: calc(var(--PrintMapDialogPreviewSizeFactor) * 240px);
+      height: calc(var(--PrintMapDialogPreviewSizeFactor) * 240px);
+
+      --PrintMapDialogPreviewFormatFactor: 1px;
+    }
+  }
+}

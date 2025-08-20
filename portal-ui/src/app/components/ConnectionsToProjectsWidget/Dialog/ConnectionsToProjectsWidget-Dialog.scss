@@ -1,0 +1,10 @@
+.ConnectionsToProjectsWidget-Dialog {
+  min-width: 500px;
+  min-height: 100px;
+}
+
+@media screen and (width <= 640px) {
+  .ConnectionsToProjectsWidget-Dialog {
+    min-width: 0;
+  }
+}

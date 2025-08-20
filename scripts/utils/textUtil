@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+BLUE='\033[0;34m'
+PURPLE='\033[0;35m'
+NC='\033[0m' # No Color
+
+function printHeader() {
+  printf "${PURPLE}== == == ========== =========== =========== == == ==${NC}\n"
+  printf "${PURPLE}$1${NC}\n"
+  printf "${PURPLE}== == == ========== =========== =========== == == ==${NC}\n"
+}
+
+function printHeader2() {
+  printf "${PURPLE}======== $1${NC}\n"
+}
+
+function printInfo() {
+  printf "${BLUE}******** $1${NC}\n"
+}
+
+function printSuccess() {
+  printf "${GREEN}******** $1${GREEN}\n"
+}
+
+function printError() {
+  printf "${RED}!! !! !! $1${NC}\n"
+}

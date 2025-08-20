@@ -1,0 +1,13 @@
+import io.cucumber.junit.Cucumber;
+import io.cucumber.junit.CucumberOptions;
+import org.junit.runner.RunWith;
+
+@RunWith(Cucumber.class)
+@CucumberOptions(
+        glue = "main",
+        features = {"target/parallel/features/[CUCABLE:FEATURE].feature"},
+        plugin = {"json:target/cucumber-report/[CUCABLE:RUNNER].json"}
+)
+public class CucableTemplate {
+    // [CUCABLE:CUSTOM:comment]
+}

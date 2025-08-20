@@ -1,0 +1,25 @@
+.fiz-box {
+  width: 100%;
+}
+
+.fiz-inner {
+  display: grid;
+  grid-template-columns: 65% 35%;
+
+  width: 100%;
+
+  grid-column-gap: 10px;
+}
+
+.prop-title {
+  font-family: serif;
+  font-size: 14px;
+  font-weight: bolder;
+  font-style: oblique;
+}
+
+.prop-error {
+  font-family: monospace;
+  font-size: initial;
+  font-variant: all-petite-caps;
+}

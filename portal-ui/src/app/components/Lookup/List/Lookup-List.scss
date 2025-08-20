@@ -1,0 +1,11 @@
+.Lookup-List {
+  &_numerous,
+  &_editable.Lookup-List_multiple {
+    overflow: auto;
+
+    max-height: 200px;
+    padding: 10px;
+
+    background-color: var(--gray-light);
+  }
+}

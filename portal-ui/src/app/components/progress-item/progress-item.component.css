@@ -1,0 +1,95 @@
+.progress-item {
+  position: relative;
+
+  height: 60px;
+  margin: 5px;
+
+  border-style: solid;
+  border-color: darkgrey;
+  border-radius: 8px;
+  background-color: white;
+}
+
+.progress-icon {
+  float: left;
+
+  width: 15%;
+  height: 100%;
+
+  border-radius: 5px 0 0 5px;
+  background-color: lightgray;
+}
+
+.progress-content {
+  float: right;
+
+  width: 85%;
+  height: 100%;
+  padding: 5px;
+}
+
+.crg-spinner {
+  position: relative;
+  top: calc(50% - 50px);
+  left: calc(50% - 50px);
+
+  zoom: 0.4;
+}
+
+.success {
+  color: seagreen;
+}
+
+.info {
+  color: var(--blue);
+}
+
+.error {
+  color: tomato;
+}
+
+.crg-progress-done {
+  position: relative;
+  top: 5px;
+  left: 5px;
+
+  width: 50px;
+  height: 50px;
+
+  font-size: xxx-large;
+}
+
+.info-close-icon {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+
+  cursor: pointer;
+
+  color: darkgrey;
+}
+
+.gml-link {
+  padding-right: 10px;
+}
+
+.content-link-icon {
+  cursor: pointer;
+
+  font-size: x-large;
+}
+
+.content-link-text {
+  position: relative;
+  top: -5px;
+
+  padding-right: 10px;
+
+  cursor: pointer;
+
+  font-family: monospace;
+}
+
+.content-description {
+  width: 295px;
+}

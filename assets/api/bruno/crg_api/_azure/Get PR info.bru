@@ -1,0 +1,25 @@
+meta {
+  name: Get PR info
+  type: http
+  seq: 1
+}
+
+get {
+  url: https://azure2022eng.geoplan.local/DefaultCollection/GIS_Platform/_apis/git/repositories/GIS_Platform/pullrequests?api-version=6.0
+  body: none
+  auth: basic
+}
+
+params:query {
+  api-version: 6.0
+}
+
+headers {
+  ~Cache-Control: 
+  ~Cookie: 
+}
+
+auth:basic {
+  username: 
+  password: 77o7a3x5nam2iwycqu7qfpsuivicuir2rd7ucsd2idzuvjxl5ucq
+}

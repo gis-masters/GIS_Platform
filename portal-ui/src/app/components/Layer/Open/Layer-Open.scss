@@ -1,0 +1,10 @@
+.Layer-Open.Layer-Open {
+  font-size: 22px;
+
+  &::after {
+    position: absolute;
+    inset: -100px -500px -100px 0;
+
+    content: '';
+  }
+}

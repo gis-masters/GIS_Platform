@@ -1,0 +1,38 @@
+<table width="425px">
+  <tr>
+    <td colspan="10" style="text-align: center; font-size: 10px">
+      <span style="color: grey">Выписка об объекте</span>
+      {{title}}
+    </td>
+  </tr>
+  <tr>
+    <td colspan="10" style="text-align: right">
+      <span style="font-size: 8px">{{currentDate}}</span>
+    </td>
+  </tr>
+  <tr>
+    <td width="280px" colspan="7"><img style="width: 300px; height: 300px" src="{{image}}" alt="" /></td>
+    <td colspan="3" style="text-align: center">
+      <table style="font-size: 6px; border-collapse: collapse">
+        <tr>
+          <td style="font-size: 8px" colspan="3">
+            <span style="color: grey">Система координат:</span>
+            {{crs}}
+          </td>
+        </tr>
+        {{area}}
+        {{coordinates}}
+      </table>
+    </td>
+  </tr>
+  <tr>
+    <td colspan="10">
+      <table style="font-size: 7px">
+        <tr>
+          <td style="color: grey; text-align: center" colspan="2">Характеристики объекта</td>
+        </tr>
+        {{properties}}
+      </table>
+    </td>
+  </tr>
+</table>

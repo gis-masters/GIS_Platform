@@ -1,0 +1,17 @@
+.Notice-ListItem {
+  display: block;
+
+  margin: 0;
+  padding: 0 0 0 5px;
+
+  list-style: none;
+
+  &::before {
+    display: inline-block;
+
+    margin-right: 4px;
+
+    content: '—';
+    vertical-align: top;
+  }
+}

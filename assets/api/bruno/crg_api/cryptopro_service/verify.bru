@@ -1,0 +1,16 @@
+meta {
+  name: verify
+  type: http
+  seq: 1
+}
+
+post {
+  url: http://localhost:8448/verify
+  body: multipartForm
+  auth: none
+}
+
+body:multipart-form {
+  path: /opt/crg/file_storage/organization_2/library_record/dl_default/36_some_files__2139217299.xml
+  signature: @file(/home/denis/dev/signature/315.dxf.sig)
+}

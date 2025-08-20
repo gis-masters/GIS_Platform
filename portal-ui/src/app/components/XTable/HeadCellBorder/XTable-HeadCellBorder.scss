@@ -1,0 +1,30 @@
+.XTable-HeadCellBorder {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+
+  width: 4px;
+
+  cursor: col-resize;
+  transition: opacity 0.3s;
+
+  opacity: calc(var(--XTableHeadHovered) * 0.5);
+
+  &:hover {
+    opacity: 1;
+  }
+
+  &::before {
+    position: absolute;
+    inset: 30% 1px;
+
+    content: '';
+
+    background-color: var(--gray);
+  }
+
+  &_dragging {
+    opacity: 1;
+  }
+}

@@ -1,0 +1,15 @@
+meta {
+  name: Publish all
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{host}}:{{port}}/api/data/gisogd-rf/publish
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{access_token}}
+}

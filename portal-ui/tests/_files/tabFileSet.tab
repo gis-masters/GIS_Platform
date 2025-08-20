@@ -1,0 +1,24 @@
+!table
+!version 450
+!charset Neutral
+
+Definition Table
+  Type NATIVE Charset "Neutral"
+  Fields 17
+    OBJECTID Decimal (10,0) ;
+    Registrati Char (50) ;
+    Address Char (254) ;
+    PropertyTy Char (50) ;
+    Propriator Char (254) ;
+    Name Char (254) ;
+    Type Char (50) ;
+    FloorCount Integer (5) ;
+    Height Decimal (19,8) ;
+    Depth Decimal (19,8) ;
+    State Char (50) ;
+    BuildDate Date ;
+    RunDate Date ;
+    Purpose Char (254) ;
+    Notes Char (254) ;
+    SHAPE_STAr Decimal (19,11) ;
+    SHAPE_STLe Decimal (19,11) ;

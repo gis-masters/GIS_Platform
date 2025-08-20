@@ -1,0 +1,23 @@
+meta {
+  name: Get roles
+  type: http
+  seq: 1
+}
+
+get {
+  url: http://localhost:8100/api/data/datasets/dataset_5ffd90/roleAssignment
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyLCJ1c2VyX25hbWUiOiJmaXpAZml6Iiwic2NvcGUiOlsiY3JnIl0sIm9yZ2FuaXphdGlvbnMiOlt7ImlkIjoxLCJuYW1lIjoiZml6IENvbXBhbnkifV0sImdyb3VwcyI6W10sImV4cCI6MTYwNTk2MzI1MCwiYXV0aG9yaXRpZXMiOlsiT1JHX0FETUlOIl0sImp0aSI6IjFkY2VlYTFiLTUzZWItNDQxMC05ZjRiLTRiYzVhMzJjYTg2NSIsImNsaWVudF9pZCI6ImFkbWluIn0.4_xhYvsjh0v0he-yYcRmm0lph_1s3Ppc009uMGm0hV8
+}
+
+body:json {
+  {
+      "name": "testtesttest",
+      "title": "first test",
+      "details": "some details"
+  }
+}

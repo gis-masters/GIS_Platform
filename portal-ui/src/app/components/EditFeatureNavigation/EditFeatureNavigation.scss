@@ -1,0 +1,17 @@
+.EditFeatureNavigation {
+  display: inline-block;
+
+  height: 36px;
+  margin-left: auto;
+
+  color: var(--gray);
+
+  &-TextBox {
+    position: relative;
+    top: 2px;
+  }
+
+  &-Text {
+    margin: 0 5px;
+  }
+}

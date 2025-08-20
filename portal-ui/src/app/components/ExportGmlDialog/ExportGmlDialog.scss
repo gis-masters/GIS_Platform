@@ -1,0 +1,29 @@
+body .ExportGmlDialog {
+  &-Title {
+    padding: 16px 24px 0;
+  }
+
+  &-Total {
+    position: absolute;
+    top: 20px;
+    right: 24px;
+
+    color: var(--gray);
+
+    font-size: medium;
+  }
+
+  &-Form {
+    padding: 15px 0;
+  }
+
+  &-EpsgSelector {
+    & .MuiInput-root {
+      margin-top: 10px;
+    }
+  }
+
+  &-SchemaSelector {
+    width: 100%;
+  }
+}

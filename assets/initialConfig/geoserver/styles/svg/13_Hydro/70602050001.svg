@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="20"
+   height="20"
+   viewBox="0 0 20 20"
+   version="1.2"
+   id="svg24"
+   sodipodi:docname="70602050001.svg"
+   inkscape:version="0.92.4 (5da689c313, 2019-01-14)">
+  <metadata
+     id="metadata28">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1920"
+     inkscape:window-height="1017"
+     id="namedview26"
+     showgrid="false"
+     inkscape:zoom="5.5312444"
+     inkscape:cx="-11.209051"
+     inkscape:cy="21.333355"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg24" />
+  <title
+     id="title2">Qt SVG Document</title>
+  <desc
+     id="desc4">Generated with Qt</desc>
+  <defs
+     id="defs6" />
+  <g
+     id="g22"
+     transform="translate(-5.4237223,-6.1469243)"
+     style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1;stroke-linecap:square;stroke-linejoin:bevel">
+    <g
+       transform="translate(16,16)"
+       font-size="8.25"
+       font-weight="400"
+       font-style="normal"
+       id="g8"
+       style="font-style:normal;font-weight:400;font-size:8.25px;font-family:'MS Shell Dlg 2';fill:none;stroke:#000000;stroke-width:1;stroke-linecap:square;stroke-linejoin:bevel;stroke-opacity:1" />
+    <g
+       transform="matrix(1.33333,0,0,1.33333,16,16)"
+       font-size="8.25"
+       font-weight="400"
+       font-style="normal"
+       id="g10"
+       style="font-style:normal;font-weight:400;font-size:8.25px;font-family:'MS Shell Dlg 2';fill:none;stroke:#000000;stroke-width:1;stroke-linecap:square;stroke-linejoin:bevel;stroke-opacity:1" />
+    <g
+       transform="matrix(0.759464,0,0,0.759464,9.89239,19.6657)"
+       font-size="11.3386"
+       font-weight="400"
+       font-style="normal"
+       id="g14"
+       style="font-style:normal;font-weight:400;font-size:11.33860016px;font-family:icomoon;fill:#009bc4;fill-opacity:1;stroke:none">
+      <path
+         d="M 11.1914,-4.96582 C 10.625,-4.7998 10.188,-4.73389 9.88037,-4.76807 9.57275,-4.80225 9.24805,-4.98047 8.90625,-5.30273 8.62305,-5.55664 8.32031,-5.68604 7.99805,-5.69092 7.67578,-5.6958 7.41211,-5.67871 7.20703,-5.63965 7.05078,-6.02051 6.79443,-6.33545 6.43799,-6.58447 6.08154,-6.8335 5.68359,-6.95801 5.24414,-6.95801 c -0.5957,0 -1.10107,0.20752 -1.51611,0.62256 -0.41504,0.41504 -0.62256,0.91553 -0.62256,1.50147 0,0.5957 0.20752,1.10107 0.62256,1.51611 0.41504,0.41504 0.91552,0.62256 1.50146,0.62256 0.52735,0 0.98633,-0.16358 1.37696,-0.49073 0.39062,-0.32714 0.62988,-0.73974 0.71777,-1.23779 0.05859,-0.00976 0.12451,-0.01953 0.19775,-0.0293 0.07324,-0.00976 0.15381,-0.01953 0.2417,-0.02929 0.49805,-0.06836 0.80078,0.02929 0.90821,0.29297 0.10742,0.26367 0.50292,0.3955 1.18652,0.3955 0.2637,0 0.5762,-0.10253 0.9375,-0.30761 0.3613,-0.19532 0.7031,-0.4126 1.0254,-0.65186 0.3223,-0.23926 0.5957,-0.45654 0.8203,-0.65185 0.2246,-0.19532 0.3369,-0.29297 0.3369,-0.29297 0,0 -0.1538,0.07812 -0.4614,0.23437 -0.3076,0.15625 -0.7495,0.32227 -1.3257,0.49805"
+         id="path12"
+         inkscape:connector-curvature="0"
+         style="vector-effect:none;fill-rule:nonzero" />
+    </g>
+    <g
+       transform="matrix(1.33333,0,0,1.33333,16,16)"
+       font-size="8.25"
+       font-weight="400"
+       font-style="normal"
+       id="g16"
+       style="font-style:normal;font-weight:400;font-size:8.25px;font-family:'MS Shell Dlg 2';fill:none;stroke:#000000;stroke-width:1;stroke-linecap:square;stroke-linejoin:bevel;stroke-opacity:1" />
+    <g
+       transform="translate(16,16)"
+       font-size="8.25"
+       font-weight="400"
+       font-style="normal"
+       id="g18"
+       style="font-style:normal;font-weight:400;font-size:8.25px;font-family:'MS Shell Dlg 2';fill:none;stroke:#000000;stroke-width:1;stroke-linecap:square;stroke-linejoin:bevel;stroke-opacity:1" />
+    <g
+       font-size="8.25"
+       font-weight="400"
+       font-style="normal"
+       id="g20"
+       style="font-style:normal;font-weight:400;font-size:8.25px;font-family:'MS Shell Dlg 2';fill:none;stroke:#000000;stroke-width:1;stroke-linecap:square;stroke-linejoin:bevel;stroke-opacity:1" />
+  </g>
+</svg>

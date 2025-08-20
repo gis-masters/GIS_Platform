@@ -1,0 +1,26 @@
+.Form-Control {
+  align-self: center;
+
+  width: 62%;
+  min-height: 35px;
+  padding-right: var(--FormFieldRightGap);
+
+  &_inSet {
+    flex-grow: 1;
+    flex-shrink: 1;
+
+    width: auto;
+  }
+
+  &_labelInField {
+    width: 100%;
+  }
+
+  &_fullWidthForOldForm {
+    width: 100%;
+
+    & .MuiInputBase-input {
+      padding: 10px;
+    }
+  }
+}

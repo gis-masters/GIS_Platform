@@ -1,0 +1,34 @@
+# Intellij
+.idea/
+*.iml
+*.iws
+
+# Mac
+.DS_Store
+
+# Maven
+log/
+target/
+.openapi-generator/
+
+# Eclipse
+**/*.project
+**/*.classpath
+**/*.settings
+
+# VS Code
+.vscode/
+_libs/auth-facade/bin/
+
+scripts/result.txt
+
+#Applications
+audit-service/src/main/resources/application.dev.yml
+auth-service/src/main/resources/application.dev.yml
+data-service/src/main/resources/application.dev.yml
+gateway/src/main/resources/application.dev.yml
+geo-wrapper/src/main/resources/application.dev.yml
+gis-service/src/main/resources/application.dev.yml
+gisogd-service/src/main/resources/application-dev.yaml
+integration-service/src/main/resources/application.dev.yml
+.env

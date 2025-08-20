@@ -1,0 +1,71 @@
+.DataImportTasksList {
+  &-Table {
+    width: 100%;
+
+    border-collapse: collapse;
+  }
+
+  &-TaskStatus {
+    width: 25%;
+    padding: 4px 0;
+  }
+
+  & &-TaskDelIcon {
+    transition: opacity 0.3s;
+
+    opacity: 0.2;
+    color: var(--danger);
+
+    &:focus {
+      opacity: 1;
+    }
+  }
+
+  &-Task {
+    transition: opacity 0.4s;
+
+    &:nth-child(odd) {
+      background: #f0f0f0;
+    }
+
+    &_error {
+      color: var(--danger);
+    }
+
+    &_deleting {
+      opacity: 0.2;
+    }
+
+    &_short {
+      .DataImportTasksList-TaskStatus {
+        width: auto;
+        padding-right: 15px;
+
+        text-align: right;
+      }
+    }
+
+    &:hover {
+      .DataImportTasksList-TaskDelIcon {
+        opacity: 1;
+      }
+    }
+  }
+
+  &-TaskName {
+    padding: 4px 20px 4px 15px;
+  }
+
+  &-TaskProgress {
+    width: 25%;
+    padding: 4px 10px 4px 20px;
+
+    text-align: right;
+  }
+
+  &-TaskControls {
+    padding-right: 15px;
+
+    text-align: right;
+  }
+}

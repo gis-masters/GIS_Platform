@@ -1,0 +1,13 @@
+.DocumentsList-Item {
+  display: grid;
+  align-items: center;
+  grid-template-columns: 3fr 20fr 3fr;
+
+  margin: 2px;
+
+  transition: background-color 0.2s;
+
+  &:hover {
+    background-color: rgb(0 0 0 / 12%);
+  }
+}

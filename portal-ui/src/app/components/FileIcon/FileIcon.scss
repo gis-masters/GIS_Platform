@@ -1,0 +1,58 @@
+.FileIcon {
+  position: relative;
+
+  display: inline-block;
+  flex-shrink: 0;
+
+  width: 1em;
+  height: 1em;
+
+  user-select: none;
+  vertical-align: middle;
+
+  fill: currentcolor;
+
+  &-Ext {
+    position: absolute;
+    top: 2em;
+    right: 0;
+    left: 0;
+
+    text-align: center;
+
+    color: var(--white);
+
+    font-size: 0.26em;
+    font-weight: bold;
+  }
+
+  &_outlined {
+    .FileIcon {
+      &-Ext {
+        color: inherit;
+      }
+    }
+  }
+
+  &_fontSize {
+    &_inherit {
+      font-size: inherit;
+    }
+
+    &_small {
+      font-size: 20px;
+    }
+
+    &_medium {
+      font-size: 24px;
+    }
+
+    &_large {
+      font-size: 35px;
+    }
+  }
+
+  .MuiSvgIcon-root {
+    vertical-align: top;
+  }
+}

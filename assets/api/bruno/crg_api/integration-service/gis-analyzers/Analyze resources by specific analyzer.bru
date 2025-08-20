@@ -1,0 +1,32 @@
+meta {
+  name: Analyze resources by specific analyzer
+  type: http
+  seq: 3
+}
+
+post {
+  url: http://localhost:8082/resource-analyzers/LayerExistenceOnGeoserverAnalyzer/analyze
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyLCJ1c2VyX25hbWUiOiJmaXpAZml6Iiwic2NvcGUiOlsiY3JnIl0sIm9yZ2FuaXphdGlvbnMiOlt7ImlkIjoxLCJuYW1lIjoiZml6IENvbXBhbnkifV0sImdyb3VwcyI6W10sImV4cCI6MTYyMTQwODcwMiwiYXV0aG9yaXRpZXMiOlsiT1JHX0FETUlOIl0sImp0aSI6IjIwM2E4ZTEzLTY2MDgtNDVhYi05ZTgzLWUxZTdmNzc2NTFhYSIsImNsaWVudF9pZCI6ImFkbWluIn0.rNDzOtY9Cv0FxZe92IzIcAHz0JXrK7o1hEDdr_Wzx1g
+}
+
+body:json {
+  [
+      {
+          "id": "testRaster",
+          "title": "Raster 2",
+          "resourceDefinition": {
+              "type": "RasterLayer",
+              "typeTitle": "Растровые слои"
+          },
+          "resourceProperties": {
+              "styleName": "polygon",
+              "type": "raster"
+          }
+      }
+  ]
+}

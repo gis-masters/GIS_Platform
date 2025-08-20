@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_0qxz0l7" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.12.0">
+  <bpmn:process id="gis_createOrgOnGeoserver" name="Create org on Geoserver" isExecutable="true">
+    <bpmn:startEvent id="Event_0kac4nk">
+      <bpmn:outgoing>Flow_1frlpdz</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="Flow_1frlpdz" sourceRef="Event_0kac4nk" targetRef="Activity_1b23ioq" />
+    <bpmn:serviceTask id="Activity_1b23ioq" name="create workspace and storage" camunda:asyncBefore="true" camunda:delegateExpression="${createWorkspaceAndStorage}">
+      <bpmn:extensionElements>
+        <camunda:failedJobRetryTimeCycle>R3/PT10S</camunda:failedJobRetryTimeCycle>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_1frlpdz</bpmn:incoming>
+      <bpmn:outgoing>Flow_0qv9e93</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="Activity_14kleju" name="crate user and role" camunda:asyncBefore="true" camunda:delegateExpression="${createUserAndRole}">
+      <bpmn:extensionElements>
+        <camunda:failedJobRetryTimeCycle>R3/PT10S</camunda:failedJobRetryTimeCycle>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_0qv9e93</bpmn:incoming>
+      <bpmn:outgoing>Flow_1goykzt</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="Activity_0iwurki" name="Add permissions to workspace" camunda:asyncBefore="true" camunda:delegateExpression="${addPermissionsToWorkspace}">
+      <bpmn:extensionElements>
+        <camunda:failedJobRetryTimeCycle>R3/PT10S</camunda:failedJobRetryTimeCycle>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_1goykzt</bpmn:incoming>
+      <bpmn:outgoing>Flow_0srfrqj</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:endEvent id="Event_0rriw20" name="SUCCESS">
+      <bpmn:incoming>Flow_12dpy4i</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:serviceTask id="Activity_07ddgfs" name="Add permissions to REST" camunda:asyncBefore="true" camunda:delegateExpression="${addPermissionsToRest}">
+      <bpmn:extensionElements>
+        <camunda:failedJobRetryTimeCycle>R3/PT10S</camunda:failedJobRetryTimeCycle>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_0srfrqj</bpmn:incoming>
+      <bpmn:incoming>Flow_0szvnfa</bpmn:incoming>
+      <bpmn:outgoing>Flow_0a1uhyg</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="Activity_1trz0qg" name="Add permissions to Services" camunda:asyncBefore="true" camunda:delegateExpression="${addPermissionsToServices}">
+      <bpmn:extensionElements>
+        <camunda:failedJobRetryTimeCycle>R3/PT10S</camunda:failedJobRetryTimeCycle>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_12tmdz3</bpmn:incoming>
+      <bpmn:outgoing>Flow_12dpy4i</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_0qv9e93" sourceRef="Activity_1b23ioq" targetRef="Activity_14kleju" />
+    <bpmn:sequenceFlow id="Flow_1goykzt" sourceRef="Activity_14kleju" targetRef="Activity_0iwurki" />
+    <bpmn:sequenceFlow id="Flow_0srfrqj" sourceRef="Activity_0iwurki" targetRef="Activity_07ddgfs" />
+    <bpmn:sequenceFlow id="Flow_12dpy4i" sourceRef="Activity_1trz0qg" targetRef="Event_0rriw20" />
+    <bpmn:sequenceFlow id="Flow_0a1uhyg" sourceRef="Activity_07ddgfs" targetRef="Activity_0s37gxp" />
+    <bpmn:serviceTask id="Activity_0s37gxp" name="check &#10;REST &#10;permissions" camunda:asyncBefore="true" camunda:delegateExpression="${checkRestPermissions}">
+      <bpmn:incoming>Flow_0a1uhyg</bpmn:incoming>
+      <bpmn:outgoing>Flow_12ofv3k</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:exclusiveGateway id="Gateway_1x3xo5v">
+      <bpmn:incoming>Flow_12ofv3k</bpmn:incoming>
+      <bpmn:outgoing>Flow_0nsghbl</bpmn:outgoing>
+      <bpmn:outgoing>Flow_12tmdz3</bpmn:outgoing>
+      <bpmn:outgoing>Flow_1nnn8mb</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="Flow_12ofv3k" sourceRef="Activity_0s37gxp" targetRef="Gateway_1x3xo5v" />
+    <bpmn:sequenceFlow id="Flow_0nsghbl" sourceRef="Gateway_1x3xo5v" targetRef="Event_1ldfs6g">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${checkStatus == 'REPEAT'}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:intermediateCatchEvent id="Event_1ldfs6g">
+      <bpmn:incoming>Flow_0nsghbl</bpmn:incoming>
+      <bpmn:outgoing>Flow_0szvnfa</bpmn:outgoing>
+      <bpmn:timerEventDefinition id="TimerEventDefinition_17w84ab">
+        <bpmn:timeDuration xsi:type="bpmn:tFormalExpression">PT20S</bpmn:timeDuration>
+      </bpmn:timerEventDefinition>
+    </bpmn:intermediateCatchEvent>
+    <bpmn:sequenceFlow id="Flow_0szvnfa" sourceRef="Event_1ldfs6g" targetRef="Activity_07ddgfs" />
+    <bpmn:sequenceFlow id="Flow_12tmdz3" sourceRef="Gateway_1x3xo5v" targetRef="Activity_1trz0qg">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${checkStatus == 'SUCCESS'}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:endEvent id="Event_1mywx2a" name="FAILED">
+      <bpmn:incoming>Flow_1nnn8mb</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_1nnn8mb" sourceRef="Gateway_1x3xo5v" targetRef="Event_1mywx2a">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${checkStatus == 'FAILED'}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="gis_createOrgOnGeoserver">
+      <bpmndi:BPMNShape id="Event_0kac4nk_di" bpmnElement="Event_0kac4nk">
+        <dc:Bounds x="162" y="172" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_05wbfah_di" bpmnElement="Activity_1b23ioq">
+        <dc:Bounds x="240" y="150" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0zm1jcm_di" bpmnElement="Activity_14kleju">
+        <dc:Bounds x="370" y="150" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1p2kzdj_di" bpmnElement="Activity_0iwurki">
+        <dc:Bounds x="500" y="150" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0zh6t7w_di" bpmnElement="Activity_07ddgfs">
+        <dc:Bounds x="630" y="150" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0rriw20_di" bpmnElement="Event_0rriw20">
+        <dc:Bounds x="1132" y="172" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1124" y="215" width="54" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_00d4mus_di" bpmnElement="Activity_1trz0qg">
+        <dc:Bounds x="990" y="150" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0rn8ck8_di" bpmnElement="Activity_0s37gxp">
+        <dc:Bounds x="760" y="150" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_1x3xo5v_di" bpmnElement="Gateway_1x3xo5v" isMarkerVisible="true">
+        <dc:Bounds x="885" y="165" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0spsael_di" bpmnElement="Event_1ldfs6g">
+        <dc:Bounds x="892" y="82" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1mywx2a_di" bpmnElement="Event_1mywx2a">
+        <dc:Bounds x="1132" y="282" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1131" y="325" width="38" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_1frlpdz_di" bpmnElement="Flow_1frlpdz">
+        <di:waypoint x="198" y="190" />
+        <di:waypoint x="240" y="190" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0qv9e93_di" bpmnElement="Flow_0qv9e93">
+        <di:waypoint x="340" y="190" />
+        <di:waypoint x="370" y="190" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1goykzt_di" bpmnElement="Flow_1goykzt">
+        <di:waypoint x="470" y="190" />
+        <di:waypoint x="500" y="190" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0srfrqj_di" bpmnElement="Flow_0srfrqj">
+        <di:waypoint x="600" y="190" />
+        <di:waypoint x="630" y="190" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_12dpy4i_di" bpmnElement="Flow_12dpy4i">
+        <di:waypoint x="1090" y="190" />
+        <di:waypoint x="1132" y="190" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0a1uhyg_di" bpmnElement="Flow_0a1uhyg">
+        <di:waypoint x="730" y="190" />
+        <di:waypoint x="760" y="190" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_12ofv3k_di" bpmnElement="Flow_12ofv3k">
+        <di:waypoint x="860" y="190" />
+        <di:waypoint x="885" y="190" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0nsghbl_di" bpmnElement="Flow_0nsghbl">
+        <di:waypoint x="910" y="165" />
+        <di:waypoint x="910" y="118" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0szvnfa_di" bpmnElement="Flow_0szvnfa">
+        <di:waypoint x="892" y="100" />
+        <di:waypoint x="680" y="100" />
+        <di:waypoint x="680" y="150" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_12tmdz3_di" bpmnElement="Flow_12tmdz3">
+        <di:waypoint x="935" y="190" />
+        <di:waypoint x="990" y="190" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1nnn8mb_di" bpmnElement="Flow_1nnn8mb">
+        <di:waypoint x="910" y="215" />
+        <di:waypoint x="910" y="300" />
+        <di:waypoint x="1132" y="300" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

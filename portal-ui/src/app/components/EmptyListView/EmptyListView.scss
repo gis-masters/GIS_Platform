@@ -1,0 +1,12 @@
+.EmptyListView {
+  display: grid;
+
+  text-align: center;
+
+  justify-items: center;
+
+  &-PrimaryText,
+  &-SecondaryText {
+    color: var(--gray-dark);
+  }
+}

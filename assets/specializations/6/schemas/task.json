@@ -1,0 +1,357 @@
+{
+  "name": "tasks_schema_v1",
+  "title": "Схема задач специализации 6",
+  "tableName": "tasks",
+  "properties": [
+    {
+      "name": "id",
+      "title": "Идентификатор",
+      "valueType": "LONG",
+      "hidden": true
+    },
+    {
+      "name": "type",
+      "title": "Тип задачи",
+      "valueType": "CHOICE",
+      "hidden": true,
+      "enumerations": [
+        {
+          "value": "ASSIGNABLE",
+          "title": "Назначаемая"
+        },
+        {
+          "value": "CUSTOM",
+          "title": "Настраиваемая"
+        },
+        {
+          "value": "SYSTEM",
+          "title": "Системная"
+        }
+      ]
+    },
+    {
+      "name": "content_type_id",
+      "title": "Вид задачи",
+      "valueType": "CHOICE",
+      "readOnly": true,
+      "maxLength": 50,
+      "minWidth": 300,
+      "enumerations": [
+        {
+          "value": "common_task",
+          "title": "Системная задача 1"
+        },
+        {
+          "value": "inbox_data",
+          "title": "Настраиваемая задача. Внесение и регистрация документов в ГИСОГД РК"
+        },
+        {
+          "value": "common_task_kpt_import",
+          "title": "Обновление данных в слоях КПТ"
+        },
+        {
+          "value": "common_task_kpt_order",
+          "title": "Заказ КПТ из ФГИС ЕГРН"
+        },
+        {
+          "value": "sed_task_introduction",
+          "title": "Размещение документов из СЭД Диалог в ГИСОГД РК"
+        },
+        {
+          "value": "rns_smev_rostelekom",
+          "title": "РНС. Выдача или внесение изменений"
+        },
+        {
+          "value": "rnv_smev_rostelekom",
+          "title": "РНВ. Выдача или внесение изменений"
+        },
+        {
+          "value": "gpzu_smev_rostelekom",
+          "title": "ГПЗУ. Выдача или внесение изменений"
+        },
+        {
+          "value": "task_with_attachments",
+          "title": "Задача с вложениями"
+        }
+      ]
+    },
+    {
+      "name": "status",
+      "title": "Статус задачи",
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "value": "DONE",
+          "title": "Выполнена"
+        },
+        {
+          "value": "CANCELED",
+          "title": "Отменена"
+        },
+        {
+          "value": "CREATED",
+          "title": "Создана"
+        },
+        {
+          "value": "IN_PROGRESS",
+          "title": "В работе"
+        }
+      ]
+    },
+    {
+      "name": "intermediate_status",
+      "title": "Промежуточный статус выполнения задачи",
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "value": "1",
+          "title": "Заявление прибыло из СМЭВ-3"
+        },
+        {
+          "value": "2",
+          "title": "Заявлению назначен исполнитель"
+        },
+        {
+          "value": "3",
+          "title": "Подготовленные документы ожидают подпись"
+        },
+        {
+          "value": "4",
+          "title": "Требуется доработка документов"
+        },
+        {
+          "value": "9",
+          "title": "Регистрация проекта решения"
+        },
+        {
+          "value": "5",
+          "title": "Документы готовы к отправке"
+        },
+        {
+          "value": "6",
+          "title": "Рассмотрение завершено (разрешено)"
+        },
+        {
+          "value": "7",
+          "title": "Рассмотрение завершено (отказано)"
+        },
+        {
+          "value": "8",
+          "title": "Отмена оказания услуги"
+        }
+      ]
+    },
+    {
+      "name": "description",
+      "title": "Описание",
+      "valueType": "STRING",
+      "display": "multiline"
+    },
+    {
+      "name": "assigned_to",
+      "title": "Исполнитель",
+      "valueType": "USER_ID",
+      "required": true,
+      "onlySubordinates": true
+    },
+    {
+      "name": "owner_id",
+      "title": "Начальник",
+      "valueType": "USER_ID",
+      "required": true,
+      "readOnly": true
+    },
+    {
+      "name": "inbox_data_key_data_connection",
+      "title": "Материалы для обработки",
+      "valueType": "DOCUMENT",
+      "required": true
+    },
+    {
+      "name": "data_section_key_data_connection",
+      "title": "Связь с библиотеками",
+      "valueType": "DOCUMENT",
+      "multiple": true,
+      "libraries": [
+        "dl_data_section1",
+        "dl_data_section2",
+        "dl_data_section3",
+        "dl_data_section4",
+        "dl_data_section5",
+        "dl_data_section6",
+        "dl_data_section7",
+        "dl_data_section8",
+        "dl_data_section9",
+        "dl_data_section10",
+        "dl_data_section11",
+        "dl_data_section12",
+        "dl_data_section13",
+        "dl_data_section14",
+        "dl_data_section15",
+        "dl_data_section16",
+        "dl_data_section17",
+        "dl_data_section18"
+      ],
+      "maxDocuments": 18
+    },
+    {
+      "name": "created_by",
+      "title": "Создано",
+      "valueType": "STRING",
+      "hidden": true
+    },
+    {
+      "name": "created_at",
+      "title": "Дата создания",
+      "valueType": "DATETIME",
+      "readOnly": true
+    },
+    {
+      "name": "due_date",
+      "title": "Срок исполнения",
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "record_status",
+      "title": "Контроль скоков исполнения",
+      "valueType": "CHOICE",
+      "readOnly": true,
+      "enumerations": [
+        {
+          "value": "В установленный срок",
+          "title": "В установленный срок"
+        },
+        {
+          "value": "С нарушением срока",
+          "title": "С нарушением срока"
+        }
+      ]
+    },
+    {
+      "name": "guid",
+      "title": "guid",
+      "valueType": "UUID",
+      "hidden": true
+    },
+    {
+      "name": "number",
+      "title": "Просроченных дней",
+      "valueType": "INT",
+      "readOnly": true
+    },
+    {
+      "name": "updated_by",
+      "title": "Модифицировано",
+      "valueType": "STRING",
+      "hidden": true
+    },
+    {
+      "name": "date",
+      "title": "Дата выполнения",
+      "valueType": "DATETIME",
+      "readOnly": true
+    },
+    {
+      "name": "last_modified",
+      "title": "Дата последнего изменения",
+      "valueType": "DATETIME",
+      "hidden": true,
+      "readOnly": true
+    },
+    {
+      "name": "attachments",
+      "title": "Вложения",
+      "valueType": "FILE",
+      "multiple": true
+    }
+  ],
+  "description": "Реестр системных и настраиваемых задач",
+  "originName": "tasks",
+  "styleName": "tasks_schema_v1",
+  "readOnly": false,
+  "geometryType": "MultiPolygon",
+  "tags": [
+    "system",
+    "Задачи"
+  ],
+  "contentTypes": [
+    {
+      "id": "common_task_kpt_import",
+      "type": "DOCUMENT",
+      "title": "Обновление данных в слоях КПТ",
+      "childOnly": false,
+      "attributes": [
+        {
+          "name": "id",
+          "hidden": true
+        },
+        {
+          "name": "content_type_id",
+          "hidden": true
+        },
+        {
+          "name": "status",
+          "hidden": true
+        },
+        {
+          "name": "owner_id"
+        },
+        {
+          "name": "assigned_to"
+        },
+        {
+          "name": "due_date"
+        },
+        {
+          "name": "guid"
+        },
+        {
+          "name": "created_at"
+        },
+        {
+          "name": "last_modified"
+        },
+        {
+          "name": "inbox_data_key_data_connection",
+          "title": "Библиотека КПТ",
+          "multiple": true,
+          "libraries": [
+            "dl_data_kpt"
+          ],
+          "maxDocuments": 10,
+          "valueType": "DOCUMENT"
+        },
+        {
+          "name": "data_section_key_data_connection"
+        },
+        {
+          "name": "description"
+        }
+      ]
+    },
+    {
+      "id": "task_with_attachments",
+      "type": "DOCUMENT",
+      "title": "Задача с вложениями",
+      "attributes": [
+        {
+          "name": "id",
+          "hidden": true
+        },
+        {
+          "name": "content_type_id",
+          "readOnly": true
+        },
+        {
+          "name": "assigned_to"
+        },
+        {
+          "name": "description"
+        },
+        {
+          "name": "attachments"
+        }
+      ]
+    }
+  ]
+}

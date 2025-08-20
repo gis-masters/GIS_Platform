@@ -1,0 +1,9 @@
+.OrgProjectionsChangeConfirm {
+  & .MuiDialog-paper {
+    min-height: 160px;
+  }
+
+  &-Link {
+    word-break: break-all;
+  }
+}

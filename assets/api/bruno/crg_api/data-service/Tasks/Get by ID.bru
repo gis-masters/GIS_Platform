@@ -1,0 +1,15 @@
+meta {
+  name: Get by ID
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{host}}:{{port}}/api/data/tasks/1
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{access_token}}
+}

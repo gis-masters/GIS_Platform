@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ClientMessage xmlns="urn://x-artefacts-smev-gov-ru/services/service-adapter/types">
+    <itSystem>U629301</itSystem>
+    <RequestMessage>
+        <RequestMetadata>
+            <clientId>4e3ccf0c-9d89-11ee-8c90-0242ac120002</clientId>
+        </RequestMetadata>
+        <RequestContent>
+            <content>
+                <MessagePrimaryContent>
+                    <tns:Request xmlns:tns='urn://x-artefacts-uishc.domrf.ru/receipt-rns/1.0.9'
+                                 xmlns:com='urn://x-artefacts-uishc.domrf.ru/receipt-rns/commons/1.0.9'>
+                        <tns:ReceiptListConstruction>
+                            <tns:ConstPermitNumber>48-20-Fias5-2023</tns:ConstPermitNumber>
+                            <tns:ConstPermitDateFrom>2000-10-07</tns:ConstPermitDateFrom>
+                            <tns:ConstPermitDateTo>2030-10-07</tns:ConstPermitDateTo>
+                            <tns:IssueOrgan>
+                                <com:OGRN>1185053037476</com:OGRN>
+                                <com:INN>5024190060</com:INN>
+                            </tns:IssueOrgan>
+                        </tns:ReceiptListConstruction>
+                    </tns:Request>
+                </MessagePrimaryContent>
+            </content>
+        </RequestContent>
+    </RequestMessage>
+</ClientMessage>

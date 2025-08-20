@@ -1,0 +1,14 @@
+.PrintMapDialog-WindRose {
+  position: absolute;
+  top: calc(var(--PrintMapDialogPreviewSizeFactor) * calc(3 * var(--PrintMapDialogPreviewControlsFactor)));
+  left: calc(var(--PrintMapDialogPreviewSizeFactor) * calc(3 * var(--PrintMapDialogPreviewControlsFactor)));
+
+  width: var(--PrintMapDialogWindRoseWidth);
+  height: var(--PrintMapDialogWindRoseWidth);
+
+  transform: rotate(calc(var(--PrintMapDialogPreviewRotation) * 1rad));
+
+  --PrintMapDialogWindRoseWidth: calc(
+    var(--PrintMapDialogPreviewSizeFactor) * calc(25 * var(--PrintMapDialogPreviewControlsFactor))
+  );
+}

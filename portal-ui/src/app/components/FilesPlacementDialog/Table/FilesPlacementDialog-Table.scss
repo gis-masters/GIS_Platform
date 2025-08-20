@@ -1,0 +1,5 @@
+body .FilesPlacementDialog-Table {
+  min-width: 500px;
+  height: 100%;
+  max-height: min(calc(100vh - 320px), 500px);
+}

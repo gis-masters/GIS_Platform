@@ -1,0 +1,7 @@
+.Attributes-CounterItem {
+  white-space: nowrap;
+
+  &_type_error {
+    color: var(--error);
+  }
+}

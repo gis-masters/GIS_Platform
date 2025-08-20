@@ -1,0 +1,53 @@
+.XTable-CellContent {
+  position: relative;
+
+  display: block;
+  overflow: hidden;
+  align-items: center;
+
+  width: calc(calc(var(--XTableCellWidth) - 28) * 1px);
+  min-width: calc(var(--XTableCellMinWidth) * 1px);
+
+  .DescriptionMark {
+    margin-left: auto;
+    padding-left: 2px;
+  }
+
+  &_display {
+    &_code {
+      white-space: pre-wrap;
+
+      font-family: 'Courier New', Courier, 'Lucida Sans Typewriter', 'Lucida Typewriter', monospace;
+      font-size: 1rem;
+
+      line-break: anywhere;
+    }
+  }
+
+  &_singleLineContent {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+
+    & .TextOverflow-Value {
+      display: block;
+      overflow: hidden;
+
+      text-overflow: ellipsis;
+    }
+  }
+
+  .XTable-TooltipTrigger {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+
+    display: inline-block;
+
+    width: 16px;
+    height: 100%;
+
+    cursor: pointer;
+
+    background: transparent;
+  }
+}

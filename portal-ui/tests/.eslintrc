@@ -1,0 +1,21 @@
+{
+  "env": { "node": true, "browser": true },
+  "globals": {
+    "WebdriverIO": true,
+    "browser": true,
+    "expect": true,
+    "$$": true,
+    "$": true,
+    "process": true,
+    "testOrganizationIndex": true
+  },
+  "parserOptions": {
+    "project": "./tests/tsconfig.json"
+  },
+  "rules": {
+    "unicorn/prefer-dom-node-dataset": 0,
+    "unicorn/prefer-node-protocol": 0,
+    // regexp
+    "regexp/no-super-linear-backtracking": "off" // в тестах нам атаки не страшны
+  }
+}

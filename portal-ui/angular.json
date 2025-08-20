@@ -1,0 +1,144 @@
+{
+  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "version": 1,
+  "newProjectRoot": "projects",
+  "projects": {
+    "gis-portal": {
+      "root": "",
+      "sourceRoot": "src",
+      "projectType": "application",
+      "prefix": "crg",
+      "schematics": {},
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/gis-portal",
+            "index": "src/index.html",
+            "main": "src/main.ts",
+            "polyfills": "src/polyfills.ts",
+            "tsConfig": "src/tsconfig.app.json",
+            "outputHashing": "all",
+            "buildOptimizer": false,
+            "vendorChunk": true,
+            "assets": [
+              "src/assets",
+              "src/sw.js",
+              "src/reglaments",
+              {
+                "glob": "**",
+                "input": "bl",
+                "output": "bl/"
+              }
+            ],
+            "styles": ["./node_modules/@angular/material/prebuilt-themes/indigo-pink.css", "src/styles.css"],
+            "scripts": [],
+            "allowedCommonJsDependencies": [
+              "@mui/utils/elementTypeAcceptingRef",
+              "@mui/utils/unsupportedProp",
+              "@stomp/stompjs",
+              "core-js",
+              "dom-to-image",
+              "dompurify",
+              "earcut",
+              "event-emitter",
+              "file-saver",
+              "form-data",
+              "geojson-equality",
+              "html2canvas",
+              "hoist-non-react-statics",
+              "lodash",
+              "lru-cache",
+              "mapbox-to-css-font",
+              "moment",
+              "numeralize-ru",
+              "papaparse",
+              "pbf",
+              "pdfjs-dist",
+              "raf",
+              "rbush",
+              "react-dom",
+              "react-favicon",
+              "react-highlight-words",
+              "react-nl2br",
+              "rgbcolor",
+              "sockjs-client",
+              "validate.js",
+              "web-worker",
+              "webfont-matcher",
+              "xmlbuilder",
+              "xml-utils",
+              "xlsx",
+              "!style-loader!css-loader!sass-loader!.",
+              "!style-loader!css-loader!sass-loader!..",
+              "!style-loader!css-loader!ol/ol.css",
+              "!../../../../node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js"
+            ]
+          },
+          "configurations": {
+            "dev": {
+              "optimization": false,
+              "sourceMap": true
+            }
+          },
+          "defaultConfiguration": ""
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "buildTarget": "gis-portal:build"
+          },
+          "configurations": {
+            "dev": {
+              "buildTarget": "gis-portal:build:dev"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "buildTarget": "gis-portal:build"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "codeCoverage": true,
+            "main": "src/test.ts",
+            "polyfills": "src/polyfills.ts",
+            "tsConfig": "src/tsconfig.spec.json",
+            "karmaConfig": "src/karma.conf.js",
+            "styles": ["./node_modules/@angular/material/prebuilt-themes/pink-bluegrey.css", "src/styles.css"],
+            "scripts": [],
+            "assets": ["src/favicon.ico", "src/assets"]
+          }
+        }
+      }
+    },
+    "gis-portal-e2e": {
+      "root": "e2e/",
+      "projectType": "application",
+      "prefix": "",
+      "architect": {
+        "e2e": {
+          "builder": "@angular-devkit/build-angular:protractor",
+          "options": {
+            "protractorConfig": "e2e/protractor.conf.js"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "gis-portal:serve:production"
+            },
+            "development": {
+              "devServerTarget": "gis-portal:serve:development"
+            }
+          },
+          "defaultConfiguration": "development"
+        }
+      }
+    }
+  },
+  "cli": {
+    "analytics": false
+  }
+}

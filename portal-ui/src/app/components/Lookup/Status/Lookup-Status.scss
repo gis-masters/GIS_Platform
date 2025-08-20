@@ -1,0 +1,18 @@
+body .Lookup-Status {
+  margin-top: -2px;
+
+  transition: opacity 1s;
+
+  &_fadeOut {
+    opacity: 0;
+  }
+
+  &_status_new,
+  &_status_loading {
+    min-width: 16px;
+  }
+
+  &_status_deleted {
+    opacity: 0.65;
+  }
+}

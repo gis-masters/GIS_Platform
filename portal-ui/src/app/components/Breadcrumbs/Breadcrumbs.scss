@@ -1,0 +1,16 @@
+.Breadcrumbs {
+  display: flex;
+
+  width: 100%;
+
+  --BreadcrumbsSize: 1;
+  --BreadcrumbsItemNestingLevel: 0;
+
+  &_size_small {
+    --BreadcrumbsSize: 0.875;
+  }
+
+  &_menuButtonOnly {
+    width: auto;
+  }
+}

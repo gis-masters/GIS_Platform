@@ -1,0 +1,15 @@
+.WorkspaceHeader-Organization {
+  grid-area: organization;
+
+  overflow: hidden;
+
+  min-width: 200px;
+  padding: 0 30px;
+
+  text-align: center;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+
+  font-size: 18px;
+  line-height: 1.2;
+}

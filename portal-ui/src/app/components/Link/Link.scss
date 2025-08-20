@@ -1,0 +1,50 @@
+body .Link {
+  &_variant_normal {
+    color: var(--blue);
+
+    &:hover {
+      color: var(--red);
+    }
+  }
+
+  &-IconContainer {
+    position: relative;
+
+    display: inline-block;
+
+    width: 5px;
+    height: 0.6em;
+    margin-right: 7px;
+
+    vertical-align: middle;
+  }
+
+  &-Icon {
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    font-size: 0.65em;
+  }
+
+  &_disabled {
+    cursor: default;
+
+    color: var(--disabled);
+  }
+
+  &_variant_contents {
+    display: contents;
+
+    color: currentcolor;
+  }
+
+  &_variant_contents,
+  &_variant_none {
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: none;
+    }
+  }
+}

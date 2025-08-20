@@ -1,0 +1,17 @@
+.Layer {
+  --LayerCardBackground: rgb(0 0 0 / 17%);
+  --LayerHovered: 0;
+  --LayerEditMode: 0;
+
+  &_visible {
+    --LayerCardBackground: rgb(0 0 0 / 10%);
+  }
+
+  &:hover {
+    --LayerHovered: 1;
+  }
+
+  &_editMode {
+    --LayerEditMode: 1;
+  }
+}

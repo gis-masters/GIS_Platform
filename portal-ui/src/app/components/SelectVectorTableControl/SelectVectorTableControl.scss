@@ -1,0 +1,11 @@
+body .SelectVectorTableControl {
+  width: 100%;
+
+  &_empty {
+    border: 1px var(--gray) dashed;
+  }
+
+  &-Explorer {
+    max-height: calc(100vh - 200px);
+  }
+}

@@ -1,0 +1,8 @@
+<style>
+                    <name>raster</name>
+                    <format>sld</format>
+                    <languageVersion>
+                        <version>1.0.0</version>
+                    </languageVersion>
+                    <filename>raster.sld</filename>
+                </style>

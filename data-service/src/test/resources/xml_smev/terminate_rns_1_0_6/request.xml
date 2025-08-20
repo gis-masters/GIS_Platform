@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<typ:ClientMessage xmlns:typ="urn://x-artefacts-smev-gov-ru/services/service-adapter/types">
+    <typ:itSystem>U629301</typ:itSystem>
+    <typ:RequestMessage>
+        <typ:RequestMetadata>
+            <typ:clientId>17265e08-927a-11ee-b9d1-0242ac120002</typ:clientId>
+        </typ:RequestMetadata>
+        <typ:RequestContent>
+            <typ:content>
+                <typ:MessagePrimaryContent>
+                    <tns:Request xmlns:tns="urn://x-artefacts-uishc.domrf.ru/terminate-rns/1.0.6"
+                                 xmlns:com="urn://x-artefacts-uishc.domrf.ru/terminate-rns/commons/1.0.6">
+                        <tns:UserType>1</tns:UserType>
+                        <tns:ConstPermitID>506763</tns:ConstPermitID>
+                        <tns:ConstPermitNumber>50-RU03308000-876-923-2022</tns:ConstPermitNumber>
+                        <tns:ConstPermitDate>2022-01-13</tns:ConstPermitDate>
+                        <tns:ConstPermitExpireDate>2022-08-14</tns:ConstPermitExpireDate>
+                        <tns:IssueOrgan>
+                            <com:OGRN>1185053037476</com:OGRN>
+                            <com:INN>5024190060</com:INN>
+                        </tns:IssueOrgan>
+                        <tns:Number>50-RU03308000-TERMINATE-RNS-001-2022</tns:Number>
+                        <tns:TerminationDate>2022-06-03</tns:TerminationDate>
+                        <tns:TerminationBasis>
+                            <com:Code>3</com:Code>
+                            <com:Name>Отказ от права собственности и иных прав на земельные участки</com:Name>
+                        </tns:TerminationBasis>
+                        <tns:Detail>Уточнение</tns:Detail>
+                        <tns:CanceledDocNumber>891-892-456</tns:CanceledDocNumber>
+                        <tns:CanceledDocDate>2022-06-03</tns:CanceledDocDate>
+                        <tns:OrganizationOPF>
+                            <com:Code>75204</com:Code>
+                            <com:Name>ГКУ</com:Name>
+                        </tns:OrganizationOPF>
+                        <tns:OrganizationName>Государственное казенное учреждение субъекта Российской Федерации
+                            МИНИСТЕРСТВО ЖИЛИЩНОЙ ПОЛИТИКИ МОСКОВСКОЙ ОБЛАСТИ
+                        </tns:OrganizationName>
+                        <tns:OrganizationINN>5024190060</tns:OrganizationINN>
+                    </tns:Request>
+                </typ:MessagePrimaryContent>
+            </typ:content>
+        </typ:RequestContent>
+    </typ:RequestMessage>
+</typ:ClientMessage>

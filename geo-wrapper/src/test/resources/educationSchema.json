@@ -1,0 +1,866 @@
+{
+  "name": "education",
+  "title": "Объекты образования и науки",
+  "description": "Класс объектов «Объекты образования и науки»",
+  "tableName": "education",
+  "properties": [
+    {
+      "name": "GLOBALID",
+      "title": "Идентификатор объекта",
+      "description": "",
+      "required": true,
+      "hidden": false,
+      "objectIdentityOnUi": false,
+      "updateability": null,
+      "multiple": false,
+      "choice": null,
+      "valueType": "STRING",
+      "foreignKeyType": null,
+      "whiteSpace": "preserve",
+      "pattern": "(urn:uuid:)?[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}|\\{[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\\}",
+      "patternDescription": "",
+      "dateFormat": null,
+      "displayMode": null,
+      "sequenceNumber": 1,
+      "length": -1,
+      "minLength": -1,
+      "maxLength": 254,
+      "minInclusive": -1,
+      "maxInclusive": -1,
+      "totalDigits": -1,
+      "fractionDigits": -1,
+      "enumerations": [],
+      "allowedValues": []
+    },
+    {
+      "name": "CLASSID",
+      "title": "Перечень объектов в классе «Объекты образования и науки»",
+      "description": "",
+      "required": true,
+      "hidden": false,
+      "objectIdentityOnUi": false,
+      "updateability": null,
+      "multiple": false,
+      "choice": null,
+      "valueType": "CHOICE",
+      "foreignKeyType": null,
+      "whiteSpace": null,
+      "pattern": null,
+      "patternDescription": "",
+      "dateFormat": null,
+      "displayMode": null,
+      "sequenceNumber": 2,
+      "length": -1,
+      "minLength": -1,
+      "maxLength": -1,
+      "minInclusive": -1,
+      "maxInclusive": -1,
+      "totalDigits": -1,
+      "fractionDigits": -1,
+      "enumerations": [
+        {
+          "value": "602010101",
+          "title": "Дошкольная образовательная организация"
+        },
+        {
+          "value": "602010102",
+          "title": "Общеобразовательная организация"
+        },
+        {
+          "value": "602010103",
+          "title": "Организация дополнительного образования"
+        },
+        {
+          "value": "602010104",
+          "title": "Организация, реализующая программы профессионального и высшего образования"
+        },
+        {
+          "value": "602010105",
+          "title": "Специальное учебно-воспитательное учреждение для обучающихся с девиантным (общественно опасным) поведением"
+        },
+        {
+          "value": "602010106",
+          "title": "Научная организация и ее структурные подразделения"
+        }
+      ],
+      "allowedValues": []
+    },
+    {
+      "name": "NUMBER",
+      "title": "Номер согласно Положению о территориальном планировании",
+      "description": "",
+      "required": false,
+      "hidden": false,
+      "objectIdentityOnUi": false,
+      "updateability": null,
+      "multiple": false,
+      "choice": null,
+      "valueType": "STRING",
+      "foreignKeyType": null,
+      "whiteSpace": "preserve",
+      "pattern": null,
+      "patternDescription": "",
+      "dateFormat": null,
+      "displayMode": null,
+      "sequenceNumber": 3,
+      "length": -1,
+      "minLength": -1,
+      "maxLength": 254,
+      "minInclusive": -1,
+      "maxInclusive": -1,
+      "totalDigits": -1,
+      "fractionDigits": -1,
+      "enumerations": [],
+      "allowedValues": []
+    },
+    {
+      "name": "NAME",
+      "title": "Наименование организации",
+      "description": "",
+      "required": true,
+      "hidden": false,
+      "objectIdentityOnUi": false,
+      "updateability": null,
+      "multiple": false,
+      "choice": null,
+      "valueType": "STRING",
+      "foreignKeyType": null,
+      "whiteSpace": "preserve",
+      "pattern": null,
+      "patternDescription": "",
+      "dateFormat": null,
+      "displayMode": null,
+      "sequenceNumber": 4,
+      "length": -1,
+      "minLength": 1,
+      "maxLength": 254,
+      "minInclusive": -1,
+      "maxInclusive": -1,
+      "totalDigits": -1,
+      "fractionDigits": -1,
+      "enumerations": [],
+      "allowedValues": []
+    },
+    {
+      "name": "OKTMO",
+      "title": "Код ОКТМО",
+      "description": "",
+      "required": true,
+      "hidden": false,
+      "objectIdentityOnUi": false,
+      "updateability": null,
+      "multiple": false,
+      "choice": null,
+      "valueType": "STRING",
+      "foreignKeyType": null,
+      "whiteSpace": "preserve",
+      "pattern": "[0-9]{8}|[0-9]{11}",
+      "patternDescription": "",
+      "dateFormat": null,
+      "displayMode": null,
+      "sequenceNumber": 5,
+      "length": -1,
+      "minLength": 8,
+      "maxLength": 11,
+      "minInclusive": -1,
+      "maxInclusive": -1,
+      "totalDigits": -1,
+      "fractionDigits": -1,
+      "enumerations": [],
+      "allowedValues": []
+    },
+    {
+      "name": "ADDRESS",
+      "title": "Местоположение, адресное описание",
+      "description": "",
+      "required": false,
+      "hidden": false,
+      "objectIdentityOnUi": false,
+      "updateability": null,
+      "multiple": false,
+      "choice": null,
+      "valueType": "STRING",
+      "foreignKeyType": null,
+      "whiteSpace": "preserve",
+      "pattern": null,
+      "patternDescription": "",
+      "dateFormat": null,
+      "displayMode": null,
+      "sequenceNumber": 6,
+      "length": -1,
+      "minLength": -1,
+      "maxLength": 254,
+      "minInclusive": -1,
+      "maxInclusive": -1,
+      "totalDigits": -1,
+      "fractionDigits": -1,
+      "enumerations": [],
+      "allowedValues": []
+    },
+    {
+      "name": "NAME_UNIT",
+      "title": "Наименование территориально обособленного структурного подразделения в составе организации",
+      "description": "",
+      "required": false,
+      "hidden": false,
+      "objectIdentityOnUi": false,
+      "updateability": null,
+      "multiple": false,
+      "choice": null,
+      "valueType": "STRING",
+      "foreignKeyType": null,
+      "whiteSpace": "preserve",
+      "pattern": null,
+      "patternDescription": "",
+      "dateFormat": null,
+      "displayMode": null,
+      "sequenceNumber": 7,
+      "length": -1,
+      "minLength": -1,
+      "maxLength": 254,
+      "minInclusive": -1,
+      "maxInclusive": -1,
+      "totalDigits": -1,
+      "fractionDigits": -1,
+      "enumerations": [],
+      "allowedValues": []
+    },
+    {
+      "name": "EDU_STYPE",
+      "title": "Подтип общеобразовательной организации",
+      "description": "",
+      "required": false,
+      "hidden": false,
+      "objectIdentityOnUi": false,
+      "updateability": null,
+      "multiple": false,
+      "choice": null,
+      "valueType": "CHOICE",
+      "foreignKeyType": null,
+      "whiteSpace": null,
+      "pattern": null,
+      "patternDescription": "",
+      "dateFormat": null,
+      "displayMode": null,
+      "sequenceNumber": 8,
+      "length": -1,
+      "minLength": -1,
+      "maxLength": -1,
+      "minInclusive": -1,
+      "maxInclusive": -1,
+      "totalDigits": -1,
+      "fractionDigits": -1,
+      "enumerations": [
+        {
+          "value": "1",
+          "title": "Начального общего образования"
+        },
+        {
+          "value": "2",
+          "title": "Начального общего и (или) основного общего образования"
+        },
+        {
+          "value": "3",
+          "title": "Начального общего, основного общего и среднего общего образования"
+        },
+        {
+          "value": "4",
+          "title": "Основного общего и среднего общего образования"
+        },
+        {
+          "value": "5",
+          "title": "Среднего общего образования"
+        }
+      ],
+      "allowedValues": []
+    },
+    {
+      "name": "EDU_SDTYPE",
+      "title": "Подтип организации, реализующей программы профессионального и высшего образования",
+      "description": "",
+      "required": false,
+      "hidden": false,
+      "objectIdentityOnUi": false,
+      "updateability": null,
+      "multiple": false,
+      "choice": null,
+      "valueType": "STRING",
+      "foreignKeyType": null,
+      "whiteSpace": "collapse",
+      "pattern": "[\\-+]?[0-9]+",
+      "patternDescription": "",
+      "dateFormat": null,
+      "displayMode": null,
+      "sequenceNumber": 9,
+      "length": -1,
+      "minLength": -1,
+      "maxLength": 254,
+      "minInclusive": -1,
+      "maxInclusive": -1,
+      "totalDigits": -1,
+      "fractionDigits": -1,
+      "enumerations": [],
+      "allowedValues": []
+    },
+    {
+      "name": "SCI_TYPE",
+      "title": "Подтип научной организации",
+      "description": "",
+      "required": false,
+      "hidden": false,
+      "objectIdentityOnUi": false,
+      "updateability": null,
+      "multiple": false,
+      "choice": null,
+      "valueType": "CHOICE",
+      "foreignKeyType": null,
+      "whiteSpace": null,
+      "pattern": null,
+      "patternDescription": "",
+      "dateFormat": null,
+      "displayMode": null,
+      "sequenceNumber": 10,
+      "length": -1,
+      "minLength": -1,
+      "maxLength": -1,
+      "minInclusive": -1,
+      "maxInclusive": -1,
+      "totalDigits": -1,
+      "fractionDigits": -1,
+      "enumerations": [
+        {
+          "value": "1",
+          "title": "Государственный научный центр"
+        },
+        {
+          "value": "2",
+          "title": "Научная организация, не являющаяся государственным научным центром и не осуществляющая образовательную деятельность"
+        },
+        {
+          "value": "3",
+          "title": "Научная организация, осуществляющая образовательную деятельность по программам магистратуры, программам подготовки научно-педагогических кадров, программам ординатуры, программам профессионального обучения, дополнительным профессиональным программам"
+        },
+        {
+          "value": "4",
+          "title": "Структурные подразделения (базы) научных организаций: опытное, опытно-экспериментальное, опытно-учебное, опытно-фармацевтическое производство, лаборатория"
+        },
+        {
+          "value": "5",
+          "title": "Центры коллективного пользования научным оборудованием"
+        }
+      ],
+      "allowedValues": []
+    },
+    {
+      "name": "PRG_TYPE",
+      "title": "Тип образовательных программ, дополняющих основную деятельность организации",
+      "description": "",
+      "required": false,
+      "hidden": false,
+      "objectIdentityOnUi": false,
+      "updateability": null,
+      "multiple": false,
+      "choice": null,
+      "valueType": "CHOICE",
+      "foreignKeyType": null,
+      "whiteSpace": null,
+      "pattern": null,
+      "patternDescription": "",
+      "dateFormat": null,
+      "displayMode": null,
+      "sequenceNumber": 11,
+      "length": -1,
+      "minLength": -1,
+      "maxLength": -1,
+      "minInclusive": -1,
+      "maxInclusive": -1,
+      "totalDigits": -1,
+      "fractionDigits": -1,
+      "enumerations": [
+        {
+          "value": "1",
+          "title": "Реализующая программы дошкольного образования"
+        },
+        {
+          "value": "2",
+          "title": "Реализующая программы профессионального обучения"
+        },
+        {
+          "value": "3",
+          "title": "Реализующая программы дошкольного образования и программы профессионального обучения"
+        }
+      ],
+      "allowedValues": []
+    },
+    {
+      "name": "EDU_TUNIT",
+      "title": "Тип структурного подразделения",
+      "description": "",
+      "required": false,
+      "hidden": false,
+      "objectIdentityOnUi": false,
+      "updateability": null,
+      "multiple": false,
+      "choice": null,
+      "valueType": "CHOICE",
+      "foreignKeyType": null,
+      "whiteSpace": null,
+      "pattern": null,
+      "patternDescription": "",
+      "dateFormat": null,
+      "displayMode": null,
+      "sequenceNumber": 12,
+      "length": -1,
+      "minLength": -1,
+      "maxLength": -1,
+      "minInclusive": -1,
+      "maxInclusive": -1,
+      "totalDigits": -1,
+      "fractionDigits": -1,
+      "enumerations": [
+        {
+          "value": "1",
+          "title": "Филиал, отделение, факультет"
+        },
+        {
+          "value": "2",
+          "title": "Представительство"
+        },
+        {
+          "value": "3",
+          "title": "Институт, центр, кафедра"
+        },
+        {
+          "value": "4",
+          "title": "Подготовительное отделение, курсы"
+        },
+        {
+          "value": "5",
+          "title": "Научно-исследовательское, методическое, учебно-методическое подразделение"
+        },
+        {
+          "value": "6",
+          "title": "Лаборатория"
+        },
+        {
+          "value": "7",
+          "title": "Конструкторское бюро"
+        },
+        {
+          "value": "8",
+          "title": "Учебные, учебно-производственные мастерские"
+        },
+        {
+          "value": "9",
+          "title": "Учебно-опытное хозяйство"
+        },
+        {
+          "value": "10",
+          "title": "Учебный полигон"
+        },
+        {
+          "value": "11",
+          "title": "Учебная база практики"
+        },
+        {
+          "value": "12",
+          "title": "Учебно-демонстрационный центр"
+        },
+        {
+          "value": "13",
+          "title": "Учебный театр, танцевальная, оперная студия, концертный зал"
+        },
+        {
+          "value": "14",
+          "title": "Учебный цирковой манеж"
+        },
+        {
+          "value": "15",
+          "title": "Художественно-творческая мастерская"
+        },
+        {
+          "value": "16",
+          "title": "Библиотека"
+        },
+        {
+          "value": "17",
+          "title": "Музей, выставочный зал"
+        },
+        {
+          "value": "18",
+          "title": "Спортивный клуб"
+        },
+        {
+          "value": "19",
+          "title": "Общежитие, интернат"
+        },
+        {
+          "value": "20",
+          "title": "Психологическая, социально-педагогическая служба, обеспечивающая социальную адаптацию и реабилитацию нуждающихся в ней обучающихся"
+        },
+        {
+          "value": "21",
+          "title": "Иное структурное подразделение"
+        },
+        {
+          "value": "22",
+          "title": "Учебный корпус"
+        },
+        {
+          "value": "23",
+          "title": "Административный, учебно-административный корпус"
+        },
+        {
+          "value": "24",
+          "title": "Здание или сооружение иного назначения"
+        }
+      ],
+      "allowedValues": []
+    },
+    {
+      "name": "CAPACITY",
+      "title": "Вместимость здания (комплекса зданий) образовательной организации, число мест для детей, учащихся, студентов",
+      "description": "",
+      "required": false,
+      "hidden": false,
+      "objectIdentityOnUi": false,
+      "updateability": null,
+      "multiple": false,
+      "choice": null,
+      "valueType": "INT",
+      "foreignKeyType": null,
+      "whiteSpace": "collapse",
+      "pattern": "[\\-+]?[0-9]+",
+      "patternDescription": "",
+      "dateFormat": null,
+      "displayMode": null,
+      "sequenceNumber": 13,
+      "length": -1,
+      "minLength": -1,
+      "maxLength": -1,
+      "minInclusive": 1,
+      "maxInclusive": 2147483647,
+      "totalDigits": -1,
+      "fractionDigits": 0,
+      "enumerations": [],
+      "allowedValues": []
+    },
+    {
+      "name": "BLD_AREA",
+      "title": "Общая площадь здания, комплекса зданий, кв. м",
+      "description": "",
+      "required": false,
+      "hidden": false,
+      "objectIdentityOnUi": false,
+      "updateability": null,
+      "multiple": false,
+      "choice": null,
+      "valueType": "DOUBLE",
+      "foreignKeyType": null,
+      "whiteSpace": "collapse",
+      "pattern": null,
+      "patternDescription": "",
+      "dateFormat": null,
+      "displayMode": null,
+      "sequenceNumber": 14,
+      "length": -1,
+      "minLength": -1,
+      "maxLength": -1,
+      "minInclusive": -1,
+      "maxInclusive": -1,
+      "totalDigits": 38,
+      "fractionDigits": 8,
+      "enumerations": [],
+      "allowedValues": []
+    },
+    {
+      "name": "WRK_COUNT",
+      "title": "Количество рабочих мест, единиц",
+      "description": "",
+      "required": false,
+      "hidden": false,
+      "objectIdentityOnUi": false,
+      "updateability": null,
+      "multiple": false,
+      "choice": null,
+      "valueType": "INT",
+      "foreignKeyType": null,
+      "whiteSpace": "collapse",
+      "pattern": "[\\-+]?[0-9]+",
+      "patternDescription": "",
+      "dateFormat": null,
+      "displayMode": null,
+      "sequenceNumber": 15,
+      "length": -1,
+      "minLength": -1,
+      "maxLength": -1,
+      "minInclusive": 1,
+      "maxInclusive": 2147483647,
+      "totalDigits": -1,
+      "fractionDigits": 0,
+      "enumerations": [],
+      "allowedValues": []
+    },
+    {
+      "name": "FUNCTION",
+      "title": "Назначение объекта",
+      "description": "",
+      "required": false,
+      "hidden": false,
+      "objectIdentityOnUi": false,
+      "updateability": null,
+      "multiple": false,
+      "choice": null,
+      "valueType": "STRING",
+      "foreignKeyType": null,
+      "whiteSpace": "preserve",
+      "pattern": null,
+      "patternDescription": "",
+      "dateFormat": null,
+      "displayMode": null,
+      "sequenceNumber": 16,
+      "length": -1,
+      "minLength": -1,
+      "maxLength": 254,
+      "minInclusive": -1,
+      "maxInclusive": -1,
+      "totalDigits": -1,
+      "fractionDigits": -1,
+      "enumerations": [],
+      "allowedValues": []
+    },
+    {
+      "name": "EVENT_TIME",
+      "title": "Срок реализации",
+      "description": "",
+      "required": false,
+      "hidden": false,
+      "objectIdentityOnUi": false,
+      "updateability": null,
+      "multiple": false,
+      "choice": null,
+      "valueType": "DOUBLE",
+      "foreignKeyType": null,
+      "whiteSpace": "collapse",
+      "pattern": "[\\-+]?[0-9]+",
+      "patternDescription": "",
+      "dateFormat": null,
+      "displayMode": null,
+      "sequenceNumber": 17,
+      "length": -1,
+      "minLength": -1,
+      "maxLength": -1,
+      "minInclusive": -1,
+      "maxInclusive": -1,
+      "totalDigits": 38,
+      "fractionDigits": 0,
+      "enumerations": [],
+      "allowedValues": []
+    },
+    {
+      "name": "SOURCE",
+      "title": "Источник данных",
+      "description": "",
+      "required": false,
+      "hidden": false,
+      "objectIdentityOnUi": false,
+      "updateability": null,
+      "multiple": false,
+      "choice": null,
+      "valueType": "STRING",
+      "foreignKeyType": null,
+      "whiteSpace": "preserve",
+      "pattern": null,
+      "patternDescription": "",
+      "dateFormat": null,
+      "displayMode": null,
+      "sequenceNumber": 18,
+      "length": -1,
+      "minLength": -1,
+      "maxLength": 254,
+      "minInclusive": -1,
+      "maxInclusive": -1,
+      "totalDigits": -1,
+      "fractionDigits": -1,
+      "enumerations": [],
+      "allowedValues": []
+    },
+    {
+      "name": "NOTE",
+      "title": "Примечание",
+      "description": "",
+      "required": false,
+      "hidden": false,
+      "objectIdentityOnUi": false,
+      "updateability": null,
+      "multiple": false,
+      "choice": null,
+      "valueType": "STRING",
+      "foreignKeyType": null,
+      "whiteSpace": "preserve",
+      "pattern": null,
+      "patternDescription": "",
+      "dateFormat": null,
+      "displayMode": null,
+      "sequenceNumber": 19,
+      "length": -1,
+      "minLength": -1,
+      "maxLength": 254,
+      "minInclusive": -1,
+      "maxInclusive": -1,
+      "totalDigits": -1,
+      "fractionDigits": -1,
+      "enumerations": [],
+      "allowedValues": []
+    },
+    {
+      "name": "STATUS",
+      "title": "Справочник: Значение объекта",
+      "description": "",
+      "required": true,
+      "hidden": false,
+      "objectIdentityOnUi": false,
+      "updateability": null,
+      "multiple": false,
+      "choice": null,
+      "valueType": "CHOICE",
+      "foreignKeyType": null,
+      "whiteSpace": null,
+      "pattern": null,
+      "patternDescription": "",
+      "dateFormat": null,
+      "displayMode": null,
+      "sequenceNumber": 20,
+      "length": -1,
+      "minLength": -1,
+      "maxLength": -1,
+      "minInclusive": -1,
+      "maxInclusive": -1,
+      "totalDigits": -1,
+      "fractionDigits": -1,
+      "enumerations": [
+        {
+          "value": "1",
+          "title": "Существующий, реконструируемый, строящийся"
+        },
+        {
+          "value": "2",
+          "title": "Планируемый к размещению"
+        },
+        {
+          "value": "3",
+          "title": "Планируемый к реконструкции"
+        },
+        {
+          "value": "4",
+          "title": "Планируемый к ликвидации"
+        }
+      ],
+      "allowedValues": []
+    },
+    {
+      "name": "REG_STATUS",
+      "title": "Справочник: Значение объекта",
+      "description": "",
+      "required": true,
+      "hidden": false,
+      "objectIdentityOnUi": false,
+      "updateability": null,
+      "multiple": false,
+      "choice": null,
+      "valueType": "CHOICE",
+      "foreignKeyType": null,
+      "whiteSpace": null,
+      "pattern": null,
+      "patternDescription": "",
+      "dateFormat": null,
+      "displayMode": null,
+      "sequenceNumber": 21,
+      "length": -1,
+      "minLength": -1,
+      "maxLength": -1,
+      "minInclusive": -1,
+      "maxInclusive": -1,
+      "totalDigits": -1,
+      "fractionDigits": -1,
+      "enumerations": [
+        {
+          "value": "1",
+          "title": "Федеральное значение"
+        },
+        {
+          "value": "2",
+          "title": "Региональное значение"
+        },
+        {
+          "value": "3",
+          "title": "Местное значение муниципального района"
+        },
+        {
+          "value": "4",
+          "title": "Местное значение городского округа"
+        },
+        {
+          "value": "5",
+          "title": "Местное значение поселения"
+        },
+        {
+          "value": "6",
+          "title": "Иное значение"
+        }
+      ],
+      "allowedValues": []
+    },
+    {
+      "name": "Geometry",
+      "title": null,
+      "description": null,
+      "required": false,
+      "hidden": false,
+      "objectIdentityOnUi": false,
+      "updateability": null,
+      "multiple": false,
+      "choice": null,
+      "valueType": "GEOMETRY",
+      "foreignKeyType": null,
+      "whiteSpace": null,
+      "pattern": null,
+      "patternDescription": "",
+      "dateFormat": null,
+      "displayMode": null,
+      "sequenceNumber": 22,
+      "length": -1,
+      "minLength": -1,
+      "maxLength": -1,
+      "minInclusive": -1,
+      "maxInclusive": -1,
+      "totalDigits": -1,
+      "fractionDigits": -1,
+      "enumerations": [],
+      "allowedValues": [
+        "Polygon"
+      ]
+    },
+    {
+      "name": "created_da",
+      "title": "Дата создания",
+      "hidden": false,
+      "required": true,
+      "valueType": "DATETIME",
+      "sequenceNumber": 6
+    },
+    {
+      "name": "created_da2",
+      "title": "Дата создания",
+      "hidden": false,
+      "required": true,
+      "valueType": "DATETIME",
+      "sequenceNumber": 6
+    }
+  ],
+  "customRuleFunction": "var errors = [];\n\nif (obj.classid == '602010102') {\n  if (!obj.edu_stype) {\n    errors.push({attribute: 'edu_stype', error: 'Значение обязательно к заполнению'});\n  }\n} else if (obj.edu_stype) {\n    errors.push({attribute: 'edu_stype', error: 'Значение заполняется только для объекта \"Общеобразовательная организация\"'});\n}\n\nif (obj.classid == '602010104') {\n  if (!obj.edu_sdtype) {\n    errors.push({attribute: 'edu_sdtype', error: 'Значение обязательно к заполнению'});\n  }\n} else if (obj.edu_sdtype) {\n    errors.push({attribute: 'edu_sdtype', error: 'Значение заполняется только для объекта \"Организация, реализующая программы профессионального и высшего образования\"'});\n}\n\nif (obj.classid == '602010106') {\n  if (!obj.sci_type) {\n    errors.push({attribute: 'sci_type', error: 'Значение обязательно к заполнению'});\n  }\n} else if (obj.sci_type) {\n    errors.push({attribute: 'sci_type', error: 'Значение заполняется только для объекта \"Научная организация и ее структурные подразделения\"'});\n}\n\nif (obj.classid == '602010102' || obj.classid == '602010103') {\n  if (!obj.prg_type) {\n    errors.push({attribute: 'prg_type', error: 'Значение обязательно к заполнению'});\n  }\n} else if (obj.prg_type) {\n    errors.push({attribute: 'prg_type', error: 'Значение заполняется только для объектов \"Общеобразовательная организация\", \"Организация дополнительного образования\"'});\n}\n\nif (!(obj.classid == '602010104')) {\n  if (obj.edu_tunit) {\n    errors.push({attribute: 'edu_tunit', error: 'Значение заполняется только для объекта \"Организация, реализующая программы профессионального и высшего образования\"'});\n  }\n}\n\nif (obj.status == '2') {\n  if (!obj.function) {\n    errors.push({attribute: 'reg_status', error: 'Значение обязательно к заполнению'});\n  }\n} else if (obj.function) {\n    errors.push({attribute: 'reg_status', error: 'Значение заполняется только для планируемых к размещению объектов'});\n}\n\nif (obj.status == '2' || obj.status == '3' || obj.status == '4') {\n  if (!obj.event_time) {\n    errors.push({attribute: 'event_time', error: 'Значение обязательно к заполнению'});\n  }\n} else if (obj.event_time) {\n    errors.push({attribute: 'event_time', error: 'Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов'});\n}\n\nreturn errors;",
+  "calcFiledFunction": "var results = {};\n\nvar status;\nif (!obj.status) {\n  status = 0;\n} else {\n  var nStatus = Number(obj.status);\n  if (!nStatus) {\n    status = 0;\n  } else {\n    if (nStatus > 0 && nStatus <= 4) {\n      status = obj.status;\n    } else {\n      status = 0;\n    }\n  }\n}\n\nif (!obj.classid) {\n  results.ruleid = '';\n} else {\n  results.ruleid = obj.classid + '0' + status;\n}\n\nreturn results;\n",
+  "originName": "Education",
+  "readOnly": true,
+  "geometryType": "MultiPolygon"
+}

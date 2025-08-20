@@ -1,0 +1,12 @@
+body .Attributes-CheckCell.XTable-HeadCell {
+  width: auto;
+  padding: 0;
+
+  .XTable-HeadCell,
+  .XTable-CellContent,
+  .XTable-HeadCellLabel,
+  .XTable-HeadCellTitle {
+    overflow: visible;
+    justify-content: center;
+  }
+}

@@ -1,0 +1,14 @@
+body .ServicesCalculator {
+  &-Counter {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    width: 100px;
+    margin: 0 22px;
+    padding: 7px 13px;
+
+    border: 1px solid var(--gray-light);
+    border-radius: 10px;
+  }
+}

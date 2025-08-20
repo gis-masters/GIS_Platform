@@ -1,0 +1,51 @@
+.PrintMapDialog-Date {
+  position: absolute;
+  z-index: 3;
+  bottom: calc(var(--PrintMapDialogPreviewResize) * 2.6);
+  left: calc(50% - calc(var(--PrintMapDialogPreviewResize) * 12.7));
+
+  width: calc(var(--PrintMapDialogPreviewResize) * 25.4);
+  height: calc(var(--PrintMapDialogPreviewResize) * 3.6);
+
+  user-select: none;
+  text-align: center;
+
+  text-shadow:
+    0.5px 0.5px 1px #fff,
+    -0.5px 0.5px 1px #fff,
+    0.5px -0.5px 1px #fff,
+    -0.5px -0.5px 1px #fff,
+    1px 0 1px #fff,
+    0 1px 1px #fff,
+    -1px 0 1px #fff,
+    0 -1px 1px #fff;
+
+  font-size: calc(var(--PrintMapDialogPreviewResize) * 2.9);
+
+  --PrintMapDialogPreviewResize: calc(
+    var(--PrintMapDialogPreviewControlsFactor) * var(--PrintMapDialogPreviewSizeFactor)
+  );
+
+  &_forPrint {
+    position: relative;
+    bottom: 0;
+    left: 0;
+
+    width: calc(var(--PrintMapDialogDateResolutionFactor) * 150px);
+    height: calc(var(--PrintMapDialogDateResolutionFactor) * 22px);
+
+    text-shadow:
+      1px 1px 2px #fff,
+      -1px 1px 2px #fff,
+      1px -1px 2px #fff,
+      -1px -1px 2px #fff,
+      2px 0 2px #fff,
+      0 2px 2px #fff,
+      -2px 0 2px #fff,
+      0 -2px 2px #fff;
+
+    font-size: calc(var(--PrintMapDialogDateResolutionFactor) * 16px);
+
+    --PrintMapDialogDateResolutionFactor: calc(var(--PrintMapDialogDateResolution) / 150);
+  }
+}

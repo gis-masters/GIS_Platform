@@ -1,0 +1,16 @@
+.FeaturesInProjects {
+  &-Button {
+    display: flex;
+    justify-content: space-between;
+
+    margin-bottom: 5px;
+  }
+
+  & .Button-Text {
+    display: contents;
+  }
+
+  &-Icon {
+    margin-left: 3px;
+  }
+}

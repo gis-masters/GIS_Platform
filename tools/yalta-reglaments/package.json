@@ -1,0 +1,16 @@
+{
+  "name": "yalta-reglaments",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bem-xjst": "^8.9.6",
+    "csv": "^5.3.1",
+    "nl2br-x": "^0.1.1",
+    "strip-bom": "^4.0.0"
+  }
+}

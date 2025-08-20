@@ -1,0 +1,91 @@
+.DataImport {
+  &-Dropzone {
+    position: relative;
+
+    margin-bottom: 10px;
+  }
+
+  &-DropzoneControl {
+    position: relative;
+
+    flex-grow: 1;
+
+    padding: 30px;
+
+    border: dotted 3px lightgray;
+
+    &::before {
+      position: absolute;
+      z-index: 1;
+      inset: 0;
+
+      content: 'file_upload';
+      transition:
+        background-color 0.3s,
+        backdrop-filter 0.3s,
+        color 0.3s;
+      text-align: center;
+
+      color: rgb(255 255 255 / 0%);
+
+      font: 60px/170px 'Material Icons';
+    }
+
+    &:hover {
+      &::before {
+        display: none;
+      }
+    }
+
+    &_fileOver {
+      &::before {
+        color: #fff;
+        background-color: rgb(0 0 0 / 15%);
+
+        backdrop-filter: blur(1px);
+      }
+    }
+  }
+
+  &-DropzoneCaption {
+    text-align: center;
+
+    line-height: 2;
+  }
+
+  &-DropzoneFiles {
+    position: absolute;
+    z-index: 2;
+    inset: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: solid 3px lightgray;
+    background: var(--white);
+  }
+
+  &-DropzoneFile {
+    display: flex;
+    align-items: center;
+
+    margin-bottom: 5px;
+
+    line-height: 1;
+  }
+
+  &-DropzoneFileName {
+    margin-right: 20px;
+
+    font-size: 20px;
+  }
+
+  &-DropzoneFileSize {
+    margin-right: 10px;
+
+    color: var(--gray);
+
+    font-size: 16px;
+  }
+}

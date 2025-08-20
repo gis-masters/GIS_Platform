@@ -1,0 +1,101 @@
+.Toast {
+  color: rgb(0 0 0 / 87%);
+
+  font-size: 14px;
+
+  &-Head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    min-height: 44px;
+    padding: 5px 0;
+  }
+
+  &-Title {
+    flex-grow: 1;
+  }
+
+  & &-Icon {
+    margin-right: 8px;
+
+    opacity: 0.9;
+
+    font-size: 20px;
+  }
+
+  &-Moar {
+    display: inline-block;
+
+    cursor: pointer;
+    white-space: nowrap;
+
+    border-bottom: 1px rgb(0 0 0 / 87%) dashed;
+
+    font-size: 12px;
+    line-height: 1;
+  }
+
+  body &-Close {
+    align-self: flex-start;
+
+    outline: none;
+  }
+
+  body &-CloseIcon {
+    font-size: 20px;
+  }
+
+  &-Details {
+    padding: 10px 0 0;
+
+    word-break: break-all;
+
+    font-size: 13px;
+  }
+
+  &-Message {
+    margin-bottom: 5px;
+
+    white-space: pre-wrap;
+  }
+
+  &-File {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    font-size: 12px;
+  }
+}
+
+.Toast-Toastify.Toastify {
+  &__toast {
+    min-height: 56px;
+    padding: 6px 2px 6px 16px;
+
+    transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+
+    border-radius: 4px;
+    box-shadow:
+      0 3px 5px -1px rgb(0 0 0 / 20%),
+      0 6px 10px 0 rgb(0 0 0 / 14%),
+      0 1px 18px 0 rgb(0 0 0 / 12%);
+
+    &--error {
+      background-color: #d32f2f;
+    }
+
+    &--warning {
+      background-color: #ffa000;
+    }
+
+    &--success {
+      background-color: #90caf9;
+    }
+
+    &--info {
+      background-color: #43a047;
+    }
+  }
+}

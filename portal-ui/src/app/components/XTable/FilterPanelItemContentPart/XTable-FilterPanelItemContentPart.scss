@@ -1,0 +1,13 @@
+.XTable-FilterPanelItemContentPart {
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+
+  &:first-child {
+    margin-right: 4px;
+  }
+
+  &_value {
+    flex-shrink: 0;
+  }
+}

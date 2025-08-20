@@ -1,0 +1,15 @@
+.Form-ViewValue {
+  overflow: auto;
+
+  max-height: 200px;
+
+  &_code {
+    padding: 7px;
+
+    white-space: pre-wrap;
+
+    background-color: var(--gray-light);
+
+    font-family: 'Courier New', Courier, monospace;
+  }
+}

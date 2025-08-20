@@ -1,0 +1,113 @@
+spring:
+  profiles:
+    active: fiz-dev
+
+logging:
+  file: /opt/crg/logs/data-service.log
+  level:
+    ru.mycrg: debug
+
+---
+
+server:
+  port: 8084
+
+spring:
+  profiles: fiz-dev
+  datasource:
+    platform: postgres
+    url: jdbc:postgresql://127.0.0.1:5434/crg_data_service
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+    hikari:
+      minimum-pool-size: ${SPRING_DATASOURCE_HIKARI_MINIMUM_POOL_SIZE:10}
+      maximum-pool-size: ${SPRING_DATASOURCE_HIKARI_MAXIMUM_POOL_SIZE:20}
+      # у data-service финальная цифра: (кол-во организаций * POOL + 1)
+  flyway:
+    enabled: true
+    url: jdbc:postgresql://127.0.0.1:5434/crg_data_service
+    user: ${SPRING_FLYWAY_USER}
+    password: ${SPRING_FLYWAY_PASSWORD}
+    placeholders:
+      db_owner: ${SPRING_FLYWAY_PLACEHOLDERS_DB_OWNER}
+  jpa:
+    database: POSTGRESQL
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: false
+    properties:
+      hibernate.format_sql: true
+      hibernate.session.events.log.LOG_QUERIES_SLOWER_THAN_MS: 200
+  servlet:
+    multipart:
+      max-file-size: 1001MB
+      max-request-size: 1001MB
+  redis:
+    host: ${SPRING_REDIS_HOST}
+    port: ${SPRING_REDIS_PORT}
+    password: ${SPRING_REDIS_PASSWORD}
+  rabbitmq:
+    host: ${SPRING_RABBITMQ_HOST}
+    port: ${SPRING_RABBITMQ_PORT}
+    username: ${SPRING_RABBITMQ_USERNAME}
+    password: ${SPRING_RABBITMQ_PASSWORD}
+  jackson:
+    default-property-inclusion: non_null
+  devtools:
+    remote:
+      secret: ${SPRING_DEVTOOLS_REMOTE_SECRET}
+
+security:
+  jwt:
+    secret: ${SECURITY_JWT_SECRET}
+
+management:
+  health:
+    db:
+      enabled: false
+
+crg-options:
+  storage:
+    cache:
+      recordStats: true
+      maximumSize: 1000
+      expireAfterWrite: 30
+  taskDb: ${CRG_OPTIONS_TASK_DB}
+  taskDeadlineTime: ${CRG_OPTIONS_TASK_DEADLINE_TIME}
+  taskManagementFolderId: ${CRG_OPTIONS_TASK_MANAGEMENT_FOLDER_ID:29}
+  kptTaskJobCron: ${CRG_OPTIONS_KPT_TASK_JOB_CRON:0 0 0 * * *}
+  kptTaskDeadlineTime: ${CRG_OPTIONS_KPT_TASK_DEADLINE_TIME:720}
+  auth-service-url: http://127.0.0.1:9000
+  gis-service-url: http://127.0.0.1:8082
+  cryptopro-service-url: http://127.0.0.1:8448
+  notification-service-url: http://127.0.0.1:8668
+  data-service-url: http://127.0.0.1:8084
+  ui-service-url: http://127.0.0.1:80
+  kptStoragePath: /opt/crg/kpt_order/
+  mainStoragePath: /opt/crg/file_storage
+  exportStoragePath: /opt/crg/export/
+  specializationsPath: /opt/crg/specializations
+  geoserverDbName: geoserver_db
+  system-admin-login: ${CRG_OPTIONS_SYSTEM_ADMIN_LOGIN}
+  system-admin-password: ${CRG_OPTIONS_SYSTEM_ADMIN_PASSWORD}
+  system-admin-crypted-password: ${CRG_OPTIONS_SYSTEM_ADMIN_CRYPTED_PASSWORD}
+  jwt:
+    client_id: ${CRG_OPTIONS_JWT_CLIENT_ID}
+    client_secret: ${CRG_OPTIONS_JWT_CLIENT_SECRET}
+  initFullTextSearch: true
+  integration:
+    sed-url: ${CRG_OPTIONS_INTEGRATION_SED_URL:-https://sed-server/docker-config-endpoint}
+    gisogd-rf: ${CRG_OPTIONS_INTEGRATION_GISOGD_RF}
+    gisogd-rf-token: ${CRG_OPTIONS_INTEGRATION_GISOGD_RF_TOKEN}
+    gisogd-rf-client-id: ${CRG_OPTIONS_INTEGRATION_GISOGD_RF_CLIENT_ID}
+    gisogd-rf-client-secret: ${CRG_OPTIONS_INTEGRATION_GISOGD_RF_CLIENT_SECRET}
+    smev3:
+      enabled: true
+      mnemonic: ${CRG_OPTIONS_INTEGRATION_SMEV3_MNEMONIC}
+      transportMnemonic: ${CRG_OPTIONS_INTEGRATION_SMEV3_TRANSPORT_MNEMONIC}
+      targetDb: database_1
+      s3:
+        endpoint: http://smev-minio:9000
+        accesskey: ${CRG_OPTIONS_INTEGRATION_SMEV3_S3_ACCESS_KEY}
+        secretkey: ${CRG_OPTIONS_INTEGRATION_SMEV3_S3_SECRET_KEY}
+        bucketOutgoing: outgoing-attachments
+        bucketIncoming: incoming-attachments

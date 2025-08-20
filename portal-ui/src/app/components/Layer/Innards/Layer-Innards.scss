@@ -1,0 +1,11 @@
+.Layer-Innards {
+  display: flex;
+
+  min-height: 36px;
+
+  --LayerInnardsHovered: 0;
+
+  &:hover {
+    --LayerInnardsHovered: 1;
+  }
+}

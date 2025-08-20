@@ -1,0 +1,72 @@
+[
+  {
+    "id": 1,
+    "title": "НТО",
+    "description": "Описание специализации НТО",
+    "settings": {
+      "storageSize": 20,
+      "reestrs": false,
+      "sedDialog": false,
+      "downloadXml": true,
+      "taskManagement": true,
+      "createProject": true,
+      "downloadFiles": true,
+      "showPermissions": true,
+      "editProjectLayer": true,
+      "createLibraryItem": true,
+      "importShp": true,
+      "downloadGml": true,
+      "viewBugReport": true,
+      "viewDocumentLibrary": true,
+      "viewServicesCalculator": true,
+      "favoritesEpsg": [
+        "3857"
+      ],
+      "defaultEpsg": "WGS 84 / Pseudo-Mercator, EPSG:3857, метры",
+      "tags": [
+        "НТО",
+        "КПТ",
+        "Инвентаризация недвижимости"
+      ]
+    },
+    "projects": [
+      {
+        "title": "Проект 1",
+        "bbox": "[3733187.3, 5540706.2,  3745910.5, 5550374.5]",
+        "isDefault": true,
+        "description": "Проект по-молчанию, с проставленным bbox и одним слоем внутри.",
+        "layers": [
+          314
+        ]
+      },
+      {
+        "title": "Проект 2",
+        "isDefault": false
+      }
+    ],
+    "datasets": [
+      {
+        "title": "Набор данных по специализации 1",
+        "tables": [
+          {
+            "id": 314,
+            "content": [
+              "contentForTable314.sql"
+            ],
+            "body": {
+              "title": "Тестовое название первой таблицы",
+              "schemaId": "zu_pro",
+              "crs": "EPSG:7829",
+              "styleName": "zu_pro"
+            }
+          }
+        ]
+      }
+    ],
+    "documentLibraries": [
+      {
+        "schemaId": "dl_data_kpt"
+      }
+    ]
+  }
+]

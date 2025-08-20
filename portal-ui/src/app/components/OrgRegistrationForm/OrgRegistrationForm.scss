@@ -1,0 +1,25 @@
+.OrgRegistrationForm {
+  overflow: hidden auto;
+
+  max-height: calc(100% - 200px);
+
+  &-Registered {
+    display: flex;
+    align-items: center;
+
+    margin-left: 24px;
+  }
+
+  &-Title {
+    margin-top: 20px;
+    padding: 0 15px;
+
+    font-size: 20px;
+    font-weight: 400;
+  }
+
+  &-Wrapper {
+    height: 100%;
+    max-height: 100%;
+  }
+}

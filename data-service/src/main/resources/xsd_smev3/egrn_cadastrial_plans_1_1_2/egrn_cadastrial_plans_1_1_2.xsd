@@ -1,0 +1,348 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:das="http://rosreestr.ru/services/v0.26/commons/directories/regionrf/1.0.0" xmlns:req="urn://x-artefacts-rosreestr-gov-ru/virtual-services/egrn-statement/1.1.2" xmlns:dAcC="http://rosreestr.ru/services/v0.26/commons/directories/actionCode/1.0.0" targetNamespace="urn://x-artefacts-rosreestr-gov-ru/virtual-services/egrn-statement/1.1.2" elementFormDefault="qualified">
+	<xs:import namespace="http://rosreestr.ru/services/v0.26/commons/directories/regionrf/1.0.0" schemaLocation="Commons/DRegionsRF.xsd"/>
+	<xs:import namespace="http://rosreestr.ru/services/v0.26/commons/directories/actionCode/1.0.0" schemaLocation="Commons/DActionCode.xsd"/>
+	<!-- Схемы для валидации заявлений (во вложении) на уровне СМЭВ3-->
+	<!--<xs:import-->
+	<!--namespace="http://rosreestr.ru/services/v0.26/TStatement"-->
+	<!--schemaLocation="Statement_v026.xsd"/>-->
+	<!--<xs:import-->
+	<!--namespace="http://rosreestr.ru/services/v0.26/TStatementRequestEGRN"-->
+	<!--schemaLocation="RequestEGRN_v026.xsd"/>-->
+	<!--Схема для валидации описания пакета (во вложении) на уровне СМЭВ3-->
+	<!--<xs:import-->
+	<!--namespace="http://rosreestr.ru/services/v0.26/TRequest"-->
+	<!--schemaLocation="TRequest.xsd"/>-->
+	<!--Схемы для валидации выписок в ответных вложениях на уровне СМЭВ3-->
+	<!--<xs:import-->
+	<!--namespace="http://rosreestr.ru/services/egrn/1.0.1/extract/extract-cadastral-plan-territory"-->
+	<!--schemaLocation="extract_v01/extract_cadastral_plan_territory_v01.xsd"/>-->
+	<!--<xs:import-->
+	<!--namespace="http://rosreestr.ru/services/egrn/1.0.1/extract/extract-about-property-land"-->
+	<!--schemaLocation="extract_v01/extract_about_property_land_v01.xsd"/>-->
+	<!--<xs:import-->
+	<!--namespace="http://rosreestr.ru/services/egrn/1.0.1/extract/extract-about-property-build"-->
+	<!--schemaLocation="extract_v01/extract_about_property_build_v01.xsd"/>-->
+	<!--<xs:import-->
+	<!--namespace="http://rosreestr.ru/services/egrn/1.0.1/extract/extract-about-property-construction"-->
+	<!--schemaLocation="extract_v01/extract_about_property_construction_v01.xsd"/>-->
+	<!--<xs:import-->
+	<!--namespace="http://rosreestr.ru/services/egrn/1.0.1/extract/extract-about-property-under-construction"-->
+	<!--schemaLocation="extract_v01/extract_about_property_under_construction_v01.xsd"/>		-->
+	<!--<xs:import -->
+	<!--namespace="http://rosreestr.ru/services/egrn/1.0.1/extract/extract-about-property-room"-->
+	<!--schemaLocation="extract_v01/extract_about_property_room_v01.xsd"/>-->
+	<!--<xs:import-->
+	<!--namespace="http://rosreestr.ru/services/egrn/1.0.1/extract/extract-about-property-property-complex"-->
+	<!--schemaLocation="extract_v01/extract_about_property_property_complex_v01.xsd"/>-->
+	<!--<xs:import-->
+	<!--namespace="http://rosreestr.ru/services/egrn/1.0.1/extract/extract-about-property-unified-real-estate-complex"-->
+	<!--schemaLocation="extract_v01/extract_about_property_unified_real_estate_complex_v01.xsd"/>-->
+	<!--<xs:import-->
+	<!--namespace="http://rosreestr.ru/services/egrn/1.0.1/extract/extract-about-boundaries"-->
+	<!--schemaLocation="extract_v01/extract_about_boundaries_v01.xsd"/>-->
+	<!--<xs:import -->
+	<!--namespace="http://rosreestr.ru/services/egrn/1.0.1/extract/extract-about-zones"-->
+	<!--schemaLocation="extract_v01/extract_about_zones_v01.xsd"/>-->
+	<!--<xs:import -->
+	<!--namespace="http://rosreestr.ru/services/egrn/1.0.1/extract/extract-base-params-land"-->
+	<!--schemaLocation="extract_v01/extract_base_params_land_v01.xsd"/>-->
+	<!--<xs:import -->
+	<!--namespace="http://rosreestr.ru/services/egrn/1.0.1/extract/extract-base-params-build"-->
+	<!--schemaLocation="extract_v01/extract_base_params_build_v01.xsd"/>-->
+	<!--<xs:import -->
+	<!--namespace="http://rosreestr.ru/services/egrn/1.0.1/extract/extract-base-params-construction"-->
+	<!--schemaLocation="extract_v01/extract_base_params_construction_v01.xsd"/>-->
+	<!--<xs:import -->
+	<!--namespace="http://rosreestr.ru/services/egrn/1.0.1/extract/extract-base-params-under-construction"-->
+	<!--schemaLocation="extract_v01/extract_base_params_under_construction_v01.xsd"/>-->
+	<!--<xs:import -->
+	<!--namespace="http://rosreestr.ru/services/egrn/1.0.1/extract/extract-base-params-room"-->
+	<!--schemaLocation="extract_v01/extract_base_params_room_v01.xsd"/>-->
+	<!--<xs:import -->
+	<!--namespace="http://rosreestr.ru/services/egrn/1.0.1/extract/extract-base-params-property-complex"-->
+	<!--schemaLocation="extract_v01/extract_base_params_property_complex_v01.xsd"/>-->
+	<!--<xs:import -->
+	<!--namespace="http://rosreestr.ru/services/egrn/1.0.1/extract/extract-base-params-unified-real-estate-complex"-->
+	<!--schemaLocation="extract_v01/extract_base_params_unified_real_estate_complex_v01.xsd"/>-->
+	<!--<xs:import -->
+	<!--namespace="http://rosreestr.ru/services/egrn/1.0.1/extract/extract-recognition-right-holder-incapacitated"-->
+	<!--schemaLocation="extract_v01/extract_recognition_right_holder_incapacitated_v01.xsd"/>-->
+	<!--<xs:import -->
+	<!--namespace="http://rosreestr.ru/services/egrn/1.0.1/extract/extract-about-contents-documents-title"-->
+	<!--schemaLocation="extract_v01/extract_about_contents_documents_title_v01.xsd"/>-->
+	<!--<xs:import -->
+	<!--namespace="http://rosreestr.ru/services/egrn/1.0.1/extract/extract-cadastral-value-property"-->
+	<!--schemaLocation="extract_v01/extract_cadastral_value_property_v01.xsd"/>-->
+	<!--<xs:import -->
+	<!--namespace="http://rosreestr.ru/services/egrn/1.0.1/extract/extract-transfer-rights-property"-->
+	<!--schemaLocation="extract_v01/extract_transfer_rights_property_v01.xsd"/>-->
+	<!--<xs:import -->
+	<!--namespace="http://rosreestr.ru/services/egrn/1.0.1/extract/extract-rights-individ-available-real-estate-objects"-->
+	<!--schemaLocation="extract_v01/extract_rights_individ_available_real_estate_objects_v01.xsd"/>-->
+	<!--<xs:import -->
+	<!--namespace="http://rosreestr.ru/services/egrn/1.0.1/extract/extract-date-statement-docs"-->
+	<!--schemaLocation="extract_v01/extract_date_statement_docs_v01.xsd"/>-->
+	<!--<xs:import -->
+	<!--namespace="http://rosreestr.ru/services/egrn/1.0.1/extract/extract-info-persons-who-received-info-about-property"-->
+	<!--schemaLocation="extract_v01/extract_info_persons_who_received_info_about_property_v01.xsd"/>-->
+	<!--<xs:import -->
+	<!--namespace="http://rosreestr.ru/services/egrn/1.0.1/extract/extract-contract-participation-share-holdings"-->
+	<!--schemaLocation="extract_v01/extract_contract_participation_share_holdings_v01.xsd"/>-->
+	<!--<xs:import -->
+	<!--namespace="http://rosreestr.ru/services/egrn/1.0.1/extract/extract-about-property-car-parking-space"-->
+	<!--schemaLocation="extract_v01/extract_about_property_car_parking_space_v01.xsd"/>-->
+	<!--<xs:import -->
+	<!--namespace="http://rosreestr.ru/services/egrn/1.0.1/extract/extract-base-params-car-parking-space"-->
+	<!--schemaLocation="extract_v01/extract_base_params_car_parking_space_v01.xsd"/>-->
+	<!--&lt;!&ndash;Схемы для валидации уведомлений в ответных вложениях на уровне СМЭВ3-->
+	<!--<xs:import -->
+	<!--namespace="http://rosreestr.ru/services/egrn/1.0.1/extract/extract-decision-refuse-provide-info"-->
+	<!--schemaLocation="extract_v01/exract_decision_refuse_provide_info_v01.xsd"/>-->
+	<!--<xs:import -->
+	<!--namespace="http://rosreestr.ru/services/egrn/1.0.1/extract/exract-notice-absence-request-info11"-->
+	<!--schemaLocation="extract_v01/exract_notice_absence_request_info_11_v01.xsd"/>-->
+	<!--<xs:import -->
+	<!--namespace="http://rosreestr.ru/services/egrn/1.0.1/extract/exract-notice-absence-request-info12"-->
+	<!--schemaLocation="extract_v01/exract_notice_absence_request_info_12_v01.xsd"/>-->
+	<!--<xs:import -->
+	<!--namespace="http://rosreestr.ru/services/egrn/1.0.1/extract/exract-notice-absence-request-info13"-->
+	<!--schemaLocation="extract_v01/exract_notice_absence_request_info_13_v01.xsd"/>-->
+	<!--<xs:import -->
+	<!--namespace="http://rosreestr.ru/services/egrn/1.0.1/extract/exract-notice-lack-info-who-received-info-about-property"-->
+	<!--schemaLocation="extract_v01/extract_notice_lack_info_who_received_info_about_property_v01.xsd"/>-->
+	<!--Для валидации запроса/ответа на уровне СМЭВ3-->
+	<xs:element name="Request">
+		<xs:annotation>
+			<xs:documentation>Запрос на предоставление услуг Росреестра в электронном виде</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:annotation>
+				<xs:documentation>Тип запроса на предоставление услуг Росреестра в электронном виде</xs:documentation>
+			</xs:annotation>
+			<xs:sequence>
+				<xs:element name="region" type="das:dRegionsRF">
+					<xs:annotation>
+						<xs:documentation>
+							Код региона
+						</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="externalNumber" type="xs:string">
+					<xs:annotation>
+						<xs:documentation>
+							Номер обращения в информационной системе отправителя
+						</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="senderType" type="req:senderTypes">
+					<xs:annotation>
+						<xs:documentation>
+							Тип информационной системы Потребителя
+						</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="actionCode" type="dAcC:DActionCode" minOccurs="0">
+					<xs:annotation>
+						<xs:documentation>Код учетно-регистрационного действия (дополнительный, для тестирования в режиме эмуляции)</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="Attachment" type="req:AttachmentRequestType">
+					<xs:annotation>
+						<xs:documentation>Блок описания вложения</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Response" type="req:responseType">
+		<xs:annotation>
+			<xs:documentation>Ответ из Росреестра с номером заявки</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+
+	<xs:complexType name="responseType">
+		<xs:annotation>
+			<xs:documentation>Тип ответа на предоставление услуг Росреестра в электронном виде</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="requestNumber" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>Номер обращения во ФГИС ЕГРН</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="State">
+				<xs:annotation>
+					<xs:documentation>Статус</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="code" type="xs:string" minOccurs="1">
+							<xs:annotation>
+								<xs:documentation>Код статуса</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="name" type="xs:string" minOccurs="1">
+							<xs:annotation>
+								<xs:documentation>Наименование</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="StateDescription" type="xs:string" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Описание статуса (причина отказа, приостановки текстом при наличии)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="StateParameter" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Параметры статуса</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="Key" type="xs:string" minOccurs="1">
+							<xs:annotation>
+								<xs:documentation>Ключ</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="Value" type="xs:string" minOccurs="1">
+							<xs:annotation>
+								<xs:documentation>Значение параметра</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="Attachment" type="req:AttachmentResponseType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Блок описания вложения</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="senderTypes">
+		<xs:annotation>
+			<xs:documentation>Тип ИС отправителя</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="EPGU">
+				<xs:annotation>
+					<xs:documentation>ЕПГУ</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="MFC">
+				<xs:annotation>
+					<xs:documentation>МФЦ</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="BC">
+				<xs:annotation>
+					<xs:documentation>ИС Бизнес Сообществ</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="Vedomstvo">
+				<xs:annotation>
+					<xs:documentation>ИС ФОИВ, РОИВ, ОМСУ</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="Other">
+				<xs:annotation>
+					<xs:documentation>Другое</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="AttachmentRequestType">
+		<xs:sequence>
+			<!-- Указание способа передачи вложения: через ФХ или методом MTOM-передачи -->
+			<xs:choice>
+				<!-- Признак передачи вложения через ФХ-->
+				<xs:element name="AttachmentFSLink" type="xs:boolean"/>
+				<!-- Признак передачи вложения методом MTOM -->
+				<xs:element name="IsMTOMAttachmentContent" type="xs:boolean"/>
+			</xs:choice>
+			<!-- Состав вложения -->
+			<!-- Опись пакета и тип учетно-регистрационного действия -->
+			<xs:element name="RequestDescription" type="req:TValidatedStructuredAttachmentFormat"/>
+			<!-- Заявление или заявления -->
+			<xs:element name="Statement" type="req:TValidatedStructuredAttachmentFormat" maxOccurs="unbounded"/>
+			<!-- Дополнительные файлы (в т.ч. открепленная ЭЦП) -->
+			<xs:element name="File" type="req:TStructuredAttachmentFormat" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="AttachmentResponseType">
+		<xs:sequence>
+			<!-- Указание способа передачи вложения: через ФХ или методом MTOM-передачи -->
+			<xs:choice>
+				<!-- Признак передачи вложения через ФХ-->
+				<xs:element name="AttachmentFSLink" type="xs:boolean">
+					<xs:annotation>
+						<xs:documentation>Признак передачи вложения через ФХ СМЭВ</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<!-- Признак передачи вложения методом MTOM -->
+				<xs:element name="IsMTOMAttachmentContent" type="xs:boolean">
+					<xs:annotation>
+						<xs:documentation>Признак передачи вложения с запросом по протоколу MTOM</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+			</xs:choice>
+			<!-- Описание состава вложения -->
+			<xs:element name="ResultFile" type="req:TValidatedStructuredAttachmentFormat" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Описание файла результата</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="File" type="req:TStructuredAttachmentFormat" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Описание дополнительного вложения или файла ЭЦП</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="TValidatedStructuredAttachmentFormat">
+		<xs:annotation>
+			<xs:documentation>Тип файла заявления или результата (выписки)</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="IsUnstructuredFormat" type="xs:boolean" fixed="false">
+				<xs:annotation>
+					<xs:documentation>Структурированный элемент или нет: валидировать ли на уровне СМЭВ</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="IsZippedPacket" type="xs:boolean" fixed="true">
+				<xs:annotation>
+					<xs:documentation>Передается в составе zip-архива</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="fileName" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>Путь до файла относительно корня архива</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="TStructuredAttachmentFormat">
+		<xs:annotation>
+			<xs:documentation>Тип файла, приложенного к заявлению</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="IsUnstructuredFormat" type="xs:boolean" fixed="true">
+				<xs:annotation>
+					<xs:documentation>Структурированный элемент или нет: валидировать ли на уровне ЕСМЭВ</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="IsZippedPacket" type="xs:boolean" fixed="true">
+				<xs:annotation>
+					<xs:documentation>Передается в составе zip-архива</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="fileName" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>Путь до файла относительно корня архива</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

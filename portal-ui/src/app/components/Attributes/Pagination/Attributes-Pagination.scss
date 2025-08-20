@@ -1,0 +1,13 @@
+body .Attributes-Pagination {
+  .MuiPagination-ul {
+    flex-wrap: nowrap;
+  }
+
+  .MuiPaginationItem-root {
+    color: var(--white);
+
+    &.Mui-selected {
+      background-color: rgb(255 255 255 / 20%);
+    }
+  }
+}

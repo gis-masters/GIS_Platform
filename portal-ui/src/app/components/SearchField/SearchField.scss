@@ -1,0 +1,20 @@
+body .SearchField {
+  display: inline-flex;
+
+  &.Form {
+    width: auto;
+    padding: 0;
+  }
+
+  &-Input_whiteStyle .MuiInputBase-input,
+  &-Input_whiteStyle .MuiInputBase-root {
+    color: var(--white);
+
+    &:hover,
+    &::before,
+    &:hover::before {
+      color: var(--white);
+      border-color: var(--white);
+    }
+  }
+}

@@ -1,0 +1,134 @@
+@import url('./assets/fonts/Roboto/Roboto.css');
+
+@import url('./assets/fonts/MaterialIcons/MaterialIcons.css');
+
+@import url('bootstrap.css');
+
+*,
+::after,
+::before {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  overflow: hidden;
+
+  margin: 0;
+
+  font-family: Roboto, 'Helvetica Neue', sans-serif;
+}
+
+.mat-button:focus {
+  outline: none;
+}
+
+.mat-menu-item:focus {
+  outline: none;
+}
+
+body .mdc-tab__text-label {
+  letter-spacing: 0;
+
+  --mat-tab-header-label-text-tracking: 0;
+}
+
+.scroll::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+.scroll::-webkit-scrollbar-thumb {
+  border-radius: 2px;
+  background: var(--gray);
+}
+
+.cut-text {
+  overflow: hidden;
+
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.fiz-toolbar {
+  position: relative;
+  top: 12px;
+}
+
+.cur-p {
+  cursor: pointer;
+}
+
+.fiz-border {
+  border: outset;
+  border-width: thin;
+  border-radius: 5px;
+}
+
+.mat-icon-button:focus {
+  outline: none;
+}
+
+.page-container {
+  display: flex;
+  overflow: hidden;
+  flex-direction: column;
+
+  height: 100%;
+}
+
+.page {
+  overflow: auto;
+}
+
+button:focus {
+  outline: none;
+}
+
+body.global-crosshair-cursor * {
+  cursor: crosshair;
+}
+
+.MuiSvgIcon-root {
+  vertical-align: middle;
+}
+
+.MuiButtonBase-root {
+  font-family: inherit;
+  font-size: inherit;
+}
+
+.remove-vertices-hint {
+  padding: 2px 4px;
+
+  border: 1px solid rgb(0 0 0 / 10%);
+  border-radius: 4px;
+  background: #fff;
+  box-shadow: rgb(0 0 0 / 10%) 0 1px 3px 0;
+
+  font-family: ui-monospace;
+}
+
+html {
+  --mdc-outlined-button-label-text-tracking: 0;
+  --mdc-protected-button-label-text-tracking: 0;
+}
+
+:root {
+  --white: #fff;
+  --blue: rgb(25 118 210);
+  --blue-light: rgb(25 118 210 / 8%);
+  --gray: #6c757d;
+  --gray-dark: #343a40;
+  --gray-light: rgb(0 0 0 / 4%);
+  --primary: var(--blue);
+  --error: #f44336;
+  --disabled: rgb(0 0 0 / 26%);
+  --deleted: #aaa;
+  --light: #f8f9fa;
+  --yellow: rgb(255 255 0 / 60%);
+}

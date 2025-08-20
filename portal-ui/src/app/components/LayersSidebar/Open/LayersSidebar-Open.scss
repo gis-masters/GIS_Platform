@@ -1,0 +1,62 @@
+.LayersSidebar-Open {
+  position: absolute;
+  z-index: -1;
+  top: calc(50% - 21px);
+  right: -29px;
+
+  width: 32px;
+  height: 42px;
+
+  cursor: pointer;
+  text-align: center;
+
+  color: var(--primary);
+  border: none;
+  border-radius: 3px;
+  background: white;
+  box-shadow: 0 8px 16px 0 rgb(0 0 0 / 16%);
+
+  font-family: 'Material Icons';
+  font-size: 24px;
+  line-height: 42px;
+
+  appearance: none;
+
+  &::before,
+  &::after {
+    position: absolute;
+    inset: 0;
+
+    text-align: center;
+
+    opacity: 0;
+  }
+
+  &::before {
+    content: 'chevron_left';
+  }
+
+  &::after {
+    content: 'layers';
+
+    opacity: 1;
+  }
+
+  &_open {
+    top: calc(50% - 18px);
+    right: -20px;
+
+    width: 23px;
+    height: 36px;
+
+    line-height: 36px;
+
+    &::before {
+      opacity: 1;
+    }
+
+    &::after {
+      opacity: 0;
+    }
+  }
+}

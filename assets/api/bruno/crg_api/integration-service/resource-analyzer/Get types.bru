@@ -1,0 +1,15 @@
+meta {
+  name: Get types
+  type: http
+  seq: 1
+}
+
+get {
+  url: http://localhost:8100/resource-analyzers
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyLCJ1c2VyX25hbWUiOiJmaXpAZml6Iiwic2NvcGUiOlsiY3JnIl0sIm9yZ2FuaXphdGlvbnMiOlt7ImlkIjoxLCJuYW1lIjoiZml6IENvbXBhbnkifV0sImdyb3VwcyI6W10sImV4cCI6MTYyMTQxNzA2NSwiYXV0aG9yaXRpZXMiOlsiT1JHX0FETUlOIl0sImp0aSI6IjM5NGY2ZjI1LTZkMmUtNDMyZC1iMGE3LTkyZWY4NjM0MjQyYSIsImNsaWVudF9pZCI6ImFkbWluIn0.o9NJ7UFYa9C544iNb7hMBAcRx7O1KIoTzZgw4kua2eo
+}

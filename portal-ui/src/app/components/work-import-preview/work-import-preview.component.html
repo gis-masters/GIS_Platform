@@ -1,0 +1,14 @@
+<div class="work-import-preview" *ngIf="importData && metrics">
+  <span
+    class="badge work-import-preview__badge"
+    [matTooltipClass]="'work-import-preview__tooltip'"
+    matTooltip="&#9658; Всего слоев: {{ metrics.all }}
+                    &#9658; Сопоставлено: {{ metrics.mapped }}
+                    &#9658; Не сопоставлено: {{ metrics.notMapped }}
+                    &#9658; Не будет импортировано: {{ metrics.disabled }}"
+  >
+    <span class="work-import-preview__badge work-import-preview__badge_mapped">{{ metrics.mapped }}</span> /
+    <span class="work-import-preview__badge work-import-preview__badge_not-mapped">{{ metrics.notMapped }}</span> /
+    <span class="work-import-preview__badge work-import-preview__badge_disabled">{{ metrics.disabled }}</span>
+  </span>
+</div>

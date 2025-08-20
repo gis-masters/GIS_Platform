@@ -1,0 +1,9 @@
+body .MenuButton {
+  position: relative;
+
+  &-Anchor {
+    position: absolute;
+    z-index: -1;
+    inset: 0;
+  }
+}

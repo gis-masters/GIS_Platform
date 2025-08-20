@@ -1,0 +1,32 @@
+.Attributes-Resize {
+  position: absolute;
+  z-index: 2;
+  top: 0;
+  left: calc(50% - 60px);
+
+  width: 120px;
+  max-width: calc(100% - 600px);
+  height: 9px;
+
+  cursor: row-resize;
+  transition: opacity 0.3s;
+
+  opacity: calc(var(--AttributesBarHeadHovered) * 0.5);
+
+  &:hover {
+    opacity: 1;
+  }
+
+  &::before {
+    position: absolute;
+    top: 3px;
+    left: 0;
+
+    width: 100px;
+    height: 3px;
+
+    content: '';
+
+    background-color: var(--gray);
+  }
+}

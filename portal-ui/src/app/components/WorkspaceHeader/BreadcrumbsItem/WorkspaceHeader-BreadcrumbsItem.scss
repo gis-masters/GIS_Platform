@@ -1,0 +1,29 @@
+body .WorkspaceHeader-BreadcrumbsItem {
+  text-decoration: none;
+
+  color: rgb(255 255 255 / 80%);
+
+  &:hover {
+    color: rgb(255 255 255 / 80%);
+  }
+
+  &::after {
+    display: inline-block;
+
+    padding: 0 5px;
+
+    content: '>';
+  }
+
+  &:last-child {
+    color: white;
+
+    &:hover {
+      color: white;
+    }
+
+    &::after {
+      display: none;
+    }
+  }
+}

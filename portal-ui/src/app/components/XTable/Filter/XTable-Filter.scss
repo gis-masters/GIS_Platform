@@ -1,0 +1,16 @@
+body .XTable-Filter {
+  position: absolute;
+  right: 6px;
+  bottom: 0;
+  left: 2px;
+
+  .MuiInputBase-input {
+    font-size: 14px;
+  }
+
+  &_type_string {
+    .MuiInputBase-input {
+      padding-top: 6px;
+    }
+  }
+}

@@ -1,0 +1,9 @@
+body .SearchInProject-Toggler {
+  @container (min-width: 200px) {
+    display: none;
+  }
+
+  &_expanded {
+    display: none;
+  }
+}

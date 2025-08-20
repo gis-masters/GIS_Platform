@@ -1,0 +1,10 @@
+body .XTable-FilterStrictness {
+  width: 28px;
+  height: 28px;
+
+  font-size: 1.3em;
+
+  &_filtered {
+    background: var(--yellow);
+  }
+}

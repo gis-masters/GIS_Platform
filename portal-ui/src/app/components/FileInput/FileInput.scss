@@ -1,0 +1,49 @@
+body .FileInput {
+  position: relative;
+
+  display: inline-flex;
+  overflow: hidden;
+  align-items: center;
+
+  max-width: 100%;
+
+  &_fullWidth {
+    width: 100%;
+  }
+
+  &-Filename {
+    overflow: hidden;
+    flex-grow: 1;
+    flex-shrink: 1;
+
+    white-space: nowrap;
+    text-overflow: ellipsis;
+
+    color: #666;
+  }
+
+  &_empty.FileInput_btnMode_button {
+    .FileInput-Filename {
+      margin-right: 15px;
+    }
+  }
+
+  &-Clear {
+    position: relative;
+
+    margin: 0 5px;
+  }
+
+  &-Browse {
+    position: relative;
+
+    flex-shrink: 0;
+  }
+
+  &-Input {
+    position: absolute;
+    inset: 0;
+
+    opacity: 0;
+  }
+}

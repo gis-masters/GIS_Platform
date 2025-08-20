@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "experimentalDecorators": true,
+    "strict": true,
+    "types": [
+      "node",
+      "expect-webdriverio",
+      "@wdio/globals/types",
+      "@wdio/cucumber-framework",
+      "wdio-image-comparison-service"
+    ],
+    "allowSyntheticDefaultImports": true,
+    "moduleResolution": "node",
+    "target": "es2022",
+    "esModuleInterop": true,
+    "module": "commonjs",
+    "skipLibCheck": true,
+    "lib": ["es2022", "esnext.array", "dom"],
+    "jsx": "react"
+  }
+}

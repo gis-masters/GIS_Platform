@@ -1,0 +1,140 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>ru.mycrg</groupId>
+    <artifactId>gis-portal</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+    <name>gis-portal</name>
+
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <!--Апнуть нужно вместе с spring-cloud.version и нужно будет повозится с oauth и -->
+        <version>2.0.6.RELEASE</version>
+        <relativePath/>
+    </parent>
+
+    <properties>
+        <java.version>11</java.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <spring-cloud.version>Finchley.RELEASE</spring-cloud.version>
+
+        <surefire.version>3.3.1</surefire.version>
+        <pmd.version>6.55.0</pmd.version>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring-cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <distributionManagement>
+        <repository>
+            <id>GisPlatformFeed</id>
+            <name>Gis portal azure repository</name>
+            <url>
+                https://azure2022eng.geoplan.local/DefaultCollection/GIS_Platform/_packaging/GisPlatformFeed/maven/v1
+            </url>
+        </repository>
+    </distributionManagement>
+    <repositories>
+        <repository>
+            <id>GisPlatformFeed</id>
+            <url>
+                https://azure2022eng.geoplan.local/DefaultCollection/GIS_Platform/_packaging/GisPlatformFeed/maven/v1
+            </url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+
+    <modules>
+        <module>gateway</module>
+        <module>auth-service</module>
+        <module>gis-service</module>
+        <module>data-service</module>
+        <module>integration-service</module>
+        <module>audit-service</module>
+
+        <module>geo-wrapper</module>
+
+        <module>_libs/mediator</module>
+        <module>_libs/geo-json</module>
+        <module>_libs/common-utils</module>
+        <module>_libs/auth-facade</module>
+
+        <module>clients/http-client</module>
+        <module>clients/oauth-client</module>
+        <module>clients/geoserver-client</module>
+
+        <module>contracts/common-contracts</module>
+        <module>contracts/messagebus-contract</module>
+        <module>contracts/auth-service-contract</module>
+        <module>contracts/data-service-contract</module>
+        <module>contracts/audit-service-contract</module>
+        <module>contracts/resource-analyzer-contract</module>
+
+        <module>contracts/messagebus-starter</module>
+        <module>contracts/validator</module>
+        <module>contracts/schemas</module>
+
+        <module>tests/acceptance-tests</module>
+    </modules>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-pmd-plugin</artifactId>
+                <version>3.21.0</version>
+                <configuration>
+                    <targetJdk>${java.version}</targetJdk>
+                    <rulesets>
+                        <ruleset>pmd-ruleset.xml</ruleset>
+                    </rulesets>
+                    <failOnViolation>true</failOnViolation>
+                    <printFailingErrors>true</printFailingErrors>
+                    <includeTests>true</includeTests>
+                    <verbose>true</verbose>
+                    <excludeRoots>
+                        <excludeRoot>target/generated-sources</excludeRoot>
+                    </excludeRoots>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>pmd-check</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>net.sourceforge.pmd</groupId>
+                        <artifactId>pmd-core</artifactId>
+                        <version>${pmd.version}</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>net.sourceforge.pmd</groupId>
+                        <artifactId>pmd-java</artifactId>
+                        <version>${pmd.version}</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+        </plugins>
+    </build>
+</project>

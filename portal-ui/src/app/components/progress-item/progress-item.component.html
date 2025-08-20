@@ -1,0 +1,21 @@
+<div class="progress-item">
+  <div class="progress-icon">
+    <mat-spinner class="crg-spinner crg-center" *ngIf="inProgress()"></mat-spinner>
+    <mat-icon class="crg-progress-done success" *ngIf="event?.payload.payload.status === 'DONE'">done_all</mat-icon>
+    <mat-icon class="crg-progress-done error" *ngIf="event?.payload.payload.status === 'ERROR'">error_outline</mat-icon>
+  </div>
+
+  <div class="progress-content">
+    <div class="cut-text content-description">{{ getDescription() }}</div>
+    <div class="content-action" *ngIf="isShowActionBlock()">
+      <div *ngIf="isShowDownloadLink()" (click)="download()">
+        <mat-icon class="content-link-icon info">archive</mat-icon>
+        <span class="content-link-text">Скачать</span>
+      </div>
+
+      <crg-import-gml-results-button [event]="event.payload"></crg-import-gml-results-button>
+
+      <mat-icon class="info-close-icon" (click)="closeNotice()">delete</mat-icon>
+    </div>
+  </div>
+</div>

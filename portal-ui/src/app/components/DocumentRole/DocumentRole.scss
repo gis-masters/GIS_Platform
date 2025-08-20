@@ -1,0 +1,24 @@
+body .DocumentRole {
+  width: 95px;
+  height: 35px;
+  padding: 5px;
+
+  border: 2px solid var(--gray);
+  border-radius: 10px;
+
+  &-Description {
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    column-gap: 5px;
+
+    color: var(--gray);
+  }
+
+  &-Row {
+    display: flex;
+    column-gap: 10px;
+
+    color: var(--gray);
+  }
+}

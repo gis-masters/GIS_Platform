@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL"
+                  xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+                  xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn"
+                  xmlns:di="http://www.omg.org/spec/DD/20100524/DI"
+                  xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_0et98s7"
+                  targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.11.1"
+                  modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.15.0">
+    <bpmn:process id="integration_layerDeleteProcess" name="Layer delete process" isExecutable="true">
+        <bpmn:startEvent id="StartEvent_1" name="Start layer delete process">
+            <bpmn:outgoing>Flow_09sp40u</bpmn:outgoing>
+        </bpmn:startEvent>
+        <bpmn:endEvent id="Event_1380nxm" name="Successful end layer delete process">
+            <bpmn:incoming>Flow_1kqu48a</bpmn:incoming>
+        </bpmn:endEvent>
+        <bpmn:sequenceFlow id="Flow_09sp40u" sourceRef="StartEvent_1" targetRef="Activity_0b7ix84"/>
+        <bpmn:sequenceFlow id="Flow_0lcshdg" sourceRef="Activity_0b7ix84" targetRef="Activity_0ktqza7"/>
+        <bpmn:sequenceFlow id="Flow_1kqu48a" sourceRef="Activity_0ktqza7" targetRef="Event_1380nxm"/>
+        <bpmn:serviceTask id="Activity_0b7ix84" name="delete layers on gis service" camunda:asyncBefore="true"
+                          camunda:delegateExpression="${gisServiceLayerDeleteDelegate}">
+            <bpmn:incoming>Flow_09sp40u</bpmn:incoming>
+            <bpmn:outgoing>Flow_0lcshdg</bpmn:outgoing>
+        </bpmn:serviceTask>
+        <bpmn:serviceTask id="Activity_0ktqza7" name="delete layers on geoserver" camunda:asyncBefore="true"
+                          camunda:delegateExpression="${geoserverLayerDeleteDelegate}">
+            <bpmn:incoming>Flow_0lcshdg</bpmn:incoming>
+            <bpmn:outgoing>Flow_1kqu48a</bpmn:outgoing>
+        </bpmn:serviceTask>
+    </bpmn:process>
+    <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+        <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="integration_layerDeleteProcess">
+            <bpmndi:BPMNEdge id="Flow_1kqu48a_di" bpmnElement="Flow_1kqu48a">
+                <di:waypoint x="570" y="117"/>
+                <di:waypoint x="642" y="117"/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge id="Flow_0lcshdg_di" bpmnElement="Flow_0lcshdg">
+                <di:waypoint x="390" y="117"/>
+                <di:waypoint x="470" y="117"/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge id="Flow_09sp40u_di" bpmnElement="Flow_09sp40u">
+                <di:waypoint x="215" y="117"/>
+                <di:waypoint x="290" y="117"/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+                <dc:Bounds x="179" y="99" width="36" height="36"/>
+                <bpmndi:BPMNLabel>
+                    <dc:Bounds x="156" y="142" width="84" height="27"/>
+                </bpmndi:BPMNLabel>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape id="Event_1380nxm_di" bpmnElement="Event_1380nxm">
+                <dc:Bounds x="642" y="99" width="36" height="36"/>
+                <bpmndi:BPMNLabel>
+                    <dc:Bounds x="624" y="142" width="75" height="40"/>
+                </bpmndi:BPMNLabel>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape id="Activity_0r4dkf0_di" bpmnElement="Activity_0b7ix84">
+                <dc:Bounds x="290" y="77" width="100" height="80"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape id="Activity_149ur79_di" bpmnElement="Activity_0ktqza7">
+                <dc:Bounds x="470" y="77" width="100" height="80"/>
+            </bpmndi:BPMNShape>
+        </bpmndi:BPMNPlane>
+    </bpmndi:BPMNDiagram>
+</bpmn:definitions>

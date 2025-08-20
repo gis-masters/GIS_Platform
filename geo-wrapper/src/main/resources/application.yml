@@ -1,0 +1,30 @@
+spring:
+  profiles:
+    active: fiz-dev
+
+---
+
+spring:
+  profiles: fiz-dev
+  datasource:
+    platform: postgres
+    url: jdbc:postgresql://127.0.0.1:5434/postgres
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+    hikari:
+      maximum-pool-size: 1
+  rabbitmq:
+    host: ${SPRING_RABBITMQ_HOST}
+    port: ${SPRING_RABBITMQ_PORT}
+    username: ${SPRING_RABBITMQ_USERNAME}
+    password: ${SPRING_RABBITMQ_PASSWORD}
+
+crg-options:
+  gis_service_url: http://127.0.0.1:8082
+  data_service_url: http://127.0.0.1:8084
+  geoserver-host: 127.0.0.1:8080
+  userServiceName: postgres_db_user_service
+
+  exportStoragePath: /opt/crg/export/
+server:
+  port: 8354

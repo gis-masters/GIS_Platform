@@ -1,0 +1,11 @@
+body .Breadcrumbs-ShowMoreMenu .LibraryRegistry-BreadcrumbsIcon {
+  margin: -3px 6px 0 0;
+
+  vertical-align: middle;
+
+  font-size: calc(1.2rem * var(--BreadcrumbsSize));
+}
+
+body .LibraryRegistry-BreadcrumbsIcon:not(.Breadcrumbs-ShowMoreMenu .LibraryRegistry-BreadcrumbsIcon) {
+  display: none;
+}

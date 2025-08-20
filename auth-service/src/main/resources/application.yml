@@ -1,0 +1,78 @@
+spring:
+  profiles:
+    active: fiz-dev
+logging:
+  file: /opt/crg/logs/auth-service.log
+  level:
+    ru.mycrg: DEBUG
+
+---
+spring:
+  profiles: fiz-dev
+  datasource:
+    platform: postgres
+    url: jdbc:postgresql://127.0.0.1:5434/crg_auth_service
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+    hikari:
+      minimum-pool-size: ${SPRING_DATASOURCE_HIKARI_MINIMUM_POOL_SIZE:10}
+      maximum-pool-size: ${SPRING_DATASOURCE_HIKARI_MAXIMUM_POOL_SIZE:20}
+  jpa:
+    show-sql: false
+    properties:
+      hibernate.format_sql: true
+      hibernate.temp.use_jdbc_metadata_defaults: false
+  flyway:
+    enabled: true
+    url: jdbc:postgresql://127.0.0.1:5434/crg_auth_service
+    user: ${SPRING_FLYWAY_USER}
+    password: ${SPRING_FLYWAY_PASSWORD}
+    placeholders:
+      db_owner: ${SPRING_FLYWAY_PLACEHOLDERS_DB_OWNER}
+      admin_username: ${SPRING_FLYWAY_PLACEHOLDERS_ADMIN_USERNAME}
+      admin_password: ${SPRING_FLYWAY_PLACEHOLDERS_ADMIN_PASSWORD}
+  rabbitmq:
+    host: ${SPRING_RABBITMQ_HOST}
+    port: ${SPRING_RABBITMQ_PORT}
+    username: ${SPRING_RABBITMQ_USERNAME}
+    password: ${SPRING_RABBITMQ_PASSWORD}
+  mail:
+    host: ${SPRING_MAIL_HOST}
+    port: ${SPRING_MAIL_PORT}
+    username: ${SPRING_MAIL_USERNAME}
+    password: ${SPRING_MAIL_PASSWORD}
+    properties:
+      mail.smtp.auth: true
+      mail.smtp.ssl.enable: true
+      mail.smtp.quitwait: false
+
+security:
+  jwt:
+    secret: ${SECURITY_JWT_SECRET}
+    client_id: ${SECURITY_JWT_CLIENT_ID}
+    client_secret: ${SECURITY_JWT_CLIENT_SECRET}
+    access_token_validity_seconds: 86400
+    refresh_token_validity_seconds: 1209600
+
+crg-options:
+  system-admin-login: ${CRG_OPTIONS_SYSTEM_ADMIN_LOGIN}
+  system-admin-password: ${CRG_OPTIONS_SYSTEM_ADMIN_PASSWORD}
+  reset-password-expiration-time: 60 # In minutes
+  reset-password-request-rate: 10 #In seconds
+
+
+esia:
+  url: ${ESIA_URL} #https://esia-portal1.test.gosuslugi.ru
+  client_id: ${ESIA_CLIENT_ID}
+  client_certificate_hash: ${ESIA_CLIENT_CERTIFICATE_HASH}
+  org_id: ${ESIA_ORG_ID}
+  group_id: ${ESIA_GROUP_ID}
+  key-store:
+    path: /opt/crg/key_storage/esia_store.pfx
+    pass: ${ESIA_KEY_STORE_PASS}
+    key_pass: ${ESIA_KEY_STORE_KEY_PASS}
+    alias: ${ESIA_KEY_STORE_ALIAS}
+    sign_alg: ${ESIA_KEY_STORE_SIGN_ALG}
+
+server:
+  port: 9000

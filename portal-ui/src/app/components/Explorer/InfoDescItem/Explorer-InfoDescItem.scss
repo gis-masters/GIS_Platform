@@ -1,0 +1,10 @@
+.Explorer-InfoDescItem {
+  &_multiline {
+    display: flex;
+    overflow: hidden;
+    flex-direction: column;
+    flex-shrink: 1;
+
+    min-height: 25px;
+  }
+}

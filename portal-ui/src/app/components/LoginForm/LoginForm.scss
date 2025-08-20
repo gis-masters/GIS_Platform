@@ -1,0 +1,11 @@
+body .LoginForm {
+  position: relative;
+
+  min-height: 214px;
+
+  &_inDialog {
+    position: static;
+
+    box-shadow: none;
+  }
+}

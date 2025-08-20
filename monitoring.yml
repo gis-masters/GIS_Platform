@@ -1,0 +1,39 @@
+version: '3.7'
+
+services:
+  metricbeat_gis_portal:
+    container_name: metricbeat_gis_portal
+    image: elastic/metricbeat:${ELK_IMAGE_TAG}
+    restart: always
+    user: root
+    environment:
+      system.hostfs: "/hostfs"
+      ELASTICSEARCH_PASSWORD: ${ELASTICSEARCH_PASSWORD}
+      ELASTICSEARCH_USERNAME: ${ELASTICSEARCH_USERNAME}
+    volumes:
+      - ./metricbeat/metricbeat.yml:/usr/share/metricbeat/metricbeat.yml
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /sys/fs/cgroup:/hostfs/sys/fs/cgroup:ro
+      - /proc:/hostfs/proc:ro
+      - /:/hostfs:ro
+    network_mode: host
+    extra_hosts:
+      - "elasticsearch:${ELASTICSEARCH_HOST}"
+      - "kibana:${KIBANA_HOST}"
+    command:  metricbeat -e -strict.perms=false
+
+  pghero:
+    image: 10.10.10.165:5000/pghero_crg:3.7
+    container_name: pghero
+    restart: always
+    ports:
+      - "5435:8080"
+    environment:
+      PGHOST: postgis
+      PGPORT: 5432
+      PGUSER: ${CRG_USER}
+      PGPASSWORD: ${DB_PASS}
+      PGHERO_DB_LIST: ${PG_HERO_DATABASES_CONNECTION}
+      PGHERO_USERNAME: ${PG_HERO_UI}
+      PGHERO_PASSWORD: ${PG_HERO_UI}
+    mem_limit: 500m

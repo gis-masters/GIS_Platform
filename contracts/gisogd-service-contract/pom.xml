@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>ru.mycrg</groupId>
+    <artifactId>gisogd-service-contract</artifactId>
+    <version>1.3-SNAPSHOT</version>
+
+    <name>gisogd-service-contract</name>
+    <description>Contract of gisogd-service</description>
+
+    <properties>
+        <java.version>11</java.version>
+        <maven.compiler.source>${java.version}</maven.compiler.source>
+        <maven.compiler.target>${java.version}</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>ru.mycrg</groupId>
+            <artifactId>messagebus-contract</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
+
+    <distributionManagement>
+        <repository>
+            <id>GisPlatformFeed</id>
+            <name>Gis portal azure repository</name>
+            <url>
+                https://azure2022eng.geoplan.local/DefaultCollection/GIS_Platform/_packaging/GisPlatformFeed/maven/v1
+            </url>
+        </repository>
+    </distributionManagement>
+    <repositories>
+        <repository>
+            <id>GisPlatformFeed</id>
+            <url>
+                https://azure2022eng.geoplan.local/DefaultCollection/GIS_Platform/_packaging/GisPlatformFeed/maven/v1
+            </url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+</project>

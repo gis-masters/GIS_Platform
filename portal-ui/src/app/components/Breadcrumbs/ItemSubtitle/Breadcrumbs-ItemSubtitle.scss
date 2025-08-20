@@ -1,0 +1,14 @@
+.Breadcrumbs-ItemSubtitle {
+  overflow: hidden;
+
+  max-width: 100%;
+  padding-top: calc(1px * var(--BreadcrumbsSize));
+
+  white-space: nowrap;
+  text-overflow: ellipsis;
+
+  color: var(--gray);
+
+  font-size: calc(12px * var(--BreadcrumbsSize));
+  line-height: 1;
+}

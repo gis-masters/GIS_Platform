@@ -1,0 +1,55 @@
+# Вариант 1
+# folder_1 -> folder_1_1 -> folder_1_1_1 -> folder_1_1_1_1
+#                                        -> folder_1_1_1_2
+#                                        -> folder_1_1_1_3
+#                                        -> file_1_1_1_1
+#                                        -> file_1_1_1_2
+#                        -> folder_1_1_2
+#                        -> file_1_1_1
+#          -> folder_1_2
+#          -> file_1_1
+#          -> file_1_2
+#          -> file_1_3
+
+# Вариант 2
+# Текущий пользователь имеет права CONTRIBUTOR на библиотеку
+#                                                                       | Выданные разрешения | Expected role | ID |
+# file_1                                                                | OWNER               | OWNER         | 1  |
+# file_2                                                                | -                   | NOT ALLOWED   | 2  |
+# folder_1                                                              | -                   | NOT ALLOWED   | 3  |
+# folder_2                                                              | -                   | VIEWER        | 4  |
+#          -> folder_7                                                  | -                   | NOT ALLOWED   | 9  |
+#          -> folder_8                                                  | VIEWER              | VIEWER        | 10 |
+#                      -> folder_9                                      | -                   | VIEWER        | 11 |
+#                                  -> folder_10                         | OWNER               | OWNER         | 13 |
+#                                               -> folder_11            | -                   | OWNER         | 14 |
+#                                                            -> file_5  | -                   | OWNER         | 16 |
+#                                               -> file_4               | -                   | OWNER         | 15 |
+#                      -> file_3                                        | -                   | VIEWER        | 12 |
+# folder_3                                                              | VIEWER              | VIEWER        | 5  |
+#          -> folder_4                                                  | -                   | VIEWER        | 6  |
+#                      -> folder_5                                      | -                   | VIEWER        | 7  |
+#                                  -> folder_6                          | -                   | VIEWER        | 8  |
+# folder_12                                                             | OWNER               | OWNER         | 17 |
+
+# Вариант 3
+#                           | ID |
+# folder_1                  | 1  |
+#           -> folder_1_1   | 2  |
+#           -> folder_1_2   | 3  |
+#           -> folder_1_3   | 4  |
+#           -> folder_1_4   | 5  |
+#           -> folder_1_5   | 6  |
+#           -> folder_1_6   | 7  |
+#           -> folder_1_7   | 8  |
+#           -> folder_1_8   | 9  |
+#           -> folder_1_9   | 10 |
+# folder_2                  | 11 |
+#           -> file_2_1     | 12 |
+
+# Вариант 4
+# Работа с библиотекой, с правами на чтение
+# Текущий пользователь имеет права VIEWER на библиотеку
+#           | Выданные разрешения | Expected role | ID |
+# Folder 1  | CONTRIBUTOR         | CONTRIBUTOR   | 1  |
+# Folder 2  | CONTRIBUTOR         | CONTRIBUTOR   | 2  |

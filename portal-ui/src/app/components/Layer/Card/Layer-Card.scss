@@ -1,0 +1,20 @@
+.Layer-Card {
+  position: relative;
+
+  display: flex;
+  overflow: hidden;
+  align-items: center;
+
+  min-height: 40px;
+  padding: 5px 10px 5px calc(15px + calc(18px * var(--LayerEditMode)));
+
+  cursor: default;
+  transition:
+    background-color 0.3s linear,
+    padding 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+
+  &:hover,
+  &_highlighted {
+    background-color: var(--LayerCardBackground);
+  }
+}

@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ClientMessage xmlns="urn://x-artefacts-smev-gov-ru/services/service-adapter/types">
+    <itSystem>U629301</itSystem>
+    <RequestMessage>
+        <RequestMetadata>
+            <clientId>55e79a58-927a-11ee-b9d1-0242ac120002</clientId>
+        </RequestMetadata>
+        <RequestContent>
+            <content>
+                <MessagePrimaryContent>
+                    <tns:Request xmlns:tns="urn://x-artefacts-uishc.domrf.ru/register-rns/1.0.10"
+                                 xmlns:com="urn://x-artefacts-uishc.domrf.ru/register-rns/commons/1.0.10"
+                                 xmlns:smev="urn://x-artefacts-smev-gov-ru/supplementary/commons/1.3.0">
+                        <tns:RegisterNewConstruction>
+                            <tns:RecipientInfo>
+                                <com:OrganizationInfo>
+                                    <com:OGRN>1187746953976</com:OGRN>
+                                    <com:INN>7704466023</com:INN>
+                                </com:OrganizationInfo>
+                                <com:MailingAddress>
+                                    <com:FIAS>ef8f9fe1-bc9f-48ca-8219-92a87f8af4c7</com:FIAS>
+                                    <com:Region>91</com:Region>
+                                    <com:Locality Name="Симферополь" Type="г"/>
+                                    <com:Street Name="Хромченко" Type="ул"/>
+                                    <com:HouseNumber>23</com:HouseNumber>
+                                    <com:BuildingNumber>соор 1</com:BuildingNumber>
+                                    <com:Note>295014 Симферополь, ул. Хромченко д 23, соор 1</com:Note>
+                                </com:MailingAddress>
+                            </tns:RecipientInfo>
+                            <tns:ConstPermitNumber>91-RU93311000-3235-2023</tns:ConstPermitNumber>
+                            <tns:ConstGovernmentOrderId>3</tns:ConstGovernmentOrderId>
+                            <tns:ConstPermitDate>2022-10-07</tns:ConstPermitDate>
+                            <tns:ExpireDate>2024-10-07</tns:ExpireDate>
+                            <tns:IssueOrgan>
+                                <com:OGRN>1185053037476</com:OGRN>
+                                <com:INN>5024190060</com:INN>
+                            </tns:IssueOrgan>
+                            <tns:IssuePersonPosition>Сотрудник</tns:IssuePersonPosition>
+                            <tns:IssuePerson>
+                                <com:Surname>Степанов</com:Surname>
+                                <com:Name>Иван</com:Name>
+                                <com:MiddleName>Петрович</com:MiddleName>
+                            </tns:IssuePerson>
+                            <tns:ConstructionKind>
+                                <com:Code>1</com:Code>
+                                <com:Name>строительство объекта капитального строительства</com:Name>
+                            </tns:ConstructionKind>
+                            <tns:ConstPermissionType>
+                                <com:Code>1</com:Code>
+                                <com:Name>Разрешение на выполнение всех строительных работ</com:Name>
+                            </tns:ConstPermissionType>
+                            <tns:ObjectNameProjectDoc>12-ти этажный жилой дом со встроенными помещениями
+                            </tns:ObjectNameProjectDoc>
+                            <tns:NumberObjects>1</tns:NumberObjects>
+                            <tns:ObjectInfo>
+                                <tns:ObjectName>12-ти этажный жилой дом со встроенными помещениями</tns:ObjectName>
+                                <tns:ObjectAddress>
+                                    <com:FIAS>b1ba8d78-9152-496b-9580-e7448caf562d</com:FIAS>
+                                    <com:OKTMO>35701000</com:OKTMO>
+                                    <com:Region>91</com:Region>
+                                    <com:Locality Name="Симферополь" Type="г"/>
+                                    <com:ElementPlanStructure>
+                                        <com:Code>1</com:Code>
+                                        <com:Name>Район</com:Name>
+                                    </com:ElementPlanStructure>
+                                    <com:Street Name="Хромченко" Type="ул"/>
+                                    <com:HouseNumber>23</com:HouseNumber>
+                                    <com:Note>295014 Симферополь, ул. Хромченко д 23, соор 1</com:Note>
+                                </tns:ObjectAddress>
+                                <tns:ObjectKind>
+                                    <com:Code>1</com:Code>
+                                    <com:Name>Многоквартирный дом</com:Name>
+                                </tns:ObjectKind>
+                                <tns:ObjectPurpose>
+                                    <com:Code>1</com:Code>
+                                    <com:Name>Жилое</com:Name>
+                                </tns:ObjectPurpose>
+                                <tns:ObjectPurposeFunctional>
+                                    <com:Code>3</com:Code>
+                                    <com:Name>Жилое здание</com:Name>
+                                </tns:ObjectPurposeFunctional>
+                                <tns:BuildCapitalType>
+                                    <com:Code>1</com:Code>
+                                    <com:Name>Здание</com:Name>
+                                </tns:BuildCapitalType>
+                                <tns:InfoDocDescription>
+                                    <tns:ExpertiseProjectDocAvailability>AVAILABLE</tns:ExpertiseProjectDocAvailability>
+                                    <tns:ExpertiseProjectDocDescription>
+                                        <tns:ProjectDocType>
+                                            <com:Code>1</com:Code>
+                                            <com:Name>Экспертиза проектной документации</com:Name>
+                                        </tns:ProjectDocType>
+                                        <tns:OrganDocInfo>
+                                            <tns:OrganizationOPF>
+                                                <com:Code>108</com:Code>
+                                                <com:Name>ГАУРФ</com:Name>
+                                            </tns:OrganizationOPF>
+                                            <tns:OrganizationName>ГАУ МО "МОСОБЛГОСЭКСПЕРТИЗА"</tns:OrganizationName>
+                                            <tns:INN>5041020693</tns:INN>
+                                            <tns:IsResident>true</tns:IsResident>
+                                        </tns:OrganDocInfo>
+                                        <tns:ExpertiseProjectDocNumber>Экспертиза проектной документации
+                                        </tns:ExpertiseProjectDocNumber>
+                                        <tns:ExpertiseProjectDocDate>2021-10-01</tns:ExpertiseProjectDocDate>
+                                    </tns:ExpertiseProjectDocDescription>
+                                    <tns:EcologicalExpertiseAvailability>AVAILABLE</tns:EcologicalExpertiseAvailability>
+                                    <tns:EcologicalExpertiseDescription>
+                                        <tns:EcologicalExpertiseNumber>Экологическая экспертиза
+                                        </tns:EcologicalExpertiseNumber>
+                                        <tns:EcologicalExpertiseDate>2021-10-01</tns:EcologicalExpertiseDate>
+                                        <tns:OrganDocInfo>
+                                            <tns:OrganizationOPF>
+                                                <com:Code>105</com:Code>
+                                                <com:Name>ФГБУ</com:Name>
+                                            </tns:OrganizationOPF>
+                                            <tns:OrganizationName>Федеральная служба по надзору в сфере
+                                                природопользования
+                                            </tns:OrganizationName>
+                                            <tns:INN>7703381225</tns:INN>
+                                        </tns:OrganDocInfo>
+                                    </tns:EcologicalExpertiseDescription>
+                                    <tns:DevPlanLandPlotAvailability>AVAILABLE</tns:DevPlanLandPlotAvailability>
+                                    <tns:DevPlanLandPlotDescription>
+                                        <tns:DevPlanLandPlotNumber>Сведения о земельном участке
+                                        </tns:DevPlanLandPlotNumber>
+                                        <tns:DevPlanLandPlotDate>2019-12-01</tns:DevPlanLandPlotDate>
+                                        <tns:LandCadastralDescription>
+                                            <tns:CadastralNumberZU>50:09:0080607:2750</tns:CadastralNumberZU>
+                                            <tns:LandPlotArea>16300</tns:LandPlotArea>
+                                        </tns:LandCadastralDescription>
+                                        <tns:OrganDocInfo>
+                                            <tns:OrganizationOPF>
+                                                <com:Code>102</com:Code>
+                                                <com:Name>Учреждение</com:Name>
+                                            </tns:OrganizationOPF>
+                                            <tns:OrganizationName>МОСОБЛАРХИТЕКТУРА</tns:OrganizationName>
+                                            <tns:INN>7707018904</tns:INN>
+                                        </tns:OrganDocInfo>
+                                    </tns:DevPlanLandPlotDescription>
+                                    <tns:DemarcationAvailability>AVAILABLE</tns:DemarcationAvailability>
+                                    <tns:DemarcationDescription>
+                                        <tns:DemarcationDate>2013-07-20</tns:DemarcationDate>
+                                        <tns:DemarcationNumber>Планировка территории</tns:DemarcationNumber>
+                                        <tns:OrganDocInfo>
+                                            <tns:OrganizationOPF>
+                                                <com:Code>120</com:Code>
+                                                <com:Name>Администрация</com:Name>
+                                            </tns:OrganizationOPF>
+                                            <tns:OrganizationName>АДМИНИСТРАЦИЯ ГОРОДСКОГО ОКРУГА СОЛНЕЧНОГОРСК
+                                            </tns:OrganizationName>
+                                            <tns:INN>5044013302</tns:INN>
+                                        </tns:OrganDocInfo>
+                                        <tns:DocType>
+                                            <com:Code>1</com:Code>
+                                            <com:Name>Проект планировки территории</com:Name>
+                                        </tns:DocType>
+                                        <tns:AdministrativeDocType>
+                                            <com:Code>1</com:Code>
+                                            <com:Name>Постановление</com:Name>
+                                        </tns:AdministrativeDocType>
+                                    </tns:DemarcationDescription>
+                                    <tns:ProjectDocumentationAvailability>AVAILABLE
+                                    </tns:ProjectDocumentationAvailability>
+                                    <tns:ProjectDocumentationDescription>
+                                        <tns:DocumentationDate>2022-04-29</tns:DocumentationDate>
+                                        <tns:ProjectDocCode>Сведения о проектной документации</tns:ProjectDocCode>
+                                        <tns:OrganDocInfo>
+                                            <tns:OrganizationOPF>
+                                                <com:Code>4</com:Code>
+                                                <com:Name>ООО</com:Name>
+                                            </tns:OrganizationOPF>
+                                            <tns:OrganizationName>ООО "АБ ПРОЕКТ"</tns:OrganizationName>
+                                            <tns:INN>7719696774</tns:INN>
+                                            <tns:IsResident>true</tns:IsResident>
+                                        </tns:OrganDocInfo>
+                                        <tns:DeveloperType>LEGAL</tns:DeveloperType>
+                                        <tns:ProjectDocYear>2022</tns:ProjectDocYear>
+                                    </tns:ProjectDocumentationDescription>
+                                    <tns:LandCadastralAvailability>NOT_AVAILABLE</tns:LandCadastralAvailability>
+                                    <tns:StandardArchitecturalSolutionAvailability>AVAILABLE
+                                    </tns:StandardArchitecturalSolutionAvailability>
+                                    <tns:StandardArchitecturalSolutionDescription>
+                                        <tns:StandArchSolutionYear>2022</tns:StandArchSolutionYear>
+                                        <tns:StandArchSolutionCode>Архитектурное решение</tns:StandArchSolutionCode>
+                                        <tns:OrganDocInfo>
+                                            <tns:OrganizationOPF>
+                                                <com:Code>4</com:Code>
+                                                <com:Name>ООО</com:Name>
+                                            </tns:OrganizationOPF>
+                                            <tns:OrganizationName>ООО "СПЕЦИАЛИЗИРОВАННЫЙ ЗАСТРОЙЩИК "СТРОЙИНДУСТРИЯ"
+                                            </tns:OrganizationName>
+                                            <tns:INN>7701620421</tns:INN>
+                                        </tns:OrganDocInfo>
+                                        <tns:NameDoc>Типовое Архитектурное Решение</tns:NameDoc>
+                                    </tns:StandardArchitecturalSolutionDescription>
+                                </tns:InfoDocDescription>
+                                <tns:ObjectProjectDescription>
+                                    <tns:ShortProjectObject>
+                                        <tns:TotalArea>8600</tns:TotalArea>
+                                        <tns:BuildingArea>877</tns:BuildingArea>
+                                        <tns:AreaObjectCap>450</tns:AreaObjectCap>
+                                        <tns:AreaBuildingPartObject>450</tns:AreaBuildingPartObject>
+                                        <tns:BuildingVolume>29980</tns:BuildingVolume>
+                                        <tns:UndergroundPart>2500</tns:UndergroundPart>
+                                        <tns:HeightObject>40</tns:HeightObject>
+                                        <tns:MinNumberFloors>12</tns:MinNumberFloors>
+                                        <tns:MaxNumberFloors>15</tns:MaxNumberFloors>
+                                        <tns:MinUndergroundFloors>0</tns:MinUndergroundFloors>
+                                        <tns:MaxUndergroundFloors>1</tns:MaxUndergroundFloors>
+                                    </tns:ShortProjectObject>
+                                    <tns:OtherProjectObject>
+                                        <tns:NumberApartments>95</tns:NumberApartments>
+                                        <tns:NumberOneRoom>30</tns:NumberOneRoom>
+                                        <tns:AreaOneRoom>1035</tns:AreaOneRoom>
+                                        <tns:NumberTwoRoom>25</tns:NumberTwoRoom>
+                                        <tns:AreaTwoRoom>1195</tns:AreaTwoRoom>
+                                        <tns:NumberThreeRoom>25</tns:NumberThreeRoom>
+                                        <tns:AreaThreeRoom>1545</tns:AreaThreeRoom>
+                                        <tns:NumberFourRoom>10</tns:NumberFourRoom>
+                                        <tns:AreaFourRoom>791</tns:AreaFourRoom>
+                                        <tns:NumberMoreRoom>5</tns:NumberMoreRoom>
+                                        <tns:AreaMoreRoom>389</tns:AreaMoreRoom>
+                                        <tns:LivingArea2>4955</tns:LivingArea2>
+                                        <tns:LivingArea>4955</tns:LivingArea>
+                                        <tns:UnlivingArea>3645</tns:UnlivingArea>
+                                        <tns:NumberUnlivigPremise>20</tns:NumberUnlivigPremise>
+                                        <tns:PremisesLivingCount>95</tns:PremisesLivingCount>
+                                        <tns:PremisesCount>115</tns:PremisesCount>
+                                        <tns:NumberParkingSpase>100</tns:NumberParkingSpase>
+                                        <tns:Elevators>3</tns:Elevators>
+                                        <tns:Escalators>1</tns:Escalators>
+                                        <tns:WheelchairLifts>1</tns:WheelchairLifts>
+                                        <tns:MaterialsFoundations>
+                                            <com:Code>5</com:Code>
+                                            <com:Name>плитный фундамент</com:Name>
+                                        </tns:MaterialsFoundations>
+                                        <tns:CorrectMaterialsFoundations>Уточнение материала фундамента
+                                        </tns:CorrectMaterialsFoundations>
+                                        <tns:MaterialsWall>
+                                            <com:Code>7</com:Code>
+                                            <com:Name>c монолитным железобетонным каркасом и стенами из мелкоштучных
+                                                каменных материалов (кирпич, керамические камни, блоки и др.)
+                                            </com:Name>
+                                        </tns:MaterialsWall>
+                                        <tns:CorrectMaterialsWall>Уточнение материала стен</tns:CorrectMaterialsWall>
+                                        <tns:CeilingMaterials>
+                                            <com:Code>3</com:Code>
+                                            <com:Name>cборные железобетонные по металлическим балкам</com:Name>
+                                        </tns:CeilingMaterials>
+                                        <tns:CorrectCeilingMaterials>Уточнение материала перекрытий
+                                        </tns:CorrectCeilingMaterials>
+                                        <tns:RoofingMaterials>
+                                            <com:Code>15</com:Code>
+                                            <com:Name>металлочерепица</com:Name>
+                                        </tns:RoofingMaterials>
+                                        <tns:CorrectRoofingMaterials>Уточнение материала кровли
+                                        </tns:CorrectRoofingMaterials>
+                                        <tns:OtherIndex>Дополнительные сведения</tns:OtherIndex>
+                                    </tns:OtherProjectObject>
+                                </tns:ObjectProjectDescription>
+                            </tns:ObjectInfo>
+                            <tns:StatusConstruction>TERMINATED</tns:StatusConstruction>
+                            <tns:Scans>
+                                <tns:Name>Разрешение_на_строительство_22</tns:Name>
+                                <smev:AttachmentRef attachmentId="9e09a3e6-8193-11ee-b962-0242ac120002"/>
+                            </tns:Scans>
+                        </tns:RegisterNewConstruction>
+                    </tns:Request>
+                </MessagePrimaryContent>
+                <AttachmentHeaderList>
+                    <AttachmentHeader>
+                        <Id>9e09a3e6-8193-11ee-b962-0242ac120002</Id>
+                        <filePath>ttt.json</filePath>
+                    </AttachmentHeader>
+                </AttachmentHeaderList>
+            </content>
+        </RequestContent>
+    </RequestMessage>
+</ClientMessage>

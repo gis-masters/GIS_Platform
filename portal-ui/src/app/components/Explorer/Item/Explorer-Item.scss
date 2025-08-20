@@ -1,0 +1,7 @@
+body .Explorer-Item.Explorer-Item {
+  padding-right: 40px;
+
+  &_selected {
+    background-color: rgb(25 118 210 / 13%);
+  }
+}

@@ -1,0 +1,17 @@
+body .HelpToc {
+  &-Subitems {
+    padding-left: 10px;
+  }
+
+  &-ItemTitleLink {
+    padding: 5px 0;
+
+    color: var(--blue);
+
+    font-size: 1rem;
+  }
+
+  &-Mark {
+    background-color: yellow;
+  }
+}

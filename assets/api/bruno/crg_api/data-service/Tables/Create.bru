@@ -1,0 +1,23 @@
+meta {
+  name: Create
+  type: http
+  seq: 2
+}
+
+post {
+  url: http://localhost:8084/datasets/dataset_test_1/tables
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyLCJ1c2VyX25hbWUiOiJmaXpAZml6Iiwic2NvcGUiOlsiY3JnIl0sIm9yZ2FuaXphdGlvbnMiOlt7ImlkIjoxLCJuYW1lIjoiZml6IENvbXBhbnkifV0sImdyb3VwcyI6W10sImV4cCI6MTYwNjI5MjUyNSwiYXV0aG9yaXRpZXMiOlsiT1JHX0FETUlOIl0sImp0aSI6IjQxMDdjMTA3LWE4Y2QtNGY0YS1hMDIxLTA0ODFkMGJjYWMyZiIsImNsaWVudF9pZCI6ImFkbWluIn0.tCSgw2yCv78uYHfFGSPvxNcc0rkbNy30DX9ZELApINo
+}
+
+body:json {
+  {
+      "name": "test_new_id_table",
+      "details": "i table",
+      "title": "Я ТАБЛИЦА"
+  }
+}

@@ -1,0 +1,20 @@
+<googleOauth2Authentication>
+  <id>7e05f5b:16c66afe3ad:-7fe4</id>
+  <name>JWT</name>
+  <className>org.geoserver.security.oauth2.GoogleOAuthAuthenticationFilter</className>
+  <roleSource class="org.geoserver.security.config.PreAuthenticatedUserNameFilterConfig$PreAuthenticatedUserNameRoleSource">RoleService</roleSource>
+  <roleServiceName>postgres_db_role_service</roleServiceName>
+  <cliendId>834804246009-sh7165n9rffo334cdqsone1rsnmf0hjn.apps.googleusercontent.com</cliendId>
+  <clientSecret>${SECURITY_JWT_SECRET}</clientSecret>
+  <accessTokenUri>https://accounts.google.com/o/oauth2/token</accessTokenUri>
+  <userAuthorizationUri>https://accounts.google.com/o/oauth2/auth</userAuthorizationUri>
+  <redirectUri>http://localhost:8080/geoserver</redirectUri>
+  <checkTokenEndpointUrl>https://www.googleapis.com/oauth2/v1/tokeninfo</checkTokenEndpointUrl>
+  <logoutUri>https://accounts.google.com/logout</logoutUri>
+  <scopes>https://www.googleapis.com/auth/userinfo.email,https://www.googleapis.com/auth/userinfo.profile</scopes>
+  <enableRedirectAuthenticationEntryPoint>false</enableRedirectAuthenticationEntryPoint>
+  <forceAccessTokenUriHttps>true</forceAccessTokenUriHttps>
+  <forceUserAuthorizationUriHttps>true</forceUserAuthorizationUriHttps>
+  <loginEndpoint>/j_spring_oauth2_google_login</loginEndpoint>
+  <logoutEndpoint>/j_spring_oauth2_google_logout</logoutEndpoint>
+</googleOauth2Authentication>

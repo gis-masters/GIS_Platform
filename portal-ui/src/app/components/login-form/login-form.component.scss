@@ -1,0 +1,30 @@
+.login-form {
+  display: flex;
+  justify-content: center;
+
+  margin-bottom: 40px;
+  padding-top: 20px;
+
+  &__field {
+    width: 100%;
+  }
+
+  &__error {
+    text-align: center;
+
+    color: var(--danger);
+  }
+
+  &__actions {
+    display: flex;
+    justify-content: space-between;
+
+    padding-top: 20px;
+  }
+
+  &__recovery-link {
+    align-self: flex-end;
+
+    color: lightgray;
+  }
+}

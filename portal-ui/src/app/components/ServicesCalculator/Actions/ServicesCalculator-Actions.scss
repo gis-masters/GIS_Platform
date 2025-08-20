@@ -1,0 +1,17 @@
+body .ServicesCalculator {
+  &-Actions {
+    width: 300px;
+
+    .MuiCardActions-root {
+      display: flex;
+      flex-direction: column;
+
+      text-align: center;
+    }
+
+    > .Button {
+      width: 100%;
+      margin-bottom: 10px;
+    }
+  }
+}

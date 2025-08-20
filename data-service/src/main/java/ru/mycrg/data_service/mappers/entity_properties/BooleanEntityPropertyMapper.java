@@ -1,0 +1,29 @@
+package ru.mycrg.data_service.mappers.entity_properties;
+
+import org.springframework.stereotype.Component;
+import ru.mycrg.data_service.entity.EntityProperty;
+import ru.mycrg.schemas.properties.EntityPropertyResponseModel;
+import ru.mycrg.schemas.properties.PropertyType;
+
+import static ru.mycrg.data_service.mappers.entity_properties.CommonEntityPropertyMapper.mapCommonProperties;
+
+@Component
+public class BooleanEntityPropertyMapper implements IEntityPropertyMapper {
+
+    @Override
+    public EntityPropertyResponseModel map(EntityProperty entityProperty) {
+        EntityPropertyResponseModel result = mapCommonProperties(entityProperty);
+
+        result.setDisplay(entityProperty.getDisplay());
+        result.setTrueLabel(entityProperty.getTrueLabel());
+        result.setFalseLabel(entityProperty.getFalseLabel());
+        result.setDefaultValue(entityProperty.getDefaultValue());
+
+        return result;
+    }
+
+    @Override
+    public PropertyType getType() {
+        return PropertyType.BOOL;
+    }
+}

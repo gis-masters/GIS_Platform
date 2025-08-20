@@ -1,0 +1,15 @@
+.UpTags {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  column-gap: 5%;
+
+  width: 100%;
+  max-width: 500px;
+  margin: 3vh auto;
+  padding: 0 15px;
+
+  &-TextField {
+    flex-grow: 1;
+  }
+}

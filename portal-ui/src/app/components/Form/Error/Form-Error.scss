@@ -1,0 +1,13 @@
+.Form-Error {
+  text-align: left;
+  letter-spacing: 0.0333em;
+
+  color: var(--error);
+
+  font-size: 0.75rem;
+  line-height: 1.66;
+
+  &:first-child {
+    margin-top: 3px;
+  }
+}

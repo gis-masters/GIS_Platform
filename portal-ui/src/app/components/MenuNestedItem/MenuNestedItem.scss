@@ -1,0 +1,15 @@
+body .MenuNestedItem {
+  &-Anchor {
+    position: absolute;
+    z-index: -1;
+    inset: 0;
+  }
+
+  &-Menu {
+    pointer-events: none;
+  }
+
+  &-MenuContainer {
+    pointer-events: auto;
+  }
+}

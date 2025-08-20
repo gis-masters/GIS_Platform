@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="utf-8"?>
+<MP Version="06" NameSoftware="АРГО" VersionSoftware="7.1.8540" GUID="da429a96-ca9b-4fc1-90b4-77c38c4a8182">
+  <Package>
+    <FormParcels Method="5">
+      <NewParcel Definition=":ЗУ1">
+        <CadastralBlock>90:12:090801</CadastralBlock>
+        <ProvidingPassCadastralNumbers>
+          <Other>1 Земли (земельные участки) общего пользования</Other>
+        </ProvidingPassCadastralNumbers>
+        <Area>
+          <Area>670</Area>
+          <Unit>055</Unit>
+          <Inaccuracy>8</Inaccuracy>
+        </Area>
+        <Address AddressOrLocation="1">
+          <OKATO>35247000183</OKATO>
+          <KLADR>9101200004400</KLADR>
+          <OKTMO />
+          <Region>91</Region>
+          <District Name="Симферопольский" Type="р-н" />
+          <Locality Name="Мирное" Type="с" />
+        </Address>
+        <Category Category="003002000000" />
+        <Utilization ByDoc="Земельные участки (территории) общего пользования" />
+        <Contours>
+          <NewContour Definition=":ЗУ1(1)">
+            <Area>
+              <Area>374.08</Area>
+              <Unit>055</Unit>
+              <Inaccuracy>6.77</Inaccuracy>
+            </Area>
+            <EntitySpatial EntSys="ID_1">
+              <SpatialElement>
+                <SpelementUnit TypeUnit="Точка">
+                  <Ordinate X="4973083.82" Y="5184759.15" NumGeopoint="1" DeltaGeopoint="0.10" PointPref="н" GeopointZacrep="Нет закрепления" />
+                </SpelementUnit>
+                <SpelementUnit TypeUnit="Точка">
+                  <Ordinate X="4973068.73" Y="5184740.29" NumGeopoint="2" DeltaGeopoint="0.10" PointPref="н" GeopointZacrep="Нет закрепления" />
+                </SpelementUnit>
+                <SpelementUnit TypeUnit="Точка">
+                  <Ordinate X="4973068.71" Y="5184725.06" NumGeopoint="3" DeltaGeopoint="0.10" PointPref="н" GeopointZacrep="Нет закрепления" />
+                </SpelementUnit>
+                <SpelementUnit TypeUnit="Точка">
+                  <Ordinate X="4973083.51" Y="5184724.87" NumGeopoint="4" DeltaGeopoint="0.10" PointPref="н" GeopointZacrep="Нет закрепления" />
+                </SpelementUnit>
+                <SpelementUnit TypeUnit="Точка">
+                  <Ordinate X="4973083.84" Y="5184724.87" NumGeopoint="5" DeltaGeopoint="0.10" PointPref="н" GeopointZacrep="Нет закрепления" />
+                </SpelementUnit>
+                <SpelementUnit TypeUnit="Точка">
+                  <Ordinate X="4973083.82" Y="5184759.15" NumGeopoint="1" DeltaGeopoint="0.10" PointPref="н" GeopointZacrep="Нет закрепления" />
+                </SpelementUnit>
+              </SpatialElement>
+              <Borders>
+                <Border Spatial="1" Point1="1" Point2="2">
+                  <Edge>
+                    <Length>24.15</Length>
+                  </Edge>
+                </Border>
+                <Border Spatial="1" Point1="2" Point2="3">
+                  <Edge>
+                    <Length>15.23</Length>
+                  </Edge>
+                </Border>
+                <Border Spatial="1" Point1="3" Point2="4">
+                  <Edge>
+                    <Length>14.8</Length>
+                  </Edge>
+                </Border>
+                <Border Spatial="1" Point1="4" Point2="5">
+                  <Edge>
+                    <Length>0.33</Length>
+                  </Edge>
+                </Border>
+                <Border Spatial="1" Point1="5" Point2="1">
+                  <Edge>
+                    <Length>34.28</Length>
+                  </Edge>
+                </Border>
+              </Borders>
+            </EntitySpatial>
+          </NewContour>
+          <NewContour Definition=":ЗУ1(2)">
+            <Area>
+              <Area>276.08</Area>
+              <Unit>055</Unit>
+              <Inaccuracy>5.82</Inaccuracy>
+            </Area>
+            <EntitySpatial EntSys="ID_1">
+              <SpatialElement>
+                <SpelementUnit TypeUnit="Точка">
+                  <Ordinate X="4973083.78" Y="5184824.29" NumGeopoint="6" DeltaGeopoint="0.10" PointPref="н" GeopointZacrep="Нет закрепления" />
+                </SpelementUnit>
+                <SpelementUnit TypeUnit="Точка">
+                  <Ordinate X="4973068.85" Y="5184824.20" NumGeopoint="7" DeltaGeopoint="0.10" PointPref="н" GeopointZacrep="Нет закрепления" />
+                </SpelementUnit>
+                <SpelementUnit TypeUnit="Точка">
+                  <Ordinate X="4973068.81" Y="5184796.42" NumGeopoint="8" DeltaGeopoint="0.10" PointPref="н" GeopointZacrep="Нет закрепления" />
+                </SpelementUnit>
+                <SpelementUnit TypeUnit="Точка">
+                  <Ordinate X="4973083.79" Y="5184815.13" NumGeopoint="9" DeltaGeopoint="0.10" PointPref="н" GeopointZacrep="Нет закрепления" />
+                </SpelementUnit>
+                <SpelementUnit TypeUnit="Точка">
+                  <Ordinate X="4973083.78" Y="5184824.29" NumGeopoint="6" DeltaGeopoint="0.10" PointPref="н" GeopointZacrep="Нет закрепления" />
+                </SpelementUnit>
+              </SpatialElement>
+              <Borders>
+                <Border Spatial="1" Point1="1" Point2="2">
+                  <Edge>
+                    <Length>14.93</Length>
+                  </Edge>
+                </Border>
+                <Border Spatial="1" Point1="2" Point2="3">
+                  <Edge>
+                    <Length>27.78</Length>
+                  </Edge>
+                </Border>
+                <Border Spatial="1" Point1="3" Point2="4">
+                  <Edge>
+                    <Length>23.97</Length>
+                  </Edge>
+                </Border>
+                <Border Spatial="1" Point1="4" Point2="1">
+                  <Edge>
+                    <Length>9.16</Length>
+                  </Edge>
+                </Border>
+              </Borders>
+            </EntitySpatial>
+          </NewContour>
+        </Contours>
+      </NewParcel>
+    </FormParcels>
+  </Package>
+  <GeneralCadastralWorks DateCadastral="2020-11-05">
+    <Contractor>
+      <FamilyName>Рижко</FamilyName>
+      <FirstName>Николай</FirstName>
+      <Patronymic>Иванович</Patronymic>
+      <NCertificate>01-16-468</NCertificate>
+      <Telephone>сот.: +79787353295</Telephone>
+      <Address>Крым Респ, Симферопольский р-н, Солнечная (СПК Надежда тер.) ул 62</Address>
+      <Email>rizhkonikolai@mail.ru</Email>
+      <Organization>
+        <Name>ООО "Геодезия"</Name>
+        <AddressOrganization>297571, Крым Респ, Симферопольский р-н, Доброе с, 40 лет Победы ул, 8 ДОМ</AddressOrganization>
+      </Organization>
+    </Contractor>
+    <Reason>образованием земельного участка из земель, находящихся в государственной или муниципальной собственности, расположенного Российская Федерация, Республика Крым, Симферопольский р-н, Мирное с</Reason>
+    <Clients>
+      <Client>
+        <Organization>
+          <Name>Муниципальное учреждение Администрация Мирновского сельского поселения Симферопольского района Республики Крым</Name>
+          <INN>9109006938</INN>
+          <OGRN>1149102132805</OGRN>
+        </Organization>
+      </Client>
+    </Clients>
+  </GeneralCadastralWorks>
+  <CoordSystems>
+    <CoordSystem CsId="ID_1" Name="СК-63" />
+  </CoordSystems>
+  <InputData>
+    <Documents>
+      <Document>
+        <CodeDocument>558217000000</CodeDocument>
+        <Name>Кадастровый план территории</Name>
+        <Number>КУВИ-002/2021-7021652</Number>
+        <Date>2021-02-02</Date>
+        <IssueOrgan>Государственный комитет по государственной регистрации и кадастру Республики Крым</IssueOrgan>
+      </Document>
+      <Document>
+        <CodeDocument>558221990000</CodeDocument>
+        <Name>Постановление</Name>
+        <Number>72/02-33/21</Number>
+        <Date>2021-04-02</Date>
+        <IssueOrgan>Администрация Мирновского сельского поселения Симферопольского района Республики Крым</IssueOrgan>
+        <AppliedFile Kind="01" Name="Applied_files\72.02-33.21 от 02.04.2021 Постановление об утверждении схемы с. Мирное, дорога, пл. 6507 кв. м, зона О-1.pdf" />
+      </Document>
+      <Document>
+        <CodeDocument>008002099000</CodeDocument>
+        <Name>Выписка из каталога координат геодезических пунктов</Name>
+        <Number>6248/2019/ДПП</Number>
+        <Date>2019-10-09</Date>
+        <IssueOrgan>Региональный отдел по КФО (г.Севастополь) ФГБУ "Центр геодезии, картографии и ИПД"</IssueOrgan>
+      </Document>
+    </Documents>
+    <GeodesicBases>
+      <GeodesicBase>
+        <PName>Сарчи-Кият. сигн. Центр 1 (№19312) 9,7 м</PName>
+        <PKind>сигнал</PKind>
+        <PKlass>2</PKlass>
+        <OrdX>4975307.96</OrdX>
+        <OrdY>5183942.58</OrdY>
+      </GeodesicBase>
+      <GeodesicBase>
+        <PName>Романовский, пир. Центр 1 6,0 м</PName>
+        <PKind>Пирамида</PKind>
+        <PKlass>4</PKlass>
+        <OrdX>4966303.34</OrdX>
+        <OrdY>5186309.41</OrdY>
+      </GeodesicBase>
+      <GeodesicBase>
+        <PName>Устиновка, пир. Центр 1 (№ 12778) 5,1 м</PName>
+        <PKind>Пирамида</PKind>
+        <PKlass>4</PKlass>
+        <OrdX>4978388.52</OrdX>
+        <OrdY>5195993.87</OrdY>
+      </GeodesicBase>
+    </GeodesicBases>
+    <MeansSurvey>
+      <MeanSurvey>
+        <Name>JAVAD Triumph-2 №00855</Name>
+        <Registration>
+          <Number>03.37.0761.20</Number>
+          <Duration>10.12.2021 года</Duration>
+        </Registration>
+        <CertificateVerification>№ 03.37.0761.20 от 11.12.2020 года</CertificateVerification>
+      </MeanSurvey>
+    </MeansSurvey>
+  </InputData>
+  <Survey>
+    <GeopointsOpred>
+      <GeopointOpred>
+        <CadastralNumberDefinition>:ЗУ1</CadastralNumberDefinition>
+        <Methods>
+          <GeopointOpred>692005000000</GeopointOpred>
+        </Methods>
+      </GeopointOpred>
+    </GeopointsOpred>
+    <TochnGeopointsParcels>
+      <TochnGeopointsParcel>
+        <CadastralNumberDefinition>:ЗУ1</CadastralNumberDefinition>
+        <Formula>√(0,08^2 + 0,06^2) = 0,10</Formula>
+      </TochnGeopointsParcel>
+    </TochnGeopointsParcels>
+    <TochnAreaParcels>
+      <TochnAreaParcel>
+        <CadastralNumberDefinition>:ЗУ1</CadastralNumberDefinition>
+        <Formula>5,82 + 5,82 = 12</Formula>
+        <Area>
+          <Area>650</Area>
+          <Unit>055</Unit>
+        </Area>
+      </TochnAreaParcel>
+    </TochnAreaParcels>
+  </Survey>
+  <Conclusion>Межевой план подготовлен в связи с образованием земельного участка из земель, находящихся в государственной или муниципальной собственности, расположенного Российская Федерация, Республика Крым, Симферопольский р-н, Мирное с, для постановки на государственный кадастровый учет. Сведения о данном земельном участке отсутствуют в ГКН. Площадь земельного участка вычислена  по координатам характерных точек границ земельного участка и составляет  650 м. кв. Адрес присвоен в установленном порядке органом местного самоуправления. На момент проведения геодезической съёмки и по данным сведений ГКН на земельном участке отсутствовали объекты капитального строительства.
+Кадастровый инженер Рижко Николай Иванович (номер в реестре СРО НП002179; номер в реестре кадастровых инженеров в Росреестре 38933; СНИЛС 182-031-798 52) является членом Саморегулируемой организации Ассоциация «Некоммерческое партнерство «Кадастровые инженеры юга» (номер в реестре СРО КИ 006 от 24.08.2016 г., http://www.kades.ru), на основании свидетельства о членстве НП002179 от 26.08.2016г.
+
+
+Основание для проведения кадастровых работ: Договор от 16 марта 2021 г. № 105-юж
+
+Подготовивший документ кадастровый инженер Рижко Николай Иванович (СНИЛС: 182-031-798-52) является членом СРО Кадастровые инженеры юга. Уникальный регистрационный номер члена саморегулируемой организации кадастровых инженеров в реестре членов саморегулируемой организации кадастровых инженеров , дата внесения сведений в реестр . Номер регистрации в государственном реестре лиц, осуществляющих кадастровую деятельность 38933</Conclusion>
+  <SchemeGeodesicPlotting Kind="01" Name="Applied_files\SchemeGeodesicPlotting.pdf" />
+  <SchemeDisposition Kind="01" Name="Applied_files\SchemeDisposition.pdf" />
+  <DiagramParcelsSubParcels Kind="01" Name="Applied_files\DiagramParcelsSubParcels.pdf" />
+  <Appendix>
+    <AppliedFiles>
+      <NumberAppendix>1</NumberAppendix>
+      <NameAppendix>Постановление № 72/02-33/21,  от 2 апреля 2021 г., документ выдан Администрация Мирновского сельского поселения Симферопольского района Республики Крым</NameAppendix>
+      <AppliedFile Kind="01" Name="Applied_files\72.02-33.21 от 02.04.2021 Постановление об утверждении схемы с. Мирное, дорога, пл. 6507 кв. м, зона О-1.pdf" />
+    </AppliedFiles>
+    <AppliedFiles>
+      <NumberAppendix>2</NumberAppendix>
+      <NameAppendix>Текстовая часть межевого плана</NameAppendix>
+      <AppliedFile Kind="01" Name="Applied_files\TextPart_c7dc7b27-44dd-42fe-96be-890eb3db9cef.pdf" />
+    </AppliedFiles>
+  </Appendix>
+</MP>

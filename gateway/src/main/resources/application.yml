@@ -1,0 +1,125 @@
+server:
+  port: 8100
+
+spring:
+  servlet:
+    multipart:
+      max-file-size: 1001MB
+      max-request-size: 1001MB
+
+  rabbitmq:
+    host: ${SPRING_RABBITMQ_HOST}
+    port: ${SPRING_RABBITMQ_PORT}
+    username: ${SPRING_RABBITMQ_USERNAME}
+    password: ${SPRING_RABBITMQ_PASSWORD}
+
+zuul:
+  host:
+    connect-timeout-millis: 20000
+    socket-timeout-millis: 20000
+    # max-total-connections: 500
+    # max-per-route-connections: 20
+    # time-unit: MILLISECONDS
+    # time-to-live: 10000
+  #  prefix: /api
+  #  include-debug-header: true
+  ignoredServices: '*'
+  sensitive-headers: Cookie,Set-Cookie
+  routes:
+
+    # AUTH SERVICE
+    crg-auth-service-groups:
+      path: /groups/**
+      url: http://auth-service:9000/groups/
+
+    crg-auth-service-users:
+      path: /users/**
+      url: http://auth-service:9000/users/
+
+    crg-auth-service-roles:
+      path: /roles/**
+      url: http://auth-service:9000/roles/
+
+    crg-auth-service-organizations:
+      path: /organizations/**
+      url: http://auth-service:9000/organizations/
+
+    crg-auth-service-specializations:
+      path: /specializations/**
+      url: http://auth-service:9000/specializations
+
+    crg-auth-service-esia:
+      path: /esia/**
+      url: http://auth-service:9000/esia/
+      sensitive-headers:
+
+    crg-auth-service-password-reset-request:
+      path: /request-password-reset/**
+      url: http://auth-service:9000/request-password-reset
+
+    crg-auth-service-password-reset:
+      path: /password-reset/**
+      url: http://auth-service:9000/password-reset
+
+    # GIS SERVICE
+    crg-gis-service-projects:
+      path: /projects/**
+      url: http://crg-gis-service:8082/projects/
+
+    crg-gis-service-specializations:
+      path: /gis/specializations/**
+      url: http://crg-gis-service:8082/specializations/
+
+    crg-gis-service-export:
+      path: /gis/export/**
+      url: http://crg-gis-service:8082/export/
+
+    # INTEGRATION SERVICE
+    crg-gis-integration-resource-analyzers:
+      path: /resource-analyzers/**
+      url: http://crg-integration-service:8338/resource-analyzers/
+
+    # DATA SERVICE
+    crg-data-service-projects:
+      path: /api/data/**
+      url: http://crg-data-service:8084/
+
+    crg-data-service-integration:
+      path: /integration/ais_ums/**
+      url: http://crg-data-service:8084/integration/ais_ums/
+
+    crg-data-service-integration-statement:
+      path: /integration/statement/**
+      url: http://crg-data-service:8084/integration/statement/
+
+    crg-data-service-integration-smev3-request:
+      path: /integration/smev3/request/**
+      url: http://crg-data-service:8084/integration/smev3/request/
+
+    gis-ws:
+      path: /crg-ws-endpoint/**
+      url: http://crg-data-service:8084/crg-ws-endpoint/
+
+    # AUDIT SERVICE
+    crg-audit-service:
+      path: /events/**
+      url: http://crg-audit-service:8086/events/
+
+    # Geoserver
+    geoserver:
+      path: /geoserver/**
+      serviceId: http://geoserver:8080/geoserver/
+
+logging:
+  level:
+    ru.mycrg: DEBUG
+  file:
+    name: /opt/crg/logs/gateway.log
+
+crg-options:
+  auth-service-url: ${CRG_OPTIONS_AUTH_SERVICE_URL}
+  auth-method: COOKIE_BEARER
+  jwt:
+    secret: ${CRG_OPTIONS_JWT_SECRET}
+    client-id: ${CRG_OPTIONS_JWT_CLIENT_ID}
+    client-secret: ${CRG_OPTIONS_JWT_CLIENT_SECRET}

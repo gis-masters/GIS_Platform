@@ -1,0 +1,76 @@
+version: '3.7'
+
+services:
+  geoserver:
+    container_name: geoserver
+    image: ${DOCKER_CRG_HOST}/geoserver:${GEOSERVER_TAG}
+    restart: always
+    healthcheck:
+      test: curl -f http://localhost:8080/geoserver/web || exit 1
+    ports:
+      - "8080:8080"
+    volumes:
+      - /opt/crg/data/geoserver:/opt/geoserver/data_dir
+      - /opt/crg/gwc_storage:/opt/crg/gwc_storage
+      - /opt/crg/spatial_data:/opt/crg/spatial_data
+      - /opt/crg/file_storage:/opt/crg/file_storage
+    environment:
+      APM_URL: ${APM_URL}
+
+      INITIAL_MEMORY: ${GEOSERVER_XMS_SIZE:-20G}
+      MAXIMUM_MEMORY: ${GEOSERVER_XMX_SIZE:-20G}
+
+      DISABLE_CORS: true
+      USE_DEFAULT_CREDENTIALS: true
+    mem_limit: ${GEOSERVER_MEM_LIMIT:-51000}m
+
+  postgis:
+    container_name: postgis
+    image: ${DOCKER_CRG_HOST}/postgis_crg:${POSTGIS_TAG}
+    restart: always
+    ports:
+      - "5434:5432"
+    volumes:
+      - /opt/crg/data/postgis:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: ${CRG_USER}
+      POSTGRES_USER: ${CRG_USER}
+      POSTGRES_PASSWORD: ${DB_PASS}
+      POSTGRES_DB_LIST: crg_notification_db,crg_auth_service,crg_gis_service,crg_data_service,geoserver_db,bpmn_camunda,crg_audit_service,gsstore,gscatalog
+    command:
+      - postgres
+      - -c
+      - shared_preload_libraries=pg_stat_statements
+      - -c
+      - max_connections=1000
+      - -c
+      - "shared_buffers=${PG_SHARED_BUFFERS:-5GB}"
+    mem_limit: ${POSTGIS_MEM_LIMIT:-10100}m
+
+  rabbitmq:
+    container_name: rabbitmq
+    image: ${DOCKER_CRG_HOST}/rabbitmq:${RABBIT_TAG}
+    restart: always
+    labels:
+      co.elastic.metrics/raw: "[{\"enabled\":true,\"metricsets\":[\"node\",\"queue\",\"exchange\"],\"module\":\"rabbitmq\",\"hosts\":[\"localhost:15672\"],\"username\":\"$CRG_USER\",\"password\":\"$RABBIT_PASS\"}]"
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBIT_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBIT_PASS}
+    mem_limit: ${RABBITMQ_MEM_LIMIT:-20000}m
+
+  redis:
+    container_name: redis
+    image: redis:latest
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - /opt/crg/data/redis:/data
+    environment:
+      REDIS_PASSWORD: ${REDIS_PASS}
+    command: redis-server --requirepass ${REDIS_PASS}
+    mem_limit: ${REDIS_MEM_LIMIT:-500}m
+    privileged: true

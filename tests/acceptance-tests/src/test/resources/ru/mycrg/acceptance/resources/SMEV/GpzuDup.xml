@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<QueryResult xmlns="urn://x-artefacts-smev-gov-ru/services/service-adapter/types"
+             xmlns:ns2="urn://x-artefacts-smev-gov-ru/services/service-adapter/types/faults">
+    <smevMetadata>
+        <MessageId>aaf695d2-08a8-11f0-8758-5af749e6a72a</MessageId>
+        <TransactionCode>e9107ace-c509-4e17-9f6b-473c478b024d</TransactionCode>
+        <Sender>MNSV05</Sender>
+        <Recipient>U629301</Recipient>
+        <SendingDate>2025-03-24T12:08:16.549Z</SendingDate>
+    </smevMetadata>
+    <Message xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="RequestMessageType">
+        <RequestMetadata>
+            <clientId>15e58c3d-642a-457e-b8d8-8384fe03e881</clientId>
+            <linkedGroupIdentity>
+                <refClientId>15e58c3d-642a-457e-b8d8-8384fe03e881</refClientId>
+                <refGroupId>e9107ace-c509-4e17-9f6b-473c478b024d</refGroupId>
+            </linkedGroupIdentity>
+            <testMessage>false</testMessage>
+            <TransactionCode>e9107ace-c509-4e17-9f6b-473c478b024d</TransactionCode>
+        </RequestMetadata>
+        <RequestContent>
+            <content>
+                <MessagePrimaryContent>
+                    <tns:request xmlns:tns="urn://rostelekom.ru/GPZU/1.0.1"
+                                 xmlns="urn://x-artefacts-smev-gov-ru/services/message-exchange/types/1.2"
+                                 xmlns:ns2="urn://x-artefacts-smev-gov-ru/services/message-exchange/types/basic/1.2"
+                                 xmlns:ns3="urn://x-artefacts-smev-gov-ru/services/message-exchange/types/faults/1.2"
+                                 xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"
+                                 xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" oktmo="U629301">
+                        <tns:Service>
+                            <tns:currentDate>24.03.2025</tns:currentDate>
+                            <tns:userType>PERSON_RF</tns:userType>
+                            <tns:orderId>4650656108</tns:orderId>
+                            <tns:orderStatusCode>draft</tns:orderStatusCode>
+                            <tns:TargetId>-10000115323</tns:TargetId>
+                            <tns:TargetName>Выдача градостроительного плана земельного участка</tns:TargetName>
+                            <tns:DepartmentId>-10003772917</tns:DepartmentId>
+                            <tns:DepartmentName>Уполномоченный орган субъекта Российской Федерации</tns:DepartmentName>
+
+                        </tns:Service>
+                        <tns:Goal>3</tns:Goal>
+                        <tns:VariantChoice>
+                            <tns:KP_DGPZU_03>1</tns:KP_DGPZU_03>
+                        </tns:VariantChoice>
+                        <tns:DelegateInfo>1</tns:DelegateInfo>
+                        <tns:RecipientPersonalData>
+                            <tns:fullfio>Ионов Вячеслав Владимирович</tns:fullfio>
+                            <tns:lastname>Ионов</tns:lastname>
+                            <tns:firstname>Вячеслав</tns:firstname>
+                            <tns:middlename>Владимирович</tns:middlename>
+                            <tns:snils>864-644-056 34</tns:snils>
+                            <tns:gender>1</tns:gender>
+                            <tns:dateBirth>09.06.2001</tns:dateBirth>
+                            <tns:citizenship>РОССИЯ</tns:citizenship>
+                            <tns:Phone>+7(978)2400862</tns:Phone>
+                            <tns:Email>ionov.vy@mail.ru</tns:Email>
+                            <tns:regAddress>295014, Респ. Крым, г. Симферополь, ул. Хромченко, д. 23</tns:regAddress>
+                            <tns:DocumentPersonal>
+                                <tns:typeDoc>Паспорт гражданина РФ</tns:typeDoc>
+                                <tns:nameDoc>Паспорт гражданина РФ</tns:nameDoc>
+                                <tns:docseries>3921</tns:docseries>
+                                <tns:docnumber>586046</tns:docnumber>
+                                <tns:issuedate>29.06.2021</tns:issuedate>
+                                <tns:issueorg>МВД по Республике Крым</tns:issueorg>
+                                <tns:issueidPassportRF>910004</tns:issueidPassportRF>
+                            </tns:DocumentPersonal>
+                        </tns:RecipientPersonalData>
+                        <tns:CompetentOrganization>
+                            <tns:OrganizationID>1149102100542</tns:OrganizationID>
+                            <tns:Name>Администрация города Армянска Республики Крым</tns:Name>
+                        </tns:CompetentOrganization>
+                        <tns:GPZUInformation>
+                            <tns:Number>RU1233467–MSK910123</tns:Number>
+                            <tns:Date>01.03.2025</tns:Date>
+                            <tns:Issuer>Уполномоченный</tns:Issuer>
+                        </tns:GPZUInformation>
+                        <tns:MethodGettingResults>
+                            <tns:IsPaperDocumentRequired>false</tns:IsPaperDocumentRequired>
+                        </tns:MethodGettingResults>
+                    </tns:request>
+                </MessagePrimaryContent>
+            </content>
+        </RequestContent>
+    </Message>
+</QueryResult>

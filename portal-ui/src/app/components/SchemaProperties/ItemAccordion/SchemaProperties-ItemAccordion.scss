@@ -1,0 +1,10 @@
+.SchemaProperties-ItemAccordion {
+  &::before {
+    display: none;
+  }
+
+  .MuiAccordionSummary-root {
+    height: 0;
+    min-height: 0;
+  }
+}

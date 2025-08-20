@@ -1,0 +1,35 @@
+.EditFeatureGeometry-CoordInput {
+  flex-grow: 2;
+
+  width: 220px;
+
+  &_d {
+    &_x {
+      margin-right: 6px;
+    }
+  }
+
+  .MuiOutlinedInput-input {
+    padding: 8px;
+
+    font-size: 14px;
+  }
+
+  .MuiInputLabel-outlined {
+    padding: 0 6px;
+
+    transform: translate(8px, 8px) scale(1);
+
+    background: #fff;
+  }
+
+  .MuiInputLabel-shrink {
+    transform: translate(14px, -8px) scale(0.75);
+  }
+
+  legend {
+    width: auto;
+
+    background: none;
+  }
+}

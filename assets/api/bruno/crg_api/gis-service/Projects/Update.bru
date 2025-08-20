@@ -1,0 +1,25 @@
+meta {
+  name: Update
+  type: http
+  seq: 2
+}
+
+patch {
+  url: http://localhost:8082/projects/24
+  body: json
+  auth: bearer
+}
+
+headers {
+  Content-Type: application/json
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjcmdfbG9naW4iOiJmaXoxQGZpeiIsInVzZXJfbmFtZSI6ImZpejFfZml6XzMiLCJncm91cHMiOltdLCJ2ZXJzaW9uIjowLCJhdXRob3JpdGllcyI6WyJVU0VSIl0sIm1pbmlvbnMiOltdLCJjbGllbnRfaWQiOiJhZG1pbiIsInVzZXJfaWQiOjMsInNjb3BlIjpbImNyZyJdLCJvcmdhbml6YXRpb25zIjpbeyJpZCI6MSwibmFtZSI6ItGC0LXRgdGC0LjRgNC-0LLQsNC90LjQtSDQv9GA0LDQsiDQvdCwINC_0YDQvtC10LrRgtGLIn1dLCJleHAiOjE3NDU0ODMwMjQsImRpcmVjdE1pbmlvbnMiOltdLCJqdGkiOiJiZmZhZDdiNi0xOGNjLTQzNjMtOThhYS01ODdiMjk1ZTNlNDQifQ.inBboE0-ieJT08frmzBFMpP6o9TkKFXhgKrWXCtU0Ek
+}
+
+body:json {
+  {
+    "name": "Проект0.1_"
+  }
+}

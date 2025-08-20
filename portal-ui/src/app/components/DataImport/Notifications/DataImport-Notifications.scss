@@ -1,0 +1,17 @@
+.DataImport {
+  &-Notifications {
+    padding-bottom: 20px;
+  }
+
+  &-Notification {
+    &_type {
+      &_success {
+        color: var(--success);
+      }
+
+      &_error {
+        color: var(--danger);
+      }
+    }
+  }
+}

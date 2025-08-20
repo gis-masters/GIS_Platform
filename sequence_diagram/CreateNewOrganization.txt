@@ -1,0 +1,18 @@
+frame Создание новой организации пользователем
+
+actor User
+participant AuthService
+
+
+User-#red:2>AuthService:Хочу новую организацию вот мой email: fiz@yandex.ru\n\nPOST /api/organizations/intents
+activate AuthService #skyBlue
+AuthService-#orange:2>AuthService:check email
+User <#red:2--AuthService:200 - пользователю отправляется письмо с ссылкой\n409 - email занят
+deactivate AuthService
+
+
+User-#red:2>AuthService:\n\n\nПользователь переходит по ссылке из письма: /register/intents/ERT3-4tSD-sdfs-SDF3 \nВ ссылке зашит orgNewToken (К orgNewToken привязан email и specializationId)\n\nфронт засылает orgNewToken на ручку GET /api/organizations/intents/{orgNewToken} \n- если токен протух или не существует - информирует пользователя\n- если все ок, бек возвращает email и specializationId в ответ.\n\n- фрон показывает нашу старую форму с пред заполненными email и specializationId\n   после заполнения отправляет запрос на POST /api/organizations/init
+activate AuthService #skyBlue
+AuthService-#orange:2>AuthService:Запускается создание\n организации
+User<#red:2--AuthService:202 - процесс создания организации запущен, ожидайте...\n409 - email занят
+deactivate AuthService

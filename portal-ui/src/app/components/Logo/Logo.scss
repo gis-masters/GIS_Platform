@@ -1,0 +1,20 @@
+body .Logo {
+  display: flex;
+  align-items: center;
+
+  text-decoration: none;
+
+  &-Title {
+    margin: 0 0 0 10px;
+
+    text-shadow: 0 0 5px rgb(255 255 255);
+
+    font-size: 24px;
+    font-weight: 500;
+    line-height: 1.2;
+  }
+
+  &:hover {
+    text-decoration: none;
+  }
+}

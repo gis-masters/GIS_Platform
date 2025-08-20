@@ -1,0 +1,43 @@
+body .User {
+  &-Info {
+    color: var(--gray);
+
+    &_type_action {
+      color: var(--black);
+    }
+  }
+
+  &-Fio {
+    font-family: initial;
+    font-size: larger;
+    font-weight: bold;
+  }
+
+  &-Email {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+
+    font-family: monospace;
+    font-size: initial;
+    font-weight: lighter;
+
+    &-CopyIcon {
+      cursor: pointer;
+      transition: opacity 0.2s;
+
+      opacity: 0.5;
+
+      font-size: 16px !important;
+
+      &:hover {
+        opacity: 1;
+      }
+    }
+  }
+
+  & .MuiButton-endIcon {
+    margin: 0;
+    padding: 0;
+  }
+}

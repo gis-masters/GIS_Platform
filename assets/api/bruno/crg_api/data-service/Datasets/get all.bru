@@ -1,0 +1,15 @@
+meta {
+  name: get all
+  type: http
+  seq: 1
+}
+
+get {
+  url: http://localhost:8100/api/data/datasets
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyLCJ1c2VyX25hbWUiOiJmaXpAZml6Iiwic2NvcGUiOlsiY3JnIl0sIm9yZ2FuaXphdGlvbnMiOlt7ImlkIjoxLCJuYW1lIjoiZml6IENvbXBhbnkifV0sImdyb3VwcyI6W10sImV4cCI6MTYwODAyNTU2NywiYXV0aG9yaXRpZXMiOlsiT1JHX0FETUlOIl0sImp0aSI6IjBkMzBiY2ZjLWNmYWUtNGQxOC04ZjlhLTU0OTQzN2I3NjYyYiIsImNsaWVudF9pZCI6ImFkbWluIn0.GiXehTbW-7FpzkOk4YjBaNoMxCCaV7nJ8NV1ik_NYVI
+}

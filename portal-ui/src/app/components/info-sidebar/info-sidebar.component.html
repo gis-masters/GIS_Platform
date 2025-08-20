@@ -1,0 +1,26 @@
+<div [ngClass]="isActive? 'crg-info-sidebar' : 'crg-info-sidebar_hidden'">
+  <div class="crg-sidebar-header">
+      <span class="crg-sidebar-header__title">
+      Уведомления
+    </span>
+
+    <button mat-icon-button (click)="clearAll()" class="crg-sidebar-header__button"
+            matTooltip="Очистить все уведомления">
+      <mat-icon>delete_outline</mat-icon>
+    </button>
+
+    <button mat-icon-button (click)="closeMe()" class="crg-sidebar-header__button">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+  <div class="crg-sidebar-content scroll">
+    <div *ngFor="let event of events">
+      <crg-progress-item [event]="event"></crg-progress-item>
+    </div>
+
+    <div class="no-events" *ngIf="!events.length">
+      <mat-icon class="no-events-icon">notifications_none</mat-icon>
+      <span style="display: block;">Нет новых уведомлений</span>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,30 @@
+.Form-View {
+  position: relative;
+
+  align-self: center;
+
+  width: 62%;
+  min-height: 24px;
+  padding-right: var(--FormFieldRightGap);
+
+  &_empty {
+    color: var(--gray);
+  }
+
+  &_inSet {
+    display: flex;
+    flex-grow: 1;
+    flex-shrink: 1;
+    gap: 10px;
+
+    width: auto;
+  }
+
+  &_fullWidthForOldForm {
+    width: 100%;
+  }
+
+  &_labelInField {
+    width: 100%;
+  }
+}

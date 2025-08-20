@@ -1,0 +1,19 @@
+body .HelpToc-Item {
+  padding: 5px 0;
+
+  &_type {
+    &_link {
+      padding: 5px 0;
+
+      color: var(--blue);
+
+      font-size: 1rem;
+    }
+
+    &_wrapper {
+      padding: 5px 0;
+
+      font-size: 1.15rem;
+    }
+  }
+}

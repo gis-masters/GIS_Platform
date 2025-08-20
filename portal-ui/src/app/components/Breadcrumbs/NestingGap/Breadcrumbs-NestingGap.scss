@@ -1,0 +1,7 @@
+.Breadcrumbs-NestingGap {
+  position: absolute;
+  top: calc(50% - 14px);
+  left: calc(calc(var(--BreadcrumbsItemNestingLevel) * 14px) - 20px);
+
+  opacity: 0.8;
+}

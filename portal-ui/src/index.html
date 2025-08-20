@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <title>GisPortal</title>
+    <base href="/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="apple-mobile-web-app-title" content="yes" />
+    <script>
+      let _environmentRaw /*~ENV~*/;
+      if (!_environmentRaw) {
+        const xhr = new XMLHttpRequest();
+        xhr.open('GET', '/assets/config/environment.json', false);
+        xhr.onload = e => {
+          if (xhr.readyState === 4) {
+            if (xhr.status === 200) {
+              _environmentRaw = JSON.parse(xhr.responseText);
+            } else {
+              console.error(xhr.statusText);
+            }
+          }
+        };
+        xhr.onerror = e => {
+          console.error(xhr.statusText);
+        };
+        xhr.send(null);
+      }
+    </script>
+  </head>
+  <body>
+    <crg-root>Загрузка...</crg-root>
+  </body>
+</html>

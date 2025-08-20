@@ -1,0 +1,15 @@
+meta {
+  name: Get by id
+  type: http
+  seq: 3
+}
+
+get {
+  url: http://localhost:8100/users/2
+  body: none
+  auth: none
+}
+
+headers {
+  Content-Type: application/json; charset=utf-8
+}

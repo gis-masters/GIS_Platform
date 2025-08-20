@@ -1,0 +1,8 @@
+<div [class]="cn()">
+  <crg-workspace-header></crg-workspace-header>
+  <div [class]="cn('container', { fixed: fixed }, ['scroll'])">
+    <ng-content></ng-content>
+  </div>
+</div>
+
+<crg-info-sidebar [isActive]="isInfoSidebarActive"></crg-info-sidebar>

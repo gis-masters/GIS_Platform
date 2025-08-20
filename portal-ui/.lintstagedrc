@@ -1,0 +1,19 @@
+{
+  "*.{js,ts,tsx}": [
+    "eslint --fix",
+    "prettier --write"
+  ],
+  "*.md": [
+    "prettier --write --parser markdown"
+  ],
+  "*.json": [
+    "prettier --write --parser json"
+  ],
+  "*.{css,scss}": [
+    "prettier --write",
+    "stylelint --fix"
+  ],
+  "*.feature": [
+    "gherkin-lint"
+  ]
+}

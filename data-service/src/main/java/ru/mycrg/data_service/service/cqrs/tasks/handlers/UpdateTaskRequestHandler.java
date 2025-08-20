@@ -1,0 +1,157 @@
+package ru.mycrg.data_service.service.cqrs.tasks.handlers;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+import ru.mycrg.auth_facade.IAuthenticationFacade;
+import ru.mycrg.auth_facade.UserDetails;
+import ru.mycrg.data_service.dao.RecordsDao;
+import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
+import ru.mycrg.common_contracts.generated.data_service.TaskLogDto;
+import ru.mycrg.data_service.dto.record.IRecord;
+import ru.mycrg.data_service.dto.record.RecordEntity;
+import ru.mycrg.data_service.exceptions.BadRequestException;
+import ru.mycrg.data_service.exceptions.DataServiceException;
+import ru.mycrg.data_service.service.TaskLogService;
+import ru.mycrg.data_service.service.TaskService;
+import ru.mycrg.data_service.service.cqrs.tasks.requests.UpdateTaskRequest;
+import ru.mycrg.data_service.service.resources.ResourceQualifier;
+import ru.mycrg.data_service.service.schemas.SystemAttributeHandler;
+import ru.mycrg.data_service.service.smev3.request.accept_gpzu.AcceptGpzuService;
+import ru.mycrg.data_service.service.smev3.request.accept_rns.AcceptRnsService;
+import ru.mycrg.data_service.service.smev3.request.accept_rnv.AcceptRnvService;
+import ru.mycrg.data_service_contract.dto.SchemaDto;
+import ru.mycrg.data_service_contract.enums.TaskStatus;
+import ru.mycrg.mediator.IRequestHandler;
+import ru.mycrg.mediator.Voidy;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static ru.mycrg.data_service.service.TaskService.*;
+import static ru.mycrg.data_service.service.smev3.fields.CommonFields.*;
+import static ru.mycrg.data_service.util.DetailedLogger.logError;
+import static ru.mycrg.data_service.util.SystemLibraryAttributes.CONTENT_TYPE_ID;
+import static ru.mycrg.data_service_contract.enums.TaskIntermediateStatus.*;
+import static ru.mycrg.data_service_contract.enums.TaskStatus.*;
+
+@Component
+public class UpdateTaskRequestHandler implements IRequestHandler<UpdateTaskRequest, Voidy> {
+
+    private final Logger log = LoggerFactory.getLogger(UpdateTaskRequestHandler.class);
+
+    private final RecordsDao recordsDao;
+    private final TaskService taskService;
+    private final TaskLogService taskLogService;
+    private final AcceptRnsService acceptRnsService;
+    private final AcceptRnvService acceptRnvService;
+    private final AcceptGpzuService acceptGpzuService;
+    private final IAuthenticationFacade authenticationFacade;
+    private final SystemAttributeHandler systemAttributeHandler;
+
+    public UpdateTaskRequestHandler(RecordsDao recordsDao,
+                                    TaskService taskService,
+                                    TaskLogService taskLogService,
+                                    AcceptRnsService acceptRnsService,
+                                    AcceptRnvService acceptRnvService,
+                                    AcceptGpzuService acceptGpzuService,
+                                    IAuthenticationFacade authenticationFacade,
+                                    SystemAttributeHandler systemAttributeHandler) {
+        this.recordsDao = recordsDao;
+        this.taskService = taskService;
+        this.taskLogService = taskLogService;
+        this.acceptRnsService = acceptRnsService;
+        this.acceptRnvService = acceptRnvService;
+        this.acceptGpzuService = acceptGpzuService;
+        this.authenticationFacade = authenticationFacade;
+        this.systemAttributeHandler = systemAttributeHandler;
+    }
+
+    @Override
+    @Transactional
+    public Voidy handle(UpdateTaskRequest request) {
+        log.debug("UpdateTaskRequestHandler: {}", request.getNewRecord().getContent());
+
+        IRecord newTask = request.getNewRecord();
+        SchemaDto tasksSchema = request.getSchema();
+        ResourceQualifier taskQualifier = request.getQualifier();
+        Long taskId = taskQualifier.getRecordIdAsLong();
+
+        Map<String, Object> task = taskService.getById(taskId);
+
+        request.setOldRecord(new RecordEntity(task));
+
+        UserDetails userDetails = authenticationFacade.getUserDetails();
+        Long assignedId = Long.valueOf(task.get(TASK_ASSIGNED_TO_PROPERTY).toString());
+        List<Long> directMinions = userDetails.getDirectMinions();
+
+        if (!userDetails.getUserId().equals(assignedId) && !directMinions.contains(assignedId)) {
+            List<Long> allMinions = userDetails.getAllMinions();
+
+            if (!allMinions.contains(assignedId)) {
+                throw new BadRequestException(
+                        "Возможно редактировать только свои задачи или задачи своих подчиненных");
+            }
+        }
+
+        Map<String, Object> props = newTask.getContent();
+        Map<String, Object> modifiedProps = systemAttributeHandler
+                .init(tasksSchema, props)
+                .decapitalize()
+                .excludeAutoGeneratedFields()
+                .prepareFilesAsJsonb()
+                .fillLastModified()
+                .fillUpdatedBy(true)
+                .build();
+
+        try {
+            String assignedTo = newTask.getAsString(TASK_ASSIGNED_TO_PROPERTY);
+            if (assignedTo != null) {
+                modifiedProps.put(TASK_OWNER_ID_PROPERTY, userDetails.getUserId());
+            }
+
+            newTask.setContent(modifiedProps);
+
+            recordsDao.updateRecordById(taskQualifier, modifiedProps, tasksSchema);
+
+            Map<String, Object> updatedTask = taskService.getById(taskId);
+
+            taskLogService.create(new TaskLogDto("Изменение задачи", taskId, userDetails.getUserId()), updatedTask);
+        } catch (CrgDaoException e) {
+            logError("Не удалось обновить задачу", e);
+
+            throw new DataServiceException("Не удалось обновить задачу: " + taskId);
+        }
+
+        Object contentType = task.get(CONTENT_TYPE_ID.getName());
+        if (contentType != null) {
+            String intermediateStatus = newTask.getAsString(TASK_INTERMEDIATE_STATUS_PROPERTY);
+            TaskStatus status = mapStatus(intermediateStatus);
+            if (intermediateStatus != null && status != null) {
+                switch (contentType.toString()) {
+                    case RNS_CONTENT_TYPE:
+                        acceptRnsService.updateTablesAndSendStatusMessageToSmev(task, status, taskId);
+                        break;
+                    case RNV_CONTENT_TYPE:
+                        acceptRnvService.updateTablesAndSendStatusMessageToSmev(task, status, taskId);
+                        break;
+                    case GPZU_CONTENT_TYPE:
+                        acceptGpzuService.updateTablesAndSendStatusMessageToSmev(task, status, taskId);
+                }
+            }
+        }
+
+        return new Voidy();
+    }
+
+    private TaskStatus mapStatus(String intermediateStatus) {
+        Map<String, TaskStatus> statusActionMap = new HashMap<>();
+        statusActionMap.put(APPLICATION_ASSIGNED_TO_PERFORMER.getIntermediateStatus(), IN_PROGRESS);
+        statusActionMap.put(DOCUMENTS_READY_TO_SENDING.getIntermediateStatus(), DONE);
+        statusActionMap.put(APPLICATION_CANCELED.getIntermediateStatus(), CANCELED);
+
+        return statusActionMap.get(intermediateStatus);
+    }
+}

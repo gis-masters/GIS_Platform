@@ -1,0 +1,29 @@
+body .PseudoLink {
+  cursor: pointer;
+  transition: border-bottom-color 0.3s;
+
+  --PseudoLinkColor: var(--blue);
+
+  &_color {
+    &_inherit {
+      --PseudoLinkColor: inherit;
+    }
+  }
+
+  &_disabled {
+    cursor: default;
+
+    --PseudoLinkColor: var(--gray);
+  }
+
+  &-Inner {
+    color: var(--PseudoLinkColor);
+    border-bottom: 1px currentcolor dashed;
+  }
+
+  &:hover {
+    .PseudoLink-Inner {
+      border-bottom-color: var(--red);
+    }
+  }
+}

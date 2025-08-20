@@ -1,0 +1,16 @@
+.DataImport {
+  position: relative;
+
+  display: flex;
+  flex-direction: column;
+
+  height: 100%;
+  padding-bottom: 20px;
+
+  &-TasksList {
+    overflow: auto;
+    flex-shrink: 1;
+
+    margin-bottom: 30px;
+  }
+}

@@ -1,0 +1,34 @@
+<div class="header">
+  <crg-logo-ng></crg-logo-ng>
+
+  <div *ngIf="envPlatform === 'conv'" class="header__buttons">
+    <a routerLink="/about">
+      <button
+        class="header__button header__button_type_how"
+        mat-raised-button
+      >
+        Как это работает?
+      </button>
+    </a>
+
+    <a routerLink="/register" *ngIf="currentPage !== 'register'">
+    <button
+      *ngIf="envRegistration"
+      class="header__button header__button_type_reg"
+      mat-raised-button
+    >
+      Зарегистрироваться
+    </button>
+  </a>
+  
+  <a routerLink="/" *ngIf="currentPage === 'register'">
+    <button
+      *ngIf="envRegistration"
+      class="register-header__button register-header__button_type_reg"
+      mat-raised-button
+    >
+      Войти
+    </button>
+  </a>
+  </div>
+</div>

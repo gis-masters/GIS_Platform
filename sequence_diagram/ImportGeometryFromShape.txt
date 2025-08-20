@@ -1,0 +1,28 @@
+frame Import geometry from SHAPE file
+
+actor User
+participant DataService
+participant Queue
+participant GeoWrapper
+
+User-#red:2>DataService:Import data from shape request
+DataService
+activate DataService #skyblue
+DataService-#orange:2>DataService:save File \ncreate process
+User <#red:2--DataService: response HTTP
+User <#green:2--DataService
+DataService-#blue:2>>Queue:ShapeLoadedEvent
+deactivate DataService
+activate Queue #skyblue
+Queue-#blue:2>>GeoWrapper:Import data from shape file Event\n{ImportShapeRequestHandler}
+activate GeoWrapper #skyblue
+deactivate Queue
+Queue <#blue:2-- GeoWrapper:Import data from Shape Response Event\n{ShapeImportedEvent}
+deactivate GeoWrapper
+activate Queue #skyblue
+DataService <#blue:2-- Queue:ShapeImportedEvent\n{ImportShapeEventHandler}
+activate DataService #skyblue
+deactivate Queue
+DataService-#orange:2>DataService:copy data from temporary table
+DataService-#orange:2>DataService:complete Process {DONE/ERROR}
+deactivate DataService
