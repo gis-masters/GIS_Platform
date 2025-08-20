@@ -7,8 +7,31 @@
          <Abstract>Generic style</Abstract>
          <FeatureTypeStyle>
             <Rule>
-               <Name>Polygon</Name>
-               <Title>Polygon</Title>
+               <Name>Polygon_min</Name>
+               <Title>Polygon_min</Title>
+               <ogc:Filter>
+                  <ogc:PropertyIsEqualTo>
+                     <ogc:Function name="dimension">
+                        <ogc:Function name="geometry" />
+                     </ogc:Function>
+                     <ogc:Literal>1</ogc:Literal>
+                  </ogc:PropertyIsEqualTo>
+               </ogc:Filter>
+               <MinScaleDenominator>0</MinScaleDenominator>
+               <MaxScaleDenominator>5000</MaxScaleDenominator>
+               <PolygonSymbolizer>
+                  <Fill>
+                     <CssParameter name="fill">#f2e4e4</CssParameter>
+                     <CssParameter name="fill-opacity">0.3</CssParameter>
+                  </Fill>
+                  <Stroke>
+                     <CssParameter name="stroke">#b8b4b4</CssParameter>
+                     <CssParameter name="stroke-width">1</CssParameter>
+                  </Stroke>
+               </PolygonSymbolizer>
+            </Rule><Rule>
+               <Name>Polygon_5000</Name>
+               <Title>Polygon_5000</Title>
                <ogc:Filter>
                   <ogc:PropertyIsEqualTo>
                      <ogc:Function name="dimension">
@@ -17,8 +40,8 @@
                      <ogc:Literal>2</ogc:Literal>
                   </ogc:PropertyIsEqualTo>
                </ogc:Filter>
-               <MinScaleDenominator>0</MinScaleDenominator>
-               <MaxScaleDenominator>2000</MaxScaleDenominator>
+               <MinScaleDenominator>5000</MinScaleDenominator>
+               <MaxScaleDenominator>10000</MaxScaleDenominator>
                <PolygonSymbolizer>
                   <Fill>
                      <CssParameter name="fill">#f2e4e4</CssParameter>
@@ -31,8 +54,80 @@
                </PolygonSymbolizer>
             </Rule>
             <Rule>
-               <Name>Line_all</Name>
-               <Title>Line_all</Title>
+               <Name>Polygon_10000</Name>
+               <Title>Polygon_10000</Title>
+               <ogc:Filter>
+                  <ogc:PropertyIsEqualTo>
+                     <ogc:Function name="dimension">
+                        <ogc:Function name="geometry" />
+                     </ogc:Function>
+                     <ogc:Literal>3</ogc:Literal>
+                  </ogc:PropertyIsEqualTo>
+               </ogc:Filter>
+               <MinScaleDenominator>10000</MinScaleDenominator>
+               <MaxScaleDenominator>200000</MaxScaleDenominator>
+               <PolygonSymbolizer>
+                  <Fill>
+                     <CssParameter name="fill">#f2e4e4</CssParameter>
+                     <CssParameter name="fill-opacity">0.3</CssParameter>
+                  </Fill>
+                  <Stroke>
+                     <CssParameter name="stroke">#b8b4b4</CssParameter>
+                     <CssParameter name="stroke-width">1</CssParameter>
+                  </Stroke>
+               </PolygonSymbolizer>
+            </Rule>
+            <Rule>
+               <Name>Polygon_200000</Name>
+               <Title>Polygon_200000</Title>
+               <ogc:Filter>
+                  <ogc:PropertyIsEqualTo>
+                     <ogc:Function name="dimension">
+                        <ogc:Function name="geometry" />
+                     </ogc:Function>
+                     <ogc:Literal>4</ogc:Literal>
+                  </ogc:PropertyIsEqualTo>
+               </ogc:Filter>
+               <MinScaleDenominator>200000</MinScaleDenominator>
+               <MaxScaleDenominator>600000</MaxScaleDenominator>
+               <PolygonSymbolizer>
+                  <Fill>
+                     <CssParameter name="fill">#f2e4e4</CssParameter>
+                     <CssParameter name="fill-opacity">0.3</CssParameter>
+                  </Fill>
+                  <Stroke>
+                     <CssParameter name="stroke">#b8b4b4</CssParameter>
+                     <CssParameter name="stroke-width">1</CssParameter>
+                  </Stroke>
+               </PolygonSymbolizer>
+            </Rule>
+            <Rule>
+               <Name>Polygon_0</Name>
+               <Title>Polygon_0</Title>
+               <ogc:Filter>
+                  <ogc:PropertyIsEqualTo>
+                     <ogc:Function name="dimension">
+                        <ogc:Function name="geometry" />
+                     </ogc:Function>
+                     <ogc:Literal>6</ogc:Literal>
+                  </ogc:PropertyIsEqualTo>
+               </ogc:Filter>
+               <MinScaleDenominator>0</MinScaleDenominator>
+               <MaxScaleDenominator>600000</MaxScaleDenominator>
+               <PolygonSymbolizer>
+                  <Fill>
+                     <CssParameter name="fill">#f2e4e4</CssParameter>
+                     <CssParameter name="fill-opacity">0.3</CssParameter>
+                  </Fill>
+                  <Stroke>
+                     <CssParameter name="stroke">#b8b4b4</CssParameter>
+                     <CssParameter name="stroke-width">1</CssParameter>
+                  </Stroke>
+               </PolygonSymbolizer>
+            </Rule>
+            <Rule>
+               <Name>Line_min</Name>
+               <Title>Line_min</Title>
                <ogc:Filter>
                   <ogc:PropertyIsEqualTo>
                      <ogc:Function name="dimension">
@@ -51,8 +146,8 @@
                </LineSymbolizer>
             </Rule>
             <Rule>
-               <Name>Line_200</Name>
-               <Title>Line_200</Title>
+               <Name>Line_2000</Name>
+               <Title>Line_2000</Title>
                <ogc:Filter>
                   <ogc:And>
                      <ogc:PropertyIsEqualTo>
