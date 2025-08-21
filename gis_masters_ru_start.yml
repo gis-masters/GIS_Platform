@@ -417,7 +417,7 @@ services:
 
   geoserver:
     container_name: geoserver
-    image: ${DOCKER_CRG_HOST}/geoserver:${GEOSERVER_TAG}
+    image: ${DOCKER_CRG_HOST}/geoserver_crg:${GEOSERVER_TAG}
     restart: always
     healthcheck:
       test: curl -f http://localhost:8080/geoserver/web || exit 1
@@ -463,7 +463,7 @@ services:
 
   rabbitmq:
     container_name: rabbitmq
-    image: ${DOCKER_CRG_HOST}/rabbitmq:${RABBIT_TAG}
+    image: ${DOCKER_CRG_HOST}/rabbitmq_crg:${RABBIT_TAG}
     restart: always
     labels:
       co.elastic.metrics/raw: "[{\"enabled\":true,\"metricsets\":[\"node\",\"queue\",\"exchange\"],\"module\":\"rabbitmq\",\"hosts\":[\"localhost:15672\"],\"username\":\"$CRG_USER\",\"password\":\"$RABBIT_PASS\"}]"
