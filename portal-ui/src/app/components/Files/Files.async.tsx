@@ -64,6 +64,8 @@ export default class Files extends Component<FilesProps> {
   private uploadingNow: FileInfo | null = null;
   private uploadPool: FileInfo[] = [];
   @observable private newbies: NewbieFile[] = [];
+  // отдельный пулл для пустых файлов что бы они ничего не засирали
+  @observable private emptyFiles: FileInfo[] = [];
   @observable private previewOpen = false;
   @observable private startingImageForPreview?: CarouselImageInfo;
 
@@ -83,11 +85,20 @@ export default class Files extends Component<FilesProps> {
     return (
       <>
         <Lookup className={cnFiles()}>
-          {!!value.length && (
+          {!!(value.length || this.emptyFiles.length) && (
             <LookupList multiple={multiple} numerous={numerous} editable={editable}>
-              {singularFiles.map((item, i) => {
+              {[...singularFiles, ...this.emptyFiles].map((item, i) => {
                 const newbie = this.getNewbie(item.id);
-                const fileWithError = this.checkFilesForErrorStatus(newbie);
+                let fileWithError = this.checkFilesForErrorStatus(newbie);
+
+                // для всех пустых файлов одна ошибка и описание
+                if (!item.size) {
+                  fileWithError = {
+                    id: item.id,
+                    status: 'error',
+                    statusText: 'Невозможно загрузить: файл не содержит данных'
+                  };
+                }
 
                 return (
                   <FilesItem
@@ -185,11 +196,13 @@ export default class Files extends Component<FilesProps> {
       onChange(value.filter(({ id }) => !deletingItemsId.includes(id)));
     }
 
-    for (const id of deletingItemsId) {
-      this.delNewbie(id);
-      this.uploadPool = this.uploadPool.filter(({ id }) => id !== id);
+    for (const itemId of deletingItemsId) {
+      this.delNewbie(itemId);
 
-      if (this.uploadingNow?.id === id) {
+      this.setEmptyFiles(this.emptyFiles.filter(({ id }) => id !== itemId));
+      this.uploadPool = this.uploadPool.filter(({ id }) => id !== itemId);
+
+      if (this.uploadingNow?.id === itemId) {
         this.uploadingNow = null;
         void this.upload();
       }
@@ -205,6 +218,11 @@ export default class Files extends Component<FilesProps> {
   @action.bound
   private onPreviewClose() {
     this.previewOpen = false;
+  }
+
+  @action.bound
+  private setEmptyFiles(emptyFiles: FileInfo[]) {
+    this.emptyFiles = emptyFiles;
   }
 
   @computed
@@ -240,7 +258,16 @@ export default class Files extends Component<FilesProps> {
         }
 
         const newItem: FileInfo = { id: uuid(), title: file.name, size: file.size, notLoaded: true };
+
+        // не пускаем пустые файлы в общий пулл
+        if (file.size === 0 || !file.size) {
+          this.setEmptyFiles([...this.emptyFiles, newItem]);
+
+          continue;
+        }
+
         newFileItems.push(newItem);
+
         this.addNewbie({ id: newItem.id, status: 'new', statusText: 'Ожидает загрузки', file });
       }
     }
@@ -266,6 +293,10 @@ export default class Files extends Component<FilesProps> {
     const fileInfo = this.uploadPool.shift();
 
     if (this.uploadingNow || !fileInfo) {
+      return;
+    }
+
+    if (fileInfo.size === 0 || !fileInfo.size) {
       return;
     }
 
@@ -332,11 +363,14 @@ export default class Files extends Component<FilesProps> {
     }
 
     const newItem = { ...value[itemIndex], ...patch };
+
     if (!newItem.notLoaded) {
       delete newItem.notLoaded;
     }
+
     const newValue = [...value];
     newValue.splice(itemIndex, 1, newItem);
+
     if (onChange) {
       onChange(newValue);
     }
