@@ -191,14 +191,8 @@
           },
           {
             "id": "copy",
-            "title": "Копирование и перенос векторных данных между слоями",
+            "title": "Копирование векторных данных между слоями",
             "contentUrl": "/assets/help/map/dataWork/9copy/09copy.html"
-          },
-          {
-            "id": "edit",
-            "title": "Внесение изменений в требуемую Приказом информацию",
-            "platforms": ["conv"],
-            "contentUrl": "/assets/help/map/dataWork/10edit/10edit.html"
           },
           {
             "id": "copyUrl",
@@ -248,11 +242,6 @@
             "id": "createObjectCSV",
             "title": "Создание объекта по координатам путем вставки их из файла CSV",
             "contentUrl": "/assets/help/map/dataEdit/3createObjectCSV/03createObjectCSV.html"
-          },
-          {
-            "id": "editObject",
-            "title": "Редактирование объекта",
-            "contentUrl": "/assets/help/map/dataEdit/4editObject/04editObject.html"
           },
           {
             "id": "addDocumentObject",
