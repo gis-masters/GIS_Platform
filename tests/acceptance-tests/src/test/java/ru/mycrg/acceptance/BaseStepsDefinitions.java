@@ -1,6 +1,7 @@
 package ru.mycrg.acceptance;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.http.Cookie;
@@ -13,7 +14,6 @@ import ru.mycrg.acceptance.configs.GeneralEnvironmentsConfig;
 import ru.mycrg.acceptance.data_service.dto.DatasetCreateDto;
 import ru.mycrg.acceptance.data_service.dto.InitialBaseMapCreateDto;
 import ru.mycrg.acceptance.data_service.dto.TableCreateDto;
-import ru.mycrg.acceptance.data_service.dto.schemas.SchemaDto;
 import ru.mycrg.acceptance.gis_service.dto.BaseMapCreateDto;
 import ru.mycrg.acceptance.gis_service.dto.LayerCreateDto;
 import ru.mycrg.acceptance.gis_service.dto.LayerGroupCreateDto;
@@ -21,6 +21,8 @@ import ru.mycrg.auth_service_contract.dto.GroupCreateDto;
 import ru.mycrg.auth_service_contract.dto.OrganizationCreateDto;
 import ru.mycrg.auth_service_contract.dto.UserCreateDto;
 import ru.mycrg.common_contracts.generated.gis_service.project.ProjectCreateDto;
+import ru.mycrg.data_service_contract.dto.SchemaDto;
+import ru.mycrg.data_service_contract.enums.GeometryType;
 import ru.mycrg.geo_json.Feature;
 
 import java.util.*;
@@ -49,7 +51,9 @@ public class BaseStepsDefinitions {
     public static Cookie cookie;
     public static Cookie oldCookie;
     public static JsonPath jsonPath;
-    public static Gson gson = new Gson();
+    public static Gson gson = new GsonBuilder()
+            .registerTypeAdapter(GeometryType.class, new GeometryTypeAdapter())
+            .create();
 
     public static int totalPages;
     public static int entityCount;

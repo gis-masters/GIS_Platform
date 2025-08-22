@@ -1,6 +1,8 @@
 package ru.mycrg.acceptance.data_service.processes;
 
+import io.cucumber.java.en.And;
 import io.cucumber.java.en.When;
+import io.restassured.http.ContentType;
 import io.restassured.specification.RequestSpecification;
 import ru.mycrg.acceptance.BaseStepsDefinitions;
 import ru.mycrg.acceptance.auth_service.AuthorizationBase;
@@ -12,6 +14,7 @@ import java.util.UUID;
 
 import static io.restassured.http.ContentType.JSON;
 import static java.lang.Thread.sleep;
+import static org.junit.Assert.assertEquals;
 import static ru.mycrg.acceptance.auth_service.OrganizationStepsDefinitions.MAX_RETRY_ATTEMPT;
 import static ru.mycrg.acceptance.data_service.FilesStepDefinitions.currentFileId;
 import static ru.mycrg.acceptance.data_service.FilesStepDefinitions.currentFiles;
@@ -51,20 +54,47 @@ public class ProcessesStepDefinitions extends BaseStepsDefinitions {
         currentProcessId = extractId((String) response.jsonPath().get("_links.self.href"));
     }
 
-    @When("Пользователь публикует GML")
-    public void tryPlacementGmlAsProcesss() {
-        GmlPlacementModel gmlPlacementModel = new GmlPlacementModel();
-        gmlPlacementModel.setFileId(currentFileId);
-        gmlPlacementModel.setWsUiId("Fiat lux");
-        gmlPlacementModel.setProjectId(Long.valueOf(projectId));
+    @When("пользователь экспортирует GML")
+    public void exportGml() {
+        String dataset = response.jsonPath().get("details.datasetIdentifier");
+        String table = response.jsonPath().getString("details.importLayerReports[0].tableIdentifier");
+        String wsUiId = generateString("STRING_6");
 
-        ProcessableModel processableModel = new ProcessableModel();
-        processableModel.setType("IMPORT");
-        processableModel.setPayload(gmlPlacementModel);
+        String body = String.format("{\"wsUiId\":\"%s\"," +
+                                            "\"format\":\"GML\"," +
+                                            "\"resources\":[{\"dataset\":\"%s\",\"table\":\"%s\"}]," +
+                                            "\"docSchema\":\"Doc.20201010000\"," +
+                                            "\"epsg\":\"EPSG:3857\"," +
+                                            "\"invertedCoordinates\":false}",
+                                    wsUiId, dataset, table);
 
-        initProcess(processableModel);
+        response = getBaseRequestWithCurrentCookie()
+                .given().
+                        body(body).
+                        contentType(ContentType.JSON).
+                        basePath("")
+                .when().
+                        log().ifValidationFails().
+                        post("/api/data/export");
 
-        currentProcessId = extractId((String) response.jsonPath().get("_links.self.href"));
+        currentProcessId = response.jsonPath().get("id");
+    }
+
+    @And("размер полученного файла равен {int}")
+    public void sizeOfFile(int size) {
+        getCurrentProcess();
+        String path = response.jsonPath().get("details");
+        String fileName = path.substring(path.lastIndexOf('/') + 1);
+
+
+        response = getBaseRequestWithCurrentCookie()
+                .given().
+                        basePath("")
+                .when().
+                        log().ifValidationFails().
+                        get("/api/data/export/"+fileName);
+
+        assertEquals(size, response.asByteArray().length);
     }
 
     @When("Пользователь публикует DXF")

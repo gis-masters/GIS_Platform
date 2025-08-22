@@ -23,7 +23,7 @@ services:
     command:  metricbeat -e -strict.perms=false
 
   pghero:
-    image: 10.10.10.165:5000/pghero_crg:3.7
+    image: ${DOCKER_CRG_HOST}/pghero_crg:3.7
     container_name: pghero
     restart: always
     ports:

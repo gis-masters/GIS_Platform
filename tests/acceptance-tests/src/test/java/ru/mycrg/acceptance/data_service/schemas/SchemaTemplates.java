@@ -1,12 +1,13 @@
 package ru.mycrg.acceptance.data_service.schemas;
 
-import ru.mycrg.acceptance.data_service.dto.schemas.SchemaDto;
-import ru.mycrg.acceptance.data_service.dto.schemas.SimplePropertyDto;
+import ru.mycrg.data_service_contract.dto.SchemaDto;
+import ru.mycrg.data_service_contract.dto.SimplePropertyDto;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static ru.mycrg.acceptance.BaseStepsDefinitions.gson;
+import static ru.mycrg.data_service_contract.enums.GeometryType.MULTI_POLYGON;
 
 public class SchemaTemplates {
 
@@ -130,7 +131,7 @@ public class SchemaTemplates {
                 incorrectSchema.setName("incorrectSchemaForTestOny");
                 incorrectSchema.setTitle("Тестовая схема с полем в верхнем регистре");
                 incorrectSchema.setTableName("t_incorrect_for_test");
-                incorrectSchema.setGeometryType("MultiPolygon");
+                incorrectSchema.setGeometryType(MULTI_POLYGON);
                 incorrectSchema.setReadOnly(false);
 
                 SimplePropertyDto incorrectField = new SimplePropertyDto();
@@ -1070,7 +1071,7 @@ public class SchemaTemplates {
         SchemaDto schemaDto = new SchemaDto();
         schemaDto.setName(currentSchemaName);
         schemaDto.setTableName(currentSchemaName);
-        schemaDto.setGeometryType("MultiPolygon");
+        schemaDto.setGeometryType(MULTI_POLYGON);
         schemaDto.setReadOnly(false);
         schemaDto.setProperties(properties);
 

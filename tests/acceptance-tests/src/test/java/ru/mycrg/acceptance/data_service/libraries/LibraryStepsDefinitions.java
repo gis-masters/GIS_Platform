@@ -12,9 +12,9 @@ import ru.mycrg.acceptance.auth_service.AuthorizationBase;
 import ru.mycrg.acceptance.auth_service.UserStepsDefinitions;
 import ru.mycrg.acceptance.data_service.datasets.DatasetsStepsDefinitions;
 import ru.mycrg.acceptance.data_service.dto.*;
-import ru.mycrg.acceptance.data_service.dto.schemas.SchemaDto;
 import ru.mycrg.acceptance.data_service.schemas.CurrentScenarioSchema;
 import ru.mycrg.data_service_contract.dto.DocumentVersioningDto;
+import ru.mycrg.data_service_contract.dto.SchemaDto;
 
 import javax.validation.constraints.NotNull;
 import java.io.File;
@@ -466,9 +466,9 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
         createDocumentAndWriteAsCurrent(getRecordBodyForDlDefaultWithCorrectField(), DEFAULT_LIBRARY);
     }
 
-    @When("B библиотеке по-умолчанию существует документ")
-    public void createDocumentInDefaultLibrary() {
-        createDocumentAndWriteAsCurrent(getRecordBodyForDlDefaultWithCorrectField(), DEFAULT_LIBRARY);
+    @Given("B созданной библиотеке существует документ")
+    public void createDocumentInCurrentLibrary() {
+        createDocumentAndWriteAsCurrent(getRecordBodyForDlDefaultWithCorrectField(), currentLibrary.getTableName());
     }
 
     @When("Пользователь делает запрос на создание записи передавая несуществующий в базе данных атрибут")

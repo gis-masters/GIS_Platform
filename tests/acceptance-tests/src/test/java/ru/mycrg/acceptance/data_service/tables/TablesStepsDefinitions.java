@@ -12,8 +12,8 @@ import ru.mycrg.acceptance.data_service.dto.ErrorInfo;
 import ru.mycrg.acceptance.data_service.dto.PermissionCreateDto;
 import ru.mycrg.acceptance.data_service.dto.TableCreateDto;
 import ru.mycrg.acceptance.data_service.dto.TableUpdateDto;
-import ru.mycrg.acceptance.data_service.dto.schemas.SchemaDto;
 import ru.mycrg.acceptance.data_service.schemas.CurrentScenarioSchema;
+import ru.mycrg.data_service_contract.dto.SchemaDto;
 
 import java.util.ArrayList;
 import java.util.List;

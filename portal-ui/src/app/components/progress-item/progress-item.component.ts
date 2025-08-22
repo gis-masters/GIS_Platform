@@ -81,7 +81,7 @@ export class ProgressItemComponent implements OnDestroy {
     }
     const wsMessage: IWsMessage = this.event.payload;
     const exportWsMsg: ExportWsMsg = wsMessage.payload as ExportWsMsg;
-    const fileName = exportWsMsg.payload.split('/')[3];
+    const fileName = exportWsMsg.payload.split(/[#?]/)[0].split(/[/\\]/).filter(Boolean).pop() as string;
     const data = await downloadExportResult(fileName);
     const blob = new Blob([data], { type: Mime.XML });
 

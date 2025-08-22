@@ -2,8 +2,6 @@ package ru.mycrg.wrapper.service.export;
 
 import org.jetbrains.annotations.NotNull;
 import org.locationtech.jts.geom.Coordinate;
-import ru.mycrg.data_service_contract.dto.SimplePropertyDto;
-import ru.mycrg.data_service_contract.enums.ValueType;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
@@ -41,19 +39,6 @@ public class GmlUtil {
         }
 
         return value.toString();
-    }
-
-    @NotNull
-    public static String getDefaultValue(SimplePropertyDto property) {
-        if (property.getValueTypeAsEnum() == ValueType.INT || property.getValueTypeAsEnum() == ValueType.CHOICE) {
-            return "0";
-        }
-
-        if (property.getValueTypeAsEnum() == ValueType.DOUBLE) {
-            return "0.0000";
-        }
-
-        return "";
     }
 
     @NotNull

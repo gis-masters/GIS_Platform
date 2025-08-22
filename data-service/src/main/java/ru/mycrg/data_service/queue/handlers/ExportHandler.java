@@ -6,13 +6,14 @@ import org.springframework.stereotype.Service;
 import ru.mycrg.data_service.dto.ProcessModel;
 import ru.mycrg.data_service.dto.WsMessageDto;
 import ru.mycrg.data_service.entity.Process;
-import ru.mycrg.data_service.service.processes.ProcessService;
 import ru.mycrg.data_service.service.WsNotificationService;
+import ru.mycrg.data_service.service.processes.ProcessService;
 import ru.mycrg.data_service_contract.queue.response.ExportResponseEvent;
 import ru.mycrg.messagebus_contract.IEventHandler;
 import ru.mycrg.messagebus_contract.events.IMessageBusEvent;
 
 import static ru.mycrg.data_service_contract.enums.ProcessType.EXPORT;
+import static ru.mycrg.http_client.JsonConverter.toJsonNode;
 
 @Service
 public class ExportHandler implements IEventHandler {
@@ -51,7 +52,11 @@ public class ExportHandler implements IEventHandler {
                 processService.error(event.getDbName(), process);
                 break;
             case DONE:
-                processService.complete(event.getDbName(), process);
+                if (event.getPayload() != null) {
+                    processService.complete(event.getDbName(), process.getId(), toJsonNode(event.getPayload()));
+                } else {
+                    processService.complete(event.getDbName(), process);
+                }
                 break;
             default:
                 log.warn("Not supported process status. {}", process);

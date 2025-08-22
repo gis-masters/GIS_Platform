@@ -1,6 +1,6 @@
 package ru.mycrg.acceptance.data_service.schemas;
 
-import ru.mycrg.acceptance.data_service.dto.schemas.SchemaDto;
+import ru.mycrg.data_service_contract.dto.SchemaDto;
 
 import java.util.HashMap;
 import java.util.Map;

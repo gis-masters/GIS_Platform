@@ -41,7 +41,8 @@ import static java.util.Objects.nonNull;
 import static java.util.stream.Collectors.toMap;
 import static ru.mycrg.data_service_contract.enums.ProcessStatus.*;
 import static ru.mycrg.wrapper.dao.DaoProperties.*;
-import static ru.mycrg.wrapper.service.export.GmlUtil.*;
+import static ru.mycrg.wrapper.service.export.GmlUtil.calculatePercent;
+import static ru.mycrg.wrapper.service.export.GmlUtil.getString;
 
 @Service
 public class GmlGenerator implements IExporter {
@@ -169,9 +170,11 @@ public class GmlGenerator implements IExporter {
                               .ifPresent(properties::remove);
 
                     properties.stream()
-                              .sorted(Comparator.comparingInt(SimplePropertyDto::getSequenceNumber))
-                              .forEach(simplePropertyDto -> fillFeatureMember(featureMember, docHolder.getGmlDocument(),
-                                                                              propFromDb, simplePropertyDto));
+                              .filter(Objects::nonNull)
+                              .forEach(simplePropertyDto -> fillFeatureMember(featureMember,
+                                                                              docHolder.getGmlDocument(),
+                                                                              propFromDb,
+                                                                              simplePropertyDto));
 
                     // Отдельно обрабатываем геометрию
                     double area = 0;
@@ -279,11 +282,7 @@ public class GmlGenerator implements IExporter {
                     prop.setTextContent(getString(value));
                     featureMember.appendChild(prop);
                 } else {
-                    // Значение isRequired то сгенерируем дефолтное иначе невключаем в gml
-                    if (targetProperty.isRequired()) {
-                        prop.setTextContent(getDefaultValue(targetProperty));
-                        featureMember.appendChild(prop);
-                    }
+                    log.debug("Поле {} не заполнено в базе", targetProperty.getName());
                 }
             }
         });
