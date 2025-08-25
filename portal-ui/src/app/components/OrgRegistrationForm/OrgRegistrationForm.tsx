@@ -25,22 +25,18 @@ import '!style-loader!css-loader!sass-loader!./OrgRegistrationForm.scss';
 
 const cnOrgRegistrationForm = cn('OrgRegistrationForm');
 
-const defaultData: Partial<RegData> = {
-  company: '',
-  contactPhone: '',
-  description: '',
-  specializationId: undefined,
-  lastName: '',
-  firstName: '',
-  email: '',
-  password: '',
-  password_: ''
+const getUrlParam = (param: string): string | null => {
+  const urlParams = new URLSearchParams(window.location.search);
+
+  return urlParams.get(param);
 };
 
 @observer
 export class OrgRegistrationForm extends Component {
   @observable private loading = false;
   @observable private specializations: SpecializationView[] = [];
+  @observable private defaultSpecializationId: number | undefined = undefined;
+  @observable private isSpecializationReadOnly = false;
 
   constructor(props: Record<string, never>) {
     super(props);
@@ -52,6 +48,20 @@ export class OrgRegistrationForm extends Component {
 
     try {
       this.specializations = await getSpecializations();
+
+      const urlSpecialization = getUrlParam('specialization');
+
+      if (urlSpecialization && urlSpecialization.trim() !== '') {
+        // проверка на существование специализации по id
+        const specializationFromUrl = this.specializations.find(specialization => {
+          return specialization.id === Number(urlSpecialization);
+        });
+
+        if (specializationFromUrl) {
+          this.setDefaultSpecializationId(specializationFromUrl.id);
+          this.setSpecializationReadOnly(true);
+        }
+      }
     } catch (error) {
       Toast.error({
         message: isError(error) ? error?.message : 'Ошибка'
@@ -63,6 +73,18 @@ export class OrgRegistrationForm extends Component {
 
   render() {
     const htmlId = generateRandomId();
+
+    const defaultData: Partial<RegData> = {
+      company: '',
+      contactPhone: '',
+      description: '',
+      specializationId: this.defaultSpecializationId || undefined,
+      lastName: '',
+      firstName: '',
+      email: '',
+      password: '',
+      password_: ''
+    };
 
     return (
       <div className={cnOrgRegistrationForm('Wrapper')}>
@@ -95,18 +117,19 @@ export class OrgRegistrationForm extends Component {
     return {
       properties: [
         {
+          name: 'specializationId',
+          title: 'Специализация',
+          required: true,
+          readOnly: this.isSpecializationReadOnly,
+          propertyType: PropertyType.CHOICE,
+          options: this.getOptionsBySpecializations()
+        },
+        {
           name: 'company',
           title: 'Наименование',
           minLength: 5,
           required: true,
           propertyType: PropertyType.STRING
-        },
-        {
-          name: 'specializationId',
-          title: 'Специализация',
-          required: true,
-          propertyType: PropertyType.CHOICE,
-          options: this.getOptionsBySpecializations()
         },
         {
           name: 'specDescription',
@@ -194,6 +217,16 @@ export class OrgRegistrationForm extends Component {
         }
       ]
     };
+  }
+
+  @action
+  private setDefaultSpecializationId(id: number): void {
+    this.defaultSpecializationId = id;
+  }
+
+  @action
+  private setSpecializationReadOnly(readOnly: boolean): void {
+    this.isSpecializationReadOnly = readOnly;
   }
 
   private getOptionsBySpecializations(): PropertyOption[] {
