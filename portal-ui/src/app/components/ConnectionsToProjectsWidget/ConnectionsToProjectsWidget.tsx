@@ -92,6 +92,8 @@ export class ConnectionsToProjectsWidget extends Component<ConnectionsToProjects
                 open={this.selectProjectDialogOpen}
                 className={cnConnectionsToProjectsWidget('Dialog')}
                 onClose={this.closeSelectProjectDialog}
+                maxWidth='md'
+                fullWidth
               >
                 <DialogTitle>Выбор проекта</DialogTitle>
                 <DialogContent>
@@ -211,11 +213,15 @@ export class ConnectionsToProjectsWidget extends Component<ConnectionsToProjects
 
   @boundMethod
   private testForDisabled(item: ExplorerItemData): boolean {
-    return (
-      item.type !== ExplorerItemType.PROJECT ||
-      item.payload.role !== Role.OWNER ||
-      this.isAlreadyConnected(item.payload)
-    );
+    if (item.type === ExplorerItemType.PROJECT_FOLDER) {
+      return false;
+    }
+
+    if (item.type === ExplorerItemType.PROJECT) {
+      return item.payload.role !== Role.OWNER || this.isAlreadyConnected(item.payload);
+    }
+
+    return false;
   }
 
   private isAlreadyConnected(payload: CrgProject): boolean {
