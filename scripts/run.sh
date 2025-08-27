@@ -37,9 +37,12 @@ echo "Using migration parameters:"
 echo "  CRG_USER: ${CRG_USER}"
 echo "  DB_PASS: ${DB_PASS}"
 echo "  SECURITY_JWT_SECRET: ${SECURITY_JWT_SECRET}"
+echo "  GEOSERVER_UI_LOGIN: ${GEOSERVER_UI_LOGIN}"
+echo "  GEOSERVER_UI_PASSWORD: ${GEOSERVER_UI_CRYPTED_PASSWORD}"
+
 echo "#👻👻👻👻👻👻👻👻👻👻👻👻👻👻👻👻👻👻👻👻👻👻👻👻👻👻👻👻#"
 
-./migration-scripts/run.sh "${CRG_USER}" "${DB_PASS}" "${SECURITY_JWT_SECRET}"
+./migration-scripts/run.sh "${CRG_USER}" "${DB_PASS}" "${SECURITY_JWT_SECRET}" "${GEOSERVER_UI_LOGIN}" "${GEOSERVER_UI_CRYPTED_PASSWORD}"
 popd || exit
 
 printHeader "Docker compose UP"

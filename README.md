@@ -34,20 +34,12 @@ SPRING_MAIL_PASSWORD
 
 ### 3. Доступ к GeoServer  
 ```
-AUTH_REFRESH_USERNAME
-AUTH_REFRESH_PASSWORD
-AUTH_REFRESH_CREDENTIALS_B64
+GEOSERVER_UI_LOGIN
+SECURITY_JWT_CLIENT_ID
+SECURITY_JWT_CLIENT_SECRET
+GEOSERVER_UI_CRYPTED_PASSWORD
 ```  
-> Параметры для проверки валидности refresh_token.
 
->Дополнительно используются как учетные данные для входа в Web UI GeoServer.  
-
-**Три переменные связаны между собой и должны меняться одновременно**
-
-Для смены пароля от UI Geoserver нужно обновить файл:
-```
-assets/initialConfig/geoserver/security/usergroup/default/users.xml
-```
-— в нём заданы соответствующие записи для GeoServer.
+**Переменные связаны между собой и должны меняться одновременно**
 
 ---

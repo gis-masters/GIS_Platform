@@ -30,4 +30,18 @@ else
     elif [ -f "$JWT_CONFIG_FILE" ]; then
         echo -e "${TAB}  Warning: JWT_SECRET not provided, JWT config will contain placeholder"
     fi
+
+    # Process users.xml if GEOSERVER_UI_LOGIN and GEOSERVER_UI_PASSWORD are provided
+    USERS_CONFIG_FILE="${GEOSERVER_DATA_DIR}/security/usergroup/default/users.xml"
+    if [ -n "$GEOSERVER_UI_LOGIN" ] && [ -n "$GEOSERVER_UI_PASSWORD" ] && [ -f "$USERS_CONFIG_FILE" ]; then
+        echo -e "${TAB}  Updating users config with provided credentials"
+        # Use sed to replace the placeholders with actual values
+        sed -e "s|\${GEOSERVER_UI_LOGIN}|$GEOSERVER_UI_LOGIN|g" \
+            -e "s|\${GEOSERVER_UI_PASSWORD}|$GEOSERVER_UI_PASSWORD|g" \
+            "$USERS_CONFIG_FILE" > "$TEMP_DIR/users_config.xml"
+        cp -f "$TEMP_DIR/users_config.xml" "$USERS_CONFIG_FILE"
+        echo -e "${TAB}  Users config updated successfully"
+    elif [ -f "$USERS_CONFIG_FILE" ]; then
+        echo -e "${TAB}  Warning: GEOSERVER_UI_LOGIN or GEOSERVER_UI_PASSWORD not provided, users config will contain placeholders"
+    fi
 fi
