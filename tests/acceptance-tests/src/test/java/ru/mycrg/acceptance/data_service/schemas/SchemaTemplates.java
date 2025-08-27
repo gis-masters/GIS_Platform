@@ -178,6 +178,11 @@ public class SchemaTemplates {
                         "      \"valueType\": \"UUID\"\n" +
                         "    },\n" +
                         "    {\n" +
+                        "      \"name\": \"fias\",\n" +
+                        "      \"title\": \"ФИАС\",\n" +
+                        "      \"valueType\": \"FIAS\"\n" +
+                        "    },\n" +
+                        "    {\n" +
                         "      \"name\": \"location\",\n" +
                         "      \"title\": \"Местоположение\",\n" +
                         "      \"maxLength\": 400,\n" +
@@ -258,6 +263,11 @@ public class SchemaTemplates {
                         "    {" +
                         "      \"name\": \"guid\"," +
                         "      \"title\": \"ВсемирныйУникал\"," +
+                        "      \"valueType\": \"INT\"" +
+                        "    }," +
+                        "    {" +
+                        "      \"name\": \"fias\"," +
+                        "      \"title\": \"ФИАС\"," +
                         "      \"valueType\": \"INT\"" +
                         "    }," +
                         "    {" +

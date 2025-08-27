@@ -59,6 +59,7 @@ public class TypeMapper {
             case CHOICE:
                 return dbType.equalsIgnoreCase("varchar") || dbType.contains("int");
             case STRING:
+            case FIAS:
             case DOCUMENT:
                 return dbType.equalsIgnoreCase("varchar");
             case DATETIME:
