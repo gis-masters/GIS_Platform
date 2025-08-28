@@ -27,7 +27,7 @@ sudo chmod -R 777 /opt/crg/
 cd /opt/crg
 
 # 2) Скачайте мастер установки (через GitHub raw)
-wget 'https://github.com/NIKTO/test/blob/main/installGisMastersApp.sh?raw=1' \
+wget 'https://github.com/gis-masters/GIS_Platform/blob/main/installGisMastersApp.sh?raw=1' \
      -O installGisMastersApp.sh
 
 # 3) Выдайте скаченному скрипту права на запуск
