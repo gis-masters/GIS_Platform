@@ -1,7 +1,10 @@
 import { createElement } from 'react';
 import { createRoot } from 'react-dom/client';
 import domToImage from 'dom-to-image';
+import { Map } from 'ol';
+import TileLayer from 'ol/layer/Tile';
 import { getPointResolution } from 'ol/proj';
+import TileSource from 'ol/source/Tile';
 
 import { Legend } from '../../components/Legend/Legend';
 import { PrintMapDialogDate } from '../../components/PrintMapDialog/Date/PrintMapDialog-Date';
@@ -25,13 +28,16 @@ export enum ImageMime {
   JPG = 'image/jpeg'
 }
 
+//  Функция печати карты в PDF
 export async function printMap(directly: boolean): Promise<Blob> {
   const { pageWidth, pageHeight, pageFormat, orientation, margin } = printSettings;
 
   const { default: jsPDF } = await import('jspdf');
 
+  // Создание нового PDF документа
   const pdf = new jsPDF(orientation, undefined, pageFormat.id);
 
+  // Добавление изображения карты в PDF
   pdf.addImage(
     await getMapImage(),
     'JPEG',
@@ -48,7 +54,9 @@ export async function printMap(directly: boolean): Promise<Blob> {
   return pdf.output('blob');
 }
 
+// Функция экспорта карты как изображения
 export async function exportMap(directly = false): Promise<string> {
+  // Получение изображения карты без цифр масштаба
   const mapImage = await getMapImage({ hideScaleDigits: true });
 
   if (directly) {
@@ -58,6 +66,7 @@ export async function exportMap(directly = false): Promise<string> {
   return mapImage;
 }
 
+// Подготовка карты для копирования в буфер обмена
 export async function prepareMapCopying(): Promise<HTMLDivElement> {
   const img = document.createElement('img');
   const div = document.createElement('div');
@@ -81,7 +90,55 @@ interface MapImageOptions {
   hideScaleDigits?: boolean;
 }
 
+function waitForTilesLoad(map: Map): Promise<void> {
+  return new Promise(resolve => {
+    const layers = map.getLayers().getArray();
+    let pendingTiles = 0;
+    let resolved = false;
+
+    const checkResolution = () => {
+      if (pendingTiles === 0 && !resolved) {
+        resolved = true;
+        resolve();
+      }
+    };
+
+    layers.forEach(layer => {
+      const tileLayer = layer as unknown as TileLayer<TileSource>;
+
+      if ('getSource' in tileLayer) {
+        const source = tileLayer.getSource();
+
+        if (source && 'on' in source) {
+          source.on('tileloadstart', () => {
+            pendingTiles++;
+          });
+
+          source.on('tileloadend', () => {
+            pendingTiles--;
+            checkResolution();
+          });
+
+          source.on('tileloaderror', () => {
+            pendingTiles--;
+            checkResolution();
+          });
+        }
+      }
+    });
+
+    setTimeout(() => {
+      if (!resolved) {
+        resolved = true;
+        resolve();
+      }
+    }, 1000); // 1 секунда ощущается при выборе куска для печати, но позволяет подгружать все ответы
+  });
+}
+
+// Генерация изображения карты
 export async function getMapImage(options: MapImageOptions = {}): Promise<string> {
+  // Установка значений по умолчанию
   const {
     resolution,
     withDesignations,
@@ -98,13 +155,15 @@ export async function getMapImage(options: MapImageOptions = {}): Promise<string
     ...options
   };
 
+  // Установка статуса печати
   printSettings.setPrintingStatus(true, resolution);
 
   const { map, view, scaleLine } = mapService;
   const { width, height, legend, showSystemLayers } = printSettings;
 
+  // Проверка инициализации карты
   if (!map || !view || !scaleLine) {
-    throw new Error('Map is not initialized');
+    throw new Error('Карта не инициализирована');
   }
 
   const size = map.getSize();
@@ -118,74 +177,94 @@ export async function getMapImage(options: MapImageOptions = {}): Promise<string
     mapService.hideSystemLayer('measure');
   }
 
+  // Установка размера для печати
   setPrintSize(resolution, translateX, translateY);
 
-  return new Promise<string>(resolve => {
-    map.once('rendercomplete', async () => {
-      if (legend.auto) {
-        await autoFilterLegend();
-      }
+  return new Promise<string>((resolve, reject) => {
+    try {
+      // Ожидание завершения рендеринга карты
+      map.once('rendercomplete', async () => {
+        try {
+          await waitForTilesLoad(map);
 
-      const mapCanvas = document.createElement('canvas');
-      mapCanvas.width = width;
-      mapCanvas.height = height;
-
-      const mapContext = mapCanvas.getContext('2d');
-      if (!mapContext) {
-        throw new Error('Canvas context is not initialized');
-      }
-      mapContext.fillStyle = '#ffffff';
-      mapContext.fillRect(0, 0, width, height);
-
-      document.querySelectorAll('.ol-layer canvas').forEach((canvas: Element) => {
-        if (!(canvas instanceof HTMLCanvasElement)) {
-          throw new TypeError('Canvas is not canvas');
-        }
-
-        if (canvas.width > 0) {
-          const parent = canvas.parentElement;
-          if (!parent) {
-            throw new Error('Impossible, but parent is not found');
+          if (legend.auto) {
+            await autoFilterLegend();
           }
-          const opacity = canvas.parentElement.style.opacity;
-          mapContext.globalAlpha = opacity === '' ? 1 : Number(opacity);
 
-          // Get the transform parameters from the style's transform matrix
-          const matrixTransform = /^matrix\(([^(]*)\)$/.exec(canvas.style.transform);
-          if (!matrixTransform) {
-            throw new Error('Matrix transform is not found');
+          // Создание canvas для финального изображения
+          const mapCanvas = document.createElement('canvas');
+          mapCanvas.width = width;
+          mapCanvas.height = height;
+
+          const mapContext = mapCanvas.getContext('2d');
+          if (!mapContext) {
+            throw new Error('Canvas context is not initialized');
           }
-          const matrix = matrixTransform[1].split(',').map(Number);
+          mapContext.fillStyle = '#ffffff';
+          mapContext.fillRect(0, 0, width, height);
 
-          // Apply the transform to the export map context
-          CanvasRenderingContext2D.prototype.setTransform.apply(mapContext, matrix as unknown as [DOMMatrix2DInit]);
-          mapContext.drawImage(canvas, 0, 0);
+          // Рендер всех слоев карты на canvas
+          document.querySelectorAll('.ol-layer canvas').forEach((canvas: Element) => {
+            if (!(canvas instanceof HTMLCanvasElement)) {
+              return;
+            }
+
+            if (canvas.width > 0) {
+              const parent = canvas.parentElement;
+              if (!parent) {
+                return;
+              }
+              const opacity = parent.style.opacity;
+              mapContext.globalAlpha = opacity === '' ? 1 : Number(opacity);
+
+              const matrixTransform = /^matrix\(([^(]*)\)$/.exec(canvas.style.transform);
+              if (matrixTransform) {
+                const matrix = matrixTransform[1].split(',').map(Number);
+                CanvasRenderingContext2D.prototype.setTransform.apply(
+                  mapContext,
+                  matrix as unknown as [DOMMatrix2DInit]
+                );
+                mapContext.drawImage(canvas, 0, 0);
+              }
+            }
+          });
+
+          // Коэффициент масштабирования для обозначений
+          const designationsResize = resolution / BASE_SCALE_LINE_DPI;
+          CanvasRenderingContext2D.prototype.resetTransform.apply(mapContext);
+
+          // Отрисовка инструментов измерений
+          if (showSystemLayers.measure) {
+            await drawMeasurementsTooltips(mapContext);
+          }
+
+          // Отрисовка всех обозначений (масштаб, роза ветров и т.д.)
+          if (withDesignations) {
+            await drawDesignations(mapContext, resolution, designationsResize, hideScaleDigits);
+          }
+
+          const result = mapCanvas.toDataURL(mime);
+
+          // Восстановление оригинальных настроек карты
+          mapService.showSystemLayer('draft');
+          mapService.showSystemLayer('measure');
+
+          scaleLine.setDpi();
+          map.setSize(size);
+          view.setResolution(viewResolution);
+
+          printSettings.setPrintingStatus(false);
+          resolve(result);
+        } catch (error) {
+          reject(error);
         }
       });
 
-      const designationsResize = resolution / BASE_SCALE_LINE_DPI;
-
-      CanvasRenderingContext2D.prototype.resetTransform.apply(mapContext);
-
-      if (showSystemLayers.measure) {
-        await drawMeasurementsTooltips(mapContext);
-      }
-
-      if (withDesignations) {
-        await drawDesignations(mapContext, resolution, designationsResize, hideScaleDigits);
-      }
-
-      resolve(mapCanvas.toDataURL(mime));
-
-      // Reset original map size
-      mapService.showSystemLayer('draft');
-      mapService.showSystemLayer('measure');
-      scaleLine.setDpi();
-      map.setSize(size);
-      view.setResolution(viewResolution);
-
-      printSettings.setPrintingStatus(false);
-    });
+      //  Запуск перерисовки
+      map.render();
+    } catch (error) {
+      reject(error);
+    }
   });
 }
 
@@ -195,7 +274,7 @@ async function drawDesignations(
   designationsResize: number,
   hideScaleDigits: boolean
 ): Promise<void> {
-  const { width, height, windRose, date, legend, border } = printSettings;
+  const { windRose, width, height, date, legend, border } = printSettings;
   const imagesPromises: Promise<void>[] = [];
 
   imagesPromises.push(drawScaleLine(mapContext, designationsResize, hideScaleDigits));
@@ -212,12 +291,13 @@ async function drawDesignations(
     imagesPromises.push(drawLegend(mapContext));
   }
 
+  // ждем завершения ВСЕХ промисов
   await Promise.all(imagesPromises);
 
   if (border) {
     const lineWidth = Math.round((BORDER_WIDTH_MM * resolution) / 25.4);
     mapContext.lineWidth = lineWidth;
-    mapContext.strokeStyle = 'f00000';
+    mapContext.strokeStyle = '#f00000';
     mapContext.strokeRect(lineWidth / 2, lineWidth / 2, width - lineWidth, height - lineWidth);
   }
 }
@@ -229,26 +309,36 @@ async function drawScaleLine(
 ): Promise<void> {
   const { height } = printSettings;
 
-  return new Promise(resolve => {
+  return new Promise((resolve, reject) => {
     const scaleLineImg = new Image();
-    scaleLineImg.src = getScaleLineImageSrc();
     scaleLineImg.addEventListener('load', () => {
-      const offsetTop = hideScaleDigits ? 16 * designationsResize : 0;
-
-      mapContext.drawImage(
-        scaleLineImg,
-        0,
-        offsetTop,
-        400 * designationsResize,
-        50 * designationsResize,
-        19 * designationsResize,
-        height - 68 * designationsResize + offsetTop,
-        400 * designationsResize,
-        50 * designationsResize
-      );
-
-      resolve();
+      try {
+        const offsetTop = hideScaleDigits ? 16 * designationsResize : 0;
+        mapContext.drawImage(
+          scaleLineImg,
+          0,
+          offsetTop,
+          400 * designationsResize,
+          50 * designationsResize,
+          19 * designationsResize,
+          height - 68 * designationsResize + offsetTop,
+          400 * designationsResize,
+          50 * designationsResize
+        );
+        resolve();
+      } catch (error) {
+        reject(error);
+      }
     });
+
+    // таймаут для загрузки изображения
+    setTimeout(() => {
+      if (!scaleLineImg.complete) {
+        reject(new Error('Scale line image loading timeout'));
+      }
+    }, 5000);
+
+    scaleLineImg.src = getScaleLineImageSrc();
   });
 }
 
