@@ -1,6 +1,4 @@
 import { SnapEvent } from 'ol/events/SnapEvent';
-import { DrawEvent } from 'ol/interaction/Draw';
-import { ModifyEvent } from 'ol/interaction/Modify';
 
 import { ObjectDto } from '../components/edit-bug-object/edit-bug-object.component';
 import { Emitter } from './common/Emitter';
@@ -44,8 +42,6 @@ class CommunicationService {
   minimizeAttributesBar = new Emitter();
   utilityDialogClosed = new Emitter<UtilityDialogCloseEventDetail>();
 
-  drawEnd = new Emitter<DrawEvent>();
-  modifyEnd = new Emitter<ModifyEvent>();
   snapDblClick = new Emitter<SnapEvent>();
 
   basemapUpdated = new Emitter<DataChangeEventDetail<Basemap>>();

@@ -59,7 +59,7 @@ export class Cache<T> {
   prettyPrint(): void {
     const stats = this.getCacheStats();
     const hitRate = stats.totalAccesses > 0 ? ((stats.hits / stats.totalAccesses) * 100).toFixed(2) : 0;
-    services.logger.debug(`Cache stats [${stats.totalAccesses}/${stats.hits}/${stats.misses}] Rate: ${hitRate}%`);
+    services.logger.trace(`Cache stats [${stats.totalAccesses}/${stats.hits}/${stats.misses}] Rate: ${hitRate}%`);
   }
 
   clearCache(): void {

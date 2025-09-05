@@ -1,15 +1,17 @@
 import React from 'react';
 import { makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
+import { Paper } from '@mui/material';
 import { withBemMod } from '@bem-react/core';
 import { boundMethod } from 'autobind-decorator';
 import { Coordinate } from 'ol/coordinate';
 
 import { GeometryType, WfsPointGeometry } from '../../../../services/geoserver/wfs/wfs.models';
 import { editFeatureStore } from '../../../../services/map/a-map-mode/edit-feature/EditFeatureStore';
-import { EditFeatureGeometryAsText } from '../../AsText/EditFeatureGeometry-AsText';
+import { mapDrawService } from '../../../../services/map/draw/map-draw.service';
 import { EditFeatureGeometryCoord } from '../../Coord/EditFeatureGeometry-Coord';
-import { EditFeatureGeometryToolbar } from '../../Toolbar/EditFeatureGeometry-Toolbar';
+import { EditFeatureGeometryCopyCoords } from '../../CopyCoords/EditFeatureGeometry-CopyCoords';
+import { EditFeatureGeometryGroupFooter } from '../../GroupFooter/EditFeatureGeometry-GroupFooter';
 import { EditFeatureGeometryToolbarLeft } from '../../ToolbarLeft/EditFeatureGeometry-ToolbarLeft';
 import { EditFeatureGeometryXY } from '../../XY/EditFeatureGeometry-XY';
 import {
@@ -38,39 +40,35 @@ class EditFeatureGeometryFormTypePoint extends EditFeatureGeometryFormBase {
     }
 
     return (
-      <div className={cnEditFeatureGeometryForm(null, [className])}>
-        <EditFeatureGeometryToolbar>
-          <EditFeatureGeometryToolbarLeft>
-            <EditFeatureGeometryAsText
-              coordinates={[geometry.coordinates]}
-              mustBeClosed={false}
-              onChange={this.handleAsTextChange}
-              geometryType={editFeatureStore.geometryType}
-              first
-            />
-          </EditFeatureGeometryToolbarLeft>
-        </EditFeatureGeometryToolbar>
-
+      <Paper elevation={2} className={cnEditFeatureGeometryForm(null, [className])}>
         <EditFeatureGeometryXY />
-        <EditFeatureGeometryCoord val={geometry.coordinates} onChange={this.handleChange} />
-      </div>
+        <EditFeatureGeometryCoord
+          key={0}
+          displayIndex={0}
+          index={0}
+          withControls
+          val={geometry.coordinates}
+          onChange={this.handleChange}
+        />
+
+        <EditFeatureGeometryGroupFooter>
+          <EditFeatureGeometryToolbarLeft />
+
+          <EditFeatureGeometryCopyCoords coordinates={[geometry.coordinates]} />
+        </EditFeatureGeometryGroupFooter>
+      </Paper>
     );
   }
 
   @boundMethod
-  private handleChange(val: Coordinate) {
+  private async handleChange(val: Coordinate) {
     if (!editFeatureStore.geometry) {
       throw new Error('Отсутствует геометрия');
     }
 
     editFeatureStore.geometry.coordinates = val;
-  }
 
-  @boundMethod
-  private handleAsTextChange(val: Coordinate[]) {
-    if (editFeatureStore.geometry) {
-      editFeatureStore.geometry.coordinates = val[0] || [];
-    }
+    await mapDrawService.syncFeatureGeometryWithMap();
   }
 }
 

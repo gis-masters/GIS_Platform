@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
-import { Divider } from '@mui/material';
+import { Divider, IconButton, Tooltip } from '@mui/material';
 import { cn } from '@bem-react/classname';
 import { polygon } from '@turf/turf';
 import { boundMethod } from 'autobind-decorator';
-import { DrawEvent } from 'ol/interaction/Draw';
+import { Coordinate } from 'ol/coordinate';
 
 import { Emitter } from '../../services/common/Emitter';
 import { communicationService } from '../../services/communication.service';
@@ -12,34 +12,42 @@ import { defaultOlProjectionCode } from '../../services/data/projections/project
 import { getProjectionByCode } from '../../services/data/projections/projections.service';
 import { recalculateBboxAndGetCoverage } from '../../services/geoserver/coverages/coverages.service';
 import { recalculateBboxAndGetFeatureType } from '../../services/geoserver/featureType/featureType.service';
-import { GeometryType, supportedGeometryTypes, WfsGeometry } from '../../services/geoserver/wfs/wfs.models';
+import {
+  GeometryType,
+  supportedGeometryTypes,
+  WfsGeometry,
+  WfsLineStringGeometry,
+  WfsMultiLineStringGeometry,
+  WfsMultiPolygonGeometry,
+  WfsPolygonGeometry
+} from '../../services/geoserver/wfs/wfs.models';
 import { CrgLayerType, CrgVectorLayer } from '../../services/gis/layers/layers.models';
 import { isVectorFromFile } from '../../services/gis/layers/layers.utils';
 import { editFeatureStore } from '../../services/map/a-map-mode/edit-feature/EditFeatureStore';
 import { mapDrawService } from '../../services/map/draw/map-draw.service';
-import { FeatureState } from '../../services/map/map.models';
-import { getStyle, KnownStyleKey } from '../../services/map/styles/map-styles';
-import { mergeToMultiLineString, mergeToMultiPoint, mergeToMultiPolygon } from '../../services/ol/marge-geometries';
+import { mergeGeometry } from '../../services/map/draw/mergeGeometry';
+import { services } from '../../services/services';
 import { transformGeometry } from '../../services/util/coordinates-transform.util';
 import { notFalsyFilter } from '../../services/util/NotFalsyFilter';
-import { featureToWfsFeature } from '../../services/util/open-layers.util';
-import { sleep } from '../../services/util/sleep';
-import { isBoolean } from '../../services/util/typeGuards/isBoolean';
 import { FeatureIcon } from '../FeatureIcon/FeatureIcon';
+import { ContourAdd } from '../Icons/ContourAdd';
 import { EditFeatureGeometryDraw } from './Draw/EditFeatureGeometry-Draw';
 import { EditFeatureGeometryError } from './Error/EditFeatureGeometry-Error';
 import { EditFeatureGeometryField } from './Field/EditFeatureGeometry-Field';
 import { EditFeatureGeometryForm } from './Form/EditFeatureGeometry-Form.composed';
 import { EditFeatureGeometryHeader } from './Header/EditFeatureGeometry-Header';
+import { EditFeatureGeometryHistoryControls } from './HistoryControls/EditFeatureGeometry-HistoryControls';
 import { EditFeatureGeometryMainToolbar } from './MainToolbar/EditFeatureGeometry-MainToolbar';
 import { EditFeatureGeometrySelectProjection } from './SelectProjection/EditFeatureGeometry-SelectProjection';
 import { EditFeatureGeometryToolbarLeft } from './ToolbarLeft/EditFeatureGeometry-ToolbarLeft';
+import { EditFeatureGeometryToolbarRight } from './ToolbarRight/EditFeatureGeometry-ToolbarRight';
 import { EditFeatureGeometryValidationError } from './ValidationError/EditFeatureGeometry-ValidationError';
 import { EditFeatureGeometryView } from './View/EditFeatureGeometry-View.composed';
 
 import '!style-loader!css-loader!sass-loader!./EditFeatureGeometry.scss';
 import '!style-loader!css-loader!sass-loader!./Divider/EditFeatureGeometry-Divider.scss';
 import '!style-loader!css-loader!sass-loader!./FieldText/EditFeatureGeometry-FieldText.scss';
+import '!style-loader!css-loader!sass-loader!./AddGeometry/EditFeatureGeometry-AsGeometry.scss';
 import '!style-loader!css-loader!sass-loader!./GeometryType/EditFeatureGeometry-GeometryType.scss';
 
 const cnEditFeatureGeometry = cn('EditFeatureGeometry');
@@ -53,8 +61,6 @@ export default class EditFeatureGeometry extends Component<EditFeatureGeometryPr
   async componentDidMount() {
     await this.updateExtent();
 
-    communicationService.drawEnd.on(e => this.handleDraw(e), this);
-    communicationService.modifyEnd.on(this.handleModify, this);
     communicationService.featuresUpdated.on(this.updateExtent, this);
   }
 
@@ -99,7 +105,23 @@ export default class EditFeatureGeometry extends Component<EditFeatureGeometryPr
           <EditFeatureGeometryMainToolbar>
             <EditFeatureGeometryToolbarLeft>
               <EditFeatureGeometryDraw />
+
+              <Divider orientation='vertical' />
+
+              {geometryType !== GeometryType.POINT && geometryType !== GeometryType.MULTI_POINT && (
+                <Tooltip title='Добавить геометрию'>
+                  <span>
+                    <IconButton className={cnEditFeatureGeometry('AddGeometry')} onClick={this.handleAdd}>
+                      <ContourAdd />
+                    </IconButton>
+                  </span>
+                </Tooltip>
+              )}
             </EditFeatureGeometryToolbarLeft>
+
+            <EditFeatureGeometryToolbarRight>
+              <EditFeatureGeometryHistoryControls />
+            </EditFeatureGeometryToolbarRight>
           </EditFeatureGeometryMainToolbar>
         )}
 
@@ -114,78 +136,68 @@ export default class EditFeatureGeometry extends Component<EditFeatureGeometryPr
   }
 
   @boundMethod
-  private handleDraw(event: CustomEvent<DrawEvent>) {
-    event.detail.feature.setStyle(getStyle(KnownStyleKey.DrawingFeature));
+  private handleAdd() {
+    const currentGeometry = editFeatureStore.geometry;
+    const geometryType = editFeatureStore.geometryType;
 
-    void this.handleGeometry();
-  }
+    if (!currentGeometry || !geometryType) {
+      return;
+    }
 
-  @boundMethod
-  private handleModify() {
-    void this.handleGeometry();
-  }
+    // Создаем новую пустую геометрию в зависимости от типа
+    let newGeometry: WfsGeometry;
 
-  // Используем события модификации и рисования просто как маркеры.
-  // При возникновении этих событий мы посмотрим на источник данных и считаем оттуда все фичи, которые сейчас там есть.
-  private async handleGeometry() {
-    await sleep(0);
-
-    // В источнике может быть много фичей - все которые выделены(selectedFeature).
-    // Но при редактировании мы работаем только с одной активной фичей(isActiveFeature).
-    // Поэтому мы отфильтровываем из источника только фичи, которые относятся к активной фиче и те фичи что были
-    // нарисованы: они не имеют никаких маркеров.
-    const activeAndNewFeatures = mapDrawService
-      .getDrawSource()
-      .getFeatures()
-      .filter(feature => {
-        const selectedFeature: unknown = feature.get(FeatureState.SELECTED);
-        const isActiveFeature: unknown = feature.get(FeatureState.ACTIVE);
-        const isEmptyFeature: unknown = feature.get(FeatureState.EMPTY);
-
-        const isEmpty = isBoolean(isEmptyFeature) ? isEmptyFeature : false;
-        const isActive = isBoolean(isActiveFeature) ? isActiveFeature : false;
-        const isSelectedFeature = isBoolean(selectedFeature) ? selectedFeature : false;
-
-        return isEmpty ? false : !isSelectedFeature || isActive;
-      });
-
-    let feature;
-
-    switch (editFeatureStore.geometryType) {
-      case GeometryType.POLYGON:
-      case GeometryType.MULTI_POLYGON: {
-        feature = mergeToMultiPolygon(activeAndNewFeatures, editFeatureStore.currentProjection);
-
+    switch (geometryType) {
+      case GeometryType.LINE_STRING: {
+        // Для линии создаем геометрию с двумя точками
+        newGeometry = {
+          type: GeometryType.LINE_STRING,
+          coordinates: [[0, 0] as Coordinate, [0, 0] as Coordinate]
+        } as WfsLineStringGeometry;
         break;
       }
-      case GeometryType.LINE_STRING:
       case GeometryType.MULTI_LINE_STRING: {
-        feature = mergeToMultiLineString(activeAndNewFeatures, editFeatureStore.currentProjection);
-
+        // Для мульти-линии создаем геометрию с двумя точками
+        newGeometry = {
+          type: GeometryType.MULTI_LINE_STRING,
+          coordinates: [[[0, 0] as Coordinate, [0, 0] as Coordinate]]
+        } as WfsMultiLineStringGeometry;
         break;
       }
-      case GeometryType.POINT:
-      case GeometryType.MULTI_POINT: {
-        feature = mergeToMultiPoint(activeAndNewFeatures, editFeatureStore.currentProjection);
-
+      case GeometryType.POLYGON: {
+        // Для полигона создаем геометрию с тремя точками (треугольник)
+        newGeometry = {
+          type: GeometryType.POLYGON,
+          coordinates: [[[0, 0] as Coordinate, [0, 0] as Coordinate, [0, 0] as Coordinate, [0, 0] as Coordinate]]
+        } as WfsPolygonGeometry;
+        break;
+      }
+      case GeometryType.MULTI_POLYGON: {
+        // Для мульти-полигона создаем геометрию с тремя точками (треугольник)
+        newGeometry = {
+          type: GeometryType.MULTI_POLYGON,
+          coordinates: [[[[0, 0] as Coordinate, [0, 0] as Coordinate, [0, 0] as Coordinate, [0, 0] as Coordinate]]]
+        } as WfsMultiPolygonGeometry;
         break;
       }
       default: {
-        throw new Error('Не поддерживаемый тип геометрии: ' + editFeatureStore.geometryType);
+        return; // Для других типов не добавляем
       }
     }
 
-    if (feature) {
-      const wfsFeature = featureToWfsFeature(feature);
+    const mergedGeometry = mergeGeometry(newGeometry, currentGeometry, geometryType);
 
-      if (wfsFeature.geometry) {
-        editFeatureStore.setGeometry(wfsFeature.geometry);
-      }
-    }
+    // Обновляем геометрию
+    editFeatureStore.setGeometry(mergedGeometry, true, 'Добавление геометрии');
+
+    // Синхронизируем с картой
+    void mapDrawService.syncFeatureGeometryWithMap();
   }
 
   private async updateExtent() {
-    if (!editFeatureStore?.editFeaturesData?.layer) {
+    if (!editFeatureStore.editFeaturesData?.layer) {
+      services.logger.warn('Не могу посчитать extend слоя => не задан слой');
+
       return;
     }
 
@@ -197,12 +209,12 @@ export default class EditFeatureGeometry extends Component<EditFeatureGeometryPr
         : await recalculateBboxAndGetCoverage(layer);
 
     if (!featureType?.nativeBoundingBox) {
+      services.logger.warn('Не могу посчитать extend слоя => не найден bbox слоя');
+
       return;
     }
 
     const { minx, miny, maxx, maxy, crs } = featureType.nativeBoundingBox;
-    const crsStringValue = typeof crs === 'string' ? crs : crs.$;
-
     let polygonCoordinates = [
       [minx - 200_000, miny - 200_000],
       [minx - 200_000, maxy + 200_000],
@@ -211,6 +223,7 @@ export default class EditFeatureGeometry extends Component<EditFeatureGeometryPr
       [minx - 200_000, miny - 200_000]
     ];
 
+    const crsStringValue = typeof crs === 'string' ? crs : crs.$;
     if (crsStringValue !== defaultOlProjectionCode) {
       const currentProjection = await getProjectionByCode(crsStringValue);
       const defaultProjection = await getProjectionByCode(defaultOlProjectionCode);

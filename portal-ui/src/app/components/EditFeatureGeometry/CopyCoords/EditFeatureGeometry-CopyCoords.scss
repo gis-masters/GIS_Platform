@@ -1,0 +1,7 @@
+.EditFeatureGeometry-CopyCoords {
+  margin: 0 2px;
+
+  transition: opacity 0.3s ease;
+
+  opacity: calc(0.3 + 0.7 * var(--EditFeatureGeometryGroupHovered, 0));
+}

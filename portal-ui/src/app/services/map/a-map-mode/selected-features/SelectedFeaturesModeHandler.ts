@@ -17,17 +17,17 @@ class SelectedFeaturesModeHandler implements IMapModeHandler {
     services.logger.trace('SelectedFeaturesModeHandler activate', props);
     mapStore.setMode(this.mode());
 
-    if (props === undefined) {
-      mapSelectionService.selectFeatures(selectedFeaturesStore.features, MapSelectionTypes.REPLACE);
-      sidebars.openSelectedFeaturesSidebar();
-
-      return Promise.resolve();
-    }
-
-    const selectedFeaturesData = props?.payload as SelectedFeaturesData;
-
-    mapSelectionService.selectFeatures(selectedFeaturesData.features, selectedFeaturesData.type);
-    sidebars.openSelectedFeaturesSidebar();
+    // Откладываем обновление состояния до следующего тика, чтобы избежать обновления несуществующих компонентов
+    setTimeout(() => {
+      if (props === undefined) {
+        mapSelectionService.selectFeatures(selectedFeaturesStore.features, MapSelectionTypes.REPLACE);
+        sidebars.openSelectedFeaturesSidebar();
+      } else {
+        const selectedFeaturesData = props?.payload as SelectedFeaturesData;
+        mapSelectionService.selectFeatures(selectedFeaturesData.features, selectedFeaturesData.type);
+        sidebars.openSelectedFeaturesSidebar();
+      }
+    }, 0);
 
     return Promise.resolve();
   }
@@ -35,19 +35,22 @@ class SelectedFeaturesModeHandler implements IMapModeHandler {
   deactivate(newMode: MapMode): Promise<void> {
     services.logger.trace('SelectedFeaturesModeHandler deactivate');
 
-    // Close the sidebar if the mode is not VERTICES_MODIFICATION
-    if (newMode !== MapMode.VERTICES_MODIFICATION) {
-      sidebars.closeSelectedFeaturesSidebar();
-    }
+    // Откладываем обновление состояния до следующего тика, чтобы избежать обновления несуществующих компонентов
+    setTimeout(() => {
+      // Close the sidebar if the mode is not VERTICES_MODIFICATION
+      if (newMode !== MapMode.VERTICES_MODIFICATION) {
+        sidebars.closeSelectedFeaturesSidebar();
+      }
 
-    // Clear selected features if the mode is not DRAW_FEATURE, EDIT_FEATURE or VERTICES_MODIFICATION
-    if (
-      newMode !== MapMode.DRAW_FEATURE &&
-      newMode !== MapMode.EDIT_FEATURE &&
-      newMode !== MapMode.VERTICES_MODIFICATION
-    ) {
-      mapSelectionService.selectFeatures([], MapSelectionTypes.REPLACE);
-    }
+      // Clear selected features if the mode is not DRAW_FEATURE, EDIT_FEATURE or VERTICES_MODIFICATION
+      if (
+        newMode !== MapMode.DRAW_FEATURE &&
+        newMode !== MapMode.EDIT_FEATURE &&
+        newMode !== MapMode.VERTICES_MODIFICATION
+      ) {
+        mapSelectionService.selectFeatures([], MapSelectionTypes.REPLACE);
+      }
+    }, 0);
 
     return Promise.resolve();
   }

@@ -66,7 +66,30 @@ When('в вкладке просмотра геометрии я нажимаю 
   await editFeatureBlock.clickGeometryAsTextButton();
 });
 
-When('в вкладке просмотра геометрии я нажимаю кнопку `Рисовать на карте`', async function () {
+When('в вкладке просмотра геометрии я нажимаю кнопку `Добавить геометрию`', async function () {
+  await editFeatureBlock.clickAddGeometryButton();
+});
+
+When(
+  'в вкладке просмотра геометрии я перевожу курсор на кнопку `Копировать координаты контура в буфер обмена`',
+  async function () {
+    await editFeatureBlock.hoverCopyCoordsButton();
+  }
+);
+
+When('в вкладке просмотра геометрии я нажимаю кнопку `Удалить линию`', async function () {
+  await editFeatureBlock.clickDeleteGroupButton();
+});
+
+When('в вкладке просмотра геометрии я нажимаю кнопку `Удалить полигон`', async function () {
+  await editFeatureBlock.clickDeletePolygonButton();
+});
+
+When('в вкладке просмотра геометрии я нажимаю кнопку `Удалить вершину`', async function () {
+  await editFeatureBlock.clickDeleteCoordButton();
+});
+
+When('в вкладке просмотра геометрии я нажимаю кнопку `Редактировать геометрию`', async function () {
   await editFeatureBlock.clickEditOnMap();
 });
 

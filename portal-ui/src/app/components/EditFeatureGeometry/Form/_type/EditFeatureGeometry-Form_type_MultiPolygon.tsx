@@ -4,14 +4,10 @@ import { observer } from 'mobx-react';
 import { withBemMod } from '@bem-react/core';
 import { Coordinate } from 'ol/coordinate';
 
-import {
-  GeometryType,
-  WfsMultiPolygonGeometry,
-  WfsPolygonGeometry
-} from '../../../../services/geoserver/wfs/wfs.models';
-import { getEmptyGeometry } from '../../../../services/geoserver/wfs/wfs.util';
+import { GeometryType, WfsMultiPolygonGeometry } from '../../../../services/geoserver/wfs/wfs.models';
+import { editFeatureHistoryStore } from '../../../../services/map/a-map-mode/edit-feature/EditFeatureHistoryStore';
 import { editFeatureStore } from '../../../../services/map/a-map-mode/edit-feature/EditFeatureStore';
-import { EditFeatureGeometryAddButton } from '../../AddButton/EditFeatureGeometry-AddButton';
+import { mapDrawService } from '../../../../services/map/draw/map-draw.service';
 import { EditFeatureGeometrySuperGroup } from '../../SuperGroup/EditFeatureGeometry-SuperGroup';
 import { cnEditFeatureGeometryForm, EditFeatureGeometryFormProps } from '../EditFeatureGeometry-Form.base';
 
@@ -40,8 +36,6 @@ class EditFeatureGeometryFormTypeMultiPolygon extends Component<EditFeatureGeome
             onPolygonDelete={this.handleDeletePolygon}
           />
         ))}
-
-        <EditFeatureGeometryAddButton onClick={this.handlePolygonAdd}>Добавить полигон</EditFeatureGeometryAddButton>
       </div>
     );
   }
@@ -66,16 +60,16 @@ class EditFeatureGeometryFormTypeMultiPolygon extends Component<EditFeatureGeome
   }
 
   @action.bound
-  private handlePolygonAdd() {
-    const geometry = editFeatureStore.geometry as WfsMultiPolygonGeometry;
-    const { coordinates } = getEmptyGeometry(GeometryType.POLYGON) as WfsPolygonGeometry;
-    geometry.coordinates.push(coordinates);
-  }
-
-  @action.bound
-  private handleDeletePolygon(i: number) {
+  private async handleDeletePolygon(i: number) {
     const geometry = editFeatureStore.geometry as WfsMultiPolygonGeometry;
     geometry.coordinates.splice(i, 1);
+
+    // Добавляем в историю как единый шаг
+    if (editFeatureStore.geometry) {
+      editFeatureHistoryStore.add(editFeatureStore.geometry, 'Удаление полигона');
+    }
+
+    await mapDrawService.syncFeatureGeometryWithMap();
   }
 }
 

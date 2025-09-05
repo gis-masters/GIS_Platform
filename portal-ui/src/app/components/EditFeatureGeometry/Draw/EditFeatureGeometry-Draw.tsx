@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import { Tooltip } from '@mui/material';
-import { Brush, BrushOutlined, SvgIconComponent } from '@mui/icons-material';
+import { Brush, BrushOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
@@ -10,24 +10,17 @@ import { communicationService } from '../../../services/communication.service';
 import { editFeatureStore } from '../../../services/map/a-map-mode/edit-feature/EditFeatureStore';
 import { mapDrawService } from '../../../services/map/draw/map-draw.service';
 import { toDrawGeometry } from '../../../services/map/draw/map-draw.util';
-import { ToolMode } from '../../../services/map/map.models';
 import { services } from '../../../services/services';
 import { mapStore } from '../../../stores/Map.store';
+import { mapLabelsStore } from '../../../stores/MapLabels.store';
 import { IconButton } from '../../IconButton/IconButton';
 
-const cnEditFeatureGeometryDraw = cn('EditFeatureGeometryDraw');
+import '!style-loader!css-loader!sass-loader!./EditFeatureGeometry-Draw.scss';
 
-interface EditFeatureGeometryDrawProps {
-  Icon?: SvgIconComponent;
-  IconWhenActive?: SvgIconComponent;
-}
+const cnEditFeatureGeometryDraw = cn('EditFeatureGeometry', 'Draw');
 
 @observer
-export class EditFeatureGeometryDraw extends Component<EditFeatureGeometryDrawProps> {
-  constructor(props: EditFeatureGeometryDrawProps) {
-    super(props);
-  }
-
+export class EditFeatureGeometryDraw extends Component {
   componentWillUnmount() {
     mapDrawService.drawOff();
 
@@ -36,22 +29,16 @@ export class EditFeatureGeometryDraw extends Component<EditFeatureGeometryDrawPr
   }
 
   render() {
-    const { Icon, IconWhenActive } = this.props;
-    const IconNormal = Icon || BrushOutlined;
-    const IconActive = IconWhenActive || Icon || Brush;
-
     return (
-      <Tooltip title='Редактировать геометрию'>
-        <span>
-          <IconButton
-            className={cnEditFeatureGeometryDraw()}
-            onClick={this.handleClick}
-            checked={mapStore.toolMode === ToolMode.DRAW}
-          >
-            {mapStore.toolMode === ToolMode.DRAW ? <IconActive /> : <IconNormal />}
-          </IconButton>
-        </span>
-      </Tooltip>
+      <div className={cnEditFeatureGeometryDraw()}>
+        <Tooltip title='Редактировать геометрию'>
+          <span>
+            <IconButton onClick={this.handleClick} checked={mapStore.isDrawEnabled}>
+              {mapStore.isDrawEnabled ? <Brush color='primary' /> : <BrushOutlined color='primary' />}
+            </IconButton>
+          </span>
+        </Tooltip>
+      </div>
     );
   }
 
@@ -63,14 +50,11 @@ export class EditFeatureGeometryDraw extends Component<EditFeatureGeometryDrawPr
       return;
     }
 
-    if (this.isDrawEnabled()) {
+    if (mapStore.isDrawEnabled) {
       mapDrawService.drawOff();
     } else {
+      mapLabelsStore.setLabelsVisibility(false);
       void mapDrawService.drawOn(toDrawGeometry(editFeatureStore.geometryType));
     }
-  }
-
-  private isDrawEnabled(): boolean {
-    return mapStore.toolMode === ToolMode.DRAW;
   }
 }

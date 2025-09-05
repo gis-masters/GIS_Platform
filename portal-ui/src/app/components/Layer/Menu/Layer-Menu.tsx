@@ -1,7 +1,16 @@
 import React, { Component } from 'react';
 import { action, computed, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { Dialog, DialogActions, DialogContent, DialogTitle, ListItemIcon, Menu, MenuItem } from '@mui/material';
+import {
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Divider,
+  ListItemIcon,
+  Menu,
+  MenuItem
+} from '@mui/material';
 import {
   AddCircleOutline,
   CropFree,
@@ -51,6 +60,7 @@ import { services } from '../../../services/services';
 import { focusToLayer } from '../../../services/sidebarActions.service';
 import { currentProject } from '../../../stores/CurrentProject.store';
 import { mapStore } from '../../../stores/Map.store';
+import { mapLabelsStore } from '../../../stores/MapLabels.store';
 import { Button } from '../../Button/Button';
 import { EditLayerDialog } from '../../EditLayerDialog/EditLayerDialog';
 import { ImportOutlined } from '../../Icons/ImportOutlined';
@@ -132,14 +142,16 @@ export class LayerMenu extends Component<LayerMenuProps> {
           anchorPosition={{ top: y, left: x }}
           onClose={onClose}
         >
-          {!layerWithError && (
-            <>
-              <MenuItem disableRipple>
+          {[
+            // Первая группа элементов
+            !layerWithError && [
+              <MenuItem key='transparency' disableRipple>
                 <LayerTransparency entity={entity} />
-              </MenuItem>
+              </MenuItem>,
 
-              {!editMode && (this.isVectorLayer || this.isVectorFromFileWithPaginationLayer) && (
+              !editMode && (this.isVectorLayer || this.isVectorFromFileWithPaginationLayer) && (
                 <MenuItem
+                  key='attribute-table'
                   onClick={this.openAttributeTable}
                   disabled={!mapStore.allowedActions.includes(MapAction.OPEN_ATTRIBUTE_TABLE)}
                 >
@@ -148,54 +160,50 @@ export class LayerMenu extends Component<LayerMenuProps> {
                   </ListItemIcon>
                   Открыть таблицу атрибутов
                 </MenuItem>
-              )}
+              ),
 
-              {!editMode && this.isVectorLayer && this.featuresCreateAllowed && (
-                <MenuItem onClick={this.addFeature} disabled={!mapStore.allowedActions.includes(MapAction.ADD_FEATURE)}>
+              !editMode && this.isVectorLayer && this.featuresCreateAllowed && (
+                <MenuItem
+                  key='add-feature'
+                  onClick={this.addFeature}
+                  disabled={!mapStore.allowedActions.includes(MapAction.ADD_FEATURE)}
+                >
                   <ListItemIcon>
                     <AddCircleOutline />
                   </ListItemIcon>
                   Добавить объект
                 </MenuItem>
-              )}
+              ),
 
-              {!editMode && (this.isVectorLayer || this.isRasterLayer || this.isVectorFromFileLayer) && (
-                <MenuItem onClick={this.goToLayer}>
+              !editMode && (this.isVectorLayer || this.isRasterLayer || this.isVectorFromFileLayer) && (
+                <MenuItem key='go-to-layer' onClick={this.goToLayer}>
                   <ListItemIcon>
                     <CropFree />
                   </ListItemIcon>
                   Перейти к слою
                 </MenuItem>
-              )}
-            </>
-          )}
-          {!editMode && this.isVectorLayer && this.isVectorTableInfoEnabled && (
-            <MenuItem
-              onClick={this.getLayerVectorTable}
-              disabled={!mapStore.allowedActions.includes(MapAction.OPEN_LAYER_SOURCE)}
-            >
-              <ListItemIcon>
-                <FileOpenOutlined />
-              </ListItemIcon>
-              Источник данных
-            </MenuItem>
-          )}
+              )
+            ],
 
-          {!editMode && (this.isVectorFromFileLayer || this.isRasterLayer) && this.isDocumentInfoEnabled && (
-            <MenuItem
-              onClick={this.getLayerDocument}
-              disabled={!mapStore.allowedActions.includes(MapAction.OPEN_LAYER_SOURCE)}
-            >
-              <ListItemIcon>
-                <FileOpenOutlined />
-              </ListItemIcon>
-              Источник данных
-            </MenuItem>
-          )}
-          {!layerWithError && (
-            <>
-              {!editMode && this.isVectorLayer && this.featuresCreateAllowed && (
+            // Второй элемент
+            !editMode && (this.isVectorFromFileLayer || this.isRasterLayer) && this.isDocumentInfoEnabled && (
+              <MenuItem
+                key='layer-document'
+                onClick={this.getLayerDocument}
+                disabled={!mapStore.allowedActions.includes(MapAction.OPEN_LAYER_SOURCE)}
+              >
+                <ListItemIcon>
+                  <FileOpenOutlined />
+                </ListItemIcon>
+                Источник данных
+              </MenuItem>
+            ),
+
+            // Третья группа элементов
+            !layerWithError && [
+              !editMode && this.isVectorLayer && this.featuresCreateAllowed && (
                 <MenuNestedItem
+                  key='import-nested'
                   parentMenuOpen={open}
                   disabled={!mapStore.allowedActions.includes(MapAction.OPEN_IMPORTS_SUBMENU)}
                   submenu={[
@@ -210,14 +218,15 @@ export class LayerMenu extends Component<LayerMenuProps> {
                         Импорт из Shape-файла
                       </MenuItem>
                     )
-                  ]}
+                  ].filter(Boolean)}
                   icon={<ImportOutlined />}
                   title='Импорт'
                 />
-              )}
+              ),
 
-              {!editMode && this.isVectorLayer && this.layerExportAllowed && (
+              !editMode && this.isVectorLayer && this.layerExportAllowed && (
                 <MenuItem
+                  key='export-shape'
                   onClick={this.openSelectProjectionDialog}
                   disabled={!mapStore.allowedActions.includes(MapAction.EXPORT_SHP)}
                 >
@@ -226,50 +235,84 @@ export class LayerMenu extends Component<LayerMenuProps> {
                   </ListItemIcon>
                   Экспорт ESRI Shape-файл
                 </MenuItem>
-              )}
-            </>
-          )}
-          {!isGroup && (
-            <MenuItem
-              onClick={this.openLayerEditDialog}
-              disabled={!mapStore.allowedActions.includes(MapAction.OPEN_LAYER_PROPERTIES)}
-            >
-              <ListItemIcon>
-                <TuneOutlined />
-              </ListItemIcon>
-              Свойства
-            </MenuItem>
-          )}
+              )
+            ],
 
-          {((!isGroup && layerWithError) || (!isGroup && editMode && this.layersDeleteAllowed)) && (
-            <MenuItem onClick={this.deleteLayer} disabled={!mapStore.allowedActions.includes(MapAction.DELETE_LAYER)}>
-              <ListItemIcon>
-                <DeleteOutline color='error' />
-              </ListItemIcon>
-              Удалить слой
-            </MenuItem>
-          )}
+            // Четвертый элемент
+            !isGroup && (
+              <MenuItem
+                key='properties'
+                onClick={this.openLayerEditDialog}
+                disabled={!mapStore.allowedActions.includes(MapAction.OPEN_LAYER_PROPERTIES)}
+              >
+                <ListItemIcon>
+                  <TuneOutlined />
+                </ListItemIcon>
+                Свойства
+              </MenuItem>
+            ),
 
-          {isGroup && editMode && (
-            <MenuItem
-              onClick={this.openEditGroupDialog}
-              disabled={!mapStore.allowedActions.includes(MapAction.RENAME_LAYER_GROUP)}
-            >
-              <ListItemIcon>
-                <Edit />
-              </ListItemIcon>
-              Переименовать группу
-            </MenuItem>
-          )}
+            // Разделитель
+            <Divider key='divider' />,
 
-          {isGroup && editMode && (
-            <MenuItem onClick={this.deleteGroup} disabled={!mapStore.allowedActions.includes(MapAction.DELETE_GROUP)}>
-              <ListItemIcon>
-                <Delete />
-              </ListItemIcon>
-              Удалить группу
-            </MenuItem>
-          )}
+            // Пятый элемент
+            !editMode && this.isVectorLayer && this.isVectorTableInfoEnabled && (
+              <MenuItem
+                key='vector-table'
+                onClick={this.getLayerVectorTable}
+                disabled={!mapStore.allowedActions.includes(MapAction.OPEN_LAYER_SOURCE)}
+              >
+                <ListItemIcon>
+                  <FileOpenOutlined />
+                </ListItemIcon>
+                Источник данных
+              </MenuItem>
+            ),
+
+            // Шестой элемент
+            ((!isGroup && layerWithError) || (!isGroup && editMode && this.layersDeleteAllowed)) && (
+              <MenuItem
+                key='delete-layer'
+                onClick={this.deleteLayer}
+                disabled={!mapStore.allowedActions.includes(MapAction.DELETE_LAYER)}
+              >
+                <ListItemIcon>
+                  <DeleteOutline color='error' />
+                </ListItemIcon>
+                Удалить слой
+              </MenuItem>
+            ),
+
+            // Седьмой элемент
+            isGroup && editMode && (
+              <MenuItem
+                key='edit-group'
+                onClick={this.openEditGroupDialog}
+                disabled={!mapStore.allowedActions.includes(MapAction.RENAME_LAYER_GROUP)}
+              >
+                <ListItemIcon>
+                  <Edit />
+                </ListItemIcon>
+                Переименовать группу
+              </MenuItem>
+            ),
+
+            // Восьмой элемент
+            isGroup && editMode && (
+              <MenuItem
+                key='delete-group'
+                onClick={this.deleteGroup}
+                disabled={!mapStore.allowedActions.includes(MapAction.DELETE_GROUP)}
+              >
+                <ListItemIcon>
+                  <Delete />
+                </ListItemIcon>
+                Удалить группу
+              </MenuItem>
+            )
+          ]
+            .flat()
+            .filter(Boolean)}
         </Menu>
 
         <LayersGroupEditDialog
@@ -437,6 +480,7 @@ export class LayerMenu extends Component<LayerMenuProps> {
     const { entity, onClose } = this.props;
     const emptyFeature = await getEmptyFeature(entity as CrgVectorLayer);
 
+    mapLabelsStore.setLabelsVisibility(false);
     mapStore.setToolMode(ToolMode.NONE);
 
     await mapModeManager.changeMode(

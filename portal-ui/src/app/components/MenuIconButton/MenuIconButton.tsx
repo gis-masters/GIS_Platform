@@ -62,7 +62,7 @@ class MenuIconButtonComponent extends Component<MenuIconButtonProps> {
           onClick={this.close}
           keepMounted={keepMounted}
         >
-          {children}
+          {Array.isArray(children) ? children : [children]}
         </Menu>
       </>
     );

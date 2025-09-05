@@ -62,23 +62,25 @@ export class BasemapsSelect extends Component {
             transformOrigin={{ horizontal: 'right', vertical: 'bottom' }}
             anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
           >
-            {(currentUser.isAdmin || currentProject.role === Role.OWNER) && (
-              <BasemapsSelectAddButton disabledItems={this.basemaps} />
-            )}
-            {this.basemaps.map(basemap => (
-              <Tooltip
-                disableInteractive
-                title={basemap.title}
-                key={basemap.id}
-                placement='left'
-                arrow
-                open={this.tooltipsOpen}
-              >
-                <span>
-                  <BasemapsSelectItem key={basemap.id} basemap={basemap} onClick={this.close} />
-                </span>
-              </Tooltip>
-            ))}
+            {[
+              (currentUser.isAdmin || currentProject.role === Role.OWNER) && (
+                <BasemapsSelectAddButton key='add-button' disabledItems={this.basemaps} />
+              ),
+              ...this.basemaps.map(basemap => (
+                <Tooltip
+                  disableInteractive
+                  title={basemap.title}
+                  key={basemap.id}
+                  placement='left'
+                  arrow
+                  open={this.tooltipsOpen}
+                >
+                  <span>
+                    <BasemapsSelectItem key={basemap.id} basemap={basemap} onClick={this.close} />
+                  </span>
+                </Tooltip>
+              ))
+            ].filter(Boolean)}
           </Menu>
         )}
       </>

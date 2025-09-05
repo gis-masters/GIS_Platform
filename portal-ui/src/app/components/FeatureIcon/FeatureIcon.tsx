@@ -32,15 +32,23 @@ export const FeatureIcon: FC<FeatureIconProps> = ({ geometryType, className }) =
       Icon = Shape;
       break;
     }
-    case GeometryType.LINE_STRING:
-    case GeometryType.MULTI_LINE_STRING: {
+    case GeometryType.LINE_STRING: {
       tooltip = 'Тип геометрии: линия';
       Icon = PolylineOutlined;
       break;
     }
-    case GeometryType.POINT:
-    case GeometryType.MULTI_POINT: {
+    case GeometryType.MULTI_LINE_STRING: {
+      tooltip = 'Тип геометрии: мультилиния';
+      Icon = PolylineOutlined;
+      break;
+    }
+    case GeometryType.POINT: {
       tooltip = 'Тип геометрии: точка';
+      Icon = Adjust;
+      break;
+    }
+    case GeometryType.MULTI_POINT: {
+      tooltip = 'Тип геометрии: мультиточка';
       Icon = Adjust;
       break;
     }

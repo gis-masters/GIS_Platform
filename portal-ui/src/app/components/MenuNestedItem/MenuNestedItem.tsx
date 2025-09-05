@@ -65,7 +65,7 @@ class MenuNestedItemComponent extends Component<MenuNestedItemProps> {
           onClose={this.closeSubmenu}
         >
           <div ref={this.menuContainerRef} className={cnMenuNestedItem('MenuContainer')}>
-            {submenu}
+            {Array.isArray(submenu) ? submenu : [submenu]}
           </div>
         </Menu>
       </div>

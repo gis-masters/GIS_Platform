@@ -33,6 +33,7 @@ import { multiPoint2 } from './testFeatures/multipoint2';
 import { multiPolygon } from './testFeatures/multiPolygon';
 import { multiPolygon2 } from './testFeatures/multiPolygon2';
 import { point } from './testFeatures/point';
+import { polarStar } from './testFeatures/polarStar';
 import { singleFeature } from './testFeatures/singleFeature';
 import { theLetterC } from './testFeatures/theLetterC';
 import { ursaMajor } from './testFeatures/ursaMajor';
@@ -147,6 +148,9 @@ export async function getTestFeatures(key: string, schema?: Schema): Promise<New
     }
     case 'несколько точек': {
       return ursaMajor;
+    }
+    case 'полярная звезда с лучами': {
+      return polarStar;
     }
     case 'точка': {
       return point;

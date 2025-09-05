@@ -43,7 +43,7 @@ class MenuButtonComponent extends Component<MenuButtonProps> {
           <span className={cnMenuButton('Anchor')} ref={this.anchorRef} />
         </Button>
         <Menu open={this.menuOpen} onClose={this.close} anchorEl={this.anchorEl} onClick={this.close}>
-          {menu}
+          {Array.isArray(menu) ? menu : [menu]}
         </Menu>
       </>
     );

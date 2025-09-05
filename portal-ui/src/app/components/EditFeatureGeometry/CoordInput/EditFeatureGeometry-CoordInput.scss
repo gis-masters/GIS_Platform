@@ -32,4 +32,42 @@
 
     background: none;
   }
+
+  // Эффект вспышки при изменении координаты
+  &_flash {
+    animation: coord-flash 0.8s ease-out;
+  }
+}
+
+// Анимация вспышки
+@keyframes coord-flash {
+  0% {
+    background-color: transparent;
+    box-shadow: none;
+  }
+
+  20% {
+    background-color: rgb(255 255 0 / 30%);
+    box-shadow: 0 0 8px rgb(255 255 0 / 50%);
+  }
+
+  40% {
+    background-color: rgb(255 255 0 / 20%);
+    box-shadow: 0 0 6px rgb(255 255 0 / 40%);
+  }
+
+  60% {
+    background-color: rgb(255 255 0 / 10%);
+    box-shadow: 0 0 4px rgb(255 255 0 / 30%);
+  }
+
+  80% {
+    background-color: rgb(255 255 0 / 5%);
+    box-shadow: 0 0 2px rgb(255 255 0 / 20%);
+  }
+
+  100% {
+    background-color: transparent;
+    box-shadow: none;
+  }
 }

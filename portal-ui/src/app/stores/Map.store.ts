@@ -169,12 +169,21 @@ class MapStore {
 
   @computed
   get allowedActions(): MapAction[] {
+    if (this.toolMode === ToolMode.DRAW) {
+      return [];
+    }
+
     return mapModeAndActionMatrix[this.mode];
   }
 
   @computed
   get isLoading(): boolean {
     return Boolean(this.loadingCount);
+  }
+
+  @computed
+  get isDrawEnabled(): boolean {
+    return mapStore.toolMode === ToolMode.DRAW;
   }
 
   @action

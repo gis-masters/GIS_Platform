@@ -6,9 +6,7 @@ import { WarningAmberOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { booleanPointInPolygon, point } from '@turf/turf';
 import { boundMethod } from 'autobind-decorator';
-import { Feature } from 'ol';
 import { Coordinate } from 'ol/coordinate';
-import { SimpleGeometry } from 'ol/geom';
 
 import {
   DEFAULT_OL_PROJECTION,
@@ -16,17 +14,13 @@ import {
   Projection
 } from '../../../services/data/projections/projections.models';
 import { getProjectionByCode } from '../../../services/data/projections/projections.service';
-import { GeometryType, WfsFeature, WfsGeometry } from '../../../services/geoserver/wfs/wfs.models';
-import { isDimensionValid, isGeometryValid } from '../../../services/geoserver/wfs/wfs.util';
+import { GeometryType } from '../../../services/geoserver/wfs/wfs.models';
+import { isDimensionValid } from '../../../services/geoserver/wfs/wfs.util';
 import { editFeatureStore } from '../../../services/map/a-map-mode/edit-feature/EditFeatureStore';
-import { mapDrawService } from '../../../services/map/draw/map-draw.service';
-import { getStyle, KnownStyleKey } from '../../../services/map/styles/map-styles';
+import { coordinateHighlightService } from '../../../services/map/coordinate-highlight/coordinate-highlight.service';
 import { services } from '../../../services/services';
 import { transformGeometry } from '../../../services/util/coordinates-transform.util';
-import { wfsFeatureToFeature } from '../../../services/util/open-layers.util';
 import { isNumberArray } from '../../../services/util/typeGuards/isNumberArray';
-import { projectionsStore } from '../../../stores/Projections.store';
-import { Toast } from '../../Toast/Toast';
 import { EditFeatureGeometryCoordDel } from '../CoordDel/EditFeatureGeometry-CoordDel';
 
 import '!style-loader!css-loader!sass-loader!./EditFeatureGeometry-Coord.scss';
@@ -51,8 +45,9 @@ interface EditFeatureGeometryCoordProps {
 
 @observer
 export class EditFeatureGeometryCoord extends Component<EditFeatureGeometryCoordProps> {
-  private focusedPointMarker?: Feature<SimpleGeometry>;
   @observable private defaultProjection?: Projection;
+  @observable private flashX = false;
+  @observable private flashY = false;
 
   constructor(props: EditFeatureGeometryCoordProps) {
     super(props);
@@ -67,6 +62,24 @@ export class EditFeatureGeometryCoord extends Component<EditFeatureGeometryCoord
     }
   }
 
+  componentDidUpdate(prevProps: EditFeatureGeometryCoordProps): void {
+    const { val } = this.props;
+    const { val: prevVal } = prevProps;
+
+    // Проверяем, изменились ли координаты извне (например, с карты)
+    if (prevVal[0] !== val[0] || prevVal[1] !== val[1]) {
+      // Определяем, какая координата изменилась
+      if (prevVal[0] !== val[0]) {
+        // Изменилась X координата (второй инпут)
+        this.triggerFlash(0);
+      }
+      if (prevVal[1] !== val[1]) {
+        // Изменилась Y координата (первый инпут)
+        this.triggerFlash(1);
+      }
+    }
+  }
+
   render() {
     const { val, withControls, displayIndex, disabled, active, canBeDeleted } = this.props;
 
@@ -76,7 +89,7 @@ export class EditFeatureGeometryCoord extends Component<EditFeatureGeometryCoord
         {withControls ? <div className={cnEditFeatureGeometry('CoordNumber')}>{(displayIndex || 0) + 1}</div> : null}
 
         <OutlinedInput
-          className={cnEditFeatureGeometry('CoordInput', { d: 'x' })}
+          className={cnEditFeatureGeometry('CoordInput', { d: 'x', flash: this.flashY })}
           value={val[1]}
           error={!isDimensionValid(val[1])}
           color={this.warning ? 'warning' : undefined}
@@ -94,7 +107,7 @@ export class EditFeatureGeometryCoord extends Component<EditFeatureGeometryCoord
         />
 
         <OutlinedInput
-          className={cnEditFeatureGeometry('CoordInput', { d: 'y' })}
+          className={cnEditFeatureGeometry('CoordInput', { d: 'y', flash: this.flashX })}
           value={val[0]}
           error={!isDimensionValid(val[0])}
           color={this.warning ? 'warning' : undefined}
@@ -111,17 +124,16 @@ export class EditFeatureGeometryCoord extends Component<EditFeatureGeometryCoord
           disabled={disabled}
         />
 
-        {withControls ? (
-          <EditFeatureGeometryCoordDel onClick={this.handleDelete} disabled={!canBeDeleted || !!disabled} />
-        ) : null}
+        {withControls && (
+          <EditFeatureGeometryCoordDel
+            onClick={this.handleDelete}
+            onMouseEnter={this.onMouseEnter}
+            onMouseLeave={this.onMouseLeave}
+            disabled={!canBeDeleted || !!disabled}
+          />
+        )}
       </div>
     );
-  }
-
-  private isDisabled() {
-    const { canBeDeleted, disabled } = this.props;
-
-    return !canBeDeleted || !!disabled;
   }
 
   @computed
@@ -172,6 +184,34 @@ export class EditFeatureGeometryCoord extends Component<EditFeatureGeometryCoord
     this.defaultProjection = projection;
   }
 
+  @action
+  private triggerFlash(coordIndex: 0 | 1): void {
+    // У росреестра своё понимание X и Y: coordIndex 0 = X (второй инпут), coordIndex 1 = Y (первый инпут)
+    if (coordIndex === 0) {
+      // X координата (второй инпут)
+      this.flashX = true;
+      setTimeout(() => {
+        this.stopFlashX();
+      }, 800);
+    } else {
+      // Y координата (первый инпут)
+      this.flashY = true;
+      setTimeout(() => {
+        this.stopFlashY();
+      }, 800);
+    }
+  }
+
+  @action
+  private stopFlashX(): void {
+    this.flashX = false;
+  }
+
+  @action
+  private stopFlashY(): void {
+    this.flashY = false;
+  }
+
   @action.bound
   private handleChangeX(e: React.ChangeEvent<HTMLInputElement>) {
     this.handleCoordinateChange(e, 0);
@@ -220,9 +260,10 @@ export class EditFeatureGeometryCoord extends Component<EditFeatureGeometryCoord
       if (index !== undefined) {
         onChange(val, index);
       }
-    }
 
-    this.drawFocusedPointMarker();
+      // Запускаем анимацию вспышки
+      this.triggerFlash(coordIndex);
+    }
   }
 
   @boundMethod
@@ -236,60 +277,21 @@ export class EditFeatureGeometryCoord extends Component<EditFeatureGeometryCoord
 
   @boundMethod
   private handleInputFocus() {
-    this.drawFocusedPointMarker();
+    coordinateHighlightService.setActiveVertex(this.props.val);
   }
 
   @boundMethod
   private handleInputBlur() {
-    this.clearFocusedPointMarker();
+    coordinateHighlightService.setActiveVertex(null);
   }
 
-  private drawFocusedPointMarker() {
-    const { val } = this.props;
-
-    const markerGeometry: WfsGeometry = {
-      type: GeometryType.POINT,
-      coordinates: val
-    };
-
-    if (isGeometryValid(markerGeometry)) {
-      if (projectionsStore.olProjection && editFeatureStore.currentProjection) {
-        const feature: WfsFeature = {
-          type: 'Feature',
-          geometry: transformGeometry(
-            markerGeometry,
-            editFeatureStore.currentProjection,
-            projectionsStore.olProjection
-          ),
-          id: '',
-          geometry_name: '',
-          properties: {}
-        };
-
-        const focusedPointMarker = wfsFeatureToFeature(feature);
-
-        this.focusedPointMarker = focusedPointMarker || wfsFeatureToFeature(feature);
-      } else {
-        Toast.error('Отсутствует проекция необходимая для изменения координат объекта');
-      }
-
-      if (this.focusedPointMarker) {
-        this.focusedPointMarker.setStyle(getStyle(KnownStyleKey.SelectedSingleCoordStyles));
-        mapDrawService.addFeatures([this.focusedPointMarker]);
-      }
-    } else {
-      this.clearFocusedPointMarker();
-    }
+  @boundMethod
+  private onMouseEnter(): void {
+    coordinateHighlightService.setActiveGroup([this.props.val]);
   }
 
-  private clearFocusedPointMarker() {
-    try {
-      if (this.focusedPointMarker) {
-        mapDrawService.removeFeature(this.focusedPointMarker);
-      }
-    } catch {
-      // мы ожидаем exception в случае, если указанной фичи нет в слое либо если переменная не содержит фичи
-      // в обоих этих случаях нам ничего не нужно предпринимать
-    }
+  @boundMethod
+  private onMouseLeave(): void {
+    coordinateHighlightService.setActiveGroup(null);
   }
 }

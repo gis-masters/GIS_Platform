@@ -1,16 +1,16 @@
 import React, { Component } from 'react';
-import { action, computed, makeObservable } from 'mobx';
+import { action, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
-import { IconButton, Tooltip } from '@mui/material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 import { isNumber } from 'lodash';
 import { Coordinate } from 'ol/coordinate';
 
 import { GeometryType } from '../../../services/geoserver/wfs/wfs.models';
-import { selectLabelForGeometryType } from '../../../services/geoserver/wfs/wfs.util';
+import { editFeatureHistoryStore } from '../../../services/map/a-map-mode/edit-feature/EditFeatureHistoryStore';
 import { editFeatureStore } from '../../../services/map/a-map-mode/edit-feature/EditFeatureStore';
-import { ContourAdd } from '../../Icons/ContourAdd';
+import { coordinateHighlightService } from '../../../services/map/coordinate-highlight/coordinate-highlight.service';
+import { mapDrawService } from '../../../services/map/draw/map-draw.service';
 import { EditFeatureGeometryDelButton } from '../DelButton/EditFeatureGeometry-DelButton';
 import { EditFeatureGeometryGroup } from '../Group/EditFeatureGeometry-Group.composed';
 import { EditFeatureGeometryToolbar } from '../Toolbar/EditFeatureGeometry-Toolbar';
@@ -42,28 +42,19 @@ export class EditFeatureGeometrySuperGroup extends Component<EditFeatureGeometry
     const anotherPolygonExists =
       editFeatureStore.geometryType === GeometryType.MULTI_POLYGON &&
       (editFeatureStore.geometry?.coordinates.length || 0) > 1;
-    const labelPart = selectLabelForGeometryType(
-      editFeatureStore.geometryType,
-      'новый контур (вырезку)',
-      'новую линию',
-      'новую группу'
-    );
 
     return (
       <div className={cnEditFeatureGeometry('SuperGroup')}>
         <EditFeatureGeometryToolbar>
-          <EditFeatureGeometryToolbarLeft>
-            <Tooltip title={`Добавить ${labelPart} списком координат`}>
-              <span>
-                <IconButton onClick={this.handleGroupAdd} color='primary'>
-                  <ContourAdd />
-                </IconButton>
-              </span>
-            </Tooltip>
-          </EditFeatureGeometryToolbarLeft>
+          <EditFeatureGeometryToolbarLeft />
           <EditFeatureGeometryToolbarRight>
             {anotherPolygonExists && (
-              <EditFeatureGeometryDelButton onClick={this.handlePolygonDelete} labelToDelete='полигон' />
+              <EditFeatureGeometryDelButton
+                onClick={this.handlePolygonDelete}
+                labelToDelete='полигон'
+                onMouseEnter={this.handlePolygonDeleteMouseEnter}
+                onMouseLeave={this.handlePolygonDeleteMouseLeave}
+              />
             )}
           </EditFeatureGeometryToolbarRight>
         </EditFeatureGeometryToolbar>
@@ -93,27 +84,16 @@ export class EditFeatureGeometrySuperGroup extends Component<EditFeatureGeometry
     );
   }
 
-  @computed
-  private get isLastGroupEmpty(): boolean {
-    const { geometryPart } = this.props;
-
-    return !geometryPart?.at(-1)?.some(coordinate => coordinate.some(Boolean));
-  }
-
   @action.bound
-  private handleGroupAdd() {
-    const group: Coordinate[] = [];
+  private async handleGroupDelete(i: number) {
+    this.props.geometryPart.splice(i, 1);
 
-    for (let i = 0; i < this.props.minCoordsPerGroup; i++) {
-      group.push([0, 0]);
+    // Добавляем в историю как единый шаг
+    if (editFeatureStore.geometry) {
+      editFeatureHistoryStore.add(editFeatureStore.geometry, 'Удаление группы координат');
     }
 
-    this.props.geometryPart.push(group);
-  }
-
-  @action.bound
-  private handleGroupDelete(i: number) {
-    this.props.geometryPart.splice(i, 1);
+    await mapDrawService.syncFeatureGeometryWithMap();
   }
 
   @boundMethod
@@ -124,14 +104,16 @@ export class EditFeatureGeometrySuperGroup extends Component<EditFeatureGeometry
     }
   }
 
-  @action.bound
-  private handleNewGroupDraw(newGroup: Coordinate[]) {
-    const { geometryPart } = this.props;
+  @boundMethod
+  private handlePolygonDeleteMouseEnter(): void {
+    // Подсвечиваем все координаты полигона при наведении на кнопку удаления
+    const allCoordinates = this.props.geometryPart.flat();
+    coordinateHighlightService.setActiveGroup(allCoordinates);
+  }
 
-    if (this.isLastGroupEmpty) {
-      geometryPart?.at(-1)?.splice(0, geometryPart[0].length, ...newGroup);
-    } else {
-      geometryPart.push(newGroup);
-    }
+  @boundMethod
+  private handlePolygonDeleteMouseLeave(): void {
+    // Убираем подсветку координат полигона
+    coordinateHighlightService.setActiveGroup(null);
   }
 }

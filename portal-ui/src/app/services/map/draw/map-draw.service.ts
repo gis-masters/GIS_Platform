@@ -1,12 +1,11 @@
-import { MapBrowserEvent } from 'ol';
+import { boundMethod } from 'autobind-decorator';
 import { Coordinate } from 'ol/coordinate';
+import { SnapEvent } from 'ol/events/SnapEvent';
 import Feature from 'ol/Feature';
 import { Geometry, MultiPolygon } from 'ol/geom';
 import { Draw, Modify, Translate } from 'ol/interaction';
 import { DrawEvent } from 'ol/interaction/Draw';
-import { ModifyEvent } from 'ol/interaction/Modify';
 import { Vector as VectorLayer } from 'ol/layer';
-import Overlay from 'ol/Overlay';
 import { Vector as VectorSource } from 'ol/source';
 
 import { mapStore } from '../../../stores/Map.store';
@@ -14,16 +13,19 @@ import { communicationService } from '../../communication.service';
 import { Projection } from '../../data/projections/projections.models';
 import { getFeatureProjection, getOlProjection } from '../../data/projections/projections.service';
 import { WfsFeature } from '../../geoserver/wfs/wfs.models';
+import { services } from '../../services';
 import { transformGeometry } from '../../util/coordinates-transform.util';
 import { wfsFeaturesToOlFeatures } from '../../util/open-layers.util';
 import { sleep } from '../../util/sleep';
 import { isBoolean } from '../../util/typeGuards/isBoolean';
+import { getVertexRemover } from '../../util/vertex/VertexRemoverFactory';
 import { editFeatureStore } from '../a-map-mode/edit-feature/EditFeatureStore';
 import { selectedFeaturesStore } from '../a-map-mode/selected-features/SelectedFeatures.store';
 import { FeatureState, ToolMode } from '../map.models';
 import { mapService } from '../map.service';
 import { mapSnapService } from '../snap/map-snap.service';
 import { getStyle, KnownStyleKey } from '../styles/map-styles';
+import { handleGeometry } from './handleModifyGeometry';
 import { SingleDrawGeometryType } from './map-draw.models';
 
 class MapDrawService {
@@ -32,16 +34,14 @@ class MapDrawService {
     return this._instance || (this._instance = new this());
   }
 
-  private removeVerticesHintElement: HTMLDivElement | undefined;
-  private removeVerticesHintOverlay: Overlay | undefined;
-  private isAltPressed = false;
-
   private translate: Translate | undefined;
   private modify: Modify | undefined;
   private draw: Draw | undefined;
   private source: VectorSource = new VectorSource<Feature<Geometry>>({
     features: []
   });
+
+  private isDrawEndClick = false;
 
   initializeDraw() {
     const drawLayer = new VectorLayer({
@@ -85,8 +85,8 @@ class MapDrawService {
       }
     });
 
-    this.modify.on('modifyend', (event: ModifyEvent) => {
-      communicationService.modifyEnd.emit(event);
+    this.modify.on('modifyend', () => {
+      void handleGeometry();
     });
 
     mapService.map.addInteraction(this.modify);
@@ -101,14 +101,19 @@ class MapDrawService {
 
     this.draw.setActive(true);
     this.draw?.on('drawend', (event: DrawEvent) => {
-      communicationService.drawEnd.emit(event);
+      event.feature.setStyle(getStyle(KnownStyleKey.DrawingFeature));
+
+      this.isDrawEndClick = true;
+
+      void handleGeometry();
     });
+
+    mapService.map.on('dblclick', this.handleDoubleClick);
 
     mapStore.setToolMode(ToolMode.DRAW);
     mapService.map.addInteraction(this.draw);
     mapSnapService.activate();
-
-    this.initHintOverlay();
+    communicationService.snapDblClick.on((event: CustomEvent<SnapEvent>) => this.removeVertex(event), this);
   }
 
   drawOff() {
@@ -130,6 +135,9 @@ class MapDrawService {
       this.translate = undefined;
     }
 
+    mapService.map.un('dblclick', this.handleDoubleClick);
+    communicationService.off(this);
+
     mapStore.setToolMode(ToolMode.NONE);
     mapSnapService.deactivate();
 
@@ -144,14 +152,6 @@ class MapDrawService {
           feature.setStyle(getStyle(KnownStyleKey.SelectedFeatures));
         }
       });
-
-    document.removeEventListener('keydown', this.handleKeyDown);
-    document.removeEventListener('keyup', this.handleKeyUp);
-    mapService.map.un('pointermove', this.handlePointerMove);
-
-    if (this.removeVerticesHintOverlay) {
-      mapService.map.removeOverlay(this.removeVerticesHintOverlay);
-    }
   }
 
   /**
@@ -247,6 +247,74 @@ class MapDrawService {
     return this.source;
   }
 
+  /**
+   * Синхронизирует геометрию фичи на карте с обновленной геометрией из editFeatureStore
+   */
+  async syncFeatureGeometryWithMap(): Promise<void> {
+    if (!editFeatureStore.firstFeature) {
+      services.logger.warn('Не удалось синхронизировать геометрию. Нет фичи');
+
+      return;
+    }
+
+    if (!editFeatureStore.geometry) {
+      services.logger.warn('Не удалось синхронизировать геометрию. Нет геометрии');
+
+      return;
+    }
+
+    if (!editFeatureStore.currentProjection) {
+      services.logger.warn('Не удалось синхронизировать геометрию. Нет текущей проекции');
+
+      return;
+    }
+
+    const featureId = editFeatureStore.firstFeature.id;
+    const geometry = editFeatureStore.geometry;
+
+    try {
+      // Находим фичу на карте по ID
+      const mapFeatures = this.source.getFeatures();
+      const mapFeature = mapFeatures.find(f => f.getId() === featureId);
+      if (mapFeature) {
+        // Трансформируем геометрию в проекцию карты
+        const olProjection = await getOlProjection();
+        const transformedGeometry = transformGeometry(geometry, editFeatureStore.currentProjection, olProjection);
+        if (transformedGeometry) {
+          // Удаляем все фичи без ID (дублирующие фичи)
+          const featuresToRemove = mapFeatures.filter(f => !f.getId());
+          featuresToRemove.forEach(f => this.source.removeFeature(f));
+
+          // Обновляем геометрию фичи на карте
+          const updatedFeature = wfsFeaturesToOlFeatures([
+            {
+              id: featureId,
+              geometry: transformedGeometry,
+              properties: {},
+              type: 'Feature',
+              geometry_name: 'geometry'
+            }
+          ]);
+
+          if (updatedFeature[0]) {
+            mapFeature.setGeometry(updatedFeature[0].getGeometry());
+          }
+        }
+      }
+
+      // Обновляем фичу в selectedFeaturesStore
+      const selectedFeature = selectedFeaturesStore.features.find(f => f.id === featureId);
+      if (selectedFeature) {
+        selectedFeaturesStore.updateFeature({
+          ...selectedFeature,
+          geometry
+        });
+      }
+    } catch (error) {
+      services.logger.error('Ошибка при синхронизации геометрии фичи на карте:', error);
+    }
+  }
+
   async getFeatures(): Promise<Feature<Geometry>[]> {
     await sleep(0);
 
@@ -279,59 +347,36 @@ class MapDrawService {
     );
   }
 
-  private initHintOverlay(): void {
-    this.removeVerticesHintElement = document.createElement('div');
-    this.removeVerticesHintElement.className = 'remove-vertices-hint';
+  private removeVertex(event: CustomEvent<SnapEvent>) {
+    if (this.isDrawEndClick) {
+      this.isDrawEndClick = false;
 
-    this.removeVerticesHintOverlay = new Overlay({
-      element: this.removeVerticesHintElement,
-      positioning: 'center-left',
-      offset: [15, 0],
-      stopEvent: false
-    });
-
-    mapService.map.addOverlay(this.removeVerticesHintOverlay);
-
-    this.setupEventListeners();
-  }
-
-  private setupEventListeners(): void {
-    mapService.map.on('pointermove', this.handlePointerMove);
-
-    // Обработчики клавиш
-    document.addEventListener('keydown', this.handleKeyDown);
-    document.addEventListener('keyup', this.handleKeyUp);
-  }
-
-  private handlePointerMove = (e: MapBrowserEvent<UIEvent>): void => {
-    if (!this.draw) {
       return;
     }
 
-    if (this.isAltPressed) {
-      if (this.removeVerticesHintElement) {
-        this.removeVerticesHintElement.innerHTML = 'Удалить вершину';
-      }
-
-      if (this.removeVerticesHintOverlay) {
-        this.removeVerticesHintOverlay.setPosition(e.coordinate);
-      }
-    } else if (this.removeVerticesHintOverlay) {
-      this.removeVerticesHintOverlay.setPosition(undefined);
+    if (event.detail === null) {
+      return;
     }
-  };
 
-  private handleKeyDown = (e: KeyboardEvent): void => {
-    if (e.key === 'Alt') {
-      this.isAltPressed = true;
+    const { vertex, feature } = event.detail;
+    if (vertex === undefined || feature === undefined) {
+      return;
     }
-  };
 
-  private handleKeyUp = (e: KeyboardEvent): void => {
-    if (e.key === 'Alt') {
-      this.isAltPressed = false;
+    const vertexRemover = getVertexRemover(feature);
+    if (vertexRemover !== null) {
+      vertexRemover.removeVertex(feature, vertex);
+
+      void handleGeometry();
     }
-  };
+  }
+
+  @boundMethod
+  private handleDoubleClick() {
+    if (this.draw) {
+      this.draw.abortDrawing();
+    }
+  }
 }
 
 export const mapDrawService = MapDrawService.instance;

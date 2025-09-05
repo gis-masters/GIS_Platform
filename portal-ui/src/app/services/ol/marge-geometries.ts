@@ -6,11 +6,29 @@ import { defaultOlProjectionCode, Projection } from '../data/projections/project
 import { getProjectionCode } from '../data/projections/projections.util';
 import { roundCoordinate } from '../util/GeometryUtil';
 
+// Функция для проверки, является ли геометрия пустой (все координаты равны 0)
+function isEmptyGeometry(coordinates: number[][][]): boolean {
+  return coordinates.every((polygon: number[][]) =>
+    polygon.every((ring: number[]) => ring.every((coord: number) => Math.round(coord) === 0))
+  );
+}
+
+// Функция для проверки, является ли линия пустой (все координаты равны 0)
+function isEmptyLine(coordinates: number[][]): boolean {
+  return coordinates.every((coord: number[]) => Math.round(coord[0]) === 0 && Math.round(coord[1]) === 0);
+}
+
+// Функция для проверки, является ли точка пустой (координаты равны 0)
+function isEmptyPoint(coordinates: number[]): boolean {
+  return Math.round(coordinates[0]) === 0 && Math.round(coordinates[1]) === 0;
+}
+
 export function mergeToMultiPolygon(
   features: Array<Feature<Geometry>>,
   proj: Projection | undefined
 ): Feature<MultiPolygon> {
   const allCoordinates: number[][][][] = [];
+  const drawnCoordinates: number[][][][] = [];
 
   // 1. Собираем все полигоны и преобразуем их в целевую проекцию
   features.forEach(feature => {
@@ -27,14 +45,35 @@ export function mergeToMultiPolygon(
     }
 
     if (geomClone instanceof Polygon) {
-      allCoordinates.push(geomClone.getCoordinates());
+      const coords = geomClone.getCoordinates();
+      // Проверяем, является ли это нарисованной геометрией (без ID)
+      if (feature.getId()) {
+        allCoordinates.push(coords);
+      } else {
+        drawnCoordinates.push(coords);
+      }
     } else if (geomClone instanceof MultiPolygon) {
-      allCoordinates.push(...geomClone.getCoordinates());
+      const coords = geomClone.getCoordinates();
+      // Проверяем, является ли это нарисованной геометрией (без ID)
+      if (feature.getId()) {
+        allCoordinates.push(...coords);
+      } else {
+        drawnCoordinates.push(...coords);
+      }
     }
   });
 
-  // 2. Округляем координаты уже в целевой проекции
-  const roundedCoordinates = allCoordinates.map(polygon =>
+  // 2. Если есть нарисованные координаты, заменяем пустые геометрии
+  let finalCoordinates = allCoordinates;
+  if (drawnCoordinates.length > 0) {
+    // Удаляем пустые геометрии (все координаты равны 0)
+    finalCoordinates = allCoordinates.filter(coords => !isEmptyGeometry(coords));
+    // Добавляем нарисованные координаты
+    finalCoordinates.push(...drawnCoordinates);
+  }
+
+  // 3. Округляем координаты уже в целевой проекции
+  const roundedCoordinates = finalCoordinates.map(polygon =>
     polygon.map(ring => ring.map(coord => roundCoordinate(coord)))
   );
 
@@ -46,6 +85,7 @@ export function mergeToMultiLineString(
   proj: Projection | undefined
 ): Feature<MultiLineString> {
   const allCoordinates: number[][][] = [];
+  const drawnCoordinates: number[][][] = [];
 
   // 1. Собираем все линии и преобразуем их в целевую проекцию
   features.forEach(feature => {
@@ -62,14 +102,35 @@ export function mergeToMultiLineString(
     }
 
     if (geomClone instanceof LineString) {
-      allCoordinates.push(geomClone.getCoordinates());
+      const coords = geomClone.getCoordinates();
+      // Проверяем, является ли это нарисованной геометрией (без ID)
+      if (feature.getId()) {
+        allCoordinates.push(coords);
+      } else {
+        drawnCoordinates.push(coords);
+      }
     } else if (geomClone instanceof MultiLineString) {
-      allCoordinates.push(...geomClone.getCoordinates());
+      const coords = geomClone.getCoordinates();
+      // Проверяем, является ли это нарисованной геометрией (без ID)
+      if (feature.getId()) {
+        allCoordinates.push(...coords);
+      } else {
+        drawnCoordinates.push(...coords);
+      }
     }
   });
 
-  // 2. Округляем координаты уже в целевой проекции
-  const roundedCoordinates = allCoordinates.map(line => line.map(coord => roundCoordinate(coord)));
+  // 2. Если есть нарисованные координаты, заменяем пустые линии
+  let finalCoordinates = allCoordinates;
+  if (drawnCoordinates.length > 0) {
+    // Удаляем пустые линии (все координаты равны 0)
+    finalCoordinates = allCoordinates.filter(coords => !isEmptyLine(coords));
+    // Добавляем нарисованные координаты
+    finalCoordinates.push(...drawnCoordinates);
+  }
+
+  // 3. Округляем координаты уже в целевой проекции
+  const roundedCoordinates = finalCoordinates.map(line => line.map(coord => roundCoordinate(coord)));
 
   return new Feature(new MultiLineString(roundedCoordinates));
 }
@@ -79,6 +140,7 @@ export function mergeToMultiPoint(
   proj: Projection | undefined
 ): Feature<MultiPoint> {
   const allCoordinates: number[][] = [];
+  const drawnCoordinates: number[][] = [];
 
   // 1. Собираем все точки и преобразуем их в целевую проекцию
   features.forEach(feature => {
@@ -95,14 +157,35 @@ export function mergeToMultiPoint(
     }
 
     if (geomClone instanceof Point) {
-      allCoordinates.push(geomClone.getCoordinates());
+      const coords = geomClone.getCoordinates();
+      // Проверяем, является ли это нарисованной геометрией (без ID)
+      if (feature.getId()) {
+        allCoordinates.push(coords);
+      } else {
+        drawnCoordinates.push(coords);
+      }
     } else if (geomClone instanceof MultiPoint) {
-      allCoordinates.push(...geomClone.getCoordinates());
+      const coords = geomClone.getCoordinates();
+      // Проверяем, является ли это нарисованной геометрией (без ID)
+      if (feature.getId()) {
+        allCoordinates.push(...coords);
+      } else {
+        drawnCoordinates.push(...coords);
+      }
     }
   });
 
-  // 2. Округляем координаты уже в целевой проекции
-  const roundedCoordinates = allCoordinates.map(coord => roundCoordinate(coord));
+  // 2. Если есть нарисованные координаты, заменяем пустые точки
+  let finalCoordinates = allCoordinates;
+  if (drawnCoordinates.length > 0) {
+    // Удаляем пустые точки (координаты равны 0)
+    finalCoordinates = allCoordinates.filter(coords => !isEmptyPoint(coords));
+    // Добавляем нарисованные координаты
+    finalCoordinates.push(...drawnCoordinates);
+  }
+
+  // 3. Округляем координаты уже в целевой проекции
+  const roundedCoordinates = finalCoordinates.map(coord => roundCoordinate(coord));
 
   return new Feature(new MultiPoint(roundedCoordinates));
 }

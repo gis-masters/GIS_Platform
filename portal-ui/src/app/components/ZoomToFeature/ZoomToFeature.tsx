@@ -65,7 +65,7 @@ export class ZoomToFeature extends Component<ZoomToFeatureProps> {
 
     if (zoomToLastCoordinate) {
       const olProjection = await getOlProjection();
-      const currentGeometry = editFeatureStore.currentGeometry;
+      const currentGeometry = editFeatureStore.geometry;
       if (!currentGeometry || !currentProjection) {
         services.logger.warn(
           `Не возможно выполнить позиционирование на фиче ${featureId}. Отсутствует геометрия или проекция`

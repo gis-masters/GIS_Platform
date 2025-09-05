@@ -132,7 +132,7 @@ export const useFeatureSave = ({
         const createdFeature = await createFeature(layer.dataset, layer.tableName, {
           type: firstFeature.type,
           properties: actualProperties,
-          geometry: transformToNativeProjection(layer.nativeCRS, editFeatureStore.currentGeometry)
+          geometry: transformToNativeProjection(layer.nativeCRS, editFeatureStore.geometry)
         });
 
         ids = [createdFeature.id];
@@ -156,7 +156,7 @@ export const useFeatureSave = ({
       }
 
       await (currentFeatures.length === 1
-        ? updateOneFeature(currentFeatures[0], actualProperties, editFeatureStore.currentGeometry)
+        ? updateOneFeature(currentFeatures[0], actualProperties, editFeatureStore.geometry)
         : batchUpdateFeatures(currentFeatures || [], actualProperties));
     }
 

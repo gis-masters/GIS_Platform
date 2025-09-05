@@ -16,6 +16,9 @@ import {
   WfsPointGeometry
 } from '../../../services/geoserver/wfs/wfs.models';
 import { getEmptyGeometry, selectLabelForGeometryType } from '../../../services/geoserver/wfs/wfs.util';
+import { editFeatureHistoryStore } from '../../../services/map/a-map-mode/edit-feature/EditFeatureHistoryStore';
+import { editFeatureStore } from '../../../services/map/a-map-mode/edit-feature/EditFeatureStore';
+import { mapDrawService } from '../../../services/map/draw/map-draw.service';
 import { Button } from '../../Button/Button';
 import { IconButton } from '../../IconButton/IconButton';
 
@@ -55,9 +58,11 @@ export class EditFeatureGeometryAsText extends Component<EditFeatureGeometryAsTe
     return (
       <>
         <Tooltip title={`Координаты ${partLabel} как текст`}>
-          <IconButton className={cnEditFeatureGeometry('AsText')} onClick={this.openDialog}>
-            <ListAlt />
-          </IconButton>
+          <span>
+            <IconButton className={cnEditFeatureGeometry('AsText')} onClick={this.openDialog}>
+              <ListAlt />
+            </IconButton>
+          </span>
         </Tooltip>
         <Dialog
           open={this.isOpen}
@@ -75,7 +80,7 @@ export class EditFeatureGeometryAsText extends Component<EditFeatureGeometryAsTe
             />
           </DialogContent>
           <DialogActions>
-            <Button onClick={this.save} color='primary'>
+            <Button onClick={this.handleSave} color='primary'>
               Изменить
             </Button>
             <Button onClick={this.closeDialog}>Отмена</Button>
@@ -83,6 +88,11 @@ export class EditFeatureGeometryAsText extends Component<EditFeatureGeometryAsTe
         </Dialog>
       </>
     );
+  }
+
+  @boundMethod
+  private async handleSave() {
+    await this.save();
   }
 
   private initText() {
@@ -119,8 +129,7 @@ export class EditFeatureGeometryAsText extends Component<EditFeatureGeometryAsTe
     this.isOpen = false;
   }
 
-  @action.bound
-  private save() {
+  private async save() {
     const { coordinates, mustBeClosed, onChange, geometryType } = this.props;
     let newCoordinates: Coordinate[] = this.text
       .replaceAll(',', '.')
@@ -167,6 +176,14 @@ export class EditFeatureGeometryAsText extends Component<EditFeatureGeometryAsTe
     if (onChange) {
       onChange(coordinates);
     }
+
+    // Добавляем в историю как единый шаг
+    if (editFeatureStore.geometry) {
+      editFeatureHistoryStore.add(editFeatureStore.geometry, 'Ввод координат через текст');
+    }
+
+    await mapDrawService.syncFeatureGeometryWithMap();
+
     this.closeDialog();
   }
 }

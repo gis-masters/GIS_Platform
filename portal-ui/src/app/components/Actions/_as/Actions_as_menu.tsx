@@ -30,7 +30,7 @@ class Container extends Component<IClassNameProps & ChildrenProps> {
         </IconButton>
 
         <Menu open={open} onClose={this.close} anchorEl={this.anchorEl} onClick={this.close} keepMounted>
-          {children}
+          {Array.isArray(children) ? children : [children]}
         </Menu>
       </ActionsMenuOpenContext.Provider>
     );

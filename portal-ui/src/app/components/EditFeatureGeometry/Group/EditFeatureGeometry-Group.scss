@@ -3,4 +3,10 @@
   flex-direction: column;
 
   margin: 6px;
+
+  --EditFeatureGeometryGroupHovered: 0;
+
+  &:hover {
+    --EditFeatureGeometryGroupHovered: 1;
+  }
 }

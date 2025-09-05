@@ -1,9 +1,9 @@
 import React, { FC } from 'react';
 import { withBemMod } from '@bem-react/core';
 
-import { OptionalTooltip } from '../../../../components/OptionalTooltip/OptionalTooltip';
 import { Button } from '../../../Button/Button';
 import { MenuButton } from '../../../MenuButton/MenuButton';
+import { OptionalTooltip } from '../../../OptionalTooltip/OptionalTooltip';
 import { ActionsItemProps, cnActionsItem } from '../Actions-Item.base';
 
 const ActionsItemAsButton: FC<ActionsItemProps> = ({

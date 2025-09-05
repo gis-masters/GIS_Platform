@@ -18,7 +18,12 @@ class EditFeatureBlock extends Block {
     editFeatureLabel: '.EditFeatureForm-Label',
     editFeatureField: '.EditFeatureForm-Row',
     editFeatureLoading: '.EditFeatureContainer .loading',
-    editFeatureGeometryDraw: '.EditFeatureContainer .EditFeatureGeometryDraw',
+    editFeatureGeometryAddGeometryBtn: '.EditFeatureContainer .EditFeatureGeometry-AddGeometry',
+    editFeatureGeometryCopyCoordsBtn: '.EditFeatureContainer .EditFeatureGeometry-CopyCoords',
+    editFeatureGeometryDeletePolygonBtn: '.EditFeatureContainer .EditFeatureGeometry-DelButton',
+    editFeatureGeometryDeleteGroupBtn: '.EditFeatureContainer .EditFeatureGeometry-DelButton',
+    editFeatureGeometryDeleteCoordBtn: '.EditFeatureContainer .EditFeatureGeometry-CoordDel',
+    editFeatureGeometryDraw: '.EditFeatureContainer .EditFeatureGeometry-Draw',
     editFeatureGeometryAsTextBtn: '.EditFeatureContainer .EditFeatureGeometry-AsText',
     lookupStatus: '.EditFeatureContainer .Lookup-Status',
     zoom: '.ZoomToFeature',
@@ -90,6 +95,41 @@ class EditFeatureBlock extends Block {
 
     await $editFeatureGeometryAsText.waitForDisplayed();
     await $editFeatureGeometryAsText.click();
+  }
+
+  async clickAddGeometryButton(): Promise<void> {
+    const $editFeatureGeometryAddGeometryBtn = await editFeatureBlock.$('editFeatureGeometryAddGeometryBtn');
+
+    await $editFeatureGeometryAddGeometryBtn.waitForDisplayed();
+    await $editFeatureGeometryAddGeometryBtn.click();
+  }
+
+  async hoverCopyCoordsButton(): Promise<void> {
+    const $editFeatureGeometryCopyCoordsBtn = await editFeatureBlock.$('editFeatureGeometryCopyCoordsBtn');
+
+    await $editFeatureGeometryCopyCoordsBtn.waitForDisplayed();
+    await $editFeatureGeometryCopyCoordsBtn.moveTo();
+  }
+
+  async clickDeletePolygonButton(): Promise<void> {
+    const $editFeatureGeometryDeletePolygonBtn = await editFeatureBlock.$('editFeatureGeometryDeletePolygonBtn');
+
+    await $editFeatureGeometryDeletePolygonBtn.waitForDisplayed();
+    await $editFeatureGeometryDeletePolygonBtn.click();
+  }
+
+  async clickDeleteGroupButton(): Promise<void> {
+    const $editFeatureGeometryDeleteGroupBtn = await editFeatureBlock.$('editFeatureGeometryDeleteGroupBtn');
+
+    await $editFeatureGeometryDeleteGroupBtn.waitForDisplayed();
+    await $editFeatureGeometryDeleteGroupBtn.click();
+  }
+
+  async clickDeleteCoordButton(): Promise<void> {
+    const $editFeatureGeometryDeleteCoordBtn = await editFeatureBlock.$('editFeatureGeometryDeleteCoordBtn');
+
+    await $editFeatureGeometryDeleteCoordBtn.waitForDisplayed();
+    await $editFeatureGeometryDeleteCoordBtn.click();
   }
 
   async clickEditOnMap(): Promise<void> {

@@ -7,7 +7,6 @@ import { cn } from '@bem-react/classname';
 import _, { isEqual } from 'lodash';
 
 import { communicationService, DataChangeEventDetail } from '../../services/communication.service';
-import { getFeatureProjection } from '../../services/data/projections/projections.service';
 import {
   applyView,
   applyViewOld,
@@ -38,10 +37,12 @@ import { EditFeatureGeometry } from '../EditFeatureGeometry/EditFeatureGeometry'
 import { EditFeatureNavigation } from '../EditFeatureNavigation/EditFeatureNavigation';
 import { IconButton } from '../IconButton/IconButton';
 import { Loading } from '../Loading/Loading';
+import { EditFeatureContainerThemeProvider } from './EditFeatureContainerTheme';
 import { useEditFeatureInitialization } from './hooks/useEditFeatureInitialization';
 import { useEditFeatureState } from './hooks/useEditFeatureState';
 import { useFeatureFormGenerator } from './hooks/useFeatureFormGenerator';
 import { useFeatureSave } from './hooks/useFeatureSave';
+import { useFeatureSetup } from './hooks/useFeatureSetup';
 import { useLayerData } from './hooks/useLayerData';
 
 import '!style-loader!css-loader!sass-loader!./EditFeatureContainer.scss';
@@ -119,10 +120,9 @@ export const EditFeatureContainer: FC = observer(() => {
     }
 
     const success = await mapModeManager.changeMode(MapMode.SELECTED_FEATURES, undefined, 'backToList');
-
     if (success) {
       selectedFeaturesStore.clearActiveFeature();
-      editFeatureStore.setEditFeaturesData(undefined);
+      editFeatureStore.clear();
 
       await mapModeManager.changeMode(
         MapMode.SELECTED_FEATURES,
@@ -160,6 +160,8 @@ export const EditFeatureContainer: FC = observer(() => {
     setSelectedTab,
     setShouldRender
   );
+
+  useFeatureSetup(features[0], layer);
 
   useEffect(() => {
     let isMounted = true;
@@ -290,35 +292,6 @@ export const EditFeatureContainer: FC = observer(() => {
   }, [layer, setUpdatingAllowed]);
 
   useEffect(() => {
-    let isMounted = true;
-
-    if (!features[0]) {
-      return;
-    }
-
-    const fetchData = async () => {
-      try {
-        if (isMounted) {
-          const projection = await getFeatureProjection(features[0]);
-          if (projection) {
-            await editFeatureStore.initFeature(features[0], projection);
-          } else {
-            services.logger.error('Не удалось получить проекцию или геометрию объекта');
-          }
-        }
-      } catch {
-        // error
-      }
-    };
-
-    void fetchData();
-
-    return () => {
-      isMounted = false;
-    };
-  }, [features]);
-
-  useEffect(() => {
     if (
       features.length &&
       updatingAllowed &&
@@ -382,6 +355,14 @@ export const EditFeatureContainer: FC = observer(() => {
     const isSelectedFeatureChangedDisposer = reaction(
       () => selectedFeaturesStore.features,
       features => {
+        // Не обновляем editFeaturesData если текущие данные уже правильные
+        const currentFeature = editFeatureStore.editFeaturesData?.features?.[0];
+        const targetFeature = features.find(f => f.id === currentFeature?.id);
+
+        if (currentFeature && targetFeature && currentFeature.geometry?.type === targetFeature.geometry?.type) {
+          return;
+        }
+
         const empty = features.find(({ id }) => id.includes('.0'));
 
         if (empty) {
@@ -507,81 +488,83 @@ export const EditFeatureContainer: FC = observer(() => {
   };
 
   return (
-    <div className={cnEditFeatureContainer({ readonly: !updatingAllowed })}>
-      <>
-        <div className={cnEditFeatureContainer('ControlsWrapper')}>
-          <div className={cnEditFeatureContainer('Controls')}>
-            <Tooltip title={getTooltip()}>
-              <Badge
-                badgeContent={(currentFeatures?.length || 0) > 1 ? currentFeatures?.length : null}
-                color='secondary'
-                anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-              >
-                {updatingAllowed && (
-                  <Button
-                    className='float-left save-feature-edit-btn'
-                    color='primary'
-                    variant='outlined'
-                    onClick={saveFeature}
-                    disabled={cantBeSaved()}
-                  >
-                    Сохранить
-                  </Button>
-                )}
-              </Badge>
-            </Tooltip>
+    <EditFeatureContainerThemeProvider>
+      <div className={cnEditFeatureContainer({ readonly: !updatingAllowed })}>
+        <>
+          <div className={cnEditFeatureContainer('ControlsWrapper')}>
+            <div className={cnEditFeatureContainer('Controls')}>
+              <Tooltip title={getTooltip()}>
+                <Badge
+                  badgeContent={(currentFeatures?.length || 0) > 1 ? currentFeatures?.length : null}
+                  color='secondary'
+                  anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+                >
+                  {updatingAllowed && (
+                    <Button
+                      className='float-left save-feature-edit-btn'
+                      color='primary'
+                      variant='outlined'
+                      onClick={saveFeature}
+                      disabled={cantBeSaved()}
+                    >
+                      Сохранить
+                    </Button>
+                  )}
+                </Badge>
+              </Tooltip>
 
-            {updatingAllowed && !isNew && mode !== 'multipleEdit' && (
-              <Button
-                className={cnEditFeatureContainer('Delete')}
-                disabled={editFeatureStore.dirty}
-                onClick={deleteFeature}
-                color='error'
-                variant='outlined'
-              >
-                Удалить
-              </Button>
-            )}
+              {updatingAllowed && !isNew && mode !== 'multipleEdit' && (
+                <Button
+                  className={cnEditFeatureContainer('Delete')}
+                  disabled={editFeatureStore.dirty}
+                  onClick={deleteFeature}
+                  color='error'
+                  variant='outlined'
+                >
+                  Удалить
+                </Button>
+              )}
 
-            {mode !== 'multipleEdit' && (
-              <EditFeatureNavigation setFormControls={setFormControls} setFeatures={setFeatures} />
-            )}
+              {mode !== 'multipleEdit' && (
+                <EditFeatureNavigation setFormControls={setFormControls} setFeatures={setFeatures} />
+              )}
 
-            <Tooltip title='Вернуться к списку'>
-              <IconButton className={cnEditFeatureContainer('Back')} onClick={backToList} color='default'>
-                <ChevronLeft />
-              </IconButton>
-            </Tooltip>
+              <Tooltip title='Вернуться к списку'>
+                <IconButton className={cnEditFeatureContainer('Back')} onClick={backToList} color='default'>
+                  <ChevronLeft />
+                </IconButton>
+              </Tooltip>
+            </div>
           </div>
+        </>
+
+        <div className={cnEditFeatureContainer('Tabs')}>
+          {mode === 'single' ? (
+            <>
+              <Tabs
+                className={cnEditFeatureContainer('Tab')}
+                value={selectedTab}
+                variant='scrollable'
+                scrollButtons='auto'
+                onChange={handleTabsChange}
+              >
+                <Tab role='Атрибуты' label='Атрибуты' />
+                <Tab role='Геометрия' label='Геометрия' />
+              </Tabs>
+
+              {selectedTab === 0 ? getEditFeatureForm() : <EditFeatureGeometry readOnly={!updatingAllowed} />}
+            </>
+          ) : (
+            getEditFeatureForm()
+          )}
+
+          {mode === 'single' && layer && !!currentFeatures?.length && isVectorLayer(layer) && (
+            <EditFeatureActions feature={currentFeatures[0]} layer={layer} />
+          )}
+
+          <Loading global visible={isSaveInProgress} />
         </div>
-      </>
-
-      <div className={cnEditFeatureContainer('Tabs')}>
-        {mode === 'single' ? (
-          <>
-            <Tabs
-              className={cnEditFeatureContainer('Tab')}
-              value={selectedTab}
-              variant='scrollable'
-              scrollButtons='auto'
-              onChange={handleTabsChange}
-            >
-              <Tab role='Атрибуты' label='Атрибуты' />
-              <Tab role='Геометрия' label='Геометрия' />
-            </Tabs>
-
-            {selectedTab === 0 ? getEditFeatureForm() : <EditFeatureGeometry readOnly={!updatingAllowed} />}
-          </>
-        ) : (
-          getEditFeatureForm()
-        )}
-
-        {mode === 'single' && layer && !!currentFeatures?.length && isVectorLayer(layer) && (
-          <EditFeatureActions feature={currentFeatures[0]} layer={layer} />
-        )}
-
-        <Loading global visible={isSaveInProgress} />
       </div>
-    </div>
+    </EditFeatureContainerThemeProvider>
   );
 });

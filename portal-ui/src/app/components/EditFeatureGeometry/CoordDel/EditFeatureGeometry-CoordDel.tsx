@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { observer } from 'mobx-react';
 import { IconButton, Tooltip } from '@mui/material';
 import { DeleteOutline } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
@@ -10,21 +11,28 @@ const cnEditFeatureGeometryCoordDel = cn('EditFeatureGeometry', 'CoordDel');
 
 interface EditFeatureGeometryCoordDelProps {
   onClick(): void;
+  onMouseEnter(): void;
+  onMouseLeave(): void;
   disabled: boolean;
 }
 
+@observer
 export class EditFeatureGeometryCoordDel extends Component<EditFeatureGeometryCoordDelProps> {
   render() {
+    const isDisabled = this.props.disabled;
+
     return (
       <Tooltip title='Удалить вершину' enterDelay={800}>
         <span>
           <IconButton
             className={cnEditFeatureGeometryCoordDel()}
             onClick={this.handleClick}
+            onMouseEnter={this.handleMouseEnter}
+            onMouseLeave={this.handleMouseLeave}
             size='small'
-            disabled={this.props.disabled}
+            disabled={isDisabled}
           >
-            <DeleteOutline color={this.props.disabled ? 'disabled' : 'error'} fontSize='small' />
+            <DeleteOutline color={isDisabled ? 'disabled' : 'error'} fontSize='small' />
           </IconButton>
         </span>
       </Tooltip>
@@ -35,5 +43,15 @@ export class EditFeatureGeometryCoordDel extends Component<EditFeatureGeometryCo
   private handleClick(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
     e.currentTarget.blur();
     this.props.onClick();
+  }
+
+  @boundMethod
+  private handleMouseEnter(): void {
+    this.props.onMouseEnter();
+  }
+
+  @boundMethod
+  private handleMouseLeave(): void {
+    this.props.onMouseLeave();
   }
 }

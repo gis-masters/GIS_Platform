@@ -9,6 +9,7 @@ import { flags } from '../../../feature-flags';
 import { extractTableNameFromFeatureId } from '../../../geoserver/featureType/featureType.util';
 import { WfsFeature } from '../../../geoserver/wfs/wfs.models';
 import { CrgLayer } from '../../../gis/layers/layers.models';
+import { services } from '../../../services';
 import { prepareLike } from '../../../util/filters/filterObjects';
 
 const defaultValues: Partial<SelectedFeaturesStore> = {
@@ -146,6 +147,45 @@ class SelectedFeaturesStore {
       ids,
       negativeIds
     };
+  }
+
+  /**
+   * Красиво распечатывает текущее состояние SelectedFeaturesStore в консоль
+   */
+  printState(): void {
+    services.logger.trace('🎯 Состояние SelectedFeaturesStore:');
+    services.logger.trace('═'.repeat(50));
+
+    services.logger.trace('📊 Общее состояние:');
+    services.logger.trace(`  • Active: ${this.active ? '✅' : '❌'}`);
+    services.logger.trace(`  • Features count: ${this.features.length}`);
+    services.logger.trace(`  • Limit: ${this.limit}`);
+    services.logger.trace(`  • Limit reached: ${this.limitReached ? '⚠️' : '✅'}`);
+    services.logger.trace(`  • Active feature: ${this.activeFeature?.id || 'Не установлена'}`);
+
+    if (this.features.length > 0) {
+      services.logger.trace('📝 Выделенные объекты:');
+
+      const featuresByTable = this.featuresByTableName;
+      Object.entries(featuresByTable).forEach(([tableName, features]) => {
+        services.logger.trace(`  • ${tableName}: ${features.length} объектов`);
+        features.forEach((feature, index) => {
+          const isActive = feature.id === this.activeFeature?.id;
+          const marker = isActive ? '👉' : '  ';
+          services.logger.trace(`    ${marker} [${index}] ID: ${feature.id}`);
+          services.logger.trace(`        Geometry type: ${feature.geometry?.type || 'Не установлен'}`);
+          if (feature.geometry?.coordinates) {
+            services.logger.trace(`        Coordinates: ${JSON.stringify(feature.geometry.coordinates)}`);
+          }
+        });
+      });
+
+      services.logger.trace(`🔍 Фильтрованные объекты: ${this.filtersByLayersFeatures.length}`);
+    } else {
+      services.logger.trace('📝 Выделенные объекты: Нет');
+    }
+
+    services.logger.trace('═'.repeat(50));
   }
 }
 

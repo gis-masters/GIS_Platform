@@ -1,9 +1,11 @@
 import Feature from 'ol/Feature';
 
 import { services } from '../../services';
+import { LineStringVertexRemover } from './LineStringVertexRemover';
 import { MultiLineStringVertexRemover } from './MultiLineStringVertexRemover';
 import { MultiPointVertexRemover } from './MultiPointVertexRemover';
 import { MultiPolygonVertexRemover } from './MultiPolygonVertexRemover';
+import { PolygonVertexRemover } from './PolygonVertexRemover';
 import { VertexRemover } from './vertex-models';
 
 export function getVertexRemover(feature: Feature): VertexRemover | null {
@@ -19,13 +21,13 @@ export function getVertexRemover(feature: Feature): VertexRemover | null {
       return new MultiPointVertexRemover();
     }
     case 'LineString': {
-      return new MultiLineStringVertexRemover();
+      return new LineStringVertexRemover();
     }
     case 'MultiLineString': {
       return new MultiLineStringVertexRemover();
     }
     case 'Polygon': {
-      return new MultiPolygonVertexRemover();
+      return new PolygonVertexRemover();
     }
     case 'MultiPolygon': {
       return new MultiPolygonVertexRemover();

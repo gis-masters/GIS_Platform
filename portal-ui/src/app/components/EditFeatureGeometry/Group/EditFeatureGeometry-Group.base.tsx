@@ -11,9 +11,12 @@ import { Coordinate } from 'ol/coordinate';
 import { GeometryType } from '../../../services/geoserver/wfs/wfs.models';
 import { selectLabelForGeometryType } from '../../../services/geoserver/wfs/wfs.util';
 import { editFeatureStore } from '../../../services/map/a-map-mode/edit-feature/EditFeatureStore';
+import { coordinateHighlightService } from '../../../services/map/coordinate-highlight/coordinate-highlight.service';
+import { mapDrawService } from '../../../services/map/draw/map-draw.service';
 import { EditFeatureGeometryAddNode } from '../AddNode/EditFeatureGeometry-AddNode';
 import { EditFeatureGeometryAsText } from '../AsText/EditFeatureGeometry-AsText';
 import { EditFeatureGeometryCoord } from '../Coord/EditFeatureGeometry-Coord';
+import { EditFeatureGeometryCopyCoords } from '../CopyCoords/EditFeatureGeometry-CopyCoords';
 import { EditFeatureGeometryCSV } from '../CSV/EditFeatureGeometry-CSV';
 import { EditFeatureGeometryDelButton } from '../DelButton/EditFeatureGeometry-DelButton';
 import { EditFeatureGeometryGroupFooter } from '../GroupFooter/EditFeatureGeometry-GroupFooter';
@@ -108,6 +111,8 @@ export class EditFeatureGeometryGroupBase extends Component<EditFeatureGeometryG
                 displayIndex = startIndex + i + this.startOffset;
               }
 
+              const isDisabled = isLast && mustBeClosed;
+
               return (
                 <EditFeatureGeometryCoord
                   val={coordinate}
@@ -117,7 +122,7 @@ export class EditFeatureGeometryGroupBase extends Component<EditFeatureGeometryG
                   onDelete={this.handleDelete}
                   withControls
                   canBeDeleted={coordinates.length > minCoordsCount}
-                  disabled={isLast && mustBeClosed}
+                  disabled={isDisabled}
                   onChange={this.handleChange}
                 />
               );
@@ -125,31 +130,33 @@ export class EditFeatureGeometryGroupBase extends Component<EditFeatureGeometryG
           </EditFeatureGeometryGroupInner>
 
           <EditFeatureGeometryGroupFooter>
-            <EditFeatureGeometryAddNode onClick={this.handleAdd} />
-            <EditFeatureGeometryAsText
-              coordinates={coordinates}
-              mustBeClosed={mustBeClosed}
-              geometryType={editFeatureStore.geometryType}
-              first={!index}
-            />
-            <EditFeatureGeometryCSV
-              coordinates={coordinates}
-              empty={this.empty}
-              mustBeClosed={mustBeClosed}
-              geometryType={editFeatureStore.geometryType}
-              first={!index}
-            />
-            {canBeDeleted ? (
-              <EditFeatureGeometryDelButton
-                onClick={this.handleGroupDeleting}
-                labelToDelete={selectLabelForGeometryType(
-                  editFeatureStore.geometryType,
-                  `контур${index ? ' (вырезку)' : ''}`,
-                  'линию',
-                  'группу'
-                )}
+            <div style={{ display: 'flex', alignItems: 'center' }}>
+              <EditFeatureGeometryAddNode onClick={this.handleAdd} />
+              <EditFeatureGeometryAsText
+                coordinates={coordinates}
+                mustBeClosed={mustBeClosed}
+                geometryType={editFeatureStore.geometryType}
+                first={!index}
               />
-            ) : null}
+              <EditFeatureGeometryCSV
+                coordinates={coordinates}
+                empty={this.empty}
+                mustBeClosed={mustBeClosed}
+                geometryType={editFeatureStore.geometryType}
+                first={!index}
+              />
+
+              {canBeDeleted && (
+                <EditFeatureGeometryDelButton
+                  onClick={this.handleGroupDeleting}
+                  labelToDelete={this.getLabelToDelete()}
+                  onMouseEnter={this.handleGroupDeleteMouseEnter}
+                  onMouseLeave={this.handleGroupDeleteMouseLeave}
+                />
+              )}
+            </div>
+
+            <EditFeatureGeometryCopyCoords coordinates={coordinates} />
           </EditFeatureGeometryGroupFooter>
         </Paper>
       </Tag>
@@ -162,7 +169,7 @@ export class EditFeatureGeometryGroupBase extends Component<EditFeatureGeometryG
   }
 
   @action.bound
-  private handleDelete(i: number) {
+  private async handleDelete(i: number) {
     const { mustBeClosed, coordinates } = this.props;
 
     coordinates.splice(i, 1);
@@ -172,14 +179,16 @@ export class EditFeatureGeometryGroupBase extends Component<EditFeatureGeometryG
     }
 
     this.updateOffsets();
+    await this.forceGeometryUpdate();
   }
 
   @action.bound
-  private handleAdd() {
+  private async handleAdd() {
     const { coordinates, mustBeClosed } = this.props;
     const where = coordinates.length - (mustBeClosed ? 1 : 0);
     coordinates.splice(where, 0, [0, 0]);
     this.updateOffsets();
+    await this.forceGeometryUpdate();
   }
 
   @boundMethod
@@ -188,8 +197,20 @@ export class EditFeatureGeometryGroupBase extends Component<EditFeatureGeometryG
     onDelete?.(index);
   }
 
+  @boundMethod
+  private handleGroupDeleteMouseEnter(): void {
+    // Подсвечиваем все координаты группы при наведении на кнопку удаления
+    coordinateHighlightService.setActiveGroup(this.props.coordinates);
+  }
+
+  @boundMethod
+  private handleGroupDeleteMouseLeave(): void {
+    // Убираем подсветку координат группы
+    coordinateHighlightService.setActiveGroup(null);
+  }
+
   @action.bound
-  private handleChange(val: Coordinate, i: number) {
+  private async handleChange(val: Coordinate, i: number) {
     const { mustBeClosed, coordinates } = this.props;
 
     coordinates[i] = val;
@@ -198,6 +219,7 @@ export class EditFeatureGeometryGroupBase extends Component<EditFeatureGeometryG
     }
 
     this.updateOffsets();
+    await this.forceGeometryUpdate();
   }
 
   @boundMethod
@@ -223,5 +245,32 @@ export class EditFeatureGeometryGroupBase extends Component<EditFeatureGeometryG
     const endOffset = Math.max(0, this.props.coordinates.length - startOffset - COORDS_IN_VIEWPORT - padding * 2);
 
     return [startOffset, endOffset];
+  }
+
+  private async forceGeometryUpdate(): Promise<void> {
+    if (!editFeatureStore.geometry) {
+      return;
+    }
+
+    const currentGeometry = editFeatureStore.geometry;
+    editFeatureStore.setGeometry(
+      {
+        ...currentGeometry,
+        coordinates: currentGeometry.coordinates
+      } as typeof currentGeometry,
+      true,
+      'Изменение координат'
+    );
+
+    await mapDrawService.syncFeatureGeometryWithMap();
+  }
+
+  private getLabelToDelete(): string {
+    return selectLabelForGeometryType(
+      editFeatureStore.geometryType,
+      `контур${this.props.index ? ' (вырезку)' : ''}`,
+      'линию',
+      'группу'
+    );
   }
 }

@@ -1,4 +1,4 @@
-import React, { FC, ReactNode } from 'react';
+import { FC, ReactNode } from 'react';
 import { cn } from '@bem-react/classname';
 import { IClassNameProps } from '@bem-react/core';
 
@@ -24,4 +24,4 @@ export interface ActionsItemProps extends IClassNameProps {
   size?: IconButtonProps['size'];
 }
 
-export const ActionsItemBase: FC<ActionsItemProps> = () => <></>;
+export const ActionsItemBase: FC<ActionsItemProps> = () => null;

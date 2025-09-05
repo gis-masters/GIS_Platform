@@ -1,5 +1,6 @@
 import React, { ChangeEvent, Component, createRef } from 'react';
 import { action, makeObservable } from 'mobx';
+import { observer } from 'mobx-react';
 import { IconButton, Tooltip } from '@mui/material';
 import { ArchiveOutlined, UnarchiveOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
@@ -9,6 +10,9 @@ import { Coordinate } from 'ol/coordinate';
 
 import { GeometryType } from '../../../services/geoserver/wfs/wfs.models';
 import { selectLabelForGeometryType } from '../../../services/geoserver/wfs/wfs.util';
+import { editFeatureHistoryStore } from '../../../services/map/a-map-mode/edit-feature/EditFeatureHistoryStore';
+import { editFeatureStore } from '../../../services/map/a-map-mode/edit-feature/EditFeatureStore';
+import { mapDrawService } from '../../../services/map/draw/map-draw.service';
 import { exportAsCSV } from '../../../services/util/export';
 import { extractCoordinates } from '../../../services/util/extractCoordinates.util';
 import { EditFeatureGeometryCSVInput } from '../CSVInput/EditFeatureGeometry-CSVInput';
@@ -24,6 +28,7 @@ interface EditFeatureGeometryCSVProps {
   first: boolean;
 }
 
+@observer
 export class EditFeatureGeometryCSV extends Component<EditFeatureGeometryCSVProps> {
   private inputRef = createRef<HTMLInputElement>();
 
@@ -46,9 +51,11 @@ export class EditFeatureGeometryCSV extends Component<EditFeatureGeometryCSVProp
       <>
         {!readOnly && (
           <Tooltip title={`Импорт координат ${partLabel} из CSV`}>
-            <IconButton className={cnEditFeatureGeometryCSV({ do: 'import' })} onClick={this.handleImportClick}>
-              <ArchiveOutlined />
-            </IconButton>
+            <span>
+              <IconButton className={cnEditFeatureGeometryCSV({ do: 'import' })} onClick={this.handleImportClick}>
+                <ArchiveOutlined />
+              </IconButton>
+            </span>
           </Tooltip>
         )}
 
@@ -92,7 +99,7 @@ export class EditFeatureGeometryCSV extends Component<EditFeatureGeometryCSVProp
     if (e.target.files && e.target.files[0]) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        this.doImport(reader.result as string);
+        void this.doImport(reader.result as string);
       };
       // eslint-disable-next-line unicorn/prefer-blob-reading-methods -- FIXME разобраться с blob.text()
       reader.readAsText(e.target.files[0]);
@@ -100,7 +107,7 @@ export class EditFeatureGeometryCSV extends Component<EditFeatureGeometryCSVProp
   }
 
   @action
-  private doImport(csv: string) {
+  private async doImport(csv: string) {
     const { coordinates, mustBeClosed } = this.props;
     const newCoordinates: Coordinate[] = extractCoordinates(csv);
 
@@ -109,5 +116,12 @@ export class EditFeatureGeometryCSV extends Component<EditFeatureGeometryCSVProp
     }
 
     coordinates.splice(0, coordinates.length, ...newCoordinates);
+
+    // Добавляем в историю как единый шаг
+    if (editFeatureStore.geometry) {
+      editFeatureHistoryStore.add(editFeatureStore.geometry, 'Импорт координат из CSV');
+    }
+
+    await mapDrawService.syncFeatureGeometryWithMap();
   }
 }

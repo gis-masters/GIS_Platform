@@ -17,6 +17,7 @@ import { Form } from '../Form/Form';
 import FormControlWrapper from '../FormControl/FormControlWrapper';
 import { IconButton } from '../IconButton/IconButton';
 import { RelationsButton } from '../RelationsButton/RelationsButton';
+import { EditFeatureFormFieldRow } from './EditFeatureFormFieldRow';
 
 import '!style-loader!css-loader!sass-loader!./EditFeatureForm.scss';
 
@@ -92,27 +93,43 @@ export const EditFeatureForm: React.FC<EditFeatureFormProps> = ({
     return Boolean(updatingAllowed);
   };
 
-  const switchControl = (property: OldPropertySchema): void => {
-    if (setFormControls) {
-      const control = formControls.find(({ key }) => key === property.name);
+  const switchControl = useCallback(
+    (property: OldPropertySchema): void => {
+      if (setFormControls) {
+        const updatedFormControls = formControls.map(control => {
+          if (control.key === property.name) {
+            return {
+              ...control,
+              disabled: !control.disabled
+            };
+          }
 
-      if (control) {
-        control.disabled = !control?.disabled;
+          return control;
+        });
 
-        setFormControls([...formControls.filter(({ key }) => key !== property.name), control]);
+        setFormControls(updatedFormControls);
       }
-    }
-  };
+    },
+    [formControls, setFormControls]
+  );
+
+  const handleSwitchControl = useCallback(
+    (property: OldPropertySchema) => () => {
+      switchControl(property);
+    },
+    [switchControl]
+  );
 
   useEffect(() => {
-    const shouldDisable = mode === 'multipleEdit';
-    const updatedFormControls = formControls.map(control => ({
-      ...control,
-      disabled: shouldDisable
-    }));
+    if (mode === 'multipleEdit') {
+      const updatedFormControls = formControls.map(control => ({
+        ...control,
+        disabled: true
+      }));
 
-    setFormControls(updatedFormControls);
-  }, [mode]);
+      setFormControls(updatedFormControls);
+    }
+  }, [mode, setFormControls]);
 
   return (
     !!formControls.length && (
@@ -176,7 +193,7 @@ export const EditFeatureForm: React.FC<EditFeatureFormProps> = ({
 
                         {mode === 'multipleEdit' && (
                           <div className={cnEditFeatureForm('MultipleEditButton')}>
-                            <IconButton size='small' onClick={() => switchControl(property)}>
+                            <IconButton size='small' onClick={handleSwitchControl(property)}>
                               <EditOutlined fontSize='small' />
                             </IconButton>
                           </div>
@@ -208,184 +225,86 @@ export const EditFeatureForm: React.FC<EditFeatureFormProps> = ({
                   </div>
                 )}
 
-                {valueType?.includes('DATETIME') && (
-                  <div className={cnEditFeatureForm('Row')}>
-                    <div className={cnEditFeatureForm('Label')}>
-                      {!editFeatureItem.isFgistpProperty && <span style={{ color: 'grey' }}>{title}</span>}
+                {valueType?.includes('DATETIME') &&
+                  (() => {
+                    const controlItem = formControls.find(({ key }) => key === editFeatureItem.name);
+                    const value = typeof controlItem?.value === 'string' ? getDateTime(controlItem.value) : null;
 
-                      {editFeatureItem.isFgistpProperty && <span>{title}</span>}
-
-                      {description && (
-                        <FormDescription>{convertOldToNewProperty(property).description}</FormDescription>
-                      )}
-                    </div>
-
-                    <div className='col-6 px-0'>
-                      {isReadOnly(property) && (
-                        <div>
-                          <FormControlWrapper
-                            property={property}
-                            onChange={handleWrapperChange}
-                            itemValue={formControls.find(({ key }) => key === editFeatureItem.name)?.value}
-                            error={formControls.find(({ key }) => key === editFeatureItem.name)?.error}
-                            updatingAllowed={updatingAllowed}
-                          />
-
-                          {formControls.find(({ key }) => key === editFeatureItem.name)?.error && (
-                            <span className='input-group-text error-badge'>
-                              <span className='crg-errors-icon'>
-                                {formControls.find(({ key }) => key === editFeatureItem.name)?.error}
-                              </span>
-                            </span>
+                    return (
+                      <div className={cnEditFeatureForm('Row')}>
+                        <div className={cnEditFeatureForm('Label')}>
+                          {editFeatureItem.isFgistpProperty ? (
+                            <span>{property.title}</span>
+                          ) : (
+                            <Tooltip title='Данное свойство не соответствует приказу'>
+                              <span style={{ color: 'grey' }}>{property.title}</span>
+                            </Tooltip>
                           )}
-
-                          {mode === 'multipleEdit' && (
-                            <>
-                              {isShowTemplate(property) && (
-                                <div className={cnEditFeatureForm('MultiEdit')}>
-                                  <span>Оставить как есть</span>
-                                </div>
-                              )}
-
-                              <div className={cnEditFeatureForm('MultipleEditButton')}>
-                                <IconButton size='small' onClick={() => switchControl(property)}>
-                                  <EditOutlined fontSize='small' />
-                                </IconButton>
-                              </div>
-                            </>
+                          {property.description && (
+                            <FormDescription>{convertOldToNewProperty(property).description}</FormDescription>
                           )}
                         </div>
-                      )}
+                        <div className='col-6 px-0'>
+                          {isReadOnly(property) && (
+                            <div>
+                              <FormControlWrapper
+                                property={property}
+                                onChange={handleWrapperChange}
+                                itemValue={formControls.find(({ key }) => key === editFeatureItem.name)?.value}
+                                error={formControls.find(({ key }) => key === editFeatureItem.name)?.error}
+                                updatingAllowed={updatingAllowed}
+                              />
 
-                      {!isReadOnly(property) &&
-                        (() => {
-                          const controlItem = formControls.find(({ key }) => key === editFeatureItem.name);
-                          const value = typeof controlItem?.value === 'string' ? getDateTime(controlItem.value) : null;
+                              {formControls.find(({ key }) => key === editFeatureItem.name)?.error && (
+                                <span className='input-group-text error-badge'>
+                                  <span className='crg-errors-icon'>
+                                    {formControls.find(({ key }) => key === editFeatureItem.name)?.error}
+                                  </span>
+                                </span>
+                              )}
 
-                          return (
+                              {mode === 'multipleEdit' && (
+                                <>
+                                  {isShowTemplate(property) && (
+                                    <div className={cnEditFeatureForm('MultiEdit')}>
+                                      <span>Оставить как есть</span>
+                                    </div>
+                                  )}
+                                  <div className={cnEditFeatureForm('MultipleEditButton')}>
+                                    <IconButton size='small' onClick={handleSwitchControl(property)}>
+                                      <EditOutlined fontSize='small' />
+                                    </IconButton>
+                                  </div>
+                                </>
+                              )}
+                            </div>
+                          )}
+
+                          {!isReadOnly(property) && (
                             <FormControlWrapper
                               property={property}
                               onChange={handleWrapperChange}
                               itemValue={value}
                               updatingAllowed={false}
                             />
-                          );
-                        })()}
-                    </div>
-                  </div>
-                )}
-
-                {valueType?.includes('INT') && (
-                  <div className={cnEditFeatureForm('Row')}>
-                    <div className={cnEditFeatureForm('Label')}>
-                      {!editFeatureItem.isFgistpProperty && (
-                        <span
-                          style={{ color: 'grey' }}
-                          // matTooltip="Данное свойство не соответствует приказу"
-                        >
-                          {title}
-                        </span>
-                      )}
-                      {editFeatureItem.isFgistpProperty && <span>{title}</span>}
-                      {description && (
-                        <FormDescription>{convertOldToNewProperty(property).description}</FormDescription>
-                      )}
-                    </div>
-
-                    <div className='col-6 px-0'>
-                      {isReadOnly(property) && (
-                        <div>
-                          <FormControlWrapper
-                            property={property}
-                            onChange={handleWrapperChange}
-                            itemValue={formControls.find(({ key }) => key === editFeatureItem.name)?.value}
-                            error={formControls.find(({ key }) => key === editFeatureItem.name)?.error}
-                            updatingAllowed={updatingAllowed}
-                          />
-
-                          {mode === 'multipleEdit' && (
-                            <>
-                              {isShowTemplate(property) && (
-                                <div className={cnEditFeatureForm('MultiEdit')}>
-                                  <span>Оставить как есть</span>
-                                </div>
-                              )}
-
-                              <div className={cnEditFeatureForm('MultipleEditButton')}>
-                                <IconButton size='small' onClick={() => switchControl(property)}>
-                                  <EditOutlined fontSize='small' />
-                                </IconButton>
-                              </div>
-                            </>
                           )}
                         </div>
-                      )}
+                      </div>
+                    );
+                  })()}
 
-                      {!isReadOnly(property) && (
-                        <FormControlWrapper
-                          property={property}
-                          onChange={handleWrapperChange}
-                          itemValue={formControls.find(({ key }) => key === editFeatureItem.name)?.value}
-                          error={formControls.find(({ key }) => key === editFeatureItem.name)?.error}
-                          updatingAllowed={false}
-                        />
-                      )}
-                    </div>
-                  </div>
-                )}
-
-                {valueType?.includes('DOUBLE') && (
-                  <div className={cnEditFeatureForm('Row')}>
-                    <div className={cnEditFeatureForm('Label')}>
-                      {!editFeatureItem.isFgistpProperty && <span style={{ color: 'grey' }}>{title}</span>}
-
-                      {editFeatureItem.isFgistpProperty && <span>{title}</span>}
-
-                      {description && (
-                        <FormDescription>{convertOldToNewProperty(property).description}</FormDescription>
-                      )}
-                    </div>
-
-                    <div className='col-6 px-0'>
-                      {isReadOnly(property) && (
-                        <div>
-                          <FormControlWrapper
-                            property={property}
-                            onChange={handleWrapperChange}
-                            itemValue={formControls.find(({ key }) => key === editFeatureItem.name)?.value}
-                            error={formControls.find(({ key }) => key === editFeatureItem.name)?.error}
-                            updatingAllowed={updatingAllowed}
-                          />
-
-                          {mode === 'multipleEdit' && (
-                            <>
-                              {isShowTemplate(property) && (
-                                <div className={cnEditFeatureForm('MultiEdit')}>
-                                  <span>Оставить как есть</span>
-                                </div>
-                              )}
-
-                              <div className={cnEditFeatureForm('MultipleEditButton')}>
-                                <IconButton size='small' onClick={() => switchControl(property)}>
-                                  <EditOutlined fontSize='small' />
-                                </IconButton>
-                              </div>
-                            </>
-                          )}
-                        </div>
-                      )}
-
-                      {!isReadOnly(property) && (
-                        <FormControlWrapper
-                          property={property}
-                          onChange={handleWrapperChange}
-                          itemValue={formControls.find(({ key }) => key === editFeatureItem.name)?.value}
-                          error={formControls.find(({ key }) => key === editFeatureItem.name)?.error}
-                          updatingAllowed={false}
-                        />
-                      )}
-                    </div>
-                  </div>
+                {(valueType?.includes('INT') || valueType?.includes('DOUBLE')) && (
+                  <EditFeatureFormFieldRow
+                    editFeatureItem={editFeatureItem}
+                    property={property}
+                    formControls={formControls}
+                    handleWrapperChange={handleWrapperChange}
+                    updatingAllowed={updatingAllowed}
+                    mode={mode}
+                    isShowTemplate={isShowTemplate}
+                    handleSwitchControl={handleSwitchControl}
+                    isReadOnly={isReadOnly}
+                  />
                 )}
               </div>
             );

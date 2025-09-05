@@ -1,16 +1,16 @@
 import { action, computed, makeObservable, observable } from 'mobx';
 import { Feature, Polygon } from '@turf/turf';
-import { cloneDeep, isEqual } from 'lodash';
+import { cloneDeep } from 'lodash';
 
-import { defaultOlProjectionCode, Projection } from '../../../data/projections/projections.models';
-import { getProjectionByCode } from '../../../data/projections/projections.service';
-import { GeometryType, WfsFeature, WfsGeometry } from '../../../geoserver/wfs/wfs.models';
+import { Projection } from '../../../data/projections/projections.models';
+import { GeometryType, WfsFeature, WfsGeometry } from '../../../geoserver/wfs/wfs.models'; // eslint-disable-line @typescript-eslint/no-unused-vars
 import { isGeometryValid } from '../../../geoserver/wfs/wfs.util';
 import { CrgVectorableLayer } from '../../../gis/layers/layers.models';
 import { services } from '../../../services';
 import { transformGeometry } from '../../../util/coordinates-transform.util';
 import { selectedFeaturesStore } from '../selected-features/SelectedFeatures.store';
 import { EditFeaturesData } from './EditFeature.models';
+import { editFeatureHistoryStore } from './EditFeatureHistoryStore';
 
 class EditFeatureStore {
   private static _instance: EditFeatureStore;
@@ -25,14 +25,11 @@ class EditFeatureStore {
   @observable editFeaturesData?: EditFeaturesData;
 
   @observable currentProjection?: Projection;
-  @observable olProjection?: Projection;
 
   // Зона слоя допустимая для добавления объектов без предупреждения
   @observable layerExtent?: Feature<Polygon>;
   // Признак нарушения границ зоны layerExtent какой-либо из точек геометрии
   @observable hasGeometryWarning: boolean = false;
-
-  @observable geometryPool: WfsGeometry[] = [];
 
   constructor() {
     makeObservable(this);
@@ -57,10 +54,9 @@ class EditFeatureStore {
     return false;
   }
 
-  @computed.struct
+  @computed
   get isGeometryChanged(): boolean {
-    if (this.isGeometryValid && !isEqual(this.geometry, this.currentGeometry)) {
-      this.addGeometryToPool(cloneDeep(this.geometry));
+    if (this.isGeometryValid) {
       this.setPristine(false);
 
       return true;
@@ -79,35 +75,6 @@ class EditFeatureStore {
     return this.editFeaturesData?.features[0];
   }
 
-  @computed
-  public get currentGeometry(): WfsGeometry | undefined {
-    return this.geometryPool.length > 0 ? this.geometryPool.at(-1) : undefined;
-  }
-
-  @action
-  async initFeature(feature: WfsFeature, projection: Projection): Promise<void> {
-    this.olProjection = await getProjectionByCode(defaultOlProjectionCode);
-
-    if (feature && feature.geometry) {
-      this.setCurrentProjection(projection);
-      this.setGeometry(feature.geometry);
-    } else {
-      services.logger.warn('Не корректная фича');
-    }
-  }
-
-  @action
-  public addGeometryToPool(geometry: WfsGeometry | undefined): void {
-    if (geometry && !isEqual(geometry, this.currentGeometry)) {
-      this.geometryPool.push(cloneDeep(geometry));
-    }
-  }
-
-  @action
-  public clearGeometryPool(): void {
-    this.geometryPool = [];
-  }
-
   @action
   setCurrentProjection(projection: Projection): void {
     this.currentProjection = projection;
@@ -124,14 +91,28 @@ class EditFeatureStore {
   }
 
   @action.bound
-  setGeometry(geometry: WfsGeometry): void {
+  setGeometry(geometry: WfsGeometry, addToHistory: boolean = true, description?: string): void {
     if (!this.currentProjection) {
       throw new Error('Отсутствует текущая проекция');
     }
 
     if (this.firstFeature) {
-      this.firstFeature.geometry = geometry;
-      this.addGeometryToPool(geometry);
+      // Добавляем в историю только если это не отмена/повтор действия
+      if (addToHistory && this.geometry) {
+        const desc = description || 'Изменение геометрии';
+        editFeatureHistoryStore.add(geometry, desc);
+      }
+
+      let processedGeometry = geometry;
+      if (geometry.type === GeometryType.MULTI_POINT) {
+        // Удаляем повторяющиеся вершины для точек
+        processedGeometry = this.removeDuplicateCoordinates(geometry);
+      }
+
+      this.firstFeature.geometry = processedGeometry;
+
+      // Очищаем ошибку геометрии при любом изменении
+      this.setGeometryErrorMessage(null);
     }
   }
 
@@ -172,26 +153,91 @@ class EditFeatureStore {
   @action
   setEditFeaturesData(editFeaturesData: EditFeaturesData | undefined) {
     if (editFeaturesData === undefined) {
-      this.editFeaturesData = undefined;
+      services.logger.warn('Лучше использовать clear() метод напрямую');
+
       this.clear();
-    } else {
-      this.editFeaturesData = cloneDeep(editFeaturesData);
 
-      // Обновляем фичу в списке выделенных
-      editFeatureStore.editFeaturesData?.features.forEach(feature => {
-        selectedFeaturesStore.updateFeature(feature);
-      });
-
-      this.setGeometryErrorMessage(null);
+      return;
     }
+
+    this.editFeaturesData = editFeaturesData;
+    if (this.geometry) {
+      editFeatureHistoryStore.add(this.geometry, 'Начальное состояние');
+    }
+
+    // Обновляем фичу в списке выделенных
+    this.editFeaturesData?.features.forEach(feature => {
+      selectedFeaturesStore.updateFeature(feature);
+    });
+
+    this.setGeometryErrorMessage(null);
   }
 
   @action
   clear() {
+    this.editFeaturesData = undefined;
+
     this.setPristine(false);
     this.setGeometryErrorMessage(null);
     this.setPristineFromGeometryFix(false);
-    this.clearGeometryPool();
+  }
+
+  /**
+   * Удаляет повторяющиеся координаты из геометрии
+   */
+  private removeDuplicateCoordinates(geometry: WfsGeometry): WfsGeometry {
+    const processedGeometry = cloneDeep(geometry);
+    if (processedGeometry.type === GeometryType.MULTI_POINT) {
+      const multiPointGeometry = processedGeometry;
+
+      multiPointGeometry.coordinates = multiPointGeometry.coordinates.filter((coord, index, arr) => {
+        return arr.findIndex(c => c[0] === coord[0] && c[1] === coord[1]) === index;
+      });
+    }
+
+    return processedGeometry;
+  }
+
+  /**
+   * Красиво распечатывает текущее состояние EditFeatureStore в консоль
+   */
+  printState(): void {
+    services.logger.trace('🎯 Состояние EditFeatureStore:');
+    services.logger.trace('═'.repeat(50));
+
+    services.logger.trace('📊 Общее состояние:');
+    services.logger.trace(`  • Pristine: ${this.pristine ? '✅' : '❌'}`);
+    services.logger.trace(`  • Dirty: ${this.dirty ? '✅' : '❌'}`);
+    services.logger.trace(`  • PristineFromGeometryFix: ${this.pristineFromGeometryFix ? '✅' : '❌'}`);
+    services.logger.trace(`  • HasGeometryWarning: ${this.hasGeometryWarning ? '⚠️' : '✅'}`);
+
+    if (this.geometryErrorMessage) {
+      services.logger.trace(`  • GeometryErrorMessage: ${this.geometryErrorMessage}`);
+    }
+
+    services.logger.trace(`  • CurrentProjection: ${this.currentProjection?.title || 'Не установлена'}`);
+    services.logger.trace(`  • LayerExtent: ${this.layerExtent ? 'Установлена' : 'Не установлена'}`);
+
+    if (this.editFeaturesData) {
+      services.logger.trace('📝 Данные редактирования:');
+      services.logger.trace(`  • Layer: ${this.editFeaturesData.layer?.title || 'Не установлен'}`);
+      services.logger.trace(`  • Features count: ${this.editFeaturesData.features.length}`);
+
+      if (this.firstFeature) {
+        services.logger.trace(`  • First feature ID: ${this.firstFeature.id}`);
+        services.logger.trace(`  • Geometry type: ${this.geometryType || 'Не установлен'}`);
+        services.logger.trace(`  • Is geometry valid: ${this.isGeometryValid ? '✅' : '❌'}`);
+        services.logger.trace(`  • Is geometry changed: ${this.isGeometryChanged ? '✅' : '❌'}`);
+
+        if (this.geometry) {
+          services.logger.trace(`  • Geometry coordinates: ${JSON.stringify(this.geometry.coordinates)}`);
+        }
+      }
+    } else {
+      services.logger.trace('📝 Данные редактирования: Не установлены');
+    }
+
+    services.logger.trace('═'.repeat(50));
   }
 }
 

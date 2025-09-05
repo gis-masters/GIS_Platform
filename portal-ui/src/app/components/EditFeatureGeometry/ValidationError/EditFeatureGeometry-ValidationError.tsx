@@ -6,6 +6,7 @@ import { AxiosError } from 'axios';
 
 import { makeGeometryValid } from '../../../services/data/geometryValidation/geometryValidation.service';
 import { editFeatureStore } from '../../../services/map/a-map-mode/edit-feature/EditFeatureStore';
+import { mapDrawService } from '../../../services/map/draw/map-draw.service';
 import { Button } from '../../Button/Button';
 
 import '!style-loader!css-loader!sass-loader!./EditFeatureGeometry-ValidationError.scss';
@@ -38,10 +39,12 @@ export const EditFeatureGeometryValidationError: FC<EditFeatureGeometryValidatio
       try {
         const validWfsFeature = await makeGeometryValid(firstFeature);
         if (validWfsFeature.geometry) {
-          editFeatureStore.setGeometry(validWfsFeature.geometry);
+          editFeatureStore.setGeometry(validWfsFeature.geometry, true, 'Исправление геометрии');
           editFeatureStore.setPristine(false);
           editFeatureStore.setGeometryErrorMessage(null);
           editFeatureStore.setPristineFromGeometryFix(false);
+
+          await mapDrawService.syncFeatureGeometryWithMap();
         }
       } catch (error) {
         const err = error as AxiosError<{ errors: Record<string, unknown>[]; message?: string }>;

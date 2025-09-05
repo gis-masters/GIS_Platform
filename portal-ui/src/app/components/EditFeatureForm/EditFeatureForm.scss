@@ -50,14 +50,7 @@ body .EditFeatureForm {
   }
 
   &-Label {
-    position: relative;
-
     flex: 0 0 50%;
-
-    width: 100%;
-    max-width: 50%;
-    padding-right: 10px !important;
-    padding-left: 0 !important;
 
     font-family: monospace;
   }
@@ -117,7 +110,6 @@ body .EditFeatureForm {
     border: 1px solid #ced4da;
     border-radius: 0.25rem;
     background: #e9ecef;
-    background-color: #e9ecef;
 
     & .MuiButtonBase-root:hover {
       background-color: unset;
