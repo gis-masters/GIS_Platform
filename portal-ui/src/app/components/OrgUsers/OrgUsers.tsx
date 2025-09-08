@@ -14,7 +14,6 @@ import { organizationSettings } from '../../stores/OrganizationSettings.store';
 import { XTable } from '../XTable/XTable';
 import { XTableColumn } from '../XTable/XTable.models';
 import { OrgUsersCreate } from './Create/OrgUsers-Create';
-import { OrgUsersEnabled } from './Enabled/OrgUsers-Enabled';
 import { OrgUsersInvite } from './Invite/OrgUsers-Invite';
 import { OrgUsersPermissionsCount } from './PermissionsCount/OrgUsers-PermissionsCount';
 import { OrgUsersUserActions } from './UserActions/OrgUsers-UserActions';
@@ -79,8 +78,9 @@ export class OrgUsers extends Component {
       title: 'Активен',
       field: 'enabled',
       sortable: true,
+      filterable: true,
       align: 'right',
-      CellContent: OrgUsersEnabled
+      type: PropertyType.BOOL
     },
     {
       title: 'e-mail / login',
