@@ -17,6 +17,7 @@ import static org.apache.http.HttpStatus.SC_CREATED;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static ru.mycrg.acceptance.auth_service.UserGroupStepsDefinitions.usersGroupId;
+import static ru.mycrg.acceptance.auth_service.UserStepsDefinitions.userDto;
 import static ru.mycrg.acceptance.auth_service.UserStepsDefinitions.userId;
 import static ru.mycrg.acceptance.gis_service.ProjectStepsDefinitions.projectId;
 
@@ -189,6 +190,11 @@ public class ProjectPermissionStepsDefinitions extends BaseStepsDefinitions {
             projectStepsDefinitions.getCurrentProjectInfoById();
             checkUserRoleForCurrentProject(expectedRole);
         }
+    }
+
+    @Given("Текущий пользователь устанавливает роль {string} для пользователя {string}, для текущего проекта")
+    public void addPermissionToCurrentProjectForCurrentUser(String role, String userName) {
+        addPermissionToCurrentProject(getUserIdByName(userName), "user", role);
     }
 
     private void addPermissionToCurrentProject(Integer principalId, String principalType, String role) {

@@ -13,6 +13,7 @@ import ru.mycrg.messagebus_contract.IMessageBusProducer;
 import ru.mycrg.messagebus_contract.events.IMessageBusEvent;
 import ru.mycrg.wrapper.service.export.GDALService;
 import ru.mycrg.wrapper.service.export.GmlGenerator;
+import ru.mycrg.wrapper.service.export.GpkgGenerator;
 
 import static ru.mycrg.data_service_contract.enums.ProcessStatus.DONE;
 import static ru.mycrg.data_service_contract.enums.ProcessStatus.ERROR;
@@ -28,11 +29,16 @@ public class ExportRequestHandler implements IEventHandler {
     private final IMessageBusProducer messageBus;
     private final GDALService gdalService;
     private final GmlGenerator gmlGenerator;
+    private final GpkgGenerator gpkgGenerator;
 
-    public ExportRequestHandler(IMessageBusProducer messageBus, GDALService gdalService, GmlGenerator gmlGenerator) {
+    public ExportRequestHandler(IMessageBusProducer messageBus,
+                                GDALService gdalService,
+                                GmlGenerator gmlGenerator,
+                                GpkgGenerator gpkgGenerator) {
         this.messageBus = messageBus;
         this.gdalService = gdalService;
         this.gmlGenerator = gmlGenerator;
+        this.gpkgGenerator = gpkgGenerator;
     }
 
     @Override
@@ -54,17 +60,22 @@ public class ExportRequestHandler implements IEventHandler {
             }
 
             log.debug("Try handle export event: {}", payload);
-            String pathToZip;
+            String pathToExportedFile;
             if ("ESRI Shapefile".equals(payload.getFormat())) {
-                pathToZip = gdalService.generate(event);
+                pathToExportedFile = gdalService.generate(event);
 
                 messageBus.produce(
-                        new ExportResponseEvent(event, DONE, getDescription(payload, "SHP"), 100, pathToZip));
+                        new ExportResponseEvent(event, DONE, getDescription(payload, "SHP"), 100, pathToExportedFile));
             } else if ("GML".equals(payload.getFormat())) {
-                pathToZip = gmlGenerator.generate(event);
+                pathToExportedFile = gmlGenerator.generate(event);
 
                 messageBus.produce(
-                        new ExportResponseEvent(event, DONE, getDescription(payload, "GML"), 100, pathToZip));
+                        new ExportResponseEvent(event, DONE, getDescription(payload, "GML"), 100, pathToExportedFile));
+            } else if ("GPKG".equals(payload.getFormat())) {
+                pathToExportedFile = gpkgGenerator.generate(event);
+
+                messageBus.produce(
+                        new ExportResponseEvent(event, DONE, getDescription(payload, "GPKG"), 100, pathToExportedFile));
             } else {
                 final String msg = "Incorrect export format: " + payload.getFormat();
                 log.warn(msg);

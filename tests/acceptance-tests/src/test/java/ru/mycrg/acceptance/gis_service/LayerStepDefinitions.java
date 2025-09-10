@@ -14,7 +14,6 @@ import ru.mycrg.acceptance.gis_service.dto.LayerCreateDto;
 import ru.mycrg.acceptance.gis_service.dto.LayerUpdateDto;
 import ru.mycrg.auth_service_contract.dto.UserCreateDto;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -35,7 +34,6 @@ import static ru.mycrg.acceptance.data_service.libraries.LibraryStepsDefinitions
 import static ru.mycrg.acceptance.data_service.libraries.LibraryStepsDefinitions.currentLibrary;
 import static ru.mycrg.acceptance.data_service.tables.TablesStepsDefinitions.currentTableName;
 import static ru.mycrg.acceptance.gis_service.LayerGroupStepsDefinitions.layerGroupId;
-import static ru.mycrg.acceptance.gis_service.ProjectStepsDefinitions.projectDto;
 import static ru.mycrg.acceptance.gis_service.ProjectStepsDefinitions.projectId;
 
 public class LayerStepDefinitions extends BaseStepsDefinitions {
@@ -278,19 +276,9 @@ public class LayerStepDefinitions extends BaseStepsDefinitions {
         scenarioLayers.add(layerCreateDto);
     }
 
-    @Given("Пользователь делает запрос на размещение растрового слоя в проекте")
-    public void createRasterLayerRequest() {
-        createRasterLayer();
-    }
-
     @When("Пользователь делает повторный запрос на создание слоя проекта")
     public void createLayerAgain() {
         super.createEntity(layerCreateDto);
-    }
-
-    @When("Пользователь делает запрос на все слои организации")
-    public void getAllLayers() {
-        super.get1000Entities();
     }
 
     @And("Представление слоя проекта корректно")
@@ -439,11 +427,6 @@ public class LayerStepDefinitions extends BaseStepsDefinitions {
         super.checkCurrentIdInResponse();
     }
 
-    @And("Сообщение об отсутствии прав на добавление слоя соответствует заданному формату")
-    public void checkResponseMessageWhenAddLayerForbidden() {
-        super.checkErrorResponseMessage("Недостаточно прав для редактирования проекта: " + projectDto.getName());
-    }
-
     @And("Текущая группа слоёв 'не пострадала'")
     public void checkThatLayerGroupExist() {
         String url = "/projects/" + projectId + "/groups/" + layerGroupId;
@@ -520,21 +503,6 @@ public class LayerStepDefinitions extends BaseStepsDefinitions {
         assertEquals(String.format("%s:%s__7829", dataStoreName, tableName), jsonPath.getList("complexName").get(0));
     }
 
-    @Then("Параметр transparent color по умолчанию чёрный")
-    public void checkLayerTransparentColorIsBlack() {
-        getCurrentWorkspaceAndStoreName();
-        getCurrentLayerFromGeoserver(currentWorkspace, currentStoreName, currentCoveragestoreName);
-
-        Map<String, Object> entry = response.jsonPath().getMap("coverage.parameters.entry");
-
-        assertNotNull(entry);
-
-        List<String> parameters = (ArrayList<String>) entry.get("string");
-
-        assertTrue(parameters.contains("InputTransparentColor"));
-        assertTrue(parameters.contains("#000000"));
-    }
-
     @When("Пользователь пытается выгрузить ESRI Shape-файл текущего слоя")
     public void exportShpOfCurrentLayer() {
         String exportEndpoint = "http://localhost/gis/export/shape";
@@ -548,14 +516,6 @@ public class LayerStepDefinitions extends BaseStepsDefinitions {
                     queryParam("layerTitle", layerCreateDto.getTitle())
                 .when().
                     get(exportEndpoint);
-    }
-
-    private void getCurrentLayerFromGeoserver(String workspace, String coveragestore, String coverage) {
-        response = getBaseRequestWithCurrentCookie()
-                       .basePath("geoserver/rest")
-                .when().
-                       get(format("/workspaces/%s/coveragestores/%s/coverages/%s.json",
-                                  workspace, coveragestore, coverage));
     }
 
     private void getCurrentWorkspaceAndStoreName() {

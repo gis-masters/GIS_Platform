@@ -241,6 +241,7 @@ services:
     volumes:
       - /opt/crg/fgistp:/opt/fgistp
       - /opt/crg/export:/opt/crg/export
+      - /opt/crg/file_storage:/opt/crg/file_storage
       - /opt/crg/logs:/opt/logs
     logging:
       options:

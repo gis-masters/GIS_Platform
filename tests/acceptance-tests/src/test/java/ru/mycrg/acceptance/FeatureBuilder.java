@@ -1,13 +1,15 @@
 package ru.mycrg.acceptance;
 
+
 import org.jetbrains.annotations.NotNull;
+import ru.mycrg.acceptance.data_service.TestFilesManager;
+import ru.mycrg.acceptance.data_service.dto.FileDescriptionModel;
 import ru.mycrg.geo_json.Feature;
 import ru.mycrg.geo_json.LngLatAlt;
 import ru.mycrg.geo_json.MultiPolygon;
 import ru.mycrg.geo_json.Polygon;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class FeatureBuilder {
 
@@ -19,6 +21,13 @@ public class FeatureBuilder {
         Feature feature1, feature2;
 
         switch (dataTemplate) {
+            case "Все типы данных":
+                Feature featureFirst = getFeature_F();
+                Map<String, Object> fullPropsMap = getFullPropsMap();
+                featureFirst.setProperties(fullPropsMap);
+                features.add(featureFirst);
+                break;
+
             case "данные для множественного копирования":
                 Feature featureF = getFeature_F();
                 featureF.setProperty("field_3", "1");
@@ -130,5 +139,29 @@ public class FeatureBuilder {
         feature.setGeometry(new MultiPolygon(new Polygon(line)));
 
         return feature;
+    }
+
+    @NotNull
+    private static Map<String, Object> getFullPropsMap() {
+        Map<String, Object> props = new HashMap<>();
+        props.put("field_int", 12);
+        props.put("field_double", 12.12);
+        props.put("field_string", "Новая стринга");
+        props.put("field_date", "2025-09-03");
+        props.put("field_boolean", true);
+        props.put("field_choice_string", "1111");
+        props.put("field_choice_int", 55);
+        props.put("field_url", "[{\"url\":\"https://blank.com\",\"text\":\"gt\"}]");
+        props.put("field_fias__oktmo", "58");
+        props.put("field_fias__address", "Радуемся");
+        props.put("field_fias__id", 85);
+        //Поля типа file нет. Нужно доносить дополнительным шагом
+        props.put("field_document", "[{\"id\":1,\"title\":\"dw\",\"libraryTableName\":\"dl_data_kpt\"}]");
+        props.put("field_uuid", "cfbde192-08a8-4f0b-bd09-a0e417ec11ef");
+        props.put("field_user_id", 2);
+        props.put("field_user",
+                  "[{\"id\":2,\"email\":\"orgOwner@any.ru\",\"name\":\"Владелец\",\"surname\":\"orgOwner\",\"middleName\":\"\"}]");
+
+        return props;
     }
 }

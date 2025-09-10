@@ -7,14 +7,18 @@ import io.restassured.specification.RequestSpecification;
 import ru.mycrg.acceptance.BaseStepsDefinitions;
 import ru.mycrg.acceptance.auth_service.AuthorizationBase;
 import ru.mycrg.acceptance.data_service.dto.FileDescriptionModel;
+import ru.mycrg.data_service_contract.enums.ProcessType;
 
 import java.io.File;
 import java.time.LocalTime;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 import static io.restassured.http.ContentType.JSON;
 import static java.lang.Thread.sleep;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static ru.mycrg.acceptance.auth_service.OrganizationStepsDefinitions.MAX_RETRY_ATTEMPT;
 import static ru.mycrg.acceptance.data_service.FilesStepDefinitions.currentFileId;
 import static ru.mycrg.acceptance.data_service.FilesStepDefinitions.currentFiles;
@@ -86,13 +90,12 @@ public class ProcessesStepDefinitions extends BaseStepsDefinitions {
         String path = response.jsonPath().get("details");
         String fileName = path.substring(path.lastIndexOf('/') + 1);
 
-
         response = getBaseRequestWithCurrentCookie()
                 .given().
                         basePath("")
                 .when().
                         log().ifValidationFails().
-                        get("/api/data/export/"+fileName);
+                        get("/api/data/export/" + fileName);
 
         assertEquals(size, response.asByteArray().length);
     }
@@ -165,6 +168,11 @@ public class ProcessesStepDefinitions extends BaseStepsDefinitions {
         getCurrentProcess();
     }
 
+    @When("В ответе процесса содержится фраза {string}")
+    public void gineMeThisProcess(String answer) {
+        assertTrue(response.prettyPrint().contains(answer));
+    }
+
     @When("процесс завершается со статусом {string}")
     public void waitUntilCurrentProcessIsDone(String status) {
         waitUntilProcessCompleteWithStatus(currentProcessId, status);
@@ -173,6 +181,76 @@ public class ProcessesStepDefinitions extends BaseStepsDefinitions {
     @When("Процесс завершается с ошибкой")
     public void waitUntilCurrentProcessIsCompleteWithError() {
         waitUntilProcessCompleteWithStatus(currentProcessId, "ERROR");
+    }
+
+    @When("Текущий пользователь экспортирует текущий слой в GeoPackage")
+    public void exportInGeoPackage() {
+        String wsUiId = "GeoPackage";
+
+        String gpkgPlacementModel = String.format("{\n" +
+                                                          "    \"wsUiId\": \"%s\",\n" +
+                                                          "    \"format\": \"GPKG\",\n" +
+                                                          "    \"resources\": [\n" +
+                                                          "        {\n" +
+                                                          "            \"dataset\": \"%s\",\n" +
+                                                          "            \"table\": \"%s\"\n" +
+                                                          "        }\n" +
+                                                          "    ],\n" +
+                                                          "    \"epsg\": \"EPSG:3857\"\n" +
+                                                          "}",
+                                                  wsUiId, currentDatasetIdentifier, currentTableName);
+
+        response = getBaseRequestWithCurrentCookie()
+                .given().
+                        body(gpkgPlacementModel).
+                        contentType(ContentType.JSON).
+                        basePath("")
+                .when().
+                        log().ifValidationFails().
+                        post("/api/data/export/");
+
+        currentProcessId = response.jsonPath().get("id");
+    }
+
+    @When("Текущий пользователь импортирует GeoPackage в текущий проект без указания набора данных")
+    public void importGeoPackageInCurrentProjectWithoutDataset() {
+        String fileId = response.jsonPath().getString("[0].id");
+        String filePath = response.jsonPath().getString("[0].path");
+
+        ProcessableModel processableModel = new ProcessableModel();
+        processableModel.setType(String.valueOf(ProcessType.IMPORT));
+        Map<String, Object> payload = new HashMap<>();
+        payload.put("fileId", fileId);
+        payload.put("filePath", filePath);
+        payload.put("projectId", projectId);
+        processableModel.setPayload(payload);
+
+        initProcess(processableModel);
+
+        if (response.getStatusCode() != 400 && response.getStatusCode() != 500) {
+            currentProcessId = extractId((String) response.jsonPath().get("_links.self.href"));
+        }
+    }
+
+    @When("Текущий пользователь импортирует GeoPackage в текущий проект")
+    public void importGeoPackageInCurrentProjectWithDataset() {
+        String fileId = response.jsonPath().getString("[0].id");
+        String filePath = response.jsonPath().getString("[0].path");
+
+        ProcessableModel processableModel = new ProcessableModel();
+        processableModel.setType(String.valueOf(ProcessType.IMPORT));
+        Map<String, Object> payload = new HashMap<>();
+        payload.put("fileId", fileId);
+        payload.put("filePath", filePath);
+        payload.put("projectId", projectId);
+        payload.put("sourceDataset", currentDatasetIdentifier);
+        processableModel.setPayload(payload);
+
+        initProcess(processableModel);
+
+        if (response.getStatusCode() != 400 && response.getStatusCode() != 500) {
+            currentProcessId = extractId((String) response.jsonPath().get("_links.self.href"));
+        }
     }
 
     public void waitUntilProcessCompleteWithStatus(Integer processId, String status) {

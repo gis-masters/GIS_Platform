@@ -15,7 +15,7 @@ public class ExportRequestModel {
     private String docSchema;
 
     @NotBlank
-    @Pattern(regexp = "^(GML|ESRI Shapefile)$", message = "Допустимые форматы: 'ESRI Shapefile', 'GML'")
+    @Pattern(regexp = "^(GML|GPKG|ESRI Shapefile)$", message = "Допустимые форматы: 'ESRI Shapefile', 'GML', 'GPKG'")
     private String format;
 
     @Valid

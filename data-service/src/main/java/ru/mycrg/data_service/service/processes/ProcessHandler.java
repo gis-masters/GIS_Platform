@@ -70,6 +70,11 @@ public class ProcessHandler {
             new Thread(wrappedRunnable).start();
 
             return process;
+        } catch (BadRequestException e) {
+            String msg = "Не удалось создать процесс => " + e.getMessage();
+            log.error(msg, e);
+
+            throw new BadRequestException(msg);
         } catch (Exception e) {
             String msg = "Не удалось создать процесс => " + e.getMessage();
             log.error(msg, e);

@@ -123,6 +123,12 @@
         </dependency>
 
         <dependency>
+            <groupId>org.xerial</groupId>
+            <artifactId>sqlite-jdbc</artifactId>
+            <version>3.36.0.3</version>
+        </dependency>
+
+        <dependency>
             <groupId>org.jetbrains</groupId>
             <artifactId>annotations</artifactId>
             <version>22.0.0</version>
@@ -330,7 +336,7 @@
         <dependency>
             <groupId>ru.mycrg</groupId>
             <artifactId>data-service-contract</artifactId>
-            <version>1.6-SNAPSHOT</version>
+            <version>1.7-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>ru.mycrg</groupId>

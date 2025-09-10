@@ -6,7 +6,17 @@
 # Load environment variables from .env with proper variable expansion
 if [ -f "../.env" ]; then
     set -a  # automatically export all variables
-    source ../.env
+    # Load .env but skip lines with dots in variable names (they are for Java tests)
+    while IFS= read -r line || [[ -n "$line" ]]; do
+        # Skip empty lines and comments
+        [[ -z "$line" || "$line" =~ ^[[:space:]]*# ]] && continue
+        # Skip lines with dots in variable names (Java test variables)
+        [[ "$line" =~ ^[^=]*\.[^=]*= ]] && continue
+        # Export valid bash variables (allow variable references like ${VAR})
+        if [[ "$line" =~ ^[A-Za-z_][A-Za-z0-9_]*=.*$ ]]; then
+            eval "export $line"
+        fi
+    done < "../.env"
     set +a  # disable auto-export
 fi
 

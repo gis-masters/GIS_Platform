@@ -19,6 +19,8 @@ public class SchemaTemplates {
                 return testPointAttributes();
             case "Точечный слой с атрибутами - ошибочная, для теста":
                 return testPointAttributesIncorrect();
+            case "Все типы данных":
+                return testAllAttributes();
             case "Точечный слой с атрибутами - исправленная":
                 SchemaDto correctTestPointSchema = testPointAttributes();
                 correctTestPointSchema.setTitle("Точечный слой с атрибутами - исправленная");
@@ -152,6 +154,147 @@ public class SchemaTemplates {
             default:
                 return simpleSchema(schemaTitle);
         }
+    }
+
+    private static SchemaDto testAllAttributes() {
+        return gson.fromJson(
+                "{" +
+                        "  \"name\": \"allTypes\"," +
+                        "  \"title\": \"Все типы данных\"," +
+                        "  \"readOnly\": false," +
+                        "  \"tableName\": \"all_types\"," +
+                        "  \"styleName\": \"generic\"," +
+                        "  \"geometryType\": \"MultiPolygon\"," +
+                        "  \"properties\": [" +
+                        "    {" +
+                        "      \"name\": \"field_int\"," +
+                        "      \"title\": \"Поле INT\"," +
+                        "      \"valueType\": \"INT\"" +
+                        "    }," +
+                        "    {" +
+                        "      \"name\": \"field_double\"," +
+                        "      \"title\": \"Поле DOUBLE\"," +
+                        "      \"valueType\": \"DOUBLE\"" +
+                        "    }," +
+                        "    {" +
+                        "      \"name\": \"field_string\"," +
+                        "      \"title\": \"Поле STRING\"," +
+                        "      \"valueType\": \"STRING\"" +
+                        "    }," +
+                        "    {" +
+                        "      \"name\": \"field_date\"," +
+                        "      \"title\": \"Поле DATETIME\"," +
+                        "      \"valueType\": \"DATETIME\"" +
+                        "    }," +
+                        "    {" +
+                        "      \"name\": \"field_boolean\"," +
+                        "      \"title\": \"Поле BOOLEAN\"," +
+                        "      \"valueType\": \"BOOLEAN\"" +
+                        "    }," +
+                        "    {" +
+                        "      \"name\": \"field_choice_string\"," +
+                        "      \"title\": \"Поле CHOICE\"," +
+                        "      \"valueType\": \"CHOICE\"," +
+                        "      \"enumerations\": [" +
+                        "        {" +
+                        "          \"title\": \"Модульная двухсторонняя\"," +
+                        "          \"value\": \"1111\"" +
+                        "        }," +
+                        "        {" +
+                        "          \"title\": \"Модульная односторонняя\"," +
+                        "          \"value\": \"1122\"" +
+                        "        }," +
+                        "        {" +
+                        "          \"title\": \"Отдельно стоящий короб\"," +
+                        "          \"value\": \"55\"" +
+                        "        }" +
+                        "      ]" +
+                        "    }," +
+                        "    {" +
+                        "      \"name\": \"field_choice_int\"," +
+                        "      \"title\": \"Поле CHOICE integer\"," +
+                        "      \"valueType\": \"CHOICE\"," +
+                        "      \"foreignKeyType\": \"'INTEGER'\"," +
+                        "      \"enumerations\": [" +
+                        "        {" +
+                        "          \"title\": \"Модульная\"," +
+                        "          \"value\": \"1111\"" +
+                        "        }," +
+                        "        {" +
+                        "          \"title\": \"Модульная\"," +
+                        "          \"value\": \"1122\"" +
+                        "        }," +
+                        "        {" +
+                        "          \"title\": \"Отдельно\"," +
+                        "          \"value\": \"55\"" +
+                        "        }" +
+                        "      ]" +
+                        "    }," +
+                        "    {" +
+                        "      \"name\": \"field_url\"," +
+                        "      \"title\": \"Поле URL\"," +
+                        "      \"valueType\": \"URL\"" +
+                        "    }," +
+                        "    {" +
+                        "      \"name\": \"field_fias\"," +
+                        "      \"title\": \"Поле FIAS\"," +
+                        "      \"valueType\": \"FIAS\"" +
+                        "    }," +
+                        "    {" +
+                        "      \"name\": \"field_fias__oktmo\"," +
+                        "      \"title\": \"Поле FIAS oktmo\"," +
+                        "      \"hidden\": true," +
+                        "      \"valueType\": \"STRING\"" +
+                        "    }," +
+                        "    {" +
+                        "      \"name\": \"field_fias__address\"," +
+                        "      \"title\": \"Поле FIAS address\"," +
+                        "      \"hidden\": true," +
+                        "      \"valueType\": \"STRING\"" +
+                        "    }," +
+                        "    {" +
+                        "      \"name\": \"field_fias__id\"," +
+                        "      \"title\": \"Поле FIAS id\"," +
+                        "      \"hidden\": true," +
+                        "      \"valueType\": \"INT\"" +
+                        "    }," +
+                        "    {" +
+                        "      \"name\": \"field_file\"," +
+                        "      \"title\": \"Поле FILE\"," +
+                        "      \"valueType\": \"FILE\"" +
+                        "    }," +
+                        "    {" +
+                        "      \"name\": \"field_document\"," +
+                        "      \"title\": \"Поле DOCUMENT\"," +
+                        "      \"valueType\": \"DOCUMENT\"" +
+                        "    }," +
+                        "    {" +
+                        "      \"name\": \"field_uuid\"," +
+                        "      \"title\": \"Поле UUID\"," +
+                        "      \"valueType\": \"UUID\"" +
+                        "    }," +
+                        "    {" +
+                        "      \"name\": \"field_user_id\"," +
+                        "      \"title\": \"Поле USER_ID\"," +
+                        "      \"valueType\": \"USER_ID\"" +
+                        "    }," +
+                        "    {" +
+                        "      \"name\": \"field_user\"," +
+                        "      \"title\": \"Поле USER\"," +
+                        "      \"multiple\": true," +
+                        "      \"valueType\": \"USER\"" +
+                        "    }," +
+                        "    {" +
+                        "      \"name\": \"shape\"," +
+                        "      \"title\": \"Геометрия\"," +
+                        "      \"hidden\": true," +
+                        "      \"valueType\": \"GEOMETRY\"," +
+                        "      \"allowedValues\": [" +
+                        "        \"MultiPolygon\"" +
+                        "      ]" +
+                        "    }" +
+                        "  ]" +
+                        "}", SchemaDto.class);
     }
 
     private static SchemaDto testPointAttributes() {

@@ -476,8 +476,6 @@ public class TableFeaturesStepsDefinitions extends BaseStepsDefinitions {
 
     @And("атрибуты объекта с полем {string} равным {int} такие")
     public void checkRecordFields(String fieldName, int value, Map<String, List<Object>> expectedFields) {
-        response.prettyPrint();
-
         List<Map<String, Object>> content = response.jsonPath().getList("content.properties");
 
         Map<String, Object> matchingRecord = content

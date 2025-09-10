@@ -7,6 +7,7 @@ import ru.mycrg.data_service.dto.ProcessModel;
 import ru.mycrg.data_service.dto.WsMessageDto;
 import ru.mycrg.data_service.entity.Process;
 import ru.mycrg.data_service.service.WsNotificationService;
+import ru.mycrg.data_service.service.gpkg.export.GpkgAddInfoService;
 import ru.mycrg.data_service.service.processes.ProcessService;
 import ru.mycrg.data_service_contract.queue.response.ExportResponseEvent;
 import ru.mycrg.messagebus_contract.IEventHandler;
@@ -22,11 +23,14 @@ public class ExportHandler implements IEventHandler {
 
     private final ProcessService processService;
     private final WsNotificationService wsNotificationService;
+    private final GpkgAddInfoService gpkgAddInfoService;
 
     public ExportHandler(WsNotificationService wsNotificationService,
-                         ProcessService processService) {
+                         ProcessService processService,
+                         GpkgAddInfoService gpkgAddInfoService) {
         this.wsNotificationService = wsNotificationService;
         this.processService = processService;
+        this.gpkgAddInfoService = gpkgAddInfoService;
     }
 
     @Override
@@ -42,6 +46,16 @@ public class ExportHandler implements IEventHandler {
         }
 
         Process process = processService.getById(event.getProcessId(), event.getDbName());
+
+        if (event.getDescription().contains("GPKG")) {
+            addSubStep(process, event);
+            gpkgAddInfoService.addSchemaToTable(event);
+            gpkgAddInfoService.addTableInfoToGpkg(event);
+            processService.complete(event.getDbName(), process.getId(), toJsonNode(event.getPayload()));
+
+            return;
+        }
+
         switch (event.getStatus()) {
             case PENDING:
             case TASK_ERROR:

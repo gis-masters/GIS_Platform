@@ -108,6 +108,24 @@ public class GDALService implements IExporter {
         return errorReport;
     }
 
+    public ErrorReport importFromGeoPackage(String filePath, String dbName, String tableName) {
+        ErrorReport errorReport;
+        ProcessBuilder processBuilder = new ProcessBuilder();
+
+        JdbcTemplate jdbcTemplate = datasourceFactory.getJdbcTemplate(dbName);
+
+        String rootPath = crgProperties.getExportStoragePath();
+        log.debug("Root path for GPKG import is: {}", rootPath);
+
+        errorReport = importGeoPackageWithoutSourceSrs(processBuilder, dbName, tableName, filePath);
+
+        if (!baseDaoService.isTableExist(jdbcTemplate, tableName)) {
+            throw new ClientException("Не удалось выполнить импорт GeoPackage файла. Подробный лог на geo-wrapper");
+        }
+
+        return errorReport;
+    }
+
     private String unzipFile(ProcessBuilder processBuilder, String rootPath, String randomDirName, String filePath) {
         try {
             String cdDir = String.format("cd %s;", rootPath);
@@ -198,6 +216,43 @@ public class GDALService implements IExporter {
                 importProcess.destroy();
 
                 throw new ImportException("Import of geometry shape failed by timeout");
+            }
+            ErrorReport errorReport = getErrorsFromInputStream(importProcess.getErrorStream());
+            if (errorReport.getUtf8ErrorCount() > 0) {
+                importProcess.destroy();
+
+                throw new ImportException("Обработка файла прервана, кодировка объектов не равна UTF-8");
+            }
+
+            errorReport.setShpFileHasProjection(false);
+            importProcess.destroy();
+
+            return errorReport;
+        } catch (IOException | InterruptedException e) {
+            // Restore interrupted state...
+            Thread.currentThread().interrupt();
+
+            throw new ImportException(e.getMessage(), e);
+        }
+    }
+
+    private ErrorReport importGeoPackageWithoutSourceSrs(ProcessBuilder processBuilder,
+                                                         String dbName,
+                                                         String tableName,
+                                                         String gpkgPath) {
+        String importGpkgToTable = getOgr2OgrImportFromGPKGToTableWithoutSourceSrs(dbName, tableName, gpkgPath);
+
+        log.debug("Execute import geometry from GPKG without source SRS console command: {}", importGpkgToTable);
+        try {
+            processBuilder.command("sh", "-c", importGpkgToTable);
+            Process importProcess = processBuilder.start();
+
+            boolean isSuccess = importProcess.waitFor(TIMEOUT, SECONDS);
+            if (!isSuccess) {
+                logStream(importProcess.getErrorStream());
+                importProcess.destroy();
+
+                throw new ImportException("Import of geometry GeoPackage failed by timeout");
             }
             ErrorReport errorReport = getErrorsFromInputStream(importProcess.getErrorStream());
             if (errorReport.getUtf8ErrorCount() > 0) {
@@ -378,6 +433,17 @@ public class GDALService implements IExporter {
                              tableName,
                              srs,
                              srs,
+                             filePath);
+    }
+
+    private String getOgr2OgrImportFromGPKGToTableWithoutSourceSrs(String dbName, String tableName,
+                                                                   String filePath) {
+        return String.format("ogr2ogr -skipfailures -f \"PostgreSQL\" PG:\"host=postgis user=%s password=%s " +
+                                     "port=5432 dbname=%s\" -nln %s %s;",
+                             DATASOURCE_USERNAME,
+                             DATASOURCE_PASSWORD,
+                             dbName,
+                             tableName,
                              filePath);
     }
 

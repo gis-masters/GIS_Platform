@@ -17,6 +17,7 @@ public class CrgProperties {
     private String userServiceName;
 
     private String exportStoragePath;
+    private String mainStoragePath;
 
     public void setGisServiceUrl(URL gisServiceUrl) {
         this.gisServiceUrl = gisServiceUrl;
@@ -59,6 +60,17 @@ public class CrgProperties {
     public String getExportStoragePath() {
         return Optional
                 .ofNullable(exportStoragePath)
+                .orElseThrow(() -> new IllegalStateException("Not set exportStoragePath"));
+    }
+
+    public void setMainStoragePath(String mainStoragePath) {
+        this.mainStoragePath = mainStoragePath;
+    }
+
+    @NotNull
+    public String getMainStoragePath() {
+        return Optional
+                .ofNullable(mainStoragePath)
                 .orElseThrow(() -> new IllegalStateException("Not set exportStoragePath"));
     }
 

@@ -12,7 +12,10 @@ import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static ru.mycrg.acceptance.data_service.FilesStepDefinitions.currentFileId;
+import static ru.mycrg.acceptance.data_service.datasets.DatasetsStepsDefinitions.currentDatasetIdentifier;
+import static ru.mycrg.acceptance.data_service.tables.TablesStepsDefinitions.currentTableName;
 import static ru.mycrg.acceptance.gis_service.LayerStepDefinitions.layerId;
+import static ru.mycrg.acceptance.gis_service.ProjectStepsDefinitions.projectId;
 
 public class LayersStepsDefinitions extends BaseStepsDefinitions {
 
@@ -55,5 +58,17 @@ public class LayersStepsDefinitions extends BaseStepsDefinitions {
         Integer currentLayerId = (Integer) response.jsonPath().getList("layer.id").get(0);
 
         assertEquals(currentLayerId, layerId);
+    }
+
+    @And("в текущий проект подключен {int} слой")
+    public void getLayerOfCurrentProject(int count) {
+        response = getBaseRequestWithCurrentCookie()
+                .when().
+                       get(projectId + "/layers");
+
+        List<Object> layers = response.jsonPath().getList("");
+        currentTableName = response.jsonPath().get("[0].tableName");
+        currentDatasetIdentifier = response.jsonPath().get("[0].dataset");
+        assertEquals(count, layers.size());
     }
 }

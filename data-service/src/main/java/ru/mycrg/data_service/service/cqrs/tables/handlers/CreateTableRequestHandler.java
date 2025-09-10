@@ -3,9 +3,11 @@ package ru.mycrg.data_service.service.cqrs.tables.handlers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.BadSqlGrammarException;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import ru.mycrg.data_service.dao.ddl.tables.DdlTablesSpecial;
+import ru.mycrg.data_service.dao.ddl.tables.DdlTablesSpecialDetached;
 import ru.mycrg.data_service.dao.ddl.tables.DdlTriggers;
 import ru.mycrg.data_service.dao.utils.wellknown_formula_generator.IWellKnownFormulaGenerator;
 import ru.mycrg.data_service.dto.TableCreateDto;
@@ -52,6 +54,7 @@ public class CreateTableRequestHandler implements IRequestHandler<CreateTableReq
     private final DdlTriggers ddlTriggers;
     private final ISchemaTemplateService schemaService;
     private final DdlTablesSpecial ddlTablesSpecial;
+    private final DdlTablesSpecialDetached ddlTablesSpecialDetached;
     private final IResourceProtector datasetProtector;
     private final PermissionsService permissionsService;
     private final SchemasAndTablesRepository schemasAndTablesRepository;
@@ -60,12 +63,14 @@ public class CreateTableRequestHandler implements IRequestHandler<CreateTableReq
     public CreateTableRequestHandler(DdlTriggers ddlTriggers,
                                      ISchemaTemplateService schemaService,
                                      DdlTablesSpecial ddlTablesSpecial,
+                                     DdlTablesSpecialDetached ddlTablesSpecialDetached,
                                      IResourceProtector datasetProtector,
                                      PermissionsService permissionsService,
                                      SchemasAndTablesRepository schemasAndTablesRepository,
                                      List<IWellKnownFormulaGenerator> generators) {
         this.ddlTriggers = ddlTriggers;
         this.ddlTablesSpecial = ddlTablesSpecial;
+        this.ddlTablesSpecialDetached = ddlTablesSpecialDetached;
         this.schemasAndTablesRepository = schemasAndTablesRepository;
         this.permissionsService = permissionsService;
         this.schemaService = schemaService;
@@ -111,6 +116,21 @@ public class CreateTableRequestHandler implements IRequestHandler<CreateTableReq
         permissionsService.addOwnerPermission(SCHEMAS_AND_TABLES_QUALIFIER, newEntity.getId());
 
         return new TableModel(newEntity, OWNER.name(), dataset.getIdentifier());
+    }
+
+    public void createTableDetached(JdbcTemplate jdbcTemplate, SchemaDto schema, String datasetId, TableCreateDto dto) {
+        try {
+            List<SimplePropertyDto> schemaProperties = schema.getProperties();
+            generateSystemAttributes(schemaProperties);
+
+            ddlTablesSpecialDetached.create(jdbcTemplate, datasetId, dto, schemaProperties);
+        } catch (BadSqlGrammarException e) {
+            String msg = String.format("Не удалось создать таблицу: %s, по схеме: %s. Причина: %s",
+                                       dto.getName(), schema.getName(), e.getMessage());
+            logError(msg, e);
+
+            throw new BadRequestException(msg);
+        }
     }
 
     private SchemasAndTables getDataset(CreateTableRequest request) {

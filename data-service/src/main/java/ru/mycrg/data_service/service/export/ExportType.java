@@ -3,6 +3,7 @@ package ru.mycrg.data_service.service.export;
 // TODO: в будущем вернуться к врапперу. пока как есть
 public enum ExportType {
     SHAPE("ESRI Shapefile"),
+    GPKG("GPKG"),
     GML("GML");
 
     private final String type;

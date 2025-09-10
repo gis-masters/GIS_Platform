@@ -7,9 +7,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import ru.mycrg.data_service.dto.ColumnShortInfo;
 import ru.mycrg.data_service.dto.TableCreateDto;
-import ru.mycrg.data_service_contract.dto.AdditionalFieldDto;
 import ru.mycrg.data_service_contract.dto.SimplePropertyDto;
-import ru.mycrg.data_service_contract.enums.ValueType;
 
 import java.util.List;
 
@@ -24,24 +22,26 @@ public class DdlTablesSpecial {
 
     private final JdbcTemplate jdbcTemplate;
     private final DdlTablesBase ddlTablesBase;
+    private final DdlTablesSpecialDetached ddlTablesSpecialDetached;
 
     public DdlTablesSpecial(DdlTablesBase ddlTablesBase,
-                            JdbcTemplate jdbcTemplate) {
+                            JdbcTemplate jdbcTemplate, DdlTablesSpecialDetached ddlTablesSpecialDetached) {
         this.ddlTablesBase = ddlTablesBase;
         this.jdbcTemplate = jdbcTemplate;
+        this.ddlTablesSpecialDetached = ddlTablesSpecialDetached;
     }
 
     public void create(String targetSchema, TableCreateDto dto, List<SimplePropertyDto> properties) {
         // add additional fields
-        addAdditionalFields(properties, dto.getAdditionalFields());
+        ddlTablesSpecialDetached.addAdditionalFields(properties, dto.getAdditionalFields());
 
         String targetTable = dto.getName();
         ddlTablesBase.create(targetSchema, targetTable, properties, PRIMARY_KEY);
 
         String extensionTable = targetTable + EXTENSION_POSTFIX;
-        jdbcTemplate.execute(getExtensionTableCreateQuery(targetSchema, extensionTable));
+        jdbcTemplate.execute(ddlTablesSpecialDetached.getExtensionTableCreateQuery(targetSchema, extensionTable));
 
-        boolean geometryExist = isGeometryExist(properties);
+        boolean geometryExist = ddlTablesSpecialDetached.isGeometryExist(properties);
         if (geometryExist) {
             Integer crsCode = extractCrsNumber(dto.getCrs());
             String target = targetSchema + "." + targetTable;
@@ -79,40 +79,5 @@ public class DdlTablesSpecial {
                 "WHERE TABLE_NAME = '" + tableName.toLowerCase() + "'";
 
         return jdbcTemplate.query(query, new BeanPropertyRowMapper<>(ColumnShortInfo.class));
-    }
-
-    private boolean isGeometryExist(List<SimplePropertyDto> properties) {
-        return properties.stream()
-                         .anyMatch(SimplePropertyDto::isGeometry);
-    }
-
-    private String getExtensionTableCreateQuery(String targetSchema, String extensionTable) {
-        return "CREATE TABLE " + targetSchema + "." + extensionTable + " (" +
-                "   object_id serial NOT NULL, " +
-                "   violations jsonb, " +
-                "   _xmin integer, " +
-                "   valid boolean, " +
-                "   class_id integer);" +
-                "ALTER TABLE ONLY " + targetSchema + "." + extensionTable +
-                "   ADD CONSTRAINT " + extensionTable + "_pkey PRIMARY KEY (object_id);";
-    }
-
-    private void addAdditionalFields(List<SimplePropertyDto> schemaProperties,
-                                     List<AdditionalFieldDto> additionalFields) {
-        if (!additionalFields.isEmpty()) {
-            additionalFields.forEach(additionalField -> {
-                SimplePropertyDto additionalProperty = new SimplePropertyDto();
-                additionalProperty.setName(additionalField.getName());
-                try {
-                    additionalProperty.setValueType(ValueType.valueOf(additionalField.getType().toUpperCase()));
-                } catch (IllegalArgumentException ex) {
-                    log.warn("Unknown type : {} . Additional field type cannot be cast. {}",
-                             additionalField.getType(),
-                             ex.getMessage());
-                    additionalProperty.setValueType(ValueType.STRING);
-                }
-                schemaProperties.add(additionalProperty);
-            });
-        }
     }
 }

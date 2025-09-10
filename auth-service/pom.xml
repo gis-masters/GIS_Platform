@@ -204,7 +204,7 @@
         <dependency>
             <groupId>ru.mycrg</groupId>
             <artifactId>data-service-contract</artifactId>
-            <version>1.6-SNAPSHOT</version>
+            <version>1.7-SNAPSHOT</version>
         </dependency>
     </dependencies>
 

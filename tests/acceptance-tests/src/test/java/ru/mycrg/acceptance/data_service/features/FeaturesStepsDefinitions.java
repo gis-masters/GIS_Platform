@@ -2,6 +2,7 @@ package ru.mycrg.acceptance.data_service.features;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import io.cucumber.datatable.DataTable;
+import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.restassured.http.ContentType;
@@ -9,18 +10,16 @@ import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import ru.mycrg.acceptance.BaseStepsDefinitions;
 import ru.mycrg.acceptance.JsonMapper;
+import ru.mycrg.acceptance.data_service.TestFilesManager;
+import ru.mycrg.acceptance.data_service.dto.FileDescriptionModel;
 import ru.mycrg.acceptance.data_service.dto.TableCreateDto;
 import ru.mycrg.acceptance.gis_service.dto.LayerCreateDto;
 import ru.mycrg.geo_json.Feature;
 import ru.mycrg.geo_json.LngLatAlt;
-import ru.mycrg.geo_json.Polygon;
 import ru.mycrg.geo_json.MultiPolygon;
+import ru.mycrg.geo_json.Polygon;
 
-import java.util.Arrays;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.hamcrest.core.IsEqual.equalTo;
@@ -176,33 +175,47 @@ public class FeaturesStepsDefinitions extends BaseStepsDefinitions {
     @When("Пользователь пытается сломать геометрию добавленного объекта")
     public void currentUserTryBreakFeatureGeometry() {
         String featureId = response.jsonPath().getString("id");
-        
+
         // Создаем Feature с некорректной геометрией (точки полигона в космосе)
         Feature brokenFeature = new Feature();
         brokenFeature.setId(Long.parseLong(featureId));
-        
+
         MultiPolygon multiPolygon = new MultiPolygon();
         List<List<LngLatAlt>> polygon = new ArrayList<>();
         List<LngLatAlt> ring = new ArrayList<>();
-        
+
         // Создаем некорректные координаты для полигона
         ring.add(new LngLatAlt(-150162514487.6791, 268047105300.436));
         ring.add(new LngLatAlt(85606667137.8359, 262433553356.9721));
         ring.add(new LngLatAlt(40698251590.1187, 79993115194.3713));
         ring.add(new LngLatAlt(-189457378091.9316, 102447322968.2297));
         ring.add(new LngLatAlt(-150162514487.6791, 268047105300.436));
-        
+
         polygon.add(ring);
         multiPolygon.add(polygon);
         brokenFeature.setGeometry(multiPolygon);
-        
+
         // Отправляем PATCH запрос с некорректной геометрией
         patchFeature(brokenFeature);
     }
-    
+
+    @Given("Файл {string} добавлен к перовой фиче")
+    public void addFileToFirstFeature(String fileName) {
+        List<FileDescriptionModel> array = new ArrayList<>();
+        array.add(TestFilesManager.getFileDescriptionByTitleOrThrow(fileName));
+
+        Feature feature = new Feature();
+        feature.setId(1L);
+        feature.setProperty("field_file", array);
+
+        patchFeature(feature);
+
+        assertEquals(204, response.getStatusCode());
+    }
+
     private void patchFeature(Feature feature) {
         TableCreateDto latestTable = getLatestTable();
-        
+
         response = getBaseRequestWithCurrentCookie()
                 .given()
                     .body(asJson(feature))

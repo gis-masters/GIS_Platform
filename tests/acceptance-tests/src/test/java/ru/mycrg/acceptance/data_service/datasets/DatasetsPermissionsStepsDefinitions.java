@@ -103,6 +103,11 @@ public class DatasetsPermissionsStepsDefinitions extends BaseStepsDefinitions {
         assertEquals(Integer.parseInt(expectedTotalPages), totalPages);
     }
 
+    @Given("Текущий пользователь устанавливает роль {string} для пользователя {string}, для текущего набора данных")
+    public void addPermissionToCurrentDatasetForCurrentUser(String role, String userName) {
+        createPermissionForCurrentDataset(new PermissionCreateDto("user", getUserIdByName(userName), role));
+    }
+
     private void createPermissionForCurrentDataset(PermissionCreateDto dto) {
         response = getBaseRequestWithCurrentCookie()
                 .given().

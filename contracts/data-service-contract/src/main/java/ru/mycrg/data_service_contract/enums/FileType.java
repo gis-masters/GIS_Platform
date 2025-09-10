@@ -12,6 +12,8 @@ public enum FileType {
     DXF,
     TIF,
 
+    GPKG,
+
     GML;
 
     public static Optional<FileType> parse(String value) {

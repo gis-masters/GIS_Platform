@@ -26,5 +26,6 @@ crg-options:
   userServiceName: postgres_db_user_service
 
   exportStoragePath: /opt/crg/export/
+  mainStoragePath: /opt/crg/file_storage
 server:
   port: 8354
