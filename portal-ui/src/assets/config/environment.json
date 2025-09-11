@@ -29,5 +29,11 @@
   "passwordRestore": "Никуда ничего не отправляйте",
   "esia": "1",
   "registration": "1",
-  "background": "/assets/background/crimea.jpg"
+  "background": "/assets/background/crimea.jpg",
+  "captcha": {
+    "enabled": false,
+    "siteKey": "testSiteKey",
+    "test": true,
+    "language": "ru"
+  }
 }

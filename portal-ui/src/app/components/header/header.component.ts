@@ -20,7 +20,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.envPlatform = environment.platform;
-    this.envRegistration = !!environment.registration;
+    this.envRegistration = environment.registration === undefined ? true : !!environment.registration;
     this.reactionDisposer = reaction(
       () => route.data.page,
       () => {

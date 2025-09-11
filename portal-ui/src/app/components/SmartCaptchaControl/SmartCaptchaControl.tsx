@@ -4,6 +4,7 @@ import { cn } from '@bem-react/classname';
 import { SmartCaptcha } from '@yandex/smart-captcha';
 import { boundMethod } from 'autobind-decorator';
 
+import { environment } from '../../services/environment';
 import { FormControlProps } from '../Form/Control/Form-Control';
 
 import '!style-loader!css-loader!sass-loader!./SmartCaptchaControl.scss';
@@ -22,12 +23,14 @@ export class SmartCaptchaControl extends Component<FormControlProps> {
   }
 
   render() {
+    const { test, language, siteKey } = environment.captcha;
+
     return (
       <div className={cnSmartCaptchaControl('Title')}>
         <SmartCaptcha
-          test
-          language='ru'
-          sitekey='ysc1_bFH8WV9rW8qsqO3yPiqAxyYHgEk4FEiNyD91BlaZ7e53cafe'
+          test={test}
+          language={language}
+          sitekey={siteKey}
           onJavascriptError={this.onError}
           onSuccess={this.onSuccess}
         />

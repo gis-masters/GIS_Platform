@@ -28,6 +28,12 @@ echo -e "{\
   \"url\":\"$UI_ATTRIBUTION_URL\",\
   \"title\":\"$UI_ATTRIBUTION_TITLE\"\
 },\
+\"captcha\":{\
+  \"enabled\":\"$UI_CAPTCHA_ENABLED\",\
+  \"test\":\"$UI_CAPTCHA_TEST\",\
+  \"language\":\"$UI_CAPTCHA_LANGUAGE\",\
+  \"siteKey\":\"$UI_CAPTCHA_SITE_KEY\"\
+},\
 \"server\":{\
   \"host\":\"$UI_SERVER_HOST\",\
   \"port\":\"$UI_SERVER_PORT\",\

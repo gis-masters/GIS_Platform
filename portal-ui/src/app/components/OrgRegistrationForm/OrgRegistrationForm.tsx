@@ -10,6 +10,7 @@ import { RegData } from '../../services/auth/auth/auth.models';
 import { authService } from '../../services/auth/auth/auth.service';
 import { getSpecializations } from '../../services/auth/specializations/specializations.service';
 import { PropertyOption, PropertyType, SimpleSchema } from '../../services/data/schema/schema.models';
+import { environment } from '../../services/environment';
 import { services } from '../../services/services';
 import { generateRandomId } from '../../services/util/randomId';
 import { isRecordStringUnknown } from '../../services/util/typeGuards/isRecordStringUnknown';
@@ -114,6 +115,14 @@ export class OrgRegistrationForm extends Component {
 
   @computed
   private get schema(): SimpleSchema {
+    let required = false;
+    let hidden = true;
+
+    if (environment.captcha.enabled) {
+      required = true;
+      hidden = false;
+    }
+
     return {
       properties: [
         {
@@ -212,7 +221,8 @@ export class OrgRegistrationForm extends Component {
           propertyType: PropertyType.CUSTOM,
           name: 'captcha',
           title: 'Каптча',
-          required: true,
+          required: required,
+          hidden: hidden,
           ControlComponent: SmartCaptchaControl
         }
       ]

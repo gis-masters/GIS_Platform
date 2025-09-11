@@ -23,6 +23,13 @@ interface ProtocolsBoolean {
   https: boolean;
 }
 
+interface EnvCaptcha {
+  enabled: boolean;
+  siteKey: string;
+  test?: boolean;
+  language?: 'ru' | 'en' | 'be' | 'kk' | 'tt' | 'uk' | 'uz' | 'tr';
+}
+
 const emptyEnv: EnvironmentData = {
   platform: 'simf',
   production: true,
@@ -46,6 +53,12 @@ const emptyEnv: EnvironmentData = {
   sendErrorsToTG: {
     http: false,
     https: false
+  },
+  captcha: {
+    enabled: false,
+    siteKey: 'wrongSiteKey',
+    language: 'ru',
+    test: true
   }
 };
 
@@ -54,6 +67,7 @@ export interface EnvironmentData {
   production: boolean;
   server: EnvironmentServer;
   attribution: EnvironmentAttribution;
+  captcha: EnvCaptcha;
   scratchWorkspaceName: string;
   flags?: FlagsList;
   logo?: string;
@@ -83,6 +97,7 @@ export class Environment implements EnvironmentData {
   production: boolean = emptyEnv.production;
   server: EnvironmentServer = emptyEnv.server;
   attribution: EnvironmentAttribution = emptyEnv.attribution;
+  captcha: EnvCaptcha = emptyEnv.captcha;
   scratchWorkspaceName: string = emptyEnv.scratchWorkspaceName;
   flags?: FlagsList;
   logo?: string;
