@@ -23,8 +23,18 @@ class FeaturesListSidebarBlock extends Block {
     await featuresListItemBlock.openEdit();
   }
 
+  async openEditByLayer(layer: string) {
+    const featuresListItemBlock = await this.getFeaturesListItemByLayer(layer);
+    await featuresListItemBlock.openEdit();
+  }
+
   async zoomToFeature(itemName: string) {
     const featuresListItemBlock = await this.getFeaturesListItemByTitle(itemName);
+    await featuresListItemBlock.zoomToFeature();
+  }
+
+  async zoomToFeatureByLayer(itemName: string) {
+    const featuresListItemBlock = await this.getFeaturesListItemByLayer(itemName);
     await featuresListItemBlock.zoomToFeature();
   }
 
@@ -81,6 +91,21 @@ class FeaturesListSidebarBlock extends Block {
     }
 
     throw new Error(`Не найден элемент "${title}"`);
+  }
+
+  async getFeaturesListItemByLayer(layer: string): Promise<FeaturesListItemBlock> {
+    await this.waitForVisible();
+
+    const $$items = await this.$$('item');
+
+    for (const $item of $$items) {
+      const itemLayer = await $item.$('.FeaturesListItem-Layer').getText();
+      if (itemLayer === layer) {
+        return new FeaturesListItemBlock($item);
+      }
+    }
+
+    throw new Error(`Не найден элемент "${layer}"`);
   }
 
   async getFeaturesCount(): Promise<number> {

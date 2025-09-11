@@ -6,7 +6,7 @@ import { IClassNameProps } from '@bem-react/core';
 import { boundMethod } from 'autobind-decorator';
 import Feature from 'ol/Feature';
 
-import { getOlProjection } from '../../services/data/projections/projections.service';
+import { getOlProjection, getProjectionByCode } from '../../services/data/projections/projections.service';
 import { getFeatureById } from '../../services/geoserver/wfs/wfs.service';
 import { getLayerByFeatureIdInCurrentProject } from '../../services/gis/layers/layers.utils';
 import { projectsService } from '../../services/gis/projects/projects.service';
@@ -52,20 +52,9 @@ export class ZoomToFeature extends Component<ZoomToFeatureProps> {
   private async handleClick() {
     const { featureId, zoomToLastCoordinate } = this.props;
 
-    const layer = getLayerByFeatureIdInCurrentProject(featureId);
-    if (!layer?.complexName) {
-      services.logger.warn(
-        `Не возможно выполнить позиционирование на фиче ${featureId}. Слой ${layer?.id} не содержит complexName`
-      );
-
-      return;
-    }
-
-    const currentProjection = editFeatureStore.currentProjection;
-
     if (zoomToLastCoordinate) {
-      const olProjection = await getOlProjection();
       const currentGeometry = editFeatureStore.geometry;
+      const currentProjection = editFeatureStore.currentProjection;
       if (!currentGeometry || !currentProjection) {
         services.logger.warn(
           `Не возможно выполнить позиционирование на фиче ${featureId}. Отсутствует геометрия или проекция`
@@ -74,6 +63,7 @@ export class ZoomToFeature extends Component<ZoomToFeatureProps> {
         return;
       }
 
+      const olProjection = await getOlProjection();
       const geometry3857 = transformGeometry(currentGeometry, currentProjection, olProjection);
       if (!geometry3857) {
         services.logger.warn(
@@ -90,13 +80,25 @@ export class ZoomToFeature extends Component<ZoomToFeatureProps> {
 
       this.btnRef.current?.blur();
     } else {
-      const feature = await getFeatureById(featureId, layer?.complexName);
+      const layer = getLayerByFeatureIdInCurrentProject(featureId);
+      if (!layer?.complexName) {
+        services.logger.warn(
+          `Не возможно выполнить позиционирование на фиче ${featureId}. Слой ${layer?.id} не содержит complexName`
+        );
 
-      if (layer?.tableName) {
-        projectsService.enableLayersByTableNames([layer.tableName]);
+        return;
       }
 
-      await mapService.positionToFeature(feature, currentProjection);
+      const { complexName, tableName, nativeCRS } = layer;
+      const feature = await getFeatureById(featureId, complexName);
+
+      if (tableName) {
+        projectsService.enableLayersByTableNames([tableName]);
+      }
+
+      const layerProjection = await getProjectionByCode(nativeCRS);
+
+      await mapService.positionToFeature(feature, layerProjection);
 
       this.btnRef.current?.blur();
       selectedFeaturesStore.setActiveFeature(feature);

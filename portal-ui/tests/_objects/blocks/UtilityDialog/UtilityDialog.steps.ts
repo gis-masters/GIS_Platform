@@ -10,6 +10,10 @@ Then('отобразилось диалоговое окно', async () => {
   await utilityDialogBlock.waitForVisible();
 });
 
+Then('я дожидаюсь исчезновения диалогового окна', async () => {
+  await utilityDialogBlock.waitForHidden();
+});
+
 Then('отобразилось диалоговое окно с текстом {string}', async (content: string) => {
   const result = await utilityDialogBlock.getTextFromDialog();
 

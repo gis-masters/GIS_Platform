@@ -13,9 +13,28 @@ When('в боковой панели выделенных объектов я н
 });
 
 When(
+  'в боковой панели выделенных объектов я нажимаю `Открыть` у объекта слоя {string}',
+  async function (itemLayer: string) {
+    await featuresListSidebarBlock.waitForVisible();
+    await featuresListSidebarBlock.openEditByLayer(itemLayer);
+  }
+);
+
+When(
   'в боковой панели выделенных объектов я нажимаю `Перейти к объекту` у объекта {string}',
   async function (itemTitle: string) {
+    await featuresListSidebarBlock.waitForVisible();
     await featuresListSidebarBlock.zoomToFeature(itemTitle);
+
+    await browser.pause(300); // анимация перехода к объекту
+  }
+);
+
+When(
+  'в боковой панели выделенных объектов я нажимаю `Перейти к объекту` у объекта слоя {string}',
+  async function (itemLayer: string) {
+    await featuresListSidebarBlock.waitForVisible();
+    await featuresListSidebarBlock.zoomToFeatureByLayer(itemLayer);
 
     await browser.pause(300); // анимация перехода к объекту
   }
