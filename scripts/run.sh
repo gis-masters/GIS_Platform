@@ -62,6 +62,7 @@ docker compose -f ../docker-compose.dev.yml \
 -f ../monitoring.yml \
 -f ../S3MinioForTests.yml \
 -f ../gisogdIntegrationSed.yml \
+-f ../gisogdRfService.yml \
 --env-file ../.env  up -d
 
 ./wait.sh

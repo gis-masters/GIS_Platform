@@ -24,6 +24,7 @@ import java.util.stream.Collectors;
 
 import static java.lang.Boolean.parseBoolean;
 import static java.lang.Thread.sleep;
+import static java.time.LocalTime.now;
 import static java.util.Objects.nonNull;
 import static java.util.stream.IntStream.range;
 import static org.apache.http.HttpStatus.SC_NO_CONTENT;
@@ -966,6 +967,28 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
                        get(url);
     }
 
+    public void getRecordByEcqlFilterAndRecordId(String ecqlFilter, String recordId, String libraryId) {
+        String url = String.format("/%s/records/as_registry?filter=%s&recordId=%s",
+                                   libraryId,
+                                   ecqlFilter,
+                                   recordId);
+
+        response = getBaseRequestWithCurrentCookie()
+                .when().
+                        get(url);
+    }
+
+    public void createDocumentAndWriteAsCurrent(String body, String libraryId) {
+        response = getBaseRequestWithCurrentCookie()
+                .given().
+                        contentType("multipart/form-data").
+                        multiPart("body", body)
+                .when().
+                        post(String.format("/%s/records", libraryId));
+
+        currentDocumentId = extractEntityIdFromResponse(response);
+    }
+
     private LibraryModel extractCurrentLibraryModel() {
         Long id = response.jsonPath().getLong("id");
         String title = response.jsonPath().get("title");
@@ -1027,17 +1050,6 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
                        get("/" + libraryId);
     }
 
-    private void createDocumentAndWriteAsCurrent(String body, String libraryId) {
-        response = getBaseRequestWithCurrentCookie()
-                .given().
-                        contentType("multipart/form-data").
-                        multiPart("body", body)
-                .when().
-                        post(String.format("/%s/records", libraryId));
-
-        currentDocumentId = extractEntityIdFromResponse(response);
-    }
-
     private void recoverRecord(Integer recordId, Integer parentId, String libraryId) {
         String url = Objects.isNull(parentId)
                 ? String.format("/%s/records/%d/recover", libraryId, recordId)
@@ -1097,17 +1109,6 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
                                           sortingDirection,
                                           filter,
                                           "size=1000"));
-    }
-
-    private void getRecordByEcqlFilterAndRecordId(String ecqlFilter, String recordId, String libraryId) {
-        String url = String.format("/%s/records/as_registry?filter=%s&recordId=%s",
-                                   libraryId,
-                                   ecqlFilter,
-                                   recordId);
-
-        response = getBaseRequestWithCurrentCookie()
-                .when().
-                        get(url);
     }
 
     private String getRecordBodyForDlDefaultWithIncorrectField() {

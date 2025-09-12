@@ -105,19 +105,25 @@ public class GisogdRfAuditor {
     }
 
     private void auditAll(ResourceQualifier qualifier, Long limit) {
-        List<IRecord> documents = gisogdRfDao.findAllForAudit(qualifier, limit);
-        if (documents.isEmpty()) {
-            return;
+        try {
+            List<IRecord> documents = gisogdRfDao.findAllForAudit(qualifier, limit);
+            if (documents.isEmpty()) {
+                return;
+            }
+
+            String resQualifier = qualifier.getQualifier();
+            StopWatch auditWatcher = new StopWatch("Аудит: " + resQualifier);
+            log.debug("Начинаю аудит [{}] с лимитом: {}. Найдено: {} записей", resQualifier, limit, documents.size());
+
+            documents.forEach(doc -> audit(qualifier, doc));
+
+            if (auditWatcher.isRunning()) {
+                auditWatcher.stop();
+                log.debug("Конец аудита [{}] \n Затрачено времени: {}", resQualifier, auditWatcher.prettyPrint());
+            }
+        } catch (Exception e) {
+            log.debug(e.getMessage());
         }
-
-        String resQualifier = qualifier.getQualifier();
-        StopWatch auditWatcher = new StopWatch("Аудит: " + resQualifier);
-        log.debug("Начинаю аудит [{}] с лимитом: {}. Найдено: {} записей", resQualifier, limit, documents.size());
-
-        documents.forEach(doc -> audit(qualifier, doc));
-
-        auditWatcher.stop();
-        log.debug("Конец аудита [{}] \n Затрачено времени: {}", resQualifier, auditWatcher.prettyPrint());
     }
 
     @NotNull
