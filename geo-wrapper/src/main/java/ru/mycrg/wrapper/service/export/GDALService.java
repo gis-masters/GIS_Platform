@@ -414,7 +414,7 @@ public class GDALService implements IExporter {
 
     private String getOgr2OgrImportFromSHPToTableCommand(String dbName, String tableName, String srs, String filePath) {
         return String.format("ogr2ogr -skipfailures -f \"PostgreSQL\" PG:\"host=postgis user=%s password=%s " +
-                                     "port=5432 dbname=%s\" -nln %s -t_srs \"%s\" %s;",
+                                     "port=5432 dbname=%s\" -nln %s -nlt PROMOTE_TO_MULTI -t_srs \"%s\" %s;",
                              DATASOURCE_USERNAME,
                              DATASOURCE_PASSWORD,
                              dbName,
@@ -426,7 +426,7 @@ public class GDALService implements IExporter {
     private String getOgr2OgrImportFromSHPToTableWithoutSourceSrs(String dbName, String tableName, String srs,
                                                                   String filePath) {
         return String.format("ogr2ogr -skipfailures -f \"PostgreSQL\" PG:\"host=postgis user=%s password=%s " +
-                                     "port=5432 dbname=%s\" -nln %s -s_srs \"%s\" -t_srs \"%s\" %s;",
+                                     "port=5432 dbname=%s\" -nln %s -nlt PROMOTE_TO_MULTI -s_srs \"%s\" -t_srs \"%s\" %s;",
                              DATASOURCE_USERNAME,
                              DATASOURCE_PASSWORD,
                              dbName,
