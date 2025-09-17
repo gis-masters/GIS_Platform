@@ -32,3 +32,4 @@ services:
         max-size: "10m"
         max-file: "10"
     mem_limit: ${GISOGD_MEM_LIMIT:-650}m
+    privileged: true

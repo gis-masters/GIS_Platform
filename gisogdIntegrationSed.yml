@@ -37,3 +37,4 @@ services:
     ports:
       - "${SERVER_PORT:-8888}:${SERVER_PORT:-8888}"
     mem_limit: ${GISOGD_INTEGRAION_MEM_LIMIT:-2100}m
+    privileged: true
