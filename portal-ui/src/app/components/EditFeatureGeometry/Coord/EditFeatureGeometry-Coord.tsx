@@ -48,15 +48,20 @@ export class EditFeatureGeometryCoord extends Component<EditFeatureGeometryCoord
   @observable private defaultProjection?: Projection;
   @observable private flashX = false;
   @observable private flashY = false;
+  @observable private stringX = ''; // Строковое представление для X
+  @observable private stringY = ''; // Строковое представление для Y
 
   constructor(props: EditFeatureGeometryCoordProps) {
     super(props);
     makeObservable(this);
+
+    // Инициализируем строковые значения из props
+    this.stringX = props.val[0].toString();
+    this.stringY = props.val[1].toString();
   }
 
   async componentDidMount(): Promise<void> {
     const projection = await getProjectionByCode(defaultOlProjectionCode);
-
     if (projection) {
       this.setDefaultProjection(projection);
     }
@@ -66,32 +71,29 @@ export class EditFeatureGeometryCoord extends Component<EditFeatureGeometryCoord
     const { val } = this.props;
     const { val: prevVal } = prevProps;
 
-    // Проверяем, изменились ли координаты извне (например, с карты)
-    if (prevVal[0] !== val[0] || prevVal[1] !== val[1]) {
-      // Определяем, какая координата изменилась
-      if (prevVal[0] !== val[0]) {
-        // Изменилась X координата (второй инпут)
-        this.triggerFlash(0);
-      }
-      if (prevVal[1] !== val[1]) {
-        // Изменилась Y координата (первый инпут)
-        this.triggerFlash(1);
-      }
+    // Обновляем строковые значения только если координаты изменились извне
+    if (prevVal[0] !== val[0]) {
+      this.stringX = val[0].toString();
+      this.triggerFlash(0);
+    }
+
+    if (prevVal[1] !== val[1]) {
+      this.stringY = val[1].toString();
+      this.triggerFlash(1);
     }
   }
 
   render() {
-    const { val, withControls, displayIndex, disabled, active, canBeDeleted } = this.props;
+    const { withControls, displayIndex, disabled, active, canBeDeleted } = this.props;
 
-    // у росреестра своё понимание X и Y
     return (
       <div className={cnEditFeatureGeometry('Coord', { withControls, active })}>
         {withControls ? <div className={cnEditFeatureGeometry('CoordNumber')}>{(displayIndex || 0) + 1}</div> : null}
 
         <OutlinedInput
           className={cnEditFeatureGeometry('CoordInput', { d: 'x', flash: this.flashY })}
-          value={val[1]}
-          error={!isDimensionValid(val[1])}
+          value={this.stringY}
+          error={!isDimensionValid(this.stringY)}
           color={this.warning ? 'warning' : undefined}
           endAdornment={
             this.warning ? (
@@ -108,8 +110,8 @@ export class EditFeatureGeometryCoord extends Component<EditFeatureGeometryCoord
 
         <OutlinedInput
           className={cnEditFeatureGeometry('CoordInput', { d: 'y', flash: this.flashX })}
-          value={val[0]}
-          error={!isDimensionValid(val[0])}
+          value={this.stringX}
+          error={!isDimensionValid(this.stringX)}
           color={this.warning ? 'warning' : undefined}
           endAdornment={
             this.warning ? (
@@ -179,9 +181,60 @@ export class EditFeatureGeometryCoord extends Component<EditFeatureGeometryCoord
     }
   }
 
-  @action
-  private setDefaultProjection(projection: Projection): void {
-    this.defaultProjection = projection;
+  @action.bound
+  private handleCoordinateChange(e: React.ChangeEvent<HTMLInputElement>, coordIndex: 0 | 1) {
+    let value = e.target.value;
+
+    // Валидация ввода
+    value = value
+      .replaceAll(',', '.')
+      .replaceAll(/[^\d.]/g, '') // Убираем все символы кроме цифр и точки
+      .replaceAll(/(\..*)\./g, '$1');
+
+    if (coordIndex === 0) {
+      this.stringX = value;
+    } else {
+      this.stringY = value;
+    }
+
+    // Пытаемся преобразовать в число только если ввод завершен
+    // иначе точка просто исчезнет
+    const numericValue = this.parseCoordinateValue(value);
+
+    if (!Number.isNaN(numericValue)) {
+      const { val, onChange, index } = this.props;
+      const coord = [...val] as Coordinate;
+      coord[coordIndex] = numericValue;
+
+      if (index !== undefined) {
+        onChange(coord, index);
+      }
+    }
+
+    this.triggerFlash(coordIndex);
+  }
+
+  private parseCoordinateValue(value: string): number {
+    if (value === '' || value === '.') {
+      return Number.NaN;
+    }
+
+    const numericValue = Number(value);
+
+    return Number.isNaN(numericValue) ? Number.NaN : numericValue;
+  }
+
+  // При потере фокуса нормализуем значения
+  @boundMethod
+  private handleInputBlur() {
+    const numericX = this.parseCoordinateValue(this.stringX);
+    const numericY = this.parseCoordinateValue(this.stringY);
+
+    this.stringX = Number.isNaN(numericX) ? '0' : numericX.toString();
+
+    this.stringY = Number.isNaN(numericY) ? '0' : numericY.toString();
+
+    coordinateHighlightService.setActiveVertex(null);
   }
 
   @action
@@ -222,50 +275,6 @@ export class EditFeatureGeometryCoord extends Component<EditFeatureGeometryCoord
     this.handleCoordinateChange(e, 1);
   }
 
-  @action.bound
-  private handleCoordinateChange(
-    e: React.ChangeEvent<HTMLInputElement>,
-    coordIndex: 0 | 1 // 0 для X, 1 для Y
-  ) {
-    const { val, onChange, index } = this.props;
-
-    let value = e.target.value;
-
-    // 1. Нормализация ввода
-    value = value
-      .replaceAll(',', '.') // Заменяем запятые на точки
-      .replaceAll(/[^\d.]/g, '') // Удаляем все нецифровые символы
-      .replaceAll(/(\..*)\./g, '$1'); // Удаляем лишние точки
-
-    // 2. Обработка целой и дробной частей
-    const [integerPart = '', fractionalPart = ''] = value.split('.');
-    const processedInteger = integerPart.slice(0, 10); // Макс 10 цифр
-    const processedFraction = fractionalPart.slice(0, 4); // Макс 4 цифры
-
-    // 3. Формирование конечного значения
-    let finalValue = processedInteger;
-    if (value.includes('.') || value.endsWith('.')) {
-      finalValue += fractionalPart ? `.${processedFraction}` : '.';
-    }
-
-    // 4. Обновление поля ввода
-    e.target.value = finalValue;
-
-    // 5. Преобразование в число (если ввод завершен)
-    const numericValue = value.endsWith('.') ? Number(finalValue.replace(/\.$/, '')) || 0 : Number(finalValue);
-
-    // 6. Обновление состояния
-    if (numericValue !== val[coordIndex]) {
-      val[coordIndex] = numericValue;
-      if (index !== undefined) {
-        onChange(val, index);
-      }
-
-      // Запускаем анимацию вспышки
-      this.triggerFlash(coordIndex);
-    }
-  }
-
   @boundMethod
   private handleDelete() {
     const { onDelete, index } = this.props;
@@ -281,11 +290,6 @@ export class EditFeatureGeometryCoord extends Component<EditFeatureGeometryCoord
   }
 
   @boundMethod
-  private handleInputBlur() {
-    coordinateHighlightService.setActiveVertex(null);
-  }
-
-  @boundMethod
   private onMouseEnter(): void {
     coordinateHighlightService.setActiveGroup([this.props.val]);
   }
@@ -293,5 +297,10 @@ export class EditFeatureGeometryCoord extends Component<EditFeatureGeometryCoord
   @boundMethod
   private onMouseLeave(): void {
     coordinateHighlightService.setActiveGroup(null);
+  }
+
+  @action
+  private setDefaultProjection(projection: Projection): void {
+    this.defaultProjection = projection;
   }
 }
