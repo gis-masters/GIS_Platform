@@ -1,9 +1,9 @@
 interface PrintTemplateOptions<T> {
   name: string;
   title: string;
-  format: string | number[];
-  margin: [number, number, number, number];
-  orientation: 'p' | 'portrait' | 'l' | 'landscape';
+  format: string | number[]; // Формат бумаги (A4, A3 или [ширина, высота])
+  margin: [number, number, number, number]; // Отступы: [верх, право, низ, лево]
+  orientation: 'p' | 'portrait' | 'l' | 'landscape'; // Ориентация страницы
   render: (entity: T) => string | Promise<string>;
   getFileName(entity: T): string | Promise<string>;
 }
@@ -32,27 +32,66 @@ export class PrintTemplate<T> {
 
   private async getHtmlFile(filename: string): Promise<string> {
     if (!this.htmlFiles[filename]) {
+      // Загрузка HTML-файла из папки assets
       this.htmlFiles[filename] = fetch(`/assets/templates/${this.name}/${filename}.html`).then(r => r.text());
     }
 
     return await this.htmlFiles[filename];
   }
 
+  // Основной метод для печати документа
   async print(entity: T): Promise<void> {
+    // Рендеринг HTML-контента с использованием переданной функции render
     const html = await this.render(entity);
 
     if (!html) {
       return;
     }
+
+    // Печать сгенерированного HTML
     await this.printHtml(html, await this.getFileName(entity), this.orientation, this.format, this.margin);
   }
 
-  async renderFragment(filename: string, data: Record<string, string | number>): Promise<string> {
-    const file = await this.getHtmlFile(filename);
+  // Метод для рендеринга фрагментов шаблона с подстановкой данных
+  async renderFragment(filename: string, data: Record<string, string | number | boolean>): Promise<string> {
+    let file = await this.getHtmlFile(filename);
 
-    return file.replaceAll(/{{(.*?)}}/g, (_, key: string) => String(data[key]));
+    // eslint-disable-next-line regexp/match-any
+    const ifPattern = /{{#if\s+([\w-]+)}}([\S\s]*?){{\/if}}/g;
+    file = file.replaceAll(ifPattern, (_, condition: string, content: string) => {
+      const trimmedCondition = condition.trim();
+
+      if (!(trimmedCondition in data)) {
+        return '';
+      }
+
+      const conditionValue = data[trimmedCondition];
+      const isTruthy = this.isTruthy(conditionValue);
+
+      return isTruthy ? content : '';
+    });
+
+    const varPattern = /{{([\w-]+)}}/g;
+
+    return file.replaceAll(varPattern, (_, key: string) => {
+      const trimmedKey = key.trim();
+
+      return trimmedKey in data ? String(data[trimmedKey]) : '';
+    });
   }
 
+  private isTruthy(value: string | number | boolean): boolean {
+    if (typeof value === 'boolean') {
+      return value;
+    }
+    if (typeof value === 'number') {
+      return value !== 0;
+    }
+
+    return value !== 'false' && value !== '0' && value !== '';
+  }
+
+  // Метод для создания PDF из HTML
   private async printHtml(
     html: string,
     fileName: string,
@@ -62,6 +101,7 @@ export class PrintTemplate<T> {
   ): Promise<void> {
     const { default: jsPDF } = await import('jspdf');
     const doc = new jsPDF(orientation, 'px', format);
+
     doc.addFileToVFS('roboto.ttf', await this.getFont());
     doc.addFont('roboto.ttf', 'roboto', 'normal');
     doc.setFont('roboto');
@@ -74,8 +114,10 @@ export class PrintTemplate<T> {
     });
   }
 
+  // Получение шрифта Roboto в формате base64 с кэшированием
   private async getFont() {
     if (!this.roboto) {
+      // Загрузка предварительно сконвертированного шрифта
       const response = await fetch('/assets/fonts/Roboto/Roboto-Regular.ttf.base64');
       this.roboto = await response.text();
     }
