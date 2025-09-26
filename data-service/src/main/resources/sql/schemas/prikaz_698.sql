@@ -585,7 +585,6 @@ SET class_rule =
        '{
         "name": "thermalpipeline_line_698",
         "title": "Сети теплоснабжения",
-        "readOnly": true,
         "styleName": "thermalpipeline_line_698",
         "tableName": "thermalpipeline_line_698",
         "originName": "ThermalPipeline",
@@ -848,7 +847,6 @@ SET class_rule =
        '{
         "name": "oilpipeline_line_698",
         "title": "Магистральные трубопроводы жидких углеводородов",
-        "readOnly": true,
         "styleName": "oilpipeline_line_698",
         "tableName": "oilpipeline_line_698",
         "originName": "OilPipeline",
@@ -1100,7 +1098,6 @@ SET class_rule =
        '{
         "name": "telecomnetworkline_line_698",
         "title": "Сети электросвязи",
-        "readOnly": true,
         "styleName": "telecomnetworkline_line_698",
         "tableName": "telecomnetworkline_line_698",
         "originName": "TelecomNetworkLine",
@@ -1456,7 +1453,6 @@ SET class_rule =
        '{
         "name": "electrictransformer_point_698",
         "title": "Электрические подстанции",
-        "readOnly": true,
         "styleName": "electrictransformer_point_698",
         "tableName": "electrictransformer_point_698",
         "originName": "ElectricTransformer",
@@ -2006,7 +2002,6 @@ SET class_rule =
        '{
         "name": "railwayfacility_point_698",
         "title": "Объекты железнодорожного транспорта",
-        "readOnly": true,
         "styleName": "railwayfacility_point_698",
         "tableName": "railwayfacility_point_698",
         "originName": "RailwayFacility",
@@ -2498,7 +2493,6 @@ SET class_rule  =
        '{
         "name": "admesrf_698",
         "title": "Территория субъекта Российской Федерации",
-        "readOnly": true,
         "styleName": "admesrf_698",
         "tableName": "admesrf_698",
         "originName": "AdmeSRF",
@@ -2606,7 +2600,6 @@ SET class_rule =
        '{
         "name": "wastefacility_point_698",
         "title": "Объекты утилизации, обезвреживания, размещения отходов производства и потребления",
-        "readOnly": true,
         "styleName": "wastefacility_point_698",
         "tableName": "wastefacility_point_698",
         "originName": "WasteFacility",
@@ -3176,7 +3169,6 @@ SET class_rule =
        '{
         "name": "waterfacility_point_698",
         "title": "Объекты водоснабжения",
-        "readOnly": true,
         "styleName": "waterfacility_point_698",
         "tableName": "waterfacility_point_698",
         "originName": "WaterFacility",
@@ -3524,7 +3516,6 @@ SET class_rule =
        '{
         "name": "publictransportservice_point_698",
         "title": "Объекты хранения и обслуживания общественного пассажирского транспорта",
-        "readOnly": true,
         "styleName": "publictransportservice_point_698",
         "tableName": "publictransportservice_point_698",
         "originName": "PublicTransportService",
@@ -3810,7 +3801,6 @@ SET class_rule =
        '{
         "name": "airtransportobj_point_698",
         "title": "Объекты воздушного транспорта",
-        "readOnly": true,
         "styleName": "airtransportobj_point_698",
         "tableName": "airtransportobj_point_698",
         "originName": "AirTransportObj",
@@ -4212,7 +4202,6 @@ SET class_rule =
        '{
         "name": "autoservice_point_698",
         "title": "Объекты обслуживания и хранения автомобильного транспорта",
-        "readOnly": true,
         "styleName": "autoservice_point_698",
         "tableName": "autoservice_point_698",
         "originName": "AutoService",
@@ -4608,7 +4597,6 @@ SET class_rule =
        '{
         "name": "heritage_point_698",
         "title": "Объекты культурного наследия (ОКН)",
-        "readOnly": true,
         "styleName": "heritage_point_698",
         "tableName": "heritage_point_698",
         "originName": "Heritage",
@@ -5031,7 +5019,6 @@ SET class_rule =
        '{
         "name": "resort_point_698",
         "title": "Объекты санаторно-курортного назначения",
-        "readOnly": true,
         "styleName": "resort_point_698",
         "tableName": "resort_point_698",
         "originName": "Resort",
@@ -5343,7 +5330,6 @@ SET class_rule =
        '{
         "name": "servicefacility_point_698",
         "title": "Прочие объекты, связанные с производственной деятельностью",
-        "readOnly": true,
         "styleName": "servicefacility_point_698",
         "tableName": "servicefacility_point_698",
         "originName": "ServiceFacility",
@@ -5850,7 +5836,6 @@ SET class_rule =
        '{
         "name": "sewerfacility_point_698",
         "title": "Объекты водоотведения",
-        "readOnly": true,
         "styleName": "sewerfacility_point_698",
         "tableName": "sewerfacility_point_698",
         "originName": "SewerFacility",
@@ -6194,7 +6179,6 @@ SET class_rule =
        '{
         "name": "culture_point_698",
         "title": "Объекты культуры и искусства",
-        "readOnly": true,
         "styleName": "culture_point_698",
         "tableName": "culture_point_698",
         "originName": "Culture",
@@ -6587,7 +6571,6 @@ SET class_rule =
        '{
         "name": "mineraldep_point_698",
         "title": "Месторождения и проявления полезных ископаемых",
-        "readOnly": true,
         "styleName": "mineraldep_point_698",
         "tableName": "mineraldep_point_698",
         "originName": "MineralDep",
@@ -6836,7 +6819,6 @@ SET class_rule =
        '{
         "name": "transplogisticobj_point_698",
         "title": "Комплексные объекты транспортной инфраструктуры",
-        "readOnly": true,
         "styleName": "mineraldep_point_698",
         "tableName": "transplogisticobj_point_698",
         "originName": "TranspLogisticObj",
@@ -7097,7 +7079,6 @@ SET class_rule =
        '{
         "name": "publictransportobj_point_698",
         "title": "Объекты автомобильного пассажирского транспорта",
-        "readOnly": true,
         "styleName": "publictransportobj_point_698",
         "tableName": "publictransportobj_point_698",
         "originName": "PublicTransportObj",
@@ -7316,7 +7297,6 @@ SET class_rule =
        '{
         "name": "envmonitoring_point_698",
         "title": "Объекты государственной системы наблюдений за состоянием окружающей среды",
-        "readOnly": true,
         "styleName": "envmonitoring_point_698",
         "tableName": "envmonitoring_point_698",
         "originName": "EnvMonitoring",
@@ -7510,7 +7490,6 @@ SET class_rule =
        '{
         "name": "hydro_point_698",
         "title": "Поверхностные водные объекты",
-        "readOnly": true,
         "styleName": "hydro_point_698",
         "tableName": "hydro_point_698",
         "originName": "Hydro",
@@ -7665,7 +7644,6 @@ SET class_rule =
        '{
         "name": "engprotectionobj_point_698",
         "title": "Объекты инженерной защиты от опасных геологических процессов",
-        "readOnly": true,
         "styleName": "engprotectionobj_point_698",
         "tableName": "engprotectionobj_point_698",
         "originName": "EngProtectionObj",
@@ -7890,7 +7868,6 @@ SET class_rule =
        '{
         "name": "waterpipeline_line_698",
         "title": "Сети водоснабжения",
-        "readOnly": true,
         "styleName": "waterpipeline_line_698",
         "tableName": "waterpipeline_line_698",
         "originName": "WaterPipeline",
@@ -8164,7 +8141,6 @@ SET class_rule =
        '{
         "name": "culture_698",
         "title": "Объекты культуры и искусства",
-        "readOnly": true,
         "styleName": "culture_point_698",
         "tableName": "culture_698",
         "originName": "Culture",
@@ -8584,7 +8560,6 @@ SET class_rule =
        '{
         "name": "manufacturing_698",
         "title": "Предприятия и объекты добывающей и обрабатывающей промышленности",
-        "readOnly": true,
         "styleName": "manufacturing_point_698",
         "tableName": "manufacturing_698",
         "originName": "Manufacturing",
@@ -9037,7 +9012,6 @@ SET class_rule =
        '{
         "name": "authorityservice_698",
         "title": "Прочие объекты обслуживания",
-        "readOnly": true,
         "styleName": "authorityservice_point_698",
         "tableName": "authorityservice_698",
         "originName": "AuthorityService",
@@ -9464,7 +9438,6 @@ SET class_rule =
        '{
         "name": "sport_698",
         "title": "Объекты физкультурного и спортивного назначения",
-        "readOnly": true,
         "styleName": "sport_point_698",
         "tableName": "sport_698",
         "originName": "Sport",
@@ -9885,7 +9858,6 @@ SET class_rule =
        '{
         "name": "naturalriskzone_698",
         "title": "Территории, подверженные риску возникновения чрезвычайных ситуаций природного характера",
-        "readOnly": true,
         "styleName": "naturalriskzone_point_698",
         "tableName": "naturalriskzone_698",
         "originName": "NaturalRiskZone",
@@ -10156,7 +10128,6 @@ SET class_rule =
        '{
         "name": "natureprotectarea_698",
         "title": "Особо охраняемые природные территории",
-        "readOnly": true,
         "styleName": "natureprotectarea_point_698",
         "tableName": "natureprotectarea_698",
         "originName": "NatureProtectArea",
@@ -10372,7 +10343,6 @@ SET class_rule =
        '{
         "name": "gasfacility_698",
         "title": "Объекты добычи и транспортировки газа",
-        "readOnly": true,
         "styleName": "gasfacility_point_698",
         "tableName": "gasfacility_698",
         "originName": "GasFacility",
@@ -10689,7 +10659,6 @@ SET class_rule =
        '{
         "name": "gasfacility_point_698",
         "title": "Объекты добычи и транспортировки газа",
-        "readOnly": true,
         "styleName": "gasfacility_point_698",
         "tableName": "gasfacility_point_698",
         "originName": "GasFacility",
@@ -11006,7 +10975,6 @@ SET class_rule =
        '{
         "name": "publictransportobj_698",
         "title": "Объекты автомобильного пассажирского транспорта",
-        "readOnly": true,
         "styleName": "publictransportobj_point_698",
         "tableName": "publictransportobj_698",
         "originName": "PublicTransportObj",
@@ -11225,7 +11193,6 @@ SET class_rule =
        '{
         "name": "thermalfacility_698",
         "title": "Объекты теплоснабжения",
-        "readOnly": true,
         "styleName": "thermalfacility_point_698",
         "tableName": "thermalfacility_698",
         "originName": "ThermalFacility",
@@ -11638,7 +11605,6 @@ SET class_rule =
        '{
         "name": "envmonitoring_698",
         "title": "Объекты государственной системы наблюдений за состоянием окружающей среды",
-        "readOnly": true,
         "styleName": "envmonitoring_point_698",
         "tableName": "envmonitoring_698",
         "originName": "EnvMonitoring",
@@ -11832,7 +11798,6 @@ SET class_rule =
        '{
         "name": "thermalfacility_point_698",
         "title": "Объекты теплоснабжения",
-        "readOnly": true,
         "styleName": "thermalfacility_point_698",
         "tableName": "thermalfacility_point_698",
         "originName": "ThermalFacility",
@@ -12245,7 +12210,6 @@ SET class_rule =
        '{
         "name": "road_line_698",
         "title": "Автомобильные дороги",
-        "readOnly": true,
         "styleName": "road_line_698",
         "tableName": "road_line_698",
         "originName": "Road",
@@ -12751,7 +12715,6 @@ SET class_rule =
        '{
         "name": "telecomfacility_698",
         "title": "Объекты связи",
-        "readOnly": true,
         "styleName": "telecomfacility_point_698",
         "tableName": "telecomfacility_698",
         "originName": "TelecomFacility",
@@ -13129,7 +13092,6 @@ SET class_rule =
        '{
         "name": "customcontrol_698",
         "title": "Пункт пропуска через Государственную границу",
-        "readOnly": true,
         "styleName": "customcontrol_point_698",
         "tableName": "customcontrol_698",
         "originName": "CustomControl",
@@ -13414,7 +13376,6 @@ SET class_rule =
        '{
         "name": "education_698",
         "title": "Объекты образования и науки",
-        "readOnly": true,
         "styleName": "education_point_698",
         "tableName": "education_698",
         "originName": "Education",
@@ -13891,7 +13852,6 @@ SET class_rule =
        '{
         "name": "publictransportline_line_698",
         "title": "Линии общественного пассажирского транспорта",
-        "readOnly": true,
         "styleName": "publictransportline_line_698",
         "tableName": "publictransportline_line_698",
         "originName": "PublicTransportLine",
@@ -14162,7 +14122,6 @@ SET class_rule =
        '{
         "name": "telecomfacility_point_698",
         "title": "Объекты связи",
-        "readOnly": true,
         "styleName": "telecomfacility_point_698",
         "tableName": "telecomfacility_point_698",
         "originName": "TelecomFacility",
@@ -14540,7 +14499,6 @@ SET class_rule =
        '{
         "name": "resort_698",
         "title": "Объекты санаторно-курортного назначения",
-        "readOnly": true,
         "styleName": "resort_point_698",
         "tableName": "resort_698",
         "originName": "Resort",
@@ -14852,7 +14810,6 @@ SET class_rule =
        '{
         "name": "servicefacility_698",
         "title": "Прочие объекты, связанные с производственной деятельностью",
-        "readOnly": true,
         "styleName": "servicefacility_point_698",
         "tableName": "servicefacility_698",
         "originName": "ServiceFacility",
@@ -15359,7 +15316,6 @@ SET class_rule =
        '{
         "name": "admenp_698",
         "title": "Территория населенного пункта",
-        "readOnly": true,
         "styleName": "admenp_698",
         "tableName": "admenp_698",
         "originName": "AdmeNP",
@@ -15774,7 +15730,6 @@ SET class_rule =
        '{
         "name": "transportobj_698",
         "title": "Искусственные дорожные сооружения",
-        "readOnly": true,
         "styleName": "transportobj_point_698",
         "tableName": "transportobj_698",
         "originName": "TransportObj",
@@ -16091,7 +16046,6 @@ SET class_rule =
        '{
         "name": "transportobj_line_698",
         "title": "Искусственные дорожные сооружения",
-        "readOnly": true,
         "styleName": "transportobj_line_698",
         "tableName": "transportobj_line_698",
         "originName": "TransportObj",
@@ -16408,7 +16362,6 @@ SET class_rule =
        '{
         "name": "transportobj_point_698",
         "title": "Искусственные дорожные сооружения",
-        "readOnly": true,
         "styleName": "transportobj_point_698",
         "tableName": "transportobj_point_698",
         "originName": "TransportObj",
@@ -16725,7 +16678,6 @@ SET class_rule =
        '{
         "name": "wastefacility_698",
         "title": "Объекты утилизации, обезвреживания, размещения отходов производства и потребления",
-        "readOnly": true,
         "styleName": "wastefacility_point_698",
         "tableName": "wastefacility_698",
         "originName": "WasteFacility",
@@ -17295,7 +17247,6 @@ SET class_rule =
        '{
         "name": "waterfacility_698",
         "title": "Объекты водоснабжения",
-        "readOnly": true,
         "styleName": "waterfacility_pooint_698",
         "tableName": "waterfacility_698",
         "originName": "WaterFacility",
@@ -17643,7 +17594,6 @@ SET class_rule =
        '{
         "name": "otherobject_698",
         "title": "Иные объекты федерального значения, объекты регионального значения, объекты местного значения",
-        "readOnly": true,
         "styleName": "otherobject_point_698",
         "tableName": "otherobject_698",
         "originName": "OtherObject",
@@ -17943,7 +17893,6 @@ SET class_rule =
        '{
         "name": "forest_698",
         "title": "Леса",
-        "readOnly": true,
         "styleName": "forest_698",
         "tableName": "forest_698",
         "originName": "Forest",
@@ -18208,7 +18157,6 @@ SET class_rule =
        '{
         "name": "education_point_698",
         "title": "Объекты образования и науки",
-        "readOnly": true,
         "styleName": "education_point_698",
         "tableName": "education_point_698",
         "originName": "Education",
@@ -18686,7 +18634,6 @@ SET class_rule =
        '{
         "name": "electricpowerstation_698",
         "title": "Электростанции",
-        "readOnly": true,
         "styleName": "electricpowerstation_point_698",
         "tableName": "electricpowerstation_698",
         "originName": "ElectricPowerStation",
@@ -19244,7 +19191,6 @@ SET class_rule =
        '{
         "name": "publictransportservice_698",
         "title": "Объекты хранения и обслуживания общественного пассажирского транспорта",
-        "readOnly": true,
         "styleName": "publictransportservice_point_698",
         "tableName": "publictransportservice_698",
         "originName": "PublicTransportService",
@@ -19530,7 +19476,6 @@ SET class_rule =
        '{
         "name": "airtransportobj_698",
         "title": "Объекты воздушного транспорта",
-        "readOnly": true,
         "styleName": "airtransportobj_point_698",
         "tableName": "airtransportobj_698",
         "originName": "AirTransportObj",
@@ -19932,7 +19877,6 @@ SET class_rule =
        '{
         "name": "electricpowerstation_point_698",
         "title": "Электростанции",
-        "readOnly": true,
         "styleName": "electricpowerstation_point_698",
         "tableName": "electricpowerstation_point_698",
         "originName": "ElectricPowerStation",
@@ -20490,7 +20434,6 @@ SET class_rule =
        '{
         "name": "autoservice_698",
         "title": "Объекты обслуживания и хранения автомобильного транспорта",
-        "readOnly": true,
         "styleName": "autoservice_point_698",
         "tableName": "autoservice_698",
         "originName": "AutoService",
@@ -20886,7 +20829,6 @@ SET class_rule =
        '{
         "name": "hydraulicstructures_line_698",
         "title": "Гидротехнические сооружения",
-        "readOnly": true,
         "styleName": "hydraulicstructures_line_698",
         "tableName": "hydraulicstructures_line_698",
         "originName": "HydraulicStructures",
@@ -21184,7 +21126,6 @@ SET class_rule =
        '{
         "name": "gaspipeline_line_698",
         "title": "Трубопроводы для транспортировки газа",
-        "readOnly": true,
         "styleName": "gaspipeline_line_698",
         "tableName": "gaspipeline_line_698",
         "originName": "GasPipeline",
@@ -21554,7 +21495,6 @@ SET class_rule =
        '{
         "name": "street_line_698",
         "title": "Улично-дорожная сеть городского поселения",
-        "readOnly": true,
         "styleName": "street_line_698",
         "tableName": "street_line_698",
         "originName": "Street",
@@ -21869,7 +21809,6 @@ SET class_rule =
        '{
         "name": "hydraulicstructures_point_698",
         "title": "Гидротехнические сооружения",
-        "readOnly": true,
         "styleName": "hydraulicstructures_point_698",
         "tableName": "hydraulicstructures_point_698",
         "originName": "HydraulicStructures",
@@ -22167,7 +22106,6 @@ SET class_rule =
        '{
         "name": "health_698",
         "title": "Объекты здравоохранения",
-        "readOnly": true,
         "styleName": "health_point_698",
         "tableName": "health_698",
         "originName": "Health",
@@ -22787,7 +22725,6 @@ SET class_rule =
        '{
         "name": "customcontrol_point_698",
         "title": "Пункт пропуска через Государственную границу",
-        "readOnly": true,
         "styleName": "customcontrol_point_698",
         "tableName": "customcontrol_point_698",
         "originName": "CustomControl",
@@ -23072,7 +23009,6 @@ SET class_rule =
 '{
     "name": "health_point_698",
     "title": "Объекты здравоохранения",
-    "readOnly": true,
     "styleName": "health_point_698",
     "tableName": "health_point_698",
     "originName": "Health",
@@ -23692,7 +23628,6 @@ SET class_rule =
        '{
         "name": "railwayline_line_698",
         "title": "Железнодорожные пути",
-        "readOnly": true,
         "styleName": "railwayline_line_698",
         "tableName": "railwayline_line_698",
         "originName": "RailwayLine",
@@ -24056,7 +23991,6 @@ SET class_rule =
        '{
         "name": "pipeline_line_698",
         "title": "Магистральные трубопроводы для транспортировки жидких и газообразных углеводородов",
-        "readOnly": true,
         "styleName": "pipeline_line_698",
         "tableName": "pipeline_line_698",
         "originName": "Pipeline",
@@ -24333,7 +24267,6 @@ SET class_rule =
        '{
         "name": "cemetery_point_698",
         "title": "Места погребения",
-        "readOnly": true,
         "styleName": "cemetery_point_698",
         "tableName": "cemetery_point_698",
         "originName": "Cemetery",
@@ -24670,7 +24603,6 @@ SET class_rule =
        '{
         "name": "cemetery_698",
         "title": "Места погребения",
-        "readOnly": true,
         "styleName": "cemetery_point_698",
         "tableName": "cemetery_698",
         "originName": "Cemetery",
@@ -25006,7 +24938,6 @@ SET class_rule =
        '{
         "name": "investmentzone_698",
         "title": "Территории и зоны, на которых устанавливается особый юридический статус, и/или действуют особые финансовые и нефинансовые механизмы поддержки инвестиционной и инновационной деятельности",
-        "readOnly": true,
         "styleName": "investmentzone_698",
         "tableName": "investmentzone_698",
         "originName": "InvestmentZone",
@@ -25274,7 +25205,6 @@ SET class_rule =
        '{
         "name": "watertransportobj_698",
         "title": "Объекты водного транспорта",
-        "readOnly": true,
         "styleName": "watertransportobj_point_698",
         "tableName": "watertransportobj_698",
         "originName": "WaterTransportObj",
@@ -25690,7 +25620,6 @@ SET class_rule =
        '{
         "name": "electricline_line_698",
         "title": "Линии электропередачи (ЛЭП)",
-        "readOnly": true,
         "styleName": "electricline_line_698",
         "tableName": "electricline_line_698",
         "originName": "ElectricLine",
@@ -26133,7 +26062,6 @@ SET class_rule =
        '{
         "name": "watertransportobj_point_698",
         "title": "Объекты водного транспорта",
-        "readOnly": true,
         "styleName": "watertransportobj_point_698",
         "tableName": "watertransportobj_point_698",
         "originName": "WaterTransportObj",
@@ -26549,7 +26477,6 @@ SET class_rule =
        '{
         "name": "historicsettlement_698",
         "title": "Границы территории исторического поселения",
-        "readOnly": true,
         "styleName": "historicsettlement_698",
         "tableName": "historicsettlement_698",
         "originName": "HistoricSettlement",
@@ -26635,7 +26562,6 @@ SET class_rule =
        '{
         "name": "public_698",
         "title": "Прочие объекты обслуживания",
-        "readOnly": true,
         "styleName": "public_point_698",
         "tableName": "public_698",
         "originName": "Public",
@@ -27054,7 +26980,6 @@ SET class_rule =
        '{
         "name": "sewerfacility_698",
         "title": "Объекты водоотведения",
-        "readOnly": true,
         "styleName": "sewerfacility_point_698",
         "tableName": "sewerfacility_698",
         "originName": "SewerFacility",
@@ -27398,7 +27323,6 @@ SET class_rule =
        '{
         "name": "functionalzone_698",
         "title": "Функциональные зоны",
-        "readOnly": true,
         "styleName": "functionalzone_698",
         "tableName": "functionalzone_698",
         "originName": "FunctionalZone",
@@ -28031,7 +27955,6 @@ SET class_rule =
        '{
         "name": "technoriskarea_698",
         "title": "Территории, подверженные риску возникновения чрезвычайных ситуаций техногенного характера",
-        "readOnly": true,
         "styleName": "technoriskarea_point_698",
         "tableName": "technoriskarea_698",
         "originName": "TechnoRiskArea",
@@ -28230,7 +28153,6 @@ SET class_rule =
        '{
         "name": "coastalprotectionzone_698",
         "title": "Прибрежные защитные полосы",
-        "readOnly": true,
         "styleName": "coastalprotectionzone_698",
         "tableName": "coastalprotectionzone_698",
         "originName": "CoastalProtectionZone",
@@ -28330,7 +28252,6 @@ SET class_rule =
        '{
         "name": "publictransportstops_698",
         "title": "Остановочные пункты общественного пассажирского транспорта",
-        "readOnly": true,
         "styleName": "publictransportstops_point_698",
         "tableName": "publictransportstops_698",
         "originName": "PublicTransportStops",
@@ -28649,7 +28570,6 @@ SET class_rule =
        '{
         "name": "hazardarea_698",
         "title": "Зона экстренного оповещения",
-        "readOnly": true,
         "styleName": "hazardarea_698",
         "tableName": "hazardarea_698",
         "originName": "HazardArea",
@@ -28708,7 +28628,6 @@ SET class_rule =
        '{
         "name": "publictransportstops_point_698",
         "title": "Остановочные пункты общественного пассажирского транспорта",
-        "readOnly": true,
         "styleName": "publictransportstops_point_698",
         "tableName": "publictransportstops_point_698",
         "originName": "PublicTransportStops",
@@ -29027,7 +28946,6 @@ SET class_rule =
        '{
         "name": "otherobject_point_698",
         "title": "Иные объекты федерального значения, объекты регионального значения, объекты местного значения",
-        "readOnly": true,
         "styleName": "otherobject_point_698",
         "tableName": "otherobject_point_698",
         "originName": "OtherObject",
@@ -29327,7 +29245,6 @@ SET class_rule =
        '{
         "name": "resortarea_698",
         "title": "Лечебно-оздоровительные местности и курорты",
-        "readOnly": true,
         "styleName": "resortarea_698",
         "tableName": "resortarea_698",
         "originName": "ResortArea",
@@ -29512,7 +29429,6 @@ SET class_rule =
        '{
         "name": "social_698",
         "title": "Объекты социального обслуживания",
-        "readOnly": true,
         "styleName": "social_point_698",
         "tableName": "social_698",
         "originName": "Social",
@@ -29946,7 +29862,6 @@ SET class_rule =
        '{
         "name": "agriculture_698",
         "title": "Предприятия и объекты сельского и лесного хозяйства, рыболовства и рыбоводства",
-        "readOnly": true,
         "styleName": "agriculture_poing_698",
         "tableName": "agriculture_698",
         "originName": "Agriculture",
@@ -30613,7 +30528,6 @@ SET class_rule =
        '{
         "name": "social_point_698",
         "title": "Объекты социального обслуживания",
-        "readOnly": true,
         "styleName": "social_point_698",
         "tableName": "social_point_698",
         "originName": "Social",
@@ -31047,7 +30961,6 @@ SET class_rule =
        '{
         "name": "agriculture_point_698",
         "title": "Предприятия и объекты сельского и лесного хозяйства, рыболовства и рыбоводства",
-        "readOnly": true,
         "styleName": "agriculture_point_698",
         "tableName": "agriculture_point_698",
         "originName": "Agriculture",
@@ -31713,7 +31626,6 @@ SET class_rule =
        '{
         "name": "wildlifeprotection_698",
         "title": "Объекты охраны животного мира",
-        "readOnly": true,
         "styleName": "wildlifeprotection_point_698",
         "tableName": "wildlifeprotection_698",
         "originName": "WildlifeProtection",
@@ -31960,7 +31872,6 @@ SET class_rule =
        '{
         "name": "heritagearea_698",
         "title": "Границы территорий объектов культурного наследия и историко-культурных заповедников",
-        "readOnly": true,
         "styleName": "heritagearea_698",
         "tableName": "heritagearea_698",
         "originName": "HeritageArea",
@@ -32145,7 +32056,6 @@ SET class_rule =
        '{
         "name": "mineraldep_698",
         "title": "Месторождения и проявления полезных ископаемых",
-        "readOnly": true,
         "styleName": "mineraldep_point_698",
         "tableName": "mineraldep_698",
         "originName": "MineralDep",
@@ -32394,7 +32304,6 @@ SET class_rule =
        '{
         "name": "transplogisticobj_698",
         "title": "Комплексные объекты транспортной инфраструктуры",
-        "readOnly": true,
         "styleName": "transplogisticobj_698",
         "tableName": "transplogisticobj_698",
         "originName": "TranspLogisticObj",
@@ -32655,7 +32564,6 @@ SET class_rule =
        '{
         "name": "heritageprotectionzone_698",
         "title": "Зоны охраны объектов культурного наследия (памятников истории и культуры) народов Российской Федерации",
-        "readOnly": true,
         "styleName": "heritageprotectionzone_698",
         "tableName": "heritageprotectionzone_698",
         "originName": "HeritageProtectionZone",
@@ -32761,7 +32669,6 @@ SET class_rule =
        '{
         "name": "engprotectionzone_698",
         "title": "Охранная зона инженерных коммуникаций",
-        "readOnly": true,
         "styleName": "engprotectionzone_698",
         "tableName": "engprotectionzone_698",
         "originName": "EngProtectionZone",
@@ -32875,7 +32782,6 @@ SET class_rule =
        '{
         "name": "foreshore_698",
         "title": "Береговые полосы",
-        "readOnly": true,
         "styleName": "foreshore_698",
         "tableName": "foreshore_698",
         "originName": "Foreshore",
@@ -32975,7 +32881,6 @@ SET class_rule =
        '{
         "name": "transpprotectionzone_698",
         "title": "Охранная зона транспортных коммуникаций",
-        "readOnly": true,
         "styleName": "transpprotectionzone_698",
         "tableName": "transpprotectionzone_698",
         "originName": "TranspProtectionZone",
@@ -33073,7 +32978,6 @@ SET class_rule =
        '{
         "name": "recreation_698",
         "title": "Объекты отдыха и туризма",
-        "readOnly": true,
         "styleName": "recreation_point_698",
         "tableName": "recreation_698",
         "originName": "Recreation",
@@ -33545,7 +33449,6 @@ SET class_rule =
        '{
         "name": "natureprotectionzone_698",
         "title": "Охранная зона особо охраняемых природных территорий",
-        "readOnly": true,
         "styleName": "natureprotectionzone_698",
         "tableName": "natureprotectionzone_698",
         "originName": "NatureProtectionZone",
@@ -33670,7 +33573,6 @@ SET class_rule =
        '{
         "name": "traditionalarea_698",
         "title": "Территории традиционного природопользования коренных малочисленных народов Севера, Сибири и Дальнего Востока РФ",
-        "readOnly": true,
         "styleName": "traditionalarea_698",
         "tableName": "traditionalarea_698",
         "originName": "TraditionalArea",
@@ -33826,7 +33728,6 @@ SET class_rule =
        '{
         "name": "specialeconomicarea_698",
         "title": "Особые экономические зоны",
-        "readOnly": true,
         "styleName": "specialeconomicarea_698",
         "tableName": "specialeconomicarea_698",
         "originName": "SpecialEconomicArea",
@@ -34030,7 +33931,6 @@ SET class_rule =
        '{
         "name": "emergencyprotectionobj_698",
         "title": "Объекты единой государственной системы предупреждения и ликвидации чрезвычайных ситуаций",
-        "readOnly": true,
         "styleName": "emergencyprotectionobj_point_698",
         "tableName": "emergencyprotectionobj_698",
         "originName": "EmergencyProtectionObj",
@@ -34445,7 +34345,6 @@ SET class_rule =
        '{
         "name": "electrictransformer_698",
         "title": "Электрические подстанции",
-        "readOnly": true,
         "styleName": "electrictransformer_698",
         "tableName": "electrictransformer_698",
         "originName": "ElectricTransformer",
@@ -34997,7 +34896,6 @@ SET class_rule =
        '{
         "name": "railwayfacility_698",
         "title": "Объекты железнодорожного транспорта",
-        "readOnly": true,
         "styleName": "railwayfacility_point_698",
         "tableName": "railwayfacility_698",
         "originName": "RailwayFacility",
@@ -35488,7 +35386,6 @@ SET class_rule =
        '{
         "name": "admemo_698",
         "title": "Территория муниципального образования",
-        "readOnly": true,
         "styleName": "admemo_698",
         "tableName": "admemo_698",
         "originName": "AdmeMO",
@@ -35621,7 +35518,6 @@ SET class_rule =
        '{
         "name": "oilfacility_698",
         "title": "Объекты добычи и транспортировки жидких углеводородов",
-        "readOnly": true,
         "styleName": "oilfacility_point_698",
         "tableName": "oilfacility_698",
         "originName": "OilFacility",
@@ -36041,7 +35937,6 @@ SET class_rule =
        '{
         "name": "emergencyprotectionobj_point_698",
         "title": "Объекты единой государственной системы предупреждения и ликвидации чрезвычайных ситуаций",
-        "readOnly": true,
         "styleName": "emergencyprotectionobj_point_698",
         "tableName": "emergencyprotectionobj_point_698",
         "originName": "EmergencyProtectionObj",
@@ -36456,7 +36351,6 @@ SET class_rule =
        '{
         "name": "manufacturing_point_698",
         "title": "Предприятия и объекты добывающей и обрабатывающей промышленности",
-        "readOnly": true,
         "styleName": "manufacturing_point_698",
         "tableName": "manufacturing_point_698",
         "originName": "Manufacturing",
@@ -36909,7 +36803,6 @@ SET class_rule =
        '{
         "name": "authorityservice_point_698",
         "title": "Прочие объекты обслуживания",
-        "readOnly": true,
         "styleName": "authorityservice_point_698",
         "tableName": "authorityservice_point_698",
         "originName": "AuthorityService",
@@ -37336,7 +37229,6 @@ SET class_rule =
        '{
         "name": "sport_point_698",
         "title": "Объекты физкультурного и спортивного назначения",
-        "readOnly": true,
         "styleName": "sport_point_698",
         "tableName": "sport_point_698",
         "originName": "Sport",
@@ -37757,7 +37649,6 @@ SET class_rule =
        '{
         "name": "recreation_point_698",
         "title": "Объекты отдыха и туризма",
-        "readOnly": true,
         "styleName": "recreation_point_698",
         "tableName": "recreation_point_698",
         "originName": "Recreation",
@@ -38229,7 +38120,6 @@ SET class_rule =
        '{
         "name": "public_point_698",
         "title": "Общественные пространства",
-        "readOnly": true,
         "styleName": "public_point_698",
         "tableName": "public_point_698",
         "originName": "Public",
@@ -38646,7 +38536,6 @@ SET class_rule =
        '{
         "name": "waterprotectionzone_698",
         "title": "Водоохранные зоны",
-        "readOnly": true,
         "styleName": "waterprotectionzone_698",
         "tableName": "waterprotectionzone_698",
         "originName": "WaterProtectionZone",
@@ -38731,7 +38620,6 @@ SET class_rule =
        '{
         "name": "envdanger_point_698",
         "title": "Объекты накопленного вреда окружающей среде, водные объекты, подлежащие реабилитации",
-        "readOnly": true,
         "styleName": "envdanger_point_698",
         "tableName": "envdanger_point_698",
         "originName": "EnvDanger",
@@ -38849,7 +38737,6 @@ SET class_rule =
        '{
         "name": "prison_698",
         "title": "Объекты ФСИН России, иные объекты федерального значения",
-        "readOnly": true,
         "styleName": "prison_point_698",
         "tableName": "prison_698",
         "originName": "Prison",
@@ -39110,7 +38997,6 @@ SET class_rule =
        '{
         "name": "greeneryplanting_698",
         "title": "Территории зеленого фонда городских и сельских поселений ",
-        "readOnly": true,
         "styleName": "greeneryplanting_698",
         "tableName": "greeneryplanting_698",
         "originName": "GreeneryPlanting",
@@ -39271,7 +39157,6 @@ SET class_rule =
        '{
         "name": "forestpark_698",
         "title": "Лесопарковый зеленый пояс",
-        "readOnly": true,
         "styleName": "forestpark_698",
         "tableName": "forestpark_698",
         "originName": "ForestPark",
@@ -39392,7 +39277,6 @@ SET class_rule =
        '{
         "name": "oilfacility_point_698",
         "title": "Объекты добычи и транспортировки жидких углеводородов",
-        "readOnly": true,
         "styleName": "oilfacility_point_698",
         "tableName": "oilfacility_point_698",
         "originName": "OilFacility",
@@ -39812,7 +39696,6 @@ SET class_rule =
        '{
         "name": "transpsanitarygapzone_698",
         "title": "Санитарный разрыв (санитарная полоса отчуждения) транспортных коммуникаций",
-        "readOnly": true,
         "styleName": "transpsanitarygapzone_698",
         "tableName": "transpsanitarygapzone_698",
         "originName": "TranspSanitaryGapZone",
@@ -39933,7 +39816,6 @@ SET class_rule =
        '{
         "name": "sanitaryprotectionzone_698",
         "title": "Санитарно-защитная зона",
-        "readOnly": true,
         "styleName": "sanitaryprotectionzone_698",
         "tableName": "sanitaryprotectionzone_698",
         "originName": "SanitaryProtectionZone",
@@ -40116,7 +39998,6 @@ SET class_rule =
        '{
         "name": "drinkwaterprotectionzone_698",
         "title": "Зоны санитарной охраны источников водоснабжения и водопроводов питьевого назначения",
-        "readOnly": true,
         "styleName": "drinkwaterprotectionzone_698",
         "tableName": "drinkwaterprotectionzone_698",
         "originName": "DrinkWaterProtectionZone",
@@ -40233,7 +40114,6 @@ SET class_rule =
        '{
         "name": "admerf_698",
         "title": "Территория Российской Федерации",
-        "readOnly": true,
         "styleName": "admerf_698",
         "tableName": "admerf_698",
         "originName": "AdmeRF",
@@ -40305,7 +40185,6 @@ SET class_rule =
        '{
         "name": "resortprotectionzone_698",
         "title": "Зоны округов санитарной (горно-санитарной) охраны",
-        "readOnly": true,
         "styleName": "resortprotectionzone_698",
         "tableName": "resortprotectionzone_698",
         "originName": "ResortProtectionZone",
@@ -40403,7 +40282,6 @@ SET class_rule =
        '{
         "name": "landuse_698",
         "title": "Земли по категориям",
-        "readOnly": true,
         "styleName": "landuse_698",
         "tableName": "landuse_698",
         "originName": "LandUse",
@@ -40497,7 +40375,6 @@ SET class_rule =
        '{
         "name": "mineralarea_698",
         "title": "Участки недр, предоставленных для добычи полезных ископаемых, а также в целях,не связанных с их добычей",
-        "readOnly": true,
         "styleName": "mineralarea_698",
         "tableName": "mineralarea_698",
         "originName": "MineralArea",
@@ -40606,7 +40483,6 @@ SET class_rule =
        '{
         "name": "engsanitarygapzone_698",
         "title": "Санитарный разрыв (санитарная полоса отчуждения) инженерных коммуникаций",
-        "readOnly": true,
         "styleName": "engsanitarygapzone_698",
         "tableName": "engsanitarygapzone_698",
         "originName": "EngSanitaryGapZone",
@@ -40704,7 +40580,6 @@ SET class_rule =
        '{
         "name": "otherzone_698",
         "title": "Иные зоны с особыми условиями использования",
-        "readOnly": true,
         "styleName": "otherzone_698",
         "tableName": "otherzone_698",
         "originName": "OtherZone",
@@ -40852,7 +40727,6 @@ SET class_rule =
        '{
         "name": "envdanger_698",
         "title": "Объекты накопленного вреда окружающей среде, водные объекты, подлежащие реабилитации",
-        "readOnly": true,
         "styleName": "envdanger_698",
         "tableName": "envdanger_698",
         "originName": "EnvDanger",
@@ -40970,7 +40844,6 @@ SET class_rule =
        '{
         "name": "streetv_line_698",
         "title": "Улично-дорожная сеть сельского населенного пункта",
-        "readOnly": true,
         "styleName": "streetv_line_698",
         "tableName": "streetv_line_698",
         "originName": "StreetV",
@@ -41234,7 +41107,6 @@ SET class_rule =
        '{
         "name": "otherprotectionzone_698",
         "title": "Охранная зона иного назначения",
-        "readOnly": true,
         "styleName": "otherprotectionzone_698",
         "tableName": "otherprotectionzone_698",
         "originName": "OtherProtectionZone",
@@ -41328,7 +41200,6 @@ SET class_rule =
        '{
         "name": "protectionzone_698",
         "title": "Зоны охраняемых объектов",
-        "readOnly": true,
         "styleName": "protectionzone_698",
         "tableName": "protectionzone_698",
         "originName": "ProtectionZone",
@@ -41445,7 +41316,6 @@ SET class_rule =
        '{
         "name": "hydro_698",
         "title": "Поверхностные водные объекты",
-        "readOnly": true,
         "styleName": "hydro_698",
         "tableName": "hydro_698",
         "originName": "Hydro",
@@ -41599,7 +41469,6 @@ SET class_rule =
        '{
         "name": "floodarea_698",
         "title": "Зоны затопления и подтопления",
-        "readOnly": true,
         "styleName": "floodarea_698",
         "tableName": "floodarea_698",
         "originName": "FloodArea",
@@ -41765,7 +41634,6 @@ SET class_rule =
        '{
         "name": "areabasedevelopment_698",
         "title": "Комплексное развитие территорий",
-        "readOnly": true,
         "styleName": "areabasedevelopment_698",
         "tableName": "areabasedevelopment_698",
         "originName": "AreaBaseDevelopment",
@@ -41957,7 +41825,6 @@ SET class_rule =
        '{
         "name": "fishprotectionzone_698",
         "title": "Рыбоохранная и рыбохозяйственная заповедная зоны",
-        "readOnly": true,
         "styleName": "fishprotectionzone_698",
         "tableName": "fishprotectionzone_698",
         "originName": "FishProtectionZone",
@@ -42066,7 +41933,6 @@ SET class_rule =
        '{
         "name": "waterways_line_698",
         "title": "Водные пути",
-        "readOnly": true,
         "styleName": "waterways_line_698",
         "tableName": "waterways_line_698",
         "originName": "WaterWays",
@@ -42273,7 +42139,6 @@ SET class_rule =
        '{
         "name": "admborder_line_698",
         "title": "Границы единиц административно-территориального деления Российской Федерации",
-        "readOnly": true,
         "styleName": "admborder_line_698",
         "tableName": "admborder_line_698",
         "originName": "AdmBorder",
@@ -42383,7 +42248,6 @@ SET class_rule =
        '{
         "name": "hydro_line_698",
         "title": "Поверхностные водные объекты",
-        "readOnly": true,
         "styleName": "hydro_line_698",
         "tableName": "hydro_line_698",
         "originName": "Hydro",
@@ -42538,7 +42402,6 @@ SET class_rule =
        '{
         "name": "sewerpipeline_line_698",
         "title": "Сети водоотведения",
-        "readOnly": true,
         "styleName": "sewerpipeline_line_698",
         "tableName": "sewerpipeline_line_698",
         "originName": "SewerPipeline",
@@ -42811,7 +42674,6 @@ SET class_rule =
        '{
         "name": "engprotectionobj_line_698",
         "title": "Объекты инженерной защиты от опасных геологических процессов",
-        "readOnly": true,
         "styleName": "engprotectionobj_line_698",
         "tableName": "engprotectionobj_line_698",
         "originName": "EngProtectionObj",
@@ -43036,7 +42898,6 @@ SET class_rule =
        '{
         "name": "naturalriskzone_point_698",
         "title": "Территории, подверженные риску возникновения чрезвычайных ситуаций природного характера",
-        "readOnly": true,
         "styleName": "naturalriskzone_point_698",
         "tableName": "naturalriskzone_point_698",
         "originName": "NaturalRiskZone",
@@ -43307,7 +43168,6 @@ SET class_rule =
        '{
         "name": "natureprotectarea_point_698",
         "title": "Особо охраняемые природные территории",
-        "readOnly": true,
         "styleName": "natureprotectarea_point_698",
         "tableName": "natureprotectarea_point_698",
         "originName": "NatureProtectArea",
@@ -43523,7 +43383,6 @@ SET class_rule =
        '{
         "name": "technoriskarea_point_698",
         "title": "Территории, подверженные риску возникновения чрезвычайных ситуаций техногенного характера",
-        "readOnly": true,
         "styleName": "technoriskarea_point_698",
         "tableName": "technoriskarea_point_698",
         "originName": "TechnoRiskArea",
@@ -43722,7 +43581,6 @@ SET class_rule =
        '{
         "name": "resortarea_point_698",
         "title": "Лечебно-оздоровительные местности и курорты",
-        "readOnly": true,
         "styleName": "resortarea_point_698",
         "tableName": "resortarea_point_698",
         "originName": "ResortArea",
@@ -43907,7 +43765,6 @@ SET class_rule =
        '{
         "name": "prison_point_698",
         "title": "Объекты ФСИН России, иные объекты федерального значения",
-        "readOnly": true,
         "styleName": "prison_point_698",
         "tableName": "prison_point_698",
         "originName": "Prison",
@@ -44168,7 +44025,6 @@ SET class_rule =
        '{
         "name": "wildlifeprotection_point_698",
         "title": "Объекты охраны животного мира",
-        "readOnly": true,
         "styleName": "wildlifeprotection_point_698",
         "tableName": "wildlifeprotection_point_698",
         "originName": "WildlifeProtection",

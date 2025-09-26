@@ -19,7 +19,6 @@ SET class_rule =
        '{
         "name": "historicsettlement_65",
         "title": "Границы территории исторического поселения",
-        "readOnly": true,
         "styleName": "historicsettlement_65",
         "tableName": "historicsettlement_65",
         "originName": "HistoricSettlement",
@@ -103,7 +102,6 @@ SET class_rule =
        '{
         "name": "waterprotectionzone_65",
         "title": "Водоохранные зоны",
-        "readOnly": true,
         "styleName": "waterprotectionzone_65",
         "tableName": "waterprotectionzone_65",
         "originName": "WaterProtectionZone",
@@ -201,7 +199,6 @@ SET class_rule =
        '{
         "name": "otherzone_65",
         "title": "Иные зоны с особыми условиями использования",
-        "readOnly": true,
         "styleName": "otherzone_65",
         "tableName": "otherzone_65",
         "originName": "OtherZone",

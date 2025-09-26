@@ -391,7 +391,6 @@ SET class_rule =
               ]
             }
           ],
-          "readOnly": false,
           "styleName": "polygon_nto",
           "tableName": "nto_all",
           "properties": [
@@ -686,7 +685,6 @@ SET class_rule =
             {
               "name": "ownership",
               "title": "Тип собственности",
-              "readOnly": true,
               "valueType": "CHOICE",
               "enumerations": [
                 {
@@ -1183,7 +1181,6 @@ SET class_rule =
               ]
             }
           ],
-          "readOnly": false,
           "styleName": "polygon_nto",
           "tableName": "nto_doc_point",
           "originName": "nto_doc_point",
@@ -1480,7 +1477,7 @@ SET class_rule =
             {
               "name": "ownership",
               "title": "Тип собственности",
-              "readOnly": true,
+              "readOnly": false,
               "valueType": "CHOICE",
               "enumerations": [
                 {
@@ -1970,7 +1967,6 @@ SET class_rule =
               ]
             }
           ],
-          "readOnly": false,
           "styleName": "polygon_nto",
           "tableName": "nto_doc",
           "originName": "nto_doc",
@@ -2277,7 +2273,7 @@ SET class_rule =
             {
               "name": "ownership",
               "title": "Тип собственности",
-              "readOnly": true,
+              "readOnly": false,
               "valueType": "CHOICE",
               "enumerations": [
                 {
@@ -2662,7 +2658,6 @@ SET class_rule =
               ]
             }
           ],
-          "readOnly": false,
           "styleName": "trading_point_simf_2022",
           "tableName": "nto_all_point",
           "properties": [
@@ -2947,7 +2942,7 @@ SET class_rule =
             {
               "name": "ownership",
               "title": "Тип собственности",
-              "readOnly": true,
+              "readOnly": false,
               "valueType": "CHOICE",
               "enumerations": [
                 {
@@ -3047,7 +3042,6 @@ SET class_rule =
           ],
           "name": "nto_zone",
           "title": "Зоны проведения мероприятий",
-          "readOnly": false,
           "styleName": "fair_zone",
           "tableName": "nto_zone",
           "originName": "nto_zone",
@@ -3198,7 +3192,6 @@ SET class_rule =
           ],
           "name": "zone_requirement_nto",
           "title": "Зоны требований к НТО",
-          "readOnly": false,
           "styleName": "zone_requirement_nto",
           "tableName": "zone_requirement_nto",
           "properties": [

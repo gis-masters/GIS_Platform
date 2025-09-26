@@ -1114,11 +1114,12 @@ SET class_rule =
             },
             {
               "name": "area_fact_autocalc",
-              "title": "Площадь фактическая, м. кв.",
-              "readOnly": true,
+              "title": "Площадь вычисляемая, м. кв.",
               "valueType": "DOUBLE",
+              "readOnly": true,
               "totalDigits": 38,
-              "fractionDigits": 2
+              "fractionDigits": 2,
+              "calculatedValueWellKnownFormula": "st_area"
             },
             {
               "name": "area_bti",
@@ -1367,7 +1368,6 @@ SET class_rule =
           ],
           "name": "oks_general",
           "title": "Объекты капитального строительства",
-          "readOnly": true,
           "tableName": "oks_general",
           "originName": "oks_general",
           "properties": [

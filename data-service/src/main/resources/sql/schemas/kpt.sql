@@ -296,7 +296,6 @@ SET class_rule =
           ],
           "name": "zu_pro",
           "title": "Земельные участки",
-          "readOnly": true,
           "styleName": "zu_pro",
           "tableName": "zu_pro",
           "properties": [
@@ -524,7 +523,6 @@ SET class_rule =
           ],
           "name": "oks_pro",
           "title": "Объекты капитального строительства",
-          "readOnly": true,
           "styleName": "oks_pro",
           "tableName": "oks_pro",
           "properties": [
@@ -704,7 +702,6 @@ SET class_rule =
           ],
           "name": "oks_polyline_pro",
           "title": "Объекты капитального строительства",
-          "readOnly": true,
           "styleName": "oks_polyline_pro",
           "tableName": "oks_polyline_pro",
           "properties": [
@@ -902,7 +899,6 @@ SET class_rule =
           ],
           "name": "borderwaterobj",
           "title": "Береговые линии (границы водных объектов)",
-          "readOnly": true,
           "styleName": "borderwaterobj",
           "tableName": "borderwaterobj",
           "originName": "borderwaterobj",
@@ -1035,7 +1031,6 @@ SET class_rule =
           ],
           "name": "kvartal_kpt",
           "title": "Кадастровые кварталы",
-          "readOnly": true,
           "styleName": "kvartal_kpt",
           "tableName": "kvartal_kpt",
           "originName": "kvartal_kpt",
@@ -1145,7 +1140,6 @@ SET class_rule =
           ],
           "name": "zouit_pro",
           "title": "Зоны с особыми условиями использования территорий",
-          "readOnly": true,
           "styleName": "zouit_pro",
           "tableName": "zouit_pro",
           "originName": "zouit_pro",
@@ -1262,7 +1256,6 @@ SET class_rule =
           ],
           "name": "oks_constructions_points",
           "title": "Сооружения",
-          "readOnly": true,
           "styleName": "oks_constructions_points",
           "tableName": "oks_constructions_points",
           "originName": "oks_constructions_points",
@@ -1598,7 +1591,6 @@ SET class_rule =
           ],
           "name": "municipality_boundaries_egrn",
           "title": "Границы населенных пунктов",
-          "readOnly": true,
           "styleName": "municipality_boundaries_egrn",
           "tableName": "municipality_boundaries_egrn",
           "properties": [
