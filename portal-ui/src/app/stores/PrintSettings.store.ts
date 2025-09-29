@@ -89,7 +89,7 @@ export const defaultPrintSettings: PrintSettings = {
   },
   windRose: true,
   border: true,
-  date: true,
+  date: false,
   legendSize: 1,
   legend: {
     enabled: true,

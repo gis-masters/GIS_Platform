@@ -17,7 +17,7 @@ import { getFeatureSize } from '../../helpers/getFeatureSize';
 import { PrintTemplate } from '../PrintTemplate';
 
 // Максимальное количество координат для отображения
-const MAX_COORDINATES = 30;
+const MAX_COORDINATES = 20;
 
 export const featureExtract: PrintTemplate<WfsFeature> = new PrintTemplate({
   name: 'featureExtract',
@@ -80,18 +80,23 @@ export const featureExtract: PrintTemplate<WfsFeature> = new PrintTemplate({
     let coordinatesFragment = '';
     let coordinatesRows = '';
     let hasManyCoordinates = false;
+    let polygonSeparators: number[] = [];
+    let polygonStartIndices: number[] = [0];
+    // номера первых точек каждого полигона
+    const polygonFirstPointNumbers: Map<number, number> = new Map();
+    const allCoordinates: Coordinate[] = [];
+
+    const isPolygonType =
+      entity.geometry?.type === GeometryType.POLYGON || entity.geometry?.type === GeometryType.MULTI_POLYGON;
 
     if (entity.geometry?.coordinates) {
-      const coordinates: Coordinate[] = [];
-      let polygonSeparators: number[] = [];
-
       // Извлечение координат в зависимости от типа геометрии
       if (entity.geometry.type === GeometryType.POINT) {
-        coordinates.push(entity.geometry.coordinates);
+        allCoordinates.push(entity.geometry.coordinates);
       }
 
       if (entity.geometry.type === GeometryType.MULTI_POINT || entity.geometry.type === GeometryType.LINE_STRING) {
-        coordinates.push(...entity.geometry.coordinates);
+        allCoordinates.push(...entity.geometry.coordinates);
       }
 
       if (entity.geometry.type === GeometryType.POLYGON || entity.geometry.type === GeometryType.MULTI_LINE_STRING) {
@@ -100,11 +105,13 @@ export const featureExtract: PrintTemplate<WfsFeature> = new PrintTemplate({
         for (let ringIndex = 0; ringIndex < entity.geometry.coordinates.length; ringIndex++) {
           const ring = entity.geometry.coordinates[ringIndex];
 
-          coordinates.push(...ring);
+          allCoordinates.push(...ring);
           totalPoints += ring.length;
 
           if (ringIndex < entity.geometry.coordinates.length - 1) {
             polygonSeparators.push(totalPoints);
+            // начало следующего полигона
+            polygonStartIndices.push(totalPoints);
           }
         }
       }
@@ -112,6 +119,7 @@ export const featureExtract: PrintTemplate<WfsFeature> = new PrintTemplate({
       if (entity.geometry.type === GeometryType.MULTI_POLYGON) {
         let totalPoints = 0;
         polygonSeparators = [];
+        polygonStartIndices = [0];
 
         for (let polygonIndex = 0; polygonIndex < entity.geometry.coordinates.length; polygonIndex++) {
           const polygon = entity.geometry.coordinates[polygonIndex];
@@ -119,78 +127,117 @@ export const featureExtract: PrintTemplate<WfsFeature> = new PrintTemplate({
           for (let ringIndex = 0; ringIndex < polygon.length; ringIndex++) {
             const ring = polygon[ringIndex];
 
-            coordinates.push(...ring);
+            allCoordinates.push(...ring);
             totalPoints += ring.length;
 
             if (!(polygonIndex === entity.geometry.coordinates.length - 1 && ringIndex === polygon.length - 1)) {
               polygonSeparators.push(totalPoints);
+              polygonStartIndices.push(totalPoints); // Запоминаем начало следующего полигона
             }
           }
         }
       }
 
-      if (coordinates.length > MAX_COORDINATES) {
-        hasManyCoordinates = true;
+      // проставляем последний индекс как конечный
+      polygonStartIndices.push(allCoordinates.length);
 
-        // Первые MAX_COORDINATES координат на первой странице
-        const firstPageCoordinates = coordinates.slice(0, MAX_COORDINATES);
-        const firstPageRows: string[] = [];
+      // номера первых точек каждого полигона
+      let currentNumber = 1;
+      for (let i = 0; i < polygonStartIndices.length - 1; i++) {
+        const startIndex = polygonStartIndices[i];
+        polygonFirstPointNumbers.set(startIndex, currentNumber);
+        // -1 потому что последняя точка будет использовать номер первой (только для полигонов)
+        const pointsInPolygon = polygonStartIndices[i + 1] - polygonStartIndices[i];
+        currentNumber += isPolygonType ? pointsInPolygon - 1 : pointsInPolygon;
+      }
 
-        for (const [i, [x, y]] of firstPageCoordinates.entries()) {
-          const globalIndex = i;
+      hasManyCoordinates = allCoordinates.length > MAX_COORDINATES;
 
-          // Проверяем, нужно ли вставить разделитель перед этой точкой
-          if (polygonSeparators.includes(globalIndex)) {
-            firstPageRows.push(`
-              <tr>
-                <td colspan="3" style="text-align: center; padding: 5px; color: grey;">
-                  --- --- ---
-                </td>
-              </tr>
-            `);
+      // получение номера точки
+      const getPointNumber = (index: number): number => {
+        let polygonStart = 0;
+        for (let i = 0; i < polygonStartIndices.length - 1; i++) {
+          if (index >= polygonStartIndices[i] && index < polygonStartIndices[i + 1]) {
+            polygonStart = polygonStartIndices[i];
+            break;
           }
-
-          firstPageRows.push(`
-            <tr>
-              <td style="color: grey; text-align: center">${globalIndex + 1}</td>
-              <td style="padding: 2px; text-align: center">${y}</td>
-              <td style="padding: 2px; text-align: center">${x}</td>
-            </tr>
-          `);
         }
 
-        coordinatesFragment = await this.renderFragment('coordinates', { coordinates: firstPageRows.join('') });
+        // если это последняя точка полигона И тип геометрии - полигон, возвращаем номер первой точки этого полигона
+        if (isPolygonType && index === polygonStartIndices[polygonStartIndices.indexOf(polygonStart) + 1] - 1) {
+          return polygonFirstPointNumbers.get(polygonStart) || 1;
+        }
 
-        const secondPageCoordinates = coordinates.slice(MAX_COORDINATES);
-        const totalCoordinates = secondPageCoordinates.length;
+        // иначе вычисляем обычный номер
+        const firstPointNumber = polygonFirstPointNumbers.get(polygonStart) || 1;
 
+        return firstPointNumber + (index - polygonStart);
+      };
+
+      const getFirstPointOfPolygon = (index: number): Coordinate => {
+        for (let i = 0; i < polygonStartIndices.length - 1; i++) {
+          if (index >= polygonStartIndices[i] && index < polygonStartIndices[i + 1]) {
+            return allCoordinates[polygonStartIndices[i]];
+          }
+        }
+
+        return allCoordinates[index];
+      };
+
+      if (hasManyCoordinates) {
+        // Формирование таблицы координат для шаблона mainWithAllCoord
         const colsCount = 3;
-        const rowsPerCol = Math.ceil(totalCoordinates / colsCount);
+        const rowsPerCol = Math.ceil(allCoordinates.length / colsCount);
 
-        // Сборка «элементов» по колонкам: либо { type: 'sep' }, либо { type: 'coord', abs, x, y }
-        type ColItem = { type: 'sep' } | { type: 'coord'; abs: number; x: number; y: number };
+        // Сборка элементов по колонкам
+        type ColItem = { type: 'sep' } | { type: 'coord'; abs: number; x: number; y: number; pointNumber: number };
 
         const colItems: ColItem[][] = Array.from({ length: colsCount }, () => []);
 
         for (let col = 0; col < colsCount; col++) {
           for (let r = 0; r < rowsPerCol; r++) {
             const idx = r + col * rowsPerCol;
-            if (idx >= totalCoordinates) {
+            if (idx >= allCoordinates.length) {
               break;
             }
 
-            const absoluteIndex = MAX_COORDINATES + idx;
+            const absoluteIndex = idx;
             // если перед этой координатой должен быть разделитель — кладём 'sep' перед ней
             if (polygonSeparators.includes(absoluteIndex)) {
               colItems[col].push({ type: 'sep' });
             }
 
-            const [x, y] = secondPageCoordinates[idx];
-            colItems[col].push({ type: 'coord', abs: absoluteIndex, x, y });
+            let displayX;
+            let displayY;
+
+            const pointNumber = getPointNumber(absoluteIndex);
+
+            // замена последней точки в полигоне - ТОЛЬКО ДЛЯ ТИПОВ POLYGON И MULTI_POLYGON
+            const polygonStart = polygonStartIndices.find(
+              (start, i) => absoluteIndex >= start && absoluteIndex < polygonStartIndices[i + 1]
+            );
+
+            if (
+              isPolygonType &&
+              polygonStart !== undefined &&
+              absoluteIndex === polygonStartIndices[polygonStartIndices.indexOf(polygonStart) + 1] - 1
+            ) {
+              [displayX, displayY] = getFirstPointOfPolygon(absoluteIndex);
+            } else {
+              [displayX, displayY] = allCoordinates[absoluteIndex];
+            }
+
+            colItems[col].push({
+              type: 'coord',
+              abs: absoluteIndex,
+              x: displayX,
+              y: displayY,
+              pointNumber
+            });
           }
         }
 
-        // максимальная высота среди колонок (с учётом вставленных разделителей)
+        // максимальная высота среди колонок
         const maxLen = Math.max(...colItems.map(arr => arr.length));
 
         const rows: string[] = [];
@@ -207,14 +254,13 @@ export const featureExtract: PrintTemplate<WfsFeature> = new PrintTemplate({
             }
 
             if (item.type === 'sep') {
-              // Разделитель занимает только ширину колонки (3 ячейки этой колонки)
+              // Разделитель занимает только ширину колонки
               rowCells +=
                 '<td colspan="3" style="text-align:center; padding:2px; color:grey; font-size:5px">--- --- ---</td>';
               continue;
             }
 
-            const n = item.abs + 1;
-            rowCells += `<td style="color:grey; text-align:center">${n}</td>
+            rowCells += `<td style="color:grey; text-align:center">${item.pointNumber}</td>
                   <td style="padding:2px; text-align:center">${item.y}</td>
                   <td style="padding:2px; text-align:center">${item.x}</td>`;
           }
@@ -224,12 +270,27 @@ export const featureExtract: PrintTemplate<WfsFeature> = new PrintTemplate({
 
         coordinatesRows = rows.join('');
       } else {
-        const coordinatesRows: string[] = [];
+        const coordinatesRowsArray: string[] = [];
 
-        for (const [i, [x, y]] of coordinates.entries()) {
+        for (const [i, [x, y]] of allCoordinates.entries()) {
+          let displayX = x;
+          let displayY = y;
+          const pointNumber = getPointNumber(i);
+
+          // Для последней точки в полигоне используем координаты первой точки этого полигона
+          // ТОЛЬКО ДЛЯ POLYGON И MULTI_POLYGON
+          const polygonStart = polygonStartIndices.find((start, idx) => i >= start && i < polygonStartIndices[idx + 1]);
+          if (
+            isPolygonType &&
+            polygonStart !== undefined &&
+            i === polygonStartIndices[polygonStartIndices.indexOf(polygonStart) + 1] - 1
+          ) {
+            [displayX, displayY] = getFirstPointOfPolygon(i);
+          }
+
           // Проверяем, нужно ли вставить разделитель перед этой точкой
           if (polygonSeparators.includes(i)) {
-            coordinatesRows.push(`
+            coordinatesRowsArray.push(`
           <tr>
             <td colspan="3" style="text-align: center; padding: 5px; color: grey;">
               --- --- ---
@@ -238,16 +299,16 @@ export const featureExtract: PrintTemplate<WfsFeature> = new PrintTemplate({
         `);
           }
 
-          coordinatesRows.push(`
+          coordinatesRowsArray.push(`
         <tr>
-          <td style="color: grey; text-align: center">${i + 1}</td>
-          <td style="padding: 2px; text-align: center">${y}</td>
-          <td style="padding: 2px; text-align: center">${x}</td>
+          <td style="color: grey; text-align: center">${pointNumber}</td>
+          <td style="padding: 2px; text-align: center">${displayY}</td>
+          <td style="padding: 2px; text-align: center">${displayX}</td>
         </tr>
       `);
         }
 
-        coordinatesFragment = await this.renderFragment('coordinates', { coordinates: coordinatesRows.join('') });
+        coordinatesFragment = await this.renderFragment('coordinates', { coordinates: coordinatesRowsArray.join('') });
       }
     }
 
@@ -281,22 +342,43 @@ export const featureExtract: PrintTemplate<WfsFeature> = new PrintTemplate({
       units: projection ? getProjectionUnit(projection.srtext) : undefined
     });
 
-    return await this.renderFragment('main', {
+    const templateName = hasManyCoordinates ? 'mainWithAllCoord' : 'main';
+
+    const templateData = {
       title: mapDialogResult.title,
       image: mapDialogResult.image,
       currentDate: moment().format('LL'),
       crs: projection ? projection.title : layer.nativeCRS,
-      coordinates: coordinatesFragment,
       properties: propertiesRows.join(''),
       area: area
         ? await this.renderFragment('area', {
-            area: String(area.value),
+            areaSize: String(area.value),
             units: String(area.units),
             areaType: area.sizeType === 'area' ? 'Площадь' : 'Протяженность'
           })
-        : '',
-      hasManyCoordinates: hasManyCoordinates ? 'true' : '',
-      coordinatesRows: coordinatesRows
+        : ''
+    };
+
+    if (hasManyCoordinates) {
+      if (!area?.value) {
+        return await this.renderFragment(templateName, {
+          ...templateData,
+          coordinates: coordinatesRows
+        });
+      }
+
+      return await this.renderFragment(templateName, {
+        ...templateData,
+        coordinates: coordinatesRows,
+        areaSize: String(area.value),
+        units: String(area.units),
+        areaType: area.sizeType === 'area' ? 'Площадь' : 'Протяженность'
+      });
+    }
+
+    return await this.renderFragment(templateName, {
+      ...templateData,
+      coordinates: coordinatesFragment
     });
   },
 

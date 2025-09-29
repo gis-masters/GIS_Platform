@@ -55,6 +55,7 @@ export class PrintMapDialogForm extends Component<PrintMapDialogFormProps> {
       legendSize,
       showSystemLayers
     } = printSettings;
+
     const mainFormValues: MainFormValues = {
       pageFormatId,
       scale,
@@ -62,6 +63,7 @@ export class PrintMapDialogForm extends Component<PrintMapDialogFormProps> {
       legend,
       showSystemLayers
     };
+
     const extraFormValues: ExtraFormValues = {
       resolution,
       legendSize,

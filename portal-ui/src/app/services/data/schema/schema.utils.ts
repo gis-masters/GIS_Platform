@@ -582,7 +582,19 @@ const valueToReadableTransformers: Partial<Record<PropertyType, (val: unknown, p
   },
 
   [PropertyType.CHOICE](value: unknown, property: PropertySchema) {
-    return (property as PropertySchemaChoice).options.find(option => option.value === value)?.title || String(value);
+    const choiceProperty = property as PropertySchemaChoice;
+
+    // точное совпадение
+    const exactMatch = choiceProperty.options.find(option => option.value === value);
+    if (exactMatch) {
+      return exactMatch.title;
+    }
+
+    // если точного совпадения нет, ищем с преобразованием типов
+    const stringValue = String(value);
+    const typeAgnosticMatch = choiceProperty.options.find(option => option.value === stringValue);
+
+    return typeAgnosticMatch?.title || String(value);
   },
 
   [PropertyType.DATETIME](value: unknown, property: PropertySchema) {
