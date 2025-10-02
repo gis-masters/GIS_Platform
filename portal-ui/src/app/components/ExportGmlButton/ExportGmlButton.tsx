@@ -20,7 +20,7 @@ export class ExportGmlButton extends Component {
   render() {
     return (
       <>
-        <Tooltip title='Выгрузка GML'>
+        <Tooltip title='Экспорт в ГМЛ по Приказу 10'>
           <span>
             <IconButton
               onClick={this.openDialog}
