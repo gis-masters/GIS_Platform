@@ -56,6 +56,20 @@ When(
 );
 
 When(
+  'в библиотеке документов у созданного документа я нажимаю на кнопку `Копировать`',
+  async function (this: ScenarioScope) {
+    const explorerBlock = new ExplorerBlock();
+
+    if (this.latestLibraryRecords[0].title) {
+      await explorerBlock.selectExplorerItem(this.latestLibraryRecords[0].title);
+      await libraryDocumentActionsBlock.clickDocumentCopyBtn();
+    } else {
+      throw new Error('Что то пошло не так при копировании документа');
+    }
+  }
+);
+
+When(
   'в библиотеке документов у созданной папки я нажимаю на кнопку `Переместить`',
   async function (this: ScenarioScope) {
     const explorerBlock = new ExplorerBlock();

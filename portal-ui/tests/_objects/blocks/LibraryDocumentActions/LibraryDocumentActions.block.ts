@@ -7,7 +7,8 @@ class LibraryDocumentActionsBlock extends Block {
     edit: '.LibraryDocumentActions-Edit',
     createChild: '.LibraryDocumentActions-CreateChild',
     delete: '.LibraryDocumentActions-Delete',
-    move: '.LibraryDocumentActions-Move'
+    move: '.LibraryDocumentActions-Move',
+    copy: '.LibraryDocumentActions-Copy'
   };
 
   async clickEditButton(): Promise<void> {
@@ -19,6 +20,12 @@ class LibraryDocumentActionsBlock extends Block {
 
   async clickDocumentMoveBtn(): Promise<void> {
     const $moveBtn = await this.$('move');
+    await $moveBtn.waitForDisplayed();
+    await $moveBtn.click();
+  }
+
+  async clickDocumentCopyBtn(): Promise<void> {
+    const $moveBtn = await this.$('copy');
     await $moveBtn.waitForDisplayed();
     await $moveBtn.click();
   }

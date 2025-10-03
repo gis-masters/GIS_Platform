@@ -16,6 +16,7 @@ import { organizationSettings } from '../../stores/OrganizationSettings.store';
 import { Actions } from '../Actions/Actions.composed';
 import { ActionsItemVariant } from '../Actions/Item/Actions-Item.base';
 import { LibraryDocumentActionsClose } from './Close/LibraryDocumentActions-Close';
+import { LibraryDocumentActionsCopy } from './Copy/LibraryDocumentActions-Copy';
 import { LibraryDocumentActionsCreateChild } from './CreateChild/LibraryDocumentActions-CreateChild';
 import { LibraryDocumentActionsDelete } from './Delete/LibraryDocumentActions-Delete';
 import { LibraryDocumentActionsDownload } from './Download/LibraryDocumentActions-Download';
@@ -101,6 +102,7 @@ export default class LibraryDocumentActions extends Component<LibraryDocumentAct
             disabled={!isOwner}
           />
         )}
+        {!isFolder && <LibraryDocumentActionsCopy document={this.document || document} schema={this.schema} as={as} />}
         {!isNew && <LibraryDocumentActionsShare document={this.document || document} as={as} />}
         {!isNew && this.canBeRegistered() && (
           <LibraryDocumentActionsRegister document={this.document || document} as={as} />

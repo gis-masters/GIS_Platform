@@ -28,6 +28,7 @@ export enum ActionTypes {
   EDIT = 'Редактирование',
   DELETE = 'Удаление',
   MOVE = 'Перемещение',
+  COPY = 'Копирование',
   IMPORT_KPT = 'Импортирование'
 }
 
