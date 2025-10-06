@@ -7,6 +7,7 @@ import ru.mycrg.data_service.dao.ddl.schemas.DdlSchemas;
 import ru.mycrg.data_service.dto.DatasetModel;
 import ru.mycrg.data_service.entity.Permission;
 import ru.mycrg.data_service.entity.SchemasAndTables;
+import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.repository.SchemasAndTablesRepository;
 import ru.mycrg.data_service.service.PermissionsService;
@@ -16,6 +17,8 @@ import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service.service.resources.protectors.IResourceProtector;
 import ru.mycrg.http_client.ResponseModel;
 import ru.mycrg.mediator.IRequestHandler;
+
+import java.sql.SQLException;
 
 import static ru.mycrg.common_utils.CrgGlobalProperties.generateDatasetName;
 import static ru.mycrg.data_service.config.CrgCommonConfig.ROOT_FOLDER_PATH;
@@ -76,7 +79,11 @@ public class CreateDatasetRequestHandler implements IRequestHandler<CreateDatase
         ResponseModel<Object> responseModel = dataStoreClient.create(datasetName);
         if (!responseModel.isSuccessful()) {
             schemasAndTablesRepository.delete(newEntity);
-            ddlSchemas.drop(dQualifier);
+            try {
+                ddlSchemas.drop(dQualifier);
+            } catch (SQLException e) {
+                throw new BadRequestException("Не получилось удалить набор данных. Причина: " + e.getMessage());
+            }
             permissionsService.delete(ownerPermission);
 
             throw new DataServiceException("Не удалось создать хранилище на геосервере", responseModel);

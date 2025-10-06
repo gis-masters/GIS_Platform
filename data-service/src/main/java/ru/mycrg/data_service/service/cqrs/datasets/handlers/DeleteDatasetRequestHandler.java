@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import ru.mycrg.data_service.dao.ddl.schemas.DdlSchemas;
+import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.exceptions.ForbiddenException;
 import ru.mycrg.data_service.repository.SchemasAndTablesRepository;
 import ru.mycrg.data_service.service.PermissionsService;
@@ -16,6 +17,8 @@ import ru.mycrg.data_service.service.resources.protectors.MasterResourceProtecto
 import ru.mycrg.http_client.ResponseModel;
 import ru.mycrg.mediator.IRequestHandler;
 import ru.mycrg.mediator.Voidy;
+
+import java.sql.SQLException;
 
 @Component
 public class DeleteDatasetRequestHandler implements IRequestHandler<DeleteDatasetRequest, Voidy> {
@@ -50,7 +53,11 @@ public class DeleteDatasetRequestHandler implements IRequestHandler<DeleteDatase
         }
 
         // Delete from DB
-        ddlSchemas.drop(datasetQualifier);
+        try {
+            ddlSchemas.drop(datasetQualifier);
+        } catch (SQLException e) {
+            throw new BadRequestException("Не получилось удалить набор данных. Причина: " + e.getMessage());
+        }
 
         // Delete dataset from information table
         schemasAndTablesRepository.deleteByIdentifier(datasetQualifier.toString());

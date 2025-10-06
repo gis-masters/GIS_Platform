@@ -1,4 +1,4 @@
-package ru.mycrg.data_service.dto;
+package ru.mycrg.data_service_contract.dto;
 
 import javax.validation.constraints.NotEmpty;
 

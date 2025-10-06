@@ -22,6 +22,7 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -108,22 +109,59 @@ public class GDALService implements IExporter {
         return errorReport;
     }
 
-    public ErrorReport importFromGeoPackage(String filePath, String dbName, String tableName) {
+    /**
+     * Импорт GeoPackage в указанную схему с предварительным созданием схемы
+     *
+     * @param filePath   Путь к файлу GeoPackage
+     * @param dbName     Название базы данных
+     * @param schemaName Название схемы
+     *
+     * @return ErrorReport с результатами импорта
+     */
+    public ErrorReport importFromGeoPackageToSchema(String filePath, String dbName, String schemaName) {
+        JdbcTemplate jdbcTemplate = datasourceFactory.getJdbcTemplate(dbName);
+        try {
+            baseDaoService.createSchemaIfNotExists(jdbcTemplate, schemaName);
+        } catch (SQLException e) {
+            throw new ClientException(
+                    "Схема со случайным именем уже существует. Останавливаем импорт!!!");
+        }
+
+        String rootPath = crgProperties.getExportStoragePath();
+        log.debug("Root path for GPKG import to schema is: {}", rootPath);
+
         ErrorReport errorReport;
         ProcessBuilder processBuilder = new ProcessBuilder();
 
-        JdbcTemplate jdbcTemplate = datasourceFactory.getJdbcTemplate(dbName);
+        errorReport = importGeoPackageToSchemaUseSrcFromPackage(processBuilder, dbName, schemaName, filePath);
 
-        String rootPath = crgProperties.getExportStoragePath();
-        log.debug("Root path for GPKG import is: {}", rootPath);
-
-        errorReport = importGeoPackageWithoutSourceSrs(processBuilder, dbName, tableName, filePath);
-
-        if (!baseDaoService.isTableExist(jdbcTemplate, tableName)) {
-            throw new ClientException("Не удалось выполнить импорт GeoPackage файла. Подробный лог на geo-wrapper");
+        // Если схему пустая после импорта -> явно что-то не так
+        if (!isTableExistInSchema(jdbcTemplate, schemaName)) {
+            throw new ClientException(
+                    "Не удалось выполнить импорт GeoPackage файла в схему " + schemaName + ". Подробный лог на geo-wrapper");
         }
 
         return errorReport;
+    }
+
+    /**
+     * Проверить существование таблицы в указанной схеме
+     *
+     * @param jdbcTemplate Коннекшн к БД
+     * @param schemaName   Название схемы
+     *
+     * @return true если таблица существует в схеме
+     */
+    private boolean isTableExistInSchema(JdbcTemplate jdbcTemplate, String schemaName) {
+        String isTableExistQuery = String.format("SELECT EXISTS(" +
+                                                         " SELECT 1" +
+                                                         " FROM information_schema.tables" +
+                                                         " WHERE table_schema = '%s');",
+                                                 schemaName);
+
+        log.debug("SQL isTableExistInSchema query: {}", isTableExistQuery);
+
+        return Boolean.TRUE.equals(jdbcTemplate.queryForObject(isTableExistQuery, Boolean.class));
     }
 
     private String unzipFile(ProcessBuilder processBuilder, String rootPath, String randomDirName, String filePath) {
@@ -236,15 +274,16 @@ public class GDALService implements IExporter {
         }
     }
 
-    private ErrorReport importGeoPackageWithoutSourceSrs(ProcessBuilder processBuilder,
-                                                         String dbName,
-                                                         String tableName,
-                                                         String gpkgPath) {
-        String importGpkgToTable = getOgr2OgrImportFromGPKGToTableWithoutSourceSrs(dbName, tableName, gpkgPath);
+    private ErrorReport importGeoPackageToSchemaUseSrcFromPackage(ProcessBuilder processBuilder,
+                                                                  String dbName,
+                                                                  String schemaName,
+                                                                  String gpkgPath) {
+        String importGpkgToSchema = getOgr2OgrImportFromGPKGToSchema(dbName, schemaName, gpkgPath);
 
-        log.debug("Execute import geometry from GPKG without source SRS console command: {}", importGpkgToTable);
+        log.debug("Execute import geometry from GPKG to schema without source SRS console command: {}",
+                  importGpkgToSchema);
         try {
-            processBuilder.command("sh", "-c", importGpkgToTable);
+            processBuilder.command("sh", "-c", importGpkgToSchema);
             Process importProcess = processBuilder.start();
 
             boolean isSuccess = importProcess.waitFor(TIMEOUT, SECONDS);
@@ -252,7 +291,7 @@ public class GDALService implements IExporter {
                 logStream(importProcess.getErrorStream());
                 importProcess.destroy();
 
-                throw new ImportException("Import of geometry GeoPackage failed by timeout");
+                throw new ImportException("Import of geometry GeoPackage to schema failed by timeout");
             }
             ErrorReport errorReport = getErrorsFromInputStream(importProcess.getErrorStream());
             if (errorReport.getUtf8ErrorCount() > 0) {
@@ -436,14 +475,28 @@ public class GDALService implements IExporter {
                              filePath);
     }
 
-    private String getOgr2OgrImportFromGPKGToTableWithoutSourceSrs(String dbName, String tableName,
-                                                                   String filePath) {
-        return String.format("ogr2ogr -skipfailures -f \"PostgreSQL\" PG:\"host=postgis user=%s password=%s " +
-                                     "port=5432 dbname=%s\" -nln %s %s;",
+    /**
+     * Создает команду ogr2ogr для импорта GeoPackage в указанную схему
+     *
+     * @param dbName     Название базы данных
+     * @param schemaName Название схемы
+     * @param filePath   Путь к файлу GeoPackage
+     *                   <p>
+     *                   -Можно использовать флаг -progress, но он работает в специфических условиях.
+     *
+     * @return Команда ogr2ogr
+     */
+    private String getOgr2OgrImportFromGPKGToSchema(String dbName,
+                                                    String schemaName,
+                                                    String filePath) {
+        return String.format("ogr2ogr -skipfailures -f \"PostgreSQL\" " +
+                                     "PG:\"host=postgis user=%s password=%s port=5432 dbname=%s\" " +
+                                     "-lco SCHEMA=%s -lco GEOMETRY_NAME=shape -nlt PROMOTE_TO_MULTI " +
+                                     " --config PG_USE_COPY YES %s;",
                              DATASOURCE_USERNAME,
                              DATASOURCE_PASSWORD,
                              dbName,
-                             tableName,
+                             schemaName,
                              filePath);
     }
 

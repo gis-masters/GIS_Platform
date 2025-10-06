@@ -12,12 +12,15 @@ import org.springframework.stereotype.Service;
 import ru.mycrg.data_service.dao.GeometryDaoDetached;
 import ru.mycrg.data_service.dao.config.DatasourceFactory;
 import ru.mycrg.data_service.dao.core.CoreTemplateDao;
+import ru.mycrg.data_service.dao.ddl.schemas.DdlSchemasDetached;
+import ru.mycrg.data_service.dao.ddl.tables.DdlTablesBaseDetached;
 import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
 import ru.mycrg.data_service.dto.TableCreateDto;
 import ru.mycrg.data_service.entity.SchemasAndTables;
 import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.repository.SchemasAndTablesRepositoryDetached;
 import ru.mycrg.data_service.service.cqrs.tables.handlers.CreateTableRequestHandler;
+import ru.mycrg.data_service.service.gpkg.GpkgException;
 import ru.mycrg.data_service.service.gpkg.importer.GpkgReader;
 import ru.mycrg.data_service.service.processes.ProcessService;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
@@ -35,14 +38,13 @@ import ru.mycrg.messagebus_contract.events.IMessageBusEvent;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.time.LocalDateTime.now;
 import static ru.mycrg.data_service.config.CrgCommonConfig.DEFAULT_MEDIA_TYPE;
-import static ru.mycrg.data_service.dao.config.DatasourceFactory.INITIAL_SCHEMA_NAME;
 import static ru.mycrg.data_service.dao.utils.SqlBuilder.buildCopyGpkgFileQuery;
-import static ru.mycrg.data_service.dao.utils.SqlBuilder.buildDeleteTableQuery;
 import static ru.mycrg.data_service.dto.ResourceType.TABLE;
 import static ru.mycrg.data_service.util.JsonConverter.toJsonNode;
 import static ru.mycrg.data_service.util.SystemLibraryAttributes.*;
@@ -57,8 +59,10 @@ public class ImportGpkgSucceededEventHandler implements IEventHandler {
     private final CoreTemplateDao coreTemplateDao;
     private final GpkgReader gpkgReader;
     private final CreateTableRequestHandler createTableRequestHandler;
-    private final SchemasAndTablesRepositoryDetached schemasAndTablesRepositoryDetached;
-    private final GeometryDaoDetached geometryDaoDetached;
+    private final SchemasAndTablesRepositoryDetached schemasAndTablesRepository;
+    private final GeometryDaoDetached geometryDao;
+    private final DdlTablesBaseDetached ddlTablesBase;
+    private final DdlSchemasDetached ddlSchemas;
 
     private final URL gisServiceUrl;
     private final HttpClient httpClient;
@@ -68,17 +72,20 @@ public class ImportGpkgSucceededEventHandler implements IEventHandler {
                                            CoreTemplateDao coreTemplateDao,
                                            GpkgReader gpkgReader,
                                            CreateTableRequestHandler createTableRequestHandler,
-                                           SchemasAndTablesRepositoryDetached schemasAndTablesRepositoryDetached,
-                                           GeometryDaoDetached geometryDaoDetached1,
-
+                                           SchemasAndTablesRepositoryDetached schemasAndTablesRepository,
+                                           GeometryDaoDetached geometryDao,
+                                           DdlTablesBaseDetached ddlTablesBase,
+                                           DdlSchemasDetached ddlSchemas,
                                            Environment environment) throws MalformedURLException {
         this.processService = processService;
         this.datasourceFactory = datasourceFactory;
         this.coreTemplateDao = coreTemplateDao;
         this.gpkgReader = gpkgReader;
         this.createTableRequestHandler = createTableRequestHandler;
-        this.schemasAndTablesRepositoryDetached = schemasAndTablesRepositoryDetached;
-        this.geometryDaoDetached = geometryDaoDetached1;
+        this.schemasAndTablesRepository = schemasAndTablesRepository;
+        this.geometryDao = geometryDao;
+        this.ddlTablesBase = ddlTablesBase;
+        this.ddlSchemas = ddlSchemas;
 
         httpClient = new HttpClient(new BaseRequestHandler(new OkHttpClient()));
         gisServiceUrl = new URL(environment.getRequiredProperty("crg-options.gis-service-url"));
@@ -96,98 +103,95 @@ public class ImportGpkgSucceededEventHandler implements IEventHandler {
 
         log.debug("From GeoPackage event success! Start to import data!");
 
-        String dataset = requestEvent.getSourceDataset();
-        TableCreateDto tableCreateDto = gpkgReader.readTableInfoFromGpkgFile(requestEvent.getFilePath());
-
-        //Если gpkg выгружен из нашей таблицы по нашей SchemaDto,
-        //то SchemaDto этого класса будет одинаковой для временной и целевой таблицы
-        //потому что временная таблица создана путём экспорта слоя по схеме
-        SchemaDto targetSchema = gpkgReader.readSchemaFromGpkgFile(requestEvent.getFilePath());
-
-        tableCreateDto.setName(generateSafeTableName(targetSchema.getTableName(), tableCreateDto.getName()));
-
         JdbcTemplate jdbcTemplate = new JdbcTemplate(datasourceFactory.getDataSource(requestEvent.getDbName()));
-
-        createTableRequestHandler.createTableDetached(jdbcTemplate, targetSchema, dataset, tableCreateDto);
-        log.debug("Успешно создали таблицу '{}' для импорта GeoPackage.", tableCreateDto.getName());
-
-        //Записываем данные о созданной таблицы в SchemasAndTables
-        Optional<SchemasAndTables> datasetObject;
-
-        datasetObject = schemasAndTablesRepositoryDetached.findByIdentifier(jdbcTemplate, dataset);
-
-        if (datasetObject.isEmpty()) {
-            throw new BadRequestException("Набор данных " + dataset + " отсутствует в базе данных.");
-        }
-
-        String pathToParent = datasetObject.get().getPath() + "/" + datasetObject.get().getId();
-        SchemasAndTables table = new SchemasAndTables(tableCreateDto, pathToParent, TABLE, toJsonNode(targetSchema));
-
-        schemasAndTablesRepositoryDetached.save(jdbcTemplate, table);
-        log.debug("Успешно привязали созданную таблицу {} к набору данных: {}.",
-                  tableCreateDto.getName(), datasetObject.get().getTitle());
-
-        //Готовимся к переправке данных между временной таблицей и результирующей
-        ResourceQualifier targetTable = new ResourceQualifier(dataset,
-                                                              tableCreateDto.getName());
-
-        ResourceQualifier sourceTable = new ResourceQualifier(INITIAL_SCHEMA_NAME,
-                                                              requestEvent.getSourceTableName());
-
-        Set<String> columnsForExclude = getSystemColumnsForExclude(targetTable);
-
-        //В отличие от shp мы можем всегда собирать SimplePropertyDto из SchemaDto
-        //потому что временная таблица когда была создана по той же SchemaDto что и новая
-        List<SimplePropertyDto> sourcePropsWithoutSystemFields = targetSchema.getProperties()
-                                                                             .stream()
-                                                                             .filter(property -> !columnsForExclude.contains(
-                                                                                     property.getName()))
-                                                                             .collect(Collectors.toList());
-
-        Map<String, Object> systemAutogeneratedField = new HashMap<>();
-        systemAutogeneratedField.put(CREATED_AT.getName(), now());
-        systemAutogeneratedField.put(CREATED_BY.getName(), requestEvent.getLogin());
-
-        ImportGpkgReport importGpkgReport = new ImportGpkgReport();
-
+        String gdalCreatedSchema = requestEvent.getGdalCreatedSchema();
+        List<ResourceQualifier> sourceResources;
         try {
-            log.debug("Проверяем всю новую геометрию на валидность перед импортом.");
-
-            int countOfInvalidGeometry = geometryDaoDetached.getInvalidGeometryRowsCount(jdbcTemplate,
-                                                                                         sourceTable.getSchema(),
-                                                                                         sourceTable.getTable());
-            if (countOfInvalidGeometry > 0) {
-                importGpkgReport.setMessage("После импорта геометрии было обнаружено '" + countOfInvalidGeometry +
-                                                    "' записей с неправильной геометрией.");
-
-                geometryDaoDetached.makeValid(jdbcTemplate, sourceTable.getSchema(), sourceTable.getTable());
-
-                countOfInvalidGeometry = geometryDaoDetached.getInvalidGeometryRowsCount(jdbcTemplate,
-                                                                                         sourceTable.getSchema(),
-                                                                                         sourceTable.getTable());
-
-                if (countOfInvalidGeometry > 0) {
-                    importGpkgReport.setQuantityOfFailedRecords(countOfInvalidGeometry);
-                    log.debug("После приведения геометрии к валидному виду, осталось {} невалидных записей.",
-                              countOfInvalidGeometry);
-
-                    geometryDaoDetached.deleteAllRowsWithInvalidGeometry(jdbcTemplate, sourceTable);
-                    log.debug("Перед копированием было удалено {} невалидных записей.", countOfInvalidGeometry);
-                }
-            }
-        } catch (CrgDaoException e) {
+            sourceResources = ddlTablesBase.getAllTablesFromScheme(jdbcTemplate,
+                                                                   gdalCreatedSchema);
+        } catch (SQLException e) {
             throw new BadRequestException(e.getMessage());
         }
 
+        log.debug("После импорта geoPackage получили {} таблиц.", sourceResources.size());
+        ImportGpkgReport importGpkgReport = new ImportGpkgReport();
+
+        for (ResourceQualifier sourceResource: sourceResources) {
+            // 1.1 Читаем данные о схеме
+            SchemaDto actualSchema = getSchema(sourceResource, requestEvent, importGpkgReport);
+
+            // 1.2 Читаем данные о векторной таблице
+            TableCreateDto tableCreateDto = getTableInfo(sourceResource, requestEvent, importGpkgReport);
+            tableCreateDto.setName(generateSafeTableName(actualSchema.getTableName(), tableCreateDto.getName()));
+
+            // 2. Создаём таблицу
+            String dataset = requestEvent.getSourceDataset();
+            createTargetTable(jdbcTemplate, actualSchema, dataset, tableCreateDto);
+
+            // 3. Проверяем всю новую геометрию на валидность перед импортом
+            makeGpkgGeometryValid(sourceResource, jdbcTemplate, importGpkgReport, requestEvent);
+
+            // 4. Копируем данные из временной таблицы в целевую
+            copy(sourceResource,
+                 dataset,
+                 tableCreateDto,
+                 importGpkgReport,
+                 actualSchema,
+                 requestEvent,
+                 jdbcTemplate,
+                 event);
+
+            // 5. Добавляем слой в проект
+            createLayer(dataset, tableCreateDto, importGpkgReport, actualSchema, requestEvent);
+        }
+
+        // После переноса данных удаляем созданную gdal-ом схему со всеми таблицами.
         try {
-            //копируем данные из временной таблицы в целевую
+            ddlSchemas.drop(jdbcTemplate, gdalCreatedSchema);
+        } catch (SQLException e) {
+            log.debug("Схему созданную gdal-ом не удалось удалить по завершению переноса. Причина => {}",
+                      e.getMessage());
+        }
+
+        log.debug("Схема временных таблиц {} удалена.", gdalCreatedSchema);
+
+        // Завершаем процесс, прикладываем отчет
+        processService.complete(requestEvent.getDbName(),
+                                requestEvent.getProcessId(),
+                                JsonConverter.toJsonNode(importGpkgReport));
+    }
+
+    private void copy(ResourceQualifier sourceResource,
+                      String dataset,
+                      TableCreateDto tableCreateDto,
+                      ImportGpkgReport importGpkgReport,
+                      SchemaDto actualSchema,
+                      GpkgStartLoaderEvent requestEvent,
+                      JdbcTemplate jdbcTemplate,
+                      GpkgImportedSucceededEvent event) {
+        try {
+            ResourceQualifier targetTable = new ResourceQualifier(dataset, tableCreateDto.getName());
+
             importGpkgReport.setDatasetIdentifier(targetTable.getSchema());
             importGpkgReport.setTableIdentifier(targetTable.getTableQualifier());
 
-            String copyQuery = buildCopyGpkgFileQuery(sourceTable,
+            // В отличие от shp мы можем всегда собирать SimplePropertyDto из SchemaDto
+            // потому что временная таблица когда была создана по той же SchemaDto что и новая
+            Set<String> columnsForExclude = getSystemColumnsForExclude(targetTable);
+            List<SimplePropertyDto> sourcePropsWithoutSystemFields = actualSchema
+                    .getProperties()
+                    .stream()
+                    .filter(property -> !columnsForExclude.contains(property.getName()))
+                    .collect(Collectors.toList());
+
+            Map<String, Object> systemAutogeneratedField = new HashMap<>();
+            systemAutogeneratedField.put(CREATED_AT.getName(), now());
+            systemAutogeneratedField.put(CREATED_BY.getName(), requestEvent.getLogin());
+
+            String copyQuery = buildCopyGpkgFileQuery(sourceResource,
                                                       targetTable,
                                                       sourcePropsWithoutSystemFields,
-                                                      targetSchema.getProperties(),
+                                                      actualSchema.getProperties(),
                                                       systemAutogeneratedField);
 
             Long insertedQuantity = coreTemplateDao.queryForObject(jdbcTemplate, copyQuery, Long.class);
@@ -199,25 +203,6 @@ public class ImportGpkgSucceededEventHandler implements IEventHandler {
             ErrorReport errorReport = event.getErrorReport();
             importGpkgReport.setQuantityOfFailedRecords(errorReport.getFailedRecordCount());
             importGpkgReport.setShapeFileHasProjection(errorReport.isShpFileHasProjection());
-
-            Long projectId = requestEvent.getProjectId();
-            log.debug("Начинаем добавлять полученный слой в проект {}", projectId);
-
-            createLayer(requestEvent.getDbName(),
-                        requestEvent.getToken(),
-                        projectId,
-                        dataset,
-                        tableCreateDto.getName(),
-                        tableCreateDto.getTitle(),
-                        tableCreateDto.getCrs(),
-                        targetSchema.getName(),
-                        targetSchema.getStyleName());
-
-            log.debug("Слой успешно добавлен в проект {}", projectId);
-
-            processService.complete(requestEvent.getDbName(),
-                                    requestEvent.getProcessId(),
-                                    JsonConverter.toJsonNode(importGpkgReport));
         } catch (Exception e) {
             String msg = "Не удалось провести импорт GPKG несмотря на успешную распаковку. Причина: " + e.getMessage();
             log.error("Необработанное исключение привело к сбою импорта. Подробности: {}", msg);
@@ -230,10 +215,144 @@ public class ImportGpkgSucceededEventHandler implements IEventHandler {
                                  requestEvent.getProcessId(),
                                  JsonConverter.toJsonNode(importGpkgReport));
         }
+    }
 
-        coreTemplateDao.execute(jdbcTemplate, buildDeleteTableQuery(sourceTable));
+    private void createLayer(String dataset,
+                             TableCreateDto tableCreateDto,
+                             ImportGpkgReport importGpkgReport,
+                             SchemaDto actualSchema,
+                             GpkgStartLoaderEvent requestEvent) {
+        try {
+            Long projectId = requestEvent.getProjectId();
+            log.debug("Начинаем добавлять полученный слой в проект {}", projectId);
 
-        log.debug("Временная таблица {} удалена.", sourceTable.getQualifier());
+            createLayer(requestEvent.getDbName(),
+                        requestEvent.getToken(),
+                        projectId,
+                        dataset,
+                        tableCreateDto.getName(),
+                        tableCreateDto.getTitle(),
+                        tableCreateDto.getCrs(),
+                        actualSchema.getName(),
+                        actualSchema.getStyleName());
+
+            log.debug("Слой успешно добавлен в проект {}", projectId);
+        } catch (Exception e) {
+            String msg = "Не удалось добавить слой в проект. Причина: " + e.getMessage();
+            log.error(msg);
+
+            importGpkgReport.setSuccess(false);
+            importGpkgReport.setQuantityOfImportedRecords(0L);
+            importGpkgReport.setErrorMessage(msg);
+
+            processService.error(requestEvent.getDbName(),
+                                 requestEvent.getProcessId(),
+                                 JsonConverter.toJsonNode(importGpkgReport));
+        }
+    }
+
+    private SchemaDto getSchema(ResourceQualifier sourceResource,
+                                GpkgStartLoaderEvent requestEvent,
+                                ImportGpkgReport importGpkgReport) {
+        try {
+            //Если gpkg выгружен из нашей таблицы по нашей SchemaDto,
+            //то SchemaDto этого класса будет одинаковой для временной и целевой таблицы
+            //потому что временная таблица создана путём экспорта слоя по схеме
+
+            return gpkgReader.readSchemaFromGpkgFile(requestEvent.getFilePath(), sourceResource);
+        } catch (GpkgException e) {
+            log.debug("При чтении информации 2 из gpkg произошла ошибка. Причина: {}", e.getMessage());
+            importGpkgReport.setErrorMessage(e.getMessage() + "!!! " + e);
+            importGpkgReport.setSuccess(false);
+
+            processService.error(requestEvent.getDbName(),
+                                 requestEvent.getProcessId(),
+                                 JsonConverter.toJsonNode(importGpkgReport));
+
+            throw new BadRequestException(e.getMessage());
+        }
+    }
+
+    private TableCreateDto getTableInfo(ResourceQualifier sourceResource,
+                                        GpkgStartLoaderEvent requestEvent,
+                                        ImportGpkgReport importGpkgReport) {
+        try {
+            return gpkgReader.readTableInfoFromGpkgFile(requestEvent.getFilePath(), sourceResource);
+        } catch (GpkgException e) {
+            log.debug("При чтении информации 1 из gpkg произошла ошибка. Причина: {}", e.getMessage());
+            importGpkgReport.setErrorMessage(e.getMessage() + "!!! " + e);
+            importGpkgReport.setSuccess(false);
+
+            processService.error(requestEvent.getDbName(),
+                                 requestEvent.getProcessId(),
+                                 JsonConverter.toJsonNode(importGpkgReport));
+
+            throw new BadRequestException(e.getMessage());
+        }
+    }
+
+    private void makeGpkgGeometryValid(ResourceQualifier sourceResource,
+                                       JdbcTemplate jdbcTemplate,
+                                       ImportGpkgReport importGpkgReport,
+                                       GpkgStartLoaderEvent requestEvent) {
+        try {
+            log.debug("Проверяем всю новую геометрию на валидность перед импортом.");
+
+            int countOfInvalidGeometry = geometryDao.getInvalidGeometryRowsCount(jdbcTemplate,
+                                                                                 sourceResource.getSchema(),
+                                                                                 sourceResource.getTable());
+            if (countOfInvalidGeometry > 0) {
+                importGpkgReport.setMessage("После импорта геометрии было обнаружено '" + countOfInvalidGeometry +
+                                                    "' записей с неправильной геометрией.");
+
+                geometryDao.makeValid(jdbcTemplate,
+                                      sourceResource.getSchema(),
+                                      sourceResource.getTable());
+
+                countOfInvalidGeometry = geometryDao.getInvalidGeometryRowsCount(jdbcTemplate,
+                                                                                 sourceResource.getSchema(),
+                                                                                 sourceResource.getTable());
+
+                if (countOfInvalidGeometry > 0) {
+                    importGpkgReport.setQuantityOfFailedRecords(countOfInvalidGeometry);
+                    log.debug("После приведения геометрии к валидному виду, осталось {} невалидных записей.",
+                              countOfInvalidGeometry);
+
+                    geometryDao.deleteAllRowsWithInvalidGeometry(jdbcTemplate,
+                                                                 sourceResource);
+                    log.debug("Перед копированием было удалено {} невалидных записей.", countOfInvalidGeometry);
+                }
+            }
+        } catch (CrgDaoException e) {
+            processService.error(requestEvent.getDbName(),
+                                 requestEvent.getProcessId(),
+                                 JsonConverter.toJsonNode(importGpkgReport));
+
+            throw new BadRequestException(e.getMessage());
+        }
+    }
+
+    private void createTargetTable(JdbcTemplate jdbcTemplate,
+                                   SchemaDto actualSchema,
+                                   String dataset,
+                                   TableCreateDto tableCreateDto) {
+        createTableRequestHandler.createTableDetached(jdbcTemplate, actualSchema, dataset, tableCreateDto);
+        log.debug("Успешно создали таблицу '{}' для импорта GeoPackage.", tableCreateDto.getName());
+
+        //Записываем данные о созданной ТАБЛИЦЕ в SchemasAndTables
+        SchemasAndTables datasetEntity = schemasAndTablesRepository
+                .findByIdentifier(jdbcTemplate, dataset)
+                .orElseThrow(
+                        () -> new BadRequestException("Набор данных " + dataset + " отсутствует в базе данных.")
+                );
+
+        String pathToParent = datasetEntity.getPath() + "/" + datasetEntity.getId();
+        SchemasAndTables table = new SchemasAndTables(tableCreateDto, pathToParent, TABLE,
+                                                      toJsonNode(actualSchema));
+
+        schemasAndTablesRepository.save(jdbcTemplate, table);
+        log.debug("Успешно привязали созданную таблицу {} к набору данных: {}.",
+                  tableCreateDto.getName(), datasetEntity.getTitle());
     }
 
     private static @NotNull Set<String> getSystemColumnsForExclude(ResourceQualifier targetTable) {

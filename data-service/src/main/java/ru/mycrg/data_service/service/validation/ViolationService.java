@@ -5,7 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
-import ru.mycrg.data_service.dto.ExportResourceModel;
+import ru.mycrg.data_service_contract.dto.ExportResourceModel;
 import ru.mycrg.data_service.dto.ValidationInfo;
 import ru.mycrg.data_service.dto.ValidationRequestDto;
 import ru.mycrg.data_service.dto.ValidationResponseDto;

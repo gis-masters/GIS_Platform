@@ -4,18 +4,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import ru.mycrg.auth_facade.IAuthenticationFacade;
-import ru.mycrg.data_service.dto.ExportRequestModel;
-import ru.mycrg.data_service.dto.ExportResourceModel;
 import ru.mycrg.data_service.dto.WsMessageDto;
 import ru.mycrg.data_service.entity.Process;
+import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.repository.SchemasAndTablesRepository;
 import ru.mycrg.data_service.service.WsNotificationService;
 import ru.mycrg.data_service.service.processes.ProcessService;
-import ru.mycrg.data_service_contract.dto.ExportProcessModel;
-import ru.mycrg.data_service_contract.dto.FgisTpDocument;
-import ru.mycrg.data_service_contract.dto.ResourceProjection;
-import ru.mycrg.data_service_contract.dto.SchemaDto;
+import ru.mycrg.data_service_contract.dto.*;
 import ru.mycrg.data_service_contract.queue.request.ExportRequestEvent;
 import ru.mycrg.data_service_contract.queue.response.ExportResponseEvent;
 import ru.mycrg.messagebus_contract.IMessageBusProducer;
@@ -60,6 +56,10 @@ public class GmlExportService implements Exporter {
 
     @Override
     public Process doExport(ExportRequestModel request) {
+        if (request.getEpsg() == null) {
+            throw new BadRequestException("EPSG обязательно для заполнения");
+        }
+
         long orgId = authenticationFacade.getOrganizationId();
         String dbName = getDefaultDatabaseName(orgId);
         String title = String.format("Экспорт. Кол-во слоев: %d", request.getResources().size());

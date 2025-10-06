@@ -149,6 +149,17 @@ public class TablesStepsDefinitions extends BaseStepsDefinitions {
                             schema.getName());
     }
 
+    @When("Существует таблица по схеме {string}, c СК равной: {string}")
+    public void initTableWithCustomCrs(String schemaTitle, String crs) {
+        SchemaDto schema = CurrentScenarioSchema.getSchemaByTitle(schemaTitle);
+
+        createTablesRequest(generateString("STRING_8"),
+                            "some title",
+                            "some description",
+                            crs,
+                            schema.getName());
+    }
+
     @When("Существует таблица созданная по текущей схеме и с включённым FTS")
     public void initTableByCurrentSchemaWithEnabledFts() {
         createTablesRequest(generateString("STRING_8"),
@@ -272,8 +283,6 @@ public class TablesStepsDefinitions extends BaseStepsDefinitions {
                 .when().
                         log().ifValidationFails().
                         delete("/" + currentTableName);
-
-        datasetsPool.remove(currentDatasetIdentifier);
     }
 
     @When("я пытаюсь применить к текущей таблице схему: {string}")

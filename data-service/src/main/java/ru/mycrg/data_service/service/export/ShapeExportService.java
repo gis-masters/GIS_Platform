@@ -3,14 +3,15 @@ package ru.mycrg.data_service.service.export;
 import org.springframework.stereotype.Service;
 import ru.mycrg.audit_service_contract.events.CrgAuditEvent;
 import ru.mycrg.auth_facade.IAuthenticationFacade;
-import ru.mycrg.data_service.dto.ExportRequestModel;
-import ru.mycrg.data_service.dto.ExportResourceModel;
 import ru.mycrg.data_service.dto.WsMessageDto;
 import ru.mycrg.data_service.entity.Process;
+import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.repository.SchemasAndTablesRepository;
 import ru.mycrg.data_service.service.WsNotificationService;
 import ru.mycrg.data_service.service.processes.ProcessService;
 import ru.mycrg.data_service_contract.dto.ExportProcessModel;
+import ru.mycrg.data_service_contract.dto.ExportRequestModel;
+import ru.mycrg.data_service_contract.dto.ExportResourceModel;
 import ru.mycrg.data_service_contract.dto.ResourceProjection;
 import ru.mycrg.data_service_contract.queue.request.ExportRequestEvent;
 import ru.mycrg.data_service_contract.queue.response.ExportResponseEvent;
@@ -52,6 +53,10 @@ public class ShapeExportService implements Exporter {
 
     @Override
     public Process doExport(ExportRequestModel request) {
+        if (request.getEpsg() == null) {
+            throw new BadRequestException("EPSG обязательно для заполнения");
+        }
+
         long orgId = authenticationFacade.getOrganizationId();
         String dbName = getDefaultDatabaseName(orgId);
         String title = String.format("Экспорт. Кол-во слоев: %d", request.getResources().size());
@@ -62,6 +67,7 @@ public class ShapeExportService implements Exporter {
         payload.setFormat(request.getFormat());
         payload.setDocSchema(request.getDocSchema());
         payload.setEpsg(extractCrsNumber(request.getEpsg()));
+
         payload.setInvertedCoordinates(request.isInvertedCoordinates());
 
         List<String> tableIdentifiers = request.getResources()

@@ -1,10 +1,10 @@
-package ru.mycrg.data_service.dto;
+package ru.mycrg.data_service_contract.dto;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 // TODO: в будущем вернуться к врапперу. пока как есть
@@ -20,9 +20,10 @@ public class ExportRequestModel {
 
     @Valid
     @NotEmpty
-    private List<ExportResourceModel> resources = new ArrayList<>();
+    private List<ExportResourceModel> resources = new LinkedList<>();
 
-    @NotBlank
+    private List<ExportDetails> exportDetails = new LinkedList<>();
+
     private String epsg;
 
     private boolean invertedCoordinates;
@@ -73,5 +74,13 @@ public class ExportRequestModel {
 
     public void setInvertedCoordinates(boolean invertedCoordinates) {
         this.invertedCoordinates = invertedCoordinates;
+    }
+
+    public List<ExportDetails> getExportDetails() {
+        return exportDetails;
+    }
+
+    public void setExportDetails(List<ExportDetails> exportDetails) {
+        this.exportDetails = exportDetails;
     }
 }

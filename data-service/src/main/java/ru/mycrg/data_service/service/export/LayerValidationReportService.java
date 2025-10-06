@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import ru.mycrg.auth_facade.IAuthenticationFacade;
 import ru.mycrg.data_service.dao.config.DatasourceFactory;
 import ru.mycrg.data_service.dao.detached.ValidationResultDao;
-import ru.mycrg.data_service.dto.ExportResourceModel;
+import ru.mycrg.data_service_contract.dto.ExportResourceModel;
 import ru.mycrg.data_service.dto.ValidationRequestDto;
 import ru.mycrg.data_service.dto.WsMessageDto;
 import ru.mycrg.data_service.dto.record.IRecord;

@@ -1,15 +1,12 @@
 package ru.mycrg.acceptance;
 
-
 import org.jetbrains.annotations.NotNull;
-import ru.mycrg.acceptance.data_service.TestFilesManager;
-import ru.mycrg.acceptance.data_service.dto.FileDescriptionModel;
-import ru.mycrg.geo_json.Feature;
-import ru.mycrg.geo_json.LngLatAlt;
-import ru.mycrg.geo_json.MultiPolygon;
-import ru.mycrg.geo_json.Polygon;
+import ru.mycrg.geo_json.*;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class FeatureBuilder {
 
@@ -21,6 +18,12 @@ public class FeatureBuilder {
         Feature feature1, feature2;
 
         switch (dataTemplate) {
+            case "Точечный слой с атрибутами":
+                Feature feature = getFeature_ThreeDots();
+                feature.setProperty("number", 555); // INT, а не строка
+                features.add(feature);
+
+                break;
             case "Все типы данных":
                 Feature featureFirst = getFeature_F();
                 Map<String, Object> fullPropsMap = getFullPropsMap();
@@ -82,6 +85,17 @@ public class FeatureBuilder {
         }
 
         return features;
+    }
+
+    @NotNull
+    private static Feature getFeature_ThreeDots() {
+        Feature feature = new Feature();
+        // Схема ожидает Point, а не MultiPoint
+        feature.setGeometry(new Point(
+                new LngLatAlt(6_657_058.3102, 4_999_784.8132)
+        ));
+
+        return feature;
     }
 
     @NotNull

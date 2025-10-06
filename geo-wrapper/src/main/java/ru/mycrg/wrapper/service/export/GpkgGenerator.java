@@ -41,34 +41,60 @@ public class GpkgGenerator {
 
             ExportProcessModel payload = event.getPayload();
 
-            // Переменные-болванки для команды экспорта в GeoPackage
+            if (payload.getResourceProjections().isEmpty()) {
+                throw new ExportException("Нет таблиц для экспорта");
+            }
+
+            // Переменные для команды экспорта в GeoPackage
             String host = getPortGisHost();
             String port = getPortGisPort();
             String database = event.getDbName(); // имя базы данных
-            String schema = payload.getResourceProjections().get(0).getSchemaName(); // схема базы данных
-            String table = payload.getResourceProjections().get(0).getTableName(); // имя таблицы для экспорта
-
-            // Генерируем уникальное имя файла
-            String fileName = table + "_" + UUID.randomUUID() + ".gpkg";
-            String outputPath = rootPath + fileName;
-
             String usrName = environment.getProperty("spring.datasource.username");
             String pswd = environment.getProperty("spring.datasource.password");
 
-            // Команда ogr2ogr для экспорта из PostgreSQL в GeoPackage
+            // Генерируем уникальное имя файла на основе количества таблиц
+            String fileName = "export_" + payload.getResourceProjections()
+                                                 .size() + "_tables_" + UUID.randomUUID() + ".gpkg";
+            String outputPath = rootPath + fileName;
+
+            log.debug("Экспорт {} таблиц в файл: {}", payload.getResourceProjections().size(), outputPath);
+
+            // Собираем все таблицы для экспорта как отдельные аргументы
+            StringBuilder tablesBuilder = new StringBuilder();
+
+            for (int i = 0; i < payload.getResourceProjections().size(); i++) {
+                var resourceProjection = payload.getResourceProjections().get(i);
+                String schema = resourceProjection.getSchemaName();
+                String table = resourceProjection.getTableName();
+
+                log.debug("Добавляем таблицу для экспорта: {}.{}", schema, table);
+
+                if (i > 0) {
+                    tablesBuilder.append(" \\\n  ");
+                }
+                tablesBuilder.append(schema).append(".").append(table);
+            }
+
+            // Создаем команду для экспорта всех таблиц в формате как в примере
             String command = String.format(
-                    "ogr2ogr -f GPKG %s PG:\"host=%s port=%s dbname=%s user=%s password=%s\" %s.%s %s",
+                    "ogr2ogr -f GPKG \\\n" +
+                            "  --config CREATE_METADATA_TABLES YES \\\n" +
+                            "  -lco GEOMETRY_NAME=%s \\\n" +
+                            "  -lco SPATIAL_INDEX=YES \\\n" +
+                            "  -nlt PROMOTE_TO_MULTI \\\n" +
+                            "  -progress \\\n" +
+                            "  %s \\\n" +
+                            "  PG:\"host=%s port=%s dbname=%s user=%s password=%s\" \\\n" +
+                            "  %s",
+                    "shape",        // имя геометрической колонки (как в примере)
                     outputPath,     // выходной .gpkg файл
                     host,           // хост БД
                     port,           // порт БД
                     database,       // имя БД
                     usrName,        // имя пользователя
                     pswd,           // пароль
-                    schema,         // схема
-                    table,          // таблица
-                    "-lco GEOMETRY_NAME=" + DEFAULT_GEOMETRY_COLUMN_NAME // имя геометрической колонки
+                    tablesBuilder   // все таблицы как отдельные аргументы
             );
-
             log.debug("Вызов консольной команды получения geoPackage: {}", command);
 
             // Выполняем команду через ProcessBuilder
@@ -86,7 +112,7 @@ public class GpkgGenerator {
 
             // Проверяем, что файл был создан
             if (Files.exists(Paths.get(outputPath))) {
-                log.info("GPKG успешно создан: {}", outputPath);
+                log.info("GPKG успешно создан с {} таблицами: {}", payload.getResourceProjections().size(), outputPath);
 
                 return outputPath;
             } else {

@@ -17,6 +17,7 @@ import ru.mycrg.data_service_contract.dto.import_.MatchingPair;
 import ru.mycrg.data_service_contract.dto.import_.TargetAttribute;
 import ru.mycrg.wrapper.service.validation.Util;
 
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -200,6 +201,48 @@ public class BaseDaoService {
         log.debug("SQL isTableExist query: {}", isTableExistQuery);
 
         return Boolean.TRUE.equals(jdbcTemplate.queryForObject(isTableExistQuery, Boolean.class));
+    }
+
+    /**
+     * Проверить существование схемы в базе данных
+     *
+     * @param jdbcTemplate Коннекшн к БД
+     * @param schemaName   Название схемы
+     *
+     * @return true если схема существует
+     */
+    public boolean isSchemaExist(JdbcTemplate jdbcTemplate, String schemaName) {
+        String isSchemaExistQuery = String.format("SELECT EXISTS(" +
+                                                          " SELECT 1" +
+                                                          " FROM information_schema.schemata" +
+                                                          " WHERE schema_name = '%s' );", schemaName);
+
+        log.debug("SQL isSchemaExist query: {}", isSchemaExistQuery);
+
+        return Boolean.TRUE.equals(jdbcTemplate.queryForObject(isSchemaExistQuery, Boolean.class));
+    }
+
+    /**
+     * Создать схему в базе данных, если она не существует
+     *
+     * @param jdbcTemplate Коннекшн к БД
+     * @param schemaName   Название схемы
+     */
+    @Transactional
+    public void createSchemaIfNotExists(JdbcTemplate jdbcTemplate, String schemaName) throws SQLException {
+        if (!isSchemaExist(jdbcTemplate, schemaName)) {
+            String createSchemaQuery = String.format("CREATE SCHEMA %s", schemaName);
+            log.debug("Создаём schema: {}", createSchemaQuery);
+
+            jdbcTemplate.execute(createSchemaQuery);
+
+            log.info("Схема '{}' успешно создана", schemaName);
+        } else {
+            log.debug("Схема '{}' уже существует. Останавливаем импорт", schemaName);
+
+            throw new SQLException("Этого не должно было произойти." +
+                                           " Схема со случайным именем уже существует. Останавливаем импорт!!!");
+        }
     }
 
     private String handleInsertMappingColumns(ImportMqTask request) {

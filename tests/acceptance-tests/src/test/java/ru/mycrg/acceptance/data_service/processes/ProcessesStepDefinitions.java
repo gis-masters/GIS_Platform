@@ -6,14 +6,15 @@ import io.restassured.http.ContentType;
 import io.restassured.specification.RequestSpecification;
 import ru.mycrg.acceptance.BaseStepsDefinitions;
 import ru.mycrg.acceptance.auth_service.AuthorizationBase;
+import ru.mycrg.acceptance.data_service.dto.DatasetCreateDto;
 import ru.mycrg.acceptance.data_service.dto.FileDescriptionModel;
+import ru.mycrg.data_service_contract.dto.ExportRequestModel;
+import ru.mycrg.data_service_contract.dto.ExportResourceModel;
 import ru.mycrg.data_service_contract.enums.ProcessType;
 
 import java.io.File;
 import java.time.LocalTime;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 import static io.restassured.http.ContentType.JSON;
 import static java.lang.Thread.sleep;
@@ -173,11 +174,6 @@ public class ProcessesStepDefinitions extends BaseStepsDefinitions {
         assertTrue(response.prettyPrint().contains(answer));
     }
 
-    @When("процесс завершается со статусом {string}")
-    public void waitUntilCurrentProcessIsDone(String status) {
-        waitUntilProcessCompleteWithStatus(currentProcessId, status);
-    }
-
     @When("Процесс завершается с ошибкой")
     public void waitUntilCurrentProcessIsCompleteWithError() {
         waitUntilProcessCompleteWithStatus(currentProcessId, "ERROR");
@@ -185,31 +181,22 @@ public class ProcessesStepDefinitions extends BaseStepsDefinitions {
 
     @When("Текущий пользователь экспортирует текущий слой в GeoPackage")
     public void exportInGeoPackage() {
-        String wsUiId = "GeoPackage";
+        ExportRequestModel exportProcessModel = createSingleResourceExportModel(currentDatasetIdentifier,
+                                                                                currentTableName);
 
-        String gpkgPlacementModel = String.format("{\n" +
-                                                          "    \"wsUiId\": \"%s\",\n" +
-                                                          "    \"format\": \"GPKG\",\n" +
-                                                          "    \"resources\": [\n" +
-                                                          "        {\n" +
-                                                          "            \"dataset\": \"%s\",\n" +
-                                                          "            \"table\": \"%s\"\n" +
-                                                          "        }\n" +
-                                                          "    ],\n" +
-                                                          "    \"epsg\": \"EPSG:3857\"\n" +
-                                                          "}",
-                                                  wsUiId, currentDatasetIdentifier, currentTableName);
+        executeExportRequest(exportProcessModel);
+    }
 
-        response = getBaseRequestWithCurrentCookie()
-                .given().
-                        body(gpkgPlacementModel).
-                        contentType(ContentType.JSON).
-                        basePath("")
-                .when().
-                        log().ifValidationFails().
-                        post("/api/data/export/");
+    @When("Текущий пользователь экспортирует два слоя в GeoPackage")
+    public void massExportInGeoPackage() {
+        List<String> scenarioDatasets = new LinkedList<>();
+        for (Map.Entry<String, DatasetCreateDto> entry: datasetsPool.entrySet()) {
+            scenarioDatasets.add(entry.getKey());
+        }
 
-        currentProcessId = response.jsonPath().get("id");
+        ExportRequestModel exportProcessModel = createTwoObjectsResourceExportModel(scenarioDatasets);
+
+        executeExportRequest(exportProcessModel);
     }
 
     @When("Текущий пользователь импортирует GeoPackage в текущий проект без указания набора данных")
@@ -349,5 +336,50 @@ public class ProcessesStepDefinitions extends BaseStepsDefinitions {
         placementModel.setFileId(fileId);
 
         placeFile(placementModel);
+    }
+
+    private ExportRequestModel createSingleResourceExportModel(String datasetIdentifier, String tableName) {
+        ExportRequestModel exportProcessModel = new ExportRequestModel();
+        exportProcessModel.setFormat("GPKG");
+
+        ExportResourceModel resource = new ExportResourceModel();
+        resource.setDataset(datasetIdentifier);
+        resource.setTable(tableName);
+
+        exportProcessModel.setResources(Collections.singletonList(resource));
+
+        return exportProcessModel;
+    }
+
+    private static ExportRequestModel createTwoObjectsResourceExportModel(List<String> scenarioDatasets) {
+        ExportRequestModel exportProcessModel = new ExportRequestModel();
+        exportProcessModel.setFormat("GPKG");
+
+        // Добавляем первый ресурс
+        ExportResourceModel firstResource = new ExportResourceModel();
+        firstResource.setDataset(scenarioDatasets.get(0));
+        firstResource.setTable(scenarioTables.get(0).getName());
+
+        // Добавляем второй ресурс
+        ExportResourceModel secondResource = new ExportResourceModel();
+        secondResource.setDataset(scenarioDatasets.get(1));
+        secondResource.setTable(scenarioTables.get(1).getName());
+
+        exportProcessModel.setResources(Arrays.asList(firstResource, secondResource));
+
+        return exportProcessModel;
+    }
+
+    private void executeExportRequest(ExportRequestModel exportProcessModel) {
+        response = getBaseRequestWithCurrentCookie()
+                .given().
+                        body(gson.toJson(exportProcessModel)).
+                        contentType(ContentType.JSON).
+                        basePath("")
+                .when().
+                        log().ifValidationFails().
+                        post("/api/data/export/");
+
+        currentProcessId = response.jsonPath().get("id");
     }
 }

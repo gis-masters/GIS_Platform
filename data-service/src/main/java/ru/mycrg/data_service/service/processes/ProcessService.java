@@ -144,4 +144,8 @@ public class ProcessService {
             throw new DataServiceException("Не удалось получить ws идентификатор UI клиента => " + e.getMessage());
         }
     }
+
+    public void save(Process process) {
+        processRepository.save(process);
+    }
 }

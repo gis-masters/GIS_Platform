@@ -39,6 +39,7 @@ import ru.mycrg.messagebus_contract.IMessageBusProducer;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.Map;
 
 import static ru.mycrg.common_utils.CrgGlobalProperties.generateDatasetName;
@@ -75,8 +76,7 @@ public class GpkgImporterExecutor implements IExecutor<ImportReport>, IFilePlace
                                 DdlSchemas ddlSchemas,
                                 SchemasAndTablesRepository schemasAndTablesRepository,
                                 PermissionsService permissionsService, DataStoreClient dataStoreClient,
-                                FileRepository fileRepository)
-            throws MalformedURLException {
+                                FileRepository fileRepository) throws MalformedURLException {
         this.messageBus = messageBus;
         this.authenticationFacade = authenticationFacade;
         this.resourceProtector = resourceProtector;
@@ -96,7 +96,11 @@ public class GpkgImporterExecutor implements IExecutor<ImportReport>, IFilePlace
         log.debug("Начало публикации GPKG: {}", this.dataFromGpkgPlacementModel);
         String dataset = dataFromGpkgPlacementModel.getSourceDataset();
 
-        dataset = createDatasetOrDoNothing(dataset);
+        try {
+            dataset = createDatasetOrDoNothing(dataset);
+        } catch (SQLException e) {
+            throw new BadRequestException("Не получилось удалить набор данных. Причина: " + e.getMessage());
+        }
 
         long orgId = authenticationFacade.getOrganizationId();
         String dbName = getDefaultDatabaseName(orgId);
@@ -122,7 +126,7 @@ public class GpkgImporterExecutor implements IExecutor<ImportReport>, IFilePlace
         return importReport;
     }
 
-    private String createDatasetOrDoNothing(String dataset) {
+    private String createDatasetOrDoNothing(String dataset) throws SQLException {
         if (dataset == null || dataset.isEmpty() || dataset.equals("null")) {
             //Если набор данных не передали. Создаём его сами
             String datasetName = generateDatasetName();

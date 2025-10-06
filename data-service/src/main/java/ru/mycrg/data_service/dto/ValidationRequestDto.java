@@ -1,5 +1,7 @@
 package ru.mycrg.data_service.dto;
 
+import ru.mycrg.data_service_contract.dto.ExportResourceModel;
+
 import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
 import java.util.ArrayList;

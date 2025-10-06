@@ -16,6 +16,7 @@ public class GpkgStartLoaderEvent extends DefaultMessageBusRequestEvent {
     private Long projectId;
     private String sourceTableName;
     private String sourceDataset;
+    private String gdalCreatedSchema;
 
     public GpkgStartLoaderEvent() {
         super();
@@ -87,6 +88,14 @@ public class GpkgStartLoaderEvent extends DefaultMessageBusRequestEvent {
         this.sourceDataset = sourceDataset;
     }
 
+    public String getGdalCreatedSchema() {
+        return gdalCreatedSchema;
+    }
+
+    public void setGdalCreatedSchema(String gdalCreatedSchema) {
+        this.gdalCreatedSchema = gdalCreatedSchema;
+    }
+
     @Override
     public String toString() {
         return "{" +
@@ -96,6 +105,7 @@ public class GpkgStartLoaderEvent extends DefaultMessageBusRequestEvent {
                 "\"filePath\":" + (filePath == null ? "null" : "\"" + filePath + "\"") + ", " +
                 "\"sourceDataset\":" + (sourceDataset == null ? "null" : "\"" + sourceDataset + "\"") + ", " +
                 "\"sourceTableName\":" + (sourceTableName == null ? "null" : "\"" + sourceTableName + "\"") + ", " +
+                "\"sourceSchemaName\":" + (gdalCreatedSchema == null ? "null" : "\"" + gdalCreatedSchema + "\"") + ", " +
                 "}";
     }
 

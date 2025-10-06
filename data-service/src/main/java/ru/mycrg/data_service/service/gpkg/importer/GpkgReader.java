@@ -6,36 +6,37 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 import ru.mycrg.data_service.dto.TableCreateDto;
 import ru.mycrg.data_service.service.gpkg.GpkgException;
+import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.http_client.JsonConverter;
 
 import java.sql.*;
 
-import static ru.mycrg.data_service.service.gpkg.export.GpkgWriter.GPKG_LAYER_INFO;
-import static ru.mycrg.data_service.service.gpkg.export.GpkgWriter.GPKG_SYSTEM_SCHEMAS_TABLE;
+import static ru.mycrg.data_service.service.gpkg.export.GpkgWriter.*;
 
 @Repository
 public class GpkgReader {
 
     private final Logger log = LoggerFactory.getLogger(GpkgReader.class);
 
-    public SchemaDto readSchemaFromGpkgFile(String gpkgFilePath) {
-        log.debug("Читаем схему из файла GPKG по пути: {}", gpkgFilePath);
+    public SchemaDto readSchemaFromGpkgFile(String gpkgFilePath, ResourceQualifier currentSourceAfterImportTable) {
+        log.debug("Читаем схему из файла GPKG по пути: {} для таблицы: {}", gpkgFilePath,
+                  currentSourceAfterImportTable.toString());
 
         try (Connection connection = DriverManager.getConnection("jdbc:sqlite:" + gpkgFilePath)) {
             // Проверяем существование таблицы схем
             if (!schemaTableExists(connection)) {
                 log.warn("Системная таблицы '" + GPKG_SYSTEM_SCHEMAS_TABLE + "' отсутствует в GPKG!!!");
 
-                return new SchemaDto();
+                throw new GpkgException("Схемы для таблицы " + currentSourceAfterImportTable + " нет внутри GPKG");
             }
 
             // Читаем схему из таблицы
-            String schemaJson = readSchemaJson(connection);
+            String schemaJson = readSchemaJson(connection, currentSourceAfterImportTable);
             if (schemaJson == null || schemaJson.trim().isEmpty()) {
-                log.warn("Схема не найдена в папке GPKG");
+                log.warn("Схема таблицы не найдена в файле GPKG");
 
-                return new SchemaDto();
+                throw new GpkgException("Для таблицы " + currentSourceAfterImportTable + " нет схемы.");
             }
 
             // Десериализуем JSON в SchemaDto
@@ -44,7 +45,7 @@ public class GpkgReader {
                                 .orElseGet(() -> {
                                     log.warn("Ошибка десериализации schema JSON, возвращаем пустую schema");
 
-                                    return new SchemaDto();
+                                    throw new GpkgException("Нельзя десериализовать JSON схемы в GPKG.");
                                 });
         } catch (SQLException e) {
             log.error("Ошибка чтение схемы из GPKG: {}", e.getMessage(), e);
@@ -63,33 +64,42 @@ public class GpkgReader {
         }
     }
 
-    private String readSchemaJson(Connection connection) throws SQLException {
-        String selectSql = "SELECT schema_json FROM " + GPKG_SYSTEM_SCHEMAS_TABLE + " ORDER BY id DESC LIMIT 1";
+    private String readSchemaJson(Connection connection, ResourceQualifier currentSourceAfterImportTable)
+            throws SQLException {
+        String selectSql =
+                "SELECT " + GPKG_SCHEMA_JSON_COLUMN +
+                        " FROM " + GPKG_SYSTEM_SCHEMAS_TABLE +
+                        " WHERE " + GPKG_SCHEMA_TABLE_NAME_COLUMN + " LIKE '%.' || ?" +
+                        " ORDER BY id DESC LIMIT 1";
 
-        try (PreparedStatement stmt = connection.prepareStatement(selectSql);
-             ResultSet rs = stmt.executeQuery()) {
+        try (PreparedStatement stmt = connection.prepareStatement(selectSql)) {
+            stmt.setString(1, currentSourceAfterImportTable.toString());
 
-            if (rs.next()) {
-                return rs.getString("schema_json");
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getString(GPKG_SCHEMA_JSON_COLUMN);
+                }
+
+                return null;
             }
-
-            return null;
         }
     }
 
-    public TableCreateDto readTableInfoFromGpkgFile(String gpkgFilePath) {
-        log.debug("Читаем информацию о таблицы из файла GPKG по пути: {}", gpkgFilePath);
+    public TableCreateDto readTableInfoFromGpkgFile(String gpkgFilePath,
+                                                    ResourceQualifier currentSourceAfterImportTable) {
+        log.debug("Читаем информацию о таблицы из файла GPKG по пути: {} для таблицы: {}", gpkgFilePath,
+                  currentSourceAfterImportTable.toString());
 
         try (Connection connection = DriverManager.getConnection("jdbc:sqlite:" + gpkgFilePath)) {
             // Проверяем существование таблицы с информацией о слоях
             if (!layerInfoTableExists(connection)) {
-                log.error("Таблицы информации о векторной таблицы '" + GPKG_LAYER_INFO + "' нет в GPKG!!!");
+                log.error("Таблицы информации о векторной таблицы '" + GPKG_LAYER_INFO_TABLE + "' нет в GPKG!!!");
 
                 throw new GpkgException("GPKG file does not contain layer information");
             }
 
             // Читаем информацию о слое из таблицы
-            LayerInfo layerInfo = readLayerInfo(connection);
+            LayerInfo layerInfo = readLayerInfo(connection, currentSourceAfterImportTable);
             if (layerInfo == null) {
                 log.error("Не найдено векторных таблицы в GPKG");
 
@@ -113,7 +123,7 @@ public class GpkgReader {
     }
 
     private boolean layerInfoTableExists(Connection connection) throws SQLException {
-        String checkTableSql = "SELECT name FROM sqlite_master WHERE type='table' AND name='" + GPKG_LAYER_INFO + "'";
+        String checkTableSql = "SELECT name FROM sqlite_master WHERE type='table' AND name='" + GPKG_LAYER_INFO_TABLE + "'";
 
         try (PreparedStatement stmt = connection.prepareStatement(checkTableSql);
              ResultSet rs = stmt.executeQuery()) {
@@ -122,17 +132,25 @@ public class GpkgReader {
         }
     }
 
-    private LayerInfo readLayerInfo(Connection connection) throws SQLException {
-        String selectSql = "SELECT layer_name, epsg_code FROM " + GPKG_LAYER_INFO + " ORDER BY id LIMIT 1";
+    private LayerInfo readLayerInfo(Connection connection,
+                                    ResourceQualifier currentSourceAfterImportTable) throws SQLException {
+        String selectSql =
+                "SELECT " + GPKG_LAYER_NAME_COLUMN + ", " + GPKG_LAYER_EPSG_CODE_COLUMN +
+                        " FROM " + GPKG_LAYER_INFO_TABLE +
+                        " WHERE " + GPKG_SCHEMA_TABLE_NAME_COLUMN + " LIKE '%.' || ?" +
+                        " ORDER BY id LIMIT 1";
 
-        try (PreparedStatement stmt = connection.prepareStatement(selectSql);
-             ResultSet rs = stmt.executeQuery()) {
+        try (PreparedStatement stmt = connection.prepareStatement(selectSql)) {
+            stmt.setString(1, currentSourceAfterImportTable.getTable());
 
-            if (rs.next()) {
-                return new LayerInfo(rs.getString("layer_name"), rs.getString("epsg_code"));
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return new LayerInfo(rs.getString(GPKG_LAYER_NAME_COLUMN),
+                                         rs.getString(GPKG_LAYER_EPSG_CODE_COLUMN));
+                }
+
+                return null;
             }
-
-            return null;
         }
     }
 

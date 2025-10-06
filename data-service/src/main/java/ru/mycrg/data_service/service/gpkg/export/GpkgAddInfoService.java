@@ -7,10 +7,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import ru.mycrg.data_service.dao.config.DatasourceFactory;
-import ru.mycrg.data_service.dto.ExportRequestModel;
+import ru.mycrg.data_service_contract.dto.ExportRequestModel;
+import ru.mycrg.data_service_contract.dto.ExportResourceModel;
 import ru.mycrg.data_service.entity.Process;
 import ru.mycrg.data_service.entity.SchemasAndTables;
-import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.repository.SchemasAndTablesRepositoryDetached;
 import ru.mycrg.data_service.service.processes.ProcessService;
 import ru.mycrg.data_service_contract.queue.response.ExportResponseEvent;
@@ -40,57 +40,65 @@ public class GpkgAddInfoService {
         log.debug("Payload ивента на GPKG {}", event.getPayload());
 
         Process process = processService.getById(event.getProcessId(), event.getDbName());
-        JsonNode extra = process.getExtra();
-
-        ExportRequestModel exportRequestModel = extractExportRequestModel(extra);
-
-        String tableName = exportRequestModel.getResources().get(0).getTable();
-        log.debug("Извлеченное tableName векторной таблицы: {}", tableName);
+        ExportRequestModel exportRequestModel = extractExportRequestModel(process.getExtra());
 
         JdbcTemplate jdbcTemplate = new JdbcTemplate(datasourceFactory.getDataSource(event.getDbName()));
-        Optional<SchemasAndTables> schemasAndTables = schemasAndTablesRepositoryDetached.findByIdentifier(jdbcTemplate,
-                                                                                                          tableName);
-        if (schemasAndTables.isEmpty()) {
-            throw new BadRequestException("Таблица " + tableName + " отсутствует в базе данных.");
-        }
-
-        JsonNode schema = schemasAndTables.get().getSchema();
-
-        log.debug("Схема таблицы {}", schema);
-
         String gpkgFileName = event.getPayload().toString();
 
-        gpkgBuilder.append(gpkgFileName, schema);
+        // Проходим по всем ресурсам в цикле
+        for (ExportResourceModel resource: exportRequestModel.getResources()) {
+            String tableName = resource.getTable();
+            log.debug("Извлеченное tableName векторной таблицы: {}", tableName);
 
-        log.debug("Процесс добавления схемы успешно завершён. Проверяйте файл.");
+            Optional<SchemasAndTables> schemasAndTables = schemasAndTablesRepositoryDetached.
+                    findByIdentifier(jdbcTemplate, tableName);
+
+            if (schemasAndTables.isEmpty()) {
+                log.warn("Таблица {} отсутствует в базе данных, найти схему невозможно, пропускаем", tableName);
+
+                continue;
+            }
+
+            JsonNode schema = schemasAndTables.get().getSchema();
+            log.debug("Схема таблицы {} : {}", tableName, schema);
+
+            gpkgBuilder.append(gpkgFileName, schema, resource);
+        }
+
+        log.debug("Процесс добавления схем успешно завершён. Проверяйте файл.");
     }
 
     public void addTableInfoToGpkg(ExportResponseEvent event) {
         Process process = processService.getById(event.getProcessId(), event.getDbName());
-        JsonNode extra = process.getExtra();
 
-        ExportRequestModel exportRequestModel = extractExportRequestModel(extra);
+        ExportRequestModel exportRequestModel = extractExportRequestModel(process.getExtra());
 
-        String tableName = exportRequestModel.getResources().get(0).getTable();
         JdbcTemplate jdbcTemplate = new JdbcTemplate(datasourceFactory.getDataSource(event.getDbName()));
-        Optional<SchemasAndTables> schemasAndTables = schemasAndTablesRepositoryDetached.findByIdentifier(jdbcTemplate,
-                                                                                                          tableName);
-        if (schemasAndTables.isEmpty()) {
-            throw new BadRequestException("Таблица " + tableName + " отсутствует в базе данных.");
-        }
-
-        //Берём данные векторной таблицы, не Слоя.
-        String layerTable = schemasAndTables.get().getTitle();
-        log.debug("Извлеченный title векторной таблицы: {}", layerTable);
-
-        String crs = schemasAndTables.get().getCrs();
-        log.debug("Извлеченная система координат векторной таблицы: {}", crs);
-
         String gpkgFileName = event.getPayload().toString();
 
-        gpkgBuilder.append(gpkgFileName, layerTable, crs);
+        // Проходим по всем ресурсам в цикле
+        for (ExportResourceModel resource: exportRequestModel.getResources()) {
+            String tableName = resource.getTable();
 
-        log.debug("Процесс добавления информации о векторной таблице. Проверяйте файл.");
+            Optional<SchemasAndTables> schemasAndTables = schemasAndTablesRepositoryDetached.
+                    findByIdentifier(jdbcTemplate, tableName);
+            if (schemasAndTables.isEmpty()) {
+                log.warn("Таблица {} отсутствует в базе данных, пропускаем", tableName);
+
+                continue;
+            }
+
+            //Берём данные векторной таблицы, не Слоя.
+            String layerTable = schemasAndTables.get().getTitle();
+            log.debug("Извлеченный title векторной таблицы: {}", layerTable);
+
+            String crs = schemasAndTables.get().getCrs();
+            log.debug("Извлеченная система координат векторной таблицы: {}", crs);
+
+            gpkgBuilder.append(gpkgFileName, layerTable, crs, resource);
+        }
+
+        log.debug("Процесс добавления информации о векторных таблицах. Проверяйте файл.");
     }
 
     protected static ExportRequestModel extractExportRequestModel(JsonNode extra) {

@@ -7,18 +7,18 @@ Feature: Импорт GeoPackage
   Scenario: Пользователь БЕЗ ПРАВ на ПРОЕКТ НЕ МОЖЕТ импортировать в него GeoPackage
     Given Существует проект "geoPackage will never be in me"
     *     Существует и авторизован некий пользователь
-    *     Загружены файлы "iomdbeze_2d09dfd4-accc-4215-946f-8e1d9eb98f8d.gpkg"
+    *     Загружены файлы "onePolygonAllTypesWithoutGenerated.gpkg"
     When  Текущий пользователь импортирует GeoPackage в текущий проект без указания набора данных
     Then  Сервер отвечает со статус-кодом 400
 
-  Scenario Outline: Пользователь МОЖЕТ импортировать GeoPackage в проект, только С ПРАВОМ ВЛАДЕЛЕЦ проекта
+  Scenario Outline: Пользователь МОЖЕТ импортировать GeoPackage в проект, только С ПРАВОМ БОЛЬШЕ ЧТЕНИЯ проекта
     Given Существует проект "geoPackage will import if not project VIEWER"
     *     Существует пользователь
       | <email> | Проверка прав проекта при импорте gpkg | <email> | testPassword1 |
     *     Владелец организации авторизован
     *     Текущий пользователь устанавливает роль "<role>" для пользователя "<email>", для текущего проекта
     *     я авторизован как "<email>"
-    *     Загружены файлы "iomdbeze_2d09dfd4-accc-4215-946f-8e1d9eb98f8d.gpkg"
+    *     Загружены файлы "onePolygonAllTypesWithoutGenerated.gpkg"
     When  Текущий пользователь импортирует GeoPackage в текущий проект без указания набора данных
     Then  Сервер отвечает со статус-кодом <code>
     Examples:
@@ -35,7 +35,7 @@ Feature: Импорт GeoPackage
     *     Текущий пользователь устанавливает роль "OWNER" для пользователя "<email>", для текущего проекта
     *     Текущий пользователь устанавливает роль "<role>" для пользователя "<email>", для текущего набора данных
     *     я авторизован как "<email>"
-    *     Загружены файлы "iomdbeze_2d09dfd4-accc-4215-946f-8e1d9eb98f8d.gpkg"
+    *     Загружены файлы "onePolygonAllTypesWithoutGenerated.gpkg"
     When  Текущий пользователь импортирует GeoPackage в текущий проект
     Then  Сервер отвечает со статус-кодом <code>
     Examples:
@@ -47,7 +47,7 @@ Feature: Импорт GeoPackage
   Scenario: Импорт GeoPackage со схемой без генерируемых атрибутов в СУЩЕСТВУЮЩИЙ набор данных проходит успешно
     Given Существует проект "I need to IMPORT geoPackage with dataset"
     *     Существует набор данных
-    *     Загружены файлы "iomdbeze_2d09dfd4-accc-4215-946f-8e1d9eb98f8d.gpkg"
+    *     Загружены файлы "onePolygonAllTypesWithoutGenerated.gpkg"
     When  Текущий пользователь импортирует GeoPackage в текущий проект
     Then  Сервер отвечает со статус-кодом 202
     *     процесс завершается успешно
@@ -78,7 +78,7 @@ Feature: Импорт GeoPackage
   Scenario: Импорт GeoPackage со схемой без генерируемых атрибутов БЕЗ УКАЗАНИЯ набора данных проходит успешно
     Given Существует и авторизован некий пользователь
     *     Существует проект "I need to IMPORT geoPackage without dataset"
-    *     Загружены файлы "iomdbeze_2d09dfd4-accc-4215-946f-8e1d9eb98f8d.gpkg"
+    *     Загружены файлы "onePolygonAllTypesWithoutGenerated.gpkg"
     When  Текущий пользователь импортирует GeoPackage в текущий проект без указания набора данных
     Then  Сервер отвечает со статус-кодом 202
     *     процесс завершается успешно

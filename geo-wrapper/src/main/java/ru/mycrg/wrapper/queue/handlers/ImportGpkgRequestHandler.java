@@ -40,19 +40,22 @@ public class ImportGpkgRequestHandler implements IEventHandler {
         log.debug("Start import of geometry GPKG: {}", event.getProcessId());
 
         try {
-            String tableName = String.format("gpkg_table_%d_%s",
-                                             event.getProcessId(),
-                                             RandomStringUtils.random(5, true, true)).toLowerCase();
+            // Генерируем уникальное имя схемы для каждого процесса импорта
+            String schemaName = String.format("gpkg_schema_%d_%s",
+                                              event.getProcessId(),
+                                              RandomStringUtils.random(5, true, true)).toLowerCase();
 
-            event.setSourceTableName(tableName);
-            log.debug("Table name : {}", tableName);
-            ErrorReport errorReport = gdalService.importFromGeoPackage(event.getFilePath(),
-                                                                       event.getDbName(),
-                                                                       tableName);
+            event.setGdalCreatedSchema(schemaName);
+            log.debug("Уникальная schema в базе для импорта gpkg: {}", schemaName);
+
+            // Импортируем GeoPackage в созданную схему
+            ErrorReport errorReport = gdalService.importFromGeoPackageToSchema(event.getFilePath(),
+                                                                               event.getDbName(),
+                                                                               schemaName);
 
             messageBus.produce(
                     new GpkgImportedSucceededEvent(event, TASK_DONE,
-                                                   "Промежуточная таблица создана",
+                                                   "Промежуточные таблицы созданы в схеме " + schemaName,
                                                    50,
                                                    "GPKG",
                                                    errorReport));

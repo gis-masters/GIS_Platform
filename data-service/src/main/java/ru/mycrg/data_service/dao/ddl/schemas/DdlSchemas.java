@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 
+import java.sql.SQLException;
+
 @Service
 public class DdlSchemas {
 
@@ -16,11 +18,14 @@ public class DdlSchemas {
 
     private final Environment environment;
     private final JdbcTemplate jdbcTemplate;
+    private final DdlSchemasDetached ddlSchemasDetached;
 
     public DdlSchemas(JdbcTemplate jdbcTemplate,
-                      Environment environment) {
+                      Environment environment,
+                      DdlSchemasDetached ddlSchemasDetached) {
         this.environment = environment;
         this.jdbcTemplate = jdbcTemplate;
+        this.ddlSchemasDetached = ddlSchemasDetached;
     }
 
     public void create(ResourceQualifier schemaQualifier) {
@@ -39,17 +44,7 @@ public class DdlSchemas {
         }
     }
 
-    public void drop(ResourceQualifier schemaQualifier) {
-        try {
-            log.debug("Удаление схемы {}", schemaQualifier);
-
-            jdbcTemplate.execute("DROP SCHEMA IF EXISTS " + schemaQualifier + " CASCADE");
-        } catch (DataAccessException e) {
-            String msg = "Не удалось удалить схему: " + schemaQualifier;
-
-            log.error(msg);
-
-            throw new DataServiceException(msg, e.getCause());
-        }
+    public void drop(ResourceQualifier schemaQualifier) throws SQLException {
+        ddlSchemasDetached.drop(jdbcTemplate, schemaQualifier.getSchema());
     }
 }
