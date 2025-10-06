@@ -1,16 +1,15 @@
-import React, { Component } from 'react';
-import { action, makeObservable, observable } from 'mobx';
+import React, { useCallback, useState } from 'react';
 import { observer } from 'mobx-react';
 import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
 import { AssignmentTurnedInOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
-import { boundMethod } from 'autobind-decorator';
 import { AxiosError } from 'axios';
 
 import { ServerError } from '../../../services/api/http.service';
 import { communicationService } from '../../../services/communication.service';
 import { LibraryRecord } from '../../../services/data/library/library.models';
 import { registerDocument } from '../../../services/data/library/library.service';
+import { Schema } from '../../../services/data/schema/schema.models';
 import { services } from '../../../services/services';
 import { ActionsItemVariant } from '../../Actions/Item/Actions-Item.base';
 import { ActionsItem } from '../../Actions/Item/Actions-Item.composed';
@@ -22,83 +21,97 @@ const cnLibraryDocumentActionsRegister = cn('LibraryDocumentActions', 'Register'
 interface LibraryDocumentActionsRegisterProps {
   document: LibraryRecord;
   as: ActionsItemVariant;
+  schema?: Schema;
 }
 
-@observer
-export class LibraryDocumentActionsRegister extends Component<LibraryDocumentActionsRegisterProps> {
-  @observable private dialogOpen = false;
-  @observable private busy: boolean = false;
+export const LibraryDocumentActionsRegister: React.FC<LibraryDocumentActionsRegisterProps> = observer(
+  ({ document, as, schema }) => {
+    const [dialogOpen, setDialogOpen] = useState(false);
+    const [errorMessage, setErrorMessage] = useState('');
+    const [busy, setBusy] = useState(false);
 
-  constructor(props: LibraryDocumentActionsRegisterProps) {
-    super(props);
-    makeObservable(this);
-  }
+    const isRegisterAllowed = () => {
+      const { properties = [] } = schema || {};
+      const requiredNames = new Set(['regdate', 'regnum', 'fias__oktmo']);
+      const existingNames = new Set(properties.map(({ name }) => name));
 
-  render() {
-    const { as } = this.props;
+      for (const requiredName of requiredNames) {
+        if (!existingNames.has(requiredName)) {
+          return false;
+        }
+      }
+
+      return true;
+    };
+
+    const closeDialog = useCallback(() => {
+      setDialogOpen(false);
+      setBusy(false);
+    }, []);
+
+    const registerDocumentHandler = useCallback(async () => {
+      if (!document.fias__oktmo) {
+        setErrorMessage(
+          'Не удалось зарегистрировать документ по причине. Документ не содержит код ОКТМО, заполните поле "Населенный пункт" или "Адресное описание" в соответствии с ФИАС.'
+        );
+
+        return;
+      }
+
+      setBusy(true);
+
+      const { libraryTableName, id } = document;
+      try {
+        await registerDocument(libraryTableName, id);
+        communicationService.libraryRecordUpdated.emit({ type: 'update', data: document });
+      } catch (error) {
+        const err = error as AxiosError<ServerError>;
+        const msg = `Не удалось зарегистрировать документ по причине: ${err?.response?.data?.message}`;
+
+        Toast.error(msg);
+        services.logger.error(msg, error);
+      } finally {
+        closeDialog();
+      }
+    }, [closeDialog, document]);
+
+    const openDialog = useCallback(async () => {
+      await registerDocumentHandler();
+      setDialogOpen(true);
+    }, [registerDocumentHandler]);
 
     return (
-      <>
-        <ActionsItem
-          className={cnLibraryDocumentActionsRegister()}
-          title=' Зарегистрировать документ'
-          icon={<AssignmentTurnedInOutlined />}
-          onClick={this.openDialog}
-          as={as}
-        />
+      isRegisterAllowed() && (
+        <>
+          <ActionsItem
+            className={cnLibraryDocumentActionsRegister()}
+            title='Зарегистрировать документ'
+            icon={<AssignmentTurnedInOutlined />}
+            onClick={openDialog}
+            as={as}
+          />
 
-        <Dialog open={this.dialogOpen} onClose={this.closeDialog}>
-          <DialogTitle>Подтверждение регистрации</DialogTitle>
-          <DialogContent>
-            <DialogContentText>
-              Вы действительно хотите зарегистрировать документ? Зарегистрированный документ нельзя изменить.
-            </DialogContentText>
-          </DialogContent>
-          <DialogActions>
-            <Button loading={this.busy} onClick={this.registerDocument} color='primary'>
-              Зарегистрировать
-            </Button>
-            <Button disabled={this.busy} onClick={this.closeDialog}>
-              Отмена
-            </Button>
-          </DialogActions>
-        </Dialog>
-      </>
+          <Dialog open={dialogOpen} onClose={closeDialog}>
+            <DialogTitle>{errorMessage ? 'Ошибка' : 'Подтверждение регистрации'}</DialogTitle>
+            <DialogContent>
+              <DialogContentText>
+                {errorMessage ||
+                  'Вы действительно хотите зарегистрировать документ? Зарегистрированный документ нельзя изменить.'}
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              {!errorMessage && (
+                <Button loading={busy} onClick={registerDocumentHandler} color='primary'>
+                  Зарегистрировать
+                </Button>
+              )}
+              <Button disabled={busy} onClick={closeDialog}>
+                Отмена
+              </Button>
+            </DialogActions>
+          </Dialog>
+        </>
+      )
     );
   }
-
-  @boundMethod
-  private async registerDocument() {
-    this.setBtnLoading(true);
-
-    const { libraryTableName, id } = this.props.document;
-    try {
-      await registerDocument(libraryTableName, id);
-      communicationService.libraryRecordUpdated.emit({ type: 'update', data: this.props.document });
-    } catch (error) {
-      const err = error as AxiosError<ServerError>;
-      const msg = `Не удалось зарегистрировать документ по причине: ${err?.response?.data?.message}`;
-
-      Toast.error(msg);
-      services.logger.error(msg, error);
-    } finally {
-      this.closeDialog();
-    }
-  }
-
-  @action.bound
-  private openDialog() {
-    this.dialogOpen = true;
-  }
-
-  @action.bound
-  private closeDialog() {
-    this.dialogOpen = false;
-    this.setBtnLoading(false);
-  }
-
-  @action.bound
-  private setBtnLoading(load: boolean) {
-    this.busy = load;
-  }
-}
+);

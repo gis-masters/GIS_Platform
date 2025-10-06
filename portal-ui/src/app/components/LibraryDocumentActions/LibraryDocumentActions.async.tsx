@@ -105,7 +105,7 @@ export default class LibraryDocumentActions extends Component<LibraryDocumentAct
         {!isFolder && <LibraryDocumentActionsCopy document={this.document || document} schema={this.schema} as={as} />}
         {!isNew && <LibraryDocumentActionsShare document={this.document || document} as={as} />}
         {!isNew && this.canBeRegistered() && (
-          <LibraryDocumentActionsRegister document={this.document || document} as={as} />
+          <LibraryDocumentActionsRegister document={this.document || document} as={as} schema={this.schema} />
         )}
         {!isNew && canDownload && <LibraryDocumentActionsDownload document={this.document || document} as={as} />}
         {organizationSettings.sedDialog && <LibraryDocumentActionsSed document={this.document || document} as={as} />}
