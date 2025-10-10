@@ -22,6 +22,7 @@ export enum ValueType {
   BINARY = 'BINARY',
   FIAS = 'FIAS',
   FILE = 'FILE',
+  VERSIONS = 'VERSIONS',
   DOCUMENT = 'DOCUMENT',
   USER = 'USER',
   USER_ID = 'USER_ID',
@@ -164,6 +165,10 @@ export interface OldPropertyFiasSchema extends OldBasePropertySchema {
   searchMode?: 'address' | 'oktmo';
 }
 
+export interface OldPropertySchemaVersion extends OldBasePropertySchema {
+  valueType: ValueType.VERSIONS;
+}
+
 export interface OldPropertyFileSchema extends OldBasePropertySchema {
   valueType: ValueType.FILE;
   accept?: string;
@@ -213,6 +218,7 @@ export type OldPropertySchema =
   | OldPropertySchemaUuid
   | OldPropertyFiasSchema
   | OldPropertyFileSchema
+  | OldPropertySchemaVersion
   | OldPropertyUserSchema
   | OldPropertyUserIdSchema
   | OldPropertyDocumentSchema;

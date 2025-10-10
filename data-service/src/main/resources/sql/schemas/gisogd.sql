@@ -5367,8 +5367,7 @@ SET class_rule =
     {
       "name": "docname",
       "title": "Наименование данных",
-      "valueType": "STRING",
-      "objectIdentityOnUi": true
+      "valueType": "STRING"
     },
     {
       "name": "docnum",

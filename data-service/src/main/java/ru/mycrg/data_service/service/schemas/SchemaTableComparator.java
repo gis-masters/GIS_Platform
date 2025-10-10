@@ -1,4 +1,4 @@
-package ru.mycrg.data_service.service.cqrs.schema_comparator;
+package ru.mycrg.data_service.service.schemas;
 
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
@@ -22,6 +22,9 @@ import java.util.Set;
 import static ru.mycrg.data_service.service.schemas.SchemaUtil.getPropertyByName;
 import static ru.mycrg.data_service.util.DetailedLogger.logError;
 
+/**
+ * Класс для определения соответствия между схемой и реальной таблицей.
+ */
 @Component
 public class SchemaTableComparator {
 

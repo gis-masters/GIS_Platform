@@ -21,6 +21,7 @@ export enum PropertyType {
   UUID = 'uuid',
   BINARY = 'binary',
   FILE = 'file',
+  VERSIONS = 'versions',
   SET = 'set',
   FIAS = 'fias',
   DOCUMENT = 'document',
@@ -233,6 +234,10 @@ export interface PropertySchemaLookup extends BasePropertySchema {
   propertyType: PropertyType.LOOKUP;
 }
 
+export interface PropertySchemaVersion extends BasePropertySchema {
+  propertyType: PropertyType.VERSIONS;
+}
+
 export interface PropertySchemaSet extends BasePropertySchema {
   propertyType: PropertyType.SET;
   properties: PropertySchema[];
@@ -305,6 +310,7 @@ export type PropertySchema =
   | PropertySchemaUserId
   | PropertySchemaCustom
   | PropertySchemaGeometry
+  | PropertySchemaVersion
   | PropertySchemaUuid;
 
 export type PropertiesAfterValidation = {

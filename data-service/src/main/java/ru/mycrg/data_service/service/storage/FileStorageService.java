@@ -21,10 +21,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
-import java.nio.file.AccessDeniedException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.nio.file.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -272,6 +269,8 @@ public class FileStorageService {
 
         try {
             Files.createDirectory(orgMainStoragePath);
+        } catch (FileAlreadyExistsException e) {
+            log.info("Хранилище: [{}] уже существует", orgMainStoragePath);
         } catch (IOException e) {
             String msg = "Не удалось создать основное хранилище организации: " + orgMainStoragePath;
             log.error("{} => {}", msg, e.getMessage(), e);

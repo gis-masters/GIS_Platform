@@ -9,11 +9,21 @@ export const propertyWithAllCheckedAttributes: Schema = {
   geometryType: GeometryType.MULTI_POLYGON,
   properties: [
     {
-      name: 'field_int',
-      title: 'Поле INT',
+      name: 'field_read_only',
+      title: 'Поле readOnly',
       propertyType: PropertyType.INT,
-      readOnly: true,
-      required: true,
+      readOnly: true
+    },
+    {
+      name: 'field_required',
+      title: 'Поле required',
+      propertyType: PropertyType.INT,
+      required: true
+    },
+    {
+      name: 'field_hidden',
+      title: 'Поле hidden',
+      propertyType: PropertyType.INT,
       hidden: true
     }
   ]

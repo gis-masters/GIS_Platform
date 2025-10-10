@@ -4720,14 +4720,6 @@ SET class_rule =
               "valueType": "FILE"
             },
             {
-              "name": "doc_tp",
-              "title": "Техплан",
-              "maxSize": 90000000,
-              "maxFiles": 5,
-              "multiple": true,
-              "valueType": "FILE"
-            },
-            {
               "name": "photo",
               "title": "Фотофиксация",
               "maxSize": 100000000,

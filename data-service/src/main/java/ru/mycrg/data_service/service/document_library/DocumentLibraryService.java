@@ -29,6 +29,7 @@ import static ru.mycrg.data_service.config.CrgCommonConfig.ROOT_FOLDER_PATH;
 import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_NAME;
 import static ru.mycrg.data_service.dto.ResourceType.LIBRARY;
 import static ru.mycrg.data_service.service.resources.ResourceQualifier.libraryQualifier;
+import static ru.mycrg.data_service.service.schemas.SchemaUtil.*;
 import static ru.mycrg.data_service.util.SystemLibraryAttributes.ID;
 import static ru.mycrg.data_service.util.SystemLibraryAttributes.PATH;
 
@@ -67,6 +68,7 @@ public class DocumentLibraryService {
                     .findAllowedByParent(DL_QUALIFIER, ROOT_FOLDER_PATH, ecqlFilter, pageable, new DocLibraryMapper())
                     .stream()
                     .map(LibraryModel::new)
+                    .peek(this::enrichSchema)
                     .collect(Collectors.toList());
 
             totalLibraries = permissionsRepository.getTotalByParent(DL_QUALIFIER, ROOT_FOLDER_PATH, ecqlFilter);
@@ -83,11 +85,10 @@ public class DocumentLibraryService {
                                             .collect(Collectors.toList());
         } else {
             allAllowedLibraries = permissionsRepository
-                    .findAllowedByParent(DL_QUALIFIER,
-                                         ROOT_FOLDER_PATH,
-                                         ecqlFilter)
+                    .findAllowedByParent(DL_QUALIFIER, ROOT_FOLDER_PATH, ecqlFilter)
                     .stream()
                     .map(LibraryModel::new)
+                    .peek(this::enrichSchema)
                     .collect(Collectors.toList());
         }
 
@@ -116,13 +117,16 @@ public class DocumentLibraryService {
         return oldRegistryNumber;
     }
 
-    public IResourceModel getInfo(String libraryId) {
+    public LibraryModel getInfo(String libraryId) {
         DocumentLibrary dl = libraryRepository
                 .findByTableName(libraryId)
                 .orElseThrow(() -> new NotFoundException("Библиотека не найдена по идентификатору: " + libraryId));
 
         if (authenticationFacade.isOrganizationAdmin()) {
-            return new LibraryModel(dl, "OWNER");
+            LibraryModel libraryModel = new LibraryModel(dl, "OWNER");
+            enrichSchema(libraryModel);
+
+            return libraryModel;
         }
 
         Optional<String> oRole = permissionsRepository.getBestRoleForLibrary(libraryId);
@@ -130,7 +134,10 @@ public class DocumentLibraryService {
             throw new ForbiddenException("Недостаточно прав для просмотра библиотеки: " + libraryId);
         }
 
-        return new LibraryModel(dl, oRole.get());
+        LibraryModel libraryModel = new LibraryModel(dl, oRole.get());
+        enrichSchema(libraryModel);
+
+        return libraryModel;
     }
 
     public boolean isExist(ResourceQualifier rIdentifier) {
@@ -168,5 +175,16 @@ public class DocumentLibraryService {
         });
 
         return registryData;
+    }
+
+    private void enrichSchema(LibraryModel libraryModel) {
+        SchemaDto schema = libraryModel.getSchema();
+        if (schema != null) {
+            enrichPropsByIsDeleted(schema.getProperties());
+
+            if (libraryModel.getVersioned()) {
+                enrichPropsByVersions(schema.getProperties());
+            }
+        }
     }
 }

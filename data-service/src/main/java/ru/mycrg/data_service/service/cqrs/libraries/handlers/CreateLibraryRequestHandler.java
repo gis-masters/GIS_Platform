@@ -17,7 +17,6 @@ import ru.mycrg.data_service.service.cqrs.libraries.requests.CreateLibraryReques
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service.service.resources.protectors.DocLibraryProtector;
 import ru.mycrg.data_service.service.schemas.ISchemaTemplateService;
-import ru.mycrg.data_service.util.SystemLibraryAttributes;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.data_service_contract.dto.SimplePropertyDto;
 import ru.mycrg.data_service_contract.enums.ValueType;
@@ -31,9 +30,10 @@ import static ru.mycrg.data_service.config.CrgCommonConfig.ROOT_FOLDER_PATH;
 import static ru.mycrg.data_service.dao.config.DaoProperties.ID;
 import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_NAME;
 import static ru.mycrg.data_service.service.resources.ResourceQualifier.libraryQualifier;
-import static ru.mycrg.data_service.service.schemas.SchemaUtil.getFtsProperties;
+import static ru.mycrg.data_service.service.schemas.SchemaUtil.*;
 import static ru.mycrg.data_service.util.JsonConverter.toJsonNode;
-import static ru.mycrg.data_service.util.SystemLibraryAttributes.*;
+import static ru.mycrg.data_service.util.SystemLibraryAttributes.IS_FOLDER;
+import static ru.mycrg.data_service.util.SystemLibraryAttributes.PATH;
 
 @Component
 public class CreateLibraryRequestHandler implements IRequestHandler<CreateLibraryRequest, LibraryModel> {
@@ -90,7 +90,12 @@ public class CreateLibraryRequestHandler implements IRequestHandler<CreateLibrar
 
         libraryRepository.save(library);
 
-        generateSystemBackAttributes(schemaProperties);
+        enrichPropsBySystemAttributes(schemaProperties);
+        enrichPropsByIsDeleted(schemaProperties);
+
+        if (library.isVersioned()) {
+            enrichPropsByVersions(schemaProperties);
+        }
 
         ddlTablesBase.create(SYSTEM_SCHEMA_NAME, library.getTableName(), schemaProperties, ID);
 
@@ -146,27 +151,6 @@ public class CreateLibraryRequestHandler implements IRequestHandler<CreateLibrar
         schemaProperties.removeIf(prop -> ID.equals(prop.getName()));
 
         schemaProperties.add(0, id);
-    }
-
-    private void generateSystemBackAttributes(List<SimplePropertyDto> schemaProperties) {
-        List<String> schemaPropertyName = schemaProperties.stream().map(SimplePropertyDto::getName)
-                                                          .collect(Collectors.toList());
-        if (!schemaPropertyName.contains(SystemLibraryAttributes.VERSIONS.getName())) {
-            SimplePropertyDto versions = new SimplePropertyDto();
-            versions.setName(SystemLibraryAttributes.VERSIONS.getName());
-            versions.setValueType(ValueType.VERSIONS);
-
-            schemaProperties.add(versions);
-        }
-
-        if (!schemaPropertyName.contains(IS_DELETED.getName())) {
-            SimplePropertyDto isDeleted = new SimplePropertyDto();
-            isDeleted.setName(IS_DELETED.getName());
-            isDeleted.setValueType(ValueType.BOOLEAN);
-            isDeleted.setDefaultValue(false);
-
-            schemaProperties.add(isDeleted);
-        }
     }
 
     private void validationSchema(SchemaDto schema) {

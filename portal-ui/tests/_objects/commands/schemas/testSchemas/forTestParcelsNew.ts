@@ -71,7 +71,7 @@ export const forTestParcelsNew: Schema = {
     {
       name: 'ruleid',
       title: 'Идентификатор стиля',
-      hidden: true,
+      hidden: false,
       required: true,
       propertyType: PropertyType.STRING
     }

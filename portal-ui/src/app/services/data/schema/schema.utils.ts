@@ -322,6 +322,10 @@ export function convertOldToNewProperties(oldFields: OldPropertySchema[]): Prope
       field.propertyType = PropertyType.FILE;
     }
 
+    if (oldField.valueType === ValueType.VERSIONS) {
+      field.propertyType = PropertyType.VERSIONS;
+    }
+
     if (oldField.valueType === ValueType.DOCUMENT) {
       field.propertyType = PropertyType.DOCUMENT;
     }
@@ -438,6 +442,10 @@ export function convertNewToOldProperties(newFields: PropertySchema[]): OldPrope
 
     if (newField.propertyType === PropertyType.FILE) {
       field.valueType = ValueType.FILE;
+    }
+
+    if (newField.propertyType === PropertyType.VERSIONS) {
+      field.valueType = ValueType.VERSIONS;
     }
 
     if (newField.propertyType === PropertyType.DOCUMENT) {

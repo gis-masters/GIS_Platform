@@ -1,7 +1,5 @@
 package ru.mycrg.data_service.service.cqrs.libraries.handlers;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import ru.mycrg.data_service.dao.ddl.columns.DdlColumnBase;
 import ru.mycrg.data_service.dto.LibraryUpdateDto;
@@ -20,11 +18,10 @@ import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 
 import static java.util.Objects.nonNull;
+import static ru.mycrg.data_service.util.SystemLibraryAttributes.VERSIONS;
 
 @Component
 public class UpdateLibraryRequestHandler implements IRequestHandler<UpdateLibraryRequest, Voidy> {
-
-    private final Logger log = LoggerFactory.getLogger(UpdateLibraryRequestHandler.class);
 
     private final DdlColumnBase ddlColumnBase;
     private final IMasterResourceProtector resourceProtector;
@@ -71,7 +68,7 @@ public class UpdateLibraryRequestHandler implements IRequestHandler<UpdateLibrar
             if (versioned) {
                 library.setVersioned(true);
 
-                ddlColumnBase.add(qualifier, "versions", "jsonb");
+                ddlColumnBase.add(qualifier, VERSIONS.getName(), "jsonb");
             } else {
                 library.setVersioned(false);
             }

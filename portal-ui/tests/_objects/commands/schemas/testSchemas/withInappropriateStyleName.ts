@@ -16,7 +16,7 @@ export const withInappropriateStyleName: Schema = {
     {
       name: 'ruleid',
       title: 'Идентификатор',
-      hidden: true,
+      hidden: false,
       required: true,
       propertyType: PropertyType.STRING
     }

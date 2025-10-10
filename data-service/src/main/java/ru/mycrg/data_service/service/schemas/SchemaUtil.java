@@ -17,6 +17,7 @@ import static java.lang.Boolean.TRUE;
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 import static ru.mycrg.data_service.util.SystemLibraryAttributes.*;
+import static ru.mycrg.data_service.util.SystemLibraryAttributes.VERSIONS;
 import static ru.mycrg.data_service_contract.enums.ValueType.*;
 import static ru.mycrg.http_client.JsonConverter.prettyPrint;
 
@@ -154,6 +155,41 @@ public class SchemaUtil {
 
             return targetType.equals(sourceValueType);
         };
+    }
+
+    public static void enrichPropsByVersions(List<SimplePropertyDto> schemaProperties) {
+        List<String> propertyNames = schemaProperties.stream()
+                                                     .map(SimplePropertyDto::getName)
+                                                     .collect(Collectors.toList());
+
+        if (!propertyNames.contains(VERSIONS.getName())) {
+            SimplePropertyDto versions = new SimplePropertyDto();
+            versions.setName(VERSIONS.getName());
+            versions.setTitle("Версии");
+            versions.setReadOnly(true);
+            versions.setHidden(true);
+            versions.setValueType(ValueType.VERSIONS);
+
+            schemaProperties.add(versions);
+        }
+    }
+
+    public static void enrichPropsByIsDeleted(List<SimplePropertyDto> schemaProperties) {
+        List<String> propertyNames = schemaProperties.stream()
+                                                     .map(SimplePropertyDto::getName)
+                                                     .collect(Collectors.toList());
+
+        if (!propertyNames.contains(IS_DELETED.getName())) {
+            SimplePropertyDto isDeleted = new SimplePropertyDto();
+            isDeleted.setName(IS_DELETED.getName());
+            isDeleted.setTitle("Признак удаления");
+            isDeleted.setReadOnly(true);
+            isDeleted.setHidden(true);
+            isDeleted.setValueType(ValueType.BOOLEAN);
+            isDeleted.setDefaultValue(false);
+
+            schemaProperties.add(isDeleted);
+        }
     }
 
     public static void enrichPropsBySystemAttributes(List<SimplePropertyDto> schemaProperties) {

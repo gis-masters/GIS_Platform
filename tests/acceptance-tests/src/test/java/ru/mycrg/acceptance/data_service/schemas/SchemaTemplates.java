@@ -597,8 +597,7 @@ public class SchemaTemplates {
                         "      \"title\": \"Идентификатор\"," +
                         "      \"required\": true," +
                         "      \"hidden\": false," +
-                        "      \"valueType\": \"INT\"," +
-                        "      \"sequenceNumber\": 0" +
+                        "      \"valueType\": \"INT\"" +
                         "    }," +
                         "    {" +
                         "      \"name\": \"title\"," +
@@ -606,7 +605,6 @@ public class SchemaTemplates {
                         "      \"required\": true," +
                         "      \"hidden\": false," +
                         "      \"valueType\": \"STRING\"," +
-                        "      \"sequenceNumber\": 0," +
                         "      \"maxLength\": 500" +
                         "    }," +
                         "    {" +
@@ -615,7 +613,6 @@ public class SchemaTemplates {
                         "      \"required\": false," +
                         "      \"hidden\": false," +
                         "      \"valueType\": \"STRING\"," +
-                        "      \"sequenceNumber\": 0," +
                         "      \"maxLength\": 254" +
                         "    }," +
                         "    {" +
@@ -624,7 +621,6 @@ public class SchemaTemplates {
                         "      \"required\": false," +
                         "      \"hidden\": false," +
                         "      \"valueType\": \"STRING\"," +
-                        "      \"sequenceNumber\": 0," +
                         "      \"maxLength\": 50" +
                         "    }," +
                         "    {" +
@@ -632,41 +628,35 @@ public class SchemaTemplates {
                         "      \"title\": \"Размер в kb\"," +
                         "      \"required\": true," +
                         "      \"hidden\": false," +
-                        "      \"valueType\": \"INT\"," +
-                        "      \"sequenceNumber\": 0" +
+                        "      \"valueType\": \"INT\"" +
                         "    }," +
                         "    {" +
                         "      \"name\": \"inner_path\"," +
                         "      \"title\": \"Где лежит\"," +
                         "      \"required\": true," +
                         "      \"hidden\": false," +
-                        "      \"valueType\": \"STRING\"," +
-                        "      \"sequenceNumber\": 0" +
+                        "      \"valueType\": \"STRING\"" +
                         "    }," +
                         "    {" +
                         "      \"name\": \"created_at\"," +
                         "      \"title\": \"Дата создания\"," +
                         "      \"required\": true," +
                         "      \"hidden\": false," +
-                        "      \"valueType\": \"DATETIME\"," +
-                        "      \"sequenceNumber\": 0" +
+                        "      \"valueType\": \"DATETIME\"" +
                         "    }," +
                         "    {" +
                         "      \"name\": \"last_modified\"," +
                         "      \"title\": \"Дата последней модификации\"," +
                         "      \"required\": true," +
                         "      \"hidden\": false," +
-                        "      \"valueType\": \"DATETIME\"," +
-                        "      \"sequenceNumber\": 0" +
+                        "      \"valueType\": \"DATETIME\"" +
                         "    }," +
                         "    {" +
                         "      \"name\": \"created_by\"," +
                         "      \"title\": \"Создатель\"," +
                         "      \"required\": true," +
                         "      \"hidden\": false," +
-                        "      \"objectIdentityOnUi\": false," +
                         "      \"valueType\": \"STRING\"," +
-                        "      \"sequenceNumber\": 0," +
                         "      \"maxLength\": 50" +
                         "    }," +
                         "    {" +
@@ -675,7 +665,6 @@ public class SchemaTemplates {
                         "      \"required\": false," +
                         "      \"hidden\": false," +
                         "      \"valueType\": \"STRING\"," +
-                        "      \"sequenceNumber\": 0," +
                         "      \"maxLength\": 254" +
                         "    }," +
                         "    {" +
@@ -684,7 +673,6 @@ public class SchemaTemplates {
                         "      \"required\": true," +
                         "      \"hidden\": false," +
                         "      \"valueType\": \"STRING\"," +
-                        "      \"sequenceNumber\": 0," +
                         "      \"maxLength\": 50" +
                         "    }," +
                         "    {" +
@@ -692,16 +680,14 @@ public class SchemaTemplates {
                         "      \"title\": \"Признак раздела\"," +
                         "      \"required\": true," +
                         "      \"hidden\": false," +
-                        "      \"valueType\": \"BOOLEAN\"," +
-                        "      \"sequenceNumber\": 0" +
+                        "      \"valueType\": \"BOOLEAN\"" +
                         "    }," +
                         "    {" +
                         "      \"name\": \"path\"," +
                         "      \"title\": \"Полный путь, отражающий иерархию обьектов\"," +
                         "      \"required\": true," +
                         "      \"hidden\": false," +
-                        "      \"valueType\": \"STRING\"," +
-                        "      \"sequenceNumber\": 0" +
+                        "      \"valueType\": \"STRING\"" +
                         "    }," +
                         "    {" +
                         "      \"name\": \"oktmo\"," +
@@ -709,7 +695,6 @@ public class SchemaTemplates {
                         "      \"required\": true," +
                         "      \"hidden\": false," +
                         "      \"valueType\": \"STRING\"," +
-                        "      \"sequenceNumber\": 0," +
                         "      \"maxLength\": 11" +
                         "    }," +
                         "    {" +
@@ -726,7 +711,6 @@ public class SchemaTemplates {
                         "      \"required\": false," +
                         "      \"hidden\": false," +
                         "      \"valueType\": \"STRING\"," +
-                        "      \"sequenceNumber\": 0," +
                         "      \"maxLength\": 11" +
                         "    }," +
                         "    {" +
@@ -766,14 +750,12 @@ public class SchemaTemplates {
                         "          \"title\": \"Название файла\"," +
                         "          \"required\": true," +
                         "          \"hidden\": false," +
-                        "          \"sequenceNumber\": 0," +
                         "          \"maxLength\": 500" +
                         "        }," +
                         "        {" +
                         "          \"name\": \"binary\"," +
                         "          \"title\": \"Выбор файла\"," +
-                        "          \"required\": true," +
-                        "          \"sequenceNumber\": 2" +
+                        "          \"required\": true" +
                         "        }," +
                         "        {" +
                         "          \"name\": \"native_crs\"," +
@@ -804,27 +786,23 @@ public class SchemaTemplates {
                         "          \"name\": \"title\"," +
                         "          \"title\": \"Название файла\"," +
                         "          \"required\": true," +
-                        "          \"hidden\": false," +
-                        "          \"sequenceNumber\": 0" +
+                        "          \"hidden\": false" +
                         "        }," +
                         "        {" +
                         "          \"name\": \"category\"," +
                         "          \"title\": \"Теги\"," +
                         "          \"required\": true," +
-                        "          \"hidden\": false," +
-                        "          \"sequenceNumber\": 1" +
+                        "          \"hidden\": false" +
                         "        }," +
                         "        {" +
                         "          \"name\": \"binary\"," +
                         "          \"title\": \"Выбор файла\"," +
-                        "          \"required\": true," +
-                        "          \"sequenceNumber\": 2" +
+                        "          \"required\": true" +
                         "        }," +
                         "        {" +
                         "          \"name\": \"native_crs\"," +
                         "          \"required\": false," +
-                        "          \"hidden\": false," +
-                        "          \"sequenceNumber\": 3" +
+                        "          \"hidden\": false" +
                         "        }" +
                         "      ]" +
                         "    }," +
