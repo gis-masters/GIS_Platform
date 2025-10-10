@@ -94,6 +94,8 @@ public class DatasourceFactory {
             dataSource.setSchema(schemaName);
         }
 
+        log.debug("Created new one dataSource by URL: [{}] with pool: [{}]", url, poolSize);
+
         return dataSource;
     }
 
