@@ -36,8 +36,8 @@ interface EditFeatureGeometryCoordProps {
   withControls?: boolean;
   canBeDeleted?: boolean;
   disabled?: boolean;
-  displayIndex?: number;
-  index?: number;
+  displayIndex: number;
+  index: number;
   active?: boolean;
   onChange(val: Coordinate, i: number): void;
   onDelete?(index: number): void;
@@ -131,7 +131,7 @@ export class EditFeatureGeometryCoord extends Component<EditFeatureGeometryCoord
             onClick={this.handleDelete}
             onMouseEnter={this.onMouseEnter}
             onMouseLeave={this.onMouseLeave}
-            disabled={!canBeDeleted || !!disabled}
+            disabled={!canBeDeleted || disabled}
           />
         )}
       </div>
@@ -206,9 +206,7 @@ export class EditFeatureGeometryCoord extends Component<EditFeatureGeometryCoord
       const coord = [...val] as Coordinate;
       coord[coordIndex] = numericValue;
 
-      if (index !== undefined) {
-        onChange(coord, index);
-      }
+      onChange(coord, index);
     }
 
     this.triggerFlash(coordIndex);
@@ -279,7 +277,7 @@ export class EditFeatureGeometryCoord extends Component<EditFeatureGeometryCoord
   private handleDelete() {
     const { onDelete, index } = this.props;
 
-    if (onDelete && index) {
+    if (onDelete) {
       onDelete(index);
     }
   }

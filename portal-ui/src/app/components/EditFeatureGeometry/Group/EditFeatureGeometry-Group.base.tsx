@@ -117,8 +117,8 @@ export class EditFeatureGeometryGroupBase extends Component<EditFeatureGeometryG
                 <EditFeatureGeometryCoord
                   val={coordinate}
                   key={i + this.startOffset}
+                  index={i + this.startOffset}
                   displayIndex={displayIndex}
-                  index={i}
                   onDelete={this.handleDelete}
                   withControls
                   canBeDeleted={coordinates.length > minCoordsCount}
@@ -169,12 +169,12 @@ export class EditFeatureGeometryGroupBase extends Component<EditFeatureGeometryG
   }
 
   @action.bound
-  private async handleDelete(i: number) {
+  private async handleDelete(index: number) {
     const { mustBeClosed, coordinates } = this.props;
 
-    coordinates.splice(i, 1);
+    coordinates.splice(index, 1);
 
-    if (i === 0 && mustBeClosed) {
+    if (index === 0 && mustBeClosed) {
       coordinates[coordinates.length - 1] = coordinates[0];
     }
 
@@ -188,6 +188,7 @@ export class EditFeatureGeometryGroupBase extends Component<EditFeatureGeometryG
     const where = coordinates.length - (mustBeClosed ? 1 : 0);
     coordinates.splice(where, 0, [0, 0]);
     this.updateOffsets();
+
     await this.forceGeometryUpdate();
   }
 

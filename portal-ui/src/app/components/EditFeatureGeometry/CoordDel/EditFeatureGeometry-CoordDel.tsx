@@ -10,16 +10,16 @@ import '!style-loader!css-loader!sass-loader!./EditFeatureGeometry-CoordDel.scss
 const cnEditFeatureGeometryCoordDel = cn('EditFeatureGeometry', 'CoordDel');
 
 interface EditFeatureGeometryCoordDelProps {
+  disabled: boolean | undefined;
   onClick(): void;
   onMouseEnter(): void;
   onMouseLeave(): void;
-  disabled: boolean;
 }
 
 @observer
 export class EditFeatureGeometryCoordDel extends Component<EditFeatureGeometryCoordDelProps> {
   render() {
-    const isDisabled = this.props.disabled;
+    const disabled = this.props.disabled;
 
     return (
       <Tooltip title='Удалить вершину' enterDelay={800}>
@@ -30,9 +30,9 @@ export class EditFeatureGeometryCoordDel extends Component<EditFeatureGeometryCo
             onMouseEnter={this.handleMouseEnter}
             onMouseLeave={this.handleMouseLeave}
             size='small'
-            disabled={isDisabled}
+            disabled={disabled}
           >
-            <DeleteOutline color={isDisabled ? 'disabled' : 'error'} fontSize='small' />
+            <DeleteOutline color={disabled ? 'disabled' : 'error'} fontSize='small' />
           </IconButton>
         </span>
       </Tooltip>
