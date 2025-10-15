@@ -1,0 +1,37 @@
+{
+  "name": "functionalzone_test",
+  "title": "Функциональные зоны тест",
+  "readOnly": false,
+  "tableName": "test_sorting__v1",
+  "styleName": "generic",
+  "geometryType": "MultiPolygon",
+  "properties": [
+    {
+      "name": "globalid",
+      "title": "Идентификатор объекта",
+      "valueType": "STRING"
+    },
+    {
+      "name": "name",
+      "title": "Наименование объекта",
+      "calculatedValueFormula": "return obj.name + '!!!'",
+      "validationFormula": "return 'error'",
+      "valueType": "STRING"
+    },
+    {
+      "name": "area",
+      "title": "Площадь, га",
+      "valueType": "DOUBLE"
+    },
+    {
+      "name": "population",
+      "title": "Численность населения, чел.",
+      "valueType": "INT"
+    },
+    {
+      "name": "shape",
+      "title": "Геометрия",
+      "valueType": "GEOMETRY"
+    }
+  ]
+}

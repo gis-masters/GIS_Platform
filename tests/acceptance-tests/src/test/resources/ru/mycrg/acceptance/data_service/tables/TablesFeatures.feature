@@ -35,7 +35,7 @@ Feature: Работа с записями в таблицах
 
   Scenario Outline: Спецсимволы корректно обрабатываются при создании или обновлении записей
     When В текущем слое создаётся запись с title: "<title>"
-    And  Запись сохранена и поле title корректно заполнено "<title>"
+    And  атрибут "properties.title" имеет значение "<title>"
     Examples:
       | title                      |
       | Some ' title               |

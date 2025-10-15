@@ -1,0 +1,45 @@
+{
+  "name": "schemaForTestCopy_consumer",
+  "title": "Схема для тестирования копирования: подтребитель",
+  "readOnly": false,
+  "tableName": "copy_test_consumer",
+  "styleName": "generic",
+  "geometryType": "MultiPolygon",
+  "properties": [
+    {
+      "name": "field_1",
+      "title": "area_generated_1",
+      "valueType": "DOUBLE"
+    },
+    {
+      "name": "field_2",
+      "title": "area_generated_2",
+      "valueType": "STRING"
+    },
+    {
+      "name": "field_3",
+      "title": "choice->string",
+      "valueType": "STRING"
+    },
+    {
+      "name": "field_4",
+      "title": "string->choice",
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "first option",
+          "value": "1"
+        },
+        {
+          "title": "second option",
+          "value": "2"
+        }
+      ]
+    },
+    {
+      "name": "shape",
+      "title": "Поле для геометрии",
+      "valueType": "GEOMETRY"
+    }
+  ]
+}

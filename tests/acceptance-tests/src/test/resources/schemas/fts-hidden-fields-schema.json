@@ -1,0 +1,32 @@
+{
+  "name": "schema_for_test_fts_hidden-fields",
+  "title": "Тест FTS - исключение hidden полей",
+  "tableName": "test_fts_hidden_fields",
+  "styleName": "generic",
+  "readOnly": false,
+  "geometryType": "MultiPolygon",
+  "properties": [
+    {
+      "name": "field_1",
+      "title": "Строка 1",
+      "description": "Строка участвующая в полнотекстовом поиске",
+      "valueType": "STRING"
+    },
+    {
+      "name": "field_2",
+      "title": "Строка 2",
+      "description": "Скрытая строка - НЕ должна участвовать в полнотекстовом поиске",
+      "valueType": "STRING",
+      "hidden": true
+    },
+    {
+      "name": "shape",
+      "title": "Геометрия",
+      "hidden": true,
+      "valueType": "GEOMETRY",
+      "allowedValues": [
+        "MultiPolygon"
+      ]
+    }
+  ]
+}

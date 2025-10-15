@@ -52,7 +52,7 @@ public class CrgScriptEngine {
 
             result = (String) invocable.invokeFunction("someFiz", data);
         } catch (ScriptException | NoSuchMethodException e) {
-            log.error("Не удалось применить функцию: [{}], для объекта: [{}] => {}",
+            log.error("Не удалось применить функцию как строку: [{}], для объекта: [{}] => {}",
                       function, data, e.getLocalizedMessage());
         }
 

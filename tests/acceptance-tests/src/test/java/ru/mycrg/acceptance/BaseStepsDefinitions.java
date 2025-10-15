@@ -391,7 +391,17 @@ public class BaseStepsDefinitions {
     }
 
     public void checkResponseValue(String field, String expectedValue) {
-        assertEquals(expectedValue, response.jsonPath().get(field));
+        try {
+            assertEquals(expectedValue, response.jsonPath().get(field));
+        } catch (Exception e) {
+            response.prettyPrint();
+
+            throw new IllegalStateException("Не удалось выполнить проверку checkResponseValue => " + e.getMessage());
+        }
+    }
+
+    public void checkResponseValueContains(String field, String value) {
+        assertTrue(((String) response.jsonPath().get(field)).contains(value));
     }
 
     public TableCreateDto getLatestTable() {
@@ -408,16 +418,6 @@ public class BaseStepsDefinitions {
                 .filter(layer -> layer.getTitle().equals(layerTitle))
                 .findFirst()
                 .orElseThrow(() -> new IllegalStateException("Не найден слой: " + layerTitle));
-    }
-
-    public void checkResponseValueContains(String field, String value) {
-        assertTrue(((String) response.jsonPath().get(field)).contains(value));
-    }
-
-    public Optional<Map.Entry<Integer, OrganizationCreateDto>> getOrgByName(String name) {
-        return orgPool.entrySet().stream()
-                      .filter(item -> item.getValue().getName().contains(name))
-                      .findFirst();
     }
 
     public int getUserGroupIdByName(String name) {

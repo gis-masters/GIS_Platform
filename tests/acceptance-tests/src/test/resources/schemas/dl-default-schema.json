@@ -1,0 +1,249 @@
+{
+  "name": "dl_default_schema",
+  "title": "Тестовая схема dl_default",
+  "description": "documents_schema_v1",
+  "tableName": "dl_default",
+  "properties": [
+    {
+      "name": "id",
+      "title": "Идентификатор",
+      "required": true,
+      "hidden": false,
+      "valueType": "INT"
+    },
+    {
+      "name": "title",
+      "title": "Заголовок",
+      "required": true,
+      "hidden": false,
+      "valueType": "STRING",
+      "maxLength": 500
+    },
+    {
+      "name": "name",
+      "title": "Название",
+      "required": false,
+      "hidden": false,
+      "valueType": "STRING",
+      "maxLength": 254
+    },
+    {
+      "name": "type",
+      "title": "Тип",
+      "required": false,
+      "hidden": false,
+      "valueType": "STRING",
+      "maxLength": 50
+    },
+    {
+      "name": "size",
+      "title": "Размер в kb",
+      "required": true,
+      "hidden": false,
+      "valueType": "INT"
+    },
+    {
+      "name": "inner_path",
+      "title": "Где лежит",
+      "required": true,
+      "hidden": false,
+      "valueType": "STRING"
+    },
+    {
+      "name": "created_at",
+      "title": "Дата создания",
+      "required": true,
+      "hidden": false,
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "last_modified",
+      "title": "Дата последней модификации",
+      "required": true,
+      "hidden": false,
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "created_by",
+      "title": "Создатель",
+      "required": true,
+      "hidden": false,
+      "valueType": "STRING",
+      "maxLength": 50
+    },
+    {
+      "name": "category",
+      "title": "Категории/Теги",
+      "required": false,
+      "hidden": false,
+      "valueType": "STRING",
+      "maxLength": 254
+    },
+    {
+      "name": "content_type_id",
+      "title": "Идентификатор контент типа",
+      "required": true,
+      "hidden": false,
+      "valueType": "STRING",
+      "maxLength": 50
+    },
+    {
+      "name": "is_folder",
+      "title": "Признак раздела",
+      "required": true,
+      "hidden": false,
+      "valueType": "BOOLEAN"
+    },
+    {
+      "name": "path",
+      "title": "Полный путь, отражающий иерархию обьектов",
+      "required": true,
+      "hidden": false,
+      "valueType": "STRING"
+    },
+    {
+      "name": "oktmo",
+      "title": "ОКТМО",
+      "required": true,
+      "hidden": false,
+      "valueType": "STRING",
+      "maxLength": 11
+    },
+    {
+      "name": "intents",
+      "title": "System intents",
+      "required": false,
+      "hidden": true,
+      "valueType": "STRING",
+      "maxLength": 500
+    },
+    {
+      "name": "native_crs",
+      "title": "nativeCRS",
+      "required": false,
+      "hidden": false,
+      "valueType": "STRING",
+      "maxLength": 11
+    },
+    {
+      "name": "some_files",
+      "title": "Any user title here",
+      "required": false,
+      "hidden": false,
+      "valueType": "FILE",
+      "multiple": true
+    },
+    {
+      "name": "one_file",
+      "title": "Any user title here",
+      "required": false,
+      "hidden": false,
+      "valueType": "FILE",
+      "multiple": false
+    },
+    {
+      "name": "test",
+      "title": "Not exist in database property",
+      "required": false,
+      "hidden": true,
+      "valueType": "STRING",
+      "maxLength": 500
+    }
+  ],
+  "contentTypes": [
+    {
+      "id": "doc_v1",
+      "type": "DOCUMENT",
+      "title": "Документ первого типа",
+      "icon": "DOCUMENT",
+      "attributes": [
+        {
+          "name": "title",
+          "title": "Название файла",
+          "required": true,
+          "hidden": false,
+          "maxLength": 500
+        },
+        {
+          "name": "binary",
+          "title": "Выбор файла",
+          "required": true
+        },
+        {
+          "name": "native_crs",
+          "required": false,
+          "hidden": false
+        }
+      ]
+    },
+    {
+      "id": "doc_v3",
+      "type": "DOCUMENT",
+      "attributes": [
+        {
+          "name": "title",
+          "title": "Название файла",
+          "required": true,
+          "maxLength": 100
+        }
+      ]
+    },
+    {
+      "id": "doc_v2",
+      "type": "DOCUMENT",
+      "title": "Документ ГПЗУ",
+      "icon": "GPZU",
+      "attributes": [
+        {
+          "name": "title",
+          "title": "Название файла",
+          "required": true,
+          "hidden": false
+        },
+        {
+          "name": "category",
+          "title": "Теги",
+          "required": true,
+          "hidden": false
+        },
+        {
+          "name": "binary",
+          "title": "Выбор файла",
+          "required": true
+        },
+        {
+          "name": "native_crs",
+          "required": false,
+          "hidden": false
+        }
+      ]
+    },
+    {
+      "id": "folder_v1",
+      "type": "FOLDER",
+      "attributes": [
+        {
+          "name": "title"
+        }
+      ]
+    },
+    {
+      "id": "doc_v4",
+      "type": "DOCUMENT",
+      "attributes": [
+        {
+          "name": "title",
+          "title": "Название документа"
+        },
+        {
+          "name": "some_files",
+          "title": "Картинки котиков"
+        },
+        {
+          "name": "one_file",
+          "title": "Одинокое фото собаки"
+        }
+      ]
+    }
+  ]
+}

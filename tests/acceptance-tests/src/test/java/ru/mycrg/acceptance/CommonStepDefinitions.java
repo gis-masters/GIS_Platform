@@ -9,8 +9,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import static org.apache.http.HttpStatus.SC_OK;
-import static org.hamcrest.CoreMatchers.hasItems;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
@@ -119,20 +117,14 @@ public class CommonStepDefinitions extends BaseStepsDefinitions {
         }
     }
 
-    @And("В ответе сервера для сущности {string} отсутствует пункт {string}")
-    public void checkNonExistentField(String entity, String field) {
-        getBaseRequestWithCurrentCookie()
-                .when().
-                        get(String.format("%s/", entity))
-                .then().
-                        log().ifValidationFails().
-                        statusCode(SC_OK).
-                        body("", not(hasItems(field)));
-    }
-
     @Then("В ответе пункт {string} имеет значение {string}")
     public void checkResponseValue(String field, String expectedValue) {
         super.checkResponseValue(field, expectedValue);
+    }
+
+    @Then("атрибут {string} имеет значение {string}")
+    public void checkAttributeValue(String attribute, String expectedValue) {
+        super.checkResponseValue(attribute, expectedValue);
     }
 
     @When("сообщение об ошибке соответствует ожидаемому: {string}")

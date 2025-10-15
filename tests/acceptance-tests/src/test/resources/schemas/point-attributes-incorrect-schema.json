@@ -1,0 +1,68 @@
+{
+  "name": "nto_all_point_incorrect",
+  "title": "Точечный слой с атрибутами - ошибочная, для теста",
+  "styleName": "generic",
+  "tableName": "nto_all_point_incorrect",
+  "properties": [
+    {
+      "name": "location",
+      "title": "Местоположение",
+      "length": 1000,
+      "valueType": "STRING"
+    },
+    {
+      "name": "user_id",
+      "title": "Нащальника",
+      "valueType": "INT"
+    },
+    {
+      "name": "guid",
+      "title": "ВсемирныйУникал",
+      "valueType": "INT"
+    },
+    {
+      "name": "fias",
+      "title": "ФИАС",
+      "valueType": "INT"
+    },
+    {
+      "name": "specialty_new",
+      "title": "Специализация",
+      "valueType": "STRING"
+    },
+    {
+      "name": "status",
+      "title": "Период функционирования НТО",
+      "valueType": "STRING"
+    },
+    {
+      "name": "area_doc",
+      "title": "Площадь, м.кв.",
+      "valueType": "INT"
+    },
+    {
+      "name": "created_at",
+      "title": "Дата создания",
+      "valueType": "STRING"
+    },
+    {
+      "name": "last_modified",
+      "title": "Дата модификации",
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "updated_by",
+      "title": "Кто обновил",
+      "length": 500,
+      "valueType": "STRING"
+    },
+    {
+      "name": "created_by",
+      "title": "Создатель",
+      "maxLength": 20,
+      "valueType": "STRING"
+    }
+  ],
+  "description": "Точечный слой с атрибутами",
+  "geometryType": "Point"
+}

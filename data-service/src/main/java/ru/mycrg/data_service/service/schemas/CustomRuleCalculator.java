@@ -31,12 +31,7 @@ public class CustomRuleCalculator {
 
         String calcFiledFunction = schema.getCalcFiledFunction();
         if (calcFiledFunction != null) {
-            ((Map<String, Object>) scriptEngine.invokeFunction(initialProps, calcFiledFunction))
-                    .forEach((key, value) -> {
-                        log.debug("Add prop: {}, with: {}", key, value);
-
-                        result.put(key, value);
-                    });
+            result.putAll((Map<String, Object>) scriptEngine.invokeFunction(initialProps, calcFiledFunction));
         }
 
         Map<String, String> propsWithFunctions = getPropertiesWithCalculatedFunctions(schema);

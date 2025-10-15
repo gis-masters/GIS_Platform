@@ -15,6 +15,7 @@ import ru.mycrg.acceptance.data_service.dto.QualifierDto;
 
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static io.restassured.http.ContentType.JSON;
 import static java.lang.String.join;
@@ -154,6 +155,11 @@ public class TableFeaturesStepsDefinitions extends BaseStepsDefinitions {
     public void updateMultipleRecords() {
         authorizationBase.loginAsCurrentUser();
 
+        updateMultipleRecordsAsCurrentUser();
+    }
+
+    @When("я делаю запрос на массовое редактирование записей слоя")
+    public void updateMultipleRecordsAsCurrentUser() {
         Map<String, Object> props = new HashMap<>();
         props.put("objectname", "updated_name");
         props.put("title", "Updated title");
@@ -163,17 +169,16 @@ public class TableFeaturesStepsDefinitions extends BaseStepsDefinitions {
         }
     }
 
-    @When("Администратор делает запрос на массовое редактирование записей слоя")
-    public void updateMultipleRecordsAsAdmin() {
-        authorizationBase.loginAsOwner();
+    @When("я обновляю атрибут {string} значением {string} для записей: {string}")
+    public void updateAttributeAsCurrentUserForMultipleFeatures(String attribute, String value, String idsAsString) {
+        List<Integer> ids = Arrays.stream(idsAsString.split("\\s*,\\s*"))
+                                  .map(Integer::parseInt)
+                                  .collect(Collectors.toList());
 
         Map<String, Object> props = new HashMap<>();
-        props.put("objectname", "updated_name");
-        props.put("title", "Updated title");
+        props.put(attribute, value);
 
-        if (!featureIds.isEmpty()) {
-            updateFeatures(props, featureIds);
-        }
+        updateFeatures(props, ids);
     }
 
     @When("Администратор делает запрос на массовое копирование записей слоя")
@@ -203,20 +208,32 @@ public class TableFeaturesStepsDefinitions extends BaseStepsDefinitions {
     public void updateFeatureInCurrentTable() {
         authorizationBase.loginAsCurrentUser();
 
-        Map<String, Object> properties = new HashMap<>();
-        properties.put("title", "new title");
-
-        updateFeature(new GeoJsonModel(properties));
+        updateCurrentFeatureAttributeAsCurrentUser("title", "new title");
     }
 
     @When("Администратор делает запрос на обновление существующей записи")
     public void updateFeatureInCurrentTableByAdmin() {
         authorizationBase.loginAsOwner();
 
+        updateCurrentFeatureAttributeAsCurrentUser("title", "new title");
+    }
+
+    @When("я обновляю атрибут {string} значением {string} в текущей записи")
+    public void updateCurrentFeatureAttributeAsCurrentUser(String attribute, String value) {
         Map<String, Object> properties = new HashMap<>();
-        properties.put("title", "new title");
+        properties.put(attribute, value);
 
         updateFeature(new GeoJsonModel(properties));
+    }
+
+    @When("я делаю запрос на выборку текущей записи")
+    public void getCurrentFeatureAsCurrentUser() {
+        getFeature(currentFeatureId);
+    }
+
+    @When("я делаю запрос на выборку записи {int}")
+    public void getCurrentFeatureAsCurrentUser(Integer featureId) {
+        getFeature(featureId);
     }
 
     @And("Сервер возвращает тело созданной записи таблицы, поля сущности корректно заполнены")
@@ -228,18 +245,6 @@ public class TableFeaturesStepsDefinitions extends BaseStepsDefinitions {
         assertNotNull(jsonPath.get("properties"));
         assertNotNull(jsonPath.get("geometry"));
         assertNotNull(jsonPath.get("id"));
-    }
-
-    @And("Калькулируемые поля пересчитаны согласно calculated Value Formula")
-    public void checkCalculatedFieldsByFormula() {
-        jsonPath = response.jsonPath();
-
-        assertEquals("Feature", jsonPath.get("type").toString());
-        assertNotNull(jsonPath.get("properties"));
-        assertNotNull(jsonPath.get("properties.name"));
-
-        String name = jsonPath.get("properties.name");
-        assertEquals("test!!!", name);
     }
 
     @And("Поля провалидированы согласно validationFormula")
@@ -260,13 +265,6 @@ public class TableFeaturesStepsDefinitions extends BaseStepsDefinitions {
         assertEquals("error", result.get("error"));
         assertTrue(result.containsKey("attribute"));
         assertEquals("name", result.get("attribute"));
-    }
-
-    @Then("Запись сохранена и поле title корректно заполнено {string}")
-    public void checkCreatedFeatureTitle(String expectedTitle) {
-        jsonPath = response.jsonPath();
-
-        assertEquals(expectedTitle, jsonPath.get("properties.title").toString());
     }
 
     @And("Записи в таблице успешно обновлены")
@@ -309,20 +307,6 @@ public class TableFeaturesStepsDefinitions extends BaseStepsDefinitions {
         List<Object> polygon = (List<Object>) coordinates.get(0);
         List<Object> firstPointOfPolygon = (List<Object>) polygon.get(0);
         assertEquals("[6694769.5, 4967093.0]", String.valueOf(firstPointOfPolygon.get(0)));
-    }
-
-    @And("Калькулируемые поля пересчитаны в связи с редактированием")
-    public void checkCalculatedFields() {
-        List<Map<String, Object>> properties = jsonPath.getList("properties");
-
-        properties
-                .forEach(property -> {
-                    String objectName = property.get("objectname").toString();
-                    String objectId = property.get("objectid").toString();
-                    String expectedName = "updated_name_test_" + objectId;
-
-                    assertEquals(expectedName, objectName);
-                });
     }
 
     @And("Записи успешно скопированы в другую таблицу")
@@ -440,6 +424,11 @@ public class TableFeaturesStepsDefinitions extends BaseStepsDefinitions {
     public void checkObjectsCount(int count) {
         getAllFeatures();
         assertEquals(count, response.jsonPath().getInt("page.totalElements"));
+    }
+
+    @Then("я делаю запрос на выборку всех записей текущей таблицы")
+    public void getAllFeaturesOfCurrentTable() {
+        getAllFeatures();
     }
 
     @And("геометрия в объекте равна {string}")

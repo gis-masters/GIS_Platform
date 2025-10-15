@@ -1,0 +1,83 @@
+{
+  "name": "nto_all_point",
+  "title": "Точечный слой с атрибутами",
+  "styleName": "generic",
+  "tableName": "nto_all_point",
+  "properties": [
+    {
+      "name": "number",
+      "title": "Номер на схеме",
+      "valueType": "INT"
+    },
+    {
+      "name": "user_id",
+      "title": "Нащальника",
+      "valueType": "USER_ID"
+    },
+    {
+      "name": "guid",
+      "title": "ВсемирныйУникал",
+      "valueType": "UUID"
+    },
+    {
+      "name": "fias",
+      "title": "ФИАС",
+      "valueType": "FIAS"
+    },
+    {
+      "name": "location",
+      "title": "Местоположение",
+      "maxLength": 400,
+      "valueType": "STRING"
+    },
+    {
+      "name": "specialty",
+      "title": "Специализация",
+      "valueType": "STRING"
+    },
+    {
+      "name": "status",
+      "title": "Период функционирования НТО",
+      "valueType": "STRING"
+    },
+    {
+      "name": "area_doc",
+      "title": "Площадь, м.кв.",
+      "valueType": "DOUBLE",
+      "fractionDigits": 6
+    },
+    {
+      "name": "created_at",
+      "title": "Дата создания",
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "last_modified",
+      "title": "Дата модификации",
+      "valueType": "DATETIME"
+    },
+    {
+      "name": "updated_by",
+      "title": "Кто обновил",
+      "maxLength": 50,
+      "valueType": "STRING"
+    },
+    {
+      "name": "created_by",
+      "title": "Создатель",
+      "maxLength": 50,
+      "valueType": "STRING"
+    },
+    {
+      "name": "shape",
+      "title": "shape",
+      "hidden": true,
+      "valueType": "GEOMETRY",
+      "allowedValues": [
+        "Point"
+      ]
+    }
+  ],
+  "description": "Точечный слой с атрибутами",
+  "geometryType": "Point"
+}

@@ -1,0 +1,47 @@
+{
+  "name": "schemaForTestCopy_producer",
+  "title": "Схема для тестирования копирования: поставщик",
+  "readOnly": false,
+  "tableName": "copy_test_producer",
+  "styleName": "generic",
+  "geometryType": "MultiPolygon",
+  "properties": [
+    {
+      "name": "field_1",
+      "title": "area_generated_1",
+      "valueType": "DOUBLE",
+      "calculatedValueWellKnownFormula": "st_area"
+    },
+    {
+      "name": "field_2",
+      "title": "area_generated_2",
+      "valueType": "DOUBLE",
+      "calculatedValueWellKnownFormula": "st_area"
+    },
+    {
+      "name": "field_3",
+      "title": "Поверхностные водные объекты",
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "first option",
+          "value": "1"
+        },
+        {
+          "title": "second option",
+          "value": "2"
+        }
+      ]
+    },
+    {
+      "name": "field_4",
+      "title": "Поверхностные водные объекты",
+      "valueType": "STRING"
+    },
+    {
+      "name": "shape",
+      "title": "Поле для геометрии",
+      "valueType": "GEOMETRY"
+    }
+  ]
+}

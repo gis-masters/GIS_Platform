@@ -1,0 +1,34 @@
+{
+  "name": "functionalzone_wellknownformula",
+  "tableName": "functionalzone_wellknownformula",
+  "geometryType": "MultiPolygon",
+  "readOnly": false,
+  "properties": [
+    {
+      "name": "globalid",
+      "title": "Идентификатор объекта",
+      "valueType": "STRING"
+    },
+    {
+      "name": "ruleid",
+      "title": "Идентификатор стиля",
+      "valueType": "STRING",
+      "calculatedValueWellKnownFormula": "rule_id_terr_Rf_subRf"
+    },
+    {
+      "name": "area",
+      "title": "Площадь, га",
+      "valueType": "DOUBLE"
+    },
+    {
+      "name": "shape",
+      "title": "Геометрия",
+      "valueType": "GEOMETRY"
+    },
+    {
+      "name": "classid",
+      "title": "Класс данных",
+      "valueType": "INT"
+    }
+  ]
+}

@@ -213,26 +213,6 @@ public class FilesStepDefinitions extends BaseStepsDefinitions {
         createFiles(new File[]{firstFile, secondFile});
     }
 
-    @And("Сообщение об отсутствии files составлено верно")
-    public void checkBadRequestMessage_files() {
-        super.checkResponseValue("message", "Требуемая часть запроса 'files' отсутствует");
-    }
-
-    @And("Сообщение об отсутствии body составлено верно")
-    public void checkBadRequestMessage_body() {
-        super.checkResponseValue("message", "Требуемая часть запроса 'body' отсутствует");
-    }
-
-    @And("Сообщение о несовпадении соответствует ожидаемому")
-    public void checkBadRequestMessageMismatch() {
-        super.checkResponseValue("message", "Данные не совпадают с переданными файлами");
-    }
-
-    @And("Сообщение о недопустимом типе ресурса соответствует ожидаемому")
-    public void checkBadRequestMessageUnsupportedResourceType() {
-        super.checkResponseValue("message", "Допустимыми типами 'resourceType' являются: TABLE, RECORD");
-    }
-
     @And("Сервер возвращает тело созданной сущности, поля сущности корректно заполнены")
     public void checkReturnedFileBody() {
         List<Object> objects = response.jsonPath().getList("");

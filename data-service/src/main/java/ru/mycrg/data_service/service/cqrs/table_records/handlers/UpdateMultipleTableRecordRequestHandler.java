@@ -8,11 +8,11 @@ import ru.mycrg.data_service.dao.ddl.tables.DdlTablesSpecial;
 import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
 import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.exceptions.ForbiddenException;
-import ru.mycrg.data_service.service.schemas.CustomRuleCalculator;
-import ru.mycrg.data_service.service.schemas.SystemAttributeHandler;
 import ru.mycrg.data_service.service.cqrs.table_records.requests.UpdateMultipleTableRecordRequest;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service.service.resources.protectors.FeatureProtector;
+import ru.mycrg.data_service.service.schemas.CustomRuleCalculator;
+import ru.mycrg.data_service.service.schemas.SystemAttributeHandler;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.geo_json.Feature;
 import ru.mycrg.mediator.IRequestHandler;
@@ -23,8 +23,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static java.util.Objects.isNull;
 import static ru.mycrg.data_service.dao.config.DaoProperties.PRIMARY_KEY;
+import static ru.mycrg.data_service.service.schemas.SchemaUtil.getPropertiesWithCalculatedFunctions;
 import static ru.mycrg.data_service.util.DetailedLogger.logError;
 import static ru.mycrg.data_service.util.TableUtils.throwIfNotMatchTableColumns;
 
@@ -77,7 +77,8 @@ public class UpdateMultipleTableRecordRequestHandler implements IRequestHandler<
 
         Feature newFeature = new Feature(modifiedProps);
 
-        if (isNull(schema.getCalcFiledFunction()) || schema.getCalcFiledFunction().isEmpty()) {
+        if ((schema.getCalcFiledFunction() == null || schema.getCalcFiledFunction().isEmpty())
+                && getPropertiesWithCalculatedFunctions(schema).isEmpty()) {
             log.debug("Update without calculated fields");
             multipleUpdate(qualifier, newFeature, schema, ids);
         } else {
