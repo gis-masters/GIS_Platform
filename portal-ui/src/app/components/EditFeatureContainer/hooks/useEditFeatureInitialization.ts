@@ -31,7 +31,8 @@ export const useEditFeatureInitialization = (
 
     setMode(data.mode);
     setFeatures(data.features);
-    const currentLayer = data.layer || getLayerByFeatureInCurrentProject(data.features[0]);
+
+    const currentLayer = getLayerByFeatureInCurrentProject(data.features[0]) || data.layer;
     setLayer(currentLayer);
 
     if (currentLayer) {

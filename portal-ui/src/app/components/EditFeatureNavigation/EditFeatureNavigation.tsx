@@ -80,7 +80,7 @@ export const EditFeatureNavigation: FC<EditFeatureNavigationProps> = observer(({
       {canBeRendered && (
         <div className={cnEditFeatureNavigation()}>
           <Tooltip title='Предыдущий объект'>
-            <span className={cnEditFeatureNavigation('Wrap')}>
+            <span className={cnEditFeatureNavigation('Prev')}>
               <IconButton disabled={!selectedFeaturesStore.features || currentIndex === 0} onClick={prevHandler}>
                 <ArrowBackIosNew />
               </IconButton>
@@ -94,7 +94,7 @@ export const EditFeatureNavigation: FC<EditFeatureNavigationProps> = observer(({
           </span>
 
           <Tooltip title='Следующий объект'>
-            <span className={cnEditFeatureNavigation('Wrap')}>
+            <span className={cnEditFeatureNavigation('Next')}>
               <IconButton
                 disabled={!selectedFeaturesStore.features || currentIndex + 1 === selectedFeaturesStore.features.length}
                 onClick={nextHandler}

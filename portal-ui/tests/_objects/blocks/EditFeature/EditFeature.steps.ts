@@ -31,6 +31,32 @@ Then('не открывается форма просмотра объекта',
   await editFeatureBlock.waitForHidden();
 });
 
+Then(
+  'в панели редактирования объекта отображается объект с значением {string} в поле {string}',
+  async function (value: string, field: string) {
+    const fieldValue = await editFeatureBlock.getFormViewFieldValue(field);
+
+    await expect(fieldValue).toEqual(value);
+  }
+);
+
+Then(
+  'в панели редактирования объекта в блоке навигации отображается значение {string}',
+  async function (value: string) {
+    const fieldValue = await editFeatureBlock.getNavigationValue();
+
+    await expect(fieldValue).toEqual(value);
+  }
+);
+
+When('в панели редактирования объекта я нажимаю на кнопку `Следующий объект`', async function () {
+  await editFeatureBlock.clickNextButton();
+});
+
+When('в панели редактирования объекта я нажимаю на кнопку `Предыдущий объект`', async function () {
+  await editFeatureBlock.clickPrevButton();
+});
+
 When('в форме просмотра объекта, я перехожу на вкладку просмотра геометрии', async function () {
   await editFeatureBlock.openGeometryTab();
 });
@@ -101,7 +127,7 @@ Then('в форме редактирования объекта в поле {str
   await editFeatureBlock.waitForVisible();
   await editFeatureBlock.waitForEditFeatureForm();
 
-  await expect(await editFeatureBlock.checkFormFieldValue(title, value)).toBe(true);
+  await expect(await editFeatureBlock.checkFormControlFieldValue(title, value)).toBe(true);
 });
 
 Then('вкладка просмотра геометрии в режиме чтения содержит следующую геометрию', async function (data: DataTable) {

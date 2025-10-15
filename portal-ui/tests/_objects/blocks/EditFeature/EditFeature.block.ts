@@ -25,6 +25,9 @@ class EditFeatureBlock extends Block {
     editFeatureGeometryDeleteCoordBtn: '.EditFeatureContainer .EditFeatureGeometry-CoordDel',
     editFeatureGeometryDraw: '.EditFeatureContainer .EditFeatureGeometry-Draw',
     editFeatureGeometryAsTextBtn: '.EditFeatureContainer .EditFeatureGeometry-AsText',
+    navigationTextBox: '.EditFeatureContainer .EditFeatureNavigation-TextBox',
+    navigationPrevFeatureBtn: '.EditFeatureContainer .EditFeatureNavigation-Prev .MuiButtonBase-root',
+    navigationNextFeatureBtn: '.EditFeatureContainer .EditFeatureNavigation-Next .MuiButtonBase-root',
     lookupStatus: '.EditFeatureContainer .Lookup-Status',
     zoom: '.ZoomToFeature',
     loader: 'EditFeatureContainer .MuiLinearProgress-root'
@@ -41,6 +44,18 @@ class EditFeatureBlock extends Block {
     const $zoomToFeature = await this.$('zoom');
     await $zoomToFeature.waitForClickable();
     await $zoomToFeature.click();
+  }
+
+  async clickPrevButton(): Promise<void> {
+    const $prevFeatureBtn = await this.$('navigationPrevFeatureBtn');
+    await $prevFeatureBtn.click();
+    await this.waitForLoading();
+  }
+
+  async clickNextButton(): Promise<void> {
+    const $nextFeatureBtn = await this.$('navigationNextFeatureBtn');
+    await $nextFeatureBtn.click();
+    await this.waitForLoading();
   }
 
   async clickSaveButton(): Promise<void> {
@@ -224,7 +239,7 @@ class EditFeatureBlock extends Block {
     await loader.waitForDisplayed({ reverse: true });
   }
 
-  async checkFormFieldValue(title: string, value: string): Promise<boolean> {
+  async checkFormControlFieldValue(title: string, value: string): Promise<boolean> {
     const $formField = await this.getFeatureEditField(title);
     if (!$formField) {
       throw new Error(`Не найден элемент ${title}`);
@@ -234,6 +249,23 @@ class EditFeatureBlock extends Block {
     const inputValue = await inputBlock.getValue();
 
     return inputValue === value;
+  }
+
+  async getFormViewFieldValue(title: string): Promise<string> {
+    const $formField = await this.getFeatureEditField(title);
+    if (!$formField) {
+      throw new Error(`Не найден элемент ${title}`);
+    }
+
+    const inputBlock = await $formField.$('.Form-ViewValue');
+
+    return await inputBlock.getText();
+  }
+
+  async getNavigationValue(): Promise<string> {
+    const inputBlock = await this.$('navigationTextBox');
+
+    return await inputBlock.getText();
   }
 }
 
