@@ -10,23 +10,23 @@ class ConnectionsToProjectsWidgetBlock extends Block {
   };
 
   async projectSelectDialogProjectAcceptBtn(): Promise<void> {
-    const $connectionToProjectDialogAccept = await this.$('connectionToProjectDialogAccept');
+    const $connectionToProjectDialogAccept = await this.findBySelector('connectionToProjectDialogAccept');
     await $connectionToProjectDialogAccept.waitForClickable();
     await $connectionToProjectDialogAccept.click();
-    await $connectionToProjectDialogAccept.waitForDisplayed({ reverse: true });
+    await $connectionToProjectDialogAccept.waitForExist({ reverse: true });
   }
 
   async projectSelectDialogViewSelector(): Promise<void> {
-    const $connectionToProjectDialogViewSelector = await this.$('connectionToProjectDialogViewSelector');
+    const $connectionToProjectDialogViewSelector = await this.findBySelector('connectionToProjectDialogViewSelector');
     await $connectionToProjectDialogViewSelector.waitForDisplayed();
   }
 
   async projectSelectDialogNoViewSelector(): Promise<void> {
-    await expect(this.$('connectionToProjectDialogViewSelector')).not.toBeDisplayed();
+    await expect(await this.findBySelector('connectionToProjectDialogViewSelector')).not.toBeDisplayed();
   }
 
   async projectSelectDialogSelectFirstView(optionTitle: string): Promise<void> {
-    const $connectionToProjectDialogViewSelector = await this.$('connectionToProjectDialogViewSelector');
+    const $connectionToProjectDialogViewSelector = await this.findBySelector('connectionToProjectDialogViewSelector');
     await $connectionToProjectDialogViewSelector.waitForDisplayed();
 
     const muiSelect = new MuiSelectBlock(

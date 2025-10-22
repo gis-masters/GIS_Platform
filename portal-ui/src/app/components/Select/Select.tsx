@@ -1,11 +1,18 @@
-import React, { FC } from 'react';
-import { BaseSelectProps, FormControl, InputLabel, ListItemText, MenuItem, Select as BaseSelect } from '@mui/material';
+import React, { type FC } from 'react';
+import {
+  type BaseSelectProps,
+  FormControl,
+  InputLabel,
+  ListItemText,
+  MenuItem,
+  Select as BaseSelect
+} from '@mui/material';
 import { cn } from '@bem-react/classname';
-import { IClassNameProps } from '@bem-react/core';
+import { type IClassNameProps } from '@bem-react/core';
 
-import { PropertyOption } from '../../services/data/schema/schema.models';
+import { type PropertyOption } from '../../services/data/schema/schema.models';
 
-import '!style-loader!css-loader!sass-loader!./Select.scss';
+import './Select.scss';
 
 const cnSelect = cn('Select');
 

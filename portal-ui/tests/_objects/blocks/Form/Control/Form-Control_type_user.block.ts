@@ -9,7 +9,7 @@ class FormControlTypeUserBlock extends Block {
   async clickAddUserBtn(title: string): Promise<void> {
     const formBlock = new FormBlock();
     const $field = await formBlock.getField(title);
-    const $addUserBtn = await $field.$('.Users-Add');
+    const $addUserBtn = await $field.$('.Users-Add').getElement();
 
     await $addUserBtn.click();
   }

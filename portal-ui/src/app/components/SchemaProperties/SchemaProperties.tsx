@@ -1,8 +1,8 @@
-import React, { FC } from 'react';
+import React, { type FC } from 'react';
 import { List } from '@mui/material';
 import { cn } from '@bem-react/classname';
 
-import { PropertySchema, Schema } from '../../services/data/schema/schema.models';
+import { type PropertySchema, type Schema } from '../../services/data/schema/schema.models';
 import { SchemaPropertiesItem } from './Item/SchemaProperties-Item';
 
 const cnSchemaProperties = cn('SchemaProperties');

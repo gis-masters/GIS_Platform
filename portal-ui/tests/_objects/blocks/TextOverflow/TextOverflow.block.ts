@@ -7,12 +7,12 @@ class TextOverflowBlock extends Block {
   };
 
   async clickButton(): Promise<void> {
-    const $link = await this.$('link');
+    const $link = await this.findBySelector('link');
     await $link.click();
   }
 
   async getButtonLabel(): Promise<string> {
-    const $link = await this.$('link');
+    const $link = await this.findBySelector('link');
 
     return await $link.getText();
   }

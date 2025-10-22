@@ -4,12 +4,12 @@ import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
-import { SpatialReferenceSystem } from '../../../server-types/common-contracts';
-import { Projection, projectionXTableCols } from '../../services/data/projections/projections.models';
+import { type SpatialReferenceSystem } from '../../../server-types/common-contracts';
+import { type Projection, projectionXTableCols } from '../../services/data/projections/projections.models';
 import { getProjections } from '../../services/data/projections/projections.service';
 import { mapToProjections } from '../../services/util/projectionMapper';
 import { ChooseXTableDialog } from '../ChooseXTableDialog/ChooseXTableDialog';
-import { FormControlProps } from '../Form/Control/Form-Control';
+import { type FormControlProps } from '../Form/Control/Form-Control';
 import { SelectFavoriteProjectionsControlButton } from './Button/SelectFavoriteProjectionsControl-Button';
 import { SelectFavoriteProjectionsControlChip } from './Chip/SelectFavoriteProjectionsControl-Chip';
 import { SelectFavoriteProjectionsControlWrapper } from './Wrapper/SelectFavoriteProjectionsControl-Wrapper';

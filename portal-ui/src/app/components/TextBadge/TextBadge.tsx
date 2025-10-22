@@ -1,11 +1,11 @@
-import React, { FC } from 'react';
+import React, { type FC } from 'react';
 import { Paper } from '@mui/material';
 import { cn } from '@bem-react/classname';
-import { IClassNameProps } from '@bem-react/core';
+import { type IClassNameProps } from '@bem-react/core';
 
-import { ChildrenProps } from '../../services/models';
+import { type ChildrenProps } from '../../services/models';
 
-import '!style-loader!css-loader!sass-loader!./TextBadge.scss';
+import './TextBadge.scss';
 
 const cnTextBadge = cn('TextBadge');
 

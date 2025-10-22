@@ -1,1 +1,3 @@
-<crg-login-form *ngIf="envPlatform " redirectTo="/projects" [noRecovery]="true"></crg-login-form>
+@if (envPlatform ) {
+  <crg-login-form redirectTo="/projects" [noRecovery]="true"></crg-login-form>
+}

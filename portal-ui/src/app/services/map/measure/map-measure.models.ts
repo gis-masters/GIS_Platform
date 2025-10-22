@@ -1,5 +1,5 @@
-import { Root } from 'react-dom/client';
-import { Feature, Overlay } from 'ol';
+import { type Root } from 'react-dom/client';
+import { type Feature, type Overlay } from 'ol';
 
 export interface MeasureItem {
   id: symbol;

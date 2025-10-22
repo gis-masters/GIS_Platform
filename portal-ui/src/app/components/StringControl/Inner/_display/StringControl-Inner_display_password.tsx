@@ -6,7 +6,11 @@ import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { withBemMod } from '@bem-react/core';
 
 import { IconButton } from '../../../IconButton/IconButton';
-import { cnStringControlInner, StringControlInnerBase, StringControlInnerProps } from '../StringControl-Inner.base';
+import {
+  cnStringControlInner,
+  StringControlInnerBase,
+  type StringControlInnerProps
+} from '../StringControl-Inner.base';
 
 @observer
 class StringControlInnerDisplayPassword extends Component<StringControlInnerProps> {

@@ -1,4 +1,4 @@
-import { createElement, FC } from 'react';
+import { createElement, type FC } from 'react';
 
 interface VendorOptionProps {
   name: string;

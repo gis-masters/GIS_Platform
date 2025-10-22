@@ -6,17 +6,20 @@ import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
 import { importKpt } from '../../../services/data/kpt/kpt.service';
-import { LibraryRecord } from '../../../services/data/library/library.models';
-import { PropertySchema, PropertyType } from '../../../services/data/schema/schema.models';
+import { type LibraryRecord } from '../../../services/data/library/library.models';
+import { type PropertySchema, PropertyType } from '../../../services/data/schema/schema.models';
 import { ActionTypes, DataTypes } from '../../../services/permissions/permissions.models';
 import { getAvailableActionsTooltipByRole } from '../../../services/permissions/permissions.utils';
 import { notFalsyFilter } from '../../../services/util/NotFalsyFilter';
-import { ActionsItemVariant } from '../../Actions/Item/Actions-Item.base';
+import { type ActionsItemVariant } from '../../Actions/Item/Actions-Item.base';
 import { ActionsItem } from '../../Actions/Item/Actions-Item.composed';
-import { ExplorerItemData, ExplorerItemType, isExplorerItemData } from '../../Explorer/Explorer.models';
+import { type ExplorerItemData, ExplorerItemType, isExplorerItemData } from '../../Explorer/Explorer.models';
 import { getDefaultValues } from '../../Form/Form.utils';
 import { FormDialog } from '../../FormDialog/FormDialog';
-import { SelectedVectorTable, SelectVectorTableControl } from '../../SelectVectorTableControl/SelectVectorTableControl';
+import {
+  type SelectedVectorTable,
+  SelectVectorTableControl
+} from '../../SelectVectorTableControl/SelectVectorTableControl';
 import { Toast } from '../../Toast/Toast';
 
 const cnLibraryDocumentActionsImportKpt = cn('LibraryDocumentActions', 'ImportKpt');

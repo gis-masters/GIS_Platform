@@ -34,23 +34,23 @@ class UsersAddDialogBlock extends Block {
       throw new Error(`Не найден пользователь "${userName}"`);
     }
 
-    const $userSelect = await $userRow.$('.MuiTableCell-root:first-child input');
+    const $userSelect = await $userRow.$('.MuiTableCell-root:first-child input').getElement();
     await $userSelect.click();
 
-    const $saveBtn = await this.$('saveBtn');
+    const $saveBtn = await this.findBySelector('saveBtn');
     await $saveBtn.click();
-    await $saveBtn.waitForDisplayed({ reverse: true });
+    await $saveBtn.waitForExist({ reverse: true });
   }
 
   async save(): Promise<void> {
-    const $saveBtn = await this.$('saveBtn');
+    const $saveBtn = await this.findBySelector('saveBtn');
     await $saveBtn.click();
-    await $saveBtn.waitForDisplayed({ reverse: true });
+    await $saveBtn.waitForExist({ reverse: true });
   }
 
   async findUser(userName: string): Promise<void> {
-    const $tableContainer = await this.$('tableContainer');
-    await $tableContainer.waitForDisplayed();
+    const $tableContainer = await this.findBySelector('tableContainer');
+    await $tableContainer.waitForExist();
 
     const $userRow = await this.findUserRow(userName);
 
@@ -62,7 +62,7 @@ class UsersAddDialogBlock extends Block {
   async getUsersAmount(): Promise<number> {
     await this.waitForVisible();
 
-    const $$userRows = await this.$$('userRow');
+    const $$userRows = await this.findAllBySelector('userRow');
 
     return $$userRows.length - 1;
   }
@@ -70,10 +70,10 @@ class UsersAddDialogBlock extends Block {
   async findUserRow(userName: string): Promise<WebdriverIO.Element | undefined> {
     await this.waitForVisible();
 
-    const $$userRows = await this.$$('userRow');
+    const $$userRows = await this.findAllBySelector('userRow');
 
     for (const $userRow of $$userRows) {
-      const $userRowName = await $userRow.$('.MuiTableCell-root:nth-child(3)');
+      const $userRowName = await $userRow.$('.MuiTableCell-root:nth-child(3)').getElement();
       const userRowName = await $userRowName.getText();
 
       if (userRowName === userName) {
@@ -85,11 +85,11 @@ class UsersAddDialogBlock extends Block {
   async waitForTableContainer(): Promise<void> {
     await this.waitForVisible();
 
-    const $loading = await this.$('loading');
-    await $loading.waitForDisplayed({ reverse: true });
+    const $loading = await this.findBySelector('loading');
+    await $loading.waitForExist({ reverse: true });
 
-    const $tableContainer = await this.$('tableContainer');
-    await $tableContainer.waitForDisplayed({ timeout: 5000 });
+    const $tableContainer = await this.findBySelector('tableContainer');
+    await $tableContainer.waitForDisplayed();
   }
 }
 

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { TableRow, TableRowProps } from '@mui/material';
+import { TableRow, type TableRowProps } from '@mui/material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 

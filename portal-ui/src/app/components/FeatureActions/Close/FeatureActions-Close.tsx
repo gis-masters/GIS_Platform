@@ -1,8 +1,8 @@
-import React, { FC } from 'react';
+import React, { type FC } from 'react';
 import { Close } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
-import { ActionsItemVariant } from '../../Actions/Item/Actions-Item.base';
+import { type ActionsItemVariant } from '../../Actions/Item/Actions-Item.base';
 import { ActionsItem } from '../../Actions/Item/Actions-Item.composed';
 
 const cnFeatureActionsClose = cn('FeatureActions', 'Close');

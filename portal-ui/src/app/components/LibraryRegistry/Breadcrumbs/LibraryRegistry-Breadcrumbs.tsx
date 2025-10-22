@@ -1,15 +1,15 @@
-import React, { Component, ReactNode } from 'react';
+import React, { Component, type ReactNode } from 'react';
 import { action, computed, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { FolderOutlined, HomeOutlined, LocalLibraryOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
-import { IClassNameProps } from '@bem-react/core';
+import { type IClassNameProps } from '@bem-react/core';
 import { isEqual } from 'lodash';
 
-import { Library, LibraryRecord } from '../../../services/data/library/library.models';
+import { type Library, type LibraryRecord } from '../../../services/data/library/library.models';
 import { getLibraryRecord } from '../../../services/data/library/library.service';
-import { FilterQuery } from '../../../services/util/filters/filters.models';
-import { Breadcrumbs, BreadcrumbsItemData, BreadcrumbsProps } from '../../Breadcrumbs/Breadcrumbs';
+import { type FilterQuery } from '../../../services/util/filters/filters.models';
+import { Breadcrumbs, type BreadcrumbsItemData, type BreadcrumbsProps } from '../../Breadcrumbs/Breadcrumbs';
 import {
   getIdsFromPath,
   getRegistryUrlWithFilter,
@@ -17,8 +17,8 @@ import {
 } from '../../DataManagement/DataManagement.utils';
 import { Library as LibraryIcon } from '../../Icons/Library';
 
-import '!style-loader!css-loader!sass-loader!./LibraryRegistry-Breadcrumbs.scss';
-import '!style-loader!css-loader!sass-loader!../BreadcrumbsIcon/LibraryRegistry-BreadcrumbsIcon.scss';
+import './LibraryRegistry-Breadcrumbs.scss';
+import '../BreadcrumbsIcon/LibraryRegistry-BreadcrumbsIcon.scss';
 
 const cnLibraryRegistryBreadcrumbs = cn('LibraryRegistry', 'Breadcrumbs');
 const cnLibraryRegistryBreadcrumbsIcon = cn('LibraryRegistry', 'BreadcrumbsIcon');

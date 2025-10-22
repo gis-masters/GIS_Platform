@@ -1,11 +1,11 @@
 import { action, computed, makeObservable, observable } from 'mobx';
 
-import { DataEntityType, Dataset, VectorTable } from '../services/data/vectorData/vectorData.models';
-import { CrgProject } from '../services/gis/projects/projects.models';
+import { DataEntityType, type Dataset, type VectorTable } from '../services/data/vectorData/vectorData.models';
+import { type CrgProject } from '../services/gis/projects/projects.models';
 import {
-  PermissionsListItem,
-  ResourcePermissions,
-  RoleAssignmentBody
+  type PermissionsListItem,
+  type ResourcePermissions,
+  type RoleAssignmentBody
 } from '../services/permissions/permissions.models';
 import { allDataEntitiesStore } from './AllDataEntities.store';
 import { allProjects } from './AllProjects.store';

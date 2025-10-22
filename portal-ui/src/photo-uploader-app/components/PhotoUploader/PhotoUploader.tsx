@@ -1,6 +1,6 @@
-import React, { FC, lazy, Suspense } from 'react';
+import React, { type FC, lazy, Suspense } from 'react';
 
-const PhotoUploaderAsync = lazy(() => import('./PhotoUploader.async'));
+const PhotoUploaderAsync = lazy(() => import('./PhotoUploader.chunkroot'));
 
 export const PhotoUploader: FC = () => (
   <Suspense>

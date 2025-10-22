@@ -1,10 +1,10 @@
-import React, { FC, useCallback, useState } from 'react';
+import React, { type FC, useCallback, useState } from 'react';
 import { observer } from 'mobx-react';
 import { DeleteOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
-import { Projection } from '../../../services/data/projections/projections.models';
-import { ActionsItemVariant } from '../../Actions/Item/Actions-Item.base';
+import { type Projection } from '../../../services/data/projections/projections.models';
+import { type ActionsItemVariant } from '../../Actions/Item/Actions-Item.base';
 import { ActionsItem } from '../../Actions/Item/Actions-Item.composed';
 import { OrgProjectionsChangeConfirm } from '../../OrgProjectionsChangeConfirm/OrgProjectionsChangeConfirm';
 

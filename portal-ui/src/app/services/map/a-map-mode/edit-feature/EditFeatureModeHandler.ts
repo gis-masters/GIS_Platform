@@ -2,10 +2,10 @@ import { mapStore } from '../../../../stores/Map.store';
 import { sidebars } from '../../../../stores/Sidebars.store';
 import { services } from '../../../services';
 import { MapMode, MapSelectionTypes } from '../../map.models';
-import { IMapModeHandler, ModeProps } from '../models';
+import { type IMapModeHandler, type ModeProps } from '../models';
 import { mapSelectionService } from '../selected-features/map-selection.service';
 import { selectedFeaturesStore } from '../selected-features/SelectedFeatures.store';
-import { EditFeaturesData } from './EditFeature.models';
+import { type EditFeaturesData } from './EditFeature.models';
 import { editFeatureHistoryStore } from './EditFeatureHistoryStore';
 import { editFeatureStore } from './EditFeatureStore';
 

@@ -1,6 +1,6 @@
 import { boundClass } from 'autobind-decorator';
 
-import { SpecializationView } from '../../../../server-types/common-contracts';
+import { type SpecializationView } from '../../../../server-types/common-contracts';
 import { Client } from '../../api/Client';
 import { http } from '../../api/http.service';
 

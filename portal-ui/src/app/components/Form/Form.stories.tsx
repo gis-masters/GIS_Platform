@@ -2,11 +2,11 @@ import React from 'react';
 import { action, observable } from 'mobx';
 import { TextField } from '@mui/material';
 import { Agriculture, Biotech, CheckCircleOutline, Clear, DataUsage, ErrorOutline, Send } from '@mui/icons-material';
-import { StoryFn } from '@storybook/react';
+import { type StoryFn } from '@storybook/react';
 import { cloneDeep } from 'lodash';
 
-import { PropertySchema, PropertyType, SimpleSchema } from '../../services/data/schema/schema.models';
-import { FieldErrors, validateFormValue } from '../../services/util/form/formValidation.utils';
+import { type PropertySchema, PropertyType, type SimpleSchema } from '../../services/data/schema/schema.models';
+import { type FieldErrors, validateFormValue } from '../../services/util/form/formValidation.utils';
 import { Mime } from '../../services/util/Mime';
 import { sleep } from '../../services/util/sleep';
 import { isRecordStringUnknown } from '../../services/util/typeGuards/isRecordStringUnknown';

@@ -2,11 +2,11 @@ import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import { withBemMod } from '@bem-react/core';
 
-import { FileInfo } from '../../../../services/data/files/files.models';
-import { LibraryRecord } from '../../../../services/data/library/library.models';
-import { PropertySchemaFile, PropertyType } from '../../../../services/data/schema/schema.models';
+import { type FileInfo } from '../../../../services/data/files/files.models';
+import { type LibraryRecord } from '../../../../services/data/library/library.models';
+import { type PropertySchemaFile, PropertyType } from '../../../../services/data/schema/schema.models';
 import { Files } from '../../../Files/Files';
-import { FormControlProps } from '../../Control/Form-Control';
+import { type FormControlProps } from '../../Control/Form-Control';
 import { FormViewErrors } from '../../ViewErrors/ViewErrors-ViewErrors';
 import { FormViewValue } from '../../ViewValue/Form-ViewValue';
 import { cnFormView } from '../Form-View.base';

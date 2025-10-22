@@ -1,6 +1,6 @@
-import { CrgProject } from '../../../../src/app/services/gis/projects/projects.models';
-import { FilterQuery } from '../../../../src/app/services/util/filters/filters.models';
-import { attributesTableStore } from '../../../../src/app/stores/AttributesTable.store';
+import { type CrgProject } from '../../../../src/app/services/gis/projects/projects.models';
+import { type FilterQuery } from '../../../../src/app/services/util/filters/filters.models';
+import { type attributesTableStore } from '../../../../src/app/stores/AttributesTable.store';
 
 export let currentProject: CrgProject;
 
@@ -9,7 +9,9 @@ declare const window: {
 };
 
 export async function getAttributesTableFilter(): Promise<FilterQuery> {
-  return await browser.executeAsync(callback => {
-    callback(window.attributesTableStore.filter);
-  });
+  return JSON.parse(
+    await browser.execute(function () {
+      return JSON.stringify(window.attributesTableStore.filter);
+    })
+  ) as FilterQuery;
 }

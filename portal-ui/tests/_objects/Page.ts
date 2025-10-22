@@ -7,7 +7,7 @@ export abstract class Page extends Block {
   abstract title: string;
 
   async testUrl(): Promise<void> {
-    await expect(browser).toHaveUrlContaining(this.url);
+    await expect(browser).toHaveUrl(expect.stringContaining(this.url));
   }
 
   async open(urlExtras = ''): Promise<void> {

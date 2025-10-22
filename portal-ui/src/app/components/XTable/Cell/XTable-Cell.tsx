@@ -1,17 +1,17 @@
-import React, { ReactElement } from 'react';
+import React, { type ReactElement } from 'react';
 import { observer } from 'mobx-react';
-import { TableCell, TableCellProps } from '@mui/material';
+import { TableCell, type TableCellProps } from '@mui/material';
 import { cn } from '@bem-react/classname';
 
 import { getFieldFilterValue } from '../../../services/util/filters/filters';
-import { FilterQuery } from '../../../services/util/filters/filters.models';
+import { type FilterQuery } from '../../../services/util/filters/filters.models';
 import { Highlight } from '../../Highlight/Highlight';
 import { TextBadge } from '../../TextBadge/TextBadge';
 import { TextOverflow } from '../../TextOverflow/TextOverflow';
 import { XTableCellContent } from '../CellContent/XTable-CellContent.composed';
-import { XTableColumn } from '../XTable.models';
+import { type XTableColumn } from '../XTable.models';
 
-import '!style-loader!css-loader!sass-loader!./XTable-Cell.scss';
+import './XTable-Cell.scss';
 
 const cnXTableCell = cn('XTable', 'Cell');
 

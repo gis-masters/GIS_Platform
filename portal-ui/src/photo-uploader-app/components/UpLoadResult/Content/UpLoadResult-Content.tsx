@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { type FC } from 'react';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { pluralize } from 'numeralize-ru';
@@ -6,7 +6,7 @@ import { pluralize } from 'numeralize-ru';
 import { PseudoLink } from '../../../../app/components/PseudoLink/PseudoLink';
 import { PhotoUploaderScreens, photoUploaderStore } from '../../../stores/PhotoUploader.store';
 
-import '!style-loader!css-loader!sass-loader!./UpLoadResult-Content.scss';
+import './UpLoadResult-Content.scss';
 
 const cnUpLoadResult = cn('UpLoadResult');
 

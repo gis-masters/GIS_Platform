@@ -1,11 +1,11 @@
-import React, { FC } from 'react';
+import React, { type FC } from 'react';
 import { observer } from 'mobx-react';
 import { ListItemIcon, ListItemText, MenuItem, Tooltip } from '@mui/material';
 import { FileOpenOutlined, LinkOutlined, MapOutlined, OpenInNewOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
-import { IClassNameProps } from '@bem-react/core';
+import { type IClassNameProps } from '@bem-react/core';
 
-import { Relation } from '../../services/data/schema/schema.models';
+import { type Relation } from '../../services/data/schema/schema.models';
 import { convertComplexNamesArrayToTableNamesUriFragment } from '../../services/gis/layers/layers.utils';
 import { buildCql } from '../../services/util/cql/buildCql';
 import { Link } from '../Link/Link';

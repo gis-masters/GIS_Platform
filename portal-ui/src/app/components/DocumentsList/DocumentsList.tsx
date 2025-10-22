@@ -1,10 +1,8 @@
-import React, { FC, lazy, Suspense } from 'react';
+import React, { type FC, lazy, Suspense } from 'react';
 
-import { DocumentsListProps } from './DocumentsList.async';
+import { type DocumentsListProps } from './DocumentsList.chunkroot';
 
-export { DocumentListItemData } from './DocumentsList.async';
-
-const DocumentsListAsync = lazy(() => import('./DocumentsList.async'));
+const DocumentsListAsync = lazy(() => import('./DocumentsList.chunkroot'));
 
 /**
  * @deprecated

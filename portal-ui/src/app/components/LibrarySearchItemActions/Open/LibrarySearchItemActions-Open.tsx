@@ -4,11 +4,11 @@ import { observer } from 'mobx-react';
 import { FileOpenOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
-import { LibraryRecord } from '../../../services/data/library/library.models';
-import { SearchItemData, SearchItemDataTypeFeature } from '../../../services/data/search/search.model';
-import { VectorTable } from '../../../services/data/vectorData/vectorData.models';
+import { type LibraryRecord } from '../../../services/data/library/library.models';
+import { type SearchItemData, type SearchItemDataTypeFeature } from '../../../services/data/search/search.model';
+import { type VectorTable } from '../../../services/data/vectorData/vectorData.models';
 import { getVectorTable } from '../../../services/data/vectorData/vectorData.service';
-import { ActionsItemVariant } from '../../Actions/Item/Actions-Item.base';
+import { type ActionsItemVariant } from '../../Actions/Item/Actions-Item.base';
 import { ActionsItem } from '../../Actions/Item/Actions-Item.composed';
 import { LibraryDocumentDialog } from '../../LibraryDocumentDialog/LibraryDocumentDialog';
 import { VectorTableFeatureDialog } from '../../VectorTableFeatureDialog/VectorTableFeatureDialog';

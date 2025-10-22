@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import { cn } from '@bem-react/classname';
 
-import { ChildrenProps } from '../../services/models';
+import { type ChildrenProps } from '../../services/models';
 import { EmptyList } from '../Icons/EmptyList';
 
-import '!style-loader!css-loader!sass-loader!./EmptyListView.scss';
-import '!style-loader!css-loader!sass-loader!./Icon/EmptyListView-Icon.scss';
-import '!style-loader!css-loader!sass-loader!./PrimaryText/EmptyListView-PrimaryText.scss';
-import '!style-loader!css-loader!sass-loader!./SecondaryText/EmptyListView-SecondaryText.scss';
+import './EmptyListView.scss';
+import './Icon/EmptyListView-Icon.scss';
+import './PrimaryText/EmptyListView-PrimaryText.scss';
+import './SecondaryText/EmptyListView-SecondaryText.scss';
 
 const cnEmptyListView = cn('EmptyListView');
 

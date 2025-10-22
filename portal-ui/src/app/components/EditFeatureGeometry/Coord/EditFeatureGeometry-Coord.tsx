@@ -6,12 +6,12 @@ import { WarningAmberOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { booleanPointInPolygon, point } from '@turf/turf';
 import { boundMethod } from 'autobind-decorator';
-import { Coordinate } from 'ol/coordinate';
+import { type Coordinate } from 'ol/coordinate';
 
 import {
   DEFAULT_OL_PROJECTION,
   defaultOlProjectionCode,
-  Projection
+  type Projection
 } from '../../../services/data/projections/projections.models';
 import { getProjectionByCode } from '../../../services/data/projections/projections.service';
 import { GeometryType } from '../../../services/geoserver/wfs/wfs.models';
@@ -23,9 +23,9 @@ import { transformGeometry } from '../../../services/util/coordinates-transform.
 import { isNumberArray } from '../../../services/util/typeGuards/isNumberArray';
 import { EditFeatureGeometryCoordDel } from '../CoordDel/EditFeatureGeometry-CoordDel';
 
-import '!style-loader!css-loader!sass-loader!./EditFeatureGeometry-Coord.scss';
-import '!style-loader!css-loader!sass-loader!../CoordInput/EditFeatureGeometry-CoordInput.scss';
-import '!style-loader!css-loader!sass-loader!../CoordNumber/EditFeatureGeometry-CoordNumber.scss';
+import './EditFeatureGeometry-Coord.scss';
+import '../CoordInput/EditFeatureGeometry-CoordInput.scss';
+import '../CoordNumber/EditFeatureGeometry-CoordNumber.scss';
 
 const warningText = 'Внимание. Заданная координата может выходить за рамки имеющегося слоя';
 

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { action, IReactionDisposer, makeObservable, observable, reaction } from 'mobx';
+import { action, type IReactionDisposer, makeObservable, observable, reaction } from 'mobx';
 import { observer } from 'mobx-react';
 import { Badge } from '@mui/material';
 import { ChevronRight, EditLocationOutlined, PinDropOutlined } from '@mui/icons-material';
@@ -16,7 +16,7 @@ import { sidebars } from '../../stores/Sidebars.store';
 import { IconButton } from '../IconButton/IconButton';
 import { ViewLocation } from '../Icons/ViewLocation';
 
-import '!style-loader!css-loader!sass-loader!./FeaturesSidebarTeaser.scss';
+import './FeaturesSidebarTeaser.scss';
 
 const cnFeaturesSidebarTeaser = cn('FeaturesSidebarTeaser');
 

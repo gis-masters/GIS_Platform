@@ -1,15 +1,15 @@
-import React, { ReactNode } from 'react';
+import React, { type ReactNode } from 'react';
 import { Restore } from '@mui/icons-material';
 
 import { usersService } from '../../../../services/auth/users/users.service';
-import { DocumentVersionExtended } from '../../../../services/data/library/library.models';
+import { type DocumentVersionExtended } from '../../../../services/data/library/library.models';
 import { getDocumentVersions } from '../../../../services/data/library/library.service';
-import { PageOptions } from '../../../../services/models';
+import { type PageOptions } from '../../../../services/models';
 import { staticImplements } from '../../../../services/util/staticImplements';
 import {
-  Adapter,
-  ExplorerItemData,
-  ExplorerItemDataAllTypes,
+  type Adapter,
+  type ExplorerItemData,
+  type ExplorerItemDataAllTypes,
   ExplorerItemType,
   itemTypeError
 } from '../../Explorer.models';

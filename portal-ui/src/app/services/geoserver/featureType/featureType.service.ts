@@ -1,9 +1,9 @@
 import { debounce } from 'lodash';
 
 import { Toast } from '../../../components/Toast/Toast';
-import { CrgLayer } from '../../gis/layers/layers.models';
+import { type CrgLayer } from '../../gis/layers/layers.models';
 import { featureTypeClient } from './featureType.client';
-import { FeatureType, FeatureTypeHref } from './featureType.model';
+import { type FeatureType, type FeatureTypeHref } from './featureType.model';
 
 export async function getFeatureType(layer: CrgLayer): Promise<FeatureType> {
   return await featureTypeClient.getFeatureType(layer);

@@ -1,12 +1,12 @@
 import { boundClass } from 'autobind-decorator';
 
-import { PageableResources } from '../../../../server-types/common-contracts';
+import { type PageableResources } from '../../../../server-types/common-contracts';
 import { Client } from '../../api/Client';
 import { http } from '../../api/http.service';
 import { preparePageOptions } from '../../api/http.utils';
-import { PageOptions } from '../../models';
+import { type PageOptions } from '../../models';
 import { Mime } from '../../util/Mime';
-import { Task, TaskHistory, TaskStatus } from './task.models';
+import { type Task, type TaskHistory, TaskStatus } from './task.models';
 
 @boundClass
 class TasksClient extends Client {

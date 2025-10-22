@@ -5,12 +5,12 @@ import { CreateOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
-import { Schema } from '../../../services/data/schema/schema.models';
+import { type Schema } from '../../../services/data/schema/schema.models';
 import { applyContentType } from '../../../services/data/schema/schema.utils';
-import { Task } from '../../../services/data/task/task.models';
+import { type Task } from '../../../services/data/task/task.models';
 import { updateTask } from '../../../services/data/task/task.service';
 import { getPatch } from '../../../services/util/patch';
-import { ActionsItemVariant } from '../../Actions/Item/Actions-Item.base';
+import { type ActionsItemVariant } from '../../Actions/Item/Actions-Item.base';
 import { ActionsItem } from '../../Actions/Item/Actions-Item.composed';
 import { FormDialog } from '../../FormDialog/FormDialog';
 import { Toast } from '../../Toast/Toast';

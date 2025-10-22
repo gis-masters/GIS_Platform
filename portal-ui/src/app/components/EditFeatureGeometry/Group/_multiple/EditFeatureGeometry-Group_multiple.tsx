@@ -1,10 +1,10 @@
-import React, { FC } from 'react';
+import React, { type FC } from 'react';
 import { withBemMod } from '@bem-react/core';
 
 import {
   cnEditFeatureGeometryGroup,
-  ContainerProps,
-  EditFeatureGeometryGroupProps
+  type ContainerProps,
+  type EditFeatureGeometryGroupProps
 } from '../EditFeatureGeometry-Group.base';
 
 const Container: FC = (props: ContainerProps) => <div {...props} />;

@@ -1,20 +1,20 @@
 import { chunk, cloneDeep, isEqual } from 'lodash';
-import { Coordinate } from 'ol/coordinate';
-import { Extent } from 'ol/extent';
+import { type Coordinate } from 'ol/coordinate';
+import { type Extent } from 'ol/extent';
 import proj4 from 'proj4';
 
-import { Projection } from '../data/projections/projections.models';
+import { type Projection } from '../data/projections/projections.models';
 import { getProjectionCode } from '../data/projections/projections.util';
 import {
   GeometryType,
-  WfsFeature,
-  WfsGeometry,
-  WfsLineStringGeometry,
-  WfsMultiLineStringGeometry,
-  WfsMultiPointGeometry,
-  WfsMultiPolygonGeometry,
-  WfsPointGeometry,
-  WfsPolygonGeometry
+  type WfsFeature,
+  type WfsGeometry,
+  type WfsLineStringGeometry,
+  type WfsMultiLineStringGeometry,
+  type WfsMultiPointGeometry,
+  type WfsMultiPolygonGeometry,
+  type WfsPointGeometry,
+  type WfsPolygonGeometry
 } from '../geoserver/wfs/wfs.models';
 import { isCoordinateValid, normalizeCoordinates } from '../geoserver/wfs/wfs.util';
 import { mapService } from '../map/map.service';

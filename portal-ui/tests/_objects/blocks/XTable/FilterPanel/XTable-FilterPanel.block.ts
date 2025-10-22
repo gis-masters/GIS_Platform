@@ -27,13 +27,13 @@ class XTableFilterPanelBlock extends Block {
   };
 
   async isEmpty(): Promise<boolean> {
-    const $$items = await this.$$('item');
+    const $$items = await this.findAllBySelector('item');
 
     return !$$items.length;
   }
 
   async hasClearAll(): Promise<boolean> {
-    const $clearAll = await this.$('clearAll');
+    const $clearAll = await this.findBySelector('clearAll');
 
     return await $clearAll.isExisting();
   }
@@ -51,27 +51,27 @@ class XTableFilterPanelBlock extends Block {
       return true;
     }
 
-    const $itemValue = await $item.$(this.selectors.itemValue);
+    const $itemValue = await $item.$(this.selectors.itemValue).getElement();
 
     return (await $itemValue.getText()) === value;
   }
 
   async clickClearAll(): Promise<void> {
-    const $clearAll = await this.$('clearAll');
+    const $clearAll = await this.findBySelector('clearAll');
     await $clearAll.click();
   }
 
   async clearItem(title: string): Promise<void> {
     const $item = await this.getItem(title);
-    const $itemClear = await $item.$(this.selectors.itemClear);
+    const $itemClear = await $item.$(this.selectors.itemClear).getElement();
     await $itemClear.click();
   }
 
   private async getItem(title: string): Promise<WebdriverIO.Element> {
-    const $$items = await this.$$('item');
+    const $$items = await this.findAllBySelector('item');
 
     for (const $item of $$items) {
-      const $itemTitle = await $item.$(this.selectors.itemTitle);
+      const $itemTitle = await $item.$(this.selectors.itemTitle).getElement();
 
       if (!(await $itemTitle.isExisting())) {
         continue;
@@ -90,20 +90,20 @@ class XTableFilterPanelBlock extends Block {
   /* ниже жопа */
 
   async setStringFieldValue(value: string): Promise<void> {
-    const $input = await this.$('inputTypeString');
+    const $input = await this.findBySelector('inputTypeString');
     await $input.setValue(value);
     await browser.pause(200);
   }
 
   async setDocumentFieldValue(value: string): Promise<void> {
-    const $input = await this.$('inputTypeDocument');
+    const $input = await this.findBySelector('inputTypeDocument');
     await $input.setValue(value);
     await browser.pause(300); //  input animation
   }
 
   async setFloatFieldValue(value1: number, value2: number): Promise<void> {
-    const $firstInput = await this.$('firstInputTypeFloat');
-    const $secondInput = await this.$('secondInputTypeFloat');
+    const $firstInput = await this.findBySelector('firstInputTypeFloat');
+    const $secondInput = await this.findBySelector('secondInputTypeFloat');
     await $firstInput.setValue(value1);
     await browser.pause(400); // input focus animation
     await $secondInput.setValue(value2);
@@ -111,50 +111,50 @@ class XTableFilterPanelBlock extends Block {
   }
 
   async setDateTimeFieldValue(value1: number, value2: number): Promise<void> {
-    const $firstInput = await this.$('firstInputTypeDateTime');
+    const $firstInput = await this.findBySelector('firstInputTypeDateTime');
     await $firstInput.setValue(value1);
     await browser.pause(400); // input focus animation
 
-    const $secondInput = await this.$('secondInputTypeDateTime');
+    const $secondInput = await this.findBySelector('secondInputTypeDateTime');
     await $secondInput.setValue(value2);
     await browser.pause(400); // input focus animation
   }
 
   async setBoolFieldValue(bool: boolean): Promise<void> {
     if (bool) {
-      const $firstInput = await this.$('firstBoolBtn');
+      const $firstInput = await this.findBySelector('firstBoolBtn');
       await $firstInput.click();
       await browser.pause(400); // input focus animation
     } else {
-      const $secondInput = await this.$('secondBoolBtn');
+      const $secondInput = await this.findBySelector('secondBoolBtn');
       await $secondInput.click();
       await browser.pause(400); // input focus animation
     }
   }
 
   async toggleStrictness(): Promise<void> {
-    const $strictness = await this.$('strictness');
+    const $strictness = await this.findBySelector('strictness');
     await $strictness.click();
     await browser.pause(300); //  input animation
   }
 
   async clearFirstFilter(): Promise<void> {
-    const $clear = await this.$('firstFilterChipClear');
+    const $clear = await this.findBySelector('firstFilterChipClear');
     await $clear.click();
   }
 
   async getSecondFilterValue(): Promise<string> {
-    const $title = await this.$('secondFilterChipValue');
+    const $title = await this.findBySelector('secondFilterChipValue');
 
     return await $title.getText();
   }
 
   async getFirstColValues(): Promise<string[]> {
-    const $$contents = [...(await this.$$('firstColCellContent'))];
+    const $$contents = [...(await this.findAllBySelector('firstColCellContent'))];
 
     return Promise.all(
       $$contents.map(async $content => {
-        const $cellValue = await $content.$(this.selectors.cellValue);
+        const $cellValue = await $content.$(this.selectors.cellValue).getElement();
 
         return await $cellValue.getText();
       })

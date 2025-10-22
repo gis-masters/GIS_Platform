@@ -1,8 +1,8 @@
-import { PageOptions } from '../../models';
+import { type PageOptions } from '../../models';
 import { sleep } from '../../util/sleep';
-import { SearchRequest } from '../search/search.model';
+import { type SearchRequest } from '../search/search.model';
 import { processesClient } from './processes.client';
-import { Process, ProcessableModel, ProcessResponse, ProcessStatus } from './processes.models';
+import { type Process, type ProcessableModel, type ProcessResponse, ProcessStatus } from './processes.models';
 
 export async function getProcess(id: number): Promise<Process> {
   return await processesClient.getProcess(id);

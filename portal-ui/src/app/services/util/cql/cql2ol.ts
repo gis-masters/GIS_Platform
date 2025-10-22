@@ -20,9 +20,9 @@ import {
   or,
   within
 } from 'ol/format/filter';
-import Filter from 'ol/format/filter/Filter';
-import { Geometry } from 'ol/geom';
-import { Units } from 'ol/proj/Units';
+import type Filter from 'ol/format/filter/Filter';
+import { type Geometry } from 'ol/geom';
+import { type Units } from 'ol/proj/Units';
 
 type FilterFunc = (...args: Filter[]) => Filter;
 

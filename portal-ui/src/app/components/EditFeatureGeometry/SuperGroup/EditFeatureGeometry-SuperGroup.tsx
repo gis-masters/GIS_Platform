@@ -4,7 +4,7 @@ import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 import { isNumber } from 'lodash';
-import { Coordinate } from 'ol/coordinate';
+import { type Coordinate } from 'ol/coordinate';
 
 import { GeometryType } from '../../../services/geoserver/wfs/wfs.models';
 import { editFeatureHistoryStore } from '../../../services/map/a-map-mode/edit-feature/EditFeatureHistoryStore';
@@ -17,7 +17,7 @@ import { EditFeatureGeometryToolbar } from '../Toolbar/EditFeatureGeometry-Toolb
 import { EditFeatureGeometryToolbarLeft } from '../ToolbarLeft/EditFeatureGeometry-ToolbarLeft';
 import { EditFeatureGeometryToolbarRight } from '../ToolbarRight/EditFeatureGeometry-ToolbarRight';
 
-import '!style-loader!css-loader!sass-loader!./EditFeatureGeometry-SuperGroup.scss';
+import './EditFeatureGeometry-SuperGroup.scss';
 
 const cnEditFeatureGeometry = cn('EditFeatureGeometry');
 

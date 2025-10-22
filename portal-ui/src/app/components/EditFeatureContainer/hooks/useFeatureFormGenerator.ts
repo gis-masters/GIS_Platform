@@ -2,7 +2,7 @@
 import { useEffect, useRef } from 'react';
 import { isEqual, isNumber } from 'lodash';
 
-import { Schema } from '../../../services/data/schema/schema.models';
+import { type Schema } from '../../../services/data/schema/schema.models';
 import { schemaService } from '../../../services/data/schema/schema.service';
 import {
   applyView,
@@ -13,14 +13,23 @@ import {
   convertOldToNewSchema,
   getFieldRelations
 } from '../../../services/data/schema/schema.utils';
-import { EditedField, OldPropertySchema, OldSchema, ValueType } from '../../../services/data/schema/schemaOld.models';
-import { WfsFeature } from '../../../services/geoserver/wfs/wfs.models';
-import { CrgVectorableLayer, CrgVectorLayer, isVectorLayer } from '../../../services/gis/layers/layers.models';
+import {
+  type EditedField,
+  type OldPropertySchema,
+  type OldSchema,
+  ValueType
+} from '../../../services/data/schema/schemaOld.models';
+import { type WfsFeature } from '../../../services/geoserver/wfs/wfs.models';
+import {
+  type CrgVectorableLayer,
+  type CrgVectorLayer,
+  isVectorLayer
+} from '../../../services/gis/layers/layers.models';
 import { EditFeatureMode } from '../../../services/map/a-map-mode/edit-feature/EditFeature.models';
 import { formatDate, systemFormat } from '../../../services/util/date.util';
-import { validateCustomRules, ValidationError } from '../../../services/util/FeaturePropertyValidatorsReact';
+import { validateCustomRules, type ValidationError } from '../../../services/util/FeaturePropertyValidatorsReact';
 import { convertToComplexField } from '../../Form/Form.utils';
-import { EditFeatureContainerFormControl } from './useEditFeatureState';
+import { type EditFeatureContainerFormControl } from './useEditFeatureState';
 
 export const useFeatureFormGenerator = (
   currentFeature: WfsFeature,

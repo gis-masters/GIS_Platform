@@ -1,10 +1,10 @@
-import React, { FC } from 'react';
+import React, { type FC } from 'react';
 import { List, ListItem, ListItemText } from '@mui/material';
 import { cn } from '@bem-react/classname';
 
 import { photoUploaderStore } from '../../stores/PhotoUploader.store';
 
-import '!style-loader!css-loader!sass-loader!./UpError.scss';
+import './UpError.scss';
 
 const cnUpError = cn('UpError');
 

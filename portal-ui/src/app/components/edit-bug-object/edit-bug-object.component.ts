@@ -1,4 +1,13 @@
-import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  type OnChanges,
+  type OnDestroy,
+  type OnInit,
+  Output,
+  type SimpleChanges
+} from '@angular/core';
 import { UntypedFormBuilder, UntypedFormControl } from '@angular/forms';
 import { NGXLogger } from 'ngx-logger';
 import { debounceTime } from 'rxjs/operators';
@@ -9,9 +18,9 @@ import { convertNewToOldSchema } from '../../services/data/schema/schema.utils';
 import { ValueType } from '../../services/data/schema/schemaOld.models';
 import { initValidation } from '../../services/data/validation/validation.service';
 import { transformFeatureService } from '../../services/geoserver/wfs/transform-feature.service';
-import { WfsFeature } from '../../services/geoserver/wfs/wfs.models';
+import { type WfsFeature } from '../../services/geoserver/wfs/wfs.models';
 import { getFeaturesById } from '../../services/geoserver/wfs/wfs.service';
-import { CrgVectorLayer } from '../../services/gis/layers/layers.models';
+import { type CrgVectorLayer } from '../../services/gis/layers/layers.models';
 import { getLayerSchema } from '../../services/gis/layers/layers.service';
 import { mapDrawService } from '../../services/map/draw/map-draw.service';
 import { mapService } from '../../services/map/map.service';
@@ -27,7 +36,8 @@ export interface ObjectDto {
 @Component({
   selector: 'crg-edit-bug-object',
   templateUrl: './edit-bug-object.component.html',
-  styleUrls: ['./edit-bug-object.component.css']
+  styleUrls: ['./edit-bug-object.component.css'],
+  standalone: false
 })
 export class EditBugObjectComponent extends BaseEdit implements OnChanges, OnInit, OnDestroy {
   @Input() data: ObjectDto[] = [];

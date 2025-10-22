@@ -1,12 +1,12 @@
 import { boundClass } from 'autobind-decorator';
 
-import { PageableResources } from '../../../../server-types/common-contracts';
+import { type PageableResources } from '../../../../server-types/common-contracts';
 import { Client } from '../../api/Client';
 import { http } from '../../api/http.service';
 import { preparePageOptions } from '../../api/http.utils';
-import { PageOptions } from '../../models';
-import { CrgLayersGroup } from '../layers/layers.models';
-import { CrgProject, NewCrgProject } from './projects.models';
+import { type PageOptions } from '../../models';
+import { type CrgLayersGroup } from '../layers/layers.models';
+import { type CrgProject, type NewCrgProject } from './projects.models';
 
 @boundClass
 class ProjectsClient extends Client {

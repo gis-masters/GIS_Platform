@@ -1,7 +1,7 @@
 import { action, makeObservable, observable } from 'mobx';
 
-import { help as store, Toc } from '../stores/Help.store';
-import { environment, Platform } from './environment';
+import { help as store, type Toc } from '../stores/Help.store';
+import { environment, type Platform } from './environment';
 
 export class HelpPart {
   @observable items?: Toc;

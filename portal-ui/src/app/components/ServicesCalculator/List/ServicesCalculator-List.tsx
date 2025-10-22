@@ -1,4 +1,4 @@
-import React, { Component, ReactElement } from 'react';
+import React, { Component, type ReactElement } from 'react';
 import { action, computed, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { Checkbox, Dialog, DialogActions, DialogContent } from '@mui/material';
@@ -9,9 +9,9 @@ import { ActionsRight } from '../../ActionsRight/ActionsRight';
 import { Button } from '../../Button/Button';
 import { XTable } from '../../XTable/XTable';
 import { ServicesCalculatorCheckbox } from '../Checkbox/ServicesCalculator-Checkbox';
-import { ServicesInfo } from '../ServicesCalculator';
+import { type ServicesInfo } from '../ServicesCalculator.models';
 
-import '!style-loader!css-loader!sass-loader!./ServicesCalculator-List.scss';
+import './ServicesCalculator-List.scss';
 
 const cnServicesCalculatorList = cn('ServicesCalculator', 'List');
 

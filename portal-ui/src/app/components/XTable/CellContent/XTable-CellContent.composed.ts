@@ -1,4 +1,4 @@
-import { compose, HOC } from '@bem-react/core';
+import { compose, type HOC } from '@bem-react/core';
 
 import { withTypeBool } from './_type/XTable-CellContent_type_bool';
 import { withTypeChoice } from './_type/XTable-CellContent_type_choice';
@@ -10,7 +10,7 @@ import { withTypeFloat } from './_type/XTable-CellContent_type_float';
 import { withTypeUrl } from './_type/XTable-CellContent_type_url';
 import { withTypeUser } from './_type/XTable-CellContent_type_user';
 import { withTypeUserId } from './_type/XTable-CellContent_type_userId';
-import { XTableCellContentBase as Presenter, XTableCellContentProps } from './XTable-CellContent.base';
+import { XTableCellContentBase as Presenter, type XTableCellContentProps } from './XTable-CellContent.base';
 
 export const XTableCellContent = compose(
   withTypeBool as HOC<XTableCellContentProps<unknown>>,

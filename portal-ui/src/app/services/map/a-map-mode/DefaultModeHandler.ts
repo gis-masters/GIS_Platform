@@ -2,7 +2,7 @@ import { mapStore } from '../../../stores/Map.store';
 import { services } from '../../services';
 import { MapMode } from '../map.models';
 import { editFeatureStore } from './edit-feature/EditFeatureStore';
-import { IMapModeHandler } from './models';
+import { type IMapModeHandler } from './models';
 
 class DefaultModeHandler implements IMapModeHandler {
   private static _instance: DefaultModeHandler;

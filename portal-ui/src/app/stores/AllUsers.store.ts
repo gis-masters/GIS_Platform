@@ -1,6 +1,6 @@
 import { action, makeObservable, observable } from 'mobx';
 
-import { CrgUser } from '../services/auth/users/users.models';
+import { type CrgUser } from '../services/auth/users/users.models';
 
 class AllUsers {
   private static _instance: AllUsers;

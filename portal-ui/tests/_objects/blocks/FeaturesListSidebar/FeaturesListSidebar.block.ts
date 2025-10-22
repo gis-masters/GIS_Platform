@@ -1,4 +1,4 @@
-import { WdioCheckElementMethodOptions } from 'wdio-image-comparison-service';
+import type { CheckElementMethodOptions } from '@wdio/image-comparison-core';
 
 import { Block } from '../../Block';
 import { extractText } from '../../commands/extractText';
@@ -13,7 +13,7 @@ class FeaturesListSidebarBlock extends Block {
   };
 
   async close() {
-    const $closeIcon = await this.$('closeIcon');
+    const $closeIcon = await this.findBySelector('closeIcon');
     await $closeIcon.waitForClickable();
     await $closeIcon.click();
   }
@@ -55,7 +55,7 @@ class FeaturesListSidebarBlock extends Block {
 
   async getFeaturesNames(): Promise<string[]> {
     await this.waitForVisible();
-    const $titles = await this.$$('title');
+    const $titles = await this.findAllBySelector('title');
 
     return await extractText($titles);
   }
@@ -69,7 +69,7 @@ class FeaturesListSidebarBlock extends Block {
   async openFirstFeature(): Promise<void> {
     await this.waitForVisible();
 
-    const $$items = await this.$$('item');
+    const $$items = await this.findAllBySelector('item');
 
     if ($$items.length) {
       await $$items[0].waitForClickable();
@@ -80,7 +80,7 @@ class FeaturesListSidebarBlock extends Block {
   async getFeaturesListItemByTitle(title: string): Promise<FeaturesListItemBlock> {
     await this.waitForVisible();
 
-    const $$items = await this.$$('item');
+    const $$items = await this.findAllBySelector('item');
 
     for (const $item of $$items) {
       const itemTitle = await $item.$('.FeaturesListItem-Title').getText();
@@ -96,7 +96,7 @@ class FeaturesListSidebarBlock extends Block {
   async getFeaturesListItemByLayer(layer: string): Promise<FeaturesListItemBlock> {
     await this.waitForVisible();
 
-    const $$items = await this.$$('item');
+    const $$items = await this.findAllBySelector('item');
 
     for (const $item of $$items) {
       const itemLayer = await $item.$('.FeaturesListItem-Layer').getText();
@@ -110,13 +110,13 @@ class FeaturesListSidebarBlock extends Block {
 
   async getFeaturesCount(): Promise<number> {
     await this.waitForVisible();
-    const $$items = await this.$$('item');
+    const $$items = await this.findAllBySelector('item');
 
     return $$items.length;
   }
 
-  async assertSelfie(tag?: string, checkElementOptions?: WdioCheckElementMethodOptions): Promise<void> {
-    const $container = await this.$('container');
+  async assertSelfie(tag?: string, checkElementOptions?: CheckElementMethodOptions): Promise<void> {
+    const $container = await this.findBySelector('container');
     await $container.waitForDisplayed();
 
     await super.assertSelfie(tag, {

@@ -1,8 +1,8 @@
-import React, { FC, lazy, Suspense } from 'react';
+import React, { type FC, lazy, Suspense } from 'react';
 
-import { PickupDatasetsProps } from './PickupDatasets.async';
+import { type PickupDatasetsProps } from './PickupDatasets.chunkroot';
 
-const PickupDatasetsAsync = lazy(() => import('./PickupDatasets.async'));
+const PickupDatasetsAsync = lazy(() => import('./PickupDatasets.chunkroot'));
 
 export const PickupDatasets: FC<PickupDatasetsProps> = props => (
   <Suspense>

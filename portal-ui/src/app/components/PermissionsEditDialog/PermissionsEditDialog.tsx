@@ -1,20 +1,20 @@
-import React, { Component, ReactElement, SyntheticEvent } from 'react';
+import React, { Component, type ReactElement, type SyntheticEvent } from 'react';
 import { action, computed, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { Dialog, DialogActions, DialogContent, DialogTitle, Tab, Tabs } from '@mui/material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
-import { CrgGroup } from '../../services/auth/groups/groups.models';
+import { type CrgGroup } from '../../services/auth/groups/groups.models';
 import { groupsService } from '../../services/auth/groups/groups.service';
-import { CrgUser } from '../../services/auth/users/users.models';
+import { type CrgUser } from '../../services/auth/users/users.models';
 import { usersService } from '../../services/auth/users/users.service';
 import { communicationService } from '../../services/communication.service';
 import {
   isPrincipalType,
   PrincipalType,
-  Role,
-  RoleAssignmentBody
+  type Role,
+  type RoleAssignmentBody
 } from '../../services/permissions/permissions.models';
 import { addEntityPermission, removeEntityPermission } from '../../services/permissions/permissions.service';
 import {
@@ -25,16 +25,16 @@ import {
 import { allGroups } from '../../stores/AllGroups.store';
 import { allUsers } from '../../stores/AllUsers.store';
 import { Button } from '../Button/Button';
-import { ExplorerItemEntityTypeTitle } from '../Explorer/Explorer.models';
+import { type ExplorerItemEntityTypeTitle } from '../Explorer/Explorer.models';
 import { Loading } from '../Loading/Loading';
 import { XTable } from '../XTable/XTable';
-import { XTableColumn } from '../XTable/XTable.models';
+import { type XTableColumn } from '../XTable/XTable.models';
 import { PermissionsEditDialogAddPrincipal } from './AddPrincipal/PermissionsEditDialog-AddPrincipal';
 import { PermissionsEditDialogRemovePrincipal } from './RemovePrincipal/PermissionsEditDialog-RemovePrincipal';
 import { PermissionsEditDialogRoleSelect } from './RoleSelect/PermissionsEditDialog-RoleSelect';
 
-import '!style-loader!css-loader!sass-loader!./Paper/PermissionsEditDialog-Paper.scss';
-import '!style-loader!css-loader!sass-loader!./Table/PermissionsEditDialog-Table.scss';
+import './Paper/PermissionsEditDialog-Paper.scss';
+import './Table/PermissionsEditDialog-Table.scss';
 
 const cnPermissionsEditDialog = cn('PermissionsEditDialog');
 

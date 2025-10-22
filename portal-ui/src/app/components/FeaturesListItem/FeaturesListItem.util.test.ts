@@ -1,9 +1,9 @@
 /* eslint-disable sonarjs/no-duplicate-string */
 import { describe, expect, test } from '@jest/globals';
 
-import { PropertyType, Schema } from '../../services/data/schema/schema.models';
-import { GeometryType, WfsFeature } from '../../services/geoserver/wfs/wfs.models';
-import { FeaturesListItemTitle, getFeaturesListItemTitle } from './FeaturesListItem.util';
+import { PropertyType, type Schema } from '../../services/data/schema/schema.models';
+import { GeometryType, type WfsFeature } from '../../services/geoserver/wfs/wfs.models';
+import { type FeaturesListItemTitle, getFeaturesListItemTitle } from './FeaturesListItem.util';
 
 const feature: WfsFeature = {
   type: 'Feature',

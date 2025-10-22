@@ -1,7 +1,7 @@
-import React, { FC } from 'react';
+import React, { type FC } from 'react';
 
 import { Rule } from '../../Rule/Rule';
-import { CustomRuleProps } from '../CustomRule';
+import { type CustomRuleProps } from '../CustomRule';
 import { CustomRuleTypeLine } from './CustomRule_type_line';
 import { CustomRuleTypePoint } from './CustomRule_type_point';
 import { CustomRuleTypePolygon } from './CustomRule_type_polygon';

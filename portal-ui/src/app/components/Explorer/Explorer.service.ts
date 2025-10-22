@@ -1,11 +1,11 @@
 import { boundMethod } from 'autobind-decorator';
-import { cloneDeep, debounce, DebouncedFunc } from 'lodash';
+import { cloneDeep, debounce, type DebouncedFunc } from 'lodash';
 
-import { DataChangeEventDetail } from '../../services/communication.service';
-import { FilterQuery } from '../../services/util/filters/filters.models';
+import { type DataChangeEventDetail } from '../../services/communication.service';
+import { type FilterQuery } from '../../services/util/filters/filters.models';
 import { getChildren, getChildrenWithParticularOne, getId } from './Adapter/Explorer-Adapter';
-import { emptyItem, ExplorerItemData, ExplorerItemType } from './Explorer.models';
-import { ExplorerStore } from './Explorer.store';
+import { emptyItem, type ExplorerItemData, ExplorerItemType } from './Explorer.models';
+import { type ExplorerStore } from './Explorer.store';
 
 export class ExplorerService {
   private store: ExplorerStore;

@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { type FC } from 'react';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 
@@ -8,8 +8,8 @@ import { UpConnectionsToProjects } from '../UpConnectionsToProjects/UpConnection
 import { UpSelectedLayer } from '../UpSelectedLayer/UpSelectedLayer';
 import { UpLoadResultContent } from './Content/UpLoadResult-Content';
 
-import '!style-loader!css-loader!sass-loader!./UpLoadResult.scss';
-import '!style-loader!css-loader!sass-loader!./Button/UpLoadResult-Button.scss';
+import './UpLoadResult.scss';
+import './Button/UpLoadResult-Button.scss';
 
 const cnUpLoadResult = cn('UpLoadResult');
 

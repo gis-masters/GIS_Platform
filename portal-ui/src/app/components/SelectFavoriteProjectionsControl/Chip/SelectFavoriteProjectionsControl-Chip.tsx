@@ -5,9 +5,9 @@ import { Clear } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
-import { Projection } from '../../../services/data/projections/projections.models';
+import { type Projection } from '../../../services/data/projections/projections.models';
 
-import '!style-loader!css-loader!sass-loader!./SelectFavoriteProjectionsControl-Chip.scss';
+import './SelectFavoriteProjectionsControl-Chip.scss';
 
 const cnSelectFavoriteProjectionsControlChip = cn('SelectFavoriteProjectionsControl', 'Chip');
 

@@ -4,17 +4,17 @@ import { observer } from 'mobx-react';
 import { TextField } from '@mui/material';
 import { Search } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
-import { IClassNameProps } from '@bem-react/core';
+import { type IClassNameProps } from '@bem-react/core';
 import { boundMethod } from 'autobind-decorator';
 
-import { FtsType } from '../../../server-types/common-contracts';
-import { SearchItemDataSource } from '../../services/data/search/search.model';
+import { type FtsType } from '../../../server-types/common-contracts';
+import { type SearchItemDataSource } from '../../services/data/search/search.model';
 import { MapAction } from '../../services/map/map.models';
 import { mapStore } from '../../stores/Map.store';
-import { ExplorerSearchValue } from '../Explorer/Explorer.models';
+import { type ExplorerSearchValue } from '../Explorer/Explorer.models';
 import { IconButton } from '../IconButton/IconButton';
 
-import '!style-loader!css-loader!sass-loader!./SearchField.scss';
+import './SearchField.scss';
 
 export interface SearchInfo {
   searchValue?: string;

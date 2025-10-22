@@ -6,7 +6,7 @@ class CreateProjectFolderBlock extends Block {
   };
 
   async click() {
-    const $container = await this.$('container');
+    const $container = await this.findBySelector('container');
     await $container.waitForDisplayed();
     await $container.click();
   }

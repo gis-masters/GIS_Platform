@@ -3,13 +3,13 @@ import { action, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { TreeItem } from '@mui/x-tree-view';
 import { cn } from '@bem-react/classname';
-import { IClassNameProps } from '@bem-react/core';
+import { type IClassNameProps } from '@bem-react/core';
 
-import { TocItem } from '../../../stores/Help.store';
+import { type TocItem } from '../../../stores/Help.store';
 
 const cnHelpTocItem = cn('HelpToc', 'Item');
 
-import '!style-loader!css-loader!sass-loader!./HelpToc-Item.scss';
+import './HelpToc-Item.scss';
 
 interface HelpTocProps extends IClassNameProps {
   item: TocItem;

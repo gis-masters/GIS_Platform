@@ -1,4 +1,4 @@
-import { PageOptions, PageQueryParams } from '../models';
+import { type PageOptions, type PageQueryParams } from '../models';
 import { buildCql } from '../util/cql/buildCql';
 
 export function preparePageOptions(

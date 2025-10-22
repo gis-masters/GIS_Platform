@@ -1,7 +1,7 @@
-import React, { FC } from 'react';
+import React, { type FC } from 'react';
 import { cn } from '@bem-react/classname';
 
-import '!style-loader!css-loader!sass-loader!./CustomStyleControl-Dash.scss';
+import './CustomStyleControl-Dash.scss';
 
 const cnCustomStyleControlDash = cn('CustomStyleControl', 'Dash');
 

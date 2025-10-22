@@ -2,7 +2,7 @@ import { boundClass } from 'autobind-decorator';
 
 import { Client } from '../../api/Client';
 import { http } from '../../api/http.service';
-import { OldSchema } from './schemaOld.models';
+import { type OldSchema } from './schemaOld.models';
 
 @boundClass
 class SchemaClient extends Client {

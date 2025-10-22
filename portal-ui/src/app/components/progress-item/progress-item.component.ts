@@ -1,18 +1,19 @@
-import { Component, Input, OnDestroy } from '@angular/core';
+import { Component, Input, type OnDestroy } from '@angular/core';
 import { NGXLogger } from 'ngx-logger';
 import { Subject } from 'rxjs';
 
 import { downloadExportResult } from '../../services/data/export/export.service';
 import { ProcessStatus, ProcessType } from '../../services/data/processes/processes.models';
-import { eventService, IEvent } from '../../services/event.service';
+import { eventService, type IEvent } from '../../services/event.service';
 import { saveAsBlob } from '../../services/util/FileSaver';
 import { Mime } from '../../services/util/Mime';
-import { ExportWsMsg, IWsMessage } from '../../services/ws.service';
+import { type ExportWsMsg, type IWsMessage } from '../../services/ws.service';
 
 @Component({
   selector: 'crg-progress-item',
   templateUrl: './progress-item.component.html',
-  styleUrls: ['./progress-item.component.css']
+  styleUrls: ['./progress-item.component.css'],
+  standalone: false
 })
 export class ProgressItemComponent implements OnDestroy {
   @Input() event?: IEvent;

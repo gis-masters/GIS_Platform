@@ -2,8 +2,8 @@ import { boundClass } from 'autobind-decorator';
 
 import { Client } from '../../api/Client';
 import { http } from '../../api/http.service';
-import { CrgProject } from '../projects/projects.models';
-import { ProjectBasemap } from './project-basemaps.models';
+import { type CrgProject } from '../projects/projects.models';
+import { type ProjectBasemap } from './project-basemaps.models';
 
 @boundClass
 class ProjectBasemapClient extends Client {

@@ -1,11 +1,11 @@
-import React, { FC } from 'react';
+import React, { type FC } from 'react';
 import { cn } from '@bem-react/classname';
 
-import { UploadedFile } from '../../../services/photoUploader.models';
+import { type UploadedFile } from '../../../services/photoUploader.models';
 
-import '!style-loader!css-loader!sass-loader!./UpPreviewer-Item.scss';
-import '!style-loader!css-loader!sass-loader!../Image/UpPreviewer-Image.scss';
-import '!style-loader!css-loader!sass-loader!../AdditionalInfo/UpPreviewer-AdditionalInfo.scss';
+import './UpPreviewer-Item.scss';
+import '../Image/UpPreviewer-Image.scss';
+import '../AdditionalInfo/UpPreviewer-AdditionalInfo.scss';
 
 const cnUpPreviewer = cn('UpPreviewer');
 

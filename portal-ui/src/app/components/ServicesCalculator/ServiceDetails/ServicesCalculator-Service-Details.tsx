@@ -1,11 +1,11 @@
-import React, { FC } from 'react';
+import React, { type FC } from 'react';
 import { cn } from '@bem-react/classname';
 
 import { ServicesCalculatorCounter } from '../Counter/ServicesCalculator-Counter';
 import { ServicesCalculatorPrice } from '../Price/ServicesCalculator-Price';
-import { ServicesInfo } from '../ServicesCalculator';
+import { type ServicesInfo } from '../ServicesCalculator.models';
 
-import '!style-loader!css-loader!sass-loader!./ServicesCalculator-Service-Details.scss';
+import './ServicesCalculator-Service-Details.scss';
 
 const cnServicesCalculatorServiceDetails = cn('ServicesCalculator', 'ServiceDetails');
 

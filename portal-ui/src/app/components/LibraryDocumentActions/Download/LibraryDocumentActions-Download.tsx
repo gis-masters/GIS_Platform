@@ -1,11 +1,11 @@
-import React, { FC } from 'react';
+import React, { type FC } from 'react';
 import { observer } from 'mobx-react';
 import { DownloadOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
 import { libraryClient } from '../../../services/data/library/library.client';
-import { LibraryRecord } from '../../../services/data/library/library.models';
-import { ActionsItemVariant } from '../../Actions/Item/Actions-Item.base';
+import { type LibraryRecord } from '../../../services/data/library/library.models';
+import { type ActionsItemVariant } from '../../Actions/Item/Actions-Item.base';
 import { ActionsItem } from '../../Actions/Item/Actions-Item.composed';
 
 const cnLibraryDocumentActionsDownload = cn('LibraryDocumentActions', 'Download');

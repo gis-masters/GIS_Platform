@@ -1,10 +1,10 @@
-import React, { FC } from 'react';
+import React, { type FC } from 'react';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 
 import { currentUser } from '../../../stores/CurrentUser.store';
 
-import '!style-loader!css-loader!sass-loader!./WorkspaceHeader-Organization.scss';
+import './WorkspaceHeader-Organization.scss';
 
 const cnWorkspaceHeaderOrganization = cn('WorkspaceHeader', 'Organization');
 

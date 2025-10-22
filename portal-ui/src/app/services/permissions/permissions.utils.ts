@@ -1,13 +1,13 @@
 import { ExplorerItemEntityTypeTitle } from '../../components/Explorer/Explorer.models';
 import { PermissionsListItemType } from '../../components/PermissionsListDialog/PermissionsListDialog.models';
 import {
-  ActionTypes,
+  type ActionTypes,
   DataTypes,
   gisRoles,
   PermissionType,
-  PrincipalType,
+  type PrincipalType,
   Role,
-  RoleAssignmentBody,
+  type RoleAssignmentBody,
   roles
 } from './permissions.models';
 

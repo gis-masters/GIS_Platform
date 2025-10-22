@@ -1,4 +1,4 @@
-import { PropertyType, Schema } from '../../../../../src/app/services/data/schema/schema.models';
+import { PropertyType, type Schema } from '../../../../../src/app/services/data/schema/schema.models';
 
 export const createDocumentsTarget: Schema = {
   name: 'createDocumentsTarget',

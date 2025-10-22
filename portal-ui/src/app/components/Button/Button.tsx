@@ -1,11 +1,11 @@
-import React, { Component, FC, ForwardedRef, forwardRef, RefObject } from 'react';
-import { LoadingButton, LoadingButtonProps } from '@mui/lab';
+import React, { Component, type FC, type ForwardedRef, forwardRef, type RefObject } from 'react';
+import { LoadingButton, type LoadingButtonProps } from '@mui/lab';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
 import { services } from '../../services/services';
 
-import '!style-loader!css-loader!sass-loader!./Button.scss';
+import './Button.scss';
 
 const cnButton = cn('Button');
 

@@ -1,9 +1,9 @@
-import React, { FC, useCallback } from 'react';
+import React, { type FC, useCallback } from 'react';
 import { observer, useLocalObservable } from 'mobx-react';
 import { Chip, Tooltip } from '@mui/material';
 import { cn } from '@bem-react/classname';
 
-import '!style-loader!css-loader!sass-loader!./TagsList-Item.scss';
+import './TagsList-Item.scss';
 
 const cnTagsListItem = cn('TagsList', 'Item');
 

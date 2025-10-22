@@ -1,6 +1,6 @@
 import { createElement } from 'react';
-import { createRoot, Root } from 'react-dom/client';
-import { Component, ElementRef, OnChanges, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { createRoot, type Root } from 'react-dom/client';
+import { Component, ElementRef, type OnChanges, type OnDestroy, type OnInit, ViewChild } from '@angular/core';
 import { withRegistry } from '@bem-react/di';
 
 import { registry } from '../../services/di-registry';
@@ -11,7 +11,8 @@ const LibraryDocumentPageContainerWithRegistry = withRegistry(registry)(LibraryD
 @Component({
   selector: 'crg-library-document-page-container',
   template: '<div class="library-document-page-container" #react></div>',
-  styleUrls: ['./library-document-page-container.component.scss']
+  styleUrls: ['./library-document-page-container.component.scss'],
+  standalone: false
 })
 export class LibraryDocumentPageContainerComponent implements OnInit, OnChanges, OnDestroy {
   @ViewChild('react', { read: ElementRef, static: true }) ref?: ElementRef<HTMLDivElement>;

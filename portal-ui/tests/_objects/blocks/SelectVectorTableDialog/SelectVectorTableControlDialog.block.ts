@@ -7,7 +7,7 @@ class SelectVectorTableControlDialogBlock extends Block {
   };
 
   async selectVectorTableBtn(): Promise<void> {
-    const $datasourceDialogAddBtn = await this.$('datasourceDialogAddBtn');
+    const $datasourceDialogAddBtn = await this.findBySelector('datasourceDialogAddBtn');
     await $datasourceDialogAddBtn.waitForDisplayed({ timeout: 3000 });
 
     await $datasourceDialogAddBtn.click();

@@ -6,14 +6,14 @@ class FeaturesSidebarTeaserBlock extends Block {
   };
 
   async open() {
-    const $container = await this.$('container');
+    const $container = await this.findBySelector('container');
     await $container.waitForClickable();
     await $container.click();
   }
 
   async getValue(): Promise<number> {
-    const $container = await this.$('container');
-    const $badge = await $container.$('.MuiBadge-badge');
+    const $container = await this.findBySelector('container');
+    const $badge = await $container.$('.MuiBadge-badge').getElement();
     const result = await $badge.getText();
 
     return Number(result);

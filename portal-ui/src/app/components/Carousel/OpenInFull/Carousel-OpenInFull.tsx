@@ -1,10 +1,10 @@
-import React, { FC } from 'react';
+import React, { type FC } from 'react';
 import { CloseFullscreen, OpenInFull } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
 import { IconButton } from '../../IconButton/IconButton';
 
-import '!style-loader!css-loader!sass-loader!./Carousel-OpenInFull.scss';
+import './Carousel-OpenInFull.scss';
 
 const cnCarouselOpenInFull = cn('Carousel', 'OpenInFull');
 

@@ -6,9 +6,9 @@ import { boundMethod } from 'autobind-decorator';
 
 import { SortOrder } from '../../../services/models';
 import { SortOrderButton } from '../../SortOrderButton/SortOrderButton';
-import { ExplorerStore } from '../Explorer.store';
+import { type ExplorerStore } from '../Explorer.store';
 
-import '!style-loader!css-loader!sass-loader!./Explorer-Sort.scss';
+import './Explorer-Sort.scss';
 
 const cnExplorerSort = cn('Explorer', 'Sort');
 

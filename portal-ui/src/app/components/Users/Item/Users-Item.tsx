@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Person } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
-import { MinimizedCrgUser } from '../../../services/auth/users/users.models';
+import { type MinimizedCrgUser } from '../../../services/auth/users/users.models';
 import { LookupActions } from '../../Lookup/Actions/Lookup-Actions';
 import { LookupDelete } from '../../Lookup/Delete/Lookup-Delete';
 import { LookupIcon } from '../../Lookup/Icon/Lookup-Icon';

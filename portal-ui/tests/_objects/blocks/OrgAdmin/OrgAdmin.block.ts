@@ -9,7 +9,7 @@ class OrgAdminBlock extends Block {
   async waitForLoadingDisappear() {
     await this.waitForVisible();
 
-    const $loading = await this.$('loading');
+    const $loading = await this.findBySelector('loading');
 
     try {
       await $loading.waitForDisplayed({ timeout: 1000 });
@@ -17,7 +17,7 @@ class OrgAdminBlock extends Block {
       // ignore
     }
 
-    await $loading.waitForDisplayed({ reverse: true });
+    await $loading.waitForExist({ reverse: true });
   }
 }
 

@@ -1,9 +1,9 @@
-import React, { FC, useCallback, useEffect } from 'react';
+import React, { type FC, useCallback, useEffect } from 'react';
 import { observer, useLocalObservable } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 
 import { ConnectionsTableToProjectsWidget } from '../../../app/components/ConnectionsTableToProjectsWidget/ConnectionsTableToProjectsWidget';
-import { FileConnection } from '../../../app/services/data/files/files.models';
+import { type FileConnection } from '../../../app/services/data/files/files.models';
 import { getVectorTableConnections } from '../../../app/services/data/vectorData/vectorData.service';
 import { photoUploaderStore } from '../../stores/PhotoUploader.store';
 

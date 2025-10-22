@@ -1,13 +1,19 @@
 import { boundClass } from 'autobind-decorator';
 
-import { PageableResources } from '../../../../server-types/common-contracts';
+import { type PageableResources } from '../../../../server-types/common-contracts';
 import { Client } from '../../api/Client';
 import { http } from '../../api/http.service';
 import { preparePageOptions } from '../../api/http.utils';
-import { PageOptions } from '../../models';
-import { RoleAssignmentBody } from '../../permissions/permissions.models';
-import { OldSchema } from '../schema/schemaOld.models';
-import { DocumentVersion, LibraryRaw, LibraryRecord, LibraryRecordNew, LibraryRecordRaw } from './library.models';
+import { type PageOptions } from '../../models';
+import { type RoleAssignmentBody } from '../../permissions/permissions.models';
+import { type OldSchema } from '../schema/schemaOld.models';
+import {
+  type DocumentVersion,
+  type LibraryRaw,
+  type LibraryRecord,
+  type LibraryRecordNew,
+  type LibraryRecordRaw
+} from './library.models';
 
 @boundClass
 class LibraryClient extends Client {

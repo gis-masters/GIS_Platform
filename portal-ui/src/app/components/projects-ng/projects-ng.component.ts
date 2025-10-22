@@ -1,6 +1,6 @@
 import { createElement } from 'react';
-import { createRoot, Root } from 'react-dom/client';
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { createRoot, type Root } from 'react-dom/client';
+import { Component, ElementRef, type OnDestroy, type OnInit, ViewChild } from '@angular/core';
 import { withRegistry } from '@bem-react/di';
 
 import { registry } from '../../services/di-registry';
@@ -11,7 +11,8 @@ const ProjectsWithRegistry = withRegistry(registry)(Projects);
 @Component({
   selector: 'crg-projects-ng',
   template: '<div class="projects-ng" #react></div>',
-  styleUrls: ['./projects-ng.component.scss']
+  styleUrls: ['./projects-ng.component.scss'],
+  standalone: false
 })
 export class ProjectsComponent implements OnDestroy, OnInit {
   @ViewChild('react', { read: ElementRef, static: true })

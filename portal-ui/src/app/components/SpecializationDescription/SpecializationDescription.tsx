@@ -1,9 +1,9 @@
-import React, { FC } from 'react';
+import React, { type FC } from 'react';
 import { observer } from 'mobx-react';
 import { Chip, Stack } from '@mui/material';
 import { cn } from '@bem-react/classname';
 
-import { PropertySchema, PropertyType } from '../../services/data/schema/schema.models';
+import { type PropertySchema, PropertyType } from '../../services/data/schema/schema.models';
 import { isStringArray } from '../../services/util/typeGuards/isStringArray';
 import { Card } from '../Card/Card';
 import { CardRow } from '../Card/Row/Card-Row';

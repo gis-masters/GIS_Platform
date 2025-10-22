@@ -1,8 +1,8 @@
-import { PageOptions } from '../../models';
-import { Schema } from '../schema/schema.models';
+import { type PageOptions } from '../../models';
+import { type Schema } from '../schema/schema.models';
 import { schemaService } from '../schema/schema.service';
 import { messagesRegistriesClient } from './messagesRegistries.client';
-import { MessagesRegistriesMessages, MessagesRegistry } from './messagesRegistries.models';
+import { type MessagesRegistriesMessages, type MessagesRegistry } from './messagesRegistries.models';
 
 export async function getMessagesRegistry(tableName: string): Promise<MessagesRegistry> {
   return await messagesRegistriesClient.getMessagesRegistry(tableName);

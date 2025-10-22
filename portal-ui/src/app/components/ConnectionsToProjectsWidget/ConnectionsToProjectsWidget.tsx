@@ -4,30 +4,30 @@ import { observer } from 'mobx-react';
 import { Dialog, DialogActions, DialogContent, DialogTitle, IconButton, Skeleton, Tooltip } from '@mui/material';
 import { AddCircle, AddCircleOutlineOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
-import { IClassNameProps } from '@bem-react/core';
+import { type IClassNameProps } from '@bem-react/core';
 import { RegistryConsumer } from '@bem-react/di';
 import { boundMethod } from 'autobind-decorator';
 import { pluralize } from 'numeralize-ru';
 
-import { FileConnection } from '../../services/data/files/files.models';
-import { PropertyOption, PropertyType, Schema } from '../../services/data/schema/schema.models';
-import { CommonDiRegistry } from '../../services/di-registry';
+import { type FileConnection } from '../../services/data/files/files.models';
+import { type PropertyOption, PropertyType, type Schema } from '../../services/data/schema/schema.models';
+import { type CommonDiRegistry } from '../../services/di-registry';
 import { getViewChoiceOptions } from '../../services/gis/layers/layers.service';
-import { CrgProject } from '../../services/gis/projects/projects.models';
+import { type CrgProject } from '../../services/gis/projects/projects.models';
 import { Role } from '../../services/permissions/permissions.models';
 import { isLayersManagementAllowed } from '../../services/permissions/permissions.service';
 import { ActionsLeft } from '../ActionsLeft/ActionsLeft';
 import { ActionsRight } from '../ActionsRight/ActionsRight';
 import { Button } from '../Button/Button';
 import { ConnectionsToProjects } from '../ConnectionsToProjects/ConnectionsToProjects';
-import { ExplorerItemData, ExplorerItemType } from '../Explorer/Explorer.models';
+import { type ExplorerItemData, ExplorerItemType } from '../Explorer/Explorer.models';
 import { Form } from '../Form/Form';
 import { PseudoLink } from '../PseudoLink/PseudoLink';
 
-import '!style-loader!css-loader!sass-loader!./ConnectionsToProjectsWidget.scss';
-import '!style-loader!css-loader!sass-loader!./Dialog/ConnectionsToProjectsWidget-Dialog.scss';
-import '!style-loader!css-loader!sass-loader!./Explorer/ConnectionsToProjectsWidget-Explorer.scss';
-import '!style-loader!css-loader!sass-loader!./ViewSelector/ConnectionsToProjectsWidget-ViewSelector.scss';
+import './ConnectionsToProjectsWidget.scss';
+import './Dialog/ConnectionsToProjectsWidget-Dialog.scss';
+import './Explorer/ConnectionsToProjectsWidget-Explorer.scss';
+import './ViewSelector/ConnectionsToProjectsWidget-ViewSelector.scss';
 
 const cnConnectionsToProjectsWidget = cn('ConnectionsToProjectsWidget');
 

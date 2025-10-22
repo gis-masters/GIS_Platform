@@ -1,7 +1,7 @@
 import { action, makeObservable, observable } from 'mobx';
-import { Feature } from 'ol';
+import { type Feature } from 'ol';
 
-import { LabelType } from '../services/map/labels/map-labels.models';
+import { type LabelType } from '../services/map/labels/map-labels.models';
 
 class MapLabelsStore {
   private static _instance: MapLabelsStore;

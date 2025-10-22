@@ -1,7 +1,7 @@
-import React, { FC } from 'react';
-import { IClassNameProps, withBemMod } from '@bem-react/core';
+import React, { type FC } from 'react';
+import { type IClassNameProps, withBemMod } from '@bem-react/core';
 
-import { BreadcrumbsItemProps, cnBreadcrumbsItem } from '../Breadcrumbs-Item.base';
+import { type BreadcrumbsItemProps, cnBreadcrumbsItem } from '../Breadcrumbs-Item.base';
 
 interface BreadcrumbsItemTypeNoneProps extends IClassNameProps {
   type: 'none';

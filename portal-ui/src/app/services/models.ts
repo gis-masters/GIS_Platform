@@ -1,8 +1,6 @@
-import { ReactNode } from 'react';
+import { type ReactNode } from 'react';
 
-import { OldSchema } from './data/schema/schemaOld.models';
-import { GeometryType } from './geoserver/wfs/wfs.models';
-import { FilterQuery } from './util/filters/filters.models';
+import { type FilterQuery } from './util/filters/filters.models';
 
 export interface ApiLink {
   href: string;
@@ -23,24 +21,6 @@ export const AS_IS = {
 export const NOT_IMPORT = {
   title: 'Не импортировать',
   name: ImportTargetType.NOT_IMPORT
-};
-
-export const IMPORT_LAYER_AS_IS: OldSchema = {
-  name: 'IMPORT_LAYER_AS_IS',
-  title: 'Импортировать как есть',
-  description: '',
-  tableName: 'IMPORT_LAYER_AS_IS',
-  geometryType: GeometryType.POINT,
-  properties: []
-};
-
-export const NOT_IMPORT_LAYER: OldSchema = {
-  name: 'NOT_IMPORT_LAYER',
-  title: 'Не импортировать',
-  description: '',
-  tableName: 'NOT_IMPORT_LAYER',
-  geometryType: GeometryType.POINT,
-  properties: []
 };
 
 export enum SortOrder {

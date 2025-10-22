@@ -1,11 +1,11 @@
-import React, { FC } from 'react';
+import React, { type FC } from 'react';
 import { observer, useLocalObservable } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { Document, Page } from 'react-pdf';
 
-import { ImagesForCarouselWrapper } from '../Wrapper/Carousel-Wrapper';
+import { type ImagesForCarouselWrapper } from '../Wrapper/Carousel-Wrapper';
 
-import '!style-loader!css-loader!sass-loader!./Carousel-Document.scss';
+import './Carousel-Document.scss';
 
 interface CarouselDocumentProps {
   imageWithUrl: ImagesForCarouselWrapper;

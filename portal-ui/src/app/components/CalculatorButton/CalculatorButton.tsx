@@ -1,9 +1,9 @@
-import React, { FC } from 'react';
+import React, { type FC } from 'react';
 import { IconButton, Tooltip } from '@mui/material';
 import { CalculateOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
-import '!style-loader!css-loader!sass-loader!./CalculatorButton.scss';
+import './CalculatorButton.scss';
 
 const cnCalculatorButton = cn('CalculatorButton');
 

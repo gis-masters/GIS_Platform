@@ -1,9 +1,9 @@
-import React, { FC } from 'react';
-import { Fab, PropTypes } from '@mui/material';
+import React, { type FC } from 'react';
+import { Fab, type PropTypes } from '@mui/material';
 import { FileCopyOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
-import '!style-loader!css-loader!sass-loader!./PrintMapDialog-CopyButton.scss';
+import './PrintMapDialog-CopyButton.scss';
 
 const cnPrintMapDialogCopyButton = cn('PrintMapDialog', 'CopyButton');
 

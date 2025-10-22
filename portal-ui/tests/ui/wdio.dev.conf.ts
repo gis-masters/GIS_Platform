@@ -1,9 +1,7 @@
-import type { Options } from '@wdio/types';
-
 import { getMyOfficeIp } from '../wdio.conf';
 import { config as baseConfig } from './wdio.conf';
 
-export const config: Options.Testrunner = {
+export const config: WebdriverIO.Config = {
   ...baseConfig,
 
   baseUrl: `http://${getMyOfficeIp()}:6006/`,

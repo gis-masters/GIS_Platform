@@ -11,36 +11,36 @@ class XTableFilterTypeChoiceBlock extends Block {
   };
 
   async setValue() {
-    const $filterInputChoice = await this.$('filterInputChoice');
+    const $filterInputChoice = await this.findBySelector('filterInputChoice');
     await $filterInputChoice.click();
     await browser.pause(300);
 
-    const $choiceFirstOptions = await this.$('choiceFirstOptions');
+    const $choiceFirstOptions = await this.findBySelector('choiceFirstOptions');
     await $choiceFirstOptions.click();
 
     await browser.pause(300);
   }
 
   async setValue2() {
-    const $filterInputChoice = await this.$('filterInputChoice');
+    const $filterInputChoice = await this.findBySelector('filterInputChoice');
     await $filterInputChoice.click();
     await browser.pause(300);
 
-    const $choiceSecondOptions = await this.$('choiceSecondOptions');
+    const $choiceSecondOptions = await this.findBySelector('choiceSecondOptions');
     await $choiceSecondOptions.click();
 
     await browser.pause(300);
   }
 
   async setValue3() {
-    const $choiceSecondOptions = await this.$('choiceSecondOptions');
+    const $choiceSecondOptions = await this.findBySelector('choiceSecondOptions');
     await $choiceSecondOptions.click();
 
     await browser.pause(300);
   }
 
   async checkFilterableOptionItems() {
-    const $popoverOverlay = await this.$('popoverOverlay');
+    const $popoverOverlay = await this.findBySelector('popoverOverlay');
     await $popoverOverlay.click();
     await browser.pause(300);
 
@@ -51,7 +51,7 @@ class XTableFilterTypeChoiceBlock extends Block {
   }
 
   async checkFilterableItems() {
-    const $popoverOverlay = await this.$('popoverOverlay');
+    const $popoverOverlay = await this.findBySelector('popoverOverlay');
     await $popoverOverlay.click();
     await browser.pause(300);
 

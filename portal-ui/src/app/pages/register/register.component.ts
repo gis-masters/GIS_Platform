@@ -1,10 +1,11 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component, type OnDestroy } from '@angular/core';
 import { Subject } from 'rxjs';
 
 @Component({
   selector: 'crg-register',
   templateUrl: './register.component.html',
-  styleUrls: ['./register.component.css']
+  styleUrls: ['./register.component.css'],
+  standalone: false
 })
 export class RegisterComponent implements OnDestroy {
   errorMsg?: string;

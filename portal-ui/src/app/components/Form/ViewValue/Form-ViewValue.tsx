@@ -1,9 +1,9 @@
-import React, { FC } from 'react';
+import React, { type FC } from 'react';
 import { cn } from '@bem-react/classname';
 
-import { ChildrenProps } from '../../../services/models';
+import { type ChildrenProps } from '../../../services/models';
 
-import '!style-loader!css-loader!sass-loader!./Form-ViewValue.scss';
+import './Form-ViewValue.scss';
 
 const cnFormViewValue = cn('Form', 'ViewValue');
 

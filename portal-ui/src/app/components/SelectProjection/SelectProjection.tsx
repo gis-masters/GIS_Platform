@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import { action, computed, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { InputLabel, MenuItem, Select, SelectChangeEvent } from '@mui/material';
+import { InputLabel, MenuItem, Select, type SelectChangeEvent } from '@mui/material';
 import { cn } from '@bem-react/classname';
-import { IClassNameProps } from '@bem-react/core';
+import { type IClassNameProps } from '@bem-react/core';
 import { boundMethod } from 'autobind-decorator';
 
-import { SpatialReferenceSystem } from '../../../server-types/common-contracts';
-import { Projection, projectionXTableCols } from '../../services/data/projections/projections.models';
+import { type SpatialReferenceSystem } from '../../../server-types/common-contracts';
+import { type Projection, projectionXTableCols } from '../../services/data/projections/projections.models';
 import { getProjections, registerProjectionArrayInProj4 } from '../../services/data/projections/projections.service';
 import { getProjectionCode } from '../../services/data/projections/projections.util';
 import { projectionsStore } from '../../stores/Projections.store';

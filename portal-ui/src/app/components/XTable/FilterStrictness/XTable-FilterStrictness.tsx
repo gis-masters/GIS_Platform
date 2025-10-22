@@ -1,11 +1,11 @@
-import React, { FC } from 'react';
+import React, { type FC } from 'react';
 import { Tooltip } from '@mui/material';
 import { cn } from '@bem-react/classname';
-import { IClassNameProps } from '@bem-react/core';
+import { type IClassNameProps } from '@bem-react/core';
 
 import { IconButton } from '../../IconButton/IconButton';
 
-import '!style-loader!css-loader!sass-loader!./XTable-FilterStrictness.scss';
+import './XTable-FilterStrictness.scss';
 
 const cnXTableFilterStrictness = cn('XTable', 'FilterStrictness');
 

@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, type OnDestroy, type OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -10,7 +10,8 @@ import { sidebars } from '../../stores/Sidebars.store';
 @Component({
   selector: 'crg-workspace',
   templateUrl: './workspace.component.html',
-  styleUrls: ['./workspace.component.scss']
+  styleUrls: ['./workspace.component.scss'],
+  standalone: false
 })
 export class WorkspaceComponent implements OnDestroy, OnInit {
   @Input() fixed?: boolean;

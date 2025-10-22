@@ -5,9 +5,9 @@ import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
 import { pageSizeVariants } from '../Explorer.models';
-import { ExplorerStore } from '../Explorer.store';
+import { type ExplorerStore } from '../Explorer.store';
 
-import '!style-loader!css-loader!sass-loader!./Explorer-PageSize.scss';
+import './Explorer-PageSize.scss';
 
 const cnExplorerPageSize = cn('Explorer', 'PageSize');
 

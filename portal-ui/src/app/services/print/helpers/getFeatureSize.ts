@@ -1,6 +1,6 @@
-import { defaultOlProjectionCode, Projection } from '../../data/projections/projections.models';
+import { defaultOlProjectionCode, type Projection } from '../../data/projections/projections.models';
 import { getProjectionCode } from '../../data/projections/projections.util';
-import { WfsFeature } from '../../geoserver/wfs/wfs.models';
+import { type WfsFeature } from '../../geoserver/wfs/wfs.models';
 import { isLinear, isPolygonal } from '../../geoserver/wfs/wfs.util';
 import { getFeatureArea, getFeatureLength } from '../../map/labels/map-labels.util';
 import { mapService } from '../../map/map.service';

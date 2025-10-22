@@ -1,11 +1,11 @@
-import React, { FC } from 'react';
+import React, { type FC } from 'react';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 
 import { FileInput } from '../../FileInput/FileInput';
 import { LibraryMassKptLoadNotice } from '../Notice/LibraryMassKptLoad-Notice';
 
-import '!style-loader!css-loader!sass-loader!./LibraryMassKptLoad-Worker.scss';
+import './LibraryMassKptLoad-Worker.scss';
 
 const cnLibraryMassKptLoad = cn('LibraryMassKptLoad');
 

@@ -3,7 +3,7 @@ import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 
-import { Projection } from '../../services/data/projections/projections.models';
+import { type Projection } from '../../services/data/projections/projections.models';
 import { getProjectionByCode } from '../../services/data/projections/projections.service';
 import { Button } from '../Button/Button';
 import { SelectProjection } from '../SelectProjection/SelectProjection';

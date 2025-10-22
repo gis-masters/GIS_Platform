@@ -2,9 +2,9 @@ import { mapStore } from '../../../../stores/Map.store';
 import { sidebars } from '../../../../stores/Sidebars.store';
 import { services } from '../../../services';
 import { MapMode, MapSelectionTypes } from '../../map.models';
-import { IMapModeHandler, ModeProps } from '../models';
+import { type IMapModeHandler, type ModeProps } from '../models';
 import { mapSelectionService } from './map-selection.service';
-import { SelectedFeaturesData } from './selectedFeatures.models';
+import { type SelectedFeaturesData } from './selectedFeatures.models';
 import { selectedFeaturesStore } from './SelectedFeatures.store';
 
 class SelectedFeaturesModeHandler implements IMapModeHandler {

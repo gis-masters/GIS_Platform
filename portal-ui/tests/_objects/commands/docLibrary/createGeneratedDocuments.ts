@@ -1,8 +1,8 @@
-import { Library, LibraryRecord } from '../../../../src/app/services/data/library/library.models';
-import { Schema } from '../../../../src/app/services/data/schema/schema.models';
+import { type Library, type LibraryRecord } from '../../../../src/app/services/data/library/library.models';
+import { type Schema } from '../../../../src/app/services/data/schema/schema.models';
 import { applyContentType } from '../../../../src/app/services/data/schema/schema.utils';
 import { generateObjectBySchema, supportedTypesForGeneration } from '../../utils/generateObjectBySchema';
-import { TestUser } from '../auth/testUsers';
+import { type TestUser } from '../auth/testUsers';
 import { createLibraryRecordAs } from './createLibraryRecordAs';
 
 export async function createGeneratedDocuments(

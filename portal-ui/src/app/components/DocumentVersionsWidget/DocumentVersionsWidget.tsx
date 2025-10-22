@@ -5,12 +5,12 @@ import { Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material
 import { Restore, RestoreOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
-import { LibraryRecord } from '../../services/data/library/library.models';
+import { type LibraryRecord } from '../../services/data/library/library.models';
 import { Button } from '../Button/Button';
 import { Explorer } from '../Explorer/Explorer';
-import { ExplorerItemData, ExplorerItemType } from '../Explorer/Explorer.models';
+import { type ExplorerItemData, ExplorerItemType } from '../Explorer/Explorer.models';
 
-import '!style-loader!css-loader!sass-loader!./DocumentVersionsWidget.scss';
+import './DocumentVersionsWidget.scss';
 
 const cnDocumentVersionsWidget = cn('DocumentVersionsWidget');
 

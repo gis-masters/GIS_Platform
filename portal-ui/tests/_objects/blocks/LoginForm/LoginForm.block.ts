@@ -8,34 +8,38 @@ class LoginFormBlock extends Block {
     errorMessage: '.LoginForm .StringControl_display_password .MuiFormHelperText-root',
     loginBtn: '.LoginForm button[type="submit"]',
     organizationsList: '.LoginForm-OrgSelectList',
-    organizationsListItem: '.LoginForm-OrgSelectListItem'
+    organizationsListItem: '.LoginForm-OrgSelectListItem',
+    loading: '.LoginForm-Loading'
   };
 
   async fillAndSubmit(login: string, password: string) {
-    const $login = await this.$('login');
+    const $login = await this.findBySelector('login');
     await $login.setValue(login);
 
-    const $password = await this.$('password');
+    const $password = await this.findBySelector('password');
     await $password.setValue(password);
 
-    const $loginBtn = await this.$('loginBtn');
+    const $loginBtn = await this.findBySelector('loginBtn');
     await $loginBtn.click();
   }
 
-  async checkErrorMessage(errorMessage: string) {
-    const $errorMessage = await this.$('errorMessage');
+  async getErrorMessage(): Promise<string> {
+    await this.waitForLoading();
+    const $errorMessage = await this.findBySelector('errorMessage');
     await $errorMessage.waitForDisplayed();
-    await expect(await $errorMessage.getText()).toEqual(errorMessage);
+
+    return await $errorMessage.getText();
   }
 
   async checkOrganizationsListVisibility() {
-    await expect(this.$('organizationsList')).toBeDisplayedInViewport();
+    const $organizationsList = await this.findBySelector('organizationsList');
+    await $organizationsList.waitForDisplayed();
   }
 
   async clickOrganization(orgTitle: string) {
-    const $organizationsList = await this.$('organizationsList');
+    const $organizationsList = await this.findBySelector('organizationsList');
     await $organizationsList.waitForDisplayed();
-    const $$organizationsListItems = await this.$$('organizationsListItem');
+    const $$organizationsListItems = await this.findAllBySelector('organizationsListItem');
 
     for (const $item of $$organizationsListItems) {
       const title = await $item.getText();
@@ -51,9 +55,19 @@ class LoginFormBlock extends Block {
   }
 
   async getOrganizations(): Promise<string[]> {
-    const $$organizationsListItems = await this.$$('organizationsListItem');
+    const $$organizationsListItems = await this.findAllBySelector('organizationsListItem');
 
     return await Promise.all([...$$organizationsListItems].map(async $item => await $item.getText()));
+  }
+
+  async waitForLoading(): Promise<void> {
+    const $loading = await this.findBySelector('loading');
+    try {
+      await $loading.waitForDisplayed({ timeout: 1000 });
+    } catch {
+      // ignore
+    }
+    await $loading.waitForExist({ reverse: true });
   }
 }
 

@@ -1,11 +1,11 @@
-import React, { FC } from 'react';
+import React, { type FC } from 'react';
 import { cn } from '@bem-react/classname';
 
-import { CrgProject } from '../../../services/gis/projects/projects.models';
+import { type CrgProject } from '../../../services/gis/projects/projects.models';
 import { ProjectCard } from '../../ProjectCard/ProjectCard';
 import { ProjectFolder } from '../../ProjectFolder/ProjectFolder';
 
-import '!style-loader!css-loader!sass-loader!./ProjectsContent.scss';
+import './ProjectsContent.scss';
 
 const cnProjectsContent = cn('ProjectsContent');
 export interface ProjectsContentProps {

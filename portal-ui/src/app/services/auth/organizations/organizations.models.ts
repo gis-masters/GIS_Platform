@@ -1,6 +1,6 @@
-import { OrgSettings } from '../../../stores/OrganizationSettings.store';
-import { CrgGroup } from '../groups/groups.models';
-import { CrgUserRaw } from '../users/users.models';
+import { type OrgSettings } from '../../../stores/OrganizationSettings.store';
+import { type CrgGroup } from '../groups/groups.models';
+import { type CrgUserRaw } from '../users/users.models';
 
 export interface OccupiedStorage {
   totalFiles: number;

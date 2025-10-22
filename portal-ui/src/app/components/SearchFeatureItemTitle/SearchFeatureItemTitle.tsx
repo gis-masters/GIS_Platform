@@ -2,10 +2,10 @@ import React, { Component } from 'react';
 import { action, computed, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 
-import { Schema } from '../../services/data/schema/schema.models';
+import { type Schema } from '../../services/data/schema/schema.models';
 import { schemaService } from '../../services/data/schema/schema.service';
 import { changeSchemaNamesCaseByFeature } from '../../services/data/schema/schema.utils';
-import { WfsFeature } from '../../services/geoserver/wfs/wfs.models';
+import { type WfsFeature } from '../../services/geoserver/wfs/wfs.models';
 import { getFeaturesListItemTitle } from '../FeaturesListItem/FeaturesListItem.util';
 
 interface FeatureTitleProps {

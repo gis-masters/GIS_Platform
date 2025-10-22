@@ -3,10 +3,10 @@ import { observer } from 'mobx-react';
 import { withBemMod } from '@bem-react/core';
 import { boundMethod } from 'autobind-decorator';
 
-import { PropertySchemaUrl, PropertyType } from '../../../../services/data/schema/schema.models';
+import { type PropertySchemaUrl, PropertyType } from '../../../../services/data/schema/schema.models';
 import { UrlsList } from '../../../UrlsList/UrlsList';
 import { FormErrors } from '../../Errors/Form-Errors';
-import { cnFormControl, FormControlProps } from '../Form-Control';
+import { cnFormControl, type FormControlProps } from '../Form-Control';
 
 export interface UrlInfo extends Record<string, unknown> {
   url: string;

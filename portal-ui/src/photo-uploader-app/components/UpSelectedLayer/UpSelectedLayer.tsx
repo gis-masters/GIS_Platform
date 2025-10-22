@@ -1,4 +1,4 @@
-import React, { FC, useCallback } from 'react';
+import React, { type FC, useCallback } from 'react';
 import { observer } from 'mobx-react';
 import { List } from '@mui/material';
 import { Clear } from '@mui/icons-material';
@@ -9,10 +9,10 @@ import { IconButton } from '../../../app/components/IconButton/IconButton';
 import { photoUploaderStore } from '../../stores/PhotoUploader.store';
 import { UpLayersListItem } from '../UpLayersList/Item/UpLayersList-Item';
 
-import '!style-loader!css-loader!sass-loader!./UpSelectedLayer.scss';
-import '!style-loader!css-loader!sass-loader!./DataType/UpSelectedLayer-DataType.scss';
-import '!style-loader!css-loader!sass-loader!./Title/UpSelectedLayer-Title.scss';
-import '!style-loader!css-loader!sass-loader!./Icon/UpSelectedLayer-Icon.scss';
+import './UpSelectedLayer.scss';
+import './DataType/UpSelectedLayer-DataType.scss';
+import './Title/UpSelectedLayer-Title.scss';
+import './Icon/UpSelectedLayer-Icon.scss';
 
 const cnUpSelectedLayer = cn('UpSelectedLayer');
 

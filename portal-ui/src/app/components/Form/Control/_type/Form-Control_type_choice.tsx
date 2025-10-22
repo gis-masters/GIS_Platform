@@ -1,4 +1,4 @@
-import React, { Component, ReactNode } from 'react';
+import React, { Component, type ReactNode } from 'react';
 import { observer } from 'mobx-react';
 import {
   Box,
@@ -7,7 +7,7 @@ import {
   ListItemText,
   MenuItem,
   Select,
-  SelectChangeEvent,
+  type SelectChangeEvent,
   ToggleButton,
   ToggleButtonGroup
 } from '@mui/material';
@@ -16,16 +16,20 @@ import { cn } from '@bem-react/classname';
 import { withBemMod } from '@bem-react/core';
 import { boundMethod } from 'autobind-decorator';
 
-import { PropertyOption, PropertySchemaChoice, PropertyType } from '../../../../services/data/schema/schema.models';
+import {
+  type PropertyOption,
+  type PropertySchemaChoice,
+  PropertyType
+} from '../../../../services/data/schema/schema.models';
 import { getMultipleChoiceValue } from '../../../../services/util/form/choiceMultiple.util';
 import { isStringArray } from '../../../../services/util/typeGuards/isStringArray';
 import { FormErrors } from '../../Errors/Form-Errors';
-import { cnFormControl, FormControlProps } from '../Form-Control';
+import { cnFormControl, type FormControlProps } from '../Form-Control';
 
-import '!style-loader!css-loader!sass-loader!./Form-Control_type_choice.scss';
-import '!style-loader!css-loader!sass-loader!../../ChoiceMenuItem/Form-ChoiceMenuItem.scss';
-import '!style-loader!css-loader!sass-loader!../../ChoiceRenderValue/Form-ChoiceRenderValue.scss';
-import '!style-loader!css-loader!sass-loader!../../ChoiceRenderValueText/Form-ChoiceRenderValueText.scss';
+import './Form-Control_type_choice.scss';
+import '../../ChoiceMenuItem/Form-ChoiceMenuItem.scss';
+import '../../ChoiceRenderValue/Form-ChoiceRenderValue.scss';
+import '../../ChoiceRenderValueText/Form-ChoiceRenderValueText.scss';
 
 const cnFormChoiceMenuItem = cn('Form', 'ChoiceMenuItem');
 const cnFormChoiceRenderValue = cn('Form', 'ChoiceRenderValue');

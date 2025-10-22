@@ -1,4 +1,4 @@
-import { compose, HOC } from '@bem-react/core';
+import { compose, type HOC } from '@bem-react/core';
 
 import { withTypeBasemap } from './_type/Explorer-Widgets_type_basemap';
 import { withTypeDataset } from './_type/Explorer-Widgets_type_dataset';
@@ -12,7 +12,7 @@ import { withTypeSchema } from './_type/Explorer-Widgets_type_schema';
 import { withTypeSearchItem } from './_type/Explorer-Widgets_type_searchItem';
 import { withTypeTable } from './_type/Explorer-Widgets_type_table';
 import { withTypeTaskHistory } from './_type/Explorer-Widgets_type_taskHistory';
-import { ExplorerWidgetsBase, ExplorerWidgetsProps } from './Explorer-Widgets.base';
+import { ExplorerWidgetsBase, type ExplorerWidgetsProps } from './Explorer-Widgets.base';
 
 export const ExplorerWidgets = compose(
   withTypeBasemap as HOC<ExplorerWidgetsProps>,

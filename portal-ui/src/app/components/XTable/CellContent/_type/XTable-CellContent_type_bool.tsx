@@ -1,10 +1,10 @@
-import React, { FC } from 'react';
+import React, { type FC } from 'react';
 import { Check, Close } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { withBemMod } from '@bem-react/core';
 
 import { PropertyType } from '../../../../services/data/schema/schema.models';
-import { cnXTableCellContent, XTableCellContentBase, XTableCellContentProps } from '../XTable-CellContent.base';
+import { cnXTableCellContent, XTableCellContentBase, type XTableCellContentProps } from '../XTable-CellContent.base';
 
 const cnXTableBoolIcon = cn('XTable', 'BoolIcon');
 

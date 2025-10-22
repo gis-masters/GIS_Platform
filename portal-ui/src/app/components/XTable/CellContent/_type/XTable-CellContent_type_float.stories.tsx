@@ -1,12 +1,12 @@
 /* eslint-disable sonarjs/no-duplicate-string */
-import { ReactElement } from 'react';
-import { StoryFn } from '@storybook/react';
+import { type ReactElement } from 'react';
+import { type StoryFn } from '@storybook/react';
 
 import { PropertyType } from '../../../../services/data/schema/schema.models';
-import { SortParams } from '../../../../services/util/sortObjects';
+import { type SortParams } from '../../../../services/util/sortObjects';
 import { Template } from '../../Filter/XTable-Filter-story-template';
-import { XTable, XTableProps } from '../../XTable';
-import { XTableColumn } from '../../XTable.models';
+import { XTable, type XTableProps } from '../../XTable';
+import { type XTableColumn } from '../../XTable.models';
 
 export default {
   title: 'XTable/CellContent',

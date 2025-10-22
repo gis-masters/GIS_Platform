@@ -4,12 +4,12 @@ import { register } from 'ol/proj/proj4';
 import proj4 from 'proj4';
 
 import { projectionsStore } from '../../../stores/Projections.store';
-import { WfsFeature } from '../../geoserver/wfs/wfs.models';
+import { type WfsFeature } from '../../geoserver/wfs/wfs.models';
 import { getLayerByFeatureInCurrentProject } from '../../gis/layers/layers.utils';
-import { PageOptions } from '../../models';
+import { type PageOptions } from '../../models';
 import { services } from '../../services';
 import { projectionsClient } from './projections.client';
-import { defaultOlProjectionCode, Projection } from './projections.models';
+import { defaultOlProjectionCode, type Projection } from './projections.models';
 import { getProjectionCode, getProjectionTitle, getProjectionUnit, getSrid } from './projections.util';
 
 const projectionCache: Record<string, Promise<Projection | undefined> | undefined> = {};

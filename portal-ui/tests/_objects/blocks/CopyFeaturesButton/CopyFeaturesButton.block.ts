@@ -6,7 +6,7 @@ export class CopyFeaturesButtonBlock extends Block {
   };
 
   async click(): Promise<void> {
-    const $container = await this.$('container');
+    const $container = await this.findBySelector('container');
     await $container.waitForClickable();
     await $container.click();
   }

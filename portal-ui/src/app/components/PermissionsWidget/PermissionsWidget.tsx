@@ -6,12 +6,17 @@ import { ChevronRightOutlined, Group, KeyboardArrowDown, Person } from '@mui/ico
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
-import { CrgGroup } from '../../services/auth/groups/groups.models';
+import { type CrgGroup } from '../../services/auth/groups/groups.models';
 import { groupsService } from '../../services/auth/groups/groups.service';
-import { CrgUser } from '../../services/auth/users/users.models';
+import { type CrgUser } from '../../services/auth/users/users.models';
 import { usersService } from '../../services/auth/users/users.service';
 import { communicationService } from '../../services/communication.service';
-import { PrincipalType, Role, RoleAssignmentBody, rolesTitles } from '../../services/permissions/permissions.models';
+import {
+  PrincipalType,
+  type Role,
+  type RoleAssignmentBody,
+  rolesTitles
+} from '../../services/permissions/permissions.models';
 import { getAllPermissions, getProjectPermissions } from '../../services/permissions/permissions.service';
 import { getRolesByExplorerItemEntityType } from '../../services/permissions/permissions.utils';
 import { allGroups } from '../../stores/AllGroups.store';
@@ -22,7 +27,7 @@ import { PermissionsEditDialog } from '../PermissionsEditDialog/PermissionsEditD
 import { PseudoLink } from '../PseudoLink/PseudoLink';
 import { Toast } from '../Toast/Toast';
 
-import '!style-loader!css-loader!sass-loader!./PermissionsWidget.scss';
+import './PermissionsWidget.scss';
 
 const cnPermissionsWidget = cn('PermissionsWidget');
 

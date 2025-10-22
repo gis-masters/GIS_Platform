@@ -1,6 +1,6 @@
 import { reaction } from 'mobx';
 import { boundMethod } from 'autobind-decorator';
-import { SnapEvent } from 'ol/events/SnapEvent';
+import { type SnapEvent } from 'ol/events/SnapEvent';
 import { Snap } from 'ol/interaction';
 
 import { mapSnapStore } from '../../../stores/MapSnap.store';

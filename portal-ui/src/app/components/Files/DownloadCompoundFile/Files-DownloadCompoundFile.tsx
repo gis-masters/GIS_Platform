@@ -1,10 +1,10 @@
-import React, { FC } from 'react';
+import React, { type FC } from 'react';
 import { Tooltip } from '@mui/material';
 import { DownloadOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
 import { filesClient } from '../../../services/data/files/files.client';
-import { FileInfo } from '../../../services/data/files/files.models';
+import { type FileInfo } from '../../../services/data/files/files.models';
 import { organizationSettings } from '../../../stores/OrganizationSettings.store';
 import { IconButton } from '../../IconButton/IconButton';
 

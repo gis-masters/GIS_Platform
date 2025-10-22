@@ -1,9 +1,9 @@
-import React, { FC } from 'react';
+import React, { type FC } from 'react';
 import { cn } from '@bem-react/classname';
 
 import { PrincipalType } from '../../../services/permissions/permissions.models';
 import { PermissionsCount } from '../../PermissionsCount/PermissionsCount';
-import { CrgGroupExtended } from '../OrgGroups';
+import { type CrgGroupExtended } from '../OrgGroups.models';
 
 const cnOrgGroupsPermissionsCount = cn('OrgGroups', 'PermissionsCount');
 

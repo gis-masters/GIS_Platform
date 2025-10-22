@@ -5,10 +5,10 @@ import { TextField } from '@mui/material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
-import { Button, ButtonProps } from '../Button/Button';
+import { Button, type ButtonProps } from '../Button/Button';
 import { Loading } from '../Loading/Loading';
 
-import '!style-loader!css-loader!sass-loader!./ProjectForm.scss';
+import './ProjectForm.scss';
 
 const cnProjectForm = cn('ProjectForm');
 

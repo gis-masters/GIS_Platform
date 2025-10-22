@@ -1,6 +1,6 @@
 import { Then, When } from '@wdio/cucumber-framework';
 
-import { ScenarioScope } from '../../ScenarioScope';
+import { type ScenarioScope } from '../../ScenarioScope';
 import { ExplorerBlock } from '../Explorer/Explorer.block';
 import { libraryDocumentActionsBlock } from '../LibraryDocumentActions/LibraryDocumentActions.block';
 import { libraryDocumentActionsCreateChildEditDialogBlock } from './CreateChildEditDialog/LibraryDocumentActions-CreateChildEditDialog.block';

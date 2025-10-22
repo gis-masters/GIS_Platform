@@ -9,7 +9,7 @@ class LayerCardBlock extends Block {
   async getLayerCardByName(layerName: string): Promise<WebdriverIO.Element | undefined> {
     await layersSidebarBlock.waitForLayersSidebarDisplayed();
 
-    const $$layerCard = await this.$$('container');
+    const $$layerCard = await this.findAllBySelector('container');
 
     for (const $layerCard of $$layerCard) {
       const layerCardName = await $layerCard.getText();
@@ -23,7 +23,7 @@ class LayerCardBlock extends Block {
   async getLayersCardsNames(): Promise<string[]> {
     await layersSidebarBlock.waitForLayersSidebarDisplayed();
 
-    const $$layerCard = await this.$$('container');
+    const $$layerCard = await this.findAllBySelector('container');
     const names: string[] = [];
 
     for (const $layerCard of $$layerCard) {
@@ -56,7 +56,7 @@ class LayerCardBlock extends Block {
       throw new Error(`Не найден элемент "${layerName}"`);
     }
 
-    const errorIcon = await $layerCard.$('.LayerIcon_type_error');
+    const errorIcon = await $layerCard.$('.LayerIcon_type_error').getElement();
 
     return errorIcon.isExisting();
   }
@@ -81,7 +81,7 @@ class LayerCardBlock extends Block {
     await $layerCard.waitForDisplayed();
     await $layerCard.moveTo();
 
-    const $btn = await $layerCard.$(btnSelectorName);
+    const $btn = await $layerCard.$(btnSelectorName).getElement();
     await $btn.waitForDisplayed();
     await browser.pause(200); // обязательна иначе нет клика
     await $btn.click();

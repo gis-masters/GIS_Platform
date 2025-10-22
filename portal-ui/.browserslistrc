@@ -4,7 +4,17 @@
 #
 # For IE 9-11 support, please remove 'not' from the last line of the file and adjust as needed
 
-> 0.5%
+> 1%
 last 2 versions
 not dead
 not IE 9-11
+
+# unsupported by angular
+not Android > 0
+not op_mini all
+not QQAndroid > 0
+not UCAndroid > 0
+not KaiOS > 0
+not OperaMobile > 0
+not Opera > 0
+not Samsung > 0

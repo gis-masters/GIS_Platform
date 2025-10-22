@@ -1,7 +1,14 @@
 import { action, computed, makeObservable, observable } from 'mobx';
 
 import { SortOrder } from '../../services/models';
-import { Adapter, CustomFilters, ExplorerItemData, ExplorerRole, pageSizeVariants, SortItem } from './Explorer.models';
+import {
+  type Adapter,
+  type CustomFilters,
+  type ExplorerItemData,
+  type ExplorerRole,
+  pageSizeVariants,
+  type SortItem
+} from './Explorer.models';
 
 export class ExplorerStore {
   readonly explorerRole: ExplorerRole;

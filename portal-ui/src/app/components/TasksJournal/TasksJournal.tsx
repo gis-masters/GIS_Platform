@@ -1,6 +1,6 @@
-import React, { FC, lazy, Suspense } from 'react';
+import React, { type FC, lazy, Suspense } from 'react';
 
-const MessagesRegistryAsync = lazy(() => import('./TasksJournal.async'));
+const MessagesRegistryAsync = lazy(() => import('./TasksJournal.chunkroot'));
 
 export const TasksJournal: FC = props => (
   <Suspense>

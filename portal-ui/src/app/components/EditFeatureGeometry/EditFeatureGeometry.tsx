@@ -1,8 +1,8 @@
-import React, { FC, lazy, Suspense } from 'react';
+import React, { type FC, lazy, Suspense } from 'react';
 
-import { EditFeatureGeometryProps } from './EditFeatureGeometry.async';
+import { type EditFeatureGeometryProps } from './EditFeatureGeometry.chunkroot';
 
-const EditFeatureGeometryAsync = lazy(() => import('./EditFeatureGeometry.async'));
+const EditFeatureGeometryAsync = lazy(() => import('./EditFeatureGeometry.chunkroot'));
 
 export const EditFeatureGeometry: FC<EditFeatureGeometryProps> = props => (
   <Suspense>

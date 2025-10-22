@@ -1,8 +1,8 @@
-import React, { FC, lazy, Suspense } from 'react';
+import React, { type FC, lazy, Suspense } from 'react';
 
-import { FilesPlacementDialogReportProps } from './FilesPlacementDialogReport.async';
+import { type FilesPlacementDialogReportProps } from './FilesPlacementDialogReport.chunkroot';
 
-const FilesPlacementDialogReportAsync = lazy(() => import('./FilesPlacementDialogReport.async'));
+const FilesPlacementDialogReportAsync = lazy(() => import('./FilesPlacementDialogReport.chunkroot'));
 
 export const FilesPlacementDialogReport: FC<FilesPlacementDialogReportProps> = props => (
   <Suspense>

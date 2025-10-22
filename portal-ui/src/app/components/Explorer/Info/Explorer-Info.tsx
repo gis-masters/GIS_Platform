@@ -1,18 +1,18 @@
-import React, { FC } from 'react';
+import React, { type FC } from 'react';
 import { observer } from 'mobx-react';
 import { Card } from '@mui/material';
 import { cn } from '@bem-react/classname';
-import { IClassNameProps } from '@bem-react/core';
+import { type IClassNameProps } from '@bem-react/core';
 
 import { ExplorerActions } from '../Actions/Explorer-Actions';
 import { getDescription, getTitle } from '../Adapter/Explorer-Adapter';
 import { ExplorerItemType } from '../Explorer.models';
-import { ExplorerStore } from '../Explorer.store';
+import { type ExplorerStore } from '../Explorer.store';
 import { ExplorerInfoContent } from '../InfoContent/Explorer-InfoContent';
 import { ExplorerInfoTitle } from '../InfoTitle/Explorer-InfoTitle';
 import { ExplorerWidgets } from '../Widgets/Explorer-Widgets.composed';
 
-import '!style-loader!css-loader!sass-loader!./Explorer-Info.scss';
+import './Explorer-Info.scss';
 
 export const cnExplorerInfo = cn('Explorer', 'Info');
 export const cnExplorerWidgets = cn('Explorer', 'Widgets');

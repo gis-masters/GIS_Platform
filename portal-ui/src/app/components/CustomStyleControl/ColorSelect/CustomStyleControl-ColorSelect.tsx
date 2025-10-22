@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import { SelectChangeEvent } from '@mui/material';
+import { type SelectChangeEvent } from '@mui/material';
 import { cn } from '@bem-react/classname';
-import { IClassNameProps } from '@bem-react/core';
+import { type IClassNameProps } from '@bem-react/core';
 import { boundMethod } from 'autobind-decorator';
 
 import { TiledSelect } from '../../TiledSelect/TiledSelect';
@@ -9,7 +9,7 @@ import { CustomStyleControlColorTile } from '../ColorTile/CustomStyleControl-Col
 import { CustomStyleControlLabel } from '../Label/CustomStyleControl-Label';
 import { CustomStyleControlSubControl } from '../SubControl/CustomStyleControl-SubControl';
 
-import '!style-loader!css-loader!sass-loader!../MenuList/CustomStyleControl-MenuList.scss';
+import '../MenuList/CustomStyleControl-MenuList.scss';
 
 const cnCustomStyleControl = cn('CustomStyleControl');
 

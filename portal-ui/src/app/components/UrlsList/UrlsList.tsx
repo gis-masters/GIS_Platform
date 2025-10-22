@@ -1,8 +1,8 @@
-import React, { FC, lazy, Suspense } from 'react';
+import React, { type FC, lazy, Suspense } from 'react';
 
-import { UrlsListProps } from './UrlsList.async';
+import { type UrlsListProps } from './UrlsList.chunkroot';
 
-const UrlsListAsync = lazy(() => import('./UrlsList.async'));
+const UrlsListAsync = lazy(() => import('./UrlsList.chunkroot'));
 
 export const UrlsList: FC<UrlsListProps> = props => (
   <Suspense>

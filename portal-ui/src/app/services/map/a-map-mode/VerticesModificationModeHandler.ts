@@ -5,7 +5,7 @@ import { mapDrawService } from '../draw/map-draw.service';
 import { MapMode } from '../map.models';
 import { getStyle, KnownStyleKey } from '../styles/map-styles';
 import { mapVerticesModificationService } from '../vertices-modification/map-vertices-modification.service';
-import { IMapModeHandler } from './models';
+import { type IMapModeHandler } from './models';
 import { selectedFeaturesStore } from './selected-features/SelectedFeatures.store';
 
 class VerticesModificationModeHandler implements IMapModeHandler {

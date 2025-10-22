@@ -3,13 +3,13 @@ import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { Print, PrintOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
-import { IClassNameProps } from '@bem-react/core';
+import { type IClassNameProps } from '@bem-react/core';
 import { boundMethod } from 'autobind-decorator';
 
-import { PrintTemplate } from '../../services/print/templates/PrintTemplate';
-import { ActionsItemVariant } from '../Actions/Item/Actions-Item.base';
+import { type PrintTemplate } from '../../services/print/templates/PrintTemplate';
+import { type ActionsItemVariant } from '../Actions/Item/Actions-Item.base';
 import { ActionsItem } from '../Actions/Item/Actions-Item.composed';
-import { IconButtonProps } from '../IconButton/IconButton';
+import { type IconButtonProps } from '../IconButton/IconButton';
 import { PrintActionDialog } from './Dialog/PrintAction-Dialog';
 
 const cnPrintAction = cn('PrintAction');

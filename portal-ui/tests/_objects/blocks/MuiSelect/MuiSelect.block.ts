@@ -8,7 +8,7 @@ export class MuiSelectBlock extends Block {
   };
 
   async selectOptionByTitle(optionTitle: string, contains?: boolean): Promise<void> {
-    const $container = await this.$('container');
+    const $container = await this.findBySelector('container');
     await $container.moveTo();
 
     await sleep(300); // ждем анимации отображения
@@ -19,7 +19,7 @@ export class MuiSelectBlock extends Block {
   }
 
   async getText(): Promise<string> {
-    const $container = await this.$('container');
+    const $container = await this.findBySelector('container');
 
     return $container.getText();
   }

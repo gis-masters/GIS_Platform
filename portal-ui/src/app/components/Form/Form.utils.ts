@@ -1,14 +1,14 @@
 import { action } from 'mobx';
 import { isEqual } from 'lodash';
 
-import { FiasValue } from '../../services/data/fias/fias.models';
+import { type FiasValue } from '../../services/data/fias/fias.models';
 import {
-  PropertyFormula,
-  PropertySchema,
+  type PropertyFormula,
+  type PropertySchema,
   PropertyType,
-  Schema,
-  SimpleSchema,
-  ValueFormula
+  type Schema,
+  type SimpleSchema,
+  type ValueFormula
 } from '../../services/data/schema/schema.models';
 import { valueWellKnownFormulas } from '../../services/data/schema/schema.utils';
 

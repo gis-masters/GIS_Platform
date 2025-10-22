@@ -3,10 +3,10 @@ import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { withBemMod } from '@bem-react/core';
 
-import { SupportedGeometryType } from '../../../services/geoserver/wfs/wfs.models';
+import { type SupportedGeometryType } from '../../../services/geoserver/wfs/wfs.models';
 import { getLayerSchema } from '../../../services/gis/layers/layers.service';
 import { GeometryIcon } from '../../GeometryIcon/GeometryIcon';
-import { cnLayerIcon, LayerIconProps } from '../LayerIcon.base';
+import { cnLayerIcon, type LayerIconProps } from '../LayerIcon.base';
 
 @observer
 class LayerIconTypeVector extends Component<LayerIconProps> {

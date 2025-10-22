@@ -1,7 +1,7 @@
 import { action } from 'mobx';
 import { isEqual } from 'lodash';
 
-import { ValueOf } from '../models';
+import { type ValueOf } from '../models';
 
 export const patch: <T extends object>(obj: T, patch: Partial<T>) => void = action((obj, patch) => {
   Object.assign(obj, patch);

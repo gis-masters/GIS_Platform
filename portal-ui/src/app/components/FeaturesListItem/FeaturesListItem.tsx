@@ -1,30 +1,30 @@
-import React, { CSSProperties, ReactNode, useCallback, useEffect, useMemo } from 'react';
+import React, { type CSSProperties, type ReactNode, useCallback, useEffect, useMemo } from 'react';
 import { observer, useLocalObservable } from 'mobx-react-lite';
 import { IconButton, Tooltip } from '@mui/material';
 import { ArrowForward } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
-import { Schema } from '../../services/data/schema/schema.models';
+import { type Schema } from '../../services/data/schema/schema.models';
 import { applyView, changeSchemaNamesCaseByFeature } from '../../services/data/schema/schema.utils';
 import { extractFeatureId, extractTableNameFromFeatureId } from '../../services/geoserver/featureType/featureType.util';
-import { WfsFeature } from '../../services/geoserver/wfs/wfs.models';
+import { type WfsFeature } from '../../services/geoserver/wfs/wfs.models';
 import { getFeatureById } from '../../services/geoserver/wfs/wfs.service';
-import { CrgLayer } from '../../services/gis/layers/layers.models';
+import { type CrgLayer } from '../../services/gis/layers/layers.models';
 import { getLayerSchema } from '../../services/gis/layers/layers.service';
 import { projectsService } from '../../services/gis/projects/projects.service';
 import { mapModeManager } from '../../services/map/a-map-mode/MapModeManager';
 import { selectedFeaturesStore } from '../../services/map/a-map-mode/selected-features/SelectedFeatures.store';
 import { MapAction, MapMode, MapSelectionTypes } from '../../services/map/map.models';
-import { FeatureError } from '../../services/map/map-link-following.service';
+import { type FeatureError } from '../../services/map/map-link-following.service';
 import { currentProject } from '../../stores/CurrentProject.store';
 import { mapStore } from '../../stores/Map.store';
 import { mapVerticesModificationStore } from '../../stores/MapVerticesModification.store';
 import { FeatureIcon } from '../FeatureIcon/FeatureIcon';
 import { RectangleSelectionCancel } from '../Icons/RectangleSelectionCancel';
 import { ZoomToFeature } from '../ZoomToFeature/ZoomToFeature';
-import { FeaturesListItemTitle, getFeaturesListItemTitle } from './FeaturesListItem.util';
+import { type FeaturesListItemTitle, getFeaturesListItemTitle } from './FeaturesListItem.util';
 
-import '!style-loader!css-loader!sass-loader!./FeaturesListItem.scss';
+import './FeaturesListItem.scss';
 
 const cnFeaturesListItem = cn('FeaturesListItem');
 

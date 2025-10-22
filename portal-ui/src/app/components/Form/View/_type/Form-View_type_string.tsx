@@ -3,15 +3,15 @@ import { observer } from 'mobx-react';
 import { withBemMod } from '@bem-react/core';
 import nl2br from 'react-nl2br';
 
-import { PropertySchemaString, PropertyType } from '../../../../services/data/schema/schema.models';
+import { type PropertySchemaString, PropertyType } from '../../../../services/data/schema/schema.models';
 import { TextOverflow } from '../../../TextOverflow/TextOverflow';
-import { FormControlProps } from '../../Control/Form-Control';
+import { type FormControlProps } from '../../Control/Form-Control';
 import { FormSetLabel } from '../../SetLabel/Form-SetLabel';
 import { FormViewErrors } from '../../ViewErrors/ViewErrors-ViewErrors';
 import { FormViewValue } from '../../ViewValue/Form-ViewValue';
 import { cnFormView } from '../Form-View.base';
 
-import '!style-loader!css-loader!sass-loader!./Form-View_type_string.scss';
+import './Form-View_type_string.scss';
 
 @observer
 class FormViewTypeString extends Component<FormControlProps> {

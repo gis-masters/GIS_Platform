@@ -5,20 +5,20 @@ import { FormControl, Input, InputAdornment, InputLabel, List, Pagination } from
 import { Search } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
-import { debounce, DebouncedFunc } from 'lodash';
+import { debounce, type DebouncedFunc } from 'lodash';
 
 import { communicationService } from '../../../services/communication.service';
-import { Dataset } from '../../../services/data/vectorData/vectorData.models';
+import { type Dataset } from '../../../services/data/vectorData/vectorData.models';
 import { getDatasets } from '../../../services/data/vectorData/vectorData.service';
 import { SortOrder } from '../../../services/models';
 import { Loading } from '../../Loading/Loading';
 import { PickupDatasetsItem } from '../Item/PickupDatasets-Item';
 
-import '!style-loader!css-loader!sass-loader!./../Filter/PickupDatasets-Filter.scss';
-import '!style-loader!css-loader!sass-loader!./../Empty/PickupDatasets-Empty.scss';
-import '!style-loader!css-loader!sass-loader!./../EmptyTitle/PickupDatasets-EmptyTitle.scss';
-import '!style-loader!css-loader!sass-loader!./../Paging/PickupDatasets-Paging.scss';
-import '!style-loader!css-loader!sass-loader!./../Content/PickupDatasets-Content.scss';
+import './../Filter/PickupDatasets-Filter.scss';
+import './../Empty/PickupDatasets-Empty.scss';
+import './../EmptyTitle/PickupDatasets-EmptyTitle.scss';
+import './../Paging/PickupDatasets-Paging.scss';
+import './../Content/PickupDatasets-Content.scss';
 
 const cnPickupDatasets = cn('PickupDatasets');
 

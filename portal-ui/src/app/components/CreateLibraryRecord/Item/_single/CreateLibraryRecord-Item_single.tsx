@@ -5,7 +5,7 @@ import { CreateLibraryRecordItemSingleButton } from '../../ItemSingleButton/Crea
 import {
   cnCreateLibraryRecordItem,
   CreateLibraryRecordItemBase,
-  CreateLibraryRecordItemProps
+  type CreateLibraryRecordItemProps
 } from '../CreateLibraryRecord-Item.base';
 
 export const withSingle = withBemMod<CreateLibraryRecordItemProps, CreateLibraryRecordItemProps>(

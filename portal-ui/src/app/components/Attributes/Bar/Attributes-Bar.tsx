@@ -4,21 +4,21 @@ import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
-import { Schema } from '../../../services/data/schema/schema.models';
+import { type Schema } from '../../../services/data/schema/schema.models';
 import { applyView } from '../../../services/data/schema/schema.utils';
 import { extractFeatureId } from '../../../services/geoserver/featureType/featureType.util';
 import { getFeatures } from '../../../services/geoserver/wfs/wfs.service';
-import { CrgVectorLayer } from '../../../services/gis/layers/layers.models';
+import { type CrgVectorLayer } from '../../../services/gis/layers/layers.models';
 import { getLayerSchema } from '../../../services/gis/layers/layers.service';
 import { selectedFeaturesStore } from '../../../services/map/a-map-mode/selected-features/SelectedFeatures.store';
-import { PageOptions } from '../../../services/models';
+import { type PageOptions } from '../../../services/models';
 import { calculateValues } from '../../../services/util/form/formValidation.utils';
 import { currentProject } from '../../../stores/CurrentProject.store';
 import { convertToComplexField } from '../../Form/Form.utils';
-import { XTableInvoke } from '../../XTable/XTable';
-import { XTableColumn } from '../../XTable/XTable.models';
+import { type XTableInvoke } from '../../XTable/XTable';
+import { type XTableColumn } from '../../XTable/XTable.models';
 import { getXTableColumnsFromSchema } from '../../XTable/XTable.utils';
-import { AttributesTableRecord } from '../Attributes.models';
+import { type AttributesTableRecord } from '../Attributes.models';
 import { extractFeatureIdsFromAttributesFilter } from '../Attributes.utils';
 import { AttributesBarActions } from '../BarActions/Attributes-BarActions';
 import { AttributesBarClose } from '../BarClose/Attributes-BarClose';
@@ -35,7 +35,7 @@ import { AttributesResize } from '../Resize/Attributes-Resize';
 import { AttributesRowHead } from '../RowHead/Attributes-RowHead';
 import { AttributesTable } from '../Table/Attributes-Table';
 
-import '!style-loader!css-loader!sass-loader!./Attributes-Bar.scss';
+import './Attributes-Bar.scss';
 
 const cnAttributesBar = cn('Attributes', 'Bar');
 const cnAttributesCheckCell = cn('Attributes', 'CheckCell');

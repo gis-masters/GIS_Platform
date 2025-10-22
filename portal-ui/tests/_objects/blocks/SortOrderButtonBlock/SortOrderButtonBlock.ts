@@ -12,13 +12,13 @@ class SortOrderButtonBlock extends Block {
     const currentSortOrder = await this.getSortOrder();
 
     if (currentSortOrder && currentSortOrder !== direction) {
-      const $sortOrderBtn = await this.$('container');
+      const $sortOrderBtn = await this.findBySelector('container');
       await $sortOrderBtn.click();
     }
   }
 
   async getSortOrder(): Promise<SortOrder> {
-    const $filterInputStrictness = await this.$('container');
+    const $filterInputStrictness = await this.findBySelector('container');
 
     const isAsc = await hasClass($filterInputStrictness, 'SortOrderButton_asc');
     const isDesc = await hasClass($filterInputStrictness, 'SortOrderButton_desc');

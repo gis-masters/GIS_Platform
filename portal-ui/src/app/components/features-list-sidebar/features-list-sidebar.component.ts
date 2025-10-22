@@ -1,10 +1,10 @@
 import { createElement } from 'react';
-import { createRoot, Root } from 'react-dom/client';
-import { Component, ElementRef, Input, OnChanges, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { createRoot, type Root } from 'react-dom/client';
+import { Component, ElementRef, Input, type OnChanges, type OnDestroy, type OnInit, ViewChild } from '@angular/core';
 import { withRegistry } from '@bem-react/di';
 
 import { registry } from '../../services/di-registry';
-import { WfsFeature } from '../../services/geoserver/wfs/wfs.models';
+import { type WfsFeature } from '../../services/geoserver/wfs/wfs.models';
 import { FeaturesListSidebar } from '../FeaturesListSidebar/FeaturesListSidebar';
 
 const FeaturesListSidebarWithRegistry = withRegistry(registry)(FeaturesListSidebar);
@@ -12,7 +12,8 @@ const FeaturesListSidebarWithRegistry = withRegistry(registry)(FeaturesListSideb
 @Component({
   selector: 'crg-features-list-sidebar',
   template: '<div class="features-list-sidebar" #react></div>',
-  styleUrls: ['./features-list-sidebar.component.scss']
+  styleUrls: ['./features-list-sidebar.component.scss'],
+  standalone: false
 })
 export class FeaturesListSidebarComponent implements OnInit, OnDestroy, OnChanges {
   @Input() features?: WfsFeature[];

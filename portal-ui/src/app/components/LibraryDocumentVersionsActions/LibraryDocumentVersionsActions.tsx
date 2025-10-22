@@ -2,14 +2,14 @@ import React, { Component } from 'react';
 import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
-import { IClassNameProps } from '@bem-react/core';
+import { type IClassNameProps } from '@bem-react/core';
 
-import { LibraryRecord, LibraryRecordRaw } from '../../services/data/library/library.models';
+import { type LibraryRecord, type LibraryRecordRaw } from '../../services/data/library/library.models';
 import { getLibraryRecord } from '../../services/data/library/library.service';
 import { Role } from '../../services/permissions/permissions.models';
 import { currentUser } from '../../stores/CurrentUser.store';
 import { Actions } from '../Actions/Actions.composed';
-import { ActionsItemVariant } from '../Actions/Item/Actions-Item.base';
+import { type ActionsItemVariant } from '../Actions/Item/Actions-Item.base';
 import { LibraryDocumentVersionsActionsRestore } from './Restore/LibraryDocumentVersionsActions-Restore';
 
 export const cnLibraryDocumentVersionsActions = cn('LibraryDocumentVersionsActions');

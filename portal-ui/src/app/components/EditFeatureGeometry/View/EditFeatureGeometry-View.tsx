@@ -1,12 +1,12 @@
-import React, { FC } from 'react';
+import React, { type FC } from 'react';
 import { cn } from '@bem-react/classname';
-import { IClassNameProps } from '@bem-react/core';
+import { type IClassNameProps } from '@bem-react/core';
 
-import { GeometryType } from '../../../services/geoserver/wfs/wfs.models';
+import { type GeometryType } from '../../../services/geoserver/wfs/wfs.models';
 import { editFeatureStore } from '../../../services/map/a-map-mode/edit-feature/EditFeatureStore';
 import { EditFeatureGeometryError } from '../Error/EditFeatureGeometry-Error';
 
-import '!style-loader!css-loader!sass-loader!./EditFeatureGeometry-View.scss';
+import './EditFeatureGeometry-View.scss';
 
 export const cnEditFeatureGeometryView = cn('EditFeatureGeometry', 'View');
 

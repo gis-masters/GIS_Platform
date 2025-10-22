@@ -1,11 +1,11 @@
 import { createElement } from 'react';
-import { createRoot, Root } from 'react-dom/client';
-import { Component, ElementRef, Input, OnChanges, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { createRoot, type Root } from 'react-dom/client';
+import { Component, ElementRef, Input, type OnChanges, type OnDestroy, type OnInit, ViewChild } from '@angular/core';
 import { withRegistry } from '@bem-react/di';
 
 import { registry } from '../../services/di-registry';
-import { WfsFeature } from '../../services/geoserver/wfs/wfs.models';
-import { CrgVectorLayer } from '../../services/gis/layers/layers.models';
+import { type WfsFeature } from '../../services/geoserver/wfs/wfs.models';
+import { type CrgVectorLayer } from '../../services/gis/layers/layers.models';
 import { EditFeatureActions } from '../EditFeatureActions/EditFeatureActions';
 
 const EditFeatureActionsWithRegistry = withRegistry(registry)(EditFeatureActions);
@@ -13,7 +13,8 @@ const EditFeatureActionsWithRegistry = withRegistry(registry)(EditFeatureActions
 @Component({
   selector: 'crg-edit-feature-actions',
   template: '<div class="edit-feature-actions" #react></div>',
-  styleUrls: ['./edit-feature-actions.component.scss']
+  styleUrls: ['./edit-feature-actions.component.scss'],
+  standalone: false
 })
 export class EditFeatureActionsComponent implements OnInit, OnDestroy, OnChanges {
   @Input() feature?: WfsFeature;

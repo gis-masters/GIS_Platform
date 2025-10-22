@@ -1,9 +1,9 @@
-import React, { FC } from 'react';
+import React, { type FC } from 'react';
 import { cn } from '@bem-react/classname';
-import { IClassNameProps } from '@bem-react/core';
+import { type IClassNameProps } from '@bem-react/core';
 
-import { EditedField, ValueType } from '../../../services/data/schema/schemaOld.models';
-import { EditFeatureInfo } from '../EditFeatureField';
+import { type EditedField, type ValueType } from '../../../services/data/schema/schemaOld.models';
+import { type EditFeatureInfo } from '../EditFeatureField.models';
 
 export const cnEditFeatureFieldControl = cn('EditFeatureField', 'Control');
 

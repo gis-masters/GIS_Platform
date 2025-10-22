@@ -1,15 +1,15 @@
 import React, { Component } from 'react';
 import { computed, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
-import { MenuItem, Select, SelectChangeEvent } from '@mui/material';
+import { MenuItem, Select, type SelectChangeEvent } from '@mui/material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
 import {
-  PermissionType,
-  PrincipalType,
-  Role,
-  RoleAssignmentBody,
+  type PermissionType,
+  type PrincipalType,
+  type Role,
+  type RoleAssignmentBody,
   rolesTitles
 } from '../../../services/permissions/permissions.models';
 import { getRoles } from '../../../services/permissions/permissions.utils';

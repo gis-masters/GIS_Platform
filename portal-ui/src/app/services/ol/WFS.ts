@@ -1,7 +1,7 @@
 import { WFS as OL_WFS } from 'ol/format';
-import { WriteGetFeatureOptions } from 'ol/format/WFS';
+import { type WriteGetFeatureOptions } from 'ol/format/WFS';
 
-import { SortOrder } from '../models';
+import { type SortOrder } from '../models';
 
 export interface WriteGetFeatureOptionsExtended extends WriteGetFeatureOptions {
   sort?: { propertyName: string; order: SortOrder };

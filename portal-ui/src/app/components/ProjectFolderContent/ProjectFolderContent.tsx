@@ -1,8 +1,8 @@
-import React, { FC, lazy, Suspense } from 'react';
+import React, { type FC, lazy, Suspense } from 'react';
 
-import { ProjectFolderContentProps } from './ProjectFolderContent.async';
+import { type ProjectFolderContentProps } from './ProjectFolderContent.chunkroot';
 
-const ProjectFolderContentAsync = lazy(() => import('./ProjectFolderContent.async'));
+const ProjectFolderContentAsync = lazy(() => import('./ProjectFolderContent.chunkroot'));
 
 export const ProjectFolderContent: FC<ProjectFolderContentProps> = props => (
   <Suspense>

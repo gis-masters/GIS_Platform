@@ -1,6 +1,6 @@
 import { action, makeObservable, observable } from 'mobx';
 
-import { Dataset, VectorTable } from '../services/data/vectorData/vectorData.models';
+import { type Dataset, type VectorTable } from '../services/data/vectorData/vectorData.models';
 
 class AllDataEntities {
   private static _instance: AllDataEntities;

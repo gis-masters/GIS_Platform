@@ -1,12 +1,12 @@
 import { observable } from 'mobx';
 import moment from 'moment';
 
-import { FormProps } from '../../../../components/Form/Form';
+import { type FormProps } from '../../../../components/Form/Form';
 import { PrintMapImageControl } from '../../../../components/PrintMapImageControl/PrintMapImageControl';
 import { SelectPropertiesControl } from '../../../../components/SelectPropertiesControl/SelectPropertiesControl';
-import { PropertySchema, PropertyType } from '../../../data/schema/schema.models';
+import { type PropertySchema, PropertyType } from '../../../data/schema/schema.models';
 import { applyView, getReadablePropertyValue } from '../../../data/schema/schema.utils';
-import { WfsFeature } from '../../../geoserver/wfs/wfs.models';
+import { type WfsFeature } from '../../../geoserver/wfs/wfs.models';
 import { getLayerSchema } from '../../../gis/layers/layers.service';
 import { getLayerByFeatureInCurrentProject } from '../../../gis/layers/layers.utils';
 import { formPrompt } from '../../../utility-dialogs.service';

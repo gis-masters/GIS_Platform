@@ -1,5 +1,5 @@
-import { WfsFeature } from '../../../geoserver/wfs/wfs.models';
-import { CrgVectorableLayer } from '../../../gis/layers/layers.models';
+import { type WfsFeature } from '../../../geoserver/wfs/wfs.models';
+import { type CrgVectorableLayer } from '../../../gis/layers/layers.models';
 
 export enum EditFeatureMode {
   multipleEdit = 'multipleEdit',

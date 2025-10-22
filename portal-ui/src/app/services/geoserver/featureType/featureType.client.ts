@@ -1,9 +1,9 @@
 import { boundClass } from 'autobind-decorator';
 
 import { http } from '../../api/http.service';
-import { CrgLayer } from '../../gis/layers/layers.models';
+import { type CrgLayer } from '../../gis/layers/layers.models';
 import { GeoserverClient } from '../GeoserverClient';
-import { FeatureType, FeatureTypeHref } from './featureType.model';
+import { type FeatureType, type FeatureTypeHref } from './featureType.model';
 import { extractFeatureTypeNameFromComplexName, extractWorkspaceFromComplexName } from './featureType.util';
 
 @boundClass

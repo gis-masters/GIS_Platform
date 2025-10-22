@@ -6,7 +6,7 @@ import { boundMethod } from 'autobind-decorator';
 import { currentImport } from '../../stores/CurrentImport.store';
 import { DataImportTasksListTask } from './Task/DataImportTasksList-Task';
 
-import '!style-loader!css-loader!sass-loader!./DataImportTasksList.scss';
+import './DataImportTasksList.scss';
 
 const cnDataImportTasksList = cn('DataImportTasksList');
 

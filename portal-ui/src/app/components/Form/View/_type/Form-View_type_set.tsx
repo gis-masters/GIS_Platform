@@ -1,15 +1,15 @@
-import React, { FC } from 'react';
+import React, { type FC } from 'react';
 import { observer } from 'mobx-react';
 import { withBemMod } from '@bem-react/core';
 import { RegistryConsumer } from '@bem-react/di';
 
-import { PropertySchemaSet, PropertyType } from '../../../../services/data/schema/schema.models';
-import { CommonDiRegistry } from '../../../../services/di-registry';
-import { FormControlProps } from '../../Control/Form-Control';
+import { type PropertySchemaSet, PropertyType } from '../../../../services/data/schema/schema.models';
+import { type CommonDiRegistry } from '../../../../services/di-registry';
+import { type FormControlProps } from '../../Control/Form-Control';
 import { FormViewErrors } from '../../ViewErrors/ViewErrors-ViewErrors';
 import { cnFormView } from '../Form-View.base';
 
-import '!style-loader!css-loader!sass-loader!./Form-View_type_set.scss';
+import './Form-View_type_set.scss';
 
 const FormViewTypeSet: FC<FormControlProps> = observer(({ className, property, fieldValue = '', errors }) => {
   const { properties } = property as PropertySchemaSet;

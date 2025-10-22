@@ -3,7 +3,7 @@ import { createFile } from '../files/files.service';
 import { getFileBaseName } from '../files/files.util';
 import { createLibraryRecord } from '../library/library.service';
 import { kptClient } from './kpt.client';
-import { KptTaskInfo, UploadKptData, UploadKptReturnType } from './kpt.models';
+import { type KptTaskInfo, type UploadKptData, type UploadKptReturnType } from './kpt.models';
 
 export async function importKpt(importRequest: Record<string, unknown>): Promise<KptTaskInfo> {
   return await kptClient.importKpt(importRequest);

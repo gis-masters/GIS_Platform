@@ -1,10 +1,10 @@
-import React, { lazy, ReactElement, Suspense } from 'react';
+import React, { lazy, type ReactElement, Suspense } from 'react';
 
-import { XTableProps } from './XTable.async';
+import { type XTableProps } from './XTable.chunkroot';
 
-export { XTableProps, XTableInvoke } from './XTable.async';
+export { XTableProps, XTableInvoke } from './XTable.chunkroot';
 
-const XTableAsync = lazy(() => import('./XTable.async')) as <T>(p: XTableProps<T>) => ReactElement;
+const XTableAsync = lazy(() => import('./XTable.chunkroot')) as <T>(p: XTableProps<T>) => ReactElement;
 
 export const XTable = (props => (
   <Suspense>

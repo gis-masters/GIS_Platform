@@ -1,15 +1,15 @@
-import { IWorldOptions } from '@cucumber/cucumber/lib/support_code_library_builder/world';
+import { type IWorldOptions } from '@cucumber/cucumber/lib/support_code_library_builder/world';
 import { setWorldConstructor, World } from '@wdio/cucumber-framework';
 
-import { FileInfo } from '../../src/app/services/data/files/files.models';
-import { LibraryRecord } from '../../src/app/services/data/library/library.models';
-import { Schema } from '../../src/app/services/data/schema/schema.models';
-import { Task } from '../../src/app/services/data/task/task.models';
-import { Dataset, VectorTable } from '../../src/app/services/data/vectorData/vectorData.models';
-import { NewWfsFeature } from '../../src/app/services/geoserver/wfs/wfs.models';
-import { CrgLayer } from '../../src/app/services/gis/layers/layers.models';
-import { CrgProject } from '../../src/app/services/gis/projects/projects.models';
-import { FilterQuery } from '../../src/app/services/util/filters/filters.models';
+import { type FileInfo } from '../../src/app/services/data/files/files.models';
+import { type LibraryRecord } from '../../src/app/services/data/library/library.models';
+import { type Schema } from '../../src/app/services/data/schema/schema.models';
+import { type Task } from '../../src/app/services/data/task/task.models';
+import { type Dataset, type VectorTable } from '../../src/app/services/data/vectorData/vectorData.models';
+import { type NewWfsFeature } from '../../src/app/services/geoserver/wfs/wfs.models';
+import { type CrgLayer } from '../../src/app/services/gis/layers/layers.models';
+import { type CrgProject } from '../../src/app/services/gis/projects/projects.models';
+import { type FilterQuery } from '../../src/app/services/util/filters/filters.models';
 
 export class ScenarioScope extends World {
   private _latestSchema?: Schema;

@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { type FC } from 'react';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 
@@ -7,7 +7,7 @@ import { konfirmieren } from '../../../../app/services/utility-dialogs.service';
 import { photoUploaderStore } from '../../../stores/PhotoUploader.store';
 import { UpAddFiles } from '../../UpAddFiles/UpAddFiles';
 
-import '!style-loader!css-loader!sass-loader!./UpChoosePhotos-Actions.scss';
+import './UpChoosePhotos-Actions.scss';
 
 const cnUpChoosePhotosActions = cn('UpChoosePhotos', 'Actions');
 

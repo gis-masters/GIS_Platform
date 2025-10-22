@@ -1,5 +1,5 @@
-import { CrgLayer } from '../../gis/layers/layers.models';
-import { CrgProject } from '../../gis/projects/projects.models';
+import { type CrgLayer } from '../../gis/layers/layers.models';
+import { type CrgProject } from '../../gis/projects/projects.models';
 import { isRecordStringUnknown } from '../../util/typeGuards/isRecordStringUnknown';
 
 export interface FileInfo {

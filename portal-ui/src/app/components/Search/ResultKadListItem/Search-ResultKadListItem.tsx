@@ -5,11 +5,11 @@ import { MyLocation } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 import { Feature } from 'ol';
-import { Extent } from 'ol/extent';
-import { SimpleGeometry } from 'ol/geom';
+import { type Extent } from 'ol/extent';
+import { type SimpleGeometry } from 'ol/geom';
 import Point from 'ol/geom/Point';
 
-import { WfsFeature } from '../../../services/geoserver/wfs/wfs.models';
+import { type WfsFeature } from '../../../services/geoserver/wfs/wfs.models';
 import { mapDrawService } from '../../../services/map/draw/map-draw.service';
 import { mapService } from '../../../services/map/map.service';
 import { getStyle, KnownStyleKey } from '../../../services/map/styles/map-styles';
@@ -17,7 +17,7 @@ import { services } from '../../../services/services';
 import { calculateBbox } from '../../../services/util/Bbox';
 import { wfsFeaturesToOlFeatures } from '../../../services/util/open-layers.util';
 import { isCoordinate, isCoordinateArrayArray } from '../../../services/util/typeGuards/isCoordinate';
-import { isNspdProperties, NspdProperties } from '../../../services/util/typeGuards/isNspdProperties';
+import { isNspdProperties, type NspdProperties } from '../../../services/util/typeGuards/isNspdProperties';
 
 const cnSearch = cn('Search');
 

@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import { withBemMod } from '@bem-react/core';
 
-import { PropertySchemaDocument, PropertyType } from '../../../../services/data/schema/schema.models';
-import { DocumentInfo, Documents } from '../../../Documents/Documents';
-import { FormControlProps } from '../../Control/Form-Control';
+import { type PropertySchemaDocument, PropertyType } from '../../../../services/data/schema/schema.models';
+import { type DocumentInfo, Documents } from '../../../Documents/Documents';
+import { type FormControlProps } from '../../Control/Form-Control';
 import { FormViewErrors } from '../../ViewErrors/ViewErrors-ViewErrors';
 import { FormViewValue } from '../../ViewValue/Form-ViewValue';
 import { cnFormView } from '../Form-View.base';

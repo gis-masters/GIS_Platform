@@ -1,5 +1,5 @@
-import { FormControlProps } from '@mui/material';
-import { compose, HOC } from '@bem-react/core';
+import { type FormControlProps } from '@mui/material';
+import { compose, type HOC } from '@bem-react/core';
 
 import { withTypeBinary } from './_type/Form-View_type_binary';
 import { withTypeBool } from './_type/Form-View_type_bool';

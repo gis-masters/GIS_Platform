@@ -4,7 +4,7 @@ import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
-import { PropertyType, SimpleSchema } from '../../services/data/schema/schema.models';
+import { PropertyType, type SimpleSchema } from '../../services/data/schema/schema.models';
 import { FormDialog } from '../FormDialog/FormDialog';
 
 const cnLayersGroupEditDialog = cn('LayersGroupEditDialog');

@@ -1,19 +1,19 @@
-import { AxiosError } from 'axios';
+import { type AxiosError } from 'axios';
 
 import { communicationService } from '../../../services/communication.service';
 import { projectionCodeToProjection } from '../../../services/data/projections/projections.util';
 import { PropertyType } from '../../../services/data/schema/schema.models';
 import { convertOldToNewProperties } from '../../../services/data/schema/schema.utils';
-import { EditedField, OldSchema } from '../../../services/data/schema/schemaOld.models';
+import { type EditedField, type OldSchema } from '../../../services/data/schema/schemaOld.models';
 import { createFeature, updateFeature } from '../../../services/data/vectorData/vectorData.service';
 import { extractFeatureId } from '../../../services/geoserver/featureType/featureType.util';
 import { transformFeatureService } from '../../../services/geoserver/wfs/transform-feature.service';
-import { WfsFeature, WfsGeometry } from '../../../services/geoserver/wfs/wfs.models';
+import { type WfsFeature, type WfsGeometry } from '../../../services/geoserver/wfs/wfs.models';
 import { getFeaturesById } from '../../../services/geoserver/wfs/wfs.service';
 import {
   CrgLayerType,
-  CrgVectorableLayer,
-  CrgVectorLayer,
+  type CrgVectorableLayer,
+  type CrgVectorLayer,
   isVectorLayer
 } from '../../../services/gis/layers/layers.models';
 import { EditFeatureMode } from '../../../services/map/a-map-mode/edit-feature/EditFeature.models';
@@ -28,8 +28,11 @@ import { konfirmieren } from '../../../services/utility-dialogs.service';
 import { mapStore } from '../../../stores/Map.store';
 import { applyFieldValue } from '../../Form/Form.utils';
 import { Toast } from '../../Toast/Toast';
-import { Properties } from '../EditFeatureContainer';
-import { EditFeatureContainerFormControl } from './useEditFeatureState';
+import { type EditFeatureContainerFormControl } from './useEditFeatureState';
+
+interface Properties {
+  [key: string]: unknown;
+}
 
 const cantBeSaved = (): boolean => {
   return mapStore.mode === MapMode.EDIT_FEATURE ? editFeatureStore.pristine : false;

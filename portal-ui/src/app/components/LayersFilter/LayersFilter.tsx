@@ -1,4 +1,4 @@
-import React, { FC, useCallback } from 'react';
+import React, { type FC, useCallback } from 'react';
 import { observer } from 'mobx-react';
 import { TextField, Tooltip } from '@mui/material';
 import { Close, FilterAltOutlined } from '@mui/icons-material';
@@ -7,7 +7,7 @@ import { cn } from '@bem-react/classname';
 import { currentProject } from '../../stores/CurrentProject.store';
 import { IconButton } from '../IconButton/IconButton';
 
-import '!style-loader!css-loader!sass-loader!./LayersFilter.scss';
+import './LayersFilter.scss';
 
 interface LayersFilterProps {
   turnOffLayersFilter(): void;

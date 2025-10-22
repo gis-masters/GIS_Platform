@@ -1,8 +1,8 @@
-import React, { FC, lazy, Suspense } from 'react';
+import React, { type FC, lazy, Suspense } from 'react';
 
-import { ExportGmlDialogProps } from './ExportGmlDialog.async';
+import { type ExportGmlDialogProps } from './ExportGmlDialog.chunkroot';
 
-const ExportGmlDialogAsync = lazy(() => import('./ExportGmlDialog.async'));
+const ExportGmlDialogAsync = lazy(() => import('./ExportGmlDialog.chunkroot'));
 
 export const ExportGmlDialog: FC<ExportGmlDialogProps> = props => (
   <Suspense>

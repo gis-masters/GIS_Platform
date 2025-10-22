@@ -1,10 +1,10 @@
 /* eslint-disable no-console */
 
-import { AxiosError } from 'axios';
+import { type AxiosError } from 'axios';
 
 import { http } from '../../../src/app/services/api/http.service';
 import { fetchUserToken } from './auth/fetchUserToken';
-import { getTestUser, TestUser } from './auth/testUsers';
+import { getTestUser, type TestUser } from './auth/testUsers';
 import { logLevel } from './logLevel';
 
 const colors = {

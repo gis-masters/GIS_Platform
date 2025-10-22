@@ -1,6 +1,6 @@
 import { Then, When } from '@wdio/cucumber-framework';
 
-import { ScenarioScope } from '../../ScenarioScope';
+import { type ScenarioScope } from '../../ScenarioScope';
 import { ExplorerBlock } from '../Explorer/Explorer.block';
 import { documentVersionsWidgetBlock } from './DocumentVersionsWidget.block';
 

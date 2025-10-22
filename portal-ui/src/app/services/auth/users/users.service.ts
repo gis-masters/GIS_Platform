@@ -1,13 +1,13 @@
-import { AxiosError } from 'axios';
-import { debounce, DebouncedFunc } from 'lodash';
+import { type AxiosError } from 'axios';
+import { debounce, type DebouncedFunc } from 'lodash';
 
 import { allUsers } from '../../../stores/AllUsers.store';
 import { currentUser } from '../../../stores/CurrentUser.store';
-import { PageOptions } from '../../models';
+import { type PageOptions } from '../../models';
 import { services } from '../../services';
 import { organizationsService } from '../organizations/organizations.service';
 import { usersClient } from './users.client';
-import { CrgUser, CrgUserRaw, NewUserData } from './users.models';
+import { type CrgUser, type CrgUserRaw, type NewUserData } from './users.models';
 
 class UsersService {
   private static _instance: UsersService;

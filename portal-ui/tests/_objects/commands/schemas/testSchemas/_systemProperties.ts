@@ -1,4 +1,4 @@
-import { PropertySchema, PropertyType } from '../../../../../src/app/services/data/schema/schema.models';
+import { type PropertySchema, PropertyType } from '../../../../../src/app/services/data/schema/schema.models';
 
 export const systemProperties: PropertySchema[] = [
   {

@@ -1,6 +1,6 @@
-import React, { FC } from 'react';
+import React, { type FC } from 'react';
 
-import { SearchItemData } from '../../services/data/search/search.model';
+import { type SearchItemData } from '../../services/data/search/search.model';
 import { SearchResultHighlight } from '../SearchResultHighlight/SearchResultHighlight';
 
 interface SearchResultHighlightWrapperProps {

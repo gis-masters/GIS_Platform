@@ -1,9 +1,9 @@
-import React, { FC } from 'react';
+import React, { type FC } from 'react';
 import { withBemMod } from '@bem-react/core';
 
 import { PropertyType } from '../../../../services/data/schema/schema.models';
 import { formatDate } from '../../../../services/util/date.util';
-import { cnXTableCellContent, XTableCellContentBase, XTableCellContentProps } from '../XTable-CellContent.base';
+import { cnXTableCellContent, XTableCellContentBase, type XTableCellContentProps } from '../XTable-CellContent.base';
 
 const XTableCellContentTypeDateTime: FC<XTableCellContentProps<unknown>> = ({ col, cellData, ...props }) => (
   <XTableCellContentBase col={col} {...props}>

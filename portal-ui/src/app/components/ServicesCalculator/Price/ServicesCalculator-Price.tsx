@@ -1,10 +1,10 @@
-import React, { FC } from 'react';
+import React, { type FC } from 'react';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 
-import { ServicesInfo } from '../ServicesCalculator';
+import { type ServicesInfo } from '../ServicesCalculator.models';
 
-import '!style-loader!css-loader!sass-loader!./ServicesCalculator-Price.scss';
+import './ServicesCalculator-Price.scss';
 
 const cnServicesCalculatorPrice = cn('ServicesCalculator', 'Price');
 

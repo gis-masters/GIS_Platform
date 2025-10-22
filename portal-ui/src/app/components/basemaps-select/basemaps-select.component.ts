@@ -1,6 +1,6 @@
 import { createElement } from 'react';
-import { createRoot, Root } from 'react-dom/client';
-import { Component, ElementRef, OnChanges, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { createRoot, type Root } from 'react-dom/client';
+import { Component, ElementRef, type OnChanges, type OnDestroy, type OnInit, ViewChild } from '@angular/core';
 import { withRegistry } from '@bem-react/di';
 
 import { registry } from '../../services/di-registry';
@@ -11,7 +11,8 @@ const BasemapsSelectWithRegistry = withRegistry(registry)(BasemapsSelect);
 @Component({
   selector: 'crg-basemaps-select',
   template: '<div class="basemaps-select" #react></div>',
-  styleUrls: ['./basemaps-select.component.scss']
+  styleUrls: ['./basemaps-select.component.scss'],
+  standalone: false
 })
 export class BasemapsSelectComponent implements OnInit, OnChanges, OnDestroy {
   @ViewChild('react', { read: ElementRef, static: true }) ref?: ElementRef<HTMLDivElement>;

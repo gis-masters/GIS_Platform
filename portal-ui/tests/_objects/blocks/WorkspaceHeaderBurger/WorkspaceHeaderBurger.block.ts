@@ -6,7 +6,7 @@ class WorkspaceHeaderBurgerBlock extends Block {
   };
 
   async openMainMenu(): Promise<void> {
-    const $container = await this.$('container');
+    const $container = await this.findBySelector('container');
     await $container.waitForDisplayed();
 
     await $container.click();

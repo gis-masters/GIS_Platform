@@ -1,16 +1,16 @@
-import React, { ReactNode } from 'react';
+import React, { type ReactNode } from 'react';
 import { SchemaOutlined } from '@mui/icons-material';
 
-import { Emitter } from '../../../../services/common/Emitter';
-import { communicationService, DataChangeEventDetail } from '../../../../services/communication.service';
-import { Schema } from '../../../../services/data/schema/schema.models';
+import { type Emitter } from '../../../../services/common/Emitter';
+import { communicationService, type DataChangeEventDetail } from '../../../../services/communication.service';
+import { type Schema } from '../../../../services/data/schema/schema.models';
 import { schemaService } from '../../../../services/data/schema/schema.service';
-import { PageOptions, SortOrder } from '../../../../services/models';
+import { type PageOptions, SortOrder } from '../../../../services/models';
 import { filterObjects } from '../../../../services/util/filters/filterObjects';
 import { sortObjects } from '../../../../services/util/sortObjects';
 import { staticImplements } from '../../../../services/util/staticImplements';
 import { CreateSchema } from '../../../CreateSchema/CreateSchema';
-import { Adapter, ExplorerItemData, ExplorerItemType, SortItem } from '../../Explorer.models';
+import { type Adapter, type ExplorerItemData, ExplorerItemType, type SortItem } from '../../Explorer.models';
 
 @staticImplements<Adapter>()
 export class ExplorerAdapterTypeSchemasRoot {

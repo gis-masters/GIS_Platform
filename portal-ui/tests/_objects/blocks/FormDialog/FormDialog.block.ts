@@ -22,7 +22,7 @@ class FormDialogBlock extends Block {
   }
 
   async clickButtonByTitle(title: string): Promise<void> {
-    const $container = await this.$('container');
+    const $container = await this.findBySelector('container');
     const dialogBlock = new DialogBlock(null, $container);
 
     await dialogBlock.clickButtonByTitle(title);

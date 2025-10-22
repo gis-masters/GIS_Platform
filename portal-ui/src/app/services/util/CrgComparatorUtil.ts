@@ -1,7 +1,19 @@
-import { OldPropertySchema, ValueType } from '../data/schema/schemaOld.models';
-import { LayerAttribute } from '../geoserver/import/import.models';
+import { type OldPropertySchema, ValueType } from '../data/schema/schemaOld.models';
+import { type LayerAttribute } from '../geoserver/import/import.models';
 import { AS_IS, NOT_IMPORT } from '../models';
-import { CrgComparison } from '../properties-comparator.service';
+
+/**
+ * Простая реализация паттерна "цепочка обязанностей" используя setNext()
+ */
+export interface CrgComparison {
+  /**
+   * Задаем следующий метод в цепочке.
+   * @param comparison Обработчик
+   */
+  setNext(comparison: CrgComparison): void;
+
+  compare(source: LayerAttribute, columns: OldPropertySchema[]): OldPropertySchema;
+}
 
 /**
  * Первый и самый простой компаратор.

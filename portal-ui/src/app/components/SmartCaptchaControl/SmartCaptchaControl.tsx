@@ -5,9 +5,9 @@ import { SmartCaptcha } from '@yandex/smart-captcha';
 import { boundMethod } from 'autobind-decorator';
 
 import { environment } from '../../services/environment';
-import { FormControlProps } from '../Form/Control/Form-Control';
+import { type FormControlProps } from '../Form/Control/Form-Control';
 
-import '!style-loader!css-loader!sass-loader!./SmartCaptchaControl.scss';
+import './SmartCaptchaControl.scss';
 
 const cnSmartCaptchaControl = cn('SmartCaptchaControl');
 

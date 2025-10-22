@@ -1,6 +1,6 @@
 import { boundClass } from 'autobind-decorator';
 
-import { Schema } from '../data/schema/schema.models';
+import { type Schema } from '../data/schema/schema.models';
 import { Cache } from './cache';
 
 @boundClass

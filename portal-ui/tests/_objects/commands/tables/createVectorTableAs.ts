@@ -1,7 +1,7 @@
 import { convertOldToNewSchema } from '../../../../src/app/services/data/schema/schema.utils';
 import { vectorDataClient } from '../../../../src/app/services/data/vectorData/vectorData.client';
-import { NewVectorTable, VectorTable } from '../../../../src/app/services/data/vectorData/vectorData.models';
-import { TestUser } from '../auth/testUsers';
+import { type NewVectorTable, type VectorTable } from '../../../../src/app/services/data/vectorData/vectorData.models';
+import { type TestUser } from '../auth/testUsers';
 import { requestAs } from '../requestAs';
 
 export async function createVectorTableAs(

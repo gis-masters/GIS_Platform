@@ -4,8 +4,8 @@ import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
-import '!style-loader!css-loader!sass-loader!./XTable-HeadCellBorder.scss';
-import '!style-loader!css-loader!sass-loader!../ColResizing/XTable-ColResizing.scss';
+import './XTable-HeadCellBorder.scss';
+import '../ColResizing/XTable-ColResizing.scss';
 
 const cnXTableHeadCellBorder = cn('XTable', 'HeadCellBorder');
 const cnXTableColResizing = cn('XTable', 'ColResizing');

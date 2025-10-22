@@ -1,6 +1,6 @@
 import { isObject } from 'lodash';
 
-import { Page, PageableResources } from '../../../../server-types/common-contracts';
+import { type Page, type PageableResources } from '../../../../server-types/common-contracts';
 
 export function isPageableResources(obj: unknown): obj is PageableResources<unknown> {
   return (

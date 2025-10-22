@@ -4,15 +4,15 @@ import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
-import { SearchItemDataSource } from '../../services/data/search/search.model';
+import { type SearchItemDataSource } from '../../services/data/search/search.model';
 import { mapModeManager } from '../../services/map/a-map-mode/MapModeManager';
 import { MapMode } from '../../services/map/map.models';
 import { currentProject } from '../../stores/CurrentProject.store';
-import { ExplorerSearchValue } from '../Explorer/Explorer.models';
+import { type ExplorerSearchValue } from '../Explorer/Explorer.models';
 import { SearchInProjectSearchField } from './SearchField/SearchInProject-SearchField';
 import { SearchInProjectToggler } from './Toggler/SearchInProject-Toggler';
 
-import '!style-loader!css-loader!sass-loader!./SearchInProject.scss';
+import './SearchInProject.scss';
 
 const cnSearchInProject = cn('SearchInProject');
 

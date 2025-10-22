@@ -1,24 +1,24 @@
-import React, { FC, ReactNode, useCallback } from 'react';
+import React, { type FC, type ReactNode, useCallback } from 'react';
 import { observer, useLocalObservable } from 'mobx-react';
-import { Breakpoint, Dialog, DialogActions } from '@mui/material';
+import { type Breakpoint, Dialog, DialogActions } from '@mui/material';
 import { cn } from '@bem-react/classname';
 import { pdfjs } from 'react-pdf';
-import { SwiperClass } from 'swiper/react';
+import { type SwiperClass } from 'swiper/react';
+import 'swiper/css';
+import 'swiper/css/pagination';
+import 'swiper/css/navigation';
+import 'swiper/css/thumbs';
+import 'swiper/css/zoom';
 
 import { filesClient } from '../../services/data/files/files.client';
-import { FileInfo } from '../../services/data/files/files.models';
+import { type FileInfo } from '../../services/data/files/files.models';
 import { isPdfFile } from '../../services/data/files/files.util';
 import { Button } from '../Button/Button';
 import { CarouselHeader } from './Header/Carousel-Header';
 import { CarouselWrapper } from './Wrapper/Carousel-Wrapper';
 import { CarouselZoom } from './Zoom/Carousel-Zoom';
 
-import '!style-loader!css-loader!swiper/css';
-import '!style-loader!css-loader!swiper/css/pagination';
-import '!style-loader!css-loader!swiper/css/navigation';
-import '!style-loader!css-loader!swiper/css/thumbs';
-import '!style-loader!css-loader!swiper/css/zoom';
-import '!style-loader!css-loader!sass-loader!./Carousel.scss';
+import './Carousel.scss';
 
 interface CarouselProps {
   open: boolean;

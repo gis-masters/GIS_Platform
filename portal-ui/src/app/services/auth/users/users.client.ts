@@ -1,11 +1,11 @@
 import { boundClass } from 'autobind-decorator';
 
-import { PageableResources } from '../../../../server-types/common-contracts';
+import { type PageableResources } from '../../../../server-types/common-contracts';
 import { Client } from '../../api/Client';
 import { http } from '../../api/http.service';
 import { preparePageOptions } from '../../api/http.utils';
-import { PageOptions } from '../../models';
-import { CrgUser, CrgUserRaw, NewUserData, OrgInfo } from './users.models';
+import { type PageOptions } from '../../models';
+import { type CrgUser, type CrgUserRaw, type NewUserData, type OrgInfo } from './users.models';
 
 @boundClass
 class UsersClient extends Client {

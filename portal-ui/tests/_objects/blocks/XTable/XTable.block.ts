@@ -24,13 +24,13 @@ export class XTableBlock extends Block {
   };
 
   async focusFirstColTitle(): Promise<void> {
-    const $cellContents = await this.$('firstColCellTitle');
+    const $cellContents = await this.findBySelector('firstColCellTitle');
 
     await $cellContents.moveTo();
   }
 
   async getFirstColCellValues(): Promise<string[]> {
-    const $$cellContents = await this.$$('firstColCellContent');
+    const $$cellContents = await this.findAllBySelector('firstColCellContent');
 
     const contents: string[] = [];
     for (const $cell of $$cellContents) {
@@ -41,10 +41,9 @@ export class XTableBlock extends Block {
   }
 
   async getSecondColValues(): Promise<string[]> {
-    const $loading = await this.$('loading');
-    await $loading.waitForDisplayed({ reverse: true });
+    await this.waitForLoading();
 
-    const $$cellContents = await this.$$('secondColCellContent');
+    const $$cellContents = await this.findAllBySelector('secondColCellContent');
 
     const contents: string[] = [];
     for (const $cell of $$cellContents) {
@@ -55,20 +54,20 @@ export class XTableBlock extends Block {
   }
 
   async getHeadCellTitle(title: string): Promise<WebdriverIO.Element> {
-    const $head = await this.$('head');
+    const $head = await this.findBySelector('head');
 
-    const $headCell = await $head.$(String(`${this.selectors.colTitle}=${title}`));
-    await $headCell.waitForDisplayed();
+    const $headCell = await $head.$(String(`${this.selectors.colTitle}=${title}`)).getElement();
+    await $headCell.waitForExist();
 
     return $headCell;
   }
 
   async getHeadCell(title: string): Promise<WebdriverIO.Element> {
-    const $oneCell = await this.$('headCell');
+    const $oneCell = await this.findBySelector('headCell');
     await $oneCell.waitForDisplayed();
-    const $$headCells = await this.$$('headCell');
+    const $$headCells = await this.findAllBySelector('headCell');
     for (const $cell of $$headCells) {
-      const $title = await $cell.$(this.selectors.colTitle);
+      const $title = await $cell.$(this.selectors.colTitle).getElement();
       const cellTitle = await $title.getText();
       if (cellTitle === title) {
         return $cell;
@@ -87,7 +86,7 @@ export class XTableBlock extends Block {
 
     const result: boolean[] = [];
     for (const $cell of $$cells) {
-      const $icon = await $cell.$('.MuiSvgIcon-root');
+      const $icon = await $cell.$('.MuiSvgIcon-root').getElement();
 
       const isOn = await hasClass($icon, 'XTable-BoolIcon_val_on');
       const isOff = await hasClass($icon, 'XTable-BoolIcon_val_off');
@@ -121,7 +120,7 @@ export class XTableBlock extends Block {
     const $headCellTitle = await this.getHeadCellTitle(title);
     await $headCellTitle.moveTo();
 
-    const $muiTableSortLabelIcon = await $headCellTitle.$('.MuiTableSortLabel-icon');
+    const $muiTableSortLabelIcon = await $headCellTitle.$('.MuiTableSortLabel-icon').getElement();
 
     return await $muiTableSortLabelIcon.isDisplayed();
   }
@@ -131,7 +130,7 @@ export class XTableBlock extends Block {
     await $headCellTitle.scrollIntoView();
     await $headCellTitle.moveTo();
 
-    const $filter = await $headCellTitle.$('.XTable-Filter');
+    const $filter = await $headCellTitle.$('.XTable-Filter').getElement();
 
     return await $filter.isExisting();
   }
@@ -153,13 +152,14 @@ export class XTableBlock extends Block {
 
   async waitForLoading(): Promise<void> {
     await this.waitForVisible();
-    const $loading = await this.$('loading');
+    const $loading = await this.findBySelector('loading');
     try {
-      await $loading.waitForDisplayed();
+      await $loading.waitForDisplayed({ timeout: 1000 });
     } catch {
       // ignore
     }
-    await $loading.waitForDisplayed({ reverse: true });
+    await $loading.waitForExist({ reverse: true });
+    await browser.pause(200); // перерендер таблицы после исчезновения лоадера
   }
 
   async filterNumerableColumn(colTitle: string, lte: string, gte: string): Promise<void> {
@@ -175,32 +175,28 @@ export class XTableBlock extends Block {
     const $headCell = await this.getHeadCell(colTitle);
     const xTableFilterTypeStringBlock = new XTableFilterTypeStringBlock($headCell);
     await xTableFilterTypeStringBlock.setValue(filter);
-    const $loading = await this.$('loading');
-    await $loading.waitForDisplayed({ reverse: true });
+    await this.waitForLoading();
   }
 
   async filterIdColumn(colTitle: string, filter: string): Promise<void> {
     const $headCell = await this.getHeadCell(colTitle);
     const xTableFilterTypeIdBlock = new XTableFilterTypeIdBlock($headCell);
     await xTableFilterTypeIdBlock.setValue(filter);
-    const $loading = await this.$('loading');
-    await $loading.waitForDisplayed({ reverse: true });
+    await this.waitForLoading();
   }
 
   async filterDocumentColumn(colTitle: string, filter: string): Promise<void> {
     const $headCell = await this.getHeadCell(colTitle);
     const xTableFilterTypeDocumentBlock = new XTableFilterTypeDocumentBlock($headCell);
     await xTableFilterTypeDocumentBlock.setValue(filter);
-    const $loading = await this.$('loading');
-    await $loading.waitForDisplayed({ reverse: true });
+    await this.waitForLoading();
   }
 
   async filterFiasColumn(colTitle: string, filter: string): Promise<void> {
     const $headCell = await this.getHeadCell(colTitle);
     const xTableFilterTypeFiasBlock = new XTableFilterTypeFiasBlock($headCell);
     await xTableFilterTypeFiasBlock.setValue(filter);
-    const $loading = await this.$('loading');
-    await $loading.waitForDisplayed({ reverse: true });
+    await this.waitForLoading();
   }
 
   async filterChoiceColumn(colTitle: string, optionTitle: string): Promise<void> {
@@ -214,28 +210,30 @@ export class XTableBlock extends Block {
 
   async getFilterValue(colTitle: string): Promise<string> {
     const $headCell = await this.getHeadCell(colTitle);
-    const $input = await $headCell.$('.XTable-Filter input');
+    const $input = await $headCell.$('.XTable-Filter input').getElement();
 
     return await $input.getValue();
   }
 
   private async getCellsByTitle(title: string): Promise<WebdriverIO.Element[]> {
-    const headerTitles = await extractText([...(await this.$$('colTitle'))]);
+    const headerTitles = await extractText([...(await this.findAllBySelector('colTitle'))]);
 
     const index = headerTitles.indexOf(title);
 
-    const $container = await this.$('container');
+    const $container = await this.findBySelector('container');
 
-    return [...(await $container.$$(`.XTable-Row .XTable-Cell:nth-child(${index + 1}) .XTable-CellContent`))];
+    return [
+      ...(await $container.$$(`.XTable-Row .XTable-Cell:nth-child(${index + 1}) .XTable-CellContent`).getElements())
+    ];
   }
 
   async getRowByFieldValue(value: string, field: string): Promise<WebdriverIO.Element> {
-    const headerTitles = await extractText([...(await this.$$('colTitle'))]);
+    const headerTitles = await extractText([...(await this.findAllBySelector('colTitle'))]);
     const index = headerTitles.indexOf(field);
-    const $$rows = await this.$$('rows');
+    const $$rows = await this.findAllBySelector('rows');
 
     for (const $row of $$rows) {
-      const $cell = await $row.$(`td:nth-child(${index + 1})`);
+      const $cell = await $row.$(`td:nth-child(${index + 1})`).getElement();
       const cellValue = await $cell.getText();
 
       if (cellValue === value) {
@@ -247,13 +245,13 @@ export class XTableBlock extends Block {
   }
 
   async getRows(rows: number): Promise<WebdriverIO.Element[]> {
-    const $$rows = await this.$$('rows');
+    const $$rows = await this.findAllBySelector('rows');
 
     return $$rows.slice(0, rows);
   }
 
   async getAllRows(): Promise<WebdriverIO.ElementArray> {
-    return await this.$$('rows');
+    return await this.findAllBySelector('rows');
   }
 }
 

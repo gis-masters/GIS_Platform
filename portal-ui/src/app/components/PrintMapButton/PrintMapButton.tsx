@@ -11,7 +11,7 @@ import { printSettings } from '../../stores/PrintSettings.store';
 import { Loading } from '../Loading/Loading';
 import { PrintMapDialog } from '../PrintMapDialog/PrintMapDialog';
 
-import '!style-loader!css-loader!sass-loader!./PrintMapButton.scss';
+import './PrintMapButton.scss';
 
 const cnPrintMapButton = cn('PrintMapButton');
 

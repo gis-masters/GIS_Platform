@@ -1,16 +1,16 @@
-import React, { FC } from 'react';
+import React, { type FC } from 'react';
 import { observer } from 'mobx-react';
 import { List } from '@mui/material';
 import { cn } from '@bem-react/classname';
 
-import { WfsFeature } from '../../../services/geoserver/wfs/wfs.models';
-import { YaGeoObjectCollection } from '../../../services/yandex-geocode.service';
+import { type WfsFeature } from '../../../services/geoserver/wfs/wfs.models';
+import { type YaGeoObjectCollection } from '../../../services/yandex-geocode.service';
 import { SearchResultKadListItem } from '../ResultKadListItem/Search-ResultKadListItem';
 import { SearchResultListItem } from '../ResultListItem/Search-ResultListItem';
 
-import '!style-loader!css-loader!sass-loader!./Search-ResultList.scss';
-import '!style-loader!css-loader!sass-loader!../Empty/Search-Empty.scss';
-import '!style-loader!css-loader!sass-loader!../PrimaryText/Search-PrimaryText.scss';
+import './Search-ResultList.scss';
+import '../Empty/Search-Empty.scss';
+import '../PrimaryText/Search-PrimaryText.scss';
 
 const cnSearch = cn('Search');
 

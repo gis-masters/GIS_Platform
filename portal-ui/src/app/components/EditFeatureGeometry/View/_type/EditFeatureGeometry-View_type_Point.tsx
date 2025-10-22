@@ -1,10 +1,10 @@
-import React, { FC } from 'react';
+import React, { type FC } from 'react';
 import { withBemMod } from '@bem-react/core';
 
-import { GeometryType, WfsPointGeometry } from '../../../../services/geoserver/wfs/wfs.models';
+import { GeometryType, type WfsPointGeometry } from '../../../../services/geoserver/wfs/wfs.models';
 import { editFeatureStore } from '../../../../services/map/a-map-mode/edit-feature/EditFeatureStore';
 import { EditFeatureGeometryViewGroup } from '../../ViewGroup/EditFeatureGeometry-ViewGroup';
-import { cnEditFeatureGeometryView, EditFeatureGeometryViewProps } from '../EditFeatureGeometry-View';
+import { cnEditFeatureGeometryView, type EditFeatureGeometryViewProps } from '../EditFeatureGeometry-View';
 
 const EditFeatureGeometryViewTypePoint: FC<EditFeatureGeometryViewProps> = ({ className }) => (
   <div className={cnEditFeatureGeometryView(null, [className])}>

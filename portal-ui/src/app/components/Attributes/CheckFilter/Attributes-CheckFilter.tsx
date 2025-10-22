@@ -7,10 +7,10 @@ import { cn } from '@bem-react/classname';
 
 import { FilterBySelectionMode } from '../../../services/map/map.models';
 import { getFieldFilterValue, modifyFieldFilterValue } from '../../../services/util/filters/filters';
-import { XTableFilterProps } from '../../XTable/Filter/XTable-Filter.base';
+import { type XTableFilterProps } from '../../XTable/Filter/XTable-Filter.base';
 import { FILTER_BY_SELECTION } from '../Attributes.models';
 
-import '!style-loader!css-loader!sass-loader!./Attributes-CheckFilter.scss';
+import './Attributes-CheckFilter.scss';
 
 const cnAttributesCheckFilter = cn('Attributes', 'CheckFilter');
 const cnAttributesCheckFilterButton = cn('Attributes', 'CheckFilterButton');

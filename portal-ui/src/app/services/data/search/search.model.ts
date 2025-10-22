@@ -1,8 +1,8 @@
-import { ReactNode } from 'react';
+import { type ReactNode } from 'react';
 
-import { FtsRequestDto, FtsResponseDto } from '../../../../server-types/common-contracts';
-import { GeometryType, WfsFeature } from '../../geoserver/wfs/wfs.models';
-import { LibraryRecordRaw } from '../library/library.models';
+import { type FtsRequestDto, type FtsResponseDto } from '../../../../server-types/common-contracts';
+import { type GeometryType, type WfsFeature } from '../../geoserver/wfs/wfs.models';
+import { type LibraryRecordRaw } from '../library/library.models';
 
 export interface SearchRequest extends Partial<FtsRequestDto> {
   text: string;

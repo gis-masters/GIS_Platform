@@ -5,7 +5,7 @@ import { Dialog, DialogActions, DialogContent, DialogTitle, MenuItem, Tooltip } 
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
-import { Basemap } from '../../../services/data/basemaps/basemaps.models';
+import { type Basemap } from '../../../services/data/basemaps/basemaps.models';
 import {
   connectBasemapToProject,
   fetchCurrentProjectBasemaps
@@ -13,10 +13,10 @@ import {
 import { currentProject } from '../../../stores/CurrentProject.store';
 import { Button } from '../../Button/Button';
 import { Explorer } from '../../Explorer/Explorer';
-import { ExplorerItemData, ExplorerItemType } from '../../Explorer/Explorer.models';
+import { type ExplorerItemData, ExplorerItemType } from '../../Explorer/Explorer.models';
 import { BasemapsSelectAddIcon } from '../AddIcon/BasemapsSelect-AddIcon';
 
-import '!style-loader!css-loader!sass-loader!./BasemapsSelect-AddButton.scss';
+import './BasemapsSelect-AddButton.scss';
 
 const cnBasemapsSelectAddButton = cn('BasemapsSelect', 'AddButton');
 

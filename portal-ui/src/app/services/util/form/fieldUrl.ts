@@ -1,5 +1,5 @@
-import { UrlInfo } from '../../../components/Form/Control/_type/Form-Control_type_url';
-import { PropertySchema, PropertySchemaUrl, PropertyType } from '../../data/schema/schema.models';
+import { type UrlInfo } from '../../../components/Form/Control/_type/Form-Control_type_url';
+import { type PropertySchema, type PropertySchemaUrl, PropertyType } from '../../data/schema/schema.models';
 
 export function parseUrlValue(value: string, multiple?: boolean, editable?: boolean): UrlInfo[] {
   if (value) {

@@ -1,19 +1,19 @@
-import { ComponentType, ReactNode } from 'react';
-import { TableCellProps } from '@mui/material';
+import { type ComponentType, type ReactNode } from 'react';
+import { type TableCellProps } from '@mui/material';
 
 import {
-  PropertySchemaChoice,
-  PropertySchemaDatetime,
-  PropertySchemaFloat,
-  PropertySchemaString,
-  PropertySchemaUrl,
+  type PropertySchemaChoice,
+  type PropertySchemaDatetime,
+  type PropertySchemaFloat,
+  type PropertySchemaString,
+  type PropertySchemaUrl,
   PropertyType,
-  Relation
+  type Relation
 } from '../../services/data/schema/schema.models';
-import { FilterQuery } from '../../services/util/filters/filters.models';
-import { XTableCellContentProps } from './CellContent/XTable-CellContent.base';
-import { XTableFilterProps } from './Filter/XTable-Filter.base';
-import { XTableFilterPanelItemContentProps } from './FilterPanelItemContent/XTable-FilterPanelItemContent.base';
+import { type FilterQuery } from '../../services/util/filters/filters.models';
+import type { XTableCellContentProps } from './CellContent/XTable-CellContent.base';
+import type { XTableFilterProps } from './Filter/XTable-Filter.base';
+import type { XTableFilterPanelItemContentProps } from './FilterPanelItemContent/XTable-FilterPanelItemContent.base';
 
 export enum XTableExtraColumnType {
   ID = 'id'

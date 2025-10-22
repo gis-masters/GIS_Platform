@@ -1,5 +1,5 @@
-import { Process, ProcessStatus } from '../../../../src/app/services/data/processes/processes.models';
 import { processesClient } from '../../../../src/app/services/data/processes/processes.client';
+import { type Process, ProcessStatus } from '../../../../src/app/services/data/processes/processes.models';
 import { sleep } from '../../../../src/app/services/util/sleep';
 import { requestAsAdmin } from '../requestAs';
 

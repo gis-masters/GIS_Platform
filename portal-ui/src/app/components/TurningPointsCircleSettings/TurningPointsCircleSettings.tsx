@@ -1,17 +1,17 @@
-import React, { FC, memo, useCallback } from 'react';
+import React, { type FC, memo, useCallback } from 'react';
 import { observer, useLocalObservable } from 'mobx-react';
-import { MenuItem, Popover, Select, SelectChangeEvent, Tooltip } from '@mui/material';
+import { MenuItem, Popover, Select, type SelectChangeEvent, Tooltip } from '@mui/material';
 import { Circle, TripOrigin } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { debounce } from 'lodash';
 import { HexColorPicker } from 'react-colorful';
 
-import { CircleProperties } from '../../services/map/labels/map-labels.models';
+import { type CircleProperties } from '../../services/map/labels/map-labels.models';
 import { mapLabelsService } from '../../services/map/labels/map-labels.service';
 import { isKeyofCircleProperties } from '../../services/util/typeGuards/isKeyOfCircleProperties';
 import { IconButton } from '../IconButton/IconButton';
 
-import '!style-loader!css-loader!sass-loader!./TurningPointsCircleSettings.scss';
+import './TurningPointsCircleSettings.scss';
 
 const pointSizes = [5, 6, 8, 10, 12, 14, 16, 18, 20];
 

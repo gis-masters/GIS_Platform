@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 
 @Component({
   selector: 'crg-org-admin-page',
-  templateUrl: './org-admin-page.component.html'
+  templateUrl: './org-admin-page.component.html',
+  standalone: false
 })
 export class OrgAdminPageComponent {}

@@ -1,10 +1,10 @@
 import {
   GeometryType,
-  WfsGeometry,
-  WfsLineStringGeometry,
-  WfsMultiLineStringGeometry,
-  WfsMultiPolygonGeometry,
-  WfsPolygonGeometry
+  type WfsGeometry,
+  type WfsLineStringGeometry,
+  type WfsMultiLineStringGeometry,
+  type WfsMultiPolygonGeometry,
+  type WfsPolygonGeometry
 } from '../../geoserver/wfs/wfs.models';
 
 export function mergeGeometry(

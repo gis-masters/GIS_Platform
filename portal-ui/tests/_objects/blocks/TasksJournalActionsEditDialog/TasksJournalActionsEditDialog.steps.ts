@@ -1,7 +1,7 @@
 import { Then, When } from '@wdio/cucumber-framework';
 
-import { TestUser } from '../../commands/auth/testUsers';
-import { ScenarioScope } from '../../ScenarioScope';
+import { type TestUser } from '../../commands/auth/testUsers';
+import { type ScenarioScope } from '../../ScenarioScope';
 import { usersAddDialogBlock } from '../Users/AddDialog/Users-AddDialog.block';
 import { tasksJournalActionsEditDialogBlock } from './TasksJournalActionsEditDialog.block';
 

@@ -5,14 +5,14 @@ import { MyLocation } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 import { Feature } from 'ol';
-import { Extent } from 'ol/extent';
-import { SimpleGeometry } from 'ol/geom';
+import { type Extent } from 'ol/extent';
+import { type SimpleGeometry } from 'ol/geom';
 import Point from 'ol/geom/Point';
 import { fromLonLat } from 'ol/proj';
 
 import { mapService } from '../../../services/map/map.service';
 import { getStyle, KnownStyleKey } from '../../../services/map/styles/map-styles';
-import { YaGeoObject } from '../../../services/yandex-geocode.service';
+import { type YaGeoObject } from '../../../services/yandex-geocode.service';
 
 const cnSearch = cn('Search');
 

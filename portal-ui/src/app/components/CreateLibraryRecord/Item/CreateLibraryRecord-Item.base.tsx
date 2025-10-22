@@ -1,4 +1,4 @@
-import React, { Component, ComponentType } from 'react';
+import React, { Component, type ComponentType } from 'react';
 import { action, computed, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { ListItemIcon, MenuItem } from '@mui/material';
@@ -7,21 +7,21 @@ import {
   FolderOutlined,
   InsertDriveFileOutlined,
   NoteAddOutlined,
-  SvgIconComponent
+  type SvgIconComponent
 } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
-import { IClassNameProps } from '@bem-react/core';
+import { type IClassNameProps } from '@bem-react/core';
 import { boundMethod } from 'autobind-decorator';
 
-import { Library, LibraryRecord } from '../../../services/data/library/library.models';
+import { type Library, type LibraryRecord } from '../../../services/data/library/library.models';
 import { createLibraryRecord } from '../../../services/data/library/library.service';
-import { ContentType, Schema } from '../../../services/data/schema/schema.models';
+import { type ContentType, type Schema } from '../../../services/data/schema/schema.models';
 import { applyContentType } from '../../../services/data/schema/schema.utils';
 import { cleanCalculatedValues } from '../../../services/util/form/formValidation.utils';
 import { getDefaultValues } from '../../Form/Form.utils';
 import { FormDialog } from '../../FormDialog/FormDialog';
 import { DocHome } from '../../Icons/DocHome';
-import { CreateLibraryRecordItemSingleButtonProps } from '../ItemSingleButton/CreateLibraryRecord-ItemSingleButton';
+import { type CreateLibraryRecordItemSingleButtonProps } from '../ItemSingleButton/CreateLibraryRecord-ItemSingleButton';
 
 export const cnCreateLibraryRecordItem = cn('CreateLibraryRecord', 'Item');
 

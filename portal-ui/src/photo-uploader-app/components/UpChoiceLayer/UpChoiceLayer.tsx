@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { type FC } from 'react';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 
@@ -6,9 +6,9 @@ import { Button } from '../../../app/components/Button/Button';
 import { PhotoUploaderScreens, photoUploaderStore } from '../../stores/PhotoUploader.store';
 import { UpSelectedLayer } from '../UpSelectedLayer/UpSelectedLayer';
 
-import '!style-loader!css-loader!sass-loader!./UpChoiceLayer.scss';
-import '!style-loader!css-loader!sass-loader!./Annotation/UpChoiceLayer-Annotation.scss';
-import '!style-loader!css-loader!sass-loader!./Button/UpChoiceLayer-Button.scss';
+import './UpChoiceLayer.scss';
+import './Annotation/UpChoiceLayer-Annotation.scss';
+import './Button/UpChoiceLayer-Button.scss';
 
 const cnUpChoiceLayer = cn('UpChoiceLayer');
 

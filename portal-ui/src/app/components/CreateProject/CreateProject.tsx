@@ -4,7 +4,7 @@ import { Tooltip } from '@mui/material';
 import { CreateNewFolderOutlined, PlaylistAdd } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
-import { CrgProject, NewCrgProject } from '../../services/gis/projects/projects.models';
+import { type CrgProject, type NewCrgProject } from '../../services/gis/projects/projects.models';
 import { projectsService } from '../../services/gis/projects/projects.service';
 import { FormDialog } from '../FormDialog/FormDialog';
 import { IconButton } from '../IconButton/IconButton';

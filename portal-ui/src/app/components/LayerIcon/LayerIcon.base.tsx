@@ -1,9 +1,9 @@
-import { FC } from 'react';
-import { SvgIconProps } from '@mui/material';
+import { type FC } from 'react';
+import { type SvgIconProps } from '@mui/material';
 import { cn } from '@bem-react/classname';
-import { IClassNameProps } from '@bem-react/core';
+import { type IClassNameProps } from '@bem-react/core';
 
-import { CrgLayer } from '../../services/gis/layers/layers.models';
+import { type CrgLayer } from '../../services/gis/layers/layers.models';
 
 export const cnLayerIcon = cn('LayerIcon');
 

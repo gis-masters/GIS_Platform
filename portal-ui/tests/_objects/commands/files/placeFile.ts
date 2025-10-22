@@ -1,4 +1,4 @@
-import { FileInfo } from '../../../../src/app/services/data/files/files.models';
+import { type FileInfo } from '../../../../src/app/services/data/files/files.models';
 import { processesClient } from '../../../../src/app/services/data/processes/processes.client';
 import { ProcessType } from '../../../../src/app/services/data/processes/processes.models';
 import { generateRandomId } from '../../../../src/app/services/util/randomId';

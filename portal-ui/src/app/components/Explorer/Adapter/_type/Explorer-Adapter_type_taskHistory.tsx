@@ -1,12 +1,12 @@
-import React, { ReactNode } from 'react';
+import React, { type ReactNode } from 'react';
 import { ArticleOutlined } from '@mui/icons-material';
 
 import { formatDate } from '../../../../services/util/date.util';
 import { staticImplements } from '../../../../services/util/staticImplements';
 import {
-  Adapter,
-  ExplorerItemData,
-  ExplorerItemDataAllTypes,
+  type Adapter,
+  type ExplorerItemData,
+  type ExplorerItemDataAllTypes,
   ExplorerItemType,
   itemTypeError
 } from '../../Explorer.models';

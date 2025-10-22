@@ -31,20 +31,20 @@ import {
   Pin,
   PinOutlined,
   SquareFootOutlined,
-  SvgIconComponent,
+  type SvgIconComponent,
   TextFieldsOutlined,
   VisibilityOffOutlined
 } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
-import { PropertySchema, PropertyType } from '../../../services/data/schema/schema.models';
+import { type PropertySchema, PropertyType } from '../../../services/data/schema/schema.models';
 import { EditPropertySchemaForm } from '../../EditPropertySchemaForm/EditPropertySchemaForm';
 import { IconButton } from '../../IconButton/IconButton';
 import { SchemaPropertiesItemIcons } from '../ItemIcons/SchemaProperties-ItemIcons';
 
-import '!style-loader!css-loader!sass-loader!../ItemIcon/SchemaProperties-ItemIcon.scss';
-import '!style-loader!css-loader!sass-loader!../PrimaryText/SchemaProperties-PrimaryText.scss';
-import '!style-loader!css-loader!sass-loader!../ItemAccordion/SchemaProperties-ItemAccordion.scss';
+import '../ItemIcon/SchemaProperties-ItemIcon.scss';
+import '../PrimaryText/SchemaProperties-PrimaryText.scss';
+import '../ItemAccordion/SchemaProperties-ItemAccordion.scss';
 
 const getTypeIcon = (type: PropertyType): [SvgIconComponent, string] => {
   const icons: Partial<Record<PropertyType, [SvgIconComponent, string]>> = {

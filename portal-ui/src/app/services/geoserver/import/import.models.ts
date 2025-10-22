@@ -1,3 +1,6 @@
+import { type OldSchema } from '../../data/schema/schemaOld.models';
+import { GeometryType } from '../wfs/wfs.models';
+
 export interface ImportRequestData {
   import: {
     targetWorkspace: {
@@ -140,3 +143,21 @@ export enum TaskStatusCode {
   COMPLETE = 'COMPLETE',
   UNKNOWN = 'UNKNOWN'
 }
+
+export const IMPORT_LAYER_AS_IS: OldSchema = {
+  name: 'IMPORT_LAYER_AS_IS',
+  title: 'Импортировать как есть',
+  description: '',
+  tableName: 'IMPORT_LAYER_AS_IS',
+  geometryType: GeometryType.POINT,
+  properties: []
+};
+
+export const NOT_IMPORT_LAYER: OldSchema = {
+  name: 'NOT_IMPORT_LAYER',
+  title: 'Не импортировать',
+  description: '',
+  tableName: 'NOT_IMPORT_LAYER',
+  geometryType: GeometryType.POINT,
+  properties: []
+};

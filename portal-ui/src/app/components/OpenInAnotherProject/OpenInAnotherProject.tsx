@@ -5,12 +5,12 @@ import { Badge, IconButton, Tooltip } from '@mui/material';
 import { OpenInNew } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
-import { VectorTableConnection } from '../../services/data/vectorData/vectorData.models';
+import { type VectorTableConnection } from '../../services/data/vectorData/vectorData.models';
 import { getVectorTableConnections } from '../../services/data/vectorData/vectorData.service';
 import { extractTableNameFromFeatureId } from '../../services/geoserver/featureType/featureType.util';
-import { WfsFeature } from '../../services/geoserver/wfs/wfs.models';
+import { type WfsFeature } from '../../services/geoserver/wfs/wfs.models';
 import { getLayerByFeatureInCurrentProject } from '../../services/gis/layers/layers.utils';
-import { CrgProject } from '../../services/gis/projects/projects.models';
+import { type CrgProject } from '../../services/gis/projects/projects.models';
 import { getFeaturesUrl } from '../../services/map/map.util';
 import { currentProject } from '../../stores/CurrentProject.store';
 import { SelectProjectsDialog } from '../SelectProjectDialog/SelectProjectDialog';

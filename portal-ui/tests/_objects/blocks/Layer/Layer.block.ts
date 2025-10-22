@@ -10,7 +10,7 @@ class LayerBlock extends Block {
   async getLayerByName(layerName: string): Promise<WebdriverIO.Element | undefined> {
     await layersSidebarBlock.waitForLayersSidebarDisplayed();
 
-    const $$layerCard = await this.$$('container');
+    const $$layerCard = await this.findAllBySelector('container');
 
     for (const $layerCard of $$layerCard) {
       const layerCardName = await $layerCard.getText();

@@ -1,11 +1,11 @@
-import React, { BaseHTMLAttributes, forwardRef } from 'react';
+import React, { type BaseHTMLAttributes, forwardRef } from 'react';
 import { Paper } from '@mui/material';
 import { cn } from '@bem-react/classname';
-import { IClassNameProps } from '@bem-react/core';
+import { type IClassNameProps } from '@bem-react/core';
 
-import { ChildrenProps } from '../../../services/models';
+import { type ChildrenProps } from '../../../services/models';
 
-import '!style-loader!css-loader!sass-loader!./Card-Value.scss';
+import './Card-Value.scss';
 
 const cnCardValue = cn('Card', 'Value');
 

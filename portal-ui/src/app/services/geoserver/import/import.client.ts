@@ -2,7 +2,12 @@ import { boundClass } from 'autobind-decorator';
 
 import { http } from '../../api/http.service';
 import { GeoserverClient } from '../GeoserverClient';
-import { ImportLayer, ImportTaskFull, ImportTaskProgress, InputStartResponseDto } from './import.models';
+import {
+  type ImportLayer,
+  type ImportTaskFull,
+  type ImportTaskProgress,
+  type InputStartResponseDto
+} from './import.models';
 
 @boundClass
 class ImportClient extends GeoserverClient {

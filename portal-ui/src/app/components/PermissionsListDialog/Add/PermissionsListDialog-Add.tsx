@@ -5,9 +5,9 @@ import { IconButton, Tooltip } from '@mui/material';
 import { AddCircleOutline } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
-import { Dataset, VectorTable } from '../../../services/data/vectorData/vectorData.models';
-import { CrgProject } from '../../../services/gis/projects/projects.models';
-import { PermissionsListItem, PrincipalType } from '../../../services/permissions/permissions.models';
+import { type Dataset, type VectorTable } from '../../../services/data/vectorData/vectorData.models';
+import { type CrgProject } from '../../../services/gis/projects/projects.models';
+import { type PermissionsListItem, type PrincipalType } from '../../../services/permissions/permissions.models';
 import { PermissionsAddDialog } from '../../PermissionsAddDialog/PermissionsAddDialog';
 import { PermissionsListItemType } from '../PermissionsListDialog.models';
 

@@ -1,9 +1,9 @@
 import { action, computed, makeObservable, observable } from 'mobx';
 
-import { Settings } from '../../server-types/common-contracts';
-import { OccupiedStorage } from '../services/auth/organizations/organizations.models';
-import { Projection } from '../services/data/projections/projections.models';
-import { Schema } from '../services/data/schema/schema.models';
+import { type Settings } from '../../server-types/common-contracts';
+import { type OccupiedStorage } from '../services/auth/organizations/organizations.models';
+import { type Projection } from '../services/data/projections/projections.models';
+import { type Schema } from '../services/data/schema/schema.models';
 
 export interface OrgSettings extends Settings {
   favorites_epsg: Projection[] | string[];

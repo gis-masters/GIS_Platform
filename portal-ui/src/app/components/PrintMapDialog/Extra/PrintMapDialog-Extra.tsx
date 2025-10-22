@@ -1,10 +1,10 @@
-import React, { FC } from 'react';
+import React, { type FC } from 'react';
 import { cn } from '@bem-react/classname';
 
 import { PseudoLink } from '../../PseudoLink/PseudoLink';
 import { PrintMapDialogExtraIcon } from '../ExtraIcon/PrintMapDialog-ExtraIcon';
 
-import '!style-loader!css-loader!sass-loader!./PrintMapDialog-Extra.scss';
+import './PrintMapDialog-Extra.scss';
 
 const cnPrintMapDialogExtra = cn('PrintMapDialog', 'Extra');
 

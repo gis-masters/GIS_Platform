@@ -1,4 +1,4 @@
-import React, { ChangeEvent, Component, createRef } from 'react';
+import React, { type ChangeEvent, Component, createRef } from 'react';
 import { action, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { IconButton, Tooltip } from '@mui/material';
@@ -6,9 +6,9 @@ import { ArchiveOutlined, UnarchiveOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 import { clone, isEqual } from 'lodash';
-import { Coordinate } from 'ol/coordinate';
+import { type Coordinate } from 'ol/coordinate';
 
-import { GeometryType } from '../../../services/geoserver/wfs/wfs.models';
+import { type GeometryType } from '../../../services/geoserver/wfs/wfs.models';
 import { selectLabelForGeometryType } from '../../../services/geoserver/wfs/wfs.util';
 import { editFeatureHistoryStore } from '../../../services/map/a-map-mode/edit-feature/EditFeatureHistoryStore';
 import { editFeatureStore } from '../../../services/map/a-map-mode/edit-feature/EditFeatureStore';

@@ -2,15 +2,15 @@ import React, { useCallback, useEffect } from 'react';
 import { Tooltip } from '@mui/material';
 import { EditOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
-import { WfsFeature } from 'src/app/services/geoserver/wfs/wfs.models';
+import { type WfsFeature } from 'src/app/services/geoserver/wfs/wfs.models';
 
 import { convertOldToNewProperty } from '../../services/data/schema/schema.utils';
-import { EditedField, OldPropertySchema, ValueType } from '../../services/data/schema/schemaOld.models';
-import { CrgVectorLayer } from '../../services/gis/layers/layers.models';
+import { type EditedField, type OldPropertySchema, ValueType } from '../../services/data/schema/schemaOld.models';
+import { type CrgVectorLayer } from '../../services/gis/layers/layers.models';
 import { editFeatureStore } from '../../services/map/a-map-mode/edit-feature/EditFeatureStore';
 import { formatDate } from '../../services/util/date.util';
 import { notFalsyFilter } from '../../services/util/NotFalsyFilter';
-import { EditFeatureContainerFormControl } from '../EditFeatureContainer/hooks/useEditFeatureState';
+import { type EditFeatureContainerFormControl } from '../EditFeatureContainer/hooks/useEditFeatureState';
 import { EditFeatureField } from '../EditFeatureField/EditFeatureField';
 import { FormDescription } from '../Form/Description/Form-Description';
 import { Form } from '../Form/Form';
@@ -19,7 +19,7 @@ import { IconButton } from '../IconButton/IconButton';
 import { RelationsButton } from '../RelationsButton/RelationsButton';
 import { EditFeatureFormFieldRow } from './EditFeatureFormFieldRow';
 
-import '!style-loader!css-loader!sass-loader!./EditFeatureForm.scss';
+import './EditFeatureForm.scss';
 
 export const cnEditFeatureForm = cn('EditFeatureForm');
 

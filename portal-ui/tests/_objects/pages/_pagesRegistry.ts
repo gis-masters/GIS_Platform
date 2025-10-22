@@ -1,4 +1,4 @@
-import { Page } from '../Page';
+import { type Page } from '../Page';
 import { blPage } from './BL.page';
 import { dataManagementPage } from './DataManagement.page';
 import { homePage } from './Home.page';

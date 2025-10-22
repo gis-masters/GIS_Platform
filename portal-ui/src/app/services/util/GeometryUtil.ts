@@ -1,7 +1,14 @@
-import { Coordinate } from 'ol/coordinate';
-import { Geometry, LineString, MultiLineString, MultiPoint, MultiPolygon, Polygon } from 'ol/geom';
-import Point from 'ol/geom/Point';
-import RenderFeature from 'ol/render/Feature';
+import { type Coordinate } from 'ol/coordinate';
+import {
+  type Geometry,
+  type LineString,
+  type MultiLineString,
+  MultiPoint,
+  type MultiPolygon,
+  type Polygon
+} from 'ol/geom';
+import type Point from 'ol/geom/Point';
+import type RenderFeature from 'ol/render/Feature';
 
 import { services } from '../services';
 

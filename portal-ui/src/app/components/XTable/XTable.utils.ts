@@ -1,7 +1,7 @@
-import { PropertyType, Schema } from '../../services/data/schema/schema.models';
+import { PropertyType, type Schema } from '../../services/data/schema/schema.models';
 import { getFieldRelations } from '../../services/data/schema/schema.utils';
 import { XTableRelationsButton } from './RelationsButton/XTable-RelationsButton';
-import { XTableColumn } from './XTable.models';
+import { type XTableColumn } from './XTable.models';
 
 const filterableTypes = new Set([
   PropertyType.BOOL,

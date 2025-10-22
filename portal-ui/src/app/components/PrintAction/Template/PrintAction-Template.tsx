@@ -2,10 +2,10 @@ import React, { Component } from 'react';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
-import { PrintTemplate } from '../../../services/print/templates/PrintTemplate';
+import { type PrintTemplate } from '../../../services/print/templates/PrintTemplate';
 import { PseudoLink } from '../../PseudoLink/PseudoLink';
 
-import '!style-loader!css-loader!sass-loader!./PrintAction-Template.scss';
+import './PrintAction-Template.scss';
 
 const cnPrintActionTemplate = cn('PrintAction', 'Template');
 

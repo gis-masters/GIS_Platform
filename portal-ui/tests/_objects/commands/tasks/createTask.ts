@@ -1,7 +1,7 @@
 import { taskClient } from '../../../../src/app/services/data/task/task.client';
-import { Task } from '../../../../src/app/services/data/task/task.models';
+import { type Task } from '../../../../src/app/services/data/task/task.models';
 import { getUserByEmail } from '../auth/getUserByEmail';
-import { TestUser } from '../auth/testUsers';
+import { type TestUser } from '../auth/testUsers';
 import { requestAs } from '../requestAs';
 
 export async function createTask(user: TestUser, boss: TestUser, contentType: string): Promise<Task> {

@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { type FC } from 'react';
 import { observer } from 'mobx-react';
 import { Dialog, DialogContent } from '@mui/material';
 import { cn } from '@bem-react/classname';
@@ -6,7 +6,7 @@ import { cn } from '@bem-react/classname';
 import { http } from '../../services/api/http.service';
 import { LoginForm } from '../LoginForm/LoginForm';
 
-import '!style-loader!css-loader!sass-loader!./LoginFormDialog.scss';
+import './LoginFormDialog.scss';
 
 const cnLoginFormDialog = cn('LoginFormDialog');
 

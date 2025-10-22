@@ -12,7 +12,7 @@ export class TasksJournalBlock extends Block {
   async clickCreateTaskMenuBtn(): Promise<void> {
     await this.waitForVisible();
 
-    const $createTaskMenuBtn = await this.$('createTaskButton');
+    const $createTaskMenuBtn = await this.findBySelector('createTaskButton');
     await $createTaskMenuBtn.waitForClickable();
     await $createTaskMenuBtn.click();
   }
@@ -25,22 +25,22 @@ export class TasksJournalBlock extends Block {
   async getTaskRowValue(): Promise<string[]> {
     await this.waitForVisible();
 
-    const $loading = await this.$('loading');
+    const $loading = await this.findBySelector('loading');
 
     try {
       await $loading.waitForDisplayed({ timeout: 1000 });
     } catch {
       // ignore
     }
-    await $loading.waitForDisplayed({ reverse: true });
+    await $loading.waitForExist({ reverse: true });
 
-    const $taskRow = await this.$('taskRow');
-    const $$taskCells = await $taskRow.$$('.MuiTableCell-root');
+    const $taskRow = await this.findBySelector('taskRow');
+    const $$taskCells = await $taskRow.$$('.MuiTableCell-root').getElements();
     const taskRowValue = [];
 
     for (const $taskCell of $$taskCells) {
       try {
-        const $textOverflow = await $taskCell.$('.TextOverflow-Value');
+        const $textOverflow = await $taskCell.$('.TextOverflow-Value').getElement();
         const taskCell = await $textOverflow.getText();
         taskRowValue.push(taskCell);
       } catch {
@@ -55,7 +55,7 @@ export class TasksJournalBlock extends Block {
   async getTaskStatus(id: string): Promise<string> {
     const $taskRow = await this.findTaskRow(id);
 
-    const $taskStatus = await $taskRow.$('.MuiTableCell-root:nth-child(5)');
+    const $taskStatus = await $taskRow.$('.MuiTableCell-root:nth-child(5)').getElement();
 
     return await $taskStatus.getText();
   }
@@ -63,7 +63,7 @@ export class TasksJournalBlock extends Block {
   async selectTaskMenuAction(id: string, menuItemTitle: string): Promise<void> {
     const $taskRow = await this.findTaskRow(id);
 
-    const $actions = await $taskRow.$('.TasksJournal-Actions');
+    const $actions = await $taskRow.$('.TasksJournal-Actions').getElement();
     await $actions.click();
 
     const muiSelect = new MuiMenuBlock();
@@ -73,7 +73,7 @@ export class TasksJournalBlock extends Block {
   async findTaskRow(id: string): Promise<WebdriverIO.Element> {
     await this.waitForVisible();
 
-    const $loading = await this.$('loading');
+    const $loading = await this.findBySelector('loading');
 
     try {
       await $loading.waitForDisplayed({ timeout: 1000 });
@@ -81,12 +81,12 @@ export class TasksJournalBlock extends Block {
       // ignore
     }
 
-    await $loading.waitForDisplayed({ reverse: true });
+    await $loading.waitForExist({ reverse: true });
 
-    const $$taskRow = await this.$$('taskRow');
+    const $$taskRow = await this.findAllBySelector('taskRow');
 
     for (const $taskRow of $$taskRow) {
-      const $taskId = await $taskRow.$('.MuiTableCell-root:nth-child(2)');
+      const $taskId = await $taskRow.$('.MuiTableCell-root:nth-child(2)').getElement();
       const currentId = await $taskId.getText();
 
       if (currentId === id) {

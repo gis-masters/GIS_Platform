@@ -8,7 +8,7 @@ import { currentUser } from '../../../stores/CurrentUser.store';
 import { Button } from '../../Button/Button';
 import { OrgGroupsCreateEditDialog } from '../../OrgGroupCreateEditDialog/OrgGroupsCreateEditDialog';
 
-import '!style-loader!css-loader!sass-loader!./OrgGroups-Create.scss';
+import './OrgGroups-Create.scss';
 
 const cnOrgGroups = cn('OrgGroups', 'Create');
 

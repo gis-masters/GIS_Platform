@@ -3,12 +3,12 @@ import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { boundMethod } from 'autobind-decorator';
 
-import { SearchItemDataSource } from '../../services/data/search/search.model';
+import { type SearchItemDataSource } from '../../services/data/search/search.model';
 import { EditFeatureMode } from '../../services/map/a-map-mode/edit-feature/EditFeature.models';
 import { mapModeManager } from '../../services/map/a-map-mode/MapModeManager';
 import { MapMode } from '../../services/map/map.models';
 import { sidebars } from '../../stores/Sidebars.store';
-import { ExplorerSearchValue } from '../Explorer/Explorer.models';
+import { type ExplorerSearchValue } from '../Explorer/Explorer.models';
 import { SearchField } from '../SearchField/SearchField';
 import { SearchResultDialog } from '../SearchResultDialog/SearchResultDialog';
 

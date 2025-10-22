@@ -3,10 +3,10 @@ import { boundClass } from 'autobind-decorator';
 import { Client } from '../../api/Client';
 import { http } from '../../api/http.service';
 import { preparePageOptions } from '../../api/http.utils';
-import { PageOptions } from '../../models';
+import { type PageOptions } from '../../models';
 import { Mime } from '../../util/Mime';
-import { SearchRequest } from '../search/search.model';
-import { Process, ProcessableModel, ProcessResponse } from './processes.models';
+import { type SearchRequest } from '../search/search.model';
+import { type Process, type ProcessableModel, type ProcessResponse } from './processes.models';
 
 @boundClass
 class ProcessesClient extends Client {

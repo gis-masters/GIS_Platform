@@ -8,14 +8,14 @@ class CreateDatasetFormBlock extends Block {
   };
 
   async setTitleValue(title: string): Promise<void> {
-    const $title = await this.$('title');
+    const $title = await this.findBySelector('title');
     await $title.setValue(title);
   }
 
   async submit(): Promise<void> {
-    const $submit = await this.$('submit');
+    const $submit = await this.findBySelector('submit');
     await $submit.click();
-    await $submit.waitForDisplayed({ reverse: true });
+    await $submit.waitForExist({ reverse: true });
   }
 }
 

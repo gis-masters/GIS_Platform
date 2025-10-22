@@ -7,13 +7,13 @@ export class XTableFilterTypeIdBlock extends Block {
   };
 
   async getValue(): Promise<string> {
-    const $input = await this.$('input');
+    const $input = await this.findBySelector('input');
 
     return $input.getValue();
   }
 
   async setValue(title: string): Promise<void> {
-    const $input = await this.$('input');
+    const $input = await this.findBySelector('input');
     await $input.setValue(title);
   }
 }

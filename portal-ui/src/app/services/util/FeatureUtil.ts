@@ -1,9 +1,9 @@
 import { cloneDeep, sortBy } from 'lodash';
 
-import { OldPropertySchema, OldSchema, ValueType } from '../data/schema/schemaOld.models';
-import { ImportLayerItem, LayerAttribute } from '../geoserver/import/import.models';
+import { type OldPropertySchema, type OldSchema, ValueType } from '../data/schema/schemaOld.models';
+import { type ImportLayerItem, type LayerAttribute } from '../geoserver/import/import.models';
 import { AS_IS, NOT_IMPORT } from '../models';
-import { CrgRootGeometry, GeometryItem } from './crg-root-geometry';
+import { CrgRootGeometry, type GeometryItem } from './crg-root-geometry';
 
 export class FeatureUtil {
   static getLayerGeometry(importLayer: ImportLayerItem): string | undefined {

@@ -3,30 +3,24 @@ import { computed, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 
-import { CrgGroup } from '../../services/auth/groups/groups.models';
 import { groupsService } from '../../services/auth/groups/groups.service';
-import { CrgUser } from '../../services/auth/users/users.models';
 import { usersService } from '../../services/auth/users/users.service';
 import { PropertyType } from '../../services/data/schema/schema.models';
 import { allGroups } from '../../stores/AllGroups.store';
 import { allUsers } from '../../stores/AllUsers.store';
 import { organizationSettings } from '../../stores/OrganizationSettings.store';
 import { XTable } from '../XTable/XTable';
-import { XTableColumn } from '../XTable/XTable.models';
+import { type XTableColumn } from '../XTable/XTable.models';
 import { OrgUsersCreate } from './Create/OrgUsers-Create';
 import { OrgUsersInvite } from './Invite/OrgUsers-Invite';
+import { type CrgUserExtended } from './OrgUsers.models';
 import { OrgUsersPermissionsCount } from './PermissionsCount/OrgUsers-PermissionsCount';
 import { OrgUsersUserActions } from './UserActions/OrgUsers-UserActions';
 import { OrgUsersUserEmail } from './UserEmail/OrgUsers-UserEmail';
 
-import '!style-loader!css-loader!sass-loader!./OrgUsers.scss';
+import './OrgUsers.scss';
 
 const cnOrgUsers = cn('OrgUsers');
-
-export interface CrgUserExtended extends CrgUser {
-  groups: CrgGroup[];
-  groupsString: string;
-}
 
 @observer
 export class OrgUsers extends Component {

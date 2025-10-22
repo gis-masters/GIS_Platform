@@ -1,9 +1,9 @@
-import React, { FC } from 'react';
+import React, { type FC } from 'react';
 import { DialogContent } from '@mui/material';
 import { cn } from '@bem-react/classname';
-import { IClassNameProps } from '@bem-react/core';
+import { type IClassNameProps } from '@bem-react/core';
 
-import { UtilityDialogInfo } from '../../../stores/UtilityDialogs.store';
+import { type UtilityDialogInfo } from '../../../stores/UtilityDialogs.store';
 
 export const cnUtilityDialogContent = cn('UtilityDialog', 'Content');
 

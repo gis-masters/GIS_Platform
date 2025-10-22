@@ -4,9 +4,9 @@ import { observer } from 'mobx-react';
 import { RestoreOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
-import { Schema } from '../../../services/data/schema/schema.models';
-import { Task } from '../../../services/data/task/task.models';
-import { ActionsItemVariant } from '../../Actions/Item/Actions-Item.base';
+import { type Schema } from '../../../services/data/schema/schema.models';
+import { type Task } from '../../../services/data/task/task.models';
+import { type ActionsItemVariant } from '../../Actions/Item/Actions-Item.base';
 import { ActionsItem } from '../../Actions/Item/Actions-Item.composed';
 import { TaskJournalHistoryDialog } from '../../TaskJournalHistoryDialog/TaskJournalHistoryDialog';
 

@@ -6,12 +6,12 @@ import { LiveHelp, LiveHelpOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
 import { HelpPart } from '../../services/HelpPart';
-import { TocItem } from '../../stores/Help.store';
+import { type TocItem } from '../../stores/Help.store';
 import { route } from '../../stores/Route.store';
 import { Button } from '../Button/Button';
 import { Help } from '../Help/Help';
 
-import '!style-loader!css-loader!sass-loader!./HelpToggler.scss';
+import './HelpToggler.scss';
 
 const cnHelpToggler = cn('HelpToggler');
 

@@ -1,14 +1,14 @@
-import { Feature } from 'ol';
-import { FeatureLike } from 'ol/Feature';
+import { type Feature } from 'ol';
+import { type FeatureLike } from 'ol/Feature';
 import { MultiPoint } from 'ol/geom';
-import Point from 'ol/geom/Point';
+import type Point from 'ol/geom/Point';
 import { Circle, Fill, Icon, Stroke, Style } from 'ol/style';
 import CircleStyle from 'ol/style/Circle';
 
 import { mapStore } from '../../../stores/Map.store';
 import { extractFeatureTypeName } from '../../geoserver/featureType/featureType.util';
 import { convertToFlatMultiPoint } from '../../util/GeometryUtil';
-import { LabelType } from '../labels/map-labels.models';
+import { type LabelType } from '../labels/map-labels.models';
 import { getTextStyle } from '../labels/map-labels.util';
 import { MapMode } from '../map.models';
 

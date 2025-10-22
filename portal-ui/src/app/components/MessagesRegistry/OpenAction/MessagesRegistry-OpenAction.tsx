@@ -5,8 +5,8 @@ import { Tooltip } from '@mui/material';
 import { StickyNote2Outlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
-import { MessagesRegistriesMessages } from '../../../services/data/messagesRegistries/messagesRegistries.models';
-import { Schema } from '../../../services/data/schema/schema.models';
+import { type MessagesRegistriesMessages } from '../../../services/data/messagesRegistries/messagesRegistries.models';
+import { type Schema } from '../../../services/data/schema/schema.models';
 import { IconButton } from '../../IconButton/IconButton';
 import { MessagesRegistryDialog } from '../../MessagesRegistryDialog/MessagesRegistryDialog';
 

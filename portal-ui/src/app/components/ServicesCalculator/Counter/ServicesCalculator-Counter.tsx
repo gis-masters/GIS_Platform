@@ -5,9 +5,9 @@ import { cn } from '@bem-react/classname';
 
 import { ServicesCalculatorButton } from '../Button/ServicesCalculator-Button';
 import { ServicesCalculatorCounterValue } from '../CounterValue/ServicesCalculator-CounterValue';
-import { ServicesInfo } from '../ServicesCalculator';
+import { type ServicesInfo } from '../ServicesCalculator.models';
 
-import '!style-loader!css-loader!sass-loader!./ServicesCalculator-Counter.scss';
+import './ServicesCalculator-Counter.scss';
 
 const cnServicesCalculatorCounter = cn('ServicesCalculator', 'Counter');
 

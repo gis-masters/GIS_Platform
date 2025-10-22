@@ -1,16 +1,21 @@
 import React, { Component } from 'react';
-import { SelectChangeEvent } from '@mui/material';
+import { type SelectChangeEvent } from '@mui/material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
-import { PropertyOption, PropertySchema, PropertyType, Schema } from '../../../services/data/schema/schema.models';
+import {
+  type PropertyOption,
+  type PropertySchema,
+  PropertyType,
+  type Schema
+} from '../../../services/data/schema/schema.models';
 import { LABEL_PROPERTY_DEFAULT } from '../../../services/geoserver/styles/styles.models';
 import { notFalsyFilter } from '../../../services/util/NotFalsyFilter';
 import { Select } from '../../Select/Select';
 import { CustomStyleControlLabel } from '../Label/CustomStyleControl-Label';
 import { CustomStyleControlSubControl } from '../SubControl/CustomStyleControl-SubControl';
 
-import '!style-loader!css-loader!sass-loader!./CustomStyleControl-LabelPropertySelect.scss';
+import './CustomStyleControl-LabelPropertySelect.scss';
 
 const cnCustomStyleControlLabelPropertySelect = cn('CustomStyleControl', 'LabelPropertySelect');
 

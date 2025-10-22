@@ -7,7 +7,7 @@ class PhotoModePreviewerBlock extends Block {
   };
 
   async photosCountChecking(count: number): Promise<void> {
-    const $photosCount = await this.$('photosCount');
+    const $photosCount = await this.findBySelector('photosCount');
     const $count = await $photosCount.getText();
 
     if (Number($count) !== count) {

@@ -5,12 +5,12 @@ import { Tooltip } from '@mui/material';
 import { FileUploadOutlined } from '@mui/icons-material';
 import { boundMethod } from 'autobind-decorator';
 
-import { SearchItemData, SearchItemDataTypeFeature } from '../../services/data/search/search.model';
+import { type SearchItemData, type SearchItemDataTypeFeature } from '../../services/data/search/search.model';
 import { getSearchResults } from '../../services/data/search/search.service';
 import { getSearchRequest } from '../../services/data/search/search.util';
 import { extractFeatureId } from '../../services/geoserver/featureType/featureType.util';
 import { exportAsXLSX } from '../../services/util/export';
-import { ExplorerSearchValue } from '../Explorer/Explorer.models';
+import { type ExplorerSearchValue } from '../Explorer/Explorer.models';
 import { IconButton } from '../IconButton/IconButton';
 
 interface ExportSearchResultsProps {

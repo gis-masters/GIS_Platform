@@ -1,9 +1,9 @@
-import React, { FC } from 'react';
+import React, { type FC } from 'react';
 import { cn } from '@bem-react/classname';
 
 import { User } from '../../User/User';
 
-import '!style-loader!css-loader!sass-loader!./SystemManagement-Header.scss';
+import './SystemManagement-Header.scss';
 
 const cnSystemManagementHeader = cn('SystemManagement', 'Header');
 

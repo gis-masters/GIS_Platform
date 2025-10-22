@@ -1,11 +1,11 @@
 import { useLocalObservable } from 'mobx-react';
 
-import { Schema } from '../../../services/data/schema/schema.models';
-import { EditedField, OldSchema } from '../../../services/data/schema/schemaOld.models';
-import { WfsFeature } from '../../../services/geoserver/wfs/wfs.models';
-import { CrgVectorableLayer, CrgVectorLayer } from '../../../services/gis/layers/layers.models';
+import { type Schema } from '../../../services/data/schema/schema.models';
+import { type EditedField, type OldSchema } from '../../../services/data/schema/schemaOld.models';
+import { type WfsFeature } from '../../../services/geoserver/wfs/wfs.models';
+import { type CrgVectorableLayer, type CrgVectorLayer } from '../../../services/gis/layers/layers.models';
 import { EditFeatureMode } from '../../../services/map/a-map-mode/edit-feature/EditFeature.models';
-import { ValidationResult } from '../../../services/util/FeaturePropertyValidatorsReact';
+import { type ValidationResult } from '../../../services/util/FeaturePropertyValidatorsReact';
 
 export interface ShouldRender {
   noData: boolean;

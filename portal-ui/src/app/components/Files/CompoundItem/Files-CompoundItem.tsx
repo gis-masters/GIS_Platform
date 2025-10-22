@@ -4,18 +4,18 @@ import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
-import { CompoundMainFiles, FileInfo } from '../../../services/data/files/files.models';
+import { CompoundMainFiles, type FileInfo } from '../../../services/data/files/files.models';
 import {
   getFileBaseName,
   getFileExtension,
   getMissingCompoundFileTypes,
   normalizeExtension
 } from '../../../services/data/files/files.util';
-import { LibraryRecord } from '../../../services/data/library/library.models';
-import { NewbieFile } from '../Files.async';
+import { type LibraryRecord } from '../../../services/data/library/library.models';
+import { type NewbieFile } from '../Files.chunkroot';
 import { FilesItem } from '../Item/Files-Item';
 
-import '!style-loader!css-loader!sass-loader!./Files-CompoundItem.scss';
+import './Files-CompoundItem.scss';
 
 const cnFilesCompoundItem = cn('Files', 'CompoundItem');
 

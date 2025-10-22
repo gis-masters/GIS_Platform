@@ -1,5 +1,5 @@
 import { libraryClient } from '../../../../src/app/services/data/library/library.client';
-import { Schema } from '../../../../src/app/services/data/schema/schema.models';
+import { type Schema } from '../../../../src/app/services/data/schema/schema.models';
 import { requestAsAdmin } from '../requestAs';
 import { getDocumentsLibraryByTitle } from './getDocLibraryByTitle';
 

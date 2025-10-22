@@ -1,6 +1,6 @@
 import { action, makeObservable, observable } from 'mobx';
-import Feature from 'ol/Feature';
-import { Geometry } from 'ol/geom';
+import type Feature from 'ol/Feature';
+import { type Geometry } from 'ol/geom';
 
 class MapVerticesModificationStore {
   private static _instance: MapVerticesModificationStore;

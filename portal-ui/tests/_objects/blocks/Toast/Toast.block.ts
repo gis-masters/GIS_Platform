@@ -10,12 +10,12 @@ class ToastBlock extends Block {
   };
 
   async clickMoar(): Promise<void> {
-    const $moar = await this.$('moar');
+    const $moar = await this.findBySelector('moar');
     await $moar.click();
   }
 
   async clickClose(): Promise<void> {
-    const $close = await this.$('close');
+    const $close = await this.findBySelector('close');
     await $close.click();
   }
 
@@ -51,23 +51,23 @@ class ToastBlock extends Block {
   }
 
   async waitForHidden(): Promise<void> {
-    const $container = await this.$('container');
-    await $container.waitForDisplayed({ timeout: 2000, reverse: true, timeoutMsg: 'Не скрывается уведомление' });
+    const $container = await this.findBySelector('container');
+    await $container.waitForExist({ timeout: 2000, reverse: true, timeoutMsg: 'Не скрывается уведомление' });
     await browser.pause(300); // animation
   }
 
   async waitForDetails(): Promise<void> {
-    const $details = await this.$('details');
+    const $details = await this.findBySelector('details');
     await $details.waitForDisplayed();
   }
 
   async waitForDetailsHidden(): Promise<void> {
-    const $details = await this.$('details');
-    await $details.waitForDisplayed({ reverse: true });
+    const $details = await this.findBySelector('details');
+    await $details.waitForExist({ reverse: true });
   }
 
   async getTitle(): Promise<string> {
-    const $title = await this.$('title');
+    const $title = await this.findBySelector('title');
 
     return await $title.getText();
   }

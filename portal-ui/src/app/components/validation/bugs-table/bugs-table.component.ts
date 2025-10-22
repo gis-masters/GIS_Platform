@@ -1,5 +1,14 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
-import { AfterViewInit, Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild } from '@angular/core';
+import {
+  type AfterViewInit,
+  Component,
+  Input,
+  type OnChanges,
+  type OnDestroy,
+  type OnInit,
+  type SimpleChanges,
+  ViewChild
+} from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { NGXLogger } from 'ngx-logger';
@@ -13,10 +22,10 @@ import { communicationService } from '../../../services/communication.service';
 import { ProcessStatus } from '../../../services/data/processes/processes.models';
 import { getProjectionByCode } from '../../../services/data/projections/projections.service';
 import { schemaService } from '../../../services/data/schema/schema.service';
-import { ValidationResultsResponse } from '../../../services/data/validation/validation.models';
+import { type ValidationResultsResponse } from '../../../services/data/validation/validation.models';
 import { getValidationResults } from '../../../services/data/validation/validation.service';
 import { getFeaturesById } from '../../../services/geoserver/wfs/wfs.service';
-import { CrgVectorLayer } from '../../../services/gis/layers/layers.models';
+import { type CrgVectorLayer } from '../../../services/gis/layers/layers.models';
 import { mapDrawService } from '../../../services/map/draw/map-draw.service';
 import { mapService } from '../../../services/map/map.service';
 import { isUpdateAllowed } from '../../../services/permissions/permissions.service';
@@ -33,7 +42,8 @@ const invalid = 'Не переданы обязательные параметр
       state('expanded', style({ height: '*' })),
       transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)'))
     ])
-  ]
+  ],
+  standalone: false
 })
 
 /**

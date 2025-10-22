@@ -1,6 +1,6 @@
 import { action, makeObservable, observable } from 'mobx';
 
-import { Basemap, SourceType } from '../services/data/basemaps/basemaps.models';
+import { type Basemap, SourceType } from '../services/data/basemaps/basemaps.models';
 
 const osmBasemap = { title: 'OSM', thumbnailUrn: '/assets/images/thumbnail-osm.jpg', type: SourceType.OSM, id: 666 };
 

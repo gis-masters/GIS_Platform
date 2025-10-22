@@ -1,8 +1,8 @@
-import React, { FC, lazy, Suspense } from 'react';
+import React, { type FC, lazy, Suspense } from 'react';
 
-import { LoginFormProps } from './LoginForm.async';
+import { type LoginFormProps } from './LoginForm.chunkroot';
 
-const LoginFormAsync = lazy(() => import('./LoginForm.async'));
+const LoginFormAsync = lazy(() => import('./LoginForm.chunkroot'));
 
 export const LoginForm: FC<LoginFormProps> = props => (
   <Suspense>

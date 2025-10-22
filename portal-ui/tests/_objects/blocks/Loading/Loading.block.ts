@@ -7,13 +7,13 @@ class LoadingBlock extends Block {
   };
 
   async waitForGlobalVisible(): Promise<void> {
-    const $global = await this.$('global');
-    await $global.waitForDisplayed({ timeout: 5000, timeoutMsg: 'Не появляется глобальный лоадер' });
+    const $global = await this.findBySelector('global');
+    await $global.waitForDisplayed({ timeoutMsg: 'Не появляется глобальный лоадер' });
   }
 
   async waitForGlobalHidden(): Promise<void> {
-    const $global = await this.$('global');
-    await $global.waitForDisplayed({ timeout: 5000, timeoutMsg: 'Не исчезает глобальный лоадер', reverse: true });
+    const $global = await this.findBySelector('global');
+    await $global.waitForExist({ timeoutMsg: 'Не исчезает глобальный лоадер', reverse: true });
   }
 }
 

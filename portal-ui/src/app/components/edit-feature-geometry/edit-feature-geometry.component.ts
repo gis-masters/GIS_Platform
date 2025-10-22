@@ -1,6 +1,6 @@
 import { createElement } from 'react';
-import { createRoot, Root } from 'react-dom/client';
-import { Component, ElementRef, Input, OnChanges, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { createRoot, type Root } from 'react-dom/client';
+import { Component, ElementRef, Input, type OnChanges, type OnDestroy, type OnInit, ViewChild } from '@angular/core';
 import { withRegistry } from '@bem-react/di';
 
 import { registry } from '../../services/di-registry';
@@ -12,7 +12,8 @@ const EditFeatureGeometryWithRegistry = withRegistry(registry)(EditFeatureGeomet
 @Component({
   selector: 'crg-edit-feature-geometry',
   template: '<div class="edit-feature-geometry" #react></div>',
-  styleUrls: ['./edit-feature-geometry.component.scss']
+  styleUrls: ['./edit-feature-geometry.component.scss'],
+  standalone: false
 })
 export class EditFeatureGeometryComponent implements OnInit, OnDestroy, OnChanges {
   @Input() readOnly?: boolean;

@@ -1,5 +1,5 @@
-import { ApiLink } from '../../models';
-import { CrgUser } from '../users/users.models';
+import { type ApiLink } from '../../models';
+import { type CrgUser } from '../users/users.models';
 
 export interface CrgGroup {
   id: number;

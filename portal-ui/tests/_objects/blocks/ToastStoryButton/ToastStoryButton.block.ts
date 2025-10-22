@@ -6,7 +6,7 @@ class ToastStoryButtonBlock extends Block {
   };
 
   async emitToast(): Promise<void> {
-    const $container = await this.$('container');
+    const $container = await this.findBySelector('container');
     await $container.click();
     await browser.pause(500); // анимация появления уведомления (да, она долгая)
   }

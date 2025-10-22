@@ -7,10 +7,10 @@ import { boundMethod } from 'autobind-decorator';
 
 import { IconButton } from '../../IconButton/IconButton';
 import { getChildrenFilterField, getChildrenFilterLabel } from '../Adapter/Explorer-Adapter';
-import { ExplorerService } from '../Explorer.service';
-import { ExplorerStore } from '../Explorer.store';
+import { type ExplorerService } from '../Explorer.service';
+import { type ExplorerStore } from '../Explorer.store';
 
-import '!style-loader!css-loader!sass-loader!./Explorer-Filter.scss';
+import './Explorer-Filter.scss';
 
 const cnExplorerFilter = cn('Explorer', 'Filter');
 

@@ -8,26 +8,26 @@ import { boundMethod } from 'autobind-decorator';
 import { pluralize } from 'numeralize-ru';
 
 import { deleteFeaturesAndEmitEvent } from '../../../services/data/vectorData/vectorData.service';
-import { WfsFeature } from '../../../services/geoserver/wfs/wfs.models';
-import { CrgVectorableLayer, isVectorLayer } from '../../../services/gis/layers/layers.models';
+import { type WfsFeature } from '../../../services/geoserver/wfs/wfs.models';
+import { type CrgVectorableLayer, isVectorLayer } from '../../../services/gis/layers/layers.models';
 import { EditFeatureMode } from '../../../services/map/a-map-mode/edit-feature/EditFeature.models';
 import { editFeatureStore } from '../../../services/map/a-map-mode/edit-feature/EditFeatureStore';
 import { mapModeManager } from '../../../services/map/a-map-mode/MapModeManager';
 import { selectedFeaturesStore } from '../../../services/map/a-map-mode/selected-features/SelectedFeatures.store';
 import { MapMode } from '../../../services/map/map.models';
 import { mapService } from '../../../services/map/map.service';
-import { PageOptions } from '../../../services/models';
+import { type PageOptions } from '../../../services/models';
 import { isUpdateAllowed } from '../../../services/permissions/permissions.service';
 import { featuresCollectionPrintTemplates } from '../../../services/print/print.service';
 import { konfirmieren } from '../../../services/utility-dialogs.service';
 import { CopyFeaturesButton } from '../../CopyFeaturesButton/CopyFeaturesButton';
 import { IconButton } from '../../IconButton/IconButton';
 import { PrintAction } from '../../PrintAction/PrintAction';
-import { XTableColumn } from '../../XTable/XTable.models';
-import { AttributesTableRecord } from '../Attributes.models';
+import { type XTableColumn } from '../../XTable/XTable.models';
+import { type AttributesTableRecord } from '../Attributes.models';
 import { AttributesBarActionExport } from '../BarActionExport/Attributes-BarActionExport';
 
-import '!style-loader!css-loader!sass-loader!./Attributes-BarActions.scss';
+import './Attributes-BarActions.scss';
 
 const cnAttributesBarActions = cn('Attributes', 'BarActions');
 

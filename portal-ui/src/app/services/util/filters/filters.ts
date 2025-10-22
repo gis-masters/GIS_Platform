@@ -1,4 +1,4 @@
-import { FilterQuery, FilterQueryValue } from './filters.models';
+import { type FilterQuery, type FilterQueryValue } from './filters.models';
 
 export function getFieldFilterValue(
   filter: FilterQuery,

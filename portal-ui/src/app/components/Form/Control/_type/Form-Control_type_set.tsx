@@ -4,14 +4,14 @@ import { withBemMod } from '@bem-react/core';
 import { RegistryConsumer } from '@bem-react/di';
 import { boundMethod } from 'autobind-decorator';
 
-import { PropertySchemaSet, PropertyType } from '../../../../services/data/schema/schema.models';
-import { CommonDiRegistry } from '../../../../services/di-registry';
+import { type PropertySchemaSet, PropertyType } from '../../../../services/data/schema/schema.models';
+import { type CommonDiRegistry } from '../../../../services/di-registry';
 import { isRecordStringUnknown } from '../../../../services/util/typeGuards/isRecordStringUnknown';
 import { FormErrors } from '../../Errors/Form-Errors';
 import { FormHiddenField } from '../../HiddenField/Form-HiddenField';
-import { cnFormControl, FormControlProps } from '../Form-Control';
+import { cnFormControl, type FormControlProps } from '../Form-Control';
 
-import '!style-loader!css-loader!sass-loader!./Form-Control_type_set.scss';
+import './Form-Control_type_set.scss';
 
 @observer
 class FormControlTypeSet extends Component<FormControlProps> {

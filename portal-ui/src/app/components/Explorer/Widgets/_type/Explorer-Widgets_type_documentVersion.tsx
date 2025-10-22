@@ -4,15 +4,15 @@ import { observer } from 'mobx-react';
 import { withBemMod } from '@bem-react/core';
 
 import { communicationService } from '../../../../services/communication.service';
-import { DocumentVersionExtended } from '../../../../services/data/library/library.models';
+import { type DocumentVersionExtended } from '../../../../services/data/library/library.models';
 import { getLibrarySchemaByRecord } from '../../../../services/data/library/library.service';
-import { Schema } from '../../../../services/data/schema/schema.models';
+import { type Schema } from '../../../../services/data/schema/schema.models';
 import { applyContentType } from '../../../../services/data/schema/schema.utils';
 import { ViewContentWidget } from '../../../ViewContentWidget/ViewContentWidget';
 import { assertExplorerItemDataTypeDocumentVersion } from '../../Adapter/_type/Explorer-Adapter_type_documentVersion';
 import { ExplorerItemType } from '../../Explorer.models';
 import { ExplorerInfoDescItem } from '../../InfoDescItem/Explorer-InfoDescItem';
-import { cnExplorerWidgets, ExplorerWidgetsProps } from '../Explorer-Widgets.base';
+import { cnExplorerWidgets, type ExplorerWidgetsProps } from '../Explorer-Widgets.base';
 
 @observer
 class ExplorerWidgetsTypeDocumentVersion extends Component<ExplorerWidgetsProps> {

@@ -4,13 +4,13 @@ import { observer } from 'mobx-react';
 import { withBemMod } from '@bem-react/core';
 import { boundMethod } from 'autobind-decorator';
 
-import { FileInfo, isFileInfoArray } from '../../../../services/data/files/files.models';
+import { type FileInfo, isFileInfoArray } from '../../../../services/data/files/files.models';
 import { checkFileEcp, verifyEcp } from '../../../../services/data/files/files.service';
-import { LibraryRecord } from '../../../../services/data/library/library.models';
-import { PropertySchemaFile, PropertyType } from '../../../../services/data/schema/schema.models';
+import { type LibraryRecord } from '../../../../services/data/library/library.models';
+import { type PropertySchemaFile, PropertyType } from '../../../../services/data/schema/schema.models';
 import { Files } from '../../../Files/Files';
 import { FormErrors } from '../../Errors/Form-Errors';
-import { cnFormControl, FormControlProps } from '../Form-Control';
+import { cnFormControl, type FormControlProps } from '../Form-Control';
 
 @observer
 class FormControlTypeFile extends Component<FormControlProps> {

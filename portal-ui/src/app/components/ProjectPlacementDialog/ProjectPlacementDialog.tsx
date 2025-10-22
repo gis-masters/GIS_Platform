@@ -1,21 +1,21 @@
 import React, { Component } from 'react';
 import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { Breakpoint } from '@mui/material';
+import { type Breakpoint } from '@mui/material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
-import { AxiosError } from 'axios';
+import { type AxiosError } from 'axios';
 
 import { communicationService } from '../../services/communication.service';
 import { placeFileWithProjection, placeGml } from '../../services/data/file-placement/file-placement.service';
-import { FileInfo } from '../../services/data/files/files.models';
+import { type FileInfo } from '../../services/data/files/files.models';
 import { isFileCanBePlaced, isGmlFile } from '../../services/data/files/files.util';
-import { LibraryRecord } from '../../services/data/library/library.models';
-import { ProcessResponse } from '../../services/data/processes/processes.models';
+import { type LibraryRecord } from '../../services/data/library/library.models';
+import { type ProcessResponse } from '../../services/data/processes/processes.models';
 import { awaitProcess } from '../../services/data/processes/processes.service';
-import { Projection } from '../../services/data/projections/projections.models';
+import { type Projection } from '../../services/data/projections/projections.models';
 import { getProjectionCode } from '../../services/data/projections/projections.util';
-import { CrgProject } from '../../services/gis/projects/projects.models';
+import { type CrgProject } from '../../services/gis/projects/projects.models';
 import { services } from '../../services/services';
 import { projectionsStore } from '../../stores/Projections.store';
 import { sidebars } from '../../stores/Sidebars.store';
@@ -24,7 +24,7 @@ import { SelectProjectsDialog } from '../SelectProjectDialog/SelectProjectDialog
 import { SelectProjection } from '../SelectProjection/SelectProjection';
 import { Toast } from '../Toast/Toast';
 
-import '!style-loader!css-loader!sass-loader!./ProjectPlacementDialog.scss';
+import './ProjectPlacementDialog.scss';
 
 const cnProjectPlacementDialog = cn('ProjectPlacementDialog');
 

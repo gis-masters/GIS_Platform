@@ -9,47 +9,47 @@ class FormControlTypeFileBlock extends Block {
 
   async isFilesPlacementBtnExist(title: string): Promise<boolean> {
     const $file = await this.findFileItem(title);
-    const $addUserBtn = await $file.$('.Files-Placement');
+    const $addUserBtn = await $file.$('.Files-Placement').getElement();
 
     return await $addUserBtn.isExisting();
   }
 
   async isCompoundFileHaveSingleDeleteBtn(): Promise<boolean> {
-    const $lookupList = await this.$('lookupList');
+    const $lookupList = await this.findBySelector('lookupList');
     await $lookupList.waitForDisplayed();
 
-    const $$delete = await $lookupList.$$('.Lookup-Delete');
+    const $$delete = await $lookupList.$$('.Lookup-Delete').getElements();
 
     return $$delete.length === 1;
   }
 
   async isCompoundFileHaveSingleDownloadBtn(): Promise<boolean> {
-    const $lookupList = await this.$('lookupList');
+    const $lookupList = await this.findBySelector('lookupList');
     await $lookupList.waitForDisplayed();
 
-    const $$delete = await $lookupList.$$('.Lookup-DownloadCompoundFile');
+    const $$delete = await $lookupList.$$('.Lookup-DownloadCompoundFile').getElements();
 
     return $$delete.length === 1;
   }
 
   async isCompoundFileHaveSingleFilesPlacementBtn(): Promise<boolean> {
-    const $lookupList = await this.$('lookupList');
+    const $lookupList = await this.findBySelector('lookupList');
     await $lookupList.waitForDisplayed();
 
-    const $$delete = await $lookupList.$$('.Files-Placement');
+    const $$delete = await $lookupList.$$('.Files-Placement').getElements();
 
     return $$delete.length === 1;
   }
 
   async findFileItem(title: string): Promise<WebdriverIO.Element> {
-    const $lookupList = await this.$('lookupList');
+    const $lookupList = await this.findBySelector('lookupList');
     await $lookupList.waitForDisplayed();
 
-    const $$items = await this.$$('filesItem');
+    const $$items = await this.findAllBySelector('filesItem');
 
     for (const $item of $$items) {
-      const $itemBaseName = await $item.$('.Files-BaseName');
-      const $itemExt = await $item.$('.Files-Ext');
+      const $itemBaseName = await $item.$('.Files-BaseName').getElement();
+      const $itemExt = await $item.$('.Files-Ext').getElement();
 
       const itemBaseName = await $itemBaseName.getText();
       const itemExt = await $itemExt.getText();

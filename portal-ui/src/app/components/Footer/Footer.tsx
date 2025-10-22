@@ -1,11 +1,11 @@
-import React, { FC } from 'react';
+import React, { type FC } from 'react';
 import { observer } from 'mobx-react';
 import { Container, Divider, Grid } from '@mui/material';
 import { cn } from '@bem-react/classname';
 
 import { environment } from '../../services/environment';
 
-import '!style-loader!css-loader!sass-loader!./Footer.scss';
+import './Footer.scss';
 
 const cnFooter = cn('Footer');
 

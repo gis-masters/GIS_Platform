@@ -1,10 +1,10 @@
 import { currentUser } from '../../../stores/CurrentUser.store';
 import { replaceUrl } from '../../api/server-urls.service';
-import { CrgLayer } from '../../gis/layers/layers.models';
-import { GeoserverLayerInfo } from '../layers/geoserver-layer.models';
+import { type CrgLayer } from '../../gis/layers/layers.models';
+import { type GeoserverLayerInfo } from '../layers/geoserver-layer.models';
 import { getLayerInfo } from '../layers/geoserver-layer.service';
 import { coveragesClient } from './coverages.client';
-import { CoverageTransparentColor, GeoserverCoverage } from './coverages.model';
+import { type CoverageTransparentColor, type GeoserverCoverage } from './coverages.model';
 
 export async function updateTransparentColor(
   coverageStore: string,

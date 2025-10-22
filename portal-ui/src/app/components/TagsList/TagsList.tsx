@@ -1,11 +1,11 @@
-import React, { FC } from 'react';
+import React, { type FC } from 'react';
 import { observer } from 'mobx-react';
 import { Stack } from '@mui/material';
 import { cn } from '@bem-react/classname';
 
 import { TagsListItem } from './Item/TagsList-Item';
 
-import '!style-loader!css-loader!sass-loader!./TagsList.scss';
+import './TagsList.scss';
 
 const cnTagsList = cn('TagsList');
 

@@ -1,8 +1,8 @@
-import React, { FC, lazy, Suspense } from 'react';
+import React, { type FC, lazy, Suspense } from 'react';
 
-import { PrintMapDialogProps } from './PrintMapDialog.async';
+import { type PrintMapDialogProps } from './PrintMapDialog.chunkroot';
 
-const PrintMapDialogAsync = lazy(() => import('./PrintMapDialog.async'));
+const PrintMapDialogAsync = lazy(() => import('./PrintMapDialog.chunkroot'));
 
 export const PrintMapDialog: FC<PrintMapDialogProps> = props => (
   <Suspense>

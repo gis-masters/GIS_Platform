@@ -1,6 +1,6 @@
 import { action, computed, makeObservable, observable } from 'mobx';
 
-import { CrgProject } from '../services/gis/projects/projects.models';
+import { type CrgProject } from '../services/gis/projects/projects.models';
 import { filterObjects } from '../services/util/filters/filterObjects';
 import { patch } from '../services/util/patch';
 import { sortObjects } from '../services/util/sortObjects';

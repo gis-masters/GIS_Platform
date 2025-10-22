@@ -1,8 +1,8 @@
-import React, { FC, lazy, Suspense } from 'react';
+import React, { type FC, lazy, Suspense } from 'react';
 
-import { ImportGmlResultsLinkProps } from './ImportGmlResultsLink.async';
+import { type ImportGmlResultsLinkProps } from './ImportGmlResultsLink.chunkroot';
 
-const ImportGmlResultsLinkAsync = lazy(() => import('./ImportGmlResultsLink.async'));
+const ImportGmlResultsLinkAsync = lazy(() => import('./ImportGmlResultsLink.chunkroot'));
 
 export const ImportGmlResultsLink: FC<ImportGmlResultsLinkProps> = props => (
   <Suspense>

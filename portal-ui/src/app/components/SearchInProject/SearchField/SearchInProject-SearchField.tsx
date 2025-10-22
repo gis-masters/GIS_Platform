@@ -1,10 +1,10 @@
-import React, { FC } from 'react';
+import React, { type FC } from 'react';
 import { cn } from '@bem-react/classname';
 
-import { ExplorerSearchValue } from '../../Explorer/Explorer.models';
+import { type ExplorerSearchValue } from '../../Explorer/Explorer.models';
 import { SearchField } from '../../SearchField/SearchField';
 
-import '!style-loader!css-loader!sass-loader!./SearchInProject-SearchField.scss';
+import './SearchInProject-SearchField.scss';
 
 const cnSearchInProject = cn('SearchInProject');
 

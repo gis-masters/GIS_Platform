@@ -3,12 +3,12 @@ import { runInAction } from 'mobx';
 import { observer, useLocalObservable } from 'mobx-react';
 import { ArticleOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
-import { AxiosError } from 'axios';
+import { type AxiosError } from 'axios';
 
 import { communicationService } from '../../services/communication.service';
-import { Schema } from '../../services/data/schema/schema.models';
+import { type Schema } from '../../services/data/schema/schema.models';
 import { applyContentType } from '../../services/data/schema/schema.utils';
-import { Task } from '../../services/data/task/task.models';
+import { type Task } from '../../services/data/task/task.models';
 import { getTask, getTaskSchema } from '../../services/data/task/task.service';
 import { services } from '../../services/services';
 import { route } from '../../stores/Route.store';
@@ -20,7 +20,7 @@ import { TasksJournalActions } from '../TasksJournalActions/TasksJournalActions'
 import { TextBadge } from '../TextBadge/TextBadge';
 import { Toast } from '../Toast/Toast';
 
-import '!style-loader!css-loader!sass-loader!./TaskPageContainer.scss';
+import './TaskPageContainer.scss';
 
 const cnTaskPageContainer = cn('TaskPageContainer');
 

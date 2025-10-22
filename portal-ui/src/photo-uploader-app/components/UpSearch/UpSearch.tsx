@@ -1,4 +1,4 @@
-import React, { ChangeEvent, FC, useCallback } from 'react';
+import React, { type ChangeEvent, type FC, useCallback } from 'react';
 import { observer } from 'mobx-react';
 import { Input } from '@mui/material';
 import { Search } from '@mui/icons-material';
@@ -6,9 +6,9 @@ import { cn } from '@bem-react/classname';
 
 import { photoUploaderStore } from '../../stores/PhotoUploader.store';
 
-import '!style-loader!css-loader!sass-loader!./UpSearch.scss';
-import '!style-loader!css-loader!sass-loader!./InputWrap/UpSearch-InputWrap.scss';
-import '!style-loader!css-loader!sass-loader!./Input/UpSearch-Input.scss';
+import './UpSearch.scss';
+import './InputWrap/UpSearch-InputWrap.scss';
+import './Input/UpSearch-Input.scss';
 
 const cnUpSearch = cn('UpSearch');
 

@@ -2,7 +2,7 @@ import { boundClass } from 'autobind-decorator';
 
 import { Client } from '../../api/Client';
 import { http } from '../../api/http.service';
-import { CrgLayer, CrgRasterLayer, NewCrgLayer, RelatedVectorLayers } from './layers.models';
+import { type CrgLayer, type CrgRasterLayer, type NewCrgLayer, type RelatedVectorLayers } from './layers.models';
 
 @boundClass
 class LayersClient extends Client {

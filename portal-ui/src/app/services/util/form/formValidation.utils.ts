@@ -1,8 +1,8 @@
 import { cloneDeep } from 'lodash';
 import moment from 'moment';
 
-import { FileInfo } from '../../data/files/files.models';
-import { PropertySchema, PropertyType, ValueFormula } from '../../data/schema/schema.models';
+import { type FileInfo } from '../../data/files/files.models';
+import { type PropertySchema, PropertyType, type ValueFormula } from '../../data/schema/schema.models';
 import { valueWellKnownFormulas } from '../../data/schema/schema.utils';
 import { knownRegex } from '../../regexp.service';
 import { notFalsyFilter } from '../NotFalsyFilter';

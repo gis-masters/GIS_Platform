@@ -7,7 +7,7 @@ import { boundMethod } from 'autobind-decorator';
 
 import { mapSnapStore } from '../../stores/MapSnap.store';
 
-import '!style-loader!css-loader!sass-loader!./MapSnapPixelTolerance.scss';
+import './MapSnapPixelTolerance.scss';
 
 const cnMapSnapPixelTolerance = cn('MapSnapPixelTolerance');
 

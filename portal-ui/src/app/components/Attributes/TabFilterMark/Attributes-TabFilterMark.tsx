@@ -1,10 +1,10 @@
-import React, { FC } from 'react';
+import React, { type FC } from 'react';
 import { Tooltip } from '@mui/material';
 import { cn } from '@bem-react/classname';
 
 import { FilterFeaturesOutlined } from '../../Icons/FilterFeaturesOutlined';
 
-import '!style-loader!css-loader!sass-loader!./Attributes-TabFilterMark.scss';
+import './Attributes-TabFilterMark.scss';
 
 const cnAttributesTabFilterMark = cn('Attributes', 'TabFilterMark');
 

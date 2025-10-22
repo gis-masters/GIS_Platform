@@ -1,7 +1,7 @@
 import { isObject } from 'lodash';
 
-import { PropertySchema, PropertyType } from '../../data/schema/schema.models';
-import { WfsGeometry } from '../wfs/wfs.models';
+import { type PropertySchema, PropertyType } from '../../data/schema/schema.models';
+import { type WfsGeometry } from '../wfs/wfs.models';
 
 export interface StyleRuleExtended extends StyleRule {
   layerId: number;

@@ -1,6 +1,6 @@
 import { describe, expect, test } from '@jest/globals';
 
-import { PropertySchemaChoice, PropertyType } from '../../data/schema/schema.models';
+import { type PropertySchemaChoice, PropertyType } from '../../data/schema/schema.models';
 import { validateFieldValue } from './formValidation.utils';
 
 describe('валидация значения поля validateFieldValue', () => {

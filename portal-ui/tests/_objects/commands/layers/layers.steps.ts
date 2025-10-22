@@ -1,8 +1,8 @@
-import { DataTable } from '@cucumber/cucumber';
+import { type DataTable } from '@cucumber/cucumber';
 import { Given, Then } from '@wdio/cucumber-framework';
 
-import { CrgLayer, CrgLayerType, NewCrgLayer } from '../../../../src/app/services/gis/layers/layers.models';
-import { ScenarioScope } from '../../ScenarioScope';
+import { type CrgLayer, CrgLayerType, type NewCrgLayer } from '../../../../src/app/services/gis/layers/layers.models';
+import { type ScenarioScope } from '../../ScenarioScope';
 import { getDatasetByTitle } from '../datasets/getDatasetByTitle';
 import { getProjectByTitle } from '../projects/getProjectByTitle';
 import { getVectorTableByTitle } from '../tables/getVectorTableByTitle';

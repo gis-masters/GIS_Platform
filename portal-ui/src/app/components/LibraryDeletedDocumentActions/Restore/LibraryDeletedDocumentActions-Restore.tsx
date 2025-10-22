@@ -4,14 +4,14 @@ import { observer } from 'mobx-react';
 import { RestorePageOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
-import { AxiosError } from 'axios';
+import { type AxiosError } from 'axios';
 
-import { Library, LibraryRecord } from '../../../services/data/library/library.models';
+import { type Library, type LibraryRecord } from '../../../services/data/library/library.models';
 import { getLibrary, getLibraryRecord, recoverLibraryRecord } from '../../../services/data/library/library.service';
 import { konfirmieren } from '../../../services/utility-dialogs.service';
-import { ActionsItemVariant } from '../../Actions/Item/Actions-Item.base';
+import { type ActionsItemVariant } from '../../Actions/Item/Actions-Item.base';
 import { ActionsItem } from '../../Actions/Item/Actions-Item.composed';
-import { emptyItem, ExplorerItemData, ExplorerItemType } from '../../Explorer/Explorer.models';
+import { emptyItem, type ExplorerItemData, ExplorerItemType } from '../../Explorer/Explorer.models';
 import { SelectFolderDialog } from '../../SelectFolderDialog/SelectFolderDialog';
 import { Toast } from '../../Toast/Toast';
 

@@ -6,20 +6,20 @@ import { FileUploadOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
-import { PropertySchema } from '../../../services/data/schema/schema.models';
+import { type PropertySchema } from '../../../services/data/schema/schema.models';
 import { applyView, getReadablePropertyValue } from '../../../services/data/schema/schema.utils';
-import { CrgVectorableLayer, isVectorLayer } from '../../../services/gis/layers/layers.models';
+import { type CrgVectorableLayer, isVectorLayer } from '../../../services/gis/layers/layers.models';
 import { getLayerSchema } from '../../../services/gis/layers/layers.service';
-import { PageOptions } from '../../../services/models';
+import { type PageOptions } from '../../../services/models';
 import { services } from '../../../services/services';
 import { exportAsXLSX } from '../../../services/util/export';
 import { notFalsyFilter } from '../../../services/util/NotFalsyFilter';
 import { IconButton } from '../../IconButton/IconButton';
 import { Toast } from '../../Toast/Toast';
-import { XTableColumn } from '../../XTable/XTable.models';
-import { AttributesTableRecord } from '../Attributes.models';
+import { type XTableColumn } from '../../XTable/XTable.models';
+import { type AttributesTableRecord } from '../Attributes.models';
 
-import '!style-loader!css-loader!sass-loader!./Attributes-BarActionExport.scss';
+import './Attributes-BarActionExport.scss';
 
 const cnAttributesBarActionExport = cn('Attributes', 'BarActionExport');
 

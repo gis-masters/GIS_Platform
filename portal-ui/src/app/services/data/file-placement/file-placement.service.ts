@@ -1,15 +1,15 @@
-import { AxiosError } from 'axios';
+import { type AxiosError } from 'axios';
 
-import { CrgLayersGroup, CrgLayerType, CrgRasterLayer } from '../../gis/layers/layers.models';
+import { type CrgLayersGroup, CrgLayerType, type CrgRasterLayer } from '../../gis/layers/layers.models';
 import { createRasterLayer } from '../../gis/layers/layers.service';
-import { CrgProject } from '../../gis/projects/projects.models';
+import { type CrgProject } from '../../gis/projects/projects.models';
 import { projectsService } from '../../gis/projects/projects.service';
 import { wsService } from '../../ws.service';
-import { FileInfo } from '../files/files.models';
+import { type FileInfo } from '../files/files.models';
 import { getFileInfo } from '../files/files.service';
 import { getFileBaseName } from '../files/files.util';
-import { LibraryRecord } from '../library/library.models';
-import { ProcessResponse, ProcessType } from '../processes/processes.models';
+import { type LibraryRecord } from '../library/library.models';
+import { type ProcessResponse, ProcessType } from '../processes/processes.models';
 import { createFileProcess, createProcess } from '../processes/processes.service';
 import { FilePlacementMode } from './file-placement.models';
 

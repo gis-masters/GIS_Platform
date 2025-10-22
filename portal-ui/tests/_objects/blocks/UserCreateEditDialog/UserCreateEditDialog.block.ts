@@ -10,7 +10,7 @@ class UserCreateEditDialogBlock extends Block {
   async clickSaveBtn(): Promise<void> {
     await this.waitForVisible();
 
-    const $saveBtn = await this.$('saveBtn');
+    const $saveBtn = await this.findBySelector('saveBtn');
     await $saveBtn.waitForClickable();
     await $saveBtn.click();
   }
@@ -19,8 +19,8 @@ class UserCreateEditDialogBlock extends Block {
     await super.waitForVisible();
     await browser.pause(300); // анимация появления диалога
 
-    const $loading = await this.$('loading');
-    await $loading.waitForDisplayed({ reverse: true });
+    const $loading = await this.findBySelector('loading');
+    await $loading.waitForExist({ reverse: true });
   }
 }
 

@@ -2,10 +2,10 @@ import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import { withBemMod } from '@bem-react/core';
 
-import { FiasValue } from '../../../../services/data/fias/fias.models';
+import { type FiasValue } from '../../../../services/data/fias/fias.models';
 import { PropertyType } from '../../../../services/data/schema/schema.models';
 import { FiasView } from '../../../FiasView/FiasView';
-import { FormControlProps } from '../../Control/Form-Control';
+import { type FormControlProps } from '../../Control/Form-Control';
 import { FormViewErrors } from '../../ViewErrors/ViewErrors-ViewErrors';
 import { cnFormView } from '../Form-View.base';
 

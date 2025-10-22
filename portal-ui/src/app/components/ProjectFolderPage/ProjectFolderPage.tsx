@@ -1,11 +1,11 @@
-import React, { FC, useEffect, useRef, useState } from 'react';
+import React, { type FC, useEffect, useRef, useState } from 'react';
 import { observer } from 'mobx-react';
 import { FolderOutlined, InsertDriveFileOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
-import { AxiosError } from 'axios';
+import { type AxiosError } from 'axios';
 
 import { communicationService } from '../../services/communication.service';
-import { CrgProject } from '../../services/gis/projects/projects.models';
+import { type CrgProject } from '../../services/gis/projects/projects.models';
 import { projectsService } from '../../services/gis/projects/projects.service';
 import { services } from '../../services/services';
 import { route } from '../../stores/Route.store';
@@ -16,7 +16,7 @@ import { ProjectActions } from '../ProjectActions/ProjectActions';
 import { ProjectFolderContent } from '../ProjectFolderContent/ProjectFolderContent';
 import { TextBadge } from '../TextBadge/TextBadge';
 
-import '!style-loader!css-loader!sass-loader!./ProjectFolderPage.scss';
+import './ProjectFolderPage.scss';
 
 const cnProjectFolderPageContainer = cn('ProjectFolderPageContainer');
 

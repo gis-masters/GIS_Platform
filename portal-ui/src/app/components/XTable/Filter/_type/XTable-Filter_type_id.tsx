@@ -1,16 +1,16 @@
 import React, { Component } from 'react';
-import { action, computed, IReactionDisposer, makeObservable, observable, reaction } from 'mobx';
+import { action, computed, type IReactionDisposer, makeObservable, observable, reaction } from 'mobx';
 import { observer } from 'mobx-react';
 import { TextField } from '@mui/material';
 import { withBemMod } from '@bem-react/core';
 
 import { getFieldFilterValue, modifyFieldFilterValue } from '../../../../services/util/filters/filters';
-import { FilterQuery } from '../../../../services/util/filters/filters.models';
+import { type FilterQuery } from '../../../../services/util/filters/filters.models';
 import { notFalsyFilter } from '../../../../services/util/NotFalsyFilter';
 import { XTableExtraColumnType } from '../../XTable.models';
-import { cnXTableFilter, XTableFilterProps } from '../XTable-Filter.base';
+import { cnXTableFilter, type XTableFilterProps } from '../XTable-Filter.base';
 
-import '!style-loader!css-loader!sass-loader!./XTable-Filter_type_id.scss';
+import './XTable-Filter_type_id.scss';
 
 @observer
 class XTableFilterTypeId extends Component<XTableFilterProps> {

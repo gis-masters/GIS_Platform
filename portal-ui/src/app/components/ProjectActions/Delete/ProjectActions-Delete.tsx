@@ -4,12 +4,12 @@ import { Delete, DeleteOutline } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
 import { communicationService } from '../../../services/communication.service';
-import { CrgProject } from '../../../services/gis/projects/projects.models';
+import { type CrgProject } from '../../../services/gis/projects/projects.models';
 import { projectsService } from '../../../services/gis/projects/projects.service';
 import { ActionTypes, DataTypes } from '../../../services/permissions/permissions.models';
 import { getAvailableActionsTooltipByRole } from '../../../services/permissions/permissions.utils';
 import { achtung, konfirmieren } from '../../../services/utility-dialogs.service';
-import { ActionsItemVariant } from '../../Actions/Item/Actions-Item.base';
+import { type ActionsItemVariant } from '../../Actions/Item/Actions-Item.base';
 import { ActionsItem } from '../../Actions/Item/Actions-Item.composed';
 
 const cnProjectActionsDelete = cn('ProjectActions', 'Delete');

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { IReactionDisposer } from 'mobx';
+import { type IReactionDisposer } from 'mobx';
 import { observer } from 'mobx-react';
 import { ButtonGroup, Tooltip } from '@mui/material';
 import { CancelOutlined, Close, SaveOutlined } from '@mui/icons-material';
@@ -16,11 +16,11 @@ import { mapVerticesModificationStore } from '../../stores/MapVerticesModificati
 import { sidebars } from '../../stores/Sidebars.store';
 import { IconButton } from '../IconButton/IconButton';
 import { SearchFeaturesList } from '../SearchFeaturesList/SearchFeaturesList';
-import { SearchInfo } from '../SearchField/SearchField';
+import { type SearchInfo } from '../SearchField/SearchField';
 import { SelectedFeaturesList } from '../SelectedFeaturesList/SelectedFeaturesList';
 import { VerticesModificationIcon } from '../VerticesModificationIcon/VerticesModificationIcon';
 
-import '!style-loader!css-loader!sass-loader!./FeaturesListSidebarFeatures.scss';
+import './FeaturesListSidebarFeatures.scss';
 
 const cnFeaturesListSidebarFeatures = cn('FeaturesListSidebarFeatures');
 

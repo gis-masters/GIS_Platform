@@ -1,18 +1,18 @@
 import { boundMethod } from 'autobind-decorator';
-import { Coordinate } from 'ol/coordinate';
-import { SnapEvent } from 'ol/events/SnapEvent';
+import { type Coordinate } from 'ol/coordinate';
+import { type SnapEvent } from 'ol/events/SnapEvent';
 import Feature from 'ol/Feature';
-import { Geometry, MultiPolygon } from 'ol/geom';
-import { Draw, Modify, Translate } from 'ol/interaction';
-import { DrawEvent } from 'ol/interaction/Draw';
+import { type Geometry, MultiPolygon } from 'ol/geom';
+import { Draw, Modify, type Translate } from 'ol/interaction';
+import { type DrawEvent } from 'ol/interaction/Draw';
 import { Vector as VectorLayer } from 'ol/layer';
 import { Vector as VectorSource } from 'ol/source';
 
 import { mapStore } from '../../../stores/Map.store';
 import { communicationService } from '../../communication.service';
-import { Projection } from '../../data/projections/projections.models';
+import { type Projection } from '../../data/projections/projections.models';
 import { getFeatureProjection, getOlProjection } from '../../data/projections/projections.service';
-import { WfsFeature } from '../../geoserver/wfs/wfs.models';
+import { type WfsFeature } from '../../geoserver/wfs/wfs.models';
 import { services } from '../../services';
 import { transformGeometry } from '../../util/coordinates-transform.util';
 import { wfsFeaturesToOlFeatures } from '../../util/open-layers.util';
@@ -26,7 +26,7 @@ import { mapService } from '../map.service';
 import { mapSnapService } from '../snap/map-snap.service';
 import { getStyle, KnownStyleKey } from '../styles/map-styles';
 import { handleGeometry } from './handleModifyGeometry';
-import { SingleDrawGeometryType } from './map-draw.models';
+import { type SingleDrawGeometryType } from './map-draw.models';
 
 class MapDrawService {
   private static _instance: MapDrawService;

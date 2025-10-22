@@ -1,4 +1,4 @@
-import { debounce, DebouncedFunc } from 'lodash';
+import { debounce, type DebouncedFunc } from 'lodash';
 
 import { allPermissions } from '../../stores/AllPermissions.store';
 import { communicationService } from '../communication.service';

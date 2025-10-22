@@ -4,10 +4,10 @@ import { observer } from 'mobx-react';
 import { Slider } from '@mui/material';
 import { cn } from '@bem-react/classname';
 
-import { TreeItemPayload } from '../../../services/gis/projects/projects.models';
+import { type TreeItemPayload } from '../../../services/gis/projects/projects.models';
 import { LayerTransparencyLabel } from '../TransparencyLabel/Layer-TransparencyLabel';
 
-import '!style-loader!css-loader!sass-loader!./Layer-Transparency.scss';
+import './Layer-Transparency.scss';
 
 const cnLayerTransparency = cn('Layer', 'Transparency');
 

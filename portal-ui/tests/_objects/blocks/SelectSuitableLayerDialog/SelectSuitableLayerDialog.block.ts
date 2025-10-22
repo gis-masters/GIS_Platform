@@ -11,7 +11,7 @@ class SelectSuitableLayerDialogBlock extends Block {
   };
 
   async clickOpenSelectLayerDialogBtn(): Promise<void> {
-    const $container = await this.$('openSelectLayerDialogBtn');
+    const $container = await this.findBySelector('openSelectLayerDialogBtn');
     await $container.waitForClickable();
     await $container.click();
   }
@@ -25,16 +25,16 @@ class SelectSuitableLayerDialogBlock extends Block {
       throw new Error(`Не найден проект "${layer}"`);
     }
 
-    const $layerSelect = await $userRow.$('.MuiTableCell-root:first-child input');
+    const $layerSelect = await $userRow.$('.MuiTableCell-root:first-child input').getElement();
 
     await $layerSelect.click();
   }
 
   async findLayerRow(layer: string): Promise<WebdriverIO.Element | undefined> {
-    const $$layerRows = await this.$$('projectRow');
+    const $$layerRows = await this.findAllBySelector('projectRow');
 
     for (const $layerRow of $$layerRows) {
-      const $layerRowName = await $layerRow.$('.MuiTableCell-root:nth-child(2)');
+      const $layerRowName = await $layerRow.$('.MuiTableCell-root:nth-child(2)').getElement();
       const layerRowName = await $layerRowName.getText();
 
       if (layerRowName === layer) {
@@ -44,7 +44,7 @@ class SelectSuitableLayerDialogBlock extends Block {
   }
 
   async clickSubmitButton(): Promise<void> {
-    const $saveBtn = await this.$('saveBtn');
+    const $saveBtn = await this.findBySelector('saveBtn');
     await $saveBtn.waitForClickable();
     await $saveBtn.click();
 

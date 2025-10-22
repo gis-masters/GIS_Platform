@@ -1,7 +1,7 @@
 import { isObject } from 'lodash';
 
-import { SpatialReferenceSystem } from '../../../../server-types/common-contracts';
-import { XTableColumn, XTableExtraColumnType } from '../../../components/XTable/XTable.models';
+import { type SpatialReferenceSystem } from '../../../../server-types/common-contracts';
+import { type XTableColumn, XTableExtraColumnType } from '../../../components/XTable/XTable.models';
 import { PropertyType } from '../schema/schema.models';
 
 export const DEFAULT_OL_PROJECTION = {

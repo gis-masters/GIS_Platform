@@ -2,7 +2,7 @@ import React, { Component, createRef } from 'react';
 import { IconButton, Tooltip } from '@mui/material';
 import { MyLocation } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
-import { IClassNameProps } from '@bem-react/core';
+import { type IClassNameProps } from '@bem-react/core';
 import { boundMethod } from 'autobind-decorator';
 import Feature from 'ol/Feature';
 

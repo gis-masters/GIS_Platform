@@ -1,10 +1,10 @@
-import React, { FC } from 'react';
+import React, { type FC } from 'react';
 import { cn } from '@bem-react/classname';
 import { pluralize } from 'numeralize-ru';
 
-import { FileInput, FileInputProps } from '../../../app/components/FileInput/FileInput';
+import { FileInput, type FileInputProps } from '../../../app/components/FileInput/FileInput';
 import { Toast } from '../../../app/components/Toast/Toast';
-import { UploadedFile } from '../../services/photoUploader.models';
+import { type UploadedFile } from '../../services/photoUploader.models';
 import { getFilesInfoByFileList } from '../../services/photoUploader.service';
 import { photoUploaderStore } from '../../stores/PhotoUploader.store';
 

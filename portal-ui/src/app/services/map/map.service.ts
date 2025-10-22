@@ -2,21 +2,21 @@ import { reaction } from 'mobx';
 import { debounce } from 'lodash';
 import { Map, View } from 'ol';
 import { defaults as defaultControls } from 'ol/control';
-import { Extent, getTopLeft, getWidth } from 'ol/extent';
-import Feature from 'ol/Feature';
-import { SimpleGeometry } from 'ol/geom';
-import ImageWrapper from 'ol/Image';
+import { type Extent, getTopLeft, getWidth } from 'ol/extent';
+import type Feature from 'ol/Feature';
+import { type SimpleGeometry } from 'ol/geom';
+import type ImageWrapper from 'ol/Image';
 import { DoubleClickZoom } from 'ol/interaction';
 import { Tile as TileLayer, Vector as VectorLayer } from 'ol/layer';
-import BaseLayer from 'ol/layer/Base';
+import type BaseLayer from 'ol/layer/Base';
 import ImageLayer from 'ol/layer/Image';
 import { get as getProjection } from 'ol/proj';
-import { ImageWMS, OSM, TileArcGISRest, TileImage, TileWMS, Vector as VectorSource, WMTS, XYZ } from 'ol/source';
-import ImageSource from 'ol/source/Image';
-import TileSource from 'ol/source/Tile';
-import { Options as TileWMSOptions } from 'ol/source/TileWMS';
-import { ServerType } from 'ol/source/wms';
-import Tile from 'ol/Tile';
+import { ImageWMS, OSM, TileArcGISRest, type TileImage, TileWMS, Vector as VectorSource, WMTS, XYZ } from 'ol/source';
+import type ImageSource from 'ol/source/Image';
+import type TileSource from 'ol/source/Tile';
+import { type Options as TileWMSOptions } from 'ol/source/TileWMS';
+import { type ServerType } from 'ol/source/wms';
+import type Tile from 'ol/Tile';
 import WMTSTileGrid from 'ol/tilegrid/WMTS';
 
 import { extractFeatureIdsFromAttributesFilter } from '../../components/Attributes/Attributes.utils';
@@ -26,16 +26,16 @@ import { mapStore } from '../../stores/Map.store';
 import { route } from '../../stores/Route.store';
 import { Emitter } from '../common/Emitter';
 import { communicationService } from '../communication.service';
-import { Basemap, SourceType } from '../data/basemaps/basemaps.models';
-import { defaultOlProjectionCode, Projection } from '../data/projections/projections.models';
+import { type Basemap, SourceType } from '../data/basemaps/basemaps.models';
+import { defaultOlProjectionCode, type Projection } from '../data/projections/projections.models';
 import { getFeatureProjection, getOlProjection } from '../data/projections/projections.service';
-import { Schema } from '../data/schema/schema.models';
+import { type Schema } from '../data/schema/schema.models';
 import { applyView } from '../data/schema/schema.utils';
-import { GeometryType, WfsFeature } from '../geoserver/wfs/wfs.models';
+import { GeometryType, type WfsFeature } from '../geoserver/wfs/wfs.models';
 import { getFeatureExtent, mergeExtents } from '../geoserver/wfs/wfs.util';
 import { wmsClient } from '../geoserver/wms/wms.client';
 import { getMap } from '../geoserver/wms/wms.service';
-import { CrgExternalLayer, CrgLayer, CrgLayerType } from '../gis/layers/layers.models';
+import { type CrgExternalLayer, type CrgLayer, CrgLayerType } from '../gis/layers/layers.models';
 import { getLayerSchema } from '../gis/layers/layers.service';
 import { ScaleLine } from '../ol/ScaleLine';
 import { services } from '../services';
@@ -45,7 +45,13 @@ import { concatCql } from '../util/cql/concatCql';
 import { Mime } from '../util/Mime';
 import { notFalsyFilter } from '../util/NotFalsyFilter';
 import { mapDrawService } from './draw/map-draw.service';
-import { CrgAdditionalLayerInfo, CrgWmsParams, CursorType, LayerAdditionalProps, MapPosition } from './map.models';
+import {
+  type CrgAdditionalLayerInfo,
+  type CrgWmsParams,
+  type CursorType,
+  type LayerAdditionalProps,
+  type MapPosition
+} from './map.models';
 
 class MapService {
   private static _instance: MapService;

@@ -1,4 +1,4 @@
-import React, { FC, useEffect } from 'react';
+import React, { type FC, useEffect } from 'react';
 import { observer, useLocalObservable } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 
@@ -7,7 +7,7 @@ import { extractFeatureId, extractTableNameFromFeatureId } from '../../services/
 import { getLayerSchema } from '../../services/gis/layers/layers.service';
 import { currentProject } from '../../stores/CurrentProject.store';
 import { sidebars } from '../../stores/Sidebars.store';
-import { Carousel, CarouselImageInfo } from '../Carousel/Carousel';
+import { Carousel, type CarouselImageInfo } from '../Carousel/Carousel';
 import { getFeaturesListItemTitle } from '../FeaturesListItem/FeaturesListItem.util';
 import { TextBadge } from '../TextBadge/TextBadge';
 

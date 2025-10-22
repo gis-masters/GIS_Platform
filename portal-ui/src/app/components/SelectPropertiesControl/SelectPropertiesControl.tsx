@@ -1,8 +1,8 @@
-import React, { FC, lazy, Suspense } from 'react';
+import React, { type FC, lazy, Suspense } from 'react';
 
-import { FormControlProps } from '../Form/Control/Form-Control';
+import { type FormControlProps } from '../Form/Control/Form-Control';
 
-const SelectPropertiesControlAsync = lazy(() => import('./SelectPropertiesControl.async'));
+const SelectPropertiesControlAsync = lazy(() => import('./SelectPropertiesControl.chunkroot'));
 
 export const SelectPropertiesControl: FC<FormControlProps> = props => (
   <Suspense>

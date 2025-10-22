@@ -5,16 +5,16 @@ import { IconButton, TextField } from '@mui/material';
 import { Clear } from '@mui/icons-material';
 import { SimpleTreeView } from '@mui/x-tree-view';
 import { cn } from '@bem-react/classname';
-import { IClassNameProps } from '@bem-react/core';
+import { type IClassNameProps } from '@bem-react/core';
 
 import { notFalsyFilter } from '../../services/util/NotFalsyFilter';
-import { Toc, TocItem } from '../../stores/Help.store';
+import { type Toc, type TocItem } from '../../stores/Help.store';
 import { HelpTocCollapseIcon } from './CollapseIcon/HelpToc-CollapseIcon';
 import { HelpTocExpandIcon } from './ExpandIcon/HelpToc-ExpandIcon';
 import { HelpTocItem } from './Item/HelpToc-Item';
 import { HelpTocSearchIcon } from './SearchIcon/HelpToc-SearchIcon';
 
-import '!style-loader!css-loader!sass-loader!./HelpToc.scss';
+import './HelpToc.scss';
 
 const cnHelpToc = cn('HelpToc');
 

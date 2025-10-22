@@ -6,7 +6,8 @@ import { services } from '../../services/services';
 
 @Component({
   selector: 'crg-services-provider',
-  template: ' '
+  template: ' ',
+  standalone: false
 })
 export class ServicesProvider {
   constructor(

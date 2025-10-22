@@ -4,13 +4,13 @@ import { Paper, Tooltip } from '@mui/material';
 import { CloseOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
-import { Feature } from 'ol';
+import { type Feature } from 'ol';
 
-import { LabelType } from '../../services/map/labels/map-labels.models';
+import { type LabelType } from '../../services/map/labels/map-labels.models';
 import { FeatureStyle } from '../FeatureStyle/FeatureStyle';
 import { IconButton } from '../IconButton/IconButton';
 
-import '!style-loader!css-loader!sass-loader!./MapLabelToolbox.scss';
+import './MapLabelToolbox.scss';
 
 const cnMapLabelToolbox = cn('MapLabelToolbox');
 

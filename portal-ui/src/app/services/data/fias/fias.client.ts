@@ -2,7 +2,7 @@ import { boundClass } from 'autobind-decorator';
 
 import { http } from '../../api/http.service';
 import { DataClient } from '../DataClient';
-import { FiasApiItem } from './fias.models';
+import { type FiasApiItem } from './fias.models';
 
 @boundClass
 class FiasClient extends DataClient {

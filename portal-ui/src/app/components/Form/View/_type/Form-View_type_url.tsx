@@ -2,13 +2,13 @@ import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import { withBemMod } from '@bem-react/core';
 
-import { PropertySchemaUrl, PropertyType } from '../../../../services/data/schema/schema.models';
+import { type PropertySchemaUrl, PropertyType } from '../../../../services/data/schema/schema.models';
 import { UrlsList } from '../../../UrlsList/UrlsList';
-import { FormControlProps } from '../../Control/Form-Control';
+import { type FormControlProps } from '../../Control/Form-Control';
 import { FormViewErrors } from '../../ViewErrors/ViewErrors-ViewErrors';
 import { cnFormView } from '../Form-View.base';
 
-import '!style-loader!css-loader!sass-loader!./Form-View_type_url.scss';
+import './Form-View_type_url.scss';
 
 @observer
 class FormViewTypeUrl extends Component<FormControlProps> {

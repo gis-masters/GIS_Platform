@@ -4,7 +4,7 @@ import { cn } from '@bem-react/classname';
 
 import { environment } from '../../services/environment';
 
-import '!style-loader!css-loader!sass-loader!../Attribution/Attribution.scss';
+import '../Attribution/Attribution.scss';
 
 const cnAttribution = cn('Attribution');
 

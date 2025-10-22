@@ -1,8 +1,8 @@
-import { FC, ReactNode } from 'react';
+import { type FC, type ReactNode } from 'react';
 import { cn } from '@bem-react/classname';
-import { IClassNameProps } from '@bem-react/core';
+import { type IClassNameProps } from '@bem-react/core';
 
-import { IconButtonProps } from '../../IconButton/IconButton';
+import { type IconButtonProps } from '../../IconButton/IconButton';
 
 export const cnActionsItem = cn('Actions', 'Item');
 

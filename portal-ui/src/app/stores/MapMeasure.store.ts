@@ -1,6 +1,6 @@
 import { action, makeObservable, observable } from 'mobx';
 
-import { MeasureItem } from '../services/map/measure/map-measure.models';
+import { type MeasureItem } from '../services/map/measure/map-measure.models';
 import { UnitsOfAreaMeasurement } from '../services/util/open-layers.util';
 
 class MapMeasureStore {

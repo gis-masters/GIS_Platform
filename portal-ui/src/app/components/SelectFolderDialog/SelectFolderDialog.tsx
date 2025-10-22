@@ -7,14 +7,14 @@ import { cn } from '@bem-react/classname';
 import { RegistryConsumer } from '@bem-react/di';
 import { boundMethod } from 'autobind-decorator';
 
-import { LibraryRecord } from '../../services/data/library/library.models';
-import { CommonDiRegistry } from '../../services/di-registry';
+import { type LibraryRecord } from '../../services/data/library/library.models';
+import { type CommonDiRegistry } from '../../services/di-registry';
 import { isRecordUpdateAllowed } from '../../services/permissions/permissions.service';
 import { ActionsRight } from '../ActionsRight/ActionsRight';
 import { Button } from '../Button/Button';
-import { ExplorerItemData, ExplorerItemType } from '../Explorer/Explorer.models';
+import { type ExplorerItemData, ExplorerItemType } from '../Explorer/Explorer.models';
 
-import '!style-loader!css-loader!sass-loader!./SelectFolderDialog.scss';
+import './SelectFolderDialog.scss';
 
 const cnSelectFolderDialog = cn('SelectFolderDialog');
 

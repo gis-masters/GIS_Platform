@@ -1,19 +1,19 @@
-import React, { Component, FC, ReactNode } from 'react';
+import React, { Component, type FC, type ReactNode } from 'react';
 import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { IconButton } from '@mui/material';
 import { CheckCircle, Close, Error, Info, Warning } from '@mui/icons-material';
-import { SvgIconProps } from '@mui/material/SvgIcon/';
+import { type SvgIconProps } from '@mui/material/SvgIcon/';
 import { cn } from '@bem-react/classname';
 import nl2br from 'react-nl2br';
-import { Id, toast, ToastOptions, TypeOptions } from 'react-toastify';
-import '!style-loader!css-loader!sass-loader!../../../../node_modules/react-toastify/dist/ReactToastify.css';
+import { type Id, toast, type ToastOptions, type TypeOptions } from 'react-toastify';
 
 import { environment } from '../../services/environment';
 import { sendTelegramError } from '../../services/telegram.service';
 import { isRecordStringUnknown } from '../../services/util/typeGuards/isRecordStringUnknown';
 
-import '!style-loader!css-loader!sass-loader!./Toast.scss';
+import '../../../../node_modules/react-toastify/dist/ReactToastify.css';
+import './Toast.scss';
 
 const cnToast = cn('Toast');
 

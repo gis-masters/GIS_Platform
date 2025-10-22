@@ -1,4 +1,4 @@
-import { SpecializationView } from '../../../../server-types/common-contracts';
+import { type SpecializationView } from '../../../../server-types/common-contracts';
 import { isAxiosError } from '../../util/typeGuards/isAxiosError';
 import { specializationsClient } from './specializations.client';
 

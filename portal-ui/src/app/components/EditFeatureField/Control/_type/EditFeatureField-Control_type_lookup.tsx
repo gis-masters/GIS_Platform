@@ -6,8 +6,9 @@ import { boundMethod } from 'autobind-decorator';
 
 import { ValueType } from '../../../../services/data/schema/schemaOld.models';
 import { services } from '../../../../services/services';
-import { DocumentListItemData, DocumentsList } from '../../../DocumentsList/DocumentsList';
-import { cnEditFeatureFieldControl, EditFeatureFieldControlProps } from '../EditFeatureField-Control.base';
+import { DocumentsList } from '../../../DocumentsList/DocumentsList';
+import { type DocumentListItemData } from '../../../DocumentsList/DocumentsList.models';
+import { cnEditFeatureFieldControl, type EditFeatureFieldControlProps } from '../EditFeatureField-Control.base';
 
 @observer
 class EditFeatureFieldControlTypeLookup extends Component<EditFeatureFieldControlProps> {

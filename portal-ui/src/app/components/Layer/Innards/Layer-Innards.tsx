@@ -1,11 +1,11 @@
-import React, { FC } from 'react';
+import React, { type FC } from 'react';
 import { cn } from '@bem-react/classname';
 
-import { ChildrenProps } from '../../../services/models';
+import { type ChildrenProps } from '../../../services/models';
 import { LayerGap } from '../Gap/Layer-Gap';
 import { LayerInnardsInner } from '../InnardsInner/Layer-InnardsInner';
 
-import '!style-loader!css-loader!sass-loader!./Layer-Innards.scss';
+import './Layer-Innards.scss';
 
 const cnLayerInnards = cn('Layer', 'Innards');
 

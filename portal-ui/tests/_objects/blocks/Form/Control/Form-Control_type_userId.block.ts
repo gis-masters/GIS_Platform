@@ -10,7 +10,7 @@ class FormControlTypeUserIdBlock extends Block {
     const formBlock = new FormBlock();
     const $field = await formBlock.getField(title);
 
-    const $deleteUserBtn = await $field.$('.Lookup-Delete');
+    const $deleteUserBtn = await $field.$('.Lookup-Delete').getElement();
 
     if (await $deleteUserBtn.isExisting()) {
       await $deleteUserBtn.click();
@@ -21,7 +21,7 @@ class FormControlTypeUserIdBlock extends Block {
     const formBlock = new FormBlock();
     const $field = await formBlock.getField(title);
 
-    const $deleteUserBtn = await $field.$('.Lookup-Delete');
+    const $deleteUserBtn = await $field.$('.Lookup-Delete').getElement();
     await $deleteUserBtn.waitForClickable();
     await $deleteUserBtn.click();
   }

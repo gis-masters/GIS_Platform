@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { type FC } from 'react';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 
@@ -8,7 +8,7 @@ import { UpChoosePhoto } from '../UpChoosePhotos/UpChoosePhotos';
 import { UpError } from '../UpError/UpError';
 import { UpPreviewer } from '../UpPreviewer/UpPreviewer';
 
-import '!style-loader!css-loader!sass-loader!./UpMain.scss';
+import './UpMain.scss';
 
 const cnUpMain = cn('UpMain');
 

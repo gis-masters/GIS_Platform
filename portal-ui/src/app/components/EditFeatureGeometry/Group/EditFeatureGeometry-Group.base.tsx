@@ -1,12 +1,12 @@
-import React, { Component, ComponentType, createRef, PropsWithChildren } from 'react';
+import React, { Component, type ComponentType, createRef, type PropsWithChildren } from 'react';
 import { action, computed, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { Paper } from '@mui/material';
 import { cn } from '@bem-react/classname';
-import { IClassNameProps } from '@bem-react/core';
+import { type IClassNameProps } from '@bem-react/core';
 import { boundMethod } from 'autobind-decorator';
 import { debounce } from 'lodash';
-import { Coordinate } from 'ol/coordinate';
+import { type Coordinate } from 'ol/coordinate';
 
 import { GeometryType } from '../../../services/geoserver/wfs/wfs.models';
 import { selectLabelForGeometryType } from '../../../services/geoserver/wfs/wfs.util';
@@ -23,7 +23,7 @@ import { EditFeatureGeometryGroupFooter } from '../GroupFooter/EditFeatureGeomet
 import { EditFeatureGeometryGroupInner } from '../GroupInner/EditFeatureGeometry-GroupInner';
 import { EditFeatureGeometryXY } from '../XY/EditFeatureGeometry-XY';
 
-import '!style-loader!css-loader!sass-loader!./EditFeatureGeometry-Group.scss';
+import './EditFeatureGeometry-Group.scss';
 
 export const cnEditFeatureGeometryGroup = cn('EditFeatureGeometry', 'Group');
 

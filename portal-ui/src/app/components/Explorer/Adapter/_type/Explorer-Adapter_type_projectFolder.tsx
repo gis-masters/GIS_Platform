@@ -1,9 +1,9 @@
-import React, { ReactNode } from 'react';
+import React, { type ReactNode } from 'react';
 import { FolderOutlined } from '@mui/icons-material';
 
-import { CrgProject } from '../../../../services/gis/projects/projects.models';
+import { type CrgProject } from '../../../../services/gis/projects/projects.models';
 import { projectsService } from '../../../../services/gis/projects/projects.service';
-import { PageOptions, SortOrder } from '../../../../services/models';
+import { type PageOptions, SortOrder } from '../../../../services/models';
 import { services } from '../../../../services/services';
 import { formatDate } from '../../../../services/util/date.util';
 import { staticImplements } from '../../../../services/util/staticImplements';
@@ -11,15 +11,15 @@ import { organizationSettings } from '../../../../stores/OrganizationSettings.st
 import { CreateProject } from '../../../CreateProject/CreateProject';
 import { ProjectActions } from '../../../ProjectActions/ProjectActions';
 import {
-  Adapter,
-  ExplorerItemData,
-  ExplorerItemDataAllTypes,
+  type Adapter,
+  type ExplorerItemData,
+  type ExplorerItemDataAllTypes,
   ExplorerItemType,
   itemTypeError,
-  SortItem
+  type SortItem
 } from '../../Explorer.models';
-import { ExplorerService } from '../../Explorer.service';
-import { ExplorerStore } from '../../Explorer.store';
+import { type ExplorerService } from '../../Explorer.service';
+import { type ExplorerStore } from '../../Explorer.store';
 
 export function assertExplorerItemDataTypeProjectFolder(
   item: ExplorerItemData

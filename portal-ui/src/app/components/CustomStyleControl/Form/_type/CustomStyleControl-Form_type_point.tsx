@@ -4,13 +4,13 @@ import { Adjust } from '@mui/icons-material';
 import { withBemMod } from '@bem-react/core';
 import { boundMethod } from 'autobind-decorator';
 
-import { PropertySchema } from '../../../../services/data/schema/schema.models';
-import { customStyleStrokeColors, PointRule } from '../../../../services/geoserver/styles/styles.models';
+import { type PropertySchema } from '../../../../services/data/schema/schema.models';
+import { customStyleStrokeColors, type PointRule } from '../../../../services/geoserver/styles/styles.models';
 import { CustomStyleControlColorSelect } from '../../ColorSelect/CustomStyleControl-ColorSelect';
-import { cnCustomStyleControl } from '../../CustomStyleControl';
 import { CustomStyleControlLabelPropertySelect } from '../../LabelPropertySelect/CustomStyleControl-LabelPropertySelect';
 import { CustomStyleControlMarkSelect } from '../../MarkSelect/CustomStyleControl-MarkSelect';
-import { cnCustomStyleControlForm, CustomStyleControlFormProps } from '../CustomStyleControl-Form.base';
+import { CustomStyleControlOptionsWrapper } from '../../OptionsWrapper/CustomStyleControl-OptionsWrapper';
+import { cnCustomStyleControlForm, type CustomStyleControlFormProps } from '../CustomStyleControl-Form.base';
 
 @observer
 export class CustomStyleControlFormTypePoint extends Component<CustomStyleControlFormProps> {
@@ -27,7 +27,7 @@ export class CustomStyleControlFormTypePoint extends Component<CustomStyleContro
       <div className={cnCustomStyleControlForm(null, [className])}>
         {withIcon && <Adjust color='primary' />}
 
-        <div className={cnCustomStyleControl('OptionsWrapper')}>
+        <CustomStyleControlOptionsWrapper>
           <CustomStyleControlMarkSelect
             label='маркер'
             value={value.rule}
@@ -54,7 +54,7 @@ export class CustomStyleControlFormTypePoint extends Component<CustomStyleContro
             onChange={this.handlerLabelChange}
             labelProperty={value.rule.labelProperty}
           />
-        </div>
+        </CustomStyleControlOptionsWrapper>
       </div>
     );
   }

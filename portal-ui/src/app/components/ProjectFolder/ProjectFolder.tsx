@@ -1,11 +1,11 @@
-import React, { FC } from 'react';
+import React, { type FC } from 'react';
 import { cn } from '@bem-react/classname';
 
-import { CrgProject } from '../../services/gis/projects/projects.models';
+import { type CrgProject } from '../../services/gis/projects/projects.models';
 import { ProjectFolderCard } from './Card/ProjectFolder-Card';
 import { ProjectFolderInner } from './Inner/ProjectFolder-Inner';
 
-import '!style-loader!css-loader!sass-loader!./ProjectFolder.scss';
+import './ProjectFolder.scss';
 
 const cnProjectFolder = cn('ProjectFolder');
 

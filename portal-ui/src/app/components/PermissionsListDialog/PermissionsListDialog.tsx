@@ -1,4 +1,4 @@
-import React, { Component, ReactNode, SyntheticEvent } from 'react';
+import React, { Component, type ReactNode, type SyntheticEvent } from 'react';
 import { action, computed, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { Dialog, DialogActions, DialogContent, Tab, Tabs } from '@mui/material';
@@ -6,14 +6,14 @@ import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
 import { communicationService } from '../../services/communication.service';
-import { Dataset, VectorTable } from '../../services/data/vectorData/vectorData.models';
+import { type Dataset, type VectorTable } from '../../services/data/vectorData/vectorData.models';
 import { tablesEqual } from '../../services/data/vectorData/vectorData.util';
-import { CrgProject } from '../../services/gis/projects/projects.models';
+import { type CrgProject } from '../../services/gis/projects/projects.models';
 import {
-  PermissionsListItem,
+  type PermissionsListItem,
   PermissionType,
   PrincipalType,
-  RoleAssignmentBody
+  type RoleAssignmentBody
 } from '../../services/permissions/permissions.models';
 import {
   addDatasetPermission,
@@ -31,11 +31,15 @@ import { TextBadge } from '../TextBadge/TextBadge';
 import { XTable } from '../XTable/XTable';
 import { PermissionsListActions } from './Actions/PermissionsListDialog-Actions';
 import { PermissionsListDialogAdd } from './Add/PermissionsListDialog-Add';
-import { baseXTablePropsSet, PermissionsListItemType, PermissionsXTablePropsSet } from './PermissionsListDialog.models';
+import {
+  baseXTablePropsSet,
+  PermissionsListItemType,
+  type PermissionsXTablePropsSet
+} from './PermissionsListDialog.models';
 import { PermissionsListRoleSelect } from './RoleSelect/PermissionsListDialog-RoleSelect';
 
-import '!style-loader!css-loader!sass-loader!./Table/PermissionsListDialog-Table.scss';
-import '!style-loader!css-loader!sass-loader!./Paper/PermissionsListDialog-Paper.scss';
+import './Table/PermissionsListDialog-Table.scss';
+import './Paper/PermissionsListDialog-Paper.scss';
 
 const cnPermissionsListDialog = cn('PermissionsListDialog');
 

@@ -1,10 +1,10 @@
-import React, { FC } from 'react';
+import React, { type FC } from 'react';
 import { cn } from '@bem-react/classname';
 
 import { MapSelectionCancel } from './Cancel/MapSelection-Cancel';
 import { MapSelectionSelect } from './Select/MapSelection-Select';
 
-import '!style-loader!css-loader!sass-loader!./MapSelection.scss';
+import './MapSelection.scss';
 
 const cnMapSelection = cn('MapSelection');
 

@@ -1,17 +1,17 @@
 import {
-  Circle,
-  Geometry,
-  GeometryCollection,
-  LinearRing,
-  LineString,
-  MultiLineString,
-  MultiPoint,
-  MultiPolygon,
-  Point,
-  Polygon
+  type Circle,
+  type Geometry,
+  type GeometryCollection,
+  type LinearRing,
+  type LineString,
+  type MultiLineString,
+  type MultiPoint,
+  type MultiPolygon,
+  type Point,
+  type Polygon
 } from 'ol/geom';
 
-import { AnyCoordinate } from '../geometry/geometry.models';
+import { type AnyCoordinate } from '../geometry/geometry.models';
 import { services } from '../services';
 
 export function getCoordinatesFromGeometry(geometry: Geometry): AnyCoordinate | undefined {

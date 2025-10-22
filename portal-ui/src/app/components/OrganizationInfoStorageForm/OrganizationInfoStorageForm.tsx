@@ -3,12 +3,12 @@ import { observer, useLocalObservable } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 
 import type { OccupiedStorage } from '../../services/auth/organizations/organizations.models';
-import { PropertyType, SimpleSchema } from '../../services/data/schema/schema.models';
+import { PropertyType, type SimpleSchema } from '../../services/data/schema/schema.models';
 import { generateRandomId } from '../../services/util/randomId';
 import { organizationSettings } from '../../stores/OrganizationSettings.store';
 import { Form } from '../Form/Form';
 
-import '!style-loader!css-loader!sass-loader!./OrganizationInfoStorageForm.scss';
+import './OrganizationInfoStorageForm.scss';
 
 const cnOrganizationInfoStorageForm = cn('OrganizationInfoStorageForm');
 

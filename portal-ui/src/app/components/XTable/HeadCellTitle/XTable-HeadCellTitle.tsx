@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 
-import { XTableColumn } from '../XTable.models';
+import { type XTableColumn } from '../XTable.models';
 
-import '!style-loader!css-loader!sass-loader!./XTable-HeadCellTitle.scss';
+import './XTable-HeadCellTitle.scss';
 
 const cnXTableHeadCellTitle = cn('XTable', 'HeadCellTitle');
 

@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { type FC } from 'react';
 import { observer } from 'mobx-react';
 import { Fab, List } from '@mui/material';
 import { Add } from '@mui/icons-material';
@@ -10,8 +10,8 @@ import { UpActionsRemoveItemButton } from '../UpActions/RemoveItemButton/UpActio
 import { UpAddFiles } from '../UpAddFiles/UpAddFiles';
 import { UpLoadItem } from '../UpLoadItem/UpLoadItem';
 
-import '!style-loader!css-loader!sass-loader!./UpPhotoList.scss';
-import '!style-loader!css-loader!sass-loader!./Fab/UpPhotoList-Fab.scss';
+import './UpPhotoList.scss';
+import './Fab/UpPhotoList-Fab.scss';
 
 const cnUpPhotoList = cn('UpPhotoList');
 

@@ -11,16 +11,22 @@
       "schematics": {},
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:browser",
+          "builder": "@angular-builders/custom-webpack:browser",
           "options": {
+            "customWebpackConfig": {
+              "path": "./webpack.config.js",
+              "mergeRules": {
+                "module": {
+                  "rules": "prepend"
+                }
+              }
+            },
             "outputPath": "dist/gis-portal",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
             "tsConfig": "src/tsconfig.app.json",
             "outputHashing": "all",
-            "buildOptimizer": false,
-            "vendorChunk": true,
             "assets": [
               "src/assets",
               "src/sw.js",
@@ -37,11 +43,15 @@
               "@mui/utils/elementTypeAcceptingRef",
               "@mui/utils/unsupportedProp",
               "@stomp/stompjs",
+              "@turf/jsts",
+              "concaveman",
               "core-js",
               "dom-to-image",
               "dompurify",
               "earcut",
               "event-emitter",
+              "fast-deep-equal",
+              "fastpriorityqueue",
               "file-saver",
               "form-data",
               "geojson-equality",
@@ -52,27 +62,28 @@
               "mapbox-to-css-font",
               "moment",
               "numeralize-ru",
+              "object-assign",
               "papaparse",
               "pbf",
               "pdfjs-dist",
               "raf",
               "rbush",
               "react-dom",
+              "react-fast-compare",
               "react-favicon",
               "react-highlight-words",
               "react-nl2br",
+              "react-side-effect",
               "rgbcolor",
+              "skmeans",
               "sockjs-client",
+              "style-loader",
               "validate.js",
               "web-worker",
               "webfont-matcher",
               "xmlbuilder",
               "xml-utils",
-              "xlsx",
-              "!style-loader!css-loader!sass-loader!.",
-              "!style-loader!css-loader!sass-loader!..",
-              "!style-loader!css-loader!ol/ol.css",
-              "!../../../../node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js"
+              "xlsx"
             ]
           },
           "configurations": {
@@ -84,7 +95,7 @@
           "defaultConfiguration": ""
         },
         "serve": {
-          "builder": "@angular-devkit/build-angular:dev-server",
+          "builder": "@angular-builders/custom-webpack:dev-server",
           "options": {
             "buildTarget": "gis-portal:build"
           },
@@ -140,5 +151,31 @@
   },
   "cli": {
     "analytics": false
+  },
+  "schematics": {
+    "@schematics/angular:component": {
+      "type": "component"
+    },
+    "@schematics/angular:directive": {
+      "type": "directive"
+    },
+    "@schematics/angular:service": {
+      "type": "service"
+    },
+    "@schematics/angular:guard": {
+      "typeSeparator": "."
+    },
+    "@schematics/angular:interceptor": {
+      "typeSeparator": "."
+    },
+    "@schematics/angular:module": {
+      "typeSeparator": "."
+    },
+    "@schematics/angular:pipe": {
+      "typeSeparator": "."
+    },
+    "@schematics/angular:resolver": {
+      "typeSeparator": "."
+    }
   }
 }

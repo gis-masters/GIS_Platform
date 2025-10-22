@@ -4,11 +4,11 @@ import { ListItemIcon, ListItemText, MenuItem } from '@mui/material';
 import { FileOpenOutlined, LinkOutlined, MapOutlined, OpenInNewOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
-import { LibraryRecord } from '../../../services/data/library/library.models';
-import { Schema } from '../../../services/data/schema/schema.models';
+import { type LibraryRecord } from '../../../services/data/library/library.models';
+import { type Schema } from '../../../services/data/schema/schema.models';
 import { convertComplexNamesArrayToTableNamesUriFragment } from '../../../services/gis/layers/layers.utils';
 import { buildCql } from '../../../services/util/cql/buildCql';
-import { ActionsItemVariant } from '../../Actions/Item/Actions-Item.base';
+import { type ActionsItemVariant } from '../../Actions/Item/Actions-Item.base';
 import { ActionsItem } from '../../Actions/Item/Actions-Item.composed';
 import { Link } from '../../Link/Link';
 

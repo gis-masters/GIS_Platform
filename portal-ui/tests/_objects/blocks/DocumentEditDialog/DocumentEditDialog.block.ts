@@ -25,7 +25,7 @@ class DocumentEditDialogBlock extends Block {
   async clickSaveButton(): Promise<void> {
     await this.waitForVisible();
 
-    const $saveButton = await this.$('saveButton');
+    const $saveButton = await this.findBySelector('saveButton');
     await $saveButton.waitForClickable();
     await $saveButton.click();
   }
@@ -39,7 +39,7 @@ class DocumentEditDialogBlock extends Block {
       throw new Error(`Не найдено поле "${field}"`);
     }
 
-    const $errorMessage = await $currentField.$('.MuiFormHelperText-root');
+    const $errorMessage = await $currentField.$('.MuiFormHelperText-root').getElement();
     await $errorMessage.waitForDisplayed();
     await expect(await $errorMessage.getText()).toContain(message);
   }
@@ -47,7 +47,7 @@ class DocumentEditDialogBlock extends Block {
   async waitForClose(): Promise<void> {
     await this.waitForVisible();
 
-    const $container = await this.$('container');
+    const $container = await this.findBySelector('container');
     await browser.waitUntil(
       async () => {
         return !(await $container.isExisting());
@@ -62,13 +62,13 @@ class DocumentEditDialogBlock extends Block {
   private async getFormField(fieldName: string): Promise<WebdriverIO.Element | undefined> {
     await this.waitForVisible();
 
-    const $form = await this.$('form');
-    const $$fields = await $form.$$('.Form-Field');
+    const $form = await this.findBySelector('form');
+    const $$fields = await $form.$$('.Form-Field').getElements();
 
     for (const $field of $$fields) {
       const label = await $field.$('.Form-Label').getText();
       if (label === fieldName) {
-        return $field.$('.Form-Control');
+        return $field.$('.Form-Control').getElement();
       }
     }
   }

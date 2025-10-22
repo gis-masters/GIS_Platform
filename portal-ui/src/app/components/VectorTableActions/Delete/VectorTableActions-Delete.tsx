@@ -13,9 +13,9 @@ import {
 import { Delete, DeleteOutline } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
-import { AxiosError } from 'axios';
+import { type AxiosError } from 'axios';
 
-import { VectorTable } from '../../../services/data/vectorData/vectorData.models';
+import { type VectorTable } from '../../../services/data/vectorData/vectorData.models';
 import { deleteVectorTable } from '../../../services/data/vectorData/vectorData.service';
 import { Button } from '../../Button/Button';
 

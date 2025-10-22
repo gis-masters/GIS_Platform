@@ -1,13 +1,13 @@
-import React, { ReactNode } from 'react';
+import React, { type ReactNode } from 'react';
 import { Tooltip } from '@mui/material';
 import { EmailOutlined, ViewListOutlined } from '@mui/icons-material';
 
 import { services } from '../../../../services/services';
 import { staticImplements } from '../../../../services/util/staticImplements';
 import {
-  Adapter,
-  ExplorerItemData,
-  ExplorerItemDataAllTypes,
+  type Adapter,
+  type ExplorerItemData,
+  type ExplorerItemDataAllTypes,
   ExplorerItemType,
   itemTypeError
 } from '../../Explorer.models';

@@ -1,13 +1,13 @@
-import React, { lazy, ReactElement, Suspense } from 'react';
+import React, { lazy, type ReactElement, Suspense } from 'react';
 
-import { FormProps } from './Form.async';
+import { type FormProps } from './Form.chunkroot';
 
 export { FormField } from './Field/Form-Field';
 export { FormLabel } from './Label/Form-Label';
 export { FormControl } from './Control/Form-Control.composed';
-export { FormProps } from './Form.async';
+export { FormProps } from './Form.chunkroot';
 
-const FormAsync = lazy(() => import('./Form.async')) as <T>(p: FormProps<T>) => ReactElement;
+const FormAsync = lazy(() => import('./Form.chunkroot')) as <T>(p: FormProps<T>) => ReactElement;
 
 export const Form = (props => (
   <Suspense>

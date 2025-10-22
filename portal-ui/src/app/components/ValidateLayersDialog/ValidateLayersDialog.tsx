@@ -1,8 +1,8 @@
-import React, { FC, lazy, Suspense } from 'react';
+import React, { type FC, lazy, Suspense } from 'react';
 
-import { ValidateLayersDialogProps } from './ValidateLayersDialog.async';
+import { type ValidateLayersDialogProps } from './ValidateLayersDialog.chunkroot';
 
-const ValidateLayersDialogAsync = lazy(() => import('./ValidateLayersDialog.async'));
+const ValidateLayersDialogAsync = lazy(() => import('./ValidateLayersDialog.chunkroot'));
 
 export const ValidateLayersDialog: FC<ValidateLayersDialogProps> = props => (
   <Suspense>

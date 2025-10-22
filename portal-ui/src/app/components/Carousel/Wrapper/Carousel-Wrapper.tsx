@@ -1,18 +1,18 @@
-import React, { FC, useCallback } from 'react';
+import React, { type FC, useCallback } from 'react';
 import { useLocalObservable } from 'mobx-react';
 import { DialogContent, Tooltip } from '@mui/material';
 import { cn } from '@bem-react/classname';
-import { SwiperClass } from 'swiper/react';
+import { type SwiperClass } from 'swiper/react';
 
 import { isPdfFile } from '../../../services/data/files/files.util';
 import { Loading } from '../../Loading/Loading';
-import { CarouselImageInfo } from '../Carousel';
+import type { CarouselImageInfo } from '../Carousel';
 import { CarouselMainSwiper } from '../MainSwiper/Carousel-MainSwiper';
 import { CarouselOpenInFull } from '../OpenInFull/Carousel-OpenInFull';
 import { CarouselThumbsSwiper } from '../ThumbsSwiper/Carousel-ThumbsSwiper';
 
-import '!style-loader!css-loader!sass-loader!./Carousel-Wrapper.scss';
-import '!style-loader!css-loader!sass-loader!../Empty/Carousel-Empty.scss';
+import './Carousel-Wrapper.scss';
+import '../Empty/Carousel-Empty.scss';
 
 export interface ImagesForCarouselWrapper extends CarouselImageInfo {
   url: string;

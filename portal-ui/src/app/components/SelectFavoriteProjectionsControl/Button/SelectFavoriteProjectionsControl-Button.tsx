@@ -1,9 +1,9 @@
-import React, { FC } from 'react';
+import React, { type FC } from 'react';
 import { cn } from '@bem-react/classname';
 
-import { Button, ButtonProps } from '../../Button/Button';
+import { Button, type ButtonProps } from '../../Button/Button';
 
-import '!style-loader!css-loader!sass-loader!./SelectFavoriteProjectionsControl-Button.scss';
+import './SelectFavoriteProjectionsControl-Button.scss';
 
 const cnSelectFavoriteProjectionsControlButton = cn('SelectFavoriteProjectionsControl', 'Button');
 

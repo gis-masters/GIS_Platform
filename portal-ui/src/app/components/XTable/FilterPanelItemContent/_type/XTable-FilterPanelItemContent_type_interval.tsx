@@ -1,12 +1,12 @@
-import React, { ReactElement } from 'react';
+import React, { type ReactElement } from 'react';
 
 import { PropertyType } from '../../../../services/data/schema/schema.models';
 import { formatDate } from '../../../../services/util/date.util';
 import { getFieldFilterValue } from '../../../../services/util/filters/filters';
-import { FilterQuery } from '../../../../services/util/filters/filters.models';
+import { type FilterQuery } from '../../../../services/util/filters/filters.models';
 import {
   XTableFilterPanelItemContentBase,
-  XTableFilterPanelItemContentProps
+  type XTableFilterPanelItemContentProps
 } from '../XTable-FilterPanelItemContent.base';
 
 export const FilterPanelItemContentTypeInterval = ((props: XTableFilterPanelItemContentProps<unknown>) => {
@@ -23,8 +23,8 @@ export const FilterPanelItemContentTypeInterval = ((props: XTableFilterPanelItem
 
   const value = (
     <>
-      {(filterValue?.$gte || filterValue?.$gte === 0) && 'от'} {from}{' '}
-      {(filterValue?.$lte || filterValue?.$lte === 0) && 'до'} {to}
+      {(filterValue?.$gte || filterValue?.$gte === 0) && 'от'} {from as string}{' '}
+      {(filterValue?.$lte || filterValue?.$lte === 0) && 'до'} {to as string}
     </>
   );
 

@@ -9,10 +9,10 @@ export class MuiMenuBlock extends Block {
   };
 
   async clickItemByTitle(title: string, contains?: boolean): Promise<void> {
-    const $container = await this.$('container');
+    const $container = await this.findBySelector('container');
     await $container.waitForDisplayed();
 
-    const $item = await $container.$(`.MuiMenuItem-root${contains ? '*' : ''}=${title}`);
+    const $item = await $container.$(`.MuiMenuItem-root${contains ? '*' : ''}=${title}`).getElement();
     await $item.waitForClickable();
     await $item.click();
     await sleep(300); // Анимация исчезновения меню

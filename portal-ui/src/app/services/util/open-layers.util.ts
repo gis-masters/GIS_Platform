@@ -1,6 +1,6 @@
 import { Feature } from 'ol';
 import {
-  Geometry,
+  type Geometry,
   LineString,
   MultiLineString,
   MultiPoint,
@@ -10,7 +10,7 @@ import {
   SimpleGeometry
 } from 'ol/geom';
 
-import { GeometryType, WfsFeature, WfsGeometry } from '../geoserver/wfs/wfs.models';
+import { GeometryType, type WfsFeature, type WfsGeometry } from '../geoserver/wfs/wfs.models';
 import { services } from '../services';
 
 export enum UnitsOfAreaMeasurement {
@@ -35,19 +35,28 @@ export function featureToWfsFeature(olFeature: Feature): WfsFeature {
     throw new TypeError('Geometry is not SimpleGeometry');
   }
 
-  const coordinates = geometry.getCoordinates();
+  let wfsGeometry: WfsGeometry | undefined;
+
+  if (geometry instanceof Point) {
+    wfsGeometry = { type: GeometryType.POINT, coordinates: geometry.getCoordinates() };
+  } else if (geometry instanceof MultiPoint) {
+    wfsGeometry = { type: GeometryType.MULTI_POINT, coordinates: geometry.getCoordinates() };
+  } else if (geometry instanceof LineString) {
+    wfsGeometry = { type: GeometryType.LINE_STRING, coordinates: geometry.getCoordinates() };
+  } else if (geometry instanceof MultiLineString) {
+    wfsGeometry = { type: GeometryType.MULTI_LINE_STRING, coordinates: geometry.getCoordinates() };
+  } else if (geometry instanceof Polygon) {
+    wfsGeometry = { type: GeometryType.POLYGON, coordinates: geometry.getCoordinates() };
+  } else if (geometry instanceof MultiPolygon) {
+    wfsGeometry = { type: GeometryType.MULTI_POLYGON, coordinates: geometry.getCoordinates() };
+  } else {
+    throw new TypeError(`Неподдерживаемый тип геометрии: ${geometry.getType()}`);
+  }
 
   return {
     type: 'Feature',
     id: String(olFeature.getId()),
-    ...(coordinates
-      ? {
-          geometry: {
-            type: geometry.getType() as GeometryType,
-            coordinates
-          }
-        }
-      : {}),
+    geometry: wfsGeometry,
     geometry_name: 'geometry',
     properties
   };
@@ -112,27 +121,29 @@ export function wfsGeometryToGeometry(wfsGeometry: WfsGeometry): SimpleGeometry 
     throw new Error('Некорректная геометрия');
   }
 
-  switch (wfsGeometry.type) {
-    case GeometryType.POINT: {
-      return new Point(wfsGeometry.coordinates);
-    }
-    case GeometryType.MULTI_POINT: {
-      return new MultiPoint(wfsGeometry.coordinates);
-    }
-    case GeometryType.LINE_STRING: {
-      return new LineString(wfsGeometry.coordinates);
-    }
-    case GeometryType.MULTI_LINE_STRING: {
-      return new MultiLineString(wfsGeometry.coordinates);
-    }
-    case GeometryType.POLYGON: {
-      return new Polygon(wfsGeometry.coordinates);
-    }
-    case GeometryType.MULTI_POLYGON: {
-      return new MultiPolygon(wfsGeometry.coordinates);
-    }
-    default: {
-      throw new Error(`Неподдерживаемый тип геометрии: ${wfsGeometry.type}`);
-    }
+  if (wfsGeometry.type === GeometryType.POINT) {
+    return new Point(wfsGeometry.coordinates);
   }
+
+  if (wfsGeometry.type === GeometryType.MULTI_POINT) {
+    return new MultiPoint(wfsGeometry.coordinates);
+  }
+
+  if (wfsGeometry.type === GeometryType.LINE_STRING) {
+    return new LineString(wfsGeometry.coordinates);
+  }
+
+  if (wfsGeometry.type === GeometryType.MULTI_LINE_STRING) {
+    return new MultiLineString(wfsGeometry.coordinates);
+  }
+
+  if (wfsGeometry.type === GeometryType.POLYGON) {
+    return new Polygon(wfsGeometry.coordinates);
+  }
+
+  if (wfsGeometry.type === GeometryType.MULTI_POLYGON) {
+    return new MultiPolygon(wfsGeometry.coordinates);
+  }
+
+  throw new TypeError('Неподдерживаемый тип геометрии');
 }

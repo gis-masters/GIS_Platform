@@ -5,13 +5,13 @@ import { Edit, EditOutlined, SaveOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
-import { LibraryRecord } from '../../../services/data/library/library.models';
+import { type LibraryRecord } from '../../../services/data/library/library.models';
 import { updateLibraryRecord } from '../../../services/data/library/library.service';
-import { PropertySchema, PropertyType, Schema } from '../../../services/data/schema/schema.models';
+import { type PropertySchema, PropertyType, type Schema } from '../../../services/data/schema/schema.models';
 import { ActionTypes, DataTypes } from '../../../services/permissions/permissions.models';
 import { getAvailableActionsTooltipByRole } from '../../../services/permissions/permissions.utils';
 import { getPatch } from '../../../services/util/patch';
-import { ActionsItemVariant } from '../../Actions/Item/Actions-Item.base';
+import { type ActionsItemVariant } from '../../Actions/Item/Actions-Item.base';
 import { ActionsItem } from '../../Actions/Item/Actions-Item.composed';
 import { FormDialog } from '../../FormDialog/FormDialog';
 import { TextBadge } from '../../TextBadge/TextBadge';

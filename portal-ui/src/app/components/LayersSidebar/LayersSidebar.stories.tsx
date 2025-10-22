@@ -1,13 +1,13 @@
 import React from 'react';
-import { Meta, StoryFn } from '@storybook/react';
+import { type Meta, type StoryFn } from '@storybook/react';
 
-import { CrgLayer, CrgLayerType } from '../../services/gis/layers/layers.models';
-import { CrgProject } from '../../services/gis/projects/projects.models';
+import { type CrgLayer, CrgLayerType } from '../../services/gis/layers/layers.models';
+import { type CrgProject } from '../../services/gis/projects/projects.models';
 import { Role } from '../../services/permissions/permissions.models';
 import { currentProject } from '../../stores/CurrentProject.store';
 import { LayersSidebar } from './LayersSidebar';
 
-import '!style-loader!css-loader!sass-loader!./LayersSidebar.scss';
+import './LayersSidebar.scss';
 
 export default {
   title: 'LayersSidebar',

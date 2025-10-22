@@ -5,10 +5,10 @@ import { Badge, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/m
 import { MapOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
-import { FileConnection } from '../../services/data/files/files.models';
-import { VectorTable } from '../../services/data/vectorData/vectorData.models';
+import { type FileConnection } from '../../services/data/files/files.models';
+import { type VectorTable } from '../../services/data/vectorData/vectorData.models';
 import { getVectorTableConnections } from '../../services/data/vectorData/vectorData.service';
-import { ActionsItemVariant } from '../Actions/Item/Actions-Item.base';
+import { type ActionsItemVariant } from '../Actions/Item/Actions-Item.base';
 import { ActionsItem } from '../Actions/Item/Actions-Item.composed';
 import { Button } from '../Button/Button';
 import { FeatureInProjects } from '../FeaturesInProjects/FeaturesInProjects';

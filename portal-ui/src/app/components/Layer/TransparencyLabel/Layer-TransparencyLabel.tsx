@@ -1,7 +1,7 @@
-import React, { FC } from 'react';
+import React, { type FC } from 'react';
 import { cn } from '@bem-react/classname';
 
-import '!style-loader!css-loader!sass-loader!./Layer-TransparencyLabel.scss';
+import './Layer-TransparencyLabel.scss';
 
 const cnLayerTransparencyLabel = cn('Layer', 'TransparencyLabel');
 

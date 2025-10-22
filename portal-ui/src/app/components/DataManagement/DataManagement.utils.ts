@@ -1,10 +1,10 @@
 import { cloneDeep } from 'lodash';
 
-import { LibraryRecord } from '../../services/data/library/library.models';
+import { type LibraryRecord } from '../../services/data/library/library.models';
 import { addFilterPart } from '../../services/util/filters/filters';
-import { FilterQuery } from '../../services/util/filters/filters.models';
+import { type FilterQuery } from '../../services/util/filters/filters.models';
 import { notFalsyFilter } from '../../services/util/NotFalsyFilter';
-import { ExplorerItemData, ExplorerItemType } from '../Explorer/Explorer.models';
+import { type ExplorerItemData, ExplorerItemType } from '../Explorer/Explorer.models';
 
 export const datasetRootUrlItems = ['r', 'root', 'dr', 'datasetRoot'];
 export const libraryRootUrlItems = ['r', 'root', 'lr', 'libraryRoot'];

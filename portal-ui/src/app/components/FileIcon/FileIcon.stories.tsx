@@ -1,5 +1,5 @@
 import React from 'react';
-import { StoryFn } from '@storybook/react';
+import { type StoryFn } from '@storybook/react';
 
 import { FileIcon } from './FileIcon';
 

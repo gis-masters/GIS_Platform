@@ -11,23 +11,23 @@ class DocumentVersionsWidgetBlock extends Block {
   };
 
   async clickDocumentVersionBtn(): Promise<void> {
-    const $documentVersionBtn = await this.$('documentVersionBtn');
+    const $documentVersionBtn = await this.findBySelector('documentVersionBtn');
     await $documentVersionBtn.waitForDisplayed();
     await $documentVersionBtn.click();
   }
 
   async clickCloseDialogBtn(): Promise<void> {
-    const $closeDialog = await this.$('closeDialog');
+    const $closeDialog = await this.findBySelector('closeDialog');
     await $closeDialog.waitForDisplayed();
     await $closeDialog.click();
 
-    await $closeDialog.waitForDisplayed({ reverse: true });
+    await $closeDialog.waitForExist({ reverse: true });
   }
 
   async clickRestoreDocumentVersionBtn(): Promise<void> {
     await this.waitForVisible();
 
-    const $documentVersionBtn = await this.$('restoreBtn');
+    const $documentVersionBtn = await this.findBySelector('restoreBtn');
     await $documentVersionBtn.waitForDisplayed();
     await $documentVersionBtn.click();
 
@@ -35,7 +35,7 @@ class DocumentVersionsWidgetBlock extends Block {
   }
 
   async restoreLastDocumentVersion(): Promise<void> {
-    const $explorerBlock = new ExplorerBlock(await this.$('container'));
+    const $explorerBlock = new ExplorerBlock(await this.findBySelector('container'));
     await $explorerBlock.waitForLoading();
     await $explorerBlock.selectFirstExplorerItem();
 
@@ -43,7 +43,7 @@ class DocumentVersionsWidgetBlock extends Block {
   }
 
   async documentVersionBtnExist(): Promise<boolean> {
-    const $documentVersionBtn = await this.$('documentVersionBtn');
+    const $documentVersionBtn = await this.findBySelector('documentVersionBtn');
 
     return await $documentVersionBtn.isExisting();
   }
@@ -51,10 +51,10 @@ class DocumentVersionsWidgetBlock extends Block {
   async restoreDocumentVersionBtnExist(): Promise<boolean> {
     await this.waitForVisible();
 
-    const $explorerBlock = new ExplorerBlock(await this.$('container'));
+    const $explorerBlock = new ExplorerBlock(await this.findBySelector('container'));
     await $explorerBlock.waitForLoading();
 
-    const $documentVersionBtn = await this.$('restoreBtn');
+    const $documentVersionBtn = await this.findBySelector('restoreBtn');
 
     return await $documentVersionBtn.isExisting();
   }
@@ -64,7 +64,7 @@ class DocumentVersionsWidgetBlock extends Block {
       throw new Error('Неверное количество версий документа');
     }
 
-    const explorerBlock = new ExplorerBlock(await this.$('container'));
+    const explorerBlock = new ExplorerBlock(await this.findBySelector('container'));
     await explorerBlock.waitForExist();
 
     return await explorerBlock.getContentWidgetFieldValue(fieldName);
@@ -79,7 +79,7 @@ class DocumentVersionsWidgetBlock extends Block {
   async getDocumentVersionLength(): Promise<number> {
     await this.waitForVisible();
 
-    const explorerBlock = new ExplorerBlock(await this.$('container'));
+    const explorerBlock = new ExplorerBlock(await this.findBySelector('container'));
     await explorerBlock.waitForExist();
 
     return await explorerBlock.getExplorerItemsLength();

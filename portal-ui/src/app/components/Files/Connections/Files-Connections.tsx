@@ -6,10 +6,10 @@ import { Map, MapOutlined, SaveOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
-import { FileConnection, FileInfo } from '../../../services/data/files/files.models';
+import { type FileConnection, type FileInfo } from '../../../services/data/files/files.models';
 import { isTifFile } from '../../../services/data/files/files.util';
-import { PropertyType, SimpleSchema } from '../../../services/data/schema/schema.models';
-import { CoverageTransparentColorEntry } from '../../../services/geoserver/coverages/coverages.model';
+import { PropertyType, type SimpleSchema } from '../../../services/data/schema/schema.models';
+import { type CoverageTransparentColorEntry } from '../../../services/geoserver/coverages/coverages.model';
 import { getTransparentColor, updateTransparentColor } from '../../../services/geoserver/coverages/coverages.service';
 import { Button } from '../../Button/Button';
 import { ConnectionsToProjects } from '../../ConnectionsToProjects/ConnectionsToProjects';
@@ -17,8 +17,8 @@ import { FormDialog } from '../../FormDialog/FormDialog';
 import { IconButton } from '../../IconButton/IconButton';
 import { MapSettingsOutlined } from '../../Icons/MapSettingsOutlined';
 
-import '!style-loader!css-loader!sass-loader!../Connections/Files-Connections.scss';
-import '!style-loader!css-loader!sass-loader!../EditLayer/Files-EditLayer.scss';
+import '../Connections/Files-Connections.scss';
+import '../EditLayer/Files-EditLayer.scss';
 
 const cnFilesConnections = cn('Files', 'Connections');
 const cnFilesEditLayer = cn('Files', 'EditLayer');

@@ -1,6 +1,6 @@
 import { createElement } from 'react';
-import { createRoot, Root } from 'react-dom/client';
-import { Component, ElementRef, OnChanges, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { createRoot, type Root } from 'react-dom/client';
+import { Component, ElementRef, type OnChanges, type OnDestroy, type OnInit, ViewChild } from '@angular/core';
 import { withRegistry } from '@bem-react/di';
 import { toast, ToastContainer } from 'react-toastify';
 
@@ -11,7 +11,8 @@ const ToastContainerWithRegistry = withRegistry(registry)(ToastContainer);
 
 @Component({
   selector: 'crg-root',
-  templateUrl: './app.component.html'
+  templateUrl: './app.component.html',
+  standalone: false
 })
 export class AppComponent implements OnInit, OnDestroy, OnChanges {
   @ViewChild('reactToastContainer', { read: ElementRef, static: true })

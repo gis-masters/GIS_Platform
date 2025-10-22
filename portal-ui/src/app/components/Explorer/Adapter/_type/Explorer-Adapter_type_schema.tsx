@@ -1,12 +1,12 @@
-import React, { ReactNode } from 'react';
+import React, { type ReactNode } from 'react';
 import { SchemaOutlined } from '@mui/icons-material';
 
 import { staticImplements } from '../../../../services/util/staticImplements';
 import { SchemaActions } from '../../../SchemaActions/SchemaActions';
 import {
-  Adapter,
-  ExplorerItemData,
-  ExplorerItemDataAllTypes,
+  type Adapter,
+  type ExplorerItemData,
+  type ExplorerItemDataAllTypes,
   ExplorerItemType,
   itemTypeError
 } from '../../Explorer.models';

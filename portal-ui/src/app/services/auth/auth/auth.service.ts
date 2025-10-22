@@ -1,9 +1,9 @@
-import { AxiosError } from 'axios';
+import { type AxiosError } from 'axios';
 
 import { http } from '../../api/http.service';
 import { environment } from '../../environment';
 import { authClient } from './auth.client';
-import { AuthCredentials, AuthenticationResult, RegData } from './auth.models';
+import { type AuthCredentials, type AuthenticationResult, type RegData } from './auth.models';
 
 http.axios.interceptors.request.use(config => {
   if (authService.token) {

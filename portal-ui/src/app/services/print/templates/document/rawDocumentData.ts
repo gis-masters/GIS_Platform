@@ -1,4 +1,4 @@
-import { LibraryRecord } from '../../../data/library/library.models';
+import { type LibraryRecord } from '../../../data/library/library.models';
 import { getLibrary } from '../../../data/library/library.service';
 import { applyContentType, getReadablePropertyValue } from '../../../data/schema/schema.utils';
 import { PrintTemplate } from '../PrintTemplate';

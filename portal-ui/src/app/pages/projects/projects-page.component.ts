@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 
 @Component({
   selector: 'crg-projects-page',
-  templateUrl: './projects-page.component.html'
+  templateUrl: './projects-page.component.html',
+  standalone: false
 })
 export class ProjectsPageComponent {}

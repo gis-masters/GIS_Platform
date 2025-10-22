@@ -1,6 +1,6 @@
 import { action, makeObservable, observable } from 'mobx';
 
-import { Platform } from '../services/environment';
+import { type Platform } from '../services/environment';
 
 export interface TocItem {
   id: string;

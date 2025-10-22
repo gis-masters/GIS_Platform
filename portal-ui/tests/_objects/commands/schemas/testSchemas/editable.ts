@@ -1,4 +1,4 @@
-import { Schema } from '../../../../../src/app/services/data/schema/schema.models';
+import { type Schema } from '../../../../../src/app/services/data/schema/schema.models';
 import { testSorting } from './testSorting';
 
 export const editable: Schema = {

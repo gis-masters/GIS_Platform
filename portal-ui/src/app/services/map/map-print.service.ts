@@ -1,19 +1,19 @@
 import { createElement } from 'react';
 import { createRoot } from 'react-dom/client';
 import domToImage from 'dom-to-image';
-import { Map } from 'ol';
-import TileLayer from 'ol/layer/Tile';
+import { type Map } from 'ol';
+import type TileLayer from 'ol/layer/Tile';
 import { getPointResolution } from 'ol/proj';
-import TileSource from 'ol/source/Tile';
+import type TileSource from 'ol/source/Tile';
 
 import { Legend } from '../../components/Legend/Legend';
 import { PrintMapDialogDate } from '../../components/PrintMapDialog/Date/PrintMapDialog-Date';
 import { currentProject } from '../../stores/CurrentProject.store';
 import { mapMeasureStore } from '../../stores/MapMeasure.store';
 import { printSettings } from '../../stores/PrintSettings.store';
-import { StyleRuleExtended } from '../geoserver/styles/styles.models';
+import { type StyleRuleExtended } from '../geoserver/styles/styles.models';
 import { filterLegendForCurrentMapView, getLayerStyleRules } from '../geoserver/styles/styles.service';
-import { CrgLayerType, CrgVectorLayer } from '../gis/layers/layers.models';
+import { CrgLayerType, type CrgVectorLayer } from '../gis/layers/layers.models';
 import { saveAsBlob } from '../util/FileSaver';
 import { notFalsyFilter } from '../util/NotFalsyFilter';
 import { sleep } from '../util/sleep';

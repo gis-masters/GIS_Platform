@@ -4,18 +4,12 @@ import { createFile } from '../../app/services/data/files/files.service';
 import { defaultOlProjectionCode } from '../../app/services/data/projections/projections.models';
 import { getProjectionByCode } from '../../app/services/data/projections/projections.service';
 import { createFeature } from '../../app/services/data/vectorData/vectorData.service';
-import { GeometryType, NewWfsFeature } from '../../app/services/geoserver/wfs/wfs.models';
+import { GeometryType, type NewWfsFeature } from '../../app/services/geoserver/wfs/wfs.models';
 import { transformGeometry } from '../../app/services/util/coordinates-transform.util';
 import { formatDate, systemFormat } from '../../app/services/util/date.util';
 import { currentUser } from '../../app/stores/CurrentUser.store';
 import { PhotoUploaderScreens, photoUploaderStore } from '../stores/PhotoUploader.store';
-import { UploadedFile, UploadedFileStatus } from './photoUploader.models';
-
-export interface UploadResultType {
-  handled: number;
-  succeeded: number;
-  withError: number;
-}
+import { type UploadedFile, UploadedFileStatus } from './photoUploader.models';
 
 interface PhotoFeatureData {
   datasetId: string;

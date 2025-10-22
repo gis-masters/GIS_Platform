@@ -1,12 +1,12 @@
-import React, { FC } from 'react';
-import { SvgIconProps } from '@mui/material';
+import React, { type FC } from 'react';
+import { type SvgIconProps } from '@mui/material';
 import { InsertDriveFile, InsertDriveFileOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
-import { IClassNameProps } from '@bem-react/core';
+import { type IClassNameProps } from '@bem-react/core';
 
 import { normalizeExtension } from '../../services/data/files/files.util';
 
-import '!style-loader!css-loader!sass-loader!./FileIcon.scss';
+import './FileIcon.scss';
 
 const cnFileIcon = cn('FileIcon');
 

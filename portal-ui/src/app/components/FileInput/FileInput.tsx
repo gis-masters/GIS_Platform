@@ -1,4 +1,11 @@
-import React, { Component, createRef, DetailedHTMLProps, InputHTMLAttributes, ReactNode, RefObject } from 'react';
+import React, {
+  Component,
+  createRef,
+  type DetailedHTMLProps,
+  type InputHTMLAttributes,
+  type ReactNode,
+  type RefObject
+} from 'react';
 import { action, computed, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { IconButton, Tooltip } from '@mui/material';
@@ -7,9 +14,9 @@ import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 import { pluralize } from 'numeralize-ru';
 
-import { Button, ButtonProps } from '../Button/Button';
+import { Button, type ButtonProps } from '../Button/Button';
 
-import '!style-loader!css-loader!sass-loader!./FileInput.scss';
+import './FileInput.scss';
 
 const cnFileInput = cn('FileInput');
 

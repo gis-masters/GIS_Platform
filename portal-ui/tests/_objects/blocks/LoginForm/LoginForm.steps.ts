@@ -1,6 +1,6 @@
 import { Then, When } from '@wdio/cucumber-framework';
 
-import { TestUser } from '../../commands/auth/testUsers';
+import { type TestUser } from '../../commands/auth/testUsers';
 import { loginFormBlock } from './LoginForm.block';
 
 When('я авторизуюсь в форме авторизации как {user}', async ({ email, password }: TestUser) => {
@@ -13,7 +13,9 @@ When('я ввожу неверные учётные данные в форму �
 });
 
 Then('на форме входа появляется сообщение об ошибке {string}', async (errorMessage: string) => {
-  await loginFormBlock.checkErrorMessage(errorMessage);
+  const message = await loginFormBlock.getErrorMessage();
+
+  await expect(message).toBe(errorMessage);
 });
 
 Then('на форме входа появляется выбор организации', async () => {

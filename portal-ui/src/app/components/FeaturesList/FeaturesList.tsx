@@ -1,21 +1,21 @@
-import React, { Component, createRef, ReactNode, RefObject } from 'react';
+import React, { Component, createRef, type ReactNode, type RefObject } from 'react';
 import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
-import { FixedSizeList, ListChildComponentProps } from 'react-window';
+import { FixedSizeList, type ListChildComponentProps } from 'react-window';
 
-import { WfsFeature } from '../../services/geoserver/wfs/wfs.models';
+import { type WfsFeature } from '../../services/geoserver/wfs/wfs.models';
 import { EditFeatureMode } from '../../services/map/a-map-mode/edit-feature/EditFeature.models';
 import { mapModeManager } from '../../services/map/a-map-mode/MapModeManager';
 import { selectedFeaturesStore } from '../../services/map/a-map-mode/selected-features/SelectedFeatures.store';
 import { MapMode } from '../../services/map/map.models';
-import { FeatureError } from '../../services/map/map-link-following.service';
+import { type FeatureError } from '../../services/map/map-link-following.service';
 import { sidebars } from '../../stores/Sidebars.store';
 import { FeaturesListItem } from '../FeaturesListItem/FeaturesListItem';
 import { FeaturesListEmpty } from './Empty/FeaturesList-Empty';
 
-import '!style-loader!css-loader!sass-loader!./FeaturesList.scss';
+import './FeaturesList.scss';
 
 const cnFeaturesList = cn('FeaturesList');
 

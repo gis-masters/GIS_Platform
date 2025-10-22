@@ -1,14 +1,14 @@
-import { IReactionDisposer, reaction } from 'mobx';
-import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { type IReactionDisposer, reaction } from 'mobx';
+import { ChangeDetectorRef, Component, type OnDestroy, type OnInit } from '@angular/core';
 import { cloneDeep } from 'lodash';
-import { Extent } from 'ol/extent';
+import { type Extent } from 'ol/extent';
 import { Subject } from 'rxjs';
-import '!style-loader!css-loader!ol/ol.css';
+import 'ol/ol.css';
 
 import { Emitter } from '../../services/common/Emitter';
 import { cursorHandler } from '../../services/cursor.handler';
 import { getOlProjection } from '../../services/data/projections/projections.service';
-import { CrgExternalLayer, CrgLayerType } from '../../services/gis/layers/layers.models';
+import { type CrgExternalLayer, CrgLayerType } from '../../services/gis/layers/layers.models';
 import { fetchCurrentProjectBasemaps } from '../../services/gis/project-basemaps/project-basemaps.service';
 import { projectsService } from '../../services/gis/projects/projects.service';
 import { mapModeManager } from '../../services/map/a-map-mode/MapModeManager';
@@ -31,7 +31,8 @@ import { Toast } from '../Toast/Toast';
 @Component({
   selector: 'crg-map',
   templateUrl: './map.component.html',
-  styleUrls: ['./map.component.scss']
+  styleUrls: ['./map.component.scss'],
+  standalone: false
 })
 export class MapComponent implements OnInit, OnDestroy {
   cn = cn('map');

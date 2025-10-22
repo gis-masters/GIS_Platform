@@ -1,8 +1,8 @@
-import React, { FC } from 'react';
+import React, { type FC } from 'react';
 import { cn } from '@bem-react/classname';
 
-import { CrgGroup } from '../../services/auth/groups/groups.models';
-import { CrgUser } from '../../services/auth/users/users.models';
+import { type CrgGroup } from '../../services/auth/groups/groups.models';
+import { type CrgUser } from '../../services/auth/users/users.models';
 import { PrincipalType } from '../../services/permissions/permissions.models';
 import { organizationSettings } from '../../stores/OrganizationSettings.store';
 import { OrgActionsDel } from './Del/OrgActions-Del';
@@ -10,7 +10,7 @@ import { OrgActionsEdit } from './Edit/OrgActions-Edit';
 import { OrgActionsGroups } from './Groups/OrgActions-Groups';
 import { OrgActionsListPermissions } from './ListPermissions/OrgActions-ListPermissions';
 
-import '!style-loader!css-loader!sass-loader!./OrgActions.scss';
+import './OrgActions.scss';
 
 const cnOrgActions = cn('OrgActions');
 

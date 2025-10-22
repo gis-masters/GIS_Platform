@@ -2,10 +2,10 @@ import React from 'react';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 
-import { Projection } from '../../services/data/projections/projections.models';
-import { FilterQuery } from '../../services/util/filters/filters.models';
+import { type Projection } from '../../services/data/projections/projections.models';
+import { type FilterQuery } from '../../services/util/filters/filters.models';
 import { Actions } from '../Actions/Actions.composed';
-import { ActionsItemVariant } from '../Actions/Item/Actions-Item.base';
+import { type ActionsItemVariant } from '../Actions/Item/Actions-Item.base';
 import { OrgProjectionsActionsDelete } from './Delete/OrgProjectionsActions-Delete';
 import { OrgProjectionsActionsEdit } from './Edit/OrgProjectionsActions-Edit';
 

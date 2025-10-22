@@ -9,20 +9,20 @@ class TaskPageBlock extends Block {
   };
 
   async isCardExist(): Promise<void> {
-    const $card = await this.$('card');
+    const $card = await this.findBySelector('card');
     await $card.waitForDisplayed();
   }
 
   async isActionsExist(): Promise<void> {
-    const $actions = await this.$('actions');
+    const $actions = await this.findBySelector('actions');
     await $actions.waitForDisplayed();
   }
 
   async getCardTitle(): Promise<string> {
-    const $container = await this.$('container');
+    const $container = await this.findBySelector('container');
     await $container.waitForDisplayed();
 
-    const $title = await this.$('title');
+    const $title = await this.findBySelector('title');
 
     return $title.getText();
   }

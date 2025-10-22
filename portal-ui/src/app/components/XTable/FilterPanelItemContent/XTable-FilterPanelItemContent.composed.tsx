@@ -1,4 +1,4 @@
-import { compose, HOC } from '@bem-react/core';
+import { compose, type HOC } from '@bem-react/core';
 
 import { withTypeBool } from './_type/XTable-FilterPanelItemContent_type_bool';
 import { withTypeChoice } from './_type/XTable-FilterPanelItemContent_type_choice';
@@ -13,7 +13,7 @@ import { withTypeString } from './_type/XTable-FilterPanelItemContent_type_strin
 import { withTypeUserId } from './_type/XTable-FilterPanelItemContent_type_userId';
 import {
   XTableFilterPanelItemContentBase,
-  XTableFilterPanelItemContentProps
+  type XTableFilterPanelItemContentProps
 } from './XTable-FilterPanelItemContent.base';
 
 export const XTableFilterPanelItemContent = compose(

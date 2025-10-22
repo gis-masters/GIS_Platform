@@ -1,13 +1,13 @@
-import React, { FC } from 'react';
+import React, { type FC } from 'react';
 import { observer } from 'mobx-react';
 import { Tabs } from '@mui/material';
 import { cn } from '@bem-react/classname';
 
-import { CrgVectorLayer } from '../../../services/gis/layers/layers.models';
+import { type CrgVectorLayer } from '../../../services/gis/layers/layers.models';
 import { AttributesTab } from '../Tab/Attributes-Tab';
 import { AttributesZeroTab } from '../ZeroTab/Attributes-ZeroTab';
 
-import '!style-loader!css-loader!sass-loader!./Attributes-Tabs.scss';
+import './Attributes-Tabs.scss';
 
 const cnAttributesTabs = cn('Attributes', 'Tabs');
 

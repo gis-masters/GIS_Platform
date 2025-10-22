@@ -1,11 +1,11 @@
-import { FC } from 'react';
+import { type FC } from 'react';
 import { cn } from '@bem-react/classname';
-import { IClassNameProps } from '@bem-react/core';
+import { type IClassNameProps } from '@bem-react/core';
 
-import { ExplorerItemData, ExplorerItemType } from '../Explorer.models';
-import { ExplorerStore } from '../Explorer.store';
+import { type ExplorerItemData, type ExplorerItemType } from '../Explorer.models';
+import { type ExplorerStore } from '../Explorer.store';
 
-import '!style-loader!css-loader!sass-loader!./Explorer-Widgets.scss';
+import './Explorer-Widgets.scss';
 
 export const cnExplorerWidgets = cn('Explorer', 'Widgets');
 

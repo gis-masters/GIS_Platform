@@ -1,17 +1,17 @@
-import React, { Component, ReactElement } from 'react';
+import React, { Component, type ReactElement } from 'react';
 import { action, computed, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { Checkbox } from '@mui/material';
 import { cn } from '@bem-react/classname';
-import { IClassNameProps } from '@bem-react/core';
+import { type IClassNameProps } from '@bem-react/core';
 import { boundMethod } from 'autobind-decorator';
 import { isEqual } from 'lodash';
 
-import { PageOptions } from '../../services/models';
-import { SortParams } from '../../services/util/sortObjects';
-import { ButtonProps } from '../Button/Button';
+import { type PageOptions } from '../../services/models';
+import { type SortParams } from '../../services/util/sortObjects';
+import { type ButtonProps } from '../Button/Button';
 import { XTable } from '../XTable/XTable';
-import { XTableColumn } from '../XTable/XTable.models';
+import { type XTableColumn } from '../XTable/XTable.models';
 import { defaultRowIdGetter } from '../XTable/XTable.utils';
 import { ChooseXTableCheck } from './Check/ChooseXTable-Check';
 import { ChooseXTableTitle } from './Title/ChooseXTable-Title';

@@ -8,8 +8,8 @@ import { boundMethod } from 'autobind-decorator';
 
 import { communicationService } from '../../services/communication.service';
 import { requestKpt } from '../../services/data/kpt/kpt.service';
-import { Library } from '../../services/data/library/library.models';
-import { PropertyType, Schema } from '../../services/data/schema/schema.models';
+import { type Library } from '../../services/data/library/library.models';
+import { PropertyType, type Schema } from '../../services/data/schema/schema.models';
 import { FormDialog } from '../FormDialog/FormDialog';
 import { IconButton } from '../IconButton/IconButton';
 

@@ -1,10 +1,10 @@
-import React, { FC } from 'react';
+import React, { type FC } from 'react';
 import { CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle, Typography } from '@mui/material';
 import { cn } from '@bem-react/classname';
 
 import { Button } from '../../Button/Button';
 
-import '!style-loader!css-loader!sass-loader!../Content/LibraryMassKptLoad-Content.scss';
+import '../Content/LibraryMassKptLoad-Content.scss';
 
 interface LibraryMassKptLoadProps {
   isOpen: boolean;

@@ -8,7 +8,7 @@ import { boundMethod } from 'autobind-decorator';
 
 import { IconButton } from '../IconButton/IconButton';
 
-import '!style-loader!css-loader!sass-loader!./Counter.scss';
+import './Counter.scss';
 
 const cnCounter = cn('Counter');
 

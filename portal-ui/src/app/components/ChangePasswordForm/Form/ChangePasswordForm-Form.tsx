@@ -1,8 +1,8 @@
-import React, { FC } from 'react';
+import React, { type FC } from 'react';
 import { cn } from '@bem-react/classname';
 import { isString } from 'lodash';
 
-import { PropertySchema, PropertyType, SimpleSchema } from '../../../services/data/schema/schema.models';
+import { type PropertySchema, PropertyType, type SimpleSchema } from '../../../services/data/schema/schema.models';
 import { generateRandomId } from '../../../services/util/randomId';
 import { isRecordStringUnknown } from '../../../services/util/typeGuards/isRecordStringUnknown';
 import { Button } from '../../Button/Button';

@@ -5,8 +5,8 @@ import {
   extractTableNameFromComplexName,
   extractTableNameFromFeatureId
 } from '../../geoserver/featureType/featureType.util';
-import { WfsFeature } from '../../geoserver/wfs/wfs.models';
-import { CrgLayer, CrgLayerType, CrgVectorLayer, NewCrgLayer } from './layers.models';
+import { type WfsFeature } from '../../geoserver/wfs/wfs.models';
+import { type CrgLayer, CrgLayerType, type CrgVectorLayer, type NewCrgLayer } from './layers.models';
 
 const defaultProps = {
   enabled: true,

@@ -1,5 +1,3 @@
-import type { Options } from '@wdio/types';
-
 import { config as baseConfig } from '../wdio.conf';
 
 declare global {
@@ -10,7 +8,7 @@ if (!baseConfig.baseUrl) {
   throw new Error('Не указан baseUrl');
 }
 
-export const config: Options.Testrunner = {
+export const config: WebdriverIO.Config = {
   ...baseConfig,
 
   baseUrl: baseConfig.baseUrl + '/bl/',

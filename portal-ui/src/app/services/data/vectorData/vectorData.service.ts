@@ -1,17 +1,17 @@
 import { communicationService } from '../../communication.service';
 import { extractFeatureId } from '../../geoserver/featureType/featureType.util';
-import { CrgFeature, NewWfsFeature, WfsFeature } from '../../geoserver/wfs/wfs.models';
-import { PageOptions } from '../../models';
-import { Schema } from '../schema/schema.models';
+import { type CrgFeature, type NewWfsFeature, type WfsFeature } from '../../geoserver/wfs/wfs.models';
+import { type PageOptions } from '../../models';
+import { type Schema } from '../schema/schema.models';
 import { convertNewToOldSchema, convertOldToNewSchema } from '../schema/schema.utils';
 import { vectorDataClient } from './vectorData.client';
 import {
-  Dataset,
-  NewDataset,
-  NewVectorTable,
-  TablesData,
-  VectorTable,
-  VectorTableConnection
+  type Dataset,
+  type NewDataset,
+  type NewVectorTable,
+  type TablesData,
+  type VectorTable,
+  type VectorTableConnection
 } from './vectorData.models';
 
 // dataset

@@ -1,20 +1,20 @@
 import { boundClass } from 'autobind-decorator';
 
-import { PageableResources } from '../../../../server-types/common-contracts';
+import { type PageableResources } from '../../../../server-types/common-contracts';
 import { http, MAX_ITEMS_PER_PAGE } from '../../api/http.service';
 import { preparePageOptions } from '../../api/http.utils';
-import { CrgFeature, NewWfsFeature, WfsFeature } from '../../geoserver/wfs/wfs.models';
-import { PageOptions } from '../../models';
+import { type CrgFeature, type NewWfsFeature, type WfsFeature } from '../../geoserver/wfs/wfs.models';
+import { type PageOptions } from '../../models';
 import { DataClient } from '../DataClient';
-import { OldSchema } from '../schema/schemaOld.models';
+import { type OldSchema } from '../schema/schemaOld.models';
 import {
-  Dataset,
-  NewDataset,
-  NewVectorTable,
-  RawVectorTable,
-  TablesData,
-  VectorTable,
-  VectorTableConnection
+  type Dataset,
+  type NewDataset,
+  type NewVectorTable,
+  type RawVectorTable,
+  type TablesData,
+  type VectorTable,
+  type VectorTableConnection
 } from './vectorData.models';
 
 @boundClass

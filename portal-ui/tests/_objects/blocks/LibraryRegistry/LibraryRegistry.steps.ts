@@ -1,7 +1,7 @@
 import { Then, When } from '@wdio/cucumber-framework';
 import { isEqual, sortBy } from 'lodash';
 
-import { ScenarioScope } from '../../ScenarioScope';
+import { type ScenarioScope } from '../../ScenarioScope';
 import { xTableFilterTypeBoolBlock } from '../XTable/Filter/_type/XTable-Filter_type_bool.block';
 import { xTableBlock } from '../XTable/XTable.block';
 import { libraryRegistryBlock } from './LibraryRegistry.block';

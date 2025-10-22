@@ -1,20 +1,20 @@
-import React, { FC, useCallback } from 'react';
+import React, { type FC, useCallback } from 'react';
 import { observer } from 'mobx-react';
 import { Tooltip } from '@mui/material';
 import { ArrowBackIosNew, ArrowForwardIos } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { cloneDeep } from 'lodash';
 
-import { WfsFeature } from '../../services/geoserver/wfs/wfs.models';
+import { type WfsFeature } from '../../services/geoserver/wfs/wfs.models';
 import { EditFeatureMode } from '../../services/map/a-map-mode/edit-feature/EditFeature.models';
 import { editFeatureStore } from '../../services/map/a-map-mode/edit-feature/EditFeatureStore';
 import { mapModeManager } from '../../services/map/a-map-mode/MapModeManager';
 import { selectedFeaturesStore } from '../../services/map/a-map-mode/selected-features/SelectedFeatures.store';
 import { MapMode } from '../../services/map/map.models';
-import { EditFeatureContainerFormControl } from '../EditFeatureContainer/hooks/useEditFeatureState';
+import { type EditFeatureContainerFormControl } from '../EditFeatureContainer/hooks/useEditFeatureState';
 import { IconButton } from '../IconButton/IconButton';
 
-import '!style-loader!css-loader!sass-loader!./EditFeatureNavigation.scss';
+import './EditFeatureNavigation.scss';
 
 const changeFeature = async (
   feature: WfsFeature,

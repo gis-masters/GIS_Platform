@@ -5,7 +5,7 @@ import { cn } from '@bem-react/classname';
 import { currentProjectFolderStore } from '../../../stores/CurrentProjectFolder.store';
 import { Link } from '../../Link/Link';
 
-import '!style-loader!css-loader!sass-loader!./ProjectsEmpty.scss';
+import './ProjectsEmpty.scss';
 
 const cnProjectsEmpty = cn('ProjectsEmpty');
 

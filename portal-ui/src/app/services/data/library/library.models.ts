@@ -1,8 +1,8 @@
 import { SelectSchemaControl } from '../../../components/SelectSchemaControl/SelectSchemaControl';
-import { Role } from '../../permissions/permissions.models';
-import { PropertyType, Schema, SimpleSchema } from '../schema/schema.models';
-import { OldSchema } from '../schema/schemaOld.models';
-import { DataEntityType } from '../vectorData/vectorData.models';
+import { type Role } from '../../permissions/permissions.models';
+import { PropertyType, type Schema, type SimpleSchema } from '../schema/schema.models';
+import { type OldSchema } from '../schema/schemaOld.models';
+import { type DataEntityType } from '../vectorData/vectorData.models';
 
 export enum ContentTypeTypes {
   FOLDER = 'FOLDER'

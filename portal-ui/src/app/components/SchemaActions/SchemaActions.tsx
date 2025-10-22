@@ -1,8 +1,8 @@
-import React, { FC, lazy, Suspense } from 'react';
+import React, { type FC, lazy, Suspense } from 'react';
 
-import { SchemaActionsProps } from './SchemaActions.async';
+import { type SchemaActionsProps } from './SchemaActions.chunkroot';
 
-const SchemaActionsAsync = lazy(() => import('./SchemaActions.async'));
+const SchemaActionsAsync = lazy(() => import('./SchemaActions.chunkroot'));
 
 export const SchemaActions: FC<SchemaActionsProps> = props => (
   <Suspense>

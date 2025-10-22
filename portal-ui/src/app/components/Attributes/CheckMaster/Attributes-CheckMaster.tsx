@@ -1,22 +1,22 @@
 import React, { Component } from 'react';
-import { action, computed, IReactionDisposer, makeObservable, observable, reaction } from 'mobx';
+import { action, computed, type IReactionDisposer, makeObservable, observable, reaction } from 'mobx';
 import { observer } from 'mobx-react';
 import { Checkbox } from '@mui/material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 import { cloneDeep } from 'lodash';
 
-import { WfsFeature } from '../../../services/geoserver/wfs/wfs.models';
+import { type WfsFeature } from '../../../services/geoserver/wfs/wfs.models';
 import { getFeatures } from '../../../services/geoserver/wfs/wfs.service';
-import { CrgVectorLayer } from '../../../services/gis/layers/layers.models';
+import { type CrgVectorLayer } from '../../../services/gis/layers/layers.models';
 import { mapModeManager } from '../../../services/map/a-map-mode/MapModeManager';
 import { selectedFeaturesStore } from '../../../services/map/a-map-mode/selected-features/SelectedFeatures.store';
 import { MapMode, MapSelectionTypes } from '../../../services/map/map.models';
-import { PageOptions } from '../../../services/models';
+import { type PageOptions } from '../../../services/models';
 import { removeFieldFilter } from '../../../services/util/filters/filters';
 import { FILTER_BY_SELECTION } from '../Attributes.models';
 
-import '!style-loader!css-loader!sass-loader!./Attributes-CheckMaster.scss';
+import './Attributes-CheckMaster.scss';
 
 const cnAttributesCheckMaster = cn('Attributes', 'CheckMaster');
 

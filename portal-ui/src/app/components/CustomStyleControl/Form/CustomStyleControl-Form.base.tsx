@@ -1,9 +1,9 @@
-import { FC } from 'react';
+import { type FC } from 'react';
 import { cn } from '@bem-react/classname';
-import { IClassNameProps } from '@bem-react/core';
+import { type IClassNameProps } from '@bem-react/core';
 
-import { Schema } from '../../../services/data/schema/schema.models';
-import { CustomStyleDescription } from '../../../services/geoserver/styles/styles.models';
+import { type Schema } from '../../../services/data/schema/schema.models';
+import { type CustomStyleDescription } from '../../../services/geoserver/styles/styles.models';
 
 export const cnCustomStyleControlForm = cn('CustomStyleControl', 'Form');
 

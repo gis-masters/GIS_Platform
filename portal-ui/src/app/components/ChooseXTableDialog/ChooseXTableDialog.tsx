@@ -1,10 +1,10 @@
-import React, { lazy, ReactElement, Suspense } from 'react';
+import React, { lazy, type ReactElement, Suspense } from 'react';
 
-import { ChooseXTableDialogProps } from './ChooseXTableDialog.async';
+import { type ChooseXTableDialogProps } from './ChooseXTableDialog.chunkroot';
 
-export { ChooseXTableDialogProps } from './ChooseXTableDialog.async';
+export { ChooseXTableDialogProps } from './ChooseXTableDialog.chunkroot';
 
-const ChooseXTableDialogAsync = lazy(() => import('./ChooseXTableDialog.async')) as <T>(
+const ChooseXTableDialogAsync = lazy(() => import('./ChooseXTableDialog.chunkroot')) as <T>(
   p: ChooseXTableDialogProps<T>
 ) => ReactElement;
 

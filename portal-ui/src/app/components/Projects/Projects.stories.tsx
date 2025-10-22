@@ -1,9 +1,9 @@
 import React from 'react';
-import { Meta, StoryFn } from '@storybook/react';
+import { type Meta, type StoryFn } from '@storybook/react';
 
 import { Projects } from './Projects';
 
-import '!style-loader!css-loader!sass-loader!./Projects.stories.scss';
+import './Projects.stories.scss';
 
 export default {
   title: 'Projects',

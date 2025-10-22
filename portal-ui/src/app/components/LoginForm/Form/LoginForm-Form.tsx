@@ -5,13 +5,13 @@ import { cn } from '@bem-react/classname';
 
 import { http } from '../../../services/api/http.service';
 import { getEsiaUrl } from '../../../services/api/server-urls.service';
-import { PropertyType, SimpleSchema } from '../../../services/data/schema/schema.models';
+import { PropertyType, type SimpleSchema } from '../../../services/data/schema/schema.models';
 import { environment } from '../../../services/environment';
 import { ActionsLeft } from '../../ActionsLeft/ActionsLeft';
 import { ActionsRight } from '../../ActionsRight/ActionsRight';
 import { Button } from '../../Button/Button';
 import { Form } from '../../Form/Form';
-import { AuthUserData } from '../LoginForm.async';
+import { type AuthUserData } from '../LoginForm.models';
 
 const cnLoginFormForm = cn('LoginForm', 'Form');
 

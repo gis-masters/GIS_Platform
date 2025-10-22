@@ -1,6 +1,6 @@
 import And from 'ol/format/filter/And';
 import EqualTo from 'ol/format/filter/EqualTo';
-import Filter from 'ol/format/filter/Filter';
+import type Filter from 'ol/format/filter/Filter';
 import GreaterThan from 'ol/format/filter/GreaterThan';
 import GreaterThanOrEqualTo from 'ol/format/filter/GreaterThanOrEqualTo';
 import IsLike from 'ol/format/filter/IsLike';
@@ -11,7 +11,7 @@ import Not from 'ol/format/filter/Not';
 import NotEqualTo from 'ol/format/filter/NotEqualTo';
 import Or from 'ol/format/filter/Or';
 
-import { FilterQuery } from '../filters/filters.models';
+import { type FilterQuery } from '../filters/filters.models';
 import { cql2ol } from './cql2ol';
 
 type Operator = (olFilter: Filter) => FilterQuery;

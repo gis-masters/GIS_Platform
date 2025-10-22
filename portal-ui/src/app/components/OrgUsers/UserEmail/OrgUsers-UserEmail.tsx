@@ -1,11 +1,11 @@
-import React, { FC } from 'react';
+import React, { type FC } from 'react';
 import { cn } from '@bem-react/classname';
 
 import { getFieldFilterValue } from '../../../services/util/filters/filters';
-import { FilterQuery } from '../../../services/util/filters/filters.models';
+import { type FilterQuery } from '../../../services/util/filters/filters.models';
 import { Highlight } from '../../Highlight/Highlight';
 import { TextBadge } from '../../TextBadge/TextBadge';
-import { CrgUserExtended } from '../OrgUsers';
+import { type CrgUserExtended } from '../OrgUsers.models';
 
 const cnOrgUsersUserEmail = cn('OrgUsers', 'UserEmail');
 

@@ -1,12 +1,12 @@
 import { isEqual } from 'lodash';
-import { Feature } from 'ol';
-import { Coordinate } from 'ol/coordinate';
-import { Extent } from 'ol/extent';
-import { SimpleGeometry } from 'ol/geom';
+import { type Feature } from 'ol';
+import { type Coordinate } from 'ol/coordinate';
+import { type Extent } from 'ol/extent';
+import { type SimpleGeometry } from 'ol/geom';
 
-import { PageOptions, SortOrder } from '../../models';
+import { type PageOptions, SortOrder } from '../../models';
 import { wfsFeatureToFeature } from '../../util/open-layers.util';
-import { GeometryType, WfsFeature, WfsGeometry, WfsPointGeometry } from './wfs.models';
+import { GeometryType, type WfsFeature, type WfsGeometry, type WfsPointGeometry } from './wfs.models';
 
 export function getEmptyGeometry(type: GeometryType): WfsGeometry {
   if (type === GeometryType.POINT) {

@@ -1,11 +1,11 @@
 import { boundMethod } from 'autobind-decorator';
-import { AxiosError } from 'axios';
+import { type AxiosError } from 'axios';
 
 import { Toast } from '../../../components/Toast/Toast';
-import { CompositeSettings, organizationSettings } from '../../../stores/OrganizationSettings.store';
+import { type CompositeSettings, organizationSettings } from '../../../stores/OrganizationSettings.store';
 import { schemaService } from '../../data/schema/schema.service';
 import { organizationsClient } from './organizations.client';
-import { OccupiedStorage, Organization } from './organizations.models';
+import { type OccupiedStorage, type Organization } from './organizations.models';
 
 class OrganizationsService {
   private static _instance: OrganizationsService;

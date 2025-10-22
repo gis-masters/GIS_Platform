@@ -6,16 +6,16 @@ import { Search } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
-import { FtsType } from '../../../../server-types/common-contracts';
+import { type FtsType } from '../../../../server-types/common-contracts';
 import { Form } from '../../Form/Form';
 import { IconButton } from '../../IconButton/IconButton';
 import { SearchResultDialog } from '../../SearchResultDialog/SearchResultDialog';
 import { hasSearch } from '../Adapter/Explorer-Adapter';
-import { ExplorerItemType, ExplorerSearchValue } from '../Explorer.models';
-import { ExplorerService } from '../Explorer.service';
-import { ExplorerStore } from '../Explorer.store';
+import { ExplorerItemType, type ExplorerSearchValue } from '../Explorer.models';
+import { type ExplorerService } from '../Explorer.service';
+import { type ExplorerStore } from '../Explorer.store';
 
-import '!style-loader!css-loader!sass-loader!./Explorer-Search.scss';
+import './Explorer-Search.scss';
 
 const cnExplorerSearch = cn('Explorer', 'Search');
 

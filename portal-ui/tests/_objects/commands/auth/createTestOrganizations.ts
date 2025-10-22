@@ -3,7 +3,7 @@ import { addValueToPool, getValueFromPool } from '@wdio/shared-store-service';
 import { createOrganization } from './createOrganization';
 import { createTestUsers, createTestUsersInOtherOrganization } from './createTestUsers';
 import { getUserToken } from './getUserToken';
-import { getTestUser, TestUser } from './testUsers';
+import { getTestUser, type TestUser } from './testUsers';
 
 export async function createTestOrganizations(): Promise<void> {
   let workerFreed = false;

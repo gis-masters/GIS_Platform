@@ -1,7 +1,7 @@
-import React, { CSSProperties, FC } from 'react';
+import React, { type CSSProperties, type FC } from 'react';
 import { cn } from '@bem-react/classname';
 
-import '!style-loader!css-loader!sass-loader!./Layer-TransparencyIndicator.scss';
+import './Layer-TransparencyIndicator.scss';
 
 const cnLayerTransparencyIndicator = cn('Layer', 'TransparencyIndicator');
 

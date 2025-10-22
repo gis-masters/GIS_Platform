@@ -3,10 +3,10 @@ import { withBemMod } from '@bem-react/core';
 
 import { PropertyType } from '../../../../services/data/schema/schema.models';
 import { getFieldFilterValue } from '../../../../services/util/filters/filters';
-import { FilterQuery } from '../../../../services/util/filters/filters.models';
+import { type FilterQuery } from '../../../../services/util/filters/filters.models';
 import {
   cnXTableFilterPanelItemContent,
-  XTableFilterPanelItemContentProps
+  type XTableFilterPanelItemContentProps
 } from '../XTable-FilterPanelItemContent.base';
 
 export const withTypeChoice = withBemMod<

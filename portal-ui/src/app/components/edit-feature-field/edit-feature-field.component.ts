@@ -1,12 +1,12 @@
 import { createElement } from 'react';
-import { createRoot, Root } from 'react-dom/client';
-import { Component, ElementRef, Input, OnChanges, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { createRoot, type Root } from 'react-dom/client';
+import { Component, ElementRef, Input, type OnChanges, type OnDestroy, type OnInit, ViewChild } from '@angular/core';
 import { withRegistry } from '@bem-react/di';
 
-import { EditedField, ValueType } from '../../services/data/schema/schemaOld.models';
+import { type EditedField, type ValueType } from '../../services/data/schema/schemaOld.models';
 import { registry } from '../../services/di-registry';
-import { WfsFeature } from '../../services/geoserver/wfs/wfs.models';
-import { CrgVectorLayer } from '../../services/gis/layers/layers.models';
+import { type WfsFeature } from '../../services/geoserver/wfs/wfs.models';
+import { type CrgVectorLayer } from '../../services/gis/layers/layers.models';
 import { EditFeatureField } from '../EditFeatureField/EditFeatureField';
 
 const EditFeatureFieldWithRegistry = withRegistry(registry)(EditFeatureField);
@@ -14,7 +14,8 @@ const EditFeatureFieldWithRegistry = withRegistry(registry)(EditFeatureField);
 @Component({
   selector: 'crg-edit-feature-field',
   template: '<div class="edit-feature-field" #react></div>',
-  styleUrls: ['./edit-feature-field.component.scss']
+  styleUrls: ['./edit-feature-field.component.scss'],
+  standalone: false
 })
 export class EditFeatureFieldComponent implements OnInit, OnDestroy, OnChanges {
   @Input() type?: ValueType;

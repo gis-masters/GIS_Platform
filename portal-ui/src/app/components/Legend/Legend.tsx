@@ -1,10 +1,14 @@
-import React, { FC, Fragment } from 'react';
+import React, { type FC, Fragment } from 'react';
 import { cn } from '@bem-react/classname';
-import { IClassNameProps } from '@bem-react/core';
+import { type IClassNameProps } from '@bem-react/core';
 
-import { isStyleRuleExtended, StyleRule, StyleRuleExtended } from '../../services/geoserver/styles/styles.models';
+import {
+  isStyleRuleExtended,
+  type StyleRule,
+  type StyleRuleExtended
+} from '../../services/geoserver/styles/styles.models';
 
-import '!style-loader!css-loader!sass-loader!./Legend.scss';
+import './Legend.scss';
 
 const cnLegend = cn('Legend');
 

@@ -4,7 +4,7 @@ import { observer } from 'mobx-react';
 import { Checkbox } from '@mui/material';
 import { cn } from '@bem-react/classname';
 
-import { CrgGroup } from '../../../services/auth/groups/groups.models';
+import { type CrgGroup } from '../../../services/auth/groups/groups.models';
 
 const cnOrgActionsUserGroupCheck = cn('OrgActions', 'UserGroupCheck');
 

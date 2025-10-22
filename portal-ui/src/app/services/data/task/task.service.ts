@@ -1,9 +1,9 @@
 import { communicationService } from '../../communication.service';
-import { PageOptions } from '../../models';
-import { Schema } from '../schema/schema.models';
+import { type PageOptions } from '../../models';
+import { type Schema } from '../schema/schema.models';
 import { schemaService } from '../schema/schema.service';
 import { taskClient } from './task.client';
-import { Task, TaskHistory, TaskStatus } from './task.models';
+import { type Task, type TaskHistory, type TaskStatus } from './task.models';
 
 export async function createTask(task: Task): Promise<void> {
   await taskClient.createTask(task);

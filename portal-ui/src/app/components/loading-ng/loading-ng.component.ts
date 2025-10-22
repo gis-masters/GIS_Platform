@@ -3,7 +3,8 @@ import { Component, Input } from '@angular/core';
 @Component({
   selector: 'crg-loading',
   templateUrl: './loading-ng.component.html',
-  styleUrls: ['./loading-ng.component.scss']
+  styleUrls: ['./loading-ng.component.scss'],
+  standalone: false
 })
 export class LoadingNgComponent {
   @Input() percents?: string;

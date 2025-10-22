@@ -1,4 +1,4 @@
-import { DataTable, Then } from '@wdio/cucumber-framework';
+import { type DataTable, Then } from '@wdio/cucumber-framework';
 
 import { editFeatureGeometryAsTextDialogBlock } from './EditFeatureGeometryAsTextDialog.block';
 
@@ -9,6 +9,7 @@ Then('объект содержит следующую геометрию', asyn
     .filter(item => item.length > 2);
 
   const geometryAsString = await editFeatureGeometryAsTextDialogBlock.getObjectCoordinates();
+
   const geometry = geometryAsString
     .replaceAll('\n', ' ')
     .replaceAll('\t', ' ')

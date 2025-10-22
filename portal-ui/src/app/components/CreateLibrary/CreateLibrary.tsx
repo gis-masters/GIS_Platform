@@ -4,7 +4,7 @@ import { observer } from 'mobx-react';
 import { Tooltip } from '@mui/material';
 import { cn } from '@bem-react/classname';
 
-import { LibraryNew, librarySchema } from '../../services/data/library/library.models';
+import { type LibraryNew, librarySchema } from '../../services/data/library/library.models';
 import { createLibrary } from '../../services/data/library/library.service';
 import { FormDialog } from '../FormDialog/FormDialog';
 import { IconButton } from '../IconButton/IconButton';

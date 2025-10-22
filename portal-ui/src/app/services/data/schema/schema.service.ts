@@ -1,18 +1,18 @@
 import { boundMethod } from 'autobind-decorator';
-import { debounce, DebouncedFunc } from 'lodash';
+import { debounce, type DebouncedFunc } from 'lodash';
 
 import { Toast } from '../../../components/Toast/Toast';
 import { schemaCacheService } from '../../cache/schema-cache.service';
 import { communicationService } from '../../communication.service';
-import { ImportLayerItem } from '../../geoserver/import/import.models';
-import { CrgVectorLayer } from '../../gis/layers/layers.models';
+import { type ImportLayerItem } from '../../geoserver/import/import.models';
+import { type CrgVectorLayer } from '../../gis/layers/layers.models';
 import { getLayerSchema } from '../../gis/layers/layers.service';
 import { FeatureUtil } from '../../util/FeatureUtil';
-import { BugObject } from '../validation/validation.models';
+import { type BugObject } from '../validation/validation.models';
 import { schemaClient } from './schema.client';
-import { PropertySchemaChoice, PropertyType, Schema } from './schema.models';
+import { type PropertySchemaChoice, PropertyType, type Schema } from './schema.models';
 import { convertNewToOldSchema, convertOldToNewSchema } from './schema.utils';
-import { OldPropertySchema, OldSchema } from './schemaOld.models';
+import { type OldPropertySchema, type OldSchema } from './schemaOld.models';
 
 class SchemaService {
   private static _instance: SchemaService;

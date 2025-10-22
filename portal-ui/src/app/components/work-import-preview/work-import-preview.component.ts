@@ -5,7 +5,8 @@ import { ImportDataHolderService, InputDataMetrics } from '../../services/geoser
 @Component({
   selector: 'crg-work-import-preview',
   templateUrl: './work-import-preview.component.html',
-  styleUrls: ['./work-import-preview.component.scss']
+  styleUrls: ['./work-import-preview.component.scss'],
+  standalone: false
 })
 export class WorkImportPreviewComponent {
   metrics?: InputDataMetrics;

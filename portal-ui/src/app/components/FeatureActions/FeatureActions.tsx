@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
-import { IClassNameProps } from '@bem-react/core';
+import { type IClassNameProps } from '@bem-react/core';
 
-import { VectorTable } from '../../services/data/vectorData/vectorData.models';
+import { type VectorTable } from '../../services/data/vectorData/vectorData.models';
 import { extractFeatureId } from '../../services/geoserver/featureType/featureType.util';
 import { Actions } from '../Actions/Actions.composed';
-import { ActionsItemVariant } from '../Actions/Item/Actions-Item.base';
+import { type ActionsItemVariant } from '../Actions/Item/Actions-Item.base';
 import { FeatureConnections } from '../FeatureConnections/FeatureConnections';
 import { FeatureActionsClose } from './Close/FeatureActions-Close';
 

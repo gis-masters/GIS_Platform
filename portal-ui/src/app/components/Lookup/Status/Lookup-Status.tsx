@@ -1,9 +1,9 @@
-import React, { FC } from 'react';
+import React, { type FC } from 'react';
 import { CircularProgress, Tooltip } from '@mui/material';
 import { CancelOutlined, CheckOutlined, LockOutlined, ReportGmailerrorredOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
-import '!style-loader!css-loader!sass-loader!./Lookup-Status.scss';
+import './Lookup-Status.scss';
 
 export type LookupStatusType =
   | 'loading'

@@ -1,10 +1,10 @@
-import React, { ReactNode } from 'react';
+import React, { type ReactNode } from 'react';
 import { HomeOutlined } from '@mui/icons-material';
 
 import { staticImplements } from '../../../../services/util/staticImplements';
 import { currentUser } from '../../../../stores/CurrentUser.store';
 import { organizationSettings } from '../../../../stores/OrganizationSettings.store';
-import { Adapter, ExplorerItemData, ExplorerItemType } from '../../Explorer.models';
+import { type Adapter, type ExplorerItemData, ExplorerItemType } from '../../Explorer.models';
 
 function getChildren(): ExplorerItemData[] {
   let baseChildren: ExplorerItemData[] = [

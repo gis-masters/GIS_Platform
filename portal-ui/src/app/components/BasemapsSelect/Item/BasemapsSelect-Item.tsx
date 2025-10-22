@@ -5,13 +5,13 @@ import { MenuItem } from '@mui/material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
-import { Basemap } from '../../../services/data/basemaps/basemaps.models';
+import { type Basemap } from '../../../services/data/basemaps/basemaps.models';
 import { services } from '../../../services/services';
 import { sleep } from '../../../services/util/sleep';
 import { basemapsStore } from '../../../stores/Basemaps.store';
 import { BasemapsSelectThumbnail } from '../Thumbnail/BasemapsSelect-Thumbnail';
 
-import '!style-loader!css-loader!sass-loader!./BasemapsSelect-Item.scss';
+import './BasemapsSelect-Item.scss';
 
 const cnBasemapsSelectItem = cn('BasemapsSelect', 'Item');
 

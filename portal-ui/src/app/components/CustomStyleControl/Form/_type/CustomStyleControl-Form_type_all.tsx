@@ -4,13 +4,13 @@ import { Paper } from '@mui/material';
 import { withBemMod } from '@bem-react/core';
 import { boundMethod } from 'autobind-decorator';
 
-import { CustomStyleDescription } from '../../../../services/geoserver/styles/styles.models';
-import { cnCustomStyleControlForm, CustomStyleControlFormProps } from '../CustomStyleControl-Form.base';
+import { type CustomStyleDescription } from '../../../../services/geoserver/styles/styles.models';
+import { cnCustomStyleControlForm, type CustomStyleControlFormProps } from '../CustomStyleControl-Form.base';
 import { CustomStyleControlFormTypeLine } from './CustomStyleControl-Form_type_line';
 import { CustomStyleControlFormTypePoint } from './CustomStyleControl-Form_type_point';
 import { CustomStyleControlFormTypePolygon } from './CustomStyleControl-Form_type_polygon';
 
-import '!style-loader!css-loader!sass-loader!./CustomStyleControl-Form_type_all.scss';
+import './CustomStyleControl-Form_type_all.scss';
 
 @observer
 class CustomStyleControlFormTypeAll extends Component<CustomStyleControlFormProps> {

@@ -1,18 +1,18 @@
-import React, { Component, ReactElement } from 'react';
+import React, { Component, type ReactElement } from 'react';
 import { action, computed, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { Checkbox } from '@mui/material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
-import { CrgLayer } from '../../services/gis/layers/layers.models';
+import { type CrgLayer } from '../../services/gis/layers/layers.models';
 import { XTable } from '../XTable/XTable';
 import { LayersListEmpty } from './Empty/LayersList-Empty';
 import { LayersListItemCheck } from './ItemCheck/LayersList-ItemCheck';
 
-import '!style-loader!css-loader!sass-loader!./LayersList.scss';
-import '!style-loader!css-loader!sass-loader!./Header/LayersList-Header.scss';
-import '!style-loader!css-loader!sass-loader!./SelectAll/LayersList-SelectAll.scss';
+import './LayersList.scss';
+import './Header/LayersList-Header.scss';
+import './SelectAll/LayersList-SelectAll.scss';
 
 const cnLayersList = cn('LayersList');
 

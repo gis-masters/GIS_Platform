@@ -7,7 +7,7 @@ class BreadcrumbsStoryBlock extends Block {
   };
 
   async setWidth(width: string): Promise<void> {
-    const $input = await this.$('input');
+    const $input = await this.findBySelector('input');
     await $input.setValue(width);
     await browser.pause(300);
   }

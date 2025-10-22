@@ -5,13 +5,13 @@ import { HomeOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { isEqual } from 'lodash';
 
-import { VectorTable, vectorTableSchema } from '../../services/data/vectorData/vectorData.models';
+import { type VectorTable, vectorTableSchema } from '../../services/data/vectorData/vectorData.models';
 import { getDataset } from '../../services/data/vectorData/vectorData.service';
 import { formatDate } from '../../services/util/date.util';
-import { Breadcrumbs, BreadcrumbsItemData } from '../Breadcrumbs/Breadcrumbs';
+import { Breadcrumbs, type BreadcrumbsItemData } from '../Breadcrumbs/Breadcrumbs';
 import { ViewContentWidget } from '../ViewContentWidget/ViewContentWidget';
 
-import '!style-loader!css-loader!sass-loader!./VectorTableCard.scss';
+import './VectorTableCard.scss';
 
 const cnVectorTableCard = cn('VectorTableCard');
 

@@ -4,8 +4,8 @@ import { Checkbox } from '@mui/material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
-import { Dataset, VectorTable } from '../../../services/data/vectorData/vectorData.models';
-import { CrgProject } from '../../../services/gis/projects/projects.models';
+import { type Dataset, type VectorTable } from '../../../services/data/vectorData/vectorData.models';
+import { type CrgProject } from '../../../services/gis/projects/projects.models';
 
 const cnPermissionsAddDialogItemCheck = cn('PermissionsAddDialog', 'ItemCheck');
 

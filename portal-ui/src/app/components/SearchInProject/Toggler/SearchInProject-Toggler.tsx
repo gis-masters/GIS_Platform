@@ -1,11 +1,11 @@
-import React, { FC } from 'react';
+import React, { type FC } from 'react';
 import { observer } from 'mobx-react';
 import { Search } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
 import { IconButton } from '../../IconButton/IconButton';
 
-import '!style-loader!css-loader!sass-loader!./SearchInProject-Toggler.scss';
+import './SearchInProject-Toggler.scss';
 
 const cnSearchInProjectToggler = cn('SearchInProject', 'Toggler');
 

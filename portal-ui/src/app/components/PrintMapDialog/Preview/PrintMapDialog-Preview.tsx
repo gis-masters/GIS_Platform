@@ -1,5 +1,5 @@
 import React, { Component, createRef } from 'react';
-import { action, IReactionDisposer, makeObservable, observable, reaction } from 'mobx';
+import { action, type IReactionDisposer, makeObservable, observable, reaction } from 'mobx';
 import { observer } from 'mobx-react';
 import { Paper } from '@mui/material';
 import { cn } from '@bem-react/classname';
@@ -18,7 +18,7 @@ import { PrintMapDialogPreviewImageContainer } from '../PreviewImageContainer/Pr
 import { PrintMapDialogScale } from '../Scale/PrintMapDialog-Scale';
 import { PrintMapDialogWindRose } from '../WindRose/PrintMapDialog-WindRose';
 
-import '!style-loader!css-loader!sass-loader!./PrintMapDialog-Preview.scss';
+import './PrintMapDialog-Preview.scss';
 
 const cnPrintMapDialogPreview = cn('PrintMapDialog', 'Preview');
 

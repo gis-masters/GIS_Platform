@@ -11,16 +11,16 @@ class FilesBlock extends Block {
     await explorerBlock.waitForExist();
 
     const $field = await explorerBlock.getContentWidgetField(field);
-    const $$items = await $field.$$('.Lookup-Item');
+    const $$items = await $field.$$('.Lookup-Item').getElements();
 
     for (const $item of $$items) {
-      const $itemBaseName = await $item.$('.Files-BaseName');
-      const $itemExt = await $item.$('.Files-Ext');
+      const $itemBaseName = await $item.$('.Files-BaseName').getElement();
+      const $itemExt = await $item.$('.Files-Ext').getElement();
       const itemBaseName = await $itemBaseName.getText();
       const itemExt = await $itemExt.getText();
 
       if (itemBaseName + itemExt === fileName) {
-        const $filePlacement = await $item.$('.Files-Placement');
+        const $filePlacement = await $item.$('.Files-Placement').getElement();
         await $filePlacement.click();
 
         break;

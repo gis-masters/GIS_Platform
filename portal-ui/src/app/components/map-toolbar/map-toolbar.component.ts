@@ -1,6 +1,6 @@
 import { createElement } from 'react';
-import { createRoot, Root } from 'react-dom/client';
-import { Component, ElementRef, Input, OnChanges, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { createRoot, type Root } from 'react-dom/client';
+import { Component, ElementRef, Input, type OnChanges, type OnDestroy, type OnInit, ViewChild } from '@angular/core';
 import { withRegistry } from '@bem-react/di';
 
 import { registry } from '../../services/di-registry';
@@ -11,7 +11,8 @@ const MapToolbarWithRegistry = withRegistry(registry)(MapToolbar);
 @Component({
   selector: 'crg-map-toolbar',
   template: '<div class="map-toolbar" #react></div>',
-  styleUrls: ['./map-toolbar.component.scss']
+  styleUrls: ['./map-toolbar.component.scss'],
+  standalone: false
 })
 export class MapToolbarComponent implements OnInit, OnDestroy, OnChanges {
   @Input() hidden?: boolean;

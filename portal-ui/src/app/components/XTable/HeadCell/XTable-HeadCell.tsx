@@ -1,13 +1,13 @@
 import React, { Component, createRef } from 'react';
 import { action, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
-import { TableCell, TableCellProps, Tooltip } from '@mui/material';
+import { TableCell, type TableCellProps, Tooltip } from '@mui/material';
 import { VisibilityOff } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
 import { PropertyType } from '../../../services/data/schema/schema.models';
-import { FilterQuery } from '../../../services/util/filters/filters.models';
-import { SortParams } from '../../../services/util/sortObjects';
+import { type FilterQuery } from '../../../services/util/filters/filters.models';
+import { type SortParams } from '../../../services/util/sortObjects';
 import { DescriptionMark } from '../../DescriptionMark/DescriptionMark';
 import { MIN_COLUMN_WIDTH } from '../CellContent/XTable-CellContent.base';
 import { XTableCellContent } from '../CellContent/XTable-CellContent.composed';
@@ -15,10 +15,10 @@ import { XTableFilter } from '../Filter/XTable-Filter.composed';
 import { XTableHeadCellBorder } from '../HeadCellBorder/XTable-HeadCellBorder';
 import { XTableHeadCellLabel } from '../HeadCellLabel/XTable-HeadCellLabel';
 import { XTableHeadCellTitle } from '../HeadCellTitle/XTable-HeadCellTitle';
-import { XTableColumn } from '../XTable.models';
+import { type XTableColumn } from '../XTable.models';
 
-import '!style-loader!css-loader!sass-loader!./XTable-HeadCell.scss';
-import '!style-loader!css-loader!sass-loader!../FilterActions/XTable-FilterActions.scss';
+import './XTable-HeadCell.scss';
+import '../FilterActions/XTable-FilterActions.scss';
 
 const cnXTableHeadCell = cn('XTable', 'HeadCell');
 const cnXTableFilter = cn('XTable', 'Filter');

@@ -1,8 +1,8 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, type OnInit } from '@angular/core';
 
 import { schemaService } from '../../../services/data/schema/schema.service';
-import { BugObject } from '../../../services/data/validation/validation.models';
-import { CrgVectorLayer } from '../../../services/gis/layers/layers.models';
+import { type BugObject } from '../../../services/data/validation/validation.models';
+import { type CrgVectorLayer } from '../../../services/gis/layers/layers.models';
 
 interface ViolationViewItem {
   propertyName: string;
@@ -12,7 +12,8 @@ interface ViolationViewItem {
 @Component({
   selector: 'crg-violations-view',
   templateUrl: './violations-view.component.html',
-  styleUrls: ['./violations-view.component.css']
+  styleUrls: ['./violations-view.component.css'],
+  standalone: false
 })
 export class ViolationsViewComponent implements OnInit {
   @Input() data?: BugObject;

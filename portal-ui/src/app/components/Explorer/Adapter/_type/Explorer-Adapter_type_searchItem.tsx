@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react';
+import React, { type ReactNode } from 'react';
 import { FolderOutlined, InsertDriveFile } from '@mui/icons-material';
 
 import { extractFeatureId } from '../../../../services/geoserver/featureType/featureType.util';
@@ -10,9 +10,9 @@ import { LibrarySearchItemActions } from '../../../LibrarySearchItemActions/Libr
 import { FeatureTitle } from '../../../SearchFeatureItemTitle/SearchFeatureItemTitle';
 import { SearchResultHighlight } from '../../../SearchResultHighlight/SearchResultHighlight';
 import {
-  Adapter,
-  ExplorerItemData,
-  ExplorerItemDataAllTypes,
+  type Adapter,
+  type ExplorerItemData,
+  type ExplorerItemDataAllTypes,
   ExplorerItemType,
   itemTypeError
 } from '../../Explorer.models';

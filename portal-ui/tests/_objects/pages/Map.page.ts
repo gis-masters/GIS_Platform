@@ -1,4 +1,4 @@
-import { MapPosition } from '../../../src/app/services/map/map.models';
+import { type MapPosition } from '../../../src/app/services/map/map.models';
 import { getFeaturesUrl } from '../../../src/app/services/map/map.util';
 import { Page } from '../Page';
 

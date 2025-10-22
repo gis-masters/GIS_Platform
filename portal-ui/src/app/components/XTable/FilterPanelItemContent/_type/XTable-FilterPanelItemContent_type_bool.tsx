@@ -5,7 +5,7 @@ import { PropertyType } from '../../../../services/data/schema/schema.models';
 import { getFieldFilterValue } from '../../../../services/util/filters/filters';
 import {
   cnXTableFilterPanelItemContent,
-  XTableFilterPanelItemContentProps
+  type XTableFilterPanelItemContentProps
 } from '../XTable-FilterPanelItemContent.base';
 
 export const withTypeBool = withBemMod<

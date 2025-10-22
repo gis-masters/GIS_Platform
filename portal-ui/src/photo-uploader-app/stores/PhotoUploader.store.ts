@@ -2,9 +2,12 @@ import { action, computed, makeObservable, observable } from 'mobx';
 
 import { http } from '../../app/services/api/http.service';
 import { currentUser } from '../../app/stores/CurrentUser.store';
-import { UpLayersListItemData } from '../components/UpLayersList/Item/UpLayersList-Item';
-import { UploadedFile, UploadedFileStatus } from '../services/photoUploader.models';
-import { UploadResultType } from '../services/photoUploader.service';
+import {
+  type UpLayersListItemData,
+  type UploadedFile,
+  UploadedFileStatus,
+  type UploadResultType
+} from '../services/photoUploader.models';
 
 export enum PhotoUploaderScreens {
   BUSY,

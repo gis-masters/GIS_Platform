@@ -8,13 +8,13 @@ export class ChooseXTableDialogBlock extends Block {
   };
 
   async clickSubmitButton(): Promise<void> {
-    const $submitBtn = await this.$('submit');
+    const $submitBtn = await this.findBySelector('submit');
     await $submitBtn.waitForClickable();
     await $submitBtn.click();
   }
 
   async getXTable(): Promise<XTableBlock> {
-    return new XTableBlock(undefined, await this.$('container'));
+    return new XTableBlock(undefined, await this.findBySelector('container'));
   }
 }
 

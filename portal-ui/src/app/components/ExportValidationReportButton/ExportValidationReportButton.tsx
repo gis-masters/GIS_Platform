@@ -5,7 +5,7 @@ import { IconButton, Tooltip } from '@mui/material';
 import { GetApp, GetAppOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
-import { CrgVectorLayer } from '../../services/gis/layers/layers.models';
+import { type CrgVectorLayer } from '../../services/gis/layers/layers.models';
 import { ExportValidationReportDialog } from '../ExportValidationReportDialog/ExportValidationReportDialog';
 
 const cnExportValidationReportButton = cn('ExportValidationReportButton');

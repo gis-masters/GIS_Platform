@@ -1,5 +1,5 @@
 import React, { Component, createRef } from 'react';
-import { computed, IReactionDisposer, makeObservable, reaction, when } from 'mobx';
+import { computed, type IReactionDisposer, makeObservable, reaction, when } from 'mobx';
 import { observer } from 'mobx-react';
 import { List } from '@mui/material';
 import { cn } from '@bem-react/classname';
@@ -17,11 +17,11 @@ import {
   isFolder
 } from '../Adapter/Explorer-Adapter';
 import { ExplorerEmpty } from '../Empty/Explorer-Empty';
-import { ExplorerItemData } from '../Explorer.models';
-import { ExplorerStore } from '../Explorer.store';
-import { ExplorerItem, ExplorerItemProps } from '../Item/Explorer-Item';
+import { type ExplorerItemData } from '../Explorer.models';
+import { type ExplorerStore } from '../Explorer.store';
+import { ExplorerItem, type ExplorerItemProps } from '../Item/Explorer-Item';
 
-import '!style-loader!css-loader!sass-loader!./Explorer-List.scss';
+import './Explorer-List.scss';
 
 const cnExplorerList = cn('Explorer', 'List');
 

@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { type FC } from 'react';
 import { observer } from 'mobx-react';
 import { Tooltip } from '@mui/material';
 import { cn } from '@bem-react/classname';
@@ -6,7 +6,7 @@ import { cn } from '@bem-react/classname';
 import { ZoomInWarning } from '../../Icons/ZoomInWarning';
 import { ZoomOutWarning } from '../../Icons/ZoomOutWarning';
 
-import '!style-loader!css-loader!sass-loader!./Layer-ZoomWarning.scss';
+import './Layer-ZoomWarning.scss';
 
 const cnLayerZoomWarning = cn('Layer', 'ZoomWarning');
 

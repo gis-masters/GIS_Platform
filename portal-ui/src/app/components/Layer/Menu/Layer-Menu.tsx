@@ -24,28 +24,28 @@ import {
 } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
-import { AxiosError } from 'axios';
+import { type AxiosError } from 'axios';
 
-import { communicationService, DataChangeEventDetail } from '../../../services/communication.service';
-import { LibraryRecord } from '../../../services/data/library/library.models';
+import { communicationService, type DataChangeEventDetail } from '../../../services/communication.service';
+import { type LibraryRecord } from '../../../services/data/library/library.models';
 import { getLibraryRecord } from '../../../services/data/library/library.service';
-import { Projection } from '../../../services/data/projections/projections.models';
-import { Schema } from '../../../services/data/schema/schema.models';
-import { VectorTable } from '../../../services/data/vectorData/vectorData.models';
+import { type Projection } from '../../../services/data/projections/projections.models';
+import { type Schema } from '../../../services/data/schema/schema.models';
+import { type VectorTable } from '../../../services/data/vectorData/vectorData.models';
 import { getVectorTable } from '../../../services/data/vectorData/vectorData.service';
 import { GeometryType } from '../../../services/geoserver/wfs/wfs.models';
 import { getEmptyFeature } from '../../../services/geoserver/wfs/wfs.service';
 import { exportShape } from '../../../services/gis/export/export.service';
 import {
-  CrgLayer,
-  CrgLayersGroup,
+  type CrgLayer,
+  type CrgLayersGroup,
   CrgLayerType,
-  CrgRasterLayer,
-  CrgVectorLayer
+  type CrgRasterLayer,
+  type CrgVectorLayer
 } from '../../../services/gis/layers/layers.models';
 import { getLayerSchema } from '../../../services/gis/layers/layers.service';
 import { isVectorFromFile } from '../../../services/gis/layers/layers.utils';
-import { TreeItemPayload } from '../../../services/gis/projects/projects.models';
+import { type TreeItemPayload } from '../../../services/gis/projects/projects.models';
 import { projectsService } from '../../../services/gis/projects/projects.service';
 import { EditFeatureMode } from '../../../services/map/a-map-mode/edit-feature/EditFeature.models';
 import { mapModeManager } from '../../../services/map/a-map-mode/MapModeManager';

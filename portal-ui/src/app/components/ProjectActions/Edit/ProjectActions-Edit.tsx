@@ -3,13 +3,13 @@ import { observer } from 'mobx-react';
 import { Edit, EditOutlined, SaveOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
-import { SimpleSchema } from '../../../services/data/schema/schema.models';
-import { CrgProject } from '../../../services/gis/projects/projects.models';
+import { type SimpleSchema } from '../../../services/data/schema/schema.models';
+import { type CrgProject } from '../../../services/gis/projects/projects.models';
 import { projectsService } from '../../../services/gis/projects/projects.service';
 import { ActionTypes, DataTypes } from '../../../services/permissions/permissions.models';
 import { getAvailableActionsTooltipByRole } from '../../../services/permissions/permissions.utils';
 import { getPatch } from '../../../services/util/patch';
-import { ActionsItemVariant } from '../../Actions/Item/Actions-Item.base';
+import { type ActionsItemVariant } from '../../Actions/Item/Actions-Item.base';
 import { ActionsItem } from '../../Actions/Item/Actions-Item.composed';
 import { FormDialog } from '../../FormDialog/FormDialog';
 import { TextBadge } from '../../TextBadge/TextBadge';

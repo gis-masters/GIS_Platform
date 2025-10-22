@@ -1,8 +1,8 @@
-import React, { BaseHTMLAttributes, FC, ForwardedRef } from 'react';
+import React, { type BaseHTMLAttributes, type FC, type ForwardedRef } from 'react';
 import { cn } from '@bem-react/classname';
-import { IClassNameProps } from '@bem-react/core';
+import { type IClassNameProps } from '@bem-react/core';
 
-import '!style-loader!css-loader!sass-loader!./Lookup-Name.scss';
+import './Lookup-Name.scss';
 
 const cnLookupName = cn('Lookup', 'Name');
 

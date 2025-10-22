@@ -6,16 +6,16 @@ import { boundMethod } from 'autobind-decorator';
 import { saveAs } from 'file-saver';
 
 import { filesClient } from '../../../services/data/files/files.client';
-import { compoundFileFullType, FileInfo } from '../../../services/data/files/files.models';
+import { compoundFileFullType, type FileInfo } from '../../../services/data/files/files.models';
 import { getFileExtension, getReadableFileSize } from '../../../services/data/files/files.util';
 import { organizationSettings } from '../../../stores/OrganizationSettings.store';
 import { Link } from '../../Link/Link';
 import { LookupName } from '../../Lookup/Name/Lookup-Name';
-import { LookupStatusType } from '../../Lookup/Status/Lookup-Status';
+import { type LookupStatusType } from '../../Lookup/Status/Lookup-Status';
 import { FilesBaseName } from '../BaseName/Files-BaseName';
 import { FilesExt } from '../Ext/Files-Ext';
 
-import '!style-loader!css-loader!sass-loader!../NameLink/Files-NameLink.scss';
+import '../NameLink/Files-NameLink.scss';
 
 const cnFilesName = cn('Files', 'Name');
 const cnFilesNameLink = cn('Files', 'NameLink');

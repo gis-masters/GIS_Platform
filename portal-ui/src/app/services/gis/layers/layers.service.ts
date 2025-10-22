@@ -1,7 +1,7 @@
 import { createElement } from 'react';
 import { ListItemIcon, Tooltip } from '@mui/material';
 import { FilterAltOutlined } from '@mui/icons-material';
-import { AxiosError } from 'axios';
+import { type AxiosError } from 'axios';
 
 import { Toast } from '../../../components/Toast/Toast';
 import { currentProject } from '../../../stores/CurrentProject.store';
@@ -9,26 +9,26 @@ import { schemaCacheService } from '../../cache/schema-cache.service';
 import { getFileInfo } from '../../data/files/files.service';
 import { getFileBaseName, getLibraryRecordFiles } from '../../data/files/files.util';
 import { getLibraryRecord } from '../../data/library/library.service';
-import { PropertyOption, Schema } from '../../data/schema/schema.models';
+import { type PropertyOption, type Schema } from '../../data/schema/schema.models';
 import { schemaService } from '../../data/schema/schema.service';
 import {
   convertGeoserverPropertiesToSchemaProperties,
   getGeometryTypeFromGeoserverAttributes
 } from '../../data/schema/schema.utils';
 import { getVectorTable } from '../../data/vectorData/vectorData.service';
-import { FeatureType } from '../../geoserver/featureType/featureType.model';
+import { type FeatureType } from '../../geoserver/featureType/featureType.model';
 import { getFeatureType } from '../../geoserver/featureType/featureType.service';
-import { SupportedGeometryType, supportedGeometryTypes } from '../../geoserver/wfs/wfs.models';
+import { type SupportedGeometryType, supportedGeometryTypes } from '../../geoserver/wfs/wfs.models';
 import { services } from '../../services';
-import { CrgProject } from '../projects/projects.models';
+import { type CrgProject } from '../projects/projects.models';
 import { layersClient } from './layers.client';
 import {
-  CrgLayer,
-  CrgLayersGroup,
+  type CrgLayer,
+  type CrgLayersGroup,
   CrgLayerType,
-  CrgRasterLayer,
-  NewCrgLayer,
-  RelatedVectorLayers
+  type CrgRasterLayer,
+  type NewCrgLayer,
+  type RelatedVectorLayers
 } from './layers.models';
 import { isLayerFromFile, isVectorFromFile } from './layers.utils';
 

@@ -1,15 +1,15 @@
-import React, { FC, useCallback } from 'react';
+import React, { type FC, useCallback } from 'react';
 import { observer, useLocalObservable } from 'mobx-react-lite';
-import { SvgIconComponent } from '@mui/icons-material';
+import { type SvgIconComponent } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
-import { AxiosError } from 'axios';
+import { type AxiosError } from 'axios';
 
 import { makeGeometryValid } from '../../../services/data/geometryValidation/geometryValidation.service';
 import { editFeatureStore } from '../../../services/map/a-map-mode/edit-feature/EditFeatureStore';
 import { mapDrawService } from '../../../services/map/draw/map-draw.service';
 import { Button } from '../../Button/Button';
 
-import '!style-loader!css-loader!sass-loader!./EditFeatureGeometry-ValidationError.scss';
+import './EditFeatureGeometry-ValidationError.scss';
 
 const cnEditFeatureGeometryValidationError = cn('EditFeatureGeometryValidationError');
 

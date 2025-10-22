@@ -3,7 +3,7 @@ import { MenuItem, TextField } from '@mui/material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
-import '!style-loader!css-loader!sass-loader!./XTable-PageSize.scss';
+import './XTable-PageSize.scss';
 
 const cnXTablePageSize = cn('XTable', 'PageSize');
 

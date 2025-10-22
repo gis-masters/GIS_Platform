@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { type FC } from 'react';
 import { observer } from 'mobx-react';
 import { withBemMod } from '@bem-react/core';
 
@@ -6,7 +6,7 @@ import { BasemapDetails } from '../../../BasemapDetails/BasemapDetails';
 import { ConnectionsBasemapToProjectsWidget } from '../../../ConnectionsBasemapToProjectsWidget/ConnectionsBasemapToProjectsWidget';
 import { assertExplorerItemDataTypeBasemap } from '../../Adapter/_type/Explorer-Adapter_type_basemap';
 import { ExplorerItemType } from '../../Explorer.models';
-import { cnExplorerWidgets, ExplorerWidgetsProps } from '../Explorer-Widgets.base';
+import { cnExplorerWidgets, type ExplorerWidgetsProps } from '../Explorer-Widgets.base';
 
 const ExplorerWidgetsTypeBasemap: FC<ExplorerWidgetsProps> = observer(({ className, item }) => {
   assertExplorerItemDataTypeBasemap(item);

@@ -1,14 +1,14 @@
 import { Given, Then, When } from '@wdio/cucumber-framework';
 
-import { Schema } from '../../src/app/services/data/schema/schema.models';
+import { type Schema } from '../../src/app/services/data/schema/schema.models';
 import { sleep } from '../../src/app/services/util/sleep';
 import { mapBlock } from './blocks/Map/Map.block';
 import { root } from './blocks/Root/Root';
 import { xTableBlock } from './blocks/XTable/XTable.block';
-import { TestUser } from './commands/auth/testUsers';
+import { type TestUser } from './commands/auth/testUsers';
 import { getDocumentsLibraryByTitle } from './commands/docLibrary/getDocLibraryByTitle';
 import { getProjectByTitle } from './commands/projects/getProjectByTitle';
-import { Page } from './Page';
+import { type Page } from './Page';
 import { pagesRegistry } from './pages/_pagesRegistry';
 import { blPage } from './pages/BL.page';
 import { dataManagementPage } from './pages/DataManagement.page';
@@ -16,7 +16,7 @@ import { LibraryRegistryPage } from './pages/LibraryRegistry.page';
 import { MapPage } from './pages/Map.page';
 import { OrgAdminPage } from './pages/OrgAdmin';
 import { TasksJournalPage } from './pages/TasksJournal.page';
-import { ScenarioScope } from './ScenarioScope';
+import { type ScenarioScope } from './ScenarioScope';
 
 async function findPage(title: string): Promise<Page> {
   const page = pagesRegistry.find(page => page.title === title);

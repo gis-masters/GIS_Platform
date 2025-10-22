@@ -4,9 +4,9 @@ import { Pagination } from '@mui/material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
-import { PageOptions } from '../../../services/models';
+import { type PageOptions } from '../../../services/models';
 
-import '!style-loader!css-loader!sass-loader!./Attributes-Pagination.scss';
+import './Attributes-Pagination.scss';
 
 const cnAttributesPagination = cn('Attributes', 'Pagination');
 

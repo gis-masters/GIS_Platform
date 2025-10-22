@@ -1,13 +1,21 @@
-import React, { Component, createRef, FC, ForwardedRef, forwardRef, ReactNode, RefObject } from 'react';
+import React, {
+  Component,
+  createRef,
+  type FC,
+  type ForwardedRef,
+  forwardRef,
+  type ReactNode,
+  type RefObject
+} from 'react';
 import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { Menu } from '@mui/material';
 import { KeyboardArrowDown } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
-import { Button, ButtonProps } from '../Button/Button';
+import { Button, type ButtonProps } from '../Button/Button';
 
-import '!style-loader!css-loader!sass-loader!./MenuButton.scss';
+import './MenuButton.scss';
 
 const cnMenuButton = cn('MenuButton');
 

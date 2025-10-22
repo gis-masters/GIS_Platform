@@ -11,7 +11,7 @@ class SelectFolderDialogBlock extends Block {
   async selectFolder(explorerItemTitle: string): Promise<void> {
     await this.waitForVisible();
 
-    const $loading = await this.$('loading');
+    const $loading = await this.findBySelector('loading');
 
     try {
       await $loading.waitForDisplayed({ timeout: 1000 });
@@ -19,14 +19,14 @@ class SelectFolderDialogBlock extends Block {
       // ignore
     }
 
-    await $loading.waitForDisplayed({ reverse: true });
-    const explorerBlock = new ExplorerBlock(await this.$('container'));
+    await $loading.waitForExist({ reverse: true });
+    const explorerBlock = new ExplorerBlock(await this.findBySelector('container'));
     await explorerBlock.selectExplorerItem(explorerItemTitle);
 
-    const $select = await this.$('select');
+    const $select = await this.findBySelector('select');
     await $select.waitForClickable();
     await $select.click();
-    await $select.waitForDisplayed({ reverse: true });
+    await $select.waitForExist({ reverse: true });
   }
 
   async openExplorerItem(item: string): Promise<void> {

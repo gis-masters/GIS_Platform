@@ -2,7 +2,7 @@ import { boundClass } from 'autobind-decorator';
 
 import { Client } from '../../api/Client';
 import { http } from '../../api/http.service';
-import { CrgGroup, GroupData } from './groups.models';
+import { type CrgGroup, type GroupData } from './groups.models';
 
 @boundClass
 class AuthClient extends Client {

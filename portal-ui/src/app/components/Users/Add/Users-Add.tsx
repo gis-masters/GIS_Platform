@@ -5,9 +5,9 @@ import { AddCircle, AddCircleOutline } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
-import { MinimizedCrgUser } from '../../../services/auth/users/users.models';
+import { type MinimizedCrgUser } from '../../../services/auth/users/users.models';
 import { usersService } from '../../../services/auth/users/users.service';
-import { PageOptions } from '../../../services/models';
+import { type PageOptions } from '../../../services/models';
 import { isFilterQuery } from '../../../services/util/filters/filters.models';
 import { notFalsyFilter } from '../../../services/util/NotFalsyFilter';
 import { replaceObjectKeys } from '../../../services/util/object';
@@ -15,7 +15,7 @@ import { currentUser } from '../../../stores/CurrentUser.store';
 import { Button } from '../../Button/Button';
 import { ChooseXTableDialog } from '../../ChooseXTableDialog/ChooseXTableDialog';
 import { LookupAdd } from '../../Lookup/Add/Lookup-Add';
-import { XTableColumn } from '../../XTable/XTable.models';
+import { type XTableColumn } from '../../XTable/XTable.models';
 
 const cnUsersAdd = cn('Users', 'Add');
 const cnUsersAddDialog = cn('Users', 'AddDialog');

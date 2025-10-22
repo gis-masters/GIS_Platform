@@ -1,12 +1,19 @@
 import React, { useState } from 'react';
 import { Input, Slider } from '@mui/material';
-import { AllInclusive, HomeOutlined, SvgIconComponent, WidthFull, WidthNormal, WidthWide } from '@mui/icons-material';
+import {
+  AllInclusive,
+  HomeOutlined,
+  type SvgIconComponent,
+  WidthFull,
+  WidthNormal,
+  WidthWide
+} from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
-import { StoryFn } from '@storybook/react';
+import { type StoryFn } from '@storybook/react';
 
-import { Breadcrumbs, BreadcrumbsItemData } from './Breadcrumbs';
+import { Breadcrumbs, type BreadcrumbsItemData } from './Breadcrumbs';
 
-import '!style-loader!css-loader!sass-loader!./Breadcrumbs.stories.scss';
+import './Breadcrumbs.stories.scss';
 
 const cnBreadcrumbsStory = cn('BreadcrumbsStory');
 

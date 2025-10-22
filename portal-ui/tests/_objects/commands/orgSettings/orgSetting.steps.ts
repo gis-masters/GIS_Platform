@@ -1,7 +1,7 @@
 import { Given } from '@wdio/cucumber-framework';
 
-import { CompositeSettings } from '../../../../src/app/stores/OrganizationSettings.store';
-import { TestUser } from '../auth/testUsers';
+import { type CompositeSettings } from '../../../../src/app/stores/OrganizationSettings.store';
+import { type TestUser } from '../auth/testUsers';
 import { getOrgSettingAsSuperAdmin, setOrgSetting } from './setOrgSetting';
 
 Given(

@@ -1,10 +1,10 @@
 import { createElement } from 'react';
-import { createRoot, Root } from 'react-dom/client';
-import { Component, ElementRef, Input, OnChanges, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { createRoot, type Root } from 'react-dom/client';
+import { Component, ElementRef, Input, type OnChanges, type OnDestroy, type OnInit, ViewChild } from '@angular/core';
 import { withRegistry } from '@bem-react/di';
 
 import { registry } from '../../services/di-registry';
-import { CrgVectorLayer } from '../../services/gis/layers/layers.models';
+import { type CrgVectorLayer } from '../../services/gis/layers/layers.models';
 import { ExportValidationReportButton } from '../ExportValidationReportButton/ExportValidationReportButton';
 
 const ExportValidationReportButtonWithRegistry = withRegistry(registry)(ExportValidationReportButton);
@@ -12,7 +12,8 @@ const ExportValidationReportButtonWithRegistry = withRegistry(registry)(ExportVa
 @Component({
   selector: 'crg-export-validation-report-button',
   template: '<div class="export-validation-report-button" #react></div>',
-  styleUrls: ['./export-validation-report-button.component.scss']
+  styleUrls: ['./export-validation-report-button.component.scss'],
+  standalone: false
 })
 export class ExportValidationReportButtonComponent implements OnInit, OnDestroy, OnChanges {
   @Input() layers?: CrgVectorLayer[];

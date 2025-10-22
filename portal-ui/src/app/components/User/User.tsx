@@ -4,7 +4,7 @@ import { observer } from 'mobx-react';
 import { Divider, ListItemIcon, Menu, MenuItem, Tooltip } from '@mui/material';
 import { AccountCircle, ContentCopy, Logout } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
-import { IClassNameProps } from '@bem-react/core';
+import { type IClassNameProps } from '@bem-react/core';
 import { boundMethod } from 'autobind-decorator';
 
 import { authService } from '../../services/auth/auth/auth.service';
@@ -12,7 +12,7 @@ import { copyToClipboard } from '../../services/util/clipboard.util';
 import { currentUser } from '../../stores/CurrentUser.store';
 import { Button } from '../Button/Button';
 
-import '!style-loader!css-loader!sass-loader!./User.scss';
+import './User.scss';
 
 const cnUser = cn('User');
 

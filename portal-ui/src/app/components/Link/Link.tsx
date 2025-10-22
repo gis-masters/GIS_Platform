@@ -1,13 +1,13 @@
-import React, { BaseHTMLAttributes, Component, FC, ForwardedRef, forwardRef } from 'react';
+import React, { type BaseHTMLAttributes, Component, type FC, type ForwardedRef, forwardRef } from 'react';
 import { OpenInNew } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
-import { ChildrenProps } from '../../services/models';
+import { type ChildrenProps } from '../../services/models';
 import { services } from '../../services/services';
 import { sleep } from '../../services/util/sleep';
 
-import '!style-loader!css-loader!sass-loader!./Link.scss';
+import './Link.scss';
 
 const cnLink = cn('Link');
 

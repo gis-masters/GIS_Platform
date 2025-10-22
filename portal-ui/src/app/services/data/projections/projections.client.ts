@@ -1,11 +1,11 @@
 import { boundClass } from 'autobind-decorator';
 
-import { PageableResources, SpatialReferenceSystem } from '../../../../server-types/common-contracts';
+import { type PageableResources, type SpatialReferenceSystem } from '../../../../server-types/common-contracts';
 import { Client } from '../../api/Client';
 import { http } from '../../api/http.service';
 import { preparePageOptions } from '../../api/http.utils';
-import { PageOptions } from '../../models';
-import { EditProjectionModel } from './projections.models';
+import { type PageOptions } from '../../models';
+import { type EditProjectionModel } from './projections.models';
 
 @boundClass
 class ProjectionsClient extends Client {

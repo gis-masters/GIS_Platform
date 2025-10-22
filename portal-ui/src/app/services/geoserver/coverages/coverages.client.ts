@@ -1,13 +1,13 @@
 import { boundClass } from 'autobind-decorator';
 
 import { http } from '../../api/http.service';
-import { CrgLayer } from '../../gis/layers/layers.models';
+import { type CrgLayer } from '../../gis/layers/layers.models';
 import {
   extractFeatureTypeNameFromComplexName,
   extractWorkspaceFromComplexName
 } from '../featureType/featureType.util';
 import { GeoserverClient } from '../GeoserverClient';
-import { CoverageTransparentColor, GeoserverCoverage } from './coverages.model';
+import { type CoverageTransparentColor, type GeoserverCoverage } from './coverages.model';
 
 @boundClass
 class CoveragesClient extends GeoserverClient {

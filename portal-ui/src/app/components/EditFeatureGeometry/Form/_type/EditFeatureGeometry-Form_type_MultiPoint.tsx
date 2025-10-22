@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import { withBemMod } from '@bem-react/core';
 
-import { GeometryType, WfsMultiPointGeometry } from '../../../../services/geoserver/wfs/wfs.models';
+import { GeometryType, type WfsMultiPointGeometry } from '../../../../services/geoserver/wfs/wfs.models';
 import { editFeatureStore } from '../../../../services/map/a-map-mode/edit-feature/EditFeatureStore';
 import { EditFeatureGeometryGroup } from '../../Group/EditFeatureGeometry-Group.composed';
-import { cnEditFeatureGeometryForm, EditFeatureGeometryFormProps } from '../EditFeatureGeometry-Form.base';
+import { cnEditFeatureGeometryForm, type EditFeatureGeometryFormProps } from '../EditFeatureGeometry-Form.base';
 
 class EditFeatureGeometryFormTypeMultiPoint extends Component<EditFeatureGeometryFormProps> {
   render() {

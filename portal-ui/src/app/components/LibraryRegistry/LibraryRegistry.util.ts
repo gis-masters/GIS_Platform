@@ -1,5 +1,5 @@
 import { getFilterRootAnd } from '../../services/util/filters/filters';
-import { FilterQuery } from '../../services/util/filters/filters.models';
+import { type FilterQuery } from '../../services/util/filters/filters.models';
 import { getIdsFromPath } from '../DataManagement/DataManagement.utils';
 
 export function getBreadcrumbsPathFromFilter(filter: FilterQuery): number[] {

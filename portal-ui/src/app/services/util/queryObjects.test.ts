@@ -1,6 +1,6 @@
 import { describe, expect, test } from '@jest/globals';
 
-import { PageOptions, SortOrder } from '../models';
+import { type PageOptions, SortOrder } from '../models';
 import { queryObjects } from './queryObjects';
 
 const arr = [

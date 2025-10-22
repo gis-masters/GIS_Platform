@@ -10,33 +10,33 @@ class SelectSchemaControlDialogBlock extends Block {
   };
 
   async waitForSelectSchemaTableDisplay(): Promise<void> {
-    const $xTable = await this.$('xTable');
+    const $xTable = await this.findBySelector('xTable');
     await $xTable.waitForDisplayed();
   }
 
   async clickSelectSchemaFirstOption(): Promise<void> {
     await this.waitForSelectSchemaTableDisplay();
 
-    const $$inputs = await this.$$('inputs');
+    const $$inputs = await this.findAllBySelector('inputs');
     await $$inputs[0].click();
   }
 
   async setOptionTitleFilter(): Promise<void> {
-    const $$filters = await this.$$('filters');
-    const $input = await $$filters[0].$('.MuiInputBase-input');
+    const $$filters = await this.findAllBySelector('filters');
+    const $input = await $$filters[0].$('.MuiInputBase-input').getElement();
 
     await $input.setValue('без');
     await browser.pause(300);
   }
 
   async clickSelectSchemaConfirm(): Promise<void> {
-    const $yes = await this.$('yes');
+    const $yes = await this.findBySelector('yes');
     await $yes.click();
   }
 
   async waitForSelectSchemaDisappear(): Promise<void> {
-    const $yes = await this.$('yes');
-    await $yes.waitForDisplayed({ reverse: true });
+    const $yes = await this.findBySelector('yes');
+    await $yes.waitForExist({ reverse: true });
   }
 }
 

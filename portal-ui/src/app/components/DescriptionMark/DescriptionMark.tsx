@@ -1,12 +1,12 @@
-import React, { FC } from 'react';
+import React, { type FC } from 'react';
 import { Tooltip } from '@mui/material';
 import { HelpOutline } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
-import { IClassNameProps } from '@bem-react/core';
+import { type IClassNameProps } from '@bem-react/core';
 
-import { ChildrenProps } from '../../services/models';
+import { type ChildrenProps } from '../../services/models';
 
-import '!style-loader!css-loader!sass-loader!./DescriptionMark.scss';
+import './DescriptionMark.scss';
 
 const cnDescriptionMark = cn('DescriptionMark');
 

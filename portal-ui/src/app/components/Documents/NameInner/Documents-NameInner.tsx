@@ -1,7 +1,7 @@
-import React, { FC, PropsWithChildren } from 'react';
+import React, { type FC, type PropsWithChildren } from 'react';
 import { cn } from '@bem-react/classname';
 
-import '!style-loader!css-loader!sass-loader!./Documents-NameInner.scss';
+import './Documents-NameInner.scss';
 
 const cnDocumentsNameInner = cn('Documents', 'NameInner');
 

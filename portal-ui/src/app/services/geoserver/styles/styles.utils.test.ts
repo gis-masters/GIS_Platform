@@ -1,6 +1,6 @@
 import { describe, expect, test } from '@jest/globals';
 
-import { CustomStyleDescription } from './styles.models';
+import { type CustomStyleDescription } from './styles.models';
 import { buildCustomSld, parseCustomStyle } from './styles.utils';
 
 const pointRedCircle: CustomStyleDescription = {

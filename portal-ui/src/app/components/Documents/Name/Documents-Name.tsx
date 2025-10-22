@@ -1,14 +1,14 @@
-import React, { FC } from 'react';
+import React, { type FC } from 'react';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 
 import { LookupName } from '../../Lookup/Name/Lookup-Name';
 import { PseudoLink } from '../../PseudoLink/PseudoLink';
 import { TextOverflow } from '../../TextOverflow/TextOverflow';
-import { DocumentInfo } from '../Documents';
+import { type DocumentInfo } from '../Documents';
 import { DocumentsNameInner } from '../NameInner/Documents-NameInner';
 
-import '!style-loader!css-loader!sass-loader!./Documents-Name.scss';
+import './Documents-Name.scss';
 
 const cnDocuments = cn('Documents');
 

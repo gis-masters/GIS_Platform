@@ -3,7 +3,7 @@ import { action, computed, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { Checkbox } from '@mui/material';
 
-import { ServicesInfo } from '../ServicesCalculator';
+import { type ServicesInfo } from '../ServicesCalculator.models';
 
 interface ServicesCalculatorCheckboxProps {
   selectedService: ServicesInfo;

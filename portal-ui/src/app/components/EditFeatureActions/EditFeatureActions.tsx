@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 
-import { WfsFeature } from '../../services/geoserver/wfs/wfs.models';
-import { CrgVectorLayer } from '../../services/gis/layers/layers.models';
+import { type WfsFeature } from '../../services/geoserver/wfs/wfs.models';
+import { type CrgVectorLayer } from '../../services/gis/layers/layers.models';
 import { organizationSettings } from '../../stores/OrganizationSettings.store';
 import { CopyFeaturesButton } from '../CopyFeaturesButton/CopyFeaturesButton';
 import { CopyUrlButton } from '../CopyUrlButton/CopyUrlButton';
@@ -13,7 +13,7 @@ import { PrintFeature } from '../PrintFeature/PrintFeature';
 import { XmlDownload } from '../XmlDownload/XmlDownload';
 import { ZoomToFeature } from '../ZoomToFeature/ZoomToFeature';
 
-import '!style-loader!css-loader!sass-loader!./EditFeatureActions.scss';
+import './EditFeatureActions.scss';
 
 const cnEditFeatureActions = cn('EditFeatureActions');
 

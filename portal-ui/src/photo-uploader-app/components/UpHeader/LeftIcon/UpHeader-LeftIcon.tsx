@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { type FC } from 'react';
 import { observer } from 'mobx-react';
 import { CircularProgress, IconButton } from '@mui/material';
 import { Done, KeyboardBackspace } from '@mui/icons-material';
@@ -6,8 +6,8 @@ import { cn } from '@bem-react/classname';
 
 import { PhotoUploaderScreens, photoUploaderStore } from '../../../stores/PhotoUploader.store';
 
-import '!style-loader!css-loader!sass-loader!./UpHeader-LeftIcon.scss';
-import '!style-loader!css-loader!sass-loader!../Loading/UpHeader-Loading.scss';
+import './UpHeader-LeftIcon.scss';
+import '../Loading/UpHeader-Loading.scss';
 
 const cnUpHeader = cn('UpHeader');
 

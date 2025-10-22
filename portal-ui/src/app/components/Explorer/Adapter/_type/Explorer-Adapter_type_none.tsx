@@ -1,5 +1,5 @@
 import { staticImplements } from '../../../../services/util/staticImplements';
-import { Adapter, ExplorerItemData } from '../../Explorer.models';
+import { type Adapter, type ExplorerItemData } from '../../Explorer.models';
 
 @staticImplements<Adapter>()
 export class ExplorerAdapterTypeNone {

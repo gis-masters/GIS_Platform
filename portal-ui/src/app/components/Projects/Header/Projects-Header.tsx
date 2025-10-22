@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, { type FC, useEffect, useState } from 'react';
 import { observer } from 'mobx-react';
 import { HomeOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
@@ -6,12 +6,12 @@ import { cn } from '@bem-react/classname';
 import { projectsService } from '../../../services/gis/projects/projects.service';
 import { notFalsyFilter } from '../../../services/util/NotFalsyFilter';
 import { currentProjectFolderStore } from '../../../stores/CurrentProjectFolder.store';
-import { Breadcrumbs, BreadcrumbsItemData } from '../../Breadcrumbs/Breadcrumbs';
+import { Breadcrumbs, type BreadcrumbsItemData } from '../../Breadcrumbs/Breadcrumbs';
 import { ProjectsFilter } from '../Filter/Projects-Filter';
 import { ProjectsSortBy } from '../SortBy/Projects-SortBy';
 import { ProjectsSortOrder } from '../SortOrder/Projects-SortOrder';
 
-import '!style-loader!css-loader!sass-loader!./Projects-Header.scss';
+import './Projects-Header.scss';
 
 const cnProjectsHeader = cn('Projects', 'Header');
 

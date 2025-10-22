@@ -1,4 +1,4 @@
-import { FilterQuery, FilterQueryValue } from '../filters/filters.models';
+import { type FilterQuery, type FilterQueryValue } from '../filters/filters.models';
 
 export function buildCql(query: FilterQuery = {}): string {
   return Object.entries(query)

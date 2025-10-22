@@ -1,14 +1,14 @@
-import React, { FC, memo, useCallback, useEffect } from 'react';
+import React, { type FC, memo, useCallback, useEffect } from 'react';
 import { observer, useLocalObservable } from 'mobx-react';
-import { AxiosError } from 'axios';
-import { Certificate, getUserCertificates } from 'crypto-pro';
+import { type AxiosError } from 'axios';
+import { type Certificate, getUserCertificates } from 'crypto-pro';
 
 import { communicationService } from '../../../services/communication.service';
 import { createSignature, getUsedCertificates } from '../../../services/cryptopro/cryptoPro.service';
 import { getFileEcp, getFileHash, signFile } from '../../../services/data/files/files.service';
-import { LibraryRecord } from '../../../services/data/library/library.models';
+import { type LibraryRecord } from '../../../services/data/library/library.models';
 import { PropertyType } from '../../../services/data/schema/schema.models';
-import { WfsFeature } from '../../../services/geoserver/wfs/wfs.models';
+import { type WfsFeature } from '../../../services/geoserver/wfs/wfs.models';
 import { services } from '../../../services/services';
 import { notFalsyFilter } from '../../../services/util/NotFalsyFilter';
 import { achtung } from '../../../services/utility-dialogs.service';

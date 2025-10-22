@@ -5,9 +5,9 @@ import { ShareOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
-import { LibraryRecord } from '../../../services/data/library/library.models';
+import { type LibraryRecord } from '../../../services/data/library/library.models';
 import { copyToClipboard } from '../../../services/util/clipboard.util';
-import { ActionsItemVariant } from '../../Actions/Item/Actions-Item.base';
+import { type ActionsItemVariant } from '../../Actions/Item/Actions-Item.base';
 import { ActionsItem } from '../../Actions/Item/Actions-Item.composed';
 import { Toast } from '../../Toast/Toast';
 

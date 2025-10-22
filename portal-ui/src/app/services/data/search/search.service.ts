@@ -1,10 +1,10 @@
-import { WfsFeature } from '../../geoserver/wfs/wfs.models';
-import { PageOptions } from '../../models';
+import { type SupportedGeometryType, type WfsFeature } from '../../geoserver/wfs/wfs.models';
+import { type PageOptions } from '../../models';
 import { isPageableResources } from '../../util/typeGuards/isPageableResources';
 import { awaitProcess, createSearchProcess } from '../processes/processes.service';
 import { getGeometryFieldName } from '../schema/schema.utils';
 import { getVectorTable } from '../vectorData/vectorData.service';
-import { SearchItemData, SearchRequest } from './search.model';
+import { type SearchItemData, type SearchRequest } from './search.model';
 
 export async function getSearchResults(
   searchRequest: SearchRequest,
@@ -25,7 +25,8 @@ export async function getSearchResults(
           const wfsFeature: WfsFeature = {
             type: 'Feature',
             id: `${source.table}.${String(payload.properties.objectid)}`,
-            geometry: { coordinates: [], type: source.geometryType },
+            // as будет убран после перехода на типы из пакета geojson (#3758)
+            geometry: { coordinates: [], type: source.geometryType as SupportedGeometryType },
             geometry_name: getGeometryFieldName(vectorTable.schema),
             properties: { ...payload.properties }
           };

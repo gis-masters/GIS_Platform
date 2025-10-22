@@ -1,7 +1,7 @@
 import { wsService } from '../../ws.service';
-import { Process } from '../processes/processes.models';
+import { type Process } from '../processes/processes.models';
 import { exportClient } from './export.client';
-import { ExportRequest, ExportResourceModel } from './export.models';
+import { type ExportRequest, type ExportResourceModel } from './export.models';
 
 export async function exportVectorTableAsGML(
   docSchema: string,

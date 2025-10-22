@@ -1,10 +1,10 @@
-import React, { FC } from 'react';
+import React, { type FC } from 'react';
 import { IconButton } from '@mui/material';
 import { cn } from '@bem-react/classname';
 
 import { LayerOpenIcon } from '../OpenIcon/Layer-OpenIcon';
 
-import '!style-loader!css-loader!sass-loader!./Layer-Open.scss';
+import './Layer-Open.scss';
 
 const cnLayerOpen = cn('Layer', 'Open');
 

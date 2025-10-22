@@ -1,7 +1,7 @@
 import { SelectProjectionCodeControl } from '../../../components/SelectProjectionCodeControl/SelectProjectionCodeControl';
-import { FilePlacementMode } from '../../data/file-placement/file-placement.models';
-import { PropertyType, SimpleSchema } from '../../data/schema/schema.models';
-import { CrgProject } from '../projects/projects.models';
+import { type FilePlacementMode } from '../../data/file-placement/file-placement.models';
+import { PropertyType, type SimpleSchema } from '../../data/schema/schema.models';
+import { type CrgProject } from '../projects/projects.models';
 
 export enum CrgLayerType {
   VECTOR = 'vector',

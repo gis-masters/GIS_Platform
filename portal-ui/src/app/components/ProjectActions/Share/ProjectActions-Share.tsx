@@ -1,10 +1,10 @@
-import React, { FC, useCallback } from 'react';
+import React, { type FC, useCallback } from 'react';
 import { ShareOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
-import { CrgProject } from '../../../services/gis/projects/projects.models';
+import { type CrgProject } from '../../../services/gis/projects/projects.models';
 import { copyToClipboard } from '../../../services/util/clipboard.util';
-import { ActionsItemVariant } from '../../Actions/Item/Actions-Item.base';
+import { type ActionsItemVariant } from '../../Actions/Item/Actions-Item.base';
 import { ActionsItem } from '../../Actions/Item/Actions-Item.composed';
 import { Toast } from '../../Toast/Toast';
 

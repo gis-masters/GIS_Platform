@@ -1,10 +1,10 @@
-import React, { FC, memo, useMemo } from 'react';
+import React, { type FC, memo, useMemo } from 'react';
 import { cn } from '@bem-react/classname';
 import Highlighter from 'react-highlight-words';
 
-import { FilterQuery, FilterQueryValue } from '../../services/util/filters/filters.models';
+import { type FilterQuery, type FilterQueryValue } from '../../services/util/filters/filters.models';
 
-import '!style-loader!css-loader!sass-loader!./Highlight.scss';
+import './Highlight.scss';
 
 const cnHighlight = cn('Highlight');
 

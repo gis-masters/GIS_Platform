@@ -4,11 +4,11 @@ import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { isObject } from 'lodash';
 
-import { communicationService, DataChangeEventDetail } from '../../../../services/communication.service';
+import { communicationService, type DataChangeEventDetail } from '../../../../services/communication.service';
 import { libraryClient } from '../../../../services/data/library/library.client';
-import { LibraryRecord } from '../../../../services/data/library/library.models';
+import { type LibraryRecord } from '../../../../services/data/library/library.models';
 import { getLibraryRecord, getLibrarySchemaByRecord } from '../../../../services/data/library/library.service';
-import { Schema } from '../../../../services/data/schema/schema.models';
+import { type Schema } from '../../../../services/data/schema/schema.models';
 import { applyContentType } from '../../../../services/data/schema/schema.utils';
 import { flags } from '../../../../services/feature-flags';
 import { Role } from '../../../../services/permissions/permissions.models';
@@ -20,7 +20,7 @@ import { ViewContentWidget } from '../../../ViewContentWidget/ViewContentWidget'
 import { getId } from '../../Adapter/Explorer-Adapter';
 import { ExplorerItemEntityTypeTitle, ExplorerItemType, itemTypeError } from '../../Explorer.models';
 import { ExplorerInfoDescItem } from '../../InfoDescItem/Explorer-InfoDescItem';
-import { ExplorerWidgetsProps } from '../Explorer-Widgets.base';
+import { type ExplorerWidgetsProps } from '../Explorer-Widgets.base';
 
 const cnExplorer = cn('Explorer');
 

@@ -5,15 +5,15 @@ import { Tooltip } from '@mui/material';
 import { ContentCopyOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
-import { AxiosError } from 'axios';
+import { type AxiosError } from 'axios';
 import { pluralize } from 'numeralize-ru';
 
 import { communicationService } from '../../services/communication.service';
 import { getProjectionByCode } from '../../services/data/projections/projections.service';
 import { createFeature } from '../../services/data/vectorData/vectorData.service';
 import { createFeatureId } from '../../services/geoserver/featureType/featureType.util';
-import { WfsFeature } from '../../services/geoserver/wfs/wfs.models';
-import { CrgLayer, CrgLayerType, CrgVectorLayer } from '../../services/gis/layers/layers.models';
+import { type WfsFeature } from '../../services/geoserver/wfs/wfs.models';
+import { type CrgLayer, CrgLayerType, type CrgVectorLayer } from '../../services/gis/layers/layers.models';
 import { isVectorFromFile } from '../../services/gis/layers/layers.utils';
 import { editFeatureStore } from '../../services/map/a-map-mode/edit-feature/EditFeatureStore';
 import { mapModeManager } from '../../services/map/a-map-mode/MapModeManager';

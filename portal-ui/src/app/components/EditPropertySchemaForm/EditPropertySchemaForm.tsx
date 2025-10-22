@@ -4,10 +4,10 @@ import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
 import {
-  BasePropertySchema,
-  PropertySchema,
+  type BasePropertySchema,
+  type PropertySchema,
   PropertyType,
-  SimpleSchema
+  type SimpleSchema
 } from '../../services/data/schema/schema.models';
 import { Form } from '../Form/Form';
 

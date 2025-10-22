@@ -1,10 +1,10 @@
 import React from 'react';
-import { action, IObservableArray, observable } from 'mobx';
+import { action, type IObservableArray, observable } from 'mobx';
 import { Biotech } from '@mui/icons-material';
-import { StoryFn } from '@storybook/react';
+import { type StoryFn } from '@storybook/react';
 
-import { PropertySchema, PropertyType } from '../../../../services/data/schema/schema.models';
-import { FieldErrors, validateFormValue } from '../../../../services/util/form/formValidation.utils';
+import { type PropertySchema, PropertyType } from '../../../../services/data/schema/schema.models';
+import { type FieldErrors, validateFormValue } from '../../../../services/util/form/formValidation.utils';
 import { sleep } from '../../../../services/util/sleep';
 import { Button } from '../../../Button/Button';
 import { cnFormStoryActions, FormStoryActions } from '../../../FormStoryActions/FormStoryActions';

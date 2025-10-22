@@ -1,6 +1,6 @@
-import React, { FC, lazy, Suspense } from 'react';
+import React, { type FC, lazy, Suspense } from 'react';
 
-const OrgAdminAsync = lazy(() => import('./OrgAdmin.async'));
+const OrgAdminAsync = lazy(() => import('./OrgAdmin.chunkroot'));
 
 export const OrgAdmin: FC = props => (
   <Suspense>

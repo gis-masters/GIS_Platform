@@ -3,11 +3,10 @@ import { action, computed, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
-import { AxiosError } from 'axios';
+import { type AxiosError } from 'axios';
 
 import { FilePlacementMode } from '../../services/data/file-placement/file-placement.models';
 import { placeFileWithProjection } from '../../services/data/file-placement/file-placement.service';
-import { FileInfo } from '../../services/data/files/files.models';
 import { getFileInfo } from '../../services/data/files/files.service';
 import {
   getFileBaseName,
@@ -17,22 +16,20 @@ import {
   isTabFile,
   isTifFile
 } from '../../services/data/files/files.util';
-import { Library, LibraryRecord } from '../../services/data/library/library.models';
 import { getLibraryRecord } from '../../services/data/library/library.service';
 import { isPlaceFileProcess } from '../../services/data/processes/processes.models';
 import { awaitProcess } from '../../services/data/processes/processes.service';
-import { Projection } from '../../services/data/projections/projections.models';
+import { type Projection } from '../../services/data/projections/projections.models';
 import { getProjectionCode } from '../../services/data/projections/projections.util';
 import {
-  ContentType,
-  PropertySchema,
+  type ContentType,
+  type PropertySchema,
   PropertyType,
-  Schema,
-  ValueFormula
+  type Schema,
+  type ValueFormula
 } from '../../services/data/schema/schema.models';
-import { Dataset, VectorTable } from '../../services/data/vectorData/vectorData.models';
 import { buildComplexName } from '../../services/geoserver/featureType/featureType.util';
-import { CrgLayer, CrgLayerType } from '../../services/gis/layers/layers.models';
+import { type CrgLayer, CrgLayerType } from '../../services/gis/layers/layers.models';
 import { createLayer, getViewChoiceOptions } from '../../services/gis/layers/layers.service';
 import {
   externalLayerDefaults,
@@ -40,7 +37,7 @@ import {
   vectorLayerDefaults
 } from '../../services/gis/layers/layers.utils';
 import { services } from '../../services/services';
-import { FieldValidator, validateFormValue } from '../../services/util/form/formValidation.utils';
+import { type FieldValidator, validateFormValue } from '../../services/util/form/formValidation.utils';
 import { currentProject } from '../../stores/CurrentProject.store';
 import { currentUser } from '../../stores/CurrentUser.store';
 import { projectionsStore } from '../../stores/Projections.store';
@@ -50,6 +47,7 @@ import { SelectFileInLibraryRecordControl } from '../SelectFileInLibraryRecordCo
 import { SelectProjectionControl } from '../SelectProjectionControl/SelectProjectionControl';
 import { SelectVectorTableControl } from '../SelectVectorTableControl/SelectVectorTableControl';
 import { Toast } from '../Toast/Toast';
+import { type Datasource } from './AddLayerDialog.models';
 
 const cnAddLayerDialog = cn('AddLayerDialog');
 
@@ -63,14 +61,6 @@ interface LayerFormValue extends CrgLayer {
   datasource?: Datasource;
   projection?: Projection;
   layerType?: string;
-}
-
-export interface Datasource {
-  dataset?: Dataset;
-  vectorTable?: VectorTable;
-  libraryRecord?: LibraryRecord;
-  library?: Library;
-  file?: FileInfo;
 }
 
 const layerTypeOptions = [

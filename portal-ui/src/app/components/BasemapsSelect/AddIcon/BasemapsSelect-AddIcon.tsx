@@ -1,9 +1,9 @@
-import React, { FC } from 'react';
+import React, { type FC } from 'react';
 import { Fab } from '@mui/material';
 import { Add } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
-import '!style-loader!css-loader!sass-loader!./BasemapsSelect-AddIcon.scss';
+import './BasemapsSelect-AddIcon.scss';
 
 const cnBasemapsSelectAddIcon = cn('BasemapsSelect', 'AddIcon');
 

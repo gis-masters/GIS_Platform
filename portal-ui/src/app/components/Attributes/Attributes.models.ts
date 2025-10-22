@@ -1,4 +1,4 @@
-import { WfsFeature } from '../../services/geoserver/wfs/wfs.models';
+import { type WfsFeature } from '../../services/geoserver/wfs/wfs.models';
 
 export interface AttributesTableRecord extends Record<string, unknown> {
   cutId: number;

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
-import '!style-loader!css-loader!sass-loader!./PseudoLink.scss';
+import './PseudoLink.scss';
 
 const cnPseudoLink = cn('PseudoLink');
 

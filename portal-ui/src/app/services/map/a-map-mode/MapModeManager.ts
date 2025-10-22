@@ -4,7 +4,7 @@ import { MapMode } from '../map.models';
 import { defaultModeHandler } from './DefaultModeHandler';
 import { drawFeatureModeHandler } from './DrawFeatureModeHandler';
 import { editFeatureModeHandler } from './edit-feature/EditFeatureModeHandler';
-import { IMapModeHandler, ModeProps } from './models';
+import { type IMapModeHandler, type ModeProps } from './models';
 import { searchInProjectModeHandler } from './SearchInProjectModeHandler';
 import { selectedFeaturesModeHandler } from './selected-features/SelectedFeaturesModeHandler';
 import { verticesModificationModeHandler } from './VerticesModificationModeHandler';

@@ -10,7 +10,8 @@ export class SelectProjectionBlock extends Block {
   };
 
   async selectProjectionByCode(code: string): Promise<void> {
-    const $select = await this.$('select');
+    const $select = await this.findBySelector('select');
+    await $select.waitForDisplayed();
     const muiSelect = new MuiSelectBlock(null, $select);
 
     try {
@@ -21,6 +22,7 @@ export class SelectProjectionBlock extends Block {
       await muiSelect.close();
       await muiSelect.selectOptionByTitle('Выбрать другую');
       await chooseXTableBlock.waitForVisible();
+      await browser.pause(400); // анимация появления диалога и отрисовка содержимого таблицы
       const xTable = await chooseXTableBlock.getXTable();
       const [, srid] = code.split(':');
       await xTable.filterIdColumn('Код SRID', srid);

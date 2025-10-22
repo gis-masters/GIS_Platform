@@ -1,6 +1,6 @@
 import { action, makeObservable, observable } from 'mobx';
 
-import { CrgGroup } from '../services/auth/groups/groups.models';
+import { type CrgGroup } from '../services/auth/groups/groups.models';
 
 class AllGroups {
   private static _instance: AllGroups;

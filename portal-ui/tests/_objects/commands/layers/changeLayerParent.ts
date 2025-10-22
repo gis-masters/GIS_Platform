@@ -1,4 +1,4 @@
-import { currentProject } from '../../../../src/app/stores/CurrentProject.store';
+import { type currentProject } from '../../../../src/app/stores/CurrentProject.store';
 
 declare const window: {
   currentProject: typeof currentProject;

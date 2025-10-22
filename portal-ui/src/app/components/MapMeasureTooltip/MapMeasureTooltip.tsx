@@ -6,15 +6,15 @@ import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 import { LineString, Polygon } from 'ol/geom';
 
-import { Projection } from '../../services/data/projections/projections.models';
+import { type Projection } from '../../services/data/projections/projections.models';
 import { getFeatureArea, getFeatureLength } from '../../services/map/labels/map-labels.util';
-import { MeasureItem } from '../../services/map/measure/map-measure.models';
-import { UnitsOfAreaMeasurement, UnitsOfLengthMeasurement } from '../../services/util/open-layers.util';
+import { type MeasureItem } from '../../services/map/measure/map-measure.models';
+import { UnitsOfAreaMeasurement, type UnitsOfLengthMeasurement } from '../../services/util/open-layers.util';
 import { mapMeasureStore } from '../../stores/MapMeasure.store';
 import { printSettings } from '../../stores/PrintSettings.store';
 import { PseudoLink } from '../PseudoLink/PseudoLink';
 
-import '!style-loader!css-loader!sass-loader!./MapMeasureTooltip.scss';
+import './MapMeasureTooltip.scss';
 
 const cnMapMeasureTooltip = cn('MapMeasureTooltip');
 

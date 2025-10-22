@@ -1,12 +1,12 @@
 /* eslint-disable sonarjs/no-duplicate-string */
-import { ReactElement } from 'react';
-import { StoryFn } from '@storybook/react';
+import { type ReactElement } from 'react';
+import { type StoryFn } from '@storybook/react';
 
-import { FiasValue } from '../../../../services/data/fias/fias.models';
+import { type FiasValue } from '../../../../services/data/fias/fias.models';
 import { PropertyType } from '../../../../services/data/schema/schema.models';
 import { Template } from '../../Filter/XTable-Filter-story-template';
-import { XTable, XTableProps } from '../../XTable';
-import { XTableColumn } from '../../XTable.models';
+import { XTable, type XTableProps } from '../../XTable';
+import { type XTableColumn } from '../../XTable.models';
 
 interface TestData {
   id: number;

@@ -1,4 +1,4 @@
-import { WdioCheckElementMethodOptions } from 'wdio-image-comparison-service';
+import { type WdioCheckElementMethodOptions } from '@wdio/visual-service/dist/types';
 
 import { Block } from '../../Block';
 import { ExplorerBlock } from '../Explorer/Explorer.block';
@@ -14,33 +14,33 @@ class SelectProjectFromExplorerDialogBlock extends Block {
     await this.waitForVisible();
     await this.loading();
 
-    const explorerBlock = new ExplorerBlock(await this.$('container'));
+    const explorerBlock = new ExplorerBlock(await this.findBySelector('container'));
     await explorerBlock.selectExplorerItem(explorerItemTitle);
   }
 
   async loading(): Promise<void> {
-    const $loading = await this.$('loading');
+    const $loading = await this.findBySelector('loading');
     try {
       await $loading.waitForDisplayed({ timeout: 1000 });
     } catch {
       // ignore
     }
 
-    await $loading.waitForDisplayed({ reverse: true });
+    await $loading.waitForExist({ reverse: true });
   }
 
   async saveSelectedFolder(): Promise<void> {
     await this.loading();
 
-    const $select = await this.$('select');
+    const $select = await this.findBySelector('select');
     await $select.waitForClickable();
 
     await $select.click();
-    await $select.waitForDisplayed({ reverse: true });
+    await $select.waitForExist({ reverse: true });
   }
 
   async assertSelfie(tag?: string, checkElementOptions?: WdioCheckElementMethodOptions): Promise<void> {
-    const $container = await this.$('container');
+    const $container = await this.findBySelector('container');
     await $container.waitForDisplayed();
 
     await super.assertSelfie(tag, {
@@ -50,7 +50,7 @@ class SelectProjectFromExplorerDialogBlock extends Block {
   }
 
   async allItemsIsDisabled(): Promise<boolean> {
-    const explorerBlock = new ExplorerBlock(await this.$('container'));
+    const explorerBlock = new ExplorerBlock(await this.findBySelector('container'));
 
     return await explorerBlock.allItemsIsDisabled();
   }

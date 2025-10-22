@@ -10,14 +10,14 @@ class FormControlTypeUrlBlock extends Block {
     const formBlock = new FormBlock();
     const $field = await formBlock.getField(title);
 
-    const $addUrlBtn = await $field.$('.UrlsList-AddUrl');
+    const $addUrlBtn = await $field.$('.UrlsList-AddUrl').getElement();
     await $addUrlBtn.click();
   }
 
   async clickFirstUrlLink(title: string): Promise<void> {
     const formBlock = new FormBlock();
     const $field = await formBlock.getField(title);
-    const $urlLink = await $field.$('.UrlsList .UrlsList-Item:first-child .PseudoLink');
+    const $urlLink = await $field.$('.UrlsList .UrlsList-Item:first-child .PseudoLink').getElement();
 
     await $urlLink.click();
   }

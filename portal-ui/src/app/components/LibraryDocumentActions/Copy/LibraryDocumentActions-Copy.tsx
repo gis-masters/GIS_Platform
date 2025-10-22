@@ -1,19 +1,19 @@
-import React, { FC, useEffect } from 'react';
+import React, { type FC, useEffect } from 'react';
 import { observer, useLocalObservable } from 'mobx-react-lite';
 import { ContentCopy, ContentCopyOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
-import { AxiosError } from 'axios';
+import { type AxiosError } from 'axios';
 
-import { Library, LibraryRecord } from '../../../services/data/library/library.models';
+import { type Library, type LibraryRecord } from '../../../services/data/library/library.models';
 import { createLibraryRecord, getLibrary, getLibraryRecord } from '../../../services/data/library/library.service';
-import { PropertySchema, PropertyType, Schema } from '../../../services/data/schema/schema.models';
+import { type PropertySchema, PropertyType, type Schema } from '../../../services/data/schema/schema.models';
 import { services } from '../../../services/services';
 import { notFalsyFilter } from '../../../services/util/NotFalsyFilter';
 import { isAxiosError } from '../../../services/util/typeGuards/isAxiosError';
-import { ActionsItemVariant } from '../../Actions/Item/Actions-Item.base';
+import { type ActionsItemVariant } from '../../Actions/Item/Actions-Item.base';
 import { ActionsItem } from '../../Actions/Item/Actions-Item.composed';
 import { getIdsFromPath, libraryRootUrlItems } from '../../DataManagement/DataManagement.utils';
-import { emptyItem, ExplorerItemData, ExplorerItemType } from '../../Explorer/Explorer.models';
+import { emptyItem, type ExplorerItemData, ExplorerItemType } from '../../Explorer/Explorer.models';
 import { Link } from '../../Link/Link';
 import { SelectFolderDialog } from '../../SelectFolderDialog/SelectFolderDialog';
 import { Toast } from '../../Toast/Toast';

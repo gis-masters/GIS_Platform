@@ -1,6 +1,6 @@
 import { faker } from '@faker-js/faker';
 
-import { PropertyType, Schema } from '../../../src/app/services/data/schema/schema.models';
+import { PropertyType, type Schema } from '../../../src/app/services/data/schema/schema.models';
 import { logLevel } from '../commands/logLevel';
 
 export const supportedTypesForGeneration: PropertyType[] = [

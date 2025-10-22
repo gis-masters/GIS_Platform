@@ -8,7 +8,7 @@ class TasksJournalCreateDialogBlock extends Block {
   };
 
   async clickSelectSchemaConfirm(): Promise<void> {
-    const $tasksJournalCreateDialogYes = await this.$('tasksJournalCreateDialogYes');
+    const $tasksJournalCreateDialogYes = await this.findBySelector('tasksJournalCreateDialogYes');
     await $tasksJournalCreateDialogYes.waitForClickable();
     await $tasksJournalCreateDialogYes.click();
   }
@@ -18,7 +18,7 @@ class TasksJournalCreateDialogBlock extends Block {
 
     const formBlock = new FormBlock(this.selectors.container);
     const $field = await formBlock.getField(title);
-    const $addUserBtn = await $field.$('.Users-Add');
+    const $addUserBtn = await $field.$('.Users-Add').getElement();
 
     await $addUserBtn.click();
   }

@@ -1,19 +1,15 @@
-import React, { FC, PropsWithChildren, useCallback } from 'react';
+import React, { type FC, type PropsWithChildren, useCallback } from 'react';
 import { observer } from 'mobx-react';
 import { ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
 import { cn } from '@bem-react/classname';
 
 import { GeometryIcon } from '../../../../app/components/GeometryIcon/GeometryIcon';
-import { VectorTable } from '../../../../app/services/data/vectorData/vectorData.models';
+import { type UpLayersListItemData } from '../../../services/photoUploader.models';
 import { photoUploaderStore } from '../../../stores/PhotoUploader.store';
 
-import '!style-loader!css-loader!sass-loader!./UpLayersList-Item.scss';
-import '!style-loader!css-loader!sass-loader!../ItemTitle/UpLayersList-ItemTitle.scss';
-import '!style-loader!css-loader!sass-loader!../DataType/UpLayersList-DataType.scss';
-
-export interface UpLayersListItemData {
-  data: VectorTable;
-}
+import './UpLayersList-Item.scss';
+import '../ItemTitle/UpLayersList-ItemTitle.scss';
+import '../DataType/UpLayersList-DataType.scss';
 
 type UpLayerListItemProps = UpLayersListItemData & PropsWithChildren & { type: 'button' | 'simple' };
 

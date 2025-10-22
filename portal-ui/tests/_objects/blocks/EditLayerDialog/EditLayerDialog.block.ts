@@ -45,7 +45,7 @@ class EditLayerPropertiesDialogBlock extends Block {
   }
 
   async saveLayerProperty(): Promise<void> {
-    const $layerPropertySaveBtn = await this.$('formDialogLayerPropertySaveBtn');
+    const $layerPropertySaveBtn = await this.findBySelector('formDialogLayerPropertySaveBtn');
     await $layerPropertySaveBtn.waitForClickable({ timeout: 1000 });
     await $layerPropertySaveBtn.click();
   }
@@ -76,8 +76,8 @@ class EditLayerPropertiesDialogBlock extends Block {
   }
 
   async waitForLoadingHide(): Promise<void> {
-    const $loading = await this.$('loading');
-    await $loading.waitForDisplayed({ reverse: true, timeout: 5000 });
+    const $loading = await this.findBySelector('loading');
+    await $loading.waitForExist({ reverse: true });
   }
 
   async selectProjection(code: string): Promise<void> {

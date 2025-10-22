@@ -1,4 +1,4 @@
-import React, { Component, ReactElement } from 'react';
+import React, { Component, type ReactElement } from 'react';
 import { action, computed, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import {
@@ -9,20 +9,20 @@ import {
   IconButton,
   MenuItem,
   Select,
-  SelectChangeEvent,
+  type SelectChangeEvent,
   Tooltip
 } from '@mui/material';
 import { GroupAdd, GroupAddOutlined, PersonAdd, PersonAddOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
-import { CrgGroup } from '../../../services/auth/groups/groups.models';
-import { CrgUser } from '../../../services/auth/users/users.models';
+import { type CrgGroup } from '../../../services/auth/groups/groups.models';
+import { type CrgUser } from '../../../services/auth/users/users.models';
 import {
-  PermissionType,
+  type PermissionType,
   PrincipalType,
   Role,
-  RoleAssignmentBody,
+  type RoleAssignmentBody,
   rolesTitles
 } from '../../../services/permissions/permissions.models';
 import { getRoles } from '../../../services/permissions/permissions.utils';
@@ -31,10 +31,10 @@ import { allUsers } from '../../../stores/AllUsers.store';
 import { ActionsRight } from '../../ActionsRight/ActionsRight';
 import { Button } from '../../Button/Button';
 import { XTable } from '../../XTable/XTable';
-import { XTableColumn } from '../../XTable/XTable.models';
+import { type XTableColumn } from '../../XTable/XTable.models';
 import { PermissionsEditDialogCheckPrincipal } from '../CheckPrincipal/PermissionsEditDialog-CheckPrincipal';
 
-import '!style-loader!css-loader!sass-loader!../AddPrincipalTable/PermissionsEditDialog-AddPrincipalTable.scss';
+import '../AddPrincipalTable/PermissionsEditDialog-AddPrincipalTable.scss';
 
 const cnPermissionsEditDialog = cn('PermissionsEditDialog');
 

@@ -10,9 +10,9 @@ import {
   extractFeatureTypeNameFromComplexName,
   extractTableNameFromComplexName
 } from '../geoserver/featureType/featureType.util';
-import { WfsFeature } from '../geoserver/wfs/wfs.models';
+import { type WfsFeature } from '../geoserver/wfs/wfs.models';
 import { getFeatureCollection, getFeaturesById } from '../geoserver/wfs/wfs.service';
-import { CrgLayer } from '../gis/layers/layers.models';
+import { type CrgLayer } from '../gis/layers/layers.models';
 import { getLayerSchema } from '../gis/layers/layers.service';
 import { projectsService } from '../gis/projects/projects.service';
 import { services } from '../services';

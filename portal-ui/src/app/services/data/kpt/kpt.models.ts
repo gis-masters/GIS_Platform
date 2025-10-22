@@ -1,7 +1,7 @@
-import { UploadFileInfo } from '../../../components/LibraryMassKptLoad/LibraryMassKptLoad';
+import { type UploadFileInfo } from '../../../components/LibraryMassKptLoad/LibraryMassKptLoad';
 import { currentUser } from '../../../stores/CurrentUser.store';
-import { LibraryRecord } from '../library/library.models';
-import { PropertySchema, PropertyType, Schema } from '../schema/schema.models';
+import { type LibraryRecord } from '../library/library.models';
+import { type PropertySchema, PropertyType, type Schema } from '../schema/schema.models';
 
 export interface KptTaskInfo {
   id: number;

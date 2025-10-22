@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { type FC } from 'react';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 
@@ -6,7 +6,7 @@ import { currentImport } from '../../../stores/CurrentImport.store';
 
 const cnDataImport = cn('DataImport');
 
-import '!style-loader!css-loader!sass-loader!./DataImport-Notifications.scss';
+import './DataImport-Notifications.scss';
 
 export const DataImportNotifications: FC = observer(() => {
   const { isWrongExt, isError, isSuccess, hasErrorTasks } = currentImport;

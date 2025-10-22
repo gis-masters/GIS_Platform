@@ -3,7 +3,7 @@ import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { withBemMod } from '@bem-react/core';
 
-import { Dataset } from '../../../../services/data/vectorData/vectorData.models';
+import { type Dataset } from '../../../../services/data/vectorData/vectorData.models';
 import { getDataset } from '../../../../services/data/vectorData/vectorData.service';
 import { permissionsClient } from '../../../../services/permissions/permissions.client';
 import { Role } from '../../../../services/permissions/permissions.models';
@@ -12,7 +12,7 @@ import { PermissionsWidget } from '../../../PermissionsWidget/PermissionsWidget'
 import { assertExplorerItemDataTypeDataset } from '../../Adapter/_type/Explorer-Adapter_type_dataset';
 import { getId } from '../../Adapter/Explorer-Adapter';
 import { ExplorerItemEntityTypeTitle, ExplorerItemType } from '../../Explorer.models';
-import { cnExplorerWidgets, ExplorerWidgetsProps } from '../Explorer-Widgets.base';
+import { cnExplorerWidgets, type ExplorerWidgetsProps } from '../Explorer-Widgets.base';
 
 @observer
 class ExplorerWidgetsTypeDataset extends Component<ExplorerWidgetsProps> {

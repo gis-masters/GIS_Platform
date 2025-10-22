@@ -1,8 +1,8 @@
-import React, { FC, lazy, Suspense } from 'react';
+import React, { type FC, lazy, Suspense } from 'react';
 
-import { TasksJournalActionsProps } from './TasksJournalActions.async';
+import { type TasksJournalActionsProps } from './TasksJournalActions.chunkroot';
 
-const TasksJournalActionsAsync = lazy(() => import('./TasksJournalActions.async'));
+const TasksJournalActionsAsync = lazy(() => import('./TasksJournalActions.chunkroot'));
 
 export const TasksJournalActions: FC<TasksJournalActionsProps> = props => (
   <Suspense>

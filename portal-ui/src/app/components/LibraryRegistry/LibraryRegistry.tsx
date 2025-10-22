@@ -1,8 +1,8 @@
-import React, { FC, lazy, Suspense } from 'react';
+import React, { type FC, lazy, Suspense } from 'react';
 
-import { LibraryRegistryProps } from './LibraryRegistry.async';
+import { type LibraryRegistryProps } from './LibraryRegistry.chunkroot';
 
-const LibraryRegistryAsync = lazy(() => import('./LibraryRegistry.async'));
+const LibraryRegistryAsync = lazy(() => import('./LibraryRegistry.chunkroot'));
 
 export const LibraryRegistry: FC<LibraryRegistryProps> = props => (
   <Suspense>

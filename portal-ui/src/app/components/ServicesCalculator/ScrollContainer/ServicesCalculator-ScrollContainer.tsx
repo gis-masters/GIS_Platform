@@ -1,10 +1,10 @@
-import React, { FC } from 'react';
+import React, { type FC } from 'react';
 import { Card } from '@mui/material';
 import { cn } from '@bem-react/classname';
 
 import { ServicesCalculatorControls } from '../Controls/ServicesCalculator-Controls';
 import { ServicesCalculatorService } from '../Service/ServicesCalculator-Service';
-import { ServicesInfo } from '../ServicesCalculator';
+import { type ServicesInfo } from '../ServicesCalculator.models';
 
 const cnServicesCalculatorScrollContainer = cn('ServicesCalculator', 'ScrollContainer');
 

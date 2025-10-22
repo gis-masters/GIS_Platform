@@ -1,9 +1,9 @@
-import { DataTable } from '@cucumber/cucumber';
+import { type DataTable } from '@cucumber/cucumber';
 import { Given, Then, When } from '@wdio/cucumber-framework';
 
 import { SourceType } from '../../../../src/app/services/data/basemaps/basemaps.models';
 import { addBasemapToProject } from '../../commands/projects/addBasemapToProject';
-import { ScenarioScope } from '../../ScenarioScope';
+import { type ScenarioScope } from '../../ScenarioScope';
 import { projectsBlock, sortDirections } from './Projects.block';
 
 Then(/^появляется форма создания проекта$/, async () => {

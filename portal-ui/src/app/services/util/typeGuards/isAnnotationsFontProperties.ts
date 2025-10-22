@@ -1,4 +1,4 @@
-import { AnnotationsFontProperties } from '../../map/labels/map-labels.models';
+import { type AnnotationsFontProperties } from '../../map/labels/map-labels.models';
 import { isFontProperties } from './isFontProperties';
 
 const keys = new Set(['area', 'length', 'turningPoints', 'distances', 'annotations']);

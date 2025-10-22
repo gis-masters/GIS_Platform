@@ -3,7 +3,7 @@ import { boundClass } from 'autobind-decorator';
 import { http } from '../../api/http.service';
 import { Mime } from '../../util/Mime';
 import { GeoserverClient } from '../GeoserverClient';
-import { FilteredStylesLayerRequest, FilteredStylesResponse, StyleGeoserverInfo } from './styles.models';
+import { type FilteredStylesLayerRequest, type FilteredStylesResponse, type StyleGeoserverInfo } from './styles.models';
 
 @boundClass
 class StylesClient extends GeoserverClient {

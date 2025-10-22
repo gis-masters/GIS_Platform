@@ -8,9 +8,9 @@ import { ServicesCalculatorAdditions } from '../Additions/ServicesCalculator-Add
 import { ServicesCalculatorDelete } from '../Delete/ServicesCalculator-Delete';
 import { ServicesCalculatorServiceDescription } from '../ServiceDescription/ServicesCalculator-ServiceDescription';
 import { ServicesCalculatorServiceDetails } from '../ServiceDetails/ServicesCalculator-Service-Details';
-import { ServicesInfo } from '../ServicesCalculator';
+import { type ServicesInfo } from '../ServicesCalculator.models';
 
-import '!style-loader!css-loader!sass-loader!./ServicesCalculator-Service.scss';
+import './ServicesCalculator-Service.scss';
 
 const cnServicesCalculatorService = cn('ServicesCalculator', 'Service');
 

@@ -1,6 +1,6 @@
-import { Dataset, VectorTable } from '../../services/data/vectorData/vectorData.models';
-import { CrgProject } from '../../services/gis/projects/projects.models';
-import { XTableProps } from '../XTable/XTable';
+import { type Dataset, type VectorTable } from '../../services/data/vectorData/vectorData.models';
+import { type CrgProject } from '../../services/gis/projects/projects.models';
+import { type XTableProps } from '../XTable/XTable';
 
 export enum PermissionsListItemType {
   PROJECT,

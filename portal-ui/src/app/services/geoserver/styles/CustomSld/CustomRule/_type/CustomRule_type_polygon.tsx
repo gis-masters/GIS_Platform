@@ -1,4 +1,4 @@
-import React, { FC, Fragment } from 'react';
+import React, { type FC, Fragment } from 'react';
 
 import { LABEL_PROPERTY_DEFAULT } from '../../../styles.models';
 import { CustomLabel } from '../../CustomLabel/CustomLabel';
@@ -16,7 +16,7 @@ import { Size } from '../../Size/Size';
 import { Stroke } from '../../Stroke/Stroke';
 import { SvgParameter } from '../../SvgParameter/SvgParameter';
 import { WellKnownName } from '../../WellKnownName/WellKnownName';
-import { CustomRuleProps } from '../CustomRule';
+import { type CustomRuleProps } from '../CustomRule';
 
 export const CustomRuleTypePolygon: FC<CustomRuleProps> = ({ rule, type, bare }) => {
   if (type !== 'polygon') {

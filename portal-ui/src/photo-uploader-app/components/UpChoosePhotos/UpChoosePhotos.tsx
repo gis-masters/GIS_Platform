@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { type FC } from 'react';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { pluralize } from 'numeralize-ru';
@@ -8,9 +8,9 @@ import { PhotoUploaderScreens, photoUploaderStore } from '../../stores/PhotoUplo
 import { UpTags } from '../UpTags/UpTags';
 import { UpChoosePhotoActions } from './Actions/UpChoosePhotos-Actions';
 
-import '!style-loader!css-loader!sass-loader!./UpChoosePhotos.scss';
-import '!style-loader!css-loader!sass-loader!./Description/UpChoosePhotos-Description.scss';
-import '!style-loader!css-loader!sass-loader!./Counter/UpChoosePhotos-Counter.scss';
+import './UpChoosePhotos.scss';
+import './Description/UpChoosePhotos-Description.scss';
+import './Counter/UpChoosePhotos-Counter.scss';
 
 const cnUpChoosePhotos = cn('UpChoosePhotos');
 

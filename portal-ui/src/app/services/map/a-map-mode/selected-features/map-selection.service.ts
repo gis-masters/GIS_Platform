@@ -1,7 +1,7 @@
-import { Kinetic, MapBrowserEvent } from 'ol';
-import { Coordinate } from 'ol/coordinate';
+import { Kinetic, type MapBrowserEvent } from 'ol';
+import { type Coordinate } from 'ol/coordinate';
 import { MultiPolygon } from 'ol/geom';
-import { DragPan, Extent } from 'ol/interaction';
+import { DragPan, type Extent } from 'ol/interaction';
 import ExtentInteraction from 'ol/interaction/Extent';
 
 import { attributesTableStore } from '../../../../stores/AttributesTable.store';
@@ -9,7 +9,7 @@ import { currentProject } from '../../../../stores/CurrentProject.store';
 import { mapStore } from '../../../../stores/Map.store';
 import { sidebars } from '../../../../stores/Sidebars.store';
 import { hasPhotoModeInFeatures } from '../../../data/files/files.util';
-import { WfsFeature } from '../../../geoserver/wfs/wfs.models';
+import { type WfsFeature } from '../../../geoserver/wfs/wfs.models';
 import { getFeatureCollectionByXmlFilter, makeXmlPolygonIntersect } from '../../../geoserver/wfs/wfs.service';
 import { services } from '../../../services';
 import { mapDrawService } from '../../draw/map-draw.service';

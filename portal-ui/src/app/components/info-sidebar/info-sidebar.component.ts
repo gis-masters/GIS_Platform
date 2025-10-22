@@ -1,14 +1,15 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, type OnDestroy, type OnInit } from '@angular/core';
 import { Subject } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
 
-import { eventService, IEvent } from '../../services/event.service';
+import { eventService, type IEvent } from '../../services/event.service';
 import { sidebars } from '../../stores/Sidebars.store';
 
 @Component({
   selector: 'crg-info-sidebar',
   templateUrl: './info-sidebar.component.html',
-  styleUrls: ['./info-sidebar.component.css']
+  styleUrls: ['./info-sidebar.component.css'],
+  standalone: false
 })
 export class InfoSidebarComponent implements OnInit, OnDestroy {
   @Input() isActive?: boolean;

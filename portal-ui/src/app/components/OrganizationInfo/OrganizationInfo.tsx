@@ -6,7 +6,7 @@ import { cn } from '@bem-react/classname';
 import { OrganizationInfoDetailForm } from '../OrganizationInfoDetailForm/OrganizationInfoDetailForm';
 import { OrganizationInfoStorageForm } from '../OrganizationInfoStorageForm/OrganizationInfoStorageForm';
 
-import '!style-loader!css-loader!sass-loader!./OrganizationInfo.scss';
+import './OrganizationInfo.scss';
 
 const cnOrganizationInfo = cn('OrganizationInfo');
 

@@ -1,4 +1,4 @@
-import React, { FC, Fragment } from 'react';
+import React, { type FC, Fragment } from 'react';
 
 import { LABEL_PROPERTY_DEFAULT } from '../../../styles.models';
 import { CustomLabel } from '../../CustomLabel/CustomLabel';
@@ -10,7 +10,7 @@ import { PropertyIsEqualTo } from '../../PropertyIsEqualTo/PropertyIsEqualTo';
 import { Rule } from '../../Rule/Rule';
 import { Stroke } from '../../Stroke/Stroke';
 import { SvgParameter } from '../../SvgParameter/SvgParameter';
-import { CustomRuleProps } from '../CustomRule';
+import { type CustomRuleProps } from '../CustomRule';
 
 export const CustomRuleTypeLine: FC<CustomRuleProps> = ({ rule, type, bare }) => {
   if (type !== 'line') {

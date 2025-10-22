@@ -1,4 +1,4 @@
-import { CrgLayerType } from '../../gis/layers/layers.models';
+import { type CrgLayerType } from '../../gis/layers/layers.models';
 
 export interface GeoserverLayerInfo {
   name: string;

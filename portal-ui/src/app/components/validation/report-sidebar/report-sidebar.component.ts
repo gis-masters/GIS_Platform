@@ -1,23 +1,33 @@
-import { Component, ElementRef, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  Input,
+  type OnChanges,
+  type OnDestroy,
+  type OnInit,
+  type SimpleChanges,
+  ViewChild
+} from '@angular/core';
 import { NGXLogger } from 'ngx-logger';
 import { Subject } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
 
 import { communicationService } from '../../../services/communication.service';
-import { ProcessStatus, ProcessType, WsImportModel } from '../../../services/data/processes/processes.models';
-import { ValidationShortInfo } from '../../../services/data/validation/validation.models';
+import { ProcessStatus, ProcessType, type WsImportModel } from '../../../services/data/processes/processes.models';
+import { type ValidationShortInfo } from '../../../services/data/validation/validation.models';
 import { getValidationShortInfo } from '../../../services/data/validation/validation.service';
-import { CrgLayer, CrgVectorLayer } from '../../../services/gis/layers/layers.models';
+import { type CrgLayer, type CrgVectorLayer } from '../../../services/gis/layers/layers.models';
 import { mapDrawService } from '../../../services/map/draw/map-draw.service';
-import { ExportWsMsg, IWsMessage, ValidationWsMsg, wsService } from '../../../services/ws.service';
+import { type ExportWsMsg, type IWsMessage, type ValidationWsMsg, wsService } from '../../../services/ws.service';
 import { currentProject } from '../../../stores/CurrentProject.store';
 import { sidebars } from '../../../stores/Sidebars.store';
-import { ObjectDto } from '../../edit-bug-object/edit-bug-object.component';
+import { type ObjectDto } from '../../edit-bug-object/edit-bug-object.component';
 
 @Component({
   selector: 'crg-report-sidebar',
   templateUrl: './report-sidebar.component.html',
-  styleUrls: ['./report-sidebar.component.css']
+  styleUrls: ['./report-sidebar.component.css'],
+  standalone: false
 })
 export class ReportSidebarComponent implements OnInit, OnChanges, OnDestroy {
   @Input() isActive: boolean = false;

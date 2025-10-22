@@ -7,13 +7,13 @@ import { cn } from '@bem-react/classname';
 import { RegistryConsumer } from '@bem-react/di';
 import { boundMethod } from 'autobind-decorator';
 
-import { CommonDiRegistry } from '../../services/di-registry';
-import { CrgProject } from '../../services/gis/projects/projects.models';
+import { type CommonDiRegistry } from '../../services/di-registry';
+import { type CrgProject } from '../../services/gis/projects/projects.models';
 import { ActionsRight } from '../ActionsRight/ActionsRight';
 import { Button } from '../Button/Button';
-import { ExplorerItemData, ExplorerItemType } from '../Explorer/Explorer.models';
+import { type ExplorerItemData, ExplorerItemType } from '../Explorer/Explorer.models';
 
-import '!style-loader!css-loader!sass-loader!./SelectProjectFromExplorerDialog.scss';
+import './SelectProjectFromExplorerDialog.scss';
 
 const cnSelectProjectFromExplorerDialog = cn('SelectProjectFromExplorerDialog');
 

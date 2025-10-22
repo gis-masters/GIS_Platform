@@ -1,13 +1,13 @@
-import React, { FC } from 'react';
+import React, { type FC } from 'react';
 import { Paper } from '@mui/material';
 import { cn } from '@bem-react/classname';
 import { RegistryConsumer } from '@bem-react/di';
 
-import { Schema, SimpleSchema } from '../../services/data/schema/schema.models';
-import { CommonDiRegistry } from '../../services/di-registry';
-import { FormRole } from '../Form/Form.async';
+import { type Schema, type SimpleSchema } from '../../services/data/schema/schema.models';
+import { type CommonDiRegistry } from '../../services/di-registry';
+import { type FormRole } from '../Form/Form.models';
 
-import '!style-loader!css-loader!sass-loader!./ViewContentWidget.scss';
+import './ViewContentWidget.scss';
 
 const cnViewContentWidget = cn('ViewContentWidget');
 

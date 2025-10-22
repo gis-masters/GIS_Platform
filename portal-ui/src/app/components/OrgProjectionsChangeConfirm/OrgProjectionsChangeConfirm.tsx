@@ -1,15 +1,15 @@
-import React, { FC, ReactNode, useCallback, useEffect } from 'react';
+import React, { type FC, type ReactNode, useCallback, useEffect } from 'react';
 import { observer, useLocalObservable } from 'mobx-react';
 import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Link } from '@mui/material';
 import { cn } from '@bem-react/classname';
-import { AxiosError } from 'axios';
+import { type AxiosError } from 'axios';
 
 import { communicationService } from '../../services/communication.service';
 import { projectionsClient } from '../../services/data/projections/projections.client';
-import { EditProjectionModel, Projection } from '../../services/data/projections/projections.models';
-import { TablesData } from '../../services/data/vectorData/vectorData.models';
+import { type EditProjectionModel, type Projection } from '../../services/data/projections/projections.models';
+import { type TablesData } from '../../services/data/vectorData/vectorData.models';
 import { getTablesBySrid } from '../../services/data/vectorData/vectorData.service';
-import { RelatedVectorLayers } from '../../services/gis/layers/layers.models';
+import { type RelatedVectorLayers } from '../../services/gis/layers/layers.models';
 import { getRelatedLayers } from '../../services/gis/layers/layers.service';
 import { achtung } from '../../services/utility-dialogs.service';
 import { Button } from '../Button/Button';
@@ -17,7 +17,7 @@ import { datasetRootUrlItems } from '../DataManagement/DataManagement.utils';
 import { Loading } from '../Loading/Loading';
 import { Toast } from '../Toast/Toast';
 
-import '!style-loader!css-loader!sass-loader!./OrgProjectionsChangeConfirm.scss';
+import './OrgProjectionsChangeConfirm.scss';
 
 const cnOrgProjectionsChangeConfirm = cn('OrgProjectionsChangeConfirm');
 

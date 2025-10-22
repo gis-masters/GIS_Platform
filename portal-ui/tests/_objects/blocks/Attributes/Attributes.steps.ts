@@ -1,13 +1,13 @@
-import { DataTable } from '@cucumber/cucumber';
+import { type DataTable } from '@cucumber/cucumber';
 import { Given, Then, When } from '@wdio/cucumber-framework';
 import { isEqual } from 'lodash';
-import { WaitUntilOptions } from 'webdriverio';
+import { type WaitUntilOptions } from 'webdriverio';
 
-import { PropertySchema, PropertyType, Schema } from '../../../../src/app/services/data/schema/schema.models';
+import { type PropertySchema, PropertyType, type Schema } from '../../../../src/app/services/data/schema/schema.models';
 import { sortObjects } from '../../../../src/app/services/util/sortObjects';
 import { getAttributesTableFilter } from '../../commands/attributesTable/getAttributesTableFilter';
 import { getVectorTableByTitle } from '../../commands/tables/getVectorTableByTitle';
-import { ScenarioScope } from '../../ScenarioScope';
+import { type ScenarioScope } from '../../ScenarioScope';
 import { getSortDirection } from '../../utils/getSortDirection';
 import { layersSidebarBlock } from '../LayersSidebar/LayersSidebar.block';
 import { attributesBlock } from './Attributes.block';
@@ -84,6 +84,7 @@ When(
   'в атрибутивной таблице я фильтрую по атрибуту {string} от {string} до {string}',
   async function (this: ScenarioScope, colTitle: string, lte: string, gte: string) {
     await attributesBlock.xTable.filterNumerableColumn(colTitle, lte, gte);
+    await attributesBlock.waitForLoadingDisappear();
     this.latestFilter = await getAttributesTableFilter();
   }
 );
@@ -144,9 +145,21 @@ Then(
     const currentFilter = await getAttributesTableFilter();
     const table = await getVectorTableByTitle(this.latestDataset.identifier, title);
 
-    await expect(JSON.stringify(currentFilter[table.identifier])).toEqual(
-      JSON.stringify(this.latestFilter[table.identifier])
-    );
+    if (!currentFilter) {
+      throw new Error('Текущий фильтр не установлен');
+    }
+
+    const currentFilterByTable = currentFilter[table.identifier];
+    if (!currentFilterByTable) {
+      throw new Error(`Текущий фильтр для таблицы ${title} не установлен`);
+    }
+
+    const latestFilterByTable = this.latestFilter[table.identifier];
+    if (!latestFilterByTable) {
+      throw new Error(`Предыдущий фильтр для таблицы ${title} не установлен`);
+    }
+
+    await expect(currentFilterByTable).toEqual(latestFilterByTable);
   }
 );
 

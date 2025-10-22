@@ -1,10 +1,10 @@
-import React, { FC } from 'react';
+import React, { type FC } from 'react';
 import { Paper } from '@mui/material';
 import { cn } from '@bem-react/classname';
 
-import { ChildrenProps } from '../../../services/models';
+import { type ChildrenProps } from '../../../services/models';
 
-import '!style-loader!css-loader!sass-loader!./MapToolbar-Bar.scss';
+import './MapToolbar-Bar.scss';
 
 const cnMapToolbarBar = cn('MapToolbar', 'Bar');
 

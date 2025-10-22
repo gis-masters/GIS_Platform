@@ -5,10 +5,10 @@ import { withBemMod } from '@bem-react/core';
 import { boundMethod } from 'autobind-decorator';
 import moment from 'moment';
 
-import { PropertySchemaDatetime, PropertyType } from '../../../../services/data/schema/schema.models';
+import { type PropertySchemaDatetime, PropertyType } from '../../../../services/data/schema/schema.models';
 import { systemFormat } from '../../../../services/util/date.util';
 import { FormErrors } from '../../Errors/Form-Errors';
-import { cnFormControl, FormControlProps } from '../Form-Control';
+import { cnFormControl, type FormControlProps } from '../Form-Control';
 
 @observer
 class FormControlTypeDatetime extends Component<FormControlProps> {

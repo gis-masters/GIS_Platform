@@ -1,11 +1,11 @@
-import React, { FC } from 'react';
+import React, { type FC } from 'react';
 import { Tooltip } from '@mui/material';
 import { ZoomIn, ZoomOut } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
 import { IconButton } from '../../IconButton/IconButton';
 
-import '!style-loader!css-loader!sass-loader!./Carousel-Zoom.scss';
+import './Carousel-Zoom.scss';
 
 const cnCarouselZoom = cn('Carousel', 'Zoom');
 

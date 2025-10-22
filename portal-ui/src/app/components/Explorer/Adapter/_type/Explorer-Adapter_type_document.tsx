@@ -1,22 +1,22 @@
-import React, { ReactNode } from 'react';
+import React, { type ReactNode } from 'react';
 import { InsertDriveFile } from '@mui/icons-material';
 import { RegistryConsumer } from '@bem-react/di';
 
-import { FileInfo } from '../../../../services/data/files/files.models';
+import { type FileInfo } from '../../../../services/data/files/files.models';
 import { getLibraryRecordFiles } from '../../../../services/data/files/files.util';
-import { CommonDiRegistry } from '../../../../services/di-registry';
-import { PageOptions } from '../../../../services/models';
+import { type CommonDiRegistry } from '../../../../services/di-registry';
+import { type PageOptions } from '../../../../services/models';
 import { formatDate } from '../../../../services/util/date.util';
 import { staticImplements } from '../../../../services/util/staticImplements';
 import { FileTiff } from '../../../Icons/FileTiff';
 import {
-  Adapter,
-  ExplorerItemData,
-  ExplorerItemDataAllTypes,
+  type Adapter,
+  type ExplorerItemData,
+  type ExplorerItemDataAllTypes,
   ExplorerItemType,
   itemTypeError
 } from '../../Explorer.models';
-import { ExplorerStore } from '../../Explorer.store';
+import { type ExplorerStore } from '../../Explorer.store';
 import { ExplorerInfoDescItem } from '../../InfoDescItem/Explorer-InfoDescItem';
 import { ExplorerInfoDescTitle } from '../../InfoDescTitle/Explorer-InfoDescTitle';
 

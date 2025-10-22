@@ -1,4 +1,4 @@
-import { Schema } from '../../../../src/app/services/data/schema/schema.models';
+import { type Schema } from '../../../../src/app/services/data/schema/schema.models';
 import { allTypes } from './testSchemas/allTypes';
 import { allTypesChoiceAsString } from './testSchemas/allTypesChoiceAsString';
 import { allTypesEditable } from './testSchemas/allTypesEditable';

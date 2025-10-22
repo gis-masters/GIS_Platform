@@ -1,12 +1,12 @@
 import { remove } from 'lodash';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, type Observable } from 'rxjs';
 import { filter, publishReplay, refCount } from 'rxjs/operators';
 
 import { communicationService } from './communication.service';
-import { ProcessType, WsImportModel } from './data/processes/processes.models';
+import { type ProcessType, type WsImportModel } from './data/processes/processes.models';
 import { Role } from './permissions/permissions.models';
 import { generateRandomId } from './util/randomId';
-import { IWsMessage, wsService } from './ws.service';
+import { type IWsMessage, wsService } from './ws.service';
 
 // Пока события будут завязаны на IWsMessage
 export interface IEvent {

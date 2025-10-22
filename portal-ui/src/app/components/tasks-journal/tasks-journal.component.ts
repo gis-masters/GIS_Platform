@@ -1,6 +1,6 @@
 import { createElement } from 'react';
-import { createRoot, Root } from 'react-dom/client';
-import { Component, ElementRef, OnChanges, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { createRoot, type Root } from 'react-dom/client';
+import { Component, ElementRef, type OnChanges, type OnDestroy, type OnInit, ViewChild } from '@angular/core';
 import { withRegistry } from '@bem-react/di';
 
 import { registry } from '../../services/di-registry';
@@ -11,7 +11,8 @@ const TasksJournalWithRegistry = withRegistry(registry)(TasksJournal);
 @Component({
   selector: 'crg-tasks-journal',
   template: '<div class="tasks-journal" #react></div>',
-  styleUrls: ['./tasks-journal.component.scss']
+  styleUrls: ['./tasks-journal.component.scss'],
+  standalone: false
 })
 export class TasksJournalComponent implements OnInit, OnChanges, OnDestroy {
   @ViewChild('react', { read: ElementRef, static: true }) ref?: ElementRef<HTMLDivElement>;

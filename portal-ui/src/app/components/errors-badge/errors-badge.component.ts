@@ -1,10 +1,11 @@
-import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
-import { ValidationErrors } from '@angular/forms';
+import { Component, Input, type OnChanges, type OnInit, type SimpleChanges } from '@angular/core';
+import { type ValidationErrors } from '@angular/forms';
 
 @Component({
   selector: 'crg-errors-badge',
   templateUrl: './errors-badge.component.html',
-  styleUrls: ['./errors-badge.component.css']
+  styleUrls: ['./errors-badge.component.css'],
+  standalone: false
 })
 export class ErrorsBadgeComponent implements OnInit, OnChanges {
   @Input() errors?: ValidationErrors | null;

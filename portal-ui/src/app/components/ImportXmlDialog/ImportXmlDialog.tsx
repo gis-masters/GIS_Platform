@@ -3,7 +3,7 @@ import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
 import { boundMethod } from 'autobind-decorator';
-import { AxiosError } from 'axios';
+import { type AxiosError } from 'axios';
 
 import { importXml } from '../../services/data/import-xml/import-xml.service';
 import { getFeaturesById } from '../../services/geoserver/wfs/wfs.service';

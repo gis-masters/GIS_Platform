@@ -1,9 +1,9 @@
-import { SearchInfo } from '../../../components/SearchField/SearchField';
+import { type SearchInfo } from '../../../components/SearchField/SearchField';
 import { mapStore } from '../../../stores/Map.store';
 import { sidebars } from '../../../stores/Sidebars.store';
 import { services } from '../../services';
 import { MapMode } from '../map.models';
-import { IMapModeHandler, ModeProps } from './models';
+import { type IMapModeHandler, type ModeProps } from './models';
 
 class SearchInProjectModeHandler implements IMapModeHandler {
   private static _instance: SearchInProjectModeHandler;

@@ -1,4 +1,4 @@
-import { Coordinate } from 'ol/coordinate';
+import { type Coordinate } from 'ol/coordinate';
 
 export enum GeometryType {
   POINT = 'Point',
@@ -38,21 +38,6 @@ interface Geometry extends GeoJSONObject {
   type: GeometryType;
 }
 
-export interface WfsLinearRingGeometry extends Geometry {
-  type: GeometryType.LINEAR_RING;
-  coordinates: Coordinate;
-}
-
-export interface WfsCircleGeometry extends Geometry {
-  type: GeometryType.CIRCLE;
-  coordinates: Coordinate;
-}
-
-export interface WfsCollectionGeometry extends Geometry {
-  type: GeometryType.GEOMETRY_COLLECTION;
-  coordinates: Coordinate;
-}
-
 export interface WfsPointGeometry extends Geometry {
   type: GeometryType.POINT;
   coordinates: Coordinate;
@@ -89,10 +74,7 @@ export type WfsGeometry =
   | WfsLineStringGeometry
   | WfsMultiLineStringGeometry
   | WfsPolygonGeometry
-  | WfsMultiPolygonGeometry
-  | WfsCollectionGeometry
-  | WfsLinearRingGeometry
-  | WfsCircleGeometry;
+  | WfsMultiPolygonGeometry;
 
 export type CrgFeature = Pick<WfsFeature, 'id' | 'type' | 'geometry' | 'properties'>;
 export type NewWfsFeature = Omit<CrgFeature, 'id'>;

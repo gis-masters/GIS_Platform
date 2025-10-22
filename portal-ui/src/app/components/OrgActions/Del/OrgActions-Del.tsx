@@ -6,9 +6,9 @@ import { Delete, DeleteOutline } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
-import { CrgGroup } from '../../../services/auth/groups/groups.models';
+import { type CrgGroup } from '../../../services/auth/groups/groups.models';
 import { groupsService } from '../../../services/auth/groups/groups.service';
-import { CrgUser } from '../../../services/auth/users/users.models';
+import { type CrgUser } from '../../../services/auth/users/users.models';
 import { usersService } from '../../../services/auth/users/users.service';
 import { konfirmieren } from '../../../services/utility-dialogs.service';
 import { Loading } from '../../Loading/Loading';

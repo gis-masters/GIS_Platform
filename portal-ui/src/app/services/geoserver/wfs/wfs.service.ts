@@ -1,6 +1,6 @@
 import { chunk } from 'lodash';
 import { and, intersects } from 'ol/format/filter';
-import { MultiPolygon } from 'ol/geom';
+import { type MultiPolygon } from 'ol/geom';
 
 import { attributesTableStore } from '../../../stores/AttributesTable.store';
 import { currentProject } from '../../../stores/CurrentProject.store';
@@ -9,11 +9,11 @@ import { usersService } from '../../auth/users/users.service';
 import { getOlProjection } from '../../data/projections/projections.service';
 import { getProjectionCode } from '../../data/projections/projections.util';
 import { applyView, getGeometryFieldName } from '../../data/schema/schema.utils';
-import { CrgVectorLayer } from '../../gis/layers/layers.models';
+import { type CrgVectorLayer } from '../../gis/layers/layers.models';
 import { getLayerSchema } from '../../gis/layers/layers.service';
 import { selectedFeaturesStore } from '../../map/a-map-mode/selected-features/SelectedFeatures.store';
 import { FeatureState, MapSelectionTypes } from '../../map/map.models';
-import { PageOptions } from '../../models';
+import { type PageOptions } from '../../models';
 import { WFS } from '../../ol/WFS';
 import { buildCql } from '../../util/cql/buildCql';
 import { concatCql } from '../../util/cql/concatCql';
@@ -28,7 +28,7 @@ import {
   extractTableNameFromComplexName
 } from '../featureType/featureType.util';
 import { wfsClient } from './wfs.client';
-import { WfsFeature, WfsFeatureCollection } from './wfs.models';
+import { type WfsFeature, type WfsFeatureCollection } from './wfs.models';
 import { generateWfsSortParam, getEmptyGeometry } from './wfs.util';
 
 function getBaseWfsParams(layer: CrgVectorLayer): { [key: string]: string } {

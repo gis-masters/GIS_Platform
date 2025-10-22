@@ -9,30 +9,30 @@ export class XTableFilterTypeStringBlock extends Block {
   };
 
   async clear(): Promise<void> {
-    const inputBlock = new MuiInputBlock(await this.$('container'));
+    const inputBlock = new MuiInputBlock(await this.findBySelector('container'));
     await inputBlock.clearValue();
   }
 
   async strictnessClick(): Promise<void> {
-    const $filterInputStrictness = await this.$('strictness');
+    const $filterInputStrictness = await this.findBySelector('strictness');
     await $filterInputStrictness.click();
     await browser.pause(300); // отрисовка фильтрации в таблице
   }
 
   async setValue(title: string): Promise<void> {
-    const inputBlock = new MuiInputBlock(await this.$('container'));
+    const inputBlock = new MuiInputBlock(await this.findBySelector('container'));
     await inputBlock.setValue(title);
     await browser.pause(300); // отрисовка фильтрации в таблице
   }
 
   async getValue(): Promise<string> {
-    const inputBlock = new MuiInputBlock(await this.$('container'));
+    const inputBlock = new MuiInputBlock(await this.findBySelector('container'));
 
     return inputBlock.getValue();
   }
 
   async isFilterActive(): Promise<boolean> {
-    const $filterInputStrictness = await this.$('strictness');
+    const $filterInputStrictness = await this.findBySelector('strictness');
 
     return hasClass($filterInputStrictness, 'XTable-FilterStrictness_filtered');
   }

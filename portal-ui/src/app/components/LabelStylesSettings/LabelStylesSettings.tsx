@@ -1,17 +1,17 @@
-import React, { ChangeEvent, FC, useCallback } from 'react';
+import React, { type ChangeEvent, type FC, useCallback } from 'react';
 import { observer, useLocalObservable } from 'mobx-react';
-import { MenuItem, Paper, Popover, Select, SelectChangeEvent, Tooltip } from '@mui/material';
+import { MenuItem, Paper, Popover, Select, type SelectChangeEvent, Tooltip } from '@mui/material';
 import { cn } from '@bem-react/classname';
 import { debounce } from 'lodash';
 import { HexColorPicker } from 'react-colorful';
 
-import { FontProperties } from '../../services/map/labels/map-labels.models';
+import { type FontProperties } from '../../services/map/labels/map-labels.models';
 import { IconButton } from '../IconButton/IconButton';
 import { FormatBold } from '../Icons/FormatBold';
 import { FormatColorText } from '../Icons/FormatColorText';
 import { FormatItalic } from '../Icons/FormatItalic';
 
-import '!style-loader!css-loader!sass-loader!./LabelStylesSettings.scss';
+import './LabelStylesSettings.scss';
 
 type LabelStylesSettingsState = {
   anchorEl: HTMLButtonElement | null;

@@ -7,7 +7,7 @@ class LibraryDocumentActionsCreateChildEditDialogBlock extends Block {
   };
 
   async clickSave() {
-    const $save = await this.$('save');
+    const $save = await this.findBySelector('save');
     await $save.waitForClickable();
     await $save.click();
   }

@@ -4,15 +4,15 @@ import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 
 import { extractTableNameFromFeatureId } from '../../../services/geoserver/featureType/featureType.util';
-import { CrgLayer, isVectorLayer } from '../../../services/gis/layers/layers.models';
-import { TreeItem } from '../../../services/gis/projects/projects.models';
+import { type CrgLayer, isVectorLayer } from '../../../services/gis/layers/layers.models';
+import { type TreeItem } from '../../../services/gis/projects/projects.models';
 import { projectsService } from '../../../services/gis/projects/projects.service';
 import { mapModeManager } from '../../../services/map/a-map-mode/MapModeManager';
 import { selectedFeaturesStore } from '../../../services/map/a-map-mode/selected-features/SelectedFeatures.store';
 import { MapMode, MapSelectionTypes } from '../../../services/map/map.models';
 import { Layer } from '../../Layer/Layer';
 
-import '!style-loader!css-loader!sass-loader!./LayersTree-Item.scss';
+import './LayersTree-Item.scss';
 
 const cnLayersTree = cn('LayersTree');
 

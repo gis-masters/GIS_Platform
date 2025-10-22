@@ -11,7 +11,7 @@ class TasksJournalActionsEditDialogBlock extends Block {
   };
 
   async clickSelectSchemaConfirm(): Promise<void> {
-    const $tasksJournalActionsEditDialogYes = await this.$('tasksJournalActionsEditDialogYes');
+    const $tasksJournalActionsEditDialogYes = await this.findBySelector('tasksJournalActionsEditDialogYes');
     await $tasksJournalActionsEditDialogYes.waitForClickable();
     await $tasksJournalActionsEditDialogYes.click();
   }
@@ -21,7 +21,7 @@ class TasksJournalActionsEditDialogBlock extends Block {
 
     const formBlock = new FormBlock(this.selectors.container);
     const $field = await formBlock.getField(title);
-    const $addUserBtn = await $field.$('.Users-Add');
+    const $addUserBtn = await $field.$('.Users-Add').getElement();
 
     await $addUserBtn.click();
   }
@@ -29,7 +29,7 @@ class TasksJournalActionsEditDialogBlock extends Block {
   async getFromError(): Promise<string> {
     await this.waitForVisible();
 
-    const $error = await this.$('error');
+    const $error = await this.findBySelector('error');
     await $error.waitForClickable();
 
     return await $error.getText();

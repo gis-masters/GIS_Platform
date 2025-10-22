@@ -1,12 +1,12 @@
-import React, { ReactNode } from 'react';
+import React, { type ReactNode } from 'react';
 
 import { staticImplements } from '../../../../services/util/staticImplements';
 import { BasemapActions } from '../../../BasemapActions/BasemapActions';
 import { Basemap as BasemapIcon } from '../../../Icons/Basemap';
 import {
-  Adapter,
-  ExplorerItemData,
-  ExplorerItemDataAllTypes,
+  type Adapter,
+  type ExplorerItemData,
+  type ExplorerItemDataAllTypes,
   ExplorerItemType,
   itemTypeError
 } from '../../Explorer.models';

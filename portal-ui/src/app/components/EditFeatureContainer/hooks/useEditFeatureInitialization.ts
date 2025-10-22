@@ -2,13 +2,13 @@
 import { useEffect } from 'react';
 
 import { extractFeatureId } from '../../../services/geoserver/featureType/featureType.util';
-import { WfsFeature } from '../../../services/geoserver/wfs/wfs.models';
-import { CrgVectorableLayer, CrgVectorLayer } from '../../../services/gis/layers/layers.models';
+import { type WfsFeature } from '../../../services/geoserver/wfs/wfs.models';
+import { type CrgVectorableLayer, type CrgVectorLayer } from '../../../services/gis/layers/layers.models';
 import { getLayerByFeatureInCurrentProject } from '../../../services/gis/layers/layers.utils';
-import { EditFeatureMode } from '../../../services/map/a-map-mode/edit-feature/EditFeature.models';
+import { type EditFeatureMode } from '../../../services/map/a-map-mode/edit-feature/EditFeature.models';
 import { editFeatureStore } from '../../../services/map/a-map-mode/edit-feature/EditFeatureStore';
 import { sidebars } from '../../../stores/Sidebars.store';
-import { ShouldRender } from './useEditFeatureState';
+import { type ShouldRender } from './useEditFeatureState';
 
 export const useEditFeatureInitialization = (
   features: WfsFeature[],

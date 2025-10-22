@@ -1,4 +1,4 @@
-import { WdioCheckElementMethodOptions } from 'wdio-image-comparison-service';
+import { type WdioCheckElementMethodOptions } from '@wdio/visual-service/dist/types';
 
 import { Block } from '../../../Block';
 
@@ -15,11 +15,11 @@ class MapMapBlock extends Block {
   async assertSelfie(tag?: string, checkElementOptions?: WdioCheckElementMethodOptions): Promise<void> {
     await super.assertSelfie(tag, {
       hideElements: [
-        await this.$('toolbar'),
-        await this.$('basemap'),
-        await this.$('zoom'),
-        await this.$('sidebarOpenBtn'),
-        await this.$('attribution'),
+        await this.findBySelector('toolbar'),
+        await this.findBySelector('basemap'),
+        await this.findBySelector('zoom'),
+        await this.findBySelector('sidebarOpenBtn'),
+        await this.findBySelector('attribution'),
         ...(checkElementOptions?.hideElements || [])
       ],
       ...checkElementOptions

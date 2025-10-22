@@ -1,10 +1,10 @@
-import React, { FC } from 'react';
+import React, { type FC } from 'react';
 import { cn } from '@bem-react/classname';
 import { chunk } from 'lodash';
 
 import { CustomStyleControlDash } from '../Dash/CustomStyleControl-Dash';
 
-import '!style-loader!css-loader!sass-loader!./CustomStyleControl-StrokeTile.scss';
+import './CustomStyleControl-StrokeTile.scss';
 
 const cnCustomStyleControlStrokeTile = cn('CustomStyleControl', 'StrokeTile');
 

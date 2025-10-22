@@ -1,8 +1,8 @@
-import React, { FC } from 'react';
-import { SvgIconProps } from '@mui/material';
-import { Adjust, PolylineOutlined, ReportProblemOutlined, SvgIconComponent } from '@mui/icons-material';
+import React, { type FC } from 'react';
+import { type SvgIconProps } from '@mui/material';
+import { Adjust, PolylineOutlined, ReportProblemOutlined, type SvgIconComponent } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
-import { IClassNameProps } from '@bem-react/core';
+import { type IClassNameProps } from '@bem-react/core';
 
 import { GeometryType } from '../../services/geoserver/wfs/wfs.models';
 import { Shape } from '../Icons/Shape';

@@ -1,7 +1,7 @@
 import { Given } from '@wdio/cucumber-framework';
 
-import { ScenarioScope } from '../../ScenarioScope';
-import { TestUser } from '../auth/testUsers';
+import { type ScenarioScope } from '../../ScenarioScope';
+import { type TestUser } from '../auth/testUsers';
 import { createTask } from './createTask';
 import { deleteAllTasks } from './deleteAllTasks';
 

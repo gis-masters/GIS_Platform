@@ -1,9 +1,9 @@
 /* eslint-disable sonarjs/no-duplicate-string */
 import React from 'react';
-import { StoryFn } from '@storybook/react';
+import { type StoryFn } from '@storybook/react';
 
-import { MinimizedCrgUser } from '../../../../services/auth/users/users.models';
-import { PropertySchema, PropertyType } from '../../../../services/data/schema/schema.models';
+import { type MinimizedCrgUser } from '../../../../services/auth/users/users.models';
+import { type PropertySchema, PropertyType } from '../../../../services/data/schema/schema.models';
 import { Form } from '../../Form';
 
 export default {

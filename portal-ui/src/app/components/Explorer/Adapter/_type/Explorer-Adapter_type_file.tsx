@@ -1,13 +1,13 @@
-import React, { ReactNode } from 'react';
+import React, { type ReactNode } from 'react';
 
 import { getFileExtension, isTifFile, normalizeExtension } from '../../../../services/data/files/files.util';
 import { staticImplements } from '../../../../services/util/staticImplements';
 import { FileIcon } from '../../../FileIcon/FileIcon';
 import { FileTiff } from '../../../Icons/FileTiff';
 import {
-  Adapter,
-  ExplorerItemData,
-  ExplorerItemDataAllTypes,
+  type Adapter,
+  type ExplorerItemData,
+  type ExplorerItemDataAllTypes,
   ExplorerItemType,
   itemTypeError
 } from '../../Explorer.models';

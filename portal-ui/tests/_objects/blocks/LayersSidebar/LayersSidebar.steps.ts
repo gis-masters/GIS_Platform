@@ -1,4 +1,4 @@
-import { DataTable, Then, When } from '@wdio/cucumber-framework';
+import { type DataTable, Then, When } from '@wdio/cucumber-framework';
 
 import { attributesBlock } from '../Attributes/Attributes.block';
 import { layersSidebarBlock } from './LayersSidebar.block';

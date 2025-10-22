@@ -1,6 +1,6 @@
 import { Then } from '@wdio/cucumber-framework';
 
-import { ScenarioScope } from '../../ScenarioScope';
+import { type ScenarioScope } from '../../ScenarioScope';
 import { taskPageBlock } from './TaskPage.block';
 
 Then('на странице задачи отображается карточка созданной задачи', async function (this: ScenarioScope) {

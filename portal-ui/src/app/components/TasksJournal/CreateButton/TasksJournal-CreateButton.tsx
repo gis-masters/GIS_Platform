@@ -1,7 +1,7 @@
-import React, { FC, ReactNode } from 'react';
+import React, { type FC, type ReactNode } from 'react';
 import { cn } from '@bem-react/classname';
 
-import { ContentType, Schema } from '../../../services/data/schema/schema.models';
+import { type ContentType, type Schema } from '../../../services/data/schema/schema.models';
 import { MenuIconButton } from '../../MenuIconButton/MenuIconButton';
 import { TasksJournalCreate } from '../Create/TasksJournal-Create';
 

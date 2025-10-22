@@ -1,8 +1,8 @@
-import { ComponentType, ReactNode } from 'react';
+import { type ComponentType, type ReactNode } from 'react';
 
-import { FormControlProps } from '../../../components/Form/Control/Form-Control';
-import { SupportedGeometryType } from '../../geoserver/wfs/wfs.models';
-import { Relation } from './schema.models';
+import type { FormControlProps } from '../../../components/Form/Control/Form-Control';
+import { type SupportedGeometryType } from '../../geoserver/wfs/wfs.models';
+import { type Relation } from './schema.models';
 
 // Править в соответствии с
 // contracts/data-service-contract/src/main/java/ru/mycrg/data_service_contract/enums/ValueType.java

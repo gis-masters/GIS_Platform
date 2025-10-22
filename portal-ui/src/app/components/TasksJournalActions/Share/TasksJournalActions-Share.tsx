@@ -3,9 +3,9 @@ import { observer } from 'mobx-react';
 import { ShareOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
-import { Task } from '../../../services/data/task/task.models';
+import { type Task } from '../../../services/data/task/task.models';
 import { copyToClipboard } from '../../../services/util/clipboard.util';
-import { ActionsItemVariant } from '../../Actions/Item/Actions-Item.base';
+import { type ActionsItemVariant } from '../../Actions/Item/Actions-Item.base';
 import { ActionsItem } from '../../Actions/Item/Actions-Item.composed';
 import { Toast } from '../../Toast/Toast';
 

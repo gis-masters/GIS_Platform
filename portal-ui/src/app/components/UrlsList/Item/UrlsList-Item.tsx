@@ -4,11 +4,12 @@ import { observer } from 'mobx-react';
 import { Dialog, DialogActions, DialogContent, Tooltip } from '@mui/material';
 import { DeleteOutlined, EditOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
+import DOMPurify from 'dompurify';
 
-import { PropertySchemaUrl } from '../../../services/data/schema/schema.models';
+import { type PropertySchemaUrl } from '../../../services/data/schema/schema.models';
 import { getUrlSubFormSchema } from '../../../services/util/form/fieldUrl';
 import { Button } from '../../Button/Button';
-import { UrlInfo } from '../../Form/Control/_type/Form-Control_type_url';
+import { type UrlInfo } from '../../Form/Control/_type/Form-Control_type_url';
 import { FormDialog } from '../../FormDialog/FormDialog';
 import { HtmlContent } from '../../HtmlContent/HtmlContent';
 import { IconButton } from '../../IconButton/IconButton';
@@ -16,9 +17,9 @@ import { Link } from '../../Link/Link';
 import { Loading } from '../../Loading/Loading';
 import { PseudoLink } from '../../PseudoLink/PseudoLink';
 
-import '!style-loader!css-loader!sass-loader!../Placeholder/UrlsList-Placeholder.scss';
-import '!style-loader!css-loader!sass-loader!../Button/UrlsList-Button.scss';
-import '!style-loader!css-loader!sass-loader!../Link/UrlsList-Link.scss';
+import '../Placeholder/UrlsList-Placeholder.scss';
+import '../Button/UrlsList-Button.scss';
+import '../Link/UrlsList-Link.scss';
 
 interface UrlFieldItemProps {
   index: number;
@@ -154,7 +155,7 @@ export class UrlsListItem extends Component<UrlFieldItemProps> {
 
   @action
   private setContent(content: string) {
-    this.content = content;
+    this.content = DOMPurify.sanitize(content);
   }
 
   @action.bound

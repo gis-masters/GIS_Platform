@@ -5,7 +5,7 @@ import { withBemMod } from '@bem-react/core';
 import { isEqual } from 'lodash';
 
 import { communicationService } from '../../../../services/communication.service';
-import { Schema } from '../../../../services/data/schema/schema.models';
+import { type Schema } from '../../../../services/data/schema/schema.models';
 import { schemaService } from '../../../../services/data/schema/schema.service';
 import { applyContentType } from '../../../../services/data/schema/schema.utils';
 import { ConnectionsFeaturesToProjectsWidget } from '../../../ConnectionsFeaturesToProjectsWidget/ConnectionsFeaturesToProjectsWidget';
@@ -13,7 +13,7 @@ import { ViewContentWidget } from '../../../ViewContentWidget/ViewContentWidget'
 import { assertExplorerItemDataTypeSearchItem } from '../../Adapter/_type/Explorer-Adapter_type_searchItem';
 import { ExplorerItemType } from '../../Explorer.models';
 import { ExplorerInfoDescItem } from '../../InfoDescItem/Explorer-InfoDescItem';
-import { cnExplorerWidgets, ExplorerWidgetsProps } from '../Explorer-Widgets.base';
+import { cnExplorerWidgets, type ExplorerWidgetsProps } from '../Explorer-Widgets.base';
 
 @observer
 class ExplorerWidgetsTypeSearchItem extends Component<ExplorerWidgetsProps> {

@@ -1,3 +1,3 @@
-import { createElement, FC } from 'react';
+import { createElement, type FC } from 'react';
 
 export const ElseFilter: FC = () => createElement('ElseFilter', {});

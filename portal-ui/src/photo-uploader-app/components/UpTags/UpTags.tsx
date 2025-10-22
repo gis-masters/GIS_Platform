@@ -1,4 +1,4 @@
-import React, { ChangeEvent, FC, useCallback } from 'react';
+import React, { type ChangeEvent, type FC, useCallback } from 'react';
 import { observer, useLocalObservable } from 'mobx-react';
 import { TextField, Tooltip } from '@mui/material';
 import { SellOutlined } from '@mui/icons-material';
@@ -7,7 +7,7 @@ import { cn } from '@bem-react/classname';
 import { IconButton } from '../../../app/components/IconButton/IconButton';
 import { photoUploaderStore } from '../../stores/PhotoUploader.store';
 
-import '!style-loader!css-loader!sass-loader!./UpTags.scss';
+import './UpTags.scss';
 
 interface UpTagsState {
   isOpen: boolean;

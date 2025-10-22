@@ -1,11 +1,11 @@
-import React, { FC } from 'react';
+import React, { type FC } from 'react';
 import { cn } from '@bem-react/classname';
 
 import { ActionsRight } from '../../ActionsRight/ActionsRight';
 import { Button } from '../../Button/Button';
 import { ChangePasswordFormTitle } from '../Title/ChangePasswordForm-Title';
 
-import '!style-loader!css-loader!sass-loader!./ChangePasswordForm-Success.scss';
+import './ChangePasswordForm-Success.scss';
 
 const cnChangePasswordForm = cn('ChangePasswordForm');
 

@@ -1,5 +1,5 @@
+import { type WdioCheckElementMethodOptions } from '@wdio/visual-service/dist/types';
 import { isEqual } from 'lodash';
-import { WdioCheckElementMethodOptions } from 'wdio-image-comparison-service';
 
 import { sleep } from '../../../../src/app/services/util/sleep';
 import { Block } from '../../Block';
@@ -36,36 +36,36 @@ class EditFeatureBlock extends Block {
   copyFeaturesButton = new CopyFeaturesButtonBlock(this.selectors.container);
 
   async waitForLoading(): Promise<void> {
-    const $editFeatureLoader = await this.$('editFeatureLoading');
-    await $editFeatureLoader.waitForDisplayed({ reverse: true });
+    const $editFeatureLoader = await this.findBySelector('editFeatureLoading');
+    await $editFeatureLoader.waitForExist({ reverse: true });
   }
 
   async zoomToFeature(): Promise<void> {
-    const $zoomToFeature = await this.$('zoom');
+    const $zoomToFeature = await this.findBySelector('zoom');
     await $zoomToFeature.waitForClickable();
     await $zoomToFeature.click();
   }
 
   async clickPrevButton(): Promise<void> {
-    const $prevFeatureBtn = await this.$('navigationPrevFeatureBtn');
+    const $prevFeatureBtn = await this.findBySelector('navigationPrevFeatureBtn');
     await $prevFeatureBtn.click();
     await this.waitForLoading();
   }
 
   async clickNextButton(): Promise<void> {
-    const $nextFeatureBtn = await this.$('navigationNextFeatureBtn');
+    const $nextFeatureBtn = await this.findBySelector('navigationNextFeatureBtn');
     await $nextFeatureBtn.click();
     await this.waitForLoading();
   }
 
   async clickSaveButton(): Promise<void> {
-    const $saveNewObjectBtn = await this.$('editFeatureSaveBtn');
+    const $saveNewObjectBtn = await this.findBySelector('editFeatureSaveBtn');
     await $saveNewObjectBtn.click();
     await this.waitForLoading();
   }
 
   async focusSaveButton(): Promise<void> {
-    const $saveNewObjectBtn = await this.$('editFeatureSaveBtn');
+    const $saveNewObjectBtn = await this.findBySelector('editFeatureSaveBtn');
     await $saveNewObjectBtn.moveTo();
   }
 
@@ -75,7 +75,7 @@ class EditFeatureBlock extends Block {
   }
 
   async goBack(): Promise<void> {
-    const $editFeatureBack = await this.$('editFeatureBack');
+    const $editFeatureBack = await this.findBySelector('editFeatureBack');
     await $editFeatureBack.waitForClickable();
     await $editFeatureBack.click();
   }
@@ -95,7 +95,7 @@ class EditFeatureBlock extends Block {
   }
 
   async getFormFieldsLabels(): Promise<string[]> {
-    const $$fieldLabels = await this.$$('editFeatureLabel');
+    const $$fieldLabels = await this.findAllBySelector('editFeatureLabel');
 
     const contents: string[] = [];
     for (const $label of $$fieldLabels) {
@@ -106,104 +106,110 @@ class EditFeatureBlock extends Block {
   }
 
   async clickGeometryAsTextButton(): Promise<void> {
-    const $editFeatureGeometryAsText = await editFeatureBlock.$('editFeatureGeometryAsTextBtn');
+    const $editFeatureGeometryAsText = await editFeatureBlock.findBySelector('editFeatureGeometryAsTextBtn');
 
     await $editFeatureGeometryAsText.waitForDisplayed();
     await $editFeatureGeometryAsText.click();
+    await sleep(400); // анимация открытия диалога
   }
 
   async clickAddGeometryButton(): Promise<void> {
-    const $editFeatureGeometryAddGeometryBtn = await editFeatureBlock.$('editFeatureGeometryAddGeometryBtn');
+    const $editFeatureGeometryAddGeometryBtn = await editFeatureBlock.findBySelector(
+      'editFeatureGeometryAddGeometryBtn'
+    );
 
     await $editFeatureGeometryAddGeometryBtn.waitForDisplayed();
     await $editFeatureGeometryAddGeometryBtn.click();
   }
 
   async hoverCopyCoordsButton(): Promise<void> {
-    const $editFeatureGeometryCopyCoordsBtn = await editFeatureBlock.$('editFeatureGeometryCopyCoordsBtn');
+    const $editFeatureGeometryCopyCoordsBtn = await editFeatureBlock.findBySelector('editFeatureGeometryCopyCoordsBtn');
 
     await $editFeatureGeometryCopyCoordsBtn.waitForDisplayed();
     await $editFeatureGeometryCopyCoordsBtn.moveTo();
   }
 
   async clickDeletePolygonButton(): Promise<void> {
-    const $editFeatureGeometryDeletePolygonBtn = await editFeatureBlock.$('editFeatureGeometryDeletePolygonBtn');
+    const $editFeatureGeometryDeletePolygonBtn = await editFeatureBlock.findBySelector(
+      'editFeatureGeometryDeletePolygonBtn'
+    );
 
     await $editFeatureGeometryDeletePolygonBtn.waitForDisplayed();
     await $editFeatureGeometryDeletePolygonBtn.click();
   }
 
   async clickDeleteGroupButton(): Promise<void> {
-    const $editFeatureGeometryDeleteGroupBtn = await editFeatureBlock.$('editFeatureGeometryDeleteGroupBtn');
+    const $editFeatureGeometryDeleteGroupBtn = await editFeatureBlock.findBySelector(
+      'editFeatureGeometryDeleteGroupBtn'
+    );
 
     await $editFeatureGeometryDeleteGroupBtn.waitForDisplayed();
     await $editFeatureGeometryDeleteGroupBtn.click();
   }
 
   async clickDeleteCoordButton(): Promise<void> {
-    const $editFeatureGeometryDeleteCoordBtn = await editFeatureBlock.$('editFeatureGeometryDeleteCoordBtn');
+    const $editFeatureGeometryDeleteCoordBtn = await editFeatureBlock.findBySelector(
+      'editFeatureGeometryDeleteCoordBtn'
+    );
 
     await $editFeatureGeometryDeleteCoordBtn.waitForDisplayed();
     await $editFeatureGeometryDeleteCoordBtn.click();
   }
 
   async clickEditOnMap(): Promise<void> {
-    const $editFeatureGeometryDraw = await editFeatureBlock.$('editFeatureGeometryDraw');
+    const $editFeatureGeometryDraw = await editFeatureBlock.findBySelector('editFeatureGeometryDraw');
 
     await $editFeatureGeometryDraw.waitForDisplayed();
     await $editFeatureGeometryDraw.click();
   }
 
   async isReadonlyMode(): Promise<boolean> {
-    const $container = await editFeatureBlock.$('container');
+    const $container = await editFeatureBlock.findBySelector('container');
 
     return hasClass($container, 'EditFeatureContainer_readonly');
   }
 
   async openGeometryTab(): Promise<void> {
-    const $container = await editFeatureBlock.$('container');
+    const $container = await editFeatureBlock.findBySelector('container');
 
-    const $geometryTab = await $container.$('.MuiButtonBase-root[role="Геометрия"]');
+    const $geometryTab = await $container.$('.MuiButtonBase-root[role="Геометрия"]').getElement();
     await $geometryTab.waitForClickable();
     await $geometryTab.click();
     await sleep(500); // Анимация перелистывания ангуларовского таба
   }
 
   async getGeometryInViewMode(): Promise<string> {
-    const $container = await editFeatureBlock.$('container');
+    const $container = await editFeatureBlock.findBySelector('container');
 
     return $container.$('.EditFeatureGeometry-View').getText();
   }
 
   async getGeometryInEditMode(): Promise<string[]> {
-    const $showAsTextBtn = await editFeatureBlock.$('editFeatureGeometryAsTextBtn');
+    const $showAsTextBtn = await editFeatureBlock.findBySelector('editFeatureGeometryAsTextBtn');
     await $showAsTextBtn.scrollIntoView();
 
-    const $container = await editFeatureBlock.$('container');
+    const $container = await editFeatureBlock.findBySelector('container');
 
-    return await extractValues([...(await $container.$$('.EditFeatureGeometry-CoordInput input'))]);
+    return await extractValues([...(await $container.$$('.EditFeatureGeometry-CoordInput input').getElements())]);
   }
 
   async waitForEditFeatureForm(): Promise<void> {
-    const $editFeatureForm = await this.$('editFeatureForm');
-    await $editFeatureForm.waitForDisplayed({ timeout: 4000 });
+    const $editFeatureForm = await this.findBySelector('editFeatureForm');
+    await $editFeatureForm.waitForDisplayed();
   }
 
   async changeEditFormFieldValue(title: string, value: string): Promise<void> {
     const $formField = await this.getFeatureEditField(title);
-    if (!$formField) {
-      throw new Error(`Не найден элемент ${title}`);
-    }
 
-    const inputBlock = new MuiInputBlock(await $formField.$('.Form-Control'));
+    const inputBlock = new MuiInputBlock(await $formField.$('.Form-Control').getElement());
     await inputBlock.waitForVisible();
     await inputBlock.clearValue();
     await inputBlock.setValue(value);
   }
 
-  async getFeatureEditField(fieldName: string): Promise<WebdriverIO.Element | undefined> {
-    await this.waitForVisible();
-    const $$fields = await this.$$('editFeatureField');
+  async getFeatureEditField(fieldName: string): Promise<WebdriverIO.Element> {
+    await this.waitForEditFeatureForm();
+    const $$fields = await this.findAllBySelector('editFeatureField');
 
     for (const $field of $$fields) {
       const name = await $field.$('.EditFeatureForm-Label').getText();
@@ -212,10 +218,12 @@ class EditFeatureBlock extends Block {
         return $field;
       }
     }
+
+    throw new Error(`Не найден элемент ${fieldName}`);
   }
 
   async assertSelfie(tag?: string, checkElementOptions?: WdioCheckElementMethodOptions): Promise<void> {
-    const $lookupStatus = await this.$('lookupStatus');
+    const $lookupStatus = await this.findBySelector('lookupStatus');
 
     try {
       await $lookupStatus.waitForDisplayed();
@@ -230,22 +238,19 @@ class EditFeatureBlock extends Block {
   }
 
   async waitForLoaderEnd(): Promise<void> {
-    const loader = await this.$('loader');
+    const loader = await this.findBySelector('loader');
     try {
       await loader.waitForDisplayed({ timeout: 1000 });
     } catch {
       // ignore
     }
-    await loader.waitForDisplayed({ reverse: true });
+    await loader.waitForExist({ reverse: true });
   }
 
   async checkFormControlFieldValue(title: string, value: string): Promise<boolean> {
     const $formField = await this.getFeatureEditField(title);
-    if (!$formField) {
-      throw new Error(`Не найден элемент ${title}`);
-    }
 
-    const inputBlock = new MuiInputBlock(await $formField.$('.Form-Control'));
+    const inputBlock = new MuiInputBlock(await $formField.$('.Form-Control').getElement());
     const inputValue = await inputBlock.getValue();
 
     return inputValue === value;
@@ -253,17 +258,14 @@ class EditFeatureBlock extends Block {
 
   async getFormViewFieldValue(title: string): Promise<string> {
     const $formField = await this.getFeatureEditField(title);
-    if (!$formField) {
-      throw new Error(`Не найден элемент ${title}`);
-    }
 
-    const inputBlock = await $formField.$('.Form-ViewValue');
+    const inputBlock = await $formField.$('.Form-ViewValue').getElement();
 
     return await inputBlock.getText();
   }
 
   async getNavigationValue(): Promise<string> {
-    const inputBlock = await this.$('navigationTextBox');
+    const inputBlock = await this.findBySelector('navigationTextBox');
 
     return await inputBlock.getText();
   }

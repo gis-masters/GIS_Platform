@@ -2,11 +2,11 @@ import React, { Component } from 'react';
 import { computed, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { boundMethod } from 'autobind-decorator';
-import { AxiosError } from 'axios';
+import { type AxiosError } from 'axios';
 
-import { CrgGroup } from '../../services/auth/groups/groups.models';
+import { type CrgGroup } from '../../services/auth/groups/groups.models';
 import { groupsService } from '../../services/auth/groups/groups.service';
-import { PropertySchema, PropertyType } from '../../services/data/schema/schema.models';
+import { type PropertySchema, PropertyType } from '../../services/data/schema/schema.models';
 import { FormDialog } from '../FormDialog/FormDialog';
 import { Toast } from '../Toast/Toast';
 

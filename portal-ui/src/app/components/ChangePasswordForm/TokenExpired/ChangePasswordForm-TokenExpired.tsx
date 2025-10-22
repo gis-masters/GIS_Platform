@@ -1,9 +1,9 @@
-import React, { FC } from 'react';
+import React, { type FC } from 'react';
 import { cn } from '@bem-react/classname';
 
 import { Button } from '../../Button/Button';
 
-import '!style-loader!css-loader!sass-loader!./ChangePasswordForm-TokenExpired.scss';
+import './ChangePasswordForm-TokenExpired.scss';
 
 const cnChangePasswordForm = cn('ChangePasswordForm');
 

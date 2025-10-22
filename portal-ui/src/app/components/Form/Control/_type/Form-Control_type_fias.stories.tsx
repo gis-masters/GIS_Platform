@@ -1,9 +1,9 @@
 import React from 'react';
 import { Send } from '@mui/icons-material';
-import { StoryFn } from '@storybook/react';
+import { type StoryFn } from '@storybook/react';
 
-import { FiasValue } from '../../../../services/data/fias/fias.models';
-import { PropertySchema, PropertyType, SimpleSchema } from '../../../../services/data/schema/schema.models';
+import { type FiasValue } from '../../../../services/data/fias/fias.models';
+import { type PropertySchema, PropertyType, type SimpleSchema } from '../../../../services/data/schema/schema.models';
 import { sleep } from '../../../../services/util/sleep';
 import { Button } from '../../../Button/Button';
 import { Toast } from '../../../Toast/Toast';

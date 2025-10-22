@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-floating-promises */
 /* eslint-disable sonarjs/no-duplicate-string */
 
-import { Attribute } from '../../geoserver/featureType/featureType.model';
+import { type Attribute } from '../../geoserver/featureType/featureType.model';
 import { GeometryType } from '../../geoserver/wfs/wfs.models';
-import { PropertySchema, PropertyType, Relation, Schema } from './schema.models';
+import { type PropertySchema, PropertyType, type Relation, type Schema } from './schema.models';
 import {
   applyContentType,
   applyView,
@@ -14,7 +14,7 @@ import {
   convertOldToNewSchema,
   mergeContentTypes
 } from './schema.utils';
-import { OldPropertySchema, OldSchema, ValueType } from './schemaOld.models';
+import { type OldPropertySchema, type OldSchema, ValueType } from './schemaOld.models';
 
 const baseGeoserverAttribute = {
   name: 'baseName',

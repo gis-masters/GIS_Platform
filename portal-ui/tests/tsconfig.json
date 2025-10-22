@@ -2,13 +2,7 @@
   "compilerOptions": {
     "experimentalDecorators": true,
     "strict": true,
-    "types": [
-      "node",
-      "expect-webdriverio",
-      "@wdio/globals/types",
-      "@wdio/cucumber-framework",
-      "wdio-image-comparison-service"
-    ],
+    "types": ["node", "expect-webdriverio", "@wdio/globals/types", "@wdio/cucumber-framework", "@wdio/visual-service"],
     "allowSyntheticDefaultImports": true,
     "moduleResolution": "node",
     "target": "es2022",

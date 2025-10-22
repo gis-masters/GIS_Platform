@@ -13,7 +13,7 @@ import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 import { cloneDeep } from 'lodash';
 
-import { CrgLayer, CrgLayersGroup } from '../../../services/gis/layers/layers.models';
+import { type CrgLayer, type CrgLayersGroup } from '../../../services/gis/layers/layers.models';
 import { projectsService } from '../../../services/gis/projects/projects.service';
 import { MapAction } from '../../../services/map/map.models';
 import { focusToLayer } from '../../../services/sidebarActions.service';
@@ -31,7 +31,7 @@ import { LayersGroupEditDialog } from '../../LayersGroupEditDialog/LayersGroupEd
 import { LayersSidebarToolbarLeft } from '../ToolbarLeft/LayersSidebar-ToolbarLeft';
 import { LayersSidebarToolbarRight } from '../ToolbarRight/LayersSidebar-ToolbarRight';
 
-import '!style-loader!css-loader!sass-loader!./LayersSidebar-Toolbar.scss';
+import './LayersSidebar-Toolbar.scss';
 
 const cnLayersSidebarToolbar = cn('LayersSidebar', 'Toolbar');
 const cnLayersSidebarEditBtn = cn('LayersSidebar', 'EditBtn');

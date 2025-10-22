@@ -1,7 +1,7 @@
-import React, { FC } from 'react';
+import React, { type FC } from 'react';
 import { cn } from '@bem-react/classname';
 
-import '!style-loader!css-loader!sass-loader!./ServicesCalculator-ResultPrice.scss';
+import './ServicesCalculator-ResultPrice.scss';
 
 const cnServicesCalculatorResultPrice = cn('ServicesCalculator', 'ResultPrice');
 

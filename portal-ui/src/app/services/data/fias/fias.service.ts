@@ -1,5 +1,5 @@
 import { fiasClient } from './fias.client';
-import { FiasApiItem, FiasValue } from './fias.models';
+import { type FiasApiItem, type FiasValue } from './fias.models';
 
 export async function getFiasAddressItems(address: string): Promise<FiasValue[]> {
   return await getFiasItems(address, fiasClient.getAddressItems);

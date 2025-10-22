@@ -1,11 +1,11 @@
 import { boundClass } from 'autobind-decorator';
 
-import { PageableResources } from '../../../../server-types/common-contracts';
+import { type PageableResources } from '../../../../server-types/common-contracts';
 import { Client } from '../../api/Client';
 import { http } from '../../api/http.service';
 import { preparePageOptions } from '../../api/http.utils';
-import { PageOptions } from '../../models';
-import { Basemap } from './basemaps.models';
+import { type PageOptions } from '../../models';
+import { type Basemap } from './basemaps.models';
 
 @boundClass
 class BasemapsClient extends Client {

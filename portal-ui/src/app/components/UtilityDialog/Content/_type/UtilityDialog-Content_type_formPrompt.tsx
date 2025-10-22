@@ -5,9 +5,9 @@ import { RegistryConsumer } from '@bem-react/di';
 import { boundMethod } from 'autobind-decorator';
 
 import { communicationService } from '../../../../services/communication.service';
-import { CommonDiRegistry } from '../../../../services/di-registry';
+import { type CommonDiRegistry } from '../../../../services/di-registry';
 import { getDefaultValues } from '../../../Form/Form.utils';
-import { cnUtilityDialogContent, UtilityDialogContentProps } from '../UtilityDialog-Content.base';
+import { cnUtilityDialogContent, type UtilityDialogContentProps } from '../UtilityDialog-Content.base';
 
 class UtilityDialogContentTypeFormPrompt extends Component<UtilityDialogContentProps> {
   render() {

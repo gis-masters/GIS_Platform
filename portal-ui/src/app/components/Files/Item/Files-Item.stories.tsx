@@ -1,5 +1,5 @@
 import React from 'react';
-import { StoryFn } from '@storybook/react';
+import { type StoryFn } from '@storybook/react';
 
 import { Role } from '../../../services/permissions/permissions.models';
 import { FilesItem } from './Files-Item';

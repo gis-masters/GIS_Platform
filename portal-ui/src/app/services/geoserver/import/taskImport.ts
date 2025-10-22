@@ -1,5 +1,5 @@
-import { ImportTargetType } from '../../models';
-import { LayerAttribute } from './import.models';
+import { type ImportTargetType } from '../../models';
+import { type LayerAttribute } from './import.models';
 
 export interface MatchingPair {
   source: LayerAttribute;

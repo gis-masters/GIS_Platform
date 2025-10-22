@@ -1,11 +1,11 @@
-import { ReactNode } from 'react';
-import { DialogProps } from '@mui/material';
+import { type ReactNode } from 'react';
+import { type DialogProps } from '@mui/material';
 import { v4 as uuid } from 'uuid';
 
-import { FormProps } from '../components/Form/Form';
-import { UtilityDialogInfo, utilityDialogsStore } from '../stores/UtilityDialogs.store';
-import { communicationService, UtilityDialogCloseEventDetail } from './communication.service';
-import { SimpleSchema } from './data/schema/schema.models';
+import { type FormProps } from '../components/Form/Form';
+import { type UtilityDialogInfo, utilityDialogsStore } from '../stores/UtilityDialogs.store';
+import { communicationService, type UtilityDialogCloseEventDetail } from './communication.service';
+import { type SimpleSchema } from './data/schema/schema.models';
 import { sleep } from './util/sleep';
 
 // диалог с сообщением, аналог alert

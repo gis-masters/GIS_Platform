@@ -1,12 +1,12 @@
-import React, { FC } from 'react';
+import React, { type FC } from 'react';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 
-import { CrgVectorLayer } from '../../../services/gis/layers/layers.models';
+import { type CrgVectorLayer } from '../../../services/gis/layers/layers.models';
 import { selectedFeaturesStore } from '../../../services/map/a-map-mode/selected-features/SelectedFeatures.store';
 import { AttributesCounterItem } from '../CounterItem/Attributes-CounterItem';
 
-import '!style-loader!css-loader!sass-loader!./Attributes-Counter.scss';
+import './Attributes-Counter.scss';
 
 const cnAttributesCounter = cn('Attributes', 'Counter');
 

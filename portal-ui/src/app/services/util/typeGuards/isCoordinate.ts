@@ -1,4 +1,4 @@
-import { Coordinate } from 'ol/coordinate';
+import { type Coordinate } from 'ol/coordinate';
 
 import { isNumberArray } from './isNumberArray';
 

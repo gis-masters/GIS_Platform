@@ -1,12 +1,20 @@
-import React, { Component, createRef, FC, ForwardedRef, forwardRef, ReactNode, RefObject } from 'react';
+import React, {
+  Component,
+  createRef,
+  type FC,
+  type ForwardedRef,
+  forwardRef,
+  type ReactNode,
+  type RefObject
+} from 'react';
 import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { ListItemIcon, ListItemText, Menu, MenuItem, MenuItemProps, MenuProps } from '@mui/material';
+import { ListItemIcon, ListItemText, Menu, MenuItem, type MenuItemProps, type MenuProps } from '@mui/material';
 import { ChevronRight } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
-import '!style-loader!css-loader!sass-loader!./MenuNestedItem.scss';
+import './MenuNestedItem.scss';
 
 const cnMenuNestedItem = cn('MenuNestedItem');
 

@@ -2,7 +2,7 @@ import { cloneDeep } from 'lodash';
 
 import { attributesTableStore } from '../../../stores/AttributesTable.store';
 import { applyView } from '../../data/schema/schema.utils';
-import { CrgVectorLayer } from '../../gis/layers/layers.models';
+import { type CrgVectorLayer } from '../../gis/layers/layers.models';
 import { getLayerSchema } from '../../gis/layers/layers.service';
 import { mapService } from '../../map/map.service';
 import { services } from '../../services';
@@ -15,11 +15,11 @@ import { getLegendGraphic } from '../wms/wms.service';
 import { stylesClient } from './styles.client';
 import {
   CUSTOM_STYLE_NAME,
-  FilteredStylesLayerRequest,
-  FilteredStylesResponse,
-  StyleFilter,
+  type FilteredStylesLayerRequest,
+  type FilteredStylesResponse,
+  type StyleFilter,
   StyleFilterOperator,
-  StyleRule
+  type StyleRule
 } from './styles.models';
 import { getSupGeometryType } from './styles.utils';
 

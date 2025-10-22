@@ -1,10 +1,10 @@
-import React, { FC } from 'react';
+import React, { type FC } from 'react';
 import { CardContent } from '@mui/material';
 import { cn } from '@bem-react/classname';
 
-import { ChildrenProps } from '../../../services/models';
+import { type ChildrenProps } from '../../../services/models';
 
-import '!style-loader!css-loader!sass-loader!./Explorer-InfoContent.scss';
+import './Explorer-InfoContent.scss';
 
 const cnExplorerInfoContent = cn('Explorer', 'InfoContent');
 

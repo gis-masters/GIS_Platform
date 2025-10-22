@@ -1,25 +1,25 @@
-import { AxiosError } from 'axios';
+import { type AxiosError } from 'axios';
 
 import { currentImport } from '../../../stores/CurrentImport.store';
 import { currentUser } from '../../../stores/CurrentUser.store';
 import { http } from '../../api/http.service';
 import { getApiImportUrl } from '../../api/server-urls.service';
 import { usersService } from '../../auth/users/users.service';
-import { Process } from '../../data/processes/processes.models';
+import { type Process } from '../../data/processes/processes.models';
 import { environment } from '../../environment';
 import { GeoUtil } from '../../util/GeoUtil';
 import { wsService } from '../../ws.service';
 import { importClient } from './import.client';
 import {
-  ImportLayer,
-  ImportRequestData,
-  ImportTaskFull,
-  ImportTaskResponse,
-  ImportTaskShort,
-  InputStartResponseDto,
-  ScratchImport
+  type ImportLayer,
+  type ImportRequestData,
+  type ImportTaskFull,
+  type ImportTaskResponse,
+  type ImportTaskShort,
+  type InputStartResponseDto,
+  type ScratchImport
 } from './import.models';
-import { TaskImport } from './taskImport';
+import { type TaskImport } from './taskImport';
 
 const importNotInited = 'Импорт не инициализирован';
 

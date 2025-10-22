@@ -4,10 +4,10 @@ import { observer } from 'mobx-react';
 import { FolderOutlined, InsertDriveFileOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
-import { AxiosError } from 'axios';
+import { type AxiosError } from 'axios';
 
 import { communicationService } from '../../services/communication.service';
-import { LibraryRecord } from '../../services/data/library/library.models';
+import { type LibraryRecord } from '../../services/data/library/library.models';
 import { getLibraryRecord } from '../../services/data/library/library.service';
 import { services } from '../../services/services';
 import { route } from '../../stores/Route.store';
@@ -19,7 +19,7 @@ import { Link } from '../Link/Link';
 import { Loading } from '../Loading/Loading';
 import { TextBadge } from '../TextBadge/TextBadge';
 
-import '!style-loader!css-loader!sass-loader!./LibraryDocumentPageContainer.scss';
+import './LibraryDocumentPageContainer.scss';
 
 const cnLibraryDocumentPageContainer = cn('LibraryDocumentPageContainer');
 

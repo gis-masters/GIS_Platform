@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { type FC } from 'react';
 import { ArrowRight } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 

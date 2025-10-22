@@ -1,8 +1,8 @@
-import React, { FC, ReactNode } from 'react';
-import { BaseSelectProps, MenuItem, Select } from '@mui/material';
+import React, { type FC, type ReactNode } from 'react';
+import { type BaseSelectProps, MenuItem, Select } from '@mui/material';
 import { cn } from '@bem-react/classname';
 
-import '!style-loader!css-loader!sass-loader!./TiledSelect.scss';
+import './TiledSelect.scss';
 
 const cnTiledSelect = cn('TiledSelect');
 

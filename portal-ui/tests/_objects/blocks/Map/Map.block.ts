@@ -9,27 +9,27 @@ class MapBlock extends Block {
   };
 
   async clickOnMap(): Promise<void> {
-    const $map = await this.$('map');
+    const $map = await this.findBySelector('map');
     await $map.waitForClickable();
     await sleep(300); // жду подгрузки объектов
     await $map.click();
   }
 
   async waitForMapIsClickable(): Promise<void> {
-    const $map = await this.$('map');
+    const $map = await this.findBySelector('map');
     await $map.waitForClickable();
   }
 
   async moveToMap(): Promise<void> {
-    const $map = await this.$('map');
+    const $map = await this.findBySelector('map');
     await $map.waitForDisplayed();
     await $map.moveTo();
   }
 
   async dragAndDropFromMapCenterToMapScaleBar(): Promise<void> {
-    const $map = await this.$('map');
+    const $map = await this.findBySelector('map');
     await $map.moveTo();
-    const $scaleBar = await this.$('scaleBar');
+    const $scaleBar = await this.findBySelector('scaleBar');
     await $map.dragAndDrop($scaleBar);
   }
 }

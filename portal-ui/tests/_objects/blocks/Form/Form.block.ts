@@ -39,14 +39,14 @@ export class FormBlock extends Block {
   async openSchemaSelection(): Promise<void> {
     const $tableFieldValueRoot = await this.getCustomFieldRoot('Схема*');
 
-    const $schemaSelectBtn = await $tableFieldValueRoot.$('button');
+    const $schemaSelectBtn = await $tableFieldValueRoot.$('button').getElement();
     await $schemaSelectBtn.click();
   }
 
   async getFieldInputRoot(title: string): Promise<WebdriverIO.Element> {
     const $tableField = await this.getField(title);
 
-    return await $tableField.$('.MuiInputBase-root');
+    return await $tableField.$('.MuiInputBase-root').getElement();
   }
 
   async getCustomFieldRoot(title: string): Promise<WebdriverIO.Element> {
@@ -55,12 +55,12 @@ export class FormBlock extends Block {
       throw new Error(`Не найден элемент ${title}`);
     }
 
-    return await $tableField.$('.Form-Control_type_custom');
+    return await $tableField.$('.Form-Control_type_custom').getElement();
   }
 
   async lookupFieldValues(title: string): Promise<string[]> {
     const $field = await this.getField(title);
-    const $$items = await $field.$$('.Lookup-Item');
+    const $$items = await $field.$$('.Lookup-Item').getElements();
 
     const itemsValues: string[] = [];
 
@@ -73,10 +73,10 @@ export class FormBlock extends Block {
 
   async getField(fieldTitle: string): Promise<WebdriverIO.Element> {
     await this.waitForVisible();
-    const $content = await this.$('content');
+    const $content = await this.findBySelector('content');
     await $content.waitForDisplayed();
 
-    const $$fields = await this.$$('formFields');
+    const $$fields = await this.findAllBySelector('formFields');
 
     if (!$$fields.length) {
       throw new Error('В форме отсутствуют поля');
@@ -105,10 +105,10 @@ export class FormBlock extends Block {
 
   async getAllFields(): Promise<string[]> {
     await this.waitForVisible();
-    const $content = await this.$('content');
+    const $content = await this.findBySelector('content');
     await $content.waitForDisplayed();
 
-    const $$fields = await this.$$('formFields');
+    const $$fields = await this.findAllBySelector('formFields');
 
     const fieldTitles: string[] = [];
 
@@ -128,6 +128,6 @@ export class FormBlock extends Block {
   async getFieldCheckboxInputRoot(title: string): Promise<WebdriverIO.Element> {
     const $tableField = await this.getField(title);
 
-    return await $tableField.$(this.selectors.checkbox);
+    return await $tableField.$(this.selectors.checkbox).getElement();
   }
 }

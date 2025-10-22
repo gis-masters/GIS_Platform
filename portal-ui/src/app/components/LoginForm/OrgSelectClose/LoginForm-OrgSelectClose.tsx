@@ -1,9 +1,9 @@
-import React, { FC } from 'react';
+import React, { type FC } from 'react';
 import { IconButton } from '@mui/material';
 import { WestOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
-import '!style-loader!css-loader!sass-loader!./LoginForm-OrgSelectClose.scss';
+import './LoginForm-OrgSelectClose.scss';
 
 const cnLoginFormOrgSelectClose = cn('LoginForm', 'OrgSelectClose');
 

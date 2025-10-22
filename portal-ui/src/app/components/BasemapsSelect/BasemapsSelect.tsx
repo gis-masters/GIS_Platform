@@ -4,7 +4,7 @@ import { observer } from 'mobx-react';
 import { ButtonBase, Menu, Paper, Tooltip } from '@mui/material';
 import { cn } from '@bem-react/classname';
 
-import { Basemap } from '../../services/data/basemaps/basemaps.models';
+import { type Basemap } from '../../services/data/basemaps/basemaps.models';
 import { Role } from '../../services/permissions/permissions.models';
 import { sleep } from '../../services/util/sleep';
 import { basemapsStore } from '../../stores/Basemaps.store';
@@ -15,9 +15,9 @@ import { BasemapsSelectItem } from './Item/BasemapsSelect-Item';
 import { BasemapsSelectThumbnail } from './Thumbnail/BasemapsSelect-Thumbnail';
 import { BasemapsSelectTooltipAnchor } from './TooltipAnchor/BasemapsSelect-TooltipAnchor';
 
-import '!style-loader!css-loader!sass-loader!./BasemapsSelect.scss';
-import '!style-loader!css-loader!sass-loader!./MenuList/BasemapsSelect-MenuList.scss';
-import '!style-loader!css-loader!sass-loader!./MenuPaper/BasemapsSelect-MenuPaper.scss';
+import './BasemapsSelect.scss';
+import './MenuList/BasemapsSelect-MenuList.scss';
+import './MenuPaper/BasemapsSelect-MenuPaper.scss';
 
 const cnBasemapsSelect = cn('BasemapsSelect');
 

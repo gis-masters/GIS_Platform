@@ -1,14 +1,27 @@
-import React, { Component, ReactElement } from 'react';
+import React, { Component, type ReactElement } from 'react';
 import { action, computed, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { Checkbox, Dialog, DialogActions, DialogContent, MenuItem, Select, SelectChangeEvent } from '@mui/material';
+import {
+  Checkbox,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  MenuItem,
+  Select,
+  type SelectChangeEvent
+} from '@mui/material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
-import { Dataset, VectorTable } from '../../services/data/vectorData/vectorData.models';
+import { type Dataset, type VectorTable } from '../../services/data/vectorData/vectorData.models';
 import { tablesEqual } from '../../services/data/vectorData/vectorData.util';
-import { CrgProject } from '../../services/gis/projects/projects.models';
-import { PermissionsListItem, PrincipalType, Role, rolesTitles } from '../../services/permissions/permissions.models';
+import { type CrgProject } from '../../services/gis/projects/projects.models';
+import {
+  type PermissionsListItem,
+  type PrincipalType,
+  Role,
+  rolesTitles
+} from '../../services/permissions/permissions.models';
 import { getRolesByPermissionsListItemType } from '../../services/permissions/permissions.utils';
 import { allDataEntitiesStore } from '../../stores/AllDataEntities.store';
 import { allProjects } from '../../stores/AllProjects.store';
@@ -17,13 +30,13 @@ import { Button } from '../Button/Button';
 import {
   baseXTablePropsSet,
   PermissionsListItemType,
-  PermissionsXTablePropsSet
+  type PermissionsXTablePropsSet
 } from '../PermissionsListDialog/PermissionsListDialog.models';
 import { XTable } from '../XTable/XTable';
-import { XTableColumn } from '../XTable/XTable.models';
+import { type XTableColumn } from '../XTable/XTable.models';
 import { PermissionsAddDialogItemCheck } from './ItemCheck/PermissionsAddDialog-ItemCheck';
 
-import '!style-loader!css-loader!sass-loader!./Paper/PermissionsAddDialog-Paper.scss';
+import './Paper/PermissionsAddDialog-Paper.scss';
 
 const cnPermissionsAddDialog = cn('PermissionsAddDialog');
 

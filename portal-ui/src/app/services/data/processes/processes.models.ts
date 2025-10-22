@@ -1,10 +1,10 @@
 import { isObject } from 'lodash';
 
-import { PageableResources } from '../../../../server-types/common-contracts';
+import { type PageableResources } from '../../../../server-types/common-contracts';
 import {
-  GmlPlacementModel,
-  ImportFeaturesFromShapeFileModel,
-  PlacementModelForFilesWithCrs
+  type GmlPlacementModel,
+  type ImportFeaturesFromShapeFileModel,
+  type PlacementModelForFilesWithCrs
 } from '../file-placement/file-placement.models';
 
 export interface Process {

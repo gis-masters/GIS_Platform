@@ -1,10 +1,10 @@
-import React, { FC } from 'react';
+import React, { type FC } from 'react';
 import { ListItemSecondaryAction } from '@mui/material';
 import { cn } from '@bem-react/classname';
 
-import { ChildrenProps } from '../../../services/models';
+import { type ChildrenProps } from '../../../services/models';
 
-import '!style-loader!css-loader!sass-loader!../ItemIcons/SchemaProperties-ItemIcons.scss';
+import '../ItemIcons/SchemaProperties-ItemIcons.scss';
 
 const cnSchemaPropertiesItemIcons = cn('SchemaProperties', 'ItemIcons');
 

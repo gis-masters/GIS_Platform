@@ -1,17 +1,25 @@
-import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
+import { Component, Input, type OnChanges, type OnDestroy, type OnInit, type SimpleChanges } from '@angular/core';
 import { NGXLogger } from 'ngx-logger';
 import { Subject } from 'rxjs';
 
-import { OldPropertySchema, OldSchema, ValueType } from '../../services/data/schema/schemaOld.models';
-import { ImportLayerItem } from '../../services/geoserver/import/import.models';
-import { ImportDataHolderService, InputDataMetrics } from '../../services/geoserver/import/import-data-holder.service';
-import { AS_IS, IMPORT_LAYER_AS_IS, NOT_IMPORT, NOT_IMPORT_LAYER } from '../../services/models';
+import { type OldPropertySchema, type OldSchema, ValueType } from '../../services/data/schema/schemaOld.models';
+import {
+  IMPORT_LAYER_AS_IS,
+  type ImportLayerItem,
+  NOT_IMPORT_LAYER
+} from '../../services/geoserver/import/import.models';
+import {
+  ImportDataHolderService,
+  type InputDataMetrics
+} from '../../services/geoserver/import/import-data-holder.service';
+import { AS_IS, NOT_IMPORT } from '../../services/models';
 import { FeatureUtil } from '../../services/util/FeatureUtil';
 
 @Component({
   selector: 'crg-mapping-card',
   templateUrl: './mapping-card.component.html',
-  styleUrls: ['./mapping-card.component.css']
+  styleUrls: ['./mapping-card.component.css'],
+  standalone: false
 })
 export class MappingCardComponent implements OnInit, OnChanges, OnDestroy {
   @Input() importLayer?: ImportLayerItem;

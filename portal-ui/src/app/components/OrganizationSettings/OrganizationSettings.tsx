@@ -1,8 +1,8 @@
-import React, { FC, lazy, Suspense } from 'react';
+import React, { type FC, lazy, Suspense } from 'react';
 
-import { OrganizationSettingsProps } from './OrganizationSettings.async';
+import { type OrganizationSettingsProps } from './OrganizationSettings.chunkroot';
 
-const OrganizationSettingsAsync = lazy(() => import('./OrganizationSettings.async'));
+const OrganizationSettingsAsync = lazy(() => import('./OrganizationSettings.chunkroot'));
 
 export const OrganizationSettings: FC<OrganizationSettingsProps> = props => (
   <Suspense>

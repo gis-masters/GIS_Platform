@@ -2,7 +2,7 @@ import { Then, When } from '@wdio/cucumber-framework';
 
 import { getDocumentsLibraryByTitle } from '../../commands/docLibrary/getDocLibraryByTitle';
 import { dataManagementPage } from '../../pages/DataManagement.page';
-import { ScenarioScope } from '../../ScenarioScope';
+import { type ScenarioScope } from '../../ScenarioScope';
 import { ExplorerBlock } from './Explorer.block';
 
 When('в диалоговом окне выбора источника данных я выбираю набор данных', async function (this: ScenarioScope) {

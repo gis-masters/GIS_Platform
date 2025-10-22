@@ -8,11 +8,11 @@ import { cloneDeep } from 'lodash';
 
 import { PropertyType } from '../../../services/data/schema/schema.models';
 import { getFieldFilterPart, modifyFieldFilterValue } from '../../../services/util/filters/filters';
-import { FilterQuery } from '../../../services/util/filters/filters.models';
+import { type FilterQuery } from '../../../services/util/filters/filters.models';
 import { XTableFilterPanelItemContent } from '../FilterPanelItemContent/XTable-FilterPanelItemContent.composed';
-import { XTableColumn } from '../XTable.models';
+import { type XTableColumn } from '../XTable.models';
 
-import '!style-loader!css-loader!sass-loader!../FilterPanelItem/XTable-FilterPanelItem.scss';
+import '../FilterPanelItem/XTable-FilterPanelItem.scss';
 
 export const cnXTableFilterPanelItem = cn('XTable', 'FilterPanelItem');
 export const cnXTableFilterPanelItemClear = cn('XTable', 'FilterPanelItemClear');

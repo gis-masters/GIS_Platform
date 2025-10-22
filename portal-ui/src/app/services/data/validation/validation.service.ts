@@ -1,9 +1,9 @@
-import { CrgVectorLayer } from '../../gis/layers/layers.models';
-import { ValidationWsMsg, wsService } from '../../ws.service';
-import { ExportResourceModel } from '../export/export.models';
-import { Process } from '../processes/processes.models';
+import { type CrgVectorLayer } from '../../gis/layers/layers.models';
+import { type ValidationWsMsg, wsService } from '../../ws.service';
+import { type ExportResourceModel } from '../export/export.models';
+import { type Process } from '../processes/processes.models';
 import { validationClient } from './validation.client';
-import { ValidationPayload, ValidationResultsResponse, ValidationShortInfo } from './validation.models';
+import { type ValidationPayload, type ValidationResultsResponse, type ValidationShortInfo } from './validation.models';
 
 export async function initValidation(layers: CrgVectorLayer[]): Promise<ValidationWsMsg> {
   return validationClient.initValidation(preparePayload(layers));

@@ -1,9 +1,9 @@
 import { useEffect, useRef } from 'react';
 
-import { Schema } from '../../../services/data/schema/schema.models';
-import { CrgVectorableLayer, CrgVectorLayer } from '../../../services/gis/layers/layers.models';
+import { type Schema } from '../../../services/data/schema/schema.models';
+import { type CrgVectorableLayer, type CrgVectorLayer } from '../../../services/gis/layers/layers.models';
 import { getLayerSchema } from '../../../services/gis/layers/layers.service';
-import { ShouldRender } from './useEditFeatureState';
+import { type ShouldRender } from './useEditFeatureState';
 
 export const useLayerData = (
   layer: CrgVectorableLayer | CrgVectorLayer | undefined,

@@ -1,8 +1,8 @@
-import React, { FC, lazy, Suspense } from 'react';
+import React, { type FC, lazy, Suspense } from 'react';
 
-import { VectorTableRegistryProps } from './VectorTableRegistry.async';
+import { type VectorTableRegistryProps } from './VectorTableRegistry.chunkroot';
 
-const VectorTableRegistryAsync = lazy(() => import('./VectorTableRegistry.async'));
+const VectorTableRegistryAsync = lazy(() => import('./VectorTableRegistry.chunkroot'));
 
 export const VectorTableRegistry: FC<VectorTableRegistryProps> = props => (
   <Suspense>

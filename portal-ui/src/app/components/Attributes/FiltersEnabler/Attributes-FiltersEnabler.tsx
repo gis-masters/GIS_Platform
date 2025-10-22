@@ -4,10 +4,10 @@ import { Switch, Tooltip } from '@mui/material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
-import { CrgVectorLayer } from '../../../services/gis/layers/layers.models';
+import { type CrgVectorLayer } from '../../../services/gis/layers/layers.models';
 import { attributesTableStore } from '../../../stores/AttributesTable.store';
 
-import '!style-loader!css-loader!sass-loader!./Attributes-FiltersEnabler.scss';
+import './Attributes-FiltersEnabler.scss';
 
 const cnAttributesFiltersEnabler = cn('Attributes', 'FiltersEnabler');
 

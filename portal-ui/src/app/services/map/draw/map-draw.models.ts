@@ -1,4 +1,4 @@
-import { GeometryType } from '../../geoserver/wfs/wfs.models';
+import { type GeometryType } from '../../geoserver/wfs/wfs.models';
 
 /**
  * В момент добавления новых объектов и возникновении события 'drawend', объекты имеют один из этих типов геометрии.

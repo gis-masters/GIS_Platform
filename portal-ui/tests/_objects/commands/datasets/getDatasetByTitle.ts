@@ -1,5 +1,5 @@
 import { vectorDataClient } from '../../../../src/app/services/data/vectorData/vectorData.client';
-import { Dataset } from '../../../../src/app/services/data/vectorData/vectorData.models';
+import { type Dataset } from '../../../../src/app/services/data/vectorData/vectorData.models';
 import { requestAsAdmin } from '../requestAs';
 
 export async function getDatasetByTitle(title: string): Promise<Dataset> {

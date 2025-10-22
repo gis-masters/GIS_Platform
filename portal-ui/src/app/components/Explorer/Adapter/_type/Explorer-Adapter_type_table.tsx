@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react';
+import React, { type ReactNode } from 'react';
 import { Tooltip } from '@mui/material';
 import { ViewListOutlined } from '@mui/icons-material';
 
@@ -8,9 +8,9 @@ import { staticImplements } from '../../../../services/util/staticImplements';
 import { GeometryIcon } from '../../../GeometryIcon/GeometryIcon';
 import { VectorTableActions } from '../../../VectorTableActions/VectorTableActions';
 import {
-  Adapter,
-  ExplorerItemData,
-  ExplorerItemDataAllTypes,
+  type Adapter,
+  type ExplorerItemData,
+  type ExplorerItemDataAllTypes,
   ExplorerItemType,
   itemTypeError
 } from '../../Explorer.models';

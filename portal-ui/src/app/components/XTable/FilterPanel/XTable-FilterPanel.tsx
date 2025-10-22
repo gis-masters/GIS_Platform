@@ -8,11 +8,11 @@ import { boundMethod } from 'autobind-decorator';
 
 import { PropertyType } from '../../../services/data/schema/schema.models';
 import { getFieldFilterPart } from '../../../services/util/filters/filters';
-import { FilterQuery } from '../../../services/util/filters/filters.models';
+import { type FilterQuery } from '../../../services/util/filters/filters.models';
 import { cnXTableFilterPanelItem, XTableFilterPanelItem } from '../FilterPanelItem/XTable-FilterPanelItem';
-import { XTableColumn } from '../XTable.models';
+import { type XTableColumn } from '../XTable.models';
 
-import '!style-loader!css-loader!sass-loader!./XTable-FilterPanel.scss';
+import './XTable-FilterPanel.scss';
 
 const cnXTableFilterPanel = cn('XTable', 'FilterPanel');
 

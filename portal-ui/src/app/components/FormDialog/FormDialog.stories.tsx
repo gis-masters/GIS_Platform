@@ -1,8 +1,8 @@
 import React, { useCallback, useState } from 'react';
 import { SaveOutlined } from '@mui/icons-material';
-import { StoryFn } from '@storybook/react';
+import { type StoryFn } from '@storybook/react';
 
-import { PropertySchema, PropertyType } from '../../services/data/schema/schema.models';
+import { type PropertySchema, PropertyType } from '../../services/data/schema/schema.models';
 import { validateFormValue } from '../../services/util/form/formValidation.utils';
 import { sleep } from '../../services/util/sleep';
 import { schemaWithDefaultValue, schemaWithDynamicProperties } from '../Form/Form.stories';

@@ -1,13 +1,13 @@
-import React, { FC } from 'react';
+import React, { type FC } from 'react';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 
-import { UploadedFile } from '../../services/photoUploader.models';
+import { type UploadedFile } from '../../services/photoUploader.models';
 import { UpPreviewerAdditionalCounter } from './AdditionalCounter/UpPreviewer-AdditionalCounter';
 import { UpPreviewerItem } from './Item/UpPreviewer-Item';
 
-import '!style-loader!css-loader!sass-loader!./UpPreviewer.scss';
-import '!style-loader!css-loader!sass-loader!./List/UpPreviewer-List.scss';
+import './UpPreviewer.scss';
+import './List/UpPreviewer-List.scss';
 
 const cnUpPreviewer = cn('UpPreviewer');
 

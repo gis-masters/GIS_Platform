@@ -9,16 +9,16 @@ class CreateProjectDialogBlock extends Block {
   };
 
   async setFieldValue(field: string, title: string): Promise<void> {
-    const formBlock = new FormBlock(await this.$('container'));
+    const formBlock = new FormBlock(await this.findBySelector('container'));
     const $field = await formBlock.getField(field);
-    const $fieldInput = await $field.$('input');
+    const $fieldInput = await $field.$('input').getElement();
     await $fieldInput.setValue(title);
   }
 
   async submit(): Promise<void> {
-    const $submit = await this.$('submit');
+    const $submit = await this.findBySelector('submit');
     await $submit.click();
-    await $submit.waitForDisplayed({ reverse: true });
+    await $submit.waitForExist({ reverse: true });
   }
 }
 

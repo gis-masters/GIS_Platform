@@ -3,7 +3,7 @@ import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { isEqual } from 'lodash';
 
-import { Library } from '../../services/data/library/library.models';
+import { type Library } from '../../services/data/library/library.models';
 import { getLibrary } from '../../services/data/library/library.service';
 import { Role } from '../../services/permissions/permissions.models';
 import { currentUser } from '../../stores/CurrentUser.store';

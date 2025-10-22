@@ -1,18 +1,18 @@
-import React, { ReactNode } from 'react';
+import React, { type ReactNode } from 'react';
 import { FolderOutlined } from '@mui/icons-material';
 import { RegistryConsumer } from '@bem-react/di';
 
-import { Emitter } from '../../../../services/common/Emitter';
-import { communicationService, DataChangeEventDetail } from '../../../../services/communication.service';
-import { ContentTypeTypes, Library, LibraryRecord } from '../../../../services/data/library/library.models';
+import { type Emitter } from '../../../../services/common/Emitter';
+import { communicationService, type DataChangeEventDetail } from '../../../../services/communication.service';
+import { ContentTypeTypes, type Library, type LibraryRecord } from '../../../../services/data/library/library.models';
 import {
   getLibraryRecord,
   getLibraryRecords,
   getLibraryRecordsWithParticularOne,
   getLibrarySchemaByRecord
 } from '../../../../services/data/library/library.service';
-import { CommonDiRegistry } from '../../../../services/di-registry';
-import { PageOptions, SortOrder } from '../../../../services/models';
+import { type CommonDiRegistry } from '../../../../services/di-registry';
+import { type PageOptions, SortOrder } from '../../../../services/models';
 import { Role } from '../../../../services/permissions/permissions.models';
 import { formatDate } from '../../../../services/util/date.util';
 import { staticImplements } from '../../../../services/util/staticImplements';
@@ -23,15 +23,15 @@ import { LibraryKptRequest } from '../../../LibraryKptRequest/LibraryKptRequest'
 import { LibraryMassKptLoad } from '../../../LibraryMassKptLoad/LibraryMassKptLoad';
 import { LibraryViewSwitch } from '../../../LibraryViewSwitch/LibraryViewSwitch';
 import {
-  Adapter,
-  ExplorerItemData,
-  ExplorerItemDataAllTypes,
+  type Adapter,
+  type ExplorerItemData,
+  type ExplorerItemDataAllTypes,
   ExplorerItemType,
   itemTypeError,
-  SortItem
+  type SortItem
 } from '../../Explorer.models';
-import { ExplorerService } from '../../Explorer.service';
-import { ExplorerStore } from '../../Explorer.store';
+import { type ExplorerService } from '../../Explorer.service';
+import { type ExplorerStore } from '../../Explorer.store';
 import { ExplorerInfoDescItem } from '../../InfoDescItem/Explorer-InfoDescItem';
 import { ExplorerInfoDescTitle } from '../../InfoDescTitle/Explorer-InfoDescTitle';
 

@@ -1,6 +1,6 @@
 import { describe, expect, test } from '@jest/globals';
 
-import { PropertySchema, PropertyType, SimpleSchema } from '../../services/data/schema/schema.models';
+import { type PropertySchema, PropertyType, type SimpleSchema } from '../../services/data/schema/schema.models';
 import { isRecordStringUnknown } from '../../services/util/typeGuards/isRecordStringUnknown';
 import { computeDynamicProperties } from './Form.utils';
 

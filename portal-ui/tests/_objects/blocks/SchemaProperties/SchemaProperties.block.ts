@@ -15,31 +15,31 @@ export class SchemaPropertiesBlock extends Block {
 
   async isReadOnlyProperty(title: string): Promise<boolean> {
     const $property = await this.getPropertyByTitle(title);
-    const $readOnlyIcon = await $property.$(this.selectors.schemaPropertyReadOnly);
+    const $readOnlyIcon = await $property.$(this.selectors.schemaPropertyReadOnly).getElement();
 
     return await $readOnlyIcon.isDisplayed();
   }
 
   async isRequiredProperty(title: string): Promise<boolean> {
     const $property = await this.getPropertyByTitle(title);
-    const $requiredIcon = await $property.$(this.selectors.schemaPropertyRequired);
+    const $requiredIcon = await $property.$(this.selectors.schemaPropertyRequired).getElement();
 
     return await $requiredIcon.isDisplayed();
   }
 
   async isHiddenProperty(title: string): Promise<boolean> {
     const $property = await this.getPropertyByTitle(title);
-    const $hiddenIcon = await $property.$(this.selectors.schemaPropertyHidden);
+    const $hiddenIcon = await $property.$(this.selectors.schemaPropertyHidden).getElement();
 
     return await $hiddenIcon.isDisplayed();
   }
 
   async getPropertyByTitle(title: string): Promise<WebdriverIO.Element> {
-    const $container = await this.$('container');
-    const $$properties = await $container.$$(this.selectors.schemaProperty);
+    const $container = await this.findBySelector('container');
+    const $$properties = await $container.$$(this.selectors.schemaProperty).getElements();
 
     for (const $property of $$properties) {
-      const $title = await $property.$(this.selectors.schemaPropertyTitle);
+      const $title = await $property.$(this.selectors.schemaPropertyTitle).getElement();
       const text = await $title.getText();
 
       if (text === title) {
@@ -52,7 +52,7 @@ export class SchemaPropertiesBlock extends Block {
 
   async getInputCheckboxByPropertyTitleAndFieldLabel(title: string, fieldLabel: string): Promise<WebdriverIO.Element> {
     const $property = await this.getPropertyByTitle(title);
-    const $propertyFieldsContainer = await $property.nextElement();
+    const $propertyFieldsContainer = await $property.nextElement().getElement();
 
     await $propertyFieldsContainer.waitForDisplayed();
 
@@ -63,7 +63,7 @@ export class SchemaPropertiesBlock extends Block {
 
   async clickEditPropertyByTitle(title: string): Promise<void> {
     const $property = await this.getPropertyByTitle(title);
-    const $btn = await $property.$(this.selectors.schemaPropertyOpenEditButton);
+    const $btn = await $property.$(this.selectors.schemaPropertyOpenEditButton).getElement();
 
     await $btn.waitForClickable();
     await $btn.click();

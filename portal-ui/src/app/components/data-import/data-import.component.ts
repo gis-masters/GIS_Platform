@@ -1,6 +1,6 @@
 import { createElement } from 'react';
-import { createRoot, Root } from 'react-dom/client';
-import { Component, ElementRef, OnChanges, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { createRoot, type Root } from 'react-dom/client';
+import { Component, ElementRef, type OnChanges, type OnDestroy, type OnInit, ViewChild } from '@angular/core';
 import { withRegistry } from '@bem-react/di';
 
 import { registry } from '../../services/di-registry';
@@ -11,7 +11,8 @@ const DataImportWithRegistry = withRegistry(registry)(DataImport);
 @Component({
   selector: 'crg-data-import',
   template: '<div class="data-import" #react></div>',
-  styleUrls: ['./data-import.component.scss']
+  styleUrls: ['./data-import.component.scss'],
+  standalone: false
 })
 export class DataImportComponent implements OnInit, OnDestroy, OnChanges {
   @ViewChild('react', { read: ElementRef, static: true }) ref?: ElementRef<HTMLDivElement>;

@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, type OnInit } from '@angular/core';
 
-import { environment, Platform } from '../../services/environment';
+import { environment, type Platform } from '../../services/environment';
 
 @Component({
   selector: 'crg-home',
-  templateUrl: './home.component.html'
+  templateUrl: './home.component.html',
+  standalone: false
 })
 export class HomeComponent implements OnInit {
   envPlatform: Platform = 'simf';

@@ -1,9 +1,9 @@
-import { DataTable } from '@cucumber/cucumber';
+import { type DataTable } from '@cucumber/cucumber';
 import { Given } from '@wdio/cucumber-framework';
 
 import { CompoundMainFiles } from '../../../../src/app/services/data/files/files.models';
 import { getFileExtension } from '../../../../src/app/services/data/files/files.util';
-import { ScenarioScope } from '../../ScenarioScope';
+import { type ScenarioScope } from '../../ScenarioScope';
 import { updateLibraryRecord } from '../docLibrary/updateLibraryRecord';
 import { placeFile } from './placeFile';
 import { uploadTestFile } from './uploadTestFile';

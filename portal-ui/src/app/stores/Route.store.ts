@@ -1,7 +1,13 @@
 import { action, makeObservable, observable } from 'mobx';
-import { ActivatedRouteSnapshot, ChildActivationStart, ParamMap, RoutesRecognized, UrlSegment } from '@angular/router';
+import {
+  type ActivatedRouteSnapshot,
+  ChildActivationStart,
+  type ParamMap,
+  RoutesRecognized,
+  type UrlSegment
+} from '@angular/router';
 
-import { AppRouteData } from '../app-routing.module';
+import { type AppRouteData } from '../app-routing.module';
 import { services } from '../services/services';
 
 type Params = Record<string, string>;

@@ -1,7 +1,7 @@
-import React, { FC, ReactNode } from 'react';
+import React, { type FC, type ReactNode } from 'react';
 import { cn } from '@bem-react/classname';
 
-import '!style-loader!css-loader!sass-loader!./Fias-Code.scss';
+import './Fias-Code.scss';
 
 const cnFiasCode = cn('Fias', 'Code');
 

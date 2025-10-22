@@ -1,21 +1,21 @@
 import React, { Component } from 'react';
-import { action, IReactionDisposer, makeObservable, observable, reaction } from 'mobx';
+import { action, type IReactionDisposer, makeObservable, observable, reaction } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 
-import { StyleRuleExtended } from '../../services/geoserver/styles/styles.models';
+import { type StyleRuleExtended } from '../../services/geoserver/styles/styles.models';
 import { loadAllLayersStyles } from '../../services/map/map-print.service';
-import { SortParams } from '../../services/util/sortObjects';
+import { type SortParams } from '../../services/util/sortObjects';
 import { currentProject } from '../../stores/CurrentProject.store';
 import { printSettings } from '../../stores/PrintSettings.store';
 import { Button } from '../Button/Button';
 import { ChooseXTableDialog } from '../ChooseXTableDialog/ChooseXTableDialog';
-import { FormControlProps } from '../Form/Control/Form-Control';
-import { XTableColumn } from '../XTable/XTable.models';
+import { type FormControlProps } from '../Form/Control/Form-Control';
+import { type XTableColumn } from '../XTable/XTable.models';
 import { SelectLegendCount } from './Count/SelectLegend-Count';
 import { SelectLegendImg } from './Img/SelectLegend-Img';
 
-import '!style-loader!css-loader!sass-loader!./SelectLegend.scss';
+import './SelectLegend.scss';
 
 const cnSelectLegend = cn('SelectLegend');
 

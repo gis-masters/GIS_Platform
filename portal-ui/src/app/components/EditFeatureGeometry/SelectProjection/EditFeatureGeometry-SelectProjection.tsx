@@ -1,10 +1,10 @@
-import React, { FC } from 'react';
+import React, { type FC } from 'react';
 import { cn } from '@bem-react/classname';
 
-import { Projection } from '../../../services/data/projections/projections.models';
+import { type Projection } from '../../../services/data/projections/projections.models';
 import { SelectProjection } from '../../SelectProjection/SelectProjection';
 
-import '!style-loader!css-loader!sass-loader!./EditFeatureGeometry-SelectProjection.scss';
+import './EditFeatureGeometry-SelectProjection.scss';
 
 const cnEditFeatureGeometrySelectProjection = cn('EditFeatureGeometry', 'SelectProjection');
 

@@ -1,9 +1,9 @@
-import React, { FC } from 'react';
+import React, { type FC } from 'react';
 import { cn } from '@bem-react/classname';
 
 import { getScaleLineImageSrc } from '../../../services/map/map-print.service';
 
-import '!style-loader!css-loader!sass-loader!./PrintMapDialog-Scale.scss';
+import './PrintMapDialog-Scale.scss';
 
 const cnPrintMapDialogScale = cn('PrintMapDialog', 'Scale');
 

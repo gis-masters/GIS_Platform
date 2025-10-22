@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, { type FC, useEffect, useState } from 'react';
 import { observer } from 'mobx-react';
 import { Tooltip } from '@mui/material';
 import { EditOutlined, HealthAndSafetyOutlined, VisibilityOutlined } from '@mui/icons-material';
@@ -7,7 +7,7 @@ import { cn } from '@bem-react/classname';
 import { getLibraryRecord } from '../../services/data/library/library.service';
 import { Role } from '../../services/permissions/permissions.models';
 
-import '!style-loader!css-loader!sass-loader!./DocumentRole.scss';
+import './DocumentRole.scss';
 
 function getRoleTitle(role: Role): string {
   const roleTitles = {

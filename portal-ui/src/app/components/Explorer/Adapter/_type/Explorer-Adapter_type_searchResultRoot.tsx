@@ -1,17 +1,17 @@
-import React, { ReactNode } from 'react';
+import React, { type ReactNode } from 'react';
 
-import { Emitter } from '../../../../services/common/Emitter';
-import { communicationService, DataChangeEventDetail } from '../../../../services/communication.service';
-import { LibraryRecord } from '../../../../services/data/library/library.models';
+import { type Emitter } from '../../../../services/common/Emitter';
+import { communicationService, type DataChangeEventDetail } from '../../../../services/communication.service';
+import { type LibraryRecord } from '../../../../services/data/library/library.models';
 import { getSearchResults } from '../../../../services/data/search/search.service';
 import { getSearchRequest } from '../../../../services/data/search/search.util';
-import { PageOptions } from '../../../../services/models';
+import { type PageOptions } from '../../../../services/models';
 import { staticImplements } from '../../../../services/util/staticImplements';
 import { ExportSearchResults } from '../../../ExportSearchResults/ExportSearchResults';
 import {
-  Adapter,
-  ExplorerItemData,
-  ExplorerItemDataAllTypes,
+  type Adapter,
+  type ExplorerItemData,
+  type ExplorerItemDataAllTypes,
   ExplorerItemType,
   itemTypeError
 } from '../../Explorer.models';

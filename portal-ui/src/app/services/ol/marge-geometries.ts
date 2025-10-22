@@ -1,8 +1,8 @@
 import Feature from 'ol/Feature';
-import { Geometry, LineString, MultiLineString, MultiPoint, MultiPolygon, Point } from 'ol/geom';
+import { type Geometry, LineString, MultiLineString, MultiPoint, MultiPolygon, Point } from 'ol/geom';
 import Polygon from 'ol/geom/Polygon';
 
-import { defaultOlProjectionCode, Projection } from '../data/projections/projections.models';
+import { defaultOlProjectionCode, type Projection } from '../data/projections/projections.models';
 import { getProjectionCode } from '../data/projections/projections.util';
 import { roundCoordinate } from '../util/GeometryUtil';
 

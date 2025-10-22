@@ -4,7 +4,7 @@ import { authenticateAs } from './authenticate';
 import { editUser } from './editUser';
 import { getUserByEmail } from './getUserByEmail';
 import { inviteUser } from './inviteUser';
-import { getTestUser, TestUser } from './testUsers';
+import { getTestUser, type TestUser } from './testUsers';
 
 Given('я авторизован как {user}', async (user: TestUser) => {
   await authenticateAs(user);

@@ -1,8 +1,8 @@
 import { getPathFilter } from '../../../components/DataManagement/DataManagement.utils';
-import { ExplorerSearchValue } from '../../../components/Explorer/Explorer.models';
-import { Library, LibraryRecord } from '../../../services/data/library/library.models';
-import { SearchRequest } from '../../../services/data/search/search.model';
-import { Dataset } from '../../../services/data/vectorData/vectorData.models';
+import { type ExplorerSearchValue } from '../../../components/Explorer/Explorer.models';
+import { type Library, type LibraryRecord } from '../../../services/data/library/library.models';
+import { type SearchRequest } from '../../../services/data/search/search.model';
+import { type Dataset } from '../../../services/data/vectorData/vectorData.models';
 import { getAllVectorTablesInDataset } from '../../../services/data/vectorData/vectorData.service';
 import { buildCql } from '../../util/cql/buildCql';
 

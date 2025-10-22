@@ -1,5 +1,5 @@
-import { CrgLayer } from '../../../../src/app/services/gis/layers/layers.models';
 import { layersClient } from '../../../../src/app/services/gis/layers/layers.client';
+import { type CrgLayer } from '../../../../src/app/services/gis/layers/layers.models';
 import { requestAsAdmin } from '../requestAs';
 
 export async function updateLayer(layerId: number, patch: Partial<CrgLayer>, projectId: number): Promise<void> {

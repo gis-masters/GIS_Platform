@@ -3,7 +3,7 @@ import { boundClass } from 'autobind-decorator';
 import { http } from '../../api/http.service';
 import { Mime } from '../../util/Mime';
 import { GeoserverClient } from '../GeoserverClient';
-import { WfsFeatureCollection } from './wfs.models';
+import { type WfsFeatureCollection } from './wfs.models';
 
 @boundClass
 class WfsClient extends GeoserverClient {

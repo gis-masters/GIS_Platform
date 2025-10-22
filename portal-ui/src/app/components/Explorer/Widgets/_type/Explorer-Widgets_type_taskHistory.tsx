@@ -3,14 +3,14 @@ import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { withBemMod } from '@bem-react/core';
 
-import { Schema } from '../../../../services/data/schema/schema.models';
+import { type Schema } from '../../../../services/data/schema/schema.models';
 import { applyContentType } from '../../../../services/data/schema/schema.utils';
 import { getTaskSchema } from '../../../../services/data/task/task.service';
 import { ViewContentWidget } from '../../../ViewContentWidget/ViewContentWidget';
 import { assertExplorerItemDataTypeTaskHistory } from '../../Adapter/_type/Explorer-Adapter_type_taskHistory';
 import { ExplorerItemType } from '../../Explorer.models';
 import { ExplorerInfoDescItem } from '../../InfoDescItem/Explorer-InfoDescItem';
-import { cnExplorerWidgets, ExplorerWidgetsProps } from '../Explorer-Widgets.base';
+import { cnExplorerWidgets, type ExplorerWidgetsProps } from '../Explorer-Widgets.base';
 
 @observer
 class ExplorerWidgetsTypeTaskHistory extends Component<ExplorerWidgetsProps> {

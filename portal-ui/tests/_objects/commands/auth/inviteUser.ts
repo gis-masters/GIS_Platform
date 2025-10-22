@@ -1,7 +1,7 @@
 import { usersClient } from '../../../../src/app/services/auth/users/users.client';
 import { requestAsAdmin } from '../requestAs';
 import { getUserByEmail } from './getUserByEmail';
-import { TestUser } from './testUsers';
+import { type TestUser } from './testUsers';
 
 export async function inviteUser(user: TestUser): Promise<void> {
   try {

@@ -1,13 +1,22 @@
-import React, { Component, createRef, FC, RefObject } from 'react';
-import { Paper, PaperProps, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
+import React, { Component, createRef, type FC, type RefObject } from 'react';
+import {
+  Paper,
+  type PaperProps,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow
+} from '@mui/material';
 import { cn } from '@bem-react/classname';
-import { Coordinate } from 'ol/coordinate';
+import { type Coordinate } from 'ol/coordinate';
 
 import { GeometryType } from '../../../services/geoserver/wfs/wfs.models';
 import { editFeatureStore } from '../../../services/map/a-map-mode/edit-feature/EditFeatureStore';
 import { EditFeatureGeometryViewGroupControls } from '../ViewGroupControls/EditFeatureGeometry-ViewGroupControls';
 
-import '!style-loader!css-loader!sass-loader!./EditFeatureGeometry-ViewGroup.scss';
+import './EditFeatureGeometry-ViewGroup.scss';
 
 const cnEditFeatureGeometryViewGroup = cn('EditFeatureGeometry', 'ViewGroup');
 const cnEditFeatureGeometryViewGroupIndexCell = cn('EditFeatureGeometry', 'ViewGroupIndexCell');

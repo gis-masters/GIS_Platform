@@ -3,8 +3,8 @@ import { observer } from 'mobx-react';
 import { withBemMod } from '@bem-react/core';
 import { boundMethod } from 'autobind-decorator';
 
-import { PropertySchemaFloat, PropertyType } from '../../../../services/data/schema/schema.models';
-import { cnFormControl, FormControlProps } from '../Form-Control';
+import { type PropertySchemaFloat, PropertyType } from '../../../../services/data/schema/schema.models';
+import { cnFormControl, type FormControlProps } from '../Form-Control';
 import { FormControlTypeNumber } from './Form-Control_type_number';
 
 @observer

@@ -6,13 +6,13 @@ import { cn } from '@bem-react/classname';
 
 import { organizationsService } from '../../../services/auth/organizations/organizations.service';
 import { PropertyType } from '../../../services/data/schema/schema.models';
-import { CompositeSettings, organizationSettings } from '../../../stores/OrganizationSettings.store';
+import { type CompositeSettings, organizationSettings } from '../../../stores/OrganizationSettings.store';
 import { Button } from '../../Button/Button';
 import { ChooseXTableDialog } from '../../ChooseXTableDialog/ChooseXTableDialog';
 import { OrganizationSettings } from '../../OrganizationSettings/OrganizationSettings';
-import { XTableColumn } from '../../XTable/XTable.models';
+import { type XTableColumn } from '../../XTable/XTable.models';
 
-import '!style-loader!css-loader!sass-loader!./SystemManagement-Content.scss';
+import './SystemManagement-Content.scss';
 
 const cnSystemManagementContent = cn('SystemManagement', 'Content');
 

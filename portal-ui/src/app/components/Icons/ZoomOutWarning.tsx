@@ -1,7 +1,7 @@
 import React from 'react';
 import { SvgIcon } from '@mui/material';
-import { SvgIconComponent } from '@mui/icons-material';
-import { SvgIconProps } from '@mui/material/SvgIcon/SvgIcon';
+import { type SvgIconComponent } from '@mui/icons-material';
+import { type SvgIconProps } from '@mui/material/SvgIcon/SvgIcon';
 
 export const ZoomOutWarning: SvgIconComponent = Object.assign(
   (props: SvgIconProps) => (

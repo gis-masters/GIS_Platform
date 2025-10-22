@@ -1,14 +1,14 @@
 import { action, computed, makeObservable, observable } from 'mobx';
 
 import {
-  ImportTask,
-  ImportTaskFull,
-  ImportTaskProgress,
-  ImportTaskShort,
-  ScratchImport,
+  type ImportTask,
+  type ImportTaskFull,
+  type ImportTaskProgress,
+  type ImportTaskShort,
+  type ScratchImport,
   TaskStatusCode
 } from '../services/geoserver/import/import.models';
-import { ValueOf } from '../services/models';
+import { type ValueOf } from '../services/models';
 
 export interface ImportInfo {
   file?: File;

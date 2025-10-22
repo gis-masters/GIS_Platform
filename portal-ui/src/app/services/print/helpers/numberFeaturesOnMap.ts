@@ -1,7 +1,7 @@
 import { pointOnFeature } from '@turf/turf';
 
 import { getOlProjection, getProjectionByCode } from '../../data/projections/projections.service';
-import { WfsFeature } from '../../geoserver/wfs/wfs.models';
+import { type WfsFeature } from '../../geoserver/wfs/wfs.models';
 import { getLayerByFeatureInCurrentProject } from '../../gis/layers/layers.utils';
 import { mapLabelsService } from '../../map/labels/map-labels.service';
 import { transform } from '../../util/coordinates-transform.util';

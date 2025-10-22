@@ -3,7 +3,7 @@ import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { Tooltip } from '@mui/material';
 
-import { FeatureTypeHref } from '../../services/geoserver/featureType/featureType.model';
+import { type FeatureTypeHref } from '../../services/geoserver/featureType/featureType.model';
 import {
   deleteFeatureTypeFromScratchDatastore,
   getFeatureTypesFromScratchDatastore

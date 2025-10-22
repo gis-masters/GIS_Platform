@@ -1,14 +1,14 @@
-import React, { Component, createRef, RefObject } from 'react';
+import React, { Component, createRef, type RefObject } from 'react';
 import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 import { parseInt } from 'lodash';
 
-import { ChildrenProps } from '../../services/models';
+import { type ChildrenProps } from '../../services/models';
 import { PseudoLink } from '../PseudoLink/PseudoLink';
 
-import '!style-loader!css-loader!sass-loader!./TextOverflow.scss';
+import './TextOverflow.scss';
 
 const DEFAULT_MAX_LINES = 3;
 

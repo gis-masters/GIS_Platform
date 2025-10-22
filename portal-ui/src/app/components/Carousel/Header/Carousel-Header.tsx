@@ -1,10 +1,10 @@
-import React, { FC, ReactNode } from 'react';
+import React, { type FC, type ReactNode } from 'react';
 import { cn } from '@bem-react/classname';
 
 import { CarouselSubTitle } from '../SubTitle/Carousel-SubTitle';
 import { CarouselTitle } from '../Title/Carousel-Title';
 
-import '!style-loader!css-loader!sass-loader!./Carousel-Header.scss';
+import './Carousel-Header.scss';
 
 const cnCarousel = cn('Carousel');
 

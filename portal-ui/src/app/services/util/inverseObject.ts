@@ -1,4 +1,4 @@
-import { ValueOf } from '../models';
+import { type ValueOf } from '../models';
 
 /**
  * Инвертирует объект так, что ключи становятся значениями, а значения ключами

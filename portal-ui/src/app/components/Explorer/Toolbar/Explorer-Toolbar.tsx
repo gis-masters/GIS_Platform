@@ -1,16 +1,16 @@
-import React, { FC } from 'react';
+import React, { type FC } from 'react';
 import { cn } from '@bem-react/classname';
 
 import { ToolbarDivider } from '../../ToolbarDivider/ToolbarDivider';
-import { ExplorerService } from '../Explorer.service';
-import { ExplorerStore } from '../Explorer.store';
+import { type ExplorerService } from '../Explorer.service';
+import { type ExplorerStore } from '../Explorer.store';
 import { ExplorerFilter } from '../Filter/Explorer-Filter';
 import { ExplorerPageSize } from '../PageSize/Explorer-PageSize';
 import { ExplorerSearch } from '../Search/Explorer-Search';
 import { ExplorerSort } from '../Sort/Explorer-Sort';
 import { ExplorerToolbarActions } from '../ToolbarActions/Explorer-ToolbarActions';
 
-import '!style-loader!css-loader!sass-loader!./Explorer-Toolbar.scss';
+import './Explorer-Toolbar.scss';
 
 const cnExplorerToolbar = cn('Explorer', 'Toolbar');
 

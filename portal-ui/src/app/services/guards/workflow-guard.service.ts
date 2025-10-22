@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, Router } from '@angular/router';
-import { AxiosError } from 'axios';
+import { type ActivatedRouteSnapshot, Router } from '@angular/router';
+import { type AxiosError } from 'axios';
 import { NGXLogger } from 'ngx-logger';
 
 import { currentProject } from '../../stores/CurrentProject.store';

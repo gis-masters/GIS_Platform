@@ -6,11 +6,11 @@ class WorkspaceHeaderMenuBlock extends Block {
   };
 
   $getMenuItem(itemName: string): Promise<WebdriverIO.Element> {
-    return $(`.WorkspaceHeader-MenuItemTitle*=${itemName}`);
+    return $(`.WorkspaceHeader-MenuItemTitle*=${itemName}`).getElement();
   }
 
   async selectMainMenuOption(itemName: string): Promise<void> {
-    const $container = await this.$('container');
+    const $container = await this.findBySelector('container');
     await $container.waitForDisplayed();
 
     const $menuItem = await this.$getMenuItem(itemName);

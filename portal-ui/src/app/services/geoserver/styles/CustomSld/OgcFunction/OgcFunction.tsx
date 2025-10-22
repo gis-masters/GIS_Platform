@@ -1,4 +1,4 @@
-import { createElement, FC, ReactNode } from 'react';
+import { createElement, type FC, type ReactNode } from 'react';
 
 interface FunctionProps {
   name: string;

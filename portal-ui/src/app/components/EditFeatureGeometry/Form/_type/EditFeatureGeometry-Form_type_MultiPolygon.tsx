@@ -2,14 +2,14 @@ import React, { Component } from 'react';
 import { action, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { withBemMod } from '@bem-react/core';
-import { Coordinate } from 'ol/coordinate';
+import { type Coordinate } from 'ol/coordinate';
 
-import { GeometryType, WfsMultiPolygonGeometry } from '../../../../services/geoserver/wfs/wfs.models';
+import { GeometryType, type WfsMultiPolygonGeometry } from '../../../../services/geoserver/wfs/wfs.models';
 import { editFeatureHistoryStore } from '../../../../services/map/a-map-mode/edit-feature/EditFeatureHistoryStore';
 import { editFeatureStore } from '../../../../services/map/a-map-mode/edit-feature/EditFeatureStore';
 import { mapDrawService } from '../../../../services/map/draw/map-draw.service';
 import { EditFeatureGeometrySuperGroup } from '../../SuperGroup/EditFeatureGeometry-SuperGroup';
-import { cnEditFeatureGeometryForm, EditFeatureGeometryFormProps } from '../EditFeatureGeometry-Form.base';
+import { cnEditFeatureGeometryForm, type EditFeatureGeometryFormProps } from '../EditFeatureGeometry-Form.base';
 
 @observer
 class EditFeatureGeometryFormTypeMultiPolygon extends Component<EditFeatureGeometryFormProps> {

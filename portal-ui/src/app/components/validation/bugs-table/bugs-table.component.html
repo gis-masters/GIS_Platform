@@ -1,48 +1,59 @@
-<div *ngIf="data.results.length < 1 && data.validated && !isLoadingResults">
-  <div *ngIf="data.status === 'DONE'">
-    <h6
-      class="float-left"
+@if (data.results.length < 1 && data.validated && !isLoadingResults) {
+  <div>
+    @if (data.status === 'DONE') {
+      <div>
+        @if (!!data.validated) {
+          <h6
+            class="float-left"
       style="
         padding-left: 10px;
 
         font-size: inherit;
 "
-      *ngIf="!!data.validated"
-    >
-      Ошибок нет
-    </h6>
-    <h6
-      class="float-left"
+            >
+            Ошибок нет
+          </h6>
+        }
+        @if (!data.validated) {
+          <h6
+            class="float-left"
       style="
         padding-left: 10px;
 
         font-size: inherit;
 "
-      *ngIf="!data.validated"
-    >
-      Проверка данных не выполнялась
-    </h6>
-    <h6
-      class="float-right"
+            >
+            Проверка данных не выполнялась
+          </h6>
+        }
+        @if (!!data.lastValidated) {
+          <h6
+            class="float-right"
       style="
         padding-right: 10px;
 
         font-size: inherit;
 "
-      *ngIf="!!data.lastValidated"
-    >
-      Время последней проверки: {{ data.lastValidated }}
-    </h6>
+            >
+            Время последней проверки: {{ data.lastValidated }}
+          </h6>
+        }
+      </div>
+    }
+    @if (data.status === 'ERROR') {
+      <div>
+        <h6 class="float-left" style="font-size: inherit;">Ошибка проверки данных</h6>
+      </div>
+    }
   </div>
-  <div *ngIf="data.status === 'ERROR'">
-    <h6 class="float-left" style="font-size: inherit;">Ошибка проверки данных</h6>
-  </div>
-</div>
+}
 
 <div class="validation-results-container mat-elevation-z8" [hidden]="data.results?.length === 0 && !isLoadingResults">
-  <div class="example-loading-shade" *ngIf="isLoadingResults">
-    <mat-spinner></mat-spinner>
-  </div>
+  @if (isLoadingResults) {
+    <div class="example-loading-shade">
+      <mat-spinner></mat-spinner>
+    </div>
+  }
 
   <div [hidden]="data.results?.length === 0">
     <div class="validation-results-table-container scroll">
@@ -53,16 +64,18 @@
         multiTemplateDataRows
         matSort
         matSortActive="objectid"
-      >
+        >
         <ng-container matColumnDef="objectid">
           <th mat-header-cell *matHeaderCellDef mat-sort-header style="padding-left: 34px;">ID</th>
           <td mat-cell *matCellDef="let element">
             <button mat-icon-button (click)="showObject($event, element.objectId)">
               <mat-icon style="color: yellowgreen;">search</mat-icon>
             </button>
-            <button *ngIf="updatingAllowed" mat-icon-button (click)="editObject($event, element.objectId)">
-              <mat-icon style="color: darkgrey;">edit</mat-icon>
-            </button>
+            @if (updatingAllowed) {
+              <button mat-icon-button (click)="editObject($event, element.objectId)">
+                <mat-icon style="color: darkgrey;">edit</mat-icon>
+              </button>
+            }
             {{ element.objectId }}
           </td>
         </ng-container>
@@ -79,10 +92,14 @@
               {{ element.propertyViolations.length + element.objectViolations.length }}
             </span>
             <div class="float-right" style="color: grey;">
-              <button mat-icon-button *ngIf="element != expandedElement">
-                <mat-icon>keyboard_arrow_down</mat-icon>
-              </button>
-              <button mat-icon-button *ngIf="element == expandedElement"><mat-icon>keyboard_arrow_up</mat-icon></button>
+              @if (element != expandedElement) {
+                <button mat-icon-button>
+                  <mat-icon>keyboard_arrow_down</mat-icon>
+                </button>
+              }
+              @if (element == expandedElement) {
+                <button mat-icon-button><mat-icon>keyboard_arrow_up</mat-icon></button>
+              }
             </div>
           </td>
         </ng-container>

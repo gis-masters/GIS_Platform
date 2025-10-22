@@ -10,6 +10,8 @@ init
 my
 node_modules
 stylelint.config.js
+dist
+webpack.config.js
 
 *conf.js
 

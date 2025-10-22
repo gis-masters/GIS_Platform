@@ -8,19 +8,19 @@ class FormViewTypeFileBlock extends Block {
   };
 
   async isCompoundFileHaveSingleDownloadBtn(): Promise<boolean> {
-    const $lookupList = await this.$('lookupList');
+    const $lookupList = await this.findBySelector('lookupList');
     await $lookupList.waitForDisplayed();
 
-    const $$delete = await $lookupList.$$('.Files-DownloadCompoundFile');
+    const $$delete = await $lookupList.$$('.Files-DownloadCompoundFile').getElements();
 
     return $$delete.length === 1;
   }
 
   async isCompoundFileHaveSingleFilesPlacementBtn(): Promise<boolean> {
-    const $lookupList = await this.$('lookupList');
+    const $lookupList = await this.findBySelector('lookupList');
     await $lookupList.waitForDisplayed();
 
-    const $$delete = await $lookupList.$$('.Files-Placement');
+    const $$delete = await $lookupList.$$('.Files-Placement').getElements();
 
     return $$delete.length === 1;
   }

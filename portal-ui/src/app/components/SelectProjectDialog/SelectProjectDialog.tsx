@@ -1,11 +1,11 @@
-import React, { Component, ReactNode } from 'react';
+import React, { Component, type ReactNode } from 'react';
 import { computed } from 'mobx';
 import { observer } from 'mobx-react';
-import { Breakpoint } from '@mui/material';
+import { type Breakpoint } from '@mui/material';
 import { cn } from '@bem-react/classname';
-import { IClassNameProps } from '@bem-react/core';
+import { type IClassNameProps } from '@bem-react/core';
 
-import { CrgProject } from '../../services/gis/projects/projects.models';
+import { type CrgProject } from '../../services/gis/projects/projects.models';
 import { projectsService } from '../../services/gis/projects/projects.service';
 import { Role } from '../../services/permissions/permissions.models';
 import { allProjects } from '../../stores/AllProjects.store';

@@ -2,7 +2,7 @@ import { boundClass } from 'autobind-decorator';
 
 import { Client } from '../../api/Client';
 import { http } from '../../api/http.service';
-import { KptTaskInfo } from './kpt.models';
+import { type KptTaskInfo } from './kpt.models';
 
 @boundClass
 class KptClient extends Client {

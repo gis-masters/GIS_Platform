@@ -8,7 +8,7 @@ import { boundMethod } from 'autobind-decorator';
 import { Button } from '../../Button/Button';
 import { DocumentsSelectDialog } from '../../DocumentsSelectDialog/DocumentsSelectDialog';
 import { LookupAdd } from '../../Lookup/Add/Lookup-Add';
-import { DocumentInfo } from '../Documents';
+import { type DocumentInfo } from '../Documents';
 
 const cnDocumentsAdd = cn('Documents', 'Add');
 

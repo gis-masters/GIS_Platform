@@ -1,8 +1,8 @@
-import React, { FC, lazy, Suspense } from 'react';
+import React, { type FC, lazy, Suspense } from 'react';
 
-import { FiasProps } from './Fias.async';
+import { type FiasProps } from './Fias.chunkroot';
 
-const FiasAsync = lazy(() => import('./Fias.async'));
+const FiasAsync = lazy(() => import('./Fias.chunkroot'));
 
 export const Fias: FC<FiasProps> = props => (
   <Suspense>

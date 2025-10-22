@@ -4,26 +4,26 @@ import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
-import { Schema } from '../../services/data/schema/schema.models';
+import { type Schema } from '../../services/data/schema/schema.models';
 import {
-  CustomStyleDescription,
+  type CustomStyleDescription,
   LABEL_PROPERTY_DEFAULT,
-  LineRule,
-  PointRule,
-  PolygonRule,
+  type LineRule,
+  type PointRule,
+  type PolygonRule,
   transparent
 } from '../../services/geoserver/styles/styles.models';
 import { buildCustomSld, getSupGeometryType, parseCustomStyle } from '../../services/geoserver/styles/styles.utils';
-import { CrgLayer } from '../../services/gis/layers/layers.models';
+import { type CrgLayer } from '../../services/gis/layers/layers.models';
 import { getLayerSchema } from '../../services/gis/layers/layers.service';
 import { isVectorFromFile } from '../../services/gis/layers/layers.utils';
-import { FormControlProps } from '../Form/Control/Form-Control';
+import { type FormControlProps } from '../Form/Control/Form-Control';
 import { CustomStyleControlForm } from './Form/CustomStyleControl-Form.composed';
 import { CustomStyleControlPreview } from './Preview/CustomStyleControl-Preview';
 
-import '!style-loader!css-loader!sass-loader!./CustomStyleControl.scss';
+import './CustomStyleControl.scss';
 
-export const cnCustomStyleControl = cn('CustomStyleControl');
+const cnCustomStyleControl = cn('CustomStyleControl');
 
 const defaultPointRule: PointRule = {
   markType: 'circle',

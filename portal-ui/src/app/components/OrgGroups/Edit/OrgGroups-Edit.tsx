@@ -5,7 +5,7 @@ import { IconButton, Tooltip } from '@mui/material';
 import { Edit } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
-import { CrgUser } from '../../../services/auth/users/users.models';
+import { type CrgUser } from '../../../services/auth/users/users.models';
 import { UserCreateEditDialog } from '../../UserCreateEditDialog/UserCreateEditDialog';
 
 const cnOrgGroupsEdit = cn('OrgGroups', 'Edit');

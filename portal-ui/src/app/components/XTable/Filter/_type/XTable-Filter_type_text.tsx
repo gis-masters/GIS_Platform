@@ -6,11 +6,11 @@ import { withBemMod } from '@bem-react/core';
 
 import { PropertyType } from '../../../../services/data/schema/schema.models';
 import { getFieldFilterValue, modifyFieldFilterValue } from '../../../../services/util/filters/filters';
-import { FilterQuery } from '../../../../services/util/filters/filters.models';
+import { type FilterQuery } from '../../../../services/util/filters/filters.models';
 import { XTableFilterStrictness } from '../../FilterStrictness/XTable-FilterStrictness';
-import { cnXTableFilter, XTableFilterProps } from '../XTable-Filter.base';
+import { cnXTableFilter, type XTableFilterProps } from '../XTable-Filter.base';
 
-import '!style-loader!css-loader!sass-loader!./XTable-Filter_type_text.scss';
+import './XTable-Filter_type_text.scss';
 
 @observer
 class XTableFilterTypeText extends Component<XTableFilterProps> {

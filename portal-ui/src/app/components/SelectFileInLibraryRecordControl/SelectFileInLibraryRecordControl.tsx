@@ -5,17 +5,17 @@ import { ButtonBase, Dialog, DialogActions, DialogContent, DialogTitle } from '@
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
-import { FileInfo } from '../../services/data/files/files.models';
+import { type FileInfo } from '../../services/data/files/files.models';
 import { isFileCanBePlaced } from '../../services/data/files/files.util';
-import { Library, LibraryRecord } from '../../services/data/library/library.models';
-import { Datasource } from '../AddLayerDialog/AddLayerDialog';
-import { Breadcrumbs, BreadcrumbsItemData } from '../Breadcrumbs/Breadcrumbs';
+import { type Library, type LibraryRecord } from '../../services/data/library/library.models';
+import { type Datasource } from '../AddLayerDialog/AddLayerDialog.models';
+import { Breadcrumbs, type BreadcrumbsItemData } from '../Breadcrumbs/Breadcrumbs';
 import { Button } from '../Button/Button';
 import { Explorer } from '../Explorer/Explorer';
-import { ExplorerItemData, ExplorerItemType } from '../Explorer/Explorer.models';
-import { FormControlProps } from '../Form/Control/Form-Control';
+import { type ExplorerItemData, ExplorerItemType } from '../Explorer/Explorer.models';
+import { type FormControlProps } from '../Form/Control/Form-Control';
 
-import '!style-loader!css-loader!sass-loader!./SelectFileInLibraryRecordControl.scss';
+import './SelectFileInLibraryRecordControl.scss';
 
 const cnSelectFileInLibraryRecordControl = cn('SelectFileInLibraryRecordControl');
 

@@ -1,6 +1,6 @@
-import { VerifyEcpResponse } from '../../../../server-types/common-contracts';
+import { type VerifyEcpResponse } from '../../../../server-types/common-contracts';
 import { filesClient } from './files.client';
-import { FileConnection, FileInfo } from './files.models';
+import { type FileConnection, type FileInfo } from './files.models';
 
 export async function createFile(file: File): Promise<FileInfo> {
   const formData = new FormData();

@@ -1,4 +1,4 @@
-import { ImportTaskResponse, ImportTaskShort } from '../geoserver/import/import.models';
+import { type ImportTaskResponse, type ImportTaskShort } from '../geoserver/import/import.models';
 
 export const GeoUtil = {
   /**

@@ -1,4 +1,14 @@
-import { TestData } from './XTable.stories';
+export interface TestData {
+  id: number;
+  title: string;
+  material?: string;
+  weight: number;
+  amount: number;
+  date: string;
+  conclusive?: boolean | null;
+  documents?: string;
+  long?: string;
+}
 
 export const smallData: TestData[] = [
   {

@@ -34,7 +34,7 @@ body {
 body .mdc-tab__text-label {
   letter-spacing: 0;
 
-  --mat-tab-header-label-text-tracking: 0;
+  --mat-tab-label-text-tracking: 0;
 }
 
 .scroll::-webkit-scrollbar {
@@ -114,8 +114,8 @@ body.global-crosshair-cursor * {
 }
 
 html {
-  --mdc-outlined-button-label-text-tracking: 0;
-  --mdc-protected-button-label-text-tracking: 0;
+  --mat-button-outlined-label-text-tracking: 0;
+  --mat-button-protected-label-text-tracking: 0;
 }
 
 :root {

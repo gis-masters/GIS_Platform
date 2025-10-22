@@ -3,10 +3,10 @@ import { observer } from 'mobx-react';
 import { withBemMod } from '@bem-react/core';
 import { boundMethod } from 'autobind-decorator';
 
-import { PropertySchemaDocument, PropertyType } from '../../../../services/data/schema/schema.models';
-import { DocumentInfo, Documents } from '../../../Documents/Documents';
+import { type PropertySchemaDocument, PropertyType } from '../../../../services/data/schema/schema.models';
+import { type DocumentInfo, Documents } from '../../../Documents/Documents';
 import { FormErrors } from '../../Errors/Form-Errors';
-import { cnFormControl, FormControlProps } from '../Form-Control';
+import { cnFormControl, type FormControlProps } from '../Form-Control';
 
 @observer
 class FormControlTypeDocument extends Component<FormControlProps> {

@@ -1,13 +1,13 @@
-import React, { Component, ReactNode } from 'react';
-import { action, IReactionDisposer, makeObservable, observable, reaction } from 'mobx';
+import React, { Component, type ReactNode } from 'react';
+import { action, type IReactionDisposer, makeObservable, observable, reaction } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 
 import { getToolbarActions } from '../Adapter/Explorer-Adapter';
-import { ExplorerService } from '../Explorer.service';
-import { ExplorerStore } from '../Explorer.store';
+import { type ExplorerService } from '../Explorer.service';
+import { type ExplorerStore } from '../Explorer.store';
 
-import '!style-loader!css-loader!sass-loader!./Explorer-ToolbarActions.scss';
+import './Explorer-ToolbarActions.scss';
 
 const cnExplorerToolbarActions = cn('Explorer', 'ToolbarActions');
 

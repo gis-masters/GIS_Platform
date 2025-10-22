@@ -3,20 +3,20 @@ import { observer } from 'mobx-react';
 import { withBemMod } from '@bem-react/core';
 import { boundMethod } from 'autobind-decorator';
 
-import { PropertySchema } from '../../../../services/data/schema/schema.models';
+import { type PropertySchema } from '../../../../services/data/schema/schema.models';
 import {
   customStyleFillColors,
   customStyleStrokeColors,
-  LineRule,
-  PolygonRule
+  type LineRule,
+  type PolygonRule
 } from '../../../../services/geoserver/styles/styles.models';
 import { Shape } from '../../../Icons/Shape';
 import { CustomStyleControlColorSelect } from '../../ColorSelect/CustomStyleControl-ColorSelect';
-import { cnCustomStyleControl } from '../../CustomStyleControl';
 import { CustomStyleControlHatchingSelect } from '../../HatchingSelect/CustomStyleControl-HatchingSelect';
 import { CustomStyleControlLabelPropertySelect } from '../../LabelPropertySelect/CustomStyleControl-LabelPropertySelect';
+import { CustomStyleControlOptionsWrapper } from '../../OptionsWrapper/CustomStyleControl-OptionsWrapper';
 import { CustomStyleControlStrokeSelect } from '../../StrokeSelect/CustomStyleControl-StrokeSelect';
-import { cnCustomStyleControlForm, CustomStyleControlFormProps } from '../CustomStyleControl-Form.base';
+import { cnCustomStyleControlForm, type CustomStyleControlFormProps } from '../CustomStyleControl-Form.base';
 
 @observer
 export class CustomStyleControlFormTypePolygon extends Component<CustomStyleControlFormProps> {
@@ -33,7 +33,7 @@ export class CustomStyleControlFormTypePolygon extends Component<CustomStyleCont
       <div className={cnCustomStyleControlForm(null, [className])}>
         {withIcon && <Shape color='primary' />}
 
-        <div className={cnCustomStyleControl('OptionsWrapper')}>
+        <CustomStyleControlOptionsWrapper>
           <CustomStyleControlStrokeSelect
             label='обводка'
             color={value.rule.strokeColor}
@@ -66,7 +66,7 @@ export class CustomStyleControlFormTypePolygon extends Component<CustomStyleCont
             onChange={this.labelChange}
             labelProperty={value.rule.labelProperty}
           />
-        </div>
+        </CustomStyleControlOptionsWrapper>
       </div>
     );
   }

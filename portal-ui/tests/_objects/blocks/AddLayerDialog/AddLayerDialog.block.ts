@@ -12,7 +12,7 @@ class AddLayerDialogBlock extends Block {
   };
 
   async checkViewFieldIsAppear(): Promise<void> {
-    const $addLayerDialogViewField = await this.$('addLayerDialogViewField');
+    const $addLayerDialogViewField = await this.findBySelector('addLayerDialogViewField');
     await $addLayerDialogViewField.waitForDisplayed();
 
     const vectorTableTitle = await $addLayerDialogViewField.getText();
@@ -20,53 +20,53 @@ class AddLayerDialogBlock extends Block {
   }
 
   async checkViewFieldIsNotAppear(): Promise<void> {
-    await expect(this.$('addLayerDialogViewField')).not.toBeDisplayed();
+    await expect(await this.findBySelector('addLayerDialogViewField')).not.toBeDisplayed();
   }
 
   async selectDatasource(): Promise<void> {
-    const $layerDialogSelectDatasource = await this.$('layerFormDialogSelectDatasource');
+    const $layerDialogSelectDatasource = await this.findBySelector('layerFormDialogSelectDatasource');
     await $layerDialogSelectDatasource.waitForDisplayed();
 
     await $layerDialogSelectDatasource.click();
   }
 
   async selectLibraryRecord(): Promise<void> {
-    const $layerDialogSelectDatasource = await this.$('layerFormDialogSelectLibraryRecord');
+    const $layerDialogSelectDatasource = await this.findBySelector('layerFormDialogSelectLibraryRecord');
     await $layerDialogSelectDatasource.waitForDisplayed();
 
     await $layerDialogSelectDatasource.click();
   }
 
   async clickAddLayerBtn(): Promise<void> {
-    const $addLayerBtn = await this.$('addLayerBtn');
+    const $addLayerBtn = await this.findBySelector('addLayerBtn');
     await $addLayerBtn.waitForDisplayed();
 
     await $addLayerBtn.click();
   }
 
   async waitForLoadingDisappear() {
-    const $loading = await this.$('addLayerBtnLoading');
-    await $loading.waitForDisplayed({ timeout: 10_000, reverse: true });
+    const $loading = await this.findBySelector('addLayerBtnLoading');
+    await $loading.waitForExist({ timeout: 10_000, reverse: true });
   }
 
   async waitForDialogDisappear() {
-    const $container = await this.$('container');
-    await $container.waitForDisplayed({ reverse: true });
+    const $container = await this.findBySelector('container');
+    await $container.waitForExist({ reverse: true });
   }
 
   async waitForDialogExist() {
-    const $container = await this.$('container');
-    await $container.waitForDisplayed();
+    const $container = await this.findBySelector('container');
+    await $container.waitForExist();
   }
 
   async selectLayerType(layerType: string): Promise<void> {
-    const $container = await this.$('container');
-    const $$formFields = await $container.$$('.Form-Field');
+    const $container = await this.findBySelector('container');
+    const $$formFields = await $container.$$('.Form-Field').getElements();
     for (const $formField of $$formFields) {
       const field = await $formField.$('.Form-Label').getText();
 
       if (field === 'Тип слоя') {
-        const $$layerTypeBtns = await $formField.$$('.MuiButtonBase-root');
+        const $$layerTypeBtns = await $formField.$$('.MuiButtonBase-root').getElements();
         for (const $layerTypeBtn of $$layerTypeBtns) {
           const type = await $layerTypeBtn.getText();
 

@@ -7,17 +7,17 @@ class KonfirmierenBlock extends Block {
   };
 
   async isDialogExist(): Promise<boolean> {
-    const $konfirmieren = await this.$('container');
+    const $konfirmieren = await this.findBySelector('container');
 
     return await $konfirmieren.isDisplayed();
   }
 
   async closeDialog(): Promise<void> {
     if (await this.isDialogExist()) {
-      const $yes = await this.$('yes');
+      const $yes = await this.findBySelector('yes');
       await $yes.waitForClickable();
       await $yes.click();
-      await $yes.waitForDisplayed({ reverse: true });
+      await $yes.waitForExist({ reverse: true });
     }
   }
 }

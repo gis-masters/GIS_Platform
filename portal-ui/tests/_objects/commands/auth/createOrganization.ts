@@ -1,8 +1,8 @@
 import { authClient } from '../../../../src/app/services/auth/auth/auth.client';
-import { RegData } from '../../../../src/app/services/auth/auth/auth.models';
+import { type RegData } from '../../../../src/app/services/auth/auth/auth.models';
 import { organizationsClient } from '../../../../src/app/services/auth/organizations/organizations.client';
-import { Organization } from '../../../../src/app/services/auth/organizations/organizations.models';
-import { OrgSettings } from '../../../../src/app/stores/OrganizationSettings.store';
+import { type Organization } from '../../../../src/app/services/auth/organizations/organizations.models';
+import { type OrgSettings } from '../../../../src/app/stores/OrganizationSettings.store';
 import { requestAs } from '../requestAs';
 import { getTestUser } from './testUsers';
 

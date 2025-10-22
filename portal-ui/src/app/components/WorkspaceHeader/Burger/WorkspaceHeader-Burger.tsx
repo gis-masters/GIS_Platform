@@ -1,9 +1,9 @@
-import React, { FC } from 'react';
+import React, { type FC } from 'react';
 import { IconButton } from '@mui/material';
 import { Menu as MenuIcon } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
-import '!style-loader!css-loader!sass-loader!./WorkspaceHeader-Burger.scss';
+import './WorkspaceHeader-Burger.scss';
 
 const cnWorkspaceHeaderBurger = cn('WorkspaceHeader', 'Burger');
 

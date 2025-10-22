@@ -10,7 +10,7 @@ export class MuiInputBlock extends Block {
   };
 
   async clearValue(): Promise<void> {
-    const $input = await this.$('input');
+    const $input = await this.findBySelector('input');
     await $input.moveTo();
     await $input.click();
     await browser.keys([Key.Ctrl, 'a']);
@@ -18,7 +18,7 @@ export class MuiInputBlock extends Block {
   }
 
   async setValue(value: string): Promise<void> {
-    const $input = await this.$('input');
+    const $input = await this.findBySelector('input');
     await $input.waitForClickable({ timeout: 5000 });
     for (const char of value) {
       await $input.addValue(char);
@@ -27,14 +27,14 @@ export class MuiInputBlock extends Block {
   }
 
   async getValue(): Promise<string> {
-    const $input = await this.$('input');
+    const $input = await this.findBySelector('input');
 
     return await $input.getValue();
   }
 
   async hasWarningIcon(): Promise<boolean> {
-    const $container = await this.$('container');
-    const $warning = await $container.$(this.selectors.icon);
+    const $container = await this.findBySelector('container');
+    const $warning = await $container.$(this.selectors.icon).getElement();
 
     return await $warning.isDisplayed();
   }

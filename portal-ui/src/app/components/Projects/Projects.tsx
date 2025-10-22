@@ -1,6 +1,6 @@
-import React, { FC, lazy, Suspense } from 'react';
+import React, { type FC, lazy, Suspense } from 'react';
 
-const ProjectsAsync = lazy(() => import('./Projects.async'));
+const ProjectsAsync = lazy(() => import('./Projects.chunkroot'));
 
 export const Projects: FC = props => (
   <Suspense>

@@ -6,22 +6,22 @@ import { FileOpenOutlined, FolderOutlined, InsertDriveFileOutlined } from '@mui/
 import { cn } from '@bem-react/classname';
 import { RegistryConsumer } from '@bem-react/di';
 import { boundMethod } from 'autobind-decorator';
-import { AxiosError } from 'axios';
+import { type AxiosError } from 'axios';
 
 import { communicationService } from '../../services/communication.service';
-import { LibraryRecord } from '../../services/data/library/library.models';
+import { type LibraryRecord } from '../../services/data/library/library.models';
 import { getLibraryRecord } from '../../services/data/library/library.service';
-import { CommonDiRegistry } from '../../services/di-registry';
+import { type CommonDiRegistry } from '../../services/di-registry';
 import { services } from '../../services/services';
 import { notFalsyFilter } from '../../services/util/NotFalsyFilter';
 import { getIdsFromPath, libraryRootUrlItems } from '../DataManagement/DataManagement.utils';
 import { Explorer } from '../Explorer/Explorer';
-import { ExplorerItemData, ExplorerItemType } from '../Explorer/Explorer.models';
+import { type ExplorerItemData, ExplorerItemType } from '../Explorer/Explorer.models';
 import { LibraryDeletedDocumentActions } from '../LibraryDeletedDocumentActions/LibraryDeletedDocumentActions';
 import { TextBadge } from '../TextBadge/TextBadge';
 import { Toast } from '../Toast/Toast';
 
-import '!style-loader!css-loader!sass-loader!./LibraryDocumentDialog.scss';
+import './LibraryDocumentDialog.scss';
 
 const cnLibraryDocumentDialog = cn('LibraryDocumentDialog');
 

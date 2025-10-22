@@ -1,16 +1,16 @@
-import React, { ReactElement } from 'react';
-import { StoryFn } from '@storybook/react';
+import React, { type ReactElement } from 'react';
+import { type StoryFn } from '@storybook/react';
 
-import { PropertyOption, PropertyType } from '../../services/data/schema/schema.models';
-import { PageOptions, SortOrder } from '../../services/models';
+import { type PropertyOption, PropertyType } from '../../services/data/schema/schema.models';
+import { type PageOptions, SortOrder } from '../../services/models';
 import { filterObjects, prepareLike } from '../../services/util/filters/filterObjects';
 import { sleep } from '../../services/util/sleep';
-import { sortObjects, SortParams } from '../../services/util/sortObjects';
-import { smallData, testDataForTables } from './testDataForTables';
-import { XTable, XTableProps } from './XTable';
-import { XTableColumn } from './XTable.models';
+import { sortObjects, type SortParams } from '../../services/util/sortObjects';
+import { smallData, type TestData, testDataForTables } from './testDataForTables';
+import { XTable, type XTableProps } from './XTable';
+import { type XTableColumn } from './XTable.models';
 
-import '!style-loader!css-loader!sass-loader!./XTable.stories.scss';
+import './XTable.stories.scss';
 
 export default {
   title: 'XTable',
@@ -18,18 +18,6 @@ export default {
 };
 
 const Template: StoryFn<typeof XTable> = args => <XTable {...args} />;
-
-export interface TestData {
-  id: number;
-  title: string;
-  material?: string;
-  weight: number;
-  amount: number;
-  date: string;
-  conclusive?: boolean | null;
-  documents?: string;
-  long?: string;
-}
 
 const materialOptions: PropertyOption[] = [
   {

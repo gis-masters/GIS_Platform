@@ -1,9 +1,9 @@
 import { boundClass } from 'autobind-decorator';
 
-import { CompositeSettings } from '../../../stores/OrganizationSettings.store';
+import { type CompositeSettings } from '../../../stores/OrganizationSettings.store';
 import { Client } from '../../api/Client';
 import { http } from '../../api/http.service';
-import { OccupiedStorage, Organization } from './organizations.models';
+import { type OccupiedStorage, type Organization } from './organizations.models';
 
 @boundClass
 class OrganizationsClient extends Client {

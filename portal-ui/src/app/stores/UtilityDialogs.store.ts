@@ -1,9 +1,9 @@
-import { Component, ReactNode } from 'react';
+import { type Component, type ReactNode } from 'react';
 import { action, makeObservable, observable } from 'mobx';
-import { DialogProps } from '@mui/material';
+import { type DialogProps } from '@mui/material';
 
-import { FormProps } from '../components/Form/Form';
-import { SimpleSchema } from '../services/data/schema/schema.models';
+import { type FormProps } from '../components/Form/Form';
+import { type SimpleSchema } from '../services/data/schema/schema.models';
 
 export interface UtilityDialogInfo {
   id: string;

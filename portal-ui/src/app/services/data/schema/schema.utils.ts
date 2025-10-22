@@ -1,42 +1,42 @@
 import { cloneDeep } from 'lodash';
 
 import { getIdsFromPath } from '../../../components/DataManagement/DataManagement.utils';
-import { DocumentInfo } from '../../../components/Documents/Documents';
-import { Attribute } from '../../geoserver/featureType/featureType.model';
-import { GeometryType, WfsFeature } from '../../geoserver/wfs/wfs.models';
+import { type DocumentInfo } from '../../../components/Documents/Documents';
+import { type Attribute } from '../../geoserver/featureType/featureType.model';
+import { GeometryType, type WfsFeature } from '../../geoserver/wfs/wfs.models';
 import { convertComplexNamesArrayToTableNamesUriFragment } from '../../gis/layers/layers.utils';
 import { services } from '../../services';
 import { formatDate } from '../../util/date.util';
-import { FilterQuery } from '../../util/filters/filters.models';
-import { FileInfo } from '../files/files.models';
-import { LibraryRecord } from '../library/library.models';
+import { type FilterQuery } from '../../util/filters/filters.models';
+import { type FileInfo } from '../files/files.models';
+import { type LibraryRecord } from '../library/library.models';
 import {
-  ContentType,
-  PropertySchema,
-  PropertySchemaChoice,
-  PropertySchemaDatetime,
-  PropertySchemaFloat,
-  PropertySchemaGeometry,
-  PropertySchemaInt,
-  PropertySchemaSet,
-  PropertySchemaString,
-  PropertySchemaUrl,
+  type ContentType,
+  type PropertySchema,
+  type PropertySchemaChoice,
+  type PropertySchemaDatetime,
+  type PropertySchemaFloat,
+  type PropertySchemaGeometry,
+  type PropertySchemaInt,
+  type PropertySchemaSet,
+  type PropertySchemaString,
+  type PropertySchemaUrl,
   PropertyType,
-  Relation,
-  Schema,
-  SimpleSchema,
-  ValueFormula
+  type Relation,
+  type Schema,
+  type SimpleSchema,
+  type ValueFormula
 } from './schema.models';
 import {
-  OldContentType,
-  OldPropertySchema,
-  OldPropertySchemaChoice,
-  OldPropertySchemaDatetime,
-  OldPropertySchemaDouble,
-  OldPropertySchemaSet,
-  OldPropertySchemaString,
-  OldPropertySchemaUrl,
-  OldSchema,
+  type OldContentType,
+  type OldPropertySchema,
+  type OldPropertySchemaChoice,
+  type OldPropertySchemaDatetime,
+  type OldPropertySchemaDouble,
+  type OldPropertySchemaSet,
+  type OldPropertySchemaString,
+  type OldPropertySchemaUrl,
+  type OldSchema,
   ValueType
 } from './schemaOld.models';
 

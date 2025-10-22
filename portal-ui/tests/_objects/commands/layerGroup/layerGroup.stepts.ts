@@ -1,6 +1,6 @@
 import { Given } from '@wdio/cucumber-framework';
 
-import { ScenarioScope } from '../../ScenarioScope';
+import { type ScenarioScope } from '../../ScenarioScope';
 import { addLayerToGroupAsAdmin } from './addLayerToGroupByAdmin';
 import { createGroupAsAdmin } from './createGroupAsAdmin';
 

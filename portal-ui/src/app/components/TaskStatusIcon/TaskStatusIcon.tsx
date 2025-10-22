@@ -1,10 +1,10 @@
-import React, { FC } from 'react';
+import React, { type FC } from 'react';
 import { Circle } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
-import { TaskStatus } from '../../services/data/task/task.models';
+import { type TaskStatus } from '../../services/data/task/task.models';
 
-import '!style-loader!css-loader!sass-loader!./TaskStatusIcon.scss';
+import './TaskStatusIcon.scss';
 
 const cnTaskStatusIcon = cn('TaskStatusIcon');
 

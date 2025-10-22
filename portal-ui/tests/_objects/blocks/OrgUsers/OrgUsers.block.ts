@@ -11,7 +11,7 @@ class OrgUsersBlock extends Block {
   async clickCreateUserButton(): Promise<void> {
     await this.waitForVisible();
 
-    const $createUser = await this.$('createUser');
+    const $createUser = await this.findBySelector('createUser');
     await $createUser.click();
   }
 
@@ -20,18 +20,18 @@ class OrgUsersBlock extends Block {
 
     const $userRow = await this.findUserRow(userName);
 
-    const $editUserBtn = await $userRow.$('.OrgActions-Edit');
+    const $editUserBtn = await $userRow.$('.OrgActions-Edit').getElement();
     await $editUserBtn.click();
   }
 
   async getUserBoss(userName: string): Promise<string> {
     await this.waitForVisible();
-    const $loading = await this.$('loading');
-    await $loading.waitForDisplayed({ reverse: true });
+    const $loading = await this.findBySelector('loading');
+    await $loading.waitForExist({ reverse: true });
 
     const $userRow = await this.findUserRow(userName);
 
-    const $userBoss = await $userRow.$('.MuiTableCell-root:nth-child(6)');
+    const $userBoss = await $userRow.$('.MuiTableCell-root:nth-child(6)').getElement();
 
     return await $userBoss.getText();
   }
@@ -39,10 +39,10 @@ class OrgUsersBlock extends Block {
   async findUserRow(userName: string): Promise<WebdriverIO.Element> {
     await this.waitForVisible();
 
-    const $$userRows = await this.$$('userRow');
+    const $$userRows = await this.findAllBySelector('userRow');
 
     for (const $userRow of $$userRows) {
-      const $userRowName = await $userRow.$('.MuiTableCell-root:nth-child(2)');
+      const $userRowName = await $userRow.$('.MuiTableCell-root:nth-child(2)').getElement();
       const userRowName = await $userRowName.getText();
 
       if (userRowName === userName) {

@@ -8,11 +8,12 @@ export class ChooseXTableBlock extends Block {
   };
 
   async getXTable(): Promise<XTableBlock> {
-    return new XTableBlock(undefined, await this.$('container'));
+    return new XTableBlock(undefined, await this.findBySelector('container'));
   }
 
   async selectOne(colTitle: string, value: string): Promise<void> {
     const xTable = await this.getXTable();
+    await xTable.waitForVisible();
     const values = await xTable.getColValues(colTitle);
 
     const rowIndex = values.indexOf(value);
@@ -20,7 +21,7 @@ export class ChooseXTableBlock extends Block {
       throw new Error(`Не нашли элемент: ${colTitle} - ${value}`);
     }
 
-    const $$checks = await this.$$('check');
+    const $$checks = await this.findAllBySelector('check');
     const $check = $$checks[rowIndex];
     if (!$check) {
       throw new Error(`Не нашли переключатель: ${colTitle} - ${value} (${rowIndex})`);

@@ -1,15 +1,15 @@
 import { action, computed, makeObservable, observable } from 'mobx';
-import { Feature, Polygon } from '@turf/turf';
+import type { Feature, Polygon } from 'geojson';
 import { cloneDeep } from 'lodash';
 
-import { Projection } from '../../../data/projections/projections.models';
-import { GeometryType, WfsFeature, WfsGeometry } from '../../../geoserver/wfs/wfs.models'; // eslint-disable-line @typescript-eslint/no-unused-vars
+import { type Projection } from '../../../data/projections/projections.models';
+import { GeometryType, type WfsFeature, type WfsGeometry } from '../../../geoserver/wfs/wfs.models'; // eslint-disable-line @typescript-eslint/no-unused-vars
 import { isGeometryValid } from '../../../geoserver/wfs/wfs.util';
-import { CrgVectorableLayer } from '../../../gis/layers/layers.models';
+import { type CrgVectorableLayer } from '../../../gis/layers/layers.models';
 import { services } from '../../../services';
 import { transformGeometry } from '../../../util/coordinates-transform.util';
 import { selectedFeaturesStore } from '../selected-features/SelectedFeatures.store';
-import { EditFeaturesData } from './EditFeature.models';
+import { type EditFeaturesData } from './EditFeature.models';
 import { editFeatureHistoryStore } from './EditFeatureHistoryStore';
 
 class EditFeatureStore {

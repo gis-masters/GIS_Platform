@@ -1,11 +1,11 @@
-import React, { CSSProperties, FC, RefObject } from 'react';
-import { Paper, PaperProps } from '@mui/material';
+import React, { type CSSProperties, type FC, type RefObject } from 'react';
+import { Paper, type PaperProps } from '@mui/material';
 import { cn } from '@bem-react/classname';
-import { IClassNameProps } from '@bem-react/core';
+import { type IClassNameProps } from '@bem-react/core';
 
-import { ChildrenProps } from '../../../services/models';
+import { type ChildrenProps } from '../../../services/models';
 
-import '!style-loader!css-loader!sass-loader!./XTable-Container.scss';
+import './XTable-Container.scss';
 
 const cnXTableContainer = cn('XTable', 'Container');
 

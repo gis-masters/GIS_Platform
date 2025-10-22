@@ -4,18 +4,18 @@ import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 
 import { extractTableNameFromFeatureId } from '../../../services/geoserver/featureType/featureType.util';
-import { CrgVectorLayer } from '../../../services/gis/layers/layers.models';
+import { type CrgVectorLayer } from '../../../services/gis/layers/layers.models';
 import { getLayerByFeatureInCurrentProject } from '../../../services/gis/layers/layers.utils';
 import { editFeatureStore } from '../../../services/map/a-map-mode/edit-feature/EditFeatureStore';
 import { isUpdateAllowed } from '../../../services/permissions/permissions.service';
-import { FilterQuery } from '../../../services/util/filters/filters.models';
+import { type FilterQuery } from '../../../services/util/filters/filters.models';
 import { sidebars } from '../../../stores/Sidebars.store';
-import { AttributesTableRecord } from '../Attributes.models';
+import { type AttributesTableRecord } from '../Attributes.models';
 import { AttributesCheck } from '../Check/Attributes-Check';
 import { AttributesEditMark } from '../EditMark/Attributes-EditMark';
 import { AttributesRowActions } from '../RowActions/Attributes-RowActions';
 
-import '!style-loader!css-loader!sass-loader!./Attributes-RowHead.scss';
+import './Attributes-RowHead.scss';
 
 const cnAttributesRowHead = cn('Attributes', 'RowHead');
 

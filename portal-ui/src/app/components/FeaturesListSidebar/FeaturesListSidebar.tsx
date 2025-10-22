@@ -1,6 +1,6 @@
-import React, { FC, lazy, Suspense } from 'react';
+import React, { type FC, lazy, Suspense } from 'react';
 
-const FeaturesListSidebarAsync = lazy(() => import('./FeaturesListSidebar.async'));
+const FeaturesListSidebarAsync = lazy(() => import('./FeaturesListSidebar.chunkroot'));
 
 export const FeaturesListSidebar: FC = props => (
   <Suspense>

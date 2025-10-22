@@ -1,4 +1,4 @@
-import { Projection } from '../../data/projections/projections.models';
+import { type Projection } from '../../data/projections/projections.models';
 import { getProjectionCode } from '../../data/projections/projections.util';
 import { saveAsBlob } from '../../util/FileSaver';
 import { Mime } from '../../util/Mime';

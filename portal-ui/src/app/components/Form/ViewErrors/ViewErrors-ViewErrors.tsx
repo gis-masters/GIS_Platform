@@ -1,9 +1,9 @@
-import React, { FC } from 'react';
+import React, { type FC } from 'react';
 import { Tooltip } from '@mui/material';
 import { ErrorOutline } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
-import '!style-loader!css-loader!sass-loader!./ViewErrors-ViewErrors.scss';
+import './ViewErrors-ViewErrors.scss';
 
 const cnFormViewErrors = cn('Form', 'ViewErrors');
 

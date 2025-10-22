@@ -7,7 +7,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 configure({ enforceActions: 'observed' }); // don't allow state modifications outside actions
 
 import { DatePipe } from '@angular/common';
-import { HttpClientModule } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { LoggerModule, NgxLoggerLevel } from 'ngx-logger';
 
 import { AppRoutingModule, routingComponents } from './app-routing.module';
@@ -143,8 +143,8 @@ import { GlobalErrorHandler } from './services/global-error.handler';
     EditFeatureNavigationComponent,
     ProjectFolderComponent
   ],
+  bootstrap: [AppComponent],
   imports: [
-    HttpClientModule,
     AppRoutingModule,
     MaterialModule,
     BrowserModule,
@@ -165,8 +165,8 @@ import { GlobalErrorHandler } from './services/global-error.handler';
     {
       provide: ErrorHandler,
       useClass: GlobalErrorHandler
-    }
-  ],
-  bootstrap: [AppComponent]
+    },
+    provideHttpClient(withInterceptorsFromDi())
+  ]
 })
 export class AppModule {}

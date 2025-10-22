@@ -1,15 +1,15 @@
 import { createElement } from 'react';
-import { createRoot, Root } from 'react-dom/client';
+import { createRoot, type Root } from 'react-dom/client';
 import { reaction } from 'mobx';
 import { withRegistry } from '@bem-react/di';
 import { bearing, point, toWgs84 } from '@turf/turf';
 import { boundMethod } from 'autobind-decorator';
 import { debounce } from 'lodash';
-import { Feature, MapBrowserEvent, Overlay } from 'ol';
-import { Coordinate } from 'ol/coordinate';
+import { Feature, type MapBrowserEvent, Overlay } from 'ol';
+import { type Coordinate } from 'ol/coordinate';
 import { LineString, Point, Polygon } from 'ol/geom';
 import { Draw, Modify } from 'ol/interaction';
-import { DrawEvent } from 'ol/interaction/Draw';
+import { type DrawEvent } from 'ol/interaction/Draw';
 import VectorLayer from 'ol/layer/Vector';
 import VectorSource from 'ol/source/Vector';
 import { Fill, Icon, Stroke, Style, Text } from 'ol/style';
@@ -21,12 +21,12 @@ import { currentUser } from '../../../stores/CurrentUser.store';
 import { mapStore } from '../../../stores/Map.store';
 import { mapLabelsStore } from '../../../stores/MapLabels.store';
 import { communicationService } from '../../communication.service';
-import { defaultOlProjectionCode, Projection } from '../../data/projections/projections.models';
+import { defaultOlProjectionCode, type Projection } from '../../data/projections/projections.models';
 import { getOlProjection, getProjectionByCode } from '../../data/projections/projections.service';
 import { getProjectionCode } from '../../data/projections/projections.util';
 import { registry } from '../../di-registry';
 import { extractTableNameFromFeatureId } from '../../geoserver/featureType/featureType.util';
-import { GeometryType, supportedGeometryTypes, WfsFeature } from '../../geoserver/wfs/wfs.models';
+import { GeometryType, supportedGeometryTypes, type WfsFeature } from '../../geoserver/wfs/wfs.models';
 import { isLinear, isPolygonal } from '../../geoserver/wfs/wfs.util';
 import { transformCoord, transformGroup } from '../../util/coordinates-transform.util';
 import { notFalsyFilter } from '../../util/NotFalsyFilter';
@@ -45,7 +45,13 @@ import { MapMode, ToolMode } from '../map.models';
 import { mapService } from '../map.service';
 import { mapMeasureService } from '../measure/map-measure.service';
 import { getStyle, KnownStyleKey } from '../styles/map-styles';
-import { AnnotationsFontProperties, CircleProperties, Distance, FontProperties, LabelType } from './map-labels.models';
+import {
+  type AnnotationsFontProperties,
+  type CircleProperties,
+  type Distance,
+  type FontProperties,
+  type LabelType
+} from './map-labels.models';
 import {
   getCircleStyle,
   getFeatureArea,

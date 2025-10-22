@@ -7,7 +7,7 @@ class FormStoryActionsBlock extends Block {
   };
 
   async clickValidate(): Promise<void> {
-    const $validate = await this.$('validate');
+    const $validate = await this.findBySelector('validate');
     await $validate.waitForClickable();
     await $validate.click();
   }

@@ -1,9 +1,9 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { ButtonBase, Tooltip } from '@mui/material';
-import { IClassNameProps, withBemMod } from '@bem-react/core';
+import { type IClassNameProps, withBemMod } from '@bem-react/core';
 
-import { BreadcrumbsItemData } from '../../Breadcrumbs';
-import { BreadcrumbsItemProps, cnBreadcrumbsItem } from '../Breadcrumbs-Item.base';
+import { type BreadcrumbsItemData } from '../../Breadcrumbs';
+import { type BreadcrumbsItemProps, cnBreadcrumbsItem } from '../Breadcrumbs-Item.base';
 
 interface BreadcrumbsItemTypeButtonProps extends IClassNameProps {
   type: 'button';

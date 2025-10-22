@@ -1,6 +1,6 @@
-import React, { FC, ReactNode } from 'react';
+import React, { type FC, type ReactNode } from 'react';
 
-import { PropertySchema, PropertyType } from '../../../../data/schema/schema.models';
+import { type PropertySchema, PropertyType } from '../../../../data/schema/schema.models';
 import { AnchorPoint } from '../AnchorPoint/AnchorPoint';
 import { AnchorPointX } from '../AnchorPointX/AnchorPointX';
 import { AnchorPointY } from '../AnchorPointY/AnchorPointY';

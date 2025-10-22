@@ -1,4 +1,4 @@
-import { compose, HOC } from '@bem-react/core';
+import { compose, type HOC } from '@bem-react/core';
 
 import { withTypeBool } from './_type/XTable-Filter_type_bool';
 import { withTypeChoice } from './_type/XTable-Filter_type_choice';
@@ -13,7 +13,7 @@ import { withTypeString } from './_type/XTable-Filter_type_string';
 import { withTypeText } from './_type/XTable-Filter_type_text';
 import { withTypeUser } from './_type/XTable-Filter_type_user';
 import { withTypeUserId } from './_type/XTable-Filter_type_userId';
-import { XTableFilterBase, XTableFilterProps } from './XTable-Filter.base';
+import { XTableFilterBase, type XTableFilterProps } from './XTable-Filter.base';
 
 export const XTableFilter = compose(
   withTypeBool as HOC<XTableFilterProps>,

@@ -1,7 +1,7 @@
 import { bearing, toWgs84 } from '@turf/turf';
-import { Feature } from 'ol';
-import { Coordinate } from 'ol/coordinate';
-import { SimpleGeometry } from 'ol/geom';
+import { type Feature } from 'ol';
+import { type Coordinate } from 'ol/coordinate';
+import { type SimpleGeometry } from 'ol/geom';
 import LineString from 'ol/geom/LineString';
 import MultiLineString from 'ol/geom/MultiLineString';
 import MultiPolygon from 'ol/geom/MultiPolygon';
@@ -19,17 +19,17 @@ import { isCoordinateArray, isCoordinateArrayArray } from '../../util/typeGuards
 import { isLabelTextProperties } from '../../util/typeGuards/isLabelTextProperties';
 import { isNumberArray } from '../../util/typeGuards/isNumberArray';
 import {
-  FeatureAreaData,
-  FeatureFontStringData,
-  FeatureLengthData,
-  FontProperties,
+  type FeatureAreaData,
+  type FeatureFontStringData,
+  type FeatureLengthData,
+  type FontProperties,
   isTextAlignTypes,
-  LabelPosition,
-  LabelStyleOffsets,
-  PointOnBisectorData,
-  PointWithAngle,
-  TextAlignTypes,
-  TextProperties
+  type LabelPosition,
+  type LabelStyleOffsets,
+  type PointOnBisectorData,
+  type PointWithAngle,
+  type TextAlignTypes,
+  type TextProperties
 } from './map-labels.models';
 
 function calculateLengthCustom(coordinates: number[][]): number {

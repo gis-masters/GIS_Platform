@@ -1,8 +1,8 @@
-import { FC } from 'react';
+import { type FC } from 'react';
 import { cn } from '@bem-react/classname';
 
-import { FileConnection } from '../../../services/data/files/files.models';
-import { ConnectionsToProjectsType } from '../ConnectionsToProjects';
+import { type FileConnection } from '../../../services/data/files/files.models';
+import { type ConnectionsToProjectsType } from '../ConnectionsToProjects';
 
 export const cnConnectionsToProjectsList = cn('ConnectionsToProjects', 'List');
 

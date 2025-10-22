@@ -1,10 +1,10 @@
-import React, { FC, useCallback, useEffect, useState } from 'react';
+import React, { type FC, useCallback, useEffect, useState } from 'react';
 
 import { PropertyType } from '../../services/data/schema/schema.models';
 import { convertOldToNewProperties } from '../../services/data/schema/schema.utils';
-import { OldPropertySchema, ValueType } from '../../services/data/schema/schemaOld.models';
-import { ErrorMessages, validateField } from '../../services/util/FeaturePropertyValidatorsReact';
-import { FormControlProps } from '../Form/Control/Form-Control';
+import { type OldPropertySchema, type ValueType } from '../../services/data/schema/schemaOld.models';
+import { type ErrorMessages, validateField } from '../../services/util/FeaturePropertyValidatorsReact';
+import { type FormControlProps } from '../Form/Control/Form-Control';
 import { FormControl } from '../Form/Control/Form-Control.composed';
 import { FormView } from '../Form/View/Form-View.composed';
 

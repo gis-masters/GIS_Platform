@@ -1,26 +1,26 @@
-import { ComponentType, createElement } from 'react';
-import { createRoot, Root } from 'react-dom/client';
+import { type ComponentType, createElement } from 'react';
+import { createRoot, type Root } from 'react-dom/client';
 import {
   Component,
   ElementRef,
   EventEmitter,
   forwardRef,
   Input,
-  OnChanges,
-  OnDestroy,
-  OnInit,
+  type OnChanges,
+  type OnDestroy,
+  type OnInit,
   Output,
   ViewChild
 } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR, UntypedFormGroup } from '@angular/forms';
+import { type ControlValueAccessor, NG_VALUE_ACCESSOR, type UntypedFormGroup } from '@angular/forms';
 import { withRegistry } from '@bem-react/di';
 import { boundMethod } from 'autobind-decorator';
 
 import { PropertyType } from '../../services/data/schema/schema.models';
 import { convertOldToNewProperties } from '../../services/data/schema/schema.utils';
-import { OldPropertySchema } from '../../services/data/schema/schemaOld.models';
+import { type OldPropertySchema } from '../../services/data/schema/schemaOld.models';
 import { registry } from '../../services/di-registry';
-import { FormControlProps } from '../Form/Control/Form-Control';
+import { type FormControlProps } from '../Form/Control/Form-Control';
 import { FormControl } from '../Form/Control/Form-Control.composed';
 import { FormView } from '../Form/View/Form-View.composed';
 
@@ -37,7 +37,8 @@ const FormViewWithRegistry = withRegistry(registry)(FormView);
       multi: true,
       useExisting: forwardRef(() => FormControlComponent)
     }
-  ]
+  ],
+  standalone: false
 })
 export class FormControlComponent implements OnInit, OnDestroy, OnChanges, ControlValueAccessor {
   @Input() property?: OldPropertySchema;

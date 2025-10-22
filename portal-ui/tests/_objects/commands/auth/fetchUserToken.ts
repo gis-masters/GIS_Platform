@@ -1,6 +1,6 @@
 import { createTestOrganizations } from './createTestOrganizations';
 import { getUserToken } from './getUserToken';
-import { TestUser } from './testUsers';
+import { type TestUser } from './testUsers';
 
 let retries = 0;
 const MAX_AUTH_RETRIES = 5;

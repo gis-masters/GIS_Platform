@@ -1,11 +1,5 @@
 import { environment } from './environment';
-
-export interface FlagsList {
-  sample: string; // boolean
-  selectingFeaturesLimit: string; // number
-  allowProjectionsForAllLayers: string; // boolean;
-  showDocumentRoles: string; //boolean
-}
+import type { FlagsList } from './feature-flags.models';
 
 const keys: (keyof FlagsList)[] = [
   'sample',

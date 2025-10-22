@@ -10,7 +10,7 @@ class LayersFilterBlock extends Block {
   async setFilterValue(filterValue: string): Promise<void> {
     await this.waitForVisible();
 
-    const $field = await this.$('filterInput');
+    const $field = await this.findBySelector('filterInput');
 
     if (!$field) {
       throw new Error('Не найдено поле фильтра');

@@ -1,8 +1,8 @@
-import React, { FC } from 'react';
+import React, { type FC } from 'react';
 import { ChevronRight } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
-import '!style-loader!css-loader!sass-loader!./Layer-OpenIcon.scss';
+import './Layer-OpenIcon.scss';
 
 const cnLayerOpenIcon = cn('Layer', 'OpenIcon');
 

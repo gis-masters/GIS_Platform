@@ -1,10 +1,10 @@
-import React, { ReactNode } from 'react';
+import React, { type ReactNode } from 'react';
 import { Tooltip } from '@mui/material';
 import { ArticleOutlined, ViewListOutlined } from '@mui/icons-material';
 
 import { services } from '../../../../services/services';
 import { staticImplements } from '../../../../services/util/staticImplements';
-import { Adapter } from '../../Explorer.models';
+import { type Adapter } from '../../Explorer.models';
 
 @staticImplements<Adapter>()
 export class ExplorerAdapterTypeTasksRoot {

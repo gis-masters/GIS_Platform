@@ -2,7 +2,7 @@ import React from 'react';
 import { ErrorOutlined } from '@mui/icons-material';
 import { withBemMod } from '@bem-react/core';
 
-import { cnLayerIcon, LayerIconProps } from '../LayerIcon.base';
+import { cnLayerIcon, type LayerIconProps } from '../LayerIcon.base';
 
 export const withTypeError = withBemMod<LayerIconProps, LayerIconProps>(
   cnLayerIcon(),

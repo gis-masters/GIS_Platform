@@ -1,15 +1,15 @@
 /* eslint-disable max-depth */
 import moment from 'moment';
-import { Coordinate } from 'ol/coordinate';
+import { type Coordinate } from 'ol/coordinate';
 
 import { getFeaturesListItemTitle } from '../../../../components/FeaturesListItem/FeaturesListItem.util';
 import { PrintMapImageControl } from '../../../../components/PrintMapImageControl/PrintMapImageControl';
 import { SelectPropertiesControl } from '../../../../components/SelectPropertiesControl/SelectPropertiesControl';
 import { getProjectionByCode } from '../../../data/projections/projections.service';
 import { getProjectionUnit } from '../../../data/projections/projections.util';
-import { PropertySchema, PropertyType } from '../../../data/schema/schema.models';
+import { type PropertySchema, PropertyType } from '../../../data/schema/schema.models';
 import { applyView, getReadablePropertyValue } from '../../../data/schema/schema.utils';
-import { GeometryType, WfsFeature } from '../../../geoserver/wfs/wfs.models';
+import { GeometryType, type WfsFeature } from '../../../geoserver/wfs/wfs.models';
 import { getLayerSchema } from '../../../gis/layers/layers.service';
 import { getLayerByFeatureInCurrentProject } from '../../../gis/layers/layers.utils';
 import { formPrompt } from '../../../utility-dialogs.service';

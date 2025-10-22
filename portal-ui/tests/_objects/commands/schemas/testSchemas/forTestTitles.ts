@@ -1,4 +1,4 @@
-import { PropertyType, Schema } from '../../../../../src/app/services/data/schema/schema.models';
+import { PropertyType, type Schema } from '../../../../../src/app/services/data/schema/schema.models';
 import { GeometryType } from '../../../../../src/app/services/geoserver/wfs/wfs.models';
 
 export const forTestTitles: Schema = {

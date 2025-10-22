@@ -1,12 +1,12 @@
-import React, { FC, memo, useCallback, useEffect, useMemo } from 'react';
+import React, { type FC, memo, useCallback, useEffect, useMemo } from 'react';
 import { observer, useLocalObservable } from 'mobx-react';
 import { Tooltip } from '@mui/material';
 import { WorkspacePremiumOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { isValidSystemSetup } from 'crypto-pro';
 
-import { communicationService, DataChangeEventDetail } from '../../../services/communication.service';
-import { FileConnection, FileInfo } from '../../../services/data/files/files.models';
+import { communicationService, type DataChangeEventDetail } from '../../../services/communication.service';
+import { type FileConnection, type FileInfo } from '../../../services/data/files/files.models';
 import { getFileConnections, getFileInfo } from '../../../services/data/files/files.service';
 import {
   getFileBaseName,
@@ -16,7 +16,7 @@ import {
   isPreviewAllowed,
   isTifFile
 } from '../../../services/data/files/files.util';
-import { LibraryRecord } from '../../../services/data/library/library.models';
+import { type LibraryRecord } from '../../../services/data/library/library.models';
 import { editFeatureStore } from '../../../services/map/a-map-mode/edit-feature/EditFeatureStore';
 import { konfirmieren } from '../../../services/utility-dialogs.service';
 import { cryptoProStore } from '../../../stores/CryptoPro.store';
@@ -26,7 +26,7 @@ import { LookupActions } from '../../Lookup/Actions/Lookup-Actions';
 import { LookupDelete } from '../../Lookup/Delete/Lookup-Delete';
 import { LookupItem } from '../../Lookup/Item/Lookup-Item';
 import { LookupNameGap } from '../../Lookup/NameGap/Lookup-NameGap';
-import { LookupStatus, LookupStatusType } from '../../Lookup/Status/Lookup-Status';
+import { LookupStatus, type LookupStatusType } from '../../Lookup/Status/Lookup-Status';
 import { FilesConnections } from '../Connections/Files-Connections';
 import { FilesDownloadCompoundFile } from '../DownloadCompoundFile/Files-DownloadCompoundFile';
 import { FilesIcon } from '../Icon/Files-Icon';
@@ -36,7 +36,7 @@ import { FilesPreview } from '../Preview/Files-Preview';
 import { FilesSignature } from '../Signature/Files-Signature';
 import { FilesSignDialog } from '../SignDialog/Files-SignDialog';
 
-import '!style-loader!css-loader!sass-loader!../Sign/Files-Sign.scss';
+import '../Sign/Files-Sign.scss';
 
 const cnFilesItem = cn('Files', 'Item');
 const cnFilesSign = cn('Files', 'Sign');

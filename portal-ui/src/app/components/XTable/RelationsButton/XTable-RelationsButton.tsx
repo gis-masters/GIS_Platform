@@ -1,11 +1,11 @@
-import React, { FC, ReactElement } from 'react';
+import React, { type FC, type ReactElement } from 'react';
 import { cn } from '@bem-react/classname';
 
-import { FilterQuery } from '../../../services/util/filters/filters.models';
+import { type FilterQuery } from '../../../services/util/filters/filters.models';
 import { RelationsButton } from '../../RelationsButton/RelationsButton';
-import { XTableColumn } from '../XTable.models';
+import { type XTableColumn } from '../XTable.models';
 
-import '!style-loader!css-loader!sass-loader!./XTable-RelationsButton.scss';
+import './XTable-RelationsButton.scss';
 
 const cnXTableRelationsButton = cn('XTable', 'RelationsButton');
 

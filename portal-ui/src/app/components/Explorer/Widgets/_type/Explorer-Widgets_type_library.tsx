@@ -4,7 +4,7 @@ import { observer } from 'mobx-react';
 import { withBemMod } from '@bem-react/core';
 
 import { libraryClient } from '../../../../services/data/library/library.client';
-import { Library } from '../../../../services/data/library/library.models';
+import { type Library } from '../../../../services/data/library/library.models';
 import { getLibrary } from '../../../../services/data/library/library.service';
 import { Role } from '../../../../services/permissions/permissions.models';
 import { currentUser } from '../../../../stores/CurrentUser.store';
@@ -12,7 +12,7 @@ import { PermissionsWidget } from '../../../PermissionsWidget/PermissionsWidget'
 import { assertExplorerItemDataTypeLibrary } from '../../Adapter/_type/Explorer-Adapter_type_library';
 import { getId } from '../../Adapter/Explorer-Adapter';
 import { ExplorerItemEntityTypeTitle, ExplorerItemType } from '../../Explorer.models';
-import { cnExplorerWidgets, ExplorerWidgetsProps } from '../Explorer-Widgets.base';
+import { cnExplorerWidgets, type ExplorerWidgetsProps } from '../Explorer-Widgets.base';
 
 @observer
 class ExplorerWidgetsTypeLibrary extends Component<ExplorerWidgetsProps> {

@@ -1,6 +1,6 @@
 import { libraryClient } from '../../../../src/app/services/data/library/library.client';
-import { LibraryRecordNew, LibraryRecordRaw } from '../../../../src/app/services/data/library/library.models';
-import { TestUser } from '../auth/testUsers';
+import { type LibraryRecordNew, type LibraryRecordRaw } from '../../../../src/app/services/data/library/library.models';
+import { type TestUser } from '../auth/testUsers';
 import { requestAs, requestAsAdmin } from '../requestAs';
 
 export async function createLibraryRecordAs(

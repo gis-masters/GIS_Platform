@@ -1,9 +1,9 @@
-import React, { FC } from 'react';
+import React, { type FC } from 'react';
 import { cn } from '@bem-react/classname';
 
-import { PointRule } from '../../../services/geoserver/styles/styles.models';
+import { type PointRule } from '../../../services/geoserver/styles/styles.models';
 
-import '!style-loader!css-loader!sass-loader!./CustomStyleControl-MarkTile.scss';
+import './CustomStyleControl-MarkTile.scss';
 
 const cnCustomStyleControlMarkTile = cn('CustomStyleControl', 'MarkTile');
 

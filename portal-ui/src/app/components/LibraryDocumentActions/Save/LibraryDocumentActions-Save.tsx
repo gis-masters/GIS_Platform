@@ -5,9 +5,9 @@ import { SaveOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
-import { LibraryRecord } from '../../../services/data/library/library.models';
+import { type LibraryRecord } from '../../../services/data/library/library.models';
 import { createLibraryRecord } from '../../../services/data/library/library.service';
-import { ActionsItemVariant } from '../../Actions/Item/Actions-Item.base';
+import { type ActionsItemVariant } from '../../Actions/Item/Actions-Item.base';
 import { ActionsItem } from '../../Actions/Item/Actions-Item.composed';
 
 const cnLibraryDocumentActionsDelete = cn('LibraryDocumentActions', 'Edit');

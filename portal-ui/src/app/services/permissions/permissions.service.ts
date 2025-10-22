@@ -1,19 +1,19 @@
-import { AxiosError } from 'axios';
+import { type AxiosError } from 'axios';
 
-import { ExplorerItemEntityTypeTitle } from '../../components/Explorer/Explorer.models';
+import { type ExplorerItemEntityTypeTitle } from '../../components/Explorer/Explorer.models';
 import { Toast } from '../../components/Toast/Toast';
 import { currentProject } from '../../stores/CurrentProject.store';
 import { currentUser } from '../../stores/CurrentUser.store';
 import { getLibraryRecordFiles } from '../data/files/files.util';
-import { LibraryRecord } from '../data/library/library.models';
+import { type LibraryRecord } from '../data/library/library.models';
 import { getLibraryRecord } from '../data/library/library.service';
-import { Schema } from '../data/schema/schema.models';
-import { VectorTable } from '../data/vectorData/vectorData.models';
+import { type Schema } from '../data/schema/schema.models';
+import { type VectorTable } from '../data/vectorData/vectorData.models';
 import { getVectorTable } from '../data/vectorData/vectorData.service';
-import { CrgLayer, CrgLayerType } from '../gis/layers/layers.models';
+import { type CrgLayer, CrgLayerType } from '../gis/layers/layers.models';
 import { getLayerSchema } from '../gis/layers/layers.service';
 import { isVectorFromFile } from '../gis/layers/layers.utils';
-import { CrgProject } from '../gis/projects/projects.models';
+import { type CrgProject } from '../gis/projects/projects.models';
 import { services } from '../services';
 import { permissionsClient } from './permissions.client';
 import {
@@ -21,7 +21,7 @@ import {
   ProjectPermissionPoint,
   projectRolesPermissionPoints,
   Role,
-  RoleAssignmentBody,
+  type RoleAssignmentBody,
   TablePermissionPoint,
   tableRolesPermissionPoints
 } from './permissions.models';

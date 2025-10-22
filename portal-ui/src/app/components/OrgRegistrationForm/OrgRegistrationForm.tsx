@@ -5,11 +5,11 @@ import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 import { isError } from 'lodash';
 
-import { SpecializationView } from '../../../server-types/common-contracts';
-import { RegData } from '../../services/auth/auth/auth.models';
+import { type SpecializationView } from '../../../server-types/common-contracts';
+import { type RegData } from '../../services/auth/auth/auth.models';
 import { authService } from '../../services/auth/auth/auth.service';
 import { getSpecializations } from '../../services/auth/specializations/specializations.service';
-import { PropertyOption, PropertyType, SimpleSchema } from '../../services/data/schema/schema.models';
+import { type PropertyOption, PropertyType, type SimpleSchema } from '../../services/data/schema/schema.models';
 import { environment } from '../../services/environment';
 import { services } from '../../services/services';
 import { generateRandomId } from '../../services/util/randomId';
@@ -22,7 +22,7 @@ import { SmartCaptchaControl } from '../SmartCaptchaControl/SmartCaptchaControl'
 import { SpecializationDescription } from '../SpecializationDescription/SpecializationDescription';
 import { Toast } from '../Toast/Toast';
 
-import '!style-loader!css-loader!sass-loader!./OrgRegistrationForm.scss';
+import './OrgRegistrationForm.scss';
 
 const cnOrgRegistrationForm = cn('OrgRegistrationForm');
 

@@ -5,7 +5,8 @@ import { cn } from '../../services/util/cn';
 @Component({
   selector: 'crg-page-title',
   templateUrl: './page-title.component.html',
-  styleUrls: ['./page-title.component.scss']
+  styleUrls: ['./page-title.component.scss'],
+  standalone: false
 })
 export class PageTitleComponent {
   @Input() simple?: boolean;

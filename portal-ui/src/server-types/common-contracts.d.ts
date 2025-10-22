@@ -17,6 +17,16 @@ export interface GeometryValidationResultDto {
   valid: boolean;
 }
 
+export interface LookupModel {
+  key: string;
+  payload: LookupPayload;
+}
+
+export interface LookupPayload {
+  type: string;
+  payload: any;
+}
+
 export interface TaskLogDto {
   eventType: string;
   taskId: number;

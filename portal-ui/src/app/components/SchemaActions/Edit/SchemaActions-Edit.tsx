@@ -12,24 +12,24 @@ import {
 } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
-import { AxiosError } from 'axios';
+import { type AxiosError } from 'axios';
 import { isEqual } from 'lodash';
 
-import { Library } from '../../../services/data/library/library.models';
+import { type Library } from '../../../services/data/library/library.models';
 import { updateLibrarySchema } from '../../../services/data/library/library.service';
-import { Schema, schemaForSchema } from '../../../services/data/schema/schema.models';
+import { type Schema, schemaForSchema } from '../../../services/data/schema/schema.models';
 import { schemaService } from '../../../services/data/schema/schema.service';
-import { DataEntityType, VectorTable } from '../../../services/data/vectorData/vectorData.models';
+import { DataEntityType, type VectorTable } from '../../../services/data/vectorData/vectorData.models';
 import { updateVectorTableSchema } from '../../../services/data/vectorData/vectorData.service';
-import { ActionsItemVariant } from '../../Actions/Item/Actions-Item.base';
+import { type ActionsItemVariant } from '../../Actions/Item/Actions-Item.base';
 import { ActionsItem } from '../../Actions/Item/Actions-Item.composed';
 import { Button } from '../../Button/Button';
 import { Form } from '../../Form/Form';
 import { SchemaCard } from '../../SchemaCard/SchemaCard';
 import { SchemaActionsPreview } from '../Preview/SchemaActions-Preview';
 
-import '!style-loader!css-loader!sass-loader!../EditInJsonForm/SchemaActions-EditInJsonForm.scss';
-import '!style-loader!css-loader!sass-loader!../Error/SchemaActions-Error.scss';
+import '../EditInJsonForm/SchemaActions-EditInJsonForm.scss';
+import '../Error/SchemaActions-Error.scss';
 
 const cnSchemaActionsEdit = cn('SchemaActions', 'Edit');
 const cnSchemaActionsError = cn('SchemaActions', 'Error');

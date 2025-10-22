@@ -1,4 +1,4 @@
-import { WdioCheckElementMethodOptions } from 'wdio-image-comparison-service';
+import { type WdioCheckElementMethodOptions } from '@wdio/visual-service/dist/types';
 
 import { Block } from '../../Block';
 import { changeLayerParent } from '../../commands/layers/changeLayerParent';
@@ -21,33 +21,32 @@ class LayersSidebarBlock extends Block {
   };
 
   async clickFilterButton(): Promise<void> {
-    const $filterBtn = await this.$('filterBtn');
-    await $filterBtn.waitForDisplayed({ timeout: 6000 });
-
+    const $filterBtn = await this.findBySelector('filterBtn');
+    await $filterBtn.waitForDisplayed();
     await $filterBtn.click();
-    await $filterBtn.waitForDisplayed({ reverse: true });
+    await $filterBtn.waitForExist({ reverse: true });
   }
 
   async clickEditButton(): Promise<void> {
-    const $editLayersBtn = await this.$('editLayersBtn');
-    await $editLayersBtn.waitForDisplayed({ timeout: 6000 });
+    const $editLayersBtn = await this.findBySelector('editLayersBtn');
+    await $editLayersBtn.waitForDisplayed();
 
     await $editLayersBtn.click();
   }
 
   async clickSaveButton(): Promise<void> {
-    const $editLayersBtn = await this.$('saveBtn');
+    const $editLayersBtn = await this.findBySelector('saveBtn');
     await $editLayersBtn.click();
   }
 
   async clickCancelButton(): Promise<void> {
-    const $editLayersBtn = await this.$('cancelBtn');
+    const $editLayersBtn = await this.findBySelector('cancelBtn');
     await $editLayersBtn.click();
   }
 
   async waitForLoadingHide(): Promise<void> {
-    const $loading = await this.$('loading');
-    await $loading.waitForDisplayed({ reverse: true });
+    const $loading = await this.findBySelector('loading');
+    await $loading.waitForExist({ reverse: true });
   }
 
   async openMenu(layerTitle: string): Promise<void> {
@@ -58,7 +57,7 @@ class LayersSidebarBlock extends Block {
       throw new Error(`Не найден элемент "${layerTitle}"`);
     }
 
-    const $layerBurger = await $layerCard.$('.Layer-Burger');
+    const $layerBurger = await $layerCard.$('.Layer-Burger').getElement();
     await $layerBurger.waitForDisplayed();
     await $layerBurger.click();
   }
@@ -78,7 +77,7 @@ class LayersSidebarBlock extends Block {
   }
 
   async addLayerBtn(): Promise<void> {
-    const $addLayerBtn = await this.$('addLayerBtn');
+    const $addLayerBtn = await this.findBySelector('addLayerBtn');
     await $addLayerBtn.waitForDisplayed({ timeout: 1000 });
 
     await $addLayerBtn.click();
@@ -94,7 +93,7 @@ class LayersSidebarBlock extends Block {
   }
 
   async waitForLayersSidebarDisplayed(): Promise<void> {
-    const $container = await this.$('container');
+    const $container = await this.findBySelector('container');
     await $container.waitForDisplayed();
   }
 
@@ -113,17 +112,17 @@ class LayersSidebarBlock extends Block {
   }
 
   async assertSelfie(tag?: string, checkElementOptions?: WdioCheckElementMethodOptions): Promise<void> {
-    const $container = await this.$('container');
+    const $container = await this.findBySelector('container');
     await $container.waitForDisplayed();
 
     await super.assertSelfie(tag, {
-      hideElements: [await this.$('toolbar'), ...(checkElementOptions?.hideElements || [])],
+      hideElements: [await this.findBySelector('toolbar'), ...(checkElementOptions?.hideElements || [])],
       ...checkElementOptions
     });
   }
 
   async assertSelfieFull(tag?: string, checkElementOptions?: WdioCheckElementMethodOptions): Promise<void> {
-    const $container = await this.$('container');
+    const $container = await this.findBySelector('container');
     await $container.waitForDisplayed();
 
     await super.assertSelfie(tag, {

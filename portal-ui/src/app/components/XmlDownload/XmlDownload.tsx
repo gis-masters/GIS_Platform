@@ -1,8 +1,8 @@
-import React, { FC, lazy, Suspense } from 'react';
+import React, { type FC, lazy, Suspense } from 'react';
 
-import { XmlDownloadProps } from './XmlDownload.async';
+import { type XmlDownloadProps } from './XmlDownload.chunkroot';
 
-const XmlDownloadAsync = lazy(() => import('./XmlDownload.async'));
+const XmlDownloadAsync = lazy(() => import('./XmlDownload.chunkroot'));
 
 export const XmlDownload: FC<XmlDownloadProps> = props => (
   <Suspense>

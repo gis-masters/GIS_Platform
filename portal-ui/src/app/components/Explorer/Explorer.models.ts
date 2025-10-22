@@ -1,21 +1,25 @@
-import { ReactNode } from 'react';
+import { type ReactNode } from 'react';
 
-import { FtsType } from '../../../server-types/common-contracts';
-import { Emitter } from '../../services/common/Emitter';
-import { DataChangeEventDetail } from '../../services/communication.service';
-import { Basemap } from '../../services/data/basemaps/basemaps.models';
-import { FileInfo } from '../../services/data/files/files.models';
-import { DocumentVersionExtended, Library, LibraryRecord } from '../../services/data/library/library.models';
-import { MessagesRegistry } from '../../services/data/messagesRegistries/messagesRegistries.models';
-import { Schema } from '../../services/data/schema/schema.models';
-import { SearchItemData, SearchItemDataSource } from '../../services/data/search/search.model';
-import { Task, TaskHistory } from '../../services/data/task/task.models';
-import { Dataset, VectorTable } from '../../services/data/vectorData/vectorData.models';
-import { CrgProject } from '../../services/gis/projects/projects.models';
-import { PageOptions, SortOrder, ValueOf } from '../../services/models';
-import { FilterQuery } from '../../services/util/filters/filters.models';
-import { ExplorerService } from './Explorer.service';
-import { ExplorerStore } from './Explorer.store';
+import { type FtsType } from '../../../server-types/common-contracts';
+import { type Emitter } from '../../services/common/Emitter';
+import { type DataChangeEventDetail } from '../../services/communication.service';
+import { type Basemap } from '../../services/data/basemaps/basemaps.models';
+import { type FileInfo } from '../../services/data/files/files.models';
+import {
+  type DocumentVersionExtended,
+  type Library,
+  type LibraryRecord
+} from '../../services/data/library/library.models';
+import { type MessagesRegistry } from '../../services/data/messagesRegistries/messagesRegistries.models';
+import { type Schema } from '../../services/data/schema/schema.models';
+import { type SearchItemData, type SearchItemDataSource } from '../../services/data/search/search.model';
+import { type Task, type TaskHistory } from '../../services/data/task/task.models';
+import { type Dataset, type VectorTable } from '../../services/data/vectorData/vectorData.models';
+import { type CrgProject } from '../../services/gis/projects/projects.models';
+import { type PageOptions, type SortOrder, type ValueOf } from '../../services/models';
+import { type FilterQuery } from '../../services/util/filters/filters.models';
+import type { ExplorerService } from './Explorer.service';
+import type { ExplorerStore } from './Explorer.store';
 
 export type ExplorerRole =
   | 'SelectVectorTable'

@@ -1,6 +1,6 @@
 import { currentProject } from '../../../stores/CurrentProject.store';
 import { defaultOlProjectionCode } from '../../data/projections/projections.models';
-import { CrgLayer, CrgLayerType } from '../../gis/layers/layers.models';
+import { type CrgLayer, CrgLayerType } from '../../gis/layers/layers.models';
 import { getLayerByComplexNameInCurrentProject } from '../../gis/layers/layers.utils';
 import { buildCql } from '../../util/cql/buildCql';
 import { Mime } from '../../util/Mime';

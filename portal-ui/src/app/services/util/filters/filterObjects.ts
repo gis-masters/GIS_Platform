@@ -1,8 +1,8 @@
 import sift from 'sift';
 
-import { WfsFeature } from '../../geoserver/wfs/wfs.models';
+import { type WfsFeature } from '../../geoserver/wfs/wfs.models';
 import { escapeStringRegexp } from '../escapeStringRegexp';
-import { FilterQuery } from './filters.models';
+import { type FilterQuery } from './filters.models';
 
 export function filterFeatures(features: WfsFeature[], query: FilterQuery): WfsFeature[] {
   return features.filter(({ properties }) => sift(prepareLike(query))(properties));

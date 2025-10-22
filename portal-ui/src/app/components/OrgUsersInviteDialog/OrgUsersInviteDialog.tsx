@@ -4,7 +4,7 @@ import { observer } from 'mobx-react';
 import { boundMethod } from 'autobind-decorator';
 
 import { usersService } from '../../services/auth/users/users.service';
-import { PropertySchema, PropertyType } from '../../services/data/schema/schema.models';
+import { type PropertySchema, PropertyType } from '../../services/data/schema/schema.models';
 import { FormDialog } from '../FormDialog/FormDialog';
 import { Toast } from '../Toast/Toast';
 

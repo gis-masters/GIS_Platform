@@ -8,11 +8,11 @@ import { communicationService } from '../../services/communication.service';
 import { FilePlacementMode } from '../../services/data/file-placement/file-placement.models';
 import { getSrid } from '../../services/data/projections/projections.util';
 import {
-  PropertyOption,
-  PropertySchema,
+  type PropertyOption,
+  type PropertySchema,
   PropertyType,
-  Schema,
-  SimpleSchema
+  type Schema,
+  type SimpleSchema
 } from '../../services/data/schema/schema.models';
 import { applyView } from '../../services/data/schema/schema.utils';
 import { flags } from '../../services/feature-flags';
@@ -20,8 +20,8 @@ import { buildComplexName } from '../../services/geoserver/featureType/featureTy
 import { CUSTOM_STYLE_NAME } from '../../services/geoserver/styles/styles.models';
 import { getSimpleStylesListForGeometryType, getStyleSld } from '../../services/geoserver/styles/styles.service';
 import { getStyleTitle } from '../../services/geoserver/styles/styles.utils';
-import { GeometryType } from '../../services/geoserver/wfs/wfs.models';
-import { CrgLayer, crgLayerSchema, CrgLayerType } from '../../services/gis/layers/layers.models';
+import { type GeometryType } from '../../services/geoserver/wfs/wfs.models';
+import { type CrgLayer, crgLayerSchema, CrgLayerType } from '../../services/gis/layers/layers.models';
 import { createLayer, getViewChoiceOptions } from '../../services/gis/layers/layers.service';
 import { isVectorFromFile } from '../../services/gis/layers/layers.utils';
 import { services } from '../../services/services';
@@ -29,7 +29,7 @@ import { patch } from '../../services/util/patch';
 import { currentProject } from '../../stores/CurrentProject.store';
 import { currentUser } from '../../stores/CurrentUser.store';
 import { CustomStyleControl } from '../CustomStyleControl/CustomStyleControl';
-import { FormProps } from '../Form/Form';
+import { type FormProps } from '../Form/Form';
 import { FormDialog } from '../FormDialog/FormDialog';
 import { Loading } from '../Loading/Loading';
 import { TextBadge } from '../TextBadge/TextBadge';

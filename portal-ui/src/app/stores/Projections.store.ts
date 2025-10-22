@@ -1,6 +1,6 @@
 import { action, computed, makeObservable, observable } from 'mobx';
 
-import { Projection } from '../services/data/projections/projections.models';
+import { type Projection } from '../services/data/projections/projections.models';
 import { mapToProjections } from '../services/util/projectionMapper';
 import { organizationSettings } from './OrganizationSettings.store';
 

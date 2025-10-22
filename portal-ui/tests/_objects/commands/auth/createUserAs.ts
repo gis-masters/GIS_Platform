@@ -1,5 +1,5 @@
 import { usersClient } from '../../../../src/app/services/auth/users/users.client';
-import { NewUserData } from '../../../../src/app/services/auth/users/users.models';
+import { type NewUserData } from '../../../../src/app/services/auth/users/users.models';
 import { requestAs } from '../requestAs';
 import { getTestUser } from './testUsers';
 

@@ -1,11 +1,11 @@
-import React, { FC } from 'react';
+import React, { type FC } from 'react';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 
-import { ChildrenProps } from '../../../services/models';
+import { type ChildrenProps } from '../../../services/models';
 import { printSettings } from '../../../stores/PrintSettings.store';
 
-import '!style-loader!css-loader!sass-loader!./PrintMapDialog-PreviewImageContainer.scss';
+import './PrintMapDialog-PreviewImageContainer.scss';
 
 const cnPrintMapDialogPreviewImageContainer = cn('PrintMapDialog', 'PreviewImageContainer');
 

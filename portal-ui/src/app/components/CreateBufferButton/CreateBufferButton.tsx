@@ -1,10 +1,10 @@
-import React, { FC, useCallback, useState } from 'react';
+import React, { type FC, useCallback, useState } from 'react';
 import { observer } from 'mobx-react';
 import { Tooltip } from '@mui/material';
 import { cn } from '@bem-react/classname';
 
-import { WfsFeature } from '../../services/geoserver/wfs/wfs.models';
-import { CrgLayer } from '../../services/gis/layers/layers.models';
+import { type WfsFeature } from '../../services/geoserver/wfs/wfs.models';
+import { type CrgLayer } from '../../services/gis/layers/layers.models';
 import { editFeatureStore } from '../../services/map/a-map-mode/edit-feature/EditFeatureStore';
 import { CreateBufferDialog } from '../CreateBufferDialog/CreateBufferDialog';
 import { IconButton } from '../IconButton/IconButton';

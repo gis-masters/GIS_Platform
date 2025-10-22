@@ -7,9 +7,9 @@ import { cn } from '@bem-react/classname';
 import { Button } from '../../Button/Button';
 import { ServicesCalculatorInvoice } from '../Invoice/ServicesCalculator-Invoice';
 import { ServicesCalculatorResultPrice } from '../ResultPrice/ServicesCalculator-ResultPrice';
-import { ServicesInfo } from '../ServicesCalculator';
+import { type ServicesInfo } from '../ServicesCalculator.models';
 
-import '!style-loader!css-loader!sass-loader!./ServicesCalculator-Actions.scss';
+import './ServicesCalculator-Actions.scss';
 
 const cnServicesCalculatorActions = cn('ServicesCalculator', 'Actions');
 

@@ -7,9 +7,9 @@ import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
 import { usersService } from '../../../services/auth/users/users.service';
-import { ContentType, Schema } from '../../../services/data/schema/schema.models';
+import { type ContentType, type Schema } from '../../../services/data/schema/schema.models';
 import { applyContentType } from '../../../services/data/schema/schema.utils';
-import { Task } from '../../../services/data/task/task.models';
+import { type Task } from '../../../services/data/task/task.models';
 import { createTask } from '../../../services/data/task/task.service';
 import { FormDialog } from '../../FormDialog/FormDialog';
 

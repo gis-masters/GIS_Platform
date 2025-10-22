@@ -10,10 +10,10 @@ export class DataManagementBlock extends Block {
   async isMenuItemExist(menuItem: string): Promise<boolean | undefined> {
     await this.waitForVisible();
 
-    const $explorerList = await this.$('explorerList');
+    const $explorerList = await this.findBySelector('explorerList');
     await $explorerList.waitForDisplayed();
 
-    const $$menuRows = await this.$$('menuItem');
+    const $$menuRows = await this.findAllBySelector('menuItem');
     for (const $menuRow of $$menuRows) {
       const menuRowTitle = await $menuRow.getText();
 

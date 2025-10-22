@@ -5,7 +5,7 @@ import { boundMethod } from 'autobind-decorator';
 
 import { sidebars } from '../../../stores/Sidebars.store';
 
-import '!style-loader!css-loader!sass-loader!./LayersSidebar-Open.scss';
+import './LayersSidebar-Open.scss';
 
 const cnLayersSidebarOpen = cn('LayersSidebar', 'Open');
 

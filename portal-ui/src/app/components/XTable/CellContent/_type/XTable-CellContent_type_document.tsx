@@ -6,9 +6,9 @@ import { withBemMod } from '@bem-react/core';
 import { pluralize } from 'numeralize-ru';
 
 import { PropertyType } from '../../../../services/data/schema/schema.models';
-import { DocumentInfo, Documents } from '../../../Documents/Documents';
+import { type DocumentInfo, Documents } from '../../../Documents/Documents';
 import { PseudoLink } from '../../../PseudoLink/PseudoLink';
-import { cnXTableCellContent, XTableCellContentBase, XTableCellContentProps } from '../XTable-CellContent.base';
+import { cnXTableCellContent, XTableCellContentBase, type XTableCellContentProps } from '../XTable-CellContent.base';
 
 @observer
 class XTableCellContentTypeDocument extends Component<XTableCellContentProps<unknown>> {

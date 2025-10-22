@@ -7,11 +7,11 @@ class LibraryDocumentVersionsActionsDialogBlock extends Block {
   };
 
   async clickAcceptRestoreBtn(): Promise<void> {
-    const $acceptRestoreBtn = await this.$('acceptRestoreBtn');
+    const $acceptRestoreBtn = await this.findBySelector('acceptRestoreBtn');
     await $acceptRestoreBtn.waitForDisplayed();
     await $acceptRestoreBtn.click();
 
-    await $acceptRestoreBtn.waitForDisplayed({ reverse: true });
+    await $acceptRestoreBtn.waitForExist({ reverse: true });
   }
 }
 

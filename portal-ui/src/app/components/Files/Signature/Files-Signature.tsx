@@ -1,4 +1,4 @@
-import React, { FC, memo, useCallback, useRef } from 'react';
+import React, { type FC, memo, useCallback, useRef } from 'react';
 import { observer, useLocalObservable } from 'mobx-react';
 import {
   Card,
@@ -15,11 +15,11 @@ import { WorkspacePremiumOutlined } from '@mui/icons-material';
 import CloseIcon from '@mui/icons-material/Close';
 import { cn } from '@bem-react/classname';
 
-import { VerifyEcpResponse } from '../../../../server-types/common-contracts';
+import { type VerifyEcpResponse } from '../../../../server-types/common-contracts';
 import { filesClient } from '../../../services/data/files/files.client';
 import { verifyEcp } from '../../../services/data/files/files.service';
-import { LibraryRecord } from '../../../services/data/library/library.models';
-import { WfsFeature } from '../../../services/geoserver/wfs/wfs.models';
+import { type LibraryRecord } from '../../../services/data/library/library.models';
+import { type WfsFeature } from '../../../services/geoserver/wfs/wfs.models';
 import { editFeatureStore } from '../../../services/map/a-map-mode/edit-feature/EditFeatureStore';
 import { services } from '../../../services/services';
 import { cryptoProStore } from '../../../stores/CryptoPro.store';

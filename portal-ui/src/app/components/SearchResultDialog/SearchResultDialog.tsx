@@ -6,9 +6,14 @@ import { cn } from '@bem-react/classname';
 
 import { Button } from '../Button/Button';
 import { Explorer } from '../Explorer/Explorer';
-import { emptyItem, ExplorerItemData, ExplorerItemType, ExplorerSearchValue } from '../Explorer/Explorer.models';
+import {
+  emptyItem,
+  type ExplorerItemData,
+  ExplorerItemType,
+  type ExplorerSearchValue
+} from '../Explorer/Explorer.models';
 
-import '!style-loader!css-loader!sass-loader!./SearchResultDialog.scss';
+import './SearchResultDialog.scss';
 
 const cnSearchResultDialog = cn('SearchResultDialog');
 

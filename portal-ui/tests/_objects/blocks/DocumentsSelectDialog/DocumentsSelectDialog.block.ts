@@ -15,16 +15,16 @@ class DocumentsSelectDialogBlock extends Block {
   }
 
   async switchExplorerView(): Promise<void> {
-    const $switcher = await this.$('switcher');
+    const $switcher = await this.findBySelector('switcher');
     await $switcher.waitForDisplayed();
     await $switcher.click();
   }
 
   async select(): Promise<void> {
-    const $select = await this.$('select');
+    const $select = await this.findBySelector('select');
     await $select.waitForDisplayed();
     await $select.click();
-    await $select.waitForDisplayed({ reverse: true });
+    await $select.waitForExist({ reverse: true });
   }
 }
 

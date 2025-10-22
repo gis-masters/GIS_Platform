@@ -1,9 +1,9 @@
 import { boundClass } from 'autobind-decorator';
 
-import { VerifyEcpResponse } from '../../../../server-types/common-contracts';
+import { type VerifyEcpResponse } from '../../../../server-types/common-contracts';
 import { Client } from '../../api/Client';
 import { http } from '../../api/http.service';
-import { FileConnection, FileInfo } from './files.models';
+import { type FileConnection, type FileInfo } from './files.models';
 
 @boundClass
 class FilesClient extends Client {

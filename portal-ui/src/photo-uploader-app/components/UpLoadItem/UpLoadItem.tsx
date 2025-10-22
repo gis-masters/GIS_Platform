@@ -1,13 +1,13 @@
-import React, { FC, ReactNode } from 'react';
+import React, { type FC, type ReactNode } from 'react';
 import { observer } from 'mobx-react';
 import { ListItem, ListItemAvatar, ListItemText } from '@mui/material';
 import { cn } from '@bem-react/classname';
 
-import { UploadedFile } from '../../services/photoUploader.models';
+import { type UploadedFile } from '../../services/photoUploader.models';
 import { getCoordinatesByFeature } from '../../services/photoUploader.service';
 
-import '!style-loader!css-loader!sass-loader!./Title/UpLoadItem-Title.scss';
-import '!style-loader!css-loader!sass-loader!./Image/UpLoadItem-Image.scss';
+import './Title/UpLoadItem-Title.scss';
+import './Image/UpLoadItem-Image.scss';
 
 export type UpPhotoLoadListItemProps = {
   item: UploadedFile;

@@ -6,10 +6,10 @@ import { withBemMod } from '@bem-react/core';
 
 import { PropertyType } from '../../../../services/data/schema/schema.models';
 import { getFieldFilterValue, modifyFieldFilterValue } from '../../../../services/util/filters/filters';
-import { FilterQuery } from '../../../../services/util/filters/filters.models';
-import { cnXTableFilter, XTableFilterProps } from '../XTable-Filter.base';
+import { type FilterQuery } from '../../../../services/util/filters/filters.models';
+import { cnXTableFilter, type XTableFilterProps } from '../XTable-Filter.base';
 
-import '!style-loader!css-loader!sass-loader!./XTable-Filter_type_fias.scss';
+import './XTable-Filter_type_fias.scss';
 
 @observer
 class XTableFilterTypeFias extends Component<XTableFilterProps> {

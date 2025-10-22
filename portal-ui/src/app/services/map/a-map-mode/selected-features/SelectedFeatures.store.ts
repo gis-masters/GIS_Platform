@@ -7,8 +7,8 @@ import { currentProject } from '../../../../stores/CurrentProject.store';
 import { Pages, route } from '../../../../stores/Route.store';
 import { flags } from '../../../feature-flags';
 import { extractTableNameFromFeatureId } from '../../../geoserver/featureType/featureType.util';
-import { WfsFeature } from '../../../geoserver/wfs/wfs.models';
-import { CrgLayer } from '../../../gis/layers/layers.models';
+import { type WfsFeature } from '../../../geoserver/wfs/wfs.models';
+import { type CrgLayer } from '../../../gis/layers/layers.models';
 import { services } from '../../../services';
 import { prepareLike } from '../../../util/filters/filterObjects';
 

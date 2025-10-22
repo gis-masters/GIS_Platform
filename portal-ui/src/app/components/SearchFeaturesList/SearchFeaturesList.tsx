@@ -2,19 +2,19 @@ import React, { Component } from 'react';
 import { action, computed, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
-import { AxiosError } from 'axios';
+import { type AxiosError } from 'axios';
 
-import { FoundFeature } from '../../services/data/search/search.model';
+import { type FoundFeature } from '../../services/data/search/search.model';
 import { getSearchResults } from '../../services/data/search/search.service';
-import { WfsFeature } from '../../services/geoserver/wfs/wfs.models';
+import { type WfsFeature } from '../../services/geoserver/wfs/wfs.models';
 import { services } from '../../services/services';
 import { EmptyListView } from '../EmptyListView/EmptyListView';
 import { FeaturesList } from '../FeaturesList/FeaturesList';
 import { Loading } from '../Loading/Loading';
-import { SearchInfo } from '../SearchField/SearchField';
+import { type SearchInfo } from '../SearchField/SearchField';
 import { SearchResultHighlightWrapper } from '../SearchResultHighlightWrapper/SearchResultHighlightWrapper';
 
-import '!style-loader!css-loader!sass-loader!./SearchFeaturesList.scss';
+import './SearchFeaturesList.scss';
 
 const cnSearchFeaturesList = cn('SearchFeaturesList');
 

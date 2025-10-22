@@ -3,11 +3,11 @@ import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
-import { PropertySchemaString, PropertyType } from '../../services/data/schema/schema.models';
-import { FormControlProps } from '../Form/Control/Form-Control';
+import { type PropertySchemaString, PropertyType } from '../../services/data/schema/schema.models';
+import { type FormControlProps } from '../Form/Control/Form-Control';
 import { StringControlInner } from './Inner/StringControl-Inner.composed';
 
-import '!style-loader!css-loader!sass-loader!./StringControl.scss';
+import './StringControl.scss';
 
 const cnStringControl = cn('StringControl');
 

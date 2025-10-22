@@ -1,8 +1,15 @@
 import { Injectable } from '@angular/core';
 
-import { OldPropertySchema } from './data/schema/schemaOld.models';
-import { LayerAttribute } from './geoserver/import/import.models';
-import { DirectComparison, GeometryComparison, LastComparison, ObjectIdComparison } from './util/CrgComparatorUtil';
+import { type OldPropertySchema } from './data/schema/schemaOld.models';
+import { type LayerAttribute } from './geoserver/import/import.models';
+// eslint-disable-next-line @typescript-eslint/consistent-type-imports
+import {
+  CrgComparison,
+  DirectComparison,
+  GeometryComparison,
+  LastComparison,
+  ObjectIdComparison
+} from './util/CrgComparatorUtil';
 
 @Injectable({
   providedIn: 'root'
@@ -31,17 +38,4 @@ export class PropertiesComparatorService {
   compare(source: LayerAttribute, columns: OldPropertySchema[]): OldPropertySchema {
     return this.initialComparison.compare(source, columns);
   }
-}
-
-/**
- * Простая реализация паттерна "цепочка обязанностей" используя setNext()
- */
-export interface CrgComparison {
-  /**
-   * Задаем следующий метод в цепочке.
-   * @param comparison Обработчик
-   */
-  setNext(comparison: CrgComparison): void;
-
-  compare(source: LayerAttribute, columns: OldPropertySchema[]): OldPropertySchema;
 }

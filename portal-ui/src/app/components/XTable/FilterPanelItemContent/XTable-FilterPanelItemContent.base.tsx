@@ -1,13 +1,13 @@
-import React, { ReactElement, ReactNode } from 'react';
+import React, { type ReactElement, type ReactNode } from 'react';
 import { Tooltip } from '@mui/material';
 import { cn } from '@bem-react/classname';
-import { IClassNameProps } from '@bem-react/core';
+import { type IClassNameProps } from '@bem-react/core';
 
-import { FilterQuery } from '../../../services/util/filters/filters.models';
-import { XTableColumn } from '../XTable.models';
+import { type FilterQuery } from '../../../services/util/filters/filters.models';
+import { type XTableColumn } from '../XTable.models';
 
-import '!style-loader!css-loader!sass-loader!./XTable-FilterPanelItemContent.scss';
-import '!style-loader!css-loader!sass-loader!../FilterPanelItemContentPart/XTable-FilterPanelItemContentPart.scss';
+import './XTable-FilterPanelItemContent.scss';
+import '../FilterPanelItemContentPart/XTable-FilterPanelItemContentPart.scss';
 
 export const cnXTableFilterPanelItemContent = cn('XTable', 'FilterPanelItemContent');
 export const cnXTableFilterPanelItemContentPart = cn('XTable', 'FilterPanelItemContentPart');

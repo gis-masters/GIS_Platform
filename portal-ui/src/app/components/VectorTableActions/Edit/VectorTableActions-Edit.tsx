@@ -6,7 +6,7 @@ import { Edit, EditOutlined, SaveOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
-import { VectorTable, vectorTableSchema } from '../../../services/data/vectorData/vectorData.models';
+import { type VectorTable, vectorTableSchema } from '../../../services/data/vectorData/vectorData.models';
 import { updateVectorTable } from '../../../services/data/vectorData/vectorData.service';
 import { getPatch } from '../../../services/util/patch';
 import { FormDialog } from '../../FormDialog/FormDialog';

@@ -3,9 +3,9 @@ import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { AssignmentOutlined, FolderOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
-import { AxiosError } from 'axios';
+import { type AxiosError } from 'axios';
 
-import { LibraryRecord } from '../../../services/data/library/library.models';
+import { type LibraryRecord } from '../../../services/data/library/library.models';
 import { getLibraryRecord } from '../../../services/data/library/library.service';
 import { LibraryDocumentDialog } from '../../LibraryDocumentDialog/LibraryDocumentDialog';
 import { LookupActions } from '../../Lookup/Actions/Lookup-Actions';
@@ -13,11 +13,11 @@ import { LookupDelete } from '../../Lookup/Delete/Lookup-Delete';
 import { LookupIcon } from '../../Lookup/Icon/Lookup-Icon';
 import { LookupItem } from '../../Lookup/Item/Lookup-Item';
 import { LookupNameGap } from '../../Lookup/NameGap/Lookup-NameGap';
-import { LookupStatus, LookupStatusType } from '../../Lookup/Status/Lookup-Status';
-import { DocumentInfo } from '../Documents';
+import { LookupStatus, type LookupStatusType } from '../../Lookup/Status/Lookup-Status';
+import { type DocumentInfo } from '../Documents';
 import { DocumentsName } from '../Name/Documents-Name';
 
-import '!style-loader!css-loader!sass-loader!../Icon/Documents-Icon.scss';
+import '../Icon/Documents-Icon.scss';
 
 const cnDocuments = cn('Documents');
 

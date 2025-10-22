@@ -6,18 +6,18 @@ import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
 import { PropertyType } from '../../services/data/schema/schema.models';
-import { Dataset, VectorTable } from '../../services/data/vectorData/vectorData.models';
+import { type Dataset, type VectorTable } from '../../services/data/vectorData/vectorData.models';
 import { getVectorTable } from '../../services/data/vectorData/vectorData.service';
 import { CrgLayerType } from '../../services/gis/layers/layers.models';
 import { isFeaturesUpdateAllowed } from '../../services/permissions/permissions.service';
 import { currentProject } from '../../stores/CurrentProject.store';
-import { Breadcrumbs, BreadcrumbsItemData } from '../Breadcrumbs/Breadcrumbs';
+import { Breadcrumbs, type BreadcrumbsItemData } from '../Breadcrumbs/Breadcrumbs';
 import { Button } from '../Button/Button';
 import { Explorer } from '../Explorer/Explorer';
-import { ExplorerItemData, ExplorerItemType, isCustomFilters } from '../Explorer/Explorer.models';
-import { FormControlProps } from '../Form/Control/Form-Control';
+import { type ExplorerItemData, ExplorerItemType, isCustomFilters } from '../Explorer/Explorer.models';
+import { type FormControlProps } from '../Form/Control/Form-Control';
 
-import '!style-loader!css-loader!sass-loader!./SelectVectorTableControl.scss';
+import './SelectVectorTableControl.scss';
 
 const cnSelectVectorTable = cn('SelectVectorTableControl');
 

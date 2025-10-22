@@ -1,13 +1,18 @@
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
-import { IClassNameProps } from '@bem-react/core';
+import { type IClassNameProps } from '@bem-react/core';
 import { boundMethod } from 'autobind-decorator';
 import { cloneDeep } from 'lodash';
 
-import { PropertySchema, PropertyType, Schema, SimpleSchema } from '../../../services/data/schema/schema.models';
+import {
+  type PropertySchema,
+  PropertyType,
+  type Schema,
+  type SimpleSchema
+} from '../../../services/data/schema/schema.models';
 import { getFieldRelations } from '../../../services/data/schema/schema.utils';
-import { FieldErrors } from '../../../services/util/form/formValidation.utils';
+import { type FieldErrors } from '../../../services/util/form/formValidation.utils';
 import { generateRandomId } from '../../../services/util/randomId';
 import { isRecordStringUnknown } from '../../../services/util/typeGuards/isRecordStringUnknown';
 import { isStringArray } from '../../../services/util/typeGuards/isStringArray';
@@ -15,13 +20,13 @@ import { organizationSettings } from '../../../stores/OrganizationSettings.store
 import { RelationsButton } from '../../RelationsButton/RelationsButton';
 import { FormControl } from '../Control/Form-Control.composed';
 import { FormField } from '../Field/Form-Field';
-import { FormRole } from '../Form.async';
+import { type FormRole } from '../Form.models';
 import { applyFieldValue, convertToComplexField } from '../Form.utils';
 import { FormHiddenField } from '../HiddenField/Form-HiddenField';
 import { FormLabel } from '../Label/Form-Label';
 import { FormView } from '../View/Form-View.composed';
 
-import '!style-loader!css-loader!sass-loader!../Relations/Form-Relations.scss';
+import '../Relations/Form-Relations.scss';
 
 const cnFormContent = cn('Form', 'Content');
 const cnFormRelations = cn('Form', 'Relations');

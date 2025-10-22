@@ -7,7 +7,7 @@ import { boundMethod } from 'autobind-decorator';
 import { communicationService } from '../../services/communication.service';
 import { importFeaturesFromShapeFile } from '../../services/data/file-placement/file-placement.service';
 import { isZipFile } from '../../services/data/files/files.util';
-import { ImportShapeProcess } from '../../services/data/processes/processes.models';
+import { type ImportShapeProcess } from '../../services/data/processes/processes.models';
 import { awaitProcess } from '../../services/data/processes/processes.service';
 import { services } from '../../services/services';
 import { Mime } from '../../services/util/Mime';

@@ -1,12 +1,20 @@
-import React, { BaseHTMLAttributes, forwardRef, ReactElement, Ref, useEffect, useRef, useState } from 'react';
+import React, {
+  type BaseHTMLAttributes,
+  forwardRef,
+  type ReactElement,
+  type Ref,
+  useEffect,
+  useRef,
+  useState
+} from 'react';
 import { observer } from 'mobx-react';
 import { TableSortLabel, Tooltip } from '@mui/material';
 import { cn } from '@bem-react/classname';
 
-import { SortParams } from '../../../services/util/sortObjects';
-import { XTableColumn } from '../XTable.models';
+import { type SortParams } from '../../../services/util/sortObjects';
+import { type XTableColumn } from '../XTable.models';
 
-import '!style-loader!css-loader!sass-loader!./XTable-HeadCellLabel.scss';
+import './XTable-HeadCellLabel.scss';
 
 const cnXTableHeadCellLabel = cn('XTable', 'HeadCellLabel');
 const cnXTableHeadCellLabelWrapper = cn('XTable', 'HeadCellLabelWrapper');

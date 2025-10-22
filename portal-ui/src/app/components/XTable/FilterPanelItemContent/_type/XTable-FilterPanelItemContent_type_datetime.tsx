@@ -4,7 +4,7 @@ import { withBemMod } from '@bem-react/core';
 import { PropertyType } from '../../../../services/data/schema/schema.models';
 import {
   cnXTableFilterPanelItemContent,
-  XTableFilterPanelItemContentProps
+  type XTableFilterPanelItemContentProps
 } from '../XTable-FilterPanelItemContent.base';
 import { FilterPanelItemContentTypeInterval } from './XTable-FilterPanelItemContent_type_interval';
 

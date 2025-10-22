@@ -1,8 +1,8 @@
-import React, { FC } from 'react';
+import React, { type FC } from 'react';
 import { cn } from '@bem-react/classname';
 import * as DOMPurify from 'dompurify';
 
-import '!style-loader!css-loader!sass-loader!./Layer-Errors.scss';
+import './Layer-Errors.scss';
 
 const cnLayerErrors = cn('Layer', 'Errors');
 

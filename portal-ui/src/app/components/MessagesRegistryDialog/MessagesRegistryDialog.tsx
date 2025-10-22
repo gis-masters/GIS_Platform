@@ -1,14 +1,14 @@
-import React, { FC } from 'react';
+import React, { type FC } from 'react';
 import { Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import { EmailOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
-import { MessagesRegistriesMessages } from '../../services/data/messagesRegistries/messagesRegistries.models';
-import { Schema } from '../../services/data/schema/schema.models';
+import { type MessagesRegistriesMessages } from '../../services/data/messagesRegistries/messagesRegistries.models';
+import { type Schema } from '../../services/data/schema/schema.models';
 import { Button } from '../Button/Button';
 import { ViewContentWidget } from '../ViewContentWidget/ViewContentWidget';
 
-import '!style-loader!css-loader!sass-loader!./MessagesRegistryDialog.scss';
+import './MessagesRegistryDialog.scss';
 
 const cnMessagesRegistryDialog = cn('MessagesRegistryDialog');
 

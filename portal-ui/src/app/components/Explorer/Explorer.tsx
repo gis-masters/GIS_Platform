@@ -1,8 +1,8 @@
-import React, { FC, lazy, Suspense } from 'react';
+import React, { type FC, lazy, Suspense } from 'react';
 
-import { ExplorerProps } from './Explorer.async';
+import { type ExplorerProps } from './Explorer.chunkroot';
 
-const ExplorerAsync = lazy(() => import('./Explorer.async'));
+const ExplorerAsync = lazy(() => import('./Explorer.chunkroot'));
 
 export const Explorer: FC<ExplorerProps> = props => (
   <Suspense>

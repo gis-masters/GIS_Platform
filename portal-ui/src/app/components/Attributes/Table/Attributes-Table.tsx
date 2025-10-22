@@ -1,30 +1,30 @@
 import React, { Component } from 'react';
-import { action, computed, IReactionDisposer, makeObservable, observable, reaction } from 'mobx';
+import { action, computed, type IReactionDisposer, makeObservable, observable, reaction } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
 import { communicationService } from '../../../services/communication.service';
-import { Schema } from '../../../services/data/schema/schema.models';
-import { CrgVectorLayer } from '../../../services/gis/layers/layers.models';
+import { type Schema } from '../../../services/data/schema/schema.models';
+import { type CrgVectorLayer } from '../../../services/gis/layers/layers.models';
 import { EditFeatureMode } from '../../../services/map/a-map-mode/edit-feature/EditFeature.models';
 import { mapModeManager } from '../../../services/map/a-map-mode/MapModeManager';
 import { selectedFeaturesStore } from '../../../services/map/a-map-mode/selected-features/SelectedFeatures.store';
 import { FilterBySelectionMode, MapMode, MapSelectionTypes } from '../../../services/map/map.models';
 import { mapService } from '../../../services/map/map.service';
-import { PageOptions } from '../../../services/models';
+import { type PageOptions } from '../../../services/models';
 import { getFieldFilterValue } from '../../../services/util/filters/filters';
-import { FilterQuery } from '../../../services/util/filters/filters.models';
-import { SortParams } from '../../../services/util/sortObjects';
+import { type FilterQuery } from '../../../services/util/filters/filters.models';
+import { type SortParams } from '../../../services/util/sortObjects';
 import { attributesTableStore } from '../../../stores/AttributesTable.store';
 import { Loading } from '../../Loading/Loading';
-import { XTable, XTableInvoke } from '../../XTable/XTable';
-import { XTableColumn } from '../../XTable/XTable.models';
-import { AttributesTableRecord, FILTER_BY_SELECTION } from '../Attributes.models';
+import { XTable, type XTableInvoke } from '../../XTable/XTable';
+import { type XTableColumn } from '../../XTable/XTable.models';
+import { type AttributesTableRecord, FILTER_BY_SELECTION } from '../Attributes.models';
 
-import '!style-loader!css-loader!sass-loader!./Attributes-Table.scss';
-import '!style-loader!css-loader!sass-loader!../CheckCell/Attributes-CheckCell.scss';
-import '!style-loader!css-loader!sass-loader!../TableContainer/Attributes-TableContainer.scss';
+import './Attributes-Table.scss';
+import '../CheckCell/Attributes-CheckCell.scss';
+import '../TableContainer/Attributes-TableContainer.scss';
 
 const cnAttributesTable = cn('Attributes', 'Table');
 const cnAttributesTableContainer = cn('Attributes', 'TableContainer');

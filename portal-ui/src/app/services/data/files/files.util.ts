@@ -1,13 +1,13 @@
-import { WfsFeature } from '../../geoserver/wfs/wfs.models';
+import { type WfsFeature } from '../../geoserver/wfs/wfs.models';
 import { getLayerByFeatureInCurrentProject } from '../../gis/layers/layers.utils';
 import { notFalsyFilter } from '../../util/NotFalsyFilter';
-import { LibraryRecord } from '../library/library.models';
+import { type LibraryRecord } from '../library/library.models';
 import {
   allCompoundFilesTypes,
   allShapeFilesTypes,
   allTabFilesTypes,
-  CompoundFileTypes,
-  FileInfo,
+  type CompoundFileTypes,
+  type FileInfo,
   isFileInfo,
   midMifRequiredFilesTypes,
   optionalShapeFilesTypes,
@@ -148,7 +148,7 @@ export function getLibraryRecordFiles(libraryRecord: LibraryRecord): FileInfo[] 
       return value;
     })
     .filter(value => Array.isArray(value) && value.every(isFileInfo))
-    .flat() as FileInfo[];
+    .flat();
 }
 
 export function hasPhotoModeInFeatures(features: WfsFeature[]): boolean {

@@ -1,11 +1,11 @@
-import React, { FC, useCallback } from 'react';
+import React, { type FC, useCallback } from 'react';
 import { observer, useLocalObservable } from 'mobx-react';
 import { Dialog, DialogActions, DialogContent, DialogTitle, Tooltip } from '@mui/material';
 import { EditOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
-import { Feature } from 'ol';
+import { type Feature } from 'ol';
 
-import { FontProperties } from '../../services/map/labels/map-labels.models';
+import { type FontProperties } from '../../services/map/labels/map-labels.models';
 import { mapLabelsService } from '../../services/map/labels/map-labels.service';
 import {
   convertFromRGBAToHEX,

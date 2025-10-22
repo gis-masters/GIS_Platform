@@ -1,21 +1,21 @@
-import React, { ReactNode } from 'react';
+import React, { type ReactNode } from 'react';
 
-import { Emitter } from '../../../../services/common/Emitter';
-import { communicationService, DataChangeEventDetail } from '../../../../services/communication.service';
-import { Library } from '../../../../services/data/library/library.models';
+import { type Emitter } from '../../../../services/common/Emitter';
+import { communicationService, type DataChangeEventDetail } from '../../../../services/communication.service';
+import { type Library } from '../../../../services/data/library/library.models';
 import {
   getLibraries,
   getLibrariesWithParticularOne,
   getLibrary
 } from '../../../../services/data/library/library.service';
-import { PageOptions, SortOrder } from '../../../../services/models';
+import { type PageOptions, SortOrder } from '../../../../services/models';
 import { staticImplements } from '../../../../services/util/staticImplements';
 import { currentUser } from '../../../../stores/CurrentUser.store';
 import { CreateLibrary } from '../../../CreateLibrary/CreateLibrary';
 import { Library as LibraryIcon } from '../../../Icons/Library';
-import { Adapter, ExplorerItemData, ExplorerItemType, SortItem } from '../../Explorer.models';
-import { ExplorerService } from '../../Explorer.service';
-import { ExplorerStore } from '../../Explorer.store';
+import { type Adapter, type ExplorerItemData, ExplorerItemType, type SortItem } from '../../Explorer.models';
+import { type ExplorerService } from '../../Explorer.service';
+import { type ExplorerStore } from '../../Explorer.store';
 
 @staticImplements<Adapter>()
 export class ExplorerAdapterTypeLibraryRoot {

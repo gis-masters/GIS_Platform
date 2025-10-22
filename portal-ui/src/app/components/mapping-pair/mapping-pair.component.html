@@ -15,14 +15,18 @@
       formControlName="columnFiz"
       [compareWith]="compareFn"
       (change)="columnChanged()"
-    >
-      <option *ngFor="let property of propertySchemas" [ngValue]="property">
-        {{ getOptionText(property) }}
-      </option>
+      >
+      @for (property of propertySchemas; track property) {
+        <option [ngValue]="property">
+          {{ getOptionText(property) }}
+        </option>
+      }
     </select>
   </form>
 
   <div class="col-6 align-self-center" style="padding-left: 10px; padding-right: 0">
-    <span *ngIf="selectedProperty">{{ selectedProperty.title }}</span>
+    @if (selectedProperty) {
+      <span>{{ selectedProperty.title }}</span>
+    }
   </div>
 </div>

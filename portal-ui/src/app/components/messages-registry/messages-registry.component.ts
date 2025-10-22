@@ -1,6 +1,6 @@
 import { createElement } from 'react';
-import { createRoot, Root } from 'react-dom/client';
-import { Component, ElementRef, OnChanges, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { createRoot, type Root } from 'react-dom/client';
+import { Component, ElementRef, type OnChanges, type OnDestroy, type OnInit, ViewChild } from '@angular/core';
 import { withRegistry } from '@bem-react/di';
 
 import { registry } from '../../services/di-registry';
@@ -12,7 +12,8 @@ const MessagesRegistryWithRegistry = withRegistry(registry)(MessagesRegistry);
 @Component({
   selector: 'crg-messages-registry',
   template: '<div class="messages-registry" #react></div>',
-  styleUrls: ['./messages-registry.component.scss']
+  styleUrls: ['./messages-registry.component.scss'],
+  standalone: false
 })
 export class MessagesRegistryComponent implements OnInit, OnChanges, OnDestroy {
   @ViewChild('react', { read: ElementRef, static: true }) ref?: ElementRef<HTMLDivElement>;

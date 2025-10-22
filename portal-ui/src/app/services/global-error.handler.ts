@@ -1,5 +1,5 @@
 import { ErrorHandler, Injectable } from '@angular/core';
-import { AxiosResponse } from 'axios';
+import { type AxiosResponse } from 'axios';
 import { NGXLogger } from 'ngx-logger';
 
 import { Toast } from '../components/Toast/Toast';

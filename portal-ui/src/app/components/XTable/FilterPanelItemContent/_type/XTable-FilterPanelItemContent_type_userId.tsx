@@ -3,16 +3,16 @@ import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { withBemMod } from '@bem-react/core';
 
-import { CrgUser } from '../../../../services/auth/users/users.models';
+import { type CrgUser } from '../../../../services/auth/users/users.models';
 import { usersService } from '../../../../services/auth/users/users.service';
 import { PropertyType } from '../../../../services/data/schema/schema.models';
 import { getFieldFilterValue } from '../../../../services/util/filters/filters';
-import { FilterQuery } from '../../../../services/util/filters/filters.models';
+import { type FilterQuery } from '../../../../services/util/filters/filters.models';
 import { isNumberArray } from '../../../../services/util/typeGuards/isNumberArray';
 import {
   cnXTableFilterPanelItemContent,
   XTableFilterPanelItemContentBase,
-  XTableFilterPanelItemContentProps
+  type XTableFilterPanelItemContentProps
 } from '../XTable-FilterPanelItemContent.base';
 
 @observer

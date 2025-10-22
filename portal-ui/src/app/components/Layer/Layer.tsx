@@ -2,12 +2,17 @@ import React, { Component } from 'react';
 import { action, computed, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
-import { IClassNameProps } from '@bem-react/core';
+import { type IClassNameProps } from '@bem-react/core';
 
-import { CrgLayer, CrgLayersGroup, CrgLayerType, CrgVectorLayer } from '../../services/gis/layers/layers.models';
+import {
+  type CrgLayer,
+  type CrgLayersGroup,
+  CrgLayerType,
+  type CrgVectorLayer
+} from '../../services/gis/layers/layers.models';
 import { getLayerSchema } from '../../services/gis/layers/layers.service';
 import { isVectorFromFile } from '../../services/gis/layers/layers.utils';
-import { TreeItemPayload } from '../../services/gis/projects/projects.models';
+import { type TreeItemPayload } from '../../services/gis/projects/projects.models';
 import { MapAction } from '../../services/map/map.models';
 import { currentProject } from '../../stores/CurrentProject.store';
 import { mapStore } from '../../stores/Map.store';
@@ -28,7 +33,7 @@ import { LayerTitle } from './Title/Layer-Title';
 import { LayerTransparencyIndicator } from './TransparencyIndicator/Layer-TransparencyIndicator';
 import { LayerZoomWarning } from './ZoomWarning/Layer-ZoomWarning';
 
-import '!style-loader!css-loader!sass-loader!./Layer.scss';
+import './Layer.scss';
 
 export const cnLayer = cn('Layer');
 

@@ -4,13 +4,13 @@ import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
-import { Basemap } from '../../services/data/basemaps/basemaps.models';
-import { FileConnection } from '../../services/data/files/files.models';
+import { type Basemap } from '../../services/data/basemaps/basemaps.models';
+import { type FileConnection } from '../../services/data/files/files.models';
 import {
   connectBasemapToProject,
   getBasemapConnections
 } from '../../services/gis/project-basemaps/project-basemaps.service';
-import { CrgProject } from '../../services/gis/projects/projects.models';
+import { type CrgProject } from '../../services/gis/projects/projects.models';
 import { ConnectionsToProjectsWidget } from '../ConnectionsToProjectsWidget/ConnectionsToProjectsWidget';
 
 const cnConnectionsBasemapToProjectsWidget = cn('ConnectionsBasemapToProjectsWidget');

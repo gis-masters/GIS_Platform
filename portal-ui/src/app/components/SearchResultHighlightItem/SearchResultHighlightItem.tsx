@@ -1,4 +1,4 @@
-import React, { Component, createRef, ReactNode, RefObject } from 'react';
+import React, { Component, createRef, type ReactNode, type RefObject } from 'react';
 import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { Popover } from '@mui/material';
@@ -10,7 +10,7 @@ import { sleep } from '../../services/util/sleep';
 import { Highlight } from '../Highlight/Highlight';
 import { IconButton } from '../IconButton/IconButton';
 
-import '!style-loader!css-loader!sass-loader!./SearchResultHighlightItem.scss';
+import './SearchResultHighlightItem.scss';
 
 const cnSearchResultHighlightItem = cn('SearchResultHighlightItem');
 

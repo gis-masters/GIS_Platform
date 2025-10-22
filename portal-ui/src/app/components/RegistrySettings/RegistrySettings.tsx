@@ -5,7 +5,7 @@ import { IconButton, Tooltip } from '@mui/material';
 import { Settings, SettingsOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
-import { PropertySchema } from '../../services/data/schema/schema.models';
+import { type PropertySchema } from '../../services/data/schema/schema.models';
 import { ChooseXTableDialog } from '../ChooseXTableDialog/ChooseXTableDialog';
 
 const cnRegistrySettings = cn('Registry', 'Settings');

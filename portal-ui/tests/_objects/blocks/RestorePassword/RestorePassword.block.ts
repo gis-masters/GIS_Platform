@@ -8,12 +8,12 @@ class RestorePasswordBlock extends Block {
   };
 
   async fillEmail(email: string) {
-    const $email = await this.$('email');
+    const $email = await this.findBySelector('email');
     await $email.setValue(email);
   }
 
   async submit() {
-    const $restorePasswordBtn = await this.$('restorePasswordBtn');
+    const $restorePasswordBtn = await this.findBySelector('restorePasswordBtn');
     await $restorePasswordBtn.waitForClickable();
     await $restorePasswordBtn.click();
   }

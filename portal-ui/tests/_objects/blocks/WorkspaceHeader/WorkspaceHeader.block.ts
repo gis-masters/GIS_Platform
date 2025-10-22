@@ -9,24 +9,25 @@ class WorkspaceHeaderBlock extends Block {
   };
 
   async testOrganization(organization: string) {
-    await expect(this.$('organization')).toHaveTextContaining(organization);
+    const $organization = await this.findBySelector('organization');
+    await expect(await $organization.getText()).toContain(organization);
   }
 
   async clickPrintMap(): Promise<void> {
-    const $printMapBtn = await this.$('printMap');
+    const $printMapBtn = await this.findBySelector('printMap');
     await $printMapBtn.waitForDisplayed();
 
     await $printMapBtn.click();
   }
 
   async waitForLoaderEnd(): Promise<void> {
-    const loader = await this.$('loader');
+    const loader = await this.findBySelector('loader');
     try {
       await loader.waitForDisplayed({ timeout: 1000 });
     } catch {
       // ignore
     }
-    await loader.waitForDisplayed({ reverse: true });
+    await loader.waitForExist({ reverse: true });
   }
 }
 

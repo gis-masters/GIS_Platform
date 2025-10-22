@@ -1,11 +1,11 @@
-import React, { FC } from 'react';
+import React, { type FC } from 'react';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 
 import { printSettings } from '../../../stores/PrintSettings.store';
 import { Legend } from '../../Legend/Legend';
 
-import '!style-loader!css-loader!sass-loader!./PrintMapDialog-Legend.scss';
+import './PrintMapDialog-Legend.scss';
 
 const cnPrintMapDialogLegend = cn('PrintMapDialog', 'Legend');
 

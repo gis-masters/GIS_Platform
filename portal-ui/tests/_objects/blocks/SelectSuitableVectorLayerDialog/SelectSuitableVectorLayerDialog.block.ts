@@ -10,7 +10,7 @@ class SelectSuitableVectorLayerDialog extends Block {
   };
 
   async clickSubmitButton(): Promise<void> {
-    const $copyBtn = await this.$('copyBtn');
+    const $copyBtn = await this.findBySelector('copyBtn');
     await $copyBtn.waitForClickable();
     await $copyBtn.click();
   }
@@ -18,7 +18,7 @@ class SelectSuitableVectorLayerDialog extends Block {
   async waitForLoadingToHide(): Promise<void> {
     await this.waitForVisible();
 
-    const $loading = await this.$('loading');
+    const $loading = await this.findBySelector('loading');
 
     try {
       await $loading.waitForDisplayed({ timeout: 1000 });
@@ -26,7 +26,7 @@ class SelectSuitableVectorLayerDialog extends Block {
       // ignore
     }
 
-    await $loading.waitForDisplayed({ reverse: true });
+    await $loading.waitForExist({ reverse: true });
   }
 
   async selectLayer(layer: string): Promise<void> {
@@ -39,17 +39,17 @@ class SelectSuitableVectorLayerDialog extends Block {
       throw new Error(`Не найден проект "${layer}"`);
     }
 
-    const $layerSelect = await $userRow.$('.MuiTableCell-root:first-child input');
+    const $layerSelect = await $userRow.$('.MuiTableCell-root:first-child input').getElement();
     await $layerSelect.click();
   }
 
   async findLayerRow(layer: string): Promise<WebdriverIO.Element | undefined> {
     await this.waitForLoadingToHide();
 
-    const $$layerRows = await this.$$('projectRow');
+    const $$layerRows = await this.findAllBySelector('projectRow');
 
     for (const $layerRow of $$layerRows) {
-      const $layerRowName = await $layerRow.$('.MuiTableCell-root:nth-child(2)');
+      const $layerRowName = await $layerRow.$('.MuiTableCell-root:nth-child(2)').getElement();
       const layerRowName = await $layerRowName.getText();
 
       if (layerRowName === layer) {

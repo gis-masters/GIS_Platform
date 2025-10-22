@@ -1,8 +1,8 @@
-import { Feature } from 'ol';
-import { Coordinate } from 'ol/coordinate';
-import { Geometry, LinearRing, MultiPolygon, Polygon } from 'ol/geom';
+import { type Feature } from 'ol';
+import { type Coordinate } from 'ol/coordinate';
+import { type Geometry, LinearRing, MultiPolygon, Polygon } from 'ol/geom';
 
-import { VertexRemover } from './vertex-models';
+import { type VertexRemover } from './vertex-models';
 
 export class MultiPolygonVertexRemover implements VertexRemover {
   removeVertex(feature: Feature<Geometry>, vertex: Coordinate): void {

@@ -1,8 +1,6 @@
-import React, { FC, lazy, Suspense } from 'react';
+import React, { type FC, lazy, Suspense } from 'react';
 
-export { ServicesInfo, InvoiceInfo, ServicesAdditions } from './ServicesCalculator.async';
-
-const ServicesCalculatorAsync = lazy(() => import('./ServicesCalculator.async'));
+const ServicesCalculatorAsync = lazy(() => import('./ServicesCalculator.chunkroot'));
 
 export const ServicesCalculator: FC = props => (
   <Suspense>

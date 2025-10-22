@@ -1,11 +1,11 @@
-import React, { FC } from 'react';
+import React, { type FC } from 'react';
 import { cn } from '@bem-react/classname';
 import { isNumber } from 'lodash';
-import { Coordinate } from 'ol/coordinate';
+import { type Coordinate } from 'ol/coordinate';
 
 import { EditFeatureGeometryViewGroup } from '../ViewGroup/EditFeatureGeometry-ViewGroup';
 
-import '!style-loader!css-loader!sass-loader!./EditFeatureGeometry-ViewSuperGroup.scss';
+import './EditFeatureGeometry-ViewSuperGroup.scss';
 
 const cnEditFeatureGeometryViewSuperGroup = cn('EditFeatureGeometry', 'ViewSuperGroup');
 

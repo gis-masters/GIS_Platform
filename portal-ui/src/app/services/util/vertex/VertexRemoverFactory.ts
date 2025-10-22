@@ -1,4 +1,4 @@
-import Feature from 'ol/Feature';
+import type Feature from 'ol/Feature';
 
 import { services } from '../../services';
 import { LineStringVertexRemover } from './LineStringVertexRemover';
@@ -6,7 +6,7 @@ import { MultiLineStringVertexRemover } from './MultiLineStringVertexRemover';
 import { MultiPointVertexRemover } from './MultiPointVertexRemover';
 import { MultiPolygonVertexRemover } from './MultiPolygonVertexRemover';
 import { PolygonVertexRemover } from './PolygonVertexRemover';
-import { VertexRemover } from './vertex-models';
+import { type VertexRemover } from './vertex-models';
 
 export function getVertexRemover(feature: Feature): VertexRemover | null {
   if (feature === undefined || feature.getGeometry() === undefined) {

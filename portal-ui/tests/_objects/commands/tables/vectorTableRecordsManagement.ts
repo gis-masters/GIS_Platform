@@ -1,5 +1,5 @@
 import { vectorDataClient } from '../../../../src/app/services/data/vectorData/vectorData.client';
-import { NewWfsFeature, WfsFeature } from '../../../../src/app/services/geoserver/wfs/wfs.models';
+import { type NewWfsFeature, type WfsFeature } from '../../../../src/app/services/geoserver/wfs/wfs.models';
 import { requestAsAdmin } from '../requestAs';
 
 export async function createRecordAsAdmin(

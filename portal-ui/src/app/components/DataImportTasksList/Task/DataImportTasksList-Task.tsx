@@ -7,7 +7,7 @@ import { cn } from '@bem-react/classname';
 
 import { deleteTask } from '../../../services/geoserver/import/import.service';
 import { konfirmieren } from '../../../services/utility-dialogs.service';
-import { currentImport, ImportTaskExtended } from '../../../stores/CurrentImport.store';
+import { currentImport, type ImportTaskExtended } from '../../../stores/CurrentImport.store';
 
 const cnDataImportTasksList = cn('DataImportTasksList');
 

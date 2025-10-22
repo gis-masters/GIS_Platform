@@ -1,9 +1,9 @@
 /* eslint-disable unicorn/prefer-node-protocol */
 import { Buffer } from 'buffer';
 
-import { CAdESCOM } from './models/cadescom_async';
-import { CADESPlugin } from './models/cadesplugin';
-import { CAPICOM_ASYNC } from './models/capicom_async';
+import { type CAdESCOM } from './models/cadescom_async';
+import { type CADESPlugin } from './models/cadesplugin';
+import { type CAPICOM_ASYNC } from './models/capicom_async';
 
 declare const cadesplugin: CADESPlugin;
 

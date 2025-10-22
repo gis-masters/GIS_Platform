@@ -11,7 +11,7 @@ import { Button } from '../../Button/Button';
 import { DataImportTasksList } from '../../DataImportTasksList/DataImportTasksList';
 import { Loading } from '../../Loading/Loading';
 
-import '!style-loader!css-loader!sass-loader!./DataImport-Dialog.scss';
+import './DataImport-Dialog.scss';
 
 const cnDataImport = cn('DataImport');
 

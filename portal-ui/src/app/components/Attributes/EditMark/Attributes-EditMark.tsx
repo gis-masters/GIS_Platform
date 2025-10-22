@@ -1,10 +1,10 @@
-import React, { FC } from 'react';
+import React, { type FC } from 'react';
 import { EditLocationOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
 import { ViewLocation } from '../../Icons/ViewLocation';
 
-import '!style-loader!css-loader!sass-loader!./Attributes-EditMark.scss';
+import './Attributes-EditMark.scss';
 
 const cnAttributesEditMark = cn('Attributes', 'EditMark');
 

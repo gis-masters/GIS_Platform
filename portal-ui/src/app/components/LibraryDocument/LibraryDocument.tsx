@@ -1,8 +1,8 @@
-import React, { FC, lazy, Suspense } from 'react';
+import React, { type FC, lazy, Suspense } from 'react';
 
-import { LibraryDocumentProps } from './LibraryDocument.async';
+import { type LibraryDocumentProps } from './LibraryDocument.chunkroot';
 
-const LibraryDocumentAsync = lazy(() => import('./LibraryDocument.async'));
+const LibraryDocumentAsync = lazy(() => import('./LibraryDocument.chunkroot'));
 
 export const LibraryDocument: FC<LibraryDocumentProps> = props => (
   <Suspense>

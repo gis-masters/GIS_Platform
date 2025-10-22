@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import { SelectChangeEvent } from '@mui/material';
+import { type SelectChangeEvent } from '@mui/material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 import { isEqual } from 'lodash';
 
-import { customStyleStrokes, LineRule } from '../../../services/geoserver/styles/styles.models';
+import { customStyleStrokes, type LineRule } from '../../../services/geoserver/styles/styles.models';
 import { TiledSelect } from '../../TiledSelect/TiledSelect';
 import { CustomStyleControlLabel } from '../Label/CustomStyleControl-Label';
 import { CustomStyleControlStrokeTile } from '../StrokeTile/CustomStyleControl-StrokeTile';

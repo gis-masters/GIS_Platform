@@ -2,20 +2,20 @@ import React, { useCallback, useEffect } from 'react';
 import { observer, useLocalObservable } from 'mobx-react';
 import { Skeleton } from '@mui/material';
 import { cn } from '@bem-react/classname';
-import { AxiosError } from 'axios';
+import { type AxiosError } from 'axios';
 import { isEqual } from 'lodash';
 
 import type { OrganizationInformation } from '../../services/auth/organizations/organizations.models';
 import { organizationsService } from '../../services/auth/organizations/organizations.service';
 import { usersService } from '../../services/auth/users/users.service';
-import { PropertyType, SimpleSchema } from '../../services/data/schema/schema.models';
+import { PropertyType, type SimpleSchema } from '../../services/data/schema/schema.models';
 import { generateRandomId } from '../../services/util/randomId';
 import { achtung } from '../../services/utility-dialogs.service';
 import { organizationSettings } from '../../stores/OrganizationSettings.store';
 import { Button } from '../Button/Button';
 import { Form } from '../Form/Form';
 
-import '!style-loader!css-loader!sass-loader!./OrganizationInfoDetailForm.scss';
+import './OrganizationInfoDetailForm.scss';
 
 const cnOrganizationInfoDetailForm = cn('OrganizationInfoDetailForm');
 

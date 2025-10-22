@@ -20,7 +20,7 @@ import { RunningOutOfSpace } from '../../RunningOutOfSpace/RunningOutOfSpace';
 import { SearchInProject } from '../../SearchInProject/SearchInProject';
 import { User } from '../../User/User';
 
-import '!style-loader!css-loader!sass-loader!./WorkspaceHeader-Buttons.scss';
+import './WorkspaceHeader-Buttons.scss';
 
 const cnWorkspaceHeaderButtons = cn('WorkspaceHeader', 'Buttons');
 

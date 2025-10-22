@@ -1,10 +1,10 @@
 import { createElement } from 'react';
-import { createRoot, Root } from 'react-dom/client';
-import { Component, ElementRef, Input, OnChanges, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { createRoot, type Root } from 'react-dom/client';
+import { Component, ElementRef, Input, type OnChanges, type OnDestroy, type OnInit, ViewChild } from '@angular/core';
 import { withRegistry } from '@bem-react/di';
 
 import { convertOldToNewProperties } from '../../services/data/schema/schema.utils';
-import { OldPropertySchema } from '../../services/data/schema/schemaOld.models';
+import { type OldPropertySchema } from '../../services/data/schema/schemaOld.models';
 import { registry } from '../../services/di-registry';
 import { FormDescription } from '../Form/Description/Form-Description';
 
@@ -13,7 +13,8 @@ const FormDescriptionWithRegistry = withRegistry(registry)(FormDescription);
 @Component({
   selector: 'crg-form-description',
   template: '<div class="form-description" #react></div>',
-  styleUrls: ['./form-description.component.scss']
+  styleUrls: ['./form-description.component.scss'],
+  standalone: false
 })
 export class FormDescriptionComponent implements OnInit, OnDestroy, OnChanges {
   @Input() property?: OldPropertySchema;

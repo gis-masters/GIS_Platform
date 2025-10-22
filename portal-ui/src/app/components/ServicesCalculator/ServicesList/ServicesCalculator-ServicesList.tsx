@@ -1,10 +1,10 @@
-import React, { FC } from 'react';
+import React, { type FC } from 'react';
 import { cn } from '@bem-react/classname';
 
 import { ServicesCalculatorScrollContainer } from '../ScrollContainer/ServicesCalculator-ScrollContainer';
-import { ServicesInfo } from '../ServicesCalculator';
+import { type ServicesInfo } from '../ServicesCalculator.models';
 
-import '!style-loader!css-loader!sass-loader!./ServicesCalculator-ServicesList.scss';
+import './ServicesCalculator-ServicesList.scss';
 
 const cnServicesCalculatorServicesList = cn('ServicesCalculator', 'ServicesList');
 

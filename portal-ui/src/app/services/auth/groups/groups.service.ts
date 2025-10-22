@@ -1,9 +1,9 @@
-import { debounce, DebouncedFunc } from 'lodash';
+import { debounce, type DebouncedFunc } from 'lodash';
 
 import { allGroups } from '../../../stores/AllGroups.store';
-import { CrgUser } from '../users/users.models';
+import { type CrgUser } from '../users/users.models';
 import { authClient } from './groups.client';
-import { CrgGroup, GroupData } from './groups.models';
+import { type CrgGroup, type GroupData } from './groups.models';
 
 class GroupsService {
   private static _instance: GroupsService;

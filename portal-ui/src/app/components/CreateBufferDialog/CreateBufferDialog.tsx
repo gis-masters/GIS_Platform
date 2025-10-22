@@ -1,16 +1,16 @@
-import React, { FC, useCallback } from 'react';
+import React, { type FC, useCallback } from 'react';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
-import { Geometry } from 'jsts/org/locationtech/jts/geom';
+import { type Geometry } from 'jsts/org/locationtech/jts/geom';
 import GeometryFactory from 'jsts/org/locationtech/jts/geom/GeometryFactory';
 import { GeoJSONReader, GeoJSONWriter } from 'jsts/org/locationtech/jts/io';
 import { BufferOp } from 'jsts/org/locationtech/jts/operation/buffer';
 import { cloneDeep } from 'lodash';
 
-import { PropertyType, SimpleSchema } from '../../services/data/schema/schema.models';
-import { WfsFeature, WfsMultiPolygonGeometry } from '../../services/geoserver/wfs/wfs.models';
+import { PropertyType, type SimpleSchema } from '../../services/data/schema/schema.models';
+import { type WfsFeature, type WfsMultiPolygonGeometry } from '../../services/geoserver/wfs/wfs.models';
 import { getEmptyFeature } from '../../services/geoserver/wfs/wfs.service';
-import { CrgLayer, CrgVectorLayer } from '../../services/gis/layers/layers.models';
+import { type CrgLayer, type CrgVectorLayer } from '../../services/gis/layers/layers.models';
 import { EditFeatureMode } from '../../services/map/a-map-mode/edit-feature/EditFeature.models';
 import { mapModeManager } from '../../services/map/a-map-mode/MapModeManager';
 import { mapDrawService } from '../../services/map/draw/map-draw.service';

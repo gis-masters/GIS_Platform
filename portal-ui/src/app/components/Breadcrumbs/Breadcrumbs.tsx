@@ -1,10 +1,10 @@
-import React, { FC, lazy, Suspense } from 'react';
+import React, { type FC, lazy, Suspense } from 'react';
 
-import { BreadcrumbsProps } from './Breadcrumbs.async';
+import { type BreadcrumbsProps } from './Breadcrumbs.chunkroot';
 
-export { BreadcrumbsItemData, BreadcrumbsProps } from './Breadcrumbs.async';
+export { BreadcrumbsItemData, BreadcrumbsProps } from './Breadcrumbs.chunkroot';
 
-const BreadcrumbsAsync = lazy(() => import('./Breadcrumbs.async'));
+const BreadcrumbsAsync = lazy(() => import('./Breadcrumbs.chunkroot'));
 
 export const Breadcrumbs: FC<BreadcrumbsProps> = props => (
   <Suspense>

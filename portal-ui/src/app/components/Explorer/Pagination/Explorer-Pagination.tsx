@@ -4,9 +4,9 @@ import { observer } from 'mobx-react';
 import { Pagination } from '@mui/material';
 import { cn } from '@bem-react/classname';
 
-import { ExplorerStore } from '../Explorer.store';
+import { type ExplorerStore } from '../Explorer.store';
 
-import '!style-loader!css-loader!sass-loader!./Explorer-Pagination.scss';
+import './Explorer-Pagination.scss';
 
 const cnExplorerPagination = cn('Explorer', 'Pagination');
 

@@ -1,11 +1,11 @@
-import React, { Component, RefObject } from 'react';
+import React, { Component, type RefObject } from 'react';
 import { IconButton, Tooltip } from '@mui/material';
 import { FileCopyOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
-import { Coordinate } from 'ol/coordinate';
+import { type Coordinate } from 'ol/coordinate';
 
-import { GeometryType } from '../../../services/geoserver/wfs/wfs.models';
+import { type GeometryType } from '../../../services/geoserver/wfs/wfs.models';
 import { selectLabelForGeometryType } from '../../../services/geoserver/wfs/wfs.util';
 import { copyNodeToClipboard } from '../../../services/util/clipboard.util';
 

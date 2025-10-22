@@ -1,19 +1,19 @@
-import { Page } from '../../../../server-types/common-contracts';
+import { type Page } from '../../../../server-types/common-contracts';
 import { ExplorerItemEntityTypeTitle } from '../../../components/Explorer/Explorer.models';
 import { communicationService } from '../../communication.service';
-import { PageOptions } from '../../models';
-import { RoleAssignmentBody } from '../../permissions/permissions.models';
+import { type PageOptions } from '../../models';
+import { type RoleAssignmentBody } from '../../permissions/permissions.models';
 import { addEntityPermission, removeEntityPermission } from '../../permissions/permissions.service';
-import { Schema } from '../schema/schema.models';
+import { type Schema } from '../schema/schema.models';
 import { convertNewToOldSchema, convertOldToNewSchema } from '../schema/schema.utils';
 import { libraryClient } from './library.client';
 import {
-  DocumentVersion,
-  Library,
-  LibraryNew,
-  LibraryRecord,
-  LibraryRecordNew,
-  LibraryRecordRaw
+  type DocumentVersion,
+  type Library,
+  type LibraryNew,
+  type LibraryRecord,
+  type LibraryRecordNew,
+  type LibraryRecordRaw
 } from './library.models';
 
 export async function getLibraries(pageOptions: PageOptions): Promise<[Library[], number]> {

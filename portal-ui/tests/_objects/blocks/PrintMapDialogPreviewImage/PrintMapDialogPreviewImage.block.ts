@@ -1,4 +1,4 @@
-import { WdioCheckElementMethodOptions } from 'wdio-image-comparison-service';
+import { type WdioCheckElementMethodOptions } from '@wdio/visual-service/dist/types';
 
 import { Block } from '../../Block';
 
@@ -9,11 +9,17 @@ class PrintMapDialogPreviewImageBlock extends Block {
   };
 
   async assertSelfie(tag?: string, checkElementOptions?: WdioCheckElementMethodOptions): Promise<void> {
-    const $container = await this.$('container');
+    const $container = await this.findBySelector('container');
     await $container.waitForDisplayed();
 
+    await browser.waitUntil(async () => {
+      const { height } = await $container.getSize();
+
+      return height > 0;
+    });
+
     await super.assertSelfie(tag, {
-      hideElements: [await this.$('printDialogDate'), ...(checkElementOptions?.hideElements || [])],
+      hideElements: [await this.findBySelector('printDialogDate'), ...(checkElementOptions?.hideElements || [])],
       ...checkElementOptions
     });
   }

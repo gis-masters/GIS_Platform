@@ -4,7 +4,7 @@ import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { isEqual } from 'lodash';
 
-import { Dataset } from '../../services/data/vectorData/vectorData.models';
+import { type Dataset } from '../../services/data/vectorData/vectorData.models';
 import { getDataset } from '../../services/data/vectorData/vectorData.service';
 import { ActionTypes, DataTypes, Role } from '../../services/permissions/permissions.models';
 import { getAvailableActionsTooltipByRole } from '../../services/permissions/permissions.utils';

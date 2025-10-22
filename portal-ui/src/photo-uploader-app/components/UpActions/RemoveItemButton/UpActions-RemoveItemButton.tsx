@@ -1,4 +1,4 @@
-import React, { FC, useCallback } from 'react';
+import React, { type FC, useCallback } from 'react';
 import { observer } from 'mobx-react';
 import { DeleteOutline } from '@mui/icons-material';
 

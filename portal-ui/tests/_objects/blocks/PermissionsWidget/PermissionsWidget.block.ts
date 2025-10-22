@@ -1,4 +1,4 @@
-import { WdioCheckElementMethodOptions } from 'wdio-image-comparison-service';
+import { type WdioCheckElementMethodOptions } from '@wdio/visual-service/dist/types';
 
 import { Block } from '../../Block';
 
@@ -12,13 +12,13 @@ class PermissionsWidgetBlock extends Block {
   async clickOpenBtn(): Promise<void> {
     await this.waitForVisible();
 
-    const $openBtn = await this.$('openBtn');
+    const $openBtn = await this.findBySelector('openBtn');
     await $openBtn.waitForClickable();
     await $openBtn.click();
   }
 
   async assertSelfie(tag?: string, checkElementOptions?: WdioCheckElementMethodOptions): Promise<void> {
-    const $container = await this.$('container');
+    const $container = await this.findBySelector('container');
     await $container.waitForDisplayed();
 
     await super.assertSelfie(tag, {

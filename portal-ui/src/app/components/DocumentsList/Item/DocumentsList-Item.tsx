@@ -5,22 +5,22 @@ import { Dialog, DialogActions, DialogContent, DialogContentText, IconButton } f
 import { AssignmentOutlined, Delete, DeleteOutline } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
-import { AxiosError } from 'axios';
+import { type AxiosError } from 'axios';
 
 import { http } from '../../../services/api/http.service';
-import { EditedField } from '../../../services/data/schema/schemaOld.models';
+import { type EditedField } from '../../../services/data/schema/schemaOld.models';
 import { environment } from '../../../services/environment';
 import { services } from '../../../services/services';
 import { Button } from '../../Button/Button';
-import { EditFeatureInfo } from '../../EditFeatureField/EditFeatureField';
+import { type EditFeatureInfo } from '../../EditFeatureField/EditFeatureField.models';
 import { Link } from '../../Link/Link';
 import { Toast } from '../../Toast/Toast';
-import { DocumentListItemData } from '../DocumentsList';
+import { type DocumentListItemData } from '../DocumentsList.models';
 
-import '!style-loader!css-loader!sass-loader!./DocumentsList-Item.scss';
-import '!style-loader!css-loader!sass-loader!../Icon/DocumentList-Icon.scss';
-import '!style-loader!css-loader!sass-loader!../Content/DocumentList-Content.scss';
-import '!style-loader!css-loader!sass-loader!../DeleteButton/DocumentList-DeleteButton.scss';
+import './DocumentsList-Item.scss';
+import '../Icon/DocumentList-Icon.scss';
+import '../Content/DocumentList-Content.scss';
+import '../DeleteButton/DocumentList-DeleteButton.scss';
 
 const cnDocumentsList = cn('DocumentsList');
 

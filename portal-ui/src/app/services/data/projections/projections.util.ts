@@ -1,5 +1,5 @@
 import { isStringArray } from '../../util/typeGuards/isStringArray';
-import { Projection, ProjectionUnit } from './projections.models';
+import { type Projection, type ProjectionUnit } from './projections.models';
 
 export function getSrid(projectionCode: string): number {
   const srid = projectionCode.split(':')[1];

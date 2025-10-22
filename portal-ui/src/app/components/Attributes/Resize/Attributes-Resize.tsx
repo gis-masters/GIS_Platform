@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
-import '!style-loader!css-loader!sass-loader!./Attributes-Resize.scss';
-import '!style-loader!css-loader!sass-loader!../Resizing/Attributes-Resizing.scss';
+import './Attributes-Resize.scss';
+import '../Resizing/Attributes-Resizing.scss';
 
 type AttributesResizeProps = {
   onResize(arg: number): void;

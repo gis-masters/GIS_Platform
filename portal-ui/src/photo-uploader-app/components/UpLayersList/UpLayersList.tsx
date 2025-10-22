@@ -1,15 +1,16 @@
-import React, { FC, useEffect } from 'react';
+import React, { type FC, useEffect } from 'react';
 import { observer, useLocalObservable } from 'mobx-react';
 import { List } from '@mui/material';
 import { cn } from '@bem-react/classname';
 
 import { getVectorTablesInAllDatasets } from '../../../app/services/data/vectorData/vectorData.service';
+import { type UpLayersListItemData } from '../../services/photoUploader.models';
 import { photoUploaderStore } from '../../stores/PhotoUploader.store';
 import { UpError } from '../UpError/UpError';
 import { UpSearch } from '../UpSearch/UpSearch';
-import { UpLayersListItem, UpLayersListItemData } from './Item/UpLayersList-Item';
+import { UpLayersListItem } from './Item/UpLayersList-Item';
 
-import '!style-loader!css-loader!sass-loader!./UpLayersList.scss';
+import './UpLayersList.scss';
 
 interface UpLayersListStore {
   dataList: UpLayersListItemData[];

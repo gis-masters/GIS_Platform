@@ -5,8 +5,8 @@ import { Tooltip } from '@mui/material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
-import { FileInfo } from '../../../services/data/files/files.models';
-import { LibraryRecord } from '../../../services/data/library/library.models';
+import { type FileInfo } from '../../../services/data/files/files.models';
+import { type LibraryRecord } from '../../../services/data/library/library.models';
 import { IconButton } from '../../IconButton/IconButton';
 import { LayerAdd } from '../../Icons/LayerAdd';
 import { LayerAddOutlined } from '../../Icons/LayerAddOutlined';

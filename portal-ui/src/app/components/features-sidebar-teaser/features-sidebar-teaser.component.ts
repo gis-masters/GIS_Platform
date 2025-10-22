@@ -1,6 +1,6 @@
 import { createElement } from 'react';
-import { createRoot, Root } from 'react-dom/client';
-import { Component, ElementRef, OnChanges, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { createRoot, type Root } from 'react-dom/client';
+import { Component, ElementRef, type OnChanges, type OnDestroy, type OnInit, ViewChild } from '@angular/core';
 import { withRegistry } from '@bem-react/di';
 
 import { registry } from '../../services/di-registry';
@@ -11,7 +11,8 @@ const FeaturesSidebarTeaserWithRegistry = withRegistry(registry)(FeaturesSidebar
 @Component({
   selector: 'crg-features-sidebar-teaser',
   styleUrls: ['./features-sidebar-teaser.component.scss'],
-  template: '<div class="features-sidebar-teaser" #react></div>'
+  template: '<div class="features-sidebar-teaser" #react></div>',
+  standalone: false
 })
 export class FeaturesSidebarTeaserComponent implements OnInit, OnDestroy, OnChanges {
   @ViewChild('react', { read: ElementRef, static: true }) ref?: ElementRef<HTMLDivElement>;

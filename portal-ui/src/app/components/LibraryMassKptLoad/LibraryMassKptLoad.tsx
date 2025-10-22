@@ -4,12 +4,12 @@ import { observer } from 'mobx-react';
 import { Tooltip } from '@mui/material';
 import { cn } from '@bem-react/classname';
 
-import { FileInfo } from '../../services/data/files/files.models';
+import { type FileInfo } from '../../services/data/files/files.models';
 import { isZipFile } from '../../services/data/files/files.util';
 import { kptMassUploadSchema } from '../../services/data/kpt/kpt.models';
 import { uploadKpt } from '../../services/data/kpt/kpt.service';
-import { Library, LibraryRecord } from '../../services/data/library/library.models';
-import { Role } from '../../services/permissions/permissions.models';
+import { type Library, type LibraryRecord } from '../../services/data/library/library.models';
+import { type Role } from '../../services/permissions/permissions.models';
 import { checkIsUpdateAllowed } from '../../services/permissions/permissions.service';
 import { FormDialog } from '../FormDialog/FormDialog';
 import { IconButton } from '../IconButton/IconButton';

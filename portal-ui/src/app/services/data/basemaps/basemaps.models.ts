@@ -1,4 +1,4 @@
-import { PropertyType, SimpleSchema } from '../schema/schema.models';
+import { PropertyType, type SimpleSchema } from '../schema/schema.models';
 
 export enum SourceType {
   OSM = 'OSM',

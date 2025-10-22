@@ -1,4 +1,4 @@
-import { BBOX } from '../featureType/featureType.model';
+import { type BBOX } from '../featureType/featureType.model';
 
 export interface CoverageTransparentColorEntry {
   string: Record<string, string>;

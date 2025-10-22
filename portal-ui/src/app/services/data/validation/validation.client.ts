@@ -3,10 +3,10 @@ import { boundClass } from 'autobind-decorator';
 import { Client } from '../../api/Client';
 import { http } from '../../api/http.service';
 import { Mime } from '../../util/Mime';
-import { ValidationWsMsg } from '../../ws.service';
-import { ExportResourceModel } from '../export/export.models';
-import { Process } from '../processes/processes.models';
-import { ValidationPayload, ValidationResultsResponse, ValidationShortInfo } from './validation.models';
+import { type ValidationWsMsg } from '../../ws.service';
+import { type ExportResourceModel } from '../export/export.models';
+import { type Process } from '../processes/processes.models';
+import { type ValidationPayload, type ValidationResultsResponse, type ValidationShortInfo } from './validation.models';
 
 const headers = { 'Content-Type': Mime.JSON };
 

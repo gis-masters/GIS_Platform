@@ -1,11 +1,11 @@
 import { createElement } from 'react';
-import { createRoot, Root } from 'react-dom/client';
-import { Component, ElementRef, Input, OnChanges, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { createRoot, type Root } from 'react-dom/client';
+import { Component, ElementRef, Input, type OnChanges, type OnDestroy, type OnInit, ViewChild } from '@angular/core';
 import { withRegistry } from '@bem-react/di';
 
-import { WsImportModel } from '../../services/data/processes/processes.models';
+import { type WsImportModel } from '../../services/data/processes/processes.models';
 import { registry } from '../../services/di-registry';
-import { IWsMessage } from '../../services/ws.service';
+import { type IWsMessage } from '../../services/ws.service';
 import { ImportGmlResultsLink } from '../ImportGmlResultLink/ImportGmlResultsLink';
 
 const ImportGmlResultsLinkWithRegistry = withRegistry(registry)(ImportGmlResultsLink);
@@ -13,7 +13,8 @@ const ImportGmlResultsLinkWithRegistry = withRegistry(registry)(ImportGmlResults
 @Component({
   selector: 'crg-import-gml-results-button',
   template: '<div class="import-gml-results-button" #react></div>',
-  styleUrls: ['./import-gml-result-button.scss']
+  styleUrls: ['./import-gml-result-button.scss'],
+  standalone: false
 })
 export class ImportGmlResultButtonComponent implements OnInit, OnChanges, OnDestroy {
   @Input() event?: IWsMessage;

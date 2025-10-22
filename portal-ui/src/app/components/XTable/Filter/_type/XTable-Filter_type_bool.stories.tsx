@@ -1,10 +1,10 @@
-import { ReactElement } from 'react';
-import { StoryFn } from '@storybook/react';
+import { type ReactElement } from 'react';
+import { type StoryFn } from '@storybook/react';
 
 import { PropertyType } from '../../../../services/data/schema/schema.models';
-import { SortParams } from '../../../../services/util/sortObjects';
-import { XTable, XTableProps } from '../../XTable';
-import { XTableColumn } from '../../XTable.models';
+import { type SortParams } from '../../../../services/util/sortObjects';
+import { XTable, type XTableProps } from '../../XTable';
+import { type XTableColumn } from '../../XTable.models';
 import { Template } from '../XTable-Filter-story-template';
 
 export default {

@@ -5,13 +5,13 @@ import { Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material
 import { RestoreOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
-import { Schema } from '../../services/data/schema/schema.models';
-import { Task } from '../../services/data/task/task.models';
+import { type Schema } from '../../services/data/schema/schema.models';
+import { type Task } from '../../services/data/task/task.models';
 import { Button } from '../Button/Button';
 import { Explorer } from '../Explorer/Explorer';
-import { ExplorerItemData, ExplorerItemType } from '../Explorer/Explorer.models';
+import { type ExplorerItemData, ExplorerItemType } from '../Explorer/Explorer.models';
 
-import '!style-loader!css-loader!sass-loader!./TaskJournalHistoryDialog.scss';
+import './TaskJournalHistoryDialog.scss';
 
 const cnTaskJournalHistoryDialog = cn('TaskJournalHistoryDialog');
 const cnTaskJournalHistoryDialogContent = cn('TaskJournalHistoryDialog', 'Content');

@@ -1,6 +1,6 @@
 import { createElement } from 'react';
-import { createRoot, Root } from 'react-dom/client';
-import { Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { createRoot, type Root } from 'react-dom/client';
+import { Component, ElementRef, Input, type OnDestroy, type OnInit, ViewChild } from '@angular/core';
 import { withRegistry } from '@bem-react/di';
 
 import { registry } from '../../services/di-registry';
@@ -11,7 +11,8 @@ const AttributesWithRegistry = withRegistry(registry)(Attributes);
 @Component({
   selector: 'crg-attributes-ng',
   template: '<div class="attributes-ng" #react></div>',
-  styleUrls: ['./attributes-ng.component.scss']
+  styleUrls: ['./attributes-ng.component.scss'],
+  standalone: false
 })
 export class AttributesNgComponent implements OnInit, OnDestroy {
   @Input() class?: string;

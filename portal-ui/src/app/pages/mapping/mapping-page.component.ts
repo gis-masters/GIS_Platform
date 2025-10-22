@@ -1,20 +1,19 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { Component, type OnDestroy, type OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NGXLogger } from 'ngx-logger';
 import { interval, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 import { Toast } from '../../components/Toast/Toast';
-import { Process, ProcessStatus } from '../../services/data/processes/processes.models';
+import { type Process, ProcessStatus } from '../../services/data/processes/processes.models';
 import { getProcess } from '../../services/data/processes/processes.service';
 import { schemaService } from '../../services/data/schema/schema.service';
-import { OldSchema } from '../../services/data/schema/schemaOld.models';
-import { Dataset } from '../../services/data/vectorData/vectorData.models';
-import { ImportLayer, ImportLayerItem } from '../../services/geoserver/import/import.models';
+import { type OldSchema } from '../../services/data/schema/schemaOld.models';
+import { type Dataset } from '../../services/data/vectorData/vectorData.models';
+import { type ImportLayer, type ImportLayerItem } from '../../services/geoserver/import/import.models';
 import { doWorkImport, getAllImportLayers } from '../../services/geoserver/import/import.service';
 import {
-  ComparableLayersPair,
+  type ComparableLayersPair,
   ImportDataHolderService
 } from '../../services/geoserver/import/import-data-holder.service';
 import { projectsService } from '../../services/gis/projects/projects.service';
@@ -25,7 +24,8 @@ import { currentProject } from '../../stores/CurrentProject.store';
 @Component({
   selector: 'crg-mapping-page',
   templateUrl: './mapping-page.component.html',
-  styleUrls: ['./mapping-page.component.css']
+  styleUrls: ['./mapping-page.component.css'],
+  standalone: false
 })
 export class MappingPageComponent implements OnInit, OnDestroy {
   selectedLayer?: ImportLayerItem;
@@ -40,9 +40,7 @@ export class MappingPageComponent implements OnInit, OnDestroy {
   private CHECK_STATUS_INTERVAL = 1000;
   private unsubscribe$: Subject<void> = new Subject<void>();
 
-  // eslint-disable-next-line max-params
   constructor(
-    private dialog: MatDialog,
     private router: Router,
     private route: ActivatedRoute,
     private importData: ImportDataHolderService,

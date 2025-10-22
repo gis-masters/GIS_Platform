@@ -1,4 +1,4 @@
-import { isProjection, Projection } from '../data/projections/projections.models';
+import { isProjection, type Projection } from '../data/projections/projections.models';
 import { isStringArray } from './typeGuards/isStringArray';
 
 export function mapToProjections(projections: unknown): Projection[] {

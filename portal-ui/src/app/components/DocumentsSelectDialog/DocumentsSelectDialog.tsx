@@ -6,18 +6,18 @@ import { TableViewOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { RegistryConsumer } from '@bem-react/di';
 import { boundMethod } from 'autobind-decorator';
-import { AxiosError } from 'axios';
+import { type AxiosError } from 'axios';
 
-import { Library, LibraryRecord } from '../../services/data/library/library.models';
+import { type Library, type LibraryRecord } from '../../services/data/library/library.models';
 import { getLibrary } from '../../services/data/library/library.service';
-import { CommonDiRegistry } from '../../services/di-registry';
+import { type CommonDiRegistry } from '../../services/di-registry';
 import { Button } from '../Button/Button';
-import { DocumentInfo } from '../Documents/Documents';
-import { emptyItem, ExplorerItemData, ExplorerItemType } from '../Explorer/Explorer.models';
+import type { DocumentInfo } from '../Documents/Documents';
+import { emptyItem, type ExplorerItemData, ExplorerItemType } from '../Explorer/Explorer.models';
 import { ExplorerView } from '../Icons/ExplorerView';
 import { Toast } from '../Toast/Toast';
 
-import '!style-loader!css-loader!sass-loader!./DocumentsSelectDialog.scss';
+import './DocumentsSelectDialog.scss';
 
 const cnDocumentsSelectDialog = cn('DocumentsSelectDialog');
 

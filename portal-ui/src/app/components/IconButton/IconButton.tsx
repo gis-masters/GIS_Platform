@@ -1,10 +1,14 @@
-import React, { BaseHTMLAttributes, FC, ForwardedRef, forwardRef } from 'react';
-import { CircularProgress, IconButton as BaseIconButton, IconButtonProps as BaseIconButtonProps } from '@mui/material';
+import React, { type BaseHTMLAttributes, type FC, type ForwardedRef, forwardRef } from 'react';
+import {
+  CircularProgress,
+  IconButton as BaseIconButton,
+  type IconButtonProps as BaseIconButtonProps
+} from '@mui/material';
 import { cn } from '@bem-react/classname';
 
-import { Link, LinkProps } from '../Link/Link';
+import { Link, type LinkProps } from '../Link/Link';
 
-import '!style-loader!css-loader!sass-loader!./IconButton.scss';
+import './IconButton.scss';
 
 const cnIconButton = cn('IconButton');
 

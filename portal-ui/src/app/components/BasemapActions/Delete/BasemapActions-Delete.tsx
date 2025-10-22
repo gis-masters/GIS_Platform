@@ -8,7 +8,7 @@ import { boundMethod } from 'autobind-decorator';
 import { isEqual } from 'lodash';
 import { pluralize } from 'numeralize-ru';
 
-import { Basemap } from '../../../services/data/basemaps/basemaps.models';
+import { type Basemap } from '../../../services/data/basemaps/basemaps.models';
 import { deleteBasemap } from '../../../services/data/basemaps/basemaps.service';
 import { getBasemapConnections } from '../../../services/gis/project-basemaps/project-basemaps.service';
 import { konfirmieren } from '../../../services/utility-dialogs.service';

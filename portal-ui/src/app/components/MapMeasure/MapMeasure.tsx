@@ -12,8 +12,8 @@ import { mapMeasureStore } from '../../stores/MapMeasure.store';
 import { IconButton } from '../IconButton/IconButton';
 import { Ruler } from '../Icons/Ruler';
 
-import '!style-loader!css-loader!sass-loader!./MapMeasure.scss';
-import '!style-loader!css-loader!sass-loader!../HelpMessage/HelpMessage.scss';
+import './MapMeasure.scss';
+import '../HelpMessage/HelpMessage.scss';
 
 const cnMapMeasure = cn('MapMeasure');
 

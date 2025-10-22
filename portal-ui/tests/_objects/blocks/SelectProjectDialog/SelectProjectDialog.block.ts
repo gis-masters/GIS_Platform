@@ -11,13 +11,13 @@ class SelectProjectDialogBlock extends Block {
   };
 
   async save(): Promise<void> {
-    const $saveBtn = await this.$('saveBtn');
+    const $saveBtn = await this.findBySelector('saveBtn');
     await $saveBtn.click();
-    await $saveBtn.waitForDisplayed({ reverse: true });
+    await $saveBtn.waitForExist({ reverse: true });
   }
 
   async selectCrs(crs: string): Promise<void> {
-    const $selectProjection = await this.$('selectProjection');
+    const $selectProjection = await this.findBySelector('selectProjection');
     await $selectProjection.waitForClickable();
     await $selectProjection.click();
 
@@ -36,17 +36,17 @@ class SelectProjectDialogBlock extends Block {
       throw new Error(`Не найден проект "${project}"`);
     }
 
-    const $projectSelect = await $userRow.$('.MuiTableCell-root:first-child input');
+    const $projectSelect = await $userRow.$('.MuiTableCell-root:first-child input').getElement();
     await $projectSelect.click();
   }
 
   async findProjectRow(project: string): Promise<WebdriverIO.Element | undefined> {
     await this.waitForVisible();
 
-    const $$projectRows = await this.$$('projectRow');
+    const $$projectRows = await this.findAllBySelector('projectRow');
 
     for (const $projectRow of $$projectRows) {
-      const $projectRowName = await $projectRow.$('.MuiTableCell-root:nth-child(2)');
+      const $projectRowName = await $projectRow.$('.MuiTableCell-root:nth-child(2)').getElement();
       const projectRowName = await $projectRowName.getText();
 
       if (projectRowName === project) {

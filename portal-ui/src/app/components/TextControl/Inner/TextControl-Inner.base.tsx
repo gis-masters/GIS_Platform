@@ -3,8 +3,8 @@ import { TextField } from '@mui/material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
-import { PropertySchemaText } from '../../../services/data/schema/schema.models';
-import { FormControlProps } from '../../Form/Control/Form-Control';
+import { type PropertySchemaText } from '../../../services/data/schema/schema.models';
+import { type FormControlProps } from '../../Form/Control/Form-Control';
 
 export const cnTextControlInner = cn('TextControl', 'Inner');
 

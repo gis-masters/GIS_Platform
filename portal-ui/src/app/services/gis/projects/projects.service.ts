@@ -1,6 +1,6 @@
 import { reaction } from 'mobx';
-import { AxiosError } from 'axios';
-import { debounce, DebouncedFunc } from 'lodash';
+import { type AxiosError } from 'axios';
+import { debounce, type DebouncedFunc } from 'lodash';
 
 import { Toast } from '../../../components/Toast/Toast';
 import { allProjects } from '../../../stores/AllProjects.store';
@@ -13,14 +13,14 @@ import { getProjectionByCode, registerProjectionArrayInProj4 } from '../../data/
 import { schemaService } from '../../data/schema/schema.service';
 import { testLayerByWms } from '../../geoserver/wms/wms.service';
 import { selectedFeaturesStore } from '../../map/a-map-mode/selected-features/SelectedFeatures.store';
-import { PageOptions } from '../../models';
+import { type PageOptions } from '../../models';
 import { isLayerReadAllowed } from '../../permissions/permissions.service';
 import { services } from '../../services';
 import { sleep } from '../../util/sleep';
-import { CrgLayer, CrgLayersGroup } from '../layers/layers.models';
+import { type CrgLayer, type CrgLayersGroup } from '../layers/layers.models';
 import { getLayers } from '../layers/layers.service';
 import { projectsClient } from './projects.client';
-import { CrgProject, NewCrgProject } from './projects.models';
+import { type CrgProject, type NewCrgProject } from './projects.models';
 
 class ProjectsService {
   private static _instance: ProjectsService;

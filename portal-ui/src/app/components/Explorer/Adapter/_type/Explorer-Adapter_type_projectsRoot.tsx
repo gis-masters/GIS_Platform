@@ -1,17 +1,17 @@
-import React, { ReactNode } from 'react';
+import React, { type ReactNode } from 'react';
 import { MapOutlined } from '@mui/icons-material';
 
-import { Emitter } from '../../../../services/common/Emitter';
-import { communicationService, DataChangeEventDetail } from '../../../../services/communication.service';
-import { CrgProject } from '../../../../services/gis/projects/projects.models';
+import { type Emitter } from '../../../../services/common/Emitter';
+import { communicationService, type DataChangeEventDetail } from '../../../../services/communication.service';
+import { type CrgProject } from '../../../../services/gis/projects/projects.models';
 import { projectsService } from '../../../../services/gis/projects/projects.service';
-import { PageOptions, SortOrder } from '../../../../services/models';
+import { type PageOptions, SortOrder } from '../../../../services/models';
 import { staticImplements } from '../../../../services/util/staticImplements';
 import { organizationSettings } from '../../../../stores/OrganizationSettings.store';
 import { CreateProject } from '../../../CreateProject/CreateProject';
-import { Adapter, ExplorerItemData, ExplorerItemType, SortItem } from '../../Explorer.models';
-import { ExplorerService } from '../../Explorer.service';
-import { ExplorerStore } from '../../Explorer.store';
+import { type Adapter, type ExplorerItemData, ExplorerItemType, type SortItem } from '../../Explorer.models';
+import { type ExplorerService } from '../../Explorer.service';
+import { type ExplorerStore } from '../../Explorer.store';
 
 @staticImplements<Adapter>()
 export class ExplorerAdapterTypeProjectsRoot {

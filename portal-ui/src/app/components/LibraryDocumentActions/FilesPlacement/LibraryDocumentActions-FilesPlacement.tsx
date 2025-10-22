@@ -3,9 +3,9 @@ import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 
-import { LibraryRecord } from '../../../services/data/library/library.models';
-import { Schema } from '../../../services/data/schema/schema.models';
-import { ActionsItemVariant } from '../../Actions/Item/Actions-Item.base';
+import { type LibraryRecord } from '../../../services/data/library/library.models';
+import { type Schema } from '../../../services/data/schema/schema.models';
+import { type ActionsItemVariant } from '../../Actions/Item/Actions-Item.base';
 import { ActionsItem } from '../../Actions/Item/Actions-Item.composed';
 import { FilesPlacementDialog } from '../../FilesPlacementDialog/FilesPlacementDialog';
 import { LayerAdd } from '../../Icons/LayerAdd';

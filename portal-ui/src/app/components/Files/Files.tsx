@@ -1,8 +1,8 @@
-import React, { FC, lazy, Suspense } from 'react';
+import React, { type FC, lazy, Suspense } from 'react';
 
-import { FilesProps } from './Files.async';
+import { type FilesProps } from './Files.chunkroot';
 
-const FilesAsync = lazy(() => import('./Files.async'));
+const FilesAsync = lazy(() => import('./Files.chunkroot'));
 
 export const Files: FC<FilesProps> = props => (
   <Suspense>

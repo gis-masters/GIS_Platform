@@ -1,8 +1,8 @@
-import { Coordinate } from 'ol/coordinate';
-import { SimpleGeometry } from 'ol/geom';
+import { type Coordinate } from 'ol/coordinate';
+import { type SimpleGeometry } from 'ol/geom';
 
-import { Projection } from '../../data/projections/projections.models';
-import { UnitsOfAreaMeasurement } from '../../util/open-layers.util';
+import { type Projection } from '../../data/projections/projections.models';
+import { type UnitsOfAreaMeasurement } from '../../util/open-layers.util';
 
 const textAlignTypes = new Set(['left', 'center', 'right', 'justify']);
 

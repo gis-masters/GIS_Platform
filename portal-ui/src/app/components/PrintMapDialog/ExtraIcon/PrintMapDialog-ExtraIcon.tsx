@@ -1,8 +1,8 @@
-import React, { FC } from 'react';
+import React, { type FC } from 'react';
 import { ArrowDropDown, ArrowDropUp } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
-import '!style-loader!css-loader!sass-loader!./PrintMapDialog-ExtraIcon.scss';
+import './PrintMapDialog-ExtraIcon.scss';
 
 const cnPrintMapDialogExtraIcon = cn('PrintMapDialog', 'ExtraIcon');
 

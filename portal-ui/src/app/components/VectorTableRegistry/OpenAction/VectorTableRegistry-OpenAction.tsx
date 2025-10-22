@@ -5,9 +5,9 @@ import { Tooltip } from '@mui/material';
 import { StickyNote2Outlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
-import { Schema } from '../../../services/data/schema/schema.models';
-import { VectorTable } from '../../../services/data/vectorData/vectorData.models';
-import { WfsFeature } from '../../../services/geoserver/wfs/wfs.models';
+import { type Schema } from '../../../services/data/schema/schema.models';
+import { type VectorTable } from '../../../services/data/vectorData/vectorData.models';
+import { type WfsFeature } from '../../../services/geoserver/wfs/wfs.models';
 import { FeatureDialog } from '../../FeatureDialog/FeatureDialog';
 import { IconButton } from '../../IconButton/IconButton';
 

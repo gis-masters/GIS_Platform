@@ -1,10 +1,10 @@
-import React, { FC } from 'react';
+import React, { type FC } from 'react';
 import { CircularProgress } from '@mui/material';
 import { cn } from '@bem-react/classname';
 
 const cnLoading = cn('Loading');
 
-import '!style-loader!css-loader!sass-loader!./Loading.scss';
+import './Loading.scss';
 
 interface LoadingProps {
   visible?: boolean;

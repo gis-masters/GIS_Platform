@@ -5,7 +5,7 @@ import { cn } from '@bem-react/classname';
 
 import { allProjects } from '../../../stores/AllProjects.store';
 
-import '!style-loader!css-loader!sass-loader!./Projects-Filter.scss';
+import './Projects-Filter.scss';
 
 const cnProjectsFilter = cn('Projects', 'Filter');
 

@@ -1,7 +1,7 @@
 import { action, computed, makeObservable, observable } from 'mobx';
 import { cloneDeep, isEqual } from 'lodash';
 
-import { WfsGeometry } from '../../../geoserver/wfs/wfs.models';
+import { type WfsGeometry } from '../../../geoserver/wfs/wfs.models';
 import { services } from '../../../services';
 
 export interface HistoryEntry {

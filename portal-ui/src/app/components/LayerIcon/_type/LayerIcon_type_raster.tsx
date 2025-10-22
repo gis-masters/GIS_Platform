@@ -2,7 +2,7 @@ import React from 'react';
 import { Texture } from '@mui/icons-material';
 import { withBemMod } from '@bem-react/core';
 
-import { cnLayerIcon, LayerIconProps } from '../LayerIcon.base';
+import { cnLayerIcon, type LayerIconProps } from '../LayerIcon.base';
 
 export const withTypeRaster = withBemMod<LayerIconProps, LayerIconProps>(
   cnLayerIcon(),

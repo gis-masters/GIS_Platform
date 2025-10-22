@@ -12,20 +12,20 @@ class LibraryDocumentActionsBlock extends Block {
   };
 
   async clickEditButton(): Promise<void> {
-    const $edit = await this.$('edit');
+    const $edit = await this.findBySelector('edit');
     await $edit.waitForClickable();
 
     await $edit.click();
   }
 
   async clickDocumentMoveBtn(): Promise<void> {
-    const $moveBtn = await this.$('move');
+    const $moveBtn = await this.findBySelector('move');
     await $moveBtn.waitForDisplayed();
     await $moveBtn.click();
   }
 
   async clickDocumentCopyBtn(): Promise<void> {
-    const $moveBtn = await this.$('copy');
+    const $moveBtn = await this.findBySelector('copy');
     await $moveBtn.waitForDisplayed();
     await $moveBtn.click();
   }
@@ -33,7 +33,7 @@ class LibraryDocumentActionsBlock extends Block {
   async documentMoveBtnDisabled(): Promise<boolean> {
     await this.waitForVisible();
 
-    const $moveBtn = await this.$('move');
+    const $moveBtn = await this.findBySelector('move');
     await $moveBtn.waitForDisplayed();
 
     return await $moveBtn.isEnabled();
@@ -42,14 +42,14 @@ class LibraryDocumentActionsBlock extends Block {
   async documentMoveBtnExist(): Promise<boolean> {
     await this.waitForVisible();
 
-    const $moveBtn = await this.$('move');
+    const $moveBtn = await this.findBySelector('move');
     await $moveBtn.waitForDisplayed();
 
     return await $moveBtn.isExisting();
   }
 
   async clickCreateChildDocButton(contentType: string): Promise<void> {
-    const $createChild = await this.$('createChild');
+    const $createChild = await this.findBySelector('createChild');
     await $createChild.waitForClickable();
     await $createChild.click();
 
@@ -59,7 +59,7 @@ class LibraryDocumentActionsBlock extends Block {
   }
 
   async clickDeleteButton(): Promise<void> {
-    const $delete = await this.$('delete');
+    const $delete = await this.findBySelector('delete');
     await $delete.waitForClickable();
 
     await $delete.click();

@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
-import { action, IReactionDisposer, makeObservable, observable, reaction } from 'mobx';
+import { action, type IReactionDisposer, makeObservable, observable, reaction } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
-import { DragDropContext, DragUpdate, Droppable, DropResult } from 'react-beautiful-dnd';
+import { DragDropContext, type DragUpdate, Droppable, type DropResult } from 'react-beautiful-dnd';
 
-import { TreeItem } from '../../services/gis/projects/projects.models';
+import { type TreeItem } from '../../services/gis/projects/projects.models';
 import { setEnabledLayerToUrl } from '../../services/map/map-url.service';
 import { currentProject } from '../../stores/CurrentProject.store';
 import { Pages, route } from '../../stores/Route.store';

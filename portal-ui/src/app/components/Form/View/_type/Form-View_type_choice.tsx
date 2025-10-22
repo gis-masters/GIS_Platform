@@ -2,14 +2,14 @@ import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import { withBemMod } from '@bem-react/core';
 
-import { PropertySchemaChoice, PropertyType } from '../../../../services/data/schema/schema.models';
+import { type PropertySchemaChoice, PropertyType } from '../../../../services/data/schema/schema.models';
 import { TextOverflow } from '../../../TextOverflow/TextOverflow';
-import { FormControlProps } from '../../Control/Form-Control';
+import { type FormControlProps } from '../../Control/Form-Control';
 import { FormSetLabel } from '../../SetLabel/Form-SetLabel';
 import { FormViewErrors } from '../../ViewErrors/ViewErrors-ViewErrors';
 import { cnFormView } from '../Form-View.base';
 
-import '!style-loader!css-loader!sass-loader!./Form-View_type_choice.scss';
+import './Form-View_type_choice.scss';
 
 const EMPTY = '~~~empty_value~~~';
 

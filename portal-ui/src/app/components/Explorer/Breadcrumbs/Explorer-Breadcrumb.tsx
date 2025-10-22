@@ -1,15 +1,15 @@
-import React, { FC } from 'react';
+import React, { type FC } from 'react';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 
 import { isRecordStringUnknown } from '../../../services/util/typeGuards/isRecordStringUnknown';
-import { Breadcrumbs, BreadcrumbsItemData } from '../../Breadcrumbs/Breadcrumbs';
-import { BreadcrumbsItemsType } from '../../Breadcrumbs/Item/Breadcrumbs-Item.base';
+import { Breadcrumbs, type BreadcrumbsItemData } from '../../Breadcrumbs/Breadcrumbs';
+import { type BreadcrumbsItemsType } from '../../Breadcrumbs/Item/Breadcrumbs-Item.base';
 import { getTitle } from '../Adapter/Explorer-Adapter';
-import { ExplorerItemData, ExplorerItemType, ExplorerSearchValue } from '../Explorer.models';
-import { ExplorerStore } from '../Explorer.store';
+import { type ExplorerItemData, ExplorerItemType } from '../Explorer.models';
+import { type ExplorerStore } from '../Explorer.store';
 
-import '!style-loader!css-loader!sass-loader!./Explorer-Breadcrumb.scss';
+import './Explorer-Breadcrumb.scss';
 
 const cnExplorerBreadcrumb = cn('Explorer', 'Breadcrumbs');
 
@@ -62,7 +62,7 @@ export const ExplorerBreadcrumb: FC<ExplorerBreadcrumbsProps> = observer(({ stor
   let itemsType: BreadcrumbsItemsType = 'button';
   const srr = store.path?.find(item => item.type === ExplorerItemType.SEARCH_RESULT_ROOT);
   if (srr) {
-    const search = srr.payload as ExplorerSearchValue;
+    const search = srr.payload;
 
     items =
       search.path?.map((pathItem, i) => ({

@@ -9,21 +9,21 @@ class CounterBlock extends Block {
   };
 
   async getCounterValue(): Promise<string> {
-    const $container = await this.$('container');
+    const $container = await this.findBySelector('container');
 
     return await $container.getText();
   }
 
   async clickShowMoreButton() {
-    const $showMoreButton = await this.$('showMoreButton');
+    const $showMoreButton = await this.findBySelector('showMoreButton');
     await $showMoreButton.click();
   }
 
   async getCounterItemsValue(): Promise<string> {
-    const $container = await this.$('popoverContent');
+    const $container = await this.findBySelector('popoverContent');
     await $container.waitForDisplayed();
 
-    const $$counterItems = await this.$$('popoverContentItem');
+    const $$counterItems = await this.findAllBySelector('popoverContentItem');
 
     const allCountersValue = [];
     for (const $counterItem of $$counterItems) {

@@ -1,5 +1,5 @@
-import { Schema } from '../../../../src/app/services/data/schema/schema.models';
-import { CrgLayer } from '../../../../src/app/services/gis/layers/layers.models';
+import { type Schema } from '../../../../src/app/services/data/schema/schema.models';
+import { type CrgLayer } from '../../../../src/app/services/gis/layers/layers.models';
 import { getVectorTable } from '../tables/getVectorTable';
 
 export async function getLayerSchema(layer: CrgLayer): Promise<Schema> {

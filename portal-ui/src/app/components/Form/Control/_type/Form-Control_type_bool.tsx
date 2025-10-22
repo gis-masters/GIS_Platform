@@ -7,9 +7,9 @@ import { boundMethod } from 'autobind-decorator';
 import { PropertyType } from '../../../../services/data/schema/schema.models';
 import { generateRandomId } from '../../../../services/util/randomId';
 import { FormErrors } from '../../Errors/Form-Errors';
-import { cnFormControl, FormControlProps } from '../Form-Control';
+import { cnFormControl, type FormControlProps } from '../Form-Control';
 
-import '!style-loader!css-loader!sass-loader!./Form-Control_type_bool.scss';
+import './Form-Control_type_bool.scss';
 
 @observer
 class FormControlTypeBool extends Component<FormControlProps> {

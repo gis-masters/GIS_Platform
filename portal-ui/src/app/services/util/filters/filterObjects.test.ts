@@ -1,7 +1,7 @@
 import { describe, expect, test } from '@jest/globals';
 
 import { filterObjects, prepareLike } from './filterObjects';
-import { FilterQuery } from './filters.models';
+import { type FilterQuery } from './filters.models';
 
 describe('утилита фильтрации объектов', () => {
   test('функция prepareLike заменяет нестандартные операторы $like и $ilike на $regex', () => {

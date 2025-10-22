@@ -3,15 +3,15 @@ import { boundMethod } from 'autobind-decorator';
 import { cloneDeep } from 'lodash';
 
 import {
-  CrgLayer,
-  CrgLayersGroup,
+  type CrgLayer,
+  type CrgLayersGroup,
   CrgLayerType,
-  CrgRasterLayer,
-  CrgVectorLayer,
-  NewCrgLayer
+  type CrgRasterLayer,
+  type CrgVectorLayer,
+  type NewCrgLayer
 } from '../services/gis/layers/layers.models';
 import { isVectorFromFile } from '../services/gis/layers/layers.utils';
-import { CrgProject, TreeItem, TreeItemPayload } from '../services/gis/projects/projects.models';
+import { type CrgProject, type TreeItem, type TreeItemPayload } from '../services/gis/projects/projects.models';
 import { Role } from '../services/permissions/permissions.models';
 import { getPatch } from '../services/util/patch';
 

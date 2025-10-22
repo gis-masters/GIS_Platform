@@ -1,13 +1,13 @@
-import React, { FC, useCallback, useEffect, useMemo } from 'react';
+import React, { type FC, useCallback, useEffect, useMemo } from 'react';
 import { observer, useLocalObservable } from 'mobx-react';
 import { Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import { cn } from '@bem-react/classname';
-import { AxiosError } from 'axios';
+import { type AxiosError } from 'axios';
 
 import { communicationService } from '../../services/communication.service';
 import { projectionsClient } from '../../services/data/projections/projections.client';
-import { EditProjectionModel, Projection } from '../../services/data/projections/projections.models';
-import { PropertyType, SimpleSchema } from '../../services/data/schema/schema.models';
+import { type EditProjectionModel, type Projection } from '../../services/data/projections/projections.models';
+import { PropertyType, type SimpleSchema } from '../../services/data/schema/schema.models';
 import { generateRandomId } from '../../services/util/randomId';
 import { achtung } from '../../services/utility-dialogs.service';
 import { ActionsRight } from '../ActionsRight/ActionsRight';
@@ -19,7 +19,7 @@ import { OrgProjectionsChangeConfirm } from '../OrgProjectionsChangeConfirm/OrgP
 import { PseudoLink } from '../PseudoLink/PseudoLink';
 import { Toast } from '../Toast/Toast';
 
-import '!style-loader!css-loader!sass-loader!./EditProjectionDialog.scss';
+import './EditProjectionDialog.scss';
 
 const cnEditProjectionDialog = cn('EditProjectionDialog');
 

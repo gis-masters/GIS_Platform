@@ -1,16 +1,16 @@
-import { SnapEvent } from 'ol/events/SnapEvent';
+import { type SnapEvent } from 'ol/events/SnapEvent';
 
-import { ObjectDto } from '../components/edit-bug-object/edit-bug-object.component';
+import { type ObjectDto } from '../components/edit-bug-object/edit-bug-object.component';
 import { Emitter } from './common/Emitter';
-import { Basemap } from './data/basemaps/basemaps.models';
-import { FileInfo } from './data/files/files.models';
-import { Library, LibraryRecord } from './data/library/library.models';
-import { Schema } from './data/schema/schema.models';
-import { Task } from './data/task/task.models';
-import { Dataset, VectorTable } from './data/vectorData/vectorData.models';
-import { WfsFeature } from './geoserver/wfs/wfs.models';
-import { CrgLayer, CrgVectorLayer } from './gis/layers/layers.models';
-import { CrgProject } from './gis/projects/projects.models';
+import { type Basemap } from './data/basemaps/basemaps.models';
+import { type FileInfo } from './data/files/files.models';
+import { type Library, type LibraryRecord } from './data/library/library.models';
+import { type Schema } from './data/schema/schema.models';
+import { type Task } from './data/task/task.models';
+import { type Dataset, type VectorTable } from './data/vectorData/vectorData.models';
+import { type WfsFeature } from './geoserver/wfs/wfs.models';
+import { type CrgLayer, type CrgVectorLayer } from './gis/layers/layers.models';
+import { type CrgProject } from './gis/projects/projects.models';
 
 export interface DataChangeEventDetail<T> {
   type: 'create' | 'update' | 'delete';

@@ -1,18 +1,18 @@
-import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
+import { type AbstractControl, type ValidationErrors, type ValidatorFn } from '@angular/forms';
 import { isEmpty } from 'validate.js';
 
 import { Toast } from '../../components/Toast/Toast';
-import { FiasValue } from '../data/fias/fias.models';
-import { PropertyOption } from '../data/schema/schema.models';
+import { type FiasValue } from '../data/fias/fias.models';
+import { type PropertyOption } from '../data/schema/schema.models';
 import { convertOldToNewProperties } from '../data/schema/schema.utils';
 import {
-  OldPropertySchema,
-  OldPropertySchemaChoice,
-  OldPropertySchemaDouble,
-  OldPropertySchemaInt,
-  OldPropertySchemaLong,
-  OldPropertySchemaString,
-  PropertyEnumeration,
+  type OldPropertySchema,
+  type OldPropertySchemaChoice,
+  type OldPropertySchemaDouble,
+  type OldPropertySchemaInt,
+  type OldPropertySchemaLong,
+  type OldPropertySchemaString,
+  type PropertyEnumeration,
   ValueType
 } from '../data/schema/schemaOld.models';
 import { services } from '../services';

@@ -1,4 +1,4 @@
-import { FlagsList } from './feature-flags';
+import { type FlagsList } from './feature-flags.models';
 
 declare const browser: { options: { baseUrl: string } }; //для автотестов
 
@@ -123,7 +123,7 @@ export class Environment implements EnvironmentData {
   init(data: EnvironmentData): void {
     let baseUrl: string;
 
-    if (typeof browser === 'object' && browser && browser.options) {
+    if (typeof browser === 'object' && browser && browser.options && browser.options.baseUrl) {
       baseUrl = browser.options.baseUrl;
     } else if (typeof window === 'undefined') {
       throw new TypeError('Unknown environment');
@@ -137,7 +137,7 @@ export class Environment implements EnvironmentData {
       host: data.server?.host || baseUrlParsed.hostname,
       path: data.server?.path || '',
       port: data.server?.port || baseUrlParsed.port || '',
-      protocol: baseUrlParsed.protocol,
+      protocol: data.server?.protocol || baseUrlParsed.protocol,
       wsPath: data.server?.wsPath || '',
       wsPort: data.server?.wsPort || ''
     };

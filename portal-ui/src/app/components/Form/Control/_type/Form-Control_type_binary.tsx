@@ -1,10 +1,10 @@
-import React, { FC, lazy, Suspense } from 'react';
+import React, { type FC, lazy, Suspense } from 'react';
 import { withBemMod } from '@bem-react/core';
 
 import { PropertyType } from '../../../../services/data/schema/schema.models';
-import { cnFormControl, FormControlProps } from '../Form-Control';
+import { cnFormControl, type FormControlProps } from '../Form-Control';
 
-const FormControlTypeBinaryAsync = lazy(() => import('./Form-Control_type_binary.async'));
+const FormControlTypeBinaryAsync = lazy(() => import('./Form-Control_type_binary.chunkroot'));
 
 const FormControlTypeBinary: FC<FormControlProps> = props => (
   <Suspense>

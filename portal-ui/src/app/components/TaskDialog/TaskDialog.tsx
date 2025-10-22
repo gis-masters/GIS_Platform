@@ -4,20 +4,21 @@ import { observer } from 'mobx-react';
 import { Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import { InsertDriveFileOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
-import { AxiosError } from 'axios';
+import { RegistryConsumer } from '@bem-react/di';
+import { type AxiosError } from 'axios';
 
 import { communicationService } from '../../services/communication.service';
-import { Schema } from '../../services/data/schema/schema.models';
+import { type Schema } from '../../services/data/schema/schema.models';
 import { applyContentType } from '../../services/data/schema/schema.utils';
-import { Task } from '../../services/data/task/task.models';
+import { type Task } from '../../services/data/task/task.models';
 import { getTask, getTaskSchema } from '../../services/data/task/task.service';
+import { type CommonDiRegistry } from '../../services/di-registry';
 import { services } from '../../services/services';
 import { TaskCard } from '../TaskCard/TaskCard';
-import { TasksJournalActions } from '../TasksJournalActions/TasksJournalActions';
 import { TextBadge } from '../TextBadge/TextBadge';
 import { Toast } from '../Toast/Toast';
 
-import '!style-loader!css-loader!sass-loader!./TaskDialog.scss';
+import './TaskDialog.scss';
 
 const cnTaskDialog = cn('TaskDialog');
 
@@ -38,24 +39,6 @@ export const TaskDialog = observer(({ task: initialTask, open, onClose }: TaskDi
     }
   }, [currentTask, primalSchema]);
 
-  const fetchData = async () => {
-    const operationId = Symbol();
-    operationIdRef.current = operationId;
-
-    try {
-      const fetchedTask = await getTask(initialTask.id);
-
-      if (operationIdRef.current === operationId) {
-        runInAction(() => {
-          setCurrentTask(fetchedTask);
-        });
-      }
-    } catch (error) {
-      Toast.error('Не удалось получить задачу');
-      services.logger.error('Не удалось удалить задачу: ', (error as AxiosError).message);
-    }
-  };
-
   const fetchSchema = async () => {
     try {
       const schema = await getTaskSchema();
@@ -74,6 +57,24 @@ export const TaskDialog = observer(({ task: initialTask, open, onClose }: TaskDi
   }, [initialTask]);
 
   useEffect(() => {
+    const fetchData = async () => {
+      const operationId = Symbol();
+      operationIdRef.current = operationId;
+
+      try {
+        const fetchedTask = await getTask(initialTask.id);
+
+        if (operationIdRef.current === operationId) {
+          runInAction(() => {
+            setCurrentTask(fetchedTask);
+          });
+        }
+      } catch (error) {
+        Toast.error('Не удалось получить задачу');
+        services.logger.error('Не удалось удалить задачу: ', (error as AxiosError).message);
+      }
+    };
+
     void fetchSchema();
     setCurrentTask(initialTask);
 
@@ -104,14 +105,18 @@ export const TaskDialog = observer(({ task: initialTask, open, onClose }: TaskDi
 
       {primalSchema && schema && (
         <DialogActions>
-          <TasksJournalActions
-            primalSchema={primalSchema}
-            schema={schema}
-            task={currentTask}
-            as='iconButton'
-            forDialog
-            onDialogClose={onClose}
-          />
+          <RegistryConsumer id='common'>
+            {({ TasksJournalActions }: CommonDiRegistry) => (
+              <TasksJournalActions
+                primalSchema={primalSchema}
+                schema={schema}
+                task={currentTask}
+                as='iconButton'
+                forDialog
+                onDialogClose={onClose}
+              />
+            )}
+          </RegistryConsumer>
         </DialogActions>
       )}
     </Dialog>

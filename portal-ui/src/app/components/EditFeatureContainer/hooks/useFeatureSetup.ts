@@ -1,8 +1,8 @@
 import { useEffect } from 'react';
 
 import { getFeatureProjection } from '../../../services/data/projections/projections.service';
-import { WfsFeature } from '../../../services/geoserver/wfs/wfs.models';
-import { CrgVectorableLayer, CrgVectorLayer } from '../../../services/gis/layers/layers.models';
+import { type WfsFeature } from '../../../services/geoserver/wfs/wfs.models';
+import { type CrgVectorableLayer, type CrgVectorLayer } from '../../../services/gis/layers/layers.models';
 import { EditFeatureMode } from '../../../services/map/a-map-mode/edit-feature/EditFeature.models';
 import { editFeatureStore } from '../../../services/map/a-map-mode/edit-feature/EditFeatureStore';
 import { services } from '../../../services/services';

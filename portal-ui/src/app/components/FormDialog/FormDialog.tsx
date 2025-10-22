@@ -1,25 +1,25 @@
-import React, { Component, ReactNode } from 'react';
+import React, { Component, type ReactNode } from 'react';
 import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import { cn } from '@bem-react/classname';
-import { IClassNameProps } from '@bem-react/core';
+import { type IClassNameProps } from '@bem-react/core';
 import { RegistryConsumer } from '@bem-react/di';
 import { boundMethod } from 'autobind-decorator';
 import { cloneDeep, isEqual } from 'lodash';
 
-import { Schema, SimpleSchema } from '../../services/data/schema/schema.models';
-import { CommonDiRegistry } from '../../services/di-registry';
+import { type Schema, type SimpleSchema } from '../../services/data/schema/schema.models';
+import { type CommonDiRegistry } from '../../services/di-registry';
 import { generateRandomId } from '../../services/util/randomId';
 import { konfirmieren } from '../../services/utility-dialogs.service';
 import { ActionsLeft } from '../ActionsLeft/ActionsLeft';
 import { ActionsRight } from '../ActionsRight/ActionsRight';
-import { Button, ButtonProps } from '../Button/Button';
-import { FormProps } from '../Form/Form';
-import { FormRole } from '../Form/Form.async';
+import { Button, type ButtonProps } from '../Button/Button';
+import { type FormProps } from '../Form/Form';
+import { type FormRole } from '../Form/Form.models';
 import { getDefaultValues } from '../Form/Form.utils';
 
-import '!style-loader!css-loader!sass-loader!./FormDialog.scss';
+import './FormDialog.scss';
 
 // избавиться от schemaId в задаче #2268
 const validateExceptions = new Set(['role', 'schemaId']);

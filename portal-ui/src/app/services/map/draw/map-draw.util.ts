@@ -1,5 +1,5 @@
 import { GeometryType } from '../../geoserver/wfs/wfs.models';
-import { SingleDrawGeometryType } from './map-draw.models';
+import { type SingleDrawGeometryType } from './map-draw.models';
 
 export function toDrawGeometry(baseType: GeometryType | undefined): SingleDrawGeometryType {
   switch (baseType) {

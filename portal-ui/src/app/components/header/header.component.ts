@@ -1,14 +1,15 @@
-import { IReactionDisposer, reaction } from 'mobx';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { type IReactionDisposer, reaction } from 'mobx';
+import { Component, type OnDestroy, type OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { environment, Platform } from '../../services/environment';
+import { environment, type Platform } from '../../services/environment';
 import { route } from '../../stores/Route.store';
 
 @Component({
   selector: 'crg-header',
   templateUrl: './header.component.html',
-  styleUrls: ['./header.component.scss']
+  styleUrls: ['./header.component.scss'],
+  standalone: false
 })
 export class HeaderComponent implements OnInit, OnDestroy {
   currentPage = '';

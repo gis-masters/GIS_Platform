@@ -1,7 +1,7 @@
 import React from 'react';
-import { StoryFn } from '@storybook/react';
+import { type StoryFn } from '@storybook/react';
 
-import { PropertyType, Schema } from '../../../services/data/schema/schema.models';
+import { PropertyType, type Schema } from '../../../services/data/schema/schema.models';
 import { GeometryType } from '../../../services/geoserver/wfs/wfs.models';
 import { SchemaActionsEdit } from './SchemaActions-Edit';
 

@@ -1,9 +1,9 @@
-import React, { FC } from 'react';
+import React, { type FC } from 'react';
 import { cn } from '@bem-react/classname';
 
-import { ImagesForCarouselWrapper } from '../Wrapper/Carousel-Wrapper';
+import { type ImagesForCarouselWrapper } from '../Wrapper/Carousel-Wrapper';
 
-import '!style-loader!css-loader!sass-loader!./Carousel-MainImage.scss';
+import './Carousel-MainImage.scss';
 
 interface CarouselMainImage {
   imageWithUrl: ImagesForCarouselWrapper;

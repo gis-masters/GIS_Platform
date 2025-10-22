@@ -47,7 +47,7 @@ class DataManagementPage extends Page {
 
   async testLibraryRootPage() {
     await this.waitForVisible();
-    await expect(browser).toHaveUrlContaining(this.libraryRootUrl);
+    await expect(browser).toHaveUrl(expect.stringContaining(this.libraryRootUrl));
     await breadcrumbsBlock.waitForVisible();
     const texts = await breadcrumbsBlock.getItemsText();
     await expect(texts.at(-1)).toBe('Библиотеки документов');

@@ -1,12 +1,12 @@
-import React, { FC } from 'react';
+import React, { type FC } from 'react';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
-import { IClassNameProps } from '@bem-react/core';
+import { type IClassNameProps } from '@bem-react/core';
 
-import { PermissionsListItem, PrincipalType } from '../../services/permissions/permissions.models';
+import { type PermissionsListItem, type PrincipalType } from '../../services/permissions/permissions.models';
 import { allPermissions } from '../../stores/AllPermissions.store';
 
-import '!style-loader!css-loader!sass-loader!./PermissionsCount.scss';
+import './PermissionsCount.scss';
 
 const cnPermissionsCount = cn('PermissionsCount');
 

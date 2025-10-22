@@ -1,4 +1,4 @@
-import React, { FC, SyntheticEvent, useCallback } from 'react';
+import React, { type FC, type SyntheticEvent, useCallback } from 'react';
 import { observer, useLocalObservable } from 'mobx-react';
 import { Dialog, DialogActions, DialogContent, DialogTitle, Tab, Tabs, Tooltip } from '@mui/material';
 import {
@@ -15,9 +15,9 @@ import { TabContext } from '@mui/lab';
 import { cn } from '@bem-react/classname';
 
 import {
-  AnnotationsFontProperties,
-  AnnotationsType,
-  FontProperties
+  type AnnotationsFontProperties,
+  type AnnotationsType,
+  type FontProperties
 } from '../../services/map/labels/map-labels.models';
 import { mapLabelsService } from '../../services/map/labels/map-labels.service';
 import { isAnnotationType } from '../../services/util/typeGuards/isAnnotationType';
@@ -26,7 +26,7 @@ import { IconButton } from '../IconButton/IconButton';
 import { LabelStylesSettings } from '../LabelStylesSettings/LabelStylesSettings';
 import { TurningPointsCircleSettings } from '../TurningPointsCircleSettings/TurningPointsCircleSettings';
 
-import '!style-loader!css-loader!sass-loader!./AnnotationSettings.scss';
+import './AnnotationSettings.scss';
 
 type AnnotationSettingsState = {
   isOpen: boolean;

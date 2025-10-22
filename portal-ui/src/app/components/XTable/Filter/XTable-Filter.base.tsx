@@ -1,12 +1,12 @@
-import React, { FC } from 'react';
+import React, { type FC } from 'react';
 import { cn } from '@bem-react/classname';
-import { IClassNameProps } from '@bem-react/core';
+import { type IClassNameProps } from '@bem-react/core';
 
-import { PropertyOption } from '../../../services/data/schema/schema.models';
-import { FilterQuery } from '../../../services/util/filters/filters.models';
-import { XTableColumnType } from '../XTable.models';
+import { type PropertyOption } from '../../../services/data/schema/schema.models';
+import { type FilterQuery } from '../../../services/util/filters/filters.models';
+import { type XTableColumnType } from '../XTable.models';
 
-import '!style-loader!css-loader!sass-loader!./XTable-Filter.scss';
+import './XTable-Filter.scss';
 
 export const cnXTableFilter = cn('XTable', 'Filter');
 

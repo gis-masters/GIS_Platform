@@ -4,9 +4,9 @@ import { observer } from 'mobx-react';
 import { Paper } from '@mui/material';
 import { withBemMod } from '@bem-react/core';
 import { boundMethod } from 'autobind-decorator';
-import { Coordinate } from 'ol/coordinate';
+import { type Coordinate } from 'ol/coordinate';
 
-import { GeometryType, WfsPointGeometry } from '../../../../services/geoserver/wfs/wfs.models';
+import { GeometryType, type WfsPointGeometry } from '../../../../services/geoserver/wfs/wfs.models';
 import { editFeatureStore } from '../../../../services/map/a-map-mode/edit-feature/EditFeatureStore';
 import { mapDrawService } from '../../../../services/map/draw/map-draw.service';
 import { EditFeatureGeometryCoord } from '../../Coord/EditFeatureGeometry-Coord';
@@ -17,10 +17,10 @@ import { EditFeatureGeometryXY } from '../../XY/EditFeatureGeometry-XY';
 import {
   cnEditFeatureGeometryForm,
   EditFeatureGeometryFormBase,
-  EditFeatureGeometryFormProps
+  type EditFeatureGeometryFormProps
 } from '../EditFeatureGeometry-Form.base';
 
-import '!style-loader!css-loader!sass-loader!./EditFeatureGeometry-Form_type_Point.scss';
+import './EditFeatureGeometry-Form_type_Point.scss';
 
 @observer
 class EditFeatureGeometryFormTypePoint extends EditFeatureGeometryFormBase {

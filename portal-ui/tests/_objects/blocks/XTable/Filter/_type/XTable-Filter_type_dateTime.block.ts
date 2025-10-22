@@ -9,11 +9,11 @@ class XTableFilterTypeDateTimeBlock extends Block {
   };
 
   async setValue2(firstDate: string, secondDate: string) {
-    const $filterInputFirstDate = await this.$('filterInputFirstDate');
+    const $filterInputFirstDate = await this.findBySelector('filterInputFirstDate');
     await $filterInputFirstDate.setValue(firstDate);
     await browser.pause(300);
 
-    const $filterInputSecondDate = await this.$('filterInputSecondDate');
+    const $filterInputSecondDate = await this.findBySelector('filterInputSecondDate');
     await $filterInputSecondDate.setValue(secondDate);
 
     await browser.pause(300);

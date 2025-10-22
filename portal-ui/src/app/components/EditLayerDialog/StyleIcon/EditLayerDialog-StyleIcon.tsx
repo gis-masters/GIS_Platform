@@ -5,7 +5,7 @@ import { cn } from '@bem-react/classname';
 import { CUSTOM_STYLE_NAME } from '../../../services/geoserver/styles/styles.models';
 import { loadLayerStyleRules } from '../../../services/geoserver/styles/styles.service';
 
-import '!style-loader!css-loader!sass-loader!./EditLayerDialog-StyleIcon.scss';
+import './EditLayerDialog-StyleIcon.scss';
 
 const cnEditLayerDialogStyleIcon = cn('EditLayerDialog', 'StyleIcon');
 

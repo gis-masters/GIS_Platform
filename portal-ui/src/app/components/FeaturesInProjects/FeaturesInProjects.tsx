@@ -1,13 +1,13 @@
-import React, { FC } from 'react';
+import React, { type FC } from 'react';
 import { List, ListItem, ListItemText } from '@mui/material';
 import { MyLocation } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
-import { FileConnection } from '../../services/data/files/files.models';
+import { type FileConnection } from '../../services/data/files/files.models';
 import { getFeaturesUrl } from '../../services/map/map.util';
 import { Button } from '../Button/Button';
 
-import '!style-loader!css-loader!sass-loader!./FeaturesInProjects.scss';
+import './FeaturesInProjects.scss';
 
 export const cnFeaturesInProjects = cn('FeaturesInProjects');
 

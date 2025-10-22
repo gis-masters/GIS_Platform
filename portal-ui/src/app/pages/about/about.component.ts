@@ -1,6 +1,6 @@
 import { createElement } from 'react';
-import { createRoot, Root } from 'react-dom/client';
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { createRoot, type Root } from 'react-dom/client';
+import { Component, ElementRef, type OnDestroy, type OnInit, ViewChild } from '@angular/core';
 import { withRegistry } from '@bem-react/di';
 
 import { Help } from '../../components/Help/Help';
@@ -10,7 +10,8 @@ const HelpWithRegistry = withRegistry(registry)(Help);
 
 @Component({
   selector: 'crg-about',
-  templateUrl: './about.component.html'
+  templateUrl: './about.component.html',
+  standalone: false
 })
 export class AboutComponent implements OnInit, OnDestroy {
   @ViewChild('helpReact', { read: ElementRef, static: true }) ref?: ElementRef<HTMLDivElement>;

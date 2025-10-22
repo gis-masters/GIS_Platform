@@ -1,18 +1,18 @@
 import React, { Component } from 'react';
 import { action, computed, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
-import { Checkbox, Divider, ListItemText, MenuItem, Select, SelectChangeEvent } from '@mui/material';
+import { Checkbox, Divider, ListItemText, MenuItem, Select, type SelectChangeEvent } from '@mui/material';
 import { cn } from '@bem-react/classname';
 import { withBemMod } from '@bem-react/core';
 import { boundMethod } from 'autobind-decorator';
 import { isEqual } from 'lodash';
 
-import { PropertyOption, PropertyType } from '../../../../services/data/schema/schema.models';
+import { type PropertyOption, PropertyType } from '../../../../services/data/schema/schema.models';
 import { getFieldFilterValue, modifyFieldFilterValue } from '../../../../services/util/filters/filters';
-import { FilterQuery } from '../../../../services/util/filters/filters.models';
-import { cnXTableFilter, XTableFilterProps } from '../XTable-Filter.base';
+import { type FilterQuery } from '../../../../services/util/filters/filters.models';
+import { cnXTableFilter, type XTableFilterProps } from '../XTable-Filter.base';
 
-import '!style-loader!css-loader!sass-loader!./XTable-Filter_type_choice.scss';
+import './XTable-Filter_type_choice.scss';
 
 const cnXTableChoiceFilterPopover = cn('XTable', 'ChoiceFilterPopover');
 

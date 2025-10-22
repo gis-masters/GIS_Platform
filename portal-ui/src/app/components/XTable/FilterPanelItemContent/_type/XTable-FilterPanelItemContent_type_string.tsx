@@ -3,10 +3,10 @@ import { withBemMod } from '@bem-react/core';
 
 import { PropertyType } from '../../../../services/data/schema/schema.models';
 import { getFieldFilterValue } from '../../../../services/util/filters/filters';
-import { FilterQuery } from '../../../../services/util/filters/filters.models';
+import { type FilterQuery } from '../../../../services/util/filters/filters.models';
 import {
   cnXTableFilterPanelItemContent,
-  XTableFilterPanelItemContentProps
+  type XTableFilterPanelItemContentProps
 } from '../XTable-FilterPanelItemContent.base';
 
 export const withTypeString = withBemMod<
@@ -15,8 +15,7 @@ export const withTypeString = withBemMod<
 >(cnXTableFilterPanelItemContent(), { type: PropertyType.STRING }, XTableFilterPanelItemContentBase => props => {
   const { filter, col } = props;
   const filterValue = getFieldFilterValue(filter, col.field) as FilterQuery;
-
-  const value = <>{filterValue?.$ilike}</>;
+  const value = <>{filterValue?.$ilike as string}</>;
 
   return <XTableFilterPanelItemContentBase {...props} value={value} />;
 });

@@ -1,14 +1,18 @@
-<div class="fiz-box" *ngIf="data">
-  <mat-nav-list role="list">
-    <mat-list-item role="listitem" *ngFor="let item of violationItems">
-      <div class="fiz-inner">
-        <div class="prop-title">
-          {{ item.propertyName }}
-        </div>
-        <div class="prop-error">
-          {{ item.errors }}
-        </div>
-      </div>
-    </mat-list-item>
-  </mat-nav-list>
-</div>
+@if (data) {
+  <div class="fiz-box">
+    <mat-nav-list role="list">
+      @for (item of violationItems; track item) {
+        <mat-list-item role="listitem">
+          <div class="fiz-inner">
+            <div class="prop-title">
+              {{ item.propertyName }}
+            </div>
+            <div class="prop-error">
+              {{ item.errors }}
+            </div>
+          </div>
+        </mat-list-item>
+      }
+    </mat-nav-list>
+  </div>
+}

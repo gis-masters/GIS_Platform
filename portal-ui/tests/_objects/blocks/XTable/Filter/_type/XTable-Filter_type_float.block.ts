@@ -9,10 +9,10 @@ class XTableFilterTypeFloatBlock extends Block {
   };
 
   async setValue2(lte: string, gte: string) {
-    const $filterInputLte = await this.$('filterInputLte');
+    const $filterInputLte = await this.findBySelector('filterInputLte');
     await $filterInputLte.setValue(lte);
 
-    const $filterInputGte = await this.$('filterInputGte');
+    const $filterInputGte = await this.findBySelector('filterInputGte');
     await $filterInputGte.setValue(gte);
 
     await browser.pause(300);

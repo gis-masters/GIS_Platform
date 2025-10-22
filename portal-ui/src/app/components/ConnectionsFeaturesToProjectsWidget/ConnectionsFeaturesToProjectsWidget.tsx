@@ -5,15 +5,15 @@ import { Dialog, DialogActions, DialogContent, DialogTitle, Skeleton } from '@mu
 import { cn } from '@bem-react/classname';
 import { pluralize } from 'numeralize-ru';
 
-import { FileConnection } from '../../services/data/files/files.models';
-import { SearchItemDataTypeFeature } from '../../services/data/search/search.model';
+import { type FileConnection } from '../../services/data/files/files.models';
+import { type SearchItemDataTypeFeature } from '../../services/data/search/search.model';
 import { getVectorTableConnections } from '../../services/data/vectorData/vectorData.service';
 import { extractFeatureId } from '../../services/geoserver/featureType/featureType.util';
 import { Button } from '../Button/Button';
 import { FeatureInProjects } from '../FeaturesInProjects/FeaturesInProjects';
 import { PseudoLink } from '../PseudoLink/PseudoLink';
 
-import '!style-loader!css-loader!sass-loader!./ConnectionsFeaturesToProjectsWidget.scss';
+import './ConnectionsFeaturesToProjectsWidget.scss';
 
 const cnConnectionsFeaturesToProjectsWidget = cn('ConnectionsFeaturesToProjectsWidget');
 

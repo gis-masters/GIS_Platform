@@ -1,4 +1,4 @@
-import { PageOptions, SortOrder } from '../models';
+import { type PageOptions, SortOrder } from '../models';
 import { filterObjects } from './filters/filterObjects';
 import { sortObjects } from './sortObjects';
 

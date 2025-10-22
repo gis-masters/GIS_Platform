@@ -8,18 +8,18 @@ import { boundMethod } from 'autobind-decorator';
 import { pluralize } from 'numeralize-ru';
 
 import { getProjectionByCode } from '../../services/data/projections/projections.service';
-import { Schema } from '../../services/data/schema/schema.models';
-import { WfsFeature } from '../../services/geoserver/wfs/wfs.models';
+import { type Schema } from '../../services/data/schema/schema.models';
+import { type WfsFeature } from '../../services/geoserver/wfs/wfs.models';
 import { isPolygonal } from '../../services/geoserver/wfs/wfs.util';
-import { CrgLayer } from '../../services/gis/layers/layers.models';
+import { type CrgLayer } from '../../services/gis/layers/layers.models';
 import { getLayerSchema } from '../../services/gis/layers/layers.service';
 import { isUpdateAllowed } from '../../services/permissions/permissions.service';
 import { currentProject } from '../../stores/CurrentProject.store';
 import { ChooseXTableDialog } from '../ChooseXTableDialog/ChooseXTableDialog';
-import { FormControlProps } from '../Form/Control/Form-Control';
-import { XTableColumn } from '../XTable/XTable.models';
+import { type FormControlProps } from '../Form/Control/Form-Control';
+import { type XTableColumn } from '../XTable/XTable.models';
 
-import '!style-loader!css-loader!sass-loader!./SelectSuitableLayerDialog.scss';
+import './SelectSuitableLayerDialog.scss';
 
 const cnSelectSuitableLayerDialog = cn('SelectSuitableLayerDialog');
 

@@ -7,7 +7,7 @@ class CreateBufferDialogBlock extends Block {
   };
 
   async clickCreateBuffer(): Promise<void> {
-    const $createBtn = await this.$('createBtn');
+    const $createBtn = await this.findBySelector('createBtn');
     await $createBtn.waitForClickable();
     await $createBtn.click();
 

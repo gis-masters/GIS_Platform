@@ -1,13 +1,13 @@
-import React, { ReactNode } from 'react';
+import React, { type ReactNode } from 'react';
 import { ArticleOutlined } from '@mui/icons-material';
 
 import { getTaskHistory } from '../../../../services/data/task/task.service';
-import { PageOptions } from '../../../../services/models';
+import { type PageOptions } from '../../../../services/models';
 import { staticImplements } from '../../../../services/util/staticImplements';
 import {
-  Adapter,
-  ExplorerItemData,
-  ExplorerItemDataAllTypes,
+  type Adapter,
+  type ExplorerItemData,
+  type ExplorerItemDataAllTypes,
   ExplorerItemType,
   itemTypeError
 } from '../../Explorer.models';

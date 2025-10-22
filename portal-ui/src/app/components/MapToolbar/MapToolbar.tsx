@@ -1,6 +1,6 @@
-import React, { FC, lazy, Suspense } from 'react';
+import React, { type FC, lazy, Suspense } from 'react';
 
-const MapToolbarAsync = lazy(() => import('./MapToolbar.async'));
+const MapToolbarAsync = lazy(() => import('./MapToolbar.chunkroot'));
 
 export const MapToolbar: FC = props => (
   <Suspense>

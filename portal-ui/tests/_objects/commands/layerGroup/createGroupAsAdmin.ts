@@ -1,4 +1,4 @@
-import { CrgLayersGroup } from '../../../../src/app/services/gis/layers/layers.models';
+import { type CrgLayersGroup } from '../../../../src/app/services/gis/layers/layers.models';
 import { projectsClient } from '../../../../src/app/services/gis/projects/projects.client';
 import { requestAsAdmin } from '../requestAs';
 

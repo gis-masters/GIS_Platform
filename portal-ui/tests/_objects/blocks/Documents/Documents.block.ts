@@ -7,7 +7,7 @@ class DocumentsBlock extends Block {
   };
 
   async clickAdd() {
-    const $add = await this.$('add');
+    const $add = await this.findBySelector('add');
     await $add.click();
   }
 }

@@ -1,14 +1,14 @@
 import { mapStore } from '../../../stores/Map.store';
 import { sidebars } from '../../../stores/Sidebars.store';
 import { extractFeatureId } from '../../geoserver/featureType/featureType.util';
-import { WfsFeature } from '../../geoserver/wfs/wfs.models';
+import { type WfsFeature } from '../../geoserver/wfs/wfs.models';
 import { services } from '../../services';
 import { mapDrawService } from '../draw/map-draw.service';
 import { toDrawGeometry } from '../draw/map-draw.util';
 import { MapMode, MapSelectionTypes } from '../map.models';
-import { EditFeaturesData } from './edit-feature/EditFeature.models';
+import { type EditFeaturesData } from './edit-feature/EditFeature.models';
 import { editFeatureStore } from './edit-feature/EditFeatureStore';
-import { IMapModeHandler, ModeProps } from './models';
+import { type IMapModeHandler, type ModeProps } from './models';
 import { mapSelectionService } from './selected-features/map-selection.service';
 import { selectedFeaturesStore } from './selected-features/SelectedFeatures.store';
 

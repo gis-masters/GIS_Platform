@@ -2,7 +2,7 @@ import { faker } from '@faker-js/faker/locale/ru';
 import { uniqueId } from 'lodash';
 
 import { currentUser } from '../../stores/CurrentUser.store';
-import { PropertyType, Schema } from '../data/schema/schema.models';
+import { PropertyType, type Schema } from '../data/schema/schema.models';
 
 export function generateObjectBySchema(schema: Schema): Record<string, unknown> {
   const result: Record<string, unknown> = {};

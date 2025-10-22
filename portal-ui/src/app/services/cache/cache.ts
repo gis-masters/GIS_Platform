@@ -1,5 +1,5 @@
 import { services } from '../services';
-import { CacheItem, CacheStats } from './models';
+import { type CacheItem, type CacheStats } from './models';
 
 export class Cache<T> {
   /**

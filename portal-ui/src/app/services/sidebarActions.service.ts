@@ -1,11 +1,11 @@
-import { AxiosError } from 'axios';
+import { type AxiosError } from 'axios';
 import { isEqual } from 'lodash';
 
 import { Toast } from '../components/Toast/Toast';
 import { getOlProjection, getProjectionByCode } from './data/projections/projections.service';
 import { recalculateBboxAndGetCoverage } from './geoserver/coverages/coverages.service';
 import { recalculateBboxAndGetFeatureType } from './geoserver/featureType/featureType.service';
-import { CrgLayer, CrgLayerType, CrgVectorLayer } from './gis/layers/layers.models';
+import { type CrgLayer, CrgLayerType, type CrgVectorLayer } from './gis/layers/layers.models';
 import { isVectorFromFile } from './gis/layers/layers.utils';
 import { mapService } from './map/map.service';
 import { services } from './services';

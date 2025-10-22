@@ -1,15 +1,15 @@
-import React, { FC } from 'react';
+import React, { type FC } from 'react';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
-import { IClassNameProps } from '@bem-react/core';
+import { type IClassNameProps } from '@bem-react/core';
 
-import { PropertyType, SimpleSchema } from '../../services/data/schema/schema.models';
-import { CrgProject } from '../../services/gis/projects/projects.models';
+import { PropertyType, type SimpleSchema } from '../../services/data/schema/schema.models';
+import { type CrgProject } from '../../services/gis/projects/projects.models';
 import { ActionTypes, DataTypes, Role } from '../../services/permissions/permissions.models';
 import { getAvailableActionsTooltipByRole } from '../../services/permissions/permissions.utils';
 import { currentUser } from '../../stores/CurrentUser.store';
 import { Actions } from '../Actions/Actions.composed';
-import { ActionsItemVariant } from '../Actions/Item/Actions-Item.base';
+import { type ActionsItemVariant } from '../Actions/Item/Actions-Item.base';
 import { ProjectActionsDelete } from './Delete/ProjectActions-Delete';
 import { ProjectActionsEdit } from './Edit/ProjectActions-Edit';
 import { ProjectActionsMove } from './Move/ProjectActions-Move';

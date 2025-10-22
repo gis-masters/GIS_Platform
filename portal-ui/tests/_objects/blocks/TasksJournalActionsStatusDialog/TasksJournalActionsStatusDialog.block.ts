@@ -10,7 +10,7 @@ class TasksJournalActionsStatusDialogBlock extends Block {
   async saveChangeStatusAction(): Promise<void> {
     await this.waitForVisible();
 
-    const $tasksJournalActionStatusSave = await this.$('tasksJournalActionStatusSave');
+    const $tasksJournalActionStatusSave = await this.findBySelector('tasksJournalActionStatusSave');
     await $tasksJournalActionStatusSave.click();
   }
 

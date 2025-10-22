@@ -1,17 +1,17 @@
-import React, { FC } from 'react';
+import React, { type FC } from 'react';
 import { Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import { cn } from '@bem-react/classname';
 
-import { Schema } from '../../services/data/schema/schema.models';
-import { VectorTable } from '../../services/data/vectorData/vectorData.models';
+import { type Schema } from '../../services/data/schema/schema.models';
+import { type VectorTable } from '../../services/data/vectorData/vectorData.models';
 import { extractFeatureId } from '../../services/geoserver/featureType/featureType.util';
-import { WfsFeature } from '../../services/geoserver/wfs/wfs.models';
+import { type WfsFeature } from '../../services/geoserver/wfs/wfs.models';
 import { FeatureActions } from '../FeatureActions/FeatureActions';
 import { FeatureIcon } from '../FeatureIcon/FeatureIcon';
 import { FeatureView } from '../FeatureView/FeatureView';
 import { TextBadge } from '../TextBadge/TextBadge';
 
-import '!style-loader!css-loader!sass-loader!./FeatureDialog.scss';
+import './FeatureDialog.scss';
 
 const cnFeatureDialog = cn('FeatureDialog');
 

@@ -52,3 +52,7 @@ tests/_screens/.tmp
 # tests reports
 allure-results
 allure-report
+
+# Build cache
+.tsbuildinfo
+dist/.tsbuildinfo

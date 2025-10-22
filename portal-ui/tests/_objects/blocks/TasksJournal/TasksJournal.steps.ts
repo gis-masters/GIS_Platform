@@ -1,7 +1,7 @@
-import { DataTable } from '@cucumber/cucumber';
+import { type DataTable } from '@cucumber/cucumber';
 import { Then, When } from '@wdio/cucumber-framework';
 
-import { ScenarioScope } from '../../ScenarioScope';
+import { type ScenarioScope } from '../../ScenarioScope';
 import { tasksJournalBlock } from './TasksJournal.block';
 
 When('на странице журнала задач я нажимаю на кнопку открытия меню создания задачи', async function () {

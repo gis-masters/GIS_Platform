@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import { WfsFeature } from './geoserver/wfs/wfs.models';
+import { type WfsFeature } from './geoserver/wfs/wfs.models';
 
 const nspdApi = 'https://nspd.gov.ru/api/geoportal/v2/search/geoportal?thematicSearchId=1&query=';
 

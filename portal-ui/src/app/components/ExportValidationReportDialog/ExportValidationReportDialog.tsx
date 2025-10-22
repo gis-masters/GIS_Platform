@@ -1,8 +1,8 @@
-import React, { FC, lazy, Suspense } from 'react';
+import React, { type FC, lazy, Suspense } from 'react';
 
-import { ExportValidationReportDialogProps } from './ExportValidationReportDialog.async';
+import { type ExportValidationReportDialogProps } from './ExportValidationReportDialog.chunkroot';
 
-const ExportValidationReportDialogAsync = lazy(() => import('./ExportValidationReportDialog.async'));
+const ExportValidationReportDialogAsync = lazy(() => import('./ExportValidationReportDialog.chunkroot'));
 
 export const ExportValidationReportDialog: FC<ExportValidationReportDialogProps> = props => (
   <Suspense>

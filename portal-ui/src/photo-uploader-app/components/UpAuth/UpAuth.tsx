@@ -1,10 +1,10 @@
-import React, { FC } from 'react';
+import React, { type FC } from 'react';
 import { cn } from '@bem-react/classname';
 
 import { LoginForm } from '../../../app/components/LoginForm/LoginForm';
 import { UpLogo } from './UpLogo/UpLogo';
 
-import '!style-loader!css-loader!sass-loader!./UpAuth.scss';
+import './UpAuth.scss';
 
 const cnUpAuth = cn('UpAuth');
 

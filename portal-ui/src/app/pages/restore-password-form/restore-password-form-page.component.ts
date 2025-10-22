@@ -5,7 +5,8 @@ import { environment } from '../../services/environment';
 @Component({
   selector: 'crg-restore-password-form-page',
   templateUrl: './restore-password-form-page.component.html',
-  styleUrls: ['./restore-password-form-page.component.scss']
+  styleUrls: ['./restore-password-form-page.component.scss'],
+  standalone: false
 })
 export class RestorePasswordFormPageComponent {
   backgroundImage = environment.background;

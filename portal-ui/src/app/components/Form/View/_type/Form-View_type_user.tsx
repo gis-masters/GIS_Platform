@@ -2,10 +2,10 @@ import React, { Component } from 'react';
 import { observer } from 'mobx-react';
 import { withBemMod } from '@bem-react/core';
 
-import { CrgUser } from '../../../../services/auth/users/users.models';
-import { PropertySchemaUser, PropertyType } from '../../../../services/data/schema/schema.models';
+import { type CrgUser } from '../../../../services/auth/users/users.models';
+import { type PropertySchemaUser, PropertyType } from '../../../../services/data/schema/schema.models';
 import { Users } from '../../../Users/Users';
-import { FormControlProps } from '../../Control/Form-Control';
+import { type FormControlProps } from '../../Control/Form-Control';
 import { FormViewErrors } from '../../ViewErrors/ViewErrors-ViewErrors';
 import { FormViewValue } from '../../ViewValue/Form-ViewValue';
 import { cnFormView } from '../Form-View.base';

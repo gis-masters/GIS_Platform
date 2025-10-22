@@ -4,8 +4,8 @@ import { observer } from 'mobx-react';
 import { FileOpenOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
-import { LibraryRecord } from '../../../services/data/library/library.models';
-import { ActionsItemVariant } from '../../Actions/Item/Actions-Item.base';
+import { type LibraryRecord } from '../../../services/data/library/library.models';
+import { type ActionsItemVariant } from '../../Actions/Item/Actions-Item.base';
 import { ActionsItem } from '../../Actions/Item/Actions-Item.composed';
 import { LibraryDocumentDialog } from '../../LibraryDocumentDialog/LibraryDocumentDialog';
 

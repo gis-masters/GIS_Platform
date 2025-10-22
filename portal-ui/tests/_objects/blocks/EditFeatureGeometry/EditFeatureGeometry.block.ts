@@ -16,8 +16,8 @@ class EditFeatureGeometryBlock extends Block {
   };
 
   async getEditFormCoordsIndexes(): Promise<string[]> {
-    const $geometryForm = await this.$('geometryForm');
-    const $$coords = await $geometryForm.$$('.EditFeatureGeometry-CoordNumber');
+    const $geometryForm = await this.findBySelector('geometryForm');
+    const $$coords = await $geometryForm.$$('.EditFeatureGeometry-CoordNumber').getElements();
 
     const indexes: string[] = [];
     for (const $coord of $$coords) {
@@ -28,8 +28,8 @@ class EditFeatureGeometryBlock extends Block {
   }
 
   async getViewFormCoordsIndexes(): Promise<string[]> {
-    const $viewForm = await this.$('view');
-    const $$coords = await $viewForm.$$('.EditFeatureGeometry-ViewGroupIndexCell');
+    const $viewForm = await this.findBySelector('view');
+    const $$coords = await $viewForm.$$('.EditFeatureGeometry-ViewGroupIndexCell').getElements();
 
     const indexes: string[] = [];
     for (const $coord of $$coords) {
@@ -40,25 +40,25 @@ class EditFeatureGeometryBlock extends Block {
   }
 
   async changeFormInputValue(fieldNumber: number, value: number, coordinate: 'x' | 'y' = 'x'): Promise<void> {
-    const $$coords = await this.$$('coord');
+    const $$coords = await this.findAllBySelector('coord');
     const coordElement = $$coords[fieldNumber - 1];
     const selector = coordinate === 'x' ? this.selectors.coordInputX : this.selectors.coordInputY;
-    const $input = await coordElement.$(selector);
+    const $input = await coordElement.$(selector).getElement();
     const inputBlock = new MuiInputBlock($input);
     await inputBlock.clearValue();
     await inputBlock.setValue(value.toString());
   }
 
   async addNodeClick(): Promise<void> {
-    const $$groupFooter = await this.$$('groupFooter');
+    const $$groupFooter = await this.findAllBySelector('groupFooter');
     const $firstGroupFooter = $$groupFooter[0];
 
-    const $addCoord = await $firstGroupFooter.$('.EditFeatureGeometry-AddNode');
+    const $addCoord = await $firstGroupFooter.$('.EditFeatureGeometry-AddNode').getElement();
     await $addCoord.click();
   }
 
   async geometryFixBtnClick(): Promise<void> {
-    const $geometryFixBtn = await this.$('geometryFixBtn');
+    const $geometryFixBtn = await this.findBySelector('geometryFixBtn');
 
     await $geometryFixBtn.click();
   }
@@ -69,7 +69,7 @@ class EditFeatureGeometryBlock extends Block {
   }
 
   async getFormInputByNumber(fieldNumber: number): Promise<MuiInputBlock> {
-    const $$coords = await this.$$('coord');
+    const $$coords = await this.findAllBySelector('coord');
 
     return new MuiInputBlock($$coords[fieldNumber - 1]);
   }
@@ -81,7 +81,7 @@ class EditFeatureGeometryBlock extends Block {
   }
 
   async selectFirstInput(): Promise<void> {
-    const $$coordInput = await this.$$('coordInput');
+    const $$coordInput = await this.findAllBySelector('coordInput');
 
     await $$coordInput[0].waitForClickable();
     await $$coordInput[0].click();

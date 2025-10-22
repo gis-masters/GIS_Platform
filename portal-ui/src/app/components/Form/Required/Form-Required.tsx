@@ -1,10 +1,10 @@
-import React, { FC } from 'react';
+import React, { type FC } from 'react';
 import { Tooltip } from '@mui/material';
 import { cn } from '@bem-react/classname';
 
 const cnForm = cn('Form');
 
-import '!style-loader!css-loader!sass-loader!./Form-Required.scss';
+import './Form-Required.scss';
 
 export const FormRequired: FC = () => (
   <Tooltip title='Обязательное поле'>

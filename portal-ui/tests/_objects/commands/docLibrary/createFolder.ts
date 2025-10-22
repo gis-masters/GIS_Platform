@@ -1,5 +1,9 @@
 import { libraryClient } from '../../../../src/app/services/data/library/library.client';
-import { Library, LibraryRecord, LibraryRecordNew } from '../../../../src/app/services/data/library/library.models';
+import {
+  type Library,
+  type LibraryRecord,
+  type LibraryRecordNew
+} from '../../../../src/app/services/data/library/library.models';
 import { requestAsAdmin } from '../requestAs';
 
 export async function createFolder(

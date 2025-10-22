@@ -1,8 +1,8 @@
-import React, { FC } from 'react';
+import React, { type FC } from 'react';
 import { cn } from '@bem-react/classname';
 
-import { FiasValue } from '../../services/data/fias/fias.models';
-import { FilterQuery, FilterQueryValue } from '../../services/util/filters/filters.models';
+import { type FiasValue } from '../../services/data/fias/fias.models';
+import { type FilterQuery, type FilterQueryValue } from '../../services/util/filters/filters.models';
 import { Highlight } from '../Highlight/Highlight';
 
 const cnFiasView = cn('FiasView');

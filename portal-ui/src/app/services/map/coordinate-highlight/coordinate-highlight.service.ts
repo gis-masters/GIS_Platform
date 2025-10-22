@@ -1,10 +1,10 @@
 import { action, makeObservable, observable } from 'mobx';
-import { Feature } from 'ol';
-import { Coordinate } from 'ol/coordinate';
-import { Geometry } from 'ol/geom';
+import { type Feature } from 'ol';
+import { type Coordinate } from 'ol/coordinate';
+import { type Geometry } from 'ol/geom';
 
 import { projectionsStore } from '../../../stores/Projections.store';
-import { GeometryType, WfsFeature, WfsGeometry } from '../../geoserver/wfs/wfs.models';
+import { GeometryType, type WfsFeature, type WfsGeometry } from '../../geoserver/wfs/wfs.models';
 import { isGeometryValid } from '../../geoserver/wfs/wfs.util';
 import { services } from '../../services';
 import { transformGeometry } from '../../util/coordinates-transform.util';

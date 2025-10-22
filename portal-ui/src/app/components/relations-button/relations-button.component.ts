@@ -1,9 +1,9 @@
 import { createElement } from 'react';
-import { createRoot, Root } from 'react-dom/client';
-import { Component, ElementRef, Input, OnChanges, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { createRoot, type Root } from 'react-dom/client';
+import { Component, ElementRef, Input, type OnChanges, type OnDestroy, type OnInit, ViewChild } from '@angular/core';
 import { withRegistry } from '@bem-react/di';
 
-import { Relation } from '../../services/data/schema/schema.models';
+import { type Relation } from '../../services/data/schema/schema.models';
 import { registry } from '../../services/di-registry';
 import { RelationsButton } from '../RelationsButton/RelationsButton';
 
@@ -12,7 +12,8 @@ const RelationsButtonWithRegistry = withRegistry(registry)(RelationsButton);
 @Component({
   selector: 'crg-relations-button',
   template: '<div class="relations-button" #react></div>',
-  styleUrls: ['./relations-button.component.scss']
+  styleUrls: ['./relations-button.component.scss'],
+  standalone: false
 })
 export class RelationsButtonComponent implements OnInit, OnDestroy, OnChanges {
   @Input() obj?: Record<string, unknown>;

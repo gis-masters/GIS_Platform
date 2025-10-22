@@ -1,6 +1,6 @@
-import React, { FC } from 'react';
+import React, { type FC } from 'react';
 
-import { CustomStyleDescription } from '../styles.models';
+import { type CustomStyleDescription } from '../styles.models';
 import { CustomRule } from './CustomRule/CustomRule';
 import { FeatureTypeStyle } from './FeatureTypeStyle/FeatureTypeStyle';
 import { Name } from './Name/Name';

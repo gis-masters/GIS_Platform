@@ -1,6 +1,6 @@
 import { Feature } from 'ol';
-import WFS, { WriteTransactionOptions } from 'ol/format/WFS';
-import { Geometry, LineString, MultiLineString, MultiPoint, MultiPolygon, Point, Polygon } from 'ol/geom';
+import WFS, { type WriteTransactionOptions } from 'ol/format/WFS';
+import { type Geometry, LineString, MultiLineString, MultiPoint, MultiPolygon, Point, Polygon } from 'ol/geom';
 
 import { currentUser } from '../../../stores/CurrentUser.store';
 import { http } from '../../api/http.service';
@@ -8,12 +8,12 @@ import { getVectorTableMultipleRecordsUrl } from '../../api/server-urls.service'
 import { usersService } from '../../auth/users/users.service';
 import { getFeatureProjection } from '../../data/projections/projections.service';
 import { getProjectionCode } from '../../data/projections/projections.util';
-import { OldSchema } from '../../data/schema/schemaOld.models';
+import { type OldSchema } from '../../data/schema/schemaOld.models';
 import { environment } from '../../environment';
 import { services } from '../../services';
 import { FeatureUtil } from '../../util/FeatureUtil';
 import { extractFeatureId } from '../featureType/featureType.util';
-import { GeometryType, WfsFeature, WfsGeometry } from './wfs.models';
+import { GeometryType, type WfsFeature, type WfsGeometry } from './wfs.models';
 import { updateFeature } from './wfs.service';
 
 export enum TransactionType {

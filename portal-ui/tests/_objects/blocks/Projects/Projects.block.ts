@@ -57,27 +57,21 @@ class ProjectsBlock extends Block {
   }
 
   async checkProjectListIsEmpty(): Promise<void> {
-    const $firstCard = await this.$('firstCard');
-    await $firstCard.waitForDisplayed({ reverse: true });
+    const $firstCard = await this.findBySelector('firstCard');
+    await $firstCard.waitForExist({ reverse: true });
   }
 
   private async getProjectCardDeleteButton(projectName: string): Promise<WebdriverIO.Element> {
     const $projectCard = await this.getProjectCard(projectName);
 
-    return await $projectCard.$('.ProjectCard-Delete');
-  }
-
-  async isProjectCardDeleteButtonNotDisplayed(projectName: string): Promise<boolean> {
-    const $deleteBtn = await this.getProjectCardDeleteButton(projectName);
-
-    return $deleteBtn.waitForDisplayed({ reverse: true });
+    return await $projectCard.$('.ProjectCard-Delete').getElement();
   }
 
   async singleVisibleProject(): Promise<string> {
-    const $container = await this.$('container');
+    const $container = await this.findBySelector('container');
     await $container.waitForDisplayed();
 
-    const $$projectsCards = await this.$$('projectsCards');
+    const $$projectsCards = await this.findAllBySelector('projectsCards');
 
     await expect($$projectsCards.length).toEqual(1);
 
@@ -99,7 +93,7 @@ class ProjectsBlock extends Block {
     }, name);
 
     if (id) {
-      const $projectCard = await browser.$(`.ProjectCard[data-id="${id}"]`);
+      const $projectCard = await browser.$(`.ProjectCard[data-id="${id}"]`).getElement();
       await $projectCard.waitForClickable({ timeout: 5000, timeoutMsg: `Не появился проект ${name}[${id}]` });
     } else {
       throw new Error(`Не найден проект "${name}"`);
@@ -107,29 +101,31 @@ class ProjectsBlock extends Block {
   }
 
   async getProjectCardText($card: WebdriverIO.Element): Promise<string> {
-    const $projectName = await $card.$('.ProjectCard-Name');
+    const $projectName = await $card.$('.ProjectCard-Name').getElement();
 
     return await $projectName.getText();
   }
 
   async getProjectFolderCardText($card: WebdriverIO.Element): Promise<string> {
-    const $projectName = await $card.$('.ProjectFolder-Name');
+    const $projectName = await $card.$('.ProjectFolder-Name').getElement();
 
     return await $projectName.getText();
   }
 
   async setProjectsFilerValue(value: string): Promise<void> {
-    const $projectsFilter = await this.$('projectsFilter');
+    const $projectsFilter = await this.findBySelector('projectsFilter');
     await $projectsFilter.waitForDisplayed();
 
     await $projectsFilter.setValue(value);
   }
 
   async getProjectCard(name: string, folder = false): Promise<WebdriverIO.Element> {
-    const $container = await this.$('container');
+    const $container = await this.findBySelector('container');
     await $container.waitForDisplayed();
 
-    const $$projectsCards = await (folder ? this.$$('projectsFolder') : this.$$('projectsCards'));
+    const $$projectsCards = await (folder
+      ? this.findAllBySelector('projectsFolder')
+      : this.findAllBySelector('projectsCards'));
 
     for (const $card of $$projectsCards) {
       const projectName = await (folder ? this.getProjectFolderCardText($card) : this.getProjectCardText($card));
@@ -145,10 +141,10 @@ class ProjectsBlock extends Block {
   async multipleVisibleProject(): Promise<string[]> {
     await loadingBlock.waitForGlobalHidden();
 
-    const $container = await this.$('container');
+    const $container = await this.findBySelector('container');
     await $container.waitForDisplayed();
 
-    const $$projectsCards = await this.$$('projectsCards');
+    const $$projectsCards = await this.findAllBySelector('projectsCards');
 
     const currentProjectsNames: string[] = [];
 
@@ -175,7 +171,7 @@ class ProjectsBlock extends Block {
   async currentFolder(): Promise<[string | undefined, string | null]> {
     await loadingBlock.waitForGlobalHidden();
 
-    const $$breadcrumbsItemsTitle = await this.$$('breadcrumbsItemsTitle');
+    const $$breadcrumbsItemsTitle = await this.findAllBySelector('breadcrumbsItemsTitle');
     const breadcrumbsItemTitle = await $$breadcrumbsItemsTitle.at(-1)?.getText();
 
     const url = await browser.getUrl();
@@ -188,7 +184,7 @@ class ProjectsBlock extends Block {
   async currentFolderBreadcrumbsPath(): Promise<string[]> {
     await loadingBlock.waitForGlobalHidden();
 
-    const $$breadcrumbsItemsTitle = await this.$$('breadcrumbsItemsTitle');
+    const $$breadcrumbsItemsTitle = await this.findAllBySelector('breadcrumbsItemsTitle');
 
     const titles = [];
     for (const $title of $$breadcrumbsItemsTitle) {

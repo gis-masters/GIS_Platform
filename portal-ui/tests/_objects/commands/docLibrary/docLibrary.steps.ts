@@ -1,12 +1,16 @@
 import { Given, When } from '@wdio/cucumber-framework';
 
-import { PrincipalType, Role, RoleAssignmentBody } from '../../../../src/app/services/permissions/permissions.models';
+import {
+  PrincipalType,
+  type Role,
+  type RoleAssignmentBody
+} from '../../../../src/app/services/permissions/permissions.models';
 import { documentVersionsWidgetBlock } from '../../blocks/DocumentVersionsWidget/DocumentVersionsWidget.block';
 import { ExplorerBlock } from '../../blocks/Explorer/Explorer.block';
-import { ScenarioScope } from '../../ScenarioScope';
+import { type ScenarioScope } from '../../ScenarioScope';
 import { authenticateAs, authenticateAsAdmin } from '../auth/authenticate';
 import { getUserByEmail } from '../auth/getUserByEmail';
-import { TestUser } from '../auth/testUsers';
+import { type TestUser } from '../auth/testUsers';
 import { setDocLibraryPermissionAsAdmin } from './addDocLibraryPermission';
 import { addRecordPermissions } from './addRecordPermissions';
 import { createFolder } from './createFolder';

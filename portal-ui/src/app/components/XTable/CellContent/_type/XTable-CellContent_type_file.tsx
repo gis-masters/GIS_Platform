@@ -5,11 +5,11 @@ import { Popover } from '@mui/material';
 import { withBemMod } from '@bem-react/core';
 import { pluralize } from 'numeralize-ru';
 
-import { FileInfo } from '../../../../services/data/files/files.models';
+import { type FileInfo } from '../../../../services/data/files/files.models';
 import { PropertyType } from '../../../../services/data/schema/schema.models';
 import { Files } from '../../../Files/Files';
 import { PseudoLink } from '../../../PseudoLink/PseudoLink';
-import { cnXTableCellContent, XTableCellContentBase, XTableCellContentProps } from '../XTable-CellContent.base';
+import { cnXTableCellContent, XTableCellContentBase, type XTableCellContentProps } from '../XTable-CellContent.base';
 
 @observer
 class XTableCellContentTypeFile extends Component<XTableCellContentProps<unknown>> {

@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { type FC } from 'react';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 
@@ -7,9 +7,9 @@ import { currentUser } from '../../../app/stores/CurrentUser.store';
 import { photoUploaderStore } from '../../stores/PhotoUploader.store';
 import { UpHeaderLeftIcon } from './LeftIcon/UpHeader-LeftIcon';
 
-import '!style-loader!css-loader!sass-loader!./UpHeader.scss';
-import '!style-loader!css-loader!sass-loader!./Title/UpHeader-Title.scss';
-import '!style-loader!css-loader!sass-loader!./User/UpHeader-User.scss';
+import './UpHeader.scss';
+import './Title/UpHeader-Title.scss';
+import './User/UpHeader-User.scss';
 
 const cnUpHeader = cn('UpHeader');
 

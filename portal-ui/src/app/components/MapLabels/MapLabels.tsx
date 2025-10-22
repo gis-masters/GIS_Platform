@@ -1,10 +1,10 @@
-import React, { FC, useCallback, useEffect } from 'react';
+import React, { type FC, useCallback, useEffect } from 'react';
 import { observer } from 'mobx-react';
 import { Tooltip } from '@mui/material';
 import { DeleteSweepOutlined, LabelOutlined, PolylineOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
-import { LabelType } from '../../services/map/labels/map-labels.models';
+import { type LabelType } from '../../services/map/labels/map-labels.models';
 import { mapLabelsService } from '../../services/map/labels/map-labels.service';
 import { MapAction, ToolMode } from '../../services/map/map.models';
 import { konfirmieren } from '../../services/utility-dialogs.service';
@@ -18,7 +18,7 @@ import { LabelsOutlined } from '../Icons/LabelsOutlined';
 import { MapDistances } from '../MapDistances/MapDistances';
 import { MapTurningPoints } from '../MapTurningPoints/MapTurningPoints';
 
-import '!style-loader!css-loader!sass-loader!./MapLabels.scss';
+import './MapLabels.scss';
 
 const cnMapLabels = cn('MapLabels');
 

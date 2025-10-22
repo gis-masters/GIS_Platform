@@ -1,4 +1,4 @@
-import { WdioCheckElementMethodOptions } from 'wdio-image-comparison-service';
+import { type WdioCheckElementMethodOptions } from '@wdio/visual-service/dist/types';
 
 import { Block } from '../../Block';
 import { extractText } from '../../commands/extractText';
@@ -34,13 +34,13 @@ class AttributesBlock extends Block {
   }
 
   async waitForBarHidden(): Promise<void> {
-    const $bar = await this.$('bar');
+    const $bar = await this.findBySelector('bar');
 
-    await $bar.waitForDisplayed({ reverse: true });
+    await $bar.waitForExist({ reverse: true });
   }
 
   async checkTableSingleColTitle(title: string): Promise<void> {
-    const $attributeTableHead = await this.$('attributesTableHead');
+    const $attributeTableHead = await this.findBySelector('attributesTableHead');
     await $attributeTableHead.waitForDisplayed({ timeout: 13_000 });
 
     const values = await this.getHeadCellsValues();
@@ -55,7 +55,7 @@ class AttributesBlock extends Block {
   }
 
   async getHeadCellsValues(): Promise<string[]> {
-    const $$cellContents = await this.$$('attributesTableHeadCellContent');
+    const $$cellContents = await this.findAllBySelector('attributesTableHeadCellContent');
 
     const contents: string[] = [];
     for (const $cell of $$cellContents) {
@@ -66,38 +66,38 @@ class AttributesBlock extends Block {
   }
 
   async clickFirstTooltip(): Promise<void> {
-    const $$cellContents = await this.$$('attributesTableCellContentTooltip');
+    const $$cellContents = await this.findAllBySelector('attributesTableCellContentTooltip');
 
     await $$cellContents[0].click();
   }
 
   async getTitle(): Promise<string> {
-    const $barTitle = await this.$('barTitle');
+    const $barTitle = await this.findBySelector('barTitle');
     await $barTitle.waitForDisplayed({ timeout: 13_000 });
 
     return await $barTitle.getText();
   }
 
   async clickPaginationItem(page: number): Promise<void> {
-    const $pagination = await this.$('pagination');
-    const $paginationBtn = await $pagination.$(`.MuiPaginationItem-root=${page}`);
+    const $pagination = await this.findBySelector('pagination');
+    const $paginationBtn = await $pagination.$(`.MuiPaginationItem-root=${page}`).getElement();
     await $paginationBtn.click();
   }
 
   async clickTab(layerTitle: string) {
-    const $attributesTabs = await this.$('attributesTabs');
-    const $tabTitle = await $attributesTabs.$(`.TabTitle=${layerTitle}`);
+    const $attributesTabs = await this.findBySelector('attributesTabs');
+    const $tabTitle = await $attributesTabs.$(`.TabTitle=${layerTitle}`).getElement();
     await $tabTitle.click();
   }
 
   async clickMultipleCopy() {
-    const $multipleCopy = await this.$('multipleCopy');
+    const $multipleCopy = await this.findBySelector('multipleCopy');
     await $multipleCopy.waitForClickable();
     await $multipleCopy.click();
   }
 
   async clickFiltersEnabler() {
-    const $attributesTabs = await this.$('filtersEnabler');
+    const $attributesTabs = await this.findBySelector('filtersEnabler');
     await $attributesTabs.waitForDisplayed();
     await $attributesTabs.click();
 
@@ -105,33 +105,33 @@ class AttributesBlock extends Block {
   }
 
   async waitForLoadingDisappear() {
-    const $loading = await this.$('loading');
-    await $loading.waitForDisplayed({ reverse: true });
+    const $loading = await this.findBySelector('loading');
+    await $loading.waitForExist({ reverse: true });
   }
 
   async minimize() {
-    const $barMinimize = await this.$('barMinimize');
+    const $barMinimize = await this.findBySelector('barMinimize');
     await $barMinimize.click();
   }
 
   async getTabsTitles() {
-    const $attributesTabs = await this.$('attributesTabs');
+    const $attributesTabs = await this.findBySelector('attributesTabs');
     await $attributesTabs.waitForDisplayed();
 
-    return await extractText(await $attributesTabs.$$('.TabTitle'));
+    return await extractText(await $attributesTabs.$$('.TabTitle').getElements());
   }
 
   async closeTab(layerTitle: string) {
-    const $attributesTabs = await this.$('attributesTabs');
-    const $tabTitle = await $attributesTabs.$(`.TabTitle=${layerTitle}`);
-    const $attributeTab = await $tabTitle.parentElement();
-    const $closeIcon = await $attributeTab.$('.Attributes-TabClose');
+    const $attributesTabs = await this.findBySelector('attributesTabs');
+    const $tabTitle = await $attributesTabs.$(`.TabTitle=${layerTitle}`).getElement();
+    const $attributeTab = await $tabTitle.parentElement().getElement();
+    const $closeIcon = await $attributeTab.$('.Attributes-TabClose').getElement();
     await $closeIcon.waitForClickable();
     await $closeIcon.click();
   }
 
   async filterBySelection(inverse: boolean): Promise<void> {
-    const $selected = await this.$(inverse ? 'selectedYes' : 'selectedNo');
+    const $selected = await this.findBySelector(inverse ? 'selectedYes' : 'selectedNo');
     await $selected.waitForClickable();
     await $selected.click();
   }
@@ -141,13 +141,13 @@ class AttributesBlock extends Block {
     const $$documentRow = await this.xTable.getRows(itemsNumber);
 
     for (const $documentRow of $$documentRow) {
-      const $xTableDocumentRowSelect = await $documentRow.$('td:first-child input');
+      const $xTableDocumentRowSelect = await $documentRow.$('td:first-child input').getElement();
       await $xTableDocumentRowSelect.click();
     }
   }
 
   async getTotalObjectsNumber() {
-    const $counterItem = await this.$('counterItem');
+    const $counterItem = await this.findBySelector('counterItem');
     const counterItemTest = await $counterItem.getText();
     const counterNumber = counterItemTest.split(':')[1];
 
@@ -155,7 +155,7 @@ class AttributesBlock extends Block {
   }
 
   async getSelectedObjectsCount(): Promise<number> {
-    const $counterItem = await this.$('counterItem');
+    const $counterItem = await this.findBySelector('counterItem');
     const counterText = await $counterItem.getText();
     const selectedCount = counterText.split('выделено: ')[1].split(' ')[0];
 
@@ -163,7 +163,7 @@ class AttributesBlock extends Block {
   }
 
   async assertSelfie(tag?: string, checkElementOptions?: WdioCheckElementMethodOptions): Promise<void> {
-    const $container = await this.$('container');
+    const $container = await this.findBySelector('container');
     await $container.waitForDisplayed();
 
     await super.assertSelfie(tag, {
@@ -173,10 +173,10 @@ class AttributesBlock extends Block {
   }
 
   private async getAttributesTabByName(name: string): Promise<WebdriverIO.Element> {
-    const $attributesTabs = await this.$('attributesTabs');
+    const $attributesTabs = await this.findBySelector('attributesTabs');
     await $attributesTabs.waitForDisplayed();
 
-    const $$attributesTab = await this.$$('attributesTab');
+    const $$attributesTab = await this.findAllBySelector('attributesTab');
 
     for (const $tab of $$attributesTab) {
       const tabName = await $tab.getText();

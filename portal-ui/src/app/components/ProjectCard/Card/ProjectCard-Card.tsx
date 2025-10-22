@@ -3,11 +3,11 @@ import { computed, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 
-import { CrgProject } from '../../../services/gis/projects/projects.models';
+import { type CrgProject } from '../../../services/gis/projects/projects.models';
 import { Link } from '../../Link/Link';
 import { ProjectCardName } from '../Name/ProjectCard-Name';
 
-import '!style-loader!css-loader!sass-loader!./ProjectCard-Card.scss';
+import './ProjectCard-Card.scss';
 
 const cnProjectCard = cn('ProjectCard');
 

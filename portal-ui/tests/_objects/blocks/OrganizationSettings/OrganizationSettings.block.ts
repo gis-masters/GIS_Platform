@@ -14,12 +14,12 @@ class OrganizationSettingsBlock extends Block {
     const formBlock = new FormBlock();
     const $field = await formBlock.getField(option);
 
-    const $optionCheckbox = await $field.$('.MuiCheckbox-root');
+    const $optionCheckbox = await $field.$('.MuiCheckbox-root').getElement();
     const isOptionChecked = await hasClass($optionCheckbox, 'Mui-checked');
 
     if (isOptionChecked) {
       await $optionCheckbox.click();
-      const $save = await this.$('save');
+      const $save = await this.findBySelector('save');
       await $save.click();
     }
   }

@@ -1,19 +1,19 @@
-import { SnapEvent } from 'ol/events/SnapEvent';
-import Feature from 'ol/Feature';
-import { Geometry } from 'ol/geom';
+import { type SnapEvent } from 'ol/events/SnapEvent';
+import type Feature from 'ol/Feature';
+import { type Geometry } from 'ol/geom';
 import { Modify } from 'ol/interaction';
-import { ModifyEvent } from 'ol/interaction/Modify';
+import { type ModifyEvent } from 'ol/interaction/Modify';
 
 import { Toast } from '../../../components/Toast/Toast';
 import { mapVerticesModificationStore } from '../../../stores/MapVerticesModification.store';
 import { projectionsStore } from '../../../stores/Projections.store';
 import { communicationService } from '../../communication.service';
-import { Projection } from '../../data/projections/projections.models';
+import { type Projection } from '../../data/projections/projections.models';
 import { projectionCodeToProjection } from '../../data/projections/projections.util';
 import { updateFeature } from '../../data/vectorData/vectorData.service';
 import { extractFeatureId } from '../../geoserver/featureType/featureType.util';
-import { WfsFeature } from '../../geoserver/wfs/wfs.models';
-import { CrgVectorLayer } from '../../gis/layers/layers.models';
+import { type WfsFeature } from '../../geoserver/wfs/wfs.models';
+import { type CrgVectorLayer } from '../../gis/layers/layers.models';
 import { getLayerByFeatureIdFromCurrentProject } from '../../gis/layers/layers.utils';
 import { services } from '../../services';
 import { transformGeometryToLayerProjectionInWfsFeature } from '../../util/coordinates-transform.util';

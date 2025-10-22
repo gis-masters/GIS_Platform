@@ -6,14 +6,14 @@ import { ListAlt } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 import { clone, isEqual } from 'lodash';
-import { Coordinate } from 'ol/coordinate';
+import { type Coordinate } from 'ol/coordinate';
 
 import {
   GeometryType,
-  WfsLineStringGeometry,
-  WfsMultiLineStringGeometry,
-  WfsMultiPolygonGeometry,
-  WfsPointGeometry
+  type WfsLineStringGeometry,
+  type WfsMultiLineStringGeometry,
+  type WfsMultiPolygonGeometry,
+  type WfsPointGeometry
 } from '../../../services/geoserver/wfs/wfs.models';
 import { getEmptyGeometry, selectLabelForGeometryType } from '../../../services/geoserver/wfs/wfs.util';
 import { editFeatureHistoryStore } from '../../../services/map/a-map-mode/edit-feature/EditFeatureHistoryStore';
@@ -22,8 +22,8 @@ import { mapDrawService } from '../../../services/map/draw/map-draw.service';
 import { Button } from '../../Button/Button';
 import { IconButton } from '../../IconButton/IconButton';
 
-import '!style-loader!css-loader!sass-loader!../AsTextDialog/EditFeatureGeometry-AsTextDialog.scss';
-import '!style-loader!css-loader!sass-loader!../Text/EditFeatureGeometry-Text.scss';
+import '../AsTextDialog/EditFeatureGeometry-AsTextDialog.scss';
+import '../Text/EditFeatureGeometry-Text.scss';
 
 const cnEditFeatureGeometry = cn('EditFeatureGeometry');
 

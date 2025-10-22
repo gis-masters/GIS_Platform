@@ -10,6 +10,8 @@ module.exports = {
   staticDirs: [{ from: '../src/assets', to: '/assets' }],
 
   webpackFinal: async (config, { configType }) => {
+    const path = require('path');
+
     /* @graphql-tools uses mjs modules, but storybook's webpack config doesn't
      * support them. This adds support. Once this is supported out of the box,
      * this can be removed. Relevant issues:
@@ -19,6 +21,24 @@ module.exports = {
       test: /\.mjs$/,
       include: /node_modules/,
       type: 'javascript/auto'
+    });
+
+    // Добавляем поддержку SCSS для React компонентов в Storybook
+    config.module.rules.push({
+      test: /\.scss$/,
+      use: [
+        'style-loader',
+        'css-loader',
+        {
+          loader: 'sass-loader',
+          options: {
+            sassOptions: {
+              includePaths: [path.resolve(__dirname, '../src')]
+            },
+            implementation: require('sass')
+          }
+        }
+      ]
     });
 
     config.resolve.alias['../../services/data/files/files.client'] = require.resolve(

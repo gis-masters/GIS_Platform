@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import { computed, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
-import { Tab, TabProps } from '@mui/material';
+import { Tab, type TabProps } from '@mui/material';
 import { Close } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
 import { communicationService } from '../../../services/communication.service';
-import { CrgVectorLayer } from '../../../services/gis/layers/layers.models';
+import { type CrgVectorLayer } from '../../../services/gis/layers/layers.models';
 import { selectedFeaturesStore } from '../../../services/map/a-map-mode/selected-features/SelectedFeatures.store';
 import { MapAction } from '../../../services/map/map.models';
 import { attributesTableStore } from '../../../stores/AttributesTable.store';
@@ -17,7 +17,7 @@ import { TabInner } from '../../TabInner/TabInner';
 import { TabTitle } from '../../TabTitle/TabTitle';
 import { AttributesTabFilterMark } from '../TabFilterMark/Attributes-TabFilterMark';
 
-import '!style-loader!css-loader!sass-loader!./Attributes-Tab.scss';
+import './Attributes-Tab.scss';
 
 const cnAttributesTab = cn('Attributes', 'Tab');
 const cnAttributesTabClose = cn('Attributes', 'TabClose');

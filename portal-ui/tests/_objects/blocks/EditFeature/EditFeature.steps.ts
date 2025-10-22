@@ -1,4 +1,4 @@
-import { DataTable } from '@cucumber/cucumber';
+import { type DataTable } from '@cucumber/cucumber';
 import { Then, When } from '@wdio/cucumber-framework';
 
 import { editFeatureBlock } from './EditFeature.block';

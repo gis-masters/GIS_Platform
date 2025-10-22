@@ -1,7 +1,6 @@
 import { networkInterfaces } from 'node:os';
-import type { Options } from '@wdio/types';
 
-import { EnvironmentData } from '../src/app/services/environment';
+import { type EnvironmentData } from '../src/app/services/environment';
 
 declare global {
   const _environmentRaw: EnvironmentData;
@@ -17,8 +16,12 @@ declare global {
 
 export function getMyOfficeIp(): string {
   const nets = networkInterfaces();
-  const officeSubnet = /^(?:10\.){3}\d{1,3}$/;
-  const vpnSubnet = /^192.168.40.\d{1,3}$/;
+
+  const subnets = [
+    /^(?:10\.){3}\d{1,3}$/, // офис, провод
+    /^192.168.101.\d{1,3}$/, // офис, wi-fi
+    /^192.168.40.\d{1,3}$/ // vpn
+  ];
 
   for (const netInterface of Object.values(nets)) {
     if (netInterface) {
@@ -28,11 +31,7 @@ export function getMyOfficeIp(): string {
         const familyV4Value = typeof net.family === 'string' ? 'IPv4' : 4;
         const isNotInternalV4 = net.family === familyV4Value && !net.internal;
 
-        if (isNotInternalV4 && officeSubnet.test(net.address)) {
-          return net.address;
-        }
-
-        if (isNotInternalV4 && vpnSubnet.test(net.address)) {
+        if (isNotInternalV4 && subnets.some(subnet => subnet.test(net.address))) {
           return net.address;
         }
       }
@@ -42,7 +41,7 @@ export function getMyOfficeIp(): string {
   throw new Error('Не удалось вычислить офисный IP для dev режима');
 }
 
-export const config: Options.Testrunner = {
+export const config: WebdriverIO.Config = {
   //
   // ====================
   // Runner Configuration
@@ -146,6 +145,8 @@ export const config: Options.Testrunner = {
       'goog:chromeOptions': {
         args: ['--headless', 'window-size=1300,900']
       }
+      // Disable WebDriver Bidi for compatibility with existing Selenium Grid
+      // 'wdio:enforceWebDriverClassic': true
       // If outputDir is provided WebdriverIO can capture driver session logs
       // it is possible to configure which logTypes to include/exclude.
       // excludeDriverLogs: ['*'], // pass '*' to exclude all driver session logs
@@ -187,7 +188,7 @@ export const config: Options.Testrunner = {
   baseUrl: 'http://10.10.10.62',
   //
   // Default timeout for all waitFor* commands.
-  waitforTimeout: 3000,
+  waitforTimeout: 6000,
   //
   // Default timeout in milliseconds for request
   // if browser driver or grid doesn't send response
@@ -202,7 +203,7 @@ export const config: Options.Testrunner = {
   // commands. Instead, they hook themselves up into the test process.
   services: [
     [
-      'image-comparison',
+      'visual',
       {
         baselineFolder: './tests/_screens/',
         formatImageName: '{tag}',
@@ -210,7 +211,8 @@ export const config: Options.Testrunner = {
         savePerInstance: true,
         autoSaveBaseline: true,
         blockOutStatusBar: true,
-        blockOutToolBar: true
+        blockOutToolBar: true,
+        instanceName: 'desktop_chrome'
       }
     ],
     'shared-store'
@@ -237,15 +239,18 @@ export const config: Options.Testrunner = {
   // The only one supported by default is 'dot'
   // see also: https://webdriver.io/docs/dot-reporter
   reporters: [
-    'spec',
-    [
-      'allure',
-      {
-        outputDir: 'allure-results',
-        disableWebdriverStepsReporting: false,
-        disableWebdriverScreenshotsReporting: false
-      }
-    ]
+    'spec'
+    // Allure reporter временно отключен из-за проблем с синхронизацией
+    // [
+    //   'allure',
+    //   {
+    //     outputDir: 'allure-results',
+    //     disableWebdriverStepsReporting: true,
+    //     disableWebdriverScreenshotsReporting: false,
+    //     useCucumberStepReporter: true,
+    //     disableMochaHooks: true
+    //   }
+    // ]
   ],
 
   //

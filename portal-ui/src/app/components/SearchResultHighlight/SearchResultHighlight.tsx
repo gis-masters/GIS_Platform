@@ -1,15 +1,15 @@
-import React, { Component, ReactNode } from 'react';
+import React, { Component, type ReactNode } from 'react';
 import { action, computed, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 
-import { Schema } from '../../services/data/schema/schema.models';
+import { type Schema } from '../../services/data/schema/schema.models';
 import { schemaService } from '../../services/data/schema/schema.service';
-import { SearchItemData } from '../../services/data/search/search.model';
+import { type SearchItemData } from '../../services/data/search/search.model';
 import { Highlight } from '../Highlight/Highlight';
 import SearchResultHighlightItem from '../SearchResultHighlightItem/SearchResultHighlightItem';
 
-import '!style-loader!css-loader!sass-loader!./SearchResultHighlight.scss';
+import './SearchResultHighlight.scss';
 
 const cnSearchResultHighlight = cn('SearchResultHighlight');
 

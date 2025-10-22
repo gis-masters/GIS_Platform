@@ -1,11 +1,11 @@
 import { cloneDeep } from 'lodash';
 
 import { extractFeatureTypeNameFromComplexName } from '../../services/geoserver/featureType/featureType.util';
-import { CrgLayer } from '../../services/gis/layers/layers.models';
+import { type CrgLayer } from '../../services/gis/layers/layers.models';
 import { selectedFeaturesStore } from '../../services/map/a-map-mode/selected-features/SelectedFeatures.store';
 import { FilterBySelectionMode } from '../../services/map/map.models';
 import { getFieldFilterValue, modifyFieldFilterValue } from '../../services/util/filters/filters';
-import { FilterQuery } from '../../services/util/filters/filters.models';
+import { type FilterQuery } from '../../services/util/filters/filters.models';
 import { isFilterBySelection } from '../../services/util/typeGuards/isFilterBySelection';
 import { isNumberArray } from '../../services/util/typeGuards/isNumberArray';
 import { isRecordStringUnknown } from '../../services/util/typeGuards/isRecordStringUnknown';

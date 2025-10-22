@@ -10,7 +10,7 @@ class FormControlTypeDocumentBlock extends Block {
     const formBlock = new FormBlock(container);
     const $field = await formBlock.getField(title);
 
-    const $documentsAdd = await $field.$('.Documents-Add button');
+    const $documentsAdd = await $field.$('.Documents-Add button').getElement();
     await $documentsAdd.click();
   }
 }

@@ -3,9 +3,9 @@ import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 
-import { Library, LibraryRecord } from '../../../services/data/library/library.models';
+import { type Library, type LibraryRecord } from '../../../services/data/library/library.models';
 import { getLibraryRecord } from '../../../services/data/library/library.service';
-import { XTableFilterPanelItemContentProps } from '../../XTable/FilterPanelItemContent/XTable-FilterPanelItemContent.base';
+import { type XTableFilterPanelItemContentProps } from '../../XTable/FilterPanelItemContent/XTable-FilterPanelItemContent.base';
 import { getBreadcrumbsPathFromFilter } from '../LibraryRegistry.util';
 
 const cnLibraryRegistryPathFilterPanelItem = cn('LibraryRegistry', 'PathFilterPanelItem');

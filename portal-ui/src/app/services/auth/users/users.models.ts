@@ -1,4 +1,4 @@
-import { BuiltInRole } from '../../permissions/permissions.models';
+import type { BuiltInRole } from '../../permissions/permissions.models';
 
 export interface CrgUser {
   id: number;

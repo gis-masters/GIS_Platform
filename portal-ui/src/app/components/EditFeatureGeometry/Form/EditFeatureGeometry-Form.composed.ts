@@ -1,4 +1,4 @@
-import { compose, HOC } from '@bem-react/core';
+import { compose, type HOC } from '@bem-react/core';
 
 import { withTypeLineString } from './_type/EditFeatureGeometry-Form_type_LineString';
 import { withTypeMultiLineString } from './_type/EditFeatureGeometry-Form_type_MultiLineString';
@@ -6,7 +6,7 @@ import { withTypeMultiPoint } from './_type/EditFeatureGeometry-Form_type_MultiP
 import { withTypeMultiPolygon } from './_type/EditFeatureGeometry-Form_type_MultiPolygon';
 import { withTypePoint } from './_type/EditFeatureGeometry-Form_type_Point';
 import { withTypePolygon } from './_type/EditFeatureGeometry-Form_type_Polygon';
-import { EditFeatureGeometryFormBase, EditFeatureGeometryFormProps } from './EditFeatureGeometry-Form.base';
+import { EditFeatureGeometryFormBase, type EditFeatureGeometryFormProps } from './EditFeatureGeometry-Form.base';
 
 export const EditFeatureGeometryForm = compose(
   withTypePoint as HOC<EditFeatureGeometryFormProps>,

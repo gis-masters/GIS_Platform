@@ -38,7 +38,7 @@ class LibraryRegistryBlock extends Block {
     await xTableBlock.waitForLoading();
     const $documentRow = await xTableBlock.getRowByFieldValue(value, field);
 
-    const $xTableDocumentRowSelect = await $documentRow.$('.LibraryRegistry-Actions');
+    const $xTableDocumentRowSelect = await $documentRow.$('.LibraryRegistry-Actions').getElement();
     await $xTableDocumentRowSelect.click();
 
     const muiSelect = new MuiMenuBlock();
@@ -49,7 +49,7 @@ class LibraryRegistryBlock extends Block {
     await xTableBlock.waitForLoading();
     const $documentRow = await xTableBlock.getRowByFieldValue(value, field);
 
-    const $xTableDocumentRowSelect = await $documentRow.$('td:first-child input');
+    const $xTableDocumentRowSelect = await $documentRow.$('td:first-child input').getElement();
     await $xTableDocumentRowSelect.click();
   }
 

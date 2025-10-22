@@ -8,7 +8,7 @@ declare global {
   var testOrganizationIndex: number | undefined;
 }
 
-export const config: Options.Testrunner = {
+export const config: WebdriverIO.Config = {
   ...baseConfig,
 
   specs: ['./**/*.feature'],

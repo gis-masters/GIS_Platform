@@ -1,6 +1,6 @@
 import { When } from '@wdio/cucumber-framework';
 
-import { TestUser } from '../../commands/auth/testUsers';
+import { type TestUser } from '../../commands/auth/testUsers';
 import { restorePasswordBlock } from './RestorePassword.block';
 
 When('я ввожу email пользователя {user} в форму восстановления пароля', async (user: TestUser) => {

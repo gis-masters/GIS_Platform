@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { type FC } from 'react';
 import { cn } from '@bem-react/classname';
 
 import { Favicon } from '../Favicon/Favicon';
@@ -8,7 +8,7 @@ import { WorkspaceHeaderLoader } from './Loader/WorkspaceHeader-Loader';
 import { WorkspaceHeaderMenu } from './Menu/WorkspaceHeader-Menu';
 import { WorkspaceHeaderOrganization } from './Organization/WorkspaceHeader-Organization';
 
-import '!style-loader!css-loader!sass-loader!./WorkspaceHeader.scss';
+import './WorkspaceHeader.scss';
 
 const cnWorkspaceHeader = cn('WorkspaceHeader');
 

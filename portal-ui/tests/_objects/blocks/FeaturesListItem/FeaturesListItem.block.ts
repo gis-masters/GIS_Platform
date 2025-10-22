@@ -12,46 +12,46 @@ export class FeaturesListItemBlock extends Block {
   };
 
   async openEdit(): Promise<void> {
-    const $openEdit = await this.$('openEdit');
+    const $openEdit = await this.findBySelector('openEdit');
     await $openEdit.waitForClickable();
     await $openEdit.click();
   }
 
   async zoomToFeature(): Promise<void> {
-    const $zoomToFeature = await this.$('zoom');
+    const $zoomToFeature = await this.findBySelector('zoom');
     await $zoomToFeature.waitForClickable();
     await $zoomToFeature.click();
   }
 
   async openObject(): Promise<void> {
-    const $title = await this.$('id');
+    const $title = await this.findBySelector('id');
     await $title.waitForClickable();
     await $title.doubleClick();
   }
 
   async selectObject(): Promise<void> {
-    const $title = await this.$('id');
+    const $title = await this.findBySelector('id');
     await $title.waitForClickable();
     await $title.click();
   }
 
   async focusToObject(): Promise<void> {
-    const $title = await this.$('id');
+    const $title = await this.findBySelector('id');
     await $title.waitForClickable();
     await $title.moveTo();
   }
 
   async getItemData(): Promise<string[]> {
-    const $icon = await this.$('icon');
+    const $icon = await this.findBySelector('icon');
     await $icon.waitForDisplayed();
 
-    const $id = await this.$('id');
+    const $id = await this.findBySelector('id');
     await $id.waitForDisplayed();
 
-    const $layer = await this.$('layer');
+    const $layer = await this.findBySelector('layer');
     await $layer.waitForDisplayed();
 
-    const $title = await this.$('title');
+    const $title = await this.findBySelector('title');
     await $title.waitForDisplayed();
 
     const id = await $id.getText();

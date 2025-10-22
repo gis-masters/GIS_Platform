@@ -1,12 +1,12 @@
-import React, { FC, ReactNode, SyntheticEvent, useCallback, useEffect, useMemo } from 'react';
-import { IReactionDisposer, reaction } from 'mobx';
+import React, { type FC, type ReactNode, type SyntheticEvent, useCallback, useEffect, useMemo } from 'react';
+import { type IReactionDisposer, reaction } from 'mobx';
 import { observer } from 'mobx-react';
 import { Badge, Tab, Tabs, Tooltip } from '@mui/material';
 import { ChevronLeft } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import _, { isEqual } from 'lodash';
 
-import { communicationService, DataChangeEventDetail } from '../../services/communication.service';
+import { communicationService, type DataChangeEventDetail } from '../../services/communication.service';
 import {
   applyView,
   applyViewOld,
@@ -14,9 +14,9 @@ import {
   convertNewToOldSchema
 } from '../../services/data/schema/schema.utils';
 import { deleteFeaturesAndEmitEvent } from '../../services/data/vectorData/vectorData.service';
-import { WfsFeature } from '../../services/geoserver/wfs/wfs.models';
+import { type WfsFeature } from '../../services/geoserver/wfs/wfs.models';
 import { getEmptyGeometry } from '../../services/geoserver/wfs/wfs.util';
-import { CrgLayer, CrgVectorLayer, isVectorLayer } from '../../services/gis/layers/layers.models';
+import { type CrgLayer, type CrgVectorLayer, isVectorLayer } from '../../services/gis/layers/layers.models';
 import { EditFeatureMode } from '../../services/map/a-map-mode/edit-feature/EditFeature.models';
 import { editFeatureStore } from '../../services/map/a-map-mode/edit-feature/EditFeatureStore';
 import { mapModeManager } from '../../services/map/a-map-mode/MapModeManager';
@@ -45,7 +45,7 @@ import { useFeatureSave } from './hooks/useFeatureSave';
 import { useFeatureSetup } from './hooks/useFeatureSetup';
 import { useLayerData } from './hooks/useLayerData';
 
-import '!style-loader!css-loader!sass-loader!./EditFeatureContainer.scss';
+import './EditFeatureContainer.scss';
 
 export const cnEditFeatureContainer = cn('EditFeatureContainer');
 
@@ -72,10 +72,6 @@ const featureHasEmptyGeometry = (feature: WfsFeature): boolean => {
 const cantBeSaved = (): boolean => {
   return mapStore.mode === MapMode.EDIT_FEATURE ? editFeatureStore.pristine : false;
 };
-
-export interface Properties {
-  [key: string]: unknown;
-}
 
 type Timer = ReturnType<typeof setTimeout>;
 

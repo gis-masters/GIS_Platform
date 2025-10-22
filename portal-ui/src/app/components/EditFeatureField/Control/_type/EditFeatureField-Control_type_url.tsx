@@ -5,16 +5,16 @@ import { Dialog, DialogActions, DialogContent } from '@mui/material';
 import { cn } from '@bem-react/classname';
 import { withBemMod } from '@bem-react/core';
 
-import { OldPropertySchemaUrl, ValueType } from '../../../../services/data/schema/schemaOld.models';
+import { type OldPropertySchemaUrl, ValueType } from '../../../../services/data/schema/schemaOld.models';
 import { services } from '../../../../services/services';
 import { Button } from '../../../Button/Button';
 import { HtmlContent } from '../../../HtmlContent/HtmlContent';
 import { Link } from '../../../Link/Link';
 import { Loading } from '../../../Loading/Loading';
 import { PseudoLink } from '../../../PseudoLink/PseudoLink';
-import { cnEditFeatureFieldControl, EditFeatureFieldControlProps } from '../EditFeatureField-Control.base';
+import { cnEditFeatureFieldControl, type EditFeatureFieldControlProps } from '../EditFeatureField-Control.base';
 
-import '!style-loader!css-loader!sass-loader!./EditFeatureField-Control_type_url.scss';
+import './EditFeatureField-Control_type_url.scss';
 
 const cnEditFeatureField = cn('EditFeatureField');
 

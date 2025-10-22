@@ -1,16 +1,16 @@
-import React, { Component, ReactNode } from 'react';
+import React, { Component, type ReactNode } from 'react';
 import { action, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { NavigationEnd } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 
-import { PageOptions, SortOrder } from '../../services/models';
+import { type PageOptions, SortOrder } from '../../services/models';
 import { services } from '../../services/services';
-import { FilterQuery } from '../../services/util/filters/filters.models';
-import { SortParams } from '../../services/util/sortObjects';
+import { type FilterQuery } from '../../services/util/filters/filters.models';
+import { type SortParams } from '../../services/util/sortObjects';
 import { route } from '../../stores/Route.store';
-import { XTable, XTableProps } from '../XTable/XTable';
-import { XTableColumn } from '../XTable/XTable.models';
+import { XTable, type XTableProps } from '../XTable/XTable';
+import { type XTableColumn } from '../XTable/XTable.models';
 
 export interface RegistryProps<T> {
   id: string;

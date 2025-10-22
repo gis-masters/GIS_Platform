@@ -5,10 +5,10 @@ import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 import { pluralize } from 'numeralize-ru';
 
-import { Dataset } from '../../../services/data/vectorData/vectorData.models';
+import { type Dataset } from '../../../services/data/vectorData/vectorData.models';
 import { Button } from '../../Button/Button';
 
-import '!style-loader!css-loader!sass-loader!./PickupDatasets-Item.scss';
+import './PickupDatasets-Item.scss';
 
 const cnPickupDatasetsItem = cn('PickupDatasets', 'Item');
 

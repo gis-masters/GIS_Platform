@@ -1,8 +1,8 @@
-import React, { FC } from 'react';
+import React, { type FC } from 'react';
 import { Tooltip } from '@mui/material';
 import { cn } from '@bem-react/classname';
 
-import { Library } from '../../services/data/library/library.models';
+import { type Library } from '../../services/data/library/library.models';
 import { getRegistryUrlWithPath } from '../DataManagement/DataManagement.utils';
 import { IconButton } from '../IconButton/IconButton';
 import { DeletedDocuments } from '../Icons/DeletedDocuments';

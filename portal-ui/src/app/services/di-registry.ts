@@ -8,6 +8,7 @@ import { FormDialog } from '../components/FormDialog/FormDialog';
 import { LibraryDocument } from '../components/LibraryDocument/LibraryDocument';
 import { LibraryDocumentActions } from '../components/LibraryDocumentActions/LibraryDocumentActions';
 import { LibraryRegistry } from '../components/LibraryRegistry/LibraryRegistry';
+import { TasksJournalActions } from '../components/TasksJournalActions/TasksJournalActions';
 
 export const registry = new Registry({ id: 'common' });
 
@@ -19,7 +20,8 @@ const dependencies = {
   FormControl,
   LibraryDocument,
   LibraryDocumentActions,
-  LibraryRegistry
+  LibraryRegistry,
+  TasksJournalActions
 };
 
 export type CommonDiRegistry = typeof dependencies;

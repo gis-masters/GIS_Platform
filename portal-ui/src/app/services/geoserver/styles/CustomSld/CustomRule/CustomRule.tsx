@@ -1,6 +1,6 @@
-import React, { ComponentType, FC } from 'react';
+import React, { type ComponentType, type FC } from 'react';
 
-import { CustomStyleDescription } from '../../styles.models';
+import { type CustomStyleDescription } from '../../styles.models';
 import { CustomRuleTypeAll } from './_type/CustomRule_type_all';
 import { CustomRuleTypeLine } from './_type/CustomRule_type_line';
 import { CustomRuleTypePoint } from './_type/CustomRule_type_point';

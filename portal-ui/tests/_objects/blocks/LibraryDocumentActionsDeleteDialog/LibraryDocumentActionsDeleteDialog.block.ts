@@ -8,9 +8,9 @@ class LibraryDocumentActionsDeleteDialogBlock extends Block {
 
   async delete(): Promise<void> {
     await this.waitForVisible();
-    const $save = await this.$('delete');
+    const $save = await this.findBySelector('delete');
     await $save.click();
-    await $save.waitForDisplayed({ reverse: true });
+    await $save.waitForExist({ reverse: true });
   }
 }
 

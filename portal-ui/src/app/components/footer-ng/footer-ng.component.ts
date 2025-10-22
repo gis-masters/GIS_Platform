@@ -1,6 +1,6 @@
 import { createElement } from 'react';
-import { createRoot, Root } from 'react-dom/client';
-import { Component, ElementRef, OnChanges, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { createRoot, type Root } from 'react-dom/client';
+import { Component, ElementRef, type OnChanges, type OnDestroy, type OnInit, ViewChild } from '@angular/core';
 import { withRegistry } from '@bem-react/di';
 
 import { registry } from '../../services/di-registry';
@@ -10,7 +10,8 @@ const FooterWithRegistry = withRegistry(registry)(Footer);
 
 @Component({
   selector: 'crg-footer-ng',
-  template: '<div class="footer-ng" #react></div>'
+  template: '<div class="footer-ng" #react></div>',
+  standalone: false
 })
 export class FooterNgComponent implements OnInit, OnDestroy, OnChanges {
   @ViewChild('react', { read: ElementRef, static: true })

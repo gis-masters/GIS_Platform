@@ -7,14 +7,14 @@ class AchtungBlock extends Block {
   };
 
   async isDialogExist(): Promise<boolean> {
-    const $achtung = await this.$('container');
+    const $achtung = await this.findBySelector('container');
 
     return await $achtung.isDisplayed();
   }
 
   async closeDialog(): Promise<void> {
     if (await this.isDialogExist()) {
-      const $yes = await this.$('yes');
+      const $yes = await this.findBySelector('yes');
       await $yes.click();
     }
   }

@@ -1,13 +1,18 @@
-import React, { ChangeEvent, Component } from 'react';
+import React, { type ChangeEvent, Component } from 'react';
 import { action, computed, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { Input, SelectChangeEvent, Tooltip } from '@mui/material';
+import { Input, type SelectChangeEvent, Tooltip } from '@mui/material';
 import { cn } from '@bem-react/classname';
-import { IClassNameProps } from '@bem-react/core';
+import { type IClassNameProps } from '@bem-react/core';
 import { boundMethod } from 'autobind-decorator';
 import { cloneDeep } from 'lodash';
 
-import { ContentType, PropertyOption, PropertySchema, Schema } from '../../services/data/schema/schema.models';
+import {
+  type ContentType,
+  type PropertyOption,
+  type PropertySchema,
+  type Schema
+} from '../../services/data/schema/schema.models';
 import { applyContentType, applyView } from '../../services/data/schema/schema.utils';
 import { isLinear, isPoint, isPolygonal } from '../../services/geoserver/wfs/wfs.util';
 import { Card } from '../Card/Card';

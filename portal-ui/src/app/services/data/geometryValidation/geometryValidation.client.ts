@@ -2,7 +2,7 @@ import { boundClass } from 'autobind-decorator';
 
 import { Client } from '../../api/Client';
 import { http } from '../../api/http.service';
-import { NewWfsFeature, WfsFeature } from '../../geoserver/wfs/wfs.models';
+import { type NewWfsFeature, type WfsFeature } from '../../geoserver/wfs/wfs.models';
 import { Mime } from '../../util/Mime';
 
 const headers = { 'Content-Type': Mime.JSON };

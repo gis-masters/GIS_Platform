@@ -4,10 +4,10 @@ import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 
 import { HelpPart } from '../../services/HelpPart';
-import { TocItem } from '../../stores/Help.store';
+import { type TocItem } from '../../stores/Help.store';
 import { HelpToc } from '../HelpToc/HelpToc';
 
-import '!style-loader!css-loader!sass-loader!./Help.scss';
+import './Help.scss';
 
 const cnHelp = cn('Help');
 

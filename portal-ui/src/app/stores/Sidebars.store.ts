@@ -1,10 +1,10 @@
 import { action, makeObservable, observable, reaction } from 'mobx';
 
-import { SearchInfo } from '../components/SearchField/SearchField';
-import { WfsFeature } from '../services/geoserver/wfs/wfs.models';
-import { CrgVectorableLayer } from '../services/gis/layers/layers.models';
+import { type SearchInfo } from '../components/SearchField/SearchField';
+import { type WfsFeature } from '../services/geoserver/wfs/wfs.models';
+import { type CrgVectorableLayer } from '../services/gis/layers/layers.models';
 import { selectedFeaturesStore } from '../services/map/a-map-mode/selected-features/SelectedFeatures.store';
-import { FeatureError } from '../services/map/map-link-following.service';
+import { type FeatureError } from '../services/map/map-link-following.service';
 import { services } from '../services/services';
 import { Pages, route } from './Route.store';
 

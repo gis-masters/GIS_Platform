@@ -20,11 +20,11 @@ import {
 import { KeyboardArrowDown, Warning } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
-import { ImportResult } from '../../services/data/processes/processes.models';
+import { type ImportResult } from '../../services/data/processes/processes.models';
 import { Button } from '../Button/Button';
 import { Link } from '../Link/Link';
 
-import '!style-loader!css-loader!sass-loader!./ImportGmlResultDialog.scss';
+import './ImportGmlResultDialog.scss';
 
 const cnImportGmlResultDialog = cn('ImportGmlResultDialog');
 

@@ -1,7 +1,7 @@
 import { clone } from 'lodash';
 
-import { Schema } from '../../../../src/app/services/data/schema/schema.models';
-import { GeometryType, NewWfsFeature } from '../../../../src/app/services/geoserver/wfs/wfs.models';
+import { type Schema } from '../../../../src/app/services/data/schema/schema.models';
+import { GeometryType, type NewWfsFeature } from '../../../../src/app/services/geoserver/wfs/wfs.models';
 import { generateObjectBySchema } from '../../utils/generateObjectBySchema';
 import { getUserByEmail } from '../auth/getUserByEmail';
 import { getTestUser } from '../auth/testUsers';

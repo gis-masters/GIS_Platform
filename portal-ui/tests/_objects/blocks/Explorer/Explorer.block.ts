@@ -40,34 +40,34 @@ export class ExplorerBlock extends Block {
   }
 
   async allItemsIsDisabled(): Promise<boolean> {
-    const $container = await this.$('container');
+    const $container = await this.findBySelector('container');
     await $container.waitForDisplayed();
 
-    const $loader = await this.$('loader');
-    await $loader.waitForDisplayed({ reverse: true });
+    const $loader = await this.findBySelector('loader');
+    await $loader.waitForExist({ reverse: true });
 
-    const $$explorerItems = await this.$$('item');
-    const $$explorerDisablesItems = await this.$$('disabledItem');
+    const $$explorerItems = await this.findAllBySelector('item');
+    const $$explorerDisablesItems = await this.findAllBySelector('disabledItem');
 
     return $$explorerItems.length === $$explorerDisablesItems.length;
   }
 
   async selectFirstExplorerItem(): Promise<void> {
-    const $firstItem = await this.$('firstItem');
+    const $firstItem = await this.findBySelector('firstItem');
     await $firstItem.waitForDisplayed();
 
     await $firstItem.click();
   }
 
   async getContentWidgetFieldValue(field: string): Promise<string> {
-    const formBlock = new FormBlock(await this.$('viewContentWidget'));
+    const formBlock = new FormBlock(await this.findBySelector('viewContentWidget'));
     const $field = await formBlock.getField(field);
 
     return $field.$('.Form-View').getText();
   }
 
   async getContentWidgetField(field: string): Promise<WebdriverIO.Element> {
-    const $contentWidget = await this.$('viewContentWidget');
+    const $contentWidget = await this.findBySelector('viewContentWidget');
     await $contentWidget.waitForDisplayed();
     const formBlock = new FormBlock($contentWidget);
 
@@ -75,62 +75,62 @@ export class ExplorerBlock extends Block {
   }
 
   async getExplorerItemsLength(): Promise<number> {
-    const $container = await this.$('container');
+    const $container = await this.findBySelector('container');
     await $container.waitForDisplayed();
 
-    const $loader = await this.$('loader');
-    await $loader.waitForDisplayed({ reverse: true });
+    const $loader = await this.findBySelector('loader');
+    await $loader.waitForExist({ reverse: true });
 
-    const $$explorerItems = await this.$$('item');
+    const $$explorerItems = await this.findAllBySelector('item');
 
     return $$explorerItems.length;
   }
 
   async addToProject(): Promise<void> {
-    const $connectionToProject = await this.$('connectionToProject');
+    const $connectionToProject = await this.findBySelector('connectionToProject');
     await $connectionToProject.click();
   }
 
   async clickCreateLayerBtn(): Promise<void> {
-    const $createLayerBtn = await this.$('createLayerBtn');
+    const $createLayerBtn = await this.findBySelector('createLayerBtn');
 
     await $createLayerBtn.click();
   }
 
   async isCreateLayerBtnExist(): Promise<boolean> {
-    const $createLayerBtn = await this.$('createLayerBtn');
+    const $createLayerBtn = await this.findBySelector('createLayerBtn');
 
     return await $createLayerBtn.isExisting();
   }
 
   async waitForLoading(): Promise<void> {
     await browser.pause(300);
-    const $loader = await this.$('loader');
-    await $loader.waitForDisplayed({ reverse: true });
+    const $loader = await this.findBySelector('loader');
+    await $loader.waitForExist({ reverse: true });
     await browser.pause(300);
   }
 
   async getListTitles(): Promise<string[]> {
-    const $title = await this.$('title');
+    const $title = await this.findBySelector('title');
     await $title.waitForDisplayed();
-    const $$titles = [...(await this.$$('title'))];
+    const $$titles = [...(await this.findAllBySelector('title'))];
 
     return await Promise.all($$titles.map(async $title => await $title.getText()));
   }
 
   async testEmptiness(): Promise<void> {
-    const $empty = await this.$('empty');
+    const $empty = await this.findBySelector('empty');
     await $empty.waitForDisplayed();
   }
 
   async getExplorerItemByName(itemName: string): Promise<WebdriverIO.Element> {
-    const $container = await this.$('container');
+    const $container = await this.findBySelector('container');
     await $container.waitForDisplayed();
 
-    const $loader = await this.$('loader');
-    await $loader.waitForDisplayed({ reverse: true });
+    const $loader = await this.findBySelector('loader');
+    await $loader.waitForExist({ reverse: true });
 
-    const $$explorerItems = await this.$$('item');
+    const $$explorerItems = await this.findAllBySelector('item');
 
     for (const $explorerItem of $$explorerItems) {
       const explorerItemName = await $explorerItem.$('.Explorer-ItemTitle').getText();
@@ -144,16 +144,16 @@ export class ExplorerBlock extends Block {
   }
 
   async getExplorerItemById(id: string): Promise<WebdriverIO.Element> {
-    const $container = await this.$('container');
+    const $container = await this.findBySelector('container');
     await $container.waitForDisplayed();
 
-    const $loader = await this.$('loader');
-    await $loader.waitForDisplayed({ reverse: true });
+    const $loader = await this.findBySelector('loader');
+    await $loader.waitForExist({ reverse: true });
 
-    const $$explorerItems = await this.$$('item');
+    const $$explorerItems = await this.findAllBySelector('item');
 
     for (const $explorerItem of $$explorerItems) {
-      const $itemId = await $explorerItem.$('.MuiListItemText-secondary');
+      const $itemId = await $explorerItem.$('.MuiListItemText-secondary').getElement();
       const currentId = await $itemId.getText();
 
       if (currentId === id) {
@@ -169,7 +169,7 @@ export class ExplorerBlock extends Block {
       async () => {
         try {
           const $item = await this.getExplorerItemById(id);
-          const $title = await $item.$('.Explorer-ItemTitle');
+          const $title = await $item.$('.Explorer-ItemTitle').getElement();
           const actualTitle = await $title.getText();
 
           return actualTitle === expectedTitle;
@@ -185,7 +185,7 @@ export class ExplorerBlock extends Block {
   }
 
   async clickEditButton(): Promise<void> {
-    const $editButton = await $('button[aria-label="Редактировать"]');
+    const $editButton = await $('button[aria-label="Редактировать"]').getElement();
     await $editButton.waitForDisplayed();
     await $editButton.click();
   }

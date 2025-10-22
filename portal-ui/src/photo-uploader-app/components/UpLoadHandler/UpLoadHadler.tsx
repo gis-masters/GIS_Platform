@@ -1,7 +1,7 @@
-import React, { FC } from 'react';
+import React, { type FC } from 'react';
 import { observer } from 'mobx-react';
 
-import { UploadedFile } from '../../services/photoUploader.models';
+import { type UploadedFile } from '../../services/photoUploader.models';
 import { UpLoadItem } from '../UpLoadItem/UpLoadItem';
 import { UpLoadHandlerActions } from './Actions/UpLoadHandler-Actions';
 

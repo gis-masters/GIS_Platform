@@ -1,9 +1,9 @@
-import React, { FC } from 'react';
+import React, { type FC } from 'react';
 import { cn } from '@bem-react/classname';
 
-import { ChildrenProps } from '../../../services/models';
+import { type ChildrenProps } from '../../../services/models';
 
-import '!style-loader!css-loader!sass-loader!./PickupDataset-SelectedContent.scss';
+import './PickupDataset-SelectedContent.scss';
 
 const cnPickupDatasetsSelectedContent = cn('PickupDatasets', 'SelectedContent');
 export const PickupDatasetSelectedContent: FC<ChildrenProps> = ({ children }) => (

@@ -1,6 +1,6 @@
 import { createElement } from 'react';
-import { createRoot, Root } from 'react-dom/client';
-import { Component, ElementRef, OnChanges, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { createRoot, type Root } from 'react-dom/client';
+import { Component, ElementRef, type OnChanges, type OnDestroy, type OnInit, ViewChild } from '@angular/core';
 import { withRegistry } from '@bem-react/di';
 
 import { registry } from '../../services/di-registry';
@@ -11,7 +11,8 @@ const LayersSidebarWithRegistry = withRegistry(registry)(LayersSidebar);
 @Component({
   selector: 'crg-layers-sidebar',
   template: '<div class="layers-sidebar" #react></div>',
-  styleUrls: ['./layers-sidebar.component.scss']
+  styleUrls: ['./layers-sidebar.component.scss'],
+  standalone: false
 })
 export class LayersSidebarComponent implements OnInit, OnDestroy, OnChanges {
   @ViewChild('react', { read: ElementRef, static: true }) ref?: ElementRef<HTMLDivElement>;

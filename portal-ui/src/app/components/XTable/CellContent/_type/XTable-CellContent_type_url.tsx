@@ -6,10 +6,10 @@ import { withBemMod } from '@bem-react/core';
 import { pluralize } from 'numeralize-ru';
 
 import { PropertyType } from '../../../../services/data/schema/schema.models';
-import { UrlInfo } from '../../../Form/Control/_type/Form-Control_type_url';
+import { type UrlInfo } from '../../../Form/Control/_type/Form-Control_type_url';
 import { PseudoLink } from '../../../PseudoLink/PseudoLink';
 import { UrlsList } from '../../../UrlsList/UrlsList';
-import { cnXTableCellContent, XTableCellContentBase, XTableCellContentProps } from '../XTable-CellContent.base';
+import { cnXTableCellContent, XTableCellContentBase, type XTableCellContentProps } from '../XTable-CellContent.base';
 
 @observer
 class XTableCellContentTypeUrl extends Component<XTableCellContentProps<unknown>> {

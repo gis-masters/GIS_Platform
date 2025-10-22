@@ -6,8 +6,8 @@ import { boundMethod } from 'autobind-decorator';
 import { EditFeatureMode } from 'src/app/services/map/a-map-mode/edit-feature/EditFeature.models';
 
 import { deleteFeaturesAndEmitEvent } from '../../../services/data/vectorData/vectorData.service';
-import { WfsFeature } from '../../../services/geoserver/wfs/wfs.models';
-import { CrgVectorLayer } from '../../../services/gis/layers/layers.models';
+import { type WfsFeature } from '../../../services/geoserver/wfs/wfs.models';
+import { type CrgVectorLayer } from '../../../services/gis/layers/layers.models';
 import { editFeatureStore } from '../../../services/map/a-map-mode/edit-feature/EditFeatureStore';
 import { mapModeManager } from '../../../services/map/a-map-mode/MapModeManager';
 import { MapMode, MapSelectionTypes } from '../../../services/map/map.models';
@@ -17,7 +17,7 @@ import { Actions } from '../../Actions/Actions.composed';
 import { ActionsItem } from '../../Actions/Item/Actions-Item.composed';
 import { ViewLocation } from '../../Icons/ViewLocation';
 
-import '!style-loader!css-loader!sass-loader!./Attributes-RowActions.scss';
+import './Attributes-RowActions.scss';
 
 const cnAttributesRowActions = cn('Attributes', 'RowActions');
 

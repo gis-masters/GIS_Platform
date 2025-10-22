@@ -10,13 +10,13 @@ class ProjectFormBlock extends Block {
   };
 
   async getInputValue(): Promise<string> {
-    const $input = await this.$('input');
+    const $input = await this.findBySelector('input');
 
     return await $input.getValue();
   }
 
   async setInputValue(title: string): Promise<void> {
-    const $input = await this.$('input');
+    const $input = await this.findBySelector('input');
     await $input.setValue(title);
   }
 
@@ -25,26 +25,26 @@ class ProjectFormBlock extends Block {
   }
 
   async inputIsFocused(): Promise<void> {
-    await expect(this.$('input')).toBeFocused();
+    await expect(this.findBySelector('input')).toBeFocused();
   }
 
   async waitForErrors(): Promise<void> {
-    const $error = await this.$('error');
+    const $error = await this.findBySelector('error');
     await $error.waitForDisplayed();
   }
 
   async errorsAreEmpty(): Promise<void> {
-    await expect(this.$('error')).not.toBeDisplayed();
+    await expect(this.findBySelector('error')).not.toBeDisplayed();
   }
 
   async submit(): Promise<void> {
-    const $submit = await this.$('submit');
+    const $submit = await this.findBySelector('submit');
     await $submit.click();
     await browser.pause(500);
   }
 
   async cancel(): Promise<void> {
-    const $cancel = await this.$('cancel');
+    const $cancel = await this.findBySelector('cancel');
     await $cancel.click();
     await this.waitForHidden();
     await browser.pause(400);

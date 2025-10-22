@@ -8,18 +8,18 @@ export class XTableFilterTypeDocumentBlock extends Block {
   };
 
   async clear(): Promise<void> {
-    const inputBlock = new MuiInputBlock(await this.$('container'));
+    const inputBlock = new MuiInputBlock(await this.findBySelector('container'));
     await inputBlock.clearValue();
   }
 
   async setValue(title: string): Promise<void> {
-    const inputBlock = new MuiInputBlock(await this.$('container'));
+    const inputBlock = new MuiInputBlock(await this.findBySelector('container'));
     await inputBlock.setValue(title);
     await browser.pause(300); // отрисовка фильтрации в таблице
   }
 
   async getValue(): Promise<string> {
-    const inputBlock = new MuiInputBlock(await this.$('container'));
+    const inputBlock = new MuiInputBlock(await this.findBySelector('container'));
 
     return inputBlock.getValue();
   }

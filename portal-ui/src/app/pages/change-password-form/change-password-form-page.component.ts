@@ -5,7 +5,8 @@ import { environment } from '../../services/environment';
 @Component({
   selector: 'crg-change-password-form-page',
   templateUrl: './change-password-form-page.component.html',
-  styleUrls: ['./change-password-form-page.component.scss']
+  styleUrls: ['./change-password-form-page.component.scss'],
+  standalone: false
 })
 export class ChangePasswordFormPageComponent {
   backgroundImage = environment.background;

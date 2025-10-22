@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { type FC } from 'react';
 import { observer } from 'mobx-react';
 import { CircularProgress } from '@mui/material';
 import DoneIcon from '@mui/icons-material/Done';
@@ -7,8 +7,8 @@ import { cn } from '@bem-react/classname';
 import { CopyUrlButton } from '../../../../app/components/CopyUrlButton/CopyUrlButton';
 import { UploadedFileStatus } from '../../../services/photoUploader.models';
 
-import '!style-loader!css-loader!sass-loader!./UpLoadHandler-Actions.scss';
-import '!style-loader!css-loader!sass-loader!../WithError/UpLoadHandler-WithError.scss';
+import './UpLoadHandler-Actions.scss';
+import '../WithError/UpLoadHandler-WithError.scss';
 
 interface UpLoadHandlerActionsProps {
   status: UploadedFileStatus | null;

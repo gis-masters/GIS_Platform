@@ -4,7 +4,7 @@ import { observer } from 'mobx-react';
 
 import { selectedFeaturesStore } from '../../services/map/a-map-mode/selected-features/SelectedFeatures.store';
 import { sidebars } from '../../stores/Sidebars.store';
-import { FeaturesList, FeaturesListItemInfo } from '../FeaturesList/FeaturesList';
+import { FeaturesList, type FeaturesListItemInfo } from '../FeaturesList/FeaturesList';
 
 @observer
 export class SelectedFeaturesList extends Component<Record<string, unknown>> {

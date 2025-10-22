@@ -7,11 +7,11 @@ class LibraryDeletedDocumentsSwitchBlock extends Block {
   };
 
   async deletedDocumentsSwitch(): Promise<void> {
-    const $switch = await this.$('container');
+    const $switch = await this.findBySelector('container');
     await $switch.waitForClickable();
     await $switch.click();
 
-    const $loading = await this.$('loading');
+    const $loading = await this.findBySelector('loading');
 
     try {
       await $loading.waitForDisplayed({ timeout: 1000 });
@@ -19,7 +19,7 @@ class LibraryDeletedDocumentsSwitchBlock extends Block {
       // ignore
     }
 
-    await $loading.waitForDisplayed({ reverse: true });
+    await $loading.waitForExist({ reverse: true });
   }
 }
 

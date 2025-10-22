@@ -9,10 +9,10 @@ class CreateVectorTableDialogBlock extends Block {
   };
 
   async clickSaveFormDialog(): Promise<void> {
-    const $editDialogYes = await this.$('dialogYes');
+    const $editDialogYes = await this.findBySelector('dialogYes');
     await $editDialogYes.waitForDisplayed();
     await $editDialogYes.click();
-    await $editDialogYes.waitForDisplayed({ reverse: true });
+    await $editDialogYes.waitForExist({ reverse: true });
   }
 
   async openSchemaSelection() {

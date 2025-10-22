@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { type FC } from 'react';
 import { observer } from 'mobx-react';
 import { Fab, List } from '@mui/material';
 import { PlayArrow, Stop } from '@mui/icons-material';
@@ -8,8 +8,8 @@ import { uploadPhotos } from '../../services/photoUploader.service';
 import { photoUploaderStore } from '../../stores/PhotoUploader.store';
 import { UpLoadHandler } from '../UpLoadHandler/UpLoadHadler';
 
-import '!style-loader!css-loader!sass-loader!./UpLoader.scss';
-import '!style-loader!css-loader!sass-loader!./Fab/UpLoader-Fab.scss';
+import './UpLoader.scss';
+import './Fab/UpLoader-Fab.scss';
 
 const cnUpLoader = cn('UpLoader');
 

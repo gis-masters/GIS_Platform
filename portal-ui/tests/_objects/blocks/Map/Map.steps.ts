@@ -3,7 +3,7 @@ import { Then, When } from '@wdio/cucumber-framework';
 import { sleep } from '../../../../src/app/services/util/sleep';
 import { getMapPosition } from '../../commands/map/getMapPosition';
 import { MapPage } from '../../pages/Map.page';
-import { ScenarioScope } from '../../ScenarioScope';
+import { type ScenarioScope } from '../../ScenarioScope';
 import { mapBlock } from './Map.block';
 
 When('я протыкаю карту в центре', async function () {

@@ -12,7 +12,7 @@ import { mapStore } from '../../stores/Map.store';
 import { mapVerticesModificationStore } from '../../stores/MapVerticesModification.store';
 import { IconButton } from '../IconButton/IconButton';
 
-import '!style-loader!css-loader!sass-loader!./VerticesModificationIcon.scss';
+import './VerticesModificationIcon.scss';
 
 const cnVerticesModificationIcon = cn('VerticesModificationIcon');
 

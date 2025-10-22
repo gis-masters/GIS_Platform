@@ -1,10 +1,10 @@
-import React, { FC } from 'react';
+import React, { type FC } from 'react';
 import { Tooltip } from '@mui/material';
 import { withBemMod } from '@bem-react/core';
 
 import { IconButton } from '../../../IconButton/IconButton';
 import { MenuIconButton } from '../../../MenuIconButton/MenuIconButton';
-import { ActionsItemProps, cnActionsItem } from '../Actions-Item.base';
+import { type ActionsItemProps, cnActionsItem } from '../Actions-Item.base';
 
 const ActionsItemAsIconButton: FC<ActionsItemProps> = ({
   title,

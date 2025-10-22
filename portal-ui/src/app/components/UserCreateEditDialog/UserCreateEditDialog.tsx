@@ -4,13 +4,13 @@ import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
-import { CrgUser, NewUserData } from '../../services/auth/users/users.models';
+import { type CrgUser, type NewUserData } from '../../services/auth/users/users.models';
 import { usersService } from '../../services/auth/users/users.service';
-import { PropertySchema, PropertySchemaString, PropertyType } from '../../services/data/schema/schema.models';
+import { type PropertySchema, type PropertySchemaString, PropertyType } from '../../services/data/schema/schema.models';
 import { getPatch } from '../../services/util/patch';
 import { FormDialog } from '../FormDialog/FormDialog';
 
-import '!style-loader!css-loader!sass-loader!./UserCreateEditDialog.scss';
+import './UserCreateEditDialog.scss';
 
 const cnUserCreateEditDialog = cn('UserCreateEditDialog');
 

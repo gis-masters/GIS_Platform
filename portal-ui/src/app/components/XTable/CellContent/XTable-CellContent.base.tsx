@@ -1,14 +1,14 @@
-import React, { isValidElement, ReactElement, useCallback, useEffect, useRef, useState } from 'react';
+import React, { isValidElement, type ReactElement, useCallback, useEffect, useRef, useState } from 'react';
 import { Tooltip } from '@mui/material';
 import { cn } from '@bem-react/classname';
-import { IClassNameProps } from '@bem-react/core';
+import { type IClassNameProps } from '@bem-react/core';
 
 import { isPropertyType, PropertyType } from '../../../services/data/schema/schema.models';
-import { ChildrenProps } from '../../../services/models';
-import { FilterQuery } from '../../../services/util/filters/filters.models';
-import { XTableColumn, XTableColumnType } from '../XTable.models';
+import { type ChildrenProps } from '../../../services/models';
+import { type FilterQuery } from '../../../services/util/filters/filters.models';
+import { type XTableColumn, type XTableColumnType } from '../XTable.models';
 
-import '!style-loader!css-loader!sass-loader!./XTable-CellContent.scss';
+import './XTable-CellContent.scss';
 
 export const cnXTableCellContent = cn('XTable', 'CellContent');
 

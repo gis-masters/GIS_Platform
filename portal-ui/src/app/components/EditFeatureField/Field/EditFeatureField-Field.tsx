@@ -1,11 +1,11 @@
-import React, { FC } from 'react';
+import React, { type FC } from 'react';
 import { cn } from '@bem-react/classname';
 
-import { EditedField, ValueType } from '../../../services/data/schema/schemaOld.models';
+import { type EditedField, type ValueType } from '../../../services/data/schema/schemaOld.models';
 import { EditFeatureFieldControl } from '../Control/EditFeatureField-Control.composed';
-import { EditFeatureInfo } from '../EditFeatureField';
+import { type EditFeatureInfo } from '../EditFeatureField.models';
 
-import '!style-loader!css-loader!sass-loader!./EditFeatureField-Field.scss';
+import './EditFeatureField-Field.scss';
 
 const cnEditFeatureField = cn('EditFeatureField');
 

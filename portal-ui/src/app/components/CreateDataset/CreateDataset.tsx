@@ -6,7 +6,7 @@ import { PlaylistAdd } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
-import { Dataset, datasetSchema, NewDataset } from '../../services/data/vectorData/vectorData.models';
+import { type Dataset, datasetSchema, type NewDataset } from '../../services/data/vectorData/vectorData.models';
 import { createDataset } from '../../services/data/vectorData/vectorData.service';
 import { FormDialog } from '../FormDialog/FormDialog';
 

@@ -1,12 +1,12 @@
-import React, { FC } from 'react';
+import React, { type FC } from 'react';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 
 import { ServicesCalculatorServiceDescription } from '../ServiceDescription/ServicesCalculator-ServiceDescription';
 import { ServicesCalculatorServiceDetails } from '../ServiceDetails/ServicesCalculator-Service-Details';
-import { ServicesAdditions } from '../ServicesCalculator';
+import { type ServicesAdditions } from '../ServicesCalculator.models';
 
-import '!style-loader!css-loader!sass-loader!./ServicesCalculator-Additions.scss';
+import './ServicesCalculator-Additions.scss';
 
 const cnServicesCalculatorAdditions = cn('ServicesCalculator', 'Additions');
 

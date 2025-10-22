@@ -1,16 +1,16 @@
-import React, { ReactElement } from 'react';
+import React, { type ReactElement } from 'react';
 import { Tooltip } from '@mui/material';
 import { EditOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
 import { convertOldToNewProperty } from '../../services/data/schema/schema.utils';
-import { EditedField, OldPropertySchema } from '../../services/data/schema/schemaOld.models';
-import { EditFeatureContainerFormControl } from '../EditFeatureContainer/hooks/useEditFeatureState';
+import { type EditedField, type OldPropertySchema } from '../../services/data/schema/schemaOld.models';
+import { type EditFeatureContainerFormControl } from '../EditFeatureContainer/hooks/useEditFeatureState';
 import { FormDescription } from '../Form/Description/Form-Description';
 import FormControlWrapper from '../FormControl/FormControlWrapper';
 import { IconButton } from '../IconButton/IconButton';
 
-import '!style-loader!css-loader!sass-loader!./EditFeatureForm.scss';
+import './EditFeatureForm.scss';
 
 export const cnEditFeatureForm = cn('EditFeatureForm');
 

@@ -1,5 +1,5 @@
-import { Role } from '../../permissions/permissions.models';
-import { CrgLayer, CrgLayersGroup } from '../layers/layers.models';
+import { type Role } from '../../permissions/permissions.models';
+import { type CrgLayer, type CrgLayersGroup } from '../layers/layers.models';
 
 export type TreeItemPayload = CrgLayer | CrgLayersGroup;
 

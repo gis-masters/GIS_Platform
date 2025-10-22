@@ -1,11 +1,11 @@
-import React, { FC } from 'react';
+import React, { type FC } from 'react';
 import { IconButton, Tooltip } from '@mui/material';
 import { cn } from '@bem-react/classname';
 
 import { Filter } from '../../Icons/Filter';
 import { FilterOutlined } from '../../Icons/FilterOutlined';
 
-import '!style-loader!css-loader!sass-loader!./Layer-LegendFilterToggler.scss';
+import './Layer-LegendFilterToggler.scss';
 
 const cnLayerLegendFilterToggler = cn('Layer', 'LegendFilterToggler');
 

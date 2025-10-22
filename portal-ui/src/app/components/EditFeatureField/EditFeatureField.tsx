@@ -1,20 +1,14 @@
 import React, { Component } from 'react';
 import { cn } from '@bem-react/classname';
 
-import { EditedField, ValueType } from '../../services/data/schema/schemaOld.models';
-import { WfsFeature } from '../../services/geoserver/wfs/wfs.models';
+import { type EditedField, type ValueType } from '../../services/data/schema/schemaOld.models';
+import { type EditFeatureInfo } from './EditFeatureField.models';
 import { EditFeatureFieldField } from './Field/EditFeatureField-Field';
 import { EditFeatureFieldLabel } from './Label/EditFeatureField-Label';
 
-import '!style-loader!css-loader!sass-loader!./EditFeatureField.scss';
+import './EditFeatureField.scss';
 
 const cnEditFeatureField = cn('EditFeatureField');
-
-export interface EditFeatureInfo {
-  layerName: string;
-  feature: WfsFeature;
-  isReadOnly: boolean;
-}
 
 interface EditFeatureFieldProps {
   type: ValueType;

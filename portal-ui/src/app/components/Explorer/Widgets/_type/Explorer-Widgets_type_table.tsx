@@ -3,8 +3,8 @@ import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { withBemMod } from '@bem-react/core';
 
-import { communicationService, DataChangeEventDetail } from '../../../../services/communication.service';
-import { VectorTable, vectorTableSchema } from '../../../../services/data/vectorData/vectorData.models';
+import { communicationService, type DataChangeEventDetail } from '../../../../services/communication.service';
+import { type VectorTable, vectorTableSchema } from '../../../../services/data/vectorData/vectorData.models';
 import { getVectorTable } from '../../../../services/data/vectorData/vectorData.service';
 import { permissionsClient } from '../../../../services/permissions/permissions.client';
 import { Role } from '../../../../services/permissions/permissions.models';
@@ -16,7 +16,7 @@ import { assertExplorerItemDataTypeTable } from '../../Adapter/_type/Explorer-Ad
 import { getId } from '../../Adapter/Explorer-Adapter';
 import { ExplorerItemEntityTypeTitle, ExplorerItemType } from '../../Explorer.models';
 import { ExplorerInfoDescItem } from '../../InfoDescItem/Explorer-InfoDescItem';
-import { cnExplorerWidgets, ExplorerWidgetsProps } from '../Explorer-Widgets.base';
+import { cnExplorerWidgets, type ExplorerWidgetsProps } from '../Explorer-Widgets.base';
 
 @observer
 class ExplorerWidgetsTypeTable extends Component<ExplorerWidgetsProps> {

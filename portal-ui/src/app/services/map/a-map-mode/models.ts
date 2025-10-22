@@ -1,7 +1,7 @@
-import { SearchInfo } from '../../../components/SearchField/SearchField';
-import { MapMode } from '../map.models';
-import { EditFeaturesData } from './edit-feature/EditFeature.models';
-import { SelectedFeaturesData } from './selected-features/selectedFeatures.models';
+import { type SearchInfo } from '../../../components/SearchField/SearchField';
+import { type MapMode } from '../map.models';
+import { type EditFeaturesData } from './edit-feature/EditFeature.models';
+import { type SelectedFeaturesData } from './selected-features/selectedFeatures.models';
 export interface ModeProps {
   payload: EditFeaturesData | SelectedFeaturesData | SearchInfo | undefined;
 }

@@ -1,4 +1,4 @@
-import { GeometryType, NewWfsFeature } from '../../../../../src/app/services/geoserver/wfs/wfs.models';
+import { GeometryType, type NewWfsFeature } from '../../../../../src/app/services/geoserver/wfs/wfs.models';
 
 export const forCopy: NewWfsFeature[] = [
   {

@@ -12,15 +12,15 @@ import {
 } from '@mui/material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
-import { AxiosError } from 'axios';
+import { type AxiosError } from 'axios';
 import { pluralize } from 'numeralize-ru';
 
-import { Dataset, VectorTable } from '../../../services/data/vectorData/vectorData.models';
+import { type Dataset, type VectorTable } from '../../../services/data/vectorData/vectorData.models';
 import { getAllVectorTablesInDataset } from '../../../services/data/vectorData/vectorData.service';
-import { NewCrgLayer } from '../../../services/gis/layers/layers.models';
+import { type NewCrgLayer } from '../../../services/gis/layers/layers.models';
 import { alertLayerOperationError, createLayer } from '../../../services/gis/layers/layers.service';
 import { vectorLayerDefaults } from '../../../services/gis/layers/layers.utils';
-import { CrgProject } from '../../../services/gis/projects/projects.models';
+import { type CrgProject } from '../../../services/gis/projects/projects.models';
 import { projectsService } from '../../../services/gis/projects/projects.service';
 import { ActionsRight } from '../../ActionsRight/ActionsRight';
 import { Button } from '../../Button/Button';

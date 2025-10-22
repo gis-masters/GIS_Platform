@@ -3,7 +3,7 @@ import { boundClass } from 'autobind-decorator';
 import { Client } from '../../api/Client';
 import { http } from '../../api/http.service';
 import { Mime } from '../../util/Mime';
-import { AuthCredentials, OrganizationsListItemInfo, RegData } from './auth.models';
+import { type AuthCredentials, type OrganizationsListItemInfo, type RegData } from './auth.models';
 
 @boundClass
 class AuthClient extends Client {

@@ -4,12 +4,12 @@ import { Checkbox } from '@mui/material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
-import { WfsFeature } from '../../../services/geoserver/wfs/wfs.models';
+import { type WfsFeature } from '../../../services/geoserver/wfs/wfs.models';
 import { mapModeManager } from '../../../services/map/a-map-mode/MapModeManager';
 import { selectedFeaturesStore } from '../../../services/map/a-map-mode/selected-features/SelectedFeatures.store';
 import { MapMode, MapSelectionTypes } from '../../../services/map/map.models';
 
-import '!style-loader!css-loader!sass-loader!./Attributes-Check.scss';
+import './Attributes-Check.scss';
 
 const cnAttributesCheck = cn('Attributes', 'Check');
 

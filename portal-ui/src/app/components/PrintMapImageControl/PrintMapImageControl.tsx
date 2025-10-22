@@ -1,8 +1,8 @@
-import React, { FC, lazy, Suspense } from 'react';
+import React, { type FC, lazy, Suspense } from 'react';
 
-import { FormControlProps } from '../Form/Control/Form-Control';
+import { type FormControlProps } from '../Form/Control/Form-Control';
 
-const PrintMapImageControlAsync = lazy(() => import('./PrintMapImageControl.async'));
+const PrintMapImageControlAsync = lazy(() => import('./PrintMapImageControl.chunkroot'));
 
 export const PrintMapImageControl: FC<FormControlProps> = props => (
   <Suspense>

@@ -5,12 +5,12 @@ import { Dialog, DialogActions, DialogTitle } from '@mui/material';
 import { Restore, RestoreOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
-import { AxiosError } from 'axios';
+import { type AxiosError } from 'axios';
 
-import { LibraryRecord, LibraryRecordRaw } from '../../../services/data/library/library.models';
+import { type LibraryRecord, type LibraryRecordRaw } from '../../../services/data/library/library.models';
 import { updateLibraryRecord } from '../../../services/data/library/library.service';
 import { getPatch } from '../../../services/util/patch';
-import { ActionsItemVariant } from '../../Actions/Item/Actions-Item.base';
+import { type ActionsItemVariant } from '../../Actions/Item/Actions-Item.base';
 import { ActionsItem } from '../../Actions/Item/Actions-Item.composed';
 import { Button } from '../../Button/Button';
 import { Toast } from '../../Toast/Toast';

@@ -1,17 +1,15 @@
-import type { Options } from '@wdio/types';
-
 import { config as baseConfig } from './wdio.conf';
 
-export const config: Options.Testrunner = {
+export const config: WebdriverIO.Config = {
   ...baseConfig,
 
   baseUrl: `http://localhost:4200`,
   hostname: undefined,
   port: undefined,
   path: undefined,
+  maxInstances: 1,
   capabilities: [
     {
-      maxInstances: 1,
       browserName: 'chrome',
       acceptInsecureCerts: true,
       setWindowRect: true,

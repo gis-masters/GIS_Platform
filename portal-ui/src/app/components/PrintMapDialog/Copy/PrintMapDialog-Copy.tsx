@@ -10,7 +10,7 @@ import { copyNodeToClipboard } from '../../../services/util/clipboard.util';
 import { Toast } from '../../Toast/Toast';
 import { PrintMapDialogCopyButton } from '../CopyButton/PrintMapDialog-CopyButton';
 
-import '!style-loader!css-loader!sass-loader!./PrintMapDialog-Copy.scss';
+import './PrintMapDialog-Copy.scss';
 
 const cnPrintMapDialogCopy = cn('PrintMapDialog', 'Copy');
 

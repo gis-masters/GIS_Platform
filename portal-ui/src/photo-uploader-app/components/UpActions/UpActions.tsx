@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { type FC } from 'react';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 
@@ -6,7 +6,7 @@ import { Button } from '../../../app/components/Button/Button';
 import { PhotoUploaderScreens, photoUploaderStore } from '../../../photo-uploader-app/stores/PhotoUploader.store';
 import { uploadPhotos } from '../../services/photoUploader.service';
 
-import '!style-loader!css-loader!sass-loader!./UpActions.scss';
+import './UpActions.scss';
 
 const cnUpActions = cn('UpActions');
 

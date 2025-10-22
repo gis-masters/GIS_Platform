@@ -1,6 +1,6 @@
 import { organizationsClient } from '../../../../src/app/services/auth/organizations/organizations.client';
-import { CompositeSettings } from '../../../../src/app/stores/OrganizationSettings.store';
-import { getTestUser, TestUser } from '../auth/testUsers';
+import { type CompositeSettings } from '../../../../src/app/stores/OrganizationSettings.store';
+import { getTestUser, type TestUser } from '../auth/testUsers';
 import { requestAs, requestAsSuperAdmin } from '../requestAs';
 
 export async function setOrgSetting(payload: CompositeSettings): Promise<void> {

@@ -3,11 +3,11 @@ import { observer } from 'mobx-react';
 import { withBemMod } from '@bem-react/core';
 import { boundMethod } from 'autobind-decorator';
 
-import { MinimizedCrgUser } from '../../../../services/auth/users/users.models';
-import { PropertySchemaUser, PropertyType } from '../../../../services/data/schema/schema.models';
+import { type MinimizedCrgUser } from '../../../../services/auth/users/users.models';
+import { type PropertySchemaUser, PropertyType } from '../../../../services/data/schema/schema.models';
 import { Users } from '../../../Users/Users';
 import { FormErrors } from '../../Errors/Form-Errors';
-import { cnFormControl, FormControlProps } from '../Form-Control';
+import { cnFormControl, type FormControlProps } from '../Form-Control';
 
 @observer
 class FormControlTypeUser extends Component<FormControlProps> {

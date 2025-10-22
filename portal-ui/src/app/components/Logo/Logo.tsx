@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { type FC } from 'react';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 
@@ -6,7 +6,7 @@ import { environment } from '../../services/environment';
 import { Favicon } from '../Favicon/Favicon';
 import { Link } from '../Link/Link';
 
-import '!style-loader!css-loader!sass-loader!./Logo.scss';
+import './Logo.scss';
 
 const cnLogo = cn('Logo');
 

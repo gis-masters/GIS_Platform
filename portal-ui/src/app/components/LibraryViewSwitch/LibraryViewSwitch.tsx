@@ -5,7 +5,7 @@ import { Tooltip } from '@mui/material';
 import { TableView } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
-import { Library } from '../../services/data/library/library.models';
+import { type Library } from '../../services/data/library/library.models';
 import { getLibraryRecord } from '../../services/data/library/library.service';
 import { getLibraryFolderExplorerUrl, getRegistryUrlWithPath } from '../DataManagement/DataManagement.utils';
 import { IconButton } from '../IconButton/IconButton';

@@ -1,9 +1,9 @@
-import React, { FC, useCallback } from 'react';
+import React, { type FC, useCallback } from 'react';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
-import { AxiosError } from 'axios';
+import { type AxiosError } from 'axios';
 
-import { CrgProject } from '../../../services/gis/projects/projects.models';
+import { type CrgProject } from '../../../services/gis/projects/projects.models';
 import { projectsService } from '../../../services/gis/projects/projects.service';
 import { allProjects } from '../../../stores/AllProjects.store';
 import { currentProjectFolderStore } from '../../../stores/CurrentProjectFolder.store';
@@ -11,7 +11,7 @@ import { Button } from '../../Button/Button';
 import { Toast } from '../../Toast/Toast';
 import { ProjectFolderName } from '../Name/ProjectFolder-Name';
 
-import '!style-loader!css-loader!sass-loader!./ProjectFolder-Card.scss';
+import './ProjectFolder-Card.scss';
 
 const cnProjectFolderCard = cn('ProjectFolder', 'Card');
 

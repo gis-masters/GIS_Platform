@@ -1,6 +1,6 @@
 import { When } from '@wdio/cucumber-framework';
 
-import { Schema } from '../../../../src/app/services/data/schema/schema.models';
+import { type Schema } from '../../../../src/app/services/data/schema/schema.models';
 import { getTestSchema } from '../../commands/schemas/testSchemas';
 import { schemaActionsBlock } from './SchemaActions.block';
 

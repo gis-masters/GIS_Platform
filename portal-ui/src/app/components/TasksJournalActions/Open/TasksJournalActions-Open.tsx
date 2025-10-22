@@ -3,8 +3,8 @@ import { observer, useLocalObservable } from 'mobx-react';
 import { FileOpenOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
-import { Task } from '../../../services/data/task/task.models';
-import { ActionsItemVariant } from '../../Actions/Item/Actions-Item.base';
+import { type Task } from '../../../services/data/task/task.models';
+import { type ActionsItemVariant } from '../../Actions/Item/Actions-Item.base';
 import { ActionsItem } from '../../Actions/Item/Actions-Item.composed';
 import { TaskDialog } from '../../TaskDialog/TaskDialog';
 

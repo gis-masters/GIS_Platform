@@ -8,7 +8,7 @@ class CreateBufferButtonBlock extends Block {
   async clickCreateBufferBtn(): Promise<void> {
     await this.waitForVisible();
 
-    const $container = await this.$('container');
+    const $container = await this.findBySelector('container');
     await $container.waitForClickable();
     await $container.click();
   }

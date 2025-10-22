@@ -15,7 +15,7 @@ import { mapStore } from '../../../stores/Map.store';
 import { mapLabelsStore } from '../../../stores/MapLabels.store';
 import { IconButton } from '../../IconButton/IconButton';
 
-import '!style-loader!css-loader!sass-loader!./EditFeatureGeometry-Draw.scss';
+import './EditFeatureGeometry-Draw.scss';
 
 const cnEditFeatureGeometryDraw = cn('EditFeatureGeometry', 'Draw');
 

@@ -3,8 +3,8 @@ import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { withBemMod } from '@bem-react/core';
 
-import { communicationService, DataChangeEventDetail } from '../../../../services/communication.service';
-import { CrgProject } from '../../../../services/gis/projects/projects.models';
+import { communicationService, type DataChangeEventDetail } from '../../../../services/communication.service';
+import { type CrgProject } from '../../../../services/gis/projects/projects.models';
 import { projectsService } from '../../../../services/gis/projects/projects.service';
 import { permissionsClient } from '../../../../services/permissions/permissions.client';
 import { Role } from '../../../../services/permissions/permissions.models';
@@ -16,7 +16,7 @@ import { assertExplorerItemDataTypeProject } from '../../Adapter/_type/Explorer-
 import { getId } from '../../Adapter/Explorer-Adapter';
 import { ExplorerItemEntityTypeTitle, ExplorerItemType } from '../../Explorer.models';
 import { ExplorerInfoDescItem } from '../../InfoDescItem/Explorer-InfoDescItem';
-import { cnExplorerWidgets, ExplorerWidgetsProps } from '../Explorer-Widgets.base';
+import { cnExplorerWidgets, type ExplorerWidgetsProps } from '../Explorer-Widgets.base';
 
 @observer
 class ExplorerWidgetsTypeProject extends Component<ExplorerWidgetsProps> {

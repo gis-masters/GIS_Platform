@@ -5,13 +5,13 @@ import { ContentCopy } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 import { clone } from 'lodash';
-import { Coordinate } from 'ol/coordinate';
+import { type Coordinate } from 'ol/coordinate';
 
 import { coordinateHighlightService } from '../../../services/map/coordinate-highlight/coordinate-highlight.service';
 import { services } from '../../../services/services';
 import { Toast } from '../../Toast/Toast';
 
-import '!style-loader!css-loader!sass-loader!./EditFeatureGeometry-CopyCoords.scss';
+import './EditFeatureGeometry-CopyCoords.scss';
 
 const cnEditFeatureGeometryCopyCoords = cn('EditFeatureGeometry', 'CopyCoords');
 

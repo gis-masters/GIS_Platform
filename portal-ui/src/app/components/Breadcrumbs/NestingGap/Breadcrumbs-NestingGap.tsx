@@ -1,8 +1,8 @@
-import React, { FC } from 'react';
+import React, { type FC } from 'react';
 import { SubdirectoryArrowRight } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
-import '!style-loader!css-loader!sass-loader!./Breadcrumbs-NestingGap.scss';
+import './Breadcrumbs-NestingGap.scss';
 
 const cnBreadcrumbsNestingGap = cn('Breadcrumbs', 'NestingGap');
 

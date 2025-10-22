@@ -1,15 +1,15 @@
-import React, { FC, useCallback } from 'react';
+import React, { type FC, useCallback } from 'react';
 import { cn } from '@bem-react/classname';
 import { FreeMode, Navigation, Pagination, Thumbs, Zoom } from 'swiper/modules';
-import { Swiper, SwiperClass, SwiperSlide } from 'swiper/react';
+import { Swiper, type SwiperClass, SwiperSlide } from 'swiper/react';
 
 import { isPdfFile } from '../../../services/data/files/files.util';
-import { CarouselImageInfo } from '../Carousel';
+import { type CarouselImageInfo } from '../Carousel';
 import { CarouselDocument } from '../Document/Carousel-Document';
 import { CarouselMainImage } from '../MainImage/Carousel-MainImage';
-import { ImagesForCarouselWrapper } from '../Wrapper/Carousel-Wrapper';
+import type { ImagesForCarouselWrapper } from '../Wrapper/Carousel-Wrapper';
 
-import '!style-loader!css-loader!sass-loader!./Carousel-MainSwiper.scss';
+import './Carousel-MainSwiper.scss';
 
 const cnCarousel = cn('Carousel');
 

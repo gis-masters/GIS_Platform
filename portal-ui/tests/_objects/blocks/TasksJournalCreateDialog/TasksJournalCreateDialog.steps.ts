@@ -1,6 +1,6 @@
 import { When } from '@wdio/cucumber-framework';
 
-import { TestUser } from '../../commands/auth/testUsers';
+import { type TestUser } from '../../commands/auth/testUsers';
 import { usersAddDialogBlock } from '../Users/AddDialog/Users-AddDialog.block';
 import { tasksJournalCreateDialogBlock } from './TasksJournalCreateDialog.block';
 

@@ -2,12 +2,12 @@ import React, { Component } from 'react';
 import { Tooltip } from '@mui/material';
 import { Share } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
-import { IClassNameProps } from '@bem-react/core';
+import { type IClassNameProps } from '@bem-react/core';
 import { boundMethod } from 'autobind-decorator';
 import { pluralize } from 'numeralize-ru';
 
-import { VectorTable } from '../../services/data/vectorData/vectorData.models';
-import { WfsFeature } from '../../services/geoserver/wfs/wfs.models';
+import { type VectorTable } from '../../services/data/vectorData/vectorData.models';
+import { type WfsFeature } from '../../services/geoserver/wfs/wfs.models';
 import { getLayerByFeatureInCurrentProject } from '../../services/gis/layers/layers.utils';
 import { getFeaturesUrl } from '../../services/map/map.util';
 import { copyToClipboard } from '../../services/util/clipboard.util';

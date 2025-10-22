@@ -1,4 +1,4 @@
-import { DataEntityType } from '../data/vectorData/vectorData.models';
+import type { DataEntityType } from '../data/vectorData/vectorData.models';
 
 export enum PermissionType {
   GIS,

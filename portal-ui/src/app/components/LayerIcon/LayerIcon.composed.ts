@@ -1,4 +1,4 @@
-import { composeU, HOC } from '@bem-react/core';
+import { composeU, type HOC } from '@bem-react/core';
 
 import { withTypeDxf } from './_type/LayerIcon_type_dxf';
 import { withTypeError } from './_type/LayerIcon_type_error';
@@ -8,7 +8,7 @@ import { withTypeRaster } from './_type/LayerIcon_type_raster';
 import { withTypeShp } from './_type/LayerIcon_type_shp';
 import { withTypeTab } from './_type/LayerIcon_type_tab';
 import { withTypeVector } from './_type/LayerIcon_type_vector';
-import { LayerIconBase as Presenter, LayerIconProps } from './LayerIcon.base';
+import { LayerIconBase as Presenter, type LayerIconProps } from './LayerIcon.base';
 
 export const LayerIcon = composeU(
   withTypeVector as HOC<LayerIconProps>,

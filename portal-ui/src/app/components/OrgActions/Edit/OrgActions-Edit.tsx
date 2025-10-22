@@ -5,8 +5,8 @@ import { IconButton, Tooltip } from '@mui/material';
 import { Edit } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
-import { CrgGroup } from '../../../services/auth/groups/groups.models';
-import { CrgUser } from '../../../services/auth/users/users.models';
+import { type CrgGroup } from '../../../services/auth/groups/groups.models';
+import { type CrgUser } from '../../../services/auth/users/users.models';
 import { OrgGroupsCreateEditDialog } from '../../OrgGroupCreateEditDialog/OrgGroupsCreateEditDialog';
 import { UserCreateEditDialog } from '../../UserCreateEditDialog/UserCreateEditDialog';
 

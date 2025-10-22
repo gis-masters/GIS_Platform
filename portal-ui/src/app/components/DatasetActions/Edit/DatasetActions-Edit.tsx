@@ -5,9 +5,9 @@ import { IconButton, Tooltip } from '@mui/material';
 import { Edit, EditOutlined, SaveOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
-import { AxiosError } from 'axios';
+import { type AxiosError } from 'axios';
 
-import { Dataset, datasetSchema } from '../../../services/data/vectorData/vectorData.models';
+import { type Dataset, datasetSchema } from '../../../services/data/vectorData/vectorData.models';
 import { updateDataset } from '../../../services/data/vectorData/vectorData.service';
 import { services } from '../../../services/services';
 import { getPatch } from '../../../services/util/patch';

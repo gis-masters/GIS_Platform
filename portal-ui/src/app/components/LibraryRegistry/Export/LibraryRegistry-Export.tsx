@@ -6,16 +6,16 @@ import { ArchiveOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
-import { Library, LibraryRecord } from '../../../services/data/library/library.models';
+import { type Library, type LibraryRecord } from '../../../services/data/library/library.models';
 import { getAllLibraryRecordsAsRegistry } from '../../../services/data/library/library.service';
-import { PropertySchema } from '../../../services/data/schema/schema.models';
+import { type PropertySchema } from '../../../services/data/schema/schema.models';
 import { getReadablePropertyValue } from '../../../services/data/schema/schema.utils';
-import { PageOptions } from '../../../services/models';
+import { type PageOptions } from '../../../services/models';
 import { exportAsCSV, exportAsXLSX } from '../../../services/util/export';
 import { sleep } from '../../../services/util/sleep';
 import { FileIcon } from '../../FileIcon/FileIcon';
 import { MenuIconButton } from '../../MenuIconButton/MenuIconButton';
-import { XTableColumn } from '../../XTable/XTable.models';
+import { type XTableColumn } from '../../XTable/XTable.models';
 
 const cnLibraryRegistryExport = cn('LibraryRegistry', 'Export');
 

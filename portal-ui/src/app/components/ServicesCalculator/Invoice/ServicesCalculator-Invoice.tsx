@@ -5,9 +5,9 @@ import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
 import { Button } from '../../Button/Button';
-import { InvoiceInfo, ServicesInfo } from '../ServicesCalculator';
+import { type InvoiceInfo, type ServicesInfo } from '../ServicesCalculator.models';
 
-import '!style-loader!css-loader!sass-loader!./ServicesCalculator-Invoice.scss';
+import './ServicesCalculator-Invoice.scss';
 
 const cnServicesCalculatorInvoice = cn('ServicesCalculator', 'Invoice');
 

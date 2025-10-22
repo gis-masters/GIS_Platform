@@ -1,15 +1,21 @@
-import React, { ReactNode } from 'react';
+import React, { type ReactNode } from 'react';
 import { InsertDriveFileOutlined } from '@mui/icons-material';
-import { AxiosError } from 'axios';
+import { type AxiosError } from 'axios';
 
-import { Emitter } from '../../../services/common/Emitter';
-import { DataChangeEventDetail } from '../../../services/communication.service';
-import { PageOptions, SortOrder } from '../../../services/models';
+import { type Emitter } from '../../../services/common/Emitter';
+import { type DataChangeEventDetail } from '../../../services/communication.service';
+import { type PageOptions, type SortOrder } from '../../../services/models';
 import { services } from '../../../services/services';
 import { Toast } from '../../Toast/Toast';
-import { Adapter, ExplorerItemData, ExplorerItemDataAllTypes, ExplorerItemType, SortItem } from '../Explorer.models';
-import { ExplorerService } from '../Explorer.service';
-import { ExplorerStore } from '../Explorer.store';
+import {
+  type Adapter,
+  type ExplorerItemData,
+  type ExplorerItemDataAllTypes,
+  ExplorerItemType,
+  type SortItem
+} from '../Explorer.models';
+import { type ExplorerService } from '../Explorer.service';
+import { type ExplorerStore } from '../Explorer.store';
 import { ExplorerAdapterTypeBasemap } from './_type/Explorer-Adapter_type_basemap';
 import { ExplorerAdapterTypeBasemapsRoot } from './_type/Explorer-Adapter_type_basemapsRoot';
 import { ExplorerAdapterTypeDataset } from './_type/Explorer-Adapter_type_dataset';

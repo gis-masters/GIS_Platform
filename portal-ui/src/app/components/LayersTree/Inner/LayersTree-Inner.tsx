@@ -1,7 +1,7 @@
-import React, { FC, LegacyRef, ReactNode } from 'react';
+import React, { type FC, type LegacyRef, type ReactNode } from 'react';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
-import { DroppableProvidedProps } from 'react-beautiful-dnd';
+import { type DroppableProvidedProps } from 'react-beautiful-dnd';
 
 import { currentProject } from '../../../stores/CurrentProject.store';
 import { LayersTreeItem } from '../Item/LayersTree-Item';

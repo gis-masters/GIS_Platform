@@ -3,24 +3,20 @@ import { computed, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 
-import { CrgGroup } from '../../services/auth/groups/groups.models';
 import { groupsService } from '../../services/auth/groups/groups.service';
 import { PropertyType } from '../../services/data/schema/schema.models';
 import { allGroups } from '../../stores/AllGroups.store';
 import { organizationSettings } from '../../stores/OrganizationSettings.store';
 import { XTable } from '../XTable/XTable';
-import { XTableColumn } from '../XTable/XTable.models';
+import { type XTableColumn } from '../XTable/XTable.models';
 import { OrgGroupsCreate } from './Create/OrgGroups-Create';
 import { OrgGroupsGroupActions } from './GroupActions/OrgGroups-GroupActions';
+import { type CrgGroupExtended } from './OrgGroups.models';
 import { OrgGroupsPermissionsCount } from './PermissionsCount/OrgGroups-PermissionsCount';
 
-import '!style-loader!css-loader!sass-loader!./OrgGroups.scss';
+import './OrgGroups.scss';
 
 const cnOrgGroups = cn('OrgGroups');
-
-export interface CrgGroupExtended extends CrgGroup {
-  usersCount: number;
-}
 
 @observer
 export class OrgGroups extends Component {
