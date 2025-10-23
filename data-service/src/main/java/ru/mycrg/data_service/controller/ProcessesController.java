@@ -7,9 +7,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import ru.mycrg.data_service.dto.ProcessDto;
 import ru.mycrg.data_service.entity.Process;
 import ru.mycrg.data_service.exceptions.DataServiceException;
-import ru.mycrg.data_service.dto.ProcessDto;
 import ru.mycrg.data_service.service.processes.ProcessHandler;
 import ru.mycrg.data_service.service.processes.ProcessService;
 import ru.mycrg.http_client.JsonConverter;
@@ -49,7 +49,8 @@ public class ProcessesController {
     public ResponseEntity<Resource<Process>> initProcessWithFile(@Valid @RequestParam String processModelJson,
                                                                  @RequestParam MultipartFile file) {
         ProcessDto processableModel = JsonConverter.fromJson(processModelJson, ProcessDto.class)
-                                                   .orElseThrow(() -> new DataServiceException("Некорректное тело запроса"));
+                                                   .orElseThrow(
+                                                           () -> new DataServiceException("Некорректное тело запроса"));
 
         Map<String, Object> payloadWithFile = (Map<String, Object>) processableModel.getPayload();
         payloadWithFile.put("file", file);

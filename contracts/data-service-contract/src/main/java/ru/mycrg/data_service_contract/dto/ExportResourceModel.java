@@ -1,8 +1,10 @@
 package ru.mycrg.data_service_contract.dto;
 
 import javax.validation.constraints.NotEmpty;
+import java.io.Serializable;
+import java.util.Objects;
 
-public class ExportResourceModel {
+public class ExportResourceModel implements Serializable {
 
     @NotEmpty
     private String dataset;
@@ -38,5 +40,22 @@ public class ExportResourceModel {
     @Override
     public String toString() {
         return dataset + "." + table;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        ExportResourceModel that = (ExportResourceModel) obj;
+        return Objects.equals(dataset, that.dataset) && Objects.equals(table, that.table);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(dataset, table);
     }
 }

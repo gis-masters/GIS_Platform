@@ -9,7 +9,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import ru.mycrg.gis_service.dto.LayerCreateDto;
-import ru.mycrg.gis_service.dto.LayerProjection;
+import ru.mycrg.gis_service_contract.dto.LayerProjection;
 import ru.mycrg.gis_service.exceptions.BindingErrorsException;
 import ru.mycrg.gis_service.service.layers.LayerService;
 import ru.mycrg.gis_service.validators.CrgLayerValidator;

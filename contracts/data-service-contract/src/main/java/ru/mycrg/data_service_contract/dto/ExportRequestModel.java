@@ -2,25 +2,29 @@ package ru.mycrg.data_service_contract.dto;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
+import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
-// TODO: в будущем вернуться к врапперу. пока как есть
-public class ExportRequestModel {
+//Сейчас экспортом ESRI Shapefile занимается Gis-service.
+// TODO: вернуть его на обычный /export api
+
+public class ExportRequestModel implements Serializable {
 
     private String wsUiId;
 
     private String docSchema;
 
     @NotBlank
-    @Pattern(regexp = "^(GML|GPKG|ESRI Shapefile)$", message = "Допустимые форматы: 'ESRI Shapefile', 'GML', 'GPKG'")
+    @Pattern(regexp = "^(GML|GPKG|ESRI Shapefile)$",
+             message = "Допустимые форматы: 'ESRI Shapefile', 'GML', 'GPKG'")
     private String format;
 
     @Valid
-    @NotEmpty
     private List<ExportResourceModel> resources = new LinkedList<>();
+
+    private Object payload;
 
     private List<ExportDetails> exportDetails = new LinkedList<>();
 
@@ -82,5 +86,13 @@ public class ExportRequestModel {
 
     public void setExportDetails(List<ExportDetails> exportDetails) {
         this.exportDetails = exportDetails;
+    }
+
+    public Object getPayload() {
+        return payload;
+    }
+
+    public void setPayload(Object payload) {
+        this.payload = payload;
     }
 }

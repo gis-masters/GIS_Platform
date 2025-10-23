@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import ru.mycrg.auth_facade.IAuthenticationFacade;
 import ru.mycrg.geoserver_client.services.layers.VectorLayer;
 import ru.mycrg.geoserver_client.services.layers.models.Layer;
-import ru.mycrg.gis_service.dto.LayerProjection;
+import ru.mycrg.gis_service_contract.dto.LayerProjection;
 import ru.mycrg.gis_service.exceptions.BadRequestException;
 import ru.mycrg.gis_service.exceptions.ErrorInfo;
 import ru.mycrg.gis_service.exceptions.NotFoundException;

@@ -84,6 +84,7 @@
         <module>contracts/messagebus-contract</module>
         <module>contracts/auth-service-contract</module>
         <module>contracts/data-service-contract</module>
+        <module>contracts/gis-service-contract</module>
         <module>contracts/audit-service-contract</module>
         <module>contracts/resource-analyzer-contract</module>
         <module>contracts/gisogd-service-contract</module>

@@ -67,6 +67,9 @@ public class MessageBusProperties {
     public static final String DATA_TO_GEO_WRAPPER_QUEUE = "dataToGeoWrapperQueue";
     public static final String GEO_WRAPPER_TO_DATA_QUEUE = "GeoWrapperToDataQueue";
 
+    public static final String INTEGRATION_TO_GEO_WRAPPER_QUEUE = "IntegrationToGeoWrapperQueue";
+    public static final String GEO_WRAPPER_TO_INTEGRATION_QUEUE = "GeoWrapperToIntegrationQueue";
+
     // Rpc data-service - gis-service
     public static final String RPC_REQUEST_QUEUE = "rpc_request_queue";
     public static final String RPC_REPLY_QUEUE = "rpc_reply_queue";

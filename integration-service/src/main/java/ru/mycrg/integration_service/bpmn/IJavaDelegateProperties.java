@@ -3,9 +3,11 @@ package ru.mycrg.integration_service.bpmn;
 public interface IJavaDelegateProperties {
 
     String EVENT_VAR_NAME = "event";
+    String EVENT_SUB_PAYLOAD_NAME = "event_sub_payload";
     String FAIL_REASON = "failReason";
 
     String TOKEN_VAR_NAME = "token";
+    String DB_NAME = "dbName";
     String ORG_ID_VAR_NAME = "orgId";
     String PROCESS_ID_VAR_NAME = "processId";
 
@@ -19,6 +21,9 @@ public interface IJavaDelegateProperties {
     String SPECIALIZATION_LAYERS_FOR_PUBLICATION = "SPECIALIZATION_LAYERS_FOR_PUBLICATION";
 
     String CHECK_STATUS_VAR_NAME = "checkStatus";
+
+    String BUSINESS_KEY_VAR_NAME = "businessKey";
+    String GPKG_PATH_VAR_NAME = "gpkgPath";
 
     String ENTITY_ID_VAR_NAME = "entityId";
 

@@ -1,6 +1,7 @@
 package ru.mycrg.data_service.service.export;
 
-// TODO: в будущем вернуться к врапперу. пока как есть
+//Сейчас экспортом ESRI Shapefile занимается Gis-service.
+// TODO: вернуть его на обычный /export api
 public enum ExportType {
     SHAPE("ESRI Shapefile"),
     GPKG("GPKG"),

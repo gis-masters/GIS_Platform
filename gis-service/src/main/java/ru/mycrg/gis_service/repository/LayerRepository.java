@@ -63,4 +63,6 @@ public interface LayerRepository extends PagingAndSortingRepository<Layer, Long>
     List<Layer> findByTableNameAndNativeCRS(String tableName, String nativeCrs);
 
     List<Layer> findByNativeCRS(String nativeCrs);
+
+    List<Layer> getLayerByIdIn(List<Long> layerIds);
 }

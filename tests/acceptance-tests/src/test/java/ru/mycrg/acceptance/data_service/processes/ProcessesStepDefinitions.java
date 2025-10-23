@@ -6,10 +6,11 @@ import io.restassured.http.ContentType;
 import io.restassured.specification.RequestSpecification;
 import ru.mycrg.acceptance.BaseStepsDefinitions;
 import ru.mycrg.acceptance.auth_service.AuthorizationBase;
-import ru.mycrg.acceptance.data_service.dto.DatasetCreateDto;
 import ru.mycrg.acceptance.data_service.dto.FileDescriptionModel;
+import ru.mycrg.common_contracts.generated.gpkg.GkpgExportDetailsModel;
 import ru.mycrg.data_service_contract.dto.ExportRequestModel;
 import ru.mycrg.data_service_contract.dto.ExportResourceModel;
+import ru.mycrg.data_service_contract.dto.gpkg.GpkgPayload;
 import ru.mycrg.data_service_contract.enums.ProcessType;
 
 import java.io.File;
@@ -26,7 +27,9 @@ import static ru.mycrg.acceptance.data_service.FilesStepDefinitions.currentFiles
 import static ru.mycrg.acceptance.data_service.datasets.DatasetsStepsDefinitions.currentDatasetIdentifier;
 import static ru.mycrg.acceptance.data_service.tables.TablesStepsDefinitions.anotherTableName;
 import static ru.mycrg.acceptance.data_service.tables.TablesStepsDefinitions.currentTableName;
+import static ru.mycrg.acceptance.gis_service.LayerStepDefinitions.layerId;
 import static ru.mycrg.acceptance.gis_service.ProjectStepsDefinitions.projectId;
+import static ru.mycrg.data_service_contract.dto.gpkg.GpkgExportTypes.*;
 
 public class ProcessesStepDefinitions extends BaseStepsDefinitions {
 
@@ -90,6 +93,23 @@ public class ProcessesStepDefinitions extends BaseStepsDefinitions {
         getCurrentProcess();
         String path = response.jsonPath().get("details");
         String fileName = path.substring(path.lastIndexOf('/') + 1);
+
+        response = getBaseRequestWithCurrentCookie()
+                .given().
+                        basePath("")
+                .when().
+                        log().ifValidationFails().
+                        get("/api/data/export/" + fileName);
+
+        assertEquals(size, response.asByteArray().length);
+    }
+
+    @And("размер полученного gpkg {int}")
+    public void sizeOfGpkgFile(int size) {
+        getCurrentProcess();
+        GkpgExportDetailsModel details = response.jsonPath().getObject("details", GkpgExportDetailsModel.class);
+        String fileName = details.getPathToGpkgFile();
+        fileName = fileName.substring(fileName.lastIndexOf('/') + 1);
 
         response = getBaseRequestWithCurrentCookie()
                 .given().
@@ -179,22 +199,95 @@ public class ProcessesStepDefinitions extends BaseStepsDefinitions {
         waitUntilProcessCompleteWithStatus(currentProcessId, "ERROR");
     }
 
-    @When("Текущий пользователь экспортирует текущий слой в GeoPackage")
-    public void exportInGeoPackage() {
-        ExportRequestModel exportProcessModel = createSingleResourceExportModel(currentDatasetIdentifier,
-                                                                                currentTableName);
+    @When("Текущий пользователь экспортирует текущий проект в GeoPackage")
+    public void exportProjectInGeoPackage() {
+        ExportRequestModel exportProcessModel = new ExportRequestModel();
+
+        GpkgPayload payload = new GpkgPayload();
+
+        Long projectId = response.jsonPath().getLong("id");
+        List<Long> layerIds = new ArrayList<>();
+        layerIds.add(projectId);
+
+        payload.setType(PROJECT);
+        payload.setPayload(layerIds);
+
+        exportProcessModel.setFormat("GPKG");
+        exportProcessModel.setPayload(payload);
 
         executeExportRequest(exportProcessModel);
     }
 
-    @When("Текущий пользователь экспортирует два слоя в GeoPackage")
-    public void massExportInGeoPackage() {
-        List<String> scenarioDatasets = new LinkedList<>();
-        for (Map.Entry<String, DatasetCreateDto> entry: datasetsPool.entrySet()) {
-            scenarioDatasets.add(entry.getKey());
+    @When("Текущий пользователь экспортирует текущий слой в GeoPackage")
+    public void exportLayerInGeoPackage() {
+        Long currentLayerId;
+        if (layerId != null) {
+            currentLayerId = Long.valueOf(layerId);
+        } else {
+            currentLayerId = response.jsonPath().getLong("id");
         }
 
-        ExportRequestModel exportProcessModel = createTwoObjectsResourceExportModel(scenarioDatasets);
+        List<Long> layerIds = new ArrayList<>();
+        layerIds.add(currentLayerId);
+
+        GpkgPayload payload = new GpkgPayload();
+        payload.setType(LAYER);
+        payload.setPayload(layerIds);
+
+        ExportRequestModel exportProcessModel = new ExportRequestModel();
+        exportProcessModel.setFormat("GPKG");
+        exportProcessModel.setPayload(payload);
+
+        executeExportRequest(exportProcessModel);
+    }
+
+    @When("Текущий пользователь экспортирует текущую таблицу в GeoPackage")
+    public void exportTableInGeoPackage() {
+        ExportRequestModel exportProcessModel = new ExportRequestModel();
+
+        GpkgPayload payload = new GpkgPayload();
+
+        List<ExportResourceModel> exportResourceModels = new ArrayList<>();
+        exportResourceModels.add(new ExportResourceModel(currentDatasetIdentifier, currentTableName));
+
+        payload.setType(TABLE);
+        payload.setPayload(exportResourceModels);
+
+        exportProcessModel.setFormat("GPKG");
+        exportProcessModel.setPayload(payload);
+
+        executeExportRequest(exportProcessModel);
+    }
+
+    @When("Текущий пользователь экспортирует последние два слоя в GeoPackage")
+    public void exportLastTwoLayersInGeoPackage() {
+        List<Long> layerIds = new ArrayList<>();
+        layerIds.add(Long.valueOf(layerId));
+        layerIds.add(response.jsonPath().getLong("id"));
+
+        GpkgPayload payload = new GpkgPayload();
+        payload.setType(LAYER);
+        payload.setPayload(layerIds);
+
+        ExportRequestModel exportProcessModel = new ExportRequestModel();
+        exportProcessModel.setFormat("GPKG");
+        exportProcessModel.setPayload(payload);
+
+        executeExportRequest(exportProcessModel);
+    }
+
+    @When("Текущий пользователь экспортирует несуществующие слои в GeoPackage")
+    public void exportGhostLayersInGeoPackage() {
+        List<Long> layerIds = new ArrayList<>();
+        layerIds.add(100_000_000L);
+
+        GpkgPayload payload = new GpkgPayload();
+        payload.setType(LAYER);
+        payload.setPayload(layerIds);
+
+        ExportRequestModel exportProcessModel = new ExportRequestModel();
+        exportProcessModel.setFormat("GPKG");
+        exportProcessModel.setPayload(payload);
 
         executeExportRequest(exportProcessModel);
     }
@@ -336,38 +429,6 @@ public class ProcessesStepDefinitions extends BaseStepsDefinitions {
         placementModel.setFileId(fileId);
 
         placeFile(placementModel);
-    }
-
-    private ExportRequestModel createSingleResourceExportModel(String datasetIdentifier, String tableName) {
-        ExportRequestModel exportProcessModel = new ExportRequestModel();
-        exportProcessModel.setFormat("GPKG");
-
-        ExportResourceModel resource = new ExportResourceModel();
-        resource.setDataset(datasetIdentifier);
-        resource.setTable(tableName);
-
-        exportProcessModel.setResources(Collections.singletonList(resource));
-
-        return exportProcessModel;
-    }
-
-    private static ExportRequestModel createTwoObjectsResourceExportModel(List<String> scenarioDatasets) {
-        ExportRequestModel exportProcessModel = new ExportRequestModel();
-        exportProcessModel.setFormat("GPKG");
-
-        // Добавляем первый ресурс
-        ExportResourceModel firstResource = new ExportResourceModel();
-        firstResource.setDataset(scenarioDatasets.get(0));
-        firstResource.setTable(scenarioTables.get(0).getName());
-
-        // Добавляем второй ресурс
-        ExportResourceModel secondResource = new ExportResourceModel();
-        secondResource.setDataset(scenarioDatasets.get(1));
-        secondResource.setTable(scenarioTables.get(1).getName());
-
-        exportProcessModel.setResources(Arrays.asList(firstResource, secondResource));
-
-        return exportProcessModel;
     }
 
     private void executeExportRequest(ExportRequestModel exportProcessModel) {

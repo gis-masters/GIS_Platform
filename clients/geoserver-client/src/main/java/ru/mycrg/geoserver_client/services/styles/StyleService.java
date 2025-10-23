@@ -24,7 +24,7 @@ public class StyleService extends GeoServerBaseService {
     }
 
     public Optional<Style> getByName(String styleName) throws HttpClientException {
-        log.info("get style: {} ", styleName);
+        log.info("Получение системной информации о стиле: {} ", styleName);
         String url = getGeoserverRestUrl().append("/styles/")
                                           .append(format("%s.json", styleName))
                                           .toString();
@@ -43,6 +43,19 @@ public class StyleService extends GeoServerBaseService {
         } else {
             return Optional.empty();
         }
+    }
+
+    public ResponseModel<String> getStyleBody(String styleName) throws HttpClientException {
+        log.info("Получения 'body' для стиля: {} ", styleName);
+
+        String url = getGeoserverRestUrl().append("/styles/")
+                                          .append(format("%s.sld", styleName))
+                                          .toString();
+
+        Request request = builderWithBearerAuth.url(url)
+                                               .get().build();
+
+        return httpClient.handleRequestAsString(request);
     }
 
     /**

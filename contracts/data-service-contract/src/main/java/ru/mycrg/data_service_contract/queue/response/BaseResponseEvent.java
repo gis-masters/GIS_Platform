@@ -23,6 +23,10 @@ public class BaseResponseEvent extends DefaultMessageBusResponseEvent {
         super(event, exchange, key);
     }
 
+    public BaseResponseEvent(IMessageBusEvent event, String queue) {
+        super(event, queue);
+    }
+
     public int getProgress() {
         return progress;
     }

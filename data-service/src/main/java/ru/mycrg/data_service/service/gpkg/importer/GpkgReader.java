@@ -26,7 +26,7 @@ public class GpkgReader {
         try (Connection connection = DriverManager.getConnection("jdbc:sqlite:" + gpkgFilePath)) {
             // Проверяем существование таблицы схем
             if (!schemaTableExists(connection)) {
-                log.warn("Системная таблицы '" + GPKG_SYSTEM_SCHEMAS_TABLE + "' отсутствует в GPKG!!!");
+                log.warn("Системная таблицы '" + GPKG_VECTOR_TABLE_SCHEMAS_TABLE + "' отсутствует в GPKG!!!");
 
                 throw new GpkgException("Схемы для таблицы " + currentSourceAfterImportTable + " нет внутри GPKG");
             }
@@ -55,7 +55,7 @@ public class GpkgReader {
     }
 
     private boolean schemaTableExists(Connection connection) throws SQLException {
-        String checkTableSql = "SELECT name FROM sqlite_master WHERE type='table' AND name='" + GPKG_SYSTEM_SCHEMAS_TABLE + "'";
+        String checkTableSql = "SELECT name FROM sqlite_master WHERE type='table' AND name='" + GPKG_VECTOR_TABLE_SCHEMAS_TABLE + "'";
 
         try (PreparedStatement stmt = connection.prepareStatement(checkTableSql);
              ResultSet rs = stmt.executeQuery()) {
@@ -68,8 +68,8 @@ public class GpkgReader {
             throws SQLException {
         String selectSql =
                 "SELECT " + GPKG_SCHEMA_JSON_COLUMN +
-                        " FROM " + GPKG_SYSTEM_SCHEMAS_TABLE +
-                        " WHERE " + GPKG_SCHEMA_TABLE_NAME_COLUMN + " LIKE '%.' || ?" +
+                        " FROM " + GPKG_VECTOR_TABLE_SCHEMAS_TABLE +
+                        " WHERE " + GPKG_RESOURCE_NAME_COLUMN + " LIKE '%.' || ?" +
                         " ORDER BY id DESC LIMIT 1";
 
         try (PreparedStatement stmt = connection.prepareStatement(selectSql)) {
@@ -93,7 +93,7 @@ public class GpkgReader {
         try (Connection connection = DriverManager.getConnection("jdbc:sqlite:" + gpkgFilePath)) {
             // Проверяем существование таблицы с информацией о слоях
             if (!layerInfoTableExists(connection)) {
-                log.error("Таблицы информации о векторной таблицы '" + GPKG_LAYER_INFO_TABLE + "' нет в GPKG!!!");
+                log.error("Таблицы информации о векторной таблицы '" + GPKG_VECTOR_TABLE_INFO_TABLE + "' нет в GPKG!!!");
 
                 throw new GpkgException("GPKG file does not contain layer information");
             }
@@ -123,7 +123,7 @@ public class GpkgReader {
     }
 
     private boolean layerInfoTableExists(Connection connection) throws SQLException {
-        String checkTableSql = "SELECT name FROM sqlite_master WHERE type='table' AND name='" + GPKG_LAYER_INFO_TABLE + "'";
+        String checkTableSql = "SELECT name FROM sqlite_master WHERE type='table' AND name='" + GPKG_VECTOR_TABLE_INFO_TABLE + "'";
 
         try (PreparedStatement stmt = connection.prepareStatement(checkTableSql);
              ResultSet rs = stmt.executeQuery()) {
@@ -135,9 +135,9 @@ public class GpkgReader {
     private LayerInfo readLayerInfo(Connection connection,
                                     ResourceQualifier currentSourceAfterImportTable) throws SQLException {
         String selectSql =
-                "SELECT " + GPKG_LAYER_NAME_COLUMN + ", " + GPKG_LAYER_EPSG_CODE_COLUMN +
-                        " FROM " + GPKG_LAYER_INFO_TABLE +
-                        " WHERE " + GPKG_SCHEMA_TABLE_NAME_COLUMN + " LIKE '%.' || ?" +
+                "SELECT " + GPKG_VECTOR_TABLE_NAME_COLUMN + ", " + GPKG_VECTOR_TABLE_EPSG_CODE_COLUMN +
+                        " FROM " + GPKG_VECTOR_TABLE_INFO_TABLE +
+                        " WHERE " + GPKG_RESOURCE_NAME_COLUMN + " LIKE '%.' || ?" +
                         " ORDER BY id LIMIT 1";
 
         try (PreparedStatement stmt = connection.prepareStatement(selectSql)) {
@@ -145,8 +145,8 @@ public class GpkgReader {
 
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
-                    return new LayerInfo(rs.getString(GPKG_LAYER_NAME_COLUMN),
-                                         rs.getString(GPKG_LAYER_EPSG_CODE_COLUMN));
+                    return new LayerInfo(rs.getString(GPKG_VECTOR_TABLE_NAME_COLUMN),
+                                         rs.getString(GPKG_VECTOR_TABLE_EPSG_CODE_COLUMN));
                 }
 
                 return null;

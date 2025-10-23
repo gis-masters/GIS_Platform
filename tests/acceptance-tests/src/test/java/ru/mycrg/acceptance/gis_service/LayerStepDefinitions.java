@@ -69,6 +69,11 @@ public class LayerStepDefinitions extends BaseStepsDefinitions {
         layerId = id;
     }
 
+    @Given("Пользователь запоминает номер созданного слоя")
+    public void rememberLayerId() {
+        layerId = response.jsonPath().getInt("id");
+    }
+
     @When("Пользователь делает запрос на создание слоя проекта {string} {string} {string} {string} {string} " +
             "{string} {string} {string} {string} {string}")
     public void createLayer(String title, String styleName, String type, String epsg, String dataSourceUri,

@@ -14,6 +14,7 @@ import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.repository.ProcessRepository;
 import ru.mycrg.data_service.util.JsonConverter;
+import ru.mycrg.data_service_contract.enums.ProcessStatus;
 import ru.mycrg.data_service_contract.enums.ProcessType;
 
 import javax.validation.constraints.NotNull;
@@ -145,7 +146,13 @@ public class ProcessService {
         }
     }
 
-    public void save(Process process) {
-        processRepository.save(process);
+    public void updateProcess(Long id, ProcessStatus status, String dbName, JsonNode details) {
+        log.debug("Меняем процесс с id {}, статус: {} детали: {}", id, status, details);
+
+        try {
+            processDao.updateDetailsAndStatus(id, status, dbName, details);
+        } catch (Exception e) {
+            throw new DataServiceException("Не удалось обновить процесс. Причина: " + e.getMessage());
+        }
     }
 }

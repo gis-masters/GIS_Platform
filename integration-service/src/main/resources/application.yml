@@ -35,6 +35,8 @@ security:
 
 camunda:
   bpm:
+    job-execution:
+      enabled: true
     admin-user:
       id: ${CAMUNDA_BPM_ADMIN-USER_ID}
       password: ${CAMUNDA_BPM_ADMIN-USER_PASSWORD}

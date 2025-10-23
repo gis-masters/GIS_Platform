@@ -11,7 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.mycrg.audit_service_contract.events.CrgAuditEvent;
 import ru.mycrg.auth_facade.IAuthenticationFacade;
 import ru.mycrg.gis_service.dto.LayerCreateDto;
-import ru.mycrg.gis_service.dto.LayerProjection;
 import ru.mycrg.gis_service.dto.LayerUpdateDto;
 import ru.mycrg.gis_service.dto.RelatedLayersModel;
 import ru.mycrg.gis_service.dto.project.ProjectProjection;
@@ -21,10 +20,12 @@ import ru.mycrg.gis_service.entity.Layer;
 import ru.mycrg.gis_service.entity.Project;
 import ru.mycrg.gis_service.exceptions.*;
 import ru.mycrg.gis_service.json.JsonPatcher;
+import ru.mycrg.gis_service.mapper.LayerMapper;
 import ru.mycrg.gis_service.queue.MessageBusProducer;
 import ru.mycrg.gis_service.repository.LayerRepository;
 import ru.mycrg.gis_service.service.ProjectProtector;
 import ru.mycrg.gis_service.service.projects.ProjectService;
+import ru.mycrg.gis_service_contract.dto.LayerProjection;
 
 import javax.json.JsonMergePatch;
 import java.time.LocalDateTime;
@@ -72,7 +73,7 @@ public class LayerService {
         return projectService
                 .getById(projectId)
                 .getLayers().stream()
-                .map(layer -> new LayerProjection(layer, getOrgWorkspaceName()))
+                .map(layer -> LayerMapper.toProjection(layer, getOrgWorkspaceName()))
                 .collect(Collectors.toList());
     }
 
@@ -87,7 +88,7 @@ public class LayerService {
                                  .findFirst()
                                  .orElseThrow(() -> new NotFoundException("Не найден слой: " + tableName));
 
-        return new LayerProjection(foundLayer, getOrgWorkspaceName());
+        return LayerMapper.toProjection(foundLayer, getOrgWorkspaceName());
     }
 
     public LayerProjection getById(long projectId, long layerId) {
@@ -95,7 +96,15 @@ public class LayerService {
 
         Layer layer = getLayerById(layers, layerId);
 
-        return new LayerProjection(layer, getOrgWorkspaceName());
+        return LayerMapper.toProjection(layer, getOrgWorkspaceName());
+    }
+
+    public List<LayerProjection> getLayersByIds(List<Long> layerIds) {
+        List<Layer> layers = layerRepository.getLayerByIdIn(layerIds);
+
+        return layers.stream()
+                     .map(layer -> LayerMapper.toProjection(layer, getOrgWorkspaceName()))
+                     .collect(Collectors.toList());
     }
 
     /**
@@ -130,7 +139,7 @@ public class LayerService {
                                                      layer.getId(),
                                                      objectMapper.convertValue(layerDto, JsonNode.class)));
 
-                LayerProjection newLayer = new LayerProjection(layer, getOrgWorkspaceName());
+                LayerProjection newLayer = LayerMapper.toProjection(layer, getOrgWorkspaceName());
 
                 return Optional.of(newLayer);
             } else {
@@ -271,7 +280,7 @@ public class LayerService {
     private List<RelatedLayersModel> mapToRelatedLayersModel(List<Layer> relatedLayers) {
         return relatedLayers.stream()
                             .map(layer -> {
-                                LayerProjection lProjection = new LayerProjection(layer, getOrgWorkspaceName());
+                                LayerProjection lProjection = LayerMapper.toProjection(layer, getOrgWorkspaceName());
                                 ProjectProjection pProjection = projectService
                                         .getProjectionByIdUnsafe(layer.getProject().getId());
 

@@ -30,6 +30,11 @@ public class RabbitConfiguration {
     }
 
     @Bean
+    public Queue queueIntegrationToGeoWrapperCreated() {
+        return new Queue(INTEGRATION_TO_GEO_WRAPPER_QUEUE);
+    }
+
+    @Bean
     public Binding bindingAuditEventCreated() {
         return BindingBuilder.bind(queueAuditEventCreated()).to(fanoutExchangeAuditEventCreated());
     }

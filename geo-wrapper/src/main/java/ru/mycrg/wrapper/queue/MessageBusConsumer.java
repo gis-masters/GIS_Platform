@@ -25,7 +25,8 @@ public class MessageBusConsumer implements IMessageBusConsumer {
             QUEUE_IMPORT_INIT,
             QUEUE_VALIDATION_START,
             QUEUE_EXPORT_INIT,
-            DATA_TO_GEO_WRAPPER_QUEUE
+            DATA_TO_GEO_WRAPPER_QUEUE,
+            INTEGRATION_TO_GEO_WRAPPER_QUEUE
     })
     public void consume(IMessageBusEvent event) {
         messageBus.consume(event);

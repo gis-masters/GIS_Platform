@@ -1,6 +1,7 @@
 package ru.mycrg.gis_service.dto;
 
 import ru.mycrg.gis_service.dto.project.ProjectProjection;
+import ru.mycrg.gis_service_contract.dto.LayerProjection;
 
 public class RelatedLayersModel {
 

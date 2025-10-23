@@ -71,11 +71,6 @@ public class ExportRequestHandler implements IEventHandler {
 
                 messageBus.produce(
                         new ExportResponseEvent(event, DONE, getDescription(payload, "GML"), 100, pathToExportedFile));
-            } else if ("GPKG".equals(payload.getFormat())) {
-                pathToExportedFile = gpkgGenerator.generate(event);
-
-                messageBus.produce(
-                        new ExportResponseEvent(event, DONE, getDescription(payload, "GPKG"), 100, pathToExportedFile));
             } else {
                 final String msg = "Incorrect export format: " + payload.getFormat();
                 log.warn(msg);

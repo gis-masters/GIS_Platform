@@ -47,15 +47,6 @@ public class ExportHandler implements IEventHandler {
 
         Process process = processService.getById(event.getProcessId(), event.getDbName());
 
-        if (event.getDescription().contains("GPKG")) {
-            addSubStep(process, event);
-            gpkgAddInfoService.addSchemaToTable(event);
-            gpkgAddInfoService.addTableInfoToGpkg(event);
-            processService.complete(event.getDbName(), process.getId(), toJsonNode(event.getPayload()));
-
-            return;
-        }
-
         switch (event.getStatus()) {
             case PENDING:
             case TASK_ERROR:
