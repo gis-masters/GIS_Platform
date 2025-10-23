@@ -15,7 +15,6 @@ import ru.mycrg.acceptance.data_service.dto.TableUpdateDto;
 import ru.mycrg.acceptance.data_service.schemas.CurrentScenarioSchema;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -419,25 +418,51 @@ public class TablesStepsDefinitions extends BaseStepsDefinitions {
                         post("/" + tableName + "/roleAssignment");
     }
 
-    @And("ошибки соответствуют ожидаемым")
-    public void checkServerErrors(List<String> errorDescriptions) {
-        List<ErrorInfo> expectedErrors = new ArrayList<>();
-
-        // Обработка ожидаемых ошибок из таблицы
-        for (String errorDescription: errorDescriptions) {
-            String[] parts = errorDescription.split(" --- ");
-            if (parts.length == 2) {
-                expectedErrors.add(new ErrorInfo(parts[0].trim(), parts[1].trim()));
-            }
-        }
-
+    @And("сервер сообщает об ошибке в поле {string} текстом: {string}")
+    public void checkSpecificError(String expectedField, String expectedMessage) {
         // Извлечение ошибок из ответа
         List<ErrorInfo> actualErrors = response.jsonPath().getList("errors", ErrorInfo.class);
 
-        // Сравнение размера ожидаемых и фактических ошибок
-        assertEquals(actualErrors.size(), expectedErrors.size());
+        // Ищем ошибку с указанным полем
+        ErrorInfo foundError = null;
+        for (ErrorInfo actualError: actualErrors) {
+            if (expectedField.equals(actualError.getField())) {
+                foundError = actualError;
+                break;
+            }
+        }
 
-        // Сравнение ожидаемых и фактических ошибок
-        assertTrue(actualErrors.containsAll(expectedErrors) && expectedErrors.containsAll(actualErrors));
+        if (foundError == null) {
+            // Поле не найдено
+            System.out.println("=== ОШИБКА: ПОЛЕ НЕ НАЙДЕНО ===");
+            System.out.println("EXPECTED поле: '" + expectedField + "'");
+            System.out.println("EXPECTED сообщение: '" + expectedMessage + "'");
+            System.out.println("\nACTUAL ошибки в ответе:");
+            for (int i = 0; i < actualErrors.size(); i++) {
+                ErrorInfo error = actualErrors.get(i);
+                System.out.println((i + 1) + ". Поле: '" + error.getField() + "' - " + error.getMessage());
+            }
+            System.out.println("===============================\n");
+
+            fail("Поле '" + expectedField + "' не найдено в ошибках сервера");
+        }
+
+        // Проверяем сообщение
+        if (!expectedMessage.equals(foundError.getMessage())) {
+            // Сообщение не совпадает
+            System.out.println("=== ОШИБКА: СООБЩЕНИЕ НЕ СОВПАДАЕТ ===");
+            System.out.println("EXPECTED поле: '" + expectedField + "'");
+            System.out.println("EXPECTED сообщение: '" + expectedMessage + "'");
+            System.out.println("ACTUAL поле: '" + foundError.getField() + "'");
+            System.out.println("ACTUAL сообщение: '" + foundError.getMessage() + "'");
+            System.out.println("=====================================\n");
+
+            fail("Сообщение для поля '" + expectedField + "' не совпадает!\n" +
+                         "EXPECTED: '" + expectedMessage + "'\n" +
+                         "ACTUAL:   '" + foundError.getMessage() + "'");
+        }
+
+        // Если дошли сюда - все совпадает
+        System.out.println("✓ Проверка пройдена для поля '" + expectedField + "'");
     }
 }

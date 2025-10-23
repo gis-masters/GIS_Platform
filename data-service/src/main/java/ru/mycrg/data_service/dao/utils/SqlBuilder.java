@@ -539,7 +539,7 @@ public class SqlBuilder {
                 break;
             case STRING:
                 Integer maxLength = attrDescription.getMaxLength();
-                if (isNull(maxLength) || maxLength < 255) {
+                if (isNull(maxLength)) {
                     maxLength = 255;
                 }
 

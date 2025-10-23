@@ -70,7 +70,9 @@ public class SimplePropertyDto {
     private List<FollowUpAction> followUpActions;
     private List<Object> options;
 
+    @Deprecated
     private Integer length;
+
     private Integer minLength;
     private Integer maxLength;
     private Integer minInclusive;
@@ -294,10 +296,12 @@ public class SimplePropertyDto {
         this.whiteSpace = whiteSpace;
     }
 
+    @Deprecated
     public Integer getLength() {
         return length;
     }
 
+    @Deprecated
     public void setLength(Integer length) {
         this.length = length;
     }

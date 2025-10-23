@@ -7,7 +7,7 @@
     {
       "name": "location",
       "title": "Местоположение",
-      "length": 1000,
+      "maxLength": 1000,
       "valueType": "STRING"
     },
     {
@@ -53,7 +53,7 @@
     {
       "name": "updated_by",
       "title": "Кто обновил",
-      "length": 500,
+      "maxLength": 500,
       "valueType": "STRING"
     },
     {

@@ -115,8 +115,8 @@ public class SchemaTableComparator {
 
         // Проверка длины строки
         if (schemaType == ValueType.STRING) {
-            int schemaLength = property.getLength() != null
-                    ? property.getLength()
+            int schemaLength = property.getMaxLength() != null
+                    ? property.getMaxLength()
                     : 255;
             int dbLength = columnInfo.getCharacterMaximumLength() != null
                     ? columnInfo.getCharacterMaximumLength()
