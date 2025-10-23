@@ -95,11 +95,6 @@ crg-options:
     client_secret: ${CRG_OPTIONS_JWT_CLIENT_SECRET}
   initFullTextSearch: true
   integration:
-    sed-url: ${CRG_OPTIONS_INTEGRATION_SED_URL:-https://sed-server/docker-config-endpoint}
-    gisogd-rf: ${CRG_OPTIONS_INTEGRATION_GISOGD_RF}
-    gisogd-rf-token: ${CRG_OPTIONS_INTEGRATION_GISOGD_RF_TOKEN}
-    gisogd-rf-client-id: ${CRG_OPTIONS_INTEGRATION_GISOGD_RF_CLIENT_ID}
-    gisogd-rf-client-secret: ${CRG_OPTIONS_INTEGRATION_GISOGD_RF_CLIENT_SECRET}
     smev3:
       enabled: true
       mnemonic: ${CRG_OPTIONS_INTEGRATION_SMEV3_MNEMONIC}
