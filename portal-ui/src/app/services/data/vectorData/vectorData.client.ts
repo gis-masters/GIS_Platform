@@ -177,6 +177,16 @@ class VectorDataClient extends DataClient {
   async deleteFeatures(datasetIdentifier: string, vectorTableIdentifier: string, featureIds: number[]): Promise<void> {
     return http.delete(this.getFeatureUrl(datasetIdentifier, vectorTableIdentifier, featureIds.join(',')));
   }
+
+  async getVectorTableFeatures(
+    datasetIdentifier: string,
+    vectorTableIdentifier: string,
+    pageOptions: Partial<PageOptions>
+  ): Promise<PageableResources<WfsFeature>> {
+    const params = preparePageOptions({ page: 0, pageSize: MAX_ITEMS_PER_PAGE, ...pageOptions }, true);
+
+    return http.get(this.getVectorTableFeaturesUrl(datasetIdentifier, vectorTableIdentifier), { params });
+  }
 }
 
 export const vectorDataClient = VectorDataClient.instance;

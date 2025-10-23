@@ -1,3 +1,4 @@
+import { PageableResources } from '../../../../server-types/common-contracts';
 import { communicationService } from '../../communication.service';
 import { extractFeatureId } from '../../geoserver/featureType/featureType.util';
 import { type CrgFeature, type NewWfsFeature, type WfsFeature } from '../../geoserver/wfs/wfs.models';
@@ -181,4 +182,12 @@ export async function deleteFeaturesAndEmitEvent(
   await vectorDataClient.deleteFeatures(datasetIdentifier, vectorTableIdentifier, featureIds);
 
   communicationService.featuresUpdated.emit({ type: 'delete', data: null });
+}
+
+export async function getVectorTableFeatures(
+  datasetIdentifier: string,
+  vectorTableIdentifier: string,
+  pageOptions: Partial<PageOptions>
+): Promise<PageableResources<WfsFeature>> {
+  return await vectorDataClient.getVectorTableFeatures(datasetIdentifier, vectorTableIdentifier, pageOptions);
 }

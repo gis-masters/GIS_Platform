@@ -7,15 +7,15 @@ import { boundMethod } from 'autobind-decorator';
 import { type AxiosError } from 'axios';
 
 import { type FileConnection } from '../../services/data/files/files.models';
+import { PropertyType } from '../../services/data/schema/schema.models';
 import { type VectorTable } from '../../services/data/vectorData/vectorData.models';
 import {
   getDataset,
   getVectorTable,
-  getVectorTableConnections
+  getVectorTableConnections,
+  getVectorTableFeatures
 } from '../../services/data/vectorData/vectorData.service';
 import { type WfsFeature } from '../../services/geoserver/wfs/wfs.models';
-import { getFeatures } from '../../services/geoserver/wfs/wfs.service';
-import { type CrgVectorLayer } from '../../services/gis/layers/layers.models';
 import { type PageOptions } from '../../services/models';
 import { currentUser } from '../../stores/CurrentUser.store';
 import { Breadcrumbs, type BreadcrumbsItemData } from '../Breadcrumbs/Breadcrumbs';
@@ -161,7 +161,8 @@ export default class VectorTableRegistry extends Component<VectorTableRegistryPr
     return [checkboxCell, ...getXTableColumnsFromSchema<Record<string, unknown>>(this.vectorTable.schema)].map(
       (item: XTableColumn<Record<string, unknown>>) => ({
         ...item,
-        hidden: this.hiddenFields.includes(String(item.field)) || item.hidden,
+        // скрыл поля с типом GEOMETRY т.к. Виктор сказал что мы не умеем иъ отображать и это косяк
+        hidden: item.type === PropertyType.GEOMETRY || this.hiddenFields.includes(String(item.field)) || item.hidden,
         filterable: item.filterable
       })
     );
@@ -217,26 +218,48 @@ export default class VectorTableRegistry extends Component<VectorTableRegistryPr
   private async getData(pageOptions: PageOptions): Promise<[Record<string, unknown>[], number]> {
     await this.fetchConnections();
 
-    if (!this.vectorTable || !this.connections.length) {
+    const { dataset, tableName } = this.getDatasetAndTableName();
+
+    if (!dataset || !tableName) {
       return [[], 1];
     }
 
-    const feat = await getFeatures(this.connections[0].layer as CrgVectorLayer, pageOptions);
+    const res = await getVectorTableFeatures(dataset, tableName, pageOptions);
 
-    this.setWfsFeatures(feat[0]);
+    const data = res.content.map(item => {
+      return { ...item.properties, id: item.id };
+    });
 
-    return [
-      feat[0].map(item => {
-        return { ...item.properties, id: item.id };
-      }),
-      feat[1]
-    ];
+    this.setWfsFeatures(res.content);
+
+    return [data, res.page.totalPages];
+  }
+
+  private getDatasetAndTableName(): { dataset?: string; tableName?: string } {
+    if (this.vectorTable) {
+      return {
+        dataset: this.vectorTable.dataset,
+        tableName: this.vectorTable.identifier
+      };
+    }
+
+    if (this.connections.length > 0) {
+      const firstConnection = this.connections[0];
+
+      return {
+        dataset: firstConnection.layer?.dataset,
+        tableName: firstConnection.layer?.tableName
+      };
+    }
+
+    return {};
   }
 
   private async fetchConnections() {
     const { vectorTableIdentifier: vectorTable } = this.props;
     this.setLoading(true);
     this.currentVectorTableId = vectorTable;
+
     const vectorTableConnections = await getVectorTableConnections(vectorTable);
 
     if (vectorTableConnections.length && this.currentVectorTableId === vectorTable) {
