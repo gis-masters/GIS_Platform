@@ -57,7 +57,7 @@ export const ProjectsHeader: FC = observer(() => {
 
         // Добавляем родительские папки в хлебные крошки
         parentFolders.forEach(folder => {
-          if (folder && mounted) {
+          if (folder?.folder && mounted) {
             newBreadcrumbs.push({
               title: folder.name,
               url: `/projects?projectFolderId=${folder.id}`

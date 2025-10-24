@@ -56,21 +56,21 @@ const Projects: FC = observer(() => {
     }
   }, [setBusy]);
 
-  // Загрузка проектов для папки
+  // Загрузка проектов для текущей папки
   const loadFolderProjects = useCallback(
-    async (folderId: number) => {
+    async (projectId: number) => {
       try {
         setBusy(true);
-        const folder = await projectsService.getById(folderId);
+        const projectFolder = await projectsService.getById(projectId);
 
-        if (!folder) {
-          services.logger.error('Folder not found');
+        if (!projectFolder?.folder) {
+          services.logger.error('Выбранная папка не найдена');
 
           return;
         }
 
-        currentProjectFolderStore.setCurrentFolder(folder);
-        const projects = await projectsService.getAllProjectsInFolder(folderId);
+        currentProjectFolderStore.setCurrentFolder(projectFolder);
+        const projects = await projectsService.getAllProjectsInFolder(projectId);
         allProjects.setList(projects);
       } catch (error) {
         console.error('Error loading folder projects:', error);
