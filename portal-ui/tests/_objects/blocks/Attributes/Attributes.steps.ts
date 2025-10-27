@@ -280,6 +280,10 @@ When('в атрибутивной таблице я нажимаю на кноп
   await attributesBlock.clickMultipleCopy();
 });
 
+When('в атрибутивной таблице я нажимаю на кнопку множественного редактирования', async function () {
+  await attributesBlock.clickMultipleEdit();
+});
+
 // если будет необходимость, можно будет дописать полноценный поиск ячеек по названию колонки
 When('в атрибутивной таблице я нажимаю на первый тултип', async function () {
   await attributesBlock.clickFirstTooltip();

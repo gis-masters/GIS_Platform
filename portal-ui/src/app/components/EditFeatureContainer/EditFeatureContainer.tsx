@@ -157,7 +157,9 @@ export const EditFeatureContainer: FC = observer(() => {
     setShouldRender
   );
 
-  useFeatureSetup(features[0], layer);
+  const featureSetupMode = features.length > 1 ? EditFeatureMode.multipleEdit : EditFeatureMode.single;
+
+  useFeatureSetup(features, layer, featureSetupMode);
 
   useEffect(() => {
     let isMounted = true;

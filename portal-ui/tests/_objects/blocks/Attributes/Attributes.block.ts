@@ -23,6 +23,7 @@ class AttributesBlock extends Block {
     selectedYes: '.Attributes-CheckFilterButton_selected_yes',
     selectedNo: '.Attributes-CheckFilterButton_selected_no',
     multipleCopy: '.Attributes .CopyFeaturesButton',
+    multipleEdit: '.Attributes .EditFeaturesButton',
     counterItem: '.Attributes .Attributes-CounterItem'
   };
 
@@ -94,6 +95,12 @@ class AttributesBlock extends Block {
     const $multipleCopy = await this.findBySelector('multipleCopy');
     await $multipleCopy.waitForClickable();
     await $multipleCopy.click();
+  }
+
+  async clickMultipleEdit() {
+    const $multipleEdit = await this.findBySelector('multipleEdit');
+    await $multipleEdit.waitForClickable();
+    await $multipleEdit.click();
   }
 
   async clickFiltersEnabler() {

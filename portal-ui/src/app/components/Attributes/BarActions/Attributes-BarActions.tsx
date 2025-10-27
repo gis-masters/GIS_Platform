@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { action, computed, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { Tooltip } from '@mui/material';
-import { Delete, DeleteOutline, EditOutlined } from '@mui/icons-material';
+import { Delete, DeleteOutline } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 import { pluralize } from 'numeralize-ru';
@@ -10,7 +10,6 @@ import { pluralize } from 'numeralize-ru';
 import { deleteFeaturesAndEmitEvent } from '../../../services/data/vectorData/vectorData.service';
 import { type WfsFeature } from '../../../services/geoserver/wfs/wfs.models';
 import { type CrgVectorableLayer, isVectorLayer } from '../../../services/gis/layers/layers.models';
-import { EditFeatureMode } from '../../../services/map/a-map-mode/edit-feature/EditFeature.models';
 import { editFeatureStore } from '../../../services/map/a-map-mode/edit-feature/EditFeatureStore';
 import { mapModeManager } from '../../../services/map/a-map-mode/MapModeManager';
 import { selectedFeaturesStore } from '../../../services/map/a-map-mode/selected-features/SelectedFeatures.store';
@@ -21,6 +20,7 @@ import { isUpdateAllowed } from '../../../services/permissions/permissions.servi
 import { featuresCollectionPrintTemplates } from '../../../services/print/print.service';
 import { konfirmieren } from '../../../services/utility-dialogs.service';
 import { CopyFeaturesButton } from '../../CopyFeaturesButton/CopyFeaturesButton';
+import { EditFeaturesButton } from '../../EditFeaturesButton/EditFeaturesButton';
 import { IconButton } from '../../IconButton/IconButton';
 import { PrintAction } from '../../PrintAction/PrintAction';
 import { type XTableColumn } from '../../XTable/XTable.models';
@@ -81,13 +81,7 @@ export class AttributesBarActions extends Component<AttributesBarActionsProps> {
         {!!this.selectedCount && (
           <>
             {isVectorLayer(layer) && this.featuresUpdateAllowed && (
-              <Tooltip title={`Редактировать${this.objLabel}`}>
-                <span>
-                  <IconButton size='small' onClick={this.multipleEdit}>
-                    <EditOutlined fontSize='small' />
-                  </IconButton>
-                </span>
-              </Tooltip>
+              <EditFeaturesButton label={this.objLabel} features={this.selectedFeatures} />
             )}
 
             <CopyFeaturesButton
@@ -137,22 +131,6 @@ export class AttributesBarActions extends Component<AttributesBarActionsProps> {
   @computed
   private get selectedFeatures(): WfsFeature[] {
     return selectedFeaturesStore.featuresByTableName[this.props.layer.tableName] || [];
-  }
-
-  @boundMethod
-  private async multipleEdit() {
-    const features: WfsFeature[] = selectedFeaturesStore.featuresByTableName[this.props.layer.tableName];
-
-    await mapModeManager.changeMode(
-      MapMode.EDIT_FEATURE,
-      {
-        payload: {
-          features,
-          mode: features.length > 1 ? EditFeatureMode.multipleEdit : EditFeatureMode.single
-        }
-      },
-      'multipleEdit'
-    );
   }
 
   private async init() {

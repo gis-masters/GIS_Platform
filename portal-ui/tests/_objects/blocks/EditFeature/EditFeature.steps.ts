@@ -163,3 +163,7 @@ Then(
 Then('на форме корректно отображаются {string}', async (variant: string) => {
   await editFeatureBlock.assertSelfie(variant.split(' ').join('-'));
 });
+
+Then('в панели редактирования объекта отображается форма с полями в {string}', async (variant: string) => {
+  await editFeatureBlock.assertSelfie(variant.split(' ').join('-'));
+});
