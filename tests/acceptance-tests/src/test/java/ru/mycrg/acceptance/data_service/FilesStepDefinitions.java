@@ -25,6 +25,7 @@ import static ru.mycrg.acceptance.auth_service.OrganizationStepsDefinitions.orgI
 import static ru.mycrg.acceptance.data_service.TestFilesManager.getFileDescriptionByTitleOrThrow;
 import static ru.mycrg.acceptance.data_service.libraries.LibraryStepsDefinitions.currentDocumentId;
 import static ru.mycrg.acceptance.data_service.libraries.LibraryStepsDefinitions.currentLibrary;
+import static ru.mycrg.acceptance.data_service.processes.ProcessesStepDefinitions.getFileByTitle;
 import static ru.mycrg.acceptance.data_service.tables.TablesStepsDefinitions.currentTableName;
 
 public class FilesStepDefinitions extends BaseStepsDefinitions {
@@ -243,9 +244,9 @@ public class FilesStepDefinitions extends BaseStepsDefinitions {
         downloadFile(firstFileId);
     }
 
-    @When("DXF файл скачивается")
-    public void downloadCurrentFile() {
-        downloadFile(currentFileId);
+    @When("файл {string} скачивается")
+    public void fileSuccessfullyDownload(String fileName) {
+        downloadFile(getFileByTitle(fileName).getId());
 
         assertEquals(200, response.getStatusCode());
     }
@@ -334,7 +335,11 @@ public class FilesStepDefinitions extends BaseStepsDefinitions {
         currentFileId = ids.get(0);
 
         getFile(currentFileId);
+
         currentFilePath = jsonPath.getString("path");
+        Long size = jsonPath.getLong("size");
+
+        currentFiles.add(new FileDescriptionModel(currentFileId, size, fileName));
     }
 
     @Given("Существуют файлы")

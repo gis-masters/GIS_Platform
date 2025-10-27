@@ -35,6 +35,7 @@ import java.util.UUID;
 import static org.springframework.util.StringUtils.getFilename;
 import static org.springframework.util.StringUtils.stripFilenameExtension;
 import static ru.mycrg.common_utils.CrgGlobalProperties.*;
+import static ru.mycrg.data_service.dto.ResourceType.FEATURE;
 import static ru.mycrg.data_service.mappers.FileResourceQualifierMapper.mapToFileQualifier;
 import static ru.mycrg.data_service.util.JsonConverter.mapper;
 import static ru.mycrg.data_service.util.StringUtil.extractHash;
@@ -140,6 +141,10 @@ public class TabPlacementExecutor implements IExecutor<ImportReport>, IFilePlace
                                                       fileQualifier.getRecordId(),
                                                       baseFile.getId());
 
+        String sourceType = baseFile.getResourceType().equals(FEATURE.name())
+                ? FEATURE.name().toLowerCase()
+                : "document";
+
         messageBus.produce(
                 new FilePublicationEvent(
                         fileType,
@@ -160,6 +165,7 @@ public class TabPlacementExecutor implements IExecutor<ImportReport>, IFilePlace
                         new GisPublicationData(
                                 payload.getProjectId(),
                                 fileQualifier.getTable(),
+                                sourceType,
                                 fileQualifier.getRecordId(),
                                 stripFilenameExtension(baseFile.getTitle()),
                                 resultPath,

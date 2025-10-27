@@ -9,7 +9,7 @@ import { communicationService, type DataChangeEventDetail } from '../../services
 import {
   extractFeatureTypeName,
   extractFeatureTypeNameFromComplexName,
-  extractTableNameFromFeatureId
+  extractResourceIdFromFeatureId
 } from '../../services/geoserver/featureType/featureType.util';
 import { type CrgLayer, type CrgVectorableLayer, type CrgVectorLayer } from '../../services/gis/layers/layers.models';
 import { getLayerByFeatureInCurrentProject } from '../../services/gis/layers/layers.utils';
@@ -154,7 +154,7 @@ export default class Attributes extends Component<IClassNameProps> {
     }
 
     const selectedFeaturesWithoutLayer = selectedFeaturesStore.features.filter(
-      ({ id }) => extractTableNameFromFeatureId(id) !== layer.tableName
+      ({ id }) => extractResourceIdFromFeatureId(id) !== layer.resourceId
     );
 
     if (selectedFeaturesWithoutLayer.length > 0) {

@@ -88,7 +88,7 @@ export class EditBugObjectComponent extends BaseEdit implements OnChanges, OnIni
     const { crgLayer } = this.data[0];
     if (this.wfsFeature && this.wfsFeature.properties && this.featureDescription) {
       const response = await transformFeatureService.updateFeatures(
-        crgLayer.tableName,
+        crgLayer.resourceId,
         [this.wfsFeature],
         this.featureDescription,
         this.getActualValuesFromForm()

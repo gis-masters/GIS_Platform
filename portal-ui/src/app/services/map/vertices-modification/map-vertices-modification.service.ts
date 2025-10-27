@@ -173,7 +173,7 @@ class MapVerticesModificationService {
         projectionCodeToProjection(layer.nativeCRS)
       );
 
-      await updateFeature(layer.dataset, layer.tableName, {
+      await updateFeature(layer.dataset, layer.resourceId, {
         id: String(extractFeatureId(featureId)),
         type: 'Feature',
         geometry: wfsFeature.geometry,

@@ -218,7 +218,7 @@ export const EditFeatureForm: React.FC<EditFeatureFormProps> = ({
                       field={editFeatureItem}
                       featureInfo={{
                         feature: features[0],
-                        layerName: layer ? layer.tableName : '',
+                        layerName: layer ? layer.resourceId : '',
                         isReadOnly: Boolean(updatingAllowed)
                       }}
                     />

@@ -37,11 +37,11 @@ public class MultipleCopyFeaturesStepsDefinitions extends BaseStepsDefinitions {
 
         // Producer
         LayerCreateDto producer = getLayerByTitle(layerProducer);
-        featuresCopyModel.setSource(new ResourceQualifierDto(currentDatasetIdentifier, producer.getTableName()));
+        featuresCopyModel.setSource(new ResourceQualifierDto(currentDatasetIdentifier, producer.getResourceId()));
 
         // Consumer
         LayerCreateDto consumer = getLayerByTitle(layerConsumer);
-        featuresCopyModel.setTarget(new ResourceQualifierDto(currentDatasetIdentifier, consumer.getTableName()));
+        featuresCopyModel.setTarget(new ResourceQualifierDto(currentDatasetIdentifier, consumer.getResourceId()));
 
         // Action
         copy(featuresCopyModel);

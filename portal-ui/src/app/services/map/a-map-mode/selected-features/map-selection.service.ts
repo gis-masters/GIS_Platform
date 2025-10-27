@@ -282,7 +282,7 @@ class MapSelectionService {
       const layerTableNames = Object.keys(attributesTableStore.filter);
 
       for (const tableName of layerTableNames) {
-        if (!selectedFeaturesStore.featuresByTableName[tableName]?.length) {
+        if (!selectedFeaturesStore.featuresByResourceId[tableName]?.length) {
           attributesTableStore.dropFilterBySelections(tableName);
         }
       }

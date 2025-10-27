@@ -213,8 +213,8 @@ class MapService {
   addExternalGeoserverLayer(extLayer: CrgExternalLayer, zIndex: number) {
     this.throwIfMapNotCreated();
 
-    const { tableName, transparency = 100, dataSourceUri } = extLayer;
-    const layerOnMap = this.getLayerByName(tableName);
+    const { resourceId, transparency = 100, dataSourceUri } = extLayer;
+    const layerOnMap = this.getLayerByName(resourceId);
     if (layerOnMap) {
       layerOnMap.setVisible(true);
       layerOnMap.setOpacity(transparency / 100);
@@ -224,7 +224,7 @@ class MapService {
     }
 
     const params: CrgWmsParams = {
-      LAYERS: tableName,
+      LAYERS: resourceId,
       FORMAT: 'image/png8' // TODO: Вынести в настройки слоя
     };
 
@@ -260,8 +260,8 @@ class MapService {
   addExternalLayer(layer: CrgExternalLayer, zIndex: number) {
     this.throwIfMapNotCreated();
 
-    const { tableName, transparency, dataSourceUri } = layer;
-    const layerOnMap = this.getLayerByName(layer.tableName);
+    const { resourceId, transparency, dataSourceUri } = layer;
+    const layerOnMap = this.getLayerByName(layer.resourceId);
     if (layerOnMap) {
       layerOnMap.setVisible(true);
       layerOnMap.setOpacity((transparency ?? 100) / 100);
@@ -274,7 +274,7 @@ class MapService {
       source: new TileArcGISRest({
         url: dataSourceUri,
         params: {
-          LAYERS: tableName
+          LAYERS: resourceId
         },
         tileLoadFunction: this.externalGisMapServerLoadFunction
       }),
@@ -295,8 +295,8 @@ class MapService {
   addNspdExternalLayer(layer: CrgExternalLayer, zIndex: number) {
     this.throwIfMapNotCreated();
 
-    const { tableName, transparency, dataSourceUri } = layer;
-    const layerOnMap = this.getLayerByName(tableName);
+    const { resourceId, transparency, dataSourceUri } = layer;
+    const layerOnMap = this.getLayerByName(resourceId);
     if (layerOnMap) {
       layerOnMap.setVisible(true);
       layerOnMap.setOpacity((transparency ?? 100) / 100);
@@ -339,9 +339,9 @@ class MapService {
   async addLayer(layer: CrgLayer, zIndex: number, opacity: number): Promise<void> {
     this.throwIfMapNotCreated();
 
-    const { tableName, complexName, styleName, view, type } = layer;
-    if (!tableName || !complexName) {
-      throw new Error('Некорректный слой, не заданы: tableName, complexName');
+    const { resourceId, complexName, styleName, view, type } = layer;
+    if (!resourceId || !complexName) {
+      throw new Error('Некорректный слой, не заданы: resourceId, complexName');
     }
 
     const params: CrgWmsParams = {
@@ -363,7 +363,7 @@ class MapService {
     }
 
     const [featureIds, filter, featureIdsNegative] = extractFeatureIdsFromAttributesFilter(
-      attributesTableStore.getLayerFilter(tableName),
+      attributesTableStore.getLayerFilter(resourceId),
       layer
     );
 

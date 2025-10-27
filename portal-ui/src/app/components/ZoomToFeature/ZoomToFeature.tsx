@@ -89,11 +89,11 @@ export class ZoomToFeature extends Component<ZoomToFeatureProps> {
         return;
       }
 
-      const { complexName, tableName, nativeCRS } = layer;
+      const { complexName, resourceId, nativeCRS } = layer;
       const feature = await getFeatureById(featureId, complexName);
 
-      if (tableName) {
-        projectsService.enableLayersByTableNames([tableName]);
+      if (resourceId) {
+        projectsService.enableLayersByResourceId([resourceId]);
       }
 
       const layerProjection = await getProjectionByCode(nativeCRS);

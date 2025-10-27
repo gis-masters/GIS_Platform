@@ -25,7 +25,7 @@ import {
   buildComplexName,
   extractFeatureId,
   extractFeatureTypeNameFromComplexName,
-  extractTableNameFromComplexName
+  extractResourceIdFromComplexName
 } from '../featureType/featureType.util';
 import { wfsClient } from './wfs.client';
 import { type WfsFeature, type WfsFeatureCollection } from './wfs.models';
@@ -190,7 +190,7 @@ export async function getFeatureCollectionByXmlFilter(xml: string): Promise<WfsF
 
 export async function getFeaturesById(ids: string[], complexName: string, definitionQuery = ''): Promise<WfsFeature[]> {
   const limit = 100;
-  const tableName = extractTableNameFromComplexName(complexName);
+  const tableName = extractResourceIdFromComplexName(complexName);
 
   if (ids.length > limit) {
     const result: WfsFeature[] = [];
@@ -238,8 +238,8 @@ export async function makeXmlPolygonIntersect(
   srsName: string,
   selectionType: MapSelectionTypes
 ): Promise<string> {
-  const tableName = extractTableNameFromComplexName(complexName);
-  const layer = currentProject.getLayerByTableNameFromVisibleVectorLayers(tableName);
+  const tableName = extractResourceIdFromComplexName(complexName);
+  const layer = currentProject.getLayerByResourceIdFromVisibleVectorLayers(tableName);
   const baseSchema = await getLayerSchema(layer as CrgVectorLayer);
 
   if (!baseSchema) {

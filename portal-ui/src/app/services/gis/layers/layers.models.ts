@@ -26,7 +26,7 @@ interface CrgEntity {
 interface CrgBaseLayer extends CrgEntity {
   type: CrgLayerType;
   nativeCRS: string;
-  tableName: string;
+  resourceId: string;
   minZoom?: number;
   maxZoom?: number;
   complexName?: string;
@@ -45,8 +45,9 @@ export interface CrgRasterLayer extends CrgBaseLayer {
   mode: FilePlacementMode;
   dataStoreName?: string;
   dataSourceUri?: string;
-  libraryId: string;
-  recordId: number;
+  sourceId: string;
+  sourceType: string;
+  sourceRecordId: number;
   parentId?: number;
   enabled?: boolean;
   nativeName?: string;

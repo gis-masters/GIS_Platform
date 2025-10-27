@@ -9,11 +9,11 @@ class CreateVectorTableBlock extends Block {
   };
 
   // мануальное создание векторной таблицы
-  async createTable(tableName: string): Promise<void> {
+  async createTable(resourceId: string): Promise<void> {
     const explorerBlock = new ExplorerBlock();
     await explorerBlock.clickCreateLayerBtn();
     await createVectorTableDialogBlock.waitForVisible();
-    await createVectorTableDialogBlock.setStringFieldValue('Наименование*', tableName);
+    await createVectorTableDialogBlock.setStringFieldValue('Наименование*', resourceId);
     await createVectorTableDialogBlock.setChoiceFieldValue(
       'Координатная система*',
       'WGS 84 / Pseudo-Mercator, EPSG:3857, метры'

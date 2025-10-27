@@ -19,7 +19,7 @@ public class LayerCreateDto {
     private String title;
 
     @Length(min = 1, max = 255)
-    private String tableName;
+    private String resourceId;
 
     @Length(min = 1, max = 255)
     private String nativeName;
@@ -64,9 +64,12 @@ public class LayerCreateDto {
     private String dataSourceUri;
 
     @Length(min = 1, max = 255)
-    private String libraryId;
+    private String sourceId;
 
-    private Long recordId;
+    @Pattern(regexp = "^(document|feature)$", message = "Источником может быть или документ(document) или фича(feature)")
+    private String sourceType = "document";
+
+    private Long sourceRecordId;
 
     @Pattern(regexp = "^(full|geoserver|gis-service)$",
              message = "Допустимые значения поля role: full, geoserver, gis-service")
@@ -103,12 +106,12 @@ public class LayerCreateDto {
         this.dataset = dataset;
     }
 
-    public String getTableName() {
-        return tableName;
+    public String getResourceId() {
+        return resourceId;
     }
 
-    public void setTableName(String tableName) {
-        this.tableName = tableName;
+    public void setResourceId(String resourceId) {
+        this.resourceId = resourceId;
     }
 
     public String getStyleName() {
@@ -199,20 +202,28 @@ public class LayerCreateDto {
         this.dataSourceUri = dataSourceUri;
     }
 
-    public String getLibraryId() {
-        return libraryId;
+    public String getSourceId() {
+        return sourceId;
     }
 
-    public void setLibraryId(String libraryId) {
-        this.libraryId = libraryId;
+    public void setSourceId(String sourceId) {
+        this.sourceId = sourceId;
     }
 
-    public Long getRecordId() {
-        return recordId;
+    public Long getSourceRecordId() {
+        return sourceRecordId;
     }
 
-    public void setRecordId(Long recordId) {
-        this.recordId = recordId;
+    public void setSourceRecordId(Long sourceRecordId) {
+        this.sourceRecordId = sourceRecordId;
+    }
+
+    public String getSourceType() {
+        return sourceType;
+    }
+
+    public void setSourceType(String sourceType) {
+        this.sourceType = sourceType;
     }
 
     public String getMode() {
@@ -284,7 +295,7 @@ public class LayerCreateDto {
         return "{" +
                 "\"type\":" + (type == null ? "null" : "\"" + type + "\"") + ", " +
                 "\"title\":" + (title == null ? "null" : "\"" + title + "\"") + ", " +
-                "\"tableName\":" + (tableName == null ? "null" : "\"" + tableName + "\"") + ", " +
+                "\"resourceId\":" + (resourceId == null ? "null" : "\"" + resourceId + "\"") + ", " +
                 "\"nativeName\":" + (nativeName == null ? "null" : "\"" + nativeName + "\"") + ", " +
                 "\"featureTypeName\":" + (featureTypeName == null ? "null" : "\"" + featureTypeName + "\"") + ", " +
                 "\"dataset\":" + (dataset == null ? "null" : "\"" + dataset + "\"") + ", " +
@@ -298,8 +309,9 @@ public class LayerCreateDto {
                 "\"dataStoreName\":" + (dataStoreName == null ? "null" : "\"" + dataStoreName + "\"") + ", " +
                 "\"nativeCRS\":" + (nativeCRS == null ? "null" : "\"" + nativeCRS + "\"") + ", " +
                 "\"dataSourceUri\":" + (dataSourceUri == null ? "null" : "\"" + dataSourceUri + "\"") + ", " +
-                "\"libraryId\":" + (libraryId == null ? "null" : "\"" + libraryId + "\"") + ", " +
-                "\"recordId\":" + (recordId == null ? "null" : "\"" + recordId + "\"") + ", " +
+                "\"sourceId\":" + (sourceId == null ? "null" : "\"" + sourceId + "\"") + ", " +
+                "\"sourceType\":" + (sourceType == null ? "null" : "\"" + sourceType + "\"") + ", " +
+                "\"sourceRecordId\":" + (sourceRecordId == null ? "null" : "\"" + sourceRecordId + "\"") + ", " +
                 "\"mode\":" + (mode == null ? "null" : "\"" + mode + "\"") + ", " +
                 "\"contentType\":" + (contentType == null ? "null" : "\"" + contentType + "\"") + ", " +
                 "\"view\":" + (view == null ? "null" : "\"" + view + "\"") + ", " +

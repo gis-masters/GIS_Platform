@@ -167,30 +167,37 @@ public class CrgGlobalProperties {
     }
 
     /**
-     * Извлекаем название таблицы из названия слоя геосервера
+     * Извлекаем идентификатор ресурса из названия слоя геосервера.
      * <p>
-     * Основано на шаблонах именования, применяемых нами при именовании таблиц и слоёв. Если таблица названа:
-     * some_table_r314, то слой на геосервере будет назван: some_table_r314__7829 - т.е. к названию таблицы добавили
-     * через разделитель код проекции(EPSG)
+     * Для векторных слоёв идентификатор ресурса это название таблицы в нашей системе. Например: `building_1553_41a8`
+     * <p>
+     * Для растровых слоёв идентификатор ресурса собран по шаблону и содержит в себе отсылки к источнику и файлу.
+     * Например: `dl_data_result_141__92056f84-7788-4089-ae43-df0548624067`
+     * <p>
+     * Для внешних слоев идентификатор ресурса содержит наименования слоёв по правилам внешних систем. Например:
+     * `show:24`
      *
-     * @param geoserverLayerName Название слоя на геосервере
+     * @param geoserverLayerName Название слоя на геосервере. Основан на шаблонах именования, применяемых нами при
+     *                           именовании таблиц и слоёв. * Если ресурс назван: some_r314, то слой на геосервере будет
+     *                           назван: some_r314__7829 - т.е., * к названию таблицы добавили через разделитель код
+     *                           проекции(EPSG)
      *
      * @return Название таблицы или {@literal Optional.empty()} если не удалось успешно его получить
      */
-    public static Optional<String> getTableNameFromGeoserverLayerName(String geoserverLayerName) {
+    public static Optional<String> getResourceIdFromGeoserverLayerName(String geoserverLayerName) {
         if (geoserverLayerName == null || geoserverLayerName.isEmpty()) {
             return Optional.empty();
         }
 
         try {
-            return Optional.ofNullable(geoserverLayerName.split("__(\\d+)")[0]);
+            return Optional.ofNullable(geoserverLayerName.split(DOUBLE_SEPARATOR + "(\\d+)")[0]);
         } catch (Exception e) {
             return Optional.empty();
         }
     }
 
-    public static Optional<String> getTableNameFromComplexName(String complexName) {
+    public static Optional<String> getResourceIdFromComplexName(String complexName) {
         return getLayerNameFromComplexName(complexName)
-                .flatMap(CrgGlobalProperties::getTableNameFromGeoserverLayerName);
+                .flatMap(CrgGlobalProperties::getResourceIdFromGeoserverLayerName);
     }
 }

@@ -131,7 +131,7 @@ export class DatasetActionsAddToProject extends Component<DatasetActionsAddToPro
       parentId: group.id,
       enabled: false,
       dataset: dataset?.identifier,
-      tableName: table?.identifier,
+      resourceId: table?.identifier,
       title: table.title,
       position: index,
       nativeCRS: table.crs,

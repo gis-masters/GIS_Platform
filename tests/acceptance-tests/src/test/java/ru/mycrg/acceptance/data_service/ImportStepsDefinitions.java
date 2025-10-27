@@ -146,11 +146,11 @@ public class ImportStepsDefinitions extends BaseStepsDefinitions {
         JsonPath path = response.jsonPath();
         List<LinkedHashMap<Integer, Object>> layers = path.get();
 
-        List<Object> tableNames = path.getList("tableName");
-        if (tableNames == null || tableNames.isEmpty()) {
-            throw new IllegalStateException("Не корректное тело ответа, не найден tableName");
+        List<Object> resourceIds = path.getList("resourceId");
+        if (resourceIds == null || resourceIds.isEmpty()) {
+            throw new IllegalStateException("Не корректное тело ответа, не найден resourceId");
         }
-        tableName = tableNames.get(0).toString();
+        tableName = resourceIds.get(0).toString();
 
         assertThat(layers.isEmpty(), is(not(true)));
 

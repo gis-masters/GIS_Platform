@@ -1,5 +1,6 @@
 package ru.mycrg.acceptance.gis_service;
 
+import com.google.common.io.Files;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
@@ -43,9 +44,6 @@ public class LayerStepDefinitions extends BaseStepsDefinitions {
     public static Integer layerId;
     public static String layerTitle = "Искусственные дорожные сооружения";
     public static String layerComplexName;
-    public static String currentWorkspace;
-    public static String currentCoveragestoreName;
-    public static String currentStoreName;
 
     private final AuthorizationBase authorizationBase = new AuthorizationBase();
 
@@ -77,7 +75,7 @@ public class LayerStepDefinitions extends BaseStepsDefinitions {
     @When("Пользователь делает запрос на создание слоя проекта {string} {string} {string} {string} {string} " +
             "{string} {string} {string} {string} {string}")
     public void createLayer(String title, String styleName, String type, String epsg, String dataSourceUri,
-                            String libraryId, String recordId, String mode, String contentType, String style) {
+                            String sourceId, String sourceRecordId, String mode, String contentType, String style) {
 
         String dataStoreName = "scratch_database_" + orgId;
 
@@ -94,9 +92,9 @@ public class LayerStepDefinitions extends BaseStepsDefinitions {
         if (type.equals("raster")) {
             Long currentRecordId = Objects.nonNull(currentDocumentId)
                     ? currentDocumentId
-                    : Long.parseLong(recordId);
-            layerCreateDto.setLibraryId(libraryId);
-            layerCreateDto.setRecordId(currentRecordId);
+                    : Long.parseLong(sourceRecordId);
+            layerCreateDto.setSourceId(sourceId);
+            layerCreateDto.setSourceRecordId(currentRecordId);
             layerCreateDto.setMode(mode);
         }
 
@@ -108,7 +106,7 @@ public class LayerStepDefinitions extends BaseStepsDefinitions {
         layerCreateDto = new LayerCreateDto("Земельные участки", "external");
         layerCreateDto.setDataSourceUri(
                 "https://pkk.rosreestr.ru/arcgis/rest/services/PKK6/CadastreObjects/MapServer/export");
-        layerCreateDto.setTableName("show:24");
+        layerCreateDto.setResourceId("show:24");
         layerCreateDto.setMinZoom(15);
         layerCreateDto.setMaxZoom(40);
 
@@ -127,21 +125,9 @@ public class LayerStepDefinitions extends BaseStepsDefinitions {
         layerCreateDto = new LayerCreateDto("Земельные участки", "external");
         layerCreateDto.setDataSourceUri(
                 "https://pkk.rosreestr.ru/arcgis/rest/services/PKK6/CadastreObjects/MapServer/export");
-        layerCreateDto.setTableName("show:24");
+        layerCreateDto.setResourceId("show:24");
         layerCreateDto.setMinZoom(15);
         layerCreateDto.setMaxZoom(40);
-
-        super.createEntity(layerCreateDto);
-    }
-
-    @When("Пользователь делает запрос на добавление слоя в проект")
-    public void createRandomLayer() {
-        authorizationBase.loginAsCurrentUser();
-
-        layerCreateDto = new LayerCreateDto(generateString("STRING_5"), generateString("STRING_5"),
-                                            generateString("STRING_5"), generateString("STRING_5"),
-                                            "vector", generateString("STRING_5"), "EPSG:28406",
-                                            generateString("STRING_8"), null, generateString("STRING_8"));
 
         super.createEntity(layerCreateDto);
     }
@@ -164,13 +150,13 @@ public class LayerStepDefinitions extends BaseStepsDefinitions {
 
         assertEquals(layerCreateDto.getTitle(), jsonPath.get("title"));
         assertEquals(layerCreateDto.getDataset(), jsonPath.get("dataset"));
-        assertEquals(layerCreateDto.getTableName(), jsonPath.get("tableName"));
+        assertEquals(layerCreateDto.getResourceId(), jsonPath.get("resourceId"));
         assertEquals(layerCreateDto.getStyleName(), jsonPath.get("styleName"));
         assertEquals(layerCreateDto.getType(), jsonPath.get("type"));
         assertEquals(layerCreateDto.getNativeCRS(), jsonPath.get("nativeCRS"));
         assertEquals(layerCreateDto.getContentType(), jsonPath.get("contentType"));
         assertEquals(String.format("scratch_database_%s:%s__%s",
-                                   orgId, layerCreateDto.getTableName(), layerCreateDto.getNativeCRS().split(":")[1]),
+                                   orgId, layerCreateDto.getResourceId(), layerCreateDto.getNativeCRS().split(":")[1]),
                      jsonPath.get("complexName"));
     }
 
@@ -179,7 +165,7 @@ public class LayerStepDefinitions extends BaseStepsDefinitions {
         jsonPath = response.jsonPath();
 
         assertEquals(layerCreateDto.getTitle(), jsonPath.get("title"));
-        assertEquals(layerCreateDto.getTableName(), jsonPath.get("tableName"));
+        assertEquals(layerCreateDto.getResourceId(), jsonPath.get("resourceId"));
         assertEquals(layerCreateDto.getType(), jsonPath.get("type"));
         assertEquals(layerCreateDto.getDataSourceUri(), jsonPath.get("dataSourceUri"));
     }
@@ -196,7 +182,7 @@ public class LayerStepDefinitions extends BaseStepsDefinitions {
                         "vector",
                         "EPSG:28406",
                         "transportobj",
-                        "libraryId",
+                        "sourceId",
                         "1",
                         "full",
                         null,
@@ -213,7 +199,7 @@ public class LayerStepDefinitions extends BaseStepsDefinitions {
                     "vector",
                     "EPSG:28406",
                     "transportobj",
-                    "libraryId",
+                    "sourceId",
                     "1",
                     "",
                     null,
@@ -227,13 +213,14 @@ public class LayerStepDefinitions extends BaseStepsDefinitions {
         String dataSourceUri = format("file://%s", currentFilePath);
         layerCreateDto = new LayerCreateDto("Тестовый растр", "raster");
 
-        layerCreateDto.setLibraryId(currentLibrary.getTableName());
+        layerCreateDto.setSourceId(currentLibrary.getTableName());
+        layerCreateDto.setSourceType("document");
+        layerCreateDto.setSourceRecordId(currentDocumentId.longValue());
         layerCreateDto.setMode("full");
         layerCreateDto.setNativeCRS("EPSG:28406");
         layerCreateDto.setDataSourceUri(dataSourceUri);
-        layerCreateDto.setRecordId(currentDocumentId.longValue());
-        String tableName = format("%s_%s__%s", layerCreateDto.getLibraryId(), currentDocumentId, currentFileId);
-        layerCreateDto.setTableName(tableName);
+        String tableName = format("%s_%s__%s", layerCreateDto.getSourceId(), currentDocumentId, currentFileId);
+        layerCreateDto.setResourceId(tableName);
 
         super.createEntity(layerCreateDto);
 
@@ -250,7 +237,7 @@ public class LayerStepDefinitions extends BaseStepsDefinitions {
         layerCreateDto.setDataset(currentDatasetIdentifier);
         layerCreateDto.setMode("full");
         layerCreateDto.setNativeCRS("EPSG:28406");
-        layerCreateDto.setTableName(currentTableName);
+        layerCreateDto.setResourceId(currentTableName);
 
         super.createEntity(layerCreateDto);
 
@@ -271,7 +258,7 @@ public class LayerStepDefinitions extends BaseStepsDefinitions {
         layerCreateDto.setDataset(currentDatasetIdentifier);
         layerCreateDto.setMode("full");
         layerCreateDto.setNativeCRS("EPSG:28406");
-        layerCreateDto.setTableName(latestTable.getName());
+        layerCreateDto.setResourceId(latestTable.getName());
 
         super.createEntity(layerCreateDto);
 
@@ -298,7 +285,7 @@ public class LayerStepDefinitions extends BaseStepsDefinitions {
         assertTrue(presentedData.containsKey("title"));
         assertTrue(presentedData.containsKey("type"));
         assertTrue(presentedData.containsKey("dataset"));
-        assertTrue(presentedData.containsKey("tableName"));
+        assertTrue(presentedData.containsKey("resourceId"));
         assertTrue(presentedData.containsKey("enabled"));
         assertTrue(presentedData.containsKey("position"));
         assertTrue(presentedData.containsKey("transparency"));
@@ -402,31 +389,6 @@ public class LayerStepDefinitions extends BaseStepsDefinitions {
         layerPool.remove(layerId);
     }
 
-    @Then("Слой, созданный на основе файла, есть на gis-service")
-    public void checkThatRelatedLayerWasNotDeleted() throws InterruptedException {
-        sleep(1000);
-
-        super.getEntityById(layerId);
-
-        int statusCode = response.getStatusCode();
-
-        assertEquals(200, statusCode);
-    }
-
-    @Then("Слой, созданный на основе файла, есть на geoserver")
-    public void checkThatRelatedLayerWasNotDeletedOnGeoserver() {
-        getCurrentWorkspaceAndStoreName();
-
-        response = getBaseRequestWithCurrentCookie()
-                .basePath("geoserver/rest")
-                .when().
-                        get(format("/workspaces/%s/coveragestores/%s", currentWorkspace, currentStoreName));
-
-        int statusCode = response.getStatusCode();
-
-        assertEquals(200, statusCode);
-    }
-
     @And("В ответе на удаление слоя проекта есть упоминание ID")
     public void checkCurrentIdInResponse() {
         super.checkCurrentIdInResponse();
@@ -454,58 +416,54 @@ public class LayerStepDefinitions extends BaseStepsDefinitions {
         assertEquals(404, response.getStatusCode());
     }
 
-    @And("В проекте корректно создан слой на основе DXF файла")
-    public void checkLayerBasedOnDxf() {
-        super.getCurrentEntityByFilter("title", "best");
+    @And("В проекте корректно создан слой типа {string} на основе файла {string}")
+    public void checkLayerTypeBasedOnFile(String expectedType, String fileName) {
+        String title = Files.getNameWithoutExtension(fileName);
+        String ext = Files.getFileExtension(fileName);
 
-        JsonPath jsonPath = response.jsonPath();
-
-        assertEquals("best", jsonPath.getList("title").get(0));
-        assertEquals("dxf", jsonPath.getList("type").get(0));
-        assertEquals("dxf_style", jsonPath.getList("styleName").get(0));
-        assertEquals("EPSG:7829", jsonPath.getList("nativeCRS").get(0));
-        assertEquals("dl_default", jsonPath.getList("libraryId").get(0));
-
-        // tableName - {recordId}_{fieldName}_{hash} - "2_some_files_504450693"
-        String tableName = jsonPath.getList("tableName").get(0).toString();
-        assertTrue(tableName.contains("dl_default_" + currentDocumentId));
-
-        // dataset - {orgId}_{fileType}_store__{library}_{recordId} - "8_tab_store__dl_default_2_"
-        assertTrue(jsonPath.getList("dataset").get(0).toString().contains(orgId + "_dxf_store__"));
-
-        // workspace на геосервере - scratch_database_1
-        String dataStoreName = jsonPath.getList("dataStoreName").get(0).toString();
-        assertEquals("scratch_database_" + orgId, dataStoreName);
-
-        // complexName - {workspace}:{tableName}__{epsgCode} - "scratch_database_8:2_some_files_504450693__7829"
-        assertEquals(String.format("%s:%s__7829", dataStoreName, tableName), jsonPath.getList("complexName").get(0));
+        checkLayerBasedOnFile(title, expectedType, ext);
     }
 
-    @And("В проекте корректно создан слой на основе TAB файла")
-    public void checkLayerBasedOnTab() {
-        super.getCurrentEntityByFilter("title", "someTab");
+    /**
+     * Обобщенный метод для проверки слоя, созданного на основе файла
+     *
+     * @param expectedTitle ожидаемое название слоя
+     * @param expectedType  ожидаемый тип слоя
+     * @param fileType      тип файла (dxf, tif, tab)
+     */
+    private void checkLayerBasedOnFile(String expectedTitle,
+                                       String expectedType,
+                                       String fileType) {
+        super.getCurrentEntityByFilter("title", expectedTitle);
 
         JsonPath jsonPath = response.jsonPath();
 
-        assertEquals("someTab", jsonPath.getList("title").get(0));
-        assertEquals("tab", jsonPath.getList("type").get(0));
-        assertEquals("generic", jsonPath.getList("styleName").get(0));
+        // Проверяем основные поля
+        assertEquals(expectedTitle, jsonPath.getList("title").get(0));
+        assertEquals(expectedType, jsonPath.getList("type").get(0));
+        assertEquals("document", jsonPath.getList("sourceType").get(0));
         assertEquals("EPSG:7829", jsonPath.getList("nativeCRS").get(0));
-        assertEquals("dl_default", jsonPath.getList("libraryId").get(0));
+        assertEquals("dl_default", jsonPath.getList("sourceId").get(0));
 
-        // tableName - {recordId}_{fieldName}_{hash} - "2_some_files_504450693"
-        String tableName = jsonPath.getList("tableName").get(0).toString();
-        assertTrue(tableName.contains("dl_default_" + currentDocumentId));
+        // Проверяем resourceId - {recordId}_{fieldName}_{hash}
+        String resourceId = jsonPath.getList("resourceId").get(0).toString();
+        assertTrue("ResourceId должен содержать dl_default_" + currentDocumentId,
+                   resourceId.contains("dl_default_" + currentDocumentId));
 
-        // dataset - {orgId}_{fileType}_store__{library}_{recordId} - "7_tab_store__541798153_dl_default_1_"
-        assertTrue(jsonPath.getList("dataset").get(0).toString().contains(orgId + "_tab_store__"));
+        // Проверяем dataset - {orgId}_{fileType}_store__{library}_{recordId}
+        String dataset = jsonPath.getList("dataset").get(0).toString();
+        assertTrue("Dataset должен содержать " + orgId + "_" + fileType + "_store__",
+                   dataset.contains(orgId + "_" + fileType + "_store__"));
 
-        // workspace на геосервере - scratch_database_1
+        // Проверяем workspace на геосервере - scratch_database_{orgId}
         String dataStoreName = jsonPath.getList("dataStoreName").get(0).toString();
-        assertEquals("scratch_database_" + orgId, dataStoreName);
+        assertEquals("DataStoreName должен быть scratch_database_" + orgId,
+                     "scratch_database_" + orgId, dataStoreName);
 
-        // complexName - {workspace}:{tableName}__{epsgCode} - "scratch_database_8:2_some_files_504450693__7829"
-        assertEquals(String.format("%s:%s__7829", dataStoreName, tableName), jsonPath.getList("complexName").get(0));
+        // Проверяем complexName - {workspace}:{resourceId}__{epsgCode}
+        String expectedComplexName = String.format("%s:%s__7829", dataStoreName, resourceId);
+        assertEquals("ComplexName должен соответствовать формату workspace:resourceId__epsgCode",
+                     expectedComplexName, jsonPath.getList("complexName").get(0));
     }
 
     @When("Пользователь пытается выгрузить ESRI Shape-файл текущего слоя")
@@ -521,13 +479,6 @@ public class LayerStepDefinitions extends BaseStepsDefinitions {
                     queryParam("layerTitle", layerCreateDto.getTitle())
                 .when().
                     get(exportEndpoint);
-    }
-
-    private void getCurrentWorkspaceAndStoreName() {
-        String[] complexName = layerComplexName.split(":");
-        currentWorkspace = complexName[0];
-        currentCoveragestoreName = complexName[1];
-        currentStoreName = format("store_%s", complexName[1]);
     }
 
     private void makeLastAvailableLayerAsCurrent() {

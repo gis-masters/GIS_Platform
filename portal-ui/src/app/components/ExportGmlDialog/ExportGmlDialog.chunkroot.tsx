@@ -69,7 +69,7 @@ const filterLayersWidthOrderTags = async (): Promise<CrgVectorLayer[]> => {
 
   for (const layer of currentProject.vectorLayers) {
     try {
-      const vectorTable = await getVectorTable(layer.dataset, layer.tableName);
+      const vectorTable = await getVectorTable(layer.dataset, layer.resourceId);
       const hasOrderTag = vectorTable.schema.tags?.some(
         tag => typeof tag === 'string' && tag.toLowerCase().includes('приказ')
       );
@@ -78,7 +78,7 @@ const filterLayersWidthOrderTags = async (): Promise<CrgVectorLayer[]> => {
         filteredLayers.push(layer);
       }
     } catch {
-      Toast.warn(`Ошибка при получении схемы для слоя ${layer.tableName}:`);
+      Toast.warn(`Ошибка при получении схемы для слоя ${layer.resourceId}:`);
     }
   }
 
@@ -190,7 +190,7 @@ export const ExportGmlDialog: FC<ExportGmlDialogProps> = observer(({ open, onClo
       const resources: ExportResourceModel[] = selectedLayers.map(layer => {
         return {
           dataset: layer.dataset,
-          table: layer.tableName
+          table: layer.resourceId
         };
       });
 

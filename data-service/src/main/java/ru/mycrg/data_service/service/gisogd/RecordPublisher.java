@@ -31,7 +31,7 @@ import java.util.stream.Collectors;
 import static java.lang.String.format;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.UUID.fromString;
-import static ru.mycrg.common_utils.CrgGlobalProperties.getTableNameFromComplexName;
+import static ru.mycrg.common_utils.CrgGlobalProperties.getResourceIdFromComplexName;
 import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_NAME;
 import static ru.mycrg.data_service.dto.ResourceType.FEATURE;
 import static ru.mycrg.data_service.dto.ResourceType.TABLE;
@@ -516,7 +516,7 @@ public class RecordPublisher {
         log.debug("Fetch from layer: {}", complexName);
 
         try {
-            Optional<String> oTableName = getTableNameFromComplexName(complexName);
+            Optional<String> oTableName = getResourceIdFromComplexName(complexName);
             if (oTableName.isEmpty()) {
                 log.warn("Не верно заданы параметры valueFormulaParams. " +
                                  "Не удалось вытащить название таблицы из layerComplexName: {}", complexName);

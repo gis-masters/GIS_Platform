@@ -7,7 +7,7 @@ import { cn } from '@bem-react/classname';
 
 import { type VectorTableConnection } from '../../services/data/vectorData/vectorData.models';
 import { getVectorTableConnections } from '../../services/data/vectorData/vectorData.service';
-import { extractTableNameFromFeatureId } from '../../services/geoserver/featureType/featureType.util';
+import { extractResourceIdFromFeatureId } from '../../services/geoserver/featureType/featureType.util';
 import { type WfsFeature } from '../../services/geoserver/wfs/wfs.models';
 import { getLayerByFeatureInCurrentProject } from '../../services/gis/layers/layers.utils';
 import { type CrgProject } from '../../services/gis/projects/projects.models';
@@ -75,7 +75,7 @@ export class OpenInAnotherProject extends Component<OpenInAnotherProjectProps> {
     const { feature } = this.props;
     const operationId = Symbol();
     this.connectionsFetchingOperationId = operationId;
-    const connections = await getVectorTableConnections(extractTableNameFromFeatureId(feature.id));
+    const connections = await getVectorTableConnections(extractResourceIdFromFeatureId(feature.id));
     if (this.connectionsFetchingOperationId === operationId) {
       this.setConnections(connections);
     }
@@ -117,6 +117,6 @@ export class OpenInAnotherProject extends Component<OpenInAnotherProjectProps> {
       throw new Error('Не удалось перейти к объекту, не найден слой: ' + feature.id);
     }
 
-    location.href = getFeaturesUrl(project.id, layer.dataset, layer.tableName, [feature.id]);
+    location.href = getFeaturesUrl(project.id, layer.dataset, layer.resourceId, [feature.id]);
   }
 }

@@ -42,13 +42,13 @@ export async function getRelatedLayers(field: string, value: string): Promise<Re
 
 export async function createLayer(newLayer: NewCrgLayer, projectId: number): Promise<CrgLayer> {
   if (isLayerFromFile(newLayer)) {
-    if (!newLayer.libraryId || !newLayer.recordId) {
+    if (!newLayer.sourceId || !newLayer.sourceRecordId) {
       throw new Error('Ошибка получения данных слоя');
     }
 
-    const document = await getLibraryRecord(newLayer.libraryId, newLayer.recordId);
+    const document = await getLibraryRecord(newLayer.sourceId, newLayer.sourceRecordId);
     const files = getLibraryRecordFiles(document);
-    const fileInfo = files.find(({ id }) => id === newLayer.tableName?.split('__')[1]);
+    const fileInfo = files.find(({ id }) => id === newLayer.resourceId?.split('__')[1]);
 
     if (!fileInfo) {
       throw new Error('Не найден источник данных файлового слоя');
@@ -123,18 +123,18 @@ export async function getLayerSchema(layer?: CrgLayer): Promise<Schema | undefin
   schemaCacheService.prettyPrint();
 
   if (layer.type === CrgLayerType.VECTOR) {
-    if (!layer.dataset || !layer.tableName) {
+    if (!layer.dataset || !layer.resourceId) {
       throw new Error('Векторный слой подключен с ошибкой');
     }
 
-    const schemaFromCache = schemaCacheService.getFromCache(layer.tableName);
+    const schemaFromCache = schemaCacheService.getFromCache(layer.resourceId);
     if (schemaFromCache) {
       return schemaFromCache;
     }
 
-    const vectorTable = await getVectorTable(layer.dataset, layer.tableName);
+    const vectorTable = await getVectorTable(layer.dataset, layer.resourceId);
 
-    schemaCacheService.addToCache(layer.tableName, vectorTable.schema);
+    schemaCacheService.addToCache(layer.resourceId, vectorTable.schema);
 
     return vectorTable.schema;
   } else if (layer.type === CrgLayerType.DXF) {

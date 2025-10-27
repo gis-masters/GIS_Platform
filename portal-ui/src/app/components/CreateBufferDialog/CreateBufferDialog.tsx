@@ -36,7 +36,7 @@ interface BufferForm {
 export const CreateBufferDialog: FC<CreateBufferDialogProps> = observer(({ open, layer, feature, onClose }) => {
   const createBuffer = useCallback(
     async (formValue: BufferForm) => {
-      if (!(formValue.layer?.dataset && formValue.layer?.tableName)) {
+      if (!(formValue.layer?.dataset && formValue.layer?.resourceId)) {
         return;
       }
 

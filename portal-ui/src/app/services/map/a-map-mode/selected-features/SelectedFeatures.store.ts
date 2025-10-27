@@ -6,7 +6,7 @@ import { attributesTableStore } from '../../../../stores/AttributesTable.store';
 import { currentProject } from '../../../../stores/CurrentProject.store';
 import { Pages, route } from '../../../../stores/Route.store';
 import { flags } from '../../../feature-flags';
-import { extractTableNameFromFeatureId } from '../../../geoserver/featureType/featureType.util';
+import { extractResourceIdFromFeatureId } from '../../../geoserver/featureType/featureType.util';
 import { type WfsFeature } from '../../../geoserver/wfs/wfs.models';
 import { type CrgLayer } from '../../../gis/layers/layers.models';
 import { services } from '../../../services';
@@ -55,16 +55,16 @@ class SelectedFeaturesStore {
   }
 
   @computed
-  get featuresByTableName(): Record<string, WfsFeature[]> {
+  get featuresByResourceId(): Record<string, WfsFeature[]> {
     const result: Record<string, WfsFeature[]> = {};
 
     for (const feature of this.features) {
-      const tableName = extractTableNameFromFeatureId(feature.id);
-      if (!result[tableName]) {
-        result[tableName] = [];
+      const resourceId = extractResourceIdFromFeatureId(feature.id);
+      if (!result[resourceId]) {
+        result[resourceId] = [];
       }
 
-      result[tableName].push(feature);
+      result[resourceId].push(feature);
     }
 
     return result;
@@ -73,7 +73,7 @@ class SelectedFeaturesStore {
   @computed
   get filtersByLayersFeatures(): WfsFeature[] {
     const filtersByLayers: {
-      [tableName: string]: {
+      [resourceId: string]: {
         tester?: (properties: WfsFeature['properties']) => boolean;
         ids: string[];
         negativeIds: boolean;
@@ -81,15 +81,15 @@ class SelectedFeaturesStore {
     } = {};
 
     return this.features.filter(feature => {
-      const tableName = extractTableNameFromFeatureId(feature.id);
+      const resourceId = extractResourceIdFromFeatureId(feature.id);
 
-      if (!filtersByLayers[tableName]) {
-        const layer = currentProject.getLayerByTableNameFromAllVectorableLayers(tableName);
+      if (!filtersByLayers[resourceId]) {
+        const layer = currentProject.getLayerByResourceIdFromAllVectorableLayers(resourceId);
 
-        filtersByLayers[tableName] = this.prepareLayerFilter(layer);
+        filtersByLayers[resourceId] = this.prepareLayerFilter(layer);
       }
 
-      const { negativeIds, ids, tester } = filtersByLayers[tableName];
+      const { negativeIds, ids, tester } = filtersByLayers[resourceId];
 
       return !negativeIds && (!tester || tester(feature.properties)) && (!ids.length || ids.includes(feature.id));
     });
@@ -133,12 +133,12 @@ class SelectedFeaturesStore {
   }
 
   private prepareLayerFilter(layer: CrgLayer) {
-    if (!layer.tableName) {
-      throw new Error(`Слой ${layer.title} не имеет tableName`);
+    if (!layer.resourceId) {
+      throw new Error(`Слой ${layer.title} не имеет resourceId`);
     }
 
     const [ids, filter, negativeIds] = extractFeatureIdsFromAttributesFilter(
-      attributesTableStore.getLayerFilter(layer.tableName, true),
+      attributesTableStore.getLayerFilter(layer.resourceId, true),
       layer
     );
 
@@ -166,9 +166,9 @@ class SelectedFeaturesStore {
     if (this.features.length > 0) {
       services.logger.trace('📝 Выделенные объекты:');
 
-      const featuresByTable = this.featuresByTableName;
-      Object.entries(featuresByTable).forEach(([tableName, features]) => {
-        services.logger.trace(`  • ${tableName}: ${features.length} объектов`);
+      const featuresByTable = this.featuresByResourceId;
+      Object.entries(featuresByTable).forEach(([resourceId, features]) => {
+        services.logger.trace(`  • ${resourceId}: ${features.length} объектов`);
         features.forEach((feature, index) => {
           const isActive = feature.id === this.activeFeature?.id;
           const marker = isActive ? '👉' : '  ';

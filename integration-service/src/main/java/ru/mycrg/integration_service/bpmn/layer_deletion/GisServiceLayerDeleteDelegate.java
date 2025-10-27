@@ -48,8 +48,8 @@ public class GisServiceLayerDeleteDelegate implements JavaDelegate {
 
             for (int i = 0; i < relatedLayers.length(); i++) {
                 JSONObject relatedObj = relatedLayers.getJSONObject(i);
-                String tableName = requireNonNull(relatedObj.getJSONObject("layer")).get("complexName").toString();
-                execution.setVariable(LAYER_COMPLEX_NAME, tableName);
+                String resourceId = requireNonNull(relatedObj.getJSONObject("layer")).get("complexName").toString();
+                execution.setVariable(LAYER_COMPLEX_NAME, resourceId);
 
                 deleteRelatedLayers(relatedObj, accessToken);
             }

@@ -203,7 +203,7 @@ public class AskGisAboutLayers implements JavaDelegate {
                                                                List<Long> layersId) {
         List<ExportResourceModel> exportedResources = layers
                 .stream()
-                .map(layer -> new ExportResourceModel(layer.getDataset(), layer.getTableName()))
+                .map(layer -> new ExportResourceModel(layer.getDataset(), layer.getResourceId()))
                 .distinct()
                 .collect(Collectors.toList());
 

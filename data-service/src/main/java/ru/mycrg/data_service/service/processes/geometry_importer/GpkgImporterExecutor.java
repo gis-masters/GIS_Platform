@@ -99,7 +99,7 @@ public class GpkgImporterExecutor implements IExecutor<ImportReport>, IFilePlace
         try {
             dataset = createDatasetOrDoNothing(dataset);
         } catch (SQLException e) {
-            throw new BadRequestException("Не получилось удалить набор данных. Причина: " + e.getMessage());
+            throw new BadRequestException("Не получилось создать набор данных. Причина: " + e.getMessage());
         }
 
         long orgId = authenticationFacade.getOrganizationId();
@@ -126,42 +126,42 @@ public class GpkgImporterExecutor implements IExecutor<ImportReport>, IFilePlace
         return importReport;
     }
 
+    // Если набор данных не передали. Создаём его сами
     private String createDatasetOrDoNothing(String dataset) throws SQLException {
-        if (dataset == null || dataset.isEmpty() || dataset.equals("null")) {
-            //Если набор данных не передали. Создаём его сами
-            String datasetName = generateDatasetName();
-            ResourceQualifier dQualifier = new ResourceQualifier(datasetName);
-            resourceProtector.throwIfExists(dQualifier);
-            ddlSchemas.create(dQualifier);
-            File file = fileRepository.findById(dataFromGpkgPlacementModel.getFileId())
-                                      .orElseThrow(() -> new NotFoundException(dataFromGpkgPlacementModel.getFileId()));
-
-            SchemasAndTables schemasAndTables = new SchemasAndTables(DATASET,
-                                                                     new ResourceCreateDto(file.getTitle()),
-                                                                     datasetName,
-                                                                     ROOT_FOLDER_PATH);
-            SchemasAndTables newEntity = schemasAndTablesRepository.save(schemasAndTables);
-            Permission ownerPermission = permissionsService.addOwnerPermission(SCHEMAS_AND_TABLES_QUALIFIER,
-                                                                               newEntity.getId());
-            ResponseModel<Object> responseModel = dataStoreClient.create(datasetName);
-            if (!responseModel.isSuccessful()) {
-                schemasAndTablesRepository.delete(newEntity);
-                ddlSchemas.drop(dQualifier);
-                permissionsService.delete(ownerPermission);
-
-                throw new DataServiceException("Не удалось создать хранилище на геосервере", responseModel);
-            }
-
-            dataset = datasetName;
+        if (dataset != null && !dataset.isEmpty() && !dataset.equals("null")) {
+            return dataset;
         }
-        return dataset;
+
+        String datasetName = generateDatasetName();
+        ResourceQualifier dQualifier = new ResourceQualifier(datasetName);
+        resourceProtector.throwIfExists(dQualifier);
+        ddlSchemas.create(dQualifier);
+        File file = fileRepository.findById(dataFromGpkgPlacementModel.getFileId())
+                                  .orElseThrow(() -> new NotFoundException(dataFromGpkgPlacementModel.getFileId()));
+
+        SchemasAndTables schemasAndTables = new SchemasAndTables(DATASET,
+                                                                 new ResourceCreateDto(file.getTitle()),
+                                                                 datasetName,
+                                                                 ROOT_FOLDER_PATH);
+        SchemasAndTables newEntity = schemasAndTablesRepository.save(schemasAndTables);
+        Permission ownerPermission = permissionsService.addOwnerPermission(SCHEMAS_AND_TABLES_QUALIFIER,
+                                                                           newEntity.getId());
+        ResponseModel<Object> responseModel = dataStoreClient.create(datasetName);
+        if (!responseModel.isSuccessful()) {
+            schemasAndTablesRepository.delete(newEntity);
+            ddlSchemas.drop(dQualifier);
+            permissionsService.delete(ownerPermission);
+
+            throw new DataServiceException("Не удалось создать хранилище на геосервере", responseModel);
+        }
+
+        return datasetName;
     }
 
     @Override
     public IExecutor<ImportReport> initialize(Object data) {
         try {
-            this.dataFromGpkgPlacementModel = mapper.convertValue(data,
-                                                                  DataFromGpkgPlacementModel.class);
+            this.dataFromGpkgPlacementModel = mapper.convertValue(data, DataFromGpkgPlacementModel.class);
         } catch (Exception e) {
             String msg = String.format("Задана некорректная модель GPKG импорта: '%s'", data);
             log.error(msg, e.getCause());
@@ -181,11 +181,12 @@ public class GpkgImporterExecutor implements IExecutor<ImportReport>, IFilePlace
         }
 
         String dataset = this.dataFromGpkgPlacementModel.getSourceDataset();
-        if (dataset != null && !dataset.isEmpty() && !dataset.equals("null")) {
-            if (!resourceProtector.isEditAllowed(new ResourceQualifier(dataset))) {
-                throw new BadRequestException(
-                        "Не хватает прав для создания слоя в наборе данных: " + dataset + ". Импорт GPKG запрещён!!!");
-            }
+        if (dataset != null &&
+                !dataset.isEmpty() &&
+                !dataset.equals("null") &&
+                !resourceProtector.isEditAllowed(new ResourceQualifier(dataset))) {
+            throw new BadRequestException(
+                    "Не хватает прав для создания слоя в наборе данных: " + dataset + ". Импорт GPKG запрещён!!!");
         }
 
         return this;

@@ -66,7 +66,7 @@ export class AttributesBarActionExport extends Component<AttributesBarActionExpo
       const { layer, pageOptions, featuresTotal, getData } = this.props;
       const [records] = await getData({ ...pageOptions, page: 0, pageSize: featuresTotal });
 
-      exportAsXLSX(await this.prepareFeatures(records), layer.tableName);
+      exportAsXLSX(await this.prepareFeatures(records), layer.resourceId);
     } catch (error) {
       Toast.error('Ошибка при экспорте данных');
       services.logger.error(error);
@@ -79,7 +79,7 @@ export class AttributesBarActionExport extends Component<AttributesBarActionExpo
     const { layer, cols } = this.props;
     const schema = await getLayerSchema(layer);
     if (!schema) {
-      throw new Error(`Не найдена схема слоя: ${layer.tableName}`);
+      throw new Error(`Не найдена схема слоя: ${layer.resourceId}`);
     }
 
     const schemaWithView = isVectorLayer(layer) && layer.view ? applyView(schema, layer.view) : schema;

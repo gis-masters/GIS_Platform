@@ -70,7 +70,7 @@ export class AttributesCheckMaster extends Component<AttributesCheckMasterProps>
 
   @computed
   get selectedFeatures(): WfsFeature[] {
-    return selectedFeaturesStore.featuresByTableName[this.props.layer.tableName] || [];
+    return selectedFeaturesStore.featuresByResourceId[this.props.layer.resourceId] || [];
   }
 
   @boundMethod

@@ -106,7 +106,7 @@ export class LayerLegend extends Component<LayerLegendProps> {
       const filteredLegend: StyleRule[] =
         this.legend?.filter(rule => {
           const resultItem = filteredStylesResponse.find(
-            ({ dataset, identifier }) => dataset === layer.dataset && identifier === layer.tableName
+            ({ dataset, identifier }) => dataset === layer.dataset && identifier === layer.resourceId
           );
 
           return resultItem?.rules.includes(rule.name);

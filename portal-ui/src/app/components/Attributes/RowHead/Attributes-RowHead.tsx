@@ -3,7 +3,7 @@ import { action, computed, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 
-import { extractTableNameFromFeatureId } from '../../../services/geoserver/featureType/featureType.util';
+import { extractResourceIdFromFeatureId } from '../../../services/geoserver/featureType/featureType.util';
 import { type CrgVectorLayer } from '../../../services/gis/layers/layers.models';
 import { getLayerByFeatureInCurrentProject } from '../../../services/gis/layers/layers.utils';
 import { editFeatureStore } from '../../../services/map/a-map-mode/edit-feature/EditFeatureStore';
@@ -42,8 +42,8 @@ export class AttributesRowHead extends Component<AttributesRowHeadProps> {
 
   async componentDidUpdate(prevProps: AttributesRowHeadProps) {
     if (
-      extractTableNameFromFeatureId(this.props.rowData.feature.id) !==
-      extractTableNameFromFeatureId(prevProps.rowData.feature.id)
+      extractResourceIdFromFeatureId(this.props.rowData.feature.id) !==
+      extractResourceIdFromFeatureId(prevProps.rowData.feature.id)
     ) {
       await this.fetchPermission();
     }

@@ -25,7 +25,7 @@ public class Layer implements Identifiable<Long> {
     private String dataset;
 
     @Column
-    private String tableName;
+    private String resourceId;
 
     @Column
     private String type;
@@ -58,10 +58,13 @@ public class Layer implements Identifiable<Long> {
     private String dataSourceUri;
 
     @Column
-    private String libraryId;
+    private String sourceId;
+
+    @Column(length = 20)
+    private String sourceType;
 
     @Column
-    private Long recordId;
+    private Long sourceRecordId;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt = LocalDateTime.now();
@@ -99,14 +102,15 @@ public class Layer implements Identifiable<Long> {
     public Layer(LayerCreateDto dto) {
         title = dto.getTitle();
         dataset = dto.getDataset();
-        tableName = dto.getTableName();
+        resourceId = dto.getResourceId();
         type = dto.getType();
         styleName = dto.getStyleName();
         dataStoreName = dto.getDataStoreName();
         nativeCRS = dto.getNativeCRS() != null ? dto.getNativeCRS() : "EPSG:28406";
         dataSourceUri = dto.getDataSourceUri();
-        libraryId = dto.getLibraryId();
-        recordId = dto.getRecordId();
+        sourceId = dto.getSourceId();
+        sourceType = dto.getSourceType();
+        sourceRecordId = dto.getSourceRecordId();
 
         enabled = Boolean.parseBoolean(dto.getEnabled());
         position = dto.getPosition();
@@ -146,12 +150,12 @@ public class Layer implements Identifiable<Long> {
         this.title = title;
     }
 
-    public String getTableName() {
-        return tableName;
+    public String getResourceId() {
+        return resourceId;
     }
 
-    public void setTableName(String tableName) {
-        this.tableName = tableName;
+    public void setResourceId(String resourceId) {
+        this.resourceId = resourceId;
     }
 
     public LocalDateTime getCreatedAt() {
@@ -274,20 +278,28 @@ public class Layer implements Identifiable<Long> {
         this.dataset = datasets;
     }
 
-    public String getLibraryId() {
-        return libraryId;
+    public String getSourceId() {
+        return sourceId;
     }
 
-    public void setLibraryId(String libraryId) {
-        this.libraryId = libraryId;
+    public void setSourceId(String sourceId) {
+        this.sourceId = sourceId;
     }
 
-    public Long getRecordId() {
-        return recordId;
+    public String getSourceType() {
+        return sourceType;
     }
 
-    public void setRecordId(Long recordId) {
-        this.recordId = recordId;
+    public void setSourceType(String sourceType) {
+        this.sourceType = sourceType;
+    }
+
+    public Long getSourceRecordId() {
+        return sourceRecordId;
+    }
+
+    public void setSourceRecordId(Long sourceRecordId) {
+        this.sourceRecordId = sourceRecordId;
     }
 
     public String getContentType() {
@@ -340,13 +352,13 @@ public class Layer implements Identifiable<Long> {
         }
         Layer layer = (Layer) o;
 
-        return getId() == layer.getId() && getTitle().equals(layer.getTitle()) && getTableName().equals(
-                layer.getTableName()) && getType().equals(layer.getType());
+        return getId() == layer.getId() && getTitle().equals(layer.getTitle()) && getResourceId().equals(
+                layer.getResourceId()) && getType().equals(layer.getType());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getTitle(), getTableName(), getType());
+        return Objects.hash(getId(), getTitle(), getResourceId(), getType());
     }
 
     @Override
@@ -355,7 +367,7 @@ public class Layer implements Identifiable<Long> {
                 "\"id\":\"" + id + "\"" + ", " +
                 "\"title\":" + (title == null ? "null" : "\"" + title + "\"") + ", " +
                 "\"dataset\":" + (dataset == null ? "null" : "\"" + dataset + "\"") + ", " +
-                "\"tableName\":" + (tableName == null ? "null" : "\"" + tableName + "\"") + ", " +
+                "\"resourceId\":" + (resourceId == null ? "null" : "\"" + resourceId + "\"") + ", " +
                 "\"type\":" + (type == null ? "null" : "\"" + type + "\"") + ", " +
                 "\"enabled\":\"" + enabled + "\"" + ", " +
                 "\"position\":\"" + position + "\"" + ", " +
@@ -366,8 +378,9 @@ public class Layer implements Identifiable<Long> {
                 "\"nativeCRS\":" + (nativeCRS == null ? "null" : "\"" + nativeCRS + "\"") + ", " +
                 "\"dataStoreName\":" + (dataStoreName == null ? "null" : "\"" + dataStoreName + "\"") + ", " +
                 "\"dataSourceUri\":" + (dataSourceUri == null ? "null" : "\"" + dataSourceUri + "\"") + ", " +
-                "\"libraryId\":" + (libraryId == null ? "null" : "\"" + libraryId + "\"") + ", " +
-                "\"recordId\":" + (recordId == null ? "null" : "\"" + recordId + "\"") + ", " +
+                "\"sourceId\":" + (sourceId == null ? "null" : "\"" + sourceId + "\"") + ", " +
+                "\"sourceType\":" + (sourceType == null ? "null" : "\"" + sourceType + "\"") + ", " +
+                "\"sourceRecordId\":" + (sourceRecordId == null ? "null" : "\"" + sourceRecordId + "\"") + ", " +
                 "\"createdAt\":" + (createdAt == null ? "null" : createdAt) + ", " +
                 "\"lastModified\":" + (lastModified == null ? "null" : lastModified) + ", " +
                 "\"project\":" + (project == null ? "null" : project) + ", " +

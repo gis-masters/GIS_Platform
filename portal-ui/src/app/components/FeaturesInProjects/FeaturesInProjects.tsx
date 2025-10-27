@@ -22,7 +22,7 @@ export const FeatureInProjects: FC<FeaturesInProjectsProps> = ({ connections, fe
       {connections.map(
         (connection, index: number) =>
           connection.layer?.dataset &&
-          connection.layer.tableName && (
+          connection.layer.resourceId && (
             <ListItem key={index}>
               <ListItemText
                 primary={
@@ -30,7 +30,7 @@ export const FeatureInProjects: FC<FeaturesInProjectsProps> = ({ connections, fe
                     color='primary'
                     variant='text'
                     className={cnFeaturesInProjects('Button')}
-                    href={getFeaturesUrl(connection.project.id, connection.layer.dataset, connection.layer.tableName, [
+                    href={getFeaturesUrl(connection.project.id, connection.layer.dataset, connection.layer.resourceId, [
                       featureId
                     ])}
                   >

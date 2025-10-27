@@ -136,7 +136,7 @@ export class AttributesBar extends Component<AttributesBarProps> {
           />
         ),
         CustomFilterComponent: AttributesCheckFilter,
-        filterable: !!selectedFeaturesStore.featuresByTableName[layer.tableName]?.length,
+        filterable: !!selectedFeaturesStore.featuresByResourceId[layer.resourceId]?.length,
         CellContent: AttributesRowHead,
         cellContentProps: { style: { overflow: 'visible' } },
         align: 'left',

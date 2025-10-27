@@ -67,7 +67,7 @@ public class LayersStepsDefinitions extends BaseStepsDefinitions {
                        get(projectId + "/layers");
 
         List<Object> layers = response.jsonPath().getList("");
-        currentTableName = response.jsonPath().get("[0].tableName");
+        currentTableName = response.jsonPath().get("[0].resourceId");
         currentDatasetIdentifier = response.jsonPath().get("[0].dataset");
         assertEquals(count, layers.size());
     }

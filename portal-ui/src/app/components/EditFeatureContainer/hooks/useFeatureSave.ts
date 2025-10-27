@@ -132,7 +132,7 @@ export const useFeatureSave = ({
     const firstFeature: WfsFeature = features?.[0];
     if (layer.dataset && isNew && firstFeature) {
       try {
-        const createdFeature = await createFeature(layer.dataset, layer.tableName, {
+        const createdFeature = await createFeature(layer.dataset, layer.resourceId, {
           type: firstFeature.type,
           properties: actualProperties,
           geometry: transformToNativeProjection(layer.nativeCRS, editFeatureStore.geometry)
@@ -207,9 +207,9 @@ export const useFeatureSave = ({
     }
 
     try {
-      const { dataset, tableName, nativeCRS } = layer;
+      const { dataset, resourceId, nativeCRS } = layer;
 
-      await updateFeature(dataset, tableName, {
+      await updateFeature(dataset, resourceId, {
         id: String(extractFeatureId(feature.id)),
         type: 'Feature',
         geometry: transformToNativeProjection(nativeCRS, newGeometry),
@@ -259,9 +259,9 @@ export const useFeatureSave = ({
     }
 
     try {
-      const { dataset, tableName } = layer;
+      const { dataset, resourceId } = layer;
 
-      await transformFeatureService.multipleEdit(dataset, tableName, features, newProperties);
+      await transformFeatureService.multipleEdit(dataset, resourceId, features, newProperties);
 
       setIsSaveInProgress(false);
       mapService.refreshAllLayers();

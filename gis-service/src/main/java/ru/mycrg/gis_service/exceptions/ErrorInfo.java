@@ -6,7 +6,7 @@ public class ErrorInfo {
     private String message;
 
     public ErrorInfo() {
-        //Required by framework
+        // Required by framework
     }
 
     public ErrorInfo(String field, String message) {
@@ -28,5 +28,13 @@ public class ErrorInfo {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    @Override
+    public String toString() {
+        return "{" +
+                "\"field\":" + (field == null ? "null" : "\"" + field + "\"") + ", " +
+                "\"message\":" + (message == null ? "null" : "\"" + message + "\"") +
+                "}";
     }
 }

@@ -74,7 +74,7 @@ export class AttributesTab extends Component<AttributesTabProps> {
 
   @computed
   private get selectedFeaturesCount(): number {
-    return selectedFeaturesStore.featuresByTableName[this.props.layer.tableName]?.length || 0;
+    return selectedFeaturesStore.featuresByResourceId[this.props.layer.resourceId]?.length || 0;
   }
 
   @boundMethod

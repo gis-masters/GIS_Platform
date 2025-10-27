@@ -33,14 +33,14 @@ export function extractFeatureIdsFromAttributesFilter(
 
   let featureIds: string[] = [];
 
-  if (!layer.tableName) {
+  if (!layer.resourceId) {
     throw new Error(`Слой ${layer.title} не имеет tableName`);
   }
 
   featureIds =
     filterBySelection === FilterBySelectionMode.DISABLED
       ? []
-      : selectedFeaturesStore.featuresByTableName[layer.tableName]?.map(({ id }) => id) || [];
+      : selectedFeaturesStore.featuresByResourceId[layer.resourceId]?.map(({ id }) => id) || [];
 
   if (idsFromTableFilter.length) {
     featureIds =

@@ -112,7 +112,7 @@ const FilesSignDialogFC: FC<FilesSignatureProps> = observer(
               propertyName &&
               sidebars.layerOfEditedFeature &&
               sidebars.layerOfEditedFeature.dataset &&
-              sidebars.layerOfEditedFeature.tableName
+              sidebars.layerOfEditedFeature.resourceId
             ) {
               communicationService.featuresUpdated.emit();
             }

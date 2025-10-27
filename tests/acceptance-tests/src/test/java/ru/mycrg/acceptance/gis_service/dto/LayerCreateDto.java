@@ -6,14 +6,15 @@ public class LayerCreateDto {
     private final String type;
 
     private String dataset;
-    private String tableName;
+    private String resourceId;
     private String styleName;
     private String schemaId;
     private String dataStoreName;
     private String nativeCRS;
     private String dataSourceUri;
-    private String libraryId;
-    private Long recordId;
+    private String sourceId;
+    private String sourceType;
+    private Long sourceRecordId;
     private long minZoom;
     private long maxZoom;
     private String mode;
@@ -25,12 +26,12 @@ public class LayerCreateDto {
         this.type = type;
     }
 
-    public LayerCreateDto(String title, String dataset, String tableName, String styleName, String type,
+    public LayerCreateDto(String title, String dataset, String resourceId, String styleName, String type,
                           String dataStoreName, String nativeCRS, String dataSourceUri, String contentType,
                           String style) {
         this.title = title;
         this.dataset = dataset;
-        this.tableName = tableName;
+        this.resourceId = resourceId;
         this.styleName = styleName;
         this.type = type;
         this.dataStoreName = dataStoreName;
@@ -38,6 +39,7 @@ public class LayerCreateDto {
         this.dataSourceUri = dataSourceUri;
         this.contentType = contentType;
         this.style = style;
+        this.sourceType = "document";
     }
 
     public String getTitle() {
@@ -48,8 +50,8 @@ public class LayerCreateDto {
         return dataset;
     }
 
-    public String getTableName() {
-        return tableName;
+    public String getResourceId() {
+        return resourceId;
     }
 
     public String getStyleName() {
@@ -80,8 +82,8 @@ public class LayerCreateDto {
         this.dataset = dataset;
     }
 
-    public void setTableName(String tableName) {
-        this.tableName = tableName;
+    public void setResourceId(String resourceId) {
+        this.resourceId = resourceId;
     }
 
     public void setStyleName(String styleName) {
@@ -120,20 +122,20 @@ public class LayerCreateDto {
         this.maxZoom = maxZoom;
     }
 
-    public String getLibraryId() {
-        return libraryId;
+    public String getSourceId() {
+        return sourceId;
     }
 
-    public void setLibraryId(String libraryId) {
-        this.libraryId = libraryId;
+    public void setSourceId(String sourceId) {
+        this.sourceId = sourceId;
     }
 
-    public Long getRecordId() {
-        return recordId;
+    public Long getSourceRecordId() {
+        return sourceRecordId;
     }
 
-    public void setRecordId(Long recordId) {
-        this.recordId = recordId;
+    public void setSourceRecordId(Long sourceRecordId) {
+        this.sourceRecordId = sourceRecordId;
     }
 
     public String getMode() {
@@ -158,5 +160,13 @@ public class LayerCreateDto {
 
     public void setStyle(String style) {
         this.style = style;
+    }
+
+    public String getSourceType() {
+        return sourceType;
+    }
+
+    public void setSourceType(String sourceType) {
+        this.sourceType = sourceType;
     }
 }

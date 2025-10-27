@@ -296,29 +296,29 @@ class CurrentProject implements CrgProjectData {
     };
   }
 
-  getLayerByTableNameFromVisibleVectorLayers(tableName: string): CrgLayer {
-    return this.getLayerByTableNameFromLayers(
-      tableName,
+  getLayerByResourceIdFromVisibleVectorLayers(resourceId: string): CrgLayer {
+    return this.getLayerByResourceIdFromLayers(
+      resourceId,
       this.visibleVectorLayers.map(item => item.payload)
     );
   }
 
-  getLayerByTableNameFromVisibleAndHiddenByZoomVectorLayers(tableName: string): CrgLayer {
-    return this.getLayerByTableNameFromLayers(
-      tableName,
+  getLayerByResourceIdFromVisibleAndHiddenByZoomVectorLayers(resourceId: string): CrgLayer {
+    return this.getLayerByResourceIdFromLayers(
+      resourceId,
       this.visibleOnMapAndHiddenByZoomLayers.map(item => item.payload)
     );
   }
 
-  getLayerByTableNameFromAllVectorableLayers(tableName: string): CrgLayer {
-    return this.getLayerByTableNameFromLayers(tableName, this.vectorableLayers);
+  getLayerByResourceIdFromAllVectorableLayers(resourceId: string): CrgLayer {
+    return this.getLayerByResourceIdFromLayers(resourceId, this.vectorableLayers);
   }
 
-  private getLayerByTableNameFromLayers(tableName: string, layers: CrgLayer[]): CrgLayer {
-    const layer = layers.find(item => item.tableName === tableName);
+  private getLayerByResourceIdFromLayers(resourceId: string, layers: CrgLayer[]): CrgLayer {
+    const layer = layers.find(item => item.resourceId === resourceId);
 
     if (!layer) {
-      throw new Error('Не удалось найти слой по tableName: ' + tableName);
+      throw new Error('Не удалось найти слой по resourceId: ' + resourceId);
     }
 
     return layer;

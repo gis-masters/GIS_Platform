@@ -23,7 +23,7 @@ Given(
       title: layerTitle,
       dataset: latestDataset.identifier,
       view: '',
-      tableName: latestVectorTable.identifier,
+      resourceId: latestVectorTable.identifier,
       nativeCRS: latestVectorTable.crs,
       styleName: latestVectorTable.schema.styleName,
       enabled: true
@@ -91,7 +91,7 @@ Given('в созданном проекте существует внешний 
 
   const externalLayer = {
     title: data[0],
-    tableName: data[1],
+    resourceId: data[1],
     type: CrgLayerType.EXTERNAL,
     dataSourceUri: data[2],
     enabled: Boolean(data[3])
@@ -109,7 +109,7 @@ Given('существует слой с параметрами:', async function
   const layer = {
     type: CrgLayerType.VECTOR,
     dataset: dataset.identifier,
-    tableName: vectorTable.identifier,
+    resourceId: vectorTable.identifier,
     title: layerTitle,
     nativeCRS: vectorTable.crs,
     styleName: vectorTable.schema.styleName,

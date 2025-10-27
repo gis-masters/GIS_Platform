@@ -6,7 +6,10 @@ import { cn } from '@bem-react/classname';
 
 import { type Schema } from '../../services/data/schema/schema.models';
 import { applyView, changeSchemaNamesCaseByFeature } from '../../services/data/schema/schema.utils';
-import { extractFeatureId, extractTableNameFromFeatureId } from '../../services/geoserver/featureType/featureType.util';
+import {
+  extractFeatureId,
+  extractResourceIdFromFeatureId
+} from '../../services/geoserver/featureType/featureType.util';
 import { type WfsFeature } from '../../services/geoserver/wfs/wfs.models';
 import { getFeatureById } from '../../services/geoserver/wfs/wfs.service';
 import { type CrgLayer } from '../../services/gis/layers/layers.models';
@@ -59,11 +62,11 @@ export const FeaturesListItem = observer((props: FeaturesListItemProps) => {
 
   const layer = useMemo<CrgLayer | undefined>(() => {
     if (feature) {
-      const tableName = extractTableNameFromFeatureId(feature.id);
+      const resourceId = extractResourceIdFromFeatureId(feature.id);
 
       return isSearchList
-        ? currentProject.getLayerByTableNameFromAllVectorableLayers(tableName)
-        : currentProject.getLayerByTableNameFromVisibleAndHiddenByZoomVectorLayers(tableName);
+        ? currentProject.getLayerByResourceIdFromAllVectorableLayers(resourceId)
+        : currentProject.getLayerByResourceIdFromVisibleAndHiddenByZoomVectorLayers(resourceId);
     }
   }, [feature, isSearchList]);
 
@@ -114,8 +117,8 @@ export const FeaturesListItem = observer((props: FeaturesListItemProps) => {
       onSelect(selectedFeature);
     }
 
-    if (layer?.tableName) {
-      projectsService.enableLayersByTableNames([layer.tableName]);
+    if (layer?.resourceId) {
+      projectsService.enableLayersByResourceId([layer.resourceId]);
     }
   }, [feature, errorData, isSearchList, onSelect, layer]);
 

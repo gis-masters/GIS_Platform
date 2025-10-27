@@ -2,8 +2,8 @@ import { currentProject } from '../../../stores/CurrentProject.store';
 import { currentUser } from '../../../stores/CurrentUser.store';
 import { defaultOlProjectionCode } from '../../data/projections/projections.models';
 import {
-  extractTableNameFromComplexName,
-  extractTableNameFromFeatureId
+  extractResourceIdFromComplexName,
+  extractResourceIdFromFeatureId
 } from '../../geoserver/featureType/featureType.util';
 import { type WfsFeature } from '../../geoserver/wfs/wfs.models';
 import { type CrgLayer, CrgLayerType, type CrgVectorLayer, type NewCrgLayer } from './layers.models';
@@ -48,7 +48,7 @@ export function getLayerByFeatureIdInCurrentProject(featureId: string): CrgVecto
 
 export function getLayerByFeatureIdFromCurrentProject(featureId: string): CrgVectorLayer | undefined {
   return currentProject.vectorableLayers.find(
-    ({ tableName }) => tableName === extractTableNameFromFeatureId(featureId)
+    ({ resourceId }) => resourceId === extractResourceIdFromFeatureId(featureId)
   );
 }
 
@@ -77,5 +77,5 @@ export function isLayerFromFile(layer: CrgLayer | NewCrgLayer): boolean {
 }
 
 export function convertComplexNamesArrayToTableNamesUriFragment(complexNames: string[]): string {
-  return complexNames.map(extractTableNameFromComplexName).join(',');
+  return complexNames.map(extractResourceIdFromComplexName).join(',');
 }

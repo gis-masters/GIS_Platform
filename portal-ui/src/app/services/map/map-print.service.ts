@@ -522,7 +522,7 @@ async function autoFilterLegend() {
         .flatMap(({ dataset, identifier, rules: rulesNames }) =>
           rulesNames.map(ruleName => {
             const layer = printSettings.layers.find(
-              l => l.type === CrgLayerType.VECTOR && l.tableName === identifier && l.dataset === dataset
+              l => l.type === CrgLayerType.VECTOR && l.resourceId === identifier && l.dataset === dataset
             );
 
             if (!layer) {

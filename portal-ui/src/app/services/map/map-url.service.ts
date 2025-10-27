@@ -70,7 +70,7 @@ export function getFeaturesUrlFragment(features: WfsFeature[]): string | null {
       continue;
     }
 
-    buildFeaturesUrlFragment(featuresUrlFragment, layer.dataset, layer.tableName, [extractFeatureId(feature.id)]);
+    buildFeaturesUrlFragment(featuresUrlFragment, layer.dataset, layer.resourceId, [extractFeatureId(feature.id)]);
   }
 
   return JSON.stringify(featuresUrlFragment);

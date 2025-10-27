@@ -3,11 +3,11 @@ import { type CrgLayer } from '../../../../src/app/services/gis/layers/layers.mo
 import { getVectorTable } from '../tables/getVectorTable';
 
 export async function getLayerSchema(layer: CrgLayer): Promise<Schema> {
-  if (!layer.tableName || !layer.dataset) {
+  if (!layer.resourceId || !layer.dataset) {
     throw new Error('Invalid layer');
   }
 
-  const table = await getVectorTable(layer.dataset, layer.tableName);
+  const table = await getVectorTable(layer.dataset, layer.resourceId);
 
   return table.schema;
 }

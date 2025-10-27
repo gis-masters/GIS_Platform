@@ -9,14 +9,14 @@ import static ru.mycrg.gis_service.service.geoserver.FeatureUtil.buildGeoserverF
 public class LayerMapper {
 
     public static LayerProjection toProjection(Layer layer, String orgWorkspaceName) {
-        String tableName = layer.getTableName();
+        String resourceId = layer.getResourceId();
         String nativeCRS = layer.getNativeCRS();
 
         return new LayerProjection(layer.getId(),
                                    layer.getTitle(),
                                    layer.getType(),
                                    layer.getDataset(),
-                                   layer.getTableName(),
+                                   layer.getResourceId(),
                                    layer.isEnabled(),
                                    layer.getPosition(),
                                    layer.getTransparency(),
@@ -28,9 +28,10 @@ public class LayerMapper {
                                    layer.getParent() != null ? layer.getParent().getId() : null,
                                    layer.getProject() != null ? layer.getProject().getId() : null,
                                    buildGeoserverComplexLayerName(orgWorkspaceName,
-                                                                  buildGeoserverFeatureName(tableName, nativeCRS)),
-                                   layer.getLibraryId(),
-                                   layer.getRecordId(),
+                                                                  buildGeoserverFeatureName(resourceId, nativeCRS)),
+                                   layer.getSourceId(),
+                                   layer.getSourceType(),
+                                   layer.getSourceRecordId(),
                                    layer.getDataStoreName(),
                                    layer.getContentType(),
                                    layer.getView(),

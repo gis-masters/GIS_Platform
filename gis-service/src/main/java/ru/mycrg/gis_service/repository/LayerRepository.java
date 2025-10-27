@@ -18,7 +18,7 @@ public interface LayerRepository extends PagingAndSortingRepository<Layer, Long>
 
     @Query(value = "SELECT DISTINCT ON (table_name) id," +
             "    title," +
-            "    table_name," +
+            "    resource_id," +
             "    enabled," +
             "    position," +
             "    transparency," +
@@ -34,8 +34,9 @@ public interface LayerRepository extends PagingAndSortingRepository<Layer, Long>
             "    data_source_uri," +
             "    type," +
             "    dataset," +
-            "    library_id," +
-            "    record_id" +
+            "    source_id," +
+            "    source_type," +
+            "    source_record_id" +
             "  FROM layers" +
             "  WHERE type = :type" +
             "    AND project_id IN :projectIds",
@@ -43,10 +44,10 @@ public interface LayerRepository extends PagingAndSortingRepository<Layer, Long>
            nativeQuery = true)
     Page<Layer> findUniqueLayers(String type, Set<Long> projectIds, Pageable pageable);
 
-    @Query("FROM Layer l WHERE l.tableName = :tableName AND l.project.id IN :projectIds")
-    List<Layer> findRelatedByTableName(@Param("tableName") String tableName, Set<Long> projectIds);
+    @Query("FROM Layer l WHERE l.resourceId = :resourceId AND l.project.id IN :projectIds")
+    List<Layer> findRelatedByResourceId(@Param("resourceId") String resourceId, Set<Long> projectIds);
 
-    @Query("FROM Layer l WHERE l.tableName like %:fileId% AND l.project.id IN :projectIds")
+    @Query("FROM Layer l WHERE l.resourceId like %:fileId% AND l.project.id IN :projectIds")
     List<Layer> findRelatedByFileId(@Param("fileId") String fileId, Set<Long> projectIds);
 
     @Query("FROM Layer l WHERE l.dataset = :datasetId AND l.project.id IN :projectIds")
@@ -56,11 +57,11 @@ public interface LayerRepository extends PagingAndSortingRepository<Layer, Long>
     @Query("DELETE FROM Layer l where l.id = :layerId")
     void deleteLayerById(@Param("layerId") Long layerId);
 
-    void deleteByTableName(String tableName);
+    void deleteByResourceId(String resourceId);
 
-    boolean existsByProjectAndTableNameAndNativeCRS(Project project, String tableName, String nativeCrs);
+    boolean existsByProjectAndResourceIdAndNativeCRS(Project project, String resourceId, String nativeCrs);
 
-    List<Layer> findByTableNameAndNativeCRS(String tableName, String nativeCrs);
+    List<Layer> findByResourceIdAndNativeCRS(String resourceId, String nativeCrs);
 
     List<Layer> findByNativeCRS(String nativeCrs);
 

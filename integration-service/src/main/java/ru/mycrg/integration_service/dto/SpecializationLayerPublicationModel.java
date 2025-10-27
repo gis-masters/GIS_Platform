@@ -9,7 +9,7 @@ public class SpecializationLayerPublicationModel implements Serializable {
     public final boolean enabled = true;
 
     public String dataset;
-    public String tableName;
+    public String resourceId;
     public String title;
     public String nativeCRS;
     public String styleName;
@@ -19,13 +19,13 @@ public class SpecializationLayerPublicationModel implements Serializable {
     }
 
     public SpecializationLayerPublicationModel(Integer id, String title, String nativeCRS, String styleName,
-                                               String dataset, String tableName) {
+                                               String dataset, String resourceId) {
         this.id = id;
         this.title = title;
         this.nativeCRS = nativeCRS;
         this.styleName = styleName;
         this.dataset = dataset;
-        this.tableName = tableName;
+        this.resourceId = resourceId;
     }
 
     public Integer getId() {
@@ -56,8 +56,8 @@ public class SpecializationLayerPublicationModel implements Serializable {
         return dataset;
     }
 
-    public String getTableName() {
-        return tableName;
+    public String getResourceId() {
+        return resourceId;
     }
 
     @Override
@@ -67,7 +67,7 @@ public class SpecializationLayerPublicationModel implements Serializable {
                 "\"type\":" + (type == null ? "null" : "\"" + type + "\"") + ", " +
                 "\"enabled\":\"" + enabled + "\"" + ", " +
                 "\"dataset\":" + (dataset == null ? "null" : "\"" + dataset + "\"") + ", " +
-                "\"tableName\":" + (tableName == null ? "null" : "\"" + tableName + "\"") + ", " +
+                "\"resourceId\":" + (resourceId == null ? "null" : "\"" + resourceId + "\"") + ", " +
                 "\"title\":" + (title == null ? "null" : "\"" + title + "\"") + ", " +
                 "\"nativeCRS\":" + (nativeCRS == null ? "null" : "\"" + nativeCRS + "\"") + ", " +
                 "\"styleName\":" + (styleName == null ? "null" : "\"" + styleName + "\"") +

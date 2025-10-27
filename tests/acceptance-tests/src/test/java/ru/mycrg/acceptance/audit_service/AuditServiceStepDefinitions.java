@@ -188,7 +188,7 @@ public class AuditServiceStepDefinitions extends BaseStepsDefinitions {
 
     @Then("Создан аудит лог о создании слоя, с корректным телом")
     public void checkLayerCreate() {
-        String tableName = layerCreateDto.getTableName();
+        String tableName = layerCreateDto.getResourceId();
 
         waitAuditEvent(CREATE.name(), LAYER, tableName);
     }
@@ -202,7 +202,7 @@ public class AuditServiceStepDefinitions extends BaseStepsDefinitions {
 
     @Then("Создан аудит лог об удалении слоя, с корректным телом")
     public void checkLayerDelete() {
-        String tableName = layerCreateDto.getTableName();
+        String tableName = layerCreateDto.getResourceId();
 
         waitAuditEvent(DELETE.name(), LAYER, tableName);
     }
@@ -278,7 +278,7 @@ public class AuditServiceStepDefinitions extends BaseStepsDefinitions {
     public void checkLayerUpdate() throws InterruptedException {
         sleep(800);
 
-        String tableName = layerCreateDto.getTableName();
+        String tableName = layerCreateDto.getResourceId();
 
         waitAuditEvent(UPDATE.name(), LAYER, tableName);
     }

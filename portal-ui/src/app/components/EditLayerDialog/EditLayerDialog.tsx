@@ -275,7 +275,7 @@ export class EditLayerDialog extends Component<EditLayerDialogProps> {
       layer.photoMode = patch.photoMode;
     }
 
-    if (patch.nativeCRS !== undefined && layer.nativeCRS !== patch.nativeCRS && layer.tableName) {
+    if (patch.nativeCRS !== undefined && layer.nativeCRS !== patch.nativeCRS && layer.resourceId) {
       void this.changeLayerProjection(layer, patch.nativeCRS);
     } else {
       communicationService.layerUpdated.emit({ type: 'update', data: layer });
@@ -285,13 +285,13 @@ export class EditLayerDialog extends Component<EditLayerDialogProps> {
   private async changeLayerProjection(layer: CrgLayer, projectionCode: string): Promise<void> {
     await createLayer({ ...layer, mode: FilePlacementMode.GEOSERVER, nativeCRS: projectionCode }, currentProject.id);
 
-    if (!layer.tableName) {
+    if (!layer.resourceId) {
       throw new Error('Отсутствует tableName у слоя');
     }
 
     patch(layer, {
       nativeCRS: projectionCode,
-      complexName: buildComplexName(currentUser.workspaceName, layer.tableName, projectionCode)
+      complexName: buildComplexName(currentUser.workspaceName, layer.resourceId, projectionCode)
     });
 
     communicationService.layerUpdated.emit({ type: 'update', data: layer });

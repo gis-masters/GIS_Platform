@@ -68,7 +68,7 @@ export class CopyUrlButton extends Component<CopyUrlButtonProps> {
         throw new Error('Не найден слой');
       }
 
-      urlForClipboard = getFeaturesUrl(currentProject.id, layer.dataset, layer.tableName, [firstFeature.id]);
+      urlForClipboard = getFeaturesUrl(currentProject.id, layer.dataset, layer.resourceId, [firstFeature.id]);
     } else if (vectorTable) {
       const { dataset, identifier } = vectorTable;
 

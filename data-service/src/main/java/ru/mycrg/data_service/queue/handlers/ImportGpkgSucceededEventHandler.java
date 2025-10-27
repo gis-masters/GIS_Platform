@@ -107,8 +107,7 @@ public class ImportGpkgSucceededEventHandler implements IEventHandler {
         String gdalCreatedSchema = requestEvent.getGdalCreatedSchema();
         List<ResourceQualifier> sourceResources;
         try {
-            sourceResources = ddlTablesBase.getAllTablesFromScheme(jdbcTemplate,
-                                                                   gdalCreatedSchema);
+            sourceResources = ddlTablesBase.getAllTablesFromScheme(jdbcTemplate, gdalCreatedSchema);
         } catch (SQLException e) {
             throw new BadRequestException(e.getMessage());
         }
@@ -399,7 +398,7 @@ public class ImportGpkgSucceededEventHandler implements IEventHandler {
                             "  \"complexName\": \"%s:%s\",\n" +
                             "  \"type\": \"vector\",\n" +
                             "  \"dataset\": \"%s\",\n" +
-                            "  \"tableName\": \"%s\",\n" +
+                            "  \"resourceId\": \"%s\",\n" +
                             "  \"title\": \"%s\",\n" +
                             "  \"nativeCRS\": \"%s\",\n" +
                             "  \"schemaId\": \"%s\",\n" +

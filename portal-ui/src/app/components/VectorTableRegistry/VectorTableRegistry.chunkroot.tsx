@@ -218,13 +218,13 @@ export default class VectorTableRegistry extends Component<VectorTableRegistryPr
   private async getData(pageOptions: PageOptions): Promise<[Record<string, unknown>[], number]> {
     await this.fetchConnections();
 
-    const { dataset, tableName } = this.getDatasetAndTableName();
+    const { dataset, resourceId } = this.getDatasetAndTableName();
 
-    if (!dataset || !tableName) {
+    if (!dataset || !resourceId) {
       return [[], 1];
     }
 
-    const res = await getVectorTableFeatures(dataset, tableName, pageOptions);
+    const res = await getVectorTableFeatures(dataset, resourceId, pageOptions);
 
     const data = res.content.map(item => {
       return { ...item.properties, id: item.id };
@@ -235,11 +235,11 @@ export default class VectorTableRegistry extends Component<VectorTableRegistryPr
     return [data, res.page.totalPages];
   }
 
-  private getDatasetAndTableName(): { dataset?: string; tableName?: string } {
+  private getDatasetAndTableName(): { dataset?: string; resourceId?: string } {
     if (this.vectorTable) {
       return {
         dataset: this.vectorTable.dataset,
-        tableName: this.vectorTable.identifier
+        resourceId: this.vectorTable.identifier
       };
     }
 
@@ -248,7 +248,7 @@ export default class VectorTableRegistry extends Component<VectorTableRegistryPr
 
       return {
         dataset: firstConnection.layer?.dataset,
-        tableName: firstConnection.layer?.tableName
+        resourceId: firstConnection.layer?.resourceId
       };
     }
 

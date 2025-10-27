@@ -34,39 +34,39 @@ class AttributesTableStore {
   }
 
   isLayerFilterExist(layer: CrgLayer): boolean {
-    if (!layer.tableName) {
+    if (!layer.resourceId) {
       throw new Error(errorMessage);
     }
 
-    return !!this.filter[layer.tableName];
+    return !!this.filter[layer.resourceId];
   }
 
   isLayerFiltered(layer: CrgLayer): boolean {
-    return this.isLayerFilterExist(layer) && this.isLayerFilterEnabled(layer.tableName);
+    return this.isLayerFilterExist(layer) && this.isLayerFilterEnabled(layer.resourceId);
   }
 
-  isLayerFilterEnabled(tableName: string | undefined): boolean {
-    if (!tableName) {
+  isLayerFilterEnabled(resourceId: string | undefined): boolean {
+    if (!resourceId) {
       throw new Error(errorMessage);
     }
 
-    return !this.filterDisabled[tableName];
+    return !this.filterDisabled[resourceId];
   }
 
-  getLayerFilter(tableName: string, considerEnabledness = false): FilterQuery {
-    if (considerEnabledness && !this.isLayerFilterEnabled(tableName)) {
+  getLayerFilter(resourceId: string, considerEnabledness = false): FilterQuery {
+    if (considerEnabledness && !this.isLayerFilterEnabled(resourceId)) {
       return {};
     }
 
-    return attributesTableStore.filter[tableName] || {};
+    return attributesTableStore.filter[resourceId] || {};
   }
 
   @action
   updateFilter(layer: CrgVectorLayer, filter?: FilterQuery) {
     if (filter) {
-      this.filter[layer.tableName] = filter;
+      this.filter[layer.resourceId] = filter;
     } else {
-      delete this.filter[layer.tableName];
+      delete this.filter[layer.resourceId];
     }
   }
 
@@ -78,9 +78,9 @@ class AttributesTableStore {
   @action
   setFilterEnablednessForLayer(layer: CrgVectorLayer, enabled: boolean) {
     if (enabled) {
-      delete this.filterDisabled[layer.tableName];
+      delete this.filterDisabled[layer.resourceId];
     } else {
-      this.filterDisabled[layer.tableName] = true;
+      this.filterDisabled[layer.resourceId] = true;
     }
   }
 

@@ -3,7 +3,7 @@ import { action, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 
-import { extractTableNameFromFeatureId } from '../../../services/geoserver/featureType/featureType.util';
+import { extractResourceIdFromFeatureId } from '../../../services/geoserver/featureType/featureType.util';
 import { type CrgLayer, isVectorLayer } from '../../../services/gis/layers/layers.models';
 import { type TreeItem } from '../../../services/gis/projects/projects.models';
 import { projectsService } from '../../../services/gis/projects/projects.service';
@@ -65,7 +65,7 @@ export class LayersTreeItem extends Component<LayersTreeItemProps> {
 
       // при выключении видимости слоя снимаем выделение с его объектов
       const features = selectedFeaturesStore.features.filter(
-        f => extractTableNameFromFeatureId(f.id) !== layer.tableName
+        f => extractResourceIdFromFeatureId(f.id) !== layer.resourceId
       );
 
       await mapModeManager.changeMode(

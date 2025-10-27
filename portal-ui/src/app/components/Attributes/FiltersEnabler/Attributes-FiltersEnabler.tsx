@@ -26,7 +26,7 @@ export class AttributesFiltersEnabler extends Component<AttributesFiltersEnabler
           <Switch
             className={cnAttributesFiltersEnabler()}
             size='small'
-            checked={attributesTableStore.isLayerFilterEnabled(layer.tableName)}
+            checked={attributesTableStore.isLayerFilterEnabled(layer.resourceId)}
             onChange={this.handleChange}
           />
         </span>

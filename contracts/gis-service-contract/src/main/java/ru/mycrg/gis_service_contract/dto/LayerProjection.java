@@ -12,7 +12,7 @@ public class LayerProjection implements Serializable {
     private final String title;
     private final String type;
     private final String dataset;
-    private final String tableName;
+    private final String resourceId;
     private final boolean enabled;
     private final Integer position;
     private final int transparency;
@@ -24,8 +24,9 @@ public class LayerProjection implements Serializable {
     private final Long parentId;
     private final Long projectId;
     private final String complexName;
-    private final String libraryId;
-    private final Long recordId;
+    private final String sourceId;
+    private final String sourceType;
+    private final Long sourceRecordId;
     private final String dataStoreName;
     private final String contentType;
     private final String view;
@@ -41,7 +42,7 @@ public class LayerProjection implements Serializable {
                            @JsonProperty("title") String title, 
                            @JsonProperty("type") String type, 
                            @JsonProperty("dataset") String dataset, 
-                           @JsonProperty("tableName") String tableName, 
+                           @JsonProperty("resourceId") String resourceId,
                            @JsonProperty("enabled") boolean enabled,
                            @JsonProperty("position") Integer position, 
                            @JsonProperty("transparency") int transparency, 
@@ -61,7 +62,7 @@ public class LayerProjection implements Serializable {
         this.title = title;
         this.type = type;
         this.dataset = dataset;
-        this.tableName = tableName;
+        this.resourceId = resourceId;
         this.enabled = enabled;
         this.position = position;
         this.transparency = transparency;
@@ -73,8 +74,9 @@ public class LayerProjection implements Serializable {
         this.parentId = parentId;
         this.projectId = projectId;
         this.complexName = complexName;
-        this.libraryId = null;
-        this.recordId = null;
+        this.sourceId = null;
+        this.sourceType = null;
+        this.sourceRecordId = null;
         this.dataStoreName = dataStoreName;
         this.contentType = null;
         this.view = view;
@@ -86,18 +88,18 @@ public class LayerProjection implements Serializable {
     }
 
     // Полный конструктор для программного использования
-    public LayerProjection(Long id, String title, String type, String dataset, String tableName, boolean enabled,
+    public LayerProjection(Long id, String title, String type, String dataset, String resourceId, boolean enabled,
                            Integer position, int transparency, int maxZoom, int minZoom, String styleName,
                            String nativeCRS, String dataSourceUri, Long parentId, Long projectId, String complexName,
-                           String libraryId,
-                           Long recordId, String dataStoreName, String contentType, String view, String errorText,
-                           String style, String photoMode, LocalDateTime createdAt, LocalDateTime lastModified) {
+                           String sourceId, String sourceType, Long sourceRecordId, String dataStoreName,
+                           String contentType, String view, String errorText, String style, String photoMode,
+                           LocalDateTime createdAt, LocalDateTime lastModified) {
 
         this.id = id;
         this.title = title;
         this.type = type;
         this.dataset = dataset;
-        this.tableName = tableName;
+        this.resourceId = resourceId;
         this.enabled = enabled;
         this.position = position;
         this.transparency = transparency;
@@ -109,8 +111,9 @@ public class LayerProjection implements Serializable {
         this.parentId = parentId;
         this.projectId = projectId;
         this.complexName = complexName;
-        this.libraryId = libraryId;
-        this.recordId = recordId;
+        this.sourceId = sourceId;
+        this.sourceType = sourceType;
+        this.sourceRecordId = sourceRecordId;
         this.dataStoreName = dataStoreName;
         this.contentType = contentType;
         this.view = view;
@@ -137,8 +140,8 @@ public class LayerProjection implements Serializable {
         return dataset;
     }
 
-    public String getTableName() {
-        return tableName;
+    public String getResourceId() {
+        return resourceId;
     }
 
     public boolean isEnabled() {
@@ -185,12 +188,16 @@ public class LayerProjection implements Serializable {
         return complexName;
     }
 
-    public String getLibraryId() {
-        return libraryId;
+    public String getSourceId() {
+        return sourceId;
     }
 
-    public Long getRecordId() {
-        return recordId;
+    public String getSourceType() {
+        return sourceType;
+    }
+
+    public Long getSourceRecordId() {
+        return sourceRecordId;
     }
 
     public String getDataStoreName() {

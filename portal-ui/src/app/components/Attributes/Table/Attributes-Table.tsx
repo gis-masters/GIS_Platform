@@ -66,7 +66,7 @@ export class AttributesTable extends Component<AttributesTableProps> {
     invoke.reset = this.forwardInvoke('reset');
 
     this.selectionReactionDisposer = reaction(
-      () => selectedFeaturesStore.featuresByTableName[layer.tableName],
+      () => selectedFeaturesStore.featuresByResourceId[layer.resourceId],
       async () => {
         if (this.filterBySelectionEnabled) {
           await this.reloadTable();
@@ -79,7 +79,7 @@ export class AttributesTable extends Component<AttributesTableProps> {
     const { layer } = this.props;
 
     if (layer?.id !== prevProps.layer?.id && this.tableInvoke?.reset && this.tableInvoke?.reload) {
-      this.tableInvoke.reset({ filter: attributesTableStore.getLayerFilter(layer.tableName) });
+      this.tableInvoke.reset({ filter: attributesTableStore.getLayerFilter(layer.resourceId) });
       await this.tableInvoke.reload();
     }
   }
@@ -94,7 +94,7 @@ export class AttributesTable extends Component<AttributesTableProps> {
 
     return schema ? (
       <XTable<AttributesTableRecord>
-        id={`AttributesTable_${layer.tableName}`}
+        id={`AttributesTable_${layer.resourceId}`}
         className={cnAttributesTable()}
         cols={cols}
         filtersAlwaysEnabled
@@ -139,8 +139,8 @@ export class AttributesTable extends Component<AttributesTableProps> {
     const { onPageOptionsChange, layer } = this.props;
 
     // this.pageOptions может быть совсем пустым только при инициализации
-    if (!this.pageOptions && attributesTableStore.filter[layer.tableName]) {
-      this.tableInvoke?.setFilter?.(attributesTableStore.filter[layer.tableName]);
+    if (!this.pageOptions && attributesTableStore.filter[layer.resourceId]) {
+      this.tableInvoke?.setFilter?.(attributesTableStore.filter[layer.resourceId]);
     } else {
       onPageOptionsChange(pageOptions);
       attributesTableStore.updateFilter(layer, Object.keys(pageOptions.filter).length ? pageOptions.filter : undefined);

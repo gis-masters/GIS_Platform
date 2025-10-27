@@ -157,20 +157,20 @@ export async function filterLegendForCurrentMapView(layers: CrgVectorLayer[]): P
       const schema = await getLayerSchema(layer);
 
       if (!schema) {
-        throw new Error(`Не удалось получить схему для слоя ${layer.tableName}`);
+        throw new Error(`Не удалось получить схему для слоя ${layer.resourceId}`);
       }
 
       const { definitionQuery } = applyView(schema, layer.view);
 
       let ecqlFilter: string | undefined = definitionQuery;
 
-      if (!filterDisabled[layer.tableName]) {
-        ecqlFilter = concatCql(ecqlFilter, buildCql(attributesTableStore.getLayerFilter(layer.tableName)));
+      if (!filterDisabled[layer.resourceId]) {
+        ecqlFilter = concatCql(ecqlFilter, buildCql(attributesTableStore.getLayerFilter(layer.resourceId)));
       }
 
       return {
         dataset: layer.dataset,
-        identifier: layer.tableName,
+        identifier: layer.resourceId,
         ecqlFilter,
         filter: {
           operator: StyleFilterOperator.INTERSECTS,

@@ -99,7 +99,7 @@ export class ConnectionsTableToProjectsWidget extends Component<ConnectionsTable
     const newLayer = {
       ...vectorLayerDefaults(),
       dataset: dataset,
-      tableName: vectorTable.identifier,
+      resourceId: vectorTable.identifier,
       complexName: buildComplexName(currentUser.workspaceName, vectorTable.identifier, vectorTable.crs),
       title: vectorTable.title,
       nativeCRS: vectorTable.crs,

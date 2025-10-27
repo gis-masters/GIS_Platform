@@ -144,7 +144,7 @@ export class CopyFeaturesButton extends Component<CopyFeaturesButtonProps> {
             feature.geometry = transformGeometry(feature.geometry, currentProjection, selectedProjection);
           }
 
-          const createdFeature = await createFeature(selectedLayer.dataset, selectedLayer.tableName, feature, true);
+          const createdFeature = await createFeature(selectedLayer.dataset, selectedLayer.resourceId, feature, true);
 
           createdFeatures.push(createdFeature);
           this.setCreatedFeaturesCounter(this.createdFeaturesCounter + 1);
@@ -157,7 +157,7 @@ export class CopyFeaturesButton extends Component<CopyFeaturesButtonProps> {
 
       const featuresWithId: WfsFeature[] = createdFeatures.map(feat => {
         feat.properties.objectid = feat.id;
-        feat.id = createFeatureId(selectedLayer.tableName, selectedLayer.nativeCRS, feat.id);
+        feat.id = createFeatureId(selectedLayer.resourceId, selectedLayer.nativeCRS, feat.id);
 
         return feat;
       });

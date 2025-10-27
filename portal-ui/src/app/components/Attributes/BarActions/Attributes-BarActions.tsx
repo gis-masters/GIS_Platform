@@ -130,7 +130,7 @@ export class AttributesBarActions extends Component<AttributesBarActionsProps> {
 
   @computed
   private get selectedFeatures(): WfsFeature[] {
-    return selectedFeaturesStore.featuresByTableName[this.props.layer.tableName] || [];
+    return selectedFeaturesStore.featuresByResourceId[this.props.layer.resourceId] || [];
   }
 
   private async init() {
@@ -155,13 +155,13 @@ export class AttributesBarActions extends Component<AttributesBarActionsProps> {
 
     if (confirmed) {
       const { layer } = this.props;
-      const features: WfsFeature[] = selectedFeaturesStore.featuresByTableName[layer.tableName];
+      const features: WfsFeature[] = selectedFeaturesStore.featuresByResourceId[layer.resourceId];
       if (!isVectorLayer(layer)) {
         throw new Error('Невозможно удалить');
       }
 
-      const { dataset, tableName } = layer;
-      await deleteFeaturesAndEmitEvent(dataset, tableName, features);
+      const { dataset, resourceId } = layer;
+      await deleteFeaturesAndEmitEvent(dataset, resourceId, features);
       mapService.refreshAllLayers();
 
       await mapModeManager.changeMode(MapMode.NONE, undefined, 'openMultipleDeleteDialog');

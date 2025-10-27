@@ -32,7 +32,7 @@ function preparePayload(layers: CrgVectorLayer[]): ValidationPayload {
     wsUiId: wsService.getId(),
     resources: layers.map(layer => ({
       dataset: layer.dataset,
-      table: layer.tableName
+      table: layer.resourceId
     }))
   };
 }

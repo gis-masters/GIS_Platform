@@ -228,16 +228,6 @@ public class CustomRestExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(errorModel, new HttpHeaders(), errorModel.getStatus());
     }
 
-    @ExceptionHandler(BindingErrorsException.class)
-    public ResponseEntity<Object> bindingHandler(final RuntimeException ex) {
-        final BindingErrorsException bindEx = (BindingErrorsException) ex;
-
-        final ApiErrorModel errorModel = new ApiErrorModel(BAD_REQUEST, bindEx.getMessage(),
-                                                           mapBindingErrors(bindEx.getBindingResult()));
-
-        return new ResponseEntity<>(errorModel, new HttpHeaders(), errorModel.getStatus());
-    }
-
     private List<ErrorInfo> mapBindingErrors(BindingResult bindingResult) {
         ArrayList<ErrorInfo> errors = bindingResult.getFieldErrors().stream()
                                                    .map(error -> new ErrorInfo(error.getField(),

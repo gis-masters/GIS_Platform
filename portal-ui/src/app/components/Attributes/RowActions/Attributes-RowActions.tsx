@@ -84,7 +84,7 @@ export class AttributesRowActions extends Component<AttributesRowActionsProps> {
     });
 
     if (confirmed) {
-      await deleteFeaturesAndEmitEvent(layer.dataset, layer.tableName, [feature]);
+      await deleteFeaturesAndEmitEvent(layer.dataset, layer.resourceId, [feature]);
       mapService.refreshAllLayers();
 
       await mapModeManager.changeMode(

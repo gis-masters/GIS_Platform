@@ -31,20 +31,21 @@ public class LayerReferencesDeletionEventHandler implements IEventHandler {
         LayerReferencesDeletionEvent event = (LayerReferencesDeletionEvent) mqEvent;
 
         try {
-            log.debug("Event: '{}' / Try delete layer references: {}", event.getId(), event.getTableName());
+            log.debug("Событие: '{}' / Пытаемся удалить слой у нас и на геосервере: {}",
+                      event.getId(), event.getResourceId());
 
-            layerService.deleteByTableName(event.getTableName());
+            layerService.deleteByResourceId(event.getResourceId());
 
             new VectorLayer(event.getAuthToken())
-                    .delete(event.getWorkspaceName(), event.getTableName());
+                    .delete(event.getWorkspaceName(), event.getResourceId());
             new FeatureTypeService(event.getAuthToken())
-                    .delete(event.getWorkspaceName(), event.getDatasetName(), event.getTableName());
+                    .delete(event.getWorkspaceName(), event.getDatasetName(), event.getResourceId());
 
-            log.debug("Event: '{}'. Successfully deleted layer references: '{}:{}'",
-                      event.getId(), event.getWorkspaceName(), event.getTableName());
+            log.debug("Событие: '{}'. Успешно удален слой: '{}:{}'",
+                      event.getId(), event.getWorkspaceName(), event.getResourceId());
         } catch (Exception e) {
-            log.error("Event: '{}'. Failed remove layer: {} / Cause: {}",
-                      event.getId(), event.getTableName(), e.getMessage());
+            log.error("Событие: '{}'. Не удалось удалить слой: '{}' => {}",
+                      event.getId(), event.getResourceId(), e.getMessage());
         }
     }
 }

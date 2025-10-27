@@ -42,9 +42,9 @@ class ProjectsService {
 
     // при выделении фичи включать её слой
     reaction(
-      () => Object.keys(selectedFeaturesStore.featuresByTableName),
+      () => Object.keys(selectedFeaturesStore.featuresByResourceId),
       tableNames => {
-        this.enableLayersByTableNames(tableNames);
+        this.enableLayersByResourceId(tableNames);
       },
       { fireImmediately: true }
     );
@@ -124,7 +124,7 @@ class ProjectsService {
     await this.registerLayersProjection(allowedLayers);
 
     const tableIdentifiers = allowedLayers
-      .map(layer => layer.tableName)
+      .map(layer => layer.resourceId)
       .filter((tableName): tableName is string => tableName !== undefined);
     await schemaService.fetchAndCacheSchemas(tableIdentifiers);
 
@@ -281,9 +281,9 @@ class ProjectsService {
     }
   }
 
-  enableLayersByTableNames(tableNames: string[]) {
+  enableLayersByResourceId(resourceIds: string[]) {
     currentProject.layers?.forEach(layer => {
-      if (layer.tableName && tableNames.includes(layer.tableName)) {
+      if (layer.resourceId && resourceIds.includes(layer.resourceId)) {
         currentProject.patchLayer(layer.id, { enabled: true });
         this.enableGroupAndAncestors(layer.parentId);
       }

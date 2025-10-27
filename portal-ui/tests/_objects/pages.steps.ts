@@ -109,7 +109,7 @@ Given(
   async function (this: ScenarioScope, layerTitle: string, ids: string[]) {
     const { latestDataset, latestProject } = this;
 
-    const tableName = this.findLayerByTitle(layerTitle).tableName;
+    const tableName = this.findLayerByTitle(layerTitle).resourceId;
     if (!tableName) {
       throw new Error(`У слоя '${layerTitle}' отсутствует название таблицы, по которой он создан`);
     }
@@ -124,7 +124,7 @@ Given(
   async function (this: ScenarioScope, objectId: number, layerTitle: string) {
     const { latestDataset, latestProject } = this;
 
-    const tableName = this.findLayerByTitle(layerTitle).tableName;
+    const tableName = this.findLayerByTitle(layerTitle).resourceId;
     if (!tableName) {
       throw new Error(`У слоя '${layerTitle}' отсутствует название таблицы, по которой он создан`);
     }

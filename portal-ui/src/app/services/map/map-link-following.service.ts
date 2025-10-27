@@ -8,7 +8,7 @@ import { applyView } from '../data/schema/schema.utils';
 import {
   extractFeatureId,
   extractFeatureTypeNameFromComplexName,
-  extractTableNameFromComplexName
+  extractResourceIdFromComplexName
 } from '../geoserver/featureType/featureType.util';
 import { type WfsFeature } from '../geoserver/wfs/wfs.models';
 import { getFeatureCollection, getFeaturesById } from '../geoserver/wfs/wfs.service';
@@ -55,8 +55,8 @@ export async function applyMapStateFromNavigator(): Promise<void> {
             return layer;
           }
 
-          const currentLayerTableName = extractTableNameFromComplexName(layer);
-          const currentLayer = currentProject.layers.find(({ tableName }) => tableName === currentLayerTableName);
+          const currentLayerTableName = extractResourceIdFromComplexName(layer);
+          const currentLayer = currentProject.layers.find(({ resourceId }) => resourceId === currentLayerTableName);
 
           return currentLayer?.complexName;
         })
@@ -218,7 +218,7 @@ async function restoreRecentOpenedFeatures() {
   for (const [dataset, featuresIdsInTables] of Object.entries(featuresIdsInDatasetsAndTables)) {
     for (const [tableName, featuresCutIds] of Object.entries(featuresIdsInTables)) {
       const currentLayer = currentProject.vectorLayers.find(
-        layer => layer.tableName === tableName && layer.dataset === dataset
+        layer => layer.resourceId === tableName && layer.dataset === dataset
       );
 
       if (currentLayer?.complexName) {

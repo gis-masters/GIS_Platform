@@ -17,7 +17,7 @@ interface AttributesCounterProps {
 }
 
 export const AttributesCounter: FC<AttributesCounterProps> = observer(({ layer, featuresMatched, featuresTotal }) => {
-  const selectedCount = selectedFeaturesStore.featuresByTableName[layer.tableName]?.length || 0;
+  const selectedCount = selectedFeaturesStore.featuresByResourceId[layer.resourceId]?.length || 0;
 
   return (
     <div className={cnAttributesCounter()}>

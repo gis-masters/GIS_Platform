@@ -121,26 +121,14 @@ public class ProcessesStepDefinitions extends BaseStepsDefinitions {
         assertEquals(size, response.asByteArray().length);
     }
 
-    @When("Пользователь публикует DXF")
-    public void tryPlacementDxfAsProcess() {
-        placeFileInCurrentProject(currentFileId);
-    }
-
-    @When("Пользователь публикует {string}")
-    public void tryPlacementFileAsProcess(String fileType) {
-        placeFileInCurrentProject(getFile(fileType.toLowerCase()).getId());
+    @When("Пользователь публикует файл {string}")
+    public void tryPlacementFile(String fileName) {
+        placeFileInCurrentProject(getFileByTitle(fileName).getId());
     }
 
     @When("Файл {string} опубликован в текущем проекте")
-    public void tryPlacementFile(String fileName) {
-        FileDescriptionModel fileForPublication = currentFiles
-                .stream()
-                .filter(file -> file.getTitle().equals(fileName))
-                .findFirst()
-                .orElseThrow(
-                        () -> new IllegalStateException("Среди текущих файлов не найден искомый: " + fileName));
-
-        placeFileInCurrentProject(fileForPublication.getId());
+    public void tryPlacementFileInCurrentProject(String fileName) {
+        placeFileInCurrentProject(getFileByTitle(fileName).getId());
     }
 
     @When("Пользователь импортирует геометрию из shape файла в существующий слой {string}")
@@ -390,6 +378,14 @@ public class ProcessesStepDefinitions extends BaseStepsDefinitions {
         getProcess(currentProcessId);
     }
 
+    public static FileDescriptionModel getFileByTitle(String title) {
+        return currentFiles
+                .stream()
+                .filter(file -> file.getTitle().equalsIgnoreCase(title))
+                .findFirst()
+                .orElseThrow(() -> new IllegalStateException("Среди текущих файлов не найден искомый: " + title));
+    }
+
     private void initProcess(ProcessableModel payload) {
         response = getBaseRequestWithCurrentCookie()
                 .given().
@@ -412,14 +408,6 @@ public class ProcessesStepDefinitions extends BaseStepsDefinitions {
                         multiPart("processModelJson", gson.toJson(processableModel))
                 .when().
                         post("/file");
-    }
-
-    private static FileDescriptionModel getFile(String extension) {
-        return currentFiles
-                .stream()
-                .filter(file -> file.getTitle().split("\\.")[1].toLowerCase().contains(extension.toLowerCase()))
-                .findFirst()
-                .orElseThrow(() -> new IllegalStateException("Нет файла с расширением " + extension));
     }
 
     private void placeFileInCurrentProject(UUID fileId) {

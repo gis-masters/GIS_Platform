@@ -25,7 +25,7 @@ import { defaultOlProjectionCode, type Projection } from '../../data/projections
 import { getOlProjection, getProjectionByCode } from '../../data/projections/projections.service';
 import { getProjectionCode } from '../../data/projections/projections.util';
 import { registry } from '../../di-registry';
-import { extractTableNameFromFeatureId } from '../../geoserver/featureType/featureType.util';
+import { extractResourceIdFromFeatureId } from '../../geoserver/featureType/featureType.util';
 import { GeometryType, supportedGeometryTypes, type WfsFeature } from '../../geoserver/wfs/wfs.models';
 import { isLinear, isPolygonal } from '../../geoserver/wfs/wfs.util';
 import { transformCoord, transformGroup } from '../../util/coordinates-transform.util';
@@ -836,14 +836,14 @@ class MapLabelsService {
   }
 
   private async getSelectedFeatureProjection(feature?: WfsFeature): Promise<Projection> {
-    const layerTableName = feature ? extractTableNameFromFeatureId(feature.id) : null;
+    const layerTableName = feature ? extractResourceIdFromFeatureId(feature.id) : null;
     const geometryType = feature?.geometry?.type;
 
     if (!geometryType || !layerTableName) {
       throw new Error('Отсутствует векторная таблица');
     }
 
-    const layer = currentProject.layers.find(layer => layer.tableName === layerTableName);
+    const layer = currentProject.layers.find(layer => layer.resourceId === layerTableName);
 
     if (!supportedGeometryTypes.includes(geometryType)) {
       throw new Error('Неподдерживаемый тип геометрии');

@@ -8,23 +8,26 @@ public class LayerPublicationDto implements Serializable {
     private String mode;
     private Long projectId;
     private String title;
-    private String tableName;
+    private String resourceId;
     private String nativeName;
     private String nativeCRS;
-    private String libraryId;
-    private Long recordId;
+    private String sourceId;
+    private String sourceType;
+    private Long sourceRecordId;
     private boolean enabled;
     private String styleName;
     private String dataStoreName;
     private String dataset;
     private String dataSourceUri;
 
-    public LayerPublicationDto(String dataset, String tableName, String title, String libraryId, Long recordId,
-                               String nativeCRS, Long projectId, String dataSourceUri, String mode) {
+    public LayerPublicationDto(String dataset, String resourceId, String title, String sourceId, String sourceType,
+                               Long sourceRecordId, String nativeCRS, Long projectId, String dataSourceUri,
+                               String mode) {
         this.title = title;
-        this.tableName = tableName;
-        this.libraryId = libraryId;
-        this.recordId = recordId;
+        this.resourceId = resourceId;
+        this.sourceId = sourceId;
+        this.sourceType = sourceType;
+        this.sourceRecordId = sourceRecordId;
         this.dataSourceUri = dataSourceUri;
         this.dataset = dataset;
         this.nativeCRS = nativeCRS;
@@ -35,21 +38,22 @@ public class LayerPublicationDto implements Serializable {
         this.enabled = true;
     }
 
-    public LayerPublicationDto(String type, String mode, Long projectId, String tableName, String nativeName,
-                               String title, String nativeCRS, String libraryId, Long recordId, String styleName,
-                               String workspaceName, String dataset) {
+    public LayerPublicationDto(String type, String mode, Long projectId, String resourceId, String nativeName,
+                               String title, String nativeCRS, String sourceId, String sourceType, Long sourceRecordId,
+                               String styleName, String workspaceName, String dataset) {
         this.type = type;
         this.mode = mode;
         this.enabled = true;
 
         this.projectId = projectId;
 
-        this.tableName = tableName;
+        this.resourceId = resourceId;
         this.nativeName = nativeName;
         this.title = title;
         this.nativeCRS = nativeCRS;
-        this.libraryId = libraryId;
-        this.recordId = recordId;
+        this.sourceId = sourceId;
+        this.sourceType = sourceType;
+        this.sourceRecordId = sourceRecordId;
 
         this.styleName = styleName;
         this.dataStoreName = workspaceName;
@@ -96,20 +100,28 @@ public class LayerPublicationDto implements Serializable {
         this.nativeCRS = nativeCRS;
     }
 
-    public String getLibraryId() {
-        return libraryId;
+    public String getSourceId() {
+        return sourceId;
     }
 
-    public void setLibraryId(String libraryId) {
-        this.libraryId = libraryId;
+    public void setSourceId(String sourceId) {
+        this.sourceId = sourceId;
     }
 
-    public Long getRecordId() {
-        return recordId;
+    public Long getSourceRecordId() {
+        return sourceRecordId;
     }
 
-    public void setRecordId(Long recordId) {
-        this.recordId = recordId;
+    public void setSourceRecordId(Long sourceRecordId) {
+        this.sourceRecordId = sourceRecordId;
+    }
+
+    public String getSourceType() {
+        return sourceType;
+    }
+
+    public void setSourceType(String sourceType) {
+        this.sourceType = sourceType;
     }
 
     public boolean isEnabled() {
@@ -120,12 +132,12 @@ public class LayerPublicationDto implements Serializable {
         this.enabled = enabled;
     }
 
-    public String getTableName() {
-        return tableName;
+    public String getResourceId() {
+        return resourceId;
     }
 
-    public void setTableName(String tableName) {
-        this.tableName = tableName;
+    public void setResourceId(String resourceId) {
+        this.resourceId = resourceId;
     }
 
     public String getStyleName() {
@@ -175,11 +187,12 @@ public class LayerPublicationDto implements Serializable {
                 "\"mode\":" + (mode == null ? "null" : "\"" + mode + "\"") + ", " +
                 "\"projectId\":" + (projectId == null ? "null" : "\"" + projectId + "\"") + ", " +
                 "\"title\":" + (title == null ? "null" : "\"" + title + "\"") + ", " +
-                "\"tableName\":" + (tableName == null ? "null" : "\"" + tableName + "\"") + ", " +
+                "\"resourceId\":" + (resourceId == null ? "null" : "\"" + resourceId + "\"") + ", " +
                 "\"nativeName\":" + (nativeName == null ? "null" : "\"" + nativeName + "\"") + ", " +
                 "\"nativeCRS\":" + (nativeCRS == null ? "null" : "\"" + nativeCRS + "\"") + ", " +
-                "\"libraryId\":" + (libraryId == null ? "null" : "\"" + libraryId + "\"") + ", " +
-                "\"recordId\":" + (recordId == null ? "null" : recordId) + ", " +
+                "\"sourceId\":" + (sourceId == null ? "null" : "\"" + sourceId + "\"") + ", " +
+                "\"sourceType\":" + (sourceType == null ? "null" : "\"" + sourceType + "\"") + ", " +
+                "\"sourceRecordId\":" + (sourceRecordId == null ? "null" : "\"" + sourceRecordId + "\"") + ", " +
                 "\"enabled\":\"" + enabled + "\"" + ", " +
                 "\"styleName\":" + (styleName == null ? "null" : "\"" + styleName + "\"") + ", " +
                 "\"dataStoreName\":" + (dataStoreName == null ? "null" : "\"" + dataStoreName + "\"") + ", " +

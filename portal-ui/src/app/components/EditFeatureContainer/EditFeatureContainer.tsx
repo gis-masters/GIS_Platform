@@ -417,11 +417,11 @@ export const EditFeatureContainer: FC = observer(() => {
         cancelText: 'Отмена'
       })
     ) {
-      const { dataset, tableName } = layer;
+      const { dataset, resourceId } = layer;
 
       const firstWfsFeature = (currentFeatures || [])[0];
       if (editFeatureStore.editFeaturesData?.mode === EditFeatureMode.single) {
-        await deleteFeaturesAndEmitEvent(dataset, tableName, [firstWfsFeature]);
+        await deleteFeaturesAndEmitEvent(dataset, resourceId, [firstWfsFeature]);
         mapService.refreshAllLayers();
 
         if (selectedFeaturesStore.features.length > 1) {

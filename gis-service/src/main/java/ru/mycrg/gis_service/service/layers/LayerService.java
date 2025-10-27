@@ -77,16 +77,16 @@ public class LayerService {
                 .collect(Collectors.toList());
     }
 
-    public LayerProjection getByTableName(String tableName) {
+    public LayerProjection getByResourceId(String resourceId) {
         List<Layer> layers = new ArrayList<>();
         projectService.getAll().stream()
                       .map(Project::getLayers)
                       .forEach(layers::addAll);
 
         Layer foundLayer = layers.stream()
-                                 .filter(layer -> layer.getTableName().equals(tableName))
+                                 .filter(layer -> layer.getResourceId().equals(resourceId))
                                  .findFirst()
-                                 .orElseThrow(() -> new NotFoundException("Не найден слой: " + tableName));
+                                 .orElseThrow(() -> new NotFoundException("Не найден слой: " + resourceId));
 
         return LayerMapper.toProjection(foundLayer, getOrgWorkspaceName());
     }
@@ -134,7 +134,7 @@ public class LayerService {
 
                 messageBus.produce(new CrgAuditEvent(authenticationFacade.getAccessToken(),
                                                      "CREATE",
-                                                     layer.getTableName(),
+                                                     layer.getResourceId(),
                                                      "LAYER",
                                                      layer.getId(),
                                                      objectMapper.convertValue(layerDto, JsonNode.class)));
@@ -181,7 +181,7 @@ public class LayerService {
             messageBus.produce(
                     new CrgAuditEvent(authenticationFacade.getAccessToken(),
                                       "UPDATE",
-                                      layerForUpdate.getTableName(),
+                                      layerForUpdate.getResourceId(),
                                       "LAYER",
                                       layerForUpdate.getId(),
                                       objectMapper.convertValue(layerDto, JsonNode.class)));
@@ -205,13 +205,13 @@ public class LayerService {
         messageBus.produce(
                 new CrgAuditEvent(authenticationFacade.getAccessToken(),
                                   "DELETE",
-                                  layerForDelete.getTableName(),
+                                  layerForDelete.getResourceId(),
                                   "LAYER",
                                   layerForDelete.getId()));
     }
 
-    public void deleteByTableName(String tableName) {
-        layerRepository.deleteByTableName(tableName);
+    public void deleteByResourceId(String resourceId) {
+        layerRepository.deleteByResourceId(resourceId);
     }
 
     public List<RelatedLayersModel> getRelatedLayers(String field, String value) {
@@ -224,7 +224,7 @@ public class LayerService {
 
         List<Layer> relatedLayers;
         if ("table".equals(field)) {
-            relatedLayers = layerRepository.findRelatedByTableName(value, projectIds);
+            relatedLayers = layerRepository.findRelatedByResourceId(value, projectIds);
         } else if ("nativeCRS".equals(field)) {
             relatedLayers = layerRepository.findByNativeCRS(value);
         } else if ("dataset".equals(field)) {

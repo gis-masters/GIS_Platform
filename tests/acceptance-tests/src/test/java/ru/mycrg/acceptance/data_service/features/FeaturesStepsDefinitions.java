@@ -110,7 +110,7 @@ public class FeaturesStepsDefinitions extends BaseStepsDefinitions {
 
         LayerCreateDto consumer = getLayerByTitle(layerConsumer);
 
-        getFeatures(consumer.getTableName(), featureIds);
+        getFeatures(consumer.getResourceId(), featureIds);
 
         List<Map<String, Object>> featuresProps = response.jsonPath()
                                                           .getList("properties");

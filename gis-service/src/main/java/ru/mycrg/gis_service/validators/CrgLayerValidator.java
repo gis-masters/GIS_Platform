@@ -114,12 +114,16 @@ public class CrgLayerValidator implements Validator {
             errors.rejectValue("nativeCRS", REQUIRED, DEFAULT_R_MESSAGE);
         }
 
-        if (dto.getLibraryId() == null) {
-            errors.rejectValue("libraryId", REQUIRED, DEFAULT_R_MESSAGE);
+        if (dto.getSourceId() == null) {
+            errors.rejectValue("sourceId", REQUIRED, DEFAULT_R_MESSAGE);
         }
 
-        if (dto.getRecordId() == null) {
-            errors.rejectValue("recordId", REQUIRED, DEFAULT_R_MESSAGE);
+        if (dto.getSourceType() == null) {
+            errors.rejectValue("sourceType", REQUIRED, DEFAULT_R_MESSAGE);
+        }
+
+        if (dto.getSourceRecordId() == null) {
+            errors.rejectValue("sourceRecordId", REQUIRED, DEFAULT_R_MESSAGE);
         }
 
         if (dto.getMode().equalsIgnoreCase(FULL_MODE) || dto.getMode().equalsIgnoreCase(GEOSERVER_MODE)) {
@@ -132,8 +136,8 @@ public class CrgLayerValidator implements Validator {
             }
 
             // Используется как раз для формирования имени хранилища
-            if (dto.getTableName() == null) {
-                errors.rejectValue("tableName", REQUIRED, DEFAULT_R_MESSAGE);
+            if (dto.getResourceId() == null) {
+                errors.rejectValue("resourceId", REQUIRED, DEFAULT_R_MESSAGE);
             }
         }
     }
@@ -149,8 +153,8 @@ public class CrgLayerValidator implements Validator {
             errors.rejectValue("title", REQUIRED, DEFAULT_V_MESSAGE);
         }
 
-        if (dto.getTableName() == null) {
-            errors.rejectValue("tableName", REQUIRED, DEFAULT_V_MESSAGE);
+        if (dto.getResourceId() == null) {
+            errors.rejectValue("resourceId", REQUIRED, DEFAULT_V_MESSAGE);
         }
 
         if (dto.getStyleName() == null) {

@@ -155,7 +155,7 @@ public class GpkgWriter {
                 "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "title TEXT, " +
                 "dataset TEXT, " +
-                "tableName TEXT, " +
+                "resourceId TEXT, " +
                 "type TEXT, " +
                 "enabled INTEGER, " +
                 "position INTEGER, " +
@@ -166,8 +166,9 @@ public class GpkgWriter {
                 "nativeCRS TEXT, " +
                 "dataStoreName TEXT, " +
                 "dataSourceUri TEXT, " +
-                "libraryId TEXT, " +
-                "recordId INTEGER, " +
+                "sourceId TEXT, " +
+                "sourceType TEXT, " +
+                "sourceRecordId INTEGER, " +
                 "createdAt TEXT, " +
                 "lastModified TEXT, " +
                 "projectId INTEGER, " +
@@ -187,48 +188,49 @@ public class GpkgWriter {
 
     public void addLayersProjection(Connection connection, List<LayerProjection> layerProjections) throws SQLException {
         //нужен батч
-        for (LayerProjection layerProjection: layerProjections) {
-
+        for (LayerProjection projection: layerProjections) {
             String insertSql = "INSERT INTO " + GPKG_LAYER_INFO_TABLE +
-                    " (title, dataset, tableName, type, enabled, position, transparency, maxZoom, minZoom, " +
-                    "styleName, nativeCRS, dataStoreName, dataSourceUri, libraryId, recordId, createdAt, " +
-                    "lastModified, projectId, parentId, contentType, view, errorText, style, photoMode)" +
-                    " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                    " (title, dataset, resourceId, type, enabled, position, transparency, maxZoom, minZoom, " +
+                    "styleName, nativeCRS, dataStoreName, dataSourceUri, sourceId, sourceType, sourceRecordId, " +
+                    "createdAt, lastModified, projectId, parentId, contentType, view, errorText, style, photoMode)" +
+                    " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
             try (PreparedStatement stmt = connection.prepareStatement(insertSql)) {
-                stmt.setString(1, layerProjection.getTitle() != null ? layerProjection.getTitle() : null);
-                stmt.setString(2, layerProjection.getDataset() != null ? layerProjection.getDataset() : null);
-                stmt.setString(3, layerProjection.getTableName() != null ? layerProjection.getTableName() : null);
-                stmt.setString(4, layerProjection.getType() != null ? layerProjection.getType() : null);
-                stmt.setInt(5, layerProjection.isEnabled() ? 1 : 0);
-                stmt.setObject(6, layerProjection.getPosition() != null ? layerProjection.getPosition() : null);
-                stmt.setInt(7, layerProjection.getTransparency());
-                stmt.setInt(8, layerProjection.getMaxZoom());
-                stmt.setInt(9, layerProjection.getMinZoom());
-                stmt.setString(10, layerProjection.getStyleName() != null ? layerProjection.getStyleName() : null);
-                stmt.setString(11, layerProjection.getNativeCRS() != null ? layerProjection.getNativeCRS() : null);
+                stmt.setString(1, projection.getTitle() != null ? projection.getTitle() : null);
+                stmt.setString(2, projection.getDataset() != null ? projection.getDataset() : null);
+                stmt.setString(3, projection.getResourceId() != null ? projection.getResourceId() : null);
+                stmt.setString(4, projection.getType() != null ? projection.getType() : null);
+                stmt.setInt(5, projection.isEnabled() ? 1 : 0);
+                stmt.setObject(6, projection.getPosition() != null ? projection.getPosition() : null);
+                stmt.setInt(7, projection.getTransparency());
+                stmt.setInt(8, projection.getMaxZoom());
+                stmt.setInt(9, projection.getMinZoom());
+                stmt.setString(10, projection.getStyleName() != null ? projection.getStyleName() : null);
+                stmt.setString(11, projection.getNativeCRS() != null ? projection.getNativeCRS() : null);
                 stmt.setString(12,
-                               layerProjection.getDataStoreName() != null ? layerProjection.getDataStoreName() : null);
+                               projection.getDataStoreName() != null ? projection.getDataStoreName() : null);
                 stmt.setString(13,
-                               layerProjection.getDataSourceUri() != null ? layerProjection.getDataSourceUri() : null);
-                stmt.setString(14, layerProjection.getLibraryId() != null ? layerProjection.getLibraryId() : null);
-                stmt.setObject(15, layerProjection.getRecordId() != null ? layerProjection.getRecordId() : null);
-                stmt.setString(16, layerProjection.getCreatedAt() != null ? String.valueOf(
-                        layerProjection.getCreatedAt()) : null);
-                stmt.setString(17, layerProjection.getLastModified() != null ? String.valueOf(
-                        layerProjection.getLastModified()) : null);
-                stmt.setObject(18, layerProjection.getProjectId() != null ? layerProjection.getProjectId() : null);
-                stmt.setObject(19, layerProjection.getParentId() != null ? layerProjection.getParentId() : null);
-                stmt.setString(20, layerProjection.getContentType() != null ? layerProjection.getContentType() : null);
-                stmt.setString(21, layerProjection.getView() != null ? layerProjection.getView() : null);
-                stmt.setString(22, layerProjection.getErrorText() != null ? layerProjection.getErrorText() : null);
-                stmt.setString(23, layerProjection.getStyle() != null ? layerProjection.getStyle() : null);
-                stmt.setString(24, layerProjection.getPhotoMode() != null ? layerProjection.getPhotoMode() : null);
+                               projection.getDataSourceUri() != null ? projection.getDataSourceUri() : null);
+                stmt.setString(14, projection.getSourceId() != null ? projection.getSourceId() : null);
+                stmt.setString(15, projection.getSourceType() != null ? projection.getSourceType() : null);
+                stmt.setObject(16, projection.getSourceRecordId() != null ? projection.getSourceRecordId() : null);
+                stmt.setString(17, projection.getCreatedAt() != null ? String.valueOf(
+                        projection.getCreatedAt()) : null);
+                stmt.setString(18, projection.getLastModified() != null ? String.valueOf(
+                        projection.getLastModified()) : null);
+                stmt.setObject(19, projection.getProjectId() != null ? projection.getProjectId() : null);
+                stmt.setObject(20, projection.getParentId() != null ? projection.getParentId() : null);
+                stmt.setString(21, projection.getContentType() != null ? projection.getContentType() : null);
+                stmt.setString(22, projection.getView() != null ? projection.getView() : null);
+                stmt.setString(23, projection.getErrorText() != null ? projection.getErrorText() : null);
+                stmt.setString(24, projection.getStyle() != null ? projection.getStyle() : null);
+                stmt.setString(25, projection.getPhotoMode() != null ? projection.getPhotoMode() : null);
 
                 stmt.executeUpdate();
             }
+
             log.debug("Сохранили информацию о слое '{}' в таблицу: {}",
-                      layerProjection.getTitle() != null ? layerProjection.getTitle() : "null",
+                      projection.getTitle() != null ? projection.getTitle() : "null",
                       GPKG_LAYER_INFO_TABLE);
         }
     }

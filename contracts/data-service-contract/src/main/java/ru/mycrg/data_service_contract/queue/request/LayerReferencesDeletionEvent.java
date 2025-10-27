@@ -10,29 +10,29 @@ public class LayerReferencesDeletionEvent extends DefaultMessageBusRequestEvent 
 
     private final String workspaceName;
     private final String datasetName;
-    private final String tableName;
+    private final String resourceId;
     private final String authToken;
 
     public LayerReferencesDeletionEvent() {
         super();
 
-        this.tableName = null;
+        this.resourceId = null;
         this.authToken = null;
         this.datasetName = null;
         this.workspaceName = null;
     }
 
-    public LayerReferencesDeletionEvent(String workspaceName, String datasetName, String tableName, String authToken) {
+    public LayerReferencesDeletionEvent(String workspaceName, String datasetName, String resourceId, String authToken) {
         super(UUID.randomUUID(), COMMON_REQUEST_QUEUE);
 
-        this.tableName = tableName;
+        this.resourceId = resourceId;
         this.authToken = authToken;
         this.datasetName = datasetName;
         this.workspaceName = workspaceName;
     }
 
-    public String getTableName() {
-        return tableName;
+    public String getResourceId() {
+        return resourceId;
     }
 
     public String getAuthToken() {

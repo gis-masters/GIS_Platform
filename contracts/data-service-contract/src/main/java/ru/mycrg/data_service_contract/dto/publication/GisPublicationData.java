@@ -5,8 +5,9 @@ import java.io.Serializable;
 public class GisPublicationData implements Serializable {
 
     private Long projectId;
-    private String libraryId;
-    private Long recordId;
+    private String sourceId;
+    private String sourceType;
+    private Long sourceRecordId;
     private String layerTitle;
     private String pathToFile;
     private String styleName;
@@ -16,11 +17,12 @@ public class GisPublicationData implements Serializable {
         // Required
     }
 
-    public GisPublicationData(Long projectId, String libraryId, Long recordId, String layerTitle, String pathToFile,
-                              String styleName, String crs) {
+    public GisPublicationData(Long projectId, String sourceId, String sourceType, Long sourceRecordId,
+                              String layerTitle, String pathToFile, String styleName, String crs) {
         this.projectId = projectId;
-        this.libraryId = libraryId;
-        this.recordId = recordId;
+        this.sourceId = sourceId;
+        this.sourceType = sourceType;
+        this.sourceRecordId = sourceRecordId;
         this.layerTitle = layerTitle;
         this.pathToFile = pathToFile;
         this.styleName = styleName;
@@ -35,20 +37,20 @@ public class GisPublicationData implements Serializable {
         this.projectId = projectId;
     }
 
-    public String getLibraryId() {
-        return libraryId;
+    public String getSourceId() {
+        return sourceId;
     }
 
-    public void setLibraryId(String libraryId) {
-        this.libraryId = libraryId;
+    public void setSourceId(String sourceId) {
+        this.sourceId = sourceId;
     }
 
-    public Long getRecordId() {
-        return recordId;
+    public Long getSourceRecordId() {
+        return sourceRecordId;
     }
 
-    public void setRecordId(Long recordId) {
-        this.recordId = recordId;
+    public void setSourceRecordId(Long sourceRecordId) {
+        this.sourceRecordId = sourceRecordId;
     }
 
     public String getLayerTitle() {
@@ -75,6 +77,14 @@ public class GisPublicationData implements Serializable {
         this.styleName = styleName;
     }
 
+    public String getSourceType() {
+        return sourceType;
+    }
+
+    public void setSourceType(String sourceType) {
+        this.sourceType = sourceType;
+    }
+
     public String getCrs() {
         return crs;
     }
@@ -87,8 +97,9 @@ public class GisPublicationData implements Serializable {
     public String toString() {
         return "{" +
                 "\"projectId\":" + (projectId == null ? "null" : "\"" + projectId + "\"") + ", " +
-                "\"libraryId\":" + (libraryId == null ? "null" : "\"" + libraryId + "\"") + ", " +
-                "\"recordId\":" + (recordId == null ? "null" : "\"" + recordId + "\"") + ", " +
+                "\"sourceId\":" + (sourceId == null ? "null" : "\"" + sourceId + "\"") + ", " +
+                "\"sourceType\":" + (sourceType == null ? "null" : "\"" + sourceType + "\"") + ", " +
+                "\"sourceRecordId\":" + (sourceRecordId == null ? "null" : "\"" + sourceRecordId + "\"") + ", " +
                 "\"layerTitle\":" + (layerTitle == null ? "null" : "\"" + layerTitle + "\"") + ", " +
                 "\"pathToFile\":" + (pathToFile == null ? "null" : "\"" + pathToFile + "\"") + ", " +
                 "\"styleName\":" + (styleName == null ? "null" : "\"" + styleName + "\"") + ", " +

@@ -51,4 +51,13 @@ public class ApiErrorModel {
     public void setErrors(List<ErrorInfo> errors) {
         this.errors = errors;
     }
+
+    @Override
+    public String toString() {
+        return "{" +
+                "\"status\":" + (status == null ? "null" : status) + ", " +
+                "\"message\":" + (message == null ? "null" : "\"" + message + "\"") + ", " +
+                "\"errors\":" + (errors == null ? "null" : errors) +
+                "}";
+    }
 }

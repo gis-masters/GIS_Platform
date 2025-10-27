@@ -43,20 +43,20 @@ export const extractFeatureTypeName = (featureId: string): string => {
   return featureTypeName;
 };
 
-function extractTableNameFromFeatureTypeName(featureTypeName: string): string {
+function extractResourceIdFromFeatureTypeName(featureTypeName: string): string {
   return featureTypeName.replace(/__\d+$/, '');
 }
 
-export const extractTableNameFromFeatureId = (id: string): string => {
-  return extractTableNameFromFeatureTypeName(extractFeatureTypeName(id));
+export const extractResourceIdFromFeatureId = (id: string): string => {
+  return extractResourceIdFromFeatureTypeName(extractFeatureTypeName(id));
 };
 
-export const extractTableNameFromComplexName = (complexName: string): string => {
+export const extractResourceIdFromComplexName = (complexName: string): string => {
   if (!complexName.includes(':')) {
     return complexName;
   }
 
-  return extractTableNameFromFeatureTypeName(splitComplexName(complexName)[1]);
+  return extractResourceIdFromFeatureTypeName(splitComplexName(complexName)[1]);
 };
 
 export const extractFeatureTypeNameFromComplexName = (complexName: string | undefined): string => {
@@ -67,7 +67,7 @@ export const extractWorkspaceFromComplexName = (complexName: string | undefined)
   return splitComplexName(complexName)[0];
 };
 
-export function buildComplexName(workspace: string, tableName: string, crs?: string): string {
+export function buildComplexName(workspace: string, resourceId: string, crs?: string): string {
   let epsgCode = undefined;
   if (crs) {
     const code = crs.split(':')[1];
@@ -78,11 +78,11 @@ export function buildComplexName(workspace: string, tableName: string, crs?: str
     }
   }
 
-  return epsgCode ? `${workspace}:${tableName}__${epsgCode}` : `${workspace}:${tableName}`;
+  return epsgCode ? `${workspace}:${resourceId}__${epsgCode}` : `${workspace}:${resourceId}`;
 }
 
-export const createFeatureId = (tableName: string, nativeCRS: string, id: string): string => {
-  return `${tableName}__${getSrid(nativeCRS)}.${id}`;
+export const createFeatureId = (resourceId: string, nativeCRS: string, id: string): string => {
+  return `${resourceId}__${getSrid(nativeCRS)}.${id}`;
 };
 
 function splitComplexName(complexName: string | undefined): [string, string] {

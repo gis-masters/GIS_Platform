@@ -208,7 +208,7 @@ export class SelectVectorTableControl extends Component<FormControlProps> {
     const alreadyUsedVectorTables = this.usedVectorTables.filter(table =>
       currentProject.layers.some(
         layer =>
-          layer.type === CrgLayerType.VECTOR && table.dataset === layer.dataset && table.identifier === layer.tableName
+          layer.type === CrgLayerType.VECTOR && table.dataset === layer.dataset && table.identifier === layer.resourceId
       )
     );
 
@@ -217,18 +217,18 @@ export class SelectVectorTableControl extends Component<FormControlProps> {
         .filter(
           layer =>
             !this.usedVectorTables.some(
-              table => table.dataset === layer.dataset && table.identifier === layer.tableName
+              table => table.dataset === layer.dataset && table.identifier === layer.resourceId
             )
         )
         .map(async layer => {
-          const table = await getVectorTable(layer.dataset, layer.tableName);
+          const table = await getVectorTable(layer.dataset, layer.resourceId);
 
           // с бэка тут временами приходит всякая хрень
           if (!table.dataset) {
             table.dataset = layer.dataset;
           }
           if (!table.identifier) {
-            table.identifier = layer.tableName;
+            table.identifier = layer.resourceId;
           }
 
           return table;

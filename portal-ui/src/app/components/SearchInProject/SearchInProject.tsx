@@ -37,10 +37,10 @@ export class SearchInProject extends Component {
   @boundMethod
   private async search(searchValue: ExplorerSearchValue) {
     if (searchValue.searchValue) {
-      const sources: SearchItemDataSource[] = currentProject.vectorLayers.map(({ dataset, tableName }) => {
+      const sources: SearchItemDataSource[] = currentProject.vectorLayers.map(({ dataset, resourceId }) => {
         return {
           dataset,
-          table: tableName
+          table: resourceId
         };
       });
 

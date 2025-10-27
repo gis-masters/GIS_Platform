@@ -329,7 +329,7 @@ export class LayerMenu extends Component<LayerMenuProps> {
               open={this.importXmlDialogOpen}
               onClose={this.closeImportXmlDialog}
               datasetId={(entity as CrgVectorLayer).dataset}
-              tableId={(entity as CrgVectorLayer).tableName}
+              tableId={(entity as CrgVectorLayer).resourceId}
               complexName={(entity as CrgLayer).complexName}
             />
           )}
@@ -339,7 +339,7 @@ export class LayerMenu extends Component<LayerMenuProps> {
             open={this.importShapeDialogOpen}
             onClose={this.closeImportShapeDialog}
             datasetId={(entity as CrgVectorLayer).dataset}
-            tableId={(entity as CrgVectorLayer).tableName}
+            tableId={(entity as CrgVectorLayer).resourceId}
           />
         )}
 
@@ -421,25 +421,25 @@ export class LayerMenu extends Component<LayerMenuProps> {
 
   @computed
   private get isDocumentInfoEnabled(): boolean {
-    const { libraryId, recordId } = this.props.entity as CrgRasterLayer;
+    const { sourceId, sourceRecordId } = this.props.entity as CrgRasterLayer;
 
-    return !!(libraryId && recordId);
+    return !!(sourceId && sourceRecordId);
   }
 
   @computed
   private get isVectorTableInfoEnabled(): boolean {
-    const { dataset, tableName } = this.props.entity as CrgVectorLayer;
+    const { dataset, resourceId } = this.props.entity as CrgVectorLayer;
 
-    return !!(dataset && tableName);
+    return !!(dataset && resourceId);
   }
 
   private async fetchPermissions() {
     if (this.isVectorLayer) {
-      const { dataset, tableName } = this.props.entity as CrgVectorLayer;
+      const { dataset, resourceId } = this.props.entity as CrgVectorLayer;
       const allowed = await Promise.all([
         isUpdateAllowed(this.props.entity),
-        isShapeImportAllowed(dataset, tableName),
-        isTableExportAllowed(dataset, tableName),
+        isShapeImportAllowed(dataset, resourceId),
+        isTableExportAllowed(dataset, resourceId),
         isLayersManagementAllowed()
       ]);
 
@@ -559,8 +559,8 @@ export class LayerMenu extends Component<LayerMenuProps> {
   @boundMethod
   private async getLayerDocument() {
     await this.setDocument(
-      (this.props.entity as CrgRasterLayer).libraryId,
-      (this.props.entity as CrgRasterLayer).recordId,
+      (this.props.entity as CrgRasterLayer).sourceId,
+      (this.props.entity as CrgRasterLayer).sourceRecordId,
       true
     );
   }
@@ -581,9 +581,9 @@ export class LayerMenu extends Component<LayerMenuProps> {
 
   @boundMethod
   private async getLayerVectorTable() {
-    const { dataset, tableName } = this.props.entity as CrgVectorLayer;
+    const { dataset, resourceId } = this.props.entity as CrgVectorLayer;
     try {
-      const vectorTable = await getVectorTable(dataset, tableName);
+      const vectorTable = await getVectorTable(dataset, resourceId);
       this.setVectorTable(vectorTable);
       this.openDialog();
     } catch (error) {

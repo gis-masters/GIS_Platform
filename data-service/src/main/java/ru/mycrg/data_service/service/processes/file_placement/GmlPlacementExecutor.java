@@ -262,7 +262,7 @@ public class GmlPlacementExecutor implements IExecutor<ImportReport>, IFilePlace
             RequestBody payload = RequestBody.create(
                     DEFAULT_MEDIA_TYPE,
                     "{" +
-                            "    \"tableName\": \"" + layerReport.getTableIdentifier() + "\"," +
+                            "    \"resourceId\": \"" + layerReport.getTableIdentifier() + "\"," +
                             "    \"type\": \"vector\"," +
                             "    \"title\": \"" + layerReport.getTableTitle() + "\"," +
                             "    \"dataset\": \"" + dataset + "\"," +

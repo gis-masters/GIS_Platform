@@ -56,12 +56,12 @@ public class RasterLayerHandler implements ILayerHandler {
             Long orgId = authenticationFacade.getOrganizationId();
             workspaceName = getScratchWorkspaceName(orgId);
             String nativeCRS = dto.getNativeCRS() != null ? dto.getNativeCRS() : defaultEpsgCode();
-            String tableName = buildGeoserverFeatureName(dto.getTableName(), nativeCRS);
+            String resourceId = buildGeoserverFeatureName(dto.getResourceId(), nativeCRS);
             if (storeName == null) {
-                storeName = buildRasterStoreName(dto.getTableName());
+                storeName = buildRasterStoreName(dto.getResourceId());
             }
 
-            CoverageModel coverage = new CoverageModel(tableName,
+            CoverageModel coverage = new CoverageModel(resourceId,
                                                        dto.getTitle(),
                                                        nativeCRS,
                                                        dto.getNativeCRS());

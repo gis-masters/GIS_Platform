@@ -50,6 +50,6 @@ public class RasterLayerQuery implements IResourceQueryService {
         resProps.put("styleName", layer.getStyleName());
         resProps.put("type", layer.getType());
 
-        return new Resource(layer.getTableName(), layer.getTitle(), resourceDefinition, resProps);
+        return new Resource(layer.getResourceId(), layer.getTitle(), resourceDefinition, resProps);
     }
 }

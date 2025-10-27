@@ -3,7 +3,10 @@ import { observer, useLocalObservable } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 
 import { getPhotoModeFeatureFiles } from '../../services/data/files/files.util';
-import { extractFeatureId, extractTableNameFromFeatureId } from '../../services/geoserver/featureType/featureType.util';
+import {
+  extractFeatureId,
+  extractResourceIdFromFeatureId
+} from '../../services/geoserver/featureType/featureType.util';
 import { getLayerSchema } from '../../services/gis/layers/layers.service';
 import { currentProject } from '../../stores/CurrentProject.store';
 import { sidebars } from '../../stores/Sidebars.store';
@@ -41,10 +44,10 @@ export const PhotoModePreviewer: FC = observer(() => {
       const filesWithFeatures: CarouselImageInfo[] = await Promise.all(
         features.flatMap(feature => {
           return getPhotoModeFeatureFiles(feature).map(async file => {
-            const tableName = extractTableNameFromFeatureId(feature.id);
+            const tableName = extractResourceIdFromFeatureId(feature.id);
             const layer =
-              currentProject.getLayerByTableNameFromAllVectorableLayers(tableName) ||
-              currentProject.getLayerByTableNameFromVisibleVectorLayers(tableName);
+              currentProject.getLayerByResourceIdFromAllVectorableLayers(tableName) ||
+              currentProject.getLayerByResourceIdFromVisibleVectorLayers(tableName);
 
             const schema = await getLayerSchema(layer);
 

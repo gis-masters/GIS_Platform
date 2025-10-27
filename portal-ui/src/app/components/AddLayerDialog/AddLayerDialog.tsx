@@ -315,7 +315,7 @@ export class AddLayerDialog extends Component<AddLayerDialogProps> {
       title = '',
       minZoom,
       dataSourceUri,
-      tableName,
+      resourceId,
       projection,
       layerType,
       view,
@@ -337,7 +337,7 @@ export class AddLayerDialog extends Component<AddLayerDialogProps> {
         ...vectorLayerDefaults(),
         id: generateNextLayerId(),
         dataset: dataset?.identifier,
-        tableName: vectorTable?.identifier,
+        resourceId: vectorTable?.identifier,
         complexName: buildComplexName(workspace, vectorTable?.identifier, crs),
         title,
         nativeCRS: crs,
@@ -374,9 +374,9 @@ export class AddLayerDialog extends Component<AddLayerDialogProps> {
 
         const generalCrgLayerProps = {
           title: title || getFileBaseName(file.title),
-          tableName: fileTableName,
-          libraryId: record.libraryTableName,
-          recordId: record.id,
+          resourceId: fileTableName,
+          sourceId: record.libraryTableName,
+          sourceRecordId: record.id,
           dataStoreName: workspace,
           complexName: buildComplexName(workspace, fileTableName, crs),
           id: generateNextLayerId(),
@@ -462,7 +462,7 @@ export class AddLayerDialog extends Component<AddLayerDialogProps> {
         title,
         dataSourceUri: dataSourceUri,
         minZoom,
-        tableName,
+        resourceId: resourceId,
         errorText: errorText
       });
       this.clearForm();

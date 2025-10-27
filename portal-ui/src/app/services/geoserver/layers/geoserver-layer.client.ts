@@ -17,7 +17,7 @@ class GeoserverLayerClient extends GeoserverClient {
   }
 
   async getLayerInfo(layer: CrgLayer): Promise<GeoserverLayerInfo> {
-    if (!layer.tableName || !layer.complexName || !layer.nativeCRS) {
+    if (!layer.resourceId || !layer.complexName || !layer.nativeCRS) {
       throw new Error('Передан некорректный слой: ' + JSON.stringify(layer));
     }
 
