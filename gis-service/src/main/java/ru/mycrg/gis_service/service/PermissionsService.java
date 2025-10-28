@@ -1,6 +1,8 @@
 package ru.mycrg.gis_service.service;
 
 import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.projection.ProjectionFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,6 +32,8 @@ import static ru.mycrg.gis_service.GisServiceApplication.objectMapper;
 @Service
 @Transactional
 public class PermissionsService {
+
+    private final Logger log = LoggerFactory.getLogger(PermissionsService.class);
 
     private final PermissionRepository permissionRepository;
     private final ProjectionFactory projectionFactory;
@@ -92,6 +96,8 @@ public class PermissionsService {
 
         Permission savedPermission = permissionRepository.save(permission);
 
+        log.debug("Создали правило [{}]", permission);
+
         return mapToProjection(savedPermission);
     }
 
@@ -105,6 +111,12 @@ public class PermissionsService {
         throwIfOverlapped(dto, projectId, permissionForUpdate.getId());
 
         permissionRepository.save(permissionForUpdate);
+    }
+
+    public void delete(long projectId, long permissionId) {
+        final Permission permission = getPermissionById(projectId, permissionId);
+
+        permissionRepository.deletePermissionById(permission.getId());
     }
 
     private void patchPermission(Permission permissionForUpdate, JsonMergePatch patchDto) {
@@ -129,12 +141,6 @@ public class PermissionsService {
         }
 
         permissionForUpdate.setLastModified(now());
-    }
-
-    public void delete(long projectId, long permissionId) {
-        final Permission permission = getPermissionById(projectId, permissionId);
-
-        permissionRepository.deletePermissionById(permission.getId());
     }
 
     public void deletePermissions(Long principalId, String principalType) {
@@ -184,11 +190,10 @@ public class PermissionsService {
         Project project = projectService.getById(projectId);
         throwIfNotOwnerOrAdmin(project);
 
-        return project
-                .getPermissions().stream()
-                .filter(permission -> permission.getId().equals(permissionId))
-                .findFirst()
-                .orElseThrow(() -> new NotFoundException(permissionId));
+        return project.getPermissions().stream()
+                      .filter(permission -> permission.getId().equals(permissionId))
+                      .findFirst()
+                      .orElseThrow(() -> new NotFoundException(permissionId));
     }
 
     private List<PermissionProjection> getProjectPermissions(Project project) {
@@ -210,11 +215,9 @@ public class PermissionsService {
         return projectionFactory.createProjection(PermissionProjection.class, permission);
     }
 
-    private boolean throwIfNotOwnerOrAdmin(@NotNull Project project) {
-        if (projectProtector.isOwner(project.getId())) {
-            return true;
+    private void throwIfNotOwnerOrAdmin(@NotNull Project project) {
+        if (!projectProtector.isOwner(project.getId())) {
+            throw new ForbiddenException("получения", "разрешений на проект", project.getName());
         }
-
-        throw new ForbiddenException("получения", "разрешений на проект", project.getName());
     }
 }

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.mycrg.audit_service_contract.events.CrgAuditEvent;
 import ru.mycrg.auth_facade.IAuthenticationFacade;
+import ru.mycrg.auth_facade.UserDetails;
 import ru.mycrg.common_contracts.generated.gis_service.project.ProjectCreateDto;
 import ru.mycrg.common_contracts.generated.gis_service.project.ProjectUpdateDto;
 import ru.mycrg.gis_service.dao.ProjectsDao;
@@ -23,7 +24,6 @@ import ru.mycrg.gis_service.entity.Project;
 import ru.mycrg.gis_service.entity.Role;
 import ru.mycrg.gis_service.exceptions.BadRequestException;
 import ru.mycrg.gis_service.exceptions.ForbiddenException;
-import ru.mycrg.gis_service.exceptions.GisServiceException;
 import ru.mycrg.gis_service.exceptions.NotFoundException;
 import ru.mycrg.gis_service.queue.MessageBusProducer;
 import ru.mycrg.gis_service.repository.BaseMapRepository;
@@ -33,10 +33,7 @@ import ru.mycrg.gis_service.repository.RoleRepository;
 import ru.mycrg.gis_service.security.Roles;
 import ru.mycrg.gis_service.service.DataServiceBasemapsClient;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.time.LocalDateTime.now;
@@ -50,14 +47,14 @@ public class ProjectService {
 
     private final Logger log = LoggerFactory.getLogger(ProjectService.class);
 
+    private final ProjectsDao projectsDao;
     private final ProjectRepository projectRepository;
+    private final RoleRepository roleRepository;
     private final PermissionRepository permissionRepository;
     private final IAuthenticationFacade authenticationFacade;
     private final MessageBusProducer messageBus;
     private final BaseMapRepository baseMapRepository;
     private final DataServiceBasemapsClient dataServiceBasemapsClient;
-    private final RoleRepository roleRepository;
-    private final ProjectsDao projectsDao;
 
     public ProjectService(ProjectRepository projectRepository,
                           PermissionRepository permissionRepository,
@@ -125,54 +122,26 @@ public class ProjectService {
                                         .map(project -> toProjection(project, OWNER));
             } else if (Objects.equals(bestRoleFromParents, 20L)) {
                 // Получили CONTRIBUTOR от какого-то родителя. Проставляем всем CONTRIBUTOR.
-                Page<ProjectProjectionImpl> byParents = projectRepository
+                Page<ProjectProjectionImpl> childProjectItems = projectRepository
                         .findAllByPath(orgId, name, "/" + parentFolderId, pageable)
                         .map(project -> toProjection(project, CONTRIBUTOR));
 
                 // CONTRIBUTOR не являются лучшей ролью. Пробуем найти права выданные непосредственно на
                 // ресурсы лежащие в заданной папке. И заменим если они лучше CONTRIBUTOR.
-                Set<String> pIds = byParents.stream()
-                                            .map(projectProjection -> projectProjection.getId().toString())
-                                            .collect(Collectors.toSet());
-                List<ProjectPermission> permissions = projectsDao.getMaxRoleFromDirectlyPermissions(pIds);
-                permissions.forEach(pp -> {
-                    byParents.stream()
-                             .filter(projectProjection -> Objects.equals(projectProjection.getId(), pp.getProjectId()))
-                             .findFirst()
-                             .ifPresent(p -> {
-                                 Roles role = Roles.stringToRole(p.getRole());
-                                 if (role.roleToValue() < pp.getMaxRole()) {
-                                     p.setRole(Roles.valueToRole(pp.getMaxRole()).name());
-                                 }
-                             });
-                });
+                tryReplaceByBestRole(childProjectItems);
 
-                return byParents;
+                return childProjectItems;
             } else if (Objects.equals(bestRoleFromParents, 10L)) {
                 // Получили VIEWER от какого-то родителя. Проставляем всем VIEWER.
-                Page<ProjectProjectionImpl> byParents = projectRepository
+                Page<ProjectProjectionImpl> childProjectItems = projectRepository
                         .findAllByPath(orgId, name, "/" + parentFolderId, pageable)
                         .map(project -> toProjection(project, VIEWER));
 
                 // VIEWER не являются лучшей ролью. Пробуем найти права выданные непосредственно на ресурсы лежащие
                 // в заданной папке. И заменим если они лучше VIEWER.
-                Set<String> pIds = byParents.stream()
-                                            .map(projectProjection -> projectProjection.getId().toString())
-                                            .collect(Collectors.toSet());
-                List<ProjectPermission> permissions = projectsDao.getMaxRoleFromDirectlyPermissions(pIds);
-                permissions.forEach(pp -> {
-                    byParents.stream()
-                             .filter(projectProjection -> Objects.equals(projectProjection.getId(), pp.getProjectId()))
-                             .findFirst()
-                             .ifPresent(p -> {
-                                 Roles role = Roles.stringToRole(p.getRole());
-                                 if (role.roleToValue() < pp.getMaxRole()) {
-                                     p.setRole(Roles.valueToRole(pp.getMaxRole()).name());
-                                 }
-                             });
-                });
+                tryReplaceByBestRole(childProjectItems);
 
-                return byParents;
+                return childProjectItems;
             } else {
                 // Прав от родителей нет.
                 // Ищем права выданные непосредственно на ресурсы лежащие в заданной папке и "проходные" папки.
@@ -201,6 +170,8 @@ public class ProjectService {
 
     @NotNull
     public ProjectProjectionImpl getByIdWithRole(@NotNull Long id) {
+        log.debug("Находим проект/папку по id: {}", id);
+
         if (authenticationFacade.isRoot()) {
             return projectRepository.findById(id)
                                     .map(project -> toProjection(project, OWNER))
@@ -208,68 +179,37 @@ public class ProjectService {
         }
 
         Long orgId = authenticationFacade.getOrganizationId();
-        Project project = projectRepository
-                .findByIdAndOrganizationId(id, orgId)
-                .orElseThrow(() -> new NotFoundException(Project.class, id));
+        Project projectItem = projectRepository.findByIdAndOrganizationId(id, orgId)
+                                               .orElseThrow(() -> new NotFoundException(Project.class, id));
+
+        log.debug("Достали проект/папку: [{}]", projectItem);
 
         if (authenticationFacade.isOrganizationAdmin()) {
-            return toProjection(project, OWNER);
+            return toProjection(projectItem, OWNER);
         }
 
-        String pathToMe = getPathToMe(project);
-        String path = project.getPath();
+        String path = projectItem.getPath();
         if (path == null) {
-            Long bestRoleForMe = projectsDao.getBestRoleFromParents(Set.of(id.toString()));
-            if (bestRoleForMe != null) {
-                return toProjection(project, Roles.valueToRole(bestRoleForMe));
-            } else {
-                return getProjectProjection(id, pathToMe);
-            }
+            log.debug("Элемент находится в корне");
+
+            return getItemIfAllowed(projectItem);
         } else {
-            Set<String> parentIds = Arrays.stream(pathToMe.split("/"))
+            log.debug("У элемента есть родители! Пытаемся взять права от них. {}", path);
+
+            Set<String> parentIds = Arrays.stream(getPathToMe(projectItem).split("/"))
                                           .filter(item -> !item.isBlank())
                                           .collect(Collectors.toSet());
 
             Long bestRoleFromParents = projectsDao.getBestRoleFromParents(parentIds);
             if (bestRoleFromParents != null) {
-                return toProjection(project, Roles.valueToRole(bestRoleFromParents));
+                log.debug("Нашли лучшую роль от родителей");
+
+                return toProjection(projectItem, Roles.valueToRole(bestRoleFromParents));
             } else {
-                if (isPassThroughFolder(pathToMe)) {
-                    return toProjection(project, VIEWER);
-                } else {
-                    throw new ForbiddenException("Недостаточно прав для просмотра проекта 2: " + id);
-                }
+                log.debug("Не найдена bestRoleFromParents");
+
+                return getItemIfAllowed(projectItem);
             }
-        }
-    }
-
-    private boolean isPassThroughFolder(String pathToMe) {
-        try {
-            return projectsDao
-                    .allowedProjects(pathToMe, "", Pageable.unpaged())
-                    .stream()
-                    .findFirst()
-                    .isPresent();
-        } catch (Exception e) {
-            log.error("Не удалось достать проект => {}", e.getMessage(), e);
-
-            return false;
-        }
-    }
-
-    private ProjectProjectionImpl getProjectProjection(@NotNull Long id, String pathToMe) {
-        try {
-            return projectsDao
-                    .allowedProjects(pathToMe, "", Pageable.unpaged())
-                    .stream()
-                    .findFirst()
-                    .orElseThrow(() -> new ForbiddenException("Недостаточно прав для просмотра проекта: " + id));
-        } catch (ForbiddenException e) {
-            throw e;
-        } catch (Exception e) {
-            log.error("Не удалось достать проект => {}", e.getMessage(), e);
-
-            throw new GisServiceException(e.getMessage());
         }
     }
 
@@ -384,6 +324,70 @@ public class ProjectService {
                                       projectImpl.getName(),
                                       projectImpl.isFolder() ? "FOLDER" : "PROJECT",
                                       projectImpl.getId()));
+        }
+    }
+
+    private ProjectProjectionImpl getItemIfAllowed(Project projectItem) {
+        if (projectItem.isFolder()) {
+            log.debug("Элемент является папкой");
+
+            if (isPassThroughFolder(getPathToMe(projectItem))) {
+                log.debug("Определили, что это `проходная` папка");
+
+                return toProjection(projectItem, VIEWER);
+            } else {
+                return getItemIfAllowedByDirectPermission(projectItem);
+            }
+        } else {
+            log.debug("Элемент является проектом");
+
+            return getItemIfAllowedByDirectPermission(projectItem);
+        }
+    }
+
+    // Проверка прав выданных непосредственно на проект/папку
+    private ProjectProjectionImpl getItemIfAllowedByDirectPermission(Project projectItem) {
+        UserDetails userDetails = authenticationFacade.getUserDetails();
+        List<Long> userIds = userDetails.getGroups();
+        userIds.add(userDetails.getUserId());
+
+        Optional<String> oBestRole = permissionRepository.getBestRoleForProject(userIds, projectItem.getId());
+        if (oBestRole.isPresent()) {
+            return toProjection(projectItem, Roles.stringToRole(oBestRole.get()));
+        }
+
+        throw new ForbiddenException("Недостаточно прав для просмотра объекта: " + projectItem.getId());
+    }
+
+    private void tryReplaceByBestRole(Page<ProjectProjectionImpl> projectItems) {
+        Set<String> pIds = projectItems.stream()
+                                       .map(projectProjection -> projectProjection.getId().toString())
+                                       .collect(Collectors.toSet());
+
+        for (ProjectPermission pp: projectsDao.getMaxRoleFromDirectlyPermissions(pIds)) {
+            projectItems.stream()
+                        .filter(projectProjection -> Objects.equals(projectProjection.getId(), pp.getProjectId()))
+                        .findFirst()
+                        .ifPresent(projectItem -> {
+                            Roles role = stringToRole(projectItem.getRole());
+                            if (role.roleToValue() < pp.getMaxRole()) {
+                                projectItem.setRole(valueToRole(pp.getMaxRole()).name());
+                            }
+                        });
+        }
+    }
+
+    private boolean isPassThroughFolder(String pathToMe) {
+        try {
+            return projectsDao
+                    .allowedProjects(pathToMe, "", Pageable.unpaged())
+                    .stream()
+                    .findFirst()
+                    .isPresent();
+        } catch (Exception e) {
+            log.error("Не удалось достать проект => {}", e.getMessage(), e);
+
+            return false;
         }
     }
 

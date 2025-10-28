@@ -1,6 +1,5 @@
 package ru.mycrg.acceptance.gis_service;
 
-import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
@@ -27,8 +26,8 @@ import static org.junit.Assert.*;
 
 public class ProjectStepsDefinitions extends BaseStepsDefinitions {
 
-    public static ProjectCreateDto projectDto;
     public static Integer projectId;
+    public static ProjectCreateDto projectDto;
 
     private final AuthorizationBase authorizationBase = new AuthorizationBase();
 
@@ -55,13 +54,6 @@ public class ProjectStepsDefinitions extends BaseStepsDefinitions {
     @And("В ответе на удаление проекта есть упоминание ID")
     public void checkCurrentIdInResponse() {
         super.checkCurrentIdInResponse();
-    }
-
-    @And("Поля проекта совпадают с переданными")
-    public void checkProjectData() {
-        jsonPath = response.jsonPath();
-
-        assertEquals(jsonPath.get("name"), projectDto.getName());
     }
 
     @And("параметры проекта совпадают с переданными")
@@ -157,16 +149,6 @@ public class ProjectStepsDefinitions extends BaseStepsDefinitions {
         super.createEntity(projectDto);
 
         projectId = extractEntityIdFromResponse(response);
-    }
-
-    @When("Существуют проекты")
-    public void createMultipleProjects(DataTable dataTable) {
-        List<List<String>> data = dataTable.asLists();
-        for (List<String> data1: data) {
-            for (String project: data1) {
-                createProjectStep(project);
-            }
-        }
     }
 
     @And("Представление проекта корректно")
@@ -324,6 +306,11 @@ public class ProjectStepsDefinitions extends BaseStepsDefinitions {
     @When("я делаю выборку проектов из папки {string}")
     public void currentUserGetAllProjects(String projectFolderName) {
         getByParent(String.valueOf(getProjectIdByName(projectFolderName)));
+    }
+
+    @When("я делаю запрос на папку проектов {string}")
+    public void currentUserGetProjectItem(String projectItem) {
+        getProjectById(getProjectIdByName(projectItem));
     }
 
     @When("я перемещаю {string} в {string}")
@@ -547,11 +534,9 @@ public class ProjectStepsDefinitions extends BaseStepsDefinitions {
                 Long.parseLong(String.valueOf(projectId))
         );
 
-        String jsonBody = gson.toJson(childProjectDto);
-
         response = getBaseRequestWithCurrentCookie()
                 .given().
-                        body(jsonBody).
+                        body(gson.toJson(childProjectDto)).
                         contentType(ContentType.JSON)
                 .when().
                         post("");
@@ -574,33 +559,6 @@ public class ProjectStepsDefinitions extends BaseStepsDefinitions {
         int targetItemId = getProjectIdByName(targetItem);
 
         moveItem(movedItemId, targetItemId);
-    }
-
-    @When("Администратор делает запрос на текущую папку")
-    public void adminGetsCurrentFolder() {
-        authorizationBase.loginAsOwner();
-
-        getCurrentEntity();
-    }
-
-    @Then("Проект находится в указанной папке")
-    public void checkProjectIsInFolder() {
-        jsonPath = response.jsonPath();
-        String path = jsonPath.get("path");
-
-        assertNotNull("Путь проекта не должен быть null", path);
-        assertTrue("Путь проекта должен содержать ID папки",
-                   path.matches(".*/" + projectId + "$"));
-    }
-
-    @Then("Папка находится в указанной папке")
-    public void checkFolderIsInFolder() {
-        jsonPath = response.jsonPath();
-        String path = jsonPath.get("path");
-
-        assertNotNull("Путь папки не должен быть null", path);
-        assertTrue("Путь папки должен содержать ID родительской папки",
-                   path.matches(".*/" + projectId + "$"));
     }
 
     @And("Сервер отвечает со статус-кодом 204, проект успешно удален")

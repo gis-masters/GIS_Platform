@@ -53,7 +53,7 @@ public class PermissionController {
     @PreAuthorize(HAS_ANY_AUTHORITY)
     public ResponseEntity<PermissionProjection> createPermission(@PathVariable(name = "project_id") long projectId,
                                                                  @Valid @RequestBody PermissionCreateDto dto) {
-        log.debug("Try to create permission for project {}", dto.getPrincipalId());
+        log.debug("Запрос на создание правила [{}] для проекта {}", dto, projectId);
 
         PermissionProjection permission = permissionsService.create(projectId, dto);
 

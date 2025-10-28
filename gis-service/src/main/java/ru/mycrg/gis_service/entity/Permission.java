@@ -140,13 +140,14 @@ public class Permission {
 
     @Override
     public String toString() {
-        return "{id=" + id +
-                ", principalType='" + principalType + '\'' +
-                ", principalId=" + principalId +
-                ", role='" + role.getName() + '\'' +
-                ", project=" + project.getId() +
-                ", createdAt=" + createdAt +
-                ", lastModified=" + lastModified +
-                '}';
+        return "{" +
+                "\"id\":" + (id == null ? "null" : "\"" + id + "\"") + ", " +
+                "\"principalType\":" + (principalType == null ? "null" : "\"" + principalType + "\"") + ", " +
+                "\"principalId\":" + (principalId == null ? "null" : "\"" + principalId + "\"") + ", " +
+                "\"role\":" + (role == null ? "null" : role) + ", " +
+                "\"project\":" + (project == null ? "null" : project) + ", " +
+                "\"createdAt\":" + (createdAt == null ? "null" : createdAt) + ", " +
+                "\"lastModified\":" + (lastModified == null ? "null" : lastModified) +
+                "}";
     }
 }

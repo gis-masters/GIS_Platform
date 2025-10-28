@@ -228,4 +228,20 @@ public class Project implements Identifiable<Long> {
     public int hashCode() {
         return Objects.hash(getId(), getName(), getOrganizationId(), getBbox(), isDefault());
     }
+
+    @Override
+    public String toString() {
+        return "{" +
+                "\"id\":\"" + id + "\"" + ", " +
+                "\"name\":" + (name == null ? "null" : "\"" + name + "\"") + ", " +
+                "\"description\":" + (description == null ? "null" : "\"" + description + "\"") + ", " +
+                "\"organizationId\":\"" + organizationId + "\"" + ", " +
+                "\"bbox\":" + (bbox == null ? "null" : "\"" + bbox + "\"") + ", " +
+                "\"isDefault\":\"" + isDefault + "\"" + ", " +
+                "\"path\":" + (path == null ? "null" : "\"" + path + "\"") + ", " +
+                "\"isFolder\":\"" + isFolder + "\"" + ", " +
+                "\"createdAt\":" + (createdAt == null ? "null" : createdAt) + ", " +
+                "\"lastModified\":" + (lastModified == null ? "null" : lastModified) +
+                "}";
+    }
 }

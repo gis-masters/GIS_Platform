@@ -16,11 +16,12 @@ public class PermissionCreateDto {
     private String principalType;
 
     @NotBlank
-    @Pattern(regexp = "^(VIEWER|CONTRIBUTOR|OWNER)$", message = "Допустимые значения поля role: VIEWER, CONTRIBUTOR, OWNER")
+    @Pattern(regexp = "^(VIEWER|CONTRIBUTOR|OWNER)$",
+             message = "Допустимые значения поля role: VIEWER, CONTRIBUTOR, OWNER")
     private String role;
 
     public PermissionCreateDto() {
-        //Required by framework
+        // Required by framework
     }
 
     public PermissionCreateDto(Permission permission) {
@@ -59,9 +60,10 @@ public class PermissionCreateDto {
 
     @Override
     public String toString() {
-        return "{principalId=" + principalId +
-                ", principalType='" + principalType + '\'' +
-                ", role='" + role + '\'' +
-                '}';
+        return "{" +
+                "\"principalId\":" + (principalId == null ? "null" : "\"" + principalId + "\"") + ", " +
+                "\"principalType\":" + (principalType == null ? "null" : "\"" + principalType + "\"") + ", " +
+                "\"role\":" + (role == null ? "null" : "\"" + role + "\"") +
+                "}";
     }
 }
