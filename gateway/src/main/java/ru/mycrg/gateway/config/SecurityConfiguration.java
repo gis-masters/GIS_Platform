@@ -72,7 +72,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                              "/organizations/init",
                              "/organizations/intents",
                              "/perform_logout",
-                             "/integration/ais_ums/import",
                              "/integration/statement/import",
                              "/request-password-reset",
                              "/password-reset").permitAll()

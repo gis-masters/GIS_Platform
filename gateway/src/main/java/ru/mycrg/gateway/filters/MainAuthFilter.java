@@ -186,12 +186,14 @@ public class MainAuthFilter extends OncePerRequestFilter implements CrgFilter {
             if (token == null) {
                 log.debug("Не предоставлен ни refresh, ни access токены!");
 
-                sendUnauthorized(response, request.getParameter("orgId"), "Не предоставлен ни refresh, ни access токены!");
+                sendUnauthorized(response, request.getParameter("orgId"),
+                                 "Не предоставлен ни refresh, ни access токены!");
             } else if (token.getAccess_token() != null) {
                 log.debug("Попытка авторизации без токена восстановления. Токен авторизации: {}",
                           token.getAccess_token());
 
-                sendUnauthorized(response, request.getParameter("orgId"), "Попытка авторизации без токена восстановления");
+                sendUnauthorized(response, request.getParameter("orgId"),
+                                 "Попытка авторизации без токена восстановления");
             }
         } else if ("refreshTokenExpired".equals(authConclusion.getCause())) {
             log.debug("Refresh-токен просрочен");
@@ -239,8 +241,7 @@ public class MainAuthFilter extends OncePerRequestFilter implements CrgFilter {
         String method = request.getMethod();
         String path = request.getServletPath();
 
-        return method.equals("POST")
-                && (path.contains("/integration/ais_ums") || path.contains("/integration/statement"));
+        return method.equals("POST") && path.contains("/integration/statement");
     }
 
     private void addOrgInfoToResponse(HttpServletResponse response, List<IdNameProjection> orgs) {

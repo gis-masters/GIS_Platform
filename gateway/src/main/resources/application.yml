@@ -84,10 +84,6 @@ zuul:
       path: /api/data/**
       url: http://crg-data-service:8084/
 
-    crg-data-service-integration:
-      path: /integration/ais_ums/**
-      url: http://crg-data-service:8084/integration/ais_ums/
-
     crg-data-service-integration-statement:
       path: /integration/statement/**
       url: http://crg-data-service:8084/integration/statement/
