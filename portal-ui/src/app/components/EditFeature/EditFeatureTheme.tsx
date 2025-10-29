@@ -12,10 +12,10 @@ const editFeatureTheme = createTheme({
   }
 });
 
-interface EditFeatureContainerThemeProviderProps {
+interface EditFeatureThemeProviderProps {
   children: React.ReactNode;
 }
 
-export const EditFeatureContainerThemeProvider: React.FC<EditFeatureContainerThemeProviderProps> = ({ children }) => {
+export const EditFeatureThemeProvider: React.FC<EditFeatureThemeProviderProps> = ({ children }) => {
   return <ThemeProvider theme={editFeatureTheme}>{children}</ThemeProvider>;
 };

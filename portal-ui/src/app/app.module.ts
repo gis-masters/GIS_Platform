@@ -19,18 +19,12 @@ import { DataImportComponent } from './components/data-import/data-import.compon
 import { DataManagementComponent } from './components/data-management/data-management.component';
 import { EditBugObjectComponent } from './components/edit-bug-object/edit-bug-object.component';
 import { EditFeatureBoxComponent } from './components/edit-feature/edit-feature.component';
-import { EditFeatureActionsComponent } from './components/edit-feature-actions/edit-feature-actions.component';
-import { EditFeatureFieldComponent } from './components/edit-feature-field/edit-feature-field.component';
-import { EditFeatureGeometryComponent } from './components/edit-feature-geometry/edit-feature-geometry.component';
-import { EditFeatureNavigationComponent } from './components/edit-feature-navigation/edit-feature-navigation.component';
 import { EditFeaturesSidebarComponent } from './components/edit-features-sidebar/edit-features-sidebar.component';
 import { ErrorsBadgeComponent } from './components/errors-badge/errors-badge.component';
 import { ExportValidationReportButtonComponent } from './components/export-validation-report-button/export-validation-report-button.component';
 import { FeaturesListSidebarComponent } from './components/features-list-sidebar/features-list-sidebar.component';
 import { FeaturesSidebarTeaserComponent } from './components/features-sidebar-teaser/features-sidebar-teaser.component';
 import { FooterNgComponent } from './components/footer-ng/footer-ng.component';
-import { FormControlComponent } from './components/form-control/form-control.component';
-import { FormDescriptionComponent } from './components/form-description/form-description.component';
 import { HeaderComponent } from './components/header/header.component';
 import { HomeComponent } from './components/home/home.component';
 import { ImportGmlResultButtonComponent } from './components/import-gml-results-button/import-gml-result-button';
@@ -107,11 +101,8 @@ import { GlobalErrorHandler } from './services/global-error.handler';
     ServicesProvider,
     WorkImportPreviewComponent,
     WorkspaceComponent,
-    EditFeatureFieldComponent,
-    EditFeatureGeometryComponent,
     FeaturesListSidebarComponent,
     ReValidateButtonNgComponent,
-    EditFeatureGeometryComponent,
     OrgAdminComponent,
     BasemapsSelectComponent,
     AttributionComponent,
@@ -127,20 +118,15 @@ import { GlobalErrorHandler } from './services/global-error.handler';
     VectorTableRegistryComponent,
     LibraryDocumentPageContainerComponent,
     TaskPageContainerComponent,
-    FormControlComponent,
     ServicesCalculatorComponent,
-    FormDescriptionComponent,
     ChangePasswordFormComponent,
-    FormDescriptionComponent,
     RelationsButtonComponent,
     FeaturesSidebarTeaserComponent,
     SystemManagementComponent,
-    EditFeatureActionsComponent,
     MessagesRegistryComponent,
     TasksJournalComponent,
     UtilityDialogsRootComponent,
     PhotoModePreviewerComponent,
-    EditFeatureNavigationComponent,
     ProjectFolderComponent
   ],
   bootstrap: [AppComponent],

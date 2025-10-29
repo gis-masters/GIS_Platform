@@ -240,6 +240,7 @@ export class ExplorerAdapterTypeFolder {
             <LibraryKptRequest library={library} />
           </>
         )}
+        {/* eslint-disable-next-line react/jsx-no-bind -- FIXME in #3782 */}
         {createEnabled && <CreateLibraryRecord library={library} parent={currentItem} onCreate={handleCreate} />}
         {store.explorerRole === 'dm' && (
           <>

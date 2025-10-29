@@ -88,37 +88,6 @@ When('в форме редактирования объекта я закрыв�
   await editFeatureBlock.closeConfirmDialog();
 });
 
-When('в вкладке просмотра геометрии я нажимаю кнопку `Координаты контура как текст`', async function () {
-  await editFeatureBlock.clickGeometryAsTextButton();
-});
-
-When('в вкладке просмотра геометрии я нажимаю кнопку `Добавить геометрию`', async function () {
-  await editFeatureBlock.clickAddGeometryButton();
-});
-
-When(
-  'в вкладке просмотра геометрии я перевожу курсор на кнопку `Копировать координаты контура в буфер обмена`',
-  async function () {
-    await editFeatureBlock.hoverCopyCoordsButton();
-  }
-);
-
-When('в вкладке просмотра геометрии я нажимаю кнопку `Удалить линию`', async function () {
-  await editFeatureBlock.clickDeleteGroupButton();
-});
-
-When('в вкладке просмотра геометрии я нажимаю кнопку `Удалить полигон`', async function () {
-  await editFeatureBlock.clickDeletePolygonButton();
-});
-
-When('в вкладке просмотра геометрии я нажимаю кнопку `Удалить вершину`', async function () {
-  await editFeatureBlock.clickDeleteCoordButton();
-});
-
-When('в вкладке просмотра геометрии я нажимаю кнопку `Редактировать геометрию`', async function () {
-  await editFeatureBlock.clickEditOnMap();
-});
-
 When('в вкладке просмотра геометрии я перевожу курсор на кнопку `Сохранить`', async function () {
   await editFeatureBlock.focusSaveButton();
 });
@@ -145,20 +114,6 @@ Then('вкладка просмотра геометрии в режиме чт�
 
   await expect(geometry).toEqual(expectedGeometry);
 });
-
-Then(
-  'вкладка просмотра геометрии в режиме редактирования содержит следующую геометрию',
-  async function (data: DataTable) {
-    const expectedGeometry = data
-      .raw()
-      .flat()
-      .filter(item => !Number.isNaN(Number(item)));
-
-    const geometry = await editFeatureBlock.getGeometryInEditMode();
-
-    await expect(geometry).toEqual(expectedGeometry);
-  }
-);
 
 Then('на форме корректно отображаются {string}', async (variant: string) => {
   await editFeatureBlock.assertSelfie(variant.split(' ').join('-'));

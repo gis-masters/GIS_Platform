@@ -12,6 +12,7 @@ import { type Toc, type TocItem } from '../../stores/Help.store';
 import { HelpTocCollapseIcon } from './CollapseIcon/HelpToc-CollapseIcon';
 import { HelpTocExpandIcon } from './ExpandIcon/HelpToc-ExpandIcon';
 import { HelpTocItem } from './Item/HelpToc-Item';
+import { HelpTocItemTitleLink } from './ItemTitleLink/HelpToc-ItemTitleLink';
 import { HelpTocSearchIcon } from './SearchIcon/HelpToc-SearchIcon';
 
 import './HelpToc.scss';
@@ -57,12 +58,7 @@ export class HelpToc extends Component<HelpTocProps> {
         />
         {this.tocTreeHidden
           ? this.searchResults.map(item => (
-              <div
-                className={cnHelpToc('ItemTitleLink')}
-                key={item.id}
-                onClick={() => this.handleClick(item)}
-                dangerouslySetInnerHTML={{ __html: item.title }}
-              />
+              <HelpTocItemTitleLink key={item.id} item={item} onClick={this.handleClick} />
             ))
           : items.map(item => (
               <SimpleTreeView
@@ -80,7 +76,7 @@ export class HelpToc extends Component<HelpTocProps> {
     );
   }
 
-  @action
+  @action.bound
   private handleClick(item: TocItem) {
     if (!item.children) {
       this.props.onSelect(item);

@@ -10,7 +10,7 @@ import { type CrgVectorLayer } from '../../services/gis/layers/layers.models';
 import { editFeatureStore } from '../../services/map/a-map-mode/edit-feature/EditFeatureStore';
 import { formatDate } from '../../services/util/date.util';
 import { notFalsyFilter } from '../../services/util/NotFalsyFilter';
-import { type EditFeatureContainerFormControl } from '../EditFeatureContainer/hooks/useEditFeatureState';
+import { type EditFeatureFormControl } from '../EditFeature/hooks/useEditFeatureState'; // TODO: запретить линтером ходить в чужие хуки
 import { EditFeatureField } from '../EditFeatureField/EditFeatureField';
 import { FormDescription } from '../Form/Description/Form-Description';
 import { Form } from '../Form/Form';
@@ -24,13 +24,13 @@ import './EditFeatureForm.scss';
 export const cnEditFeatureForm = cn('EditFeatureForm');
 
 interface EditFeatureFormProps {
-  formControls: EditFeatureContainerFormControl[];
+  formControls: EditFeatureFormControl[];
   features: WfsFeature[];
   editFeatureData: EditedField[];
   updatingAllowed: boolean;
   layer?: CrgVectorLayer;
   mode?: 'single' | 'multipleEdit';
-  setFormControls: (formControl: EditFeatureContainerFormControl[]) => void;
+  setFormControls: (formControl: EditFeatureFormControl[]) => void;
 }
 
 const checkType = (valueType: ValueType | undefined): boolean => {
@@ -79,19 +79,25 @@ export const EditFeatureForm: React.FC<EditFeatureFormProps> = ({
     [formControls, setFormControls]
   );
 
-  const isShowTemplate = (property: OldPropertySchema): boolean => {
-    const control = formControls.find(({ key }) => key === property.name);
+  const isShowTemplate = useCallback(
+    (property: OldPropertySchema): boolean => {
+      const control = formControls.find(({ key }) => key === property.name);
 
-    return control ? Boolean(control.disabled) : false;
-  };
+      return control ? Boolean(control.disabled) : false;
+    },
+    [formControls]
+  );
 
-  const isReadOnly = (property: OldPropertySchema): boolean => {
-    if (updatingAllowed) {
-      return !property.readOnly;
-    }
+  const isReadOnly = useCallback(
+    (property: OldPropertySchema): boolean => {
+      if (updatingAllowed) {
+        return !property.readOnly;
+      }
 
-    return Boolean(updatingAllowed);
-  };
+      return Boolean(updatingAllowed);
+    },
+    [updatingAllowed]
+  );
 
   const switchControl = useCallback(
     (property: OldPropertySchema): void => {

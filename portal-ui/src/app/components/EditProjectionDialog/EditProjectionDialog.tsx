@@ -141,7 +141,7 @@ export const EditProjectionDialog: FC<EditProjectionDialogProps> = observer(({ o
     [projection, setValue, openDialog, setBusy, handleClose]
   );
 
-  const getWktExample = () => {
+  const getWktExample = useCallback(async () => {
     const wktCodeExample = `
 PROJCS["Local_SK-42_to_WGS84",                  // Название проекционной системы
 GEOGCS["GCS_Krasovsky_1940",                    // Географическая СК на эллипсоиде Красовского
@@ -161,7 +161,7 @@ PARAMETER["false_northing",0],                  // Смещение по оси 
 UNIT["Meter",1]                                 // Единица измерения результатов в метрах
 ]`;
 
-    return achtung({
+    await achtung({
       title: 'Пример системы координат в формате WKT',
       okText: 'Закрыть',
       message: (
@@ -189,7 +189,7 @@ UNIT["Meter",1]                                 // Единица измерен
       ),
       dialogProps: { maxWidth: 'lg', fullWidth: true, className: cnEditProjectionDialog('WktCodeExample') }
     });
-  };
+  }, []);
 
   useEffect(() => {
     if (open && projection) {

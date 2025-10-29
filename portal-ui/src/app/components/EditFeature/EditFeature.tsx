@@ -2,7 +2,7 @@ import React, { type FC, type ReactNode, type SyntheticEvent, useCallback, useEf
 import { type IReactionDisposer, reaction } from 'mobx';
 import { observer } from 'mobx-react';
 import { Badge, Tab, Tabs, Tooltip } from '@mui/material';
-import { ChevronLeft } from '@mui/icons-material';
+import { Close } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import _, { isEqual } from 'lodash';
 
@@ -37,7 +37,7 @@ import { EditFeatureGeometry } from '../EditFeatureGeometry/EditFeatureGeometry'
 import { EditFeatureNavigation } from '../EditFeatureNavigation/EditFeatureNavigation';
 import { IconButton } from '../IconButton/IconButton';
 import { Loading } from '../Loading/Loading';
-import { EditFeatureContainerThemeProvider } from './EditFeatureContainerTheme';
+import { EditFeatureThemeProvider } from './EditFeatureTheme';
 import { useEditFeatureInitialization } from './hooks/useEditFeatureInitialization';
 import { useEditFeatureState } from './hooks/useEditFeatureState';
 import { useFeatureFormGenerator } from './hooks/useFeatureFormGenerator';
@@ -45,9 +45,9 @@ import { useFeatureSave } from './hooks/useFeatureSave';
 import { useFeatureSetup } from './hooks/useFeatureSetup';
 import { useLayerData } from './hooks/useLayerData';
 
-import './EditFeatureContainer.scss';
+import './EditFeature.scss';
 
-export const cnEditFeatureContainer = cn('EditFeatureContainer');
+export const cnEditFeature = cn('EditFeature');
 
 const featureHasNotEmptyGeometry = (feature: WfsFeature): boolean => {
   if (!feature?.geometry || !feature?.geometry?.coordinates) {
@@ -75,7 +75,7 @@ const cantBeSaved = (): boolean => {
 
 type Timer = ReturnType<typeof setTimeout>;
 
-export const EditFeatureContainer: FC = observer(() => {
+export const EditFeature: FC = observer(() => {
   const state = useEditFeatureState();
   const {
     mode,
@@ -106,7 +106,7 @@ export const EditFeatureContainer: FC = observer(() => {
     setFormControls
   } = state;
 
-  const backToList = async (): Promise<void> => {
+  const backToList = useCallback(async (): Promise<void> => {
     if (!selectedFeaturesStore.features?.length) {
       await services.provided;
       await services.router.navigate([location.pathname], {
@@ -141,7 +141,7 @@ export const EditFeatureContainer: FC = observer(() => {
       setFeatures([]);
       editFeatureStore.setPristine(true);
     }
-  };
+  }, [setEditFeatureData, setFeatures, setFormControls]);
 
   useLayerData(layer, shouldRender, setLayerSchema, setShouldRender);
 
@@ -312,7 +312,7 @@ export const EditFeatureContainer: FC = observer(() => {
   useEffect(() => {
     const disposers: IReactionDisposer[] = [];
 
-    // Реакция на изменение координат (flat(5) аналогично можно трекать просто изменение структуры)
+    // Реакция на изменение координат (flat(5) аналогично можно отслеживать просто изменение структуры)
     const coordinatesDisposer = reaction(
       () => editFeatureStore.geometry?.coordinates?.flat(5),
       () => {
@@ -486,61 +486,67 @@ export const EditFeatureContainer: FC = observer(() => {
   };
 
   return (
-    <EditFeatureContainerThemeProvider>
-      <div className={cnEditFeatureContainer({ readonly: !updatingAllowed })}>
-        <>
-          <div className={cnEditFeatureContainer('ControlsWrapper')}>
-            <div className={cnEditFeatureContainer('Controls')}>
-              <Tooltip title={getTooltip()}>
-                <Badge
-                  badgeContent={(currentFeatures?.length || 0) > 1 ? currentFeatures?.length : null}
-                  color='secondary'
-                  anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-                >
-                  {updatingAllowed && (
-                    <Button
-                      className='float-left save-feature-edit-btn'
-                      color='primary'
-                      variant='outlined'
-                      onClick={saveFeature}
-                      disabled={cantBeSaved()}
-                    >
-                      Сохранить
-                    </Button>
-                  )}
-                </Badge>
-              </Tooltip>
+    <EditFeatureThemeProvider>
+      <div className={cnEditFeature({ readonly: !updatingAllowed })}>
+        <div className={cnEditFeature('Controls')}>
+          <div className={cnEditFeature('ButtonsBox')}>
+            <Tooltip title={getTooltip()}>
+              <Badge
+                badgeContent={(currentFeatures?.length || 0) > 1 ? currentFeatures?.length : null}
+                color='secondary'
+                anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+              >
+                {updatingAllowed && (
+                  <Button
+                    className={cnEditFeature('Save')}
+                    color='primary'
+                    variant='outlined'
+                    onClick={saveFeature}
+                    disabled={cantBeSaved()}
+                  >
+                    Сохранить
+                  </Button>
+                )}
+              </Badge>
+            </Tooltip>
 
-              {updatingAllowed && !isNew && mode !== 'multipleEdit' && (
-                <Button
-                  className={cnEditFeatureContainer('Delete')}
-                  disabled={editFeatureStore.dirty}
-                  onClick={deleteFeature}
-                  color='error'
-                  variant='outlined'
-                >
-                  Удалить
-                </Button>
-              )}
-
-              {mode !== 'multipleEdit' && (
-                <EditFeatureNavigation setFormControls={setFormControls} setFeatures={setFeatures} />
-              )}
-
-              <Tooltip title='Вернуться к списку'>
-                <IconButton className={cnEditFeatureContainer('Back')} onClick={backToList} color='default'>
-                  <ChevronLeft />
-                </IconButton>
-              </Tooltip>
-            </div>
+            {updatingAllowed && !isNew && mode !== 'multipleEdit' && (
+              <Button
+                className={cnEditFeature('Delete')}
+                disabled={editFeatureStore.dirty}
+                onClick={deleteFeature}
+                color='error'
+                variant='outlined'
+              >
+                Удалить
+              </Button>
+            )}
           </div>
-        </>
 
-        <div className={cnEditFeatureContainer('Tabs')}>
+          <div className={cnEditFeature('NavigationBox')}>
+            {mode !== 'multipleEdit' && (
+              <EditFeatureNavigation
+                className={cnEditFeature('Navigation')}
+                setFormControls={setFormControls}
+                setFeatures={setFeatures}
+              />
+            )}
+          </div>
+
+          <div className={cnEditFeature('BackBox')}>
+            <Tooltip title='Вернуться к списку'>
+              <IconButton className={cnEditFeature('Back')} onClick={backToList} color='default'>
+                <Close />
+              </IconButton>
+            </Tooltip>
+          </div>
+        </div>
+
+        <div className={cnEditFeature('Tabs')}>
           {mode === 'single' ? (
             <>
               <Tabs
-                className={cnEditFeatureContainer('Tab')}
+                className={cnEditFeature('Tab')}
                 value={selectedTab}
                 variant='scrollable'
                 scrollButtons='auto'
@@ -563,6 +569,6 @@ export const EditFeatureContainer: FC = observer(() => {
           <Loading global visible={isSaveInProgress} />
         </div>
       </div>
-    </EditFeatureContainerThemeProvider>
+    </EditFeatureThemeProvider>
   );
 });

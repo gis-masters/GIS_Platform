@@ -3,7 +3,6 @@ import { isEqual } from 'lodash';
 
 import { sleep } from '../../../../src/app/services/util/sleep';
 import { Block } from '../../Block';
-import { extractValues } from '../../commands/extractText';
 import { hasClass } from '../../utils/hasClass';
 import { CopyFeaturesButtonBlock } from '../CopyFeaturesButton/CopyFeaturesButton.block';
 import { konfirmierenBlock } from '../Konfirmieren/Konfirmieren.block';
@@ -11,26 +10,19 @@ import { MuiInputBlock } from '../MuiInput/MuiInput.block';
 
 class EditFeatureBlock extends Block {
   selectors = {
-    container: '.EditFeatureContainer',
-    editFeatureBack: '.EditFeatureContainer-Back',
-    editFeatureSaveBtn: '.EditFeatureContainer .save-feature-edit-btn',
-    editFeatureForm: '.EditFeatureContainer',
+    container: '.EditFeature',
+    editFeatureBack: '.EditFeature-Back',
+    editFeatureSaveBtn: '.EditFeature-Save',
+    editFeatureForm: '.EditFeature',
     editFeatureLabel: '.EditFeatureForm-Label',
     editFeatureField: '.EditFeatureForm-Row',
-    editFeatureLoading: '.EditFeatureContainer .loading',
-    editFeatureGeometryAddGeometryBtn: '.EditFeatureContainer .EditFeatureGeometry-AddGeometry',
-    editFeatureGeometryCopyCoordsBtn: '.EditFeatureContainer .EditFeatureGeometry-CopyCoords',
-    editFeatureGeometryDeletePolygonBtn: '.EditFeatureContainer .EditFeatureGeometry-DelButton',
-    editFeatureGeometryDeleteGroupBtn: '.EditFeatureContainer .EditFeatureGeometry-DelButton',
-    editFeatureGeometryDeleteCoordBtn: '.EditFeatureContainer .EditFeatureGeometry-CoordDel',
-    editFeatureGeometryDraw: '.EditFeatureContainer .EditFeatureGeometry-Draw',
-    editFeatureGeometryAsTextBtn: '.EditFeatureContainer .EditFeatureGeometry-AsText',
-    navigationTextBox: '.EditFeatureContainer .EditFeatureNavigation-TextBox',
-    navigationPrevFeatureBtn: '.EditFeatureContainer .EditFeatureNavigation-Prev .MuiButtonBase-root',
-    navigationNextFeatureBtn: '.EditFeatureContainer .EditFeatureNavigation-Next .MuiButtonBase-root',
-    lookupStatus: '.EditFeatureContainer .Lookup-Status',
+    editFeatureLoading: '.EditFeature .loading',
+    navigationTextBox: '.EditFeature .EditFeatureNavigation-TextBox',
+    navigationPrevFeatureBtn: '.EditFeature .EditFeatureNavigation-Prev .MuiButtonBase-root',
+    navigationNextFeatureBtn: '.EditFeature .EditFeatureNavigation-Next .MuiButtonBase-root',
+    lookupStatus: '.EditFeature .Lookup-Status',
     zoom: '.ZoomToFeature',
-    loader: 'EditFeatureContainer .MuiLinearProgress-root'
+    loader: 'EditFeature .MuiLinearProgress-root'
   };
 
   copyFeaturesButton = new CopyFeaturesButtonBlock(this.selectors.container);
@@ -105,68 +97,10 @@ class EditFeatureBlock extends Block {
     return contents;
   }
 
-  async clickGeometryAsTextButton(): Promise<void> {
-    const $editFeatureGeometryAsText = await editFeatureBlock.findBySelector('editFeatureGeometryAsTextBtn');
-
-    await $editFeatureGeometryAsText.waitForDisplayed();
-    await $editFeatureGeometryAsText.click();
-    await sleep(400); // анимация открытия диалога
-  }
-
-  async clickAddGeometryButton(): Promise<void> {
-    const $editFeatureGeometryAddGeometryBtn = await editFeatureBlock.findBySelector(
-      'editFeatureGeometryAddGeometryBtn'
-    );
-
-    await $editFeatureGeometryAddGeometryBtn.waitForDisplayed();
-    await $editFeatureGeometryAddGeometryBtn.click();
-  }
-
-  async hoverCopyCoordsButton(): Promise<void> {
-    const $editFeatureGeometryCopyCoordsBtn = await editFeatureBlock.findBySelector('editFeatureGeometryCopyCoordsBtn');
-
-    await $editFeatureGeometryCopyCoordsBtn.waitForDisplayed();
-    await $editFeatureGeometryCopyCoordsBtn.moveTo();
-  }
-
-  async clickDeletePolygonButton(): Promise<void> {
-    const $editFeatureGeometryDeletePolygonBtn = await editFeatureBlock.findBySelector(
-      'editFeatureGeometryDeletePolygonBtn'
-    );
-
-    await $editFeatureGeometryDeletePolygonBtn.waitForDisplayed();
-    await $editFeatureGeometryDeletePolygonBtn.click();
-  }
-
-  async clickDeleteGroupButton(): Promise<void> {
-    const $editFeatureGeometryDeleteGroupBtn = await editFeatureBlock.findBySelector(
-      'editFeatureGeometryDeleteGroupBtn'
-    );
-
-    await $editFeatureGeometryDeleteGroupBtn.waitForDisplayed();
-    await $editFeatureGeometryDeleteGroupBtn.click();
-  }
-
-  async clickDeleteCoordButton(): Promise<void> {
-    const $editFeatureGeometryDeleteCoordBtn = await editFeatureBlock.findBySelector(
-      'editFeatureGeometryDeleteCoordBtn'
-    );
-
-    await $editFeatureGeometryDeleteCoordBtn.waitForDisplayed();
-    await $editFeatureGeometryDeleteCoordBtn.click();
-  }
-
-  async clickEditOnMap(): Promise<void> {
-    const $editFeatureGeometryDraw = await editFeatureBlock.findBySelector('editFeatureGeometryDraw');
-
-    await $editFeatureGeometryDraw.waitForDisplayed();
-    await $editFeatureGeometryDraw.click();
-  }
-
   async isReadonlyMode(): Promise<boolean> {
     const $container = await editFeatureBlock.findBySelector('container');
 
-    return hasClass($container, 'EditFeatureContainer_readonly');
+    return hasClass($container, 'EditFeature_readonly');
   }
 
   async openGeometryTab(): Promise<void> {
@@ -184,18 +118,11 @@ class EditFeatureBlock extends Block {
     return $container.$('.EditFeatureGeometry-View').getText();
   }
 
-  async getGeometryInEditMode(): Promise<string[]> {
-    const $showAsTextBtn = await editFeatureBlock.findBySelector('editFeatureGeometryAsTextBtn');
-    await $showAsTextBtn.scrollIntoView();
-
-    const $container = await editFeatureBlock.findBySelector('container');
-
-    return await extractValues([...(await $container.$$('.EditFeatureGeometry-CoordInput input').getElements())]);
-  }
-
   async waitForEditFeatureForm(): Promise<void> {
     const $editFeatureForm = await this.findBySelector('editFeatureForm');
     await $editFeatureForm.waitForDisplayed();
+    const $someField = await this.findBySelector('editFeatureField');
+    await $someField.waitForDisplayed({ timeoutMsg: 'Не отобразилось ни одно поле в форме' });
   }
 
   async changeEditFormFieldValue(title: string, value: string): Promise<void> {

@@ -232,6 +232,7 @@ export class ExplorerAdapterTypeLibrary {
               <LibraryKptRequest library={item.payload} />
             </>
           )}
+          {/* eslint-disable-next-line react/jsx-no-bind -- FIXME in #3782 */}
           {full && recordCreationAllowed && <CreateLibraryRecord library={item.payload} onCreate={handleCreate} />}
           <LibraryDeletedDocumentsSwitch library={currentItem} />
           <LibraryViewSwitch to='registry' library={currentItem} path={[]} />

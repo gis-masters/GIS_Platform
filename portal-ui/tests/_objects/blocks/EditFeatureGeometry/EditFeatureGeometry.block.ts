@@ -1,4 +1,5 @@
 import { Block } from '../../Block';
+import { extractValues } from '../../commands/extractText';
 import { MuiInputBlock } from '../MuiInput/MuiInput.block';
 
 class EditFeatureGeometryBlock extends Block {
@@ -11,8 +12,14 @@ class EditFeatureGeometryBlock extends Block {
     warningIcon: '.MuiSvgIcon-colorWarning',
     geometryForm: '.EditFeatureGeometry-Form',
     groupFooter: '.EditFeatureGeometry-GroupFooter',
-    coordInput: '.EditFeatureGeometry-Form .EditFeatureGeometry-CoordInput',
-    geometryFixBtn: '.EditFeatureGeometryValidationError-Button'
+    coordInput: '.EditFeatureGeometry-Form .EditFeatureGeometry-CoordInput input',
+    geometryFixBtn: '.EditFeatureGeometryValidationError-Button',
+    addGeometryBtn: '.EditFeatureGeometry-AddGeometry',
+    copyCoordsBtn: '.EditFeatureGeometry-CopyCoords',
+    deleteBtn: '.EditFeatureGeometry-DelButton',
+    deleteCoordBtn: '.EditFeatureGeometry-CoordDel',
+    draw: '.EditFeatureGeometry-Draw',
+    asTextBtn: '.EditFeatureGeometry-AsText'
   };
 
   async getEditFormCoordsIndexes(): Promise<string[]> {
@@ -52,14 +59,12 @@ class EditFeatureGeometryBlock extends Block {
   async addNodeClick(): Promise<void> {
     const $$groupFooter = await this.findAllBySelector('groupFooter');
     const $firstGroupFooter = $$groupFooter[0];
-
     const $addCoord = await $firstGroupFooter.$('.EditFeatureGeometry-AddNode').getElement();
     await $addCoord.click();
   }
 
   async geometryFixBtnClick(): Promise<void> {
     const $geometryFixBtn = await this.findBySelector('geometryFixBtn');
-
     await $geometryFixBtn.click();
   }
 
@@ -82,9 +87,60 @@ class EditFeatureGeometryBlock extends Block {
 
   async selectFirstInput(): Promise<void> {
     const $$coordInput = await this.findAllBySelector('coordInput');
-
     await $$coordInput[0].waitForClickable();
     await $$coordInput[0].click();
+  }
+
+  async clickGeometryAsTextButton(): Promise<void> {
+    const $asText = await this.findBySelector('asTextBtn');
+    await $asText.waitForDisplayed();
+    await $asText.click();
+    await browser.pause(400); // анимация открытия диалога
+  }
+
+  async clickAddGeometryButton(): Promise<void> {
+    const $addGeometryBtn = await this.findBySelector('addGeometryBtn');
+    await $addGeometryBtn.waitForDisplayed();
+    await $addGeometryBtn.click();
+  }
+
+  async hoverCopyCoordsButton(): Promise<void> {
+    const $copyCoordsBtn = await this.findBySelector('copyCoordsBtn');
+    await $copyCoordsBtn.waitForDisplayed();
+    await $copyCoordsBtn.moveTo();
+  }
+
+  // FIXME: разобраться, почему с clickDeleteGroupButton один и тот же селектор
+  async clickDeletePolygonButton(): Promise<void> {
+    const $deletePolygonBtn = await this.findBySelector('deleteBtn');
+    await $deletePolygonBtn.waitForDisplayed();
+    await $deletePolygonBtn.click();
+  }
+
+  async clickDeleteGroupButton(): Promise<void> {
+    const $deleteGroupBtn = await this.findBySelector('deleteBtn');
+    await $deleteGroupBtn.waitForDisplayed();
+    await $deleteGroupBtn.click();
+  }
+
+  async clickDeleteCoordButton(): Promise<void> {
+    const $deleteCoordBtn = await this.findBySelector('deleteCoordBtn');
+    await $deleteCoordBtn.waitForDisplayed();
+    await $deleteCoordBtn.click();
+  }
+
+  async clickEditOnMap(): Promise<void> {
+    const $draw = await this.findBySelector('draw');
+    await $draw.waitForDisplayed();
+    await $draw.click();
+  }
+
+  async getGeometryInEditMode(): Promise<string[]> {
+    const $showAsTextBtn = await this.findBySelector('asTextBtn');
+    await $showAsTextBtn.scrollIntoView();
+    const $$inputs = await this.findAllBySelector('coordInput');
+
+    return await extractValues([...$$inputs]);
   }
 }
 

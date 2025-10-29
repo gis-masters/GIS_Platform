@@ -1,21 +1,19 @@
 import React, { Component, type FC, type ReactNode } from 'react';
 import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { IconButton } from '@mui/material';
-import { CheckCircle, Close, Error, Info, Warning } from '@mui/icons-material';
+import { CheckCircle, Error, Info, Warning } from '@mui/icons-material';
 import { type SvgIconProps } from '@mui/material/SvgIcon/';
-import { cn } from '@bem-react/classname';
 import nl2br from 'react-nl2br';
 import { type Id, toast, type ToastOptions, type TypeOptions } from 'react-toastify';
 
 import { environment } from '../../services/environment';
 import { sendTelegramError } from '../../services/telegram.service';
 import { isRecordStringUnknown } from '../../services/util/typeGuards/isRecordStringUnknown';
+import { ToastCloseButton } from './CloseButton/Toast-CloseButton';
+import { cnToast } from './Toast.classname';
 
 import '../../../../node_modules/react-toastify/dist/ReactToastify.css';
 import './Toast.scss';
-
-const cnToast = cn('Toast');
 
 interface ToastOpts extends ToastOptions {
   message?: ReactNode;
@@ -63,20 +61,11 @@ export class Toast extends Component<ToastProps> {
     const normalizedOpts = this.normalizeOpts(message, opts);
     const Icon = this.icons[normalizedOpts.type || 'default'] || null;
     const toastInfo: { id: Id } = { id: '0' };
-    const handleClose = () => {
-      toast.dismiss(toastInfo.id);
-    };
 
     opts = {
       ...normalizedOpts,
-      className: 'Toast-Toastify',
-      closeButton: (
-        <>
-          <IconButton type='button' className={cnToast('Close')} onClick={handleClose}>
-            <Close className={cnToast('CloseIcon')} />
-          </IconButton>
-        </>
-      )
+      className: cnToast('Toastify'),
+      closeButton: <ToastCloseButton toastId={toastInfo} />
     };
 
     const props: ToastProps = {

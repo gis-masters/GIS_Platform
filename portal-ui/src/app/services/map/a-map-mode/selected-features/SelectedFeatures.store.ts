@@ -150,7 +150,7 @@ class SelectedFeaturesStore {
   }
 
   /**
-   * Красиво распечатывает текущее состояние SelectedFeaturesStore в консоль
+   * Красиво распечатывает текущее состояние SelectedFeaturesStore в консоль. Но зачем?
    */
   printState(): void {
     services.logger.trace('🎯 Состояние SelectedFeaturesStore:');

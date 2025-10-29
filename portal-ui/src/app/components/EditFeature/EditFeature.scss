@@ -1,0 +1,51 @@
+body .EditFeature {
+  position: absolute;
+  inset: 0;
+
+  display: flex;
+  overflow: hidden;
+  flex-direction: column;
+
+  padding-bottom: 120px;
+
+  &-Controls {
+    display: flex;
+
+    padding: 15px 8px 15px 15px;
+
+    border-bottom: 1px solid rgb(0 0 0 / 12%);
+  }
+
+  &-ButtonsBox {
+    min-width: 211px;
+  }
+
+  &-NavigationBox {
+    display: flex;
+    flex-grow: 1;
+    justify-content: center;
+  }
+
+  &-Save {
+    float: left;
+  }
+
+  &-Delete {
+    margin-left: 10px;
+  }
+
+  &-Tabs {
+    display: contents;
+  }
+
+  &-Tab {
+    display: flex;
+    flex-direction: column;
+
+    .MuiTab-root {
+      padding: 0 24px;
+
+      text-transform: none;
+    }
+  }
+}

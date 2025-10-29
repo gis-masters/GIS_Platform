@@ -1,4 +1,4 @@
-import React, { type FC } from 'react';
+import React, { type FC, useCallback } from 'react';
 import { observer, useLocalObservable } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { Document, Page } from 'react-pdf';
@@ -31,10 +31,17 @@ export const CarouselDocument: FC<CarouselDocumentProps> = observer(({ imageWith
 
   const { pages, setPages } = store;
 
-  const onDocumentLoad = ({ numPages }: { numPages: number }) => {
-    setPages([...(Array(numPages) as unknown[])]);
-    onLoad();
-  };
+  const onDocumentLoad = useCallback(
+    ({ numPages }: { numPages: number }) => {
+      setPages([...(Array(numPages) as unknown[])]);
+      onLoad();
+    },
+    [onLoad, setPages]
+  );
+
+  const renderPage = useCallback((_: unknown, index: number) => {
+    return <Page key={index} pageNumber={index + 1} width={1000} />;
+  }, []);
 
   return (
     <Document
@@ -44,7 +51,7 @@ export const CarouselDocument: FC<CarouselDocumentProps> = observer(({ imageWith
       onLoadSuccess={onDocumentLoad}
       onLoadError={onLoad}
     >
-      {pages?.map((_, index) => <Page key={index} pageNumber={index + 1} width={1000} />)}
+      {pages?.map(renderPage)}
     </Document>
   );
 });

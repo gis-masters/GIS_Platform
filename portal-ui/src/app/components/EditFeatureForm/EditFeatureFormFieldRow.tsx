@@ -5,7 +5,7 @@ import { cn } from '@bem-react/classname';
 
 import { convertOldToNewProperty } from '../../services/data/schema/schema.utils';
 import { type EditedField, type OldPropertySchema } from '../../services/data/schema/schemaOld.models';
-import { type EditFeatureContainerFormControl } from '../EditFeatureContainer/hooks/useEditFeatureState';
+import { type EditFeatureFormControl } from '../EditFeature/hooks/useEditFeatureState';
 import { FormDescription } from '../Form/Description/Form-Description';
 import FormControlWrapper from '../FormControl/FormControlWrapper';
 import { IconButton } from '../IconButton/IconButton';
@@ -17,7 +17,7 @@ export const cnEditFeatureForm = cn('EditFeatureForm');
 interface EditFeatureFormFieldRowProps {
   editFeatureItem: EditedField;
   property: OldPropertySchema;
-  formControls: EditFeatureContainerFormControl[];
+  formControls: EditFeatureFormControl[];
   handleWrapperChange: (value: unknown, name: string) => void;
   updatingAllowed: boolean;
   mode: 'single' | 'multipleEdit' | undefined;
@@ -43,7 +43,7 @@ const renderLabel = (editFeatureItem: EditedField, property: OldPropertySchema):
 const renderFormControl = (
   property: OldPropertySchema,
   editFeatureItem: EditedField,
-  formControls: EditFeatureContainerFormControl[],
+  formControls: EditFeatureFormControl[],
   handleWrapperChange: (value: unknown, name: string) => void,
   updatingAllowed: boolean
 ): ReactElement => (

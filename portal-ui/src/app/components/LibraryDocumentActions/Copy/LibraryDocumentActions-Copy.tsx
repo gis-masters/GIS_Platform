@@ -1,4 +1,4 @@
-import React, { type FC, useEffect } from 'react';
+import React, { type FC, useCallback, useEffect } from 'react';
 import { observer, useLocalObservable } from 'mobx-react-lite';
 import { ContentCopy, ContentCopyOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
@@ -70,14 +70,14 @@ export const LibraryDocumentActionsCopy: FC<LibraryDocumentActionsFilesPlacement
       })
     );
 
-    const clearedFields = (): PropertySchema[] => {
+    const clearedFields = useCallback((): PropertySchema[] => {
       const { properties = [] } = schema || {};
       const excludedNames = new Set(['regdate', 'regnum']);
 
       return properties
         .filter(({ propertyType }) => propertyType !== PropertyType.BINARY)
         .filter(({ name }) => !excludedNames.has(name));
-    };
+    }, [schema]);
 
     useEffect(() => {
       const fetchLibrary = async () => {
@@ -90,42 +90,57 @@ export const LibraryDocumentActionsCopy: FC<LibraryDocumentActionsFilesPlacement
       void fetchLibrary();
     }, [document?.libraryTableName, state]);
 
-    const selectFolder = async (selectedFolder: LibraryRecord | null) => {
-      state.setLoading(true);
+    const createDocumentUrl = useCallback(
+      async (targetFolder: LibraryRecord | null) => {
+        if (!targetFolder) {
+          Toast.warn('Ошибка копирования документа');
 
-      try {
-        const schemaPropertyNames = clearedFields().map(prop => prop.name) || [];
-
-        const newDoc: Record<string, unknown> = {
-          content_type_id: document.content_type_id,
-          path: selectedFolder?.path + '/' + selectedFolder?.id
-        };
-
-        schemaPropertyNames.forEach(propName => {
-          if (Object.hasOwn(document, propName) && propName !== 'path') {
-            newDoc[propName] = document[propName];
-          }
-        });
-
-        await createLibraryRecord(newDoc, document.libraryTableName);
-
-        await createDocumentUrl(selectedFolder);
-        successMessage();
-      } catch (error) {
-        if (isAxiosError<{ message?: string }>(error)) {
-          Toast.error({
-            message: error.response?.data?.message || error?.message
-          });
-        } else {
-          Toast.error({ message: 'Не удалось копировать' });
+          return;
         }
-      } finally {
-        state.setLoading(false);
-        state.closeDocumentCopyDialog();
-      }
-    };
 
-    const successMessage = () => {
+        const { libraryTableName, path } = targetFolder;
+        const currentItem = ['doc', document.id];
+
+        try {
+          let parentsInfo = await Promise.all(
+            getIdsFromPath(path || '').map(async pathId => {
+              const { id, title } = await getLibraryRecord(libraryTableName, pathId);
+
+              return { id, title };
+            })
+          );
+
+          parentsInfo.push({ id: targetFolder.id, title: targetFolder.title });
+          parentsInfo = parentsInfo.filter(notFalsyFilter);
+
+          let pathWithCurrent = '';
+
+          parentsInfo?.forEach((_, index) => {
+            const folders: (string | number)[] = [];
+            for (let i = 0; i < index + 1; i++) {
+              folders.push('folder', parentsInfo[i].id);
+            }
+
+            pathWithCurrent = JSON.stringify([
+              ...libraryRootUrlItems,
+              'library',
+              libraryTableName,
+              ...folders,
+              ...currentItem
+            ]);
+          });
+
+          state.setUrl(`/data-management?path_dm=${pathWithCurrent}`);
+        } catch (error) {
+          const err = error as AxiosError;
+          Toast.warn(`Ошибка копирования документа. ${err.message}`);
+          services.logger.warn(`Ошибка копирования документа. ${document.id} ${err.message}`);
+        }
+      },
+      [document.id, state]
+    );
+
+    const successMessage = useCallback(() => {
       const { title } = document;
 
       Toast.success(
@@ -135,54 +150,45 @@ export const LibraryDocumentActionsCopy: FC<LibraryDocumentActionsFilesPlacement
         </>,
         { duration: 15_000 }
       );
-    };
+    }, [document, state.url]);
 
-    const createDocumentUrl = async (targetFolder: LibraryRecord | null) => {
-      if (!targetFolder) {
-        Toast.warn('Ошибка копирования документа');
+    const selectFolder = useCallback(
+      async (selectedFolder: LibraryRecord | null) => {
+        state.setLoading(true);
 
-        return;
-      }
+        try {
+          const schemaPropertyNames = clearedFields().map(prop => prop.name) || [];
 
-      const { libraryTableName, path } = targetFolder;
-      const currentItem = ['doc', document.id];
+          const newDoc: Record<string, unknown> = {
+            content_type_id: document.content_type_id,
+            path: selectedFolder?.path + '/' + selectedFolder?.id
+          };
 
-      try {
-        let parentsInfo = await Promise.all(
-          getIdsFromPath(path || '').map(async pathId => {
-            const { id, title } = await getLibraryRecord(libraryTableName, pathId);
+          schemaPropertyNames.forEach(propName => {
+            if (Object.hasOwn(document, propName) && propName !== 'path') {
+              newDoc[propName] = document[propName];
+            }
+          });
 
-            return { id, title };
-          })
-        );
+          await createLibraryRecord(newDoc, document.libraryTableName);
 
-        parentsInfo.push({ id: targetFolder.id, title: targetFolder.title });
-        parentsInfo = parentsInfo.filter(notFalsyFilter);
-
-        let pathWithCurrent = '';
-
-        parentsInfo?.forEach((_, index) => {
-          const folders: (string | number)[] = [];
-          for (let i = 0; i < index + 1; i++) {
-            folders.push('folder', parentsInfo[i].id);
+          await createDocumentUrl(selectedFolder);
+          successMessage();
+        } catch (error) {
+          if (isAxiosError<{ message?: string }>(error)) {
+            Toast.error({
+              message: error.response?.data?.message || error?.message
+            });
+          } else {
+            Toast.error({ message: 'Не удалось копировать' });
           }
-
-          pathWithCurrent = JSON.stringify([
-            ...libraryRootUrlItems,
-            'library',
-            libraryTableName,
-            ...folders,
-            ...currentItem
-          ]);
-        });
-
-        state.setUrl(`/data-management?path_dm=${pathWithCurrent}`);
-      } catch (error) {
-        const err = error as AxiosError;
-        Toast.warn(`Ошибка копирования документа. ${err.message}`);
-        services.logger.warn(`Ошибка копирования документа. ${document.id} ${err.message}`);
-      }
-    };
+        } finally {
+          state.setLoading(false);
+          state.closeDocumentCopyDialog();
+        }
+      },
+      [clearedFields, createDocumentUrl, document, state, successMessage]
+    );
 
     const { role } = document;
 

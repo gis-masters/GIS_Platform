@@ -4,9 +4,9 @@ import { Component, ElementRef, type OnChanges, type OnDestroy, type OnInit, Vie
 import { withRegistry } from '@bem-react/di';
 
 import { registry } from '../../services/di-registry';
-import { EditFeatureContainer } from '../EditFeatureContainer/EditFeatureContainer';
+import { EditFeature } from '../EditFeature/EditFeature';
 
-const EditFeatureBoxWithRegistry = withRegistry(registry)(EditFeatureContainer);
+const EditFeatureBoxWithRegistry = withRegistry(registry)(EditFeature);
 
 @Component({
   selector: 'crg-edit-feature',

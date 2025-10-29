@@ -159,7 +159,9 @@ export class ExplorerAdapterTypeProjectsRoot {
 
     return organizationSettings.createProject ? (
       <>
+        {/* eslint-disable-next-line react/jsx-no-bind -- FIXME in #3782 */}
         <CreateProject currentProjectFolderId={parentId} onCreate={handleCreate} />
+        {/* eslint-disable-next-line react/jsx-no-bind -- FIXME in #3782 */}
         <CreateProject currentProjectFolderId={parentId} isFolder onCreate={handleCreate} />
       </>
     ) : null;

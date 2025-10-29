@@ -13,7 +13,7 @@ export interface ShouldRender {
   noLayerSchema: boolean;
 }
 
-export interface EditFeatureContainerFormControl {
+export interface EditFeatureFormControl {
   key: string;
   value: unknown;
   validators?: ValidationResult[];
@@ -50,8 +50,8 @@ export interface EditFeatureState {
   setLayerSchema: (layerSchema: Schema | undefined) => void;
   featureDescription: OldSchema | undefined;
   setFeatureDescription: (featureDescription: OldSchema | undefined) => void;
-  formControls: EditFeatureContainerFormControl[];
-  setFormControls: (formControls: EditFeatureContainerFormControl[]) => void;
+  formControls: EditFeatureFormControl[];
+  setFormControls: (formControls: EditFeatureFormControl[]) => void;
 }
 
 export const useEditFeatureState = (): EditFeatureState => {
@@ -113,7 +113,7 @@ export const useEditFeatureState = (): EditFeatureState => {
       this.featureDescription = featureDescription;
     },
     formControls: [],
-    setFormControls(this: EditFeatureState, formControls: EditFeatureContainerFormControl[]): void {
+    setFormControls(this: EditFeatureState, formControls: EditFeatureFormControl[]): void {
       this.formControls = formControls;
     }
   }));

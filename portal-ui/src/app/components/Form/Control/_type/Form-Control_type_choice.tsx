@@ -77,6 +77,7 @@ class FormControlTypeChoice extends Component<FormControlProps> {
               onChange={this.handleSelectChange}
               error={!!errors?.length}
               inputProps={{ id: htmlId }}
+              // eslint-disable-next-line react/jsx-no-bind -- FIXME #3792
               renderValue={selected => {
                 if (multiple) {
                   const title = this.getMultipleTitle(options, selected);
@@ -150,7 +151,7 @@ class FormControlTypeChoice extends Component<FormControlProps> {
   }
 
   /**
-   * Рендерит выбранные значения в multiple режиме
+   * Выводит выбранные значения в multiple режиме
    */
   private getMultipleTitle(options: PropertyOption[], jsonValues: string | number | (string | number)[]): ReactNode {
     if (!jsonValues || jsonValues === '' || jsonValues === null || jsonValues === undefined) {

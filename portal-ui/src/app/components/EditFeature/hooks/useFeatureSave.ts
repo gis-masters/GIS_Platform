@@ -28,7 +28,7 @@ import { konfirmieren } from '../../../services/utility-dialogs.service';
 import { mapStore } from '../../../stores/Map.store';
 import { applyFieldValue } from '../../Form/Form.utils';
 import { Toast } from '../../Toast/Toast';
-import { type EditFeatureContainerFormControl } from './useEditFeatureState';
+import { type EditFeatureFormControl } from './useEditFeatureState';
 
 interface Properties {
   [key: string]: unknown;
@@ -51,7 +51,7 @@ export const useFeatureSave = ({
 }: {
   features: WfsFeature[];
   currentFeatures: WfsFeature[];
-  formControls: EditFeatureContainerFormControl[];
+  formControls: EditFeatureFormControl[];
   featureDescription: OldSchema | undefined;
   editFeatureData: EditedField[];
   layer: CrgVectorableLayer | CrgVectorLayer | undefined;
@@ -65,7 +65,7 @@ export const useFeatureSave = ({
       return result;
     }
 
-    formControls.forEach((property: EditFeatureContainerFormControl) => {
+    formControls.forEach((property: EditFeatureFormControl) => {
       if (property?.dirty) {
         const prop = { ...editFeatureData.find(({ name }) => name === property.key), value: property.value };
 

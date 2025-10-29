@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { Input, Slider } from '@mui/material';
 import {
   AllInclusive,
@@ -41,23 +41,23 @@ const Template: StoryFn<typeof Breadcrumbs> = props => {
     Icon = WidthFull;
   }
 
-  const handleSliderChange = (e: Event, value: number | number[]) => {
+  const handleSliderChange = useCallback((e: Event, value: number | number[]) => {
     if (typeof value === 'number') {
       setMaxWidth(value);
     }
-  };
+  }, []);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     setMaxWidth(e.target.value === '' ? MAX : Number(e.target.value));
-  };
+  }, []);
 
-  const handleBlur = () => {
+  const handleBlur = useCallback(() => {
     if (maxWidth < MIN) {
       setMaxWidth(MIN);
     } else if (maxWidth > MAX) {
       setMaxWidth(MAX);
     }
-  };
+  }, [maxWidth]);
 
   return (
     <div className={cnBreadcrumbsStory()}>

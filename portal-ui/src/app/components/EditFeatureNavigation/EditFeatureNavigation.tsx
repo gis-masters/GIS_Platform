@@ -3,6 +3,7 @@ import { observer } from 'mobx-react';
 import { Tooltip } from '@mui/material';
 import { ArrowBackIosNew, ArrowForwardIos } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
+import { type IClassNameProps } from '@bem-react/core';
 import { cloneDeep } from 'lodash';
 
 import { type WfsFeature } from '../../services/geoserver/wfs/wfs.models';
@@ -11,7 +12,7 @@ import { editFeatureStore } from '../../services/map/a-map-mode/edit-feature/Edi
 import { mapModeManager } from '../../services/map/a-map-mode/MapModeManager';
 import { selectedFeaturesStore } from '../../services/map/a-map-mode/selected-features/SelectedFeatures.store';
 import { MapMode } from '../../services/map/map.models';
-import { type EditFeatureContainerFormControl } from '../EditFeatureContainer/hooks/useEditFeatureState';
+import { type EditFeatureFormControl } from '../EditFeature/hooks/useEditFeatureState';
 import { IconButton } from '../IconButton/IconButton';
 
 import './EditFeatureNavigation.scss';
@@ -19,7 +20,7 @@ import './EditFeatureNavigation.scss';
 const changeFeature = async (
   feature: WfsFeature,
   setFeatures: (features: WfsFeature[]) => void,
-  setFormControls: (features: EditFeatureContainerFormControl[]) => void
+  setFormControls: (features: EditFeatureFormControl[]) => void
 ) => {
   if (!selectedFeaturesStore.features) {
     return;
@@ -48,63 +49,69 @@ const changeFeature = async (
 
 const cnEditFeatureNavigation = cn('EditFeatureNavigation');
 
-interface EditFeatureNavigationProps {
+interface EditFeatureNavigationProps extends IClassNameProps {
   setFeatures(features: WfsFeature[]): void;
-  setFormControls(formControl: EditFeatureContainerFormControl[]): void;
+  setFormControls(formControl: EditFeatureFormControl[]): void;
 }
 
-export const EditFeatureNavigation: FC<EditFeatureNavigationProps> = observer(({ setFeatures, setFormControls }) => {
-  const feature = editFeatureStore.editFeaturesData?.features[0];
-  const currentIndex = feature ? selectedFeaturesStore.features?.findIndex(feat => feature.id === feat.id) : undefined;
+export const EditFeatureNavigation: FC<EditFeatureNavigationProps> = observer(
+  ({ className, setFeatures, setFormControls }) => {
+    const feature = editFeatureStore.editFeaturesData?.features[0];
+    const currentIndex = feature
+      ? selectedFeaturesStore.features?.findIndex(feat => feature.id === feat.id)
+      : undefined;
 
-  const prevHandler = useCallback(() => {
-    if (typeof currentIndex === 'number' && currentIndex >= 0 && currentIndex >= 0) {
-      void changeFeature(selectedFeaturesStore.features[currentIndex - 1], setFeatures, setFormControls);
-    }
-  }, [currentIndex, setFeatures, setFormControls]);
+    const prevHandler = useCallback(() => {
+      if (typeof currentIndex === 'number' && currentIndex >= 0 && currentIndex >= 0) {
+        void changeFeature(selectedFeaturesStore.features[currentIndex - 1], setFeatures, setFormControls);
+      }
+    }, [currentIndex, setFeatures, setFormControls]);
 
-  const nextHandler = useCallback(() => {
-    if (typeof currentIndex === 'number' && currentIndex >= 0) {
-      void changeFeature(selectedFeaturesStore.features[currentIndex + 1], setFeatures, setFormControls);
-    }
-  }, [currentIndex, setFeatures, setFormControls]);
+    const nextHandler = useCallback(() => {
+      if (typeof currentIndex === 'number' && currentIndex >= 0) {
+        void changeFeature(selectedFeaturesStore.features[currentIndex + 1], setFeatures, setFormControls);
+      }
+    }, [currentIndex, setFeatures, setFormControls]);
 
-  const canBeRendered =
-    !!selectedFeaturesStore.features &&
-    selectedFeaturesStore.features?.length > 1 &&
-    typeof currentIndex === 'number' &&
-    currentIndex >= 0;
+    const canBeRendered =
+      !!selectedFeaturesStore.features &&
+      selectedFeaturesStore.features?.length > 1 &&
+      typeof currentIndex === 'number' &&
+      currentIndex >= 0;
 
-  return (
-    <>
-      {canBeRendered && (
-        <div className={cnEditFeatureNavigation()}>
-          <Tooltip title='Предыдущий объект'>
-            <span className={cnEditFeatureNavigation('Prev')}>
-              <IconButton disabled={!selectedFeaturesStore.features || currentIndex === 0} onClick={prevHandler}>
-                <ArrowBackIosNew />
-              </IconButton>
+    return (
+      <>
+        {canBeRendered && (
+          <div className={cnEditFeatureNavigation(null, [className])}>
+            <Tooltip title='Предыдущий объект'>
+              <span className={cnEditFeatureNavigation('Prev')}>
+                <IconButton disabled={!selectedFeaturesStore.features || currentIndex === 0} onClick={prevHandler}>
+                  <ArrowBackIosNew />
+                </IconButton>
+              </span>
+            </Tooltip>
+
+            <span className={cnEditFeatureNavigation('TextBox')}>
+              {currentIndex + 1}
+              <span className={cnEditFeatureNavigation('Text')}> из</span>
+              {selectedFeaturesStore.features.length}
             </span>
-          </Tooltip>
 
-          <span className={cnEditFeatureNavigation('TextBox')}>
-            {currentIndex + 1}
-            <span className={cnEditFeatureNavigation('Text')}> из</span>
-            {selectedFeaturesStore.features.length}
-          </span>
-
-          <Tooltip title='Следующий объект'>
-            <span className={cnEditFeatureNavigation('Next')}>
-              <IconButton
-                disabled={!selectedFeaturesStore.features || currentIndex + 1 === selectedFeaturesStore.features.length}
-                onClick={nextHandler}
-              >
-                <ArrowForwardIos />
-              </IconButton>
-            </span>
-          </Tooltip>
-        </div>
-      )}
-    </>
-  );
-});
+            <Tooltip title='Следующий объект'>
+              <span className={cnEditFeatureNavigation('Next')}>
+                <IconButton
+                  disabled={
+                    !selectedFeaturesStore.features || currentIndex + 1 === selectedFeaturesStore.features.length
+                  }
+                  onClick={nextHandler}
+                >
+                  <ArrowForwardIos />
+                </IconButton>
+              </span>
+            </Tooltip>
+          </div>
+        )}
+      </>
+    );
+  }
+);

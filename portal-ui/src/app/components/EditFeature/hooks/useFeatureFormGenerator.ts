@@ -29,20 +29,20 @@ import { EditFeatureMode } from '../../../services/map/a-map-mode/edit-feature/E
 import { formatDate, systemFormat } from '../../../services/util/date.util';
 import { validateCustomRules, type ValidationError } from '../../../services/util/FeaturePropertyValidatorsReact';
 import { convertToComplexField } from '../../Form/Form.utils';
-import { type EditFeatureContainerFormControl } from './useEditFeatureState';
+import { type EditFeatureFormControl } from './useEditFeatureState';
 
 export const useFeatureFormGenerator = (
   currentFeature: WfsFeature,
-  formControls: EditFeatureContainerFormControl[],
+  formControls: EditFeatureFormControl[],
   mode: EditFeatureMode,
-  setFormControls: (formControls: EditFeatureContainerFormControl[]) => void,
+  setFormControls: (formControls: EditFeatureFormControl[]) => void,
   setEditFeatureData: (editFeatureData: EditedField[]) => void,
   setFeatureDescription: (featureDescription: OldSchema | undefined) => void,
   layerSchema?: Schema,
   featureDescription?: OldSchema,
   layer?: CrgVectorableLayer | CrgVectorLayer
 ): void => {
-  const currentDepsRef = useRef<EditFeatureContainerFormControl[]>();
+  const currentDepsRef = useRef<EditFeatureFormControl[]>();
 
   useEffect(() => {
     if (!layerSchema || !currentFeature || !featureDescription || !layer) {
@@ -71,7 +71,7 @@ export const useFeatureFormGenerator = (
 
     const convertedProperties = convertOldToNewProperties(featureProps);
     const newEditFeatureData: EditedField[] = [];
-    const newFormControls: EditFeatureContainerFormControl[] = [];
+    const newFormControls: EditFeatureFormControl[] = [];
 
     Object.keys(currentFeature.properties)
       .filter(key => {
@@ -182,12 +182,12 @@ export const useFeatureFormGenerator = (
         }
       });
 
-    const validateRules = (featureProperties: { [key: string]: unknown }): EditFeatureContainerFormControl[] => {
+    const validateRules = (featureProperties: { [key: string]: unknown }): EditFeatureFormControl[] => {
       if (!featureDescription) {
         return [];
       }
 
-      const controlsWithErrors: EditFeatureContainerFormControl[] = [];
+      const controlsWithErrors: EditFeatureFormControl[] = [];
 
       validateCustomRules(
         featureProperties,
