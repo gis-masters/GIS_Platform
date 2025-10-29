@@ -1,4 +1,4 @@
-import React, { type FC, useCallback, useEffect, useState } from 'react';
+import React, { type FC, useCallback, useEffect, useMemo, useState } from 'react';
 
 import { PropertyType } from '../../services/data/schema/schema.models';
 import { convertOldToNewProperties } from '../../services/data/schema/schema.utils';
@@ -27,7 +27,6 @@ const checkType = (valueType: ValueType | undefined): boolean => {
 
 const FormControlWrapper: FC<FormControlWrapperProps> = ({ property, itemValue, updatingAllowed, error, onChange }) => {
   const [updating, setUpdatingAllowed] = useState<boolean>(updatingAllowed);
-  const [properties, setProperties] = useState<FormControlProps>();
 
   const handleChange = useCallback(
     ({ value }: { value: unknown }) => {
@@ -36,7 +35,7 @@ const FormControlWrapper: FC<FormControlWrapperProps> = ({ property, itemValue, 
     [onChange, property.name]
   );
 
-  useEffect(() => {
+  const properties: FormControlProps | undefined = useMemo(() => {
     if (!property) {
       return;
     }
@@ -45,13 +44,11 @@ const FormControlWrapper: FC<FormControlWrapperProps> = ({ property, itemValue, 
 
     const [convertedProperty] = convertOldToNewProperties([property]);
     if (typeof itemValue === 'string' && convertedProperty.propertyType === PropertyType.FILE) {
-      currentValue = JSON.parse(itemValue);
-    }
-
-    setUpdatingAllowed(updatingAllowed);
-
-    if (updatingAllowed) {
-      setUpdatingAllowed(!convertedProperty.readOnly);
+      try {
+        currentValue = JSON.parse(itemValue);
+      } catch {
+        currentValue = itemValue;
+      }
     }
 
     let errors: ErrorMessages = {};
@@ -63,7 +60,7 @@ const FormControlWrapper: FC<FormControlWrapperProps> = ({ property, itemValue, 
 
     const errorArray = [...(Object.values(errors) as string[]).flat(), ...(error ? [error] : [])].filter(Boolean);
 
-    setProperties({
+    return {
       property: convertedProperty,
       errors: errorArray,
       type: convertedProperty.propertyType,
@@ -72,8 +69,23 @@ const FormControlWrapper: FC<FormControlWrapperProps> = ({ property, itemValue, 
       variant: 'outlined',
       onChange: handleChange,
       fullWidthForOldForm: true
-    });
-  }, [error, handleChange, itemValue, property, updatingAllowed]);
+    };
+    // указаны только необходимые зависимости
+  }, [property, itemValue, error]);
+
+  useEffect(() => {
+    if (!property) {
+      return;
+    }
+
+    const [convertedProperty] = convertOldToNewProperties([property]);
+
+    if (updatingAllowed) {
+      setUpdatingAllowed(!convertedProperty.readOnly);
+    } else {
+      setUpdatingAllowed(false);
+    }
+  }, [property, updatingAllowed]);
 
   return properties && (updating ? <FormControl {...properties} /> : <FormView {...properties} />);
 };

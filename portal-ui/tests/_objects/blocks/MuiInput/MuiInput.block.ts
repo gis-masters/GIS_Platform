@@ -9,6 +9,10 @@ export class MuiInputBlock extends Block {
     icon: '.MuiSvgIcon-colorWarning'
   };
 
+  public async findBySelector(selector: keyof typeof this.selectors): Promise<WebdriverIO.Element> {
+    return super.findBySelector(selector);
+  }
+
   async clearValue(): Promise<void> {
     const $input = await this.findBySelector('input');
     await $input.moveTo();

@@ -126,11 +126,23 @@ class EditFeatureBlock extends Block {
   }
 
   async changeEditFormFieldValue(title: string, value: string): Promise<void> {
-    const $formField = await this.getFeatureEditField(title);
+    const inputBlock = await this.getMuiInputBlockElement(title);
 
-    const inputBlock = new MuiInputBlock(await $formField.$('.Form-Control').getElement());
     await inputBlock.waitForVisible();
     await inputBlock.clearValue();
+    await inputBlock.setValue(value);
+  }
+
+  async addValueToEditFormFieldValue(value: string, title: string): Promise<void> {
+    const inputBlock = await this.getMuiInputBlockElement(title);
+    await inputBlock.waitForVisible();
+
+    const $input = await inputBlock.findBySelector('input');
+    await $input.click();
+
+    await browser.keys(['Home']); // Home для перехода в начало строки
+    await browser.pause(100); // пауза для гарантии
+
     await inputBlock.setValue(value);
   }
 
@@ -175,9 +187,7 @@ class EditFeatureBlock extends Block {
   }
 
   async checkFormControlFieldValue(title: string, value: string): Promise<boolean> {
-    const $formField = await this.getFeatureEditField(title);
-
-    const inputBlock = new MuiInputBlock(await $formField.$('.Form-Control').getElement());
+    const inputBlock = await this.getMuiInputBlockElement(title);
     const inputValue = await inputBlock.getValue();
 
     return inputValue === value;
@@ -195,6 +205,12 @@ class EditFeatureBlock extends Block {
     const inputBlock = await this.findBySelector('navigationTextBox');
 
     return await inputBlock.getText();
+  }
+
+  async getMuiInputBlockElement(title: string): Promise<MuiInputBlock> {
+    const $formField = await this.getFeatureEditField(title);
+
+    return new MuiInputBlock(await $formField.$('.Form-Control').getElement());
   }
 }
 

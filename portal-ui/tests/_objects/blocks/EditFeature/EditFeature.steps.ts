@@ -72,6 +72,13 @@ When(
   }
 );
 
+When(
+  'в форме редактирования объекта я дописываю значение {string} в начале поля {string}',
+  async function (value: string, title: string) {
+    await editFeatureBlock.addValueToEditFormFieldValue(value, title);
+  }
+);
+
 When('на панели выделенного объекта я нажимаю `Копировать объект в другой слой`', async function () {
   await editFeatureBlock.copyFeaturesButton.click();
 });
