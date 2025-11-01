@@ -194,6 +194,10 @@ class MapSelectionService {
             mapDrawService.showSelectionMarker(buffer.getCoordinates());
             const features: WfsFeature[] = await this.fetchFeatures(MapSelectionTypes.REPLACE, buffer);
 
+            if (hasPhotoModeInFeatures(features)) {
+              sidebars.openPhotoModePreviewer(features);
+            }
+
             await mapModeManager.changeMode(MapMode.NONE, undefined, 'прокол - нет фичей');
 
             if (features.length > 1) {
@@ -303,6 +307,7 @@ class MapSelectionService {
     mapDrawService.showSelectionMarker(buffer.getCoordinates());
 
     const features: WfsFeature[] = await this.fetchFeatures(selectionType, buffer);
+
     const limitOverflow = features.splice(
       Math.max(
         selectedFeaturesStore.limit -
