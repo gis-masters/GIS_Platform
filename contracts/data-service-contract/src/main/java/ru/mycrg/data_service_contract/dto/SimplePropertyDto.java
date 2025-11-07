@@ -61,6 +61,7 @@ public class SimplePropertyDto {
 
     private String calculatedValueFormula;
     private String validationFormula;
+    private String validationWellKnownFormula;
     private String calculatedValueWellKnownFormula;
     private String defaultValueFormula;
     private String defaultValueWellKnownFormula;
@@ -453,6 +454,14 @@ public class SimplePropertyDto {
 
     public void setValidationFormula(String validationFormula) {
         this.validationFormula = validationFormula;
+    }
+
+    public String getValidationWellKnownFormula() {
+        return validationWellKnownFormula;
+    }
+
+    public void setValidationWellKnownFormula(String validationWellKnownFormula) {
+        this.validationWellKnownFormula = validationWellKnownFormula;
     }
 
     public String getDefaultValueFormula() {

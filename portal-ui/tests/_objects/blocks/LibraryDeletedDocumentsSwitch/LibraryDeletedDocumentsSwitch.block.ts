@@ -2,12 +2,12 @@ import { Block } from '../../Block';
 
 class LibraryDeletedDocumentsSwitchBlock extends Block {
   selectors = {
-    container: '.LibraryDeletedDocumentsSwitch',
+    root: '.LibraryDeletedDocumentsSwitch',
     loading: '.LibraryRegistry .Loading'
   };
 
   async deletedDocumentsSwitch(): Promise<void> {
-    const $switch = await this.findBySelector('container');
+    const $switch = await this.findBySelector('root');
     await $switch.waitForClickable();
     await $switch.click();
 

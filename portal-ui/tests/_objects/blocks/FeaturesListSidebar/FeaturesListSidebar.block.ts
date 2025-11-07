@@ -6,7 +6,7 @@ import { FeaturesListItemBlock } from '../FeaturesListItem/FeaturesListItem.bloc
 
 class FeaturesListSidebarBlock extends Block {
   selectors = {
-    container: '.FeaturesListSidebar',
+    root: '.FeaturesListSidebar',
     closeIcon: '.FeaturesListSidebarFeatures-Close',
     item: '.FeaturesListSidebar .FeaturesListItem',
     title: '.FeaturesListSidebar .FeaturesListItem-Title'
@@ -116,8 +116,8 @@ class FeaturesListSidebarBlock extends Block {
   }
 
   async assertSelfie(tag?: string, checkElementOptions?: CheckElementMethodOptions): Promise<void> {
-    const $container = await this.findBySelector('container');
-    await $container.waitForDisplayed();
+    const $root = await this.findBySelector('root');
+    await $root.waitForDisplayed();
 
     await super.assertSelfie(tag, {
       hideElements: [...(checkElementOptions?.hideElements || [])],

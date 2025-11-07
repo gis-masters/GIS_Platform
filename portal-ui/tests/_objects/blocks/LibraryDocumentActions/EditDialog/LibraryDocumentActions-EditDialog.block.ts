@@ -3,12 +3,12 @@ import { FormBlock } from '../../Form/Form.block';
 
 class LibraryDocumentActionsEditDialogBlock extends Block {
   selectors = {
-    container: '.LibraryDocumentActions-EditDialog',
+    root: '.LibraryDocumentActions-EditDialog',
     save: '.LibraryDocumentActions-EditDialog .MuiButton-outlinedPrimary'
   };
 
   async clickDeleteFilesInField(field: string) {
-    const formBlock = new FormBlock(await this.findBySelector('container'));
+    const formBlock = new FormBlock(await this.findBySelector('root'));
     const $field = await formBlock.getField(field);
 
     const $delete = await $field.$('.Lookup-Delete').getElement();

@@ -89,7 +89,16 @@ Then('список в explorer пуст', async () => {
 
 Then('в списке элементов explorer присутствует {string}', async (itemTitle: string) => {
   const explorerBlock = new ExplorerBlock();
-  await expect(await explorerBlock.getListTitles()).toContain(itemTitle);
+  await browser.waitUntil(
+    async () => {
+      const titles = await explorerBlock.getListTitles();
+
+      return titles.includes(itemTitle);
+    },
+    {
+      timeoutMsg: `Элемент "${itemTitle}" не найден в explorer`
+    }
+  );
 });
 
 Then(

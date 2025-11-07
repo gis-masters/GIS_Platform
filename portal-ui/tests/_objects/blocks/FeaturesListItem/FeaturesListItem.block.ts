@@ -2,7 +2,7 @@ import { Block } from '../../Block';
 
 export class FeaturesListItemBlock extends Block {
   selectors = {
-    container: '.FeaturesListItem',
+    root: '.FeaturesListItem',
     id: '.FeaturesListItem-Id',
     icon: '.FeaturesListItem-Icon',
     layer: '.FeaturesListItem-Layer',

@@ -4,7 +4,10 @@
   "private": true,
   "scripts": {
     "postinstall": "cd .. && husky install portal-ui/.husky",
+    "_ensure-env": "test -f src/assets/config/environment.json || cp src/assets/config/environment.json.sample src/assets/config/environment.json",
+    "prestart": "npm run _ensure-env",
     "start": "ng serve -c dev --disable-host-check --host \"0.0.0.0\"",
+    "prestart:min": "npm run _ensure-env",
     "start:min": "ng serve --disable-host-check --host \"0.0.0.0\"",
     "build": "npm run build-storybook && ng build",
     "lint": "gherkin-lint && eslint ./src/ && stylelint ./src/**/*.*css",

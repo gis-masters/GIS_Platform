@@ -3,7 +3,7 @@ import { FormBlock } from '../Form.block';
 
 class FormControlTypeUserIdBlock extends Block {
   selectors = {
-    container: '.Form-Control_type_userId'
+    root: '.Form-Control_type_userId'
   };
 
   async clearSelectedUser(title: string): Promise<void> {

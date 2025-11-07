@@ -5,7 +5,7 @@ class BLPage extends Page {
   url = '';
 
   selectors = {
-    container: '.StoryWrapper'
+    root: '.StoryWrapper'
   };
 
   async openExample(story: string): Promise<void> {

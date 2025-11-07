@@ -4,7 +4,7 @@ import { xTableBlock } from '../XTable/XTable.block';
 
 class SelectProjectDialogBlock extends Block {
   selectors = {
-    container: '.SelectProjectDialog',
+    root: '.SelectProjectDialog',
     saveBtn: '.SelectProjectDialog .MuiButton-outlinedPrimary',
     projectRow: '.SelectProjectDialog .MuiTable-root .MuiTableRow-root',
     selectProjection: '.SelectProjectDialog .SelectProjection'

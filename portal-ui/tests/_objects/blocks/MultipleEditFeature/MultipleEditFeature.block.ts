@@ -5,10 +5,10 @@ import { MuiInputBlock } from '../MuiInput/MuiInput.block';
 
 class MultipleEditFeatureBlock extends Block {
   selectors = {
-    container: '.EditFeatureForm_multipleEdit',
+    root: '.EditFeatureForm_multipleEdit',
     editFeatureField: '.EditFeatureForm-Row',
     multipleEditButton: '.EditFeatureForm-MultipleEditButton',
-    loader: 'EditFeatureContainer .MuiLinearProgress-root'
+    loader: '.EditFeatureContainer .MuiLinearProgress-root'
   };
 
   async assertSelfie(tag?: string, checkElementOptions?: WdioCheckElementMethodOptions): Promise<void> {

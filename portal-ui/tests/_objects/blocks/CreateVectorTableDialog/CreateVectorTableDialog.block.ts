@@ -4,7 +4,7 @@ import { xTableBlock } from '../XTable/XTable.block';
 
 class CreateVectorTableDialogBlock extends Block {
   selectors = {
-    container: '.CreateVectorTableDialog',
+    root: '.CreateVectorTableDialog',
     dialogYes: '.CreateVectorTableDialog-Yes'
   };
 
@@ -16,18 +16,18 @@ class CreateVectorTableDialogBlock extends Block {
   }
 
   async openSchemaSelection() {
-    const formBlock = new FormBlock(this.selectors.container);
+    const formBlock = new FormBlock(this.selectors.root);
     await formBlock.openSchemaSelection();
     await xTableBlock.waitForLoading();
   }
 
   async setStringFieldValue(fieldTitle: string, value: string) {
-    const formBlock = new FormBlock(this.selectors.container);
+    const formBlock = new FormBlock(this.selectors.root);
     await formBlock.setStringValue(fieldTitle, value);
   }
 
   async setChoiceFieldValue(fieldTitle: string, value: string) {
-    const formBlock = new FormBlock(this.selectors.container);
+    const formBlock = new FormBlock(this.selectors.root);
     await formBlock.setChoiceValue(fieldTitle, value);
   }
 }

@@ -3,12 +3,12 @@ import { XTableBlock } from '../XTable/XTable.block';
 
 export class ChooseXTableBlock extends Block {
   selectors = {
-    container: '.ChooseXTable',
+    root: '.ChooseXTable',
     check: '.ChooseXTable-Check'
   };
 
   async getXTable(): Promise<XTableBlock> {
-    return new XTableBlock(undefined, await this.findBySelector('container'));
+    return new XTableBlock(undefined, await this.findBySelector('root'));
   }
 
   async selectOne(colTitle: string, value: string): Promise<void> {

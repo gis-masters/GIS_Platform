@@ -2,7 +2,7 @@ import { Block } from '../../Block';
 
 class RestorePasswordBlock extends Block {
   selectors = {
-    container: '.RestorePassword',
+    root: '.RestorePassword',
     email: '.RestorePassword input',
     restorePasswordBtn: '.RestorePassword button[type="submit"]'
   };

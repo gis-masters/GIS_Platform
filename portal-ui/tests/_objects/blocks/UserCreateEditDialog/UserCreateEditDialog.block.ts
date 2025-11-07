@@ -2,7 +2,7 @@ import { Block } from '../../Block';
 
 class UserCreateEditDialogBlock extends Block {
   selectors = {
-    container: '.UserCreateEditDialog',
+    root: '.UserCreateEditDialog',
     loading: '.UserCreateEditDialog .Loading',
     saveBtn: '.UserCreateEditDialog .MuiButton-outlinedPrimary'
   };

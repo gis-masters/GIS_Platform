@@ -3,7 +3,7 @@ import { MuiMenuBlock } from '../MuiMenu/MuiMenu.block';
 
 class LibraryDocumentActionsBlock extends Block {
   selectors = {
-    container: '.LibraryDocumentActions',
+    root: '.LibraryDocumentActions',
     edit: '.LibraryDocumentActions-Edit',
     createChild: '.LibraryDocumentActions-CreateChild',
     delete: '.LibraryDocumentActions-Delete',

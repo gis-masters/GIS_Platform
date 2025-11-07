@@ -3,7 +3,7 @@ import { ExplorerBlock } from '../Explorer/Explorer.block';
 
 class DocumentsSelectDialogBlock extends Block {
   selectors = {
-    container: '.DocumentsSelectDialog',
+    root: '.DocumentsSelectDialog',
     switcher: '.DocumentsSelectDialog .DocumentsSelectDialog-Switcher button',
     select: '.DocumentsSelectDialog .MuiButton-outlinedPrimary'
   };

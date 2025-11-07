@@ -4,16 +4,16 @@ import { Block } from '../../Block';
 
 class PrintMapDialogPreviewImageBlock extends Block {
   selectors = {
-    container: '.PrintMapDialog-PreviewImageContainer',
+    root: '.PrintMapDialog-PreviewImageContainer',
     printDialogDate: '.PrintMapDialog .PrintMapDialog-Date'
   };
 
   async assertSelfie(tag?: string, checkElementOptions?: WdioCheckElementMethodOptions): Promise<void> {
-    const $container = await this.findBySelector('container');
-    await $container.waitForDisplayed();
+    const $root = await this.findBySelector('root');
+    await $root.waitForDisplayed();
 
     await browser.waitUntil(async () => {
-      const { height } = await $container.getSize();
+      const { height } = await $root.getSize();
 
       return height > 0;
     });

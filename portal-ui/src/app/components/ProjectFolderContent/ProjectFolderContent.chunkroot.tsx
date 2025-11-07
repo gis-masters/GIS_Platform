@@ -5,7 +5,7 @@ import { cn } from '@bem-react/classname';
 import { type IClassNameProps } from '@bem-react/core';
 import { isEqual } from 'lodash';
 
-import { type CrgProject } from '../../services/gis/projects/projects.models';
+import { type CrgProject, crgProjectFolderSchema } from '../../services/gis/projects/projects.models';
 import { projectsService } from '../../services/gis/projects/projects.service';
 import { permissionsClient } from '../../services/permissions/permissions.client';
 import { Role } from '../../services/permissions/permissions.models';
@@ -14,7 +14,6 @@ import { currentUser } from '../../stores/CurrentUser.store';
 import { Breadcrumbs, type BreadcrumbsItemData } from '../Breadcrumbs/Breadcrumbs';
 import { ExplorerItemEntityTypeTitle } from '../Explorer/Explorer.models';
 import { PermissionsWidget } from '../PermissionsWidget/PermissionsWidget';
-import { crgProjectFolderSchema } from '../ProjectActions/ProjectActions';
 import { ViewContentWidget } from '../ViewContentWidget/ViewContentWidget';
 
 import './ProjectFolderContent.scss';

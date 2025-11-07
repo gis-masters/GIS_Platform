@@ -12,7 +12,7 @@ export const sortDirections: Record<string, SortOrder> = {
 
 class ProjectsBlock extends Block {
   selectors = {
-    container: '.Projects',
+    root: '.Projects',
     breadcrumbsItemsTitle: '.Projects .Breadcrumbs-ItemTitle',
     firstCard: '.ProjectCard:first-child',
     projectsCards: '.ProjectCard',
@@ -68,8 +68,8 @@ class ProjectsBlock extends Block {
   }
 
   async singleVisibleProject(): Promise<string> {
-    const $container = await this.findBySelector('container');
-    await $container.waitForDisplayed();
+    const $root = await this.findBySelector('root');
+    await $root.waitForDisplayed();
 
     const $$projectsCards = await this.findAllBySelector('projectsCards');
 
@@ -120,8 +120,8 @@ class ProjectsBlock extends Block {
   }
 
   async getProjectCard(name: string, folder = false): Promise<WebdriverIO.Element> {
-    const $container = await this.findBySelector('container');
-    await $container.waitForDisplayed();
+    const $root = await this.findBySelector('root');
+    await $root.waitForDisplayed();
 
     const $$projectsCards = await (folder
       ? this.findAllBySelector('projectsFolder')
@@ -141,8 +141,8 @@ class ProjectsBlock extends Block {
   async multipleVisibleProject(): Promise<string[]> {
     await loadingBlock.waitForGlobalHidden();
 
-    const $container = await this.findBySelector('container');
-    await $container.waitForDisplayed();
+    const $root = await this.findBySelector('root');
+    await $root.waitForDisplayed();
 
     const $$projectsCards = await this.findAllBySelector('projectsCards');
 

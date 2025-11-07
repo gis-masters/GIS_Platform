@@ -4,7 +4,7 @@ import { Block } from '../../Block';
 
 class EditFeatureGeometryAsTextDialogBlock extends Block {
   selectors = {
-    container: '.EditFeatureGeometry-AsTextDialog',
+    root: '.EditFeatureGeometry-AsTextDialog',
     editFeatureGeometryAsTextDialogTextarea:
       '.EditFeatureGeometry-AsTextDialog .MuiInputBase-inputMultiline:not([readonly])',
     editFeatureGeometryAsTextDialogSaveBtn: '.EditFeatureGeometry-AsTextDialog .MuiButton-outlinedPrimary',

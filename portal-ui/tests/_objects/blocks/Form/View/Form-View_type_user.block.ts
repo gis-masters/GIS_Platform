@@ -2,7 +2,7 @@ import { Block } from '../../../Block';
 
 class FormViewTypeUserBlock extends Block {
   selectors = {
-    container: '.Form-View_type_user'
+    root: '.Form-View_type_user'
   };
 }
 

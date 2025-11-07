@@ -19,6 +19,7 @@
       "viewBugReport": true,
       "viewDocumentLibrary": true,
       "viewServicesCalculator": true,
+      "defaultProjectBbox": "[4336548,5630738,4337222,5632892]",
       "favoritesEpsg": [
         "3857"
       ],

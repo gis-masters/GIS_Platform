@@ -3,7 +3,7 @@ import { xTableBlock } from '../../XTable.block';
 
 class XTableFilterTypeFloatBlock extends Block {
   selectors = {
-    container: '.XTable-Filter_type_float',
+    root: '.XTable-Filter_type_float',
     filterInputLte: '.XTable-HeadCell .XTable-Filter .MuiTextField-root:first-child input',
     filterInputGte: '.XTable-HeadCell .XTable-Filter .MuiTextField-root:last-child input'
   };

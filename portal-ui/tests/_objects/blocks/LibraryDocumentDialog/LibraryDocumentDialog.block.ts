@@ -2,7 +2,7 @@ import { Block } from '../../Block';
 
 class LibraryDocumentDialogBlock extends Block {
   selectors = {
-    container: '.LibraryDocumentDialog'
+    root: '.LibraryDocumentDialog'
   };
 }
 

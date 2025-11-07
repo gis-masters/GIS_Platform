@@ -5,7 +5,7 @@ class RegisterPage extends Page {
   url = 'register';
 
   selectors = {
-    container: 'crg-register .container'
+    root: 'crg-register .container'
   };
 }
 

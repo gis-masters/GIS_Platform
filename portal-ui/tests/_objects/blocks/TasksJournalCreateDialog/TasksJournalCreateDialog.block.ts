@@ -3,7 +3,7 @@ import { FormBlock } from '../Form/Form.block';
 
 class TasksJournalCreateDialogBlock extends Block {
   selectors = {
-    container: '.TasksJournal-CreateDialog',
+    root: '.TasksJournal-CreateDialog',
     tasksJournalCreateDialogYes: '.TasksJournal-CreateDialog .MuiButton-outlinedPrimary'
   };
 
@@ -16,7 +16,7 @@ class TasksJournalCreateDialogBlock extends Block {
   async clickAddUserBtn(title: string): Promise<void> {
     await this.waitForVisible();
 
-    const formBlock = new FormBlock(this.selectors.container);
+    const formBlock = new FormBlock(this.selectors.root);
     const $field = await formBlock.getField(title);
     const $addUserBtn = await $field.$('.Users-Add').getElement();
 

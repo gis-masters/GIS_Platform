@@ -2,7 +2,7 @@ import { Block } from '../../Block';
 
 class ProjectFormBlock extends Block {
   selectors = {
-    container: '.ProjectForm',
+    root: '.ProjectForm',
     input: '.ProjectForm-Input input',
     submit: '.ProjectForm-Button_action_submit',
     cancel: '.ProjectForm-Button_action_cancel',

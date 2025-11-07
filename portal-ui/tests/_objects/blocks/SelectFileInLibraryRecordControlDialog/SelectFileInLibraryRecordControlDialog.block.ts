@@ -2,7 +2,7 @@ import { Block } from '../../Block';
 
 class SelectFileInLibraryRecordControlDialogBlock extends Block {
   selectors = {
-    container: '.SelectFileInLibraryRecordControl-Dialog',
+    root: '.SelectFileInLibraryRecordControl-Dialog',
     datasourceDialogAddBtn: '.SelectFileInLibraryRecordControl-Dialog .MuiButton-outlinedPrimary'
   };
 

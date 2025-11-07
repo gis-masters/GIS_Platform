@@ -5,7 +5,7 @@ class SystemManagementPage extends Page {
   url = 'system-management';
 
   selectors = {
-    container: '.SystemManagement'
+    root: '.SystemManagement'
   };
 }
 

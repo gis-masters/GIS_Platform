@@ -4,7 +4,7 @@ import { Block } from '../../Block';
 
 class PermissionsWidgetBlock extends Block {
   selectors = {
-    container: '.PermissionsWidget',
+    root: '.PermissionsWidget',
     openBtn: '.PermissionsWidget-Open',
     content: '.PermissionsWidget-Content'
   };
@@ -18,8 +18,8 @@ class PermissionsWidgetBlock extends Block {
   }
 
   async assertSelfie(tag?: string, checkElementOptions?: WdioCheckElementMethodOptions): Promise<void> {
-    const $container = await this.findBySelector('container');
-    await $container.waitForDisplayed();
+    const $root = await this.findBySelector('root');
+    await $root.waitForDisplayed();
 
     await super.assertSelfie(tag, {
       hideElements: [...(checkElementOptions?.hideElements || [])],

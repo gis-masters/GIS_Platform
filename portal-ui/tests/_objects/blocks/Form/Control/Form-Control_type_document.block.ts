@@ -3,11 +3,11 @@ import { FormBlock } from '../Form.block';
 
 class FormControlTypeDocumentBlock extends Block {
   selectors = {
-    container: '.Form-Control_type_document'
+    root: '.Form-Control_type_document'
   };
 
-  async clickDocumentsAdd(container: string, title: string): Promise<void> {
-    const formBlock = new FormBlock(container);
+  async clickDocumentsAdd(root: string, title: string): Promise<void> {
+    const formBlock = new FormBlock(root);
     const $field = await formBlock.getField(title);
 
     const $documentsAdd = await $field.$('.Documents-Add button').getElement();

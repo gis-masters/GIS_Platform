@@ -2,7 +2,7 @@ import { Block } from '../../Block';
 
 class FiasBlock extends Block {
   selectors = {
-    container: '.Fias'
+    root: '.Fias'
   };
 }
 

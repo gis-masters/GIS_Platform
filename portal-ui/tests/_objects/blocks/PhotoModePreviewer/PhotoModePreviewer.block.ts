@@ -2,7 +2,7 @@ import { Block } from '../../Block';
 
 class PhotoModePreviewerBlock extends Block {
   selectors = {
-    container: '.Carousel',
+    root: '.Carousel',
     photosCount: '.swiper-pagination-total'
   };
 

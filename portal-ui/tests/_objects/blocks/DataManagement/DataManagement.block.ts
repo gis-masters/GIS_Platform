@@ -2,7 +2,7 @@ import { Block } from '../../Block';
 
 export class DataManagementBlock extends Block {
   selectors = {
-    container: '.DataManagement',
+    root: '.DataManagement',
     explorerList: '.DataManagement .Explorer-List',
     menuItem: '.DataManagement .Explorer-List .Explorer-Item'
   };

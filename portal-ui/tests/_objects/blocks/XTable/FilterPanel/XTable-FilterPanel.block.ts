@@ -2,7 +2,7 @@ import { Block } from '../../../Block';
 
 class XTableFilterPanelBlock extends Block {
   selectors = {
-    container: '.XTable-FilterPanel',
+    root: '.XTable-FilterPanel',
     item: '.XTable-FilterPanelItem',
     clearAll: '.XTable-FilterPanelItem_clearAll',
     itemTitle: '.XTable-FilterPanelItemContentPart:first-child',

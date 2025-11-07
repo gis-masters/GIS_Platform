@@ -2,7 +2,7 @@ import { Page } from '../Page';
 
 export class OrgAdminPage extends Page {
   selectors = {
-    container: '.OrgAdmin'
+    root: '.OrgAdmin'
   };
 
   title = 'Управление организацией';

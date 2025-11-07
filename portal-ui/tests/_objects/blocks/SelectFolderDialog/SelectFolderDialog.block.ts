@@ -3,7 +3,7 @@ import { ExplorerBlock } from '../Explorer/Explorer.block';
 
 class SelectFolderDialogBlock extends Block {
   selectors = {
-    container: '.SelectFolderDialog',
+    root: '.SelectFolderDialog',
     select: '.SelectFolderDialog .MuiButton-outlinedPrimary',
     loading: '.SelectFolderDialog .Loading'
   };
@@ -20,7 +20,7 @@ class SelectFolderDialogBlock extends Block {
     }
 
     await $loading.waitForExist({ reverse: true });
-    const explorerBlock = new ExplorerBlock(await this.findBySelector('container'));
+    const explorerBlock = new ExplorerBlock(await this.findBySelector('root'));
     await explorerBlock.selectExplorerItem(explorerItemTitle);
 
     const $select = await this.findBySelector('select');

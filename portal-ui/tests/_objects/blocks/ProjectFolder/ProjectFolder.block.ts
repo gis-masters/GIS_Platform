@@ -10,7 +10,7 @@ export const sortDirections: Record<string, SortOrder> = {
 
 class ProjectFolderBlock extends Block {
   selectors = {
-    container: '.Projects'
+    root: '.Projects'
   };
 
   async deleteConfirmDialog(): Promise<void> {

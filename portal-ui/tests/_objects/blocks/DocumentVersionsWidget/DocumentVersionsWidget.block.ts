@@ -4,7 +4,7 @@ import { libraryDocumentVersionsActionsDialogBlock } from '../LibraryDocumentAct
 
 class DocumentVersionsWidgetBlock extends Block {
   selectors = {
-    container: '.DocumentVersionsWidget',
+    root: '.DocumentVersionsWidget',
     closeDialog: '.DocumentVersionsWidget .MuiButton-outlined',
     restoreBtn: '.DocumentVersionsWidget .LibraryDocumentVersionsActions-Restore',
     documentVersionBtn: '.DocumentVersionsWidget-Button'
@@ -35,7 +35,7 @@ class DocumentVersionsWidgetBlock extends Block {
   }
 
   async restoreLastDocumentVersion(): Promise<void> {
-    const $explorerBlock = new ExplorerBlock(await this.findBySelector('container'));
+    const $explorerBlock = new ExplorerBlock(await this.findBySelector('root'));
     await $explorerBlock.waitForLoading();
     await $explorerBlock.selectFirstExplorerItem();
 
@@ -51,7 +51,7 @@ class DocumentVersionsWidgetBlock extends Block {
   async restoreDocumentVersionBtnExist(): Promise<boolean> {
     await this.waitForVisible();
 
-    const $explorerBlock = new ExplorerBlock(await this.findBySelector('container'));
+    const $explorerBlock = new ExplorerBlock(await this.findBySelector('root'));
     await $explorerBlock.waitForLoading();
 
     const $documentVersionBtn = await this.findBySelector('restoreBtn');
@@ -64,7 +64,7 @@ class DocumentVersionsWidgetBlock extends Block {
       throw new Error('Неверное количество версий документа');
     }
 
-    const explorerBlock = new ExplorerBlock(await this.findBySelector('container'));
+    const explorerBlock = new ExplorerBlock(await this.findBySelector('root'));
     await explorerBlock.waitForExist();
 
     return await explorerBlock.getContentWidgetFieldValue(fieldName);
@@ -79,7 +79,7 @@ class DocumentVersionsWidgetBlock extends Block {
   async getDocumentVersionLength(): Promise<number> {
     await this.waitForVisible();
 
-    const explorerBlock = new ExplorerBlock(await this.findBySelector('container'));
+    const explorerBlock = new ExplorerBlock(await this.findBySelector('root'));
     await explorerBlock.waitForExist();
 
     return await explorerBlock.getExplorerItemsLength();

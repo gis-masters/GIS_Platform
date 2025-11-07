@@ -8,7 +8,7 @@ import { MuiMenuBlock, muiMenuBlock } from '../MuiMenu/MuiMenu.block';
 
 class LayersSidebarBlock extends Block {
   selectors = {
-    container: '.LayersSidebar',
+    root: '.LayersSidebar',
     layer: '.LayersSidebar .Layer',
     editLayersBtn: '.LayersSidebar-EditBtn',
     saveBtn: '.LayersSidebar-SaveBtn',
@@ -93,8 +93,8 @@ class LayersSidebarBlock extends Block {
   }
 
   async waitForLayersSidebarDisplayed(): Promise<void> {
-    const $container = await this.findBySelector('container');
-    await $container.waitForDisplayed();
+    const $root = await this.findBySelector('root');
+    await $root.waitForDisplayed();
   }
 
   async moveLayerToGroup(layerTitle: string, groupTitle: string): Promise<void> {
@@ -112,8 +112,8 @@ class LayersSidebarBlock extends Block {
   }
 
   async assertSelfie(tag?: string, checkElementOptions?: WdioCheckElementMethodOptions): Promise<void> {
-    const $container = await this.findBySelector('container');
-    await $container.waitForDisplayed();
+    const $root = await this.findBySelector('root');
+    await $root.waitForDisplayed();
 
     await super.assertSelfie(tag, {
       hideElements: [await this.findBySelector('toolbar'), ...(checkElementOptions?.hideElements || [])],
@@ -122,8 +122,8 @@ class LayersSidebarBlock extends Block {
   }
 
   async assertSelfieFull(tag?: string, checkElementOptions?: WdioCheckElementMethodOptions): Promise<void> {
-    const $container = await this.findBySelector('container');
-    await $container.waitForDisplayed();
+    const $root = await this.findBySelector('root');
+    await $root.waitForDisplayed();
 
     await super.assertSelfie(tag, {
       hideElements: [...(checkElementOptions?.hideElements || [])],

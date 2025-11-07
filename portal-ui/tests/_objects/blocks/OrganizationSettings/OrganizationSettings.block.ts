@@ -4,7 +4,7 @@ import { FormBlock } from '../Form/Form.block';
 
 class OrganizationSettingsBlock extends Block {
   selectors = {
-    container: '.OrganizationSettings',
+    root: '.OrganizationSettings',
     save: '.OrganizationSettings .MuiButton-outlinedPrimary'
   };
 

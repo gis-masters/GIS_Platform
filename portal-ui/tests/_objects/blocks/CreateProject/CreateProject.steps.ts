@@ -1,24 +1,19 @@
 import { Then, When } from '@wdio/cucumber-framework';
 
 import { createProjectBlock } from './CreateProject.block';
-import { createProjectDialogBlock } from './Dialog/CreateProject-Dialog.block';
 
 Then('доступна кнопка `создать проект`', async () => {
-  await createProjectBlock.waitForVisible();
+  await createProjectBlock.waitForCreateProjectVisible();
+});
+
+Then('доступна кнопка `создать папку проекта`', async () => {
+  await createProjectBlock.waitForCreateProjectFolderVisible();
 });
 
 When('я открываю форму создания нового проекта', async () => {
-  await createProjectBlock.click();
+  await createProjectBlock.clickCreateProject();
 });
 
-When(
-  'в форме создания нового проекта в поле {string} я ввожу значение {string}',
-  async (field: string, title: string) => {
-    await createProjectDialogBlock.waitForVisible();
-    await createProjectDialogBlock.setFieldValue(field, title);
-  }
-);
-
-When('в форме создания нового проекта я нажимаю кнопку `Создать`', async () => {
-  await createProjectDialogBlock.submit();
+When('я открываю форму создания новой папки проекта', async () => {
+  await createProjectBlock.clickCreateProjectFolder();
 });

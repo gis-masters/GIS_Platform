@@ -2,65 +2,65 @@ import type { WdioCheckElementMethodOptions } from '@wdio/visual-service/dist/ty
 
 interface Selectors {
   [key: string]: string;
-  container: string;
+  root: string;
 }
 
 export abstract class Block<S extends Selectors = Selectors> {
   abstract selectors: S;
   protected parent: string | WebdriverIO.Element | null;
-  private readonly container?: WebdriverIO.Element;
+  private readonly root?: WebdriverIO.Element;
 
   get name(): string {
     return this.constructor.name.replace(/Block$/, '');
   }
 
-  constructor(parent: string | WebdriverIO.Element | null = null, container?: WebdriverIO.Element) {
-    this.container = container;
+  constructor(parent: string | WebdriverIO.Element | null = null, root?: WebdriverIO.Element) {
+    this.root = root;
     this.parent = parent;
   }
 
   protected async findBySelector(key: keyof this['selectors']): Promise<WebdriverIO.Element> {
-    if (key === 'container' && this.container) {
-      return this.container;
+    if (key === 'root' && this.root) {
+      return this.root;
     }
 
-    const $parent = await this.getParentOrContainer();
+    const $parent = await this.getParentOrRoot();
 
     return $parent.$(this.selectors[key]).getElement();
   }
 
   protected async findAllBySelector(key: keyof this['selectors']): Promise<WebdriverIO.ElementArray> {
-    const $parent = await this.getParentOrContainer();
+    const $parent = await this.getParentOrRoot();
 
     return $parent.$$(this.selectors[key]).getElements();
   }
 
   async waitForExist(): Promise<void> {
-    const $container = await this.findBySelector('container');
-    await $container.waitForExist();
+    const $root = await this.findBySelector('root');
+    await $root.waitForExist();
   }
 
   async waitForVisible(): Promise<void> {
-    const $container = await this.findBySelector('container');
-    await $container.waitForDisplayed();
+    const $root = await this.findBySelector('root');
+    await $root.waitForDisplayed();
   }
 
   async waitForHidden(): Promise<void> {
-    const $container = await this.findBySelector('container');
-    await $container.waitForExist({ reverse: true });
+    const $root = await this.findBySelector('root');
+    await $root.waitForExist({ reverse: true });
   }
 
   async assertSelfie(tag = 'plain', checkElementOptions: WdioCheckElementMethodOptions = {}): Promise<void> {
-    const $container = await this.findBySelector('container');
-    await expect($container).toMatchElementSnapshot(`${this.name}-${tag}`, {
+    const $root = await this.findBySelector('root');
+    await expect($root).toMatchElementSnapshot(`${this.name}-${tag}`, {
       disableBlinkingCursor: true,
       ...checkElementOptions
     });
   }
 
-  private async getParentOrContainer(): Promise<WebdriverIO.Element | WebdriverIO.Browser> {
-    if (this.container) {
-      return this.container;
+  private async getParentOrRoot(): Promise<WebdriverIO.Element | WebdriverIO.Browser> {
+    if (this.root) {
+      return this.root;
     }
 
     if (this.parent && typeof this.parent === 'string') {

@@ -3,16 +3,16 @@ import { DialogBlock } from '../Dialog/Dialog.block';
 
 class UtilityDialogBlock extends Block {
   selectors = {
-    container: '.UtilityDialog',
+    root: '.UtilityDialog',
     confirm: '.UtilityDialog_type_konfirmieren',
     content: '.UtilityDialog-Content'
   };
 
   async clickButtonByTitle(title: string): Promise<void> {
-    const $container = await this.findBySelector('container');
-    const dialogBlock = new DialogBlock(null, $container);
+    const $root = await this.findBySelector('root');
+    const dialogBlock = new DialogBlock(null, $root);
 
-    await dialogBlock.clickButtonByTitle(title);
+    await dialogBlock.clickActionButton(title);
   }
 
   async getConfirmDialog(): Promise<WebdriverIO.Element> {

@@ -128,6 +128,7 @@ export interface BasePropertySchema {
   calculatedValueWellKnownFormula?: string;
   valueFormulaParams?: Record<string, unknown>;
   validationFormula?: FieldValidator;
+  validationWellKnownFormula?: string;
   dynamicPropertyFormula?: string | PropertyFormula;
 }
 

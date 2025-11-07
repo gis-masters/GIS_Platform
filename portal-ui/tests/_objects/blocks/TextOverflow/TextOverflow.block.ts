@@ -2,7 +2,7 @@ import { Block } from '../../Block';
 
 class TextOverflowBlock extends Block {
   selectors = {
-    container: '.TextOverflow',
+    root: '.TextOverflow',
     link: '.TextOverflow-PseudoLink'
   };
 

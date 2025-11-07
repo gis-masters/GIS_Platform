@@ -2,12 +2,12 @@ import { Block } from '../../Block';
 
 class KonfirmierenBlock extends Block {
   selectors = {
-    container: '.UtilityDialog_type_konfirmieren',
+    root: '.UtilityDialog_type_konfirmieren',
     yes: '.UtilityDialog_type_konfirmieren .MuiButton-outlinedPrimary'
   };
 
   async isDialogExist(): Promise<boolean> {
-    const $konfirmieren = await this.findBySelector('container');
+    const $konfirmieren = await this.findBySelector('root');
 
     return await $konfirmieren.isDisplayed();
   }

@@ -6,7 +6,7 @@ import { SchemaPropertiesBlock } from '../SchemaProperties/SchemaProperties.bloc
 
 class SchemaActionsBlock extends Block {
   selectors = {
-    container: '.SchemaActions',
+    root: '.SchemaActions',
     editBtn: '.SchemaActions-Edit',
     editDialog: '.SchemaActions-EditDialog',
     editDialogYes: '.SchemaActions-EditDialogYes',

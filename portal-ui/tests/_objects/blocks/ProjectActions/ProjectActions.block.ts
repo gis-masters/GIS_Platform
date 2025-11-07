@@ -3,7 +3,7 @@ import { FormBlock } from '../Form/Form.block';
 
 class ProjectActionsBlock extends Block {
   selectors = {
-    container: '.ProjectActions',
+    root: '.ProjectActions',
     deleteBtn: '.ProjectActions .ProjectActions-Delete',
     editBtn: '.ProjectActions .ProjectActions-Edit',
     moveBtn: '.ProjectActions .ProjectActions-Move',

@@ -2,7 +2,7 @@ import { Block } from '../../Block';
 
 class SelectSchemaControlDialogBlock extends Block {
   selectors = {
-    container: '.SelectSchemaControl-Dialog',
+    root: '.SelectSchemaControl-Dialog',
     xTable: '.SelectSchemaControl-Dialog .XTable',
     yes: '.SelectSchemaControl-Dialog .MuiButton-outlinedPrimary',
     filters: '.SelectSchemaControl-Dialog .XTable-HeadCell_filterable',

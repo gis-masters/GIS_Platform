@@ -2,7 +2,7 @@ import { Block } from '../../Block';
 
 class DocumentsBlock extends Block {
   selectors = {
-    container: '.Documents',
+    root: '.Documents',
     add: '.Documents-Add .MuiButton-root'
   };
 

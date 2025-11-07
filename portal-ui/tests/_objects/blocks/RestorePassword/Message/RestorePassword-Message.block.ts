@@ -2,7 +2,7 @@ import { Block } from '../../../Block';
 
 class RestorePasswordMessageBlock extends Block {
   selectors = {
-    container: '.RestorePassword-Message'
+    root: '.RestorePassword-Message'
   };
 }
 

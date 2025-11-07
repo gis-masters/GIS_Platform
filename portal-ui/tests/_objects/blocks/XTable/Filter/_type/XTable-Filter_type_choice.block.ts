@@ -3,7 +3,7 @@ import { xTableBlock } from '../../XTable.block';
 
 class XTableFilterTypeChoiceBlock extends Block {
   selectors = {
-    container: '.XTable-Filter_type_choice',
+    root: '.XTable-Filter_type_choice',
     filterInputChoice: '.XTable-Filter_type_choice .MuiSelect-select',
     popoverOverlay: '.MuiPopover-root',
     choiceFirstOptions: '.XTable-ChoiceFilterPopover ul li:first-child input',

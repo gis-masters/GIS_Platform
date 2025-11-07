@@ -5,7 +5,7 @@ class ProjectsPage extends Page {
   url = 'projects';
 
   selectors = {
-    container: '.Projects'
+    root: '.Projects'
   };
 }
 

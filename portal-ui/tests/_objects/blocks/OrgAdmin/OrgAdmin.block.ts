@@ -2,7 +2,7 @@ import { Block } from '../../Block';
 
 class OrgAdminBlock extends Block {
   selectors = {
-    container: '.OrgAdmin',
+    root: '.OrgAdmin',
     loading: '.OrgAdmin .Loading'
   };
 

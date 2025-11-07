@@ -12,7 +12,7 @@ import { XTableFilterTypeStringBlock } from './Filter/_type/XTable-Filter_type_s
 
 export class XTableBlock extends Block {
   selectors = {
-    container: '.XTable',
+    root: '.XTable',
     loading: '.XTable .Loading',
     head: '.XTable-Head',
     headCell: '.XTable-HeadCell',
@@ -220,11 +220,9 @@ export class XTableBlock extends Block {
 
     const index = headerTitles.indexOf(title);
 
-    const $container = await this.findBySelector('container');
+    const $root = await this.findBySelector('root');
 
-    return [
-      ...(await $container.$$(`.XTable-Row .XTable-Cell:nth-child(${index + 1}) .XTable-CellContent`).getElements())
-    ];
+    return [...(await $root.$$(`.XTable-Row .XTable-Cell:nth-child(${index + 1}) .XTable-CellContent`).getElements())];
   }
 
   async getRowByFieldValue(value: string, field: string): Promise<WebdriverIO.Element> {

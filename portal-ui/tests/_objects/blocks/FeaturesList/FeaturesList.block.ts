@@ -3,14 +3,14 @@ import { CopyFeaturesButtonBlock } from '../CopyFeaturesButton/CopyFeaturesButto
 
 class FeaturesListBlock extends Block {
   selectors = {
-    container: '.FeaturesList',
+    root: '.FeaturesList',
     item: '.FeaturesList .FeaturesListItem'
   };
 
-  copyFeaturesButton = new CopyFeaturesButtonBlock(this.selectors.container);
+  copyFeaturesButton = new CopyFeaturesButtonBlock(this.selectors.root);
 
   async waitForLoading(): Promise<void> {
-    const $editFeatureLoader = await this.findBySelector('container');
+    const $editFeatureLoader = await this.findBySelector('root');
     await $editFeatureLoader.waitForDisplayed();
   }
 

@@ -2,7 +2,7 @@ import { Block } from '../../Block';
 
 class AddLayerDialogBlock extends Block {
   selectors = {
-    container: '.AddLayerDialog',
+    root: '.AddLayerDialog',
     addLayerDialogViewField: '.AddLayerDialog .Form-Content .Form-Field:last-child label',
     layerFormDialogSelectDatasource: '.AddLayerDialog .SelectVectorTableControl',
     layerFormDialogSelectLibraryRecord: '.AddLayerDialog .SelectFileInLibraryRecordControl',
@@ -50,18 +50,18 @@ class AddLayerDialogBlock extends Block {
   }
 
   async waitForDialogDisappear() {
-    const $container = await this.findBySelector('container');
-    await $container.waitForExist({ reverse: true });
+    const $root = await this.findBySelector('root');
+    await $root.waitForExist({ reverse: true });
   }
 
   async waitForDialogExist() {
-    const $container = await this.findBySelector('container');
-    await $container.waitForExist();
+    const $root = await this.findBySelector('root');
+    await $root.waitForExist();
   }
 
   async selectLayerType(layerType: string): Promise<void> {
-    const $container = await this.findBySelector('container');
-    const $$formFields = await $container.$$('.Form-Field').getElements();
+    const $root = await this.findBySelector('root');
+    const $$formFields = await $root.$$('.Form-Field').getElements();
     for (const $formField of $$formFields) {
       const field = await $formField.$('.Form-Label').getText();
 

@@ -3,7 +3,7 @@ import { FormBlock } from '../Form/Form.block';
 
 class TasksJournalActionsStatusDialogBlock extends Block {
   selectors = {
-    container: '.TasksJournalActions-StatusDialog',
+    root: '.TasksJournalActions-StatusDialog',
     tasksJournalActionStatusSave: '.TasksJournalActions-StatusDialog .MuiButton-outlinedPrimary'
   };
 
@@ -15,7 +15,7 @@ class TasksJournalActionsStatusDialogBlock extends Block {
   }
 
   async setChoiceFieldValue(fieldTitle: string, value: string) {
-    const formBlock = new FormBlock(this.selectors.container);
+    const formBlock = new FormBlock(this.selectors.root);
     await formBlock.setChoiceValue(fieldTitle, value);
   }
 }

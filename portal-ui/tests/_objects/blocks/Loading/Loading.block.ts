@@ -2,7 +2,7 @@ import { Block } from '../../Block';
 
 class LoadingBlock extends Block {
   selectors = {
-    container: '.Loading',
+    root: '.Loading',
     global: '.Loading_global'
   };
 

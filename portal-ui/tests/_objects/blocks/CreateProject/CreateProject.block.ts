@@ -2,13 +2,32 @@ import { Block } from '../../Block';
 
 class CreateProjectBlock extends Block {
   selectors = {
-    container: '.CreateProject'
+    root: '.CreateProject',
+    rootOfCreateProject: '.CreateProject_mode_project',
+    rootOfCreateProjectFolder: '.CreateProject_mode_folder',
+    dialog: '.CreateProject-Dialog'
   };
 
-  async click() {
-    const $container = await this.findBySelector('container');
-    await $container.waitForDisplayed();
-    await $container.click();
+  async clickCreateProject() {
+    const $root = await this.findBySelector('rootOfCreateProject');
+    await $root.waitForDisplayed();
+    await $root.click();
+  }
+
+  async clickCreateProjectFolder() {
+    const $root = await this.findBySelector('rootOfCreateProjectFolder');
+    await $root.waitForDisplayed();
+    await $root.click();
+  }
+
+  async waitForCreateProjectVisible() {
+    const $button = await this.findBySelector('rootOfCreateProject');
+    await $button.waitForDisplayed();
+  }
+
+  async waitForCreateProjectFolderVisible() {
+    const $button = await this.findBySelector('rootOfCreateProjectFolder');
+    await $button.waitForDisplayed();
   }
 }
 

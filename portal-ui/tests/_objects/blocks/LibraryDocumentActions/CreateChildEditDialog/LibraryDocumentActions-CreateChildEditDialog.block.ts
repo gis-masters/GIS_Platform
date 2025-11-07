@@ -2,7 +2,7 @@ import { Block } from '../../../Block';
 
 class LibraryDocumentActionsCreateChildEditDialogBlock extends Block {
   selectors = {
-    container: '.LibraryDocumentActions-CreateChildEditDialog',
+    root: '.LibraryDocumentActions-CreateChildEditDialog',
     save: '.LibraryDocumentActions-CreateChildEditDialog .MuiButton-outlinedPrimary'
   };
 

@@ -3,8 +3,7 @@ import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { type IClassNameProps } from '@bem-react/core';
 
-import { PropertyType, type SimpleSchema } from '../../services/data/schema/schema.models';
-import { type CrgProject } from '../../services/gis/projects/projects.models';
+import { type CrgProject, crgProjectFolderSchema, crgProjectSchema } from '../../services/gis/projects/projects.models';
 import { ActionTypes, DataTypes, Role } from '../../services/permissions/permissions.models';
 import { getAvailableActionsTooltipByRole } from '../../services/permissions/permissions.utils';
 import { currentUser } from '../../stores/CurrentUser.store';
@@ -22,45 +21,6 @@ interface ProjectActionsProps extends IClassNameProps {
   as: ActionsItemVariant;
   forDialog?: boolean;
 }
-
-export const crgProjectFolderSchema: SimpleSchema = {
-  properties: [
-    {
-      name: 'name',
-      title: 'Название',
-      required: true,
-      propertyType: PropertyType.STRING
-    },
-    {
-      name: 'description',
-      title: 'Описание',
-      propertyType: PropertyType.STRING
-    }
-  ]
-};
-
-export const crgProjectSchema: SimpleSchema = {
-  properties: [
-    ...crgProjectFolderSchema.properties,
-    {
-      name: 'bbox',
-      title: 'Bbox',
-      required: true,
-      description: (
-        <>
-          BBox (bounding box) для картографического слоя в метрах — это прямоугольная область, которая определяет
-          границы проекта на карте. Она указывается в метрах и содержит координаты минимального и максимального значений
-          по осям X и Y.
-          <br />
-          Пример заполнения:
-          <br />
-          [4336548,5630738,4337222,5632892]
-        </>
-      ),
-      propertyType: PropertyType.STRING
-    }
-  ]
-};
 
 export const ProjectActions: FC<ProjectActionsProps> = observer(({ project, className, forDialog, as }) => {
   const owningAllowed = currentUser.isAdmin || project.role === Role.OWNER;

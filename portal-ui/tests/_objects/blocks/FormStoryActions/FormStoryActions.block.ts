@@ -2,7 +2,7 @@ import { Block } from '../../Block';
 
 class FormStoryActionsBlock extends Block {
   selectors = {
-    container: '.StoryWrapper .Form-Actions',
+    root: '.StoryWrapper .Form-Actions',
     validate: '.StoryWrapper .FormStoryActions-ValidateData'
   };
 

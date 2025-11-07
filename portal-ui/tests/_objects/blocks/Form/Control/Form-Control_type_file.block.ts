@@ -2,7 +2,7 @@ import { Block } from '../../../Block';
 
 class FormControlTypeFileBlock extends Block {
   selectors = {
-    container: '.Form-Control_type_file',
+    root: '.Form-Control_type_file',
     lookupList: '.Form-Control_type_file .Lookup-List',
     filesItem: '.Form-Control_type_file .Files-Item'
   };

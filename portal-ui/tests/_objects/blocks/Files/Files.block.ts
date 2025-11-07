@@ -3,7 +3,7 @@ import { ExplorerBlock } from '../Explorer/Explorer.block';
 
 class FilesBlock extends Block {
   selectors = {
-    container: '.Files'
+    root: '.Files'
   };
 
   async clickPlaceFileBtn(fileName: string, field: string) {

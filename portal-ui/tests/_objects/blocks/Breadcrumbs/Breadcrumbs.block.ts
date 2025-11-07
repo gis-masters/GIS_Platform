@@ -2,7 +2,7 @@ import { Block } from '../../Block';
 
 class BreadcrumbsBlock extends Block {
   selectors = {
-    container: '.Breadcrumbs',
+    root: '.Breadcrumbs',
     items: '.Breadcrumbs-Item'
   };
 

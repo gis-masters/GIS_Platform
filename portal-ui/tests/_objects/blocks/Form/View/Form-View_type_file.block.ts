@@ -2,7 +2,7 @@ import { Block } from '../../../Block';
 
 class FormViewTypeFileBlock extends Block {
   selectors = {
-    container: '.Form-View_type_file',
+    root: '.Form-View_type_file',
     lookupList: '.Form-View_type_file .Lookup-List',
     filesItem: '.Form-View_type_file .Files-Item'
   };

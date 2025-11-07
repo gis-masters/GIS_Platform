@@ -2,7 +2,7 @@ import { Block } from '../../Block';
 
 class BreadcrumbsStoryBlock extends Block {
   selectors = {
-    container: '.BreadcrumbsStory',
+    root: '.BreadcrumbsStory',
     input: '.BreadcrumbsStory-InputControl'
   };
 

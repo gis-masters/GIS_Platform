@@ -2,7 +2,7 @@ import { Block } from '../../Block';
 
 class LoginFormBlock extends Block {
   selectors = {
-    container: '.LoginForm',
+    root: '.LoginForm',
     login: '.LoginForm .StringControl_display_email input',
     password: '.LoginForm .StringControl_display_password input',
     errorMessage: '.LoginForm .StringControl_display_password .MuiFormHelperText-root',

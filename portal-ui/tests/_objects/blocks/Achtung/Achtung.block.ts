@@ -2,12 +2,12 @@ import { Block } from '../../Block';
 
 class AchtungBlock extends Block {
   selectors = {
-    container: '.UtilityDialog_type_achtung',
+    root: '.UtilityDialog_type_achtung',
     yes: '.UtilityDialog_type_achtung .MuiButton-outlinedPrimary'
   };
 
   async isDialogExist(): Promise<boolean> {
-    const $achtung = await this.findBySelector('container');
+    const $achtung = await this.findBySelector('root');
 
     return await $achtung.isDisplayed();
   }

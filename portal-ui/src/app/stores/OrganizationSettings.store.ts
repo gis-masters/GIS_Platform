@@ -168,6 +168,15 @@ export class OrganizationSettings {
     return Boolean(this.orgSettings?.system?.sedDialog && this.orgSettings?.organization?.sedDialog);
   }
 
+  @computed
+  get defaultProjectBbox(): string {
+    return (
+      this.orgSettings?.organization?.defaultProjectBbox ||
+      this.orgSettings?.system?.defaultProjectBbox ||
+      '[4336548,5630738,4337222,5632892]'
+    );
+  }
+
   private allowedToUse(systemSetting?: boolean, orgSetting?: boolean): boolean {
     const setting = systemSetting && orgSetting;
 

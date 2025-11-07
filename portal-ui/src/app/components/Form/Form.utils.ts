@@ -10,7 +10,7 @@ import {
   type SimpleSchema,
   type ValueFormula
 } from '../../services/data/schema/schema.models';
-import { valueWellKnownFormulas } from '../../services/data/schema/schema.utils';
+import { valueWellKnownFormulas } from '../../services/data/schema/valueWellKnownFormulas';
 
 const fromComplex: Partial<
   Record<PropertyType, <T>(propertySchema: PropertySchema, formValue: Partial<T>, fieldValue: unknown) => Partial<T>>

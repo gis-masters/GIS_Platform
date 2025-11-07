@@ -2,7 +2,7 @@ import { Block } from '../../Block';
 
 class LibraryDocumentActionsDeleteDialogBlock extends Block {
   selectors = {
-    container: '.LibraryDocumentActions-DeleteDialog',
+    root: '.LibraryDocumentActions-DeleteDialog',
     delete: '.LibraryDocumentActions-DeleteDialog .MuiButton-outlinedPrimary'
   };
 

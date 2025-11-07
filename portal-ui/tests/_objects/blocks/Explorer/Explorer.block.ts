@@ -5,7 +5,7 @@ import { FormBlock } from '../Form/Form.block';
 
 export class ExplorerBlock extends Block {
   selectors = {
-    container: '.Explorer',
+    root: '.Explorer',
     item: '.Explorer-Item',
     disabledItem: '.Explorer-Item.Mui-disabled',
     title: '.Explorer-ItemTitle',
@@ -40,8 +40,8 @@ export class ExplorerBlock extends Block {
   }
 
   async allItemsIsDisabled(): Promise<boolean> {
-    const $container = await this.findBySelector('container');
-    await $container.waitForDisplayed();
+    const $root = await this.findBySelector('root');
+    await $root.waitForDisplayed();
 
     const $loader = await this.findBySelector('loader');
     await $loader.waitForExist({ reverse: true });
@@ -75,8 +75,8 @@ export class ExplorerBlock extends Block {
   }
 
   async getExplorerItemsLength(): Promise<number> {
-    const $container = await this.findBySelector('container');
-    await $container.waitForDisplayed();
+    const $root = await this.findBySelector('root');
+    await $root.waitForDisplayed();
 
     const $loader = await this.findBySelector('loader');
     await $loader.waitForExist({ reverse: true });
@@ -124,8 +124,8 @@ export class ExplorerBlock extends Block {
   }
 
   async getExplorerItemByName(itemName: string): Promise<WebdriverIO.Element> {
-    const $container = await this.findBySelector('container');
-    await $container.waitForDisplayed();
+    const $root = await this.findBySelector('root');
+    await $root.waitForDisplayed();
 
     const $loader = await this.findBySelector('loader');
     await $loader.waitForExist({ reverse: true });
@@ -144,8 +144,8 @@ export class ExplorerBlock extends Block {
   }
 
   async getExplorerItemById(id: string): Promise<WebdriverIO.Element> {
-    const $container = await this.findBySelector('container');
-    await $container.waitForDisplayed();
+    const $root = await this.findBySelector('root');
+    await $root.waitForDisplayed();
 
     const $loader = await this.findBySelector('loader');
     await $loader.waitForExist({ reverse: true });

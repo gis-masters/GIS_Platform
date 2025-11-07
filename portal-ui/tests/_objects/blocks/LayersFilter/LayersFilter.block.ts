@@ -3,7 +3,7 @@ import { MuiInputBlock } from '../MuiInput/MuiInput.block';
 
 class LayersFilterBlock extends Block {
   selectors = {
-    container: '.LayersFilter',
+    root: '.LayersFilter',
     filterInput: '.LayersFilter-Input'
   };
 

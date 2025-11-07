@@ -3,7 +3,7 @@ import { Block } from '../../Block';
 
 class MapBlock extends Block {
   selectors = {
-    container: '.map',
+    root: '.map',
     map: '.map__map',
     scaleBar: '.map__map .ol-scale-bar'
   };

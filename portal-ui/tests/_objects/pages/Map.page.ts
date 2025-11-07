@@ -4,7 +4,7 @@ import { Page } from '../Page';
 
 export class MapPage extends Page {
   selectors = {
-    container: '.map'
+    root: '.map'
   };
   title = 'Карта';
   url: string;

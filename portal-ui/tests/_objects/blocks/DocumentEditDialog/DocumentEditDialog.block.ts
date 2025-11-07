@@ -3,7 +3,7 @@ import { MuiInputBlock } from '../MuiInput/MuiInput.block';
 
 class DocumentEditDialogBlock extends Block {
   selectors = {
-    container: '.LibraryDocumentActions-EditDialog',
+    root: '.LibraryDocumentActions-EditDialog',
     saveButton: '.LibraryDocumentActions-EditDialog button[type="submit"]',
     form: '.LibraryDocumentActions-EditDialog form',
     formField: '.LibraryDocumentActions-EditDialog .Form-Control'
@@ -47,10 +47,10 @@ class DocumentEditDialogBlock extends Block {
   async waitForClose(): Promise<void> {
     await this.waitForVisible();
 
-    const $container = await this.findBySelector('container');
+    const $root = await this.findBySelector('root');
     await browser.waitUntil(
       async () => {
-        return !(await $container.isExisting());
+        return !(await $root.isExisting());
       },
       {
         timeout: 5000,

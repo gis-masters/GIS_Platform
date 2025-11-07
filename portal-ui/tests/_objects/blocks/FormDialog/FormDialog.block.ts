@@ -1,31 +1,28 @@
 import { Block } from '../../Block';
 import { DialogBlock } from '../Dialog/Dialog.block';
 import { FormBlock } from '../Form/Form.block';
-import { MuiInputBlock } from '../MuiInput/MuiInput.block';
 
 class FormDialogBlock extends Block {
   selectors = {
-    container: '.FormDialog'
+    root: '.FormDialog'
   };
 
-  async changeFieldValueByFieldName(fieldName: string, fieldValue: string): Promise<void> {
-    const formBlock = new FormBlock(this.selectors.container);
-    const $field = await formBlock.getField(fieldName);
+  async getStringValue(fieldName: string): Promise<string> {
+    const formBlock = new FormBlock(this.selectors.root);
 
-    if (!$field) {
-      throw new Error(`Не найден элемент ${fieldName}`);
-    }
-
-    const inputBlock = new MuiInputBlock($field);
-    await inputBlock.clearValue();
-    await inputBlock.setValue(fieldValue);
+    return await formBlock.getStringValue(fieldName);
   }
 
-  async clickButtonByTitle(title: string): Promise<void> {
-    const $container = await this.findBySelector('container');
-    const dialogBlock = new DialogBlock(null, $container);
+  async setStringValue(fieldName: string, fieldValue: string): Promise<void> {
+    const formBlock = new FormBlock(this.selectors.root);
+    await formBlock.replaceStringValue(fieldName, fieldValue);
+  }
 
-    await dialogBlock.clickButtonByTitle(title);
+  async clickActionButton(title: string): Promise<void> {
+    const $root = await this.findBySelector('root');
+    const dialogBlock = new DialogBlock(null, $root);
+
+    await dialogBlock.clickActionButton(title);
   }
 
   async waitForNotHidden(): Promise<void> {

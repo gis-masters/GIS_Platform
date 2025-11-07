@@ -4,7 +4,7 @@ import { hasClass } from '../../utils/hasClass';
 
 class SortOrderButtonBlock extends Block {
   selectors = {
-    container: '.SortOrderButton',
+    root: '.SortOrderButton',
     sortOrderButtonAsc: '.Projects .SortOrderButton_asc'
   };
 
@@ -12,13 +12,13 @@ class SortOrderButtonBlock extends Block {
     const currentSortOrder = await this.getSortOrder();
 
     if (currentSortOrder && currentSortOrder !== direction) {
-      const $sortOrderBtn = await this.findBySelector('container');
+      const $sortOrderBtn = await this.findBySelector('root');
       await $sortOrderBtn.click();
     }
   }
 
   async getSortOrder(): Promise<SortOrder> {
-    const $filterInputStrictness = await this.findBySelector('container');
+    const $filterInputStrictness = await this.findBySelector('root');
 
     const isAsc = await hasClass($filterInputStrictness, 'SortOrderButton_asc');
     const isDesc = await hasClass($filterInputStrictness, 'SortOrderButton_desc');

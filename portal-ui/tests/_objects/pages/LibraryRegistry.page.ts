@@ -2,7 +2,7 @@ import { Page } from '../Page';
 
 export class LibraryRegistryPage extends Page {
   selectors = {
-    container: '.LibraryRegistry'
+    root: '.LibraryRegistry'
   };
   title = 'Табличный вид библиотеки документов';
   url: string;

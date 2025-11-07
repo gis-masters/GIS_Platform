@@ -7,7 +7,7 @@ import { XTableBlock } from '../XTable/XTable.block';
 
 class AttributesBlock extends Block {
   selectors = {
-    container: '.Attributes',
+    root: '.Attributes',
     bar: '.Attributes-Bar',
     loading: '.Attributes .Loading',
     attributeTableCols: '.Attributes-Table .XTable-Head .XTable-CellContent',
@@ -27,8 +27,8 @@ class AttributesBlock extends Block {
     counterItem: '.Attributes .Attributes-CounterItem'
   };
 
-  xTable = new XTableBlock(this.selectors.container);
-  copyFeaturesButton = new CopyFeaturesButtonBlock(this.selectors.container);
+  xTable = new XTableBlock(this.selectors.root);
+  copyFeaturesButton = new CopyFeaturesButtonBlock(this.selectors.root);
 
   async waitForTableVisible(): Promise<void> {
     await this.xTable.waitForVisible();
@@ -170,8 +170,8 @@ class AttributesBlock extends Block {
   }
 
   async assertSelfie(tag?: string, checkElementOptions?: WdioCheckElementMethodOptions): Promise<void> {
-    const $container = await this.findBySelector('container');
-    await $container.waitForDisplayed();
+    const $root = await this.findBySelector('root');
+    await $root.waitForDisplayed();
 
     await super.assertSelfie(tag, {
       hideElements: [...(checkElementOptions?.hideElements || [])],

@@ -6,11 +6,11 @@ import { XTableBlock, xTableBlock } from '../XTable/XTable.block';
 
 class LibraryRegistryBlock extends Block {
   selectors = {
-    container: '.LibraryRegistry',
+    root: '.LibraryRegistry',
     loading: '.LibraryRegistry .Loading'
   };
 
-  xTable = new XTableBlock(this.selectors.container);
+  xTable = new XTableBlock(this.selectors.root);
 
   async getVisibleDocumentsIds(): Promise<number[]> {
     await this.waitForVisible();

@@ -2,7 +2,7 @@ import { Block } from '../../../Block';
 
 class CreateDatasetFormBlock extends Block {
   selectors = {
-    container: '.CreateDataset-Form',
+    root: '.CreateDataset-Form',
     title: '.CreateDataset-Form input[name="title"]',
     submit: '.CreateDataset-Form .MuiButton-outlinedPrimary'
   };

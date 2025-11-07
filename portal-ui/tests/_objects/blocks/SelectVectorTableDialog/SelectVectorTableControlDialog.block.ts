@@ -2,7 +2,7 @@ import { Block } from '../../Block';
 
 class SelectVectorTableControlDialogBlock extends Block {
   selectors = {
-    container: '.SelectVectorTableControl-Dialog',
+    root: '.SelectVectorTableControl-Dialog',
     datasourceDialogAddBtn: '.SelectVectorTableControl-Dialog .MuiButton-outlinedPrimary'
   };
 

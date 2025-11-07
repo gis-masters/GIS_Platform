@@ -4,7 +4,7 @@ import { MuiSelectBlock } from '../MuiSelect/MuiSelect.block';
 
 export class FormBlock extends Block {
   selectors = {
-    container: '.Form',
+    root: '.Form',
     content: '.Form .Form-Content',
     formFields: '.Form .Form-Field',
     checkbox: '.Form-Control input[type="checkbox"]'
@@ -51,9 +51,6 @@ export class FormBlock extends Block {
 
   async getCustomFieldRoot(title: string): Promise<WebdriverIO.Element> {
     const $tableField = await this.getField(title);
-    if (!$tableField) {
-      throw new Error(`Не найден элемент ${title}`);
-    }
 
     return await $tableField.$('.Form-Control_type_custom').getElement();
   }
@@ -82,15 +79,17 @@ export class FormBlock extends Block {
       throw new Error('В форме отсутствуют поля');
     }
 
+    const fieldTitles: string[] = [];
+
     for (const $field of $$fields) {
       const title = await $field.$('.Form-Label').getText();
-
+      fieldTitles.push(title);
       if (title === fieldTitle) {
         return $field;
       }
     }
 
-    throw new Error(`Не найден элемент ${fieldTitle}`);
+    throw new Error(`Не найден элемент ${fieldTitle} (присутствуют поля: ${fieldTitles.join(', ')})`);
   }
 
   async hasField(fieldTitle: string): Promise<boolean> {

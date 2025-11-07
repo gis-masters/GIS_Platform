@@ -4,7 +4,7 @@ import { MuiSelectBlock } from '../MuiSelect/MuiSelect.block';
 
 class TasksJournalActionsEditDialogBlock extends Block {
   selectors = {
-    container: '.TasksJournalActions-EditDialog',
+    root: '.TasksJournalActions-EditDialog',
     tasksJournalActionsEditDialogYes: '.TasksJournalActions-EditDialog .MuiButton-outlinedPrimary',
     error: '.TasksJournalActions-EditDialog .Form-Error',
     item: '.TasksJournalActions-EditDialog .Documents-Item'
@@ -19,7 +19,7 @@ class TasksJournalActionsEditDialogBlock extends Block {
   async clickAddUserBtn(title: string): Promise<void> {
     await this.waitForVisible();
 
-    const formBlock = new FormBlock(this.selectors.container);
+    const formBlock = new FormBlock(this.selectors.root);
     const $field = await formBlock.getField(title);
     const $addUserBtn = await $field.$('.Users-Add').getElement();
 
@@ -36,13 +36,13 @@ class TasksJournalActionsEditDialogBlock extends Block {
   }
 
   async getDocValue(fieldTitle: string): Promise<string[]> {
-    const formBlock = new FormBlock(this.selectors.container);
+    const formBlock = new FormBlock(this.selectors.root);
 
     return await formBlock.lookupFieldValues(fieldTitle);
   }
 
   async selectOption(optionTitle: string, fieldTitle: string): Promise<void> {
-    const formBlock = new FormBlock(this.selectors.container);
+    const formBlock = new FormBlock(this.selectors.root);
     const $field = await formBlock.getField(fieldTitle);
 
     if (!$field) {

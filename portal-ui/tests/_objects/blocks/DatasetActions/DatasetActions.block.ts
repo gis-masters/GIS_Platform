@@ -3,7 +3,7 @@ import { FormBlock } from '../Form/Form.block';
 
 class DatasetActionsBlock extends Block {
   selectors = {
-    container: '.DatasetActions',
+    root: '.DatasetActions',
     deleteBtn: '.DatasetActions .DatasetActions-Delete',
     editBtn: '.DatasetActions .DatasetActions-Edit',
     dialogEdit: '.DatasetActions-EditDialog',

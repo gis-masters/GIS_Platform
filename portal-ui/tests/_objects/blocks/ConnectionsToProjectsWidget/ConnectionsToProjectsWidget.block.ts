@@ -3,7 +3,7 @@ import { MuiSelectBlock } from '../MuiSelect/MuiSelect.block';
 
 class ConnectionsToProjectsWidgetBlock extends Block {
   selectors = {
-    container: '.ConnectionsToProjectsWidget',
+    root: '.ConnectionsToProjectsWidget',
     connectionToProjectDialogViewSelector:
       '.ConnectionsToProjectsWidget-Dialog .ConnectionsToProjectsWidget-ViewSelector .Form-Control',
     connectionToProjectDialogAccept: '.ConnectionsToProjectsWidget-Dialog .MuiButton-outlinedPrimary'

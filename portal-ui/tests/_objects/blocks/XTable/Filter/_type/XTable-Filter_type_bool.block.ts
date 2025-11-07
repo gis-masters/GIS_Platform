@@ -7,7 +7,7 @@ class XTableFilterTypeBoolBlock extends Block {
   selected = 'Mui-selected';
 
   selectors = {
-    container: '.XTable-Filter_type_bool',
+    root: '.XTable-Filter_type_bool',
     filterButtonTrue: '.XTable-Filter_type_bool button:first-child',
     filterButtonFalse: '.XTable-Filter_type_bool button:last-child'
   };

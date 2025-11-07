@@ -2,7 +2,7 @@ import { Block } from '../../Block';
 
 class OrgUsersBlock extends Block {
   selectors = {
-    container: '.OrgUsers',
+    root: '.OrgUsers',
     loading: '.OrgUsers .Loading',
     userRow: '.OrgUsers .MuiTable-root .MuiTableRow-root',
     createUser: '.OrgUsers-Create'

@@ -2,16 +2,16 @@ import { Block } from '../../Block';
 
 class CounterBlock extends Block {
   selectors = {
-    container: '.Counter',
+    root: '.Counter',
     showMoreButton: '.Counter-Icon',
     popoverContent: '.Counter-PopoverContent',
     popoverContentItem: '.Counter-PopoverContentItem'
   };
 
   async getCounterValue(): Promise<string> {
-    const $container = await this.findBySelector('container');
+    const $root = await this.findBySelector('root');
 
-    return await $container.getText();
+    return await $root.getText();
   }
 
   async clickShowMoreButton() {
@@ -20,8 +20,8 @@ class CounterBlock extends Block {
   }
 
   async getCounterItemsValue(): Promise<string> {
-    const $container = await this.findBySelector('popoverContent');
-    await $container.waitForDisplayed();
+    const $root = await this.findBySelector('popoverContent');
+    await $root.waitForDisplayed();
 
     const $$counterItems = await this.findAllBySelector('popoverContentItem');
 

@@ -2,7 +2,7 @@ import { Block } from '../../Block';
 
 class ToastBlock extends Block {
   selectors = {
-    container: '.Toast',
+    root: '.Toast',
     moar: '.Toast-Moar',
     close: '.Toast-Close',
     details: '.Toast-Details',
@@ -51,8 +51,8 @@ class ToastBlock extends Block {
   }
 
   async waitForHidden(): Promise<void> {
-    const $container = await this.findBySelector('container');
-    await $container.waitForExist({ timeout: 2000, reverse: true, timeoutMsg: 'Не скрывается уведомление' });
+    const $root = await this.findBySelector('root');
+    await $root.waitForExist({ timeout: 2000, reverse: true, timeoutMsg: 'Не скрывается уведомление' });
     await browser.pause(300); // animation
   }
 

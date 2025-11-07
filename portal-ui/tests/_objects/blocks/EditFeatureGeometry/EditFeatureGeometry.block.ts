@@ -4,7 +4,7 @@ import { MuiInputBlock } from '../MuiInput/MuiInput.block';
 
 class EditFeatureGeometryBlock extends Block {
   selectors = {
-    container: '.EditFeatureGeometry',
+    root: '.EditFeatureGeometry',
     view: '.EditFeatureGeometry-View',
     coord: '.EditFeatureGeometry-Coord',
     coordInputX: '.EditFeatureGeometry-CoordInput_d_x',

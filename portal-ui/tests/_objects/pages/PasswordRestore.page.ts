@@ -5,7 +5,7 @@ export class PasswordRestorePage extends Page {
   url = 'restore-password';
 
   selectors = {
-    container: '.RestorePassword '
+    root: '.RestorePassword '
   };
 }
 

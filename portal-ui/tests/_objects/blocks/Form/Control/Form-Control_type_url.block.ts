@@ -3,7 +3,7 @@ import { FormBlock } from '../Form.block';
 
 class FormControlTypeUrlBlock extends Block {
   selectors = {
-    container: '.Form-Control_type_url'
+    root: '.Form-Control_type_url'
   };
 
   async clickAddUrlBtn(title: string): Promise<void> {

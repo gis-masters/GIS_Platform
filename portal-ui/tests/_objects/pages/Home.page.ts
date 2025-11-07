@@ -5,7 +5,7 @@ class HomePage extends Page {
   url = '';
 
   selectors = {
-    container: 'crg-home-page .container'
+    root: 'crg-home-page .container'
   };
 }
 

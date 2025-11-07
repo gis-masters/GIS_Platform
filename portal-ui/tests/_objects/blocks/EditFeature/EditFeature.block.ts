@@ -10,7 +10,7 @@ import { MuiInputBlock } from '../MuiInput/MuiInput.block';
 
 class EditFeatureBlock extends Block {
   selectors = {
-    container: '.EditFeature',
+    root: '.EditFeature',
     editFeatureBack: '.EditFeature-Back',
     editFeatureSaveBtn: '.EditFeature-Save',
     editFeatureForm: '.EditFeature',
@@ -25,7 +25,7 @@ class EditFeatureBlock extends Block {
     loader: 'EditFeature .MuiLinearProgress-root'
   };
 
-  copyFeaturesButton = new CopyFeaturesButtonBlock(this.selectors.container);
+  copyFeaturesButton = new CopyFeaturesButtonBlock(this.selectors.root);
 
   async waitForLoading(): Promise<void> {
     const $editFeatureLoader = await this.findBySelector('editFeatureLoading');
@@ -98,24 +98,24 @@ class EditFeatureBlock extends Block {
   }
 
   async isReadonlyMode(): Promise<boolean> {
-    const $container = await editFeatureBlock.findBySelector('container');
+    const $root = await editFeatureBlock.findBySelector('root');
 
-    return hasClass($container, 'EditFeature_readonly');
+    return hasClass($root, 'EditFeature_readonly');
   }
 
   async openGeometryTab(): Promise<void> {
-    const $container = await editFeatureBlock.findBySelector('container');
+    const $root = await editFeatureBlock.findBySelector('root');
 
-    const $geometryTab = await $container.$('.MuiButtonBase-root[role="Геометрия"]').getElement();
+    const $geometryTab = await $root.$('.MuiButtonBase-root[role="Геометрия"]').getElement();
     await $geometryTab.waitForClickable();
     await $geometryTab.click();
     await sleep(500); // Анимация перелистывания ангуларовского таба
   }
 
   async getGeometryInViewMode(): Promise<string> {
-    const $container = await editFeatureBlock.findBySelector('container');
+    const $root = await editFeatureBlock.findBySelector('root');
 
-    return $container.$('.EditFeatureGeometry-View').getText();
+    return $root.$('.EditFeatureGeometry-View').getText();
   }
 
   async waitForEditFeatureForm(): Promise<void> {

@@ -4,7 +4,7 @@ import { Block } from '../../../Block';
 
 class MapMapBlock extends Block {
   selectors = {
-    container: '.map__map',
+    root: '.map__map',
     toolbar: '.MapToolbar',
     basemap: '.BasemapsSelect',
     zoom: '.ol-zoom',

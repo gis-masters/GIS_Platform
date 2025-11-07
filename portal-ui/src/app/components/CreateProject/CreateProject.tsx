@@ -4,22 +4,25 @@ import { Tooltip } from '@mui/material';
 import { CreateNewFolderOutlined, PlaylistAdd } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
-import { type CrgProject, type NewCrgProject } from '../../services/gis/projects/projects.models';
+import {
+  type CrgProject,
+  crgProjectFolderSchema,
+  crgProjectSchema,
+  type NewCrgProject
+} from '../../services/gis/projects/projects.models';
 import { projectsService } from '../../services/gis/projects/projects.service';
 import { FormDialog } from '../FormDialog/FormDialog';
 import { IconButton } from '../IconButton/IconButton';
-import { crgProjectFolderSchema, crgProjectSchema } from '../ProjectActions/ProjectActions';
 
 const cnCreateProject = cn('CreateProject');
-const cnCreateProjectFolder = cn('CreateProjectFolder');
 
 interface CreateProjectProps {
-  isFolder?: boolean;
+  folder?: boolean;
   currentProjectFolderId?: number;
   onCreate(project: CrgProject): void;
 }
 
-export const CreateProject = observer(({ isFolder, currentProjectFolderId, onCreate }: CreateProjectProps) => {
+export const CreateProject = observer(({ folder, currentProjectFolderId, onCreate }: CreateProjectProps) => {
   const [dialogOpen, setDialogOpen] = useState(false);
 
   const openDialog = useCallback(() => {
@@ -32,7 +35,7 @@ export const CreateProject = observer(({ isFolder, currentProjectFolderId, onCre
 
   const create = useCallback(
     async (project: NewCrgProject) => {
-      if (isFolder) {
+      if (folder) {
         project.folder = true;
       }
 
@@ -44,25 +47,24 @@ export const CreateProject = observer(({ isFolder, currentProjectFolderId, onCre
 
       onCreate(newProject);
     },
-    [currentProjectFolderId, isFolder, onCreate]
+    [currentProjectFolderId, folder, onCreate]
   );
 
   return (
     <>
-      <Tooltip title={isFolder ? 'Создать папку проектов' : 'Создать проект'}>
+      <Tooltip title={folder ? 'Создать папку проектов' : 'Создать проект'}>
         <span>
-          <IconButton className={isFolder ? cnCreateProjectFolder() : cnCreateProject()} onClick={openDialog}>
-            {isFolder ? <CreateNewFolderOutlined /> : <PlaylistAdd />}
+          <IconButton className={cnCreateProject({ mode: folder ? 'folder' : 'project' })} onClick={openDialog}>
+            {folder ? <CreateNewFolderOutlined /> : <PlaylistAdd />}
           </IconButton>
         </span>
       </Tooltip>
 
       <FormDialog<CrgProject>
-        title={isFolder ? 'Создание папки проектов' : 'Создание нового проекта'}
-        className={isFolder ? cnCreateProjectFolder('Dialog') : cnCreateProject('Dialog')}
+        title={folder ? 'Создание папки проектов' : 'Создание нового проекта'}
+        className={cnCreateProject('Dialog')}
         open={dialogOpen}
-        value={{}}
-        schema={isFolder ? crgProjectFolderSchema : crgProjectSchema}
+        schema={folder ? crgProjectFolderSchema : crgProjectSchema}
         onClose={closeDialog}
         closeWithConfirm
         actionFunction={create}

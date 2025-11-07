@@ -2,7 +2,7 @@ import { Block } from '../../Block';
 
 class LibraryDocumentVersionsActionsDialogBlock extends Block {
   selectors = {
-    container: '.LibraryDocumentVersionsActionsRestore-Dialog',
+    root: '.LibraryDocumentVersionsActionsRestore-Dialog',
     acceptRestoreBtn: '.LibraryDocumentVersionsActionsRestore-Dialog .MuiButton-outlinedPrimary'
   };
 

@@ -3,7 +3,7 @@ import { XTableBlock } from '../XTable/XTable.block';
 
 export class ChooseXTableDialogBlock extends Block {
   selectors = {
-    container: '.ChooseXTableDialog',
+    root: '.ChooseXTableDialog',
     submit: '.ChooseXTableDialog-Submit'
   };
 
@@ -14,7 +14,7 @@ export class ChooseXTableDialogBlock extends Block {
   }
 
   async getXTable(): Promise<XTableBlock> {
-    return new XTableBlock(undefined, await this.findBySelector('container'));
+    return new XTableBlock(undefined, await this.findBySelector('root'));
   }
 }
 

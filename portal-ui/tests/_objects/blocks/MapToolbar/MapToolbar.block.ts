@@ -2,7 +2,7 @@ import { Block } from '../../Block';
 
 class MapToolbarBlock extends Block {
   selectors = {
-    container: '.MapToolbar',
+    root: '.MapToolbar',
     cancelSelection: '.MapToolbar .MapSelection-Cancel',
     selectMultiple: '.MapToolbar .MapSelection-Select',
     labelsToggler: '.MapToolbar .MapLabels .MapLabels-Toggler',

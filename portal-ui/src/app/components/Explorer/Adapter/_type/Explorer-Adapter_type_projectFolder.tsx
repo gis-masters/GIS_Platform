@@ -186,7 +186,7 @@ export class ExplorerAdapterTypeProjectFolder {
         {/* eslint-disable-next-line react/jsx-no-bind -- FIXME in #3782 */}
         <CreateProject currentProjectFolderId={item.payload.id} onCreate={handleCreate} />
         {/* eslint-disable-next-line react/jsx-no-bind -- FIXME in #3782 */}
-        <CreateProject currentProjectFolderId={item.payload.id} isFolder onCreate={handleCreate} />
+        <CreateProject currentProjectFolderId={item.payload.id} folder onCreate={handleCreate} />
       </>
     ) : null;
   }

@@ -4,15 +4,15 @@ import { FormBlock } from '../Form/Form.block';
 
 class LibraryDocumentActionsEditDialogBlock extends Block {
   selectors = {
-    container: '.LibraryDocumentActions-EditDialog'
+    root: '.LibraryDocumentActions-EditDialog'
   };
 
   async clickDocumentsAdd(title: string): Promise<void> {
-    await formControlTypeDocumentBlock.clickDocumentsAdd(this.selectors.container, title);
+    await formControlTypeDocumentBlock.clickDocumentsAdd(this.selectors.root, title);
   }
 
   async lookupFieldValues(title: string): Promise<string[]> {
-    const formBlock = new FormBlock(this.selectors.container);
+    const formBlock = new FormBlock(this.selectors.root);
 
     return formBlock.lookupFieldValues(title);
   }

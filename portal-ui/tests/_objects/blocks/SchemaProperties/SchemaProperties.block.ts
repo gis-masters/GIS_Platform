@@ -4,7 +4,7 @@ import { FormBlock } from '../Form/Form.block';
 
 export class SchemaPropertiesBlock extends Block {
   selectors = {
-    container: '.SchemaProperties',
+    root: '.SchemaProperties',
     schemaProperty: '.SchemaProperties-Item',
     schemaPropertyTitle: '.SchemaProperties-PrimaryText',
     schemaPropertyOpenEditButton: '.SchemaProperties-OpenEditButton',
@@ -35,8 +35,8 @@ export class SchemaPropertiesBlock extends Block {
   }
 
   async getPropertyByTitle(title: string): Promise<WebdriverIO.Element> {
-    const $container = await this.findBySelector('container');
-    const $$properties = await $container.$$(this.selectors.schemaProperty).getElements();
+    const $root = await this.findBySelector('root');
+    const $$properties = await $root.$$(this.selectors.schemaProperty).getElements();
 
     for (const $property of $$properties) {
       const $title = await $property.$(this.selectors.schemaPropertyTitle).getElement();

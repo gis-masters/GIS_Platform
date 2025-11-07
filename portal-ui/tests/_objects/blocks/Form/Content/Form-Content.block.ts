@@ -2,7 +2,7 @@ import { Block } from '../../../Block';
 
 class FormContentBlock extends Block {
   selectors = {
-    container: '.Form-Content'
+    root: '.Form-Content'
   };
 }
 

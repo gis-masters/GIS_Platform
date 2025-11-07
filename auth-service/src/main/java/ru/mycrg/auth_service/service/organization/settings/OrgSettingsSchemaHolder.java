@@ -159,6 +159,13 @@ public class OrgSettingsSchemaHolder {
         storageSize.setMinInclusive(0);
         storageSize.setMaxInclusive(100);
 
+        SimplePropertyDto defaultProjectBbox = new SimplePropertyDto();
+        defaultProjectBbox.setName("defaultProjectBbox");
+        defaultProjectBbox.setTitle("Bbox нового проекта по-умолчанию");
+        defaultProjectBbox.setValueType(STRING);
+        defaultProjectBbox.setDefaultValue("[3510207,5370754,4155031,5882794]");
+        defaultProjectBbox.setValidationWellKnownFormula("bboxJson3857");
+
         props.add(createLibraryItem);
         props.add(viewDocumentLibrary);
         props.add(viewBugReport);
@@ -177,6 +184,7 @@ public class OrgSettingsSchemaHolder {
         props.add(favoritesEpsg);
         props.add(defaultEpsg);
         props.add(storageSize);
+        props.add(defaultProjectBbox);
 
         this.schema.setProperties(props);
     }

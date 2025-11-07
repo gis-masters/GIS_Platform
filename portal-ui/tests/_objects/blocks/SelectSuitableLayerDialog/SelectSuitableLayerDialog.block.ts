@@ -3,7 +3,7 @@ import { xTableBlock } from '../XTable/XTable.block';
 
 class SelectSuitableLayerDialogBlock extends Block {
   selectors = {
-    container: '.SelectSuitableLayerDialog',
+    root: '.SelectSuitableLayerDialog',
     openSelectLayerDialogBtn: '.SelectSuitableLayerDialog-LayerSelect',
     saveBtn: '.SelectSuitableLayerDialog .MuiButton-outlinedPrimary',
     loading: '.SelectSuitableLayerDialog .Loading',
@@ -11,9 +11,9 @@ class SelectSuitableLayerDialogBlock extends Block {
   };
 
   async clickOpenSelectLayerDialogBtn(): Promise<void> {
-    const $container = await this.findBySelector('openSelectLayerDialogBtn');
-    await $container.waitForClickable();
-    await $container.click();
+    const $root = await this.findBySelector('openSelectLayerDialogBtn');
+    await $root.waitForClickable();
+    await $root.click();
   }
 
   async selectLayer(layer: string): Promise<void> {

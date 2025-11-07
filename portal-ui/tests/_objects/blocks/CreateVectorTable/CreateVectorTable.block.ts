@@ -5,7 +5,7 @@ import { selectSchemaControlDialogBlock } from '../SelectSchemaControlDialog/Sel
 
 class CreateVectorTableBlock extends Block {
   selectors = {
-    container: '.CreateVectorTable'
+    root: '.CreateVectorTable'
   };
 
   // мануальное создание векторной таблицы

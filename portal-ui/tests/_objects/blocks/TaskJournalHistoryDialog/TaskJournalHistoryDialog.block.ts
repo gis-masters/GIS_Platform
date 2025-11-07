@@ -2,7 +2,7 @@ import { Block } from '../../Block';
 
 class TaskJournalHistoryDialogBlock extends Block {
   selectors = {
-    container: '.TaskJournalHistoryDialog'
+    root: '.TaskJournalHistoryDialog'
   };
 }
 

@@ -4,13 +4,16 @@ import { observer } from 'mobx-react';
 import { withBemMod } from '@bem-react/core';
 
 import { communicationService, type DataChangeEventDetail } from '../../../../services/communication.service';
-import { type CrgProject } from '../../../../services/gis/projects/projects.models';
+import {
+  type CrgProject,
+  crgProjectFolderSchema,
+  crgProjectSchema
+} from '../../../../services/gis/projects/projects.models';
 import { projectsService } from '../../../../services/gis/projects/projects.service';
 import { permissionsClient } from '../../../../services/permissions/permissions.client';
 import { Role } from '../../../../services/permissions/permissions.models';
 import { currentUser } from '../../../../stores/CurrentUser.store';
 import { PermissionsWidget } from '../../../PermissionsWidget/PermissionsWidget';
-import { crgProjectFolderSchema, crgProjectSchema } from '../../../ProjectActions/ProjectActions';
 import { ViewContentWidget } from '../../../ViewContentWidget/ViewContentWidget';
 import { assertExplorerItemDataTypeProjectFolder } from '../../Adapter/_type/Explorer-Adapter_type_projectFolder';
 import { getId } from '../../Adapter/Explorer-Adapter';

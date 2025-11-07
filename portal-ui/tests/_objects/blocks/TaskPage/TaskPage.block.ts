@@ -2,7 +2,7 @@ import { Block } from '../../Block';
 
 class TaskPageBlock extends Block {
   selectors = {
-    container: '.TaskPageContainer',
+    root: '.TaskPageContainer',
     title: '.TaskPageContainer-Title',
     actions: '.TaskPageContainer-Actions',
     card: '.TaskPageContainer .TaskCard-Card'
@@ -19,8 +19,8 @@ class TaskPageBlock extends Block {
   }
 
   async getCardTitle(): Promise<string> {
-    const $container = await this.findBySelector('container');
-    await $container.waitForDisplayed();
+    const $root = await this.findBySelector('root');
+    await $root.waitForDisplayed();
 
     const $title = await this.findBySelector('title');
 

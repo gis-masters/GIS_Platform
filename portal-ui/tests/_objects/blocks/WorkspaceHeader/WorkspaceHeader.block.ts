@@ -2,7 +2,7 @@ import { Block } from '../../Block';
 
 class WorkspaceHeaderBlock extends Block {
   selectors = {
-    container: '.WorkspaceHeader',
+    root: '.WorkspaceHeader',
     printMap: '.WorkspaceHeader .PrintMapButton',
     organization: '.WorkspaceHeader-Organization',
     loader: '.WorkspaceHeader-Loader .MuiLinearProgress-root'

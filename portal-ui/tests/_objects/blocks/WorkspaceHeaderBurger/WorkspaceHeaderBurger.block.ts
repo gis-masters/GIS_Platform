@@ -2,14 +2,14 @@ import { Block } from '../../Block';
 
 class WorkspaceHeaderBurgerBlock extends Block {
   selectors = {
-    container: '.WorkspaceHeader-Burger'
+    root: '.WorkspaceHeader-Burger'
   };
 
   async openMainMenu(): Promise<void> {
-    const $container = await this.findBySelector('container');
-    await $container.waitForDisplayed();
+    const $root = await this.findBySelector('root');
+    await $root.waitForDisplayed();
 
-    await $container.click();
+    await $root.click();
   }
 }
 

@@ -3,7 +3,7 @@ import { FormBlock } from '../Form.block';
 
 class FormControlTypeUserBlock extends Block {
   selectors = {
-    container: '.Form-Control_type_user'
+    root: '.Form-Control_type_user'
   };
 
   async clickAddUserBtn(title: string): Promise<void> {

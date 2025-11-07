@@ -2,12 +2,12 @@ import { Block } from '../../Block';
 
 export class CopyFeaturesButtonBlock extends Block {
   selectors = {
-    container: '.CopyFeaturesButton'
+    root: '.CopyFeaturesButton'
   };
 
   async click(): Promise<void> {
-    const $container = await this.findBySelector('container');
-    await $container.waitForClickable();
-    await $container.click();
+    const $root = await this.findBySelector('root');
+    await $root.waitForClickable();
+    await $root.click();
   }
 }

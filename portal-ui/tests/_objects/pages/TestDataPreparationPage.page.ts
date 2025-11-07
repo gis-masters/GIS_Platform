@@ -5,7 +5,7 @@ class TestDataPreparationPage extends Page {
   url = 'test-data-preparation';
 
   selectors = {
-    container: '.test-data-preparation'
+    root: '.test-data-preparation'
   };
 }
 

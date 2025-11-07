@@ -5,7 +5,7 @@ import { Block } from '../../Block';
 
 class UrlListDialogBlock extends Block {
   selectors = {
-    container: '.UrlsList-Dialog'
+    root: '.UrlsList-Dialog'
   };
 
   async assertSelfie(tag = 'plain', checkElementOptions: WdioCheckElementMethodOptions = {}): Promise<void> {

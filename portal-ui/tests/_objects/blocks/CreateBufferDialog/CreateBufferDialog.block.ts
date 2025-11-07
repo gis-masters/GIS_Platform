@@ -2,7 +2,7 @@ import { Block } from '../../Block';
 
 class CreateBufferDialogBlock extends Block {
   selectors = {
-    container: '.CreateBufferDialog',
+    root: '.CreateBufferDialog',
     createBtn: '.CreateBufferDialog .MuiButton-outlinedPrimary'
   };
 

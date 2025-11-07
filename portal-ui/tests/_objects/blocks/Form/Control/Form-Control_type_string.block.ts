@@ -2,7 +2,7 @@ import { Block } from '../../../Block';
 
 class FormControlTypeStringBlock extends Block {
   selectors = {
-    container: '.Form-Control_type_string'
+    root: '.Form-Control_type_string'
   };
 }
 

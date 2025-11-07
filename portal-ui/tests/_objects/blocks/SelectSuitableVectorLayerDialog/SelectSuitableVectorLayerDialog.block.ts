@@ -3,7 +3,7 @@ import { xTableBlock } from '../XTable/XTable.block';
 
 class SelectSuitableVectorLayerDialog extends Block {
   selectors = {
-    container: '.SelectSuitableVectorLayerDialog',
+    root: '.SelectSuitableVectorLayerDialog',
     copyBtn: '.SelectSuitableVectorLayerDialog .MuiButton-outlinedPrimary',
     loading: '.SelectSuitableVectorLayerDialog .Loading',
     projectRow: '.SelectSuitableVectorLayerDialog .MuiTable-root .MuiTableRow-root'

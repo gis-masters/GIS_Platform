@@ -3,7 +3,8 @@ import moment from 'moment';
 
 import { type FileInfo } from '../../data/files/files.models';
 import { type PropertySchema, PropertyType, type ValueFormula } from '../../data/schema/schema.models';
-import { valueWellKnownFormulas } from '../../data/schema/schema.utils';
+import { validationWellKnownFormulas } from '../../data/schema/validationWellKnownFormulas';
+import { valueWellKnownFormulas } from '../../data/schema/valueWellKnownFormulas';
 import { knownRegex } from '../../regexp.service';
 import { notFalsyFilter } from '../NotFalsyFilter';
 import { isRecordStringUnknown } from '../typeGuards/isRecordStringUnknown';
@@ -57,6 +58,10 @@ export function validateFieldValue(value: unknown, property: PropertySchema, for
   const validatorsList = [...(fieldValidators[property.propertyType] || [])];
   if (property.validationFormula) {
     validatorsList.push(property.validationFormula);
+  }
+
+  if (property.validationWellKnownFormula && validationWellKnownFormulas[property.validationWellKnownFormula]) {
+    validatorsList.push(validationWellKnownFormulas[property.validationWellKnownFormula]);
   }
 
   return {

@@ -4,7 +4,7 @@ import { Block } from '../../Block';
 
 export class MuiInputBlock extends Block {
   selectors = {
-    container: '.MuiInputBase-root',
+    root: '.MuiInputBase-root',
     input: '.MuiInputBase-input',
     icon: '.MuiSvgIcon-colorWarning'
   };
@@ -37,8 +37,8 @@ export class MuiInputBlock extends Block {
   }
 
   async hasWarningIcon(): Promise<boolean> {
-    const $container = await this.findBySelector('container');
-    const $warning = await $container.$(this.selectors.icon).getElement();
+    const $root = await this.findBySelector('root');
+    const $warning = await $root.$(this.selectors.icon).getElement();
 
     return await $warning.isDisplayed();
   }

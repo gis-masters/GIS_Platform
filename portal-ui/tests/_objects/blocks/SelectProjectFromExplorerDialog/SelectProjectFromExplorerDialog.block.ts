@@ -5,7 +5,7 @@ import { ExplorerBlock } from '../Explorer/Explorer.block';
 
 class SelectProjectFromExplorerDialogBlock extends Block {
   selectors = {
-    container: '.SelectProjectFromExplorerDialog',
+    root: '.SelectProjectFromExplorerDialog',
     select: '.SelectProjectFromExplorerDialog .MuiButton-outlinedPrimary',
     loading: '.SelectProjectFromExplorerDialog .Loading'
   };
@@ -14,7 +14,7 @@ class SelectProjectFromExplorerDialogBlock extends Block {
     await this.waitForVisible();
     await this.loading();
 
-    const explorerBlock = new ExplorerBlock(await this.findBySelector('container'));
+    const explorerBlock = new ExplorerBlock(await this.findBySelector('root'));
     await explorerBlock.selectExplorerItem(explorerItemTitle);
   }
 
@@ -40,8 +40,8 @@ class SelectProjectFromExplorerDialogBlock extends Block {
   }
 
   async assertSelfie(tag?: string, checkElementOptions?: WdioCheckElementMethodOptions): Promise<void> {
-    const $container = await this.findBySelector('container');
-    await $container.waitForDisplayed();
+    const $root = await this.findBySelector('root');
+    await $root.waitForDisplayed();
 
     await super.assertSelfie(tag, {
       hideElements: [...(checkElementOptions?.hideElements || [])],
@@ -50,7 +50,7 @@ class SelectProjectFromExplorerDialogBlock extends Block {
   }
 
   async allItemsIsDisabled(): Promise<boolean> {
-    const explorerBlock = new ExplorerBlock(await this.findBySelector('container'));
+    const explorerBlock = new ExplorerBlock(await this.findBySelector('root'));
 
     return await explorerBlock.allItemsIsDisabled();
   }

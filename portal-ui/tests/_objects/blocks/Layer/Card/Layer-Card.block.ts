@@ -3,13 +3,13 @@ import { layersSidebarBlock } from '../../LayersSidebar/LayersSidebar.block';
 
 class LayerCardBlock extends Block {
   selectors = {
-    container: '.Layer-Card'
+    root: '.Layer-Card'
   };
 
   async getLayerCardByName(layerName: string): Promise<WebdriverIO.Element | undefined> {
     await layersSidebarBlock.waitForLayersSidebarDisplayed();
 
-    const $$layerCard = await this.findAllBySelector('container');
+    const $$layerCard = await this.findAllBySelector('root');
 
     for (const $layerCard of $$layerCard) {
       const layerCardName = await $layerCard.getText();
@@ -23,7 +23,7 @@ class LayerCardBlock extends Block {
   async getLayersCardsNames(): Promise<string[]> {
     await layersSidebarBlock.waitForLayersSidebarDisplayed();
 
-    const $$layerCard = await this.findAllBySelector('container');
+    const $$layerCard = await this.findAllBySelector('root');
     const names: string[] = [];
 
     for (const $layerCard of $$layerCard) {

@@ -5,7 +5,7 @@ import { MuiSelectBlock } from '../MuiSelect/MuiSelect.block';
 
 export class SelectProjectionBlock extends Block {
   selectors = {
-    container: '.SelectProjection',
+    root: '.SelectProjection',
     select: '.SelectProjection-Select'
   };
 

@@ -1,8 +1,8 @@
-export async function hasClass($container: WebdriverIO.Element, clazz: string): Promise<boolean> {
-  const cls = await $container.getAttribute('class');
+export async function hasClass($element: WebdriverIO.Element, className: string): Promise<boolean> {
+  const cls = await $element.getAttribute('class');
   if (!cls) {
     throw new Error('Ошибка получения классов');
   }
 
-  return cls.split(' ').includes(clazz);
+  return cls.split(' ').includes(className);
 }

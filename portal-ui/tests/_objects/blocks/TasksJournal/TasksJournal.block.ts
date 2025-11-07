@@ -3,7 +3,7 @@ import { MuiMenuBlock } from '../MuiMenu/MuiMenu.block';
 
 export class TasksJournalBlock extends Block {
   selectors = {
-    container: '.TasksJournal',
+    root: '.TasksJournal',
     loading: '.TasksJournal .Loading',
     createTaskButton: '.TasksJournal-CreateButton',
     taskRow: '.TasksJournal .MuiTableBody-root .MuiTableRow-root'

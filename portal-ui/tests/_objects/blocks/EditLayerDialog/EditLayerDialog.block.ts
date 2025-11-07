@@ -6,14 +6,14 @@ import { SelectProjectionBlock } from '../SelectProjection/SelectProjection.bloc
 
 class EditLayerPropertiesDialogBlock extends Block {
   selectors = {
-    container: '.EditLayerDialog',
+    root: '.EditLayerDialog',
     layerPropertyFormDialogViewSelect: '.EditLayerDialog .Form-Field:first-child .MuiSelect-select',
     formDialogLayerPropertySaveBtn: '.EditLayerDialog .MuiButton-outlinedPrimary',
     loading: '.EditLayerDialog .Loading'
   };
 
   async getChoiceValue(fieldTitle: string): Promise<string> {
-    const formBlock = new FormBlock(this.selectors.container);
+    const formBlock = new FormBlock(this.selectors.root);
     const $field = await formBlock.getField(fieldTitle);
 
     if (!$field) {
@@ -28,7 +28,7 @@ class EditLayerPropertiesDialogBlock extends Block {
   async selectOption(optionTitle: string, fieldTitle: string): Promise<void> {
     await this.waitForLoadingHide();
 
-    const formBlock = new FormBlock(this.selectors.container);
+    const formBlock = new FormBlock(this.selectors.root);
     const $field = await formBlock.getField(fieldTitle);
 
     if (!$field) {
@@ -40,7 +40,7 @@ class EditLayerPropertiesDialogBlock extends Block {
   }
 
   async layerPropertyDialogSelectPhotoLayer(optionTitle: string): Promise<void> {
-    const muiSelect = new MuiSelectBlock(this.selectors.container);
+    const muiSelect = new MuiSelectBlock(this.selectors.root);
     await muiSelect.selectOptionByTitle(optionTitle);
   }
 
@@ -51,7 +51,7 @@ class EditLayerPropertiesDialogBlock extends Block {
   }
 
   async setStringFieldValue(title: string, value: string): Promise<void> {
-    const formBlock = new FormBlock(this.selectors.container);
+    const formBlock = new FormBlock(this.selectors.root);
     const $field = await formBlock.getField(title);
 
     if (!$field) {
@@ -64,7 +64,7 @@ class EditLayerPropertiesDialogBlock extends Block {
   }
 
   async setChoiceFieldValue(title: string, optionTitle: string): Promise<void> {
-    const formBlock = new FormBlock(this.selectors.container);
+    const formBlock = new FormBlock(this.selectors.root);
     const $field = await formBlock.getField(title);
 
     if (!$field) {
@@ -81,7 +81,7 @@ class EditLayerPropertiesDialogBlock extends Block {
   }
 
   async selectProjection(code: string): Promise<void> {
-    const selectProjectionBlock = new SelectProjectionBlock(this.selectors.container);
+    const selectProjectionBlock = new SelectProjectionBlock(this.selectors.root);
     await selectProjectionBlock.selectProjectionByCode(code);
   }
 }

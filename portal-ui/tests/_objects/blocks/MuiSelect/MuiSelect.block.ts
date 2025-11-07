@@ -4,24 +4,24 @@ import { MuiMenuBlock } from '../MuiMenu/MuiMenu.block';
 
 export class MuiSelectBlock extends Block {
   selectors = {
-    container: '.MuiInputBase-root div[class*="MuiSelect"]'
+    root: '.MuiInputBase-root div[class*="MuiSelect"]'
   };
 
   async selectOptionByTitle(optionTitle: string, contains?: boolean): Promise<void> {
-    const $container = await this.findBySelector('container');
-    await $container.moveTo();
+    const $root = await this.findBySelector('root');
+    await $root.moveTo();
 
     await sleep(300); // ждем анимации отображения
-    await $container.click();
+    await $root.click();
 
     const muiMenuBlock = new MuiMenuBlock();
     await muiMenuBlock.clickItemByTitle(optionTitle, contains);
   }
 
   async getText(): Promise<string> {
-    const $container = await this.findBySelector('container');
+    const $root = await this.findBySelector('root');
 
-    return $container.getText();
+    return $root.getText();
   }
 
   async close(): Promise<void> {

@@ -76,6 +76,15 @@ export interface ProjectUpdateDto {
   description: string;
 }
 
+export interface GkpgExportDetailsModel extends Serializable {
+  pathToGpkgFile: string;
+  messageFromExport: MessageFromExport[];
+}
+
+export interface MessageFromExport extends Serializable {
+  message: string;
+}
+
 export interface Page {
   size: number;
   totalElements: number;
@@ -102,6 +111,8 @@ export interface TableContentModel {
   variables: { [index: string]: string };
 }
 
+export interface Serializable {}
+
 export interface Settings {
   storageSize: number;
   reestrs: boolean;
@@ -118,6 +129,7 @@ export interface Settings {
   viewBugReport: boolean;
   viewDocumentLibrary: boolean;
   viewServicesCalculator: boolean;
+  defaultProjectBbox: string;
   favoritesEpsg: string[];
   defaultEpsg: string;
   tags: string[];

@@ -3,14 +3,14 @@ import { XTableBlock } from '../../XTable/XTable.block';
 
 class UsersAddDialogBlock extends Block {
   selectors = {
-    container: '.Users-AddDialog',
+    root: '.Users-AddDialog',
     saveBtn: '.Users-AddDialog .MuiButton-outlinedPrimary',
     userRow: '.Users-AddDialog .MuiTable-root .MuiTableRow-root',
     tableContainer: '.Users-AddDialog .XTable-Container',
     loading: '.Users-AddDialog .Loading'
   };
 
-  xTable = new XTableBlock(this.selectors.container);
+  xTable = new XTableBlock(this.selectors.root);
 
   async waitForVisible(): Promise<void> {
     await super.waitForVisible();

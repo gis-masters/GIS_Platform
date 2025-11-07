@@ -2,7 +2,7 @@ import { Block } from '../../../../Block';
 
 export class XTableFilterTypeIdBlock extends Block {
   selectors = {
-    container: '.XTable-Filter_type_id',
+    root: '.XTable-Filter_type_id',
     input: '.XTable-Filter_type_id input'
   };
 

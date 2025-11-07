@@ -3,7 +3,7 @@ import { xTableBlock } from '../../XTable.block';
 
 class XTableFilterTypeDateTimeBlock extends Block {
   selectors = {
-    container: '.XTable-Filter_type_dateTime',
+    root: '.XTable-Filter_type_dateTime',
     filterInputFirstDate: '.XTable-Filter_type_dateTime .MuiTextField-root:first-child input',
     filterInputSecondDate: '.XTable-Filter_type_dateTime .MuiTextField-root:last-child input'
   };

@@ -2,7 +2,7 @@ import { Block } from '../../Block';
 
 class WorkspaceHeaderMenuBlock extends Block {
   selectors = {
-    container: '.WorkspaceHeader-Menu'
+    root: '.WorkspaceHeader-Menu'
   };
 
   $getMenuItem(itemName: string): Promise<WebdriverIO.Element> {
@@ -10,8 +10,8 @@ class WorkspaceHeaderMenuBlock extends Block {
   }
 
   async selectMainMenuOption(itemName: string): Promise<void> {
-    const $container = await this.findBySelector('container');
-    await $container.waitForDisplayed();
+    const $root = await this.findBySelector('root');
+    await $root.waitForDisplayed();
 
     const $menuItem = await this.$getMenuItem(itemName);
     await $menuItem.click();

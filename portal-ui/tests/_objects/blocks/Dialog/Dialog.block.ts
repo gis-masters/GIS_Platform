@@ -2,7 +2,7 @@ import { Block } from '../../Block';
 
 export class DialogBlock extends Block {
   selectors = {
-    container: '.MuiDialog-paper',
+    root: '.MuiDialog-paper',
     actions: '.MuiDialog-paper .MuiDialogActions-root',
     actionsButtons: '.MuiDialog-paper .MuiDialogActions-root .Button'
   };
@@ -29,7 +29,7 @@ export class DialogBlock extends Block {
     throw new Error(`Не найден элемент ${buttonTitle}`);
   }
 
-  async clickButtonByTitle(title: string): Promise<void> {
+  async clickActionButton(title: string): Promise<void> {
     const $button = await this.getButtonByTitle(title);
     await $button.click();
   }

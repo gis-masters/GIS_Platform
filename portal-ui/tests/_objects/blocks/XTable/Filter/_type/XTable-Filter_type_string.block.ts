@@ -4,12 +4,12 @@ import { MuiInputBlock } from '../../../MuiInput/MuiInput.block';
 
 export class XTableFilterTypeStringBlock extends Block {
   selectors = {
-    container: '.XTable-Filter_type_string',
+    root: '.XTable-Filter_type_string',
     strictness: '.XTable-Filter_type_string .XTable-FilterStrictness'
   };
 
   async clear(): Promise<void> {
-    const inputBlock = new MuiInputBlock(await this.findBySelector('container'));
+    const inputBlock = new MuiInputBlock(await this.findBySelector('root'));
     await inputBlock.clearValue();
   }
 
@@ -20,13 +20,13 @@ export class XTableFilterTypeStringBlock extends Block {
   }
 
   async setValue(title: string): Promise<void> {
-    const inputBlock = new MuiInputBlock(await this.findBySelector('container'));
+    const inputBlock = new MuiInputBlock(await this.findBySelector('root'));
     await inputBlock.setValue(title);
     await browser.pause(300); // отрисовка фильтрации в таблице
   }
 
   async getValue(): Promise<string> {
-    const inputBlock = new MuiInputBlock(await this.findBySelector('container'));
+    const inputBlock = new MuiInputBlock(await this.findBySelector('root'));
 
     return inputBlock.getValue();
   }
