@@ -26,7 +26,7 @@ fi
 
 # Если параметры не указаны, берем из CHANGELOG.md и текущего HEAD
 if [ $# -eq 0 ]; then
-    echo "Режим: Автоматический (из CHANGELOG.md и HEAD)" >&2
+    echo "Режим: Автоматический (из CHANGELOG.md и HEAD)"
     # Извлекаем последний хеш из CHANGELOG.md (первая строка с ###### _[hex]_)
     if [ -f "$CHANGELOG_FILE" ]; then
         [ -n "${DEBUG:-}" ] && echo "Читаем CHANGELOG.md: $CHANGELOG_FILE" >&2
@@ -57,7 +57,8 @@ if [ $# -eq 0 ]; then
         echo "Предупреждение: не удалось извлечь хеш из CHANGELOG.md, ищем последний коммит с изменением CHANGELOG.md..." >&2
         FROM_HASH=$(git log --format="%H" --follow -- "$CHANGELOG_FILE" 2>/dev/null | head -1)
         if [ -n "$FROM_HASH" ]; then
-            FROM_HASH=$(git rev-parse --short=8 "$FROM_HASH" 2>/dev/null || echo "$FROM_HASH")
+            # Используем полный хеш
+            FROM_HASH=$(git rev-parse "$FROM_HASH" 2>/dev/null || echo "$FROM_HASH")
             echo "Используем хеш последнего коммита с CHANGELOG.md: $FROM_HASH" >&2
         fi
     fi
@@ -72,20 +73,36 @@ if [ $# -eq 0 ]; then
     # Расширяем короткий хеш до полного, если нужно
     FROM_HASH_FULL=$(git rev-parse "$FROM_HASH" 2>/dev/null)
     if [ -z "$FROM_HASH_FULL" ]; then
-        echo "Ошибка: коммит $FROM_HASH не найден в репозитории" >&2
-        exit 1
+        echo "Предупреждение: коммит $FROM_HASH из CHANGELOG.md не найден в репозитории" >&2
+        echo "Попытка найти альтернативный способ определения начальной точки..." >&2
+        
+        # Пробуем найти последний коммит с изменением CHANGELOG.md
+        ALTERNATIVE_HASH=$(git log --format="%H" --follow -- "$CHANGELOG_FILE" 2>/dev/null | head -1)
+        if [ -n "$ALTERNATIVE_HASH" ]; then
+            FROM_HASH="$ALTERNATIVE_HASH"
+            echo "Используем последний коммит с изменением CHANGELOG.md: ${FROM_HASH:0:8}" >&2
+        else
+            echo "Ошибка: не удалось определить начальный коммит" >&2
+            echo "Коммит $FROM_HASH из CHANGELOG.md не найден в репозитории на сервере." >&2
+            echo "Возможные причины:" >&2
+            echo "  - Репозиторий на сервере не синхронизирован (shallow clone)" >&2
+            echo "  - Коммит был удален или переписан" >&2
+            echo "  - Коммит находится в другой ветке" >&2
+            exit 1
+        fi
+    else
+        FROM_HASH="$FROM_HASH_FULL"
     fi
-    FROM_HASH="$FROM_HASH_FULL"
     
     # Текущий HEAD
     TO_HASH=$(git rev-parse HEAD)
     
-    echo "  FROM (из CHANGELOG.md): $FROM_HASH" >&2
-    echo "  TO (текущий HEAD): $TO_HASH" >&2
-    echo "" >&2
+    echo "  FROM (из CHANGELOG.md): $FROM_HASH"
+    echo "  TO (текущий HEAD): $TO_HASH"
+    echo ""
 elif [ $# -eq 2 ]; then
     # Ручной режим с параметрами (для отладки)
-    echo "Режим: Отладка (хеши переданы вручную)" >&2
+    echo "Режим: Отладка (хеши переданы вручную)"
     FROM_HASH=$1
     TO_HASH=$2
     
@@ -104,9 +121,9 @@ elif [ $# -eq 2 ]; then
     fi
     TO_HASH="$TO_HASH_FULL"
     
-    echo "  FROM: $FROM_HASH" >&2
-    echo "  TO: $TO_HASH" >&2
-    echo "" >&2
+    echo "  FROM: $FROM_HASH"
+    echo "  TO: $TO_HASH"
+    echo ""
 else
     echo "Usage: $0 [from_commit_hash] [to_commit_hash]" >&2
     echo "" >&2
@@ -126,8 +143,27 @@ else
 fi
 
 echo "Collecting git log from $FROM_HASH to $TO_HASH..."
+# Проверяем, что оба коммита существуют перед использованием
+if ! git cat-file -e "$FROM_HASH" 2>/dev/null; then
+    echo "Ошибка: коммит $FROM_HASH не существует в репозитории" >&2
+    exit 1
+fi
+if ! git cat-file -e "$TO_HASH" 2>/dev/null; then
+    echo "Ошибка: коммит $TO_HASH не существует в репозитории" >&2
+    exit 1
+fi
+
 # Сохраняем git log в переменную и логируем его
-GIT_LOG=$(git log --oneline "${FROM_HASH}..${TO_HASH}")
+GIT_LOG=$(git log --oneline "${FROM_HASH}..${TO_HASH}" 2>&1)
+GIT_LOG_EXIT_CODE=$?
+
+# Проверяем код возврата git log
+if [ $GIT_LOG_EXIT_CODE -ne 0 ]; then
+    echo "Ошибка: не удалось получить git log для диапазона ${FROM_HASH}..${TO_HASH}" >&2
+    echo "Детали ошибки:" >&2
+    echo "$GIT_LOG" >&2
+    exit 1
+fi
 
 # Печатаем лог для наглядности (можно отключить, если нужно только логфайл)
 echo "===== GIT LOG ====="
@@ -143,17 +179,17 @@ PR_NUMBERS=$(echo "$GIT_LOG" | grep -oE '(PR\s+[0-9]+|запрос на вытя
 if [ -n "$PR_NUMBERS" ]; then
     echo "$PR_NUMBERS" > "$PR_NUMBERS_FILE"
     if [ $? -eq 0 ]; then
-        echo "" >&2
-        echo "✓ Номера PR записаны в файл: $PR_NUMBERS_FILE" >&2
-        echo "Содержимое файла:" >&2
-        cat "$PR_NUMBERS_FILE" >&2
+        echo ""
+        echo "✓ Номера PR записаны в файл: $PR_NUMBERS_FILE"
+        echo "Содержимое файла:"
+        cat "$PR_NUMBERS_FILE"
     else
         echo "Ошибка: не удалось записать номера PR в файл $PR_NUMBERS_FILE" >&2
         exit 1
     fi
 else
     echo "" >&2
-    echo "Предупреждение: номера пул-реквестов не найдены в диапазоне коммитов ${FROM_HASH:0:8}..${TO_HASH:0:8}" >&2
+    echo "Предупреждение: номера пул-реквестов не найдены в диапазоне коммитов ${FROM_HASH}..${TO_HASH}" >&2
     # Создаем пустой файл, чтобы fetch-release-notes.sh знал, что файл существует
     touch "$PR_NUMBERS_FILE"
 fi

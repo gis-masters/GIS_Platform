@@ -39,14 +39,14 @@ if [ -z "$RELEASE_BRANCH_NAME" ]; then
     RELEASE_BRANCH_NAME="release/changelog-${TIMESTAMP}"
 fi
 
-echo "" >&2
-echo -e "${CYAN}╔════════════════════════════════════════╗${NC}" >&2
-echo -e "${CYAN}║${NC}   ${BOLD}Автоматическое создание релиза${NC}       ${CYAN}║${NC}" >&2
-echo -e "${CYAN}╚════════════════════════════════════════╝${NC}" >&2
-echo "" >&2
-echo -e "  ${BLUE}Базовая ветка:${NC}    ${BASE_BRANCH}" >&2
-echo -e "  ${BLUE}Релизная ветка:${NC}   ${RELEASE_BRANCH_NAME}" >&2
-echo "" >&2
+echo ""
+echo -e "${CYAN}╔════════════════════════════════════════╗${NC}"
+echo -e "${CYAN}║${NC}   ${BOLD}Автоматическое создание релиза${NC}       ${CYAN}║${NC}"
+echo -e "${CYAN}╚════════════════════════════════════════╝${NC}"
+echo ""
+echo -e "  ${BLUE}Базовая ветка:${NC}    ${BASE_BRANCH}"
+echo -e "  ${BLUE}Релизная ветка:${NC}   ${RELEASE_BRANCH_NAME}"
+echo ""
 
 # Проверяем наличие необходимых скриптов
 # Делаем пути абсолютными для надежности
@@ -84,9 +84,9 @@ if ! git rev-parse --git-dir > /dev/null 2>&1; then
 fi
 
 # Шаг 1: Извлекаем номера PR из коммитов
-echo -e "${CYAN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}" >&2
-echo -e "  ${BOLD}Шаг 1/5:${NC} ${BLUE}Извлечение номеров PR${NC}" >&2
-echo -e "${CYAN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}" >&2
+echo -e "${CYAN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+echo -e "  ${BOLD}Шаг 1/5:${NC} ${BLUE}Извлечение номеров PR${NC}"
+echo -e "${CYAN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
 
 # Передаем PROJECT_ROOT в дочерние скрипты
 export PROJECT_ROOT_ABS="$PROJECT_ROOT"
@@ -98,13 +98,13 @@ if ! bash "$EXTRACT_SCRIPT"; then
     exit 1
 fi
 
-echo "" >&2
+echo ""
 
 # Шаг 2: Получаем release notes и заполняем CHANGELOG.md
-echo "" >&2
-echo -e "${CYAN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}" >&2
-echo -e "  ${BOLD}Шаг 2/5:${NC} ${BLUE}Заполнение CHANGELOG.md${NC}" >&2
-echo -e "${CYAN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}" >&2
+echo ""
+echo -e "${CYAN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+echo -e "  ${BOLD}Шаг 2/5:${NC} ${BLUE}Заполнение CHANGELOG.md${NC}"
+echo -e "${CYAN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
 
 # Проверяем наличие файла с номерами PR
 PR_NUMBERS_FILE="$SCRIPT_DIR/pr_numbers.txt"
@@ -124,51 +124,51 @@ if [ ! -f "$CHANGELOG_FILE" ]; then
     exit 1
 fi
 
-echo "" >&2
+echo ""
 
 # Шаг 3: Создаем ветку через API
-echo "" >&2
-echo -e "${CYAN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}" >&2
-echo -e "  ${BOLD}Шаг 3/5:${NC} ${BLUE}Создание ветки${NC}" >&2
-echo -e "${CYAN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}" >&2
+echo ""
+echo -e "${CYAN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+echo -e "  ${BOLD}Шаг 3/5:${NC} ${BLUE}Создание ветки${NC}"
+echo -e "${CYAN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
 
 if ! bash "$CREATE_BRANCH_SCRIPT" "$RELEASE_BRANCH_NAME" "$BASE_BRANCH"; then
     echo -e "${RED}Ошибка${NC} при создании ветки" >&2
     exit 1
 fi
 
-echo "" >&2
+echo ""
 
 # Шаг 4: Обновляем CHANGELOG.md в новой ветке через API
-echo "" >&2
-echo -e "${CYAN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}" >&2
-echo -e "  ${BOLD}Шаг 4/5:${NC} ${BLUE}Обновление CHANGELOG.md в ветке${NC}" >&2
-echo -e "${CYAN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}" >&2
+echo ""
+echo -e "${CYAN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+echo -e "  ${BOLD}Шаг 4/5:${NC} ${BLUE}Обновление CHANGELOG.md в ветке${NC}"
+echo -e "${CYAN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
 
 if ! bash "$UPDATE_CHANGELOG_SCRIPT" "$RELEASE_BRANCH_NAME" "$CHANGELOG_FILE"; then
     echo -e "${RED}Ошибка${NC} при обновлении CHANGELOG.md в ветке" >&2
     exit 1
 fi
 
-echo "" >&2
+echo ""
 
 # Шаг 5: Создаем Pull Request через API
-echo "" >&2
-echo -e "${CYAN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}" >&2
-echo -e "  ${BOLD}Шаг 5/5:${NC} ${BLUE}Создание Pull Request${NC}" >&2
-echo -e "${CYAN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}" >&2
+echo ""
+echo -e "${CYAN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+echo -e "  ${BOLD}Шаг 5/5:${NC} ${BLUE}Создание Pull Request${NC}"
+echo -e "${CYAN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
 
 if ! bash "$CREATE_PR_SCRIPT" "$RELEASE_BRANCH_NAME" "$BASE_BRANCH"; then
     echo -e "${RED}Ошибка${NC} при создании Pull Request" >&2
     exit 1
 fi
 
-echo "" >&2
-echo -e "${GREEN}╔════════════════════════════════════╗${NC}" >&2
-echo -e "${GREEN}║${NC}      ${GREEN}✓${NC} ${BOLD}${GREEN}Релиз успешно создан!${NC}       ${GREEN}║${NC}" >&2
-echo -e "${GREEN}╚════════════════════════════════════╝${NC}" >&2
-echo "" >&2
-echo -e "  ${BLUE}Релизная ветка:${NC}   ${BOLD}$RELEASE_BRANCH_NAME${NC}" >&2
-echo -e "  ${BLUE}Базовая ветка:${NC}    ${BOLD}$BASE_BRANCH${NC}" >&2
-echo "" >&2
+echo ""
+echo -e "${GREEN}╔════════════════════════════════════╗${NC}"
+echo -e "${GREEN}║${NC}      ${GREEN}✓${NC} ${BOLD}${GREEN}Релиз успешно создан!${NC}       ${GREEN}║${NC}"
+echo -e "${GREEN}╚════════════════════════════════════╝${NC}"
+echo ""
+echo -e "  ${BLUE}Релизная ветка:${NC}   ${BOLD}$RELEASE_BRANCH_NAME${NC}"
+echo -e "  ${BLUE}Базовая ветка:${NC}    ${BOLD}$BASE_BRANCH${NC}"
+echo ""
 

@@ -54,15 +54,15 @@ PROJECT_NAME="GIS_Platform"
 REPO_NAME="GIS_Platform"
 CHANGELOG_PATH="CHANGELOG.md"
 
-echo "==========================================" >&2
-echo "Обновление CHANGELOG.md через Azure DevOps API" >&2
-echo "==========================================" >&2
-echo "Ветка: ${BRANCH_NAME}" >&2
-echo "Файл с новым содержимым: ${SOURCE_FILE}" >&2
-echo "" >&2
+echo "=========================================="
+echo "Обновление CHANGELOG.md через Azure DevOps API"
+echo "=========================================="
+echo "Ветка: ${BRANCH_NAME}"
+echo "Файл с новым содержимым: ${SOURCE_FILE}"
+echo ""
 
 # Шаг 1: Получаем информацию о репозитории
-echo "Шаг 1: Получение информации о репозитории..." >&2
+echo "Шаг 1: Получение информации о репозитории..."
 
 REPO_API_URL="${AZURE_DEVOPS_URL}/${PROJECT_NAME}/_apis/git/repositories/${REPO_NAME}?api-version=7.0"
 REPO_RESPONSE=$(curl -s -u ":$AZURE_PAT" -H "Content-Type: application/json" "$REPO_API_URL")
@@ -85,11 +85,11 @@ if [ -z "$REPOSITORY_ID" ] || [ "$REPOSITORY_ID" = "null" ]; then
     exit 1
 fi
 
-echo "✓ ID репозитория: $REPOSITORY_ID" >&2
-echo "" >&2
+echo "✓ ID репозитория: $REPOSITORY_ID"
+echo ""
 
 # Шаг 2: Получаем информацию о ветке
-echo "Шаг 2: Получение информации о ветке ${BRANCH_NAME}..." >&2
+echo "Шаг 2: Получение информации о ветке ${BRANCH_NAME}..."
 
 REFS_API_URL="${AZURE_DEVOPS_URL}/${PROJECT_NAME}/_apis/git/repositories/${REPOSITORY_ID}/refs?filter=heads/${BRANCH_NAME}&api-version=7.0"
 REFS_RESPONSE=$(curl -s -u ":$AZURE_PAT" -H "Content-Type: application/json" "$REFS_API_URL")
@@ -112,11 +112,11 @@ if [ -z "$BRANCH_OBJECT_ID" ] || [ "$BRANCH_OBJECT_ID" = "null" ]; then
     exit 1
 fi
 
-echo "✓ Хеш коммита ветки: ${BRANCH_OBJECT_ID:0:8}..." >&2
-echo "" >&2
+echo "✓ Хеш коммита ветки: ${BRANCH_OBJECT_ID}"
+echo ""
 
 # Шаг 3: Получаем текущий коммит для создания дерева
-echo "Шаг 3: Получение информации о текущем коммите..." >&2
+echo "Шаг 3: Получение информации о текущем коммите..."
 
 COMMIT_API_URL="${AZURE_DEVOPS_URL}/${PROJECT_NAME}/_apis/git/repositories/${REPOSITORY_ID}/commits/${BRANCH_OBJECT_ID}?api-version=7.0"
 COMMIT_RESPONSE=$(curl -s -u ":$AZURE_PAT" -H "Content-Type: application/json" "$COMMIT_API_URL")
@@ -135,19 +135,19 @@ if [ -z "$COMMIT_TREE_ID" ] || [ "$COMMIT_TREE_ID" = "null" ]; then
     exit 1
 fi
 
-echo "✓ Tree ID: ${COMMIT_TREE_ID:0:8}..." >&2
-echo "" >&2
+echo "✓ Tree ID: ${COMMIT_TREE_ID}"
+echo ""
 
 # Шаг 4: Читаем новое содержимое файла
-echo "Шаг 4: Подготовка содержимого CHANGELOG.md..." >&2
+echo "Шаг 4: Подготовка содержимого CHANGELOG.md..."
 
 NEW_CONTENT=$(cat "$SOURCE_FILE")
 CONTENT_LENGTH=${#NEW_CONTENT}
-echo "✓ Содержимое подготовлено (${CONTENT_LENGTH} символов)" >&2
-echo "" >&2
+echo "✓ Содержимое подготовлено (${CONTENT_LENGTH} символов)"
+echo ""
 
 # Шаг 5: Создаем коммит через Push API напрямую (без создания blob и дерева отдельно)
-echo "Шаг 5: Создание коммита через Push API..." >&2
+echo "Шаг 5: Создание коммита через Push API..."
 
 COMMIT_DATE=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
 COMMIT_MESSAGE="chore: обновлен CHANGELOG.md для нового релиза"
@@ -196,15 +196,15 @@ PUSH_BODY=$(echo "$PUSH_RESPONSE" | sed '/HTTP_CODE:/d')
 if [ "$PUSH_HTTP_CODE" = "201" ]; then
     NEW_COMMIT_ID=$(echo "$PUSH_BODY" | jq -r '.commits[0].commitId // .refUpdates[0].newObjectId // empty' 2>/dev/null)
     if [ -n "$NEW_COMMIT_ID" ] && [ "$NEW_COMMIT_ID" != "null" ]; then
-        echo "✓ Коммит успешно создан: ${NEW_COMMIT_ID:0:8}..." >&2
-        echo "" >&2
-        echo "==========================================" >&2
-        echo "Готово!" >&2
-        echo "==========================================" >&2
-        echo "Ветка: $BRANCH_NAME" >&2
-        echo "Новый коммит: ${NEW_COMMIT_ID:0:8}..." >&2
-        echo "CHANGELOG.md обновлен" >&2
-        echo "" >&2
+        echo "✓ Коммит успешно создан: ${NEW_COMMIT_ID}"
+        echo ""
+        echo "=========================================="
+        echo "Готово!"
+        echo "=========================================="
+        echo "Ветка: $BRANCH_NAME"
+        echo "Новый коммит: ${NEW_COMMIT_ID}"
+        echo "CHANGELOG.md обновлен"
+        echo ""
         exit 0
     fi
 fi

@@ -43,15 +43,15 @@ AZURE_DEVOPS_URL="https://azure2022eng.geoplan.local/DefaultCollection"
 PROJECT_NAME="GIS_Platform"
 REPO_NAME="GIS_Platform"
 
-echo "==========================================" >&2
-echo "Создание Pull Request через Azure DevOps API" >&2
-echo "==========================================" >&2
-echo "Исходная ветка: ${SOURCE_BRANCH}" >&2
-echo "Целевая ветка: ${TARGET_BRANCH}" >&2
-echo "" >&2
+echo "=========================================="
+echo "Создание Pull Request через Azure DevOps API"
+echo "=========================================="
+echo "Исходная ветка: ${SOURCE_BRANCH}"
+echo "Целевая ветка: ${TARGET_BRANCH}"
+echo ""
 
 # Шаг 1: Получаем информацию о репозитории
-echo "Шаг 1: Получение информации о репозитории..." >&2
+echo "Шаг 1: Получение информации о репозитории..."
 
 REPO_API_URL="${AZURE_DEVOPS_URL}/${PROJECT_NAME}/_apis/git/repositories/${REPO_NAME}?api-version=7.0"
 REPO_RESPONSE=$(curl -s -u ":$AZURE_PAT" -H "Content-Type: application/json" "$REPO_API_URL")
@@ -74,11 +74,11 @@ if [ -z "$REPOSITORY_ID" ] || [ "$REPOSITORY_ID" = "null" ]; then
     exit 1
 fi
 
-echo "✓ ID репозитория: $REPOSITORY_ID" >&2
-echo "" >&2
+echo "✓ ID репозитория: $REPOSITORY_ID"
+echo ""
 
 # Шаг 2: Проверяем существование веток
-echo "Шаг 2: Проверка существования веток..." >&2
+echo "Шаг 2: Проверка существования веток..."
 
 # Проверяем исходную ветку
 SOURCE_REFS_API_URL="${AZURE_DEVOPS_URL}/${PROJECT_NAME}/_apis/git/repositories/${REPOSITORY_ID}/refs?filter=heads/${SOURCE_BRANCH}&api-version=7.0"
@@ -91,7 +91,7 @@ if [ -z "$SOURCE_BRANCH_OBJECT_ID" ] || [ "$SOURCE_BRANCH_OBJECT_ID" = "null" ];
     exit 1
 fi
 
-echo "✓ Исходная ветка ${SOURCE_BRANCH} найдена: ${SOURCE_BRANCH_OBJECT_ID:0:8}..." >&2
+echo "✓ Исходная ветка ${SOURCE_BRANCH} найдена: ${SOURCE_BRANCH_OBJECT_ID}"
 
 # Проверяем целевую ветку
 TARGET_REFS_API_URL="${AZURE_DEVOPS_URL}/${PROJECT_NAME}/_apis/git/repositories/${REPOSITORY_ID}/refs?filter=heads/${TARGET_BRANCH}&api-version=7.0"
@@ -104,11 +104,11 @@ if [ -z "$TARGET_BRANCH_OBJECT_ID" ] || [ "$TARGET_BRANCH_OBJECT_ID" = "null" ];
     exit 1
 fi
 
-echo "✓ Целевая ветка ${TARGET_BRANCH} найдена: ${TARGET_BRANCH_OBJECT_ID:0:8}..." >&2
-echo "" >&2
+echo "✓ Целевая ветка ${TARGET_BRANCH} найдена: ${TARGET_BRANCH_OBJECT_ID}"
+echo ""
 
 # Шаг 3: Формируем заголовок и описание PR
-echo "Шаг 3: Формирование заголовка и описания PR..." >&2
+echo "Шаг 3: Формирование заголовка и описания PR..."
 
 CURRENT_DATE=$(date +%Y-%m-%d)
 PR_TITLE="chore(release): update changelog $CURRENT_DATE"
@@ -119,11 +119,11 @@ PR_DESCRIPTION="Автоматически созданный Pull Request дл�
 - Интегрированы release notes из связанных Pull Request
 "
 
-echo "✓ Заголовок: $PR_TITLE" >&2
-echo "" >&2
+echo "✓ Заголовок: $PR_TITLE"
+echo ""
 
 # Шаг 4: Создаем Pull Request через Azure DevOps API
-echo "Шаг 4: Создание Pull Request..." >&2
+echo "Шаг 4: Создание Pull Request..."
 
 CREATE_PR_URL="${AZURE_DEVOPS_URL}/${PROJECT_NAME}/_apis/git/repositories/${REPOSITORY_ID}/pullrequests?api-version=7.0"
 
@@ -158,18 +158,18 @@ if [ "$HTTP_CODE" = "200" ] || [ "$HTTP_CODE" = "201" ]; then
     PR_ID=$(echo "$BODY" | jq -r '.pullRequestId // ""' 2>/dev/null)
     if [ -n "$PR_ID" ] && [ "$PR_ID" != "null" ]; then
         PR_URL=$(echo "$BODY" | jq -r '._links.web.href // ""' 2>/dev/null)
-        echo "✓ Pull Request успешно создан!" >&2
-        echo "" >&2
-        echo "==========================================" >&2
-        echo "Готово!" >&2
-        echo "==========================================" >&2
-        echo "  ID: $PR_ID" >&2
-        echo "  Исходная ветка: $SOURCE_BRANCH" >&2
-        echo "  Целевая ветка: $TARGET_BRANCH" >&2
+        echo "✓ Pull Request успешно создан!"
+        echo ""
+        echo "=========================================="
+        echo "Готово!"
+        echo "=========================================="
+        echo "  ID: $PR_ID"
+        echo "  Исходная ветка: $SOURCE_BRANCH"
+        echo "  Целевая ветка: $TARGET_BRANCH"
         if [ -n "$PR_URL" ] && [ "$PR_URL" != "null" ]; then
-            echo "  URL: $PR_URL" >&2
+            echo "  URL: $PR_URL"
         fi
-        echo "" >&2
+        echo ""
         exit 0
     else
         echo "Предупреждение: PR создан, но не удалось получить его ID" >&2

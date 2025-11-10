@@ -32,15 +32,15 @@ AZURE_DEVOPS_URL="https://azure2022eng.geoplan.local/DefaultCollection"
 PROJECT_NAME="GIS_Platform"
 REPO_NAME="GIS_Platform"
 
-echo "==========================================" >&2
-echo "Создание ветки через Azure DevOps API" >&2
-echo "==========================================" >&2
-echo "Базовая ветка: ${BASE_BRANCH}" >&2
-echo "Новая ветка: ${BRANCH_NAME}" >&2
-echo "" >&2
+echo "=========================================="
+echo "Создание ветки через Azure DevOps API"
+echo "=========================================="
+echo "Базовая ветка: ${BASE_BRANCH}"
+echo "Новая ветка: ${BRANCH_NAME}"
+echo ""
 
 # Шаг 1: Получаем информацию о репозитории
-echo "Шаг 1: Получение информации о репозитории..." >&2
+echo "Шаг 1: Получение информации о репозитории..."
 
 REPO_API_URL="${AZURE_DEVOPS_URL}/${PROJECT_NAME}/_apis/git/repositories/${REPO_NAME}?api-version=7.0"
 REPO_RESPONSE=$(curl -s -u ":$AZURE_PAT" -H "Content-Type: application/json" "$REPO_API_URL")
@@ -65,11 +65,11 @@ if [ -z "$REPOSITORY_ID" ] || [ "$REPOSITORY_ID" = "null" ]; then
     exit 1
 fi
 
-echo "✓ ID репозитория: $REPOSITORY_ID" >&2
-echo "" >&2
+echo "✓ ID репозитория: $REPOSITORY_ID"
+echo ""
 
 # Шаг 2: Получаем информацию о базовой ветке
-echo "Шаг 2: Получение информации о базовой ветке ${BASE_BRANCH}..." >&2
+echo "Шаг 2: Получение информации о базовой ветке ${BASE_BRANCH}..."
 
 REFS_API_URL="${AZURE_DEVOPS_URL}/${PROJECT_NAME}/_apis/git/repositories/${REPOSITORY_ID}/refs?filter=heads/${BASE_BRANCH}&api-version=7.0"
 REFS_RESPONSE=$(curl -s -u ":$AZURE_PAT" -H "Content-Type: application/json" "$REFS_API_URL")
@@ -94,11 +94,11 @@ if [ -z "$BASE_BRANCH_OBJECT_ID" ] || [ "$BASE_BRANCH_OBJECT_ID" = "null" ]; the
     exit 1
 fi
 
-echo "✓ Хеш коммита базовой ветки: ${BASE_BRANCH_OBJECT_ID:0:8}..." >&2
-echo "" >&2
+echo "✓ Хеш коммита базовой ветки: ${BASE_BRANCH_OBJECT_ID}"
+echo ""
 
 # Шаг 3: Проверяем, существует ли уже ветка с таким именем
-echo "Шаг 3: Проверка существования ветки ${BRANCH_NAME}..." >&2
+echo "Шаг 3: Проверка существования ветки ${BRANCH_NAME}..."
 
 CHECK_BRANCH_API_URL="${AZURE_DEVOPS_URL}/${PROJECT_NAME}/_apis/git/repositories/${REPOSITORY_ID}/refs?filter=heads/${BRANCH_NAME}&api-version=7.0"
 CHECK_RESPONSE=$(curl -s -u ":$AZURE_PAT" -H "Content-Type: application/json" "$CHECK_BRANCH_API_URL")
@@ -112,11 +112,11 @@ if [ $? -eq 0 ] && [ -n "$CHECK_RESPONSE" ]; then
     fi
 fi
 
-echo "✓ Ветка ${BRANCH_NAME} не существует" >&2
-echo "" >&2
+echo "✓ Ветка ${BRANCH_NAME} не существует"
+echo ""
 
 # Шаг 4: Создаем новую ветку через API
-echo "Шаг 4: Создание ветки ${BRANCH_NAME} через API..." >&2
+echo "Шаг 4: Создание ветки ${BRANCH_NAME} через API..."
 
 CREATE_BRANCH_API_URL="${AZURE_DEVOPS_URL}/${PROJECT_NAME}/_apis/git/repositories/${REPOSITORY_ID}/refs?api-version=7.0"
 
@@ -149,16 +149,16 @@ BODY=$(echo "$CREATE_RESPONSE" | sed '/HTTP_CODE:/d')
 if [ "$HTTP_CODE" = "200" ] || [ "$HTTP_CODE" = "201" ]; then
     CREATED_BRANCH=$(echo "$BODY" | jq -r '.value[0].name // empty' 2>/dev/null)
     if [ -n "$CREATED_BRANCH" ] && [ "$CREATED_BRANCH" != "null" ]; then
-        echo "✓ Ветка успешно создана!" >&2
-        echo "" >&2
-        echo "==========================================" >&2
-        echo "Готово!" >&2
-        echo "==========================================" >&2
-        echo "Ветка: $BRANCH_NAME" >&2
-        echo "Полное имя: $CREATED_BRANCH" >&2
-        echo "Базовая ветка: $BASE_BRANCH" >&2
-        echo "Хеш коммита: ${BASE_BRANCH_OBJECT_ID:0:8}..." >&2
-        echo "" >&2
+        echo "✓ Ветка успешно создана!"
+        echo ""
+        echo "=========================================="
+        echo "Готово!"
+        echo "=========================================="
+        echo "Ветка: $BRANCH_NAME"
+        echo "Полное имя: $CREATED_BRANCH"
+        echo "Базовая ветка: $BASE_BRANCH"
+        echo "Хеш коммита: ${BASE_BRANCH_OBJECT_ID}"
+        echo ""
         exit 0
     else
         echo "Предупреждение: ветка создана, но не удалось получить подтверждение" >&2

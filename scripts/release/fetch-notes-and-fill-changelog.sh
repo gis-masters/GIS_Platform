@@ -69,11 +69,11 @@ get_pr_description() {
             echo "$response" | jq -r '.description // ""' 2>/dev/null || echo ""
             return 0
         else
-            echo "WARNING: PR #${pr_id} не найден: $error" >&2
+            echo "WARNING: PR #${pr_id} не найден: $error"
             return 1
         fi
     else
-        echo "WARNING: Ошибка при запросе PR #${pr_id}" >&2
+        echo "WARNING: Ошибка при запросе PR #${pr_id}"
         return 1
     fi
 }
@@ -100,10 +100,10 @@ extract_release_note() {
 
 # Получаем текущую дату и хеш HEAD
 CURRENT_DATE=$(date +%Y-%m-%d)
-CURRENT_HASH_SHORT=$(git rev-parse --short=8 HEAD)
+CURRENT_HASH=$(git rev-parse HEAD)
 
-echo "Обработка пул-реквестов..." >&2
-echo "" >&2
+echo "Обработка пул-реквестов..."
+echo ""
 
 PR_NUMBERS=$(cat "$PR_NUMBERS_FILE" | grep -v '^$')
 
@@ -121,13 +121,13 @@ if [ -n "$PR_NUMBERS" ]; then
                     echo "- ${release_note}" >> "$NOTES_TEMP"
                     NOTES_COUNT=$((NOTES_COUNT + 1))
                 else
-                    echo "WARNING: PR #${pr_number} не содержит секцию Release note" >&2
+                    echo "WARNING: PR #${pr_number} не содержит секцию Release note"
                 fi
             fi
         fi
     done <<< "$PR_NUMBERS"
 else
-    echo "Номера PR не найдены в файле $PR_NUMBERS_FILE." >&2
+    echo "Номера PR не найдены в файле $PR_NUMBERS_FILE."
 fi
 
 # Создаем временный файл для нового содержимого CHANGELOG.md
@@ -137,7 +137,7 @@ NEW_ENTRY_TEMP=$(mktemp)
 # Формируем блок с новой записью
 {
     echo "## $CURRENT_DATE"
-    echo "###### _[$CURRENT_HASH_SHORT]_"
+    echo "###### _[$CURRENT_HASH]_"
     if [ -s "$NOTES_TEMP" ]; then
         echo ""
         echo "### Изменения"
@@ -184,9 +184,9 @@ rm -f "$NEW_ENTRY_TEMP"
 # Удаляем временный файл с заметками
 rm -f "$NOTES_TEMP"
 
-echo "" >&2
+echo ""
 if [ $NOTES_COUNT -gt 0 ]; then
-    echo "CHANGELOG.md обновлен. Добавлено $NOTES_COUNT записей." >&2
+    echo "CHANGELOG.md обновлен. Добавлено $NOTES_COUNT записей."
 else
-    echo "WARNING: Release notes не найдены. Добавлена только заголовок даты." >&2
+    echo "WARNING: Release notes не найдены. Добавлена только заголовок даты."
 fi
