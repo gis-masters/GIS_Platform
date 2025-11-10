@@ -9,7 +9,7 @@ import ru.mycrg.data_service_contract.dto.ExportProcessModel;
 import ru.mycrg.data_service_contract.dto.ExportResourceModel;
 import ru.mycrg.data_service_contract.dto.ResourceProjection;
 import ru.mycrg.data_service_contract.dto.gpkg.GpkgPayload;
-import ru.mycrg.data_service_contract.queue.request.BuildGpkgEvent;
+import ru.mycrg.data_service_contract.queue.request.gpkg.BuildGpkgEvent;
 import ru.mycrg.messagebus_contract.IMessageBusProducer;
 
 import java.util.ArrayList;

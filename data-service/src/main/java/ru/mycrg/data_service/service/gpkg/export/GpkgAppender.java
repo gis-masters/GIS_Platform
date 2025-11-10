@@ -57,7 +57,7 @@ public class GpkgAppender {
 
         try (Connection connection = DriverManager.getConnection("jdbc:sqlite:" + gpkgFileName)) {
             // Создаем системную таблицу для хранения схем, если она не существует
-            gpkgWriter.createSchemaTable(connection);
+            gpkgWriter.createIfNotExistSchemaTable(connection);
 
             // Сохраняем схему в системную таблицу
             gpkgWriter.saveSchema(connection, schema.toString(), resourceQualifier);
@@ -80,7 +80,7 @@ public class GpkgAppender {
 
         try (Connection connection = DriverManager.getConnection("jdbc:sqlite:" + gpkgFileName)) {
             // Создаем таблицу для хранения информации о слоях, если она не существует
-            gpkgWriter.createVectorTableInfoTable(connection);
+            gpkgWriter.createIfNotExistVectorTableInfoTable(connection);
 
             // Сохраняем информацию о слое в таблицу
             gpkgWriter.saveVectorTableInfo(connection, title, crs, description, tableFullName);

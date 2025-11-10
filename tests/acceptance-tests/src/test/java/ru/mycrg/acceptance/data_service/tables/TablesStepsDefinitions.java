@@ -5,6 +5,7 @@ import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.restassured.http.ContentType;
+import io.restassured.path.json.JsonPath;
 import io.restassured.specification.RequestSpecification;
 import ru.mycrg.acceptance.BaseStepsDefinitions;
 import ru.mycrg.acceptance.auth_service.AuthorizationBase;
@@ -17,6 +18,7 @@ import ru.mycrg.data_service_contract.dto.SchemaDto;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static org.hamcrest.core.IsEqual.equalTo;
@@ -30,6 +32,8 @@ import static ru.mycrg.acceptance.data_service.datasets.DatasetsStepsDefinitions
 public class TablesStepsDefinitions extends BaseStepsDefinitions {
 
     public static String currentTableName;
+    public static String currentWorkspace;
+    public static String currentComplexName;
     public static String anotherTableName;
     public static TableCreateDto currentTableDto;
     public static TableCreateDto anotherTableDto;
@@ -403,21 +407,6 @@ public class TablesStepsDefinitions extends BaseStepsDefinitions {
                         put(String.format("/%s", tableName));
     }
 
-    private void getCurrentTable() {
-        response = getBaseRequestWithCurrentCookie()
-                .when().
-                        get("/" + currentTableName);
-    }
-
-    private void createPermissionForTable(PermissionCreateDto dto, String tableName) {
-        response = getBaseRequestWithCurrentCookie()
-                .given().
-                        body(gson.toJson(dto)).
-                        contentType(ContentType.JSON)
-                .when().
-                        post("/" + tableName + "/roleAssignment");
-    }
-
     @And("сервер сообщает об ошибке в поле {string} текстом: {string}")
     public void checkSpecificError(String expectedField, String expectedMessage) {
         // Извлечение ошибок из ответа
@@ -464,5 +453,42 @@ public class TablesStepsDefinitions extends BaseStepsDefinitions {
 
         // Если дошли сюда - все совпадает
         System.out.println("✓ Проверка пройдена для поля '" + expectedField + "'");
+    }
+
+    @And("поля векторной таблицы совпадают с ожидаемыми")
+    public void checkTableDataAfterGpkgImport(Map<String, List<Object>> expectedFields) {
+        JsonPath jsonPath = response.jsonPath();
+        Map<String, Object> matchingRecord = jsonPath.getMap("");
+
+        boolean areEqual = true;
+        for (Map.Entry<String, List<Object>> entry: expectedFields.entrySet()) {
+            String key = entry.getKey();
+            List<Object> list = entry.getValue();
+            Object valueFromList = list != null && !list.isEmpty() ? list.get(0) : null;
+
+            Object matchingValue = matchingRecord.get(key);
+            if (!Objects.equals(String.valueOf(valueFromList), String.valueOf(matchingValue))) {
+                System.out.printf("Mismatch for key '%s': expected '%s', but found '%s'%n",
+                                  key, valueFromList, matchingValue);
+                areEqual = false;
+            }
+        }
+
+        assertTrue("The expected fields do not match the record fields", areEqual);
+    }
+
+    private void getCurrentTable() {
+        response = getBaseRequestWithCurrentCookie()
+                .when().
+                        get("/" + currentTableName);
+    }
+
+    private void createPermissionForTable(PermissionCreateDto dto, String tableName) {
+        response = getBaseRequestWithCurrentCookie()
+                .given().
+                        body(gson.toJson(dto)).
+                        contentType(ContentType.JSON)
+                .when().
+                        post("/" + tableName + "/roleAssignment");
     }
 }

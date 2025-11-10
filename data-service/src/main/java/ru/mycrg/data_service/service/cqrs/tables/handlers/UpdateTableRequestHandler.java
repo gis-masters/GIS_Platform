@@ -4,6 +4,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import ru.mycrg.auth_facade.IAuthenticationFacade;
+import ru.mycrg.common_contracts.enums.Roles;
 import ru.mycrg.data_service.dao.BasePermissionsRepository;
 import ru.mycrg.data_service.dto.TableUpdateDto;
 import ru.mycrg.data_service.entity.SchemasAndTables;
@@ -20,6 +21,7 @@ import java.util.Optional;
 
 import static java.time.LocalDateTime.now;
 import static java.util.Objects.nonNull;
+import static ru.mycrg.common_contracts.enums.Roles.OWNER;
 
 @Component
 public class UpdateTableRequestHandler implements IRequestHandler<UpdateTableRequest, Voidy> {
@@ -117,8 +119,8 @@ public class UpdateTableRequestHandler implements IRequestHandler<UpdateTableReq
         final Long userId = authenticationFacade.getUserDetails().getUserId();
 
         permissionsService.getAllByResourceId(resourceQualifier, userId, Pageable.unpaged());
-        Optional<String> roleForDataset = permissionsRepository.getBestRoleForDataset(resourceQualifier);
+        Optional<Roles> roleForDataset = permissionsRepository.getBestRoleForDataset(resourceQualifier);
 
-        return roleForDataset.filter("OWNER"::equals).isPresent();
+        return roleForDataset.filter(OWNER::equals).isPresent();
     }
 }

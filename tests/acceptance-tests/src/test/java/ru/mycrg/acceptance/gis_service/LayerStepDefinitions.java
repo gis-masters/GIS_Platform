@@ -67,11 +67,6 @@ public class LayerStepDefinitions extends BaseStepsDefinitions {
         layerId = id;
     }
 
-    @Given("Пользователь запоминает номер созданного слоя")
-    public void rememberLayerId() {
-        layerId = response.jsonPath().getInt("id");
-    }
-
     @When("Пользователь делает запрос на создание слоя проекта {string} {string} {string} {string} {string} " +
             "{string} {string} {string} {string} {string}")
     public void createLayer(String title, String styleName, String type, String epsg, String dataSourceUri,
@@ -99,6 +94,13 @@ public class LayerStepDefinitions extends BaseStepsDefinitions {
         }
 
         super.createEntity(layerCreateDto);
+
+        int currentId = 0;
+        if (response.getStatusCode() == SC_OK || response.getStatusCode() == SC_CREATED) {
+            currentId = response.jsonPath().getInt("id");
+        }
+
+        layerPool.put(currentId, layerCreateDto);
     }
 
     @When("Пользователь делает запрос на создание внешнего слоя")
@@ -155,8 +157,8 @@ public class LayerStepDefinitions extends BaseStepsDefinitions {
         assertEquals(layerCreateDto.getType(), jsonPath.get("type"));
         assertEquals(layerCreateDto.getNativeCRS(), jsonPath.get("nativeCRS"));
         assertEquals(layerCreateDto.getContentType(), jsonPath.get("contentType"));
-        assertEquals(String.format("scratch_database_%s:%s__%s",
-                                   orgId, layerCreateDto.getResourceId(), layerCreateDto.getNativeCRS().split(":")[1]),
+        assertEquals(format("scratch_database_%s:%s__%s",
+                            orgId, layerCreateDto.getResourceId(), layerCreateDto.getNativeCRS().split(":")[1]),
                      jsonPath.get("complexName"));
     }
 
@@ -335,6 +337,28 @@ public class LayerStepDefinitions extends BaseStepsDefinitions {
         assertThat(presentedData.get("style"), is(layerUpdateDto.getStyle()));
     }
 
+    @And("поля слоя совпадают с ожидаемыми")
+    public void checkLayerDataAfterGpkgImport(Map<String, List<Object>> expectedFields) {
+        JsonPath jsonPath = response.jsonPath();
+        Map<String, Object> matchingRecord = jsonPath.getMap("[0]");
+
+        boolean areEqual = true;
+        for (Map.Entry<String, List<Object>> entry: expectedFields.entrySet()) {
+            String key = entry.getKey();
+            List<Object> list = entry.getValue();
+            Object valueFromList = list != null && !list.isEmpty() ? list.get(0) : null;
+
+            Object matchingValue = matchingRecord.get(key);
+            if (!Objects.equals(String.valueOf(valueFromList), String.valueOf(matchingValue))) {
+                System.out.printf("Mismatch for key '%s': expected '%s', but found '%s'%n",
+                                  key, valueFromList, matchingValue);
+                areEqual = false;
+            }
+        }
+
+        assertTrue("The expected fields do not match the record fields", areEqual);
+    }
+
     @When("Пользователь делает запрос на добавление слоя в папку-родитель")
     public void updateLayerAndAddToLayerGroup() {
         layerUpdateDto = new LayerUpdateDto(layerGroupId.longValue());
@@ -461,7 +485,7 @@ public class LayerStepDefinitions extends BaseStepsDefinitions {
                      "scratch_database_" + orgId, dataStoreName);
 
         // Проверяем complexName - {workspace}:{resourceId}__{epsgCode}
-        String expectedComplexName = String.format("%s:%s__7829", dataStoreName, resourceId);
+        String expectedComplexName = format("%s:%s__7829", dataStoreName, resourceId);
         assertEquals("ComplexName должен соответствовать формату workspace:resourceId__epsgCode",
                      expectedComplexName, jsonPath.getList("complexName").get(0));
     }

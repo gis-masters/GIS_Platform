@@ -2,7 +2,6 @@ package ru.mycrg.acceptance.data_service.processes;
 
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.When;
-import io.restassured.http.ContentType;
 import io.restassured.specification.RequestSpecification;
 import ru.mycrg.acceptance.BaseStepsDefinitions;
 import ru.mycrg.acceptance.auth_service.AuthorizationBase;
@@ -16,6 +15,7 @@ import ru.mycrg.data_service_contract.enums.ProcessType;
 import java.io.File;
 import java.time.LocalTime;
 import java.util.*;
+import java.util.regex.Pattern;
 
 import static io.restassured.http.ContentType.JSON;
 import static java.lang.Thread.sleep;
@@ -27,7 +27,6 @@ import static ru.mycrg.acceptance.data_service.FilesStepDefinitions.currentFiles
 import static ru.mycrg.acceptance.data_service.datasets.DatasetsStepsDefinitions.currentDatasetIdentifier;
 import static ru.mycrg.acceptance.data_service.tables.TablesStepsDefinitions.anotherTableName;
 import static ru.mycrg.acceptance.data_service.tables.TablesStepsDefinitions.currentTableName;
-import static ru.mycrg.acceptance.gis_service.LayerStepDefinitions.layerId;
 import static ru.mycrg.acceptance.gis_service.ProjectStepsDefinitions.projectId;
 import static ru.mycrg.data_service_contract.dto.gpkg.GpkgExportTypes.*;
 
@@ -79,7 +78,7 @@ public class ProcessesStepDefinitions extends BaseStepsDefinitions {
         response = getBaseRequestWithCurrentCookie()
                 .given().
                         body(body).
-                        contentType(ContentType.JSON).
+                        contentType(JSON).
                         basePath("")
                 .when().
                         log().ifValidationFails().
@@ -173,16 +172,30 @@ public class ProcessesStepDefinitions extends BaseStepsDefinitions {
     }
 
     @When("пользователь опрашивает процесс")
-    public void gineMeThisProcess() {
+    public void gineMeThisProcess() throws InterruptedException {
+        sleep(1000);
         getCurrentProcess();
     }
 
-    @When("В ответе процесса содержится фраза {string}")
-    public void gineMeThisProcess(String answer) {
-        assertTrue(response.prettyPrint().contains(answer));
+    @When("в ответе процесса содержится фраза {string}")
+    public void checkProcessAnswer(String pattern) {
+        System.out.println(pattern);
+        String responseText = response.prettyPrint();
+
+        // Проверяем, содержит ли паттерн регулярные выражения
+        if (pattern.contains("\\d+") || pattern.contains(".*") || pattern.contains("\\w+")) {
+            // Используем регулярные выражения
+            Pattern regex = Pattern.compile(pattern);
+            assertTrue("Response does not match pattern: " + pattern,
+                       regex.matcher(responseText).find());
+        } else {
+            // Используем простой поиск подстроки как раньше
+            assertTrue("Response does not contain: " + pattern,
+                       responseText.contains(pattern));
+        }
     }
 
-    @When("Процесс завершается с ошибкой")
+    @When("процесс завершается с ошибкой")
     public void waitUntilCurrentProcessIsCompleteWithError() {
         waitUntilProcessCompleteWithStatus(currentProcessId, "ERROR");
     }
@@ -208,15 +221,10 @@ public class ProcessesStepDefinitions extends BaseStepsDefinitions {
 
     @When("Текущий пользователь экспортирует текущий слой в GeoPackage")
     public void exportLayerInGeoPackage() {
-        Long currentLayerId;
-        if (layerId != null) {
-            currentLayerId = Long.valueOf(layerId);
-        } else {
-            currentLayerId = response.jsonPath().getLong("id");
-        }
+        int currentLayerId = Collections.max(layerPool.keySet());
 
         List<Long> layerIds = new ArrayList<>();
-        layerIds.add(currentLayerId);
+        layerIds.add((long) currentLayerId);
 
         GpkgPayload payload = new GpkgPayload();
         payload.setType(LAYER);
@@ -250,8 +258,10 @@ public class ProcessesStepDefinitions extends BaseStepsDefinitions {
     @When("Текущий пользователь экспортирует последние два слоя в GeoPackage")
     public void exportLastTwoLayersInGeoPackage() {
         List<Long> layerIds = new ArrayList<>();
-        layerIds.add(Long.valueOf(layerId));
-        layerIds.add(response.jsonPath().getLong("id"));
+        int currentLayerId = Collections.max(layerPool.keySet());
+
+        layerIds.add((long) currentLayerId);
+        layerIds.add((long) currentLayerId - 1);
 
         GpkgPayload payload = new GpkgPayload();
         payload.setType(LAYER);
@@ -280,16 +290,13 @@ public class ProcessesStepDefinitions extends BaseStepsDefinitions {
         executeExportRequest(exportProcessModel);
     }
 
-    @When("Текущий пользователь импортирует GeoPackage в текущий проект без указания набора данных")
-    public void importGeoPackageInCurrentProjectWithoutDataset() {
-        String fileId = response.jsonPath().getString("[0].id");
-        String filePath = response.jsonPath().getString("[0].path");
-
+    @When("Текущий пользователь импортирует несуществующий GeoPackage в текущий проект")
+    public void importNonExistentGeoPackageInCurrentProject() {
         ProcessableModel processableModel = new ProcessableModel();
         processableModel.setType(String.valueOf(ProcessType.IMPORT));
         Map<String, Object> payload = new HashMap<>();
-        payload.put("fileId", fileId);
-        payload.put("filePath", filePath);
+        payload.put("fileId", UUID.randomUUID().toString());
+        payload.put("filePath", "/trasher");
         payload.put("projectId", projectId);
         processableModel.setPayload(payload);
 
@@ -301,17 +308,16 @@ public class ProcessesStepDefinitions extends BaseStepsDefinitions {
     }
 
     @When("Текущий пользователь импортирует GeoPackage в текущий проект")
-    public void importGeoPackageInCurrentProjectWithDataset() {
-        String fileId = response.jsonPath().getString("[0].id");
-        String filePath = response.jsonPath().getString("[0].path");
+    public void importGeoPackageInCurrentProject() {
+        FileDescriptionModel fdm = currentFiles.get(currentFiles.size() - 1);
+        UUID fileId = fdm.getId();
 
         ProcessableModel processableModel = new ProcessableModel();
         processableModel.setType(String.valueOf(ProcessType.IMPORT));
         Map<String, Object> payload = new HashMap<>();
-        payload.put("fileId", fileId);
-        payload.put("filePath", filePath);
+        payload.put("fileId", String.valueOf(fileId));
+        payload.put("filePath", "need/only/toDataset/name.gpkg");
         payload.put("projectId", projectId);
-        payload.put("sourceDataset", currentDatasetIdentifier);
         processableModel.setPayload(payload);
 
         initProcess(processableModel);
@@ -423,7 +429,7 @@ public class ProcessesStepDefinitions extends BaseStepsDefinitions {
         response = getBaseRequestWithCurrentCookie()
                 .given().
                         body(gson.toJson(exportProcessModel)).
-                        contentType(ContentType.JSON).
+                        contentType(JSON).
                         basePath("")
                 .when().
                         log().ifValidationFails().

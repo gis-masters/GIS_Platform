@@ -6,11 +6,12 @@ import ru.mycrg.data_service_contract.enums.GeometryType;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
-public class SchemaDto {
+public class SchemaDto implements Serializable {
 
     @NotBlank
     private String name;

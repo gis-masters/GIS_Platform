@@ -10,7 +10,7 @@ import ru.mycrg.common_contracts.generated.gpkg.MessageFromExport;
 import ru.mycrg.data_service_contract.dto.PatchProcess;
 import ru.mycrg.data_service_contract.dto.gpkg.GpkgAppendingData;
 import ru.mycrg.data_service_contract.dto.gpkg.StyleWithIcons;
-import ru.mycrg.data_service_contract.queue.request.ExportGpkgEvent;
+import ru.mycrg.data_service_contract.queue.request.gpkg.ExportGpkgEvent;
 import ru.mycrg.data_service_contract.queue.request.UpdateProcessEvent;
 import ru.mycrg.gis_service_contract.dto.LayerProjection;
 import ru.mycrg.integration_service.bpmn.gpkg.GeoServerSpeaker;
@@ -90,7 +90,7 @@ public class AskGeoserversAboutStylesAndSvg implements JavaDelegate {
 
         List<StyleWithIcons> stylesAndSvgs = new LinkedList<>();
         for (String styleName: stylesNames) {
-            stylesAndSvgs.add(geoServerSpeaker.getStylesAndSvg(styleName, token));
+            stylesAndSvgs.add(geoServerSpeaker.getStylesAndSvg(styleName, token, event.getDbName()));
         }
 
         log.debug("Всё прошло хорошо. У нас есть слои, стили и место где это объединить!");

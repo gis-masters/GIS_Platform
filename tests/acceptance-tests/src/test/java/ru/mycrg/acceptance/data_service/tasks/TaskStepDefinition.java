@@ -1,6 +1,5 @@
 package ru.mycrg.acceptance.data_service.tasks;
 
-import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -318,7 +317,6 @@ public class TaskStepDefinition extends BaseStepsDefinitions {
     @When("файл {string} добавлен к задаче {string}")
     public void currentUserAddFileToTask(String fileName, String taskDescription) {
         FileDescriptionModel fileDescription = TestFilesManager.getFileDescriptionByTitleOrThrow(fileName);
-
         updateTask(getTaskByDescription(taskDescription),
                    "{\"attachments\": [" + fileDescription.asJson() + "]}");
 

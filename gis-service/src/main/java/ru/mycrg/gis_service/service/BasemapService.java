@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.mycrg.gis_service.dto.BaseMapCreateDto;
 import ru.mycrg.gis_service.dto.BaseMapProjection;
-import ru.mycrg.gis_service.dto.project.ProjectProjection;
+import ru.mycrg.gis_service.dto.project.IProjectProjection;
 import ru.mycrg.gis_service.entity.BaseMap;
 import ru.mycrg.gis_service.entity.Project;
 import ru.mycrg.gis_service.exceptions.ConflictException;
@@ -115,7 +115,7 @@ public class BasemapService {
      *
      * @return list of related projects to the "source basemap"
      */
-    public List<ProjectProjection> findRelatedProjects(long sourceBasemapId) {
+    public List<IProjectProjection> findRelatedProjects(long sourceBasemapId) {
         final List<Project> projects = new ArrayList<>();
 
         baseMapRepository
@@ -123,7 +123,7 @@ public class BasemapService {
                 .forEach(basemap -> projects.addAll(basemap.getProjects()));
 
         return projects.stream()
-                       .map(baseMap -> projectionFactory.createProjection(ProjectProjection.class, baseMap))
+                       .map(baseMap -> projectionFactory.createProjection(IProjectProjection.class, baseMap))
                        .collect(Collectors.toList());
     }
 

@@ -12,11 +12,12 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.mycrg.audit_service_contract.events.CrgAuditEvent;
 import ru.mycrg.auth_facade.IAuthenticationFacade;
 import ru.mycrg.auth_facade.UserDetails;
+import ru.mycrg.common_contracts.enums.Roles;
 import ru.mycrg.common_contracts.generated.gis_service.project.ProjectCreateDto;
 import ru.mycrg.common_contracts.generated.gis_service.project.ProjectUpdateDto;
 import ru.mycrg.gis_service.dao.ProjectsDao;
+import ru.mycrg.gis_service.dto.project.IProjectProjection;
 import ru.mycrg.gis_service.dto.project.ProjectPermission;
-import ru.mycrg.gis_service.dto.project.ProjectProjection;
 import ru.mycrg.gis_service.dto.project.ProjectProjectionImpl;
 import ru.mycrg.gis_service.entity.BaseMap;
 import ru.mycrg.gis_service.entity.Permission;
@@ -30,7 +31,6 @@ import ru.mycrg.gis_service.repository.BaseMapRepository;
 import ru.mycrg.gis_service.repository.PermissionRepository;
 import ru.mycrg.gis_service.repository.ProjectRepository;
 import ru.mycrg.gis_service.repository.RoleRepository;
-import ru.mycrg.gis_service.security.Roles;
 import ru.mycrg.gis_service.service.DataServiceBasemapsClient;
 
 import java.util.*;
@@ -38,9 +38,9 @@ import java.util.stream.Collectors;
 
 import static java.time.LocalDateTime.now;
 import static java.util.Objects.nonNull;
+import static ru.mycrg.common_contracts.enums.Roles.*;
 import static ru.mycrg.gis_service.GisServiceApplication.objectMapper;
 import static ru.mycrg.gis_service.mappers.ProjectMapper.toProjection;
-import static ru.mycrg.gis_service.security.Roles.*;
 
 @Service
 public class ProjectService {
@@ -213,7 +213,7 @@ public class ProjectService {
         }
     }
 
-    public ProjectProjection getProjectionByIdUnsafe(Long id) {
+    public IProjectProjection getProjectionByIdUnsafe(Long id) {
         Project project = projectRepository
                 .findById(id)
                 .orElseThrow(() -> new NotFoundException(Project.class, id));
@@ -225,7 +225,7 @@ public class ProjectService {
     public void update(long projectId, ProjectUpdateDto updateDto) {
         if (!authenticationFacade.isRoot() || !authenticationFacade.isOrganizationAdmin()) {
             ProjectProjectionImpl projectImpl = getByIdWithRole(projectId);
-            if (projectImpl.getRole() == null || projectImpl.getRole().equals(VIEWER.name())) {
+            if (projectImpl.getRole() == null || projectImpl.getRole() == VIEWER) {
                 throw new ForbiddenException("Недостаточно прав для редактирования проекта: " + projectId);
             }
         }
@@ -277,10 +277,7 @@ public class ProjectService {
         // Отправляем событие аудита
         sendAuditEvent("CREATE", savedProject);
 
-        ProjectProjectionImpl projection = new ProjectProjectionImpl(savedProject);
-        projection.setRole(OWNER.name());
-
-        return projection;
+        return toProjection(savedProject, OWNER);
     }
 
     /**
@@ -306,7 +303,7 @@ public class ProjectService {
                                       "DELETE", "PROJECT_ITEM", "PROJECT_ITEM", projectItemId));
         } else {
             ProjectProjectionImpl projectImpl = getByIdWithRole(projectItemId);
-            if (!projectImpl.getRole().equals(OWNER.name())) {
+            if (!(projectImpl.getRole() == OWNER)) {
                 throw new ForbiddenException("Недостаточно прав для удаления проекта: " + projectItemId);
             }
 
@@ -369,9 +366,9 @@ public class ProjectService {
                         .filter(projectProjection -> Objects.equals(projectProjection.getId(), pp.getProjectId()))
                         .findFirst()
                         .ifPresent(projectItem -> {
-                            Roles role = stringToRole(projectItem.getRole());
+                            Roles role = projectItem.getRole();
                             if (role.roleToValue() < pp.getMaxRole()) {
-                                projectItem.setRole(valueToRole(pp.getMaxRole()).name());
+                                projectItem.setRole(valueToRole(pp.getMaxRole()));
                             }
                         });
         }

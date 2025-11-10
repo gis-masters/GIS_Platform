@@ -6,6 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.mycrg.auth_facade.IAuthenticationFacade;
+import ru.mycrg.common_contracts.enums.Roles;
 import ru.mycrg.data_service.dao.BasePermissionsRepository;
 import ru.mycrg.data_service.dao.DocumentLibraryDao;
 import ru.mycrg.data_service.dao.mappers.DocLibraryMapper;
@@ -25,11 +26,13 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static java.time.LocalDateTime.now;
+import static ru.mycrg.common_contracts.enums.Roles.OWNER;
 import static ru.mycrg.data_service.config.CrgCommonConfig.ROOT_FOLDER_PATH;
 import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_NAME;
 import static ru.mycrg.data_service.dto.ResourceType.LIBRARY;
 import static ru.mycrg.data_service.service.resources.ResourceQualifier.libraryQualifier;
-import static ru.mycrg.data_service.service.schemas.SchemaUtil.*;
+import static ru.mycrg.data_service.service.schemas.SchemaUtil.enrichPropsByIsDeleted;
+import static ru.mycrg.data_service.service.schemas.SchemaUtil.enrichPropsByVersions;
 import static ru.mycrg.data_service.util.SystemLibraryAttributes.ID;
 import static ru.mycrg.data_service.util.SystemLibraryAttributes.PATH;
 
@@ -123,13 +126,13 @@ public class DocumentLibraryService {
                 .orElseThrow(() -> new NotFoundException("Библиотека не найдена по идентификатору: " + libraryId));
 
         if (authenticationFacade.isOrganizationAdmin()) {
-            LibraryModel libraryModel = new LibraryModel(dl, "OWNER");
+            LibraryModel libraryModel = new LibraryModel(dl, OWNER);
             enrichSchema(libraryModel);
 
             return libraryModel;
         }
 
-        Optional<String> oRole = permissionsRepository.getBestRoleForLibrary(libraryId);
+        Optional<Roles> oRole = permissionsRepository.getBestRoleForLibrary(libraryId);
         if (oRole.isEmpty()) {
             throw new ForbiddenException("Недостаточно прав для просмотра библиотеки: " + libraryId);
         }

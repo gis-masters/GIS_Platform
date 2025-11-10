@@ -100,6 +100,11 @@ public class DxfPlacementExecutor implements IExecutor<ImportReport>, IFilePlace
         return false;
     }
 
+    @Override
+    public void cleanup() {
+        log.debug("Процесс завершился с ошибкой. Операция очистки запущена, но не существует.");
+    }
+
     @NotNull
     private String changeFileEncoding(File file) {
         String filePath = file.getPath();

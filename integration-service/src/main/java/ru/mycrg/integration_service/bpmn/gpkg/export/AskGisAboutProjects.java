@@ -38,10 +38,6 @@ public class AskGisAboutProjects implements JavaDelegate {
 
     private final Logger log = LoggerFactory.getLogger(AskGisAboutProjects.class);
 
-    public AskGisAboutProjects() {
-        // Required for Spring
-    }
-
     @Override
     public void execute(DelegateExecution delegateExecution) throws Exception {
         log.debug("Класс '{}' начал работу.", AskGisAboutProjects.class.getSimpleName());

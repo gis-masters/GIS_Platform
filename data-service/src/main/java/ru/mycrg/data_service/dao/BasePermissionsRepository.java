@@ -10,6 +10,7 @@ import org.springframework.jdbc.core.SingleColumnRowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+import ru.mycrg.common_contracts.enums.Roles;
 import ru.mycrg.data_service.dao.mappers.DocLibraryMapper;
 import ru.mycrg.data_service.dao.mappers.RecordRowMapper;
 import ru.mycrg.data_service.dao.mappers.SchemasAndTablesMapper;
@@ -201,7 +202,7 @@ public class BasePermissionsRepository {
         pJdbcTemplate.getJdbcTemplate().execute(query);
     }
 
-    public Optional<String> bestRoleForTable(ResourceQualifier tableQualifier) {
+    public Optional<Roles> bestRoleForTable(ResourceQualifier tableQualifier) {
         String tableName = tableQualifier.getTable();
         String schemaName = tableQualifier.getSchema();
 
@@ -265,7 +266,7 @@ public class BasePermissionsRepository {
     /**
      * Возвращает лучшую роль наследованную от родителей
      */
-    public Optional<String> bestRoleInheritedFromParent(ResourceQualifier tableQualifier,
+    public Optional<Roles> bestRoleInheritedFromParent(ResourceQualifier tableQualifier,
                                                         Set<String> parentFolderIds) {
         if (parentFolderIds.isEmpty()) {
             return Optional.empty();
@@ -299,7 +300,7 @@ public class BasePermissionsRepository {
         }
     }
 
-    public Optional<String> getBestRoleForLibrary(String tableName) {
+    public Optional<Roles> getBestRoleForLibrary(String tableName) {
         List<String> allPrincipalIds = principalService.getAllIds();
         if (allPrincipalIds.isEmpty()) {
             return Optional.empty();
@@ -322,7 +323,7 @@ public class BasePermissionsRepository {
         return defineRoleById(results);
     }
 
-    public Optional<String> getBestRoleForDataset(ResourceQualifier dQualifier) {
+    public Optional<Roles> getBestRoleForDataset(ResourceQualifier dQualifier) {
         List<String> allPrincipalIds = principalService.getAllIds();
         if (allPrincipalIds.isEmpty()) {
             return Optional.empty();
@@ -354,7 +355,7 @@ public class BasePermissionsRepository {
      *
      * @throws IllegalStateException если квалификатор не содержит record
      */
-    public Optional<String> getBestRoleForRecord(ResourceQualifier rQualifier) {
+    public Optional<Roles> getBestRoleForRecord(ResourceQualifier rQualifier) {
         checkQualifier(rQualifier);
 
         String tableQualifier = rQualifier.getTableQualifier();

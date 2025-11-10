@@ -63,4 +63,6 @@ public interface IExecutor<T> {
     default boolean notDetached() {
         return true;
     }
+
+    void cleanup();
 }

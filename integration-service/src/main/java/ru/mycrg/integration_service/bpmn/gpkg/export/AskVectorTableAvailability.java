@@ -15,7 +15,7 @@ import ru.mycrg.common_contracts.generated.gpkg.MessageFromExport;
 import ru.mycrg.data_service_contract.dto.ExportResourceModel;
 import ru.mycrg.data_service_contract.dto.PatchProcess;
 import ru.mycrg.data_service_contract.dto.gpkg.GpkgPayload;
-import ru.mycrg.data_service_contract.queue.request.ExportGpkgEvent;
+import ru.mycrg.data_service_contract.queue.request.gpkg.ExportGpkgEvent;
 import ru.mycrg.data_service_contract.queue.request.UpdateProcessEvent;
 import ru.mycrg.http_client.JsonConverter;
 import ru.mycrg.integration_service.bpmn.BaseHttpService;
@@ -208,7 +208,7 @@ public class AskVectorTableAvailability implements JavaDelegate {
     private Response fetchTableByIdentifier(ExportResourceModel resource, String token) throws IOException {
         URL dataServiceUrl = baseHttpService.getDataServiceUrl();
         URL exportUrl = new URL(dataServiceUrl,
-                                "/datasets/" + resource.getDataset() + "/tables/" + resource.getTable() + "/roleAssignment");
+                                "/datasets/" + resource.getDataset() + "/tables/" + resource.getTable());
 
         Request request = new Request.Builder()
                 .url(exportUrl)

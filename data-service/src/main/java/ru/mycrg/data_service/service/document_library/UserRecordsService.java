@@ -1,12 +1,12 @@
 package ru.mycrg.data_service.service.document_library;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.mycrg.common_contracts.enums.Roles;
 import ru.mycrg.data_service.dao.BasePermissionsRepository;
 import ru.mycrg.data_service.dao.RecordsDao;
 import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
@@ -14,7 +14,6 @@ import ru.mycrg.data_service.dao.mappers.RecordRowMapper;
 import ru.mycrg.data_service.dto.RegistryData;
 import ru.mycrg.data_service.dto.record.IRecord;
 import ru.mycrg.data_service.exceptions.BadRequestException;
-import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.exceptions.ForbiddenException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
@@ -24,15 +23,13 @@ import ru.mycrg.data_service.service.schemas.SystemAttributeHandler;
 import ru.mycrg.data_service_contract.dto.DocumentVersioningDto;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 
-import java.io.IOException;
 import java.util.*;
 
 import static java.util.Objects.nonNull;
+import static ru.mycrg.common_contracts.enums.Roles.*;
 import static ru.mycrg.data_service.config.CrgCommonConfig.ROOT_FOLDER_PATH;
 import static ru.mycrg.data_service.dto.ResourceType.LIBRARY_RECORD;
-import static ru.mycrg.data_service.dto.Roles.*;
 import static ru.mycrg.data_service.util.EcqlFilterUtil.addAsEqual;
-import static ru.mycrg.data_service.util.JsonConverter.mapper;
 import static ru.mycrg.data_service.util.SystemLibraryAttributes.*;
 
 @Service
@@ -139,7 +136,7 @@ public class UserRecordsService implements IRecordsService {
 
     @Override
     public IRecord getById(ResourceQualifier rQualifier, Object recordId, SchemaDto schema) {
-        String definedRole = null;
+        Roles definedRole = null;
 
         // Создаю новый - переходное решение пока некоторые квалификаторы не включают в себя идентификатор записи
         ResourceQualifier recordQualifier = new ResourceQualifier(rQualifier, recordId, LIBRARY_RECORD);
@@ -153,23 +150,23 @@ public class UserRecordsService implements IRecordsService {
         if (path != null && !path.equals(ROOT_FOLDER_PATH)) {
             Set<String> ids = systemAttributeHandler.extractFolderIdsFromPath(path);
 
-            Optional<String> oRole = permissionsRepository.bestRoleInheritedFromParent(rQualifier, ids);
+            Optional<Roles> oRole = permissionsRepository.bestRoleInheritedFromParent(rQualifier, ids);
             if (oRole.isPresent()) {
                 definedRole = oRole.get();
             }
         }
 
         // Если роль на данном этапе максимальная, то дальше ничего делать не нужно.
-        String ownerRole = "OWNER";
-        String editorRole = "CONTRIBUTOR";
-        if (ownerRole.equals(definedRole)) {
+        Roles ownerRole = OWNER;
+        Roles editorRole = CONTRIBUTOR;
+        if (ownerRole == definedRole) {
             content.put(ROLE.getName(), ownerRole);
 
             return record;
         }
 
         // Проверим роль выданную непосредственно на запись
-        Optional<String> oRole = permissionsRepository.getBestRoleForRecord(recordQualifier);
+        Optional<Roles> oRole = permissionsRepository.getBestRoleForRecord(recordQualifier);
         if (oRole.isPresent()) {
             if (nonNull(definedRole)) {
                 if (isFirstRoleBetterThanSecond(oRole.get(), definedRole)) {
@@ -355,11 +352,11 @@ public class UserRecordsService implements IRecordsService {
         }
     }
 
-    private boolean isFirstRoleBetterThanSecond(String recordRole, String defineRole) {
-        Map<String, Integer> roleWeights = new HashMap<>();
-        roleWeights.put(VIEWER.name(), 10);
-        roleWeights.put(CONTRIBUTOR.name(), 20);
-        roleWeights.put(OWNER.name(), 30);
+    private boolean isFirstRoleBetterThanSecond(Roles recordRole, Roles defineRole) {
+        Map<Roles, Integer> roleWeights = new HashMap<>();
+        roleWeights.put(VIEWER, 10);
+        roleWeights.put(CONTRIBUTOR, 20);
+        roleWeights.put(OWNER, 30);
 
         Integer firstRoleWeight = roleWeights.get(recordRole);
         Integer secondRoleWeight = roleWeights.get(defineRole);

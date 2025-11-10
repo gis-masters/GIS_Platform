@@ -1,6 +1,5 @@
 package ru.mycrg.data_service.service.document_library;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,15 +22,13 @@ import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service_contract.dto.DocumentVersioningDto;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 
-import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
 import static ru.mycrg.data_service.config.CrgCommonConfig.ROOT_FOLDER_PATH;
 import static ru.mycrg.data_service.dto.ResourceType.LIBRARY_RECORD;
-import static ru.mycrg.data_service.dto.Roles.OWNER;
+import static ru.mycrg.common_contracts.enums.Roles.OWNER;
 import static ru.mycrg.data_service.util.EcqlFilterUtil.addAsEqual;
-import static ru.mycrg.data_service.util.JsonConverter.mapper;
 import static ru.mycrg.data_service.util.SystemLibraryAttributes.*;
 import static ru.mycrg.data_service.util.TableUtils.throwIfNotMatchTableColumns;
 

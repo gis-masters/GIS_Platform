@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import ru.mycrg.data_service_contract.dto.BuildGpkgBackwardEvent;
 import ru.mycrg.data_service_contract.dto.ExportProcessModel;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
-import ru.mycrg.data_service_contract.queue.request.BuildGpkgEvent;
+import ru.mycrg.data_service_contract.queue.request.gpkg.BuildGpkgEvent;
 import ru.mycrg.messagebus_contract.IEventHandler;
 import ru.mycrg.messagebus_contract.IMessageBusProducer;
 import ru.mycrg.messagebus_contract.events.IMessageBusEvent;

@@ -2,6 +2,7 @@ package ru.mycrg.data_service.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import org.springframework.hateoas.core.Relation;
+import ru.mycrg.common_contracts.enums.Roles;
 import ru.mycrg.data_service.entity.SchemasAndTables;
 
 import java.util.Objects;
@@ -27,7 +28,7 @@ public class TableModel extends ResourceModel implements IResourceModel {
         super();
     }
 
-    public TableModel(SchemasAndTables table, String role, String dataset) {
+    public TableModel(SchemasAndTables table, Roles role, String dataset) {
         super(table.getId(), table.getTitle(), table.getDetails(), "TABLE", table.getIdentifier(),
               table.getItemsCount(), table.getCrs(), jsonToDto(table.getSchema()), table.getCreatedAt().toString(),
               role);

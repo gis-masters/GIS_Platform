@@ -11,23 +11,23 @@ public class LayerProjection implements Serializable {
     private final Long id;
     private final String title;
     private final String type;
-    private final String dataset;
-    private final String resourceId;
+    private String dataset;
+    private String resourceId;
     private final boolean enabled;
     private final Integer position;
     private final int transparency;
     private final int maxZoom;
     private final int minZoom;
-    private final String styleName;
+    private String styleName;
     private final String nativeCRS;
     private final String dataSourceUri;
-    private final Long parentId;
-    private final Long projectId;
+    private Long parentId;
+    private Long projectId;
     private final String complexName;
     private final String sourceId;
     private final String sourceType;
     private final Long sourceRecordId;
-    private final String dataStoreName;
+    private String dataStoreName;
     private final String contentType;
     private final String view;
     private final String errorText;
@@ -38,24 +38,24 @@ public class LayerProjection implements Serializable {
 
     // Конструктор для JSON десериализации - только с полями, которые приходят в JSON
     @JsonCreator
-    public LayerProjection(@JsonProperty("id") Long id, 
-                           @JsonProperty("title") String title, 
-                           @JsonProperty("type") String type, 
-                           @JsonProperty("dataset") String dataset, 
+    public LayerProjection(@JsonProperty("id") Long id,
+                           @JsonProperty("title") String title,
+                           @JsonProperty("type") String type,
+                           @JsonProperty("dataset") String dataset,
                            @JsonProperty("resourceId") String resourceId,
                            @JsonProperty("enabled") boolean enabled,
-                           @JsonProperty("position") Integer position, 
-                           @JsonProperty("transparency") int transparency, 
-                           @JsonProperty("maxZoom") int maxZoom, 
-                           @JsonProperty("minZoom") int minZoom, 
+                           @JsonProperty("position") Integer position,
+                           @JsonProperty("transparency") int transparency,
+                           @JsonProperty("maxZoom") int maxZoom,
+                           @JsonProperty("minZoom") int minZoom,
                            @JsonProperty("styleName") String styleName,
-                           @JsonProperty("nativeCRS") String nativeCRS, 
-                           @JsonProperty("parentId") Long parentId, 
-                           @JsonProperty("projectId") Long projectId, 
+                           @JsonProperty("nativeCRS") String nativeCRS,
+                           @JsonProperty("parentId") Long parentId,
+                           @JsonProperty("projectId") Long projectId,
                            @JsonProperty("complexName") String complexName,
-                           @JsonProperty("dataStoreName") String dataStoreName, 
-                           @JsonProperty("view") String view, 
-                           @JsonProperty("createdAt") LocalDateTime createdAt, 
+                           @JsonProperty("dataStoreName") String dataStoreName,
+                           @JsonProperty("view") String view,
+                           @JsonProperty("createdAt") LocalDateTime createdAt,
                            @JsonProperty("lastModified") LocalDateTime lastModified) {
 
         this.id = id;
@@ -140,8 +140,16 @@ public class LayerProjection implements Serializable {
         return dataset;
     }
 
+    public void setDataset(String dataset) {
+        this.dataset = dataset;
+    }
+
     public String getResourceId() {
         return resourceId;
+    }
+
+    public void setResourceId(String resourceId) {
+        this.resourceId = resourceId;
     }
 
     public boolean isEnabled() {
@@ -168,6 +176,10 @@ public class LayerProjection implements Serializable {
         return styleName;
     }
 
+    public void setStyleName(String styleName) {
+        this.styleName = styleName;
+    }
+
     public String getNativeCRS() {
         return nativeCRS;
     }
@@ -180,8 +192,16 @@ public class LayerProjection implements Serializable {
         return parentId;
     }
 
+    public void setParentId(Long parentId) {
+        this.parentId = parentId;
+    }
+
     public Long getProjectId() {
         return projectId;
+    }
+
+    public void setProjectId(Long projectId) {
+        this.projectId = projectId;
     }
 
     public String getComplexName() {
@@ -202,6 +222,10 @@ public class LayerProjection implements Serializable {
 
     public String getDataStoreName() {
         return dataStoreName;
+    }
+
+    public void setDataStoreName(String dataStoreName) {
+        this.dataStoreName = dataStoreName;
     }
 
     public String getContentType() {
@@ -230,5 +254,38 @@ public class LayerProjection implements Serializable {
 
     public LocalDateTime getLastModified() {
         return lastModified;
+    }
+
+    @Override
+    public String toString() {
+        return "{" +
+                "\"id\":" + (id == null ? "null" : "\"" + id + "\"") + ", " +
+                "\"title\":" + (title == null ? "null" : "\"" + title + "\"") + ", " +
+                "\"type\":" + (type == null ? "null" : "\"" + type + "\"") + ", " +
+                "\"dataset\":" + (dataset == null ? "null" : "\"" + dataset + "\"") + ", " +
+                "\"resourceId\":" + (resourceId == null ? "null" : "\"" + resourceId + "\"") + ", " +
+                "\"enabled\":\"" + enabled + "\"" + ", " +
+                "\"position\":" + (position == null ? "null" : "\"" + position + "\"") + ", " +
+                "\"transparency\":\"" + transparency + "\"" + ", " +
+                "\"maxZoom\":\"" + maxZoom + "\"" + ", " +
+                "\"minZoom\":\"" + minZoom + "\"" + ", " +
+                "\"styleName\":" + (styleName == null ? "null" : "\"" + styleName + "\"") + ", " +
+                "\"nativeCRS\":" + (nativeCRS == null ? "null" : "\"" + nativeCRS + "\"") + ", " +
+                "\"dataSourceUri\":" + (dataSourceUri == null ? "null" : "\"" + dataSourceUri + "\"") + ", " +
+                "\"parentId\":" + (parentId == null ? "null" : "\"" + parentId + "\"") + ", " +
+                "\"projectId\":" + (projectId == null ? "null" : "\"" + projectId + "\"") + ", " +
+                "\"complexName\":" + (complexName == null ? "null" : "\"" + complexName + "\"") + ", " +
+                "\"sourceId\":" + (sourceId == null ? "null" : "\"" + sourceId + "\"") + ", " +
+                "\"sourceType\":" + (sourceType == null ? "null" : "\"" + sourceType + "\"") + ", " +
+                "\"sourceRecordId\":" + (sourceRecordId == null ? "null" : "\"" + sourceRecordId + "\"") + ", " +
+                "\"dataStoreName\":" + (dataStoreName == null ? "null" : "\"" + dataStoreName + "\"") + ", " +
+                "\"contentType\":" + (contentType == null ? "null" : "\"" + contentType + "\"") + ", " +
+                "\"view\":" + (view == null ? "null" : "\"" + view + "\"") + ", " +
+                "\"errorText\":" + (errorText == null ? "null" : "\"" + errorText + "\"") + ", " +
+                "\"style\":" + (style == null ? "null" : "\"" + style + "\"") + ", " +
+                "\"photoMode\":" + (photoMode == null ? "null" : "\"" + photoMode + "\"") + ", " +
+                "\"createdAt\":" + (createdAt == null ? "null" : createdAt) + ", " +
+                "\"lastModified\":" + (lastModified == null ? "null" : lastModified) +
+                "}";
     }
 }

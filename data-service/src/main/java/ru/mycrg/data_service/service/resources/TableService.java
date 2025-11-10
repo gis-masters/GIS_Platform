@@ -8,6 +8,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ru.mycrg.auth_facade.IAuthenticationFacade;
+import ru.mycrg.common_contracts.enums.Roles;
 import ru.mycrg.data_service.dao.BasePermissionsRepository;
 import ru.mycrg.data_service.dao.BaseReadDao;
 import ru.mycrg.data_service.dao.mappers.SchemasAndTablesMapper;
@@ -32,7 +33,7 @@ import static java.util.Collections.unmodifiableList;
 import static ru.mycrg.data_service.config.CrgCommonConfig.ROOT_FOLDER_PATH;
 import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_NAME;
 import static ru.mycrg.data_service.dto.ResourceType.TABLE;
-import static ru.mycrg.data_service.dto.Roles.OWNER;
+import static ru.mycrg.common_contracts.enums.Roles.OWNER;
 import static ru.mycrg.data_service.mappers.SchemaMapper.jsonToDto;
 import static ru.mycrg.data_service.service.resources.DatasetService.SCHEMAS_AND_TABLES_QUALIFIER;
 
@@ -74,12 +75,12 @@ public class TableService {
                                                 pageable,
                                                 new SchemasAndTablesMapper())
                                        .stream()
-                                       .map(item -> new TableModel(item, OWNER.name(), datasetIdentifier))
+                                       .map(item -> new TableModel(item, OWNER, datasetIdentifier))
                                        .collect(Collectors.toList());
             total = baseReadDao.total(SCHEMAS_AND_TABLES_QUALIFIER, ecqlFilter);
         } else {
             ResourceQualifier dQualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, datasetIdentifier);
-            Optional<String> roleForParentDataset = permissionsRepository.getBestRoleForDataset(dQualifier);
+            Optional<Roles> roleForParentDataset = permissionsRepository.getBestRoleForDataset(dQualifier);
             if (roleForParentDataset.isPresent()) {
                 ecqlFilter = addPathToDataset(ecqlFilter, dataset.pathTo());
 
@@ -116,7 +117,7 @@ public class TableService {
                                                 TableModel.class);
         } else {
             ResourceQualifier dQualifier = new ResourceQualifier(SYSTEM_SCHEMA_NAME, dataset.getIdentifier());
-            Optional<String> roleForParentDataset = permissionsRepository.getBestRoleForDataset(dQualifier);
+            Optional<Roles> roleForParentDataset = permissionsRepository.getBestRoleForDataset(dQualifier);
             if (roleForParentDataset.isPresent()) {
                 allowedTables = baseReadDao.findAll(SCHEMAS_AND_TABLES_QUALIFIER,
                                                     addPathToDataset(dataset.pathTo()),
@@ -139,9 +140,9 @@ public class TableService {
                     .findByIdentifier(tQualifier.getTable())
                     .orElseThrow(() -> new NotFoundException("Не найдена таблица: " + tQualifier.getTable()));
 
-            return new TableModel(table, OWNER.name(), tQualifier.getSchema());
+            return new TableModel(table, OWNER, tQualifier.getSchema());
         } else {
-            Optional<String> oRole = permissionsRepository.bestRoleForTable(tQualifier);
+            Optional<Roles> oRole = permissionsRepository.bestRoleForTable(tQualifier);
             if (oRole.isPresent()) {
                 SchemasAndTables table = schemasAndTablesRepository
                         .findByIdentifier(tQualifier.getTable())

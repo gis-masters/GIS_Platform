@@ -1,8 +1,8 @@
 package ru.mycrg.gis_service.dao;
 
 import org.springframework.jdbc.core.RowMapper;
+import ru.mycrg.common_contracts.enums.Roles;
 import ru.mycrg.gis_service.dto.project.ProjectProjectionImpl;
-import ru.mycrg.gis_service.security.Roles;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -20,7 +20,7 @@ public class ProjectsMapper implements RowMapper<ProjectProjectionImpl> {
         project.setDefault(rs.getBoolean("is_default"));
         project.setFolder(rs.getBoolean("is_folder"));
         project.setDescription(rs.getString("description"));
-        project.setRole(Roles.valueToRole(rs.getLong("role")).name());
+        project.setRole(Roles.valueToRole(rs.getLong("role")));
         project.setPath(rs.getString("path"));
 
         Timestamp createdAt = rs.getTimestamp("created_at");

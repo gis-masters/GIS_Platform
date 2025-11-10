@@ -10,7 +10,6 @@ import io.restassured.specification.RequestSpecification;
 import ru.mycrg.acceptance.BaseStepsDefinitions;
 import ru.mycrg.acceptance.auth_service.AuthorizationBase;
 import ru.mycrg.acceptance.data_service.ImportStepsDefinitions;
-import ru.mycrg.acceptance.data_service.ValidationReportStepDefinition;
 import ru.mycrg.acceptance.data_service.dto.DatasetCreateDto;
 import ru.mycrg.acceptance.data_service.tables.TablesStepsDefinitions;
 
@@ -22,6 +21,8 @@ import static org.apache.http.HttpStatus.SC_OK;
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.*;
 import static ru.mycrg.acceptance.data_service.tables.TablesStepsDefinitions.currentTableName;
+import static ru.mycrg.acceptance.data_service.tables.TablesStepsDefinitions.currentWorkspace;
+import static ru.mycrg.acceptance.data_service.tables.TablesStepsDefinitions.currentComplexName;
 
 public class DatasetsStepsDefinitions extends BaseStepsDefinitions {
 
@@ -31,7 +32,6 @@ public class DatasetsStepsDefinitions extends BaseStepsDefinitions {
     private final AuthorizationBase authorizationBase = new AuthorizationBase();
 
     private final ImportStepsDefinitions importSteps = new ImportStepsDefinitions();
-    private final ValidationReportStepDefinition validationSteps = new ValidationReportStepDefinition();
     private final TablesStepsDefinitions tablesSteps = new TablesStepsDefinitions();
 
     @Override
@@ -199,12 +199,6 @@ public class DatasetsStepsDefinitions extends BaseStepsDefinitions {
         assertEquals(Integer.parseInt(datasetsSize), realCount);
     }
 
-    @Given("Существует набор данных с проверенным слоем в нем")
-    public void initializeDataSetWithVerifiedLayers() throws InterruptedException {
-        importValidShape();
-        validationSteps.validateLayer();
-    }
-
     @Given("Импортирован архив с валидным Shape-файлом в проект")
     public void importValidShape() throws InterruptedException {
         initDataset();
@@ -262,6 +256,14 @@ public class DatasetsStepsDefinitions extends BaseStepsDefinitions {
 
         assertEquals("updated Title", title);
         assertEquals("updated Details", details);
+    }
+
+    @And("пользователь запоминает информацию из слоя")
+    public void rememberDatasetAndTable() {
+        currentDatasetIdentifier = response.jsonPath().get("[0].dataset");
+        currentTableName = response.jsonPath().get("[0].resourceId");
+        currentWorkspace = response.jsonPath().get("[0].dataStoreName");
+        currentComplexName = response.jsonPath().get("[0].currentComplexName");
     }
 
     private void createDataset(DatasetCreateDto dto) {

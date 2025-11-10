@@ -3,6 +3,7 @@ package ru.mycrg.data_service.service.resources.protectors;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 import ru.mycrg.auth_facade.IAuthenticationFacade;
+import ru.mycrg.common_contracts.enums.Roles;
 import ru.mycrg.data_service.dao.BasePermissionsRepository;
 import ru.mycrg.data_service.dao.RecordsDao;
 import ru.mycrg.data_service.dto.ResourceType;
@@ -19,10 +20,10 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static ru.mycrg.common_contracts.enums.Roles.CONTRIBUTOR;
+import static ru.mycrg.common_contracts.enums.Roles.OWNER;
 import static ru.mycrg.data_service.config.CrgCommonConfig.ROOT_FOLDER_PATH;
 import static ru.mycrg.data_service.dto.ResourceType.LIBRARY_RECORD;
-import static ru.mycrg.data_service.dto.Roles.CONTRIBUTOR;
-import static ru.mycrg.data_service.dto.Roles.OWNER;
 import static ru.mycrg.data_service.util.SystemLibraryAttributes.PATH;
 
 @Component
@@ -83,7 +84,7 @@ public class DocLibraryRecordsProtector implements IResourceProtector {
         if (path != null && !path.equals(ROOT_FOLDER_PATH)) {
             Set<String> ids = extractFolderIdsFromPath(path);
 
-            Optional<String> roleFromParent = permissionsRepository.bestRoleInheritedFromParent(recordQualifier, ids);
+            Optional<Roles> roleFromParent = permissionsRepository.bestRoleInheritedFromParent(recordQualifier, ids);
             if (roleFromParent.isPresent()) {
                 return true;
             }
@@ -120,19 +121,16 @@ public class DocLibraryRecordsProtector implements IResourceProtector {
         if (path != null && !path.equals(ROOT_FOLDER_PATH)) {
             Set<String> ids = extractFolderIdsFromPath(path);
 
-            Optional<String> oRole = permissionsRepository.bestRoleInheritedFromParent(rQualifier, ids);
-            if (oRole.isPresent() && OWNER.name().equals(oRole.get())) {
+            Optional<Roles> oRole = permissionsRepository.bestRoleInheritedFromParent(rQualifier, ids);
+            if (oRole.isPresent() && OWNER == oRole.get()) {
                 return true;
             }
         }
 
         // Проверим роль выданную непосредственно на запись
-        Optional<String> oRole = permissionsRepository.getBestRoleForRecord(rQualifier);
-        if (oRole.isPresent() && OWNER.name().equals(oRole.get())) {
-            return true;
-        }
+        Optional<Roles> oRole = permissionsRepository.getBestRoleForRecord(rQualifier);
 
-        return false;
+        return oRole.isPresent() && OWNER == oRole.get();
     }
 
     private boolean isUserHasEditPermission(ResourceQualifier rQualifier) {
@@ -145,20 +143,16 @@ public class DocLibraryRecordsProtector implements IResourceProtector {
         if (path != null && !path.equals(ROOT_FOLDER_PATH)) {
             Set<String> ids = extractFolderIdsFromPath(path);
 
-            Optional<String> oRole = permissionsRepository.bestRoleInheritedFromParent(rQualifier, ids);
-            if (oRole.isPresent() && (OWNER.name().equals(oRole.get()) || CONTRIBUTOR.name().equals(oRole.get()))) {
+            Optional<Roles> oRole = permissionsRepository.bestRoleInheritedFromParent(rQualifier, ids);
+            if (oRole.isPresent() && (OWNER == oRole.get() || CONTRIBUTOR == oRole.get())) {
                 return true;
             }
         }
 
         // Проверим роль выданную непосредственно на запись
-        Optional<String> oRole = permissionsRepository.getBestRoleForRecord(rQualifier);
-        if (oRole.isPresent() &&
-                (OWNER.name().equals(oRole.get()) || CONTRIBUTOR.name().equals(oRole.get()))) {
-            return true;
-        }
+        Optional<Roles> oRole = permissionsRepository.getBestRoleForRecord(rQualifier);
 
-        return false;
+        return oRole.isPresent() && (OWNER == oRole.get() || CONTRIBUTOR == oRole.get());
     }
 
     private Set<String> extractFolderIdsFromPath(String path) {

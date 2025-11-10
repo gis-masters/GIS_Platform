@@ -13,7 +13,7 @@ import ru.mycrg.auth_facade.IAuthenticationFacade;
 import ru.mycrg.gis_service.dto.LayerCreateDto;
 import ru.mycrg.gis_service.dto.LayerUpdateDto;
 import ru.mycrg.gis_service.dto.RelatedLayersModel;
-import ru.mycrg.gis_service.dto.project.ProjectProjection;
+import ru.mycrg.gis_service.dto.project.IProjectProjection;
 import ru.mycrg.gis_service.dto.project.ProjectProjectionImpl;
 import ru.mycrg.gis_service.entity.Group;
 import ru.mycrg.gis_service.entity.Layer;
@@ -281,7 +281,7 @@ public class LayerService {
         return relatedLayers.stream()
                             .map(layer -> {
                                 LayerProjection lProjection = LayerMapper.toProjection(layer, getOrgWorkspaceName());
-                                ProjectProjection pProjection = projectService
+                                IProjectProjection pProjection = projectService
                                         .getProjectionByIdUnsafe(layer.getProject().getId());
 
                                 return new RelatedLayersModel(lProjection, pProjection);

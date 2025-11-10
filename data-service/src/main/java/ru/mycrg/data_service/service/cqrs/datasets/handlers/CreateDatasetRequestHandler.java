@@ -20,10 +20,10 @@ import ru.mycrg.mediator.IRequestHandler;
 
 import java.sql.SQLException;
 
+import static ru.mycrg.common_contracts.enums.Roles.OWNER;
 import static ru.mycrg.common_utils.CrgGlobalProperties.generateDatasetName;
 import static ru.mycrg.data_service.config.CrgCommonConfig.ROOT_FOLDER_PATH;
 import static ru.mycrg.data_service.dto.ResourceType.DATASET;
-import static ru.mycrg.data_service.dto.Roles.OWNER;
 import static ru.mycrg.data_service.service.resources.DatasetService.SCHEMAS_AND_TABLES_QUALIFIER;
 
 @Component
@@ -76,6 +76,20 @@ public class CreateDatasetRequestHandler implements IRequestHandler<CreateDatase
         log.debug("Запись о наборе данных создана(schemas_and_tables), права на владение даны. ID: {}",
                   newEntity.getId());
 
+        createDatastoreOnGeoserverOrRollback(datasetName, newEntity, dQualifier, ownerPermission);
+
+        log.debug("Хранилище: {} создано на геосервере", datasetName);
+
+        DatasetModel datasetModel = new DatasetModel(newEntity, OWNER, 0);
+        request.setDatasetModel(datasetModel);
+
+        return datasetModel;
+    }
+
+    public void createDatastoreOnGeoserverOrRollback(String datasetName,
+                                                     SchemasAndTables newEntity,
+                                                     ResourceQualifier dQualifier,
+                                                     Permission ownerPermission) {
         ResponseModel<Object> responseModel = dataStoreClient.create(datasetName);
         if (!responseModel.isSuccessful()) {
             schemasAndTablesRepository.delete(newEntity);
@@ -88,12 +102,5 @@ public class CreateDatasetRequestHandler implements IRequestHandler<CreateDatase
 
             throw new DataServiceException("Не удалось создать хранилище на геосервере", responseModel);
         }
-
-        log.debug("Хранилище: {} создано на геосервере", datasetName);
-
-        DatasetModel datasetModel = new DatasetModel(newEntity, OWNER.name(), 0);
-        request.setDatasetModel(datasetModel);
-
-        return datasetModel;
     }
 }

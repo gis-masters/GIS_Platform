@@ -3,6 +3,7 @@ package ru.mycrg.data_service.service.resources.protectors;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 import ru.mycrg.auth_facade.IAuthenticationFacade;
+import ru.mycrg.common_contracts.enums.Roles;
 import ru.mycrg.data_service.dao.BasePermissionsRepository;
 import ru.mycrg.data_service.dto.ResourceType;
 import ru.mycrg.data_service.entity.SchemasAndTables;
@@ -13,9 +14,9 @@ import ru.mycrg.data_service.service.resources.ResourceQualifier;
 
 import java.util.Optional;
 
+import static ru.mycrg.common_contracts.enums.Roles.CONTRIBUTOR;
+import static ru.mycrg.common_contracts.enums.Roles.OWNER;
 import static ru.mycrg.data_service.dto.ResourceType.TABLE;
-import static ru.mycrg.data_service.dto.Roles.CONTRIBUTOR;
-import static ru.mycrg.data_service.dto.Roles.OWNER;
 
 @Component
 public class TableProtector implements IResourceProtector {
@@ -81,20 +82,14 @@ public class TableProtector implements IResourceProtector {
      * Для таблицы проверим наследования сверху от набора(права выданные на набор) и права на саму таблицу
      */
     private boolean isUserHasOwnPermission(ResourceQualifier tQualifier) {
-        Optional<String> oRole = basePermissionsRepository.bestRoleForTable(tQualifier);
-        if (oRole.isEmpty()) {
-            return false;
-        }
+        Optional<Roles> oRole = basePermissionsRepository.bestRoleForTable(tQualifier);
 
-        return OWNER.name().equals(oRole.get());
+        return oRole.filter(roles -> OWNER == roles).isPresent();
     }
 
     private boolean isUserHasEditPermission(ResourceQualifier tQualifier) {
-        Optional<String> oRole = basePermissionsRepository.bestRoleForTable(tQualifier);
-        if (oRole.isEmpty()) {
-            return false;
-        }
+        Optional<Roles> oRole = basePermissionsRepository.bestRoleForTable(tQualifier);
 
-        return CONTRIBUTOR.name().equals(oRole.get()) || OWNER.name().equals(oRole.get());
+        return oRole.filter(roles -> CONTRIBUTOR == roles || OWNER == roles).isPresent();
     }
 }

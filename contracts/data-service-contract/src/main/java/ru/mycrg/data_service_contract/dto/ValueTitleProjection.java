@@ -1,8 +1,9 @@
 package ru.mycrg.data_service_contract.dto;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public class ValueTitleProjection {
+public class ValueTitleProjection implements Serializable {
 
     private String value;
     private String title;

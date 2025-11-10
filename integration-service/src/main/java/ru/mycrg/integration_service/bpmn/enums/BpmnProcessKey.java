@@ -10,6 +10,7 @@ public enum BpmnProcessKey {
     REFERENCE_LAYER_DELETION_PROCESS("integration_layerDeleteProcess"),
 
     GPKG_EXPORT_PROCESS("integration_exportGeoPackageProcess"),
+    GPKG_IMPORT_PROCESS("integration_importGeoPackageProcess"),
 
     FILE_PLACEMENT_PROCESS("integration_filePlacementProcess");
 

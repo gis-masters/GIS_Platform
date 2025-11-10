@@ -15,7 +15,7 @@ import org.springframework.jdbc.datasource.init.ScriptUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StreamUtils;
 import ru.mycrg.data_service.dao.config.DatasourceFactory;
-import ru.mycrg.data_service.dao.ddl.tables.DdlTriggers;
+import ru.mycrg.data_service.dao.ddl.tables.DdlTriggersDetached;
 import ru.mycrg.data_service.dao.mappers.DocLibraryMapper;
 import ru.mycrg.data_service.dao.mappers.SchemasAndTablesMapper;
 import ru.mycrg.data_service.entity.DocumentLibrary;
@@ -48,6 +48,7 @@ public class CrgMigrationHandler {
 
     private final ApplicationContext ctx;
     private final DatasourceFactory datasourceFactory;
+    private final DdlTriggersDetached ddlTriggers;
 
     @Value("${crg-options.initFullTextSearch:false}")
     private boolean initFullTextSearch;
@@ -56,9 +57,11 @@ public class CrgMigrationHandler {
     private String dbOwner;
 
     public CrgMigrationHandler(ApplicationContext ctx,
-                               DatasourceFactory datasourceFactory) {
+                               DatasourceFactory datasourceFactory,
+                               DdlTriggersDetached ddlTriggers) {
         this.ctx = ctx;
         this.datasourceFactory = datasourceFactory;
+        this.ddlTriggers = ddlTriggers;
     }
 
     public void handle() {
@@ -181,10 +184,9 @@ public class CrgMigrationHandler {
             return;
         }
 
-        DdlTriggers ddlTriggers = new DdlTriggers(jdbcTemplate);
         SchemaDto schema = jsonToDto(table.getSchema());
         if (schema == null) {
-            log.warn("Для библиотеки: {} не определена схема", table.getId());
+            log.warn("Для таблицы: {} не определена схема", table.getId());
 
             return;
         }
@@ -195,9 +197,9 @@ public class CrgMigrationHandler {
         try {
             log.debug("====== FTS: [ Добавляем слой: '{}' к полнотекстовому поиску ]", tableName);
 
-            ddlTriggers.createInsertTrigger(qualifier, ftsProperties);
-            ddlTriggers.createUpdateTrigger(qualifier, ftsProperties);
-            ddlTriggers.createDeleteTrigger(qualifier);
+            ddlTriggers.createInsertTrigger(jdbcTemplate, qualifier, ftsProperties);
+            ddlTriggers.createUpdateTrigger(jdbcTemplate, qualifier, ftsProperties);
+            ddlTriggers.createDeleteTrigger(jdbcTemplate, qualifier);
         } catch (Exception e) {
             log.error("Не удалось создать триггеры для слоя: '{}'. По причине: {}",
                       tableName, e.getMessage(), e);
@@ -212,10 +214,9 @@ public class CrgMigrationHandler {
         } catch (Exception e) {
             log.error("Не удалось перенести данные из библиотеки: '{}'. По причине: {}",
                       tableName, e.getMessage(), e);
-
-            ddlTriggers.dropInsertTrigger(qualifier);
-            ddlTriggers.dropUpdateTrigger(qualifier);
-            ddlTriggers.dropDeleteTrigger(qualifier);
+            ddlTriggers.dropInsertTrigger(jdbcTemplate, qualifier);
+            ddlTriggers.dropUpdateTrigger(jdbcTemplate, qualifier);
+            ddlTriggers.dropDeleteTrigger(jdbcTemplate, qualifier);
         }
     }
 
@@ -243,7 +244,7 @@ public class CrgMigrationHandler {
 
         SchemaDto schema = jsonToDto(library.getSchema());
         if (schema == null) {
-            log.warn("Для библиотеки: {} не определена схема", library.getId());
+            log.warn("Схема для библиотеки: {} сломана. Тело схемы: [{}]", library.getId(), library.getSchema());
 
             return;
         }
@@ -251,15 +252,14 @@ public class CrgMigrationHandler {
         List<String> ftsProperties = getFtsProperties(schema);
 
         String tableName = library.getTableName();
-        DdlTriggers ddlTriggers = new DdlTriggers(jdbcTemplate);
         ResourceQualifier qualifier = libraryQualifier(tableName);
 
         try {
             log.debug("====== FTS: [ Добавляем библиотеку: '{}' к полнотекстовому поиску ]", tableName);
 
-            ddlTriggers.createInsertTrigger(qualifier, ftsProperties);
-            ddlTriggers.createUpdateTrigger(qualifier, ftsProperties);
-            ddlTriggers.createDeleteTrigger(qualifier);
+            ddlTriggers.createInsertTrigger(jdbcTemplate, qualifier, ftsProperties);
+            ddlTriggers.createUpdateTrigger(jdbcTemplate, qualifier, ftsProperties);
+            ddlTriggers.createDeleteTrigger(jdbcTemplate, qualifier);
         } catch (Exception e) {
             log.error("Не удалось создать триггеры для библиотеки: '{}'. По причине: {}",
                       tableName, e.getMessage(), e);
@@ -275,9 +275,9 @@ public class CrgMigrationHandler {
             log.error("Не удалось перенести данные из библиотеки: '{}'. По причине: {}",
                       tableName, e.getMessage(), e);
 
-            ddlTriggers.dropInsertTrigger(qualifier);
-            ddlTriggers.dropUpdateTrigger(qualifier);
-            ddlTriggers.dropDeleteTrigger(qualifier);
+            ddlTriggers.dropInsertTrigger(jdbcTemplate, qualifier);
+            ddlTriggers.dropUpdateTrigger(jdbcTemplate, qualifier);
+            ddlTriggers.dropDeleteTrigger(jdbcTemplate, qualifier);
         }
     }
 

@@ -1,7 +1,7 @@
 package ru.mycrg.data_service.util;
 
 import org.jetbrains.annotations.NotNull;
-import ru.mycrg.data_service.dto.Roles;
+import ru.mycrg.common_contracts.enums.Roles;
 import ru.mycrg.data_service.exceptions.BadRequestException;
 
 import java.util.HashMap;
@@ -23,11 +23,11 @@ public class RoleHandler {
         throw new IllegalStateException("Utility class");
     }
 
-    public static Optional<String> defineRoleById(Long id) {
+    public static Optional<Roles> defineRoleById(Long id) {
         for (Map.Entry<String, Long> entry: roles.entrySet()) {
             Long value = entry.getValue();
             if (value.equals(id)) {
-                return Optional.ofNullable(entry.getKey());
+                return Optional.of(Roles.valueOf(entry.getKey()));
             }
         }
 

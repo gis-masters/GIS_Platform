@@ -4,6 +4,7 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 import ru.mycrg.auth_facade.IAuthenticationFacade;
 import ru.mycrg.auth_facade.UserDetails;
+import ru.mycrg.common_contracts.enums.Roles;
 import ru.mycrg.gis_service.dto.project.ProjectProjectionImpl;
 import ru.mycrg.gis_service.entity.Permission;
 import ru.mycrg.gis_service.entity.Project;
@@ -15,8 +16,8 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static ru.mycrg.gis_service.security.Roles.OWNER;
-import static ru.mycrg.gis_service.security.Roles.VIEWER;
+import static ru.mycrg.common_contracts.enums.Roles.OWNER;
+import static ru.mycrg.common_contracts.enums.Roles.VIEWER;
 
 @Service
 public class ProjectProtector {
@@ -54,13 +55,13 @@ public class ProjectProtector {
     }
 
     public boolean lessThenContributor(Long id) {
-        Optional<String> oRole = defineBestRole(id);
+        Optional<Roles> oRole = defineBestRole(id);
 
         return !moreThenViewer(oRole);
     }
 
     public boolean lessThenContributor(ProjectProjectionImpl projection) {
-        Optional<String> oRole = Optional.ofNullable(projection.getRole());
+        Optional<Roles> oRole = Optional.ofNullable(projection.getRole());
 
         return !moreThenViewer(oRole);
     }
@@ -75,21 +76,21 @@ public class ProjectProtector {
         throwIfMoveNotAllowed(movedFolder.getId());
     }
 
-    private static boolean moreThenViewer(Optional<String> oRole) {
-        return oRole.filter(s -> !Objects.equals(VIEWER.name(), s))
+    private static boolean moreThenViewer(Optional<Roles> oRole) {
+        return oRole.filter(s -> !Objects.equals(VIEWER, s))
                     .isPresent();
     }
 
-    private Optional<String> defineBestRole(Long id) {
-        String role = projectService.getByIdWithRole(id)
-                                    .getRole();
+    private Optional<Roles> defineBestRole(Long id) {
+        Roles role = projectService.getByIdWithRole(id)
+                                   .getRole();
 
         return Optional.ofNullable(role);
     }
 
     private boolean isUserHasOwnPermission(Long id) {
         return defineBestRole(id)
-                .filter(s -> Objects.equals(OWNER.name(), s))
+                .filter(s -> Objects.equals(OWNER, s))
                 .isPresent();
     }
 }

@@ -9,8 +9,6 @@ public class DataFromGpkgPlacementModel {
     protected String filePath;
     private UUID fileId;
     private Long projectId;
-    private String sourceDataset;
-    protected String tableName;
     protected FileType fileType;
 
     public DataFromGpkgPlacementModel() {
@@ -33,14 +31,6 @@ public class DataFromGpkgPlacementModel {
         this.projectId = projectId;
     }
 
-    public String getTableName() {
-        return tableName;
-    }
-
-    public void setTableName(String tableName) {
-        this.tableName = tableName;
-    }
-
     public FileType getFileType() {
         return fileType;
     }
@@ -55,13 +45,5 @@ public class DataFromGpkgPlacementModel {
 
     public void setFileId(UUID fileId) {
         this.fileId = fileId;
-    }
-
-    public String getSourceDataset() {
-        return sourceDataset;
-    }
-
-    public void setSourceDataset(String sourceDataset) {
-        this.sourceDataset = sourceDataset;
     }
 }

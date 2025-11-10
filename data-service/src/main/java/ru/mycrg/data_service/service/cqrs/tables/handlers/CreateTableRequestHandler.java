@@ -3,11 +3,9 @@ package ru.mycrg.data_service.service.cqrs.tables.handlers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.BadSqlGrammarException;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import ru.mycrg.data_service.dao.ddl.tables.DdlTablesSpecial;
-import ru.mycrg.data_service.dao.ddl.tables.DdlTablesSpecialDetached;
 import ru.mycrg.data_service.dao.ddl.tables.DdlTriggers;
 import ru.mycrg.data_service.dao.utils.wellknown_formula_generator.IWellKnownFormulaGenerator;
 import ru.mycrg.data_service.dto.TableCreateDto;
@@ -38,9 +36,9 @@ import java.util.stream.Collectors;
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 import static java.util.stream.Collectors.toMap;
+import static ru.mycrg.common_contracts.enums.Roles.OWNER;
 import static ru.mycrg.data_service.dao.config.DaoProperties.*;
 import static ru.mycrg.data_service.dto.ResourceType.TABLE;
-import static ru.mycrg.data_service.dto.Roles.OWNER;
 import static ru.mycrg.data_service.service.resources.DatasetService.SCHEMAS_AND_TABLES_QUALIFIER;
 import static ru.mycrg.data_service.service.schemas.SchemaUtil.getFtsProperties;
 import static ru.mycrg.data_service.util.DetailedLogger.logError;
@@ -54,7 +52,6 @@ public class CreateTableRequestHandler implements IRequestHandler<CreateTableReq
     private final DdlTriggers ddlTriggers;
     private final ISchemaTemplateService schemaService;
     private final DdlTablesSpecial ddlTablesSpecial;
-    private final DdlTablesSpecialDetached ddlTablesSpecialDetached;
     private final IResourceProtector datasetProtector;
     private final PermissionsService permissionsService;
     private final SchemasAndTablesRepository schemasAndTablesRepository;
@@ -63,14 +60,12 @@ public class CreateTableRequestHandler implements IRequestHandler<CreateTableReq
     public CreateTableRequestHandler(DdlTriggers ddlTriggers,
                                      ISchemaTemplateService schemaService,
                                      DdlTablesSpecial ddlTablesSpecial,
-                                     DdlTablesSpecialDetached ddlTablesSpecialDetached,
                                      IResourceProtector datasetProtector,
                                      PermissionsService permissionsService,
                                      SchemasAndTablesRepository schemasAndTablesRepository,
                                      List<IWellKnownFormulaGenerator> generators) {
         this.ddlTriggers = ddlTriggers;
         this.ddlTablesSpecial = ddlTablesSpecial;
-        this.ddlTablesSpecialDetached = ddlTablesSpecialDetached;
         this.schemasAndTablesRepository = schemasAndTablesRepository;
         this.permissionsService = permissionsService;
         this.schemaService = schemaService;
@@ -85,10 +80,18 @@ public class CreateTableRequestHandler implements IRequestHandler<CreateTableReq
     public TableModel handle(CreateTableRequest request) {
         TableCreateDto dto = request.getTableCreateDto();
 
-        SchemaDto schema = schemaService
-                .getSchemaByName(dto.getSchemaId())
-                .orElseThrow(() -> new BadRequestException(
-                        "Не возможно создать таблицу. Не существует схемы: " + dto.getSchemaId()));
+        SchemaDto schema = dto.getSchema();
+
+        if (schema != null && dto.getSchemaId() != null) {
+            log.warn("При создании таблицы указаны и schemaDto и schemaId. schemaId игнорируется.");
+        }
+
+        if (schema == null) {
+            schema = schemaService
+                    .getSchemaByName(dto.getSchemaId())
+                    .orElseThrow(() -> new BadRequestException(
+                            "Не возможно создать таблицу. Не существует схемы: " + dto.getSchemaId()));
+        }
 
         validateSchema(schema);
 
@@ -115,22 +118,7 @@ public class CreateTableRequestHandler implements IRequestHandler<CreateTableReq
         // Create OWNER permission
         permissionsService.addOwnerPermission(SCHEMAS_AND_TABLES_QUALIFIER, newEntity.getId());
 
-        return new TableModel(newEntity, OWNER.name(), dataset.getIdentifier());
-    }
-
-    public void createTableDetached(JdbcTemplate jdbcTemplate, SchemaDto schema, String datasetId, TableCreateDto dto) {
-        try {
-            List<SimplePropertyDto> schemaProperties = schema.getProperties();
-            generateSystemAttributes(schemaProperties);
-
-            ddlTablesSpecialDetached.create(jdbcTemplate, datasetId, dto, schemaProperties);
-        } catch (BadSqlGrammarException e) {
-            String msg = String.format("Не удалось создать таблицу: %s, по схеме: %s. Причина: %s",
-                                       dto.getName(), schema.getName(), e.getMessage());
-            logError(msg, e);
-
-            throw new BadRequestException(msg);
-        }
+        return new TableModel(newEntity, OWNER, dataset.getIdentifier());
     }
 
     private SchemasAndTables getDataset(CreateTableRequest request) {
@@ -161,7 +149,7 @@ public class CreateTableRequestHandler implements IRequestHandler<CreateTableReq
         }
     }
 
-    private void validateSchema(SchemaDto schema) {
+    public void validateSchema(SchemaDto schema) {
         long geomField = schema.getProperties().stream().filter(SimplePropertyDto::isGeometry).count();
         if (isNull(schema.getGeometryType()) || geomField < 1) {
             throw new BadRequestException(
@@ -201,7 +189,7 @@ public class CreateTableRequestHandler implements IRequestHandler<CreateTableReq
         }
     }
 
-    private void generateSystemAttributes(List<SimplePropertyDto> schemaProperties) {
+    public void generateSystemAttributes(List<SimplePropertyDto> schemaProperties) {
         List<String> schemaPropertyName = schemaProperties.stream().map(SimplePropertyDto::getName)
                                                           .collect(Collectors.toList());
         if (!schemaPropertyName.contains(RULE_ID)) {
@@ -229,7 +217,7 @@ public class CreateTableRequestHandler implements IRequestHandler<CreateTableReq
         schemaProperties.add(0, objectId);
     }
 
-    private String buildTableName(String nameFromSchema, long datasetId, String requiredName) {
+    public String buildTableName(String nameFromSchema, long datasetId, String requiredName) {
         if (requiredName != null && !requiredName.isBlank()) {
             return requiredName;
         }

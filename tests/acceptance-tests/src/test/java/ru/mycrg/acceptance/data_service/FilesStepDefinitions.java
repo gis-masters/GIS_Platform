@@ -469,6 +469,12 @@ public class FilesStepDefinitions extends BaseStepsDefinitions {
         assertFalse("Файл должен иметь заполненный 'resourceQualifier'", fileResourceQualifier.isEmpty());
     }
 
+    @And("файл успешно удалён")
+    public void checkFileDelete() {
+        getFile(currentFiles.get(0).getId());
+        assertEquals(SC_NOT_FOUND, response.statusCode());
+    }
+
     private void getFile(UUID id) {
         response = getBaseRequestWithCurrentCookie()
                 .when().

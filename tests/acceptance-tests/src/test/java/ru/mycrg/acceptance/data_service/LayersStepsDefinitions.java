@@ -71,4 +71,11 @@ public class LayersStepsDefinitions extends BaseStepsDefinitions {
         currentDatasetIdentifier = response.jsonPath().get("[0].dataset");
         assertEquals(count, layers.size());
     }
+
+    @And("оба слоя опубликованы с одним стилем")
+    public void checkBothStyles() {
+        List<String> styleNames = response.jsonPath().getList("styleName");
+
+        assertEquals(styleNames.get(0), styleNames.get(1));
+    }
 }

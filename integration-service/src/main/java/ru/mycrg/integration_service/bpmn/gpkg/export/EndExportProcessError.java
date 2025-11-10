@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import ru.mycrg.common_contracts.generated.gpkg.GkpgExportDetailsModel;
 import ru.mycrg.common_contracts.generated.gpkg.MessageFromExport;
 import ru.mycrg.data_service_contract.dto.PatchProcess;
-import ru.mycrg.data_service_contract.queue.request.ExportGpkgEvent;
+import ru.mycrg.data_service_contract.queue.request.gpkg.ExportGpkgEvent;
 import ru.mycrg.data_service_contract.queue.request.UpdateProcessEvent;
 import ru.mycrg.messagebus_contract.IMessageBusProducer;
 

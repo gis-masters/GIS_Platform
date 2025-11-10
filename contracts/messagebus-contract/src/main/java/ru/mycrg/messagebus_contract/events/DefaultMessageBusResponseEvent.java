@@ -26,6 +26,12 @@ public class DefaultMessageBusResponseEvent implements IMessageBusEvent {
         this.routingKey = null;
     }
 
+    public DefaultMessageBusResponseEvent(String exchange) {
+        this.id = UUID.randomUUID();
+        this.exchange = exchange;
+        this.routingKey = null;
+    }
+
     @Override
     public UUID getId() {
         return this.id;

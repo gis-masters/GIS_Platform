@@ -7,7 +7,6 @@ import ru.mycrg.data_service.dto.ProcessModel;
 import ru.mycrg.data_service.dto.WsMessageDto;
 import ru.mycrg.data_service.entity.Process;
 import ru.mycrg.data_service.service.WsNotificationService;
-import ru.mycrg.data_service.service.gpkg.export.GpkgAddInfoService;
 import ru.mycrg.data_service.service.processes.ProcessService;
 import ru.mycrg.data_service_contract.queue.response.ExportResponseEvent;
 import ru.mycrg.messagebus_contract.IEventHandler;
@@ -23,14 +22,11 @@ public class ExportHandler implements IEventHandler {
 
     private final ProcessService processService;
     private final WsNotificationService wsNotificationService;
-    private final GpkgAddInfoService gpkgAddInfoService;
 
     public ExportHandler(WsNotificationService wsNotificationService,
-                         ProcessService processService,
-                         GpkgAddInfoService gpkgAddInfoService) {
+                         ProcessService processService) {
         this.wsNotificationService = wsNotificationService;
         this.processService = processService;
-        this.gpkgAddInfoService = gpkgAddInfoService;
     }
 
     @Override

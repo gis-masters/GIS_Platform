@@ -9,7 +9,7 @@ import ru.mycrg.data_service_contract.dto.ExportResourceModel;
 import ru.mycrg.data_service_contract.dto.gpkg.GpkgAppendingData;
 import ru.mycrg.data_service_contract.dto.gpkg.GpkgPayload;
 import ru.mycrg.data_service_contract.queue.request.AppendGpkgInfoEvent;
-import ru.mycrg.data_service_contract.queue.request.ExportGpkgEvent;
+import ru.mycrg.data_service_contract.queue.request.gpkg.ExportGpkgEvent;
 import ru.mycrg.messagebus_contract.IMessageBusProducer;
 
 import java.util.List;

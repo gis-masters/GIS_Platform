@@ -2,6 +2,7 @@ package ru.mycrg.data_service.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import ru.mycrg.data_service_contract.dto.AdditionalFieldDto;
+import ru.mycrg.data_service_contract.dto.SchemaDto;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
@@ -19,9 +20,10 @@ public class TableCreateDto extends ResourceCreateDto {
     @Size(min = 8, max = 20, message = "Ожидается строка вида: 'EPSG:28406'")
     private String crs;
 
-    @NotBlank
     @Size(min = 2, max = 50)
     private String schemaId;
+
+    private SchemaDto schema;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = SYSTEM_DATE_PATTERN)
     private LocalDate docTerminationDate;
@@ -152,5 +154,13 @@ public class TableCreateDto extends ResourceCreateDto {
                 "\"fias__id\":" + (fias__id == null ? "null" : "\"" + fias__id + "\"") + ", " +
                 "\"additionalFields\":" + (additionalFields == null ? "null" : additionalFields) +
                 "}";
+    }
+
+    public SchemaDto getSchema() {
+        return schema;
+    }
+
+    public void setSchema(SchemaDto schema) {
+        this.schema = schema;
     }
 }

@@ -173,4 +173,9 @@ public class ShapeGeometryImporterExecutor implements IExecutor<ImportShapeRepor
     public boolean notDetached() {
         return false;
     }
+
+    @Override
+    public void cleanup() {
+        log.debug("Процесс завершился с ошибкой. Операция очистки запущена, но не существует.");
+    }
 }

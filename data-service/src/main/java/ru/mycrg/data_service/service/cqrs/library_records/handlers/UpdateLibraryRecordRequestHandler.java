@@ -31,8 +31,8 @@ import java.util.Map;
 import java.util.Optional;
 
 import static java.lang.Boolean.TRUE;
+import static ru.mycrg.common_contracts.enums.Roles.VIEWER;
 import static ru.mycrg.data_service.config.CrgCommonConfig.ROOT_FOLDER_PATH;
-import static ru.mycrg.data_service.dto.Roles.VIEWER;
 import static ru.mycrg.data_service.util.SystemLibraryAttributes.*;
 import static ru.mycrg.data_service.util.TableUtils.throwIfNotMatchTableColumns;
 

@@ -7,7 +7,7 @@ import ru.mycrg.data_service.service.export.ExportType;
 import ru.mycrg.data_service.service.export.Exporter;
 import ru.mycrg.data_service.service.processes.ProcessService;
 import ru.mycrg.data_service_contract.dto.ExportRequestModel;
-import ru.mycrg.data_service_contract.queue.request.ExportGpkgEvent;
+import ru.mycrg.data_service_contract.queue.request.gpkg.ExportGpkgEvent;
 import ru.mycrg.messagebus_contract.IMessageBusProducer;
 
 import javax.validation.Valid;

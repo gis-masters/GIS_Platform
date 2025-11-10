@@ -54,7 +54,7 @@
       "name": "field_choice_int",
       "title": "Поле CHOICE integer",
       "valueType": "CHOICE",
-      "foreignKeyType": "'INTEGER'",
+      "foreignKeyType": "INTEGER",
       "enumerations": [
         {
           "title": "Модульная",

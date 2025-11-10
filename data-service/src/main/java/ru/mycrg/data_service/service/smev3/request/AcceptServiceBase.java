@@ -63,7 +63,7 @@ import java.util.zip.ZipInputStream;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static ru.mycrg.data_service.config.CrgCommonConfig.SYSTEM_DATETIME_PATTERN;
 import static ru.mycrg.data_service.config.CrgCommonConfig.SYSTEM_USER_ID;
-import static ru.mycrg.data_service.dto.Roles.OWNER;
+import static ru.mycrg.common_contracts.enums.Roles.OWNER;
 import static ru.mycrg.data_service.service.TaskService.*;
 import static ru.mycrg.data_service.service.resources.ResourceQualifier.*;
 import static ru.mycrg.data_service.service.smev3.fields.FieldsSection.DL_DATA_SECTION_DELIVERY_DATA_TABLE;
@@ -218,7 +218,7 @@ public abstract class AcceptServiceBase {
         ResourceQualifier libraryQualifier = libraryRecordQualifier(INBOX_LIBRARY_ID, docId);
         SchemaDto rnvSchema = libraryRepository
                 .findByTableName(INBOX_LIBRARY_ID)
-                .map(documentLibrary -> new LibraryModel(documentLibrary, OWNER.name()))
+                .map(documentLibrary -> new LibraryModel(documentLibrary, OWNER))
                 .orElseThrow(() -> new NotFoundException("Библиотека не найдена по идентификатору: " + INBOX_LIBRARY_ID))
                 .getSchema();
 
@@ -262,7 +262,7 @@ public abstract class AcceptServiceBase {
                                                                              inboxDocId);
             SchemaDto inboxRnvSchema = libraryRepository
                     .findByTableName(firstDocument.getLibraryTableName())
-                    .map(documentLibrary -> new LibraryModel(documentLibrary, OWNER.name()))
+                    .map(documentLibrary -> new LibraryModel(documentLibrary, OWNER))
                     .orElseThrow(() -> new NotFoundException("Библиотека не найдена по идентификатору: " +
                                                                      firstDocument.getLibraryTableName()))
                     .getSchema();
@@ -566,7 +566,7 @@ public abstract class AcceptServiceBase {
         ResourceQualifier rnvLibraryQualifier = libraryQualifier(INBOX_LIBRARY_ID);
         LibraryModel rnvLibraryModel = libraryRepository
                 .findByTableName(INBOX_LIBRARY_ID)
-                .map(documentLibrary -> new LibraryModel(documentLibrary, OWNER.name()))
+                .map(documentLibrary -> new LibraryModel(documentLibrary, OWNER))
                 .orElseThrow(() -> new NotFoundException("Библиотека не найдена по идентификатору: "
                                                                  + INBOX_LIBRARY_ID));
         SchemaDto rnvSchema = rnvLibraryModel.getSchema();
@@ -650,7 +650,7 @@ public abstract class AcceptServiceBase {
         ResourceQualifier libraryQualifier = libraryQualifier(TABLE_13);
         LibraryModel libraryModel = libraryRepository
                 .findByTableName(TABLE_13)
-                .map(documentLibrary -> new LibraryModel(documentLibrary, OWNER.name()))
+                .map(documentLibrary -> new LibraryModel(documentLibrary, OWNER))
                 .orElseThrow(() -> new NotFoundException("Библиотека не найдена по идентификатору: "
                                                                  + TABLE_13));
         SchemaDto schema = libraryModel.getSchema();

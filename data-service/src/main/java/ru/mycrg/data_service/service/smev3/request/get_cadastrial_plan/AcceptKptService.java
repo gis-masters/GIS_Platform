@@ -13,13 +13,12 @@ import org.springframework.web.multipart.MultipartFile;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
-import ru.mycrg.data_service.service.smev3.config.Smev3Config;
+import ru.mycrg.common_contracts.generated.data_service.TaskLogDto;
 import ru.mycrg.data_service.dao.RecordsDao;
 import ru.mycrg.data_service.dao.detached.TasksDetachedDao;
 import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
 import ru.mycrg.data_service.dto.FileResourceQualifier;
 import ru.mycrg.data_service.dto.LibraryModel;
-import ru.mycrg.common_contracts.generated.data_service.TaskLogDto;
 import ru.mycrg.data_service.dto.record.IRecord;
 import ru.mycrg.data_service.entity.File;
 import ru.mycrg.data_service.exceptions.BadRequestException;
@@ -32,6 +31,7 @@ import ru.mycrg.data_service.service.TaskLogService;
 import ru.mycrg.data_service.service.binary_analyzers.SimpleIntentHandler;
 import ru.mycrg.data_service.service.files.FileService;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
+import ru.mycrg.data_service.service.smev3.config.Smev3Config;
 import ru.mycrg.data_service.service.smev3.model.CustomMultipartFile;
 import ru.mycrg.data_service.service.smev3.model.ProcessAdapterMessageResult;
 import ru.mycrg.data_service.service.storage.FileStorageService;
@@ -44,10 +44,10 @@ import java.io.StringReader;
 import java.time.LocalDateTime;
 import java.util.*;
 
+import static ru.mycrg.common_contracts.enums.Roles.OWNER;
+import static ru.mycrg.data_service.config.CrgCommonConfig.SYSTEM_USER_ID;
 import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_NAME;
 import static ru.mycrg.data_service.dto.ResourceType.LIBRARY_RECORD;
-import static ru.mycrg.data_service.dto.Roles.OWNER;
-import static ru.mycrg.data_service.config.CrgCommonConfig.SYSTEM_USER_ID;
 import static ru.mycrg.data_service.service.import_.kpt.KptSourceFilesService.KPT_LIBRARY_ID;
 import static ru.mycrg.data_service.service.reestrs.Systems.FGIS_EGRN;
 import static ru.mycrg.data_service.service.reestrs.Systems.SMEV_3;
@@ -144,7 +144,7 @@ public class AcceptKptService {
 
             LibraryModel libraryModel = libraryRepository
                     .findByTableName(KPT_LIBRARY_ID)
-                    .map(documentLibrary -> new LibraryModel(documentLibrary, OWNER.name()))
+                    .map(documentLibrary -> new LibraryModel(documentLibrary, OWNER))
                     .orElseThrow(() -> new NotFoundException("Библиотека не найдена по идентификатору: "
                                                                      + KPT_LIBRARY_ID));
             SchemaDto schema = libraryModel.getSchema();

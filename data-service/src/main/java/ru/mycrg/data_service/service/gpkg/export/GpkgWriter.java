@@ -14,7 +14,9 @@ import java.sql.SQLException;
 import java.time.LocalTime;
 import java.util.List;
 
+import static java.time.LocalTime.now;
 import static ru.mycrg.data_service.dao.config.DaoProperties.DEFAULT_GEOMETRY_COLUMN_NAME;
+import static ru.mycrg.data_service.service.gpkg.importer.mappers.LayerProjectionMapper.*;
 
 @Repository
 public class GpkgWriter {
@@ -41,7 +43,7 @@ public class GpkgWriter {
 
     public static final String GPKG_LAYER_INFO_TABLE = "crg_layer_info_table";
 
-    protected void createSchemaTable(Connection connection) throws SQLException {
+    protected void createIfNotExistSchemaTable(Connection connection) throws SQLException {
         String createTableSql = "CREATE TABLE IF NOT EXISTS " + GPKG_VECTOR_TABLE_SCHEMAS_TABLE + " (" +
                 "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 GPKG_RESOURCE_NAME_COLUMN + " TEXT NOT NULL, " +
@@ -51,6 +53,26 @@ public class GpkgWriter {
         try (PreparedStatement stmt = connection.prepareStatement(createTableSql)) {
             stmt.executeUpdate();
             log.debug("Создана если не существовала таблица:" + GPKG_VECTOR_TABLE_SCHEMAS_TABLE);
+        }
+
+        insertInfoInGpkgContentsTable(connection, GPKG_VECTOR_TABLE_SCHEMAS_TABLE);
+    }
+
+    private void insertInfoInGpkgContentsTable(Connection connection, String tableName) throws SQLException {
+        String insertSql =
+                "INSERT OR IGNORE INTO gpkg_contents" +
+                        " (table_name, data_type, identifier, last_change, srs_id)" +
+                        " VALUES (?, ?, ?, ?, ?)";
+
+        try (PreparedStatement stmt = connection.prepareStatement(insertSql)) {
+            stmt.setString(1, tableName);
+            stmt.setString(2, "attributes");
+            stmt.setString(3, tableName);
+            stmt.setString(4, String.valueOf(LocalTime.now()));
+            stmt.setInt(5, 0);
+
+            stmt.executeUpdate();
+            log.debug("Сохранили данные о таблице {} в системной таблице gpkg_contents", tableName);
         }
     }
 
@@ -71,7 +93,7 @@ public class GpkgWriter {
         }
     }
 
-    protected void createVectorTableInfoTable(Connection connection) throws SQLException {
+    protected void createIfNotExistVectorTableInfoTable(Connection connection) throws SQLException {
         String createTableSql = "CREATE TABLE IF NOT EXISTS " + GPKG_VECTOR_TABLE_INFO_TABLE + " (" +
                 "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 GPKG_RESOURCE_NAME_COLUMN + " TEXT NOT NULL, " +
@@ -83,6 +105,8 @@ public class GpkgWriter {
             stmt.executeUpdate();
             log.debug("Создана если не существовала таблица " + GPKG_VECTOR_TABLE_INFO_TABLE);
         }
+
+        insertInfoInGpkgContentsTable(connection, GPKG_VECTOR_TABLE_INFO_TABLE);
     }
 
     protected void saveVectorTableInfo(Connection connection,
@@ -127,6 +151,8 @@ public class GpkgWriter {
             stmt.executeUpdate();
             log.debug("Создана если не существовала таблица: " + GPKG_STYLE_LAYER_TABLE);
         }
+
+        insertInfoInGpkgContentsTable(connection, GPKG_STYLE_LAYER_TABLE);
     }
 
     public void createIfNotExistSvgTable(Connection connection) throws SQLException {
@@ -140,6 +166,8 @@ public class GpkgWriter {
             stmt.executeUpdate();
             log.debug("Создана если не существовала таблица: " + GPKG_SVG_CONTENT_TABLE);
         }
+
+        insertInfoInGpkgContentsTable(connection, GPKG_SVG_CONTENT_TABLE);
     }
 
     public void addStylesAndSvgs(Connection connection, List<StyleWithIcons> stylesAndSvgs) throws SQLException {
@@ -152,38 +180,40 @@ public class GpkgWriter {
 
     public void createIfNotExistLayerTable(Connection connection) throws SQLException {
         String createTableSql = "CREATE TABLE IF NOT EXISTS " + GPKG_LAYER_INFO_TABLE + " (" +
-                "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                "title TEXT, " +
-                "dataset TEXT, " +
-                "resourceId TEXT, " +
-                "type TEXT, " +
-                "enabled INTEGER, " +
-                "position INTEGER, " +
-                "transparency INTEGER, " +
-                "maxZoom INTEGER, " +
-                "minZoom INTEGER, " +
-                "styleName TEXT, " +
-                "nativeCRS TEXT, " +
-                "dataStoreName TEXT, " +
-                "dataSourceUri TEXT, " +
-                "sourceId TEXT, " +
-                "sourceType TEXT, " +
-                "sourceRecordId INTEGER, " +
+                GPKG_LAYER_INFO_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                GPKG_LAYER_INFO_TITLE + " TEXT, " +
+                GPKG_LAYER_INFO_DATASET + " TEXT, " +
+                GPKG_LAYER_INFO_RESOURCE_ID + " TEXT, " +
+                GPKG_LAYER_INFO_TYPE + " TEXT, " +
+                GPKG_LAYER_INFO_ENABLED + " INTEGER, " +
+                GPKG_LAYER_INFO_POSITION + " INTEGER, " +
+                GPKG_LAYER_INFO_TRANSPARENCY + " INTEGER, " +
+                GPKG_LAYER_INFO_MAX_ZOOM + " INTEGER, " +
+                GPKG_LAYER_INFO_MIN_ZOOM + " INTEGER, " +
+                GPKG_LAYER_INFO_STYLE_NAME + " TEXT, " +
+                GPKG_LAYER_INFO_NATIVE_CRS + " TEXT, " +
+                GPKG_LAYER_INFO_DATA_STORE_NAME + " TEXT, " +
+                GPKG_LAYER_INFO_DATA_SOURCE_URI + " TEXT, " +
+                GPKG_LAYER_INFO_SOURCE_ID + " TEXT, " +
+                GPKG_LAYER_INFO_SOURCE_TYPE + " TEXT, " +
+                GPKG_LAYER_INFO_SOURCE_RECORD_ID + " INTEGER, " +
                 "createdAt TEXT, " +
                 "lastModified TEXT, " +
-                "projectId INTEGER, " +
-                "parentId INTEGER, " +
-                "contentType TEXT, " +
-                "view TEXT, " +
-                "errorText TEXT, " +
-                "style TEXT, " +
-                "photoMode TEXT)";
+                GPKG_LAYER_INFO_PROJECT_ID + " INTEGER, " +
+                GPKG_LAYER_INFO_PARENT_ID + " INTEGER, " +
+                GPKG_LAYER_INFO_CONTENT_TYPE + " TEXT, " +
+                GPKG_LAYER_INFO_VIEW + " TEXT, " +
+                GPKG_LAYER_INFO_ERROR_TEXT + " TEXT, " +
+                GPKG_LAYER_INFO_STYLE + " TEXT, " +
+                GPKG_LAYER_INFO_PHOTO_MODE + " TEXT)";
 
         try (PreparedStatement stmt = connection.prepareStatement(createTableSql)) {
             stmt.executeUpdate();
 
             log.debug("Создана если не существовала таблица: " + GPKG_LAYER_INFO_TABLE);
         }
+
+        insertInfoInGpkgContentsTable(connection, GPKG_LAYER_INFO_TABLE);
     }
 
     public void addLayersProjection(Connection connection, List<LayerProjection> layerProjections) throws SQLException {
@@ -271,7 +301,7 @@ public class GpkgWriter {
             stmt.setString(4, styleAndSvg.getBody());
             stmt.setInt(5, 1);
             stmt.setString(6, "Стиль создан и добавлен CrimeanResearchGroup");
-            stmt.setString(7, String.valueOf(LocalTime.now()));
+            stmt.setString(7, String.valueOf(now()));
 
             stmt.executeUpdate();
             log.debug("Сохранили информацию о стиле слоя {} в таблицу: {}", "имя таблицы к которой привязываемся",

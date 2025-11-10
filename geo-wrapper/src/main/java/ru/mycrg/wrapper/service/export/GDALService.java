@@ -294,13 +294,7 @@ public class GDALService implements IExporter {
                 throw new ImportException("Import of geometry GeoPackage to schema failed by timeout");
             }
             ErrorReport errorReport = getErrorsFromInputStream(importProcess.getErrorStream());
-            if (errorReport.getUtf8ErrorCount() > 0) {
-                importProcess.destroy();
 
-                throw new ImportException("Обработка файла прервана, кодировка объектов не равна UTF-8");
-            }
-
-            errorReport.setShpFileHasProjection(false);
             importProcess.destroy();
 
             return errorReport;

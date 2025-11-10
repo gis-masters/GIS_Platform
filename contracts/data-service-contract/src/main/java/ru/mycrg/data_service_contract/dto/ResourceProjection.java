@@ -2,17 +2,28 @@ package ru.mycrg.data_service_contract.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-public class ResourceProjection {
+import java.io.Serializable;
+
+public class ResourceProjection implements Serializable {
 
     private String dbName;
     private String schemaName;
     private String tableName;
     private SchemaDto schema;
+    private String title;
     private String crs;
+    private String details;
     private String type;
 
     public ResourceProjection() {
         // Required
+    }
+
+    public ResourceProjection(SchemaDto schema, String title, String crs, String details) {
+        this.schema = schema;
+        this.title = title;
+        this.crs = crs;
+        this.details = details;
     }
 
     public ResourceProjection(String dbName, String schemaName, String tableName) {
@@ -74,12 +85,28 @@ public class ResourceProjection {
         this.schema = schema;
     }
 
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
     public String getCrs() {
         return crs;
     }
 
     public void setCrs(String crs) {
         this.crs = crs;
+    }
+
+    public String getDetails() {
+        return details;
+    }
+
+    public void setDetails(String details) {
+        this.details = details;
     }
 
     public String getType() {
@@ -92,6 +119,15 @@ public class ResourceProjection {
 
     @Override
     public String toString() {
-        return getResourceId();
+        return "{" +
+                "\"dbName\":" + (dbName == null ? "null" : "\"" + dbName + "\"") + ", " +
+                "\"schemaName\":" + (schemaName == null ? "null" : "\"" + schemaName + "\"") + ", " +
+                "\"tableName\":" + (tableName == null ? "null" : "\"" + tableName + "\"") + ", " +
+                "\"schema\":" + (schema == null ? "null" : schema) + ", " +
+                "\"title\":" + (title == null ? "null" : "\"" + title + "\"") + ", " +
+                "\"crs\":" + (crs == null ? "null" : "\"" + crs + "\"") + ", " +
+                "\"details\":" + (details == null ? "null" : "\"" + details + "\"") + ", " +
+                "\"type\":" + (type == null ? "null" : "\"" + type + "\"") +
+                "}";
     }
 }

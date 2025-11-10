@@ -1,5 +1,7 @@
 package ru.mycrg.data_service.service.processes.fts;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import ru.mycrg.data_service.service.cqrs.fts.requests.FtsReloadRequest;
 import ru.mycrg.data_service.service.import_.model.FilePlacementPayloadModel;
@@ -8,7 +10,9 @@ import ru.mycrg.data_service_contract.dto.ProcessModel;
 import ru.mycrg.mediator.Mediator;
 
 @Component
-public class FtsReloadExecutor  implements IExecutor<String> {
+public class FtsReloadExecutor implements IExecutor<String> {
+
+    private static final Logger log = LoggerFactory.getLogger(FtsReloadExecutor.class);
 
     private String result;
     private final Mediator mediator;
@@ -48,5 +52,10 @@ public class FtsReloadExecutor  implements IExecutor<String> {
     @Override
     public FilePlacementPayloadModel getPayload() {
         return null;
+    }
+
+    @Override
+    public void cleanup() {
+        log.debug("Процесс завершился с ошибкой. Операция очистки запущена, но не существует.");
     }
 }

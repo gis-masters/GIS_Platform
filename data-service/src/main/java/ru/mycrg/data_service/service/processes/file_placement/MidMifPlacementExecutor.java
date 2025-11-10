@@ -220,6 +220,11 @@ public class MidMifPlacementExecutor implements IExecutor<ImportReport>, IFilePl
         return false;
     }
 
+    @Override
+    public void cleanup() {
+        log.debug("Процесс завершился с ошибкой. Операция очистки запущена, но не существует.");
+    }
+
     private void notifyProcessAsPending(ImportReport report, String msg) {
         wsNotificationService.send(
                 new WsMessageDto<>(join(IMPORT.name(), MID.name()),

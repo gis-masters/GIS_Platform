@@ -1,5 +1,6 @@
 package ru.mycrg.data_service.dto;
 
+import ru.mycrg.common_contracts.enums.Roles;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 
 import java.util.Objects;
@@ -15,7 +16,7 @@ public class ResourceModel implements IResourceModel {
     private String crs;
     private SchemaDto schema;
     private String createdAt;
-    private String role;
+    private Roles role;
     private String tableName;
 
     public ResourceModel() {
@@ -23,7 +24,7 @@ public class ResourceModel implements IResourceModel {
     }
 
     public ResourceModel(Long id, String title, String details, String type, String identifier, Integer itemsCount,
-                         String crs, SchemaDto schema, String createdAt, String role) {
+                         String crs, SchemaDto schema, String createdAt, Roles role) {
         this.id = id;
         this.title = title;
         this.details = details;
@@ -46,12 +47,12 @@ public class ResourceModel implements IResourceModel {
     }
 
     @Override
-    public String getRole() {
+    public Roles getRole() {
         return role;
     }
 
     @Override
-    public void setRole(String role) {
+    public void setRole(Roles role) {
         this.role = role;
     }
 

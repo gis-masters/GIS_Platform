@@ -6,6 +6,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ru.mycrg.auth_facade.IAuthenticationFacade;
+import ru.mycrg.common_contracts.enums.Roles;
 import ru.mycrg.data_service.dao.BasePermissionsRepository;
 import ru.mycrg.data_service.dao.BaseReadDao;
 import ru.mycrg.data_service.dao.mappers.SchemasAndTablesMapper;
@@ -23,6 +24,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static ru.mycrg.common_contracts.enums.Roles.OWNER;
+import static ru.mycrg.common_contracts.enums.Roles.VIEWER;
 import static ru.mycrg.data_service.config.CrgCommonConfig.ROOT_FOLDER_PATH;
 import static ru.mycrg.data_service.dao.config.DatasourceFactory.SYSTEM_SCHEMA_NAME;
 import static ru.mycrg.data_service.service.resources.ResourceQualifier.systemTable;
@@ -112,9 +115,9 @@ public class DatasetService {
                 .orElseThrow(() -> new NotFoundException(datasetId));
 
         if (datasetProtector.isOwner(dQualifier)) {
-            return new DatasetModel(dataset, "OWNER", allowedTablesCount);
+            return new DatasetModel(dataset, OWNER, allowedTablesCount);
         } else {
-            Optional<String> oRole = permissionsRepository.getBestRoleForDataset(dQualifier);
+            Optional<Roles> oRole = permissionsRepository.getBestRoleForDataset(dQualifier);
             if (oRole.isPresent()) {
                 return new DatasetModel(dataset, oRole.get(), allowedTablesCount);
             }
@@ -122,7 +125,7 @@ public class DatasetService {
             boolean canBeViewed = permissionsRepository.isPassThroughFolder(SCHEMAS_AND_TABLES_QUALIFIER,
                                                                             dataset.getPath() + "/" + dataset.getId());
             if (canBeViewed) {
-                return new DatasetModel(dataset, "VIEWER", allowedTablesCount);
+                return new DatasetModel(dataset, VIEWER, allowedTablesCount);
             } else {
                 throw new ForbiddenException("Недостаточно прав для просмотра набора: " + datasetId);
             }

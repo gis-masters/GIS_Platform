@@ -81,7 +81,9 @@ public class FeatureTypeService extends GeoServerBaseService implements IFeature
                                                .post(RequestBody.create(JSON_MEDIA_TYPE, payload))
                                                .build();
 
-        return httpClient.handleRequest(request);
+        ResponseModel<String> stringResponse = httpClient.handleRequestAsString(request);
+
+        return new ResponseModel<>(stringResponse, null);
     }
 
     @Override

@@ -1,7 +1,7 @@
 package ru.mycrg.data_service_contract.dto;
 
 import ru.mycrg.data_service_contract.enums.ProcessStatus;
-import ru.mycrg.data_service_contract.queue.request.BuildGpkgEvent;
+import ru.mycrg.data_service_contract.queue.request.gpkg.BuildGpkgEvent;
 import ru.mycrg.data_service_contract.queue.response.BaseResponseEvent;
 
 import static ru.mycrg.messagebus_contract.MessageBusProperties.GEO_WRAPPER_TO_INTEGRATION_QUEUE;

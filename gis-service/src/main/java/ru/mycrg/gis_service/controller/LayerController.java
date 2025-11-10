@@ -10,11 +10,11 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import ru.mycrg.gis_service.dto.LayerCreateDto;
-import ru.mycrg.gis_service_contract.dto.LayerProjection;
 import ru.mycrg.gis_service.exceptions.BadRequestException;
 import ru.mycrg.gis_service.exceptions.ErrorInfo;
 import ru.mycrg.gis_service.service.layers.LayerService;
 import ru.mycrg.gis_service.validators.CrgLayerValidator;
+import ru.mycrg.gis_service_contract.dto.LayerProjection;
 
 import javax.json.JsonMergePatch;
 import javax.validation.Valid;

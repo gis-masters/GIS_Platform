@@ -24,7 +24,6 @@ import java.util.stream.Collectors;
 
 import static java.lang.Boolean.parseBoolean;
 import static java.lang.Thread.sleep;
-import static java.time.LocalTime.now;
 import static java.util.Objects.nonNull;
 import static java.util.stream.IntStream.range;
 import static org.apache.http.HttpStatus.SC_NO_CONTENT;
@@ -531,7 +530,6 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
         Map<String, Object> data = new HashMap<>();
         data.put("title", "Different properties");
         data.put("content_type_id", "doc_v4");
-
         data.put(propName, currentFiles);
 
         createDocumentAndWriteAsCurrent(gson.toJson(data), DEFAULT_LIBRARY);

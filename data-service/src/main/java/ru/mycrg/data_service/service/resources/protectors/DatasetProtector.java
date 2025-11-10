@@ -3,6 +3,7 @@ package ru.mycrg.data_service.service.resources.protectors;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 import ru.mycrg.auth_facade.IAuthenticationFacade;
+import ru.mycrg.common_contracts.enums.Roles;
 import ru.mycrg.data_service.dao.BasePermissionsRepository;
 import ru.mycrg.data_service.dto.ResourceType;
 import ru.mycrg.data_service.entity.SchemasAndTables;
@@ -13,9 +14,9 @@ import ru.mycrg.data_service.service.resources.ResourceQualifier;
 
 import java.util.Optional;
 
+import static ru.mycrg.common_contracts.enums.Roles.CONTRIBUTOR;
+import static ru.mycrg.common_contracts.enums.Roles.OWNER;
 import static ru.mycrg.data_service.dto.ResourceType.DATASET;
-import static ru.mycrg.data_service.dto.Roles.CONTRIBUTOR;
-import static ru.mycrg.data_service.dto.Roles.OWNER;
 
 @Component
 public class DatasetProtector implements IResourceProtector {
@@ -81,20 +82,14 @@ public class DatasetProtector implements IResourceProtector {
      * Для набора данных не бывает наследования сверху, поэтому проверим только права выданные на сам набор.
      */
     private boolean isUserHasOwnPermission(ResourceQualifier dQualifier) {
-        Optional<String> oRole = basePermissionsRepository.getBestRoleForDataset(dQualifier);
-        if (oRole.isEmpty()) {
-            return false;
-        }
+        Optional<Roles> oRole = basePermissionsRepository.getBestRoleForDataset(dQualifier);
 
-        return OWNER.name().equals(oRole.get());
+        return oRole.filter(roles -> OWNER == roles).isPresent();
     }
 
     private boolean isUserHasEditPermission(ResourceQualifier dQualifier) {
-        Optional<String> oRole = basePermissionsRepository.getBestRoleForDataset(dQualifier);
-        if (oRole.isEmpty()) {
-            return false;
-        }
+        Optional<Roles> oRole = basePermissionsRepository.getBestRoleForDataset(dQualifier);
 
-        return CONTRIBUTOR.name().equals(oRole.get()) || OWNER.name().equals(oRole.get());
+        return oRole.filter(roles -> CONTRIBUTOR == roles || OWNER == roles).isPresent();
     }
 }

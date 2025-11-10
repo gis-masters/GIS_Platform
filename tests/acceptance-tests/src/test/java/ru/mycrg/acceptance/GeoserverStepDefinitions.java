@@ -1,12 +1,16 @@
 package ru.mycrg.acceptance;
 
-import io.cucumber.core.exception.CucumberException;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.restassured.response.Response;
 import ru.mycrg.acceptance.auth_service.UserStepsDefinitions;
+import ru.mycrg.acceptance.data_service.TestFilesManager;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -17,6 +21,8 @@ import static org.junit.Assert.*;
 import static ru.mycrg.acceptance.auth_service.OrganizationStepsDefinitions.orgId;
 import static ru.mycrg.acceptance.auth_service.UserStepsDefinitions.geoserverLogin;
 import static ru.mycrg.acceptance.data_service.datasets.DatasetsStepsDefinitions.currentDatasetIdentifier;
+import static ru.mycrg.acceptance.data_service.tables.TablesStepsDefinitions.currentComplexName;
+import static ru.mycrg.acceptance.data_service.tables.TablesStepsDefinitions.currentWorkspace;
 
 public class GeoserverStepDefinitions extends BaseStepsDefinitions {
 
@@ -147,69 +153,6 @@ public class GeoserverStepDefinitions extends BaseStepsDefinitions {
                         body("roles", not(hasItems(role)));
     }
 
-    @And("На Геосервере доступ к слоям. Роль пользователя отсутствует в списке")
-    public void checkGeoserverLayersRulesIfUserIsAbsent() {
-        String role = "admin_" + orgId;
-
-        Response response = getBaseRequestWithCurrentCookie()
-                .when().
-                        get("/geoserver/rest/security/acl/layers");
-
-        Map<Object, Object> layersRules =
-                response.then().
-                        statusCode(SC_OK).
-                        extract().jsonPath().
-                        getMap("");
-
-        if (layersRules.containsValue(role)) {
-            throw new CucumberException(role + " are present in layer rules");
-        }
-    }
-
-    @And("На Геосервере дан доступ к сервисам. Роль пользователя отсутствует в списке")
-    public void checkGeoserverServiceRulesIfUserIsAbsent() {
-        String role = "admin_" + orgId;
-
-        final Map<Object, Object> servicesRules = getBaseRequestWithCurrentCookie()
-                .when().
-                        get("/geoserver/rest/security/acl/services")
-                .then().
-                        log().ifValidationFails().
-                        statusCode(SC_OK).
-                        extract().jsonPath().
-                        getMap("");
-
-        if (servicesRules.values()
-                         .stream()
-                         .filter(e -> e.toString().contains(role))
-                         .findFirst()
-                         .orElse(null) != null) {
-            throw new CucumberException(role + " are present in services");
-        }
-    }
-
-    @And("На Геосервере дан доступ к rest. Роль пользователя отсутствует в списке")
-    public void checkGeoserverRestRulesIfUserIsAbsent() {
-        String role = "admin_" + orgId;
-
-        final Map<Object, Object> restRules = getBaseRequestWithCurrentCookie()
-                .when().
-                        get("/geoserver/rest/security/acl/rest")
-                .then().
-                        log().ifValidationFails().
-                        statusCode(SC_OK).
-                        extract().jsonPath().
-                        getMap("");
-
-        if (restRules.values()
-                     .stream()
-                     .filter(e -> e.toString().contains(role))
-                     .findFirst()
-                     .orElse(null) != null) {
-            throw new CucumberException(role + " are present in services");
-        }
-    }
-
     @And("На геосервере создано хранилище с тем же названием")
     public void checkThatCurrentStoreExistOnGeoserver() {
         String workspace = "scratch_database_" + orgId;
@@ -274,12 +217,43 @@ public class GeoserverStepDefinitions extends BaseStepsDefinitions {
         assertTrue("Проекция srsThread2Modified не найдена", epsgProperties.contains("srsThread2Modified"));
     }
 
+    @And("стиль {string} существует на геосервере, в текущем рабочем пространстве")
+    public void checkStyle(String styleName) {
+        getStyleFromWorkspace(currentWorkspace, styleName);
+
+        assertEquals(SC_OK, response.getStatusCode());
+    }
+
+    @And("геосервер успешно отдаёт легенду для стиля {string} правила {string}")
+    public void checkStyleLegend(String styleName, String rule) {
+        getLegendToLayer(currentComplexName, styleName, rule);
+    }
+
+    @And("тело текущего стиля содержит строку {string}")
+    public void checkStyleBody(String bodyPart) {
+        assertTrue(response.asString().contains(bodyPart));
+    }
+
+    @And("SVG {string} существует на геосервере и соответствует ожидаемой")
+    public void checkSvg(String svgPath) throws IOException {
+        getSvgFromGeoserver(svgPath);
+
+        String svgName = svgPath.substring(svgPath.lastIndexOf("/") + 1);
+
+        File file = TestFilesManager.getFile(svgName);
+        String expectedSvg = Files.readString(file.toPath(), StandardCharsets.UTF_8).replaceAll("\\s+", " ").trim();
+        String actualSvg = response.getBody().asString().replaceAll("\\s+", " ").trim();
+
+        assertEquals(expectedSvg, actualSvg);
+    }
+
     public Response getEpsgPropertiesResponse() {
         Response response = getBaseRequestWithCurrentCookie()
                 .when().
                         get("/geoserver/rest/resource/user_projections/epsg.properties");
 
         response.then().statusCode(SC_OK);
+
         return response;
     }
 
@@ -361,5 +335,33 @@ public class GeoserverStepDefinitions extends BaseStepsDefinitions {
                 assertTrue(containsInWms);
             }
         });
+    }
+
+    private void getStyleFromWorkspace(String workspace, String styleName) {
+        response = getBaseRequestWithCurrentCookie()
+                .given().
+                        headers("Accept", "application/vnd.ogc.se+xml")
+                .when().
+                        get("/geoserver/rest/workspaces/" + workspace + "/styles/" + styleName);
+    }
+
+    private void getLegendToLayer(String complexName, String styleName, String rule) {
+        String request = "geoserver/wms?REQUEST=GetLegendGraphic&VERSION=1.3.0&FORMAT=image%2Fpng&WIDTH=40&HEIGHT=20&" +
+                "LAYER=" + complexName + "&STYLE=" + styleName + "&RULE=" + rule;
+
+        getBaseRequestWithCurrentCookie()
+                .given().
+                        headers("Accept", "application/vnd.ogc.se+xml")
+                .when().
+                        get(request)
+                .then().
+                        log().ifValidationFails().
+                        statusCode(SC_OK);
+    }
+
+    private void getSvgFromGeoserver(String svgPath) {
+        response = getBaseRequestWithCurrentCookie()
+                .when().
+                        get("/geoserver/rest/resource/styles/" + svgPath);
     }
 }

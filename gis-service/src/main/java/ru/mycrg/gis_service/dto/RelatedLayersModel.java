@@ -1,14 +1,14 @@
 package ru.mycrg.gis_service.dto;
 
-import ru.mycrg.gis_service.dto.project.ProjectProjection;
+import ru.mycrg.gis_service.dto.project.IProjectProjection;
 import ru.mycrg.gis_service_contract.dto.LayerProjection;
 
 public class RelatedLayersModel {
 
     private final LayerProjection layer;
-    private final ProjectProjection project;
+    private final IProjectProjection project;
 
-    public RelatedLayersModel(LayerProjection layer, ProjectProjection project) {
+    public RelatedLayersModel(LayerProjection layer, IProjectProjection project) {
         this.layer = layer;
         this.project = project;
     }
@@ -17,7 +17,7 @@ public class RelatedLayersModel {
         return layer;
     }
 
-    public ProjectProjection getProject() {
+    public IProjectProjection getProject() {
         return project;
     }
 }

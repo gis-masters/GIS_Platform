@@ -59,9 +59,20 @@ public class ProcessHandler {
 
             log.debug("Создан процесс: '{}'", process.getId());
 
-            executor.initialize(model.getPayload())
-                    .setPayload(new ProcessModel(process.getId(), databaseName))
-                    .validate();
+            try {
+                executor.initialize(model.getPayload())
+                        .setPayload(new ProcessModel(process.getId(), databaseName))
+                        .validate();
+            } catch (BadRequestException e) {
+                log.warn("Валидация процесса провалилась!");
+                executor.cleanup();
+
+                process.setDetails(toJsonNode(executor.getReport()));
+                processService.error(databaseName, process.getId(), process.getDetails());
+
+
+                return process;
+            }
 
             SecurityContext securityContext = SecurityContextHolder.getContext();
             DelegatingSecurityContextRunnable wrappedRunnable = new DelegatingSecurityContextRunnable(() -> {
@@ -72,11 +83,15 @@ public class ProcessHandler {
             return process;
         } catch (BadRequestException e) {
             String msg = "Не удалось создать процесс => " + e.getMessage();
+            executor.cleanup();
+
             log.error(msg, e);
 
             throw new BadRequestException(msg);
         } catch (Exception e) {
             String msg = "Не удалось создать процесс => " + e.getMessage();
+            executor.cleanup();
+
             log.error(msg, e);
 
             throw new DataServiceException(msg, e.getCause());
@@ -96,6 +111,8 @@ public class ProcessHandler {
             String msg = "Выполнение процесса потерпело неудачу. Причина: " + e.getMessage();
 
             log.error(msg, e.getCause(), e);
+            executor.cleanup();
+
             processService.error(databaseName, process.getId(), toJsonNode(executor.getReport()));
         }
     }

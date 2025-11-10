@@ -1,5 +1,6 @@
 package ru.mycrg.acceptance.data_service.schemas;
 
+import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -53,24 +54,6 @@ public class SchemasStepsDefinitions extends BaseStepsDefinitions {
         authorizationBase.loginAsOwner();
 
         getAllSchemas();
-    }
-
-    @Then("Количество схем соответствует ожидаемому: {int}")
-    public void getSchemasCount(int schemasQuantity) {
-        int schemasCount = getEntitiesCount();
-        assertEquals(schemasQuantity, schemasCount);
-    }
-
-    @Then("В выборке схем отсутствуют схемы с тэгом {string}")
-    public void checkThatNoSchemasWithTag(String tag) {
-        List<List<String>> tagsFromSchemas = response.jsonPath().getList("tags");
-
-        long quantityHasTag = tagsFromSchemas.stream()
-                                             .filter(Objects::nonNull)
-                                             .filter(tags -> tags.contains(tag))
-                                             .count();
-
-        assertEquals(0, quantityHasTag);
     }
 
     @Then("В выборке схем присутствуют схемы с тэгом {string}")
@@ -163,6 +146,12 @@ public class SchemasStepsDefinitions extends BaseStepsDefinitions {
                 response.jsonPath()
                         .getList("title", String.class)
                         .contains(title));
+    }
+
+    @And("поле {string} в схеме имеет значение {string}")
+    public void checkValueByPropName(String propName, String expectedValue) {
+        String actualValue = response.jsonPath().getString("schema." + propName);
+        assertEquals(expectedValue, actualValue);
     }
 
     public void getCurrentSchema(String schemaName) {

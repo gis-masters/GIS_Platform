@@ -2,7 +2,7 @@ package ru.mycrg.gis_service.controller;
 
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import ru.mycrg.gis_service.dto.project.ProjectProjection;
+import ru.mycrg.gis_service.dto.project.IProjectProjection;
 import ru.mycrg.gis_service.dto.RelatedLayersModel;
 import ru.mycrg.gis_service.exceptions.BadRequestException;
 import ru.mycrg.gis_service.exceptions.ErrorInfo;
@@ -47,7 +47,7 @@ public class RelatedObjectsController {
 
     @GetMapping("/find-related-by-basemap/{sourceBasemapId}")
     @PreAuthorize(HAS_ANY_AUTHORITY)
-    public List<ProjectProjection> findRelatedProjects(@PathVariable(name = "sourceBasemapId") long sourceBasemapId) {
+    public List<IProjectProjection> findRelatedProjects(@PathVariable(name = "sourceBasemapId") long sourceBasemapId) {
         return basemapService.findRelatedProjects(sourceBasemapId);
     }
 }

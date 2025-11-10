@@ -85,4 +85,9 @@ public class FtsExecutor implements IExecutor<PageableResources<FtsResponseDto>>
     public FilePlacementPayloadModel getPayload() {
         return null;
     }
+
+    @Override
+    public void cleanup() {
+        log.debug("Процесс завершился с ошибкой. Операция очистки запущена, но не существует.");
+    }
 }

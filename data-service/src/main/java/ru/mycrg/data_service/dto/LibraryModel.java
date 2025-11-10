@@ -2,6 +2,7 @@ package ru.mycrg.data_service.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import ru.mycrg.common_contracts.enums.Roles;
 import ru.mycrg.data_service.entity.DocumentLibrary;
 
 import static ru.mycrg.data_service.dto.ResourceType.LIBRARY;
@@ -40,7 +41,7 @@ public class LibraryModel extends ResourceModel {
         this.readyForFts = dl.getReadyForFts();
     }
 
-    public LibraryModel(DocumentLibrary dl, String role) {
+    public LibraryModel(DocumentLibrary dl, Roles role) {
         super(dl.getId(),
               dl.getTitle(),
               dl.getDetails(),

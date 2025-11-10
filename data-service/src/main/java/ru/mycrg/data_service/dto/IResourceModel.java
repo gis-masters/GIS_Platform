@@ -1,15 +1,16 @@
 package ru.mycrg.data_service.dto;
 
 import org.jetbrains.annotations.Nullable;
+import ru.mycrg.common_contracts.enums.Roles;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 
 public interface IResourceModel {
 
     Long getId();
 
-    String getRole();
+    Roles getRole();
 
-    void setRole(String role);
+    void setRole(Roles role);
 
     String getTitle();
 

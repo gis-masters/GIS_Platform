@@ -82,7 +82,6 @@ public class SmevTasksDefinitions extends BaseStepsDefinitions {
 
     @Then("создана задача ожидаемого вида {string} {string}")
     public void checkRnsTask(String expectedType, String expectedView) {
-
         int maxId = response.jsonPath().getList("content.id")
                             .stream()
                             .mapToInt(id -> Integer.parseInt(id.toString()))
