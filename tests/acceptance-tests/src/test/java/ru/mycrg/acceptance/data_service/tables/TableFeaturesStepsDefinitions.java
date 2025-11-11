@@ -1,5 +1,6 @@
 package ru.mycrg.acceptance.data_service.tables;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
@@ -7,6 +8,7 @@ import io.cucumber.java.en.When;
 import io.restassured.specification.RequestSpecification;
 import org.junit.Assert;
 import ru.mycrg.acceptance.BaseStepsDefinitions;
+import ru.mycrg.acceptance.JsonMapper;
 import ru.mycrg.acceptance.auth_service.AuthorizationBase;
 import ru.mycrg.acceptance.data_service.dto.FeaturesCopyModel;
 import ru.mycrg.acceptance.data_service.dto.FileDescriptionModel;
@@ -72,7 +74,7 @@ public class TableFeaturesStepsDefinitions extends BaseStepsDefinitions {
     }
 
     @When("Пользователь отправляет POST запрос на создание новой записи с телом в формате GeoJson")
-    public void createFeatureInCurrentTable() {
+    public void createFeatureWithTittleAndNameInCurrentTable() {
         Map<String, Object> properties = new HashMap<>();
         properties.put("title", "some title here");
         properties.put("name", "test");
@@ -81,7 +83,7 @@ public class TableFeaturesStepsDefinitions extends BaseStepsDefinitions {
     }
 
     @When("В текущем слое создаётся запись с title: {string}")
-    public void createFeatureInCurrentTable(String title) {
+    public void createFeatureWithTitleInCurrentTable(String title) {
         Map<String, Object> properties = new HashMap<>();
         properties.put("title", title);
 
@@ -96,6 +98,13 @@ public class TableFeaturesStepsDefinitions extends BaseStepsDefinitions {
         properties.put("created_at", "2022-11-08 00:00:00");
 
         createFeature(new GeoJsonModel(properties));
+    }
+
+    @When("в текущей таблице существует запись со следующим содержимым")
+    public void createFeatureInCurrentTable(String attributesAsJson) throws JsonProcessingException {
+        createFeature(
+                new GeoJsonModel(
+                        JsonMapper.parseJsonFromFeatureFile(attributesAsJson)));
     }
 
     @When("В текущей таблице существует {string} записи")
@@ -229,11 +238,6 @@ public class TableFeaturesStepsDefinitions extends BaseStepsDefinitions {
     @When("я делаю запрос на выборку текущей записи")
     public void getCurrentFeatureAsCurrentUser() {
         getFeature(currentFeatureId);
-    }
-
-    @When("я делаю запрос на выборку записи {int}")
-    public void getCurrentFeatureAsCurrentUser(Integer featureId) {
-        getFeature(featureId);
     }
 
     @And("Сервер возвращает тело созданной записи таблицы, поля сущности корректно заполнены")
@@ -503,7 +507,7 @@ public class TableFeaturesStepsDefinitions extends BaseStepsDefinitions {
                 .given().
                         contentType(JSON)
                 .when().
-                        get("/" + id);
+                       get("/" + id);
     }
 
     private void getAllFeatures() {

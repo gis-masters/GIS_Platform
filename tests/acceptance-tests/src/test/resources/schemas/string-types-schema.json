@@ -1,0 +1,46 @@
+{
+  "name": "testStringTypes",
+  "title": "Схема для проверки типов STRING",
+  "description": "Схема для тестирования полей типа STRING с разными вариантами длины",
+  "tableName": "test_string_types",
+  "styleName": "generic",
+  "geometryType": "MultiPolygon",
+  "properties": [
+    {
+      "name": "id",
+      "title": "Идентификатор",
+      "required": true,
+      "hidden": false,
+      "valueType": "INT"
+    },
+    {
+      "name": "string_unlimited",
+      "title": "Строка без ограничения длины",
+      "valueType": "STRING"
+    },
+    {
+      "name": "string_length_2",
+      "title": "Строка с длиной 2",
+      "valueType": "STRING",
+      "maxLength": 2
+    },
+    {
+      "name": "string_length_20",
+      "title": "Строка с длиной 20",
+      "valueType": "STRING",
+      "maxLength": 20
+    },
+    {
+      "name": "string_length_300",
+      "title": "Строка с длиной 300",
+      "valueType": "STRING",
+      "maxLength": 300
+    },
+    {
+      "name": "shape",
+      "title": "Поле для геометрии",
+      "valueType": "GEOMETRY"
+    }
+  ],
+  "contentTypes": []
+}

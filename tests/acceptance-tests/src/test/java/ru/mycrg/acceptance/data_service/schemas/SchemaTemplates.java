@@ -16,6 +16,8 @@ public class SchemaTemplates {
                 return prepareTaskSchema();
             case "Точечный слой с атрибутами":
                 return testPointAttributes();
+            case "Схема для проверки типов STRING":
+                return stringTypesSchema();
             case "Точечный слой с атрибутами - ошибочная, для теста":
                 return testPointAttributesIncorrect();
             case "Все типы данных":
@@ -157,6 +159,10 @@ public class SchemaTemplates {
 
     private static SchemaDto testAllAttributes() {
         return loadSchemaFromResource("all-types-schema.json");
+    }
+
+    private static SchemaDto stringTypesSchema() {
+        return loadSchemaFromResource("string-types-schema.json");
     }
 
     private static SchemaDto testPointAttributes() {

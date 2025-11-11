@@ -602,7 +602,7 @@ public class ProjectStepsDefinitions extends BaseStepsDefinitions {
                 .given().
                         body(jsonBody).
                         contentType(ContentType.JSON)
-                .when().log().all().
+                .when().
                        patch("" + id);
     }
 

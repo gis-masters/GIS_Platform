@@ -131,4 +131,9 @@ public class CommonStepDefinitions extends BaseStepsDefinitions {
     public void checkErrorMsg(String msg) {
         checkResponseValue("message", msg);
     }
+
+    @And("атрибут {string} имеет длину {int} символов")
+    public void checkAttributeLength(String attribute, int expectedLength) {
+        super.checkResponseValueLength(attribute, expectedLength);
+    }
 }

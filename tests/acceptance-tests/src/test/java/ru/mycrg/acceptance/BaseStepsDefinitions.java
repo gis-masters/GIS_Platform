@@ -393,7 +393,7 @@ public class BaseStepsDefinitions {
     public void checkResponseValue(String field, String expectedValue) {
         try {
             assertEquals(expectedValue, response.jsonPath().get(field));
-        } catch (Exception e) {
+        } catch (Throwable e) {
             response.prettyPrint();
 
             throw new IllegalStateException("Не удалось выполнить проверку checkResponseValue => " + e.getMessage());
@@ -402,6 +402,19 @@ public class BaseStepsDefinitions {
 
     public void checkResponseValueContains(String field, String value) {
         assertTrue(((String) response.jsonPath().get(field)).contains(value));
+    }
+
+    public void checkResponseValueLength(String field, int expectedLength) {
+        try {
+            String actualValue = response.jsonPath().getString(field);
+            int actualLength = actualValue != null ? actualValue.length() : 0;
+
+            assertEquals(expectedLength, actualLength);
+        } catch (Throwable e) {
+            response.prettyPrint();
+
+            throw new IllegalStateException("Не удалось выполнить проверку длины checkResponseValueLength => " + e.getMessage());
+        }
     }
 
     public TableCreateDto getLatestTable() {
