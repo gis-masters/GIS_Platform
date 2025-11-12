@@ -20,9 +20,7 @@ import static org.apache.http.HttpStatus.SC_NOT_FOUND;
 import static org.apache.http.HttpStatus.SC_OK;
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.*;
-import static ru.mycrg.acceptance.data_service.tables.TablesStepsDefinitions.currentTableName;
-import static ru.mycrg.acceptance.data_service.tables.TablesStepsDefinitions.currentWorkspace;
-import static ru.mycrg.acceptance.data_service.tables.TablesStepsDefinitions.currentComplexName;
+import static ru.mycrg.acceptance.data_service.tables.TablesStepsDefinitions.*;
 
 public class DatasetsStepsDefinitions extends BaseStepsDefinitions {
 
@@ -54,6 +52,23 @@ public class DatasetsStepsDefinitions extends BaseStepsDefinitions {
                         get("/" + currentDatasetIdentifier + "/tables");
 
         assertEquals(Integer.valueOf(1), response.jsonPath().get("page.totalElements"));
+    }
+
+    @And("количество таблиц в созданном наборе данных равно: {int}")
+    public void checkDatasetTablesCount(int count) {
+        String parsResponse = response.jsonPath().getString("details.datasetIdentifier");
+        if (parsResponse == null) {
+            currentDatasetIdentifier = response.jsonPath().getString("details.payload.tables[0].dataset");
+        } else {
+            currentDatasetIdentifier = parsResponse;
+        }
+
+        response = getBaseRequestWithCurrentCookie()
+                .when()
+                        .get("/" + currentDatasetIdentifier + "/tables");
+
+        int actualCount = response.jsonPath().getList("content").size();
+        assertEquals(count, actualCount);
     }
 
     @When("Пользователь делает запрос на несуществующий набор данных {string}")

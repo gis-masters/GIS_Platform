@@ -1,6 +1,7 @@
 package ru.mycrg.acceptance.data_service.tables;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
@@ -14,6 +15,7 @@ import ru.mycrg.acceptance.data_service.dto.FeaturesCopyModel;
 import ru.mycrg.acceptance.data_service.dto.FileDescriptionModel;
 import ru.mycrg.acceptance.data_service.dto.GeoJsonModel;
 import ru.mycrg.acceptance.data_service.dto.QualifierDto;
+import ru.mycrg.acceptance.utils.GeometryUtils;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -438,10 +440,27 @@ public class TableFeaturesStepsDefinitions extends BaseStepsDefinitions {
     @And("геометрия в объекте равна {string}")
     public void checkObjectGeom(String geom) {
         List<Map<String, Object>> features = response.jsonPath().getList("content.properties");
-        boolean geometryMatches = features.stream().anyMatch(properties ->
-                                                                     geom.equals(properties.get("shape"))
-        );
-        Assert.assertTrue("Геометрия не совпадает", geometryMatches);
+
+        boolean geometryMatches = false;
+        String actualGeometry = null;
+
+        for (Map<String, Object> properties: features) {
+            actualGeometry = (String) properties.get("shape");
+            if (GeometryUtils.isGeometriesEqual(geom, actualGeometry)) {
+                geometryMatches = true;
+                break;
+            }
+        }
+
+        if (!geometryMatches) {
+            System.out.println("Геометрия не совпадает:");
+            System.out.println("Ожидаемая геометрия: " + geom);
+            System.out.println("Фактическая геометрия: " + actualGeometry);
+            System.out.println("Количество найденных объектов: " + features.size());
+        }
+
+        assertTrue("Геометрия не совпадает. Ожидаемая: " + geom + ", Фактическая: " + actualGeometry,
+                   geometryMatches);
     }
 
     @And("атрибуты объекта с полем {string} равным {int} такие")
@@ -472,6 +491,55 @@ public class TableFeaturesStepsDefinitions extends BaseStepsDefinitions {
         }
 
         assertTrue("The expected fields do not match the record fields", areEqual);
+    }
+
+    @And("данные внутри каждой из таблиц соответствует ожиданиям")
+    public void assertDatasetFeaturesAttributesMatchExpected(DataTable dataTable) {
+        List<Map<Object, Object>> rawRows = dataTable.asMaps(Object.class, Object.class);
+        List<Map<String, Object>> tablesList = response.jsonPath().getList("content");
+
+        for (Map<Object, Object> rawRow: rawRows) {
+            Map<String, String> expectedValues = new HashMap<>();
+            for (Map.Entry<Object, Object> entry: rawRow.entrySet()) {
+                expectedValues.put(String.valueOf(entry.getKey()), String.valueOf(entry.getValue()));
+            }
+
+            String expectedLayer = expectedValues.get("vectorTable");
+            String expectedGlobalId = expectedValues.get("globalid");
+            String expectedShape = expectedValues.get("shape");
+
+            Map<String, Object> table = tablesList
+                    .stream()
+                    .filter(tableMap -> {
+                        Map<String, Object> schema = (Map<String, Object>) tableMap.get("schema");
+                        return expectedLayer.equals(schema.get("name"));
+                    })
+                    .findFirst()
+                    .orElseThrow(() -> new AssertionError("Ожидаемая таблица: " + expectedLayer + " не найдена"));
+
+            String fullIdentifier = table.get("identifier").toString();
+
+            response = getBaseRequestWithCurrentCookie()
+                    .basePath(String.format("/api/data/datasets/%s/tables/%s/records",
+                                            currentDatasetIdentifier, fullIdentifier))
+                    .when()
+                            .get();
+
+            List<Map<String, Object>> features = response.jsonPath().getList("content");
+            assertFalse("No features found in layer " + expectedLayer, features.isEmpty());
+
+            Map<String, Object> firstFeature = features.get(0);
+            Map<String, Object> properties = (Map<String, Object>) firstFeature.get("properties");
+            assertEquals("Несоответствие значения globalid для таблицы " + expectedLayer, expectedGlobalId,
+                         properties.get("globalid"));
+
+            // Сравниваем геометрии с учетом разных форматов (EWKB vs WKT/GeoJSON)
+            String actualShape = String.valueOf(properties.get("shape"));
+            boolean geometriesEqual = GeometryUtils.isGeometriesEqual(expectedShape, actualShape);
+            assertTrue("Несоответствие значения shape для таблицы " + expectedLayer +
+                               ". Expected: " + expectedShape +
+                               ", Actual: " + actualShape, geometriesEqual);
+        }
     }
 
     private void createFeature(GeoJsonModel geoJsonModel) {

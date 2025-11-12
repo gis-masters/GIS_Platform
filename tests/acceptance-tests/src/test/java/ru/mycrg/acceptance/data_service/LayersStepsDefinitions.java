@@ -60,7 +60,7 @@ public class LayersStepsDefinitions extends BaseStepsDefinitions {
         assertEquals(currentLayerId, layerId);
     }
 
-    @And("в текущий проект подключен {int} слой")
+    @And("количество слоёв в текущем проекте равно: {int}")
     public void getLayerOfCurrentProject(int count) {
         response = getBaseRequestWithCurrentCookie()
                 .when().
