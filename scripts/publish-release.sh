@@ -44,10 +44,12 @@ echo ""
 # Проверяем наличие необходимых скриптов
 PUSH_GITHUB_SCRIPT="$SCRIPT_DIR/push-to-github.sh"
 PUSH_DOCKER_SCRIPT="$SCRIPT_DIR/push-app-docker-hub.sh"
+RELEASE_TG_SCRIPT="$SCRIPT_DIR/release/send-telegram-release-note.sh"
 
 REQUIRED_SCRIPTS=(
     "$PUSH_GITHUB_SCRIPT"
     "$PUSH_DOCKER_SCRIPT"
+    "$RELEASE_TG_SCRIPT"
 )
 
 for script in "${REQUIRED_SCRIPTS[@]}"; do
@@ -90,6 +92,11 @@ echo -e "${CYAN}━━━━━━━━━━━━━━━━━━━━━�
 if ! bash "$PUSH_DOCKER_SCRIPT"; then
     echo -e "${RED}Ошибка${NC} при публикации Docker образов" >&2
     exit 1
+fi
+
+# Отправляем уведомление в Telegram. Слишком маленький для прям отдельного шага
+if ! bash "$RELEASE_TG_SCRIPT"; then
+    echo -e "${RED}Предупреждение:${NC} не удалось отправить уведомление в Telegram" >&2
 fi
 
 echo ""

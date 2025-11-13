@@ -140,7 +140,7 @@ NEW_ENTRY_TEMP=$(mktemp)
     echo "###### _[$CURRENT_HASH]_"
     if [ -s "$NOTES_TEMP" ]; then
         echo ""
-        echo "### Изменения"
+        echo "### Список изменений"
         cat "$NOTES_TEMP"
     fi
 } > "$NEW_ENTRY_TEMP"
