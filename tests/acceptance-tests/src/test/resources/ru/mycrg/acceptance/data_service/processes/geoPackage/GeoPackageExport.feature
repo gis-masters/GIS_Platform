@@ -1,3 +1,4 @@
+@Shard
 Feature: Экспорт в GeoPackage одиночных объектов
 
   Background:

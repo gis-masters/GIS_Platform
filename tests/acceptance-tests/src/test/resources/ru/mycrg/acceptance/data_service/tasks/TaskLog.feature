@@ -1,3 +1,4 @@
+@Shard
 Feature: Журнал задач
 
   Background:

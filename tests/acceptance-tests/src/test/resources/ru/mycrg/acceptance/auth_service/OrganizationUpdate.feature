@@ -1,3 +1,4 @@
+@Shard
 Feature: Обновление организации
 
   Background:

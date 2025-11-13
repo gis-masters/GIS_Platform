@@ -1,3 +1,4 @@
+@Shard
 Feature: Тест API анализатора ресурсов
 
   Background:

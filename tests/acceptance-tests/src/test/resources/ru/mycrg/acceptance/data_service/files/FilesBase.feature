@@ -1,3 +1,4 @@
+@Shard
 Feature: Создание файлов (базовые сценарии)
 
   Background:

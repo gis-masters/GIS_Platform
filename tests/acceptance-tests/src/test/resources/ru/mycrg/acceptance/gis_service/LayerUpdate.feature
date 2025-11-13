@@ -1,3 +1,4 @@
+@Shard
 Feature: Обновление слоя проектов
 
   Background:

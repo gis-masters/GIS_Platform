@@ -1,3 +1,4 @@
+@Shard
 Feature: Фильтрация пользователей
 
   Background:

@@ -1,3 +1,4 @@
+@Shard
 Feature: Проверка API установки прав на наборы данных
 
   Background:

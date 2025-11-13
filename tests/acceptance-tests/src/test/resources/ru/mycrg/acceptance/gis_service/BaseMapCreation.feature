@@ -1,3 +1,4 @@
+@Shard
 Feature: Создание подложек в проектах
 
   Background:

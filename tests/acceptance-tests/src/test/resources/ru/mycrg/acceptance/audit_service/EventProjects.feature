@@ -1,3 +1,4 @@
+@Shard
 Feature: Аудит работы с проектами
 
   Background:

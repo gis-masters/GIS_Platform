@@ -1,3 +1,4 @@
+@Shard
 Feature: Права на библиотеки
 
   Background:

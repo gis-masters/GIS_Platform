@@ -1,3 +1,4 @@
+@Shard
 Feature: Выборка подложек
 
   Background:

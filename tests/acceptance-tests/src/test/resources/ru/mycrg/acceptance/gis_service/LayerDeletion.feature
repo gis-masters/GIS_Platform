@@ -1,3 +1,4 @@
+@Shard
 Feature: Удаление слоев проектов
 
   Background:

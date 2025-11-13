@@ -1,3 +1,4 @@
+@Shard
 Feature: Работа с шаблонами схем данных
 
   Background:

@@ -1,3 +1,4 @@
+@Shard
 Feature: Работа с записями в таблицах
 
   Background:

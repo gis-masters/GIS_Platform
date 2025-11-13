@@ -1,3 +1,4 @@
+@Shard
 Feature: Поиск таблиц и наборов данных по SRID
 
   Background:

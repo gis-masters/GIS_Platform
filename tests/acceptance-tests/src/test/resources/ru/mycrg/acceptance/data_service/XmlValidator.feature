@@ -1,3 +1,4 @@
+@Shard
 Feature: Импорт xml файла межевого плана
 
   Background:

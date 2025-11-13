@@ -1,3 +1,4 @@
+@Shard
 Feature: Размещение геометрии из SHAPE файла в существующий слой
 
   Background:

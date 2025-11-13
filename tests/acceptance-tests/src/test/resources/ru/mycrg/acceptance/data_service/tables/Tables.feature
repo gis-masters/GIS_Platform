@@ -1,3 +1,4 @@
+@Shard
 Feature: Проверка сущности table
 
   Background:

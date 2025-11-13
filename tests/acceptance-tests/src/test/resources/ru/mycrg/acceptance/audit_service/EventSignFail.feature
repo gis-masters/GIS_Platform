@@ -1,3 +1,4 @@
+@Shard
 Feature: Аудит попыток неудачной авторизации
 
   Background:

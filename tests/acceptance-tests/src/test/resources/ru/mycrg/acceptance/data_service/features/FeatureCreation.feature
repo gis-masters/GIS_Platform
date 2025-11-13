@@ -1,3 +1,4 @@
+@Shard
 Feature: Работа по некорректной схеме
 
   Background:

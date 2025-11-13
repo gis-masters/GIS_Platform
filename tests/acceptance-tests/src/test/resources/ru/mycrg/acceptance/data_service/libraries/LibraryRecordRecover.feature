@@ -1,3 +1,4 @@
+@Shard
 Feature: Восстановление записей после удаления
 
   Background:

@@ -1,3 +1,4 @@
+@Shard
 Feature: Специализации
 
   Scenario: Специализации доступны для всех по эндпоинту: /specializations

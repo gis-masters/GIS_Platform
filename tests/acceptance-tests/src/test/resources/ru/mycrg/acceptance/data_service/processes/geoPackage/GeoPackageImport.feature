@@ -1,3 +1,4 @@
+@Shard
 Feature: Импорт GeoPackage
 
   Background:
