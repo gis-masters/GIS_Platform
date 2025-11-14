@@ -14,13 +14,13 @@ export const Footer: FC = observer(() => (
     <Container className={cnFooter('Info')} maxWidth='md'>
       <Grid container spacing={2} justifyContent='center'>
         {environment.description && (
-          <Grid item xs={6}>
+          <Grid size={6}>
             <h2 className={cnFooter('Title')}>{environment.title}:</h2>
             {environment.description}
           </Grid>
         )}
         {(environment.contactsPhone || environment.contactsEmail) && (
-          <Grid item xs={6}>
+          <Grid size={6}>
             <h2 className={cnFooter('Title')}>Контакты:</h2>
             <b>Телефон приемной:</b> {environment.contactsPhone}
             <br />

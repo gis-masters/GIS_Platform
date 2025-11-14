@@ -43,10 +43,10 @@
     "@bem-react/di": "5.0.0",
     "@emotion/react": "11.11.4",
     "@emotion/styled": "11.11.5",
-    "@mui/icons-material": "6.1.1",
-    "@mui/lab": " 6.0.0-beta.10",
-    "@mui/material": "6.1.1",
-    "@mui/x-tree-view": "7.17.0",
+    "@mui/icons-material": "7.3.5",
+    "@mui/lab": "7.0.1-beta.19",
+    "@mui/material": "7.3.5",
+    "@mui/x-tree-view": "8.18.0",
     "@stomp/stompjs": "5.4.2",
     "@turf/turf": "7.2.0",
     "@yandex/smart-captcha": "2.6.0",
@@ -196,7 +196,8 @@
   },
   "overrides": {
     "react": "18.2.0",
-    "react-dom": "18.2.0"
+    "react-dom": "18.2.0",
+    "react-is": "18.3.1"
   },
   "eslintConfig": {
     "extends": "react-app"
