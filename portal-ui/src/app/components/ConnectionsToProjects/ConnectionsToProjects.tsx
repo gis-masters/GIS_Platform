@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { type FC } from 'react';
 import { observer } from 'mobx-react';
 
 import { type FileConnection } from '../../services/data/files/files.models';
@@ -13,11 +13,6 @@ interface ConnectionsToProjectsProps {
 
 export type ConnectionsToProjectsType = 'list' | 'text';
 
-@observer
-export class ConnectionsToProjects extends Component<ConnectionsToProjectsProps> {
-  render() {
-    const { type, connections } = this.props;
-
-    return <ConnectionsToProjectsList connections={connections} type={type} />;
-  }
-}
+export const ConnectionsToProjects: FC<ConnectionsToProjectsProps> = observer(({ type, connections }) => (
+  <ConnectionsToProjectsList connections={connections} type={type} />
+));
