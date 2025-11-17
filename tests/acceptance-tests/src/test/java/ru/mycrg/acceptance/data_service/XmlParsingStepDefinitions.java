@@ -30,7 +30,7 @@ public class XmlParsingStepDefinitions extends BaseStepsDefinitions {
         datasetId = dataTable.cell(0, 1);
         tableId = dataTable.cell(0, 2);
 
-        file = new File(String.format("src/test/resources/ru/mycrg/acceptance/resources/%s", fileName));
+        file = TestFilesManager.getFile(fileName);
 
         response = getBaseRequestWithCurrentCookie()
                 .given().

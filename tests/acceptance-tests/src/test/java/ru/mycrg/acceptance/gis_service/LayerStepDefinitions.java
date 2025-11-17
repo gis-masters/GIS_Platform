@@ -255,7 +255,7 @@ public class LayerStepDefinitions extends BaseStepsDefinitions {
 
         layerCreateDto = new LayerCreateDto(layerTitle, "vector");
         layerCreateDto.setSchemaId(latestTable.getSchemaId());
-        layerCreateDto.setStyleName("default");
+        layerCreateDto.setStyleName("generic");
         layerCreateDto.setDataStoreName("scratch_database_" + orgId);
         layerCreateDto.setDataset(currentDatasetIdentifier);
         layerCreateDto.setMode("full");

@@ -13,6 +13,8 @@ import ru.mycrg.acceptance.data_service.dto.FileDescriptionModel;
 import ru.mycrg.auth_service_contract.dto.UserCreateDto;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.*;
 
 import static java.lang.Boolean.TRUE;
@@ -36,11 +38,14 @@ public class FilesStepDefinitions extends BaseStepsDefinitions {
     public static String currentFilePath;
     public static List<FileDescriptionModel> currentFiles = new ArrayList<>();
 
+    public static File contextFile;
+    public static String contextFileName;
+
     private final AuthorizationBase authorizationBase = new AuthorizationBase();
 
-    private final File firstFile = new File("src/test/resources/ru/mycrg/acceptance/resources/100b.png");
-    private final File secondFile = new File("src/test/resources/ru/mycrg/acceptance/resources/correct.gml");
-    private final File thirdFile = new File("src/test/resources/ru/mycrg/acceptance/resources/gpzu.xml");
+    private final File firstFile = TestFilesManager.getFile("100b.png");
+    private final File secondFile = TestFilesManager.getFile("correct.gml");
+    private final File thirdFile = TestFilesManager.getFile("correct.gml");
 
     @Override
     public RequestSpecification getBaseRequest() {
@@ -94,7 +99,24 @@ public class FilesStepDefinitions extends BaseStepsDefinitions {
     public void fileSigned(String baseFileName, String ecpFileName) {
         signFile(
                 getFileDescriptionByTitleOrThrow(baseFileName).getId(),
-                new File("src/test/resources/ru/mycrg/acceptance/resources/" + ecpFileName));
+                TestFilesManager.getFile(ecpFileName));
+    }
+
+    @Given("Пользователь скачивает полученный файл")
+    public void downloadResponseLikeFile() throws IOException {
+        byte[] fileData = response.asByteArray();
+
+        File tempDirFile = TestFilesManager.createTempTestResourcesDirectoryIfNotExist();
+
+        String fileName = "downloaded_" + System.currentTimeMillis() + ".zip";
+        contextFile = new File(tempDirFile, fileName);
+
+        Files.write(contextFile.toPath(), fileData);
+
+        contextFileName = fileName;
+
+        // Log the absolute path for debugging
+        System.out.println("Downloaded file saved to: " + contextFile.getAbsolutePath());
     }
 
     @Given("подпись файла {string} имеет размер {int}")
@@ -110,7 +132,7 @@ public class FilesStepDefinitions extends BaseStepsDefinitions {
     public void signFile(String baseFileName, String ecpFileName) {
         signFile(
                 getFileDescriptionByTitleOrThrow(baseFileName).getId(),
-                new File("src/test/resources/ru/mycrg/acceptance/resources/" + ecpFileName));
+                TestFilesManager.getFile(ecpFileName));
     }
 
     @Then("файл успешно подписан")
@@ -431,7 +453,7 @@ public class FilesStepDefinitions extends BaseStepsDefinitions {
 
     @Given("Существует GML файл")
     public void createGmlFile() {
-        File testGml = new File("src/test/resources/ru/mycrg/acceptance/resources/correct.gml");
+        File testGml = TestFilesManager.getFile("correct.gml");
 
         List<UUID> ids = createFiles(new File[]{testGml});
         currentFileId = ids.get(0);

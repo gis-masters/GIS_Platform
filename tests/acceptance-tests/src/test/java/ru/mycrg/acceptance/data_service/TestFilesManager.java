@@ -10,9 +10,11 @@ import java.util.Optional;
 
 public class TestFilesManager {
 
+    private static final String defaultDataPath = "src/test/resources/ru/mycrg/acceptance/resources/";
+
     @NotNull
     public static File getFile(String fileName) {
-        Path resourcesPath = Paths.get("src/test/resources/ru/mycrg/acceptance/resources/");
+        Path resourcesPath = Paths.get(defaultDataPath);
 
         Optional<File> foundFile = findFileRecursively(resourcesPath.toFile(), fileName);
         if (foundFile.isPresent()) {
@@ -20,6 +22,25 @@ public class TestFilesManager {
         }
 
         throw new IllegalStateException("Указанный ресурс не найден: " + fileName);
+    }
+
+    public static FileDescriptionModel getFileDescriptionByTitleOrThrow(String title) {
+        return FilesStepDefinitions.currentFiles
+                .stream()
+                .filter(file -> file.getTitle().equals(title))
+                .findFirst()
+                .orElseThrow(() -> new IllegalStateException("Среди текущих файлов не найден искомый: " + title));
+    }
+
+    public static File createTempTestResourcesDirectoryIfNotExist() {
+        String tempDir = defaultDataPath + "tempTestData";
+        File tempDirFile = new File(tempDir);
+        
+        if (!tempDirFile.exists()) {
+            tempDirFile.mkdirs();
+        }
+        
+        return tempDirFile;
     }
 
     private static Optional<File> findFileRecursively(File directory, String fileName) {
@@ -44,13 +65,5 @@ public class TestFilesManager {
         }
 
         return Optional.empty();
-    }
-
-    public static FileDescriptionModel getFileDescriptionByTitleOrThrow(String title) {
-        return FilesStepDefinitions.currentFiles
-                .stream()
-                .filter(file -> file.getTitle().equals(title))
-                .findFirst()
-                .orElseThrow(() -> new IllegalStateException("Среди текущих файлов не найден искомый: " + title));
     }
 }

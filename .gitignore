@@ -32,3 +32,6 @@ gis-service/src/main/resources/application.dev.yml
 gisogd-service/src/main/resources/application-dev.yaml
 integration-service/src/main/resources/application.dev.yml
 .env
+
+# Test temporary files
+tests/acceptance-tests/src/test/resources/ru/mycrg/acceptance/resources/tempTestData/

@@ -16,7 +16,7 @@ public class ImportExcelFileStepsDefinitions extends BaseStepsDefinitions {
 
     @When("Пользователь делает запрос на импорт excel файла: {string} в библиотеку {string}")
     public void importToDocLibrary(String fileName, String libraryId) {
-        File excelFile = new File("src/test/resources/ru/mycrg/acceptance/resources/" + fileName);
+        File excelFile = TestFilesManager.getFile(fileName);
 
         Map<String, Object> queryParams = new HashMap<>() {{
             put("libraryId", libraryId);

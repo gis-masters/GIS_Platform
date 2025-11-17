@@ -19,6 +19,7 @@ import ru.mycrg.wrapper.exceptions.ExportException;
 import ru.mycrg.wrapper.exceptions.ImportException;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -28,6 +29,8 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.apache.commons.lang3.StringUtils.containsIgnoreCase;
@@ -94,7 +97,7 @@ public class GDALService implements IExporter {
 
         String randomDirName = UUID.randomUUID().toString();
 
-        String shpPath = unzipFile(processBuilder, rootPath, randomDirName, filePath);
+        String shpPath = unzipFile(rootPath, randomDirName, filePath);
 
         errorReport = importShapeWithSourceSrs(processBuilder, dbName, tableName, srs, shpPath);
         if (!errorReport.isShpFileHasProjection()) {
@@ -164,41 +167,65 @@ public class GDALService implements IExporter {
         return Boolean.TRUE.equals(jdbcTemplate.queryForObject(isTableExistQuery, Boolean.class));
     }
 
-    private String unzipFile(ProcessBuilder processBuilder, String rootPath, String randomDirName, String filePath) {
+    private String unzipFile(String rootPath, String randomDirName, String filePath) {
         try {
-            String cdDir = String.format("cd %s;", rootPath);
+            Path unzipDir = Paths.get(rootPath, randomDirName);
+            Files.createDirectories(unzipDir);
 
-            String mkDir = String.format("mkdir %s;", randomDirName);
-            String unzipFile = String.format("unzip %s -d %s", filePath, randomDirName);
-            String allInOneCommand = cdDir + mkDir + unzipFile;
+            try (ZipInputStream zipIn = new ZipInputStream(new FileInputStream(filePath), StandardCharsets.UTF_8)) {
+                ZipEntry entry;
 
-            log.debug("Execute unzip archive console command: {}", allInOneCommand);
+                while ((entry = zipIn.getNextEntry()) != null) {
+                    if (entry.isDirectory()) {
+                        zipIn.closeEntry();
+                        continue;
+                    }
 
-            processBuilder.directory(new File(rootPath));
-            processBuilder.command("sh", "-c", allInOneCommand);
-            Process unzipProcess = processBuilder.start();
+                    String originalName = Paths.get(entry.getName()).getFileName().toString();
+                    String safeName = sanitizeFileName(originalName, randomDirName);
 
-            boolean isSuccess = unzipProcess.waitFor(TIMEOUT, SECONDS);
-            if (!isSuccess) {
-                logStream(unzipProcess.getErrorStream());
+                    Path extractPath = unzipDir.resolve(safeName);
+                    Files.createDirectories(extractPath.getParent());
 
-                throw new ImportException("Unzip failed by timeout");
+                    try (OutputStream out = Files.newOutputStream(extractPath)) {
+                        byte[] buffer = new byte[8192];
+                        int len;
+
+                        while ((len = zipIn.read(buffer)) > 0) {
+                            out.write(buffer, 0, len);
+                        }
+                    }
+
+                    zipIn.closeEntry();
+                }
             }
-            unzipProcess.destroy();
 
-            Path unzipDir = Path.of(String.format("%s/%s", rootPath, randomDirName));
             List<String> shpPaths = getFilePathByExtension(unzipDir, "shp");
             if (shpPaths.size() != 1) {
                 throw new ClientException("Архив содержит неверное количество shape файлов: " + shpPaths.size());
             }
 
             return shpPaths.get(0);
-        } catch (IOException | InterruptedException e) {
-            // Restore interrupted state...
-            Thread.currentThread().interrupt();
-
+        } catch (IOException e) {
             throw new ImportException(e.getMessage(), e);
         }
+    }
+
+    private String sanitizeFileName(String fileName, String fallbackBase) {
+        // Отделяем расширение
+        int dot = fileName.lastIndexOf('.');
+        String base = dot > 0 ? fileName.substring(0, dot) : fileName;
+        String ext = dot > 0 ? fileName.substring(dot) : "";
+
+        // Заменяем все "левые" символы на подчёркивания
+        String safeBase = base.replaceAll("[^\\w.-]", "");
+
+        // Если после очистки имя пустое — используем UUID
+        if (safeBase.isBlank()) {
+            safeBase = fallbackBase;
+        }
+
+        return safeBase + ext;
     }
 
     private ErrorReport importShapeWithSourceSrs(ProcessBuilder processBuilder,

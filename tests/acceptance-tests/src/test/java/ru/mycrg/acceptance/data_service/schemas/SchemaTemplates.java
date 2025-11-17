@@ -5,7 +5,9 @@ import ru.mycrg.data_service_contract.dto.SimplePropertyDto;
 
 import java.util.List;
 
+import static ru.mycrg.acceptance.BaseStepsDefinitions.PRIMARY_KEY;
 import static ru.mycrg.acceptance.loaders.SchemaLoader.loadSchemaFromResource;
+import static ru.mycrg.acceptance.utils.GeometryUtils.DEFAULT_GEOMETRY_COLUMN_NAME;
 import static ru.mycrg.data_service_contract.enums.GeometryType.MULTI_POLYGON;
 
 public class SchemaTemplates {
@@ -33,7 +35,7 @@ public class SchemaTemplates {
                 ruleId.setValueType("STRING");
 
                 SimplePropertyDto objectId = new SimplePropertyDto();
-                objectId.setName("objectid");
+                objectId.setName(PRIMARY_KEY);
                 objectId.setTitle("Идентификатор объекта");
                 objectId.setValueType("LONG");
 
@@ -143,7 +145,7 @@ public class SchemaTemplates {
                 incorrectField.setValueType("STRING");
 
                 SimplePropertyDto shape = new SimplePropertyDto();
-                shape.setName("shape");
+                shape.setName(DEFAULT_GEOMETRY_COLUMN_NAME);
                 shape.setTitle("Геометрия");
                 shape.setValueType("GEOMETRY");
 

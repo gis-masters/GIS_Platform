@@ -35,6 +35,7 @@ import static ru.mycrg.acceptance.data_service.FilesStepDefinitions.*;
 import static ru.mycrg.acceptance.data_service.datasets.DatasetsStepsDefinitions.currentDatasetIdentifier;
 import static ru.mycrg.acceptance.data_service.tables.TablesStepsDefinitions.anotherTableName;
 import static ru.mycrg.acceptance.data_service.tables.TablesStepsDefinitions.currentTableName;
+import static ru.mycrg.acceptance.utils.GeometryUtils.DEFAULT_GEOMETRY_COLUMN_NAME;
 
 public class TableFeaturesStepsDefinitions extends BaseStepsDefinitions {
 
@@ -97,7 +98,7 @@ public class TableFeaturesStepsDefinitions extends BaseStepsDefinitions {
         Map<String, Object> properties = new HashMap<>();
         properties.put("title", "some feature");
         properties.put("name", "testName");
-        properties.put("created_at", "2022-11-08 00:00:00");
+        properties.put(CREATED_AT, "2022-11-08 00:00:00");
 
         createFeature(new GeoJsonModel(properties));
     }
@@ -106,7 +107,7 @@ public class TableFeaturesStepsDefinitions extends BaseStepsDefinitions {
     public void createFeatureInCurrentTable(String attributesAsJson) throws JsonProcessingException {
         createFeature(
                 new GeoJsonModel(
-                        JsonMapper.parseJsonFromFeatureFile(attributesAsJson)));
+                        JsonMapper.getMapFromJsonString(attributesAsJson)));
     }
 
     @When("В текущей таблице существует {string} записи")
@@ -360,7 +361,7 @@ public class TableFeaturesStepsDefinitions extends BaseStepsDefinitions {
         ArrayList<HashMap<String, Object>> propertiesList = response.jsonPath().get("properties");
         HashMap<String, Object> properties = propertiesList.get(0);
 
-        Object createdAt = properties.get("created_at");
+        Object createdAt = properties.get(CREATED_AT);
         Assert.assertNotNull(createdAt);
         Object createdBy = properties.get("created_by");
         Assert.assertNotNull(createdBy);
@@ -380,7 +381,7 @@ public class TableFeaturesStepsDefinitions extends BaseStepsDefinitions {
                 .jsonPath()
                 .getList("properties").get(0);
 
-        assertNotNull(firstRecordProps.get("created_at"));
+        assertNotNull(firstRecordProps.get(CREATED_AT));
         assertNotNull(firstRecordProps.get("last_modified"));
     }
 
@@ -445,7 +446,7 @@ public class TableFeaturesStepsDefinitions extends BaseStepsDefinitions {
         String actualGeometry = null;
 
         for (Map<String, Object> properties: features) {
-            actualGeometry = (String) properties.get("shape");
+            actualGeometry = (String) properties.get(DEFAULT_GEOMETRY_COLUMN_NAME);
             if (GeometryUtils.isGeometriesEqual(geom, actualGeometry)) {
                 geometryMatches = true;
                 break;
@@ -464,33 +465,63 @@ public class TableFeaturesStepsDefinitions extends BaseStepsDefinitions {
     }
 
     @And("атрибуты объекта с полем {string} равным {int} такие")
-    public void checkRecordFields(String fieldName, int value, Map<String, List<Object>> expectedFields) {
+    public void checkRecordFields(String fieldName, int value, DataTable expectedFields) {
         List<Map<String, Object>> content = response.jsonPath().getList("content.properties");
 
-        Map<String, Object> matchingRecord = content
+        Optional<Map<String, Object>> matchingRecord = content
                 .stream()
                 .filter(properties -> properties.containsKey(fieldName) && properties.get(fieldName).equals(value))
-                .findFirst()
-                .orElse(null);
+                .findFirst();
 
-        String msg = String.format("Объект не найден в выборке по заданным параметрам [%s:%s]", fieldName, value);
-        assertNotNull(msg, matchingRecord);
+        assertTrue("Запись со значением " + value + " не найдена.", matchingRecord.isPresent());
 
-        boolean areEqual = true;
-        for (Map.Entry<String, List<Object>> entry: expectedFields.entrySet()) {
+        Map<String, String> expectedMap = expectedFields.asMap();
+
+        for (Map.Entry<String, String> entry: expectedMap.entrySet()) {
             String key = entry.getKey();
-            List<Object> list = entry.getValue();
-            Object valueFromList = list != null && !list.isEmpty() ? list.get(0) : null;
+            String expectedValue = entry.getValue();
+            if (expectedValue == null) {
+                assertNull("Ожидали пустое значение, но получили запоенное." + key, matchingRecord.get().get(key));
+                continue;
+            }
 
-            Object matchingValue = matchingRecord.get(key);
-            if (!Objects.equals(String.valueOf(valueFromList), String.valueOf(matchingValue))) {
-                System.out.printf("Mismatch for key '%s': expected '%s', but found '%s'%n",
-                                  key, valueFromList, matchingValue);
-                areEqual = false;
+            assertNotNull("В полученной фиче нет поля " + key, matchingRecord.get().get(key));
+
+            if (key.equals(DEFAULT_GEOMETRY_COLUMN_NAME)) {
+                assertTrue(GeometryUtils.isGeometriesEqual(expectedValue,
+                                                           String.valueOf(matchingRecord.get().get(key))));
+            } else {
+                assertEquals(expectedValue, String.valueOf(matchingRecord.get().get(key)));
             }
         }
+    }
 
-        assertTrue("The expected fields do not match the record fields", areEqual);
+    @And("атрибуты двух фичей подобны")
+    public void attributesTwoFeaturesAreSimilar() {
+        Map<String, Object> firstFeature = response.jsonPath().getMap("content[0].properties");
+        Map<String, Object> secondFeature = response.jsonPath().getMap("content[1].properties");
+
+        // Определяем меньшую и большую мапы
+        boolean firstIsSmaller = firstFeature.size() <= secondFeature.size();
+        Map<String, Object> smallerMap = firstIsSmaller ? firstFeature : secondFeature;
+        Map<String, Object> largerMap = firstIsSmaller ? secondFeature : firstFeature;
+
+        smallerMap.remove("field_boolean");
+        smallerMap.remove(CREATED_AT);
+        smallerMap.remove(PRIMARY_KEY);
+
+        smallerMap.forEach((key, value) -> {
+
+            assertTrue("Поле '" + key + "' одной из фичей, на найдено во второй", largerMap.containsKey(key));
+
+            if (key.equals(DEFAULT_GEOMETRY_COLUMN_NAME)) {
+                assertTrue(GeometryUtils.isGeometriesEqual(String.valueOf(value),
+                                                           String.valueOf(largerMap.get(key))));
+            } else {
+                assertEquals("Ожидалось: " + value + " Но получили: " + largerMap.get(key),
+                             largerMap.get(key), value);
+            }
+        });
     }
 
     @And("данные внутри каждой из таблиц соответствует ожиданиям")
@@ -506,7 +537,7 @@ public class TableFeaturesStepsDefinitions extends BaseStepsDefinitions {
 
             String expectedLayer = expectedValues.get("vectorTable");
             String expectedGlobalId = expectedValues.get("globalid");
-            String expectedShape = expectedValues.get("shape");
+            String expectedShape = expectedValues.get(DEFAULT_GEOMETRY_COLUMN_NAME);
 
             Map<String, Object> table = tablesList
                     .stream()
@@ -534,12 +565,20 @@ public class TableFeaturesStepsDefinitions extends BaseStepsDefinitions {
                          properties.get("globalid"));
 
             // Сравниваем геометрии с учетом разных форматов (EWKB vs WKT/GeoJSON)
-            String actualShape = String.valueOf(properties.get("shape"));
+            String actualShape = String.valueOf(properties.get(DEFAULT_GEOMETRY_COLUMN_NAME));
             boolean geometriesEqual = GeometryUtils.isGeometriesEqual(expectedShape, actualShape);
             assertTrue("Несоответствие значения shape для таблицы " + expectedLayer +
                                ". Expected: " + expectedShape +
                                ", Actual: " + actualShape, geometriesEqual);
         }
+    }
+
+    private void deleteFeature(Integer id) {
+        response = getBaseRequestWithCurrentCookie()
+                .when().
+                        delete(String.format("/%s", id));
+
+        response.then().statusCode(204);
     }
 
     private void createFeature(GeoJsonModel geoJsonModel) {
@@ -584,14 +623,6 @@ public class TableFeaturesStepsDefinitions extends BaseStepsDefinitions {
                         .contentType(JSON)
                 .when()
                         .get();
-    }
-
-    public void deleteFeature(Integer id) {
-        response = getBaseRequestWithCurrentCookie()
-                .when().
-                        delete(String.format("/%s", id));
-
-        response.then().statusCode(204);
     }
 
     private void deleteFeatures(List<Integer> ids) {

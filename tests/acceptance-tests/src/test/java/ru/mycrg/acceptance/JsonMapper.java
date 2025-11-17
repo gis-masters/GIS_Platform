@@ -38,17 +38,7 @@ public class JsonMapper {
         return jsonNode;
     }
 
-    /**
-     * Парсит JSON из feature файла с нормализацией переносов строк. Убирает переносы строк внутри строковых значений,
-     * которые были добавлены для форматирования.
-     *
-     * @param jsonString JSON строка из feature файла (может содержать переносы строк для читаемости)
-     *
-     * @return Map с распарсенными данными
-     *
-     * @throws JsonProcessingException если JSON некорректен
-     */
-    public static Map<String, Object> parseJsonFromFeatureFile(String jsonString) throws JsonProcessingException {
+    public static Map<String, Object> getMapFromJsonString(String jsonString) throws JsonProcessingException {
         return mapper.readValue(normalizeJsonString(jsonString),
                                 new TypeReference<>() {
                                 });

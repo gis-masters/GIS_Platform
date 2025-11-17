@@ -40,6 +40,9 @@ import static ru.mycrg.acceptance.auth_service.AuthorizationBase.AUTH_COOKIE_VAL
 
 public class BaseStepsDefinitions {
 
+    public static final String PRIMARY_KEY = "objectid";
+    public static final String CREATED_AT = "created_at";
+
     public static Random random = new Random();
     public static String testServerHost;
     public static Integer testServerPort;

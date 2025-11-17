@@ -10,6 +10,7 @@ import io.restassured.specification.RequestSpecification;
 import org.jetbrains.annotations.Nullable;
 import ru.mycrg.acceptance.auth_service.AuthorizationBase;
 import ru.mycrg.acceptance.auth_service.UserStepsDefinitions;
+import ru.mycrg.acceptance.data_service.TestFilesManager;
 import ru.mycrg.acceptance.data_service.datasets.DatasetsStepsDefinitions;
 import ru.mycrg.acceptance.data_service.dto.*;
 import ru.mycrg.acceptance.data_service.schemas.CurrentScenarioSchema;
@@ -471,16 +472,10 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
         createDocumentAndWriteAsCurrent(getRecordBodyForDlDefaultWithCorrectField(), currentLibrary.getTableName());
     }
 
-    @When("Пользователь делает запрос на создание записи передавая несуществующий в базе данных атрибут")
-    public void tryCreateRecordWithNotExistAttributesInDB() {
-        createDocumentAndWriteAsCurrent(getRecordBodyForDlDefaultWithIncorrectField(), DEFAULT_LIBRARY);
-    }
-
     @When("Существует запись в библиотеке на основе растрового файла {string}")
-    public void initLibraryRecord(String title) {
-        String filePath = "src/test/resources/ru/mycrg/acceptance/resources/zolotopolenskoe_sp.tif";
-        String body = "{\"title\": \"" + title + "\",\"content_type_id\": \"doc_v1\",\"native_crs\": \"EPSG:28406\"}";
-        File testTif = new File(filePath);
+    public void initLibraryRecord(String fileName) {
+        String body = "{\"title\": \"" + fileName + "\",\"content_type_id\": \"doc_v1\",\"native_crs\": \"EPSG:28406\"}";
+        File testTif = TestFilesManager.getFile(fileName);
 
         response = getBaseRequestWithCurrentCookie()
                 .given().
@@ -1107,16 +1102,6 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
                                           sortingDirection,
                                           filter,
                                           "size=1000"));
-    }
-
-    private String getRecordBodyForDlDefaultWithIncorrectField() {
-        return "{" +
-                "    \"title\": \"test\"," +
-                "    \"oktmo\": \"123123\"," +
-                "    \"native_crs\": \"EPSG:28406\"," +
-                "    \"content_type_id\": \"doc_v4\"," +
-                "    \"iwillnotexist\": \"test\"" +
-                "}";
     }
 
     private String getRecordBodyForDlDefaultWithCorrectField() {

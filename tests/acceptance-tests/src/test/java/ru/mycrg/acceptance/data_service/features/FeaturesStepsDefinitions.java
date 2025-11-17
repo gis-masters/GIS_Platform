@@ -122,21 +122,21 @@ public class FeaturesStepsDefinitions extends BaseStepsDefinitions {
         assertEquals("935.06275092", firstFeature.get("field_2"));
         assertEquals("1", firstFeature.get("field_3"));
         assertEquals("1", firstFeature.get("field_4"));
-        assertEquals(1, firstFeature.get("objectid"));
+        assertEquals(1, firstFeature.get(PRIMARY_KEY));
 
         Map<String, Object> secondFeature = featuresProps.get(1);
         assertEquals("530.84226136", secondFeature.get("field_1"));
         assertEquals("530.84226136", secondFeature.get("field_2"));
         assertEquals("2", secondFeature.get("field_3"));
         assertEquals("20", secondFeature.get("field_4"));
-        assertEquals(2, secondFeature.get("objectid"));
+        assertEquals(2, secondFeature.get(PRIMARY_KEY));
 
         Map<String, Object> thirdFeature = featuresProps.get(2);
         assertEquals("1195.79501826", thirdFeature.get("field_1"));
         assertEquals("1195.79501826", thirdFeature.get("field_2"));
         assertEquals("3", thirdFeature.get("field_3"));
         assertEquals("30", thirdFeature.get("field_4"));
-        assertEquals(3, thirdFeature.get("objectid"));
+        assertEquals(3, thirdFeature.get(PRIMARY_KEY));
     }
 
     @When("Пользователь спрашивает валидность объекта: {string} с EPSG: {string}")

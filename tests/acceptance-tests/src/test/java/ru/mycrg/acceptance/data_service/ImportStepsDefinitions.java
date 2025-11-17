@@ -91,7 +91,7 @@ public class ImportStepsDefinitions extends BaseStepsDefinitions {
 
     @When("Второй этап: создание задачи в текущем импорте {string}")
     public void sendArchive(String archiveName) {
-        File testArchive = new File("src/test/resources/ru/mycrg/acceptance/resources/" + archiveName);
+        File testArchive = TestFilesManager.getFile(archiveName);
 
         response = getBaseRequestWithCurrentCookie()
                 .given().

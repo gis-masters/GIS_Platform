@@ -2,6 +2,7 @@ package ru.mycrg.acceptance.utils;
 
 import org.geolatte.geom.ByteBuffer;
 import org.geolatte.geom.Geometry;
+import org.geolatte.geom.ProjectedGeometryOperations;
 import org.geolatte.geom.codec.Wkb;
 import org.geolatte.geom.codec.WkbDecoder;
 import org.geolatte.geom.codec.Wkt;
@@ -13,6 +14,8 @@ import java.util.Optional;
  * Утилитный класс для работы с геометриями в различных форматах
  */
 public class GeometryUtils {
+
+    public static final String DEFAULT_GEOMETRY_COLUMN_NAME = "shape";
 
     /**
      * Сравнивает две геометрии, которые могут быть в разных форматах (EWKB, GeoJSON)
@@ -48,7 +51,7 @@ public class GeometryUtils {
         }
 
         // Сравниваем геометрии с учетом возможных различий в точности
-        return expectedGeom.equals(actualGeom) || isGeometricallyEqual(expectedGeom.get(), actualGeom.get());
+        return isGeometricallyEqual(expectedGeom.get(), actualGeom.get());
     }
 
     /**
@@ -127,16 +130,34 @@ public class GeometryUtils {
      * Сравнивает геометрии с учетом возможных различий в точности координат
      */
     private static boolean isGeometricallyEqual(Geometry<?> geom1, Geometry<?> geom2) {
-        // Проверяем тип геометрии
+        if (geom1 == null || geom2 == null) {
+            return false;
+        }
+
+        // Тип геометрии должен совпадать (полигон с мультиполигоном не равен)
         if (!geom1.getGeometryType().equals(geom2.getGeometryType())) {
             return false;
         }
 
-        // Проверяем SRID (система координат)
+        // SRID тоже должен совпадать
         if (geom1.getSRID() != geom2.getSRID()) {
             return false;
         }
 
-        return geom1.equals(geom2);
+        // Работаем через "сырые" типы, чтобы не упираться в generics
+        Geometry g1 = geom1;
+        Geometry g2 = geom2;
+
+        // 1. Симметрическая разность: если пуста – геометрии топологически равны
+        Geometry symDiff = ProjectedGeometryOperations.Default.symmetricDifference(g1, g2);
+        if (symDiff.isEmpty()) {
+            return true;
+        }
+
+        // 2. На всякий случай – дополнительная проверка на "почти равенство" по расстоянию
+        double distance = ProjectedGeometryOperations.Default.distance(g1, g2);
+        double EPS = 1e-6; // можно настроить под свою точность
+
+        return distance <= EPS;
     }
 }

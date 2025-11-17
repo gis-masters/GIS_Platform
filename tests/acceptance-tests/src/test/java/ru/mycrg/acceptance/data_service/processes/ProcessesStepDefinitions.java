@@ -5,6 +5,7 @@ import io.cucumber.java.en.When;
 import io.restassured.specification.RequestSpecification;
 import ru.mycrg.acceptance.BaseStepsDefinitions;
 import ru.mycrg.acceptance.auth_service.AuthorizationBase;
+import ru.mycrg.acceptance.data_service.TestFilesManager;
 import ru.mycrg.acceptance.data_service.dto.FileDescriptionModel;
 import ru.mycrg.common_contracts.generated.gpkg.GkpgExportDetailsModel;
 import ru.mycrg.data_service_contract.dto.ExportRequestModel;
@@ -22,8 +23,7 @@ import static java.lang.Thread.sleep;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static ru.mycrg.acceptance.auth_service.OrganizationStepsDefinitions.MAX_RETRY_ATTEMPT;
-import static ru.mycrg.acceptance.data_service.FilesStepDefinitions.currentFileId;
-import static ru.mycrg.acceptance.data_service.FilesStepDefinitions.currentFiles;
+import static ru.mycrg.acceptance.data_service.FilesStepDefinitions.*;
 import static ru.mycrg.acceptance.data_service.datasets.DatasetsStepsDefinitions.currentDatasetIdentifier;
 import static ru.mycrg.acceptance.data_service.tables.TablesStepsDefinitions.anotherTableName;
 import static ru.mycrg.acceptance.data_service.tables.TablesStepsDefinitions.currentTableName;
@@ -152,6 +152,24 @@ public class ProcessesStepDefinitions extends BaseStepsDefinitions {
         shapePlacementModel.setFileType("SHP");
 
         placeGeometryFromShape(shapePlacementModel, filename);
+    }
+
+    @When("Владелец импортирует скаченный файл в существующий слой")
+    public void tryImportContextFileShapeAsProcessAsOwner() {
+        authorizationBase.loginAsOwner();
+
+        GeometryShapePlacementModel shapePlacementModel = new GeometryShapePlacementModel();
+        shapePlacementModel.setDatasetId(currentDatasetIdentifier);
+        shapePlacementModel.setTableName(currentTableName);
+        shapePlacementModel.setFileType("SHP");
+
+        ProcessableModel processableModel = new ProcessableModel();
+        processableModel.setType("IMPORT_GEOMETRY");
+        processableModel.setPayload(shapePlacementModel);
+
+        initProcessWithFile(processableModel, contextFileName);
+
+        currentProcessId = extractId((String) response.jsonPath().get("_links.self.href"));
     }
 
     @When("администратор импортирует геометрию из shape файла, имеющую \"EPSG:7829\" в существующий слой")
@@ -402,7 +420,7 @@ public class ProcessesStepDefinitions extends BaseStepsDefinitions {
     }
 
     private void initProcessWithFile(ProcessableModel processableModel, String fileName) {
-        File file = new File("src/test/resources/ru/mycrg/acceptance/resources/" + fileName);
+        File file = TestFilesManager.getFile(fileName);
         if (!file.exists()) {
             throw new IllegalStateException("Not exist test resource: " + fileName);
         }
