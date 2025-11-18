@@ -53,6 +53,20 @@ export class ProgressItemComponent implements OnDestroy {
 
         break;
       }
+      case ProcessStatus.DONE_WITH_WARNINGS: {
+        if (
+          this.event.payload.type === ProcessType.IMPORT_GML ||
+          this.event.payload.type === ProcessType.IMPORT_DXF ||
+          this.event.payload.type === ProcessType.IMPORT_TAB ||
+          this.event.payload.type === ProcessType.IMPORT_MID ||
+          this.event.payload.type === ProcessType.IMPORT_SHP ||
+          this.event.payload.type === ProcessType.IMPORT_TIF
+        ) {
+          return this.event.payload.payload.description || 'Завершено с предупреждениями';
+        }
+
+        return this.event.payload.payload.description || 'Завершено с предупреждениями';
+      }
       case ProcessStatus.ERROR: {
         return 'Процесс завершился ошибкой';
       }
@@ -92,6 +106,7 @@ export class ProgressItemComponent implements OnDestroy {
   isShowActionBlock(): boolean {
     return (
       this.event?.payload.payload.status === ProcessStatus.DONE ||
+      this.event?.payload.payload.status === ProcessStatus.DONE_WITH_WARNINGS ||
       this.event?.payload.payload.status === ProcessStatus.ERROR
     );
   }

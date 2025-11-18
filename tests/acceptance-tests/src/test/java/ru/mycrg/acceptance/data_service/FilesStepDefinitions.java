@@ -21,7 +21,6 @@ import static java.lang.Boolean.TRUE;
 import static java.lang.Thread.sleep;
 import static org.apache.http.HttpStatus.SC_NOT_FOUND;
 import static org.apache.http.HttpStatus.SC_OK;
-import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.*;
 import static ru.mycrg.acceptance.auth_service.OrganizationStepsDefinitions.orgId;
 import static ru.mycrg.acceptance.data_service.TestFilesManager.getFileDescriptionByTitleOrThrow;
@@ -325,19 +324,6 @@ public class FilesStepDefinitions extends BaseStepsDefinitions {
         assertNull(resourceType);
     }
 
-    @Then("файлы принадлежащие этой записи также удалены")
-    public void checkThenFileAreDeleted() throws InterruptedException {
-        sleep(800);
-
-        getBaseRequestWithCurrentCookie()
-                .when().
-                        get("/" + secondFileId)
-                .then().
-                        statusCode(SC_NOT_FOUND).
-                        body("message",
-                             equalTo("Ресурс не найден по идентификатору: " + secondFileId));
-    }
-
     @Then("файлы принадлежащие этой записи НЕ удаляются")
     public void checkThenFileAreNotDeleted() throws InterruptedException {
         sleep(800);
@@ -449,14 +435,6 @@ public class FilesStepDefinitions extends BaseStepsDefinitions {
     @Given("файл подписан")
     public void checkFileSignature() {
         assertTrue(jsonPath.getBoolean("signed"));
-    }
-
-    @Given("Существует GML файл")
-    public void createGmlFile() {
-        File testGml = TestFilesManager.getFile("correct.gml");
-
-        List<UUID> ids = createFiles(new File[]{testGml});
-        currentFileId = ids.get(0);
     }
 
     @Then("загруженный файл {string} запрашивается пользователем {string}")

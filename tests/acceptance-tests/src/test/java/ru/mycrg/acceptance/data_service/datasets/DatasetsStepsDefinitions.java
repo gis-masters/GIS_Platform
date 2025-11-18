@@ -54,6 +54,13 @@ public class DatasetsStepsDefinitions extends BaseStepsDefinitions {
         assertEquals(Integer.valueOf(1), response.jsonPath().get("page.totalElements"));
     }
 
+    @And("в результате публикации был создан набор данных")
+    public void extractDatasetIdentifier() {
+        currentDatasetIdentifier = response.jsonPath().getString("details.datasetIdentifier");
+
+        assertNotNull(currentDatasetIdentifier);
+    }
+
     @And("количество таблиц в созданном наборе данных равно: {int}")
     public void checkDatasetTablesCount(int count) {
         String parsResponse = response.jsonPath().getString("details.datasetIdentifier");

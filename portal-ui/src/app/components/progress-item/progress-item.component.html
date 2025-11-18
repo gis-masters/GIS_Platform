@@ -6,6 +6,9 @@
     @if (event?.payload.payload.status === 'DONE') {
       <mat-icon class="crg-progress-done success">done_all</mat-icon>
     }
+    @if (event?.payload.payload.status === 'DONE_WITH_WARNINGS') {
+      <mat-icon class="crg-progress-done warning">warning</mat-icon>
+    }
     @if (event?.payload.payload.status === 'ERROR') {
       <mat-icon class="crg-progress-done error">error_outline</mat-icon>
     }

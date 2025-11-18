@@ -16,6 +16,8 @@ public class SchemaTemplates {
         switch (schemaTitle) {
             case "tasks_schema_v1":
                 return prepareTaskSchema();
+            case "Схема recreation_point":
+                return prepareRecreationPointSchema();
             case "Точечный слой с атрибутами":
                 return testPointAttributes();
             case "Схема для проверки типов STRING":
@@ -201,6 +203,10 @@ public class SchemaTemplates {
 
     private static SchemaDto prepareTaskSchema() {
         return loadSchemaFromResource("tasks-schema.json");
+    }
+
+    private static SchemaDto prepareRecreationPointSchema() {
+        return loadSchemaFromResource("recreation_point.json");
     }
 
     private static SchemaDto prepareFunctionalZoneWithTerrRf_SubRfFormulaWithRequiredField() {

@@ -54,6 +54,7 @@ public class ImportHandler implements IEventHandler {
                 processService.error(event.getDbName(), process);
                 break;
             case DONE:
+            case DONE_WITH_WARNINGS:
                 processService.complete(event.getDbName(), process);
                 break;
             default:

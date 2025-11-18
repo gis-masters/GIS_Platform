@@ -33,4 +33,10 @@ public class SimpleFeatureData {
     public void setGeometryTypes(String... geometryTypes) {
         this.geometryTypes.addAll(Arrays.asList(geometryTypes));
     }
+
+    @Override
+    public String toString() {
+        return String.format("SimpleFeatureData: {%s} {%s} {%s}",
+                             schemaName, epsgCode, geometryTypes);
+    }
 }

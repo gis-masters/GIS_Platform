@@ -149,6 +149,8 @@ public class TableFeaturesStepsDefinitions extends BaseStepsDefinitions {
         properties.put("one_file", fileDescriptions);
 
         updateFeature(new GeoJsonModel(properties));
+
+        response.then().statusCode(204);
     }
 
     @When("Пользователь удаляет запись слоя")
@@ -214,6 +216,8 @@ public class TableFeaturesStepsDefinitions extends BaseStepsDefinitions {
         properties.put("some_files", new ArrayList<>());
 
         updateFeature(new GeoJsonModel(properties));
+
+        response.then().statusCode(204);
     }
 
     @When("Пользователь делает запрос на обновление существующей записи")
@@ -438,6 +442,20 @@ public class TableFeaturesStepsDefinitions extends BaseStepsDefinitions {
         getAllFeatures();
     }
 
+    @Then("в результате публикации была создана таблица")
+    public void extractTableIdentifier() {
+        currentTableName = response.jsonPath().getString("details.importLayerReports[0].tableIdentifier");
+
+        assertNotNull(currentTableName);
+    }
+
+    @Then("в результате публикации была создана запись с id: {int}")
+    public void fetchRecordByIfFromPublishedData(Integer recordId) {
+        getFeature(recordId);
+
+        response.then().statusCode(200);
+    }
+
     @And("геометрия в объекте равна {string}")
     public void checkObjectGeom(String geom) {
         List<Map<String, Object>> features = response.jsonPath().getList("content.properties");
@@ -596,17 +614,6 @@ public class TableFeaturesStepsDefinitions extends BaseStepsDefinitions {
         currentFeatureId = extractEntityIdFromResponse(response);
     }
 
-    private void updateFeature(GeoJsonModel geoJsonModel) {
-        response = getBaseRequestWithCurrentCookie()
-                .given().
-                        contentType(PATCH_CONTENT_TYPE)
-                .when().
-                        body(gson.toJson(geoJsonModel)).
-                        patch("/" + currentFeatureId);
-
-        response.then().statusCode(204);
-    }
-
     // Нет GET пока что
 
     private void getFeature(Integer id) {
@@ -635,6 +642,15 @@ public class TableFeaturesStepsDefinitions extends BaseStepsDefinitions {
                 .basePath(path)
                 .when().
                         delete(String.format("/%s", join(",", iterable)));
+    }
+
+    private void updateFeature(GeoJsonModel geoJsonModel) {
+        response = getBaseRequestWithCurrentCookie()
+                .given().
+                        contentType(PATCH_CONTENT_TYPE)
+                .when().
+                        body(gson.toJson(geoJsonModel)).
+                        patch("/" + currentFeatureId);
     }
 
     private void updateFeatures(Map<String, Object> properties, List<Integer> ids) {

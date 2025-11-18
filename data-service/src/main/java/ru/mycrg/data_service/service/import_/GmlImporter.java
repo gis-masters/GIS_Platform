@@ -12,7 +12,6 @@ import ru.mycrg.common_utils.CrgScriptEngine;
 import ru.mycrg.data_service.dao.GeometryDao;
 import ru.mycrg.data_service.dao.RecordsDao;
 import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
-import ru.mycrg.data_service_contract.dto.ExportResourceModel;
 import ru.mycrg.data_service.dto.TableCreateDto;
 import ru.mycrg.data_service.dto.ValidationRequestDto;
 import ru.mycrg.data_service.exceptions.BadRequestException;
@@ -28,9 +27,7 @@ import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service.service.schemas.ISchemaTemplateService;
 import ru.mycrg.data_service.service.storage.FileStorageService;
 import ru.mycrg.data_service.service.validation.ValidationService;
-import ru.mycrg.data_service_contract.dto.ImportLayerReport;
-import ru.mycrg.data_service_contract.dto.ImportReport;
-import ru.mycrg.data_service_contract.dto.SchemaDto;
+import ru.mycrg.data_service_contract.dto.*;
 import ru.mycrg.data_service_contract.enums.ValueType;
 import ru.mycrg.mediator.Mediator;
 
@@ -39,6 +36,7 @@ import java.util.stream.Collectors;
 
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
+import static ru.mycrg.common_utils.CrgGlobalProperties.join;
 import static ru.mycrg.data_service.config.CrgCommonConfig.DEFAULT_EPSG_METRE;
 import static ru.mycrg.data_service.dao.config.DaoProperties.DEFAULT_GEOMETRY_COLUMN_NAME;
 import static ru.mycrg.data_service.service.schemas.SchemaUtil.getPropertiesWithCalculatedFunctions;
@@ -93,12 +91,13 @@ public class GmlImporter {
 
         try {
             ImportReport importResult = new ImportReport();
-
             importResult.setDatasetIdentifier(datasetIdentifier);
 
             String bboxCrs = gmlParser.getBboxCrs(file);
             List<SimpleFeatureData> features = gmlParser.parseFeatures(file);
             List<ImportLayerReport> importLayerReports = new ArrayList<>();
+
+            log.debug("Получили из GML фичи: {}", features);
 
             getExistingSchemas(features, importLayerReports).forEach(schema -> {
                 Optional<String> oLayerEpsg = getEpsgForLayer(features, schema);
@@ -123,11 +122,17 @@ public class GmlImporter {
                 }
 
                 String epsg = nonNull(epsgFromLayer) && !epsgFromLayer.isEmpty() ? epsgFromLayer : bboxCrs;
-                ImportLayerReport importLayerReport = importLayer(featureData, epsg, schema, datasetIdentifier);
-                String styleName = schema.getStyleName();
-                importLayerReport.setStyleName((styleName != null) ? styleName : schema.getName());
 
-                importLayerReports.add(importLayerReport);
+                if (!featureData.getObjects().isEmpty()) {
+                    log.debug("Для [{}] найдено {} записей", featureData.getName(), featureData.getObjects().size());
+
+                    ImportLayerReport importLayerReport = createTable(featureData, epsg, schema, datasetIdentifier);
+                    String styleName = schema.getStyleName();
+                    importLayerReport.setStyleName((styleName != null) ? styleName : schema.getName());
+                    importLayerReports.add(importLayerReport);
+                } else {
+                    log.debug("Для [{}] не найдено записей", featureData.getName());
+                }
             });
 
             importResult.setImportLayerReports(importLayerReports);
@@ -176,15 +181,19 @@ public class GmlImporter {
                        .map(SimpleFeatureData::getEpsgCode);
     }
 
-    private ImportLayerReport importLayer(FeatureData featureData,
+    private ImportLayerReport createTable(FeatureData featureData,
                                           String epsgCode,
                                           SchemaDto schema,
                                           String datasetIdentifier) {
+        String tableName = join(schema.getName(), RandomString.make(6).toLowerCase());
+
         ImportLayerReport importLayerReport = new ImportLayerReport(schema.getName(), epsgCode);
+        importLayerReport.setTableIdentifier(tableName);
+        importLayerReport.setTableTitle(schema.getTitle());
 
         try {
             TableCreateDto table = new TableCreateDto(schema.getTitle());
-            table.setName(schema.getName() + "_" + RandomString.make(6).toLowerCase());
+            table.setName(tableName);
             table.setSchemaId(schema.getName());
             table.setCrs(epsgCode);
 
@@ -197,31 +206,25 @@ public class GmlImporter {
                 calculatePropertiesByFormula(featureData, key, formula);
             });
 
-            if (!featureData.getObjects().isEmpty()) {
-                ResourceQualifier tableQualifier = new ResourceQualifier(datasetIdentifier, table.getName());
+            ResourceQualifier tableQualifier = new ResourceQualifier(datasetIdentifier, tableName);
+            log.debug("Создаем таблицу: [{}] в [{}]", tableName, datasetIdentifier);
 
-                mediator.execute(new CreateTableRequest(table, tableQualifier));
+            mediator.execute(new CreateTableRequest(table, tableQualifier));
 
-                int countOfAddedRecords = addRecordsToTable(tableQualifier, featureData, schema);
+            log.debug("Добавляем данные в таблицу: [{}]", tableName);
+            int countOfAddedRecords = addRecordsToTable(tableQualifier, featureData, schema);
 
-                geometryDao.makeValid(tableQualifier.getSchema(), tableQualifier.getTable());
+            log.debug("Чиним геометрию в таблице: [{}]", tableName);
+            geometryDao.makeValid(tableQualifier.getSchema(), tableQualifier.getTable());
 
-                if (countOfAddedRecords > 0) {
-                    runValidation(datasetIdentifier, table.getName());
-                }
-
-                importLayerReport.setSuccess(true);
-                importLayerReport.setTableIdentifier(table.getName());
-                importLayerReport.setSuccessCount(countOfAddedRecords);
-                importLayerReport.setTableTitle(schema.getTitle());
-            } else {
-                importLayerReport.setSuccess(true);
-                importLayerReport.setTableIdentifier(table.getName());
-                importLayerReport.setSuccessCount(0);
-                importLayerReport.setTableTitle(schema.getTitle());
+            if (countOfAddedRecords > 0) {
+                runValidation(datasetIdentifier, tableName);
             }
+
+            importLayerReport.setSuccess(true);
+            importLayerReport.setSuccessCount(countOfAddedRecords);
         } catch (CrgDaoException e) {
-            String msg = "Ошибка при добавлении записи в таблицу " + schema.getTitle() + ". " + e.getMessage();
+            String msg = "Ошибка при добавлении записи в таблицу: '" + schema.getTitle() + "' => " + e.getMessage();
             log.error(msg, e.getCause());
 
             importLayerReport.setSuccess(false);
@@ -244,14 +247,20 @@ public class GmlImporter {
         return importLayerReport;
     }
 
-    private Set<SchemaDto> getExistingSchemas(List<SimpleFeatureData> featureDataList,
+    private Set<SchemaDto> getExistingSchemas(List<SimpleFeatureData> features,
                                               List<ImportLayerReport> importLayerReports) {
         Set<SchemaDto> existedSchemas = new HashSet<>();
 
-        for (SimpleFeatureData featureData: featureDataList) {
+        for (SimpleFeatureData featureData: features) {
             Set<String> geometryTypes = featureData.getGeometryTypes();
             String schemaName = featureData.getSchemaName();
             Optional<SchemaDto> schemaByName = schemaService.getSchemaByName(schemaName.toLowerCase());
+
+            List<SchemaDto> schemas = findSchemasByPostfixAndName(geometryTypes, schemaName);
+            schemas.forEach(schemaDto -> {
+                log.debug("Нашли схему '{}' по базовому названию '{}' для '{}'",
+                          schemaDto.getName(), schemaName, featureData);
+            });
 
             if (schemaByName.isPresent()) {
                 String geoTypeOfSchema = schemaByName.get().getGeometryType().getType();
@@ -269,10 +278,10 @@ public class GmlImporter {
                     existedSchemas.add(schemaByName.get());
                     geometryTypes.remove(appropriateGeoTypeForSchema.get());
                 }
-                existedSchemas.addAll(findSchemasByPostfixAndName(geometryTypes, schemaName));
+
+                existedSchemas.addAll(schemas);
             } else {
-                List<SchemaDto> tableByPostfixAndName = findSchemasByPostfixAndName(geometryTypes, schemaName);
-                if (tableByPostfixAndName.isEmpty()) {
+                if (schemas.isEmpty()) {
                     log.warn("Не найдена схемы для таблицы: '{}'", schemaName);
 
                     String msg = String.format("Название таблицы: '%s' не соответствует предусмотренному " +
@@ -280,7 +289,7 @@ public class GmlImporter {
 
                     importLayerReports.add(new ImportLayerReport(schemaName, false, msg));
                 } else {
-                    existedSchemas.addAll(tableByPostfixAndName);
+                    existedSchemas.addAll(schemas);
                 }
             }
         }
@@ -307,11 +316,52 @@ public class GmlImporter {
                                   SchemaDto schema) throws CrgDaoException {
         List<FeatureObject> objects = propertiesBySchema.getObjects();
 
+        Set<String> trimmedFields = trimStringFieldsByMaxLength(objects, schema);
+        if (!trimmedFields.isEmpty()) {
+            log.warn("При вставке в таблицу '{}', из-за превышения допустимой длинны, " +
+                             "были обрезаны данные следующих полей: {}",
+                     tableQualifier.getTableQualifier(), trimmedFields);
+        }
+
         Map<String, Object>[] objectList = preparePropsToDB(objects);
 
         recordsDao.addRecordsAsBatch(tableQualifier, objectList, schema);
 
         return objectList.length;
+    }
+
+    private Set<String> trimStringFieldsByMaxLength(List<FeatureObject> objects, SchemaDto schema) {
+        Map<String, Integer> maxLengthByPropertyName = new HashMap<>();
+
+        // Создаем карту максимальных длин для строковых свойств схемы
+        for (SimplePropertyDto property: schema.getProperties()) {
+            if (property.getValueTypeAsEnum() == STRING && property.getMaxLength() != null) {
+                maxLengthByPropertyName.put(property.getName().toLowerCase(), property.getMaxLength());
+            }
+        }
+
+        if (maxLengthByPropertyName.isEmpty()) {
+            new ArrayList<>();
+        }
+
+        Set<String> result = new HashSet<>();
+        for (FeatureObject featureObject: objects) {
+            for (FeatureProperty featureProperty: featureObject.getProperties()) {
+                String propertyName = featureProperty.getName().toLowerCase();
+                Integer maxLength = maxLengthByPropertyName.get(propertyName);
+
+                if (maxLength != null && featureProperty.getType() == STRING && featureProperty.getValue() != null) {
+                    String value = featureProperty.getValue().toString();
+                    if (value.length() > maxLength) {
+                        String trimmedValue = value.substring(0, maxLength);
+                        featureProperty.setValue(trimmedValue);
+                        result.add(propertyName);
+                    }
+                }
+            }
+        }
+
+        return result;
     }
 
     private Map<String, Object>[] preparePropsToDB(List<FeatureObject> objects) {

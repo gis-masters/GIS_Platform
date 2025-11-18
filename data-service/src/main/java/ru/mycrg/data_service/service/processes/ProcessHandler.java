@@ -1,5 +1,6 @@
 package ru.mycrg.data_service.service.processes;
 
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.concurrent.DelegatingSecurityContextRunnable;
@@ -11,7 +12,10 @@ import ru.mycrg.data_service.dto.ProcessDto;
 import ru.mycrg.data_service.entity.Process;
 import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.exceptions.DataServiceException;
+import ru.mycrg.data_service_contract.dto.ImportLayerReport;
+import ru.mycrg.data_service_contract.dto.ImportReport;
 import ru.mycrg.data_service_contract.dto.ProcessModel;
+import ru.mycrg.data_service_contract.enums.ProcessStatus;
 import ru.mycrg.data_service_contract.enums.ProcessType;
 
 import java.util.List;
@@ -21,6 +25,8 @@ import java.util.function.Function;
 import static java.util.stream.Collectors.toMap;
 import static ru.mycrg.common_utils.CrgGlobalProperties.getDefaultDatabaseName;
 import static ru.mycrg.data_service.util.JsonConverter.toJsonNode;
+import static ru.mycrg.data_service_contract.enums.ProcessStatus.DONE;
+import static ru.mycrg.data_service_contract.enums.ProcessStatus.DONE_WITH_WARNINGS;
 
 @Component
 public class ProcessHandler {
@@ -70,13 +76,12 @@ public class ProcessHandler {
                 process.setDetails(toJsonNode(executor.getReport()));
                 processService.error(databaseName, process.getId(), process.getDetails());
 
-
                 return process;
             }
 
             SecurityContext securityContext = SecurityContextHolder.getContext();
             DelegatingSecurityContextRunnable wrappedRunnable = new DelegatingSecurityContextRunnable(() -> {
-                execute(executor, databaseName, process);
+                execute(executor, databaseName, process.getId());
             }, securityContext);
             new Thread(wrappedRunnable).start();
 
@@ -98,22 +103,56 @@ public class ProcessHandler {
         }
     }
 
-    private void execute(IExecutor<?> executor, String databaseName, Process process) {
+    private void execute(IExecutor<?> executor, String databaseName, Long processId) {
+        if (processId == null) {
+            return;
+        }
+
         try {
             Object result = executor.execute();
 
-            if (executor.notDetached()) {
-                log.debug("Процесс успешно завершен");
+            if (!executor.notDetached()) {
+                log.debug("Процесс detached завершен");
 
-                processService.complete(databaseName, process.getId(), toJsonNode(result));
+                return;
             }
+
+            log.debug("Процесс notDetached завершен");
+            processService.updateProcess(processId,
+                                         defineFinalStatus(processId, result),
+                                         databaseName,
+                                         toJsonNode(result));
         } catch (Exception e) {
             String msg = "Выполнение процесса потерпело неудачу. Причина: " + e.getMessage();
 
             log.error(msg, e.getCause(), e);
             executor.cleanup();
 
-            processService.error(databaseName, process.getId(), toJsonNode(executor.getReport()));
+            processService.error(databaseName, processId, toJsonNode(executor.getReport()));
         }
+    }
+
+    @NotNull
+    private ProcessStatus defineFinalStatus(Long processId, Object result) {
+        if (result instanceof ImportReport) {
+            ImportReport importReport = (ImportReport) result;
+            List<ImportLayerReport> reports = importReport.getImportLayerReports();
+            if (reports == null || reports.isEmpty()) {
+                log.warn("Отчет процесса '{}' не имеет данных о слоях", processId);
+
+                return DONE;
+            }
+
+            long failedLayersCount = reports.stream().filter(r -> !r.isSuccess()).count();
+            if (failedLayersCount > 0) {
+                log.debug("Процесс '{}' завершен с предупреждениями", processId);
+
+                return DONE_WITH_WARNINGS;
+            }
+        } else {
+            log.warn("Процесс '{}' не сформировал ожидаемый ImportReport", processId);
+        }
+
+        return DONE;
     }
 }

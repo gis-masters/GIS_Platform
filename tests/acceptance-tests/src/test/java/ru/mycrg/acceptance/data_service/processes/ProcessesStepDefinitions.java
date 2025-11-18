@@ -45,7 +45,7 @@ public class ProcessesStepDefinitions extends BaseStepsDefinitions {
         return super.getBaseRequestWithCurrentCookie().basePath("/api/data/processes");
     }
 
-    @When("пользователь публикует GML")
+    @When("пользователь публикует текущий GML")
     public void tryPlacementGmlAsProcess() {
         GmlPlacementModel gmlPlacementModel = new GmlPlacementModel();
         gmlPlacementModel.setFileId(currentFileId);
@@ -189,6 +189,18 @@ public class ProcessesStepDefinitions extends BaseStepsDefinitions {
         waitUntilProcessCompleteWithStatus(currentProcessId, "DONE");
     }
 
+    @When("процесс завершается с ошибками")
+    public void waitUntilCurrentProcessIsDoneWithWarnings() {
+        waitUntilProcessCompleteWithStatus(currentProcessId, "DONE_WITH_WARNINGS");
+    }
+
+    @When("процесс завершается с ошибкой")
+    public void waitUntilCurrentProcessIsCompleteWithError() {
+        waitUntilProcessCompleteWithStatus(currentProcessId, "ERROR");
+    }
+
+    // TODO: Нахрена его еще раз опрашивать если мы и так только что его бомбили запросами и ждали изменения статуса?
+    //  Да еще и ждем секунду?
     @When("пользователь опрашивает процесс")
     public void gineMeThisProcess() throws InterruptedException {
         sleep(1000);
@@ -211,11 +223,6 @@ public class ProcessesStepDefinitions extends BaseStepsDefinitions {
             assertTrue("Response does not contain: " + pattern,
                        responseText.contains(pattern));
         }
-    }
-
-    @When("процесс завершается с ошибкой")
-    public void waitUntilCurrentProcessIsCompleteWithError() {
-        waitUntilProcessCompleteWithStatus(currentProcessId, "ERROR");
     }
 
     @When("Текущий пользователь экспортирует текущий проект в GeoPackage")

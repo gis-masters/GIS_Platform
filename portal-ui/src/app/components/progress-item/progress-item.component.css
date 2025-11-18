@@ -40,6 +40,10 @@
   color: seagreen;
 }
 
+.warning {
+  color: orange;
+}
+
 .info {
   color: var(--blue);
 }

@@ -113,19 +113,38 @@ export class MappingPageComponent implements OnInit, OnDestroy {
           .pipe(takeUntil(this.unsubscribe$))
           .subscribe(async () => {
             const response: Process = await getProcess(crgProcess.id);
-            if (response.status === ProcessStatus.DONE) {
-              this.unsubscribe$.next();
-              projectsService.clearCurrent();
+            switch (response.status) {
+              case ProcessStatus.DONE: {
+                this.unsubscribe$.next();
+                projectsService.clearCurrent();
 
-              const { projectId } = this.route.snapshot.params as Record<string, string>;
-              void this.router.navigateByUrl(`/projects/${projectId}/map`);
+                const { projectId } = this.route.snapshot.params as Record<string, string>;
+                void this.router.navigateByUrl(`/projects/${projectId}/map`);
 
-              Toast.success('Импортировано успешно');
-            } else if (response.status === ProcessStatus.ERROR) {
-              this.isWorkImportInited = false;
+                Toast.success('Импортировано успешно');
 
-              this.unsubscribe$.next();
-              projectsService.clearCurrent();
+                break;
+              }
+              case ProcessStatus.DONE_WITH_WARNINGS: {
+                this.unsubscribe$.next();
+                projectsService.clearCurrent();
+
+                const { projectId } = this.route.snapshot.params as Record<string, string>;
+                void this.router.navigateByUrl(`/projects/${projectId}/map`);
+
+                Toast.warn('Импорт завершен с предупреждениями. Проверьте отчет.');
+
+                break;
+              }
+              case ProcessStatus.ERROR: {
+                this.isWorkImportInited = false;
+
+                this.unsubscribe$.next();
+                projectsService.clearCurrent();
+
+                break;
+              }
+              // No default
             }
           });
       },

@@ -34,7 +34,7 @@ export async function awaitProcess(id: number, i = 0): Promise<void | Process> {
 
   const res = await processesClient.getProcess(id);
 
-  if (res.status === ProcessStatus.DONE) {
+  if (res.status === ProcessStatus.DONE || res.status === ProcessStatus.DONE_WITH_WARNINGS) {
     return res;
   }
 

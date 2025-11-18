@@ -259,18 +259,10 @@ public class LibraryStepsDefinitions extends LibraryBaseRecords {
                         patch(String.format("/%s/records/%d", DEFAULT_LIBRARY, currentDocumentId));
     }
 
-    @When("к текущему документу прикреплён GML файл")
+    @When("к текущему документу прикреплён текущий файл")
     public void addCurrentFileToCurrentDocument() {
         currentDocument = new DefaultDocumentModel("Тестовое имя документа" + generateString("STRING_4"));
         currentDocument.addFile(new FileDescriptionModel(currentFileId, 314L, "Some GML file"));
-
-        updateCurrentDocument(gson.toJson(currentDocument));
-    }
-
-    @When("к текущему документу прикреплён GML файл: {string}")
-    public void addSomeFileToCurrentDocument(String fileName) {
-        currentDocument = new DefaultDocumentModel(fileName + generateString("STRING_4"));
-        currentDocument.addFile(new FileDescriptionModel(currentFileId, 314L, fileName));
 
         updateCurrentDocument(gson.toJson(currentDocument));
     }

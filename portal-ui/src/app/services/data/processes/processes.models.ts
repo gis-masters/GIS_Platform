@@ -67,6 +67,7 @@ export enum ProcessStatus {
   TASK_ERROR = 'TASK_ERROR', // Часть процесса завершилась неудачно
 
   DONE = 'DONE',
+  DONE_WITH_WARNINGS = 'DONE_WITH_WARNINGS', // Процесс завершен, но есть предупреждения/ошибки в части операций
   ERROR = 'ERROR'
 }
 

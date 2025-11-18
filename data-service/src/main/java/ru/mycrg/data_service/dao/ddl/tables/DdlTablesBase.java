@@ -39,7 +39,7 @@ public class DdlTablesBase {
                                              primaryKeyName,
                                              propertyBuilder.buildProps(properties, primaryKeyName));
 
-        log.debug("Create table query: [{}]", query);
+        log.debug("Запрос на создание таблицы: [{}]", query);
 
         jdbcTemplate.execute(query);
     }

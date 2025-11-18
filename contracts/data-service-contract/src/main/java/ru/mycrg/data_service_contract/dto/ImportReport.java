@@ -76,4 +76,17 @@ public class ImportReport {
     public void setReason(String reason) {
         this.reason = reason;
     }
+
+    @Override
+    public String toString() {
+        return "{" +
+                "\"datasetIdentifier\":" + (datasetIdentifier == null ? "null" : "\"" + datasetIdentifier + "\"") + ", " +
+                "\"projectId\":" + (projectId == null ? "null" : "\"" + projectId + "\"") + ", " +
+                "\"projectName\":" + (projectName == null ? "null" : "\"" + projectName + "\"") + ", " +
+                "\"projectIsNew\":\"" + projectIsNew + "\"" + ", " +
+                "\"importLayerReports\":" + importLayerReports + ", " +
+                "\"success\":\"" + success + "\"" + ", " +
+                "\"reason\":" + (reason == null ? "null" : "\"" + reason + "\"") +
+                "}";
+    }
 }

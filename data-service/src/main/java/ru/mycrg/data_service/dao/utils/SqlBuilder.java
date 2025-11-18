@@ -580,13 +580,13 @@ public class SqlBuilder {
                 break;
 
             case DOCUMENT:
-                result = attrDescription.getName() + " character varying";
+                result = attrDescription.getName() + " VARCHAR";
                 break;
 
             default:
                 log.warn("Not supported attribute type: {}", attrDescription.getValueTypeAsEnum());
 
-                result = attrDescription.getName() + " character varying";
+                result = attrDescription.getName() + " VARCHAR";
         }
 
         return result;
@@ -596,19 +596,20 @@ public class SqlBuilder {
     private static String handleChoice(@NotNull SimplePropertyDto attrDescription) {
         ForeignKeyType foreignKeyType = attrDescription.getForeignKeyType();
         if (foreignKeyType == null) {
-            return attrDescription.getName() + " character varying(255)";
+            return attrDescription.getName() + " VARCHAR";
         }
 
         switch (foreignKeyType) {
             case STRING:
-                return attrDescription.getName() + " character varying(255)";
+                return attrDescription.getName() + " VARCHAR";
             case INTEGER:
                 return attrDescription.getName() + " integer";
             case LONG:
                 return attrDescription.getName() + " bigint";
             default:
                 log.warn("Unknown foreignKeyType: {}. Will be used string type", foreignKeyType);
-                return attrDescription.getName() + " character varying(255)";
+
+                return attrDescription.getName() + " VARCHAR";
         }
     }
 
