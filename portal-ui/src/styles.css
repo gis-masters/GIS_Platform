@@ -127,6 +127,7 @@ html {
   --gray-light: rgb(0 0 0 / 4%);
   --primary: var(--blue);
   --error: #f44336;
+  --warning: #ffa000;
   --disabled: rgb(0 0 0 / 26%);
   --deleted: #aaa;
   --light: #f8f9fa;

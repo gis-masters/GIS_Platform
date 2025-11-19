@@ -1,0 +1,95 @@
+.RingSpinner {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+  gap: 24px;
+
+  &-Spinner {
+    position: relative;
+
+    width: 80px;
+    height: 80px;
+  }
+
+  &-Ring {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+
+    transform: translate(-50%, -50%);
+
+    border: 3px solid transparent;
+    border-radius: 50%;
+
+    &_outer {
+      width: 80px;
+      height: 80px;
+
+      animation: ring-spin 1.2s linear infinite;
+
+      border-top-color: rgb(0 0 0 / 40%);
+      border-right-color: rgb(0 0 0 / 20%);
+    }
+
+    &_middle {
+      width: 60px;
+      height: 60px;
+
+      animation: ring-spin-reverse 1s linear infinite;
+
+      border-top-color: rgb(0 0 0 / 30%);
+      border-left-color: rgb(0 0 0 / 20%);
+    }
+
+    &_inner {
+      width: 40px;
+      height: 40px;
+
+      animation: ring-spin 0.8s linear infinite;
+
+      border-top-color: rgb(0 0 0 / 50%);
+      border-right-color: rgb(0 0 0 / 30%);
+    }
+  }
+
+  &-Text {
+    animation: ring-fade-in-out 2s ease-in-out infinite;
+
+    color: rgb(0 0 0 / 60%);
+
+    font-size: 0.875rem;
+    font-weight: 500;
+  }
+}
+
+@keyframes ring-spin {
+  from {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+
+  to {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+
+@keyframes ring-spin-reverse {
+  from {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+
+  to {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+}
+
+@keyframes ring-fade-in-out {
+  0%,
+  100% {
+    opacity: 0.6;
+  }
+
+  50% {
+    opacity: 1;
+  }
+}

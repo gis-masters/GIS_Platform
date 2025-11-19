@@ -1,5 +1,7 @@
 import { createElement, Fragment } from 'react';
 
+import { BboxPreview } from '../../../components/BboxPreview/BboxPreview';
+import { SelectBboxControl } from '../../../components/SelectBboxControl/SelectBboxControl';
 import { organizationSettings } from '../../../stores/OrganizationSettings.store';
 import { PropertyType, type SimpleSchema } from '../../data/schema/schema.models';
 import { type Role } from '../../permissions/permissions.models';
@@ -58,20 +60,23 @@ export const crgProjectSchema: SimpleSchema = {
     ...crgProjectFolderSchema.properties,
     {
       name: 'bbox',
-      title: 'Bbox',
+      title: 'Область показа',
       required: true,
       defaultValueFormula: () => organizationSettings.defaultProjectBbox,
       validationWellKnownFormula: 'bboxJson3857',
       description: createElement(
         Fragment,
         null,
-        'BBox (bounding box) для картографического слоя в метрах — это прямоугольная область, которая определяет границы проекта на карте. Она указывается в метрах и содержит координаты минимального и максимального значений по осям X и Y.',
+        'Область показа (bbox — bounding box) для картографического слоя в метрах — это прямоугольная область, которая' +
+          ' определяет границы проекта на карте. Она указывается в метрах и содержит координаты минимального и максимального значений по осям X и Y.',
         createElement('br'),
         'Пример заполнения:',
         createElement('br'),
         '[4336548,5630738,4337222,5632892]'
       ),
-      propertyType: PropertyType.STRING
+      propertyType: PropertyType.CUSTOM,
+      ControlComponent: SelectBboxControl,
+      ViewComponent: BboxPreview
     }
   ]
 };

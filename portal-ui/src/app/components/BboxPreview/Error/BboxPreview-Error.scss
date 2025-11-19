@@ -1,0 +1,17 @@
+.BboxPreview {
+  &-Error {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    min-height: 400px;
+    padding: 16px;
+
+    text-align: center;
+
+    color: var(--warning);
+    border: 1px solid var(--warning);
+    border-radius: 4px;
+    background-color: color-mix(in srgb, var(--warning) 8%, transparent);
+  }
+}

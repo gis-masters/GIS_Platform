@@ -24,6 +24,7 @@ import {
 } from '../../stores/OrganizationSettings.store';
 import { Button } from '../Button/Button';
 import { Form } from '../Form/Form';
+import { SelectBboxControl } from '../SelectBboxControl/SelectBboxControl';
 import { SelectFavoriteProjectionsControl } from '../SelectFavoriteProjectionsControl/SelectFavoriteProjectionsControl';
 import { Toast } from '../Toast/Toast';
 
@@ -153,6 +154,7 @@ export default class OrganizationSettings extends Component<OrganizationSettings
     }
   }
 
+  @action
   private updateOptions() {
     const options = this.favoritesProjection.length
       ? this.favoritesProjection.map(item => {
@@ -229,6 +231,15 @@ export default class OrganizationSettings extends Component<OrganizationSettings
           title: prop.title,
           propertyType: PropertyType.CUSTOM,
           ControlComponent: props => <SelectFavoriteProjectionsControl {...props} />
+        };
+      }
+
+      if (prop.name === 'defaultProjectBbox') {
+        return {
+          name: prop.name,
+          title: prop.title,
+          propertyType: PropertyType.CUSTOM,
+          ControlComponent: props => <SelectBboxControl {...props} />
         };
       }
 
