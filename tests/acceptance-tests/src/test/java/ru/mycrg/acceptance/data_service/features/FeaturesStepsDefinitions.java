@@ -10,7 +10,7 @@ import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import ru.mycrg.acceptance.BaseStepsDefinitions;
 import ru.mycrg.acceptance.JsonMapper;
-import ru.mycrg.acceptance.data_service.TestFilesManager;
+import ru.mycrg.acceptance.data_service.CurrentFilesManager;
 import ru.mycrg.acceptance.data_service.dto.FileDescriptionModel;
 import ru.mycrg.acceptance.data_service.dto.TableCreateDto;
 import ru.mycrg.acceptance.gis_service.dto.LayerCreateDto;
@@ -202,7 +202,7 @@ public class FeaturesStepsDefinitions extends BaseStepsDefinitions {
     @Given("Файл {string} добавлен к перовой фиче")
     public void addFileToFirstFeature(String fileName) {
         List<FileDescriptionModel> array = new ArrayList<>();
-        array.add(TestFilesManager.getFileDescriptionByTitleOrThrow(fileName));
+        array.add(CurrentFilesManager.getFileDescription(fileName));
 
         Feature feature = new Feature();
         feature.setId(1L);

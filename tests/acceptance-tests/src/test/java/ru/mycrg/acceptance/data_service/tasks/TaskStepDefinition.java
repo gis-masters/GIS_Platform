@@ -7,7 +7,7 @@ import io.restassured.specification.RequestSpecification;
 import ru.mycrg.acceptance.BaseStepsDefinitions;
 import ru.mycrg.acceptance.auth_service.AuthorizationBase;
 import ru.mycrg.acceptance.auth_service.UserStepsDefinitions;
-import ru.mycrg.acceptance.data_service.TestFilesManager;
+import ru.mycrg.acceptance.data_service.CurrentFilesManager;
 import ru.mycrg.acceptance.data_service.dto.FileDescriptionModel;
 import ru.mycrg.auth_service_contract.dto.UserCreateDto;
 import ru.mycrg.data_service_contract.enums.TaskStatus;
@@ -316,7 +316,7 @@ public class TaskStepDefinition extends BaseStepsDefinitions {
 
     @When("файл {string} добавлен к задаче {string}")
     public void currentUserAddFileToTask(String fileName, String taskDescription) {
-        FileDescriptionModel fileDescription = TestFilesManager.getFileDescriptionByTitleOrThrow(fileName);
+        FileDescriptionModel fileDescription = CurrentFilesManager.getFileDescription(fileName);
         updateTask(getTaskByDescription(taskDescription),
                    "{\"attachments\": [" + fileDescription.asJson() + "]}");
 

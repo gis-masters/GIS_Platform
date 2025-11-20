@@ -20,6 +20,7 @@ import static ru.mycrg.common_contracts.generated.data_service.gpkg.GpkgTableTyp
 public class GpkgReaderService {
 
     private final Logger log = LoggerFactory.getLogger(GpkgReaderService.class);
+
     private final GpkgFileRepository gpkgFileRepository;
 
     public GpkgReaderService(GpkgFileRepository gpkgFileRepository) {
@@ -36,7 +37,7 @@ public class GpkgReaderService {
      * @throws GpkgException если не удалось прочитать файл
      */
     public List<GpkgTablesData> getTablesSmallInfoFromGpkg(String filePath) {
-        List<GpkgTablesData> allTables = new ArrayList<>();
+        List<GpkgTablesData> allTables;
         try (Connection connection = createConnection(filePath)) {
             List<GpkgTablesData> vectorTables = getVectorTablesData(connection);
             allTables = new ArrayList<>(vectorTables);

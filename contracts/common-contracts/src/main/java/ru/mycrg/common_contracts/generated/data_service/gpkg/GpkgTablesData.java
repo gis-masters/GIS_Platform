@@ -10,7 +10,7 @@ public class GpkgTablesData implements Serializable {
     private Long rowsCount;
 
     public GpkgTablesData() {
-
+        // Required
     }
 
     public GpkgTablesData(GpkgTableType type, String tableGpkgIdentifier) {

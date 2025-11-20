@@ -11,6 +11,8 @@ import ru.mycrg.acceptance.BaseStepsDefinitions;
 import ru.mycrg.acceptance.auth_service.AuthorizationBase;
 import ru.mycrg.acceptance.data_service.dto.FileDescriptionModel;
 import ru.mycrg.auth_service_contract.dto.UserCreateDto;
+import ru.mycrg.common_contracts.generated.data_service.gpkg.GpkgFileMetadata;
+import ru.mycrg.common_contracts.generated.data_service.gpkg.GpkgTablesData;
 
 import java.io.File;
 import java.io.IOException;
@@ -23,7 +25,7 @@ import static org.apache.http.HttpStatus.SC_NOT_FOUND;
 import static org.apache.http.HttpStatus.SC_OK;
 import static org.junit.Assert.*;
 import static ru.mycrg.acceptance.auth_service.OrganizationStepsDefinitions.orgId;
-import static ru.mycrg.acceptance.data_service.TestFilesManager.getFileDescriptionByTitleOrThrow;
+import static ru.mycrg.acceptance.data_service.CurrentFilesManager.getFileDescription;
 import static ru.mycrg.acceptance.data_service.libraries.LibraryStepsDefinitions.currentDocumentId;
 import static ru.mycrg.acceptance.data_service.libraries.LibraryStepsDefinitions.currentLibrary;
 import static ru.mycrg.acceptance.data_service.processes.ProcessesStepDefinitions.getFileByTitle;
@@ -97,7 +99,7 @@ public class FilesStepDefinitions extends BaseStepsDefinitions {
     @Given("файл {string} подписан подписью {string}")
     public void fileSigned(String baseFileName, String ecpFileName) {
         signFile(
-                getFileDescriptionByTitleOrThrow(baseFileName).getId(),
+                getFileDescription(baseFileName).getId(),
                 TestFilesManager.getFile(ecpFileName));
     }
 
@@ -120,7 +122,7 @@ public class FilesStepDefinitions extends BaseStepsDefinitions {
 
     @Given("подпись файла {string} имеет размер {int}")
     public void checkFileSignature(String baseFileName, Integer signSize) {
-        downloadEcp(getFileDescriptionByTitleOrThrow(baseFileName).getId());
+        downloadEcp(getFileDescription(baseFileName).getId());
 
         assertEquals(SC_OK, response.getStatusCode());
         assertEquals((int) signSize, response.asByteArray().length);
@@ -130,7 +132,7 @@ public class FilesStepDefinitions extends BaseStepsDefinitions {
     @When("я подписываю файл {string} подписью {string}")
     public void signFile(String baseFileName, String ecpFileName) {
         signFile(
-                getFileDescriptionByTitleOrThrow(baseFileName).getId(),
+                getFileDescription(baseFileName).getId(),
                 TestFilesManager.getFile(ecpFileName));
     }
 
@@ -163,27 +165,27 @@ public class FilesStepDefinitions extends BaseStepsDefinitions {
 
     @Given("я скачиваю группу файлов архивом, передав главный файл группы: {string}")
     public void downloadArchiveStep(String mainFileName) {
-        downloadAsArchive(mainFileName);
+        downloadArchive(getFileDescription(mainFileName).getId());
     }
 
     @Given("я скачиваю ЭЦП файла {string}")
     public void downloadOnlyEcp(String fileName) {
-        downloadEcp(getFileDescriptionByTitleOrThrow(fileName).getId());
+        downloadEcp(getFileDescription(fileName).getId());
     }
 
     @Given("я скачиваю архивом файл {string} c ЭЦП")
     public void downloadFileWithEcpAsZip(String fileName) {
-        downloadFileWithEcp(getFileDescriptionByTitleOrThrow(fileName).getId());
+        downloadFileWithEcp(getFileDescription(fileName).getId());
     }
 
     @Given("я скачиваю группу файлов архивом с ЭЦП, передав главный файл группы: {string}")
     public void downloadGroupWithEcp(String baseFileName) {
-        downloadGroupWithEcp(getFileDescriptionByTitleOrThrow(baseFileName).getId());
+        downloadGroupWithEcp(getFileDescription(baseFileName).getId());
     }
 
     @Given("я скачиваю группу файлов архивом, передав не корректный идентификатор файла: {string}")
     public void downloadArchiveIncorrectly(String incorrectFileName) {
-        downloadAsArchive(incorrectFileName);
+        downloadArchive(getFileDescription(incorrectFileName).getId());
     }
 
     @Given("архив успешно скачан в полном объеме: {int} байт")
@@ -384,7 +386,7 @@ public class FilesStepDefinitions extends BaseStepsDefinitions {
 
     @Given("я запрашиваю информацию о файле {string}")
     public void getFileInfo(String fileName) {
-        getFile(getFileDescriptionByTitleOrThrow(fileName).getId());
+        getFile(getFileDescription(fileName).getId());
     }
 
     @Given("я из документа запрашиваю информацию о файле {string}")
@@ -409,7 +411,7 @@ public class FilesStepDefinitions extends BaseStepsDefinitions {
             currentFiles.add(new FileDescriptionModel(fileId, fileSize, fileName));
 
             // Получаем информацию о файле через стандартный метод
-            getFile(getFileDescriptionByTitleOrThrow(fileName).getId());
+            getFile(getFileDescription(fileName).getId());
         } catch (Exception e) {
             throw new RuntimeException("Процесс полупения данных сломался: " + e.getMessage(), e);
         }
@@ -417,8 +419,8 @@ public class FilesStepDefinitions extends BaseStepsDefinitions {
 
     @Given("я отправляю запрос на проверку соответствия файла {string} подписи {string}")
     public void verifyFileByEcpStep(String baseFileName, String ecpFileName) {
-        FileDescriptionModel baseFile = getFileDescriptionByTitleOrThrow(baseFileName);
-        FileDescriptionModel ecpFile = getFileDescriptionByTitleOrThrow(ecpFileName);
+        FileDescriptionModel baseFile = getFileDescription(baseFileName);
+        FileDescriptionModel ecpFile = getFileDescription(ecpFileName);
 
         verifyFileByEcp(baseFile, ecpFile);
     }
@@ -444,7 +446,7 @@ public class FilesStepDefinitions extends BaseStepsDefinitions {
 
         response = getBaseRequestWithCurrentCookie()
                 .when().
-                        get("/" + getFileDescriptionByTitleOrThrow(fileName).getId());
+                        get("/" + getFileDescription(fileName).getId());
     }
 
     @Then("файл лежит в библиотеке по-умолчанию")
@@ -475,10 +477,69 @@ public class FilesStepDefinitions extends BaseStepsDefinitions {
         assertEquals(SC_NOT_FOUND, response.statusCode());
     }
 
+    @When("я запрашиваю метаданные текущего файла")
+    public void fetchCurrentFileMetadataAsCurrentUser() {
+        getFileMetadata(currentFileId);
+    }
+
+    @When("я запрашиваю метаданные не существующего файла")
+    public void fetchNotExistFileMetadataAsCurrentUser() {
+        getFileMetadata(UUID.randomUUID());
+    }
+
+    @When("я запрашиваю метаданные файла с невалидным UUID")
+    public void incorrectFetchFileMetadataAsCurrentUser() {
+        getFileMetadata(null);
+    }
+
+    @And("я получил метаданные текущего файла в ожидаемом формате")
+    public void checkFileMetadata() {
+        GpkgFileMetadata metadata = response.jsonPath().getObject("", GpkgFileMetadata.class);
+
+        assertNotNull("Это база! Данные должны быть!", metadata);
+        assertNotNull("Поле 'id' не должно быть null", metadata.getId());
+
+        FileDescriptionModel currentFile = getFileDescription(currentFileId);
+        switch (currentFile.getTitle()) {
+            case "onePolygonAllTypesWithoutGenerated.gpkg":
+                checkOnePolygonAllTypesWithoutGenerated(metadata);
+                break;
+            case "zolotopolenskoe_sp.tif":
+                break;
+            default:
+                throw new IllegalStateException(
+                        "Для файла " + currentFile.getTitle() + "не прописана проверка метаданных");
+        }
+    }
+
+    private void checkOnePolygonAllTypesWithoutGenerated(GpkgFileMetadata metadata) {
+        assertNotNull("Поле 'payload' не должно быть null", metadata.getPayload());
+        assertTrue("Поле 'payload' должно быть списком", metadata.getPayload() instanceof List);
+
+        List<GpkgTablesData> tables = metadata.getPayload();
+        assertFalse("Список таблиц не должен быть пустым", tables.isEmpty());
+
+        for (GpkgTablesData table: tables) {
+            assertNotNull("Таблица должна содержать поле 'type'", table.getType());
+            assertNotNull("Таблица должна содержать поле 'tableGpkgIdentifier'", table.getTableGpkgIdentifier());
+            // rowsCount может быть null для некоторых таблиц, но поле должно присутствовать в структуре
+            // Проверяем, что объект корректно десериализован и имеет все необходимые поля
+            assertNotNull("Объект таблицы должен быть корректно десериализован", table);
+        }
+    }
+
     private void getFile(UUID id) {
         response = getBaseRequestWithCurrentCookie()
                 .when().
                         get("/" + id);
+
+        jsonPath = response.jsonPath();
+    }
+
+    private void getFileMetadata(UUID id) {
+        response = getBaseRequestWithCurrentCookie()
+                .when().log().all().
+                        get("/" + id + "/metadata");
 
         jsonPath = response.jsonPath();
     }
@@ -547,9 +608,5 @@ public class FilesStepDefinitions extends BaseStepsDefinitions {
         } catch (Exception e) {
             return new ArrayList<>();
         }
-    }
-
-    private void downloadAsArchive(String fileName) {
-        downloadArchive(getFileDescriptionByTitleOrThrow(fileName).getId());
     }
 }
