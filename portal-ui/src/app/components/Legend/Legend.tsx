@@ -7,6 +7,7 @@ import {
   type StyleRule,
   type StyleRuleExtended
 } from '../../services/geoserver/styles/styles.models';
+import { cssVars } from '../../utils/cssVars';
 
 import './Legend.scss';
 
@@ -78,7 +79,10 @@ export const Legend: FC<LegendProps> = ({
   return (
     <div
       className={cnLegend({ forPrint }, [className])}
-      style={{ '--LegendResolution': resolution || '', '--LegendResize': resize }}
+      style={cssVars({
+        '--LegendResolution': resolution || '',
+        '--LegendResize': resize
+      })}
     >
       {forPrint && <div className={cnLegend('Title')}>Условные обозначения</div>}
 

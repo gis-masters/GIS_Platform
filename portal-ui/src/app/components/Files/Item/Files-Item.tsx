@@ -87,13 +87,11 @@ const FilesItemFC: FC<FilesItemProps> = observer(
     const {
       connections,
       id,
-
       fileInfo,
       fileSignDialogOpen,
       setFileSignDialogOpen,
       setConnections,
       setIds,
-
       setFileInfo
     } = useLocalObservable(
       (): FilesItemState => ({
@@ -238,7 +236,7 @@ const FilesItemFC: FC<FilesItemProps> = observer(
           await updateFileInfo();
         }
       })();
-    }, [item.id, item.signed, fileInfo]);
+    }, [item.id, item.signed, fileInfo, dropConnections, fetchConnections, updateFileInfo]);
 
     return (
       <>
@@ -256,6 +254,7 @@ const FilesItemFC: FC<FilesItemProps> = observer(
           />
           {(numerous || multiple) && <LookupNameGap />}
           {!!status && <LookupStatus status={status} statusText={statusText} />}
+
           <LookupActions>
             {isPreviewAllowed(item) && <FilesPreview item={item} onPreview={onPreview} />}
 

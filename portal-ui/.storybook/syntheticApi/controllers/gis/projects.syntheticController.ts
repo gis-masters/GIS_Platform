@@ -68,6 +68,7 @@ class ProjectsSyntheticController implements SyntheticController {
       organizationId: 1,
       createdAt: '2022-11-11T12:27:11.238515',
       role: Role.OWNER,
+      folder: false,
       default: false
     };
 

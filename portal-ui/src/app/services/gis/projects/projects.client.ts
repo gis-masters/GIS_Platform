@@ -51,9 +51,7 @@ class ProjectsClient extends Client {
 
   async getAllProjectsInFolder(folderId: number): Promise<CrgProject[]> {
     return http.getPaged<CrgProject>(this.getProjectsUrl(), {
-      params: {
-        parent: folderId
-      },
+      params: { parent: folderId },
       cache: { disabled: true }
     });
   }

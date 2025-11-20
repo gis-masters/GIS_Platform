@@ -12,6 +12,7 @@ import { type MeasureItem } from '../../services/map/measure/map-measure.models'
 import { UnitsOfAreaMeasurement, type UnitsOfLengthMeasurement } from '../../services/util/open-layers.util';
 import { mapMeasureStore } from '../../stores/MapMeasure.store';
 import { printSettings } from '../../stores/PrintSettings.store';
+import { cssVars } from '../../utils/cssVars';
 import { PseudoLink } from '../PseudoLink/PseudoLink';
 
 import './MapMeasureTooltip.scss';
@@ -60,7 +61,7 @@ export class MapMeasureTooltip extends Component<MapMeasureTooltipProps> {
           state: sketch ? 'sketch' : 'static',
           printing: printingInProcess
         })}
-        style={{ '--MapMeasureTooltipPrintingResolution': printingResolution }}
+        style={cssVars({ '--MapMeasureTooltipPrintingResolution': printingResolution })}
       >
         {value}{' '}
         {switchingUnitsEnabled && !printingInProcess ? (

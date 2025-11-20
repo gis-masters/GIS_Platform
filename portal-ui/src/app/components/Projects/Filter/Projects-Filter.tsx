@@ -1,36 +1,42 @@
-import React, { Component } from 'react';
+import React, { type FC, useCallback, useEffect } from 'react';
 import { observer } from 'mobx-react';
 import { TextField } from '@mui/material';
 import { cn } from '@bem-react/classname';
 
-import { allProjects } from '../../../stores/AllProjects.store';
+import { type ProjectsStore } from '../Projects.store';
 
 import './Projects-Filter.scss';
 
 const cnProjectsFilter = cn('Projects', 'Filter');
 
-@observer
-export class ProjectsFilter extends Component {
-  componentWillUnmount() {
-    allProjects.setNameFilter('');
-  }
-
-  render() {
-    return (
-      <TextField
-        label='Фильтр по названию'
-        variant='standard'
-        value={allProjects.nameFilter}
-        className={cnProjectsFilter()}
-        onChange={this.handleChange}
-        InputProps={{
-          startAdornment: ' '
-        }}
-      />
-    );
-  }
-
-  private handleChange(e: React.ChangeEvent<HTMLInputElement>) {
-    allProjects.setNameFilter(e.target.value);
-  }
+interface ProjectsFilterProps {
+  store: ProjectsStore;
 }
+
+export const ProjectsFilter: FC<ProjectsFilterProps> = observer(({ store }) => {
+  useEffect(() => {
+    return () => {
+      store.setNameFilter('');
+    };
+  }, [store]);
+
+  const handleChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      store.setNameFilter(e.target.value);
+    },
+    [store]
+  );
+
+  return (
+    <TextField
+      label='Фильтр по названию'
+      variant='standard'
+      value={store.nameFilter}
+      className={cnProjectsFilter()}
+      onChange={handleChange}
+      InputProps={{
+        startAdornment: ' '
+      }}
+    />
+  );
+});

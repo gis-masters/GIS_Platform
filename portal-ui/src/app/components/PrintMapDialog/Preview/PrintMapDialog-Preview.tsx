@@ -86,7 +86,7 @@ export class PrintMapDialogPreview extends Component<PrintMapDialogPreviewProps>
       <div className={cnPrintMapDialogPreview()}>
         <Paper
           className={cnPrintMapDialogPreview({ orientation, pageFormat: pageFormatId })}
-          style={{
+          sx={{
             '--PrintMapDialogPreviewMarginTop': margin.top,
             '--PrintMapDialogPreviewMarginRight': margin.right,
             '--PrintMapDialogPreviewMarginBottom': margin.bottom,

@@ -6,6 +6,7 @@ import { type IClassNameProps } from '@bem-react/core';
 import { isPropertyType, PropertyType } from '../../../services/data/schema/schema.models';
 import { type ChildrenProps } from '../../../services/models';
 import { type FilterQuery } from '../../../services/util/filters/filters.models';
+import { cssVars } from '../../../utils/cssVars';
 import { type XTableColumn, type XTableColumnType } from '../XTable.models';
 
 import './XTable-CellContent.scss';
@@ -176,8 +177,10 @@ export function XTableCellContentBase<T>({
       {...spanProps}
       style={{
         ...spanProps.style,
-        '--XTableCellWidth': getXTableCellWidth(),
-        '--XTableCellMinWidth': getXTableCellMinWidth()
+        ...cssVars({
+          '--XTableCellWidth': getXTableCellWidth(),
+          '--XTableCellMinWidth': getXTableCellMinWidth()
+        })
       }}
     >
       {children !== null && children !== undefined ? children : ''}

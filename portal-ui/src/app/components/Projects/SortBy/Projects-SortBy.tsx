@@ -1,38 +1,44 @@
-import React, { Component } from 'react';
+import React, { type FC, useCallback, useEffect } from 'react';
 import { observer } from 'mobx-react';
 import { MenuItem, TextField } from '@mui/material';
 import { cn } from '@bem-react/classname';
 
 import { type CrgProject } from '../../../services/gis/projects/projects.models';
-import { allProjects } from '../../../stores/AllProjects.store';
+import { type ProjectsStore } from '../Projects.store';
 
 import './Projects-SortBy.scss';
 
 const cnProjectsSortBy = cn('Projects', 'SortBy');
 
-@observer
-export class ProjectsSortBy extends Component {
-  componentWillUnmount() {
-    allProjects.setSortBy('createdAt');
-  }
-
-  render() {
-    return (
-      <TextField
-        label='Сортировать по'
-        variant='standard'
-        value={allProjects.sortBy}
-        className={cnProjectsSortBy()}
-        onChange={this.handleChange}
-        select
-      >
-        <MenuItem value='createdAt'>По-умолчанию</MenuItem>
-        <MenuItem value='name'>Названию</MenuItem>
-      </TextField>
-    );
-  }
-
-  private handleChange(e: React.ChangeEvent<HTMLInputElement>) {
-    allProjects.setSortBy(e.target.value as keyof CrgProject);
-  }
+interface ProjectsSortByProps {
+  store: ProjectsStore;
 }
+
+export const ProjectsSortBy: FC<ProjectsSortByProps> = observer(({ store }) => {
+  useEffect(() => {
+    return () => {
+      store.setSortBy('createdAt');
+    };
+  }, [store]);
+
+  const handleChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      store.setSortBy(e.target.value as keyof CrgProject);
+    },
+    [store]
+  );
+
+  return (
+    <TextField
+      label='Сортировать по'
+      variant='standard'
+      value={store.sortBy}
+      className={cnProjectsSortBy()}
+      onChange={handleChange}
+      select
+    >
+      <MenuItem value='createdAt'>По-умолчанию</MenuItem>
+      <MenuItem value='name'>Названию</MenuItem>
+    </TextField>
+  );
+});

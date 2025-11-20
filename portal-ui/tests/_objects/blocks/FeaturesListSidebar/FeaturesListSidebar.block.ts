@@ -1,4 +1,4 @@
-import type { CheckElementMethodOptions } from '@wdio/image-comparison-core';
+import type { WdioCheckElementMethodOptions } from '@wdio/visual-service/dist/types';
 
 import { Block } from '../../Block';
 import { extractText } from '../../commands/extractText';
@@ -115,7 +115,7 @@ class FeaturesListSidebarBlock extends Block {
     return $$items.length;
   }
 
-  async assertSelfie(tag?: string, checkElementOptions?: CheckElementMethodOptions): Promise<void> {
+  async assertSelfie(tag?: string, checkElementOptions?: WdioCheckElementMethodOptions): Promise<void> {
     const $root = await this.findBySelector('root');
     await $root.waitForDisplayed();
 

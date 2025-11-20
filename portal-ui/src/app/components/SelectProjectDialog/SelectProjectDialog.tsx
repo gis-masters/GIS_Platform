@@ -77,6 +77,6 @@ export class SelectProjectsDialog extends Component<SelectProjectDialogProps> {
 
   @computed
   private get projects(): CrgProject[] {
-    return allProjects.list.filter(({ role }) => role === Role.OWNER);
+    return allProjects.withoutFolders.filter(({ role }) => role === Role.OWNER);
   }
 }

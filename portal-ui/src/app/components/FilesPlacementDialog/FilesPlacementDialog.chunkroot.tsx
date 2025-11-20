@@ -124,8 +124,7 @@ export default class FilesPlacementDialog extends Component<FilesPlacementDialog
           <Stepper activeStep={activeStep} alternativeLabel className={cnFilesPlacementDialog('Stepper')}>
             {this.steps.map(stepItem => (
               <Step key={stepItem.title}>
-                {/* TODO: странная ошибка типов */}
-                <StepLabel StepIconComponent={FilesPlacementDialogStepIcon}>{stepItem.title}</StepLabel>
+                <StepLabel slots={{ stepIcon: FilesPlacementDialogStepIcon }}>{stepItem.title}</StepLabel>
               </Step>
             ))}
           </Stepper>
@@ -185,7 +184,7 @@ export default class FilesPlacementDialog extends Component<FilesPlacementDialog
             </Button>
           )}
 
-          {activeStep === 3 && (
+          {activeStep === 3 && project && (
             <Button href={`/projects/${project.id}/map`} color='primary' disabled={commonProgress}>
               Перейти к проекту
             </Button>
@@ -235,7 +234,7 @@ export default class FilesPlacementDialog extends Component<FilesPlacementDialog
 
   @computed
   private get projects(): CrgProject[] {
-    return allProjects.list.filter(({ role }) => role === Role.OWNER);
+    return allProjects.withoutFolders.filter(({ role }) => role === Role.OWNER);
   }
 
   @boundMethod
@@ -269,6 +268,15 @@ export default class FilesPlacementDialog extends Component<FilesPlacementDialog
   private async place() {
     const { document } = this.props;
     const { files, projection, project, tasks } = this.store;
+
+    if (!projection) {
+      throw new Error('Для размещения файлов требуется система координат');
+    }
+
+    if (!project) {
+      throw new Error('Для размещения файлов требуется проект');
+    }
+
     const apiActions = placeFiles(files, getProjectionCode(projection), project, document);
 
     this.store.initTasks(document);

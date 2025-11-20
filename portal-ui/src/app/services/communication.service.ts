@@ -35,7 +35,6 @@ class CommunicationService {
   validationInitiated = new Emitter<boolean>();
   needUpdateValidationResults = new Emitter<boolean>();
   authDialogSuccess = new Emitter();
-  allProjectsFetched = new Emitter();
   editBugObject = new Emitter<ObjectDto[]>();
   beforeMapDestroy = new Emitter();
   openAttributesBar = new Emitter<CrgVectorLayer>();

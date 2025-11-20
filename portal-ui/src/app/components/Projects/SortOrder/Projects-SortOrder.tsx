@@ -1,18 +1,17 @@
-import React, { Component } from 'react';
+import React, { type FC, useCallback } from 'react';
 import { observer } from 'mobx-react';
-import { boundMethod } from 'autobind-decorator';
 
-import { allProjects } from '../../../stores/AllProjects.store';
 import { SortOrderButton } from '../../SortOrderButton/SortOrderButton';
+import { type ProjectsStore } from '../Projects.store';
 
-@observer
-export class ProjectsSortOrder extends Component {
-  render() {
-    return <SortOrderButton asc={allProjects.sortAsc} onClick={this.handleClick} />;
-  }
-
-  @boundMethod
-  private handleClick() {
-    allProjects.setSortAsc(!allProjects.sortAsc);
-  }
+interface ProjectsSortOrderProps {
+  store: ProjectsStore;
 }
+
+export const ProjectsSortOrder: FC<ProjectsSortOrderProps> = observer(({ store }) => {
+  const handleClick = useCallback(() => {
+    store.setSortAsc(!store.sortAsc);
+  }, [store]);
+
+  return <SortOrderButton asc={store.sortAsc} onClick={handleClick} />;
+});

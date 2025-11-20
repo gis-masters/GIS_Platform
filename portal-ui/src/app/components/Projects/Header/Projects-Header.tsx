@@ -8,6 +8,7 @@ import { notFalsyFilter } from '../../../services/util/NotFalsyFilter';
 import { currentProjectFolderStore } from '../../../stores/CurrentProjectFolder.store';
 import { Breadcrumbs, type BreadcrumbsItemData } from '../../Breadcrumbs/Breadcrumbs';
 import { ProjectsFilter } from '../Filter/Projects-Filter';
+import { type ProjectsStore } from '../Projects.store';
 import { ProjectsSortBy } from '../SortBy/Projects-SortBy';
 import { ProjectsSortOrder } from '../SortOrder/Projects-SortOrder';
 
@@ -20,7 +21,11 @@ const HOME_BREADCRUMB: BreadcrumbsItemData = {
   url: '/projects'
 };
 
-export const ProjectsHeader: FC = observer(() => {
+interface ProjectsHeaderProps {
+  store: ProjectsStore;
+}
+
+export const ProjectsHeader: FC<ProjectsHeaderProps> = observer(({ store }) => {
   const [breadcrumbs, setBreadcrumbs] = useState<BreadcrumbsItemData[]>([HOME_BREADCRUMB]);
 
   useEffect(() => {
@@ -90,9 +95,9 @@ export const ProjectsHeader: FC = observer(() => {
     <div className={cnProjectsHeader()}>
       <Breadcrumbs items={breadcrumbs} itemsType='link' size='medium' />
       <div className={cnProjectsHeader({ rightActions: true })}>
-        <ProjectsFilter />
-        <ProjectsSortBy />
-        <ProjectsSortOrder />
+        <ProjectsFilter store={store} />
+        <ProjectsSortBy store={store} />
+        <ProjectsSortOrder store={store} />
       </div>
     </div>
   );

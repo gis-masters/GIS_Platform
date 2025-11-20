@@ -4,15 +4,17 @@ import { cn } from '@bem-react/classname';
 import { type CrgProject } from '../../../services/gis/projects/projects.models';
 import { ProjectCard } from '../../ProjectCard/ProjectCard';
 import { ProjectFolder } from '../../ProjectFolder/ProjectFolder';
+import { type ProjectsStore } from '../Projects.store';
 
 import './ProjectsContent.scss';
 
 const cnProjectsContent = cn('ProjectsContent');
 export interface ProjectsContentProps {
   projects: CrgProject[];
+  store: ProjectsStore;
 }
 
-export const ProjectsContent: FC<ProjectsContentProps> = React.memo(({ projects }) => {
+export const ProjectsContent: FC<ProjectsContentProps> = React.memo(({ projects, store }) => {
   const sortedProjects = [...projects].sort((a, b) => {
     if (a.folder === true && b.folder !== true) {
       return -1;
@@ -32,7 +34,7 @@ export const ProjectsContent: FC<ProjectsContentProps> = React.memo(({ projects 
     <>
       {sortedProjects.map(project =>
         project.folder ? (
-          <ProjectFolder className={cnProjectsContent('Card')} project={project} key={project.id} />
+          <ProjectFolder className={cnProjectsContent('Card')} project={project} store={store} key={project.id} />
         ) : (
           <ProjectCard className={cnProjectsContent('Card')} project={project} key={project.id} />
         )

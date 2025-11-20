@@ -46,13 +46,13 @@ export class BasemapsSelectAddButton extends Component<BasemapsSelectAddButtonPr
         </Tooltip>
 
         <Dialog open={this.dialogOpen} onClose={this.closeSelectBasemapDialog}>
-          <DialogTitle>Выбор проекта</DialogTitle>
+          <DialogTitle>Выбор подложки</DialogTitle>
           <DialogContent>
             <Explorer
               className={cnBasemapsSelectAddButton('Explorer')}
-              explorerRole='ConnectionsToProjectsWidget'
+              explorerRole='BasemapsSelectAddButtonDialog'
               preset={ExplorerItemType.BASEMAPS_ROOT}
-              onSelect={this.setSelectedProject}
+              onSelect={this.setSelectedBasemap}
               onOpen={this.handleOpen}
               withoutTitle
               disabledTester={this.testForDisabled}
@@ -80,7 +80,7 @@ export class BasemapsSelectAddButton extends Component<BasemapsSelectAddButtonPr
   }
 
   @action.bound
-  private setSelectedProject(item: ExplorerItemData | null) {
+  private setSelectedBasemap(item: ExplorerItemData | null) {
     if (!item) {
       this.basemap = undefined;
     } else if (item.type === ExplorerItemType.BASEMAP) {
@@ -91,7 +91,7 @@ export class BasemapsSelectAddButton extends Component<BasemapsSelectAddButtonPr
   @action.bound
   private handleOpen(item: ExplorerItemData) {
     if (item.type === ExplorerItemType.BASEMAP) {
-      this.setSelectedProject(item);
+      this.setSelectedBasemap(item);
       void this.submitBasemapSelection();
     }
   }

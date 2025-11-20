@@ -3,8 +3,8 @@ import { type StoryFn } from '@storybook/react';
 
 import { PropertyType } from '../../services/data/schema/schema.models';
 import { testDataForTables } from '../XTable/testDataForTables';
+import { type TestData } from '../XTable/testDataForTables';
 import { type XTableColumn } from '../XTable/XTable.models';
-import { type TestData } from '../XTable/XTable.stories';
 import { ChooseXTableDialog } from './ChooseXTableDialog';
 
 export default {

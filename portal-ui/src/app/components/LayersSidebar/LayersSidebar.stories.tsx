@@ -20,7 +20,8 @@ const PROJECT: CrgProject = {
   organizationId: 11,
   createdAt: '2024-10-23T15:11:53.421326',
   role: Role.OWNER,
-  default: false
+  default: false,
+  folder: false
 };
 
 const ALLOWED_LAYERS: CrgLayer[] = [

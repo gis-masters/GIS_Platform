@@ -1,10 +1,12 @@
-import React, { type FC, useCallback, useEffect } from 'react';
-import { observer, useLocalObservable } from 'mobx-react';
+import React, { type FC, useCallback, useEffect, useMemo, useRef } from 'react';
+import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
+import { debounce, type DebouncedFunc } from 'lodash';
 
+import { communicationService, type DataChangeEventDetail } from '../../services/communication.service';
+import { type CrgProject } from '../../services/gis/projects/projects.models';
 import { projectsService } from '../../services/gis/projects/projects.service';
 import { services } from '../../services/services';
-import { allProjects } from '../../stores/AllProjects.store';
 import { currentProjectFolderStore, FOLDER_PARAM } from '../../stores/CurrentProjectFolder.store';
 import { Loading } from '../Loading/Loading';
 import { ProjectsContent } from './Content/ProjectsContent';
@@ -12,6 +14,7 @@ import { ProjectsEmpty } from './Empty/ProjectsEmpty';
 import { ProjectsHeader } from './Header/Projects-Header';
 import { ProjectsList } from './List/Projects-List';
 import { ProjectsLoader } from './Loader/Projects-Loader';
+import { ProjectsStore } from './Projects.store';
 
 import './Projects.scss';
 import './Add/Projects-Add.scss';
@@ -22,27 +25,18 @@ interface ProjectsState {
   lastFolderId: string | null;
 }
 
-interface ProjectsStore {
-  busy: boolean;
-  setBusy(busy: boolean): void;
-}
-
 const Projects: FC = observer(() => {
-  const { busy, setBusy } = useLocalObservable(
-    (): ProjectsStore => ({
-      busy: false,
-      setBusy(this: ProjectsStore, busy: boolean): void {
-        this.busy = busy;
-      }
-    })
-  );
+  const store = useMemo(() => new ProjectsStore(), []);
+  const { busy, setBusy, setProjects, displayedList } = store;
+
+  const debouncedFetchProjectsRef = useRef<DebouncedFunc<() => Promise<void>>>();
 
   // Загрузка корневых проектов
   const loadRootProjects = useCallback(async () => {
     try {
       setBusy(true);
       const projects = await projectsService.getAllProjects();
-      allProjects.setList(projects);
+      setProjects(projects);
 
       const url = new URL(window.location.href);
       url.searchParams.delete(FOLDER_PARAM);
@@ -50,11 +44,11 @@ const Projects: FC = observer(() => {
       currentProjectFolderStore.setCurrentFolder(null);
     } catch (error) {
       console.error('Error loading root projects:', error);
-      allProjects.setList([]);
+      setProjects([]);
     } finally {
       setBusy(false);
     }
-  }, [setBusy]);
+  }, [setBusy, setProjects]);
 
   // Загрузка проектов для текущей папки
   const loadFolderProjects = useCallback(
@@ -71,7 +65,7 @@ const Projects: FC = observer(() => {
 
         currentProjectFolderStore.setCurrentFolder(projectFolder);
         const projects = await projectsService.getAllProjectsInFolder(projectId);
-        allProjects.setList(projects);
+        setProjects(projects || []);
       } catch (error) {
         console.error('Error loading folder projects:', error);
         currentProjectFolderStore.setCurrentFolder(null);
@@ -80,7 +74,42 @@ const Projects: FC = observer(() => {
         setBusy(false);
       }
     },
-    [loadRootProjects, setBusy]
+    [loadRootProjects, setBusy, setProjects]
+  );
+
+  // Обновление списка проектов
+  const fetchProjects = useCallback(async () => {
+    const url = new URL(window.location.href);
+    const currentFolderId = url.searchParams.get(FOLDER_PARAM);
+
+    await (currentFolderId ? loadFolderProjects(Number(currentFolderId)) : loadRootProjects());
+  }, [loadFolderProjects, loadRootProjects]);
+
+  // Обработчик события обновления проекта
+  const handleProjectUpdated = useCallback(
+    (e: CustomEvent<DataChangeEventDetail<CrgProject>>) => {
+      const { type, data } = e.detail;
+
+      // Немедленно обновляем стор на основе данных из события
+      switch (type) {
+        case 'create': {
+          store.addProject(data);
+          break;
+        }
+        case 'update': {
+          store.updateProject(data.id, data);
+          break;
+        }
+        case 'delete': {
+          store.deleteProject(data.id);
+          break;
+        }
+      }
+
+      // Инициируем обновление списка через API с debounce
+      void debouncedFetchProjectsRef.current?.();
+    },
+    [store]
   );
 
   // Обработка изменений URL
@@ -101,6 +130,19 @@ const Projects: FC = observer(() => {
     },
     [loadFolderProjects, loadRootProjects]
   );
+
+  useEffect(() => {
+    // Создаём debounced функцию для обновления списка
+    debouncedFetchProjectsRef.current = debounce(fetchProjects, 300);
+
+    // Подписываемся на событие обновления проектов
+    communicationService.projectUpdated.on(handleProjectUpdated);
+
+    return () => {
+      debouncedFetchProjectsRef.current?.cancel();
+      communicationService.off(handleProjectUpdated);
+    };
+  }, [fetchProjects, handleProjectUpdated]);
 
   useEffect(() => {
     const state: ProjectsState = { lastFolderId: null };
@@ -132,17 +174,17 @@ const Projects: FC = observer(() => {
     return () => observer.disconnect();
   }, [handleUrlChange, loadFolderProjects, loadRootProjects, setBusy]);
 
-  const hasProjects = allProjects.displayedList.length > 0;
+  const hasProjects = displayedList.length > 0;
 
   return (
     <div className={cnProjects(null, ['scroll'])}>
-      {allProjects.inited ? (
+      {store.inited ? (
         <>
-          <ProjectsHeader />
+          <ProjectsHeader store={store} />
 
           {hasProjects ? (
             <ProjectsList>
-              <ProjectsContent projects={allProjects.displayedList} />
+              <ProjectsContent projects={displayedList} store={store} />
             </ProjectsList>
           ) : (
             <ProjectsEmpty />

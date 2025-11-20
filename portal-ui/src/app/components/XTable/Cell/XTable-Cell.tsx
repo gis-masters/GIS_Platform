@@ -5,6 +5,7 @@ import { cn } from '@bem-react/classname';
 
 import { getFieldFilterValue } from '../../../services/util/filters/filters';
 import { type FilterQuery } from '../../../services/util/filters/filters.models';
+import { cssVars } from '../../../utils/cssVars';
 import { Highlight } from '../../Highlight/Highlight';
 import { TextBadge } from '../../TextBadge/TextBadge';
 import { TextOverflow } from '../../TextOverflow/TextOverflow';
@@ -60,7 +61,7 @@ export const XTableCell = observer((({
       })}
       align={align}
       {...(cellProps || {})}
-      style={width ? { '--XTableCellWidth': width } : undefined}
+      style={width ? cssVars({ '--XTableCellWidth': width }) : undefined}
       data-field={field}
     >
       {BeforeCellContent && (

@@ -6,6 +6,7 @@ import { boundMethod } from 'autobind-decorator';
 import { parseInt } from 'lodash';
 
 import { type ChildrenProps } from '../../services/models';
+import { cssVars } from '../../utils/cssVars';
 import { PseudoLink } from '../PseudoLink/PseudoLink';
 
 import './TextOverflow.scss';
@@ -58,7 +59,11 @@ export class TextOverflow extends Component<TextOverflowProps> {
     const { children, hideButton } = this.props;
 
     return (
-      <div ref={this.wrapperRef} className={cnTextOverflow()} style={{ '--TextOverflowMaxLines': this.maxLines }}>
+      <div
+        ref={this.wrapperRef}
+        className={cnTextOverflow()}
+        style={cssVars({ '--TextOverflowMaxLines': this.maxLines })}
+      >
         <span
           ref={this.ref}
           className={cnTextOverflow('Value', { hidePartOfText: !this.isAllTextVisible }, ['scroll'])}

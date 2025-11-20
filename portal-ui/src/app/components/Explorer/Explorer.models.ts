@@ -34,6 +34,7 @@ export type ExplorerRole =
   | 'SearchResultDialog'
   | 'FolderPreview'
   | 'SelectProjectFromExplorer'
+  | 'BasemapsSelectAddButtonDialog'
   | '';
 
 export enum ExplorerItemType {

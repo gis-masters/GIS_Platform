@@ -2,6 +2,7 @@ import React, { type FC } from 'react';
 import { cn } from '@bem-react/classname';
 
 import { type CrgProject } from '../../services/gis/projects/projects.models';
+import { type ProjectsStore } from '../Projects/Projects.store';
 import { ProjectFolderCard } from './Card/ProjectFolder-Card';
 import { ProjectFolderInner } from './Inner/ProjectFolder-Inner';
 
@@ -12,12 +13,13 @@ const cnProjectFolder = cn('ProjectFolder');
 interface ProjectFolderProps {
   project: CrgProject;
   className?: string;
+  store: ProjectsStore;
 }
 
-export const ProjectFolder: FC<ProjectFolderProps> = ({ className, project }) => (
+export const ProjectFolder: FC<ProjectFolderProps> = ({ className, project, store }) => (
   <div className={cnProjectFolder(null, [className])} data-id={project.id}>
     <ProjectFolderInner>
-      <ProjectFolderCard project={project} />
+      <ProjectFolderCard project={project} store={store} />
     </ProjectFolderInner>
   </div>
 );

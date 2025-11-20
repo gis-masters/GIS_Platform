@@ -8,6 +8,7 @@ import { cn } from '@bem-react/classname';
 import { PropertyType } from '../../../services/data/schema/schema.models';
 import { type FilterQuery } from '../../../services/util/filters/filters.models';
 import { type SortParams } from '../../../services/util/sortObjects';
+import { cssVars } from '../../../utils/cssVars';
 import { DescriptionMark } from '../../DescriptionMark/DescriptionMark';
 import { MIN_COLUMN_WIDTH } from '../CellContent/XTable-CellContent.base';
 import { XTableCellContent } from '../CellContent/XTable-CellContent.composed';
@@ -76,7 +77,7 @@ export class XTableHeadCell<T> extends Component<XTableHeadCellProps<T>> {
       style: {
         ...style,
         ...col.headerCellProps?.style,
-        '--XTableCellWidth': width || ''
+        ...cssVars({ '--XTableCellWidth': width || '' })
       },
       className: cnXTableHeadCell(
         {

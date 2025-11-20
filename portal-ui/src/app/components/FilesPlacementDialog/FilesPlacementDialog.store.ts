@@ -15,12 +15,12 @@ export interface PlacementTask {
 }
 
 export class FilesPlacementReportStore {
-  @observable commonProgress: boolean;
-  @observable tasks: PlacementTask[];
+  @observable commonProgress: boolean = false;
+  @observable tasks: PlacementTask[] = [];
   @observable activeStep = 0;
   @observable projection?: Projection;
   @observable files: FileInfo[] = [];
-  @observable project: CrgProject;
+  @observable project: CrgProject | undefined = undefined;
 
   constructor() {
     makeObservable(this);
@@ -54,11 +54,11 @@ export class FilesPlacementReportStore {
 
     if (this.files.length > 1) {
       this.tasks.push({
-        title: document.title,
+        title: document.title || '',
         status: 'PENDING',
         description: 'Создание группы',
         type: 'g',
-        id: document.title
+        id: document.title || ''
       });
     }
 

@@ -9,7 +9,7 @@
     "esModuleInterop": true,
     "module": "commonjs",
     "skipLibCheck": true,
-    "lib": ["es2022", "esnext.array", "dom"],
+    "lib": ["es2022", "esnext.array", "dom", "dom.iterable", "ES2015.Iterable"],
     "jsx": "react"
   }
 }

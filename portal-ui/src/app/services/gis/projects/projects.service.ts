@@ -50,6 +50,21 @@ class ProjectsService {
     );
   }
 
+  /**
+   * Рекурсивно получает все проекты включая вложенные в папки
+   */
+  private async getAllProjectsRecursively(parentId?: number): Promise<CrgProject[]> {
+    const projects = parentId
+      ? await projectsClient.getAllProjectsInFolder(parentId)
+      : await projectsClient.getAllProjects();
+
+    // Рекурсивно получаем проекты из папок
+    const folders = projects.filter(p => p.folder);
+    const nestedProjects = await Promise.all(folders.map(folder => this.getAllProjectsRecursively(folder.id)));
+
+    return [...nestedProjects.flat(), ...projects];
+  }
+
   async initAllProjectsStore() {
     if (this.fetchingAllProjectsRequest) {
       await this.fetchingAllProjectsRequest;
@@ -66,7 +81,7 @@ class ProjectsService {
   }
 
   private async fetchAllProjects() {
-    const request = projectsClient.getAllProjects();
+    const request = this.getAllProjectsRecursively();
 
     this.fetchingAllProjectsRequest = request;
 
@@ -79,7 +94,6 @@ class ProjectsService {
     delete this.fetchingAllProjectsRequest;
 
     allProjects.setList(response);
-    communicationService.allProjectsFetched.emit();
   }
 
   clearCurrent() {
@@ -150,7 +164,7 @@ class ProjectsService {
    * Тестируем слой, "дергая" его по WMS в заранее определенной небольшой области.
    *
    * Целью проверки является заблаговременное распознавание "битых" по разным причинам слоёв на геосервере.
-   * Частые причины отсутствие слоя, отсутствие данных, на которые слой ссылается, будь-то файл или источник в БД.
+   * Частые причины отсутствия слоя — отсутствие данных, на которые слой ссылается, будь то файл или источник в БД.
    *
    * По результатам проверки слой будет помечен сломанным в текущем проекте в currentProject.layersErrors
    *
@@ -190,7 +204,7 @@ class ProjectsService {
     const result = await projectsClient.createProject(project);
     communicationService.projectUpdated.emit({ type: 'create', data: result });
 
-    allProjects.addProject(result);
+    allProjects.add(result);
 
     return result;
   }
@@ -214,19 +228,23 @@ class ProjectsService {
 
   async update(project: CrgProject, patch: Partial<CrgProject>) {
     await projectsClient.updateProject(project.id, patch);
-
     communicationService.projectUpdated.emit({ type: 'update', data: { ...project, ...patch } });
+    allProjects.update(project.id, patch);
   }
 
-  async move(currentProj: CrgProject, targetProjId: number) {
-    await projectsClient.moveProject(currentProj.id, targetProjId);
-
-    communicationService.projectUpdated.emit({ type: 'delete', data: currentProj });
+  async move(project: CrgProject, targetProjId: number) {
+    await projectsClient.moveProject(project.id, targetProjId);
+    communicationService.projectUpdated.emit({ type: 'delete', data: project });
+    allProjects.update(project.id, { parentId: targetProjId });
   }
 
   async delete(id: number) {
     await projectsClient.deleteProject(id);
-    allProjects.delete(id);
+    const project = allProjects.getById(id);
+    if (project) {
+      communicationService.projectUpdated.emit({ type: 'delete', data: project });
+      allProjects.delete(id);
+    }
   }
 
   async getGroups(projectId: number): Promise<CrgLayersGroup[]> {

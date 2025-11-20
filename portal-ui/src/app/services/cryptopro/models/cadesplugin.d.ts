@@ -54,13 +54,13 @@ type _CADESPluginBase = Promise<never> &
   Readonly<typeof CAPICOM.CAPICOM_CERTIFICATE_FIND_TYPE> &
   Readonly<typeof CAPICOM.CAPICOM_CERTIFICATE_INCLUDE_OPTION> &
   Readonly<typeof CAPICOM.CAPICOM_ATTRIBUTE> &
-  Readonly<typeof CAdESCOM.CADESCOM_CADES_TYPE> &
-  Readonly<typeof CAdESCOM.CADESCOM_XML_SIGNATURE_TYPE> &
+  Readonly<Pick<typeof CAdESCOM.CADESCOM_CADES_TYPE, CAdESCOM.CadesTypePluginNames>> &
+  Readonly<typeof CAdeSCOM.CADESCOM_XML_SIGNATURE_TYPE> &
   Readonly<typeof CAdESCOM.CADESCOM_ATTRIBUTE> &
   Readonly<typeof CAdESCOM.CADESCOM_CONTENT_ENCODING_TYPE> &
   Readonly<typeof CAdESCOM.CADESCOM_DISPLAY_DATA> &
   Readonly<typeof CAdESCOM.CADESCOM_ENCRYPTION_ALGORITHM> &
-  Readonly<typeof CAdESCOM.CADESCOM_HASH_ALGORITHM> &
+  Readonly<Pick<typeof CAdESCOM.CADESCOM_HASH_ALGORITHM, CAdESCOM.HashAlgorithmPluginNames>> &
   Readonly<typeof CAdESCOM.CADESCOM_InstallResponseRestrictionFlags> &
   Readonly<typeof CADES_Plugin.LogLevel> &
   Readonly<typeof CADES_Plugin.ISignedXmlUrls> &
@@ -76,6 +76,13 @@ interface CADESPluginBase extends _CADESPluginBase {
   set_log_level(level: CADES_Plugin.LogLevel): void;
   getLastError(exception: Error): string;
   is_capilite_enabled(): boolean;
+
+  // Дополнительные свойства для const enum
+  readonly CADESCOM_HASH_ALGORITHM_CP_GOST_3411_2012_256: CAdESCOM.CADESCOM_HASH_ALGORITHM.CADESCOM_HASH_ALGORITHM_CP_GOST_3411_2012_256;
+  readonly CADESCOM_CADES_BES: CAdESCOM.CADESCOM_CADES_TYPE.CADESCOM_CADES_BES;
+  readonly CAPICOM_CURRENT_USER_STORE: CAPICOM.CAPICOM_STORE_LOCATION.CAPICOM_CURRENT_USER_STORE;
+  readonly CAPICOM_MY_STORE: CAPICOM.CAPICOM_STORE_NAME.CAPICOM_MY_STORE;
+  readonly CAPICOM_STORE_OPEN_MAXIMUM_ALLOWED: CAPICOM.CAPICOM_STORE_OPEN_MODE.CAPICOM_STORE_OPEN_MAXIMUM_ALLOWED;
 }
 
 interface CADESPluginAsync extends CADESPluginBase {

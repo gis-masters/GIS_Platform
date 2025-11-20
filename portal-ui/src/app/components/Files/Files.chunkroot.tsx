@@ -259,7 +259,7 @@ export default class Files extends Component<FilesProps> {
 
         const newItem: FileInfo = { id: uuid(), title: file.name, size: file.size, notLoaded: true };
 
-        // не пускаем пустые файлы в общий пулл
+        // не пускаем пустые файлы в общий пул
         if (file.size === 0 || !file.size) {
           this.setEmptyFiles([...this.emptyFiles, newItem]);
 
