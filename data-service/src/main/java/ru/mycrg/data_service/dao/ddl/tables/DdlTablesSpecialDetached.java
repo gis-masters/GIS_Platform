@@ -2,9 +2,12 @@ package ru.mycrg.data_service.dao.ddl.tables;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+import ru.mycrg.data_service.dto.ColumnShortInfo;
 import ru.mycrg.data_service.dto.TableCreateDto;
+import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service_contract.dto.AdditionalFieldDto;
 import ru.mycrg.data_service_contract.dto.SimplePropertyDto;
 import ru.mycrg.data_service_contract.enums.ValueType;
@@ -26,7 +29,9 @@ public class DdlTablesSpecialDetached {
         this.ddlTablesBaseDetached = ddlTablesBaseDetached;
     }
 
-    public void create(JdbcTemplate jdbcTemplate, String targetSchema, TableCreateDto dto,
+    public void create(JdbcTemplate jdbcTemplate,
+                       String targetSchema,
+                       TableCreateDto dto,
                        List<SimplePropertyDto> properties) {
         // add additional fields
         addAdditionalFields(properties, dto.getAdditionalFields());
@@ -90,5 +95,14 @@ public class DdlTablesSpecialDetached {
                 schemaProperties.add(additionalProperty);
             });
         }
+    }
+
+    public List<ColumnShortInfo> getColumnShortInfo(ResourceQualifier sourceTable, JdbcTemplate jdbcTemplate) {
+        String query = "SELECT column_name, udt_name, character_maximum_length, numeric_scale " +
+                "FROM INFORMATION_SCHEMA.COLUMNS " +
+                "WHERE TABLE_NAME = '" + sourceTable.getTable().toLowerCase() + "'" +
+                "AND TABLE_SCHEMA = '" + sourceTable.getSchema() + "'";
+
+        return jdbcTemplate.query(query, new BeanPropertyRowMapper<>(ColumnShortInfo.class));
     }
 }

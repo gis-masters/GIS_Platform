@@ -37,6 +37,9 @@ camunda:
   bpm:
     job-execution:
       enabled: true
+      core-pool-size: 10
+      max-pool-size: 20
+      queue-capacity: 10
     admin-user:
       id: ${CAMUNDA_BPM_ADMIN-USER_ID}
       password: ${CAMUNDA_BPM_ADMIN-USER_PASSWORD}

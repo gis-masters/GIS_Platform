@@ -115,13 +115,13 @@ public class GDALService implements IExporter {
     /**
      * Импорт GeoPackage в указанную схему с предварительным созданием схемы
      *
-     * @param filePath   Путь к файлу GeoPackage
+     * @param fileId     id файла gpkg как сущности платформы
      * @param dbName     Название базы данных
      * @param schemaName Название схемы
      *
      * @return ErrorReport с результатами импорта
      */
-    public ErrorReport importFromGeoPackageToSchema(String filePath, String dbName, String schemaName) {
+    public ErrorReport importFromGeoPackageToSchema(UUID fileId, String dbName, String schemaName) {
         JdbcTemplate jdbcTemplate = datasourceFactory.getJdbcTemplate(dbName);
         try {
             baseDaoService.createSchemaIfNotExists(jdbcTemplate, schemaName);
@@ -135,6 +135,14 @@ public class GDALService implements IExporter {
 
         ErrorReport errorReport;
         ProcessBuilder processBuilder = new ProcessBuilder();
+
+        String filePath;
+        try {
+            filePath = baseDaoService.getFilePathByUUID(jdbcTemplate, fileId);
+        } catch (SQLException e) {
+            throw new ClientException(
+                    "Файл не найден по id '" + fileId + "'. Останавливаем импорт!!!. Причина: " + e.getMessage());
+        }
 
         errorReport = importGeoPackageToSchemaUseSrcFromPackage(processBuilder, dbName, schemaName, filePath);
 

@@ -76,6 +76,16 @@ public class OrgSettingsKeeper {
         return false;
     }
 
+    @NotNull
+    public Map<String, Object> getOrgSettingsById(Long orgId) {
+        OrgSettingsUpdatedEvent orgSettings = this.orgSettings.get(orgId);
+        if (orgSettings == null || orgSettings.getSettings() == null) {
+            throw new DataServiceException("Не удалось считать настройки организации: " + orgId);
+        }
+
+        return orgSettings.getSettings();
+    }
+
     private void throwIfNotAllowed(String settingKey) {
         Object oSetting = getCurrentOrgSettings().get(settingKey);
         if (oSetting != null && !Boolean.parseBoolean(oSetting.toString())) {
@@ -85,14 +95,7 @@ public class OrgSettingsKeeper {
         }
     }
 
-    @NotNull
     private Map<String, Object> getCurrentOrgSettings() {
-        Long orgId = authenticationFacade.getOrganizationId();
-        OrgSettingsUpdatedEvent orgSettings = this.orgSettings.get(orgId);
-        if (orgSettings == null || orgSettings.getSettings() == null) {
-            throw new DataServiceException("Не удалось считать настройки организации: " + orgId);
-        }
-
-        return orgSettings.getSettings();
+        return getOrgSettingsById(authenticationFacade.getOrganizationId());
     }
 }

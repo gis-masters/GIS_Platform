@@ -1,4 +1,4 @@
-package ru.mycrg.data_service_contract.queue.request.gpkg;
+package ru.mycrg.messagebus_contract.events.integration_wrapper;
 
 import ru.mycrg.messagebus_contract.events.DefaultMessageBusRequestEvent;
 
@@ -10,7 +10,7 @@ import static ru.mycrg.messagebus_contract.MessageBusProperties.INTEGRATION_TO_G
 public class ExtractGpkgEvent extends DefaultMessageBusRequestEvent {
 
     private String dbName;
-    private String filePath;
+    private UUID fileId;
     private String businessKey;
 
     public ExtractGpkgEvent() {
@@ -18,12 +18,12 @@ public class ExtractGpkgEvent extends DefaultMessageBusRequestEvent {
     }
 
     public ExtractGpkgEvent(String dbName,
-                            String filePath,
+                            UUID fileId,
                             String businessKey) {
         super(UUID.randomUUID(), INTEGRATION_TO_GEO_WRAPPER_QUEUE);
 
         this.dbName = dbName;
-        this.filePath = filePath;
+        this.fileId = fileId;
         this.businessKey = businessKey;
     }
 
@@ -35,12 +35,12 @@ public class ExtractGpkgEvent extends DefaultMessageBusRequestEvent {
         this.dbName = dbName;
     }
 
-    public String getFilePath() {
-        return filePath;
+    public UUID getFileId() {
+        return fileId;
     }
 
-    public void setFilePath(String filePath) {
-        this.filePath = filePath;
+    public void setFileId(UUID fileId) {
+        this.fileId = fileId;
     }
 
     public String getBusinessKey() {

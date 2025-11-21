@@ -300,6 +300,13 @@ public class TablesStepsDefinitions extends BaseStepsDefinitions {
                         put(String.format("/%s/schema", tableName));
     }
 
+    @And("пользователь делает запрос на получение схемы текущей таблицы")
+    public void getTableSchema() {
+        response = getBaseRequestWithCurrentCookie()
+                .when().
+                        get("/" + currentTableName + "/schema");
+    }
+
     @Given("В текущем наборе данных существует таблица, созданная по тестовой схеме")
     public void createAnyTableInCurrentDatasetAndByTestSchema() {
         currentTableName = generateString("STRING_5");
@@ -351,7 +358,7 @@ public class TablesStepsDefinitions extends BaseStepsDefinitions {
     @And("Тело ответа содержит ошибку о том что для калькуляции ruleid по wellKnown формуле отсутствует поле classid")
     public void checkErrorMessageContainsErrorThatShapeFieldIsMissingForWellKnownCalculation() {
         String message = response.jsonPath().get("message");
-        assertTrue(message.contains("Argument validation exception"));
+        assertTrue(message.contains("Ошибка валидации объектов схемы."));
 
         List<Map<String, Object>> errors = response.jsonPath().getList("errors");
 
@@ -366,7 +373,7 @@ public class TablesStepsDefinitions extends BaseStepsDefinitions {
     @And("Тело ответа содержит ошибку о том что для калькуляции ruleid по wellKnown формуле поле classid должно быть типа choice, string или int")
     public void checkErrorMessageContainsErrorThatFieldIsNotAllowedType() {
         String message = response.jsonPath().get("message");
-        assertTrue(message.contains("Argument validation exception"));
+        assertTrue(message.contains("Ошибка валидации объектов схемы."));
 
         List<Map<String, Object>> errors = response.jsonPath().getList("errors");
 

@@ -10,9 +10,11 @@ import ru.mycrg.data_service.dao.core.CoreTemplateDao;
 import ru.mycrg.data_service.entity.SchemasAndTables;
 import ru.mycrg.data_service.repository.SchemasAndTablesRepositoryDetached;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
+import ru.mycrg.data_service.util.SimplePropertyCollector;
 import ru.mycrg.data_service_contract.dto.ErrorReport;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.data_service_contract.dto.SimplePropertyDto;
+import ru.mycrg.data_service_contract.enums.ValueType;
 import ru.mycrg.data_service_contract.queue.request.gpkg.ImportGpkgCopyDataBackwardEvent;
 import ru.mycrg.data_service_contract.queue.request.gpkg.ImportGpkgCopyDataEvent;
 import ru.mycrg.messagebus_contract.IEventHandler;
@@ -23,11 +25,11 @@ import javax.validation.constraints.NotNull;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static java.lang.Thread.sleep;
 import static java.time.LocalDateTime.now;
 import static ru.mycrg.data_service.dao.utils.SqlBuilder.buildCopyGpkgFileQuery;
 import static ru.mycrg.data_service.util.SystemLibraryAttributes.*;
-import static ru.mycrg.data_service_contract.enums.ProcessStatus.*;
+import static ru.mycrg.data_service_contract.enums.ProcessStatus.TASK_DONE;
+import static ru.mycrg.data_service_contract.enums.ProcessStatus.TASK_ERROR;
 import static ru.mycrg.http_client.JsonConverter.fromJson;
 
 @Service
@@ -36,17 +38,20 @@ public class ImportGpkgCopyDataEventHandler implements IEventHandler {
     private final Logger log = LoggerFactory.getLogger(ImportGpkgCopyDataEventHandler.class);
 
     private final SchemasAndTablesRepositoryDetached schemasAndTablesRepository;
+    private final SimplePropertyCollector simplePropertyCollector;
     private final DatasourceFactory datasourceFactory;
     private final GeometryDaoDetached geometryDao;
     private final CoreTemplateDao coreTemplateDao;
     private final IMessageBusProducer messageBus;
 
     public ImportGpkgCopyDataEventHandler(SchemasAndTablesRepositoryDetached schemasAndTablesRepository,
+                                          SimplePropertyCollector simplePropertyCollector,
                                           DatasourceFactory datasourceFactory,
                                           GeometryDaoDetached geometryDao,
                                           CoreTemplateDao coreTemplateDao,
                                           IMessageBusProducer messageBus) {
         this.schemasAndTablesRepository = schemasAndTablesRepository;
+        this.simplePropertyCollector = simplePropertyCollector;
         this.datasourceFactory = datasourceFactory;
         this.geometryDao = geometryDao;
         this.coreTemplateDao = coreTemplateDao;
@@ -80,11 +85,6 @@ public class ImportGpkgCopyDataEventHandler implements IEventHandler {
             log.error(msg);
             List<String> messages = errorReport.getMessages();
             messages.add(msg);
-            try {
-                sleep(10000);
-            } catch (InterruptedException ex) {
-                throw new RuntimeException(ex);
-            }
             messageBus.produce(new ImportGpkgCopyDataBackwardEvent(TASK_ERROR, businessKey, errorReport));
 
             return;
@@ -104,11 +104,6 @@ public class ImportGpkgCopyDataEventHandler implements IEventHandler {
             log.error(msg);
             List<String> messages = errorReport.getMessages();
             messages.add(msg);
-            try {
-                sleep(10000);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
             messageBus.produce(new ImportGpkgCopyDataBackwardEvent(TASK_ERROR, businessKey, errorReport));
 
             return;
@@ -121,11 +116,6 @@ public class ImportGpkgCopyDataEventHandler implements IEventHandler {
              jdbcTemplate,
              errorReport);
 
-        try {
-            sleep(10000);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
         messageBus.produce(new ImportGpkgCopyDataBackwardEvent(TASK_DONE, businessKey, errorReport));
     }
 
@@ -181,13 +171,19 @@ public class ImportGpkgCopyDataEventHandler implements IEventHandler {
                       ErrorReport errorReport) {
         try {
             // В отличие от shp мы можем всегда собирать SimplePropertyDto из SchemaDto
-            // потому что временная таблица когда была создана по той же SchemaDto что и новая
+            // Потому что временная таблица когда была создана по той же SchemaDto что и новая
             Set<String> columnsForExclude = getSystemColumnsForExclude(targetResource);
             List<SimplePropertyDto> sourcePropsWithoutSystemFields = actualSchemaDto
                     .getProperties()
                     .stream()
                     .filter(property -> !columnsForExclude.contains(property.getName()))
                     .collect(Collectors.toList());
+
+            log.debug("До удаления из сорса {}", sourcePropsWithoutSystemFields.size());
+            //Однако иногда у нас схемы нет и мы собираем её "налету"
+            //Доп. Мы же можем в QGIS модифицировать таблицу при этом не трогая схему так что проверка полезна
+            findAndRemoveAllDefunctProps(jdbcTemplate, sourcePropsWithoutSystemFields, sourceResource);
+            log.debug("После из сорса {}", sourcePropsWithoutSystemFields.size());
 
             Map<String, Object> systemAutogeneratedField = new HashMap<>();
             systemAutogeneratedField.put(CREATED_AT.getName(), now());
@@ -198,6 +194,8 @@ public class ImportGpkgCopyDataEventHandler implements IEventHandler {
                                                       sourcePropsWithoutSystemFields,
                                                       actualSchemaDto.getProperties(),
                                                       systemAutogeneratedField);
+
+            log.debug("Запрос [{}]", copyQuery);
 
             Long insertedQuantity = coreTemplateDao.queryForObject(jdbcTemplate, copyQuery, Long.class);
             String msg = String.format("Процесс переноса данных из временной таблицы успешно завершён. Перенесено " +
@@ -222,5 +220,25 @@ public class ImportGpkgCopyDataEventHandler implements IEventHandler {
                       UPDATED_BY.getName(),
                       CREATED_BY.getName(),
                       LAST_MODIFIED.getName());
+    }
+
+    /**
+     * Удаляет из sourcePropsWithoutSystemFields свойства, которых нет в sourceResource или у них не совпадает тип.
+     */
+    private void findAndRemoveAllDefunctProps(JdbcTemplate jdbcTemplate,
+                                              List<SimplePropertyDto> sourcePropsWithoutSystemFields,
+                                              ResourceQualifier sourceResource) {
+        List<SimplePropertyDto> realDbProps = simplePropertyCollector
+                .getSimpleProperties(jdbcTemplate, sourceResource);
+
+        Map<String, ValueType> generatedPropsMap = realDbProps.stream()
+                                                              .collect(Collectors.toMap(
+                                                                      SimplePropertyDto::getName,
+                                                                      SimplePropertyDto::getValueTypeAsEnum));
+
+        //Возможно тут нужна проверка ещё и по ValueType тем более что Map мы таскаем цельную.
+        //Но тогда мы начинаем терять наши поля типа choice если делаем тупой equals, а умный equals пока лень.
+        //Вполне вероятно что текущего кода на долго хватит
+        sourcePropsWithoutSystemFields.removeIf(currProp -> !generatedPropsMap.containsKey(currProp.getName()));
     }
 }

@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import ru.mycrg.common_contracts.exceptions.ClientException;
 import ru.mycrg.data_service_contract.dto.ErrorReport;
-import ru.mycrg.data_service_contract.queue.request.gpkg.ExtractGpkgEvent;
+import ru.mycrg.messagebus_contract.events.integration_wrapper.ExtractGpkgEvent;
 import ru.mycrg.data_service_contract.queue.response.ExtractGpkgBackwardEvent;
 import ru.mycrg.messagebus_contract.IEventHandler;
 import ru.mycrg.messagebus_contract.IMessageBusProducer;
@@ -23,7 +23,8 @@ public class ExtractGpkgEventHandler implements IEventHandler {
     private final IMessageBusProducer messageBus;
     private final GDALService gdalService;
 
-    public ExtractGpkgEventHandler(IMessageBusProducer messageBus, GDALService gdalService) {
+    public ExtractGpkgEventHandler(IMessageBusProducer messageBus,
+                                   GDALService gdalService) {
         this.messageBus = messageBus;
         this.gdalService = gdalService;
     }
@@ -42,7 +43,7 @@ public class ExtractGpkgEventHandler implements IEventHandler {
                                           RandomStringUtils.random(15, true, true)).toLowerCase();
 
         try {
-            ErrorReport errorReport = gdalService.importFromGeoPackageToSchema(event.getFilePath(),
+            ErrorReport errorReport = gdalService.importFromGeoPackageToSchema(event.getFileId(),
                                                                                event.getDbName(),
                                                                                schemaName);
 

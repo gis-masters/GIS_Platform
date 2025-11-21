@@ -10,6 +10,7 @@ public class ImportGpkgAckInfoEvent extends DefaultMessageBusRequestEvent {
 
     private String businessKey;
     private String dbName;
+    private UUID fileId;
     private String sourceSchemaName;
     private String tableName;
 
@@ -19,12 +20,14 @@ public class ImportGpkgAckInfoEvent extends DefaultMessageBusRequestEvent {
 
     public ImportGpkgAckInfoEvent(String businessKey,
                                   String dbName,
+                                  UUID fileId,
                                   String sourceSchemaName,
                                   String tableName) {
         super(UUID.randomUUID(), INTEGRATION_TO_DATA_QUEUE);
 
         this.businessKey = businessKey;
         this.dbName = dbName;
+        this.fileId = fileId;
         this.sourceSchemaName = sourceSchemaName;
         this.tableName = tableName;
     }
@@ -43,6 +46,14 @@ public class ImportGpkgAckInfoEvent extends DefaultMessageBusRequestEvent {
 
     public void setDbName(String dbName) {
         this.dbName = dbName;
+    }
+
+    public UUID getFileId() {
+        return fileId;
+    }
+
+    public void setFileId(UUID fileId) {
+        this.fileId = fileId;
     }
 
     public String getSourceSchemaName() {

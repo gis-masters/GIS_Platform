@@ -9,6 +9,8 @@ import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.exceptions.TransformationException;
 import ru.mycrg.data_service.service.parsers.exceptions.EpsgParserException;
 
+import static ru.mycrg.data_service.config.CrgCommonConfig.DEFAULT_EPSG_TEXT_PART;
+
 public class CrsHandler {
 
     private static final Logger log = LoggerFactory.getLogger(CrsHandler.class);
@@ -39,10 +41,11 @@ public class CrsHandler {
         String normalizedCrs = crs.toUpperCase().trim();
 
         // Определение позиции "EPSG:" в строке
-        int epsgIndex = normalizedCrs.indexOf("EPSG:");
+        int epsgIndex = normalizedCrs.indexOf(DEFAULT_EPSG_TEXT_PART);
         if (epsgIndex == -1) {
             String errorMsg = String.format("Неверный формат CRS: '%s'. Не найден префикс EPSG", crs);
             log.error(errorMsg);
+
             throw new EpsgParserException(errorMsg);
         }
 
@@ -54,6 +57,7 @@ public class CrsHandler {
             String errorMsg = String.format("Неверный формат номера CRS: '%s'. После 'EPSG:' должны быть только цифры",
                                             crs);
             log.error(errorMsg);
+
             throw new EpsgParserException(errorMsg);
         }
 
@@ -65,6 +69,7 @@ public class CrsHandler {
         } catch (NumberFormatException e) {
             String errorMsg = String.format("Невозможно преобразовать номер CRS: '%s'. Число слишком большое", crs);
             log.error("Ошибка преобразования числа: {}", errorMsg, e);
+
             throw new DataServiceException(errorMsg, e);
         }
     }
@@ -105,7 +110,7 @@ public class CrsHandler {
             } else if (srid == 314315) {
                 return epsgCodes.getCrsBySrid(314315);
             } else {
-                return CRS.decode("EPSG:" + srid);
+                return CRS.decode(DEFAULT_EPSG_TEXT_PART + srid);
             }
         } catch (FactoryException e) {
             String msg = "Не удалось определить код EPSG => " + e.getMessage();

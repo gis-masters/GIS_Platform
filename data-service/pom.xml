@@ -336,7 +336,7 @@
         <dependency>
             <groupId>ru.mycrg</groupId>
             <artifactId>data-service-contract</artifactId>
-            <version>1.9.1-SNAPSHOT</version>
+            <version>1.9.2-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>ru.mycrg</groupId>
@@ -358,7 +358,7 @@
         <dependency>
             <groupId>ru.mycrg</groupId>
             <artifactId>schemas</artifactId>
-            <version>0.1-SNAPSHOT</version>
+            <version>0.2-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>ru.mycrg</groupId>

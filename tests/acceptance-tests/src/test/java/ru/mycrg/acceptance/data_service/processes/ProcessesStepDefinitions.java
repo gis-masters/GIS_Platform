@@ -207,7 +207,7 @@ public class ProcessesStepDefinitions extends BaseStepsDefinitions {
         getCurrentProcess();
     }
 
-    @When("в ответе процесса содержится фраза {string}")
+    @When("в ответе содержится фраза {string}")
     public void checkProcessAnswer(String pattern) {
         System.out.println(pattern);
         String responseText = response.prettyPrint();

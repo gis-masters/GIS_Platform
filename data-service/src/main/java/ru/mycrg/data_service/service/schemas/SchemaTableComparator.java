@@ -41,7 +41,7 @@ public class SchemaTableComparator {
                                     @NotNull ResourceQualifier qualifier) {
         Set<ErrorInfo> mismatches = new HashSet<>();
         try {
-            List<ColumnShortInfo> columnsShortInfo = ddlTablesSpecial.getColumnShortInfo(qualifier.getTable());
+            List<ColumnShortInfo> columnsShortInfo = ddlTablesSpecial.getColumnShortInfo(qualifier);
             log.info("columnsShortInfo:{}", columnsShortInfo);
 
             // Проверка колонок БД на наличие в схеме

@@ -6,7 +6,7 @@
 
     <groupId>ru.mycrg</groupId>
     <artifactId>data-service-contract</artifactId>
-    <version>1.9.1-SNAPSHOT</version>
+    <version>1.9.2-SNAPSHOT</version>
 
     <name>data-service-contract</name>
     <description>Contract of data-service</description>
@@ -29,7 +29,7 @@
         <dependency>
             <groupId>ru.mycrg</groupId>
             <artifactId>messagebus-contract</artifactId>
-            <version>1.2-SNAPSHOT</version>
+            <version>1.3-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>jakarta.validation</groupId>
@@ -40,7 +40,7 @@
         <dependency>
             <groupId>ru.mycrg</groupId>
             <artifactId>gis-service-contract</artifactId>
-            <version>1.3-SNAPSHOT</version>
+            <version>1.4-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
         <dependency>

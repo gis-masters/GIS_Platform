@@ -6,7 +6,7 @@
 
     <groupId>ru.mycrg</groupId>
     <artifactId>schemas</artifactId>
-    <version>0.1-SNAPSHOT</version>
+    <version>0.2-SNAPSHOT</version>
 
     <name>Crg validator</name>
     <description>Library for validate features/layers by crg-schemas</description>

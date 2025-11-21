@@ -33,19 +33,20 @@ public class GpkgRepositoryDetached {
     public Optional<SchemaDto> getSchemaFromSchemaTable(JdbcTemplate jdbcTemplate,
                                                         String schema,
                                                         String filterParam) {
-
         String sql = "SELECT " + GPKG_SCHEMA_JSON_COLUMN + " " +
                 "FROM " + schema + "." + GPKG_VECTOR_TABLE_SCHEMAS_TABLE + " " +
                 "WHERE resource_name LIKE '%." + filterParam + "' LIMIT 1";
 
-        String jsonString = jdbcTemplate.queryForObject(sql, String.class);
+        try {
+            String jsonString = jdbcTemplate.queryForObject(sql, String.class);
 
-        if (jsonString == null) {
+            return JsonConverter.fromJson(jsonString, new TypeReference<SchemaDto>() {
+            });
+        } catch (Exception e) {
+            log.error("Не удалось найти информацию о векторной таблице. Причина: {}", e.getMessage());
+
             return Optional.empty();
         }
-
-        return JsonConverter.fromJson(jsonString, new TypeReference<SchemaDto>() {
-        });
     }
 
     public Optional<TableCreateDto> getTableInfo(JdbcTemplate jdbcTemplate,
@@ -56,14 +57,22 @@ public class GpkgRepositoryDetached {
                 "FROM " + schema + "." + GPKG_VECTOR_TABLE_INFO_TABLE + " " +
                 "WHERE resource_name LIKE '%." + tableName + "' LIMIT 1";
 
-        List<TableCreateDto> results = jdbcTemplate.query(sql, new TableCreateDtoMapper());
+        try {
+            List<TableCreateDto> results = jdbcTemplate.query(sql, new TableCreateDtoMapper());
 
-        return results.isEmpty() ? Optional.empty() : Optional.of(results.get(0));
+            return results.isEmpty() ? Optional.empty() : Optional.of(results.get(0));
+        } catch (Exception e) {
+            log.error("Не удалось прочитать информацию о векторной таблице из временного хранилища {}", e.getMessage());
+
+            return Optional.empty();
+        }
     }
 
     public List<LayerProjection> getLayerInfoFromGpkg(JdbcTemplate jdbcTemplate,
                                                       String schema,
                                                       String oldTableName) {
+        List<LayerProjection> layerProjections = new ArrayList<>();
+
         String sql = "SELECT *, " +
                 "CONCAT(" + GPKG_LAYER_INFO_DATASET + ", '.', " + GPKG_LAYER_INFO_RESOURCE_ID + ")" +
                 " AS " + GPKG_LAYER_INFO_COMPLEX_NAME + ", " +
@@ -72,9 +81,16 @@ public class GpkgRepositoryDetached {
                 "FROM " + schema + "." + GPKG_LAYER_INFO_TABLE + " " +
                 "WHERE " + GPKG_LAYER_INFO_RESOURCE_ID + " LIKE '" + oldTableName + "'";
 
-        log.debug("Query получения списка слоёв: [{}], для {}", sql, oldTableName);
+        log.debug("Query получения списка crg слоёв: [{}], для {}", sql, oldTableName);
+        try {
+            layerProjections = jdbcTemplate.query(sql, new LayerProjectionMapper());
 
-        return jdbcTemplate.query(sql, new LayerProjectionMapper());
+            return layerProjections;
+        } catch (Exception e) {
+            log.error("Не удалось прочитать информацию о crg слоях из временного хранилища {}", e.getMessage());
+
+            return layerProjections;
+        }
     }
 
     public List<GpkgImportedStyles> getStyleInfoFromGpkg(JdbcTemplate jdbcTemplate,

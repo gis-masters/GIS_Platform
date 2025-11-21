@@ -14,7 +14,6 @@ import ru.mycrg.data_service.entity.File;
 import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.repository.FileRepository;
-import ru.mycrg.data_service.service.files.DefaultMetadataExtractor;
 import ru.mycrg.data_service.service.files.IMetadataExtractor;
 import ru.mycrg.data_service.service.files.MetadataExtractionException;
 import ru.mycrg.data_service.service.resources.protectors.IFileResourceProtector;

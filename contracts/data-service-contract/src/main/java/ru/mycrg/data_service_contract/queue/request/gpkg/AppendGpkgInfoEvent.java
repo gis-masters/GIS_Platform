@@ -1,4 +1,4 @@
-package ru.mycrg.data_service_contract.queue.request;
+package ru.mycrg.data_service_contract.queue.request.gpkg;
 
 import ru.mycrg.data_service_contract.dto.gpkg.GpkgAppendingData;
 import ru.mycrg.messagebus_contract.events.DefaultMessageBusRequestEvent;

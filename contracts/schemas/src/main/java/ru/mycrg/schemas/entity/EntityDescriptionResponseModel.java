@@ -1,7 +1,7 @@
 package ru.mycrg.schemas.entity;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import ru.mycrg.schemas.GeometryType;
+import ru.mycrg.schemas.BaseGeometryType;
 import ru.mycrg.schemas.content_types.EntityContentTypeResponseModel;
 import ru.mycrg.schemas.properties.EntityPropertyResponseModel;
 
@@ -15,7 +15,7 @@ public class EntityDescriptionResponseModel {
     private String customRuleFunction;
     private String calcFieldsFunction;
     private boolean readOnly;
-    private GeometryType geometryType;
+    private BaseGeometryType geometryType;
     private List<EntityPropertyResponseModel> properties = new ArrayList<>();
     private List<EntityContentTypeResponseModel> contentTypes = new ArrayList<>();
 
@@ -59,11 +59,11 @@ public class EntityDescriptionResponseModel {
         this.readOnly = readOnly;
     }
 
-    public GeometryType getGeometryType() {
+    public BaseGeometryType getGeometryType() {
         return geometryType;
     }
 
-    public void setGeometryType(GeometryType geometryType) {
+    public void setGeometryType(BaseGeometryType geometryType) {
         this.geometryType = geometryType;
     }
 

@@ -14,7 +14,6 @@ public class ImportGpkgEvent extends DefaultMessageBusRequestEvent implements Se
     private String dbName;
     private String token;
     private String creator;
-    private String filePath;
     private UUID fileId;
     private Long projectId;
     private String targetDatasetIdentifier;
@@ -29,7 +28,6 @@ public class ImportGpkgEvent extends DefaultMessageBusRequestEvent implements Se
                            String dbName,
                            String token,
                            String creator,
-                           String filePath,
                            UUID fileId,
                            Long projectId,
                            String targetDatasetIdentifier,
@@ -41,7 +39,6 @@ public class ImportGpkgEvent extends DefaultMessageBusRequestEvent implements Se
         this.dbName = dbName;
         this.token = token;
         this.creator = creator;
-        this.filePath = filePath;
         this.fileId = fileId;
         this.projectId = projectId;
         this.targetDatasetIdentifier = targetDatasetIdentifier;
@@ -79,14 +76,6 @@ public class ImportGpkgEvent extends DefaultMessageBusRequestEvent implements Se
 
     public void setCreator(String creator) {
         this.creator = creator;
-    }
-
-    public String getFilePath() {
-        return filePath;
-    }
-
-    public void setFilePath(String filePath) {
-        this.filePath = filePath;
     }
 
     public UUID getFileId() {
@@ -134,7 +123,6 @@ public class ImportGpkgEvent extends DefaultMessageBusRequestEvent implements Se
         return "{" +
                 "\"processId\":" + (processId == null ? "null" : "\"" + processId + "\"") + ", " +
                 "\"dbName\":" + (dbName == null ? "null" : "\"" + dbName + "\"") + ", " +
-                "\"filePath\":" + (filePath == null ? "null" : "\"" + filePath + "\"") + ", " +
                 "\"importGpkgReport\":" + (gpkgImportReport == null ? "null" : "\"" + gpkgImportReport + "\"") + ", " +
                 "}";
     }

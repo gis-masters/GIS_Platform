@@ -16,13 +16,16 @@ public class CrgCommonConfig {
 
     public static final Long SYSTEM_USER_ID = -1L;
 
+    //TODO: Реализовать и начать использовать класс на подобии CrgGlobalProperties из common_utils (AzureDevOps #3851)
+    public static final String DEFAULT_EPSG_TEXT_PART = "EPSG:";
+
     /**
      * EPSG:4326. Degree.
      * <br><br>
      * WGS 84 - World Geodetic System 1984
      */
     public static final String DEFAULT_SRID_DEGREE = "4326";
-    public static final String DEFAULT_EPSG_DEGREE = "EPSG:4326";
+    public static final String DEFAULT_EPSG_DEGREE = DEFAULT_EPSG_TEXT_PART + DEFAULT_SRID_DEGREE;
 
     /**
      * EPSG:3857. Metre.
@@ -30,7 +33,7 @@ public class CrgCommonConfig {
      * WGS 84 - World Geodetic System 1984
      */
     public static final String DEFAULT_SRID_METRE = "3857";
-    public static final String DEFAULT_EPSG_METRE = "EPSG:3857";
+    public static final String DEFAULT_EPSG_METRE = DEFAULT_EPSG_TEXT_PART + DEFAULT_SRID_METRE;
 
     public static final String ROOT_FOLDER_PATH = "/root";
 

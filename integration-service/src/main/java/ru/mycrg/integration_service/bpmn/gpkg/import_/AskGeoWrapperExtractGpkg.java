@@ -6,7 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import ru.mycrg.common_contracts.generated.data_service.gpkg.GpkgImportReport;
-import ru.mycrg.data_service_contract.queue.request.gpkg.ExtractGpkgEvent;
+import ru.mycrg.messagebus_contract.events.integration_wrapper.ExtractGpkgEvent;
 import ru.mycrg.data_service_contract.queue.request.gpkg.ImportGpkgEvent;
 import ru.mycrg.messagebus_contract.IMessageBusProducer;
 
@@ -44,6 +44,6 @@ public class AskGeoWrapperExtractGpkg implements JavaDelegate {
 
         String businessKey = (String) delegateExecution.getVariable(BUSINESS_KEY_VAR_NAME);
 
-        messageBus.produce(new ExtractGpkgEvent(event.getDbName(), event.getFilePath(), businessKey));
+        messageBus.produce(new ExtractGpkgEvent(event.getDbName(), event.getFileId(), businessKey));
     }
 }

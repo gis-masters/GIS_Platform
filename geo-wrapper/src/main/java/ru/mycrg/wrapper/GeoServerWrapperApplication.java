@@ -27,8 +27,8 @@ public class GeoServerWrapperApplication {
         long totalMemory = runtime.totalMemory();
 
         log.info("=== HEAP MEMORY INFO ===");
-        log.info("HEAP: Max Memory (Xmx): {} MB", maxMemory / (1024*1024));
-        log.info("HEAP: Initial Memory (Xms): {} MB", totalMemory / (1024*1024));
+        log.info("HEAP: Max Memory (Xmx): {} MB", maxMemory / (1024 * 1024));
+        log.info("HEAP: Initial Memory (Xms): {} MB", totalMemory / (1024 * 1024));
         log.info("========= END HEAP =========");
         SpringApplication.run(GeoServerWrapperApplication.class, args);
     }

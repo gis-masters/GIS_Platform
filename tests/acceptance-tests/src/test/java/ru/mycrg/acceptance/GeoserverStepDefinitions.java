@@ -218,8 +218,15 @@ public class GeoserverStepDefinitions extends BaseStepsDefinitions {
     }
 
     @And("стиль {string} существует на геосервере, в текущем рабочем пространстве")
-    public void checkStyle(String styleName) {
+    public void checkStyleInWorkspace(String styleName) {
         getStyleFromWorkspace(currentWorkspace, styleName);
+
+        assertEquals(SC_OK, response.getStatusCode());
+    }
+
+    @And("стиль {string} существует на геосервере")
+    public void checkStyle(String styleName) {
+        getStyle(styleName);
 
         assertEquals(SC_OK, response.getStatusCode());
     }
@@ -335,6 +342,14 @@ public class GeoserverStepDefinitions extends BaseStepsDefinitions {
                 assertTrue(containsInWms);
             }
         });
+    }
+
+    private void getStyle(String styleName) {
+        response = getBaseRequestWithCurrentCookie()
+                .given().
+                        headers("Accept", "application/vnd.ogc.se+xml")
+                .when().
+                        get("/geoserver/rest/styles/" + styleName);
     }
 
     private void getStyleFromWorkspace(String workspace, String styleName) {

@@ -20,6 +20,7 @@ import ru.mycrg.wrapper.service.validation.Util;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import static java.lang.String.format;
@@ -242,6 +243,16 @@ public class BaseDaoService {
 
             throw new SQLException("Этого не должно было произойти." +
                                            " Схема со случайным именем уже существует. Останавливаем импорт!!!");
+        }
+    }
+
+    public String getFilePathByUUID(JdbcTemplate jdbcTemplate, UUID id) throws SQLException {
+        String sql = "SELECT path FROM data.files where id = ?";
+
+        try {
+            return jdbcTemplate.queryForObject(sql, String.class, id);
+        } catch (Exception e) {
+            throw new SQLException(e.getMessage());
         }
     }
 

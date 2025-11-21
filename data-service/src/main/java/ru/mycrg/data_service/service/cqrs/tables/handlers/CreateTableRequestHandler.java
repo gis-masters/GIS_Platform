@@ -167,25 +167,25 @@ public class CreateTableRequestHandler implements IRequestHandler<CreateTableReq
             if (nonNull(formulaGenerator)) {
                 String message = formulaGenerator.validate(schema);
                 if (!message.isEmpty()) {
-                    ErrorInfo error = new ErrorInfo();
-                    error.setField(property.getName());
-                    error.setMessage(message);
-
-                    errors.add(error);
+                    errors.add(new ErrorInfo(property.getName(), message));
                 }
             } else {
-                ErrorInfo error = new ErrorInfo();
-                error.setField(property.getName());
-                error.setMessage("Неизвестная valueWellKnownFormula: " + formulaName);
+                errors.add(new ErrorInfo(property.getName(), "Неизвестная valueWellKnownFormula: " + formulaName));
+            }
 
-                errors.add(error);
+            if (property.getTitle() == null) {
+                errors.add(new ErrorInfo(property.getName(), "title это обязательный атрибут."));
+            }
+
+            if (property.getValueTypeAsEnum() == null) {
+                errors.add(new ErrorInfo(property.getName(), "Тип поля это обязательный атрибут."));
             }
         });
 
         if (!errors.isEmpty()) {
-            errors.forEach(errorInfo -> log.error("For field '{}': {}", errorInfo.getField(), errorInfo.getMessage()));
+            errors.forEach(errorInfo -> log.error("Для поля '{}': {}", errorInfo.getField(), errorInfo.getMessage()));
 
-            throw new BadRequestException("Argument validation exception", errors);
+            throw new BadRequestException("Ошибка валидации объектов схемы.", errors);
         }
     }
 

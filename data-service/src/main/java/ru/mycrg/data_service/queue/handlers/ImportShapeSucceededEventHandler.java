@@ -8,19 +8,16 @@ import org.springframework.stereotype.Service;
 import ru.mycrg.common_contracts.exceptions.ClientException;
 import ru.mycrg.data_service.dao.config.DatasourceFactory;
 import ru.mycrg.data_service.dao.core.CoreTemplateDao;
-import ru.mycrg.data_service.dao.ddl.tables.DdlTablesSpecial;
 import ru.mycrg.data_service.dao.mappers.SchemasAndTablesMapper;
-import ru.mycrg.data_service.dto.ColumnShortInfo;
 import ru.mycrg.data_service.entity.SchemasAndTables;
-import ru.mycrg.data_service.mappers.TypeMapper;
 import ru.mycrg.data_service.service.processes.ProcessService;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
+import ru.mycrg.data_service.util.SimplePropertyCollector;
 import ru.mycrg.data_service.util.JsonConverter;
 import ru.mycrg.data_service_contract.dto.ErrorReport;
 import ru.mycrg.data_service_contract.dto.ImportShapeReport;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.data_service_contract.dto.SimplePropertyDto;
-import ru.mycrg.data_service_contract.enums.ValueType;
 import ru.mycrg.data_service_contract.queue.request.ShapeLoadedEvent;
 import ru.mycrg.data_service_contract.queue.response.ShapeImportedSucceededEvent;
 import ru.mycrg.messagebus_contract.IEventHandler;
@@ -30,7 +27,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import static java.time.LocalDateTime.now;
 import static ru.mycrg.data_service.dao.config.DatasourceFactory.INITIAL_SCHEMA_NAME;
@@ -47,16 +43,16 @@ public class ImportShapeSucceededEventHandler implements IEventHandler {
     private final ProcessService processService;
     private final DatasourceFactory datasourceFactory;
     private final CoreTemplateDao coreTemplateDao;
-    private final DdlTablesSpecial ddlTablesSpecial;
+    private final SimplePropertyCollector simplePropertyCollector;
 
     public ImportShapeSucceededEventHandler(ProcessService processService,
                                             DatasourceFactory datasourceFactory,
                                             CoreTemplateDao coreTemplateDao,
-                                            DdlTablesSpecial ddlTablesSpecial) {
+                                            SimplePropertyCollector simplePropertyCollector) {
         this.processService = processService;
         this.datasourceFactory = datasourceFactory;
         this.coreTemplateDao = coreTemplateDao;
-        this.ddlTablesSpecial = ddlTablesSpecial;
+        this.simplePropertyCollector = simplePropertyCollector;
     }
 
     @Override
@@ -87,21 +83,8 @@ public class ImportShapeSucceededEventHandler implements IEventHandler {
                                                CREATED_BY.getName(),
                                                LAST_MODIFIED.getName());
 
-        List<ColumnShortInfo> tableColumns = getColumnsInfo(jdbcTemplate, sourceTable.getTable());
-        tableColumns = tableColumns.stream()
-                                   .filter(columnInfo -> !columnsForExclude.contains(columnInfo.getColumnName()))
-                                   .collect(Collectors.toList());
-
-        List<SimplePropertyDto> sourcePropsWithoutSystemFields = tableColumns
-                .stream()
-                .map(columnInfo -> {
-                    SimplePropertyDto sourseSimplePropertyDto = new SimplePropertyDto();
-                    sourseSimplePropertyDto.setName(columnInfo.getColumnName());
-                    sourseSimplePropertyDto.setValueType(TypeMapper.map(columnInfo).orElse(ValueType.STRING));
-
-                    return sourseSimplePropertyDto;
-                })
-                .collect(Collectors.toList());
+        List<SimplePropertyDto> sourcePropsWithoutSystemFields = simplePropertyCollector
+                .getSimpleProperties(jdbcTemplate, sourceTable, columnsForExclude);
 
         SchemaDto targetSchema = getSchema(jdbcTemplate, targetTable);
 
@@ -193,16 +176,6 @@ public class ImportShapeSucceededEventHandler implements IEventHandler {
             log.error("Не смогли достать схему, причина: {}", String.valueOf(e));
 
             throw new ClientException("Не смогли достать схему");
-        }
-    }
-
-    private List<ColumnShortInfo> getColumnsInfo(JdbcTemplate jdbcTemplate, String tableName) {
-        try {
-            return ddlTablesSpecial.getColumnShortInfo(tableName, jdbcTemplate);
-        } catch (Exception e) {
-            log.error("Сбор колонок после импорта shp файла провалился: {}", e.getMessage(), e);
-
-            throw new ClientException("Сбор колонок после импорта shp файла провалился");
         }
     }
 

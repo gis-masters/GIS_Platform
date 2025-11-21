@@ -2,16 +2,24 @@ package ru.mycrg.data_service.service.gpkg.importer;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
-import ru.mycrg.common_contracts.generated.data_service.gpkg.GpkgTablesData;
 import ru.mycrg.common_contracts.generated.data_service.gpkg.GpkgTableType;
+import ru.mycrg.common_contracts.generated.data_service.gpkg.GpkgTablesData;
+import ru.mycrg.data_service.entity.File;
+import ru.mycrg.data_service.exceptions.NotFoundException;
+import ru.mycrg.data_service.repository.FileRepositoryDetached;
+import ru.mycrg.data_service.service.gpkg.GpkgContentsDto;
 import ru.mycrg.data_service.service.gpkg.GpkgException;
+import ru.mycrg.data_service_contract.enums.GeometryType;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 import static ru.mycrg.common_contracts.generated.data_service.gpkg.GpkgTableType.CRG_DATA_TABLE;
 import static ru.mycrg.common_contracts.generated.data_service.gpkg.GpkgTableType.VECTOR_DATA_TABLE;
@@ -19,12 +27,14 @@ import static ru.mycrg.common_contracts.generated.data_service.gpkg.GpkgTableTyp
 @Service
 public class GpkgReaderService {
 
-    private final Logger log = LoggerFactory.getLogger(GpkgReaderService.class);
-
+    private final static Logger log = LoggerFactory.getLogger(GpkgReaderService.class);
     private final GpkgFileRepository gpkgFileRepository;
+    private final FileRepositoryDetached fileRepository;
 
-    public GpkgReaderService(GpkgFileRepository gpkgFileRepository) {
+    public GpkgReaderService(GpkgFileRepository gpkgFileRepository,
+                             FileRepositoryDetached fileRepository) {
         this.gpkgFileRepository = gpkgFileRepository;
+        this.fileRepository = fileRepository;
     }
 
     /**
@@ -52,6 +62,32 @@ public class GpkgReaderService {
             log.error("Ошибка чтения из GPKG файла: {}", filePath, e);
 
             throw new GpkgException("Невозможно прочитать gpkg. Причина: " + e.getMessage());
+        }
+    }
+
+    public GeometryType getLayerGeometryType(JdbcTemplate jdbcTemplate, UUID fileId, String sourceTableName) {
+        Optional<File> oFile = fileRepository.findByIdentifier(jdbcTemplate, fileId);
+        if (oFile.isEmpty()) {
+            throw new NotFoundException("Не найден файл с ID: " + fileId);
+        }
+
+        try (Connection connection = createConnection(oFile.get().getPath())) {
+            return gpkgFileRepository.getTableGeomType(connection, sourceTableName);
+        } catch (Exception e) {
+            throw new GpkgException("Проблема чтения из gpkg: " + e.getMessage());
+        }
+    }
+
+    public GpkgContentsDto getVectorTableContent(JdbcTemplate jdbcTemplate, UUID fileId, String sourceTableName) {
+        Optional<File> oFile = fileRepository.findByIdentifier(jdbcTemplate, fileId);
+        if (oFile.isEmpty()) {
+            throw new NotFoundException("Не найден файл с ID: " + fileId);
+        }
+
+        try (Connection connection = createConnection(oFile.get().getPath())) {
+            return gpkgFileRepository.getGpkgContents(connection, sourceTableName);
+        } catch (Exception e) {
+            throw new GpkgException(e.getMessage());
         }
     }
 

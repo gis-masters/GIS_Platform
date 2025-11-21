@@ -10,7 +10,9 @@ import io.restassured.specification.RequestSpecification;
 import ru.mycrg.acceptance.BaseStepsDefinitions;
 import ru.mycrg.acceptance.auth_service.AuthorizationBase;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
+import ru.mycrg.data_service_contract.enums.ValueType;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -152,6 +154,30 @@ public class SchemasStepsDefinitions extends BaseStepsDefinitions {
     public void checkValueByPropName(String propName, String expectedValue) {
         String actualValue = response.jsonPath().getString("schema." + propName);
         assertEquals(expectedValue, actualValue);
+    }
+
+    @And("схема векторной таблицы соответствует ожиданиям")
+    public void validateSchema() {
+        SchemaDto actualSchema = response.jsonPath().getObject("", SchemaDto.class);
+        SchemaDto expectedSchema = getSchemaTemplateByTitle("expectedGpkgGenerated");
+
+        assertEquals("Тип геометрии не совал.", expectedSchema.getGeometryType(), actualSchema.getGeometryType());
+        assertEquals("Описание не совпало.", expectedSchema.getDescription(), actualSchema.getDescription());
+        assertEquals("Имя стиля не совпало.", expectedSchema.getStyleName(), actualSchema.getStyleName());
+        assertFalse("Схема не должна быть readOnly.", actualSchema.isReadOnly());
+        assertEquals("В схеме не должно быть тегов.", 0, actualSchema.getTags().size());
+
+        assertEquals("Количество пропертей должно совпадать.", expectedSchema.getProperties().size(),
+                     actualSchema.getProperties().size());
+
+        Map<String, ValueType> actualMap = new HashMap<>();
+        actualSchema.getProperties().forEach(prop -> actualMap.put(prop.getName(), prop.getValueTypeAsEnum()));
+
+        expectedSchema.getProperties()
+                      .forEach(prop ->
+                                       assertEquals("Проперти '" + prop.getName() + "' должны совпадать по типам.",
+                                                    prop.getValueTypeAsEnum(),
+                                                    actualMap.get(prop.getName())));
     }
 
     public void getCurrentSchema(String schemaName) {

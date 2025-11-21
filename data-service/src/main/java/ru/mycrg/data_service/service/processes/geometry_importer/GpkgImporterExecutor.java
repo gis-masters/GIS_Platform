@@ -124,7 +124,6 @@ public class GpkgImporterExecutor implements IExecutor<GpkgImportReport>, IFileP
                                                getDefaultDatabaseName(orgId),
                                                authenticationFacade.getAccessToken(),
                                                authenticationFacade.getLogin(),
-                                               importReport.getFilePath(),
                                                importReport.getFileId(),
                                                dataFromGpkgPlacementModel.getProjectId(),
                                                datasetName.get(),

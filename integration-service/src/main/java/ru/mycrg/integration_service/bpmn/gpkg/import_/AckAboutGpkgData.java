@@ -77,6 +77,7 @@ public class AckAboutGpkgData implements JavaDelegate {
 
         messageBus.produce(new ImportGpkgAckInfoEvent(businessKey,
                                                       event.getDbName(),
+                                                      event.getFileId(),
                                                       schemaName,
                                                       currentTableOldName));
     }

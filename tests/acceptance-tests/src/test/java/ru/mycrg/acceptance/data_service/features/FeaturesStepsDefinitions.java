@@ -2,6 +2,7 @@ package ru.mycrg.acceptance.data_service.features;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import io.cucumber.datatable.DataTable;
+import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -28,6 +29,7 @@ import static ru.mycrg.acceptance.Config.PATCH_CONTENT_TYPE;
 import static ru.mycrg.acceptance.FeatureBuilder.prepareFeatures;
 import static ru.mycrg.acceptance.JsonMapper.asJson;
 import static ru.mycrg.acceptance.data_service.datasets.DatasetsStepsDefinitions.currentDatasetIdentifier;
+import static ru.mycrg.acceptance.data_service.tables.TablesStepsDefinitions.currentTableName;
 
 public class FeaturesStepsDefinitions extends BaseStepsDefinitions {
 
@@ -213,15 +215,36 @@ public class FeaturesStepsDefinitions extends BaseStepsDefinitions {
         assertEquals(204, response.getStatusCode());
     }
 
-    private void patchFeature(Feature feature) {
-        TableCreateDto latestTable = getLatestTable();
+    @And("пользователь запоминает номер полученной фичи")
+    public void rememberFeatureId() {
+        List<Map<String, Object>> content = response.jsonPath().getList("content.properties");
 
+        Optional<Map<String, Object>> matchingRecord = content
+                .stream()
+                .filter(properties -> properties.containsKey("ogc_fid") && properties.get("ogc_fid").equals(2))
+                .findFirst();
+
+        currentId = (Integer) matchingRecord.get().get("objectid");
+    }
+
+    @And("в текущей фиче пользователь ставит полю {string} значение {string}")
+    public void patchFeatureProperty(String property, String value) {
+        Feature feature = new Feature();
+        feature.setProperty(property, value);
+        feature.setId(Long.valueOf(currentId));
+
+        patchFeature(feature);
+
+        assertEquals(204, response.getStatusCode());
+    }
+
+    private void patchFeature(Feature feature) {
         response = getBaseRequestWithCurrentCookie()
                 .given()
                     .body(asJson(feature))
                     .contentType(PATCH_CONTENT_TYPE)
                 .when()
-                    .patch("/" + latestTable.getName() + "/records/" + feature.getId());
+                    .patch("/" + currentTableName + "/records/" + feature.getId());
     }
 
     private void createFeature(Feature feature) {

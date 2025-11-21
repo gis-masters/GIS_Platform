@@ -14,6 +14,8 @@ public class SchemaTemplates {
 
     public static SchemaDto getSchemaTemplateByTitle(String schemaTitle) {
         switch (schemaTitle) {
+            case "expectedGpkgGenerated":
+                return getGpkgGeneratedSchema();
             case "tasks_schema_v1":
                 return prepareTaskSchema();
             case "Схема recreation_point":
@@ -203,6 +205,10 @@ public class SchemaTemplates {
 
     private static SchemaDto prepareTaskSchema() {
         return loadSchemaFromResource("tasks-schema.json");
+    }
+
+    private static SchemaDto getGpkgGeneratedSchema() {
+        return loadSchemaFromResource("expected-gpkg-generated.json");
     }
 
     private static SchemaDto prepareRecreationPointSchema() {

@@ -57,7 +57,6 @@ public class LayerProjection implements Serializable {
                            @JsonProperty("view") String view,
                            @JsonProperty("createdAt") LocalDateTime createdAt,
                            @JsonProperty("lastModified") LocalDateTime lastModified) {
-
         this.id = id;
         this.title = title;
         this.type = type;
@@ -94,7 +93,6 @@ public class LayerProjection implements Serializable {
                            String sourceId, String sourceType, Long sourceRecordId, String dataStoreName,
                            String contentType, String view, String errorText, String style, String photoMode,
                            LocalDateTime createdAt, LocalDateTime lastModified) {
-
         this.id = id;
         this.title = title;
         this.type = type;
@@ -122,6 +120,16 @@ public class LayerProjection implements Serializable {
         this.photoMode = photoMode;
         this.createdAt = createdAt;
         this.lastModified = lastModified;
+    }
+
+    public LayerProjection(String nativeCRS, String styleName, String title, String type) {
+        this(null,
+             title, type,
+             null, null,
+             false, -1, 75, 0, 0, styleName, nativeCRS,
+             null, null, null, null, null,
+             null, null, null, null, null,
+             null, null, null, null, null);
     }
 
     public Long getId() {

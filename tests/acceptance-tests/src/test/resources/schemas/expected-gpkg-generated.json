@@ -1,0 +1,182 @@
+{
+  "name": "qtkzsrh",
+  "title": "qtkzsrh",
+  "readOnly": false,
+  "styleName": "simple_point_1",
+  "tableName": "qtkzsrh",
+  "properties": [
+    {
+      "name": "objectid",
+      "title": "№",
+      "readOnly": true,
+      "valueType": "LONG",
+      "description": "Идентификатор объекта (Заполняется автоматически)",
+      "maxDefaultWidth": 105
+    },
+    {
+      "name": "ogc_fid",
+      "title": "ogc_fid",
+      "valueType": "INT"
+    },
+    {
+      "name": "globalid",
+      "title": "globalid",
+      "valueType": "STRING"
+    },
+    {
+      "name": "classid",
+      "title": "classid",
+      "valueType": "STRING"
+    },
+    {
+      "name": "number",
+      "title": "number",
+      "valueType": "STRING"
+    },
+    {
+      "name": "name",
+      "title": "name",
+      "valueType": "STRING"
+    },
+    {
+      "name": "oktmo",
+      "title": "oktmo",
+      "valueType": "STRING"
+    },
+    {
+      "name": "address",
+      "title": "address",
+      "valueType": "STRING"
+    },
+    {
+      "name": "main_activ",
+      "title": "main_activ",
+      "valueType": "STRING"
+    },
+    {
+      "name": "add_activ",
+      "title": "add_activ",
+      "valueType": "STRING"
+    },
+    {
+      "name": "main_type",
+      "title": "main_type",
+      "valueType": "INT"
+    },
+    {
+      "name": "store_type",
+      "title": "store_type",
+      "valueType": "INT"
+    },
+    {
+      "name": "oth_pobj",
+      "title": "oth_pobj",
+      "valueType": "STRING"
+    },
+    {
+      "name": "capacity",
+      "title": "capacity",
+      "valueType": "DOUBLE"
+    },
+    {
+      "name": "wrk_count",
+      "title": "wrk_count",
+      "valueType": "INT"
+    },
+    {
+      "name": "hzrd_class",
+      "title": "hzrd_class",
+      "valueType": "INT"
+    },
+    {
+      "name": "hzrd_cat",
+      "title": "hzrd_cat",
+      "valueType": "INT"
+    },
+    {
+      "name": "bent_type",
+      "title": "bent_type",
+      "valueType": "INT"
+    },
+    {
+      "name": "danger_obj",
+      "title": "danger_obj",
+      "valueType": "INT"
+    },
+    {
+      "name": "function",
+      "title": "function",
+      "valueType": "STRING"
+    },
+    {
+      "name": "event_time",
+      "title": "event_time",
+      "valueType": "INT"
+    },
+    {
+      "name": "source",
+      "title": "source",
+      "valueType": "STRING"
+    },
+    {
+      "name": "note",
+      "title": "note",
+      "valueType": "STRING"
+    },
+    {
+      "name": "status",
+      "title": "status",
+      "valueType": "INT"
+    },
+    {
+      "name": "reg_status",
+      "title": "reg_status",
+      "valueType": "INT"
+    },
+    {
+      "name": "kadastroks",
+      "title": "kadastroks",
+      "valueType": "STRING"
+    },
+    {
+      "name": "kadastrzu",
+      "title": "kadastrzu",
+      "valueType": "STRING"
+    },
+    {
+      "name": "okved",
+      "title": "okved",
+      "valueType": "STRING"
+    },
+    {
+      "name": "namedocosn",
+      "title": "namedocosn",
+      "valueType": "STRING"
+    },
+    {
+      "name": "datedocosn",
+      "title": "datedocosn",
+      "valueType": "STRING"
+    },
+    {
+      "name": "numberdocosn",
+      "title": "numberdocosn",
+      "valueType": "STRING"
+    },
+    {
+      "name": "shape",
+      "title": "shape",
+      "valueType": "GEOMETRY",
+      "allowedValues": [
+        "POINT"
+      ]
+    },
+    {
+      "name": "ruleid",
+      "title": "Идентификатор стиля",
+      "valueType": "STRING"
+    }
+  ],
+  "description": "Схема сгенерирована автоматически на основе GPKG",
+  "geometryType": "Point"
+}

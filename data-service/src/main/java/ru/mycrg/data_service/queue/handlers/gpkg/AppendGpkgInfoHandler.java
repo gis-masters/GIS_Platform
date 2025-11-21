@@ -4,7 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import ru.mycrg.data_service.service.gpkg.export.GpkgAddInfoService;
-import ru.mycrg.data_service_contract.queue.request.AppendGpkgInfoEvent;
+import ru.mycrg.data_service_contract.queue.request.gpkg.AppendGpkgInfoEvent;
 import ru.mycrg.data_service_contract.queue.response.AppendGpkgBackwardEvent;
 import ru.mycrg.messagebus_contract.IEventHandler;
 import ru.mycrg.messagebus_contract.IMessageBusProducer;
