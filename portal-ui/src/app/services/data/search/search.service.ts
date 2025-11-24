@@ -36,6 +36,10 @@ export async function getSearchResults(
           return { ...item, payload: wfsFeature, headlines };
         }
 
+        if (item.type === 'DOCUMENT') {
+          return { ...item, payload: { ...item.payload, libraryTableName: item.source.library } };
+        }
+
         return item;
       })
     );

@@ -4,7 +4,7 @@ import { observer } from 'mobx-react';
 import { FileOpenOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
-import { type LibraryRecord } from '../../../services/data/library/library.models';
+import { isLibraryRecord, type LibraryRecord } from '../../../services/data/library/library.models';
 import { type SearchItemData, type SearchItemDataTypeFeature } from '../../../services/data/search/search.model';
 import { type VectorTable } from '../../../services/data/vectorData/vectorData.models';
 import { getVectorTable } from '../../../services/data/vectorData/vectorData.service';
@@ -40,6 +40,8 @@ export class LibrarySearchItemActionsOpen extends Component<LibrarySearchItemAct
   render() {
     const { as, item, libraryRecord } = this.props;
 
+    const record = libraryRecord ?? item.payload;
+
     return (
       <>
         <ActionsItem
@@ -60,8 +62,8 @@ export class LibrarySearchItemActionsOpen extends Component<LibrarySearchItemAct
           />
         )}
 
-        {item?.type === 'DOCUMENT' && libraryRecord && (
-          <LibraryDocumentDialog document={libraryRecord} open={this.dialogOpen} onClose={this.closeDialog} />
+        {item?.type === 'DOCUMENT' && isLibraryRecord(record) && (
+          <LibraryDocumentDialog document={record} open={this.dialogOpen} onClose={this.closeDialog} />
         )}
       </>
     );

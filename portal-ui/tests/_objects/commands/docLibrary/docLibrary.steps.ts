@@ -141,7 +141,7 @@ Given(
 );
 
 Given(
-  'существует библиотека {string} документов по заготовленной схеме без версионирования',
+  'существует библиотека документов {string} по заготовленной схеме без версионирования',
   async function (this: ScenarioScope, title: string) {
     await createLibrary(this.latestSchema, title, false);
   }

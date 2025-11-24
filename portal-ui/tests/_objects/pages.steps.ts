@@ -218,6 +218,10 @@ Given(
   }
 );
 
+Given('я на странице управления данными', async () => {
+  await browser.url('/data-management');
+});
+
 Given(
   'я на странице управление данными и в библиотеке выбран созданный документ',
   async function (this: ScenarioScope) {

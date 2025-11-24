@@ -34,12 +34,11 @@ export class SearchResultDialog extends Component<SearchResultDialogProps> {
     const { open, onClose } = this.props;
 
     return (
-      <Dialog open={open} onClose={onClose} maxWidth='xl' fullWidth>
+      <Dialog className={cnSearchResultDialog()} open={open} onClose={onClose} maxWidth='xl' fullWidth>
         <DialogTitle>Результаты поиска:</DialogTitle>
         <DialogContent>
           <Explorer
             explorerRole='SearchResultDialog'
-            className={cnSearchResultDialog('Explorer')}
             path={this.path}
             fixedHeight
             withInfoPanel

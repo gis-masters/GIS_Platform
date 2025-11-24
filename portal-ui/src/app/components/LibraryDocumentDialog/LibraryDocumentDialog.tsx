@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { Dialog, DialogActions, DialogContent, DialogTitle, Paper, Tooltip } from '@mui/material';
 import { FileOpenOutlined, FolderOutlined, InsertDriveFileOutlined } from '@mui/icons-material';
@@ -8,7 +7,6 @@ import { RegistryConsumer } from '@bem-react/di';
 import { boundMethod } from 'autobind-decorator';
 import { type AxiosError } from 'axios';
 
-import { communicationService } from '../../services/communication.service';
 import { type LibraryRecord } from '../../services/data/library/library.models';
 import { getLibraryRecord } from '../../services/data/library/library.service';
 import { type CommonDiRegistry } from '../../services/di-registry';
@@ -33,27 +31,10 @@ interface LibraryDocumentDialogProps {
 
 @observer
 export class LibraryDocumentDialog extends Component<LibraryDocumentDialogProps> {
-  @observable currentDocument?: LibraryRecord;
-  private operationId?: symbol;
-
-  constructor(props: LibraryDocumentDialogProps) {
-    super(props);
-    makeObservable(this);
-  }
-
-  componentDidMount() {
-    this.setCurrentDocument(this.props.document);
-
-    communicationService.libraryRecordUpdated.on(async () => {
-      await this.fetchData();
-    }, this);
-  }
-
   render() {
     const { document, open, onClose } = this.props;
-    const currentDocument = this.currentDocument || document;
-    const { is_deleted: isDeleted } = currentDocument;
-    const path: ExplorerItemData[] = [{ type: ExplorerItemType.FOLDER, payload: currentDocument }];
+    const { is_deleted: isDeleted } = document;
+    const path: ExplorerItemData[] = [{ type: ExplorerItemType.FOLDER, payload: document }];
 
     return (
       <Dialog
@@ -61,32 +42,28 @@ export class LibraryDocumentDialog extends Component<LibraryDocumentDialogProps>
         onClose={onClose}
         fullWidth
         maxWidth='xl'
-        PaperProps={{ className: cnLibraryDocumentDialog() }}
+        slotProps={{ paper: { className: cnLibraryDocumentDialog() } }}
       >
         <DialogTitle>
           <div className={cnLibraryDocumentDialog('TypeIcon')}>
-            {currentDocument.is_folder ? (
-              <FolderOutlined color='primary' />
-            ) : (
-              <InsertDriveFileOutlined color='primary' />
-            )}
+            {document.is_folder ? <FolderOutlined color='primary' /> : <InsertDriveFileOutlined color='primary' />}
           </div>
           {isDeleted ? (
             <span className={cnLibraryDocumentDialog('TitleDeleted')}>Документ удален</span>
           ) : (
-            `Просмотр ${currentDocument.is_folder ? 'папки' : 'документа'}`
+            `Просмотр ${document.is_folder ? 'папки' : 'документа'}`
           )}
-          {currentDocument.id && <TextBadge id={currentDocument.id} />}
+          {document.id && <TextBadge id={document.id} />}
         </DialogTitle>
 
         <DialogContent className='scroll'>
           <RegistryConsumer id='common'>
             {({ LibraryDocument }: CommonDiRegistry) => (
-              <LibraryDocument document={currentDocument} className={cnLibraryDocumentDialog('Document')} />
+              <LibraryDocument document={document} className={cnLibraryDocumentDialog('Document')} />
             )}
           </RegistryConsumer>
 
-          {!!currentDocument.is_folder && (
+          {!!document.is_folder && (
             <>
               <span className={cnLibraryDocumentDialog('FolderContentTitle')}>Содержимое папки:</span>
               <Paper className={cnLibraryDocumentDialog(null, ['scroll'])} variant='outlined' square>
@@ -124,18 +101,12 @@ export class LibraryDocumentDialog extends Component<LibraryDocumentDialogProps>
 
         <DialogActions>
           {isDeleted && (
-            <LibraryDeletedDocumentActions
-              forDialog
-              onDialogClose={onClose}
-              hideOpen
-              document={currentDocument}
-              as='button'
-            />
+            <LibraryDeletedDocumentActions forDialog onDialogClose={onClose} hideOpen document={document} as='button' />
           )}
           {!isDeleted && (
             <RegistryConsumer id='common'>
               {({ LibraryDocumentActions }: CommonDiRegistry) => (
-                <LibraryDocumentActions document={currentDocument} as='iconButton' forDialog onDialogClose={onClose} />
+                <LibraryDocumentActions document={document} as='iconButton' forDialog onDialogClose={onClose} />
               )}
             </RegistryConsumer>
           )}
@@ -158,24 +129,6 @@ export class LibraryDocumentDialog extends Component<LibraryDocumentDialogProps>
         <FileOpenOutlined />
       </Tooltip>
     );
-  }
-
-  private async fetchData() {
-    const { document } = this.props;
-
-    const operationId = Symbol();
-    this.operationId = operationId;
-
-    const record = await getLibraryRecord(document.libraryTableName, document.id);
-
-    if (this.operationId === operationId) {
-      this.setCurrentDocument(record);
-    }
-  }
-
-  @action
-  private setCurrentDocument(document: LibraryRecord) {
-    this.currentDocument = document;
   }
 
   @boundMethod

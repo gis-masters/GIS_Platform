@@ -2,6 +2,7 @@
 import { sleep } from '../../../../src/app/services/util/sleep';
 import { Block } from '../../Block';
 import { FormBlock } from '../Form/Form.block';
+import { MuiInputBlock } from '../MuiInput/MuiInput.block';
 
 export class ExplorerBlock extends Block {
   selectors = {
@@ -12,6 +13,8 @@ export class ExplorerBlock extends Block {
     loader: '.Explorer .Loading',
     viewContentWidget: '.Explorer .ViewContentWidget',
     empty: '.Explorer-Empty',
+    search: '.Explorer-Search',
+    searchSubmit: '.Explorer-SearchSubmit',
     createLayerBtn: '.Explorer-ToolbarActions .MuiButtonBase-root[aria-label="Создать векторную таблицу"]',
     firstItem: '.Explorer-List .Explorer-Item:first-child',
     secondItemTitle: '.Explorer-List .Explorer-Item:last-child .MuiListItemText-primary',
@@ -188,5 +191,18 @@ export class ExplorerBlock extends Block {
     const $editButton = await $('button[aria-label="Редактировать"]').getElement();
     await $editButton.waitForDisplayed();
     await $editButton.click();
+  }
+
+  async setSearchValue(value: string): Promise<void> {
+    const $search = await this.findBySelector('search');
+
+    const searchInputBlock = new MuiInputBlock($search);
+    await searchInputBlock.clearValue();
+    await searchInputBlock.setValue(value);
+  }
+
+  async clickSearchSubmit(): Promise<void> {
+    const $searchSubmit = await this.findBySelector('searchSubmit');
+    await $searchSubmit.click();
   }
 }

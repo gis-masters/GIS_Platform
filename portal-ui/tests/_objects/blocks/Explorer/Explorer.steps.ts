@@ -77,6 +77,16 @@ When('я выбираю созданный набор данных', async funct
   await explorerBlock.selectExplorerItem(this.latestDataset.title);
 });
 
+When('я ввожу значение {string} в поле поиска explorer', async (value: string) => {
+  const explorerBlock = new ExplorerBlock();
+  await explorerBlock.setSearchValue(value);
+});
+
+When('я нажимаю кнопку поиска в explorer', async () => {
+  const explorerBlock = new ExplorerBlock();
+  await explorerBlock.clickSearchSubmit();
+});
+
 Then('список названий в explorer: {strings}', async (titles: string[]) => {
   const explorerBlock = new ExplorerBlock();
   await expect(titles).toEqual(await explorerBlock.getListTitles());

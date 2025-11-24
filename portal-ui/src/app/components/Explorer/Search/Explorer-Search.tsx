@@ -1,19 +1,18 @@
-import React, { Component } from 'react';
+import React, { type ChangeEvent, Component } from 'react';
 import { action, makeObservable, observable, reaction } from 'mobx';
 import { observer } from 'mobx-react';
 import { TextField } from '@mui/material';
-import { Search } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
 import { type FtsType } from '../../../../server-types/common-contracts';
 import { Form } from '../../Form/Form';
-import { IconButton } from '../../IconButton/IconButton';
 import { SearchResultDialog } from '../../SearchResultDialog/SearchResultDialog';
 import { hasSearch } from '../Adapter/Explorer-Adapter';
 import { ExplorerItemType, type ExplorerSearchValue } from '../Explorer.models';
 import { type ExplorerService } from '../Explorer.service';
 import { type ExplorerStore } from '../Explorer.store';
+import { ExplorerSearchSubmit } from '../SearchSubmit/Explorer-SearchSubmit';
 
 import './Explorer-Search.scss';
 
@@ -56,12 +55,8 @@ export class ExplorerSearch extends Component<ExplorerSearchProps> {
               label={'Поиск'}
               value={this.search?.searchValue || ''}
               onChange={this.handleSearchChange}
-              InputProps={{
-                endAdornment: (
-                  <IconButton type='submit' size='small'>
-                    <Search />
-                  </IconButton>
-                )
+              slotProps={{
+                input: { endAdornment: <ExplorerSearchSubmit /> }
               }}
               variant='standard'
             />
@@ -83,7 +78,7 @@ export class ExplorerSearch extends Component<ExplorerSearchProps> {
   }
 
   @boundMethod
-  private handleSearchChange(e: React.ChangeEvent<HTMLInputElement>) {
+  private handleSearchChange(e: ChangeEvent<HTMLInputElement>) {
     this.setSearch({
       ...this.search,
       searchValue: e.target.value
