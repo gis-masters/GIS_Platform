@@ -46,12 +46,14 @@ export interface CrgRasterLayer extends CrgBaseLayer {
   dataStoreName?: string;
   dataSourceUri?: string;
   sourceId: string;
-  sourceType: string;
+  sourceType: SourceType;
   sourceRecordId: number;
   parentId?: number;
   enabled?: boolean;
   nativeName?: string;
 }
+
+export type SourceType = 'document' | 'feature';
 
 export interface CrgVectorLayer extends CrgBaseLayer {
   type: CrgLayerType.VECTOR;

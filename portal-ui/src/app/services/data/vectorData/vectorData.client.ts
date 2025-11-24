@@ -11,6 +11,7 @@ import {
   type Dataset,
   type NewDataset,
   type NewVectorTable,
+  type RawLiteVectorTable,
   type RawVectorTable,
   type TablesData,
   type VectorTable,
@@ -20,6 +21,7 @@ import {
 @boundClass
 class VectorDataClient extends DataClient {
   private static _instance: VectorDataClient;
+
   static get instance(): VectorDataClient {
     return this._instance || (this._instance = new this());
   }
@@ -28,12 +30,24 @@ class VectorDataClient extends DataClient {
     return `${this.getProjectsUrl()}/find-related-layers`;
   }
 
+  private getVectorTablesUrl(): string {
+    return `${this.getDataUrl()}/tables`;
+  }
+
+  private getVectorTablesInDatasetUrl(datasetIdentifier: string): string {
+    return `${this.getDatasetUrl(datasetIdentifier)}/tables`;
+  }
+
   private getVectorTableRecordsUrl(datasetIdentifier: string, tableIdentifier: string): string {
     return `${this.getDatasetUrl(datasetIdentifier)}/tables/${tableIdentifier}/records`;
   }
 
   private getVectorTableRecordsSchemaUrl(datasetIdentifier: string, tableIdentifier: string): string {
     return `${this.getDatasetUrl(datasetIdentifier)}/tables/${tableIdentifier}/schema`;
+  }
+
+  private getDatasetTablesBySridUrl(): string {
+    return `${this.getDatasetsUrl()}/getTablesBySrid`;
   }
 
   // Для удаления может быть передано множество id через запятую
@@ -91,14 +105,20 @@ class VectorDataClient extends DataClient {
     return http.get<RawVectorTable>(this.getVectorTableUrl(datasetIdentifier, identifier));
   }
 
-  async getVectorTables(
+  async getVectorTablesInDataset(
     datasetIdentifier: string,
     pageOptions: PageOptions
   ): Promise<PageableResources<RawVectorTable>> {
-    const url = this.getVectorTablesUrl(datasetIdentifier);
+    const url = this.getVectorTablesInDatasetUrl(datasetIdentifier);
     const params = preparePageOptions(pageOptions, true);
 
     return http.get<PageableResources<RawVectorTable>>(url, { params });
+  }
+
+  async getVectorTables(pageOptions: PageOptions): Promise<PageableResources<RawLiteVectorTable>> {
+    const params = preparePageOptions(pageOptions, true);
+
+    return http.get<PageableResources<RawLiteVectorTable>>(this.getVectorTablesUrl(), { params });
   }
 
   async getVectorTablesWithParticularOne(
@@ -107,7 +127,7 @@ class VectorDataClient extends DataClient {
     pageOptions: PageOptions
   ): Promise<[RawVectorTable[], number, number] | undefined> {
     return http.getPageWithObject<RawVectorTable>(
-      this.getVectorTablesUrl(datasetIdentifier),
+      this.getVectorTablesInDatasetUrl(datasetIdentifier),
       preparePageOptions(pageOptions, true),
       (item: RawVectorTable) => item.identifier === vectorTableIdentifier,
       {}
@@ -115,20 +135,20 @@ class VectorDataClient extends DataClient {
   }
 
   async getAllVectorTablesInDataset(datasetIdentifier: string): Promise<RawVectorTable[]> {
-    return http.getPaged<RawVectorTable>(this.getVectorTablesUrl(datasetIdentifier), {
+    return http.getPaged<RawVectorTable>(this.getVectorTablesInDatasetUrl(datasetIdentifier), {
       params: { sort: 'title,asc' }
     });
   }
 
   async getVectorTablesInAllDatasets(pageOptions: Partial<PageOptions>): Promise<RawVectorTable[]> {
-    const url = this.getAllVectorTablesUrl();
+    const url = this.getVectorTablesUrl();
     const params = preparePageOptions({ page: 0, pageSize: MAX_ITEMS_PER_PAGE, ...pageOptions }, true);
 
     return http.getPaged<RawVectorTable>(url, { params });
   }
 
   async createVectorTable(datasetIdentifier: string, table: NewVectorTable): Promise<RawVectorTable> {
-    return http.post<RawVectorTable>(this.getVectorTablesUrl(datasetIdentifier), table);
+    return http.post<RawVectorTable>(this.getVectorTablesInDatasetUrl(datasetIdentifier), table);
   }
 
   async updateVectorTable(
@@ -185,7 +205,7 @@ class VectorDataClient extends DataClient {
   ): Promise<PageableResources<WfsFeature>> {
     const params = preparePageOptions({ page: 0, pageSize: MAX_ITEMS_PER_PAGE, ...pageOptions }, true);
 
-    return http.get(this.getVectorTableFeaturesUrl(datasetIdentifier, vectorTableIdentifier), { params });
+    return http.get(this.getVectorTableRecordsUrl(datasetIdentifier, vectorTableIdentifier), { params });
   }
 }
 

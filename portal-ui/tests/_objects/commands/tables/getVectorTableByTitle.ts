@@ -4,7 +4,7 @@ import { type VectorTable } from '../../../../src/app/services/data/vectorData/v
 import { requestAsAdmin } from '../requestAs';
 
 export async function getVectorTableByTitle(datasetIdentifier: string, tableTitle: string): Promise<VectorTable> {
-  const response = await requestAsAdmin(vectorDataClient.getVectorTables, datasetIdentifier, {
+  const response = await requestAsAdmin(vectorDataClient.getVectorTablesInDataset, datasetIdentifier, {
     page: 0,
     pageSize: 2,
     filter: { title: tableTitle }

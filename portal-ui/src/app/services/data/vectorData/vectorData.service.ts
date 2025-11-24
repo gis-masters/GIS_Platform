@@ -3,11 +3,13 @@ import { communicationService } from '../../communication.service';
 import { extractFeatureId } from '../../geoserver/featureType/featureType.util';
 import { type CrgFeature, type NewWfsFeature, type WfsFeature } from '../../geoserver/wfs/wfs.models';
 import { type PageOptions } from '../../models';
+import { FilterQuery } from '../../util/filters/filters.models';
 import { type Schema } from '../schema/schema.models';
 import { convertNewToOldSchema, convertOldToNewSchema } from '../schema/schema.utils';
 import { vectorDataClient } from './vectorData.client';
 import {
   type Dataset,
+  type LiteVectorTable,
   type NewDataset,
   type NewVectorTable,
   type TablesData,
@@ -63,11 +65,11 @@ export async function getVectorTable(datasetIdentifier: string, identifier: stri
   return { ...response, schema: convertOldToNewSchema(response.schema) };
 }
 
-export async function getVectorTables(
+export async function getVectorTablesInDataset(
   datasetIdentifier: string,
   pageOptions: PageOptions
 ): Promise<[VectorTable[], number]> {
-  const response = await vectorDataClient.getVectorTables(datasetIdentifier, pageOptions);
+  const response = await vectorDataClient.getVectorTablesInDataset(datasetIdentifier, pageOptions);
   const vectorTables: VectorTable[] = (response.content || []).map(table => ({
     ...table,
     schema: convertOldToNewSchema(table.schema)
@@ -145,6 +147,33 @@ export async function deleteVectorTable(vectorTable: VectorTable): Promise<void>
 
 export async function getVectorTableConnections(vectorTableIdentifier: string): Promise<VectorTableConnection[]> {
   return vectorDataClient.getVectorTableConnections(vectorTableIdentifier);
+}
+
+export async function getVectorTables(pageOptions: PageOptions): Promise<LiteVectorTable[]> {
+  const response = await vectorDataClient.getVectorTables(pageOptions);
+
+  return (response.content || []).map(table => ({
+    ...table,
+    schema: convertOldToNewSchema(table.schema)
+  }));
+}
+
+export async function enrichVectorTable({ dataset, identifier }: LiteVectorTable): Promise<VectorTable> {
+  return await getVectorTable(dataset, identifier);
+}
+
+export async function findVectorTable(filter: FilterQuery): Promise<LiteVectorTable> {
+  const tables: LiteVectorTable[] = await getVectorTables({ filter, page: 0, pageSize: 2 });
+
+  if (tables.length === 0) {
+    throw new Error(`Не найдена векторная таблица по критериям поиска "${JSON.stringify(filter)}"`);
+  }
+
+  if (tables.length > 1) {
+    throw new Error(`Найдено больше одной таблицы по критериям поиска "${JSON.stringify(filter)}"`);
+  }
+
+  return tables[0];
 }
 
 // feature

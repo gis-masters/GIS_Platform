@@ -7,7 +7,7 @@ import { type VectorTable } from '../../../../services/data/vectorData/vectorDat
 import {
   getDataset,
   getVectorTable,
-  getVectorTables,
+  getVectorTablesInDataset,
   getVectorTablesWithParticularOne
 } from '../../../../services/data/vectorData/vectorData.service';
 import { type PageOptions, SortOrder } from '../../../../services/models';
@@ -100,7 +100,7 @@ export class ExplorerAdapterTypeDataset {
   ): Promise<[ExplorerItemData[], number]> {
     assertExplorerItemDataTypeDataset(item);
 
-    const [tables, totalPages] = await getVectorTables(item.payload.identifier, {
+    const [tables, totalPages] = await getVectorTablesInDataset(item.payload.identifier, {
       ...options,
       filter: service.mergeCustomFilter(filter || {}, item, store)
     });

@@ -2,7 +2,7 @@ import { SelectSchemaControl } from '../../../components/SelectSchemaControl/Sel
 import { projectionsStore } from '../../../stores/Projections.store';
 import { type CrgLayer } from '../../gis/layers/layers.models';
 import { type CrgProject } from '../../gis/projects/projects.models';
-import type { Role } from '../../permissions/permissions.models';
+import { type Role } from '../../permissions/permissions.models';
 import { getProjectionCode } from '../projections/projections.util';
 import { PropertyType, type Schema, type SimpleSchema } from '../schema/schema.models';
 import { type OldSchema } from '../schema/schemaOld.models';
@@ -52,6 +52,8 @@ export interface VectorTable extends DataEntity {
 
 export type NewVectorTable = Pick<VectorTable, 'title' | 'crs'> & { schemaId: string };
 export type RawVectorTable = Omit<VectorTable, 'schema'> & { schema: OldSchema };
+export type LiteVectorTable = Omit<VectorTable, 'role'>;
+export type RawLiteVectorTable = Omit<VectorTable, 'schema'> & { schema: OldSchema };
 
 const title = 'Наименование';
 

@@ -9,23 +9,7 @@ export abstract class DataClient extends Client {
     return `${this.getDatasetsUrl()}/${datasetIdentifier}`;
   }
 
-  protected getDatasetTablesBySridUrl(): string {
-    return `${this.getDatasetsUrl()}/getTablesBySrid`;
-  }
-
-  protected getVectorTablesUrl(datasetIdentifier: string): string {
-    return `${this.getDatasetUrl(datasetIdentifier)}/tables`;
-  }
-
   protected getVectorTableUrl(datasetIdentifier: string, tableIdentifier: string): string {
     return `${this.getDatasetUrl(datasetIdentifier)}/tables/${tableIdentifier}`;
-  }
-
-  protected getVectorTableFeaturesUrl(datasetIdentifier: string, tableIdentifier: string): string {
-    return `${this.getDatasetUrl(datasetIdentifier)}/tables/${tableIdentifier}/records`;
-  }
-
-  protected getAllVectorTablesUrl(): string {
-    return `${this.getDataUrl()}/tables`;
   }
 }

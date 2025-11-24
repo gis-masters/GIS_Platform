@@ -8,7 +8,7 @@ import { boundMethod } from 'autobind-decorator';
 import { type AxiosError } from 'axios';
 
 import { type Dataset } from '../../../services/data/vectorData/vectorData.models';
-import { deleteDataset, getVectorTables } from '../../../services/data/vectorData/vectorData.service';
+import { deleteDataset, getVectorTablesInDataset } from '../../../services/data/vectorData/vectorData.service';
 import { achtung, konfirmieren } from '../../../services/utility-dialogs.service';
 
 const cnDatasetActionsDelete = cn('DatasetActions', 'Delete');
@@ -61,7 +61,7 @@ export class DatasetActionsDelete extends Component<DatasetActionsDeleteProps> {
       const { dataset } = this.props;
 
       // Проверяем, пустой ли набор данных
-      const [records] = await getVectorTables(dataset.identifier, { page: 0, pageSize: 1 });
+      const [records] = await getVectorTablesInDataset(dataset.identifier, { page: 0, pageSize: 1 });
       if (records.length) {
         await achtung({
           title: 'Невозможно удалить',

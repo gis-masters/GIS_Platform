@@ -130,9 +130,12 @@ export function isDxfFile(file: File | FileInfo): boolean {
 
 export function isFileCanBePlaced(file: File | FileInfo): boolean {
   const title = isFileInfo(file) ? file.title : file.name;
-
   const ext = normalizeExtension(getFileExtension(title));
 
+  return isPlaceableFileExtention(ext);
+}
+
+export function isPlaceableFileExtention(ext: string): boolean {
   return ext === 'dxf' || ext === 'shp' || ext === 'tab' || ext === 'mid' || ext === 'mif' || ext === 'tif';
 }
 

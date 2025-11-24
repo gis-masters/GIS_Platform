@@ -55,7 +55,6 @@ export class FormContent<T> extends Component<FormContentProps<T>> {
           const relations = getFieldRelations(propertySchema.name, schema);
 
           const formValueRetyped: unknown = formValue;
-
           const fieldValue: unknown = isRecordStringUnknown(formValueRetyped)
             ? formValueRetyped[propertySchema.name]
             : undefined;

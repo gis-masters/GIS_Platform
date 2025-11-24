@@ -9,7 +9,7 @@ import { type LibraryRecord } from '../data/library/library.models';
 import { getLibraryRecord } from '../data/library/library.service';
 import { type Schema } from '../data/schema/schema.models';
 import { type VectorTable } from '../data/vectorData/vectorData.models';
-import { getVectorTable } from '../data/vectorData/vectorData.service';
+import { enrichVectorTable, findVectorTable, getVectorTable } from '../data/vectorData/vectorData.service';
 import { type CrgLayer, CrgLayerType } from '../gis/layers/layers.models';
 import { getLayerSchema } from '../gis/layers/layers.service';
 import { isVectorFromFile } from '../gis/layers/layers.utils';
@@ -137,6 +137,17 @@ export async function isLayerReadAllowed(layer: CrgLayer): Promise<boolean> {
     layer.type === CrgLayerType.EXTERNAL_NSPD
   ) {
     return true;
+  }
+
+  if (layer.sourceType === 'feature' && layer.sourceId) {
+    try {
+      const table = await findVectorTable({ identifier: layer.sourceId });
+      const { role } = await enrichVectorTable(table);
+
+      return currentUser.isAdmin || role === Role.OWNER || role === Role.CONTRIBUTOR;
+    } catch {
+      return false;
+    }
   }
 
   if (layer.dataset && layer.resourceId && layer.type === CrgLayerType.VECTOR) {

@@ -32,8 +32,13 @@ import { getLibraryRecord } from '../../../services/data/library/library.service
 import { type Projection } from '../../../services/data/projections/projections.models';
 import { type Schema } from '../../../services/data/schema/schema.models';
 import { type VectorTable } from '../../../services/data/vectorData/vectorData.models';
-import { getVectorTable } from '../../../services/data/vectorData/vectorData.service';
-import { GeometryType } from '../../../services/geoserver/wfs/wfs.models';
+import {
+  enrichVectorTable,
+  findVectorTable,
+  getVectorTable,
+  getVectorTableFeatures
+} from '../../../services/data/vectorData/vectorData.service';
+import { GeometryType, type WfsFeature } from '../../../services/geoserver/wfs/wfs.models';
 import { getEmptyFeature } from '../../../services/geoserver/wfs/wfs.service';
 import { exportShape } from '../../../services/gis/export/export.service';
 import {
@@ -63,6 +68,7 @@ import { mapStore } from '../../../stores/Map.store';
 import { mapLabelsStore } from '../../../stores/MapLabels.store';
 import { Button } from '../../Button/Button';
 import { EditLayerDialog } from '../../EditLayerDialog/EditLayerDialog';
+import { FeatureDialog } from '../../FeatureDialog/FeatureDialog';
 import { ImportOutlined } from '../../Icons/ImportOutlined';
 import { ImportShapeDialog } from '../../ImportShapeDialog/ImportShapeDialog';
 import { ImportXmlDialog } from '../../ImportXmlDialog/ImportXmlDialog';
@@ -101,6 +107,7 @@ export class LayerMenu extends Component<LayerMenuProps> {
   @observable private importShapeAllowed = false;
   @observable private rasterDocument?: LibraryRecord;
   @observable private vectorTable?: VectorTable;
+  @observable private feature?: WfsFeature;
   @observable private schema?: Schema;
   @observable private dialogOpen = false;
   @observable private layerEditDialogOpen = false;
@@ -186,10 +193,26 @@ export class LayerMenu extends Component<LayerMenuProps> {
             ],
 
             // Второй элемент
-            !editMode && (this.isVectorFromFileLayer || this.isRasterLayer) && this.isDocumentInfoEnabled && (
+            !editMode &&
+              !this.isLayerFromFeature &&
+              (this.isVectorFromFileLayer || this.isRasterLayer) &&
+              this.isDocumentInfoEnabled && (
+                <MenuItem
+                  key='layer-document'
+                  onClick={this.getLayerDocument}
+                  disabled={!mapStore.allowedActions.includes(MapAction.OPEN_LAYER_SOURCE)}
+                >
+                  <ListItemIcon>
+                    <FileOpenOutlined />
+                  </ListItemIcon>
+                  Источник данных
+                </MenuItem>
+              ),
+
+            !editMode && this.isLayerFromFeature && (
               <MenuItem
                 key='layer-document'
-                onClick={this.getLayerDocument}
+                onClick={this.openSourceFeatureDialog}
                 disabled={!mapStore.allowedActions.includes(MapAction.OPEN_LAYER_SOURCE)}
               >
                 <ListItemIcon>
@@ -343,7 +366,7 @@ export class LayerMenu extends Component<LayerMenuProps> {
           />
         )}
 
-        {this.vectorTable && (
+        {!this.feature && this.vectorTable && (
           <Dialog open={this.dialogOpen} onClose={this.closeDialog} fullWidth maxWidth='md'>
             <DialogTitle>{entity.title}</DialogTitle>
             <DialogContent>
@@ -353,6 +376,16 @@ export class LayerMenu extends Component<LayerMenuProps> {
               <Button onClick={this.closeDialog}>Закрыть</Button>
             </DialogActions>
           </Dialog>
+        )}
+
+        {this.feature && this.vectorTable && (
+          <FeatureDialog
+            schema={this.vectorTable.schema}
+            feature={this.feature}
+            vectorTable={this.vectorTable}
+            open={this.dialogOpen}
+            onClose={this.closeDialog}
+          />
         )}
 
         {!editMode && this.isVectorLayer && (
@@ -398,6 +431,18 @@ export class LayerMenu extends Component<LayerMenuProps> {
     }
 
     return !isGroup && isVectorFromFile(type);
+  }
+
+  @computed
+  private get isLayerFromFeature(): boolean {
+    const { entity, isGroup } = this.props;
+    const { type, sourceType } = entity as CrgLayer;
+
+    if (!type) {
+      return false;
+    }
+
+    return !isGroup && sourceType === 'feature' && this.isRasterLayer;
   }
 
   @computed
@@ -565,6 +610,38 @@ export class LayerMenu extends Component<LayerMenuProps> {
     );
   }
 
+  @boundMethod
+  private async openSourceFeatureDialog() {
+    const { sourceRecordId, sourceId } = this.props.entity as CrgRasterLayer;
+
+    try {
+      const table = await findVectorTable({ identifier: sourceId });
+      this.setVectorTable(await enrichVectorTable(table));
+
+      const { content } = await getVectorTableFeatures(table.dataset, table.identifier, {
+        page: 0,
+        pageSize: 1,
+        filter: { objectid: sourceRecordId }
+      });
+
+      if (content.length !== 1) {
+        Toast.warn('Не найден объект-источник');
+
+        return;
+      }
+
+      this.setFeature(content[0]);
+
+      if (this.openDialog) {
+        this.openDialog();
+      }
+    } catch (error) {
+      const err = error as AxiosError;
+      Toast.warn(`Ошибка получения источника. ${err.message}`);
+      services.logger.warn(`Ошибка получения источника. ${err.message}`);
+    }
+  }
+
   private async setDocument(libraryId: string, recordId: number, openDialog = false) {
     try {
       const document = await getLibraryRecord(libraryId, recordId);
@@ -646,6 +723,11 @@ export class LayerMenu extends Component<LayerMenuProps> {
   @action
   private setSchema(schema: Schema) {
     this.schema = schema;
+  }
+
+  @action
+  private setFeature(feature: WfsFeature) {
+    this.feature = feature;
   }
 
   @action

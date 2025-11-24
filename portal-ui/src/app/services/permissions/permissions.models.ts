@@ -43,6 +43,16 @@ export enum DataTypes {
 export const roles: Role[] = [Role.VIEWER, Role.CONTRIBUTOR, Role.OWNER];
 export const gisRoles: Role[] = [Role.VIEWER, Role.OWNER];
 
+export function isRole(role: unknown): role is Role {
+  for (const r of roles) {
+    if (r === role) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
 export const tableRolesPermissionPoints = new Map<Role, TablePermissionPoint[]>([
   [
     Role.OWNER,
