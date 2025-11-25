@@ -409,5 +409,132 @@
         "schemaId": "dl_data_universal_for_document"
       }
     ]
+  },
+  {
+    "id": 7,
+    "title": "Рекламные конструкции",
+    "description": "Специализация предназначена для инвентаризации и управления существующими рекламными конструкциями, а также для контроля и согласований размещения рекламных конструкций в зонах для допустимого размещения",
+    "settings": {
+      "storageSize": 2,
+      "createLibraryItem": true,
+      "viewDocumentLibrary": true,
+      "viewBugReport": true,
+      "downloadGml": true,
+      "importShp": true,
+      "downloadFiles": true,
+      "createProject": true,
+      "editProjectLayer": true,
+      "tags": [
+        "system",
+        "advertising",
+        "КПТ"
+      ]
+    },
+    "projects": [
+      {
+        "title": "Пример рекламных конструкций",        
+        "bbox": "[3777461,5604395,3816353,5626627]",
+        "isDefault": true,
+        "layers": [
+          707,
+          706,
+          705,
+          704,
+          703,
+          702,
+          701
+        ]
+      }
+    ],
+    "datasets": [
+      {
+        "title": "Векторные данные рекламных конструкций",
+        "tables": [
+          {
+            "id": 701,
+            "content": [
+              "advertising_point_simf.sql"
+            ],
+            "body": {
+              "title": "Рекламные конструкции",
+              "schemaId": "advertising_point_simf_2025",
+              "crs": "EPSG:7829",
+              "styleName": "advertising_point_simf_2025"
+            }
+          },
+          {
+            "id": 702,
+            "content": [
+              "advertising_zone_simf.sql"
+            ],
+            "body": {
+              "title": "Зоны возможного размещения рекламных конструкций",
+              "schemaId": "advertising_zone_simf_2025",
+              "crs": "EPSG:7829",
+              "styleName": "advertising_zone_simf_2025"
+            }
+          },
+          {
+            "id": 703,
+            "content": [
+              "signs_on_buildings.sql"
+            ],
+            "body": {
+              "title": "Вывески на зданиях",
+              "schemaId": "signs_on_buildings",
+              "crs": "EPSG:7829",
+              "styleName": "signs_on_buildings"
+            }
+          }
+        ]
+      },
+      {
+        "title": "Сведения Росреестра",
+        "tables": [
+          {
+            "id": 704,
+            "content": [
+              "oks_pro.sql"
+            ],
+            "body": {
+              "title": "Объекты капитального строительства",
+              "schemaId": "oks_pro",
+              "crs": "EPSG:7829",
+              "styleName": "oks_pro"
+            }
+          },
+          {
+            "id": 705,
+            "content": [
+              "zu_pro.sql"
+            ],
+            "body": {
+              "title": "Земельные участки",
+              "schemaId": "zu_pro",
+              "crs": "EPSG:7829",
+              "styleName": "zu_pro"
+            }
+          },
+          {
+            "id": 706,
+            "content": [
+              "zouit_pro.sql"
+            ],
+            "body": {
+              "title": "Зоны с особыми условиями использования территорий",
+              "schemaId": "zouit_pro",
+              "crs": "EPSG:7829",
+              "enabled": true,
+              "styleName": "zouit_pro"
+            }
+          }
+        ]
+      }
+    ],
+    "documentLibraries": [
+      {
+        "schemaId": "dl_data_universal_for_document"
+      }
+    ]
   }
 ]

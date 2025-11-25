@@ -21,6 +21,7 @@ import ru.mycrg.data_service.service.cqrs.tables.requests.CreateTableRequest;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service.service.resources.protectors.IResourceProtector;
 import ru.mycrg.data_service.service.schemas.ISchemaTemplateService;
+import ru.mycrg.data_service.util.JsonConverter;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.data_service_contract.dto.SimplePropertyDto;
 import ru.mycrg.data_service_contract.enums.ValueType;
@@ -100,6 +101,8 @@ public class CreateTableRequestHandler implements IRequestHandler<CreateTableReq
         String tableName = buildTableName(schema.getTableName(), dataset.getId(), dto.getName());
         dto.setName(tableName);
 
+        log.debug("Создаем таблицу в '{}' по схеме: [{}], DTO: [{}]",
+                  dataset.getIdentifier(), JsonConverter.asJsonString(schema), dto);
         createTable(schema, dataset.getIdentifier(), dto);
 
         // Create FTS triggers

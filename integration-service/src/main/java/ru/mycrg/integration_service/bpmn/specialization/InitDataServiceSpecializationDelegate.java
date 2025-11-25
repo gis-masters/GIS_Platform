@@ -166,9 +166,12 @@ public class InitDataServiceSpecializationDelegate implements JavaDelegate {
             } else {
                 String location = response.header("Location");
 
+                assert location != null;
                 return location.split("/datasets/")[1];
             }
         } catch (Exception e) {
+            log.error("Не удалось создать набор данных с токеном: {}", token);
+
             throw new IllegalStateException("Не удалось создать набор данных => " + e.getMessage(), e);
         } finally {
             if (response != null) {

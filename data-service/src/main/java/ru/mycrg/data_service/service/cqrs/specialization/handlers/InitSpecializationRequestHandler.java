@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 import static ru.mycrg.common_utils.CrgGlobalProperties.getDefaultDatabaseName;
+import static ru.mycrg.data_service.util.DetailedLogger.logError;
 import static ru.mycrg.data_service.util.ErrorDetailsExtractor.extractDetails;
 
 @Component
@@ -54,7 +55,7 @@ public class InitSpecializationRequestHandler implements IRequestHandler<InitSpe
                     .filter(pathToScript -> content.contains(pathToScript.getFileName().toString()))
                     .forEach(pathToScript -> {
                         try {
-                            log.info("Специализация: {}. Выполнять скрипт: {}", specializationId, pathToScript);
+                            log.info("Специализация: {}. Выполняю скрипт: {}", specializationId, pathToScript);
 
                             String scriptContent = Files.readString(pathToScript);
 
@@ -74,6 +75,8 @@ public class InitSpecializationRequestHandler implements IRequestHandler<InitSpe
                         } catch (Exception e) {
                             String msg = String.format("Не удалось выполнить скрипт: '%s'", pathToScript.getFileName());
                             log.error("{} => {}", msg, e.getMessage());
+
+                            logError("Выполнение скрипта. Детальный лог", e);
 
                             throw new CrgPSqlException(msg, extractDetails(e));
                         }
