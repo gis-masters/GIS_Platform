@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import ru.mycrg.data_service_contract.dto.ExportProcessModel;
 import ru.mycrg.data_service_contract.dto.ExportResourceModel;
 import ru.mycrg.data_service_contract.dto.ResourceProjection;
-import ru.mycrg.data_service_contract.dto.gpkg.GpkgPayload;
+import ru.mycrg.common_contracts.generated.gpkg.ExportGpkgPayload;
 import ru.mycrg.data_service_contract.queue.request.gpkg.BuildGpkgEvent;
 import ru.mycrg.messagebus_contract.IMessageBusProducer;
 
@@ -46,7 +46,7 @@ public class AskGeoWrapperCreateGpkg implements JavaDelegate {
         log.debug("Класс '{}' начал работу.", AskGeoWrapperCreateGpkg.class.getSimpleName());
         String businessKey = (String) delegateExecution.getVariable(BUSINESS_KEY_VAR_NAME);
 
-        GpkgPayload subPayload = (GpkgPayload) delegateExecution.getVariable(EVENT_SUB_PAYLOAD_NAME);
+        ExportGpkgPayload subPayload = (ExportGpkgPayload) delegateExecution.getVariable(EVENT_SUB_PAYLOAD_NAME);
         List<ExportResourceModel> resources = (List<ExportResourceModel>) subPayload.getPayload();
         resources = resources.stream().distinct().collect(Collectors.toList());
 

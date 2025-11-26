@@ -25,7 +25,6 @@ import java.util.List;
 
 import static org.springframework.http.HttpStatus.ACCEPTED;
 
-// TODO: в будущем вернуться к врапперу при экспорте шэйпа. пока выгружаем через ГС
 @RestController
 public class ExportController extends BaseController {
 

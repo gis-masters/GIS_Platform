@@ -7,15 +7,13 @@ import org.springframework.stereotype.Service;
 import ru.mycrg.common_contracts.generated.data_service.gpkg.GpkgTableType;
 import ru.mycrg.common_contracts.generated.data_service.gpkg.GpkgTablesData;
 import ru.mycrg.data_service.entity.File;
+import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.repository.FileRepositoryDetached;
 import ru.mycrg.data_service.service.gpkg.GpkgContentsDto;
 import ru.mycrg.data_service.service.gpkg.GpkgException;
 import ru.mycrg.data_service_contract.enums.GeometryType;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -28,6 +26,7 @@ import static ru.mycrg.common_contracts.generated.data_service.gpkg.GpkgTableTyp
 public class GpkgReaderService {
 
     private final static Logger log = LoggerFactory.getLogger(GpkgReaderService.class);
+
     private final GpkgFileRepository gpkgFileRepository;
     private final FileRepositoryDetached fileRepository;
 
@@ -46,22 +45,25 @@ public class GpkgReaderService {
      *
      * @throws GpkgException если не удалось прочитать файл
      */
-    public List<GpkgTablesData> getTablesSmallInfoFromGpkg(String filePath) {
-        List<GpkgTablesData> allTables;
-        try (Connection connection = createConnection(filePath)) {
-            List<GpkgTablesData> vectorTables = getVectorTablesData(connection);
-            allTables = new ArrayList<>(vectorTables);
+    public List<GpkgTablesData> getTablesInfo(String filePath) {
+        List<GpkgTablesData> vectorTables = getVectorTablesData(filePath);
+        List<GpkgTablesData> allTables = new ArrayList<>(vectorTables);
 
-            List<GpkgTablesData> crgTables = getCrgCustomTablesData(connection);
-            allTables.addAll(crgTables);
+        List<GpkgTablesData> crgTables = getCrgCustomTablesData(filePath);
+        allTables.addAll(crgTables);
 
-            log.debug("Найдено {} таблиц в GPKG файле: {}", allTables.size(), filePath);
+        log.debug("Найдено {} таблиц в GPKG файле: {}", allTables.size(), filePath);
 
-            return allTables;
-        } catch (SQLException e) {
-            log.error("Ошибка чтения из GPKG файла: {}", filePath, e);
+        return allTables;
+    }
 
-            throw new GpkgException("Невозможно прочитать gpkg. Причина: " + e.getMessage());
+    public List<GpkgTablesData> getOnlyVectorTablesInfo(String filePath) {
+        return getVectorTablesData(filePath);
+    }
+
+    public void throwIfNotGpkg(File file) {
+        if (gpkgFileRepository.isNotCorrectGpkg(file.getPath())) {
+            throw new BadRequestException("Файл " + file.getId() + " не является корректным GPKG файлом");
         }
     }
 
@@ -71,11 +73,7 @@ public class GpkgReaderService {
             throw new NotFoundException("Не найден файл с ID: " + fileId);
         }
 
-        try (Connection connection = createConnection(oFile.get().getPath())) {
-            return gpkgFileRepository.getTableGeomType(connection, sourceTableName);
-        } catch (Exception e) {
-            throw new GpkgException("Проблема чтения из gpkg: " + e.getMessage());
-        }
+        return gpkgFileRepository.getTableGeomType(oFile.get().getPath(), sourceTableName);
     }
 
     public GpkgContentsDto getVectorTableContent(JdbcTemplate jdbcTemplate, UUID fileId, String sourceTableName) {
@@ -84,26 +82,22 @@ public class GpkgReaderService {
             throw new NotFoundException("Не найден файл с ID: " + fileId);
         }
 
-        try (Connection connection = createConnection(oFile.get().getPath())) {
-            return gpkgFileRepository.getGpkgContents(connection, sourceTableName);
-        } catch (Exception e) {
-            throw new GpkgException(e.getMessage());
-        }
+        return gpkgFileRepository.getGpkgContents(oFile.get().getPath(), sourceTableName);
     }
 
-    private List<GpkgTablesData> getVectorTablesData(Connection connection) throws SQLException {
-        List<String> tableNames = gpkgFileRepository.getVectorTableNames(connection);
+    private List<GpkgTablesData> getVectorTablesData(String filePath) {
+        List<String> tableNames = gpkgFileRepository.getVectorTableNames(filePath);
 
-        return createTablesData(connection, tableNames, VECTOR_DATA_TABLE);
+        return createTablesData(filePath, tableNames, VECTOR_DATA_TABLE);
     }
 
-    private List<GpkgTablesData> getCrgCustomTablesData(Connection connection) throws SQLException {
-        List<String> tableNames = gpkgFileRepository.getCrgCustomTableNames(connection);
+    private List<GpkgTablesData> getCrgCustomTablesData(String filePath) {
+        List<String> tableNames = gpkgFileRepository.getCrgCustomTableNames(filePath);
 
-        return createTablesData(connection, tableNames, CRG_DATA_TABLE);
+        return createTablesData(filePath, tableNames, CRG_DATA_TABLE);
     }
 
-    private List<GpkgTablesData> createTablesData(Connection connection,
+    private List<GpkgTablesData> createTablesData(String filePath,
                                                   List<String> tableNames,
                                                   GpkgTableType tableType) {
         List<GpkgTablesData> result = new ArrayList<>();
@@ -111,23 +105,17 @@ public class GpkgReaderService {
         for (String tableName: tableNames) {
             try {
                 GpkgTablesData tableData = new GpkgTablesData(tableType, tableName);
-                Long rowsCount = gpkgFileRepository.getTableRowsCount(connection, tableName);
+                Long rowsCount = gpkgFileRepository.getTableRowsCount(filePath, tableName);
                 tableData.setRowsCount(rowsCount);
                 result.add(tableData);
 
                 log.debug("Обработана таблица: {} (тип: {}, строк: {})", tableName, tableType, rowsCount);
-            } catch (SQLException e) {
+            } catch (GpkgException e) {
                 log.warn("Не удалось получить информацию о таблице: {}. Пропускаем. Ошибка: {}",
                          tableName, e.getMessage());
             }
         }
 
         return result;
-    }
-
-    private Connection createConnection(String filePath) throws SQLException {
-        log.debug("Создание соединения с GPKG файлом: {}", filePath);
-
-        return DriverManager.getConnection("jdbc:sqlite:" + filePath);
     }
 }

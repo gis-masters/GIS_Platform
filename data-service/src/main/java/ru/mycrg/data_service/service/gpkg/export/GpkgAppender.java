@@ -4,13 +4,13 @@ import com.fasterxml.jackson.databind.JsonNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
+import ru.mycrg.data_service.service.gpkg.GpkgConnectionManager;
 import ru.mycrg.data_service.service.gpkg.GpkgException;
 import ru.mycrg.data_service_contract.dto.ExportResourceModel;
 import ru.mycrg.data_service_contract.dto.gpkg.StyleWithIcons;
 import ru.mycrg.gis_service_contract.dto.LayerProjection;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.util.List;
 
 @Repository
@@ -19,15 +19,17 @@ public class GpkgAppender {
     private final Logger log = LoggerFactory.getLogger(GpkgAppender.class);
 
     private final GpkgWriter gpkgWriter;
+    private final GpkgConnectionManager connectionManager;
 
-    public GpkgAppender(GpkgWriter gpkgWriter) {
+    public GpkgAppender(GpkgWriter gpkgWriter, GpkgConnectionManager connectionManager) {
         this.gpkgWriter = gpkgWriter;
+        this.connectionManager = connectionManager;
     }
 
     public void appendStylesAndSvgs(String gpkgFileName, List<StyleWithIcons> stylesAndSvgs) {
         log.debug("GpkgAppender.append stylesAndSvgs");
 
-        try (Connection connection = DriverManager.getConnection("jdbc:sqlite:" + gpkgFileName)) {
+        try (Connection connection = connectionManager.createConnectionForWriting(gpkgFileName)) {
             gpkgWriter.createIfNotExistSvgTable(connection);
             gpkgWriter.createIfNotExistStylesTable(connection);
 
@@ -35,27 +37,27 @@ public class GpkgAppender {
         } catch (Exception e) {
             log.debug("Ошибка добавление стилей и SVG в GPKG: {}. Причина: {}", gpkgFileName, e.getMessage());
 
-            throw new GpkgException("Не смогли добавить стили и svg в файл: " + gpkgFileName);
+            throw new GpkgException("Не смогли добавить стили и svg в файл: " + gpkgFileName, e);
         }
     }
 
     public void appendLayersInfo(String gpkgFileName, List<LayerProjection> layerProjections) {
         log.debug("GpkgAppender.append LayersInfo");
-        try (Connection connection = DriverManager.getConnection("jdbc:sqlite:" + gpkgFileName)) {
+        try (Connection connection = connectionManager.createConnectionForWriting(gpkgFileName)) {
             gpkgWriter.createIfNotExistLayerTable(connection);
 
             gpkgWriter.addLayersProjection(connection, layerProjections);
         } catch (Exception e) {
             log.debug("Ошибка добавление информации о слоях в файл: {}. Причина: {}", gpkgFileName, e.getMessage());
 
-            throw new GpkgException("Не смогли добавить стили и svg в файл: " + gpkgFileName);
+            throw new GpkgException("Не смогли добавить информацию о слоях в файл: " + gpkgFileName, e);
         }
     }
 
     public void appendVectorTableSchema(String gpkgFileName, JsonNode schema, ExportResourceModel resourceQualifier) {
         log.debug("GpkgAppender.append {}, {}, schemasAndTables: {}", gpkgFileName, schema, resourceQualifier);
 
-        try (Connection connection = DriverManager.getConnection("jdbc:sqlite:" + gpkgFileName)) {
+        try (Connection connection = connectionManager.createConnectionForWriting(gpkgFileName)) {
             // Создаем системную таблицу для хранения схем, если она не существует
             gpkgWriter.createIfNotExistSchemaTable(connection);
 
@@ -78,7 +80,7 @@ public class GpkgAppender {
         log.debug("GpkgAppender.append table info {}, title: {}, crs: {}, tableFullName: {}",
                   gpkgFileName, title, crs, tableFullName);
 
-        try (Connection connection = DriverManager.getConnection("jdbc:sqlite:" + gpkgFileName)) {
+        try (Connection connection = connectionManager.createConnectionForWriting(gpkgFileName)) {
             // Создаем таблицу для хранения информации о слоях, если она не существует
             gpkgWriter.createIfNotExistVectorTableInfoTable(connection);
 

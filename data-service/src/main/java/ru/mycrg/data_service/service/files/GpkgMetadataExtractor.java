@@ -21,7 +21,9 @@ public class GpkgMetadataExtractor implements IMetadataExtractor {
 
     @Override
     public FileMetadata<?> extract(@NotNull File file) {
-        List<GpkgTablesData> data = gpkgReaderService.getTablesSmallInfoFromGpkg(file.getPath());
+        gpkgReaderService.throwIfNotGpkg(file);
+
+        List<GpkgTablesData> data = gpkgReaderService.getOnlyVectorTablesInfo(file.getPath());
 
         return new GpkgFileMetadata(file.getId(), data);
     }

@@ -10,13 +10,12 @@ import org.camunda.bpm.engine.delegate.JavaDelegate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import ru.mycrg.common_contracts.generated.gpkg.GkpgExportDetailsModel;
-import ru.mycrg.common_contracts.generated.gpkg.MessageFromExport;
+import ru.mycrg.common_contracts.generated.gpkg.GpkgExportDetailsModel;
 import ru.mycrg.data_service_contract.dto.ExportResourceModel;
 import ru.mycrg.data_service_contract.dto.PatchProcess;
-import ru.mycrg.data_service_contract.dto.gpkg.GpkgPayload;
-import ru.mycrg.data_service_contract.queue.request.gpkg.ExportGpkgEvent;
+import ru.mycrg.common_contracts.generated.gpkg.ExportGpkgPayload;
 import ru.mycrg.data_service_contract.queue.request.UpdateProcessEvent;
+import ru.mycrg.data_service_contract.queue.request.gpkg.ExportGpkgEvent;
 import ru.mycrg.http_client.JsonConverter;
 import ru.mycrg.integration_service.bpmn.BaseHttpService;
 import ru.mycrg.messagebus_contract.IMessageBusProducer;
@@ -28,7 +27,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static ru.mycrg.data_service_contract.dto.gpkg.GpkgExportTypes.TABLE;
+import static ru.mycrg.common_contracts.generated.gpkg.GpkgExportType.TABLE;
 import static ru.mycrg.data_service_contract.enums.ProcessStatus.TASK_DONE;
 import static ru.mycrg.integration_service.IntegrationApplication.objectMapper;
 import static ru.mycrg.integration_service.bpmn.IJavaDelegateProperties.*;
@@ -57,7 +56,6 @@ import static ru.mycrg.integration_service.bpmn.VariableUtil.getVariable;
  *     <li>При переходе на следующий шаг нужно выкидывать те слои которые не доступны.</li>
  *   </ul>
  */
-
 @Service("askVectorTableAvailability")
 public class AskVectorTableAvailability implements JavaDelegate {
 
@@ -86,7 +84,7 @@ public class AskVectorTableAvailability implements JavaDelegate {
         log.debug("Класс '{}' начал работу.", AskVectorTableAvailability.class.getSimpleName());
 
         //Шаг 1. Проверили что мы вообще можем работать.
-        GpkgPayload subPayload = (GpkgPayload) delegateExecution.getVariable(EVENT_SUB_PAYLOAD_NAME);
+        ExportGpkgPayload subPayload = (ExportGpkgPayload) delegateExecution.getVariable(EVENT_SUB_PAYLOAD_NAME);
         if (subPayload.getType() != TABLE) {
             log.error("Экспорт без векторных таблиц невозможен. Останавливаем процесс!");
             delegateExecution.setVariable(CHECK_STATUS_VAR_NAME, "allResourcesUnavailable");
@@ -219,21 +217,20 @@ public class AskVectorTableAvailability implements JavaDelegate {
         return BaseHttpService.httpClient.newCall(request).execute();
     }
 
-    private GkpgExportDetailsModel makeReport(ExportGpkgEvent event,
+    private GpkgExportDetailsModel makeReport(ExportGpkgEvent event,
                                               int resources,
                                               int unavailableResources) {
         log.debug("Формируем отчёт о работе");
 
-        GkpgExportDetailsModel details = event.getGkpgExportDetailsModel();
+        GpkgExportDetailsModel details = event.getGpkgExportDetailsModel();
         if (details == null) {
             log.debug("GkpgExportDetailsModel пустой");
-            details = new GkpgExportDetailsModel();
-            event.setGkpgExportDetailsModel(details);
+            details = new GpkgExportDetailsModel();
+            event.setGpkgExportDetailsModel(details);
         }
 
-        List<MessageFromExport> messages = details.getMessageFromExport();
-        if (messages == null) {
-            log.debug("MessageFromExport пустой");
+        List<String> messages = details.getMessages();
+        if (messages == null || messages.isEmpty()) {
             messages = new LinkedList<>();
         }
 
@@ -246,14 +243,14 @@ public class AskVectorTableAvailability implements JavaDelegate {
                     " Не хватает прав на остальные ресурсы.";
         }
 
-        messages.add(new MessageFromExport(msg));
-        details.setMessageFromExport(messages);
-        event.setGkpgExportDetailsModel(details);
+        messages.add(msg);
+        details.setMessages(messages);
+        event.setGpkgExportDetailsModel(details);
 
         return details;
     }
 
-    private List<ExportResourceModel> extractResourcesFromPayload(GpkgPayload subPayload) {
+    private List<ExportResourceModel> extractResourcesFromPayload(ExportGpkgPayload subPayload) {
         Object payload = subPayload.getPayload();
 
         // Сначала проверяем, не является ли это уже правильным типом

@@ -5,9 +5,9 @@ import org.camunda.bpm.engine.delegate.JavaDelegate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import ru.mycrg.data_service_contract.dto.gpkg.GpkgPayload;
+import ru.mycrg.common_contracts.generated.gpkg.ExportGpkgPayload;
 
-import static ru.mycrg.data_service_contract.dto.gpkg.GpkgExportTypes.PROJECT;
+import static ru.mycrg.common_contracts.generated.gpkg.GpkgExportType.PROJECT;
 import static ru.mycrg.integration_service.bpmn.IJavaDelegateProperties.CHECK_STATUS_VAR_NAME;
 import static ru.mycrg.integration_service.bpmn.IJavaDelegateProperties.EVENT_SUB_PAYLOAD_NAME;
 
@@ -42,7 +42,7 @@ public class AskGisAboutProjects implements JavaDelegate {
     public void execute(DelegateExecution delegateExecution) throws Exception {
         log.debug("Класс '{}' начал работу.", AskGisAboutProjects.class.getSimpleName());
 
-        GpkgPayload subPayload = (GpkgPayload) delegateExecution.getVariable(EVENT_SUB_PAYLOAD_NAME);
+        ExportGpkgPayload subPayload = (ExportGpkgPayload) delegateExecution.getVariable(EVENT_SUB_PAYLOAD_NAME);
 
         log.debug("Запрашиваемая сущность: {}, {}", subPayload.getType(), subPayload.getPayload());
 

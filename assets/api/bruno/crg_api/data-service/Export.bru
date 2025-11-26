@@ -1,0 +1,45 @@
+meta {
+  name: Export
+  type: http
+  seq: 14
+}
+
+post {
+  url: http://localhost:8084/export
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjcmdfbG9naW4iOiJyMmlsd2h6QHQiLCJ1c2VyX25hbWUiOiJyMmlsd2h6X3RfMTUiLCJncm91cHMiOltdLCJ2ZXJzaW9uIjpudWxsLCJhdXRob3JpdGllcyI6WyJPUkdfQURNSU4iXSwibWluaW9ucyI6W10sImNsaWVudF9pZCI6InRlc3RBZG1pbiIsInVzZXJfaWQiOjE1LCJzY29wZSI6WyJjcmciXSwib3JnYW5pemF0aW9ucyI6W3siaWQiOjMsIm5hbWUiOiLQntCe0J4g0JHRi9C60LjQmNCa0L7QstGLIn1dLCJleHAiOjE3NjQwNjI2MDMsImRpcmVjdE1pbmlvbnMiOltdLCJqdGkiOiJjZGNkOTA1Ny1hYjZkLTQxY2UtYmRmZC0wMDc5MGRlZTE0OGYifQ.X_RjEJ2e6T9c94j-alVUyKvvwWXWIEZooPQ4-Yi0rMk
+}
+
+body:json {
+  {
+    "wsUiId": "e4vf6v",
+    "format": "GPKG",
+    "payload": {
+      "type": "TABLE",
+      "payload": [
+        {
+          "dataset": "dataset_4с4122",
+          "table": "interaction_1_6512"
+        },
+        {
+          "dataset": "dataset_4с4122",
+          "table": "parcels_new_1_df2a"
+        },
+        {
+          "dataset": "dataset_4с4122",
+          "table": "border_servitut_1_ea4c"
+        }
+      ]
+    },
+    "epsg": "EPSG:7829"
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

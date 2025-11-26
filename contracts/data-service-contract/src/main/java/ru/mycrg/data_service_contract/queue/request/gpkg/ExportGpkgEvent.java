@@ -1,6 +1,7 @@
 package ru.mycrg.data_service_contract.queue.request.gpkg;
 
-import ru.mycrg.common_contracts.generated.gpkg.GkpgExportDetailsModel;
+import ru.mycrg.common_contracts.generated.gpkg.GpkgExportDetailsModel;
+import ru.mycrg.common_contracts.generated.gpkg.ExportGpkgPayload;
 import ru.mycrg.data_service_contract.dto.gpkg.GpkgAppendingData;
 import ru.mycrg.messagebus_contract.events.DefaultMessageBusRequestEvent;
 
@@ -17,15 +18,15 @@ public class ExportGpkgEvent extends DefaultMessageBusRequestEvent implements Se
     private String dbName;
     @NotNull
     private String token;
-    private Object payload;
+    private ExportGpkgPayload payload;
     private GpkgAppendingData gpkgAppendingData;
-    private GkpgExportDetailsModel gkpgExportDetailsModel;
+    private GpkgExportDetailsModel gpkgExportDetailsModel;
 
     public ExportGpkgEvent() {
         super();
     }
 
-    public ExportGpkgEvent(Long processId, String dbName, String token, Object payload) {
+    public ExportGpkgEvent(Long processId, String dbName, String token, ExportGpkgPayload payload) {
         super(UUID.randomUUID(), DATA_TO_INTEGRATION_QUEUE);
 
         this.processId = processId;
@@ -58,20 +59,20 @@ public class ExportGpkgEvent extends DefaultMessageBusRequestEvent implements Se
         this.token = token;
     }
 
-    public Object getPayload() {
+    public ExportGpkgPayload getPayload() {
         return payload;
     }
 
-    public void setPayload(Object payload) {
+    public void setPayload(ExportGpkgPayload payload) {
         this.payload = payload;
     }
 
-    public GkpgExportDetailsModel getGkpgExportDetailsModel() {
-        return gkpgExportDetailsModel;
+    public GpkgExportDetailsModel getGpkgExportDetailsModel() {
+        return gpkgExportDetailsModel;
     }
 
-    public void setGkpgExportDetailsModel(GkpgExportDetailsModel gkpgExportDetailsModel) {
-        this.gkpgExportDetailsModel = gkpgExportDetailsModel;
+    public void setGpkgExportDetailsModel(GpkgExportDetailsModel gpkgExportDetailsModel) {
+        this.gpkgExportDetailsModel = gpkgExportDetailsModel;
     }
 
     public GpkgAppendingData getGpkgAppendingData() {

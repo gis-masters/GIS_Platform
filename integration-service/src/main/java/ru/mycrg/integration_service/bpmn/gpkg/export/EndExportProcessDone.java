@@ -5,11 +5,10 @@ import org.camunda.bpm.engine.delegate.JavaDelegate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import ru.mycrg.common_contracts.generated.gpkg.GkpgExportDetailsModel;
-import ru.mycrg.common_contracts.generated.gpkg.MessageFromExport;
+import ru.mycrg.common_contracts.generated.gpkg.GpkgExportDetailsModel;
 import ru.mycrg.data_service_contract.dto.PatchProcess;
-import ru.mycrg.data_service_contract.queue.request.gpkg.ExportGpkgEvent;
 import ru.mycrg.data_service_contract.queue.request.UpdateProcessEvent;
+import ru.mycrg.data_service_contract.queue.request.gpkg.ExportGpkgEvent;
 import ru.mycrg.messagebus_contract.IMessageBusProducer;
 
 import java.util.List;
@@ -33,7 +32,6 @@ import static ru.mycrg.integration_service.bpmn.IJavaDelegateProperties.*;
  * </ul>
  *
  */
-
 @Service("endExportProcessDone")
 public class EndExportProcessDone implements JavaDelegate {
 
@@ -50,15 +48,15 @@ public class EndExportProcessDone implements JavaDelegate {
         log.debug("Класс '{}' начал работу.", EndExportProcessDone.class.getSimpleName());
         ExportGpkgEvent event = (ExportGpkgEvent) delegateExecution.getVariable(EVENT_VAR_NAME);
 
-        GkpgExportDetailsModel details = event.getGkpgExportDetailsModel();
-        List<MessageFromExport> messages = details.getMessageFromExport();
-        details.setMessageFromExport(messages);
+        GpkgExportDetailsModel details = event.getGpkgExportDetailsModel();
+        List<String> messages = details.getMessages();
+        details.setMessages(messages);
 
         String pathToGpkg = delegateExecution.getVariable(GPKG_PATH_VAR_NAME).toString();
         details.setPathToGpkgFile(pathToGpkg);
 
-        messages.add(new MessageFromExport("Процесс выгрузки GPKG был завершён."));
-        details.setMessageFromExport(messages);
+        messages.add("Процесс выгрузки GPKG был завершён.");
+        details.setMessages(messages);
         String businessKey = (String) delegateExecution.getVariable(BUSINESS_KEY_VAR_NAME);
 
         PatchProcess patchProcess = new PatchProcess(DONE, details);

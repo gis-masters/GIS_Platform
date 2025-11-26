@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import ru.mycrg.data_service_contract.dto.ExportResourceModel;
 import ru.mycrg.data_service_contract.dto.gpkg.GpkgAppendingData;
-import ru.mycrg.data_service_contract.dto.gpkg.GpkgPayload;
+import ru.mycrg.common_contracts.generated.gpkg.ExportGpkgPayload;
 import ru.mycrg.data_service_contract.queue.request.gpkg.AppendGpkgInfoEvent;
 import ru.mycrg.data_service_contract.queue.request.gpkg.ExportGpkgEvent;
 import ru.mycrg.messagebus_contract.IMessageBusProducer;
@@ -50,7 +50,7 @@ public class AskDataAppendInfo implements JavaDelegate {
         ExportGpkgEvent event = (ExportGpkgEvent) delegateExecution.getVariable(EVENT_VAR_NAME);
         String pathToGpkg = delegateExecution.getVariable(GPKG_PATH_VAR_NAME).toString();
 
-        GpkgPayload subPayload = (GpkgPayload) delegateExecution.getVariable(EVENT_SUB_PAYLOAD_NAME);
+        ExportGpkgPayload subPayload = (ExportGpkgPayload) delegateExecution.getVariable(EVENT_SUB_PAYLOAD_NAME);
         List<ExportResourceModel> resources = (List<ExportResourceModel>) subPayload.getPayload();
         resources = resources.stream().distinct().collect(Collectors.toList());
 

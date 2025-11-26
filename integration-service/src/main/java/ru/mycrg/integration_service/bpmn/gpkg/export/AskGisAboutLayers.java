@@ -11,14 +11,13 @@ import org.camunda.bpm.engine.delegate.JavaDelegate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import ru.mycrg.common_contracts.generated.gpkg.GkpgExportDetailsModel;
-import ru.mycrg.common_contracts.generated.gpkg.MessageFromExport;
+import ru.mycrg.common_contracts.generated.gpkg.GpkgExportDetailsModel;
 import ru.mycrg.data_service_contract.dto.ExportResourceModel;
 import ru.mycrg.data_service_contract.dto.PatchProcess;
 import ru.mycrg.data_service_contract.dto.gpkg.GpkgAppendingData;
-import ru.mycrg.data_service_contract.dto.gpkg.GpkgPayload;
-import ru.mycrg.data_service_contract.queue.request.gpkg.ExportGpkgEvent;
+import ru.mycrg.common_contracts.generated.gpkg.ExportGpkgPayload;
 import ru.mycrg.data_service_contract.queue.request.UpdateProcessEvent;
+import ru.mycrg.data_service_contract.queue.request.gpkg.ExportGpkgEvent;
 import ru.mycrg.gis_service_contract.dto.LayerProjection;
 import ru.mycrg.integration_service.bpmn.BaseHttpService;
 import ru.mycrg.messagebus_contract.IMessageBusProducer;
@@ -29,8 +28,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static ru.mycrg.data_service_contract.dto.gpkg.GpkgExportTypes.LAYER;
-import static ru.mycrg.data_service_contract.dto.gpkg.GpkgExportTypes.TABLE;
+import static ru.mycrg.common_contracts.generated.gpkg.GpkgExportType.LAYER;
+import static ru.mycrg.common_contracts.generated.gpkg.GpkgExportType.TABLE;
 import static ru.mycrg.data_service_contract.enums.ProcessStatus.TASK_DONE;
 import static ru.mycrg.integration_service.bpmn.BaseHttpService.httpClient;
 import static ru.mycrg.integration_service.bpmn.IJavaDelegateProperties.*;
@@ -53,7 +52,6 @@ import static ru.mycrg.integration_service.bpmn.VariableUtil.getVariable;
  *   <li>При успешном переходе на следующий шаг обнуляем счётчик</li>
  * </ul>
  */
-
 @Service("askGisAboutLayers")
 public class AskGisAboutLayers implements JavaDelegate {
 
@@ -82,7 +80,7 @@ public class AskGisAboutLayers implements JavaDelegate {
             return;
         }
         log.debug("Класс '{}' начал работу.", AskGisAboutLayers.class.getSimpleName());
-        GpkgPayload subPayload = (GpkgPayload) delegateExecution.getVariable(EVENT_SUB_PAYLOAD_NAME);
+        ExportGpkgPayload subPayload = (ExportGpkgPayload) delegateExecution.getVariable(EVENT_SUB_PAYLOAD_NAME);
 
         ExportGpkgEvent event = (ExportGpkgEvent) delegateExecution.getVariable(EVENT_VAR_NAME);
         String businessKey = (String) delegateExecution.getVariable(BUSINESS_KEY_VAR_NAME);
@@ -117,7 +115,7 @@ public class AskGisAboutLayers implements JavaDelegate {
 
         if (!layers.isEmpty()) {
             //Шаг 3. Формируем объект для следующего шага
-            GkpgExportDetailsModel details = collectNewObjectForNextStep(layers,
+            GpkgExportDetailsModel details = collectNewObjectForNextStep(layers,
                                                                          subPayload,
                                                                          event,
                                                                          layersId);
@@ -197,8 +195,8 @@ public class AskGisAboutLayers implements JavaDelegate {
         }
     }
 
-    private GkpgExportDetailsModel collectNewObjectForNextStep(List<LayerProjection> layers,
-                                                               GpkgPayload subPayload,
+    private GpkgExportDetailsModel collectNewObjectForNextStep(List<LayerProjection> layers,
+                                                               ExportGpkgPayload subPayload,
                                                                ExportGpkgEvent event,
                                                                List<Long> layersId) {
         List<ExportResourceModel> exportedResources = layers
@@ -215,23 +213,22 @@ public class AskGisAboutLayers implements JavaDelegate {
         //При появлении проектов нужно будет брать сущность.
         event.setGpkgAppendingData(new GpkgAppendingData(layers));
 
-        GkpgExportDetailsModel details = event.getGkpgExportDetailsModel();
+        GpkgExportDetailsModel details = event.getGpkgExportDetailsModel();
         if (details == null) {
             log.debug("GkpgExportDetailsModel пустой");
-            details = new GkpgExportDetailsModel();
-            event.setGkpgExportDetailsModel(details);
+            details = new GpkgExportDetailsModel();
+            event.setGpkgExportDetailsModel(details);
         }
 
-        List<MessageFromExport> messages = details.getMessageFromExport();
-        if (messages == null) {
-            log.debug("MessageFromExport пустой");
+        List<String> messages = details.getMessages();
+        if (messages == null || messages.isEmpty()) {
             messages = new LinkedList<>();
         }
 
-        messages.add(new MessageFromExport(
-                "Слоёв было запрошено: " + layersId.size() + ". Будет экспортированно: " + layers.size()));
-        details.setMessageFromExport(messages);
-        event.setGkpgExportDetailsModel(details);
+        String msg = "Слоёв было запрошено: " + layersId.size() + ". Будет экспортированно: " + layers.size();
+        messages.add(msg);
+        details.setMessages(messages);
+        event.setGpkgExportDetailsModel(details);
 
         return details;
     }

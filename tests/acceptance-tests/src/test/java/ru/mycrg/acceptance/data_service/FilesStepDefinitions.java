@@ -12,6 +12,7 @@ import ru.mycrg.acceptance.auth_service.AuthorizationBase;
 import ru.mycrg.acceptance.data_service.dto.FileDescriptionModel;
 import ru.mycrg.auth_service_contract.dto.UserCreateDto;
 import ru.mycrg.common_contracts.generated.data_service.gpkg.GpkgFileMetadata;
+import ru.mycrg.common_contracts.generated.data_service.gpkg.GpkgTableType;
 import ru.mycrg.common_contracts.generated.data_service.gpkg.GpkgTablesData;
 
 import java.io.File;
@@ -492,23 +493,38 @@ public class FilesStepDefinitions extends BaseStepsDefinitions {
         getFileMetadata(null);
     }
 
-    @And("я получил метаданные текущего файла в ожидаемом формате")
+    @When("я вижу, что некорректный GPKG файл отклонен сервером с корректной формулировкой ошибки")
+    public void checkErrorResponseFromIncorrectGpkg() {
+        assertEquals(400, response.getStatusCode());
+        checkResponseValue("message", "Файл " + currentFileId + " не является корректным GPKG файлом");
+    }
+
+    @And("я получаю метаданные текущего файла в ожидаемом формате")
     public void checkFileMetadata() {
-        GpkgFileMetadata metadata = response.jsonPath().getObject("", GpkgFileMetadata.class);
+        try {
+            GpkgFileMetadata metadata = response.jsonPath().getObject("", GpkgFileMetadata.class);
 
-        assertNotNull("Это база! Данные должны быть!", metadata);
-        assertNotNull("Поле 'id' не должно быть null", metadata.getId());
+            assertNotNull("Это база! Данные должны быть!", metadata);
+            assertNotNull("Поле 'id' не должно быть null", metadata.getId());
 
-        FileDescriptionModel currentFile = getFileDescription(currentFileId);
-        switch (currentFile.getTitle()) {
-            case "onePolygonAllTypesWithoutGenerated.gpkg":
-                checkOnePolygonAllTypesWithoutGenerated(metadata);
-                break;
-            case "zolotopolenskoe_sp.tif":
-                break;
-            default:
-                throw new IllegalStateException(
-                        "Для файла " + currentFile.getTitle() + "не прописана проверка метаданных");
+            FileDescriptionModel currentFile = getFileDescription(currentFileId);
+            switch (currentFile.getTitle()) {
+                case "onePolygonAllTypesWithoutGenerated.gpkg":
+                    checkOnePolygonAllTypesWithoutGenerated(metadata);
+                    break;
+                case "emptyVector.gpkg":
+                    checkThatTablesAreEmpty(metadata);
+                    break;
+                case "zolotopolenskoe_sp.tif":
+                    break;
+                default:
+                    throw new IllegalStateException(
+                            "Для файла " + currentFile.getTitle() + " не прописана проверка метаданных");
+            }
+        } catch (Throwable th) {
+            response.prettyPrint();
+
+            throw th;
         }
     }
 
@@ -522,10 +538,20 @@ public class FilesStepDefinitions extends BaseStepsDefinitions {
         for (GpkgTablesData table: tables) {
             assertNotNull("Таблица должна содержать поле 'type'", table.getType());
             assertNotNull("Таблица должна содержать поле 'tableGpkgIdentifier'", table.getTableGpkgIdentifier());
-            // rowsCount может быть null для некоторых таблиц, но поле должно присутствовать в структуре
-            // Проверяем, что объект корректно десериализован и имеет все необходимые поля
             assertNotNull("Объект таблицы должен быть корректно десериализован", table);
+
+            // Проверяем, что все таблицы имеют тип VECTOR_DATA_TABLE
+            assertEquals("Таблица должна иметь тип VECTOR_DATA_TABLE, но получен тип: " + table.getType(),
+                         GpkgTableType.VECTOR_DATA_TABLE, table.getType());
         }
+    }
+
+    private void checkThatTablesAreEmpty(GpkgFileMetadata metadata) {
+        assertNotNull("Поле 'payload' не должно быть null", metadata.getPayload());
+        assertTrue("Поле 'payload' должно быть списком", metadata.getPayload() instanceof List);
+
+        List<GpkgTablesData> tables = metadata.getPayload();
+        assertTrue("Список таблиц должен быть пустым", tables.isEmpty());
     }
 
     private void getFile(UUID id) {
@@ -538,8 +564,8 @@ public class FilesStepDefinitions extends BaseStepsDefinitions {
 
     private void getFileMetadata(UUID id) {
         response = getBaseRequestWithCurrentCookie()
-                .when().log().all().
-                        get("/" + id + "/metadata");
+                .when().
+                       get("/" + id + "/metadata");
 
         jsonPath = response.jsonPath();
     }

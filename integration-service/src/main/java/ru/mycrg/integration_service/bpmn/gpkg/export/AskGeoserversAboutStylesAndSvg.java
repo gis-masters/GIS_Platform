@@ -5,8 +5,7 @@ import org.camunda.bpm.engine.delegate.JavaDelegate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import ru.mycrg.common_contracts.generated.gpkg.GkpgExportDetailsModel;
-import ru.mycrg.common_contracts.generated.gpkg.MessageFromExport;
+import ru.mycrg.common_contracts.generated.gpkg.GpkgExportDetailsModel;
 import ru.mycrg.data_service_contract.dto.PatchProcess;
 import ru.mycrg.data_service_contract.dto.gpkg.GpkgAppendingData;
 import ru.mycrg.data_service_contract.dto.gpkg.StyleWithIcons;
@@ -111,15 +110,15 @@ public class AskGeoserversAboutStylesAndSvg implements JavaDelegate {
         delegateExecution.setVariable(CHECK_STATUS_VAR_NAME, "geoserverGiveSome");
     }
 
-    private GkpgExportDetailsModel makeReport(ExportGpkgEvent event) {
+    private GpkgExportDetailsModel makeReport(ExportGpkgEvent event) {
         log.debug("Формируем отчёт о работе c геосервером");
 
-        GkpgExportDetailsModel details = event.getGkpgExportDetailsModel();
-        List<MessageFromExport> messages = details.getMessageFromExport();
+        GpkgExportDetailsModel details = event.getGpkgExportDetailsModel();
+        List<String> messages = details.getMessages();
 
-        messages.add(new MessageFromExport("Забрали ресурсы с геосервера."));
-        details.setMessageFromExport(messages);
-        event.setGkpgExportDetailsModel(details);
+        messages.add("Забрали ресурсы с геосервера.");
+        details.setMessages(messages);
+        event.setGpkgExportDetailsModel(details);
 
         return details;
     }

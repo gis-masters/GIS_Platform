@@ -147,7 +147,7 @@ public class ProcessService {
     }
 
     public void updateProcess(Long id, ProcessStatus status, String dbName, JsonNode details) {
-        log.debug("Меняем процесс с id {}, статус: {} детали: {}", id, status, details);
+        log.debug("Обновляем процесс с id '{}', статус: {} детали: {}", id, status, details);
 
         try {
             processDao.updateDetailsAndStatus(id, status, dbName, details);

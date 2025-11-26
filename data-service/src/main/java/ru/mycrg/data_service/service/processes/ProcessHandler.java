@@ -63,25 +63,27 @@ public class ProcessHandler {
                                                     processType,
                                                     model.getPayload());
 
-            log.debug("Создан процесс: '{}'", process.getId());
+            Long id = process.getId();
+            log.debug("Создан процесс: '{}'", id);
 
             try {
                 executor.initialize(model.getPayload())
-                        .setPayload(new ProcessModel(process.getId(), databaseName))
+                        .setPayload(new ProcessModel(id, databaseName))
                         .validate();
             } catch (BadRequestException e) {
-                log.warn("Валидация процесса провалилась!");
+                log.warn("Выполнение процесса '{}' прервано, данные не прошли проверку!", id);
+
                 executor.cleanup();
 
                 process.setDetails(toJsonNode(executor.getReport()));
-                processService.error(databaseName, process.getId(), process.getDetails());
+                processService.error(databaseName, id, process.getDetails());
 
                 return process;
             }
 
             SecurityContext securityContext = SecurityContextHolder.getContext();
             DelegatingSecurityContextRunnable wrappedRunnable = new DelegatingSecurityContextRunnable(() -> {
-                execute(executor, databaseName, process.getId());
+                execute(executor, databaseName, id);
             }, securityContext);
             new Thread(wrappedRunnable).start();
 

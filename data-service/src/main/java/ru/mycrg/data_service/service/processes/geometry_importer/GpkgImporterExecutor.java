@@ -203,7 +203,7 @@ public class GpkgImporterExecutor implements IExecutor<GpkgImportReport>, IFileP
             this.importReport.setFileTitle(fileTitle);
             this.importReport.setFileId(fileId);
 
-            List<GpkgTablesData> tablesInGpkg = gpkgReaderService.getTablesSmallInfoFromGpkg(filePath);
+            List<GpkgTablesData> tablesInGpkg = gpkgReaderService.getTablesInfo(filePath);
             if (tablesInGpkg.stream().noneMatch(table -> table.getType() == VECTOR_DATA_TABLE)) {
                 String msg = "GPKG файл не содержит векторных таблиц.";
                 log.debug(msg);
@@ -222,11 +222,11 @@ public class GpkgImporterExecutor implements IExecutor<GpkgImportReport>, IFileP
 
             return this;
         } catch (Exception e) {
-            log.debug("Ошибка при валидации GPKG файла {}", e.getMessage());
+            log.debug("Ошибка при валидации GPKG файла => {}", e.getMessage());
 
             this.importReport.setFileId(fileId);
             this.importReport.setStatus(ERROR);
-            this.importReport.setMessages(List.of("Импорт GPKG невозможен. " + e.getMessage()));
+            this.importReport.setMessages(List.of("Не удалось выполнить импорт GPKG файла. " + e.getMessage()));
 
             throw new BadRequestException(importReport.getMessages().toString());
         }

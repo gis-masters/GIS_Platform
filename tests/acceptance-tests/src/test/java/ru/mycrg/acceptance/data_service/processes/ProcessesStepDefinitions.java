@@ -1,16 +1,17 @@
 package ru.mycrg.acceptance.data_service.processes;
 
 import io.cucumber.java.en.And;
+import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.restassured.specification.RequestSpecification;
 import ru.mycrg.acceptance.BaseStepsDefinitions;
 import ru.mycrg.acceptance.auth_service.AuthorizationBase;
 import ru.mycrg.acceptance.data_service.TestFilesManager;
 import ru.mycrg.acceptance.data_service.dto.FileDescriptionModel;
-import ru.mycrg.common_contracts.generated.gpkg.GkpgExportDetailsModel;
+import ru.mycrg.common_contracts.generated.gpkg.GpkgExportDetailsModel;
 import ru.mycrg.data_service_contract.dto.ExportRequestModel;
 import ru.mycrg.data_service_contract.dto.ExportResourceModel;
-import ru.mycrg.data_service_contract.dto.gpkg.GpkgPayload;
+import ru.mycrg.common_contracts.generated.gpkg.ExportGpkgPayload;
 import ru.mycrg.data_service_contract.enums.ProcessType;
 
 import java.io.File;
@@ -28,7 +29,7 @@ import static ru.mycrg.acceptance.data_service.datasets.DatasetsStepsDefinitions
 import static ru.mycrg.acceptance.data_service.tables.TablesStepsDefinitions.anotherTableName;
 import static ru.mycrg.acceptance.data_service.tables.TablesStepsDefinitions.currentTableName;
 import static ru.mycrg.acceptance.gis_service.ProjectStepsDefinitions.projectId;
-import static ru.mycrg.data_service_contract.dto.gpkg.GpkgExportTypes.*;
+import static ru.mycrg.common_contracts.generated.gpkg.GpkgExportType.*;
 
 public class ProcessesStepDefinitions extends BaseStepsDefinitions {
 
@@ -106,7 +107,7 @@ public class ProcessesStepDefinitions extends BaseStepsDefinitions {
     @And("размер полученного gpkg {int}")
     public void sizeOfGpkgFile(int size) {
         getCurrentProcess();
-        GkpgExportDetailsModel details = response.jsonPath().getObject("details", GkpgExportDetailsModel.class);
+        GpkgExportDetailsModel details = response.jsonPath().getObject("details", GpkgExportDetailsModel.class);
         String fileName = details.getPathToGpkgFile();
         fileName = fileName.substring(fileName.lastIndexOf('/') + 1);
 
@@ -194,7 +195,8 @@ public class ProcessesStepDefinitions extends BaseStepsDefinitions {
         waitUntilProcessCompleteWithStatus(currentProcessId, "DONE_WITH_WARNINGS");
     }
 
-    @When("процесс завершается с ошибкой")
+    @Then("процесс завершается с ошибкой")
+    @Then("я вижу, что процесс завершается ошибкой")
     public void waitUntilCurrentProcessIsCompleteWithError() {
         waitUntilProcessCompleteWithStatus(currentProcessId, "ERROR");
     }
@@ -205,6 +207,14 @@ public class ProcessesStepDefinitions extends BaseStepsDefinitions {
     public void gineMeThisProcess() throws InterruptedException {
         sleep(1000);
         getCurrentProcess();
+    }
+
+    @Then("в деталях процесса указано, что файл не является корректным GPKG файлом")
+    public void checkProcessDetailsMessage() {
+        String msg = response.jsonPath().getString("details.messages[0]");
+
+        assertTrue(msg.contains("Не удалось выполнить импорт GPKG файла."));
+        assertTrue(msg.contains("не является корректным GPKG файлом"));
     }
 
     @When("в ответе содержится фраза {string}")
@@ -229,7 +239,7 @@ public class ProcessesStepDefinitions extends BaseStepsDefinitions {
     public void exportProjectInGeoPackage() {
         ExportRequestModel exportProcessModel = new ExportRequestModel();
 
-        GpkgPayload payload = new GpkgPayload();
+        ExportGpkgPayload payload = new ExportGpkgPayload();
 
         Long projectId = response.jsonPath().getLong("id");
         List<Long> layerIds = new ArrayList<>();
@@ -251,7 +261,7 @@ public class ProcessesStepDefinitions extends BaseStepsDefinitions {
         List<Long> layerIds = new ArrayList<>();
         layerIds.add((long) currentLayerId);
 
-        GpkgPayload payload = new GpkgPayload();
+        ExportGpkgPayload payload = new ExportGpkgPayload();
         payload.setType(LAYER);
         payload.setPayload(layerIds);
 
@@ -266,7 +276,7 @@ public class ProcessesStepDefinitions extends BaseStepsDefinitions {
     public void exportTableInGeoPackage() {
         ExportRequestModel exportProcessModel = new ExportRequestModel();
 
-        GpkgPayload payload = new GpkgPayload();
+        ExportGpkgPayload payload = new ExportGpkgPayload();
 
         List<ExportResourceModel> exportResourceModels = new ArrayList<>();
         exportResourceModels.add(new ExportResourceModel(currentDatasetIdentifier, currentTableName));
@@ -288,7 +298,7 @@ public class ProcessesStepDefinitions extends BaseStepsDefinitions {
         layerIds.add((long) currentLayerId);
         layerIds.add((long) currentLayerId - 1);
 
-        GpkgPayload payload = new GpkgPayload();
+        ExportGpkgPayload payload = new ExportGpkgPayload();
         payload.setType(LAYER);
         payload.setPayload(layerIds);
 
@@ -304,7 +314,7 @@ public class ProcessesStepDefinitions extends BaseStepsDefinitions {
         List<Long> layerIds = new ArrayList<>();
         layerIds.add(100_000_000L);
 
-        GpkgPayload payload = new GpkgPayload();
+        ExportGpkgPayload payload = new ExportGpkgPayload();
         payload.setType(LAYER);
         payload.setPayload(layerIds);
 
@@ -332,6 +342,7 @@ public class ProcessesStepDefinitions extends BaseStepsDefinitions {
         }
     }
 
+    @When("я выполняю импорт текущего файла в текущий проект")
     @When("Текущий пользователь импортирует GeoPackage в текущий проект")
     public void importGeoPackageInCurrentProject() {
         FileDescriptionModel fdm = currentFiles.get(currentFiles.size() - 1);

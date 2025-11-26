@@ -14,3 +14,5 @@ popd || exit
 cp ../contracts/common-contracts/target/typescript-generator/* ../portal-ui/src/server-types
 
 ./clear-generated-files.sh
+
+npx prettier --write --ignore-path=/dev/null ../portal-ui/src/server-types/common-contracts.d.ts

@@ -1,4 +1,3 @@
-
 export interface SpatialReferenceSystem {
   authName: string;
   authSrid: number;
@@ -16,10 +15,6 @@ export interface DatasetAndTableModel {
 export interface FileMetadata<T> {
   id: string;
   payload: T;
-}
-
-export interface GpkgFileMetadata extends FileMetadata<GpkgTablesData[]> {
-  payload: GpkgTablesData[];
 }
 
 export interface GeometryValidationResultDto {
@@ -41,6 +36,10 @@ export interface TaskLogDto {
   eventType: string;
   taskId: number;
   createdBy: number;
+}
+
+export interface GpkgFileMetadata extends FileMetadata<GpkgTablesData[]> {
+  payload: GpkgTablesData[];
 }
 
 export interface GpkgImportBaseDto extends Serializable {
@@ -149,13 +148,14 @@ export interface ProjectUpdateDto {
   description: string;
 }
 
-export interface GkpgExportDetailsModel extends Serializable {
-  pathToGpkgFile: string;
-  messageFromExport: MessageFromExport[];
+export interface ExportGpkgPayload extends Serializable {
+  type: GpkgExportType;
+  payload: any;
 }
 
-export interface MessageFromExport extends Serializable {
-  message: string;
+export interface GpkgExportDetailsModel extends Serializable {
+  pathToGpkgFile: string;
+  messages: string[];
 }
 
 export interface Page {
@@ -213,3 +213,5 @@ export type GpkgProcessStatus = 'ACTIVE' | 'COMPLETED' | 'ERROR';
 export type GpkgTableType = 'VECTOR_DATA_TABLE' | 'CRG_DATA_TABLE';
 
 export type FtsType = 'DOCUMENT' | 'FEATURE';
+
+export type GpkgExportType = 'PROJECT' | 'LAYER' | 'TABLE';

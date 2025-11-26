@@ -5,8 +5,7 @@ import org.camunda.bpm.engine.delegate.JavaDelegate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import ru.mycrg.common_contracts.generated.gpkg.GkpgExportDetailsModel;
-import ru.mycrg.common_contracts.generated.gpkg.MessageFromExport;
+import ru.mycrg.common_contracts.generated.gpkg.GpkgExportDetailsModel;
 import ru.mycrg.data_service_contract.dto.PatchProcess;
 import ru.mycrg.data_service_contract.queue.request.gpkg.ExportGpkgEvent;
 import ru.mycrg.data_service_contract.queue.request.UpdateProcessEvent;
@@ -34,7 +33,6 @@ import static ru.mycrg.integration_service.bpmn.IJavaDelegateProperties.*;
  * </ul>
  *
  */
-
 @Service("endExportProcessError")
 public class EndExportProcessError implements JavaDelegate {
 
@@ -51,14 +49,9 @@ public class EndExportProcessError implements JavaDelegate {
         log.debug("Класс '{}' начал работу.", EndExportProcessError.class.getSimpleName());
 
         ExportGpkgEvent event = (ExportGpkgEvent) delegateExecution.getVariable(EVENT_VAR_NAME);
-        GkpgExportDetailsModel details = event.getGkpgExportDetailsModel();
+        GpkgExportDetailsModel details = event.getGpkgExportDetailsModel();
         if (details == null) {
-            details = new GkpgExportDetailsModel();
-        }
-
-        List<MessageFromExport> messages = details.getMessageFromExport();
-        if (messages == null) {
-            messages = new LinkedList<>();
+            details = new GpkgExportDetailsModel();
         }
 
         String pathToGpkg = null;
@@ -66,6 +59,11 @@ public class EndExportProcessError implements JavaDelegate {
                 && !delegateExecution.getVariable(GPKG_PATH_VAR_NAME).toString().isBlank()) {
             pathToGpkg = delegateExecution.getVariable(GPKG_PATH_VAR_NAME).toString();
             details.setPathToGpkgFile(pathToGpkg);
+        }
+
+        List<String> messages = details.getMessages();
+        if (messages == null || messages.isEmpty()) {
+            messages = new LinkedList<>();
         }
 
         String status = delegateExecution.getVariable(CHECK_STATUS_VAR_NAME).toString();
@@ -99,8 +97,8 @@ public class EndExportProcessError implements JavaDelegate {
                 msg = msg + "gpkg не был сформирован в течении 5 минут. Останавливаем процесс.";
         }
 
-        messages.add(new MessageFromExport(msg));
-        details.setMessageFromExport(messages);
+        messages.add(msg);
+        details.setMessages(messages);
 
         String businessKey = (String) delegateExecution.getVariable(BUSINESS_KEY_VAR_NAME);
 
