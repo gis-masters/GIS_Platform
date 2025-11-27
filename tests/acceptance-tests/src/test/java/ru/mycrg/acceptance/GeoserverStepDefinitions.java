@@ -224,16 +224,15 @@ public class GeoserverStepDefinitions extends BaseStepsDefinitions {
         assertEquals(SC_OK, response.getStatusCode());
     }
 
-    @And("стиль {string} существует на геосервере")
-    public void checkStyle(String styleName) {
-        getStyle(styleName);
-
-        assertEquals(SC_OK, response.getStatusCode());
+    @Then("установленный стиль соответствует стандартному точечному стилю")
+    public void checkCurrentLayerStyleLegend() {
+        assertTrue(response.prettyPrint().contains("simple_point_1"));
     }
+
 
     @And("геосервер успешно отдаёт легенду для стиля {string} правила {string}")
     public void checkStyleLegend(String styleName, String rule) {
-        getLegendToLayer(currentComplexName, styleName, rule);
+        getRuleOfStyleFromGeoserver(currentComplexName, styleName, rule);
     }
 
     @And("тело текущего стиля содержит строку {string}")
@@ -344,12 +343,15 @@ public class GeoserverStepDefinitions extends BaseStepsDefinitions {
         });
     }
 
-    private void getStyle(String styleName) {
-        response = getBaseRequestWithCurrentCookie()
-                .given().
-                        headers("Accept", "application/vnd.ogc.se+xml")
+    public void getLayerLegend(String complexName) {
+        String request = "geoserver/rest/layers/" + complexName + "/styles";
+
+        getBaseRequestWithCurrentCookie()
                 .when().
-                        get("/geoserver/rest/styles/" + styleName);
+                        get(request)
+                .then().
+                        log().ifValidationFails().
+                        statusCode(SC_OK);
     }
 
     private void getStyleFromWorkspace(String workspace, String styleName) {
@@ -360,7 +362,13 @@ public class GeoserverStepDefinitions extends BaseStepsDefinitions {
                         get("/geoserver/rest/workspaces/" + workspace + "/styles/" + styleName);
     }
 
-    private void getLegendToLayer(String complexName, String styleName, String rule) {
+    private void getSvgFromGeoserver(String svgPath) {
+        response = getBaseRequestWithCurrentCookie()
+                .when().
+                        get("/geoserver/rest/resource/styles/" + svgPath);
+    }
+
+    private void getRuleOfStyleFromGeoserver(String complexName, String styleName, String rule) {
         String request = "geoserver/wms?REQUEST=GetLegendGraphic&VERSION=1.3.0&FORMAT=image%2Fpng&WIDTH=40&HEIGHT=20&" +
                 "LAYER=" + complexName + "&STYLE=" + styleName + "&RULE=" + rule;
 
@@ -372,11 +380,5 @@ public class GeoserverStepDefinitions extends BaseStepsDefinitions {
                 .then().
                         log().ifValidationFails().
                         statusCode(SC_OK);
-    }
-
-    private void getSvgFromGeoserver(String svgPath) {
-        response = getBaseRequestWithCurrentCookie()
-                .when().
-                        get("/geoserver/rest/resource/styles/" + svgPath);
     }
 }

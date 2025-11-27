@@ -9,12 +9,15 @@ import io.cucumber.java.en.When;
 import io.restassured.path.json.JsonPath;
 import io.restassured.specification.RequestSpecification;
 import ru.mycrg.acceptance.BaseStepsDefinitions;
+import ru.mycrg.acceptance.GeoserverStepDefinitions;
 import ru.mycrg.acceptance.auth_service.AuthorizationBase;
 import ru.mycrg.acceptance.data_service.dto.TableCreateDto;
 import ru.mycrg.acceptance.gis_service.dto.LayerCreateDto;
 import ru.mycrg.acceptance.gis_service.dto.LayerUpdateDto;
 import ru.mycrg.auth_service_contract.dto.UserCreateDto;
+import ru.mycrg.gis_service_contract.dto.LayerProjection;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -33,6 +36,7 @@ import static ru.mycrg.acceptance.data_service.FilesStepDefinitions.currentFileP
 import static ru.mycrg.acceptance.data_service.datasets.DatasetsStepsDefinitions.currentDatasetIdentifier;
 import static ru.mycrg.acceptance.data_service.libraries.LibraryStepsDefinitions.currentDocumentId;
 import static ru.mycrg.acceptance.data_service.libraries.LibraryStepsDefinitions.currentLibrary;
+import static ru.mycrg.acceptance.data_service.tables.TablesStepsDefinitions.currentComplexName;
 import static ru.mycrg.acceptance.data_service.tables.TablesStepsDefinitions.currentTableName;
 import static ru.mycrg.acceptance.gis_service.LayerGroupStepsDefinitions.layerGroupId;
 import static ru.mycrg.acceptance.gis_service.ProjectStepsDefinitions.projectId;
@@ -44,8 +48,10 @@ public class LayerStepDefinitions extends BaseStepsDefinitions {
     public static Integer layerId;
     public static String layerTitle = "Искусственные дорожные сооружения";
     public static String layerComplexName;
+    public static String layerStyleName;
 
     private final AuthorizationBase authorizationBase = new AuthorizationBase();
+    private final GeoserverStepDefinitions geoserverStep = new GeoserverStepDefinitions();
 
     @Override
     public RequestSpecification getBaseRequest() {
@@ -83,7 +89,9 @@ public class LayerStepDefinitions extends BaseStepsDefinitions {
                                             generateString(epsg),
                                             generateString(dataSourceUri),
                                             generateString(contentType),
-                                            generateString(style));
+                                            generateString(style),
+                                            false,
+                                            null);
         if (type.equals("raster")) {
             Long currentRecordId = Objects.nonNull(currentDocumentId)
                     ? currentDocumentId
@@ -91,6 +99,12 @@ public class LayerStepDefinitions extends BaseStepsDefinitions {
             layerCreateDto.setSourceId(sourceId);
             layerCreateDto.setSourceRecordId(currentRecordId);
             layerCreateDto.setMode(mode);
+
+            if (sourceId.contains("dl_")) {
+                layerCreateDto.setSourceType("document");
+            } else {
+                layerCreateDto.setSourceType("feature");
+            }
         }
 
         super.createEntity(layerCreateDto);
@@ -357,6 +371,84 @@ public class LayerStepDefinitions extends BaseStepsDefinitions {
         }
 
         assertTrue("The expected fields do not match the record fields", areEqual);
+    }
+
+    @Given("получены слои текущего проекта")
+    @When("я опрашиваю созданный слой")
+    public void getAllLayersInProject() {
+        response = getBaseRequestWithCurrentCookie()
+                .when().
+                        get();
+
+        List<LayerProjection> layers = response.jsonPath().getList("", LayerProjection.class);
+
+        for (LayerProjection layer: layers) {
+            layerPool.put(Math.toIntExact(layer.getId()), new LayerCreateDto(layer.getTitle(),
+                                                                             layer.getDataset(),
+                                                                             layer.getResourceId(),
+                                                                             layer.getStyleName(),
+                                                                             layer.getType(),
+                                                                             layer.getDataStoreName(),
+                                                                             layer.getNativeCRS(),
+                                                                             layer.getDataSourceUri(),
+                                                                             layer.getContentType(),
+                                                                             layer.getStyle(),
+                                                                             layer.isEnabled(),
+                                                                             layer.getComplexName()));
+        }
+
+        layerId = Math.toIntExact(layers.get(0).getId());
+    }
+
+    @When("я смотрю на стиль установленный для текущего слоя")
+    public void rememberLayerStyle() {
+        assertNull("Слой должен быть единственным!", response.jsonPath().getString("[1]"));
+
+        currentComplexName = response.jsonPath().getString("[0].complexName");
+        layerStyleName = response.jsonPath().getString("[0].styleName");
+
+        geoserverStep.getLayerLegend(currentComplexName);
+    }
+
+    @Then("слой соответствует ожиданиям")
+    public void checkLayerDataAfterGpkgImport(DataTable expectedFields) {
+        LayerCreateDto currentLayer = layerPool.get(Collections.max(layerPool.keySet()));
+
+        Map<String, String> expectedLayer = expectedFields.asMap();
+
+        assertEquals("Тип должен соответствовать", currentLayer.getType(), expectedLayer.get("type"));
+        assertEquals("Вкл/выкл должен соответствовать",
+                     String.valueOf(currentLayer.isEnabled()),
+                     expectedLayer.get("enabled"));
+
+        assertEquals("Позиция должна соответствовать",
+                     String.valueOf(currentLayer.getPosition()),
+                     expectedLayer.get("position"));
+
+        assertEquals("Прозрачность должна соответствовать",
+                     String.valueOf(currentLayer.getTransparency()),
+                     expectedLayer.get("transparency"));
+
+        assertEquals("Максимальное приближение должно соответствовать",
+                     String.valueOf(currentLayer.getMaxZoom()),
+                     expectedLayer.get("maxZoom"));
+
+        assertEquals("Минимальное приближение должно соответствовать",
+                     String.valueOf(currentLayer.getMinZoom()),
+                     expectedLayer.get("minZoom"));
+
+        assertEquals("Стили должны соответствовать",
+                     currentLayer.getStyleName(),
+                     expectedLayer.get("styleName"));
+
+        assertEquals("СК должна соответствовать", currentLayer.getNativeCRS(), expectedLayer.get("nativeCRS"));
+        assertEquals(currentLayer.getDataSourceUri(), expectedLayer.get("dataStoreUri"));
+        assertEquals("Тип ресурса должен соответствовать",
+                     currentLayer.getSourceType(),
+                     expectedLayer.get("sourceType"));
+
+        assertEquals(currentLayer.getContentType(), expectedLayer.get("contentType"));
+        assertEquals(currentLayer.getStyle(), expectedLayer.get("style"));
     }
 
     @When("Пользователь делает запрос на добавление слоя в папку-родитель")

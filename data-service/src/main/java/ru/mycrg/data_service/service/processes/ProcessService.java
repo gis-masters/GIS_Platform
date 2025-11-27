@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import ru.mycrg.auth_facade.IAuthenticationFacade;
 import ru.mycrg.data_service.dao.detached.ProcessDao;
 import ru.mycrg.data_service.dto.DetailsModel;
 import ru.mycrg.data_service.dto.ProcessModel;
@@ -19,7 +20,6 @@ import ru.mycrg.data_service_contract.enums.ProcessType;
 
 import javax.validation.constraints.NotNull;
 import java.io.IOException;
-import java.security.Principal;
 import java.sql.SQLException;
 import java.util.Optional;
 
@@ -34,24 +34,26 @@ public class ProcessService {
 
     private final ProcessDao processDao;
     private final ProcessRepository processRepository;
+    private final IAuthenticationFacade authenticationFacade;
 
     public ProcessService(ProcessRepository processRepository,
-                          ProcessDao processDao) {
+                          ProcessDao processDao,
+                          IAuthenticationFacade authenticationFacade) {
         this.processDao = processDao;
         this.processRepository = processRepository;
+        this.authenticationFacade = authenticationFacade;
     }
 
     /**
-     * Возвращает страницу {@link Page} сущностей {@link Process} соответствующих ограничениям пользовательских прав,
-     * представленных обьектом {@code Principal}; а также пейджингом, который предусмотрен в объекте {@code Pageable}.
+     * Возвращает страницу {@link Page} сущностей {@link Process} соответствующих ограничениям пользовательских прав. А
+     * также пейджингом, который предусмотрен в объекте {@code Pageable}.
      *
-     * @param pageable  Pagination information
-     * @param principal User claims
+     * @param pageable Pagination information
      *
      * @return a page of entities
      */
-    public Page<Process> findAll(Pageable pageable, Principal principal) {
-        return processRepository.findAllByUserName(principal.getName(), pageable);
+    public Page<Process> findAll(Pageable pageable) {
+        return processRepository.findAllByUserName(authenticationFacade.getLogin(), pageable);
     }
 
     @NotNull
@@ -67,6 +69,17 @@ public class ProcessService {
         } else {
             throw new NotFoundException(id);
         }
+    }
+
+    public Page<Process> findAllByUserWithFilters(ProcessStatus status,
+                                                  ProcessType type,
+                                                  String title,
+                                                  Pageable pageable) {
+        return processRepository.findAllByUserWithFilters(status,
+                                                          type,
+                                                          title,
+                                                          authenticationFacade.getLogin(),
+                                                          pageable);
     }
 
     public Process create(String userName, String title, ProcessType type, Object payload) {
@@ -151,6 +164,16 @@ public class ProcessService {
 
         try {
             processDao.updateDetailsAndStatus(id, status, dbName, details);
+        } catch (Exception e) {
+            throw new DataServiceException("Не удалось обновить процесс. Причина: " + e.getMessage());
+        }
+    }
+
+    public void updateProcessTitle(Long id, String dbName, String title) {
+        log.debug("Устанавливаем {} как title процесса с id {}", title, id);
+
+        try {
+            processDao.updateTitle(id, dbName, title);
         } catch (Exception e) {
             throw new DataServiceException("Не удалось обновить процесс. Причина: " + e.getMessage());
         }

@@ -1,5 +1,6 @@
 package ru.mycrg.acceptance.gis_service.dto;
 
+//TODO: убить и переиспользовать package ru.mycrg.gis_service_contract.dto.LayerProjection;
 public class LayerCreateDto {
 
     private final String title;
@@ -20,6 +21,10 @@ public class LayerCreateDto {
     private String mode;
     private String contentType;
     private String style;
+    private boolean enabled;
+    private int position = -1;
+    private int transparency = 75;
+    private String complexName;
 
     public LayerCreateDto(String title, String type) {
         this.title = title;
@@ -28,7 +33,7 @@ public class LayerCreateDto {
 
     public LayerCreateDto(String title, String dataset, String resourceId, String styleName, String type,
                           String dataStoreName, String nativeCRS, String dataSourceUri, String contentType,
-                          String style) {
+                          String style, boolean enabled, String complexName) {
         this.title = title;
         this.dataset = dataset;
         this.resourceId = resourceId;
@@ -39,7 +44,8 @@ public class LayerCreateDto {
         this.dataSourceUri = dataSourceUri;
         this.contentType = contentType;
         this.style = style;
-        this.sourceType = "document";
+        this.enabled = enabled;
+        this.complexName = complexName;
     }
 
     public String getTitle() {
@@ -168,5 +174,37 @@ public class LayerCreateDto {
 
     public void setSourceType(String sourceType) {
         this.sourceType = sourceType;
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    public int getPosition() {
+        return position;
+    }
+
+    public void setPosition(int position) {
+        this.position = position;
+    }
+
+    public int getTransparency() {
+        return transparency;
+    }
+
+    public void setTransparency(int transparency) {
+        this.transparency = transparency;
+    }
+
+    public String getComplexName() {
+        return complexName;
+    }
+
+    public void setComplexName(String complexName) {
+        this.complexName = complexName;
     }
 }

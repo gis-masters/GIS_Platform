@@ -1,0 +1,26 @@
+meta {
+  name: Import gpkg
+  type: http
+  seq: 1
+}
+
+post {
+  url: http://10.10.10.61:8084/processes
+  body: json
+  auth: inherit
+}
+
+headers {
+  Content-Type: application/json
+  Authorization: Bearer eyJhbGciOiJIUzI1NiIs
+}
+
+body:json {
+  {
+    "payload" : {
+      "fileId" : "5a93de2c-8cd7-4c97-ad7d-a66ac5f919a0",
+      "projectId" : 6
+    },
+    "type" : "IMPORT"
+  }
+}

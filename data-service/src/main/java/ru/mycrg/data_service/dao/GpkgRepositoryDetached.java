@@ -137,7 +137,7 @@ public class GpkgRepositoryDetached {
         try {
             svgs = jdbcTemplate.query(sqlGetSvg, new GpkgImportedSvgMapper(), styleName);
         } catch (Exception e) {
-            log.warn("Ошибка чтения из {}: {}", GPKG_SVG_STYLE_NAME_COLUMN, e.getMessage());
+            log.warn("Ошибка чтения таблицы {}: {}", GPKG_SVG_STYLE_NAME_COLUMN, e.getMessage());
         }
 
         return svgs;

@@ -12,13 +12,15 @@ import ru.mycrg.data_service.entity.Process;
 import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.service.processes.ProcessHandler;
 import ru.mycrg.data_service.service.processes.ProcessService;
+import ru.mycrg.data_service_contract.enums.ProcessStatus;
+import ru.mycrg.data_service_contract.enums.ProcessType;
 import ru.mycrg.http_client.JsonConverter;
 
 import javax.validation.Valid;
-import java.security.Principal;
 import java.util.Map;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
+import static ru.mycrg.auth_service_contract.Authorities.HAS_ANY_AUTHORITY;
 import static ru.mycrg.common_utils.page.PageHandler.pageFromList;
 
 @RestController
@@ -65,14 +67,24 @@ public class ProcessesController {
     }
 
     @GetMapping()
-    public ResponseEntity<Object> getProcesses(Pageable pageable, Principal principal) {
-        Page<Process> processes = processService.findAll(pageable, principal);
+    @PreAuthorize(HAS_ANY_AUTHORITY)
+    public ResponseEntity<Object> getProcesses(@RequestParam(required = false) ProcessStatus status,
+                                               @RequestParam(required = false) ProcessType type,
+                                               @RequestParam(required = false) String title,
+                                               Pageable pageable) {
+        Page<Process> processes;
+
+        if (status == null && type == null && title == null) {
+            processes = processService.findAll(pageable);
+        } else {
+            processes = processService.findAllByUserWithFilters(status, type, title, pageable);
+        }
 
         return ResponseEntity.ok(pageFromList(processes, pageable));
     }
 
     @GetMapping("/{processId}")
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize(HAS_ANY_AUTHORITY)
     public Resource<Process> getProcessesById(@PathVariable Long processId) {
         Process process = processService.getById(processId);
 

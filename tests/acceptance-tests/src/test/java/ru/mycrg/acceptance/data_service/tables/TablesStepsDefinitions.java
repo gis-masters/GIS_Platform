@@ -13,6 +13,7 @@ import ru.mycrg.acceptance.data_service.dto.ErrorInfo;
 import ru.mycrg.acceptance.data_service.dto.PermissionCreateDto;
 import ru.mycrg.acceptance.data_service.dto.TableCreateDto;
 import ru.mycrg.acceptance.data_service.dto.TableUpdateDto;
+import ru.mycrg.acceptance.data_service.processes.ProcessesStepDefinitions;
 import ru.mycrg.acceptance.data_service.schemas.CurrentScenarioSchema;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 
@@ -300,11 +301,9 @@ public class TablesStepsDefinitions extends BaseStepsDefinitions {
                         put(String.format("/%s/schema", tableName));
     }
 
-    @And("пользователь делает запрос на получение схемы текущей таблицы")
+    @When("я опрашиваю схему текущей таблицы")
     public void getTableSchema() {
-        response = getBaseRequestWithCurrentCookie()
-                .when().
-                        get("/" + currentTableName + "/schema");
+        getCurrentTableSchema();
     }
 
     @Given("В текущем наборе данных существует таблица, созданная по тестовой схеме")
@@ -321,6 +320,7 @@ public class TablesStepsDefinitions extends BaseStepsDefinitions {
         super.createEntity(currentTableDto);
     }
 
+    //TODO удалить и заменить на @When("я опрашиваю текущую таблицу")
     @When("Пользователь делает запрос на получение текущей таблицы")
     public void getCurrentTableByCurrentUser() {
         getCurrentTable();
@@ -338,7 +338,7 @@ public class TablesStepsDefinitions extends BaseStepsDefinitions {
 
         String newTitle = response.jsonPath().get("title");
 
-        assertTrue("update title".equals(newTitle));
+        assertEquals("update title", newTitle);
     }
 
     @And("Тело ответа содержит ошибку о том что таблица доступна только для чтения")
@@ -462,6 +462,7 @@ public class TablesStepsDefinitions extends BaseStepsDefinitions {
         System.out.println("✓ Проверка пройдена для поля '" + expectedField + "'");
     }
 
+    @Then("свойства таблицы соответствуют ожиданиям")
     @And("поля векторной таблицы совпадают с ожидаемыми")
     public void checkTableDataAfterGpkgImport(Map<String, List<Object>> expectedFields) {
         JsonPath jsonPath = response.jsonPath();
@@ -484,10 +485,31 @@ public class TablesStepsDefinitions extends BaseStepsDefinitions {
         assertTrue("The expected fields do not match the record fields", areEqual);
     }
 
+    @When("я опрашиваю текущую таблицу")
+    public void findCurrentTableData() {
+        getCurrentTable();
+    }
+
+    public static void getTablePathFromGpkgProcess() {
+        ProcessesStepDefinitions processesStep = new ProcessesStepDefinitions();
+        processesStep.getCurrentProcess();
+        currentDatasetIdentifier = response.jsonPath().getString("details.payload.tables[0].dataset");
+        currentTableName = response.jsonPath().getString("details.payload.tables[0].createdTableIdentifier");
+    }
+
     private void getCurrentTable() {
         response = getBaseRequestWithCurrentCookie()
                 .when().
                         get("/" + currentTableName);
+    }
+
+    private void getCurrentTableSchema() {
+        assertNotNull("Набор данных не задан в контексте сценария!", currentDatasetIdentifier);
+        assertNotNull("Таблица не задана в контексте сценария!", currentTableName);
+
+        response = getBaseRequestWithCurrentCookie()
+                .when().
+                        get("/" + currentTableName + "/schema");
     }
 
     private void createPermissionForTable(PermissionCreateDto dto, String tableName) {

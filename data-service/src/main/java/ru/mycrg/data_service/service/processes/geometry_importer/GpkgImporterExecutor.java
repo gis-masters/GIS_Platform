@@ -22,6 +22,7 @@ import ru.mycrg.data_service.service.gpkg.importer.GpkgReaderService;
 import ru.mycrg.data_service.service.import_.model.DataFromGpkgPlacementModel;
 import ru.mycrg.data_service.service.import_.model.FilePlacementPayloadModel;
 import ru.mycrg.data_service.service.processes.IExecutor;
+import ru.mycrg.data_service.service.processes.ProcessService;
 import ru.mycrg.data_service.service.processes.file_placement.IFilePlacer;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service.service.storage.FileStorageService;
@@ -60,6 +61,7 @@ public class GpkgImporterExecutor implements IExecutor<GpkgImportReport>, IFileP
     private final PermissionsService permissionsService;
     private final CreateDatasetRequestHandler createDatasetRequestHandler;
     private final FileStorageService fileStorage;
+    private final ProcessService processService;
 
     private ProcessModel processModel;
     private DataFromGpkgPlacementModel dataFromGpkgPlacementModel;
@@ -73,7 +75,8 @@ public class GpkgImporterExecutor implements IExecutor<GpkgImportReport>, IFileP
                                 SchemasAndTablesRepository schemasAndTablesRepository,
                                 PermissionsService permissionsService,
                                 CreateDatasetRequestHandler createDatasetRequestHandler,
-                                FileStorageService fileStorage) {
+                                FileStorageService fileStorage,
+                                ProcessService processService) {
         this.messageBus = messageBus;
         this.authenticationFacade = authenticationFacade;
         this.fileRepository = fileRepository;
@@ -83,6 +86,7 @@ public class GpkgImporterExecutor implements IExecutor<GpkgImportReport>, IFileP
         this.permissionsService = permissionsService;
         this.createDatasetRequestHandler = createDatasetRequestHandler;
         this.fileStorage = fileStorage;
+        this.processService = processService;
     }
 
     @Override
@@ -94,6 +98,9 @@ public class GpkgImporterExecutor implements IExecutor<GpkgImportReport>, IFileP
         log.debug(msg);
 
         long orgId = authenticationFacade.getOrganizationId();
+
+        //TODO: Сделать что-то вроде ("Импорт GPKG " + title) -> придётся переписать тесты
+        processService.updateProcessTitle(processModel.getId(), getDefaultDatabaseName(orgId), "Импорт GPKG");
 
         Optional<String> datasetName;
         try {

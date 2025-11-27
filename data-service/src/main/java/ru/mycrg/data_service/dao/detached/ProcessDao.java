@@ -59,4 +59,15 @@ public class ProcessDao {
 
         jdbcTemplate.update("UPDATE processes SET status = :status, details = :details WHERE id = :rowId", source);
     }
+
+    public void updateTitle(Long id, String dbName, String title) {
+        NamedParameterJdbcTemplate jdbcTemplate = new NamedParameterJdbcTemplate(
+                datasourceFactory.getDataSource(dbName));
+
+        final MapSqlParameterSource source = new MapSqlParameterSource()
+                .addValue("title", title)
+                .addValue("rowId", id);
+
+        jdbcTemplate.update("UPDATE processes SET title = :title WHERE id = :rowId", source);
+    }
 }

@@ -24,6 +24,7 @@ import ru.mycrg.common_contracts.generated.gis_service.project.ProjectCreateDto;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.data_service_contract.enums.GeometryType;
 import ru.mycrg.geo_json.Feature;
+import ru.mycrg.gis_service_contract.dto.LayerProjection;
 
 import java.util.*;
 import java.util.regex.Matcher;

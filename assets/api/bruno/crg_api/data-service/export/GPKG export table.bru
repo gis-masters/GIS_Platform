@@ -1,0 +1,31 @@
+meta {
+  name: GPKG export table
+  type: http
+  seq: 1
+}
+
+post {
+  url: http://10.10.10.61:8084/export
+  body: json
+  auth: bearer
+}
+
+headers {
+  Content-Type: application/json
+  Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5c
+}
+
+body:json {
+  {
+    "format": "GPKG",
+    "payload": {
+      "type": "TABLE",
+      "payload": [
+        {
+          "dataset": "dataset_980f56",
+          "table": "lmjcazor"
+        }
+      ]
+    }
+  }
+}

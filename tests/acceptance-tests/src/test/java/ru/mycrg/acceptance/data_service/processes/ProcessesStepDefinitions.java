@@ -2,6 +2,7 @@ package ru.mycrg.acceptance.data_service.processes;
 
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Then;
+import io.cucumber.java.en.Given;
 import io.cucumber.java.en.When;
 import io.restassured.specification.RequestSpecification;
 import ru.mycrg.acceptance.BaseStepsDefinitions;
@@ -12,6 +13,7 @@ import ru.mycrg.common_contracts.generated.gpkg.GpkgExportDetailsModel;
 import ru.mycrg.data_service_contract.dto.ExportRequestModel;
 import ru.mycrg.data_service_contract.dto.ExportResourceModel;
 import ru.mycrg.common_contracts.generated.gpkg.ExportGpkgPayload;
+import ru.mycrg.data_service_contract.enums.ProcessStatus;
 import ru.mycrg.data_service_contract.enums.ProcessType;
 
 import java.io.File;
@@ -21,15 +23,16 @@ import java.util.regex.Pattern;
 
 import static io.restassured.http.ContentType.JSON;
 import static java.lang.Thread.sleep;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static ru.mycrg.acceptance.auth_service.OrganizationStepsDefinitions.MAX_RETRY_ATTEMPT;
+import static ru.mycrg.acceptance.data_service.CurrentFilesManager.getFileDescription;
 import static ru.mycrg.acceptance.data_service.FilesStepDefinitions.*;
 import static ru.mycrg.acceptance.data_service.datasets.DatasetsStepsDefinitions.currentDatasetIdentifier;
-import static ru.mycrg.acceptance.data_service.tables.TablesStepsDefinitions.anotherTableName;
-import static ru.mycrg.acceptance.data_service.tables.TablesStepsDefinitions.currentTableName;
+import static ru.mycrg.acceptance.data_service.tables.TablesStepsDefinitions.*;
 import static ru.mycrg.acceptance.gis_service.ProjectStepsDefinitions.projectId;
 import static ru.mycrg.common_contracts.generated.gpkg.GpkgExportType.*;
+import static ru.mycrg.data_service_contract.enums.ProcessStatus.DONE;
+import static ru.mycrg.data_service_contract.enums.ProcessType.IMPORT;
 
 public class ProcessesStepDefinitions extends BaseStepsDefinitions {
 
@@ -121,14 +124,73 @@ public class ProcessesStepDefinitions extends BaseStepsDefinitions {
         assertEquals(size, response.asByteArray().length);
     }
 
+    @Given("текущий файл успешно импортирован в текущий проект как geoPackage")
+    public void smartGeoPackageImport() {
+        assertNotNull("Проект обязательно должен быть в контексте сценария!", projectId);
+        assertNotNull("Файл обязательно должен быть в контексте сценария!", currentFileId);
+
+        String fileName = getFileDescription(currentFileId).getTitle();
+
+        if (currentProcessId != null) {
+            getCurrentProcess();
+
+            ProcessStatus status = ProcessStatus.valueOf(response.jsonPath().getString("status"));
+            ProcessType type = ProcessType.valueOf(response.jsonPath().getString("type"));
+            String title = response.jsonPath().getString("title");
+            String fileTitle = response.jsonPath().getString("details.fileTitle");
+
+            if (status == DONE && type == IMPORT && title.equals("Импорт GPKG") && fileTitle.equals(fileName)) {
+                System.out.println("Текущий процесс уже идеальный, будем использовать его.");
+                currentProcessId = extractId((String) response.jsonPath().get("_links.self.href"));
+                getTablePathFromGpkgProcess();
+
+                return;
+            }
+        }
+
+        getProcessByFilter(DONE, IMPORT, "Импорт GPKG");
+        if (response.getStatusCode() == 200 && response.jsonPath().getInt("page.totalElements") == 1) {
+            if (response.jsonPath().getString("content.details[0].fileTitle").equals(fileName) &&
+                    response.jsonPath().getInt("content.details[0].payload.project.projectId") == projectId) {
+                System.out.println("С текущим файлом найден процесс успешно завершённый в текущем проекте." +
+                                           " Второй процесс запускать не будем.");
+
+                currentProcessId = response.jsonPath().getInt("content[0].id");
+                getTablePathFromGpkgProcess();
+
+                return;
+            }
+
+            System.out.println("Вынуждены запустить новый процесс.");
+        }
+
+        FileDescriptionModel fdm = currentFiles.get(currentFiles.size() - 1);
+        UUID fileId = fdm.getId();
+
+        ProcessableModel processableModel = new ProcessableModel();
+        processableModel.setType(String.valueOf(IMPORT));
+
+        processableModel.setPayload(Map.of("fileId", String.valueOf(fileId),
+                                           "projectId", projectId));
+
+        initProcess(processableModel);
+
+        if (response.getStatusCode() != 400 && response.getStatusCode() != 500) {
+            currentProcessId = extractId((String) response.jsonPath().get("_links.self.href"));
+        }
+
+        waitUntilCurrentProcessIsDone();
+        getTablePathFromGpkgProcess();
+    }
+
     @When("Пользователь публикует файл {string}")
     public void tryPlacementFile(String fileName) {
-        placeFileInCurrentProject(getFileByTitle(fileName).getId());
+        placeFileInCurrentProject(getFileDescription(fileName).getId());
     }
 
     @When("Файл {string} опубликован в текущем проекте")
     public void tryPlacementFileInCurrentProject(String fileName) {
-        placeFileInCurrentProject(getFileByTitle(fileName).getId());
+        placeFileInCurrentProject(getFileDescription(fileName).getId());
     }
 
     @When("Пользователь импортирует геометрию из shape файла в существующий слой {string}")
@@ -196,7 +258,6 @@ public class ProcessesStepDefinitions extends BaseStepsDefinitions {
     }
 
     @Then("процесс завершается с ошибкой")
-    @Then("я вижу, что процесс завершается ошибкой")
     public void waitUntilCurrentProcessIsCompleteWithError() {
         waitUntilProcessCompleteWithStatus(currentProcessId, "ERROR");
     }
@@ -328,12 +389,10 @@ public class ProcessesStepDefinitions extends BaseStepsDefinitions {
     @When("Текущий пользователь импортирует несуществующий GeoPackage в текущий проект")
     public void importNonExistentGeoPackageInCurrentProject() {
         ProcessableModel processableModel = new ProcessableModel();
-        processableModel.setType(String.valueOf(ProcessType.IMPORT));
-        Map<String, Object> payload = new HashMap<>();
-        payload.put("fileId", UUID.randomUUID().toString());
-        payload.put("filePath", "/trasher");
-        payload.put("projectId", projectId);
-        processableModel.setPayload(payload);
+        processableModel.setType(String.valueOf(IMPORT));
+
+        processableModel.setPayload(Map.of("fileId", UUID.randomUUID().toString(),
+                                           "projectId", projectId));
 
         initProcess(processableModel);
 
@@ -349,12 +408,10 @@ public class ProcessesStepDefinitions extends BaseStepsDefinitions {
         UUID fileId = fdm.getId();
 
         ProcessableModel processableModel = new ProcessableModel();
-        processableModel.setType(String.valueOf(ProcessType.IMPORT));
-        Map<String, Object> payload = new HashMap<>();
-        payload.put("fileId", String.valueOf(fileId));
-        payload.put("filePath", "need/only/toDataset/name.gpkg");
-        payload.put("projectId", projectId);
-        processableModel.setPayload(payload);
+        processableModel.setType(String.valueOf(IMPORT));
+
+        processableModel.setPayload(Map.of("fileId", fileId.toString(),
+                                           "projectId", projectId));
 
         initProcess(processableModel);
 
@@ -386,6 +443,12 @@ public class ProcessesStepDefinitions extends BaseStepsDefinitions {
         }
     }
 
+    public void getCurrentProcess() {
+        assertNotNull("Идентификатор текущего процесса не задан.", currentProcessId);
+
+        getProcess(currentProcessId);
+    }
+
     private void placeFile(DxfPlacementModel dxfPlacementModel) {
         ProcessableModel processableModel = new ProcessableModel();
         processableModel.setType("IMPORT");
@@ -412,20 +475,10 @@ public class ProcessesStepDefinitions extends BaseStepsDefinitions {
                         get("/" + processId);
     }
 
-    public void getCurrentProcess() {
-        if (currentProcessId == null) {
-            throw new IllegalStateException("Идентификатор текущего процесса не задан");
-        }
-
-        getProcess(currentProcessId);
-    }
-
-    public static FileDescriptionModel getFileByTitle(String title) {
-        return currentFiles
-                .stream()
-                .filter(file -> file.getTitle().equalsIgnoreCase(title))
-                .findFirst()
-                .orElseThrow(() -> new IllegalStateException("Среди текущих файлов не найден искомый: " + title));
+    private void getProcessByFilter(ProcessStatus status, ProcessType type, String title) {
+        response = getBaseRequestWithCurrentCookie()
+                .when().
+                        get("?status=" + status + "&type=" + type + "&title=" + title);
     }
 
     private void initProcess(ProcessableModel payload) {

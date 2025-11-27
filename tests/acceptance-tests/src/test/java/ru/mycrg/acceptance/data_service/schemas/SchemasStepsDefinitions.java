@@ -156,7 +156,7 @@ public class SchemasStepsDefinitions extends BaseStepsDefinitions {
         assertEquals(expectedValue, actualValue);
     }
 
-    @And("схема векторной таблицы соответствует ожиданиям")
+    @Then("схема собранная из полей gpkg соответствует ожидаемой")
     public void validateSchema() {
         SchemaDto actualSchema = response.jsonPath().getObject("", SchemaDto.class);
         SchemaDto expectedSchema = getSchemaTemplateByTitle("expectedGpkgGenerated");

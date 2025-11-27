@@ -29,7 +29,6 @@ import static ru.mycrg.acceptance.auth_service.OrganizationStepsDefinitions.orgI
 import static ru.mycrg.acceptance.data_service.CurrentFilesManager.getFileDescription;
 import static ru.mycrg.acceptance.data_service.libraries.LibraryStepsDefinitions.currentDocumentId;
 import static ru.mycrg.acceptance.data_service.libraries.LibraryStepsDefinitions.currentLibrary;
-import static ru.mycrg.acceptance.data_service.processes.ProcessesStepDefinitions.getFileByTitle;
 import static ru.mycrg.acceptance.data_service.tables.TablesStepsDefinitions.currentTableName;
 
 public class FilesStepDefinitions extends BaseStepsDefinitions {
@@ -93,6 +92,8 @@ public class FilesStepDefinitions extends BaseStepsDefinitions {
         List<UUID> ids = createFiles(new File[]{file});
 
         currentFiles.add(new FileDescriptionModel(ids.get(0), file.getTotalSpace(), fileName));
+
+        currentFileId = ids.get(0);
 
         assertEquals(1, currentFiles.size());
     }
@@ -270,7 +271,7 @@ public class FilesStepDefinitions extends BaseStepsDefinitions {
 
     @When("файл {string} скачивается")
     public void fileSuccessfullyDownload(String fileName) {
-        downloadFile(getFileByTitle(fileName).getId());
+        downloadFile(getFileDescription(fileName).getId());
 
         assertEquals(200, response.getStatusCode());
     }

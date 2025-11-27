@@ -1,0 +1,28 @@
+meta {
+  name: GPKG export layer
+  type: http
+  seq: 2
+}
+
+post {
+  url: http://10.10.10.61:8084/export
+  body: json
+  auth: bearer
+}
+
+headers {
+  Content-Type: application/json
+  Authorization: Bearer eyJhbGciOiJIUzI1NiIs
+}
+
+body:json {
+  {
+    "format": "GPKG",
+    "payload": {
+      "type": "LAYER",
+      "payload": [
+        3
+      ]
+    }
+  }
+}

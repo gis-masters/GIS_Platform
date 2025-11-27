@@ -93,6 +93,31 @@ public class ProjectStepsDefinitions extends BaseStepsDefinitions {
         }
     }
 
+    @Given("существует единственный проект {string}")
+    public void createProjectIfNotExist(String projectName) {
+        if (isProjectExistInPool(projectName)) {
+            makeExactProjectAsCurrent(projectName);
+
+            return;
+        }
+
+        getProjectsByFilter("name", projectName);
+        assertFalse("Должен существовать уникальный по имени проект",
+                    response.jsonPath().getInt("page.totalElements") > 1);
+
+        if (response.jsonPath().getInt("page.totalElements") != 0) {
+            projectId = response.jsonPath().getInt("content[0].id");
+            String existProjectName = response.jsonPath().getString("content[0].name");
+
+            projectPool.put(projectId, new ProjectCreateDto(existProjectName));
+        } else {
+            createProjectStep(projectName);
+
+            assertEquals(SC_CREATED, response.getStatusCode());
+            extractAndSetProjectIdAddToProjectPool();
+        }
+    }
+
     @Given("я создал проект {string}")
     public void createProject(String projectName) {
         projectDto = new ProjectCreateDto(generateString(projectName));

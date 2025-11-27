@@ -14,6 +14,7 @@ import java.util.List;
 
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
+import static ru.mycrg.auth_service_contract.Authorities.HAS_ANY_AUTHORITY;
 import static ru.mycrg.auth_service_contract.Authorities.ORG_ADMIN_AUTHORITY;
 
 @RestController
@@ -29,14 +30,14 @@ public class SchemaTemplateController {
     }
 
     @GetMapping("/schemas")
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize(HAS_ANY_AUTHORITY)
     public ResponseEntity<List<SchemaDto>> getSchemaTemplates(@RequestParam List<String> schemaIds) {
 
         return ResponseEntity.ok(schemaTemplateService.getSchemas(schemaIds));
     }
 
     @GetMapping("/schemas/tags")
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize(HAS_ANY_AUTHORITY)
     public ResponseEntity<List<String>> getSystemTags() {
         List<String> systemTags = schemaTemplateService.getSystemTags();
 
@@ -44,7 +45,7 @@ public class SchemaTemplateController {
     }
 
     @GetMapping("/reglaments_schemas")
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize(HAS_ANY_AUTHORITY)
     public List<SchemaDto> getSchemaTemplatesWithReglaments() {
         return schemaTemplateService.getSchemasWithReglaments();
     }

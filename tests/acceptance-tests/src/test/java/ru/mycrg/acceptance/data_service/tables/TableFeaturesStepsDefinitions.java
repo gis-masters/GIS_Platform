@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 import static io.restassured.http.ContentType.JSON;
 import static java.lang.String.join;
 import static java.util.stream.Collectors.toList;
-import static org.apache.http.HttpStatus.SC_NOT_FOUND;
+import static org.apache.http.HttpStatus.*;
 import static org.junit.Assert.*;
 import static ru.mycrg.acceptance.Config.DATE_TIME_FORMAT;
 import static ru.mycrg.acceptance.Config.PATCH_CONTENT_TYPE;
@@ -35,6 +35,7 @@ import static ru.mycrg.acceptance.data_service.FilesStepDefinitions.*;
 import static ru.mycrg.acceptance.data_service.datasets.DatasetsStepsDefinitions.currentDatasetIdentifier;
 import static ru.mycrg.acceptance.data_service.tables.TablesStepsDefinitions.anotherTableName;
 import static ru.mycrg.acceptance.data_service.tables.TablesStepsDefinitions.currentTableName;
+import static ru.mycrg.acceptance.gis_service.LayerStepDefinitions.layerId;
 import static ru.mycrg.acceptance.utils.GeometryUtils.DEFAULT_GEOMETRY_COLUMN_NAME;
 
 public class TableFeaturesStepsDefinitions extends BaseStepsDefinitions {
@@ -431,10 +432,19 @@ public class TableFeaturesStepsDefinitions extends BaseStepsDefinitions {
         assertEquals(userDto.getEmail(), updatedBy);
     }
 
-    @Then("количество объектов в слое равно {int}")
+    @Then("количество объектов в слое равно: {int}")
     public void checkObjectsCount(int count) {
         getAllFeatures();
         assertEquals(count, response.jsonPath().getInt("page.totalElements"));
+    }
+
+    @When("я открываю таблицу атрибутов единственного слоя")
+    public void getFeatureDataFromLayer() {
+        assertEquals("В контексте должен быть один слой.", 1, layerPool.size());
+        currentDatasetIdentifier = layerPool.get(layerId).getDataset();
+        currentTableName = layerPool.get(layerId).getResourceId();
+
+        getAllFeatures();
     }
 
     @Then("я делаю запрос на выборку всех записей текущей таблицы")
@@ -510,6 +520,33 @@ public class TableFeaturesStepsDefinitions extends BaseStepsDefinitions {
                                                            String.valueOf(matchingRecord.get().get(key))));
             } else {
                 assertEquals(expectedValue, String.valueOf(matchingRecord.get().get(key)));
+            }
+        }
+    }
+
+    @Then("атрибуты фичи соответствуют ожиданиям")
+    public void checkFeaturesAttributes(DataTable expectedFields) {
+        Map<String, String> expectedProps = expectedFields.asMap();
+
+        Map<String, Object> actualProps = response.jsonPath().getMap("content[0].properties");
+
+        for (Map.Entry<String, String> entry: expectedProps.entrySet()) {
+            String key = entry.getKey();
+            String expectedValue = entry.getValue();
+            if (expectedValue == null) {
+                assertNull("Ожидали пустое значение, но получили запоенное." + key, actualProps.get(key));
+                continue;
+            }
+
+            assertNotNull("В полученной фиче нет поля " + key, actualProps.get(key));
+
+            if (key.equals(DEFAULT_GEOMETRY_COLUMN_NAME)) {
+                String actualGeometry = String.valueOf(actualProps.get(key));
+                assertTrue(
+                        "Геометрия объектов не совпала. Ожидаем: '" + expectedValue + "' Получили: " + actualGeometry,
+                        GeometryUtils.isGeometriesEqual(expectedValue, actualGeometry));
+            } else {
+                assertEquals(expectedValue, String.valueOf(actualProps.get(key)));
             }
         }
     }
@@ -591,6 +628,28 @@ public class TableFeaturesStepsDefinitions extends BaseStepsDefinitions {
         }
     }
 
+    @Given("найдена фича по фильтру {string} = {string} в текущем слое")
+    @When("я нахожу фичу по фильтру {string} = {string} в текущем слое")
+    @Then("фича по фильтру {string} = {string} существует в текущем слое")
+    public void getFilteredFeature(String column, String value) {
+        getFeatureByFilter(column, value);
+
+        assertEquals(SC_OK, response.getStatusCode());
+
+        assertEquals("Переданный фильтр должен отдавать уникальную запись",
+                     1, response.jsonPath().getInt("page.totalElements"));
+    }
+
+    @When("я устанавливаю в текущей фиче полю {string} значение {string}")
+    public void updateCurrentFeature(String column, String value) {
+        currentFeatureId = response.jsonPath().getInt("content[0].properties.objectid");
+
+        Map<String, Object> content = new HashMap<>(Map.of(column, value));
+        updateFeature(new GeoJsonModel(content));
+
+        assertEquals(SC_NO_CONTENT, response.getStatusCode());
+    }
+
     private void deleteFeature(Integer id) {
         response = getBaseRequestWithCurrentCookie()
                 .when().
@@ -622,6 +681,14 @@ public class TableFeaturesStepsDefinitions extends BaseStepsDefinitions {
                         contentType(JSON)
                 .when().
                        get("/" + id);
+    }
+
+    private void getFeatureByFilter(String column, String value) {
+        response = getBaseRequestWithCurrentCookie()
+                .given().
+                        contentType(JSON)
+                .when().
+                       get("?filter=(" + column + " ILIKE '%" + value + "%')");
     }
 
     private void getAllFeatures() {
