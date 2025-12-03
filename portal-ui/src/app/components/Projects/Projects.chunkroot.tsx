@@ -27,6 +27,7 @@ interface ProjectsState {
 
 const Projects: FC = observer(() => {
   const store = useMemo(() => new ProjectsStore(), []);
+  const lastFailedFolderIdRef = useRef<number | null>(null);
   const { busy, setBusy, setProjects, displayedList } = store;
 
   const debouncedFetchProjectsRef = useRef<DebouncedFunc<() => Promise<void>>>();
@@ -41,6 +42,7 @@ const Projects: FC = observer(() => {
       const url = new URL(window.location.href);
       url.searchParams.delete(FOLDER_PARAM);
 
+      lastFailedFolderIdRef.current = null;
       currentProjectFolderStore.setCurrentFolder(null);
     } catch (error) {
       console.error('Error loading root projects:', error);
@@ -53,11 +55,20 @@ const Projects: FC = observer(() => {
   // Загрузка проектов для текущей папки
   const loadFolderProjects = useCallback(
     async (projectId: number) => {
+      if (lastFailedFolderIdRef.current === projectId) {
+        return;
+      }
+
+      lastFailedFolderIdRef.current = projectId;
+
       try {
         setBusy(true);
         const projectFolder = await projectsService.getById(projectId);
 
         if (!projectFolder?.folder) {
+          setProjects([]);
+          currentProjectFolderStore.setCurrentFolder(null);
+
           services.logger.error('Выбранная папка не найдена');
 
           return;
@@ -71,6 +82,7 @@ const Projects: FC = observer(() => {
         currentProjectFolderStore.setCurrentFolder(null);
         await loadRootProjects();
       } finally {
+        lastFailedFolderIdRef.current = null;
         setBusy(false);
       }
     },

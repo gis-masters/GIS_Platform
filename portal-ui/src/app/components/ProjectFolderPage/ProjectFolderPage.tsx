@@ -34,13 +34,12 @@ export const ProjectFolderPage: FC = observer(() => {
 
   const fetchProject = async () => {
     const projectId = Number(route.params.projectId);
-
     const currentOperationId = Symbol();
     operationId.current = currentOperationId;
+    const errorMessageType = project?.folder ? 'папку проекта' : 'проект';
 
     try {
       const fetchedProject = await projectsService.getById(projectId);
-
       if (operationId.current !== currentOperationId) {
         return;
       }
@@ -52,9 +51,13 @@ export const ProjectFolderPage: FC = observer(() => {
       const err = error as AxiosError<{ message: string }>;
       setBusy(false);
 
-      setError(err?.response?.data?.message || err?.message || 'Не удалось открыть проект');
+      setError(err?.response?.data?.message || err?.message || `Не удалось открыть ${errorMessageType}`);
 
-      services.logger.error('Не удалось открыть проект: ', err.message);
+      services.logger.error(`Не удалось открыть ${errorMessageType}:`, err.message);
+    } finally {
+      if (!project && !error) {
+        setError(`Не удалось открыть ${errorMessageType}`);
+      }
     }
   };
 
