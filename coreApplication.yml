@@ -421,3 +421,20 @@ services:
       - "8668:8668"
     mem_limit: ${NOTIFICATION_MEM_LIMIT:-1000}m
     privileged: true
+
+  report-service:
+    container_name: crg-report-service
+    image: ${DOCKER_CRG_HOST}/crg-report-service:${CRG_REPORT_TAG}
+    restart: always
+    environment:
+      APM_URL: ${APM_URL}
+      XMX_SIZE: ${REPORT_XMX_SIZE:-1100m}
+
+      CRG_OPTIONS_DATA_SERVICE_URL: http://data-service:8084
+      CRG_OPTIONS_CARBONE_URL: http://carbone:4000
+
+      CRG_OPTIONS_SYSTEM_ADMIN_LOGIN_JWT_SECRET: ${SECURITY_JWT_SECRET}
+    ports:
+      - "8090:8090"
+    mem_limit: ${REPORT_SERVICE_MEM_LIMIT:-1000}m
+    privileged: true

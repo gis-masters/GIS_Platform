@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<toolchains xmlns="http://maven.apache.org/TOOLCHAINS/1.1.0"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:schemaLocation="http://maven.apache.org/TOOLCHAINS/1.1.0 http://maven.apache.org/xsd/toolchains-1.1.0.xsd">
+    
+    <!-- Java 11 for most projects -->
+    <toolchain>
+        <type>jdk</type>
+        <provides>
+            <version>11</version>
+            <vendor>openjdk</vendor>
+        </provides>
+        <configuration>
+            <jdkHome>/usr/lib/jvm/java-11-openjdk-amd64</jdkHome>
+        </configuration>
+    </toolchain>
+
+    <!-- Java 25 for carbone-service -->
+    <toolchain>
+        <type>jdk</type>
+        <provides>
+            <version>25</version>
+            <vendor>openjdk</vendor>
+        </provides>
+        <configuration>
+            <jdkHome>/usr/lib/jvm/java-25-openjdk-amd64</jdkHome>
+        </configuration>
+    </toolchain>
+
+</toolchains>

@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 import ru.mycrg.auth_facade.IAuthenticationFacade;
-import ru.mycrg.data_service.dto.FileProjection;
+import ru.mycrg.common_contracts.generated.data_service.FileProjection;
 import ru.mycrg.data_service.entity.File;
 import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.repository.FileRepository;
@@ -17,6 +17,7 @@ import ru.mycrg.mediator.IRequestHandler;
 import java.util.ArrayList;
 import java.util.List;
 
+import static ru.mycrg.data_service.mappers.FilesMapper.toProjection;
 import static ru.mycrg.data_service.service.storage.FileStorageUtil.generateFileName;
 
 @Component
@@ -52,7 +53,7 @@ public class CreateFileHandler implements IRequestHandler<CreateFileRequest, Lis
                 File entity = new File(file, intents, path, authenticationFacade.getLogin());
                 File savedEntity = fileRepository.save(entity);
 
-                fileProjections.add(new FileProjection(savedEntity));
+                fileProjections.add(toProjection(savedEntity));
             } else {
                 log.debug("Файл: '{}' пуст", file == null ? "unknown" : file.getName());
             }

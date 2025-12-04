@@ -69,6 +69,7 @@
         <module>integration-service</module>
         <module>audit-service</module>
 
+        <module>report-service</module>
         <module>geo-wrapper</module>
 
         <module>_libs/mediator</module>
@@ -78,6 +79,7 @@
 
         <module>clients/http-client</module>
         <module>clients/oauth-client</module>
+        <module>clients/data-service-client</module>
         <module>clients/geoserver-client</module>
 
         <module>contracts/common-contracts</module>

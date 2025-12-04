@@ -1,4 +1,4 @@
-package ru.mycrg.data_service.mappers;
+package ru.mycrg.data_service.dao.mappers;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -11,8 +11,9 @@ import java.sql.SQLException;
 
 import static ru.mycrg.data_service.dao.config.DaoProperties.ID;
 
+//TODO: Удалить и использовать полноценного брата (без Short)
 @Component
-public class SchemasAndTablesMapper implements RowMapper<SchemasAndTables> {
+public class SchemasAndTablesShortMapper implements RowMapper<SchemasAndTables> {
 
     private static final ObjectMapper objectMapper = new ObjectMapper();
 

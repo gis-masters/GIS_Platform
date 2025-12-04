@@ -101,6 +101,11 @@ zuul:
       path: /events/**
       url: http://crg-audit-service:8086/events/
 
+    # REPORT SERVICE
+    crg-report-service:
+      path: /reports/**
+      url: http://crg-report-service:8090/reports/
+
     # Geoserver
     geoserver:
       path: /geoserver/**

@@ -1,7 +1,7 @@
 package ru.mycrg.data_service.service.cqrs.files.requests;
 
 import org.springframework.web.multipart.MultipartFile;
-import ru.mycrg.data_service.dto.FileProjection;
+import ru.mycrg.common_contracts.generated.data_service.FileProjection;
 import ru.mycrg.mediator.IRequest;
 
 import java.util.List;

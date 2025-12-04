@@ -5,7 +5,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.mycrg.data_service.controller.BaseController;
-import ru.mycrg.data_service.dto.FileProjection;
+import ru.mycrg.common_contracts.generated.data_service.FileProjection;
 import ru.mycrg.data_service.entity.File;
 import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.exceptions.ForbiddenException;
@@ -22,6 +22,7 @@ import java.util.UUID;
 
 import static org.springframework.http.HttpStatus.CREATED;
 import static ru.mycrg.auth_service_contract.Authorities.HAS_ANY_AUTHORITY;
+import static ru.mycrg.data_service.mappers.FilesMapper.toProjection;
 
 @RestController
 @RequestMapping("/files")
@@ -66,7 +67,7 @@ public class FileCrudController extends BaseController {
             throw new ForbiddenException("Файл недоступен");
         }
 
-        return ResponseEntity.ok(new FileProjection(file));
+        return ResponseEntity.ok(toProjection(file));
     }
 
     private void validateRequest(MultipartFile[] files) {

@@ -3,7 +3,7 @@ package ru.mycrg.data_service.repository;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import ru.mycrg.data_service.entity.SchemasAndTables;
-import ru.mycrg.data_service.mappers.SchemasAndTablesMapper;
+import ru.mycrg.data_service.dao.mappers.SchemasAndTablesShortMapper;
 
 import java.util.Optional;
 
@@ -14,7 +14,7 @@ public class SchemasAndTablesRepositoryDetached {
         String sql = "SELECT id, identifier, path, schema, title, crs FROM schemas_and_tables WHERE identifier = ?";
 
         try {
-            SchemasAndTables result = jdbcTemplate.queryForObject(sql, new SchemasAndTablesMapper(), identifier);
+            SchemasAndTables result = jdbcTemplate.queryForObject(sql, new SchemasAndTablesShortMapper(), identifier);
             return Optional.ofNullable(result);
         } catch (Exception e) {
             return Optional.empty();

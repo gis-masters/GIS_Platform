@@ -170,6 +170,12 @@ export interface PageableResources<T> {
   page: Page;
 }
 
+export interface ReportMainDto {
+  outputFormat: ReportOutputFormat;
+  media: { [index: string]: string };
+  data: any;
+}
+
 export interface SpecializationView {
   id: number;
   title: string;
@@ -215,3 +221,5 @@ export type GpkgTableType = 'VECTOR_DATA_TABLE' | 'CRG_DATA_TABLE';
 export type FtsType = 'DOCUMENT' | 'FEATURE';
 
 export type GpkgExportType = 'PROJECT' | 'LAYER' | 'TABLE';
+
+export type ReportOutputFormat = 'PDF' | 'DOCX';

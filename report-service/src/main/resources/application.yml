@@ -1,0 +1,17 @@
+spring:
+  profiles:
+    active: fiz-dev
+logging:
+  file:
+    name: /opt/crg/logs/report-service.log
+  level:
+    ru.mycrg: DEBUG
+
+server:
+  port: 8090
+
+crg-options:
+  data_service_url: http://127.0.0.1:8084
+  carbone_url: http://127.0.0.1:4000
+  jwt:
+    secret: your_jwt_secret_here

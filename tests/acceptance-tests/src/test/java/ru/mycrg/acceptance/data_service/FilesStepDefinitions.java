@@ -377,6 +377,14 @@ public class FilesStepDefinitions extends BaseStepsDefinitions {
         assertEquals(currentFileId.toString(), jsonPath.get("id"));
     }
 
+    @Given("я запрашиваю атрибуты текущего файла")
+    public void getFileAttributes() {
+        getFile(currentFileId);
+        currentFilePath = jsonPath.getString("path");
+
+        assertEquals(currentFileId.toString(), jsonPath.get("id"));
+    }
+
     @Given("Файл перемещён из временного хранилища в соответствующую директорию")
     public void checkFilePlaceInCorrectDirectory() {
         String organizationDir = "organization_" + orgId;
@@ -529,6 +537,18 @@ public class FilesStepDefinitions extends BaseStepsDefinitions {
         }
     }
 
+    public void downloadFile(UUID fileId) {
+        downloadFile(String.format("/%s/download", fileId));
+    }
+
+    public void getFile(UUID id) {
+        response = getBaseRequestWithCurrentCookie()
+                .when().
+                        get("/" + id);
+
+        jsonPath = response.jsonPath();
+    }
+
     private void checkOnePolygonAllTypesWithoutGenerated(GpkgFileMetadata metadata) {
         assertNotNull("Поле 'payload' не должно быть null", metadata.getPayload());
         assertTrue("Поле 'payload' должно быть списком", metadata.getPayload() instanceof List);
@@ -555,24 +575,12 @@ public class FilesStepDefinitions extends BaseStepsDefinitions {
         assertTrue("Список таблиц должен быть пустым", tables.isEmpty());
     }
 
-    private void getFile(UUID id) {
-        response = getBaseRequestWithCurrentCookie()
-                .when().
-                        get("/" + id);
-
-        jsonPath = response.jsonPath();
-    }
-
     private void getFileMetadata(UUID id) {
         response = getBaseRequestWithCurrentCookie()
                 .when().
                        get("/" + id + "/metadata");
 
         jsonPath = response.jsonPath();
-    }
-
-    private void downloadFile(UUID fileId) {
-        downloadFile(String.format("/%s/download", fileId));
     }
 
     private void downloadArchive(UUID mainFileId) {

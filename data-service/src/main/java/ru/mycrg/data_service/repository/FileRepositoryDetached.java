@@ -2,8 +2,8 @@ package ru.mycrg.data_service.repository;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+import ru.mycrg.data_service.dao.mappers.FilesMapper;
 import ru.mycrg.data_service.entity.File;
-import ru.mycrg.data_service.mappers.FilesMapper;
 
 import java.sql.SQLException;
 import java.util.Optional;
