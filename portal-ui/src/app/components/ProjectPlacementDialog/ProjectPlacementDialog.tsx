@@ -143,7 +143,6 @@ export class ProjectPlacementDialog extends Component<ProjectPlacementDialogProp
 
   private async waitForProcess(response: ProcessResponse): Promise<void> {
     const process = await awaitProcess(Number(response._links.process.href.split('/').at(-1)));
-
     if (process) {
       communicationService.fileConnectionsUpdated.emit({ type: 'update', data: [this.props.fileInfo] });
     }

@@ -5,6 +5,7 @@ import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 import { type AxiosError } from 'axios';
 
+import { communicationService } from '../../services/communication.service';
 import { type NewCrgLayer } from '../../services/gis/layers/layers.models';
 import {
   alertLayerOperationError,
@@ -37,6 +38,17 @@ export default class LayersSidebar extends Component {
   constructor(props: Record<string, never>) {
     super(props);
     makeObservable(this);
+  }
+
+  componentDidMount() {
+    communicationService.fileConnectionsUpdated.on(async () => {
+      projectsService.clearCurrent();
+      await projectsService.fetchCurrent();
+    }, this);
+  }
+
+  componentWillUnmount(): void {
+    communicationService.off(this);
   }
 
   render() {
