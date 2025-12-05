@@ -1,12 +1,12 @@
 package ru.mycrg.data_service.service.cqrs.files.requests;
 
 import org.springframework.web.multipart.MultipartFile;
-import ru.mycrg.common_contracts.generated.data_service.FileProjection;
+import ru.mycrg.common_contracts.generated.data_service.FileResponse;
 import ru.mycrg.mediator.IRequest;
 
 import java.util.List;
 
-public class CreateFileRequest implements IRequest<List<FileProjection>> {
+public class CreateFileRequest implements IRequest<List<FileResponse>> {
 
     private final MultipartFile[] files;
 

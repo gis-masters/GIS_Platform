@@ -1,22 +1,15 @@
+import { type FileResponse } from '../../../../server-types/common-contracts';
 import { type CrgLayer } from '../../gis/layers/layers.models';
 import { type CrgProject } from '../../gis/projects/projects.models';
 import { isRecordStringUnknown } from '../../util/typeGuards/isRecordStringUnknown';
 
-export interface FileInfo {
-  id: string;
-  title: string;
-  size: number;
-  path?: string;
-  createdBy?: string;
-  createdAt?: string;
+type RequiredFileInfoFields = 'id' | 'title' | 'size';
+type FileResponseWithoutAny = Omit<FileResponse, 'resourceQualifier'>;
+type FileInfoBase = Partial<FileResponseWithoutAny> & Pick<FileResponse, RequiredFileInfoFields>;
+
+export interface FileInfo extends FileInfoBase {
   notLoaded?: boolean;
-  signed?: boolean;
-  contentType?: string;
-  expired?: boolean;
-  extension?: string;
-  intents?: string;
   resourceQualifier?: Record<string, string | number>;
-  resourceType?: string;
 }
 
 export interface FileConnection {

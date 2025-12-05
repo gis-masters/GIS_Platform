@@ -225,10 +225,14 @@ public class GeoserverStepDefinitions extends BaseStepsDefinitions {
     }
 
     @Then("установленный стиль соответствует стандартному точечному стилю")
-    public void checkCurrentLayerStyleLegend() {
+    public void checkCurrentLayerStyleLegendPoint() {
         assertTrue(response.prettyPrint().contains("simple_point_1"));
     }
 
+    @Then("установленный стиль соответствует стандартному полигональному стилю")
+    public void checkCurrentLayerStyleLegendPolygon() {
+        assertTrue(response.prettyPrint().contains("simple_polygon_1"));
+    }
 
     @And("геосервер успешно отдаёт легенду для стиля {string} правила {string}")
     public void checkStyleLegend(String styleName, String rule) {

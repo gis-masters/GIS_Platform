@@ -5,7 +5,7 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.mycrg.common_contracts.generated.data_service.FileProjection;
+import ru.mycrg.common_contracts.generated.data_service.FileResponse;
 import ru.mycrg.http_client.HttpClient;
 import ru.mycrg.http_client.ResponseModel;
 import ru.mycrg.http_client.exceptions.HttpClientException;
@@ -27,8 +27,8 @@ public class DataServiceClient implements IDataServiceClient {
     }
 
     @Override
-    public List<FileProjection> postFiles(String accessToken, RequestBody body) throws HttpClientException {
-        List<FileProjection> createdFiles = new ArrayList<>();
+    public List<FileResponse> postFiles(String accessToken, RequestBody body) throws HttpClientException {
+        List<FileResponse> createdFiles = new ArrayList<>();
 
         Request request = new Request.Builder()
                 .url(baseUrl + "/files")
@@ -37,8 +37,8 @@ public class DataServiceClient implements IDataServiceClient {
                 .build();
 
         log.debug("Выполняем запрос на {}", baseUrl + "/files");
-        ResponseModel<List<FileProjection>> response = httpClient.handleRequest(request,
-                                                                                new TypeReference<>() {
+        ResponseModel<List<FileResponse>> response = httpClient.handleRequest(request,
+                                                                              new TypeReference<>() {
                                                                                 });
 
         log.debug("Код ответа: {}. Тело ответа: {}", response.getCode(), response.getBody());

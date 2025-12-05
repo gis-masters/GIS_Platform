@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 import ru.mycrg.auth_facade.IAuthenticationFacade;
-import ru.mycrg.common_contracts.generated.data_service.FileProjection;
+import ru.mycrg.common_contracts.generated.data_service.FileResponse;
 import ru.mycrg.data_service.entity.File;
 import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.repository.FileRepository;
@@ -21,7 +21,7 @@ import static ru.mycrg.data_service.mappers.FilesMapper.toProjection;
 import static ru.mycrg.data_service.service.storage.FileStorageUtil.generateFileName;
 
 @Component
-public class CreateFileHandler implements IRequestHandler<CreateFileRequest, List<FileProjection>> {
+public class CreateFileHandler implements IRequestHandler<CreateFileRequest, List<FileResponse>> {
 
     private static final Logger log = LoggerFactory.getLogger(CreateFileHandler.class);
 
@@ -41,8 +41,8 @@ public class CreateFileHandler implements IRequestHandler<CreateFileRequest, Lis
     }
 
     @Override
-    public List<FileProjection> handle(CreateFileRequest request) {
-        List<FileProjection> fileProjections = new ArrayList<>();
+    public List<FileResponse> handle(CreateFileRequest request) {
+        List<FileResponse> fileProjections = new ArrayList<>();
 
         MultipartFile[] files = request.getFiles();
         for (MultipartFile file: files) {

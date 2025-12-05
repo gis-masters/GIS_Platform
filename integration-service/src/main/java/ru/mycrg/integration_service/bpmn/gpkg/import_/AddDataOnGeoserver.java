@@ -95,6 +95,9 @@ public class AddDataOnGeoserver implements JavaDelegate {
                     tableReport.setStatus(COMPLETED);
                     List<String> prevMsg = tableReport.getMessages();
                     prevMsg.addAll(copyAnswer.getErrorReport().getMessages());
+                    tableReport.setImportedObjects(copyAnswer.getErrorReport().getSuccessfulRecordCount());
+                    tableReport.setFailedObjects(
+                            (long) copyAnswer.getErrorReport().getFailedRecordCount());
                     tableReport.setMessages(prevMsg);
                 } else {
                     tableReport.setStatus(ERROR);

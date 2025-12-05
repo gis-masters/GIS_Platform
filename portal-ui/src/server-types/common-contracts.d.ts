@@ -17,6 +17,22 @@ export interface FileMetadata<T> {
   payload: T;
 }
 
+export interface FileResponse {
+  id: string;
+  title: string;
+  size: number;
+  extension: string;
+  path: string;
+  contentType: string;
+  intents: string;
+  createdBy: string;
+  createdAt: string;
+  signed: boolean;
+  expired: boolean;
+  resourceType: string;
+  resourceQualifier: any;
+}
+
 export interface GeometryValidationResultDto {
   message: string;
   valid: boolean;
@@ -63,6 +79,7 @@ export interface GpkgImportReport extends GpkgImportBaseDto, Serializable {
 export interface GpkgImportedLayer extends GpkgImportBaseDto, Serializable {
   createdTableId: number;
   styleName: string;
+  type: LayerType;
 }
 
 export interface GpkgImportedStyles extends GpkgImportBaseDto, Serializable {
@@ -80,6 +97,8 @@ export interface GpkgImportedTable extends GpkgImportBaseDto, Serializable {
   dataset: string;
   oldTableIdentifier: string;
   createdTableIdentifier: string;
+  importedObjects: number;
+  failedObjects: number;
 }
 
 export interface GpkgPayloadData extends Serializable {
@@ -219,6 +238,17 @@ export type GpkgProcessStatus = 'ACTIVE' | 'COMPLETED' | 'ERROR';
 export type GpkgTableType = 'VECTOR_DATA_TABLE' | 'CRG_DATA_TABLE';
 
 export type FtsType = 'DOCUMENT' | 'FEATURE';
+
+export type LayerType =
+  | 'VECTOR'
+  | 'DXF'
+  | 'TAB'
+  | 'MID'
+  | 'SHP'
+  | 'RASTER'
+  | 'EXTERNAL'
+  | 'EXTERNAL_NSPD'
+  | 'EXTERNAL_GEOSERVER';
 
 export type GpkgExportType = 'PROJECT' | 'LAYER' | 'TABLE';
 

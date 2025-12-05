@@ -42,4 +42,4 @@ services:
   report-service:
     build: report-service
     ports:
-      - "4004:4004"
+      - "8090:8090"

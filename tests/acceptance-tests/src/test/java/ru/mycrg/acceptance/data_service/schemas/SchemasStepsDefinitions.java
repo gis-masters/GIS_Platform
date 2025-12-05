@@ -10,6 +10,7 @@ import io.restassured.specification.RequestSpecification;
 import ru.mycrg.acceptance.BaseStepsDefinitions;
 import ru.mycrg.acceptance.auth_service.AuthorizationBase;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
+import ru.mycrg.data_service_contract.dto.SimplePropertyDto;
 import ru.mycrg.data_service_contract.enums.ValueType;
 
 import java.util.HashMap;
@@ -178,6 +179,17 @@ public class SchemasStepsDefinitions extends BaseStepsDefinitions {
                                        assertEquals("Проперти '" + prop.getName() + "' должны совпадать по типам.",
                                                     prop.getValueTypeAsEnum(),
                                                     actualMap.get(prop.getName())));
+    }
+
+    @Then("в схеме существует свойство, title которого равен {string}")
+    public void validateSchemaWithRussianTitle(String title) {
+        SchemaDto actualSchema = response.jsonPath().getObject("", SchemaDto.class);
+        List<SimplePropertyDto> actualProps = actualSchema.getProperties();
+
+        SimplePropertyDto expectedProp =
+                actualProps.stream().filter((prop) -> prop.getName().equals(title)).findFirst().orElse(null);
+
+        assertNotNull(expectedProp);
     }
 
     public void getCurrentSchema(String schemaName) {

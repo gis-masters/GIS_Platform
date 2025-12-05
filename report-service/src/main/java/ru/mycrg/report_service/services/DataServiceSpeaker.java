@@ -6,7 +6,7 @@ import okhttp3.RequestBody;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import ru.mycrg.common_contracts.generated.data_service.FileProjection;
+import ru.mycrg.common_contracts.generated.data_service.FileResponse;
 import ru.mycrg.data_service_client.IDataServiceClient;
 import ru.mycrg.http_client.exceptions.HttpClientException;
 
@@ -39,7 +39,7 @@ public class DataServiceSpeaker {
                 .addFormDataPart("files", fileName, fileBody)
                 .build();
 
-        List<FileProjection> files = dataServiceClient.postFiles(accessToken, body);
+        List<FileResponse> files = dataServiceClient.postFiles(accessToken, body);
 
         //Всегда кладём 1 файл значит всегда получаем List из одного элемента
 

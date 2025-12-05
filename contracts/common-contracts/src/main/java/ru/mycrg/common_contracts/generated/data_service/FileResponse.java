@@ -4,10 +4,9 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.JsonNode;
 
-import java.time.LocalDateTime;
 import java.util.UUID;
 
-public class FileProjection {
+public class FileResponse {
 
     private final UUID id;
     private final String title;
@@ -19,23 +18,23 @@ public class FileProjection {
     private final String resourceType;
     private final JsonNode resourceQualifier;
     private final String createdBy;
-    private final LocalDateTime createdAt;
+    private final String createdAt;
 
     private final boolean signed;
     private final boolean expired;
 
     @JsonCreator
-    public FileProjection(@JsonProperty("id") UUID id,
-                          @JsonProperty("title") String title,
-                          @JsonProperty("size") Long size,
-                          @JsonProperty("extension") String extension,
-                          @JsonProperty("path") String path,
-                          @JsonProperty("contentType") String contentType,
-                          @JsonProperty("intents") String intents,
-                          @JsonProperty("createdBy") String createdBy,
-                          @JsonProperty("createdAt") LocalDateTime createdAt,
-                          @JsonProperty("signed") boolean signed,
-                          @JsonProperty("expired") boolean expired) {
+    public FileResponse(@JsonProperty("id") UUID id,
+                        @JsonProperty("title") String title,
+                        @JsonProperty("size") Long size,
+                        @JsonProperty("extension") String extension,
+                        @JsonProperty("path") String path,
+                        @JsonProperty("contentType") String contentType,
+                        @JsonProperty("intents") String intents,
+                        @JsonProperty("createdBy") String createdBy,
+                        @JsonProperty("createdAt") String createdAt,
+                        @JsonProperty("signed") boolean signed,
+                        @JsonProperty("expired") boolean expired) {
         this.id = id;
         this.title = title;
         this.size = size;
@@ -52,9 +51,9 @@ public class FileProjection {
         this.resourceQualifier = null;
     }
 
-    public FileProjection(UUID id, String title, Long size, String extension, String path, String contentType,
-                          String intents, String resourceType, JsonNode resourceQualifier, String createdBy,
-                          LocalDateTime createdAt, boolean signed, boolean expired) {
+    public FileResponse(UUID id, String title, Long size, String extension, String path, String contentType,
+                        String intents, String resourceType, JsonNode resourceQualifier, String createdBy,
+                        String createdAt, boolean signed, boolean expired) {
         this.id = id;
         this.title = title;
         this.size = size;
@@ -110,7 +109,7 @@ public class FileProjection {
         return createdBy;
     }
 
-    public LocalDateTime getCreatedAt() {
+    public String getCreatedAt() {
         return createdAt;
     }
 

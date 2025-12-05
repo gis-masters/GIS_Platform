@@ -7,6 +7,8 @@ public class GpkgImportedTable extends GpkgImportBaseDto implements Serializable
     private String dataset;
     private String oldTableIdentifier;
     private String createdTableIdentifier;
+    private Long importedObjects;
+    private Long failedObjects;
 
     public GpkgImportedTable() {
     }
@@ -35,12 +37,30 @@ public class GpkgImportedTable extends GpkgImportBaseDto implements Serializable
         this.createdTableIdentifier = createdTableIdentifier;
     }
 
+    public Long getImportedObjects() {
+        return importedObjects;
+    }
+
+    public void setImportedObjects(Long importedObjects) {
+        this.importedObjects = importedObjects;
+    }
+
+    public Long getFailedObjects() {
+        return failedObjects;
+    }
+
+    public void setFailedObjects(Long failedObjects) {
+        this.failedObjects = failedObjects;
+    }
+
     @Override
     public String toString() {
         return "{" +
                 "\"dataset\":" + (dataset == null ? "null" : "\"" + dataset + "\"") + ", " +
                 "\"createdTableIdentifier\":" + (createdTableIdentifier == null ? "null" : "\"" + createdTableIdentifier + "\"") + ", " +
                 "\"oldTableIdentifier\":" + (oldTableIdentifier == null ? "null" : "\"" + oldTableIdentifier + "\"") + ", " +
+                "\"importedObjects\":" + (importedObjects == null ? "null" : "\"" + importedObjects + "\"") + ", " +
+                "\"failedObjects\":" + (failedObjects == null ? "null" : "\"" + failedObjects + "\"") + ", " +
                 "\"name\":" + (getTitle() == null ? "null" : "\"" + getTitle() + "\"") + ", " +
                 "\"status\":" + (getStatus() == null ? "null" : "\"" + getStatus() + "\"") + ", " +
                 "\"messages\":" + (getMessages() == null ? "null" : "\"" + getMessages() + "\"") + ", " +

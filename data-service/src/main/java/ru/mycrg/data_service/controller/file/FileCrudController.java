@@ -5,7 +5,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.mycrg.data_service.controller.BaseController;
-import ru.mycrg.common_contracts.generated.data_service.FileProjection;
+import ru.mycrg.common_contracts.generated.data_service.FileResponse;
 import ru.mycrg.data_service.entity.File;
 import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.exceptions.ForbiddenException;
@@ -45,14 +45,14 @@ public class FileCrudController extends BaseController {
 
     @PreAuthorize(HAS_ANY_AUTHORITY)
     @PostMapping
-    public ResponseEntity<List<FileProjection>> createFile(@RequestPart MultipartFile[] files) {
+    public ResponseEntity<List<FileResponse>> createFile(@RequestPart MultipartFile[] files) {
         validateRequest(files);
 
         if (fileStorageSizeGuarder.isTooLarge(files)) {
             throw new PayloadTooLargeException();
         }
 
-        List<FileProjection> projections = mediator.execute(new CreateFileRequest(files));
+        List<FileResponse> projections = mediator.execute(new CreateFileRequest(files));
 
         return ResponseEntity.status(CREATED)
                              .body(projections);
@@ -60,7 +60,7 @@ public class FileCrudController extends BaseController {
 
     @PreAuthorize(HAS_ANY_AUTHORITY)
     @GetMapping("/{id}")
-    public ResponseEntity<FileProjection> getFile(@PathVariable UUID id) {
+    public ResponseEntity<FileResponse> getFile(@PathVariable UUID id) {
         File file = fileRepository.findById(id)
                                   .orElseThrow(() -> new NotFoundException(id));
         if (!fileResourceProtector.isAllowed(file)) {

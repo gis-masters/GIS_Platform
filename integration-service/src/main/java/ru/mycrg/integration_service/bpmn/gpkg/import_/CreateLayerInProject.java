@@ -28,6 +28,7 @@ import java.util.List;
 
 import static ru.mycrg.common_contracts.generated.data_service.gpkg.GpkgProcessStatus.ACTIVE;
 import static ru.mycrg.common_contracts.generated.data_service.gpkg.GpkgProcessStatus.COMPLETED;
+import static ru.mycrg.common_contracts.generated.gis_service.LayerType.VECTOR;
 import static ru.mycrg.data_service_contract.enums.ProcessStatus.TASK_DONE;
 import static ru.mycrg.integration_service.bpmn.BaseHttpService.crgHttpClient;
 import static ru.mycrg.integration_service.bpmn.IJavaDelegateProperties.*;
@@ -87,6 +88,7 @@ public class CreateLayerInProject implements JavaDelegate {
         for (LayerProjection layerProjection: layerForCreate) {
             GpkgImportedLayer curLayer = new GpkgImportedLayer();
             curLayer.setStatus(ACTIVE);
+            curLayer.setType(VECTOR);
             curLayer.setTitle(layerProjection.getTitle());
             curLayer.setStyleName(layerProjection.getStyleName());
 
