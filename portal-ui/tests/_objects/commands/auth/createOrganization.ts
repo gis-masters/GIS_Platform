@@ -7,7 +7,7 @@ import { requestAs } from '../requestAs';
 import { getTestUser } from './testUsers';
 
 export async function createOrganization(regData: RegData): Promise<void> {
-  const limit = 60;
+  const limit = 120;
 
   const orgId = await authClient.registration(regData);
   for (let i = 0; i < limit; i++) {

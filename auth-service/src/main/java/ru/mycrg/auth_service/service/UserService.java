@@ -1,6 +1,5 @@
 package ru.mycrg.auth_service.service;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,10 +37,10 @@ import java.util.stream.Collectors;
 import static java.time.LocalDateTime.now;
 import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME;
 import static java.util.Objects.nonNull;
-import static ru.mycrg.auth_service.AuthJWTApplication.mapper;
 import static ru.mycrg.auth_service_contract.Authorities.USER;
 import static ru.mycrg.common_utils.CrgGlobalProperties.getDefaultRoleName;
 import static ru.mycrg.common_utils.CrgGlobalProperties.prepareGeoserverLogin;
+import static ru.mycrg.http_client.JsonConverter.toJsonNode;
 
 @Service
 public class UserService {
@@ -162,8 +161,7 @@ public class UserService {
                                 dto.getMiddleName(),
                                 dto.getJob(),
                                 dto.getPhone(),
-                                dto.getBossId()
-        );
+                                dto.getBossId());
         newUser.setLogin(dto.getEmail());
         newUser.addAuthority(USER);
         newUser.setEnabled(enabled);
@@ -183,15 +181,7 @@ public class UserService {
                                      accessToken,
                                      dto.getPassword(),
                                      true,
-                                     getDefaultRoleName(orgId))
-        );
-
-        messageBus.produce(new CrgAuditEvent(accessToken,
-                                             "CREATE",
-                                             savedUser.getEmail(),
-                                             "USER",
-                                             savedUser.getId(),
-                                             mapper.convertValue(dto, JsonNode.class)));
+                                     getDefaultRoleName(orgId)));
 
         return projectionFactory.createProjection(UserProjection.class, savedUser);
     }
@@ -388,7 +378,7 @@ public class UserService {
                                              "UPDATE",
                                              userForUpdate.getEmail(),
                                              "USER", userForUpdate.getId(),
-                                             mapper.convertValue(dto, JsonNode.class)));
+                                             toJsonNode(dto)));
     }
 
     /**
@@ -418,25 +408,6 @@ public class UserService {
         user.setLastModified(now());
     }
 
-    public Set<Long> fetchAllBosses(Set<Long> bossIds, Long userId, Map<Long, Integer> recursion) {
-        Integer counter = recursion.getOrDefault(userId, 0);
-        if (counter <= 3) {
-            User user = findOrThrow(userId);
-
-            if (nonNull(user.getBossId())) {
-                Long currentBossId = user.getBossId().longValue();
-                bossIds.add(currentBossId);
-
-                recursion.put(userId, counter + 1);
-                fetchAllBosses(bossIds, currentBossId, recursion);
-            }
-        } else {
-            log.debug("Для пользователя {} существует подозрение на рекурсию начальника", userId);
-        }
-
-        return bossIds;
-    }
-
     public Set<Integer> fetchDirectMinions(Long bossId) {
         return userRepository.findByBossId(bossId.intValue())
                              .stream().map(user -> user.getId().intValue())
@@ -459,6 +430,25 @@ public class UserService {
         } else {
             log.debug("Для пользователя {} существует подозрение на рекурсию подчинённых", bossId);
         }
+    }
+
+    private Set<Long> fetchAllBosses(Set<Long> bossIds, Long userId, Map<Long, Integer> result) {
+        Integer counter = result.getOrDefault(userId, 0);
+        if (counter <= 3) {
+            User user = findOrThrow(userId);
+
+            if (nonNull(user.getBossId())) {
+                Long currentBossId = user.getBossId().longValue();
+                bossIds.add(currentBossId);
+
+                result.put(userId, counter + 1);
+                fetchAllBosses(bossIds, currentBossId, result);
+            }
+        } else {
+            log.debug("Для пользователя {} существует подозрение на рекурсию начальника", userId);
+        }
+
+        return bossIds;
     }
 
     private boolean isUserHasAuthority(UserProjection userProjection, String authority) {

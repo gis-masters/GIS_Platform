@@ -5,7 +5,13 @@ meta {
 }
 
 post {
-  url: http://localhost:0.0.31.164/oauth/token
+  url: http://localhost:8100/oauth/token?username=orgOwner@any.ru&password=testPassword1&grant_type=password
   body: none
   auth: none
+}
+
+params:query {
+  username: orgOwner@any.ru
+  password: testPassword1
+  grant_type: password
 }

@@ -22,7 +22,6 @@ import ru.mycrg.auth_service_contract.dto.UserCreateDto;
 import ru.mycrg.auth_service_contract.dto.UserInfoModel;
 import ru.mycrg.auth_service_contract.dto.UserUpdateDto;
 
-import javax.inject.Inject;
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.Comparator;
@@ -35,8 +34,7 @@ import static ru.mycrg.common_utils.page.PageHandler.pageFromList;
 @RepositoryRestController
 public class UserController {
 
-    @Inject
-    private LocalValidatorFactoryBean validator;
+    private final LocalValidatorFactoryBean validator;
 
     @InitBinder
     protected void initBinder(WebDataBinder binder) {
@@ -49,10 +47,12 @@ public class UserController {
 
     public UserController(UserService userService,
                           UserRepository userRepository,
-                          IAuthenticationFacade authenticationFacade) {
+                          IAuthenticationFacade authenticationFacade,
+                          LocalValidatorFactoryBean validator) {
         this.userService = userService;
         this.userRepository = userRepository;
         this.authenticationFacade = authenticationFacade;
+        this.validator = validator;
     }
 
     @GetMapping("/users/current")

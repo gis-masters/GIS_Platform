@@ -7,9 +7,11 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import ru.mycrg.auth_service.queue.MessageBusProducer;
 import ru.mycrg.auth_service_contract.events.request.SystemTagsRequestEvent;
 
+@EnableScheduling
 @SpringBootApplication
 public class AuthJWTApplication {
 

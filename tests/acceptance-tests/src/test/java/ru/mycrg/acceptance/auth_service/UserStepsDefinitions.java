@@ -86,17 +86,15 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
                                     String middleNameKey, String jobKey, String phoneKey, String departmentKey) {
         authorizationBase.loginAsOwner();
 
-        userDto = new UserCreateDto(generateString(nameKey),
-                                    generateString(middleNameKey),
-                                    generateString(surnameKey),
-                                    generateString(jobKey),
-                                    generateString(phoneKey),
-                                    generateString(emailKey),
-                                    generateString(passwordKey),
-                                    generateString(departmentKey)
-        );
-
-        super.createEntity(userDto);
+        createUser(
+                new UserCreateDto(generateString(nameKey),
+                                  generateString(middleNameKey),
+                                  generateString(surnameKey),
+                                  generateString(jobKey),
+                                  generateString(phoneKey),
+                                  generateString(emailKey),
+                                  generateString(passwordKey),
+                                  generateString(departmentKey)));
     }
 
     @When("Администратор повторно создает пользователя")
@@ -105,21 +103,21 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
     }
 
     @Given("Существует пользователь")
-    public void initializeUser(DataTable dataTable) throws InterruptedException {
+    public void initializeUser(DataTable dataTable) {
         userDto = mapToDto(dataTable.asLists(String.class).get(0));
 
-        createRandomUser(userDto);
+        createUser(userDto);
     }
 
     @Given("Существует другой пользователь")
-    public void initAnotherUser(DataTable dataTable) throws InterruptedException {
+    public void initAnotherUser(DataTable dataTable) {
         anotherUserDto = mapToDto(dataTable.asLists(String.class).get(0));
 
-        createAnotherUser(anotherUserDto);
+        createUser(anotherUserDto, 1, true);
     }
 
     @Given("Существует пользователь у которого email содержит спецсимволы")
-    public void initializeUserWithSpecialSymbols() throws InterruptedException {
+    public void initializeUserWithSpecialSymbols() {
         String email = format("test.email%s@test", generateString("STRING_5"));
 
         UserCreateDto userDto = new UserCreateDto();
@@ -128,7 +126,7 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
         userDto.setEmail(email);
         userDto.setPassword(DEFAULT_TEST_PASSWORD);
 
-        createRandomUser(userDto);
+        createUser(userDto);
     }
 
     @Then("На геосервере удалилась роль, связанная с пользователем")
@@ -162,7 +160,7 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
     public void initializeSomeUser() throws InterruptedException {
         authorizationBase.loginAsOwner();
 
-        createRandomUser();
+        createUser();
     }
 
     @Given("Существует {int} пользователей")
@@ -218,13 +216,6 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
         userPool.remove(userId);
     }
 
-    @And("в заголовке Location передает ID созданного пользователя")
-    public void extractUserIdFromLocation() {
-        userId = extractId(response);
-
-        userPool.put(userId, userDto);
-    }
-
     @When("Администратор делает запрос с сортировкой по {string} и {string} на всех пользователей")
     public void getAllUsersSorted(String sortingType, String sortingDirection) {
         super.get1000EntitiesSorted(sortingType, sortingDirection);
@@ -247,11 +238,6 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
                         get();
     }
 
-    @And("Количество страниц пользователей пропорционально {string}")
-    public void checkUserPagesCount(String entitiesPerPage) {
-        super.checkPagesCount(entitiesPerPage);
-    }
-
     @Then("Поля пользователя совпадают с переданными")
     public void checkUserData() {
         jsonPath = response.jsonPath();
@@ -261,11 +247,6 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
         assertEquals(jsonPath.get("email"), userDto.getEmail());
 
         userPool.put(userId, userDto);
-    }
-
-    @And("На всех страницах пользователей есть {string}")
-    public void areUsersOnPages(String entitiesPerPage) {
-        super.checkSomethingOnPages(entitiesPerPage);
     }
 
     @Given("Существуют пользователи")
@@ -279,16 +260,16 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
     }
 
     @Given("Существует иерархия пользователей {string}")
-    public void createUsersByTemplate(String template) throws InterruptedException {
+    public void createUsersByTemplate(String template) {
         if ("тестирование прав на проекты".equals(template)) {
-            createRandomUser(new UserCreateDto("fiz1", "fiz1", "fiz1@fiz", DEFAULT_TEST_PASSWORD));
-            createRandomUser(new UserCreateDto("fiz2", "fiz2", "fiz2@fiz", DEFAULT_TEST_PASSWORD));
-            createRandomUser(new UserCreateDto("fiz3", "fiz3", "fiz3@fiz", DEFAULT_TEST_PASSWORD));
-            createRandomUser(new UserCreateDto("fiz4", "fiz4", "fiz4@fiz", DEFAULT_TEST_PASSWORD));
-            createRandomUser(new UserCreateDto("fiz5", "fiz5", "fiz5@fiz", DEFAULT_TEST_PASSWORD));
+            createUser(new UserCreateDto("fiz1", "fiz1", "fiz1@fiz", DEFAULT_TEST_PASSWORD));
+            createUser(new UserCreateDto("fiz2", "fiz2", "fiz2@fiz", DEFAULT_TEST_PASSWORD));
+            createUser(new UserCreateDto("fiz3", "fiz3", "fiz3@fiz", DEFAULT_TEST_PASSWORD));
+            createUser(new UserCreateDto("fiz4", "fiz4", "fiz4@fiz", DEFAULT_TEST_PASSWORD));
+            createUser(new UserCreateDto("fiz5", "fiz5", "fiz5@fiz", DEFAULT_TEST_PASSWORD));
         } else if ("для тестирования задач РНС по СМЭВ".equals(template)) {
-            createRandomUser(new UserCreateDto("rns1", "rns1", "rns1@smev.ru", DEFAULT_TEST_PASSWORD));
-            createRandomUser(new UserCreateDto("sed1", "sed1", "sed_user_integration@mycrg.ru", DEFAULT_TEST_PASSWORD));
+            createUser(new UserCreateDto("rns1", "rns1", "rns1@smev.ru", DEFAULT_TEST_PASSWORD));
+            createUser(new UserCreateDto("sed1", "sed1", "sed_user_integration@mycrg.ru", DEFAULT_TEST_PASSWORD));
         } else if ("Иерархия вариант 1".equals(template)) {
             // orgOwner
             //   fiz1
@@ -315,7 +296,7 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
 
             System.out.println("*** *** Create user fiz1");
             userDto = fiz1;
-            createRandomUser(fiz1);
+            createUser(fiz1);
 
             // Пользователь fiz2, у которого начальником будет владелец организации
             UserCreateDto fiz2 = new UserCreateDto("fiz2", "fiz2", "fiz2", "job", generateString("NUMBER_10"),
@@ -324,7 +305,7 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
 
             System.out.println("*** *** Create user fiz2");
             userDto = fiz2;
-            createRandomUser(fiz2);
+            createUser(fiz2);
             Integer fiz2Id = userId;
 
             // Пользователь fiz3, у которого начальником будет fiz2
@@ -334,7 +315,7 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
 
             System.out.println("*** *** Create user fiz3");
             userDto = fiz3;
-            createRandomUser(fiz3);
+            createUser(fiz3);
             Integer fiz3Id = userId;
 
             // Пользователь fiz4, у которого начальником будет fiz3
@@ -344,7 +325,7 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
 
             System.out.println("*** *** Create user fiz4");
             userDto = fiz4;
-            createRandomUser(fiz4);
+            createUser(fiz4);
 
             // Пользователь fiz5, без начальника
             UserCreateDto fiz5 = new UserCreateDto("fiz5", "fiz5", "fiz5", "job", generateString("NUMBER_10"),
@@ -352,7 +333,7 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
 
             System.out.println("*** *** Create user fiz5");
             userDto = fiz5;
-            createRandomUser(fiz5);
+            createUser(fiz5);
 
             System.out.println("============= Print userPool =============");
             userPool.forEach((id, userDto) -> {
@@ -708,10 +689,14 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
             }
         } while (currentAttempt <= MAX_RETRY_ATTEMPT);
 
-        throw new RuntimeException("User not created: " + id);
+        throw new IllegalStateException("Не удалось дождаться создания пользователя: " + id);
     }
 
-    private void createRandomUser(UserCreateDto dto) throws InterruptedException {
+    private void createUser(UserCreateDto dto) {
+        createUser(dto, 1, false);
+    }
+
+    private void createUser(UserCreateDto dto, int attempt, boolean isAnotherUser) {
         if (isUserExistInPool(dto.getEmail())) {
             makeExactUserAsCurrent(dto.getEmail());
         } else {
@@ -719,21 +704,31 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
 
             super.createEntity(dto);
             assertEquals(SC_ACCEPTED, response.getStatusCode());
-            extractUserIdFromLocation();
 
-            waitUntilUserSuccessfullyCreated(userId);
-        }
-    }
+            if (isAnotherUser) {
+                anotherUserId = extractId(response);
+            } else {
+                userId = extractId(response);
+            }
 
-    private void createAnotherUser(UserCreateDto dto) throws InterruptedException {
-        if (isUserExistInPool(dto.getEmail())) {
-            makeExactUserAsCurrent(dto.getEmail());
-        } else {
-            super.createEntity(dto);
-            assertEquals(SC_ACCEPTED, response.getStatusCode());
-            anotherUserId = extractId(response);
+            userPool.put(userId, userDto);
 
-            waitUntilUserSuccessfullyCreated(anotherUserId);
+            try {
+                waitUntilUserSuccessfullyCreated(userId);
+            } catch (IllegalStateException e) {
+                if (attempt < 3) {
+                    System.out.printf(
+                            "Не удалось создать пользователя с попытки %d. Попробуем еще раз (попытка %d)%n",
+                            attempt, attempt + 1);
+
+                    userPool.remove(userId);
+                    createUser(dto, attempt + 1, isAnotherUser);
+                } else {
+                    throw new IllegalStateException("Не удалось создать пользователя после 3 попыток");
+                }
+            } catch (InterruptedException e) {
+                throw new RuntimeException("Гавно случилось => " + e.getMessage());
+            }
         }
     }
 
@@ -757,13 +752,13 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
         }
     }
 
-    private void createRandomUser() throws InterruptedException {
+    private void createUser() throws InterruptedException {
         userDto = new UserCreateDto(generateString("STRING_10"),
                                     generateString("STRING_10"),
                                     generateString("EMAIL_10"),
                                     DEFAULT_TEST_PASSWORD);
 
-        createRandomUser(userDto);
+        createUser(userDto);
     }
 
     private void createUserWithEmail(String email) throws InterruptedException {
@@ -772,13 +767,13 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
                                     email,
                                     DEFAULT_TEST_PASSWORD);
 
-        createRandomUser(userDto);
+        createUser(userDto);
     }
 
     private void createRandomUserAndLogin() throws InterruptedException {
         authorizationBase.loginAsOwner();
 
-        createRandomUser();
+        createUser();
 
         authorizationBase.loginAsCurrentUser();
     }
@@ -791,13 +786,13 @@ public class UserStepsDefinitions extends BaseStepsDefinitions {
     }
 
     private void inviteUserByEmail(String email) {
-        Map<String, String> queryParams = new HashMap<String, String>() {{
+        Map<String, String> queryParams = new HashMap<>() {{
             put("email", email);
         }};
 
         response = getBaseRequestWithCurrentCookie()
-                .formParams(queryParams)
+                        .formParams(queryParams)
                 .when().
-                       post("/invite");
+                        post("/invite");
     }
 }

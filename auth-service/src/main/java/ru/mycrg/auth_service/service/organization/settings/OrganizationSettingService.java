@@ -145,7 +145,6 @@ public class OrganizationSettingService {
         }
     }
 
-    synchronized
     public void initOrgSetting(Organization organization, SpecializationView specialization) {
         Map<String, Object> orgSettings = fillSettingsBySpecialization(specialization.getSettings(),
                                                                        orgSettingsSchemaHolder.allInclusive());

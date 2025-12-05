@@ -55,13 +55,18 @@ public class CreateDbDelegate implements JavaDelegate {
                     .build();
 
             Response response = httpClient.newCall(request).execute();
-            if (!response.isSuccessful()) {
-                log.warn("Создание БД: {}, потерпело неудачу. Код ответа: {}", dbName, response.code());
+
+            int statusCode = response.code();
+            if (response.isSuccessful()) {
+                log.info("БД: {} успешно создана", dbName);
+            } else if (statusCode == 409) {
+                log.info("БД: {} уже существует (код 409). Шаг выполнен успешно.", dbName);
+            } else {
+                log.warn("Создание БД: {}, потерпело неудачу. Код ответа: {}", dbName, statusCode);
 
                 throw new IllegalStateException();
             }
 
-            log.info("БД: {} успешно создана", dbName);
             execution.setVariable(ITERATION_COUNTER_VAR_NAME, 3);
             response.close();
         } catch (Exception e) {

@@ -1,6 +1,5 @@
 package ru.mycrg.auth_service.service;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -34,7 +33,7 @@ import java.util.stream.Collectors;
 
 import static java.time.LocalDateTime.now;
 import static java.util.Objects.nonNull;
-import static ru.mycrg.auth_service.AuthJWTApplication.mapper;
+import static ru.mycrg.http_client.JsonConverter.toJsonNode;
 
 @Service
 @Transactional
@@ -95,7 +94,7 @@ public class GroupService {
                                              savedGroup.getName(),
                                              "GROUP",
                                              savedGroup.getId(),
-                                             mapper.convertValue(dto, JsonNode.class)));
+                                             toJsonNode(dto)));
 
         return projectionFactory.createProjection(GroupProjection.class, savedGroup);
     }
@@ -158,7 +157,7 @@ public class GroupService {
                                   group.getName(),
                                   "GROUP",
                                   group.getId(),
-                                  mapper.convertValue(updatedUsers, JsonNode.class)));
+                                  toJsonNode(updatedUsers)));
     }
 
     public void removeUser(Long groupId, Long userId) {
@@ -182,7 +181,7 @@ public class GroupService {
                                   group.getName(),
                                   "GROUP",
                                   userId,
-                                  mapper.convertValue(updatedUsers, JsonNode.class)));
+                                  toJsonNode(updatedUsers)));
     }
 
     public void update(Long groupId, GroupUpdateDto dto) {
@@ -208,7 +207,7 @@ public class GroupService {
                                   groupForUpdate.getName(),
                                   "GROUP",
                                   groupForUpdate.getId(),
-                                  mapper.convertValue(dto, JsonNode.class)));
+                                  toJsonNode(dto)));
     }
 
     public void delete(Long groupId) {

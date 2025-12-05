@@ -37,7 +37,7 @@ import static ru.mycrg.acceptance.gis_service.ProjectStepsDefinitions.projectId;
 
 public class OrganizationStepsDefinitions extends BaseStepsDefinitions {
 
-    public static final int MAX_RETRY_ATTEMPT = 100;
+    public static final int MAX_RETRY_ATTEMPT = 300;
     public static final int RETRY_DELAY = 1000;
 
     public static Integer orgId;

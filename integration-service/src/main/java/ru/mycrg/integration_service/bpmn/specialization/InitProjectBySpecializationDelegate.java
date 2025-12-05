@@ -50,6 +50,7 @@ public class InitProjectBySpecializationDelegate implements JavaDelegate {
         int currentIteration = (int) getVariable(execution, ITERATION_COUNTER_VAR_NAME, getClass().getName());
         log.error("Создание проекта согласно специализации, осталось попыток: [{}]", currentIteration);
 
+        Integer specializationId = null;
         try {
             OrganizationInitializedEvent event = objectMapper.readValue(
                     getVariable(execution, EVENT_VAR_NAME, getClass().getName()).toString(),
@@ -61,6 +62,7 @@ public class InitProjectBySpecializationDelegate implements JavaDelegate {
                     });
 
             Specialization specialization = specializationManager.getSpecialization(event.getSpecializationId());
+            specializationId = specialization.getId();
             specialization.getProjects()
                           .forEach(project -> {
                               String projectId = createProject(project, event.getOwnerToken());
@@ -78,18 +80,18 @@ public class InitProjectBySpecializationDelegate implements JavaDelegate {
                               });
                           });
 
-            log.info("Создание проекта согласно специализации: '{}', успешно выполнена",
-                     specialization.getId());
+            log.info("Создание проекта согласно специализации: '{}', успешно выполнена", specializationId);
             execution.setVariable(ITERATION_COUNTER_VAR_NAME, 3);
         } catch (Exception e) {
             if (currentIteration < 1) {
-                log.error("Создание проекта согласно специализации потерпело неудачу => {}", e.getMessage(), e);
+                log.error("Создание проекта согласно специализации: '{}' потерпело неудачу => {}",
+                          specializationId, e.getMessage(), e);
 
                 throw new BpmnError("initProjectFailed");
             } else {
                 execution.setVariable(ITERATION_COUNTER_VAR_NAME, --currentIteration);
-                log.error("Создание проекта согласно специализации потерпело неудачу => [{}] Попробуем еще раз.",
-                          e.getMessage(), e);
+                log.error("Создание проекта согласно специализации: '{}' потерпело неудачу => [{}] Попробуем еще раз.",
+                          specializationId, e.getMessage(), e);
 
                 throw new BpmnError("initProjectFailedTryOneMore");
             }
