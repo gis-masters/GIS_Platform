@@ -155,80 +155,117 @@ export async function getMapByXml(url: string): Promise<Blob> {
   return await wmsClient.getMapByXml(xml);
 }
 
+async function testExternalNspd(layer: CrgLayer) {
+  if (!layer.errorText) {
+    return { ok: true };
+  }
+
+  if (!layer.dataSourceUri) {
+    return { ok: false, errors: ['Не указан dataSourceUri у слоя'] };
+  }
+
+  const url = new URL(layer.dataSourceUri);
+  url.searchParams.set('BBOX', '3740789.9457623847,5618140.688217526,3740809.055019456,5618159.797474598');
+
+  const errors = [layer.errorText];
+  try {
+    const response = await fetch(url);
+    if (!response.ok) {
+      return { ok: false, errors };
+    }
+  } catch {
+    return { ok: false, errors };
+  }
+
+  return { ok: true };
+}
+
+async function testExternalAndExternalGeoserver(layer: CrgLayer) {
+  if (!layer.errorText) {
+    return { ok: true };
+  }
+
+  if (!layer.dataSourceUri) {
+    return { ok: false, errors: ['Не указан dataSourceUri у слоя'] };
+  }
+
+  const url = new URL(layer.dataSourceUri);
+  url.searchParams.set('F', 'Image');
+  url.searchParams.set('FORMAT', 'PNG32');
+  url.searchParams.set('TRANSPARENT', 'true');
+  url.searchParams.set('LAYERS', layer.complexName ?? '');
+  url.searchParams.set('SIZE', '1024,1024');
+  url.searchParams.set('BBOX', '3740789.9457623847,5618140.688217526,3740809.055019456,5618159.797474598');
+  url.searchParams.set('bboxSR', '102100');
+  url.searchParams.set('imageSR', '102100');
+  url.searchParams.set('DPI', '360');
+
+  const errors = [layer.errorText];
+  try {
+    const response = await fetch(url);
+    if (!response.ok) {
+      return { ok: false, errors };
+    }
+  } catch {
+    return { ok: false, errors };
+  }
+
+  return { ok: true };
+}
+
 export async function testLayerByWms(layer: CrgLayer): Promise<{ ok: boolean; errors?: string[] }> {
   if (!layer.complexName) {
     return { ok: false, errors: ['Не указан complexName у слоя'] };
   }
 
-  if (layer.type === CrgLayerType.VECTOR || layer.type === CrgLayerType.DXF || layer.type === CrgLayerType.SHP) {
-    const url = new URL(wmsClient.getWmsUrl());
+  switch (layer.type) {
+    case CrgLayerType.VECTOR:
+    case CrgLayerType.DXF:
+    case CrgLayerType.SHP: {
+      const url = new URL(wmsClient.getWmsUrl());
 
-    url.searchParams.set('SERVICE', 'WMS');
-    url.searchParams.set('VERSION', '1.3.0');
-    url.searchParams.set('REQUEST', 'GetMap');
-    url.searchParams.set('FORMAT', 'image/vnd.jpeg-png8');
-    url.searchParams.set('TRANSPARENT', 'true');
-    url.searchParams.set('LAYERS', layer.complexName);
-    url.searchParams.set('CRS', defaultOlProjectionCode);
+      url.searchParams.set('SERVICE', 'WMS');
+      url.searchParams.set('VERSION', '1.3.0');
+      url.searchParams.set('REQUEST', 'GetMap');
+      url.searchParams.set('FORMAT', 'image/vnd.jpeg-png8');
+      url.searchParams.set('TRANSPARENT', 'true');
+      url.searchParams.set('LAYERS', layer.complexName);
+      url.searchParams.set('CRS', defaultOlProjectionCode);
 
-    if (layer.styleName && layer.styleName !== CUSTOM_STYLE_NAME) {
-      url.searchParams.set('STYLES', layer.styleName);
-    }
+      if (layer.styleName && layer.styleName !== CUSTOM_STYLE_NAME) {
+        url.searchParams.set('STYLES', layer.styleName);
+      }
 
-    if (layer.styleName === CUSTOM_STYLE_NAME && layer.style) {
-      url.searchParams.set('SLD_BODY', layer.style);
-    }
+      if (layer.styleName === CUSTOM_STYLE_NAME && layer.style) {
+        url.searchParams.set('SLD_BODY', layer.style);
+      }
 
-    url.searchParams.set('WIDTH', '300');
-    url.searchParams.set('HEIGHT', '300');
-    url.searchParams.set('BBOX', '3778140.58549765,5300522.190056069,3778162.97915828,5300544.5837167');
+      url.searchParams.set('WIDTH', '300');
+      url.searchParams.set('HEIGHT', '300');
+      url.searchParams.set('BBOX', '3778140.58549765,5300522.190056069,3778162.97915828,5300544.5837167');
 
-    const result = await wmsClient.getMap(url.toString());
+      const result = await wmsClient.getMap(url.toString());
 
-    if (typeof result === 'string' || result.type === Mime.TEXT_XML) {
-      const parser = new DOMParser();
-      const xmlDoc = parser.parseFromString(typeof result === 'string' ? result : await result.text(), Mime.XML);
-      const errors = [...xmlDoc.querySelectorAll('ServiceException')].map(
-        (n: Element) => `Ошибка получения данных с сервера: ${n.innerHTML.trim()}`
-      );
+      if (typeof result === 'string' || result.type === Mime.TEXT_XML) {
+        const parser = new DOMParser();
+        const xmlDoc = parser.parseFromString(typeof result === 'string' ? result : await result.text(), Mime.XML);
+        const errors = [...xmlDoc.querySelectorAll('ServiceException')].map(
+          (n: Element) => `Ошибка получения данных с сервера: ${n.innerHTML.trim()}`
+        );
 
-      return { ok: false, errors };
-    }
-  } else if (
-    layer.type === CrgLayerType.EXTERNAL_GEOSERVER ||
-    layer.type === CrgLayerType.EXTERNAL ||
-    layer.type === CrgLayerType.EXTERNAL_NSPD
-  ) {
-    if (!layer.errorText) {
-      return { ok: true };
-    }
-
-    if (!layer.dataSourceUri) {
-      return { ok: false, errors: ['Не указан dataSourceUri у слоя'] };
-    }
-
-    const url = new URL(layer.dataSourceUri);
-    url.searchParams.set('F', 'Image');
-    url.searchParams.set('FORMAT', 'PNG32');
-    url.searchParams.set('TRANSPARENT', 'true');
-    url.searchParams.set('LAYERS', layer.complexName);
-    url.searchParams.set('SIZE', '1024,1024');
-    url.searchParams.set('BBOX', '3740789.9457623847,5618140.688217526,3740809.055019456,5618159.797474598');
-    url.searchParams.set('bboxSR', '102100');
-    url.searchParams.set('imageSR', '102100');
-    url.searchParams.set('DPI', '360');
-
-    const errors = [layer.errorText];
-    try {
-      const response = await fetch(url);
-      if (!response.ok) {
         return { ok: false, errors };
       }
-    } catch {
-      return { ok: false, errors };
-    }
 
-    return { ok: true };
+      break;
+    }
+    case CrgLayerType.EXTERNAL_GEOSERVER:
+    case CrgLayerType.EXTERNAL: {
+      return await testExternalAndExternalGeoserver(layer);
+    }
+    case CrgLayerType.EXTERNAL_NSPD: {
+      return await testExternalNspd(layer);
+    }
+    // No default
   }
 
   return { ok: true };

@@ -273,7 +273,7 @@ export class AddLayerDialog extends Component<AddLayerDialogProps> {
           propertyType: PropertyType.STRING
         },
         {
-          name: 'tableName',
+          name: 'resourceId',
           title: 'Системное название слоя',
           required: true,
           propertyType: PropertyType.STRING

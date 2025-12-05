@@ -214,7 +214,7 @@ class MapService {
     this.throwIfMapNotCreated();
 
     const { resourceId, transparency = 100, dataSourceUri } = extLayer;
-    const layerOnMap = this.getLayerByName(resourceId);
+    const layerOnMap = this.getLayerByResourceId(resourceId);
     if (layerOnMap) {
       layerOnMap.setVisible(true);
       layerOnMap.setOpacity(transparency / 100);
@@ -261,7 +261,7 @@ class MapService {
     this.throwIfMapNotCreated();
 
     const { resourceId, transparency, dataSourceUri } = layer;
-    const layerOnMap = this.getLayerByName(layer.resourceId);
+    const layerOnMap = this.getLayerByResourceId(layer.resourceId);
     if (layerOnMap) {
       layerOnMap.setVisible(true);
       layerOnMap.setOpacity((transparency ?? 100) / 100);
@@ -296,7 +296,11 @@ class MapService {
     this.throwIfMapNotCreated();
 
     const { resourceId, transparency, dataSourceUri } = layer;
-    const layerOnMap = this.getLayerByName(resourceId);
+    if (!resourceId) {
+      throw new Error('Некорректный слой, не задан: resourceId');
+    }
+
+    const layerOnMap = this.getLayerByResourceId(resourceId);
     if (layerOnMap) {
       layerOnMap.setVisible(true);
       layerOnMap.setOpacity((transparency ?? 100) / 100);
@@ -406,7 +410,7 @@ class MapService {
 
     const props: LayerAdditionalProps = { crgInfo: { isUserLayer: true } };
 
-    const oldLayer = this.getLayerByName(complexName);
+    const oldLayer = this.getLayerByResourceId(complexName);
     if (oldLayer) {
       this.map.removeLayer(oldLayer);
     }
@@ -523,14 +527,11 @@ class MapService {
     mapStore.enrollLoadingFinish();
   }
 
-  /**
-   * @param complexLayerName Название слоя в формате 'workspace:layerName'
-   */
-  private getLayerByName(complexLayerName: string): ImageLayer<ImageSource> | TileLayer<TileSource> | undefined {
+  private getLayerByResourceId(resourceId: string): ImageLayer<ImageSource> | TileLayer<TileSource> | undefined {
     return this.getUserLayers().find(layer => {
       const source = layer.getSource() as TileWMS;
 
-      return source && (source.getParams() as CrgWmsParams).LAYERS === complexLayerName;
+      return source && (source.getParams() as CrgWmsParams).LAYERS === resourceId;
     });
   }
 
