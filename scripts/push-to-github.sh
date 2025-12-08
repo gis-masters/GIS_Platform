@@ -155,7 +155,50 @@ if ! git show-ref --verify --quiet "refs/heads/$BRANCH_NAME"; then
     exit 1
 fi
 
-# Пушим ветку
+# Получаем изменения с GitHub перед пушем
+echo -e "  ${BLUE}Получение изменений с GitHub...${NC}"
+if ! git fetch "$GITHUB_REMOTE_NAME" "$BRANCH_NAME" 2>&1; then
+    echo -e "  ${YELLOW}Предупреждение:${NC} ветка '$BRANCH_NAME' еще не существует на GitHub, создадим новую"
+fi
+
+# Проверяем, есть ли удаленная ветка
+if git show-ref --verify --quiet "refs/remotes/${GITHUB_REMOTE_NAME}/${BRANCH_NAME}"; then
+    echo -e "  ${BLUE}Ветка существует на GitHub, проверяем расхождения...${NC}"
+    
+    # Проверяем, есть ли локальные коммиты, которых нет на GitHub
+    LOCAL_COMMITS=$(git rev-list "${GITHUB_REMOTE_NAME}/${BRANCH_NAME}..${BRANCH_NAME}" 2>/dev/null | wc -l || echo "0")
+    REMOTE_COMMITS=$(git rev-list "${BRANCH_NAME}..${GITHUB_REMOTE_NAME}/${BRANCH_NAME}" 2>/dev/null | wc -l || echo "0")
+    
+    if [ "$REMOTE_COMMITS" -gt 0 ]; then
+        echo -e "  ${YELLOW}Обнаружены новые коммиты на GitHub (${REMOTE_COMMITS} коммитов)${NC}"
+        echo -e "  ${BLUE}Выполняем merge...${NC}"
+        
+        # Пытаемся сделать merge
+        if git merge "${GITHUB_REMOTE_NAME}/${BRANCH_NAME}" --no-edit 2>&1; then
+            echo -e "  ${GREEN}✓${NC} Изменения успешно объединены"
+        else
+            echo -e "  ${RED}Ошибка:${NC} не удалось автоматически объединить изменения" >&2
+            echo -e "  ${YELLOW}Возможные варианты:${NC}" >&2
+            echo -e "    1. Разрешите конфликты вручную и выполните:" >&2
+            echo -e "       ${BLUE}git merge --continue${NC}" >&2
+            echo -e "       ${BLUE}git push ${GITHUB_REMOTE_NAME} ${BRANCH_NAME}${NC}" >&2
+            echo -e "    2. Или используйте rebase:" >&2
+            echo -e "       ${BLUE}git rebase ${GITHUB_REMOTE_NAME}/${BRANCH_NAME}${NC}" >&2
+            echo -e "       ${BLUE}git push ${GITHUB_REMOTE_NAME} ${BRANCH_NAME}${NC}" >&2
+            echo -e "    3. Или отмените merge и используйте force push (не рекомендуется):" >&2
+            echo -e "       ${BLUE}git merge --abort${NC}" >&2
+            echo -e "       ${BLUE}git push ${GITHUB_REMOTE_NAME} ${BRANCH_NAME} --force${NC}" >&2
+            exit 1
+        fi
+    else
+        echo -e "  ${GREEN}✓${NC} Локальная ветка актуальна"
+    fi
+else
+    echo -e "  ${GREEN}✓${NC} Ветка не существует на GitHub, будет создана новая"
+fi
+
+# Пушим ветку без --force
+echo -e "  ${BLUE}Отправка ветки '${BRANCH_NAME}' в '${GITHUB_REMOTE_NAME}'...${NC}"
 if git push -u "$GITHUB_REMOTE_NAME" "$BRANCH_NAME" 2>&1; then
     echo -e "  ${GREEN}✓${NC} Ветка успешно отправлена"
 else
@@ -165,16 +208,19 @@ else
     echo -e "  ${YELLOW}Возможные причины:${NC}" >&2
     echo -e "    - Нет доступа к GitHub репозиторию" >&2
     echo -e "    - SSH ключ не настроен для GitHub" >&2
-    echo -e "    - Ветка уже существует на GitHub и требует force push" >&2
+    echo -e "    - Ветка на GitHub содержит коммиты, которых нет локально" >&2
+    echo -e "    - Требуется разрешение конфликтов (см. выше)" >&2
+    echo "" >&2
+    echo -e "  ${YELLOW}Если уверены, что нужно перезаписать историю:${NC}" >&2
+    echo -e "    ${BLUE}git push ${GITHUB_REMOTE_NAME} ${BRANCH_NAME} --force${NC}" >&2
     exit $EXIT_CODE
 fi
 
 echo ""
 echo -e "${GREEN}╔════════════════════════════════════════╗${NC}"
-echo -e "${GREEN}║${NC}      ${GREEN}✓${NC} ${BOLD}${GREEN}Синхронизация завершена!${NC}      ${GREEN}║${NC}"
+echo -e "${GREEN}║${NC}      ${GREEN}✓${NC} ${BOLD}${GREEN}Синхронизация завершена!  ${NC}      ${GREEN}║${NC}"
 echo -e "${GREEN}╚════════════════════════════════════════╝${NC}"
 echo ""
 echo -e "  ${BLUE}Ветка:${NC}              ${BOLD}$BRANCH_NAME${NC}"
 echo -e "  ${BLUE}Remote:${NC}             ${BOLD}$GITHUB_REMOTE_NAME${NC}"
 echo ""
-

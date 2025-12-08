@@ -101,7 +101,6 @@ fi
 
 echo ""
 echo -e "${GREEN}╔════════════════════════════════════════╗${NC}"
-echo -e "${GREEN}║${NC}      ${GREEN}✓${NC} ${BOLD}${GREEN}Публикация завершена!${NC}         ${GREEN}║${NC}"
+echo -e "${GREEN}║${NC}      ${GREEN}✓${NC} ${BOLD}${GREEN}Публикация завершена!  ${NC}         ${GREEN}║${NC}"
 echo -e "${GREEN}╚════════════════════════════════════════╝${NC}"
 echo ""
-
