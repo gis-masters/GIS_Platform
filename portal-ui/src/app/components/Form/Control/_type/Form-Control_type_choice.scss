@@ -9,3 +9,17 @@
     text-transform: none;
   }
 }
+
+.Form-ChoiceRenderValue_invalid {
+  font-style: italic;
+}
+
+.Form-ChoiceMenuItem_invalid {
+  .MuiListItemText-primary {
+    font-style: italic;
+  }
+}
+
+.Form-ChoiceChip_invalid {
+  font-style: italic;
+}

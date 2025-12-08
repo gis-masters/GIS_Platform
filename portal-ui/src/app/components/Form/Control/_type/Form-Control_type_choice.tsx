@@ -34,6 +34,7 @@ import '../../ChoiceRenderValueText/Form-ChoiceRenderValueText.scss';
 const cnFormChoiceMenuItem = cn('Form', 'ChoiceMenuItem');
 const cnFormChoiceRenderValue = cn('Form', 'ChoiceRenderValue');
 const cnFormChoiceRenderValueText = cn('Form', 'ChoiceRenderValueText');
+const cnFormChoiceChip = cn('Form', 'ChoiceChip');
 
 const EMPTY = '~~~empty_value~~~';
 const emptyTitle = 'Не выбрано';
@@ -100,7 +101,7 @@ class FormControlTypeChoice extends Component<FormControlProps> {
                   );
                 }
 
-                return <em>{emptyTitle}</em>;
+                return <span className={cnFormChoiceRenderValue({ invalid: true })}>{selected}</span>;
               }}
               variant={variant}
             >
@@ -120,6 +121,32 @@ class FormControlTypeChoice extends Component<FormControlProps> {
                   {item.endIcon}
                 </MenuItem>
               ))}
+
+              {/* Добавляем некорректное значение, если его нет в опциях */}
+              {!multiple &&
+                typeof value === 'string' &&
+                value !== EMPTY &&
+                !options.some(opt => String(opt.value) === String(value)) && (
+                  <MenuItem className={cnFormChoiceMenuItem({ invalid: true })} key={`invalid-${value}`} value={value}>
+                    <ListItemText>{value}</ListItemText>
+                  </MenuItem>
+                )}
+
+              {/* Добавляем некорректные значения для multiple режима */}
+              {multiple &&
+                Array.isArray(value) &&
+                value
+                  .filter(val => !options.some(opt => String(opt.value) === String(val)))
+                  .map(invalidVal => (
+                    <MenuItem
+                      className={cnFormChoiceMenuItem({ invalid: true })}
+                      key={`invalid-${invalidVal}`}
+                      value={invalidVal}
+                    >
+                      <Checkbox checked />
+                      <ListItemText>{invalidVal}</ListItemText>
+                    </MenuItem>
+                  ))}
             </Select>
 
             <FormErrors errors={errors} />
@@ -174,20 +201,24 @@ class FormControlTypeChoice extends Component<FormControlProps> {
       return null;
     }
 
-    const checkedOptions = options.filter(option => values?.includes(option.value as string));
-    const titles = checkedOptions.map(option => option.title);
+    const chips: ReactNode[] = [];
 
-    if (titles.length === 0) {
+    values.forEach(val => {
+      const option = options.find(opt => String(opt.value) === String(val));
+      if (option) {
+        chips.push(<Chip key={`chip-${val}`} label={option.title} size='small' />);
+      } else {
+        chips.push(
+          <Chip key={`chip-${val}`} label={String(val)} size='small' className={cnFormChoiceChip({ invalid: true })} />
+        );
+      }
+    });
+
+    if (chips.length === 0) {
       return null;
     }
 
-    return (
-      <Box className={cnFormChoiceMenuItem({ type: 'selected' })}>
-        {titles.map((value, i) => (
-          <Chip key={i} label={value} size='small' />
-        ))}
-      </Box>
-    );
+    return <Box className={cnFormChoiceMenuItem({ type: 'selected' })}>{chips}</Box>;
   }
 
   @boundMethod

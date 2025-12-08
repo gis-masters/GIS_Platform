@@ -187,7 +187,25 @@ class EditFeatureBlock extends Block {
   }
 
   async checkFormControlFieldValue(title: string, value: string): Promise<boolean> {
-    const inputBlock = await this.getMuiInputBlockElement(title);
+    const $formField = await this.getFeatureEditField(title);
+    const $control = await $formField.$('.Form-Control').getElement();
+
+    // Проверяем, является ли поле Select (choice)
+    const hasSelect = await $control
+      .$('.MuiSelect-select')
+      .isExisting()
+      .catch(() => false);
+
+    if (hasSelect) {
+      // Для Select получаем текст из .MuiSelect-select
+      const $selectInput = await $control.$('.MuiSelect-select').getElement();
+      const selectValue = await $selectInput.getText();
+
+      return selectValue.trim() === value;
+    }
+
+    // Для обычных input используем getValue()
+    const inputBlock = new MuiInputBlock($control);
     const inputValue = await inputBlock.getValue();
 
     return inputValue === value;

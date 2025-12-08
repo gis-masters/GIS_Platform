@@ -37,6 +37,7 @@ import { polarStar } from './testFeatures/polarStar';
 import { singleFeature } from './testFeatures/singleFeature';
 import { theLetterC } from './testFeatures/theLetterC';
 import { ursaMajor } from './testFeatures/ursaMajor';
+import { incorrectChoiceValue } from './testFeatures/incorrectChoiceValue';
 
 const KEY = 'тестовые данные';
 
@@ -127,6 +128,9 @@ export async function getTestFeatures(key: string, schema?: Schema): Promise<New
     }
     case 'небольшой треугольник': {
       return smallTriangle;
+    }
+    case 'не корректное value для поля типа choice': {
+      return incorrectChoiceValue;
     }
     case 'мультиполигон': {
       return multiPolygon;
