@@ -1,3 +1,28 @@
+## 🛠 Быстрый старт
+```bash
+  wget -qO installGisMastersApp.sh https://raw.githubusercontent.com/gis-masters/GIS_Platform_installer/main/installGisMastersApp.sh && chmod +x installGisMastersApp.sh && script -c "./installGisMastersApp.sh" installGisMastersAppLog.txt
+```
+
+## 🛠 Системные требования
+<details open>
+<summary><strong>Рекомендованные</strong></summary>
+
+- **ОС**: Linux Ubuntu/Debian 24
+- **Процессор**: Intel Core i7-13700K
+- **Оперативная память: 64 GB
+- **SSD NVMe**: 1 TB
+</details>
+
+<details>
+<summary><strong>Минимальные</strong></summary>
+
+- **ОС**: Linux Ubuntu/Debian 20
+- **Процессор**: Intel Core i5-12400F
+- **Оперативная память: 32 GB
+- **Место на диске**: 20 GB (без учёта веса ОС, docker, файлов пользователей)
+
+</details>
+
 # Памятка по файлу `.env.example`
 
 В этом документе описаны все переменные окружения, необходимые для корректной работы приложения. Не добавляйте и не удаляйте переменные без явной необходимости — следуйте инструкциям ниже.

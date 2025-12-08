@@ -23,19 +23,36 @@ fi
 # Actions
 printHeader "Run CRG GIS"
 
-while [ -n "$1" ]; do
+MODE="dev"  # режим по умолчанию
+
+#./run.sh
+#./run.sh -clear --MODE dev
+while [ "$#" -gt 0 ]; do
+  if [ -z "$1" ]; then
+    shift
+    continue
+  fi
+
   case "$1" in
-  -clear)
-    printHeader "CLEAR DB"
-    export RECREATE_DATADIR="True"
-    ;;
-  *)
-    printError "unknown options"
-    exit
-    ;;
+    -clear)
+      printHeader "CLEAR DB"
+      export RECREATE_DATADIR="True"
+      ;;
+    --name)
+      MODE="$2"
+      shift 2
+      continue
+      ;;
+    *)
+      printError "unknown options: $1"
+      return 1
+      ;;
   esac
+
   shift
 done
+
+
 
 printHeader "Init migrations"
 export GEOSERVER_DATA_DIR=${GEOSERVER_DATA_DIR:-/opt/crg/data/geoserver}
@@ -56,13 +73,21 @@ echo "#👻👻👻👻👻👻👻👻👻👻👻👻👻👻👻👻👻👻�
 popd || exit
 
 printHeader "Docker compose UP"
-docker compose -f ../docker-compose.dev.yml \
--f ../coreApplication.yml \
--f ../openSources.yml \
--f ../monitoring.yml \
--f ../S3MinioForTests.yml \
--f ../gisogdIntegrationSed.yml \
--f ../gisogdRfService.yml \
---env-file ../.env  up -d
+if [ "$MODE" = "dev" ]; then
+    printHeader "Docker compose UP (dev)"
+    docker compose -f ../docker-compose.dev.yml \
+        -f ../coreApplication.yml \
+        -f ../openSources.yml \
+        -f ../monitoring.yml \
+        -f ../S3MinioForTests.yml \
+        -f ../gisogdIntegrationSed.yml \
+        -f ../gisogdRfService.yml \
+        --env-file ../.env up -d
+else
+    printHeader "Docker compose UP (${MODE})"
+    docker compose -f ../coreApplication.yml \
+        -f ../openSources.yml \
+        --env-file ../.env up -d
+fi
 
 ./wait.sh
