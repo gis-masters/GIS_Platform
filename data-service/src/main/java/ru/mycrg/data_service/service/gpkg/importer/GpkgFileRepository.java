@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.sqlite.SQLiteErrorCode.SQLITE_NOTADB;
-import static ru.mycrg.data_service.service.gpkg.export.GpkgWriter.GPKG_STYLE_LAYER_TABLE;
+import static ru.mycrg.data_service.service.gpkg.export.tables.LayerStyleWriter.GPKG_STYLE_LAYER_TABLE;
 
 @Repository
 public class GpkgFileRepository {

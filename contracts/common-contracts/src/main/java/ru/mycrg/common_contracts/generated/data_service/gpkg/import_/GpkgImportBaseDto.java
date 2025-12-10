@@ -1,4 +1,4 @@
-package ru.mycrg.common_contracts.generated.data_service.gpkg;
+package ru.mycrg.common_contracts.generated.data_service.gpkg.import_;
 
 import java.io.Serializable;
 import java.util.ArrayList;

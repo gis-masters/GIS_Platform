@@ -4,16 +4,16 @@ import ru.mycrg.data_service_contract.dto.ExportResourceModel;
 import ru.mycrg.gis_service_contract.dto.LayerProjection;
 
 import java.io.Serializable;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 public class GpkgAppendingData implements Serializable {
 
-    private List<ExportResourceModel> resourceProjections = new LinkedList<>();
+    private List<ExportResourceModel> resourceProjections = new ArrayList<>();
 
-    private List<StyleWithIcons> stylesAndSvgs = new LinkedList<>();
+    private List<StyleWithIcons> stylesAndSvgs = new ArrayList<>();
 
-    private List<LayerProjection> layerProjections = new LinkedList<>();
+    private List<LayerProjection> layerProjections = new ArrayList<>();
 
     public GpkgAppendingData() {
         //req
@@ -28,7 +28,7 @@ public class GpkgAppendingData implements Serializable {
     }
 
     public void setResourceProjections(List<ExportResourceModel> resourceProjections) {
-        this.resourceProjections = resourceProjections != null ? resourceProjections : new LinkedList<>();
+        this.resourceProjections = resourceProjections != null ? resourceProjections : new ArrayList<>();
     }
 
     public List<StyleWithIcons> getStylesAndSvgs() {
@@ -36,7 +36,7 @@ public class GpkgAppendingData implements Serializable {
     }
 
     public void setStylesAndSvgs(List<StyleWithIcons> stylesAndSvgs) {
-        this.stylesAndSvgs = stylesAndSvgs != null ? stylesAndSvgs : new LinkedList<>();
+        this.stylesAndSvgs = stylesAndSvgs != null ? stylesAndSvgs : new ArrayList<>();
     }
 
     public List<LayerProjection> getLayerProjections() {
@@ -44,6 +44,6 @@ public class GpkgAppendingData implements Serializable {
     }
 
     public void setLayerProjections(List<LayerProjection> layerProjections) {
-        this.layerProjections = layerProjections != null ? layerProjections : new LinkedList<>();
+        this.layerProjections = layerProjections != null ? layerProjections : new ArrayList<>();
     }
 }

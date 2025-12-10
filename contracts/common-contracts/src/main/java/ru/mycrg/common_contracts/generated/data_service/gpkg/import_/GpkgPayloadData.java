@@ -1,4 +1,4 @@
-package ru.mycrg.common_contracts.generated.data_service.gpkg;
+package ru.mycrg.common_contracts.generated.data_service.gpkg.import_;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -13,6 +13,8 @@ public class GpkgPayloadData implements Serializable {
     private GpkgWrapperImportReport wrapperImportReport;
 
     private List<GpkgImportedTable> tables = new ArrayList<>();
+
+    private List<GpkgImportedFile> files = new ArrayList<>();
 
     private List<GpkgImportedStyles> styles = new ArrayList<>();
 
@@ -65,6 +67,18 @@ public class GpkgPayloadData implements Serializable {
         return styles;
     }
 
+    public List<GpkgImportedFile> getFiles() {
+        if (files == null) {
+            files = new ArrayList<>();
+        }
+
+        return files;
+    }
+
+    public void setFiles(List<GpkgImportedFile> files) {
+        this.files = files != null ? files : new ArrayList<>();
+    }
+
     public void setStyles(List<GpkgImportedStyles> styles) {
         this.styles = styles != null ? styles : new ArrayList<>();
     }
@@ -88,6 +102,7 @@ public class GpkgPayloadData implements Serializable {
                 "\"project\":" + (project == null ? "null" : project) + ", " +
                 "\"wrapperImportReport\":" + (wrapperImportReport == null ? "null" : wrapperImportReport) + ", " +
                 "\"tables\":" + (tables == null ? "null" : tables + ", ") +
+                "\"files\":" + (files == null ? "null" : files + ", ") +
                 "\"styles\":" + (styles == null ? "null" : styles + ", ") +
                 "\"layers\":" + (layers == null ? "null" : layers) +
                 "}";

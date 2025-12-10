@@ -8,7 +8,6 @@ import org.springframework.core.env.Environment;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StopWatch;
 import org.springframework.web.multipart.MultipartFile;
 import ru.mycrg.auth_facade.IAuthenticationFacade;
 import ru.mycrg.data_service.exceptions.DataServiceException;
@@ -19,6 +18,7 @@ import ru.mycrg.data_service.service.storage.exceptions.StorageException;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.nio.file.*;
@@ -106,10 +106,10 @@ public class FileStorageService {
      * Перемещение файла.
      * <p>
      *
-     * @param sourcePath Путь откуда перемещаем файл
-     * @param targetPath Путь куда перемещаем файл
-     *
+     * @param sourcePath     Путь откуда перемещаем файл
+     * @param targetPath     Путь куда перемещаем файл
      * @param organizationId
+     *
      * @throws DataServiceException в случае если не удается переместить файл
      */
     public Path moveToMainStorage(Path sourcePath, Path targetPath, Long organizationId) {
@@ -161,9 +161,11 @@ public class FileStorageService {
             }
 
             log.error("В хранилище exportStorage, не найден файл: {}", fileName);
+
             throw new NotFoundException(fileName);
         } catch (MalformedURLException e) {
             log.error("В хранилище exportStorage, не найден ресурс: {}", fileName);
+
             throw new NotFoundException(fileName);
         }
     }
@@ -182,6 +184,13 @@ public class FileStorageService {
         }
     }
 
+    public byte[] loadFileLikeByteArray(String path) throws Exception {
+        Resource resource = loadFromMainStorage(path);
+        try (InputStream is = resource.getInputStream()) {
+            return is.readAllBytes();
+        }
+    }
+
     public File loadFromKptStorage(String fileName) throws IOException {
         Path filePath = kptStoragePath.resolve(fileName).normalize();
         Resource resource = new UrlResource(filePath.toUri());
@@ -189,6 +198,7 @@ public class FileStorageService {
             log.debug("Успешно нашли КПТ архив");
         } else {
             log.error("Ресурс {} не существует", kptStoragePath);
+
             throw new NotFoundException(kptStoragePath);
         }
 

@@ -1,6 +1,6 @@
 package ru.mycrg.data_service_contract.queue.request.gpkg;
 
-import ru.mycrg.common_contracts.generated.data_service.gpkg.GpkgImportReport;
+import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgImportReport;
 import ru.mycrg.messagebus_contract.events.DefaultMessageBusRequestEvent;
 
 import java.io.Serializable;

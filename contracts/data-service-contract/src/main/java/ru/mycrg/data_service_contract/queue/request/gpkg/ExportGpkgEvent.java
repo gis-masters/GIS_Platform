@@ -1,11 +1,10 @@
 package ru.mycrg.data_service_contract.queue.request.gpkg;
 
-import ru.mycrg.common_contracts.generated.gpkg.GpkgExportDetailsModel;
-import ru.mycrg.common_contracts.generated.gpkg.ExportGpkgPayload;
+import ru.mycrg.common_contracts.generated.data_service.gpkg.export.ExportGpkgPayload;
+import ru.mycrg.common_contracts.generated.data_service.gpkg.export.GpkgExportDetailsModel;
 import ru.mycrg.data_service_contract.dto.gpkg.GpkgAppendingData;
 import ru.mycrg.messagebus_contract.events.DefaultMessageBusRequestEvent;
 
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.UUID;
 
@@ -13,10 +12,8 @@ import static ru.mycrg.messagebus_contract.MessageBusProperties.DATA_TO_INTEGRAT
 
 public class ExportGpkgEvent extends DefaultMessageBusRequestEvent implements Serializable {
 
-    @NotNull
     private Long processId;
     private String dbName;
-    @NotNull
     private String token;
     private ExportGpkgPayload payload;
     private GpkgAppendingData gpkgAppendingData;

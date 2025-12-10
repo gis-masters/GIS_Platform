@@ -12,8 +12,8 @@ import ru.mycrg.acceptance.auth_service.AuthorizationBase;
 import ru.mycrg.acceptance.data_service.dto.FileDescriptionModel;
 import ru.mycrg.auth_service_contract.dto.UserCreateDto;
 import ru.mycrg.common_contracts.generated.data_service.gpkg.GpkgFileMetadata;
-import ru.mycrg.common_contracts.generated.data_service.gpkg.GpkgTableType;
-import ru.mycrg.common_contracts.generated.data_service.gpkg.GpkgTablesData;
+import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgTableType;
+import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgTablesData;
 
 import java.io.File;
 import java.io.IOException;

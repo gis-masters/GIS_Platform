@@ -1,4 +1,4 @@
-package ru.mycrg.common_contracts.generated.gpkg;
+package ru.mycrg.common_contracts.generated.data_service.gpkg.export;
 
 import java.io.Serializable;
 

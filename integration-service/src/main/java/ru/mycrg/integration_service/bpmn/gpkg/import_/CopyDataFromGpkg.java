@@ -5,7 +5,7 @@ import org.camunda.bpm.engine.delegate.JavaDelegate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import ru.mycrg.common_contracts.generated.data_service.gpkg.GpkgTablesData;
+import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgTablesData;
 import ru.mycrg.data_service_contract.dto.ResourceQualifierDto;
 import ru.mycrg.data_service_contract.queue.request.gpkg.ImportGpkgCopyDataEvent;
 import ru.mycrg.data_service_contract.queue.request.gpkg.ImportGpkgEvent;

@@ -67,11 +67,6 @@ public class ReportStepsDefinitions extends BaseStepsDefinitions {
         currentFileId = currentReportFileId;
     }
 
-    @When("я делаю запрос для создание отчёта {string}")
-    public void postReportWithCondition(String condition) {
-        postReport(condition);
-    }
-
     @When("пользователь скачивает текущий отчёт")
     public void downloadCurrentReport() {
         assertNotNull("В контексте сценария должен быть ID отчёта!", currentReportFileId);
@@ -93,11 +88,6 @@ public class ReportStepsDefinitions extends BaseStepsDefinitions {
     @Then("отчёт соответствует формату {string}")
     public void chekReportFormat(String expectedFormat) {
         assertNotNull(expectedFormat, response.jsonPath().getString("extension"));
-    }
-
-    @Then("запрос на создание отчёта отклонён с ошибкой {string}")
-    public void chekErrorMsg(String errorMessage) {
-        assertNotNull(errorMessage, response.jsonPath().getString("message"));
     }
 
     @Then("атрибутами отчёта как файла соответствуют ожиданиям")

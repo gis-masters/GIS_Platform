@@ -2,7 +2,7 @@ package ru.mycrg.data_service.service.gpkg.importer.mappers;
 
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
-import ru.mycrg.common_contracts.generated.data_service.gpkg.GpkgImportedStyles;
+import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgImportedStyles;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

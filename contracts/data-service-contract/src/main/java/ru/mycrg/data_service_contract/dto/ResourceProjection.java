@@ -26,6 +26,10 @@ public class ResourceProjection implements Serializable {
         this.details = details;
     }
 
+    public ResourceProjection(SchemaDto schema, String schemaName, String tableName) {
+        this(null, schemaName, tableName, schema, null, "objectCollection");
+    }
+
     public ResourceProjection(String dbName, String schemaName, String tableName) {
         this(dbName, schemaName, tableName, null, null, "objectCollection");
     }

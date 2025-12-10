@@ -4,8 +4,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
-import ru.mycrg.common_contracts.generated.data_service.gpkg.GpkgTableType;
-import ru.mycrg.common_contracts.generated.data_service.gpkg.GpkgTablesData;
+import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgTableType;
+import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgTablesData;
 import ru.mycrg.data_service.entity.File;
 import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
@@ -19,8 +19,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import static ru.mycrg.common_contracts.generated.data_service.gpkg.GpkgTableType.CRG_DATA_TABLE;
-import static ru.mycrg.common_contracts.generated.data_service.gpkg.GpkgTableType.VECTOR_DATA_TABLE;
+import static ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgTableType.CRG_DATA_TABLE;
+import static ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgTableType.VECTOR_DATA_TABLE;
 
 @Service
 public class GpkgReaderService {

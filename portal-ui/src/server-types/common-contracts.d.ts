@@ -58,6 +58,16 @@ export interface GpkgFileMetadata extends FileMetadata<GpkgTablesData[]> {
   payload: GpkgTablesData[];
 }
 
+export interface ExportGpkgPayload extends Serializable {
+  type: GpkgExportType;
+  payload: any;
+}
+
+export interface GpkgExportDetailsModel extends Serializable {
+  pathToGpkgFile: string;
+  messages: string[];
+}
+
 export interface GpkgImportBaseDto extends Serializable {
   title: string;
   status: GpkgProcessStatus;
@@ -74,6 +84,13 @@ export interface GpkgImportReport extends GpkgImportBaseDto, Serializable {
   filePath: string;
   fileTitle: string;
   payload: GpkgPayloadData;
+}
+
+export interface GpkgImportedFile extends GpkgImportBaseDto, Serializable {
+  newId: string;
+  oldId: string;
+  path: string;
+  resourceQualifier: any;
 }
 
 export interface GpkgImportedLayer extends GpkgImportBaseDto, Serializable {
@@ -106,6 +123,7 @@ export interface GpkgPayloadData extends Serializable {
   project: GpkgImportDestinationProject;
   wrapperImportReport: GpkgWrapperImportReport;
   tables: GpkgImportedTable[];
+  files: GpkgImportedFile[];
   styles: GpkgImportedStyles[];
   layers: GpkgImportedLayer[];
 }
@@ -167,16 +185,6 @@ export interface ProjectUpdateDto {
   description: string;
 }
 
-export interface ExportGpkgPayload extends Serializable {
-  type: GpkgExportType;
-  payload: any;
-}
-
-export interface GpkgExportDetailsModel extends Serializable {
-  pathToGpkgFile: string;
-  messages: string[];
-}
-
 export interface Page {
   size: number;
   totalElements: number;
@@ -233,6 +241,8 @@ export interface Settings {
   tags: string[];
 }
 
+export type GpkgExportType = 'PROJECT' | 'LAYER' | 'TABLE';
+
 export type GpkgProcessStatus = 'ACTIVE' | 'COMPLETED' | 'ERROR';
 
 export type GpkgTableType = 'VECTOR_DATA_TABLE' | 'CRG_DATA_TABLE';
@@ -249,7 +259,5 @@ export type LayerType =
   | 'EXTERNAL'
   | 'EXTERNAL_NSPD'
   | 'EXTERNAL_GEOSERVER';
-
-export type GpkgExportType = 'PROJECT' | 'LAYER' | 'TABLE';
 
 export type ReportOutputFormat = 'PDF' | 'DOCX';

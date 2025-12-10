@@ -5,7 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
-import ru.mycrg.common_contracts.generated.data_service.gpkg.GpkgImportedStyles;
+import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgImportedStyles;
 import ru.mycrg.data_service.dao.GpkgRepositoryDetached;
 import ru.mycrg.data_service.dao.config.DatasourceFactory;
 import ru.mycrg.data_service.dto.TableCreateDto;

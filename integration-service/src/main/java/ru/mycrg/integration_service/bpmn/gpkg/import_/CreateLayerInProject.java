@@ -9,10 +9,10 @@ import org.camunda.bpm.engine.delegate.JavaDelegate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import ru.mycrg.common_contracts.generated.data_service.gpkg.GpkgImportReport;
-import ru.mycrg.common_contracts.generated.data_service.gpkg.GpkgImportedLayer;
-import ru.mycrg.common_contracts.generated.data_service.gpkg.GpkgPayloadData;
-import ru.mycrg.common_contracts.generated.data_service.gpkg.GpkgTablesData;
+import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgImportReport;
+import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgImportedLayer;
+import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgPayloadData;
+import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgTablesData;
 import ru.mycrg.data_service_contract.dto.PatchProcess;
 import ru.mycrg.data_service_contract.queue.request.UpdateProcessEvent;
 import ru.mycrg.data_service_contract.queue.request.gpkg.ImportGpkgAckInfoBackwardEvent;
@@ -26,8 +26,8 @@ import ru.mycrg.messagebus_contract.IMessageBusProducer;
 
 import java.util.List;
 
-import static ru.mycrg.common_contracts.generated.data_service.gpkg.GpkgProcessStatus.ACTIVE;
-import static ru.mycrg.common_contracts.generated.data_service.gpkg.GpkgProcessStatus.COMPLETED;
+import static ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgProcessStatus.ACTIVE;
+import static ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgProcessStatus.COMPLETED;
 import static ru.mycrg.common_contracts.generated.gis_service.LayerType.VECTOR;
 import static ru.mycrg.data_service_contract.enums.ProcessStatus.TASK_DONE;
 import static ru.mycrg.integration_service.bpmn.BaseHttpService.crgHttpClient;

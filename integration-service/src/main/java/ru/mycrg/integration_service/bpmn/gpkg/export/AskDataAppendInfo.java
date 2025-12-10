@@ -5,15 +5,14 @@ import org.camunda.bpm.engine.delegate.JavaDelegate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import ru.mycrg.common_contracts.generated.data_service.gpkg.export.ExportGpkgPayload;
 import ru.mycrg.data_service_contract.dto.ExportResourceModel;
 import ru.mycrg.data_service_contract.dto.gpkg.GpkgAppendingData;
-import ru.mycrg.common_contracts.generated.gpkg.ExportGpkgPayload;
 import ru.mycrg.data_service_contract.queue.request.gpkg.AppendGpkgInfoEvent;
 import ru.mycrg.data_service_contract.queue.request.gpkg.ExportGpkgEvent;
 import ru.mycrg.messagebus_contract.IMessageBusProducer;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static ru.mycrg.integration_service.bpmn.IJavaDelegateProperties.*;
 
@@ -52,7 +51,6 @@ public class AskDataAppendInfo implements JavaDelegate {
 
         ExportGpkgPayload subPayload = (ExportGpkgPayload) delegateExecution.getVariable(EVENT_SUB_PAYLOAD_NAME);
         List<ExportResourceModel> resources = (List<ExportResourceModel>) subPayload.getPayload();
-        resources = resources.stream().distinct().collect(Collectors.toList());
 
         GpkgAppendingData gpkgData = event.getGpkgAppendingData();
         if (gpkgData == null) {
@@ -68,6 +66,6 @@ public class AskDataAppendInfo implements JavaDelegate {
 
         messageBus.produce(new AppendGpkgInfoEvent(event.getDbName(), businessKey, pathToGpkg, gpkgData));
 
-        log.debug("GpkgAppendingData была: {}", gpkgData);
+        log.debug("Запрос на добавление доп информации в gpkg был направлен.");
     }
 }

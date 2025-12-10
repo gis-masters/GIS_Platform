@@ -10,8 +10,8 @@ import ru.mycrg.data_service.service.export.ExportType;
 import ru.mycrg.data_service.service.export.Exporter;
 import ru.mycrg.data_service.service.processes.ProcessService;
 import ru.mycrg.data_service_contract.dto.ExportRequestModel;
-import ru.mycrg.common_contracts.generated.gpkg.ExportGpkgPayload;
-import ru.mycrg.common_contracts.generated.gpkg.GpkgExportType;
+import ru.mycrg.common_contracts.generated.data_service.gpkg.export.ExportGpkgPayload;
+import ru.mycrg.common_contracts.generated.data_service.gpkg.export.GpkgExportType;
 import ru.mycrg.data_service_contract.queue.request.gpkg.ExportGpkgEvent;
 import ru.mycrg.messagebus_contract.IMessageBusProducer;
 

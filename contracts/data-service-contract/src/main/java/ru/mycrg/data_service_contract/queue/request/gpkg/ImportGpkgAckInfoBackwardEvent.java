@@ -1,6 +1,6 @@
 package ru.mycrg.data_service_contract.queue.request.gpkg;
 
-import ru.mycrg.common_contracts.generated.data_service.gpkg.GpkgImportedStyles;
+import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgImportedStyles;
 import ru.mycrg.data_service_contract.dto.ResourceProjection;
 import ru.mycrg.data_service_contract.enums.ProcessStatus;
 import ru.mycrg.gis_service_contract.dto.LayerProjection;

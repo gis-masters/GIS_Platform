@@ -1,6 +1,7 @@
 package ru.mycrg.common_contracts.generated.data_service.gpkg;
 
 import ru.mycrg.common_contracts.generated.data_service.FileMetadata;
+import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgTablesData;
 
 import java.util.List;
 import java.util.UUID;

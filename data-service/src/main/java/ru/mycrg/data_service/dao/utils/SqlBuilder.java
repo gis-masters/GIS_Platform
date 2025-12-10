@@ -514,6 +514,30 @@ public class SqlBuilder {
                              schemaName + "." + targetTable, idColumnName, otherProps, targetTable);
     }
 
+    /**
+     * Простроит запрос который, найдёт все уникальные UUID всех файлов во всех записях
+     *
+     * @param fileProps - все колонки которые гипотетически могут содержать файлы
+     */
+    public static String buildFilesIdFindInRecordsQuery(String schemaName, String tableName, List<String> fileProps) {
+        StringBuilder query = new StringBuilder();
+        query.append("WITH all_ids AS (");
+
+        for (int i = 0; i < fileProps.size(); i++) {
+            if (i > 0) {
+                query.append(" UNION ALL ");
+            }
+            String fileProp = fileProps.get(i);
+            query.append("SELECT (elem->>'id')::uuid AS id FROM ")
+                 .append(schemaName).append(".").append(tableName).append(" t ")
+                 .append("CROSS JOIN LATERAL jsonb_array_elements(t.").append(fileProp).append("::jsonb) elem");
+        }
+
+        query.append(") SELECT DISTINCT id FROM all_ids");
+
+        return query.toString();
+    }
+
     @NotNull
     public static String generatePropertySqlString(@NotNull SimplePropertyDto attrDescription) {
         Object defaultValue = attrDescription.getDefaultValue();

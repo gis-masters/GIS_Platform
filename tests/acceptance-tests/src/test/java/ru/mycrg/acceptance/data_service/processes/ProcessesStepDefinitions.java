@@ -9,10 +9,10 @@ import ru.mycrg.acceptance.BaseStepsDefinitions;
 import ru.mycrg.acceptance.auth_service.AuthorizationBase;
 import ru.mycrg.acceptance.data_service.TestFilesManager;
 import ru.mycrg.acceptance.data_service.dto.FileDescriptionModel;
-import ru.mycrg.common_contracts.generated.gpkg.GpkgExportDetailsModel;
+import ru.mycrg.common_contracts.generated.data_service.gpkg.export.GpkgExportDetailsModel;
 import ru.mycrg.data_service_contract.dto.ExportRequestModel;
 import ru.mycrg.data_service_contract.dto.ExportResourceModel;
-import ru.mycrg.common_contracts.generated.gpkg.ExportGpkgPayload;
+import ru.mycrg.common_contracts.generated.data_service.gpkg.export.ExportGpkgPayload;
 import ru.mycrg.data_service_contract.enums.ProcessStatus;
 import ru.mycrg.data_service_contract.enums.ProcessType;
 
@@ -30,7 +30,7 @@ import static ru.mycrg.acceptance.data_service.FilesStepDefinitions.*;
 import static ru.mycrg.acceptance.data_service.datasets.DatasetsStepsDefinitions.currentDatasetIdentifier;
 import static ru.mycrg.acceptance.data_service.tables.TablesStepsDefinitions.*;
 import static ru.mycrg.acceptance.gis_service.ProjectStepsDefinitions.projectId;
-import static ru.mycrg.common_contracts.generated.gpkg.GpkgExportType.*;
+import static ru.mycrg.common_contracts.generated.data_service.gpkg.export.GpkgExportType.*;
 import static ru.mycrg.data_service_contract.enums.ProcessStatus.DONE;
 import static ru.mycrg.data_service_contract.enums.ProcessType.IMPORT;
 

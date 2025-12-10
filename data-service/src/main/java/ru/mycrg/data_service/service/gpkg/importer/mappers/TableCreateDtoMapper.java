@@ -7,7 +7,7 @@ import ru.mycrg.data_service.dto.TableCreateDto;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import static ru.mycrg.data_service.service.gpkg.export.GpkgWriter.*;
+import static ru.mycrg.data_service.service.gpkg.export.tables.VectorTableInfoWriter.*;
 
 /**
  * RowMapper для маппинга результатов запроса в TableCreateDto. Используется для извлечения информации о таблицах из

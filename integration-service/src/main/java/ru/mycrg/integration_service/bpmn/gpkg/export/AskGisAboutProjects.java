@@ -5,9 +5,9 @@ import org.camunda.bpm.engine.delegate.JavaDelegate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import ru.mycrg.common_contracts.generated.gpkg.ExportGpkgPayload;
+import ru.mycrg.common_contracts.generated.data_service.gpkg.export.ExportGpkgPayload;
 
-import static ru.mycrg.common_contracts.generated.gpkg.GpkgExportType.PROJECT;
+import static ru.mycrg.common_contracts.generated.data_service.gpkg.export.GpkgExportType.PROJECT;
 import static ru.mycrg.integration_service.bpmn.IJavaDelegateProperties.CHECK_STATUS_VAR_NAME;
 import static ru.mycrg.integration_service.bpmn.IJavaDelegateProperties.EVENT_SUB_PAYLOAD_NAME;
 

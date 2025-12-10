@@ -4,7 +4,7 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 import ru.mycrg.common_contracts.generated.data_service.FileMetadata;
 import ru.mycrg.common_contracts.generated.data_service.gpkg.GpkgFileMetadata;
-import ru.mycrg.common_contracts.generated.data_service.gpkg.GpkgTablesData;
+import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgTablesData;
 import ru.mycrg.data_service.entity.File;
 import ru.mycrg.data_service.service.gpkg.importer.GpkgReaderService;
 

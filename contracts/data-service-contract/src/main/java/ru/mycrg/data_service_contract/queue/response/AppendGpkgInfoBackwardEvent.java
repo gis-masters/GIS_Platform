@@ -7,26 +7,26 @@ import java.util.UUID;
 
 import static ru.mycrg.messagebus_contract.MessageBusProperties.DATA_TO_INTEGRATION_QUEUE;
 
-public class AppendGpkgBackwardEvent extends DefaultMessageBusRequestEvent {
+public class AppendGpkgInfoBackwardEvent extends DefaultMessageBusRequestEvent {
 
     private String businessKey;
     private ProcessStatus status;
-    private Exception errorMsg;
+    private String errorMsg;
 
-    public AppendGpkgBackwardEvent() {
+    public AppendGpkgInfoBackwardEvent() {
         super();
     }
 
-    public AppendGpkgBackwardEvent(String businessKey, ProcessStatus status) {
+    public AppendGpkgInfoBackwardEvent(String businessKey, ProcessStatus status) {
         super(UUID.randomUUID(), DATA_TO_INTEGRATION_QUEUE);
 
         this.businessKey = businessKey;
         this.status = status;
     }
 
-    public AppendGpkgBackwardEvent(String businessKey,
-                                   ProcessStatus status,
-                                   Exception errorMsg) {
+    public AppendGpkgInfoBackwardEvent(String businessKey,
+                                       ProcessStatus status,
+                                       String errorMsg) {
         super(UUID.randomUUID(), DATA_TO_INTEGRATION_QUEUE);
 
         this.businessKey = businessKey;
@@ -50,11 +50,11 @@ public class AppendGpkgBackwardEvent extends DefaultMessageBusRequestEvent {
         this.status = status;
     }
 
-    public Exception getErrorMsg() {
+    public String getErrorMsg() {
         return errorMsg;
     }
 
-    public void setErrorMsg(Exception errorMsg) {
+    public void setErrorMsg(String errorMsg) {
         this.errorMsg = errorMsg;
     }
 }

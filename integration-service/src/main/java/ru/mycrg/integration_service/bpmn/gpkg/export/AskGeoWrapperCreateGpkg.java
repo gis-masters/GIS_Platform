@@ -8,13 +8,12 @@ import org.springframework.stereotype.Service;
 import ru.mycrg.data_service_contract.dto.ExportProcessModel;
 import ru.mycrg.data_service_contract.dto.ExportResourceModel;
 import ru.mycrg.data_service_contract.dto.ResourceProjection;
-import ru.mycrg.common_contracts.generated.gpkg.ExportGpkgPayload;
+import ru.mycrg.common_contracts.generated.data_service.gpkg.export.ExportGpkgPayload;
 import ru.mycrg.data_service_contract.queue.request.gpkg.BuildGpkgEvent;
 import ru.mycrg.messagebus_contract.IMessageBusProducer;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static ru.mycrg.integration_service.bpmn.IJavaDelegateProperties.*;
 
@@ -48,7 +47,6 @@ public class AskGeoWrapperCreateGpkg implements JavaDelegate {
 
         ExportGpkgPayload subPayload = (ExportGpkgPayload) delegateExecution.getVariable(EVENT_SUB_PAYLOAD_NAME);
         List<ExportResourceModel> resources = (List<ExportResourceModel>) subPayload.getPayload();
-        resources = resources.stream().distinct().collect(Collectors.toList());
 
         String dbName = (String) delegateExecution.getVariable(DB_NAME);
         produceGeoWrapperEvent(resources, businessKey, dbName);
