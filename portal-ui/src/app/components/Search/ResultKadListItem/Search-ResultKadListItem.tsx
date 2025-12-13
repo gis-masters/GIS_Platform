@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
-import { IconButton, ListItem, ListItemSecondaryAction, ListItemText } from '@mui/material';
+import { ListItem, ListItemSecondaryAction, ListItemText } from '@mui/material';
 import { MyLocation } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
@@ -18,6 +18,7 @@ import { calculateBbox } from '../../../services/util/Bbox';
 import { wfsFeaturesToOlFeatures } from '../../../services/util/open-layers.util';
 import { isCoordinate, isCoordinateArrayArray } from '../../../services/util/typeGuards/isCoordinate';
 import { isNspdProperties, type NspdProperties } from '../../../services/util/typeGuards/isNspdProperties';
+import { IconButton } from '../../IconButton/IconButton';
 
 const cnSearch = cn('Search');
 

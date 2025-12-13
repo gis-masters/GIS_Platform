@@ -6,7 +6,6 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  IconButton,
   MenuItem,
   Select,
   type SelectChangeEvent,
@@ -30,6 +29,7 @@ import { allGroups } from '../../../stores/AllGroups.store';
 import { allUsers } from '../../../stores/AllUsers.store';
 import { ActionsRight } from '../../ActionsRight/ActionsRight';
 import { Button } from '../../Button/Button';
+import { IconButton } from '../../IconButton/IconButton';
 import { XTable } from '../../XTable/XTable';
 import { type XTableColumn } from '../../XTable/XTable.models';
 import { PermissionsEditDialogCheckPrincipal } from '../CheckPrincipal/PermissionsEditDialog-CheckPrincipal';

@@ -42,7 +42,7 @@ export class ExplorerBlock extends Block {
     await $item.click();
   }
 
-  async allItemsIsDisabled(): Promise<boolean> {
+  async allItemsAreDisabled(): Promise<boolean> {
     const $root = await this.findBySelector('root');
     await $root.waitForDisplayed();
 

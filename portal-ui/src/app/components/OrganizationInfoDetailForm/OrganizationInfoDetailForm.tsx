@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { type FC, useCallback, useEffect } from 'react';
 import { observer, useLocalObservable } from 'mobx-react';
 import { Skeleton } from '@mui/material';
 import { cn } from '@bem-react/classname';
@@ -62,7 +62,7 @@ interface OrganizationDetailState {
   setBusy(busy: boolean): void;
 }
 
-export const OrganizationInfoDetailForm: React.FC = observer(() => {
+export const OrganizationInfoDetailForm: FC = observer(() => {
   const state = useLocalObservable(
     (): OrganizationDetailState => ({
       orgDetailFormValue: undefined,

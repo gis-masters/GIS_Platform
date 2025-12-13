@@ -1,4 +1,4 @@
-import React, { type FC, useCallback } from 'react';
+import React, { type ChangeEvent, type FC, useCallback } from 'react';
 import { observer } from 'mobx-react';
 import { TextField, Tooltip } from '@mui/material';
 import { Close, FilterAltOutlined } from '@mui/icons-material';
@@ -16,7 +16,7 @@ interface LayersFilterProps {
 const cnLayersFilter = cn('LayersFilter');
 
 export const LayersFilter: FC<LayersFilterProps> = observer(({ turnOffLayersFilter }) => {
-  const handleFilterChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFilterChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     currentProject.setFilter(e.target.value);
   }, []);
 

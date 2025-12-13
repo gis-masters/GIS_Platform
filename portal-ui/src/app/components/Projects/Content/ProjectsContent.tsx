@@ -1,4 +1,4 @@
-import React, { type FC } from 'react';
+import React, { type FC, memo } from 'react';
 import { cn } from '@bem-react/classname';
 
 import { type CrgProject } from '../../../services/gis/projects/projects.models';
@@ -14,7 +14,7 @@ export interface ProjectsContentProps {
   store: ProjectsStore;
 }
 
-export const ProjectsContent: FC<ProjectsContentProps> = React.memo(({ projects, store }) => {
+export const ProjectsContent: FC<ProjectsContentProps> = memo(({ projects, store }) => {
   const sortedProjects = [...projects].sort((a, b) => {
     if (a.folder === true && b.folder !== true) {
       return -1;

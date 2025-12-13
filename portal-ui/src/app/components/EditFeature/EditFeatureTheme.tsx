@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { type FC, type ReactNode } from 'react';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 // Создаем тему с кастомными настройками для тултипов
@@ -13,9 +13,9 @@ const editFeatureTheme = createTheme({
 });
 
 interface EditFeatureThemeProviderProps {
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
-export const EditFeatureThemeProvider: React.FC<EditFeatureThemeProviderProps> = ({ children }) => {
+export const EditFeatureThemeProvider: FC<EditFeatureThemeProviderProps> = ({ children }) => {
   return <ThemeProvider theme={editFeatureTheme}>{children}</ThemeProvider>;
 };

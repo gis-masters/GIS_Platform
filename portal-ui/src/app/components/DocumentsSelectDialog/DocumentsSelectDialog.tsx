@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { action, computed, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { Dialog, DialogActions, DialogContent, DialogTitle, IconButton, Tooltip } from '@mui/material';
+import { Dialog, DialogActions, DialogContent, DialogTitle, Tooltip } from '@mui/material';
 import { TableViewOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { RegistryConsumer } from '@bem-react/di';
@@ -14,6 +14,7 @@ import { type CommonDiRegistry } from '../../services/di-registry';
 import { Button } from '../Button/Button';
 import type { DocumentInfo } from '../Documents/Documents';
 import { emptyItem, type ExplorerItemData, ExplorerItemType } from '../Explorer/Explorer.models';
+import { IconButton } from '../IconButton/IconButton';
 import { ExplorerView } from '../Icons/ExplorerView';
 import { Toast } from '../Toast/Toast';
 

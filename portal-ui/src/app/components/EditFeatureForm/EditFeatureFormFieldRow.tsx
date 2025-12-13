@@ -1,4 +1,4 @@
-import React, { type ReactElement } from 'react';
+import React, { type FC, type ReactElement } from 'react';
 import { Tooltip } from '@mui/material';
 import { EditOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
@@ -75,7 +75,7 @@ const renderMultipleEditControls = (
   </>
 );
 
-export const EditFeatureFormFieldRow: React.FC<EditFeatureFormFieldRowProps> = ({
+export const EditFeatureFormFieldRow: FC<EditFeatureFormFieldRowProps> = ({
   editFeatureItem,
   property,
   formControls,

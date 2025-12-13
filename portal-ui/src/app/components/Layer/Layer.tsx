@@ -82,6 +82,7 @@ export class Layer extends Component<LayerProps> {
       this.setOpen(false);
     }
   }
+
   render() {
     const { className, data, isGroup, isEmptyGroup, depth, onEyeClick, visible, hiddenByZoom, editMode, highlighted } =
       this.props;

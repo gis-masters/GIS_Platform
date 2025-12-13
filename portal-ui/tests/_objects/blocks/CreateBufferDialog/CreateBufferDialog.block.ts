@@ -1,16 +1,14 @@
 import { Block } from '../../Block';
+import { DialogBlock } from '../Dialog/Dialog.block';
 
 class CreateBufferDialogBlock extends Block {
   selectors = {
-    root: '.CreateBufferDialog',
-    createBtn: '.CreateBufferDialog .MuiButton-outlinedPrimary'
+    root: '.CreateBufferDialog'
   };
 
   async clickCreateBuffer(): Promise<void> {
-    const $createBtn = await this.findBySelector('createBtn');
-    await $createBtn.waitForClickable();
-    await $createBtn.click();
-
+    const dialogBlock = new DialogBlock(await this.findBySelector('root'));
+    await dialogBlock.clickPrimaryActionButton();
     await this.waitForHidden();
   }
 

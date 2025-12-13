@@ -1,8 +1,8 @@
-import { When } from '@wdio/cucumber-framework';
+import { Then, When } from '@wdio/cucumber-framework';
 
 import { selectProjectDialogBlock } from './SelectProjectDialog.block';
 
-When('в диалоговом окне выбора проекта я выбираю проект {string}', async function (project: string) {
+When('в диалоговом окне выбора проекта я выбираю {string}', async function (project: string) {
   await selectProjectDialogBlock.selectProject(project);
 });
 
@@ -10,6 +10,8 @@ When('в диалоговом окне выбора проекта я выбир
   await selectProjectDialogBlock.selectCrs(crs);
 });
 
-When('в диалоговом окне выбора проекта я выбираю нажимаю кнопку `Разместить в выбранном проекте`', async function () {
-  await selectProjectDialogBlock.save();
+Then('в диалоговом окне выбора проекта все элементы недоступны', async function () {
+  const allDisabled = await selectProjectDialogBlock.allItemsAreDisabled();
+
+  await expect(allDisabled).toBeTruthy();
 });

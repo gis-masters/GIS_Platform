@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
-import { IconButton, Tooltip } from '@mui/material';
+import { Tooltip } from '@mui/material';
 import { DeleteOutline } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
+
+import { IconButton } from '../../IconButton/IconButton';
 
 import './EditFeatureGeometry-CoordDel.scss';
 

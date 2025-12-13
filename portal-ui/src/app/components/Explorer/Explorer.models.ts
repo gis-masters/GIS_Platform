@@ -22,12 +22,12 @@ import type { ExplorerService } from './Explorer.service';
 import type { ExplorerStore } from './Explorer.store';
 
 export type ExplorerRole =
+  | 'SelectProjectDialog'
   | 'SelectVectorTable'
   | 'SelectLibraryRecord'
   | 'DocumentMove'
   | 'DocumentsSelectDialog'
   | 'dm'
-  | 'ConnectionsToProjectsWidget'
   | 'DocumentVersions'
   | 'SelectFolder'
   | 'taskJournalHistory'

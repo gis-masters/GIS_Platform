@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
 import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { IconButton, Tooltip } from '@mui/material';
+import { Tooltip } from '@mui/material';
 import { Delete } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
 import { deleteTask } from '../../../services/geoserver/import/import.service';
 import { konfirmieren } from '../../../services/utility-dialogs.service';
 import { currentImport, type ImportTaskExtended } from '../../../stores/CurrentImport.store';
+import { IconButton } from '../../IconButton/IconButton';
 
 const cnDataImportTasksList = cn('DataImportTasksList');
 

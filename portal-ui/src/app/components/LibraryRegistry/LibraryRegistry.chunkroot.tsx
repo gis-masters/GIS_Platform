@@ -1,4 +1,4 @@
-import React, { Component, type ReactElement } from 'react';
+import React, { type ChangeEvent, Component, type ReactElement } from 'react';
 import { action, computed, makeObservable, observable, when } from 'mobx';
 import { observer } from 'mobx-react';
 import { Checkbox } from '@mui/material';
@@ -524,7 +524,7 @@ export default class LibraryRegistry extends Component<LibraryRegistryProps> {
   }
 
   @action.bound
-  private handleChange(e: React.ChangeEvent<HTMLInputElement>, checked: boolean) {
+  private handleChange(e: ChangeEvent<HTMLInputElement>, checked: boolean) {
     const selectedRecord = this.libraryDocuments.find(item => item.id === Number(e.target.value));
 
     if (!selectedRecord) {

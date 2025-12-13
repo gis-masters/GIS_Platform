@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { Dialog, DialogActions, DialogContent, DialogContentText, IconButton } from '@mui/material';
+import { Dialog, DialogActions, DialogContent, DialogContentText } from '@mui/material';
 import { AssignmentOutlined, Delete, DeleteOutline } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
@@ -13,6 +13,7 @@ import { environment } from '../../../services/environment';
 import { services } from '../../../services/services';
 import { Button } from '../../Button/Button';
 import { type EditFeatureInfo } from '../../EditFeatureField/EditFeatureField.models';
+import { IconButton } from '../../IconButton/IconButton';
 import { Link } from '../../Link/Link';
 import { Toast } from '../../Toast/Toast';
 import { type DocumentListItemData } from '../DocumentsList.models';

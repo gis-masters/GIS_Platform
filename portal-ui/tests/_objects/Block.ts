@@ -58,6 +58,20 @@ export abstract class Block<S extends Selectors = Selectors> {
     });
   }
 
+  async waitForLoading(): Promise<void> {
+    if (!this.selectors.loader) {
+      throw new Error('Чтобы использовать waitForLoading заведи селектор loader');
+    }
+
+    const loader = await this.findBySelector('loader');
+    try {
+      await loader.waitForDisplayed({ timeout: 1000 });
+    } catch {
+      // ignore
+    }
+    await loader.waitForDisplayed({ reverse: true });
+  }
+
   private async getParentOrRoot(): Promise<WebdriverIO.Element | WebdriverIO.Browser> {
     if (this.root) {
       return this.root;

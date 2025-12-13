@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 import { observer } from 'mobx-react';
 import { Edit, EditOutlined, SaveOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
@@ -27,7 +27,7 @@ interface ProjectActionsProps {
 
 export const ProjectActionsEdit = observer((props: ProjectActionsProps) => {
   const { project, schema, disabled, as, tooltipText } = props;
-  const [dialogOpen, setDialogOpen] = React.useState(false);
+  const [dialogOpen, setDialogOpen] = useState(false);
 
   const role = project.role;
 

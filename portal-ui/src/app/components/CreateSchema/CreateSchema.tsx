@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
 import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { IconButton, Tooltip } from '@mui/material';
+import { Tooltip } from '@mui/material';
 import { PlaylistAdd } from '@mui/icons-material';
 import { boundMethod } from 'autobind-decorator';
 
 import { type Schema, schemaForSchema } from '../../services/data/schema/schema.models';
 import { schemaService } from '../../services/data/schema/schema.service';
 import { FormDialog } from '../FormDialog/FormDialog';
+import { IconButton } from '../IconButton/IconButton';
 
 @observer
 export class CreateSchema extends Component {

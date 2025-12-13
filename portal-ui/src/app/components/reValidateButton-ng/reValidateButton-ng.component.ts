@@ -16,6 +16,7 @@ const ReValidateButtonWithRegistry = withRegistry(registry)(ReValidateButton);
 export class ReValidateButtonNgComponent implements OnInit, OnDestroy, OnChanges {
   @ViewChild('react', { read: ElementRef, static: true })
   ref?: ElementRef<HTMLDivElement>;
+
   private root?: Root;
 
   ngOnInit() {

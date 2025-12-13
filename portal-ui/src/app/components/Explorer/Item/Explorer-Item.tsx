@@ -1,11 +1,12 @@
 import React, { Component, type ReactNode, type RefObject } from 'react';
 import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { IconButton, ListItemButton, ListItemIcon, ListItemSecondaryAction, ListItemText } from '@mui/material';
+import { ListItemButton, ListItemIcon, ListItemSecondaryAction, ListItemText } from '@mui/material';
 import { ChevronRight } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
+import { IconButton } from '../../IconButton/IconButton';
 import { type ExplorerItemData } from '../Explorer.models';
 import { type ExplorerStore } from '../Explorer.store';
 

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { type ChangeEvent, Component } from 'react';
 import { observer } from 'mobx-react';
 import { MenuItem, TextField } from '@mui/material';
 import { cn } from '@bem-react/classname';
@@ -39,7 +39,7 @@ export class ExplorerSort extends Component<ExplorerSortProps> {
   }
 
   @boundMethod
-  private handleSortChange(e: React.ChangeEvent<HTMLInputElement>) {
+  private handleSortChange(e: ChangeEvent<HTMLInputElement>) {
     const { store, onChange } = this.props;
     store.setSort(e.target.value);
     onChange();

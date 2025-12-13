@@ -41,7 +41,7 @@ export class ImportGmlResultDialog extends Component<ImportGmlResultDialogProps>
     const { projectIsNew, projectId, projectName, importLayerReports = [] } = reports || {};
 
     return (
-      <Dialog open={open} onClose={onClose} PaperProps={{ className: cnImportGmlResultDialog() }}>
+      <Dialog open={open} onClose={onClose} slotProps={{ paper: { className: cnImportGmlResultDialog() } }}>
         <DialogTitle>Импорт завершён</DialogTitle>
         <DialogContent>
           <DialogContentText>Данные загружены в {projectIsNew && 'новый'} проект:</DialogContentText>

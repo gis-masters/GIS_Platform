@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
+import React, { type ChangeEvent, Component } from 'react';
 import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { CircularProgress, FormControl, IconButton, InputBase, Paper, Popover, Tooltip } from '@mui/material';
+import { CircularProgress, FormControl, InputBase, Paper, Popover, Tooltip } from '@mui/material';
 import { SearchOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
@@ -14,6 +14,7 @@ import { getNspdData } from '../../services/nspd-data.service';
 import { services } from '../../services/services';
 import { wfsFeaturesToFeatures } from '../../services/util/open-layers.util';
 import { type YaGeoObjectCollection } from '../../services/yandex-geocode.service';
+import { IconButton } from '../IconButton/IconButton';
 import { Toast } from '../Toast/Toast';
 import { SearchResultList } from './ResultList/Search-ResultList';
 
@@ -84,7 +85,7 @@ export default class Search extends Component {
   }
 
   @action.bound
-  private handleInputChange(e: React.ChangeEvent<HTMLInputElement>) {
+  private handleInputChange(e: ChangeEvent<HTMLInputElement>) {
     this.setError(false);
     this.setSearchValue(e.target.value);
     const olFeatures = wfsFeaturesToFeatures(this.features);

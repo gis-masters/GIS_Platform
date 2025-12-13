@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { type ChangeEvent, Component } from 'react';
 import { observer } from 'mobx-react';
 import { TextField } from '@mui/material';
 import { FilterAltOutlined } from '@mui/icons-material';
@@ -53,7 +53,7 @@ export class ExplorerFilter extends Component<ExplorerFilterProps> {
   }
 
   @boundMethod
-  private handleFilterChange(e: React.ChangeEvent<HTMLInputElement>) {
+  private handleFilterChange(e: ChangeEvent<HTMLInputElement>) {
     const { store, service, onChange } = this.props;
     const { openedItem } = store;
     const filterField = getChildrenFilterField(openedItem, store);

@@ -1,4 +1,4 @@
-import React, { type FC, useCallback, useEffect } from 'react';
+import React, { type ChangeEvent, type FC, useCallback, useEffect } from 'react';
 import { observer } from 'mobx-react';
 import { MenuItem, TextField } from '@mui/material';
 import { cn } from '@bem-react/classname';
@@ -22,7 +22,7 @@ export const ProjectsSortBy: FC<ProjectsSortByProps> = observer(({ store }) => {
   }, [store]);
 
   const handleChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
+    (e: ChangeEvent<HTMLInputElement>) => {
       store.setSortBy(e.target.value as keyof CrgProject);
     },
     [store]

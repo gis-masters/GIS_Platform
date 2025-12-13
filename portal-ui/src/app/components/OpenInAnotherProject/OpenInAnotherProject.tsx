@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { action, computed, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { Badge, IconButton, Tooltip } from '@mui/material';
+import { Badge, Tooltip } from '@mui/material';
 import { OpenInNew } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
@@ -13,7 +13,8 @@ import { getLayerByFeatureInCurrentProject } from '../../services/gis/layers/lay
 import { type CrgProject } from '../../services/gis/projects/projects.models';
 import { getFeaturesUrl } from '../../services/map/map.util';
 import { currentProject } from '../../stores/CurrentProject.store';
-import { SelectProjectsDialog } from '../SelectProjectDialog/SelectProjectDialog';
+import { IconButton } from '../IconButton/IconButton';
+import { SelectProjectsTableDialog } from '../SelectProjectsTableDialog/SelectProjectsTableDialog';
 
 const cnOpenInAnotherProject = cn('OpenInAnotherProject');
 
@@ -60,7 +61,7 @@ export class OpenInAnotherProject extends Component<OpenInAnotherProjectProps> {
           </span>
         </Tooltip>
 
-        <SelectProjectsDialog
+        <SelectProjectsTableDialog
           projects={this.projects}
           open={this.dialogOpen}
           onClose={this.closeDialog}

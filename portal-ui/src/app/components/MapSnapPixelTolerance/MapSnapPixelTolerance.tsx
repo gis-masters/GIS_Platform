@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { type ChangeEvent, Component } from 'react';
 import { observer } from 'mobx-react';
 import { Divider, InputBase, Paper, Tooltip } from '@mui/material';
 import { AnimationOutlined } from '@mui/icons-material';
@@ -39,7 +39,7 @@ export class MapSnapPixelTolerance extends Component {
   }
 
   @boundMethod
-  private handleChange(event: React.ChangeEvent<HTMLInputElement>) {
+  private handleChange(event: ChangeEvent<HTMLInputElement>) {
     let value = Number(event.target.value);
     if (value < 1) {
       value = 99;

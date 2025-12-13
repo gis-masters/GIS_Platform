@@ -117,7 +117,7 @@ export default class FilesPlacementDialog extends Component<FilesPlacementDialog
         onClose={this.close}
         fullWidth
         maxWidth='md'
-        PaperProps={{ className: cnFilesPlacementDialog() }}
+        slotProps={{ paper: { className: cnFilesPlacementDialog() } }}
       >
         <DialogTitle>Публикация файлов</DialogTitle>
         <DialogContent>

@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { type FC, useCallback, useState } from 'react';
 import { observer } from 'mobx-react';
 import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
 import { AssignmentTurnedInOutlined } from '@mui/icons-material';
@@ -24,7 +24,7 @@ interface LibraryDocumentActionsRegisterProps {
   schema?: Schema;
 }
 
-export const LibraryDocumentActionsRegister: React.FC<LibraryDocumentActionsRegisterProps> = observer(
+export const LibraryDocumentActionsRegister: FC<LibraryDocumentActionsRegisterProps> = observer(
   ({ document, as, schema }) => {
     const [dialogOpen, setDialogOpen] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');

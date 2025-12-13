@@ -1,4 +1,4 @@
-import React, { Component, createRef, type ReactNode, type RefObject } from 'react';
+import React, { type ChangeEvent, Component, createRef, type ReactNode, type RefObject } from 'react';
 import { action, computed, type IReactionDisposer, makeObservable, observable, reaction } from 'mobx';
 import { observer } from 'mobx-react';
 import { Pagination, type PaperProps, Table, TableBody, TableContainer, TableRow } from '@mui/material';
@@ -376,7 +376,7 @@ export default class XTable<T> extends Component<XTableProps<T>> {
   }
 
   @action.bound
-  private handlePagination(e: React.ChangeEvent<unknown> | null, value: number) {
+  private handlePagination(e: ChangeEvent<unknown> | null, value: number) {
     const { onPageOptionsChange } = this.props;
     this._page = value;
     if (onPageOptionsChange) {

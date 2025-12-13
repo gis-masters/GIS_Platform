@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { type FC, useCallback } from 'react';
 import { observer } from 'mobx-react';
 import { Tooltip } from '@mui/material';
 import { EditOutlined } from '@mui/icons-material';
@@ -17,7 +17,7 @@ interface EditFeaturesButtonProps {
   features: WfsFeature[];
 }
 
-export const EditFeaturesButton: React.FC<EditFeaturesButtonProps> = observer(({ label, features }) => {
+export const EditFeaturesButton: FC<EditFeaturesButtonProps> = observer(({ label, features }) => {
   const handleMultipleEdit = useCallback(async () => {
     await mapModeManager.changeMode(
       MapMode.EDIT_FEATURE,

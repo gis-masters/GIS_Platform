@@ -1,9 +1,10 @@
 import React, { type FC } from 'react';
 import { observer } from 'mobx-react';
-import { CircularProgress, IconButton } from '@mui/material';
+import { CircularProgress } from '@mui/material';
 import { Done, KeyboardBackspace } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
+import { IconButton } from '../../../../app/components/IconButton/IconButton';
 import { PhotoUploaderScreens, photoUploaderStore } from '../../../stores/PhotoUploader.store';
 
 import './UpHeader-LeftIcon.scss';

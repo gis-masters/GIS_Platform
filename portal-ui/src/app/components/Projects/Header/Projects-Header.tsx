@@ -3,6 +3,7 @@ import { observer } from 'mobx-react';
 import { HomeOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
+import { type CrgProject } from '../../../services/gis/projects/projects.models';
 import { projectsService } from '../../../services/gis/projects/projects.service';
 import { notFalsyFilter } from '../../../services/util/NotFalsyFilter';
 import { currentProjectFolderStore } from '../../../stores/CurrentProjectFolder.store';
@@ -58,7 +59,12 @@ export const ProjectsHeader: FC<ProjectsHeaderProps> = observer(({ store }) => {
         const pathIds = path.split('/').filter(Boolean).filter(notFalsyFilter);
 
         // Загружаем информацию о родительских папках
-        const parentFolders = await Promise.all(pathIds.map(id => projectsService.getById(Number(id))));
+        let parentFolders: CrgProject[] = [];
+        try {
+          parentFolders = await Promise.all(pathIds.map(id => projectsService.getById(Number(id))));
+        } catch (error) {
+          console.error('Не удалось загрузить родительские папки:', error);
+        }
 
         // Добавляем родительские папки в хлебные крошки
         parentFolders.forEach(folder => {

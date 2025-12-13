@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { type FC } from 'react';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 
@@ -17,7 +17,7 @@ const buildUrlToProject = (folderId?: string | number | null): string => {
   return `/data-management?path_dm=["r","root","pr","projectsRoot","prf","${folderId}","none","none"]`;
 };
 
-export const ProjectsEmpty: React.FC = observer(() => {
+export const ProjectsEmpty: FC = observer(() => {
   const folderId = currentProjectFolderStore.currentFolder?.id;
 
   return (

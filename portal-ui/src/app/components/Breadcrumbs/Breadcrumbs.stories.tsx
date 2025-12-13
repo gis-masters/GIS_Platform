@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { type ChangeEvent, useCallback, useState } from 'react';
 import { Input, Slider } from '@mui/material';
 import {
   AllInclusive,
@@ -47,7 +47,7 @@ const Template: StoryFn<typeof Breadcrumbs> = props => {
     }
   }, []);
 
-  const handleInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     setMaxWidth(e.target.value === '' ? MAX : Number(e.target.value));
   }, []);
 

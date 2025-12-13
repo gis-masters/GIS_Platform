@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { Button, Tooltip } from '@mui/material';
+import { Tooltip } from '@mui/material';
 import { WarningAmberOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
@@ -15,6 +15,7 @@ import { type CrgLayer } from '../../services/gis/layers/layers.models';
 import { getLayerSchema } from '../../services/gis/layers/layers.service';
 import { isUpdateAllowed } from '../../services/permissions/permissions.service';
 import { currentProject } from '../../stores/CurrentProject.store';
+import { Button } from '../Button/Button';
 import { ChooseXTableDialog } from '../ChooseXTableDialog/ChooseXTableDialog';
 import { type FormControlProps } from '../Form/Control/Form-Control';
 import { type XTableColumn } from '../XTable/XTable.models';

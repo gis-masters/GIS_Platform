@@ -123,7 +123,7 @@ export class PermissionsEditDialog extends Component<PermissionsEditDialogProps>
       <Dialog
         open={open}
         className={cnPermissionsEditDialog()}
-        PaperProps={{ className: cnPermissionsEditDialog('Paper') }}
+        slotProps={{ paper: { className: cnPermissionsEditDialog('Paper') } }}
         onClose={onClose}
         maxWidth='xl'
       >

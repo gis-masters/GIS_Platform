@@ -1,7 +1,7 @@
-import React, { Component, type SyntheticEvent } from 'react';
+import React, { Component, type PointerEvent, type SyntheticEvent } from 'react';
 import { action, type IReactionDisposer, makeObservable, observable, reaction } from 'mobx';
 import { observer } from 'mobx-react';
-import { IconButton, Tab, Tabs } from '@mui/material';
+import { Tab, Tabs } from '@mui/material';
 import { Close } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
@@ -10,6 +10,7 @@ import { communicationService } from '../../services/communication.service';
 import { selectedFeaturesStore } from '../../services/map/a-map-mode/selected-features/SelectedFeatures.store';
 import { sidebars } from '../../stores/Sidebars.store';
 import FeaturesListSidebarFeatures from '../FeaturesListSidebarFeatures/FeaturesListSidebarFeatures';
+import { IconButton } from '../IconButton/IconButton';
 import { Loading } from '../Loading/Loading';
 import { type SearchInfo } from '../SearchField/SearchField';
 import { TabInner } from '../TabInner/TabInner';
@@ -111,7 +112,7 @@ export default class FeaturesListSidebar extends Component {
     );
   }
 
-  private handleClosePointerDown(e: React.PointerEvent<HTMLButtonElement>) {
+  private handleClosePointerDown(e: PointerEvent<HTMLButtonElement>) {
     e.stopPropagation();
   }
 

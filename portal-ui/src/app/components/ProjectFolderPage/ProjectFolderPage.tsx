@@ -44,9 +44,7 @@ export const ProjectFolderPage: FC = observer(() => {
         return;
       }
 
-      if (fetchedProject) {
-        setProject(fetchedProject);
-      }
+      setProject(fetchedProject);
     } catch (error) {
       const err = error as AxiosError<{ message: string }>;
       setBusy(false);

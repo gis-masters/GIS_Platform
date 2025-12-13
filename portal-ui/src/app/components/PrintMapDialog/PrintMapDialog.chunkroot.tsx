@@ -41,7 +41,7 @@ export default class PrintMapDialog extends Component<PrintMapDialogProps> {
     const { open, directlyPrint, format, allowJpg, allowPdf, onClose } = this.props;
 
     return (
-      <Dialog open={open} onClose={onClose} PaperProps={{ className: cnPrintMapDialog() }}>
+      <Dialog open={open} onClose={onClose} slotProps={{ paper: { className: cnPrintMapDialog() } }}>
         <PrintMapDialogContent>
           <PrintMapDialogPreview open={open} />
           <PrintMapDialogForm format={format} onSubmit={this.handleSubmit} />

@@ -1,8 +1,8 @@
 import React, { type FC, useCallback } from 'react';
-import { IconButton } from '@mui/material';
 import { Close } from '@mui/icons-material';
 import { type Id, toast } from 'react-toastify';
 
+import { IconButton } from '../../IconButton/IconButton';
 import { cnToast } from '../Toast.classname';
 
 export interface ToastCloseButtonProps {

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { type FC, useCallback, useEffect, useRef, useState } from 'react';
 import { ButtonBase, Tooltip } from '@mui/material';
 import { type IClassNameProps, withBemMod } from '@bem-react/core';
 
@@ -10,7 +10,7 @@ interface BreadcrumbsItemTypeButtonProps extends IClassNameProps {
   onClick?(itemData: BreadcrumbsItemData['payload']): void;
 }
 
-const ContainerComponent: React.FC<BreadcrumbsItemProps> = props => {
+const ContainerComponent: FC<BreadcrumbsItemProps> = props => {
   const { title, className, style, children, payload, onClick } = props;
 
   const [needTooltip, setNeedTooltip] = useState(false);

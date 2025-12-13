@@ -5,8 +5,8 @@ class ConnectionsToProjectsWidgetBlock extends Block {
   selectors = {
     root: '.ConnectionsToProjectsWidget',
     connectionToProjectDialogViewSelector:
-      '.ConnectionsToProjectsWidget-Dialog .ConnectionsToProjectsWidget-ViewSelector .Form-Control',
-    connectionToProjectDialogAccept: '.ConnectionsToProjectsWidget-Dialog .MuiButton-outlinedPrimary'
+      '.ConnectionsToProjectsWidget-SelectProjectDialog .ConnectionsToProjectsWidget-ViewSelector .Form-Control',
+    connectionToProjectDialogAccept: '.ConnectionsToProjectsWidget-SelectProjectDialog .MuiButton-outlinedPrimary'
   };
 
   async projectSelectDialogProjectAcceptBtn(): Promise<void> {
@@ -29,9 +29,7 @@ class ConnectionsToProjectsWidgetBlock extends Block {
     const $connectionToProjectDialogViewSelector = await this.findBySelector('connectionToProjectDialogViewSelector');
     await $connectionToProjectDialogViewSelector.waitForDisplayed();
 
-    const muiSelect = new MuiSelectBlock(
-      '.ConnectionsToProjectsWidget-Dialog .ConnectionsToProjectsWidget-ViewSelector .Form-Control'
-    );
+    const muiSelect = new MuiSelectBlock(this.selectors.connectionToProjectDialogViewSelector);
     await muiSelect.selectOptionByTitle(optionTitle);
   }
 }

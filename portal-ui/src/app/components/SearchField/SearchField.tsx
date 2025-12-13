@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { type ChangeEvent, Component } from 'react';
 import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { TextField } from '@mui/material';
@@ -77,7 +77,7 @@ export class SearchField extends Component<SearchFieldProps> {
   }
 
   @boundMethod
-  private handleSearchChange(e: React.ChangeEvent<HTMLInputElement>) {
+  private handleSearchChange(e: ChangeEvent<HTMLInputElement>) {
     this.setSearch({
       searchValue: e.target.value,
       type: 'FEATURE'

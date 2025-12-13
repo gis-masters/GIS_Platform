@@ -1,10 +1,10 @@
 import React from 'react';
-import { Button } from '@mui/material';
 import { Send } from '@mui/icons-material';
 import { type StoryFn } from '@storybook/react';
 
 import { type PropertySchemaChoice, PropertyType } from '../../../../services/data/schema/schema.models';
 import { sleep } from '../../../../services/util/sleep';
+import { Button } from '../../../Button/Button';
 import { Toast } from '../../../Toast/Toast';
 import { Form } from '../../Form';
 

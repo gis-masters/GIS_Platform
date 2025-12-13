@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
-import { IconButton, Tooltip } from '@mui/material';
+import { Tooltip } from '@mui/material';
 import { ContentCopy } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
@@ -9,6 +9,7 @@ import { type Coordinate } from 'ol/coordinate';
 
 import { coordinateHighlightService } from '../../../services/map/coordinate-highlight/coordinate-highlight.service';
 import { services } from '../../../services/services';
+import { IconButton } from '../../IconButton/IconButton';
 import { Toast } from '../../Toast/Toast';
 
 import './EditFeatureGeometry-CopyCoords.scss';

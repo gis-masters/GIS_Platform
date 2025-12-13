@@ -1,7 +1,7 @@
 import React, { type FC } from 'react';
-import { IconButton } from '@mui/material';
 import { cn } from '@bem-react/classname';
 
+import { IconButton } from '../../IconButton/IconButton';
 import { LayerOpenIcon } from '../OpenIcon/Layer-OpenIcon';
 
 import './Layer-Open.scss';

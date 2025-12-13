@@ -1,7 +1,7 @@
 import React, { Component, type ReactElement } from 'react';
 import { action, computed, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { Dialog, DialogActions, DialogContent, IconButton, Tooltip } from '@mui/material';
+import { Dialog, DialogActions, DialogContent, Tooltip } from '@mui/material';
 import { People, PeopleOutline } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
@@ -12,6 +12,7 @@ import { groupsService } from '../../../services/auth/groups/groups.service';
 import { type CrgUser } from '../../../services/auth/users/users.models';
 import { allGroups } from '../../../stores/AllGroups.store';
 import { Button } from '../../Button/Button';
+import { IconButton } from '../../IconButton/IconButton';
 import { Loading } from '../../Loading/Loading';
 import { XTable } from '../../XTable/XTable';
 import { type XTableColumn } from '../../XTable/XTable.models';

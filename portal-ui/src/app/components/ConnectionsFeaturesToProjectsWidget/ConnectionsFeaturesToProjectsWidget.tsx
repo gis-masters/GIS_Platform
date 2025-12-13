@@ -61,7 +61,7 @@ export class ConnectionsFeaturesToProjectsWidget extends Component<ConnectionsFe
               <Dialog
                 open={this.dialogOpen}
                 onClose={this.closeDialog}
-                PaperProps={{ className: cnConnectionsFeaturesToProjectsWidget('Dialog') }}
+                slotProps={{ paper: { className: cnConnectionsFeaturesToProjectsWidget('Dialog') } }}
                 maxWidth='sm'
                 fullWidth
               >

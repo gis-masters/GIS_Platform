@@ -1,4 +1,4 @@
-import React, { type FC, useCallback, useEffect } from 'react';
+import React, { type ChangeEvent, type FC, useCallback, useEffect } from 'react';
 import { observer } from 'mobx-react';
 import { TextField } from '@mui/material';
 import { cn } from '@bem-react/classname';
@@ -21,7 +21,7 @@ export const ProjectsFilter: FC<ProjectsFilterProps> = observer(({ store }) => {
   }, [store]);
 
   const handleChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
+    (e: ChangeEvent<HTMLInputElement>) => {
       store.setNameFilter(e.target.value);
     },
     [store]

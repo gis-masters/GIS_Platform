@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { type ChangeEvent, Component } from 'react';
 import { observer } from 'mobx-react';
 import { Checkbox } from '@mui/material';
 import { cn } from '@bem-react/classname';
@@ -32,7 +32,7 @@ export class PermissionsAddDialogItemCheck extends Component<PermissionsAddDialo
   }
 
   @boundMethod
-  private handleChange(e: React.ChangeEvent<HTMLInputElement>, checked: boolean) {
+  private handleChange(e: ChangeEvent<HTMLInputElement>, checked: boolean) {
     const { item, onChange } = this.props;
     onChange(item, checked);
   }

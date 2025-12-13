@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { type ChangeEvent, Component, type JSX } from 'react';
 import { observer } from 'mobx-react';
 import {
   type FilledTextFieldProps,
@@ -29,7 +29,7 @@ class StringControlInnerDisplayPhone extends Component<StringControlInnerProps> 
         {
           // @ts-expect-error беда в типах react-input-mask
           (
-            inputProps: React.JSX.IntrinsicAttributes & { variant?: TextFieldVariants | undefined } & Omit<
+            inputProps: JSX.IntrinsicAttributes & { variant?: TextFieldVariants | undefined } & Omit<
                 StandardTextFieldProps | OutlinedTextFieldProps | FilledTextFieldProps,
                 'variant'
               >
@@ -51,7 +51,7 @@ class StringControlInnerDisplayPhone extends Component<StringControlInnerProps> 
   }
 
   @boundMethod
-  private handleChange(event: React.ChangeEvent<{ value: string }>) {
+  private handleChange(event: ChangeEvent<{ value: string }>) {
     this.props.onChange(event.target.value);
   }
 

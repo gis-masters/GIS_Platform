@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
-import { IconButton, Tooltip } from '@mui/material';
+import { Tooltip } from '@mui/material';
 import { ContentCopy } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
@@ -8,6 +8,7 @@ import { boundMethod } from 'autobind-decorator';
 import { services } from '../../services/services';
 import { copyToClipboard } from '../../services/util/clipboard.util';
 import { type FormControlProps } from '../Form/Control/Form-Control';
+import { IconButton } from '../IconButton/IconButton';
 import { Toast } from '../Toast/Toast';
 import { BboxPreviewMap } from './Map/BboxPreview-Map';
 

@@ -40,6 +40,7 @@ export class LibrarySearchItemActions extends Component<LibrarySearchItemActions
   async componentDidMount(): Promise<void> {
     await this.checkUserRole();
   }
+
   async componentDidUpdate(prevProps: LibrarySearchItemActionsProps) {
     if (!isEqual(this.props.item, prevProps.item)) {
       await this.checkUserRole();

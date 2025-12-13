@@ -1,7 +1,7 @@
 import React, { type ChangeEvent, Component, createRef } from 'react';
 import { action, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
-import { IconButton, Tooltip } from '@mui/material';
+import { Tooltip } from '@mui/material';
 import { ArchiveOutlined, UnarchiveOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
@@ -15,6 +15,7 @@ import { editFeatureStore } from '../../../services/map/a-map-mode/edit-feature/
 import { mapDrawService } from '../../../services/map/draw/map-draw.service';
 import { exportAsCSV } from '../../../services/util/export';
 import { extractCoordinates } from '../../../services/util/extractCoordinates.util';
+import { IconButton } from '../../IconButton/IconButton';
 import { EditFeatureGeometryCSVInput } from '../CSVInput/EditFeatureGeometry-CSVInput';
 
 const cnEditFeatureGeometryCSV = cn('EditFeatureGeometry', 'CSV');

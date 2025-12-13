@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
-import { Divider, IconButton, Tooltip } from '@mui/material';
+import { Divider, Tooltip } from '@mui/material';
 import { cn } from '@bem-react/classname';
 import { polygon } from '@turf/turf';
 import { boundMethod } from 'autobind-decorator';
@@ -30,6 +30,7 @@ import { services } from '../../services/services';
 import { transformGeometry } from '../../services/util/coordinates-transform.util';
 import { notFalsyFilter } from '../../services/util/NotFalsyFilter';
 import { FeatureIcon } from '../FeatureIcon/FeatureIcon';
+import { IconButton } from '../IconButton/IconButton';
 import { ContourAdd } from '../Icons/ContourAdd';
 import { EditFeatureGeometryDraw } from './Draw/EditFeatureGeometry-Draw';
 import { EditFeatureGeometryError } from './Error/EditFeatureGeometry-Error';

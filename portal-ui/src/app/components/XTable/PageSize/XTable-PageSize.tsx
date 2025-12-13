@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { type ChangeEvent, Component } from 'react';
 import { MenuItem, TextField } from '@mui/material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
@@ -38,7 +38,7 @@ export class XTablePageSize extends Component<XTablePageSizeProps> {
   }
 
   @boundMethod
-  private handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+  private handleChange(e: ChangeEvent<HTMLInputElement>) {
     const { onChange } = this.props;
     onChange(Number(e.target.value));
   }

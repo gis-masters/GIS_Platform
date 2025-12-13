@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { type ChangeEvent, Component } from 'react';
 import { action, computed, type IReactionDisposer, makeObservable, observable, reaction } from 'mobx';
 import { observer } from 'mobx-react';
 import { TextField } from '@mui/material';
@@ -63,7 +63,7 @@ class XTableFilterTypeId extends Component<XTableFilterProps> {
   }
 
   @action.bound
-  private handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+  private handleChange(e: ChangeEvent<HTMLInputElement>) {
     const { field, filterQuery, onBeforeFilterChange, onFilterChange } = this.props;
 
     this.setCurrentInput(e.target.value.replaceAll(/[^\d ,]/g, ''));

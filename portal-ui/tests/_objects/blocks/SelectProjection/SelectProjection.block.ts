@@ -9,7 +9,7 @@ export class SelectProjectionBlock extends Block {
     select: '.SelectProjection-Select'
   };
 
-  async selectProjectionByCode(code: string): Promise<void> {
+  async select(code: string): Promise<void> {
     const $select = await this.findBySelector('select');
     await $select.waitForDisplayed();
     const muiSelect = new MuiSelectBlock(null, $select);

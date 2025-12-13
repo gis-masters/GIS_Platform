@@ -22,7 +22,7 @@ export class PrintActionDialog<T> extends Component<PrintActionDialogProps<T>> {
     const { entity, templates, open, onClose } = this.props;
 
     return (
-      <Dialog PaperProps={{ className: cnPrintActionDialog() }} open={open} onClose={onClose}>
+      <Dialog slotProps={{ paper: { className: cnPrintActionDialog() } }} open={open} onClose={onClose}>
         <DialogTitle>Выберите шаблон печати</DialogTitle>
         <DialogContent>
           {templates.map(template => (

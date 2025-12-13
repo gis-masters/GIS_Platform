@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { type FC, useCallback, useEffect } from 'react';
 import { Tooltip } from '@mui/material';
 import { EditOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
@@ -53,7 +53,7 @@ const getDateTime = (value: string | null): string => {
   return formatDate(value);
 };
 
-export const EditFeatureForm: React.FC<EditFeatureFormProps> = ({
+export const EditFeatureForm: FC<EditFeatureFormProps> = ({
   formControls,
   features,
   editFeatureData,

@@ -1,9 +1,11 @@
 import React, { type BaseHTMLAttributes, type FC, type ForwardedRef, forwardRef } from 'react';
+/* eslint-disable no-restricted-imports -- это и есть кастомный IconButton, оборачивающий MUI IconButton */
 import {
   CircularProgress,
   IconButton as BaseIconButton,
   type IconButtonProps as BaseIconButtonProps
 } from '@mui/material';
+/* eslint-enable no-restricted-imports */
 import { cn } from '@bem-react/classname';
 
 import { Link, type LinkProps } from '../Link/Link';

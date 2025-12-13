@@ -27,6 +27,7 @@ class XTableFilterTypeUser extends Component<XTableFilterProps> {
     super(props);
     makeObservable(this);
   }
+
   componentDidMount(): void {
     if (!allUsers.list?.length) {
       void usersService.initUsersListStore();
@@ -39,7 +40,7 @@ class XTableFilterTypeUser extends Component<XTableFilterProps> {
     return (
       <Select
         className={cnXTableFilter(null, [className])}
-        MenuProps={{ PaperProps: { className: cnXTableChoiceFilterPopover() } }}
+        MenuProps={{ slotProps: { paper: { className: cnXTableChoiceFilterPopover() } } }}
         onChange={this.handleChange}
         value={this.value}
         renderValue={this.renderSelectValue}

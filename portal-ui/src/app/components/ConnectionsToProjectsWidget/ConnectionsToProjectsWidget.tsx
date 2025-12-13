@@ -1,28 +1,26 @@
 import React, { Component } from 'react';
 import { action, computed, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { Dialog, DialogActions, DialogContent, DialogTitle, IconButton, Skeleton, Tooltip } from '@mui/material';
+import { Dialog, DialogActions, DialogContent, DialogTitle, Skeleton, Tooltip } from '@mui/material';
 import { AddCircle, AddCircleOutlineOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { type IClassNameProps } from '@bem-react/core';
-import { RegistryConsumer } from '@bem-react/di';
 import { boundMethod } from 'autobind-decorator';
 import { pluralize } from 'numeralize-ru';
 
 import { type FileConnection } from '../../services/data/files/files.models';
 import { type PropertyOption, PropertyType, type Schema } from '../../services/data/schema/schema.models';
-import { type CommonDiRegistry } from '../../services/di-registry';
 import { getViewChoiceOptions } from '../../services/gis/layers/layers.service';
 import { type CrgProject } from '../../services/gis/projects/projects.models';
 import { Role } from '../../services/permissions/permissions.models';
 import { isLayersManagementAllowed } from '../../services/permissions/permissions.service';
-import { ActionsLeft } from '../ActionsLeft/ActionsLeft';
-import { ActionsRight } from '../ActionsRight/ActionsRight';
 import { Button } from '../Button/Button';
 import { ConnectionsToProjects } from '../ConnectionsToProjects/ConnectionsToProjects';
 import { type ExplorerItemData, ExplorerItemType } from '../Explorer/Explorer.models';
 import { Form } from '../Form/Form';
+import { IconButton } from '../IconButton/IconButton';
 import { PseudoLink } from '../PseudoLink/PseudoLink';
+import { SelectProjectDialog } from '../SelectProjectDialog/SelectProjectDialog';
 
 import './ConnectionsToProjectsWidget.scss';
 import './Dialog/ConnectionsToProjectsWidget-Dialog.scss';
@@ -48,7 +46,6 @@ interface ViewFormValue extends Record<string, unknown> {
 export class ConnectionsToProjectsWidget extends Component<ConnectionsToProjectsWidgetProps> {
   @observable private currentProjectsDialogOpen = false;
   @observable private selectProjectDialogOpen = false;
-  @observable private selectedProject?: CrgProject;
   @observable private view = '';
 
   constructor(props: ConnectionsToProjectsWidgetProps) {
@@ -78,7 +75,7 @@ export class ConnectionsToProjectsWidget extends Component<ConnectionsToProjects
               <Dialog
                 open={this.currentProjectsDialogOpen}
                 onClose={this.closeCurrentProjectsDialog}
-                PaperProps={{ className: cnConnectionsToProjectsWidget('Dialog') }}
+                slotProps={{ paper: { className: cnConnectionsToProjectsWidget('Dialog') } }}
               >
                 <DialogTitle>{dialogTitle}</DialogTitle>
                 <DialogContent className='scroll'>
@@ -88,58 +85,34 @@ export class ConnectionsToProjectsWidget extends Component<ConnectionsToProjects
                   <Button onClick={this.closeCurrentProjectsDialog}>Закрыть</Button>
                 </DialogActions>
               </Dialog>
-              <Dialog
+              <SelectProjectDialog
+                className={cnConnectionsToProjectsWidget('SelectProjectDialog')}
                 open={this.selectProjectDialogOpen}
-                className={cnConnectionsToProjectsWidget('Dialog')}
                 onClose={this.closeSelectProjectDialog}
-                maxWidth='md'
-                fullWidth
-              >
-                <DialogTitle>Выбор проекта</DialogTitle>
-                <DialogContent>
-                  <RegistryConsumer id='common'>
-                    {({ Explorer }: CommonDiRegistry) => (
-                      <Explorer
-                        className={cnConnectionsToProjectsWidget('Explorer')}
-                        explorerRole='ConnectionsToProjectsWidget'
-                        preset={ExplorerItemType.PROJECTS_ROOT}
-                        onSelect={this.handleSelect}
-                        onOpen={this.handleOpen}
-                        withoutTitle
-                        disabledTester={this.testForDisabled}
-                      />
-                    )}
-                  </RegistryConsumer>
-                </DialogContent>
-                <DialogActions>
-                  {this.options.length > 1 && (
-                    <ActionsLeft>
-                      <Form<ViewFormValue>
-                        className={cnConnectionsToProjectsWidget('ViewSelector')}
-                        schema={{
-                          properties: [
-                            {
-                              name: 'view',
-                              title: 'Представление',
-                              options: this.options,
-                              defaultValue: '',
-                              propertyType: PropertyType.CHOICE
-                            }
-                          ]
-                        }}
-                        value={{ view: this.view }}
-                        onFormChange={this.handleChange}
-                      />
-                    </ActionsLeft>
-                  )}
-                  <ActionsRight>
-                    <Button color='primary' disabled={!this.selectedProject} onClick={this.submitProjectSelection}>
-                      Подключить
-                    </Button>
-                    <Button onClick={this.closeSelectProjectDialog}>Отмена</Button>
-                  </ActionsRight>
-                </DialogActions>
-              </Dialog>
+                onSubmit={this.handleProjectSelectionSubmit}
+                additionalActions={
+                  this.options.length > 1 && (
+                    <Form<ViewFormValue>
+                      className={cnConnectionsToProjectsWidget('ViewSelector')}
+                      schema={{
+                        properties: [
+                          {
+                            name: 'view',
+                            title: 'Представление',
+                            options: this.options,
+                            defaultValue: '',
+                            propertyType: PropertyType.CHOICE
+                          }
+                        ]
+                      }}
+                      value={{ view: this.view }}
+                      onFormChange={this.handleChange}
+                    />
+                  )
+                }
+                actionButtonProps={{ children: 'Выбрать' }}
+                disabledTester={this.testForDisabled}
+              />
             </>
           )}
         </div>
@@ -168,47 +141,18 @@ export class ConnectionsToProjectsWidget extends Component<ConnectionsToProjects
     this.view = '';
   }
 
-  @action
-  private setSelectedProject(project: CrgProject | undefined) {
-    this.selectedProject = project;
-  }
-
   @action.bound
   private handleChange(value: ViewFormValue) {
     this.view = value.view;
   }
 
   @boundMethod
-  private handleSelect(explorerItem: ExplorerItemData) {
-    if (
-      explorerItem.type === ExplorerItemType.PROJECT &&
-      !this.isAlreadyConnected(explorerItem.payload) &&
-      isLayersManagementAllowed(explorerItem.payload)
-    ) {
-      this.setSelectedProject(explorerItem.payload);
-    } else {
-      this.setSelectedProject(undefined);
-    }
-  }
-
-  @boundMethod
-  private handleOpen(item: ExplorerItemData) {
-    if (item.type === ExplorerItemType.PROJECT) {
-      this.handleSelect(item);
-      this.submitProjectSelection();
-    }
-  }
-
-  @boundMethod
-  private submitProjectSelection() {
-    if (!this.selectedProject) {
+  private handleProjectSelectionSubmit(project?: CrgProject) {
+    if (!project || this.isAlreadyConnected(project) || !isLayersManagementAllowed(project)) {
       return;
     }
 
-    this.props.onConnect(this.selectedProject, this.view);
-
-    this.setSelectedProject(undefined);
-    this.closeSelectProjectDialog();
+    this.props.onConnect(project, this.view);
   }
 
   @boundMethod

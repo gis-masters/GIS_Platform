@@ -63,7 +63,7 @@ class EditFeatureFieldControlTypeUrl extends Component<EditFeatureFieldControlPr
             <Dialog
               open={this.isOpen}
               onClose={this.closeDialog}
-              PaperProps={{ className: cnEditFeatureField('TypeUrlDialog') }}
+              slotProps={{ paper: { className: cnEditFeatureField('TypeUrlDialog') } }}
             >
               <DialogContent>
                 <HtmlContent content={this.content} />

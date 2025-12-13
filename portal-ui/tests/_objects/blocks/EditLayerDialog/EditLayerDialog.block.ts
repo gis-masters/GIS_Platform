@@ -82,7 +82,7 @@ class EditLayerPropertiesDialogBlock extends Block {
 
   async selectProjection(code: string): Promise<void> {
     const selectProjectionBlock = new SelectProjectionBlock(this.selectors.root);
-    await selectProjectionBlock.selectProjectionByCode(code);
+    await selectProjectionBlock.select(code);
   }
 }
 

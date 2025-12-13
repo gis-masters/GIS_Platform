@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { IconButton, Tooltip } from '@mui/material';
+import { Tooltip } from '@mui/material';
 import { Edit, EditOutlined, SaveOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
@@ -12,6 +12,7 @@ import { updateDataset } from '../../../services/data/vectorData/vectorData.serv
 import { services } from '../../../services/services';
 import { getPatch } from '../../../services/util/patch';
 import { FormDialog } from '../../FormDialog/FormDialog';
+import { IconButton } from '../../IconButton/IconButton';
 import { Toast } from '../../Toast/Toast';
 
 const cnDatasetActionsEdit = cn('DatasetActions', 'Edit');

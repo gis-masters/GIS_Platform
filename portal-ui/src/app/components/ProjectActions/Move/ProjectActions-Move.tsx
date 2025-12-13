@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 import { observer } from 'mobx-react';
 import { DriveFileMove, DriveFileMoveOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
@@ -12,10 +12,10 @@ import { isAxiosError } from '../../../services/util/typeGuards/isAxiosError';
 import { currentUser } from '../../../stores/CurrentUser.store';
 import { type ActionsItemVariant } from '../../Actions/Item/Actions-Item.base';
 import { ActionsItem } from '../../Actions/Item/Actions-Item.composed';
-import { emptyItem, type ExplorerItemData, ExplorerItemType } from '../../Explorer/Explorer.models';
+import { type ExplorerItemData, ExplorerItemType } from '../../Explorer/Explorer.models';
 import { Link } from '../../Link/Link';
 import { projectsRootUrlItems } from '../../ProjectFolderContent/ProjectFolderContent.chunkroot';
-import { SelectProjectFromExplorerDialog } from '../../SelectProjectFromExplorerDialog/SelectProjectFromExplorerDialog';
+import { SelectProjectDialog } from '../../SelectProjectDialog/SelectProjectDialog';
 import { Toast } from '../../Toast/Toast';
 
 const cnProjectActionsMove = cn('ProjectActions', 'Move');
@@ -31,8 +31,7 @@ interface ProjectActionsFilesPlacementProps {
 
 export const ProjectActionsMove = observer((props: ProjectActionsFilesPlacementProps) => {
   const { as, project, disabled, onChange } = props;
-  const [projectMoveDialogOpen, setProjectMoveDialogOpen] = React.useState(false);
-  const [loading, setLoading] = React.useState(false);
+  const [projectMoveDialogOpen, setProjectMoveDialogOpen] = useState(false);
 
   const role = project.role;
   const { folder } = project;
@@ -65,9 +64,7 @@ export const ProjectActionsMove = observer((props: ProjectActionsFilesPlacementP
   }, []);
 
   const handleSelectProject = useCallback(
-    async (selectedProject: CrgProject | null) => {
-      setLoading(true);
-
+    async (selectedProject?: CrgProject) => {
       try {
         if (!selectedProject?.id) {
           Toast.error({ message: 'Не удалось переместить. Выберите проект' });
@@ -118,7 +115,6 @@ export const ProjectActionsMove = observer((props: ProjectActionsFilesPlacementP
           Toast.error({ message: 'Не удалось переместить' });
         }
       } finally {
-        setLoading(false);
         handleCloseProjectMoveDialog();
       }
     },
@@ -126,7 +122,7 @@ export const ProjectActionsMove = observer((props: ProjectActionsFilesPlacementP
   );
 
   const customTestForDisabled = useCallback(
-    (item: ExplorerItemData) => {
+    (item: ExplorerItemData): boolean => {
       if (item.type === ExplorerItemType.PROJECT_FOLDER) {
         if (item.payload.id === project.id) {
           return true;
@@ -136,6 +132,8 @@ export const ProjectActionsMove = observer((props: ProjectActionsFilesPlacementP
 
         return !isEditAllowed;
       }
+
+      return true;
     },
     [project]
   );
@@ -154,15 +152,16 @@ export const ProjectActionsMove = observer((props: ProjectActionsFilesPlacementP
         disabled={disabled}
       />
 
-      <SelectProjectFromExplorerDialog
-        project={project}
-        title='Укажите папку для перемещения'
-        startPath={[{ type: ExplorerItemType.PROJECTS_ROOT, payload: null }, emptyItem] as ExplorerItemData[]}
+      <SelectProjectDialog
         open={projectMoveDialogOpen}
-        loading={loading}
+        title='Укажите папку для перемещения'
+        allowFolderSelection
         onClose={handleCloseProjectMoveDialog}
-        onSelect={handleSelectProject}
-        customTestForDisabled={customTestForDisabled}
+        onSubmit={handleSelectProject}
+        disabledTester={customTestForDisabled}
+        actionButtonProps={{
+          startIcon: <DriveFileMoveOutlined />
+        }}
       />
     </>
   );

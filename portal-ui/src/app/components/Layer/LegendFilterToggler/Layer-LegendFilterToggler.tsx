@@ -1,7 +1,8 @@
 import React, { type FC } from 'react';
-import { IconButton, Tooltip } from '@mui/material';
+import { Tooltip } from '@mui/material';
 import { cn } from '@bem-react/classname';
 
+import { IconButton } from '../../IconButton/IconButton';
 import { Filter } from '../../Icons/Filter';
 import { FilterOutlined } from '../../Icons/FilterOutlined';
 

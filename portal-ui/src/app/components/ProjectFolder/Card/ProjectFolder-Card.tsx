@@ -36,6 +36,7 @@ export const ProjectFolderCard: FC<ProjectFolderCardProps> = observer(({ project
     }
   }, [project, store]);
 
+  // TODO: тут должна быть ссылка
   return (
     <Button className={cnProjectFolderCard()} onClick={openFolder}>
       <ProjectFolderName>{project.name}</ProjectFolderName>

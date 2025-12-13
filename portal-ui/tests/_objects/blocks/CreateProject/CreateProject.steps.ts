@@ -3,11 +3,11 @@ import { Then, When } from '@wdio/cucumber-framework';
 import { sleep } from '../../../../src/app/services/util/sleep';
 import { createProjectBlock } from './CreateProject.block';
 
-Then('доступна кнопка `создать проект`', async () => {
+Then('доступна кнопка `Создать проект`', async () => {
   await createProjectBlock.waitForCreateProjectVisible();
 });
 
-Then('доступна кнопка `создать папку проекта`', async () => {
+Then('доступна кнопка `Создать папку проектов`', async () => {
   await createProjectBlock.waitForCreateProjectFolderVisible();
 });
 

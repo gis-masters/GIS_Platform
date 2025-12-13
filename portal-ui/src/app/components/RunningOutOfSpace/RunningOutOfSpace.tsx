@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
 import { action, computed, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { IconButton, Tooltip } from '@mui/material';
+import { Tooltip } from '@mui/material';
 import { WarningAmber } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
 import { type OccupiedStorage } from '../../services/auth/organizations/organizations.models';
 import { organizationsService } from '../../services/auth/organizations/organizations.service';
 import { organizationSettings } from '../../stores/OrganizationSettings.store';
+import { IconButton } from '../IconButton/IconButton';
 
 const cnRunningOutOfSpace = cn('RunningOutOfSpace');
 

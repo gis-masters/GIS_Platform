@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { type ChangeEvent, Component } from 'react';
 import { observer } from 'mobx-react';
 import { InputAdornment, Slider, TextField } from '@mui/material';
 import { boundMethod } from 'autobind-decorator';
@@ -64,7 +64,7 @@ export class FormControlTypeNumber extends Component<FormControlProps> {
   }
 
   @boundMethod
-  private handleNumberChange(event: React.ChangeEvent<{ value: string }>) {
+  private handleNumberChange(event: ChangeEvent<{ value: string }>) {
     let targetValue = event.target.value;
     targetValue = targetValue.replaceAll(',', '.');
 

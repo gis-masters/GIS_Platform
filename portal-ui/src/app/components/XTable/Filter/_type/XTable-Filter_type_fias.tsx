@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { type ChangeEvent, Component } from 'react';
 import { action, computed, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { TextField } from '@mui/material';
@@ -42,7 +42,7 @@ class XTableFilterTypeFias extends Component<XTableFilterProps> {
   }
 
   @action.bound
-  private handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+  private handleChange(e: ChangeEvent<HTMLInputElement>) {
     const { field, filterQuery, onBeforeFilterChange, onFilterChange } = this.props;
 
     onBeforeFilterChange();

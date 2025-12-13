@@ -54,8 +54,10 @@ export class BasemapsSelect extends Component {
         )}
         {this.ready && (
           <Menu
-            PaperProps={{ className: cnBasemapsSelect('MenuPaper'), square: true, elevation: 0 }}
-            MenuListProps={{ className: cnBasemapsSelect('MenuList') }}
+            slotProps={{
+              paper: { className: cnBasemapsSelect('MenuPaper'), square: true, elevation: 0 },
+              list: { className: cnBasemapsSelect('MenuList') }
+            }}
             open={this.open}
             anchorEl={this.ref.current}
             onClose={this.close}

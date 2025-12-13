@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { type ChangeEvent, Component } from 'react';
 import { action, computed, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { Checkbox, Radio, Tooltip } from '@mui/material';
@@ -49,7 +49,7 @@ export class ChooseXTableCheck<T> extends Component<ChooseXTableCheckProps<T>> {
   }
 
   @action.bound
-  private handleChange(e: React.ChangeEvent<HTMLInputElement>, checked: boolean) {
+  private handleChange(e: ChangeEvent<HTMLInputElement>, checked: boolean) {
     const { item, selectedItems, getRowId, single, onSelect } = this.props;
     if (single && checked) {
       selectedItems.splice(0, selectedItems.length, item);

@@ -8,13 +8,14 @@ import React, {
 } from 'react';
 import { action, computed, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { IconButton, Tooltip } from '@mui/material';
+import { Tooltip } from '@mui/material';
 import { AddCircleOutline, Close } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 import { pluralize } from 'numeralize-ru';
 
 import { Button, type ButtonProps } from '../Button/Button';
+import { IconButton } from '../IconButton/IconButton';
 
 import './FileInput.scss';
 

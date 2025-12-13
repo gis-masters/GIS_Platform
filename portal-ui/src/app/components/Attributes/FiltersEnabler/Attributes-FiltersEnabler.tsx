@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { type ChangeEvent, Component } from 'react';
 import { observer } from 'mobx-react';
 import { Switch, Tooltip } from '@mui/material';
 import { cn } from '@bem-react/classname';
@@ -35,7 +35,7 @@ export class AttributesFiltersEnabler extends Component<AttributesFiltersEnabler
   }
 
   @boundMethod
-  private handleChange(e: React.ChangeEvent<HTMLInputElement>, checked: boolean) {
+  private handleChange(e: ChangeEvent<HTMLInputElement>, checked: boolean) {
     attributesTableStore.setFilterEnablednessForLayer(this.props.layer, checked);
   }
 }

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { type ChangeEvent, Component } from 'react';
 import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { Dialog, DialogActions, DialogContent, TextField, Tooltip } from '@mui/material';
@@ -67,7 +67,7 @@ export class EditFeatureGeometryAsText extends Component<EditFeatureGeometryAsTe
         <Dialog
           open={this.isOpen}
           onClose={this.closeDialog}
-          PaperProps={{ className: cnEditFeatureGeometry('AsTextDialog') }}
+          slotProps={{ paper: { className: cnEditFeatureGeometry('AsTextDialog') } }}
         >
           <DialogContent>
             <TextField
@@ -109,7 +109,7 @@ export class EditFeatureGeometryAsText extends Component<EditFeatureGeometryAsTe
   }
 
   @boundMethod
-  private handleChange(e: React.ChangeEvent<HTMLTextAreaElement>) {
+  private handleChange(e: ChangeEvent<HTMLTextAreaElement>) {
     this.setText(e.target.value);
   }
 

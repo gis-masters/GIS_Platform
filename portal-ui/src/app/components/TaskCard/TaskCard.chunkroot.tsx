@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { runInAction } from 'mobx';
 import { observer } from 'mobx-react';
 import { HomeOutlined } from '@mui/icons-material';
@@ -25,8 +25,8 @@ export interface TaskCardProps extends IClassNameProps {
 }
 
 export default observer(({ task, className }: TaskCardProps) => {
-  const [primalSchema, setPrimalSchema] = React.useState<Schema>();
-  const [breadcrumbsItems, setBreadcrumbsItems] = React.useState<BreadcrumbsItemData[]>([]);
+  const [primalSchema, setPrimalSchema] = useState<Schema>();
+  const [breadcrumbsItems, setBreadcrumbsItems] = useState<BreadcrumbsItemData[]>([]);
 
   const schema = useMemo(() => {
     if (task && primalSchema) {

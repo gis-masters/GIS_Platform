@@ -16,6 +16,7 @@ const FooterWithRegistry = withRegistry(registry)(Footer);
 export class FooterNgComponent implements OnInit, OnDestroy, OnChanges {
   @ViewChild('react', { read: ElementRef, static: true })
   ref?: ElementRef<HTMLDivElement>;
+
   private root?: Root;
 
   ngOnInit() {

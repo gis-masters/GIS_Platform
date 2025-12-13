@@ -100,7 +100,7 @@ export class FormDialog<T> extends Component<FormDialogProps<T>> {
 
     return (
       <Dialog
-        PaperProps={{ className: cnFormDialog(null, [className]) }}
+        slotProps={{ paper: { className: cnFormDialog(null, [className]) } }}
         open={open}
         onClose={this.close}
         fullWidth

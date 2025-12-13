@@ -1,7 +1,7 @@
 import React, { Component, createRef } from 'react';
 import { action, computed, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { Dialog, DialogActions, DialogContent, DialogContentText, IconButton, Tooltip } from '@mui/material';
+import { Dialog, DialogActions, DialogContent, DialogContentText, Tooltip } from '@mui/material';
 import { LiveHelp, LiveHelpOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
@@ -10,6 +10,7 @@ import { type TocItem } from '../../stores/Help.store';
 import { route } from '../../stores/Route.store';
 import { Button } from '../Button/Button';
 import { Help } from '../Help/Help';
+import { IconButton } from '../IconButton/IconButton';
 
 import './HelpToggler.scss';
 
@@ -39,7 +40,11 @@ export class HelpToggler extends Component {
           </IconButton>
         </Tooltip>
 
-        <Dialog open={this.dialogOpen} onClose={this.closeDialog} PaperProps={{ className: cnHelpToggler('Dialog') }}>
+        <Dialog
+          open={this.dialogOpen}
+          onClose={this.closeDialog}
+          slotProps={{ paper: { className: cnHelpToggler('Dialog') } }}
+        >
           <DialogContent>
             <DialogContentText>Справка</DialogContentText>
             <Help className={cnHelpToggler('Help')} selectedItem={this.selectedItem} helpPart={this.helpPart} />

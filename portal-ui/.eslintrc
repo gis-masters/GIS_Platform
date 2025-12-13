@@ -151,6 +151,58 @@
     "key-spacing": [2, { "beforeColon": false, "afterColon": true, "mode": "strict" }],
     "space-infix-ops": 2,
     "newline-before-return": "error",
+    "lines-between-class-members": ["error", "always", { "exceptAfterSingleLine": true }],
+    "padding-line-between-statements": [
+      "error",
+      { "blankLine": "always", "prev": "class", "next": "*" },
+      { "blankLine": "always", "prev": "*", "next": "class" }
+    ],
+    "no-restricted-imports": [
+      "error",
+      {
+        "paths": [
+          {
+            "name": "react",
+            "importNames": [
+              "MouseEvent",
+              "TouchEvent",
+              "KeyboardEvent",
+              "AnimationEvent",
+              "ClipboardEvent",
+              "CompositionEvent",
+              "DragEvent",
+              "FocusEvent",
+              "FormEvent",
+              "TransitionEvent",
+              "UIEvent",
+              "WheelEvent"
+            ],
+            "message": "Importing global types from \"react\" is forbidden. Use global types or React.MouseEvent, React.KeyboardEvent, etc."
+          },
+          {
+            "name": "@mui/material",
+            "importNames": ["Button"],
+            "message": "Use custom Button from 'components/Button/Button' instead of MUI Button."
+          },
+          {
+            "name": "@mui/material",
+            "importNames": ["IconButton"],
+            "message": "Use custom IconButton from 'components/IconButton/IconButton' instead of MUI IconButton."
+          }
+        ]
+      }
+    ],
+    "no-restricted-syntax": [
+      "error",
+      {
+        "selector": "MemberExpression[object.name='React']",
+        "message": "Using \"React.\" is forbidden. Use direct imports instead."
+      },
+      {
+        "selector": "TSQualifiedName[left.name='React'][right.name!='MouseEvent'][right.name!='TouchEvent'][right.name!='KeyboardEvent'][right.name!='AnimationEvent'][right.name!='ClipboardEvent'][right.name!='CompositionEvent'][right.name!='DragEvent'][right.name!='FocusEvent'][right.name!='FormEvent'][right.name!='TransitionEvent'][right.name!='UIEvent'][right.name!='WheelEvent']",
+        "message": "Using \"React.\" in types is forbidden, except for events that overlap with global types. Use direct imports instead."
+      }
+    ],
 
     // REACT
     // https://github.com/yannickcr/eslint-plugin-react/tree/master/docs/rules
@@ -287,7 +339,17 @@
       }
     },
     {
-      "files": ["*.component.ts", "*.service.ts", "*.guard.ts", "*.interceptor.ts", "*.directive.ts", "*.pipe.ts", "*.handler.ts", "services.ts", "*.module.ts"],
+      "files": [
+        "*.component.ts",
+        "*.service.ts",
+        "*.guard.ts",
+        "*.interceptor.ts",
+        "*.directive.ts",
+        "*.pipe.ts",
+        "*.handler.ts",
+        "services.ts",
+        "*.module.ts"
+      ],
       "rules": {
         "@typescript-eslint/consistent-type-imports": "off"
       }

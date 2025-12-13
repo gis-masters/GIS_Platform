@@ -1,4 +1,4 @@
-import React, { type BaseHTMLAttributes, type FC, type ForwardedRef } from 'react';
+import React, { type BaseHTMLAttributes, type FC, type ForwardedRef, forwardRef } from 'react';
 import { cn } from '@bem-react/classname';
 import { type IClassNameProps } from '@bem-react/core';
 
@@ -10,7 +10,7 @@ interface LookupNameProps extends IClassNameProps, BaseHTMLAttributes<HTMLDivEle
   numerous: boolean;
 }
 
-export const LookupName: FC<LookupNameProps> = React.forwardRef(
+export const LookupName: FC<LookupNameProps> = forwardRef(
   ({ className, numerous, children, ...otherProps }, ref: ForwardedRef<HTMLDivElement>) => (
     <span className={cnLookupName({ numerous }, [className])} ref={ref} {...otherProps}>
       {children}

@@ -97,16 +97,19 @@ class MapLabelsService {
     zIndex: mapService.LABELS_LAYER_ZINDEX,
     properties: { name: 'labels' }
   });
+
   private layerForTurningPoints = new VectorLayer({
     source: this.turningPointsSource,
     zIndex: mapService.LABELS_LAYER_ZINDEX,
     properties: { name: 'turningPoints' }
   });
+
   private layerForPrintLabels = new VectorLayer({
     source: this.sourceForPrintLabels,
     zIndex: mapService.LABELS_LAYER_ZINDEX,
     properties: { name: 'printLabels' }
   });
+
   private renderLabelToolboxDebounced = debounce(this.renderLabelToolbox, 500);
   private removeLabelToolboxDebounced = debounce(this.removeLabelToolbox, 500);
   private toolboxHovered = false;

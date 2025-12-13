@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { IconButton, Tooltip } from '@mui/material';
+import { Tooltip } from '@mui/material';
 import { Delete, DeleteOutline } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
@@ -12,6 +12,7 @@ import { type Basemap } from '../../../services/data/basemaps/basemaps.models';
 import { deleteBasemap } from '../../../services/data/basemaps/basemaps.service';
 import { getBasemapConnections } from '../../../services/gis/project-basemaps/project-basemaps.service';
 import { konfirmieren } from '../../../services/utility-dialogs.service';
+import { IconButton } from '../../IconButton/IconButton';
 
 const cnBasemapActionsDelete = cn('BasemapActions', 'Delete');
 

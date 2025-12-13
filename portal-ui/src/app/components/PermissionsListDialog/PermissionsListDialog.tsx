@@ -74,7 +74,7 @@ export class PermissionsListDialog extends Component<PermissionsListProps> {
         open={open}
         maxWidth='xl'
         className={cnPermissionsListDialog()}
-        PaperProps={{ className: cnPermissionsListDialog('Paper') }}
+        slotProps={{ paper: { className: cnPermissionsListDialog('Paper') } }}
       >
         <DialogContent>
           <XTable<any>

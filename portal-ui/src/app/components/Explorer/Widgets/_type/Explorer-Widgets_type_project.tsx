@@ -86,9 +86,6 @@ class ExplorerWidgetsTypeProject extends Component<ExplorerWidgetsProps> {
     const project = await projectsService.getById(item.payload.id);
 
     if (this.operationId === operationId) {
-      if (!project) {
-        throw new Error(`Проект ${item.payload.id} not found`);
-      }
       this.setUrl(url);
       this.setProject(project);
     }

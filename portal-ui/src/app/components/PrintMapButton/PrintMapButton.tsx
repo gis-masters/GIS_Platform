@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
 import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { IconButton, Tooltip } from '@mui/material';
+import { Tooltip } from '@mui/material';
 import { Print, PrintOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
 import { MapAction } from '../../services/map/map.models';
 import { mapStore } from '../../stores/Map.store';
 import { printSettings } from '../../stores/PrintSettings.store';
+import { IconButton } from '../IconButton/IconButton';
 import { Loading } from '../Loading/Loading';
 import { PrintMapDialog } from '../PrintMapDialog/PrintMapDialog';
 

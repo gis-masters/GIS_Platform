@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
-import { IconButton, Tooltip } from '@mui/material';
+import { Tooltip } from '@mui/material';
 import { DeleteOutline } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
+
+import { IconButton } from '../../IconButton/IconButton';
 
 const cnPermissionsListDialogActions = cn('PermissionsListDialog', 'Actions');
 

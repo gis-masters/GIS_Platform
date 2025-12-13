@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { IconButton, Tooltip } from '@mui/material';
+import { Tooltip } from '@mui/material';
 import { Edit } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
 import { type CrgUser } from '../../../services/auth/users/users.models';
+import { IconButton } from '../../IconButton/IconButton';
 import { UserCreateEditDialog } from '../../UserCreateEditDialog/UserCreateEditDialog';
 
 const cnOrgGroupsEdit = cn('OrgGroups', 'Edit');

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { action, computed, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { IconButton, Tooltip } from '@mui/material';
+import { Tooltip } from '@mui/material';
 import { AddCircleOutline } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { type IClassNameProps } from '@bem-react/core';
@@ -12,6 +12,7 @@ import { getUrlSubFormSchema, parseUrlValue } from '../../services/util/form/fie
 import { type UrlInfo } from '../Form/Control/_type/Form-Control_type_url';
 import { FormViewValue } from '../Form/ViewValue/Form-ViewValue';
 import { FormDialog } from '../FormDialog/FormDialog';
+import { IconButton } from '../IconButton/IconButton';
 import { UrlsListItem } from './Item/UrlsList-Item';
 
 import './UrlsList.scss';

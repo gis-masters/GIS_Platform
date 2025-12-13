@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { type ChangeEvent, Component } from 'react';
 import { observer } from 'mobx-react';
 import { Pagination } from '@mui/material';
 import { cn } from '@bem-react/classname';
@@ -32,7 +32,7 @@ export class AttributesPagination extends Component<AttributesPaginationProps> {
   }
 
   @boundMethod
-  private handlePagination(e: React.ChangeEvent<unknown>, page: number) {
+  private handlePagination(e: ChangeEvent<unknown>, page: number) {
     const { onChange } = this.props;
     onChange(page);
   }

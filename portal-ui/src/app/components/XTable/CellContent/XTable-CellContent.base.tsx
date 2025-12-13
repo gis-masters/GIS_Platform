@@ -1,4 +1,12 @@
-import React, { isValidElement, type ReactElement, useCallback, useEffect, useRef, useState } from 'react';
+import React, {
+  type HTMLAttributes,
+  isValidElement,
+  type ReactElement,
+  useCallback,
+  useEffect,
+  useRef,
+  useState
+} from 'react';
 import { Tooltip } from '@mui/material';
 import { cn } from '@bem-react/classname';
 import { type IClassNameProps } from '@bem-react/core';
@@ -15,10 +23,7 @@ export const cnXTableCellContent = cn('XTable', 'CellContent');
 
 const INDENT = 29;
 
-export interface XTableCellContentProps<T>
-  extends ChildrenProps,
-    IClassNameProps,
-    React.HTMLAttributes<HTMLSpanElement> {
+export interface XTableCellContentProps<T> extends ChildrenProps, IClassNameProps, HTMLAttributes<HTMLSpanElement> {
   singleLineContent: boolean;
   col: XTableColumn<T>;
   type?: XTableColumnType;

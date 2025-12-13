@@ -1,6 +1,6 @@
 import React, { type CSSProperties, type ReactNode, useCallback, useEffect, useMemo } from 'react';
 import { observer, useLocalObservable } from 'mobx-react-lite';
-import { IconButton, Tooltip } from '@mui/material';
+import { Tooltip } from '@mui/material';
 import { ArrowForward } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
@@ -23,6 +23,7 @@ import { currentProject } from '../../stores/CurrentProject.store';
 import { mapStore } from '../../stores/Map.store';
 import { mapVerticesModificationStore } from '../../stores/MapVerticesModification.store';
 import { FeatureIcon } from '../FeatureIcon/FeatureIcon';
+import { IconButton } from '../IconButton/IconButton';
 import { RectangleSelectionCancel } from '../Icons/RectangleSelectionCancel';
 import { ZoomToFeature } from '../ZoomToFeature/ZoomToFeature';
 import { type FeaturesListItemTitle, getFeaturesListItemTitle } from './FeaturesListItem.util';

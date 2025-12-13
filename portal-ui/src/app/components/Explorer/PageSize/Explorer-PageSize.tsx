@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { type ChangeEvent, Component } from 'react';
 import { observer } from 'mobx-react';
 import { MenuItem, TextField } from '@mui/material';
 import { cn } from '@bem-react/classname';
@@ -46,7 +46,7 @@ export class ExplorerPageSize extends Component<ExplorerPageSizeProps> {
   }
 
   @boundMethod
-  private handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+  private handleChange(e: ChangeEvent<HTMLInputElement>) {
     this.setSize(Number(e.target.value));
   }
 

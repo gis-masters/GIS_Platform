@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 import { observer } from 'mobx-react';
 import { Delete, DeleteOutline } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
@@ -23,7 +23,7 @@ interface ProjectActionsDeleteProps {
 
 export const ProjectActionsDelete = observer((props: ProjectActionsDeleteProps) => {
   const { disabled, project, tooltipText, as } = props;
-  const [dialogOpen, setDialogOpen] = React.useState(false);
+  const [dialogOpen, setDialogOpen] = useState(false);
 
   const role = project.role;
 

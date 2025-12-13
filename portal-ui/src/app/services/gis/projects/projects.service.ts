@@ -271,17 +271,11 @@ class ProjectsService {
     return Math.max(...currentProject.groups.map(({ id }) => id), 0) + 1;
   }
 
-  async getById(id: number): Promise<CrgProject | undefined> {
+  async getById(id: number): Promise<CrgProject> {
     try {
       return await projectsClient.getProject(id);
-    } catch (error) {
-      const err = error as AxiosError<{ status: string; message: string }>;
-      const message = err?.response?.data?.message;
-      if (message) {
-        Toast.warn(message);
-      } else {
-        throw error;
-      }
+    } catch {
+      throw new Error(`Проект ${id} не найден`);
     }
   }
 

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { type ChangeEvent, Component } from 'react';
 import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { FormControl, Input, InputAdornment, InputLabel, List, Pagination } from '@mui/material';
@@ -129,7 +129,7 @@ export class PickupDatasetsList extends Component<PickupDatasetsListProps> {
   }
 
   @boundMethod
-  private async onFilterChanged(event: React.ChangeEvent<HTMLInputElement>) {
+  private async onFilterChanged(event: ChangeEvent<HTMLInputElement>) {
     const { value } = event.target;
 
     this.isInitial = false;

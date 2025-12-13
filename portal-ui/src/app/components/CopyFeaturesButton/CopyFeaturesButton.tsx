@@ -111,6 +111,7 @@ export class CopyFeaturesButton extends Component<CopyFeaturesButtonProps> {
   private setWfsFeature(wfsFeatures: WfsFeature[]) {
     this.wfsFeatures = wfsFeatures;
   }
+
   @action
   private setSelectedLayer(selectedLayer: CrgVectorLayer) {
     this.selectedLayer = selectedLayer;

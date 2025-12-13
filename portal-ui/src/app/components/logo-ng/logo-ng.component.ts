@@ -17,6 +17,7 @@ const LogoWithRegistry = withRegistry(registry)(Logo);
 export class LogoNgComponent implements OnInit, OnChanges, OnDestroy {
   @ViewChild('react', { read: ElementRef, static: true })
   ref?: ElementRef<HTMLDivElement>;
+
   private root?: Root;
 
   ngOnInit() {

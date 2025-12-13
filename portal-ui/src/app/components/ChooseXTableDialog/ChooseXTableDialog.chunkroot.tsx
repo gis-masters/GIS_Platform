@@ -90,7 +90,7 @@ export default class ChooseXTableDialog<T> extends Component<ChooseXTableDialogP
 
     return (
       <Dialog
-        PaperProps={{ className: cnChooseXTableDialog(null, [className]) }}
+        slotProps={{ paper: { className: cnChooseXTableDialog(null, [className]) } }}
         open={open}
         onClose={this.close}
         maxWidth={maxWidth}

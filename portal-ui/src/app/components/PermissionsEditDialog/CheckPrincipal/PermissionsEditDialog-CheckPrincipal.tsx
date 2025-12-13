@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { type ChangeEvent, Component } from 'react';
 import { action, computed, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { Checkbox } from '@mui/material';
@@ -48,7 +48,7 @@ export class PermissionsEditDialogCheckPrincipal extends Component<PermissionsEd
   }
 
   @action.bound
-  private handleChange(e: React.ChangeEvent<HTMLInputElement>, checked: boolean) {
+  private handleChange(e: ChangeEvent<HTMLInputElement>, checked: boolean) {
     const { principal, selectedPrincipals } = this.props;
 
     if (checked) {

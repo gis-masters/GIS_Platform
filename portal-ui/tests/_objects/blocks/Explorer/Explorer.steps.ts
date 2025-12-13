@@ -47,7 +47,7 @@ When('в списке элементов explorer я выбираю элемен
 
 When('в списке элементов explorer все элементы недоступны', async () => {
   const explorerBlock = new ExplorerBlock();
-  const disabled = await explorerBlock.allItemsIsDisabled();
+  const disabled = await explorerBlock.allItemsAreDisabled();
 
   await expect(disabled).toEqual(true);
 });

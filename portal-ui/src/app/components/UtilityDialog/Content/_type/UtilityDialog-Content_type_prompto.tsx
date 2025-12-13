@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { type ChangeEvent, Component } from 'react';
 import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { DialogContent, DialogContentText, TextField } from '@mui/material';
@@ -48,7 +48,7 @@ class UtilityDialogContentTypePrompto extends Component<UtilityDialogContentProp
   }
 
   @action.bound
-  private handleTextChange(event: React.ChangeEvent<HTMLInputElement>) {
+  private handleTextChange(event: ChangeEvent<HTMLInputElement>) {
     this.text = event.target.value;
   }
 }

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { type FC, useState } from 'react';
 import { SettingsSuggestOutlined, StyleOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
@@ -14,7 +14,7 @@ interface EditLayerDialogStyleIconProps {
   styleName: string;
 }
 
-export const EditLayerDialogStyleIcon: React.FC<EditLayerDialogStyleIconProps> = ({ layerComplexName, styleName }) => {
+export const EditLayerDialogStyleIcon: FC<EditLayerDialogStyleIconProps> = ({ layerComplexName, styleName }) => {
   const [img, setImg] = useState('');
   let Icon = StyleOutlined;
 

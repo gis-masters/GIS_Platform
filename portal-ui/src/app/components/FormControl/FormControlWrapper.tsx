@@ -1,4 +1,4 @@
-import React, { type FC, useCallback, useEffect, useMemo, useState } from 'react';
+import React, { type FC, memo, useCallback, useEffect, useMemo, useState } from 'react';
 
 import { PropertyType } from '../../services/data/schema/schema.models';
 import { convertOldToNewProperties } from '../../services/data/schema/schema.utils';
@@ -90,4 +90,4 @@ const FormControlWrapper: FC<FormControlWrapperProps> = ({ property, itemValue, 
   return properties && (updating ? <FormControl {...properties} /> : <FormView {...properties} />);
 };
 
-export default React.memo(FormControlWrapper);
+export default memo(FormControlWrapper);

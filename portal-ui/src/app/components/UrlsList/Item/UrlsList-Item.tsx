@@ -97,7 +97,7 @@ export class UrlsListItem extends Component<UrlFieldItemProps> {
           onClose={this.closeViewDialog}
           maxWidth='xl'
           fullWidth
-          PaperProps={{ className: cnUrlsList('Dialog') }}
+          slotProps={{ paper: { className: cnUrlsList('Dialog') } }}
         >
           <DialogContent>
             <HtmlContent content={this.content} />

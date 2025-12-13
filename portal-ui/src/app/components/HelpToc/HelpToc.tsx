@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
+import React, { type ChangeEvent, Component } from 'react';
 import { action, computed, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { IconButton, TextField } from '@mui/material';
+import { TextField } from '@mui/material';
 import { Clear } from '@mui/icons-material';
 import { SimpleTreeView } from '@mui/x-tree-view';
 import { cn } from '@bem-react/classname';
@@ -9,6 +9,7 @@ import { type IClassNameProps } from '@bem-react/core';
 
 import { notFalsyFilter } from '../../services/util/NotFalsyFilter';
 import { type Toc, type TocItem } from '../../stores/Help.store';
+import { IconButton } from '../IconButton/IconButton';
 import { HelpTocCollapseIcon } from './CollapseIcon/HelpToc-CollapseIcon';
 import { HelpTocExpandIcon } from './ExpandIcon/HelpToc-ExpandIcon';
 import { HelpTocItem } from './Item/HelpToc-Item';
@@ -106,7 +107,7 @@ export class HelpToc extends Component<HelpTocProps> {
   }
 
   @action.bound
-  private handleFilterChange(e: React.ChangeEvent<HTMLInputElement>) {
+  private handleFilterChange(e: ChangeEvent<HTMLInputElement>) {
     this.setFilterParam(e.target.value);
     this.search(e.target.value);
     if (e.target.value.trim()) {

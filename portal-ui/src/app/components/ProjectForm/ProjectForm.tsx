@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { type ChangeEvent, Component } from 'react';
 import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { TextField } from '@mui/material';
@@ -73,7 +73,7 @@ export class ProjectForm extends Component<ProjectFormProps> {
   }
 
   @action.bound
-  private handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+  private handleChange(e: ChangeEvent<HTMLInputElement>) {
     this.newProjectName = e.target.value;
     this.props.onChange();
   }

@@ -1,58 +1,40 @@
 import { Block } from '../../Block';
-import { MuiMenuBlock } from '../MuiMenu/MuiMenu.block';
-import { xTableBlock } from '../XTable/XTable.block';
+import { DialogBlock } from '../Dialog/Dialog.block';
+import { ExplorerBlock } from '../Explorer/Explorer.block';
+import { SelectProjectionBlock } from '../SelectProjection/SelectProjection.block';
 
 class SelectProjectDialogBlock extends Block {
   selectors = {
     root: '.SelectProjectDialog',
-    saveBtn: '.SelectProjectDialog .MuiButton-outlinedPrimary',
+    submit: '.SelectProjectDialog .MuiButton-outlinedPrimary',
     projectRow: '.SelectProjectDialog .MuiTable-root .MuiTableRow-root',
     selectProjection: '.SelectProjectDialog .SelectProjection'
   };
 
-  async save(): Promise<void> {
-    const $saveBtn = await this.findBySelector('saveBtn');
-    await $saveBtn.click();
-    await $saveBtn.waitForExist({ reverse: true });
+  private async submit(): Promise<void> {
+    const dialogBlock = new DialogBlock(null, await this.findBySelector('root'));
+    await dialogBlock.clickPrimaryActionButton();
+    await dialogBlock.waitForHidden();
   }
 
   async selectCrs(crs: string): Promise<void> {
-    const $selectProjection = await this.findBySelector('selectProjection');
-    await $selectProjection.waitForClickable();
-    await $selectProjection.click();
-
-    const muiSelect = new MuiMenuBlock();
-    await muiSelect.waitForVisible();
-    await muiSelect.clickItemByTitle(crs);
+    const selectProjectionBlock = new SelectProjectionBlock(null, await this.findBySelector('selectProjection'));
+    await selectProjectionBlock.select(crs);
   }
 
   async selectProject(project: string): Promise<void> {
     await this.waitForVisible();
-    await xTableBlock.waitForLoading();
-
-    const $userRow = await this.findProjectRow(project);
-
-    if (!$userRow) {
-      throw new Error(`Не найден проект "${project}"`);
-    }
-
-    const $projectSelect = await $userRow.$('.MuiTableCell-root:first-child input').getElement();
-    await $projectSelect.click();
+    const explorerBlock = new ExplorerBlock(await this.findBySelector('root'));
+    await explorerBlock.waitForLoading();
+    await explorerBlock.selectExplorerItem(project);
+    await this.submit();
   }
 
-  async findProjectRow(project: string): Promise<WebdriverIO.Element | undefined> {
-    await this.waitForVisible();
+  async allItemsAreDisabled(): Promise<boolean> {
+    const explorerBlock = new ExplorerBlock(await this.findBySelector('root'));
 
-    const $$projectRows = await this.findAllBySelector('projectRow');
-
-    for (const $projectRow of $$projectRows) {
-      const $projectRowName = await $projectRow.$('.MuiTableCell-root:nth-child(2)').getElement();
-      const projectRowName = await $projectRowName.getText();
-
-      if (projectRowName === project) {
-        return $projectRow;
-      }
-    }
+    return await explorerBlock.allItemsAreDisabled();
   }
 }
+
 export const selectProjectDialogBlock = new SelectProjectDialogBlock();

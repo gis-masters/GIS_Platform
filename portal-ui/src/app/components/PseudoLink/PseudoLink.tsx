@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, type DetailedHTMLProps, type HTMLAttributes } from 'react';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
@@ -6,7 +6,7 @@ import './PseudoLink.scss';
 
 const cnPseudoLink = cn('PseudoLink');
 
-interface PseudoLinkProps extends React.DetailedHTMLProps<React.HTMLAttributes<HTMLSpanElement>, HTMLSpanElement> {
+interface PseudoLinkProps extends DetailedHTMLProps<HTMLAttributes<HTMLSpanElement>, HTMLSpanElement> {
   className?: string;
   disabled?: boolean;
   color?: 'inherit';

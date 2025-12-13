@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
 import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { IconButton, Tooltip } from '@mui/material';
+import { Tooltip } from '@mui/material';
 import { GetApp, GetAppOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
 import { type CrgVectorLayer } from '../../services/gis/layers/layers.models';
 import { ExportValidationReportDialog } from '../ExportValidationReportDialog/ExportValidationReportDialog';
+import { IconButton } from '../IconButton/IconButton';
 
 const cnExportValidationReportButton = cn('ExportValidationReportButton');
 

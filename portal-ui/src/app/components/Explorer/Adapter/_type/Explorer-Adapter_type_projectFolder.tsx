@@ -146,10 +146,6 @@ export class ExplorerAdapterTypeProjectFolder {
 
     const project = await projectsService.getById(Number(id));
 
-    if (!project) {
-      throw new Error(`Проект ${id} не найден`);
-    }
-
     return {
       type: project.folder ? ExplorerItemType.PROJECT_FOLDER : ExplorerItemType.PROJECT,
       payload: project

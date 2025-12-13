@@ -23,7 +23,7 @@ class CurrentProjectFolderStore {
     const url = new URL(window.location.href);
 
     if (currentFolder?.folder) {
-      url.searchParams.set(FOLDER_PARAM, currentFolder.id.toString());
+      url.searchParams.set(FOLDER_PARAM, String(currentFolder.id));
     } else {
       url.searchParams.delete(FOLDER_PARAM);
     }

@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
 import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { IconButton, Tooltip } from '@mui/material';
+import { Tooltip } from '@mui/material';
 import { GetApp, GetAppOutlined } from '@mui/icons-material';
 
 import { MapAction } from '../../services/map/map.models';
 import { mapStore } from '../../stores/Map.store';
 import { ExportGmlDialog } from '../ExportGmlDialog/ExportGmlDialog';
+import { IconButton } from '../IconButton/IconButton';
 
 @observer
 export class ExportGmlButton extends Component {

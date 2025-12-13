@@ -64,8 +64,10 @@ export class Counter extends Component<CounterProps> {
             vertical: 'top',
             horizontal: 'left'
           }}
-          PaperProps={{
-            className: cnCounter('Popover')
+          slotProps={{
+            paper: {
+              className: cnCounter('Popover')
+            }
           }}
         >
           {!!this.countersInfo.length && (

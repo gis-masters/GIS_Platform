@@ -18,6 +18,7 @@ export class AttributesNgComponent implements OnInit, OnDestroy {
   @Input() class?: string;
   @ViewChild('react', { read: ElementRef, static: true })
   ref?: ElementRef<HTMLDivElement>;
+
   private root?: Root;
 
   ngOnChanges() {

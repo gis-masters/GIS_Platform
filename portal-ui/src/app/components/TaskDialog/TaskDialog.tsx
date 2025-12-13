@@ -90,7 +90,7 @@ export const TaskDialog = observer(({ task: initialTask, open, onClose }: TaskDi
   }, []);
 
   return (
-    <Dialog open={open} onClose={onClose} fullWidth maxWidth='md' PaperProps={{ className: cnTaskDialog() }}>
+    <Dialog open={open} onClose={onClose} fullWidth maxWidth='md' slotProps={{ paper: { className: cnTaskDialog() } }}>
       <DialogTitle>
         <div className={cnTaskDialog('TypeIcon')}>
           <InsertDriveFileOutlined color='primary' />

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { type ChangeEvent, Component } from 'react';
 import { action, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { Pagination } from '@mui/material';
@@ -33,7 +33,7 @@ export class ExplorerPagination extends Component<ExplorerPaginationProps> {
   }
 
   @action.bound
-  private setPage(e: React.ChangeEvent<unknown>, page: number) {
+  private setPage(e: ChangeEvent<unknown>, page: number) {
     this.props.onChange(page - 1);
   }
 }

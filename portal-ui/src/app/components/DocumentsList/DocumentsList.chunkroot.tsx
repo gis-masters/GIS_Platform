@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { type ChangeEvent, Component } from 'react';
 import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { AddBoxOutlined } from '@mui/icons-material';
@@ -110,7 +110,7 @@ export default class DocumentsList extends Component<DocumentsListProps> {
   }
 
   @boundMethod
-  private async handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
+  private async handleFileChange(e: ChangeEvent<HTMLInputElement>) {
     e.preventDefault();
     if (this.loading) {
       return;

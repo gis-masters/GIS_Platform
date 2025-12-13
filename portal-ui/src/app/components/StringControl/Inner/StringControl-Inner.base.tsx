@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { type ChangeEvent, Component } from 'react';
 import { TextField, type TextFieldProps } from '@mui/material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
@@ -46,7 +46,7 @@ export class StringControlInnerBase extends Component<StringControlInnerProps> {
   }
 
   @boundMethod
-  private handleChange(event: React.ChangeEvent<{ value: string }>) {
+  private handleChange(event: ChangeEvent<{ value: string }>) {
     this.props.onChange(event.target.value);
   }
 }

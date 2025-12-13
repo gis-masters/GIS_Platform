@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
 import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { IconButton, Tooltip } from '@mui/material';
+import { Tooltip } from '@mui/material';
 import { Settings, SettingsOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
 import { type PropertySchema } from '../../services/data/schema/schema.models';
 import { ChooseXTableDialog } from '../ChooseXTableDialog/ChooseXTableDialog';
+import { IconButton } from '../IconButton/IconButton';
 
 const cnRegistrySettings = cn('Registry', 'Settings');
 

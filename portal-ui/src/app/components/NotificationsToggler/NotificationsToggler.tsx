@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { Badge, IconButton, Tooltip } from '@mui/material';
+import { Badge, Tooltip } from '@mui/material';
 import { Notifications, NotificationsOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
@@ -10,6 +10,7 @@ import { filter, takeUntil } from 'rxjs/operators';
 
 import { eventService } from '../../services/event.service';
 import { sidebars } from '../../stores/Sidebars.store';
+import { IconButton } from '../IconButton/IconButton';
 
 const cnNotificationsToggler = cn('NotificationsToggler');
 

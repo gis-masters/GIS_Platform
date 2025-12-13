@@ -4,7 +4,8 @@ export class DialogBlock extends Block {
   selectors = {
     root: '.MuiDialog-paper',
     actions: '.MuiDialog-paper .MuiDialogActions-root',
-    actionsButtons: '.MuiDialog-paper .MuiDialogActions-root .Button'
+    actionsButtons: '.MuiDialog-paper .MuiDialogActions-root .Button',
+    primaryAction: '.MuiDialog-paper .MuiDialogActions-root .MuiButton-outlinedPrimary'
   };
 
   private async getButtonByTitle(buttonTitle: string): Promise<WebdriverIO.Element> {
@@ -32,5 +33,15 @@ export class DialogBlock extends Block {
   async clickActionButton(title: string): Promise<void> {
     const $button = await this.getButtonByTitle(title);
     await $button.click();
+  }
+
+  async clickPrimaryActionButton(): Promise<void> {
+    const $$buttons = await this.findAllBySelector('primaryAction');
+
+    if ($$buttons.length !== 1) {
+      throw new Error(`Ожидалась одна primary кнопка, найдено: ${$$buttons.length}`);
+    }
+
+    await $$buttons[0].click();
   }
 }

@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
-import { IconButton, Tooltip } from '@mui/material';
+import { Tooltip } from '@mui/material';
 import { PlaylistAdd } from '@mui/icons-material';
+
+import { IconButton } from '../../IconButton/IconButton';
 
 interface CreateVectorTableButtonProps {
   onClick(): void;

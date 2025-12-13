@@ -25,6 +25,7 @@ export class PhotoUploaderPageComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.root?.unmount();
   }
+
   backgroundImage = environment.background;
 
   setStyle(): Record<string, string> {

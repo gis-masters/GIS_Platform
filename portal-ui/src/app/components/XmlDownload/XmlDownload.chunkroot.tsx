@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
-import { IconButton, Tooltip } from '@mui/material';
+import { Tooltip } from '@mui/material';
 import { DownloadOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
@@ -11,6 +11,7 @@ import xmlbuilder from 'xmlbuilder';
 
 import { GeometryType, type WfsFeature, type WfsGeometry } from '../../services/geoserver/wfs/wfs.models';
 import { type CrgVectorLayer } from '../../services/gis/layers/layers.models';
+import { IconButton } from '../IconButton/IconButton';
 
 const cnXmlDownload = cn('XmlDownload');
 

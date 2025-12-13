@@ -1,4 +1,4 @@
-import React, { Component, type RefObject } from 'react';
+import React, { type ChangeEvent, Component, createRef, type RefObject } from 'react';
 import { action, makeObservable, observable, runInAction } from 'mobx';
 import { observer } from 'mobx-react';
 import { TextField } from '@mui/material';
@@ -32,7 +32,7 @@ const MAP_UNAVAILABLE_MESSAGE = (
 
 @observer
 export class SelectBboxControl extends Component<FormControlProps> {
-  private mapContainerRef: RefObject<HTMLDivElement> = React.createRef();
+  private mapContainerRef: RefObject<HTMLDivElement> = createRef();
   private mapInstanceRef: Map | null = null;
   private loadingTimeoutRef: number | null = null;
   private moveEndHandlerRef: (() => void) | null = null;
@@ -98,7 +98,7 @@ export class SelectBboxControl extends Component<FormControlProps> {
   }
 
   @boundMethod
-  private handleManualInput(event: React.ChangeEvent<HTMLInputElement>) {
+  private handleManualInput(event: ChangeEvent<HTMLInputElement>) {
     const { onChange, property } = this.props;
     const value = event.target.value;
 

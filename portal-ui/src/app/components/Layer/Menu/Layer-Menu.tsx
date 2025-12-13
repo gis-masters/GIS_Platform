@@ -142,7 +142,7 @@ export class LayerMenu extends Component<LayerMenuProps> {
     return (
       <>
         <Menu
-          PaperProps={{ className: cnLayerMenu() }}
+          slotProps={{ paper: { className: cnLayerMenu() } }}
           open={open}
           anchorReference={anchor ? 'anchorEl' : 'anchorPosition'}
           anchorEl={anchor}

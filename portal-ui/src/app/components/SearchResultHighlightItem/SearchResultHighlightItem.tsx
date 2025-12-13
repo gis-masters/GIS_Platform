@@ -67,9 +67,11 @@ export default class SearchResultHighlightItem extends Component<SearchResultHig
             vertical: 'top',
             horizontal: 'center'
           }}
-          PaperProps={{
-            className: cnSearchResultHighlightItem('Popover'),
-            ref: this.paperRef
+          slotProps={{
+            paper: {
+              className: cnSearchResultHighlightItem('Popover'),
+              ref: this.paperRef
+            }
           }}
         >
           {searchResults}

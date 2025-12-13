@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { type ChangeEvent, Component } from 'react';
 import { observer } from 'mobx-react';
 import { TextField } from '@mui/material';
 import { withBemMod } from '@bem-react/core';
@@ -47,7 +47,7 @@ class FormControlTypeDatetime extends Component<FormControlProps> {
   }
 
   @boundMethod
-  private handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+  private handleChange(e: ChangeEvent<HTMLInputElement>) {
     const { onChange, property, onNeedValidate } = this.props;
     const date = e.target.value;
 

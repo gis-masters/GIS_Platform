@@ -1,12 +1,13 @@
 import React, { type FC, useCallback } from 'react';
 import { observer } from 'mobx-react';
-import { IconButton, Tooltip } from '@mui/material';
+import { Tooltip } from '@mui/material';
 import { Redo, Undo } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
 import { editFeatureHistoryStore } from '../../../services/map/a-map-mode/edit-feature/EditFeatureHistoryStore';
 import { editFeatureStore } from '../../../services/map/a-map-mode/edit-feature/EditFeatureStore';
 import { mapDrawService } from '../../../services/map/draw/map-draw.service';
+import { IconButton } from '../../IconButton/IconButton';
 
 const cnEditFeatureGeometryHistoryControls = cn('EditFeatureGeometry', 'HistoryControls');
 

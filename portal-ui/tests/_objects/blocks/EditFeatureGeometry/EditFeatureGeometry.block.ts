@@ -47,6 +47,17 @@ class EditFeatureGeometryBlock extends Block {
   }
 
   async changeFormInputValue(fieldNumber: number, value: number, coordinate: 'x' | 'y' = 'x'): Promise<void> {
+    await browser.waitUntil(
+      async () => {
+        const $$coords = await this.findAllBySelector('coord');
+        const coordElement = $$coords[fieldNumber - 1];
+
+        return coordElement !== undefined;
+      },
+      {
+        timeoutMsg: `Координата с номером ${fieldNumber} не найдена`
+      }
+    );
     const $$coords = await this.findAllBySelector('coord');
     const coordElement = $$coords[fieldNumber - 1];
     const selector = coordinate === 'x' ? this.selectors.coordInputX : this.selectors.coordInputY;

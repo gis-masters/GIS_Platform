@@ -10,8 +10,6 @@ Then('мне доступна кнопка `Создать набор данны
 When('я, воспользовавшись формой, создаю набор данных {string}', async (datasetTitle: string) => {
   await createDatasetBlock.click();
   await createDatasetFormBlock.waitForVisible();
-  await browser.pause(300); // анимация открытия диалогового окна
-
   await createDatasetFormBlock.setTitleValue(datasetTitle);
   await createDatasetFormBlock.submit();
 });

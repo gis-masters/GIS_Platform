@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
-import { IconButton, ListItem, ListItemSecondaryAction, ListItemText } from '@mui/material';
+import { ListItem, ListItemSecondaryAction, ListItemText } from '@mui/material';
 import { MyLocation } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
@@ -13,6 +13,7 @@ import { fromLonLat } from 'ol/proj';
 import { mapService } from '../../../services/map/map.service';
 import { getStyle, KnownStyleKey } from '../../../services/map/styles/map-styles';
 import { type YaGeoObject } from '../../../services/yandex-geocode.service';
+import { IconButton } from '../../IconButton/IconButton';
 
 const cnSearch = cn('Search');
 

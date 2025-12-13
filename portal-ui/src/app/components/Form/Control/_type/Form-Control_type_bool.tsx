@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { type ChangeEvent, Component } from 'react';
 import { observer } from 'mobx-react';
 import { Checkbox } from '@mui/material';
 import { withBemMod } from '@bem-react/core';
@@ -32,7 +32,7 @@ class FormControlTypeBool extends Component<FormControlProps> {
   }
 
   @boundMethod
-  private handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+  private handleChange(e: ChangeEvent<HTMLInputElement>) {
     const { onChange, onNeedValidate, property, fieldValue } = this.props;
     let value: boolean | string | number = e.target.checked;
 

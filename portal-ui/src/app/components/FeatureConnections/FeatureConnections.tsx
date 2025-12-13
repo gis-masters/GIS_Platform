@@ -74,7 +74,7 @@ export class FeatureConnections extends Component<FeatureConnectionsProps> {
         <Dialog
           open={this.dialogOpen}
           onClose={this.closeDialog}
-          PaperProps={{ className: cnFeatureConnectionsDialog() }}
+          slotProps={{ paper: { className: cnFeatureConnectionsDialog() } }}
           maxWidth='sm'
           fullWidth
         >

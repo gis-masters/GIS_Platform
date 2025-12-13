@@ -17,6 +17,11 @@ class CreateDatasetFormBlock extends Block {
     await $submit.click();
     await $submit.waitForExist({ reverse: true });
   }
+
+  async waitForVisible(): Promise<void> {
+    await super.waitForVisible();
+    await browser.pause(300); // анимация открытия диалогового окна
+  }
 }
 
 export const createDatasetFormBlock = new CreateDatasetFormBlock();

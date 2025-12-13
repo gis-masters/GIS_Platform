@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { type FC } from 'react';
 import { observer } from 'mobx-react';
 import { Container, Divider } from '@mui/material';
 import { cn } from '@bem-react/classname';
@@ -10,7 +10,7 @@ import './OrganizationInfo.scss';
 
 const cnOrganizationInfo = cn('OrganizationInfo');
 
-export const OrganizationInfo: React.FC = observer(() => {
+export const OrganizationInfo: FC = observer(() => {
   return (
     <Container className={cnOrganizationInfo()} maxWidth='md'>
       <h1 className={cnOrganizationInfo('Title')}>Данные об организации</h1>

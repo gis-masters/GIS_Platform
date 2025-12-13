@@ -6,9 +6,9 @@ import { debounce, type DebouncedFunc } from 'lodash';
 import { communicationService, type DataChangeEventDetail } from '../../services/communication.service';
 import { type CrgProject } from '../../services/gis/projects/projects.models';
 import { projectsService } from '../../services/gis/projects/projects.service';
-import { services } from '../../services/services';
 import { currentProjectFolderStore, FOLDER_PARAM } from '../../stores/CurrentProjectFolder.store';
 import { Loading } from '../Loading/Loading';
+import { Toast } from '../Toast/Toast';
 import { ProjectsContent } from './Content/ProjectsContent';
 import { ProjectsEmpty } from './Empty/ProjectsEmpty';
 import { ProjectsHeader } from './Header/Projects-Header';
@@ -22,12 +22,11 @@ import './Add/Projects-Add.scss';
 const cnProjects = cn('Projects');
 
 interface ProjectsState {
-  lastFolderId: string | null;
+  lastFolderId: string | null | undefined;
 }
 
 const Projects: FC = observer(() => {
   const store = useMemo(() => new ProjectsStore(), []);
-  const lastFailedFolderIdRef = useRef<number | null>(null);
   const { busy, setBusy, setProjects, displayedList } = store;
 
   const debouncedFetchProjectsRef = useRef<DebouncedFunc<() => Promise<void>>>();
@@ -42,7 +41,6 @@ const Projects: FC = observer(() => {
       const url = new URL(window.location.href);
       url.searchParams.delete(FOLDER_PARAM);
 
-      lastFailedFolderIdRef.current = null;
       currentProjectFolderStore.setCurrentFolder(null);
     } catch (error) {
       console.error('Error loading root projects:', error);
@@ -54,48 +52,25 @@ const Projects: FC = observer(() => {
 
   // Загрузка проектов для текущей папки
   const loadFolderProjects = useCallback(
-    async (projectId: number) => {
-      if (lastFailedFolderIdRef.current === projectId) {
-        return;
-      }
-
-      lastFailedFolderIdRef.current = projectId;
-
+    async (folderId: number) => {
       try {
         setBusy(true);
-        const projectFolder = await projectsService.getById(projectId);
-
-        if (!projectFolder?.folder) {
-          setProjects([]);
-          currentProjectFolderStore.setCurrentFolder(null);
-
-          services.logger.error('Выбранная папка не найдена');
-
-          return;
-        }
+        const projectFolder = await projectsService.getById(folderId);
 
         currentProjectFolderStore.setCurrentFolder(projectFolder);
-        const projects = await projectsService.getAllProjectsInFolder(projectId);
+        const projects = await projectsService.getAllProjectsInFolder(folderId);
         setProjects(projects || []);
       } catch (error) {
         console.error('Error loading folder projects:', error);
         currentProjectFolderStore.setCurrentFolder(null);
         await loadRootProjects();
+        Toast.error(`Не удалось загрузить проекты в папке с id:${folderId}`);
       } finally {
-        lastFailedFolderIdRef.current = null;
         setBusy(false);
       }
     },
     [loadRootProjects, setBusy, setProjects]
   );
-
-  // Обновление списка проектов
-  const fetchProjects = useCallback(async () => {
-    const url = new URL(window.location.href);
-    const currentFolderId = url.searchParams.get(FOLDER_PARAM);
-
-    await (currentFolderId ? loadFolderProjects(Number(currentFolderId)) : loadRootProjects());
-  }, [loadFolderProjects, loadRootProjects]);
 
   // Обработчик события обновления проекта
   const handleProjectUpdated = useCallback(
@@ -127,23 +102,36 @@ const Projects: FC = observer(() => {
   // Обработка изменений URL
   const handleUrlChange = useCallback(
     async (state: ProjectsState) => {
+      setBusy(true);
+
+      // TODO: выпилить прямую работу с URL и переделать на использование роутера
       const url = new URL(window.location.href);
       const currentFolderId = url.searchParams.get(FOLDER_PARAM);
 
       if (currentFolderId === state.lastFolderId) {
+        setBusy(false);
+
         return state;
       }
 
       state.lastFolderId = currentFolderId;
 
       await (currentFolderId ? loadFolderProjects(Number(currentFolderId)) : loadRootProjects());
+      setBusy(false);
 
       return state;
     },
-    [loadFolderProjects, loadRootProjects]
+    [loadFolderProjects, loadRootProjects, setBusy]
   );
 
   useEffect(() => {
+    // Обновление списка проектов
+    const fetchProjects = async () => {
+      const url = new URL(window.location.href);
+      const currentFolderId = url.searchParams.get(FOLDER_PARAM);
+      await (currentFolderId ? loadFolderProjects(Number(currentFolderId)) : loadRootProjects());
+    };
+
     // Создаём debounced функцию для обновления списка
     debouncedFetchProjectsRef.current = debounce(fetchProjects, 300);
 
@@ -154,23 +142,17 @@ const Projects: FC = observer(() => {
       debouncedFetchProjectsRef.current?.cancel();
       communicationService.off(handleProjectUpdated);
     };
-  }, [fetchProjects, handleProjectUpdated]);
+  }, [handleProjectUpdated, loadFolderProjects, loadRootProjects]);
 
   useEffect(() => {
-    const state: ProjectsState = { lastFolderId: null };
+    // lastFolderId = undefined означает, что начальная загрузка ещё не была выполнена
+    const state: ProjectsState = { lastFolderId: undefined };
 
-    // Инициализация: проверяем сохраненную папку
-    const initializeProjects = async () => {
-      setBusy(true);
-      const savedFolderId = currentProjectFolderStore.getSavedFolderId();
-
-      await (savedFolderId ? loadFolderProjects(savedFolderId) : loadRootProjects());
-      setBusy(false);
-    };
-
-    void initializeProjects();
+    // Выполняем начальную загрузку
+    void handleUrlChange(state);
 
     // Наблюдаем за изменениями URL
+    // TODO: выпилить наблюдение за DOM, этот костыль вообще за гранью
     const observer = new MutationObserver(() => {
       void handleUrlChange(state);
     });
@@ -180,11 +162,8 @@ const Projects: FC = observer(() => {
       childList: true
     });
 
-    // Проверяем URL при первой загрузке
-    void handleUrlChange(state);
-
     return () => observer.disconnect();
-  }, [handleUrlChange, loadFolderProjects, loadRootProjects, setBusy]);
+  }, [handleUrlChange]);
 
   const hasProjects = displayedList.length > 0;
 

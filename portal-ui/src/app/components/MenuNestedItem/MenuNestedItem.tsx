@@ -4,7 +4,9 @@ import React, {
   type FC,
   type ForwardedRef,
   forwardRef,
+  type HTMLAttributes,
   type ReactNode,
+  type RefAttributes,
   type RefObject
 } from 'react';
 import { action, makeObservable, observable } from 'mobx';
@@ -22,7 +24,7 @@ interface MenuNestedItemProps extends Omit<MenuItemProps, 'ref'> {
   parentMenuOpen: boolean;
   MenuProps?: Omit<MenuProps, 'children'>;
   innerRef?: ForwardedRef<HTMLLIElement>;
-  ContainerProps?: React.HTMLAttributes<HTMLElement> & React.RefAttributes<HTMLElement | null>;
+  ContainerProps?: HTMLAttributes<HTMLElement> & RefAttributes<HTMLElement | null>;
   submenu: ReactNode[];
   icon: ReactNode;
   title: string;

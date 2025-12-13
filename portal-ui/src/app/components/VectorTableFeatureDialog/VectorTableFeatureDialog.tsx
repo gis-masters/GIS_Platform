@@ -35,7 +35,7 @@ export const VectorTableFeatureDialog: FC<VectorTableFeatureProps> = ({
     onClose={onClose}
     fullWidth
     maxWidth='xl'
-    PaperProps={{ className: cnVectorTableFeatureDialog() }}
+    slotProps={{ paper: { className: cnVectorTableFeatureDialog() } }}
   >
     <DialogTitle>
       <>

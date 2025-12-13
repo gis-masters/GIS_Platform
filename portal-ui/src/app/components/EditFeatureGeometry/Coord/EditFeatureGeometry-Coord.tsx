@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { type ChangeEvent, Component } from 'react';
 import { action, computed, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { OutlinedInput, Tooltip } from '@mui/material';
@@ -182,7 +182,7 @@ export class EditFeatureGeometryCoord extends Component<EditFeatureGeometryCoord
   }
 
   @action.bound
-  private handleCoordinateChange(e: React.ChangeEvent<HTMLInputElement>, coordIndex: 0 | 1) {
+  private handleCoordinateChange(e: ChangeEvent<HTMLInputElement>, coordIndex: 0 | 1) {
     let value = e.target.value;
 
     // Валидация ввода
@@ -264,12 +264,12 @@ export class EditFeatureGeometryCoord extends Component<EditFeatureGeometryCoord
   }
 
   @action.bound
-  private handleChangeX(e: React.ChangeEvent<HTMLInputElement>) {
+  private handleChangeX(e: ChangeEvent<HTMLInputElement>) {
     this.handleCoordinateChange(e, 0);
   }
 
   @action.bound
-  private handleChangeY(e: React.ChangeEvent<HTMLInputElement>) {
+  private handleChangeY(e: ChangeEvent<HTMLInputElement>) {
     this.handleCoordinateChange(e, 1);
   }
 

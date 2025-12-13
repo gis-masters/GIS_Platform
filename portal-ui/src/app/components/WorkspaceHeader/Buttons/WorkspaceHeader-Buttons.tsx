@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
-import { IconButton, Tooltip } from '@mui/material';
+import { Tooltip } from '@mui/material';
 import { BugReport, BugReportOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
@@ -14,6 +14,7 @@ import { CalculatorButton } from '../../CalculatorButton/CalculatorButton';
 import { CopyUrlButton } from '../../CopyUrlButton/CopyUrlButton';
 import { ExportGmlButton } from '../../ExportGmlButton/ExportGmlButton';
 import { HelpToggler } from '../../HelpToggler/HelpToggler';
+import { IconButton } from '../../IconButton/IconButton';
 import { NotificationsToggler } from '../../NotificationsToggler/NotificationsToggler';
 import { PrintMapButton } from '../../PrintMapButton/PrintMapButton';
 import { RunningOutOfSpace } from '../../RunningOutOfSpace/RunningOutOfSpace';

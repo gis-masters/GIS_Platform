@@ -1,6 +1,7 @@
 import { type Dataset, type VectorTable } from '../../services/data/vectorData/vectorData.models';
 import { type CrgProject } from '../../services/gis/projects/projects.models';
 import { type XTableProps } from '../XTable/XTable';
+import { PermissionsListProjectIcon } from './ProjectIcon/PermissionsListDialog-ProjectIcon';
 
 export enum PermissionsListItemType {
   PROJECT,
@@ -22,6 +23,7 @@ export const baseXTablePropsSet: PermissionsXTablePropsSet = {
         title: 'Название',
         field: 'name',
         filterable: true,
+        BeforeCellContent: PermissionsListProjectIcon,
         sortable: true,
         getIdBadge: ({ id }) => id
       }

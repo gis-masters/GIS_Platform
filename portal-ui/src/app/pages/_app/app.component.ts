@@ -17,6 +17,7 @@ const ToastContainerWithRegistry = withRegistry(registry)(ToastContainer);
 export class AppComponent implements OnInit, OnDestroy, OnChanges {
   @ViewChild('reactToastContainer', { read: ElementRef, static: true })
   refToastContainer?: ElementRef<HTMLDivElement>;
+
   private root?: Root;
 
   async ngOnInit() {

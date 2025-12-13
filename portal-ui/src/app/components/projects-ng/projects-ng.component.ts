@@ -17,6 +17,7 @@ const ProjectsWithRegistry = withRegistry(registry)(Projects);
 export class ProjectsComponent implements OnDestroy, OnInit {
   @ViewChild('react', { read: ElementRef, static: true })
   ref?: ElementRef<HTMLDivElement>;
+
   private root?: Root;
 
   ngOnInit() {

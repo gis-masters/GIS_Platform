@@ -41,7 +41,7 @@ export class UtilityDialog extends Component<UtilityDialogProps> {
     return (
       <Dialog
         {...baseDialogProps}
-        PaperProps={{ className: cnUtilityDialog({ type }) }}
+        slotProps={{ paper: { className: cnUtilityDialog({ type }) } }}
         open={Boolean(open)}
         onClose={this.handleClose}
         {...this.props.info.dialogProps}

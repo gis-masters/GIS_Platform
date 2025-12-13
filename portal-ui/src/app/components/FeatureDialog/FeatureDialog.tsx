@@ -24,7 +24,7 @@ interface FeatureDialogProps {
 }
 
 export const FeatureDialog: FC<FeatureDialogProps> = ({ feature, schema, vectorTable, open, onClose }) => (
-  <Dialog open={open} onClose={onClose} fullWidth maxWidth='xl' PaperProps={{ className: cnFeatureDialog() }}>
+  <Dialog open={open} onClose={onClose} fullWidth maxWidth='xl' slotProps={{ paper: { className: cnFeatureDialog() } }}>
     <DialogTitle>
       <div className={cnFeatureDialog('TypeIcon')}>
         {feature.geometry?.type && <FeatureIcon geometryType={feature.geometry.type} />}

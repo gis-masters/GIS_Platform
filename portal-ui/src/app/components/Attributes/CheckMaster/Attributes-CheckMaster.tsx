@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { type ChangeEvent, Component } from 'react';
 import { action, computed, type IReactionDisposer, makeObservable, observable, reaction } from 'mobx';
 import { observer } from 'mobx-react';
 import { Checkbox } from '@mui/material';
@@ -74,7 +74,7 @@ export class AttributesCheckMaster extends Component<AttributesCheckMasterProps>
   }
 
   @boundMethod
-  private async selectAll(e: React.ChangeEvent<HTMLInputElement>, checked: boolean) {
+  private async selectAll(e: ChangeEvent<HTMLInputElement>, checked: boolean) {
     if (checked) {
       const operationId = Symbol();
       this.selectingAllOperationId = operationId;

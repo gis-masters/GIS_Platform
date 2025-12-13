@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { type ChangeEvent, Component } from 'react';
 import { observer } from 'mobx-react';
 import { Checkbox } from '@mui/material';
 import { cn } from '@bem-react/classname';
@@ -33,7 +33,7 @@ export class AttributesCheck extends Component<AttributesCheckProps> {
   }
 
   @boundMethod
-  private async handleChange(e: React.ChangeEvent<HTMLInputElement>, checked: boolean) {
+  private async handleChange(e: ChangeEvent<HTMLInputElement>, checked: boolean) {
     const { feature } = this.props;
     if (selectedFeaturesStore.limitReached) {
       await mapModeManager.changeMode(

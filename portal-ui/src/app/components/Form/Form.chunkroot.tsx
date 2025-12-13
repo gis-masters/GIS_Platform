@@ -1,4 +1,4 @@
-import React, { Component, type ReactNode } from 'react';
+import React, { Component, type DetailedHTMLProps, type FormHTMLAttributes, type ReactNode } from 'react';
 import { action, computed, type IReactionDisposer, makeObservable, observable, reaction } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
@@ -28,7 +28,7 @@ import './Form.scss';
 const cnForm = cn('Form');
 
 export interface FormProps<T>
-  extends Omit<React.DetailedHTMLProps<React.FormHTMLAttributes<HTMLFormElement>, HTMLFormElement>, 'ref'> {
+  extends Omit<DetailedHTMLProps<FormHTMLAttributes<HTMLFormElement>, HTMLFormElement>, 'ref'> {
   schema?: Schema | SimpleSchema;
   value?: Partial<T>;
   errors?: FieldErrors[];

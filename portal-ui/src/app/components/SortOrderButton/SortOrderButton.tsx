@@ -1,8 +1,10 @@
 import React, { type FC } from 'react';
-import { IconButton, Tooltip } from '@mui/material';
+import { Tooltip } from '@mui/material';
 import { Sort } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { type IClassNameProps } from '@bem-react/core';
+
+import { IconButton } from '../IconButton/IconButton';
 
 import './SortOrderButton.scss';
 

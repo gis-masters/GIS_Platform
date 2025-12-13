@@ -31,7 +31,7 @@ class XTableFilterTypeChoice extends Component<XTableFilterProps> {
     return (
       <Select
         className={cnXTableFilter(null, [className])}
-        MenuProps={{ PaperProps: { className: cnXTableChoiceFilterPopover() } }}
+        MenuProps={{ slotProps: { paper: { className: cnXTableChoiceFilterPopover() } } }}
         onChange={this.handleChange}
         value={this.value}
         renderValue={this.renderSelectValue}

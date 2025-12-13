@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { type ChangeEvent, Component } from 'react';
 import { action, computed, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { TextField } from '@mui/material';
@@ -60,7 +60,7 @@ export class XTableFilterTypeNumber extends Component<XTableFilterProps> {
   }
 
   @action.bound
-  private handleFromChange(e: React.ChangeEvent<HTMLInputElement>) {
+  private handleFromChange(e: ChangeEvent<HTMLInputElement>) {
     const { field, filterQuery, onBeforeFilterChange, onFilterChange } = this.props;
     const currentValue = getFieldFilterValue(filterQuery, field) as { $lte: string; $gte: string };
 
@@ -81,7 +81,7 @@ export class XTableFilterTypeNumber extends Component<XTableFilterProps> {
   }
 
   @action.bound
-  private handleToChange(e: React.ChangeEvent<HTMLInputElement>) {
+  private handleToChange(e: ChangeEvent<HTMLInputElement>) {
     const { field, filterQuery, onBeforeFilterChange, onFilterChange } = this.props;
     const currentValue = getFieldFilterValue(filterQuery, field) as { $lte: string; $gte: string };
 

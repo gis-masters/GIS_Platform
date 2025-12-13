@@ -52,14 +52,12 @@ const ProjectFolderContent: FC<ProjectFolderContentProps> = observer(props => {
         try {
           const projectFolder = await projectsService.getById(Number(identifier));
 
-          if (projectFolder) {
-            currentPath.push('prf', identifier);
+          currentPath.push('prf', identifier);
 
-            breadcrumbs.push({
-              title: projectFolder.name,
-              url: `/data-management?path_dm=${JSON.stringify([...currentPath, 'none', 'none'])}`
-            });
-          }
+          breadcrumbs.push({
+            title: projectFolder.name,
+            url: `/data-management?path_dm=${JSON.stringify([...currentPath, 'none', 'none'])}`
+          });
         } catch (error) {
           console.error(`Error fetching project folder ${identifier}:`, error);
         }

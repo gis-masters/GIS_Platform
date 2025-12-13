@@ -117,6 +117,7 @@ class PrintSettingsStore implements PrintSettings {
     bottom: number;
     left: number;
   } = defaultPrintSettings.margin;
+
   @observable windRose: boolean = defaultPrintSettings.windRose;
   @observable border: boolean = defaultPrintSettings.border;
   @observable date: boolean = defaultPrintSettings.date;

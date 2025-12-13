@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, type PointerEvent } from 'react';
 import { computed, makeObservable } from 'mobx';
 import { observer } from 'mobx-react';
 import { Tab, type TabProps } from '@mui/material';
@@ -88,12 +88,12 @@ export class AttributesTab extends Component<AttributesTabProps> {
     }
   }
 
-  private handleClosePointerDown(e: React.PointerEvent<HTMLButtonElement>) {
+  private handleClosePointerDown(e: PointerEvent<HTMLButtonElement>) {
     e.stopPropagation();
   }
 
   @boundMethod
-  private handleCloseClick(e: React.PointerEvent<HTMLButtonElement>) {
+  private handleCloseClick(e: PointerEvent<HTMLButtonElement>) {
     e.stopPropagation();
     e.preventDefault();
     const { layer, onClose } = this.props;

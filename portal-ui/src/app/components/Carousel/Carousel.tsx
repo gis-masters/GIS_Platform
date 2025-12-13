@@ -66,30 +66,28 @@ export const Carousel: FC<CarouselProps> = observer(({ open, images, onClose, st
     setMainSwiper,
     zoomed,
     setZoomed
-  } = useLocalObservable(
-    (): CarouselStore => ({
-      currentImage: startingImage || images[0],
-      expanded: false,
-      zoomed: false,
-      mainSwiper: undefined,
-      thumbsSwiper: undefined,
-      setMainSwiper(this: CarouselStore, swiper: SwiperClass): void {
-        this.mainSwiper = swiper;
-      },
-      setThumbsSwiper(this: CarouselStore, swiper: SwiperClass): void {
-        this.thumbsSwiper = swiper;
-      },
-      setCurrentImage(this: CarouselStore, image: CarouselImageInfo | undefined): void {
-        this.currentImage = image;
-      },
-      toggleExpanded(this: CarouselStore): void {
-        this.expanded = !this.expanded;
-      },
-      setZoomed(this: CarouselStore, zoomed: boolean): void {
-        this.zoomed = zoomed;
-      }
-    })
-  );
+  } = useLocalObservable<CarouselStore>(() => ({
+    currentImage: startingImage || images[0],
+    expanded: false,
+    zoomed: false,
+    mainSwiper: undefined,
+    thumbsSwiper: undefined,
+    setMainSwiper(swiper) {
+      this.mainSwiper = swiper;
+    },
+    setThumbsSwiper(swiper) {
+      this.thumbsSwiper = swiper;
+    },
+    setCurrentImage(image) {
+      this.currentImage = image;
+    },
+    toggleExpanded() {
+      this.expanded = !this.expanded;
+    },
+    setZoomed(zoomed) {
+      this.zoomed = zoomed;
+    }
+  }));
 
   const handleZoomChange = useCallback(() => {
     setZoomed(!zoomed);
@@ -117,7 +115,7 @@ export const Carousel: FC<CarouselProps> = observer(({ open, images, onClose, st
       maxWidth={maxWidth()}
       className={cnCarousel()}
       fullWidth
-      PaperProps={{ className: cnCarousel('Paper', { height: expanded && 'fullHeight' }) }}
+      slotProps={{ paper: { className: cnCarousel('Paper', { height: expanded && 'fullHeight' }) } }}
     >
       {currentImage && <CarouselHeader title={currentImage.title} subTitle={currentImage.subTitle} />}
       {mainSwiper && !!currentImage && !isPdfFile(currentImage.file) && (

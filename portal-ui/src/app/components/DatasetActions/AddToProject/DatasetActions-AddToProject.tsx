@@ -1,15 +1,7 @@
 import React, { Component } from 'react';
 import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import {
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-  IconButton,
-  Tooltip
-} from '@mui/material';
+import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Tooltip } from '@mui/material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 import { type AxiosError } from 'axios';
@@ -24,10 +16,11 @@ import { type CrgProject } from '../../../services/gis/projects/projects.models'
 import { projectsService } from '../../../services/gis/projects/projects.service';
 import { ActionsRight } from '../../ActionsRight/ActionsRight';
 import { Button } from '../../Button/Button';
+import { IconButton } from '../../IconButton/IconButton';
 import { LayerAdd } from '../../Icons/LayerAdd';
 import { LayerAddOutlined } from '../../Icons/LayerAddOutlined';
 import { Loading } from '../../Loading/Loading';
-import { SelectProjectsDialog } from '../../SelectProjectDialog/SelectProjectDialog';
+import { SelectProjectDialog } from '../../SelectProjectDialog/SelectProjectDialog';
 import { Toast } from '../../Toast/Toast';
 
 const cnDatasetActionsAddToProject = cn('DatasetActions', 'AddToProject');
@@ -65,11 +58,13 @@ export class DatasetActionsAddToProject extends Component<DatasetActionsAddToPro
           </span>
         </Tooltip>
 
-        <SelectProjectsDialog
+        <SelectProjectDialog
           open={this.projectsListDialogOpen}
           onClose={this.closeProjectsListDialog}
-          onSelect={this.onProjectSelected}
-          actionButtonLabel='Добавить в выбранный проект'
+          onSubmit={this.onProjectSelected}
+          actionButtonProps={{
+            children: 'Добавить в выбранный проект'
+          }}
         />
 
         <Dialog open={this.dialogOpen} onClose={this.closeDialog}>
@@ -99,7 +94,7 @@ export class DatasetActionsAddToProject extends Component<DatasetActionsAddToPro
   }
 
   @boundMethod
-  private async onProjectSelected([project]: CrgProject[]) {
+  private async onProjectSelected(project: CrgProject) {
     this.setAddedLayers(0);
     this.setProjectId(project.id);
     this.setBusy(true);

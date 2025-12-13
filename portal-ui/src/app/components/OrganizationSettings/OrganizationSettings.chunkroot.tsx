@@ -44,6 +44,7 @@ export default class OrganizationSettings extends Component<OrganizationSettings
   @observable private formValue?: OrgSettings = cloneDeep(
     organizationSettings.orgSettings?.organization || this.props.orgSettings?.system
   );
+
   @observable private busy = false;
   @observable private _schema?: SimpleSchema;
   @observable private favoritesProjection: Projection[] = [];

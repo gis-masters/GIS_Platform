@@ -1,5 +1,6 @@
 import React, { Component, type FC, type ForwardedRef, forwardRef, type RefObject } from 'react';
-import { LoadingButton, type LoadingButtonProps } from '@mui/lab';
+// eslint-disable-next-line no-restricted-imports -- это и есть кастомный Button, оборачивающий MUI Button
+import { Button as BaseButton, type ButtonProps as BaseButtonProps } from '@mui/material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
@@ -9,7 +10,7 @@ import './Button.scss';
 
 const cnButton = cn('Button');
 
-export interface ButtonProps extends LoadingButtonProps {
+export interface ButtonProps extends BaseButtonProps {
   routerLink?: string;
   innerRef?: RefObject<HTMLButtonElement> | ForwardedRef<HTMLButtonElement>;
 }
@@ -27,7 +28,7 @@ class ButtonComponent extends Component<ButtonProps> {
       onClick: this.handleClick
     };
 
-    return <LoadingButton ref={innerRef} {...extendedProps} />;
+    return <BaseButton ref={innerRef} {...extendedProps} />;
   }
 
   @boundMethod

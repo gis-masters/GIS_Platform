@@ -20,7 +20,7 @@ import { services } from '../../services/services';
 import { projectionsStore } from '../../stores/Projections.store';
 import { sidebars } from '../../stores/Sidebars.store';
 import { CoordinateAxes } from '../CoordinateAxes/CoordinateAxes';
-import { SelectProjectsDialog } from '../SelectProjectDialog/SelectProjectDialog';
+import { SelectProjectDialog } from '../SelectProjectDialog/SelectProjectDialog';
 import { SelectProjection } from '../SelectProjection/SelectProjection';
 import { Toast } from '../Toast/Toast';
 
@@ -57,19 +57,18 @@ export class ProjectPlacementDialog extends Component<ProjectPlacementDialogProp
   }
 
   render() {
-    const { open, onClose, maxWidth, fullWidth, fileInfo } = this.props;
+    const { open, onClose, fileInfo } = this.props;
 
     return (
-      <SelectProjectsDialog
+      <SelectProjectDialog
         className={cnProjectPlacementDialog()}
         open={open}
         onClose={onClose}
-        onSelect={this.onProjectSelected}
-        actionButtonLabel='Разместить в выбранном проекте'
-        loading={this.addFormBusy}
-        maxWidth={maxWidth}
-        fullWidth={fullWidth}
-        additionalAction={
+        onSubmit={this.onProjectSelected}
+        actionButtonProps={{
+          children: 'Разместить в выбранном проекте'
+        }}
+        additionalActions={
           <>
             {isFileCanBePlaced(fileInfo) && (
               <SelectProjection value={this.projection} onChange={this.setProjection} fullWidth />
@@ -89,7 +88,7 @@ export class ProjectPlacementDialog extends Component<ProjectPlacementDialogProp
   }
 
   @action.bound
-  private async onProjectSelected([project]: CrgProject[]) {
+  private async onProjectSelected(project: CrgProject) {
     const { fileInfo } = this.props;
 
     await this.place(fileInfo, project);

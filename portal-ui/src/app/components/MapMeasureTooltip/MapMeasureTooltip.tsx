@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { observer } from 'mobx-react';
-import { IconButton } from '@mui/material';
 import { Close } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
@@ -13,6 +12,7 @@ import { UnitsOfAreaMeasurement, type UnitsOfLengthMeasurement } from '../../ser
 import { mapMeasureStore } from '../../stores/MapMeasure.store';
 import { printSettings } from '../../stores/PrintSettings.store';
 import { cssVars } from '../../utils/cssVars';
+import { IconButton } from '../IconButton/IconButton';
 import { PseudoLink } from '../PseudoLink/PseudoLink';
 
 import './MapMeasureTooltip.scss';

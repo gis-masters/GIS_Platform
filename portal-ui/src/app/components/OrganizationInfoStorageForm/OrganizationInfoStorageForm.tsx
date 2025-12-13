@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { type FC } from 'react';
 import { observer, useLocalObservable } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 
@@ -36,7 +36,7 @@ const defaultValue: OccupiedStorage = {
   totalFiles: 0
 };
 
-export const OrganizationInfoStorageForm: React.FC = observer(() => {
+export const OrganizationInfoStorageForm: FC = observer(() => {
   const state = useLocalObservable(() => ({
     get storageFormValue() {
       return organizationSettings.occupiedStorageInfo || defaultValue;

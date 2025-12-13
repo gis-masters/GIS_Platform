@@ -118,12 +118,14 @@ export default class Breadcrumbs extends Component<BreadcrumbsProps> {
         <Menu
           open={!!this.menuAnchorEl && (menuButtonOnly || !!this.hiddenItemsCount)}
           anchorEl={this.menuAnchorEl}
-          PaperProps={{ ref: this.menuRef }}
+          slotProps={{
+            paper: { ref: this.menuRef },
+            list: { className: cnBreadcrumbs('ShowMoreMenu') }
+          }}
           className={cnBreadcrumbs('ShowMoreMenuRoot')}
           onClose={this.closeMenu}
           anchorOrigin={{ horizontal: 'center', vertical: 'bottom' }}
           transformOrigin={{ horizontal: 'center', vertical: 'top' }}
-          MenuListProps={{ className: cnBreadcrumbs('ShowMoreMenu') }}
           hideBackdrop
         >
           {items?.map((item, i) => (

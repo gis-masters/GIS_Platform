@@ -1,4 +1,4 @@
-import React, { Component, type RefObject } from 'react';
+import React, { Component, createRef, type RefObject } from 'react';
 import { action, makeObservable, observable, runInAction } from 'mobx';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
@@ -26,7 +26,7 @@ export interface BboxPreviewMapProps {
 
 @observer
 export class BboxPreviewMap extends Component<BboxPreviewMapProps> {
-  private mapContainerRef: RefObject<HTMLDivElement> = React.createRef();
+  private mapContainerRef: RefObject<HTMLDivElement> = createRef();
   private mapInstanceRef: Map | null = null;
   private loadingTimeoutRef: number | null = null;
   private imageCaptured = false;

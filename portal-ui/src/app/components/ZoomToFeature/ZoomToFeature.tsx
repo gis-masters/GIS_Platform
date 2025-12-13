@@ -1,5 +1,5 @@
 import React, { Component, createRef } from 'react';
-import { IconButton, Tooltip } from '@mui/material';
+import { Tooltip } from '@mui/material';
 import { MyLocation } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { type IClassNameProps } from '@bem-react/core';
@@ -16,6 +16,7 @@ import { mapService } from '../../services/map/map.service';
 import { services } from '../../services/services';
 import { transformGeometry } from '../../services/util/coordinates-transform.util';
 import { wfsGeometryToGeometry } from '../../services/util/open-layers.util';
+import { IconButton } from '../IconButton/IconButton';
 
 const cnZoomToFeature = cn('ZoomToFeature');
 
