@@ -38,7 +38,7 @@ while [ "$#" -gt 0 ]; do
       printHeader "CLEAR DB"
       export RECREATE_DATADIR="True"
       ;;
-    --name)
+    --MODE)
       MODE="$2"
       shift 2
       continue

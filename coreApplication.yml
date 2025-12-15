@@ -397,7 +397,7 @@ services:
 
   notification-service:
     container_name: crg-notification-service
-    image: ${DOCKER_CRG_HOST}/crg-notification-service:latest
+    image: ${DOCKER_CRG_HOST}/crg-notification-service:${CRG_NOTIFICATION_SERVICE_TAG}
     restart: always
     environment:
       APM_URL: ${APM_URL}

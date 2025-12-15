@@ -81,7 +81,7 @@ services:
     ports:
       - "4000:4000"
     environment:
-#      CARBONE_MAX_DATA_SIZE: 629145600         Объем должен позволять грузить темплэйты с настоящими картинками
+      #      CARBONE_MAX_DATA_SIZE: 629145600         Объем должен позволять грузить темплэйты с настоящими картинками
       CARBONE_SECRET_KEY: "dev-secret-key"
       CARBONE_ALLOW_HTTP: "true"
       CARBONE_HTTP_PORT: "4000"
