@@ -28,6 +28,7 @@ services:
     container_name: postgis
     image: ${DOCKER_CRG_HOST}/postgis_crg:${POSTGIS_TAG}
     restart: always
+    shm_size: ${SHM_SIZE:-500mb}
     ports:
       - "5434:5432"
     volumes:
