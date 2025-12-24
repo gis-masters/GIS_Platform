@@ -64,7 +64,7 @@ services:
 
   redis:
     container_name: redis
-    image: redis:latest
+    image: ${DOCKER_CRG_HOST}/redis:latest
     restart: always
     ports:
       - "6379:6379"

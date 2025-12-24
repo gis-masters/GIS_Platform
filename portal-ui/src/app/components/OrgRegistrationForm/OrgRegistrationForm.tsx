@@ -254,7 +254,11 @@ export class OrgRegistrationForm extends Component {
     }
 
     await authService.registration(value);
-    Toast.success('Регистрация прошла успешно');
+    Toast.success(
+      'Регистрация прошла успешно.\n' +
+      'Подготовка данных для новой организации займет (3–10 минут).\n' +
+      'Вход доступен, но для начала работы дождитесь создания проекта.'
+    );
 
     this.toLoginPage();
   }
