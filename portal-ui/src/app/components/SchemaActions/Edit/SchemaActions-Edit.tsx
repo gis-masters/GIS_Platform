@@ -1,6 +1,5 @@
-import React, { Component } from 'react';
-import { action, computed, makeObservable, observable } from 'mobx';
-import { observer } from 'mobx-react';
+import React, { useCallback, useEffect, useMemo, useRef } from 'react';
+import { observer, useLocalObservable } from 'mobx-react';
 import { Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import {
   Edit,
@@ -11,9 +10,7 @@ import {
   SchemaOutlined
 } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
-import { boundMethod } from 'autobind-decorator';
 import { type AxiosError } from 'axios';
-import { isEqual } from 'lodash';
 
 import { type Library } from '../../../services/data/library/library.models';
 import { updateLibrarySchema } from '../../../services/data/library/library.service';
@@ -35,7 +32,6 @@ const cnSchemaActionsEdit = cn('SchemaActions', 'Edit');
 const cnSchemaActionsError = cn('SchemaActions', 'Error');
 const cnSchemaActionsEditDialog = cn('SchemaActions', 'EditDialog');
 const cnSchemaActionsEditDialogYes = cn('SchemaActions', 'EditDialogYes');
-
 const cnSchemaActionsEditInJson = cn('SchemaActions', 'EditInJson');
 const cnSchemaActionsEditInJsonForm = cn('SchemaActions', 'EditInJsonForm');
 
@@ -50,124 +46,127 @@ interface SchemaActionsEditProps {
   tooltipText?: string;
 }
 
-@observer
-export class SchemaActionsEdit extends Component<SchemaActionsEditProps> {
-  @observable private loading = false;
-  @observable private dialogOpen = false;
-  @observable private jsonMode = false;
-  @observable private currentSchema?: Schema;
-  @observable private error?: string;
+interface SchemaActionsEditState {
+  loading: boolean;
+  dialogOpen: boolean;
+  jsonMode: boolean;
+  currentSchema: Schema | undefined;
+  schemaString: string;
+  error: string;
+  isSchemaChanged: boolean;
 
-  constructor(props: SchemaActionsEditProps) {
-    super(props);
-    makeObservable(this);
-  }
+  setLoading(loading: boolean): void;
+  setDialogOpen(dialogOpen: boolean): void;
+  setJsonMode(jsonMode: boolean): void;
+  setCurrentSchema(currentSchema: Schema | undefined): void;
+  setSchemaString(schemaString: string): void;
+  setError(error: string): void;
+  setIsSchemaChanged(isSchemaChanged: boolean): void;
+}
 
-  componentDidMount(): void {
-    this.setCurrentSchema(this.props.schema);
-  }
+export const SchemaActionsEdit = observer((props: SchemaActionsEditProps) => {
+  const {
+    schema: propSchema,
+    as,
+    item: explorerItem,
+    withPreview,
+    readonly = false,
+    isTemplateEditing: editIcon,
+    disabled,
+    tooltipText
+  } = props;
 
-  componentDidUpdate(prevProps: SchemaActionsEditProps) {
-    if (!isEqual(prevProps.schema, this.props.schema)) {
-      this.setCurrentSchema(this.props.schema);
+  const {
+    loading,
+    dialogOpen,
+    jsonMode,
+    currentSchema,
+    schemaString,
+    error,
+    isSchemaChanged,
+    setLoading,
+    setDialogOpen,
+    setJsonMode,
+    setCurrentSchema,
+    setSchemaString,
+    setError,
+    setIsSchemaChanged
+  } = useLocalObservable(
+    (): SchemaActionsEditState => ({
+      loading: false,
+      dialogOpen: false,
+      jsonMode: false,
+      currentSchema: propSchema,
+      schemaString: JSON.stringify(propSchema, null, 2),
+      error: '',
+      isSchemaChanged: false,
+
+      setLoading(this: SchemaActionsEditState, loading: boolean): void {
+        this.loading = loading;
+      },
+      setDialogOpen(this: SchemaActionsEditState, dialogOpen: boolean): void {
+        this.dialogOpen = dialogOpen;
+      },
+      setJsonMode(this: SchemaActionsEditState, jsonMode: boolean): void {
+        this.jsonMode = jsonMode;
+      },
+      setCurrentSchema(this: SchemaActionsEditState, currentSchema: Schema | undefined): void {
+        this.currentSchema = currentSchema;
+      },
+      setSchemaString(this: SchemaActionsEditState, schemaString: string): void {
+        this.schemaString = schemaString;
+      },
+      setError(this: SchemaActionsEditState, error: string): void {
+        this.error = error;
+      },
+      setIsSchemaChanged(this: SchemaActionsEditState, isSchemaChanged: boolean): void {
+        this.isSchemaChanged = isSchemaChanged;
+      }
+    })
+  );
+
+  const icons = [
+    [SchemaOutlined, SchemaIcon],
+    [EditOutlined, Edit]
+  ];
+
+  const Icon = icons[Number(!!editIcon)][Number(dialogOpen)];
+
+  const prevJsonMode = useRef(jsonMode);
+  const prevDialogOpen = useRef(dialogOpen);
+
+  useEffect(() => {
+    if (!dialogOpen && !isSchemaChanged) {
+      setCurrentSchema(propSchema);
+      setSchemaString(JSON.stringify(propSchema, null, 2));
     }
-  }
+  }, [propSchema, dialogOpen, isSchemaChanged, setCurrentSchema, setSchemaString]);
 
-  render() {
-    const { as, withPreview, isTemplateEditing: editIcon, readonly = false, disabled, tooltipText } = this.props;
-    const icons = [
-      [SchemaOutlined, SchemaIcon],
-      [EditOutlined, Edit]
-    ];
-    const Icon = icons[Number(!!editIcon)][Number(this.dialogOpen)];
+  useEffect(() => {
+    setIsSchemaChanged(false);
+  }, [dialogOpen, setIsSchemaChanged]);
 
-    return (
-      <>
-        <ActionsItem
-          className={cnSchemaActionsEdit()}
-          title={disabled ? tooltipText || this.buttonTitle : this.buttonTitle}
-          as={as}
-          onClick={this.openDialog}
-          icon={<Icon />}
-          disabled={disabled}
-        />
+  useEffect(() => {
+    const jsonModeJustEnabled = !prevJsonMode.current && jsonMode;
+    const dialogJustOpened = !prevDialogOpen.current && dialogOpen;
 
-        <Dialog
-          className={cnSchemaActionsEditDialog()}
-          maxWidth='md'
-          fullWidth
-          open={this.dialogOpen}
-          onClose={this.closeDialog}
-        >
-          <DialogTitle>{this.schemaEditTitle}</DialogTitle>
+    if ((jsonModeJustEnabled || dialogJustOpened) && jsonMode) {
+      setSchemaString(JSON.stringify(currentSchema ?? propSchema, null, 2));
+    }
 
-          <DialogContent>
-            {this.currentSchema &&
-              (this.jsonMode ? (
-                <Form
-                  className={cnSchemaActionsEditInJsonForm()}
-                  schema={schemaForSchema}
-                  value={{ schema: JSON.stringify(this.currentSchema, null, 2) }}
-                  onFormChange={this.handleJsonChange}
-                  labelInField
-                />
-              ) : (
-                <SchemaCard
-                  readonly={readonly}
-                  onSchemaChange={this.setCurrentSchema}
-                  onError={this.setError}
-                  schema={this.currentSchema}
-                />
-              ))}
+    prevJsonMode.current = jsonMode;
+    prevDialogOpen.current = dialogOpen;
+  }, [currentSchema, dialogOpen, jsonMode, propSchema, setSchemaString]);
 
-            {this.error && <div className={cnSchemaActionsError()}>{this.error}</div>}
-          </DialogContent>
-
-          <DialogActions>
-            {!readonly && (
-              <ActionsItem
-                className={cnSchemaActionsEditDialogYes()}
-                title={'Сохранить'}
-                as='button'
-                color='primary'
-                onClick={this.save}
-                icon={<SaveOutlined />}
-                loading={this.loading}
-              />
-            )}
-
-            {withPreview && this.currentSchema && <SchemaActionsPreview schema={this.currentSchema} as='button' />}
-
-            {!readonly && (
-              <ActionsItem
-                className={cnSchemaActionsEditInJson()}
-                title={this.jsonMode ? 'Редактировать в интерфейсе' : 'Редактировать в JSON'}
-                as='button'
-                onClick={this.toggleJsonMode}
-                icon={<EditNoteOutlined />}
-              />
-            )}
-            <Button onClick={this.closeDialog}>Отмена</Button>
-          </DialogActions>
-        </Dialog>
-      </>
-    );
-  }
-
-  @computed
-  private get buttonTitle(): string {
-    const { readonly, isTemplateEditing: editIcon } = this.props;
-
+  const buttonTitle = useMemo(() => {
     if (editIcon) {
       return 'Редактировать';
     }
 
     return readonly ? 'Просмотр схемы' : 'Редактировать схему';
-  }
+  }, [editIcon, readonly]);
 
-  @computed
-  private get schemaEditTitle() {
-    const { readonly, item: explorerItem, schema } = this.props;
+  const schemaEditTitle = useMemo(() => {
     const title = readonly ? 'Просмотр схемы' : 'Редактирование схемы';
 
     if (explorerItem?.type === DataEntityType.LIBRARY && explorerItem?.title) {
@@ -178,58 +177,83 @@ export class SchemaActionsEdit extends Component<SchemaActionsEditProps> {
       return `${title} векторной таблицы ${explorerItem.title}`;
     }
 
-    return `${title} ${schema.title}`;
-  }
+    return `${title} ${propSchema.title}`;
+  }, [readonly, explorerItem, propSchema.title]);
 
-  @action.bound
-  private toggleJsonMode() {
-    this.jsonMode = !this.jsonMode;
-  }
+  const toggleJsonMode = useCallback(() => {
+    setJsonMode(!jsonMode);
+  }, [jsonMode, setJsonMode]);
 
-  @action.bound
-  private openDialog() {
-    this.dialogOpen = true;
-  }
+  const openDialog = useCallback(() => {
+    setDialogOpen(true);
+    setCurrentSchema(propSchema);
+    setSchemaString(JSON.stringify(propSchema, null, 2));
+    setIsSchemaChanged(false);
+  }, [propSchema, setDialogOpen, setCurrentSchema, setSchemaString, setIsSchemaChanged]);
 
-  @action.bound
-  private closeDialog() {
-    this.dialogOpen = false;
-    this.setError('');
-  }
+  const closeDialog = useCallback(() => {
+    setDialogOpen(false);
+    setError('');
+    setJsonMode(false);
+    setIsSchemaChanged(false);
+  }, [setDialogOpen, setError, setJsonMode, setIsSchemaChanged]);
 
-  @action.bound
-  private setCurrentSchema(currentSchema: Schema) {
-    this.currentSchema = currentSchema;
-  }
+  const handleSetCurrentSchema = useCallback(
+    (schema: Schema) => {
+      setCurrentSchema(schema);
+      setIsSchemaChanged(true);
+      if (!jsonMode) {
+        setSchemaString(JSON.stringify(schema, null, 2));
+      }
+    },
+    [setCurrentSchema, setSchemaString, jsonMode, setIsSchemaChanged]
+  );
 
-  @action.bound
-  private setLoading(loading: boolean) {
-    this.loading = loading;
-  }
+  const handleSetError = useCallback(
+    (errorMsg: string) => {
+      setError(errorMsg);
+    },
+    [setError]
+  );
 
-  @action.bound
-  private setError(error: string): void {
-    this.error = error;
-  }
+  const updateSchema = useCallback(
+    async (schema: Schema) => {
+      if (!explorerItem) {
+        await schemaService.updateSchema(schema);
 
-  @action.bound
-  private async save() {
-    if (!this.currentSchema) {
-      this.setError('Ошибка сохранения схемы');
+        return;
+      }
+
+      if (explorerItem.type === DataEntityType.LIBRARY) {
+        await updateLibrarySchema(explorerItem, schema);
+
+        return;
+      }
+
+      if (explorerItem.type === DataEntityType.TABLE) {
+        await updateVectorTableSchema(explorerItem, schema);
+      }
+    },
+    [explorerItem]
+  );
+
+  const save = useCallback(async () => {
+    if (!currentSchema) {
+      setError('Ошибка сохранения схемы');
 
       return;
     }
 
-    this.setLoading(true);
+    setLoading(true);
 
     try {
-      await this.updateSchema(this.currentSchema);
-
-      this.setLoading(false);
-      this.closeDialog();
+      await updateSchema(currentSchema);
+      setLoading(false);
+      closeDialog();
     } catch (error) {
       const err = error as AxiosError<{ errors?: [{ field: string; message: string }] }>;
       const errorsMessages: string[] = [];
+
       err.response?.data?.errors?.forEach(({ field, message }) => {
         let errorMessage: string = '';
 
@@ -241,7 +265,7 @@ export class SchemaActionsEdit extends Component<SchemaActionsEditProps> {
             const propertyIndex = Number.parseInt(matches[1], 10);
 
             if (propertyIndex) {
-              const property = this.currentSchema?.properties[propertyIndex];
+              const property = currentSchema?.properties[propertyIndex];
               errorMessage = property?.name ? `Ошибка в поле ${property.name}: ` : '';
             }
           }
@@ -256,36 +280,90 @@ export class SchemaActionsEdit extends Component<SchemaActionsEditProps> {
         }
       });
 
-      this.setError(errorsMessages.length ? errorsMessages.join('. ') : 'Ошибка сохранения схемы');
-      this.setLoading(false);
+      setError(errorsMessages.length ? errorsMessages.join('. ') : 'Ошибка сохранения схемы');
+      setLoading(false);
     }
-  }
+  }, [closeDialog, currentSchema, setError, setLoading, updateSchema]);
 
-  @boundMethod
-  private handleJsonChange({ schema }: { schema: string }) {
-    this.setError('');
+  const handleJsonChange = useCallback(
+    ({ schema: schemaJson }: { schema: string }) => {
+      setSchemaString(schemaJson);
+      setError('');
 
-    try {
-      const parsedSchema = JSON.parse(schema) as Schema;
-      this.setCurrentSchema(parsedSchema);
-    } catch {
-      this.setError('Ошибка изменения схемы');
-    }
-  }
+      try {
+        const parsedSchema = JSON.parse(schemaJson) as Schema;
+        setCurrentSchema(parsedSchema);
+        setIsSchemaChanged(true);
+      } catch {
+        setError('Ошибка изменения схемы');
+      }
+    },
+    [setCurrentSchema, setError, setSchemaString, setIsSchemaChanged]
+  );
 
-  private async updateSchema(schema: Schema) {
-    const { item: explorerItem } = this.props;
+  return (
+    <>
+      <ActionsItem
+        className={cnSchemaActionsEdit()}
+        title={disabled ? tooltipText || buttonTitle : buttonTitle}
+        as={as}
+        onClick={openDialog}
+        icon={<Icon />}
+        disabled={disabled}
+      />
 
-    if (!explorerItem) {
-      await schemaService.updateSchema(schema);
-    }
+      <Dialog className={cnSchemaActionsEditDialog()} maxWidth='md' fullWidth open={dialogOpen} onClose={closeDialog}>
+        <DialogTitle>{schemaEditTitle}</DialogTitle>
 
-    if (explorerItem?.type === DataEntityType.LIBRARY) {
-      await updateLibrarySchema(explorerItem, schema);
-    }
+        <DialogContent>
+          {currentSchema &&
+            (jsonMode ? (
+              <Form
+                className={cnSchemaActionsEditInJsonForm()}
+                schema={schemaForSchema}
+                value={{ schema: schemaString }}
+                onFormChange={handleJsonChange}
+                labelInField
+              />
+            ) : (
+              <SchemaCard
+                readonly={readonly}
+                onSchemaChange={handleSetCurrentSchema}
+                onError={handleSetError}
+                schema={currentSchema}
+              />
+            ))}
 
-    if (explorerItem?.type === DataEntityType.TABLE) {
-      await updateVectorTableSchema(explorerItem, schema);
-    }
-  }
-}
+          {error && <div className={cnSchemaActionsError()}>{error}</div>}
+        </DialogContent>
+
+        <DialogActions>
+          {!readonly && (
+            <ActionsItem
+              className={cnSchemaActionsEditDialogYes()}
+              title={'Сохранить'}
+              as='button'
+              color='primary'
+              onClick={save}
+              icon={<SaveOutlined />}
+              loading={loading}
+            />
+          )}
+
+          {withPreview && currentSchema && <SchemaActionsPreview schema={currentSchema} as='button' />}
+
+          {!readonly && (
+            <ActionsItem
+              className={cnSchemaActionsEditInJson()}
+              title={jsonMode ? 'Редактировать в интерфейсе' : 'Редактировать в JSON'}
+              as='button'
+              onClick={toggleJsonMode}
+              icon={<EditNoteOutlined />}
+            />
+          )}
+          <Button onClick={closeDialog}>Отмена</Button>
+        </DialogActions>
+      </Dialog>
+    </>
+  );
+});
