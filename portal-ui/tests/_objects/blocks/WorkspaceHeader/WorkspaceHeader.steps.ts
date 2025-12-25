@@ -13,3 +13,13 @@ When('я дожидаюсь исчезновения индикатора заг
 When('я нажимаю на кнопку `Распечатать карту` в шапке страницы', async () => {
   await workspaceHeaderBlock.clickPrintMap();
 });
+
+When('я нажимаю на ссылку {string} в хлебных крошках в шапке страницы', async (title: string) => {
+  await workspaceHeaderBlock.clickBreadcrumbsItem(title);
+});
+
+Then('в шапке страницы карты проекта отображаются хлебные крошки: {strings}', async function (breadcrumbs: string) {
+  const currentProjectBreadcrumbs = await workspaceHeaderBlock.currentProjectBreadcrumbs();
+
+  await expect(breadcrumbs).toEqual(currentProjectBreadcrumbs);
+});

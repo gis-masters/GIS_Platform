@@ -8,12 +8,14 @@ class BreadcrumbsBlock extends Block {
 
   async getItemsText(): Promise<string[]> {
     const $$items = await this.findAllBySelector('items');
+
     const res: string[] = [];
+
     for (const $item of $$items) {
       res.push(await $item.getText());
     }
 
-    return res;
+    return res.filter(Boolean);
   }
 }
 

@@ -10,4 +10,47 @@
   text-overflow: ellipsis;
 
   font-size: 14px;
+
+  .Breadcrumbs {
+    .Breadcrumbs-ItemTitle {
+      color: rgb(255 255 255 / 80%);
+
+      font-size: 14px;
+    }
+
+    .Link {
+      text-decoration: none;
+
+      color: rgb(255 255 255 / 80%);
+
+      &:hover {
+        color: rgb(255 255 255 / 80%);
+      }
+    }
+
+    & > :last-child {
+      .Breadcrumbs-ItemTitle {
+        color: var(--white);
+      }
+    }
+
+    .Breadcrumbs-Divider {
+      width: auto;
+      padding: 0 5px;
+
+      color: rgb(255 255 255 / 80%);
+
+      font-size: 14px;
+    }
+
+    .Breadcrumbs-ShowMore {
+      text-decoration: none;
+
+      color: rgb(255 255 255 / 80%);
+
+      &:hover {
+        color: rgb(255 255 255 / 80%);
+      }
+    }
+  }
 }

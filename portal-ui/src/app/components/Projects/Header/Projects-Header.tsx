@@ -56,7 +56,7 @@ export const ProjectsHeader: FC<ProjectsHeaderProps> = observer(({ store }) => {
 
       try {
         // Получаем массив ID из пути, фильтруем пустые значения
-        const pathIds = path.split('/').filter(Boolean).filter(notFalsyFilter);
+        const pathIds = path.split('/').filter(notFalsyFilter);
 
         // Загружаем информацию о родительских папках
         let parentFolders: CrgProject[] = [];

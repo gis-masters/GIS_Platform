@@ -39,6 +39,10 @@ When('на странице проектов я выбираю направле�
   await projectsBlock.selectProjectSortingDescending(sortDirections[direction]);
 });
 
+When('я жду отображения страницы проектов', async () => {
+  await projectsBlock.waitForExist();
+});
+
 Given('в текущий проект подключена пустая подложка', async function (this: ScenarioScope) {
   const whiteBasemap = {
     id: 1,
