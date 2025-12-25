@@ -61,9 +61,9 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
+import static ru.mycrg.common_contracts.enums.Roles.OWNER;
 import static ru.mycrg.data_service.config.CrgCommonConfig.SYSTEM_DATETIME_PATTERN;
 import static ru.mycrg.data_service.config.CrgCommonConfig.SYSTEM_USER_ID;
-import static ru.mycrg.common_contracts.enums.Roles.OWNER;
 import static ru.mycrg.data_service.service.TaskService.*;
 import static ru.mycrg.data_service.service.resources.ResourceQualifier.*;
 import static ru.mycrg.data_service.service.smev3.fields.FieldsSection.DL_DATA_SECTION_DELIVERY_DATA_TABLE;
@@ -219,7 +219,8 @@ public abstract class AcceptServiceBase {
         SchemaDto rnvSchema = libraryRepository
                 .findByTableName(INBOX_LIBRARY_ID)
                 .map(documentLibrary -> new LibraryModel(documentLibrary, OWNER))
-                .orElseThrow(() -> new NotFoundException("Библиотека не найдена по идентификатору: " + INBOX_LIBRARY_ID))
+                .orElseThrow(
+                        () -> new NotFoundException("Библиотека не найдена по идентификатору: " + INBOX_LIBRARY_ID))
                 .getSchema();
 
         IRecord docRecord = recordsDao
@@ -577,12 +578,17 @@ public abstract class AcceptServiceBase {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
 
         String fullFio = getFullFio(queryResult);
+
         documentPayload.put(RECORD_STATUS_ATTRIBUTE, "1.А.1");
         documentPayload.put(DATE_ATTRIBUTE, LocalDate.parse(getCurrentDate(queryResult), formatter));
         documentPayload.put(PERSON_NAME_ATTRIBUTE, fullFio);
         documentPayload.put(REQUEST_TYPE_ATTRIBUTE, REQUEST_TYPE);
         documentPayload.put(DATA_TYPE_ATTRIBUTE, DATA_TYPE);
-        documentPayload.put(TITLE.getName(), getTitle() + " от " + fullFio);
+
+        documentPayload.put(TITLE.getName(),
+                            getTitle() + " от " + fullFio.replace("Индивидуальный предприниматель",
+                                                                  "ИП"));
+
         documentPayload.put(CONTENT_TYPE_ID.getName(), getContentType());
         documentPayload.put(IS_FOLDER.getName(), false);
         documentPayload.put(PATH.getName(), getDocumentPath());

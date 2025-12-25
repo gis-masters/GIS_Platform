@@ -157,7 +157,11 @@ public class AcceptRnvService extends AcceptServiceBase {
                                            .map(LegalDataType::getRepresentativeInfo)
                                            .map(RepresentativeInfoType::getFullfio)
                                            .orElse(null);
-        List<String> fullfios = Arrays.asList(recipientFio, delegateRecipientFio, representativeFio);
+        String businessmanName = Optional.ofNullable(request.getBusinessmanData())
+                                         .map(BusinessmanDataType::getOrgFullname)
+                                         .orElse(null);
+
+        List<String> fullfios = Arrays.asList(recipientFio, delegateRecipientFio, representativeFio, businessmanName);
 
         return fullfios.stream()
                        .filter(Objects::nonNull)
