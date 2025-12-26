@@ -42,3 +42,17 @@ Feature: Поле choice: внешний вид
   Scenario: Внешний вид поля с возможностью выбора нескольких значений с тремя выбранными значениями
     Given я на странице "form-field-choice--multiple-three-value" библиотеки блоков
     Then блок FormControlTypeChoice вариант "multiple-three-value" выглядит как положено
+
+  Scenario: При наличие в данных строки, не совпадающей ни с одной из опций, строка будет отображена в выбранных опциях поля курсивом
+    Given я на странице "form-field-choice--multiple-array-not-included-value" библиотеки блоков
+    Then блок FormControlTypeChoice вариант "multiple-array-not-included-value" выглядит как положено
+
+  Scenario: При наличие одного числа, среди массива значений, не совпадающего ни с одной из опций, данное число будут отражено как выбранное курсивом
+    Given я на странице "form-field-choice--multiple-array-with-not-match-number" библиотеки блоков
+    Then блок FormControlTypeChoice вариант "multiple-array-with-not-match-number" выглядит как положено
+    And значение формы FormControlTypeChoiceStory: {"address": ["address1", 1, "address2", "address3"]}
+
+  Scenario: При наличии в данных массива чисел, часть из которых совпадает с опциями, а часть нет, то в выбранных опциях поля будут все эти значения; те числовые значения, что отсутствуют в опциях, будут выделены курсивом
+    Given я на странице "form-field-choice--multiple-array-with-partial-match-number" библиотеки блоков
+    Then блок FormControlTypeChoice вариант "multiple-array-with-partial-match-number" выглядит как положено
+    And значение формы FormControlTypeChoiceStory: {"address": ["address1", 1, "address2", "address3", 5, "address3", 6]}

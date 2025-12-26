@@ -31,9 +31,22 @@ export class FormBlock extends Block {
   }
 
   async setChoiceValue(title: string, value: string): Promise<void> {
+    const $inputRoot = await this.getFieldInputRoot(title);
+    const select = new MuiSelectBlock($inputRoot);
+    await select.selectOptionByTitle(value);
+  }
+
+  async setChoiceMultipleValues(title: string, values: string[]): Promise<void> {
+    const $inputRoot = await this.getFieldInputRoot(title);
+    const select = new MuiSelectBlock($inputRoot);
+    await select.selectMultipleOptions(values);
+  }
+
+  async getChoiceValue(title: string): Promise<string> {
     const $tableFieldValueRoot = await this.getFieldInputRoot(title);
     const tableFieldValue = new MuiSelectBlock($tableFieldValueRoot);
-    await tableFieldValue.selectOptionByTitle(value);
+
+    return await tableFieldValue.getText();
   }
 
   async openSchemaSelection(): Promise<void> {

@@ -229,19 +229,25 @@ class FormControlTypeChoice extends Component<FormControlProps> {
     const nextValue = event.target.value;
 
     // Конвертируем в финальное значение
-    let finalValue: string | null = null;
+    let finalValue: string | string[] | null = null;
 
     if (!multiple) {
       finalValue = nextValue === EMPTY ? null : String(nextValue);
     } else if (multiple && isStringArray(nextValue)) {
-      finalValue = nextValue.length === 0 ? null : JSON.stringify(nextValue);
+      if (nextValue.length === 0) {
+        finalValue = null;
+      } else {
+        // Сохраняем тип исходного значения: если был массив — возвращаем массив, иначе строку
+        const wasArray = Array.isArray(fieldValue);
+        finalValue = wasArray ? nextValue : JSON.stringify(nextValue);
+      }
     }
 
     // Нормализуем текущее значение
-    const normalizedCurrentValue = fieldValue == null || fieldValue === EMPTY ? null : String(fieldValue);
+    const normalizedCurrentValue = fieldValue == null || fieldValue === EMPTY ? null : fieldValue;
 
     // 🔁 Не вызываем onChange, если значение не изменилось
-    if (normalizedCurrentValue === finalValue) {
+    if (JSON.stringify(normalizedCurrentValue) === JSON.stringify(finalValue)) {
       return;
     }
 

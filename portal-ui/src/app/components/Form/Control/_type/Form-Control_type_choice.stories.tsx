@@ -1,5 +1,6 @@
 import React from 'react';
 import { Send } from '@mui/icons-material';
+import { cn } from '@bem-react/classname';
 import { type StoryFn } from '@storybook/react';
 
 import { type PropertySchemaChoice, PropertyType } from '../../../../services/data/schema/schema.models';
@@ -64,6 +65,8 @@ const choiceFieldWithMultipleWithMatchNumber: PropertySchemaChoice[] = [
       { title: shortAddress, value: 'address1' },
       { title: middleAddress, value: 'address2' },
       { title: '#1', value: 1 },
+      { title: '#2', value: 2 },
+      { title: '#3', value: 3 },
       {
         title: longAddress,
         value: 'address3'
@@ -81,18 +84,19 @@ const value = { address: 'address1' };
 const longValue = { address: 'address3' };
 
 const actionFunction = async (val: unknown) => {
-  // имитируем обращение к серверу
-  await sleep(Math.random() * 500);
-  Toast.success(JSON.stringify(val, null, 2));
+  await sleep(Math.random() * 500); // имитируем обращение к серверу
+  Toast.success(`Значение формы: ${JSON.stringify(val, null, 2)}`);
 };
 
+const cnFormControlTypeChoiceStory = cn('FormControlTypeChoiceStory');
+
+const Template: StoryFn<typeof Form> = args => <Form className={cnFormControlTypeChoiceStory()} {...args} />;
+
 const actions = (
-  <Button type='submit' startIcon={<Send />} color='primary'>
+  <Button className={cnFormControlTypeChoiceStory('Send')} type='submit' startIcon={<Send />} color='primary'>
     Send
   </Button>
 );
-
-const Template: StoryFn<typeof Form> = args => <Form {...args} />;
 
 export const LongValueEditable = Template.bind({});
 LongValueEditable.args = {
@@ -150,30 +154,32 @@ export const MultipleEmpty = Template.bind({});
 MultipleEmpty.args = {
   schema: {
     properties: [
-      choiceFieldWithMultiple[0],
-      { ...choiceFieldWithMultiple[0], name: 'address2' },
-      { ...choiceFieldWithMultiple[0], name: 'address3' },
-      { ...choiceFieldWithMultiple[0], name: 'address4' },
-      { ...choiceFieldWithMultiple[0], name: 'address5' }
+      { ...choiceFieldWithMultiple[0], title: 'Адрес' },
+      { ...choiceFieldWithMultiple[0], name: 'address2', title: 'Адрес 2' },
+      { ...choiceFieldWithMultiple[0], name: 'address3', title: 'Адрес 3' },
+      { ...choiceFieldWithMultiple[0], name: 'address4', title: 'Адрес 4' },
+      { ...choiceFieldWithMultiple[0], name: 'address5', title: 'Адрес 5' }
     ]
   },
   auto: true,
-  value: { address: '[]', address2: null, address3: '', address5: [] },
+  value: { address: [], address2: null, address3: '', address5: '[]' },
   actions,
   actionFunction
 };
 
 export const MultipleThreeValues = Template.bind({});
 MultipleThreeValues.args = {
-  schema: { properties: [choiceFieldWithMultiple[0], { ...choiceFieldWithMultiple[0], name: 'address2' }] },
+  schema: {
+    properties: [choiceFieldWithMultiple[0], { ...choiceFieldWithMultiple[0], name: 'address2', title: 'Адрес 2' }]
+  },
   auto: true,
   value: multipleThreeValues,
   actions,
   actionFunction
 };
 
-export const MultipleArrayNotIncludeValue = Template.bind({});
-MultipleArrayNotIncludeValue.args = {
+export const MultipleArrayNotIncludedValue = Template.bind({});
+MultipleArrayNotIncludedValue.args = {
   schema: { properties: choiceFieldWithMultiple },
   auto: true,
   value: { address: ['address1', 'address2', 'notMatch', 'address3'] },
@@ -181,11 +187,11 @@ MultipleArrayNotIncludeValue.args = {
   actionFunction
 };
 
-export const MultipleArrayIncludeValue = Template.bind({});
-MultipleArrayIncludeValue.args = {
+export const MultipleArrayIncludedValue = Template.bind({});
+MultipleArrayIncludedValue.args = {
   schema: { properties: choiceFieldWithMultiple },
   auto: true,
-  value: { address: ['address2', 'address3'] },
+  value: { address: ['address2'] },
   actions,
   actionFunction
 };
@@ -201,7 +207,7 @@ MultipleOneNumberValue.args = {
 
 export const MultipleArrayWithNumbers = Template.bind({});
 MultipleArrayWithNumbers.args = {
-  schema: { properties: choiceFieldWithMultiple },
+  schema: { properties: choiceFieldWithMultipleWithMatchNumber },
   auto: true,
   value: { address: [1, 2, 3] },
   actions,
@@ -217,11 +223,11 @@ MultipleArrayWithNotMatchNumber.args = {
   actionFunction
 };
 
-export const MultipleArrayWithMatchNumber = Template.bind({});
-MultipleArrayWithMatchNumber.args = {
+export const MultipleArrayWithPartialMatchNumber = Template.bind({});
+MultipleArrayWithPartialMatchNumber.args = {
   schema: { properties: choiceFieldWithMultipleWithMatchNumber },
   auto: true,
-  value: { address: ['address1', 1, 'address2', 'address3'] },
+  value: { address: ['address1', 1, 'address2', 'address3', 5, 'address3', 6] },
   actions,
   actionFunction
 };

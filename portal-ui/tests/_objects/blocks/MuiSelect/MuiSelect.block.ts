@@ -7,15 +7,31 @@ export class MuiSelectBlock extends Block {
     root: '.MuiInputBase-root div[class*="MuiSelect"]'
   };
 
-  async selectOptionByTitle(optionTitle: string, contains?: boolean): Promise<void> {
+  private async openSelect(): Promise<void> {
     const $root = await this.findBySelector('root');
     await $root.moveTo();
 
     await sleep(300); // ждем анимации отображения
     await $root.click();
+  }
+
+  async selectOptionByTitle(optionTitle: string, contains?: boolean): Promise<void> {
+    await this.openSelect();
 
     const muiMenuBlock = new MuiMenuBlock();
     await muiMenuBlock.clickItemByTitle(optionTitle, contains);
+  }
+
+  async selectMultipleOptions(optionTitles: string[], contains?: boolean): Promise<void> {
+    await this.openSelect();
+
+    const muiMenuBlock = new MuiMenuBlock();
+
+    for (const optionTitle of optionTitles) {
+      await muiMenuBlock.clickItemByTitle(optionTitle, contains);
+    }
+
+    await muiMenuBlock.close();
   }
 
   async getText(): Promise<string> {
