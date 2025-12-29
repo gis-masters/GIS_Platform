@@ -32,6 +32,8 @@ export const ProjectsHeader: FC<ProjectsHeaderProps> = observer(({ store }) => {
   useEffect(() => {
     let mounted = true;
 
+    store.setNameFilter('');
+
     const loadBreadcrumbs = async () => {
       const { currentFolder } = currentProjectFolderStore;
 
