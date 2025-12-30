@@ -6,6 +6,7 @@ import ru.mycrg.data_service_contract.enums.GeometryType;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Pattern;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +21,9 @@ public class SchemaDto implements Serializable {
     private String title;
 
     @NotBlank
+    @Pattern(regexp = "^[a-z][a-z0-9_]*$",
+             message = "В tableName допускаются только строчные латинские буквы (a–z)," +
+                     " цифры (0–9) и нижнее подчёркивание _")
     private String tableName;
 
     @Valid
