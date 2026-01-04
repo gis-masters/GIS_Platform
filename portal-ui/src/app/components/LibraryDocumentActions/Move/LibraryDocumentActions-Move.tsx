@@ -118,12 +118,12 @@ export class LibraryDocumentActionsMove extends Component<LibraryDocumentActions
   @boundMethod
   private successMessage() {
     const { document } = this.props;
-    const { is_folder, title } = document;
+    const { is_folder: isFolder, title } = document;
 
     Toast.success(
       <>
-        {is_folder ? `Папка с документами "${title}" успешно перемещена. ` : `Документ "${title}" успешно перемещен. `}
-        {this.url && <Link href={this.url}>Перейти к {is_folder ? 'папке' : 'документу'}</Link>}
+        {isFolder ? `Папка с документами "${title}" успешно перемещена. ` : `Документ "${title}" успешно перемещен. `}
+        {this.url && <Link href={this.url}>Перейти к {isFolder ? 'папке' : 'документу'}</Link>}
       </>,
       { duration: 15_000 }
     );

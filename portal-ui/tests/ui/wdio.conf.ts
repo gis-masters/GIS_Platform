@@ -1,6 +1,7 @@
 import { config as baseConfig } from '../wdio.conf';
 
 declare global {
+  // eslint-disable-next-line no-var
   var testOrganizationIndex: number | undefined;
 }
 

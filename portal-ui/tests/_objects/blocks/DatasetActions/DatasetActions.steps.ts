@@ -12,15 +12,15 @@ Then('в панели свойств набора данных есть кноп
 });
 
 Then('в панели свойств набора данных есть кнопка удаления, и она активна', async () => {
-  await expect(await datasetActionsBlock.isDeleteBtnEnabled()).toBe(true);
+  expect(await datasetActionsBlock.isDeleteBtnEnabled()).toBe(true);
 });
 
 Then('в панели свойств набора данных есть кнопка редактирования, и она активна', async () => {
-  await expect(await datasetActionsBlock.isEditBtnEnabled()).toBe(true);
+  expect(await datasetActionsBlock.isEditBtnEnabled()).toBe(true);
 });
 
 Then('в панели свойств набора данных есть кнопка редактирования, но она неактивна', async () => {
-  await expect(await datasetActionsBlock.isDeleteBtnEnabled()).toBeFalsy();
+  expect(await datasetActionsBlock.isDeleteBtnEnabled()).toBeFalsy();
 });
 
 When('я открываю карточку редактирования набора данных', async () => {

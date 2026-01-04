@@ -26,7 +26,7 @@ When(
       await browser.pause(400); // анимация перехода к объектам слоя на карте
     }
 
-    await attributesBlock.waitForLoadingDisappear();
+    await attributesBlock.waitForLoading();
   }
 );
 

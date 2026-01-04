@@ -37,7 +37,7 @@ When(
   async (fieldTitle: string) => {
     const value = await tasksJournalActionsEditDialogBlock.getDocValue(fieldTitle);
 
-    await expect(value).toEqual([]);
+    expect(value).toEqual([]);
   }
 );
 
@@ -46,6 +46,6 @@ Then(
   async function (this: ScenarioScope, err: string) {
     const error = await tasksJournalActionsEditDialogBlock.getFromError();
 
-    await expect(error).toEqual(err);
+    expect(error).toEqual(err);
   }
 );

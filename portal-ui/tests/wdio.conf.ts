@@ -1,4 +1,6 @@
+import * as fs from 'node:fs';
 import { networkInterfaces } from 'node:os';
+import * as path from 'node:path';
 
 import { type EnvironmentData } from '../src/app/services/environment';
 
@@ -282,7 +284,7 @@ export const config: WebdriverIO.Config = {
     ignoreUndefinedDefinitions: false
   },
 
-  execArgv: ['--experimental-global-customevent']
+  execArgv: ['--experimental-global-customevent'],
 
   //
   // =====
@@ -392,8 +394,33 @@ export const config: WebdriverIO.Config = {
    * @param {number}             result.duration  duration of scenario in milliseconds
    * @param {Object}             context          Cucumber World object
    */
-  // afterStep: function (step, scenario, result, context) {
-  // },
+  afterStep: async function (step, scenario, result, _context) {
+    // Делаем скриншот только если шаг упал
+    if (!result.passed) {
+      const errorDir = path.join(process.cwd(), 'tests/_screens/.tmp/errors');
+
+      // Создаем директорию для ошибок, если она не существует
+      if (!fs.existsSync(errorDir)) {
+        fs.mkdirSync(errorDir, { recursive: true });
+      }
+
+      // Формируем имя файла со временем и названием сценария
+      const time = new Date().toISOString().split('T')[1].slice(0, 8).replaceAll(':', '-');
+      const scenarioName = scenario.name.replaceAll(/[^\dA-Za-zА-я]/g, '_').slice(0, 30);
+      const stepText = step.text.replaceAll(/[^\dA-Za-zА-я]/g, '_').slice(0, 30);
+      const filename = `${time}_${scenarioName}_${stepText}.png`;
+      const filepath = path.join(errorDir, filename);
+
+      try {
+        await browser.saveScreenshot(filepath);
+        // eslint-disable-next-line no-console
+        console.log(`\n📸 Скриншот ошибки сохранен: ${filepath}`);
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.error(`\n❌ Не удалось сохранить скриншот: ${String(error)}`);
+      }
+    }
+  }
 
   /**
    *

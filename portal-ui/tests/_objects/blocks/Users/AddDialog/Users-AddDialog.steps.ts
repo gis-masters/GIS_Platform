@@ -25,7 +25,7 @@ When('в диалоговом окне выбора пользователя д�
 
   const currentRowsLength = await usersAddDialogBlock.getUsersAmount();
 
-  await expect(users.length).toEqual(currentRowsLength);
+  expect(users.length).toEqual(currentRowsLength);
 });
 
 When(
@@ -44,6 +44,6 @@ Then(
   async ({ rawTable }: { rawTable: string[][] }) => {
     const values = rawTable.flat();
 
-    await expect(values).toEqual(await usersAddDialogBlock.getSecondColValues());
+    expect(values).toEqual(await usersAddDialogBlock.getSecondColValues());
   }
 );

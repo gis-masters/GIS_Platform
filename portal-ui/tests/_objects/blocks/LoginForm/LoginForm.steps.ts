@@ -15,7 +15,7 @@ When('я ввожу неверные учётные данные в форму �
 Then('на форме входа появляется сообщение об ошибке {string}', async (errorMessage: string) => {
   const message = await loginFormBlock.getErrorMessage();
 
-  await expect(message).toBe(errorMessage);
+  expect(message).toBe(errorMessage);
 });
 
 Then('на форме входа появляется выбор организации', async () => {
@@ -29,5 +29,5 @@ When('я нажимаю на пункт {string} в списке организ�
 Then('в списке организаций на форме входа перечислены: {strings}', async (titles: string[]) => {
   const organizations = await loginFormBlock.getOrganizations();
   const cleanOrganizations = organizations.map(org => org.replace(/ \d+$/, '')); // remove trailing number
-  await expect(titles).toEqual(cleanOrganizations);
+  expect(titles).toEqual(cleanOrganizations);
 });

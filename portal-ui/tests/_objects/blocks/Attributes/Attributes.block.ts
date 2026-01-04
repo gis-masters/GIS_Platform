@@ -9,7 +9,7 @@ class AttributesBlock extends Block {
   selectors = {
     root: '.Attributes',
     bar: '.Attributes-Bar',
-    loading: '.Attributes .Loading',
+    loader: '.Attributes .Loading',
     attributeTableCols: '.Attributes-Table .XTable-Head .XTable-CellContent',
     barTitle: '.Attributes-BarTitle',
     barMinimize: '.Attributes-BarMinimize',
@@ -46,7 +46,7 @@ class AttributesBlock extends Block {
 
     const values = await this.getHeadCellsValues();
 
-    await expect(values).toEqual(['', title]);
+    expect(values).toEqual(['', title]);
   }
 
   async selectTab(title: string): Promise<void> {
@@ -108,12 +108,7 @@ class AttributesBlock extends Block {
     await $attributesTabs.waitForDisplayed();
     await $attributesTabs.click();
 
-    await this.waitForLoadingDisappear();
-  }
-
-  async waitForLoadingDisappear() {
-    const $loading = await this.findBySelector('loading');
-    await $loading.waitForExist({ reverse: true });
+    await this.waitForLoading();
   }
 
   async minimize() {

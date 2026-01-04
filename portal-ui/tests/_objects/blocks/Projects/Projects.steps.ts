@@ -31,7 +31,7 @@ When(
   async (sortOptionName: string) => {
     const currentOptionName = await projectsBlock.projectSortTypeSelect(sortOptionName);
 
-    await expect(currentOptionName).toEqual(sortOptionName);
+    expect(currentOptionName).toEqual(sortOptionName);
   }
 );
 
@@ -62,33 +62,33 @@ Then(/^в списке проектов появляется "(.*)" и он до
 Then(/^в списке проектов отображается один проект "(.*)"$/, async (name: string) => {
   const projectName = await projectsBlock.singleVisibleProject();
 
-  await expect(projectName).toEqual(name);
+  expect(projectName).toEqual(name);
 });
 
 Then(/^в списке проектов отображаются проекты:$/, async (names: DataTable) => {
   const currentProjectsNames = await projectsBlock.multipleVisibleProject();
   const projectsNames = names.raw().map(name => name[0]);
 
-  await expect(currentProjectsNames).toEqual(projectsNames);
+  expect(currentProjectsNames).toEqual(projectsNames);
 });
 
 Then('я перешел на страницу созданной папки проектов', async function (this: ScenarioScope) {
   const folder = this.latestProjectFolder;
   const currentFolder = await projectsBlock.currentFolder();
 
-  await expect([folder.name, String(folder.id)]).toEqual(currentFolder);
+  expect([folder.name, String(folder.id)]).toEqual(currentFolder);
 });
 
 Then('в хлебных крошках отображается {string} и {string}', async function (firstFolder: string, secondFolder: string) {
   const currentFolderBreadcrumbsPath = await projectsBlock.currentFolderBreadcrumbsPath();
 
   // первый элемент - иконка корневой папки
-  await expect(['', firstFolder, secondFolder]).toEqual(currentFolderBreadcrumbsPath);
+  expect(['', firstFolder, secondFolder]).toEqual(currentFolderBreadcrumbsPath);
 });
 
 Then(/^сортировка проектов соответствует ожидаемому (".+"[ ,]*)+$/, async (names: string) => {
   const currentProjectsNames = await projectsBlock.multipleVisibleProject();
   const newNames = names.replaceAll(/^.|.$/g, '');
 
-  await expect(currentProjectsNames).toEqual(newNames.slice(1, -1).split('", "'));
+  expect(currentProjectsNames).toEqual(newNames.slice(1, -1).split('", "'));
 });

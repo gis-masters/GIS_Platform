@@ -9,9 +9,9 @@ declare const window: {
 };
 
 export async function getAttributesTableFilter(): Promise<FilterQuery> {
-  return JSON.parse(
-    await browser.execute(function () {
-      return JSON.stringify(window.attributesTableStore.filter);
-    })
-  ) as FilterQuery;
+  const result = await browser.execute(function () {
+    return JSON.stringify(window.attributesTableStore.filter);
+  });
+
+  return JSON.parse(result) as FilterQuery;
 }

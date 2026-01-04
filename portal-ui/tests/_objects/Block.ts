@@ -52,6 +52,7 @@ export abstract class Block<S extends Selectors = Selectors> {
 
   async assertSelfie(tag = 'plain', checkElementOptions: WdioCheckElementMethodOptions = {}): Promise<void> {
     const $root = await this.findBySelector('root');
+    // eslint-disable-next-line @typescript-eslint/await-thenable -- ошибка в типах @wdio/visual-service
     await expect($root).toMatchElementSnapshot(`${this.name}-${tag}`, {
       disableBlinkingCursor: true,
       ...checkElementOptions

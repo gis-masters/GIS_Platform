@@ -21,7 +21,7 @@ Then(
   'в поле {string} формы FormControlTypeChoiceStory выбрано значение {string}',
   async (fieldTitle: string, expectedValue: string) => {
     const actualValue = await formControlTypeChoiceStoryBlock.getChoiceValue(fieldTitle);
-    await expect(actualValue).toEqual(expectedValue);
+    expect(actualValue).toEqual(expectedValue);
   }
 );
 
@@ -29,7 +29,7 @@ Then(
   'в поле {string} формы FormControlTypeChoiceStory выбраны значения {strings}',
   async (fieldTitle: string, expectedValues: string[]) => {
     const actualValue = await formControlTypeChoiceStoryBlock.getChoiceValue(fieldTitle);
-    await expect(actualValue).toEqual(expectedValues.join('\n'));
+    expect(actualValue).toEqual(expectedValues.join('\n'));
   }
 );
 
@@ -44,5 +44,5 @@ Then(/значение формы FormControlTypeChoiceStory: (.*)/, async (expe
   const actualJson: unknown = JSON.parse(actualJsonString);
   const expectedJson: unknown = JSON.parse(expectedValue);
 
-  await expect(actualJson).toEqual(expectedJson);
+  expect(actualJson).toEqual(expectedJson);
 });

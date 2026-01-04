@@ -21,12 +21,12 @@ Then('блок FormContent вариант {string} выглядит как по�
 
 Then('в форме существует поле {string}', async (fieldTitle: string) => {
   const formBlock = new FormBlock();
-  await expect(await formBlock.hasField(fieldTitle)).toBeTruthy();
+  expect(await formBlock.hasField(fieldTitle)).toBeTruthy();
 });
 
 Then('в форме существуют поля: {strings}', async (fieldTitles: string[]) => {
   const formBlock = new FormBlock();
-  await expect(await formBlock.getAllFields()).toEqual(fieldTitles);
+  expect(await formBlock.getAllFields()).toEqual(fieldTitles);
 });
 
 // url
@@ -97,11 +97,11 @@ Then('блок FormViewTypeString вариант {string} выглядит ка�
 // file
 
 When('в поле файла у прикрепленного файла {string} есть кнопка `Разместить в проекте`', async (title: string) => {
-  await expect(await formControlTypeFileBlock.isFilesPlacementBtnExist(title)).toBeTruthy();
+  expect(await formControlTypeFileBlock.isFilesPlacementBtnExist(title)).toBeTruthy();
 });
 
 When('в поле файл у прикрепленного файла {string} нет кнопки `Разместить в проекте`', async (title: string) => {
-  await expect(await formControlTypeFileBlock.isFilesPlacementBtnExist(title)).toBeFalsy();
+  expect(await formControlTypeFileBlock.isFilesPlacementBtnExist(title)).toBeFalsy();
 });
 
 Then('блок FormViewTypeFile вариант {string} выглядит как положено', async (variant: string) => {
@@ -109,13 +109,13 @@ Then('блок FormViewTypeFile вариант {string} выглядит как 
 });
 
 Then('в поле файл у набора файлов есть единственная кнопка `Удалить набор`', async () => {
-  await expect(await formControlTypeFileBlock.isCompoundFileHaveSingleDeleteBtn()).toBeTruthy();
+  expect(await formControlTypeFileBlock.isCompoundFileHaveSingleDeleteBtn()).toBeTruthy();
 });
 
 Then('в поле файл у набора файлов есть единственная кнопка `Скачать набор файлов архивом`', async () => {
-  await expect(await formViewTypeFileBlock.isCompoundFileHaveSingleDownloadBtn()).toBeTruthy();
+  expect(await formViewTypeFileBlock.isCompoundFileHaveSingleDownloadBtn()).toBeTruthy();
 });
 
 Then('в поле файл у набора файлов есть единственная кнопка `Разместить в проекте`', async () => {
-  await expect(await formViewTypeFileBlock.isCompoundFileHaveSingleFilesPlacementBtn()).toBeTruthy();
+  expect(await formViewTypeFileBlock.isCompoundFileHaveSingleFilesPlacementBtn()).toBeTruthy();
 });

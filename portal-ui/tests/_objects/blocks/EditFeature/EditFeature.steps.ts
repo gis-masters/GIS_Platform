@@ -20,7 +20,7 @@ Then('форма просмотра объекта открывается в р�
   await editFeatureBlock.waitForEditFeatureForm();
   const isReadonly = await editFeatureBlock.isReadonlyMode();
 
-  await expect(isReadonly).toEqual(expected);
+  expect(isReadonly).toEqual(expected);
 });
 
 Then('открывается форма просмотра объекта', async function () {
@@ -36,7 +36,7 @@ Then(
   async function (value: string, field: string) {
     const fieldValue = await editFeatureBlock.getFormViewFieldValue(field);
 
-    await expect(fieldValue).toEqual(value);
+    expect(fieldValue).toEqual(value);
   }
 );
 
@@ -45,7 +45,7 @@ Then(
   async function (value: string) {
     const fieldValue = await editFeatureBlock.getNavigationValue();
 
-    await expect(fieldValue).toEqual(value);
+    expect(fieldValue).toEqual(value);
   }
 );
 
@@ -62,7 +62,7 @@ When('в форме просмотра объекта, я перехожу на 
 });
 
 When('я дожидаюсь исчезновения индикатора загрузки в форме редактирования объекта', async () => {
-  await editFeatureBlock.waitForLoaderEnd();
+  await editFeatureBlock.waitForLoading();
 });
 
 When(
@@ -103,7 +103,7 @@ Then('в форме редактирования объекта в поле {str
   await editFeatureBlock.waitForVisible();
   await editFeatureBlock.waitForEditFeatureForm();
 
-  await expect(await editFeatureBlock.checkFormControlFieldValue(title, value)).toBe(true);
+  expect(await editFeatureBlock.checkFormControlFieldValue(title, value)).toBe(true);
 });
 
 Then('вкладка просмотра геометрии в режиме чтения содержит следующую геометрию', async function (data: DataTable) {
@@ -119,7 +119,7 @@ Then('вкладка просмотра геометрии в режиме чт�
     .split(' ')
     .filter(item => item.length > 2);
 
-  await expect(geometry).toEqual(expectedGeometry);
+  expect(geometry).toEqual(expectedGeometry);
 });
 
 Then('на форме корректно отображаются {string}', async (variant: string) => {

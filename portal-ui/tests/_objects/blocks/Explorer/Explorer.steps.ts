@@ -23,12 +23,12 @@ When('я открываю созданный набор данных', async fun
   await explorerBlock.openExplorerItem(latestDataset.title);
 });
 
-When('в библиотеке документов я захожу внутрь элемента с названием {string}', async (folder: string) => {
+When('в explorer я захожу внутрь элемента с названием {string}', async (folder: string) => {
   const explorerBlock = new ExplorerBlock();
   await explorerBlock.openExplorerItem(folder);
 });
 
-When('в библиотеке документов я захожу внутрь созданного документа', async function (this: ScenarioScope) {
+When('в explorer я захожу внутрь созданного документа', async function (this: ScenarioScope) {
   const explorerBlock = new ExplorerBlock();
   if (this.latestLibraryRecords[0]?.title) {
     await explorerBlock.openExplorerItem(this.latestLibraryRecords[0].title);
@@ -49,7 +49,7 @@ When('в списке элементов explorer все элементы нед
   const explorerBlock = new ExplorerBlock();
   const disabled = await explorerBlock.allItemsAreDisabled();
 
-  await expect(disabled).toEqual(true);
+  expect(disabled).toEqual(true);
 });
 
 When('я нажимаю кнопку `Подключить в проект` в панели свойств векторной таблицы', async () => {
@@ -59,7 +59,7 @@ When('я нажимаю кнопку `Подключить в проект` в �
 
 When('я дожидаюсь окончания загрузки в explorer', async () => {
   const explorerBlock = new ExplorerBlock();
-  await explorerBlock.waitForLoading();
+  await explorerBlock.waitForVisible();
 });
 
 When('в библиотеке документов я выбираю {string}', async (explorerItem: string) => {
@@ -89,7 +89,7 @@ When('я нажимаю кнопку поиска в explorer', async () => {
 
 Then('список названий в explorer: {strings}', async (titles: string[]) => {
   const explorerBlock = new ExplorerBlock();
-  await expect(titles).toEqual(await explorerBlock.getListTitles());
+  expect(titles).toEqual(await explorerBlock.getListTitles());
 });
 
 Then('список в explorer пуст', async () => {
@@ -120,6 +120,6 @@ Then(
     const explorerBlock = new ExplorerBlock();
     await explorerBlock.openExplorerItem(folder);
 
-    await expect(await explorerBlock.getListTitles()).toContain(doc);
+    expect(await explorerBlock.getListTitles()).toContain(doc);
   }
 );

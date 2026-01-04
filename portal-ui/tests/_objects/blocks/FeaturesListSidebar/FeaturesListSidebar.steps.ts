@@ -62,7 +62,7 @@ When('в боковой панели выделенных объектов я н
 Then('в боковой панели выделенных объектов изменились названия объектов на:', async (expectedNames: DataTable) => {
   const currentNames = await featuresListSidebarBlock.getFeaturesNames();
 
-  await expect(expectedNames.raw()[0]).toEqual(currentNames);
+  expect(expectedNames.raw()[0]).toEqual(currentNames);
 });
 
 Then('в боковой панели выделенных объектов отображаются {string}', async (variant: string) => {
@@ -81,7 +81,7 @@ Then('в боковой панели выделенных объектов су�
     })
   );
 
-  await expect(rawExpectedNames).toEqual(currentNames);
+  expect(rawExpectedNames).toEqual(currentNames);
 });
 
 Then('панель выделенных объектов закрывается', async function () {
@@ -102,7 +102,7 @@ Then(
     const values = itemValues.raw()[0];
     const [id, layer] = await featuresListSidebarBlock.listItemData(values);
 
-    await expect([values[0], values[2]]).toEqual([id, layer]);
+    expect([values[0], values[2]]).toEqual([id, layer]);
   }
 );
 

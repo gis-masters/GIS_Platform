@@ -9,7 +9,7 @@ class LoginFormBlock extends Block {
     loginBtn: '.LoginForm button[type="submit"]',
     organizationsList: '.LoginForm-OrgSelectList',
     organizationsListItem: '.LoginForm-OrgSelectListItem',
-    loading: '.LoginForm-Loading'
+    loader: '.LoginForm-Loading'
   };
 
   async fillAndSubmit(login: string, password: string) {
@@ -58,16 +58,6 @@ class LoginFormBlock extends Block {
     const $$organizationsListItems = await this.findAllBySelector('organizationsListItem');
 
     return await Promise.all([...$$organizationsListItems].map(async $item => await $item.getText()));
-  }
-
-  async waitForLoading(): Promise<void> {
-    const $loading = await this.findBySelector('loading');
-    try {
-      await $loading.waitForDisplayed({ timeout: 1000 });
-    } catch {
-      // ignore
-    }
-    await $loading.waitForExist({ reverse: true });
   }
 }
 

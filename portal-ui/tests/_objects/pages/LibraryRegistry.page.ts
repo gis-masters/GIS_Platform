@@ -4,6 +4,7 @@ export class LibraryRegistryPage extends Page {
   selectors = {
     root: '.LibraryRegistry'
   };
+
   title = 'Табличный вид библиотеки документов';
   url: string;
 

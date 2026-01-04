@@ -11,5 +11,5 @@ When('отсутствует кнопка создания векторной т
   const explorerBlock = new ExplorerBlock();
   const isExist = await explorerBlock.isCreateLayerBtnExist();
 
-  await expect(isExist).toEqual(false);
+  expect(isExist).toEqual(false);
 });

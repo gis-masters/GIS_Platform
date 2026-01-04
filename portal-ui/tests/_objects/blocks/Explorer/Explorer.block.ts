@@ -21,10 +21,10 @@ export class ExplorerBlock extends Block {
     connectionToProject: '.Explorer .ConnectionsToProjectsWidget button'
   };
 
-  async openExplorerItem(datatable: string): Promise<void> {
-    const $item = await this.getExplorerItemByName(datatable);
+  async openExplorerItem(title: string): Promise<void> {
+    const $item = await this.getExplorerItemByTitle(title);
     if (!$item) {
-      throw new Error(`Не найден элемент "${datatable}"`);
+      throw new Error(`Не найден элемент "${title}"`);
     }
 
     await $item.doubleClick();
@@ -34,7 +34,7 @@ export class ExplorerBlock extends Block {
   async selectExplorerItem(item: string): Promise<void> {
     await this.waitForVisible();
 
-    const $item = await this.getExplorerItemByName(item);
+    const $item = await this.getExplorerItemByTitle(item);
     if (!$item) {
       throw new Error(`Не найден элемент "${item}"`);
     }
@@ -46,8 +46,7 @@ export class ExplorerBlock extends Block {
     const $root = await this.findBySelector('root');
     await $root.waitForDisplayed();
 
-    const $loader = await this.findBySelector('loader');
-    await $loader.waitForExist({ reverse: true });
+    await this.waitForLoading();
 
     const $$explorerItems = await this.findAllBySelector('item');
     const $$explorerDisablesItems = await this.findAllBySelector('disabledItem');
@@ -78,11 +77,8 @@ export class ExplorerBlock extends Block {
   }
 
   async getExplorerItemsLength(): Promise<number> {
-    const $root = await this.findBySelector('root');
-    await $root.waitForDisplayed();
-
-    const $loader = await this.findBySelector('loader');
-    await $loader.waitForExist({ reverse: true });
+    await this.waitForVisible();
+    await this.waitForLoading();
 
     const $$explorerItems = await this.findAllBySelector('item');
 
@@ -106,13 +102,6 @@ export class ExplorerBlock extends Block {
     return await $createLayerBtn.isExisting();
   }
 
-  async waitForLoading(): Promise<void> {
-    await browser.pause(300);
-    const $loader = await this.findBySelector('loader');
-    await $loader.waitForExist({ reverse: true });
-    await browser.pause(300);
-  }
-
   async getListTitles(): Promise<string[]> {
     const $title = await this.findBySelector('title');
     await $title.waitForDisplayed();
@@ -126,35 +115,27 @@ export class ExplorerBlock extends Block {
     await $empty.waitForDisplayed();
   }
 
-  async getExplorerItemByName(itemName: string): Promise<WebdriverIO.Element> {
-    const $root = await this.findBySelector('root');
-    await $root.waitForDisplayed();
-
-    const $loader = await this.findBySelector('loader');
-    await $loader.waitForExist({ reverse: true });
+  async getExplorerItemByTitle(title: string): Promise<WebdriverIO.Element> {
+    await this.waitForVisible();
+    await this.waitForLoading();
 
     const $$explorerItems = await this.findAllBySelector('item');
-
     for (const $explorerItem of $$explorerItems) {
       const explorerItemName = await $explorerItem.$('.Explorer-ItemTitle').getText();
 
-      if (explorerItemName === itemName) {
+      if (explorerItemName === title) {
         return $explorerItem;
       }
     }
 
-    throw new Error('Не найдет элемент' + itemName);
+    throw new Error('Не найдет элемент: ' + title);
   }
 
   async getExplorerItemById(id: string): Promise<WebdriverIO.Element> {
-    const $root = await this.findBySelector('root');
-    await $root.waitForDisplayed();
-
-    const $loader = await this.findBySelector('loader');
-    await $loader.waitForExist({ reverse: true });
+    await this.waitForVisible();
+    await this.waitForLoading();
 
     const $$explorerItems = await this.findAllBySelector('item');
-
     for (const $explorerItem of $$explorerItems) {
       const $itemId = await $explorerItem.$('.MuiListItemText-secondary').getElement();
       const currentId = await $itemId.getText();

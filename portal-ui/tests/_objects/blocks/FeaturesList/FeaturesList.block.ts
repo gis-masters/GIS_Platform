@@ -1,5 +1,4 @@
 import { Block } from '../../Block';
-import { CopyFeaturesButtonBlock } from '../CopyFeaturesButton/CopyFeaturesButton.block';
 
 class FeaturesListBlock extends Block {
   selectors = {
@@ -7,15 +6,8 @@ class FeaturesListBlock extends Block {
     item: '.FeaturesList .FeaturesListItem'
   };
 
-  copyFeaturesButton = new CopyFeaturesButtonBlock(this.selectors.root);
-
-  async waitForLoading(): Promise<void> {
-    const $editFeatureLoader = await this.findBySelector('root');
-    await $editFeatureLoader.waitForDisplayed();
-  }
-
   async openFirstItem(): Promise<void> {
-    await this.waitForLoading();
+    await this.waitForVisible();
 
     const $$items = await this.findAllBySelector('item');
     const $item = $$items[0];
@@ -29,7 +21,7 @@ class FeaturesListBlock extends Block {
   }
 
   async openLastItem(): Promise<void> {
-    await this.waitForLoading();
+    await this.waitForVisible();
 
     const $$items = await this.findAllBySelector('item');
     const $item = $$items.at(-1);

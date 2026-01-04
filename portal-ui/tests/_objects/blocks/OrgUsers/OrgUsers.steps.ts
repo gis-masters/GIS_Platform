@@ -10,7 +10,7 @@ When('в вкладке `Пользователи` я нажимаю кнопк�
 When(
   'в вкладке `Пользователи` у пользователя {string} я нажимаю кнопку `Редактировать`',
   async function (userName: string) {
-    await orgAdminBlock.waitForLoadingDisappear();
+    await orgAdminBlock.waitForLoading();
     await orgUsersBlock.clickEditUserButton(userName);
   }
 );
@@ -20,7 +20,7 @@ When(
   async function (userName: string, bossName: string) {
     const userBoss = await orgUsersBlock.getUserBoss(userName);
 
-    await expect(userBoss).toEqual(bossName);
+    expect(userBoss).toEqual(bossName);
   }
 );
 
@@ -29,6 +29,6 @@ When(
   async function (userName: string) {
     const userBoss = await orgUsersBlock.getUserBoss(userName);
 
-    await expect(userBoss).toEqual('');
+    expect(userBoss).toEqual('');
   }
 );

@@ -9,5 +9,5 @@ Then('блок Breadcrumbs вариант {string} выглядит как по�
 Then('в хлебных крошках страницы проектов отображается: {strings}', async function (breadcrumbs: string) {
   const currentBreadcrumbs = await breadcrumbsBlock.getItemsText();
 
-  await expect(breadcrumbs).toEqual(currentBreadcrumbs);
+  expect(breadcrumbs).toEqual(currentBreadcrumbs);
 });

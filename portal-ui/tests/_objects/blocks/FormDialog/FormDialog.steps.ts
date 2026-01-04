@@ -25,6 +25,6 @@ Then(
   'в диалоговом окне формы текстовое поле {string} имеет значение {string}',
   async (fieldName: string, fieldValue: string) => {
     const value = await formDialogBlock.getStringValue(fieldName);
-    await expect(value).toBe(fieldValue);
+    expect(value).toBe(fieldValue);
   }
 );

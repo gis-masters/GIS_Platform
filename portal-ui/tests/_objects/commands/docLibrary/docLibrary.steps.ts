@@ -200,5 +200,5 @@ When('в библиотеке документов у созданного до�
   const explorerBlock = new ExplorerBlock();
   await explorerBlock.waitForExist();
 
-  await expect(await explorerBlock.getContentWidgetFieldValue(field)).toEqual('—');
+  expect(await explorerBlock.getContentWidgetFieldValue(field)).toEqual('—');
 });

@@ -1,7 +1,7 @@
 import { Then, When } from '@wdio/cucumber-framework';
 
 import { ExplorerBlock } from '../../blocks/Explorer/Explorer.block';
-import { ScenarioScope } from '../../ScenarioScope';
+import { type ScenarioScope } from '../../ScenarioScope';
 import { documentEditDialog } from './DocumentEditDialog.block';
 
 When(

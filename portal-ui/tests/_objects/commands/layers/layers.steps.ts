@@ -131,6 +131,6 @@ Then(
 
     const layer = await getLayer(latestLayer.id, latestProject.id);
 
-    await expect(layer[fieldName]).toBe(fieldValue);
+    expect(layer[fieldName]).toBe(fieldValue);
   }
 );

@@ -8,7 +8,7 @@ import { xTableBlock } from './XTable.block';
 
 Then('в первой колонке таблицы xTable содержатся только элементы:', async ({ rawTable }: { rawTable: string[][] }) => {
   const values = rawTable.flat();
-  await expect(values).toEqual(await xTableBlock.getFirstColCellValues());
+  expect(values).toEqual(await xTableBlock.getFirstColCellValues());
 });
 
 When('в таблице в первой колонке я навожусь на заголовок', async () => {
@@ -17,11 +17,11 @@ When('в таблице в первой колонке я навожусь на 
 
 Then('в первой колонке таблицы xTable содержатся только элементы {string}', async (valuesDirty: string) => {
   const values = valuesDirty.split(', ');
-  await expect(values).toEqual(await xTableBlock.getFirstColCellValues());
+  expect(values).toEqual(await xTableBlock.getFirstColCellValues());
 });
 
 Then('таблица xTable не содержит записей', async () => {
-  await expect(await xTableBlock.getFirstColCellValues()).toEqual([]);
+  expect(await xTableBlock.getFirstColCellValues()).toEqual([]);
 });
 
 Then('блок xTable вариант {string} выглядит как положено', async (variant: string) => {

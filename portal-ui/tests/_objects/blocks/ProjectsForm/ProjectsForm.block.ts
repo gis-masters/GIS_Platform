@@ -21,11 +21,12 @@ class ProjectFormBlock extends Block {
   }
 
   async testInputValue(title: string) {
-    await expect(await this.getInputValue()).toEqual(title);
+    expect(await this.getInputValue()).toEqual(title);
   }
 
   async inputIsFocused(): Promise<void> {
-    await expect(this.findBySelector('input')).toBeFocused();
+    const $input = await this.findBySelector('input');
+    await expect($input).toBeFocused();
   }
 
   async waitForErrors(): Promise<void> {
@@ -34,7 +35,8 @@ class ProjectFormBlock extends Block {
   }
 
   async errorsAreEmpty(): Promise<void> {
-    await expect(this.findBySelector('error')).not.toBeDisplayed();
+    const $error = await this.findBySelector('error');
+    await expect($error).not.toBeDisplayed();
   }
 
   async submit(): Promise<void> {

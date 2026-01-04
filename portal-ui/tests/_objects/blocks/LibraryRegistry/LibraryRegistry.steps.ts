@@ -32,7 +32,7 @@ Then(
   async function (field: string, value: string) {
     const document = await libraryRegistryBlock.isDocumentExist(field, value);
 
-    await expect(document).toBeTruthy();
+    expect(document).toBeTruthy();
   }
 );
 

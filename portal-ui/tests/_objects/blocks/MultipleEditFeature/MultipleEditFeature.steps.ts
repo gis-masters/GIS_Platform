@@ -17,5 +17,5 @@ When(
 );
 
 When('я жду завершения загрузки формы множественного редактирования', async function () {
-  await multipleEditFeatureBlock.waitForLoaderEnd();
+  await multipleEditFeatureBlock.waitForLoading();
 });

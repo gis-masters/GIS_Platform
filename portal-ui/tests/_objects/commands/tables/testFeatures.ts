@@ -24,6 +24,7 @@ import { forProkol } from './testFeatures/forProkol';
 import { forSimpleFiltering } from './testFeatures/forSimpleFiltering';
 import { forSorting } from './testFeatures/forSorting';
 import { forTitles } from './testFeatures/forTitles';
+import { incorrectChoiceValue } from './testFeatures/incorrectChoiceValue';
 import { line } from './testFeatures/line';
 import { line2 } from './testFeatures/line2';
 import { multiLine } from './testFeatures/multiline';
@@ -37,7 +38,6 @@ import { polarStar } from './testFeatures/polarStar';
 import { singleFeature } from './testFeatures/singleFeature';
 import { theLetterC } from './testFeatures/theLetterC';
 import { ursaMajor } from './testFeatures/ursaMajor';
-import { incorrectChoiceValue } from './testFeatures/incorrectChoiceValue';
 
 const KEY = 'тестовые данные';
 

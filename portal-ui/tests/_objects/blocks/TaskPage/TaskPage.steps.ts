@@ -8,5 +8,5 @@ Then('на странице задачи отображается карточк
   await taskPageBlock.isActionsExist();
   const currentTitle = await taskPageBlock.getCardTitle();
 
-  await expect(currentTitle).toEqual(`Задача №${this.latestTask.id}id: ${this.latestTask.id}`);
+  expect(currentTitle).toEqual(`Задача №${this.latestTask.id}id: ${this.latestTask.id}`);
 });

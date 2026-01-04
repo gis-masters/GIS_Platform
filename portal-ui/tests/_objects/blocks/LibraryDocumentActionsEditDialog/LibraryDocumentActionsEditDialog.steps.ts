@@ -14,6 +14,6 @@ Then(
   async (field: string, fieldValue: string) => {
     const fieldValues = await libraryDocumentActionsEditDialogBlock.lookupFieldValues(field);
 
-    await expect(fieldValues).toEqual([fieldValue]);
+    expect(fieldValues).toEqual([fieldValue]);
   }
 );

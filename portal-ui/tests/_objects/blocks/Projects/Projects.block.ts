@@ -73,7 +73,7 @@ class ProjectsBlock extends Block {
 
     const $$projectsCards = await this.findAllBySelector('projectsCards');
 
-    await expect($$projectsCards.length).toEqual(1);
+    expect($$projectsCards.length).toEqual(1);
 
     return await this.getProjectCardText($$projectsCards[0]);
   }

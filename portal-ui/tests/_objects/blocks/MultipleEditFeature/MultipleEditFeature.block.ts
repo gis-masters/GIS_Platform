@@ -18,16 +18,6 @@ class MultipleEditFeatureBlock extends Block {
     });
   }
 
-  async waitForLoaderEnd(): Promise<void> {
-    const loader = await this.findBySelector('loader');
-    try {
-      await loader.waitForDisplayed({ timeout: 1000 });
-    } catch {
-      // ignore
-    }
-    await loader.waitForDisplayed({ reverse: true });
-  }
-
   async clickEditInField(field: string): Promise<void> {
     const $currentField = await this.getFeatureEditField(field);
     const $multipleEditButton = $currentField?.$('.EditFeatureForm-MultipleEditButton');

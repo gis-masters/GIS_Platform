@@ -41,7 +41,7 @@ class DocumentEditDialogBlock extends Block {
 
     const $errorMessage = await $currentField.$('.MuiFormHelperText-root').getElement();
     await $errorMessage.waitForDisplayed();
-    await expect(await $errorMessage.getText()).toContain(message);
+    expect(await $errorMessage.getText()).toContain(message);
   }
 
   async waitForClose(): Promise<void> {

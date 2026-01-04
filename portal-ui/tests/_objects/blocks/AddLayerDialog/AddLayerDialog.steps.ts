@@ -27,7 +27,7 @@ When('в диалоговом окне `Добавить слой` я нажим
 });
 
 When('в диалоговом окне `Добавить слой` я жду окончания загрузки', async function () {
-  await addLayerDialogBlock.waitForLoadingDisappear();
+  await addLayerDialogBlock.waitForLoading();
 });
 
 When('я жду закрытия диалогового окна `Добавить слой`', async function () {

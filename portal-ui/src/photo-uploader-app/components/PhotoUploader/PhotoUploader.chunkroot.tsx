@@ -1,7 +1,7 @@
 import React, { type FC, useEffect } from 'react';
 import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
-import Helmet from 'react-helmet';
+import { Helmet } from 'react-helmet';
 
 import { Favicon } from '../../../app/components/Favicon/Favicon';
 import { Loading } from '../../../app/components/Loading/Loading';

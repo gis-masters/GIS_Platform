@@ -11,26 +11,20 @@ import { MuiInputBlock } from '../MuiInput/MuiInput.block';
 class EditFeatureBlock extends Block {
   selectors = {
     root: '.EditFeature',
-    editFeatureBack: '.EditFeature-Back',
-    editFeatureSaveBtn: '.EditFeature-Save',
-    editFeatureForm: '.EditFeature',
-    editFeatureLabel: '.EditFeatureForm-Label',
-    editFeatureField: '.EditFeatureForm-Row',
-    editFeatureLoading: '.EditFeature .loading',
+    back: '.EditFeature-Back',
+    saveBtn: '.EditFeature-Save',
+    form: '.EditFeature',
+    label: '.EditFeatureForm-Label',
+    field: '.EditFeatureForm-Row',
     navigationTextBox: '.EditFeature .EditFeatureNavigation-TextBox',
     navigationPrevFeatureBtn: '.EditFeature .EditFeatureNavigation-Prev .MuiButtonBase-root',
     navigationNextFeatureBtn: '.EditFeature .EditFeatureNavigation-Next .MuiButtonBase-root',
     lookupStatus: '.EditFeature .Lookup-Status',
     zoom: '.ZoomToFeature',
-    loader: 'EditFeature .MuiLinearProgress-root'
+    loader: '.EditFeature .MuiLinearProgress-root'
   };
 
   copyFeaturesButton = new CopyFeaturesButtonBlock(this.selectors.root);
-
-  async waitForLoading(): Promise<void> {
-    const $editFeatureLoader = await this.findBySelector('editFeatureLoading');
-    await $editFeatureLoader.waitForExist({ reverse: true });
-  }
 
   async zoomToFeature(): Promise<void> {
     const $zoomToFeature = await this.findBySelector('zoom');
@@ -51,13 +45,13 @@ class EditFeatureBlock extends Block {
   }
 
   async clickSaveButton(): Promise<void> {
-    const $saveNewObjectBtn = await this.findBySelector('editFeatureSaveBtn');
+    const $saveNewObjectBtn = await this.findBySelector('saveBtn');
     await $saveNewObjectBtn.click();
     await this.waitForLoading();
   }
 
   async focusSaveButton(): Promise<void> {
-    const $saveNewObjectBtn = await this.findBySelector('editFeatureSaveBtn');
+    const $saveNewObjectBtn = await this.findBySelector('saveBtn');
     await $saveNewObjectBtn.moveTo();
   }
 
@@ -67,7 +61,7 @@ class EditFeatureBlock extends Block {
   }
 
   async goBack(): Promise<void> {
-    const $editFeatureBack = await this.findBySelector('editFeatureBack');
+    const $editFeatureBack = await this.findBySelector('back');
     await $editFeatureBack.waitForClickable();
     await $editFeatureBack.click();
   }
@@ -87,7 +81,7 @@ class EditFeatureBlock extends Block {
   }
 
   async getFormFieldsLabels(): Promise<string[]> {
-    const $$fieldLabels = await this.findAllBySelector('editFeatureLabel');
+    const $$fieldLabels = await this.findAllBySelector('label');
 
     const contents: string[] = [];
     for (const $label of $$fieldLabels) {
@@ -119,9 +113,9 @@ class EditFeatureBlock extends Block {
   }
 
   async waitForEditFeatureForm(): Promise<void> {
-    const $editFeatureForm = await this.findBySelector('editFeatureForm');
+    const $editFeatureForm = await this.findBySelector('form');
     await $editFeatureForm.waitForDisplayed();
-    const $someField = await this.findBySelector('editFeatureField');
+    const $someField = await this.findBySelector('field');
     await $someField.waitForDisplayed({ timeoutMsg: 'Не отобразилось ни одно поле в форме' });
   }
 
@@ -148,7 +142,7 @@ class EditFeatureBlock extends Block {
 
   async getFeatureEditField(fieldName: string): Promise<WebdriverIO.Element> {
     await this.waitForEditFeatureForm();
-    const $$fields = await this.findAllBySelector('editFeatureField');
+    const $$fields = await this.findAllBySelector('field');
 
     for (const $field of $$fields) {
       const name = await $field.$('.EditFeatureForm-Label').getText();
@@ -174,16 +168,6 @@ class EditFeatureBlock extends Block {
       hideElements: [$lookupStatus, ...(checkElementOptions?.hideElements || [])],
       ...checkElementOptions
     });
-  }
-
-  async waitForLoaderEnd(): Promise<void> {
-    const loader = await this.findBySelector('loader');
-    try {
-      await loader.waitForDisplayed({ timeout: 1000 });
-    } catch {
-      // ignore
-    }
-    await loader.waitForExist({ reverse: true });
   }
 
   async checkFormControlFieldValue(title: string, value: string): Promise<boolean> {

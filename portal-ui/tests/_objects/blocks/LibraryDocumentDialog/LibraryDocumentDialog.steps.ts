@@ -9,5 +9,5 @@ Then('существует диалоговое окно просмотра со
 Then('открывается окно `Просмотр объекта` с названием объекта {string}', async function (title: string) {
   const currentTitle = await libraryDocumentDialogBlock.getFieldValue('Название');
 
-  await expect(title).toEqual(currentTitle);
+  expect(title).toEqual(currentTitle);
 });

@@ -78,5 +78,5 @@ Then('проект {string} отсутствует на сервере', async (
     project = await getProjectByTitle(projectName);
   } catch {}
 
-  await expect(project).toBeUndefined();
+  expect(project).toBeUndefined();
 });

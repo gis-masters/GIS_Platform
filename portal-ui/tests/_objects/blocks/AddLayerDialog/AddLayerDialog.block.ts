@@ -1,4 +1,5 @@
 import { Block } from '../../Block';
+import { FormBlock } from '../Form/Form.block';
 
 class AddLayerDialogBlock extends Block {
   selectors = {
@@ -8,7 +9,7 @@ class AddLayerDialogBlock extends Block {
     layerFormDialogSelectLibraryRecord: '.AddLayerDialog .SelectFileInLibraryRecordControl',
     layerTypesControl: '.AddLayerDialog .Form-Control',
     addLayerBtn: '.AddLayerDialog .MuiButton-outlinedPrimary',
-    addLayerBtnLoading: '.AddLayerDialog .MuiButton-outlinedPrimary.MuiLoadingButton-root'
+    loader: '.AddLayerDialog .MuiButton-outlinedPrimary.MuiLoadingButton-root'
   };
 
   async checkViewFieldIsAppear(): Promise<void> {
@@ -16,7 +17,7 @@ class AddLayerDialogBlock extends Block {
     await $addLayerDialogViewField.waitForDisplayed();
 
     const vectorTableTitle = await $addLayerDialogViewField.getText();
-    await expect(vectorTableTitle).toEqual('Представление');
+    expect(vectorTableTitle).toEqual('Представление');
   }
 
   async checkViewFieldIsNotAppear(): Promise<void> {
@@ -44,11 +45,6 @@ class AddLayerDialogBlock extends Block {
     await $addLayerBtn.click();
   }
 
-  async waitForLoadingDisappear() {
-    const $loading = await this.findBySelector('addLayerBtnLoading');
-    await $loading.waitForExist({ timeout: 10_000, reverse: true });
-  }
-
   async waitForDialogDisappear() {
     const $root = await this.findBySelector('root');
     await $root.waitForExist({ reverse: true });
@@ -61,21 +57,21 @@ class AddLayerDialogBlock extends Block {
 
   async selectLayerType(layerType: string): Promise<void> {
     const $root = await this.findBySelector('root');
-    const $$formFields = await $root.$$('.Form-Field').getElements();
-    for (const $formField of $$formFields) {
-      const field = await $formField.$('.Form-Label').getText();
+    const formBlock = new FormBlock($root);
+    const $formField = await formBlock.getField('Тип слоя');
 
-      if (field === 'Тип слоя') {
-        const $$layerTypeBtns = await $formField.$$('.MuiButtonBase-root').getElements();
-        for (const $layerTypeBtn of $$layerTypeBtns) {
-          const type = await $layerTypeBtn.getText();
+    const $$layerTypeButtons = await $formField.$$('.MuiButtonBase-root').getElements();
+    for (const $layerTypeBtn of $$layerTypeButtons) {
+      const type = await $layerTypeBtn.getText();
 
-          if (type === layerType) {
-            await $layerTypeBtn.click();
-          }
-        }
+      if (type === layerType) {
+        await $layerTypeBtn.click();
+
+        return;
       }
     }
+
+    throw new Error(`Нет кнопки ${layerType}`);
   }
 }
 

@@ -11,7 +11,7 @@ Then(
       const explorerBlock = new ExplorerBlock();
       await explorerBlock.selectExplorerItem(this.latestLibraryRecords[0].title);
       const exist = await documentVersionsWidgetBlock.documentVersionBtnExist();
-      await expect(exist).toEqual(true);
+      expect(exist).toEqual(true);
     } else {
       throw new Error('Нет документов в библиотеке');
     }
@@ -25,7 +25,7 @@ Then(
       const explorerBlock = new ExplorerBlock();
       await explorerBlock.selectExplorerItem(this.latestLibraryRecords[0].title);
       const exist = await documentVersionsWidgetBlock.documentVersionBtnExist();
-      await expect(exist).toEqual(false);
+      expect(exist).toEqual(false);
     } else {
       throw new Error('Нет документов в библиотеке');
     }
@@ -37,7 +37,7 @@ Then(
   async function (this: ScenarioScope) {
     const exist = await documentVersionsWidgetBlock.restoreDocumentVersionBtnExist();
 
-    await expect(exist).toEqual(true);
+    expect(exist).toEqual(true);
   }
 );
 
@@ -46,7 +46,7 @@ Then(
   async function (this: ScenarioScope) {
     const exist = await documentVersionsWidgetBlock.restoreDocumentVersionBtnExist();
 
-    await expect(exist).toEqual(false);
+    expect(exist).toEqual(false);
   }
 );
 
@@ -55,7 +55,7 @@ Then(
   async (title: string, fieldName: string) => {
     const oldTitle = await documentVersionsWidgetBlock.getPrevDocumentVersionTitleFieldValue(fieldName);
 
-    await expect(title).toEqual(oldTitle);
+    expect(title).toEqual(oldTitle);
   }
 );
 
@@ -67,14 +67,14 @@ Then(
     await explorerBlock.selectExplorerItem(title);
     const oldTitle = await explorerBlock.getContentWidgetFieldValue(fieldName);
 
-    await expect(title).toEqual(oldTitle);
+    expect(title).toEqual(oldTitle);
   }
 );
 
 Then('в таблице в диалоговом окне `Восстановление версии документа` добавляется новая версия документа', async () => {
   const versions = await documentVersionsWidgetBlock.getDocumentVersionLength();
 
-  await expect(versions).toEqual(2);
+  expect(versions).toEqual(2);
 });
 
 When(

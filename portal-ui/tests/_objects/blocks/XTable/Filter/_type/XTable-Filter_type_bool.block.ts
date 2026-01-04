@@ -53,14 +53,14 @@ class XTableFilterTypeBoolBlock extends Block {
 
   async checkFilterableTrueItems() {
     const values = await xTableBlock.getSecondColValues();
-    await expect(values.length).toEqual(4);
-    await expect(values).toEqual(['да', 'да', 'да', 'да']);
+    expect(values.length).toEqual(4);
+    expect(values).toEqual(['да', 'да', 'да', 'да']);
   }
 
   async checkFilterableFalseItems() {
     const values = await xTableBlock.getSecondColValues();
-    await expect(values.length).toEqual(2);
-    await expect(values).toEqual(['нет', 'нет']);
+    expect(values.length).toEqual(2);
+    expect(values).toEqual(['нет', 'нет']);
   }
 }
 

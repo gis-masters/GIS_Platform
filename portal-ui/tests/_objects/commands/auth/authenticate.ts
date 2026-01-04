@@ -33,9 +33,9 @@ async function authenticate(
     return { ok: true };
   }
 
-  const result: AuthenticationResult = await browser.executeAsync<AuthenticationResult, [string, string]>(
-    async (username, password, callback) => {
-      callback(await window.authService.authenticate({ username, password }));
+  const result: AuthenticationResult = await browser.execute(
+    (username, password) => {
+      return window.authService.authenticate({ username, password });
     },
     login,
     password
@@ -88,7 +88,7 @@ export async function authenticateAs({ email, password }: TestUser, thenPage?: P
 
 export async function logout(): Promise<void> {
   await browser.execute(() => {
-    void window.authService.logout();
+    return window.authService.logout();
   });
   await browser.pause(500); // перезагрузка страницы после logout
   await homePage.waitForVisible();

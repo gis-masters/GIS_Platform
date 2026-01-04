@@ -17,5 +17,5 @@ Then('я дожидаюсь исчезновения диалогового ок
 Then('отобразилось диалоговое окно с текстом {string}', async (content: string) => {
   const result = await utilityDialogBlock.getTextFromDialog();
 
-  await expect(result).toBe(content);
+  expect(result).toBe(content);
 });

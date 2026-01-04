@@ -137,8 +137,8 @@ export function registerProjectionArrayInProj4(projections: Projection[]): void 
   register(proj4);
 }
 
-function proj4Str({ lat_0, lon_0, x_0 }: { lat_0: number; lon_0: number; x_0: number }) {
-  return `+proj=tmerc +lat_0=${lat_0} +lon_0=${lon_0} +k=1 +x_0=${x_0} +y_0=0 +ellps=krass +towgs84=43.822,-108.842,-119.585,1.455,-0.761,0.737,0.549 +units=m +no_defs`;
+function proj4Str({ lat_0: lat0, lon_0: lon0, x_0: x0 }: { lat_0: number; lon_0: number; x_0: number }) {
+  return `+proj=tmerc +lat_0=${lat0} +lon_0=${lon0} +k=1 +x_0=${x0} +y_0=0 +ellps=krass +towgs84=43.822,-108.842,-119.585,1.455,-0.761,0.737,0.549 +units=m +no_defs`;
 }
 
 // СК для подложек Яндекса

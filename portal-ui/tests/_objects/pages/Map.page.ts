@@ -6,6 +6,7 @@ export class MapPage extends Page {
   selectors = {
     root: '.map'
   };
+
   title = 'Карта';
   url: string;
 

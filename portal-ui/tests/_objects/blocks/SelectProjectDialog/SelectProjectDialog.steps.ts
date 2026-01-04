@@ -13,5 +13,5 @@ When('в диалоговом окне выбора проекта я выбир
 Then('в диалоговом окне выбора проекта все элементы недоступны', async function () {
   const allDisabled = await selectProjectDialogBlock.allItemsAreDisabled();
 
-  await expect(allDisabled).toBeTruthy();
+  expect(allDisabled).toBeTruthy();
 });

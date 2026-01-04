@@ -12,6 +12,11 @@ class FeaturesListSidebarBlock extends Block {
     title: '.FeaturesListSidebar .FeaturesListItem-Title'
   };
 
+  async waitForVisible(): Promise<void> {
+    await browser.pause(300); // непонятный баг wdio :(
+    await super.waitForVisible();
+  }
+
   async close() {
     const $closeIcon = await this.findBySelector('closeIcon');
     await $closeIcon.waitForClickable();

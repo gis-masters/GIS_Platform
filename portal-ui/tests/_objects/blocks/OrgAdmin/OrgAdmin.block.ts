@@ -3,22 +3,8 @@ import { Block } from '../../Block';
 class OrgAdminBlock extends Block {
   selectors = {
     root: '.OrgAdmin',
-    loading: '.OrgAdmin .Loading'
+    loader: '.OrgAdmin .Loading'
   };
-
-  async waitForLoadingDisappear() {
-    await this.waitForVisible();
-
-    const $loading = await this.findBySelector('loading');
-
-    try {
-      await $loading.waitForDisplayed({ timeout: 1000 });
-    } catch {
-      // ignore
-    }
-
-    await $loading.waitForExist({ reverse: true });
-  }
 }
 
 export const orgAdminBlock = new OrgAdminBlock();

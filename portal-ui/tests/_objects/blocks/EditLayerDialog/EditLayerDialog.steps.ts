@@ -15,13 +15,13 @@ When('в диалоговом окне `Свойства слоя` в поле `
 });
 
 Then('в диалоговом окне `Свойства слоя` у поля `Представление` выбрано {string}', async (viewTitle: string) => {
-  await expect(await editLayerPropertiesDialogBlock.getChoiceValue('Представление')).toBe(viewTitle);
+  expect(await editLayerPropertiesDialogBlock.getChoiceValue('Представление')).toBe(viewTitle);
 });
 
 When('в диалоговом окне `Свойства слоя` нажимаю `Изменить`', async () => {
   await editLayerPropertiesDialogBlock.saveLayerProperty();
 
-  await attributesBlock.waitForLoadingDisappear();
+  await attributesBlock.waitForLoading();
 });
 
 When(

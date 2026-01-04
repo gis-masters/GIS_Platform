@@ -13,7 +13,7 @@ import { XTableFilterTypeStringBlock } from './Filter/_type/XTable-Filter_type_s
 export class XTableBlock extends Block {
   selectors = {
     root: '.XTable',
-    loading: '.XTable .Loading',
+    loader: '.XTable .Loading',
     head: '.XTable-Head',
     headCell: '.XTable-HeadCell',
     colTitle: '.XTable-HeadCellTitle',
@@ -148,18 +148,6 @@ export class XTableBlock extends Block {
     } else {
       throw new Error('Unsupported direction: ' + direction);
     }
-  }
-
-  async waitForLoading(): Promise<void> {
-    await this.waitForVisible();
-    const $loading = await this.findBySelector('loading');
-    try {
-      await $loading.waitForDisplayed({ timeout: 1000 });
-    } catch {
-      // ignore
-    }
-    await $loading.waitForExist({ reverse: true });
-    await browser.pause(200); // перерендер таблицы после исчезновения лоадера
   }
 
   async filterNumerableColumn(colTitle: string, lte: string, gte: string): Promise<void> {

@@ -26,7 +26,7 @@ When(
     const currentValues = await tasksJournalBlock.getTaskRowValue();
     const staticFieldsValue = [currentValues[2], currentValues[3], currentValues[6], currentValues[7]];
 
-    await expect(staticFieldsValue).toEqual(values);
+    expect(staticFieldsValue).toEqual(values);
   }
 );
 
@@ -35,6 +35,6 @@ Then(
   async function (this: ScenarioScope, status: string) {
     const currentStatus = await tasksJournalBlock.getTaskStatus(String(this.latestTask.id));
 
-    await expect(currentStatus).toEqual(status);
+    expect(currentStatus).toEqual(status);
   }
 );

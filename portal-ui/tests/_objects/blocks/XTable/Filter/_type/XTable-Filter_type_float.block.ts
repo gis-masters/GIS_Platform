@@ -21,31 +21,31 @@ class XTableFilterTypeFloatBlock extends Block {
   async checkFilterableLteItems(lte: string) {
     const values = await xTableBlock.getFirstColCellValues();
 
-    await expect(values.length).toEqual(4);
+    expect(values.length).toEqual(4);
 
     for (const val of values) {
-      await expect(Number(val)).toBeGreaterThanOrEqual(Number(lte));
+      expect(Number(val)).toBeGreaterThanOrEqual(Number(lte));
     }
   }
 
   async checkFilterableGteItems2(gte: string) {
     const values = await xTableBlock.getFirstColCellValues();
 
-    await expect(values.length).toEqual(5);
+    expect(values.length).toEqual(5);
 
     for (const val of values) {
-      await expect(Number(val)).toBeLessThanOrEqual(Number(gte));
+      expect(Number(val)).toBeLessThanOrEqual(Number(gte));
     }
   }
 
   async checkFilterableGteItems3(lte: string, gte: string) {
     const values = await xTableBlock.getFirstColCellValues();
 
-    await expect(values.length).toEqual(5);
+    expect(values.length).toEqual(5);
 
     for (const val of values) {
-      await expect(Number(val)).toBeGreaterThanOrEqual(Number(lte));
-      await expect(Number(val)).toBeLessThanOrEqual(Number(gte));
+      expect(Number(val)).toBeGreaterThanOrEqual(Number(lte));
+      expect(Number(val)).toBeLessThanOrEqual(Number(gte));
     }
   }
 }

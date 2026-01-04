@@ -26,22 +26,22 @@ Then('в атрибутивной таблице отображается тол
 });
 
 Then('открылась атрибутивная таблица слоя {string}', async (title: string) => {
-  await expect(await attributesBlock.getTitle()).toEqual(title);
+  expect(await attributesBlock.getTitle()).toEqual(title);
 });
 
 Then('нажимаю на переключатель применения фильтрации в атрибутивной таблице', async () => {
   await attributesBlock.clickFiltersEnabler();
 });
 
-Then('открыта атрибутивная таблица созданного слоя', async function (this: ScenarioScope) {
+Given('открыта атрибутивная таблица созданного слоя', async function (this: ScenarioScope) {
   await layersSidebarBlock.openAttributeTable(this.latestLayer.title);
 
   await browser.waitUntil(async () => {
     return (await attributesBlock.getTitle()) === this.latestLayer.title;
   });
 
-  await attributesBlock.waitForLoadingDisappear();
   await attributesBlock.waitForTableVisible();
+  await attributesBlock.waitForLoading();
 });
 
 Given('открыта атрибутивная таблица слоя {string}', async (layerName: string) => {
@@ -52,7 +52,7 @@ Given('открыта атрибутивная таблица слоя {string}'
   });
 
   await attributesBlock.waitForTableVisible();
-  await attributesBlock.waitForLoadingDisappear();
+  await attributesBlock.waitForLoading();
 });
 
 Then(
@@ -65,11 +65,11 @@ Then(
     });
 
     await attributesBlock.waitForTableVisible();
-    await attributesBlock.waitForLoadingDisappear();
+    await attributesBlock.waitForLoading();
 
     const allRowsLength = await attributesBlock.getTotalObjectsNumber();
 
-    await expect(allRowsLength).toEqual(numberOfObjects);
+    expect(allRowsLength).toEqual(numberOfObjects);
   }
 );
 
@@ -84,7 +84,7 @@ When(
   'в атрибутивной таблице я фильтрую по атрибуту {string} от {string} до {string}',
   async function (this: ScenarioScope, colTitle: string, lte: string, gte: string) {
     await attributesBlock.xTable.filterNumerableColumn(colTitle, lte, gte);
-    await attributesBlock.waitForLoadingDisappear();
+    await attributesBlock.waitForLoading();
     this.latestFilter = await getAttributesTableFilter();
   }
 );
@@ -122,7 +122,7 @@ When(
     await attributesBlock.xTable.filterStringColumn(colTitle, filter);
 
     this.latestFilter = await getAttributesTableFilter();
-    await attributesBlock.waitForLoadingDisappear();
+    await attributesBlock.waitForLoading();
   }
 );
 
@@ -136,7 +136,7 @@ When(
 When('в атрибутивной таблице я перехожу во вкладку таблицы {string}', async function (title: string) {
   await attributesBlock.selectTab(title);
 
-  await attributesBlock.waitForLoadingDisappear();
+  await attributesBlock.waitForLoading();
 });
 
 Then(
@@ -159,7 +159,7 @@ Then(
       throw new Error(`Предыдущий фильтр для таблицы ${title} не установлен`);
     }
 
-    await expect(currentFilterByTable).toEqual(latestFilterByTable);
+    expect(currentFilterByTable).toEqual(latestFilterByTable);
   }
 );
 
@@ -227,7 +227,7 @@ Then('сортировка в атрибутивной таблице недос
   const titles = data.raw().map(item => item[0]);
 
   for (const title of titles) {
-    await expect(await attributesBlock.xTable.isColumnSortable(title)).toEqual(false);
+    expect(await attributesBlock.xTable.isColumnSortable(title)).toEqual(false);
   }
 });
 
@@ -235,7 +235,7 @@ Then('фильтрация в атрибутивной таблице недос
   const titles = data.raw().map(item => item[0]);
 
   for (const title of titles) {
-    await expect(await attributesBlock.xTable.isColumnFilterable(title)).toEqual(false);
+    expect(await attributesBlock.xTable.isColumnFilterable(title)).toEqual(false);
   }
 });
 
@@ -252,7 +252,7 @@ Then(
 
 Then('в атрибутивной таблице существуют вкладки с заголовками:', async function (attributeTitle: DataTable) {
   const titles = await attributesBlock.getTabsTitles();
-  await expect(titles).toEqual(attributeTitle.raw()[0]);
+  expect(titles).toEqual(attributeTitle.raw()[0]);
 });
 
 When('в атрибутивной таблице я нажимаю `Копировать N объектов в другой слой`', async function () {
@@ -303,9 +303,9 @@ Then(
     });
 
     await attributesBlock.waitForTableVisible();
-    await attributesBlock.waitForLoadingDisappear();
+    await attributesBlock.waitForLoading();
 
     const selectedCount = await attributesBlock.getSelectedObjectsCount();
-    await expect(selectedCount).toEqual(expectedCount);
+    expect(selectedCount).toEqual(expectedCount);
   }
 );

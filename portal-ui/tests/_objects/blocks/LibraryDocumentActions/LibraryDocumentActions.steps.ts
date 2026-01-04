@@ -90,7 +90,7 @@ Then(
       const explorerBlock = new ExplorerBlock();
       await explorerBlock.selectExplorerItem(this.latestLibraryRecords[0].title);
       const exist = await libraryDocumentActionsBlock.documentMoveBtnDisabled();
-      await expect(exist).toEqual(false);
+      expect(exist).toEqual(false);
     } else {
       throw new Error('Что то пошло не так при перемещении документа');
     }
@@ -102,7 +102,7 @@ Then('в библиотеке документов у созданной пап�
     const explorerBlock = new ExplorerBlock();
     await explorerBlock.selectExplorerItem(this.latestFolder.title);
     const exist = await libraryDocumentActionsBlock.documentMoveBtnDisabled();
-    await expect(exist).toEqual(false);
+    expect(exist).toEqual(false);
   } else {
     throw new Error('Что то пошло не так при перемещении папки');
   }

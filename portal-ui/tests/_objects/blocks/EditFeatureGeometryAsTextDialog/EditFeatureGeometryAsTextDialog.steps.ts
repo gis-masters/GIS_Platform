@@ -16,5 +16,5 @@ Then('объект содержит следующую геометрию', asyn
     .split(' ')
     .filter(item => item.length > 2);
 
-  await expect(geometry).toEqual(expectedGeometry);
+  expect(geometry).toEqual(expectedGeometry);
 });

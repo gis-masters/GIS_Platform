@@ -41,6 +41,6 @@ Then(
     const MAP_POS_FOR_OBJECT1 = { center: [center1, center2], zoom: Number(zoom) };
     const position = await getMapPosition();
 
-    await expect(MAP_POS_FOR_OBJECT1).toEqual(position);
+    expect(MAP_POS_FOR_OBJECT1).toEqual(position);
   }
 );

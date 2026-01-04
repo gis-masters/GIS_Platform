@@ -11,7 +11,7 @@ class WorkspaceHeaderBlock extends Block {
 
   async testOrganization(organization: string) {
     const $organization = await this.findBySelector('organization');
-    await expect(await $organization.getText()).toContain(organization);
+    expect(await $organization.getText()).toContain(organization);
   }
 
   async clickPrintMap(): Promise<void> {
@@ -21,18 +21,8 @@ class WorkspaceHeaderBlock extends Block {
     await $printMapBtn.click();
   }
 
-  async waitForLoaderEnd(): Promise<void> {
-    const loader = await this.findBySelector('loader');
-    try {
-      await loader.waitForDisplayed({ timeout: 1000 });
-    } catch {
-      // ignore
-    }
-    await loader.waitForExist({ reverse: true });
-  }
-
   async currentProjectBreadcrumbs(): Promise<string[]> {
-    await this.waitForLoaderEnd();
+    await this.waitForLoading();
 
     const fullPath: string[] = [];
 
@@ -48,7 +38,7 @@ class WorkspaceHeaderBlock extends Block {
   }
 
   async clickBreadcrumbsItem(title: string): Promise<void> {
-    await this.waitForLoaderEnd();
+    await this.waitForLoading();
 
     const $$breadcrumbsItems = await this.findAllBySelector('breadcrumbItem');
 

@@ -5,9 +5,8 @@ import { Block } from '../../Block';
 class EditFeatureGeometryAsTextDialogBlock extends Block {
   selectors = {
     root: '.EditFeatureGeometry-AsTextDialog',
-    editFeatureGeometryAsTextDialogTextarea:
-      '.EditFeatureGeometry-AsTextDialog .MuiInputBase-inputMultiline:not([readonly])',
-    editFeatureGeometryAsTextDialogSaveBtn: '.EditFeatureGeometry-AsTextDialog .MuiButton-outlinedPrimary',
+    dialogTextarea: '.EditFeatureGeometry-AsTextDialog .MuiInputBase-inputMultiline:not([readonly])',
+    saveBtn: '.EditFeatureGeometry-AsTextDialog .MuiButton-outlinedPrimary',
     textarea: '.EditFeatureGeometry-Text textarea'
   };
 
@@ -31,17 +30,15 @@ class EditFeatureGeometryAsTextDialogBlock extends Block {
       }
     }
 
-    const $editFeatureGeometryAsTextDialogSaveBtn = await this.findBySelector('editFeatureGeometryAsTextDialogSaveBtn');
+    const $editFeatureGeometryAsTextDialogSaveBtn = await this.findBySelector('saveBtn');
     await $editFeatureGeometryAsTextDialogSaveBtn.click();
   }
 
   async getObjectCoordinates(): Promise<string> {
-    const $editFeatureGeometryAsTextDialogTextarea = await this.findBySelector(
-      'editFeatureGeometryAsTextDialogTextarea'
-    );
-    await $editFeatureGeometryAsTextDialogTextarea.waitForDisplayed();
+    const $dialogTextarea = await this.findBySelector('dialogTextarea');
+    await $dialogTextarea.waitForDisplayed();
 
-    return await $editFeatureGeometryAsTextDialogTextarea.getValue();
+    return await $dialogTextarea.getValue();
   }
 }
 
