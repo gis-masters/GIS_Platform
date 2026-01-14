@@ -69,6 +69,8 @@ public class ImportGpkgEventHandler implements IEventHandler {
                                              .putValue(NEEDED_CYCLES_COUNT_VAR_NAME, neededCyclesCount)
                                              .putValue(PERFORMED_CYCLES_COUNT_VAR_NAME, 0)
                                              .putValue(ITERATION_COUNTER_VAR_NAME, 0)
+                                             .putValue(FILES_CYCLES_COUNT_VAR_NAME, 0)
+                                             .putValue(FILES_CYCLES_COUNT_DONE_VAR_NAME, 0)
                                              .putValue(BUSINESS_KEY_VAR_NAME, businessKey);
 
             bpmnRuntimeService.startProcessInstanceByKey(GPKG_IMPORT_PROCESS.getValue(),

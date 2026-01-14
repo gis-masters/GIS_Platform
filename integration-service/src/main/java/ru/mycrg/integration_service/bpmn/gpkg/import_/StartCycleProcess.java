@@ -95,6 +95,10 @@ public class StartCycleProcess implements JavaDelegate {
             delegateExecution.setVariable(ENTITY_ID_VAR_NAME, asJava(currentTable));
             delegateExecution.setVariable(ITERATION_COUNTER_VAR_NAME, 0);
             delegateExecution.setVariable(CHECK_STATUS_VAR_NAME, "haveOneMoreObject");
+
+            //новый слой новый счётчик
+            delegateExecution.setVariable(FILES_CYCLES_COUNT_VAR_NAME, 0);
+            delegateExecution.setVariable(FILES_CYCLES_COUNT_DONE_VAR_NAME, 0);
         } else {
             log.debug("Переходим на ветку завершения.");
             delegateExecution.setVariable(CHECK_STATUS_VAR_NAME, "doneAll");
@@ -151,6 +155,7 @@ public class StartCycleProcess implements JavaDelegate {
                 // Временные ошибки - можно повторить
                 if (statusCode == 503 || statusCode == 502 || statusCode == 504 || statusCode == 429) {
                     delegateExecution.setVariable(ITERATION_COUNTER_VAR_NAME, currentIteration + 1);
+
                     throw new BpmnError("responseTimeOut");
                 }
             }

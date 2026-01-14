@@ -59,4 +59,52 @@ public class FileRepositoryDetached {
             return new ArrayList<>();
         }
     }
+
+    public File save(JdbcTemplate jdbcTemplate, File entity) throws SQLException {
+        if (entity.getId() == null) {
+            entity.setId(UUID.randomUUID());
+        }
+
+        String sql = "INSERT INTO files " +
+                "(id, title, size, extension, path, content_type, intents, resource_type, " +
+                "resource_qualifier, created_by, created_at, ecp) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?::jsonb, ?, ?, ?) " +
+                "ON CONFLICT (id) DO UPDATE SET " +
+                "title = EXCLUDED.title, " +
+                "size = EXCLUDED.size, " +
+                "extension = EXCLUDED.extension, " +
+                "path = EXCLUDED.path, " +
+                "content_type = EXCLUDED.content_type, " +
+                "intents = EXCLUDED.intents, " +
+                "resource_type = EXCLUDED.resource_type, " +
+                "resource_qualifier = EXCLUDED.resource_qualifier, " +
+                "created_by = EXCLUDED.created_by, " +
+                "created_at = EXCLUDED.created_at, " +
+                "ecp = EXCLUDED.ecp";
+
+        try {
+            jdbcTemplate.update(sql,
+                                entity.getId(),
+                                entity.getTitle(),
+                                entity.getSize(),
+                                entity.getExtension(),
+                                entity.getPath(),
+                                entity.getContentType(),
+                                entity.getIntents(),
+                                entity.getResourceType(),
+                                entity.getResourceQualifier() != null ? entity.getResourceQualifier().toString() : null,
+                                entity.getCreatedBy(),
+                                entity.getCreatedAt(),
+                                entity.getEcp()
+            );
+
+            log.debug("Файл с ID {} успешно сохранен", entity.getId());
+
+            return entity;
+        } catch (Exception e) {
+            log.error("Не удалось сохранить файл с ID {}. Причина: {}", entity.getId(), e.getMessage());
+
+            throw new SQLException("Не удалось сохранить файл. Причина => " + e.getMessage(), e);
+        }
+    }
 }

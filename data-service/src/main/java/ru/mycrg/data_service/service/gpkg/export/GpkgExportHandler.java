@@ -16,6 +16,7 @@ import ru.mycrg.data_service_contract.queue.request.gpkg.ExportGpkgEvent;
 import ru.mycrg.messagebus_contract.IMessageBusProducer;
 
 import javax.validation.Valid;
+import java.util.List;
 
 import static ru.mycrg.common_utils.CrgGlobalProperties.getDefaultDatabaseName;
 import static ru.mycrg.data_service.service.export.ExportType.GPKG;
@@ -56,7 +57,7 @@ public class GpkgExportHandler implements Exporter {
 
     @NotNull
     private ExportGpkgPayload getPayloadOrThrow(ExportRequestModel request) {
-        String msg = "Не корректный формат данных для выполнения экспорта GPKG";
+        String msg = "Не корректный формат данных для выполнения экспорта GPKG.";
 
         ExportGpkgPayload exportGpkgPayload;
         try {
@@ -76,13 +77,37 @@ public class GpkgExportHandler implements Exporter {
             if (payload == null) {
                 throw new BadRequestException(msg, new ErrorInfo("payload", "Тело должно быть заполнено"));
             }
+
+            validatePayloadStructure(gpkgExportType, payload, msg);
+        } catch (BadRequestException e) {
+            throw e;
         } catch (Exception e) {
             logError(msg, e);
-
             throw new BadRequestException(msg);
         }
 
         return exportGpkgPayload;
+    }
+
+    private void validatePayloadStructure(GpkgExportType type, Object payload, String errorMsg) {
+        if (!(payload instanceof List)) {
+            throw new BadRequestException(errorMsg);
+        }
+
+        List<?> payloadList = (List<?>) payload;
+        if (payloadList.isEmpty()) {
+            throw new BadRequestException(errorMsg + " Массив переданных объектов пустой!!!");
+        }
+
+        Object firstItem = payloadList.get(0);
+
+        if (type == GpkgExportType.LAYER && !(firstItem instanceof Number)) {
+            throw new BadRequestException(errorMsg);
+        }
+
+        if (type == GpkgExportType.TABLE && firstItem instanceof Number) {
+            throw new BadRequestException(errorMsg);
+        }
     }
 
     @Override

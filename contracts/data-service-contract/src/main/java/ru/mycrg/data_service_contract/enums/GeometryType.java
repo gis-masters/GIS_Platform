@@ -2,7 +2,9 @@ package ru.mycrg.data_service_contract.enums;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public enum GeometryType {
+import java.io.Serializable;
+
+public enum GeometryType implements Serializable {
 
     @JsonProperty("Point")
     POINT("Point"),

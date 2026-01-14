@@ -1,6 +1,8 @@
 package ru.mycrg.data_service_contract.dto;
 
-public class SchemaChild {
+import java.io.Serializable;
+
+public class SchemaChild implements Serializable {
 
     private String library;
     private String contentType;

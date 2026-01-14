@@ -69,6 +69,9 @@ public class JsonConverter {
         try {
             return Optional.ofNullable(mapper.readValue(stringJson, typeReference));
         } catch (Exception e) {
+            log.error("Сбой при конвертации строки: [{}] с TypeReference в JSON: {}",
+                      stringJson, e.getMessage(), e);
+
             return Optional.empty();
         }
     }
@@ -78,6 +81,17 @@ public class JsonConverter {
             return Optional.ofNullable(mapper.readValue(data, clazz));
         } catch (Exception e) {
             return Optional.empty();
+        }
+    }
+
+    public static <T> T convertValue(Object fromValue, TypeReference<T> typeReference) {
+        try {
+            return mapper.convertValue(fromValue, typeReference);
+        } catch (Exception e) {
+            log.error("Сбой при конвертации объекта: [{}] с TypeReference: {}",
+                      fromValue, e.getMessage(), e);
+
+            throw new IllegalArgumentException("Не удалось конвертировать объект", e);
         }
     }
 }

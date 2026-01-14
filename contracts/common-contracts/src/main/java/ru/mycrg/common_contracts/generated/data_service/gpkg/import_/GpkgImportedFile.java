@@ -5,15 +5,21 @@ import com.fasterxml.jackson.databind.JsonNode;
 import java.io.Serializable;
 import java.util.UUID;
 
-// TODO: сделать чтобы кто-то наполнял эту DTO сейчас мы не умеем импортировать файлы
 public class GpkgImportedFile extends GpkgImportBaseDto implements Serializable {
 
     private UUID newId;
     private UUID oldId;
-    private String path;
+    private String tableName;
     private JsonNode resourceQualifier;
 
     public GpkgImportedFile() {
+    }
+
+    public GpkgImportedFile(UUID oldId, String tableName, GpkgProcessStatus status, String title) {
+        this.oldId = oldId;
+        this.tableName = tableName;
+        setStatus(status);
+        setTitle(title);
     }
 
     public UUID getNewId() {
@@ -32,12 +38,12 @@ public class GpkgImportedFile extends GpkgImportBaseDto implements Serializable 
         this.oldId = oldId;
     }
 
-    public String getPath() {
-        return path;
+    public String getTableName() {
+        return tableName;
     }
 
-    public void setPath(String path) {
-        this.path = path;
+    public void setTableName(String tableName) {
+        this.tableName = tableName;
     }
 
     public JsonNode getResourceQualifier() {

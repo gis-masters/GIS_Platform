@@ -12,7 +12,7 @@ import java.util.function.Function;
 
 import static java.util.stream.Collectors.toMap;
 
-public class DefaultMessageBusConsumer implements IMessageBusConsumer {
+    public class DefaultMessageBusConsumer implements IMessageBusConsumer {
 
     private final Logger log = LoggerFactory.getLogger(DefaultMessageBusConsumer.class);
 
@@ -37,7 +37,7 @@ public class DefaultMessageBusConsumer implements IMessageBusConsumer {
             eventHandlers.getOrDefault(event.getClass().getSimpleName(), defaultHandler)
                          .handle(event);
         } catch (Exception e) {
-            log.error("Failed consume event: {}:{}", event.getClass().getSimpleName(), event.getId(), e.getCause());
+            log.error("Failed consume event: {}:{}", event.getClass().getSimpleName(), event.getId(), e);
         }
     }
 }

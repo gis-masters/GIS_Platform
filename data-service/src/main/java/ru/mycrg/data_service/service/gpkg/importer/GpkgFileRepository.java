@@ -14,11 +14,11 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import static org.sqlite.SQLiteErrorCode.SQLITE_NOTADB;
 import static ru.mycrg.data_service.service.gpkg.export.tables.LayerStyleWriter.GPKG_STYLE_LAYER_TABLE;
+import static ru.mycrg.data_service.service.gpkg.export.tables.MediaFilesWriter.GPKG_MEDIA_FILES_TABLE;
 
 @Repository
 public class GpkgFileRepository {
@@ -156,6 +156,31 @@ public class GpkgFileRepository {
         } catch (SQLException e) {
             String msg = String.format("Ошибка получения содержимого таблицы %s из GPKG файла: %s",
                                        tableName, filePath);
+            log.error("{} => {}", msg, e.getMessage(), e);
+
+            throw new GpkgException(msg);
+        }
+    }
+
+    public Map<String, byte[]> findFileById(String path, UUID filesId) {
+        String sql = String.format("SELECT title, data FROM %s WHERE crg_id = '%s'", GPKG_MEDIA_FILES_TABLE, filesId);
+
+        try (Connection connection = connectionManager.createConnection(path);
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            try (ResultSet resultSet = statement.executeQuery()) {
+                Map<String, byte[]> filesMap = new HashMap<>();
+
+                while (resultSet.next()) {
+                    String title = resultSet.getString("title");
+                    byte[] data = resultSet.getBytes("data");
+                    filesMap.put(title, data);
+                }
+
+                return filesMap;
+            }
+        } catch (SQLException e) {
+            String msg = String.format("Ошибка получения файла %s из GPKG!!!", filesId);
             log.error("{} => {}", msg, e.getMessage(), e);
 
             throw new GpkgException(msg);

@@ -17,10 +17,7 @@ import ru.mycrg.acceptance.gis_service.dto.LayerUpdateDto;
 import ru.mycrg.auth_service_contract.dto.UserCreateDto;
 import ru.mycrg.gis_service_contract.dto.LayerProjection;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 import static java.lang.String.format;
 import static java.lang.Thread.sleep;
@@ -398,6 +395,38 @@ public class LayerStepDefinitions extends BaseStepsDefinitions {
         }
 
         layerId = Math.toIntExact(layers.get(0).getId());
+    }
+
+    @Given("среди слоёв текущего проекта, найден слой по имени {string}")
+    public void getAllLayersInProjectWithNameFilter(String name) {
+        response = getBaseRequestWithCurrentCookie()
+                .when().
+                        get();
+
+        List<LayerProjection> layers = response.jsonPath().getList("", LayerProjection.class);
+
+        Optional<LayerProjection> oFilteredLayer = layers.stream().filter(l -> l.getTitle().equals(name)).findAny();
+
+        assertFalse("Слой по имени " + name + " не найден внутри текущего проекта", oFilteredLayer.isEmpty());
+
+        LayerProjection filteredLayer = oFilteredLayer.get();
+
+        layerId = Math.toIntExact(filteredLayer.getId());
+        layerPool.put(layerId, new LayerCreateDto(filteredLayer.getTitle(),
+                                                  filteredLayer.getDataset(),
+                                                  filteredLayer.getResourceId(),
+                                                  filteredLayer.getStyleName(),
+                                                  filteredLayer.getType(),
+                                                  filteredLayer.getDataStoreName(),
+                                                  filteredLayer.getNativeCRS(),
+                                                  filteredLayer.getDataSourceUri(),
+                                                  filteredLayer.getContentType(),
+                                                  filteredLayer.getStyle(),
+                                                  filteredLayer.isEnabled(),
+                                                  filteredLayer.getComplexName()));
+
+        currentDatasetIdentifier = filteredLayer.getDataset();
+        currentTableName = filteredLayer.getResourceId();
     }
 
     @When("я смотрю на стиль установленный для текущего слоя")

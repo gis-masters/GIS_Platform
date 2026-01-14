@@ -1,11 +1,13 @@
 package ru.mycrg.integration_service.bpmn;
 
+//TODO: осторожно создать отдельные переменные для gpkg которые не будут пересекаться с другими процессами
 public interface IJavaDelegateProperties {
 
     String EVENT_VAR_NAME = "event";
     String EVENT_SUB_PAYLOAD_NAME = "event_sub_payload";
     String EVENT_IMPORT_GPKG_REPORT_NAME = "event_import_gpkg_report";
     String EVENT_IMPORT_GPKG_BACKWARD_DATA_NAME = "event_import_gpkg_backward_data";
+    String EVENT_IMPORT_GPKG_BACKWARD_FILE_CREATE = "event_import_gpkg_backward_file_create";
     String FAIL_REASON = "failReason";
 
     String TOKEN_VAR_NAME = "token";
@@ -23,6 +25,10 @@ public interface IJavaDelegateProperties {
     String ITERATION_COUNTER_VAR_NAME = "counter";
     String NEEDED_CYCLES_COUNT_VAR_NAME = "neededCyclesCount";
     String PERFORMED_CYCLES_COUNT_VAR_NAME = "performedCyclesCount";
+    String FILES_CYCLES_COUNT_VAR_NAME = "filesCyclesCount";
+    String FILES_CYCLES_COUNT_DONE_VAR_NAME = "filesCyclesDone";
+    String FEATURES_FILES_LIST_VAR_NAME = "featuresFilesList";
+    String FILES_LIST_VAR_NAME = "filesList";
     String SPECIALIZATION_LAYERS_FOR_PUBLICATION = "SPECIALIZATION_LAYERS_FOR_PUBLICATION";
 
     String CHECK_STATUS_VAR_NAME = "checkStatus";
@@ -31,6 +37,7 @@ public interface IJavaDelegateProperties {
     String GPKG_PATH_VAR_NAME = "gpkgPath";
 
     String ENTITY_ID_VAR_NAME = "entityId";
+    String FEATURE_ID_VAR_NAME = "featureId";
 
     String LAYER_COMPLEX_NAME = "layerComplexName";
     String EXTRACTED_SCHEMA_NAME = "extractedSchemaName";

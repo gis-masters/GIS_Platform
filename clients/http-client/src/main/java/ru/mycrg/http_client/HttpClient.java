@@ -94,8 +94,10 @@ public class HttpClient {
             String body = responseBody.string();
             if (response.isSuccessful()) {
                 ResponseModel<T> model = new ResponseModel<>(response);
-                fromJson(body, typeReference)
-                        .ifPresent(model::setBody);
+                if (!body.isEmpty()) {
+                    fromJson(body, typeReference)
+                            .ifPresent(model::setBody);
+                }
 
                 return model;
             } else {

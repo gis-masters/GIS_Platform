@@ -1,9 +1,10 @@
 package ru.mycrg.data_service_contract.dto;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SchemaRelation {
+public class SchemaRelation implements Serializable {
 
     private String title;
     private String property;

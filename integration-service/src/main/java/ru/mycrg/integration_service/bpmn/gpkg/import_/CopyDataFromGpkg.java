@@ -37,7 +37,7 @@ public class CopyDataFromGpkg implements JavaDelegate {
         messageBus.produce(
                 new ImportGpkgCopyDataEvent(businessKey,
                                             event.getDbName(),
-                                            event.getCreator(),
+                                            event.getCreatorLogin(),
                                             new ResourceQualifierDto(schema, currentTable.getTableGpkgIdentifier()),
                                             new ResourceQualifierDto(event.getTargetDatasetIdentifier(),
                                                                      currentTable.getTableNewIdentifier())

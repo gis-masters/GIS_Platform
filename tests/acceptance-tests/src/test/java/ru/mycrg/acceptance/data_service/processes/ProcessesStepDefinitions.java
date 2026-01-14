@@ -1,18 +1,18 @@
 package ru.mycrg.acceptance.data_service.processes;
 
 import io.cucumber.java.en.And;
-import io.cucumber.java.en.Then;
 import io.cucumber.java.en.Given;
+import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.restassured.specification.RequestSpecification;
 import ru.mycrg.acceptance.BaseStepsDefinitions;
 import ru.mycrg.acceptance.auth_service.AuthorizationBase;
 import ru.mycrg.acceptance.data_service.TestFilesManager;
 import ru.mycrg.acceptance.data_service.dto.FileDescriptionModel;
+import ru.mycrg.common_contracts.generated.data_service.gpkg.export.ExportGpkgPayload;
 import ru.mycrg.common_contracts.generated.data_service.gpkg.export.GpkgExportDetailsModel;
 import ru.mycrg.data_service_contract.dto.ExportRequestModel;
 import ru.mycrg.data_service_contract.dto.ExportResourceModel;
-import ru.mycrg.common_contracts.generated.data_service.gpkg.export.ExportGpkgPayload;
 import ru.mycrg.data_service_contract.enums.ProcessStatus;
 import ru.mycrg.data_service_contract.enums.ProcessType;
 
@@ -28,7 +28,8 @@ import static ru.mycrg.acceptance.auth_service.OrganizationStepsDefinitions.MAX_
 import static ru.mycrg.acceptance.data_service.CurrentFilesManager.getFileDescription;
 import static ru.mycrg.acceptance.data_service.FilesStepDefinitions.*;
 import static ru.mycrg.acceptance.data_service.datasets.DatasetsStepsDefinitions.currentDatasetIdentifier;
-import static ru.mycrg.acceptance.data_service.tables.TablesStepsDefinitions.*;
+import static ru.mycrg.acceptance.data_service.tables.TablesStepsDefinitions.anotherTableName;
+import static ru.mycrg.acceptance.data_service.tables.TablesStepsDefinitions.currentTableName;
 import static ru.mycrg.acceptance.gis_service.ProjectStepsDefinitions.projectId;
 import static ru.mycrg.common_contracts.generated.data_service.gpkg.export.GpkgExportType.*;
 import static ru.mycrg.data_service_contract.enums.ProcessStatus.DONE;
@@ -91,6 +92,11 @@ public class ProcessesStepDefinitions extends BaseStepsDefinitions {
         currentProcessId = response.jsonPath().get("id");
     }
 
+    @Then("размер скаченного файла равен {int}")
+    public void sizeOfAnswer(int size) {
+        assertEquals(size, response.asByteArray().length);
+    }
+
     @And("размер полученного файла равен {int}")
     public void sizeOfFile(int size) {
         getCurrentProcess();
@@ -142,7 +148,6 @@ public class ProcessesStepDefinitions extends BaseStepsDefinitions {
             if (status == DONE && type == IMPORT && title.equals("Импорт GPKG") && fileTitle.equals(fileName)) {
                 System.out.println("Текущий процесс уже идеальный, будем использовать его.");
                 currentProcessId = extractId((String) response.jsonPath().get("_links.self.href"));
-                getTablePathFromGpkgProcess();
 
                 return;
             }
@@ -156,7 +161,6 @@ public class ProcessesStepDefinitions extends BaseStepsDefinitions {
                                            " Второй процесс запускать не будем.");
 
                 currentProcessId = response.jsonPath().getInt("content[0].id");
-                getTablePathFromGpkgProcess();
 
                 return;
             }
@@ -180,7 +184,6 @@ public class ProcessesStepDefinitions extends BaseStepsDefinitions {
         }
 
         waitUntilCurrentProcessIsDone();
-        getTablePathFromGpkgProcess();
     }
 
     @When("Пользователь публикует файл {string}")

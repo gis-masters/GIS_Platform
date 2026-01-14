@@ -3,7 +3,9 @@ package ru.mycrg.data_service.service.gpkg.importer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgTableType;
 import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgTablesData;
 import ru.mycrg.data_service.entity.File;
@@ -14,10 +16,7 @@ import ru.mycrg.data_service.service.gpkg.GpkgContentsDto;
 import ru.mycrg.data_service.service.gpkg.GpkgException;
 import ru.mycrg.data_service_contract.enums.GeometryType;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 import static ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgTableType.CRG_DATA_TABLE;
 import static ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgTableType.VECTOR_DATA_TABLE;
@@ -117,5 +116,31 @@ public class GpkgReaderService {
         }
 
         return result;
+    }
+
+    public Map<UUID, MultipartFile> getFilesFromGpkg(String path, List<UUID> fileIds) {
+        if (fileIds == null || fileIds.isEmpty()) {
+            throw new GpkgException("Список идентификаторов файлов пуст или не передан!");
+        }
+
+        Map<UUID, MultipartFile> allFoundFiles = new HashMap<>();
+
+        for (UUID id: fileIds) {
+            Map<String, byte[]> fileFromGpkg = gpkgFileRepository.findFileById(path, id);
+
+            for (Map.Entry<String, byte[]> entry: fileFromGpkg.entrySet()) {
+                MultipartFile multipartFile = new MockMultipartFile(
+                        "file",
+                        entry.getKey(),
+                        "application/octet-stream",
+                        entry.getValue()
+                );
+                allFoundFiles.put(id, multipartFile);
+            }
+        }
+
+        log.info("Получено {} файлов из GPKG", allFoundFiles.size());
+
+        return allFoundFiles;
     }
 }

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import ru.mycrg.data_service.dao.config.DatasourceFactory;
 import ru.mycrg.data_service.dao.ddl.schemas.DdlSchemasDetached;
 import ru.mycrg.data_service.entity.File;
+import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.repository.FileRepositoryDetached;
 import ru.mycrg.data_service.service.storage.FileStorageService;
 import ru.mycrg.data_service_contract.queue.request.gpkg.ImportGpkgClearTemplatesEvent;
@@ -58,6 +59,7 @@ public class ImportGpkgClearTemplatesEventHandler implements IEventHandler {
         }
 
         //2. Удалим файл
+        // TODO: а чё рантайм то.... уфф нужно пересмотреть
         Optional<File> file;
         file = fileRepository.findByIdentifier(jdbcTemplate, event.getFileId());
 
@@ -69,7 +71,7 @@ public class ImportGpkgClearTemplatesEventHandler implements IEventHandler {
                 log.error("После импорта GPKG удалить файл по пути '{}' не удалось. Причина: {}",
                           event.getFileId(), e.getMessage());
 
-                throw new RuntimeException(e);
+                throw new DataServiceException("Удалить GPKG после обработки не получилось!!!");
             }
 
             log.debug("После импорта GPKG успешно удалили файл '{}'.", file.get().getTitle());

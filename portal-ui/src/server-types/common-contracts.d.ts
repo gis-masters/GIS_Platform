@@ -89,7 +89,7 @@ export interface GpkgImportReport extends GpkgImportBaseDto, Serializable {
 export interface GpkgImportedFile extends GpkgImportBaseDto, Serializable {
   newId: string;
   oldId: string;
-  path: string;
+  tableName: string;
   resourceQualifier: any;
 }
 

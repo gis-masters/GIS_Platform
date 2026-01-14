@@ -1,0 +1,26 @@
+meta {
+  name: get records with cql filter
+  type: http
+  seq: 2
+}
+
+get {
+  url: http://10.10.10.61:8084/datasets/dataset_3269d4/tables/all_types_59_608f0/records?filter=((field_file IS NOT NULL AND field_file <> '[]'))&page=0&size=20
+  body: none
+  auth: bearer
+}
+
+params:query {
+  filter: ((field_file IS NOT NULL AND field_file <> '[]'))
+  page: 0
+  size: 20
+}
+
+auth:bearer {
+  token: eo
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

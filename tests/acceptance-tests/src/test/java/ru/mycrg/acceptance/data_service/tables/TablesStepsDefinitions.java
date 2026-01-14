@@ -13,7 +13,6 @@ import ru.mycrg.acceptance.data_service.dto.ErrorInfo;
 import ru.mycrg.acceptance.data_service.dto.PermissionCreateDto;
 import ru.mycrg.acceptance.data_service.dto.TableCreateDto;
 import ru.mycrg.acceptance.data_service.dto.TableUpdateDto;
-import ru.mycrg.acceptance.data_service.processes.ProcessesStepDefinitions;
 import ru.mycrg.acceptance.data_service.schemas.CurrentScenarioSchema;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 
@@ -488,13 +487,6 @@ public class TablesStepsDefinitions extends BaseStepsDefinitions {
     @When("я опрашиваю текущую таблицу")
     public void findCurrentTableData() {
         getCurrentTable();
-    }
-
-    public static void getTablePathFromGpkgProcess() {
-        ProcessesStepDefinitions processesStep = new ProcessesStepDefinitions();
-        processesStep.getCurrentProcess();
-        currentDatasetIdentifier = response.jsonPath().getString("details.payload.tables[0].dataset");
-        currentTableName = response.jsonPath().getString("details.payload.tables[0].createdTableIdentifier");
     }
 
     private void getCurrentTable() {

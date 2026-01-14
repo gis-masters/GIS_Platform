@@ -13,7 +13,7 @@ public class ImportGpkgEvent extends DefaultMessageBusRequestEvent implements Se
     private Long processId;
     private String dbName;
     private String token;
-    private String creator;
+    private String creatorLogin;
     private UUID fileId;
     private Long projectId;
     private String targetDatasetIdentifier;
@@ -27,7 +27,7 @@ public class ImportGpkgEvent extends DefaultMessageBusRequestEvent implements Se
     public ImportGpkgEvent(Long processId,
                            String dbName,
                            String token,
-                           String creator,
+                           String creatorLogin,
                            UUID fileId,
                            Long projectId,
                            String targetDatasetIdentifier,
@@ -38,7 +38,7 @@ public class ImportGpkgEvent extends DefaultMessageBusRequestEvent implements Se
         this.processId = processId;
         this.dbName = dbName;
         this.token = token;
-        this.creator = creator;
+        this.creatorLogin = creatorLogin;
         this.fileId = fileId;
         this.projectId = projectId;
         this.targetDatasetIdentifier = targetDatasetIdentifier;
@@ -70,12 +70,12 @@ public class ImportGpkgEvent extends DefaultMessageBusRequestEvent implements Se
         this.token = token;
     }
 
-    public String getCreator() {
-        return creator;
+    public String getCreatorLogin() {
+        return creatorLogin;
     }
 
-    public void setCreator(String creator) {
-        this.creator = creator;
+    public void setCreatorLogin(String creatorLogin) {
+        this.creatorLogin = creatorLogin;
     }
 
     public UUID getFileId() {

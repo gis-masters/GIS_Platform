@@ -7,7 +7,7 @@ meta {
 post {
   url: http://10.10.10.61:8084/processes
   body: json
-  auth: inherit
+  auth: bearer
 }
 
 headers {
@@ -15,11 +15,15 @@ headers {
   Authorization: Bearer eyJhbGciOiJIUzI1NiIs
 }
 
+auth:bearer {
+  token: eo
+}
+
 body:json {
   {
     "payload" : {
-      "fileId" : "5a93de2c-8cd7-4c97-ad7d-a66ac5f919a0",
-      "projectId" : 6
+      "fileId" : "cb57eb74-327a-4b18-b035-cfaf4e7269da",
+      "projectId" : 15
     },
     "type" : "IMPORT"
   }

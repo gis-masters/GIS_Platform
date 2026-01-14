@@ -2,7 +2,10 @@ package ru.mycrg.integration_service.config;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import org.aopalliance.aop.Advice;
 import org.camunda.bpm.engine.MismatchingMessageCorrelationException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
 import org.springframework.amqp.core.FanoutExchange;
@@ -10,10 +13,16 @@ import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
+
+import org.springframework.amqp.AmqpRejectAndDontRequeueException;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.retry.RetryCallback;
+import org.springframework.retry.RetryContext;
+import org.springframework.retry.RetryListener;
 import org.springframework.retry.backoff.ExponentialBackOffPolicy;
+import org.springframework.retry.interceptor.RetryOperationsInterceptor;
 import org.springframework.retry.policy.SimpleRetryPolicy;
 import org.springframework.retry.support.RetryTemplate;
 
@@ -25,6 +34,8 @@ import static ru.mycrg.messagebus_contract.MessageBusProperties.*;
 
 @Configuration
 public class RabbitConfiguration {
+
+    private static final Logger log = LoggerFactory.getLogger(RabbitConfiguration.class);
 
     // Config "audit request" exchange/queue
     @Bean
@@ -69,9 +80,23 @@ public class RabbitConfiguration {
         SimpleRabbitListenerContainerFactory factory = new SimpleRabbitListenerContainerFactory();
         factory.setConnectionFactory(connectionFactory);
         factory.setMessageConverter(producerJackson2MessageConverter());
-        factory.setRetryTemplate(retryTemplate());
+
+        factory.setAdviceChain(retryAdvice());
+
+        factory.setDefaultRequeueRejected(false);
 
         return factory;
+    }
+
+    @Bean
+    public Advice retryAdvice() {
+        RetryOperationsInterceptor interceptor = new RetryOperationsInterceptor();
+        interceptor.setRetryOperations(retryTemplate());
+        interceptor.setRecoverer((args, cause) -> {
+            log.error("Rejecting message after retry exhaustion", cause);
+            throw new AmqpRejectAndDontRequeueException(cause);
+        });
+        return interceptor;
     }
 
     private RetryTemplate retryTemplate() {
@@ -86,8 +111,49 @@ public class RabbitConfiguration {
         Map<Class<? extends Throwable>, Boolean> retryableExceptions = new HashMap<>();
         retryableExceptions.put(MismatchingMessageCorrelationException.class, true);
 
-        SimpleRetryPolicy retryPolicy = new SimpleRetryPolicy(5, retryableExceptions);
+        SimpleRetryPolicy retryPolicy = new SimpleRetryPolicy(5, retryableExceptions, true, false);
         retryTemplate.setRetryPolicy(retryPolicy);
+
+        // ✅ Логирование попыток
+        retryTemplate.registerListener(new RetryListener() {
+            @Override
+            public <T, E extends Throwable> boolean open(
+                    RetryContext context, RetryCallback<T, E> callback) {
+                // Можно залогировать старт обработки сообщения
+                log.debug("Rabbit retry started");
+
+                return true;
+            }
+
+            @Override
+            public <T, E extends Throwable> void onError(
+                    RetryContext context, RetryCallback<T, E> callback, Throwable throwable) {
+                int attempt = context.getRetryCount(); // 1..N (после первого фейла будет 1)
+                log.warn("Rabbit retry attempt #{} failed: {}: {}",
+                         attempt,
+                         throwable.getClass().getSimpleName(),
+                         throwable.getMessage(),
+                         throwable);
+            }
+
+            @Override
+            public <T, E extends Throwable> void close(
+                    RetryContext context, RetryCallback<T, E> callback, Throwable throwable) {
+                // throwable != null => исчерпали попытки и вылетели наружу
+                if (throwable != null) {
+                    log.error("Rabbit retries exhausted after {} failures. Final exception: {}: {}",
+                              context.getRetryCount(),
+                              throwable.getClass().getSimpleName(),
+                              throwable.getMessage(),
+                              throwable);
+                } else {
+                    // Успешно после ретраев или с первой попытки
+                    if (context.getRetryCount() > 0) {
+                        log.info("Rabbit retry succeeded after {} failures", context.getRetryCount());
+                    }
+                }
+            }
+        });
 
         return retryTemplate;
     }

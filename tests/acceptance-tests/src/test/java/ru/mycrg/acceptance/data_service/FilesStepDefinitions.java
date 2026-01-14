@@ -14,6 +14,7 @@ import ru.mycrg.auth_service_contract.dto.UserCreateDto;
 import ru.mycrg.common_contracts.generated.data_service.gpkg.GpkgFileMetadata;
 import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgTableType;
 import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgTablesData;
+import ru.mycrg.data_service_contract.dto.FileDescription;
 
 import java.io.File;
 import java.io.IOException;
@@ -535,6 +536,15 @@ public class FilesStepDefinitions extends BaseStepsDefinitions {
 
             throw th;
         }
+    }
+
+    @When("я скачиваю файл из поля {string}")
+    public void downloadFileFromField(String field) {
+        List<FileDescription> description = response.jsonPath().getList("content[0].properties." + field,
+                                                                        FileDescription.class);
+        UUID id = description.get(0).getId();
+
+        downloadFile(id);
     }
 
     public void downloadFile(UUID fileId) {
