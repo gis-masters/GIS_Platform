@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { action, makeObservable, observable } from 'mobx';
+import { action, computed, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { withBemMod } from '@bem-react/core';
 
@@ -77,12 +77,17 @@ class ExplorerWidgetsTypeProject extends Component<ExplorerWidgetsProps> {
               url={this.url}
               title={this.project.name}
               itemEntityType={ExplorerItemEntityTypeTitle.PROJECT_FOLDER}
-              disabled={!(currentUser.isAdmin || this.project.role === Role.OWNER)}
+              disabled={this.permissionsDisabled}
             />
           </>
         )}
       </div>
     );
+  }
+
+  @computed
+  private get permissionsDisabled(): boolean {
+    return !(currentUser.isAdmin || this.project?.role === Role.OWNER);
   }
 
   private async fetchData() {

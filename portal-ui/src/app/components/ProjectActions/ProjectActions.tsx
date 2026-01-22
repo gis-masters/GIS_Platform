@@ -23,6 +23,7 @@ interface ProjectActionsProps extends IClassNameProps {
 }
 
 export const ProjectActions: FC<ProjectActionsProps> = observer(({ project, className, forDialog, as }) => {
+  const editAllowed = currentUser.isAdmin || project.role === Role.OWNER || project.role === Role.CONTRIBUTOR;
   const owningAllowed = currentUser.isAdmin || project.role === Role.OWNER;
   const { folder } = project;
 
@@ -31,7 +32,7 @@ export const ProjectActions: FC<ProjectActionsProps> = observer(({ project, clas
       <ProjectActionsEdit
         project={project}
         schema={folder ? crgProjectFolderSchema : crgProjectSchema}
-        disabled={!owningAllowed}
+        disabled={!editAllowed}
         tooltipText={getAvailableActionsTooltipByRole(ActionTypes.EDIT, project.role, DataTypes.PROJECT)}
         as={as}
       />

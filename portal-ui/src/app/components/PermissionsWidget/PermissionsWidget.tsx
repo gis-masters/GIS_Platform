@@ -15,10 +15,10 @@ import {
   PrincipalType,
   type Role,
   type RoleAssignmentBody,
+  roles,
   rolesTitles
 } from '../../services/permissions/permissions.models';
 import { getAllPermissions, getProjectPermissions } from '../../services/permissions/permissions.service';
-import { getRolesByExplorerItemEntityType } from '../../services/permissions/permissions.utils';
 import { allGroups } from '../../stores/AllGroups.store';
 import { allUsers } from '../../stores/AllUsers.store';
 import { ExplorerItemEntityTypeTitle } from '../Explorer/Explorer.models';
@@ -100,7 +100,7 @@ export class PermissionsWidget extends Component<PermissionsWidgetProps> {
                 <Skeleton height={20} animation='wave' width={String(40 + Math.random() * 60) + '%'} />
               </>
             ) : (
-              getRolesByExplorerItemEntityType(itemEntityType)
+              roles
                 .map(role => {
                   const groups = this.getListForRole(role, allGroups.list, PrincipalType.GROUP);
                   const users = this.getListForRole(role, allUsers.list, PrincipalType.USER);
@@ -193,8 +193,6 @@ export class PermissionsWidget extends Component<PermissionsWidgetProps> {
   }
 
   private getListForRole<T extends CrgUser | CrgGroup>(listRole: Role, arr: T[], type: PrincipalType): T[] {
-    const roles = getRolesByExplorerItemEntityType(this.props.itemEntityType);
-
     const greaterRoles = new Set(roles.slice(roles.indexOf(listRole) + 1, roles.length));
 
     return arr

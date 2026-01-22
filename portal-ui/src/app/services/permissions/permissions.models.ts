@@ -1,10 +1,5 @@
 import type { DataEntityType } from '../data/vectorData/vectorData.models';
 
-export enum PermissionType {
-  GIS,
-  DATA
-}
-
 export enum BuiltInRole {
   SYSTEM_ADMIN = 'SYSTEM_ADMIN',
   ORG_ADMIN = 'ORG_ADMIN',

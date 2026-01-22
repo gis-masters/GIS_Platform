@@ -17,15 +17,14 @@ import { type CrgProject } from '../gis/projects/projects.models';
 import { services } from '../services';
 import { permissionsClient } from './permissions.client';
 import {
-  PermissionType,
   ProjectPermissionPoint,
   projectRolesPermissionPoints,
   Role,
   type RoleAssignmentBody,
+  roles,
   TablePermissionPoint,
   tableRolesPermissionPoints
 } from './permissions.models';
-import { getRoles } from './permissions.utils';
 
 export async function getProjectPermissions(url: string): Promise<RoleAssignmentBody[]> {
   return await permissionsClient.getProjectPermissions(url);
@@ -293,7 +292,6 @@ async function isAllowedWithTable(
       role = Role.OWNER;
     }
 
-    const roles = getRoles(PermissionType.DATA);
     if (roles.indexOf(role) > roles.indexOf(Role.VIEWER) && readOnly) {
       role = Role.VIEWER;
     }

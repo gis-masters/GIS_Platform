@@ -20,9 +20,9 @@ import {
   type PermissionsListItem,
   type PrincipalType,
   Role,
+  roles,
   rolesTitles
 } from '../../services/permissions/permissions.models';
-import { getRolesByPermissionsListItemType } from '../../services/permissions/permissions.utils';
 import { allDataEntitiesStore } from '../../stores/AllDataEntities.store';
 import { allProjects } from '../../stores/AllProjects.store';
 import { ActionsRight } from '../ActionsRight/ActionsRight';
@@ -80,7 +80,7 @@ export class PermissionsAddDialog extends Component<PermissionsAddDialogProps> {
         <DialogActions>
           <ActionsRight>
             <Select value={this.role} onChange={this.handleRoleChange} variant='standard'>
-              {getRolesByPermissionsListItemType(type).map(roleName => (
+              {roles.map(roleName => (
                 <MenuItem value={roleName} key={roleName}>
                   {rolesTitles[roleName]}
                 </MenuItem>

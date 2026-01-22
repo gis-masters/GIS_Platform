@@ -168,7 +168,7 @@ class CurrentProject implements CrgProjectData {
 
   @computed
   get canBeEdited(): boolean {
-    return this.role === Role.OWNER;
+    return this.role === Role.OWNER || this.role === Role.CONTRIBUTOR;
   }
 
   @computed

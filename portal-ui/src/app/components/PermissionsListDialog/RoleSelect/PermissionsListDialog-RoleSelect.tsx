@@ -6,12 +6,12 @@ import { cn } from '@bem-react/classname';
 
 import {
   type PermissionsListItem,
-  type PermissionType,
   type PrincipalType,
   type Role,
+  roles,
   rolesTitles
 } from '../../../services/permissions/permissions.models';
-import { filterOutPrincipal, getRoles } from '../../../services/permissions/permissions.utils';
+import { filterOutPrincipal } from '../../../services/permissions/permissions.utils';
 
 import './PermissionsListDialog-RoleSelect.scss';
 
@@ -21,7 +21,6 @@ interface PermissionsListRoleSelectProps {
   listItem: PermissionsListItem;
   principalId: number;
   principalType: PrincipalType;
-  permissionType: PermissionType;
   onChange(newItem: PermissionsListItem): void;
 }
 
@@ -36,7 +35,7 @@ export class PermissionsListRoleSelect extends Component<PermissionsListRoleSele
     return (
       <div className={cnPermissionsListRoleSelect()}>
         <Select value={this.value} onChange={this.handleChange} variant='standard'>
-          {getRoles(this.props.permissionType).map(roleName => (
+          {roles.map(roleName => (
             <MenuItem value={roleName} key={roleName}>
               {rolesTitles[roleName]}
             </MenuItem>
@@ -48,8 +47,6 @@ export class PermissionsListRoleSelect extends Component<PermissionsListRoleSele
 
   @computed
   private get value(): Role {
-    const roles = getRoles(this.props.permissionType);
-
     return roles[Math.max(...this.props.listItem.permissions.map(({ role }) => roles.indexOf(role)))];
   }
 

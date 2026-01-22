@@ -11,9 +11,9 @@ import { tablesEqual } from '../../services/data/vectorData/vectorData.util';
 import { type CrgProject } from '../../services/gis/projects/projects.models';
 import {
   type PermissionsListItem,
-  PermissionType,
   PrincipalType,
-  type RoleAssignmentBody
+  type RoleAssignmentBody,
+  roles
 } from '../../services/permissions/permissions.models';
 import {
   addDatasetPermission,
@@ -23,7 +23,6 @@ import {
   removeProjectPermission,
   removeTablePermission
 } from '../../services/permissions/permissions.service';
-import { getRolesByPermissionsListItemType } from '../../services/permissions/permissions.utils';
 import { allPermissions } from '../../stores/AllPermissions.store';
 import { Button } from '../Button/Button';
 import { Loading } from '../Loading/Loading';
@@ -376,8 +375,6 @@ export class PermissionsListDialog extends Component<PermissionsListProps> {
 
   @action
   private handleProjectAdd(items: PermissionsListItem<CrgProject>[]) {
-    const roles = getRolesByPermissionsListItemType(this.activeTab);
-
     items.forEach(item => {
       item.permissions.forEach(permission => {
         if (!roles.includes(permission.role)) {
@@ -514,7 +511,6 @@ export class PermissionsListDialog extends Component<PermissionsListProps> {
         onChange={this.handleProjectRolesChange}
         principalId={principalId}
         principalType={principalType}
-        permissionType={PermissionType.GIS}
       />
     );
   }
@@ -536,7 +532,6 @@ export class PermissionsListDialog extends Component<PermissionsListProps> {
         onChange={this.handleTableRolesChange}
         principalId={principalId}
         principalType={principalType}
-        permissionType={PermissionType.DATA}
       />
     );
   }
@@ -556,7 +551,6 @@ export class PermissionsListDialog extends Component<PermissionsListProps> {
         onChange={this.handleDatasetRolesChange}
         principalId={principalId}
         principalType={principalType}
-        permissionType={PermissionType.DATA}
       />
     );
   }
