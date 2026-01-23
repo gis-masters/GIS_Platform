@@ -10,6 +10,7 @@ import ru.mycrg.data_service.service.cqrs.libraries.requests.UpdateDocLibrarySch
 import ru.mycrg.data_service.service.document_library.DocumentLibraryService;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service.service.schemas.SchemaLogicValidator;
+import ru.mycrg.data_service.service.schemas.SchemaPrintingTemplatesValidator;
 import ru.mycrg.data_service.service.schemas.SchemaTableComparator;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.mediator.Mediator;
@@ -30,15 +31,18 @@ public class DocumentLibrarySchemaController {
     private final Mediator mediator;
     private final DocumentLibraryService librariesService;
     private final SchemaLogicValidator schemaLogicValidator;
+    private final SchemaPrintingTemplatesValidator schemaPrintingTemplatesValidator;
     private final SchemaTableComparator schemaTableComparator;
 
     public DocumentLibrarySchemaController(Mediator mediator,
                                            DocumentLibraryService librariesService,
                                            SchemaLogicValidator schemaLogicValidator,
+                                           SchemaPrintingTemplatesValidator schemaPrintingTemplatesValidator,
                                            SchemaTableComparator schemaTableComparator) {
         this.mediator = mediator;
         this.librariesService = librariesService;
         this.schemaLogicValidator = schemaLogicValidator;
+        this.schemaPrintingTemplatesValidator = schemaPrintingTemplatesValidator;
         this.schemaTableComparator = schemaTableComparator;
     }
 
@@ -69,6 +73,7 @@ public class DocumentLibrarySchemaController {
         }
 
         Set<ErrorInfo> validationMismatches = schemaLogicValidator.validate(newSchema);
+        validationMismatches.addAll(schemaPrintingTemplatesValidator.checkTemplateAvailability(newSchema.getPrintTemplates()));
         if (!validationMismatches.isEmpty()) {
             throw new BadRequestException("В схеме найдены ошибки", new ArrayList<>(validationMismatches));
         }

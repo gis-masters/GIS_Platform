@@ -78,6 +78,7 @@ crg-options:
   kptTaskDeadlineTime: ${CRG_OPTIONS_KPT_TASK_DEADLINE_TIME:720}
   auth-service-url: http://127.0.0.1:9000
   gis-service-url: http://127.0.0.1:8082
+  report-service-url: http://127.0.0.1:8090
   cryptopro-service-url: http://127.0.0.1:8448
   notification-service-url: http://127.0.0.1:8668
   data-service-url: http://127.0.0.1:8084

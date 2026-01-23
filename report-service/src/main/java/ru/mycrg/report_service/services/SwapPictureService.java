@@ -1,18 +1,17 @@
 package ru.mycrg.report_service.services;
 
-import org.apache.poi.util.Units;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.apache.xmlbeans.XmlCursor;
 import org.apache.xmlbeans.XmlObject;
+import org.openxmlformats.schemas.drawingml.x2006.main.CTBlip;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTR;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.xml.namespace.QName;
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -36,6 +35,10 @@ public class SwapPictureService {
     public File createNewTemplateWithNewPictures(File file, Map<String, String> media) throws Exception {
         File tempFile = fileService.createFileCopy(file);
 
+        if (media == null || media.isEmpty()) {
+            return tempFile;
+        }
+
         for (Map.Entry<String, String> entry: media.entrySet()) {
             swapPicture(tempFile, entry.getKey(), entry.getValue());
         }
@@ -49,7 +52,13 @@ public class SwapPictureService {
         try (FileInputStream fis = new FileInputStream(tempFile);
              XWPFDocument document = new XWPFDocument(fis)) {
 
-            byte[] imageBytes = Base64.getDecoder().decode(base64Picture);
+            //TODO: Сделать под base64 от фронта или взять другой декодер. фронт оправляет "data:image/jpeg;base64, ..."
+            String s = base64Picture;
+            int comma = s.indexOf(',');
+            if (comma >= 0) {
+                s = s.substring(comma + 1);
+            }
+            byte[] imageBytes = Base64.getDecoder().decode(s);
             boolean placeholderFound = false;
 
             // Проходим по всем параграфам
@@ -178,19 +187,119 @@ public class SwapPictureService {
     }
 
     private void changeFoundImage(XWPFParagraph paragraph, XWPFRun run, byte[] imageBytes) throws Exception {
-        // Удаляем старый run и создаём новый с картинкой
-        int runPosition = paragraph.getRuns().indexOf(run);
-        paragraph.removeRun(runPosition);
-        XWPFRun newRun = paragraph.insertNewRun(runPosition);
+        // Определяем тип картинки по magic bytes
+        int pictureType = detectImageType(imageBytes);
+        if (pictureType == -1) {
+            throw new IllegalArgumentException("Неподдерживаемый формат изображения");
+        }
 
-        newRun.addPicture(
-                new ByteArrayInputStream(imageBytes),
-                XWPFDocument.PICTURE_TYPE_PNG,
-                "replaced-image.png",
-                Units.toEMU(400),
-                Units.toEMU(300)
+        // Получаем документ
+        XWPFDocument document = paragraph.getDocument();
+
+        // Добавляем новую картинку в документ и получаем relationship ID
+        String relationshipId = document.addPictureData(imageBytes, pictureType);
+
+        CTR ctR = run.getCTR();
+        int replacedBlipCount = 0;
+        int replacedImagedataCount = 0;
+
+        // Заменяем ВСЕ a:blip (DrawingML - для современных версий Word)
+        XmlObject[] blipArray = ctR.selectPath(
+                "declare namespace a='http://schemas.openxmlformats.org/drawingml/2006/main' " +
+                        ".//a:blip"
         );
 
-        log.debug("Картинка заменена успешно!");
+        log.debug("Найдено a:blip элементов: {}", blipArray.length);
+
+        for (XmlObject blipObj: blipArray) {
+            log.debug("Тип blipObj: {}", blipObj.getClass().getName());
+
+            // Используем типизированный подход через CTBlip для правильной записи namespace
+            if (blipObj instanceof CTBlip ctBlip) {
+                ctBlip.setEmbed(relationshipId);
+                replacedBlipCount++;
+                log.debug("Заменён DrawingML blip #{}, relationship ID: {}", replacedBlipCount, relationshipId);
+            } else {
+                // Если instanceof не сработал, попробуем через XmlCursor как fallback
+                log.debug("blipObj не является CTBlip, используем XmlCursor");
+                XmlCursor cursor = blipObj.newCursor();
+                cursor.setAttributeText(
+                        new QName("http://schemas.openxmlformats.org/officeDocument/2006/relationships", "embed"),
+                        relationshipId
+                );
+                cursor.dispose();
+                replacedBlipCount++;
+                log.debug("Заменён DrawingML blip #{} через XmlCursor, relationship ID: {}",
+                          replacedBlipCount,
+                          relationshipId);
+            }
+        }
+
+        // Заменяем VML fallback (v:imagedata - для старых версий Word и OnlyOffice)
+        XmlObject[] imagedataArray = ctR.selectPath(
+                "declare namespace v='urn:schemas-microsoft-com:vml' " +
+                        "declare namespace r='http://schemas.openxmlformats.org/officeDocument/2006/relationships' " +
+                        ".//v:imagedata"
+        );
+
+        for (XmlObject imagedataObj: imagedataArray) {
+            XmlCursor cursor = imagedataObj.newCursor();
+            cursor.setAttributeText(
+                    new QName("http://schemas.openxmlformats.org/officeDocument/2006/relationships", "id"),
+                    relationshipId
+            );
+            cursor.dispose();
+            replacedImagedataCount++;
+            log.debug("Заменён VML fallback imagedata #{}, relationship ID: {}", replacedImagedataCount,
+                      relationshipId);
+        }
+
+        if (replacedBlipCount == 0 && replacedImagedataCount == 0) {
+            log.warn("Не найдено ни одного blip или imagedata элемента в drawing");
+        } else {
+            log.debug("Картинка заменена успешно! Обновлено DrawingML blip: {}, VML imagedata: {}",
+                      replacedBlipCount, replacedImagedataCount);
+        }
+    }
+
+    private int detectImageType(byte[] imageBytes) {
+        if (imageBytes == null || imageBytes.length == 0) {
+            log.error("Пустой массив байтов изображения");
+
+            return -1;
+        }
+
+        // PNG: полная сигнатура 89 50 4E 47 0D 0A 1A 0A (8 байт)
+        if (imageBytes.length >= 8 &&
+                (imageBytes[0] & 0xFF) == 0x89 &&
+                (imageBytes[1] & 0xFF) == 0x50 &&
+                (imageBytes[2] & 0xFF) == 0x4E &&
+                (imageBytes[3] & 0xFF) == 0x47 &&
+                (imageBytes[4] & 0xFF) == 0x0D &&
+                (imageBytes[5] & 0xFF) == 0x0A &&
+                (imageBytes[6] & 0xFF) == 0x1A &&
+                (imageBytes[7] & 0xFF) == 0x0A) {
+            log.debug("Обнаружен формат изображения: PNG");
+
+            return XWPFDocument.PICTURE_TYPE_PNG;
+        }
+
+        // JPEG: начинается с FF D8 FF
+        if (imageBytes.length >= 3 &&
+                (imageBytes[0] & 0xFF) == 0xFF &&
+                (imageBytes[1] & 0xFF) == 0xD8 &&
+                (imageBytes[2] & 0xFF) == 0xFF) {
+            log.debug("Обнаружен формат изображения: JPEG");
+
+            return XWPFDocument.PICTURE_TYPE_JPEG;
+        }
+
+        // Неподдерживаемый формат
+        log.error("Неподдерживаемый формат изображения. Первые байты: {} {} {} {}",
+                  String.format("%02X", imageBytes[0] & 0xFF),
+                  imageBytes.length > 1 ? String.format("%02X", imageBytes[1] & 0xFF) : "N/A",
+                  imageBytes.length > 2 ? String.format("%02X", imageBytes[2] & 0xFF) : "N/A",
+                  imageBytes.length > 3 ? String.format("%02X", imageBytes[3] & 0xFF) : "N/A");
+        return -1;
     }
 }

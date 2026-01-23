@@ -1,0 +1,24 @@
+meta {
+  name: download template by name
+  type: http
+  seq: 5
+}
+
+get {
+  url: http://localhost:8090/temlates/excerpt_about_object/download
+  body: json
+  auth: bearer
+}
+
+headers {
+  Content-Type: application/json
+}
+
+auth:bearer {
+  token: 1
+}
+
+settings {
+  encodeUrl: false
+  timeout: 0
+}

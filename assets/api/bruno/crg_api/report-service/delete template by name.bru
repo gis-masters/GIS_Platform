@@ -1,0 +1,24 @@
+meta {
+  name: delete template by name
+  type: http
+  seq: 6
+}
+
+delete {
+  url: http://localhost:8090/temlates/excerpt_about_object
+  body: json
+  auth: bearer
+}
+
+headers {
+  Content-Type: application/json
+}
+
+auth:bearer {
+  token: 1
+}
+
+settings {
+  encodeUrl: false
+  timeout: 0
+}

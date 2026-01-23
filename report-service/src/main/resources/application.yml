@@ -2,13 +2,34 @@ spring:
   profiles:
     active: fiz-dev
 logging:
-  file:
-    name: /opt/crg/logs/report-service.log
+  file: /opt/crg/logs/data-service.log
   level:
     ru.mycrg: DEBUG
 
+---
+
 server:
   port: 8090
+
+spring:
+  datasource:
+    url: jdbc:postgresql://127.0.0.1:5434/crg_report_service
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+    hikari:
+      connection-timeout: 50000
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+  flyway:
+    enabled: true
+    placeholders:
+      db_owner: ${SPRING_FLYWAY_PLACEHOLDERS_DB_OWNER}
 
 crg-options:
   data_service_url: http://127.0.0.1:8084

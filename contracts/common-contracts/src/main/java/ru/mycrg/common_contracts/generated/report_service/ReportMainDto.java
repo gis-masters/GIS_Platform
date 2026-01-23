@@ -4,18 +4,18 @@ import java.util.Map;
 
 public class ReportMainDto {
 
-    ReportOutputFormat outputFormat;
-
-    Map<String, String> media;
-
-    Object data;
+    private ReportOutputFormat outputFormat;
+    private String templateName;
+    private Map<String, String> media;
+    private Object data;
 
     public ReportMainDto() {
         //Req
     }
 
-    public ReportMainDto(ReportOutputFormat outputFormat, Map<String, String> media, Object data) {
+    public ReportMainDto(ReportOutputFormat outputFormat, String templateName, Map<String, String> media, Object data) {
         this.outputFormat = outputFormat;
+        this.templateName = templateName;
         this.media = media;
         this.data = data;
     }
@@ -26,6 +26,14 @@ public class ReportMainDto {
 
     public void setOutputFormat(ReportOutputFormat outputFormat) {
         this.outputFormat = outputFormat;
+    }
+
+    public String getTemplateName() {
+        return templateName;
+    }
+
+    public void setTemplateName(String templateName) {
+        this.templateName = templateName;
     }
 
     public Map<String, String> getMedia() {

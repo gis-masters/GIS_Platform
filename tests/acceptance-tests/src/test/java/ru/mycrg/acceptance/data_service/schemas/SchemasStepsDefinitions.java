@@ -101,6 +101,13 @@ public class SchemasStepsDefinitions extends BaseStepsDefinitions {
         createSchemaWithRandomName();
     }
 
+    @When("Пользователь создает новую схему с именем {string}")
+    public void createNewSchema(String schemaName) {
+        SchemaDto schema = getSchemaTemplateByTitle(schemaName);
+
+        super.createEntity(schema);
+    }
+
     @When("Существует схема {string}")
     public void createSchemaByKey(String schemaTitle) {
         SchemaDto schema = getSchemaTemplateByTitle(schemaTitle);

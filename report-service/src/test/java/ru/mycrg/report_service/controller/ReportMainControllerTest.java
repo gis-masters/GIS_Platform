@@ -6,7 +6,6 @@ import org.mockito.InjectMocks;
 import org.mockito.junit.MockitoJUnitRunner;
 import ru.mycrg.common_contracts.generated.report_service.ReportMainDto;
 import ru.mycrg.common_contracts.generated.report_service.ReportOutputFormat;
-import ru.mycrg.report_service.controler.ReportController;
 import ru.mycrg.report_service.exceptions.BadRequestException;
 
 import java.util.HashMap;
@@ -14,10 +13,10 @@ import java.util.HashMap;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @RunWith(MockitoJUnitRunner.class)
-public class ReportControllerTest {
+public class ReportMainControllerTest {
 
     @InjectMocks
-    private ReportController reportController;
+    private ReportMainController reportController;
 
     @Test
     public void nullDto_shouldThrowBadRequestException() {

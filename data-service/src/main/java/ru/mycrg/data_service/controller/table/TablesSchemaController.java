@@ -9,6 +9,7 @@ import ru.mycrg.data_service.service.cqrs.tables.requests.UpdateTableSchemaReque
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service.service.resources.TableService;
 import ru.mycrg.data_service.service.schemas.SchemaLogicValidator;
+import ru.mycrg.data_service.service.schemas.SchemaPrintingTemplatesValidator;
 import ru.mycrg.data_service.service.schemas.SchemaTableComparator;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.mediator.Mediator;
@@ -28,14 +29,18 @@ public class TablesSchemaController {
     private final Mediator mediator;
     private final TableService tableService;
     private final SchemaLogicValidator schemaLogicValidator;
+    private final SchemaPrintingTemplatesValidator schemaPrintingTemplatesValidator;
     private final SchemaTableComparator schemaTableComparator;
 
     public TablesSchemaController(Mediator mediator,
-                                  TableService tableService, SchemaLogicValidator schemaLogicValidator,
+                                  TableService tableService,
+                                  SchemaLogicValidator schemaLogicValidator,
+                                  SchemaPrintingTemplatesValidator schemaPrintingTemplatesValidator,
                                   SchemaTableComparator schemaTableComparator) {
         this.mediator = mediator;
         this.tableService = tableService;
         this.schemaLogicValidator = schemaLogicValidator;
+        this.schemaPrintingTemplatesValidator = schemaPrintingTemplatesValidator;
         this.schemaTableComparator = schemaTableComparator;
     }
 
@@ -69,6 +74,7 @@ public class TablesSchemaController {
         }
 
         Set<ErrorInfo> validationMismatches = schemaLogicValidator.validate(newSchema);
+        validationMismatches.addAll(schemaPrintingTemplatesValidator.checkTemplateAvailability(newSchema.getPrintTemplates()));
         if (!validationMismatches.isEmpty()) {
             throw new BadRequestException("В схеме найдены ошибки", new ArrayList<>(validationMismatches));
         }

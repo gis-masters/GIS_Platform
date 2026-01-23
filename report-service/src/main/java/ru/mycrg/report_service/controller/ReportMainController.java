@@ -1,4 +1,4 @@
-package ru.mycrg.report_service.controler;
+package ru.mycrg.report_service.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -15,11 +15,11 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping(value = "/reports")
-public class ReportController {
+public class ReportMainController {
 
     private final IReportService reportService;
 
-    public ReportController(IReportService reportService) {
+    public ReportMainController(IReportService reportService) {
         this.reportService = reportService;
     }
 

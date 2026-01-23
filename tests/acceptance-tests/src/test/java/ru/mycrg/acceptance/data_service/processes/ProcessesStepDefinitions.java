@@ -92,11 +92,6 @@ public class ProcessesStepDefinitions extends BaseStepsDefinitions {
         currentProcessId = response.jsonPath().get("id");
     }
 
-    @Then("размер скаченного файла равен {int}")
-    public void sizeOfAnswer(int size) {
-        assertEquals(size, response.asByteArray().length);
-    }
-
     @And("размер полученного файла равен {int}")
     public void sizeOfFile(int size) {
         getCurrentProcess();

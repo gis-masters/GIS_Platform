@@ -19,6 +19,8 @@ public class DataServiceSpeaker {
 
     private final Logger log = LoggerFactory.getLogger(DataServiceSpeaker.class);
 
+    public final static String FILE_MEDIA_TYPE = "application/octet-stream";
+
     private final IDataServiceClient dataServiceClient;
 
     public DataServiceSpeaker(IDataServiceClient dataServiceClient) {
@@ -30,7 +32,7 @@ public class DataServiceSpeaker {
                                             String fileName) throws HttpClientException {
 
         RequestBody fileBody = RequestBody.create(
-                MediaType.parse("application/octet-stream"),
+                MediaType.parse(FILE_MEDIA_TYPE),
                 fileContent
         );
 

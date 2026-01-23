@@ -40,7 +40,7 @@ public class AuthorizationStepDefinitions extends BaseStepsDefinitions {
     }
 
     @Given("я авторизован как {string}")
-    public void orgOwnerAuthorized(String userName) {
+    public void authorizedAs(String userName) {
         switch (userName) {
             case "Администратор системы":
                 authorizeAsSystemAdmin();
@@ -60,7 +60,7 @@ public class AuthorizationStepDefinitions extends BaseStepsDefinitions {
     }
 
     @Given("Владелец организации авторизован")
-    public void orgOwnerAuthorized() {
+    public void authorizedAs() {
         authorizationBase.loginAsOwner();
     }
 

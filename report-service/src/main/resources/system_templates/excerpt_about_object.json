@@ -1,0 +1,11 @@
+{
+  "name": "excerpt_about_object",
+  "title": "Выписка об объекте",
+  "printFormSchemaOverrides": {
+    "properties": {
+      "name": "some_name",
+      "title": "Русское имя",
+      "propertyType": "STRING"
+    }
+  }
+}

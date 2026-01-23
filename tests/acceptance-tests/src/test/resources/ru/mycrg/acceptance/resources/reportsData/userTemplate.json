@@ -1,0 +1,7 @@
+{
+  "properties": {
+    "name": "some_name",
+    "title": "Русское имя",
+    "propertyType": "STRING"
+  }
+}

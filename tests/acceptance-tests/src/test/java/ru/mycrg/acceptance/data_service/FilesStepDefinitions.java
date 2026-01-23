@@ -1,6 +1,7 @@
 package ru.mycrg.acceptance.data_service;
 
 import io.cucumber.datatable.DataTable;
+import io.cucumber.java.PendingException;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
@@ -507,6 +508,11 @@ public class FilesStepDefinitions extends BaseStepsDefinitions {
     public void checkErrorResponseFromIncorrectGpkg() {
         assertEquals(400, response.getStatusCode());
         checkResponseValue("message", "Файл " + currentFileId + " не является корректным GPKG файлом");
+    }
+
+    @And("размер скаченного файла равен {int}")
+    public void checkFileResponseSize(int fileSize) {
+        assertEquals(fileSize, response.asByteArray().length);
     }
 
     @And("я получаю метаданные текущего файла в ожидаемом формате")

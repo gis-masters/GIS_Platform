@@ -10,6 +10,7 @@ import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.repository.SchemaTemplateRepository;
 import ru.mycrg.data_service.service.cqrs.schema_temaplates.requests.UpdateSchemaTemplateRequest;
 import ru.mycrg.data_service.service.schemas.SchemaLogicValidator;
+import ru.mycrg.data_service.service.schemas.SchemaPrintingTemplatesValidator;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.mediator.IRequestHandler;
 import ru.mycrg.mediator.Voidy;
@@ -27,13 +28,16 @@ public class UpdateSchemaTemplateRequestHandler implements IRequestHandler<Updat
     private final static String TAG = "tags";
 
     private final SchemaLogicValidator schemaLogicValidator;
+    private final SchemaPrintingTemplatesValidator schemaPrintingTemplatesValidator;
     private final SchemaTemplateRepository schemaRepository;
     private final IAuthenticationFacade authenticationFacade;
 
     public UpdateSchemaTemplateRequestHandler(SchemaLogicValidator schemaLogicValidator,
+                                              SchemaPrintingTemplatesValidator schemaPrintingTemplatesValidator,
                                               SchemaTemplateRepository schemaRepository,
                                               IAuthenticationFacade authenticationFacade) {
         this.schemaLogicValidator = schemaLogicValidator;
+        this.schemaPrintingTemplatesValidator = schemaPrintingTemplatesValidator;
         this.schemaRepository = schemaRepository;
         this.authenticationFacade = authenticationFacade;
     }
@@ -42,6 +46,8 @@ public class UpdateSchemaTemplateRequestHandler implements IRequestHandler<Updat
     public Voidy handle(UpdateSchemaTemplateRequest request) {
         SchemaDto schema = request.getSchema();
         Set<ErrorInfo> validationMismatches = schemaLogicValidator.validate(schema);
+        validationMismatches.addAll(schemaPrintingTemplatesValidator.checkTemplateAvailability(schema.getPrintTemplates()));
+
         if (!validationMismatches.isEmpty()) {
             throw new BadRequestException("В схеме найдены ошибки", new ArrayList<>(validationMismatches));
         }

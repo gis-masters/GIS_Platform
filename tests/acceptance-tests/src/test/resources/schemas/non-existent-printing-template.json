@@ -1,0 +1,22 @@
+{
+  "name": "non_existent",
+  "title": "Нет такого шаблона печати",
+  "styleName": "generic",
+  "tableName": "non_existent",
+  "printTemplates": [
+    "non_existent"
+  ],
+  "properties": [
+    {
+      "name": "shape",
+      "title": "геометрия",
+      "hidden": true,
+      "allowedValues": [
+        "Polygon"
+      ],
+      "valueType": "GEOMETRY"
+    }
+  ],
+  "description": "Точечный слой с атрибутами",
+  "geometryType": "Point"
+}

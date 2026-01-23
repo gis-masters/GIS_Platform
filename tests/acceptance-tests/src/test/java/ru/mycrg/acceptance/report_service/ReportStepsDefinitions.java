@@ -67,7 +67,16 @@ public class ReportStepsDefinitions extends BaseStepsDefinitions {
         currentFileId = currentReportFileId;
     }
 
-    @When("пользователь скачивает текущий отчёт")
+    @Given("я формирую отчёт по шаблону {string}")
+    public void makeReportByName(String templateName) {
+        postReport(templateName);
+
+        assertNotNull(currentReportFileId);
+        currentFileId = currentReportFileId;
+    }
+
+
+    @When("я скачиваю текущий отчёт")
     public void downloadCurrentReport() {
         assertNotNull("В контексте сценария должен быть ID отчёта!", currentReportFileId);
 
@@ -82,7 +91,7 @@ public class ReportStepsDefinitions extends BaseStepsDefinitions {
         File file = new File(tempDirFile, fileName);
         Files.write(file.toPath(), fileData);
 
-        assertEquals(25629, file.length());
+        assertEquals(25630, file.length());
     }
 
     @Then("отчёт соответствует формату {string}")
@@ -100,6 +109,7 @@ public class ReportStepsDefinitions extends BaseStepsDefinitions {
                          value, String.valueOf(actualData.get(key)));
         });
     }
+
 
     private void createReport(ReportMainDto request) {
         response = getBaseRequestWithCurrentCookie()

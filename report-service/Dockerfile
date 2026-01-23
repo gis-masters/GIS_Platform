@@ -6,7 +6,7 @@ COPY ./target/report-service.jar report-service.jar
 
 COPY ./target/apm-agent.jar apm-agent.jar
 
-COPY src/main/resources/excerpt_about_object.docx report-service/src/main/resources/excerpt_about_object.docx
+COPY src/main/resources/system_templates report-service/src/main/resources/system_templates
 
 ENTRYPOINT exec java -Xmx${XMX_SIZE} \
                                      --add-opens java.base/java.lang=ALL-UNNAMED \

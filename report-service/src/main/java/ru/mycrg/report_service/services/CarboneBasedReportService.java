@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import ru.mycrg.auth_facade.IAuthenticationFacade;
 import ru.mycrg.common_contracts.generated.report_service.ReportMainDto;
 import ru.mycrg.http_client.exceptions.HttpClientException;
+import ru.mycrg.report_service.entity.Template;
 import ru.mycrg.report_service.exceptions.BadRequestException;
 
 import java.io.File;
@@ -23,22 +24,24 @@ import static ru.mycrg.report_service.utils.CarbonUtils.prepareJsonData;
 @Service
 public class CarboneBasedReportService implements IReportService {
 
-    private final String DEFAULT_TEMPLATE_NAME = "excerpt_about_object.docx";
     private final Logger log = LoggerFactory.getLogger(CarboneBasedReportService.class);
 
     private final FileService fileService;
-    private final SwapPictureService templateService;
+    private final TemplateService templateService;
+    private final SwapPictureService swapPictureService;
     private final DataServiceSpeaker dataServiceSpeaker;
     private final IAuthenticationFacade authenticationFacade;
     private final ICarboneServices carboneServices;
 
     public CarboneBasedReportService(FileService fileService,
-                                     SwapPictureService templateService,
+                                     TemplateService templateService,
+                                     SwapPictureService swapPictureService,
                                      DataServiceSpeaker dataServiceSpeaker,
                                      IAuthenticationFacade authenticationFacade,
                                      ICarboneServices carboneServices) {
         this.fileService = fileService;
         this.templateService = templateService;
+        this.swapPictureService = swapPictureService;
         this.dataServiceSpeaker = dataServiceSpeaker;
         this.authenticationFacade = authenticationFacade;
         this.carboneServices = carboneServices;
@@ -48,10 +51,13 @@ public class CarboneBasedReportService implements IReportService {
     public UUID makeReport(ReportMainDto dto) {
         try {
             // 1 - Убедиться что шаблон есть у этого сервиса
-            File defaultTemplate = fileService.throwIfNotExist(DEFAULT_TEMPLATE_NAME);
+            Template currentTemplate = templateService.getTemplateByName(dto.getTemplateName());
+            log.debug("Запрошен отчёт по шаблону {} ->  {}", currentTemplate.getName(), currentTemplate.getName());
+
+            File defaultTemplate = fileService.throwIfNotExist(currentTemplate.getPath());
 
             // 2 - Модифицировать шаблон переданной картинкой
-            File newTemplate = templateService.createNewTemplateWithNewPictures(defaultTemplate, dto.getMedia());
+            File newTemplate = swapPictureService.createNewTemplateWithNewPictures(defaultTemplate, dto.getMedia());
 
             // 3 - Скормить новый шаблон сервису
             String templateId = carboneServices.addTemplate(Files.readAllBytes(Paths.get(newTemplate.getPath())));
@@ -67,7 +73,8 @@ public class CarboneBasedReportService implements IReportService {
 
             // 5 - Сохранить полученный файл как сущность платформы
             Optional<UUID> fileProjection = dataServiceSpeaker
-                    .postFileOnService(authenticationFacade.getAccessToken(), report.getFileContent(), report.getName());
+                    .postFileOnService(authenticationFacade.getAccessToken(), report.getFileContent(),
+                                       report.getName());
 
             // 6 - Отдать uuid по которому юзер может сделать /export/uuid и получить файл
             if (fileProjection.isEmpty()) {

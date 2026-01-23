@@ -24,6 +24,8 @@ public class SchemaTemplates {
                 return testPointAttributes();
             case "Схема для проверки типов STRING":
                 return stringTypesSchema();
+            case "Схема с несуществующим шаблон печати":
+                return nonExistTemplateSchema();
             case "Точечный слой с атрибутами - ошибочная, для теста":
                 return testPointAttributesIncorrect();
             case "Все типы данных":
@@ -169,6 +171,10 @@ public class SchemaTemplates {
 
     private static SchemaDto stringTypesSchema() {
         return loadSchemaFromResource("string-types-schema.json");
+    }
+
+    private static SchemaDto nonExistTemplateSchema() {
+        return loadSchemaFromResource("non-existent-printing-template.json");
     }
 
     private static SchemaDto testPointAttributes() {

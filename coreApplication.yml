@@ -141,6 +141,7 @@ services:
       CRG_OPTIONS_NOTIFICATION_SERVICE_URL: http://notification-service:8668
       CRG_OPTIONS_DATA_SERVICE_URL: http://data-service:8084
       CRG_OPTIONS_UI_SERVICE_URL: http://portal-ui:80
+      CRG_OPTIONS_REPORT_SERVICE_URL: http://report-service:8090
       CRG_OPTIONS_KPT_STORAGE_PATH: /opt/crg/kpt_order/
       CRG_OPTIONS_MAIN_STORAGE_PATH: /opt/crg/file_storage
       CRG_OPTIONS_EXPORT_STORAGE_PATH: /opt/crg/export/
@@ -430,10 +431,20 @@ services:
       APM_URL: ${APM_URL}
       XMX_SIZE: ${REPORT_XMX_SIZE:-1100m}
 
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgis:5432/crg_report_service
+      SPRING_DATASOURCE_USERNAME: ${CRG_USER}
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASS}
+
+      SPRING_FLYWAY_PLACEHOLDERS_DB_OWNER: ${CRG_USER}
+
       CRG_OPTIONS_DATA_SERVICE_URL: http://data-service:8084
       CRG_OPTIONS_CARBONE_URL: http://carbone:4000
 
       CRG_OPTIONS_SYSTEM_ADMIN_LOGIN_JWT_SECRET: ${SECURITY_JWT_SECRET}
+
+    volumes:
+      - /opt/crg/logs:/opt/logs
+      - /opt/crg/templates:/report-service/src/main/resources/ready_to_work
     ports:
       - "8090:8090"
     mem_limit: ${REPORT_SERVICE_MEM_LIMIT:-1000}m

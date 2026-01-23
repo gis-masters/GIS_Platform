@@ -37,7 +37,7 @@ services:
       POSTGRES_DB: ${CRG_USER}
       POSTGRES_USER: ${CRG_USER}
       POSTGRES_PASSWORD: ${DB_PASS}
-      POSTGRES_DB_LIST: crg_notification_db,crg_auth_service,crg_gis_service,crg_data_service,geoserver_db,bpmn_camunda,crg_audit_service,gsstore,gscatalog
+      POSTGRES_DB_LIST: crg_notification_db,crg_auth_service,crg_gis_service,crg_data_service,geoserver_db,bpmn_camunda,crg_audit_service,gsstore,gscatalog,crg_report_service
     command:
       - postgres
       - -c

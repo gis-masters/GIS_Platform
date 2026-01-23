@@ -9,6 +9,7 @@ import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Optional;
 
@@ -69,9 +70,6 @@ public class JsonConverter {
         try {
             return Optional.ofNullable(mapper.readValue(stringJson, typeReference));
         } catch (Exception e) {
-            log.error("Сбой при конвертации строки: [{}] с TypeReference в JSON: {}",
-                      stringJson, e.getMessage(), e);
-
             return Optional.empty();
         }
     }
@@ -93,5 +91,9 @@ public class JsonConverter {
 
             throw new IllegalArgumentException("Не удалось конвертировать объект", e);
         }
+    }
+
+    public static JsonNode readTreeFromFile(File file) throws Exception {
+        return mapper.readTree(file);
     }
 }

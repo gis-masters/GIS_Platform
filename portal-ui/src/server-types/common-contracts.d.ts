@@ -199,8 +199,27 @@ export interface PageableResources<T> {
 
 export interface ReportMainDto {
   outputFormat: ReportOutputFormat;
+  templateName: string;
   media: { [index: string]: string };
   data: any;
+}
+
+export interface TemplateCreateDto extends TemplateShortInfo {
+  printFormSchemaOverrides: any;
+}
+
+export interface TemplateFullInfo extends TemplateCreateDto {
+  id: number;
+  createdBy: string;
+  createdAt: string;
+  system: boolean;
+}
+
+export interface TemplateShortInfo extends TemplateShortProjection {}
+
+export interface TemplateShortProjection {
+  name: string;
+  title: string;
 }
 
 export interface SpecializationView {

@@ -32,6 +32,11 @@ public class CommonStepDefinitions extends BaseStepsDefinitions {
         assertEquals(status, response.getStatusCode());
     }
 
+    @And("в ошибке содержится сообщение {string}")
+    public void errorMessageContains(String msg) {
+        assertEquals(msg, response.jsonPath().get("message"));
+    }
+
     @And("В ответе есть контент")
     public void isThereContentExist() {
         jsonPath = response.jsonPath();

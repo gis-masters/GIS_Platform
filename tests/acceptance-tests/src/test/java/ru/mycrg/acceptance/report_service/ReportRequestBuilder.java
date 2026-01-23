@@ -11,6 +11,8 @@ import static ru.mycrg.common_contracts.generated.report_service.ReportOutputFor
 
 public class ReportRequestBuilder {
 
+    public static String DEFAULT_SYSTEM_TEMPLATE_NAME = "excerpt_about_object";
+
     public static ReportMainDto prepareReport(String dataTemplate) {
         switch (dataTemplate) {
             case "pdf":
@@ -27,6 +29,12 @@ public class ReportRequestBuilder {
 
             case "Пустые поля media и data":
                 return emptyMediaAndData();
+
+            case "user template":
+                ReportMainDto dto = createDefaultReport();
+                dto.setTemplateName(dataTemplate);
+
+                return dto;
         }
         throw new IllegalArgumentException("В тестах нет шаблона отчёта для " + dataTemplate);
     }
@@ -46,7 +54,7 @@ public class ReportRequestBuilder {
                                                         "coordinates", List.of(Map.of("num", 1,
                                                                                       "x", 37, "y", 55))));
 
-        return new ReportMainDto(PDF, media, data);
+        return new ReportMainDto(PDF, DEFAULT_SYSTEM_TEMPLATE_NAME, media, data);
     }
 
     private static ReportMainDto emptyOutputFormat() {
