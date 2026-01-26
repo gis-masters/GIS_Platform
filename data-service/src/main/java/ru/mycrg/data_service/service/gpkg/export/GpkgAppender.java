@@ -174,7 +174,7 @@ public class GpkgAppender {
 
             // Сохраняем информацию о файлах в таблицу
             for (File file: filesToExport) {
-                //todo часто попадаем на other секцию. При импорте не влияет но желательно пофиксить
+                //TODO: часто попадаем на other секцию. При импорте не влияет но желательно пофиксить
                 Optional<FileResourceQualifier> oResQualifier = fromJson(file.getResourceQualifier().toString(),
                                                                          FileResourceQualifier.class);
 

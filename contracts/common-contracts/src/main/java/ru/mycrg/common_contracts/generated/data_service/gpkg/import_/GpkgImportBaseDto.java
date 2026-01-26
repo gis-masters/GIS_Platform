@@ -41,7 +41,7 @@ public abstract class GpkgImportBaseDto implements Serializable {
     @Override
     public String toString() {
         return "{" +
-                "\"name\":" + (title == null ? "null" : "\"" + title + "\"") + ", " +
+                "\"title\":" + (title == null ? "null" : "\"" + title + "\"") + ", " +
                 "\"status\":" + (status == null ? "null" : "\"" + status + "\"") + ", " +
                 "\"messages\":" + (messages == null ? "null" : "\"" + messages + "\"") + ", " +
                 "}";

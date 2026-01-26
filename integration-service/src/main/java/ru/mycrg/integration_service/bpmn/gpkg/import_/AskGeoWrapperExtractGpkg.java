@@ -5,12 +5,12 @@ import org.camunda.bpm.engine.delegate.JavaDelegate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgImportReport;
-import ru.mycrg.messagebus_contract.events.integration_wrapper.ExtractGpkgEvent;
 import ru.mycrg.data_service_contract.queue.request.gpkg.ImportGpkgEvent;
 import ru.mycrg.messagebus_contract.IMessageBusProducer;
+import ru.mycrg.messagebus_contract.events.integration_wrapper.ExtractGpkgEvent;
 
-import static ru.mycrg.integration_service.bpmn.IJavaDelegateProperties.*;
+import static ru.mycrg.integration_service.bpmn.IJavaDelegateProperties.BUSINESS_KEY_VAR_NAME;
+import static ru.mycrg.integration_service.bpmn.IJavaDelegateProperties.EVENT_VAR_NAME;
 
 /**
  * Класс для импорта GPKG. (второй в цепочке)
@@ -38,9 +38,6 @@ public class AskGeoWrapperExtractGpkg implements JavaDelegate {
     public void execute(DelegateExecution delegateExecution) throws Exception {
         log.debug("Ставим ивент распаковки geoPackage");
         ImportGpkgEvent event = (ImportGpkgEvent) delegateExecution.getVariable(EVENT_VAR_NAME);
-
-        GpkgImportReport importReport = (GpkgImportReport) delegateExecution.getVariable(EVENT_IMPORT_GPKG_REPORT_NAME);
-        log.debug("Отслеживание json импорт репорта: {}", importReport);
 
         String businessKey = (String) delegateExecution.getVariable(BUSINESS_KEY_VAR_NAME);
 

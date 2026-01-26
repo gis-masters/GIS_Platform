@@ -3,8 +3,6 @@ package ru.mycrg.integration_service.bpmn.gpkg;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgImportedStyles;
-import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgImportedSvg;
 import ru.mycrg.data_service_contract.dto.gpkg.StyleWithIcons;
 import ru.mycrg.data_service_contract.dto.gpkg.SvgIcon;
 import ru.mycrg.geoserver_client.services.resources.Svg;
@@ -48,10 +46,6 @@ public class GeoServerSpeaker {
         });
 
         return styleWithIcons;
-    }
-
-    public String addSvgOnGeoserver(String token, GpkgImportedSvg svg) throws HttpClientException {
-        return addSvgOnGeoserverRecursive(token, svg.getTitle(), svg.getBody());
     }
 
     public List<String> findSvgRelativePathInSld(String styleSLD) {
@@ -119,7 +113,7 @@ public class GeoServerSpeaker {
         return svgUrls;
     }
 
-    private synchronized String addSvgOnGeoserverRecursive(String token, String svgPath, String actualBody)
+    public synchronized String addSvgOnGeoserverRecursive(String token, String svgPath, String actualBody)
             throws HttpClientException {
         Optional<String> existBody = getSvgBodyFromGeoserver(svgPath, token);
 
@@ -215,15 +209,10 @@ public class GeoServerSpeaker {
         return Optional.empty();
     }
 
-    public String addStyleOnGeoserver(String token, String dbName, GpkgImportedStyles style)
-            throws HttpClientException {
-        return addStyleOnGeoserverRecursive(token, dbName, style.getName(), style.getBody());
-    }
-
-    private synchronized String addStyleOnGeoserverRecursive(String token,
-                                                             String dbName,
-                                                             String styleName,
-                                                             String actualBody) throws HttpClientException {
+    public synchronized String addStyleOnGeoserverRecursive(String token,
+                                                            String dbName,
+                                                            String styleName,
+                                                            String actualBody) throws HttpClientException {
         Optional<String> existBody = getSldFromGeoserver(styleName, token, dbName);
 
         if (existBody.isPresent()) {

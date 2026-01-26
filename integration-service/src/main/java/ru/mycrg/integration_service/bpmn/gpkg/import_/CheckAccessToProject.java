@@ -8,19 +8,16 @@ import org.camunda.bpm.engine.delegate.JavaDelegate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgImportDestinationProject;
 import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgImportReport;
 import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgPayloadData;
-import ru.mycrg.data_service_contract.dto.PatchProcess;
-import ru.mycrg.data_service_contract.queue.request.UpdateProcessEvent;
 import ru.mycrg.data_service_contract.queue.request.gpkg.ImportGpkgEvent;
 import ru.mycrg.gis_service_contract.dto.ProjectBaseProjection;
 import ru.mycrg.integration_service.bpmn.BaseHttpService;
-import ru.mycrg.messagebus_contract.IMessageBusProducer;
+import ru.mycrg.integration_service.bpmn.gpkg.GpkgImportReportManager;
+import ru.mycrg.integration_service.bpmn.gpkg.ReportSendConfigDto;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.List;
 import java.util.Optional;
 
 import static ru.mycrg.common_contracts.enums.Roles.VIEWER;
@@ -47,12 +44,12 @@ public class CheckAccessToProject implements JavaDelegate {
     private final Logger log = LoggerFactory.getLogger(CheckAccessToProject.class);
 
     private final BaseHttpService baseHttpService;
-    private final IMessageBusProducer messageBus;
+    private final GpkgImportReportManager reportManager;
 
     public CheckAccessToProject(BaseHttpService baseHttpService,
-                                IMessageBusProducer messageBus) {
+                                GpkgImportReportManager reportManager) {
         this.baseHttpService = baseHttpService;
-        this.messageBus = messageBus;
+        this.reportManager = reportManager;
     }
 
     @Override
@@ -66,55 +63,42 @@ public class CheckAccessToProject implements JavaDelegate {
 
         log.debug("Класс {} начал работу.", CheckAccessToProject.class.getSimpleName());
         ImportGpkgEvent event = (ImportGpkgEvent) delegateExecution.getVariable(EVENT_VAR_NAME);
-
-        Long projectId = event.getProjectId();
-        String token = event.getToken();
+        String businessKey = (String) delegateExecution.getVariable(BUSINESS_KEY_VAR_NAME);
+        ReportSendConfigDto rabbitDto = new ReportSendConfigDto(event.getProcessId(),
+                                                                event.getDbName(),
+                                                                businessKey,
+                                                                TASK_DONE);
 
         GpkgImportReport importReport = (GpkgImportReport) delegateExecution.getVariable(EVENT_IMPORT_GPKG_REPORT_NAME);
         GpkgPayloadData payload = importReport.getPayload();
 
-        GpkgImportDestinationProject projectReport = new GpkgImportDestinationProject(projectId);
-
+        Long projectId = event.getProjectId();
+        String token = event.getToken();
         Optional<ProjectBaseProjection> project = getProjectById(projectId, token, delegateExecution, currentIteration);
 
         if (project.isEmpty()) {
             log.debug("У пользователя не хватает прав что бы смотреть на проект.");
+            reportManager.createProjectRepWithError(rabbitDto, payload,
+                                                    projectId, "Проект с ID: " + projectId + " недоступен");
 
-            projectReport.setStatus(ERROR);
-            projectReport.setMessages(List.of("Проект с ID: " + projectId + " недоступен"));
-            payload.setProject(projectReport);
-            importReport.setPayload(payload);
-
-            delegateExecution.setVariable(EVENT_IMPORT_GPKG_REPORT_NAME, importReport);
             delegateExecution.setVariable(CHECK_STATUS_VAR_NAME, "noAccess");
 
             return;
         }
 
-        projectReport.setTitle(project.get().getName());
+        reportManager.createProjectReport(rabbitDto, payload, projectId, project.get().getName());
 
         if (project.get().getRole() != VIEWER) {
             log.debug("У пользователя хватает прав что бы создавать слои в проекте.");
-
-            projectReport.setStatus(ACTIVE);
-            payload.setProject(projectReport);
-
-            String businessKey = (String) delegateExecution.getVariable(BUSINESS_KEY_VAR_NAME);
-            PatchProcess newDetails = new PatchProcess(TASK_DONE, payload);
-            messageBus.produce(new UpdateProcessEvent(event.getProcessId(),
-                                                      businessKey,
-                                                      event.getDbName(),
-                                                      newDetails));
+            reportManager.updateProjectReport(rabbitDto, payload, ACTIVE);
 
             delegateExecution.setVariable(ITERATION_COUNTER_VAR_NAME, 0);
             delegateExecution.setVariable(CHECK_STATUS_VAR_NAME, "haveAccess");
         } else {
-            log.debug("У пользователя не хватает прав что бы создать слои в проекте.");
+            String msg = "У пользователя нет прав редактировать проект '" + project.get().getName() + "'";
+            log.debug(msg);
 
-            projectReport.setStatus(ERROR);
-            projectReport.setMessages(
-                    List.of("У пользователя нет прав редактировать проект '" + project.get().getName() + "'"));
-            payload.setProject(projectReport);
+            reportManager.updateProjectReport(rabbitDto, payload, ERROR, msg);
 
             delegateExecution.setVariable(CHECK_STATUS_VAR_NAME, "noAccess");
         }

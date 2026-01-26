@@ -7,10 +7,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgImportReport;
 import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgProcessStatus;
-import ru.mycrg.data_service_contract.dto.PatchProcess;
-import ru.mycrg.data_service_contract.queue.request.UpdateProcessEvent;
 import ru.mycrg.data_service_contract.queue.request.gpkg.ImportGpkgClearTemplatesEvent;
 import ru.mycrg.data_service_contract.queue.request.gpkg.ImportGpkgEvent;
+import ru.mycrg.integration_service.bpmn.gpkg.GpkgImportReportManager;
+import ru.mycrg.integration_service.bpmn.gpkg.ReportSendConfigDto;
 import ru.mycrg.messagebus_contract.IMessageBusProducer;
 
 import java.util.List;
@@ -24,9 +24,11 @@ public class EndImportGpkgProcessError implements JavaDelegate {
     private static final Logger log = LoggerFactory.getLogger(EndImportGpkgProcessError.class);
 
     private final IMessageBusProducer messageBus;
+    private final GpkgImportReportManager reportManager;
 
-    public EndImportGpkgProcessError(IMessageBusProducer messageBus) {
+    public EndImportGpkgProcessError(IMessageBusProducer messageBus, GpkgImportReportManager reportManager) {
         this.messageBus = messageBus;
+        this.reportManager = reportManager;
     }
 
     @Override
@@ -69,11 +71,12 @@ public class EndImportGpkgProcessError implements JavaDelegate {
         }
 
         log.debug("importReport перед отправкой о завершении{}", importReport);
-        PatchProcess newDetails = new PatchProcess(ERROR, importReport);
-        messageBus.produce(new UpdateProcessEvent(event.getProcessId(),
-                                                  businessKey,
-                                                  event.getDbName(),
-                                                  newDetails));
+        ReportSendConfigDto rabbitDto = new ReportSendConfigDto(event.getProcessId(),
+                                                                event.getDbName(),
+                                                                businessKey,
+                                                                ERROR);
+
+        reportManager.finalizeReport(rabbitDto, importReport, GpkgProcessStatus.ERROR, "Импорт завершён c ошибкой!!!");
     }
 
     private static void createReport(GpkgImportReport importReport, String e) {

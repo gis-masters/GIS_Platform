@@ -14,14 +14,16 @@ import org.springframework.stereotype.Service;
 import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgImportReport;
 import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgPayloadData;
 import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgTablesData;
-import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgWrapperImportReport;
 import ru.mycrg.data_service_contract.dto.ErrorReport;
 import ru.mycrg.data_service_contract.queue.request.gpkg.ImportGpkgEvent;
 import ru.mycrg.http_client.ResponseModel;
 import ru.mycrg.integration_service.bpmn.BaseHttpService;
+import ru.mycrg.integration_service.bpmn.gpkg.GpkgImportReportManager;
+import ru.mycrg.integration_service.bpmn.gpkg.ReportSendConfigDto;
 
 import java.util.Optional;
 
+import static ru.mycrg.data_service_contract.enums.ProcessStatus.TASK_DONE;
 import static ru.mycrg.integration_service.bpmn.BaseHttpService.crgHttpClient;
 import static ru.mycrg.integration_service.bpmn.CamundaVariables.asJava;
 import static ru.mycrg.integration_service.bpmn.IJavaDelegateProperties.*;
@@ -45,9 +47,11 @@ public class StartCycleProcess implements JavaDelegate {
     private static final Logger log = LoggerFactory.getLogger(StartCycleProcess.class);
 
     private final BaseHttpService baseHttpService;
+    private final GpkgImportReportManager reportManager;
 
-    public StartCycleProcess(BaseHttpService baseHttpService) {
+    public StartCycleProcess(BaseHttpService baseHttpService, GpkgImportReportManager reportManager) {
         this.baseHttpService = baseHttpService;
+        this.reportManager = reportManager;
     }
 
     @Override
@@ -63,16 +67,19 @@ public class StartCycleProcess implements JavaDelegate {
 
             GpkgImportReport importReport = (GpkgImportReport) delegateExecution.getVariable(
                     EVENT_IMPORT_GPKG_REPORT_NAME);
-            GpkgPayloadData subPayload = importReport.getPayload();
+            GpkgPayloadData payload = importReport.getPayload();
 
             if (performedCyclesCount == 0) {
                 log.debug("Мы первый раз в процессе -> нужно добавить отчёт geoWrapper и создать группу в проекте.");
 
                 ErrorReport geoWrapperReport = (ErrorReport) delegateExecution.getVariable(FAIL_REASON);
-                GpkgWrapperImportReport gwIr = new GpkgWrapperImportReport(geoWrapperReport.getFailedRecordCount(),
-                                                                           geoWrapperReport.getUtf8ErrorCount());
-                subPayload.setWrapperImportReport(gwIr);
-                importReport.setPayload(subPayload);
+
+                String businessKey = (String) delegateExecution.getVariable(BUSINESS_KEY_VAR_NAME);
+                ReportSendConfigDto rabbitDto = new ReportSendConfigDto(event.getProcessId(),
+                                                                        event.getDbName(),
+                                                                        businessKey,
+                                                                        TASK_DONE);
+                reportManager.createWrapperReport(rabbitDto, payload, geoWrapperReport);
 
                 Optional<Long> groupId = createParentGroup(event.getToken(),
                                                            event.getProjectId(),
@@ -88,7 +95,7 @@ public class StartCycleProcess implements JavaDelegate {
                 }
             }
 
-            GpkgTablesData currentTable = subPayload.getTablesInGpkg().get(performedCyclesCount);
+            GpkgTablesData currentTable = payload.getTablesInGpkg().get(performedCyclesCount);
 
             performedCyclesCount++;
             delegateExecution.setVariable(PERFORMED_CYCLES_COUNT_VAR_NAME, performedCyclesCount);

@@ -13,8 +13,6 @@ import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgImportR
 import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgImportedLayer;
 import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgPayloadData;
 import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgTablesData;
-import ru.mycrg.data_service_contract.dto.PatchProcess;
-import ru.mycrg.data_service_contract.queue.request.UpdateProcessEvent;
 import ru.mycrg.data_service_contract.queue.request.gpkg.ImportGpkgAckInfoBackwardEvent;
 import ru.mycrg.data_service_contract.queue.request.gpkg.ImportGpkgEvent;
 import ru.mycrg.gis_service_contract.dto.LayerProjection;
@@ -22,12 +20,12 @@ import ru.mycrg.http_client.JsonConverter;
 import ru.mycrg.http_client.ResponseModel;
 import ru.mycrg.http_client.exceptions.HttpClientException;
 import ru.mycrg.integration_service.bpmn.BaseHttpService;
-import ru.mycrg.messagebus_contract.IMessageBusProducer;
+import ru.mycrg.integration_service.bpmn.gpkg.GpkgImportReportManager;
+import ru.mycrg.integration_service.bpmn.gpkg.ReportSendConfigDto;
 
 import java.util.List;
 
-import static ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgProcessStatus.ACTIVE;
-import static ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgProcessStatus.COMPLETED;
+import static ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgProcessStatus.*;
 import static ru.mycrg.common_contracts.generated.gis_service.LayerType.VECTOR;
 import static ru.mycrg.data_service_contract.enums.ProcessStatus.TASK_DONE;
 import static ru.mycrg.integration_service.bpmn.BaseHttpService.crgHttpClient;
@@ -51,11 +49,12 @@ public class CreateLayerInProject implements JavaDelegate {
     private static final Logger log = LoggerFactory.getLogger(CreateLayerInProject.class);
 
     private final BaseHttpService baseHttpService;
-    private final IMessageBusProducer messageBus;
+    private final GpkgImportReportManager reportManager;
 
-    public CreateLayerInProject(BaseHttpService baseHttpService, IMessageBusProducer messageBus) {
+    public CreateLayerInProject(BaseHttpService baseHttpService,
+                                GpkgImportReportManager reportManager) {
         this.baseHttpService = baseHttpService;
-        this.messageBus = messageBus;
+        this.reportManager = reportManager;
     }
 
     @Override
@@ -70,13 +69,16 @@ public class CreateLayerInProject implements JavaDelegate {
         long layerGroupId = (long) delegateExecution.getVariable(CREATED_LAYER_GROUP_ID);
 
         ImportGpkgEvent event = (ImportGpkgEvent) delegateExecution.getVariable(EVENT_VAR_NAME);
-
+        String businessKey = (String) delegateExecution.getVariable(BUSINESS_KEY_VAR_NAME);
         long projectId = event.getProjectId();
+        ReportSendConfigDto rabbitDto = new ReportSendConfigDto(projectId,
+                                                                event.getDbName(),
+                                                                businessKey,
+                                                                TASK_DONE);
 
         GpkgImportReport importReport = (GpkgImportReport) delegateExecution.getVariable(
                 EVENT_IMPORT_GPKG_REPORT_NAME);
-        GpkgPayloadData prevImportPayload = importReport.getPayload();
-        List<GpkgImportedLayer> prevLayers = prevImportPayload.getLayers();
+        GpkgPayloadData payload = importReport.getPayload();
 
         GpkgTablesData currentTable = (GpkgTablesData) delegateExecution.getVariable(ENTITY_ID_VAR_NAME);
         ImportGpkgAckInfoBackwardEvent backward = (ImportGpkgAckInfoBackwardEvent)
@@ -102,20 +104,8 @@ public class CreateLayerInProject implements JavaDelegate {
             createLayer(event.getToken(), projectId, layerProjection, curLayer, delegateExecution,
                         currentIteration);
 
-            prevLayers.add(curLayer);
+            reportManager.createLayerReport(rabbitDto, payload, curLayer);
         }
-
-        prevImportPayload.setLayers(prevLayers);
-        // Потом прыгнуть на следующий шаг передав репорт (автоматом прыгнем)
-        importReport.setPayload(prevImportPayload);
-
-        String businessKey = (String) delegateExecution.getVariable(BUSINESS_KEY_VAR_NAME);
-        PatchProcess newDetails = new PatchProcess(TASK_DONE, importReport);
-
-        messageBus.produce(new UpdateProcessEvent(event.getProcessId(),
-                                                  businessKey,
-                                                  event.getDbName(),
-                                                  newDetails));
 
         // Сбрасываем счетчик итераций при успешном выполнении
         delegateExecution.setVariable(ITERATION_COUNTER_VAR_NAME, 0);
@@ -147,6 +137,7 @@ public class CreateLayerInProject implements JavaDelegate {
                 log.debug("Слой успешно создан: код={}", response.getCode());
                 curLayer.setStatus(COMPLETED);
             } else {
+                curLayer.setStatus(ERROR);
                 int statusCode = response.getCode();
                 log.warn("GIS сервис вернул неуспешный статус: {} для создания слоя", statusCode);
 
@@ -159,11 +150,13 @@ public class CreateLayerInProject implements JavaDelegate {
                 // Остальные ошибки - не критичны, продолжаем
             }
         } catch (HttpClientException e) {
+            curLayer.setStatus(ERROR);
             log.error("Ошибка при создании слоя: {}", e.getMessage(), e);
             delegateExecution.setVariable(ITERATION_COUNTER_VAR_NAME, currentIteration + 1);
 
             throw new BpmnError("responseTimeOut");
         } catch (Exception e) {
+            curLayer.setStatus(ERROR);
             log.error("Неожиданная ошибка при создании слоя: {}", e.getMessage(), e);
             delegateExecution.setVariable(ITERATION_COUNTER_VAR_NAME, currentIteration + 1);
 

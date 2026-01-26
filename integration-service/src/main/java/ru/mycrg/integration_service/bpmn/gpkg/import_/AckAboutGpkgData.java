@@ -6,18 +6,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgImportReport;
-import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgImportedTable;
 import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgPayloadData;
 import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgTablesData;
-import ru.mycrg.data_service_contract.dto.PatchProcess;
 import ru.mycrg.data_service_contract.queue.request.gpkg.ImportGpkgAckInfoEvent;
 import ru.mycrg.data_service_contract.queue.request.gpkg.ImportGpkgEvent;
-import ru.mycrg.data_service_contract.queue.request.UpdateProcessEvent;
+import ru.mycrg.integration_service.bpmn.gpkg.GpkgImportReportManager;
+import ru.mycrg.integration_service.bpmn.gpkg.ReportSendConfigDto;
 import ru.mycrg.messagebus_contract.IMessageBusProducer;
 
-import java.util.List;
-
-import static ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgProcessStatus.ACTIVE;
 import static ru.mycrg.data_service_contract.enums.ProcessStatus.TASK_DONE;
 import static ru.mycrg.integration_service.bpmn.IJavaDelegateProperties.*;
 
@@ -38,9 +34,11 @@ public class AckAboutGpkgData implements JavaDelegate {
     private static final Logger log = LoggerFactory.getLogger(AckAboutGpkgData.class);
 
     private final IMessageBusProducer messageBus;
+    private final GpkgImportReportManager reportManager;
 
-    public AckAboutGpkgData(IMessageBusProducer messageBus) {
+    public AckAboutGpkgData(IMessageBusProducer messageBus, GpkgImportReportManager reportManager) {
         this.messageBus = messageBus;
+        this.reportManager = reportManager;
     }
 
     @Override
@@ -49,7 +47,6 @@ public class AckAboutGpkgData implements JavaDelegate {
 
         GpkgImportReport importReport = (GpkgImportReport) delegateExecution.getVariable(
                 EVENT_IMPORT_GPKG_REPORT_NAME);
-        log.debug("Отслеживание json импорт репорта: {}", importReport);
 
         ImportGpkgEvent event = (ImportGpkgEvent) delegateExecution.getVariable(EVENT_VAR_NAME);
         String schemaName = (String) delegateExecution.getVariable(EXTRACTED_SCHEMA_NAME);
@@ -59,21 +56,17 @@ public class AckAboutGpkgData implements JavaDelegate {
         String currentTableOldName = currentTable.getTableGpkgIdentifier();
 
         //Наполним репорт
-        GpkgPayloadData reportPayload = importReport.getPayload();
-        List<GpkgImportedTable> tables = reportPayload.getTables();
-        GpkgImportedTable table = new GpkgImportedTable();
-        table.setStatus(ACTIVE);
-        table.setDataset(event.getTargetDatasetIdentifier());
-        table.setOldTableIdentifier(currentTableOldName);
-        tables.add(table);
-        reportPayload.setTables(tables);
-        importReport.setPayload(reportPayload);
+        GpkgPayloadData payload = importReport.getPayload();
 
-        PatchProcess newDetails = new PatchProcess(TASK_DONE, importReport);
-        messageBus.produce(new UpdateProcessEvent(event.getProcessId(),
-                                                  businessKey,
-                                                  event.getDbName(),
-                                                  newDetails));
+        ReportSendConfigDto rabbitDto = new ReportSendConfigDto(event.getProcessId(),
+                                                                event.getDbName(),
+                                                                businessKey,
+                                                                TASK_DONE);
+
+        reportManager.createTableReport(rabbitDto,
+                                        payload,
+                                        event.getTargetDatasetIdentifier(),
+                                        currentTableOldName);
 
         messageBus.produce(new ImportGpkgAckInfoEvent(businessKey,
                                                       event.getDbName(),

@@ -36,7 +36,6 @@ public class ImportGpkgAckInfoBackwardEventHandler implements IEventHandler {
 
         log.debug("Получен ImportGpkgAckInfoBackwardEvent для businessKey: {}, status: {}",
                   businessKey, status);
-        log.debug("Проверка backward: {}", backward);
 
         //По Camunda процессу мы в любом случае идём дальше. Следующие классы сами разберутся если нужно.
         runtimeService.createMessageCorrelation("Mes_FromDataAckInfoFromGpkg")

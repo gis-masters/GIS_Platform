@@ -160,7 +160,12 @@ public class ProcessService {
     }
 
     public void updateProcess(Long id, ProcessStatus status, String dbName, JsonNode details) {
-        log.debug("Обновляем процесс с id '{}', статус: {} детали: {}", id, status, details);
+        String detailsStr = details.toString();
+        String msg = detailsStr.length() > 1200
+                ? "Переданные детали процесса слишком большие (" + detailsStr.length() + " символов)"
+                : detailsStr;
+
+        log.debug("Обновляем процесс с id '{}', статус: {}, детали: {}", id, status, msg);
 
         try {
             processDao.updateDetailsAndStatus(id, status, dbName, details);

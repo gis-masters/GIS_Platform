@@ -117,7 +117,6 @@ public class ImportGpkgAckInfoEventHandler implements IEventHandler {
 
         if (!crgLayerData.isEmpty()) {
             log.debug("Количество слоёв созданных по векторной таблице: {}", crgLayerData.size());
-            log.debug("Слои: {}", crgLayerData);
 
             for (LayerProjection layerProjection: crgLayerData) {
                 List<GpkgImportedStyles> curStyles = gpkgTablesDao.getStyleInfoFromGpkg(jdbcTemplate,
@@ -143,7 +142,6 @@ public class ImportGpkgAckInfoEventHandler implements IEventHandler {
 
         log.debug("Таблица: {}", table);
         log.debug("Схема: {}", oSchemaDto.get());
-        log.debug("Стили: {}", styles);
 
         messageBus.produce(new ImportGpkgAckInfoBackwardEvent(DONE, businessKey, table, crgLayerData, styles));
     }

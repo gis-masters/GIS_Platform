@@ -14,20 +14,18 @@ import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgImportR
 import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgImportedTable;
 import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgPayloadData;
 import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgTablesData;
-import ru.mycrg.data_service_contract.dto.PatchProcess;
 import ru.mycrg.data_service_contract.dto.ResourceProjection;
 import ru.mycrg.data_service_contract.dto.TableModelProjection;
-import ru.mycrg.data_service_contract.queue.request.UpdateProcessEvent;
 import ru.mycrg.data_service_contract.queue.request.gpkg.ImportGpkgAckInfoBackwardEvent;
 import ru.mycrg.data_service_contract.queue.request.gpkg.ImportGpkgEvent;
 import ru.mycrg.integration_service.bpmn.BaseHttpService;
-import ru.mycrg.messagebus_contract.IMessageBusProducer;
+import ru.mycrg.integration_service.bpmn.gpkg.GpkgImportReportManager;
+import ru.mycrg.integration_service.bpmn.gpkg.ReportSendConfigDto;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 import static ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgProcessStatus.COMPLETED;
@@ -44,11 +42,12 @@ public class CreateVectorTable implements JavaDelegate {
     private static final Logger log = LoggerFactory.getLogger(CreateVectorTable.class);
 
     private final BaseHttpService baseHttpService;
-    private final IMessageBusProducer messageBus;
+    private final GpkgImportReportManager reportManager;
 
-    public CreateVectorTable(BaseHttpService baseHttpService, IMessageBusProducer messageBus) {
+    public CreateVectorTable(BaseHttpService baseHttpService,
+                             GpkgImportReportManager reportManager) {
         this.baseHttpService = baseHttpService;
-        this.messageBus = messageBus;
+        this.reportManager = reportManager;
     }
 
     @Override
@@ -64,28 +63,12 @@ public class CreateVectorTable implements JavaDelegate {
 
         GpkgImportReport importReport = (GpkgImportReport) delegateExecution.getVariable(
                 EVENT_IMPORT_GPKG_REPORT_NAME);
-        GpkgPayloadData reportPayload = importReport.getPayload();
-        List<GpkgImportedTable> tables = reportPayload.getTables();
+        GpkgPayloadData payload = importReport.getPayload();
 
-        //Сетим таблицу по сути из gpkg в самом-самом начале обработки
+        //Сетим таблицу по сути из gpkg в самом-самом начале обработки и её отчёт.
         GpkgTablesData gpkgTable = (GpkgTablesData) delegateExecution.getVariable(ENTITY_ID_VAR_NAME);
-
-        //Переменная для репорта.
-        //При старте цикла мы должны были её заполнить и иметь, но вдруг если как-то случаться что мы её не засетили,
-        //то мы не будем падать, а подсопортим.
-        //Плюс цикл ходит несколько раз, если таблиц больше одной нужно уметь её искать
-
-        GpkgImportedTable tableReport = tables
-                .stream()
-                .filter(t -> Objects.equals(t.getOldTableIdentifier(), gpkgTable.getTableGpkgIdentifier()))
-                .findFirst()
-                .orElseGet(() -> {
-                    GpkgImportedTable newTable = new GpkgImportedTable();
-                    newTable.setOldTableIdentifier(gpkgTable.getTableGpkgIdentifier());
-                    tables.add(newTable);
-
-                    return newTable;
-                });
+        GpkgImportedTable tableReport = reportManager.findCurrentTable(payload.getTables(),
+                                                                       gpkgTable.getTableGpkgIdentifier());
 
         ImportGpkgAckInfoBackwardEvent backward = (ImportGpkgAckInfoBackwardEvent)
                 delegateExecution.getVariable(EVENT_IMPORT_GPKG_BACKWARD_DATA_NAME);
@@ -95,10 +78,14 @@ public class CreateVectorTable implements JavaDelegate {
 
         ImportGpkgEvent event = (ImportGpkgEvent) delegateExecution.getVariable(EVENT_VAR_NAME);
         String businessKey = (String) delegateExecution.getVariable(BUSINESS_KEY_VAR_NAME);
+        ReportSendConfigDto rabbitDto = new ReportSendConfigDto(event.getProcessId(),
+                                                                event.getDbName(),
+                                                                businessKey,
+                                                                TASK_DONE);
 
         if (dataToTableCreate == null) {
             String msg = "Не хватает информации для создания новой векторной таблицы.";
-            breakStepAndOut(msg, backward, tableReport, reportPayload, tables, importReport, event, businessKey);
+            breakStepAndOut(msg, backward, tableReport.getOldTableIdentifier(), payload, rabbitDto);
 
             //Без информации о векторной таблицы мы не сможем, в том числе создать слой.
             //Есть необходимость "создавать дефолтные таблицы", но например без схемы таблицу не сделать
@@ -114,33 +101,24 @@ public class CreateVectorTable implements JavaDelegate {
             if (response.isSuccessful() && response.body() != null) {
                 //Наполним репорт
                 String responseBody = response.body().string();
-                tableReport.setStatus(COMPLETED);
 
                 Optional<TableModelProjection> tableResponse = fromJson(responseBody, TableModelProjection.class);
                 if (tableResponse.isPresent()) {
                     String newIdentifier = tableResponse.get().getIdentifier();
 
                     gpkgTable.setTableNewIdentifier(newIdentifier);
-                    tableReport.setCreatedTableIdentifier(newIdentifier);
-                    tableReport.setTitle(tableResponse.get().getTitle());
+
+                    reportManager.updateTableRepByIdentifier(rabbitDto, payload, COMPLETED, newIdentifier,
+                                                             tableResponse.get().getTitle(),
+                                                             tableReport.getOldTableIdentifier());
                 }
-
-                reportPayload.setTables(tables);
-                importReport.setPayload(reportPayload);
-
-                PatchProcess newDetails = new PatchProcess(TASK_DONE, importReport);
-                messageBus.produce(new UpdateProcessEvent(event.getProcessId(),
-                                                          businessKey,
-                                                          event.getDbName(),
-                                                          newDetails));
 
                 // Сбрасываем счетчик итераций при успешном выполнении
                 delegateExecution.setVariable(ITERATION_COUNTER_VAR_NAME, 0);
             } else {
                 String msg = "Таблица не была создана. Подробнее в логе data-service.";
                 log.warn(msg);
-                breakStepAndOut(msg, backward, tableReport, reportPayload, tables, importReport, event,
-                                businessKey);
+                breakStepAndOut(msg, backward, tableReport.getOldTableIdentifier(), payload, rabbitDto);
 
                 throw new BpmnError("noTablesCreated");
             }
@@ -211,6 +189,18 @@ public class CreateVectorTable implements JavaDelegate {
         }
     }
 
+    //Избавиться от GpkgImportedTable table нужен только getOldTableIdentifier
+    private void breakStepAndOut(String msg, ImportGpkgAckInfoBackwardEvent backward, String identifier,
+                                 GpkgPayloadData payload, ReportSendConfigDto rabbitDto) {
+        log.error(msg);
+
+        List<String> messages = new ArrayList<>();
+        messages.add(msg);
+        messages.add(backward.getErrorMessage());
+
+        reportManager.updateTableRepByIdentifier(rabbitDto, payload, ERROR, messages, identifier);
+    }
+
     private void normalizeDto(ResourceProjection table) {
         if (table.getTitle() != null && table.getTitle().length() > 250) {
             table.setTitle(table.getTitle().substring(0, 250));
@@ -219,25 +209,5 @@ public class CreateVectorTable implements JavaDelegate {
         if (table.getDetails() != null && table.getDetails().length() > 1000) {
             table.setDetails(table.getDetails().substring(0, 1000));
         }
-    }
-
-    private void breakStepAndOut(String msg, ImportGpkgAckInfoBackwardEvent backward, GpkgImportedTable table,
-                                 GpkgPayloadData reportPayload, List<GpkgImportedTable> tables,
-                                 GpkgImportReport importReport,
-                                 ImportGpkgEvent event, String businessKey) {
-        log.error(msg);
-        List<String> messages = new ArrayList<>();
-        messages.add(msg);
-        messages.add(backward.getErrorMessage());
-        table.setStatus(ERROR);
-        table.setMessages(messages);
-        reportPayload.setTables(tables);
-        importReport.setPayload(reportPayload);
-
-        PatchProcess newDetails = new PatchProcess(TASK_DONE, importReport);
-        messageBus.produce(new UpdateProcessEvent(event.getProcessId(),
-                                                  businessKey,
-                                                  event.getDbName(),
-                                                  newDetails));
     }
 }

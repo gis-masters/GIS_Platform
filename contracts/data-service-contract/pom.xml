@@ -46,7 +46,7 @@
         <dependency>
             <groupId>ru.mycrg</groupId>
             <artifactId>common-contracts</artifactId>
-            <version>1.11.4-SNAPSHOT</version>
+            <version>1.11.5-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>
