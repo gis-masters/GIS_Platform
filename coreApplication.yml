@@ -342,6 +342,7 @@ services:
   portal-ui:
     container_name: crg-ui
     image: ${DOCKER_CRG_HOST}/crg-ui:${CRG_UI_TAG}
+    profiles: ["ui"]
     restart: always
     environment:
       UI_PLATFORM: $UI_PLATFORM
