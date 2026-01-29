@@ -29,3 +29,11 @@ Feature: xTable Cell Content Type Float
       | 16  |
       | 20  |
       | 420 |
+
+  Scenario: При значении в данных null, 0, undefined или пустая строка, значения в колонке выглядят как ничего
+    Given я на странице "xtable-cellcontent--type-float-with-nullish-values" библиотеки блоков
+    Then в первой колонке таблицы xTable содержатся только элементы:
+      |   |
+      |   |
+      |   |
+      | 0 |

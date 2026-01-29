@@ -15,7 +15,7 @@ export default {
 
 interface TestData {
   id: number;
-  weight: number;
+  weight: number | undefined | '' | null;
 }
 
 const data: TestData[] = [
@@ -42,6 +42,25 @@ const data: TestData[] = [
   {
     id: 9,
     weight: 16
+  }
+];
+
+const dataWithNullishValues: TestData[] = [
+  {
+    id: 4,
+    weight: null
+  },
+  {
+    id: 5,
+    weight: undefined
+  },
+  {
+    id: 6,
+    weight: ''
+  },
+  {
+    id: 7,
+    weight: 0
   }
 ];
 
@@ -113,6 +132,17 @@ TypeFloatWithPrecision3.args = {
 export const TypeFloatWithPrecision0 = Template.bind({}) as StoryFn<XTableForTestData>;
 TypeFloatWithPrecision0.args = {
   data,
+  cols: colsWithPrecision0,
+  defaultSort,
+  showFiltersPanel: true,
+  secondarySortField: 'id',
+  filterable: true,
+  filtersAlwaysEnabled: true
+};
+
+export const TypeFloatWithNullishValues = Template.bind({}) as StoryFn<XTableForTestData>;
+TypeFloatWithNullishValues.args = {
+  data: dataWithNullishValues,
   cols: colsWithPrecision0,
   defaultSort,
   showFiltersPanel: true,
