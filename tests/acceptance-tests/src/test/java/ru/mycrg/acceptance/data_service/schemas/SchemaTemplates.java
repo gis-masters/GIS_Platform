@@ -97,7 +97,7 @@ public class SchemaTemplates {
                 SchemaDto schemaWithOrder123 = prepareSchemaTarget();
                 schemaWithOrder123.setName("schemaWithTagsOrder123");
                 schemaWithOrder123.setTitle("с тэгом 'Приказ 123'");
-                schemaWithOrder123.setTags(List.of("Приказ 123", "system"));
+                schemaWithOrder123.setTags(List.of("Приказ 123"));
 
                 return schemaWithOrder123;
             case "с тэгами 'Приказ 10' и 'Приказ 123'":
