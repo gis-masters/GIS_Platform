@@ -5,6 +5,7 @@ import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.restassured.specification.RequestSpecification;
+import org.jetbrains.annotations.NotNull;
 import ru.mycrg.acceptance.BaseStepsDefinitions;
 import ru.mycrg.acceptance.data_service.FilesStepDefinitions;
 import ru.mycrg.acceptance.data_service.TestFilesManager;
@@ -38,7 +39,7 @@ public class ReportStepsDefinitions extends BaseStepsDefinitions {
         return super.getBaseRequestWithCurrentCookie().basePath("/reports");
     }
 
-    @When("я делаю запрос для создание отчёта c данными по умолчанию")
+    @When("я делаю запрос для создание отчёта c данными по-умолчанию")
     public void portReportWithDefaultData() {
         postReport();
     }
@@ -49,7 +50,7 @@ public class ReportStepsDefinitions extends BaseStepsDefinitions {
         assertNotNull(UUID.fromString(answer.substring(1, answer.length() - 1)));
     }
 
-    @Given("создан отчёт с данными по умолчанию")
+    @Given("создан отчёт с данными по-умолчанию")
     public void createReportIfNotExist() {
         if (currentReportFileId == null) {
             postReport();
@@ -67,14 +68,13 @@ public class ReportStepsDefinitions extends BaseStepsDefinitions {
         currentFileId = currentReportFileId;
     }
 
-    @Given("я формирую отчёт по шаблону {string}")
+    @Given("сформирован отчёт по шаблону с именем {string}")
     public void makeReportByName(String templateName) {
         postReport(templateName);
 
         assertNotNull(currentReportFileId);
         currentFileId = currentReportFileId;
     }
-
 
     @When("я скачиваю текущий отчёт")
     public void downloadCurrentReport() {
@@ -83,20 +83,22 @@ public class ReportStepsDefinitions extends BaseStepsDefinitions {
         filesStepDefinitions.downloadFile(currentReportFileId);
     }
 
-    @Then("скачанный отчёт соответствует ожидаемому виду")
-    public void reportDownloadSuccessfully() throws Exception {
+    @Then("размер скачанного отчёта равен {int} байт")
+    public void reportDownloadSuccessfully(int size) throws Exception {
         byte[] fileData = response.asByteArray();
         File tempDirFile = TestFilesManager.createTempTestResourcesDirectoryIfNotExist();
-        String fileName = "report_" + System.currentTimeMillis() + ".pdf";
+        String fileName = "report_" +
+                System.currentTimeMillis() +
+                getExtensionFromContent(response.getHeader("Content-Disposition"));
         File file = new File(tempDirFile, fileName);
         Files.write(file.toPath(), fileData);
 
-        assertEquals(25630, file.length());
+        assertEquals(size, file.length());
     }
 
     @Then("отчёт соответствует формату {string}")
     public void chekReportFormat(String expectedFormat) {
-        assertNotNull(expectedFormat, response.jsonPath().getString("extension"));
+        assertEquals(expectedFormat.toLowerCase(), response.jsonPath().getString("extension"));
     }
 
     @Then("атрибутами отчёта как файла соответствуют ожиданиям")
@@ -109,7 +111,6 @@ public class ReportStepsDefinitions extends BaseStepsDefinitions {
                          value, String.valueOf(actualData.get(key)));
         });
     }
-
 
     private void createReport(ReportMainDto request) {
         response = getBaseRequestWithCurrentCookie()
@@ -125,7 +126,7 @@ public class ReportStepsDefinitions extends BaseStepsDefinitions {
      * По умолчанию создаём отчёт в формате PDF
      */
     private void postReport() {
-        postReport("pdf");
+        postReport("PDF");
     }
 
     /**
@@ -141,5 +142,11 @@ public class ReportStepsDefinitions extends BaseStepsDefinitions {
             String answer = response.body().asString();
             currentReportFileId = UUID.fromString(answer.substring(1, answer.length() - 1));
         }
+    }
+
+    private static @NotNull String getExtensionFromContent(String header) {
+        int lastDot = header.lastIndexOf('.');
+
+        return header.substring(lastDot);
     }
 }

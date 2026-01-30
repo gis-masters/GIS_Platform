@@ -1,6 +1,7 @@
 package ru.mycrg.acceptance.report_service;
 
 import ru.mycrg.common_contracts.generated.report_service.ReportMainDto;
+import ru.mycrg.common_contracts.generated.report_service.ReportOutputFormat;
 
 import java.util.HashMap;
 import java.util.List;
@@ -15,11 +16,16 @@ public class ReportRequestBuilder {
 
     public static ReportMainDto prepareReport(String dataTemplate) {
         switch (dataTemplate) {
-            case "pdf":
+            case "PDF":
                 return createDefaultReport();
 
-            case "docx":
-                return createDocxReport();
+            case "DOCX":
+            case "JPEG":
+            case "ODT":
+                return createReportCustomExtension(dataTemplate);
+
+            case "test pictures in arrays":
+                return createHardData(dataTemplate);
 
             case "Пустой запрос":
                 return new ReportMainDto();
@@ -39,11 +45,77 @@ public class ReportRequestBuilder {
         throw new IllegalArgumentException("В тестах нет шаблона отчёта для " + dataTemplate);
     }
 
+    private static ReportMainDto createHardData(String dataTemplate) {
+        String firstPicture = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEwAAAATBAMAAADIYfY6AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAASUExURSaL/xJFf31/fvz//bowRv8oL4WYM94AAAAJcEhZcwAADsIAAA7CARUoSoAAAAAaSURBVCjPY0AAIWNUoBKKAKPKRpUNVWWhoQDgIYIviVUrYwAAAABJRU5ErkJggg==";
+        String secondPicture = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEwAAAATBAMAAADIYfY6AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAASUExURQAAAAUUJLpCUf9CP7rGXP/8T1mvjq8AAAAJcEhZcwAADsIAAA7CARUoSoAAAAAqSURBVCjPYxjMQJAoQKxpSkQBBmOiwKBWRqRPiQQuRAGGUKLAACgLDQUAS1ZvCecNXnEAAAAASUVORK5CYII=";
+        String thirdPicture = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEwAAAATBAMAAADIYfY6AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAnUExURUT/YzXJawAAALjG2fz8/2trbZQsQf81QoEiMG8YHm0WHHh8g3+Gj9IufucAAAAJcEhZcwAADsIAAA7CARUoSoAAAAAqSURBVCjPY4ABIRMXVOCaXo4AQ1RZ+9BXNp04ZcsHrzJv4pT50EpZeTkA5yDBvcQ96MsAAAAASUVORK5CYII=";
+
+        Map<String, String> media = new HashMap<>();
+        media.put("{%solo%}", firstPicture);
+
+        media.put("{%legend1%}", firstPicture);
+        media.put("{%random1%}", firstPicture);
+        media.put("{%random2%}", firstPicture);
+
+        media.put("{%legend2%}", secondPicture);
+        media.put("{%random3%}", secondPicture);
+        media.put("{%random4%}", secondPicture);
+        media.put("{%random5%}", secondPicture);
+        media.put("{%random6%}", secondPicture);
+
+        media.put("{%legend3%}", thirdPicture);
+
+        Map<String, Object> data = new HashMap<>();
+        data.put("attributes", List.of(
+                Map.of("pict", "Italy", "label", "{%legend1%}"),
+                Map.of("pict", "Germany", "label", "{%legend2%}"),
+                Map.of("pict", "France", "label", "{%legend3%}")
+        ));
+
+        data.put("nova", List.of(
+                Map.of(
+                        "pict", "Text once",
+                        "models", List.of(
+                                Map.of("name", "name 1", "value", "{%random1%}"),
+                                Map.of("name", "name 2", "value", "{%random2%}"),
+                                Map.of("name", "Special duplication to make the table move apart 1", "value",
+                                       "{%random1%}"),
+                                Map.of("name", "Special duplication to make the table move apart 2", "value",
+                                       "{%random2%}")
+                        )
+                ),
+                Map.of(
+                        "pict", "Text two",
+                        "models", List.of(
+                                Map.of("name", "name 3", "value", "{%random3%}"),
+                                Map.of("name", "name 4", "value", "{%random4%}"),
+                                Map.of("name", "Special duplication to make the table move apart 3", "value",
+                                       "{%random1%}"),
+                                Map.of("name", "Special duplication to make the table move apart 4", "value",
+                                       "{%random2%}")
+                        )
+                ),
+                Map.of(
+                        "pict", "Text three",
+                        "models", List.of(
+                                Map.of("name", "name 5", "value", "{%random5%}"),
+                                Map.of("name", "name 6", "value", "{%random6%}"),
+                                Map.of("name", "Special duplication to make the table move apart 5", "value",
+                                       "{%random5%}"),
+                                Map.of("name", "Special duplication to make the table move apart 6", "value",
+                                       "{%random6%}")
+                        )
+                )
+        ));
+
+        return new ReportMainDto(DOCX, dataTemplate, media, data);
+    }
+
     private static ReportMainDto createDefaultReport() {
         //просто чёрный квадрат
-        String base64Picture = "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMB/axDt44AAAAASUVORK5CYII=";
+        String base64Picture = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR4AWJiYGD4DwAAAP//cGajQwAAAAZJREFUAwABDgEC81VxbAAAAABJRU5ErkJggg==";
         Map<String, String> media = new HashMap<>() {{
-            put("picture", base64Picture);
+            put("{%picture%}", base64Picture);
         }};
 
         Map<String, Object> data = new HashMap<>(Map.of("header", "jujutsu",
@@ -64,9 +136,9 @@ public class ReportRequestBuilder {
         return dto;
     }
 
-    private static ReportMainDto createDocxReport() {
+    private static ReportMainDto createReportCustomExtension(String ext) {
         ReportMainDto dto = createDefaultReport();
-        dto.setOutputFormat(DOCX);
+        dto.setOutputFormat(ReportOutputFormat.valueOf(ext));
 
         return dto;
     }

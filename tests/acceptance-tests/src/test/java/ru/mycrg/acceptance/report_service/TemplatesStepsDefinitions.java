@@ -74,14 +74,14 @@ public class TemplatesStepsDefinitions extends BaseStepsDefinitions {
         assertTrue(response.jsonPath().getBoolean("system"));
     }
 
-    @Given("я создал пользовательский шаблон печати с именем {string}")
+    @Given("существует пользовательский шаблон печати с именем {string}")
     public void createNewTemplate(String templateName) throws IOException {
-        File json = getFile("userTemplate.json");
+        File json = getFile(templateName + ".json");
 
         String jsonBody = Files.readString(json.toPath(), StandardCharsets.UTF_8);
         TemplateCreateDto additionalData = new TemplateCreateDto(templateName, templateName, asJsonNode(jsonBody));
 
-        File file = getFile("userTemplate.docx");
+        File file = getFile(templateName + ".docx");
 
         response = getBaseRequestWithCurrentCookie()
                 .given().

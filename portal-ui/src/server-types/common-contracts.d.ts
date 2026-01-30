@@ -138,7 +138,7 @@ export interface GpkgTablesData extends Serializable {
 export interface GpkgWrapperImportReport extends Serializable {
   failedRecordCount: number;
   utf8ErrorCount: number;
-  results: { [index: string]: number };
+  results: { [ index: string ]: number };
   additionalInfo: string;
 }
 
@@ -154,13 +154,13 @@ export interface FtsRequestDto {
   ecqlFilter: string;
   type: FtsType;
   bound: number;
-  sources: { [index: string]: any }[];
+  sources: { [ index: string ]: any }[];
 }
 
 export interface FtsResponseDto {
   type: FtsType;
   value: number;
-  source: { [index: string]: any };
+  source: { [ index: string ]: any };
   payload: any;
   headlines: string[];
 }
@@ -200,7 +200,7 @@ export interface PageableResources<T> {
 export interface ReportMainDto {
   outputFormat: ReportOutputFormat;
   templateName: string;
-  media: { [index: string]: string };
+  media: { [ index: string ]: string };
   data: any;
 }
 
@@ -215,7 +215,8 @@ export interface TemplateFullInfo extends TemplateCreateDto {
   system: boolean;
 }
 
-export interface TemplateShortInfo extends TemplateShortProjection {}
+export interface TemplateShortInfo extends TemplateShortProjection {
+}
 
 export interface TemplateShortProjection {
   name: string;
@@ -233,10 +234,11 @@ export interface TableContentModel {
   datasetIdentifier: string;
   tableIdentifier: string;
   content: string[];
-  variables: { [index: string]: string };
+  variables: { [ index: string ]: string };
 }
 
-export interface Serializable {}
+export interface Serializable {
+}
 
 export interface Settings {
   storageSize: number;
@@ -279,4 +281,4 @@ export type LayerType =
   | 'EXTERNAL_NSPD'
   | 'EXTERNAL_GEOSERVER';
 
-export type ReportOutputFormat = 'PDF' | 'DOCX';
+export type ReportOutputFormat = 'PDF' | 'DOCX' | 'ODT' | 'JPEG';

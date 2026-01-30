@@ -7,7 +7,10 @@ import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -37,15 +40,13 @@ public class FileService {
         return file;
     }
 
-    public File createFileCopy(File file) throws Exception {
-        String fileName = file.getName();
+    public File createFileCopy(String fileName, byte[] bytes) throws Exception {
         String extension = fileName.substring(fileName.lastIndexOf("."));
         File tempFile = File.createTempFile("template-", extension);
         tempFile.deleteOnExit();
 
-        try (FileInputStream fis = new FileInputStream(file);
-             FileOutputStream fos = new FileOutputStream(tempFile)) {
-            fis.transferTo(fos);
+        try (FileOutputStream fos = new FileOutputStream(tempFile)) {
+            fos.write(bytes);
             fos.flush();
         }
 

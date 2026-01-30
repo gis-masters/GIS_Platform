@@ -10,6 +10,9 @@ import ru.mycrg.common_contracts.generated.data_service.FileResponse;
 import ru.mycrg.data_service_client.IDataServiceClient;
 import ru.mycrg.http_client.exceptions.HttpClientException;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -27,18 +30,16 @@ public class DataServiceSpeaker {
         this.dataServiceClient = dataServiceClient;
     }
 
-    public Optional<UUID> postFileOnService(String accessToken,
-                                            byte[] fileContent,
-                                            String fileName) throws HttpClientException {
+    public Optional<UUID> postFileOnService(String accessToken, File file) throws HttpClientException, IOException {
+        log.debug("Путь к сформированному отчёту, перед сохранением на data-service {}", file.toPath());
 
         RequestBody fileBody = RequestBody.create(
                 MediaType.parse(FILE_MEDIA_TYPE),
-                fileContent
-        );
+                Files.readAllBytes(file.toPath()));
 
         RequestBody body = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
-                .addFormDataPart("files", fileName, fileBody)
+                .addFormDataPart("files", file.getName(), fileBody)
                 .build();
 
         List<FileResponse> files = dataServiceClient.postFiles(accessToken, body);
