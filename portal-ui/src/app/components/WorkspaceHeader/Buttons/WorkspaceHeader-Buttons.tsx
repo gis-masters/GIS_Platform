@@ -12,7 +12,7 @@ import { Pages, route } from '../../../stores/Route.store';
 import { sidebars } from '../../../stores/Sidebars.store';
 import { CalculatorButton } from '../../CalculatorButton/CalculatorButton';
 import { CopyUrlButton } from '../../CopyUrlButton/CopyUrlButton';
-import { ExportGmlButton } from '../../ExportGmlButton/ExportGmlButton';
+import { ExportGmlMenu } from '../../ExportGmlMenu/ExportGmlMenu';
 import { HelpToggler } from '../../HelpToggler/HelpToggler';
 import { IconButton } from '../../IconButton/IconButton';
 import { NotificationsToggler } from '../../NotificationsToggler/NotificationsToggler';
@@ -48,7 +48,7 @@ export class WorkspaceHeaderButtons extends Component {
           </Tooltip>
         )}
 
-        {route.data.page === Pages.MAP && organizationSettings.downloadGml && <ExportGmlButton />}
+        {route.data.page === Pages.MAP && <ExportGmlMenu />}
 
         <HelpToggler />
         <NotificationsToggler />

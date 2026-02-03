@@ -1,0 +1,178 @@
+body .ExportGeoPackageDialog {
+  @keyframes slide-up-and-fade-in {
+    0% {
+      transform: translateY(15px);
+
+      opacity: 0;
+    }
+
+    100% {
+      transform: translateY(0);
+
+      opacity: 1;
+    }
+  }
+
+  @keyframes slide-up-and-fade-out {
+    0% {
+      transform: translateY(0);
+
+      opacity: 1;
+    }
+
+    100% {
+      transform: translateY(-15px);
+
+      opacity: 0;
+    }
+  }
+
+  &-Paper {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &-Title {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+    justify-content: space-between;
+
+    padding: 16px 24px 0;
+  }
+
+  &-Total {
+    color: var(--gray);
+
+    font-size: 14px;
+  }
+
+  &-Content {
+    display: flex;
+    overflow: hidden;
+    flex: 1;
+    flex-direction: column;
+  }
+
+  &-Form {
+    display: flex;
+    overflow: hidden;
+    flex: 1;
+    flex-direction: column;
+
+    min-height: 0;
+
+    .LayersList {
+      display: flex;
+      overflow: hidden;
+      flex: 1;
+      flex-direction: column;
+
+      min-height: 0;
+      max-height: none;
+
+      .XTable {
+        display: flex;
+        flex: 1;
+        flex-direction: column;
+
+        min-height: 0;
+      }
+
+      .MuiTableContainer-root {
+        overflow: auto;
+        flex: 1;
+
+        min-height: 0;
+      }
+    }
+  }
+
+  &-Actions {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+    gap: 16px;
+  }
+
+  &-StatusMessageWrapper {
+    position: relative;
+
+    display: flex;
+    overflow: visible;
+    align-items: center;
+    flex: 1;
+    gap: 8px;
+
+    min-width: 0;
+    height: 20px;
+  }
+
+  &-StatusMessage {
+    position: absolute;
+    right: 32px;
+    left: 0;
+
+    overflow: hidden;
+
+    padding: 0;
+
+    white-space: nowrap;
+    text-overflow: ellipsis;
+
+    color: var(--gray);
+
+    font-size: 14px;
+
+    &_entering {
+      animation: slide-up-and-fade-in 0.5s ease-out;
+    }
+
+    &_leaving {
+      animation: slide-up-and-fade-out 0.5s ease-out;
+    }
+  }
+
+  &-HistoryButton {
+    position: absolute;
+    right: 0;
+
+    flex-shrink: 0;
+
+    padding: 4px;
+
+    color: var(--gray);
+  }
+
+  &-HistoryList {
+    overflow-y: auto;
+
+    max-width: 400px;
+    max-height: 300px;
+    padding: 12px;
+  }
+
+  &-HistoryTitle {
+    margin-bottom: 8px;
+
+    font-weight: 600;
+  }
+
+  &-HistoryItem {
+    padding: 4px 0;
+
+    color: var(--gray);
+    border-bottom: 1px solid rgb(0 0 0 / 10%);
+
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+
+  &-ActionsRight {
+    flex: 0 0 auto;
+    flex-grow: 0;
+
+    margin-left: auto;
+  }
+}

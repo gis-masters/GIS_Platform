@@ -12,3 +12,12 @@ export interface ExportResourceModel {
   dataset: string;
   table: string;
 }
+
+export interface ExportGpkgRequest {
+  wsUiId?: string;
+  format: 'GPKG';
+  payload: {
+    type: 'LAYER';
+    payload: number[];
+  };
+}

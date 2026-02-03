@@ -1,7 +1,7 @@
 import { wsService } from '../../ws.service';
 import { type Process } from '../processes/processes.models';
 import { exportClient } from './export.client';
-import { type ExportRequest, type ExportResourceModel } from './export.models';
+import { type ExportGpkgRequest, type ExportRequest, type ExportResourceModel } from './export.models';
 
 export async function exportVectorTableAsGML(
   docSchema: string,
@@ -21,6 +21,19 @@ export async function exportVectorTableAsGML(
   return exportClient.export(payload);
 }
 
-export async function downloadExportResult(fileName: string): Promise<Blob> {
-  return await exportClient.download(fileName);
+export function getExportDownloadUrl(fileName: string): string {
+  return exportClient.getDownloadUrl(fileName);
+}
+
+export async function exportLayersAsGeoPackage(layerIds: number[]): Promise<Process> {
+  const payload: ExportGpkgRequest = {
+    wsUiId: wsService.getId(),
+    format: 'GPKG',
+    payload: {
+      type: 'LAYER',
+      payload: layerIds
+    }
+  };
+
+  return exportClient.export(payload);
 }
