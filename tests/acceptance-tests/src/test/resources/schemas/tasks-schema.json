@@ -7,7 +7,7 @@
   "styleName": "tasks_schema_v1",
   "readOnly": false,
   "geometryType": "MultiPolygon",
-  "tags": ["system", "Задачи"],
+  "tags": ["Задачи"],
   "properties": [
     {
       "name": "id",

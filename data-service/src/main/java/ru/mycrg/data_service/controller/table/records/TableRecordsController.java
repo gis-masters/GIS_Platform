@@ -9,6 +9,7 @@ import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.service.cqrs.table_records.requests.*;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service.service.resources.TableService;
+import ru.mycrg.data_service.util.MapUtil;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.geo_json.Feature;
 import ru.mycrg.mediator.Mediator;
@@ -20,7 +21,6 @@ import static org.springframework.http.HttpStatus.CREATED;
 import static ru.mycrg.auth_service_contract.Authorities.HAS_ANY_AUTHORITY;
 import static ru.mycrg.common_utils.MediaTypes.APPLICATION_JSON_MERGE_PATCH;
 import static ru.mycrg.data_service.dto.ResourceType.FEATURE;
-import static ru.mycrg.data_service.service.schemas.SchemaUtil.excludeNullProperties;
 import static ru.mycrg.data_service.service.schemas.SchemaUtil.excludeUnknownProperties;
 
 @RestController
@@ -72,7 +72,7 @@ public class TableRecordsController {
 
         feature.setSrs(table.getCrs());
         Map<String, Object> props = excludeUnknownProperties(schema, feature.getProperties());
-        Map<String, Object> clearProps = excludeNullProperties(props);
+        Map<String, Object> clearProps = MapUtil.clearNullable(props);
         feature.setProperties(clearProps);
 
         Feature newFeature = mediator.execute(

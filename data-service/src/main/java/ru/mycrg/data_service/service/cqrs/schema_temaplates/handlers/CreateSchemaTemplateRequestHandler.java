@@ -17,6 +17,8 @@ import java.util.ArrayList;
 import java.util.Set;
 
 import static ru.mycrg.data_service.mappers.SchemaEntityMapper.mapToEntity;
+import static ru.mycrg.data_service.service.schemas.SchemaUtil.SYSTEM_TAG_NAME;
+import static ru.mycrg.data_service.service.schemas.SchemaUtil.TAG;
 
 @Component
 public class CreateSchemaTemplateRequestHandler implements IRequestHandler<CreateSchemaTemplateRequest, Voidy> {
@@ -43,6 +45,11 @@ public class CreateSchemaTemplateRequestHandler implements IRequestHandler<Creat
         Set<ErrorInfo> validationMismatches = schemaLogicValidator.validate(newSchema);
         validationMismatches.addAll(
                 schemaPrintingTemplatesValidator.checkTemplateAvailability(newSchema.getPrintTemplates()));
+
+        if (newSchema.getTags().contains(SYSTEM_TAG_NAME)) {
+            validationMismatches.add(new ErrorInfo(TAG, "Схемы с тегом 'system' нельзя создавать вручную."));
+        }
+
         if (!validationMismatches.isEmpty()) {
             throw new BadRequestException("В схеме найдены ошибки", new ArrayList<>(validationMismatches));
         }

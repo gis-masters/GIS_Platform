@@ -1,0 +1,22 @@
+{
+  "name": "system_tag",
+  "title": "Схема с тегом system",
+  "styleName": "generic",
+  "tableName": "system_tag",
+  "tags": [
+    "system",
+    "alpha"
+  ],
+  "properties": [
+    {
+      "name": "location",
+      "title": "Местоположение",
+      "maxLength": 1000,
+      "hidden": true,
+      "required": true,
+      "valueType": "STRING"
+    }
+  ],
+  "description": "Точечный слой с атрибутами",
+  "geometryType": "Point"
+}

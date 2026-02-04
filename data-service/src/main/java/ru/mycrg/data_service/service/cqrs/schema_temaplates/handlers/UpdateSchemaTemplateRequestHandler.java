@@ -21,11 +21,10 @@ import java.util.Set;
 
 import static ru.mycrg.data_service.mappers.SchemaEntityMapper.mapToEntity;
 import static ru.mycrg.data_service.service.schemas.SchemaUtil.SYSTEM_TAG_NAME;
+import static ru.mycrg.data_service.service.schemas.SchemaUtil.TAG;
 
 @Component
 public class UpdateSchemaTemplateRequestHandler implements IRequestHandler<UpdateSchemaTemplateRequest, Voidy> {
-
-    private final static String TAG = "tags";
 
     private final SchemaLogicValidator schemaLogicValidator;
     private final SchemaPrintingTemplatesValidator schemaPrintingTemplatesValidator;
@@ -46,7 +45,8 @@ public class UpdateSchemaTemplateRequestHandler implements IRequestHandler<Updat
     public Voidy handle(UpdateSchemaTemplateRequest request) {
         SchemaDto schema = request.getSchema();
         Set<ErrorInfo> validationMismatches = schemaLogicValidator.validate(schema);
-        validationMismatches.addAll(schemaPrintingTemplatesValidator.checkTemplateAvailability(schema.getPrintTemplates()));
+        validationMismatches.addAll(
+                schemaPrintingTemplatesValidator.checkTemplateAvailability(schema.getPrintTemplates()));
 
         if (!validationMismatches.isEmpty()) {
             throw new BadRequestException("В схеме найдены ошибки", new ArrayList<>(validationMismatches));

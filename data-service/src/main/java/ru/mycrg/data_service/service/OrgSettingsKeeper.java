@@ -13,6 +13,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static ru.mycrg.data_service.service.schemas.SchemaUtil.TAG;
+
 @Component
 public class OrgSettingsKeeper {
 
@@ -60,11 +62,11 @@ public class OrgSettingsKeeper {
 
     public boolean isTagAllowed(String tag) {
         Map<String, Object> orgSettings = getCurrentOrgSettings();
-        if (!orgSettings.containsKey("tags")) {
+        if (!orgSettings.containsKey(TAG)) {
             return false;
         }
 
-        List<String> tags = (List<String>) orgSettings.get("tags");
+        List<String> tags = (List<String>) orgSettings.get(TAG);
         if (tags.isEmpty()) {
             return false;
         }

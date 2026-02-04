@@ -12,6 +12,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static ru.mycrg.data_service.service.schemas.SchemaUtil.SYSTEM_TAG_NAME;
+
 /**
  * Данный сервис фильтрует схемы на основе настроек организации.
  * <p>
@@ -70,7 +72,7 @@ public class SchemaTemplateServiceProtected implements ISchemaTemplateService {
      */
     private boolean isAllowedByTags(SchemaDto schema) {
         List<String> tags = schema.getTags();
-        if (tags.isEmpty() || !tags.contains("system")) {
+        if (tags.isEmpty() || !tags.contains(SYSTEM_TAG_NAME)) {
             return true;
         }
 

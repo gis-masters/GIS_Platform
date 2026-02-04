@@ -30,6 +30,8 @@ public class SchemaTemplates {
                 return testPointAttributesIncorrect();
             case "Все типы данных":
                 return testAllAttributes();
+            case "с тегом system":
+                return existSystemTag();
             case "Точечный слой с атрибутами - исправленная":
                 SchemaDto correctTestPointSchema = testPointAttributes();
                 correctTestPointSchema.setTitle("Точечный слой с атрибутами - исправленная");
@@ -90,7 +92,7 @@ public class SchemaTemplates {
                 SchemaDto schemaWithOrder10 = prepareSchemaWithTags();
                 schemaWithOrder10.setName("schemaWithTagsOrder10");
                 schemaWithOrder10.setTitle("с тэгом 'Приказ 10'");
-                schemaWithOrder10.setTags(List.of("Приказ 10", "system"));
+                schemaWithOrder10.setTags(List.of("Приказ 10"));
 
                 return schemaWithOrder10;
             case "с тэгом 'Приказ 123'":
@@ -104,7 +106,7 @@ public class SchemaTemplates {
                 SchemaDto schemaBoth = prepareSchemaWithTags();
                 schemaBoth.setName("schema_with_both_tags");
                 schemaBoth.setTitle("с тэгами 'Приказ 10' и 'Приказ 123'");
-                schemaBoth.setTags(List.of("Приказ 10", "Приказ 123", "system"));
+                schemaBoth.setTags(List.of("Приказ 10", "Приказ 123"));
 
                 return schemaBoth;
             case "с тэгом 'Схема доярки'":
@@ -183,6 +185,10 @@ public class SchemaTemplates {
 
     private static SchemaDto testPointAttributesIncorrect() {
         return loadSchemaFromResource("point-attributes-incorrect-schema.json");
+    }
+
+    private static SchemaDto existSystemTag() {
+        return loadSchemaFromResource("schema-with-system-tag.json");
     }
 
     private static SchemaDto testFtsHiddenFieldsSchema() {

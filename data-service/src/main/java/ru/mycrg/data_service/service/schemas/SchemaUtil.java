@@ -25,6 +25,7 @@ public class SchemaUtil {
 
     private static final Logger log = LoggerFactory.getLogger(SchemaUtil.class);
 
+    public static final String TAG = "tags";
     public static final String SYSTEM_TAG_NAME = "system";
 
     private static final List<ValueType> typesReadyForFts = List.of(STRING, DOCUMENT, CHOICE, FILE, FIAS, LOOKUP,
@@ -42,18 +43,6 @@ public class SchemaUtil {
                 result.put(key, value);
             } else {
                 log.warn("Параметр: [{}] был исключен при создании, поле не описано в схеме!", key);
-            }
-        });
-
-        return result;
-    }
-
-    @NotNull
-    public static Map<String, Object> excludeNullProperties(@NotNull Map<String, Object> props) {
-        Map<String, Object> result = new HashMap<>();
-        props.forEach((key, value) -> {
-            if (value != null) {
-                result.put(key, value);
             }
         });
 
