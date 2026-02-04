@@ -3,7 +3,7 @@ package ru.mycrg.common_contracts.generated.data_service.gpkg.import_;
 import java.io.Serializable;
 import java.util.UUID;
 
-public class GpkgImportReport extends GpkgImportBaseDto implements Serializable {
+public class GpkgProcessReport extends GpkgReportBaseDto implements Serializable {
 
     private Long projectId;
     private UUID fileId;
@@ -11,7 +11,7 @@ public class GpkgImportReport extends GpkgImportBaseDto implements Serializable 
     private String fileTitle;
     private GpkgPayloadData payload;
 
-    public GpkgImportReport() {
+    public GpkgProcessReport() {
         // Required
     }
 

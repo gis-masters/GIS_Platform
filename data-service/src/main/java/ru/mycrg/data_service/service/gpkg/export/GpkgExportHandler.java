@@ -3,6 +3,8 @@ package ru.mycrg.data_service.service.gpkg.export;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 import ru.mycrg.auth_facade.IAuthenticationFacade;
+import ru.mycrg.common_contracts.generated.data_service.gpkg.export.ExportGpkgPayload;
+import ru.mycrg.common_contracts.generated.data_service.gpkg.export.GpkgExportType;
 import ru.mycrg.data_service.entity.Process;
 import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.exceptions.ErrorInfo;
@@ -10,8 +12,6 @@ import ru.mycrg.data_service.service.export.ExportType;
 import ru.mycrg.data_service.service.export.Exporter;
 import ru.mycrg.data_service.service.processes.ProcessService;
 import ru.mycrg.data_service_contract.dto.ExportRequestModel;
-import ru.mycrg.common_contracts.generated.data_service.gpkg.export.ExportGpkgPayload;
-import ru.mycrg.common_contracts.generated.data_service.gpkg.export.GpkgExportType;
 import ru.mycrg.data_service_contract.queue.request.gpkg.ExportGpkgEvent;
 import ru.mycrg.messagebus_contract.IMessageBusProducer;
 
@@ -68,14 +68,17 @@ public class GpkgExportHandler implements Exporter {
 
             GpkgExportType gpkgExportType = exportGpkgPayload.getType();
             if (gpkgExportType == null) {
-                String message = "Не поддерживаемый тип экспорта. Поддерживаемые форматы: PROJECT, LAYER, TABLE";
+                String message = "Поле type обязательно. Допустимые значения: PROJECT, LAYER, TABLE.";
 
                 throw new BadRequestException(msg, new ErrorInfo("type", message));
             }
 
             Object payload = exportGpkgPayload.getPayload();
             if (payload == null) {
-                throw new BadRequestException(msg, new ErrorInfo("payload", "Тело должно быть заполнено"));
+                throw new BadRequestException(msg,
+                                              new ErrorInfo("payload",
+                                                            "payload отсутствует. Передайте тело запроса" +
+                                                                    " для выбранного type"));
             }
 
             validatePayloadStructure(gpkgExportType, payload, msg);

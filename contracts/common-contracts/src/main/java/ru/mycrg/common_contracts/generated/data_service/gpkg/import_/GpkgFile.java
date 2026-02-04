@@ -5,19 +5,25 @@ import com.fasterxml.jackson.databind.JsonNode;
 import java.io.Serializable;
 import java.util.UUID;
 
-public class GpkgImportedFile extends GpkgImportBaseDto implements Serializable {
+public class GpkgFile extends GpkgReportBaseDto implements Serializable {
 
     private UUID newId;
     private UUID oldId;
     private String tableName;
     private JsonNode resourceQualifier;
 
-    public GpkgImportedFile() {
+    public GpkgFile() {
     }
 
-    public GpkgImportedFile(UUID oldId, String tableName, GpkgProcessStatus status, String title) {
+    public GpkgFile(UUID oldId, String tableName, GpkgProcessStatus status, String title) {
         this.oldId = oldId;
         this.tableName = tableName;
+        setStatus(status);
+        setTitle(title);
+    }
+
+    public GpkgFile(UUID oldId, GpkgProcessStatus status, String title) {
+        this.oldId = oldId;
         setStatus(status);
         setTitle(title);
     }

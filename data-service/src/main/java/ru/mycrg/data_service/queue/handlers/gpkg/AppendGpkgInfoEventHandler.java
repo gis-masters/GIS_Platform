@@ -5,12 +5,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
+import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgStyle;
 import ru.mycrg.data_service.dao.config.DatasourceFactory;
 import ru.mycrg.data_service.repository.SchemasAndTablesRepositoryDetached;
 import ru.mycrg.data_service.service.gpkg.export.GpkgAppender;
 import ru.mycrg.data_service_contract.dto.ExportResourceModel;
 import ru.mycrg.data_service_contract.dto.gpkg.GpkgAppendingData;
-import ru.mycrg.data_service_contract.dto.gpkg.StyleWithIcons;
 import ru.mycrg.data_service_contract.queue.request.gpkg.AppendGpkgInfoEvent;
 import ru.mycrg.data_service_contract.queue.response.AppendGpkgInfoBackwardEvent;
 import ru.mycrg.gis_service_contract.dto.LayerProjection;
@@ -116,7 +116,7 @@ public class AppendGpkgInfoEventHandler implements IEventHandler {
     }
 
     private void appendStylesAndLayersInfo(String pathToGpkg,
-                                           List<StyleWithIcons> stylesAndSvgs,
+                                           List<GpkgStyle> stylesAndSvgs,
                                            List<LayerProjection> layerProjections) {
         if (stylesAndSvgs.isEmpty()) {
             log.debug("Информации о стилях и svg нет. Пропускаем шаг.");

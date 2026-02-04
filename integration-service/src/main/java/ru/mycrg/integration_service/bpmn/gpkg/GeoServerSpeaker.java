@@ -3,8 +3,8 @@ package ru.mycrg.integration_service.bpmn.gpkg;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import ru.mycrg.data_service_contract.dto.gpkg.StyleWithIcons;
-import ru.mycrg.data_service_contract.dto.gpkg.SvgIcon;
+import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgStyle;
+import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgSvg;
 import ru.mycrg.geoserver_client.services.resources.Svg;
 import ru.mycrg.geoserver_client.services.styles.StyleService;
 import ru.mycrg.http_client.ResponseModel;
@@ -18,6 +18,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
+import static ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgProcessStatus.ACTIVE;
+
 @Service
 public class GeoServerSpeaker {
 
@@ -25,23 +27,24 @@ public class GeoServerSpeaker {
 
     private final String ADDITIONAL_SUB_STRING = "_1";
 
-    public StyleWithIcons getStylesAndSvg(String styleName, String token, String dbName) {
-        StyleWithIcons styleWithIcons = new StyleWithIcons();
+    public GpkgStyle getStylesAndSvg(String styleName, String token, String dbName) {
+        GpkgStyle styleWithIcons = new GpkgStyle();
         styleWithIcons.setName(styleName);
+        styleWithIcons.setStatus(ACTIVE);
 
         getSldFromGeoserver(styleName, token, dbName).ifPresent(styleBody -> {
             styleWithIcons.setBody(styleBody);
 
-            List<SvgIcon> svgList = new LinkedList<>();
+            List<GpkgSvg> svgList = new LinkedList<>();
             if (styleBody.contains("<se:Format>image/svg+xml</se:Format>")) {
                 List<String> svgPaths = findSvgRelativePathInSld(styleBody);
 
                 for (String svgPath: svgPaths) {
                     getSvgBodyFromGeoserver(svgPath, token)
-                            .ifPresent(svgBody -> svgList.add(new SvgIcon(svgPath, svgBody)));
+                            .ifPresent(svgBody -> svgList.add(new GpkgSvg(svgPath, ACTIVE, svgBody)));
                 }
 
-                styleWithIcons.setSvg(svgList);
+                styleWithIcons.setSvgs(svgList);
             }
         });
 

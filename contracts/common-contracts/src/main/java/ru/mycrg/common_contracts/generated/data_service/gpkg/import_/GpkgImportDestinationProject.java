@@ -2,7 +2,7 @@ package ru.mycrg.common_contracts.generated.data_service.gpkg.import_;
 
 import java.io.Serializable;
 
-public class GpkgImportDestinationProject extends GpkgImportBaseDto implements Serializable {
+public class GpkgImportDestinationProject extends GpkgReportBaseDto implements Serializable {
 
     private Long projectId;
 

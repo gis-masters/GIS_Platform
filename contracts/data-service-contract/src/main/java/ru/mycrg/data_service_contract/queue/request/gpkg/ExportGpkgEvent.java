@@ -1,7 +1,7 @@
 package ru.mycrg.data_service_contract.queue.request.gpkg;
 
 import ru.mycrg.common_contracts.generated.data_service.gpkg.export.ExportGpkgPayload;
-import ru.mycrg.common_contracts.generated.data_service.gpkg.export.GpkgExportDetailsModel;
+import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgProcessReport;
 import ru.mycrg.data_service_contract.dto.gpkg.GpkgAppendingData;
 import ru.mycrg.messagebus_contract.events.DefaultMessageBusRequestEvent;
 
@@ -17,7 +17,7 @@ public class ExportGpkgEvent extends DefaultMessageBusRequestEvent implements Se
     private String token;
     private ExportGpkgPayload payload;
     private GpkgAppendingData gpkgAppendingData;
-    private GpkgExportDetailsModel gpkgExportDetailsModel;
+    private GpkgProcessReport gpkgReport;
 
     public ExportGpkgEvent() {
         super();
@@ -64,12 +64,12 @@ public class ExportGpkgEvent extends DefaultMessageBusRequestEvent implements Se
         this.payload = payload;
     }
 
-    public GpkgExportDetailsModel getGpkgExportDetailsModel() {
-        return gpkgExportDetailsModel;
+    public GpkgProcessReport getGpkgReport() {
+        return gpkgReport;
     }
 
-    public void setGpkgExportDetailsModel(GpkgExportDetailsModel gpkgExportDetailsModel) {
-        this.gpkgExportDetailsModel = gpkgExportDetailsModel;
+    public void setGpkgReport(GpkgProcessReport gpkgReport) {
+        this.gpkgReport = gpkgReport;
     }
 
     public GpkgAppendingData getGpkgAppendingData() {

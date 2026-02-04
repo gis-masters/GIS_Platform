@@ -12,13 +12,13 @@ public class GpkgPayloadData implements Serializable {
 
     private GpkgWrapperImportReport wrapperImportReport;
 
-    private List<GpkgImportedTable> tables = new ArrayList<>();
+    private List<GpkgTable> tables = new ArrayList<>();
 
-    private List<GpkgImportedFile> files = new ArrayList<>();
+    private List<GpkgFile> files = new ArrayList<>();
 
-    private List<GpkgImportedStyles> styles = new ArrayList<>();
+    private List<GpkgStyle> styles = new ArrayList<>();
 
-    private List<GpkgImportedLayer> layers = new ArrayList<>();
+    private List<GpkgLayer> layers = new ArrayList<>();
 
     public GpkgPayloadData() {
     }
@@ -47,7 +47,7 @@ public class GpkgPayloadData implements Serializable {
         this.wrapperImportReport = wrapperImportReport;
     }
 
-    public List<GpkgImportedTable> getTables() {
+    public List<GpkgTable> getTables() {
         if (tables == null) {
             tables = new ArrayList<>();
         }
@@ -55,11 +55,11 @@ public class GpkgPayloadData implements Serializable {
         return tables;
     }
 
-    public void setTables(List<GpkgImportedTable> tables) {
+    public void setTables(List<GpkgTable> tables) {
         this.tables = tables != null ? tables : new ArrayList<>();
     }
 
-    public List<GpkgImportedStyles> getStyles() {
+    public List<GpkgStyle> getStyles() {
         if (styles == null) {
             styles = new ArrayList<>();
         }
@@ -67,7 +67,7 @@ public class GpkgPayloadData implements Serializable {
         return styles;
     }
 
-    public List<GpkgImportedFile> getFiles() {
+    public List<GpkgFile> getFiles() {
         if (files == null) {
             files = new ArrayList<>();
         }
@@ -75,15 +75,15 @@ public class GpkgPayloadData implements Serializable {
         return files;
     }
 
-    public void setFiles(List<GpkgImportedFile> files) {
+    public void setFiles(List<GpkgFile> files) {
         this.files = files != null ? files : new ArrayList<>();
     }
 
-    public void setStyles(List<GpkgImportedStyles> styles) {
+    public void setStyles(List<GpkgStyle> styles) {
         this.styles = styles != null ? styles : new ArrayList<>();
     }
 
-    public List<GpkgImportedLayer> getLayers() {
+    public List<GpkgLayer> getLayers() {
         if (layers == null) {
             layers = new ArrayList<>();
         }
@@ -91,7 +91,7 @@ public class GpkgPayloadData implements Serializable {
         return layers;
     }
 
-    public void setLayers(List<GpkgImportedLayer> layers) {
+    public void setLayers(List<GpkgLayer> layers) {
         this.layers = layers != null ? layers : new ArrayList<>();
     }
 

@@ -204,9 +204,9 @@ export const ExportGeoPackageDialog: FC<ExportGeoPackageDialogProps> = observer(
             state.setIsExporting(false);
             state.setExportCompleted(true);
 
-            // Извлекаем путь к файлу из details.pathToGpkgFile
-            if (isRecordStringUnknown(process.details) && typeof process.details.pathToGpkgFile === 'string') {
-              state.setFilePath(process.details.pathToGpkgFile);
+            // Извлекаем путь к файлу из details.filePath
+            if (isRecordStringUnknown(process.details) && typeof process.details.filePath === 'string') {
+              state.setFilePath(process.details.filePath);
             }
 
             return;

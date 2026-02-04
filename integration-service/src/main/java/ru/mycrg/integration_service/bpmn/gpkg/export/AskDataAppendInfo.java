@@ -16,21 +16,6 @@ import java.util.List;
 
 import static ru.mycrg.integration_service.bpmn.IJavaDelegateProperties.*;
 
-/**
- * В рамках BPMN экспорта GPKG засылаем информацию которую нужно добавить. (седьмой в процессе)
- *
- * <p>Реализован.</p>
- *
- * <h3>Поведение:</h3>
- * <ul>
- *   <li>Из сущностей из прошлых шагов собирает объект и ставит его в data-service</li>
- *   <li>Шаг не делает TASK_DONE потому что дальше будет DONE</li>
- *   <li>Есть ретраи. При исчерпании говорим что не можем работать дальше.</li>
- *   <li>При успешном переходе на следующий шаг обнуляем счётчик</li>
- * </ul>
- *
- */
-
 @Service("askDataAppendInfo")
 public class AskDataAppendInfo implements JavaDelegate {
 

@@ -10,7 +10,6 @@ import static ru.mycrg.messagebus_contract.MessageBusProperties.INTEGRATION_TO_D
 public class UpdateProcessEvent extends DefaultMessageBusRequestEvent {
 
     private Long processId;
-    private String businessKey;
     private String dbName;
     private PatchProcess payload;
 
@@ -18,11 +17,10 @@ public class UpdateProcessEvent extends DefaultMessageBusRequestEvent {
         super();
     }
 
-    public UpdateProcessEvent(Long processId, String businessKey, String dbName, PatchProcess payload) {
+    public UpdateProcessEvent(Long processId, String dbName, PatchProcess payload) {
         super(UUID.randomUUID(), INTEGRATION_TO_DATA_QUEUE);
 
         this.processId = processId;
-        this.businessKey = businessKey;
         this.dbName = dbName;
         this.payload = payload;
     }
@@ -33,14 +31,6 @@ public class UpdateProcessEvent extends DefaultMessageBusRequestEvent {
 
     public void setProcessId(Long processId) {
         this.processId = processId;
-    }
-
-    public String getBusinessKey() {
-        return businessKey;
-    }
-
-    public void setBusinessKey(String businessKey) {
-        this.businessKey = businessKey;
     }
 
     public String getDbName() {

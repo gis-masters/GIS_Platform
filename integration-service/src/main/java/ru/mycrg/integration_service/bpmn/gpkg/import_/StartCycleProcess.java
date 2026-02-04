@@ -11,15 +11,15 @@ import org.camunda.bpm.engine.delegate.JavaDelegate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgImportReport;
+import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgProcessReport;
 import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgPayloadData;
 import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgTablesData;
 import ru.mycrg.data_service_contract.dto.ErrorReport;
 import ru.mycrg.data_service_contract.queue.request.gpkg.ImportGpkgEvent;
 import ru.mycrg.http_client.ResponseModel;
 import ru.mycrg.integration_service.bpmn.BaseHttpService;
-import ru.mycrg.integration_service.bpmn.gpkg.GpkgImportReportManager;
-import ru.mycrg.integration_service.bpmn.gpkg.ReportSendConfigDto;
+import ru.mycrg.integration_service.bpmn.gpkg.report.GpkgReportManager;
+import ru.mycrg.integration_service.bpmn.gpkg.report.GpkgProcessContext;
 
 import java.util.Optional;
 
@@ -47,9 +47,9 @@ public class StartCycleProcess implements JavaDelegate {
     private static final Logger log = LoggerFactory.getLogger(StartCycleProcess.class);
 
     private final BaseHttpService baseHttpService;
-    private final GpkgImportReportManager reportManager;
+    private final GpkgReportManager reportManager;
 
-    public StartCycleProcess(BaseHttpService baseHttpService, GpkgImportReportManager reportManager) {
+    public StartCycleProcess(BaseHttpService baseHttpService, GpkgReportManager reportManager) {
         this.baseHttpService = baseHttpService;
         this.reportManager = reportManager;
     }
@@ -65,7 +65,7 @@ public class StartCycleProcess implements JavaDelegate {
             log.debug("Класс {} начал работать.", StartCycleProcess.class.getSimpleName());
             ImportGpkgEvent event = (ImportGpkgEvent) delegateExecution.getVariable(EVENT_VAR_NAME);
 
-            GpkgImportReport importReport = (GpkgImportReport) delegateExecution.getVariable(
+            GpkgProcessReport importReport = (GpkgProcessReport) delegateExecution.getVariable(
                     EVENT_IMPORT_GPKG_REPORT_NAME);
             GpkgPayloadData payload = importReport.getPayload();
 
@@ -74,12 +74,11 @@ public class StartCycleProcess implements JavaDelegate {
 
                 ErrorReport geoWrapperReport = (ErrorReport) delegateExecution.getVariable(FAIL_REASON);
 
-                String businessKey = (String) delegateExecution.getVariable(BUSINESS_KEY_VAR_NAME);
-                ReportSendConfigDto rabbitDto = new ReportSendConfigDto(event.getProcessId(),
-                                                                        event.getDbName(),
-                                                                        businessKey,
-                                                                        TASK_DONE);
-                reportManager.createWrapperReport(rabbitDto, payload, geoWrapperReport);
+                GpkgProcessContext rabbitDto = new GpkgProcessContext(event.getProcessId(),
+                                                                      event.getDbName(),
+                                                                      TASK_DONE);
+
+                reportManager.createWrapperReport(rabbitDto, importReport, geoWrapperReport);
 
                 Optional<Long> groupId = createParentGroup(event.getToken(),
                                                            event.getProjectId(),

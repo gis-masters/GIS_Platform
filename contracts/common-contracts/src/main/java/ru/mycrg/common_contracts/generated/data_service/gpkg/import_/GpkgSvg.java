@@ -2,11 +2,16 @@ package ru.mycrg.common_contracts.generated.data_service.gpkg.import_;
 
 import java.io.Serializable;
 
-public class GpkgImportedSvg extends GpkgImportBaseDto implements Serializable {
+public class GpkgSvg extends GpkgReportBaseDto implements Serializable {
 
     private String body;
 
-    public GpkgImportedSvg() {
+    public GpkgSvg() {
+    }
+
+    public GpkgSvg(String title, GpkgProcessStatus status, String body) {
+        super(title, status);
+        this.body = body;
     }
 
     public String getBody() {

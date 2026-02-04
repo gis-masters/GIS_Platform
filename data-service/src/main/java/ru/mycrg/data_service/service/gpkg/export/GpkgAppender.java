@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgStyle;
 import ru.mycrg.data_service.dto.FileResourceQualifier;
 import ru.mycrg.data_service.entity.File;
 import ru.mycrg.data_service.service.gpkg.GpkgConnectionManager;
@@ -11,7 +12,6 @@ import ru.mycrg.data_service.service.gpkg.GpkgException;
 import ru.mycrg.data_service.service.gpkg.export.tables.*;
 import ru.mycrg.data_service.service.storage.FileStorageService;
 import ru.mycrg.data_service_contract.dto.ExportResourceModel;
-import ru.mycrg.data_service_contract.dto.gpkg.StyleWithIcons;
 import ru.mycrg.gis_service_contract.dto.LayerProjection;
 
 import java.sql.Connection;
@@ -139,7 +139,7 @@ public class GpkgAppender {
         }
     }
 
-    public void appendStylesAndSvgs(String gpkgFileName, List<StyleWithIcons> stylesAndSvgs) {
+    public void appendStylesAndSvgs(String gpkgFileName, List<GpkgStyle> stylesAndSvgs) {
         log.debug("GpkgAppender.append stylesAndSvgs");
 
         try (Connection connection = connectionManager.createConnectionForWriting(gpkgFileName)) {
@@ -154,7 +154,7 @@ public class GpkgAppender {
                                     GPKG_SVG_CONTENT_TABLE,
                                     "Хранит информацию о svg для стилей.");
 
-            for (StyleWithIcons styleAndSvg: stylesAndSvgs) {
+            for (GpkgStyle styleAndSvg: stylesAndSvgs) {
                 layerStyleWriter.insert(connection, styleAndSvg);
 
                 svgWriter.insert(connection, styleAndSvg);

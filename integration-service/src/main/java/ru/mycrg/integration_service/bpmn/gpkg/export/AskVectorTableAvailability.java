@@ -11,19 +11,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import ru.mycrg.common_contracts.generated.data_service.gpkg.export.ExportGpkgPayload;
-import ru.mycrg.common_contracts.generated.data_service.gpkg.export.GpkgExportDetailsModel;
 import ru.mycrg.data_service_contract.dto.ExportResourceModel;
-import ru.mycrg.data_service_contract.dto.PatchProcess;
-import ru.mycrg.data_service_contract.queue.request.UpdateProcessEvent;
 import ru.mycrg.data_service_contract.queue.request.gpkg.ExportGpkgEvent;
 import ru.mycrg.http_client.JsonConverter;
 import ru.mycrg.integration_service.bpmn.BaseHttpService;
-import ru.mycrg.messagebus_contract.IMessageBusProducer;
+import ru.mycrg.integration_service.bpmn.gpkg.report.GpkgProcessContext;
+import ru.mycrg.integration_service.bpmn.gpkg.report.GpkgReportManager;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -33,43 +30,20 @@ import static ru.mycrg.integration_service.IntegrationApplication.objectMapper;
 import static ru.mycrg.integration_service.bpmn.IJavaDelegateProperties.*;
 import static ru.mycrg.integration_service.bpmn.VariableUtil.getVariable;
 
-/**
- * Класс для работы с выгрузкой ТАБЛИЦ в рамках BPMN процесса экспорта GPKG. (третий в цепочке)
- *
- * <p>Реализован</p>
- *
- * <h3>Текущее поведение:</h3>
- * <ul>
- *   <li>Тип PROJECTS и LAYERS обработали в прошлых шагах.</li>
- *   <li>Для типов TABLES проверяем права пользователя.</li>
- *   <li>Если тип не TABLES падаем и останавливаемся потому что делать больше нечего.</li>
- *
- *   <li>Есть ретраи. При исчерпании говорим что не можем работать дальше.</li>
- *   <li>Если часть запрошенных ресурсов не существует или недоступны -> формируем сообщение и идём дальше.</li>
- *   <li>Если всех ресурсов не существует -> завершаем процесс.</li>
- *   <li>При успешном переходе на следующий шаг обнуляем счётчик</li>
- * </ul>
- *
- *   <h3>Доделать:</h3>
- *   <ul>
- *     <li>Сейчас лист запрошенных слоёв может быть больше чем лист доступных ресурсов.</li>
- *     <li>При переходе на следующий шаг нужно выкидывать те слои которые не доступны.</li>
- *   </ul>
- */
 @Service("askVectorTableAvailability")
 public class AskVectorTableAvailability implements JavaDelegate {
 
     private final Logger log = LoggerFactory.getLogger(AskVectorTableAvailability.class);
 
     private final BaseHttpService baseHttpService;
-    private final IMessageBusProducer messageBus;
+    private final GpkgReportManager reportManager;
 
     int currentIteration;
 
     public AskVectorTableAvailability(BaseHttpService baseHttpService,
-                                      IMessageBusProducer messageBus) {
+                                      GpkgReportManager reportManager) {
         this.baseHttpService = baseHttpService;
-        this.messageBus = messageBus;
+        this.reportManager = reportManager;
     }
 
     @Override
@@ -92,50 +66,40 @@ public class AskVectorTableAvailability implements JavaDelegate {
             return;
         }
 
-        String businessKey = (String) delegateExecution.getVariable(BUSINESS_KEY_VAR_NAME);
         List<ExportResourceModel> resources = extractResourcesFromPayload(subPayload);
         resources = resources.stream().distinct().collect(Collectors.toList());
-        int startResourcesSize = resources.size();
-
-        subPayload.setPayload(resources);
-        String token = delegateExecution.getVariable(TOKEN_VAR_NAME).toString();
 
         //Шаг 2. Собрали список недоступных ресурсов (Доступные у нас как бы есть).
+        String token = delegateExecution.getVariable(TOKEN_VAR_NAME).toString();
         List<ExportResourceModel> unavailableResources = checkAccessOnDataService(delegateExecution, resources, token);
-        int unavailableSize = unavailableResources.size();
+
         ExportGpkgEvent event = (ExportGpkgEvent) delegateExecution.getVariable(EVENT_VAR_NAME);
+        GpkgProcessContext rabbitDto = new GpkgProcessContext(event.getProcessId(),
+                                                              event.getDbName(),
+                                                              TASK_DONE);
+
+        //Шаг 3. Отправляем отчёт в процесс + обнуляем попытки + двигаем процесс
+        //Для каждого ресурса создаём отчёт о том что мы будем его выгружать.
+        reportManager.createTablesReport(rabbitDto, event.getGpkgReport(), resources);
 
         if (unavailableResources.isEmpty()) {
-            //Шаг 3. Отправляем отчёт в процесс + обнуляем попытки + двигаем процесс
             log.debug("Пользователю доступны все указанные ресурсы.");
 
-            PatchProcess newDetails = new PatchProcess(TASK_DONE, makeReport(event,
-                                                                             startResourcesSize,
-                                                                             unavailableSize));
-
-            messageBus.produce(new UpdateProcessEvent(event.getProcessId(),
-                                                      businessKey,
-                                                      event.getDbName(),
-                                                      newDetails));
-
+            subPayload.setPayload(resources);
             delegateExecution.setVariable(ITERATION_COUNTER_VAR_NAME, 0);
             delegateExecution.setVariable(CHECK_STATUS_VAR_NAME, "someResourcesAvailable");
         } else {
             log.debug("Количество недоступных ресурсов: {}", unavailableResources.size());
 
+            reportManager.errorTableRepByIdentifiers(rabbitDto,
+                                                     event.getGpkgReport(),
+                                                     unavailableResources);
+
             resources.removeAll(unavailableResources);
+            subPayload.setPayload(resources);
 
             if (!resources.isEmpty()) {
                 log.debug("После проверки доступности ресурсов осталось: {}", resources.size());
-
-                PatchProcess newDetails = new PatchProcess(TASK_DONE, makeReport(event,
-                                                                                 startResourcesSize,
-                                                                                 unavailableSize));
-
-                messageBus.produce(new UpdateProcessEvent(event.getProcessId(),
-                                                          businessKey,
-                                                          event.getDbName(),
-                                                          newDetails));
 
                 delegateExecution.setVariable(ITERATION_COUNTER_VAR_NAME, 0);
                 delegateExecution.setVariable(CHECK_STATUS_VAR_NAME, "someResourcesAvailable");
@@ -217,39 +181,12 @@ public class AskVectorTableAvailability implements JavaDelegate {
         return BaseHttpService.httpClient.newCall(request).execute();
     }
 
-    private GpkgExportDetailsModel makeReport(ExportGpkgEvent event,
-                                              int resources,
-                                              int unavailableResources) {
-        log.debug("Формируем отчёт о работе");
-
-        GpkgExportDetailsModel details = event.getGpkgExportDetailsModel();
-        if (details == null) {
-            log.debug("GkpgExportDetailsModel пустой");
-            details = new GpkgExportDetailsModel();
-            event.setGpkgExportDetailsModel(details);
-        }
-
-        List<String> messages = details.getMessages();
-        if (messages == null || messages.isEmpty()) {
-            messages = new LinkedList<>();
-        }
-
-        String msg;
-        if (unavailableResources == 0) {
-            msg = "Таблиц было запрошено: " + resources + ". Все запрошенные ресурсы будут выгружены.";
-        } else {
-            msg = "Таблиц было запрошено: " + resources + "." +
-                    " Таблиц будет выгружено: " + (resources - unavailableResources) + "." +
-                    " Не хватает прав на остальные ресурсы.";
-        }
-
-        messages.add(msg);
-        details.setMessages(messages);
-        event.setGpkgExportDetailsModel(details);
-
-        return details;
-    }
-
+    /**
+     * subPayload может быть сформирован либо нашим кодом на прошлом шаге, тогда он легко добывается. Либо его нам
+     * передали как OBJECT из самого начала и тогда он может быть ещё и не корректным.
+     *
+     * @return объекты либо пустой массив
+     */
     private List<ExportResourceModel> extractResourcesFromPayload(ExportGpkgPayload subPayload) {
         Object payload = subPayload.getPayload();
 

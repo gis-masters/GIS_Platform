@@ -1,6 +1,6 @@
 package ru.mycrg.data_service_contract.queue.request.gpkg;
 
-import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgImportReport;
+import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgProcessReport;
 import ru.mycrg.messagebus_contract.events.DefaultMessageBusRequestEvent;
 
 import java.io.Serializable;
@@ -18,7 +18,7 @@ public class ImportGpkgEvent extends DefaultMessageBusRequestEvent implements Se
     private Long projectId;
     private String targetDatasetIdentifier;
     private String targetDatasetTitle;
-    private GpkgImportReport gpkgImportReport;
+    private GpkgProcessReport gpkgProcessReport;
 
     public ImportGpkgEvent() {
         super();
@@ -32,7 +32,7 @@ public class ImportGpkgEvent extends DefaultMessageBusRequestEvent implements Se
                            Long projectId,
                            String targetDatasetIdentifier,
                            String targetDatasetTitle,
-                           GpkgImportReport gpkgImportReport) {
+                           GpkgProcessReport gpkgProcessReport) {
         super(UUID.randomUUID(), DATA_TO_INTEGRATION_QUEUE);
 
         this.processId = processId;
@@ -43,7 +43,7 @@ public class ImportGpkgEvent extends DefaultMessageBusRequestEvent implements Se
         this.projectId = projectId;
         this.targetDatasetIdentifier = targetDatasetIdentifier;
         this.targetDatasetTitle = targetDatasetTitle;
-        this.gpkgImportReport = gpkgImportReport;
+        this.gpkgProcessReport = gpkgProcessReport;
     }
 
     public Long getProcessId() {
@@ -110,12 +110,13 @@ public class ImportGpkgEvent extends DefaultMessageBusRequestEvent implements Se
         this.targetDatasetTitle = targetDatasetTitle;
     }
 
-    public GpkgImportReport getImportGpkgReport() {
-        return gpkgImportReport;
+    public GpkgProcessReport getGpkgProcessReport() {
+        return gpkgProcessReport;
     }
 
-    public void setImportGpkgReport(GpkgImportReport gpkgImportReport) {
-        this.gpkgImportReport = gpkgImportReport;
+    public void setGpkgProcessReport(
+            GpkgProcessReport gpkgProcessReport) {
+        this.gpkgProcessReport = gpkgProcessReport;
     }
 
     @Override
@@ -123,7 +124,7 @@ public class ImportGpkgEvent extends DefaultMessageBusRequestEvent implements Se
         return "{" +
                 "\"processId\":" + (processId == null ? "null" : "\"" + processId + "\"") + ", " +
                 "\"dbName\":" + (dbName == null ? "null" : "\"" + dbName + "\"") + ", " +
-                "\"importGpkgReport\":" + (gpkgImportReport == null ? "null" : "\"" + gpkgImportReport + "\"") + ", " +
+                "\"importGpkgReport\":" + (gpkgProcessReport == null ? "null" : "\"" + gpkgProcessReport + "\"") + ", " +
                 "}";
     }
 }

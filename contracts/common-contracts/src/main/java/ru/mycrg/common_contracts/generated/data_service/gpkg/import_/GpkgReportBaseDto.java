@@ -4,14 +4,22 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class GpkgImportBaseDto implements Serializable {
+public abstract class GpkgReportBaseDto implements Serializable {
 
     private String title;
     private GpkgProcessStatus status;
     private List<String> messages = new ArrayList<>();
 
-    public GpkgImportBaseDto() {
+    public GpkgReportBaseDto() {
+    }
 
+    public GpkgReportBaseDto(GpkgProcessStatus status) {
+        this.status = status;
+    }
+
+    public GpkgReportBaseDto(String title, GpkgProcessStatus status) {
+        this.title = title;
+        this.status = status;
     }
 
     public String getTitle() {

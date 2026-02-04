@@ -11,28 +11,6 @@ import static ru.mycrg.common_contracts.generated.data_service.gpkg.export.GpkgE
 import static ru.mycrg.integration_service.bpmn.IJavaDelegateProperties.CHECK_STATUS_VAR_NAME;
 import static ru.mycrg.integration_service.bpmn.IJavaDelegateProperties.EVENT_SUB_PAYLOAD_NAME;
 
-/**
- * Класс для работы с выгрузкой ПРОЕКТОВ в рамках BPMN процесса экспорта GPKG. (первый в цепочке)
- *
- * <p>На данный момент класс не полностью реализован и выполняет только базовую проверку типов запросов.</p>
- *
- * <h3>Планируемая функциональность:</h3>
- * <ul>
- *   <li>Проверка прав доступа на запрошенные проекты</li>
- *   <li>Преобразование payload: замена типа PROJECTS на LAYERS с передачей ID слоёв в следующий шаг</li>
- *   <li>Закрытие задачи при критических ошибках</li>
- *   <li>Передача ошибки + TASK_DONE и продолжение работы по возможности</li>
- *   <li>Передача статуса TASK_DONE и отчёта при положительной работе</li>
- * </ul>
- *
- * <h3>Текущее поведение:</h3>
- * <ul>
- *   <li>Для типа PROJECTS: устанавливает статус "dontKnowHow" (не реализовано)</li>
- *   <li>Для типов LAYERS и TABLES: устанавливает статус "exportNext" (пропуск шага)</li>
- *   <li>Для неподдерживаемых типов: устанавливает статус "dontKnowHow"</li>
- * </ul>
- *
- */
 @Service("askGisAboutProjects")
 public class AskGisAboutProjects implements JavaDelegate {
 

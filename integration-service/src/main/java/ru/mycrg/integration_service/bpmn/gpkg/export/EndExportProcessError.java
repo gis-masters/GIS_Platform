@@ -5,43 +5,24 @@ import org.camunda.bpm.engine.delegate.JavaDelegate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import ru.mycrg.common_contracts.generated.data_service.gpkg.export.GpkgExportDetailsModel;
-import ru.mycrg.data_service_contract.dto.PatchProcess;
+import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgProcessReport;
+import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgProcessStatus;
 import ru.mycrg.data_service_contract.queue.request.gpkg.ExportGpkgEvent;
-import ru.mycrg.data_service_contract.queue.request.UpdateProcessEvent;
-import ru.mycrg.messagebus_contract.IMessageBusProducer;
-
-import java.util.LinkedList;
-import java.util.List;
+import ru.mycrg.integration_service.bpmn.gpkg.report.GpkgReportManager;
+import ru.mycrg.integration_service.bpmn.gpkg.report.GpkgProcessContext;
 
 import static ru.mycrg.data_service_contract.enums.ProcessStatus.ERROR;
 import static ru.mycrg.integration_service.bpmn.IJavaDelegateProperties.*;
 
-/**
- * В рамках BPMN экспорта GPKG завершаем основной процесс. (последний в цепочке)
- *
- * <p>Реализован.</p>
- *
- * <h3>Поведение:</h3>
- * <ul>
- *   <li>Отправляем ERROR в процесс.</li>
- * </ul>
- *
- * <h3>Планируемые доработки:</h3>
- * <ul>
- *   <li>Считывать результаты прошлых шагов и направлять в детали понятный полный отчёт. Azure: 3750</li>
- * </ul>
- *
- */
 @Service("endExportProcessError")
 public class EndExportProcessError implements JavaDelegate {
 
     private final Logger log = LoggerFactory.getLogger(EndExportProcessError.class);
 
-    private final IMessageBusProducer messageBus;
+    private final GpkgReportManager reportManager;
 
-    public EndExportProcessError(IMessageBusProducer messageBus) {
-        this.messageBus = messageBus;
+    public EndExportProcessError(GpkgReportManager reportManager) {
+        this.reportManager = reportManager;
     }
 
     @Override
@@ -49,21 +30,13 @@ public class EndExportProcessError implements JavaDelegate {
         log.debug("Класс '{}' начал работу.", EndExportProcessError.class.getSimpleName());
 
         ExportGpkgEvent event = (ExportGpkgEvent) delegateExecution.getVariable(EVENT_VAR_NAME);
-        GpkgExportDetailsModel details = event.getGpkgExportDetailsModel();
-        if (details == null) {
-            details = new GpkgExportDetailsModel();
-        }
+        GpkgProcessReport exportReport = event.getGpkgReport();
 
         String pathToGpkg = null;
         if (delegateExecution.getVariable(GPKG_PATH_VAR_NAME) != null
                 && !delegateExecution.getVariable(GPKG_PATH_VAR_NAME).toString().isBlank()) {
             pathToGpkg = delegateExecution.getVariable(GPKG_PATH_VAR_NAME).toString();
-            details.setPathToGpkgFile(pathToGpkg);
-        }
-
-        List<String> messages = details.getMessages();
-        if (messages == null || messages.isEmpty()) {
-            messages = new LinkedList<>();
+            exportReport.setFilePath(pathToGpkg);
         }
 
         String status = delegateExecution.getVariable(CHECK_STATUS_VAR_NAME).toString();
@@ -82,11 +55,11 @@ public class EndExportProcessError implements JavaDelegate {
             case "gpkgNotExist":
                 msg = msg + "Не получилось создать gpkg. Причина: " + pathToGpkg;
                 break;
+            case "geoWrapperError":
+                msg = msg + "Неожиданная ошибка при создании geoPackage. Подробный лог на geo-wrapper.";
+                break;
             case "geoserverGiveNothing":
                 msg = msg + "Геосервер не вернул данные о стилях.";
-                if (pathToGpkg == null || pathToGpkg.isBlank()) {
-                    msg = msg + " Geo-wrapper не сформировал gpkg. Дальнейшая работа невозможна!";
-                }
 
                 break;
             case "fail":
@@ -97,16 +70,12 @@ public class EndExportProcessError implements JavaDelegate {
                 msg = msg + "gpkg не был сформирован в течении 5 минут. Останавливаем процесс.";
         }
 
-        messages.add(msg);
-        details.setMessages(messages);
+        GpkgProcessContext rabbitDto = new GpkgProcessContext(event.getProcessId(),
+                                                              event.getDbName(),
+                                                              ERROR);
 
-        String businessKey = (String) delegateExecution.getVariable(BUSINESS_KEY_VAR_NAME);
+        reportManager.finalizeReport(rabbitDto, exportReport, GpkgProcessStatus.ERROR, msg);
 
-        messageBus.produce(new UpdateProcessEvent(event.getProcessId(),
-                                                  businessKey,
-                                                  event.getDbName(),
-                                                  new PatchProcess(ERROR, details)));
-
-        log.debug("Выполнение процесса потерпело неудачу!");
+        log.debug("Выполнение процесса экспорта geoPackage потерпело неудачу!");
     }
 }

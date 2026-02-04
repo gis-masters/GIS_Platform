@@ -5,8 +5,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
-import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgImportedStyles;
-import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgImportedSvg;
+import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgStyle;
+import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgSvg;
 import ru.mycrg.data_service.dto.TableCreateDto;
 import ru.mycrg.data_service.service.gpkg.importer.mappers.GpkgImportedStylesMapper;
 import ru.mycrg.data_service.service.gpkg.importer.mappers.GpkgImportedSvgMapper;
@@ -98,11 +98,11 @@ public class GpkgRepositoryDetached {
         }
     }
 
-    public List<GpkgImportedStyles> getStyleInfoFromGpkg(JdbcTemplate jdbcTemplate,
-                                                         String schema,
-                                                         String styleName) {
+    public List<GpkgStyle> getStyleInfoFromGpkg(JdbcTemplate jdbcTemplate,
+                                                String schema,
+                                                String styleName) {
 
-        List<GpkgImportedStyles> styles = new ArrayList<>();
+        List<GpkgStyle> styles = new ArrayList<>();
         if (styleName == null || styleName.equals("__custom__")) {
             return styles;
         }
@@ -120,7 +120,7 @@ public class GpkgRepositoryDetached {
         }
 
         styles.forEach(style -> {
-            List<GpkgImportedSvg> svgs = getSvgInfoFromGpkg(jdbcTemplate, schema, styleName);
+            List<GpkgSvg> svgs = getSvgInfoFromGpkg(jdbcTemplate, schema, styleName);
             if (!svgs.isEmpty()) {
                 style.setSvgs(svgs);
             }
@@ -129,10 +129,10 @@ public class GpkgRepositoryDetached {
         return styles;
     }
 
-    private List<GpkgImportedSvg> getSvgInfoFromGpkg(JdbcTemplate jdbcTemplate,
-                                                     String schema,
-                                                     String styleName) {
-        List<GpkgImportedSvg> svgs = new ArrayList<>();
+    private List<GpkgSvg> getSvgInfoFromGpkg(JdbcTemplate jdbcTemplate,
+                                             String schema,
+                                             String styleName) {
+        List<GpkgSvg> svgs = new ArrayList<>();
         String sqlGetSvg = "SELECT " + GPKG_SVG_SVG_NAME_COLUMN + ", " + GPKG_SVG_SVG_BODY_COLUMN + " " +
                 "FROM " + schema + "." + GPKG_SVG_CONTENT_TABLE +
                 " WHERE " + GPKG_SVG_STYLE_NAME_COLUMN + " = ?";

@@ -1,6 +1,6 @@
 package ru.mycrg.data_service_contract.queue.request.gpkg;
 
-import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgImportedStyles;
+import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgStyle;
 import ru.mycrg.data_service_contract.dto.ResourceProjection;
 import ru.mycrg.data_service_contract.enums.ProcessStatus;
 import ru.mycrg.gis_service_contract.dto.LayerProjection;
@@ -20,7 +20,7 @@ public class ImportGpkgAckInfoBackwardEvent extends DefaultMessageBusRequestEven
     private String errorMessage;
     private ResourceProjection table;
     private List<LayerProjection> layerProjections = new ArrayList<>();
-    private List<GpkgImportedStyles> styles = new ArrayList<>();
+    private List<GpkgStyle> styles = new ArrayList<>();
 
     public ImportGpkgAckInfoBackwardEvent() {
         super(UUID.randomUUID(), DATA_TO_INTEGRATION_QUEUE);
@@ -38,7 +38,7 @@ public class ImportGpkgAckInfoBackwardEvent extends DefaultMessageBusRequestEven
                                           String businessKey,
                                           ResourceProjection table,
                                           List<LayerProjection> layerProjections,
-                                          List<GpkgImportedStyles> styles) {
+                                          List<GpkgStyle> styles) {
         super(UUID.randomUUID(), DATA_TO_INTEGRATION_QUEUE);
 
         this.status = status;
@@ -92,7 +92,7 @@ public class ImportGpkgAckInfoBackwardEvent extends DefaultMessageBusRequestEven
         this.layerProjections = layerProjections != null ? layerProjections : new ArrayList<>();
     }
 
-    public List<GpkgImportedStyles> getStyles() {
+    public List<GpkgStyle> getStyles() {
         if (styles == null) {
             styles = new ArrayList<>();
         }
@@ -100,7 +100,7 @@ public class ImportGpkgAckInfoBackwardEvent extends DefaultMessageBusRequestEven
         return styles;
     }
 
-    public void setStyles(List<GpkgImportedStyles> styles) {
+    public void setStyles(List<GpkgStyle> styles) {
         this.styles = styles != null ? styles : new ArrayList<>();
     }
 

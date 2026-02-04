@@ -6,8 +6,8 @@ import org.camunda.bpm.engine.delegate.JavaDelegate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgImportReport;
-import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgImportedFile;
+import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgProcessReport;
+import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgFile;
 import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgPayloadData;
 import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgTablesData;
 import ru.mycrg.data_service_contract.dto.FileDescription;
@@ -15,8 +15,8 @@ import ru.mycrg.data_service_contract.queue.request.gpkg.ImportGpkgCreateFilesEv
 import ru.mycrg.data_service_contract.queue.request.gpkg.ImportGpkgEvent;
 import ru.mycrg.geo_json.Feature;
 import ru.mycrg.http_client.JsonConverter;
-import ru.mycrg.integration_service.bpmn.gpkg.GpkgImportReportManager;
-import ru.mycrg.integration_service.bpmn.gpkg.ReportSendConfigDto;
+import ru.mycrg.integration_service.bpmn.gpkg.report.GpkgReportManager;
+import ru.mycrg.integration_service.bpmn.gpkg.report.GpkgProcessContext;
 import ru.mycrg.messagebus_contract.IMessageBusProducer;
 
 import java.util.ArrayList;
@@ -35,9 +35,9 @@ public class CreateNewFiles implements JavaDelegate {
     private static final Logger log = LoggerFactory.getLogger(CreateNewFiles.class);
 
     private final IMessageBusProducer messageBus;
-    private final GpkgImportReportManager reportManager;
+    private final GpkgReportManager reportManager;
 
-    public CreateNewFiles(IMessageBusProducer messageBus, GpkgImportReportManager reportManager) {
+    public CreateNewFiles(IMessageBusProducer messageBus, GpkgReportManager reportManager) {
         this.messageBus = messageBus;
         this.reportManager = reportManager;
     }
@@ -53,7 +53,7 @@ public class CreateNewFiles implements JavaDelegate {
         Map<String, Object> props = currentFeature.getProperties();
 
         List<UUID> fileIds = new ArrayList<>();
-        List<GpkgImportedFile> files = new ArrayList<>();
+        List<GpkgFile> files = new ArrayList<>();
         try {
             for (Map.Entry<String, Object> prop: props.entrySet()) {
                 Object propValue = prop.getValue();
@@ -65,7 +65,7 @@ public class CreateNewFiles implements JavaDelegate {
 
                 for (FileDescription fd: fileDescriptions) {
                     fileIds.add(fd.getId());
-                    files.add(new GpkgImportedFile(fd.getId(), table, ACTIVE, fd.getTitle()));
+                    files.add(new GpkgFile(fd.getId(), table, ACTIVE, fd.getTitle()));
                 }
             }
         } catch (Exception e) {
@@ -74,16 +74,14 @@ public class CreateNewFiles implements JavaDelegate {
 
         String businessKey = (String) delegateExecution.getVariable(BUSINESS_KEY_VAR_NAME);
         ImportGpkgEvent event = (ImportGpkgEvent) delegateExecution.getVariable(EVENT_VAR_NAME);
-        ReportSendConfigDto rabbitDto = new ReportSendConfigDto(event.getProcessId(),
-                                                                event.getDbName(),
-                                                                businessKey,
-                                                                TASK_DONE);
+        GpkgProcessContext rabbitDto = new GpkgProcessContext(event.getProcessId(),
+                                                              event.getDbName(),
+                                                              TASK_DONE);
 
         log.debug("Наполним файловый репорт");
-        GpkgImportReport importReport = (GpkgImportReport) delegateExecution.getVariable(
+        GpkgProcessReport importReport = (GpkgProcessReport) delegateExecution.getVariable(
                 EVENT_IMPORT_GPKG_REPORT_NAME);
-        GpkgPayloadData payload = importReport.getPayload();
-        reportManager.createFileReport(rabbitDto, payload, files);
+        reportManager.createFileReport(rabbitDto, importReport, files);
 
         delegateExecution.setVariable(FILES_LIST_VAR_NAME, asJava(fileIds));
         messageBus.produce(new ImportGpkgCreateFilesEvent(businessKey,

@@ -6,18 +6,16 @@ import org.camunda.bpm.engine.variable.Variables;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgImportReport;
 import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgPayloadData;
-import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgProcessStatus;
-import ru.mycrg.data_service_contract.dto.PatchProcess;
-import ru.mycrg.data_service_contract.queue.request.UpdateProcessEvent;
+import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgProcessReport;
 import ru.mycrg.data_service_contract.queue.request.gpkg.ImportGpkgClearTemplatesEvent;
 import ru.mycrg.data_service_contract.queue.request.gpkg.ImportGpkgEvent;
+import ru.mycrg.integration_service.bpmn.gpkg.report.GpkgProcessContext;
+import ru.mycrg.integration_service.bpmn.gpkg.report.GpkgReportManager;
 import ru.mycrg.messagebus_contract.IEventHandler;
 import ru.mycrg.messagebus_contract.IMessageBusProducer;
 import ru.mycrg.messagebus_contract.events.IMessageBusEvent;
 
-import java.util.List;
 import java.util.UUID;
 
 import static ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgTableType.VECTOR_DATA_TABLE;
@@ -33,11 +31,14 @@ public class ImportGpkgEventHandler implements IEventHandler {
 
     private final RuntimeService bpmnRuntimeService;
     private final IMessageBusProducer messageBus;
+    private final GpkgReportManager reportManager;
 
     public ImportGpkgEventHandler(RuntimeService bpmnRuntimeService,
-                                  IMessageBusProducer messageBus) {
+                                  IMessageBusProducer messageBus,
+                                  GpkgReportManager reportManager) {
         this.bpmnRuntimeService = bpmnRuntimeService;
         this.messageBus = messageBus;
+        this.reportManager = reportManager;
     }
 
     @Override
@@ -50,10 +51,9 @@ public class ImportGpkgEventHandler implements IEventHandler {
         log.debug("Старт процесса импорта GPKG!");
         ImportGpkgEvent event = (ImportGpkgEvent) messageBusEvent;
 
-        GpkgImportReport importReport = event.getImportGpkgReport();
+        GpkgProcessReport importReport = event.getGpkgProcessReport();
 
         GpkgPayloadData subPayload = importReport.getPayload();
-        log.debug("subPayload: {}", subPayload);
 
         String businessKey = UUID.randomUUID().toString();
 
@@ -80,20 +80,15 @@ public class ImportGpkgEventHandler implements IEventHandler {
             String msg = String.format("Процесс импорта gpkg остановлен. Причина: %s", e.getMessage());
             log.debug(msg, e);
 
-            importReport.setStatus(GpkgProcessStatus.ERROR);
-            List<String> prev = importReport.getMessages();
-            prev.add(msg);
-            importReport.setMessages(prev);
-
             messageBus.produce(new ImportGpkgClearTemplatesEvent(event.getDbName(),
                                                                  "empty",
                                                                  event.getFileId()));
 
-            PatchProcess newDetails = new PatchProcess(ERROR, importReport);
-            messageBus.produce(new UpdateProcessEvent(event.getProcessId(),
-                                                      businessKey,
-                                                      event.getDbName(),
-                                                      newDetails));
+            GpkgProcessContext processContext = new GpkgProcessContext(event.getProcessId(),
+                                                                       event.getDbName(),
+                                                                       ERROR);
+
+            reportManager.finalizeReport(processContext, msg);
         }
     }
 }

@@ -82,12 +82,14 @@ if [ "$MODE" = "dev" ]; then
         -f ../S3MinioForTests.yml \
         -f ../gisogdIntegrationSed.yml \
         -f ../gisogdRfService.yml \
-        --env-file ../.env up -d
+        --env-file ../.env \
+        --profile ui up -d
 else
     printHeader "Docker compose UP (${MODE})"
     docker compose -f ../coreApplication.yml \
         -f ../openSources.yml \
-        --env-file ../.env up -d
+        --env-file ../.env \
+        --profile ui up -d
 fi
 
 ./wait.sh

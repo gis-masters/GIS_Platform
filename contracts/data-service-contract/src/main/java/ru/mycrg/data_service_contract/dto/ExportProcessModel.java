@@ -11,6 +11,14 @@ public class ExportProcessModel {
     private boolean invertedCoordinates;
     private List<ResourceProjection> resourceProjections = new ArrayList<>();
 
+    public ExportProcessModel() {
+    }
+
+    public ExportProcessModel(String format, List<ResourceProjection> resourceProjections) {
+        this.format = format;
+        this.resourceProjections = resourceProjections;
+    }
+
     public String getDocSchema() {
         return docSchema;
     }

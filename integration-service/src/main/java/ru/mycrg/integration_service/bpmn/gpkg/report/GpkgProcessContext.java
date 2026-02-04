@@ -1,21 +1,19 @@
-package ru.mycrg.integration_service.bpmn.gpkg;
+package ru.mycrg.integration_service.bpmn.gpkg.report;
 
 import ru.mycrg.data_service_contract.enums.ProcessStatus;
 
-public class ReportSendConfigDto {
+public class GpkgProcessContext {
 
     private Long processId;
     private String dbName;
-    private String businessKey;
     private ProcessStatus processStatus;
 
-    public ReportSendConfigDto() {
+    public GpkgProcessContext() {
     }
 
-    public ReportSendConfigDto(Long processId, String dbName, String businessKey, ProcessStatus processStatus) {
+    public GpkgProcessContext(Long processId, String dbName, ProcessStatus processStatus) {
         this.processId = processId;
         this.dbName = dbName;
-        this.businessKey = businessKey;
         this.processStatus = processStatus;
     }
 
@@ -33,14 +31,6 @@ public class ReportSendConfigDto {
 
     public void setDbName(String dbName) {
         this.dbName = dbName;
-    }
-
-    public String getBusinessKey() {
-        return businessKey;
-    }
-
-    public void setBusinessKey(String businessKey) {
-        this.businessKey = businessKey;
     }
 
     public ProcessStatus getProcessStatus() {

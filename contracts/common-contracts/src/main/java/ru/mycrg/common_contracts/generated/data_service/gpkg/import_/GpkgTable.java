@@ -2,7 +2,7 @@ package ru.mycrg.common_contracts.generated.data_service.gpkg.import_;
 
 import java.io.Serializable;
 
-public class GpkgImportedTable extends GpkgImportBaseDto implements Serializable {
+public class GpkgTable extends GpkgReportBaseDto implements Serializable {
 
     private String dataset;
     private String oldTableIdentifier;
@@ -10,7 +10,14 @@ public class GpkgImportedTable extends GpkgImportBaseDto implements Serializable
     private Long importedObjects;
     private Long failedObjects;
 
-    public GpkgImportedTable() {
+    public GpkgTable() {
+    }
+
+    public GpkgTable(GpkgProcessStatus status, String dataset, String identifier) {
+        super(status);
+
+        this.dataset = dataset;
+        this.oldTableIdentifier = identifier;
     }
 
     public String getDataset() {
@@ -61,7 +68,7 @@ public class GpkgImportedTable extends GpkgImportBaseDto implements Serializable
                 "\"oldTableIdentifier\":" + (oldTableIdentifier == null ? "null" : "\"" + oldTableIdentifier + "\"") + ", " +
                 "\"importedObjects\":" + (importedObjects == null ? "null" : "\"" + importedObjects + "\"") + ", " +
                 "\"failedObjects\":" + (failedObjects == null ? "null" : "\"" + failedObjects + "\"") + ", " +
-                "\"name\":" + (getTitle() == null ? "null" : "\"" + getTitle() + "\"") + ", " +
+                "\"title\":" + (getTitle() == null ? "null" : "\"" + getTitle() + "\"") + ", " +
                 "\"status\":" + (getStatus() == null ? "null" : "\"" + getStatus() + "\"") + ", " +
                 "\"messages\":" + (getMessages() == null ? "null" : "\"" + getMessages() + "\"") + ", " +
                 "}";

@@ -5,12 +5,12 @@ import org.camunda.bpm.engine.delegate.JavaDelegate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgImportReport;
+import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgProcessReport;
 import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgProcessStatus;
 import ru.mycrg.data_service_contract.queue.request.gpkg.ImportGpkgClearTemplatesEvent;
 import ru.mycrg.data_service_contract.queue.request.gpkg.ImportGpkgEvent;
-import ru.mycrg.integration_service.bpmn.gpkg.GpkgImportReportManager;
-import ru.mycrg.integration_service.bpmn.gpkg.ReportSendConfigDto;
+import ru.mycrg.integration_service.bpmn.gpkg.report.GpkgProcessContext;
+import ru.mycrg.integration_service.bpmn.gpkg.report.GpkgReportManager;
 import ru.mycrg.messagebus_contract.IMessageBusProducer;
 
 import java.util.List;
@@ -24,9 +24,9 @@ public class EndImportGpkgProcessError implements JavaDelegate {
     private static final Logger log = LoggerFactory.getLogger(EndImportGpkgProcessError.class);
 
     private final IMessageBusProducer messageBus;
-    private final GpkgImportReportManager reportManager;
+    private final GpkgReportManager reportManager;
 
-    public EndImportGpkgProcessError(IMessageBusProducer messageBus, GpkgImportReportManager reportManager) {
+    public EndImportGpkgProcessError(IMessageBusProducer messageBus, GpkgReportManager reportManager) {
         this.messageBus = messageBus;
         this.reportManager = reportManager;
     }
@@ -36,11 +36,11 @@ public class EndImportGpkgProcessError implements JavaDelegate {
         log.debug("Класс {} начал работать.", EndImportGpkgProcessError.class.getSimpleName());
         ImportGpkgEvent event = (ImportGpkgEvent) delegateExecution.getVariable(EVENT_VAR_NAME);
 
-        GpkgImportReport importReport = (GpkgImportReport) delegateExecution.getVariable(EVENT_IMPORT_GPKG_REPORT_NAME);
+        GpkgProcessReport importReport = (GpkgProcessReport) delegateExecution.getVariable(
+                EVENT_IMPORT_GPKG_REPORT_NAME);
         String schema = "empty";
 
         String status = (String) delegateExecution.getVariable(CHECK_STATUS_VAR_NAME);
-        String businessKey = (String) delegateExecution.getVariable(BUSINESS_KEY_VAR_NAME);
 
         switch (status) {
             case "noAccess":
@@ -71,15 +71,14 @@ public class EndImportGpkgProcessError implements JavaDelegate {
         }
 
         log.debug("importReport перед отправкой о завершении{}", importReport);
-        ReportSendConfigDto rabbitDto = new ReportSendConfigDto(event.getProcessId(),
-                                                                event.getDbName(),
-                                                                businessKey,
-                                                                ERROR);
+        GpkgProcessContext rabbitDto = new GpkgProcessContext(event.getProcessId(),
+                                                              event.getDbName(),
+                                                              ERROR);
 
         reportManager.finalizeReport(rabbitDto, importReport, GpkgProcessStatus.ERROR, "Импорт завершён c ошибкой!!!");
     }
 
-    private static void createReport(GpkgImportReport importReport, String e) {
+    private static void createReport(GpkgProcessReport importReport, String e) {
         importReport.setStatus(GpkgProcessStatus.ERROR);
         List<String> prev = importReport.getMessages();
         prev.add(e);

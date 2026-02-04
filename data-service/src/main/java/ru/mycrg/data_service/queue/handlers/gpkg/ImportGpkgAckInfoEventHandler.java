@@ -5,7 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
-import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgImportedStyles;
+import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgStyle;
 import ru.mycrg.data_service.dao.GpkgRepositoryDetached;
 import ru.mycrg.data_service.dao.config.DatasourceFactory;
 import ru.mycrg.data_service.dto.TableCreateDto;
@@ -113,15 +113,15 @@ public class ImportGpkgAckInfoEventHandler implements IEventHandler {
                                                                                 sourceSchemaName,
                                                                                 sourceTableName);
 
-        List<GpkgImportedStyles> styles = new ArrayList<>();
+        List<GpkgStyle> styles = new ArrayList<>();
 
         if (!crgLayerData.isEmpty()) {
             log.debug("Количество слоёв созданных по векторной таблице: {}", crgLayerData.size());
 
             for (LayerProjection layerProjection: crgLayerData) {
-                List<GpkgImportedStyles> curStyles = gpkgTablesDao.getStyleInfoFromGpkg(jdbcTemplate,
-                                                                                        sourceSchemaName,
-                                                                                        layerProjection.getStyleName());
+                List<GpkgStyle> curStyles = gpkgTablesDao.getStyleInfoFromGpkg(jdbcTemplate,
+                                                                               sourceSchemaName,
+                                                                               layerProjection.getStyleName());
                 styles.addAll(curStyles);
             }
         } else {

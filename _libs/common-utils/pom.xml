@@ -50,7 +50,7 @@
         <dependency>
             <groupId>ru.mycrg</groupId>
             <artifactId>common-contracts</artifactId>
-            <version>1.11.6-SNAPSHOT</version>
+            <version>1.11.7-SNAPSHOT</version>
         </dependency>
     </dependencies>
 

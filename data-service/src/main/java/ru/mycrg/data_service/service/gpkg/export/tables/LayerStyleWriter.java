@@ -3,7 +3,7 @@ package ru.mycrg.data_service.service.gpkg.export.tables;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
-import ru.mycrg.data_service_contract.dto.gpkg.StyleWithIcons;
+import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgStyle;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -44,7 +44,7 @@ public class LayerStyleWriter implements ICrgGpkgTables {
         }
     }
 
-    public void insert(Connection connection, StyleWithIcons styleAndSvg) throws SQLException {
+    public void insert(Connection connection, GpkgStyle styleAndSvg) throws SQLException {
         String insertSql = "INSERT INTO " + GPKG_STYLE_LAYER_TABLE +
                 " (f_table_name, f_geometry_column, styleName, " +
                 "styleSLD, useAsDefault, description, update_time)" +

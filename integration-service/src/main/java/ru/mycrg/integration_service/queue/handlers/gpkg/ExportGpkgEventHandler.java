@@ -6,21 +6,18 @@ import org.camunda.bpm.engine.variable.Variables;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import ru.mycrg.common_contracts.generated.data_service.gpkg.export.GpkgExportDetailsModel;
-import ru.mycrg.data_service_contract.dto.PatchProcess;
 import ru.mycrg.common_contracts.generated.data_service.gpkg.export.ExportGpkgPayload;
 import ru.mycrg.common_contracts.generated.data_service.gpkg.export.GpkgExportType;
-import ru.mycrg.data_service_contract.queue.request.UpdateProcessEvent;
 import ru.mycrg.data_service_contract.queue.request.gpkg.ExportGpkgEvent;
+import ru.mycrg.integration_service.bpmn.gpkg.report.GpkgReportManager;
+import ru.mycrg.integration_service.bpmn.gpkg.report.GpkgProcessContext;
 import ru.mycrg.messagebus_contract.IEventHandler;
-import ru.mycrg.messagebus_contract.IMessageBusProducer;
 import ru.mycrg.messagebus_contract.events.IMessageBusEvent;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 import static ru.mycrg.data_service_contract.enums.ProcessStatus.ERROR;
+import static ru.mycrg.data_service_contract.enums.ProcessStatus.PENDING;
 import static ru.mycrg.integration_service.bpmn.CamundaVariables.asJava;
 import static ru.mycrg.integration_service.bpmn.IJavaDelegateProperties.*;
 import static ru.mycrg.integration_service.bpmn.enums.BpmnProcessKey.GPKG_EXPORT_PROCESS;
@@ -31,12 +28,12 @@ public class ExportGpkgEventHandler implements IEventHandler {
     private final Logger log = LoggerFactory.getLogger(ExportGpkgEventHandler.class);
 
     private final RuntimeService bpmnRuntimeService;
-    private final IMessageBusProducer messageBus;
+    private final GpkgReportManager reportManager;
 
     public ExportGpkgEventHandler(RuntimeService bpmnRuntimeService,
-                                  IMessageBusProducer messageBus) {
+                                  GpkgReportManager reportManager) {
         this.bpmnRuntimeService = bpmnRuntimeService;
-        this.messageBus = messageBus;
+        this.reportManager = reportManager;
     }
 
     @Override
@@ -48,10 +45,14 @@ public class ExportGpkgEventHandler implements IEventHandler {
     public void handle(IMessageBusEvent messageBusEvent) {
         log.debug("Старт процесса экспорта GPKG!");
 
-        ExportGpkgEvent event = null;
         String businessKey = UUID.randomUUID().toString();
+
+        ExportGpkgEvent event = (ExportGpkgEvent) messageBusEvent;
+        GpkgProcessContext rabbitDto = new GpkgProcessContext(event.getProcessId(),
+                                                              event.getDbName(),
+                                                              ERROR);
+
         try {
-            event = (ExportGpkgEvent) messageBusEvent;
             ExportGpkgPayload exportGpkgPayload = event.getPayload();
 
             if (exportGpkgPayload.getType() != GpkgExportType.PROJECT
@@ -62,14 +63,13 @@ public class ExportGpkgEventHandler implements IEventHandler {
                 String msg = "Невозможно успешно завершить экспорт GPKG. " +
                         "Причина: Невозможно экспортировать запрошенный тип объектов!";
 
-                messageBus.produce(
-                        new UpdateProcessEvent(event.getProcessId(),
-                                               businessKey,
-                                               event.getDbName(),
-                                               new PatchProcess(ERROR, createPatchBody(msg))));
+                reportManager.finalizeReport(rabbitDto, msg);
 
                 return;
             }
+
+            rabbitDto.setProcessStatus(PENDING);
+            reportManager.createReport(rabbitDto, event);
 
             VariableMap variables = Variables.createVariables()
                                              .putValue(EVENT_VAR_NAME, asJava(event))
@@ -89,18 +89,7 @@ public class ExportGpkgEventHandler implements IEventHandler {
             String msg = String.format("Не удалось стартовать процесс экспорта gpkg. Причина: %s", e.getMessage());
             log.debug(msg, e);
 
-            messageBus.produce(
-                    new UpdateProcessEvent(event.getProcessId(),
-                                           businessKey,
-                                           event.getDbName(),
-                                           new PatchProcess(ERROR, createPatchBody(msg))));
+            reportManager.finalizeReport(rabbitDto, msg);
         }
-    }
-
-    private static GpkgExportDetailsModel createPatchBody(String msg) {
-        List<String> message = new ArrayList<>();
-        message.add(msg);
-
-        return new GpkgExportDetailsModel(message);
     }
 }

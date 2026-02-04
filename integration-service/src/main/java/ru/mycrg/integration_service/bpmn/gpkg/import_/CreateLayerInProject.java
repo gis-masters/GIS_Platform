@@ -9,8 +9,8 @@ import org.camunda.bpm.engine.delegate.JavaDelegate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgImportReport;
-import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgImportedLayer;
+import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgProcessReport;
+import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgLayer;
 import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgPayloadData;
 import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgTablesData;
 import ru.mycrg.data_service_contract.queue.request.gpkg.ImportGpkgAckInfoBackwardEvent;
@@ -20,8 +20,8 @@ import ru.mycrg.http_client.JsonConverter;
 import ru.mycrg.http_client.ResponseModel;
 import ru.mycrg.http_client.exceptions.HttpClientException;
 import ru.mycrg.integration_service.bpmn.BaseHttpService;
-import ru.mycrg.integration_service.bpmn.gpkg.GpkgImportReportManager;
-import ru.mycrg.integration_service.bpmn.gpkg.ReportSendConfigDto;
+import ru.mycrg.integration_service.bpmn.gpkg.report.GpkgReportManager;
+import ru.mycrg.integration_service.bpmn.gpkg.report.GpkgProcessContext;
 
 import java.util.List;
 
@@ -49,10 +49,10 @@ public class CreateLayerInProject implements JavaDelegate {
     private static final Logger log = LoggerFactory.getLogger(CreateLayerInProject.class);
 
     private final BaseHttpService baseHttpService;
-    private final GpkgImportReportManager reportManager;
+    private final GpkgReportManager reportManager;
 
     public CreateLayerInProject(BaseHttpService baseHttpService,
-                                GpkgImportReportManager reportManager) {
+                                GpkgReportManager reportManager) {
         this.baseHttpService = baseHttpService;
         this.reportManager = reportManager;
     }
@@ -69,16 +69,13 @@ public class CreateLayerInProject implements JavaDelegate {
         long layerGroupId = (long) delegateExecution.getVariable(CREATED_LAYER_GROUP_ID);
 
         ImportGpkgEvent event = (ImportGpkgEvent) delegateExecution.getVariable(EVENT_VAR_NAME);
-        String businessKey = (String) delegateExecution.getVariable(BUSINESS_KEY_VAR_NAME);
         long projectId = event.getProjectId();
-        ReportSendConfigDto rabbitDto = new ReportSendConfigDto(projectId,
-                                                                event.getDbName(),
-                                                                businessKey,
-                                                                TASK_DONE);
+        GpkgProcessContext rabbitDto = new GpkgProcessContext(projectId,
+                                                              event.getDbName(),
+                                                              TASK_DONE);
 
-        GpkgImportReport importReport = (GpkgImportReport) delegateExecution.getVariable(
+        GpkgProcessReport importReport = (GpkgProcessReport) delegateExecution.getVariable(
                 EVENT_IMPORT_GPKG_REPORT_NAME);
-        GpkgPayloadData payload = importReport.getPayload();
 
         GpkgTablesData currentTable = (GpkgTablesData) delegateExecution.getVariable(ENTITY_ID_VAR_NAME);
         ImportGpkgAckInfoBackwardEvent backward = (ImportGpkgAckInfoBackwardEvent)
@@ -88,7 +85,7 @@ public class CreateLayerInProject implements JavaDelegate {
         List<LayerProjection> layerForCreate = backward.getLayerProjections();
 
         for (LayerProjection layerProjection: layerForCreate) {
-            GpkgImportedLayer curLayer = new GpkgImportedLayer();
+            GpkgLayer curLayer = new GpkgLayer();
             curLayer.setStatus(ACTIVE);
             curLayer.setType(VECTOR);
             curLayer.setTitle(layerProjection.getTitle());
@@ -104,7 +101,7 @@ public class CreateLayerInProject implements JavaDelegate {
             createLayer(event.getToken(), projectId, layerProjection, curLayer, delegateExecution,
                         currentIteration);
 
-            reportManager.createLayerReport(rabbitDto, payload, curLayer);
+            reportManager.createLayerReport(rabbitDto, importReport, curLayer);
         }
 
         // Сбрасываем счетчик итераций при успешном выполнении
@@ -114,7 +111,7 @@ public class CreateLayerInProject implements JavaDelegate {
     private void createLayer(String token,
                              long projectId,
                              LayerProjection layerForCreate,
-                             GpkgImportedLayer curLayer,
+                             GpkgLayer curLayer,
                              DelegateExecution delegateExecution,
                              int currentIteration) {
         String layerPublishUrl = baseHttpService.getGisServiceUrl() + "/projects/" + projectId + "/layers";

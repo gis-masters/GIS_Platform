@@ -10,17 +10,16 @@ import org.camunda.bpm.engine.delegate.JavaDelegate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgImportReport;
-import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgImportedTable;
-import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgPayloadData;
+import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgProcessReport;
+import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgTable;
 import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgTablesData;
 import ru.mycrg.data_service_contract.dto.ResourceProjection;
 import ru.mycrg.data_service_contract.dto.TableModelProjection;
 import ru.mycrg.data_service_contract.queue.request.gpkg.ImportGpkgAckInfoBackwardEvent;
 import ru.mycrg.data_service_contract.queue.request.gpkg.ImportGpkgEvent;
 import ru.mycrg.integration_service.bpmn.BaseHttpService;
-import ru.mycrg.integration_service.bpmn.gpkg.GpkgImportReportManager;
-import ru.mycrg.integration_service.bpmn.gpkg.ReportSendConfigDto;
+import ru.mycrg.integration_service.bpmn.gpkg.report.GpkgProcessContext;
+import ru.mycrg.integration_service.bpmn.gpkg.report.GpkgReportManager;
 
 import java.io.IOException;
 import java.net.URL;
@@ -42,10 +41,10 @@ public class CreateVectorTable implements JavaDelegate {
     private static final Logger log = LoggerFactory.getLogger(CreateVectorTable.class);
 
     private final BaseHttpService baseHttpService;
-    private final GpkgImportReportManager reportManager;
+    private final GpkgReportManager reportManager;
 
     public CreateVectorTable(BaseHttpService baseHttpService,
-                             GpkgImportReportManager reportManager) {
+                             GpkgReportManager reportManager) {
         this.baseHttpService = baseHttpService;
         this.reportManager = reportManager;
     }
@@ -61,14 +60,13 @@ public class CreateVectorTable implements JavaDelegate {
 
         log.debug("Класс {} начал работу", CreateVectorTable.class.getSimpleName());
 
-        GpkgImportReport importReport = (GpkgImportReport) delegateExecution.getVariable(
+        GpkgProcessReport importReport = (GpkgProcessReport) delegateExecution.getVariable(
                 EVENT_IMPORT_GPKG_REPORT_NAME);
-        GpkgPayloadData payload = importReport.getPayload();
 
         //Сетим таблицу по сути из gpkg в самом-самом начале обработки и её отчёт.
         GpkgTablesData gpkgTable = (GpkgTablesData) delegateExecution.getVariable(ENTITY_ID_VAR_NAME);
-        GpkgImportedTable tableReport = reportManager.findCurrentTable(payload.getTables(),
-                                                                       gpkgTable.getTableGpkgIdentifier());
+        GpkgTable tableReport = reportManager.findCurrentTable(importReport.getPayload().getTables(),
+                                                               gpkgTable.getTableGpkgIdentifier());
 
         ImportGpkgAckInfoBackwardEvent backward = (ImportGpkgAckInfoBackwardEvent)
                 delegateExecution.getVariable(EVENT_IMPORT_GPKG_BACKWARD_DATA_NAME);
@@ -77,15 +75,13 @@ public class CreateVectorTable implements JavaDelegate {
         ResourceProjection dataToTableCreate = backward.getTable();
 
         ImportGpkgEvent event = (ImportGpkgEvent) delegateExecution.getVariable(EVENT_VAR_NAME);
-        String businessKey = (String) delegateExecution.getVariable(BUSINESS_KEY_VAR_NAME);
-        ReportSendConfigDto rabbitDto = new ReportSendConfigDto(event.getProcessId(),
-                                                                event.getDbName(),
-                                                                businessKey,
-                                                                TASK_DONE);
+        GpkgProcessContext rabbitDto = new GpkgProcessContext(event.getProcessId(),
+                                                              event.getDbName(),
+                                                              TASK_DONE);
 
         if (dataToTableCreate == null) {
             String msg = "Не хватает информации для создания новой векторной таблицы.";
-            breakStepAndOut(msg, backward, tableReport.getOldTableIdentifier(), payload, rabbitDto);
+            breakStepAndOut(msg, backward, tableReport.getOldTableIdentifier(), importReport, rabbitDto);
 
             //Без информации о векторной таблицы мы не сможем, в том числе создать слой.
             //Есть необходимость "создавать дефолтные таблицы", но например без схемы таблицу не сделать
@@ -108,7 +104,7 @@ public class CreateVectorTable implements JavaDelegate {
 
                     gpkgTable.setTableNewIdentifier(newIdentifier);
 
-                    reportManager.updateTableRepByIdentifier(rabbitDto, payload, COMPLETED, newIdentifier,
+                    reportManager.updateTableRepByIdentifier(rabbitDto, importReport, COMPLETED, newIdentifier,
                                                              tableResponse.get().getTitle(),
                                                              tableReport.getOldTableIdentifier());
                 }
@@ -118,7 +114,7 @@ public class CreateVectorTable implements JavaDelegate {
             } else {
                 String msg = "Таблица не была создана. Подробнее в логе data-service.";
                 log.warn(msg);
-                breakStepAndOut(msg, backward, tableReport.getOldTableIdentifier(), payload, rabbitDto);
+                breakStepAndOut(msg, backward, tableReport.getOldTableIdentifier(), importReport, rabbitDto);
 
                 throw new BpmnError("noTablesCreated");
             }
@@ -191,14 +187,14 @@ public class CreateVectorTable implements JavaDelegate {
 
     //Избавиться от GpkgImportedTable table нужен только getOldTableIdentifier
     private void breakStepAndOut(String msg, ImportGpkgAckInfoBackwardEvent backward, String identifier,
-                                 GpkgPayloadData payload, ReportSendConfigDto rabbitDto) {
+                                 GpkgProcessReport processReport, GpkgProcessContext rabbitDto) {
         log.error(msg);
 
         List<String> messages = new ArrayList<>();
         messages.add(msg);
         messages.add(backward.getErrorMessage());
 
-        reportManager.updateTableRepByIdentifier(rabbitDto, payload, ERROR, messages, identifier);
+        reportManager.updateTableRepByIdentifier(rabbitDto, processReport, ERROR, messages, identifier);
     }
 
     private void normalizeDto(ResourceProjection table) {

@@ -10,22 +10,7 @@ import ru.mycrg.messagebus_contract.IEventHandler;
 import ru.mycrg.messagebus_contract.events.IMessageBusEvent;
 
 import static ru.mycrg.data_service_contract.enums.ProcessStatus.DONE;
-import static ru.mycrg.integration_service.bpmn.IJavaDelegateProperties.CHECK_STATUS_VAR_NAME;
-import static ru.mycrg.integration_service.bpmn.IJavaDelegateProperties.FAIL_REASON;
-
-/**
- * Обработчик AppendGpkgBackwardEvent от data-service в рамках BPMN экспорта GPKG.
- *
- * <p>Получает сообщение от data-service и коррелирует его с Camunda процессом.</p>
- *
- * <h3>Текущее поведение:</h3>
- * <ul>
- *   <li>Получает AppendGpkgBackwardEvent через MessageBusConsumer</li>
- *   <li>Извлекает businessKey.</li>
- *   <li>Отправляет сообщение в Camunda процесс через корреляцию</li>
- *   <li>В зависимости от получаемого статуса ивента переходим на разные ветки.</li>
- * </ul>
- */
+import static ru.mycrg.integration_service.bpmn.IJavaDelegateProperties.*;
 
 @Service
 public class AppendGpkgFileBackwardEventHandler implements IEventHandler {
@@ -55,6 +40,7 @@ public class AppendGpkgFileBackwardEventHandler implements IEventHandler {
             runtimeService.createMessageCorrelation("Mes_FromDataAppendingFiles")
                           .processInstanceBusinessKey(event.getBusinessKey())
                           .setVariable(CHECK_STATUS_VAR_NAME, "sunIsShining")
+                          .setVariable(FEATURES_FILES_LIST_VAR_NAME, event.getFiles())
                           .correlateWithResult();
         } else {
             runtimeService.createMessageCorrelation("Mes_FromDataAppendingFiles")

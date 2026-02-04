@@ -10,7 +10,10 @@ import org.camunda.bpm.engine.delegate.JavaDelegate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.*;
+import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgProcessReport;
+import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgStyle;
+import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgSvg;
+import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgTablesData;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.data_service_contract.queue.request.gpkg.ImportGpkgAckInfoBackwardEvent;
 import ru.mycrg.data_service_contract.queue.request.gpkg.ImportGpkgCopyDataBackwardEvent;
@@ -18,8 +21,8 @@ import ru.mycrg.data_service_contract.queue.request.gpkg.ImportGpkgEvent;
 import ru.mycrg.gis_service_contract.dto.LayerProjection;
 import ru.mycrg.integration_service.bpmn.BaseHttpService;
 import ru.mycrg.integration_service.bpmn.gpkg.GeoServerSpeaker;
-import ru.mycrg.integration_service.bpmn.gpkg.GpkgImportReportManager;
-import ru.mycrg.integration_service.bpmn.gpkg.ReportSendConfigDto;
+import ru.mycrg.integration_service.bpmn.gpkg.report.GpkgProcessContext;
+import ru.mycrg.integration_service.bpmn.gpkg.report.GpkgReportManager;
 
 import java.io.IOException;
 import java.net.URL;
@@ -51,11 +54,11 @@ public class AddDataOnGeoserver implements JavaDelegate {
 
     private final GeoServerSpeaker geoServerSpeaker;
     private final BaseHttpService baseHttpService;
-    private final GpkgImportReportManager reportManager;
+    private final GpkgReportManager reportManager;
 
     public AddDataOnGeoserver(GeoServerSpeaker geoServerSpeaker,
                               BaseHttpService baseHttpService,
-                              GpkgImportReportManager reportManager) {
+                              GpkgReportManager reportManager) {
         this.geoServerSpeaker = geoServerSpeaker;
         this.baseHttpService = baseHttpService;
         this.reportManager = reportManager;
@@ -73,16 +76,13 @@ public class AddDataOnGeoserver implements JavaDelegate {
 
         log.debug("Класс {} начал работу", AddDataOnGeoserver.class.getSimpleName());
         ImportGpkgEvent event = (ImportGpkgEvent) delegateExecution.getVariable(EVENT_VAR_NAME);
-        String businessKey = (String) delegateExecution.getVariable(BUSINESS_KEY_VAR_NAME);
-        ReportSendConfigDto rabbitDto = new ReportSendConfigDto(event.getProcessId(),
-                                                                event.getDbName(),
-                                                                businessKey,
-                                                                TASK_DONE);
+        GpkgProcessContext rabbitDto = new GpkgProcessContext(event.getProcessId(),
+                                                              event.getDbName(),
+                                                              TASK_DONE);
 
         try {
-            GpkgImportReport importReport = (GpkgImportReport) delegateExecution.getVariable(
+            GpkgProcessReport importReport = (GpkgProcessReport) delegateExecution.getVariable(
                     EVENT_IMPORT_GPKG_REPORT_NAME);
-            GpkgPayloadData payload = importReport.getPayload();
             GpkgTablesData currentTable = (GpkgTablesData) delegateExecution.getVariable(ENTITY_ID_VAR_NAME);
 
             ImportGpkgCopyDataBackwardEvent copyAnswer = (ImportGpkgCopyDataBackwardEvent)
@@ -92,13 +92,13 @@ public class AddDataOnGeoserver implements JavaDelegate {
                 if (Objects.requireNonNull(copyAnswer.getStatus()) == TASK_DONE) {
 
                     reportManager.updateTableRepByIdentifier(rabbitDto,
-                                                             payload,
+                                                             importReport,
                                                              COMPLETED,
                                                              copyAnswer,
                                                              currentTable.getTableGpkgIdentifier());
                 } else {
                     reportManager.updateTableRepByIdentifier(rabbitDto,
-                                                             payload,
+                                                             importReport,
                                                              ERROR,
                                                              copyAnswer.getErrorReport().getMessages(),
                                                              currentTable.getTableGpkgIdentifier());
@@ -108,13 +108,13 @@ public class AddDataOnGeoserver implements JavaDelegate {
             ImportGpkgAckInfoBackwardEvent backward = (ImportGpkgAckInfoBackwardEvent)
                     delegateExecution.getVariable(EVENT_IMPORT_GPKG_BACKWARD_DATA_NAME);
 
-            List<GpkgImportedStyles> styles = backward.getStyles();
+            List<GpkgStyle> styles = backward.getStyles();
             List<LayerProjection> lp = backward.getLayerProjections();
-            reportManager.createStylesReport(rabbitDto, payload, styles);
+            reportManager.createStylesReport(rabbitDto, importReport, styles);
 
-            for (GpkgImportedStyles style: styles) {
-                for (GpkgImportedSvg svg: style.getSvgs()) {
-                    processSingleSvg(svg, style, event.getToken(), payload, rabbitDto);
+            for (GpkgStyle style: styles) {
+                for (GpkgSvg svg: style.getSvgs()) {
+                    processSingleSvg(svg, style, event.getToken(), importReport, rabbitDto);
                 }
 
                 String modifiedStyleName = geoServerSpeaker.addStyleOnGeoserverRecursive(event.getToken(),
@@ -122,12 +122,12 @@ public class AddDataOnGeoserver implements JavaDelegate {
                                                                                          style.getName(),
                                                                                          style.getBody());
 
-                reportManager.updateStyleReportByIdentifier(rabbitDto, payload,
+                reportManager.updateStyleReportByIdentifier(rabbitDto, importReport,
                                                             COMPLETED, "hidden body: ********", style.getTitle());
 
                 if (!style.getName().equals(modifiedStyleName)) {
                     handleStyleNameChange(style, modifiedStyleName, lp, event, currentTable,
-                                          backward, delegateExecution, currentIteration, payload, rabbitDto);
+                                          backward, delegateExecution, currentIteration, importReport, rabbitDto);
                 }
             }
 
@@ -144,7 +144,7 @@ public class AddDataOnGeoserver implements JavaDelegate {
         }
     }
 
-    private void handleStyleNameChange(GpkgImportedStyles style,
+    private void handleStyleNameChange(GpkgStyle style,
                                        String modifiedStyleName,
                                        List<LayerProjection> lp,
                                        ImportGpkgEvent event,
@@ -152,12 +152,12 @@ public class AddDataOnGeoserver implements JavaDelegate {
                                        ImportGpkgAckInfoBackwardEvent backward,
                                        DelegateExecution delegateExecution,
                                        int currentIteration,
-                                       GpkgPayloadData payload,
-                                       ReportSendConfigDto rabbitDto) throws Exception {
+                                       GpkgProcessReport processReport,
+                                       GpkgProcessContext rabbitDto) throws Exception {
         log.debug("Запишем новый стиль и слой для публикации и в схему векторной таблицы");
 
         reportManager.updateStyleReportByIdentifier(rabbitDto,
-                                                    payload,
+                                                    processReport,
                                                     "На геосервере создан новый стиль с именем " + modifiedStyleName,
                                                     style.getTitle());
 
@@ -176,33 +176,34 @@ public class AddDataOnGeoserver implements JavaDelegate {
         style.setName(modifiedStyleName);
 
         String newMsg = "Имя стиля в схеме будет изменено на: " + modifiedStyleName;
-        reportManager.updateTableRepByIdentifier(rabbitDto, payload, newMsg, currentTable.getTableGpkgIdentifier());
+        reportManager.updateTableRepByIdentifier(rabbitDto, processReport, newMsg,
+                                                 currentTable.getTableGpkgIdentifier());
     }
 
-    private void processSingleSvg(GpkgImportedSvg svg,
-                                  GpkgImportedStyles style,
+    private void processSingleSvg(GpkgSvg svg,
+                                  GpkgStyle style,
                                   String token,
-                                  GpkgPayloadData payload,
-                                  ReportSendConfigDto rabbitDto) throws Exception {
+                                  GpkgProcessReport importReport,
+                                  GpkgProcessContext rabbitDto) throws Exception {
         String modifiedSvgPath = geoServerSpeaker.addSvgOnGeoserverRecursive(token, svg.getTitle(), svg.getBody());
 
-        reportManager.hideSvgBody(payload, style.getTitle(), svg.getTitle());
+        reportManager.hideSvgBody(importReport, style.getTitle(), svg.getTitle());
 
         if (!svg.getTitle().equals(modifiedSvgPath)) {
-            handleSvgNameChange(svg, style, modifiedSvgPath, payload, rabbitDto);
+            handleSvgNameChange(svg, style, modifiedSvgPath, importReport, rabbitDto);
         }
 
-        reportManager.updateSvgReport(payload, COMPLETED, style.getTitle(), svg.getTitle());
+        reportManager.updateSvgReport(importReport, COMPLETED, style.getTitle(), svg.getTitle());
     }
 
-    private void handleSvgNameChange(GpkgImportedSvg svg,
-                                     GpkgImportedStyles style,
+    private void handleSvgNameChange(GpkgSvg svg,
+                                     GpkgStyle style,
                                      String modifiedSvgPath,
-                                     GpkgPayloadData payload,
-                                     ReportSendConfigDto rabbitDto) {
+                                     GpkgProcessReport importReport,
+                                     GpkgProcessContext rabbitDto) {
         String originSvgPath = svg.getTitle();
 
-        reportManager.updateSvgTitle(rabbitDto, payload, style.getTitle(), modifiedSvgPath, svg.getTitle());
+        reportManager.updateSvgTitle(rabbitDto, importReport, style.getTitle(), modifiedSvgPath, svg.getTitle());
 
         String msg = "Запишем новую SVG '" + modifiedSvgPath + "' в стиль.";
         log.debug(msg);
@@ -210,7 +211,7 @@ public class AddDataOnGeoserver implements JavaDelegate {
         style.setBody(style.getBody().replace(originSvgPath, modifiedSvgPath));
         svg.setTitle(modifiedSvgPath);
 
-        reportManager.updateStyleReportByIdentifier(rabbitDto, payload, msg, style.getTitle());
+        reportManager.updateStyleReportByIdentifier(rabbitDto, importReport, msg, style.getTitle());
     }
 
     private void changeVectorTableSchemaStyleName(String token,

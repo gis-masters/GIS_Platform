@@ -10,7 +10,8 @@ import ru.mycrg.acceptance.auth_service.AuthorizationBase;
 import ru.mycrg.acceptance.data_service.TestFilesManager;
 import ru.mycrg.acceptance.data_service.dto.FileDescriptionModel;
 import ru.mycrg.common_contracts.generated.data_service.gpkg.export.ExportGpkgPayload;
-import ru.mycrg.common_contracts.generated.data_service.gpkg.export.GpkgExportDetailsModel;
+
+import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgProcessReport;
 import ru.mycrg.data_service_contract.dto.ExportRequestModel;
 import ru.mycrg.data_service_contract.dto.ExportResourceModel;
 import ru.mycrg.data_service_contract.enums.ProcessStatus;
@@ -111,8 +112,8 @@ public class ProcessesStepDefinitions extends BaseStepsDefinitions {
     @And("размер полученного gpkg {int}")
     public void sizeOfGpkgFile(int size) {
         getCurrentProcess();
-        GpkgExportDetailsModel details = response.jsonPath().getObject("details", GpkgExportDetailsModel.class);
-        String fileName = details.getPathToGpkgFile();
+        GpkgProcessReport details = response.jsonPath().getObject("details", GpkgProcessReport.class);
+        String fileName = details.getFilePath();
         fileName = fileName.substring(fileName.lastIndexOf('/') + 1);
 
         response = getBaseRequestWithCurrentCookie()

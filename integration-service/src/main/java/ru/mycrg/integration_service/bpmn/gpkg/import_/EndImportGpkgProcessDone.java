@@ -5,11 +5,11 @@ import org.camunda.bpm.engine.delegate.JavaDelegate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgImportReport;
+import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgProcessReport;
 import ru.mycrg.data_service_contract.queue.request.gpkg.ImportGpkgClearTemplatesEvent;
 import ru.mycrg.data_service_contract.queue.request.gpkg.ImportGpkgEvent;
-import ru.mycrg.integration_service.bpmn.gpkg.GpkgImportReportManager;
-import ru.mycrg.integration_service.bpmn.gpkg.ReportSendConfigDto;
+import ru.mycrg.integration_service.bpmn.gpkg.report.GpkgProcessContext;
+import ru.mycrg.integration_service.bpmn.gpkg.report.GpkgReportManager;
 import ru.mycrg.messagebus_contract.IMessageBusProducer;
 
 import static ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgProcessStatus.COMPLETED;
@@ -35,9 +35,9 @@ public class EndImportGpkgProcessDone implements JavaDelegate {
     private static final Logger log = LoggerFactory.getLogger(EndImportGpkgProcessDone.class);
 
     private final IMessageBusProducer messageBus;
-    private final GpkgImportReportManager reportManager;
+    private final GpkgReportManager reportManager;
 
-    public EndImportGpkgProcessDone(IMessageBusProducer messageBus, GpkgImportReportManager reportManager) {
+    public EndImportGpkgProcessDone(IMessageBusProducer messageBus, GpkgReportManager reportManager) {
         this.messageBus = messageBus;
         this.reportManager = reportManager;
     }
@@ -47,18 +47,17 @@ public class EndImportGpkgProcessDone implements JavaDelegate {
         log.debug("Класс {} начал работать.", EndImportGpkgProcessDone.class.getSimpleName());
 
         ImportGpkgEvent event = (ImportGpkgEvent) delegateExecution.getVariable(EVENT_VAR_NAME);
-        GpkgImportReport importReport = (GpkgImportReport) delegateExecution.getVariable(EVENT_IMPORT_GPKG_REPORT_NAME);
-        String businessKey = (String) delegateExecution.getVariable(BUSINESS_KEY_VAR_NAME);
+        GpkgProcessReport importReport = (GpkgProcessReport) delegateExecution.getVariable(
+                EVENT_IMPORT_GPKG_REPORT_NAME);
 
         String schema = (String) delegateExecution.getVariable(EXTRACTED_SCHEMA_NAME);
         messageBus.produce(new ImportGpkgClearTemplatesEvent(event.getDbName(),
                                                              schema,
                                                              event.getFileId()));
 
-        ReportSendConfigDto rabbitDto = new ReportSendConfigDto(event.getProcessId(),
-                                                                event.getDbName(),
-                                                                businessKey,
-                                                                DONE);
+        GpkgProcessContext rabbitDto = new GpkgProcessContext(event.getProcessId(),
+                                                              event.getDbName(),
+                                                              DONE);
 
         reportManager.finalizeReport(rabbitDto, importReport, COMPLETED, "Импорт успешно завершён.");
     }

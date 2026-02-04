@@ -15,18 +15,6 @@ import java.util.List;
 
 import static ru.mycrg.integration_service.bpmn.IJavaDelegateProperties.*;
 
-/**
- * В рамках BPMN экспорта GPKG засылаем информацию которую нужно добавить. (седьмой в процессе)
- *
- * <p>Реализован.</p>
- *
- * <h3>Поведение:</h3>
- * <ul>
- *   <li>Просит data-service добавить файлы к GeoPackage.</li>
- * </ul>
- *
- */
-
 @Service("askDataAppendFiles")
 public class AskDataAppendFiles implements JavaDelegate {
 

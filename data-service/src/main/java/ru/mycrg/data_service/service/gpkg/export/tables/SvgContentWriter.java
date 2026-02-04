@@ -3,8 +3,8 @@ package ru.mycrg.data_service.service.gpkg.export.tables;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
-import ru.mycrg.data_service_contract.dto.gpkg.StyleWithIcons;
-import ru.mycrg.data_service_contract.dto.gpkg.SvgIcon;
+import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgStyle;
+import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgSvg;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -34,18 +34,18 @@ public class SvgContentWriter implements ICrgGpkgTables {
         }
     }
 
-    public void insert(Connection connection, StyleWithIcons styleAndSvg) throws SQLException {
-        List<SvgIcon> svgIcons = styleAndSvg.getSvg();
+    public void insert(Connection connection, GpkgStyle styleAndSvg) throws SQLException {
+        List<GpkgSvg> svgIcons = styleAndSvg.getSvgs();
 
         //нужно постараться батчем
-        for (SvgIcon svg: svgIcons) {
+        for (GpkgSvg svg: svgIcons) {
             String insertSql = "INSERT INTO " + GPKG_SVG_CONTENT_TABLE +
                     " (" + GPKG_SVG_STYLE_NAME_COLUMN + ", " + GPKG_SVG_SVG_NAME_COLUMN + ", " + GPKG_SVG_SVG_BODY_COLUMN + ")" +
                     " VALUES (?, ?, ?)";
 
             try (PreparedStatement stmt = connection.prepareStatement(insertSql)) {
                 stmt.setString(1, styleAndSvg.getName());
-                stmt.setString(2, svg.getName());
+                stmt.setString(2, svg.getTitle());
                 stmt.setString(3, svg.getBody());
 
                 stmt.executeUpdate();

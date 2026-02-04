@@ -4,14 +4,14 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GpkgImportedStyles extends GpkgImportBaseDto implements Serializable {
+public class GpkgStyle extends GpkgReportBaseDto implements Serializable {
 
     private Long createdTableId;
     private String name;
     private String body;
-    private List<GpkgImportedSvg> svgs = new ArrayList<>();
+    private List<GpkgSvg> svgs = new ArrayList<>();
 
-    public GpkgImportedStyles() {
+    public GpkgStyle() {
     }
 
     public Long getCreatedTableId() {
@@ -38,11 +38,11 @@ public class GpkgImportedStyles extends GpkgImportBaseDto implements Serializabl
         this.body = body;
     }
 
-    public List<GpkgImportedSvg> getSvgs() {
+    public List<GpkgSvg> getSvgs() {
         return svgs != null ? svgs : new ArrayList<>();
     }
 
-    public void setSvgs(List<GpkgImportedSvg> svgs) {
+    public void setSvgs(List<GpkgSvg> svgs) {
         this.svgs = svgs;
     }
 

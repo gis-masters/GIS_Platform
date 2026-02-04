@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import ru.mycrg.auth_facade.IAuthenticationFacade;
-import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgImportReport;
+import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgProcessReport;
 import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgPayloadData;
 import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgTablesData;
 import ru.mycrg.data_service.dao.ddl.schemas.DdlSchemas;
@@ -48,7 +48,7 @@ import static ru.mycrg.data_service.util.JsonConverter.mapper;
 import static ru.mycrg.data_service_contract.enums.FileType.GPKG;
 
 @Component
-public class GpkgImporterExecutor implements IExecutor<GpkgImportReport>, IFilePlacer {
+public class GpkgImporterExecutor implements IExecutor<GpkgProcessReport>, IFilePlacer {
 
     private final Logger log = LoggerFactory.getLogger(GpkgImporterExecutor.class);
 
@@ -65,7 +65,7 @@ public class GpkgImporterExecutor implements IExecutor<GpkgImportReport>, IFileP
 
     private ProcessModel processModel;
     private DataFromGpkgPlacementModel dataFromGpkgPlacementModel;
-    private GpkgImportReport importReport;
+    private GpkgProcessReport importReport;
 
     public GpkgImporterExecutor(IMessageBusProducer messageBus,
                                 IAuthenticationFacade authenticationFacade,
@@ -91,7 +91,7 @@ public class GpkgImporterExecutor implements IExecutor<GpkgImportReport>, IFileP
 
     @Override
     @Transactional
-    public GpkgImportReport execute() {
+    public GpkgProcessReport execute() {
         String title = importReport.getFileTitle().substring(0, importReport.getFileTitle().lastIndexOf('.'));
 
         String msg = "Процесс импорта GPKG в проект запущен.";
@@ -167,7 +167,7 @@ public class GpkgImporterExecutor implements IExecutor<GpkgImportReport>, IFileP
     }
 
     @Override
-    public IExecutor<GpkgImportReport> initialize(Object data) {
+    public IExecutor<GpkgProcessReport> initialize(Object data) {
         try {
             this.dataFromGpkgPlacementModel = mapper.convertValue(data,
                                                                   DataFromGpkgPlacementModel.class);
@@ -182,20 +182,20 @@ public class GpkgImporterExecutor implements IExecutor<GpkgImportReport>, IFileP
     }
 
     @Override
-    public GpkgImportReport getReport() {
+    public GpkgProcessReport getReport() {
         return this.importReport;
     }
 
     @Override
-    public IExecutor<GpkgImportReport> setPayload(ProcessModel processModel) {
+    public IExecutor<GpkgProcessReport> setPayload(ProcessModel processModel) {
         this.processModel = processModel;
 
         return this;
     }
 
     @Override
-    public IExecutor<GpkgImportReport> validate() {
-        this.importReport = new GpkgImportReport();
+    public IExecutor<GpkgProcessReport> validate() {
+        this.importReport = new GpkgProcessReport();
         UUID fileId = dataFromGpkgPlacementModel.getFileId();
         try {
             File file = fileRepository
