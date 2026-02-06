@@ -15,6 +15,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.List;
 
+import static org.apache.http.HttpStatus.SC_NO_CONTENT;
 import static org.junit.Assert.*;
 import static ru.mycrg.acceptance.JsonMapper.asJsonNode;
 import static ru.mycrg.acceptance.data_service.TestFilesManager.getFile;
@@ -101,6 +102,8 @@ public class TemplatesStepsDefinitions extends BaseStepsDefinitions {
                 .when().
                         log().ifValidationFails().
                         delete();
+
+        assertEquals(SC_NO_CONTENT, response.statusCode());
     }
 
     @And("среди шаблонов печати есть шаблон с именем {string}")

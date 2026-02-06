@@ -5,25 +5,20 @@ meta {
 }
 
 post {
-  url: http://localhost:8090/temlates
+  url: http://10.10.10.131:8090/temlates
   body: multipartForm
   auth: bearer
 }
 
 headers {
-  Content-Type: application/json
+  Content-Type: multipart/form-data
 }
 
 auth:bearer {
-  token: 1
+  token: ey
 }
 
 body:multipart-form {
-  dto: {"schema":"jsonNode","name":"","title":""}
-  file: realFile->MultipartFile
-}
-
-settings {
-  encodeUrl: false
-  timeout: 0
+  dto: {"name":"featureExtractFullFlat","title":"featureExtractFullFlat"} @contentType(application/json)
+  file: @file(/path/file.docx) @contentType(multipart/form-data)
 }

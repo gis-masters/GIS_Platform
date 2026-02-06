@@ -110,7 +110,7 @@ public class TemplateCrudController {
 
         templateService.deleteTemplate(name);
 
-        return ResponseEntity.ok(ResponseEntity.noContent());
+        return ResponseEntity.noContent().build();
     }
 
     private static void validateCreateTemplateRequest(TemplateCreateDto dto) {
