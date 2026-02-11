@@ -12,7 +12,7 @@ import static ru.mycrg.common_contracts.generated.report_service.ReportOutputFor
 
 public class ReportRequestBuilder {
 
-    public static String DEFAULT_SYSTEM_TEMPLATE_NAME = "excerpt_about_object";
+    public static String DEFAULT_SYSTEM_TEMPLATE_NAME = "featureExtractMini";
 
     public static ReportMainDto prepareReport(String dataTemplate) {
         switch (dataTemplate) {
@@ -115,12 +115,13 @@ public class ReportRequestBuilder {
         //просто чёрный квадрат
         String base64Picture = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR4AWJiYGD4DwAAAP//cGajQwAAAAZJREFUAwABDgEC81VxbAAAAABJRU5ErkJggg==";
         Map<String, String> media = new HashMap<>() {{
-            put("{%picture%}", base64Picture);
+            put("{%map%}", base64Picture);
         }};
 
         Map<String, Object> data = new HashMap<>(Map.of("header", "jujutsu",
                                                         "date", "01.11.794",
                                                         "crs", "173",
+                                                        "map", "{%map%}",
                                                         "attributes", List.of(Map.of("title", "номер",
                                                                                      "value", "itadakimas")),
                                                         "coordinates", List.of(Map.of("num", 1,
