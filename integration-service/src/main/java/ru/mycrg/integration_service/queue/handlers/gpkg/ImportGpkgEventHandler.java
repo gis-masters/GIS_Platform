@@ -6,7 +6,7 @@ import org.camunda.bpm.engine.variable.Variables;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgPayloadData;
+import ru.mycrg.common_contracts.generated.data_service.gpkg.contents.GpkgContentsBaseDto;
 import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgProcessReport;
 import ru.mycrg.data_service_contract.queue.request.gpkg.ImportGpkgClearTemplatesEvent;
 import ru.mycrg.data_service_contract.queue.request.gpkg.ImportGpkgEvent;
@@ -16,13 +16,17 @@ import ru.mycrg.messagebus_contract.IEventHandler;
 import ru.mycrg.messagebus_contract.IMessageBusProducer;
 import ru.mycrg.messagebus_contract.events.IMessageBusEvent;
 
+import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
-import static ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgTableType.VECTOR_DATA_TABLE;
+import static ru.mycrg.common_contracts.enums.GpkgContentsDataType.FEATURES;
+import static ru.mycrg.common_contracts.enums.GpkgContentsDataType.TILES;
 import static ru.mycrg.data_service_contract.enums.ProcessStatus.ERROR;
 import static ru.mycrg.integration_service.bpmn.CamundaVariables.asJava;
 import static ru.mycrg.integration_service.bpmn.IJavaDelegateProperties.*;
 import static ru.mycrg.integration_service.bpmn.enums.BpmnProcessKey.GPKG_IMPORT_PROCESS;
+import static ru.mycrg.integration_service.bpmn.enums.GpkgImportProcessPermittedStatus.DEFAULT;
 
 @Service
 public class ImportGpkgEventHandler implements IEventHandler {
@@ -49,30 +53,28 @@ public class ImportGpkgEventHandler implements IEventHandler {
     @Override
     public void handle(IMessageBusEvent messageBusEvent) {
         log.debug("Старт процесса импорта GPKG!");
+
         ImportGpkgEvent event = (ImportGpkgEvent) messageBusEvent;
-
-        GpkgProcessReport importReport = event.getGpkgProcessReport();
-
-        GpkgPayloadData subPayload = importReport.getPayload();
-
-        String businessKey = UUID.randomUUID().toString();
-
-        long neededCyclesCount = subPayload.getTablesInGpkg().stream()
-                                           .filter(table -> table.getType() == VECTOR_DATA_TABLE)
-                                           .count();
-
         try {
+            GpkgProcessReport importReport = event.getGpkgProcessReport();
+
+            List<GpkgContentsBaseDto> dataToImport = importReport.getPayload().getGpkgContents();
+            String workerType = getWorkerType(dataToImport);
+
             VariableMap variables = Variables.createVariables()
-                                             .putValue(EVENT_VAR_NAME, asJava(event))
-                                             .putValue(EVENT_IMPORT_GPKG_REPORT_NAME, asJava(importReport))
+                                             .putValue(IMPORT_GPKG_COUNT_HTTP_ERRORS, 0)
 
-                                             .putValue(NEEDED_CYCLES_COUNT_VAR_NAME, neededCyclesCount)
-                                             .putValue(PERFORMED_CYCLES_COUNT_VAR_NAME, 0)
-                                             .putValue(ITERATION_COUNTER_VAR_NAME, 0)
-                                             .putValue(FILES_CYCLES_COUNT_VAR_NAME, 0)
-                                             .putValue(FILES_CYCLES_COUNT_DONE_VAR_NAME, 0)
-                                             .putValue(BUSINESS_KEY_VAR_NAME, businessKey);
+                                             .putValue(IMPORT_GPKG_EVENT, asJava(event))
+                                             .putValue(IMPORT_GPKG_EVENT_REPORT, asJava(importReport))
 
+                                             .putValue(CHECK_STATUS_VAR_NAME, DEFAULT.getValue())
+
+                                             .putValue(IMPORT_GPKG_NEEDED_CYCLES_COUNT_RASTER, 0)
+                                             .putValue(IMPORT_GPKG_PERFORMED_CYCLES_COUNT_RASTER, 0)
+
+                                             .putValue(IMPORT_GPKG_WORKER_TYPE, workerType);
+
+            String businessKey = String.valueOf(UUID.randomUUID());
             bpmnRuntimeService.startProcessInstanceByKey(GPKG_IMPORT_PROCESS.getValue(),
                                                          businessKey,
                                                          variables);
@@ -90,5 +92,26 @@ public class ImportGpkgEventHandler implements IEventHandler {
 
             reportManager.finalizeReport(processContext, msg);
         }
+    }
+
+    /**
+     * Было создано два Call Activity для отдельной (возможно многопоточной) работы с растрами и векторами. Чтобы не
+     * запускать кубик который нам может не понадобиться -> фильтруем объекты. Можно было бы внутри каждого кубика
+     * делать "быстрый выход если не с чем работать", но текущее место кажется корректным.
+     */
+    private String getWorkerType(List<GpkgContentsBaseDto> dataToImport) {
+        boolean hasRaster = dataToImport.stream()
+                                        .map(GpkgContentsBaseDto::getDataType)
+                                        .filter(Objects::nonNull)
+                                        .anyMatch(dataType -> TILES == dataType);
+
+        boolean hasVector = dataToImport.stream()
+                                        .map(GpkgContentsBaseDto::getDataType)
+                                        .filter(Objects::nonNull)
+                                        .anyMatch(dataType -> FEATURES == dataType);
+
+        return hasRaster && !hasVector ? TILES.getDataTypeAsString() :
+                hasVector && !hasRaster ? FEATURES.getDataTypeAsString() :
+                        FEATURES.getDataTypeAsString() + "And" + TILES.getDataTypeAsString();
     }
 }

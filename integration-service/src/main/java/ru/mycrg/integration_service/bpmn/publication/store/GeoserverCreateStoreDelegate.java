@@ -46,6 +46,8 @@ public class GeoserverCreateStoreDelegate implements JavaDelegate {
                 return;
             }
 
+            log.debug("response публикации файлов {}", response);
+
             if (response.isSuccessful()) {
                 log.debug("В рабочем пространстве: '{}' успешно создано хранилище: [{}]", workspaceName, storeName);
 
@@ -67,7 +69,7 @@ public class GeoserverCreateStoreDelegate implements JavaDelegate {
             }
         } catch (Exception e) {
             String msg = "На геосервере не удалось выполнить создание хранилища на основе файла.";
-            log.error("{} По причине: {}", msg, e.getCause().getMessage());
+            log.error("{} По причине: {}", msg, e.getMessage());
 
             execution.setVariable(FAIL_REASON, msg);
             execution.setVariable(IS_CREATED_VAR_NAME, false);

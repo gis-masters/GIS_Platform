@@ -124,7 +124,13 @@ public class ImportGpkgEvent extends DefaultMessageBusRequestEvent implements Se
         return "{" +
                 "\"processId\":" + (processId == null ? "null" : "\"" + processId + "\"") + ", " +
                 "\"dbName\":" + (dbName == null ? "null" : "\"" + dbName + "\"") + ", " +
-                "\"importGpkgReport\":" + (gpkgProcessReport == null ? "null" : "\"" + gpkgProcessReport + "\"") + ", " +
+                "\"token\":" + (token == null ? "null" : "\"" + token + "\"") + ", " +
+                "\"creatorLogin\":" + (creatorLogin == null ? "null" : "\"" + creatorLogin + "\"") + ", " +
+                "\"fileId\":" + (fileId == null ? "null" : fileId) + ", " +
+                "\"projectId\":" + (projectId == null ? "null" : "\"" + projectId + "\"") + ", " +
+                "\"targetDatasetIdentifier\":" + (targetDatasetIdentifier == null ? "null" : "\"" + targetDatasetIdentifier + "\"") + ", " +
+                "\"targetDatasetTitle\":" + (targetDatasetTitle == null ? "null" : "\"" + targetDatasetTitle + "\"") + ", " +
+                "\"gpkgProcessReport\":" + (gpkgProcessReport == null ? "null" : gpkgProcessReport) +
                 "}";
     }
 }

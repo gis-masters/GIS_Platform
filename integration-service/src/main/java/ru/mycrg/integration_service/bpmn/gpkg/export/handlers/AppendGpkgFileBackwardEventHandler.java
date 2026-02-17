@@ -40,7 +40,7 @@ public class AppendGpkgFileBackwardEventHandler implements IEventHandler {
             runtimeService.createMessageCorrelation("Mes_FromDataAppendingFiles")
                           .processInstanceBusinessKey(event.getBusinessKey())
                           .setVariable(CHECK_STATUS_VAR_NAME, "sunIsShining")
-                          .setVariable(FEATURES_FILES_LIST_VAR_NAME, event.getFiles())
+                          .setVariable(IMPORT_GPKG_FEATURES_WITH_FILES_LIST, event.getFiles())
                           .correlateWithResult();
         } else {
             runtimeService.createMessageCorrelation("Mes_FromDataAppendingFiles")

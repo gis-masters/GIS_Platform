@@ -2,11 +2,13 @@ package ru.mycrg.integration_service.bpmn.publication.gis_layer;
 
 import java.io.Serializable;
 
+//TODO: у нас 4 dto для слоёв. УДАЛИТЬ ВСЕ КРОМЕ ОДНОЙ! (LayerProjection, LayerCreateDto)
 public class LayerPublicationDto implements Serializable {
 
     private String type;
     private String mode;
     private Long projectId;
+    private Long parentId;
     private String title;
     private String resourceId;
     private String nativeName;
@@ -66,6 +68,14 @@ public class LayerPublicationDto implements Serializable {
 
     public void setProjectId(Long projectId) {
         this.projectId = projectId;
+    }
+
+    public Long getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(Long parentId) {
+        this.parentId = parentId;
     }
 
     public String getType() {
@@ -186,6 +196,7 @@ public class LayerPublicationDto implements Serializable {
                 "\"type\":" + (type == null ? "null" : "\"" + type + "\"") + ", " +
                 "\"mode\":" + (mode == null ? "null" : "\"" + mode + "\"") + ", " +
                 "\"projectId\":" + (projectId == null ? "null" : "\"" + projectId + "\"") + ", " +
+                "\"parentId\":" + (parentId == null ? "null" : "\"" + parentId + "\"") + ", " +
                 "\"title\":" + (title == null ? "null" : "\"" + title + "\"") + ", " +
                 "\"resourceId\":" + (resourceId == null ? "null" : "\"" + resourceId + "\"") + ", " +
                 "\"nativeName\":" + (nativeName == null ? "null" : "\"" + nativeName + "\"") + ", " +

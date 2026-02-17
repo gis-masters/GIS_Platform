@@ -1,269 +1,303 @@
 export interface SpatialReferenceSystem {
-    authName: string;
-    authSrid: number;
-    srtext: string;
-    proj4Text: string;
+  authName: string;
+  authSrid: number;
+  srtext: string;
+  proj4Text: string;
 }
 
 export interface DatasetAndTableModel {
-    datasetTitle: string;
-    datasetIdentifier: string;
-    tableTitle: string;
-    tableName: string;
+  datasetTitle: string;
+  datasetIdentifier: string;
+  tableTitle: string;
+  tableName: string;
 }
 
 export interface FileMetadata<T> {
-    id: string;
-    payload: T;
+  id: string;
+  payload: T;
 }
 
 export interface FileResponse {
-    id: string;
-    title: string;
-    size: number;
-    extension: string;
-    path: string;
-    contentType: string;
-    intents: string;
-    createdBy: string;
-    createdAt: string;
-    signed: boolean;
-    expired: boolean;
-    resourceType: string;
-    resourceQualifier: any;
+  id: string;
+  title: string;
+  size: number;
+  extension: string;
+  path: string;
+  contentType: string;
+  intents: string;
+  createdBy: string;
+  createdAt: string;
+  signed: boolean;
+  expired: boolean;
+  resourceType: string;
+  resourceQualifier: any;
 }
 
 export interface GeometryValidationResultDto {
-    message: string;
-    valid: boolean;
+  message: string;
+  valid: boolean;
 }
 
 export interface LookupModel {
-    key: string;
-    payload: LookupPayload;
+  key: string;
+  payload: LookupPayload;
 }
 
 export interface LookupPayload {
-    type: string;
-    payload: any;
+  type: string;
+  payload: any;
 }
 
 export interface TaskLogDto {
-    eventType: string;
-    taskId: number;
-    createdBy: number;
+  eventType: string;
+  taskId: number;
+  createdBy: number;
 }
 
-export interface GpkgFileMetadata extends FileMetadata<GpkgTablesData[]> {
-    payload: GpkgTablesData[];
+export interface DataFromGpkgPlacementModel {
+  fileId: string;
+  projectId: number;
+  layersPlacement: GpkgLayersPlacementModel;
+}
+
+export interface GpkgFileMetadata extends FileMetadata<GpkgContentsBaseDto[]> {
+  payload: GpkgContentsBaseDtoUnion[];
+}
+
+export interface GpkgLayersPlacementModel {
+  rasterLayers: GpkgTile[];
+  vectorLayers: string[];
+}
+
+export interface GpkgTile extends GpkgReportBaseDto, Serializable {
+  libraryIdentifier: string;
+  documentId: number;
+  field: string;
+  gpkgLayerTableName: string;
+  gpkgMediaReference: number;
+  srs: string;
+  pathAfterImport: string;
+}
+
+export interface GpkgContentsAttributes extends GpkgContentsBaseDto {
+  type: 'attributes';
+  crg: boolean;
+}
+
+export interface GpkgContentsBaseDto extends Serializable {
+  type: 'GpkgContentsBaseDto' | 'attributes' | 'features' | 'tiles';
+  tableName: string;
+  dataType: GpkgContentsDataType;
+  description: string;
+}
+
+export interface GpkgContentsFeatures extends GpkgContentsBaseDto {
+  type: 'features';
+  featureCount: number;
+  sriId: number;
+}
+
+export interface GpkgContentsTiles extends GpkgContentsBaseDto {
+  type: 'tiles';
+  sriId: number;
 }
 
 export interface ExportGpkgPayload extends Serializable {
-    type: GpkgExportType;
-    payload: any;
+  type: GpkgExportType;
+  payload: any;
 }
 
 export interface GpkgFile extends GpkgReportBaseDto, Serializable {
-    newId: string;
-    oldId: string;
-    tableName: string;
-    resourceQualifier: any;
+  newId: string;
+  oldId: string;
+  tableName: string;
+  resourceQualifier: any;
 }
 
 export interface GpkgImportDestinationProject extends GpkgReportBaseDto, Serializable {
-    projectId: number;
+  projectId: number;
 }
 
 export interface GpkgLayer extends GpkgReportBaseDto, Serializable {
-    createdTableId: number;
-    tableIdentifier: string;
-    tableDataset: string;
-    styleName: string;
-    type: LayerType;
+  createdTableId: number;
+  tableIdentifier: string;
+  tableDataset: string;
+  styleName: string;
+  type: LayerType;
 }
 
 export interface GpkgPayloadData extends Serializable {
-    tablesInGpkg: GpkgTablesData[];
-    project: GpkgImportDestinationProject;
-    wrapperImportReport: GpkgWrapperImportReport;
-    tables: GpkgTable[];
-    files: GpkgFile[];
-    styles: GpkgStyle[];
-    layers: GpkgLayer[];
+  gpkgContents: GpkgContentsBaseDtoUnion[];
+  wrapperImportReport: GpkgWrapperImportReport;
+  project: GpkgImportDestinationProject;
+  tiles: GpkgTile[];
+  tables: GpkgTable[];
+  layers: GpkgLayer[];
+  styles: GpkgStyle[];
+  files: GpkgFile[];
 }
 
 export interface GpkgProcessReport extends GpkgReportBaseDto, Serializable {
-    projectId: number;
-    fileId: string;
-    filePath: string;
-    fileTitle: string;
-    payload: GpkgPayloadData;
+  projectId: number;
+  fileId: string;
+  filePath: string;
+  fileTitle: string;
+  payload: GpkgPayloadData;
 }
 
 export interface GpkgReportBaseDto extends Serializable {
-    title: string;
-    status: GpkgProcessStatus;
-    messages: string[];
+  title: string;
+  status: GpkgProcessStatus;
+  messages: string[];
 }
 
 export interface GpkgStyle extends GpkgReportBaseDto, Serializable {
-    createdTableId: number;
-    name: string;
-    body: string;
-    svgs: GpkgSvg[];
+  createdTableId: number;
+  name: string;
+  body: string;
+  svgs: GpkgSvg[];
 }
 
 export interface GpkgSvg extends GpkgReportBaseDto, Serializable {
-    body: string;
+  body: string;
 }
 
 export interface GpkgTable extends GpkgReportBaseDto, Serializable {
-    dataset: string;
-    oldTableIdentifier: string;
-    createdTableIdentifier: string;
-    importedObjects: number;
-    failedObjects: number;
-}
-
-export interface GpkgTablesData extends Serializable {
-    type: GpkgTableType;
-    tableGpkgIdentifier: string;
-    tableNewIdentifier: string;
-    rowsCount: number;
+  dataset: string;
+  oldTableIdentifier: string;
+  createdTableIdentifier: string;
+  importedObjects: number;
+  failedObjects: number;
 }
 
 export interface GpkgWrapperImportReport extends Serializable {
-    failedRecordCount: number;
-    utf8ErrorCount: number;
-    results: { [index: string]: number };
-    additionalInfo: string;
+  failedRecordCount: number;
+  utf8ErrorCount: number;
+  results: { [index: string]: number };
+  additionalInfo: string;
 }
 
 export interface VerifyEcpResponse {
-    message: string;
-    signer: string;
-    code: string;
-    verified: boolean;
+  message: string;
+  signer: string;
+  code: string;
+  verified: boolean;
 }
 
 export interface FtsRequestDto {
-    text: string;
-    ecqlFilter: string;
-    type: FtsType;
-    bound: number;
-    sources: { [index: string]: any }[];
+  text: string;
+  ecqlFilter: string;
+  type: FtsType;
+  bound: number;
+  sources: { [index: string]: any }[];
 }
 
 export interface FtsResponseDto {
-    type: FtsType;
-    value: number;
-    source: { [index: string]: any };
-    payload: any;
-    headlines: string[];
+  type: FtsType;
+  value: number;
+  source: { [index: string]: any };
+  payload: any;
+  headlines: string[];
 }
 
 export interface ProjectCreateDto extends ProjectUpdateDto {
-    parentId: number;
-    default: boolean;
-    folder: boolean;
+  parentId: number;
+  default: boolean;
+  folder: boolean;
 }
 
 export interface ProjectDto extends ProjectCreateDto {
-    id: string;
-    organizationId: string;
-    createdAt: string;
-    role: string;
-    path: string;
+  id: string;
+  organizationId: string;
+  createdAt: string;
+  role: string;
+  path: string;
 }
 
 export interface ProjectUpdateDto {
-    name: string;
-    bbox: string;
-    description: string;
+  name: string;
+  bbox: string;
+  description: string;
 }
 
 export interface Page {
-    size: number;
-    totalElements: number;
-    totalPages: number;
-    number: number;
+  size: number;
+  totalElements: number;
+  totalPages: number;
+  number: number;
 }
 
 export interface PageableResources<T> {
-    content: T[];
-    page: Page;
+  content: T[];
+  page: Page;
 }
 
 export interface ReportMainDto {
-    outputFormat: ReportOutputFormat;
-    templateName: string;
-    media: { [index: string]: string };
-    data: any;
+  outputFormat: ReportOutputFormat;
+  templateName: string;
+  media: { [index: string]: string };
+  data: any;
 }
 
 export interface TemplateCreateDto extends TemplateShortInfo {
-    printFormSchemaOverrides: any;
+  printFormSchemaOverrides: any;
 }
 
 export interface TemplateFullInfo extends TemplateCreateDto {
-    id: number;
-    createdBy: string;
-    createdAt: string;
-    system: boolean;
+  id: number;
+  createdBy: string;
+  createdAt: string;
+  system: boolean;
 }
 
-export interface TemplateShortInfo extends TemplateShortProjection {
-}
+export interface TemplateShortInfo extends TemplateShortProjection {}
 
 export interface TemplateShortProjection {
-    name: string;
-    title: string;
+  name: string;
+  title: string;
 }
 
 export interface SpecializationView {
-    id: number;
-    title: string;
-    description: string;
-    settings: Settings;
+  id: number;
+  title: string;
+  description: string;
+  settings: Settings;
 }
 
 export interface TableContentModel {
-    datasetIdentifier: string;
-    tableIdentifier: string;
-    content: string[];
-    variables: { [index: string]: string };
+  datasetIdentifier: string;
+  tableIdentifier: string;
+  content: string[];
+  variables: { [index: string]: string };
 }
 
-export interface Serializable {
-}
+export interface Serializable {}
 
 export interface Settings {
-    storageSize: number;
-    reestrs: boolean;
-    sedDialog: boolean;
-    downloadXml: boolean;
-    taskManagement: boolean;
-    createProject: boolean;
-    downloadFiles: boolean;
-    showPermissions: boolean;
-    editProjectLayer: boolean;
-    createLibraryItem: boolean;
-    importShp: boolean;
-    downloadGml: boolean;
-    viewBugReport: boolean;
-    viewDocumentLibrary: boolean;
-    viewServicesCalculator: boolean;
-    defaultProjectBbox: string;
-    favoritesEpsg: string[];
-    defaultEpsg: string;
-    tags: string[];
+  storageSize: number;
+  reestrs: boolean;
+  sedDialog: boolean;
+  downloadXml: boolean;
+  taskManagement: boolean;
+  createProject: boolean;
+  downloadFiles: boolean;
+  showPermissions: boolean;
+  editProjectLayer: boolean;
+  createLibraryItem: boolean;
+  importShp: boolean;
+  downloadGml: boolean;
+  viewBugReport: boolean;
+  viewDocumentLibrary: boolean;
+  viewServicesCalculator: boolean;
+  defaultProjectBbox: string;
+  favoritesEpsg: string[];
+  defaultEpsg: string;
+  tags: string[];
 }
 
 export type GpkgExportType = 'PROJECT' | 'LAYER' | 'TABLE';
 
 export type GpkgProcessStatus = 'ACTIVE' | 'COMPLETED' | 'ERROR';
-
-export type GpkgTableType = 'VECTOR_DATA_TABLE' | 'CRG_DATA_TABLE';
 
 export type FtsType = 'DOCUMENT' | 'FEATURE';
 
@@ -279,3 +313,7 @@ export type LayerType =
   | 'EXTERNAL_GEOSERVER';
 
 export type ReportOutputFormat = 'PDF' | 'DOCX' | 'ODT' | 'JPEG';
+
+export type GpkgContentsDataType = 'FEATURES' | 'TILES' | 'ATTRIBUTES';
+
+export type GpkgContentsBaseDtoUnion = GpkgContentsFeatures | GpkgContentsTiles | GpkgContentsAttributes;

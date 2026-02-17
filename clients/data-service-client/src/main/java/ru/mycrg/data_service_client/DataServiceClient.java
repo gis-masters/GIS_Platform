@@ -18,6 +18,7 @@ import ru.mycrg.http_client.exceptions.HttpClientException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import static ru.mycrg.http_client.JsonConverter.toJson;
 
@@ -120,6 +121,23 @@ public class DataServiceClient implements IDataServiceClient {
     }
 
     @Override
+    public ResponseModel<Map<String, Object>> getLibRecordById(String token, String docLibId, Long recId) throws HttpClientException {
+        String url = baseUrl + "/document-libraries/" + docLibId + "/records/" + recId;
+
+        Request request = new Request.Builder()
+                .url(url)
+                .get()
+                .addHeader("Authorization", "Bearer " + token)
+                .build();
+
+        log.debug("Запрос получения записи библиотеки по ID: {}", url);
+
+        return httpClient.handleRequest(request,
+                                       new TypeReference<>() {
+                                       });
+    }
+
+    @Override
     public ResponseModel<Object> patchRecordInTableById(String token,
                                                         String dataset,
                                                         String table,
@@ -144,5 +162,52 @@ public class DataServiceClient implements IDataServiceClient {
         return httpClient.handleRequest(request,
                                         new TypeReference<>() {
                                         });
+    }
+
+    @Override
+    public ResponseModel<Object> patchLibRecordField(String token,
+                                                     String docLibId,
+                                                     Long recId,
+                                                     String fieldName,
+                                                     Object fieldValue) throws HttpClientException {
+        String url = baseUrl + "/document-libraries/" + docLibId + "/records/" + recId;
+
+        Map<String, Object> payload = Map.of(fieldName, fieldValue);
+
+        RequestBody requestBody = RequestBody.create(
+                okhttp3.MediaType.parse("application/merge-patch+json"),
+                toJson(payload)
+        );
+
+        Request request = new Request.Builder()
+                .url(url)
+                .method("PATCH", requestBody)
+                .addHeader("Authorization", "Bearer " + token)
+                .addHeader("Content-Type", "application/merge-patch+json")
+                .build();
+
+        log.debug("Запрос обновления поля записи библиотеки: {}", url);
+        log.debug("Поле: {}, Значение: {}", fieldName, fieldValue);
+
+        return httpClient.handleRequest(request,
+                                       new TypeReference<>() {
+                                       });
+    }
+
+    @Override
+    public ResponseModel<FileResponse> getFileById(String token, String uuid) throws HttpClientException {
+        String url = baseUrl + "/files/" + uuid;
+
+        Request request = new Request.Builder()
+                .url(url)
+                .get()
+                .addHeader("Authorization", "Bearer " + token)
+                .build();
+
+        log.debug("Запрос получения файла по ID: {}", url);
+
+        return httpClient.handleRequest(request,
+                                       new TypeReference<>() {
+                                       });
     }
 }

@@ -10,7 +10,6 @@ import ru.mycrg.acceptance.auth_service.AuthorizationBase;
 import ru.mycrg.acceptance.data_service.TestFilesManager;
 import ru.mycrg.acceptance.data_service.dto.FileDescriptionModel;
 import ru.mycrg.common_contracts.generated.data_service.gpkg.export.ExportGpkgPayload;
-
 import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgProcessReport;
 import ru.mycrg.data_service_contract.dto.ExportRequestModel;
 import ru.mycrg.data_service_contract.dto.ExportResourceModel;
@@ -32,6 +31,7 @@ import static ru.mycrg.acceptance.data_service.datasets.DatasetsStepsDefinitions
 import static ru.mycrg.acceptance.data_service.tables.TablesStepsDefinitions.anotherTableName;
 import static ru.mycrg.acceptance.data_service.tables.TablesStepsDefinitions.currentTableName;
 import static ru.mycrg.acceptance.gis_service.ProjectStepsDefinitions.projectId;
+import static ru.mycrg.acceptance.integration_service.GpkgTemplates.makeProcessableModelByGpkgName;
 import static ru.mycrg.common_contracts.generated.data_service.gpkg.export.GpkgExportType.*;
 import static ru.mycrg.data_service_contract.enums.ProcessStatus.DONE;
 import static ru.mycrg.data_service_contract.enums.ProcessType.IMPORT;
@@ -149,7 +149,7 @@ public class ProcessesStepDefinitions extends BaseStepsDefinitions {
             }
         }
 
-        getProcessByFilter(DONE, IMPORT, "Импорт GPKG");
+        getProcessByFilter(DONE, IMPORT, "Импорт GPKG " + fileName);
         if (response.getStatusCode() == 200 && response.jsonPath().getInt("page.totalElements") == 1) {
             if (response.jsonPath().getString("content.details[0].fileTitle").equals(fileName) &&
                     response.jsonPath().getInt("content.details[0].payload.project.projectId") == projectId) {
@@ -273,8 +273,9 @@ public class ProcessesStepDefinitions extends BaseStepsDefinitions {
     public void checkProcessDetailsMessage() {
         String msg = response.jsonPath().getString("details.messages[0]");
 
+        assertTrue(msg.contains("Ошибка при валидации GPKG файла =>"));
         assertTrue(msg.contains("Не удалось выполнить импорт GPKG файла."));
-        assertTrue(msg.contains("не является корректным GPKG файлом"));
+        assertTrue(msg.contains("Файл broken.gpkg не является корректным GPKG файлом!!!"));
     }
 
     @When("в ответе содержится фраза {string}")
@@ -392,6 +393,19 @@ public class ProcessesStepDefinitions extends BaseStepsDefinitions {
 
         processableModel.setPayload(Map.of("fileId", UUID.randomUUID().toString(),
                                            "projectId", projectId));
+
+        initProcess(processableModel);
+
+        if (response.getStatusCode() != 400 && response.getStatusCode() != 500) {
+            currentProcessId = extractId((String) response.jsonPath().get("_links.self.href"));
+        }
+    }
+
+    @When("Текущий пользователь импортирует GeoPackage {string}")
+    public void importGeoPackageSetCurrentLibToOneRaster(String gpkgName) {
+        FileDescriptionModel fdm = currentFiles.get(currentFiles.size() - 1);
+        currentFileId = fdm.getId();
+        ProcessableModel processableModel = makeProcessableModelByGpkgName(gpkgName);
 
         initProcess(processableModel);
 

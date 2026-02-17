@@ -86,7 +86,6 @@ public class LayerProjection implements Serializable {
         this.lastModified = lastModified;
     }
 
-    // Полный конструктор для программного использования
     public LayerProjection(Long id, String title, String type, String dataset, String resourceId, boolean enabled,
                            Integer position, int transparency, int maxZoom, int minZoom, String styleName,
                            String nativeCRS, String dataSourceUri, Long parentId, Long projectId, String complexName,

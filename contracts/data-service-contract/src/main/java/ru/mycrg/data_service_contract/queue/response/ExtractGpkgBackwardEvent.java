@@ -6,6 +6,7 @@ import ru.mycrg.messagebus_contract.events.DefaultMessageBusResponseEvent;
 
 import static ru.mycrg.messagebus_contract.MessageBusProperties.GEO_WRAPPER_TO_INTEGRATION_QUEUE;
 
+//TODO: сдвинуть в пакет package ru.mycrg.messagebus_contract.events.integration_wrapper;
 public class ExtractGpkgBackwardEvent extends DefaultMessageBusResponseEvent {
 
     private ProcessStatus status;

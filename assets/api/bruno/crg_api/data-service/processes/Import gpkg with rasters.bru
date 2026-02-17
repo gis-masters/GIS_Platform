@@ -1,0 +1,38 @@
+meta {
+  name: Import gpkg with rasters
+  type: http
+  seq: 2
+}
+
+post {
+  url: http://10.10.10.61:8084/processes
+  body: json
+  auth: bearer
+}
+
+headers {
+  Content-Type: application/json
+  Authorization: Bearer eyJhbGciOiJIUzI1NiIs
+}
+
+auth:bearer {
+  token: ey
+}
+
+body:json {
+  {
+    "payload" : {
+      "fileId" : "9a1d99e6-5496-44d4-b239-30cd0432d224",
+      "projectId" : 43,
+      "layersPlacement" : {
+        "rasterLayers" : [ {
+          "libraryIdentifier" : "dl_default",
+          "documentId" : 37,
+          "field" : "some_files",
+          "gpkgLayerTableName" : "one_raster_7829"
+        } ]
+      }
+    },
+    "type" : "IMPORT"
+  }
+}

@@ -21,6 +21,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static ru.mycrg.auth_service_contract.Authorities.HAS_ANY_AUTHORITY;
 import static ru.mycrg.common_utils.MediaTypes.APPLICATION_JSON_MERGE_PATCH;
 
@@ -78,7 +79,7 @@ public class LayerController {
 
         return layerService.create(projectId, dto)
                            .map(layerProjection -> new ResponseEntity<>(layerProjection, CREATED))
-                           .orElseGet(() -> new ResponseEntity<>(null, CREATED));
+                           .orElseGet(() -> new ResponseEntity<>(null, NO_CONTENT));
     }
 
     @PatchMapping(path = "/layers/{layerId}", consumes = APPLICATION_JSON_MERGE_PATCH)

@@ -2,7 +2,7 @@ package ru.mycrg.common_contracts.generated.data_service.gpkg.import_;
 
 import java.io.Serializable;
 import java.util.Map;
-
+//TODO: удалить либо переделать в будущем
 public class GpkgWrapperImportReport implements Serializable {
 
     private int failedRecordCount;

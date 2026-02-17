@@ -3,6 +3,7 @@ package ru.mycrg.integration_service.bpmn.gpkg.report;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+import ru.mycrg.common_contracts.generated.data_service.gpkg.GpkgTile;
 import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.*;
 import ru.mycrg.data_service_contract.dto.ErrorReport;
 import ru.mycrg.data_service_contract.dto.ExportResourceModel;
@@ -14,11 +15,13 @@ import ru.mycrg.gis_service_contract.dto.LayerProjection;
 import ru.mycrg.messagebus_contract.IMessageBusProducer;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 import static ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgProcessStatus.*;
+import static ru.mycrg.common_contracts.generated.gis_service.LayerType.RASTER;
 
 //TODO: Пересобрать класс через использование воркеров для Таблиц, Слоёв... с методами create, update, batchUpdate...
 @Component
@@ -30,21 +33,6 @@ public class GpkgReportManager {
 
     public GpkgReportManager(IMessageBusProducer messageBus) {
         this.messageBus = messageBus;
-    }
-
-    //TODO: возможно сделать приватным, возможно поменять все листы на сеты
-    public GpkgTable findCurrentTable(List<GpkgTable> tables, String tableGpkgIdentifier) {
-        return tables
-                .stream()
-                .filter(t -> Objects.equals(t.getOldTableIdentifier(), tableGpkgIdentifier))
-                .findFirst()
-                .orElseGet(() -> {
-                    GpkgTable newTable = new GpkgTable();
-                    newTable.setOldTableIdentifier(tableGpkgIdentifier);
-                    tables.add(newTable);
-
-                    return newTable;
-                });
     }
 
     public void createReport(GpkgProcessContext rabbitDto, ExportGpkgEvent event) {
@@ -131,6 +119,25 @@ public class GpkgReportManager {
         sendReportInQueue(rabbitDto, processReport);
     }
 
+    /**
+     * Возможно сетим слишком много. Можно переделывать.
+     */
+    public void createLayerReport(GpkgProcessContext rabbitDto, GpkgProcessReport processReport,
+                                  GpkgTile tile) {
+        GpkgLayer layerReport = new GpkgLayer();
+        layerReport.setTitle(tile.getTitle());
+        layerReport.setStatus(ACTIVE);
+        layerReport.setStyleName("raster");
+        layerReport.setType(RASTER);
+        layerReport.setTableDataset(tile.getLibraryIdentifier());
+        layerReport.setTableIdentifier(tile.getField());
+        layerReport.setCreatedTableId(tile.getDocumentId());
+
+        processReport.getPayload().getLayers().add(layerReport);
+
+        sendReportInQueue(rabbitDto, processReport);
+    }
+
     public void updateLayerReportWithCompleted(GpkgProcessContext rabbitDto, GpkgProcessReport report) {
         List<GpkgLayer> layers = report.getPayload().getLayers();
 
@@ -196,11 +203,11 @@ public class GpkgReportManager {
                                            String oldTableIdentifier) {
         GpkgTable table = findCurrentTable(processReport.getPayload().getTables(), oldTableIdentifier);
         table.setStatus(status);
-
         table.getMessages().addAll(reportData.getErrorReport().getMessages());
 
         table.setImportedObjects(reportData.getErrorReport().getSuccessfulRecordCount());
         table.setFailedObjects((long) reportData.getErrorReport().getFailedRecordCount());
+        table.setImportedObjects(reportData.getErrorReport().getSuccessfulRecordCount());
 
         sendReportInQueue(rabbitDto, processReport);
     }
@@ -377,9 +384,91 @@ public class GpkgReportManager {
         sendReportInQueue(rabbitDto, processReport);
     }
 
+    public void updateGdalTilesReport(GpkgProcessContext rabbitDto, GpkgProcessReport processReport,
+                                      List<GpkgTile> beforeGdal) {
+        List<GpkgTile> gdalTilesFromReport = processReport.getPayload().getTiles().stream()
+                                                          .filter(tile -> tile.getGpkgMediaReference() == null)
+                                                          .collect(Collectors.toList());
+
+        Map<String, GpkgTile> gdalTilesMap = beforeGdal.stream()
+                                                       .collect(Collectors.toMap(
+                                                               GpkgTile::getGpkgLayerTableName,
+                                                               gpkgTile -> gpkgTile));
+        gdalTilesFromReport.stream()
+                           .filter(tile -> gdalTilesMap.containsKey(tile.getGpkgLayerTableName()))
+                           .forEach(tile -> {
+                               tile.setStatus(gdalTilesMap.get(tile.getGpkgLayerTableName()).getStatus());
+                               tile.setTitle(gdalTilesMap.get(tile.getGpkgLayerTableName()).getTitle());
+                               tile.getMessages().add("Растр был создан с использованием gdal_translate.");
+                           });
+
+        sendReportInQueue(rabbitDto, processReport);
+    }
+
+    public void updateTilesReportWithDone(GpkgProcessContext rabbitDto, GpkgProcessReport processReport,
+                                          List<GpkgTile> extractedData) {
+        List<GpkgTile> gdalTilesFromReport = processReport.getPayload().getTiles().stream()
+                                                          .filter(tile -> tile.getGpkgMediaReference() == null)
+                                                          .collect(Collectors.toList());
+
+        Map<String, GpkgTile> gdalTilesMap = extractedData.stream()
+                                                          .collect(Collectors.toMap(
+                                                                  GpkgTile::getGpkgLayerTableName,
+                                                                  gpkgTile -> gpkgTile));
+
+        gdalTilesFromReport.stream()
+                           .filter(tile -> gdalTilesMap.containsKey(tile.getGpkgLayerTableName()))
+                           .forEach(tile -> {
+                               tile.setStatus(COMPLETED);
+                               tile.getMessages().add("Растр был успешно привязан к записи в библиотеке.");
+                           });
+
+        sendReportInQueue(rabbitDto, processReport);
+    }
+
+    public void updateTilesReportWithError(GpkgProcessContext rabbitDto, GpkgProcessReport processReport,
+                                           List<GpkgTile> extractedData) {
+        List<GpkgTile> gdalTilesFromReport = processReport.getPayload().getTiles().stream()
+                                                          .filter(tile -> tile.getGpkgMediaReference() == null)
+                                                          .collect(Collectors.toList());
+
+        Map<String, GpkgTile> gdalTilesMap = extractedData.stream()
+                                                          .collect(Collectors.toMap(
+                                                                  GpkgTile::getGpkgLayerTableName,
+                                                                  gpkgTile -> gpkgTile));
+
+        gdalTilesFromReport.stream()
+                           .filter(tile -> gdalTilesMap.containsKey(tile.getGpkgLayerTableName()))
+                           .forEach(tile -> {
+                               tile.setStatus(ERROR);
+                               tile.getMessages().add("Растр не удалось привязать к библиотеке.");
+                           });
+
+        sendReportInQueue(rabbitDto, processReport);
+    }
+
+    public void updateLayerReportByTitle(GpkgProcessContext rabbitDto, GpkgProcessReport processReport,
+                                         String title, GpkgProcessStatus status, String msg) {
+        List<GpkgLayer> layerList = processReport.getPayload().getLayers();
+        GpkgLayer currentLayer = layerList.stream()
+                                          .filter(layer -> layer.getTitle().equals(title))
+                                          .findFirst().orElse(null);
+
+        if (currentLayer != null) {
+            currentLayer.setStatus(status);
+            currentLayer.getMessages().add(msg);
+        }
+
+        sendReportInQueue(rabbitDto, processReport);
+    }
+
     public void finalizeReport(GpkgProcessContext rabbitDto, GpkgProcessReport processReport,
                                GpkgProcessStatus status, String msg) {
         GpkgPayloadData payload = processReport.getPayload();
+
+        if (payload == null) {
+            payload = new GpkgPayloadData();
+        }
 
         if (payload.getProject() != null) {
             GpkgImportDestinationProject project = payload.getProject();
@@ -421,6 +510,20 @@ public class GpkgReportManager {
                     newStyle.setStatus(ACTIVE);
 
                     return newStyle;
+                });
+    }
+
+    private GpkgTable findCurrentTable(List<GpkgTable> tables, String tableGpkgIdentifier) {
+        return tables
+                .stream()
+                .filter(t -> Objects.equals(t.getOldTableIdentifier(), tableGpkgIdentifier))
+                .findFirst()
+                .orElseGet(() -> {
+                    GpkgTable newTable = new GpkgTable();
+                    newTable.setOldTableIdentifier(tableGpkgIdentifier);
+                    tables.add(newTable);
+
+                    return newTable;
                 });
     }
 }

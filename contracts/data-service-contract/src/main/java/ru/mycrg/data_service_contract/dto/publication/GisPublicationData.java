@@ -5,6 +5,7 @@ import java.io.Serializable;
 public class GisPublicationData implements Serializable {
 
     private Long projectId;
+    private Long parentId;
     private String sourceId;
     private String sourceType;
     private Long sourceRecordId;
@@ -27,6 +28,27 @@ public class GisPublicationData implements Serializable {
         this.pathToFile = pathToFile;
         this.styleName = styleName;
         this.crs = crs;
+    }
+
+    public GisPublicationData(Long projectId, Long parentId, String sourceId, String sourceType, Long sourceRecordId,
+                              String layerTitle, String pathToFile, String styleName, String crs) {
+        this.projectId = projectId;
+        this.parentId = parentId;
+        this.sourceId = sourceId;
+        this.sourceType = sourceType;
+        this.sourceRecordId = sourceRecordId;
+        this.layerTitle = layerTitle;
+        this.pathToFile = pathToFile;
+        this.styleName = styleName;
+        this.crs = crs;
+    }
+
+    public Long getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(Long parentId) {
+        this.parentId = parentId;
     }
 
     public Long getProjectId() {
@@ -97,6 +119,7 @@ public class GisPublicationData implements Serializable {
     public String toString() {
         return "{" +
                 "\"projectId\":" + (projectId == null ? "null" : "\"" + projectId + "\"") + ", " +
+                "\"parentId\":" + (parentId == null ? "null" : "\"" + parentId + "\"") + ", " +
                 "\"sourceId\":" + (sourceId == null ? "null" : "\"" + sourceId + "\"") + ", " +
                 "\"sourceType\":" + (sourceType == null ? "null" : "\"" + sourceType + "\"") + ", " +
                 "\"sourceRecordId\":" + (sourceRecordId == null ? "null" : "\"" + sourceRecordId + "\"") + ", " +

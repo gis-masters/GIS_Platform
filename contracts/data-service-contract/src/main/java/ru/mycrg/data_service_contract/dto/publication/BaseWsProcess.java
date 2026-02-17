@@ -16,6 +16,10 @@ public class BaseWsProcess implements Serializable {
         // Required
     }
 
+    public BaseWsProcess(String token) {
+        this.token = token;
+    }
+
     public BaseWsProcess(String token, ProcessModel processModel, UUID wsMsgId, String wsUiId) {
         this.token = token;
         this.processModel = processModel;

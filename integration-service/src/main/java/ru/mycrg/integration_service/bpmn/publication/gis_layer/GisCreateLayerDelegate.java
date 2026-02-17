@@ -57,6 +57,7 @@ public class GisCreateLayerDelegate implements JavaDelegate {
             if (response.isSuccessful()) {
                 log.debug("Слой успешно создан");
 
+                execution.setVariable(PREV_STEP_STATUS, response.code());
                 execution.setVariable(IS_CREATED_VAR_NAME, true);
             } else {
                 String failMsg = baseFailMsg();
@@ -85,16 +86,22 @@ public class GisCreateLayerDelegate implements JavaDelegate {
         if (type.equals(TIF)) {
             String dataSourceUri = "file://" + gisPublicationData.getPathToFile();
 
-            return new LayerPublicationDto(geoserverPublicationData.getStoreName(),
-                                           geoserverPublicationData.getFeatureTypeName(),
-                                           gisPublicationData.getLayerTitle(),
-                                           gisPublicationData.getSourceId(),
-                                           gisPublicationData.getSourceType(),
-                                           gisPublicationData.getSourceRecordId(),
-                                           gisPublicationData.getCrs(),
-                                           gisPublicationData.getProjectId(),
-                                           dataSourceUri,
-                                           getMode(event));
+            LayerPublicationDto lpd = new LayerPublicationDto(geoserverPublicationData.getStoreName(),
+                                                              geoserverPublicationData.getFeatureTypeName(),
+                                                              gisPublicationData.getLayerTitle(),
+                                                              gisPublicationData.getSourceId(),
+                                                              gisPublicationData.getSourceType(),
+                                                              gisPublicationData.getSourceRecordId(),
+                                                              gisPublicationData.getCrs(),
+                                                              gisPublicationData.getProjectId(),
+                                                              dataSourceUri,
+                                                              getMode(event));
+
+            if (gisPublicationData.getParentId() != null) {
+                lpd.setParentId(gisPublicationData.getParentId());
+            }
+
+            return lpd;
         } else {
             return new LayerPublicationDto(type.name().toLowerCase(),
                                            getMode(event),

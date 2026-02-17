@@ -46,7 +46,9 @@ public class RasterStorage extends GeoServerBaseService {
                 .post(RequestBody.create(JSON_MEDIA_TYPE, payload))
                 .build();
 
-        return httpClient.handleRequest(request);
+        ResponseModel<String> responseModel = httpClient.handleRequestAsString(request);
+
+        return new ResponseModel<>(responseModel, responseModel.getBody());
     }
 
     public ResponseModel<CoverageStoreResponseWrapper> getStorage(String workspace, String store)

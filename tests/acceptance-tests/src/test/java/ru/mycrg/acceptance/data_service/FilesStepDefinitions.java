@@ -1,7 +1,6 @@
 package ru.mycrg.acceptance.data_service;
 
 import io.cucumber.datatable.DataTable;
-import io.cucumber.java.PendingException;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
@@ -13,8 +12,7 @@ import ru.mycrg.acceptance.auth_service.AuthorizationBase;
 import ru.mycrg.acceptance.data_service.dto.FileDescriptionModel;
 import ru.mycrg.auth_service_contract.dto.UserCreateDto;
 import ru.mycrg.common_contracts.generated.data_service.gpkg.GpkgFileMetadata;
-import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgTableType;
-import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgTablesData;
+import ru.mycrg.common_contracts.generated.data_service.gpkg.contents.GpkgContentsBaseDto;
 import ru.mycrg.data_service_contract.dto.FileDescription;
 
 import java.io.File;
@@ -32,6 +30,7 @@ import static ru.mycrg.acceptance.data_service.CurrentFilesManager.getFileDescri
 import static ru.mycrg.acceptance.data_service.libraries.LibraryStepsDefinitions.currentDocumentId;
 import static ru.mycrg.acceptance.data_service.libraries.LibraryStepsDefinitions.currentLibrary;
 import static ru.mycrg.acceptance.data_service.tables.TablesStepsDefinitions.currentTableName;
+import static ru.mycrg.common_contracts.enums.GpkgContentsDataType.ATTRIBUTES;
 
 public class FilesStepDefinitions extends BaseStepsDefinitions {
 
@@ -507,7 +506,9 @@ public class FilesStepDefinitions extends BaseStepsDefinitions {
     @When("я вижу, что некорректный GPKG файл отклонен сервером с корректной формулировкой ошибки")
     public void checkErrorResponseFromIncorrectGpkg() {
         assertEquals(400, response.getStatusCode());
-        checkResponseValue("message", "Файл " + currentFileId + " не является корректным GPKG файлом");
+        checkResponseValue("message",
+                           "Ошибка при получении информации из GPKG: " +
+                                   "Файл broken.gpkg не является корректным GPKG файлом");
     }
 
     @And("размер скаченного файла равен {int}")
@@ -569,17 +570,13 @@ public class FilesStepDefinitions extends BaseStepsDefinitions {
         assertNotNull("Поле 'payload' не должно быть null", metadata.getPayload());
         assertTrue("Поле 'payload' должно быть списком", metadata.getPayload() instanceof List);
 
-        List<GpkgTablesData> tables = metadata.getPayload();
+        List<GpkgContentsBaseDto> tables = metadata.getPayload();
         assertFalse("Список таблиц не должен быть пустым", tables.isEmpty());
 
-        for (GpkgTablesData table: tables) {
-            assertNotNull("Таблица должна содержать поле 'type'", table.getType());
-            assertNotNull("Таблица должна содержать поле 'tableGpkgIdentifier'", table.getTableGpkgIdentifier());
+        for (GpkgContentsBaseDto table: tables) {
+            assertNotNull("Таблица должна содержать поле 'dataType'", table.getDataType());
+            assertNotNull("Таблица должна содержать поле 'tableName'", table.getTableName());
             assertNotNull("Объект таблицы должен быть корректно десериализован", table);
-
-            // Проверяем, что все таблицы имеют тип VECTOR_DATA_TABLE
-            assertEquals("Таблица должна иметь тип VECTOR_DATA_TABLE, но получен тип: " + table.getType(),
-                         GpkgTableType.VECTOR_DATA_TABLE, table.getType());
         }
     }
 
@@ -587,8 +584,10 @@ public class FilesStepDefinitions extends BaseStepsDefinitions {
         assertNotNull("Поле 'payload' не должно быть null", metadata.getPayload());
         assertTrue("Поле 'payload' должно быть списком", metadata.getPayload() instanceof List);
 
-        List<GpkgTablesData> tables = metadata.getPayload();
-        assertTrue("Список таблиц должен быть пустым", tables.isEmpty());
+        List<GpkgContentsBaseDto> tables = metadata.getPayload();
+        long count = tables.stream().filter(t -> t.getDataType() == ATTRIBUTES).count();
+
+        assertEquals("Список таблиц должен содержать только системные таблицы", tables.size(), count);
     }
 
     private void getFileMetadata(UUID id) {

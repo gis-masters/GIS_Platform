@@ -20,6 +20,7 @@ import static ru.mycrg.data_service_contract.enums.ProcessStatus.ERROR;
 public class ExtractGpkgEventHandler implements IEventHandler {
 
     private static final Logger log = LoggerFactory.getLogger(ExtractGpkgEventHandler.class);
+
     private final IMessageBusProducer messageBus;
     private final GDALService gdalService;
 

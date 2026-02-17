@@ -6,7 +6,6 @@ import java.util.UUID;
 
 import static ru.mycrg.messagebus_contract.MessageBusProperties.INTEGRATION_TO_GEO_WRAPPER_QUEUE;
 
-//пакет не тот как будто бы
 public class ExtractGpkgEvent extends DefaultMessageBusRequestEvent {
 
     private String dbName;

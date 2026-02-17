@@ -8,6 +8,7 @@ import ru.mycrg.http_client.ResponseModel;
 import ru.mycrg.http_client.exceptions.HttpClientException;
 
 import java.util.List;
+import java.util.Map;
 
 public interface IDataServiceClient {
 
@@ -20,8 +21,20 @@ public interface IDataServiceClient {
                                               int page,
                                               int size) throws HttpClientException;
 
+    ResponseModel<Map<String, Object>> getLibRecordById(String token,
+                                                        String docLibId,
+                                                        Long recId) throws HttpClientException;
+
     ResponseModel<Object> patchRecordInTableById(String token,
                                                  String dataset,
                                                  String table,
                                                  Feature feature) throws HttpClientException;
+
+    ResponseModel<Object> patchLibRecordField(String token,
+                                              String docLibId,
+                                              Long recId,
+                                              String fieldName,
+                                              Object fieldValue) throws HttpClientException;
+
+    ResponseModel<FileResponse> getFileById(String token, String uuid) throws HttpClientException;
 }

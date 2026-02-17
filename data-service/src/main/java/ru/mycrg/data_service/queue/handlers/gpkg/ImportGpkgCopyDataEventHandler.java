@@ -202,9 +202,7 @@ public class ImportGpkgCopyDataEventHandler implements IEventHandler {
                                                "объектов: %d.", insertedQuantity);
             log.debug(msg);
 
-            List<String> messages = errorReport.getMessages();
-            messages.add(msg);
-            errorReport.setMessages(messages);
+            errorReport.getMessages().add(msg);
             errorReport.setSuccessfulRecordCount(insertedQuantity);
         } catch (Exception e) {
             String msg = "Ошибка при копировании объектов: " + e.getMessage() + " В проект будет добавлен пустой слой.";

@@ -5,12 +5,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
+import ru.mycrg.common_contracts.generated.data_service.gpkg.contents.GpkgContentsTiles;
 import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgStyle;
 import ru.mycrg.data_service.dao.GpkgRepositoryDetached;
 import ru.mycrg.data_service.dao.config.DatasourceFactory;
 import ru.mycrg.data_service.dto.TableCreateDto;
 import ru.mycrg.data_service.service.OrgSettingsKeeper;
-import ru.mycrg.data_service.service.gpkg.GpkgContentsDto;
+import ru.mycrg.common_contracts.generated.data_service.gpkg.contents.GpkgContentsBaseDto;
 import ru.mycrg.data_service.service.gpkg.importer.GpkgReaderService;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
 import ru.mycrg.data_service.util.CrsHandler;
@@ -151,7 +152,7 @@ public class ImportGpkgAckInfoEventHandler implements IEventHandler {
                                                UUID fileId,
                                                String sourceTableName,
                                                Long orgId) {
-        GpkgContentsDto gpkgContent = gpkgReader.getVectorTableContent(jdbcTemplate, fileId, sourceTableName);
+        GpkgContentsTiles gpkgContent = gpkgReader.getVectorTableContent(jdbcTemplate, fileId, sourceTableName);
 
         tcd.setDetails(
                 gpkgContent.getDescription() == null ? "Таблица сгенерирована исходя из значений 'по умолчанию'" :

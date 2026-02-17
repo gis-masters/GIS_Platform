@@ -7,7 +7,7 @@
 
     <groupId>ru.mycrg</groupId>
     <artifactId>geoserver-client</artifactId>
-    <version>1.4.3-SNAPSHOT</version>
+    <version>1.4.4-SNAPSHOT</version>
 
     <properties>
         <java.version>11</java.version>

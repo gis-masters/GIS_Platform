@@ -13,7 +13,7 @@ docker compose -f ../docker-compose.dev.yml \
 -f ../S3MinioForTests.yml \
 -f ../gisogdIntegrationSed.yml \
 -f ../gisogdRfService.yml \
---env-file ../.env --profile "*"  down ||
+--env-file ../.env --profile "*" down ||
   {
     echo '***** Failed stop containers *****'
     exit 1

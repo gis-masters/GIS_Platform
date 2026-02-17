@@ -6,20 +6,21 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgTableType;
-import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgTablesData;
+import ru.mycrg.common_contracts.generated.data_service.gpkg.contents.GpkgContentsAttributes;
+import ru.mycrg.common_contracts.generated.data_service.gpkg.contents.GpkgContentsBaseDto;
+import ru.mycrg.common_contracts.generated.data_service.gpkg.contents.GpkgContentsFeatures;
+import ru.mycrg.common_contracts.generated.data_service.gpkg.contents.GpkgContentsTiles;
 import ru.mycrg.data_service.entity.File;
-import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.repository.FileRepositoryDetached;
-import ru.mycrg.data_service.service.gpkg.GpkgContentsDto;
 import ru.mycrg.data_service.service.gpkg.GpkgException;
 import ru.mycrg.data_service_contract.enums.GeometryType;
 
+import java.sql.Connection;
 import java.util.*;
+import java.util.stream.Collectors;
 
-import static ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgTableType.CRG_DATA_TABLE;
-import static ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgTableType.VECTOR_DATA_TABLE;
+import static ru.mycrg.common_contracts.enums.GpkgContentsDataType.*;
 
 @Service
 public class GpkgReaderService {
@@ -35,35 +36,48 @@ public class GpkgReaderService {
         this.fileRepository = fileRepository;
     }
 
-    /**
-     * Получает информацию о всех таблицах из GPKG файла (векторные + CRG кастомные)
-     *
-     * @param filePath путь к GPKG файлу
-     *
-     * @return список данных о таблицах
-     *
-     * @throws GpkgException если не удалось прочитать файл
-     */
-    public List<GpkgTablesData> getTablesInfo(String filePath) {
-        List<GpkgTablesData> vectorTables = getVectorTablesData(filePath);
-        List<GpkgTablesData> allTables = new ArrayList<>(vectorTables);
-
-        List<GpkgTablesData> crgTables = getCrgCustomTablesData(filePath);
-        allTables.addAll(crgTables);
-
-        log.debug("Найдено {} таблиц в GPKG файле: {}", allTables.size(), filePath);
-
-        return allTables;
+    public Connection getConnectionToGpkg(String filePath) {
+        return gpkgFileRepository.getConnectionToGpkg(filePath);
     }
 
-    public List<GpkgTablesData> getOnlyVectorTablesInfo(String filePath) {
-        return getVectorTablesData(filePath);
+    public List<GpkgContentsFeatures> getAllVectorLayersFromGpkgContents(Connection connection) {
+        return gpkgFileRepository
+                .getPartOfGpkgContents(connection, FEATURES)
+                .collect(Collectors.collectingAndThen(
+                        Collectors.toMap(GpkgContentsBaseDto::getTableName,
+                                         baseDto -> baseDto
+                        ),
+                        baseContentsMap -> {
+                            Map<String, Long> featuresCount =
+                                    gpkgFileRepository.getGpkgOgrContentsByTableNames(connection,
+                                                                                      baseContentsMap.keySet());
+
+                            return baseContentsMap.values().stream()
+                                                  .map(baseDto -> new GpkgContentsFeatures(
+                                                          baseDto.getTableName(),
+                                                          baseDto.getDataType(),
+                                                          baseDto.getDescription(),
+                                                          featuresCount.getOrDefault(
+                                                                  baseDto.getTableName(), 0L),
+                                                          baseDto.getSriId()
+                                                  ))
+                                                  .collect(Collectors.toList());
+                        }
+                ));
     }
 
-    public void throwIfNotGpkg(File file) {
-        if (gpkgFileRepository.isNotCorrectGpkg(file.getPath())) {
-            throw new BadRequestException("Файл " + file.getId() + " не является корректным GPKG файлом");
-        }
+    public List<GpkgContentsTiles> getAllTilesFromGpkgContents(Connection connection) {
+        return gpkgFileRepository.getPartOfGpkgContents(connection, TILES)
+                                 .collect(Collectors.toList());
+    }
+
+    public List<GpkgContentsAttributes> getAllSystemTablesFromGpkgContents(Connection connection) {
+        return gpkgFileRepository.getPartOfGpkgContents(connection, ATTRIBUTES)
+                                 .map(content -> new GpkgContentsAttributes(content.getTableName(),
+                                                                            content.getDataType(),
+                                                                            content.getDescription(),
+                                                                            content.getTableName().contains("crg")))
+                                 .collect(Collectors.toList());
     }
 
     public GeometryType getLayerGeometryType(JdbcTemplate jdbcTemplate, UUID fileId, String sourceTableName) {
@@ -75,47 +89,13 @@ public class GpkgReaderService {
         return gpkgFileRepository.getTableGeomType(oFile.get().getPath(), sourceTableName);
     }
 
-    public GpkgContentsDto getVectorTableContent(JdbcTemplate jdbcTemplate, UUID fileId, String sourceTableName) {
+    public GpkgContentsTiles getVectorTableContent(JdbcTemplate jdbcTemplate, UUID fileId, String sourceTableName) {
         Optional<File> oFile = fileRepository.findByIdentifier(jdbcTemplate, fileId);
         if (oFile.isEmpty()) {
             throw new NotFoundException("Не найден файл с ID: " + fileId);
         }
 
         return gpkgFileRepository.getGpkgContents(oFile.get().getPath(), sourceTableName);
-    }
-
-    private List<GpkgTablesData> getVectorTablesData(String filePath) {
-        List<String> tableNames = gpkgFileRepository.getVectorTableNames(filePath);
-
-        return createTablesData(filePath, tableNames, VECTOR_DATA_TABLE);
-    }
-
-    private List<GpkgTablesData> getCrgCustomTablesData(String filePath) {
-        List<String> tableNames = gpkgFileRepository.getCrgCustomTableNames(filePath);
-
-        return createTablesData(filePath, tableNames, CRG_DATA_TABLE);
-    }
-
-    private List<GpkgTablesData> createTablesData(String filePath,
-                                                  List<String> tableNames,
-                                                  GpkgTableType tableType) {
-        List<GpkgTablesData> result = new ArrayList<>();
-
-        for (String tableName: tableNames) {
-            try {
-                GpkgTablesData tableData = new GpkgTablesData(tableType, tableName);
-                Long rowsCount = gpkgFileRepository.getTableRowsCount(filePath, tableName);
-                tableData.setRowsCount(rowsCount);
-                result.add(tableData);
-
-                log.debug("Обработана таблица: {} (тип: {}, строк: {})", tableName, tableType, rowsCount);
-            } catch (GpkgException e) {
-                log.warn("Не удалось получить информацию о таблице: {}. Пропускаем. Ошибка: {}",
-                         tableName, e.getMessage());
-            }
-        }
-
-        return result;
     }
 
     public Map<UUID, MultipartFile> getFilesFromGpkg(String path, List<UUID> fileIds) {
@@ -142,5 +122,30 @@ public class GpkgReaderService {
         log.info("Получено {} файлов из GPKG", allFoundFiles.size());
 
         return allFoundFiles;
+    }
+
+    public boolean isAllLayersExistInGpkgContents(Connection connection, Set<String> tableNames) {
+        return gpkgFileRepository.isAllLayersExistInGpkgContents(connection, tableNames);
+    }
+
+    public boolean isGpkgValidDataBaseFile(Connection connection) {
+        String failFastSql = "SELECT 1 FROM gpkg_contents LIMIT 1";
+        try {
+            gpkgFileRepository.executeSql(connection, failFastSql);
+
+            return true;
+        } catch (Exception e) {
+            log.debug("Ошибка при проверки валидности gpkg файла: {}", e.getMessage());
+
+            return false;
+        }
+    }
+
+    public Map<String, Long> findTilesReferenceByNames(Connection connection, Set<String> names) {
+        return gpkgFileRepository.findTilesReferenceByNames(connection, names);
+    }
+
+    public String getSrcByIdentifier(Connection connection, String name) {
+        return gpkgFileRepository.getSrcByIdentifier(connection, name);
     }
 }

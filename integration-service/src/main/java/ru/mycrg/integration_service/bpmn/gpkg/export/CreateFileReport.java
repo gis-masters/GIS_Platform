@@ -29,7 +29,7 @@ public class CreateFileReport implements JavaDelegate {
     @Override
     public void execute(DelegateExecution delegateExecution) throws Exception {
         List<GpkgFile> exportedFile =
-                (List<GpkgFile>) delegateExecution.getVariable(FEATURES_FILES_LIST_VAR_NAME);
+                (List<GpkgFile>) delegateExecution.getVariable(IMPORT_GPKG_FEATURES_WITH_FILES_LIST);
 
         ExportGpkgEvent event = (ExportGpkgEvent) delegateExecution.getVariable(EVENT_VAR_NAME);
         GpkgProcessContext rabbitDto = new GpkgProcessContext(event.getProcessId(),

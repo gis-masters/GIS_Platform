@@ -7,6 +7,8 @@ import org.springframework.core.env.Environment;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import ru.mycrg.common_contracts.exceptions.ClientException;
+import ru.mycrg.common_contracts.generated.data_service.gpkg.GpkgTile;
+import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgProcessStatus;
 import ru.mycrg.data_service_contract.dto.ErrorReport;
 import ru.mycrg.data_service_contract.dto.ExportProcessModel;
 import ru.mycrg.data_service_contract.dto.ResourceProjection;
@@ -17,6 +19,7 @@ import ru.mycrg.wrapper.dao.BaseDaoService;
 import ru.mycrg.wrapper.dao.DatasourceFactory;
 import ru.mycrg.wrapper.exceptions.ExportException;
 import ru.mycrg.wrapper.exceptions.ImportException;
+import ru.mycrg.wrapper.service.DataServiceSpeaker;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -24,9 +27,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
@@ -45,6 +46,7 @@ public class GDALService implements IExporter {
     private final CrgProperties crgProperties;
     private final BaseDaoService baseDaoService;
     private final DatasourceFactory datasourceFactory;
+    private final DataServiceSpeaker dataServiceSpeaker;
 
     @Value("${spring.datasource.username}")
     private String DATASOURCE_USERNAME;
@@ -55,11 +57,13 @@ public class GDALService implements IExporter {
     public GDALService(CrgProperties crgProperties,
                        Environment environment,
                        BaseDaoService baseDaoService,
-                       DatasourceFactory datasourceFactory) {
+                       DatasourceFactory datasourceFactory,
+                       DataServiceSpeaker dataServiceSpeaker) {
         this.crgProperties = crgProperties;
         this.environment = environment;
         this.baseDaoService = baseDaoService;
         this.datasourceFactory = datasourceFactory;
+        this.dataServiceSpeaker = dataServiceSpeaker;
     }
 
     @Override
@@ -153,6 +157,145 @@ public class GDALService implements IExporter {
         }
 
         return errorReport;
+    }
+
+    public Map<String, GpkgTile> importRastersFromGeoPackage(UUID fileId,
+                                                             String dbName,
+                                                             String token,
+                                                             List<String> tilesNames) {
+        JdbcTemplate jdbcTemplate = datasourceFactory.getJdbcTemplate(dbName);
+        String filePath;
+        Map<String, GpkgTile> createdTiles = new HashMap<>();
+
+        try {
+            filePath = baseDaoService.getFilePathByUUID(jdbcTemplate, fileId);
+        } catch (SQLException e) {
+            throw new ClientException(
+                    "Файл не найден по id '" + fileId + "'. Останавливаем импорт!!!. Причина: " + e.getMessage());
+        }
+
+        for (String tileName: tilesNames) {
+            GpkgTile tile = new GpkgTile();
+            tile.setGpkgLayerTableName(tileName);
+
+            String extractedFilePath;
+            try {
+                extractedFilePath = extractTiffFromGpkg(filePath, tileName);
+            } catch (Exception e) {
+                tile.getMessages().add("Ошибка при конвертации растра: " + e.getMessage());
+                tile.setStatus(GpkgProcessStatus.ERROR);
+                createdTiles.put(tileName, tile);
+
+                continue;
+            }
+
+            try {
+                Optional<UUID> oCreatedFileId = dataServiceSpeaker.postFileOnService(token,
+                                                                                     new File(extractedFilePath));
+
+                oCreatedFileId.ifPresentOrElse(
+                        uuid -> {
+                            tile.setTitle(String.valueOf(uuid));
+                            tile.setStatus(GpkgProcessStatus.ACTIVE);
+                        },
+                        () -> {
+                            tile.setStatus(GpkgProcessStatus.ERROR);
+                            tile.getMessages()
+                                .add("Неожиданная ошибка при сохранении распакованного файла на сервере!");
+                        }
+                );
+            } catch (Exception e) {
+                tile.getMessages().add("Ошибка при сохранении созданного файла на сервере: " + e.getMessage());
+                tile.setStatus(GpkgProcessStatus.ERROR);
+            } finally {
+                new File(extractedFilePath).delete();
+            }
+
+            createdTiles.put(tileName, tile);
+        }
+
+        return createdTiles;
+    }
+
+    private String extractTiffFromGpkg(String filePath, String tileName) {
+        if (!isTileExist(filePath, tileName)) {
+            throw new ImportException("Таблица " + tileName + " не существует в " + filePath);
+        }
+
+        String rootPath = crgProperties.getExportStoragePath();
+        String outputPath = rootPath + tileName + ".tif";
+
+        String gdalTranslateCommand = String.format(
+                "gdal_translate -of GTiff \"GPKG:%s:%s\" %s -co TILED=YES -co COMPRESS=DEFLATE -co BIGTIFF=IF_SAFER",
+                filePath, tileName, outputPath
+        );
+
+        log.debug("Execute gdal_translate command: {}", gdalTranslateCommand);
+
+        try {
+            ProcessBuilder processBuilder = new ProcessBuilder();
+            processBuilder.command("sh", "-c", gdalTranslateCommand);
+            Process process = processBuilder.start();
+
+            boolean isSuccess = process.waitFor(TIMEOUT, SECONDS);
+            if (!isSuccess) {
+                logStream(process.getErrorStream());
+                process.destroy();
+
+                throw new ImportException("gdal_translate failed by timeout");
+            }
+
+            logStream(process.getInputStream());
+            logStream(process.getErrorStream());
+
+            process.destroy();
+
+            return outputPath;
+        } catch (IOException | InterruptedException e) {
+            Thread.currentThread().interrupt();
+            log.error("Error extracting TIFF from GPKG: {}", e.getMessage(), e);
+
+            throw new ImportException(e.getMessage(), e);
+        }
+    }
+
+    private boolean isTileExist(String filePath, String tileName) {
+        String gdalinfoCommand = String.format("gdalinfo \"GPKG:%s:%s\"", filePath, tileName);
+        log.debug("Вызываем gdalinfo command: {}", gdalinfoCommand);
+
+        try {
+            ProcessBuilder processBuilder = new ProcessBuilder();
+            processBuilder.command("sh", "-c", gdalinfoCommand);
+            Process process = processBuilder.start();
+
+            boolean isSuccess = process.waitFor(TIMEOUT, SECONDS);
+            if (!isSuccess) {
+                logStream(process.getErrorStream());
+                process.destroy();
+
+                return false;
+            }
+
+            BufferedReader errorReader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
+            String line;
+            while ((line = errorReader.readLine()) != null) {
+                if (line.contains("ERROR")) {
+                    log.debug("Ратсровый слой '{}' не найден в GPKG: {}", tileName, line);
+                    process.destroy();
+
+                    return false;
+                }
+            }
+
+            process.destroy();
+
+            return true;
+        } catch (IOException | InterruptedException e) {
+            Thread.currentThread().interrupt();
+            log.error("Ошибка при проверки наличия тайлов в gpkg: {}", e.getMessage(), e);
+
+            return false;
+        }
     }
 
     /**
