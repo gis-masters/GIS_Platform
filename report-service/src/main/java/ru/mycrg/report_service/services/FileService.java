@@ -125,11 +125,13 @@ public class FileService {
         // Проверяем, что путь существует и это директория
         if (!directory.exists()) {
             log.warn("Директория не существует: {}", path);
+
             return matchedFiles;
         }
 
         if (!directory.isDirectory()) {
             log.warn("Путь не является директорией: {}", path);
+
             return matchedFiles;
         }
 
@@ -138,6 +140,7 @@ public class FileService {
 
         if (files == null) {
             log.warn("Не удалось получить список файлов из директории: {}", path);
+
             return matchedFiles;
         }
 

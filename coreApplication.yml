@@ -441,7 +441,7 @@ services:
       CRG_OPTIONS_DATA_SERVICE_URL: http://data-service:8084
       CRG_OPTIONS_CARBONE_URL: http://carbone:4000
 
-      CRG_OPTIONS_SYSTEM_ADMIN_LOGIN_JWT_SECRET: ${SECURITY_JWT_SECRET}
+      CRG_OPTIONS_JWT_SECRET: ${SECURITY_JWT_SECRET}
 
     volumes:
       - /opt/crg/logs:/opt/logs

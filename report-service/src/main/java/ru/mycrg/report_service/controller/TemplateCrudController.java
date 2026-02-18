@@ -33,7 +33,7 @@ import static ru.mycrg.report_service.mappers.TemplateMapper.mapToTemplateFullIn
 import static ru.mycrg.report_service.services.DataServiceSpeaker.FILE_MEDIA_TYPE;
 
 @RestController
-@RequestMapping(value = "/temlates")
+@RequestMapping(value = "/templates")
 public class TemplateCrudController {
 
     private final Logger log = LoggerFactory.getLogger(TemplateCrudController.class);

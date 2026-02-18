@@ -39,7 +39,7 @@ public class ReportClient {
     public ResponseModel<List<TemplateShortProjection>> getAll() throws MalformedURLException, HttpClientException {
         Request request = new Request.Builder()
                 .addHeader("Authorization", "Bearer " + authenticationFacade.getAccessToken())
-                .url(new URL(reportServiceUrl, "/temlates/"))
+                .url(new URL(reportServiceUrl, "/templates/"))
                 .get()
                 .build();
 

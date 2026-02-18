@@ -44,8 +44,13 @@ public class ReplacePictureService {
              XWPFDocument document = new XWPFDocument(fis)) {
 
             Map<String, List<PictureWithDescription>> imagesInDock = findAllImages(document);
-            log.debug("Ключи найденные в шаблоне печати: {}", imagesInDock.keySet());
+            if (imagesInDock.isEmpty()) {
+                log.warn("Ни один переданный в media ключ не был найден в документе!");
 
+                return file;
+            }
+
+            log.debug("Ключи найденные в шаблоне печати: {}", imagesInDock.keySet());
             for (Map.Entry<String, String> entry: media.entrySet()) {
                 String placeholder = entry.getKey();
                 log.debug("Работаем с картинкой по ключу: {}", placeholder);
@@ -71,6 +76,10 @@ public class ReplacePictureService {
     }
 
     private void swapPicture(String base64Picture, List<PictureWithDescription> locations) {
+        if (locations == null || locations.isEmpty()) {
+            return;
+        }
+
         byte[] imageBytes = imagesUtils.decodePicture(base64Picture);
 
         for (PictureWithDescription picture: locations) {
@@ -118,10 +127,9 @@ public class ReplacePictureService {
     }
 
     /**
-     * Рекурсивно ищет картинки с плейсхолдерами в таблице документа.
-     * Поддерживает вложенные таблицы.
+     * Рекурсивно ищет картинки с плейсхолдерами в таблице документа. Поддерживает вложенные таблицы.
      *
-     * @param table таблица для обработки
+     * @param table     таблица для обработки
      * @param imagesMap мапа для сохранения найденных картинок (ключ - плейсхолдер, значение - список картинок)
      */
     private void findPicturesInTable(XWPFTable table, Map<String, List<PictureWithDescription>> imagesMap) {

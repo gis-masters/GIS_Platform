@@ -36,18 +36,27 @@ public class DocxUtils {
 
             // 1. Проверяем прямые drawing элементы
             try (XmlCursor cursor = ctR.newCursor()) {
-                cursor.toFirstChild();
+                boolean hasChild = cursor.toFirstChild();
+                log.debug("Run имеет дочерние элементы: {}", hasChild);
 
-                do {
-                    String localPart = cursor.getName().getLocalPart();
-                    if ("drawing".equals(localPart)) {
-                        Optional<String> description = extractDescription(cursor);
+                if (hasChild) {
+                    do {
+                        String localPart = cursor.getName().getLocalPart();
+                        log.debug("Найден элемент: {}", localPart);
+                        
+                        if ("drawing".equals(localPart)) {
+                            log.debug("Найден drawing элемент, извлекаем описание...");
+                            Optional<String> description = extractDescription(cursor);
 
-                        description
-                                .ifPresent(desc -> result.add(
-                                        new PictureWithDescription(desc, paragraph, run)));
-                    }
-                } while (cursor.toNextSibling());
+                            if (description.isPresent()) {
+                                log.debug("Найдено описание: {}", description.get());
+                                result.add(new PictureWithDescription(description.get(), paragraph, run));
+                            } else {
+                                log.debug("Описание не найдено в drawing элементе");
+                            }
+                        }
+                    } while (cursor.toNextSibling());
+                }
             }
 
             // 2. Проверяем AlternateContent (для картинок в совместимом формате)
@@ -123,35 +132,55 @@ public class DocxUtils {
      * @return описание картинки или null
      */
     private Optional<String> extractDescription(XmlCursor cursor) {
+        log.debug("extractDescription: начало извлечения описания");
+        
+        // Попытка 1: проверяем inline
         try (XmlCursor innerCursor = cursor.newCursor()) {
-            if (innerCursor.toChild(
-                    new QName("http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing", "inline"))) {
-                if (innerCursor.toChild(
-                        new QName("http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing", "docPr"))) {
+            boolean hasInline = innerCursor.toChild(
+                    new QName("http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing", "inline"));
+            log.debug("extractDescription: есть inline элемент: {}", hasInline);
+            
+            if (hasInline) {
+                boolean hasDocPr = innerCursor.toChild(
+                        new QName("http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing", "docPr"));
+                log.debug("extractDescription: inline имеет docPr: {}", hasDocPr);
+                
+                if (hasDocPr) {
                     String descr = innerCursor.getAttributeText(new QName("descr"));
+                    log.debug("extractDescription: inline descr атрибут: {}", descr);
+                    
                     if (descr != null) {
                         log.debug("Извлечено описание из inline: {}", descr);
-
                         return Optional.of(descr);
                     }
                 }
             }
-
-            innerCursor.toParent();
-            if (innerCursor.toChild(
-                    new QName("http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing", "anchor"))) {
-                if (innerCursor.toChild(
-                        new QName("http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing", "docPr"))) {
+        }
+        
+        // Попытка 2: проверяем anchor (создаём новый курсор от исходной позиции)
+        try (XmlCursor innerCursor = cursor.newCursor()) {
+            boolean hasAnchor = innerCursor.toChild(
+                    new QName("http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing", "anchor"));
+            log.debug("extractDescription: есть anchor элемент: {}", hasAnchor);
+            
+            if (hasAnchor) {
+                boolean hasDocPr = innerCursor.toChild(
+                        new QName("http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing", "docPr"));
+                log.debug("extractDescription: anchor имеет docPr: {}", hasDocPr);
+                
+                if (hasDocPr) {
                     String descr = innerCursor.getAttributeText(new QName("descr"));
+                    log.debug("extractDescription: anchor descr атрибут: {}", descr);
+                    
                     if (descr != null) {
                         log.debug("Извлечено описание из anchor: {}", descr);
-
-                        return descr.describeConstable();
+                        return Optional.of(descr);
                     }
                 }
             }
         }
 
+        log.debug("extractDescription: описание не найдено, возврат empty");
         return Optional.empty();
     }
 

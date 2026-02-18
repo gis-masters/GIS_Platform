@@ -107,8 +107,8 @@ zuul:
       url: http://crg-report-service:8090/reports/
 
     crg-report-templates:
-      path: /temlates/**
-      url: http://crg-report-service:8090/temlates/
+      path: /templates/**
+      url: http://crg-report-service:8090/templates/
 
     # Geoserver
     geoserver:

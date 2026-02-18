@@ -24,19 +24,19 @@ public class TemplatesStepsDefinitions extends BaseStepsDefinitions {
 
     @Override
     public RequestSpecification getBaseRequest() {
-        return super.getBaseRequest().basePath("/temlates");
+        return super.getBaseRequest().basePath("/templates");
     }
 
     @Override
     public RequestSpecification getBaseRequestWithCurrentCookie() {
-        return super.getBaseRequestWithCurrentCookie().basePath("/temlates");
+        return super.getBaseRequestWithCurrentCookie().basePath("/templates");
     }
 
     @When("я удаляю шаблон печати по имени {string}")
     public void deleteSystemTemplate(String templateName) {
         response = getBaseRequestWithCurrentCookie()
                 .given().
-                        basePath("/temlates/" + templateName)
+                        basePath("/templates/" + templateName)
                 .when().
                         log().ifValidationFails().
                         delete();
@@ -51,7 +51,7 @@ public class TemplatesStepsDefinitions extends BaseStepsDefinitions {
     public void getDefaultTemplate(String templateName) {
         response = getBaseRequestWithCurrentCookie()
                 .given().
-                         basePath("/temlates/" + templateName)
+                         basePath("/templates/" + templateName)
                 .when().
                          log().ifValidationFails().
                          get();
@@ -61,7 +61,7 @@ public class TemplatesStepsDefinitions extends BaseStepsDefinitions {
     public void downloadDefaultTemplate(String templateName) {
         response = getBaseRequestWithCurrentCookie()
                 .given().
-                         basePath("/temlates/" + templateName + "/download")
+                         basePath("/templates/" + templateName + "/download")
                 .when().
                          log().ifValidationFails().
                          get();
@@ -98,7 +98,7 @@ public class TemplatesStepsDefinitions extends BaseStepsDefinitions {
     public void deleteTemplate(String templateName) {
         response = getBaseRequestWithCurrentCookie()
                 .given().
-                        basePath("/temlates/" + templateName)
+                        basePath("/templates/" + templateName)
                 .when().
                         log().ifValidationFails().
                         delete();

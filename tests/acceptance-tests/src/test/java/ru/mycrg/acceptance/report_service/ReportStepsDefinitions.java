@@ -50,16 +50,6 @@ public class ReportStepsDefinitions extends BaseStepsDefinitions {
         assertNotNull(UUID.fromString(answer.substring(1, answer.length() - 1)));
     }
 
-    @Given("создан отчёт с данными по-умолчанию")
-    public void createReportIfNotExist() {
-        if (currentReportFileId == null) {
-            postReport();
-        }
-
-        assertNotNull(currentReportFileId);
-        currentFileId = currentReportFileId;
-    }
-
     @Given("создан отчёт в формате {string}")
     public void createExpectedFormatReport(String reportFormat) {
         postReport(reportFormat);

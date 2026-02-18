@@ -127,7 +127,9 @@ public class TemplateService {
             List<File> files = fileService.
                     getFilesByPathWithPattern(TEMPLATES_DIR, Pattern.compile(template + "\\.(?!json$).*"));
 
-            fileService.deleteByPath(files.getFirst().getPath());
+            if (!files.isEmpty()) {
+                fileService.deleteByPath(files.getFirst().getPath());
+            }
         }
     }
 

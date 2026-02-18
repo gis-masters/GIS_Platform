@@ -12,12 +12,13 @@ import static ru.mycrg.common_contracts.generated.report_service.ReportOutputFor
 
 public class ReportRequestBuilder {
 
-    public static String DEFAULT_SYSTEM_TEMPLATE_NAME = "featureExtractMini";
+    public static final String DEFAULT_SYSTEM_TEMPLATE_NAME = "featureExtractMini";
 
     public static ReportMainDto prepareReport(String dataTemplate) {
         switch (dataTemplate) {
             case "PDF":
-                return createDefaultReport();
+            case DEFAULT_SYSTEM_TEMPLATE_NAME:
+                return createPdfReport();
 
             case "DOCX":
             case "JPEG":
@@ -37,8 +38,10 @@ public class ReportRequestBuilder {
                 return emptyMediaAndData();
 
             case "user template":
-                ReportMainDto dto = createDefaultReport();
+            case "featureExtractFullFlat":
+                ReportMainDto dto = createPdfReport();
                 dto.setTemplateName(dataTemplate);
+                dto.setOutputFormat(DOCX);
 
                 return dto;
         }
@@ -111,7 +114,7 @@ public class ReportRequestBuilder {
         return new ReportMainDto(DOCX, dataTemplate, media, data);
     }
 
-    private static ReportMainDto createDefaultReport() {
+    private static ReportMainDto createPdfReport() {
         //просто чёрный квадрат
         String base64Picture = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR4AWJiYGD4DwAAAP//cGajQwAAAAZJREFUAwABDgEC81VxbAAAAABJRU5ErkJggg==";
         Map<String, String> media = new HashMap<>() {{
@@ -131,21 +134,21 @@ public class ReportRequestBuilder {
     }
 
     private static ReportMainDto emptyOutputFormat() {
-        ReportMainDto dto = createDefaultReport();
+        ReportMainDto dto = createPdfReport();
         dto.setOutputFormat(null);
 
         return dto;
     }
 
     private static ReportMainDto createReportCustomExtension(String ext) {
-        ReportMainDto dto = createDefaultReport();
+        ReportMainDto dto = createPdfReport();
         dto.setOutputFormat(ReportOutputFormat.valueOf(ext));
 
         return dto;
     }
 
     private static ReportMainDto emptyMediaAndData() {
-        ReportMainDto dto = createDefaultReport();
+        ReportMainDto dto = createPdfReport();
         dto.setMedia(null);
         dto.setData(null);
 
