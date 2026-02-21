@@ -495,7 +495,7 @@
 					</se:PointSymbolizer>
 				</se:Rule>
 				<se:Rule>
-					<se:Name>60201050531</se:Name>
+					<se:Name>60201050631</se:Name>
 					<se:Description>
 						<se:Title>Объекты молодежной политики существующие</se:Title>
 					</se:Description>
@@ -503,7 +503,7 @@
 						xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
-							<ogc:Literal>60201050531</ogc:Literal>
+							<ogc:Literal>60201050631</ogc:Literal>
 						</ogc:PropertyIsEqualTo>
 					</ogc:Filter>
 					<se:PolygonSymbolizer>
@@ -518,7 +518,7 @@
 					<se:PointSymbolizer>
 						<se:Graphic>
 							<se:ExternalGraphic>
-								<se:OnlineResource xlink:type="simple" xlink:href="svg_698/01_Oks_social/05_Social/60201050531.svg" />
+								<se:OnlineResource xlink:type="simple" xlink:href="svg_698/01_Oks_social/05_Social/60201050631.svg" />
 								<se:Format>image/svg+xml</se:Format>
 							</se:ExternalGraphic>
 							<se:Size>40</se:Size>
@@ -526,7 +526,7 @@
 					</se:PointSymbolizer>
 				</se:Rule>
 				<se:Rule>
-					<se:Name>60201050532</se:Name>
+					<se:Name>60201050632</se:Name>
 					<se:Description>
 						<se:Title>Объекты молодежной политики планируемые к размещению</se:Title>
 					</se:Description>
@@ -534,7 +534,7 @@
 						xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
-							<ogc:Literal>60201050532</ogc:Literal>
+							<ogc:Literal>60201050632</ogc:Literal>
 						</ogc:PropertyIsEqualTo>
 					</ogc:Filter>
 					<se:PolygonSymbolizer>
@@ -549,7 +549,7 @@
 					<se:PointSymbolizer>
 						<se:Graphic>
 							<se:ExternalGraphic>
-								<se:OnlineResource xlink:type="simple" xlink:href="svg_698/01_Oks_social/05_Social/60201050532.svg" />
+								<se:OnlineResource xlink:type="simple" xlink:href="svg_698/01_Oks_social/05_Social/60201050632.svg" />
 								<se:Format>image/svg+xml</se:Format>
 							</se:ExternalGraphic>
 							<se:Size>40</se:Size>
@@ -557,7 +557,7 @@
 					</se:PointSymbolizer>
 				</se:Rule>
 				<se:Rule>
-					<se:Name>60201050533</se:Name>
+					<se:Name>60201050633</se:Name>
 					<se:Description>
 						<se:Title>Объекты молодежной политики планируемые к реконструкции</se:Title>
 					</se:Description>
@@ -565,7 +565,7 @@
 						xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
-							<ogc:Literal>60201050533</ogc:Literal>
+							<ogc:Literal>60201050633</ogc:Literal>
 						</ogc:PropertyIsEqualTo>
 					</ogc:Filter>
 					<se:PolygonSymbolizer>
@@ -580,7 +580,7 @@
 					<se:PointSymbolizer>
 						<se:Graphic>
 							<se:ExternalGraphic>
-								<se:OnlineResource xlink:type="simple" xlink:href="svg_698/01_Oks_social/05_Social/60201050533.svg" />
+								<se:OnlineResource xlink:type="simple" xlink:href="svg_698/01_Oks_social/05_Social/60201050633.svg" />
 								<se:Format>image/svg+xml</se:Format>
 							</se:ExternalGraphic>
 							<se:Size>40</se:Size>
@@ -588,7 +588,7 @@
 					</se:PointSymbolizer>
 				</se:Rule>
 				<se:Rule>
-					<se:Name>60201050534</se:Name>
+					<se:Name>60201050634</se:Name>
 					<se:Description>
 						<se:Title>Объекты молодежной политики планируемые к ликвидации</se:Title>
 					</se:Description>
@@ -596,7 +596,7 @@
 						xmlns:ogc="http://www.opengis.net/ogc">
 						<ogc:PropertyIsEqualTo>
 							<ogc:PropertyName>ruleid</ogc:PropertyName>
-							<ogc:Literal>60201050534</ogc:Literal>
+							<ogc:Literal>60201050634</ogc:Literal>
 						</ogc:PropertyIsEqualTo>
 					</ogc:Filter>
 					<se:PolygonSymbolizer>
@@ -611,7 +611,7 @@
 					<se:PointSymbolizer>
 						<se:Graphic>
 							<se:ExternalGraphic>
-								<se:OnlineResource xlink:type="simple" xlink:href="svg_698/01_Oks_social/05_Social/60201050534.svg" />
+								<se:OnlineResource xlink:type="simple" xlink:href="svg_698/01_Oks_social/05_Social/60201050634.svg" />
 								<se:Format>image/svg+xml</se:Format>
 							</se:ExternalGraphic>
 							<se:Size>40</se:Size>
