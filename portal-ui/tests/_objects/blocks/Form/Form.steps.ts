@@ -4,7 +4,6 @@ import { usersAddDialogBlock } from '../Users/AddDialog/Users-AddDialog.block';
 import { formContentBlock } from './Content/Form-Content.block';
 import { formControlTypeChoiceBlock } from './Control/Form-Control_type_choice.block';
 import { formControlTypeDocumentBlock } from './Control/Form-Control_type_document.block';
-import { formControlTypeFileBlock } from './Control/Form-Control_type_file.block';
 import { formControlTypeStringBlock } from './Control/Form-Control_type_string.block';
 import { formControlTypeUrlBlock } from './Control/Form-Control_type_url.block';
 import { formControlTypeUserBlock } from './Control/Form-Control_type_user.block';
@@ -55,10 +54,6 @@ Then('блок FormViewTypeUser вариант {string} выглядит как 
   await formViewTypeUserBlock.assertSelfie(variant);
 });
 
-Then('блок FormControlTypeFile вариант {string} выглядит как положено', async (variant: string) => {
-  await formControlTypeFileBlock.assertSelfie(variant);
-});
-
 // choice
 
 Then('блок FormControlTypeChoice вариант {string} выглядит как положено', async (variant: string) => {
@@ -96,20 +91,8 @@ Then('блок FormViewTypeString вариант {string} выглядит ка�
 
 // file
 
-When('в поле файла у прикрепленного файла {string} есть кнопка `Разместить в проекте`', async (title: string) => {
-  expect(await formControlTypeFileBlock.isFilesPlacementBtnExist(title)).toBeTruthy();
-});
-
-When('в поле файл у прикрепленного файла {string} нет кнопки `Разместить в проекте`', async (title: string) => {
-  expect(await formControlTypeFileBlock.isFilesPlacementBtnExist(title)).toBeFalsy();
-});
-
 Then('блок FormViewTypeFile вариант {string} выглядит как положено', async (variant: string) => {
   await formViewTypeFileBlock.assertSelfie(variant);
-});
-
-Then('в поле файл у набора файлов есть единственная кнопка `Удалить набор`', async () => {
-  expect(await formControlTypeFileBlock.isCompoundFileHaveSingleDeleteBtn()).toBeTruthy();
 });
 
 Then('в поле файл у набора файлов есть единственная кнопка `Скачать набор файлов архивом`', async () => {

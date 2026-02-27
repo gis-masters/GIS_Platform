@@ -6,7 +6,7 @@ import { type WaitUntilOptions } from 'webdriverio';
 import { type PropertySchema, PropertyType, type Schema } from '../../../../src/app/services/data/schema/schema.models';
 import { sortObjects } from '../../../../src/app/services/util/sortObjects';
 import { getAttributesTableFilter } from '../../commands/attributesTable/getAttributesTableFilter';
-import { getVectorTableByTitle } from '../../commands/tables/getVectorTableByTitle';
+import { getVectorTableInDatasetByTitle } from '../../commands/tables/getVectorTableByTitle';
 import { type ScenarioScope } from '../../ScenarioScope';
 import { getSortDirection } from '../../utils/getSortDirection';
 import { layersSidebarBlock } from '../LayersSidebar/LayersSidebar.block';
@@ -143,7 +143,7 @@ Then(
   'в атрибутивной таблице {string} настроенные фильтры не изменились',
   async function (this: ScenarioScope, title: string) {
     const currentFilter = await getAttributesTableFilter();
-    const table = await getVectorTableByTitle(this.latestDataset.identifier, title);
+    const table = await getVectorTableInDatasetByTitle(this.latestDataset.identifier, title);
 
     if (!currentFilter) {
       throw new Error('Текущий фильтр не установлен');

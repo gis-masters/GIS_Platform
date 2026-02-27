@@ -9,7 +9,7 @@ import { type TestUser } from '../auth/testUsers';
 import { getDatasetByTitle } from '../datasets/getDatasetByTitle';
 import { addVectorTablePermissions } from './addVectorTablePermissions';
 import { createVectorTableAs } from './createVectorTableAs';
-import { getVectorTableByTitle } from './getVectorTableByTitle';
+import { getVectorTableInDatasetByTitle } from './getVectorTableByTitle';
 import { getTestFeatures } from './testFeatures';
 import { createRecordAsAdmin } from './vectorTableRecordsManagement';
 
@@ -85,6 +85,25 @@ Given('таблица наполнена данными {string}', async functio
   }
 });
 
+Given('таблица наполнена данными, c один файлом, для фотослоя', async function (this: ScenarioScope) {
+  this.latestFeatures = await getTestFeatures('для фотослоя с несколькими объектами', this.latestSchema);
+  if (this.latestFeatures?.every(feature => feature.properties.photo)) {
+    this.latestFeatures.map(
+      feature =>
+        (feature.properties.photo = [
+          {
+            id: this.latestUploadedFiles[0].id,
+            size: this.latestUploadedFiles[0].size,
+            title: this.latestUploadedFiles[0].title
+          }
+        ])
+    );
+  }
+  for (const feature of this.latestFeatures) {
+    await createRecordAsAdmin(this.latestDataset.identifier, this.latestVectorTable.identifier, feature);
+  }
+});
+
 Given('таблица наполнена данными для фотослоя c несколькими объектами', async function (this: ScenarioScope) {
   this.latestFeatures = await getTestFeatures('для фотослоя с несколькими объектами', this.latestSchema);
   if (this.latestFeatures?.every(feature => feature.properties.photo)) {
@@ -103,7 +122,7 @@ Given(
     if (!userFromApi) {
       throw new Error(`Не найден пользователь ${user.email}`);
     }
-    const table = await getVectorTableByTitle(this.latestDataset.identifier, tableTitle);
+    const table = await getVectorTableInDatasetByTitle(this.latestDataset.identifier, tableTitle);
     await addVectorTablePermissions(
       { role, principalId: userFromApi.id, principalType: PrincipalType.USER },
       this.latestDataset.identifier,

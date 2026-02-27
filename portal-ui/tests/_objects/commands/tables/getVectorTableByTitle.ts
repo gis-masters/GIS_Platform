@@ -3,7 +3,10 @@ import { vectorDataClient } from '../../../../src/app/services/data/vectorData/v
 import { type VectorTable } from '../../../../src/app/services/data/vectorData/vectorData.models';
 import { requestAsAdmin } from '../requestAs';
 
-export async function getVectorTableByTitle(datasetIdentifier: string, tableTitle: string): Promise<VectorTable> {
+export async function getVectorTableInDatasetByTitle(
+  datasetIdentifier: string,
+  tableTitle: string
+): Promise<VectorTable> {
   const response = await requestAsAdmin(vectorDataClient.getVectorTablesInDataset, datasetIdentifier, {
     page: 0,
     pageSize: 2,

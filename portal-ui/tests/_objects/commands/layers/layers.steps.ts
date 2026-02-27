@@ -5,7 +5,7 @@ import { type CrgLayer, CrgLayerType, type NewCrgLayer } from '../../../../src/a
 import { type ScenarioScope } from '../../ScenarioScope';
 import { getDatasetByTitle } from '../datasets/getDatasetByTitle';
 import { getProjectByTitle } from '../projects/getProjectByTitle';
-import { getVectorTableByTitle } from '../tables/getVectorTableByTitle';
+import { getVectorTableInDatasetByTitle } from '../tables/getVectorTableByTitle';
 import { createLayer } from './createLayer';
 import { getLayer } from './getLayer';
 import { getLayerSchema } from './getLayerSchema';
@@ -104,7 +104,7 @@ Given('существует слой с параметрами:', async function
   const [projectTitle, layerTitle, tableTitle, datasetTitle, enabled, viewId] = table.rows()[0];
   const dataset = await getDatasetByTitle(datasetTitle);
   const project = await getProjectByTitle(projectTitle);
-  const vectorTable = await getVectorTableByTitle(dataset.identifier, tableTitle);
+  const vectorTable = await getVectorTableInDatasetByTitle(dataset.identifier, tableTitle);
 
   const layer = {
     type: CrgLayerType.VECTOR,
