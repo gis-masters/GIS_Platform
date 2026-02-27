@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.mycrg.common_contracts.generated.report_service.ReportMainDto;
+import ru.mycrg.report_service.config.custom_annotation.RequiresCarboneHealth;
 import ru.mycrg.report_service.exceptions.BadRequestException;
 import ru.mycrg.report_service.services.IReportService;
 
@@ -25,6 +26,7 @@ public class ReportMainController {
 
     @PostMapping
     @PreAuthorize("isAuthenticated()")
+    @RequiresCarboneHealth
     public ResponseEntity<UUID> createReport(@Valid @RequestBody ReportMainDto dto) {
 
         throwIfInvalid(dto);
