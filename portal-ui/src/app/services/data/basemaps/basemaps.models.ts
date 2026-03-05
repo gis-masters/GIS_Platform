@@ -7,6 +7,7 @@ export enum SourceType {
   WMTS_P = 'WMTS_P'
 }
 
+// TODO: сделать наследование от BaseMapRequestModel (Azure № 3984)
 export interface Basemap {
   id: number;
   name?: string;

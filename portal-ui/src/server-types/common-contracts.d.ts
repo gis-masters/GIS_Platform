@@ -5,6 +5,23 @@ export interface SpatialReferenceSystem {
   proj4Text: string;
 }
 
+export interface BaseMapRequestModel {
+  name: string;
+  title: string;
+  thumbnailUrn: string;
+  type: BaseMapType;
+  url: string;
+  layerName: string;
+  style: string;
+  projection: string;
+  format: string;
+  size: number;
+  resolution: number;
+  matrixIds: number;
+  position: number;
+  pluggableToNewProject: boolean;
+}
+
 export interface DatasetAndTableModel {
   datasetTitle: string;
   datasetIdentifier: string;
@@ -296,6 +313,8 @@ export interface Settings {
   defaultEpsg: string;
   tags: string[];
 }
+
+export type BaseMapType = 'OSM' | 'XYZ' | 'WMTS' | 'WMTS_P';
 
 export type GpkgExportType = 'PROJECT' | 'LAYER' | 'TABLE';
 

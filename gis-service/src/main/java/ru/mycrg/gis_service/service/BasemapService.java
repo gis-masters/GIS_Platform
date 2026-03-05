@@ -3,6 +3,7 @@ package ru.mycrg.gis_service.service;
 import org.springframework.data.projection.ProjectionFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.mycrg.auth_facade.IAuthenticationFacade;
 import ru.mycrg.gis_service.dto.BaseMapCreateDto;
 import ru.mycrg.gis_service.dto.BaseMapProjection;
 import ru.mycrg.gis_service.dto.project.IProjectProjection;
@@ -31,15 +32,18 @@ public class BasemapService {
     private final ProjectService projectService;
     private final BaseMapRepository baseMapRepository;
     private final ProjectionFactory projectionFactory;
+    private final IAuthenticationFacade authenticationFacade;
 
     public BasemapService(JsonPatcher jsonPatcher,
                           ProjectService projectService,
                           ProjectionFactory projectionFactory,
-                          BaseMapRepository baseMapRepository) {
+                          BaseMapRepository baseMapRepository,
+                          IAuthenticationFacade authenticationFacade) {
         this.jsonPatcher = jsonPatcher;
         this.projectService = projectService;
         this.baseMapRepository = baseMapRepository;
         this.projectionFactory = projectionFactory;
+        this.authenticationFacade = authenticationFacade;
     }
 
     public List<BaseMapProjection> getAll(long projectId) {
@@ -77,11 +81,10 @@ public class BasemapService {
         baseMapRepository.delete(baseMap);
     }
 
-    public void deleteByBasemapId(Long sourceBasemapId) {
-        baseMapRepository.findAllByBaseMapId(sourceBasemapId)
+    public void deleteByBasemapId(Long sourceBasemapId, Long orgId) {
+        baseMapRepository.findByBasemapIdAndOrgId(sourceBasemapId, orgId)
                          .forEach(basemap -> {
-                             basemap.getProjects()
-                                    .forEach(project -> project.getBaseMaps().remove(basemap));
+                             basemap.getProject().getBaseMaps().remove(basemap);
 
                              baseMapRepository.delete(basemap);
                          });
@@ -119,8 +122,8 @@ public class BasemapService {
         final List<Project> projects = new ArrayList<>();
 
         baseMapRepository
-                .findAllByBaseMapId(sourceBasemapId)
-                .forEach(basemap -> projects.addAll(basemap.getProjects()));
+                .findByBasemapIdAndOrgId(sourceBasemapId, authenticationFacade.getOrganizationId())
+                .forEach(basemap -> projects.add(basemap.getProject()));
 
         return projects.stream()
                        .map(baseMap -> projectionFactory.createProjection(IProjectProjection.class, baseMap))

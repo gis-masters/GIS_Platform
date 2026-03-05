@@ -6,9 +6,7 @@ import ru.mycrg.gis_service.dto.BaseMapCreateDto;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.HashSet;
 import java.util.Objects;
-import java.util.Set;
 
 @Entity
 @Table(name = "basemaps")
@@ -35,13 +33,13 @@ public class BaseMap implements Identifiable<Long> {
     private @LastModifiedDate
     LocalDateTime lastModified = LocalDateTime.now();
 
-    @OneToMany
+    @ManyToOne
     @JoinTable(
             name = "projects_basemaps",
             joinColumns = {@JoinColumn(name = "basemap_id")},
             inverseJoinColumns = {@JoinColumn(name = "project_id")}
     )
-    private Set<Project> projects = new HashSet<>();
+    private Project project;
 
     public BaseMap() {
         // Required
@@ -105,12 +103,12 @@ public class BaseMap implements Identifiable<Long> {
         this.lastModified = lastModified;
     }
 
-    public Set<Project> getProjects() {
-        return projects;
+    public Project getProject() {
+        return project;
     }
 
-    public void setProjects(Set<Project> projects) {
-        this.projects = projects;
+    public void setProject(Project project) {
+        this.project = project;
     }
 
     @Override

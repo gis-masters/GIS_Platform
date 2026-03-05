@@ -24,6 +24,13 @@ export async function getBasemapsWithParticularOne(
   return await basemapsClient.betBasemapsWithParticularOne(id, pageOptions);
 }
 
+export async function createBasemap(basemap: Omit<Basemap, 'id'>): Promise<Basemap> {
+  const created = await basemapsClient.createBasemap(basemap);
+  communicationService.basemapUpdated.emit({ type: 'create', data: created });
+
+  return created;
+}
+
 export async function updateBasemap(basemap: Basemap, patch: Partial<Basemap>): Promise<void> {
   await basemapsClient.updateBasemap(basemap.id, patch);
   communicationService.basemapUpdated.emit({ type: 'update', data: { ...basemap, ...patch } });

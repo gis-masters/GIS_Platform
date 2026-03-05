@@ -54,6 +54,10 @@ class BasemapsClient extends Client {
     );
   }
 
+  async createBasemap(basemap: Omit<Basemap, 'id'>): Promise<Basemap> {
+    return await http.post(this.getBasemapsUrl(), basemap);
+  }
+
   async updateBasemap(id: number, patch: Partial<Basemap>): Promise<void> {
     return await http.patch(this.getBasemapUrl(id), patch);
   }

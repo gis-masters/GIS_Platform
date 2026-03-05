@@ -9,5 +9,7 @@ export enum Mime {
   ZIP = 'application/zip, application/x-zip-compressed, multipart/x-zip',
   SHAPE_ZIP = 'shape-zip',
   FORM_DATA = 'multipart/form-data',
-  VND_JPEG_PNG8 = 'image/vnd.jpeg-png8'
+  VND_JPEG_PNG8 = 'image/vnd.jpeg-png8',
+  IMAGE_PNG = 'image/png',
+  IMAGE_JPEG = 'image/jpeg'
 }

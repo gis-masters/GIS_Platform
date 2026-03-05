@@ -10,6 +10,8 @@ import {
 } from '../../../../services/data/basemaps/basemaps.service';
 import { type PageOptions, SortOrder } from '../../../../services/models';
 import { staticImplements } from '../../../../services/util/staticImplements';
+import { currentUser } from '../../../../stores/CurrentUser.store';
+import { CreateBasemap } from '../../../CreateBasemap/CreateBasemap';
 import { Basemap as BasemapIcon } from '../../../Icons/Basemap';
 import { type Adapter, type ExplorerItemData, ExplorerItemType, type SortItem } from '../../Explorer.models';
 import { type ExplorerService } from '../../Explorer.service';
@@ -92,6 +94,14 @@ export class ExplorerAdapterTypeBasemapsRoot {
 
   static getChildrenSortDefaultOrder(): SortOrder {
     return SortOrder.DESC;
+  }
+
+  static getToolbarActions(): ReactNode {
+    if (currentUser.isAdmin) {
+      return <CreateBasemap />;
+    }
+
+    return null;
   }
 
   static getRefreshEmitters(): Emitter<DataChangeEventDetail<Basemap>>[] {

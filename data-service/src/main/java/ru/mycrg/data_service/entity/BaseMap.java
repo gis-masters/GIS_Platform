@@ -1,6 +1,7 @@
 package ru.mycrg.data_service.entity;
 
 import org.springframework.data.annotation.LastModifiedDate;
+import ru.mycrg.common_contracts.generated.data_service.BaseMapType;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -25,8 +26,9 @@ public class BaseMap {
     @Column
     private String thumbnailUrn;
 
+    @Enumerated(EnumType.STRING)
     @Column(length = 20)
-    private String type;
+    private BaseMapType type;
 
     @Column
     private String url;
@@ -101,11 +103,11 @@ public class BaseMap {
         this.thumbnailUrn = thumbnailUrn;
     }
 
-    public String getType() {
+    public BaseMapType getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(BaseMapType type) {
         this.type = type;
     }
 

@@ -11,6 +11,7 @@ public class BasemapReferencesDeletionEvent extends DefaultMessageBusRequestEven
     private final Long basemapId;
     private final String complexLayerName;
     private final String authToken;
+    private final Long orgId;
 
     public BasemapReferencesDeletionEvent() {
         super();
@@ -18,14 +19,16 @@ public class BasemapReferencesDeletionEvent extends DefaultMessageBusRequestEven
         this.basemapId = null;
         this.authToken = null;
         this.complexLayerName = null;
+        this.orgId = null;
     }
 
-    public BasemapReferencesDeletionEvent(Long basemapId, String complexLayerName, String authToken) {
+    public BasemapReferencesDeletionEvent(Long basemapId, String complexLayerName, String authToken, Long orgId) {
         super(UUID.randomUUID(), COMMON_REQUEST_QUEUE);
 
         this.basemapId = basemapId;
         this.authToken = authToken;
         this.complexLayerName = complexLayerName;
+        this.orgId = orgId;
     }
 
     public Long getBasemapId() {
@@ -38,5 +41,9 @@ public class BasemapReferencesDeletionEvent extends DefaultMessageBusRequestEven
 
     public String getComplexLayerName() {
         return complexLayerName;
+    }
+
+    public Long getOrgId() {
+        return orgId;
     }
 }

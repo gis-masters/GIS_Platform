@@ -1,7 +1,7 @@
 package ru.mycrg.data_service.service.cqrs.basemaps.handlers;
 
 import org.springframework.stereotype.Component;
-import ru.mycrg.data_service.dto.BaseMapCreateDto;
+import ru.mycrg.common_contracts.generated.data_service.BaseMapRequestModel;
 import ru.mycrg.data_service.entity.BaseMap;
 import ru.mycrg.data_service.repository.BaseMapRepository;
 import ru.mycrg.data_service.service.cqrs.basemaps.requests.CreateBaseMapRequest;
@@ -20,7 +20,7 @@ public class CreateBaseMapRequestHandler implements IRequestHandler<CreateBaseMa
 
     @Override
     public BaseMap handle(CreateBaseMapRequest request) {
-        BaseMapCreateDto baseMapCreateDto = request.getBaseMapCreateDto();
+        BaseMapRequestModel baseMapCreateDto = request.getBaseMapCreateDto();
 
         BaseMap savedBaseMap = baseMapRepository.save(basemapMapper.toEntity(baseMapCreateDto));
         request.setEntity(savedBaseMap);

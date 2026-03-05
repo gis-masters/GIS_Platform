@@ -36,7 +36,8 @@ public class DeleteBaseMapRequestHandler implements IRequestHandler<DeleteBaseMa
 
         messageBus.produce(new BasemapReferencesDeletionEvent(baseMap.getId(),
                                                               baseMap.getLayerName(),
-                                                              authenticationFacade.getAccessToken()));
+                                                              authenticationFacade.getAccessToken(),
+                                                              authenticationFacade.getOrganizationId()));
 
         return new Voidy();
     }

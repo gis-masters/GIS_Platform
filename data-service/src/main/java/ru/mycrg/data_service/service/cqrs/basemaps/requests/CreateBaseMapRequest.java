@@ -3,7 +3,7 @@ package ru.mycrg.data_service.service.cqrs.basemaps.requests;
 import com.fasterxml.jackson.databind.JsonNode;
 import ru.mycrg.audit_service_contract.Auditable;
 import ru.mycrg.audit_service_contract.events.CrgAuditEvent;
-import ru.mycrg.data_service.dto.BaseMapCreateDto;
+import ru.mycrg.common_contracts.generated.data_service.BaseMapRequestModel;
 import ru.mycrg.data_service.entity.BaseMap;
 import ru.mycrg.mediator.IRequest;
 
@@ -12,10 +12,10 @@ import static ru.mycrg.data_service.util.JsonConverter.mapper;
 
 public class CreateBaseMapRequest implements IRequest<BaseMap>, Auditable {
 
-    private final BaseMapCreateDto baseMapCreateDto;
+    private final BaseMapRequestModel baseMapCreateDto;
     private BaseMap entity;
 
-    public CreateBaseMapRequest(BaseMapCreateDto baseMapCreateDto) {
+    public CreateBaseMapRequest(BaseMapRequestModel baseMapCreateDto) {
         this.baseMapCreateDto = baseMapCreateDto;
     }
 
@@ -33,7 +33,7 @@ public class CreateBaseMapRequest implements IRequest<BaseMap>, Auditable {
                                  entity.getId());
     }
 
-    public BaseMapCreateDto getBaseMapCreateDto() {
+    public BaseMapRequestModel getBaseMapCreateDto() {
         return baseMapCreateDto;
     }
 

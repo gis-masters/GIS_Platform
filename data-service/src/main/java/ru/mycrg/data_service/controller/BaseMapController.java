@@ -7,9 +7,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import ru.mycrg.data_service.dto.BaseMapCreateDto;
+import ru.mycrg.common_contracts.OnCreate;
+import ru.mycrg.common_contracts.generated.data_service.BaseMapRequestModel;
 import ru.mycrg.data_service.dto.BaseMapProjection;
-import ru.mycrg.data_service.dto.BaseMapUpdateDto;
 import ru.mycrg.data_service.entity.BaseMap;
 import ru.mycrg.data_service.service.BaseMapService;
 import ru.mycrg.data_service.service.cqrs.basemaps.requests.CreateBaseMapRequest;
@@ -73,7 +73,7 @@ public class BaseMapController {
 
     @PreAuthorize(ORG_ADMIN_AUTHORITY)
     @PostMapping("/basemaps")
-    public ResponseEntity<Object> createBasemap(@Valid @RequestBody BaseMapCreateDto basemap) {
+    public ResponseEntity<Object> createBasemap(@RequestBody @Validated(OnCreate.class) BaseMapRequestModel basemap) {
         BaseMap baseMap = mediator.execute(new CreateBaseMapRequest(basemap));
 
         URI location = ServletUriComponentsBuilder
@@ -88,7 +88,7 @@ public class BaseMapController {
     @PreAuthorize(ORG_ADMIN_AUTHORITY)
     @PatchMapping("/basemaps/{id}")
     public ResponseEntity<Object> updateBasemap(@PathVariable Long id,
-                                                @Valid @RequestBody BaseMapUpdateDto basemap) {
+                                                @Valid @RequestBody BaseMapRequestModel basemap) {
 
         mediator.execute(new UpdateBaseMapRequest(id, basemap));
 

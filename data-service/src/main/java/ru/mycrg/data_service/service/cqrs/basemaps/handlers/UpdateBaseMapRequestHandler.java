@@ -1,7 +1,7 @@
 package ru.mycrg.data_service.service.cqrs.basemaps.handlers;
 
 import org.springframework.stereotype.Component;
-import ru.mycrg.data_service.dto.BaseMapUpdateDto;
+import ru.mycrg.common_contracts.generated.data_service.BaseMapRequestModel;
 import ru.mycrg.data_service.entity.BaseMap;
 import ru.mycrg.data_service.exceptions.NotFoundException;
 import ru.mycrg.data_service.repository.BaseMapRepository;
@@ -24,7 +24,7 @@ public class UpdateBaseMapRequestHandler implements IRequestHandler<UpdateBaseMa
     @Override
     public Voidy handle(UpdateBaseMapRequest request) {
         Long baseMapId = request.getId();
-        BaseMapUpdateDto dto = request.getBaseMapUpdate();
+        BaseMapRequestModel dto = request.getBaseMapUpdate();
 
         BaseMap baseMapForUpdate = baseMapRepository
                 .findById(baseMapId)

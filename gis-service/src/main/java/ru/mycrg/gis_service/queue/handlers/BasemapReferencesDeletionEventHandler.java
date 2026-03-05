@@ -35,7 +35,7 @@ public class BasemapReferencesDeletionEventHandler implements IEventHandler {
             BasemapReferencesDeletionEvent event = (BasemapReferencesDeletionEvent) mqEvent;
             log.debug("Event: '{}'. Try delete basemap references: {}", event.getId(), event.getBasemapId());
 
-            basemapService.deleteByBasemapId(event.getBasemapId());
+            basemapService.deleteByBasemapId(event.getBasemapId(), event.getOrgId());
 
             final String complexLayerName = event.getComplexLayerName();
             if (complexLayerName != null) {
