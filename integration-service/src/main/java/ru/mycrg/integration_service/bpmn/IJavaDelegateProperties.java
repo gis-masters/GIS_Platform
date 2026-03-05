@@ -3,7 +3,7 @@ package ru.mycrg.integration_service.bpmn;
 public interface IJavaDelegateProperties {
 
     String EVENT_VAR_NAME = "event";
-    String EVENT_SUB_PAYLOAD_NAME = "event_sub_payload";
+
 
     String EVENT_IMPORT_GPKG_BACKWARD_EXTRACTED_RASTERS_NAME = "event_import_gpkg_backward_extracted_rasters";
     String FAIL_REASON = "failReason";
@@ -26,8 +26,7 @@ public interface IJavaDelegateProperties {
 
     String CHECK_STATUS_VAR_NAME = "checkStatus";
 
-    String BUSINESS_KEY_VAR_NAME = "businessKey";
-    String GPKG_PATH_VAR_NAME = "gpkgPath";
+
 
     String ENTITY_ID_VAR_NAME = "entityId";
 
@@ -72,4 +71,31 @@ public interface IJavaDelegateProperties {
     String IMPORT_GPKG_CURRENT_PUBLISH_RASTER = "importGpkgCurrentPublishRaster";
 
     String IMPORT_GPKG_PUBLISH_RASTER_STATUS = "importGpkgPublishRasterStatus";
+
+    /**                                               **\
+     * ============================================== *
+     * Переменные относящиеся к процессу ЭКСПОРТА GPKG *
+     * ============================================== *
+     */
+
+    String EXPORT_GPKG_WORKER_TYPE = "exportGpkgWorkerType";//  -IMPORT_GPKG_WORKER_TYPE
+
+    String EXPORT_GPKG_EVENT = "exportGpkgEvent"; // -IMPORT_GPKG_EVENT
+    String EXPORT_GPKG_SUB_PAYLOAD = "exportGpkgSubPayload"; // - думаю мусор
+
+    String EXPORT_GPKG_COUNT_HTTP_ERRORS = "exportGpkgCounter"; // -IMPORT_GPKG_COUNT_HTTP_ERRORS
+
+    String EXPORT_GPKG_RASTERS_LIST = "exportGpkgRastersList";
+    String EXPORT_GPKG_VECTOR_LIST = "exportGpkgVectorList";
+
+    String EXPORT_GPKG_PATH_TO_GPKG = "exportGpkgPath";
+    String EXPORT_GPKG_FAIL_REASON = "exportGpkgFailReason";
+
+    String EXPORT_GPKG_FEATURES_WITH_FILES_LIST = "exportGpkgFeaturesWithFilesList";
+
+    String EXPORT_GPKG_RESOURCE_AND_PATH = "exportGpkgResourceAndPath";
+
+    String EXPORT_GPKG_APPENDING_CRG_DATA = "exportGpkgAppendingCrgData";
+
+    String EXPORT_GPKG_BACKWARD_RASTERS_EVENT = "exportGpkgBackwardRastersEvent";
 }

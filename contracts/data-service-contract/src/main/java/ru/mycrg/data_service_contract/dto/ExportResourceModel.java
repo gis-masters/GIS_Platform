@@ -51,6 +51,7 @@ public class ExportResourceModel implements Serializable {
             return false;
         }
         ExportResourceModel that = (ExportResourceModel) obj;
+
         return Objects.equals(dataset, that.dataset) && Objects.equals(table, that.table);
     }
 

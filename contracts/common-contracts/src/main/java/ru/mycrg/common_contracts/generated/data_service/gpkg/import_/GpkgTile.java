@@ -1,6 +1,4 @@
-package ru.mycrg.common_contracts.generated.data_service.gpkg;
-
-import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgReportBaseDto;
+package ru.mycrg.common_contracts.generated.data_service.gpkg.import_;
 
 import java.io.Serializable;
 
@@ -13,9 +11,28 @@ public class GpkgTile extends GpkgReportBaseDto implements Serializable {
     private Long gpkgMediaReference;
     private String srs;
     private String pathAfterImport;
+    private String pathFromGeoserver;
+    private String resourceId;
 
     public GpkgTile() {
         //Req
+    }
+
+    public GpkgTile(GpkgProcessStatus status, String title,
+                    String pathAfterImport) {
+        super(title, status);
+
+        this.pathAfterImport = pathAfterImport;
+    }
+
+    public GpkgTile(GpkgProcessStatus status, String title,
+                    String libraryIdentifier, Long documentId, String srs, String resourceId) {
+        super(title, status);
+
+        this.libraryIdentifier = libraryIdentifier;
+        this.documentId = documentId;
+        this.srs = srs;
+        this.resourceId = resourceId;
     }
 
     public GpkgTile(String gpkgLayerTableName, String libraryIdentifier, Long documentId, String field) {
@@ -93,6 +110,22 @@ public class GpkgTile extends GpkgReportBaseDto implements Serializable {
         this.pathAfterImport = pathAfterImport;
     }
 
+    public String getPathFromGeoserver() {
+        return pathFromGeoserver;
+    }
+
+    public void setPathFromGeoserver(String pathFromGeoserver) {
+        this.pathFromGeoserver = pathFromGeoserver;
+    }
+
+    public String getResourceId() {
+        return resourceId;
+    }
+
+    public void setResourceId(String resourceId) {
+        this.resourceId = resourceId;
+    }
+
     @Override
     public String toString() {
         return "{" +
@@ -102,7 +135,9 @@ public class GpkgTile extends GpkgReportBaseDto implements Serializable {
                 "\"gpkgLayerTableName\":" + (gpkgLayerTableName == null ? "null" : "\"" + gpkgLayerTableName + "\"") + ", " +
                 "\"gpkgMediaReference\":" + (gpkgMediaReference == null ? "null" : "\"" + gpkgMediaReference + "\"") + ", " +
                 "\"srs\":" + (srs == null ? "null" : "\"" + srs + "\"") + ", " +
-                "\"pathAfterImport\":" + (pathAfterImport == null ? "null" : "\"" + pathAfterImport + "\"") +
+                "\"pathAfterImport\":" + (pathAfterImport == null ? "null" : "\"" + pathAfterImport + "\"") + ", " +
+                "\"pathFromGeoserver\":" + (pathFromGeoserver == null ? "null" : "\"" + pathFromGeoserver + "\"") + ", " +
+                "\"resourceId\":" + (resourceId == null ? "null" : "\"" + resourceId + "\"") +
                 "}";
     }
 }

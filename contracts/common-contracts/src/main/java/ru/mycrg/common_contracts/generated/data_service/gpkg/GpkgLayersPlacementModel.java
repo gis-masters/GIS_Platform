@@ -1,5 +1,7 @@
 package ru.mycrg.common_contracts.generated.data_service.gpkg;
 
+import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgTile;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;

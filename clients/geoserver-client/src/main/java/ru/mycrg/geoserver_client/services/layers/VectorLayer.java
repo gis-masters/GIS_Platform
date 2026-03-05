@@ -28,17 +28,7 @@ public class VectorLayer extends GeoServerBaseService {
         Request request = builderWithBearerAuth.url(url)
                                                .get().build();
 
-        GeoserverLayerResponse body = httpClient.handleRequest(request, GeoserverLayerResponse.class)
-                                                .getBody();
-        if (body != null) {
-            Layer layer = httpClient.handleRequest(request, GeoserverLayerResponse.class)
-                                    .getBody()
-                                    .getLayer();
-
-            return Optional.of(layer);
-        } else {
-            return Optional.empty();
-        }
+        return extractLayer(request);
     }
 
     public ResponseModel<Object> delete(String layerName) throws HttpClientException {
@@ -63,5 +53,17 @@ public class VectorLayer extends GeoServerBaseService {
                                                .delete().build();
 
         return httpClient.handleRequest(request, Object.class);
+    }
+
+    public static Optional<Layer> extractLayer(Request request) throws HttpClientException {
+        GeoserverLayerResponse body = httpClient.handleRequest(request, GeoserverLayerResponse.class)
+                                                .getBody();
+        if (body != null) {
+            Layer layer = body.getLayer();
+
+            return Optional.of(layer);
+        } else {
+            return Optional.empty();
+        }
     }
 }

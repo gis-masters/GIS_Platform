@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_0ai3hyr" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.39.0" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.23.0">
+  <bpmn:process id="exportGpkgAdditionalContent" name="insaid pos add crg data in gpkg" isExecutable="true">
+    <bpmn:startEvent id="StartEvent_1" name="Start">
+      <bpmn:outgoing>Flow_1nicdqi</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:serviceTask id="Activity_0rp79t2" name="Ask data-service core info" camunda:delegateExpression="${askDataAppendInfo}">
+      <bpmn:documentation>add data about vector table, layers, styles</bpmn:documentation>
+      <bpmn:incoming>Flow_1nicdqi</bpmn:incoming>
+      <bpmn:outgoing>Flow_08g4bl8</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_1nicdqi" sourceRef="StartEvent_1" targetRef="Activity_0rp79t2" />
+    <bpmn:receiveTask id="Activity_1h2l8lw" name="Catch appending event" messageRef="Message_3a2ffs9">
+      <bpmn:incoming>Flow_08g4bl8</bpmn:incoming>
+      <bpmn:outgoing>Flow_08rsiei</bpmn:outgoing>
+    </bpmn:receiveTask>
+    <bpmn:sequenceFlow id="Flow_08g4bl8" sourceRef="Activity_0rp79t2" targetRef="Activity_1h2l8lw" />
+    <bpmn:serviceTask id="Activity_1lrdslw" name="Update report after data append" camunda:delegateExpression="${updateReportAfterCrgData}">
+      <bpmn:incoming>Flow_08rsiei</bpmn:incoming>
+      <bpmn:outgoing>Flow_1prnwhp</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="Activity_1vjv4mp" name="Ask data-service append files blob" camunda:delegateExpression="${askDataAppendUsersFiles}">
+      <bpmn:documentation>add files in gpkg</bpmn:documentation>
+      <bpmn:incoming>Flow_1prnwhp</bpmn:incoming>
+      <bpmn:outgoing>Flow_1m52lvf</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:receiveTask id="Activity_0t0icei" name="Catch files blob event" messageRef="Message_2ir85r0">
+      <bpmn:incoming>Flow_04pakdu</bpmn:incoming>
+      <bpmn:outgoing>Flow_0e0bufh</bpmn:outgoing>
+    </bpmn:receiveTask>
+    <bpmn:boundaryEvent id="Event_0fb7qj6" name="PT5M" camunda:asyncBefore="true" camunda:asyncAfter="true" attachedToRef="Activity_0t0icei">
+      <bpmn:outgoing>Flow_1xldkdo</bpmn:outgoing>
+      <bpmn:timerEventDefinition id="TimerEventDefinition_0851wop">
+        <bpmn:timeDuration xsi:type="bpmn:tFormalExpression">PT5M</bpmn:timeDuration>
+      </bpmn:timerEventDefinition>
+    </bpmn:boundaryEvent>
+    <bpmn:serviceTask id="Activity_1gc4yf2" name="finalize" camunda:delegateExpression="${finalizeCrgAppendData}">
+      <bpmn:incoming>Flow_0e0bufh</bpmn:incoming>
+      <bpmn:incoming>Flow_1xldkdo</bpmn:incoming>
+      <bpmn:incoming>Flow_0o4emox</bpmn:incoming>
+      <bpmn:outgoing>Flow_02pdc8q</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_08rsiei" sourceRef="Activity_1h2l8lw" targetRef="Activity_1lrdslw" />
+    <bpmn:sequenceFlow id="Flow_1prnwhp" sourceRef="Activity_1lrdslw" targetRef="Activity_1vjv4mp" />
+    <bpmn:sequenceFlow id="Flow_0e0bufh" sourceRef="Activity_0t0icei" targetRef="Activity_1gc4yf2" />
+    <bpmn:sequenceFlow id="Flow_1xldkdo" sourceRef="Event_0fb7qj6" targetRef="Activity_1gc4yf2" />
+    <bpmn:endEvent id="Event_0kx2e4k" name="End">
+      <bpmn:incoming>Flow_02pdc8q</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_02pdc8q" sourceRef="Activity_1gc4yf2" targetRef="Event_0kx2e4k" />
+    <bpmn:exclusiveGateway id="Gateway_0hfkt1v">
+      <bpmn:incoming>Flow_1m52lvf</bpmn:incoming>
+      <bpmn:outgoing>Flow_0o4emox</bpmn:outgoing>
+      <bpmn:outgoing>Flow_04pakdu</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="Flow_1m52lvf" sourceRef="Activity_1vjv4mp" targetRef="Gateway_0hfkt1v" />
+    <bpmn:sequenceFlow id="Flow_0o4emox" sourceRef="Gateway_0hfkt1v" targetRef="Activity_1gc4yf2">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${checkStatus == 'noRabbit'}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_04pakdu" sourceRef="Gateway_0hfkt1v" targetRef="Activity_0t0icei">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${checkStatus == 'waitRabbit'}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+  </bpmn:process>
+  <bpmn:message id="Message_3a2ffs9" name="Mes_FromDataAppendingInfo" />
+  <bpmn:message id="Message_2ir85r0" name="Mes_FromDataAppendingFiles" />
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="exportGpkgAdditionalContent">
+      <bpmndi:BPMNShape id="StartEvent_1_di" bpmnElement="StartEvent_1">
+        <dc:Bounds x="182" y="182" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="188" y="225" width="24" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0rp79t2_di" bpmnElement="Activity_0rp79t2">
+        <dc:Bounds x="290" y="160" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1h2l8lw_di" bpmnElement="Activity_1h2l8lw">
+        <dc:Bounds x="480" y="270" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1lrdslw_di" bpmnElement="Activity_1lrdslw">
+        <dc:Bounds x="630" y="160" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_1to9ooe" bpmnElement="Activity_1vjv4mp">
+        <dc:Bounds x="810" y="80" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_0tx6oto" bpmnElement="Activity_0t0icei">
+        <dc:Bounds x="810" y="270" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1gc4yf2_di" bpmnElement="Activity_1gc4yf2">
+        <dc:Bounds x="810" y="450" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0kx2e4k_di" bpmnElement="Event_0kx2e4k">
+        <dc:Bounds x="842" y="592" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="851" y="635" width="20" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_0hfkt1v_di" bpmnElement="Gateway_0hfkt1v" isMarkerVisible="true">
+        <dc:Bounds x="835" y="195" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1610srm_di" bpmnElement="Event_0fb7qj6">
+        <dc:Bounds x="792" y="312" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="795" y="358" width="30" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_1nicdqi_di" bpmnElement="Flow_1nicdqi">
+        <di:waypoint x="218" y="200" />
+        <di:waypoint x="290" y="200" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_08g4bl8_di" bpmnElement="Flow_08g4bl8">
+        <di:waypoint x="390" y="200" />
+        <di:waypoint x="445" y="200" />
+        <di:waypoint x="445" y="310" />
+        <di:waypoint x="480" y="310" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_08rsiei_di" bpmnElement="Flow_08rsiei">
+        <di:waypoint x="530" y="270" />
+        <di:waypoint x="530" y="200" />
+        <di:waypoint x="630" y="200" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1prnwhp_di" bpmnElement="Flow_1prnwhp">
+        <di:waypoint x="680" y="160" />
+        <di:waypoint x="680" y="120" />
+        <di:waypoint x="810" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0e0bufh_di" bpmnElement="Flow_0e0bufh">
+        <di:waypoint x="860" y="350" />
+        <di:waypoint x="860" y="450" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1xldkdo_di" bpmnElement="Flow_1xldkdo">
+        <di:waypoint x="792" y="330" />
+        <di:waypoint x="770" y="330" />
+        <di:waypoint x="770" y="490" />
+        <di:waypoint x="810" y="490" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_02pdc8q_di" bpmnElement="Flow_02pdc8q">
+        <di:waypoint x="860" y="530" />
+        <di:waypoint x="860" y="592" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1m52lvf_di" bpmnElement="Flow_1m52lvf">
+        <di:waypoint x="860" y="160" />
+        <di:waypoint x="860" y="195" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0o4emox_di" bpmnElement="Flow_0o4emox">
+        <di:waypoint x="885" y="220" />
+        <di:waypoint x="950" y="220" />
+        <di:waypoint x="950" y="490" />
+        <di:waypoint x="910" y="490" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_04pakdu_di" bpmnElement="Flow_04pakdu">
+        <di:waypoint x="860" y="245" />
+        <di:waypoint x="860" y="270" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

@@ -21,12 +21,13 @@ public class MediaFilesWriter implements ICrgGpkgTables {
     public void createTableIfNotExist(Connection connection) throws SQLException {
         String createSql = "CREATE TABLE IF NOT EXISTS " + GPKG_MEDIA_FILES_TABLE + " (" +
                 GPKG_MEDIA_FILES_ID_COLUMN + "     INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                "data   BLOB    NOT NULL," +
-                "crg_id TEXT    NOT NULL," +
-                "name   TEXT    NOT NULL," +
-                "title  TEXT    NOT NULL," +
-                "type   TEXT    NOT NULL," +
-                "size   TEXT    );";
+                "data            BLOB    NOT NULL," +
+                "crg_id          TEXT    NOT NULL," +
+                "crg_resource_id TEXT            ," +
+                "name            TEXT    NOT NULL," +
+                "title           TEXT    NOT NULL," +
+                "type            TEXT    NOT NULL," +
+                "size            TEXT    );";
 
         try (PreparedStatement stmt = connection.prepareStatement(createSql)) {
             stmt.executeUpdate();
@@ -34,19 +35,20 @@ public class MediaFilesWriter implements ICrgGpkgTables {
         }
     }
 
-    public Long insert(Connection connection, byte[] fileContent, UUID id,
+    public Long insert(Connection connection, byte[] fileContent, UUID id, String resourceId,
                        String path, String title, String extension, Long size) throws SQLException {
         String insertSql = "INSERT INTO crg_media_files " +
-                "(data, crg_id, name, title, type, size) " +
-                "VALUES (?, ?, ?, ?, ?, ?)";
+                "(data, crg_id, crg_resource_id, name, title, type, size) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?)";
 
         try (PreparedStatement stmt = connection.prepareStatement(insertSql, PreparedStatement.RETURN_GENERATED_KEYS)) {
             stmt.setBytes(1, fileContent);
             stmt.setString(2, id.toString());
-            stmt.setString(3, path);
-            stmt.setString(4, title);
-            stmt.setString(5, extension);
-            stmt.setString(6, size != null ? size.toString() : null);
+            stmt.setString(3, resourceId);
+            stmt.setString(4, path);
+            stmt.setString(5, title);
+            stmt.setString(6, extension);
+            stmt.setString(7, size != null ? size.toString() : null);
 
             stmt.executeUpdate();
 

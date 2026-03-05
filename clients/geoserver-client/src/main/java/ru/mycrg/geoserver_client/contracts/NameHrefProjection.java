@@ -1,5 +1,8 @@
 package ru.mycrg.geoserver_client.contracts;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class NameHrefProjection {
 
     private String name;

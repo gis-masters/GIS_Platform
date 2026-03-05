@@ -5,7 +5,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgStyle;
 import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgSvg;
+import ru.mycrg.geoserver_client.contracts.coveragestores.CoverageStoreResponseModel;
+import ru.mycrg.geoserver_client.contracts.coveragestores.CoverageStoreResponseWrapper;
+import ru.mycrg.geoserver_client.services.layers.models.Layer;
+import ru.mycrg.geoserver_client.services.layers.rasters.RasterLayer;
 import ru.mycrg.geoserver_client.services.resources.Svg;
+import ru.mycrg.geoserver_client.services.storage.raster.RasterStorage;
 import ru.mycrg.geoserver_client.services.styles.StyleService;
 import ru.mycrg.http_client.ResponseModel;
 import ru.mycrg.http_client.exceptions.HttpClientException;
@@ -239,6 +244,28 @@ public class GeoServerSpeaker {
             postNewStyle(token, styleName, actualBody, dbName);
 
             return styleName;
+        }
+    }
+
+    public Optional<Layer> getLayer(String token, String workspace, String layerName) {
+        try {
+            return new RasterLayer(token).getByName(workspace, layerName);
+        } catch (HttpClientException e) {
+            return Optional.empty();
+        }
+    }
+
+    public Optional<CoverageStoreResponseModel> getCoverageStore(String token, String scratchWorkspaceName,
+                                                                 String coverageStore) {
+        try {
+            ResponseModel<CoverageStoreResponseWrapper> storage = new RasterStorage(token)
+                    .getStorage(scratchWorkspaceName, coverageStore);
+
+            return Optional.of(storage.getBody().getCoverageStore());
+        } catch (Exception e) {
+            log.warn("При получении CoverageStore произошла ошибка: {}", e.getMessage());
+
+            return Optional.empty();
         }
     }
 

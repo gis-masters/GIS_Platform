@@ -1,7 +1,9 @@
 package ru.mycrg.geoserver_client.services.layers.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import ru.mycrg.geoserver_client.contracts.NameHrefProjection;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Layer {
 
     private String name;

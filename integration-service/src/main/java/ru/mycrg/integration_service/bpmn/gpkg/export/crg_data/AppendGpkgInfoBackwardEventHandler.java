@@ -1,4 +1,4 @@
-package ru.mycrg.integration_service.bpmn.gpkg.export.handlers;
+package ru.mycrg.integration_service.bpmn.gpkg.export.crg_data;
 
 import org.camunda.bpm.engine.RuntimeService;
 import org.slf4j.Logger;
@@ -10,8 +10,7 @@ import ru.mycrg.messagebus_contract.IEventHandler;
 import ru.mycrg.messagebus_contract.events.IMessageBusEvent;
 
 import static ru.mycrg.data_service_contract.enums.ProcessStatus.DONE;
-import static ru.mycrg.integration_service.bpmn.IJavaDelegateProperties.CHECK_STATUS_VAR_NAME;
-import static ru.mycrg.integration_service.bpmn.IJavaDelegateProperties.FAIL_REASON;
+import static ru.mycrg.integration_service.bpmn.IJavaDelegateProperties.EXPORT_GPKG_FAIL_REASON;
 
 @Service
 public class AppendGpkgInfoBackwardEventHandler implements IEventHandler {
@@ -40,7 +39,6 @@ public class AppendGpkgInfoBackwardEventHandler implements IEventHandler {
         if (status == DONE) {
             runtimeService.createMessageCorrelation("Mes_FromDataAppendingInfo")
                           .processInstanceBusinessKey(event.getBusinessKey())
-                          .setVariable(CHECK_STATUS_VAR_NAME, "sunIsShining")
                           .correlateWithResult();
 
             log.debug("Успешно отправлено сообщение в Camunda процесс для businessKey: {}",
@@ -48,8 +46,7 @@ public class AppendGpkgInfoBackwardEventHandler implements IEventHandler {
         } else {
             runtimeService.createMessageCorrelation("Mes_FromDataAppendingInfo")
                           .processInstanceBusinessKey(event.getBusinessKey())
-                          .setVariable(CHECK_STATUS_VAR_NAME, "fail")
-                          .setVariable(FAIL_REASON, event.getErrorMsg())
+                          .setVariable(EXPORT_GPKG_FAIL_REASON, event.getErrorMsg())
                           .correlateWithResult();
         }
     }

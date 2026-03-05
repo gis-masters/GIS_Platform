@@ -69,16 +69,6 @@ export interface GpkgLayersPlacementModel {
   vectorLayers: string[];
 }
 
-export interface GpkgTile extends GpkgReportBaseDto, Serializable {
-  libraryIdentifier: string;
-  documentId: number;
-  field: string;
-  gpkgLayerTableName: string;
-  gpkgMediaReference: number;
-  srs: string;
-  pathAfterImport: string;
-}
-
 export interface GpkgContentsAttributes extends GpkgContentsBaseDto {
   type: 'attributes';
   crg: boolean;
@@ -121,7 +111,7 @@ export interface GpkgImportDestinationProject extends GpkgReportBaseDto, Seriali
 export interface GpkgLayer extends GpkgReportBaseDto, Serializable {
   createdTableId: number;
   tableIdentifier: string;
-  tableDataset: string;
+  source: string;
   styleName: string;
   type: LayerType;
 }
@@ -168,6 +158,18 @@ export interface GpkgTable extends GpkgReportBaseDto, Serializable {
   createdTableIdentifier: string;
   importedObjects: number;
   failedObjects: number;
+}
+
+export interface GpkgTile extends GpkgReportBaseDto, Serializable {
+  libraryIdentifier: string;
+  documentId: number;
+  field: string;
+  gpkgLayerTableName: string;
+  gpkgMediaReference: number;
+  srs: string;
+  pathAfterImport: string;
+  pathFromGeoserver: string;
+  resourceId: string;
 }
 
 export interface GpkgWrapperImportReport extends Serializable {

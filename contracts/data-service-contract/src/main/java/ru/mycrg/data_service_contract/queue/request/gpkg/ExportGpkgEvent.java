@@ -16,7 +16,6 @@ public class ExportGpkgEvent extends DefaultMessageBusRequestEvent implements Se
     private String dbName;
     private String token;
     private ExportGpkgPayload payload;
-    private GpkgAppendingData gpkgAppendingData;
     private GpkgProcessReport gpkgReport;
 
     public ExportGpkgEvent() {
@@ -70,13 +69,5 @@ public class ExportGpkgEvent extends DefaultMessageBusRequestEvent implements Se
 
     public void setGpkgReport(GpkgProcessReport gpkgReport) {
         this.gpkgReport = gpkgReport;
-    }
-
-    public GpkgAppendingData getGpkgAppendingData() {
-        return gpkgAppendingData;
-    }
-
-    public void setGpkgAppendingData(GpkgAppendingData gpkgAppendingData) {
-        this.gpkgAppendingData = gpkgAppendingData;
     }
 }

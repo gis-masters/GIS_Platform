@@ -121,7 +121,8 @@ public class DataServiceClient implements IDataServiceClient {
     }
 
     @Override
-    public ResponseModel<Map<String, Object>> getLibRecordById(String token, String docLibId, Long recId) throws HttpClientException {
+    public ResponseModel<Map<String, Object>> getLibRecordById(String token, String docLibId, Long recId)
+            throws HttpClientException {
         String url = baseUrl + "/document-libraries/" + docLibId + "/records/" + recId;
 
         Request request = new Request.Builder()
@@ -133,8 +134,8 @@ public class DataServiceClient implements IDataServiceClient {
         log.debug("Запрос получения записи библиотеки по ID: {}", url);
 
         return httpClient.handleRequest(request,
-                                       new TypeReference<>() {
-                                       });
+                                        new TypeReference<>() {
+                                        });
     }
 
     @Override
@@ -190,8 +191,8 @@ public class DataServiceClient implements IDataServiceClient {
         log.debug("Поле: {}, Значение: {}", fieldName, fieldValue);
 
         return httpClient.handleRequest(request,
-                                       new TypeReference<>() {
-                                       });
+                                        new TypeReference<>() {
+                                        });
     }
 
     @Override
@@ -207,7 +208,44 @@ public class DataServiceClient implements IDataServiceClient {
         log.debug("Запрос получения файла по ID: {}", url);
 
         return httpClient.handleRequest(request,
-                                       new TypeReference<>() {
-                                       });
+                                        new TypeReference<>() {
+                                        });
+    }
+
+    @Override
+    public Page<Object> getTableWithFilter(String token, String customFilter) throws HttpClientException {
+        String baseUrlPath = baseUrl.toString() + "/tables/" + customFilter;
+
+        log.debug("Готовим запрос на получение таблицы с фильтром: {}", baseUrlPath);
+
+        Request request = new Request.Builder()
+                .url(baseUrlPath)
+                .get()
+                .addHeader("Authorization", "Bearer " + token)
+                .build();
+
+        ResponseModel<RestResponsePage<Object>> response = httpClient.handleRequest(request,
+                                                                                    new TypeReference<>() {
+                                                                                    });
+
+        if (!response.isSuccessful()) {
+            log.error("Ошибка при получении таблицы по фильтру. Код: {}, Тело: {}",
+                      response.getCode(), response.getBody());
+
+            throw new HttpClientException("Не удалось получить features: " + response.getCode());
+        }
+
+        RestResponsePage<Object> pageResult = response.getBody();
+        if (pageResult == null) {
+            log.error("response.getBody() вернул null при успешном коде ответа");
+
+            throw new HttpClientException("Получен null в теле ответа при коде 200");
+        }
+
+        return new PageImpl<>(
+                pageResult.getContent(),
+                pageResult.getPageable(),
+                pageResult.getTotalElements()
+        );
     }
 }

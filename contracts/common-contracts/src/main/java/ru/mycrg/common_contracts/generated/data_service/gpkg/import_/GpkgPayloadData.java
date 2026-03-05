@@ -1,6 +1,5 @@
 package ru.mycrg.common_contracts.generated.data_service.gpkg.import_;
 
-import ru.mycrg.common_contracts.generated.data_service.gpkg.GpkgTile;
 import ru.mycrg.common_contracts.generated.data_service.gpkg.contents.GpkgContentsBaseDto;
 
 import java.io.Serializable;

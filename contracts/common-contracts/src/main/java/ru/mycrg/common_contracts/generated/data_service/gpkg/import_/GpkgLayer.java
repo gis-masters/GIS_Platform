@@ -3,12 +3,13 @@ package ru.mycrg.common_contracts.generated.data_service.gpkg.import_;
 import ru.mycrg.common_contracts.generated.gis_service.LayerType;
 
 import java.io.Serializable;
+import java.util.Arrays;
 
 public class GpkgLayer extends GpkgReportBaseDto implements Serializable {
 
     private Long createdTableId;
     private String tableIdentifier;
-    private String tableDataset;
+    private String source;
     private String styleName;
     private LayerType type;
 
@@ -16,13 +17,24 @@ public class GpkgLayer extends GpkgReportBaseDto implements Serializable {
     }
 
     public GpkgLayer(GpkgProcessStatus status, String title,
-                     String styleName, String tableIdentifier, String tableDataset) {
+                     String styleName, String tableIdentifier, String source) {
 
         super(title, status);
 
         this.styleName = styleName;
         this.tableIdentifier = tableIdentifier;
-        this.tableDataset = tableDataset;
+        this.source = source;
+    }
+
+    public GpkgLayer(GpkgProcessStatus status, String title,
+                     String styleName, String tableIdentifier, String source, LayerType type) {
+
+        super(title, status);
+
+        this.styleName = styleName;
+        this.tableIdentifier = tableIdentifier;
+        this.source = source;
+        this.type = type;
     }
 
     public Long getCreatedTableId() {
@@ -41,12 +53,12 @@ public class GpkgLayer extends GpkgReportBaseDto implements Serializable {
         this.tableIdentifier = identifier;
     }
 
-    public String getTableDataset() {
-        return tableDataset;
+    public String getSource() {
+        return source;
     }
 
-    public void setTableDataset(String dataset) {
-        this.tableDataset = dataset;
+    public void setSource(String dataset) {
+        this.source = dataset;
     }
 
     public String getStyleName() {
@@ -68,14 +80,14 @@ public class GpkgLayer extends GpkgReportBaseDto implements Serializable {
     @Override
     public String toString() {
         return "{" +
+                "\"title\":" + (getTitle() == null ? "null" : "\"" + getTitle() + "\"") + ", " +
+                "\"status\":" + (getStatus() == null ? "null" : getStatus()) + ", " +
+                "\"messages\":" + (getMessages() == null ? "null" : Arrays.toString(getMessages().toArray())) + ", " +
                 "\"createdTableId\":" + (createdTableId == null ? "null" : "\"" + createdTableId + "\"") + ", " +
                 "\"tableIdentifier\":" + (tableIdentifier == null ? "null" : "\"" + tableIdentifier + "\"") + ", " +
-                "\"tableDataset\":" + (tableDataset == null ? "null" : "\"" + tableDataset + "\"") + ", " +
+                "\"source\":" + (source == null ? "null" : "\"" + source + "\"") + ", " +
                 "\"styleName\":" + (styleName == null ? "null" : "\"" + styleName + "\"") + ", " +
-                "\"type\":" + (type == null ? "null" : "\"" + type + "\"") + ", " +
-                "\"title\":" + (getTitle() == null ? "null" : "\"" + getTitle() + "\"") + ", " +
-                "\"status\":" + (getStatus() == null ? "null" : "\"" + getStatus() + "\"") + ", " +
-                "\"messages\":" + (getMessages() == null ? "null" : "\"" + getMessages() + "\"") + ", " +
+                "\"type\":" + (type == null ? "null" : type) +
                 "}";
     }
 }

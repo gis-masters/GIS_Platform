@@ -8,7 +8,7 @@ import { cn } from '@bem-react/classname';
 import { exportLayersAsGeoPackage, getExportDownloadUrl } from '../../services/data/export/export.service';
 import { ProcessStatus } from '../../services/data/processes/processes.models';
 import { getProcess } from '../../services/data/processes/processes.service';
-import { type CrgVectorLayer } from '../../services/gis/layers/layers.models';
+import { type CrgLayer } from '../../services/gis/layers/layers.models';
 import { isArray } from '../../services/util/typeGuards/isArray';
 import { isRecordStringUnknown } from '../../services/util/typeGuards/isRecordStringUnknown';
 import { currentProject } from '../../stores/CurrentProject.store';
@@ -27,7 +27,7 @@ export interface ExportGeoPackageDialogProps {
 }
 
 type ExportGeoPackageDialogState = {
-  selectedLayers: CrgVectorLayer[];
+  selectedLayers: CrgLayer[];
   isExporting: boolean;
   exportCompleted: boolean;
   lastMessage: string;
@@ -36,7 +36,7 @@ type ExportGeoPackageDialogState = {
   allMessages: string[];
   historyOpen: boolean;
   filePath: string;
-  setSelectedLayers(layers: CrgVectorLayer[]): void;
+  setSelectedLayers(layers: CrgLayer[]): void;
   setIsExporting(exporting: boolean): void;
   setExportCompleted(completed: boolean): void;
   setLastMessage(message: string): void;
@@ -57,7 +57,7 @@ export const ExportGeoPackageDialog: FC<ExportGeoPackageDialogProps> = observer(
     historyOpen: false,
     filePath: '',
 
-    setSelectedLayers(layers: CrgVectorLayer[]) {
+    setSelectedLayers(layers: CrgLayer[]) {
       this.selectedLayers = layers;
     },
 
@@ -138,7 +138,7 @@ export const ExportGeoPackageDialog: FC<ExportGeoPackageDialogProps> = observer(
   }, [state.filePath]);
 
   const onSelectLayers = useCallback(
-    (layers: CrgVectorLayer[]) => {
+    (layers: CrgLayer[]) => {
       state.setSelectedLayers(layers);
     },
     [state]
@@ -227,7 +227,7 @@ export const ExportGeoPackageDialog: FC<ExportGeoPackageDialogProps> = observer(
     async (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
 
-      const layerIds = state.selectedLayers.map((layer: CrgVectorLayer) => layer.id);
+      const layerIds = state.selectedLayers.map((layer: CrgLayer) => layer.id);
 
       state.setIsExporting(true);
       state.setLastMessage('Начало экспорта...');
@@ -256,7 +256,10 @@ export const ExportGeoPackageDialog: FC<ExportGeoPackageDialogProps> = observer(
 
       <DialogContent className={cnExportGeoPackageDialog('Content')}>
         <form id='exportGmlSimpleForm' className={cnExportGeoPackageDialog('Form')} onSubmit={executeExport}>
-          <LayersList layers={currentProject.vectorLayers} onSelect={onSelectLayers} />
+          <LayersList
+            layers={[...currentProject.vectorLayers, ...currentProject.rasterLayers]}
+            onSelect={onSelectLayers}
+          />
         </form>
       </DialogContent>
 

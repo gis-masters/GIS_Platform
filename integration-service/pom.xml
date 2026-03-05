@@ -119,7 +119,7 @@
         <dependency>
             <groupId>ru.mycrg</groupId>
             <artifactId>geoserver-client</artifactId>
-            <version>1.4.4-SNAPSHOT</version>
+            <version>1.4.5-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>ru.mycrg</groupId>
@@ -156,7 +156,7 @@
         <dependency>
             <groupId>ru.mycrg</groupId>
             <artifactId>data-service-contract</artifactId>
-            <version>1.9.8-SNAPSHOT</version>
+            <version>1.9.9-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>ru.mycrg</groupId>
@@ -173,7 +173,7 @@
         <dependency>
             <groupId>ru.mycrg</groupId>
             <artifactId>data-service-client</artifactId>
-            <version>1.2-SNAPSHOT</version>
+            <version>1.3-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>

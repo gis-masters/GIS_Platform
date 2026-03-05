@@ -7,7 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.mycrg.auth_facade.IAuthenticationFacade;
 import ru.mycrg.common_contracts.generated.data_service.gpkg.DataFromGpkgPlacementModel;
 import ru.mycrg.common_contracts.generated.data_service.gpkg.GpkgLayersPlacementModel;
-import ru.mycrg.common_contracts.generated.data_service.gpkg.GpkgTile;
+import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgTile;
 import ru.mycrg.common_contracts.generated.data_service.gpkg.contents.GpkgContentsBaseDto;
 import ru.mycrg.common_contracts.generated.data_service.gpkg.contents.GpkgContentsFeatures;
 import ru.mycrg.common_contracts.generated.data_service.gpkg.contents.GpkgContentsTiles;

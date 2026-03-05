@@ -125,4 +125,19 @@ public class DataServiceSpeaker {
 
         return "Кидать ошибку!";
     }
+
+    public boolean getTableAvailabilityByIdentifier(String token, String sourceId) {
+        Page<Object> response;
+        try {
+            response = dataServiceClient.getTableWithFilter(token, createCustomFilter(sourceId));
+        } catch (HttpClientException e) {
+            return false;
+        }
+
+        return response.getTotalElements() > 0;
+    }
+
+    private String createCustomFilter(String sourceId) {
+        return "?page=0&size=2&filter=(identifier+%3D+%27" + sourceId + "%27)";
+    }
 }

@@ -7,7 +7,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import ru.mycrg.common_contracts.exceptions.ClientException;
-import ru.mycrg.common_contracts.generated.data_service.gpkg.GpkgTile;
+import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgTile;
 import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgProcessStatus;
 import ru.mycrg.data_service_contract.dto.ErrorReport;
 import ru.mycrg.data_service_contract.dto.ExportProcessModel;

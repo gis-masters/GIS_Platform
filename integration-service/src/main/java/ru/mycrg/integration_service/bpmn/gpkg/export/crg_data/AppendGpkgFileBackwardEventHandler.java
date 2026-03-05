@@ -1,4 +1,4 @@
-package ru.mycrg.integration_service.bpmn.gpkg.export.handlers;
+package ru.mycrg.integration_service.bpmn.gpkg.export.crg_data;
 
 import org.camunda.bpm.engine.RuntimeService;
 import org.slf4j.Logger;
@@ -39,14 +39,12 @@ public class AppendGpkgFileBackwardEventHandler implements IEventHandler {
         if (status == DONE) {
             runtimeService.createMessageCorrelation("Mes_FromDataAppendingFiles")
                           .processInstanceBusinessKey(event.getBusinessKey())
-                          .setVariable(CHECK_STATUS_VAR_NAME, "sunIsShining")
-                          .setVariable(IMPORT_GPKG_FEATURES_WITH_FILES_LIST, event.getFiles())
+                          .setVariable(EXPORT_GPKG_FEATURES_WITH_FILES_LIST, event.getFiles())
                           .correlateWithResult();
         } else {
             runtimeService.createMessageCorrelation("Mes_FromDataAppendingFiles")
                           .processInstanceBusinessKey(event.getBusinessKey())
-                          .setVariable(CHECK_STATUS_VAR_NAME, "fail")
-                          .setVariable(FAIL_REASON, event.getErrorMsg())
+                          .setVariable(EXPORT_GPKG_FAIL_REASON, event.getErrorMsg())
                           .correlateWithResult();
         }
     }

@@ -1,12 +1,11 @@
 package ru.mycrg.data_service_contract.queue.response;
 
-import ru.mycrg.common_contracts.generated.data_service.gpkg.GpkgTile;
+import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgTile;
 import ru.mycrg.data_service_contract.enums.ProcessStatus;
 import ru.mycrg.messagebus_contract.events.DefaultMessageBusResponseEvent;
 
 import java.io.Serializable;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import static ru.mycrg.messagebus_contract.MessageBusProperties.GEO_WRAPPER_TO_INTEGRATION_QUEUE;

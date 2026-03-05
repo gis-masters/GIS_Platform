@@ -3,6 +3,7 @@ import { type FilePlacementMode } from '../../data/file-placement/file-placement
 import { PropertyType, type SimpleSchema } from '../../data/schema/schema.models';
 import { type CrgProject } from '../projects/projects.models';
 
+// TODO: пронаследовать от common-contracts.d.ts LayerType ? в базе куча 'vector' и т.д. (Azure №3970)
 export enum CrgLayerType {
   VECTOR = 'vector',
   DXF = 'dxf',

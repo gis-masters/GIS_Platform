@@ -60,6 +60,27 @@ public class FileRepositoryDetached {
         }
     }
 
+    public List<File> getAllByPaths(JdbcTemplate jdbcTemplate, Set<String> filePath) {
+        if (filePath == null || filePath.isEmpty()) {
+            return new ArrayList<>();
+        }
+
+        String placeholders = String.join(",", Collections.nCopies(filePath.size(), "?"));
+        String query = "SELECT id, title, size, extension, path, content_type, intents, resource_type," +
+                " resource_qualifier, created_by, created_at, crs, ecp" +
+                " FROM files WHERE path IN (" + placeholders + ")";
+
+        log.debug("Запрос поиска всех файлов по их PATH {}", query);
+
+        try {
+            return jdbcTemplate.query(query, new FilesMapper(), filePath.toArray());
+        } catch (Exception e) {
+            log.warn("Не удалось в бд найти файлы по их PATH. Причина: {}", e.getMessage());
+
+            return new ArrayList<>();
+        }
+    }
+
     public File save(JdbcTemplate jdbcTemplate, File entity) throws SQLException {
         if (entity.getId() == null) {
             entity.setId(UUID.randomUUID());

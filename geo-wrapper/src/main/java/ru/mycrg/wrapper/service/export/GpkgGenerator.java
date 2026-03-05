@@ -4,8 +4,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
+import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgProcessStatus;
+import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgTile;
 import ru.mycrg.data_service_contract.dto.ExportProcessModel;
 import ru.mycrg.data_service_contract.queue.request.gpkg.BuildGpkgEvent;
+import ru.mycrg.data_service_contract.queue.request.gpkg.BuildGpkgRastersEvent;
 import ru.mycrg.wrapper.config.CrgProperties;
 import ru.mycrg.wrapper.exceptions.ExportException;
 
@@ -14,7 +17,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -33,7 +36,7 @@ public class GpkgGenerator {
     }
 
     public String generate(BuildGpkgEvent event) {
-        log.debug("Start gpkg generation");
+        log.debug("Начали генерацию gpkg для векторных данных.");
 
         try {
             String rootPath = crgProperties.getExportStoragePath();
@@ -105,6 +108,137 @@ public class GpkgGenerator {
             log.error("Ошибка в процессе экспорта GPKG: {}", e.getMessage(), e);
 
             throw new ExportException("Ошибка при экспорте в GPKG: " + e.getMessage(), e);
+        }
+    }
+
+    public List<GpkgTile> generate(BuildGpkgRastersEvent event) {
+        log.debug("Начали генерацию gpkg для растровых данных.");
+        List<GpkgTile> tiles = new ArrayList<>();
+
+        Optional<String> gpkgCreatedPath = Optional.ofNullable(event.getPath());
+
+        for (Map.Entry<String, String> currentFile: event.getResourceAndPath().entrySet()) {
+            String layerIdentifier = currentFile.getKey();
+            String pathToTif = currentFile.getValue();
+
+            try {
+                if (gpkgCreatedPath.isEmpty()) {
+                    log.debug("GPKG еще не создан. Попытка создать из растра: {}", layerIdentifier);
+                    Optional<String> createdPath = generateNewGpkgFromRaster(pathToTif, layerIdentifier);
+
+                    if (createdPath.isPresent()) {
+                        gpkgCreatedPath = createdPath;
+                        tiles.add(new GpkgTile(GpkgProcessStatus.COMPLETED, layerIdentifier, createdPath.get()));
+
+                        log.info("Успешно создан GPKG с растром: {}", layerIdentifier);
+                    } else {
+                        String msg = String.format("Не удалось создать GPKG из растра: %s. Пробуем следующий.",
+                                                   layerIdentifier);
+                        GpkgTile tile = new GpkgTile(GpkgProcessStatus.ERROR, layerIdentifier, null);
+                        tile.getMessages().add(msg);
+                        tiles.add(tile);
+
+                        log.warn(msg);
+                    }
+                } else {
+                    log.debug("GPKG уже существует. Добавляем растр: {}", layerIdentifier);
+                    appendRasterToGpkg(gpkgCreatedPath.get(), pathToTif, layerIdentifier);
+                    tiles.add(new GpkgTile(GpkgProcessStatus.COMPLETED, layerIdentifier, gpkgCreatedPath.get()));
+                }
+            } catch (Exception e) {
+                String msg = String.format("Ошибка при обработке растра %s: %s", layerIdentifier, e.getMessage());
+
+                GpkgTile tile = new GpkgTile(GpkgProcessStatus.ERROR, layerIdentifier, null);
+                tile.getMessages().add(msg);
+                log.error(msg);
+            }
+        }
+
+        if (gpkgCreatedPath.isEmpty()) {
+            log.error("Не удалось создать GPKG. Все растры завершились с ошибкой.");
+
+            throw new ExportException("Не удалось создать GPKG. Все растры завершились с ошибкой.");
+        }
+
+        return tiles;
+    }
+
+    private Optional<String> generateNewGpkgFromRaster(String pathToTif, String layerIdentifier) {
+        try {
+            String basePath = crgProperties.getExportStoragePath();
+            String randomName = basePath + "/" + UUID.randomUUID() + ".gpkg";
+
+            String command = String.format("gdal_translate -of GPKG -co RASTER_TABLE=%s %s %s",
+                                           layerIdentifier,
+                                           pathToTif,
+                                           randomName);
+
+            log.debug("Создание нового GPKG из растра. Команда: {}", command);
+
+            ProcessBuilder processBuilder = new ProcessBuilder();
+            processBuilder.command("sh", "-c", command);
+            Process process = processBuilder.start();
+
+            boolean isSuccess = process.waitFor(TIMEOUT, TimeUnit.SECONDS);
+            if (!isSuccess) {
+                log.error("Создание GPKG из растра упало по таймауту для слоя: {}", layerIdentifier);
+
+                return Optional.empty();
+            }
+
+            int exitCode = process.exitValue();
+            if (exitCode != 0) {
+                log.error("Ошибка при создании GPKG из растра. Exit code: {} для слоя: {}", exitCode, layerIdentifier);
+
+                return Optional.empty();
+            }
+
+            if (Files.exists(Paths.get(randomName))) {
+                log.info("GPKG успешно создан из растра: {} для слоя: {}", randomName, layerIdentifier);
+                return Optional.of(randomName);
+            } else {
+                log.error("GPKG файл не был создан: {} для слоя: {}", randomName, layerIdentifier);
+
+                return Optional.empty();
+            }
+        } catch (Exception e) {
+            log.error("Ошибка при создании GPKG из растра для слоя {}: {}", layerIdentifier, e.getMessage(), e);
+
+            return Optional.empty();
+        }
+    }
+
+    private void appendRasterToGpkg(String pathToGpkg, String pathToTif, String layerIdentifier) {
+        try {
+            String command = String.format(
+                    "gdal_translate -of GPKG -co APPEND_SUBDATASET=YES -co RASTER_TABLE=%s %s %s",
+                    layerIdentifier,
+                    pathToTif,
+                    pathToGpkg);
+
+            log.debug("Добавление растра в существующий GPKG. Команда: {}", command);
+
+            ProcessBuilder processBuilder = new ProcessBuilder();
+            processBuilder.command("sh", "-c", command);
+            Process process = processBuilder.start();
+
+            boolean isSuccess = process.waitFor(TIMEOUT, TimeUnit.SECONDS);
+            if (!isSuccess) {
+                log.error("Добавление растра в GPKG упало по таймауту для слоя: {}", layerIdentifier);
+
+                return;
+            }
+
+            int exitCode = process.exitValue();
+            if (exitCode != 0) {
+                log.error("Ошибка при добавлении растра в GPKG. Exit code: {} для слоя: {}", exitCode, layerIdentifier);
+
+                return;
+            }
+
+            log.info("Растр успешно добавлен в GPKG: {} для слоя: {}", pathToGpkg, layerIdentifier);
+        } catch (Exception e) {
+            log.error("Ошибка при добавлении растра в GPKG для слоя {}: {}", layerIdentifier, e.getMessage(), e);
         }
     }
 

@@ -55,6 +55,7 @@ public class RasterStorage extends GeoServerBaseService {
             throws HttpClientException {
         String url = getGeoserverRestUrl().append(WORKSPACES).append(workspace)
                                           .append(COVERAGE_STORES).append(store)
+                                          .append(".json")
                                           .toString();
 
         Request request = builderWithBearerAuth.url(url)

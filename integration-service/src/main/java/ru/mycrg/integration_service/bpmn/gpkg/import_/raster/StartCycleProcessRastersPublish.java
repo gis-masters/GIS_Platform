@@ -5,7 +5,7 @@ import org.camunda.bpm.engine.delegate.JavaDelegate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import ru.mycrg.common_contracts.generated.data_service.gpkg.GpkgTile;
+import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgTile;
 import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgProcessReport;
 import ru.mycrg.data_service_contract.dto.publication.BaseWsProcess;
 import ru.mycrg.data_service_contract.dto.publication.GeoserverPublicationData;
@@ -17,10 +17,10 @@ import ru.mycrg.integration_service.bpmn.gpkg.report.GpkgReportManager;
 import ru.mycrg.integration_service.service.DataServiceSpeaker;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
-import static ru.mycrg.common_utils.CrgGlobalProperties.buildFeatureTypeName;
-import static ru.mycrg.common_utils.CrgGlobalProperties.buildStoreName;
+import static ru.mycrg.common_utils.CrgGlobalProperties.*;
 import static ru.mycrg.data_service_contract.enums.FilePublicationMode.FULL;
 import static ru.mycrg.data_service_contract.enums.FileType.TIF;
 import static ru.mycrg.data_service_contract.enums.ProcessStatus.TASK_DONE;
@@ -113,38 +113,37 @@ public class StartCycleProcessRastersPublish implements JavaDelegate {
         GpkgProcessReport importReport = (GpkgProcessReport) delegateExecution.getVariable(IMPORT_GPKG_EVENT_REPORT);
         reportManager.createLayerReport(rabbitDto, importReport, currentTile);
 
-        FilePublicationEvent filePublicationEvent = new FilePublicationEvent(
-                TIF,
-                FULL,
-                new BaseWsProcess(event.getToken()),
-                new GeoserverPublicationData(
-                        getScratchWorkspaceName(event.getDbName()),
-                        buildStoreName(extractOrgId(event.getDbName()),
-                                       "tif",
-                                       nativeName,
-                                       fileQ),
-                        featureTypeName,
-                        nativeName),
-                new GisPublicationData(
-                        event.getProjectId(),
-                        layerGroupId,
-                        currentTile.getLibraryIdentifier(),
-                        "document",
-                        currentTile.getDocumentId(),
-                        currentTile.getGpkgLayerTableName(),
-                        filePath,
-                        "raster",
-                        currentTile.getSrs())
-        );
+        Optional<Long> oExtractedId = extractIdFromDbName(event.getDbName());
 
-        delegateExecution.setVariable(IMPORT_GPKG_CURRENT_PUBLISH_RASTER, asJava(filePublicationEvent));
-    }
+        if (oExtractedId.isPresent()) {
+            FilePublicationEvent filePublicationEvent = new FilePublicationEvent(
+                    TIF,
+                    FULL,
+                    new BaseWsProcess(event.getToken()),
+                    new GeoserverPublicationData(
+                            getScratchWorkspaceName(oExtractedId.get()),
+                            buildStoreName(oExtractedId.get(),
+                                           "tif",
+                                           nativeName,
+                                           fileQ),
+                            featureTypeName,
+                            nativeName),
+                    new GisPublicationData(
+                            event.getProjectId(),
+                            layerGroupId,
+                            currentTile.getLibraryIdentifier(),
+                            "document",
+                            currentTile.getDocumentId(),
+                            currentTile.getGpkgLayerTableName(),
+                            filePath,
+                            "raster",
+                            currentTile.getSrs())
+            );
 
-    private Long extractOrgId(String databaseName) {
-        return Long.parseLong(databaseName.replace("database_", ""));
-    }
-
-    private String getScratchWorkspaceName(String databaseName) {
-        return databaseName.replace("database_", "scratch_database_");
+            delegateExecution.setVariable(IMPORT_GPKG_CURRENT_PUBLISH_RASTER, asJava(filePublicationEvent));
+        } else {
+            log.warn("Не удалось вычислить Id организации из строки {}", event.getDbName());
+            delegateExecution.setVariable(IMPORT_GPKG_CURRENT_PUBLISH_RASTER, asJava(new FilePublicationEvent()));
+        }
     }
 }

@@ -89,6 +89,8 @@ public class LayerStepDefinitions extends BaseStepsDefinitions {
                                             generateString(style),
                                             false,
                                             null);
+
+        //TODO: сломанная ерунда. когда тип раст нужно пользоваться "публикацией" а не созданием слоя
         if (type.equals("raster")) {
             Long currentRecordId = Objects.nonNull(currentDocumentId)
                     ? currentDocumentId
@@ -567,6 +569,21 @@ public class LayerStepDefinitions extends BaseStepsDefinitions {
         String ext = Files.getFileExtension(fileName);
 
         checkLayerBasedOnFile(title, expectedType, ext);
+
+        LayerProjection layer = response.jsonPath().getObject("[0]", LayerProjection.class);
+
+        layerPool.put(Math.toIntExact(layer.getId()), new LayerCreateDto(layer.getTitle(),
+                                                                         layer.getDataset(),
+                                                                         layer.getResourceId(),
+                                                                         layer.getStyleName(),
+                                                                         layer.getType(),
+                                                                         layer.getDataStoreName(),
+                                                                         layer.getNativeCRS(),
+                                                                         layer.getDataSourceUri(),
+                                                                         layer.getContentType(),
+                                                                         layer.getStyle(),
+                                                                         layer.isEnabled(),
+                                                                         layer.getComplexName()));
     }
 
     /**

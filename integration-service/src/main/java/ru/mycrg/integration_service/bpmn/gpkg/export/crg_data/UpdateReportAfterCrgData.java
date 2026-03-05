@@ -1,4 +1,4 @@
-package ru.mycrg.integration_service.bpmn.gpkg.export;
+package ru.mycrg.integration_service.bpmn.gpkg.export.crg_data;
 
 import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.delegate.JavaDelegate;
@@ -10,22 +10,21 @@ import ru.mycrg.integration_service.bpmn.gpkg.report.GpkgReportManager;
 import ru.mycrg.integration_service.bpmn.gpkg.report.GpkgProcessContext;
 
 import static ru.mycrg.data_service_contract.enums.ProcessStatus.TASK_DONE;
-import static ru.mycrg.integration_service.bpmn.IJavaDelegateProperties.BUSINESS_KEY_VAR_NAME;
-import static ru.mycrg.integration_service.bpmn.IJavaDelegateProperties.EVENT_VAR_NAME;
+import static ru.mycrg.integration_service.bpmn.IJavaDelegateProperties.EXPORT_GPKG_EVENT;
 
-@Service("updateStyleReport")
-public class UpdateStyleReport implements JavaDelegate {
+@Service("updateReportAfterCrgData")
+public class UpdateReportAfterCrgData implements JavaDelegate {
 
-    private static final Logger log = LoggerFactory.getLogger(UpdateStyleReport.class);
+    private static final Logger log = LoggerFactory.getLogger(UpdateReportAfterCrgData.class);
     private final GpkgReportManager reportManager;
 
-    public UpdateStyleReport(GpkgReportManager reportManager) {
+    public UpdateReportAfterCrgData(GpkgReportManager reportManager) {
         this.reportManager = reportManager;
     }
 
     @Override
     public void execute(DelegateExecution delegateExecution) throws Exception {
-        ExportGpkgEvent event = (ExportGpkgEvent) delegateExecution.getVariable(EVENT_VAR_NAME);
+        ExportGpkgEvent event = (ExportGpkgEvent) delegateExecution.getVariable(EXPORT_GPKG_EVENT);
         GpkgProcessContext rabbitDto = new GpkgProcessContext(event.getProcessId(),
                                                               event.getDbName(),
                                                               TASK_DONE);

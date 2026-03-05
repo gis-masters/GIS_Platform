@@ -1,4 +1,4 @@
-package ru.mycrg.integration_service.bpmn.gpkg.export;
+package ru.mycrg.integration_service.bpmn.gpkg.export.main;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -29,8 +29,9 @@ import static ru.mycrg.common_contracts.generated.data_service.gpkg.export.GpkgE
 import static ru.mycrg.common_contracts.generated.data_service.gpkg.export.GpkgExportType.TABLE;
 import static ru.mycrg.data_service_contract.enums.ProcessStatus.TASK_DONE;
 import static ru.mycrg.integration_service.bpmn.BaseHttpService.httpClient;
+import static ru.mycrg.integration_service.bpmn.CamundaVariables.asJava;
 import static ru.mycrg.integration_service.bpmn.IJavaDelegateProperties.*;
-import static ru.mycrg.integration_service.bpmn.VariableUtil.getVariable;
+import static ru.mycrg.integration_service.bpmn.enums.GpkgImportProcessPermittedStatus.*;
 
 @Service("askGisAboutLayers")
 public class AskGisAboutLayers implements JavaDelegate {
@@ -40,8 +41,6 @@ public class AskGisAboutLayers implements JavaDelegate {
     private final BaseHttpService baseHttpService;
     private final ObjectMapper objectMapper;
     private final GpkgReportManager reportManager;
-
-    int currentIteration;
 
     public AskGisAboutLayers(BaseHttpService baseHttpService,
                              ObjectMapper objectMapper,
@@ -53,24 +52,30 @@ public class AskGisAboutLayers implements JavaDelegate {
 
     @Override
     public void execute(DelegateExecution delegateExecution) throws Exception {
-        currentIteration = (int) getVariable(delegateExecution, ITERATION_COUNTER_VAR_NAME, getClass().getName());
+        int currentIteration = (int) delegateExecution.getVariable(EXPORT_GPKG_COUNT_HTTP_ERRORS);
         if (currentIteration >= 4) {
-            delegateExecution.setVariable(CHECK_STATUS_VAR_NAME, "allLayersUnavailable");
+            delegateExecution.setVariable(EXPORT_GPKG_WORKER_TYPE, "allLayersUnavailable");
 
             return;
         }
         log.debug("Класс '{}' начал работу.", AskGisAboutLayers.class.getSimpleName());
-        ExportGpkgPayload subPayload = (ExportGpkgPayload) delegateExecution.getVariable(EVENT_SUB_PAYLOAD_NAME);
+        ExportGpkgPayload subPayload = (ExportGpkgPayload) delegateExecution.getVariable(EXPORT_GPKG_SUB_PAYLOAD);
 
-        ExportGpkgEvent event = (ExportGpkgEvent) delegateExecution.getVariable(EVENT_VAR_NAME);
+        ExportGpkgEvent event = (ExportGpkgEvent) delegateExecution.getVariable(EXPORT_GPKG_EVENT);
 
-        //Шаг 1. Выходим из класса если ему не с чем работать.
-        if (subPayload.getType() != LAYER) {
+        /*
+        Шаг 1. Проверяем может ли этот класс выполнять свою работу
+        Класс может работать только если у нас LAYER, при TABLE переопределяем тип, чтобы попасть на следующего
+        делегата. Иначе мы как-то на шагах ранее пропустили тип с которым не умеем работать.
+        */
+        if (subPayload.getType() == TABLE) {
             log.debug("У нас не просили слои. Пропускаем шаг!");
 
-            delegateExecution.setVariable(CHECK_STATUS_VAR_NAME, "someLayersAvailable");
+            delegateExecution.setVariable(EXPORT_GPKG_WORKER_TYPE, FEATURES.getValue());
 
             return;
+        } else if (subPayload.getType() != LAYER) {
+            throw new BpmnError("notCorrectGpkgImportType");
         }
 
         // Безопасное преобразование payload в List<Long>
@@ -80,17 +85,17 @@ public class AskGisAboutLayers implements JavaDelegate {
                               .collect(Collectors.toList());
 
         if (layersId.isEmpty()) {
-            delegateExecution.setVariable(CHECK_STATUS_VAR_NAME, "allLayersUnavailable");
+            delegateExecution.setVariable(EXPORT_GPKG_WORKER_TYPE, "allLayersUnavailable");
 
             return;
         }
 
         log.debug("Были запрошены слои с id: {}", layersId);
 
-        String token = delegateExecution.getVariable(TOKEN_VAR_NAME).toString();
+        String token = event.getToken();
 
         //Шаг 2. Собираем лист запрошенных объектов
-        List<LayerProjection> layers = getLayersById(delegateExecution, token, layersId);
+        List<LayerProjection> layers = getLayersById(currentIteration, delegateExecution, token, layersId);
 
         GpkgProcessContext rabbitDto = new GpkgProcessContext(event.getProcessId(),
                                                               event.getDbName(),
@@ -99,16 +104,21 @@ public class AskGisAboutLayers implements JavaDelegate {
 
         if (!layers.isEmpty()) {
             //Шаг 3. Формируем объект для следующего шага
-            collectNewObjectForNextStep(rabbitDto, layers, subPayload, event, layersId);
+            defineWorkerAndSetupData(delegateExecution, layers);
 
-            delegateExecution.setVariable(ITERATION_COUNTER_VAR_NAME, 0);
-            delegateExecution.setVariable(CHECK_STATUS_VAR_NAME, "someLayersAvailable");
+            makeReport(rabbitDto, event, layersId, layers);
+
+            GpkgAppendingData gpkgData = new GpkgAppendingData(layers);
+            delegateExecution.setVariable(EXPORT_GPKG_APPENDING_CRG_DATA, asJava(gpkgData));
+
+            delegateExecution.setVariable(EXPORT_GPKG_COUNT_HTTP_ERRORS, 0);
         } else {
-            delegateExecution.setVariable(CHECK_STATUS_VAR_NAME, "allLayersUnavailable");
+            delegateExecution.setVariable(EXPORT_GPKG_WORKER_TYPE, "allLayersUnavailable");
         }
     }
 
-    private List<LayerProjection> getLayersById(DelegateExecution delegateExecution,
+    private List<LayerProjection> getLayersById(int currentIteration,
+                                                DelegateExecution delegateExecution,
                                                 String token,
                                                 List<Long> layersId) {
         try {
@@ -160,7 +170,7 @@ public class AskGisAboutLayers implements JavaDelegate {
             }
         } catch (IOException e) {
             log.error("Ошибка ввода-вывода при запросе слоев с ID {}: {}", layersId, e.getMessage(), e);
-            delegateExecution.setVariable(ITERATION_COUNTER_VAR_NAME, currentIteration++);
+            delegateExecution.setVariable(ITERATION_COUNTER_VAR_NAME, currentIteration + 1);
 
             throw new BpmnError("responseTimeOut");
         } catch (Exception e) {
@@ -170,25 +180,38 @@ public class AskGisAboutLayers implements JavaDelegate {
         }
     }
 
-    private void collectNewObjectForNextStep(GpkgProcessContext rabbitDto,
-                                             List<LayerProjection> layers,
-                                             ExportGpkgPayload subPayload,
-                                             ExportGpkgEvent event,
-                                             List<Long> layersId) {
-        List<ExportResourceModel> exportedResources = layers
+    //TODO: Наполнить растры исключительно нужными данными
+    private void defineWorkerAndSetupData(DelegateExecution delegateExecution, List<LayerProjection> layers) {
+        log.debug("Пытаемся определить тип обработчика для Экспорта слоёв в gpkg.");
+
+        List<LayerProjection> rasterLayers = layers.stream()
+                                                   .filter(layer -> layer.getType().equals("raster"))
+                                                   .collect(Collectors.toList());
+        delegateExecution.setVariable(EXPORT_GPKG_RASTERS_LIST, asJava(rasterLayers));
+
+        List<ExportResourceModel> vectorTables = layers
                 .stream()
+                .filter(layer -> layer.getType().equals("vector"))
                 .map(layer -> new ExportResourceModel(layer.getDataset(), layer.getResourceId()))
                 .distinct()
                 .collect(Collectors.toList());
+        delegateExecution.setVariable(EXPORT_GPKG_VECTOR_LIST, asJava(vectorTables));
 
-        subPayload.setType(TABLE);
-        subPayload.setPayload(exportedResources);
-        event.setPayload(subPayload);
+        if (!rasterLayers.isEmpty() && !vectorTables.isEmpty()) {
+            delegateExecution.setVariable(EXPORT_GPKG_WORKER_TYPE, FEATURES_AND_TILES.getValue());
+        } else if (!rasterLayers.isEmpty()) {
+            delegateExecution.setVariable(EXPORT_GPKG_WORKER_TYPE, TILES.getValue());
+        } else if (!vectorTables.isEmpty()) {
+            delegateExecution.setVariable(EXPORT_GPKG_WORKER_TYPE, FEATURES.getValue());
+        } else {
+            throw new BpmnError("canNotDefineWorker");
+        }
+    }
 
-        //Пока что мы тут первые -> мы можем себе это позволить.
-        //При появлении проектов нужно будет брать сущность.
-        event.setGpkgAppendingData(new GpkgAppendingData(layers));
-
+    private void makeReport(GpkgProcessContext rabbitDto,
+                            ExportGpkgEvent event,
+                            List<Long> layersId,
+                            List<LayerProjection> layers) {
         String msg = "Слоёв было запрошено: " + layersId.size() + ".";
 
         if (layersId.size() > layers.size()) {

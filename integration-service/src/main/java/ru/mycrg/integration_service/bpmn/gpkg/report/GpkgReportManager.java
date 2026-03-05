@@ -3,8 +3,8 @@ package ru.mycrg.integration_service.bpmn.gpkg.report;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-import ru.mycrg.common_contracts.generated.data_service.gpkg.GpkgTile;
 import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.*;
+import ru.mycrg.common_contracts.generated.gis_service.LayerType;
 import ru.mycrg.data_service_contract.dto.ErrorReport;
 import ru.mycrg.data_service_contract.dto.ExportResourceModel;
 import ru.mycrg.data_service_contract.dto.PatchProcess;
@@ -111,7 +111,8 @@ public class GpkgReportManager {
                                                  lp.getTitle(),
                                                  lp.getStyleName(),
                                                  lp.getResourceId(),
-                                                 lp.getDataset())
+                                                 lp.getSourceType(),
+                                                 LayerType.valueOf(lp.getType().toUpperCase()))
                 ).collect(Collectors.toList());
 
         processReport.getPayload().setLayers(layersReport);
@@ -129,7 +130,7 @@ public class GpkgReportManager {
         layerReport.setStatus(ACTIVE);
         layerReport.setStyleName("raster");
         layerReport.setType(RASTER);
-        layerReport.setTableDataset(tile.getLibraryIdentifier());
+        layerReport.setSource(tile.getLibraryIdentifier());
         layerReport.setTableIdentifier(tile.getField());
         layerReport.setCreatedTableId(tile.getDocumentId());
 
@@ -156,7 +157,7 @@ public class GpkgReportManager {
     }
 
     public void createFileReport(GpkgProcessContext rabbitDto, GpkgProcessReport processReport, List<GpkgFile> files) {
-        if (files != null) {
+        if (files != null && !files.isEmpty()) {
             processReport.getPayload().getFiles().addAll(files);
             sendReportInQueue(rabbitDto, processReport);
         }
@@ -241,6 +242,16 @@ public class GpkgReportManager {
         tables.stream()
               .filter(table -> table.getStatus() == ACTIVE)
               .forEach(table -> table.setStatus(COMPLETED));
+
+        sendReportInQueue(rabbitDto, report);
+    }
+
+    public void errorAllTablesInReport(GpkgProcessContext rabbitDto, GpkgProcessReport report) {
+        List<GpkgTable> tables = report.getPayload().getTables();
+
+        tables.stream()
+              .filter(table -> table.getStatus() == ACTIVE)
+              .forEach(table -> table.setStatus(ERROR));
 
         sendReportInQueue(rabbitDto, report);
     }
@@ -460,6 +471,78 @@ public class GpkgReportManager {
         }
 
         sendReportInQueue(rabbitDto, processReport);
+    }
+
+    public void appendLayerReport(GpkgProcessContext rabbitDto, GpkgProcessReport processReport,
+                                  List<GpkgLayer> layers) {
+        processReport.getPayload().getLayers().addAll(layers);
+
+        sendReportInQueue(rabbitDto, processReport);
+    }
+
+    public void createTileReport(GpkgProcessContext rabbitDto, GpkgProcessReport processReport,
+                                 List<GpkgTile> tiles) {
+        processReport.getPayload().getTiles().addAll(tiles);
+
+        sendReportInQueue(rabbitDto, processReport);
+    }
+
+    public void errorAllRastersReport(GpkgProcessContext rabbitDto, GpkgProcessReport gpkgReport, String msg) {
+        List<GpkgTile> tiles = gpkgReport.getPayload().getTiles();
+        List<GpkgLayer> layers = gpkgReport.getPayload().getLayers();
+
+        tiles.stream()
+             .filter(tile -> tile.getStatus() == ACTIVE)
+             .forEach(tile -> {
+                 tile.setStatus(ERROR);
+                 tile.getMessages().add(msg);
+             });
+
+        layers.stream()
+              .filter(layer -> layer.getStatus() == ACTIVE && layer.getType() == RASTER)
+              .forEach(layer -> {
+                  layer.setStatus(ERROR);
+                  layer.getMessages().add(msg);
+              });
+
+        sendReportInQueue(rabbitDto, gpkgReport);
+    }
+
+    public void mergeGdalTilesReport(GpkgProcessContext rabbitDto, GpkgProcessReport gpkgReport,
+                                     List<GpkgTile> newReport) {
+        Map<String, GpkgTile> titleToTile = newReport.stream()
+                                                     .collect(Collectors.toMap(GpkgReportBaseDto::getTitle,
+                                                                               tile -> tile));
+
+        log.debug("Что тут происходит new {}", newReport);
+        log.debug("Что тут происходит titleToTile {}", titleToTile);
+        log.debug("Что тут происходит report {}", gpkgReport.getPayload().getTiles());
+
+
+        gpkgReport.getPayload().getTiles().forEach(tile -> {
+            GpkgTile newTile = titleToTile.get(tile.getResourceId());
+            tile.setStatus(newTile.getStatus());
+            tile.getMessages().addAll(newTile.getMessages());
+        });
+
+        sendReportInQueue(rabbitDto, gpkgReport);
+    }
+
+    public void updateTileReportWithResources(GpkgProcessContext rabbitDto, GpkgProcessReport gpkgReport,
+                                              Map<String, String> resourceAndPath) {
+        gpkgReport.getPayload().getTiles().stream()
+                  .filter(tile -> tile.getStatus() == ACTIVE)
+                  .forEach(tile -> {
+                      String ri = tile.getResourceId();
+                      if (resourceAndPath.containsKey(ri)) {
+                          tile.setPathFromGeoserver(resourceAndPath.get(ri));
+                      } else {
+                          tile.setStatus(ERROR);
+                          tile.getMessages().add("Не удалось найти путь к растровому файлу");
+                      }
+                  });
+
+        sendReportInQueue(rabbitDto, gpkgReport);
     }
 
     public void finalizeReport(GpkgProcessContext rabbitDto, GpkgProcessReport processReport,

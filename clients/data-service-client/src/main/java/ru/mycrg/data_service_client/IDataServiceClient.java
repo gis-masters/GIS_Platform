@@ -37,4 +37,6 @@ public interface IDataServiceClient {
                                               Object fieldValue) throws HttpClientException;
 
     ResponseModel<FileResponse> getFileById(String token, String uuid) throws HttpClientException;
+
+    Page<Object> getTableWithFilter(String token, String customFilter) throws  HttpClientException;
 }

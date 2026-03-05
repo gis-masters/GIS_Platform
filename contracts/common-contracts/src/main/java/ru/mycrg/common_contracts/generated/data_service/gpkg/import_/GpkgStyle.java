@@ -2,6 +2,7 @@ package ru.mycrg.common_contracts.generated.data_service.gpkg.import_;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class GpkgStyle extends GpkgReportBaseDto implements Serializable {
@@ -49,13 +50,13 @@ public class GpkgStyle extends GpkgReportBaseDto implements Serializable {
     @Override
     public String toString() {
         return "{" +
+                "\"title\":" + (getTitle() == null ? "null" : "\"" + getTitle() + "\"") + ", " +
+                "\"status\":" + (getStatus() == null ? "null" : getStatus()) + ", " +
+                "\"messages\":" + (getMessages() == null ? "null" : Arrays.toString(getMessages().toArray())) + ", " +
                 "\"createdTableId\":" + (createdTableId == null ? "null" : "\"" + createdTableId + "\"") + ", " +
-                "\"styleName\":" + (name == null ? "null" : "\"" + name + "\"") + ", " +
-                "\"styleBody\":" + (body == null ? "null" : "\"" + body + "\"") + ", " +
-                "\"svgs\":" + (svgs == null ? "null" : "\"" + svgs + "\"") + ", " +
-                "\"name\":" + (getTitle() == null ? "null" : "\"" + getTitle() + "\"") + ", " +
-                "\"status\":" + (getStatus() == null ? "null" : "\"" + getStatus() + "\"") + ", " +
-                "\"messages\":" + (getMessages() == null ? "null" : "\"" + getMessages() + "\"") + ", " +
+                "\"name\":" + (name == null ? "null" : "\"" + name + "\"") + ", " +
+                "\"body\":" + (body == null ? "null" : "\"" + body + "\"") + ", " +
+                "\"svgs\":" + (svgs == null ? "null" : Arrays.toString(svgs.toArray())) +
                 "}";
     }
 }

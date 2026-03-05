@@ -1,6 +1,7 @@
 package ru.mycrg.common_contracts.generated.data_service.gpkg.import_;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.UUID;
 
 public class GpkgProcessReport extends GpkgReportBaseDto implements Serializable {
@@ -13,6 +14,10 @@ public class GpkgProcessReport extends GpkgReportBaseDto implements Serializable
 
     public GpkgProcessReport() {
         // Required
+    }
+
+    public GpkgProcessReport(String filePath) {
+        this.filePath = filePath;
     }
 
     public Long getProjectId() {

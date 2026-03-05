@@ -4,7 +4,7 @@ import org.jetbrains.annotations.NotNull;
 import ru.mycrg.acceptance.data_service.processes.ProcessableModel;
 import ru.mycrg.common_contracts.generated.data_service.gpkg.DataFromGpkgPlacementModel;
 import ru.mycrg.common_contracts.generated.data_service.gpkg.GpkgLayersPlacementModel;
-import ru.mycrg.common_contracts.generated.data_service.gpkg.GpkgTile;
+import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgTile;
 
 import java.util.ArrayList;
 

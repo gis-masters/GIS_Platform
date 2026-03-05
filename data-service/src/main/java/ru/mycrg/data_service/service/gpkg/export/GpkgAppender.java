@@ -16,6 +16,7 @@ import ru.mycrg.gis_service_contract.dto.LayerProjection;
 
 import java.sql.Connection;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import static ru.mycrg.data_service.service.gpkg.export.tables.GpkgExtRelationsWriter.GPKG_EXT_RELATION_TABLE;
@@ -184,7 +185,7 @@ public class GpkgAppender {
                                        oResQualifier.map(FileResourceQualifier::getTable).orElse("")
                 );
 
-                Long mediaId = mediaFilesWriter.insert(connection, fileContent, file.getId(), file.getPath(),
+                Long mediaId = mediaFilesWriter.insert(connection, fileContent, file.getId(), null, file.getPath(),
                                                        file.getTitle(), file.getExtension(), file.getSize());
 
                 mediaToFeaturesWriter
@@ -199,6 +200,31 @@ public class GpkgAppender {
             log.debug("Ошибка добавления информации о файлах в GPKG: {}", e.getMessage());
 
             throw new GpkgException("Не смогли добавить gpkg в файл: " + e.getMessage());
+        }
+    }
+
+    public void appendRasterFiles(String pathToGpkg, Map<String, File> rasterLikeFile) {
+        if (rasterLikeFile.isEmpty()) {
+            log.error("Неожиданная ошибка при попытке смапить файлы к их resource_id слоёв");
+
+            return;
+        }
+
+        log.debug("GpkgAppender.append Добавляем растры в gpkg. Всего растров: {}", rasterLikeFile.size());
+
+        try (Connection connection = connectionManager.createConnectionForWriting(pathToGpkg)) {
+            createAllOgcMediaSubjections(connection);
+            for (Map.Entry<String, File> entry: rasterLikeFile.entrySet()) {
+                File file = entry.getValue();
+                byte[] fileContent = fileStorageService.loadFileLikeByteArray(file.getPath());
+
+                mediaFilesWriter.insert(connection, fileContent, file.getId(), entry.getKey(),
+                                        file.getPath(), file.getTitle(), file.getExtension(), file.getSize());
+            }
+        } catch (Exception e) {
+            log.debug("Ошибка добавления растров в GPKG: {}", e.getMessage());
+
+            throw new GpkgException("Не смогли добавить растр как Blob в gpkg. Причина: " + e.getMessage());
         }
     }
 

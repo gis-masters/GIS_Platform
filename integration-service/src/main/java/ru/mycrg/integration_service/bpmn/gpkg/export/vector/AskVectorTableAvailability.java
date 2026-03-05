@@ -1,4 +1,4 @@
-package ru.mycrg.integration_service.bpmn.gpkg.export;
+package ru.mycrg.integration_service.bpmn.gpkg.export.vector;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -21,14 +21,15 @@ import ru.mycrg.integration_service.bpmn.gpkg.report.GpkgReportManager;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static ru.mycrg.common_contracts.generated.data_service.gpkg.export.GpkgExportType.TABLE;
+import static ru.mycrg.common_contracts.generated.data_service.gpkg.export.GpkgExportType.LAYER;
 import static ru.mycrg.data_service_contract.enums.ProcessStatus.TASK_DONE;
 import static ru.mycrg.integration_service.IntegrationApplication.objectMapper;
+import static ru.mycrg.integration_service.bpmn.CamundaVariables.asJava;
 import static ru.mycrg.integration_service.bpmn.IJavaDelegateProperties.*;
-import static ru.mycrg.integration_service.bpmn.VariableUtil.getVariable;
 
 @Service("askVectorTableAvailability")
 public class AskVectorTableAvailability implements JavaDelegate {
@@ -38,8 +39,6 @@ public class AskVectorTableAvailability implements JavaDelegate {
     private final BaseHttpService baseHttpService;
     private final GpkgReportManager reportManager;
 
-    int currentIteration;
-
     public AskVectorTableAvailability(BaseHttpService baseHttpService,
                                       GpkgReportManager reportManager) {
         this.baseHttpService = baseHttpService;
@@ -48,7 +47,7 @@ public class AskVectorTableAvailability implements JavaDelegate {
 
     @Override
     public void execute(DelegateExecution delegateExecution) throws Exception {
-        currentIteration = (int) getVariable(delegateExecution, ITERATION_COUNTER_VAR_NAME, getClass().getName());
+        int currentIteration = (int) delegateExecution.getVariable(EXPORT_GPKG_COUNT_HTTP_ERRORS);
         if (currentIteration >= 4) {
             delegateExecution.setVariable(CHECK_STATUS_VAR_NAME, "allResourcesUnavailable");
 
@@ -58,22 +57,31 @@ public class AskVectorTableAvailability implements JavaDelegate {
         log.debug("Класс '{}' начал работу.", AskVectorTableAvailability.class.getSimpleName());
 
         //Шаг 1. Проверили что мы вообще можем работать.
-        ExportGpkgPayload subPayload = (ExportGpkgPayload) delegateExecution.getVariable(EVENT_SUB_PAYLOAD_NAME);
-        if (subPayload.getType() != TABLE) {
-            log.error("Экспорт без векторных таблиц невозможен. Останавливаем процесс!");
+        ExportGpkgPayload subPayload = (ExportGpkgPayload) delegateExecution.getVariable(EXPORT_GPKG_SUB_PAYLOAD);
+        List<ExportResourceModel> resources;
+        if (subPayload.getType() == LAYER) {
+            resources = (List<ExportResourceModel>) delegateExecution.getVariable(EXPORT_GPKG_VECTOR_LIST);
+        } else {
+            resources = extractResourcesFromPayload(subPayload);
+        }
+
+        if (resources.isEmpty()) {
+            log.error("Невозможно продолжать выполнение экспорта векторных таблиц. Останавливаем процесс!");
             delegateExecution.setVariable(CHECK_STATUS_VAR_NAME, "allResourcesUnavailable");
 
             return;
         }
 
-        List<ExportResourceModel> resources = extractResourcesFromPayload(subPayload);
         resources = resources.stream().distinct().collect(Collectors.toList());
 
-        //Шаг 2. Собрали список недоступных ресурсов (Доступные у нас как бы есть).
-        String token = delegateExecution.getVariable(TOKEN_VAR_NAME).toString();
-        List<ExportResourceModel> unavailableResources = checkAccessOnDataService(delegateExecution, resources, token);
+        //Шаг 2. Собрать список недоступных ресурсов (Доступные у нас как бы есть).
+        ExportGpkgEvent event = (ExportGpkgEvent) delegateExecution.getVariable(EXPORT_GPKG_EVENT);
+        String token = event.getToken();
+        List<ExportResourceModel> unavailableResources = checkAccessOnDataService(currentIteration,
+                                                                                  delegateExecution,
+                                                                                  resources,
+                                                                                  token);
 
-        ExportGpkgEvent event = (ExportGpkgEvent) delegateExecution.getVariable(EVENT_VAR_NAME);
         GpkgProcessContext rabbitDto = new GpkgProcessContext(event.getProcessId(),
                                                               event.getDbName(),
                                                               TASK_DONE);
@@ -86,8 +94,9 @@ public class AskVectorTableAvailability implements JavaDelegate {
             log.debug("Пользователю доступны все указанные ресурсы.");
 
             subPayload.setPayload(resources);
-            delegateExecution.setVariable(ITERATION_COUNTER_VAR_NAME, 0);
+            delegateExecution.setVariable(EXPORT_GPKG_COUNT_HTTP_ERRORS, 0);
             delegateExecution.setVariable(CHECK_STATUS_VAR_NAME, "someResourcesAvailable");
+            delegateExecution.setVariable(EXPORT_GPKG_VECTOR_LIST, asJava(resources));
         } else {
             log.debug("Количество недоступных ресурсов: {}", unavailableResources.size());
 
@@ -96,13 +105,13 @@ public class AskVectorTableAvailability implements JavaDelegate {
                                                      unavailableResources);
 
             resources.removeAll(unavailableResources);
-            subPayload.setPayload(resources);
 
             if (!resources.isEmpty()) {
                 log.debug("После проверки доступности ресурсов осталось: {}", resources.size());
 
-                delegateExecution.setVariable(ITERATION_COUNTER_VAR_NAME, 0);
+                delegateExecution.setVariable(EXPORT_GPKG_COUNT_HTTP_ERRORS, 0);
                 delegateExecution.setVariable(CHECK_STATUS_VAR_NAME, "someResourcesAvailable");
+                delegateExecution.setVariable(EXPORT_GPKG_VECTOR_LIST, asJava(resources));
             } else {
                 log.debug("После проверки, пользователю недоступны все ресурсы.");
                 delegateExecution.setVariable(CHECK_STATUS_VAR_NAME, "allResourcesUnavailable");
@@ -110,7 +119,8 @@ public class AskVectorTableAvailability implements JavaDelegate {
         }
     }
 
-    private List<ExportResourceModel> checkAccessOnDataService(DelegateExecution delegateExecution,
+    private List<ExportResourceModel> checkAccessOnDataService(int currentIteration,
+                                                               DelegateExecution delegateExecution,
                                                                List<ExportResourceModel> resources,
                                                                String token) {
         List<ExportResourceModel> unavailableResources = new ArrayList<>();
@@ -143,7 +153,7 @@ public class AskVectorTableAvailability implements JavaDelegate {
 
                     // Временные ошибки - можно повторить
                     if (statusCode == 503 || statusCode == 502 || statusCode == 504 || statusCode == 429) {
-                        delegateExecution.setVariable(ITERATION_COUNTER_VAR_NAME, currentIteration++);
+                        delegateExecution.setVariable(EXPORT_GPKG_COUNT_HTTP_ERRORS, currentIteration + 1);
 
                         throw new BpmnError("responseTimeOut");
                     }
@@ -153,7 +163,7 @@ public class AskVectorTableAvailability implements JavaDelegate {
             } catch (IOException e) {
                 log.debug("Ошибка ввода-вывода при запросе ресурса {}/{}: {}",
                           resource.getDataset(), resource.getTable(), e.getMessage(), e);
-                delegateExecution.setVariable(ITERATION_COUNTER_VAR_NAME, currentIteration++);
+                delegateExecution.setVariable(EXPORT_GPKG_COUNT_HTTP_ERRORS, currentIteration + 1);
 
                 throw new BpmnError("responseTimeOut");
             } catch (Exception e) {
@@ -211,7 +221,7 @@ public class AskVectorTableAvailability implements JavaDelegate {
         } catch (Exception e) {
             log.error("Не удалось конвертировать payload в List<ExportResourceModel>: {}", e.getMessage(), e);
 
-            return new ArrayList<>();
+            return Collections.emptyList();
         }
     }
 }

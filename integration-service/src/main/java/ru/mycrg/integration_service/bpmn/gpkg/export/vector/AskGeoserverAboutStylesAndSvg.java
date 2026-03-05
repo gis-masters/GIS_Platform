@@ -1,21 +1,25 @@
-package ru.mycrg.integration_service.bpmn.gpkg.export;
+package ru.mycrg.integration_service.bpmn.gpkg.export.vector;
 
 import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.delegate.JavaDelegate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import ru.mycrg.common_contracts.generated.data_service.gpkg.export.ExportGpkgPayload;
 import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgStyle;
 import ru.mycrg.data_service_contract.dto.gpkg.GpkgAppendingData;
 import ru.mycrg.data_service_contract.queue.request.gpkg.ExportGpkgEvent;
 import ru.mycrg.gis_service_contract.dto.LayerProjection;
 import ru.mycrg.integration_service.bpmn.gpkg.GeoServerSpeaker;
-import ru.mycrg.integration_service.bpmn.gpkg.report.GpkgReportManager;
 import ru.mycrg.integration_service.bpmn.gpkg.report.GpkgProcessContext;
+import ru.mycrg.integration_service.bpmn.gpkg.report.GpkgReportManager;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
+import static ru.mycrg.common_contracts.generated.data_service.gpkg.export.GpkgExportType.TABLE;
 import static ru.mycrg.data_service_contract.enums.ProcessStatus.TASK_DONE;
 import static ru.mycrg.integration_service.bpmn.IJavaDelegateProperties.*;
 
@@ -37,43 +41,44 @@ public class AskGeoserverAboutStylesAndSvg implements JavaDelegate {
     public void execute(DelegateExecution delegateExecution) throws Exception {
         log.debug("Класс '{}' начал работу.", AskGeoserverAboutStylesAndSvg.class.getSimpleName());
 
-        ExportGpkgEvent event = (ExportGpkgEvent) delegateExecution.getVariable(EVENT_VAR_NAME);
-        GpkgAppendingData gpkgData = event.getGpkgAppendingData();
-        if (gpkgData == null) {
-            log.debug("GpkgAppendingData пустая. Скорее всего тип выгрузки 'TABLES'.");
-            delegateExecution.setVariable(CHECK_STATUS_VAR_NAME, "dontAskGeoserver");
+        ExportGpkgPayload subPayload = (ExportGpkgPayload) delegateExecution.getVariable(EXPORT_GPKG_SUB_PAYLOAD);
+        if (subPayload.getType() == TABLE) {
+            log.debug("Тип выгрузки 'TABLES' - опрашивать geoserver не нужно");
 
             return;
         }
 
-        List<LayerProjection> layers = gpkgData.getLayerProjections();
-        String token = event.getToken();
+        GpkgAppendingData appendingData = (GpkgAppendingData) delegateExecution
+                .getVariable(EXPORT_GPKG_APPENDING_CRG_DATA);
+        List<LayerProjection> layers = appendingData.getLayerProjections();
 
         if (layers.isEmpty()) {
             log.debug("Добавлять в GPKG информацию о слоях не нужно!");
-            delegateExecution.setVariable(CHECK_STATUS_VAR_NAME, "geoserverGiveNothing");
+            delegateExecution.setVariable(CHECK_STATUS_VAR_NAME, "geoserverDontReturnInfo");
 
             return;
         }
 
-        List<String> stylesNames = layers.stream()
-                                         .map(LayerProjection::getStyleName)
-                                         .collect(Collectors.toList());
+        Set<String> stylesNames = layers.stream()
+                                        .filter(Objects::nonNull)
+                                        .map(LayerProjection::getStyleName)
+                                        .collect(Collectors.toSet());
+
+        ExportGpkgEvent event = (ExportGpkgEvent) delegateExecution.getVariable(EXPORT_GPKG_EVENT);
 
         List<GpkgStyle> stylesAndSvgs = stylesNames
                 .stream()
-                .map(style -> geoServerSpeaker.getStylesAndSvg(style, token, event.getDbName()))
+                .filter(Objects::nonNull)
+                .map(style -> geoServerSpeaker.getStylesAndSvg(style, event.getToken(), event.getDbName()))
                 .collect(Collectors.toList());
 
         log.debug("Всё прошло хорошо. У нас есть слои, стили и место где это объединить!");
 
-        //Типа защита, типа от NPE
-        GpkgAppendingData gpkgAppendingData = event.getGpkgAppendingData();
-        if (gpkgAppendingData == null) {
-            gpkgAppendingData = new GpkgAppendingData();
+        if (stylesAndSvgs.isEmpty()) {
+            delegateExecution.setVariable(CHECK_STATUS_VAR_NAME, "geoserverDontReturnInfo");
         }
-        gpkgAppendingData.setStylesAndSvgs(stylesAndSvgs);
-        event.setGpkgAppendingData(gpkgAppendingData);
+
+        appendingData.setStylesAndSvgs(stylesAndSvgs);
 
         GpkgProcessContext rabbitDto = new GpkgProcessContext(event.getProcessId(),
                                                               event.getDbName(),

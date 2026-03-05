@@ -1,7 +1,9 @@
 package ru.mycrg.geoserver_client.contracts.coveragestores;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import ru.mycrg.geoserver_client.contracts.NameHrefProjection;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class CoverageStoreResponseModel {
 
     private String name;

@@ -2,6 +2,7 @@ package ru.mycrg.common_contracts.generated.data_service.gpkg.import_;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public abstract class GpkgReportBaseDto implements Serializable {
@@ -50,8 +51,8 @@ public abstract class GpkgReportBaseDto implements Serializable {
     public String toString() {
         return "{" +
                 "\"title\":" + (title == null ? "null" : "\"" + title + "\"") + ", " +
-                "\"status\":" + (status == null ? "null" : "\"" + status + "\"") + ", " +
-                "\"messages\":" + (messages == null ? "null" : "\"" + messages + "\"") + ", " +
+                "\"status\":" + (status == null ? "null" : status) + ", " +
+                "\"messages\":" + (messages == null ? "null" : Arrays.toString(messages.toArray())) +
                 "}";
     }
 }

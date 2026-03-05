@@ -3,6 +3,9 @@ package ru.mycrg.geoserver_client.services.layers.models;
 public class GeoserverLayerResponse {
     private Layer layer;
 
+    public GeoserverLayerResponse() {
+    }
+
     public GeoserverLayerResponse(Layer layer) {
         this.layer = layer;
     }

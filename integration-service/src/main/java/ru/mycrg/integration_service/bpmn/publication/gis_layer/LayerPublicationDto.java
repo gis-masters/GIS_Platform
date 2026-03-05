@@ -2,7 +2,8 @@ package ru.mycrg.integration_service.bpmn.publication.gis_layer;
 
 import java.io.Serializable;
 
-//TODO: у нас 4 dto для слоёв. УДАЛИТЬ ВСЕ КРОМЕ ОДНОЙ! (LayerProjection, LayerCreateDto)
+//TODO: у нас 4 dto для слоёв. УДАЛИТЬ ВСЕ КРОМЕ ОДНОЙ! (LayerProjection, LayerCreateDto,
+// SpecializationLayerPublicationModel) (Azure №3970)
 public class LayerPublicationDto implements Serializable {
 
     private String type;

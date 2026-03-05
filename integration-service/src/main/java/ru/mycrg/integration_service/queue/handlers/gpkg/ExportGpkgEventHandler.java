@@ -9,8 +9,8 @@ import org.springframework.stereotype.Service;
 import ru.mycrg.common_contracts.generated.data_service.gpkg.export.ExportGpkgPayload;
 import ru.mycrg.common_contracts.generated.data_service.gpkg.export.GpkgExportType;
 import ru.mycrg.data_service_contract.queue.request.gpkg.ExportGpkgEvent;
-import ru.mycrg.integration_service.bpmn.gpkg.report.GpkgReportManager;
 import ru.mycrg.integration_service.bpmn.gpkg.report.GpkgProcessContext;
+import ru.mycrg.integration_service.bpmn.gpkg.report.GpkgReportManager;
 import ru.mycrg.messagebus_contract.IEventHandler;
 import ru.mycrg.messagebus_contract.events.IMessageBusEvent;
 
@@ -72,15 +72,10 @@ public class ExportGpkgEventHandler implements IEventHandler {
             reportManager.createReport(rabbitDto, event);
 
             VariableMap variables = Variables.createVariables()
-                                             .putValue(EVENT_VAR_NAME, asJava(event))
-                                             .putValue(EVENT_SUB_PAYLOAD_NAME, asJava(exportGpkgPayload))
+                                             .putValue(EXPORT_GPKG_COUNT_HTTP_ERRORS, 0)
 
-                                             .putValue(TOKEN_VAR_NAME, event.getToken())
-                                             .putValue(DB_NAME, event.getDbName())
-                                             .putValue(PROCESS_ID_VAR_NAME, event.getProcessId())
-
-                                             .putValue(ITERATION_COUNTER_VAR_NAME, 0)
-                                             .putValue(BUSINESS_KEY_VAR_NAME, businessKey);
+                                             .putValue(EXPORT_GPKG_EVENT, asJava(event))
+                                             .putValue(EXPORT_GPKG_SUB_PAYLOAD, asJava(exportGpkgPayload));
 
             bpmnRuntimeService.startProcessInstanceByKey(GPKG_EXPORT_PROCESS.getValue(),
                                                          businessKey,

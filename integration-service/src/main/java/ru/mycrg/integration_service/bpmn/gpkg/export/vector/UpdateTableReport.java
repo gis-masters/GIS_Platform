@@ -1,4 +1,4 @@
-package ru.mycrg.integration_service.bpmn.gpkg.export;
+package ru.mycrg.integration_service.bpmn.gpkg.export.vector;
 
 import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.delegate.JavaDelegate;
@@ -25,7 +25,7 @@ public class UpdateTableReport implements JavaDelegate {
 
     @Override
     public void execute(DelegateExecution delegateExecution) throws Exception {
-        String gpkgPath = String.valueOf(delegateExecution.getVariable(GPKG_PATH_VAR_NAME));
+        String gpkgPath = String.valueOf(delegateExecution.getVariable(EXPORT_GPKG_PATH_TO_GPKG));
         if (gpkgPath == null || gpkgPath.isBlank()) {
             log.error("Geo-wrapper не вернул путь к файлу.");
 
@@ -34,11 +34,18 @@ public class UpdateTableReport implements JavaDelegate {
             return;
         }
 
-        ExportGpkgEvent event = (ExportGpkgEvent) delegateExecution.getVariable(EVENT_VAR_NAME);
+        ExportGpkgEvent event = (ExportGpkgEvent) delegateExecution.getVariable(EXPORT_GPKG_EVENT);
         GpkgProcessContext rabbitDto = new GpkgProcessContext(event.getProcessId(),
                                                               event.getDbName(),
                                                               TASK_DONE);
 
+        /*
+         Мы тянем за собой ивент в котором есть что-то вроде ошибок и статусов.
+         Но в нём нет детализации и опираться на него сложно.
+         Поэтому пока что просто безусловно говорим что весь вектор done.
+         Так же не удалось словить ошибок на этом шаге, разве что пробовать отключать БД например.
+         Возможно стоит написать немного интеграционных SpringBootTest-ов с использованием WireMock или т.д.
+         */
         reportManager.completeAllTablesInReport(rabbitDto, event.getGpkgReport(), gpkgPath);
 
         delegateExecution.setVariable(CHECK_STATUS_VAR_NAME, "geoWrapperDone");

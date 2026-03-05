@@ -5,6 +5,9 @@ public class Style {
     private String name;
     private String href;
 
+    public Style() {
+    }
+
     public Style(String name, String href) {
         this.name = name;
         this.href = href;

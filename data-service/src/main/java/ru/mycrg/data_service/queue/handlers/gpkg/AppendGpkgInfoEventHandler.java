@@ -7,6 +7,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgStyle;
 import ru.mycrg.data_service.dao.config.DatasourceFactory;
+import ru.mycrg.data_service.entity.File;
+import ru.mycrg.data_service.repository.FileRepositoryDetached;
 import ru.mycrg.data_service.repository.SchemasAndTablesRepositoryDetached;
 import ru.mycrg.data_service.service.gpkg.export.GpkgAppender;
 import ru.mycrg.data_service_contract.dto.ExportResourceModel;
@@ -18,7 +20,11 @@ import ru.mycrg.messagebus_contract.IEventHandler;
 import ru.mycrg.messagebus_contract.IMessageBusProducer;
 import ru.mycrg.messagebus_contract.events.IMessageBusEvent;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import static ru.mycrg.data_service_contract.enums.ProcessStatus.DONE;
 import static ru.mycrg.data_service_contract.enums.ProcessStatus.ERROR;
@@ -31,15 +37,18 @@ public class AppendGpkgInfoEventHandler implements IEventHandler {
     private final IMessageBusProducer messageBus;
     private final DatasourceFactory datasourceFactory;
     private final SchemasAndTablesRepositoryDetached schemasAndTablesRepository;
+    private final FileRepositoryDetached fileRepository;
     private final GpkgAppender gpkgAppender;
 
     public AppendGpkgInfoEventHandler(IMessageBusProducer messageBus,
                                       DatasourceFactory datasourceFactory,
                                       SchemasAndTablesRepositoryDetached schemasAndTablesRepository,
+                                      FileRepositoryDetached fileRepository,
                                       GpkgAppender gpkgAppender) {
         this.messageBus = messageBus;
         this.datasourceFactory = datasourceFactory;
         this.schemasAndTablesRepository = schemasAndTablesRepository;
+        this.fileRepository = fileRepository;
         this.gpkgAppender = gpkgAppender;
     }
 
@@ -89,6 +98,41 @@ public class AppendGpkgInfoEventHandler implements IEventHandler {
                                                  resource);
                     }, () -> log.warn("Таблица {} отсутствует в базе данных, пропускаем", resource.getTable()));
         }
+
+        addRastersFilesDataLikeBlob(jdbcTemplate, pathToGpkg, data.getResourceAndPath());
+    }
+
+    private void addRastersFilesDataLikeBlob(JdbcTemplate jdbcTemplate,
+                                             String pathToGpkg,
+                                             Map<String, String> resourceAndPath) {
+        if (resourceAndPath.isEmpty()) {
+            log.debug("Не было растров для добавления в таблицу как блоб.");
+
+            return;
+        }
+
+        //Обратиться к сервису и получить List<Files>
+        Set<String> filePath = new HashSet<>(resourceAndPath.values());
+        List<File> filesToExport = fileRepository.getAllByPaths(jdbcTemplate, filePath);
+
+        Map<String, String> pathAndResource = resourceAndPath
+                .entrySet().stream()
+                .collect(Collectors.toMap(Map.Entry::getValue,
+                                          Map.Entry::getKey,
+                                          (oldVal, newVal) -> newVal));
+
+        //Какой-то мем с этими путями и файлами, возможно стоит инверсировать мапу при создании
+        //Суть флоу: по path получить файлы, для каждого файла написать свой resource_id, чтобы хранить его в gpkg
+        Map<String, File> resourceToFile = filesToExport.stream()
+                                                        .map(f -> Map.entry(pathAndResource.get(f.getPath()), f))
+                                                        .filter(e -> e.getKey() != null)
+                                                        .collect(Collectors.toMap(
+                                                                Map.Entry::getKey,
+                                                                Map.Entry::getValue,
+                                                                (oldFile, newFile) -> newFile
+                                                        ));
+
+        gpkgAppender.appendRasterFiles(pathToGpkg, resourceToFile);
     }
 
     private void addVectorTableInfoToGpkg(String pathToGpkg,

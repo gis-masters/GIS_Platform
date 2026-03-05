@@ -1,4 +1,4 @@
-package ru.mycrg.integration_service.bpmn.gpkg.export.handlers;
+package ru.mycrg.integration_service.bpmn.gpkg.export.vector;
 
 import org.camunda.bpm.engine.RuntimeService;
 import org.slf4j.Logger;
@@ -9,7 +9,8 @@ import ru.mycrg.messagebus_contract.IEventHandler;
 import ru.mycrg.messagebus_contract.events.IMessageBusEvent;
 
 import static ru.mycrg.data_service_contract.enums.ProcessStatus.DONE;
-import static ru.mycrg.integration_service.bpmn.IJavaDelegateProperties.*;
+import static ru.mycrg.integration_service.bpmn.IJavaDelegateProperties.EXPORT_GPKG_FAIL_REASON;
+import static ru.mycrg.integration_service.bpmn.IJavaDelegateProperties.EXPORT_GPKG_PATH_TO_GPKG;
 
 @Service
 public class BuildGpkgBackwardEventHandler implements IEventHandler {
@@ -35,7 +36,7 @@ public class BuildGpkgBackwardEventHandler implements IEventHandler {
                   event.getBusinessKey(), event.getPayload());
 
         if (event.getStatus() == DONE) {
-            handleGpkgWrapperDoneEvent(event.getBusinessKey(), event.getPayload().toString(), "gpkgExist");
+            handleGpkgWrapperDoneEvent(event.getBusinessKey(), event.getPayload().toString());
             log.debug("Успешно обработан ReverseGpkgExportEvent для businessKey: {}",
                       event.getBusinessKey());
         } else {
@@ -52,20 +53,18 @@ public class BuildGpkgBackwardEventHandler implements IEventHandler {
      * @param businessKey ключ бизнес-процесса
      * @param payload     путь к обработанному GPKG файлу, либо описание ошибки
      */
-    public void handleGpkgWrapperDoneEvent(String businessKey, String payload, String status) {
+    public void handleGpkgWrapperDoneEvent(String businessKey, String payload) {
         runtimeService.createMessageCorrelation("Mes_FromWrapperAboutGpkg")
                       .processInstanceBusinessKey(businessKey)
-                      .setVariable(GPKG_PATH_VAR_NAME, payload)
-                      .setVariable(CHECK_STATUS_VAR_NAME, status)
+                      .setVariable(EXPORT_GPKG_PATH_TO_GPKG, payload)
                       .correlateWithResult();
     }
 
     private void handleGpkgWrapperErrorEvent(String businessKey, String payload, String error) {
         runtimeService.createMessageCorrelation("Mes_FromWrapperAboutGpkg")
                       .processInstanceBusinessKey(businessKey)
-                      .setVariable(GPKG_PATH_VAR_NAME, payload)
-                      .setVariable(CHECK_STATUS_VAR_NAME, "gpkgNotExist")
-                      .setVariable(FAIL_REASON, error)
+                      .setVariable(EXPORT_GPKG_PATH_TO_GPKG, payload)
+                      .setVariable(EXPORT_GPKG_FAIL_REASON, error)
                       .correlateWithResult();
     }
 }

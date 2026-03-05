@@ -1,17 +1,18 @@
-package ru.mycrg.integration_service.bpmn.gpkg.export;
+package ru.mycrg.integration_service.bpmn.gpkg.export.crg_data;
 
 import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.delegate.JavaDelegate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import ru.mycrg.common_contracts.generated.data_service.gpkg.export.ExportGpkgPayload;
 import ru.mycrg.data_service_contract.dto.ExportResourceModel;
 import ru.mycrg.data_service_contract.dto.gpkg.GpkgAppendingData;
 import ru.mycrg.data_service_contract.queue.request.gpkg.AppendGpkgInfoEvent;
 import ru.mycrg.data_service_contract.queue.request.gpkg.ExportGpkgEvent;
 import ru.mycrg.messagebus_contract.IMessageBusProducer;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static ru.mycrg.integration_service.bpmn.IJavaDelegateProperties.*;
@@ -31,26 +32,30 @@ public class AskDataAppendInfo implements JavaDelegate {
     public void execute(DelegateExecution delegateExecution) throws Exception {
         log.debug("Класс '{}' начал работу.", AskDataAppendInfo.class.getSimpleName());
 
-        ExportGpkgEvent event = (ExportGpkgEvent) delegateExecution.getVariable(EVENT_VAR_NAME);
-        String pathToGpkg = delegateExecution.getVariable(GPKG_PATH_VAR_NAME).toString();
+        String pathToGpkg = (String) delegateExecution.getVariable(EXPORT_GPKG_PATH_TO_GPKG);
 
-        ExportGpkgPayload subPayload = (ExportGpkgPayload) delegateExecution.getVariable(EVENT_SUB_PAYLOAD_NAME);
-        List<ExportResourceModel> resources = (List<ExportResourceModel>) subPayload.getPayload();
-
-        GpkgAppendingData gpkgData = event.getGpkgAppendingData();
-        if (gpkgData == null) {
-            log.debug("Если объект null, значит выгружаем инфу о таблицах и у нас нет данных о слоях.");
-
-            gpkgData = new GpkgAppendingData();
-            gpkgData.setResourceProjections(resources);
-        } else {
-            gpkgData.setResourceProjections(resources);
+        List<ExportResourceModel> resources;
+        try {
+            resources = (List<ExportResourceModel>) delegateExecution
+                    .getVariable(EXPORT_GPKG_VECTOR_LIST);
+        }catch (Exception e) {
+            log.debug("Нет списка векторных таблицы, значит экспорт только растров.");
+            resources = Collections.emptyList();
         }
 
-        String businessKey = (String) delegateExecution.getVariable(BUSINESS_KEY_VAR_NAME);
+        GpkgAppendingData appendingData = (GpkgAppendingData) delegateExecution
+                .getVariable(EXPORT_GPKG_APPENDING_CRG_DATA);
 
-        messageBus.produce(new AppendGpkgInfoEvent(event.getDbName(), businessKey, pathToGpkg, gpkgData));
+        if (appendingData == null) {
+            appendingData = new GpkgAppendingData();
+        }
+        appendingData.setResourceProjections(resources);
+
+        String businessKey = delegateExecution.getProcessBusinessKey();
+        ExportGpkgEvent event = (ExportGpkgEvent) delegateExecution.getVariable(EXPORT_GPKG_EVENT);
 
         log.debug("Запрос на добавление доп информации в gpkg был направлен.");
+
+        messageBus.produce(new AppendGpkgInfoEvent(event.getDbName(), businessKey, pathToGpkg, appendingData));
     }
 }

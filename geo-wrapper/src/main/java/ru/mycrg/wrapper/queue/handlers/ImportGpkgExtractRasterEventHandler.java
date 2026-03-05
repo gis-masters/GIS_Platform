@@ -3,7 +3,7 @@ package ru.mycrg.wrapper.queue.handlers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import ru.mycrg.common_contracts.generated.data_service.gpkg.GpkgTile;
+import ru.mycrg.common_contracts.generated.data_service.gpkg.import_.GpkgTile;
 import ru.mycrg.data_service_contract.queue.response.ImportGpkgExtractRasterBackwardEvent;
 import ru.mycrg.messagebus_contract.IEventHandler;
 import ru.mycrg.messagebus_contract.IMessageBusProducer;
@@ -11,7 +11,6 @@ import ru.mycrg.messagebus_contract.events.IMessageBusEvent;
 import ru.mycrg.messagebus_contract.events.integration_wrapper.ImportGpkgExtractRasterEvent;
 import ru.mycrg.wrapper.service.export.GDALService;
 
-import java.util.List;
 import java.util.Map;
 
 import static ru.mycrg.data_service_contract.enums.ProcessStatus.DONE;

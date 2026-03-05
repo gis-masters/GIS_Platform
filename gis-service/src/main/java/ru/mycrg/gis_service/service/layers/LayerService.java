@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.mycrg.audit_service_contract.events.CrgAuditEvent;
 import ru.mycrg.auth_facade.IAuthenticationFacade;
+import ru.mycrg.common_contracts.generated.gis_service.LayerType;
 import ru.mycrg.gis_service.dto.LayerCreateDto;
 import ru.mycrg.gis_service.dto.LayerUpdateDto;
 import ru.mycrg.gis_service.dto.RelatedLayersModel;
@@ -50,6 +51,8 @@ public class LayerService {
     private final IAuthenticationFacade authenticationFacade;
     private final MessageBusProducer messageBus;
     private final ProjectProtector projectProtector;
+
+    //TODO: Правильнее будет переписать так, чтобы ключ был LayerType
     private final Map<String, ILayerHandler> layerHandlers;
 
     public LayerService(JsonPatcher jsonPatcher,
