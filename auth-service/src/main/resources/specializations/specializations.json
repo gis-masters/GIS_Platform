@@ -213,8 +213,6 @@
       "editProjectLayer": true,
       "tags": [
         "Приказ 10",
-        "Приказ 123",
-        "Приказ 10, версия 5 изм. от 6 октября 2023 № 698",
         "КПТ",
         "Тер.планирование",
         "ДПТ"
@@ -242,21 +240,21 @@
             ],
             "body": {
               "title": "Функциональные зоны",
-              "schemaId": "functionalzone_123",
+              "schemaId": "functionalzone",
               "crs": "EPSG:7829",
-              "styleName": "functionalzone_123"
+              "styleName": "functionalzone"
             }
           },
           {
             "id": 402,
             "content": [
-              "admborder_line_123.sql"
+              "admborder_line.sql"
             ],
             "body": {
               "title": "Границы",
-              "schemaId": "admborder_line_123",
+              "schemaId": "admborder_line",
               "crs": "EPSG:7829",
-              "styleName": "admborder_line_123"
+              "styleName": "admborder_line"
             }
           }
         ]
@@ -288,8 +286,6 @@
       "taskManagement": true,
       "tags": [
         "Приказ 10",
-        "Приказ 123",
-        "Приказ 10, версия 5 изм. от 6 октября 2023 № 698",
         "КПТ",
         "Тер.планирование",
         "ГИСОГД",
