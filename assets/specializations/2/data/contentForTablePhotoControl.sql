@@ -206,5 +206,6 @@ VALUES
   		"schema": "dataset_90c0f8",
   		"recordId": 18874551
 	}'
-    );
+    )
+    ON CONFLICT (id) DO NOTHING;
 	

@@ -56,3 +56,25 @@ Feature: Регистрация новой организации
     Then все организации созданы корректно и имеют статус "PROVISIONED" [auth-service]
     *    для всех организаций корректно созданы зависимости в данных [data-service]
     *    на геосервере создано всё необходимое и даны права [geoserver]
+
+  Scenario Outline: Создание организаций по специализациям
+    When Отправляется запрос на создание организации
+      | name     | phone      | ownerSurname | ownerName      | ownerEmail | ownerPassword    | specializationId | description |
+      | "<name>" | 1234567890 | Иванов<id>   | Иван из <name> | EMAIL_9    | testPassword<id> | <id>             | "<name>"    |
+    Then Сервер отвечает со статус-кодом 202
+    *    В заголовке Location передается ID созданной организации
+    *    Ждем окончания процесса создания организации
+    *    Авторизуемся владельцем организации
+    *    Проверяем создана ли организация
+    *    Сервер отвечает со статус-кодом 200
+    *    Статус организации соответствует "PROVISIONED"
+    Examples:
+      | name                   | id |
+#      | Spezialisierung Eins  | 1  |
+      | Spezialisierung Zwei   | 2  |
+      | Spezialisierung Drei   | 3  |
+      | Spezialisierung Vier   | 4  |
+      | Spezialisierung Fünf   | 5  |
+      | Spezialisierung Sechs  | 6  |
+      | Spezialisierung Sieben | 7  |
+#    TODO: Специализация по ID == 1 уже проверятся в тестах выше и будет переписана. Поэтому сейчас скип

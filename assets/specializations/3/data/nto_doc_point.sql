@@ -533,4 +533,5 @@ VALUES
         'image/jpeg',
         'FEATURE',
         '{}'
-    );
+    )
+    ON CONFLICT (id) DO NOTHING;

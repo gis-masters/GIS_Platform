@@ -446,4 +446,5 @@ VALUES
         'application/pdf',
         'FEATURE',
         '{}'
-    );
+    )
+    ON CONFLICT (id) DO NOTHING;
