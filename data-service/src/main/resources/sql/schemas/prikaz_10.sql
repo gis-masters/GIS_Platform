@@ -952,36 +952,38 @@ custom_rule = 'var errors = [];
        
        if (obj.status == ''2'' || obj.status == ''3'') {
               
-  if (!obj.event_time) {
-    errors.push({attribute: ''event_time'', error: ''Значение обязательно к заполнению''});
-  }
-  if (!obj.number) {
-    errors.push({attribute: ''number'', error: ''Значение обязательно к заполнению''});
-  }
-  } else { 
-    if (obj.event_time) {
-      errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
-  }
-  if (obj.number) {
-    errors.push({attribute: ''number'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
-}
+      if (!obj.event_time) {
+        errors.push({attribute: ''event_time'', error: ''Значение обязательно к заполнению''});
+      }
+      if (!obj.number) {
+        errors.push({attribute: ''number'', error: ''Значение обязательно к заполнению''});
+      }
+      } else { 
+        if (obj.event_time) {
+          errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
+      }
+      if (obj.number) {
+        errors.push({attribute: ''number'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
+    }
+      }
 
-if (obj.reg_status == ''1'' || obj.reg_status == ''2'') {
-  if (!obj.event_time) {
-    errors.push({attribute: ''event_time'', error: ''Значение обязательно к заполнению''});
-  }
-  if (!obj.wear_prcnt) {
-    errors.push({attribute: ''wear_prcnt'', error: ''Значение обязательно к заполнению''});
-  }
-} else if {
-  (obj.event_time) {
-    errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
-}
-(obj.wear_prcnt) {
-  errors.push({attribute: ''wear_prcnt'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
-}
+      if (obj.reg_status == ''1'' || obj.reg_status == ''2'') {
+        if (!obj.event_time) {
+          errors.push({attribute: ''event_time'', error: ''Значение обязательно к заполнению''});
+        }
+        if (!obj.wear_prcnt) {
+          errors.push({attribute: ''wear_prcnt'', error: ''Значение обязательно к заполнению''});
+        }
+      } else if {
+        (obj.event_time) {
+          errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
+      }
+      (obj.wear_prcnt) {
+        errors.push({attribute: ''wear_prcnt'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
+      }
+      }
 
-if (!(obj.status == ''1'' || obj.status == ''3'' || obj.status == ''4'')) {
+      if (!(obj.status == ''1'' || obj.status == ''3'' || obj.status == ''4'')) {
         if (!obj.wear_prcnt) {
             errors.push({ attribute: ''wear_prcnt'', error: ''Значение обязательно к заполнению'' });
         }
@@ -989,6 +991,7 @@ if (!(obj.status == ''1'' || obj.status == ''3'' || obj.status == ''4'')) {
         if (obj.wear_prcnt) {
             errors.push({ attribute: ''wear_prcnt'', error: ''Значение заполняется только для существующих и строящихся, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов'' });
         }
+      }
 
        return errors;'
 WHERE name = 'thermalpipeline_line';
@@ -1595,12 +1598,9 @@ custom_rule = 'var errors = [];
         if (!obj.wear_prcnt) {
           errors.push({attribute: ''wear_prcnt'', error: ''Значение обязательно к заполнению''});
         }
-      } else if {
-        (obj.event_time) {
-          errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
-      }
-      (obj.wear_prcnt) {
-        errors.push({attribute: ''wear_prcnt'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
+        } else if (obj.event_time || obj.wear_prcnt) {
+          if (obj.event_time) errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
+          if (obj.wear_prcnt) errors.push({attribute: ''wear_prcnt'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
 
       if (obj.status == ''2'' || obj.status == ''3'') {
@@ -1611,12 +1611,9 @@ custom_rule = 'var errors = [];
         if (!obj.number) {
           errors.push({attribute: ''number'', error: ''Значение обязательно к заполнению''});
         }
-        } else { 
-          if (obj.event_time) {
-            errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
-        }
-        if (obj.number) {
-          errors.push({attribute: ''number'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
+        } else if (obj.event_time || obj.wear_prcnt) {
+          if (obj.event_time) errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
+          if (obj.wear_prcnt) errors.push({attribute: ''wear_prcnt'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
 
       if (obj.status == ''1'' || obj.status == ''3'' || obj.status == ''4'') {
@@ -1777,7 +1774,6 @@ SET class_rule =
     {
       "name": "address",
       "title": "Местоположение, адресное описание",
-      "required": true,
       "valueType": "STRING"
     },
     {
@@ -2057,80 +2053,116 @@ if (!(obj.classid == ''602040201'' || obj.classid == ''602040202'' ||
     obj.classid == ''602040203'' || obj.classid == ''602040204'' ||
     obj.classid == ''602040205'' || obj.classid == ''602040206''
     || obj.classid == ''602040207'')) {
-if (obj.danger_obj) {
-  errors.push({attribute: ''danger_obj'', error: ''Значение заполняется только для объекта''});
-}
+    if (obj.danger_obj) {
+        errors.push({attribute: ''danger_obj'', error: ''Значение заполняется только для объекта''});
+    }
 }
 
-if (obj.status == ''3'' || obj.status == ''4'') {
+if (obj.status == ''1'' || obj.status == ''3'' || obj.status == ''4'') {
     if (!obj.wear_prcnt) {
         errors.push({attribute: ''wear_prcnt'', error: ''Значение обязательно к заполнению''});
     }
-  } else if (obj.wear_prcnt) {
-    errors.push({attribute: ''wear_prcnt'', error: ''Значение заполняется только для планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
-  }
-
-  if (obj.status == ''1'' || obj.status == ''3'' || obj.status == ''4'') {
     if (!obj.fact_use) {
         errors.push({attribute: ''fact_use'', error: ''Значение обязательно к заполнению''});
     }
-  } else if (obj.fact_use) {
-    errors.push({attribute: ''fact_use'', error: ''Значение заполняется только для сушествующих, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
-  }
-
-  if (!(obj.classid == ''602040201'' || obj.classid == ''602040202'' ||
-    obj.classid == ''602040203'' || obj.classid == ''602040204'' ||
-    obj.classid == ''602040205'' || obj.classid == ''602040206''
-    || obj.classid == ''602040207 || obj.classid == ''602040208''
-    || obj.classid == ''602040209'' || obj.classid == ''602040210''
-    || obj.classid == ''602040211'' || obj.classid == ''602040212''
-    || obj.classid == ''602040213'' || obj.classid == ''602040214''
-    || obj.classid == ''602040215'' || obj.classid == ''602040216''
-    || obj.classid == ''602040217'' || obj.classid == ''602040221''
-    || obj.classid == ''602040222'' || obj.classid == ''602040224''
-    || obj.classid == ''602040225'')) {
-if (obj.power) {
-  errors.push({attribute: ''power'', error: ''Значение заполняется только для объекта''});
-}
+    if (!obj.kadastrzu) {
+        errors.push({attribute: ''kadastrzu'', error: ''Значение обязательно к заполнению''});
+    }
+} else {
+    if (obj.wear_prcnt) {
+        errors.push({attribute: ''wear_prcnt'', error: ''Значение заполняется только для планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
+    }
+    if (obj.fact_use) {
+        errors.push({attribute: ''fact_use'', error: ''Значение заполняется только для сушествующих, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
+    }
+    if (obj.kadastrzu) {
+        errors.push({attribute: ''kadastrzu'', error: ''Значение заполняется только для сушествующих, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
+    }
 }
 
 if (!(obj.classid == ''602040201'' || obj.classid == ''602040202'' ||
     obj.classid == ''602040203'' || obj.classid == ''602040204'' ||
     obj.classid == ''602040205'' || obj.classid == ''602040206''
-    || obj.classid == ''602040207 || obj.classid == ''602040208''
+    || obj.classid == ''602040207'' || obj.classid == ''602040208''
     || obj.classid == ''602040209'' || obj.classid == ''602040210''
     || obj.classid == ''602040211'' || obj.classid == ''602040212''
     || obj.classid == ''602040213'' || obj.classid == ''602040214''
     || obj.classid == ''602040215'' || obj.classid == ''602040216''
     || obj.classid == ''602040217'' || obj.classid == ''602040221''
-    || obj.classid == ''602040222'' || obj.classid == ''602040224''
-    || obj.classid == ''602040225'')) {
-if (obj.amount) {
-  errors.push({attribute: ''amount'', error: ''Значение заполняется только для объекта''});
+    || obj.classid == ''602040222'' || obj.classid == ''602040224'')) {
+    if (obj.power) {
+        errors.push({attribute: ''power'', error: ''Значение заполняется только для объекта''});
+    }
 }
+
+  if (!(obj.classid == ''602040201'' || obj.classid == ''602040202'' ||
+  obj.classid == ''602040203'' || obj.classid == ''602040204'' ||
+  obj.classid == ''602040205'' || obj.classid == ''602040206''
+  || obj.classid == ''602040207'' || obj.classid == ''602040208''
+  || obj.classid == ''602040209'' || obj.classid == ''602040210''
+  || obj.classid == ''602040211'' || obj.classid == ''602040212''
+  || obj.classid == ''602040213'' || obj.classid == ''602040214''
+  || obj.classid == ''602040215'' || obj.classid == ''602040216''
+  || obj.classid == ''602040217'' || obj.classid == ''602040221''
+  || obj.classid == ''602040222'' || obj.classid == ''602040224'')) {
+    if (obj.amount) {
+        errors.push({attribute: ''amount'', error: ''Значение заполняется только для объекта''});
+    }
 }
 
 if (obj.status == ''2'' || obj.status == ''3'') {
+    if (!obj.namedocosn) {
+        errors.push({ attribute: ''namedocosn'', error: ''Значение обязательно к заполнению'' });
+    }
+    if (!obj.datedocosn) {
+        errors.push({ attribute: ''datedocosn'', error: ''Значение обязательно к заполнению'' });
+    }
+    if (!obj.numberdocosn) {
+        errors.push({ attribute: ''numberdocosn'', error: ''Значение обязательно к заполнению'' });
+    }
     if (!obj.event_time) {
-      errors.push({attribute: ''event_time'', error: ''Значение обязательно к заполнению''});
+        errors.push({ attribute: ''event_time'', error: ''Значение обязательно к заполнению'' });
     }
-  } else if (obj.event_time) {
-      errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции''});
-  }
-
-  if (!(obj.status == ''1'' || obj.status == ''3'' || obj.status == ''4'')) {
-    if (!obj.kadastroks) {
-        errors.push({ attribute: ''kadastroks'', error: ''Значение обязательно к заполнению'' });
-    }
-    if (!obj.kadastrzu) {
-        errors.push({ attribute: ''kadastrzu'', error: ''Значение обязательно к заполнению'' });
+    if (!obj.number) {
+        errors.push({ attribute: ''number'', error: ''Значение обязательно к заполнению'' });
     }
 } else {
-    if (obj.kadastroks) {
-        errors.push({ attribute: ''kadastroks'', error: ''Значение заполняется только для существующих и строящихся, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов'' });
+    if (obj.namedocosn) {
+        errors.push({ attribute: ''namedocosn'', error: ''Значение заполняется только для планируемых к размещению или планируемых к реконструкции объектов'' });
     }
-    if (obj.kadastrzu) {
-        errors.push({ attribute: ''kadastrzu'', error: ''Значение заполняется только для существующих и строящихся, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов'' });
+    if (obj.datedocosn) {
+        errors.push({ attribute: ''datedocosn'', error: ''Значение заполняется только для планируемых к размещению или планируемых к реконструкции объектов'' });
+    }
+    if (obj.numberdocosn) {
+        errors.push({ attribute: ''numberdocosn'', error: ''Значение заполняется только для планируемых к размещению или планируемых к реконструкции объектов'' });
+    }
+    if (obj.event_time) {
+        errors.push({ attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению или планируемых к реконструкции объектов'' });
+    }
+    if (obj.number) {
+        errors.push({ attribute: ''number'', error: ''Значение заполняется только для планируемых к размещению или планируемых к реконструкции объектов'' });
+    }
+}
+
+if (obj.reg_status == ''1'' || obj.reg_status == ''2'') {
+    if (!obj.event_time) {
+        errors.push({attribute: ''event_time'', error: ''Значение обязательно к заполнению''});
+    }
+    if (!obj.fact_use) {
+        errors.push({attribute: ''fact_use'', error: ''Значение обязательно к заполнению''});
+    }
+    if (!obj.wear_prcnt) {
+        errors.push({attribute: ''wear_prcnt'', error: ''Значение обязательно к заполнению''});
+    }
+} else {
+    if (obj.event_time) {
+        errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
+    }
+    if (obj.fact_use) {
+        errors.push({attribute: ''fact_use'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
+    }
+    if (obj.wear_prcnt) {
+        errors.push({attribute: ''wear_prcnt'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
     }
 }
 
@@ -2611,6 +2643,7 @@ custom_rule = 'var errors = [];
         if (obj.number) {
           errors.push({ attribute: ''number'', error: ''Значение заполняется только для планируемых к размещению или планируемых к реконструкции объектов'' });
       }
+    }
 
       if (!(obj.status == ''1'' || obj.status == ''3'' || obj.status == ''4'')) {
         if (!obj.kadastrzu) {
@@ -2630,6 +2663,7 @@ custom_rule = 'var errors = [];
         if (obj.event_time) {
             errors.push({ attribute: ''event_time'', error: ''Значение заполняется только для существующих и строящихся, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов'' });
         }
+      }
 
       return errors;'
 WHERE name = 'railwayfacility_point';
@@ -3626,7 +3660,6 @@ custom_rule = 'var errors = [];
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
 
-
       return errors;'
 WHERE name = 'waterfacility_point';
 
@@ -3901,6 +3934,7 @@ custom_rule = 'var errors = [];
       if (obj.number) {
         errors.push({attribute: ''number'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
+    }
 
       if (obj.reg_status == ''1'' || obj.reg_status == ''2'') {
         if (!obj.event_time) {
@@ -4326,6 +4360,7 @@ custom_rule = 'var errors = [];
         if (obj.number) {
           errors.push({ attribute: ''number'', error: ''Значение заполняется только для планируемых к размещению или планируемых к реконструкции объектов'' });
       }
+    }
 
       return errors;'
 WHERE name = 'airtransportobj_point';
@@ -4691,6 +4726,7 @@ custom_rule = 'var errors = [];
         if (obj.number) {
           errors.push({ attribute: ''number'', error: ''Значение заполняется только для планируемых к размещению или планируемых к реконструкции объектов'' });
       }
+    }
 
       if (obj.reg_status == ''1'' || obj.reg_status == ''2'') {
         if (!obj.event_time) {
@@ -4708,6 +4744,8 @@ custom_rule = 'var errors = [];
         if (obj.kadastrzu) {
             errors.push({ attribute: ''kadastrzu'', error: ''Значение заполняется только для существующих и строящихся, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов'' });
         }
+      }
+    }
 
       return errors;'
 WHERE name = 'autoservice_point';
@@ -5162,7 +5200,6 @@ custom_rule = 'var errors = [];
       } else if (obj.kadastrzu) {
           errors.push({attribute: ''kadastrzu'', error: ''Значение заполняется только для объекта "Существующий"''});
       }
-      }
 
       return errors;'
 WHERE name = 'heritage_point';
@@ -5467,6 +5504,7 @@ custom_rule = 'var errors = [];
         }
         if (obj.number) {
           errors.push({ attribute: ''number'', error: ''Значение заполняется только для планируемых к размещению или планируемых к реконструкции объектов'' });
+      }
       }
 
       return errors;'
@@ -5901,21 +5939,6 @@ SET class_rule =
       "valueType": "DOUBLE"
     },
     {
-      "name": "type_inp",
-      "title": "Справочник: Тип индустриального парка",
-      "valueType": "CHOICE",
-      "enumerations": [
-        {
-          "title": "Гринфилд",
-          "value": "1"
-        },
-        {
-          "title": "Браунфилд",
-          "value": "2"
-        }
-      ]
-    },
-    {
       "name": "shape",
       "title": "Геометрия",
       "hidden": true,
@@ -5974,6 +5997,7 @@ custom_rule = 'var errors = [];
         if (obj.number) {
           errors.push({ attribute: ''number'', error: ''Значение заполняется только для планируемых к размещению или планируемых к реконструкции объектов'' });
       }
+    }
 
       if (!(obj.status == ''1'' || obj.status == ''3'' || obj.status == ''4'')) {
         if (!obj.kadastrzu) {
@@ -5983,6 +6007,7 @@ custom_rule = 'var errors = [];
         if (obj.kadastrzu) {
             errors.push({ attribute: ''kadastrzu'', error: ''Значение заполняется только для существующих и строящихся, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов'' });
         }
+      }
 
         if (!(obj.reg_status == ''1'' || obj.reg_status == ''2'')) {
         if (!obj.event_time) {
@@ -5992,6 +6017,7 @@ custom_rule = 'var errors = [];
         if (obj.event_time) {
             errors.push({ attribute: ''event_time'', error: ''Значение заполняется только для существующих и строящихся, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов'' });
         }
+      }
 
       return errors;'
 WHERE name = 'servicefacility_point';
@@ -6280,6 +6306,7 @@ custom_rule = 'var errors = [];
         if (obj.number) {
           errors.push({attribute: ''number'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
+        }
 
       if (obj.status == ''2'' || obj.status == ''3'') {
         if (!obj.event_time) {
@@ -6725,17 +6752,19 @@ custom_rule = 'var errors = [];
         if (obj.number) {
           errors.push({ attribute: ''number'', error: ''Значение заполняется только для планируемых к размещению или планируемых к реконструкции объектов'' });
       }
+    }
 
       if (obj.reg_status == ''1'' || obj.reg_status == ''2'') {
         if (!obj.event_time) {
           errors.push({attribute: ''event_time'', error: ''Значение обязательно к заполнению''});
         }
       } 
-      else 
+      else {
       if (obj.event_time) {
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
-      
+    }
+
       if (!(obj.status == ''1'' || obj.status == ''3'' || obj.status == ''4'')) {
         if (!obj.kadastrzu) {
             errors.push({ attribute: ''kadastrzu'', error: ''Значение обязательно к заполнению'' });
@@ -6744,6 +6773,7 @@ custom_rule = 'var errors = [];
          if (obj.kadastrzu) {
             errors.push({ attribute: ''kadastrzu'', error: ''Значение заполняется только для существующих и строящихся, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов'' });
         }
+      }
 
       return errors;'
 WHERE name = 'culture_point';
@@ -7208,6 +7238,7 @@ custom_rule = 'var errors = [];
         if (obj.kadastrzu) {
             errors.push({ attribute: ''kadastrzu'', error: ''Значение заполняется только для существующих и строящихся, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов'' });
         }
+      }
 
     if (obj.status == ''2'' || obj.status == ''3'') {
 
@@ -7239,6 +7270,7 @@ custom_rule = 'var errors = [];
         if (obj.event_time) {
             errors.push({ attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению или планируемых к реконструкции объектов'' });
         }
+      }
 
         if (!(obj.reg_status == ''1'' || obj.reg_status == ''2'')) {
         if (!obj.event_time) {
@@ -7248,6 +7280,7 @@ custom_rule = 'var errors = [];
         if (obj.event_time) {
             errors.push({ attribute: ''event_time'', error: ''Значение заполняется только для существующих и строящихся, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов'' });
         }
+      }
 
       return errors;'
 WHERE name = 'transplogisticobj_point';
@@ -7443,6 +7476,7 @@ custom_rule = 'var errors = [];
       if (obj.number) {
         errors.push({attribute: ''number'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
+    }
 
       if (obj.reg_status == ''1'' || obj.reg_status == ''2'') {
         if (!obj.event_time) {
@@ -7460,6 +7494,7 @@ custom_rule = 'var errors = [];
         if (obj.kadastrzu) {
             errors.push({ attribute: ''kadastrzu'', error: ''Значение заполняется только для существующих и строящихся, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов'' });
         }
+      }
 
       return errors;'
 WHERE name = 'publictransportobj_point';
@@ -7830,6 +7865,7 @@ custom_rule = 'var errors = [];
       if (obj.number) {
         errors.push({attribute: ''number'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
+    }
       
 
       if (obj.reg_status == ''1'' || obj.reg_status == ''2'') {
@@ -7838,8 +7874,7 @@ custom_rule = 'var errors = [];
         }
       } else if (obj.event_time) {
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
-      }
-    
+      }    
 
       return errors;'
 WHERE name = 'hydro_point';
@@ -8294,6 +8329,7 @@ custom_rule = 'var errors = [];
       if (obj.number) {
         errors.push({attribute: ''number'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
+    }
 
       if (obj.reg_status == ''1'' || obj.reg_status == ''2'') {
         if (!obj.wear_prcnt) {
@@ -8309,6 +8345,7 @@ custom_rule = 'var errors = [];
       if (obj.event_time) {
         errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
+    }
 
 
 
@@ -8702,6 +8739,7 @@ custom_rule = 'var errors = [];
         if (obj.number) {
           errors.push({ attribute: ''number'', error: ''Значение заполняется только для планируемых к размещению или планируемых к реконструкции объектов'' });
       }
+    }
 
       if (obj.reg_status == ''1'' || obj.reg_status == ''2'') {
         if (!obj.event_time) {
@@ -8721,6 +8759,7 @@ custom_rule = 'var errors = [];
          if (obj.kadastrzu) {
             errors.push({ attribute: ''kadastrzu'', error: ''Значение заполняется только для существующих и строящихся, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов'' });
         }
+      }
 
       return errors;'
 WHERE name = 'culture';
@@ -9150,6 +9189,7 @@ custom_rule = 'var errors = [];
         if (obj.kadastrzu) {
             errors.push({ attribute: ''kadastrzu'', error: ''Значение заполняется только для существующих и строящихся, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов'' });
         }
+      }
 
       if (!(obj.reg_status == ''1'' || obj.reg_status == ''2'')) {
         if (!obj.event_time) {
@@ -9159,13 +9199,13 @@ custom_rule = 'var errors = [];
         if (obj.event_time) {
             errors.push({ attribute: ''event_time'', error: ''Значение заполняется только для существующих и строящихся, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов'' });
         }
+      }
 
       if (obj.status == ''2'' || obj.status == ''3'') {
 
         if (!obj.event_time) {
             errors.push({ attribute: ''event_time'', error: ''Значение обязательно к заполнению'' });
         }
-
         if (!obj.number) {
           errors.push({ attribute: ''number'', error: ''Значение обязательно к заполнению'' });
        }
@@ -9176,6 +9216,7 @@ custom_rule = 'var errors = [];
         if (obj.number) {
           errors.push({ attribute: ''number'', error: ''Значение заполняется только для планируемых к размещению или планируемых к реконструкции объектов'' });
       }
+    }
 
       return errors;'
 WHERE name = 'manufacturing';
@@ -9607,6 +9648,7 @@ custom_rule = 'var errors = [];
         if (obj.number) {
           errors.push({attribute: ''number'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
+    }
 
       if (obj.status == ''2'' || obj.status == ''3'') {
         if (!obj.event_time) {
@@ -9634,6 +9676,7 @@ custom_rule = 'var errors = [];
       if (obj.event_time) {
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
+    }
 
       return errors;'
 WHERE name = 'authorityservice';
@@ -10789,7 +10832,7 @@ custom_rule = 'var errors = [];
     if (!obj.kadastrzu) {
       errors.push({attribute: ''kadastrzu'', error: ''Значение обязательно к заполнению''});
     }
-    } else 
+    } else {
     if (obj.wear_prcnt) {
       errors.push({attribute: ''wear_prcnt'', error: ''Значение заполняется только для планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
     }
@@ -10799,6 +10842,7 @@ custom_rule = 'var errors = [];
     if (obj.kadastrzu) {
       errors.push({attribute: ''kadastrzu'', error: ''Значение заполняется только для сушествующих, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
     }
+  }
 
     if (obj.status == ''2'' || obj.status == ''3'') {
 
@@ -10816,6 +10860,7 @@ custom_rule = 'var errors = [];
       if (obj.number) {
         errors.push({ attribute: ''number'', error: ''Значение заполняется только для планируемых к размещению или планируемых к реконструкции объектов'' });
     }
+  }
 
     if (obj.reg_status == ''1'' || obj.reg_status == ''2'') {
       if (!obj.event_time) {
@@ -10837,6 +10882,7 @@ custom_rule = 'var errors = [];
     (obj.fact_use) {
       errors.push({attribute: ''fact_use'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
     }
+  }
 
     if (obj.status == ''2'' || obj.status == ''3'') {
 
@@ -10875,6 +10921,7 @@ custom_rule = 'var errors = [];
         if (obj.number) {
           errors.push({ attribute: ''number'', error: ''Значение заполняется только для планируемых к размещению или планируемых к реконструкции объектов'' });
       }
+    }
 
       return errors;'
 WHERE name = 'gasfacility';
@@ -11225,7 +11272,7 @@ custom_rule = 'var errors = [];
     if (!obj.kadastrzu) {
       errors.push({attribute: ''kadastrzu'', error: ''Значение обязательно к заполнению''});
     }
-    } else 
+    } else {
     if (obj.wear_prcnt) {
       errors.push({attribute: ''wear_prcnt'', error: ''Значение заполняется только для планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
     }
@@ -11235,13 +11282,13 @@ custom_rule = 'var errors = [];
     if (obj.kadastrzu) {
       errors.push({attribute: ''kadastrzu'', error: ''Значение заполняется только для сушествующих, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
     }
+  }
 
     if (obj.status == ''2'' || obj.status == ''3'') {
 
       if (!obj.event_time) {
           errors.push({ attribute: ''event_time'', error: ''Значение обязательно к заполнению'' });
       }
-
       if (!obj.number) {
         errors.push({ attribute: ''number'', error: ''Значение обязательно к заполнению'' });
     }
@@ -11252,6 +11299,7 @@ custom_rule = 'var errors = [];
       if (obj.number) {
         errors.push({ attribute: ''number'', error: ''Значение заполняется только для планируемых к размещению или планируемых к реконструкции объектов'' });
     }
+  }
 
     if (obj.reg_status == ''1'' || obj.reg_status == ''2'') {
       if (!obj.event_time) {
@@ -11263,16 +11311,17 @@ custom_rule = 'var errors = [];
       if (!obj.fact_use) {
         errors.push({attribute: ''fact_use'', error: ''Значение обязательно к заполнению''});
       }
-    } else if {
-      (obj.event_time) {
-        errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
-    }
-    (obj.wear_prcnt) {
-      errors.push({attribute: ''wear_prcnt'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
-    }
-    (obj.fact_use) {
-      errors.push({attribute: ''fact_use'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
-    }
+      } else {
+        if (obj.event_time) {
+          errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
+        }
+        if (obj.wear_prcnt) {
+          errors.push({attribute: ''wear_prcnt'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
+        }
+        if (obj.fact_use) {
+          errors.push({attribute: ''fact_use'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
+        }
+      }
 
     if (obj.status == ''2'' || obj.status == ''3'') {
 
@@ -11311,6 +11360,7 @@ custom_rule = 'var errors = [];
         if (obj.number) {
           errors.push({ attribute: ''number'', error: ''Значение заполняется только для планируемых к размещению или планируемых к реконструкции объектов'' });
       }
+    }
 
       return errors;'
 WHERE name = 'gasfacility_point';
@@ -11508,6 +11558,7 @@ custom_rule = 'var errors = [];
       if (obj.number) {
         errors.push({attribute: ''number'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
+    }
 
       if (obj.reg_status == ''1'' || obj.reg_status == ''2'') {
         if (!obj.event_time) {
@@ -11525,6 +11576,7 @@ custom_rule = 'var errors = [];
         if (obj.kadastrzu) {
             errors.push({ attribute: ''kadastrzu'', error: ''Значение заполняется только для существующих и строящихся, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов'' });
         }
+      }
 
       return errors;'
 WHERE name = 'publictransportobj';
@@ -11858,7 +11910,7 @@ custom_rule = 'var errors = [];
           errors.push({attribute: ''wear_prcnt'', error: ''Значение обязательно к заполнению''});
         }
       } 
-      else 
+      else {
       if (obj.event_time) {
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
@@ -11868,6 +11920,7 @@ custom_rule = 'var errors = [];
       if (obj.wear_prcnt) {
       errors.push({attribute: ''wear_prcnt'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
+    }
 
       if (!(obj.status == ''1'' || obj.status == ''3'' || obj.status == ''4'')) {
         if (!obj.wear_prcnt) {
@@ -11889,6 +11942,7 @@ custom_rule = 'var errors = [];
         if (obj.kadastrzu) {
             errors.push({ attribute: ''kadastrzu'', error: ''Значение заполняется только для существующих и строящихся, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов'' });
         }
+      }
 
       if (obj.status == ''2'' || obj.status == ''3'') {
               
@@ -11905,6 +11959,7 @@ custom_rule = 'var errors = [];
         if (obj.number) {
           errors.push({attribute: ''number'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
+    }
 
       if (obj.classid == ''602040901'') {
         if (!obj.fuel_type) {
@@ -11926,6 +11981,8 @@ custom_rule = 'var errors = [];
         if (obj.ht_power) {
           errors.push({attribute: ''ht_power'', error: ''Значение заполняется только для объектов "Источник тепловой энергии", "Индивидуальный тепловой пункт (ИТП)"''});
         }
+      }
+
       return errors;'
 WHERE name = 'thermalfacility';
 
@@ -12474,7 +12531,7 @@ custom_rule = 'var errors = [];
           errors.push({attribute: ''wear_prcnt'', error: ''Значение обязательно к заполнению''});
         }
       } 
-      else 
+      else {
       if (obj.event_time) {
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
@@ -12484,6 +12541,7 @@ custom_rule = 'var errors = [];
       if (obj.wear_prcnt) {
       errors.push({attribute: ''wear_prcnt'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
+    }
 
       if (!(obj.status == ''1'' || obj.status == ''3'' || obj.status == ''4'')) {
         if (!obj.wear_prcnt) {
@@ -12505,6 +12563,7 @@ custom_rule = 'var errors = [];
         if (obj.kadastrzu) {
             errors.push({ attribute: ''kadastrzu'', error: ''Значение заполняется только для существующих и строящихся, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов'' });
         }
+        }
 
       if (obj.status == ''2'' || obj.status == ''3'') {
               
@@ -12521,6 +12580,7 @@ custom_rule = 'var errors = [];
         if (obj.number) {
           errors.push({attribute: ''number'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
+    }
 
       if (obj.classid == ''602040901'') {
         if (!obj.fuel_type) {
@@ -12542,6 +12602,7 @@ custom_rule = 'var errors = [];
         if (obj.ht_power) {
           errors.push({attribute: ''ht_power'', error: ''Значение заполняется только для объектов "Источник тепловой энергии", "Индивидуальный тепловой пункт (ИТП)"''});
         }
+      }
 
       return errors;'
 WHERE name = 'thermalfacility_point';
@@ -12996,6 +13057,7 @@ custom_rule = 'var errors = [];
         if (obj.rdwin_cat) {
             errors.push({ attribute: ''rdwin_cat'', error: ''Значение заполняется только для планируемых к реконструкции объектов'' });
         }
+      }
 
         if (obj.status == ''2'' || obj.status == ''3'') {
 
@@ -13034,6 +13096,7 @@ custom_rule = 'var errors = [];
         if (obj.number) {
           errors.push({ attribute: ''number'', error: ''Значение заполняется только для планируемых к размещению или планируемых к реконструкции объектов'' });
       }
+    }
 
       if (obj.reg_status == ''1'' || obj.reg_status == ''2'') {
         if (!obj.event_time) {
@@ -13380,6 +13443,7 @@ custom_rule = 'var errors = [];
         if (obj.number) {
           errors.push({attribute: ''number'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
+    }
 
       if (obj.status == ''1'' || obj.status == ''3'' || obj.status == ''4'') {
             if (!obj.wear_prcnt) {
@@ -13391,7 +13455,7 @@ custom_rule = 'var errors = [];
           if (!obj.kadastrzu) {
             errors.push({attribute: ''kadastrzu'', error: ''Значение обязательно к заполнению''});
         }
-          } else 
+          } else {
           if (obj.wear_prcnt) {
             errors.push({attribute: ''wear_prcnt'', error: ''Значение заполняется только для планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
           }
@@ -13401,6 +13465,7 @@ custom_rule = 'var errors = [];
           if (obj.kadastrzu) {
             errors.push({attribute: ''kadastrzu'', error: ''Значение заполняется только для сушествующих, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
           }
+        }
 
           if (obj.reg_status == ''1'' || obj.reg_status == ''2'') {
         if (!obj.event_time) {
@@ -13413,7 +13478,7 @@ custom_rule = 'var errors = [];
           errors.push({attribute: ''wear_prcnt'', error: ''Значение обязательно к заполнению''});
         }
       } 
-      else 
+      else {
       if (obj.event_time) {
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
@@ -13423,6 +13488,7 @@ custom_rule = 'var errors = [];
       if (obj.wear_prcnt) {
         errors.push({attribute: ''wear_prcnt'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
+    }
 
 
 
@@ -13707,6 +13773,7 @@ custom_rule = 'var errors = [];
         if (obj.number) {
           errors.push({attribute: ''number'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
+    }
 
       return errors;'
 WHERE name = 'customcontrol';
@@ -13717,7 +13784,7 @@ SET class_rule =
        '{
         "name": "education",
         "title": "Объекты образования и науки",
-        "styleName": "education_point_123",
+        "styleName": "education_point_698",
         "tableName": "education",
         "originName": "Education",
         "tags": ["system", "Приказ 10"],
@@ -13759,23 +13826,47 @@ SET class_rule =
                 "value": "602010104"
               },
               {
-                "title": "Специальное учебно-воспитательное учреждение для обучающихся с девиантным (общественно опасным) поведением",
+                "title": "Специальное учебно-воспитательное учреждение для обучающихся с ограниченными возможностями здоровья",
                 "value": "602010105"
               },
               {
-                "title": "Научная организация и ее структурные подразделения",
+                "title": "Организация, осуществляющая обучение",
                 "value": "602010106"
+              },
+              {
+                "title": "Научные центры мирового уровня",
+                "value": "602010107"
+              },
+              {
+                "title": "Научно-образовательный центр мирового уровня",
+                "value": "602010108"
+              },
+              {
+                "title": "Математический центр мирового уровня",
+                "value": "602010109"
+              },
+              {
+                "title": "Центр геномных исследований мирового уровня",
+                "value": "602010110"
+              },
+              {
+                "title": "Научная установка мегасаенс",
+                "value": "602010111"
+              },
+              {
+                "title": "Национальный сетевой биоресурс",
+                "value": "602010112"
               }
             ]
           },
           {
             "name": "number",
-            "title": "Номер согласно Положению о территориальном планировании",
+            "title": "Номер согласно положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
             "name": "name",
-            "title": "Наименование организации",
+            "title": "Наименование объекта",
             "required": true,
             "minLength": 1,
             "valueType": "STRING"
@@ -13847,27 +13938,27 @@ SET class_rule =
           },
           {
             "name": "sci_type",
-            "title": "Подтип научной организации",
+            "title": "Подтип организации, осуществляющей обучение",
             "valueType": "CHOICE",
             "enumerations": [
               {
-                "title": "Государственный научный центр",
+                "title": "Научная организация",
                 "value": "1"
               },
               {
-                "title": "Научная организация, не являющаяся государственным научным центром и не осуществляющая образовательную деятельность",
+                "title": "Организация для детей-сирот и детей, оставшихся без попечения родителей",
                 "value": "2"
               },
               {
-                "title": "Научная организация, осуществляющая образовательную деятельность по программам магистратуры, программам подготовки научно-педагогических кадров, программам ординатуры, программам профессионального обучения, дополнительным профессиональным программам",
+                "title": "Организация, осуществляющая лечение, оздоровление и (или) отдых",
                 "value": "3"
               },
               {
-                "title": "Структурные подразделения (базы) научных организаций: опытное, опытно-экспериментальное, опытно-учебное, опытно-фармацевтическое производство, лаборатория",
+                "title": "Организация, осуществляющая социальное обслуживание",
                 "value": "4"
               },
               {
-                "title": "Центры коллективного пользования научным оборудованием",
+                "title": "Иное юридическое лицо (или прочее)",
                 "value": "5"
               }
             ]
@@ -13905,7 +13996,7 @@ SET class_rule =
                 "value": "2"
               },
               {
-                "title": "Институт, центр, кафедра",
+                "title": "Академия, институт, университет, центр, кафедра",
                 "value": "3"
               },
               {
@@ -13997,6 +14088,7 @@ SET class_rule =
           {
             "name": "capacity",
             "title": "Вместимость здания (комплекса зданий) образовательной организации, число мест для детей, учащихся, студентов",
+            "required": true,
             "valueType": "INT"
           },
           {
@@ -14091,6 +14183,33 @@ SET class_rule =
             ]
           },
           {
+            "name": "kadastroks",
+            "title": "Кадастровый номер ОКС",
+            "valueType": "STRING"
+          },
+          {
+            "name": "kadastrzu",
+            "title": "Кадастровый номер земельного участка, на котором расположен объект",
+            "valueType": "STRING"
+          },
+          {
+            "name": "namedocosn",
+            "title": "Наименование документа основания",
+            "valueType": "STRING"
+          },
+          {
+            "name": "datedocosn",
+            "title": "Дата документа основания",
+            "valueType": "DOUBLE",
+            "fractionDigits": 2
+          },
+          {
+            "name": "numberdocosn",
+            "title": "Номер документа основания",
+            "valueType": "DOUBLE",
+            "fractionDigits": 2
+          },
+          {
             "name": "shape",
             "title": "Геометрия",
             "hidden": true,
@@ -14143,20 +14262,61 @@ custom_rule = 'var errors = [];
         }
       }
 
-      if (obj.status == ''2'') {
-        if (!obj.function) {
-          errors.push({attribute: ''function'', error: ''Значение обязательно к заполнению''});
-        }
-      } else if (obj.function) {
-          errors.push({attribute: ''function'', error: ''Значение заполняется только для планируемых к размещению объектов''});
-      }
+      if (obj.status == ''2'' || obj.status == ''3'') {
 
-      if (obj.status == ''2'' || obj.status == ''3'' || obj.status == ''4'') {
+        if (!obj.namedocosn) {
+            errors.push({ attribute: ''namedocosn'', error: ''Значение обязательно к заполнению'' });
+        }
+
+        if (!obj.datedocosn) {
+            errors.push({ attribute: ''datedocosn'', error: ''Значение обязательно к заполнению'' });
+        }
+
+        if (!obj.numberdocosn) {
+            errors.push({ attribute: ''numberdocosn'', error: ''Значение обязательно к заполнению'' });
+        }
+
+        if (!obj.event_time) {
+            errors.push({ attribute: ''event_time'', error: ''Значение обязательно к заполнению'' });
+        }
+
+        if (!obj.number) {
+          errors.push({ attribute: ''number'', error: ''Значение обязательно к заполнению'' });
+      }
+      } else {
+        if (obj.namedocosn) {
+            errors.push({ attribute: ''namedocosn'', error: ''Значение заполняется только для планируемых к размещению или планируемых к реконструкции объектов'' });
+        }
+        if (obj.datedocosn) {
+            errors.push({ attribute: ''datedocosn'', error: ''Значение заполняется только для планируемых к размещению или планируемых к реконструкции объектов'' });
+        }
+        if (obj.numberdocosn) {
+            errors.push({ attribute: ''numberdocosn'', error: ''Значение заполняется только для планируемых к размещению или планируемых к реконструкции объектов'' });
+        }
+        if (obj.event_time) {
+            errors.push({ attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению или планируемых к реконструкции объектов'' });
+        }
+        if (obj.number) {
+          errors.push({ attribute: ''number'', error: ''Значение заполняется только для планируемых к размещению или планируемых к реконструкции объектов'' });
+      }
+    }
+
+      if (obj.reg_status == ''1'' || obj.reg_status == ''2'') {
         if (!obj.event_time) {
           errors.push({attribute: ''event_time'', error: ''Значение обязательно к заполнению''});
         }
       } else if (obj.event_time) {
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
+      }
+
+      if (!(obj.status == ''1'' || obj.status == ''3'' || obj.status == ''4'')) {
+        if (!obj.kadastrzu) {
+            errors.push({ attribute: ''kadastrzu'', error: ''Значение обязательно к заполнению'' });
+        }
+      } else {
+        if (obj.kadastrzu) {
+            errors.push({ attribute: ''kadastrzu'', error: ''Значение заполняется только для существующих и строящихся, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов'' });
+        }
       }
 
       return errors;'
@@ -14226,8 +14386,7 @@ SET class_rule =
     },
     {
       "name": "number",
-      "title": "Номер согласно Положению о территориальном планировании",
-      "required": true,
+      "title": "Номер согласно положению о территориальном планировании",
       "valueType": "STRING"
     },
     {
@@ -14325,7 +14484,6 @@ SET class_rule =
     {
       "name": "function",
       "title": "Назначение объекта",
-      "required": true,
       "valueType": "STRING"
     },
     {
@@ -14431,12 +14589,29 @@ SET class_rule =
 }',
 custom_rule = 'var errors = [];
 
-       if (obj.status == ''2'' || obj.status == ''3'') {
+      if (obj.status == ''2'' || obj.status == ''3'') {
+        if (!obj.event_time) {
+          errors.push({attribute: ''event_time'', error: ''Значение обязательно к заполнению''});
+        }
+        if (!obj.number) {
+          errors.push({attribute: ''number'', error: ''Значение обязательно к заполнению''});
+        }
+      } else {
+        if (obj.event_time) {
+          errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
+      }
+      if (obj.number) {
+        errors.push({attribute: ''number'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
+      }
+      }
+
+
+      if (obj.reg_status == ''1'' || obj.reg_status == ''2'') {
         if (!obj.event_time) {
           errors.push({attribute: ''event_time'', error: ''Значение обязательно к заполнению''});
         }
       } else if (obj.event_time) {
-          errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции''});
+          errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
 
       return errors;'
@@ -14776,6 +14951,7 @@ custom_rule = 'var errors = [];
         if (obj.number) {
           errors.push({attribute: ''number'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
+        }
 
       if (obj.status == ''1'' || obj.status == ''3'' || obj.status == ''4'') {
             if (!obj.wear_prcnt) {
@@ -14787,7 +14963,7 @@ custom_rule = 'var errors = [];
           if (!obj.kadastrzu) {
             errors.push({attribute: ''kadastrzu'', error: ''Значение обязательно к заполнению''});
         }
-          } else 
+          } else {
           if (obj.wear_prcnt) {
             errors.push({attribute: ''wear_prcnt'', error: ''Значение заполняется только для планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
           }
@@ -14797,6 +14973,7 @@ custom_rule = 'var errors = [];
           if (obj.kadastrzu) {
             errors.push({attribute: ''kadastrzu'', error: ''Значение заполняется только для сушествующих, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
           }
+        }
 
           if (obj.reg_status == ''1'' || obj.reg_status == ''2'') {
         if (!obj.event_time) {
@@ -14809,7 +14986,7 @@ custom_rule = 'var errors = [];
           errors.push({attribute: ''wear_prcnt'', error: ''Значение обязательно к заполнению''});
         }
       } 
-      else 
+      else {
       if (obj.event_time) {
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
@@ -14819,6 +14996,7 @@ custom_rule = 'var errors = [];
       if (obj.wear_prcnt) {
         errors.push({attribute: ''wear_prcnt'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
+    }
 
       return errors;'
 WHERE name = 'telecomfacility_point';
@@ -15124,6 +15302,7 @@ custom_rule = 'var errors = [];
         if (obj.number) {
           errors.push({ attribute: ''number'', error: ''Значение заполняется только для планируемых к размещению или планируемых к реконструкции объектов'' });
       }
+    }
 
       return errors;'
 WHERE name = 'resort';
@@ -15616,6 +15795,7 @@ custom_rule = 'var errors = [];
         if (obj.number) {
           errors.push({ attribute: ''number'', error: ''Значение заполняется только для планируемых к размещению или планируемых к реконструкции объектов'' });
       }
+    }
 
       if (!(obj.status == ''1'' || obj.status == ''3'' || obj.status == ''4'')) {
         if (!obj.kadastrzu) {
@@ -15625,6 +15805,7 @@ custom_rule = 'var errors = [];
         if (obj.kadastrzu) {
             errors.push({ attribute: ''kadastrzu'', error: ''Значение заполняется только для существующих и строящихся, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов'' });
         }
+      }
 
         if (!(obj.reg_status == ''1'' || obj.reg_status == ''2'')) {
         if (!obj.event_time) {
@@ -15634,6 +15815,7 @@ custom_rule = 'var errors = [];
         if (obj.event_time) {
             errors.push({ attribute: ''event_time'', error: ''Значение заполняется только для существующих и строящихся, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов'' });
         }
+      }
 
       return errors;'
 WHERE name = 'servicefacility';
@@ -16368,6 +16550,7 @@ custom_rule = 'var errors = [];
       if (obj.event_time) {
           errors.push({ attribute: ''event_time'', error: ''Значение заполняется только для существующих и строящихся, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов'' });
       }
+    }
 
       return errors;'
 WHERE name = 'transportobj';
@@ -16689,6 +16872,7 @@ custom_rule = 'var errors = [];
       if (obj.event_time) {
           errors.push({ attribute: ''event_time'', error: ''Значение заполняется только для существующих и строящихся, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов'' });
       }
+    }
 
       return errors;'
 WHERE name = 'transportobj_line';
@@ -17010,6 +17194,7 @@ custom_rule = 'var errors = [];
       if (obj.event_time) {
           errors.push({ attribute: ''event_time'', error: ''Значение заполняется только для существующих и строящихся, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов'' });
       }
+    }
 
       return errors;'
 WHERE name = 'transportobj_point';
@@ -18171,6 +18356,7 @@ custom_rule = 'var errors = [];
         if (obj.number) {
           errors.push({attribute: ''number'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
+    }
 
       if (obj.status == ''1'' || obj.status == ''3'' || obj.status == ''4'') {
         if (!obj.kadastrzu) {
@@ -18438,19 +18624,21 @@ custom_rule = 'var errors = [];
         if (obj.forest_cat) {
         errors.push({attribute: ''forest_cat'', error: ''Значение заполняется только для объекта "Леса защитные"''});
       }
+    }
     
 
       if (!(obj.classid == ''706010100'')) {
         if (obj.forest_os) {
         errors.push({attribute: ''forest_os'', error: ''Значение заполняется только для объекта "Леса защитные"''});
       }
+    }
     
 
       if (!(obj.classid == ''706010100'' && obj.forest_cat  == ''3'')) {
         if (obj.forest_t) {
         errors.push({attribute: ''forest_t'', error: ''Значение заполняется только для объекта "Леса защитные" и защитных лесов, выполняющих функции защиты природных и иных объектов''});
         }
-      
+      }      
       
 
       if (!(obj.classid == ''706010100'' && obj.forest_cat  == ''4'')) {
@@ -18462,6 +18650,7 @@ custom_rule = 'var errors = [];
         if (obj.event_time) {
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
+    }
       
       return errors;'
 WHERE name = 'forest';
@@ -18514,11 +18703,11 @@ SET class_rule =
                 "value": "602010104"
               },
               {
-                "title": "Специальное учебно-воспитательное учреждение для обучающихся с девиантным (общественно опасным) поведением",
+                "title": "Специальное учебно-воспитательное учреждение для обучающихся с ограниченными возможностями здоровья",
                 "value": "602010105"
               },
               {
-                "title": "Научная организация и ее структурные подразделения",
+                "title": "Организация, осуществляющая обучение",
                 "value": "602010106"
               },
               {
@@ -18531,6 +18720,10 @@ SET class_rule =
               },
               {
                 "title": "Математический центр мирового уровня",
+                "value": "602010109"
+              },
+              {
+                "title": "Центр геномных исследований мирового уровня",
                 "value": "602010110"
               },
               {
@@ -18550,7 +18743,7 @@ SET class_rule =
           },
           {
             "name": "name",
-            "title": "Наименование организации",
+            "title": "Наименование объекта",
             "required": true,
             "minLength": 1,
             "valueType": "STRING"
@@ -18622,27 +18815,27 @@ SET class_rule =
           },
           {
             "name": "sci_type",
-            "title": "Подтип научной организации",
+            "title": "Подтип организации, осуществляющей обучение",
             "valueType": "CHOICE",
             "enumerations": [
               {
-                "title": "Государственный научный центр",
+                "title": "Научная организация",
                 "value": "1"
               },
               {
-                "title": "Научная организация, не являющаяся государственным научным центром и не осуществляющая образовательную деятельность",
+                "title": "Организация для детей-сирот и детей, оставшихся без попечения родителей",
                 "value": "2"
               },
               {
-                "title": "Научная организация, осуществляющая образовательную деятельность по программам магистратуры, программам подготовки научно-педагогических кадров, программам ординатуры, программам профессионального обучения, дополнительным профессиональным программам",
+                "title": "Организация, осуществляющая лечение, оздоровление и (или) отдых",
                 "value": "3"
               },
               {
-                "title": "Структурные подразделения (базы) научных организаций: опытное, опытно-экспериментальное, опытно-учебное, опытно-фармацевтическое производство, лаборатория",
+                "title": "Организация, осуществляющая социальное обслуживание",
                 "value": "4"
               },
               {
-                "title": "Центры коллективного пользования научным оборудованием",
+                "title": "Иное юридическое лицо (или прочее)",
                 "value": "5"
               }
             ]
@@ -18680,7 +18873,7 @@ SET class_rule =
                 "value": "2"
               },
               {
-                "title": "Институт, центр, кафедра",
+                "title": "Академия, институт, университет, центр, кафедра",
                 "value": "3"
               },
               {
@@ -18772,6 +18965,7 @@ SET class_rule =
           {
             "name": "capacity",
             "title": "Вместимость здания (комплекса зданий) образовательной организации, число мест для детей, учащихся, студентов",
+            "required": true,
             "pattern": "[\\-+]?[0-9]+",
             "valueType": "INT"
           },
@@ -18870,11 +19064,37 @@ SET class_rule =
             ]
           },
           {
+            "name": "kadastroks",
+            "title": "Кадастровый номер ОКС",
+            "valueType": "STRING"
+          },
+          {
+            "name": "kadastrzu",
+            "title": "Кадастровый номер земельного участка, на котором расположен объект",
+            "valueType": "STRING"
+          },
+          {
+            "name": "namedocosn",
+            "title": "Наименование документа основания",
+            "valueType": "STRING"
+          },
+          {
+            "name": "datedocosn",
+            "title": "Дата документа основания",
+            "valueType": "DOUBLE",
+            "fractionDigits": 2
+          },
+          {
+            "name": "numberdocosn",
+            "title": "Номер документа основания",
+            "valueType": "DOUBLE",
+            "fractionDigits": 2
+          },
+          {
             "name": "shape",
             "hidden": true,
             "title": "геометрия",
             "valueType": "GEOMETRY",
-            "hidden": true,
             "allowedValues": [
               "Point"
             ]
@@ -18923,20 +19143,61 @@ custom_rule = 'var errors = [];
         }
       }
 
-      if (obj.status == ''2'') {
-        if (!obj.function) {
-          errors.push({attribute: ''function'', error: ''Значение обязательно к заполнению''});
-        }
-      } else if (obj.function) {
-          errors.push({attribute: ''function'', error: ''Значение заполняется только для планируемых к размещению объектов''});
-      }
+      if (obj.status == ''2'' || obj.status == ''3'') {
 
-      if (obj.status == ''2'' || obj.status == ''3'' || obj.status == ''4'') {
+        if (!obj.namedocosn) {
+            errors.push({ attribute: ''namedocosn'', error: ''Значение обязательно к заполнению'' });
+        }
+
+        if (!obj.datedocosn) {
+            errors.push({ attribute: ''datedocosn'', error: ''Значение обязательно к заполнению'' });
+        }
+
+        if (!obj.numberdocosn) {
+            errors.push({ attribute: ''numberdocosn'', error: ''Значение обязательно к заполнению'' });
+        }
+
+        if (!obj.event_time) {
+            errors.push({ attribute: ''event_time'', error: ''Значение обязательно к заполнению'' });
+        }
+
+        if (!obj.number) {
+          errors.push({ attribute: ''number'', error: ''Значение обязательно к заполнению'' });
+      }
+      } else {
+        if (obj.namedocosn) {
+            errors.push({ attribute: ''namedocosn'', error: ''Значение заполняется только для планируемых к размещению или планируемых к реконструкции объектов'' });
+        }
+        if (obj.datedocosn) {
+            errors.push({ attribute: ''datedocosn'', error: ''Значение заполняется только для планируемых к размещению или планируемых к реконструкции объектов'' });
+        }
+        if (obj.numberdocosn) {
+            errors.push({ attribute: ''numberdocosn'', error: ''Значение заполняется только для планируемых к размещению или планируемых к реконструкции объектов'' });
+        }
+        if (obj.event_time) {
+            errors.push({ attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению или планируемых к реконструкции объектов'' });
+        }
+        if (obj.number) {
+          errors.push({ attribute: ''number'', error: ''Значение заполняется только для планируемых к размещению или планируемых к реконструкции объектов'' });
+      }
+    }
+
+      if (obj.reg_status == ''1'' || obj.reg_status == ''2'') {
         if (!obj.event_time) {
           errors.push({attribute: ''event_time'', error: ''Значение обязательно к заполнению''});
         }
       } else if (obj.event_time) {
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
+      }
+
+      if (!(obj.status == ''1'' || obj.status == ''3'' || obj.status == ''4'')) {
+        if (!obj.kadastrzu) {
+            errors.push({ attribute: ''kadastrzu'', error: ''Значение обязательно к заполнению'' });
+        }
+      } else {
+        if (obj.kadastrzu) {
+            errors.push({ attribute: ''kadastrzu'', error: ''Значение заполняется только для существующих и строящихся, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов'' });
+        }
       }
 
       return errors;'
@@ -19479,7 +19740,7 @@ custom_rule = 'var errors = [];
         errors.push({attribute: ''kadastrzu'', error: ''Значение обязательно к заполнению''});
     }
       } 
-      else 
+      else {
       if (obj.wear_prcnt) {
         errors.push({attribute: ''wear_prcnt'', error: ''Значение заполняется только для планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
@@ -19489,6 +19750,7 @@ custom_rule = 'var errors = [];
       if (obj.kadastrzu) {
         errors.push({attribute: ''kadastrzu'', error: ''Значение заполняется только для планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
+    }
 
       if (obj.classid == ''602040104'' || obj.classid == ''602040105'' ||
           obj.classid == ''602040106'' || obj.classid == ''602040113'' ||
@@ -19772,6 +20034,7 @@ custom_rule = 'var errors = [];
       if (obj.number) {
         errors.push({attribute: ''number'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
+    }
 
       if (obj.reg_status == ''1'' || obj.reg_status == ''2'') {
         if (!obj.event_time) {
@@ -20147,7 +20410,7 @@ custom_rule = 'var errors = [];
 
       if (!(obj.classid == ''602031201'' || obj.classid == ''602031202'' || obj.classid == ''602031203'' || obj.classid == ''602031204'')) {
         if (obj.rdwin_type) {
-          errors.push({attribute: ''rdwin_type'', error: ''Значение заполняется только для объектов "Международный аэропорт", "Аэропорт", "Аэродром", "Вертодром"''});
+          errors.push({attribute: ''rdwin_type'', error: ''Значение заполняется только для объектов Международный аэропорт, Аэропорт, Аэродром, Вертодром''});
         }
       }
 
@@ -20196,6 +20459,7 @@ custom_rule = 'var errors = [];
         if (obj.number) {
           errors.push({ attribute: ''number'', error: ''Значение заполняется только для планируемых к размещению или планируемых к реконструкции объектов'' });
       }
+    }
 
       return errors;'
 WHERE name = 'airtransportobj';
@@ -20739,7 +21003,7 @@ custom_rule = 'var errors = [];
         errors.push({attribute: ''kadastrzu'', error: ''Значение обязательно к заполнению''});
     }
       } 
-      else 
+      else {
       if (obj.wear_prcnt) {
         errors.push({attribute: ''wear_prcnt'', error: ''Значение заполняется только для планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
@@ -20749,6 +21013,7 @@ custom_rule = 'var errors = [];
       if (obj.kadastrzu) {
         errors.push({attribute: ''kadastrzu'', error: ''Значение заполняется только для планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
+    }
 
       if (obj.classid == ''602040104'' || obj.classid == ''602040105'' ||
           obj.classid == ''602040106'' || obj.classid == ''602040113'' ||
@@ -21123,14 +21388,17 @@ custom_rule = 'var errors = [];
         if (obj.number) {
           errors.push({ attribute: ''number'', error: ''Значение заполняется только для планируемых к размещению или планируемых к реконструкции объектов'' });
       }
+    }
 
       if (obj.reg_status == ''1'' || obj.reg_status == ''2'') {
         if (!obj.event_time) {
           errors.push({attribute: ''event_time'', error: ''Значение обязательно к заполнению''});
-        }
+        } 
+        } else {
         if (!obj.wear_prcnt) {
           errors.push({attribute: ''wear_prcnt'', error: ''Значение обязательно к заполнению''});
         }
+      }
 
       if (!(obj.status == ''1'' || obj.status == ''3'' || obj.status == ''4'')) {
         if (!obj.kadastrzu) {
@@ -21140,6 +21408,7 @@ custom_rule = 'var errors = [];
         if (obj.kadastrzu) {
             errors.push({ attribute: ''kadastrzu'', error: ''Значение заполняется только для существующих и строящихся, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов'' });
         }
+      }
 
       return errors;'
 WHERE name = 'autoservice';
@@ -21447,36 +21716,35 @@ custom_rule = 'var errors = [];
         if (obj.fact_use) {
           errors.push({ attribute: ''fact_use'', error: ''Значение заполняется только для существующих и строящихся, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов'' });
       }
+    }
 
-      if (obj.reg_status == ''1'' || obj.reg_status == ''2'') {
-        if (!obj.event_time) {
-          errors.push({attribute: ''event_time'', error: ''Значение обязательно к заполнению''});
-        }
-        if (!obj.fact_use) {
-          errors.push({attribute: ''fact_use'', error: ''Значение обязательно к заполнению''});
-        }
-        if (!obj.wear_prcnt) {
-          errors.push({attribute: ''wear_prcnt'', error: ''Значение обязательно к заполнению''});
-        }
-      } 
-      else 
+    if (obj.reg_status == ''1'' || obj.reg_status == ''2'') {
+      if (!obj.event_time) {
+        errors.push({attribute: ''event_time'', error: ''Значение обязательно к заполнению''});
+      }
+      if (!obj.fact_use) {
+        errors.push({attribute: ''fact_use'', error: ''Значение обязательно к заполнению''});
+      }
+      if (!obj.wear_prcnt) {
+        errors.push({attribute: ''wear_prcnt'', error: ''Значение обязательно к заполнению''});
+      }
+      if (!obj.number) {
+        errors.push({attribute: ''number'', error: ''Значение обязательно к заполнению''});
+      }
+    } else {
       if (obj.event_time) {
-          errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
+        errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
       if (obj.fact_use) {
         errors.push({attribute: ''fact_use'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
       if (obj.wear_prcnt) {
-      errors.push({attribute: ''wear_prcnt'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
+        errors.push({attribute: ''wear_prcnt'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
-
-      if (!obj.number) {
-          errors.push({attribute: ''number'', error: ''Значение обязательно к заполнению''});
-        }
-        } else { 
-        if (obj.number) {
-          errors.push({attribute: ''number'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
+      if (obj.number) {
+        errors.push({attribute: ''number'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
+    }
 
       return errors;'
 WHERE name = 'hydraulicstructures_line';
@@ -21736,20 +22004,17 @@ SET class_rule =
     {
       "name": "namedocosn",
       "title": "Наименование документа основания",
-      "required": true,
       "valueType": "STRING"
     },
     {
       "name": "datedocosn",
       "title": "Дата документа основания",
-      "required": true,
       "valueType": "DOUBLE",
       "fractionDigits": 2
     },
     {
       "name": "numberdocosn",
       "title": "Номер документа основания",
-      "required": true,
       "valueType": "DOUBLE",
       "fractionDigits": 2
     },
@@ -21822,23 +22087,25 @@ custom_rule = 'var errors = [];
           errors.push({attribute: ''wear_prcnt'', error: ''Значение обязательно к заполнению''});
         }
       } 
-      else 
+      else {
       if (obj.event_time) {
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
       if (obj.wear_prcnt) {
         errors.push({attribute: ''wear_prcnt'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
+    }
 
       if (obj.status == ''1'' || obj.status == ''3'' || obj.status == ''4'') {
         if (!obj.wear_prcnt) {
           errors.push({attribute: ''wear_prcnt'', error: ''Значение обязательно к заполнению''});
         }
       } 
-      else 
+      else {
       if (obj.wear_prcnt) {
           errors.push({attribute: ''wear_prcnt'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
+    }
 
       return errors;'
 WHERE name = 'gaspipeline_line';
@@ -21868,7 +22135,7 @@ SET class_rule =
       "valueType": "CHOICE",
       "enumerations": [
         {
-          "title": "Магистральные городские дороги",
+          "title": "Магистральная городская дорога",
           "value": "602030401"
         },
         {
@@ -21899,8 +22166,7 @@ SET class_rule =
     },
     {
       "name": "number",
-      "title": "Номер согласно Положению о территориальном планировании",
-      "required": true,
+      "title": "Номер согласно положению о территориальном планировании",
       "valueType": "STRING"
     },
     {
@@ -21912,7 +22178,6 @@ SET class_rule =
     {
       "name": "address",
       "title": "Местоположение, адресное описание",
-      "required": true,
       "valueType": "STRING"
     },
     {
@@ -21950,10 +22215,6 @@ SET class_rule =
         {
           "title": "Улицы и дороги в производственных зонах",
           "value": "4"
-        },
-        {
-          "title": "Проезды",
-          "value": "5"
         }
       ]
     },
@@ -22027,7 +22288,6 @@ SET class_rule =
     {
       "name": "function",
       "title": "Назначение объекта",
-      "required": true,
       "valueType": "STRING"
     },
     {
@@ -22111,15 +22371,15 @@ SET class_rule =
       "valueType": "CHOICE",
       "enumerations": [
         {
-          "title": "1-го класса - скоростного движения",
+          "title": "1-го класса скоростного движения",
           "value": "1"
         },
         {
-          "title": "2-го класса - регулируемого движения",
+          "title": "2-го класса регулируемого движения",
           "value": "2"
         },
         {
-          "title": "3-го класса - регулируемого движения",
+          "title": "3-го класса регулируемого движения",
           "value": "3"
         }
       ]
@@ -22180,11 +22440,29 @@ custom_rule = 'var errors = [];
       }
 
       if (obj.status == ''2'' || obj.status == ''3'') {
+
+        if (!obj.event_time) {
+            errors.push({ attribute: ''event_time'', error: ''Значение обязательно к заполнению'' });
+        }
+
+        if (!obj.number) {
+          errors.push({ attribute: ''number'', error: ''Значение обязательно к заполнению'' });
+      }
+      } else {
+        if (obj.event_time) {
+            errors.push({ attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению или планируемых к реконструкции объектов'' });
+        }
+        if (obj.number) {
+          errors.push({ attribute: ''number'', error: ''Значение заполняется только для планируемых к размещению или планируемых к реконструкции объектов'' });
+      }
+    }
+
+      if (obj.reg_status == ''1'' || obj.reg_status == ''2'') {
         if (!obj.event_time) {
           errors.push({attribute: ''event_time'', error: ''Значение обязательно к заполнению''});
         }
       } else if (obj.event_time) {
-          errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции''});
+          errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
 
       return errors;'
@@ -22493,6 +22771,7 @@ custom_rule = 'var errors = [];
         if (obj.fact_use) {
           errors.push({ attribute: ''fact_use'', error: ''Значение заполняется только для существующих и строящихся, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов'' });
       }
+    }
 
       if (obj.reg_status == ''1'' || obj.reg_status == ''2'') {
         if (!obj.event_time) {
@@ -22505,7 +22784,7 @@ custom_rule = 'var errors = [];
           errors.push({attribute: ''wear_prcnt'', error: ''Значение обязательно к заполнению''});
         }
       } 
-      else 
+      else {
       if (obj.event_time) {
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
@@ -22515,14 +22794,15 @@ custom_rule = 'var errors = [];
       if (obj.wear_prcnt) {
       errors.push({attribute: ''wear_prcnt'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
+    }
 
       if (!obj.number) {
           errors.push({attribute: ''number'', error: ''Значение обязательно к заполнению''});
-        }
         } else { 
         if (obj.number) {
           errors.push({attribute: ''number'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
+    }
 
       return errors;'
 WHERE name = 'hydraulicstructures_point';
@@ -22594,7 +22874,7 @@ SET class_rule =
           },
           {
             "name": "number",
-            "title": "Номер согласно Положению о территориальном планировании",
+            "title": "Номер согласно положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
@@ -22616,6 +22896,25 @@ SET class_rule =
             "name": "address",
             "title": "Местоположение, адресное описание",
             "valueType": "STRING"
+          },
+          {
+              "name": "nsi_type",
+              "title": "Вид организации по виду медицинской деятельности",
+              "valueType": "CHOICE",
+              "enumerations": [
+                  {
+                      "title": "Лечебно-профилактические медицинские организации",
+                      "value": "1"
+                  },
+                  {
+                      "title": "Медицинские организации особого типа",
+                      "value": "2"
+                  },
+                  {
+                      "title": "Медицинские организации по надзору в сфере защиты прав потребителей и благополучия человека",
+                      "value": "3"
+                  }
+              ]
           },
           {
             "name": "md_stype",
@@ -22739,6 +23038,10 @@ SET class_rule =
               {
                 "title": "Медицинский отряд (в т. ч. специального назначения)",
                 "value": "4"
+              },
+              {
+                "title": "Отдельный медицинский батальон",
+                "value": "6"
               }
             ]
           },
@@ -22927,6 +23230,40 @@ SET class_rule =
             ]
           },
           {
+            "name": "kadastroks",
+            "title": "Кадастровый номер ОКС",
+            "valueType": "STRING"
+          },
+          {
+            "name": "kadastrzu",
+            "title": "Кадастровый номер земельного участка, на котором расположен объект",
+            "valueType": "STRING"
+          },
+          {
+            "name": "namedocosn",
+            "title": "Наименование документа основания",
+            "valueType": "STRING"
+          },
+          {
+            "name": "datedocosn",
+            "title": "Дата документа основания",
+            "valueType": "DOUBLE",
+            "fractionDigits": 2
+          },
+          {
+            "name": "numberdocosn",
+            "title": "Номер документа основания",
+            "valueType": "DOUBLE",
+            "fractionDigits": 2
+          },
+          {
+            "name": "levelmed",
+            "title": "Уровень медицинской организации",
+            "required": true,
+            "valueType": "DOUBLE",
+            "fractionDigits": 2
+          },
+          {
             "name": "shape",
             "title": "Геометрия",
             "hidden": true,
@@ -22945,8 +23282,8 @@ custom_rule = 'var errors = [];
         if (!obj.md_stype) {
           errors.push({attribute: ''md_stype'', error: ''Значение обязательно к заполнению''});
         }
-      } else if (obj.cu_type) {
-          errors.push({attribute: ''md_stype'', error: ''Значение заполняется только для объекта "Лечебно-профилактическая медицинская организация (кроме санаторно-курортной), оказывающая медицинскую помощь в стационарных условиях, ее структурное подразделение"''});
+      } else if (obj.md_stype) {
+        errors.push({attribute: ''md_stype'', error: ''Значение заполняется только для объекта "Лечебно-профилактическая медицинская организация (кроме санаторно-курортной), оказывающая медицинскую помощь в стационарных условиях, ее структурное подразделение"''});
       }
 
       if (obj.classid == ''602010402'') {
@@ -22954,7 +23291,7 @@ custom_rule = 'var errors = [];
           errors.push({attribute: ''amb_type'', error: ''Значение обязательно к заполнению''});
         }
       } else if (obj.amb_type) {
-          errors.push({attribute: ''amb_type'', error: ''Значение заполняется только для объекта "Лечебно-профилактическая медицинская организация, оказывающая медицинскую помощь в амбулаторных условиях и (или) в условиях дневного стационара"''});
+        errors.push({attribute: ''amb_type'', error: ''Значение заполняется только для объекта "Лечебно-профилактическая медицинская организация, оказывающая медицинскую помощь в амбулаторных условиях и (или) в условиях дневного стационара"''});
       }
 
       if (obj.classid == ''602010403'') {
@@ -22962,7 +23299,7 @@ custom_rule = 'var errors = [];
           errors.push({attribute: ''mst_type'', error: ''Значение обязательно к заполнению''});
         }
       } else if (obj.mst_type) {
-          errors.push({attribute: ''mst_type'', error: ''Значение заполняется только для объекта "Медицинская организация особого типа"''});
+        errors.push({attribute: ''mst_type'', error: ''Значение заполняется только для объекта "Медицинская организация особого типа"''});
       }
 
       if (obj.classid == ''602010404'') {
@@ -22970,7 +23307,7 @@ custom_rule = 'var errors = [];
           errors.push({attribute: ''su_type'', error: ''Значение обязательно к заполнению''});
         }
       } else if (obj.su_type) {
-          errors.push({attribute: ''su_type'', error: ''Значение заполняется только для объекта "Медицинская организация по надзору в сфере защиты прав потребителей и благополучия человека"''});
+        errors.push({attribute: ''su_type'', error: ''Значение заполняется только для объекта "Медицинская организация по надзору в сфере защиты прав потребителей и благополучия человека"''});
       }
 
       if (obj.classid == ''602010406'') {
@@ -22978,7 +23315,7 @@ custom_rule = 'var errors = [];
           errors.push({attribute: ''msd_type'', error: ''Значение обязательно к заполнению''});
         }
       } else if (obj.msd_type) {
-          errors.push({attribute: ''msd_type'', error: ''Значение заполняется только для объекта "Обособленное структурное подразделение медицинской организации, оказывающей первичную медико-санитарную помощь"''});
+        errors.push({attribute: ''msd_type'', error: ''Значение заполняется только для объекта "Обособленное структурное подразделение медицинской организации, оказывающей первичную медико-санитарную помощь"''});
       }
 
       if (obj.classid == ''602010407'') {
@@ -22986,7 +23323,7 @@ custom_rule = 'var errors = [];
           errors.push({attribute: ''mc_type'', error: ''Значение обязательно к заполнению''});
         }
       } else if (obj.mc_type) {
-          errors.push({attribute: ''mc_type'', error: ''Значение заполняется только для объекта "Медицинская организация, оказывающая скорую медицинскую помощь, ее структурное подразделение"''});
+        errors.push({attribute: ''mc_type'', error: ''Значение заполняется только для объекта "Медицинская организация, оказывающая скорую медицинскую помощь, ее структурное подразделение"''});
       }
 
       if (obj.classid == ''602010401'' || obj.classid == ''602010402'' || obj.classid == ''602010406'') {
@@ -22994,14 +23331,15 @@ custom_rule = 'var errors = [];
           errors.push({attribute: ''capacity_s'', error: ''Значение обязательно к заполнению''});
         }
       } else if (obj.capacity_s) {
-          errors.push({attribute: ''capacity_s'', error: ''Значение заполняется только для объектов "Лечебно-профилактическая медицинская организация (кроме санаторно-курортной), оказывающая медицинскую помощь в стационарных условиях, ее структурное подразделение", "Лечебно-профилактическая медицинская организация, оказывающая медицинскую помощь в амбулаторных условиях и (или) в условиях дневного стационара", "Обособленное структурное подразделение медицинской организации, оказывающей первичную медико-санитарную помощь"''});
+        errors.push({attribute: ''capacity_s'', error: ''Значение заполняется только для объектов "Лечебно-профилактическая медицинская организация (кроме санаторно-курортной), оказывающая медицинскую помощь в стационарных условиях, ее структурное подразделение", "Лечебно-профилактическая медицинская организация, оказывающая медицинскую помощь в амбулаторных условиях и (или) в условиях дневного стационара", "Обособленное структурное подразделение медицинской организации, оказывающей первичную медико-санитарную помощь"''});
       }
+
       if (obj.classid == ''602010401'' || obj.classid == ''602010405'') {
         if (!obj.capacity24) {
           errors.push({attribute: ''capacity24'', error: ''Значение обязательно к заполнению''});
         }
       } else if (obj.capacity24) {
-          errors.push({attribute: ''capacity24'', error: ''Значение заполняется только для объектов "Лечебно-профилактическая медицинская организация (кроме санаторно-курортной), оказывающая медицинскую помощь в стационарных условиях, ее структурное подразделение", "Клиники научных и научно-исследовательских организаций, организаций профессионального образования"''});
+        errors.push({attribute: ''capacity24'', error: ''Значение заполняется только для объектов "Лечебно-профилактическая медицинская организация (кроме санаторно-курортной), оказывающая медицинскую помощь в стационарных условиях, ее структурное подразделение", "Клиники научных и научно-исследовательских организаций, организаций профессионального образования"''});
       }
 
       if (!(obj.classid == ''602010401'' || obj.classid == ''602010402'' || obj.classid == ''602010405'')) {
@@ -23010,62 +23348,74 @@ custom_rule = 'var errors = [];
         }
       }
 
-      if (obj.classid == ''602010401'' || obj.classid == ''602010402'' ||
-          obj.classid == ''602010405'' || obj.classid == ''602010407'') {
+      if (obj.classid == ''602010401'' || obj.classid == ''602010402'' || obj.classid == ''602010405'' || obj.classid == ''602010407'') {
         if (!obj.num_cars) {
           errors.push({attribute: ''num_cars'', error: ''Значение обязательно к заполнению''});
         }
       } else if (obj.num_cars) {
-          errors.push({attribute: ''num_cars'', error: ''Значение заполняется только для объектов "Лечебно-профилактическая медицинская организация (кроме санаторно-курортной), оказывающая медицинскую помощь в стационарных условиях, ее структурное подразделение", "Лечебно-профилактическая медицинская организация, оказывающая медицинскую помощь в амбулаторных условиях и (или) в условиях дневного стационара", "Клиники научных и научно-исследовательских организаций, организаций профессионального образования", "Медицинская организация, оказывающая скорую медицинскую помощь, ее структурное подразделение"''});
+        errors.push({attribute: ''num_cars'', error: ''Значение заполняется только для объектов "Лечебно-профилактическая медицинская организация (кроме санаторно-курортной), оказывающая медицинскую помощь в стационарных условиях, ее структурное подразделение", "Лечебно-профилактическая медицинская организация, оказывающая медицинскую помощь в амбулаторных условиях и (или) в условиях дневного стационара", "Клиники научных и научно-исследовательских организаций, организаций профессионального образования", "Медицинская организация, оказывающая скорую медицинскую помощь, ее структурное подразделение"''});
       }
 
-      if (!(obj.status == ''2'')) {
-        if (!obj.kadastroks) {
-            errors.push({ attribute: ''kadastroks'', error: ''Значение обязательно к заполнению'' });
-        }
+      if (!(obj.status == ''1'' || obj.status == ''3'' || obj.status == ''4'')) {
         if (!obj.kadastrzu) {
-            errors.push({ attribute: ''kadastrzu'', error: ''Значение обязательно к заполнению'' });
+          errors.push({ attribute: ''kadastrzu'', error: ''Значение обязательно к заполнению'' });
         }
-    } else {
-        if (obj.kadastroks) {
-            errors.push({ attribute: ''kadastroks'', error: ''Значение заполняется только для существующих и строящихся, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов'' });
-        }
+      } else {
         if (obj.kadastrzu) {
-            errors.push({ attribute: ''kadastrzu'', error: ''Значение заполняется только для существующих и строящихся, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов'' });
+          errors.push({ attribute: ''kadastrzu'', error: ''Значение заполняется только для существующих и строящихся, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов'' });
         }
-    }
-    
-    if (obj.status == ''2'' || obj.status == ''3'') {
-    
-        if (!obj.namedocosn) {
-            errors.push({ attribute: ''namedocosn'', error: ''Значение обязательно к заполнению'' });
-        }
-    
-        if (!obj.datedocosn) {
-            errors.push({ attribute: ''datedocosn'', error: ''Значение обязательно к заполнению'' });
-        }
-    
-        if (!obj.numberdocosn) {
-            errors.push({ attribute: ''numberdocosn'', error: ''Значение обязательно к заполнению'' });
-        }
-    
+      }
+
+      if (!(obj.reg_status == ''1'' || obj.reg_status == ''2'')) {
         if (!obj.event_time) {
-            errors.push({ attribute: ''event_time'', error: ''Значение обязательно к заполнению'' });
+          errors.push({ attribute: ''event_time'', error: ''Значение обязательно к заполнению'' });
         }
-    } else {
+      } else {
+        if (obj.event_time) {
+          errors.push({ attribute: ''event_time'', error: ''Значение заполняется только для существующих и строящихся, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов'' });
+        }
+      }
+
+      if (obj.status == ''2'' || obj.status == ''3'') {
+
+        if (!obj.namedocosn) {
+          errors.push({ attribute: ''namedocosn'', error: ''Значение обязательно к заполнению'' });
+        }
+
+        if (!obj.datedocosn) {
+          errors.push({ attribute: ''datedocosn'', error: ''Значение обязательно к заполнению'' });
+        }
+
+        if (!obj.numberdocosn) {
+          errors.push({ attribute: ''numberdocosn'', error: ''Значение обязательно к заполнению'' });
+        }
+
+        if (!obj.event_time) {
+          errors.push({ attribute: ''event_time'', error: ''Значение обязательно к заполнению'' });
+        }
+
+        if (!obj.number) {
+          errors.push({ attribute: ''number'', error: ''Значение обязательно к заполнению'' });
+        }
+
+      } else {
+
         if (obj.namedocosn) {
-            errors.push({ attribute: ''namedocosn'', error: ''Значение заполняется только для планируемых к размещению или планируемых к реконструкции объектов'' });
+          errors.push({ attribute: ''namedocosn'', error: ''Значение заполняется только для планируемых к размещению или планируемых к реконструкции объектов'' });
         }
         if (obj.datedocosn) {
-            errors.push({ attribute: ''datedocosn'', error: ''Значение заполняется только для планируемых к размещению или планируемых к реконструкции объектов'' });
+          errors.push({ attribute: ''datedocosn'', error: ''Значение заполняется только для планируемых к размещению или планируемых к реконструкции объектов'' });
         }
         if (obj.numberdocosn) {
-            errors.push({ attribute: ''numberdocosn'', error: ''Значение заполняется только для планируемых к размещению или планируемых к реконструкции объектов'' });
+          errors.push({ attribute: ''numberdocosn'', error: ''Значение заполняется только для планируемых к размещению или планируемых к реконструкции объектов'' });
         }
         if (obj.event_time) {
-            errors.push({ attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению или планируемых к реконструкции объектов'' });
+          errors.push({ attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению или планируемых к реконструкции объектов'' });
         }
-    }
+        if (obj.number) {
+          errors.push({ attribute: ''number'', error: ''Значение заполняется только для планируемых к размещению или планируемых к реконструкции объектов'' });
+        }
+      }
 
       return errors;'
 WHERE name = 'health';
@@ -23348,6 +23698,7 @@ custom_rule = 'var errors = [];
         if (obj.number) {
           errors.push({attribute: ''number'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
+    }
 
       return errors;'
 WHERE name = 'customcontrol_point';
@@ -23412,7 +23763,7 @@ SET class_rule =
     },
     {
       "name": "number",
-      "title": "Номер согласно Положению о территориальном планировании",
+      "title": "Номер согласно положению о территориальном планировании",
       "valueType": "STRING"
     },
     {
@@ -23434,6 +23785,25 @@ SET class_rule =
       "name": "address",
       "title": "Местоположение, адресное описание",
       "valueType": "STRING"
+    },
+    {
+        "name": "nsi_type",
+        "title": "Вид организации по виду медицинской деятельности",
+        "valueType": "CHOICE",
+        "enumerations": [
+            {
+                "title": "Лечебно-профилактические медицинские организации",
+                "value": "1"
+            },
+            {
+                "title": "Медицинские организации особого типа",
+                "value": "2"
+            },
+            {
+                "title": "Медицинские организации по надзору в сфере защиты прав потребителей и благополучия человека",
+                "value": "3"
+            }
+        ]
     },
     {
       "name": "md_stype",
@@ -23560,7 +23930,7 @@ SET class_rule =
         },
         {
           "title": "Отдельный медицинский батальон",
-          "value": "5"
+          "value": "6"
         }
       ]
     },
@@ -23650,7 +24020,6 @@ SET class_rule =
     {
       "name": "capacity",
       "title": "Мощность дневного стационара, мест",
-      "required": true,
       "valueType": "INT"
     },
     {
@@ -23661,20 +24030,17 @@ SET class_rule =
     {
       "name": "bld_area",
       "title": "Общая площадь здания, комплекса зданий, кв. м",
-      "required": true,
       "valueType": "DOUBLE",
       "fractionDigits": 2
     },
     {
       "name": "wrk_count",
       "title": "Количество рабочих мест, единиц",
-      "required": true,
       "valueType": "INT"
     },
     {
       "name": "function",
       "title": "Назначение объекта",
-      "required": true,
       "valueType": "STRING"
     },
     {
@@ -23780,8 +24146,8 @@ SET class_rule =
       "fractionDigits": 2
     },
     {
-      "name": "LEVELMED",
-      "title": "Номер документа основания",
+      "name": "levelmed",
+      "title": "Уровень медицинской организации",
       "required": true,
       "valueType": "DOUBLE",
       "fractionDigits": 2
@@ -23808,130 +24174,143 @@ SET class_rule =
 }',
 custom_rule = 'var errors = [];
 
-      if (obj.classid == ''602010401'') {
-        if (!obj.md_stype) {
-          errors.push({attribute: ''md_stype'', error: ''Значение обязательно к заполнению''});
-        }
-      } else if (obj.cu_type) {
-          errors.push({attribute: ''md_stype'', error: ''Значение заполняется только для объекта "Лечебно-профилактическая медицинская организация (кроме санаторно-курортной), оказывающая медицинскую помощь в стационарных условиях, ее структурное подразделение"''});
+    if (obj.classid == ''602010401'') {
+      if (!obj.md_stype) {
+        errors.push({attribute: ''md_stype'', error: ''Значение обязательно к заполнению''});
       }
-
-      if (obj.classid == ''602010402'') {
-        if (!obj.amb_type) {
-          errors.push({attribute: ''amb_type'', error: ''Значение обязательно к заполнению''});
-        }
-      } else if (obj.amb_type) {
-          errors.push({attribute: ''amb_type'', error: ''Значение заполняется только для объекта "Лечебно-профилактическая медицинская организация, оказывающая медицинскую помощь в амбулаторных условиях и (или) в условиях дневного стационара"''});
-      }
-
-      if (obj.classid == ''602010403'') {
-        if (!obj.mst_type) {
-          errors.push({attribute: ''mst_type'', error: ''Значение обязательно к заполнению''});
-        }
-      } else if (obj.mst_type) {
-          errors.push({attribute: ''mst_type'', error: ''Значение заполняется только для объекта "Медицинская организация особого типа"''});
-      }
-
-      if (obj.classid == ''602010404'') {
-        if (!obj.su_type) {
-          errors.push({attribute: ''su_type'', error: ''Значение обязательно к заполнению''});
-        }
-      } else if (obj.su_type) {
-          errors.push({attribute: ''su_type'', error: ''Значение заполняется только для объекта "Медицинская организация по надзору в сфере защиты прав потребителей и благополучия человека"''});
-      }
-
-      if (obj.classid == ''602010406'') {
-        if (!obj.msd_type) {
-          errors.push({attribute: ''msd_type'', error: ''Значение обязательно к заполнению''});
-        }
-      } else if (obj.msd_type) {
-          errors.push({attribute: ''msd_type'', error: ''Значение заполняется только для объекта "Обособленное структурное подразделение медицинской организации, оказывающей первичную медико-санитарную помощь"''});
-      }
-
-      if (obj.classid == ''602010407'') {
-        if (!obj.mc_type) {
-          errors.push({attribute: ''mc_type'', error: ''Значение обязательно к заполнению''});
-        }
-      } else if (obj.mc_type) {
-          errors.push({attribute: ''mc_type'', error: ''Значение заполняется только для объекта "Медицинская организация, оказывающая скорую медицинскую помощь, ее структурное подразделение"''});
-      }
-
-      if (obj.classid == ''602010401'' || obj.classid == ''602010402'' || obj.classid == ''602010406'') {
-        if (!obj.capacity_s) {
-          errors.push({attribute: ''capacity_s'', error: ''Значение обязательно к заполнению''});
-        }
-      } else if (obj.capacity_s) {
-          errors.push({attribute: ''capacity_s'', error: ''Значение заполняется только для объектов "Лечебно-профилактическая медицинская организация (кроме санаторно-курортной), оказывающая медицинскую помощь в стационарных условиях, ее структурное подразделение", "Лечебно-профилактическая медицинская организация, оказывающая медицинскую помощь в амбулаторных условиях и (или) в условиях дневного стационара", "Обособленное структурное подразделение медицинской организации, оказывающей первичную медико-санитарную помощь"''});
-      }
-      if (obj.classid == ''602010401'' || obj.classid == ''602010405'') {
-        if (!obj.capacity24) {
-          errors.push({attribute: ''capacity24'', error: ''Значение обязательно к заполнению''});
-        }
-      } else if (obj.capacity24) {
-          errors.push({attribute: ''capacity24'', error: ''Значение заполняется только для объектов "Лечебно-профилактическая медицинская организация (кроме санаторно-курортной), оказывающая медицинскую помощь в стационарных условиях, ее структурное подразделение", "Клиники научных и научно-исследовательских организаций, организаций профессионального образования"''});
-      }
-
-      if (!(obj.classid == ''602010401'' || obj.classid == ''602010402'' || obj.classid == ''602010405'')) {
-        if (obj.capacity) {
-          errors.push({attribute: ''capacity'', error: ''Значение заполняется только для объектов "Лечебно-профилактическая медицинская организация (кроме санаторно-курортной), оказывающая медицинскую помощь в стационарных условиях, ее структурное подразделение", "Лечебно-профилактическая медицинская организация, оказывающая медицинскую помощь в амбулаторных условиях и (или) в условиях дневного стационара", "Клиники научных и научно-исследовательских организаций, организаций профессионального образования"''});
-        }
-      }
-
-      if (obj.classid == ''602010401'' || obj.classid == ''602010402'' ||
-          obj.classid == ''602010405'' || obj.classid == ''602010407'') {
-        if (!obj.num_cars) {
-          errors.push({attribute: ''num_cars'', error: ''Значение обязательно к заполнению''});
-        }
-      } else if (obj.num_cars) {
-          errors.push({attribute: ''num_cars'', error: ''Значение заполняется только для объектов "Лечебно-профилактическая медицинская организация (кроме санаторно-курортной), оказывающая медицинскую помощь в стационарных условиях, ее структурное подразделение", "Лечебно-профилактическая медицинская организация, оказывающая медицинскую помощь в амбулаторных условиях и (или) в условиях дневного стационара", "Клиники научных и научно-исследовательских организаций, организаций профессионального образования", "Медицинская организация, оказывающая скорую медицинскую помощь, ее структурное подразделение"''});
-      }
-
-      if (!(obj.status == ''2'')) {
-        if (!obj.kadastroks) {
-            errors.push({ attribute: ''kadastroks'', error: ''Значение обязательно к заполнению'' });
-        }
-        if (!obj.kadastrzu) {
-            errors.push({ attribute: ''kadastrzu'', error: ''Значение обязательно к заполнению'' });
-        }
-    } else {
-        if (obj.kadastroks) {
-            errors.push({ attribute: ''kadastroks'', error: ''Значение заполняется только для существующих и строящихся, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов'' });
-        }
-        if (obj.kadastrzu) {
-            errors.push({ attribute: ''kadastrzu'', error: ''Значение заполняется только для существующих и строящихся, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов'' });
-        }
+    } else if (obj.md_stype) {
+      errors.push({attribute: ''md_stype'', error: ''Значение заполняется только для объекта "Лечебно-профилактическая медицинская организация (кроме санаторно-курортной), оказывающая медицинскую помощь в стационарных условиях, ее структурное подразделение"''});
     }
-    
-    if (obj.status == ''2'' || obj.status == ''3'') {
-    
-        if (!obj.namedocosn) {
-            errors.push({ attribute: ''namedocosn'', error: ''Значение обязательно к заполнению'' });
-        }
-    
-        if (!obj.datedocosn) {
-            errors.push({ attribute: ''datedocosn'', error: ''Значение обязательно к заполнению'' });
-        }
-    
-        if (!obj.numberdocosn) {
-            errors.push({ attribute: ''numberdocosn'', error: ''Значение обязательно к заполнению'' });
-        }
-    
-        if (!obj.event_time) {
-            errors.push({ attribute: ''event_time'', error: ''Значение обязательно к заполнению'' });
-        }
+
+    if (obj.classid == ''602010402'') {
+      if (!obj.amb_type) {
+        errors.push({attribute: ''amb_type'', error: ''Значение обязательно к заполнению''});
+      }
+    } else if (obj.amb_type) {
+      errors.push({attribute: ''amb_type'', error: ''Значение заполняется только для объекта "Лечебно-профилактическая медицинская организация, оказывающая медицинскую помощь в амбулаторных условиях и (или) в условиях дневного стационара"''});
+    }
+
+    if (obj.classid == ''602010403'') {
+      if (!obj.mst_type) {
+        errors.push({attribute: ''mst_type'', error: ''Значение обязательно к заполнению''});
+      }
+    } else if (obj.mst_type) {
+      errors.push({attribute: ''mst_type'', error: ''Значение заполняется только для объекта "Медицинская организация особого типа"''});
+    }
+
+    if (obj.classid == ''602010404'') {
+      if (!obj.su_type) {
+        errors.push({attribute: ''su_type'', error: ''Значение обязательно к заполнению''});
+      }
+    } else if (obj.su_type) {
+      errors.push({attribute: ''su_type'', error: ''Значение заполняется только для объекта "Медицинская организация по надзору в сфере защиты прав потребителей и благополучия человека"''});
+    }
+
+    if (obj.classid == ''602010406'') {
+      if (!obj.msd_type) {
+        errors.push({attribute: ''msd_type'', error: ''Значение обязательно к заполнению''});
+      }
+    } else if (obj.msd_type) {
+      errors.push({attribute: ''msd_type'', error: ''Значение заполняется только для объекта "Обособленное структурное подразделение медицинской организации, оказывающей первичную медико-санитарную помощь"''});
+    }
+
+    if (obj.classid == ''602010407'') {
+      if (!obj.mc_type) {
+        errors.push({attribute: ''mc_type'', error: ''Значение обязательно к заполнению''});
+      }
+    } else if (obj.mc_type) {
+      errors.push({attribute: ''mc_type'', error: ''Значение заполняется только для объекта "Медицинская организация, оказывающая скорую медицинскую помощь, ее структурное подразделение"''});
+    }
+
+    if (obj.classid == ''602010401'' || obj.classid == ''602010402'' || obj.classid == ''602010406'') {
+      if (!obj.capacity_s) {
+        errors.push({attribute: ''capacity_s'', error: ''Значение обязательно к заполнению''});
+      }
+    } else if (obj.capacity_s) {
+      errors.push({attribute: ''capacity_s'', error: ''Значение заполняется только для объектов "Лечебно-профилактическая медицинская организация (кроме санаторно-курортной), оказывающая медицинскую помощь в стационарных условиях, ее структурное подразделение", "Лечебно-профилактическая медицинская организация, оказывающая медицинскую помощь в амбулаторных условиях и (или) в условиях дневного стационара", "Обособленное структурное подразделение медицинской организации, оказывающей первичную медико-санитарную помощь"''});
+    }
+
+    if (obj.classid == ''602010401'' || obj.classid == ''602010405'') {
+      if (!obj.capacity24) {
+        errors.push({attribute: ''capacity24'', error: ''Значение обязательно к заполнению''});
+      }
+    } else if (obj.capacity24) {
+      errors.push({attribute: ''capacity24'', error: ''Значение заполняется только для объектов "Лечебно-профилактическая медицинская организация (кроме санаторно-курортной), оказывающая медицинскую помощь в стационарных условиях, ее структурное подразделение", "Клиники научных и научно-исследовательских организаций, организаций профессионального образования"''});
+    }
+
+    if (!(obj.classid == ''602010401'' || obj.classid == ''602010402'' || obj.classid == ''602010405'')) {
+      if (obj.capacity) {
+        errors.push({attribute: ''capacity'', error: ''Значение заполняется только для объектов "Лечебно-профилактическая медицинская организация (кроме санаторно-курортной), оказывающая медицинскую помощь в стационарных условиях, ее структурное подразделение", "Лечебно-профилактическая медицинская организация, оказывающая медицинскую помощь в амбулаторных условиях и (или) в условиях дневного стационара", "Клиники научных и научно-исследовательских организаций, организаций профессионального образования"''});
+      }
+    }
+
+    if (obj.classid == ''602010401'' || obj.classid == ''602010402'' || obj.classid == ''602010405'' || obj.classid == ''602010407'') {
+      if (!obj.num_cars) {
+        errors.push({attribute: ''num_cars'', error: ''Значение обязательно к заполнению''});
+      }
+    } else if (obj.num_cars) {
+      errors.push({attribute: ''num_cars'', error: ''Значение заполняется только для объектов "Лечебно-профилактическая медицинская организация (кроме санаторно-курортной), оказывающая медицинскую помощь в стационарных условиях, ее структурное подразделение", "Лечебно-профилактическая медицинская организация, оказывающая медицинскую помощь в амбулаторных условиях и (или) в условиях дневного стационара", "Клиники научных и научно-исследовательских организаций, организаций профессионального образования", "Медицинская организация, оказывающая скорую медицинскую помощь, ее структурное подразделение"''});
+    }
+
+    if (!(obj.status == ''1'' || obj.status == ''3'' || obj.status == ''4'')) {
+      if (!obj.kadastrzu) {
+        errors.push({ attribute: ''kadastrzu'', error: ''Значение обязательно к заполнению'' });
+      }
     } else {
-        if (obj.namedocosn) {
-            errors.push({ attribute: ''namedocosn'', error: ''Значение заполняется только для планируемых к размещению или планируемых к реконструкции объектов'' });
-        }
-        if (obj.datedocosn) {
-            errors.push({ attribute: ''datedocosn'', error: ''Значение заполняется только для планируемых к размещению или планируемых к реконструкции объектов'' });
-        }
-        if (obj.numberdocosn) {
-            errors.push({ attribute: ''numberdocosn'', error: ''Значение заполняется только для планируемых к размещению или планируемых к реконструкции объектов'' });
-        }
-        if (obj.event_time) {
-            errors.push({ attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению или планируемых к реконструкции объектов'' });
-        }
+      if (obj.kadastrzu) {
+        errors.push({ attribute: ''kadastrzu'', error: ''Значение заполняется только для существующих и строящихся, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов'' });
+      }
+    }
+
+    if (!(obj.reg_status == ''1'' || obj.reg_status == ''2'')) {
+      if (!obj.event_time) {
+        errors.push({ attribute: ''event_time'', error: ''Значение обязательно к заполнению'' });
+      }
+    } else {
+      if (obj.event_time) {
+        errors.push({ attribute: ''event_time'', error: ''Значение заполняется только для существующих и строящихся, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов'' });
+      }
+    }
+
+    if (obj.status == ''2'' || obj.status == ''3'') {
+
+      if (!obj.namedocosn) {
+        errors.push({ attribute: ''namedocosn'', error: ''Значение обязательно к заполнению'' });
+      }
+
+      if (!obj.datedocosn) {
+        errors.push({ attribute: ''datedocosn'', error: ''Значение обязательно к заполнению'' });
+      }
+
+      if (!obj.numberdocosn) {
+        errors.push({ attribute: ''numberdocosn'', error: ''Значение обязательно к заполнению'' });
+      }
+
+      if (!obj.event_time) {
+        errors.push({ attribute: ''event_time'', error: ''Значение обязательно к заполнению'' });
+      }
+
+      if (!obj.number) {
+        errors.push({ attribute: ''number'', error: ''Значение обязательно к заполнению'' });
+      }
+
+    } else {
+
+      if (obj.namedocosn) {
+        errors.push({ attribute: ''namedocosn'', error: ''Значение заполняется только для планируемых к размещению или планируемых к реконструкции объектов'' });
+      }
+      if (obj.datedocosn) {
+        errors.push({ attribute: ''datedocosn'', error: ''Значение заполняется только для планируемых к размещению или планируемых к реконструкции объектов'' });
+      }
+      if (obj.numberdocosn) {
+        errors.push({ attribute: ''numberdocosn'', error: ''Значение заполняется только для планируемых к размещению или планируемых к реконструкции объектов'' });
+      }
+      if (obj.event_time) {
+        errors.push({ attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению или планируемых к реконструкции объектов'' });
+      }
+      if (obj.number) {
+        errors.push({ attribute: ''number'', error: ''Значение заполняется только для планируемых к размещению или планируемых к реконструкции объектов'' });
+      }
     }
 
       return errors;'
@@ -24348,6 +24727,7 @@ custom_rule = 'var errors = [];
       if (obj.number) {
         errors.push({ attribute: ''number'', error: ''Значение заполняется только для планируемых к размещению или планируемых к реконструкции объектов'' });
     }
+  }
 
     if (!(obj.reg_status == ''1'' || obj.reg_status == ''2'')) {
       if (!obj.event_time) {
@@ -24357,6 +24737,7 @@ custom_rule = 'var errors = [];
       if (obj.event_time) {
           errors.push({ attribute: ''event_time'', error: ''Значение заполняется только для существующих и строящихся, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов'' });
       }
+    }
 
       return errors;'
 WHERE name = 'railwayline_line';
@@ -24671,6 +25052,7 @@ if (obj.status == ''2'' || obj.status == ''3'') {
     if (obj.zmr_size) {
         errors.push({ attribute: ''zmr_size'', error: ''Значение заполняется только для планируемых к размещению или планируемых к реконструкции объектов'' });
     }
+  }
 
     if (!(obj.reg_status == ''1'' || obj.reg_status == ''2'')) {
       if (!obj.wear_prcnt) {
@@ -24686,6 +25068,7 @@ if (obj.status == ''2'' || obj.status == ''3'') {
       if (obj.event_time) {
           errors.push({ attribute: ''event_time'', error: ''Значение заполняется только для существующих и строящихся, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов'' });
       }
+    }
 
       if (!(obj.status == ''1'' || obj.status == ''3'' || obj.status == ''4'')) {
       if (!obj.wear_prcnt) {
@@ -24695,6 +25078,7 @@ if (obj.status == ''2'' || obj.status == ''3'') {
        if (obj.wear_prcnt) {
           errors.push({ attribute: ''wear_prcnt'', error: ''Значение заполняется только для существующих и строящихся, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов'' });
       }
+    }
 
       return errors;'
 WHERE name = 'pipeline_line';
@@ -25011,6 +25395,7 @@ custom_rule = 'var errors = [];
         if (obj.number) {
           errors.push({attribute: ''number'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
+    }
 
       if (obj.status == ''2'' || obj.status == ''3'') {
         if (!obj.event_time) {
@@ -25025,10 +25410,11 @@ custom_rule = 'var errors = [];
           errors.push({attribute: ''event_time'', error: ''Значение обязательно к заполнению''});
         }
       } 
-      else 
+      else {
       if (obj.event_time) {
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
+    }
 
        return errors;'
 WHERE name = 'cemetery_point';
@@ -25345,6 +25731,7 @@ custom_rule = 'var errors = [];
         if (obj.number) {
           errors.push({attribute: ''number'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
+    }
 
       if (obj.status == ''2'' || obj.status == ''3'') {
         if (!obj.event_time) {
@@ -25359,10 +25746,11 @@ custom_rule = 'var errors = [];
           errors.push({attribute: ''event_time'', error: ''Значение обязательно к заполнению''});
         }
       } 
-      else 
+      else {
       if (obj.event_time) {
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
+    }
 
       return errors;'
 WHERE name = 'cemetery';
@@ -26041,6 +26429,7 @@ custom_rule = 'var errors = [];
         if (obj.event_time) {
             errors.push({ attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению или планируемых к реконструкции объектов'' });
         }
+      }
 
         if (obj.reg_status == ''1'' || obj.reg_status == ''2'') {
         if (!obj.event_time) {
@@ -26477,7 +26866,6 @@ SET class_rule =
             "hidden": true,
             "title": "геометрия",
             "valueType": "GEOMETRY",
-            "hidden": true,
             "allowedValues": [
               "LineString"
             ]
@@ -26492,7 +26880,6 @@ custom_rule = 'var errors = [];
         if (!obj.event_time) {
             errors.push({ attribute: ''event_time'', error: ''Значение обязательно к заполнению'' });
         }
-
         if (!obj.number) {
           errors.push({ attribute: ''number'', error: ''Значение обязательно к заполнению'' });
        }
@@ -26503,6 +26890,7 @@ custom_rule = 'var errors = [];
         if (obj.number) {
           errors.push({ attribute: ''number'', error: ''Значение заполняется только для планируемых к размещению или планируемых к реконструкции объектов'' });
       }
+    }
 
       if (obj.reg_status == ''1'' || obj.reg_status == ''2'') {
         if (!obj.event_time) {
@@ -26512,13 +26900,14 @@ custom_rule = 'var errors = [];
           errors.push({attribute: ''wear_prcnt'', error: ''Значение обязательно к заполнению''});
         }
       } 
-      else 
+      else {
       if (obj.event_time) {
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
         if (obj.wear_prcnt) {
           errors.push({attribute: ''wear_prcnt'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
+    }
 
       if (!(obj.status == ''1'' || obj.status == ''3'' || obj.status == ''4'')) {
         if (!obj.wear_prcnt) {
@@ -26528,6 +26917,7 @@ custom_rule = 'var errors = [];
         if (obj.wear_prcnt) {
             errors.push({ attribute: ''wear_prcnt'', error: ''Значение заполняется только для существующих и строящихся, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов'' });
         }
+      }
 
       return errors;'
 WHERE name = 'electricline_line';
@@ -26981,6 +27371,7 @@ custom_rule = 'var errors = [];
         if (obj.event_time) {
             errors.push({ attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению или планируемых к реконструкции объектов'' });
         }
+      }
 
         if (obj.reg_status == ''1'' || obj.reg_status == ''2'') {
         if (!obj.event_time) {
@@ -27082,7 +27473,7 @@ UPDATE data.schemas
 SET class_rule =
        '{
         "name": "public",
-        "title": "Прочие объекты обслуживания",
+        "title": "Общественные пространства, объекты благоустройства и озеленения",
         "styleName": "public_point_123",
         "tableName": "public",
         "originName": "Public",
@@ -27128,7 +27519,7 @@ SET class_rule =
           },
           {
             "name": "number",
-            "title": "Номер согласно Положению о территориальном планировании",
+            "title": "Номер согласно положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
@@ -27154,6 +27545,7 @@ SET class_rule =
           {
             "name": "tpark_type",
             "title": "Подтип тематического парка",
+            "required": true,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -27185,14 +27577,51 @@ SET class_rule =
                 "value": "7"
               },
               {
-                "title": "Иной вид открытых территорий со специализированным набором услуг в области культуры и отдыха",
+                "title": "Исторический тематический парк",
                 "value": "8"
+              },
+              {
+                "title": "Парк искусств",
+                "value": "9"
+              },
+              {
+                "title": "Парк аттракционов",
+                "value": "10"
+              },
+              {
+                "title": "Спортивный парк",
+                "value": "11"
+              },
+              {
+                "title": "Научно-познавательные парки",
+                "value": "12"
+              },
+              {
+                "title": "Детский парк",
+                "value": "13"
+              },
+              {
+                "title": "Парк",
+                "value": "14"
+              },
+              {
+                "title": "Сквер",
+                "value": "15"
+              },
+              {
+                "title": "Детская игровая площадка",
+                "value": "16"
+              },
+              {
+                "title": "Иной вид открытых территорий со специализированным набором услуг в области культуры и отдыха",
+                "value": "17"
               }
             ]
           },
           {
             "name": "pkio_type",
             "title": "Подтип парка культуры и отдыха",
+            "required": true,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -27202,12 +27631,17 @@ SET class_rule =
               {
                 "title": "Районного значения",
                 "value": "2"
+              },
+              {
+                "title": "Загородные",
+                "value": "4"
               }
             ]
           },
           {
             "name": "ped_type",
             "title": "Подтип пешеходной зоны",
+            "required": true,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -27229,12 +27663,17 @@ SET class_rule =
               {
                 "title": "Квартал (группа кварталов)",
                 "value": "5"
+              },
+              {
+                "title": "Сквер",
+                "value": "7"
               }
             ]
           },
           {
             "name": "aq_stype",
             "title": "Подтип благоустроенного пляжа, места массовой околоводной рекреации",
+            "required": true,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -27410,28 +27849,36 @@ custom_rule = 'var errors = [];
       }
 
       if (obj.classid == ''602010904'') {
-        if (!obj.aq_type) {
-          errors.push({attribute: ''aq_type'', error: ''Значение обязательно к заполнению''});
+        if (!obj.aq_stype) {
+          errors.push({attribute: ''aq_stype'', error: ''Значение обязательно к заполнению''});
         }
-      } else if (obj.aq_type) {
-          errors.push({attribute: ''aq_type'', error: ''Значение заполняется только для объекта "Благоустроенный пляж, место массовой околоводной рекреации"''});
+      } else if (obj.aq_stype) {
+          errors.push({attribute: ''aq_stype'', error: ''Значение заполняется только для объекта "Благоустроенный пляж, место массовой околоводной рекреации"''});
       }
 
-      if (obj.status == ''2'') {
-        if (!obj.function) {
-          errors.push({attribute: ''function'', error: ''Значение обязательно к заполнению''});
-        }
-      } else if (obj.function) {
-          errors.push({attribute: ''function'', error: ''Значение заполняется только для планируемых к размещению объектов''});
-      }
-
-      if (obj.status == ''2'' || obj.status == ''3'' || obj.status == ''4'') {
+      if (obj.reg_status == ''1'' || obj.reg_status == ''2'') {
         if (!obj.event_time) {
           errors.push({attribute: ''event_time'', error: ''Значение обязательно к заполнению''});
         }
       } else if (obj.event_time) {
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
+
+      if (obj.status == ''2'' || obj.status == ''3'') {
+        if (!obj.event_time) {
+          errors.push({attribute: ''event_time'', error: ''Значение обязательно к заполнению''});
+        }
+        if (!obj.number) {
+          errors.push({attribute: ''number'', error: ''Значение обязательно к заполнению''});
+        }
+      } else {
+        if (obj.event_time) {
+          errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
+      }
+      if (obj.number) {
+        errors.push({attribute: ''number'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
+      }
+    }
 
       return errors;'
 WHERE name = 'public';
@@ -27718,6 +28165,7 @@ custom_rule = 'var errors = [];
         if (obj.number) {
           errors.push({attribute: ''number'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
+    }
 
       if (obj.status == ''2'' || obj.status == ''3'') {
         if (!obj.event_time) {
@@ -27760,7 +28208,7 @@ custom_rule = 'var errors = [];
           errors.push({attribute: ''wear_prcnt'', error: ''Значение обязательно к заполнению''});
         }
       } 
-      else 
+      else {
       if (obj.event_time) {
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
@@ -27770,6 +28218,7 @@ custom_rule = 'var errors = [];
       if (obj.wear_prcnt) {
       errors.push({attribute: ''wear_prcnt'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
+    }
 
       return errors;'
 WHERE name = 'sewerfacility';
@@ -29116,6 +29565,7 @@ custom_rule = 'var errors = [];
       if (obj.number) {
         errors.push({attribute: ''number'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
+    }
 
       if (obj.reg_status == ''1'' || obj.reg_status == ''2'') {
         if (!obj.event_time) {
@@ -29501,6 +29951,7 @@ custom_rule = 'var errors = [];
       if (obj.number) {
         errors.push({attribute: ''number'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
+    }
 
       if (obj.reg_status == ''1'' || obj.reg_status == ''2'') {
         if (!obj.event_time) {
@@ -29785,6 +30236,7 @@ custom_rule = 'var errors = [];
         if (obj.number) {
           errors.push({attribute: ''number'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
+    }
 
       if (obj.status == ''1'' || obj.status == ''3'' || obj.status == ''4'') {
         if (!obj.kadastrzu) {
@@ -29799,10 +30251,11 @@ custom_rule = 'var errors = [];
           errors.push({attribute: ''event_time'', error: ''Значение обязательно к заполнению''});
         }
       } 
-      else 
+      else {
       if (obj.event_time) {
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
+    }
 
       return errors;'
 WHERE name = 'otherobject_point';
@@ -29983,6 +30436,7 @@ custom_rule = 'var errors = [];
       if (obj.number) {
         errors.push({attribute: ''number'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
+    }
 
       return errors;'
 WHERE name = 'resortarea';
@@ -30462,16 +30916,18 @@ custom_rule = 'var errors = [];
         if (obj.number) {
           errors.push({ attribute: ''number'', error: ''Значение заполняется только для планируемых к размещению или планируемых к реконструкции объектов'' });
       }
+    }
 
       if (obj.reg_status == ''1'' || obj.reg_status == ''2'') {
         if (!obj.event_time) {
           errors.push({attribute: ''event_time'', error: ''Значение обязательно к заполнению''});
         }
       } 
-      else 
+      else {
       if (obj.event_time) {
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
+    }
 
       if (!(obj.status == ''1'' || obj.status == ''3'' || obj.status == ''4'')) {
         if (!obj.kadastrzu) {
@@ -30481,6 +30937,7 @@ custom_rule = 'var errors = [];
          if (obj.kadastrzu) {
             errors.push({ attribute: ''kadastrzu'', error: ''Значение заполняется только для существующих и строящихся, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов'' });
         }
+      }
 
       return errors;'
 WHERE name = 'social';
@@ -31138,6 +31595,7 @@ custom_rule = 'var errors = [];
         if (obj.kadastrzu) {
             errors.push({ attribute: ''kadastrzu'', error: ''Значение заполняется только для существующих и строящихся, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов'' });
         }
+      }
 
       return errors;'
 WHERE name = 'agriculture';
@@ -31617,16 +32075,18 @@ custom_rule = 'var errors = [];
         if (obj.number) {
           errors.push({ attribute: ''number'', error: ''Значение заполняется только для планируемых к размещению или планируемых к реконструкции объектов'' });
       }
+    }
 
       if (obj.reg_status == ''1'' || obj.reg_status == ''2'') {
         if (!obj.event_time) {
           errors.push({attribute: ''event_time'', error: ''Значение обязательно к заполнению''});
         }
       } 
-      else 
+      else {
       if (obj.event_time) {
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
+    }
 
       if (!(obj.status == ''1'' || obj.status == ''3'' || obj.status == ''4'')) {
         if (!obj.kadastrzu) {
@@ -31636,6 +32096,7 @@ custom_rule = 'var errors = [];
          if (obj.kadastrzu) {
             errors.push({ attribute: ''kadastrzu'', error: ''Значение заполняется только для существующих и строящихся, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов'' });
         }
+      }
 
       return errors;'
 WHERE name = 'social_point';
@@ -32294,6 +32755,7 @@ custom_rule = 'var errors = [];
         if (obj.kadastrzu) {
             errors.push({ attribute: ''kadastrzu'', error: ''Значение заполняется только для существующих и строящихся, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов'' });
         }
+      }
 
       return errors;'
 WHERE name = 'agriculture_point';
@@ -32330,7 +32792,7 @@ SET class_rule =
             "valueType": "CHOICE",
             "enumerations": [
               {
-                "title": "Центры реабилитации животных",
+                "title": "Центры реабилитации, репродукции и сохранения животных",
                 "value": "602050501"
               },
               {
@@ -32341,7 +32803,7 @@ SET class_rule =
           },
           {
             "name": "number",
-            "title": "Номер согласно Положению о территориальном планировании",
+            "title": "Номер согласно положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
@@ -32394,7 +32856,6 @@ SET class_rule =
           {
             "name": "area",
             "title": "Площадь объекта, га",
-            "required": true,
             "valueType": "DOUBLE",
             "fractionDigits": 2
           },
@@ -32493,15 +32954,7 @@ SET class_rule =
 }',
 custom_rule = 'var errors = [];
 
-      if (obj.status == ''2'') {
-        if (!obj.function) {
-          errors.push({attribute: ''function'', error: ''Значение обязательно к заполнению''});
-        }
-      } else if (obj.function) {
-          errors.push({attribute: ''function'', error: ''Значение заполняется только для планируемых к размещению объектов''});
-      }
-
-      if (obj.status == ''2'' || obj.status == ''3'' || obj.status == ''4'') {
+      if (obj.reg_status == ''1'' || obj.reg_status == ''2'') {
         if (!obj.event_time) {
           errors.push({attribute: ''event_time'', error: ''Значение обязательно к заполнению''});
         }
@@ -32509,6 +32962,29 @@ custom_rule = 'var errors = [];
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
 
+      if (obj.status == ''2'' || obj.status == ''3'') {
+        if (!obj.event_time) {
+          errors.push({attribute: ''event_time'', error: ''Значение обязательно к заполнению''});
+        }
+        if (!obj.number) {
+          errors.push({attribute: ''number'', error: ''Значение обязательно к заполнению''});
+        }
+      } else {
+        if (obj.event_time) {
+          errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
+      }
+      if (obj.number) {
+        errors.push({attribute: ''number'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
+      }
+    }
+
+      if (obj.status == ''1'' || obj.status == ''3'' || obj.status == ''4'') {
+        if (!obj.kadastrzu) {
+          errors.push({attribute: ''kadastrzu'', error: ''Значение обязательно к заполнению''});
+        }
+      } else if (obj.kadastrzu) {
+          errors.push({attribute: ''kadastrzu'', error: ''Значение заполняется только для существующих, реконструируемых, строящихся, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
+      }
       return errors;'
 WHERE name = 'wildlifeprotection';
 
@@ -32569,13 +33045,11 @@ SET class_rule =
     {
       "name": "address",
       "title": "Местоположение, адресное описание",
-      "required": true,
       "valueType": "STRING"
     },
     {
       "name": "reg_number",
       "title": "Регистрационный номер объекта в едином государственном реестре объектов культурного наследия",
-      "required": true,
       "valueType": "STRING"
     },
     {
@@ -32654,7 +33128,6 @@ SET class_rule =
     {
       "name": "status",
       "title": "Справочник: Статус объекта",
-      "required": true,
       "valueType": "CHOICE",
       "enumerations": [
         {
@@ -33149,6 +33622,7 @@ custom_rule = 'var errors = [];
         if (obj.kadastrzu) {
             errors.push({ attribute: ''kadastrzu'', error: ''Значение заполняется только для существующих и строящихся, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов'' });
         }
+      }
 
     if (obj.status == ''2'' || obj.status == ''3'') {
 
@@ -33180,6 +33654,7 @@ custom_rule = 'var errors = [];
         if (obj.event_time) {
             errors.push({ attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению или планируемых к реконструкции объектов'' });
         }
+      }
 
         if (!(obj.reg_status == ''1'' || obj.reg_status == ''2'')) {
         if (!obj.event_time) {
@@ -33189,6 +33664,7 @@ custom_rule = 'var errors = [];
         if (obj.event_time) {
             errors.push({ attribute: ''event_time'', error: ''Значение заполняется только для существующих и строящихся, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов'' });
         }
+      }
 
       return errors;'
 WHERE name = 'transplogisticobj';
@@ -33469,34 +33945,7 @@ SET class_rule =
   ],
   "description": "Приказ 10, версия 5 изм. от 6 октября 2023 № 698",
   "geometryType": "MultiPolygon"
-}',
-custom_rule = 'var errors = [];
-
-      if (obj.status == ''1'' || obj.status == ''3'' || obj.status == ''4'') {
-        if (!obj.numberzoit) {
-          errors.push({attribute: ''numberzoit'', error: ''Значение обязательно к заполнению''});
-        }
-      } else if (obj.numberzoit) {
-          errors.push({attribute: ''numberzoit'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
-      }
-
-      if (obj.status == ''1'' || obj.status == ''3'' || obj.status == ''4'') {
-        if (!obj.reestrzoit) {
-          errors.push({attribute: ''reestrzoit'', error: ''Значение обязательно к заполнению''});
-        }
-      } else if (obj.reestrzoit) {
-          errors.push({attribute: ''reestrzoit'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
-      }
-
-      if (obj.status == ''1'' || obj.status == ''3'' || obj.status == ''4'') {
-        if (!obj.dateegrn) {
-          errors.push({attribute: ''dateegrn'', error: ''Значение обязательно к заполнению''});
-        }
-      } else if (obj.dateegrn) {
-          errors.push({attribute: ''dateegrn'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
-      }
-
-      return errors;'
+}'
 WHERE name = 'engprotectionzone';
 
 
@@ -33597,34 +34046,7 @@ SET class_rule =
   ],
   "description": "Класс объектов Береговые полосы",
   "geometryType": "MultiPolygon"
-}',
-custom_rule = 'var errors = [];
-
-      if (obj.status == ''1'' || obj.status == ''3'' || obj.status == ''4'') {
-        if (!obj.numberzoit) {
-          errors.push({attribute: ''numberzoit'', error: ''Значение обязательно к заполнению''});
-        }
-      } else if (obj.numberzoit) {
-          errors.push({attribute: ''numberzoit'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
-      }
-
-      if (obj.status == ''1'' || obj.status == ''3'' || obj.status == ''4'') {
-        if (!obj.reestrzoit) {
-          errors.push({attribute: ''reestrzoit'', error: ''Значение обязательно к заполнению''});
-        }
-      } else if (obj.reestrzoit) {
-          errors.push({attribute: ''reestrzoit'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
-      }
-
-      if (obj.status == ''1'' || obj.status == ''3'' || obj.status == ''4'') {
-        if (!obj.dateegrn) {
-          errors.push({attribute: ''dateegrn'', error: ''Значение обязательно к заполнению''});
-        }
-      } else if (obj.dateegrn) {
-          errors.push({attribute: ''dateegrn'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
-      }
-
-      return errors;'
+}'
 WHERE name = 'foreshore';
 
 
@@ -33738,34 +34160,7 @@ SET class_rule =
   ],
   "description": "Класс объектов Охранная зона транспортных коммуникаций",
   "geometryType": "MultiPolygon"
-}',
-custom_rule = 'var errors = [];
-
-      if (obj.status == ''1'' || obj.status == ''3'' || obj.status == ''4'') {
-        if (!obj.numberzoit) {
-          errors.push({attribute: ''numberzoit'', error: ''Значение обязательно к заполнению''});
-        }
-      } else if (obj.numberzoit) {
-          errors.push({attribute: ''numberzoit'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
-      }
-
-      if (obj.status == ''1'' || obj.status == ''3'' || obj.status == ''4'') {
-        if (!obj.reestrzoit) {
-          errors.push({attribute: ''reestrzoit'', error: ''Значение обязательно к заполнению''});
-        }
-      } else if (obj.reestrzoit) {
-          errors.push({attribute: ''reestrzoit'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
-      }
-
-      if (obj.status == ''1'' || obj.status == ''3'' || obj.status == ''4'') {
-        if (!obj.dateegrn) {
-          errors.push({attribute: ''dateegrn'', error: ''Значение обязательно к заполнению''});
-        }
-      } else if (obj.dateegrn) {
-          errors.push({attribute: ''dateegrn'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
-      }
-
-      return errors;'
+}'
 WHERE name = 'transpprotectionzone';
 
 
@@ -33774,7 +34169,7 @@ SET class_rule =
        '{
         "name": "recreation",
         "title": "Объекты отдыха и туризма",
-        "styleName": "recreation_point_123",
+        "styleName": "recreation_point_698",
         "tableName": "recreation",
         "originName": "Recreation",
         "tags": ["system", "Приказ 10"],
@@ -33818,12 +34213,16 @@ SET class_rule =
               {
                 "title": "Объекты физкультурно-досугового назначения и активного отдыха",
                 "value": "602010605"
+              },
+              {
+                "title": "Места и объекты массового посещения, в том числе тематический туризм",
+                "value": "602010607"
               }
             ]
           },
           {
             "name": "number",
-            "title": "Номер согласно Положению о территориальном планировании",
+            "title": "Номер согласно положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
@@ -33946,8 +34345,12 @@ SET class_rule =
                 "value": "5"
               },
               {
-                "title": "Иной объект",
+                "title": "Здание спортивного лагеря",
                 "value": "6"
+              },
+              {
+                "title": "Иной объект",
+                "value": "8"
               }
             ]
           },
@@ -33987,6 +34390,77 @@ SET class_rule =
               {
                 "title": "Иной объект",
                 "value": "8"
+              }
+            ]
+          },
+          {
+            "name": "tem_type",
+            "title": "Подтип места или объекта массового посещения, в том числе тематического туризма",
+            "valueType": "CHOICE",
+            "enumerations": [
+              {
+                "title": "Культура",
+                "value": "1"
+              },
+              {
+                "title": "Детский отдых",
+                "value": "2"
+              },
+              {
+                "title": "Гастрономический туризм",
+                "value": "3"
+              },
+              {
+                "title": "Святыни и храмы",
+                "value": "4"
+              },
+              {
+                "title": "Музеи",
+                "value": "5"
+              },
+              {
+                "title": "Необычные места",
+                "value": "6"
+              },
+              {
+                "title": "Охота и рыбалка",
+                "value": "7"
+              },
+              {
+                "title": "Оздоровительный туризм",
+                "value": "8"
+              },
+              {
+                "title": "Пляжный отдых",
+                "value": "9"
+              },
+              {
+                "title": "Природа",
+                "value": "10"
+              },
+              {
+                "title": "Развлечения",
+                "value": "11"
+              },
+              {
+                "title": "Сельский отдых",
+                "value": "12"
+              },
+              {
+                "title": "Театры",
+                "value": "13"
+              },
+              {
+                "title": "Традиции",
+                "value": "14"
+              },
+              {
+                "title": "Места воинской славы",
+                "value": "15"
+              },
+              {
+                "title": "Активный отдых",
+                "value": "16"
               }
             ]
           },
@@ -34090,7 +34564,6 @@ SET class_rule =
           {
             "name": "reg_status",
             "title": "Значение объекта",
-            "required": true,
             "valueType": "CHOICE",
             "enumerations": [
               {
@@ -34122,6 +34595,33 @@ SET class_rule =
                 "value": "8"
               }
             ]
+          },
+          {
+            "name": "kadastroks",
+            "title": "Кадастровый номер ОКС",
+            "valueType": "STRING"
+          },
+          {
+            "name": "kadastrzu",
+            "title": "Кадастровый номер земельного участка, на котором расположен объект",
+            "valueType": "STRING"
+          },
+          {
+            "name": "namedocosn",
+            "title": "Наименование документа основания",
+            "valueType": "STRING"
+          },
+          {
+            "name": "datedocosn",
+            "title": "Дата документа основания",
+            "valueType": "DOUBLE",
+            "fractionDigits": 2
+          },
+          {
+            "name": "numberdocosn",
+            "title": "Номер документа основания",
+            "valueType": "DOUBLE",
+            "fractionDigits": 2
           },
           {
             "name": "shape",
@@ -34163,69 +34663,112 @@ custom_rule = 'var errors = [];
       }
 
       if (obj.classid == ''602010605'') {
-        if (!obj.al_stype) {
-          errors.push({attribute: ''al_stype'', error: ''Значение обязательно к заполнению''});
+        if (!obj.seat_count) {
+            errors.push({ attribute: ''seat_count'', error: ''Значение обязательно к заполнению'' });
         }
-      } else if (obj.al_stype) {
-          errors.push({attribute: ''al_stype'', error: ''Значение заполняется только для объекта "Объекты физкультурно-досугового назначения и активного отдыха"''});
-      }
-
-      if (obj.classid == ''602010605'') {
-        if (!obj.person_pd) {
-          errors.push({attribute: ''person_pd'', error: ''Значение обязательно к заполнению''});
-        }
-      } else if (obj.person_pd) {
-          errors.push({attribute: ''person_pd'', error: ''Значение заполняется только для объекта "Объекты физкультурно-досугового назначения и активного отдыха"''});
-      }
-
-      if (obj.classid == ''602010605'') {
-        if (!obj.one_time) {
-          errors.push({attribute: ''one_time'', error: ''Значение обязательно к заполнению''});
-        }
-      } else if (obj.one_time) {
-          errors.push({attribute: ''one_time'', error: ''Значение заполняется только для объекта "Объекты физкультурно-досугового назначения и активного отдыха"''});
-      }
-
-      if (obj.classid == ''602010605'') {
         if (!obj.boat_count) {
-          errors.push({attribute: ''boat_count'', error: ''Значение обязательно к заполнению''});
+            errors.push({ attribute: ''boat_count'', error: ''Значение обязательно к заполнению'' });
         }
-      } else if (obj.boat_count) {
-          errors.push({attribute: ''boat_count'', error: ''Значение заполняется только для объекта "Объекты физкультурно-досугового назначения и активного отдыха"''});
-      }
-
-      if (obj.classid == ''602010605'') {
-       if (!obj.seat_count) {
-          errors.push({attribute: ''seat_count'', error: ''Значение обязательно к заполнению''});
+        if (!obj.one_time) {
+            errors.push({ attribute: ''one_time'', error: ''Значение обязательно к заполнению'' });
         }
-      } else if (obj.seat_count) {
-          errors.push({attribute: ''seat_count'', error: ''Значение заполняется только для объекта "Объекты физкультурно-досугового назначения и активного отдыха"''});
-      }
-
-      if (obj.classid == ''602010601'' || obj.classid == ''602010602'' ||
-          obj.classid == ''602010603'' || obj.classid == ''602010604'' ||
-          obj.classid == ''602010605'') {
+        if (!obj.person_pd) {
+            errors.push({ attribute: ''person_pd'', error: ''Значение обязательно к заполнению'' });
+        }
+        if (!obj.al_stype) {
+            errors.push({ attribute: ''al_stype'', error: ''Значение заполняется только для объекта "Объекты физкультурно-досугового назначения и активного отдыха"'' });
+        }
+    } else {
+        if (obj.seat_count) {
+            errors.push({ attribute: ''seat_count'', error: ''Значение заполняется только для объекта "Объекты физкультурно-досугового назначения и активного отдыха"'' });
+        }
+        if (obj.boat_count) {
+            errors.push({ attribute: ''boat_count'', error: ''Значение заполняется только для объекта "Объекты физкультурно-досугового назначения и активного отдыха"'' });
+        }
+        if (obj.one_time) {
+            errors.push({ attribute: ''one_time'', error: ''Значение заполняется только для объекта "Объекты физкультурно-досугового назначения и активного отдыха"'' });
+        }
+        if (obj.person_pd) {
+            errors.push({ attribute: ''person_pd'', error: ''Значение заполняется только для объекта "Объекты физкультурно-досугового назначения и активного отдыха"'' });
+        }
+        if (obj.al_stype) {
+            errors.push({ attribute: ''al_stype'', error: ''Значение заполняется только для объекта "Объекты физкультурно-досугового назначения и активного отдыха"'' });
+        }
+    }
+    
+    if (obj.classid == ''602010601'' || obj.classid == ''602010602'' ||
+        obj.classid == ''602010603'' || obj.classid == ''602010604'' ||
+        obj.classid == ''602010605'') {
         if (!obj.capacity) {
-          errors.push({attribute: ''capacity'', error: ''Значение обязательно к заполнению''});
+            errors.push({ attribute: ''capacity'', error: ''Значение обязательно к заполнению'' });
         }
-      } else if (obj.capacity) {
-          errors.push({attribute: ''capacity'', error: ''Значение заполняется только для объектов "Гостиницы и аналогичные коллективные средства размещения", "Специализированные коллективные средства размещения", "Детский оздоровительный лагерь", "Оздоровительно-спортивный лагерь", "Объекты физкультурно-досугового назначения и активного отдыха"''});
+    } else if (obj.capacity) {
+        errors.push({ attribute: ''capacity'', error: ''Значение заполняется только для объектов "Гостиницы и аналогичные коллективные средства размещения", "Специализированные коллективные средства размещения", "Детский оздоровительный лагерь", "Оздоровительно-спортивный лагерь", "Объекты физкультурно-досугового назначения и активного отдыха"'' });
+    }
+
+    if (obj.classid == ''602010607'') {
+        if (!obj.tem_type) {
+          errors.push({attribute: ''tem_type'', error: ''Значение обязательно к заполнению''});
+        }
+      } else if (obj.tem_type) {
+          errors.push({attribute: ''tem_type'', error: ''Значение заполняется только для объекта "Места и объекты массового посещения, в том числе тематический туризм"''});
       }
 
-      if (obj.status == ''2'') {
-        if (!obj.function) {
-          errors.push({attribute: ''function'', error: ''Значение обязательно к заполнению''});
-        }
-      } else if (obj.function) {
-          errors.push({attribute: ''function'', error: ''Значение заполняется только для планируемых к размещению объектов''});
-      }
+      if (obj.status == ''2'' || obj.status == ''3'') {
 
-      if (obj.status == ''2'' || obj.status == ''3'' || obj.status == ''4'') {
+        if (!obj.namedocosn) {
+            errors.push({ attribute: ''namedocosn'', error: ''Значение обязательно к заполнению'' });
+        }
+
+        if (!obj.datedocosn) {
+            errors.push({ attribute: ''datedocosn'', error: ''Значение обязательно к заполнению'' });
+        }
+
+        if (!obj.numberdocosn) {
+            errors.push({ attribute: ''numberdocosn'', error: ''Значение обязательно к заполнению'' });
+        }
+
+        if (!obj.event_time) {
+            errors.push({ attribute: ''event_time'', error: ''Значение обязательно к заполнению'' });
+        }
+
+        if (!obj.number) {
+          errors.push({ attribute: ''number'', error: ''Значение обязательно к заполнению'' });
+      }
+      } else {
+        if (obj.namedocosn) {
+            errors.push({ attribute: ''namedocosn'', error: ''Значение заполняется только для планируемых к размещению или планируемых к реконструкции объектов'' });
+        }
+        if (obj.datedocosn) {
+            errors.push({ attribute: ''datedocosn'', error: ''Значение заполняется только для планируемых к размещению или планируемых к реконструкции объектов'' });
+        }
+        if (obj.numberdocosn) {
+            errors.push({ attribute: ''numberdocosn'', error: ''Значение заполняется только для планируемых к размещению или планируемых к реконструкции объектов'' });
+        }
+        if (obj.event_time) {
+            errors.push({ attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению или планируемых к реконструкции объектов'' });
+        }
+        if (obj.number) {
+          errors.push({ attribute: ''number'', error: ''Значение заполняется только для планируемых к размещению или планируемых к реконструкции объектов'' });
+      }
+    }
+
+       if (obj.reg_status == ''1'' || obj.reg_status == ''2'') {
         if (!obj.event_time) {
           errors.push({attribute: ''event_time'', error: ''Значение обязательно к заполнению''});
         }
       } else if (obj.event_time) {
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
+      }
+
+       if (!(obj.status == ''1'' || obj.status == ''3'' || obj.status == ''4'')) {
+        if (!obj.kadastrzu) {
+            errors.push({ attribute: ''kadastrzu'', error: ''Значение обязательно к заполнению'' });
+        }
+      } else {
+        if (obj.kadastrzu) {
+            errors.push({ attribute: ''kadastrzu'', error: ''Значение заполняется только для существующих и строящихся, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов'' });
+        } 
       }
 
       return errors;'
@@ -34438,7 +34981,6 @@ SET class_rule =
     {
       "name": "area",
       "title": "Площадь объекта, га",
-      "required": true,
       "valueType": "DOUBLE",
       "fractionDigits": 2
     },
@@ -34531,11 +35073,19 @@ SET class_rule =
 }',
 custom_rule = 'var errors = [];
 
-      if (!(obj.status == ''2'' || obj.status == ''3'' || obj.status == ''4'')) {
+      if (!(obj.status == ''2'' || obj.status == ''3'')) {
         if (obj.event_time) {
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
     }
+
+      if (obj.reg_status == ''1'' || obj.reg_status == ''2'') {
+        if (!obj.event_time) {
+          errors.push({attribute: ''event_time'', error: ''Значение обязательно к заполнению''});
+        }
+      } else if (obj.event_time) {
+          errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
+      }
 
       return errors;'
 WHERE name = 'traditionalarea';
@@ -35077,7 +35627,6 @@ SET class_rule =
             "hidden": true,
             "title": "геометрия",
             "valueType": "GEOMETRY",
-            "hidden": true,
             "allowedValues": [
               "Polygon"
             ]
@@ -35290,7 +35839,7 @@ SET class_rule =
           },
           {
             "name": "number",
-            "title": "Номер согласно Положению о территориальном планировании",
+            "title": "Номер согласно положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
@@ -35441,14 +35990,12 @@ SET class_rule =
           {
             "name": "power",
             "title": "Мощность трансформаторов, МВ · A",
-            "required": true,
             "valueType": "DOUBLE",
             "fractionDigits": 2
           },
           {
             "name": "amount",
             "title": "Количество трансформаторов",
-            "required": true,
             "valueType": "INT"
           },
           {
@@ -35544,6 +36091,34 @@ SET class_rule =
             ]
           },
           {
+            "name": "kadastroks",
+            "title": "Кадастровый номер ОКС",
+            "valueType": "STRING"
+          },
+          {
+            "name": "kadastrzu",
+            "title": "Кадастровый номер земельного участка, на котором расположен объект",
+            "valueType": "STRING"
+          },
+          {
+            "name": "namedocosn",
+            "title": "Наименование документа основания",
+            "required": true,
+            "valueType": "STRING"
+          },
+          {
+            "name": "datedocosn",
+            "title": "Дата документа основания",
+            "required": true,
+            "valueType": "DOUBLE"
+          },
+          {
+            "name": "numberdocosn",
+            "title": "Номер документа основания",
+            "required": true,
+            "valueType": "DOUBLE"
+          },
+          {
             "name": "shape",
             "title": "Геометрия",
             "hidden": true,
@@ -35555,7 +36130,133 @@ SET class_rule =
         ],
         "description": "Класс объектов Электрические подстанции",
         "geometryType": "MultiPolygon"
-      }'
+      }',
+custom_rule = 'var errors = [];
+
+if (!(obj.classid == ''602040201'' || obj.classid == ''602040202'' ||
+    obj.classid == ''602040203'' || obj.classid == ''602040204'' ||
+    obj.classid == ''602040205'' || obj.classid == ''602040206''
+    || obj.classid == ''602040207'')) {
+      if (obj.danger_obj) {
+        errors.push({attribute: ''danger_obj'', error: ''Значение заполняется только для объекта''});
+      }
+    }
+
+  if (obj.status == ''1'' || obj.status == ''3'' || obj.status == ''4'') {
+            if (!obj.wear_prcnt) {
+                errors.push({attribute: ''wear_prcnt'', error: ''Значение обязательно к заполнению''});
+            }
+            if (!obj.fact_use) {
+              errors.push({attribute: ''fact_use'', error: ''Значение обязательно к заполнению''});
+          }
+          if (!obj.kadastrzu) {
+            errors.push({attribute: ''kadastrzu'', error: ''Значение обязательно к заполнению''});
+        }
+          } else {
+          if (obj.wear_prcnt) {
+            errors.push({attribute: ''wear_prcnt'', error: ''Значение заполняется только для планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
+          }
+          if (obj.fact_use) {
+            errors.push({attribute: ''fact_use'', error: ''Значение заполняется только для сушествующих, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
+          }
+          if (obj.kadastrzu) {
+            errors.push({attribute: ''kadastrzu'', error: ''Значение заполняется только для сушествующих, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
+          }
+        }
+
+  if (!(obj.classid == ''602040201'' || obj.classid == ''602040202'' ||
+    obj.classid == ''602040203'' || obj.classid == ''602040204'' ||
+    obj.classid == ''602040205'' || obj.classid == ''602040206''
+    || obj.classid == ''602040207'' || obj.classid == ''602040208''
+    || obj.classid == ''602040209'' || obj.classid == ''602040210''
+    || obj.classid == ''602040211'' || obj.classid == ''602040212''
+    || obj.classid == ''602040213'' || obj.classid == ''602040214''
+    || obj.classid == ''602040215'' || obj.classid == ''602040216''
+    || obj.classid == ''602040217'' || obj.classid == ''602040221''
+    || obj.classid == ''602040222'' || obj.classid == ''602040224'')) {
+      if (obj.power) {
+        errors.push({attribute: ''power'', error: ''Значение заполняется только для объекта''});
+      }
+    }
+
+if (!(obj.classid == ''602040201'' || obj.classid == ''602040202'' ||
+    obj.classid == ''602040203'' || obj.classid == ''602040204'' ||
+    obj.classid == ''602040205'' || obj.classid == ''602040206''
+    || obj.classid == ''602040207'' || obj.classid == ''602040208''
+    || obj.classid == ''602040209'' || obj.classid == ''602040210''
+    || obj.classid == ''602040211'' || obj.classid == ''602040212''
+    || obj.classid == ''602040213'' || obj.classid == ''602040214''
+    || obj.classid == ''602040215'' || obj.classid == ''602040216''
+    || obj.classid == ''602040217'' || obj.classid == ''602040221''
+    || obj.classid == ''602040222'' || obj.classid == ''602040224'')) {
+      if (obj.amount) {
+        errors.push({attribute: ''amount'', error: ''Значение заполняется только для объекта''});
+      }
+    }
+
+if (obj.status == ''2'' || obj.status == ''3'') {
+
+        if (!obj.namedocosn) {
+            errors.push({ attribute: ''namedocosn'', error: ''Значение обязательно к заполнению'' });
+        }
+
+        if (!obj.datedocosn) {
+            errors.push({ attribute: ''datedocosn'', error: ''Значение обязательно к заполнению'' });
+        }
+
+        if (!obj.numberdocosn) {
+            errors.push({ attribute: ''numberdocosn'', error: ''Значение обязательно к заполнению'' });
+        }
+
+        if (!obj.event_time) {
+            errors.push({ attribute: ''event_time'', error: ''Значение обязательно к заполнению'' });
+        }
+
+        if (!obj.number) {
+          errors.push({ attribute: ''number'', error: ''Значение обязательно к заполнению'' });
+       }
+      } else {
+        if (obj.namedocosn) {
+            errors.push({ attribute: ''namedocosn'', error: ''Значение заполняется только для планируемых к размещению или планируемых к реконструкции объектов'' });
+        }
+        if (obj.datedocosn) {
+            errors.push({ attribute: ''datedocosn'', error: ''Значение заполняется только для планируемых к размещению или планируемых к реконструкции объектов'' });
+        }
+        if (obj.numberdocosn) {
+            errors.push({ attribute: ''numberdocosn'', error: ''Значение заполняется только для планируемых к размещению или планируемых к реконструкции объектов'' });
+        }
+        if (obj.event_time) {
+            errors.push({ attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению или планируемых к реконструкции объектов'' });
+        }
+        if (obj.number) {
+          errors.push({ attribute: ''number'', error: ''Значение заполняется только для планируемых к размещению или планируемых к реконструкции объектов'' });
+      }
+    }
+
+      if (obj.reg_status == ''1'' || obj.reg_status == ''2'') {
+        if (!obj.event_time) {
+          errors.push({attribute: ''event_time'', error: ''Значение обязательно к заполнению''});
+        }
+        if (!obj.fact_use) {
+          errors.push({attribute: ''fact_use'', error: ''Значение обязательно к заполнению''});
+        }
+        if (!obj.wear_prcnt) {
+          errors.push({attribute: ''wear_prcnt'', error: ''Значение обязательно к заполнению''});
+        }
+      } 
+      else {
+      if (obj.event_time) {
+          errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
+      }
+      if (obj.fact_use) {
+        errors.push({attribute: ''fact_use'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
+    }
+    if (obj.wear_prcnt) {
+      errors.push({attribute: ''wear_prcnt'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
+      }
+    }
+
+return errors;'
 WHERE name = 'electrictransformer';
 
 
@@ -36030,6 +36731,7 @@ custom_rule = 'var errors = [];
         if (obj.number) {
           errors.push({ attribute: ''number'', error: ''Значение заполняется только для планируемых к размещению или планируемых к реконструкции объектов'' });
       }
+    }
 
       if (!(obj.status == ''1'' || obj.status == ''3'' || obj.status == ''4'')) {
         if (!obj.kadastrzu) {
@@ -36049,6 +36751,7 @@ custom_rule = 'var errors = [];
         if (obj.event_time) {
             errors.push({ attribute: ''event_time'', error: ''Значение заполняется только для существующих и строящихся, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов'' });
         }
+      }
 
       return errors;'
 WHERE name = 'railwayfacility';
@@ -36174,7 +36877,6 @@ SET class_rule =
             "hidden": true,
             "title": "геометрия",
             "valueType": "GEOMETRY",
-            "hidden": true,
             "allowedValues": [
               "Polygon"
             ]
@@ -36190,7 +36892,7 @@ UPDATE data.schemas
 SET class_rule =
        '{
         "name": "oilfacility",
-        "title": "Объекты добычи и транспортировки жидких углеводородов",
+        "title": "Объекты добычи, перекачки, учета и хранения жидких углеводородов",
         "styleName": "oilfacility_point_123",
         "tableName": "oilfacility",
         "originName": "OilFacility",
@@ -36268,7 +36970,7 @@ SET class_rule =
           },
           {
             "name": "number",
-            "title": "Номер согласно Положению о территориальном планировании",
+            "title": "Номер согласно положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
@@ -36325,14 +37027,12 @@ SET class_rule =
           {
             "name": "output",
             "title": "Производительность, т/сут",
-            "required": true,
             "valueType": "DOUBLE",
             "fractionDigits": 2
           },
           {
             "name": "volume",
             "title": "Объем, куб. м",
-            "required": true,
             "valueType": "DOUBLE",
             "fractionDigits": 2
           },
@@ -36452,6 +37152,33 @@ SET class_rule =
             ]
           },
           {
+            "name": "kadastroks",
+            "title": "Кадастровый номер ОКС",
+            "valueType": "STRING"
+          },
+          {
+            "name": "kadastrzu",
+            "title": "Кадастровый номер земельного участка, на котором расположен объект",
+            "valueType": "STRING"
+          },
+          {
+            "name": "namedocosn",
+            "title": "Наименование документа основания",
+            "valueType": "STRING"
+          },
+          {
+            "name": "datedocosn",
+            "title": "Дата документа основания",
+            "valueType": "DOUBLE",
+            "fractionDigits": 2
+          },
+          {
+            "name": "numberdocosn",
+            "title": "Номер документа основания",
+            "valueType": "DOUBLE",
+            "fractionDigits": 2
+          },
+          {
             "name": "shape",
             "title": "Геометрия",
             "hidden": true,
@@ -36466,21 +37193,106 @@ SET class_rule =
 }',
 custom_rule = 'var errors = [];
 
-      if (obj.status == ''2'') {
-        if (!obj.function) {
-          errors.push({attribute: ''function'', error: ''Значение обязательно к заполнению''});
+      if (!(obj.classid == ''602040701'' || obj.classid == ''602040702'' ||
+            obj.classid == ''602040703'' || obj.classid == ''602040704'' ||
+            obj.classid == ''602040705'' || obj.classid == ''602040706''
+            || obj.classid == ''602040710'' || obj.classid == ''602040711''
+            || obj.classid == ''602040712'')) {
+        if (obj.output) {
+          errors.push({attribute: ''output'', error: ''Значение заполняется только для объекта''});
         }
-      } else if (obj.function) {
-          errors.push({attribute: ''function'', error: ''Значение заполняется только для планируемых к размещению объектов''});
       }
 
-      if (obj.status == ''2'' || obj.status == ''3'' || obj.status == ''4'') {
+        if (!(obj.classid == ''602040707'' || obj.classid == ''602040708'' ||
+            obj.classid == ''602040709'')) {
+        if (obj.volume) {
+          errors.push({attribute: ''volume'', error: ''Значение заполняется только для объекта''});
+        }
+      }
+
+        if (obj.status == ''2'' || obj.status == ''3'') {
+
+        if (!obj.namedocosn) {
+            errors.push({ attribute: ''namedocosn'', error: ''Значение обязательно к заполнению'' });
+        }
+
+        if (!obj.datedocosn) {
+            errors.push({ attribute: ''datedocosn'', error: ''Значение обязательно к заполнению'' });
+        }
+
+        if (!obj.numberdocosn) {
+            errors.push({ attribute: ''numberdocosn'', error: ''Значение обязательно к заполнению'' });
+        }
+
+        if (!obj.event_time) {
+            errors.push({ attribute: ''event_time'', error: ''Значение обязательно к заполнению'' });
+        }
+
+        if (!obj.number) {
+          errors.push({ attribute: ''number'', error: ''Значение обязательно к заполнению'' });
+      }
+      } else {
+        if (obj.namedocosn) {
+            errors.push({ attribute: ''namedocosn'', error: ''Значение заполняется только для планируемых к размещению или планируемых к реконструкции объектов'' });
+        }
+        if (obj.datedocosn) {
+            errors.push({ attribute: ''datedocosn'', error: ''Значение заполняется только для планируемых к размещению или планируемых к реконструкции объектов'' });
+        }
+        if (obj.numberdocosn) {
+            errors.push({ attribute: ''numberdocosn'', error: ''Значение заполняется только для планируемых к размещению или планируемых к реконструкции объектов'' });
+        }
+        if (obj.event_time) {
+            errors.push({ attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению или планируемых к реконструкции объектов'' });
+        }
+        if (obj.number) {
+          errors.push({ attribute: ''number'', error: ''Значение заполняется только для планируемых к размещению или планируемых к реконструкции объектов'' });
+      }
+    }
+
+      if (!(obj.status == ''1'' || obj.status == ''3'' || obj.status == ''4'')) {
+        if (!obj.wear_prcnt) {
+            errors.push({ attribute: ''wear_prcnt'', error: ''Значение обязательно к заполнению'' });
+        }
+        if (!obj.fact_use) {
+          errors.push({ attribute: ''fact_use'', error: ''Значение обязательно к заполнению'' });
+      }
+        if (!obj.kadastrzu) {
+            errors.push({ attribute: ''kadastrzu'', error: ''Значение обязательно к заполнению'' });
+        }
+      } else {
+        if (obj.wear_prcnt) {
+            errors.push({ attribute: ''wear_prcnt'', error: ''Значение заполняется только для существующих и строящихся, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов'' });
+        }
+        if (obj.fact_use) {
+          errors.push({ attribute: ''fact_use'', error: ''Значение заполняется только для существующих и строящихся, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов'' });
+      }
+        if (obj.kadastrzu) {
+            errors.push({ attribute: ''kadastrzu'', error: ''Значение заполняется только для существующих и строящихся, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов'' });
+        }
+      }
+
+        if (obj.reg_status == ''1'' || obj.reg_status == ''2'') {
         if (!obj.event_time) {
           errors.push({attribute: ''event_time'', error: ''Значение обязательно к заполнению''});
         }
-      } else if (obj.event_time) {
+        if (!obj.fact_use) {
+          errors.push({attribute: ''fact_use'', error: ''Значение обязательно к заполнению''});
+        }
+        if (!obj.wear_prcnt) {
+          errors.push({attribute: ''wear_prcnt'', error: ''Значение обязательно к заполнению''});
+        }
+      } 
+      else {
+      if (obj.event_time) {
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
+      if (obj.fact_use) {
+        errors.push({attribute: ''fact_use'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
+      }
+      if (obj.wear_prcnt) {
+      errors.push({attribute: ''wear_prcnt'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
+      }
+    }
 
       return errors;'
 WHERE name = 'oilfacility';
@@ -37351,6 +38163,7 @@ custom_rule = 'var errors = [];
         if (obj.kadastrzu) {
             errors.push({ attribute: ''kadastrzu'', error: ''Значение заполняется только для существующих и строящихся, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов'' });
         }
+      }
 
       if (!(obj.reg_status == ''1'' || obj.reg_status == ''2'')) {
         if (!obj.event_time) {
@@ -37360,6 +38173,7 @@ custom_rule = 'var errors = [];
         if (obj.event_time) {
             errors.push({ attribute: ''event_time'', error: ''Значение заполняется только для существующих и строящихся, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов'' });
         }
+      }
 
       if (obj.status == ''2'' || obj.status == ''3'') {
 
@@ -37377,6 +38191,7 @@ custom_rule = 'var errors = [];
         if (obj.number) {
           errors.push({ attribute: ''number'', error: ''Значение заполняется только для планируемых к размещению или планируемых к реконструкции объектов'' });
       }
+    }
 
       return errors;'
 WHERE name = 'manufacturing_point';
@@ -37731,7 +38546,6 @@ SET class_rule =
             "hidden": true,
             "title": "геометрия",
             "valueType": "GEOMETRY",
-            "hidden": true,
             "allowedValues": [
               "Point"
             ]
@@ -37815,6 +38629,7 @@ custom_rule = 'var errors = [];
         if (obj.number) {
           errors.push({attribute: ''number'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
+    }
 
       if (obj.status == ''2'' || obj.status == ''3'') {
         if (!obj.event_time) {
@@ -37832,16 +38647,18 @@ custom_rule = 'var errors = [];
         if (obj.kadastrzu) {
             errors.push({ attribute: ''kadastrzu'', error: ''Значение заполняется только для существующих и строящихся, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов'' });
         }
+      }
 
         if (obj.reg_status == ''1'' || obj.reg_status == ''2'') {
         if (!obj.event_time) {
           errors.push({attribute: ''event_time'', error: ''Значение обязательно к заполнению''});
         }
       } 
-      else 
+      else {
       if (obj.event_time) {
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
+    }
 
       return errors;'
 WHERE name = 'authorityservice_point';
@@ -38259,7 +39076,7 @@ SET class_rule =
        '{
   "name": "recreation_point",
   "title": "Объекты отдыха и туризма",
-  "styleName": "recreation_point_123",
+  "styleName": "recreation_point_698",
   "tableName": "recreation_point",
   "originName": "Recreation",
   "tags": ["system", "Приказ 10"],
@@ -38299,14 +39116,13 @@ SET class_rule =
         },
         {
           "title": "Места и объекты массового посещения, в том числе тематический туризм",
-          "value": "602010606"
+          "value": "602010607"
         }
       ]
     },
     {
       "name": "number",
-      "title": "Номер согласно Положению о территориальном планировании",
-      "required": true,
+      "title": "Номер согласно положению о территориальном планировании",
       "valueType": "STRING"
     },
     {
@@ -38319,7 +39135,6 @@ SET class_rule =
       "name": "oktmo",
       "title": "Код ОКТМО",
       "pattern": "[0-9]{8}|[0-9]{11}",
-      "required": true,
       "maxLength": 11,
       "minLength": 8,
       "valueType": "STRING"
@@ -38435,13 +39250,52 @@ SET class_rule =
         },
         {
           "title": "Иной объект",
-          "value": "7"
+          "value": "8"
         }
       ]
     },
     {
       "name": "al_stype",
       "title": "Подтип объекта физкультурно-досугового назначения и активного отдыха",
+      "valueType": "CHOICE",
+      "enumerations": [
+        {
+          "title": "Центр (комплекс) конного туризма",
+          "value": "1"
+        },
+        {
+          "title": "Лодочная станция",
+          "value": "2"
+        },
+        {
+          "title": "Аквапарк",
+          "value": "3"
+        },
+        {
+          "title": "Дом рыбака и охотника (база, комплекс и другое)",
+          "value": "4"
+        },
+        {
+          "title": "Визит-центр особо охраняемой природной территории",
+          "value": "5"
+        },
+        {
+          "title": "Танцевальные залы",
+          "value": "6"
+        },
+        {
+          "title": "Аттракционы и иные подобные объекты",
+          "value": "7"
+        },
+        {
+          "title": "Иной объект",
+          "value": "8"
+        }
+      ]
+    },
+    {
+      "name": "tem_type",
+      "title": "Подтип места или объекта массового посещения, в том числе тематического туризма",
       "valueType": "CHOICE",
       "enumerations": [
         {
@@ -38561,13 +39415,11 @@ SET class_rule =
     {
       "name": "wrk_count",
       "title": "Количество рабочих мест, единиц",
-      "required": true,
       "valueType": "INT"
     },
     {
       "name": "function",
       "title": "Назначение объекта",
-      "required": true,
       "valueType": "STRING"
     },
     {
@@ -38612,7 +39464,6 @@ SET class_rule =
     {
       "name": "reg_status",
       "title": "Справочник: Значение объекта",
-      "required": true,
       "valueType": "CHOICE",
       "enumerations": [
         {
@@ -38654,6 +39505,23 @@ SET class_rule =
       "name": "kadastrzu",
       "title": "Кадастровый номер земельного участка, на котором расположен объект",
       "valueType": "STRING"
+    },
+    {
+      "name": "namedocosn",
+      "title": "Наименование документа основания",
+      "valueType": "STRING"
+    },
+    {
+      "name": "datedocosn",
+      "title": "Дата документа основания",
+      "valueType": "DOUBLE",
+      "fractionDigits": 2
+    },
+    {
+      "name": "numberdocosn",
+      "title": "Номер документа основания",
+      "valueType": "DOUBLE",
+      "fractionDigits": 2
     },
     {
       "name": "shape",
@@ -38745,32 +39613,70 @@ custom_rule = 'var errors = [];
         errors.push({ attribute: ''capacity'', error: ''Значение заполняется только для объектов "Гостиницы и аналогичные коллективные средства размещения", "Специализированные коллективные средства размещения", "Детский оздоровительный лагерь", "Оздоровительно-спортивный лагерь", "Объекты физкультурно-досугового назначения и активного отдыха"'' });
     }
 
-    if (!(obj.status == ''2'')) {
-      if (!obj.kadastroks) {
-          errors.push({ attribute: ''kadastroks'', error: ''Значение обязательно к заполнению'' });
+    if (obj.classid == ''602010607'') {
+        if (!obj.tem_type) {
+          errors.push({attribute: ''tem_type'', error: ''Значение обязательно к заполнению''});
+        }
+      } else if (obj.tem_type) {
+          errors.push({attribute: ''tem_type'', error: ''Значение заполняется только для объекта "Места и объекты массового посещения, в том числе тематический туризм"''});
       }
-      if (!obj.kadastrzu) {
-          errors.push({ attribute: ''kadastrzu'', error: ''Значение обязательно к заполнению'' });
+
+      if (obj.status == ''2'' || obj.status == ''3'') {
+
+        if (!obj.namedocosn) {
+            errors.push({ attribute: ''namedocosn'', error: ''Значение обязательно к заполнению'' });
+        }
+
+        if (!obj.datedocosn) {
+            errors.push({ attribute: ''datedocosn'', error: ''Значение обязательно к заполнению'' });
+        }
+
+        if (!obj.numberdocosn) {
+            errors.push({ attribute: ''numberdocosn'', error: ''Значение обязательно к заполнению'' });
+        }
+
+        if (!obj.event_time) {
+            errors.push({ attribute: ''event_time'', error: ''Значение обязательно к заполнению'' });
+        }
+
+        if (!obj.number) {
+          errors.push({ attribute: ''number'', error: ''Значение обязательно к заполнению'' });
       }
-  } else {
-      if (obj.kadastroks) {
-          errors.push({ attribute: ''kadastroks'', error: ''Значение заполняется только для существующих и строящихся, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов'' });
+      } else {
+        if (obj.namedocosn) {
+            errors.push({ attribute: ''namedocosn'', error: ''Значение заполняется только для планируемых к размещению или планируемых к реконструкции объектов'' });
+        }
+        if (obj.datedocosn) {
+            errors.push({ attribute: ''datedocosn'', error: ''Значение заполняется только для планируемых к размещению или планируемых к реконструкции объектов'' });
+        }
+        if (obj.numberdocosn) {
+            errors.push({ attribute: ''numberdocosn'', error: ''Значение заполняется только для планируемых к размещению или планируемых к реконструкции объектов'' });
+        }
+        if (obj.event_time) {
+            errors.push({ attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению или планируемых к реконструкции объектов'' });
+        }
+        if (obj.number) {
+          errors.push({ attribute: ''number'', error: ''Значение заполняется только для планируемых к размещению или планируемых к реконструкции объектов'' });
       }
-      if (obj.kadastrzu) {
-          errors.push({ attribute: ''kadastrzu'', error: ''Значение заполняется только для существующих и строящихся, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов'' });
+    }
+
+       if (obj.reg_status == ''1'' || obj.reg_status == ''2'') {
+        if (!obj.event_time) {
+          errors.push({attribute: ''event_time'', error: ''Значение обязательно к заполнению''});
+        }
+      } else if (obj.event_time) {
+          errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
-  }
-  
-  if (obj.status == ''2'' || obj.status == ''3'') {
-      if (!obj.event_time) {
-          errors.push({ attribute: ''event_time'', error: ''Значение обязательно к заполнению'' });
+
+       if (!(obj.status == ''1'' || obj.status == ''3'' || obj.status == ''4'')) {
+        if (!obj.kadastrzu) {
+            errors.push({ attribute: ''kadastrzu'', error: ''Значение обязательно к заполнению'' });
+        }
+      } else {
+        if (obj.kadastrzu) {
+            errors.push({ attribute: ''kadastrzu'', error: ''Значение заполняется только для существующих и строящихся, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов'' });
+        } 
       }
-  } else {
-      if (obj.event_time) {
-          errors.push({ attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению или планируемых к реконструкции объектов'' });
-      }
-  }
-    
 
       return errors;'
 WHERE name = 'recreation_point';
@@ -38780,7 +39686,7 @@ UPDATE data.schemas
 SET class_rule =
        '{
   "name": "public_point",
-  "title": "Общественные пространства",
+  "title": "Общественные пространства, объекты благоустройства и озеленения",
   "styleName": "public_point_123",
   "tableName": "public_point",
   "originName": "Public",
@@ -38795,7 +39701,7 @@ SET class_rule =
     },
     {
       "name": "classid",
-      "title": "Общественные пространства",
+      "title": "Общественные пространства, объекты благоустройства и озеленения",
       "required": true,
       "valueType": "CHOICE",
       "enumerations": [
@@ -38819,7 +39725,7 @@ SET class_rule =
     },
     {
       "name": "number",
-      "title": "Номер согласно Положению о территориальном планировании",
+      "title": "Номер согласно положению о территориальном планировании",
       "valueType": "STRING"
     },
     {
@@ -38840,12 +39746,12 @@ SET class_rule =
     {
       "name": "address",
       "title": "Местоположение, адресное описание",
-      "required": true,
       "valueType": "STRING"
     },
     {
       "name": "tpark_type",
       "title": "Подтип тематического парка",
+      "required": true,
       "valueType": "CHOICE",
       "enumerations": [
         {
@@ -38921,6 +39827,7 @@ SET class_rule =
     {
       "name": "pkio_type",
       "title": "Подтип парка культуры и отдыха",
+      "required": true,
       "valueType": "CHOICE",
       "enumerations": [
         {
@@ -38933,13 +39840,14 @@ SET class_rule =
         },
         {
           "title": "Загородные",
-          "value": "3"
+          "value": "4"
         }
       ]
     },
     {
       "name": "ped_type",
       "title": "Подтип пешеходной зоны",
+      "required": true,
       "valueType": "CHOICE",
       "enumerations": [
         {
@@ -38964,7 +39872,7 @@ SET class_rule =
         },
         {
           "title": "Сквер",
-          "value": "6"
+          "value": "7"
         }
       ]
     },
@@ -38994,7 +39902,6 @@ SET class_rule =
     {
       "name": "sp_area",
       "title": "Площадь территории, кв. м ",
-      "required": true,
       "valueType": "DOUBLE",
       "fractionDigits": 2
     },
@@ -39030,13 +39937,11 @@ SET class_rule =
     {
       "name": "wrk_count",
       "title": "Количество рабочих мест, единиц",
-      "required": true,
       "valueType": "INT"
     },
     {
       "name": "function",
       "title": "Назначение объекта",
-      "required": true,
       "valueType": "STRING"
     },
     {
@@ -39163,21 +40068,29 @@ custom_rule = 'var errors = [];
           errors.push({attribute: ''aq_stype'', error: ''Значение заполняется только для объекта "Благоустроенный пляж, место массовой околоводной рекреации"''});
       }
 
-      if (obj.status == ''2'') {
-        if (!obj.function) {
-          errors.push({attribute: ''function'', error: ''Значение обязательно к заполнению''});
-        }
-      } else if (obj.function) {
-          errors.push({attribute: ''function'', error: ''Значение заполняется только для планируемых к размещению объектов''});
-      }
-
-      if (obj.status == ''2'' || obj.status == ''3'' || obj.status == ''4'') {
+      if (obj.reg_status == ''1'' || obj.reg_status == ''2'') {
         if (!obj.event_time) {
           errors.push({attribute: ''event_time'', error: ''Значение обязательно к заполнению''});
         }
       } else if (obj.event_time) {
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
+
+      if (obj.status == ''2'' || obj.status == ''3'') {
+        if (!obj.event_time) {
+          errors.push({attribute: ''event_time'', error: ''Значение обязательно к заполнению''});
+        }
+        if (!obj.number) {
+          errors.push({attribute: ''number'', error: ''Значение обязательно к заполнению''});
+        }
+      } else {
+        if (obj.event_time) {
+          errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
+      }
+      if (obj.number) {
+        errors.push({attribute: ''number'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
+      }
+    }
 
       return errors;'
 WHERE name = 'public_point';
@@ -39343,8 +40256,7 @@ SET class_rule =
     },
     {
       "name": "number",
-      "title": "Номер согласно Положению о территориальном планировании",
-      "required": true,
+      "title": "Номер согласно положению о территориальном планировании",
       "valueType": "STRING"
     },
     {
@@ -39365,19 +40277,16 @@ SET class_rule =
     {
       "name": "address",
       "title": "Местоположение, адресное описание",
-      "required": true,
       "valueType": "STRING"
     },
     {
       "name": "obj_desc",
       "title": "Описание объекта",
-      "required": true,
       "valueType": "STRING"
     },
     {
       "name": "area",
       "title": "Площадь, га",
-      "required": true,
       "valueType": "DOUBLE",
       "fractionDigits": 2
     },
@@ -39410,7 +40319,21 @@ SET class_rule =
   ],
   "description": "Класс объектов Объекты накопленного вреда окружающей среде, водные объекты, подлежащие реабилитации",
   "geometryType": "Point"
-}'
+}',
+custom_rule = 'var errors = [];
+
+      if (obj.status == ''2'' || obj.status == ''3'') {
+
+        if (!obj.number) {
+          errors.push({ attribute: ''number'', error: ''Значение обязательно к заполнению'' });
+      }
+      } else {
+        }
+        if (obj.number) {
+          errors.push({ attribute: ''number'', error: ''Значение заполняется только для планируемых к размещению или планируемых к реконструкции объектов'' });
+      }
+
+      return errors;'
 WHERE name = 'envdanger_point';
 
 
@@ -39649,6 +40572,7 @@ custom_rule = 'var errors = [];
       if (obj.number) {
         errors.push({attribute: ''number'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
+    }
       
       if (obj.status == ''1'' || obj.status == ''3'' || obj.status == ''4'') {
         if (!obj.kadastrzu) {
@@ -39725,8 +40649,7 @@ SET class_rule =
     },
     {
       "name": "number",
-      "title": "Номер согласно Положению о территориальном планировании",
-      "required": true,
+      "title": "Номер согласно положению о территориальном планировании",
       "valueType": "STRING"
     },
     {
@@ -39738,7 +40661,6 @@ SET class_rule =
     {
       "name": "address",
       "title": "Местоположение, адресное описание",
-      "required": true,
       "valueType": "STRING"
     },
     {
@@ -39772,7 +40694,6 @@ SET class_rule =
     {
       "name": "area",
       "title": "Площадь, га",
-      "required": true,
       "valueType": "DOUBLE",
       "fractionDigits": 2
     },
@@ -39793,13 +40714,21 @@ SET class_rule =
       "valueType": "CHOICE",
       "enumerations": [
         {
-          "title": "Существующий",
-          "value": "1"
-        },
-        {
-          "title": "Планируемый",
-          "value": "2"
-        }
+                "title": "Существующий, реконструируемый, строящийся",
+                "value": "1"
+              },
+              {
+                "title": "Планируемый к размещению",
+                "value": "2"
+              },
+              {
+                "title": "Планируемый к реконструкции",
+                "value": "3"
+              },
+              {
+                "title": "Планируемый к ликвидации",
+                "value": "4"
+              }
       ]
     },
     {
@@ -39949,7 +40878,7 @@ UPDATE data.schemas
 SET class_rule =
        '{
   "name": "oilfacility_point",
-  "title": "Объекты добычи и транспортировки жидких углеводородов",
+  "title": "Объекты добычи, перекачки, учета и хранения жидких углеводородов",
   "styleName": "oilfacility_point_123",
   "tableName": "oilfacility_point",
   "originName": "OilFacility",
@@ -40020,8 +40949,7 @@ SET class_rule =
     },
     {
       "name": "number",
-      "title": "Номер согласно Положению о территориальном планировании",
-      "required": true,
+      "title": "Номер согласно положению о территориальном планировании",
       "valueType": "STRING"
     },
     {
@@ -40042,7 +40970,6 @@ SET class_rule =
     {
       "name": "address",
       "title": "Местоположение, адресное описание",
-      "required": true,
       "valueType": "STRING"
     },
     {
@@ -40079,14 +41006,12 @@ SET class_rule =
     {
       "name": "output",
       "title": "Производительность, т/сут",
-      "required": true,
       "valueType": "DOUBLE",
       "fractionDigits": 2
     },
     {
       "name": "volume",
       "title": "Объем, куб. м",
-      "required": true,
       "valueType": "DOUBLE",
       "fractionDigits": 2
     },
@@ -40128,7 +41053,6 @@ SET class_rule =
     {
       "name": "function",
       "title": "Назначение объекта",
-      "required": true,
       "valueType": "STRING"
     },
     {
@@ -40217,6 +41141,23 @@ SET class_rule =
       "valueType": "STRING"
     },
     {
+      "name": "namedocosn",
+      "title": "Наименование документа основания",
+      "valueType": "STRING"
+    },
+    {
+      "name": "datedocosn",
+      "title": "Дата документа основания",
+      "valueType": "DOUBLE",
+      "fractionDigits": 2
+    },
+    {
+      "name": "numberdocosn",
+      "title": "Номер документа основания",
+      "valueType": "DOUBLE",
+      "fractionDigits": 2
+    },
+    {
       "name": "shape",
       "title": "Геометрия",
       "hidden": true,
@@ -40238,44 +41179,104 @@ SET class_rule =
 }',
 custom_rule = 'var errors = [];
 
-       if (obj.status == ''2'' || obj.status == ''3'') {
+       if (!(obj.classid == ''602040701'' || obj.classid == ''602040702'' ||
+            obj.classid == ''602040703'' || obj.classid == ''602040704'' ||
+            obj.classid == ''602040705'' || obj.classid == ''602040706''
+            || obj.classid == ''602040710'' || obj.classid == ''602040711''
+            || obj.classid == ''602040712'')) {
+        if (obj.output) {
+          errors.push({attribute: ''output'', error: ''Значение заполняется только для объекта''});
+        }
+      }
+
+        if (!(obj.classid == ''602040707'' || obj.classid == ''602040708'' ||
+            obj.classid == ''602040709'')) {
+        if (obj.volume) {
+          errors.push({attribute: ''volume'', error: ''Значение заполняется только для объекта''});
+        }
+      }
+        if (obj.status == ''2'' || obj.status == ''3'') {
+
+        if (!obj.namedocosn) {
+            errors.push({ attribute: ''namedocosn'', error: ''Значение обязательно к заполнению'' });
+        }
+
+        if (!obj.datedocosn) {
+            errors.push({ attribute: ''datedocosn'', error: ''Значение обязательно к заполнению'' });
+        }
+
+        if (!obj.numberdocosn) {
+            errors.push({ attribute: ''numberdocosn'', error: ''Значение обязательно к заполнению'' });
+        }
+
         if (!obj.event_time) {
-          errors.push({attribute: ''event_time'', error: ''Значение обязательно к заполнению''});
+            errors.push({ attribute: ''event_time'', error: ''Значение обязательно к заполнению'' });
         }
-      } else if (obj.event_time) {
-          errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции''});
+
+        if (!obj.number) {
+          errors.push({ attribute: ''number'', error: ''Значение обязательно к заполнению'' });
       }
-    
-      if (obj.status == ''3'' || obj.status == ''4'') {
-        if (!obj.wear_prcnt) {
-            errors.push({attribute: ''wear_prcnt'', error: ''Значение обязательно к заполнению''});
+      } else {
+        if (obj.namedocosn) {
+            errors.push({ attribute: ''namedocosn'', error: ''Значение заполняется только для планируемых к размещению или планируемых к реконструкции объектов'' });
         }
-      } else if (obj.wear_prcnt) {
-        errors.push({attribute: ''wear_prcnt'', error: ''Значение заполняется только для планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
-      }
-    
-      if (obj.status == ''1'' || obj.status == ''3'' || obj.status == ''4'') {
-        if (!obj.fact_use) {
-            errors.push({attribute: ''fact_use'', error: ''Значение обязательно к заполнению''});
+        if (obj.datedocosn) {
+            errors.push({ attribute: ''datedocosn'', error: ''Значение заполняется только для планируемых к размещению или планируемых к реконструкции объектов'' });
         }
-      } else if (obj.fact_use) {
-        errors.push({attribute: ''fact_use'', error: ''Значение заполняется только для сушествующих, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
+        if (obj.numberdocosn) {
+            errors.push({ attribute: ''numberdocosn'', error: ''Значение заполняется только для планируемых к размещению или планируемых к реконструкции объектов'' });
+        }
+        if (obj.event_time) {
+            errors.push({ attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению или планируемых к реконструкции объектов'' });
+        }
+        if (obj.number) {
+          errors.push({ attribute: ''number'', error: ''Значение заполняется только для планируемых к размещению или планируемых к реконструкции объектов'' });
       }
-    
+    }
+
       if (!(obj.status == ''1'' || obj.status == ''3'' || obj.status == ''4'')) {
-        if (!obj.kadastroks) {
-            errors.push({ attribute: ''kadastroks'', error: ''Значение обязательно к заполнению'' });
+        if (!obj.wear_prcnt) {
+            errors.push({ attribute: ''wear_prcnt'', error: ''Значение обязательно к заполнению'' });
         }
+        if (!obj.fact_use) {
+          errors.push({ attribute: ''fact_use'', error: ''Значение обязательно к заполнению'' });
+      }
         if (!obj.kadastrzu) {
             errors.push({ attribute: ''kadastrzu'', error: ''Значение обязательно к заполнению'' });
         }
-    } else {
-        if (obj.kadastroks) {
-            errors.push({ attribute: ''kadastroks'', error: ''Значение заполняется только для существующих и строящихся, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов'' });
+      } else {
+        if (obj.wear_prcnt) {
+            errors.push({ attribute: ''wear_prcnt'', error: ''Значение заполняется только для существующих и строящихся, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов'' });
         }
+        if (obj.fact_use) {
+          errors.push({ attribute: ''fact_use'', error: ''Значение заполняется только для существующих и строящихся, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов'' });
+      }
         if (obj.kadastrzu) {
             errors.push({ attribute: ''kadastrzu'', error: ''Значение заполняется только для существующих и строящихся, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов'' });
         }
+      }
+
+        if (obj.reg_status == ''1'' || obj.reg_status == ''2'') {
+        if (!obj.event_time) {
+          errors.push({attribute: ''event_time'', error: ''Значение обязательно к заполнению''});
+        }
+        if (!obj.fact_use) {
+          errors.push({attribute: ''fact_use'', error: ''Значение обязательно к заполнению''});
+        }
+        if (!obj.wear_prcnt) {
+          errors.push({attribute: ''wear_prcnt'', error: ''Значение обязательно к заполнению''});
+        }
+      } 
+      else {
+      if (obj.event_time) {
+          errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
+      }
+      if (obj.fact_use) {
+        errors.push({attribute: ''fact_use'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
+      }
+      if (obj.wear_prcnt) {
+      errors.push({attribute: ''wear_prcnt'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
+      }
     }
 
       return errors;'
@@ -40400,34 +41401,7 @@ SET class_rule =
   ],
   "description": "Класс объектов Санитарный разрыв (санитарная полоса отчуждения) транспортных коммуникаций",
   "geometryType": "MultiPolygon"
-}',
-custom_rule = 'var errors = [];
-
-      if (obj.status == ''1'' || obj.status == ''3'' || obj.status == ''4'') {
-        if (!obj.numberzoit) {
-          errors.push({attribute: ''numberzoit'', error: ''Значение обязательно к заполнению''});
-        }
-      } else if (obj.numberzoit) {
-          errors.push({attribute: ''numberzoit'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
-      }
-
-      if (obj.status == ''1'' || obj.status == ''3'' || obj.status == ''4'') {
-        if (!obj.reestrzoit) {
-          errors.push({attribute: ''reestrzoit'', error: ''Значение обязательно к заполнению''});
-        }
-      } else if (obj.reestrzoit) {
-          errors.push({attribute: ''reestrzoit'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
-      }
-
-      if (obj.status == ''1'' || obj.status == ''3'' || obj.status == ''4'') {
-        if (!obj.dateegrn) {
-          errors.push({attribute: ''dateegrn'', error: ''Значение обязательно к заполнению''});
-        }
-      } else if (obj.dateegrn) {
-          errors.push({attribute: ''dateegrn'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
-      }
-
-      return errors;'
+}'
 WHERE name = 'transpsanitarygapzone';
 
 
@@ -40611,34 +41585,7 @@ SET class_rule =
   ],
   "description": "Класс объектов Санитарно-защитная зона",
   "geometryType": "MultiPolygon"
-}',
-custom_rule = 'var errors = [];
-
-      if (obj.status == ''1'' || obj.status == ''3'' || obj.status == ''4'') {
-        if (!obj.numberzoit) {
-          errors.push({attribute: ''numberzoit'', error: ''Значение обязательно к заполнению''});
-        }
-      } else if (obj.numberzoit) {
-          errors.push({attribute: ''numberzoit'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
-      }
-
-      if (obj.status == ''1'' || obj.status == ''3'' || obj.status == ''4'') {
-        if (!obj.reestrzoit) {
-          errors.push({attribute: ''reestrzoit'', error: ''Значение обязательно к заполнению''});
-        }
-      } else if (obj.reestrzoit) {
-          errors.push({attribute: ''reestrzoit'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
-      }
-
-      if (obj.status == ''1'' || obj.status == ''3'' || obj.status == ''4'') {
-        if (!obj.dateegrn) {
-          errors.push({attribute: ''dateegrn'', error: ''Значение обязательно к заполнению''});
-        }
-      } else if (obj.dateegrn) {
-          errors.push({attribute: ''dateegrn'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
-      }
-
-      return errors;'
+}'
 WHERE name = 'sanitaryprotectionzone';
 
 
@@ -40756,34 +41703,7 @@ SET class_rule =
   ],
   "description": "Класс объектов Зоны санитарной охраны источников водоснабжения и водопроводов питьевого назначения",
   "geometryType": "MultiPolygon"
-}',
-custom_rule = 'var errors = [];
-
-      if (obj.status == ''1'' || obj.status == ''3'' || obj.status == ''4'') {
-        if (!obj.numberzoit) {
-          errors.push({attribute: ''numberzoit'', error: ''Значение обязательно к заполнению''});
-        }
-      } else if (obj.numberzoit) {
-          errors.push({attribute: ''numberzoit'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
-      }
-
-      if (obj.status == ''1'' || obj.status == ''3'' || obj.status == ''4'') {
-        if (!obj.reestrzoit) {
-          errors.push({attribute: ''reestrzoit'', error: ''Значение обязательно к заполнению''});
-        }
-      } else if (obj.reestrzoit) {
-          errors.push({attribute: ''reestrzoit'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
-      }
-
-      if (obj.status == ''1'' || obj.status == ''3'' || obj.status == ''4'') {
-        if (!obj.dateegrn) {
-          errors.push({attribute: ''dateegrn'', error: ''Значение обязательно к заполнению''});
-        }
-      } else if (obj.dateegrn) {
-          errors.push({attribute: ''dateegrn'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
-      }
-
-      return errors;'
+}'
 WHERE name = 'drinkwaterprotectionzone';
 
 
@@ -41566,7 +42486,7 @@ SET class_rule =
           },
           {
             "name": "number",
-            "title": "Номер согласно Положению о территориальном планировании",
+            "title": "Номер согласно положению о территориальном планировании",
             "valueType": "STRING"
           },
           {
@@ -41622,7 +42542,21 @@ SET class_rule =
         ],
         "description": "Класс объектов Объекты накопленного вреда окружающей среде, водные объекты, подлежащие реабилитации",
         "geometryType": "MultiPolygon"
-      }'
+      }',
+custom_rule = 'var errors = [];
+
+      if (obj.status == ''2'' || obj.status == ''3'') {
+
+        if (!obj.number) {
+          errors.push({ attribute: ''number'', error: ''Значение обязательно к заполнению'' });
+      }
+      } else {
+        }
+        if (obj.number) {
+          errors.push({ attribute: ''number'', error: ''Значение заполняется только для планируемых к размещению или планируемых к реконструкции объектов'' });
+      }
+
+      return errors;'
 WHERE name = 'envdanger';
 
 
@@ -42001,34 +42935,7 @@ SET class_rule =
   ],
   "description": "Приказ 10, версия 5 изм. от 6 октября 2023 № 698",
   "geometryType": "MultiPolygon"
-}',
-custom_rule = 'var errors = [];
-
-      if (obj.status == ''1'' || obj.status == ''3'' || obj.status == ''4'') {
-        if (!obj.numberzoit) {
-          errors.push({attribute: ''numberzoit'', error: ''Значение обязательно к заполнению''});
-        }
-      } else if (obj.numberzoit) {
-          errors.push({attribute: ''numberzoit'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
-      }
-
-      if (obj.status == ''1'' || obj.status == ''3'' || obj.status == ''4'') {
-        if (!obj.reestrzoit) {
-          errors.push({attribute: ''reestrzoit'', error: ''Значение обязательно к заполнению''});
-        }
-      } else if (obj.reestrzoit) {
-          errors.push({attribute: ''reestrzoit'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
-      }
-
-      if (obj.status == ''1'' || obj.status == ''3'' || obj.status == ''4'') {
-        if (!obj.dateegrn) {
-          errors.push({attribute: ''dateegrn'', error: ''Значение обязательно к заполнению''});
-        }
-      } else if (obj.dateegrn) {
-          errors.push({attribute: ''dateegrn'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
-      }
-
-      return errors;'
+}'
 WHERE name = 'otherprotectionzone';
 
 
@@ -42143,34 +43050,7 @@ SET class_rule =
   ],
   "description": "Класс объектов Зоны охраняемых объектов",
   "geometryType": "MultiPolygon"
-}',
-custom_rule = 'var errors = [];
-
-      if (obj.status == ''1'' || obj.status == ''3'' || obj.status == ''4'') {
-        if (!obj.numberzoit) {
-          errors.push({attribute: ''numberzoit'', error: ''Значение обязательно к заполнению''});
-        }
-      } else if (obj.numberzoit) {
-          errors.push({attribute: ''numberzoit'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
-      }
-
-      if (obj.status == ''1'' || obj.status == ''3'' || obj.status == ''4'') {
-        if (!obj.reestrzoit) {
-          errors.push({attribute: ''reestrzoit'', error: ''Значение обязательно к заполнению''});
-        }
-      } else if (obj.reestrzoit) {
-          errors.push({attribute: ''reestrzoit'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
-      }
-
-      if (obj.status == ''1'' || obj.status == ''3'' || obj.status == ''4'') {
-        if (!obj.dateegrn) {
-          errors.push({attribute: ''dateegrn'', error: ''Значение обязательно к заполнению''});
-        }
-      } else if (obj.dateegrn) {
-          errors.push({attribute: ''dateegrn'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
-      }
-
-      return errors;'
+}'
 WHERE name = 'protectionzone';
 
 
@@ -42324,6 +43204,7 @@ custom_rule = 'var errors = [];
       if (obj.number) {
         errors.push({attribute: ''number'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
+    }
       
 
       if (obj.reg_status == ''1'' || obj.reg_status == ''2'') {
@@ -42500,30 +43381,6 @@ custom_rule = 'var errors = [];
           errors.push({attribute: ''uderfl_t'', error: ''Значение заполняется только для объекта "Зона подтопления"''});
       }
 
-      if (obj.status == ''1'' || obj.status == ''3'' || obj.status == ''4'') {
-        if (!obj.numberzoit) {
-          errors.push({attribute: ''numberzoit'', error: ''Значение обязательно к заполнению''});
-        }
-      } else if (obj.numberzoit) {
-          errors.push({attribute: ''numberzoit'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
-      }
-
-      if (obj.status == ''1'' || obj.status == ''3'' || obj.status == ''4'') {
-        if (!obj.reestrzoit) {
-          errors.push({attribute: ''reestrzoit'', error: ''Значение обязательно к заполнению''});
-        }
-      } else if (obj.reestrzoit) {
-          errors.push({attribute: ''reestrzoit'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
-      }
-
-      if (obj.status == ''1'' || obj.status == ''3'' || obj.status == ''4'') {
-        if (!obj.dateegrn) {
-          errors.push({attribute: ''dateegrn'', error: ''Значение обязательно к заполнению''});
-        }
-      } else if (obj.dateegrn) {
-          errors.push({attribute: ''dateegrn'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
-      }
-
       return errors;'
 WHERE name = 'floodarea';
 
@@ -42552,7 +43409,7 @@ SET class_rule =
       "valueType": "CHOICE",
       "enumerations": [
         {
-          "title": "Территория комплексного развития, включая территории, подлежащие комплексному освоению, в том числе в целях строительства жилья экономического класса, территории размещения земельных участков, подлежащих предоставлению многодетным семьям",
+          "title": "Территория комплексного развития, включая территории, подлежащие комплексному освоению, в том числе в целях строительства стандартного жилья, территории размещения земельных участков, подлежащих предоставлению многодетным семьям",
           "value": "704020100"
         },
         {
@@ -42571,8 +43428,7 @@ SET class_rule =
     },
     {
       "name": "number",
-      "title": "Номер согласно Положению о территориальном планировании",
-      "required": true,
+      "title": "Номер согласно положению о территориальном планировании",
       "valueType": "STRING"
     },
     {
@@ -42584,20 +43440,17 @@ SET class_rule =
     {
       "name": "address",
       "title": "Местоположение, адресное описание",
-      "required": true,
       "valueType": "STRING"
     },
     {
       "name": "area",
       "title": "Общая площадь территории, га",
-      "required": true,
       "valueType": "DOUBLE",
       "fractionDigits": 2
     },
     {
       "name": "event_time",
       "title": "Срок реализации",
-      "required": true,
       "valueType": "INT"
     },
     {
@@ -42692,11 +43545,32 @@ SET class_rule =
 }',
 custom_rule = 'var errors = [];
 
-      if (!(obj.status == ''2'' || obj.status == ''3'' || obj.status == ''4'')) {
+      if (obj.status == ''2'' || obj.status == ''3'') {
+        if (!obj.event_time) {
+          errors.push({attribute: ''event_time'', error: ''Значение обязательно к заполнению''});
+        }
+      } else {
         if (obj.event_time) {
           errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
+    }
+
+      if (obj.reg_status == ''1'' || obj.reg_status == ''2'') {
+        if (!obj.event_time) {
+          errors.push({attribute: ''event_time'', error: ''Значение обязательно к заполнению''});
+        }
+      } else if (obj.event_time) {
+          errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
+
+      if (obj.status == ''2'' || obj.status == ''3'') {
+        if (!obj.number) {
+          errors.push({attribute: ''number'', error: ''Значение обязательно к заполнению''});
+        }
+      } else if (obj.number) {
+          errors.push({attribute: ''number'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
+      }
+
       return errors;'
 WHERE name = 'areabasedevelopment';
 
@@ -42807,34 +43681,7 @@ SET class_rule =
   ],
   "description": "Класс объектов Рыбоохранная и рыбохозяйственная заповедная зоны",
   "geometryType": "MultiPolygon"
-}',
-custom_rule = 'var errors = [];
-
-      if (obj.status == ''1'' || obj.status == ''3'' || obj.status == ''4'') {
-        if (!obj.numberzoit) {
-          errors.push({attribute: ''numberzoit'', error: ''Значение обязательно к заполнению''});
-        }
-      } else if (obj.numberzoit) {
-          errors.push({attribute: ''numberzoit'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
-      }
-
-      if (obj.status == ''1'' || obj.status == ''3'' || obj.status == ''4'') {
-        if (!obj.reestrzoit) {
-          errors.push({attribute: ''reestrzoit'', error: ''Значение обязательно к заполнению''});
-        }
-      } else if (obj.reestrzoit) {
-          errors.push({attribute: ''reestrzoit'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
-      }
-
-      if (obj.status == ''1'' || obj.status == ''3'' || obj.status == ''4'') {
-        if (!obj.dateegrn) {
-          errors.push({attribute: ''dateegrn'', error: ''Значение обязательно к заполнению''});
-        }
-      } else if (obj.dateegrn) {
-          errors.push({attribute: ''dateegrn'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
-      }
-
-      return errors;'
+}'
 WHERE name = 'fishprotectionzone';
 
 
@@ -42873,8 +43720,7 @@ SET class_rule =
     },
     {
       "name": "number",
-      "title": "Номер согласно Положению о территориальном планировании",
-      "required": true,
+      "title": "Номер согласно положению о территориальном планировании",
       "valueType": "STRING"
     },
     {
@@ -42903,7 +43749,6 @@ SET class_rule =
     {
       "name": "compl_name",
       "title": "Наименование комплексного объекта",
-      "required": true,
       "valueType": "STRING"
     },
     {
@@ -42914,7 +43759,6 @@ SET class_rule =
     {
       "name": "function",
       "title": "Назначение объекта",
-      "required": true,
       "valueType": "STRING"
     },
     {
@@ -43014,12 +43858,28 @@ SET class_rule =
 }',
 custom_rule = 'var errors = [];
 
-       if (obj.status == ''2'' || obj.status == ''3'') {
+      if (obj.status == ''2'' || obj.status == ''3'') {
+        if (!obj.number) {
+          errors.push({attribute: ''number'', error: ''Значение обязательно к заполнению''});
+        }
+      } else if (obj.number) {
+          errors.push({attribute: ''number'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
+      }
+
+      if (obj.status == ''2'' || obj.status == ''3'') {
         if (!obj.event_time) {
           errors.push({attribute: ''event_time'', error: ''Значение обязательно к заполнению''});
         }
       } else if (obj.event_time) {
-          errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции''});
+          errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
+      }
+
+      if (obj.reg_status == ''1'' || obj.reg_status == ''2'') {
+        if (!obj.event_time) {
+          errors.push({attribute: ''event_time'', error: ''Значение обязательно к заполнению''});
+        }
+      } else if (obj.event_time) {
+          errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
 
       return errors;'
@@ -43274,6 +44134,7 @@ custom_rule = 'var errors = [];
       if (obj.number) {
         errors.push({attribute: ''number'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
+    }
       
 
       if (obj.reg_status == ''1'' || obj.reg_status == ''2'') {
@@ -43526,6 +44387,7 @@ custom_rule = 'var errors = [];
         if (obj.number) {
           errors.push({ attribute: ''number'', error: ''Значение заполняется только для планируемых к размещению или планируемых к реконструкции объектов'' });
       }
+    }
 
       if (obj.reg_status == ''1'' || obj.reg_status == ''2'') {
         if (!obj.event_time) {
@@ -44646,6 +45508,7 @@ custom_rule = 'var errors = [];
       if (obj.number) {
         errors.push({attribute: ''number'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
+    }
 
       return errors;'
 WHERE name = 'resortarea_point';
@@ -44886,6 +45749,7 @@ custom_rule = 'var errors = [];
       if (obj.number) {
         errors.push({attribute: ''number'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
+    }
       
       if (obj.status == ''1'' || obj.status == ''3'' || obj.status == ''4'') {
         if (!obj.kadastrzu) {
@@ -44942,8 +45806,7 @@ SET class_rule =
     },
     {
       "name": "number",
-      "title": "Номер согласно Положению о территориальном планировании",
-      "required": true,
+      "title": "Номер согласно положению о территориальном планировании",
       "valueType": "STRING"
     },
     {
@@ -44964,7 +45827,6 @@ SET class_rule =
     {
       "name": "address",
       "title": "Местоположение, адресное описание",
-      "required": true,
       "valueType": "STRING"
     },
     {
@@ -44997,14 +45859,12 @@ SET class_rule =
     {
       "name": "area",
       "title": "Площадь объекта, га",
-      "required": true,
       "valueType": "DOUBLE",
       "fractionDigits": 2
     },
     {
       "name": "function",
       "title": "Назначение объекта",
-      "required": true,
       "valueType": "STRING"
     },
     {
@@ -45114,29 +45974,29 @@ SET class_rule =
 }',
 custom_rule = 'var errors = [];
 
-      if (obj.status == ''2'') {
-        if (!obj.function) {
-          errors.push({attribute: ''function'', error: ''Значение обязательно к заполнению''});
+      if (obj.reg_status == ''1'' || obj.reg_status == ''2'') {
+        if (!obj.event_time) {
+          errors.push({attribute: ''event_time'', error: ''Значение обязательно к заполнению''});
         }
-      } else if (obj.function) {
-          errors.push({attribute: ''function'', error: ''Значение заполняется только для планируемых к размещению объектов''});
+      } else if (obj.event_time) {
+          errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
 
       if (obj.status == ''2'' || obj.status == ''3'') {
         if (!obj.event_time) {
           errors.push({attribute: ''event_time'', error: ''Значение обязательно к заполнению''});
         }
-      } else if (obj.event_time) {
-          errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции объектов''});
-      }
-
-      if (obj.status == ''1'' || obj.status == ''3'' || obj.status == ''4'') {
-        if (!obj.kadastroks) {
-          errors.push({attribute: ''kadastroks'', error: ''Значение обязательно к заполнению''});
+        if (!obj.number) {
+          errors.push({attribute: ''number'', error: ''Значение обязательно к заполнению''});
         }
-      } else if (obj.kadastroks) {
-          errors.push({attribute: ''kadastroks'', error: ''Значение заполняется только для существующих, реконструируемых, строящихся, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
+      } else {
+        if (obj.event_time) {
+          errors.push({attribute: ''event_time'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
       }
+      if (obj.number) {
+        errors.push({attribute: ''number'', error: ''Значение заполняется только для планируемых к размещению, планируемых к реконструкции или планируемых к ликвидации (сносу) объектов''});
+      }
+    }
 
       if (obj.status == ''1'' || obj.status == ''3'' || obj.status == ''4'') {
         if (!obj.kadastrzu) {
