@@ -5,6 +5,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @ResponseStatus(value = HttpStatus.BAD_REQUEST)
 public class BadRequestException extends RuntimeException {
@@ -25,6 +27,15 @@ public class BadRequestException extends RuntimeException {
         super(msg);
 
         errors.addAll(errorInfoList);
+    }
+
+    public BadRequestException(String msg, Map<String, String> errors) {
+        super(msg);
+
+        this.errors.addAll(errors.entrySet().stream()
+                                 .map(entry -> new ErrorInfo(entry.getKey(),
+                                                             entry.getValue()))
+                                 .collect(Collectors.toList()));
     }
 
     public List<ErrorInfo> getErrors() {

@@ -5,15 +5,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import ru.mycrg.auth_facade.IAuthenticationFacade;
 import ru.mycrg.auth_facade.UserDetails;
+import ru.mycrg.common_contracts.generated.data_service.TaskLogDto;
 import ru.mycrg.data_service.dao.RecordsDao;
 import ru.mycrg.data_service.dao.ddl.tables.DdlTablesSpecial;
 import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
-import ru.mycrg.common_contracts.generated.data_service.TaskLogDto;
 import ru.mycrg.data_service.dto.record.IRecord;
 import ru.mycrg.data_service.dto.record.RecordEntity;
 import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.exceptions.DataServiceException;
-import ru.mycrg.data_service.exceptions.ErrorInfo;
 import ru.mycrg.data_service.service.TaskLogService;
 import ru.mycrg.data_service.service.cqrs.tasks.requests.CreateTaskRequest;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
@@ -22,7 +21,6 @@ import ru.mycrg.data_service.service.schemas.SystemAttributeHandler;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.mediator.IRequestHandler;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -112,10 +110,7 @@ public class CreateTaskRequestHandler implements IRequestHandler<CreateTaskReque
             return newTask;
         } catch (CrgDaoException e) {
             if (e.hasErrors()) {
-                List<ErrorInfo> errorInfoList = new ArrayList<>();
-                e.getErrors().forEach((field, msg) -> errorInfoList.add(new ErrorInfo(field, msg)));
-
-                throw new BadRequestException(e.getMessage(), errorInfoList);
+                throw new BadRequestException(e.getMessage(), e.getErrors());
             } else {
                 throw new DataServiceException(e.getMessage(), e.getCause());
             }

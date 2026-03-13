@@ -25,7 +25,7 @@ scripts/result.txt
 #Applications
 *application.dev.yml
 .env
+.review-context.md
 
 # Test temporary files
 tests/acceptance-tests/src/test/resources/ru/mycrg/acceptance/resources/tempTestData/
-

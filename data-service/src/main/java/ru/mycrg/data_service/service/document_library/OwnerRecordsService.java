@@ -13,21 +13,23 @@ import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
 import ru.mycrg.data_service.dto.record.IRecord;
 import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.exceptions.DataServiceException;
-import ru.mycrg.data_service.exceptions.ErrorInfo;
 import ru.mycrg.data_service.exceptions.NotFoundException;
-import ru.mycrg.data_service.service.schemas.CustomRuleCalculator;
 import ru.mycrg.data_service.service.PermissionsService;
-import ru.mycrg.data_service.service.schemas.SystemAttributeHandler;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
+import ru.mycrg.data_service.service.schemas.CustomRuleCalculator;
+import ru.mycrg.data_service.service.schemas.SystemAttributeHandler;
 import ru.mycrg.data_service_contract.dto.DocumentVersioningDto;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
+import static ru.mycrg.common_contracts.enums.Roles.OWNER;
 import static ru.mycrg.data_service.config.CrgCommonConfig.ROOT_FOLDER_PATH;
 import static ru.mycrg.data_service.dto.ResourceType.LIBRARY_RECORD;
-import static ru.mycrg.common_contracts.enums.Roles.OWNER;
 import static ru.mycrg.data_service.util.EcqlFilterUtil.addAsEqual;
 import static ru.mycrg.data_service.util.SystemLibraryAttributes.*;
 import static ru.mycrg.data_service.util.TableUtils.throwIfNotMatchTableColumns;
@@ -165,13 +167,10 @@ public class OwnerRecordsService implements IRecordsService {
             return newRecord;
         } catch (CrgDaoException e) {
             if (e.hasErrors()) {
-                List<ErrorInfo> errorInfoList = new ArrayList<>();
-                e.getErrors().forEach((field, msg) -> errorInfoList.add(new ErrorInfo(field, msg)));
-
-                throw new BadRequestException(e.getMessage(), errorInfoList);
-            } else {
-                throw new DataServiceException(e.getMessage(), e.getCause());
+                throw new BadRequestException(e.getMessage(), e.getErrors());
             }
+
+            throw new DataServiceException(e.getMessage(), e.getCause());
         }
     }
 

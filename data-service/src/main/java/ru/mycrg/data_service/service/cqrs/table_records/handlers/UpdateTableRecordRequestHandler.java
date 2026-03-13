@@ -4,12 +4,13 @@ import org.springframework.stereotype.Component;
 import ru.mycrg.data_service.dao.SpatialRecordsDao;
 import ru.mycrg.data_service.dao.ddl.tables.DdlTablesSpecial;
 import ru.mycrg.data_service.dao.exceptions.CrgDaoException;
+import ru.mycrg.data_service.exceptions.BadRequestException;
 import ru.mycrg.data_service.exceptions.DataServiceException;
 import ru.mycrg.data_service.exceptions.NotFoundException;
-import ru.mycrg.data_service.service.schemas.CustomRuleCalculator;
-import ru.mycrg.data_service.service.schemas.SystemAttributeHandler;
 import ru.mycrg.data_service.service.cqrs.table_records.requests.UpdateTableRecordRequest;
 import ru.mycrg.data_service.service.resources.ResourceQualifier;
+import ru.mycrg.data_service.service.schemas.CustomRuleCalculator;
+import ru.mycrg.data_service.service.schemas.SystemAttributeHandler;
 import ru.mycrg.data_service.service.validation.GeometryValidationService;
 import ru.mycrg.data_service_contract.dto.SchemaDto;
 import ru.mycrg.geo_json.Feature;
@@ -87,6 +88,10 @@ public class UpdateTableRecordRequestHandler implements IRequestHandler<UpdateTa
         } catch (CrgDaoException e) {
             String msg = "Не удалось обновить фичу в таблице: " + rQualifier.getTable();
             logError(msg, e);
+
+            if (e.hasErrors()) {
+                throw new BadRequestException(e.getMessage(), e.getErrors());
+            }
 
             throw new DataServiceException(msg);
         }

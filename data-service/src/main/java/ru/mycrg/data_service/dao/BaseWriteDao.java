@@ -71,7 +71,7 @@ public class BaseWriteDao {
 
             pJdbcTemplate.batchUpdate(query, parameterSource.toArray(SqlParameterSource[]::new));
         } catch (Exception e) {
-            throw new CrgDaoException(e.getMessage());
+            throw new CrgDaoException(e.getMessage(), extractDetails(e));
         }
     }
 

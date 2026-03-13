@@ -135,7 +135,7 @@ public class SpatialRecordsDao {
                                 join(ids), qualifier.getTableQualifier());
             logError(msg, e);
 
-            throw new CrgDaoException(msg);
+            throw new CrgDaoException(msg, e.getErrors());
         } catch (Exception e) {
             String msg = format("Что то пошло не так при обновлении записей: '%s' в таблице: '%s'",
                                 join(ids), qualifier.getTableQualifier());
@@ -164,7 +164,7 @@ public class SpatialRecordsDao {
             String msg = format("Не удалось выполнить batchUpdate для таблицы: '%s'", qualifier.getTableQualifier());
             logError(msg, e);
 
-            throw new CrgDaoException(msg);
+            throw new CrgDaoException(msg, e.getErrors());
         } catch (Exception e) {
             String msg = format("Что то пошло не так при обновлении записи: '%s' в таблице: '%s'",
                                 qualifier.getRecordIdAsLong(), qualifier.getTableQualifier());
