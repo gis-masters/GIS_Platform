@@ -4,6 +4,7 @@ import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { cloneDeep } from 'lodash';
 
+import { flags } from '../../services/common/feature-flags/feature-flags.service';
 import { communicationService } from '../../services/communication.service';
 import { FilePlacementMode } from '../../services/data/file-placement/file-placement.models';
 import { getSrid } from '../../services/data/projections/projections.util';
@@ -15,7 +16,6 @@ import {
   type SimpleSchema
 } from '../../services/data/schema/schema.models';
 import { applyView } from '../../services/data/schema/schema.utils';
-import { flags } from '../../services/feature-flags';
 import { buildComplexName } from '../../services/geoserver/featureType/featureType.util';
 import { CUSTOM_STYLE_NAME } from '../../services/geoserver/styles/styles.models';
 import { getSimpleStylesListForGeometryType, getStyleSld } from '../../services/geoserver/styles/styles.service';

@@ -2,10 +2,10 @@ import { action, makeObservable, observable } from 'mobx';
 import axios, { type AxiosError, type AxiosInstance, type AxiosRequestConfig, type AxiosResponse } from 'axios';
 
 import { type PageableResources } from '../../../server-types/common-contracts';
+import { CustomCache, type CustomCacheConfig } from '../common/CustomCache';
 import { communicationService } from '../communication.service';
 import { type PageQueryParams } from '../models';
 import { Mime } from '../util/Mime';
-import { CustomCache, type CustomCacheConfig } from './CustomCache';
 import { stringifyParams } from './http.utils';
 import { replaceUrl } from './server-urls.service';
 

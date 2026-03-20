@@ -2,7 +2,6 @@ import { boundMethod } from 'autobind-decorator';
 import { debounce, type DebouncedFunc } from 'lodash';
 
 import { Toast } from '../../../components/Toast/Toast';
-import { schemaCacheService } from '../../cache/schema-cache.service';
 import { communicationService } from '../../communication.service';
 import { type ImportLayerItem } from '../../geoserver/import/import.models';
 import { type CrgVectorLayer } from '../../gis/layers/layers.models';
@@ -13,6 +12,7 @@ import { schemaClient } from './schema.client';
 import { type PropertySchemaChoice, PropertyType, type Schema } from './schema.models';
 import { convertNewToOldSchema, convertOldToNewSchema } from './schema.utils';
 import { type OldPropertySchema, type OldSchema } from './schemaOld.models';
+import { tablesSchemasCache } from './tablesSchemasCache';
 
 class SchemaService {
   private static _instance: SchemaService;
@@ -61,10 +61,10 @@ class SchemaService {
     return Promise.all(Object.values(this.schemas));
   }
 
-  async fetchAndCacheSchemas(tableIdentifiers: string[]): Promise<void> {
+  async fetchAndCacheTablesSchemas(tableIdentifiers: string[]): Promise<void> {
     const schemas = await schemaClient.getTableSchemas(tableIdentifiers);
     schemas.forEach((schemaDto, identifier) => {
-      schemaCacheService.addToCache(identifier, convertOldToNewSchema(schemaDto));
+      tablesSchemasCache.add(identifier, Promise.resolve(convertOldToNewSchema(schemaDto)));
     });
   }
 

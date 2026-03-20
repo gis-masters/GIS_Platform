@@ -16,3 +16,14 @@ export function saveAsCsv(filename: string, data: string): void {
 export function saveAsBlob(filename: string, data: Blob | string): void {
   saveAs(data, filename, { autoBom: false });
 }
+
+export function downloadByUrl(url: string, filename: string): void {
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = filename;
+  link.rel = 'noopener noreferrer';
+  link.target = '_blank';
+  document.body.append(link);
+  link.click();
+  link.remove();
+}

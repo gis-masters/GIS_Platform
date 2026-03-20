@@ -1,9 +1,16 @@
-import { type Component, type ReactNode } from 'react';
+import { type Component, type FC, type ReactNode } from 'react';
 import { action, makeObservable, observable } from 'mobx';
 import { type DialogProps } from '@mui/material';
 
+import { type ButtonProps } from '../components/Button/Button';
 import { type FormProps } from '../components/Form/Form';
 import { type SimpleSchema } from '../services/data/schema/schema.models';
+
+export interface SubmitComponentProps {
+  formId: string;
+  submit(): void;
+  submitData: Record<string, unknown>;
+}
 
 export interface UtilityDialogInfo {
   id: string;
@@ -15,6 +22,9 @@ export interface UtilityDialogInfo {
   open?: boolean;
   okText?: string;
   cancelText?: string;
+  submitProps?: Partial<ButtonProps>;
+  SubmitComponent?: FC<SubmitComponentProps>;
+  submitData?: Record<string, unknown>;
   schema?: SimpleSchema;
   formProps?: Partial<FormProps<unknown>>;
   dialogProps?: Partial<DialogProps>;

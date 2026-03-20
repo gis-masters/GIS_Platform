@@ -15,14 +15,14 @@ interface UtilityDialogProps {
   info: UtilityDialogInfo;
 }
 
-const submitTexts: Record<UtilityDialogInfo['type'], string> = {
+const defaultSubmitTexts: Record<UtilityDialogInfo['type'], string> = {
   achtung: 'Понятно',
   konfirmieren: 'Да',
   prompto: 'OK',
-  formPrompt: 'Печать (PDF)'
+  formPrompt: 'OK'
 };
 
-const cancelTexts: Record<UtilityDialogInfo['type'], string> = {
+const defaultCancelTexts: Record<UtilityDialogInfo['type'], string> = {
   achtung: '',
   konfirmieren: 'Нет',
   prompto: 'Отмена',
@@ -32,10 +32,24 @@ const cancelTexts: Record<UtilityDialogInfo['type'], string> = {
 @observer
 export class UtilityDialog extends Component<UtilityDialogProps> {
   render() {
-    const { id, title, type, okText, cancelText, message, open } = this.props.info;
+    const {
+      id,
+      title,
+      type,
+      okText,
+      cancelText,
+      message,
+      open,
+      submitProps: extraSubmitProps,
+      SubmitComponent,
+      submitData
+    } = this.props.info;
     const formId = `UtilityDialogForm_${id}`;
+    const submitText = extraSubmitProps?.children ?? okText ?? defaultSubmitTexts[type];
     const submitProps: ButtonProps =
-      type === 'prompto' || type === 'formPrompt' ? { form: formId, type: 'submit' } : { onClick: this.handleOk };
+      type === 'prompto' || type === 'formPrompt'
+        ? { form: formId, type: 'submit', ...extraSubmitProps }
+        : { onClick: this.handleOk, ...extraSubmitProps };
     const baseDialogProps: Partial<DialogProps> = type === 'formPrompt' ? { fullWidth: true, maxWidth: 'md' } : {};
 
     return (
@@ -49,13 +63,27 @@ export class UtilityDialog extends Component<UtilityDialogProps> {
         {title && <DialogTitle className={cnUtilityDialog('Title')}>{title}</DialogTitle>}
         {(message || type === 'prompto') && <UtilityDialogContent info={this.props.info} type={type} formId={formId} />}
         <DialogActions className={cnUtilityDialog('Actions')}>
-          <Button {...submitProps} color='primary' autoFocus={type !== 'prompto'}>
-            {okText || submitTexts[type]}
-          </Button>
-          {type !== 'achtung' && <Button onClick={this.handleClose}>{cancelText || cancelTexts[type]}</Button>}
+          {SubmitComponent ? (
+            <SubmitComponent formId={formId} submit={this.submitForm} submitData={submitData ?? {}} />
+          ) : (
+            <Button {...submitProps} color='primary' autoFocus={type !== 'prompto'}>
+              {submitText}
+            </Button>
+          )}
+          {type !== 'achtung' && <Button onClick={this.handleClose}>{cancelText || defaultCancelTexts[type]}</Button>}
         </DialogActions>
       </Dialog>
     );
+  }
+
+  @boundMethod
+  private submitForm() {
+    const formId = `UtilityDialogForm_${this.props.info.id}`;
+    const form = document.querySelector<HTMLFormElement>(`#${formId}`);
+
+    if (form) {
+      form.requestSubmit();
+    }
   }
 
   @boundMethod

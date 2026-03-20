@@ -42,3 +42,7 @@ export async function getFileConnections(fileId: string): Promise<FileConnection
 export async function getFile(fileId: string): Promise<string> {
   return await filesClient.getFile(fileId);
 }
+
+export function getFileDownloadUrl(fileId: string): string {
+  return filesClient.getFileDownloadUrl(fileId);
+}

@@ -1,0 +1,29 @@
+import { Block } from '../../classes/Block';
+
+export class DataManagementBlock extends Block {
+  selectors = {
+    root: '.DataManagement',
+    explorerList: '.DataManagement .Explorer-List',
+    menuItem: '.DataManagement .Explorer-List .Explorer-Item'
+  };
+
+  async isMenuItemExist(menuItem: string): Promise<boolean | undefined> {
+    await this.waitForVisible();
+
+    const $explorerList = await this.findBySelector('explorerList');
+    await $explorerList.waitForDisplayed();
+
+    const $$menuRows = await this.findAllBySelector('menuItem');
+    for (const $menuRow of $$menuRows) {
+      const menuRowTitle = await $menuRow.getText();
+
+      if (menuRowTitle === menuItem) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+}
+
+export const dataManagementBlock = new DataManagementBlock();

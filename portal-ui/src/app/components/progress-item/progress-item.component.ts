@@ -5,6 +5,7 @@ import { Subject } from 'rxjs';
 import { getExportDownloadUrl } from '../../services/data/export/export.service';
 import { ProcessStatus, ProcessType } from '../../services/data/processes/processes.models';
 import { eventService, type IEvent } from '../../services/event.service';
+import { downloadByUrl } from '../../services/util/FileSaver';
 import { type ExportWsMsg, type IWsMessage } from '../../services/ws.service';
 
 @Component({
@@ -95,15 +96,7 @@ export class ProgressItemComponent implements OnDestroy {
     const wsMessage: IWsMessage = this.event.payload;
     const exportWsMsg: ExportWsMsg = wsMessage.payload as ExportWsMsg;
     const fileName = exportWsMsg.payload.split(/[#?]/)[0].split(/[/\\]/).filter(Boolean).pop() as string;
-    const url = getExportDownloadUrl(fileName);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = fileName;
-    link.rel = 'noopener noreferrer';
-    link.target = '_blank';
-    document.body.append(link);
-    link.click();
-    link.remove();
+    downloadByUrl(getExportDownloadUrl(fileName), fileName);
   }
 
   isShowActionBlock(): boolean {

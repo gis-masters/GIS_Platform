@@ -5,8 +5,8 @@ import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 import { saveAs } from 'file-saver';
 
-import { filesClient } from '../../../services/data/files/files.client';
 import { compoundFileFullType, type FileInfo } from '../../../services/data/files/files.models';
+import { getFileDownloadUrl } from '../../../services/data/files/files.service';
 import { getFileExtension, getReadableFileSize } from '../../../services/data/files/files.util';
 import { organizationSettings } from '../../../stores/OrganizationSettings.store';
 import { Link } from '../../Link/Link';
@@ -56,7 +56,7 @@ export class FilesName extends Component<FilesNameProps> {
           <Link
             className={cnFilesNameLink({ main: mainCompletedCompoundFile })}
             disabled={disabled || !organizationSettings.downloadFiles}
-            href={filesClient.getFileDownloadUrl(item.id)}
+            href={getFileDownloadUrl(item.id)}
             download={item.title}
             onClick={this.handleClick}
           >

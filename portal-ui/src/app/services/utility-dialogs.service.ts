@@ -62,16 +62,35 @@ export async function formPrompt<T>({
   title,
   message,
   schema,
-  formProps
+  formProps,
+  submitProps,
+  SubmitComponent,
+  submitData
 }: {
   title?: ReactNode;
   message?: ReactNode;
   schema?: SimpleSchema;
   formProps?: FormProps<T>;
-}): Promise<T> {
-  const { formValue } = await doDialog({ id: uuid(), type: 'formPrompt', title, message, schema, formProps });
+  submitProps?: UtilityDialogInfo['submitProps'];
+  SubmitComponent?: UtilityDialogInfo['SubmitComponent'];
+  submitData?: UtilityDialogInfo['submitData'];
+}): Promise<{ formValue: T; extra?: Record<string, unknown> }> {
+  const detail = await doDialog({
+    id: uuid(),
+    type: 'formPrompt',
+    title,
+    message,
+    schema,
+    formProps,
+    submitProps,
+    SubmitComponent,
+    submitData
+  });
 
-  return formValue as T;
+  return {
+    formValue: detail.formValue as T,
+    ...(detail.extra !== undefined && { extra: detail.extra })
+  };
 }
 
 function doDialog(dialogData: UtilityDialogInfo) {

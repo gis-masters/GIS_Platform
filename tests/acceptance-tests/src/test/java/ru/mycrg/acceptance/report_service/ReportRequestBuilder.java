@@ -12,7 +12,7 @@ import static ru.mycrg.common_contracts.generated.report_service.ReportOutputFor
 
 public class ReportRequestBuilder {
 
-    public static final String DEFAULT_SYSTEM_TEMPLATE_NAME = "featureExtractMini";
+    public static final String DEFAULT_SYSTEM_TEMPLATE_NAME = "featureExtractCompact";
 
     public static ReportMainDto prepareReport(String dataTemplate) {
         switch (dataTemplate) {
@@ -38,7 +38,7 @@ public class ReportRequestBuilder {
                 return emptyMediaAndData();
 
             case "user template":
-            case "featureExtractFullFlat":
+            case "featureExtractFull":
                 ReportMainDto dto = createPdfReport();
                 dto.setTemplateName(dataTemplate);
                 dto.setOutputFormat(DOCX);

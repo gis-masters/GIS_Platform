@@ -1,4 +1,4 @@
-import { type FlagsList } from './feature-flags.models';
+import { type FlagsList } from './common/feature-flags/feature-flags.models';
 
 declare const browser: { options: { baseUrl: string } }; //для автотестов
 

@@ -38,8 +38,13 @@ class UtilityDialogContentTypeFormPrompt extends Component<UtilityDialogContentP
 
   @boundMethod
   private handleSubmit(formValue: unknown) {
-    const { id } = this.props.info;
-    communicationService.utilityDialogClosed.emit({ id, answer: true, formValue });
+    const { id, submitData } = this.props.info;
+    communicationService.utilityDialogClosed.emit({
+      id,
+      answer: true,
+      formValue,
+      extra: submitData
+    });
   }
 }
 

@@ -9,15 +9,15 @@ Feature: Тесты report service с дефолтным шаблоном
     When  я скачиваю текущий отчёт
     Then  размер скачанного отчёта равен <size> байт
     Examples:
-      | templateName           | size   |
-      | featureExtractMini     | 16484  |
-      | featureExtractFullFlat | 659388 |
+      | templateName          | size   |
+      | featureExtractCompact | 15240  |
+      | featureExtractFull    | 470950 |
 
   Scenario: Созданный отчёт сохраняется как файл платформы с ожидаемыми атрибутами
-    Given сформирован отчёт по шаблону с именем "featureExtractFullFlat"
+    Given сформирован отчёт по шаблону с именем "featureExtractFull"
     When  я запрашиваю атрибуты текущего файла
     Then  атрибутами отчёта как файла соответствуют ожиданиям
-      | size        | 659388                   |
+      | size        | 470950                   |
       | extension   | docx                     |
       | contentType | application/octet-stream |
       | signed      | false                    |

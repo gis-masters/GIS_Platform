@@ -4,13 +4,13 @@ import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 import { isObject } from 'lodash';
 
+import { flags } from '../../../../services/common/feature-flags/feature-flags.service';
 import { communicationService, type DataChangeEventDetail } from '../../../../services/communication.service';
 import { libraryClient } from '../../../../services/data/library/library.client';
 import { type LibraryRecord } from '../../../../services/data/library/library.models';
 import { getLibraryRecord, getLibrarySchemaByRecord } from '../../../../services/data/library/library.service';
 import { type Schema } from '../../../../services/data/schema/schema.models';
 import { applyContentType } from '../../../../services/data/schema/schema.utils';
-import { flags } from '../../../../services/feature-flags';
 import { Role } from '../../../../services/permissions/permissions.models';
 import { currentUser } from '../../../../stores/CurrentUser.store';
 import { DocumentRole } from '../../../DocumentRole/DocumentRole';

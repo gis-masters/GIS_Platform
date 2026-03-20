@@ -140,7 +140,7 @@ class ProjectsService {
     const tableIdentifiers = allowedLayers
       .map(layer => layer.resourceId)
       .filter((tableName): tableName is string => tableName !== undefined);
-    await schemaService.fetchAndCacheSchemas(tableIdentifiers);
+    await schemaService.fetchAndCacheTablesSchemas(tableIdentifiers);
 
     currentProject.setProject(project, allowedLayers, groups, layersErrors, layers);
 

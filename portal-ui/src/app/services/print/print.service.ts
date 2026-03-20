@@ -1,10 +1,15 @@
+import { getFileDownloadUrl } from '../data/files/files.service';
 import { type LibraryRecord } from '../data/library/library.models';
 import { type WfsFeature } from '../geoserver/wfs/wfs.models';
+import { downloadByUrl } from '../util/FileSaver';
+import { printClient } from './print.client';
+import { type CreateReportRequest } from './print.models';
 import { rawDocumentData } from './templates/document/rawDocumentData';
 import { featureExtract } from './templates/feature/featureExtract';
 import { rawFeatureData } from './templates/feature/rawFeatureData';
 import { situationalPlan } from './templates/featuresCollection/situationalPlan';
 import { type PrintTemplate } from './templates/PrintTemplate';
+import { prepareReportData } from './utils/prepareReportData';
 
 export const documentPrintTemplates: PrintTemplate<LibraryRecord>[] = [rawDocumentData];
 export const featurePrintTemplates: PrintTemplate<WfsFeature>[] = [rawFeatureData, featureExtract];
@@ -18,4 +23,32 @@ export async function printDocument(document: LibraryRecord, templateName: strin
   }
 
   await template.print(document);
+}
+
+/**
+ * Генерирует отчёт через report-service (Carbon).
+ * Base64-картинки из `data` автоматически выносятся в `media`.
+ * Если передан `fileName`, файл автоматически скачивается пользователю через браузер.
+ * @returns Идентификатор сгенерированного файла.
+ */
+export async function printWithCarbon(
+  data: Record<string, unknown>,
+  templateName: string,
+  outputFormat: CreateReportRequest['outputFormat'],
+  fileName?: string
+): Promise<string> {
+  const { data: preparedData, media } = prepareReportData(data);
+
+  const fileId = await printClient.createReport({
+    outputFormat,
+    templateName,
+    media,
+    data: preparedData
+  });
+
+  if (fileName) {
+    downloadByUrl(getFileDownloadUrl(fileId), fileName);
+  }
+
+  return fileId;
 }

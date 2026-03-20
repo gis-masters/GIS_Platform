@@ -5,7 +5,6 @@ import { type AxiosError } from 'axios';
 
 import { Toast } from '../../../components/Toast/Toast';
 import { currentProject } from '../../../stores/CurrentProject.store';
-import { schemaCacheService } from '../../cache/schema-cache.service';
 import { getFileInfo } from '../../data/files/files.service';
 import { getFileBaseName, getLibraryRecordFiles } from '../../data/files/files.util';
 import { getLibraryRecord } from '../../data/library/library.service';
@@ -15,6 +14,7 @@ import {
   convertGeoserverPropertiesToSchemaProperties,
   getGeometryTypeFromGeoserverAttributes
 } from '../../data/schema/schema.utils';
+import { tablesSchemasCache } from '../../data/schema/tablesSchemasCache';
 import { getVectorTable } from '../../data/vectorData/vectorData.service';
 import { type FeatureType } from '../../geoserver/featureType/featureType.model';
 import { getFeatureType } from '../../geoserver/featureType/featureType.service';
@@ -115,28 +115,32 @@ export function alertLayerOperationError(
   services.logger.error(message, e);
 }
 
+async function getVectorTableSchema(datasetIdentifier: string, identifier: string): Promise<Schema> {
+  const vectorTable = await getVectorTable(datasetIdentifier, identifier);
+
+  return vectorTable.schema;
+}
+
 export async function getLayerSchema(layer?: CrgLayer): Promise<Schema | undefined> {
   if (!layer) {
     return undefined;
   }
-
-  schemaCacheService.prettyPrint();
 
   if (layer.type === CrgLayerType.VECTOR) {
     if (!layer.dataset || !layer.resourceId) {
       throw new Error('Векторный слой подключен с ошибкой');
     }
 
-    const schemaFromCache = schemaCacheService.getFromCache(layer.resourceId);
-    if (schemaFromCache) {
-      return schemaFromCache;
+    const schemaPromiseFromCache = tablesSchemasCache.match(layer.resourceId);
+    if (schemaPromiseFromCache) {
+      return await schemaPromiseFromCache;
     }
 
-    const vectorTable = await getVectorTable(layer.dataset, layer.resourceId);
+    const vectorTableSchemaPromise = getVectorTableSchema(layer.dataset, layer.resourceId);
 
-    schemaCacheService.addToCache(layer.resourceId, vectorTable.schema);
+    tablesSchemasCache.add(layer.resourceId, vectorTableSchemaPromise);
 
-    return vectorTable.schema;
+    return await vectorTableSchemaPromise;
   } else if (layer.type === CrgLayerType.DXF) {
     return await schemaService.getSchema('dxf_schema_v1');
   } else if (layer.type && isVectorFromFile(layer.type)) {

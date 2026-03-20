@@ -1,21 +1,21 @@
 interface PrintTemplateOptions<T> {
   name: string;
   title: string;
-  format: string | number[]; // Формат бумаги (A4, A3 или [ширина, высота])
-  margin: [number, number, number, number]; // Отступы: [верх, право, низ, лево]
-  orientation: 'p' | 'portrait' | 'l' | 'landscape'; // Ориентация страницы
-  render: (entity: T) => string | Promise<string>;
+  format?: string | number[]; // Формат бумаги (A4, A3 или [ширина, высота])
+  margin?: [number, number, number, number]; // Отступы: [верх, право, низ, лево]
+  orientation?: 'p' | 'portrait' | 'l' | 'landscape'; // Ориентация страницы
+  render: (entity: T) => Promise<string | void>;
   getFileName(entity: T): string | Promise<string>;
 }
 
 export class PrintTemplate<T> {
   name: string;
   title: string;
-  private format: string | number[];
-  private margin: [number, number, number, number];
-  private orientation: 'p' | 'portrait' | 'l' | 'landscape';
-  private render: (entity: T) => string | Promise<string>;
-  private getFileName: (entity: T) => string | Promise<string>;
+  private format?: string | number[];
+  private margin?: [number, number, number, number];
+  private orientation?: 'p' | 'portrait' | 'l' | 'landscape';
+  private render: (entity: T) => Promise<string | void>;
+  getFileName: (entity: T) => string | Promise<string>;
 
   private roboto?: string;
   private htmlFiles: Record<string, Promise<string>> = {};
@@ -24,8 +24,8 @@ export class PrintTemplate<T> {
     this.name = name;
     this.title = title;
     this.format = format;
-    this.margin = margin;
-    this.orientation = orientation;
+    this.margin = margin || [0, 0, 0, 0];
+    this.orientation = orientation || 'p';
     this.render = render;
     this.getFileName = getFileName;
   }
@@ -44,7 +44,7 @@ export class PrintTemplate<T> {
     // Рендеринг HTML-контента с использованием переданной функции render
     const html = await this.render(entity);
 
-    if (!html) {
+    if (!html || !this.orientation || !this.format || !this.margin) {
       return;
     }
 

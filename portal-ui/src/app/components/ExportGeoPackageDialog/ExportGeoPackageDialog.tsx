@@ -9,6 +9,7 @@ import { exportLayersAsGeoPackage, getExportDownloadUrl } from '../../services/d
 import { ProcessStatus } from '../../services/data/processes/processes.models';
 import { getProcess } from '../../services/data/processes/processes.service';
 import { type CrgLayer } from '../../services/gis/layers/layers.models';
+import { downloadByUrl } from '../../services/util/FileSaver';
 import { isArray } from '../../services/util/typeGuards/isArray';
 import { isRecordStringUnknown } from '../../services/util/typeGuards/isRecordStringUnknown';
 import { currentProject } from '../../stores/CurrentProject.store';
@@ -57,19 +58,19 @@ export const ExportGeoPackageDialog: FC<ExportGeoPackageDialogProps> = observer(
     historyOpen: false,
     filePath: '',
 
-    setSelectedLayers(layers: CrgLayer[]) {
+    setSelectedLayers(layers) {
       this.selectedLayers = layers;
     },
 
-    setIsExporting(exporting: boolean) {
+    setIsExporting(exporting) {
       this.isExporting = exporting;
     },
 
-    setExportCompleted(completed: boolean) {
+    setExportCompleted(completed) {
       this.exportCompleted = completed;
     },
 
-    setLastMessage(message: string) {
+    setLastMessage(message) {
       if (this.lastMessage !== message) {
         this.previousMessage = this.lastMessage;
         this.messageKey += 1;
@@ -89,11 +90,11 @@ export const ExportGeoPackageDialog: FC<ExportGeoPackageDialogProps> = observer(
       }
     },
 
-    setHistoryOpen(open: boolean) {
+    setHistoryOpen(open) {
       this.historyOpen = open;
     },
 
-    setFilePath(path: string) {
+    setFilePath(path) {
       this.filePath = path;
     },
 
@@ -126,15 +127,7 @@ export const ExportGeoPackageDialog: FC<ExportGeoPackageDialogProps> = observer(
     }
 
     const fileName = state.filePath.split(/[#?]/)[0].split(/[/\\]/).filter(Boolean).pop() || 'export.gpkg';
-    const url = getExportDownloadUrl(fileName);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = fileName;
-    link.rel = 'noopener noreferrer';
-    link.target = '_blank';
-    document.body.append(link);
-    link.click();
-    link.remove();
+    downloadByUrl(getExportDownloadUrl(fileName), fileName);
   }, [state.filePath]);
 
   const onSelectLayers = useCallback(

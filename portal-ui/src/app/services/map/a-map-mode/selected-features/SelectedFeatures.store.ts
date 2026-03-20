@@ -5,7 +5,7 @@ import { extractFeatureIdsFromAttributesFilter } from '../../../../components/At
 import { attributesTableStore } from '../../../../stores/AttributesTable.store';
 import { currentProject } from '../../../../stores/CurrentProject.store';
 import { Pages, route } from '../../../../stores/Route.store';
-import { flags } from '../../../feature-flags';
+import { flags } from '../../../common/feature-flags/feature-flags.service';
 import { extractResourceIdFromFeatureId } from '../../../geoserver/featureType/featureType.util';
 import { type WfsFeature } from '../../../geoserver/wfs/wfs.models';
 import { type CrgLayer } from '../../../gis/layers/layers.models';

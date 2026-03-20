@@ -22,6 +22,8 @@ export interface UtilityDialogCloseEventDetail {
   answer?: boolean;
   value?: string;
   formValue?: unknown;
+  /** Произвольные дополнительные данные (например, outputFormat для печати) */
+  extra?: Record<string, unknown>;
 }
 
 class CommunicationService {

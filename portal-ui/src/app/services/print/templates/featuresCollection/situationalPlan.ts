@@ -46,9 +46,10 @@ export const situationalPlan: PrintTemplate<WfsFeature[]> = new PrintTemplate({
 
     const formInvoke: FormProps<SituationalPlanFormData>['invoke'] = observable({});
 
-    const mapDialogResult = await formPrompt<SituationalPlanFormData>({
+    const { formValue: mapDialogResult } = await formPrompt<SituationalPlanFormData>({
       title: 'Параметры печати',
       message: this.title,
+      submitProps: { children: 'Печать (PDF)' },
       schema: {
         properties: [
           {

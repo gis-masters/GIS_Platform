@@ -10,8 +10,8 @@ import 'swiper/css/navigation';
 import 'swiper/css/thumbs';
 import 'swiper/css/zoom';
 
-import { filesClient } from '../../services/data/files/files.client';
 import { type FileInfo } from '../../services/data/files/files.models';
+import { getFileDownloadUrl } from '../../services/data/files/files.service';
 import { isPdfFile } from '../../services/data/files/files.util';
 import { Button } from '../Button/Button';
 import { CarouselHeader } from './Header/Carousel-Header';
@@ -98,7 +98,7 @@ export const Carousel: FC<CarouselProps> = observer(({ open, images, onClose, st
     }
   }, [setZoomed, zoomed, mainSwiper?.zoom]);
 
-  const imagesWithUrls = images.map(image => ({ ...image, url: filesClient.getFileDownloadUrl(image.file.id) }));
+  const imagesWithUrls = images.map(image => ({ ...image, url: getFileDownloadUrl(image.file.id) }));
 
   const maxWidth = (): false | Breakpoint => {
     if (!expanded) {
