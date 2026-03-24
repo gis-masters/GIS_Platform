@@ -7,6 +7,7 @@ import { communicationService, type DataChangeEventDetail } from '../../services
 import { type CrgProject } from '../../services/gis/projects/projects.models';
 import { projectsService } from '../../services/gis/projects/projects.service';
 import { currentProjectFolderStore, FOLDER_PARAM } from '../../stores/CurrentProjectFolder.store';
+import { route } from '../../stores/Route.store';
 import { Loading } from '../Loading/Loading';
 import { Toast } from '../Toast/Toast';
 import { ProjectsContent } from './Content/ProjectsContent';
@@ -21,29 +22,24 @@ import './Add/Projects-Add.scss';
 
 const cnProjects = cn('Projects');
 
-interface ProjectsState {
-  lastFolderId: string | null | undefined;
-}
-
 const Projects: FC = observer(() => {
   const store = useMemo(() => new ProjectsStore(), []);
   const { busy, setBusy, setProjects, displayedList } = store;
 
   const debouncedFetchProjectsRef = useRef<DebouncedFunc<() => Promise<void>>>();
 
+  const folderId = route.queryParams[FOLDER_PARAM];
+
   // Загрузка корневых проектов
   const loadRootProjects = useCallback(async () => {
     try {
       setBusy(true);
-      const projects = await projectsService.getAllProjects();
-      setProjects(projects);
-
-      const url = new URL(window.location.href);
-      url.searchParams.delete(FOLDER_PARAM);
 
       currentProjectFolderStore.setCurrentFolder(null);
-    } catch (error) {
-      console.error('Error loading root projects:', error);
+
+      const projects = await projectsService.getAllProjects();
+      setProjects(projects ?? []);
+    } catch {
       setProjects([]);
     } finally {
       setBusy(false);
@@ -52,25 +48,34 @@ const Projects: FC = observer(() => {
 
   // Загрузка проектов для текущей папки
   const loadFolderProjects = useCallback(
-    async (folderId: number) => {
+    async (id: number) => {
       try {
         setBusy(true);
-        const projectFolder = await projectsService.getById(folderId);
 
-        currentProjectFolderStore.setCurrentFolder(projectFolder);
-        const projects = await projectsService.getAllProjectsInFolder(folderId);
-        setProjects(projects || []);
-      } catch (error) {
-        console.error('Error loading folder projects:', error);
+        const folder = await projectsService.getById(id);
+        currentProjectFolderStore.setCurrentFolder(folder);
+
+        const projects = await projectsService.getAllProjectsInFolder(id);
+        setProjects(projects ?? []);
+      } catch {
         currentProjectFolderStore.setCurrentFolder(null);
         await loadRootProjects();
-        Toast.error(`Не удалось загрузить проекты в папке с id:${folderId}`);
+
+        Toast.error(`Не удалось загрузить папку ${id}`);
       } finally {
         setBusy(false);
       }
     },
     [loadRootProjects, setBusy, setProjects]
   );
+
+  useEffect(() => {
+    if (folderId) {
+      void loadFolderProjects(Number(folderId));
+    } else {
+      void loadRootProjects();
+    }
+  }, [folderId, loadFolderProjects, loadRootProjects]);
 
   // Обработчик события обновления проекта
   const handleProjectUpdated = useCallback(
@@ -93,77 +98,25 @@ const Projects: FC = observer(() => {
         }
       }
 
-      // Инициируем обновление списка через API с debounce
       void debouncedFetchProjectsRef.current?.();
     },
     [store]
   );
 
-  // Обработка изменений URL
-  const handleUrlChange = useCallback(
-    async (state: ProjectsState) => {
-      setBusy(true);
-
-      // TODO: выпилить прямую работу с URL и переделать на использование роутера
-      const url = new URL(window.location.href);
-      const currentFolderId = url.searchParams.get(FOLDER_PARAM);
-
-      if (currentFolderId === state.lastFolderId) {
-        setBusy(false);
-
-        return state;
-      }
-
-      state.lastFolderId = currentFolderId;
-
-      await (currentFolderId ? loadFolderProjects(Number(currentFolderId)) : loadRootProjects());
-      setBusy(false);
-
-      return state;
-    },
-    [loadFolderProjects, loadRootProjects, setBusy]
-  );
-
   useEffect(() => {
-    // Обновление списка проектов
-    const fetchProjects = async () => {
-      const url = new URL(window.location.href);
-      const currentFolderId = url.searchParams.get(FOLDER_PARAM);
-      await (currentFolderId ? loadFolderProjects(Number(currentFolderId)) : loadRootProjects());
+    const refresh = async () => {
+      await (folderId ? loadFolderProjects(Number(folderId)) : loadRootProjects());
     };
 
-    // Создаём debounced функцию для обновления списка
-    debouncedFetchProjectsRef.current = debounce(fetchProjects, 300);
+    debouncedFetchProjectsRef.current = debounce(refresh, 300);
 
-    // Подписываемся на событие обновления проектов
     communicationService.projectUpdated.on(handleProjectUpdated);
 
     return () => {
       debouncedFetchProjectsRef.current?.cancel();
       communicationService.off(handleProjectUpdated);
     };
-  }, [handleProjectUpdated, loadFolderProjects, loadRootProjects]);
-
-  useEffect(() => {
-    // lastFolderId = undefined означает, что начальная загрузка ещё не была выполнена
-    const state: ProjectsState = { lastFolderId: undefined };
-
-    // Выполняем начальную загрузку
-    void handleUrlChange(state);
-
-    // Наблюдаем за изменениями URL
-    // TODO: выпилить наблюдение за DOM, этот костыль вообще за гранью
-    const observer = new MutationObserver(() => {
-      void handleUrlChange(state);
-    });
-
-    observer.observe(document.body, {
-      subtree: true,
-      childList: true
-    });
-
-    return () => observer.disconnect();
-  }, [handleUrlChange]);
+  }, [handleProjectUpdated, folderId, loadFolderProjects, loadRootProjects]);
 
   const hasProjects = displayedList.length > 0;
 
