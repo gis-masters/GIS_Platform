@@ -39,6 +39,7 @@ interface EditFeatureGeometryAsTextProps {
 export class EditFeatureGeometryAsText extends Component<EditFeatureGeometryAsTextProps> {
   @observable private isOpen = false;
   @observable private text = '';
+  @observable private errorMessage: string | null = null;
 
   constructor(props: EditFeatureGeometryAsTextProps) {
     super(props);
@@ -77,6 +78,8 @@ export class EditFeatureGeometryAsText extends Component<EditFeatureGeometryAsTe
               multiline
               autoFocus
               variant='standard'
+              error={Boolean(this.errorMessage)}
+              helperText={this.errorMessage}
             />
           </DialogContent>
           <DialogActions>
@@ -108,8 +111,19 @@ export class EditFeatureGeometryAsText extends Component<EditFeatureGeometryAsTe
     );
   }
 
+  @action
+  private setError(message: string) {
+    this.errorMessage = message;
+  }
+
+  @action
+  private clearError() {
+    this.errorMessage = null;
+  }
+
   @boundMethod
   private handleChange(e: ChangeEvent<HTMLTextAreaElement>) {
+    this.clearError();
     this.setText(e.target.value);
   }
 
@@ -120,6 +134,7 @@ export class EditFeatureGeometryAsText extends Component<EditFeatureGeometryAsTe
 
   @action.bound
   private openDialog() {
+    this.clearError();
     this.initText();
     this.isOpen = true;
   }
@@ -131,6 +146,7 @@ export class EditFeatureGeometryAsText extends Component<EditFeatureGeometryAsTe
 
   private async save() {
     const { coordinates, mustBeClosed, onChange, geometryType } = this.props;
+
     let newCoordinates: Coordinate[] = this.text
       .replaceAll(',', '.')
       .split('\n')
@@ -142,6 +158,13 @@ export class EditFeatureGeometryAsText extends Component<EditFeatureGeometryAsTe
 
         return rowArr;
       });
+
+    // по 2 координаты в строке
+    if (newCoordinates.some(coord => coord.length / 2 !== 1)) {
+      this.setError('Некорректное значение');
+
+      return;
+    }
 
     if (!newCoordinates.length) {
       const emptyGeometry = getEmptyGeometry(geometryType);
