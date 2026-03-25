@@ -13,6 +13,7 @@ class Flags implements FlagsList {
 
   allowProjectionsForAllLayers = '';
   oldPrintMechanism = '';
+  openFileDownloadInSameTab = '';
   selectingFeaturesLimit = '';
   showDocumentRoles = '';
 

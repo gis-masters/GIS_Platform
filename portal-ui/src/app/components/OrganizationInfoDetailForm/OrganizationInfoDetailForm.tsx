@@ -5,12 +5,12 @@ import { cn } from '@bem-react/classname';
 import { type AxiosError } from 'axios';
 import { isEqual } from 'lodash';
 
+import { doAlert } from '../../services/answer-modals.service';
 import type { OrganizationInformation } from '../../services/auth/organizations/organizations.models';
 import { organizationsService } from '../../services/auth/organizations/organizations.service';
 import { usersService } from '../../services/auth/users/users.service';
 import { PropertyType, type SimpleSchema } from '../../services/data/schema/schema.models';
 import { generateRandomId } from '../../services/util/randomId';
-import { achtung } from '../../services/utility-dialogs.service';
 import { organizationSettings } from '../../stores/OrganizationSettings.store';
 import { Button } from '../Button/Button';
 import { Form } from '../Form/Form';
@@ -106,7 +106,7 @@ export const OrganizationInfoDetailForm: FC = observer(() => {
           setOrgDetailInitialValue({ ...orgDetailInitialValue, ...value });
         } catch (error) {
           const err = error as AxiosError<{ message: string }>;
-          await achtung({
+          await doAlert({
             title: 'Ошибка',
             message: err.response?.data.message || 'Не удалось обновить данные организации'
           });

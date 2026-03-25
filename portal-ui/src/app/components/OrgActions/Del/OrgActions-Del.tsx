@@ -6,11 +6,11 @@ import { Delete, DeleteOutline } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 
+import { doConfirm } from '../../../services/answer-modals.service';
 import { type CrgGroup } from '../../../services/auth/groups/groups.models';
 import { groupsService } from '../../../services/auth/groups/groups.service';
 import { type CrgUser } from '../../../services/auth/users/users.models';
 import { usersService } from '../../../services/auth/users/users.service';
-import { konfirmieren } from '../../../services/utility-dialogs.service';
 import { IconButton } from '../../IconButton/IconButton';
 import { Loading } from '../../Loading/Loading';
 
@@ -47,7 +47,7 @@ export class OrgActionsDel extends Component<OrgActionsDelProps> {
   @boundMethod
   private async handleDelete() {
     this.setDialogOpen(true);
-    const shouldDelete = await konfirmieren({
+    const shouldDelete = await doConfirm({
       title: 'Подтверждение удаления',
       message: this.props.user
         ? 'Вы уверены, что хотите удалить этого пользователя?'

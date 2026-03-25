@@ -4,12 +4,12 @@ import moment from 'moment';
 import { type FormProps } from '../../../../components/Form/Form';
 import { PrintMapImageControl } from '../../../../components/PrintMapImageControl/PrintMapImageControl';
 import { SelectPropertiesControl } from '../../../../components/SelectPropertiesControl/SelectPropertiesControl';
+import { doFormPrompt } from '../../../answer-modals.service';
 import { type PropertySchema, PropertyType } from '../../../data/schema/schema.models';
 import { applyView, getReadablePropertyValue } from '../../../data/schema/schema.utils';
 import { type WfsFeature } from '../../../geoserver/wfs/wfs.models';
 import { getLayerSchema } from '../../../gis/layers/layers.service';
 import { getLayerByFeatureInCurrentProject } from '../../../gis/layers/layers.utils';
-import { formPrompt } from '../../../utility-dialogs.service';
 import { hideNumberFeaturesOnMap, numberFeaturesOnMap } from '../../helpers/numberFeaturesOnMap';
 import { PrintTemplate } from '../PrintTemplate';
 
@@ -46,7 +46,7 @@ export const situationalPlan: PrintTemplate<WfsFeature[]> = new PrintTemplate({
 
     const formInvoke: FormProps<SituationalPlanFormData>['invoke'] = observable({});
 
-    const { formValue: mapDialogResult } = await formPrompt<SituationalPlanFormData>({
+    const { formValue: mapDialogResult } = await doFormPrompt<SituationalPlanFormData>({
       title: 'Параметры печати',
       message: this.title,
       submitProps: { children: 'Печать (PDF)' },

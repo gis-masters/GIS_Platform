@@ -1,5 +1,6 @@
 import { type AxiosError } from 'axios';
 
+import { doConfirm } from '../../../services/answer-modals.service';
 import { communicationService } from '../../../services/communication.service';
 import { projectionCodeToProjection } from '../../../services/data/projections/projections.util';
 import { PropertyType } from '../../../services/data/schema/schema.models';
@@ -24,7 +25,6 @@ import { MapMode, MapSelectionTypes } from '../../../services/map/map.models';
 import { mapService } from '../../../services/map/map.service';
 import { services } from '../../../services/services';
 import { transformGeometry } from '../../../services/util/coordinates-transform.util';
-import { konfirmieren } from '../../../services/utility-dialogs.service';
 import { mapStore } from '../../../stores/Map.store';
 import { applyFieldValue } from '../../Form/Form.utils';
 import { Toast } from '../../Toast/Toast';
@@ -88,7 +88,7 @@ export const useFeatureSave = ({
 
   const saveFeatureWithConfirm = async (): Promise<void> => {
     if (
-      await konfirmieren({
+      await doConfirm({
         message: 'Точки геометрии, выходят за рамки слоя. Вы уверенны, что хотите внести изменения в геометрию?'
       })
     ) {

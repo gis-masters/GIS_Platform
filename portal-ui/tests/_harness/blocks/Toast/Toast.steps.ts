@@ -22,6 +22,10 @@ Then('отсутствуют уведомления об ошибках', async 
   await toastBlock.notBecomeVisible();
 });
 
+Then('не появляется уведомление {string}', async (msg: string) => {
+  await toastBlock.assertNoToastWithTitle(msg);
+});
+
 Then('появляются подробности уведомления', async () => {
   await toastBlock.waitForDetails();
 });

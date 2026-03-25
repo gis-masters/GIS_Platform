@@ -4,6 +4,7 @@ import { getFeaturesListItemTitle } from '../../../../components/FeaturesListIte
 import { PrintFormatSubmitButton } from '../../../../components/PrintFormatSubmitButton/PrintFormatSubmitButton';
 import { PrintMapImageControl } from '../../../../components/PrintMapImageControl/PrintMapImageControl';
 import { SelectPropertiesControl } from '../../../../components/SelectPropertiesControl/SelectPropertiesControl';
+import { doFormPrompt } from '../../../answer-modals.service';
 import { getProjectionByCode } from '../../../data/projections/projections.service';
 import { getProjectionUnit } from '../../../data/projections/projections.util';
 import { type PropertySchema, PropertyType } from '../../../data/schema/schema.models';
@@ -11,7 +12,6 @@ import { applyView, getReadablePropertyValue } from '../../../data/schema/schema
 import { type WfsFeature } from '../../../geoserver/wfs/wfs.models';
 import { getLayerSchema } from '../../../gis/layers/layers.service';
 import { getLayerByFeatureInCurrentProject } from '../../../gis/layers/layers.utils';
-import { formPrompt } from '../../../utility-dialogs.service';
 import { type CreateReportRequest, isOutputFormat } from '../../print.models';
 import { printWithCarbon } from '../../print.service';
 import { buildCoordinatesList, type PrintableCoordinatesChunk } from '../../utils/buildCoordinatesList';
@@ -57,7 +57,7 @@ export const featureExtractNew: PrintTemplate<WfsFeature> = new PrintTemplate({
     // Диалог для настройки параметров печати
     const submitData: { outputFormat: CreateReportRequest['outputFormat'] } = { outputFormat: 'PDF' };
 
-    const { formValue: mapDialogResult, extra } = await formPrompt<{
+    const { formValue: mapDialogResult, extra } = await doFormPrompt<{
       title: string;
       map: string;
       properties: PropertySchema[];

@@ -1,6 +1,6 @@
 import { SortOrder } from '../../../../src/app/services/models';
 import { Block } from '../../classes/Block';
-import { achtungBlock } from '../Achtung/Achtung.block';
+import { answerModalTypeAlertBlock } from '../AnswerModal/_type/AnswerModal_type_alert.block';
 import { ExplorerBlock } from '../Explorer/Explorer.block';
 
 export const sortDirections: Record<string, SortOrder> = {
@@ -14,7 +14,7 @@ class ProjectFolderBlock extends Block {
   };
 
   async deleteConfirmDialog(): Promise<void> {
-    await achtungBlock.isDialogExist();
+    await answerModalTypeAlertBlock.waitForVisible();
   }
 
   async openFolder(folder: string): Promise<void> {

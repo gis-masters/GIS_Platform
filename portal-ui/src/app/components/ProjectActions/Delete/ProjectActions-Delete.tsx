@@ -3,12 +3,12 @@ import { observer } from 'mobx-react';
 import { Delete, DeleteOutline } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
+import { doAlert, doConfirm } from '../../../services/answer-modals.service';
 import { communicationService } from '../../../services/communication.service';
 import { type CrgProject } from '../../../services/gis/projects/projects.models';
 import { projectsService } from '../../../services/gis/projects/projects.service';
 import { ActionTypes, DataTypes } from '../../../services/permissions/permissions.models';
 import { getAvailableActionsTooltipByRole } from '../../../services/permissions/permissions.utils';
-import { achtung, konfirmieren } from '../../../services/utility-dialogs.service';
 import { type ActionsItemVariant } from '../../Actions/Item/Actions-Item.base';
 import { ActionsItem } from '../../Actions/Item/Actions-Item.composed';
 
@@ -33,7 +33,7 @@ export const ProjectActionsDelete = observer((props: ProjectActionsDeleteProps) 
 
   const handleDelete = useCallback(async () => {
     setDialogOpen(true);
-    const confirmed = await konfirmieren({
+    const confirmed = await doConfirm({
       title: 'Подтверждение удаления',
       message: `Вы действительно хотите удалить "${project.name}"?`,
       okText: 'Удалить',
@@ -58,7 +58,7 @@ export const ProjectActionsDelete = observer((props: ProjectActionsDeleteProps) 
     });
 
     if (projects.length) {
-      await achtung({
+      await doAlert({
         title: 'Невозможно удалить',
         message: 'Папка проектов не пуста. Для её удаления необходимо сперва удалить все проекты внутри.'
       });

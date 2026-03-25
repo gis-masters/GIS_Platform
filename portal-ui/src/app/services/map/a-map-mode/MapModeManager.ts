@@ -1,5 +1,5 @@
+import { doConfirm } from '../../answer-modals.service';
 import { services } from '../../services';
-import { konfirmieren } from '../../utility-dialogs.service';
 import { MapMode } from '../map.models';
 import { defaultModeHandler } from './DefaultModeHandler';
 import { drawFeatureModeHandler } from './DrawFeatureModeHandler';
@@ -34,7 +34,7 @@ class MapModeManager {
     services.logger.trace(`try change [${MapMode[this.currentMode.mode()]}->${MapMode[newMode]}] => [${reason}]`);
     let confirmed = true;
     if (!this.currentMode.pristine()) {
-      confirmed = await konfirmieren({
+      confirmed = await doConfirm({
         message: 'Все несохраненные данные будут утеряны.',
         okText: 'Всё равно закрыть',
         cancelText: 'Не закрывать'

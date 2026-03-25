@@ -17,7 +17,7 @@ export interface DataChangeEventDetail<T> {
   data: T;
 }
 
-export interface UtilityDialogCloseEventDetail {
+export interface AnswerModalCloseEventDetail {
   id: string;
   answer?: boolean;
   value?: string;
@@ -41,7 +41,7 @@ class CommunicationService {
   beforeMapDestroy = new Emitter();
   openAttributesBar = new Emitter<CrgVectorLayer>();
   minimizeAttributesBar = new Emitter();
-  utilityDialogClosed = new Emitter<UtilityDialogCloseEventDetail>();
+  answerModalClosed = new Emitter<AnswerModalCloseEventDetail>();
 
   snapDblClick = new Emitter<SnapEvent>();
 

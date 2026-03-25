@@ -128,6 +128,7 @@
     "@types/lodash": "4.14.199",
     "@types/node": "20.12.3",
     "@types/papaparse": "5.3.8",
+    "@types/pngjs": "6.0.5",
     "@types/proj4": "2.5.4",
     "@types/react": "18.2.33",
     "@types/react-beautiful-dnd": "13.1.4",

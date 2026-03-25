@@ -71,6 +71,43 @@ class ToastBlock extends Block {
 
     return await $title.getText();
   }
+
+  /**
+   * Убеждаемся, что за короткое окно не появился тост с данным заголовком
+   */
+  async assertNoToastWithTitle(msg: string): Promise<void> {
+    const msgNorm = msg.replaceAll(/\s+/g, ' ').trim();
+    let forbiddenSeen = false;
+    try {
+      await browser.waitUntil(
+        async () => {
+          const $$titles = await this.findAllBySelector('title');
+          for (const $title of $$titles) {
+            const raw = await $title.getText();
+            const text = raw.replaceAll(/\s+/g, ' ').trim();
+            if (text === msgNorm) {
+              forbiddenSeen = true;
+
+              return true;
+            }
+          }
+
+          return false;
+        },
+        { timeout: 1000 }
+      );
+    } catch {
+      if (forbiddenSeen) {
+        throw new Error(`Не ожидали уведомление "${msg}", но оно отобразилось`);
+      }
+
+      return;
+    }
+
+    if (forbiddenSeen) {
+      throw new Error(`Не ожидали уведомление "${msg}", но оно отобразилось`);
+    }
+  }
 }
 
 export const toastBlock = new ToastBlock();

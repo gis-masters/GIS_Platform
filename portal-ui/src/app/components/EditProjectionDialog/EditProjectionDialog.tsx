@@ -4,12 +4,12 @@ import { Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material
 import { cn } from '@bem-react/classname';
 import { type AxiosError } from 'axios';
 
+import { doAlert } from '../../services/answer-modals.service';
 import { communicationService } from '../../services/communication.service';
 import { projectionsClient } from '../../services/data/projections/projections.client';
 import { type EditProjectionModel, type Projection } from '../../services/data/projections/projections.models';
 import { PropertyType, type SimpleSchema } from '../../services/data/schema/schema.models';
 import { generateRandomId } from '../../services/util/randomId';
-import { achtung } from '../../services/utility-dialogs.service';
 import { ActionsRight } from '../ActionsRight/ActionsRight';
 import { Button } from '../Button/Button';
 import { Form } from '../Form/Form';
@@ -161,7 +161,7 @@ PARAMETER["false_northing",0],                  // Смещение по оси 
 UNIT["Meter",1]                                 // Единица измерения результатов в метрах
 ]`;
 
-    await achtung({
+    await doAlert({
       title: 'Пример системы координат в формате WKT',
       okText: 'Закрыть',
       message: (

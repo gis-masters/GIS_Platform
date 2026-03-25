@@ -7,9 +7,9 @@ import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 import { type AxiosError } from 'axios';
 
+import { doAlert, doConfirm } from '../../../services/answer-modals.service';
 import { type Dataset } from '../../../services/data/vectorData/vectorData.models';
 import { deleteDataset, getVectorTablesInDataset } from '../../../services/data/vectorData/vectorData.service';
-import { achtung, konfirmieren } from '../../../services/utility-dialogs.service';
 import { IconButton } from '../../IconButton/IconButton';
 
 const cnDatasetActionsDelete = cn('DatasetActions', 'Delete');
@@ -64,7 +64,7 @@ export class DatasetActionsDelete extends Component<DatasetActionsDeleteProps> {
       // Проверяем, пустой ли набор данных
       const [records] = await getVectorTablesInDataset(dataset.identifier, { page: 0, pageSize: 1 });
       if (records.length) {
-        await achtung({
+        await doAlert({
           title: 'Невозможно удалить',
           message: 'Набор данных не пустой. Для его удаления необходимо сперва удалить все таблицы внутри.'
         });
@@ -74,7 +74,7 @@ export class DatasetActionsDelete extends Component<DatasetActionsDeleteProps> {
       }
 
       // Запрашиваем подтверждение удаления
-      const confirmed = await konfirmieren({
+      const confirmed = await doConfirm({
         title: 'Подтверждение удаления',
         message: `Вы действительно хотите удалить "${dataset.title}"?`,
         okText: 'Удалить',
@@ -88,7 +88,7 @@ export class DatasetActionsDelete extends Component<DatasetActionsDeleteProps> {
       this.setDialogOpen(false);
     } catch (error) {
       const err = error as AxiosError<{ message: string }>;
-      await achtung({
+      await doAlert({
         title: 'Ошибка',
         message: err.response?.data.message || 'Не удалось удалить набор данных'
       });

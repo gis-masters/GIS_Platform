@@ -3,6 +3,7 @@ import { observer, useLocalObservable } from 'mobx-react';
 import { type AxiosError } from 'axios';
 import { type Certificate, getUserCertificates } from 'crypto-pro';
 
+import { doAlert } from '../../../services/answer-modals.service';
 import { communicationService } from '../../../services/communication.service';
 import { createSignature, getUsedCertificates } from '../../../services/cryptopro/cryptoPro.service';
 import { getFileEcp, getFileHash, signFile } from '../../../services/data/files/files.service';
@@ -11,7 +12,6 @@ import { PropertyType } from '../../../services/data/schema/schema.models';
 import { type WfsFeature } from '../../../services/geoserver/wfs/wfs.models';
 import { services } from '../../../services/services';
 import { notFalsyFilter } from '../../../services/util/NotFalsyFilter';
-import { achtung } from '../../../services/utility-dialogs.service';
 import { sidebars } from '../../../stores/Sidebars.store';
 import { ChooseXTableDialog } from '../../ChooseXTableDialog/ChooseXTableDialog';
 import { Loading } from '../../Loading/Loading';
@@ -165,7 +165,7 @@ const FilesSignDialogFC: FC<FilesSignatureProps> = observer(
           setCertificates(certificates);
         } catch {
           setLoading(false);
-          await achtung({
+          await doAlert({
             title: 'Не удалось получить данные для формирования ЭЦП'
           });
         }

@@ -8,10 +8,10 @@ import { boundMethod } from 'autobind-decorator';
 import { isEqual } from 'lodash';
 import { pluralize } from 'numeralize-ru';
 
+import { doConfirm } from '../../../services/answer-modals.service';
 import { type Basemap } from '../../../services/data/basemaps/basemaps.models';
 import { deleteBasemap } from '../../../services/data/basemaps/basemaps.service';
 import { getBasemapConnections } from '../../../services/gis/project-basemaps/project-basemaps.service';
-import { konfirmieren } from '../../../services/utility-dialogs.service';
 import { IconButton } from '../../IconButton/IconButton';
 
 const cnBasemapActionsDelete = cn('BasemapActions', 'Delete');
@@ -75,7 +75,7 @@ export class BasemapActionsDelete extends Component<BasemapActionsDeleteProps> {
 
     this.setDialogOpen(true);
 
-    const confirmed = await konfirmieren({
+    const confirmed = await doConfirm({
       title: 'Подтверждение удаления',
       message: (
         <>

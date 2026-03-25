@@ -3,9 +3,9 @@ import { Block } from '../../classes/Block';
 export class DialogBlock extends Block {
   selectors = {
     root: '.MuiDialog-paper',
-    actions: '.MuiDialog-paper .MuiDialogActions-root',
-    actionsButtons: '.MuiDialog-paper .MuiDialogActions-root .Button',
-    primaryAction: '.MuiDialog-paper .MuiDialogActions-root .MuiButton-outlinedPrimary'
+    actions: '.MuiDialogActions-root',
+    actionsButtons: '.MuiDialogActions-root .Button',
+    primaryAction: '.MuiDialogActions-root .MuiButton-outlinedPrimary'
   };
 
   private async getButtonByTitle(buttonTitle: string): Promise<WebdriverIO.Element> {

@@ -7,6 +7,7 @@ import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 import { pluralize } from 'numeralize-ru';
 
+import { doConfirm } from '../../../services/answer-modals.service';
 import { deleteFeaturesAndEmitEvent } from '../../../services/data/vectorData/vectorData.service';
 import { type WfsFeature } from '../../../services/geoserver/wfs/wfs.models';
 import { type CrgVectorableLayer, isVectorLayer } from '../../../services/gis/layers/layers.models';
@@ -18,7 +19,6 @@ import { mapService } from '../../../services/map/map.service';
 import { type PageOptions } from '../../../services/models';
 import { isUpdateAllowed } from '../../../services/permissions/permissions.service';
 import { featuresCollectionPrintTemplates } from '../../../services/print/print.service';
-import { konfirmieren } from '../../../services/utility-dialogs.service';
 import { CopyFeaturesButton } from '../../CopyFeaturesButton/CopyFeaturesButton';
 import { EditFeaturesButton } from '../../EditFeaturesButton/EditFeaturesButton';
 import { IconButton } from '../../IconButton/IconButton';
@@ -147,7 +147,7 @@ export class AttributesBarActions extends Component<AttributesBarActionsProps> {
   @boundMethod
   private async openMultipleDeleteDialog() {
     this.setDialogOpen(true);
-    const confirmed = await konfirmieren({
+    const confirmed = await doConfirm({
       message: `Вы действительно хотите удалить${this.objLabel}?`,
       okText: 'Удалить',
       cancelText: 'Отмена'

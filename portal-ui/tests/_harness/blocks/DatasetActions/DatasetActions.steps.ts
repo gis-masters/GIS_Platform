@@ -1,6 +1,6 @@
 import { Then, When } from '@wdio/cucumber-framework';
 
-import { utilityDialogBlock } from '../UtilityDialog/UtilityDialog.block';
+import { answerModalBlock } from '../AnswerModal/AnswerModal.block';
 import { datasetActionsBlock } from './DatasetActions.block';
 
 When('я нажимаю кнопку удалить в панели свойств набора данных', async () => {
@@ -35,5 +35,5 @@ When(
 );
 
 Then('появляется диалоговое окно запрещающее удаление', async () => {
-  await utilityDialogBlock.waitForVisible();
+  await answerModalBlock.waitForVisible();
 });

@@ -7,7 +7,7 @@ import '../src/styles.css';
 import { registry } from '../src/app/services/di-registry';
 import { Toast } from '../src/app/components/Toast/Toast';
 import { LoginFormDialog } from '../src/app/components/LoginFormDialog/LoginFormDialog';
-import { UtilityDialogsRoot } from '../src/app/components/UtilityDialogsRoot/UtilityDialogsRoot';
+import { AnswerModalsRoot } from '../src/app/components/AnswerModalsRoot/AnswerModalsRoot';
 import { StoryWrapper } from './StoryWrapper/StoryWrapper';
 
 const toastProps = {
@@ -30,7 +30,7 @@ export const decorators = [
       <Story />
       <LoginFormDialog />
       <ToastContainer {...toastProps} />
-      <UtilityDialogsRoot />
+      <AnswerModalsRoot />
     </StoryWrapperWithRegistry>
   )
 ];

@@ -47,7 +47,7 @@ export async function printWithCarbon(
   });
 
   if (fileName) {
-    downloadByUrl(getFileDownloadUrl(fileId), fileName);
+    await downloadByUrl(getFileDownloadUrl(fileId), fileName);
   }
 
   return fileId;

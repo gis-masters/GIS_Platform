@@ -4,10 +4,10 @@ import { Tooltip } from '@mui/material';
 import { DeleteSweepOutlined, LabelOutlined, PolylineOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
+import { doConfirm } from '../../services/answer-modals.service';
 import { type LabelType } from '../../services/map/labels/map-labels.models';
 import { mapLabelsService } from '../../services/map/labels/map-labels.service';
 import { MapAction, ToolMode } from '../../services/map/map.models';
-import { konfirmieren } from '../../services/utility-dialogs.service';
 import { mapStore } from '../../stores/Map.store';
 import { mapLabelsStore } from '../../stores/MapLabels.store';
 import { AnnotationSettings } from '../AnnotationSettings/AnnotationSettings';
@@ -61,7 +61,7 @@ export const MapLabels: FC = observer(() => {
 
   const handleClearAllClick = useCallback(async () => {
     if (
-      await konfirmieren({
+      await doConfirm({
         title: 'Вы уверены, что хотите удалить все аннотации?',
         message: 'Все аннотации будут удалены безвозвратно.'
       })

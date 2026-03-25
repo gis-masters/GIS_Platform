@@ -8,10 +8,10 @@ import { RegistryConsumer } from '@bem-react/di';
 import { boundMethod } from 'autobind-decorator';
 import { cloneDeep, isEqual } from 'lodash';
 
+import { doConfirm } from '../../services/answer-modals.service';
 import { type Schema, type SimpleSchema } from '../../services/data/schema/schema.models';
 import { type CommonDiRegistry } from '../../services/di-registry';
 import { generateRandomId } from '../../services/util/randomId';
-import { konfirmieren } from '../../services/utility-dialogs.service';
 import { ActionsLeft } from '../ActionsLeft/ActionsLeft';
 import { ActionsRight } from '../ActionsRight/ActionsRight';
 import { Button, type ButtonProps } from '../Button/Button';
@@ -191,7 +191,7 @@ export class FormDialog<T> extends Component<FormDialogProps<T>> {
     }
 
     if (this.props.closeWithConfirm && !this.isValueNotChanged(this.initialFormValue, this.actualFormValue)) {
-      const confirmed = await konfirmieren({
+      const confirmed = await doConfirm({
         message: 'Все несохраненные данные будут утеряны.',
         okText: 'Всё равно закрыть',
         cancelText: 'Не закрывать'

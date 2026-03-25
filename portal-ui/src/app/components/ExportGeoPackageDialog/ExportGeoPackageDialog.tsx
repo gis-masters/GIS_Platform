@@ -121,13 +121,13 @@ export const ExportGeoPackageDialog: FC<ExportGeoPackageDialogProps> = observer(
     state.setHistoryOpen(false);
   }, [state]);
 
-  const handleDownload = useCallback(() => {
+  const handleDownload = useCallback(async () => {
     if (!state.filePath) {
       return;
     }
 
     const fileName = state.filePath.split(/[#?]/)[0].split(/[/\\]/).filter(Boolean).pop() || 'export.gpkg';
-    downloadByUrl(getExportDownloadUrl(fileName), fileName);
+    await downloadByUrl(getExportDownloadUrl(fileName), fileName);
   }, [state.filePath]);
 
   const onSelectLayers = useCallback(

@@ -20,6 +20,7 @@ import { currentProject } from '../../../stores/CurrentProject.store';
 import { currentUser } from '../../../stores/CurrentUser.store';
 import { mapStore } from '../../../stores/Map.store';
 import { mapLabelsStore } from '../../../stores/MapLabels.store';
+import { doPrompt } from '../../answer-modals.service';
 import { communicationService } from '../../communication.service';
 import { defaultOlProjectionCode, type Projection } from '../../data/projections/projections.models';
 import { getOlProjection, getProjectionByCode } from '../../data/projections/projections.service';
@@ -37,7 +38,6 @@ import { isArrayOf } from '../../util/typeGuards/isArrayOf';
 import { isCircleProperties } from '../../util/typeGuards/isCircleProperties';
 import { isCoordinate, isCoordinateArray, isCoordinateArrayArray } from '../../util/typeGuards/isCoordinate';
 import { isNumberArray } from '../../util/typeGuards/isNumberArray';
-import { prompto } from '../../utility-dialogs.service';
 import { editFeatureStore } from '../a-map-mode/edit-feature/EditFeatureStore';
 import { selectedFeaturesStore } from '../a-map-mode/selected-features/SelectedFeatures.store';
 import { mapDrawService } from '../draw/map-draw.service';
@@ -580,7 +580,7 @@ class MapLabelsService {
   private async editLabel(feature: Feature) {
     const currentText = feature.getProperties().text as string | undefined;
 
-    const text = await prompto({
+    const text = await doPrompt({
       title: 'Текст аннотации:',
       defaultValue: currentText || 'аннотация',
       multiline: true

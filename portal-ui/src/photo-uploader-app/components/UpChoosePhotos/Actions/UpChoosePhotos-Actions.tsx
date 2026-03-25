@@ -3,7 +3,7 @@ import { observer } from 'mobx-react';
 import { cn } from '@bem-react/classname';
 
 import { Button } from '../../../../app/components/Button/Button';
-import { konfirmieren } from '../../../../app/services/utility-dialogs.service';
+import { doConfirm } from '../../../../app/services/answer-modals.service';
 import { photoUploaderStore } from '../../../stores/PhotoUploader.store';
 import { UpAddFiles } from '../../UpAddFiles/UpAddFiles';
 
@@ -13,7 +13,7 @@ const cnUpChoosePhotosActions = cn('UpChoosePhotos', 'Actions');
 
 const clearHandler = async () => {
   if (
-    await konfirmieren({
+    await doConfirm({
       message: 'Вы уверены, что хотите удалить из списка все добавленные фотографии?'
     })
   ) {

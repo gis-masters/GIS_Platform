@@ -5,6 +5,7 @@ import { interval, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 import { Toast } from '../../components/Toast/Toast';
+import { doAlert } from '../../services/answer-modals.service';
 import { type Process, ProcessStatus } from '../../services/data/processes/processes.models';
 import { getProcess } from '../../services/data/processes/processes.service';
 import { schemaService } from '../../services/data/schema/schema.service';
@@ -17,7 +18,6 @@ import {
   ImportDataHolderService
 } from '../../services/geoserver/import/import-data-holder.service';
 import { projectsService } from '../../services/gis/projects/projects.service';
-import { achtung } from '../../services/utility-dialogs.service';
 import { currentImport } from '../../stores/CurrentImport.store';
 import { currentProject } from '../../stores/CurrentProject.store';
 
@@ -84,7 +84,7 @@ export class MappingPageComponent implements OnInit, OnDestroy {
 
   async startWorkImport(): Promise<void> {
     if (!this.importData.isWorkImportReady) {
-      await achtung({
+      await doAlert({
         message: 'Есть не обработанные слои',
         okText: 'Закончить обработку слоёв'
       });

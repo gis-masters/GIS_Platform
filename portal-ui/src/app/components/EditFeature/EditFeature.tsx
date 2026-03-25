@@ -6,6 +6,7 @@ import { Close } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import _, { isEqual } from 'lodash';
 
+import { doConfirm } from '../../services/answer-modals.service';
 import { communicationService, type DataChangeEventDetail } from '../../services/communication.service';
 import {
   applyView,
@@ -28,7 +29,6 @@ import { getStyle, KnownStyleKey } from '../../services/map/styles/map-styles';
 import { isUpdateAllowed } from '../../services/permissions/permissions.service';
 import { services } from '../../services/services';
 import { calculateValues } from '../../services/util/form/formValidation.utils';
-import { konfirmieren } from '../../services/utility-dialogs.service';
 import { mapStore } from '../../stores/Map.store';
 import { Button } from '../Button/Button';
 import { EditFeatureActions } from '../EditFeatureActions/EditFeatureActions';
@@ -411,7 +411,7 @@ export const EditFeature: FC = observer(() => {
     }
 
     if (
-      await konfirmieren({
+      await doConfirm({
         message: 'Вы действительно хотите удалить объект?',
         okText: 'Удалить',
         cancelText: 'Отмена'

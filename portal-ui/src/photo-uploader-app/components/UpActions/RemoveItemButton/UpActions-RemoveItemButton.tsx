@@ -3,7 +3,7 @@ import { observer } from 'mobx-react';
 import { DeleteOutline } from '@mui/icons-material';
 
 import { IconButton } from '../../../../app/components/IconButton/IconButton';
-import { konfirmieren } from '../../../../app/services/utility-dialogs.service';
+import { doConfirm } from '../../../../app/services/answer-modals.service';
 import { photoUploaderStore } from '../../../stores/PhotoUploader.store';
 
 interface UpActionsRemoveItemButtonProps {
@@ -14,7 +14,7 @@ interface UpActionsRemoveItemButtonProps {
 export const UpActionsRemoveItemButton: FC<UpActionsRemoveItemButtonProps> = observer(({ title, error }) => {
   const clickHandler = useCallback(async () => {
     if (
-      await konfirmieren({
+      await doConfirm({
         message: 'Вы уверены, что хотите удалить эту фотографию?'
       })
     ) {

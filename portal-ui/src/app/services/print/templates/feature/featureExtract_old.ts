@@ -4,6 +4,7 @@ import { type Coordinate } from 'ol/coordinate';
 import { getFeaturesListItemTitle } from '../../../../components/FeaturesListItem/FeaturesListItem.util';
 import { PrintMapImageControl } from '../../../../components/PrintMapImageControl/PrintMapImageControl';
 import { SelectPropertiesControl } from '../../../../components/SelectPropertiesControl/SelectPropertiesControl';
+import { doFormPrompt } from '../../../answer-modals.service';
 import { getProjectionByCode } from '../../../data/projections/projections.service';
 import { getProjectionUnit } from '../../../data/projections/projections.util';
 import { type PropertySchema, PropertyType } from '../../../data/schema/schema.models';
@@ -11,7 +12,6 @@ import { applyView, getReadablePropertyValue } from '../../../data/schema/schema
 import { GeometryType, type WfsFeature } from '../../../geoserver/wfs/wfs.models';
 import { getLayerSchema } from '../../../gis/layers/layers.service';
 import { getLayerByFeatureInCurrentProject } from '../../../gis/layers/layers.utils';
-import { formPrompt } from '../../../utility-dialogs.service';
 import { getFeatureSize } from '../../utils/getFeatureSize';
 import { PrintTemplate } from '../PrintTemplate';
 
@@ -42,7 +42,7 @@ export const featureExtractOld: PrintTemplate<WfsFeature> = new PrintTemplate({
     const properties = schemaWithAppliedView.properties.filter(({ hidden }) => !hidden);
 
     // Диалог для настройки параметров печати
-    const { formValue: mapDialogResult } = await formPrompt<{
+    const { formValue: mapDialogResult } = await doFormPrompt<{
       title: string;
       image: string;
       properties: PropertySchema[];

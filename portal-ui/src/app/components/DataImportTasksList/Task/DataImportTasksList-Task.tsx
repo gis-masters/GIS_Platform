@@ -5,8 +5,8 @@ import { Tooltip } from '@mui/material';
 import { Delete } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
+import { doConfirm } from '../../../services/answer-modals.service';
 import { deleteTask } from '../../../services/geoserver/import/import.service';
-import { konfirmieren } from '../../../services/utility-dialogs.service';
 import { currentImport, type ImportTaskExtended } from '../../../stores/CurrentImport.store';
 import { IconButton } from '../../IconButton/IconButton';
 
@@ -64,7 +64,7 @@ export class DataImportTasksListTask extends Component<DataImportTasksListTaskPr
 
   @action.bound
   private async deleteTask() {
-    const confirmed = await konfirmieren({
+    const confirmed = await doConfirm({
       message: 'Вы действительно хотите удалить слой?',
       okText: 'Удалить',
       cancelText: 'Отмена'

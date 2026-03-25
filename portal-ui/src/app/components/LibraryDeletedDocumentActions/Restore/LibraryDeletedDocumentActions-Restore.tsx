@@ -6,9 +6,9 @@ import { cn } from '@bem-react/classname';
 import { boundMethod } from 'autobind-decorator';
 import { type AxiosError } from 'axios';
 
+import { doConfirm } from '../../../services/answer-modals.service';
 import { type Library, type LibraryRecord } from '../../../services/data/library/library.models';
 import { getLibrary, getLibraryRecord, recoverLibraryRecord } from '../../../services/data/library/library.service';
-import { konfirmieren } from '../../../services/utility-dialogs.service';
 import { type ActionsItemVariant } from '../../Actions/Item/Actions-Item.base';
 import { ActionsItem } from '../../Actions/Item/Actions-Item.composed';
 import { emptyItem, type ExplorerItemData, ExplorerItemType } from '../../Explorer/Explorer.models';
@@ -99,7 +99,7 @@ export class LibraryDeletedDocumentActionsRestore extends Component<LibraryDelet
 
         if (parent?.is_deleted) {
           if (
-            await konfirmieren({
+            await doConfirm({
               title: 'Невозможно восстановить документ в изначальную папку. Выбрать другую папку для восстановления?'
             })
           ) {

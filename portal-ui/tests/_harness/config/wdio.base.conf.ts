@@ -15,6 +15,14 @@ declare global {
   }
 }
 
+const chromeCapability = {
+  browserName: 'chrome',
+  acceptInsecureCerts: true,
+  'goog:chromeOptions': {
+    args: ['--headless=new', 'window-size=1300,900']
+  }
+} satisfies WebdriverIO.Capabilities;
+
 export const baseConfig: WebdriverIO.Config = {
   hostname: '10.10.10.116',
   port: 4444,
@@ -25,15 +33,7 @@ export const baseConfig: WebdriverIO.Config = {
 
   maxInstances: 3,
 
-  capabilities: [
-    {
-      browserName: 'chrome',
-      acceptInsecureCerts: true,
-      'goog:chromeOptions': {
-        args: ['--headless', 'window-size=1300,900']
-      }
-    }
-  ],
+  capabilities: [chromeCapability],
 
   logLevel: 'error',
   bail: 0,

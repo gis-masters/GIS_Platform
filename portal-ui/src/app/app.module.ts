@@ -11,6 +11,7 @@ import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http'
 import { LoggerModule, NgxLoggerLevel } from 'ngx-logger';
 
 import { AppRoutingModule, routingComponents } from './app-routing.module';
+import { AnswerModalsRootComponent } from './components/answer-modals-root/answer-modals-root.component';
 import { AttributesNgComponent } from './components/attributes-ng/attributes-ng.component';
 import { AttributionComponent } from './components/attribution/attribution.component';
 import { BasemapsSelectComponent } from './components/basemaps-select/basemaps-select.component';
@@ -57,7 +58,6 @@ import { ServicesProvider } from './components/services-provider/services-provid
 import { SystemManagementComponent } from './components/system-management/system-management.component';
 import { TaskPageContainerComponent } from './components/task-page-container/task-page-container.component';
 import { TasksJournalComponent } from './components/tasks-journal/tasks-journal.component';
-import { UtilityDialogsRootComponent } from './components/utility-dialogs-root/utility-dialogs-root.component';
 import { BugsTableComponent } from './components/validation/bugs-table/bugs-table.component';
 import { ReportSidebarComponent } from './components/validation/report-sidebar/report-sidebar.component';
 import { ViolationsViewComponent } from './components/validation/violations-view/violations-view.component';
@@ -125,7 +125,7 @@ import { GlobalErrorHandler } from './services/global-error.handler';
     SystemManagementComponent,
     MessagesRegistryComponent,
     TasksJournalComponent,
-    UtilityDialogsRootComponent,
+    AnswerModalsRootComponent,
     PhotoModePreviewerComponent,
     ProjectFolderComponent
   ],

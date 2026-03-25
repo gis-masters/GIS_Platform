@@ -89,14 +89,14 @@ export class ProgressItemComponent implements OnDestroy {
     }
   }
 
-  download(): void {
+  async download(): Promise<void> {
     if (!this.event) {
       return;
     }
     const wsMessage: IWsMessage = this.event.payload;
     const exportWsMsg: ExportWsMsg = wsMessage.payload as ExportWsMsg;
     const fileName = exportWsMsg.payload.split(/[#?]/)[0].split(/[/\\]/).filter(Boolean).pop() as string;
-    downloadByUrl(getExportDownloadUrl(fileName), fileName);
+    await downloadByUrl(getExportDownloadUrl(fileName), fileName);
   }
 
   isShowActionBlock(): boolean {

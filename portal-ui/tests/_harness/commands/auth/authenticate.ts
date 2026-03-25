@@ -21,7 +21,14 @@ async function authenticate(
   thenPage: Page = testDataPreparationPage
 ): Promise<AuthenticationResult> {
   const currentUrl = await browser.getUrl();
-  if (!currentUrl || currentUrl === 'data:,' || currentUrl === 'about:blank') {
+  const needsApp =
+    !currentUrl ||
+    currentUrl === 'data:,' ||
+    currentUrl === 'about:blank' ||
+    currentUrl.startsWith('blob:') ||
+    currentUrl.startsWith('data:image');
+
+  if (needsApp) {
     await homePage.open();
   }
 

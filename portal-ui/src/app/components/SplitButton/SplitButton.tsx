@@ -33,7 +33,7 @@ export const SplitButton: FC<SplitButtonProps> = observer(
     children,
     className,
     variant,
-    color,
+    color = 'inherit',
     size,
     disabled,
     onClick,
@@ -63,7 +63,14 @@ export const SplitButton: FC<SplitButtonProps> = observer(
           disabled={disabled}
           className={cnSplitButton(null, [className])}
         >
-          <Button variant={variant} color={color} disabled={disabled} {...buttonProps} onClick={onClick}>
+          <Button
+            variant={variant}
+            color={color}
+            disabled={disabled}
+            {...buttonProps}
+            className={cnSplitButton('Main')}
+            onClick={onClick}
+          >
             {children}
           </Button>
 

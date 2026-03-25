@@ -5,6 +5,7 @@ import { WorkspacePremiumOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 import { isValidSystemSetup } from 'crypto-pro';
 
+import { doConfirm } from '../../../services/answer-modals.service';
 import { communicationService, type DataChangeEventDetail } from '../../../services/communication.service';
 import { type FileConnection, type FileInfo } from '../../../services/data/files/files.models';
 import { getFileConnections, getFileInfo } from '../../../services/data/files/files.service';
@@ -18,7 +19,6 @@ import {
 } from '../../../services/data/files/files.util';
 import { type LibraryRecord } from '../../../services/data/library/library.models';
 import { editFeatureStore } from '../../../services/map/a-map-mode/edit-feature/EditFeatureStore';
-import { konfirmieren } from '../../../services/utility-dialogs.service';
 import { cryptoProStore } from '../../../stores/CryptoPro.store';
 import { ConnectionsToProjects } from '../../ConnectionsToProjects/ConnectionsToProjects';
 import { IconButton } from '../../IconButton/IconButton';
@@ -118,7 +118,7 @@ const FilesItemFC: FC<FilesItemProps> = observer(
     const handleDeleteButtonClick = useCallback(
       async (item: FileInfo) => {
         if (connections?.length) {
-          const confirmed = await konfirmieren({
+          const confirmed = await doConfirm({
             message: (
               <>
                 Файл {item.title} подключен в проекты:

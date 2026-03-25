@@ -7,54 +7,12 @@ When('я нажимаю на стрелку назад в панели прос�
   await editFeatureBlock.goBack();
 });
 
-Then(
-  'в панели атрибутов объекта на карте в списке атрибутов отображается только поля: {strings}',
-  async function (titles: string[]) {
-    await editFeatureBlock.checkObjectAttributeFields(titles);
-  }
-);
-
-Then('форма просмотра объекта открывается в режиме {string}', async function (mode: string) {
-  const expected = mode === 'чтения';
-
-  await editFeatureBlock.waitForEditFeatureForm();
-  const isReadonly = await editFeatureBlock.isReadonlyMode();
-
-  expect(isReadonly).toEqual(expected);
-});
-
 Then('открывается форма просмотра объекта', async function () {
   await editFeatureBlock.waitForVisible();
 });
 
 Then('не открывается форма просмотра объекта', async function () {
   await editFeatureBlock.waitForHidden();
-});
-
-Then(
-  'в панели редактирования объекта отображается объект с значением {string} в поле {string}',
-  async function (value: string, field: string) {
-    const fieldValue = await editFeatureBlock.getFormViewFieldValue(field);
-
-    expect(fieldValue).toEqual(value);
-  }
-);
-
-Then(
-  'в панели редактирования объекта в блоке навигации отображается значение {string}',
-  async function (value: string) {
-    const fieldValue = await editFeatureBlock.getNavigationValue();
-
-    expect(fieldValue).toEqual(value);
-  }
-);
-
-When('в панели редактирования объекта я нажимаю на кнопку `Следующий объект`', async function () {
-  await editFeatureBlock.clickNextButton();
-});
-
-When('в панели редактирования объекта я нажимаю на кнопку `Предыдущий объект`', async function () {
-  await editFeatureBlock.clickPrevButton();
 });
 
 When('в форме просмотра объекта, я перехожу на вкладку просмотра геометрии', async function () {
@@ -65,26 +23,8 @@ When('я дожидаюсь исчезновения индикатора заг
   await editFeatureBlock.waitForLoading();
 });
 
-When(
-  'в форме редактирования объекта я изменяю значение поля {string} на {string}',
-  async function (title: string, value: string) {
-    await editFeatureBlock.changeEditFormFieldValue(title, value);
-  }
-);
-
-When(
-  'в форме редактирования объекта я дописываю значение {string} в начале поля {string}',
-  async function (value: string, title: string) {
-    await editFeatureBlock.addValueToEditFormFieldValue(value, title);
-  }
-);
-
 When('на панели выделенного объекта я нажимаю `Копировать объект в другой слой`', async function () {
   await editFeatureBlock.copyFeaturesButton.click();
-});
-
-When('на панели выделенного объекта я нажимаю `Перейти к объекту`', async function () {
-  await editFeatureBlock.zoomToFeature();
 });
 
 When('в форме редактирования объекта я нажимаю кнопку `Сохранить`', async function () {
@@ -97,13 +37,6 @@ When('в форме редактирования объекта я закрыв�
 
 When('в вкладке просмотра геометрии я перевожу курсор на кнопку `Сохранить`', async function () {
   await editFeatureBlock.focusSaveButton();
-});
-
-Then('в форме редактирования объекта в поле {string} значение {string}', async function (title: string, value: string) {
-  await editFeatureBlock.waitForVisible();
-  await editFeatureBlock.waitForEditFeatureForm();
-
-  expect(await editFeatureBlock.checkFormControlFieldValue(title, value)).toBe(true);
 });
 
 Then('вкладка просмотра геометрии в режиме чтения содержит следующую геометрию', async function (data: DataTable) {

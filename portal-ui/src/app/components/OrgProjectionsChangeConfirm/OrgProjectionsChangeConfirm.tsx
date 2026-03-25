@@ -4,6 +4,7 @@ import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, L
 import { cn } from '@bem-react/classname';
 import { type AxiosError } from 'axios';
 
+import { doAlert } from '../../services/answer-modals.service';
 import { communicationService } from '../../services/communication.service';
 import { projectionsClient } from '../../services/data/projections/projections.client';
 import { type EditProjectionModel, type Projection } from '../../services/data/projections/projections.models';
@@ -11,7 +12,6 @@ import { type TablesData } from '../../services/data/vectorData/vectorData.model
 import { getTablesBySrid } from '../../services/data/vectorData/vectorData.service';
 import { type RelatedVectorLayers } from '../../services/gis/layers/layers.models';
 import { getRelatedLayers } from '../../services/gis/layers/layers.service';
-import { achtung } from '../../services/utility-dialogs.service';
 import { Button } from '../Button/Button';
 import { datasetRootUrlItems } from '../DataManagement/DataManagement.utils';
 import { Loading } from '../Loading/Loading';
@@ -144,7 +144,7 @@ export const OrgProjectionsChangeConfirm: FC<OrgProjectionsChangeConfirmProps> =
         });
       } catch (error) {
         const err = error as AxiosError<{ message: string }>;
-        await achtung({
+        await doAlert({
           title: 'Ошибка',
           message: err.response?.data.message || 'Не удалось удалить систему координат'
         });
@@ -176,7 +176,7 @@ export const OrgProjectionsChangeConfirm: FC<OrgProjectionsChangeConfirmProps> =
         });
       } catch (error) {
         const err = error as AxiosError<{ message: string }>;
-        await achtung({
+        await doAlert({
           title: 'Ошибка',
           message: err.response?.data.message || 'Не удалось отредактировать систему координат'
         });
@@ -201,7 +201,7 @@ export const OrgProjectionsChangeConfirm: FC<OrgProjectionsChangeConfirmProps> =
         }
       } catch (error) {
         const err = error as AxiosError<{ message: string }>;
-        await achtung({
+        await doAlert({
           title: 'Ошибка',
           message: err.response?.data.message || 'Не удалось получить данные о связанных таблицах'
         });
