@@ -26,7 +26,7 @@ services:
     ports:
       - "8088:8088"
     volumes:
-      - /opt/crg/logs:/opt/logs
+      - ${CRG_DATA_DIR:-/opt/crg}/logs:/opt/logs
     logging:
       options:
         max-size: "10m"

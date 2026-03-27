@@ -10,10 +10,10 @@ services:
     ports:
       - "8080:8080"
     volumes:
-      - /opt/crg/data/geoserver:/opt/geoserver/data_dir
-      - /opt/crg/gwc_storage:/opt/crg/gwc_storage
-      - /opt/crg/spatial_data:/opt/crg/spatial_data
-      - /opt/crg/file_storage:/opt/crg/file_storage
+      - ${CRG_DATA_DIR:-/opt/crg}/data/geoserver:/opt/geoserver/data_dir
+      - ${CRG_DATA_DIR:-/opt/crg}/gwc_storage:/opt/crg/gwc_storage
+      - ${CRG_DATA_DIR:-/opt/crg}/spatial_data:/opt/crg/spatial_data
+      - ${CRG_DATA_DIR:-/opt/crg}/file_storage:/opt/crg/file_storage
     environment:
       APM_URL: ${APM_URL}
 
@@ -32,7 +32,7 @@ services:
     ports:
       - "5434:5432"
     volumes:
-      - /opt/crg/data/postgis:/var/lib/postgresql/data
+      - ${CRG_DATA_DIR:-/opt/crg}/data/postgis:/var/lib/postgresql/data
     environment:
       POSTGRES_DB: ${CRG_USER}
       POSTGRES_USER: ${CRG_USER}
@@ -69,7 +69,7 @@ services:
     ports:
       - "6379:6379"
     volumes:
-      - /opt/crg/data/redis:/data
+      - ${CRG_DATA_DIR:-/opt/crg}/data/redis:/data
     environment:
       REDIS_PASSWORD: ${REDIS_PASS}
     command: redis-server --requirepass ${REDIS_PASS}

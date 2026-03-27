@@ -33,7 +33,7 @@ services:
       GISOGD_INTEGRAION_CRG_OPTIONS_SED_SECRET: ${GISOGD_INTEGRAION_CRG_OPTIONS_SED_SECRET:-секретныйСекрет}
 
     volumes:
-      - /opt/logs:/opt/logs
+      - ${CRG_DATA_DIR:-/opt/crg}/logs:/opt/logs
     ports:
       - "${SERVER_PORT:-8888}:${SERVER_PORT:-8888}"
     mem_limit: ${GISOGD_INTEGRAION_MEM_LIMIT:-2100}m

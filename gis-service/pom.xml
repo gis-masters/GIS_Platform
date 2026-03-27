@@ -167,7 +167,7 @@
         <dependency>
             <groupId>ru.mycrg</groupId>
             <artifactId>geoserver-client</artifactId>
-            <version>1.4.4-SNAPSHOT</version>
+            <version>1.4.5-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>ru.mycrg</groupId>

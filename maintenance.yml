@@ -12,4 +12,4 @@ services:
       - HTTPS_ALLOWED=${HTTPS_ALLOWED:-0}
       - MAINTENANCE_TIME=${MAINTENANCE_TIME:-Планируемое время работ 10 минут.}
     volumes:
-      - /opt/crg/ssl:/opt/crg/ssl
+      - ${CRG_DATA_DIR:-/opt/crg}/ssl:/opt/crg/ssl

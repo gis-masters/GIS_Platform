@@ -51,7 +51,7 @@ else
 fi
 
 echo "Copy specializations"
-mkdir -p /opt/crg/specializations
-cp -r ../specializations/* /opt/crg/specializations/
+mkdir -p  ${CRG_DATA_DIR:-/opt/crg}/specializations
+cp -r ../specializations/*  ${CRG_DATA_DIR:-/opt/crg}/specializations/
 
 popd || exit

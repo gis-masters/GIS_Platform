@@ -55,8 +55,8 @@ done
 
 
 printHeader "Init migrations"
-export GEOSERVER_DATA_DIR=${GEOSERVER_DATA_DIR:-/opt/crg/data/geoserver}
-export DB_DATA_DIR=${DB_DATA_DIR:-/opt/crg/data/postgres}
+export GEOSERVER_DATA_DIR=${GEOSERVER_DATA_DIR:-${CRG_DATA_DIR:-/opt/crg}/data/geoserver}
+export DB_DATA_DIR=${DB_DATA_DIR:-${CRG_DATA_DIR:-/opt/crg}/data/postgres}
 
 pushd ../assets/ || exit
 
