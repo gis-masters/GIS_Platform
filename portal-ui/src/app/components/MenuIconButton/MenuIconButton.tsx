@@ -69,6 +69,9 @@ class MenuIconButtonComponent extends Component<MenuIconButtonProps> {
           anchorEl={this.anchorEl}
           onClick={this.close}
           keepMounted={keepMounted}
+          slotProps={{
+            root: { className: cnMenuIconButton('MenuModalRoot') }
+          }}
         >
           {Array.isArray(children) ? children : [children]}
         </Menu>

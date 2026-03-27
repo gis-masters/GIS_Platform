@@ -16,12 +16,12 @@ import { services } from '../../services/services';
 import { currentImport } from '../../stores/CurrentImport.store';
 import { organizationSettings } from '../../stores/OrganizationSettings.store';
 import { route } from '../../stores/Route.store';
+import { DataImportDropzone } from '../DataImportDropzone/DataImportDropzone';
 import { DataImportTasksList } from '../DataImportTasksList/DataImportTasksList';
 import { NoticeList } from '../Notice/List/Notice-List';
 import { NoticeListItem } from '../Notice/ListItem/Notice-ListItem';
 import { Notice } from '../Notice/Notice';
 import { DataImportDialog } from './Dialog/DataImport-Dialog';
-import { DataImportDropzone } from './Dropzone/DataImport-Dropzone';
 import { DataImportNavButtons } from './NavButtons/DataImport-NavButtons';
 import { DataImportNotifications } from './Notifications/DataImport-Notifications';
 
@@ -82,6 +82,10 @@ export default class DataImport extends Component {
     }
 
     await projectsService.fetchCurrent();
+
+    if (!urlImportId && !currentImport.id && currentImport.file && !currentImport.isWrongExt) {
+      this.start();
+    }
   }
 
   componentWillUnmount() {

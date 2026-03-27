@@ -2,12 +2,11 @@ import React, { Component } from 'react';
 import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { ListItemIcon, Menu, MenuItem } from '@mui/material';
-import { Business, CloudDownload, Map, Storage, ViewModule } from '@mui/icons-material';
+import { Business, Map, Storage, ViewModule } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
 import { currentProject } from '../../../stores/CurrentProject.store';
 import { currentUser } from '../../../stores/CurrentUser.store';
-import { organizationSettings } from '../../../stores/OrganizationSettings.store';
 import { Pages, route } from '../../../stores/Route.store';
 import { Link } from '../../Link/Link';
 import { WorkspaceHeaderBurger } from '../Burger/WorkspaceHeader-Burger';
@@ -35,17 +34,6 @@ export class WorkspaceHeaderMenu extends Component {
           onClose={this.close}
           anchorEl={this.anchorEl}
         >
-          {route.data.page === Pages.MAP && currentUser.isAdmin && organizationSettings.importShp && (
-            <Link href={`/projects/${currentProject.id}/import`} variant='contents' delay={300}>
-              <MenuItem onClick={this.close}>
-                <ListItemIcon>
-                  <CloudDownload />
-                </ListItemIcon>
-                <span className={cnWorkspaceHeaderMenuItemTitle()}>Импорт данных</span>
-              </MenuItem>
-            </Link>
-          )}
-
           {route.data.page === Pages.IMPORT && (
             <Link href={`/projects/${currentProject.id}/map`} variant='contents' delay={300}>
               <MenuItem onClick={this.close}>

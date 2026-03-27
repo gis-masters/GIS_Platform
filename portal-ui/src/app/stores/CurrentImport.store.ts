@@ -1,5 +1,6 @@
 import { action, computed, makeObservable, observable } from 'mobx';
 
+import { isZipFile } from '../services/data/files/files.util';
 import {
   type ImportTask,
   type ImportTaskFull,
@@ -121,7 +122,7 @@ class CurrentImport implements ImportInfo {
       return false;
     }
 
-    return this.file.name.split('.')[1] !== 'zip';
+    return !isZipFile(this.file);
   }
 
   @computed

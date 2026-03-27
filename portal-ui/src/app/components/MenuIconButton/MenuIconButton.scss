@@ -1,3 +1,8 @@
+// Modal меню ниже Tooltip (1300 vs 1500); поднимаем корень, чтобы тултип закрывался при открытии.
+body .MenuIconButton-MenuModalRoot.MuiModal-root {
+  z-index: 1600;
+}
+
 body .MenuIconButton {
   position: relative;
 

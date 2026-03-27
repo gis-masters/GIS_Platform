@@ -15,6 +15,7 @@ import { CopyUrlButton } from '../../CopyUrlButton/CopyUrlButton';
 import { ExportGmlMenu } from '../../ExportGmlMenu/ExportGmlMenu';
 import { HelpToggler } from '../../HelpToggler/HelpToggler';
 import { IconButton } from '../../IconButton/IconButton';
+import { ImportButton } from '../../ImportButton/ImportButton';
 import { NotificationsToggler } from '../../NotificationsToggler/NotificationsToggler';
 import { PrintMapButton } from '../../PrintMapButton/PrintMapButton';
 import { RunningOutOfSpace } from '../../RunningOutOfSpace/RunningOutOfSpace';
@@ -48,7 +49,12 @@ export class WorkspaceHeaderButtons extends Component {
           </Tooltip>
         )}
 
-        {route.data.page === Pages.MAP && <ExportGmlMenu />}
+        {route.data.page === Pages.MAP && (
+          <>
+            <ImportButton />
+            <ExportGmlMenu />
+          </>
+        )}
 
         <HelpToggler />
         <NotificationsToggler />

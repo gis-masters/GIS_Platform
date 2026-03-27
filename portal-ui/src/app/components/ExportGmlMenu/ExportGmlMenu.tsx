@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { action, makeObservable, observable } from 'mobx';
 import { observer } from 'mobx-react';
-import { MenuItem } from '@mui/material';
+import { MenuItem, Tooltip } from '@mui/material';
 import { GetAppOutlined } from '@mui/icons-material';
 import { cn } from '@bem-react/classname';
 
@@ -29,12 +29,16 @@ export class ExportGmlMenu extends Component {
 
     return (
       <>
-        <MenuIconButton className={cnExportGmlMenu()} icon={<GetAppOutlined />} color='inherit' disabled={disabled}>
-          <MenuItem onClick={this.openExportGeopackageDialog}>Экспорт в GeoPackage</MenuItem>
-          {organizationSettings.downloadGml && (
-            <MenuItem onClick={this.openExportGmlDialog}>Экспорт в GML по 10 приказу</MenuItem>
-          )}
-        </MenuIconButton>
+        <Tooltip disableInteractive title='Экспорт данных'>
+          <span>
+            <MenuIconButton className={cnExportGmlMenu()} color='inherit' disabled={disabled} icon={<GetAppOutlined />}>
+              <MenuItem onClick={this.openExportGeopackageDialog}>Выгрузить в GeoPackage</MenuItem>
+              {organizationSettings.downloadGml && (
+                <MenuItem onClick={this.openExportGmlDialog}>Выгрузить в GML (Приказ 10)</MenuItem>
+              )}
+            </MenuIconButton>
+          </span>
+        </Tooltip>
 
         <ExportGmlDialog open={this.exportGmlDialogOpen} onClose={this.closeExportGmlDialog} />
         <ExportGeoPackageDialog open={this.exportGeopackageDialogOpen} onClose={this.closeExportGeopackageDialog} />
