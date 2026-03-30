@@ -19,3 +19,23 @@ export const smallTriangle: NewWfsFeature[] = [
     properties: {}
   }
 ];
+
+export const triangleForFeatureExtractPrint: NewWfsFeature[] = [
+  {
+    type: 'Feature',
+    geometry: {
+      type: GeometryType.MULTI_POLYGON,
+      coordinates: [
+        [
+          [
+            [6_656_596, 4_999_940],
+            [6_657_036, 4_999_940],
+            [6_656_816, 5_000_300],
+            [6_656_596, 4_999_940]
+          ]
+        ]
+      ]
+    },
+    properties: {}
+  }
+];

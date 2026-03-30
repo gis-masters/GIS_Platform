@@ -62,7 +62,8 @@ export const featureExtractOld: PrintTemplate<WfsFeature> = new PrintTemplate({
             name: 'image',
             propertyType: PropertyType.CUSTOM,
             title: 'Карта',
-            ControlComponent: PrintMapImageControl
+            ControlComponent: PrintMapImageControl,
+            focusFeature: entity
           },
           {
             name: 'properties',

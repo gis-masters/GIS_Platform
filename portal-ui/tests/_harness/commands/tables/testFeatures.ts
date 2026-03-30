@@ -7,7 +7,7 @@ import { getUserByEmail } from '../auth/getUserByEmail';
 import { getTestUser } from '../auth/testUsers';
 import { blackSea } from './testFeatures/blackSea';
 import { crimea } from './testFeatures/crimea';
-import { smallTriangle } from './testFeatures/featuresForTests';
+import { smallTriangle, triangleForFeatureExtractPrint } from './testFeatures/featuresForTests';
 import { forAttrEllipsis } from './testFeatures/forAttrEllipsis';
 import { forCopy } from './testFeatures/forCopy';
 import { forFeaturesSidebar } from './testFeatures/forFeaturesSidebar';
@@ -128,6 +128,9 @@ export async function getTestFeatures(key: string, schema?: Schema): Promise<New
     }
     case 'небольшой треугольник': {
       return smallTriangle;
+    }
+    case 'треугольник для печати выписки': {
+      return triangleForFeatureExtractPrint;
     }
     case 'не корректное value для поля типа choice': {
       return incorrectChoiceValue;

@@ -2,18 +2,26 @@ import { createElement } from 'react';
 import { createRoot } from 'react-dom/client';
 import domToImage from 'dom-to-image';
 import { type Map } from 'ol';
+import { type Coordinate } from 'ol/coordinate';
+import { buffer, type Extent, getCenter, getHeight, getWidth } from 'ol/extent';
 import type TileLayer from 'ol/layer/Tile';
-import { getPointResolution } from 'ol/proj';
+import { getPointResolution, type Projection } from 'ol/proj';
 import type TileSource from 'ol/source/Tile';
+import View from 'ol/View';
 
 import { Legend } from '../../components/Legend/Legend';
 import { PrintMapDialogDate } from '../../components/PrintMapDialog/Date/PrintMapDialog-Date';
 import { currentProject } from '../../stores/CurrentProject.store';
 import { mapMeasureStore } from '../../stores/MapMeasure.store';
-import { printSettings } from '../../stores/PrintSettings.store';
+import { type Orientation, pageFormats, printSettings, scales } from '../../stores/PrintSettings.store';
+import { getOlProjection, getProjectionByCode } from '../data/projections/projections.service';
 import { type StyleRuleExtended } from '../geoserver/styles/styles.models';
 import { filterLegendForCurrentMapView, getLayerStyleRules } from '../geoserver/styles/styles.service';
+import { GeometryType, type WfsFeature } from '../geoserver/wfs/wfs.models';
+import { getFeatureExtent } from '../geoserver/wfs/wfs.util';
 import { CrgLayerType, type CrgVectorLayer } from '../gis/layers/layers.models';
+import { getLayerByFeatureInCurrentProject } from '../gis/layers/layers.utils';
+import { transformExtent } from '../util/coordinates-transform.util';
 import { saveAsBlob } from '../util/FileSaver';
 import { notFalsyFilter } from '../util/NotFalsyFilter';
 import { sleep } from '../util/sleep';
@@ -541,6 +549,147 @@ async function autoFilterLegend() {
   }
 }
 
+const PREVIEW_DPI = 72;
+const ZOOM_TO_FEATURE_PADDING_PX = 50;
+
+/** Пиксельный размер области карты при заданном DPI (аналог printSettings.width/height при printingResolution). */
+function getPrintContentPixels(params: {
+  pageFormatId: string;
+  orientation: Orientation;
+  margin: { top: number; right: number; bottom: number; left: number };
+  dpi: number;
+}): { width: number; height: number } {
+  const format = pageFormats.find(({ id }) => id === params.pageFormatId) ?? pageFormats[1];
+  const pageW = params.orientation === 'l' ? format.width : format.height;
+  const pageH = params.orientation === 'l' ? format.height : format.width;
+  const m = params.margin;
+
+  return {
+    width: Math.round(((pageW - m.left - m.right) * params.dpi) / 25.4),
+    height: Math.round(((pageH - m.top - m.bottom) * params.dpi) / 25.4)
+  };
+}
+
+function resolutionForPrintScale(
+  scaleDenominator: number,
+  dpi: number,
+  center: Coordinate,
+  projection: Projection
+): number {
+  return scaleDenominator / 1000 / getPointResolution(projection, dpi / 25.4, center);
+}
+
+function isPointOrSingleMultiPointGeometry(feature: WfsFeature): boolean {
+  const g = feature.geometry;
+  if (!g) {
+    return false;
+  }
+
+  if (g.type === GeometryType.POINT) {
+    return true;
+  }
+
+  return g.type === GeometryType.MULTI_POINT && g.coordinates.length === 1;
+}
+
+function pickPrintScaleClosestToViewResolution(
+  viewResolution: number,
+  center: Coordinate,
+  projection: Projection,
+  dpi: number
+): number {
+  let chosen = scales[0];
+  let bestDelta = Number.POSITIVE_INFINITY;
+
+  for (const S of scales) {
+    const r = resolutionForPrintScale(S, dpi, center, projection);
+    const delta = Math.abs(r - viewResolution);
+    if (delta < bestDelta) {
+      bestDelta = delta;
+      chosen = S;
+    }
+  }
+
+  return chosen;
+}
+
+function pickPrintScaleForBboxFit(fitExtent: Extent, center: Coordinate, projection: Projection): number {
+  const { width: cw, height: ch } = getPrintContentPixels({
+    pageFormatId: printSettings.pageFormatId,
+    orientation: printSettings.orientation,
+    margin: printSettings.margin,
+    dpi: PREVIEW_DPI
+  });
+
+  const innerW = Math.max(1, cw - 2 * ZOOM_TO_FEATURE_PADDING_PX);
+  const innerH = Math.max(1, ch - 2 * ZOOM_TO_FEATURE_PADDING_PX);
+
+  const tempView = new View({ projection });
+  const rFit = tempView.getResolutionForExtent(fitExtent, [innerW, innerH]);
+
+  const sortedScales = [...scales].sort((a, b) => a - b);
+  let chosen: number = sortedScales.at(-1)!;
+  for (const S of sortedScales) {
+    if (resolutionForPrintScale(S, PREVIEW_DPI, center, projection) >= rFit) {
+      chosen = S;
+      break;
+    }
+  }
+
+  return chosen;
+}
+
+export async function applyPrintFocusForFeatureExtract(
+  feature: WfsFeature,
+  options: { pageFormatId: string }
+): Promise<void> {
+  const view = mapService.view;
+  if (!view) {
+    return;
+  }
+
+  const layer = getLayerByFeatureInCurrentProject(feature);
+  if (!layer?.nativeCRS) {
+    return;
+  }
+
+  const layerProjection = await getProjectionByCode(layer.nativeCRS);
+  const olProjection = await getOlProjection();
+  const extentSource = getFeatureExtent(feature);
+  if (!extentSource || !layerProjection) {
+    return;
+  }
+
+  const pointLike = isPointOrSingleMultiPointGeometry(feature);
+
+  let extent3857 = transformExtent(extentSource, layerProjection, olProjection);
+  if (!pointLike && (getWidth(extent3857) === 0 || getHeight(extent3857) === 0)) {
+    extent3857 = buffer(extent3857, 50);
+  }
+
+  const center = getCenter(extent3857);
+  const projection = view.getProjection();
+
+  printSettings.setPageFormatId(options.pageFormatId);
+
+  const rMain = view.getResolution();
+  let chosen: number;
+
+  if (pointLike && rMain != null) {
+    chosen = pickPrintScaleClosestToViewResolution(rMain, center, projection, PREVIEW_DPI);
+  } else {
+    let fitExtent = extent3857;
+    if (getWidth(fitExtent) === 0 || getHeight(fitExtent) === 0) {
+      fitExtent = buffer(fitExtent, 50);
+    }
+
+    chosen = pickPrintScaleForBboxFit(fitExtent, center, projection);
+  }
+
+  printSettings.setValues({ scale: chosen });
+  view.setCenter(center);
+}
+
 function setPrintSize(resolution: number, translateX: number, translateY: number) {
   const { map, view, scaleLine } = mapService;
   const { width, height, scale } = printSettings;
@@ -555,7 +704,7 @@ function setPrintSize(resolution: number, translateX: number, translateY: number
     throw new Error('Map center is not initialized');
   }
 
-  const scaleResolution = scale / 1000 / getPointResolution(view.getProjection(), resolution / 25.4, center);
+  const scaleResolution = resolutionForPrintScale(scale, resolution, center, view.getProjection());
 
   scaleLine.setDpi(resolution);
   map.setSize([width, height]);

@@ -1,6 +1,10 @@
 const path = require('path');
 
 module.exports = {
+  // Не вешать watcher на зависимости — иначе на Linux часто ENOSPC (лимит inotify).
+  watchOptions: {
+    ignored: /node_modules/
+  },
   module: {
     rules: [
       // Правило для SCSS, импортируемых из React компонентов (.tsx файлы)

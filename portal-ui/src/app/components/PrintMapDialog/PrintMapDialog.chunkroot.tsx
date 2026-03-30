@@ -43,7 +43,7 @@ export default class PrintMapDialog extends Component<PrintMapDialogProps> {
     return (
       <Dialog open={open} onClose={onClose} slotProps={{ paper: { className: cnPrintMapDialog() } }}>
         <PrintMapDialogContent>
-          <PrintMapDialogPreview open={open} />
+          <PrintMapDialogPreview open={open} showCopy={directlyPrint} />
           <PrintMapDialogForm format={format} onSubmit={this.handleSubmit} />
         </PrintMapDialogContent>
         <DialogActions>

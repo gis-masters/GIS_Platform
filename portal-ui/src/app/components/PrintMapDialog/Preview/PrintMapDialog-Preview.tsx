@@ -24,6 +24,7 @@ const cnPrintMapDialogPreview = cn('PrintMapDialog', 'Preview');
 
 interface PrintMapDialogPreviewProps {
   open: boolean;
+  showCopy?: boolean;
 }
 
 @observer
@@ -80,6 +81,7 @@ export class PrintMapDialogPreview extends Component<PrintMapDialogPreviewProps>
   }
 
   render() {
+    const { showCopy = false } = this.props;
     const { pageFormatId, orientation, margin, windRose, date, legend, rotation, printingInProcess } = printSettings;
 
     return (
@@ -111,7 +113,7 @@ export class PrintMapDialogPreview extends Component<PrintMapDialogPreviewProps>
             {this.previewImageDataUri && (
               <>
                 <PrintMapDialogPreviewImage src={this.previewImageDataUri} imgRef={this.previewRef} />
-                <PrintMapDialogCopy />
+                {showCopy && <PrintMapDialogCopy />}
               </>
             )}
 
