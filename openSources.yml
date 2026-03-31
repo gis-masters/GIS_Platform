@@ -88,4 +88,3 @@ services:
       CARBONE_HTTP_PORT: "4000"
       CARBONE_LOG_LEVEL: "info"
       CARBONE_DATABASE_NAME: "database.sqlite"
-    privileged: true

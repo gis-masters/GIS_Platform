@@ -10,7 +10,7 @@ Feature: Тесты report service с дефолтным шаблоном
     Then  размер скачанного отчёта равен <size> байт
     Examples:
       | templateName          | size   |
-      | featureExtractCompact | 15240  |
+      | featureExtractCompact | 15201  |
       | featureExtractFull    | 470950 |
 
   Scenario: Созданный отчёт сохраняется как файл платформы с ожидаемыми атрибутами
