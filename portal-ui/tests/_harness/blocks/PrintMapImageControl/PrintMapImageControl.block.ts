@@ -3,18 +3,22 @@ import { Block } from '../../classes/Block';
 export class PrintMapImageControlBlock extends Block {
   selectors = {
     root: '.PrintMapImageControl',
-    selectedImage: '.PrintMapImageControl-Image'
+    selectedPreview: '.PrintMapImageControl-Preview',
+    loader: '.PrintMapImageControl-Loading',
+    clearButton: '.PrintMapImageControl-Clear',
+    chooseButton: '.PrintMapImageControl-ChooseButton'
   };
 
   async clickChooseMapFragment(): Promise<void> {
-    const $btn = await this.findBySelector('root');
+    const $btn = await this.findBySelector('chooseButton');
     await $btn.waitForClickable();
     await $btn.click();
   }
 
   async waitForSelectedImage(): Promise<void> {
-    const $img = await this.findBySelector('selectedImage');
-    await $img.waitForDisplayed();
+    const $preview = await this.findBySelector('selectedPreview');
+    await $preview.waitForDisplayed();
+    await this.waitForLoading();
   }
 }
 

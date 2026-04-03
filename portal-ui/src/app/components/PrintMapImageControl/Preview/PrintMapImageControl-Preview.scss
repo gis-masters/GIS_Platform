@@ -1,0 +1,18 @@
+.PrintMapImageControl-Preview {
+  position: relative;
+
+  display: inline-flex;
+  overflow: hidden;
+
+  padding: 0;
+
+  vertical-align: middle;
+
+  border: 1px solid rgb(0 0 0 / 23%);
+  border-radius: 4px;
+}
+
+.PrintMapImageControl-Preview:not(:disabled):hover .PrintMapImageControl-Overlay,
+.PrintMapImageControl-Preview:not(:disabled):focus-visible .PrintMapImageControl-Overlay {
+  opacity: 1;
+}

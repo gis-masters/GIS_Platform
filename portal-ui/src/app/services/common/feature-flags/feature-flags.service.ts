@@ -14,6 +14,7 @@ class Flags implements FlagsList {
   allowProjectionsForAllLayers = '';
   oldPrintMechanism = '';
   openFileDownloadInSameTab = '';
+  featureExtractPrintAutoMap = '';
   selectingFeaturesLimit = '';
   showDocumentRoles = '';
 

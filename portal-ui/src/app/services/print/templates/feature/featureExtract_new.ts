@@ -5,6 +5,7 @@ import { PrintFormatSubmitButton } from '../../../../components/PrintFormatSubmi
 import { PrintMapImageControl } from '../../../../components/PrintMapImageControl/PrintMapImageControl';
 import { SelectPropertiesControl } from '../../../../components/SelectPropertiesControl/SelectPropertiesControl';
 import { doFormPrompt } from '../../../answer-modals.service';
+import { flags } from '../../../common/feature-flags/feature-flags.service';
 import { getProjectionByCode } from '../../../data/projections/projections.service';
 import { getProjectionUnit } from '../../../data/projections/projections.util';
 import { type PropertySchema, PropertyType } from '../../../data/schema/schema.models';
@@ -79,7 +80,8 @@ export const featureExtractNew: PrintTemplate<WfsFeature> = new PrintTemplate({
             propertyType: PropertyType.CUSTOM,
             title: 'Карта',
             ControlComponent: PrintMapImageControl,
-            focusFeature: feature
+            focusFeature: feature,
+            autoGenerate: Boolean(flags.featureExtractPrintAutoMap)
           },
           {
             name: 'properties',
